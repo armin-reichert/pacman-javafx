@@ -21,6 +21,8 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.HTS;
@@ -147,20 +149,35 @@ public class TengenMsPacMan_GameLevelRenderer extends GameLevelRenderer implemen
     private void drawMessage(GameLevel gameLevel) {
         gameLevel.optMessage().ifPresent(message -> {
             NES_ColorScheme colorScheme = gameLevel.worldMap().getConfigValue("nesColorScheme");
+            String text = messageText(gameLevel, message.type());
             switch (message.type()) {
-                case MessageType.GAME_OVER -> {
+                case GAME_OVER -> {
                     Color color = gameLevel.isDemoLevel()
                         ? Color.web(colorScheme.strokeColorRGB())
                         : uiConfig.assets().color("color.game_over_message");
-                    fillTextCentered("GAME  OVER",
-                        color, arcadeFontTS(), message.x(), message.y());
+                    fillTextCentered(text, color, arcadeFontTS(), message.x(), message.y());
                 }
-                case MessageType.READY -> fillTextCentered("READY!",
-                    uiConfig.assets().color("color.ready_message"), arcadeFontTS(), message.x(), message.y());
-                case MessageType.TEST -> fillTextCentered("TEST    L%02d".formatted(gameLevel.number()),
-                    nesColor(0x28), arcadeFontTS(), message.x(), message.y());
+                case READY -> fillTextCentered(text, uiConfig.assets().color("color.ready_message"), arcadeFontTS(),
+                    message.x(), message.y());
+                case TEST -> fillTextCentered(text, nesColor(0x28), arcadeFontTS(), message.x(), message.y());
             }
         });
+    }
+
+    private String messageText(GameLevel gameLevel, MessageType messageType) {
+        return switch (messageType) {
+            case GAME_OVER -> "GAME OVER";
+            case READY -> "READY!";
+            case TEST -> "TEST    L%02d".formatted(gameLevel.number());
+        };
+    }
+
+    public double messageTextWidth(GameLevel gameLevel, MessageType messageType) {
+        String messageText = messageText(gameLevel, messageType);
+        Text dummy = new Text(messageText);
+        // unscaled font!
+        dummy.setFont(Font.font(ARCADE_FONT_TS.getFamily(), TS));
+        return dummy.getLayoutBounds().getWidth();
     }
 
     private void overPaintActorSprites(GameLevel level) {

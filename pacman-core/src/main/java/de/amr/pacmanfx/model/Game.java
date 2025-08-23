@@ -42,11 +42,10 @@ public interface Game extends GameLifecycle, GameEvents {
     double pacPowerFadingSeconds(GameLevel gameLevel);
     double pacPowerSeconds(GameLevel level);
 
-    default GameLevelMessage showMessage(GameLevel gameLevel, MessageType type) {
+    default void showMessage(GameLevel gameLevel, MessageType type) {
         requireNonNull(type);
         GameLevelMessage message = new GameLevelMessage(type);
         message.setPosition(gameLevel.defaultMessagePosition());
         gameLevel.setMessage(message);
-        return message;
     }
 }

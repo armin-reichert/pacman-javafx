@@ -44,12 +44,14 @@ import static java.util.Objects.requireNonNull;
  */
 public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
-    private static final byte FIRST_LEVEL_NUMBER = 1;
-    private static final byte LAST_LEVEL_NUMBER = 32;
-    private static final byte DEMO_LEVEL_MIN_DURATION_SEC = 20;
+    public static final byte FIRST_LEVEL_NUMBER = 1;
+    public static final byte LAST_LEVEL_NUMBER = 32;
+    public static final byte DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
-    private static final byte PELLET_VALUE = 10;
-    private static final byte ENERGIZER_VALUE = 50;
+    public static final int GAME_OVER_MESSAGE_DELAY = 120;
+
+    public static final byte PELLET_VALUE = 10;
+    public static final byte ENERGIZER_VALUE = 50;
 
     // See https://github.com/RussianManSMWC/Ms.-Pac-Man-NES-Tengen-Disassembly/blob/main/Data/PowerPelletTimes.asm
     // Hex value divided by 16 gives the duration in seconds
@@ -420,6 +422,16 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
+    public void showMessage(GameLevel gameLevel, MessageType type) {
+        if (type == MessageType.GAME_OVER && mapCategory != MapCategory.ARCADE) {
+            var gameOverMessage = new GameOverMessage(gameLevel.defaultMessagePosition(), GAME_OVER_MESSAGE_DELAY);
+            gameLevel.setMessage(gameOverMessage);
+        } else {
+            super.showMessage(gameLevel, type);
+        }
+    }
+
+    @Override
     public void startNextLevel() {
         if (gameLevel.number() < LAST_LEVEL_NUMBER) {
             buildNormalLevel(gameLevel.number() + 1);
@@ -481,7 +493,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     public void createLevel(int levelNumber) {
         WorldMap worldMap = mapSelector.createWorldMapForLevel(mapCategory, levelNumber);
         gameLevel = new GameLevel(levelNumber, worldMap, createLevelData());
-        gameLevel.setGameOverStateTicks(420);
+        // For non-Arcade game levels, give some extra time for "game over" text animation
+        gameLevel.setGameOverStateTicks(mapCategory == MapCategory.ARCADE ? 420 : 600);
         addHouse(gameLevel);
 
         var msPacMan = createMsPacMan();

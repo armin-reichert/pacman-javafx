@@ -23,7 +23,7 @@ import static java.util.Objects.requireNonNull;
 
 public class BaseRenderer implements CanvasRenderer {
 
-    private static final Font ARCADE_FONT_TS;
+    public static final Font ARCADE_FONT_TS;
 
     static {
         ResourceManager rm = () -> BaseRenderer.class;

@@ -9,23 +9,16 @@ import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.controller.teststates.LevelMediumTestState;
 import de.amr.pacmanfx.controller.teststates.LevelShortTestState;
 import de.amr.pacmanfx.event.GameEvent;
+import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.GameLevelMessage;
-import de.amr.pacmanfx.model.House;
 import de.amr.pacmanfx.model.MessageType;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
-import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
-import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_HUDData;
-import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_LevelCounter;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.ColoredSpriteImage;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.MazeSpriteSet;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameLevelRenderer;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_HUDRenderer;
+import de.amr.pacmanfx.tengen.ms_pacman.model.*;
+import de.amr.pacmanfx.tengen.ms_pacman.rendering.*;
 import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
@@ -73,8 +66,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     // 42 tiles (BIG maps height) + 2 extra rows
     private static final int UNSCALED_CANVAS_HEIGHT = 44 * TS;
 
-    private static final int MESSAGE_MOVEMENT_DELAY = 120;
-
     private final ObjectProperty<SceneDisplayMode> displayModeProperty = new SimpleObjectProperty<>(SceneDisplayMode.SCROLLING);
 
     private final SubScene subScene;
@@ -88,7 +79,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     private final BooleanProperty mazeHighlighted = new SimpleBooleanProperty(false);
 
-    private MessageMovement messageMovement;
     private LevelCompletedAnimation levelCompletedAnimation;
 
     public TengenMsPacMan_PlayScene2D(GameUI ui) {
@@ -155,11 +145,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         debugInfoRenderer = new PlaySceneDebugInfoRenderer(ui);
         bindRendererScaling(hudRenderer, gameLevelRenderer, actorSpriteRenderer, debugInfoRenderer);
 
-        messageMovement = new MessageMovement();
-
-        context().game().hudData().showScore(true);
-        context().game().hudData().showLevelCounter(true);
-        context().game().hudData().showLivesCounter(true);
+        context().game().hudData().score(true).levelCounter(true).livesCounter(true);
 
         dynamicCamera.moveTop();
     }
@@ -177,7 +163,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
             if (level.isDemoLevel()) {
                 ui.soundManager().setEnabled(false);
             } else {
-                messageMovement.update();
+                level.optMessage()
+                    .filter(GameOverMessage.class::isInstance)
+                    .map(GameOverMessage.class::cast)
+                    .ifPresent(GameOverMessage::update);
                 ui.soundManager().setEnabled(true);
                 updateSound();
             }
@@ -317,20 +306,16 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
             }
             case GAME_OVER -> {
                 ui.soundManager().stopAll();
-                // After some delay, the "game over" message moves from the center to the right border, wraps around,
-                // appears at the left border and moves to the center again (for non-Arcade maps)
-                if (context().<TengenMsPacMan_GameModel>game().mapCategory() != MapCategory.ARCADE) {
-                    context().gameLevel().house().ifPresent(house -> {
-                        float startX = house.centerPositionUnderHouse().x();
-                        float wrappingX = sizeInPx().x();
-                        messageMovement.start(MESSAGE_MOVEMENT_DELAY, startX, wrappingX);
+                context().gameLevel().optMessage()
+                    .filter(GameOverMessage.class::isInstance)
+                    .map(GameOverMessage.class::cast)
+                    .ifPresent(gameOverMessage -> {
+                        double width = gameLevelRenderer.messageTextWidth(context().gameLevel(), MessageType.GAME_OVER);
+                        gameOverMessage.start(sizeInPx().x(), width);
                     });
-                }
                 dynamicCamera.moveTop();
             }
-            default -> {
-                //TODO
-            }
+            default -> {}
         }
     }
 
@@ -357,11 +342,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void onGameContinued(GameEvent e) {
-        context().optGameLevel().ifPresent(level -> {
-            GameLevelMessage message = new GameLevelMessage(MessageType.READY);
-            message.setPosition(level.defaultMessagePosition());
-            level.setMessage(message);
-        });
+        context().optGameLevel().ifPresent(gameLevel -> context().game().showMessage(gameLevel, MessageType.READY));
     }
 
     @Override
@@ -513,18 +494,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     private Stream<Ghost> ghostsByZ(GameLevel gameLevel) {
         return Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW).map(gameLevel::ghost);
-    }
-
-    private Vector2f currentMessagePosition() {
-        House house = context().gameLevel().house().orElse(null);
-        if (house == null) {
-            Logger.error("No house in game level!");
-            return Vector2f.ZERO; //TODO
-        }
-        Vector2f center = house.centerPositionUnderHouse();
-        return messageMovement != null && messageMovement.isRunning()
-            ? new Vector2f(messageMovement.currentX(), center.y())
-            : center;
     }
 
     private void updateHUD() {
