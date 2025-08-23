@@ -6,46 +6,40 @@ package de.amr.pacmanfx.ui._2d;
 
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapColorScheme;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer;
-import javafx.beans.property.FloatProperty;
-import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 import java.util.Map;
 
-import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
 /**
  * Draws wall and obstacle paths generated at runtime from the 2D tile map data.
  */
-public class GenericMapRenderer {
+public class GenericMapRenderer extends BaseRenderer {
 
-    private final GraphicsContext ctx;
-    private final FloatProperty scalingPy = new SimpleFloatProperty(1.0f);
     private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
     private final FoodMapRenderer foodRenderer = new FoodMapRenderer();
-    private Color bgColor;
     private TerrainMapColorScheme blinkingOnColors;
     private TerrainMapColorScheme blinkingOffColors;
 
     public GenericMapRenderer(Canvas canvas) {
-        ctx = requireNonNull(canvas).getGraphicsContext2D();
-        terrainRenderer.scalingProperty().bind(scalingPy);
-        foodRenderer.scalingProperty().bind(scalingPy);
+        super(canvas);
+        terrainRenderer.scalingProperty().bind(scalingProperty());
+        foodRenderer.scalingProperty().bind(scalingProperty());
         setBackgroundColor(Color.BLACK);
+        backgroundColorProperty().addListener((py, ov, newColor) -> updateBlinkingColors(newColor));
+        updateBlinkingColors(backgroundColor());
     }
 
-    public FloatProperty scalingProperty() { return scalingPy; }
+    private void updateBlinkingColors(Color backgroundColor) {
+        blinkingOnColors = new TerrainMapColorScheme(backgroundColor, Color.BLACK, Color.WHITE, Color.BLACK);
+        blinkingOffColors = new TerrainMapColorScheme(backgroundColor, Color.WHITE, Color.BLACK, Color.BLACK);
 
-    public void setBackgroundColor(Color color) {
-        bgColor = requireNonNull(color);
-        blinkingOnColors = new TerrainMapColorScheme(bgColor, Color.BLACK, Color.WHITE, Color.BLACK);
-        blinkingOffColors = new TerrainMapColorScheme(bgColor, Color.WHITE, Color.BLACK, Color.BLACK);
     }
 
     public void drawLevel(GameLevel level, boolean mazeHighlighted, boolean energizerHighlighted) {
@@ -58,7 +52,7 @@ public class GenericMapRenderer {
             //TODO move into applyMapSettings?
             Map<String, String> colorMap = worldMap.getConfigValue("colorMap");
             TerrainMapColorScheme colors = new TerrainMapColorScheme(
-                bgColor,
+                backgroundColor(),
                 Color.web(colorMap.get("fill")),
                 Color.web(colorMap.get("stroke")),
                 Color.web(colorMap.get("door"))
