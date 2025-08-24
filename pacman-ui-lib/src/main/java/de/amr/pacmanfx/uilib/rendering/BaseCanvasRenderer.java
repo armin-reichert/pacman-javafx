@@ -20,12 +20,12 @@ import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static java.util.Objects.requireNonNull;
 
-public class BaseRenderer implements CanvasRenderer {
+public class BaseCanvasRenderer implements CanvasRenderer {
 
     public static final Font ARCADE_FONT_TS;
 
     static {
-        ResourceManager rm = () -> BaseRenderer.class;
+        ResourceManager rm = () -> BaseCanvasRenderer.class;
         ARCADE_FONT_TS = rm.loadFont("/de/amr/pacmanfx/uilib/fonts/emulogic.ttf", TS);
     }
 
@@ -36,7 +36,7 @@ public class BaseRenderer implements CanvasRenderer {
 
     protected final GraphicsContext ctx;
 
-    public BaseRenderer(Canvas canvas) {
+    public BaseCanvasRenderer(Canvas canvas) {
         ctx = requireNonNull(canvas).getGraphicsContext2D();
         ctx.setImageSmoothing(false);
         arcadeFontTS.bind(scaling.map(s -> Font.font(ARCADE_FONT_TS.getFamily(), scaled(TS))));

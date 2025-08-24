@@ -3,7 +3,7 @@ package de.amr.pacmanfx.uilib.rendering;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.canvas.Canvas;
 
-public class BaseSpriteRenderer extends BaseRenderer implements SpriteRenderer {
+public class BaseSpriteRenderer extends BaseCanvasRenderer implements SpriteRenderer {
 
     private SpriteSheet<?> spriteSheet;
 

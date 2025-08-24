@@ -10,7 +10,7 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
-import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.rendering.BaseCanvasRenderer;
 import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_PIXELS;
@@ -25,7 +25,7 @@ import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
 public class ArcadePacMan_StartScene extends GameScene2D {
 
     private ArcadePacMan_HUDRenderer hudRenderer;
-    private BaseRenderer sceneRenderer;
+    private BaseCanvasRenderer sceneRenderer;
 
     public ArcadePacMan_StartScene(GameUI ui) {
         super(ui);
@@ -34,7 +34,7 @@ public class ArcadePacMan_StartScene extends GameScene2D {
     @Override
     public void doInit() {
         hudRenderer = new ArcadePacMan_HUDRenderer(canvas, ui.currentConfig());
-        sceneRenderer = new BaseRenderer(canvas);
+        sceneRenderer = new BaseCanvasRenderer(canvas);
 
         bindRendererProperties(hudRenderer, sceneRenderer);
 

@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui._2d;
 
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.rendering.BaseCanvasRenderer;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
 import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapColorScheme;
@@ -21,7 +21,7 @@ import static java.util.function.Predicate.not;
 /**
  * Draws wall and obstacle paths generated at runtime from the 2D tile map data.
  */
-public class GenericMapRenderer extends BaseRenderer {
+public class GenericMapRenderer extends BaseCanvasRenderer {
 
     private final TerrainMapRenderer terrainRenderer;
     private final FoodMapRenderer foodRenderer;

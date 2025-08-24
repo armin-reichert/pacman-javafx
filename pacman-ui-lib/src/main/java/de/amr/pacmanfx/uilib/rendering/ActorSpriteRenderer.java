@@ -3,7 +3,7 @@ package de.amr.pacmanfx.uilib.rendering;
 import de.amr.pacmanfx.model.actors.Actor;
 import javafx.scene.canvas.Canvas;
 
-public abstract class ActorSpriteRenderer extends BaseRenderer implements SpriteRenderer {
+public abstract class ActorSpriteRenderer extends BaseCanvasRenderer implements SpriteRenderer {
 
     protected ActorSpriteRenderer(Canvas canvas) {
         super(canvas);

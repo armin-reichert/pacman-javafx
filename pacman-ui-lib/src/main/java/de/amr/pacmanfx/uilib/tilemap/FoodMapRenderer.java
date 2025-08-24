@@ -6,7 +6,7 @@ package de.amr.pacmanfx.uilib.tilemap;
 
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.FoodTile;
-import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.rendering.BaseCanvasRenderer;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
@@ -16,7 +16,7 @@ import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static java.util.Objects.requireNonNull;
 
-public class FoodMapRenderer extends BaseRenderer implements TileMapRenderer {
+public class FoodMapRenderer extends BaseCanvasRenderer implements TileMapRenderer {
 
     private static final double PELLET_SIZE = 2;
     private static final double ENERGIZER_SIZE = 8;
