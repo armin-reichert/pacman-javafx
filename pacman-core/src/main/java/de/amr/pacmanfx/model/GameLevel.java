@@ -85,7 +85,8 @@ public class GameLevel {
 
         blinking = new Pulse(10, Pulse.OFF);
         portals = findPortals(worldMap);
-        findHousePosition();
+
+        findHouse();
 
         currentBonusIndex = -1;
         energizerPositions = worldMap.tilesContaining(LayerID.FOOD, ENERGIZER.code()).collect(Collectors.toSet());
@@ -123,6 +124,11 @@ public class GameLevel {
         }
         ghostStartPositions[ORANGE_GHOST_POKEY] = halfTileRightOf(orangeGhostTile);
 
+        setGhostStartDirection(RED_GHOST_SHADOW, Direction.LEFT);
+        setGhostStartDirection(PINK_GHOST_SPEEDY, Direction.DOWN);
+        setGhostStartDirection(CYAN_GHOST_BASHFUL, Direction.UP);
+        setGhostStartDirection(ORANGE_GHOST_POKEY, Direction.UP);
+
         // Scatter tiles
 
         ghostScatterTiles[RED_GHOST_SHADOW] = worldMap.getTerrainTileProperty(POS_SCATTER_RED_GHOST,
@@ -151,32 +157,21 @@ public class GameLevel {
         return portals.toArray(new Portal[0]);
     }
 
-    private void findHousePosition() {
-        Vector2i minTile = worldMap.getTerrainTileProperty(POS_HOUSE_MIN_TILE);
-        if (minTile != null) {
-            house = new ArcadeHouse(minTile);
-            addHouseContent(house);
-        }
-    }
-
     /**
      * The ghost house is stored in the world map using property "pos_house_min" (left upper tile).
      * We add the corresponding map content here at runtime such that collision of actors with house walls
      * and doors is working. The obstacle detection algorithm will then also detect the house and create a
      * closed obstacle representing the house boundary.
      */
-    public void addHouseContent(House house) {
-        if (!worldMap.properties(LayerID.TERRAIN).containsKey(POS_HOUSE_MIN_TILE)) {
-            Logger.warn("No house min tile found in map!");
-            worldMap.properties(LayerID.TERRAIN).put(POS_HOUSE_MIN_TILE, WorldMapFormatter.formatTile(DEFAULT_HOUSE.minTile()));
-        }
+    private void findHouse() {
         Vector2i minTile = worldMap.getTerrainTileProperty(POS_HOUSE_MIN_TILE);
+        if (minTile == null) {
+            minTile = ArcadeHouse.DEFAULT_MIN_TILE;
+            Logger.warn("No house min tile found in map, using {}", minTile);
+            worldMap.properties(LayerID.TERRAIN).put(POS_HOUSE_MIN_TILE, WorldMapFormatter.formatTile(minTile));
+        }
+        house = new ArcadeHouse(minTile);
         worldMap.setContentRect(LayerID.TERRAIN, minTile, house.content());
-
-        setGhostStartDirection(RED_GHOST_SHADOW, Direction.LEFT);
-        setGhostStartDirection(PINK_GHOST_SPEEDY, Direction.DOWN);
-        setGhostStartDirection(CYAN_GHOST_BASHFUL, Direction.UP);
-        setGhostStartDirection(ORANGE_GHOST_POKEY, Direction.UP);
     }
 
     public void getReadyToPlay() {
