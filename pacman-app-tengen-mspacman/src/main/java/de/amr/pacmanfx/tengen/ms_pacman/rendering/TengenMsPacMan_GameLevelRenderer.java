@@ -15,7 +15,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
-import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
+import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -30,7 +30,7 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesColor;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
-public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements GameLevelRenderer, SpriteRendererMixin {
+public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements GameLevelRenderer, SpriteRenderer {
 
     private final TengenMsPacMan_UIConfig uiConfig;
 

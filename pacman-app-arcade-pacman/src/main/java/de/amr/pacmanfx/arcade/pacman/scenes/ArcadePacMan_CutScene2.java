@@ -16,7 +16,7 @@ import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.rendering.ActorSpriteRenderer;
-import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
+import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -49,7 +49,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
     private ArcadePacMan_HUDRenderer hudRenderer;
     private ActorSpriteRenderer actorSpriteRenderer;
-    private SpriteRenderer spriteRenderer;
+    private BaseSpriteRenderer spriteRenderer;
 
     public ArcadePacMan_CutScene2(GameUI ui) {
         super(ui);
@@ -60,7 +60,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         GameUI_Config uiConfig = ui.currentConfig();
 
         hudRenderer = new ArcadePacMan_HUDRenderer(canvas, uiConfig);
-        spriteRenderer = new SpriteRenderer(canvas, uiConfig.spriteSheet());
+        spriteRenderer = new BaseSpriteRenderer(canvas, uiConfig.spriteSheet());
         actorSpriteRenderer = uiConfig.createActorSpriteRenderer(canvas);
         debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas) {
             @Override

@@ -23,7 +23,7 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
-import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
+import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
@@ -60,7 +60,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     private ArcadePacMan_SpriteSheet spriteSheet;
 
-    private SpriteRenderer spriteRenderer;
+    private BaseSpriteRenderer spriteRenderer;
     private ArcadePacMan_HUDRenderer hudRenderer;
     private ArcadePacMan_ActorSpriteRenderer actorSpriteRenderer;
 
@@ -83,7 +83,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     public void doInit() {
         GameUI_Config uiConfig = ui.currentConfig();
 
-        spriteRenderer = new SpriteRenderer(canvas, uiConfig.spriteSheet());
+        spriteRenderer = new BaseSpriteRenderer(canvas, uiConfig.spriteSheet());
         hudRenderer = (ArcadePacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas);
         actorSpriteRenderer = new ArcadePacMan_ActorSpriteRenderer(canvas, uiConfig);
         debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas) {

@@ -12,7 +12,7 @@ import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
-import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
+import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
 
 import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.Globals.TS;
@@ -29,7 +29,7 @@ public class Arcade_BootScene2D extends GameScene2D {
 
     private static final int RASTER_SIZE = 16;
 
-    private SpriteRenderer spriteRenderer;
+    private BaseSpriteRenderer spriteRenderer;
     private Vector2f minPoint, maxPoint;
 
     public Arcade_BootScene2D(GameUI ui) {
@@ -42,7 +42,7 @@ public class Arcade_BootScene2D extends GameScene2D {
         // This can be different spritesheet types!
         SpriteSheet<?> spriteSheet = uiConfig.spriteSheet();
 
-        spriteRenderer = new SpriteRenderer(canvas, spriteSheet);
+        spriteRenderer = new BaseSpriteRenderer(canvas, spriteSheet);
         bindRendererProperties(spriteRenderer);
 
         context().game().hudData().all(false);
