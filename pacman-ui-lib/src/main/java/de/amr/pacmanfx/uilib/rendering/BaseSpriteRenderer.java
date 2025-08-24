@@ -5,10 +5,18 @@ import javafx.scene.canvas.Canvas;
 
 public class BaseSpriteRenderer extends BaseRenderer implements SpriteRenderer {
 
-    private final SpriteSheet<?> spriteSheet;
+    private SpriteSheet<?> spriteSheet;
 
     public BaseSpriteRenderer(Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(canvas);
+        this.spriteSheet = spriteSheet;
+    }
+
+    public BaseSpriteRenderer(Canvas canvas) {
+        super(canvas);
+    }
+
+    public void setSpriteSheet(SpriteSheet<?> spriteSheet) {
         this.spriteSheet = spriteSheet;
     }
 

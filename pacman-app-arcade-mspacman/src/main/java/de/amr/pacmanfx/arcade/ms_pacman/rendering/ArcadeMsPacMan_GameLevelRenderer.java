@@ -24,8 +24,9 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseSpriteRenderer impleme
     protected GameUI_Config uiConfig;
 
     public ArcadeMsPacMan_GameLevelRenderer(Canvas canvas, GameUI_Config uiConfig) {
-        super(canvas, uiConfig.spriteSheet());
+        super(canvas);
         this.uiConfig = requireNonNull(uiConfig);
+        setSpriteSheet(uiConfig.spriteSheet());
     }
 
     @Override

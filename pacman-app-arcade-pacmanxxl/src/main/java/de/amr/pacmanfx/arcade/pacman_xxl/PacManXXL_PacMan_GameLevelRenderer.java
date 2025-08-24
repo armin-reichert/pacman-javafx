@@ -8,7 +8,11 @@ import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_GameLevelRenderer;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui._2d.GenericMapRenderer;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
+import de.amr.pacmanfx.uilib.tilemap.TerrainMapColorScheme;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.paint.Color;
+
+import java.util.Map;
 
 /**
  * Renderer for "Pac-Man XXL" game variant. Uses the vector graphics map renderer that can render any custom map.
@@ -22,6 +26,18 @@ public class PacManXXL_PacMan_GameLevelRenderer extends ArcadePacMan_GameLevelRe
         mazeRenderer = new GenericMapRenderer(canvas);
         mazeRenderer.scalingProperty().bind(scalingProperty());
         mazeRenderer.backgroundColorProperty().bind(backgroundColorProperty());
+    }
+
+    @Override
+    public void applyLevelSettings(GameLevel gameLevel, RenderInfo info) {
+        Map<String, String> colorMap = gameLevel.worldMap().getConfigValue("colorMap");
+        var terrainMapColorScheme = new TerrainMapColorScheme(
+                backgroundColor(),
+                Color.web(colorMap.get("fill")),
+                Color.web(colorMap.get("stroke")),
+                Color.web(colorMap.get("door"))
+        );
+        info.put("terrainMapColorScheme", terrainMapColorScheme);
     }
 
     @Override
