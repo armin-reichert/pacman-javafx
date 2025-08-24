@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman.rendering;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
@@ -47,8 +46,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Ga
     }
 
     @Override
-    public void applyLevelSettings(GameContext gameContext) {
-        GameLevel gameLevel = gameContext.gameLevel();
+    public void applyLevelSettings(GameLevel gameLevel) {
         WorldMap worldMap = gameLevel.worldMap();
         // store the maze sprite set with the correct colors for this level in the map configuration:
         if (!worldMap.hasConfigValue(TengenMsPacMan_UIConfig.MAZE_SPRITE_SET_PROPERTY)) {
@@ -60,25 +58,24 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Ga
     }
 
     @Override
-    public void drawGameLevel(GameContext gameContext, RenderInfo info) {
-        GameLevel gameLevel = gameContext.gameLevel();
-        applyLevelSettings(gameContext);
+    public void drawGameLevel(GameLevel gameLevel, RenderInfo info) {
+        applyLevelSettings(gameLevel);
         Image mazeImage = info.get("mazeImage", Image.class);
         RectShort mazeSprite = info.get("mazeSprite", RectShort.class);
-        drawGameLevel(gameContext, mazeImage, mazeSprite);
+        drawGameLevel(gameLevel, mazeImage, mazeSprite);
         drawMessage(gameLevel);
     }
 
-    private void drawGameLevel(GameContext gameContext, Image mazeImage, RectShort mazeSprite) {
+    private void drawGameLevel(GameLevel gameLevel, Image mazeImage, RectShort mazeSprite) {
         ctx().setImageSmoothing(false);
         int x = 0, y = GameLevel.EMPTY_ROWS_OVER_MAZE * TS;
         ctx().drawImage(mazeImage,
             mazeSprite.x(), mazeSprite.y(), mazeSprite.width(), mazeSprite.height(),
             scaled(x), scaled(y), scaled(mazeSprite.width()), scaled(mazeSprite.height())
         );
-        overPaintActorSprites(gameContext.gameLevel());
-        drawFood(gameContext.gameLevel());
-        drawMessage(gameContext.gameLevel());
+        overPaintActorSprites(gameLevel);
+        drawFood(gameLevel);
+        drawMessage(gameLevel);
     }
 
     private void drawFood(GameLevel gameLevel) {

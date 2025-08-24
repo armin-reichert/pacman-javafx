@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_GameLevelRenderer;
+import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui._2d.GenericMapRenderer;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
 import javafx.scene.canvas.Canvas;
@@ -25,11 +25,11 @@ public class PacManXXL_PacMan_GameLevelRenderer extends ArcadePacMan_GameLevelRe
     }
 
     @Override
-    public void drawGameLevel(GameContext context, RenderInfo info) {
-        mapRenderer.drawLevel(context.gameLevel(),
+    public void drawGameLevel(GameLevel gameLevel, RenderInfo info) {
+        mapRenderer.drawLevel(gameLevel,
             info.getBoolean("bright"),
             info.getBoolean("blinkingOn")
         );
-        super.drawGameLevelMessage(context.gameLevel());
+        drawGameLevelMessage(gameLevel);
     }
 }

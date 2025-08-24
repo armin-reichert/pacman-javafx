@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.MessageType;
@@ -33,7 +32,7 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements Ga
     }
 
     @Override
-    public void applyLevelSettings(GameContext gameContext) {
+    public void applyLevelSettings(GameLevel gameLevel) {
         // Nothing to do
     }
 
@@ -47,8 +46,7 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements Ga
     }
 
     @Override
-    public void drawGameLevel(GameContext gameContext, RenderInfo info) {
-        GameLevel gameLevel = gameContext.gameLevel();
+    public void drawGameLevel(GameLevel gameLevel, RenderInfo info) {
         float emptySpaceOverMaze = TS(GameLevel.EMPTY_ROWS_OVER_MAZE);
         int colorMapIndex = gameLevel.worldMap().getConfigValue("colorMapIndex");
         ctx().save();
@@ -73,7 +71,7 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements Ga
                 .forEach(tile -> fillSquareAtTileCenter(tile, 10));
         }
         ctx().restore();
-        drawGameLevelMessage(gameContext.gameLevel());
+        drawGameLevelMessage(gameLevel);
     }
 
     protected void drawGameLevelMessage(GameLevel gameLevel) {

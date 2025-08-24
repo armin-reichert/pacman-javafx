@@ -485,7 +485,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         RenderInfo info = bright
             ? uiConfig.highlightedMazeRenderInfo(gameLevel, levelCompletedAnimation.flashingIndex())
             : uiConfig.normalMazeRenderInfo(context().game(), gameLevel);
-        gameLevelRenderer.drawGameLevel(context(), info);
+        gameLevelRenderer.drawGameLevel(gameLevel, info);
     }
 
     private Stream<Ghost> ghostsByZ(GameLevel gameLevel) {

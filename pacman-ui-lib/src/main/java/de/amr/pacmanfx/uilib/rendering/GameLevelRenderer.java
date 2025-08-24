@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.rendering;
 
-import de.amr.pacmanfx.GameContext;
+import de.amr.pacmanfx.model.GameLevel;
 
 public interface GameLevelRenderer extends CanvasRenderer {
 
@@ -13,13 +13,13 @@ public interface GameLevelRenderer extends CanvasRenderer {
      * the selection of a different color scheme which is specified in the level map. The default
      * implementation is empty such that subclasses that have no such hints can silently ignore it.
      *
-     * @param gameContext the game context
+     * @param gameLevel the game level
      */
-    void applyLevelSettings(GameContext gameContext);
+    void applyLevelSettings(GameLevel gameLevel);
 
     /**
-     * @param gameContext the game context
+     * @param gameLevel the game level to draw
      * @param info additional rendering info
      */
-    void drawGameLevel(GameContext gameContext, RenderInfo info);
+    void drawGameLevel(GameLevel gameLevel, RenderInfo info);
 }

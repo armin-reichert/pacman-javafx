@@ -11,7 +11,10 @@ import de.amr.pacmanfx.controller.teststates.LevelShortTestState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.model.*;
+import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.HuntingTimer;
+import de.amr.pacmanfx.model.LivesCounter;
+import de.amr.pacmanfx.model.MessageType;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.MovingActor;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -37,7 +40,6 @@ import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -287,12 +289,12 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
             return; // Scene is drawn already 2 ticks before level has been created
         }
         final GameLevel gameLevel = context().gameLevel();
-        gameLevelRenderer.applyLevelSettings(context());
+        gameLevelRenderer.applyLevelSettings(gameLevel);
         RenderInfo info = new RenderInfo();
         info.put("bright", mazeHighlighted.get());
         info.put("blinkingOn", gameLevel.blinking().isOn());
         info.put("empty", context().gameLevel().uneatenFoodCount() == 0);
-        gameLevelRenderer.drawGameLevel(context(), info);
+        gameLevelRenderer.drawGameLevel(gameLevel, info);
 
         createActorDrawingOrder(gameLevel);
         actorsInZOrder.forEach(actor -> actorSpriteRenderer.drawActor(actor));

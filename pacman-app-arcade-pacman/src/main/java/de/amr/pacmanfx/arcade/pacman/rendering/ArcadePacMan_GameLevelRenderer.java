@@ -38,13 +38,12 @@ public class ArcadePacMan_GameLevelRenderer extends BaseRenderer implements Game
     }
 
     @Override
-    public void applyLevelSettings(GameContext gameContext) {
+    public void applyLevelSettings(GameLevel gameLevel) {
         // nothing to do
     }
 
     @Override
-    public void drawGameLevel(GameContext gameContext, RenderInfo info) {
-        GameLevel gameLevel = gameContext.gameLevel();
+    public void drawGameLevel(GameLevel gameLevel, RenderInfo info) {
         int emptySpaceOverMaze = GameLevel.EMPTY_ROWS_OVER_MAZE * TS;
         ctx().save();
         ctx().scale(scaling(), scaling());
@@ -69,7 +68,7 @@ public class ArcadePacMan_GameLevelRenderer extends BaseRenderer implements Game
                 .forEach(tile -> fillSquareAtTileCenter(tile, 10));
         }
         ctx().restore();
-        drawGameLevelMessage(gameContext.gameLevel());
+        drawGameLevelMessage(gameLevel);
     }
 
     protected void drawGameLevelMessage(GameLevel gameLevel) {
