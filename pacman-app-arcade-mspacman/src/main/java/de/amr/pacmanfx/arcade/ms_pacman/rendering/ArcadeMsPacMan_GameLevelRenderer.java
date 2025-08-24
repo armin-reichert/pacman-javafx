@@ -23,21 +23,15 @@ import static java.util.function.Predicate.not;
 public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements GameLevelRenderer, SpriteRendererMixin {
 
     protected GameUI_Config uiConfig;
-    protected BrightMazesSpriteSheet brightMazesSpriteSheet;
 
-    public ArcadeMsPacMan_GameLevelRenderer(Canvas canvas, GameUI_Config uiConfig, BrightMazesSpriteSheet brightMazesSpriteSheet) {
+    public ArcadeMsPacMan_GameLevelRenderer(Canvas canvas, GameUI_Config uiConfig) {
         super(canvas);
         this.uiConfig = requireNonNull(uiConfig);
-        this.brightMazesSpriteSheet = brightMazesSpriteSheet; // can be null in Ms. Pac-Man XXL!
     }
 
     @Override
     public void applyLevelSettings(GameLevel gameLevel) {
         // Nothing to do
-    }
-
-    public ArcadeMsPacMan_GameLevelRenderer(Canvas canvas, GameUI_Config uiConfig) {
-        this(canvas, uiConfig, null);
     }
 
     @Override
