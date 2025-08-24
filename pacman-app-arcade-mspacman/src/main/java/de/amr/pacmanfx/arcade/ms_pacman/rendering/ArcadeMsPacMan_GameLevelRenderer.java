@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.GameLevelMessage;
 import de.amr.pacmanfx.model.MessageType;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
@@ -40,7 +41,7 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseSpriteRenderer impleme
     @Override
     public void drawGameLevel(GameLevel gameLevel, RenderInfo info) {
         drawMaze(gameLevel, info);
-        drawGameLevelMessage(gameLevel);
+        gameLevel.optMessage().ifPresent(message -> drawGameLevelMessage(gameLevel, message));
     }
 
     protected void drawMaze(GameLevel gameLevel, RenderInfo info) {
@@ -70,16 +71,14 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseSpriteRenderer impleme
         ctx().restore();
     }
 
-    protected void drawGameLevelMessage(GameLevel gameLevel) {
-        gameLevel.optMessage().ifPresent(message -> {
-            switch (message.type()) {
-                case MessageType.GAME_OVER -> fillTextCentered("GAME  OVER",
-                    ARCADE_RED, arcadeFontTS(), message.x(), message.y());
-                case MessageType.READY -> fillTextCentered("READY!",
-                    ARCADE_YELLOW, arcadeFontTS(), message.x(), message.y());
-                case MessageType.TEST -> fillTextCentered("TEST    L%02d".formatted(gameLevel.number()),
-                    ARCADE_WHITE, arcadeFontTS(), message.x(), message.y());
-            }
-        });
+    protected void drawGameLevelMessage(GameLevel gameLevel, GameLevelMessage message) {
+        switch (message.type()) {
+            case MessageType.GAME_OVER -> fillTextCentered("GAME  OVER",
+                ARCADE_RED, arcadeFontTS(), message.x(), message.y());
+            case MessageType.READY -> fillTextCentered("READY!",
+                ARCADE_YELLOW, arcadeFontTS(), message.x(), message.y());
+            case MessageType.TEST -> fillTextCentered("TEST    L%02d".formatted(gameLevel.number()),
+                ARCADE_WHITE, arcadeFontTS(), message.x(), message.y());
+        }
     }
 }
