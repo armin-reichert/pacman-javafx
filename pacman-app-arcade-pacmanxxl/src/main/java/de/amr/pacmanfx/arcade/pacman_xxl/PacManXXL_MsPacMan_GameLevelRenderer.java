@@ -25,8 +25,8 @@ public class PacManXXL_MsPacMan_GameLevelRenderer extends ArcadeMsPacMan_GameLev
     @Override
     public void drawGameLevel(GameContext context, RenderInfo info) {
         mapRenderer.drawLevel(context.gameLevel(),
-            info.getBoolean("mazeBright"),
-            info.getBoolean("blinkingPhaseOn")
+            info.getBoolean("bright"),
+            info.getBoolean("blinkingOn")
         );
         super.drawGameLevelMessage(context.gameLevel());
     }

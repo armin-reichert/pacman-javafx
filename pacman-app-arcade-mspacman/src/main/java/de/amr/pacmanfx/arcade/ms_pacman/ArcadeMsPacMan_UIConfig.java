@@ -24,6 +24,7 @@ import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.DefaultSoundManager;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
+import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
@@ -63,13 +64,22 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config {
     private final DefaultSoundManager soundManager = new DefaultSoundManager();
     private final Map<String, GameScene> scenesByID = new HashMap<>();
     private final ArcadeMsPacMan_SpriteSheet spriteSheet;
-    private final BrightMazesSpriteSheet spriteSheetBrightMazes;
 
     public ArcadeMsPacMan_UIConfig(GameUI ui) {
         this.ui = requireNonNull(ui);
         spriteSheet = new ArcadeMsPacMan_SpriteSheet(RES_ARCADE_MS_PAC_MAN.loadImage("graphics/mspacman_spritesheet.png"));
-        spriteSheetBrightMazes = new BrightMazesSpriteSheet(RES_ARCADE_MS_PAC_MAN.loadImage("graphics/mazes_flashing.png"));
         assets.setTextResources(ResourceBundle.getBundle("de.amr.pacmanfx.arcade.ms_pacman.localized_texts"));
+    }
+
+    private Image brightMaze(int index) {
+        RectShort mazeSprite = spriteSheet().spriteSequence(SpriteID.FULL_MAZES)[index];
+        Image mazeImage = spriteSheet.image(mazeSprite);
+        WorldMapColorScheme colorScheme = WORLD_MAP_COLOR_SCHEMES.get(index);
+        Map<Color, Color> changes = Map.of(
+            colorScheme.stroke(), ARCADE_WHITE,
+            colorScheme.door(), Color.TRANSPARENT
+        );
+        return Ufx.recolorImage(mazeImage, changes);
     }
 
     @Override
@@ -89,6 +99,10 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config {
 
         assets.set("startpage.image1",        RES_ARCADE_MS_PAC_MAN.loadImage("graphics/f1.jpg"));
         assets.set("startpage.image2",        RES_ARCADE_MS_PAC_MAN.loadImage("graphics/f2.jpg"));
+
+        for (int i = 0; i < WORLD_MAP_COLOR_SCHEMES.size(); ++i) {
+            assets.set("maze.bright.%d".formatted(i), brightMaze(i));
+        }
 
         assets.set("color.game_over_message", ARCADE_RED);
 
@@ -173,7 +187,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config {
 
     @Override
     public ArcadeMsPacMan_GameLevelRenderer createGameLevelRenderer(Canvas canvas) {
-        return new ArcadeMsPacMan_GameLevelRenderer(canvas, this, spriteSheetBrightMazes);
+        return new ArcadeMsPacMan_GameLevelRenderer(canvas, this);
     }
 
     @Override

@@ -14,6 +14,7 @@ import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
 import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.image.Image;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
@@ -47,41 +48,30 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements Ga
 
     @Override
     public void drawGameLevel(GameContext gameContext, RenderInfo info) {
+        GameLevel gameLevel = gameContext.gameLevel();
+        int colorMapIndex = gameLevel.worldMap().getConfigValue("colorMapIndex");
+        ctx().save();
+        ctx().scale(scaling(), scaling());
         if (info.getBoolean("bright")) {
-            drawBrightGameLevel(gameContext.gameLevel());
+            drawBrightMaze(colorMapIndex);
         } else if (info.getBoolean("empty")) {
-            drawEmptyGameLevel(gameContext.gameLevel());
+            RectShort maze = spriteSheet().spriteSequence(SpriteID.EMPTY_MAZES)[colorMapIndex];
+            drawSprite(maze, 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE), false);
         } else {
-            drawGameLevelWithFood(gameContext.gameLevel(), !info.getBoolean("blinkingOn"));
+            drawGameLevelWithFood(gameContext.gameLevel(), colorMapIndex, !info.getBoolean("blinkingOn"));
         }
+        ctx().restore();
         drawGameLevelMessage(gameContext.gameLevel());
     }
 
-    private void drawEmptyGameLevel(GameLevel gameLevel) {
-        int colorMapIndex = gameLevel.worldMap().getConfigValue("colorMapIndex");
-        RectShort maze = spriteSheet().spriteSequence(SpriteID.EMPTY_MAZES)[colorMapIndex];
-        drawSprite(maze, 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE), true);
+    private void drawBrightMaze(int index) {
+        Image mazeImage = uiConfig.assets().image("maze.bright.%d".formatted(index));
+        ctx.drawImage(mazeImage, 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE));
     }
 
-    private void drawBrightGameLevel(GameLevel gameLevel) {
-        if (brightMazesSpriteSheet != null) {
-            int colorMapIndex = gameLevel.worldMap().getConfigValue("colorMapIndex");
-            RectShort[] brightMazes = brightMazesSpriteSheet.spriteSequence(BrightMazesSpriteSheet.SpriteID.BRIGHT_MAZES);
-            RectShort maze = brightMazes[colorMapIndex];
-            double s = scaling();
-            ctx().drawImage(brightMazesSpriteSheet.sourceImage(),
-                maze.x(), maze.y(), maze.width(), maze.height(),
-                0, s * TS(GameLevel.EMPTY_ROWS_OVER_MAZE), s * maze.width(), s * maze.height());
-        }
-    }
-
-    private void drawGameLevelWithFood(GameLevel gameLevel, boolean energizerDark) {
-        int colorMapIndex = gameLevel.worldMap().getConfigValue("colorMapIndex");
-        // Draw the maze
+    private void drawGameLevelWithFood(GameLevel gameLevel, int colorMapIndex, boolean energizerDark) {
         RectShort mazeSprite = spriteSheet().spriteSequence(SpriteID.FULL_MAZES)[colorMapIndex];
-        drawSprite(mazeSprite, 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE), true);
-        ctx().save();
-        ctx().scale(scaling(), scaling());
+        drawSprite(mazeSprite, 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE), false);
         // Overpaint the eaten pellets as they are part of the maze image
         gameLevel.worldMap().tiles()
                 .filter(not(gameLevel::isEnergizerPosition))
@@ -91,7 +81,6 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements Ga
         gameLevel.energizerPositions().stream()
                 .filter(tile -> energizerDark || gameLevel.tileContainsEatenFood(tile))
                 .forEach(tile -> fillSquareAtTileCenter(tile, 10));
-        ctx().restore();
     }
 
     protected void drawGameLevelMessage(GameLevel gameLevel) {
