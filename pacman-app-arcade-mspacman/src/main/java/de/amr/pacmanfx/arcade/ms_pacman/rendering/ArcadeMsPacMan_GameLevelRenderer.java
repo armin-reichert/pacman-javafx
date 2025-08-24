@@ -8,9 +8,9 @@ import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.MessageType;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
-import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
+import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapColorScheme;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -23,12 +23,12 @@ import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
-public class ArcadeMsPacMan_GameLevelRenderer extends BaseSpriteRenderer implements GameLevelRenderer {
+public class ArcadeMsPacMan_GameLevelRenderer extends SpriteRenderer implements GameLevelRenderer {
 
     protected GameUI_Config uiConfig;
 
     public ArcadeMsPacMan_GameLevelRenderer(Canvas canvas, GameUI_Config uiConfig) {
-        super(canvas);
+        super(canvas, uiConfig.spriteSheet());
         this.uiConfig = requireNonNull(uiConfig);
     }
 

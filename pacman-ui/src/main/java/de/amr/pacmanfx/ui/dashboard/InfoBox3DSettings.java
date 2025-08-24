@@ -5,10 +5,10 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.dashboard;
 
 import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.ui.api.GameScene;
-import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
+import de.amr.pacmanfx.ui.api.GameScene;
+import de.amr.pacmanfx.ui.api.GameUI;
 import javafx.scene.SubScene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
@@ -18,9 +18,9 @@ import javafx.scene.shape.DrawMode;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.ui.api.GameUI_Properties.*;
 import static de.amr.pacmanfx.ui.CommonGameActions.ACTION_TOGGLE_DRAW_MODE;
 import static de.amr.pacmanfx.ui.CommonGameActions.ACTION_TOGGLE_PLAY_SCENE_2D_3D;
+import static de.amr.pacmanfx.ui.api.GameUI_Properties.*;
 
 /**
  * Infobox with 3D related settings.

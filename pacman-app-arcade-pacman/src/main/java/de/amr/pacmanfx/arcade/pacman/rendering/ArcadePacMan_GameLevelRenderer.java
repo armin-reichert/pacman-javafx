@@ -8,9 +8,10 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.House;
 import de.amr.pacmanfx.model.MessageType;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
-import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
+import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapColorScheme;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -26,7 +27,7 @@ import static java.util.function.Predicate.not;
 /**
  * Renderer for classic Arcade Pac-Man and Pac-Man XXL game variants.
  */
-public class ArcadePacMan_GameLevelRenderer extends BaseSpriteRenderer implements GameLevelRenderer {
+public class ArcadePacMan_GameLevelRenderer extends BaseRenderer implements GameLevelRenderer, SpriteRendererMixin {
 
     protected final GameUI_Config uiConfig;
 

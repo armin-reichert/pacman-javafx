@@ -5,7 +5,9 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.ui.*;
+import de.amr.pacmanfx.ui.AbstractGameAction;
+import de.amr.pacmanfx.ui.DefaultActionBindingsManager;
+import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.api.ActionBindingsManager;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.uilib.widgets.Carousel;

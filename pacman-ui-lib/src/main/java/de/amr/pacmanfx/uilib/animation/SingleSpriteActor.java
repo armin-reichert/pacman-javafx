@@ -6,8 +6,8 @@ package de.amr.pacmanfx.uilib.animation;
 
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.model.actors.AnimationManager;
 import de.amr.pacmanfx.model.actors.Animated;
+import de.amr.pacmanfx.model.actors.AnimationManager;
 
 import java.util.Optional;
 
