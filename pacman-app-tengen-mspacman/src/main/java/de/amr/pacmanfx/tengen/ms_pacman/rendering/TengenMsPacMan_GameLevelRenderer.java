@@ -46,7 +46,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Ga
     }
 
     @Override
-    public void applyLevelSettings(GameLevel gameLevel) {
+    public void applyLevelSettings(GameLevel gameLevel, RenderInfo info) {
         WorldMap worldMap = gameLevel.worldMap();
         // store the maze sprite set with the correct colors for this level in the map configuration:
         if (!worldMap.hasConfigValue(TengenMsPacMan_UIConfig.MAZE_SPRITE_SET_PROPERTY)) {
@@ -59,7 +59,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Ga
 
     @Override
     public void drawGameLevel(GameLevel gameLevel, RenderInfo info) {
-        applyLevelSettings(gameLevel);
+        applyLevelSettings(gameLevel, info);
         Image mazeImage = info.get("mazeImage", Image.class);
         RectShort mazeSprite = info.get("mazeSprite", RectShort.class);
         drawGameLevel(gameLevel, mazeImage, mazeSprite);

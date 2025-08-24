@@ -445,18 +445,15 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
         };
     }
 
-    public RenderInfo highlightedMazeRenderInfo(GameLevel gameLevel, int frame) {
+    public void configureHighlightedMazeRenderInfo(RenderInfo info, GameLevel gameLevel, int frame) {
         WorldMap worldMap = gameLevel.worldMap();
         MazeSpriteSet mazeSpriteSet = worldMap.getConfigValue(TengenMsPacMan_UIConfig.MAZE_SPRITE_SET_PROPERTY);
         ColoredSpriteImage flashingMazeSprite = mazeSpriteSet.flashingMazeImages().get(frame);
-        RenderInfo info = new RenderInfo();
         info.put("mazeImage", flashingMazeSprite.spriteSheetImage());
         info.put("mazeSprite", flashingMazeSprite.sprite());
-        return info;
     }
 
-    public RenderInfo normalMazeRenderInfo(TengenMsPacMan_GameModel game, GameLevel gameLevel) {
-        RenderInfo info = new RenderInfo();
+    public void configureNormalMazeRenderInfo(RenderInfo info, TengenMsPacMan_GameModel game, GameLevel gameLevel) {
         int mapNumber = gameLevel.worldMap().getConfigValue("mapNumber");
         MazeSpriteSet mazeSpriteSet = gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.MAZE_SPRITE_SET_PROPERTY);
         info.put("mazeImage", mazeSpriteSet.mazeImage().spriteSheetImage());
@@ -467,7 +464,6 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
         } else {
             info.put("mazeSprite", mazeSpriteSet.mazeImage().sprite());
         }
-        return info;
     }
 
     /**

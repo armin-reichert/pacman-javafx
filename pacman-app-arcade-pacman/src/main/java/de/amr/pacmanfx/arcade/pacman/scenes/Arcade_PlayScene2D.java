@@ -29,6 +29,7 @@ import de.amr.pacmanfx.uilib.rendering.ActorSpriteRenderer;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
+import de.amr.pacmanfx.uilib.tilemap.TerrainMapColorScheme;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.CheckMenuItem;
@@ -40,6 +41,7 @@ import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -53,7 +55,7 @@ import static de.amr.pacmanfx.uilib.Ufx.createContextMenuTitle;
  * TODO: Currently the instance of this scene is permanently stored in the UI configuration and lives as long as the
  *       game, so no garbage collection occurs!
  */
-public class ArcadePacMan_PlayScene2D extends GameScene2D {
+public class Arcade_PlayScene2D extends GameScene2D {
 
     private final BooleanProperty mazeHighlighted = new SimpleBooleanProperty(false);
 
@@ -112,7 +114,7 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
         }
     }
 
-    public ArcadePacMan_PlayScene2D(GameUI ui) {
+    public Arcade_PlayScene2D(GameUI ui) {
         super(ui);
     }
 
@@ -162,6 +164,7 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
             ui.soundManager().setEnabled(true);
         }
         actionBindings.installBindings(ui.keyboard());
+
         Logger.info("Scene {} initialized with game level", getClass().getSimpleName());
     }
 
@@ -289,11 +292,11 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
             return; // Scene is drawn already 2 ticks before level has been created
         }
         final GameLevel gameLevel = context().gameLevel();
-        gameLevelRenderer.applyLevelSettings(gameLevel);
         RenderInfo info = new RenderInfo();
         info.put("bright", mazeHighlighted.get());
         info.put("blinkingOn", gameLevel.blinking().isOn());
         info.put("empty", context().gameLevel().uneatenFoodCount() == 0);
+        gameLevelRenderer.applyLevelSettings(gameLevel, info);
         gameLevelRenderer.drawGameLevel(gameLevel, info);
 
         createActorDrawingOrder(gameLevel);

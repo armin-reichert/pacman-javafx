@@ -111,7 +111,6 @@ public class MiniGameView extends VBox {
         gameLevelRenderer = ui.currentConfig().createGameLevelRenderer(canvas);
         gameLevelRenderer.scalingProperty().bind(scaling);
         gameLevelRenderer.backgroundColorProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
-        gameLevelRenderer.applyLevelSettings(gameLevel);
 
         actorSpriteRenderer = new ActorSpriteRenderer(canvas) {
             @Override
@@ -143,9 +142,11 @@ public class MiniGameView extends VBox {
         GameLevel gameLevel = ui.gameContext().gameLevel();
         if (gameLevel != null) {
             var info = RenderInfo.build(Map.of(
-                "mazeBright", false,
-                "blinkingPhaseOn", gameLevel.blinking().isOn()
+                "bright", false,
+                "blinkingOn", gameLevel.blinking().isOn(),
+                "empty", gameLevel.uneatenFoodCount() == 0
             ));
+            gameLevelRenderer.applyLevelSettings(gameLevel, info);
             gameLevelRenderer.drawGameLevel(gameLevel, info);
             gameLevel.bonus().ifPresent(bonus -> actorSpriteRenderer.drawActor(bonus));
             actorSpriteRenderer.drawActor(gameLevel.pac());

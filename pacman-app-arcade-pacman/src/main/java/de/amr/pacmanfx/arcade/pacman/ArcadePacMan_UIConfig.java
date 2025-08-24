@@ -57,11 +57,9 @@ public class ArcadePacMan_UIConfig implements GameUI_Config {
     public static final String ANIM_BLINKY_NAIL_DRESS_RAPTURE = "blinky_nail_dress_rapture";
     public static final String ANIM_BLINKY_NAKED              = "blinky_naked";
 
-    private static final WorldMapColorScheme MAP_COLORING = new WorldMapColorScheme("#000000", "#2121ff", "#ffb7ff", "#febdb4");
-
     private static final Map<Color, Color> BRIGHT_MAZE_COLOR_CHANGES = Map.of(
-        MAP_COLORING.stroke(), ARCADE_WHITE,   // wall color change
-        MAP_COLORING.door(), Color.TRANSPARENT // door color change
+        ArcadePacMan_GameModel.MAP_COLOR_SCHEME.stroke(), ARCADE_WHITE,   // wall color change
+        ArcadePacMan_GameModel.MAP_COLOR_SCHEME.door(), Color.TRANSPARENT // door color change
     );
 
     private final GameUI ui;
@@ -168,7 +166,7 @@ public class ArcadePacMan_UIConfig implements GameUI_Config {
 
     @Override
     public WorldMapColorScheme colorScheme(WorldMap worldMap) {
-        return MAP_COLORING;
+        return ArcadePacMan_GameModel.MAP_COLOR_SCHEME;
     }
 
     @Override
@@ -247,10 +245,10 @@ public class ArcadePacMan_UIConfig implements GameUI_Config {
 
     @Override
     public void createGameScenes() {
-        scenesByID.put(SCENE_ID_BOOT_SCENE_2D,  new ArcadePacMan_BootScene2D(ui));
+        scenesByID.put(SCENE_ID_BOOT_SCENE_2D,  new Arcade_BootScene2D(ui));
         scenesByID.put(SCENE_ID_INTRO_SCENE_2D, new ArcadePacMan_IntroScene(ui));
         scenesByID.put(SCENE_ID_START_SCENE_2D, new ArcadePacMan_StartScene(ui));
-        scenesByID.put(SCENE_ID_PLAY_SCENE_2D,  new ArcadePacMan_PlayScene2D(ui));
+        scenesByID.put(SCENE_ID_PLAY_SCENE_2D,  new Arcade_PlayScene2D(ui));
         scenesByID.put(SCENE_ID_PLAY_SCENE_3D,  new PlayScene3D(ui));
         scenesByID.put(sceneID_CutScene(1),     new ArcadePacMan_CutScene1(ui));
         scenesByID.put(sceneID_CutScene(2),     new ArcadePacMan_CutScene2(ui));

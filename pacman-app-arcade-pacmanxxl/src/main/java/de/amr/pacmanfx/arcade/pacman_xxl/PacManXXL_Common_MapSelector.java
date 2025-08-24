@@ -1,10 +1,8 @@
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
-import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.MapSelectionMode;
 import de.amr.pacmanfx.model.MapSelector;
-import de.amr.pacmanfx.model.WorldMapProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.tinylog.Logger;
@@ -118,18 +116,9 @@ public class PacManXXL_Common_MapSelector implements MapSelector {
         // if selected map is a built-in map, use a random color scheme to make it not so boring
         Map<String, String> colorScheme = builtinMaps.contains(selectedMap)
                 ? MAP_COLOR_SCHEMES.get(randomInt(0, MAP_COLOR_SCHEMES.size()))
-                : colorSchemeFromMap(selectedMap);
+                : MapSelector.extractColorMap(selectedMap);
         worldMap.setConfigValue("colorMap", colorScheme);
         Logger.info("Map selected (Mode {}): {}", mapSelectionMode, worldMap.url());
         return worldMap;
-    }
-
-    private Map<String, String> colorSchemeFromMap(WorldMap worldMap) {
-        return Map.of(
-            "fill",   worldMap.properties(LayerID.TERRAIN).getOrDefault(WorldMapProperty.COLOR_WALL_FILL,   "000000"),
-            "stroke", worldMap.properties(LayerID.TERRAIN).getOrDefault(WorldMapProperty.COLOR_WALL_STROKE, "0000ff"),
-            "door",   worldMap.properties(LayerID.TERRAIN).getOrDefault(WorldMapProperty.COLOR_DOOR,        "00ffff"),
-            "pellet", worldMap.properties(LayerID.FOOD).getOrDefault(WorldMapProperty.COLOR_FOOD,           "ffffff")
-        );
     }
 }

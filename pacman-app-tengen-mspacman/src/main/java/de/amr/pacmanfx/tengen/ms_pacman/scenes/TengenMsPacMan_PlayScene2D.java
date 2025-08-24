@@ -481,10 +481,15 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     private void drawGameLevel(GameLevel gameLevel) {
         TengenMsPacMan_UIConfig uiConfig = ui.currentConfig();
+        RenderInfo info = new RenderInfo();
+        gameLevelRenderer.applyLevelSettings(gameLevel, info); // ensure maze sprite set is contained in render info
         boolean bright = levelCompletedAnimation != null && mazeHighlighted.get();
-        RenderInfo info = bright
-            ? uiConfig.highlightedMazeRenderInfo(gameLevel, levelCompletedAnimation.flashingIndex())
-            : uiConfig.normalMazeRenderInfo(context().game(), gameLevel);
+        if (bright) {
+            uiConfig.configureHighlightedMazeRenderInfo(info, gameLevel, levelCompletedAnimation.flashingIndex());
+
+        } else {
+            uiConfig.configureNormalMazeRenderInfo(info, context().game(), gameLevel);
+        }
         gameLevelRenderer.drawGameLevel(gameLevel, info);
     }
 

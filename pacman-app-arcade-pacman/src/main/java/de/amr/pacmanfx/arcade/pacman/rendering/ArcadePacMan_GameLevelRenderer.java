@@ -11,8 +11,12 @@ import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
+import de.amr.pacmanfx.uilib.tilemap.TerrainMapColorScheme;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
+
+import java.util.Map;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
@@ -37,8 +41,15 @@ public class ArcadePacMan_GameLevelRenderer extends BaseSpriteRenderer implement
     }
 
     @Override
-    public void applyLevelSettings(GameLevel gameLevel) {
-        // nothing to do
+    public void applyLevelSettings(GameLevel gameLevel, RenderInfo info) {
+        Map<String, String> colorMap = gameLevel.worldMap().getConfigValue("colorMap");
+        var terrainMapColorScheme = new TerrainMapColorScheme(
+            backgroundColor(),
+            Color.web(colorMap.get("fill")),
+            Color.web(colorMap.get("stroke")),
+            Color.web(colorMap.get("door"))
+        );
+        info.put("terrainMapColorScheme", terrainMapColorScheme);
     }
 
     @Override

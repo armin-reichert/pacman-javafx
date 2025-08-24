@@ -14,8 +14,9 @@ public interface GameLevelRenderer extends CanvasRenderer {
      * implementation is empty such that subclasses that have no such hints can silently ignore it.
      *
      * @param gameLevel the game level
+     * @param info rendering info
      */
-    void applyLevelSettings(GameLevel gameLevel);
+    void applyLevelSettings(GameLevel gameLevel, RenderInfo info);
 
     /**
      * @param gameLevel the game level to draw

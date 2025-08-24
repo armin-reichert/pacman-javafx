@@ -57,14 +57,12 @@ public class GenericMapRenderer extends BaseRenderer {
             terrainRenderer.drawTerrain(worldMap, worldMap.obstacles());
         }
         else {
-            Map<String, String> colorMap = worldMap.getConfigValue("colorMap");
-            TerrainMapColorScheme colors = new TerrainMapColorScheme(
-                backgroundColor(),
-                Color.web(colorMap.get("fill")),
-                Color.web(colorMap.get("stroke")),
-                Color.web(colorMap.get("door"))
-            );
-            terrainRenderer.setColorScheme(colors);
+            //TODO better pass WorldMapColorSchme in render info?
+
+            Map<String, String> colorMap = gameLevel.worldMap().getConfigValue("colorMap");
+
+            TerrainMapColorScheme colorScheme = info.get("terrainMapColorScheme", TerrainMapColorScheme.class);
+            terrainRenderer.setColorScheme(colorScheme);
             terrainRenderer.drawTerrain(worldMap, worldMap.obstacles());
 
             gameLevel.house().ifPresent(house -> terrainRenderer.drawHouse(house.minTile(), house.sizeInTiles()));

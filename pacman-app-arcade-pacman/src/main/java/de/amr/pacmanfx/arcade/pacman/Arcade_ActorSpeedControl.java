@@ -9,7 +9,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.ActorSpeedControl;
 import de.amr.pacmanfx.model.actors.Ghost;
 
-public class ArcadeCommon_ActorSpeedControl implements ActorSpeedControl {
+public class Arcade_ActorSpeedControl implements ActorSpeedControl {
 
     /** Base speed is 75 px per second (=1.25 px/tick). */
     public static final float BASE_SPEED = 1.25f;
@@ -32,7 +32,7 @@ public class ArcadeCommon_ActorSpeedControl implements ActorSpeedControl {
         if (level.isTunnel(ghost.tile())) {
             return ghostTunnelSpeed(gameContext, level, ghost);
         }
-        var arcadeGame = (ArcadeCommon_GameModel) gameContext.game();
+        var arcadeGame = (Arcade_GameModel) gameContext.game();
         if (arcadeGame.cruiseElroy() == 1) {
             return level.data().elroy1SpeedPercentage() * BASE_SPEED_1_PERCENT;
         }

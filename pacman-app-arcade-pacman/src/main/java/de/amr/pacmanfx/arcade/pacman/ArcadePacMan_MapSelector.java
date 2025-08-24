@@ -16,10 +16,10 @@ public class ArcadePacMan_MapSelector implements MapSelector {
 
     private static final String MAP_PATH = "/de/amr/pacmanfx/arcade/pacman/maps/pacman.world";
 
-    private List<WorldMap> maps;
+    private List<WorldMap> worldMaps;
 
     @Override
-    public List<WorldMap> builtinMaps() { return maps; }
+    public List<WorldMap> builtinMaps() { return worldMaps; }
 
     @Override
     public List<WorldMap> customMaps() {
@@ -31,18 +31,22 @@ public class ArcadePacMan_MapSelector implements MapSelector {
 
     @Override
     public void loadAllMaps() {
-        if (maps == null) {
+        if (worldMaps == null) {
             URL mapURL = getClass().getResource(MAP_PATH);
             if (mapURL == null) {
                 Logger.error("Could not locate Pac-Man Arcade map, path='{}'", MAP_PATH);
                 throw new IllegalStateException();
             }
             try {
-                var map = WorldMap.fromURL(mapURL);
-                map.setConfigValue("mapNumber", 1);
-                map.setConfigValue("colorMapIndex", 0);
-                Logger.info("Pac-Man Arcade map loaded, URL='{}'", map.url());
-                maps = List.of(map);
+                var worldMap = WorldMap.fromURL(mapURL);
+                worldMap.setConfigValue("mapNumber", 1);
+                //TODO get rid of this, use "colorMap" everywhere
+                worldMap.setConfigValue("colorMapIndex", 0);
+
+                worldMap.setConfigValue("colorMap", MapSelector.extractColorMap(worldMap));
+
+                Logger.info("Pac-Man Arcade map loaded, URL='{}'", worldMap.url());
+                worldMaps = List.of(worldMap);
             } catch (IOException x) {
                 Logger.error("Could not load Pac-Man Arcade map, path={}", MAP_PATH);
                 throw new IllegalStateException(x);
@@ -52,6 +56,6 @@ public class ArcadePacMan_MapSelector implements MapSelector {
 
     @Override
     public WorldMap getWorldMap(int levelNumber) {
-        return maps.getFirst();
+        return worldMaps.getFirst();
     }
 }

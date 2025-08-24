@@ -5,8 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.arcade.pacman.ArcadeCommon_ActorSpeedControl;
-import de.amr.pacmanfx.arcade.pacman.ArcadeCommon_GameModel;
+import de.amr.pacmanfx.arcade.pacman.Arcade_ActorSpeedControl;
+import de.amr.pacmanfx.arcade.pacman.Arcade_GameModel;
 import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Vector2i;
@@ -17,6 +17,7 @@ import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
+import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -44,7 +45,16 @@ import static java.util.Objects.requireNonNull;
  * </ul>
  * </p>
  */
-public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
+public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
+
+    public static final List<WorldMapColorScheme> WORLD_MAP_COLOR_SCHEMES = List.of(
+        new WorldMapColorScheme("FFB7AE", "FF0000", "FCB5FF", "DEDEFF"),
+        new WorldMapColorScheme("47B7FF", "DEDEFF", "FCB5FF", "FFFF00"),
+        new WorldMapColorScheme("DE9751", "DEDEFF", "FCB5FF", "FF0000"),
+        new WorldMapColorScheme("2121FF", "FFB751", "FCB5FF", "DEDEFF"),
+        new WorldMapColorScheme("FFB7FF", "FFFF00", "FCB5FF", "00FFFF"),
+        new WorldMapColorScheme("FFB7AE", "FF0000", "FCB5FF", "DEDEFF")
+    );
 
     private static final byte[] BONUS_VALUE_MULTIPLIERS = {1, 2, 5, 7, 10, 20, 50}; // points = value * 100
 
@@ -75,7 +85,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
                 @Override
                 public void hunt(GameContext gameContext) {
                     if (gameContext == null || gameContext.optGameLevel().isEmpty()) return;
-                    var game = gameContext.<ArcadeCommon_GameModel>game();
+                    var game = gameContext.<Arcade_GameModel>game();
                     GameLevel level = gameContext.gameLevel();
 
                     float speed = game.actorSpeedControl().ghostAttackSpeed(gameContext, level, this);
@@ -249,7 +259,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
             }
         });
 
-        actorSpeedControl = new ArcadeCommon_ActorSpeedControl();
+        actorSpeedControl = new Arcade_ActorSpeedControl();
 
         gateKeeper = new GateKeeper(this);
         gateKeeper.setOnGhostReleased(prisoner -> {

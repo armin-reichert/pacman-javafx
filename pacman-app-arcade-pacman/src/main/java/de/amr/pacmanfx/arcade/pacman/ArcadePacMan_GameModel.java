@@ -16,6 +16,7 @@ import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.steering.RouteBasedSteering;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
+import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -45,7 +46,10 @@ import static java.util.Objects.requireNonNull;
  *
  * @see <a href="https://pacman.holenet.info/">The Pac-Man Dossier by Jamey Pittman</a>
  */
-public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
+public class ArcadePacMan_GameModel extends Arcade_GameModel {
+
+    public static final WorldMapColorScheme MAP_COLOR_SCHEME = new WorldMapColorScheme(
+        "#000000", "#2121ff", "#ffb7ff", "#febdb4");
 
     public static Pac createPac() {
         var pac = new Pac("Pac-Man");
@@ -61,7 +65,7 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
                 public void hunt(GameContext gameContext) {
                     if (gameContext == null || gameContext.optGameLevel().isEmpty()) return;
                     GameLevel level = gameContext.gameLevel();
-                    var arcadeGame = (ArcadeCommon_GameModel) gameContext.game();
+                    var arcadeGame = (Arcade_GameModel) gameContext.game();
 
                     boolean chase = arcadeGame.huntingTimer().phase() == HuntingPhase.CHASING || arcadeGame.cruiseElroy() > 0;
                     Vector2i targetTile = chase ? chasingTargetTile(gameContext) : level.ghostScatterTile(id().personality());
@@ -219,7 +223,7 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
             }
         });
 
-        actorSpeedControl = new ArcadeCommon_ActorSpeedControl();
+        actorSpeedControl = new Arcade_ActorSpeedControl();
 
         gateKeeper = new GateKeeper(this);
         gateKeeper.setOnGhostReleased(prisoner -> {

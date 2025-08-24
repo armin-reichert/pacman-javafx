@@ -7,8 +7,8 @@ package de.amr.pacmanfx.arcade.ms_pacman;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.*;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.*;
-import de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_BootScene2D;
-import de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_PlayScene2D;
+import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_BootScene2D;
+import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
 import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.controller.teststates.CutScenesTestState;
 import de.amr.pacmanfx.lib.RectShort;
@@ -50,15 +50,6 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config {
     private static final ResourceManager RES_GAME_UI = () -> GameUI_Implementation.class;
     private static final ResourceManager RES_ARCADE_MS_PAC_MAN = () -> ArcadeMsPacMan_UIConfig.class;
 
-    private static final List<WorldMapColorScheme> WORLD_MAP_COLOR_SCHEMES = List.of(
-        new WorldMapColorScheme("FFB7AE", "FF0000", "FCB5FF", "DEDEFF"),
-        new WorldMapColorScheme("47B7FF", "DEDEFF", "FCB5FF", "FFFF00"),
-        new WorldMapColorScheme("DE9751", "DEDEFF", "FCB5FF", "FF0000"),
-        new WorldMapColorScheme("2121FF", "FFB751", "FCB5FF", "DEDEFF"),
-        new WorldMapColorScheme("FFB7FF", "FFFF00", "FCB5FF", "00FFFF"),
-        new WorldMapColorScheme("FFB7AE", "FF0000", "FCB5FF", "DEDEFF")
-    );
-
     private final GameUI ui;
     private final AssetStorage assets = new AssetStorage();
     private final DefaultSoundManager soundManager = new DefaultSoundManager();
@@ -74,7 +65,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config {
     private Image brightMaze(int index) {
         RectShort mazeSprite = spriteSheet().spriteSequence(SpriteID.FULL_MAZES)[index];
         Image mazeImage = spriteSheet.image(mazeSprite);
-        WorldMapColorScheme colorScheme = WORLD_MAP_COLOR_SCHEMES.get(index);
+        WorldMapColorScheme colorScheme = ArcadeMsPacMan_GameModel.WORLD_MAP_COLOR_SCHEMES.get(index);
         Map<Color, Color> changes = Map.of(
             colorScheme.stroke(), ARCADE_WHITE,
             colorScheme.door(), Color.TRANSPARENT
@@ -100,7 +91,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config {
         assets.set("startpage.image1",        RES_ARCADE_MS_PAC_MAN.loadImage("graphics/f1.jpg"));
         assets.set("startpage.image2",        RES_ARCADE_MS_PAC_MAN.loadImage("graphics/f2.jpg"));
 
-        for (int i = 0; i < WORLD_MAP_COLOR_SCHEMES.size(); ++i) {
+        for (int i = 0; i < ArcadeMsPacMan_GameModel.WORLD_MAP_COLOR_SCHEMES.size(); ++i) {
             assets.set("maze.bright.%d".formatted(i), brightMaze(i));
         }
 
@@ -182,7 +173,8 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config {
 
     @Override
     public WorldMapColorScheme colorScheme(WorldMap worldMap) {
-        return WORLD_MAP_COLOR_SCHEMES.get(worldMap.getConfigValue("colorMapIndex"));
+        int index = worldMap.getConfigValue("colorMapIndex");
+        return ArcadeMsPacMan_GameModel.WORLD_MAP_COLOR_SCHEMES.get(index);
     }
 
     @Override
@@ -262,10 +254,10 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config {
 
     @Override
     public void createGameScenes() {
-        scenesByID.put(SCENE_ID_BOOT_SCENE_2D,  new ArcadePacMan_BootScene2D(ui));
+        scenesByID.put(SCENE_ID_BOOT_SCENE_2D,  new Arcade_BootScene2D(ui));
         scenesByID.put(SCENE_ID_INTRO_SCENE_2D, new ArcadeMsPacMan_IntroScene(ui));
         scenesByID.put(SCENE_ID_START_SCENE_2D, new ArcadeMsPacMan_StartScene(ui));
-        scenesByID.put(SCENE_ID_PLAY_SCENE_2D,  new ArcadePacMan_PlayScene2D(ui));
+        scenesByID.put(SCENE_ID_PLAY_SCENE_2D,  new Arcade_PlayScene2D(ui));
         scenesByID.put(SCENE_ID_PLAY_SCENE_3D,  new PlayScene3D(ui));
         scenesByID.put(sceneID_CutScene(1),     new ArcadeMsPacMan_CutScene1(ui));
         scenesByID.put(sceneID_CutScene(2),     new ArcadeMsPacMan_CutScene2(ui));
