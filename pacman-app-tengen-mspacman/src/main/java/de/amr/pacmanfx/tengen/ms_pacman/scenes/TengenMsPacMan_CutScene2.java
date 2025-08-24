@@ -10,13 +10,13 @@ import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
+import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_ActorRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_HUDRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
-import de.amr.pacmanfx.uilib.rendering.ActorSpriteRenderer;
 
 import java.util.stream.Stream;
 
@@ -45,7 +45,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
     private static final int RIGHT_BORDER = TS * 30;
 
     private TengenMsPacMan_HUDRenderer hudRenderer;
-    private ActorSpriteRenderer actorSpriteRenderer;
+    private TengenMsPacMan_ActorRenderer actorRenderer;
 
     private Clapperboard clapperboard;
     private Pac pacMan;
@@ -62,10 +62,10 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
         var spriteSheet = (TengenMsPacMan_SpriteSheet) uiConfig.spriteSheet();
 
         hudRenderer = (TengenMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas);
-        actorSpriteRenderer = uiConfig.createActorSpriteRenderer(canvas);
+        actorRenderer = (TengenMsPacMan_ActorRenderer) uiConfig.createActorSpriteRenderer(canvas);
         debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas);
 
-        bindRendererProperties(hudRenderer, actorSpriteRenderer, debugInfoRenderer);
+        bindRendererProperties(hudRenderer, actorRenderer, debugInfoRenderer);
 
         context().game().hudData().credit(false).score(false).levelCounter(true).livesCounter(false);
 
@@ -73,7 +73,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
 
         clapperboard = new Clapperboard(spriteSheet, 2, "THE CHASE");
         clapperboard.setPosition(3 * TS, 10 * TS);
-        clapperboard.setFont(actorSpriteRenderer.arcadeFontTS());
+        clapperboard.setFont(actorRenderer.arcadeFontTS());
 
         msPacMan = createMsPacMan();
         msPacMan.setAnimations(uiConfig.createPacAnimations(msPacMan));
@@ -176,8 +176,8 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        if (actorSpriteRenderer != null) {
-            Stream.of(clapperboard, msPacMan, pacMan).forEach(actorSpriteRenderer::drawActor);
+        if (actorRenderer != null) {
+            Stream.of(clapperboard, msPacMan, pacMan).forEach(actorRenderer::drawActor);
         }
     }
 }

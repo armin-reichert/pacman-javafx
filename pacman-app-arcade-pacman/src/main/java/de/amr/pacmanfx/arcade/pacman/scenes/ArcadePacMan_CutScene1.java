@@ -13,7 +13,7 @@ import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
-import de.amr.pacmanfx.uilib.rendering.ActorSpriteRenderer;
+import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -37,7 +37,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
     private Ghost blinky;
 
     private ArcadePacMan_HUDRenderer hudRenderer;
-    private ActorSpriteRenderer actorSpriteRenderer;
+    private ActorRenderer actorRenderer;
 
     public ArcadePacMan_CutScene1(GameUI ui) {
         super(ui);
@@ -48,7 +48,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
         GameUI_Config uiConfig = ui.currentConfig();
 
         hudRenderer = new ArcadePacMan_HUDRenderer(canvas, uiConfig);
-        actorSpriteRenderer = uiConfig.createActorSpriteRenderer(canvas);
+        actorRenderer = uiConfig.createActorSpriteRenderer(canvas);
         debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas) {
             @Override
             public void drawDebugInfo() {
@@ -57,7 +57,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
                 fillText(text, debugTextFill, debugTextFont, TS(1), TS(5));
             }
         };
-        bindRendererProperties(hudRenderer, actorSpriteRenderer, debugInfoRenderer);
+        bindRendererProperties(hudRenderer, actorRenderer, debugInfoRenderer);
 
         context().game().hudData().credit(false).score(true).levelCounter(true).livesCounter(false);
 
@@ -124,7 +124,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        actorsInZOrder.forEach(actor -> actorSpriteRenderer.drawActor(actor));
+        actorsInZOrder.forEach(actor -> actorRenderer.drawActor(actor));
     }
 
     @Override

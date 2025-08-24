@@ -9,11 +9,11 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_ActorRenderer;
 import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
-import de.amr.pacmanfx.uilib.rendering.ActorSpriteRenderer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -37,7 +37,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     private Actor movingText;
     private Ghost ghost;
 
-    private ActorSpriteRenderer actorSpriteRenderer;
+    private TengenMsPacMan_ActorRenderer actorRenderer;
 
     private class BootSceneDebugInfoRenderer extends DefaultDebugInfoRenderer {
 
@@ -62,10 +62,10 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     public void doInit() {
         GameUI_Config uiConfig = ui.currentConfig();
 
-        actorSpriteRenderer = uiConfig.createActorSpriteRenderer(canvas);
+        actorRenderer = (TengenMsPacMan_ActorRenderer) uiConfig.createActorSpriteRenderer(canvas);
         debugInfoRenderer = new BootSceneDebugInfoRenderer(ui);
 
-        bindRendererProperties(actorSpriteRenderer, debugInfoRenderer);
+        bindRendererProperties(actorRenderer, debugInfoRenderer);
 
         tick = 0;
         grayScreen = false;
@@ -127,11 +127,11 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     @Override
     public void drawSceneContent() {
         if (grayScreen) {
-            actorSpriteRenderer.fillCanvas(GRAY);
+            actorRenderer.fillCanvas(GRAY);
         } else {
-            actorSpriteRenderer.fillText(TENGEN_PRESENTS, blueShadedColor(tick), actorSpriteRenderer.arcadeFontTS(),
+            actorRenderer.fillText(TENGEN_PRESENTS, blueShadedColor(tick), actorRenderer.arcadeFontTS(),
                     movingText.x(), movingText.y());
-            actorSpriteRenderer.drawActor(ghost);
+            actorRenderer.drawActor(ghost);
         }
     }
 }

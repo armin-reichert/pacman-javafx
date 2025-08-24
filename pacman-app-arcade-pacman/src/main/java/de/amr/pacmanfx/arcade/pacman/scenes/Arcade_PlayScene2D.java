@@ -25,7 +25,7 @@ import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
-import de.amr.pacmanfx.uilib.rendering.ActorSpriteRenderer;
+import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
@@ -59,7 +59,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     private HUDRenderer hudRenderer;
     private GameLevelRenderer gameLevelRenderer;
-    private ActorSpriteRenderer actorSpriteRenderer;
+    private ActorRenderer actorRenderer;
     private LevelCompletedAnimation levelCompletedAnimation;
 
     private class PlaySceneDebugInfoRenderer extends DefaultDebugInfoRenderer {
@@ -123,10 +123,10 @@ public class Arcade_PlayScene2D extends GameScene2D {
         // Can be Pac-Man or Ms.Pac-Man renderer!
         hudRenderer = uiConfig.createHUDRenderer(canvas);
         gameLevelRenderer = uiConfig.createGameLevelRenderer(canvas);
-        actorSpriteRenderer = uiConfig.createActorSpriteRenderer(canvas);
+        actorRenderer = uiConfig.createActorSpriteRenderer(canvas);
         debugInfoRenderer = new PlaySceneDebugInfoRenderer(ui);
 
-        bindRendererProperties(hudRenderer, gameLevelRenderer, actorSpriteRenderer, debugInfoRenderer);
+        bindRendererProperties(hudRenderer, gameLevelRenderer, actorRenderer, debugInfoRenderer);
 
         context().game().hudData().credit(false).score(true).levelCounter(true).livesCounter(true);
     }
@@ -298,7 +298,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
         gameLevelRenderer.drawGameLevel(gameLevel, info);
 
         createActorDrawingOrder(gameLevel);
-        actorsInZOrder.forEach(actor -> actorSpriteRenderer.drawActor(actor));
+        actorsInZOrder.forEach(actor -> actorRenderer.drawActor(actor));
     }
 
     private void createActorDrawingOrder(GameLevel gameLevel) {

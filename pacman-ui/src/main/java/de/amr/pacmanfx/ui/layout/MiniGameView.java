@@ -7,8 +7,8 @@ package de.amr.pacmanfx.ui.layout;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.api.GameUI;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
-import de.amr.pacmanfx.uilib.rendering.ActorSpriteRenderer;
+import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
+import de.amr.pacmanfx.uilib.rendering.BaseCanvasRenderer;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
 import javafx.animation.Interpolator;
@@ -50,8 +50,10 @@ public class MiniGameView extends VBox {
     private final Canvas canvas;
 
     private final GameUI ui;
+
+    private final BaseCanvasRenderer canvasRenderer;
     private GameLevelRenderer gameLevelRenderer;
-    private ActorSpriteRenderer actorSpriteRenderer;
+    private ActorRenderer actorRenderer;
 
     private long drawCallCount;
 
@@ -71,6 +73,8 @@ public class MiniGameView extends VBox {
             },
             worldSize, canvas.heightProperty()
         ));
+
+        canvasRenderer = new BaseCanvasRenderer(canvas);
 
         // The VBox fills the complete parent container height (why?), so we put the canvas
         // into an HBox that does not grow in height and provides some padding around the canvas.
@@ -112,14 +116,9 @@ public class MiniGameView extends VBox {
         gameLevelRenderer.scalingProperty().bind(scaling);
         gameLevelRenderer.backgroundColorProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
 
-        actorSpriteRenderer = new ActorSpriteRenderer(canvas) {
-            @Override
-            public SpriteSheet<?> spriteSheet() {
-                return ui.currentConfig().spriteSheet();
-            }
-        };
-        actorSpriteRenderer.scalingProperty().bind(scaling);
-        actorSpriteRenderer.backgroundColorProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
+        actorRenderer = ui.currentConfig().createActorSpriteRenderer(canvas);
+        actorRenderer.scalingProperty().bind(scaling);
+        actorRenderer.backgroundColorProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
     }
 
     public void slideIn() {
@@ -137,7 +136,7 @@ public class MiniGameView extends VBox {
         if (!isVisible() || gameLevelRenderer == null) {
             return;
         }
-        actorSpriteRenderer.clearCanvas();
+        actorRenderer.clearCanvas();
 
         GameLevel gameLevel = ui.gameContext().gameLevel();
         if (gameLevel != null) {
@@ -148,15 +147,15 @@ public class MiniGameView extends VBox {
             ));
             gameLevelRenderer.applyLevelSettings(gameLevel, info);
             gameLevelRenderer.drawGameLevel(gameLevel, info);
-            gameLevel.bonus().ifPresent(bonus -> actorSpriteRenderer.drawActor(bonus));
-            actorSpriteRenderer.drawActor(gameLevel.pac());
+            gameLevel.bonus().ifPresent(bonus -> actorRenderer.drawActor(bonus));
+            actorRenderer.drawActor(gameLevel.pac());
             Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW)
                 .map(gameLevel::ghost)
-                .forEach(ghost -> actorSpriteRenderer.drawActor(ghost));
+                .forEach(ghost -> actorRenderer.drawActor(ghost));
         }
 
         if (PROPERTY_DEBUG_INFO_VISIBLE.get()) {
-            actorSpriteRenderer.fillTextCentered(
+            canvasRenderer.fillTextCentered(
                 "scaling: %.2f, draw calls: %d".formatted(scaling.doubleValue(), drawCallCount),
                 Color.WHITE, Font.font(14 * scaling.get()),
                 0.5 * worldSize.get().x(), 16

@@ -35,7 +35,7 @@ import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.MsPacMan3D;
 import de.amr.pacmanfx.uilib.model3D.MsPacManBody;
-import de.amr.pacmanfx.uilib.rendering.ActorSpriteRenderer;
+import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
 import javafx.scene.canvas.Canvas;
@@ -275,8 +275,8 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     }
 
     @Override
-    public ActorSpriteRenderer createActorSpriteRenderer(Canvas canvas) {
-        return new TengenMsPacMan_ActorSpriteRenderer(canvas, this);
+    public ActorRenderer createActorSpriteRenderer(Canvas canvas) {
+        return new TengenMsPacMan_ActorRenderer(canvas, this);
     }
 
     @Override

@@ -26,7 +26,7 @@ import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
-import de.amr.pacmanfx.uilib.rendering.ActorSpriteRenderer;
+import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -76,7 +76,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     private TengenMsPacMan_HUDRenderer hudRenderer;
     private TengenMsPacMan_GameLevelRenderer gameLevelRenderer;
-    private ActorSpriteRenderer actorSpriteRenderer;
+    private ActorRenderer actorRenderer;
 
     private final BooleanProperty mazeHighlighted = new SimpleBooleanProperty(false);
 
@@ -143,10 +143,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
         hudRenderer = (TengenMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas);
         gameLevelRenderer = (TengenMsPacMan_GameLevelRenderer) uiConfig.createGameLevelRenderer(canvas);
-        actorSpriteRenderer = uiConfig.createActorSpriteRenderer(canvas);
+        actorRenderer = uiConfig.createActorSpriteRenderer(canvas);
         debugInfoRenderer = new PlaySceneDebugInfoRenderer(ui);
 
-        bindRendererProperties(hudRenderer, gameLevelRenderer, actorSpriteRenderer, debugInfoRenderer);
+        bindRendererProperties(hudRenderer, gameLevelRenderer, actorRenderer, debugInfoRenderer);
 
         context().game().hudData().score(true).levelCounter(true).livesCounter(true);
 
@@ -476,7 +476,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         context().gameLevel().bonus().ifPresent(actorsInZOrder::add);
         actorsInZOrder.add(context().gameLevel().pac());
         ghostsByZ(context().gameLevel()).forEach(actorsInZOrder::add);
-        actorsInZOrder.forEach(actor -> actorSpriteRenderer.drawActor(actor));
+        actorsInZOrder.forEach(actor -> actorRenderer.drawActor(actor));
     }
 
     private void drawGameLevel(GameLevel gameLevel) {

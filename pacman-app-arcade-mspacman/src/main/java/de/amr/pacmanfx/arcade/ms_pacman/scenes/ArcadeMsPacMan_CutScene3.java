@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.pacmanfx.Globals;
+import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_ActorRenderer;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_HUDRenderer;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.lib.Direction;
@@ -14,7 +15,6 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
-import de.amr.pacmanfx.uilib.rendering.ActorSpriteRenderer;
 
 import java.util.stream.Stream;
 
@@ -48,7 +48,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
     private Clapperboard clapperboard;
 
     private ArcadeMsPacMan_HUDRenderer hudRenderer;
-    private ActorSpriteRenderer actorSpriteRenderer;
+    private ArcadeMsPacMan_ActorRenderer actorSpriteRenderer;
 
     public ArcadeMsPacMan_CutScene3(GameUI ui) {
         super(ui);
@@ -59,7 +59,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         GameUI_Config uiConfig = ui.currentConfig();
 
         hudRenderer = (ArcadeMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas);
-        actorSpriteRenderer = uiConfig.createActorSpriteRenderer(canvas);
+        actorSpriteRenderer = (ArcadeMsPacMan_ActorRenderer) uiConfig.createActorSpriteRenderer(canvas);
 
         bindRendererProperties(hudRenderer, actorSpriteRenderer);
 

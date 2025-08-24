@@ -32,7 +32,7 @@ import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.MsPacMan3D;
 import de.amr.pacmanfx.uilib.model3D.MsPacManBody;
-import de.amr.pacmanfx.uilib.rendering.ActorSpriteRenderer;
+import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -179,8 +179,8 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config {
     }
 
     @Override
-    public ActorSpriteRenderer createActorSpriteRenderer(Canvas canvas) {
-        return new ArcadeMsPacMan_ActorSpriteRenderer(canvas, this);
+    public ActorRenderer createActorSpriteRenderer(Canvas canvas) {
+        return new ArcadeMsPacMan_ActorRenderer(canvas, this);
     }
 
     @Override

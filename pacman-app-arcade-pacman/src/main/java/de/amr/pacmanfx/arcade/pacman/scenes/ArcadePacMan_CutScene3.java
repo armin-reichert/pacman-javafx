@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
-import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_ActorSpriteRenderer;
+import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_ActorRenderer;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_HUDRenderer;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
@@ -38,7 +38,7 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
     private Ghost blinky;
 
     private ArcadePacMan_HUDRenderer hudRenderer;
-    private ArcadePacMan_ActorSpriteRenderer actorSpriteRenderer;
+    private ArcadePacMan_ActorRenderer actorSpriteRenderer;
 
     public ArcadePacMan_CutScene3(GameUI ui) {
         super(ui);
@@ -49,7 +49,7 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
         GameUI_Config uiConfig = ui.currentConfig();
 
         hudRenderer = new ArcadePacMan_HUDRenderer(canvas, uiConfig);
-        actorSpriteRenderer = new ArcadePacMan_ActorSpriteRenderer(canvas, uiConfig);
+        actorSpriteRenderer = new ArcadePacMan_ActorRenderer(canvas, uiConfig);
         debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas) {
             @Override
             public void drawDebugInfo() {

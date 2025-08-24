@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
-import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_ActorSpriteRenderer;
+import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_ActorRenderer;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_HUDRenderer;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.controller.GamePlayState;
@@ -62,7 +62,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     private BaseSpriteRenderer spriteRenderer;
     private ArcadePacMan_HUDRenderer hudRenderer;
-    private ArcadePacMan_ActorSpriteRenderer actorSpriteRenderer;
+    private ArcadePacMan_ActorRenderer actorSpriteRenderer;
 
     private Pulse blinking;
     private Pac pacMan;
@@ -85,7 +85,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
         spriteRenderer = new BaseSpriteRenderer(canvas, uiConfig.spriteSheet());
         hudRenderer = (ArcadePacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas);
-        actorSpriteRenderer = new ArcadePacMan_ActorSpriteRenderer(canvas, uiConfig);
+        actorSpriteRenderer = new ArcadePacMan_ActorRenderer(canvas, uiConfig);
         debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas) {
             @Override
             public void drawDebugInfo() {

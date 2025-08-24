@@ -19,7 +19,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
-import de.amr.pacmanfx.uilib.rendering.ActorSpriteRenderer;
+import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
@@ -47,7 +47,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     private final StateMachine<SceneState, TengenMsPacMan_IntroScene> sceneController;
 
-    private ActorSpriteRenderer actorSpriteRenderer;
+    private ActorRenderer actorRenderer;
     private TengenMsPacMan_ScenesRenderer scenesRenderer;
 
     private TengenMsPacMan_SpriteSheet spriteSheet;
@@ -77,9 +77,9 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
         spriteSheet = (TengenMsPacMan_SpriteSheet) uiConfig.spriteSheet();
 
         scenesRenderer = new TengenMsPacMan_ScenesRenderer(canvas, uiConfig);
-        actorSpriteRenderer = uiConfig.createActorSpriteRenderer(canvas);
+        actorRenderer = uiConfig.createActorSpriteRenderer(canvas);
 
-        bindRendererProperties(scenesRenderer, actorSpriteRenderer);
+        bindRendererProperties(scenesRenderer, actorRenderer);
 
         var tengenActionBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().actionBindings();
         actionBindings.assign(ACTION_ENTER_START_SCREEN, tengenActionBindings);
@@ -147,15 +147,15 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 Ghost currentGhost = ghosts.get(ghostIndex);
                 Color ghostColor = ghostColors[currentGhost.id().personality()];
                 scenesRenderer.fillText(currentGhost.name().toUpperCase(), ghostColor, MARQUEE_X + 44, MARQUEE_Y + 41);
-                ghosts.forEach(ghost -> actorSpriteRenderer.drawActor(ghost));
+                ghosts.forEach(ghost -> actorRenderer.drawActor(ghost));
             }
             case MS_PACMAN_MARCHING_IN -> {
                 marquee.draw(ctx());
                 scenesRenderer.fillText("\"MS PAC-MAN\"", nesColor(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
                 scenesRenderer.fillText("STARRING", nesColor(0x20), MARQUEE_X + 12, MARQUEE_Y + 22);
                 scenesRenderer.fillText("MS PAC-MAN", nesColor(0x28), MARQUEE_X + 28, MARQUEE_Y + 38);
-                ghosts.forEach(ghost -> actorSpriteRenderer.drawActor(ghost));
-                actorSpriteRenderer.drawActor(msPacMan);
+                ghosts.forEach(ghost -> actorRenderer.drawActor(ghost));
+                actorRenderer.drawActor(msPacMan);
             }
         }
 

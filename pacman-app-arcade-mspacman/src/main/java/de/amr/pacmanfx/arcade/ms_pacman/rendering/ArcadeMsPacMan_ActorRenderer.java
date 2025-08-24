@@ -9,17 +9,18 @@ import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
-import de.amr.pacmanfx.uilib.rendering.ActorSpriteRenderer;
+import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
+import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_WHITE;
 import static java.util.Objects.requireNonNull;
 
-public class ArcadeMsPacMan_ActorSpriteRenderer extends ActorSpriteRenderer {
+public class ArcadeMsPacMan_ActorRenderer extends BaseSpriteRenderer implements ActorRenderer {
 
     protected final GameUI_Config uiConfig;
 
-    public ArcadeMsPacMan_ActorSpriteRenderer(Canvas canvas, GameUI_Config uiConfig) {
+    public ArcadeMsPacMan_ActorRenderer(Canvas canvas, GameUI_Config uiConfig) {
         super(canvas);
         this.uiConfig = requireNonNull(uiConfig);
     }
@@ -37,7 +38,10 @@ public class ArcadeMsPacMan_ActorSpriteRenderer extends ActorSpriteRenderer {
         switch (actor) {
             case Bonus bonus -> drawBonus(bonus);
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
-            default -> super.drawActor(actor);
+            default -> actor.animations()
+                    .map(animations -> animations.currentSprite(actor))
+                    .ifPresent(sprite -> drawSpriteCentered(actor.center(), sprite));
+
         }
     }
 

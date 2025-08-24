@@ -15,7 +15,7 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
-import de.amr.pacmanfx.uilib.rendering.ActorSpriteRenderer;
+import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
 import org.tinylog.Logger;
 
@@ -48,7 +48,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     private SpriteAnimation nailDressRaptureAnimation;
 
     private ArcadePacMan_HUDRenderer hudRenderer;
-    private ActorSpriteRenderer actorSpriteRenderer;
+    private ActorRenderer actorRenderer;
     private BaseSpriteRenderer spriteRenderer;
 
     public ArcadePacMan_CutScene2(GameUI ui) {
@@ -61,7 +61,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
         hudRenderer = new ArcadePacMan_HUDRenderer(canvas, uiConfig);
         spriteRenderer = new BaseSpriteRenderer(canvas, uiConfig.spriteSheet());
-        actorSpriteRenderer = uiConfig.createActorSpriteRenderer(canvas);
+        actorRenderer = uiConfig.createActorSpriteRenderer(canvas);
         debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas) {
             @Override
             public void drawDebugInfo() {
@@ -71,7 +71,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
             }
         };
 
-        bindRendererProperties(hudRenderer, spriteRenderer, actorSpriteRenderer, debugInfoRenderer);
+        bindRendererProperties(hudRenderer, spriteRenderer, actorRenderer, debugInfoRenderer);
 
         context().game().hudData().credit(false).score(true).levelCounter(true).livesCounter(false);
 
@@ -157,7 +157,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     @Override
     public void drawSceneContent() {
         spriteRenderer.drawSprite(nailDressRaptureAnimation.currentSprite(), TS(14), TS(19) + 3, true);
-        actorsInZOrder.forEach(actor -> actorSpriteRenderer.drawActor(actor));
+        actorsInZOrder.forEach(actor -> actorRenderer.drawActor(actor));
     }
 
     @Override

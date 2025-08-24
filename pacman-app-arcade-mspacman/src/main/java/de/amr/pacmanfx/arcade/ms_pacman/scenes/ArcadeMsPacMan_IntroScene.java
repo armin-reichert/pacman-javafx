@@ -21,7 +21,7 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
-import de.amr.pacmanfx.uilib.rendering.ActorSpriteRenderer;
+import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import javafx.scene.paint.Color;
 
 import java.util.List;
@@ -57,7 +57,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     private ArcadeMsPacMan_HUDRenderer hudRenderer;
     private ArcadeMsPacMan_ScenesRenderer scenesRenderer;
-    private ActorSpriteRenderer actorSpriteRenderer;
+    private ActorRenderer actorRenderer;
 
     private Marquee marquee;
     private Pac msPacMan;
@@ -81,9 +81,9 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
         hudRenderer = (ArcadeMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas);
         scenesRenderer = new ArcadeMsPacMan_ScenesRenderer(canvas, ui.currentConfig());
-        actorSpriteRenderer = uiConfig.createActorSpriteRenderer(canvas);
+        actorRenderer = uiConfig.createActorSpriteRenderer(canvas);
 
-        bindRendererProperties(hudRenderer, scenesRenderer, actorSpriteRenderer);
+        bindRendererProperties(hudRenderer, scenesRenderer, actorRenderer);
 
         context().game().hudData().credit(true).score(true).levelCounter(true).livesCounter(false);
 
@@ -149,8 +149,8 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         scenesRenderer.fillText(TITLE, ARCADE_ORANGE, TITLE_X, TITLE_Y);
         scenesRenderer.drawMarquee(marquee);
 
-        ghosts.forEach(actorSpriteRenderer::drawActor);
-        actorSpriteRenderer.drawActor(msPacMan);
+        ghosts.forEach(actorRenderer::drawActor);
+        actorRenderer.drawActor(msPacMan);
 
         switch (sceneController.state()) {
             case GHOSTS_MARCHING_IN -> {

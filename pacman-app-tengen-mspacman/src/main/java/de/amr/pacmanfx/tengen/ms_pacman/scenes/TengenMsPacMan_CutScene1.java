@@ -12,7 +12,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.SpriteID;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_ActorSpriteRenderer;
+import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_ActorRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_HUDRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
@@ -53,7 +53,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
     private static final float SPEED_GHOST_AFTER_COLLISION = 0.5f;
 
     private TengenMsPacMan_HUDRenderer hudRenderer;
-    private TengenMsPacMan_ActorSpriteRenderer actorSpriteRenderer;
+    private TengenMsPacMan_ActorRenderer actorSpriteRenderer;
 
     private Clapperboard clapperboard;
     private SingleSpriteActor heart;
@@ -76,7 +76,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         var spriteSheet = (TengenMsPacMan_SpriteSheet) uiConfig.spriteSheet();
 
         hudRenderer = (TengenMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas);
-        actorSpriteRenderer = (TengenMsPacMan_ActorSpriteRenderer) uiConfig.createActorSpriteRenderer(canvas);
+        actorSpriteRenderer = (TengenMsPacMan_ActorRenderer) uiConfig.createActorSpriteRenderer(canvas);
         debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas);
 
         bindRendererProperties(hudRenderer, actorSpriteRenderer, debugInfoRenderer);
