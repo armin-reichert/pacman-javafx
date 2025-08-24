@@ -81,7 +81,6 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config {
         assets.set("app_icon", RES_ARCADE_MS_PAC_MAN.loadImage("graphics/icons/mspacman.png"));
         assets.set("startpage.image1", RES_ARCADE_MS_PAC_MAN.loadImage("graphics/f1.jpg"));
         assets.set("startpage.image2", RES_ARCADE_MS_PAC_MAN.loadImage("graphics/f2.jpg"));
-        assets.set("flashing_mazes", RES_ARCADE_MS_PAC_MAN.loadImage("graphics/mazes_flashing.png"));
         assets.set("logo.midway", RES_ARCADE_MS_PAC_MAN.loadImage("graphics/midway_logo.png"));
         assets.set("color.game_over_message", ARCADE_RED);
 
