@@ -10,9 +10,7 @@ import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.Waypoint;
-import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
-import de.amr.pacmanfx.lib.tilemap.WorldMapFormatter;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.*;
@@ -29,7 +27,6 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.lib.RandomNumberSupport.randomByte;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
-import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
 import static de.amr.pacmanfx.lib.timer.TickTimer.secToTicks;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
@@ -100,13 +97,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     private static final byte[] KILLED_GHOST_VALUE_FACTORS = {2, 4, 8, 16}; // points = factor * 100
-
-    private static final byte[][] HOUSE = {
-        { ARC_NW.$, WALL_H.$, WALL_H.$, DOOR.$, DOOR.$, WALL_H.$, WALL_H.$, ARC_NE.$ },
-        { WALL_V.$, EMPTY.$, EMPTY.$, EMPTY.$, EMPTY.$, EMPTY.$, EMPTY.$, WALL_V.$   },
-        { WALL_V.$, EMPTY.$, EMPTY.$, EMPTY.$, EMPTY.$, EMPTY.$, EMPTY.$, WALL_V.$   },
-        { ARC_SW.$, WALL_H.$, WALL_H.$, WALL_H.$, WALL_H.$, WALL_H.$, WALL_H.$, ARC_SE.$ }
-    };
 
     public static Pac createMsPacMan() {
         var msPacMan = new Pac("Ms. Pac-Man");
@@ -240,7 +230,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         scoreManager = new DefaultScoreManager(this, highScoreFile);
         actorSpeedControl = new TengenActorSpeedControl();
         mapSelector = new TengenMsPacMan_MapSelector();
-        gateKeeper = new GateKeeper(this); //TODO implement Tengen logic instead
+        gateKeeper = new GateKeeper(this); //TODO implement original house logic
         huntingTimer = new TengenMsPacMan_HuntingTimer();
         huntingTimer.phaseIndexProperty().addListener((py, ov, nv) -> {
             if (nv.intValue() > 0) {
@@ -495,7 +485,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         gameLevel = new GameLevel(levelNumber, worldMap, createLevelData());
         // For non-Arcade game levels, give some extra time for "game over" text animation
         gameLevel.setGameOverStateTicks(mapCategory == MapCategory.ARCADE ? 420 : 600);
-        addHouse(gameLevel);
 
         var msPacMan = createMsPacMan();
         msPacMan.setAutopilotSteering(autopilot);
@@ -514,6 +503,11 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             .forEach(personality -> gameLevel.setGhostStartPosition(personality, gameLevel.ghostStartPosition(personality).plus(0, HTS))
         );
 
+        gameLevel.setGhostStartDirection(RED_GHOST_SHADOW, Direction.LEFT);
+        gameLevel.setGhostStartDirection(PINK_GHOST_SPEEDY, Direction.DOWN);
+        gameLevel.setGhostStartDirection(CYAN_GHOST_BASHFUL, Direction.UP);
+        gameLevel.setGhostStartDirection(ORANGE_GHOST_POKEY, Direction.UP);
+
         //TODO this might not be appropriate for Tengen Ms. Pac-Man
         gameLevel.setBonusSymbol(0, computeBonusSymbol(gameLevel.number()));
         gameLevel.setBonusSymbol(1, computeBonusSymbol(gameLevel.number()));
@@ -521,28 +515,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         hud.theLevelCounter().setEnabled(levelNumber < 8);
 
         activatePacBooster(pacBooster == PacBooster.ALWAYS_ON);
-    }
-
-    protected void addHouse(GameLevel level) {
-        WorldMap worldMap = level.worldMap();
-        if (!worldMap.properties(LayerID.TERRAIN).containsKey(WorldMapProperty.POS_HOUSE_MIN_TILE)) {
-            Logger.warn("No house min tile found in map!");
-            worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_HOUSE_MIN_TILE, WorldMapFormatter.formatTile(Vector2i.of(10, 15)));
-        }
-        if (!worldMap.properties(LayerID.TERRAIN).containsKey(WorldMapProperty.POS_HOUSE_MAX_TILE)) {
-            Logger.warn("No house max tile found in map!");
-            worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_HOUSE_MAX_TILE, WorldMapFormatter.formatTile(Vector2i.of(17, 19)));
-        }
-        Vector2i houseMinTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE);
-        for (int y = 0; y < HOUSE.length; ++y) {
-            for (int x = 0; x < HOUSE[y].length; ++x) {
-                level.worldMap().setContent(LayerID.TERRAIN, houseMinTile.y() + y, houseMinTile.x() + x, HOUSE[y][x]);
-            }
-        }
-        level.setGhostStartDirection(RED_GHOST_SHADOW, Direction.LEFT);
-        level.setGhostStartDirection(PINK_GHOST_SPEEDY, Direction.DOWN);
-        level.setGhostStartDirection(CYAN_GHOST_BASHFUL, Direction.UP);
-        level.setGhostStartDirection(ORANGE_GHOST_POKEY, Direction.UP);
     }
 
     //TODO needed?

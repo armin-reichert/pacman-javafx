@@ -12,7 +12,7 @@ import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static java.util.Objects.requireNonNull;
 
-public class House {
+public abstract class House {
 
     private final Vector2i minTile;
     private final Vector2i maxTile;
@@ -20,12 +20,14 @@ public class House {
     private final Vector2i rightDoorTile;
     private final Map<GhostID, Vector2i> ghostRevivalTileMap = new HashMap<>();
 
-    public House(Vector2i minTile, Vector2i maxTile, Vector2i leftDoorTile, Vector2i rightDoorTile) {
+    protected House(Vector2i minTile, Vector2i maxTile, Vector2i leftDoorTile, Vector2i rightDoorTile) {
         this.minTile = requireNonNull(minTile);
         this.maxTile = requireNonNull(maxTile);
         this.leftDoorTile = requireNonNull(leftDoorTile);
         this.rightDoorTile = requireNonNull(rightDoorTile);
     }
+
+    public abstract byte[][] content();
 
     public Vector2i minTile() {
         return minTile;

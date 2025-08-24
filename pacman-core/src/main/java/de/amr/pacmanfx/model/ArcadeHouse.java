@@ -18,11 +18,11 @@ public class ArcadeHouse extends House {
         { ARC_SW.$, WALL_H.$, WALL_H.$, WALL_H.$, WALL_H.$, WALL_H.$, WALL_H.$, ARC_SE.$ }
     };
 
-    private static final Vector2i MIN_TILE = Vector2i.of(10, 15);
-    private static final Vector2i MAX_TILE = Vector2i.of(17, 19);
+    public static final Vector2i DEFAULT_MIN_TILE = Vector2i.of(10, 15);
+    public static final Vector2i DEFAULT_MAX_TILE = Vector2i.of(17, 19);
 
-    public ArcadeHouse() {
-        super(MIN_TILE, MAX_TILE, MIN_TILE.plus(3, 0), MIN_TILE.plus(4, 0));
+    public ArcadeHouse(Vector2i minTile) {
+        super(minTile, minTile.plus(7, 4), minTile.plus(3, 0), minTile.plus(4, 0));
     }
 
     //TODO return immutable copy?

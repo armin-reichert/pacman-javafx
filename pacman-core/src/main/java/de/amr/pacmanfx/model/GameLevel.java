@@ -39,7 +39,7 @@ public class GameLevel {
     public static final int EMPTY_ROWS_OVER_MAZE  = 3;
     public static final int EMPTY_ROWS_BELOW_MAZE = 2;
 
-    private static final ArcadeHouse DEFAULT_HOUSE = new ArcadeHouse();
+    private static final ArcadeHouse DEFAULT_HOUSE = new ArcadeHouse(ArcadeHouse.DEFAULT_MIN_TILE);
 
     private static Vector2f halfTileRightOf(Vector2i tile) { return Vector2f.of(tile.x() * TS + HTS, tile.y() * TS); }
 
@@ -85,7 +85,7 @@ public class GameLevel {
 
         blinking = new Pulse(10, Pulse.OFF);
         portals = findPortals(worldMap);
-        findHouse();
+        findHousePosition();
 
         currentBonusIndex = -1;
         energizerPositions = worldMap.tilesContaining(LayerID.FOOD, ENERGIZER.code()).collect(Collectors.toSet());
@@ -151,13 +151,11 @@ public class GameLevel {
         return portals.toArray(new Portal[0]);
     }
 
-    private void findHouse() {
+    private void findHousePosition() {
         Vector2i minTile = worldMap.getTerrainTileProperty(POS_HOUSE_MIN_TILE);
-        Vector2i maxTile = worldMap.getTerrainTileProperty(POS_HOUSE_MAX_TILE);
-        if (minTile != null && maxTile != null) {
-            Vector2i leftDoorTile = minTile.plus(3, 0);
-            Vector2i rightDoorTile = minTile.plus(4, 0);
-            house = new House(minTile, maxTile, leftDoorTile, rightDoorTile);
+        if (minTile != null) {
+            house = new ArcadeHouse(minTile);
+            addHouseContent(house);
         }
     }
 
@@ -166,7 +164,7 @@ public class GameLevel {
      * (right lower tile). We add the corresponding map content here such that collision of actors with house walls
      * and doors is working. The obstacle detection algorithm will then also detect the house and create a closed obstacle.
      */
-    public void addHouseContent() {
+    public void addHouseContent(House house) {
         if (!worldMap.properties(LayerID.TERRAIN).containsKey(POS_HOUSE_MIN_TILE)) {
             Logger.warn("No house min tile found in map!");
             worldMap.properties(LayerID.TERRAIN).put(
@@ -182,7 +180,7 @@ public class GameLevel {
             );
         }
         Vector2i minTile = worldMap.getTerrainTileProperty(POS_HOUSE_MIN_TILE);
-        worldMap.setContentRect(LayerID.TERRAIN, minTile, DEFAULT_HOUSE.content());
+        worldMap.setContentRect(LayerID.TERRAIN, minTile, house.content());
 
         setGhostStartDirection(RED_GHOST_SHADOW, Direction.LEFT);
         setGhostStartDirection(PINK_GHOST_SPEEDY, Direction.DOWN);
