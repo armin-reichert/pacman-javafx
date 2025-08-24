@@ -24,7 +24,8 @@ import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
 import static de.amr.pacmanfx.lib.tilemap.FoodTile.ENERGIZER;
 import static de.amr.pacmanfx.lib.tilemap.FoodTile.PELLET;
-import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
+import static de.amr.pacmanfx.lib.tilemap.TerrainTile.TUNNEL;
+import static de.amr.pacmanfx.lib.tilemap.TerrainTile.isBlocked;
 import static de.amr.pacmanfx.model.WorldMapProperty.*;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
@@ -181,15 +182,7 @@ public class GameLevel {
             );
         }
         Vector2i minTile = worldMap.getTerrainTileProperty(POS_HOUSE_MIN_TILE);
-        Vector2i maxTile = worldMap.getTerrainTileProperty(POS_HOUSE_MAX_TILE);
-        Vector2i size = maxTile.minus(minTile).plus(1, 1);
-
-        for (int y = 0; y < size.y(); ++y) {
-            for (int x = 0; x < size.x(); ++x) {
-                byte content = DEFAULT_HOUSE.content()[y][x];
-                worldMap.setContent(LayerID.TERRAIN, minTile.y() + y, minTile.x() + x, content);
-            }
-        }
+        worldMap.setContentRect(LayerID.TERRAIN, minTile, DEFAULT_HOUSE.content());
 
         setGhostStartDirection(RED_GHOST_SHADOW, Direction.LEFT);
         setGhostStartDirection(PINK_GHOST_SPEEDY, Direction.DOWN);

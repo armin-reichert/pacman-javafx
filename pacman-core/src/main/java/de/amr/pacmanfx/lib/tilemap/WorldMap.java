@@ -404,4 +404,14 @@ public class WorldMap {
     public void setContent(LayerID layerID, Vector2i tile, byte code) {
         setContent(layerID, tile.y(), tile.x(), code);
     }
+
+    public void setContentRect(LayerID layerID, Vector2i leftTopTile, byte[][] rect) {
+        requireNonNull(rect);
+        int numCols = rect[0].length, numRows = rect.length;
+        for (int x = 0; x < numCols; ++x) {
+            for (int y = 0; y < numRows; ++y) {
+                layer(layerID).set(leftTopTile.y() + y, leftTopTile.x() + x, rect[y][x]);
+            }
+        }
+    }
 }
