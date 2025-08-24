@@ -160,24 +160,15 @@ public class GameLevel {
     }
 
     /**
-     * The ghost house is stored in the world map using properties "pos_house_min" (left upper tile) and "pos_house_max"
-     * (right lower tile). We add the corresponding map content here such that collision of actors with house walls
-     * and doors is working. The obstacle detection algorithm will then also detect the house and create a closed obstacle.
+     * The ghost house is stored in the world map using property "pos_house_min" (left upper tile).
+     * We add the corresponding map content here at runtime such that collision of actors with house walls
+     * and doors is working. The obstacle detection algorithm will then also detect the house and create a
+     * closed obstacle representing the house boundary.
      */
     public void addHouseContent(House house) {
         if (!worldMap.properties(LayerID.TERRAIN).containsKey(POS_HOUSE_MIN_TILE)) {
             Logger.warn("No house min tile found in map!");
-            worldMap.properties(LayerID.TERRAIN).put(
-                    POS_HOUSE_MIN_TILE,
-                    WorldMapFormatter.formatTile(DEFAULT_HOUSE.minTile())
-            );
-        }
-        if (!worldMap.properties(LayerID.TERRAIN).containsKey(POS_HOUSE_MAX_TILE)) {
-            Logger.warn("No house max tile found in map!");
-            worldMap.properties(LayerID.TERRAIN).put(
-                    POS_HOUSE_MAX_TILE,
-                    WorldMapFormatter.formatTile(DEFAULT_HOUSE.maxTile())
-            );
+            worldMap.properties(LayerID.TERRAIN).put(POS_HOUSE_MIN_TILE, WorldMapFormatter.formatTile(DEFAULT_HOUSE.minTile()));
         }
         Vector2i minTile = worldMap.getTerrainTileProperty(POS_HOUSE_MIN_TILE);
         worldMap.setContentRect(LayerID.TERRAIN, minTile, house.content());
