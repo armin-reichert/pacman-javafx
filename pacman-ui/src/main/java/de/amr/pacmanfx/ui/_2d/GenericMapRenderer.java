@@ -49,14 +49,13 @@ public class GenericMapRenderer extends BaseRenderer {
         terrainRenderer.setColorScheme(newColorScheme);
     }
 
-    public void drawLevel(GameLevel level, boolean mazeHighlighted, boolean energizerHighlighted) {
-        WorldMap worldMap = level.worldMap();
-        if (mazeHighlighted) {
-            terrainRenderer.setColorScheme(energizerHighlighted ? blinkingOnColors : blinkingOffColors);
+    public void drawMaze(GameLevel gameLevel, boolean bright, boolean blinkingOn) {
+        WorldMap worldMap = gameLevel.worldMap();
+        if (bright) {
+            terrainRenderer.setColorScheme(blinkingOn ? blinkingOnColors : blinkingOffColors);
             terrainRenderer.drawTerrain(worldMap, worldMap.obstacles());
         }
         else {
-            //TODO move into applyMapSettings?
             Map<String, String> colorMap = worldMap.getConfigValue("colorMap");
             TerrainMapColorScheme colors = new TerrainMapColorScheme(
                 backgroundColor(),
@@ -65,15 +64,21 @@ public class GenericMapRenderer extends BaseRenderer {
                 Color.web(colorMap.get("door"))
             );
             terrainRenderer.setColorScheme(colors);
-
             terrainRenderer.drawTerrain(worldMap, worldMap.obstacles());
-            level.house().ifPresent(house -> terrainRenderer.drawHouse(house.minTile(), house.sizeInTiles()));
+
+            gameLevel.house().ifPresent(house -> terrainRenderer.drawHouse(house.minTile(), house.sizeInTiles()));
+
             foodRenderer.setPelletColor(Color.web(colorMap.get("pellet")));
-            foodRenderer.setEnergizerColor(Color.web(colorMap.get("pellet")));
-            worldMap.tiles().filter(level::tileContainsFood).filter(not(level::isEnergizerPosition))
+            gameLevel.tiles()
+                .filter(gameLevel::tileContainsFood)
+                .filter(not(gameLevel::isEnergizerPosition))
                 .forEach(foodRenderer::drawPellet);
-            if (energizerHighlighted) {
-                level.energizerPositions().stream().filter(level::tileContainsFood).forEach(foodRenderer::drawEnergizer);
+
+            if (blinkingOn) {
+                foodRenderer.setEnergizerColor(Color.web(colorMap.get("pellet")));
+                gameLevel.energizerPositions().stream()
+                    .filter(gameLevel::tileContainsFood)
+                    .forEach(foodRenderer::drawEnergizer);
             }
         }
     }

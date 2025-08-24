@@ -40,6 +40,11 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseSpriteRenderer impleme
 
     @Override
     public void drawGameLevel(GameLevel gameLevel, RenderInfo info) {
+        drawMaze(gameLevel, info);
+        drawGameLevelMessage(gameLevel);
+    }
+
+    protected void drawMaze(GameLevel gameLevel, RenderInfo info) {
         float emptySpaceOverMaze = TS(GameLevel.EMPTY_ROWS_OVER_MAZE);
         int colorMapIndex = gameLevel.worldMap().getConfigValue("colorMapIndex");
         ctx().save();
@@ -64,7 +69,6 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseSpriteRenderer impleme
                 .forEach(tile -> fillSquareAtTileCenter(tile, 10));
         }
         ctx().restore();
-        drawGameLevelMessage(gameLevel);
     }
 
     protected void drawGameLevelMessage(GameLevel gameLevel) {

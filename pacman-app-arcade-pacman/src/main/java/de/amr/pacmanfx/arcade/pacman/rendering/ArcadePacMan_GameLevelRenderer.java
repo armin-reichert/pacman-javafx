@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.House;
 import de.amr.pacmanfx.model.MessageType;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
@@ -42,6 +43,11 @@ public class ArcadePacMan_GameLevelRenderer extends BaseSpriteRenderer implement
 
     @Override
     public void drawGameLevel(GameLevel gameLevel, RenderInfo info) {
+        drawMaze(gameLevel, info);
+        drawGameLevelMessage(gameLevel);
+    }
+
+    protected void drawMaze(GameLevel gameLevel, RenderInfo info) {
         int emptySpaceOverMaze = GameLevel.EMPTY_ROWS_OVER_MAZE * TS;
         ctx().save();
         ctx().scale(scaling(), scaling());
@@ -51,33 +57,35 @@ public class ArcadePacMan_GameLevelRenderer extends BaseSpriteRenderer implement
         }
         else if (info.getBoolean("empty")) {
             drawSprite(spriteSheet().sprite(SpriteID.MAP_EMPTY), 0, emptySpaceOverMaze, false);
-            // hide doors
-            gameLevel.house().ifPresent(house -> fillSquareAtTileCenter(house.leftDoorTile(), TS + 0.5));
-            gameLevel.house().ifPresent(house -> fillSquareAtTileCenter(house.rightDoorTile(), TS + 0.5));
+            // over-paint door tiles
+            gameLevel.house().map(House::leftDoorTile) .ifPresent(tile -> fillSquareAtTileCenter(tile, TS + 0.5));
+            gameLevel.house().map(House::rightDoorTile).ifPresent(tile -> fillSquareAtTileCenter(tile, TS + 0.5));
         }
         else {
             drawSprite(spriteSheet().sprite(SpriteID.MAP_FULL), 0, emptySpaceOverMaze, false);
+            // Over-paint eaten food tiles
             gameLevel.tiles()
                 .filter(not(gameLevel::isEnergizerPosition))
                 .filter(gameLevel::tileContainsEatenFood)
                 .forEach(tile -> fillSquareAtTileCenter(tile, 4));
+            // Over-paint eaten or dark-blinking energizer tiles
             gameLevel.energizerPositions().stream()
                 .filter(tile -> !info.getBoolean("blinkingOn") || gameLevel.tileContainsEatenFood(tile))
                 .forEach(tile -> fillSquareAtTileCenter(tile, 10));
         }
         ctx().restore();
-        drawGameLevelMessage(gameLevel);
     }
 
     protected void drawGameLevelMessage(GameLevel gameLevel) {
         gameLevel.optMessage().ifPresent(message -> {
+            double x = message.x(), y = message.y();
             switch (message.type()) {
-                case MessageType.GAME_OVER -> fillTextCentered("GAME  OVER",
-                        ARCADE_RED, arcadeFontTS(), message.x(), message.y());
-                case MessageType.READY -> fillTextCentered("READY!",
-                        ARCADE_YELLOW, arcadeFontTS(), message.x(), message.y());
-                case MessageType.TEST -> fillTextCentered("TEST    L%02d".formatted(gameLevel.number()),
-                        ARCADE_WHITE, arcadeFontTS(), message.x(), message.y());
+                case MessageType.GAME_OVER
+                    -> fillTextCentered("GAME  OVER", ARCADE_RED, arcadeFontTS(), x, y);
+                case MessageType.READY
+                    -> fillTextCentered("READY!", ARCADE_YELLOW, arcadeFontTS(), x, y);
+                case MessageType.TEST
+                    -> fillTextCentered("TEST    L%02d".formatted(gameLevel.number()), ARCADE_WHITE, arcadeFontTS(), x, y);
             }
         });
     }

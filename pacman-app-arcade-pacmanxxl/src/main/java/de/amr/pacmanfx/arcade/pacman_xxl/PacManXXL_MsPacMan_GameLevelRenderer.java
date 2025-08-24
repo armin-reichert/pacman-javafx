@@ -13,21 +13,20 @@ import javafx.scene.canvas.Canvas;
 
 public class PacManXXL_MsPacMan_GameLevelRenderer extends ArcadeMsPacMan_GameLevelRenderer {
 
-    private final GenericMapRenderer mapRenderer;
+    private final GenericMapRenderer mazeRenderer;
 
     public PacManXXL_MsPacMan_GameLevelRenderer(Canvas canvas, GameUI_Config uiConfig) {
         super(canvas, uiConfig);
-        mapRenderer = new GenericMapRenderer(canvas);
-        mapRenderer.scalingProperty().bind(scalingProperty());
-        mapRenderer.backgroundColorProperty().bind(backgroundColorProperty());
+        mazeRenderer = new GenericMapRenderer(canvas);
+        mazeRenderer.scalingProperty().bind(scalingProperty());
+        mazeRenderer.backgroundColorProperty().bind(backgroundColorProperty());
     }
 
     @Override
-    public void drawGameLevel(GameLevel gameLevel, RenderInfo info) {
-        mapRenderer.drawLevel(gameLevel,
+    protected void drawMaze(GameLevel gameLevel, RenderInfo info) {
+        mazeRenderer.drawMaze(gameLevel,
             info.getBoolean("bright"),
             info.getBoolean("blinkingOn")
         );
-        drawGameLevelMessage(gameLevel);
     }
 }
