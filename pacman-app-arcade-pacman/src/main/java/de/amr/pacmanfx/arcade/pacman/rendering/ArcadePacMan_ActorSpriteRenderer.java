@@ -36,9 +36,7 @@ public class ArcadePacMan_ActorSpriteRenderer extends ActorSpriteRenderer {
             drawBonus(bonus);
         }
         else {
-            actor.animations()
-                    .map(animations -> animations.currentSprite(actor))
-                    .ifPresent(sprite -> drawSpriteCentered(actor.center(), sprite));
+            super.drawActor(actor);
         }
     }
 
