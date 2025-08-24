@@ -7,6 +7,7 @@ package de.amr.pacmanfx.ui._2d;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.rendering.RenderInfo;
 import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapColorScheme;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer;
@@ -49,10 +50,10 @@ public class GenericMapRenderer extends BaseRenderer {
         terrainRenderer.setColorScheme(newColorScheme);
     }
 
-    public void drawMaze(GameLevel gameLevel, boolean bright, boolean blinkingOn) {
+    public void drawMaze(GameLevel gameLevel, RenderInfo info) {
         WorldMap worldMap = gameLevel.worldMap();
-        if (bright) {
-            terrainRenderer.setColorScheme(blinkingOn ? blinkingOnColors : blinkingOffColors);
+        if (info.getBoolean("bright")) {
+            terrainRenderer.setColorScheme(info.getBoolean("blinkingOn") ? blinkingOnColors : blinkingOffColors);
             terrainRenderer.drawTerrain(worldMap, worldMap.obstacles());
         }
         else {
@@ -74,7 +75,7 @@ public class GenericMapRenderer extends BaseRenderer {
                 .filter(not(gameLevel::isEnergizerPosition))
                 .forEach(foodRenderer::drawPellet);
 
-            if (blinkingOn) {
+            if (info.getBoolean("blinkingOn")) {
                 foodRenderer.setEnergizerColor(Color.web(colorMap.get("pellet")));
                 gameLevel.energizerPositions().stream()
                     .filter(gameLevel::tileContainsFood)

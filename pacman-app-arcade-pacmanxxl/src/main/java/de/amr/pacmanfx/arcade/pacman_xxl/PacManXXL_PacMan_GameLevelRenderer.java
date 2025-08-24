@@ -26,9 +26,6 @@ public class PacManXXL_PacMan_GameLevelRenderer extends ArcadePacMan_GameLevelRe
 
     @Override
     protected void drawMaze(GameLevel gameLevel, RenderInfo info) {
-        mazeRenderer.drawMaze(gameLevel,
-            info.getBoolean("bright"),
-            info.getBoolean("blinkingOn")
-        );
+        mazeRenderer.drawMaze(gameLevel, info);
     }
 }
