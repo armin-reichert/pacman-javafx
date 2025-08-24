@@ -47,12 +47,12 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements Ga
 
     @Override
     public void drawGameLevel(GameContext gameContext, RenderInfo info) {
-        if (info.getBoolean("mazeBright")) {
+        if (info.getBoolean("bright")) {
             drawBrightGameLevel(gameContext.gameLevel());
-        } else if (gameContext.gameLevel().uneatenFoodCount() == 0) {
+        } else if (info.getBoolean("empty")) {
             drawEmptyGameLevel(gameContext.gameLevel());
         } else {
-            drawGameLevelWithFood(gameContext.gameLevel(), !info.getBoolean("blinkingPhaseOn"));
+            drawGameLevelWithFood(gameContext.gameLevel(), !info.getBoolean("blinkingOn"));
         }
         drawGameLevelMessage(gameContext.gameLevel());
     }
