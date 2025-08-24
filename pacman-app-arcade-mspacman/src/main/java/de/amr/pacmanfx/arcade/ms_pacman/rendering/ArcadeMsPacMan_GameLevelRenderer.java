@@ -49,38 +49,31 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements Ga
     @Override
     public void drawGameLevel(GameContext gameContext, RenderInfo info) {
         GameLevel gameLevel = gameContext.gameLevel();
+        float emptySpaceOverMaze = TS(GameLevel.EMPTY_ROWS_OVER_MAZE);
         int colorMapIndex = gameLevel.worldMap().getConfigValue("colorMapIndex");
         ctx().save();
         ctx().scale(scaling(), scaling());
         if (info.getBoolean("bright")) {
-            drawBrightMaze(colorMapIndex);
+            Image mazeImage = uiConfig.assets().image("maze.bright.%d".formatted(colorMapIndex));
+            ctx.drawImage(mazeImage, 0, emptySpaceOverMaze);
         } else if (info.getBoolean("empty")) {
-            RectShort maze = spriteSheet().spriteSequence(SpriteID.EMPTY_MAZES)[colorMapIndex];
-            drawSprite(maze, 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE), false);
+            RectShort mazeSprite = spriteSheet().spriteSequence(SpriteID.EMPTY_MAZES)[colorMapIndex];
+            drawSprite(mazeSprite, 0, emptySpaceOverMaze, false);
         } else {
-            drawGameLevelWithFood(gameContext.gameLevel(), colorMapIndex, !info.getBoolean("blinkingOn"));
-        }
-        ctx().restore();
-        drawGameLevelMessage(gameContext.gameLevel());
-    }
-
-    private void drawBrightMaze(int index) {
-        Image mazeImage = uiConfig.assets().image("maze.bright.%d".formatted(index));
-        ctx.drawImage(mazeImage, 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE));
-    }
-
-    private void drawGameLevelWithFood(GameLevel gameLevel, int colorMapIndex, boolean energizerDark) {
-        RectShort mazeSprite = spriteSheet().spriteSequence(SpriteID.FULL_MAZES)[colorMapIndex];
-        drawSprite(mazeSprite, 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE), false);
-        // Overpaint the eaten pellets as they are part of the maze image
-        gameLevel.worldMap().tiles()
+            RectShort mazeSprite = spriteSheet().spriteSequence(SpriteID.FULL_MAZES)[colorMapIndex];
+            drawSprite(mazeSprite, 0, emptySpaceOverMaze, false);
+            // Over-paint the eaten pellets (pellets are part of the maze image)
+            gameLevel.worldMap().tiles()
                 .filter(not(gameLevel::isEnergizerPosition))
                 .filter(gameLevel::tileContainsEatenFood)
                 .forEach(tile -> fillSquareAtTileCenter(tile, 4));
-        // Draw the energizers, overpaint them if they are in dark phase
-        gameLevel.energizerPositions().stream()
-                .filter(tile -> energizerDark || gameLevel.tileContainsEatenFood(tile))
+            // Over-paint eaten and dark-phase energizers
+            gameLevel.energizerPositions().stream()
+                .filter(tile -> !info.getBoolean("blinkingOn") || gameLevel.tileContainsEatenFood(tile))
                 .forEach(tile -> fillSquareAtTileCenter(tile, 10));
+        }
+        ctx().restore();
+        drawGameLevelMessage(gameContext.gameLevel());
     }
 
     protected void drawGameLevelMessage(GameLevel gameLevel) {
