@@ -437,16 +437,11 @@ public class GameLevel {
     }
 
     public void eatAllPellets() {
-        worldMap.tiles()
-            .filter(this::tileContainsFood)
-            .filter(not(this::isEnergizerPosition))
-            .forEach(this::registerFoodEatenAt);
+        tiles().filter(this::tileContainsFood).filter(not(this::isEnergizerPosition)).forEach(this::registerFoodEatenAt);
     }
 
     public void eatAllFood() {
-        worldMap.tiles()
-            .filter(this::tileContainsFood)
-            .forEach(this::registerFoodEatenAt);
+        tiles().filter(this::tileContainsFood).forEach(this::registerFoodEatenAt);
     }
 
     public boolean isFoodPosition(Vector2i tile) {
@@ -465,9 +460,5 @@ public class GameLevel {
 
     public boolean tileContainsEatenFood(Vector2i tile) {
         return eatenFoodBits.get(worldMap.indexInRowWiseOrder(tile));
-    }
-
-    public Stream<Vector2i> tilesContainingFood() {
-        return worldMap.tiles().filter(this::tileContainsFood);
     }
 }
