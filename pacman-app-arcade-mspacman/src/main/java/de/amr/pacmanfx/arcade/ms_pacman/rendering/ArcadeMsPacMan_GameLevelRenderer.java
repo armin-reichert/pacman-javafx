@@ -55,7 +55,7 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements Ga
             RectShort mazeSprite = spriteSheet().spriteSequence(SpriteID.FULL_MAZES)[colorMapIndex];
             drawSprite(mazeSprite, 0, emptySpaceOverMaze, false);
             // Over-paint the eaten pellets (pellets are part of the maze image)
-            gameLevel.worldMap().tiles()
+            gameLevel.tiles()
                 .filter(not(gameLevel::isEnergizerPosition))
                 .filter(gameLevel::tileContainsEatenFood)
                 .forEach(tile -> fillSquareAtTileCenter(tile, 4));

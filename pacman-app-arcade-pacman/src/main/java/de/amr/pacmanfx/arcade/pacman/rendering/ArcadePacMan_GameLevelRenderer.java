@@ -59,7 +59,7 @@ public class ArcadePacMan_GameLevelRenderer extends BaseRenderer implements Game
         }
         else {
             drawSprite(spriteSheet().sprite(SpriteID.MAP_FULL), 0, emptySpaceOverMaze, false);
-            gameLevel.worldMap().tiles()
+            gameLevel.tiles()
                 .filter(not(gameLevel::isEnergizerPosition))
                 .filter(gameLevel::tileContainsEatenFood)
                 .forEach(tile -> fillSquareAtTileCenter(tile, 4));

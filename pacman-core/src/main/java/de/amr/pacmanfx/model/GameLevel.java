@@ -331,6 +331,10 @@ public class GameLevel {
         return new Vector2f(worldMap.numCols() * TS, worldMap.numRows() * TS);
     }
 
+    public Stream<Vector2i> tiles() {
+        return worldMap.tiles();
+    }
+
     public boolean isTileInsideWorld(Vector2i tile) { return !worldMap.outOfWorld(tile); }
 
     public Stream<Vector2i> neighborTilesOutsideWorld(Vector2i tile) {

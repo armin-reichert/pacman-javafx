@@ -29,7 +29,7 @@ public class TestEatingFood {
     private ArcadePacMan_GameModel pacManGame() { return theGameContext().game(); }
 
     private void eatNextPellet(GameLevel gameLevel) {
-        gameLevel.worldMap().tiles()
+        gameLevel.tiles()
             .filter(gameLevel::tileContainsFood)
             .filter(not(gameLevel::isEnergizerPosition))
             .findFirst().ifPresent(tile -> {

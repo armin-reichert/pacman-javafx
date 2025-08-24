@@ -81,7 +81,7 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
 
                 // mark intersection tiles
                 List<Direction> clockOrder = List.of(Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT);
-                context().gameLevel().worldMap().tiles().filter(context().gameLevel()::isIntersection).forEach(tile -> {
+                context().gameLevel().tiles().filter(context().gameLevel()::isIntersection).forEach(tile -> {
                     double cx = tile.x() * TS + HTS, cy = tile.y() * TS + HTS;
                     for (Direction dir : clockOrder) {
                         if (!context().gameLevel().isTileBlocked(tile.plus(dir.vector()))) {
