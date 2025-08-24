@@ -288,11 +288,12 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
         }
         final GameLevel gameLevel = context().gameLevel();
         gameLevelRenderer.applyLevelSettings(context());
-        RenderInfo info = RenderInfo.build(Map.of(
-            "mazeBright", mazeHighlighted.get(),
-            "blinkingPhaseOn", gameLevel.blinking().isOn()
-        ));
+        RenderInfo info = new RenderInfo();
+        info.put("bright", mazeHighlighted.get());
+        info.put("blinkingOn", gameLevel.blinking().isOn());
+        info.put("empty", context().gameLevel().uneatenFoodCount() == 0);
         gameLevelRenderer.drawGameLevel(context(), info);
+
         createActorDrawingOrder(gameLevel);
         actorsInZOrder.forEach(actor -> actorSpriteRenderer.drawActor(actor));
     }
