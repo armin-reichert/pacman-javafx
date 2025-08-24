@@ -38,16 +38,7 @@ public class GameLevel {
     public static final int EMPTY_ROWS_OVER_MAZE  = 3;
     public static final int EMPTY_ROWS_BELOW_MAZE = 2;
 
-    private static final byte[][] DEFAULT_HOUSE_CONTENT = {
-        { ARC_NW.$, WALL_H.$, WALL_H.$, DOOR.$, DOOR.$, WALL_H.$, WALL_H.$, ARC_NE.$ },
-        { WALL_V.$, EMPTY.$, EMPTY.$, EMPTY.$, EMPTY.$, EMPTY.$, EMPTY.$, WALL_V.$   },
-        { WALL_V.$, EMPTY.$, EMPTY.$, EMPTY.$, EMPTY.$, EMPTY.$, EMPTY.$, WALL_V.$   },
-        { WALL_V.$, EMPTY.$, EMPTY.$, EMPTY.$, EMPTY.$, EMPTY.$, EMPTY.$, WALL_V.$   },
-        { ARC_SW.$, WALL_H.$, WALL_H.$, WALL_H.$, WALL_H.$, WALL_H.$, WALL_H.$, ARC_SE.$ }
-    };
-
-    private static final Vector2i DEFAULT_HOUSE_MIN_TILE = Vector2i.of(10, 15);
-    private static final Vector2i DEFAULT_HOUSE_MAX_TILE = Vector2i.of(17, 19);
+    private static final ArcadeHouse DEFAULT_HOUSE = new ArcadeHouse();
 
     private static Vector2f halfTileRightOf(Vector2i tile) { return Vector2f.of(tile.x() * TS + HTS, tile.y() * TS); }
 
@@ -179,14 +170,14 @@ public class GameLevel {
             Logger.warn("No house min tile found in map!");
             worldMap.properties(LayerID.TERRAIN).put(
                     POS_HOUSE_MIN_TILE,
-                    WorldMapFormatter.formatTile(DEFAULT_HOUSE_MIN_TILE)
+                    WorldMapFormatter.formatTile(DEFAULT_HOUSE.minTile())
             );
         }
         if (!worldMap.properties(LayerID.TERRAIN).containsKey(POS_HOUSE_MAX_TILE)) {
             Logger.warn("No house max tile found in map!");
             worldMap.properties(LayerID.TERRAIN).put(
                     POS_HOUSE_MAX_TILE,
-                    WorldMapFormatter.formatTile(DEFAULT_HOUSE_MAX_TILE)
+                    WorldMapFormatter.formatTile(DEFAULT_HOUSE.maxTile())
             );
         }
         Vector2i minTile = worldMap.getTerrainTileProperty(POS_HOUSE_MIN_TILE);
@@ -195,7 +186,7 @@ public class GameLevel {
 
         for (int y = 0; y < size.y(); ++y) {
             for (int x = 0; x < size.x(); ++x) {
-                byte content = DEFAULT_HOUSE_CONTENT[y][x];
+                byte content = DEFAULT_HOUSE.content()[y][x];
                 worldMap.setContent(LayerID.TERRAIN, minTile.y() + y, minTile.x() + x, content);
             }
         }
