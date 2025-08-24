@@ -10,8 +10,7 @@ public interface GameLevelRenderer extends CanvasRenderer {
 
     /**
      * Applies settings specific to the given game level to this renderer. This can be for example
-     * the selection of a different color scheme which is specified in the level map. The default
-     * implementation is empty such that subclasses that have no such hints can silently ignore it.
+     * the selection of a different color scheme which is specified in the level map.
      *
      * @param gameLevel the game level
      * @param info rendering info
