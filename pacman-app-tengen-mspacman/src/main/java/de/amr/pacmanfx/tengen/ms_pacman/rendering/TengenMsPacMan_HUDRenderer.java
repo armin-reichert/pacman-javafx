@@ -47,10 +47,9 @@ public class TengenMsPacMan_HUDRenderer extends BaseCanvasRenderer implements HU
 
         if (!data.isVisible()) return;
 
-        Font font = uiConfig.theUI().assets().arcadeFont(TS);
         TengenMsPacMan_GameModel game = gameContext.game();
         if (data.isScoreVisible()) {
-            drawScores(gameContext, nesColor(0x20), font);
+            drawScores(gameContext, nesColor(0x20), arcadeFontTS());
         }
         if (data.isLivesCounterVisible()) {
             drawLivesCounter(data.livesCounter(), game.lifeCount(), TS(2), sceneSize.y() - TS);

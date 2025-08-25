@@ -47,12 +47,10 @@ public class ArcadeMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HU
     public void drawHUD(GameContext gameContext, HUDData data, Vector2f sceneSize) {
         if (!data.isVisible()) return;
 
-        Font font = uiConfig.theUI().assets().arcadeFont(scaled(TS));
-
         if (data.isScoreVisible()) {
             ScoreManager scoreManager = gameContext.game().scoreManager();
-            drawScore(scoreManager.score(), "SCORE", font, TS(1), TS(1));
-            drawScore(scoreManager.highScore(), "HIGH SCORE", font, TS(14), TS(1));
+            drawScore(scoreManager.score(), "SCORE", arcadeFontTS(), TS(1), TS(1));
+            drawScore(scoreManager.highScore(), "HIGH SCORE", arcadeFontTS(), TS(14), TS(1));
         }
 
         if (data.isLevelCounterVisible()) {
@@ -82,7 +80,7 @@ public class ArcadeMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HU
 
         if (data.isCreditVisible()) {
             int credit = gameContext.coinMechanism().numCoins();
-            fillText("CREDIT %2d".formatted(credit), ARCADE_WHITE, font, TS(2), sceneSize.y());
+            fillText("CREDIT %2d".formatted(credit), ARCADE_WHITE, arcadeFontTS(), TS(2), sceneSize.y());
         }
     }
 
