@@ -35,14 +35,6 @@ public class ArcadeMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HU
         return (ArcadeMsPacMan_SpriteSheet) uiConfig.spriteSheet();
     }
 
-    protected RectShort[] bonusSymbols() {
-        return spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS);
-    }
-
-    protected RectShort livesCounterSymbol() {
-        return spriteSheet().sprite(SpriteID.LIVES_COUNTER_SYMBOL);
-    }
-
     @Override
     public void drawHUD(GameContext gameContext, HUDData data, Vector2f sceneSize) {
         if (!data.isVisible()) return;
@@ -55,7 +47,7 @@ public class ArcadeMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HU
 
         if (data.isLevelCounterVisible()) {
             LevelCounter levelCounter = data.levelCounter();
-            RectShort[] bonusSymbols = bonusSymbols();
+            RectShort[] bonusSymbols = spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS);
             float x = sceneSize.x() - TS(4), y = sceneSize.y() - TS(2) + 2;
             for (byte symbol : levelCounter.symbols()) {
                 drawSprite(bonusSymbols[symbol], x, y, true);
@@ -65,7 +57,7 @@ public class ArcadeMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HU
 
         if (data.isLivesCounterVisible()) {
             LivesCounter livesCounter = data.livesCounter();
-            RectShort sprite = livesCounterSymbol();
+            RectShort sprite = spriteSheet().sprite(SpriteID.LIVES_COUNTER_SYMBOL);
             float x = TS(2), y = sceneSize.y() - TS(2);
             for (int i = 0; i < livesCounter.visibleLifeCount(); ++i) {
                 drawSprite(sprite, x + i * TS(2), y, true);
