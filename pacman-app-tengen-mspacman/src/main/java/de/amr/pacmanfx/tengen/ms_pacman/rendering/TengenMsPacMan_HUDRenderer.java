@@ -101,7 +101,9 @@ public class TengenMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HU
         x -= TS(2);
         // symbols are drawn from right to left!
         for (byte symbol : levelCounter.symbols()) {
-            drawSprite(symbolSprites[symbol], x, y, true);
+            if (0 <= symbol && symbol < symbolSprites.length) {
+                drawSprite(symbolSprites[symbol], x, y, true);
+            }
             x -= TS(2);
         }
     }
