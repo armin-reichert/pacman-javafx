@@ -25,8 +25,6 @@ import javafx.scene.image.Image;
 
 public interface GameUI_Config extends GameScene_Config, Disposable {
 
-    GameUI theUI();
-
     AssetStorage assets();
 
     void loadAssets();

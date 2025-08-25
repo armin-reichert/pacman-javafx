@@ -35,8 +35,6 @@ import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.MsPacMan3D;
 import de.amr.pacmanfx.uilib.model3D.MsPacManBody;
-import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
-import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -143,11 +141,6 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
     public Set<ActionBinding> actionBindings() {
         return actionBindings;
-    }
-
-    @Override
-    public GameUI theUI() {
-        return ui;
     }
 
     @Override
@@ -271,7 +264,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
     @Override
     public TengenMsPacMan_HUDRenderer createHUDRenderer(Canvas canvas) {
-        return new TengenMsPacMan_HUDRenderer(canvas, this);
+        return new TengenMsPacMan_HUDRenderer(canvas, this, ui.clock());
     }
 
     @Override
@@ -453,13 +446,13 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
         info.put("mazeSprite", flashingMazeSprite.sprite());
     }
 
-    public void configureNormalMazeRenderInfo(RenderInfo info, TengenMsPacMan_GameModel game, GameLevel gameLevel) {
+    public void configureNormalMazeRenderInfo(RenderInfo info, TengenMsPacMan_GameModel game, GameLevel gameLevel, long tick) {
         int mapNumber = gameLevel.worldMap().getConfigValue("mapNumber");
         MazeSpriteSet mazeSpriteSet = gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.MAZE_SPRITE_SET_PROPERTY);
         info.put("mazeImage", mazeSpriteSet.mazeImage().spriteSheetImage());
         if (game.mapCategory() == MapCategory.STRANGE && mapNumber == 15) {
             TengenMsPacMan_UIConfig uiConfig = ui.currentConfig();
-            int spriteIndex = mazeAnimationSpriteIndex(uiConfig.theUI().clock().tickCount());
+            int spriteIndex = mazeAnimationSpriteIndex(tick);
             info.put("mazeSprite", uiConfig.nonArcadeMapsSpriteSheet().spriteSequence(MAZE32_ANIMATED)[spriteIndex]);
         } else {
             info.put("mazeSprite", mazeSpriteSet.mazeImage().sprite());

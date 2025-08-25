@@ -13,6 +13,7 @@ import de.amr.pacmanfx.model.LivesCounter;
 import de.amr.pacmanfx.model.ScoreManager;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.*;
+import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.rendering.BaseCanvasRenderer;
 import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
@@ -27,11 +28,13 @@ import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_HUDRenderer extends BaseCanvasRenderer implements HUDRenderer, SpriteRenderer {
 
-    protected final TengenMsPacMan_UIConfig uiConfig;
+    private final TengenMsPacMan_UIConfig uiConfig;
+    private final GameClock clock;
 
-    public TengenMsPacMan_HUDRenderer(Canvas canvas, TengenMsPacMan_UIConfig uiConfig) {
+    public TengenMsPacMan_HUDRenderer(Canvas canvas, TengenMsPacMan_UIConfig uiConfig, GameClock clock) {
         super(canvas);
         this.uiConfig = requireNonNull(uiConfig);
+        this.clock = requireNonNull(clock);
     }
 
     @Override
@@ -49,7 +52,7 @@ public class TengenMsPacMan_HUDRenderer extends BaseCanvasRenderer implements HU
 
         TengenMsPacMan_GameModel game = gameContext.game();
         if (data.isScoreVisible()) {
-            drawScores(gameContext, nesColor(0x20), arcadeFontTS());
+            drawScores(game.scoreManager(), clock.tickCount(), nesColor(0x20), arcadeFontTS());
         }
         if (data.isLivesCounterVisible()) {
             drawLivesCounter(data.livesCounter(), game.lifeCount(), TS(2), sceneSize.y() - TS);
@@ -62,20 +65,14 @@ public class TengenMsPacMan_HUDRenderer extends BaseCanvasRenderer implements HU
         }
     }
 
-    public void drawScores(GameContext gameContext, Color color, Font font) {
-        ScoreManager scoreManager = gameContext.game().scoreManager();
-        ctx().save();
-        ctx().scale(scaling(), scaling());
-        ctx().setFill(color);
-        ctx().setFont(font);
+    private void drawScores(ScoreManager scoreManager, long tick, Color color, Font font) {
         // show 1/2 second, hide 1/2 second
-        if (uiConfig.theUI().clock().tickCount() % 60 < 30) {
-            ctx().fillText("1UP", TS(4), TS(1));
+        if (tick % 60 < 30) {
+            fillText("1UP", color, font, TS(4), TS(1));
         }
-        ctx().fillText("HIGH SCORE", TS(11), TS(1));
-        ctx().fillText("%6d".formatted(scoreManager.score().points()), TS(2), TS(2));
-        ctx().fillText("%6d".formatted(scoreManager.highScore().points()), TS(13), TS(2));
-        ctx().restore();
+        fillText("HIGH SCORE", color, font, TS(11), TS(1));
+        fillText("%6d".formatted(scoreManager.score().points()), color, font, TS(2), TS(2));
+        fillText("%6d".formatted(scoreManager.highScore().points()), color, font, TS(13), TS(2));
     }
 
     public void drawLivesCounter(LivesCounter livesCounter, int lifeCount, float x, float y) {

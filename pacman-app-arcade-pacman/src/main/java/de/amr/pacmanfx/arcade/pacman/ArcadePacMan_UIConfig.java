@@ -75,11 +75,6 @@ public class ArcadePacMan_UIConfig implements GameUI_Config {
     }
 
     @Override
-    public GameUI theUI() {
-        return ui;
-    }
-
-    @Override
     public AssetStorage assets() {
         return assets;
     }

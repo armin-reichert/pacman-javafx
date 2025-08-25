@@ -514,7 +514,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         if (bright) {
             uiConfig.configureHighlightedMazeRenderInfo(info, gameLevel, levelCompletedAnimation.flashingIndex());
         } else {
-            uiConfig.configureNormalMazeRenderInfo(info, context().game(), gameLevel);
+            uiConfig.configureNormalMazeRenderInfo(info, context().game(), gameLevel, ui.clock().tickCount());
         }
         gameLevelRenderer.drawGameLevel(gameLevel, info);
     }
