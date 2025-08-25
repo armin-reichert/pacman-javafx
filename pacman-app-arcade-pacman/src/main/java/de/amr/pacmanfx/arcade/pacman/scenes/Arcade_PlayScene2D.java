@@ -313,17 +313,24 @@ public class Arcade_PlayScene2D extends GameScene2D {
     public void onEnterGameState(GameState state) {
         if (state == GamePlayState.LEVEL_COMPLETE) {
             ui.soundManager().stopAll();
-            levelCompletedAnimation = new LevelCompletedAnimation(animationRegistry);
-            mazeHighlighted.bind(levelCompletedAnimation.highlightedProperty());
-            levelCompletedAnimation.setGameLevel(context().gameLevel());
-            levelCompletedAnimation.setSingleFlashMillis(333);
-            levelCompletedAnimation.getOrCreateAnimationFX().setOnFinished(e -> context().gameController().letCurrentGameStateExpire());
-            levelCompletedAnimation.playFromStart();
+            startLevelCompleteAnimation();
         }
         else if (state == GamePlayState.GAME_OVER) {
             ui.soundManager().stopAll();
             ui.soundManager().play(SoundID.GAME_OVER);
         }
+    }
+
+    private void startLevelCompleteAnimation() {
+        levelCompletedAnimation = new LevelCompletedAnimation(animationRegistry);
+        levelCompletedAnimation.setGameLevel(context().gameLevel());
+        levelCompletedAnimation.setSingleFlashMillis(333);
+        levelCompletedAnimation.getOrCreateAnimationFX().setOnFinished(e -> {
+            mazeHighlighted.unbind();
+            context().gameController().letCurrentGameStateExpire();
+        });
+        mazeHighlighted.bind(levelCompletedAnimation.highlightedProperty());
+        levelCompletedAnimation.playFromStart();
     }
 
     @Override
