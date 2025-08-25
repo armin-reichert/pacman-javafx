@@ -82,7 +82,7 @@ public class TengenMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HU
     }
 
     public void drawLivesCounter(LivesCounter livesCounter, int lifeCount, float x, float y) {
-        RectShort sprite = uiConfig.spriteSheet().sprite(SpriteID.LIVES_COUNTER_SYMBOL);
+        RectShort sprite = spriteSheet().sprite(SpriteID.LIVES_COUNTER_SYMBOL);
         for (int i = 0; i < livesCounter.visibleLifeCount(); ++i) {
             drawSprite(sprite, x + TS(i * 2), y, true);
         }
@@ -97,7 +97,7 @@ public class TengenMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HU
             drawLevelNumberBox(levelNumber, 0, y); // left box
             drawLevelNumberBox(levelNumber, x, y); // right box
         }
-        RectShort[] symbolSprites = uiConfig.spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS);
+        RectShort[] symbolSprites = spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS);
         x -= TS(2);
         // symbols are drawn from right to left!
         for (byte symbol : levelCounter.symbols()) {
@@ -107,35 +107,33 @@ public class TengenMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HU
     }
 
     public void drawGameOptions(MapCategory category, Difficulty difficulty, PacBooster booster, double centerX, double y) {
-        TengenMsPacMan_SpriteSheet spriteSheet = uiConfig.spriteSheet();
-        drawSpriteCentered(centerX, y, spriteSheet.sprite(SpriteID.INFO_FRAME));
         RectShort categorySprite = switch (requireNonNull(category)) {
-            case BIG     -> spriteSheet.sprite(SpriteID.INFO_CATEGORY_BIG);
-            case MINI    -> spriteSheet.sprite(SpriteID.INFO_CATEGORY_MINI);
-            case STRANGE -> spriteSheet.sprite(SpriteID.INFO_CATEGORY_STRANGE);
+            case BIG     -> spriteSheet().sprite(SpriteID.INFO_CATEGORY_BIG);
+            case MINI    -> spriteSheet().sprite(SpriteID.INFO_CATEGORY_MINI);
+            case STRANGE -> spriteSheet().sprite(SpriteID.INFO_CATEGORY_STRANGE);
             case ARCADE  -> RectShort.ZERO;
         };
-        drawSpriteCentered(centerX + TS(4.5), y, categorySprite);
         RectShort difficultySprite = switch (requireNonNull(difficulty)) {
-            case EASY   -> spriteSheet.sprite(SpriteID.INFO_DIFFICULTY_EASY);
-            case HARD   -> spriteSheet.sprite(SpriteID.INFO_DIFFICULTY_HARD);
-            case CRAZY  -> spriteSheet.sprite(SpriteID.INFO_DIFFICULTY_CRAZY);
+            case EASY   -> spriteSheet().sprite(SpriteID.INFO_DIFFICULTY_EASY);
+            case HARD   -> spriteSheet().sprite(SpriteID.INFO_DIFFICULTY_HARD);
+            case CRAZY  -> spriteSheet().sprite(SpriteID.INFO_DIFFICULTY_CRAZY);
             case NORMAL -> RectShort.ZERO;
         };
-        drawSpriteCentered(centerX, y, difficultySprite);
+        drawSpriteCentered(centerX, y, spriteSheet().sprite(SpriteID.INFO_FRAME));
         if (requireNonNull(booster) != PacBooster.OFF) {
-            drawSpriteCentered(centerX - TS(6), y, spriteSheet.sprite(SpriteID.INFO_BOOSTER));
+            drawSpriteCentered(centerX - TS(6), y, spriteSheet().sprite(SpriteID.INFO_BOOSTER));
         }
+        drawSpriteCentered(centerX, y, difficultySprite);
+        drawSpriteCentered(centerX + TS(4.5), y, categorySprite);
     }
 
     // this is also used by the 3D scene
     public void drawLevelNumberBox(int number, double x, double y) {
-        TengenMsPacMan_SpriteSheet spriteSheet = uiConfig.spriteSheet();
         drawSprite(spriteSheet().sprite(SpriteID.LEVEL_NUMBER_BOX), x, y, true);
         int tens = number / 10, ones = number % 10;
         if (tens > 0) {
-            drawSprite(spriteSheet.digitSprite(tens), x + 2, y + 2, true);
+            drawSprite(spriteSheet().digitSprite(tens), x + 2, y + 2, true);
         }
-        drawSprite(spriteSheet.digitSprite(ones), x + 10, y + 2, true);
+        drawSprite(spriteSheet().digitSprite(ones), x + 10, y + 2, true);
     }
 }
