@@ -53,11 +53,11 @@ public class TengenMsPacMan_HUDRenderer extends BaseCanvasRenderer implements HU
             drawScores(gameContext, nesColor(0x20), font);
         }
         if (data.isLivesCounterVisible()) {
-            drawLivesCounter(data.theLivesCounter(), game.lifeCount(), TS(2), sceneSize.y() - TS);
+            drawLivesCounter(data.livesCounter(), game.lifeCount(), TS(2), sceneSize.y() - TS);
         }
         if (data.isLevelCounterVisible()) {
             var hudData = (TengenMsPacMan_HUDData) data;
-            TengenMsPacMan_LevelCounter levelCounter = hudData.theLevelCounter();
+            TengenMsPacMan_LevelCounter levelCounter = hudData.levelCounter();
             float x = sceneSize.x() - TS(2), y = sceneSize.y() - TS;
             drawLevelCounter(levelCounter.displayedLevelNumber(), levelCounter, x, y);
         }

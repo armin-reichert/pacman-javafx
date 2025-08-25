@@ -54,12 +54,12 @@ public class TengenMsPacMan_HUDData implements HUDData {
     }
 
     @Override
-    public TengenMsPacMan_LevelCounter theLevelCounter() {
+    public TengenMsPacMan_LevelCounter levelCounter() {
         return levelCounter;
     }
 
     @Override
-    public LivesCounter theLivesCounter() {
+    public LivesCounter livesCounter() {
         return livesCounter;
     }
 }

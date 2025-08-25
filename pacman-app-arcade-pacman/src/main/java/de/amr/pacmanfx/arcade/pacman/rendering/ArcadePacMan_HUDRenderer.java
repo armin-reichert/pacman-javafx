@@ -57,7 +57,7 @@ public class ArcadePacMan_HUDRenderer extends BaseCanvasRenderer implements HUDR
         }
 
         if (data.isLevelCounterVisible()) {
-            LevelCounter levelCounter = data.theLevelCounter();
+            LevelCounter levelCounter = data.levelCounter();
             RectShort[] bonusSymbols = bonusSymbols();
             float x = sceneSize.x() - TS(4), y = sceneSize.y() - TS(2) + 2;
             for (byte symbol : levelCounter.symbols()) {
@@ -67,7 +67,7 @@ public class ArcadePacMan_HUDRenderer extends BaseCanvasRenderer implements HUDR
         }
 
         if (data.isLivesCounterVisible()) {
-            LivesCounter livesCounter = data.theLivesCounter();
+            LivesCounter livesCounter = data.livesCounter();
             RectShort sprite = livesCounterSymbol();
             float x = TS(2), y = sceneSize.y() - TS(2);
             for (int i = 0; i < livesCounter.visibleLifeCount(); ++i) {

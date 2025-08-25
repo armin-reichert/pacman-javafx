@@ -318,29 +318,39 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     @Override
     public void onEnterGameState(GameState state) {
         switch (state) {
-            case HUNTING -> dynamicCamera.setFollowTarget(true);
             case LEVEL_COMPLETE -> {
                 ui.soundManager().stopAll();
-                levelCompletedAnimation = new LevelCompletedAnimation(animationRegistry);
-                mazeHighlighted.bind(levelCompletedAnimation.highlightedProperty());
-                levelCompletedAnimation.setGameLevel(context().gameLevel());
-                levelCompletedAnimation.setSingleFlashMillis(333);
-                levelCompletedAnimation.getOrCreateAnimationFX().setOnFinished(e -> context().gameController().letCurrentGameStateExpire());
-                levelCompletedAnimation.playFromStart();
+                startLevelCompleteAnimation(context().gameLevel());
             }
             case GAME_OVER -> {
                 ui.soundManager().stopAll();
-                context().gameLevel().optMessage()
-                    .filter(GameOverMessage.class::isInstance)
-                    .map(GameOverMessage.class::cast)
-                    .ifPresent(gameOverMessage -> {
-                        double width = gameLevelRenderer.messageTextWidth(context().gameLevel(), MessageType.GAME_OVER);
-                        gameOverMessage.start(sizeInPx().x(), width);
-                    });
                 dynamicCamera.targetTop();
+                startGameOverMessageAnimation(context().gameLevel());
             }
             default -> {}
         }
+    }
+
+    private void startLevelCompleteAnimation(GameLevel gameLevel) {
+        levelCompletedAnimation = new LevelCompletedAnimation(animationRegistry);
+        levelCompletedAnimation.setGameLevel(gameLevel);
+        levelCompletedAnimation.setSingleFlashMillis(333);
+        levelCompletedAnimation.getOrCreateAnimationFX().setOnFinished(e -> {
+            mazeHighlighted.unbind();
+            context().gameController().letCurrentGameStateExpire();
+        });
+        mazeHighlighted.bind(levelCompletedAnimation.highlightedProperty());
+        levelCompletedAnimation.playFromStart();
+    }
+
+    private void startGameOverMessageAnimation(GameLevel gameLevel) {
+        gameLevel.optMessage()
+            .filter(GameOverMessage.class::isInstance)
+            .map(GameOverMessage.class::cast)
+            .ifPresent(gameOverMessage -> {
+                double width = gameLevelRenderer.messageTextWidth(gameLevel, MessageType.GAME_OVER);
+                gameOverMessage.start(sizeInPx().x(), width);
+            });
     }
 
     @Override
@@ -440,15 +450,15 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void draw() {
-        hudRenderer.clearCanvas();
+        gameLevelRenderer.clearCanvas();
         context().optGameLevel().ifPresent(gameLevel -> {
             updateScaling(gameLevel);
             ctx().save();
             // map width is 28 tiles but NES screen width is 32 tiles: move 2 tiles right and clip one tile on each side
             ctx().translate(scaled(TS(2)), 0);
             canvas.setClip(clipRect);
-            drawGameLevel(context().gameLevel());
-            drawActors();
+            drawGameLevel(gameLevel);
+            drawActors(gameLevel);
             drawHUD();
             if (debugInfoVisible.get() && debugInfoRenderer != null) {
                 // debug info also used normally clipped area
@@ -462,15 +472,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void drawHUD() {
-        hudRenderer.drawHUD(context(), context().game().hudData(), sizeInPx());
         TengenMsPacMan_GameModel game = context().game();
+        hudRenderer.drawHUD(context(), game.hudData(), sizeInPx());
         if (!game.optionsAreInitial()) {
-            hudRenderer.drawGameOptions(
-                game.mapCategory(),
-                game.difficulty(),
-                game.pacBooster(),
-                context().gameLevel().worldMap().numCols() * HTS,
-                TS(2) + HTS);
+            hudRenderer.drawGameOptions(game.mapCategory(), game.difficulty(), game.pacBooster(), 0.5 * sizeInPx().x(), TS(2.5));
         }
     }
 
@@ -481,61 +486,65 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     private void updateScaling(GameLevel gameLevel) {
         double scaling = switch (displayModeProperty.get()) {
-            case SCALED_TO_FIT -> { //TODO this code smells
+            case SCALED_TO_FIT -> {
+                //TODO this code smells
                 int tilesY = gameLevel.worldMap().numRows() + 3;
-                double camY = scaled((tilesY - 46) * HTS);
-                fixedCamera.setTranslateY(camY);
-                yield (subScene.getHeight() / (tilesY * TS));
+                double y = scaled((tilesY - 46) * HTS);
+                fixedCamera.setTranslateY(y);
+                yield subScene.getHeight() / TS(tilesY);
             }
-            case SCROLLING -> (subScene.getHeight() / NES_SIZE_PX.y());
+            case SCROLLING -> subScene.getHeight() / NES_SIZE_PX.y();
         };
         setScaling(scaling);
     }
 
-    private void drawActors() {
+    private void drawActors(GameLevel gameLevel) {
         actorsInZOrder.clear();
-        context().gameLevel().bonus().ifPresent(actorsInZOrder::add);
-        actorsInZOrder.add(context().gameLevel().pac());
-        ghostsByZ(context().gameLevel()).forEach(actorsInZOrder::add);
+        gameLevel.bonus().ifPresent(actorsInZOrder::add);
+        actorsInZOrder.add(gameLevel.pac());
+        ghostsByZ(gameLevel).forEach(actorsInZOrder::add);
         actorsInZOrder.forEach(actor -> actorRenderer.drawActor(actor));
     }
 
     private void drawGameLevel(GameLevel gameLevel) {
         TengenMsPacMan_UIConfig uiConfig = ui.currentConfig();
         RenderInfo info = new RenderInfo();
-        gameLevelRenderer.applyLevelSettings(gameLevel, info); // ensure maze sprite set is contained in render info
+        gameLevelRenderer.applyLevelSettings(gameLevel, info); // ensure maze sprite set is stored in render info
         boolean bright = levelCompletedAnimation != null && mazeHighlighted.get();
         if (bright) {
             uiConfig.configureHighlightedMazeRenderInfo(info, gameLevel, levelCompletedAnimation.flashingIndex());
-
         } else {
             uiConfig.configureNormalMazeRenderInfo(info, context().game(), gameLevel);
         }
         gameLevelRenderer.drawGameLevel(gameLevel, info);
     }
 
+    //TODO the ghost state should also be taken into account
     private Stream<Ghost> ghostsByZ(GameLevel gameLevel) {
         return Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW).map(gameLevel::ghost);
     }
 
     private void updateHUD() {
-        TengenMsPacMan_HUDData hud = context().<TengenMsPacMan_GameModel>game().hudData();
-        int numLives = context().game().lifeCount() - 1;
+        TengenMsPacMan_GameModel game = context().game();
+        TengenMsPacMan_HUDData hud = game.hudData();
+        GameLevel gameLevel = game.optGameLevel().orElse(null);
+
+        if (gameLevel == null) return;
+
+        int numLives = game.lifeCount() - 1;
         // As long as Pac-Man is still invisible on start, he is shown as an additional entry in the lives counter
-        if (context().gameState() == GamePlayState.STARTING_GAME && !context().gameLevel().pac().isVisible()) {
+        if (context().gameState() == GamePlayState.STARTING_GAME && !gameLevel.pac().isVisible()) {
             numLives += 1;
         }
-        numLives = Math.min(numLives, hud.theLivesCounter().maxLivesDisplayed());
-        hud.theLivesCounter().setVisibleLifeCount(numLives);
+        numLives = Math.min(numLives, hud.livesCounter().maxLivesDisplayed());
+        hud.livesCounter().setVisibleLifeCount(numLives);
 
         //TODO check demo level behavior in emulator. Are there demo levels for non-ARCADE maps at all?
-        TengenMsPacMan_LevelCounter levelCounter = hud.theLevelCounter();
-        if (context().<TengenMsPacMan_GameModel>game().mapCategory() == MapCategory.ARCADE
-            || context().optGameLevel().isEmpty()
-            || context().gameLevel().isDemoLevel()) {
-            levelCounter.setDisplayedLevelNumber(0); // no level number boxes for ARCADE maps or when level not yet created
+        if (game.mapCategory() == MapCategory.ARCADE || gameLevel.isDemoLevel()) {
+            // levelNumber=0: no level number boxes displayed
+            hud.levelCounter().setDisplayedLevelNumber(0);
         } else {
-            levelCounter.setDisplayedLevelNumber(context().gameLevel().number());
+            hud.levelCounter().setDisplayedLevelNumber(gameLevel.number());
         }
     }
 }

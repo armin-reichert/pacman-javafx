@@ -57,12 +57,12 @@ public class ArcadeMsPacMan_HUDData implements HUDData {
     }
 
     @Override
-    public ArcadePacMan_LevelCounter theLevelCounter() {
+    public ArcadePacMan_LevelCounter levelCounter() {
         return levelCounter;
     }
 
     @Override
-    public LivesCounter theLivesCounter() {
+    public LivesCounter livesCounter() {
         return livesCounter;
     }
 }

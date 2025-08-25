@@ -318,7 +318,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         gameLevel.setBonusSymbol(0, symbol);
         gameLevel.setBonusSymbol(1, symbol);
 
-        hud.theLevelCounter().setEnabled(true);
+        hud.levelCounter().setEnabled(true);
     }
 
     @Override

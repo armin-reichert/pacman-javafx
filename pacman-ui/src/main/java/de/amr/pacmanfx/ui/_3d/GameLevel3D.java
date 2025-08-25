@@ -724,7 +724,7 @@ public class GameLevel3D extends Group implements Disposable {
     public void onStartingGame() {
         energizers3D().forEach(Energizer3D::stopPumping);
         if (levelCounter3D != null) {
-            levelCounter3D.update(ui, ui.gameContext().game().hudData().theLevelCounter());
+            levelCounter3D.update(ui, ui.gameContext().game().hudData().levelCounter());
         }
     }
 
@@ -849,7 +849,7 @@ public class GameLevel3D extends Group implements Disposable {
 
     public void updateLevelCounter3D() {
         if (levelCounter3D != null) {
-            levelCounter3D.update(ui, ui.gameContext().game().hudData().theLevelCounter());
+            levelCounter3D.update(ui, ui.gameContext().game().hudData().levelCounter());
         }
     }
 

@@ -207,7 +207,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     private void updateHUD() {
-        LivesCounter livesCounter = context().game().hudData().theLivesCounter();
+        LivesCounter livesCounter = context().game().hudData().livesCounter();
         int numLivesDisplayed = context().game().lifeCount() - 1;
         // As long as Pac-Man is still initially hidden in the maze, he is shown as an entry in the lives counter
         if (context().gameState() == GamePlayState.STARTING_GAME && !context().gameLevel().pac().isVisible()) {
