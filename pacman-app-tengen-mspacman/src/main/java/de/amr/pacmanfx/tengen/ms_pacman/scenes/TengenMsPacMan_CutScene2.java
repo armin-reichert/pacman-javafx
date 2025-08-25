@@ -50,7 +50,6 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
     private Clapperboard clapperboard;
     private Pac pacMan;
     private Pac msPacMan;
-    private int t;
 
     public TengenMsPacMan_CutScene2(GameUI ui) {
         super(ui);
@@ -80,8 +79,6 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
 
         pacMan = createPacMan();
         pacMan.setAnimations(uiConfig.createPacAnimations(pacMan));
-
-        t = -1;
     }
 
     @Override
@@ -91,8 +88,13 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
 
     @Override
     public void update() {
-        t += 1;
-        if (t == 0) {
+        final int t = (int) context().gameState().timer().tickCount();
+
+        pacMan.move();
+        msPacMan.move();
+        clapperboard.tick();
+
+        if (t == 1) {
             clapperboard.show();
             clapperboard.startAnimation();
             ui.soundManager().play(MUSIC_ID);
@@ -154,11 +156,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
         }
         else if (t == 1380) {
             context().gameController().letCurrentGameStateExpire();
-            return;
         }
-        pacMan.move();
-        msPacMan.move();
-        clapperboard.tick();
     }
 
     @Override
