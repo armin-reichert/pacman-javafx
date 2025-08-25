@@ -1346,15 +1346,15 @@ public class TileMapEditor {
         }
     }
 
-    private void drawPreview2D(TerrainMapColorScheme colors) {
+    private void drawPreview2D(TerrainMapColorScheme colorScheme) {
         GraphicsContext g = canvasPreview2D.getGraphicsContext2D();
         g.setImageSmoothing(false);
-        g.setFill(colors.backgroundColor());
+        g.setFill(colorScheme.floorColor());
         g.fillRect(0, 0, canvasPreview2D.getWidth(), canvasPreview2D.getHeight());
         if (isTerrainVisible()) {
             terrainPathRenderer.setScaling(gridSize() / 8.0);
-            terrainPathRenderer.setColorScheme(colors);
-            terrainPathRenderer.drawTerrain(editedWorldMap(), editedWorldMap().obstacles());
+            terrainPathRenderer.setColorScheme(colorScheme);
+            terrainPathRenderer.draw(editedWorldMap(), editedWorldMap().obstacles());
             Vector2i houseMinTile = editedWorldMap().getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE);
             Vector2i houseMaxTile = editedWorldMap().getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE);
             if (houseMinTile != null && houseMaxTile != null) {

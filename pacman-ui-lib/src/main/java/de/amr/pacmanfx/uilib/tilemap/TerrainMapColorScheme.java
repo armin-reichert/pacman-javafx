@@ -7,8 +7,7 @@ package de.amr.pacmanfx.uilib.tilemap;
 import javafx.scene.paint.Color;
 
 public record TerrainMapColorScheme(
-    Color backgroundColor,
+    Color floorColor,
     Color wallFillColor,
     Color wallStrokeColor,
-    Color doorColor
-) {}
+    Color doorColor) {}

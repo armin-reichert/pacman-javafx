@@ -62,7 +62,7 @@ public class TerrainTileMapRenderer extends TerrainMapRenderer {
     }
 
     @Override
-    public void drawTerrain(WorldMap worldMap, Set<Obstacle> obstacles) {
+    public void draw(WorldMap worldMap, Set<Obstacle> obstacles) {
         ctx().save();
         ctx().scale(scaling(), scaling());
         worldMap.tiles().forEach(tile -> drawTileUnscaled(tile, worldMap.content(LayerID.TERRAIN, tile)));

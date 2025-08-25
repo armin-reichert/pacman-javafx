@@ -9,7 +9,9 @@ import de.amr.pacmanfx.lib.tilemap.Obstacle;
 import de.amr.pacmanfx.lib.tilemap.ObstacleSegment;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.uilib.rendering.BaseCanvasRenderer;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -25,19 +27,28 @@ import static java.util.Objects.requireNonNull;
  */
 public class TerrainMapRenderer extends BaseCanvasRenderer implements TileMapRenderer {
 
+    public static final double DEFAULT_DOUBLE_STROKE_OUTER_WIDTH = 4;
+    public static final double DEFAULT_DOUBLE_STROKE_INNER_WIDTH = 2;
+    public static final double DEFAULT_SINGLE_STROKE_WIDTH = 1;
     public static final TerrainMapColorScheme DEFAULT_COLOR_SCHEME = new TerrainMapColorScheme(Color.BLACK, Color.RED,  Color.GOLD, Color.PINK);
 
-    protected double doubleStrokeOuterWidth;
-    protected double doubleStrokeInnerWidth;
-    protected double singleStrokeWidth;
-    protected final ObjectProperty<TerrainMapColorScheme> colorScheme = new SimpleObjectProperty<>();
+    protected final ObjectProperty<TerrainMapColorScheme> colorScheme = new SimpleObjectProperty<>(DEFAULT_COLOR_SCHEME);
+    protected final DoubleProperty doubleStrokeOuterWidth = new SimpleDoubleProperty(DEFAULT_DOUBLE_STROKE_OUTER_WIDTH);
+    protected final DoubleProperty doubleStrokeInnerWidth = new SimpleDoubleProperty(DEFAULT_DOUBLE_STROKE_INNER_WIDTH);
+    protected final DoubleProperty singleStrokeWidth = new SimpleDoubleProperty(DEFAULT_SINGLE_STROKE_WIDTH);
 
     public TerrainMapRenderer(Canvas canvas) {
         super(canvas);
-        doubleStrokeOuterWidth = 4;
-        doubleStrokeInnerWidth = 2;
-        singleStrokeWidth = 1;
-        colorScheme.set(DEFAULT_COLOR_SCHEME);
+    }
+
+    @Override
+    public void drawTile(Vector2i tile, byte content) {
+        // this renderer doesn't draw tiles individually but complete paths
+        //TODO adjust renderer types
+    }
+
+    public ObjectProperty<TerrainMapColorScheme> colorSchemeProperty() {
+        return colorScheme;
     }
 
     public TerrainMapColorScheme colorScheme() {
@@ -48,35 +59,55 @@ public class TerrainMapRenderer extends BaseCanvasRenderer implements TileMapRen
         this.colorScheme.set(requireNonNull(colorScheme));
     }
 
-    public ObjectProperty<TerrainMapColorScheme> colorSchemeProperty() {
-        return colorScheme;
+    public DoubleProperty doubleStrokeInnerWidthProperty() {
+        return doubleStrokeInnerWidth;
     }
 
     public void setDoubleStrokeInnerWidth(double width) {
-        doubleStrokeInnerWidth = width;
+        doubleStrokeInnerWidth.set(width);
+    }
+
+    public double doubleStrokeInnerWidth() {
+        return doubleStrokeInnerWidth.get();
+    }
+
+    public DoubleProperty doubleStrokeOuterWidthProperty() {
+        return doubleStrokeOuterWidth;
     }
 
     public void setDoubleStrokeOuterWidth(double width) {
-        doubleStrokeOuterWidth = width;
+        doubleStrokeOuterWidth.set(width);
+    }
+
+    public double doubleStrokeOuterWidth() {
+        return doubleStrokeOuterWidth.get();
+    }
+
+    public DoubleProperty singleStrokeWidthProperty() {
+        return singleStrokeWidth;
     }
 
     public void setSingleStrokeWidth(double width) {
-        singleStrokeWidth = width;
+        singleStrokeWidth.set(width);
     }
 
-    public void drawTerrain(WorldMap worldMap, Set<Obstacle> obstacles) {
+    public double singleStrokeWidth() {
+        return singleStrokeWidth.get();
+    }
+
+    public void draw(WorldMap worldMap, Set<Obstacle> obstacles) {
         ctx().save();
         ctx().scale(scaling(), scaling());
         for (Obstacle obstacle : obstacles) {
             if (startsAtBorder(obstacle, worldMap)) {
-                drawObstacle(obstacle, doubleStrokeOuterWidth, false, colorScheme().wallFillColor(), colorScheme().wallStrokeColor());
-                drawObstacle(obstacle, doubleStrokeInnerWidth, false, colorScheme().wallFillColor(), colorScheme().wallFillColor());
+                drawObstacle(obstacle, doubleStrokeOuterWidth(), false, colorScheme().wallFillColor(), colorScheme().wallStrokeColor());
+                drawObstacle(obstacle, doubleStrokeInnerWidth(), false, colorScheme().wallFillColor(), colorScheme().wallFillColor());
             }
         }
         for (Obstacle obstacle : obstacles) {
             if (!startsAtBorder(obstacle, worldMap)) {
                 //boolean hasParent = obstacle.getParent() != null;
-                drawObstacle(obstacle, singleStrokeWidth, true, colorScheme().wallFillColor(), colorScheme().wallStrokeColor());
+                drawObstacle(obstacle, singleStrokeWidth(), true, colorScheme().wallFillColor(), colorScheme().wallStrokeColor());
             }
         }
         ctx().restore();
@@ -88,7 +119,7 @@ public class TerrainMapRenderer extends BaseCanvasRenderer implements TileMapRen
             || start.y() <= 4*TS || start.y() >= (worldMap.numRows() - 1) * TS;
     }
 
-    private void drawObstacle(Obstacle obstacle, double lineWidth, boolean fill, Color fillColor, Color strokeColor) {
+    protected void drawObstacle(Obstacle obstacle, double lineWidth, boolean fill, Color fillColor, Color strokeColor) {
         int r = HTS;
         Vector2i p = obstacle.startPoint();
         ctx().beginPath();
@@ -142,21 +173,16 @@ public class TerrainMapRenderer extends BaseCanvasRenderer implements TileMapRen
         ctx().stroke();
     }
 
-    @Override
-    public void drawTile(Vector2i tile, byte content) {
-        // this renderer doesn't draw tiles individually but draws complete paths
-    }
-
     public void drawHouse(Vector2i origin, Vector2i size) {
         ctx().save();
         ctx().scale(scaling(), scaling());
-        drawHouseWalls(origin, size, colorScheme().wallStrokeColor(), doubleStrokeOuterWidth);
-        drawHouseWalls(origin, size, colorScheme().wallFillColor(), doubleStrokeInnerWidth);
+        drawHouseWalls(origin, size, colorScheme().wallStrokeColor(), doubleStrokeOuterWidth());
+        drawHouseWalls(origin, size, colorScheme().wallFillColor(), doubleStrokeInnerWidth());
         drawDoors(origin.plus((size.x() / 2 - 1), 0));
         ctx().restore();
     }
 
-    private void drawHouseWalls(Vector2i origin, Vector2i size, Color color, double lineWidth) {
+    protected void drawHouseWalls(Vector2i origin, Vector2i size, Color color, double lineWidth) {
         Vector2i p = origin.scaled(TS).plus(HTS, HTS);
         double w = (size.x() - 1) * TS, h = (size.y() - 1) * TS - 2;
         ctx().save();
@@ -175,9 +201,9 @@ public class TerrainMapRenderer extends BaseCanvasRenderer implements TileMapRen
     }
 
     // assume we always have a pair of horizontally neighbored doors
-    private void drawDoors(Vector2i tile) {
+    protected void drawDoors(Vector2i tile) {
         double x = tile.x() * TS, y = tile.y() * TS + 3;
-        ctx().setFill(colorScheme().backgroundColor());
+        ctx().setFill(colorScheme().floorColor());
         ctx().fillRect(x, y - 1, 2 * TS, 4);
         ctx().setFill(colorScheme().doorColor());
         ctx().fillRect(x-2, y, 2 * TS + 4, 2);

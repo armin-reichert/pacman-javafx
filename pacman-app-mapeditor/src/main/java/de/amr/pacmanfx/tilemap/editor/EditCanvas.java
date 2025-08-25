@@ -129,7 +129,7 @@ public class EditCanvas {
         double width = canvas.getWidth(), height = canvas.getHeight();
         ctx.setImageSmoothing(false);
 
-        ctx.setFill(terrainMapColorScheme.backgroundColor());
+        ctx.setFill(terrainMapColorScheme.floorColor());
         ctx.fillRect(0, 0, width, height);
 
         if (templateImageGreyPy.get() != null) {
@@ -158,7 +158,7 @@ public class EditCanvas {
             renderer.setColorScheme(terrainMapColorScheme);
             renderer.setSegmentNumbersDisplayed(editor.isSegmentNumbersVisible());
             renderer.setObstacleInnerAreaDisplayed(editor.isObstacleInnerAreaDisplayed());
-            renderer.drawTerrain(worldMap(), worldMap().obstacles());
+            renderer.draw(worldMap(), worldMap().obstacles());
             obstacleEditor.draw(renderer);
         }
 

@@ -54,12 +54,12 @@ public class GenericMapRenderer extends BaseCanvasRenderer {
         WorldMap worldMap = gameLevel.worldMap();
         if (info.getBoolean("bright")) {
             terrainRenderer.setColorScheme(info.getBoolean("blinkingOn") ? blinkingOnColors : blinkingOffColors);
-            terrainRenderer.drawTerrain(worldMap, worldMap.obstacles());
+            terrainRenderer.draw(worldMap, worldMap.obstacles());
         }
         else {
             TerrainMapColorScheme colorScheme = info.get("terrainMapColorScheme", TerrainMapColorScheme.class);
             terrainRenderer.setColorScheme(colorScheme);
-            terrainRenderer.drawTerrain(worldMap, worldMap.obstacles());
+            terrainRenderer.draw(worldMap, worldMap.obstacles());
 
             gameLevel.house().ifPresent(house -> terrainRenderer.drawHouse(house.minTile(), house.sizeInTiles()));
 
