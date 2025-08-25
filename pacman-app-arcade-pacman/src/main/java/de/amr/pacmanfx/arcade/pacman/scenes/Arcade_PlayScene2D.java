@@ -60,6 +60,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     private HUDRenderer hudRenderer;
     private GameLevelRenderer gameLevelRenderer;
     private ActorRenderer actorRenderer;
+
     private LevelCompletedAnimation levelCompletedAnimation;
 
     private class PlaySceneDebugInfoRenderer extends DefaultDebugInfoRenderer {
