@@ -47,20 +47,27 @@ public class TengenMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HU
         requireNonNull(data);
         requireNonNull(sceneSize);
 
-        if (!data.isVisible()) return;
-
         TengenMsPacMan_GameModel game = gameContext.game();
-        if (data.isScoreVisible()) {
+        TengenMsPacMan_HUDData hudData = (TengenMsPacMan_HUDData) data;
+
+        if (!hudData.isVisible()) return;
+
+        if (hudData.isScoreVisible()) {
             drawScores(game.scoreManager(), clock.tickCount(), nesColor(0x20), arcadeFontTS());
         }
-        if (data.isLivesCounterVisible()) {
-            drawLivesCounter(data.livesCounter(), game.lifeCount(), TS(2), sceneSize.y() - TS);
+
+        if (hudData.isLivesCounterVisible()) {
+            drawLivesCounter(hudData.livesCounter(), game.lifeCount(), TS(2), sceneSize.y() - TS);
         }
-        if (data.isLevelCounterVisible()) {
-            var hudData = (TengenMsPacMan_HUDData) data;
+
+        if (hudData.isLevelCounterVisible()) {
             TengenMsPacMan_LevelCounter levelCounter = hudData.levelCounter();
             float x = sceneSize.x() - TS(2), y = sceneSize.y() - TS;
             drawLevelCounter(levelCounter.displayedLevelNumber(), levelCounter, x, y);
+        }
+
+        if (hudData.gameOptionsVisible()) {
+            drawGameOptions(game.mapCategory(), game.difficulty(), game.pacBooster(), 0.5 * sceneSize.x(), TS(2.5));
         }
     }
 

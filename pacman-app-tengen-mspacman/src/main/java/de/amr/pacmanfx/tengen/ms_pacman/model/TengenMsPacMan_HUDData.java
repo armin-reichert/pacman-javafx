@@ -11,6 +11,15 @@ public class TengenMsPacMan_HUDData implements HUDData {
     private boolean livesCounterVisible = true;
     private boolean levelCounterVisible = true;
     private boolean scoreVisible = true;
+    private boolean gameOptionsVisible = false;
+
+    public void showGameOptions(boolean b) {
+        gameOptionsVisible = b;
+    }
+
+    public boolean gameOptionsVisible() {
+        return gameOptionsVisible;
+    }
 
     @Override
     public void show(boolean b) { visible = b; }
@@ -21,6 +30,7 @@ public class TengenMsPacMan_HUDData implements HUDData {
     @Override
     public boolean isCreditVisible() { return false; }
 
+    @Override
     public void showCredit(boolean b) { /* not needed */ }
 
     @Override
