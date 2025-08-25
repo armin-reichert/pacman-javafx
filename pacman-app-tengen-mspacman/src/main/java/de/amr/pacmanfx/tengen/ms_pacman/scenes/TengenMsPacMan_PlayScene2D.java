@@ -17,16 +17,16 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.*;
+import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_ActorRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameLevelRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_HUDRenderer;
+import de.amr.pacmanfx.ui.ActionBinding;
 import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
-import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
-import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -45,6 +45,7 @@ import org.tinylog.Logger;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -59,26 +60,49 @@ import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_MUTED;
 import static de.amr.pacmanfx.uilib.Ufx.createContextMenuTitle;
 
 /**
- * Tengen Ms. Pac-Man play scene, uses vertical scrolling by default.
+ * Tengen Ms. Pac-Man play scene, uses vertical scrolling by default to accommodate to NES screen size.
  */
 public class TengenMsPacMan_PlayScene2D extends GameScene2D {
-    // 32 tiles (NES screen width)
-    private static final int UNSCALED_CANVAS_WIDTH = NES_TILES.x() * TS;
-    // 42 tiles (BIG maps height) + 2 extra rows
-    private static final int UNSCALED_CANVAS_HEIGHT = 44 * TS;
+
+    /** Unscaled canvas width: 32 tiles (NES screen width) */
+    public static final int UNSCALED_CANVAS_WIDTH = NES_TILES.x() * TS;
+
+    /** Unscaled canvas height: 42 tiles (BIG maps height) + 2 extra rows */
+    public static final int UNSCALED_CANVAS_HEIGHT = 44 * TS;
 
     private final ObjectProperty<SceneDisplayMode> displayModeProperty = new SimpleObjectProperty<>(SceneDisplayMode.SCROLLING);
+    private final BooleanProperty mazeHighlighted = new SimpleBooleanProperty(false);
 
     private final SubScene subScene;
     private final DynamicCamera dynamicCamera = new DynamicCamera();
     private final ParallelCamera fixedCamera  = new ParallelCamera();
-    private final Rectangle contentClipArea = new Rectangle();
+    private final Rectangle clipRect = new Rectangle();
+
+    private class TengenPlaySceneDebugInfoRenderer extends DefaultDebugInfoRenderer {
+
+        public TengenPlaySceneDebugInfoRenderer(GameUI ui) {
+            super(ui, canvas);
+        }
+
+        @Override
+        public void drawDebugInfo() {
+            drawTileGrid(UNSCALED_CANVAS_WIDTH, UNSCALED_CANVAS_HEIGHT, Color.LIGHTGRAY);
+            ctx.save();
+            ctx.translate(scaled(2 * TS), 0);
+            ctx.setFill(debugTextFill);
+            ctx.setFont(debugTextFont);
+            ctx.fillText("%s %d".formatted(context().gameState(), context().gameState().timer().tickCount()), 0, scaled(3 * TS));
+            if (context().optGameLevel().isPresent()) {
+                drawMovingActorInfo(ctx, scaling(), context().gameLevel().pac());
+                ghostsByZ(context().gameLevel()).forEach(ghost -> drawMovingActorInfo(ctx, scaling(), ghost));
+            }
+            ctx.restore();
+        }
+    }
 
     private TengenMsPacMan_HUDRenderer hudRenderer;
     private TengenMsPacMan_GameLevelRenderer gameLevelRenderer;
-    private ActorRenderer actorRenderer;
-
-    private final BooleanProperty mazeHighlighted = new SimpleBooleanProperty(false);
+    private TengenMsPacMan_ActorRenderer actorRenderer;
 
     private LevelCompletedAnimation levelCompletedAnimation;
 
@@ -86,41 +110,37 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         super(ui);
 
         backgroundColorProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
-        displayModeProperty().bind(PROPERTY_PLAY_SCENE_DISPLAY_MODE);
+        displayModeProperty.bind(PROPERTY_PLAY_SCENE_DISPLAY_MODE);
 
-        // use own canvas, not the shared canvas from the game view
+        // Play scene uses its own canvas, not the one from the game view
         canvas = new Canvas();
         canvas.widthProperty() .bind(scalingProperty().multiply(UNSCALED_CANVAS_WIDTH));
         canvas.heightProperty().bind(scalingProperty().multiply(UNSCALED_CANVAS_HEIGHT));
 
-        // The maps are only 28 tiles wide. To avoid seeing the actors outside the map e.g. when going through portals,
-        // 2 tiles on each side of the canvas are clipped. and not drawn.
-        contentClipArea.xProperty().bind(canvas.translateXProperty().add(scalingProperty().multiply(2 * TS)));
-        contentClipArea.yProperty().bind(canvas.translateYProperty());
-        contentClipArea.widthProperty().bind(canvas.widthProperty().subtract(scalingProperty().multiply(4 * TS)));
-        contentClipArea.heightProperty().bind(canvas.heightProperty());
+        // The maps are 28 tiles wide while the NES screen is 32 tiles wide. The map is displayed horizontally centered
+        // on the NES screen and the unused 2 tiles on each side are clipped.
+        clipRect.xProperty().bind(canvas.translateXProperty().add(scalingProperty().multiply(2 * TS)));
+        clipRect.yProperty().bind(canvas.translateYProperty());
+        clipRect.widthProperty().bind(canvas.widthProperty().subtract(scalingProperty().multiply(4 * TS)));
+        clipRect.heightProperty().bind(canvas.heightProperty());
 
-        var root = new StackPane(canvas);
-        root.setBackground(null);
+        var rootPane = new StackPane(canvas);
+        rootPane.setBackground(null);
 
-        subScene = new SubScene(root, 88, 88); // size gets bound to parent scene size when embedded in game view
+        // Scene size gets bound to parent scene size when embedded in game view so initial size is 88 ("doesn't matter")
+        subScene = new SubScene(rootPane, 88, 88);
         subScene.fillProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
-        subScene.cameraProperty().bind(displayModeProperty()
-            .map(displayMode -> displayMode == SceneDisplayMode.SCROLLING ? dynamicCamera : fixedCamera));
+        subScene.cameraProperty().bind(displayModeProperty.map(mode -> mode == SceneDisplayMode.SCROLLING ? dynamicCamera : fixedCamera));
 
         dynamicCamera.scalingProperty().bind(scalingProperty());
     }
 
-    public ObjectProperty<SceneDisplayMode> displayModeProperty() {
-        return displayModeProperty;
-    }
-
-    private void setActionsBindings() {
-        var tengenActionBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().actionBindings();
-        if (context().gameLevel().isDemoLevel()) {
+    private void setActionsBindings(boolean demoLevel) {
+        Set<ActionBinding> tengenActionBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().actionBindings();
+        if (demoLevel) {
             actionBindings.assign(ACTION_QUIT_DEMO_LEVEL, tengenActionBindings);
         } else {
-            // Steer Pac-Man using current "Joypad" settings
+            // Pac-Man is steered with keys representing the "Joypad" buttons
             actionBindings.assign(ACTION_STEER_UP,    tengenActionBindings);
             actionBindings.assign(ACTION_STEER_DOWN,  tengenActionBindings);
             actionBindings.assign(ACTION_STEER_LEFT,  tengenActionBindings);
@@ -139,18 +159,18 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void doInit() {
-        GameUI_Config uiConfig = ui.currentConfig();
+        TengenMsPacMan_UIConfig uiConfig = ui.currentConfig();
 
-        hudRenderer = (TengenMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas);
-        gameLevelRenderer = (TengenMsPacMan_GameLevelRenderer) uiConfig.createGameLevelRenderer(canvas);
-        actorRenderer = uiConfig.createActorSpriteRenderer(canvas);
-        debugInfoRenderer = new PlaySceneDebugInfoRenderer(ui);
+        hudRenderer       = uiConfig.createHUDRenderer(canvas);
+        gameLevelRenderer = uiConfig.createGameLevelRenderer(canvas);
+        actorRenderer     = uiConfig.createActorSpriteRenderer(canvas);
+        debugInfoRenderer = new TengenPlaySceneDebugInfoRenderer(ui);
 
         bindRendererProperties(hudRenderer, gameLevelRenderer, actorRenderer, debugInfoRenderer);
 
         context().game().hudData().score(true).levelCounter(true).livesCounter(true);
 
-        dynamicCamera.moveTop();
+        dynamicCamera.targetTop();
     }
 
     @Override
@@ -162,26 +182,30 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void update() {
-        context().optGameLevel().ifPresent(level -> {
-            if (level.isDemoLevel()) {
+        context().optGameLevel().ifPresent(gameLevel -> {
+            if (gameLevel.isDemoLevel()) {
                 ui.soundManager().setEnabled(false);
             } else {
-                level.optMessage()
+                ui.soundManager().setEnabled(true);
+                // Update moving "game over" message if present
+                gameLevel.optMessage()
                     .filter(GameOverMessage.class::isInstance)
                     .map(GameOverMessage.class::cast)
                     .ifPresent(GameOverMessage::update);
-                ui.soundManager().setEnabled(true);
                 updateSound();
             }
-            if (subScene.getCamera() == dynamicCamera) {
-                if (context().gameState() == HUNTING) {
-                    dynamicCamera.setFocussingActor(true);
-                }
-                dynamicCamera.setVerticalRangeInTiles(level.worldMap().numRows());
-                dynamicCamera.update(level.pac());
-            }
+            updateCamera(gameLevel);
             updateHUD();
         });
+    }
+
+    private void updateCamera(GameLevel gameLevel) {
+        if (subScene.getCamera() == dynamicCamera) {
+            //TODO check if this is correct
+            dynamicCamera.setFollowTarget(context().gameState() == HUNTING);
+            dynamicCamera.setVerticalRangeInTiles(gameLevel.worldMap().numRows());
+            dynamicCamera.update(gameLevel.pac());
+        }
     }
 
     // Context menu
@@ -264,10 +288,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         }
     }
 
-    private void initForGameLevel() {
-        context().game().hudData().showLevelCounter(true);
-        context().game().hudData().showLivesCounter(true); // is also visible in demo level!
-        setActionsBindings();
+    private void initForGameLevel(GameLevel gameLevel) {
+        context().game().hudData().levelCounter(true).livesCounter(true); // is also visible in demo level!
+        setActionsBindings(gameLevel.isDemoLevel());
 
         //TODO check if this is needed, if not, remove
         gameLevelRenderer = (TengenMsPacMan_GameLevelRenderer) ui.currentConfig().createGameLevelRenderer(canvas);
@@ -276,28 +299,26 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void onLevelCreated(GameEvent e) {
-        initForGameLevel();
+        initForGameLevel(ui.gameContext().gameLevel());
     }
 
     @Override
     public void onSwitch_3D_2D(GameScene scene3D) {
         // Switch might occur just during the few ticks when level is not yet available!
-        if (context().optGameLevel().isPresent()) {
-            initForGameLevel();
-        }
+        context().optGameLevel().ifPresent(this::initForGameLevel);
     }
 
     @Override
     public void onLevelStarted(GameEvent e) {
         dynamicCamera.setIdleTime(90);
-        dynamicCamera.setCameraTopOfScene();
-        dynamicCamera.moveBottom();
+        dynamicCamera.moveTop();
+        dynamicCamera.targetBottom();
     }
 
     @Override
     public void onEnterGameState(GameState state) {
         switch (state) {
-            case HUNTING -> dynamicCamera.setFocussingActor(true);
+            case HUNTING -> dynamicCamera.setFollowTarget(true);
             case LEVEL_COMPLETE -> {
                 ui.soundManager().stopAll();
                 levelCompletedAnimation = new LevelCompletedAnimation(animationRegistry);
@@ -316,7 +337,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
                         double width = gameLevelRenderer.messageTextWidth(context().gameLevel(), MessageType.GAME_OVER);
                         gameOverMessage.start(sizeInPx().x(), width);
                     });
-                dynamicCamera.moveTop();
+                dynamicCamera.targetTop();
             }
             default -> {}
         }
@@ -355,7 +376,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void onPacDead(GameEvent e) {
-        dynamicCamera.moveTop();
+        dynamicCamera.targetTop();
         context().gameController().letCurrentGameStateExpire();
     }
 
@@ -425,7 +446,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
             ctx().save();
             // map width is 28 tiles but NES screen width is 32 tiles: move 2 tiles right and clip one tile on each side
             ctx().translate(scaled(TS(2)), 0);
-            canvas.setClip(contentClipArea);
+            canvas.setClip(clipRect);
             drawGameLevel(context().gameLevel());
             drawActors();
             drawHUD();
@@ -515,28 +536,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
             levelCounter.setDisplayedLevelNumber(0); // no level number boxes for ARCADE maps or when level not yet created
         } else {
             levelCounter.setDisplayedLevelNumber(context().gameLevel().number());
-        }
-    }
-
-    private class PlaySceneDebugInfoRenderer extends DefaultDebugInfoRenderer {
-
-        public PlaySceneDebugInfoRenderer(GameUI ui) {
-            super(ui, canvas);
-        }
-
-        @Override
-        public void drawDebugInfo() {
-            drawTileGrid(UNSCALED_CANVAS_WIDTH, UNSCALED_CANVAS_HEIGHT, Color.LIGHTGRAY);
-            ctx.save();
-            ctx.translate(scaled(2 * TS), 0);
-            ctx.setFill(debugTextFill);
-            ctx.setFont(debugTextFont);
-            ctx.fillText("%s %d".formatted(context().gameState(), context().gameState().timer().tickCount()), 0, scaled(3 * TS));
-            if (context().optGameLevel().isPresent()) {
-                drawMovingActorInfo(ctx, scaling(), context().gameLevel().pac());
-                ghostsByZ(context().gameLevel()).forEach(ghost -> drawMovingActorInfo(ctx, scaling(), ghost));
-            }
-            ctx.restore();
         }
     }
 }

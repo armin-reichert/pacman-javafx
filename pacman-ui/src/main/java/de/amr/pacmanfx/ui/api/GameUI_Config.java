@@ -47,11 +47,11 @@ public interface GameUI_Config extends GameScene_Config, Disposable {
 
     AnimationManager createGhostAnimations(Ghost ghost);
 
-    Node createLivesCounterShape3D();
-
     AnimationManager createPacAnimations(Pac pac);
 
     PacBase3D createPac3D(AnimationRegistry animationMgr, GameLevel gameLevel, Pac pac);
+
+    Node createLivesCounterShape3D();
 
     default boolean hasGameCanvasRoundedBorder() { return true; }
 

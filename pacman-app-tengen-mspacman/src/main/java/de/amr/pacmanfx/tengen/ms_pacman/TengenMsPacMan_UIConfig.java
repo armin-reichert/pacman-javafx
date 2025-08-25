@@ -270,12 +270,12 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     }
 
     @Override
-    public HUDRenderer createHUDRenderer(Canvas canvas) {
+    public TengenMsPacMan_HUDRenderer createHUDRenderer(Canvas canvas) {
         return new TengenMsPacMan_HUDRenderer(canvas, this);
     }
 
     @Override
-    public ActorRenderer createActorSpriteRenderer(Canvas canvas) {
+    public TengenMsPacMan_ActorRenderer createActorSpriteRenderer(Canvas canvas) {
         return new TengenMsPacMan_ActorRenderer(canvas, this);
     }
 
