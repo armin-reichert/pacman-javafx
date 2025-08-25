@@ -116,7 +116,7 @@ public class MiniGameView extends VBox {
         gameLevelRenderer.scalingProperty().bind(scaling);
         gameLevelRenderer.backgroundColorProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
 
-        actorRenderer = ui.currentConfig().createActorSpriteRenderer(canvas);
+        actorRenderer = ui.currentConfig().createActorRenderer(canvas);
         actorRenderer.scalingProperty().bind(scaling);
         actorRenderer.backgroundColorProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
     }

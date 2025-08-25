@@ -77,7 +77,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
         spriteSheet = (TengenMsPacMan_SpriteSheet) uiConfig.spriteSheet();
 
         scenesRenderer = new TengenMsPacMan_ScenesRenderer(canvas, uiConfig);
-        actorRenderer = uiConfig.createActorSpriteRenderer(canvas);
+        actorRenderer = uiConfig.createActorRenderer(canvas);
 
         bindRendererProperties(scenesRenderer, actorRenderer);
 

@@ -41,7 +41,7 @@ public interface GameUI_Config extends GameScene_Config, Disposable {
 
     HUDRenderer createHUDRenderer(Canvas canvas);
 
-    ActorRenderer createActorSpriteRenderer(Canvas canvas);
+    ActorRenderer createActorRenderer(Canvas canvas);
 
     AnimationManager createGhostAnimations(Ghost ghost);
 

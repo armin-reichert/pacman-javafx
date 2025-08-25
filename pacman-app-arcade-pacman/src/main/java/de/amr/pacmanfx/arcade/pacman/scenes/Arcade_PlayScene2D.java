@@ -124,7 +124,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
         // Can be Pac-Man or Ms.Pac-Man renderer!
         hudRenderer = uiConfig.createHUDRenderer(canvas);
         gameLevelRenderer = uiConfig.createGameLevelRenderer(canvas);
-        actorRenderer = uiConfig.createActorSpriteRenderer(canvas);
+        actorRenderer = uiConfig.createActorRenderer(canvas);
         debugInfoRenderer = new PlaySceneDebugInfoRenderer(ui);
 
         bindRendererProperties(hudRenderer, gameLevelRenderer, actorRenderer, debugInfoRenderer);

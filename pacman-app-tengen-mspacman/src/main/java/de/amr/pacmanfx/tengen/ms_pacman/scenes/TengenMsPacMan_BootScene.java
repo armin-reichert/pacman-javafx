@@ -28,13 +28,12 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     public static final String TENGEN_PRESENTS = "TENGEN PRESENTS";
     public static final Color GRAY = nesColor(0x10);
 
-    private static final float GHOST_Y = 21.5f * TS;
+    private static final float GHOST_Y = TS(21.5);
 
-    private long tick;
+    private int tick;
     private boolean grayScreen;
     private Actor movingText;
     private Ghost ghost;
-
     private TengenMsPacMan_ActorRenderer actorRenderer;
 
     public TengenMsPacMan_BootScene(GameUI ui) {
@@ -45,14 +44,12 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     public void doInit() {
         GameUI_Config uiConfig = ui.currentConfig();
 
-        actorRenderer = (TengenMsPacMan_ActorRenderer) uiConfig.createActorSpriteRenderer(canvas);
-
+        actorRenderer = (TengenMsPacMan_ActorRenderer) uiConfig.createActorRenderer(canvas);
         bindRendererProperties(actorRenderer);
 
-        tick = 0;
-        grayScreen = false;
-
         movingText = new Actor();
+        movingText.setPosition(TS(9), sizeInPx().y()); // lower border of screen
+        movingText.setVelocity(Vector2f.ZERO);
 
         ghost = createGhost(RED_GHOST_SHADOW);
         ghost.setSpeed(0);
@@ -60,39 +57,46 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
         ghost.selectAnimation(ANIM_GHOST_NORMAL);
     }
 
+    private void grayOn()  { grayScreen = true; }
+    private void grayOff() { grayScreen = false; }
+
     @Override
     protected void doEnd() {}
 
     @Override
     public void update() {
+        tick = (int) context().gameState().timer().tickCount();
+
         ghost.move();
         movingText.move();
-        tick += 1;
-        if (tick == 7) {
-            grayScreen = true;
-        } else if (tick == 12) {
-            grayScreen = false;
-        } else if (tick == 21) {
-            movingText.setPosition(9 * TS, sizeInPx().y()); // lower border of screen
-            movingText.setVelocity(0, -HTS);
-            movingText.show();
-        } else if (tick == 55) {
-            movingText.setPosition(9 * TS, 13 * TS);
-            movingText.setVelocity(Vector2f.ZERO);
-        } else if (tick == 113) {
-            ghost.setPosition(sizeInPx().x() - TS, GHOST_Y);
-            ghost.setMoveDir(Direction.LEFT);
-            ghost.setWishDir(Direction.LEFT);
-            ghost.setSpeed(TS);
-            ghost.show();
-        } else if (tick == 181) {
-            movingText.setVelocity(0, TS);
-        } else if (tick == 203) {
-            grayScreen = true;
-        } else if (tick == 214) {
-            grayScreen = false;
-        } else if (tick == 220) {
-            context().gameController().changeGameState(GamePlayState.INTRO);
+
+        switch (tick) {
+            case   1 -> grayOff();
+            case   7 -> grayOn();
+            case  12 -> grayOff();
+            case  21 -> {
+                movingText.setVelocity(0, -HTS);
+                movingText.show();
+            }
+            case  55 -> {
+                movingText.setPosition(TS(9), TS(13));
+                movingText.setVelocity(Vector2f.ZERO);
+            }
+            case 113 -> {
+                ghost.setPosition(sizeInPx().x() - TS, GHOST_Y);
+                ghost.setMoveDir(Direction.LEFT);
+                ghost.setWishDir(Direction.LEFT);
+                ghost.setSpeed(TS);
+                ghost.show();
+            }
+            case 181 -> movingText.setVelocity(0, TS);
+            case 203 -> {
+                grayOn();
+                movingText.hide();
+                ghost.hide();
+            }
+            case 214 -> grayOff();
+            case 220 -> context().gameController().changeGameState(GamePlayState.INTRO);
         }
     }
 
@@ -111,8 +115,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
         if (grayScreen) {
             actorRenderer.fillCanvas(GRAY);
         } else {
-            actorRenderer.fillText(TENGEN_PRESENTS, blueShadedColor(tick), actorRenderer.arcadeFontTS(),
-                    movingText.x(), movingText.y());
+            actorRenderer.fillText(TENGEN_PRESENTS, blueShadedColor(tick), actorRenderer.arcadeFontTS(), movingText.x(), movingText.y());
             actorRenderer.drawActor(ghost);
         }
     }

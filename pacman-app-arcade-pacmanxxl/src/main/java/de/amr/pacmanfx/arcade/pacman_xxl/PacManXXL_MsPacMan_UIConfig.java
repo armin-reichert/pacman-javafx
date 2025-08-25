@@ -174,7 +174,7 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config {
     }
 
     @Override
-    public ActorRenderer createActorSpriteRenderer(Canvas canvas) {
+    public ActorRenderer createActorRenderer(Canvas canvas) {
         return new ArcadeMsPacMan_ActorRenderer(canvas, this);
     }
 

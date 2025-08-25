@@ -67,7 +67,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         final var spriteSheet = (ArcadeMsPacMan_SpriteSheet) uiConfig.spriteSheet();
 
         hudRenderer = (ArcadeMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas);
-        actorSpriteRenderer = (ArcadeMsPacMan_ActorRenderer) uiConfig.createActorSpriteRenderer(canvas);
+        actorSpriteRenderer = (ArcadeMsPacMan_ActorRenderer) uiConfig.createActorRenderer(canvas);
 
         bindRendererProperties(hudRenderer, actorSpriteRenderer);
 
