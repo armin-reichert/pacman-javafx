@@ -133,6 +133,8 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
     public void update() {
         final int t = (int) context().gameState().timer().tickCount();
 
+        clapperboard.tick();
+
         pacMan.move();
         msPacMan.move();
         inky.move();
@@ -147,86 +149,83 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
             }
         }
 
-        clapperboard.tick();
+        switch (t) {
+            case 130 -> {
+                pacMan.setSpeed(SPEED_CHASING);
+                pacMan.playAnimation(ANIM_PAC_MAN_MUNCHING);
+                pacMan.show();
 
-        if (t == 130) {
-            pacMan.setSpeed(SPEED_CHASING);
-            pacMan.playAnimation(ANIM_PAC_MAN_MUNCHING);
-            pacMan.show();
+                msPacMan.setSpeed(SPEED_CHASING);
+                msPacMan.playAnimation(ANIM_PAC_MUNCHING);
+                msPacMan.show();
+            }
+            case 160 -> {
+                inky.setSpeed(SPEED_CHASING);
+                inky.playAnimation(ANIM_GHOST_NORMAL);
+                inky.show();
 
-            msPacMan.setSpeed(SPEED_CHASING);
-            msPacMan.playAnimation(ANIM_PAC_MUNCHING);
-            msPacMan.show();
-        }
-        else if (t == 160) {
-            inky.setSpeed(SPEED_CHASING);
-            inky.playAnimation(ANIM_GHOST_NORMAL);
-            inky.show();
+                pinky.setSpeed(SPEED_CHASING);
+                pinky.playAnimation(ANIM_GHOST_NORMAL);
+                pinky.show();
+            }
+            case 400 -> {
+                msPacMan.setPosition(LEFT_BORDER, MIDDLE_LANE);
+                msPacMan.setMoveDir(Direction.RIGHT);
 
-            pinky.setSpeed(SPEED_CHASING);
-            pinky.playAnimation(ANIM_GHOST_NORMAL);
-            pinky.show();
+                pacMan.setPosition(RIGHT_BORDER, MIDDLE_LANE);
+                pacMan.setMoveDir(Direction.LEFT);
 
-        }
-        else if (t == 400) {
-            msPacMan.setPosition(LEFT_BORDER, MIDDLE_LANE);
-            msPacMan.setMoveDir(Direction.RIGHT);
+                pinky.setPosition(msPacMan.x() - TS * 11, msPacMan.y());
+                pinky.setMoveDir(Direction.RIGHT);
+                pinky.setWishDir(Direction.RIGHT);
 
-            pacMan.setPosition(RIGHT_BORDER, MIDDLE_LANE);
-            pacMan.setMoveDir(Direction.LEFT);
+                inky.setPosition(pacMan.x() + TS * 11, pacMan.y());
+                inky.setMoveDir(Direction.LEFT);
+                inky.setWishDir(Direction.LEFT);
+            }
+            case 454 -> {
+                pacMan.setMoveDir(Direction.UP);
+                pacMan.setSpeed(SPEED_RISING);
+                msPacMan.setMoveDir(Direction.UP);
+                msPacMan.setSpeed(SPEED_RISING);
+            }
+            case 498 -> {
+                collided = true;
 
-            pinky.setPosition(msPacMan.x() - TS * 11, msPacMan.y());
-            pinky.setMoveDir(Direction.RIGHT);
-            pinky.setWishDir(Direction.RIGHT);
+                inky.setMoveDir(Direction.RIGHT);
+                inky.setWishDir(Direction.RIGHT);
+                inky.setSpeed(SPEED_AFTER_COLLISION);
+                inky.setVelocity(inky.velocity().minus(0, 2.0f));
+                inky.setAcceleration(0, 0.4f);
 
-            inky.setPosition(pacMan.x() + TS * 11, pacMan.y());
-            inky.setMoveDir(Direction.LEFT);
-            inky.setWishDir(Direction.LEFT);
-        }
-        else if (t == 454) {
-            pacMan.setMoveDir(Direction.UP);
-            pacMan.setSpeed(SPEED_RISING);
-            msPacMan.setMoveDir(Direction.UP);
-            msPacMan.setSpeed(SPEED_RISING);
-        }
-        else if (t == 498) {
-            collided = true;
-
-            inky.setMoveDir(Direction.RIGHT);
-            inky.setWishDir(Direction.RIGHT);
-            inky.setSpeed(SPEED_AFTER_COLLISION);
-            inky.setVelocity(inky.velocity().minus(0, 2.0f));
-            inky.setAcceleration(0, 0.4f);
-
-            pinky.setMoveDir(Direction.LEFT);
-            pinky.setWishDir(Direction.LEFT);
-            pinky.setSpeed(SPEED_AFTER_COLLISION);
-            pinky.setVelocity(pinky.velocity().minus(0, 2.0f));
-            pinky.setAcceleration(0, 0.4f);
-        }
-        else if (t == 530) {
-            inky.hide();
-            pinky.hide();
-            pacMan.setSpeed(0);
-            pacMan.setMoveDir(Direction.LEFT);
-            msPacMan.setSpeed(0);
-            msPacMan.setMoveDir(Direction.RIGHT);
-        }
-        else if (t == 545) {
-            pacMan.animations().ifPresent(AnimationManager::reset);
-            msPacMan.animations().ifPresent(AnimationManager::reset);
-        }
-        else if (t == 560) {
-            heart.setPosition(0.5f * (pacMan.x() + msPacMan.x()), pacMan.y() - TS(2));
-            heart.show();
-        }
-        else if (t == 760) {
-            pacMan.hide();
-            msPacMan.hide();
-            heart.hide();
-        }
-        else if (t == 775) {
-            context().gameController().letCurrentGameStateExpire();
+                pinky.setMoveDir(Direction.LEFT);
+                pinky.setWishDir(Direction.LEFT);
+                pinky.setSpeed(SPEED_AFTER_COLLISION);
+                pinky.setVelocity(pinky.velocity().minus(0, 2.0f));
+                pinky.setAcceleration(0, 0.4f);
+            }
+            case 530 -> {
+                inky.hide();
+                pinky.hide();
+                pacMan.setSpeed(0);
+                pacMan.setMoveDir(Direction.LEFT);
+                msPacMan.setSpeed(0);
+                msPacMan.setMoveDir(Direction.RIGHT);
+            }
+            case 545 -> {
+                pacMan.animations().ifPresent(AnimationManager::reset);
+                msPacMan.animations().ifPresent(AnimationManager::reset);
+            }
+            case 560 -> {
+                heart.setPosition(0.5f * (pacMan.x() + msPacMan.x()), pacMan.y() - TS(2));
+                heart.show();
+            }
+            case 760 -> {
+                pacMan.hide();
+                msPacMan.hide();
+                heart.hide();
+            }
+            case 775 -> context().gameController().letCurrentGameStateExpire();
         }
     }
 

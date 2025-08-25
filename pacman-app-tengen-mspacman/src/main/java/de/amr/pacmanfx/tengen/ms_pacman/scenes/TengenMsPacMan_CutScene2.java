@@ -73,12 +73,16 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
         clapperboard = new Clapperboard(spriteSheet, 2, "THE CHASE");
         clapperboard.setPosition(3 * TS, 10 * TS);
         clapperboard.setFont(actorRenderer.arcadeFontTS());
+        clapperboard.show();
+        clapperboard.startAnimation();
 
         msPacMan = createMsPacMan();
         msPacMan.setAnimations(uiConfig.createPacAnimations(msPacMan));
 
         pacMan = createPacMan();
         pacMan.setAnimations(uiConfig.createPacAnimations(pacMan));
+
+        ui.soundManager().play(MUSIC_ID);
     }
 
     @Override
@@ -94,68 +98,63 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
         msPacMan.move();
         clapperboard.tick();
 
-        if (t == 1) {
-            clapperboard.show();
-            clapperboard.startAnimation();
-            ui.soundManager().play(MUSIC_ID);
-        }
-        else if (t == 270) {
-            msPacMan.setPosition(LEFT_BORDER, UPPER_LANE);
-            msPacMan.setMoveDir(Direction.RIGHT);
-            msPacMan.playAnimation(ANIM_PAC_MUNCHING);
-            msPacMan.setSpeed(2.0f);
-            msPacMan.show();
-        }
-        else if (t == 320) {
-            pacMan.setMoveDir(Direction.RIGHT);
-            pacMan.playAnimation(ANIM_PAC_MAN_MUNCHING);
-            pacMan.setPosition(LEFT_BORDER, UPPER_LANE);
-            pacMan.setMoveDir(Direction.RIGHT);
-            pacMan.setSpeed(2.0f);
-            pacMan.show();
-        }
-        else if (t == 520) {
-            pacMan.setPosition(RIGHT_BORDER, LOWER_LANE);
-            pacMan.setMoveDir(Direction.LEFT);
-            pacMan.setSpeed(2.0f);
-        }
-        else if (t == 570) {
-            msPacMan.setPosition(RIGHT_BORDER, LOWER_LANE);
-            msPacMan.setMoveDir(Direction.LEFT);
-            msPacMan.setSpeed(2.0f);
-        }
-        else if (t == 780) {
-            msPacMan.setPosition(LEFT_BORDER, MIDDLE_LANE);
-            msPacMan.setMoveDir(Direction.RIGHT);
-            msPacMan.setSpeed(2.0f);
-        }
-        else if (t == 830) {
-            pacMan.setPosition(LEFT_BORDER, MIDDLE_LANE);
-            pacMan.setMoveDir(Direction.RIGHT);
-            pacMan.setSpeed(2.0f);
-        }
-        else if (t == 1040) {
-            pacMan.setPosition(RIGHT_BORDER, UPPER_LANE);
-            pacMan.setMoveDir(Direction.LEFT);
-            pacMan.setSpeed(4.0f); //TODO correct?
-        }
-        else if (t == 1055) {
-            msPacMan.setPosition(RIGHT_BORDER, UPPER_LANE);
-            msPacMan.setMoveDir(Direction.LEFT);
-            msPacMan.setSpeed(4.0f);
-        }
-        else if (t == 1105) {
-            msPacMan.setPosition(LEFT_BORDER, LOWER_LANE);
-            msPacMan.setMoveDir(Direction.RIGHT);
-            msPacMan.setSpeed(4.0f);
-        }
-        else if (t == 1120) {
-            pacMan.setPosition(LEFT_BORDER, LOWER_LANE);
-            pacMan.setMoveDir(Direction.RIGHT);
-            pacMan.setSpeed(4.0f);
-        }
-        else if (t == 1380) {
-            context().gameController().letCurrentGameStateExpire();
+        switch (t) {
+            case 270 -> {
+                msPacMan.setPosition(LEFT_BORDER, UPPER_LANE);
+                msPacMan.setMoveDir(Direction.RIGHT);
+                msPacMan.playAnimation(ANIM_PAC_MUNCHING);
+                msPacMan.setSpeed(2.0f);
+                msPacMan.show();
+            }
+            case 320 -> {
+                pacMan.setMoveDir(Direction.RIGHT);
+                pacMan.playAnimation(ANIM_PAC_MAN_MUNCHING);
+                pacMan.setPosition(LEFT_BORDER, UPPER_LANE);
+                pacMan.setMoveDir(Direction.RIGHT);
+                pacMan.setSpeed(2.0f);
+                pacMan.show();
+            }
+            case 520 -> {
+                pacMan.setPosition(RIGHT_BORDER, LOWER_LANE);
+                pacMan.setMoveDir(Direction.LEFT);
+                pacMan.setSpeed(2.0f);
+            }
+            case 570 -> {
+                msPacMan.setPosition(RIGHT_BORDER, LOWER_LANE);
+                msPacMan.setMoveDir(Direction.LEFT);
+                msPacMan.setSpeed(2.0f);
+            }
+            case 780 -> {
+                msPacMan.setPosition(LEFT_BORDER, MIDDLE_LANE);
+                msPacMan.setMoveDir(Direction.RIGHT);
+                msPacMan.setSpeed(2.0f);
+            }
+            case 830 -> {
+                pacMan.setPosition(LEFT_BORDER, MIDDLE_LANE);
+                pacMan.setMoveDir(Direction.RIGHT);
+                pacMan.setSpeed(2.0f);
+            }
+            case 1040 -> {
+                pacMan.setPosition(RIGHT_BORDER, UPPER_LANE);
+                pacMan.setMoveDir(Direction.LEFT);
+                pacMan.setSpeed(4.0f); //TODO correct?
+            }
+            case 1055 -> {
+                msPacMan.setPosition(RIGHT_BORDER, UPPER_LANE);
+                msPacMan.setMoveDir(Direction.LEFT);
+                msPacMan.setSpeed(4.0f);
+            }
+            case 1105 -> {
+                msPacMan.setPosition(LEFT_BORDER, LOWER_LANE);
+                msPacMan.setMoveDir(Direction.RIGHT);
+                msPacMan.setSpeed(4.0f);
+            }
+            case 1120 -> {
+                pacMan.setPosition(LEFT_BORDER, LOWER_LANE);
+                pacMan.setMoveDir(Direction.RIGHT);
+                pacMan.setSpeed(4.0f);
+            }
+            case 1380 -> context().gameController().letCurrentGameStateExpire();
         }
     }
 

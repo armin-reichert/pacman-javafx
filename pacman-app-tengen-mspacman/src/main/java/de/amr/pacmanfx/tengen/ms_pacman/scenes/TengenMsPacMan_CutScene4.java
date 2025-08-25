@@ -51,7 +51,6 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     private List<Integer> juniorCreationTime;
     private Clapperboard clapperboard;
 
-    private int t;
 
     public TengenMsPacMan_CutScene4(GameUI ui) {
         super(ui);
@@ -73,6 +72,8 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         clapperboard = new Clapperboard(spriteSheet, 4, "THE END");
         clapperboard.setPosition(3*TS, 10*TS);
         clapperboard.setFont(actorRenderer.arcadeFontTS());
+        clapperboard.setVisible(true);
+        clapperboard.startAnimation();
 
         msPacMan = createMsPacMan();
         msPacMan.setAnimations(uiConfig.createPacAnimations(msPacMan));
@@ -83,7 +84,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         juniors = new ArrayList<>();
         juniorCreationTime = new ArrayList<>();
 
-        t = -1;
+        ui.soundManager().play(MUSIC_ID);
     }
 
     @Override
@@ -93,88 +94,73 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
     @Override
     public void update() {
-        t += 1;
-        if (t == 0) {
-            clapperboard.setVisible(true);
-            clapperboard.startAnimation();
-            ui.soundManager().play(MUSIC_ID);
-        }
-        else if (t == 130) {
-            pacMan.setMoveDir(Direction.RIGHT);
-            pacMan.setPosition(LEFT_BORDER, LOWER_LANE);
-            pacMan.setSpeed(1f);
-            pacMan.playAnimation(ANIM_PAC_MAN_MUNCHING);
-            pacMan.show();
+        final int tick = (int) context().gameState().timer().tickCount();
 
-            msPacMan.setMoveDir(Direction.LEFT);
-            msPacMan.setPosition(RIGHT_BORDER, LOWER_LANE);
-            msPacMan.setSpeed(1f);
-            msPacMan.playAnimation(ANIM_PAC_MUNCHING);
-            msPacMan.show();
-        }
-        else if (t == 230) {
-            pacMan.setSpeed(0);
-            pacMan.animations().ifPresent(am -> {
-                am.stop();
-                am.reset();
-            });
-            msPacMan.setSpeed(0);
-            msPacMan.animations().ifPresent(am -> {
-                am.stop();
-                am.reset();
-            });
-        }
-        else if (t == 400) {
-            pacMan.playAnimation(ANIM_PAC_MAN_MUNCHING);
-            msPacMan.playAnimation(ANIM_PAC_MUNCHING);
-        }
-        else if (t == 520) {
-            pacMan.selectAnimation(ANIM_PAC_MAN_WAVING_HAND);
-            msPacMan.selectAnimation(ANIM_MS_PAC_MAN_WAVING_HAND);
-        }
-        else if (t == 527) {
-            pacMan.animations().ifPresent(AnimationManager::play);
-            msPacMan.animations().ifPresent(AnimationManager::play);
-        }
-        else if (t == 648) {
-            pacMan.playAnimation(ANIM_PAC_MAN_TURNING_AWAY);
-            msPacMan.playAnimation(ANIM_MS_PAC_MAN_TURNING_AWAY);
-        }
-        else if (t == 650) {
-            pacMan.setSpeed(1.5f); // TODO not sure
-            pacMan.setMoveDir(Direction.UP);
-            msPacMan.setSpeed(1.5f); // TODO not sure
-            msPacMan.setMoveDir(Direction.UP);
-        }
-        else if (t == 720) {
-            pacMan.hide();
-            msPacMan.hide();
-        }
-        else if (isJuniorSpawnTime()) {
-            spawnJunior();
-        }
-        else if (t == 1512) {
-            context().gameController().changeGameState(GamePlayState.SETTING_OPTIONS_FOR_START);
-        }
+        clapperboard.tick();
 
         pacMan.move();
         msPacMan.move();
         for (int i = 0; i < juniors.size(); ++i) {
-            updateJunior(i);
+            updateJunior(tick, i);
         }
-        clapperboard.tick();
-    }
 
-    private boolean isJuniorSpawnTime() {
-        for (int i = 0; i < 8; ++i) {
-            if (t == 904 + 64*i) {
-                return true;
+        switch (tick) {
+            case 130 -> {
+                pacMan.setMoveDir(Direction.RIGHT);
+                pacMan.setPosition(LEFT_BORDER, LOWER_LANE);
+                pacMan.setSpeed(1f);
+                pacMan.playAnimation(ANIM_PAC_MAN_MUNCHING);
+                pacMan.show();
+
+                msPacMan.setMoveDir(Direction.LEFT);
+                msPacMan.setPosition(RIGHT_BORDER, LOWER_LANE);
+                msPacMan.setSpeed(1f);
+                msPacMan.playAnimation(ANIM_PAC_MUNCHING);
+                msPacMan.show();
+            } case 230 -> {
+                pacMan.setSpeed(0);
+                pacMan.animations().ifPresent(am -> {
+                    am.stop();
+                    am.reset();
+                });
+                msPacMan.setSpeed(0);
+                msPacMan.animations().ifPresent(am -> {
+                    am.stop();
+                    am.reset();
+                });
             }
+            case 400 -> {
+                pacMan.playAnimation(ANIM_PAC_MAN_MUNCHING);
+                msPacMan.playAnimation(ANIM_PAC_MUNCHING);
+            }
+            case 520 -> {
+                pacMan.selectAnimation(ANIM_PAC_MAN_WAVING_HAND);
+                msPacMan.selectAnimation(ANIM_MS_PAC_MAN_WAVING_HAND);
+            }
+            case 527 -> {
+                pacMan.animations().ifPresent(AnimationManager::play);
+                msPacMan.animations().ifPresent(AnimationManager::play);
+            }
+            case 648 -> {
+                pacMan.playAnimation(ANIM_PAC_MAN_TURNING_AWAY);
+                msPacMan.playAnimation(ANIM_MS_PAC_MAN_TURNING_AWAY);
+            }
+            case 650 -> {
+                pacMan.setSpeed(1.5f); // TODO not sure
+                pacMan.setMoveDir(Direction.UP);
+                msPacMan.setSpeed(1.5f); // TODO not sure
+                msPacMan.setMoveDir(Direction.UP);
+            }
+            case 720 -> {
+                pacMan.hide();
+                msPacMan.hide();
+            }
+            case 904, 968, 1032, 1096, 1160, 1224, 1288, 1352 -> spawnJunior(tick);
+            case 1512 -> context().gameController().changeGameState(GamePlayState.SETTING_OPTIONS_FOR_START);
         }
-        return false;
     }
 
-    private void spawnJunior() {
+    private void spawnJunior(int tick) {
         var junior = createPacMan();
         double randomX = 8 * TS + (8 * TS) * Math.random();
         junior.setPosition((float) randomX, sizeInPx().y() - 4 * TS);
@@ -184,18 +170,18 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         junior.selectAnimation(ANIM_JUNIOR);
         junior.show();
         juniors.add(junior);
-        juniorCreationTime.add(t);
+        juniorCreationTime.add(tick);
 
         String id = "audio.intermission.4.junior." + randomInt(1, 3); // 1 or 2
         ui.soundManager().loop(id);
 
-        Logger.info("Junior spawned at tick {}", t);
+        Logger.info("Junior spawned at tick {}", tick);
     }
 
-    private void updateJunior(int index) {
+    private void updateJunior(int tick, int index) {
         Pac junior = juniors.get(index);
         int creationTime = juniorCreationTime.get(index);
-        int lifeTime = t - creationTime;
+        int lifeTime = tick - creationTime;
         if (lifeTime> 0 && lifeTime % 10 == 0) {
             computeNewMoveDir(junior);
         }
