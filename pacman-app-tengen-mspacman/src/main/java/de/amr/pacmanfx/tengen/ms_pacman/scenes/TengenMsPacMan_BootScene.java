@@ -10,12 +10,10 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_ActorRenderer;
-import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
@@ -39,21 +37,6 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
 
     private TengenMsPacMan_ActorRenderer actorRenderer;
 
-    private class BootSceneDebugInfoRenderer extends DefaultDebugInfoRenderer {
-
-        public BootSceneDebugInfoRenderer(GameUI ui) {
-            super(ui, canvas);
-        }
-
-        @Override
-        public void drawDebugInfo() {
-            super.drawDebugInfo();
-            ctx.setFill(Color.WHITE);
-            ctx.setFont(Font.font(20));
-            ctx.fillText("Tick " + tick, 20, 20);
-        }
-    }
-
     public TengenMsPacMan_BootScene(GameUI ui) {
         super(ui);
     }
@@ -63,9 +46,8 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
         GameUI_Config uiConfig = ui.currentConfig();
 
         actorRenderer = (TengenMsPacMan_ActorRenderer) uiConfig.createActorSpriteRenderer(canvas);
-        debugInfoRenderer = new BootSceneDebugInfoRenderer(ui);
 
-        bindRendererProperties(actorRenderer, debugInfoRenderer);
+        bindRendererProperties(actorRenderer);
 
         tick = 0;
         grayScreen = false;
