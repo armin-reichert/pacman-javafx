@@ -1416,7 +1416,8 @@ public class TileMapEditor {
 
     private void setPreconfiguredMap(int tilesX, int tilesY) {
         var worldMap = WorldMap.emptyMap(tilesY, tilesX);
-        addBorderWall(worldMap);
+        EditorActions.ADD_BORDER_WALL.setWorldMap(worldMap);
+        EditorActions.ADD_BORDER_WALL.execute(this);
         setDefaultScatterPositions(worldMap);
         if (worldMap.numRows() >= 20) {
             Vector2i houseMinTile = Vector2i.of(tilesX / 2 - 4, tilesY / 2 - 3);
@@ -1449,23 +1450,6 @@ public class TileMapEditor {
             worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_SCATTER_ORANGE_GHOST, WorldMapFormatter.formatTile(Vector2i.of(0, numRows - 2)));
             changeManager.setTerrainMapChanged();
         }
-    }
-
-    void addBorderWall(WorldMap worldMap) {
-        int lastRow = worldMap.numRows() - 1 - EMPTY_ROWS_BELOW_MAZE, lastCol = worldMap.numCols() - 1;
-        setTileValueRespectSymmetry(worldMap, LayerID.TERRAIN, EMPTY_ROWS_BEFORE_MAZE, 0, TerrainTile.ARC_NW.$);
-        setTileValueRespectSymmetry(worldMap, LayerID.TERRAIN, EMPTY_ROWS_BEFORE_MAZE, lastCol, TerrainTile.ARC_NE.$);
-        setTileValueRespectSymmetry(worldMap, LayerID.TERRAIN, lastRow, 0, TerrainTile.ARC_SW.$);
-        setTileValueRespectSymmetry(worldMap, LayerID.TERRAIN, lastRow, lastCol, TerrainTile.ARC_SE.$);
-        for (int row = EMPTY_ROWS_BEFORE_MAZE + 1; row < lastRow; ++row) {
-            setTileValueRespectSymmetry(worldMap, LayerID.TERRAIN, row, 0, TerrainTile.WALL_V.$);
-            setTileValueRespectSymmetry(worldMap, LayerID.TERRAIN, row, lastCol, TerrainTile.WALL_V.$);
-        }
-        for (int col = 1; col < lastCol; ++col) {
-            setTileValueRespectSymmetry(worldMap, LayerID.TERRAIN, EMPTY_ROWS_BEFORE_MAZE, col, TerrainTile.WALL_H.$);
-            setTileValueRespectSymmetry(worldMap, LayerID.TERRAIN, lastRow, col, TerrainTile.WALL_H.$);
-        }
-        changeManager.setTerrainMapChanged();
     }
 
     private boolean hasTemplateImageSize(Image image) {
