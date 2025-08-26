@@ -265,7 +265,7 @@ public class TileMapEditor {
     private final ObjectProperty<WorldMap> editedWorldMap = new SimpleObjectProperty<>(WorldMap.emptyMap(28, 36)) {
         @Override
         protected void invalidated() {
-            templateImagePy.set(null);
+            templateImage.set(null);
             changeManager.setWorldMapChanged();
         }
     };
@@ -484,7 +484,7 @@ public class TileMapEditor {
         symmetricEditModeProperty().set(value);
     }
 
-    private final ObjectProperty<Image> templateImagePy = new SimpleObjectProperty<>();
+    private final ObjectProperty<Image> templateImage = new SimpleObjectProperty<>();
 
     // terrainVisible
 
@@ -540,7 +540,7 @@ public class TileMapEditor {
 
     public StringProperty titleProperty() { return title; }
 
-    public ObjectProperty<Image> templateImageProperty() { return templateImagePy; }
+    public ObjectProperty<Image> templateImageProperty() { return templateImage; }
 
     public byte selectedPaletteID() {
         return (Byte) tabPaneWithPalettes.getSelectionModel().getSelectedItem().getUserData();
@@ -784,7 +784,7 @@ public class TileMapEditor {
         registerDragAndDropImageHandler(dropTargetForTemplateImage);
 
         var stackPane = new StackPane(spTemplateImage, dropTargetForTemplateImage);
-        templateImagePy.addListener((py, ov, nv) -> {
+        templateImage.addListener((py, ov, nv) -> {
             stackPane.getChildren().remove(dropTargetForTemplateImage);
             if (nv == null) {
                 stackPane.getChildren().add(dropTargetForTemplateImage);
@@ -819,10 +819,11 @@ public class TileMapEditor {
                 File file = e.getDragboard().getFiles().getFirst();
                 if (isSupportedImageFile(file) && !isEditMode(EditMode.INSPECT)) {
                     e.acceptTransferModes(TransferMode.COPY);
-                    try (FileInputStream in = new FileInputStream(file)) {
-                        Image image = new Image(in);
-                        boolean accepted = setBlankMapForTemplateImage(image);
+                    try (FileInputStream stream = new FileInputStream(file)) {
+                        Image image = new Image(stream);
+                        boolean accepted = checkIfTemplateImageOk(image);
                         if (accepted) {
+                            acceptTemplateImage(image);
                             showMessage("Select colors for tile identification!", 10, MessageType.INFO);
                             tabPaneEditorViews.getSelectionModel().select(tabTemplateImage);
                         }
@@ -1320,41 +1321,42 @@ public class TileMapEditor {
         }
     }
 
-    private boolean hasTemplateImageSize(Image image) {
-        return image.getHeight() % TS == 0 && image.getWidth() % TS == 0;
-    }
-
-    private boolean setBlankMapForTemplateImage(Image templateImage) {
-        if (!hasTemplateImageSize(templateImage)) {
+    private boolean checkIfTemplateImageOk(Image image) {
+        boolean sizeOk = image.getHeight() % TS == 0 && image.getWidth() % TS == 0;
+        if (!sizeOk) {
             showMessage("Template image size seems dubious", 3, MessageType.WARNING);
             return false;
         }
-        int tilesX = (int) (templateImage.getWidth() / TS);
-        int tilesY = EMPTY_ROWS_BEFORE_MAZE + EMPTY_ROWS_BELOW_MAZE + (int) (templateImage.getHeight() / TS);
+        return true;
+    }
+
+    private void acceptTemplateImage(Image image) {
+        int tilesX = (int) (image.getWidth() / TS);
+        int tilesY = EMPTY_ROWS_BEFORE_MAZE + EMPTY_ROWS_BELOW_MAZE + (int) (image.getHeight() / TS);
         setBlankMap(tilesX, tilesY);
         removeTerrainMapProperty(WorldMapProperty.COLOR_WALL_FILL);
         removeTerrainMapProperty(WorldMapProperty.COLOR_WALL_STROKE);
         removeTerrainMapProperty(WorldMapProperty.COLOR_DOOR);
         removeFoodMapProperty(WorldMapProperty.COLOR_FOOD);
-        templateImagePy.set(templateImage);
-        return true;
+        templateImage.set(image);
     }
 
     void initWorldMapForTemplateImage() {
         TemplateImageManager.selectImageFile(stage, translated("open_template_image"), currentDirectory())
             .ifPresent(image -> {
-                if (setBlankMapForTemplateImage(image)) {
+                if (checkIfTemplateImageOk(image)) {
+                    acceptTemplateImage(image);
                     showMessage("Select map colors from template!", 20, MessageType.INFO);
                 }
             });
     }
 
     void closeTemplateImage() {
-        templateImagePy.set(null);
+        templateImage.set(null);
     }
 
     void populateMapFromTemplateImage(WorldMap worldMap) {
-        Image templateImage = templateImagePy.get();
+        Image templateImage = this.templateImage.get();
         if (templateImage == null) {
             return;
         }
