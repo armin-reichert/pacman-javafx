@@ -59,6 +59,11 @@ public class DefaultHUD implements HUD {
     }
 
     @Override
+    public int maxLivesDisplayed() {
+        return 5;
+    }
+
+    @Override
     public void setVisibleLifeCount(int count) {
         visibleLifeCount = count;
     }

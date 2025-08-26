@@ -535,7 +535,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         if (context().gameState() == GamePlayState.STARTING_GAME_OR_LEVEL && !gameLevel.pac().isVisible()) {
             numLives += 1;
         }
-        numLives = Math.min(numLives, game.maxLivesDisplayed());
+        numLives = Math.min(numLives, game.hud().maxLivesDisplayed());
         game.hud().setVisibleLifeCount(numLives);
 
         game.hud().showLevelNumber(game.mapCategory() != MapCategory.ARCADE);

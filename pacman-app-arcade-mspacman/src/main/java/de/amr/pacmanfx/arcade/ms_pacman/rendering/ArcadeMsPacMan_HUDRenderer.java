@@ -63,7 +63,7 @@ public class ArcadeMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HU
                 drawSprite(sprite, x + i * TS(2), y, true);
             }
             int lifeCount = game.lifeCount();
-            if (lifeCount > game.maxLivesDisplayed()) {
+            if (lifeCount > game.hud().maxLivesDisplayed()) {
                 // show text indicating that more lives are available than symbols displayed (cheating may cause this)
                 Font hintFont = Font.font("Serif", FontWeight.BOLD, scaled(8));
                 fillText("%d".formatted(lifeCount), ARCADE_YELLOW, hintFont, x - 14, y + TS);

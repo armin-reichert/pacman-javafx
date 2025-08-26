@@ -21,6 +21,8 @@ public interface HUD {
     int visibleLifeCount();
     void setVisibleLifeCount(int count);
 
+    int maxLivesDisplayed();
+
     boolean isScoreVisible();
     void showScore(boolean visible);
 

@@ -89,7 +89,7 @@ public class TengenMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HU
         for (int i = 0; i < hudControlData.visibleLifeCount(); ++i) {
             drawSprite(sprite, x + TS(i * 2), y, true);
         }
-        if (game.lifeCount() > game.maxLivesDisplayed()) {
+        if (game.lifeCount() > game.hud().maxLivesDisplayed()) {
             Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
             fillText("(%d)".formatted(game.lifeCount()), nesColor(0x28), font, x + TS(10), y + TS);
         }

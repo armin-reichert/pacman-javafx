@@ -36,7 +36,6 @@ public interface Game extends GameLifecycle, GameEvents {
     int                  initialLifeCount();
     void                 setInitialLifeCount(int numLives);
     int                  lifeCount();
-    default int          maxLivesDisplayed() { return 5; }
     void                 addLives(int numLives);
     boolean              isPlaying();
     void                 setPlaying(boolean playing);

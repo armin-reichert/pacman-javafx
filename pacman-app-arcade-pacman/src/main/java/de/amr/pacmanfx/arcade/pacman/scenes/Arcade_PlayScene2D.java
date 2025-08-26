@@ -212,7 +212,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     private void updateHUD(Game game, boolean oneMore) {
         int numLivesDisplayed = game.lifeCount() - 1;
         if (oneMore) numLivesDisplayed += 1;
-        game.hud().setVisibleLifeCount(Math.min(numLivesDisplayed, game.maxLivesDisplayed()));
+        game.hud().setVisibleLifeCount(Math.min(numLivesDisplayed, game.hud().maxLivesDisplayed()));
         //TODO this is wrong in level test state
         game.hud().showCredit(context().coinMechanism().isEmpty());
         game.hud().setNumCoins(context().coinMechanism().numCoins());
