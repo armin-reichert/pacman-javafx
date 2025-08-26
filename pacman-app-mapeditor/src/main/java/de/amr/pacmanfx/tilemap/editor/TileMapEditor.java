@@ -580,7 +580,6 @@ public class TileMapEditor {
         createMessageDisplay();
         createZoomSlider();
         createStatusLine();
-        createMenuBarAndMenus();
         loadSampleMapsAndAddMenuEntries();
 
         arrangeMainLayout();
@@ -992,9 +991,6 @@ public class TileMapEditor {
                         editedWorldMap().numRows(), editedWorldMap().numCols() );
             }, currentFile, editedWorldMap
         );
-    }
-
-    private void createMenuBarAndMenus() {
     }
 
     // also called from EditorPage
