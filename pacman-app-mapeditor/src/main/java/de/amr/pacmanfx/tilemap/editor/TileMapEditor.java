@@ -687,6 +687,13 @@ public class TileMapEditor {
         editCanvas.foodVisibleProperty().bind(foodVisibleProperty());
         editCanvas.actorsVisibleProperty().bind(actorsVisibleProperty());
 
+        editCanvas.setOnContextMenuRequested(event -> editCanvas.onContextMenuRequested(this, event));
+        editCanvas.setOnMouseClicked(event -> editCanvas.onMouseClicked(this, event));
+        editCanvas.setOnMouseDragged(event -> editCanvas.onMouseDragged(this, event));
+        editCanvas.setOnMouseMoved(event -> editCanvas.onMouseMoved(this, event));
+        editCanvas.setOnMouseReleased(event -> editCanvas.onMouseReleased(this, event));
+        editCanvas.setOnKeyPressed(event -> editCanvas.onKeyPressed(this, event));
+
         spEditCanvas = new ScrollPane(editCanvas);
         spEditCanvas.setFitToHeight(true);
         registerDragAndDropImageHandler(spEditCanvas);
@@ -854,23 +861,23 @@ public class TileMapEditor {
     }
 
     private void createPalettes(TerrainTileMapRenderer terrainRenderer, FoodMapRenderer foodRenderer) {
-        palettes[PALETTE_ID_ACTORS]  = createActorPalette(PALETTE_ID_ACTORS, TOOL_SIZE, this, terrainRenderer);
         palettes[PALETTE_ID_TERRAIN] = createTerrainPalette(PALETTE_ID_TERRAIN, TOOL_SIZE, this, terrainRenderer);
         palettes[PALETTE_ID_FOOD]    = createFoodPalette(PALETTE_ID_FOOD, TOOL_SIZE, this, foodRenderer);
+        palettes[PALETTE_ID_ACTORS]  = createActorPalette(PALETTE_ID_ACTORS, TOOL_SIZE, this, terrainRenderer);
 
         var tabTerrain = new Tab(translated("terrain"), palettes[PALETTE_ID_TERRAIN].root());
         tabTerrain.setClosable(false);
         tabTerrain.setUserData(PALETTE_ID_TERRAIN);
 
-        var tabActors = new Tab(translated("actors"), palettes[PALETTE_ID_ACTORS].root());
-        tabActors.setClosable(false);
-        tabActors.setUserData(PALETTE_ID_ACTORS);
-
         var tabPellets = new Tab(translated("pellets"), palettes[PALETTE_ID_FOOD].root());
         tabPellets.setClosable(false);
         tabPellets.setUserData(PALETTE_ID_FOOD);
 
-        tabPaneWithPalettes = new TabPane(tabTerrain, tabActors, tabPellets);
+        var tabActors = new Tab(translated("actors"), palettes[PALETTE_ID_ACTORS].root());
+        tabActors.setClosable(false);
+        tabActors.setUserData(PALETTE_ID_ACTORS);
+
+        tabPaneWithPalettes = new TabPane(tabTerrain, tabPellets, tabActors);
         tabPaneWithPalettes.setPadding(new Insets(5, 5, 5, 5));
         tabPaneWithPalettes.setMinHeight(75);
     }
@@ -1314,17 +1321,17 @@ public class TileMapEditor {
     // Drawing
     //
 
-    private void draw(TerrainMapColorScheme colors) {
+    private void draw(TerrainMapColorScheme colorScheme) {
         try {
             Logger.trace("Draw palette");
-            drawSelectedPalette(colors);
+            palettes[selectedPaletteID()].draw();
         } catch (Exception x) {
             Logger.error(x);
         }
         if (tabEditCanvas.isSelected()) {
             try {
                 Logger.trace("Draw edit canvas");
-                editCanvas.draw(colors);
+                editCanvas.draw(this, colorScheme);
             } catch (Exception x) {
                 Logger.error(x);
             }
@@ -1340,16 +1347,11 @@ public class TileMapEditor {
         if (tabPreview2D.isSelected()) {
             try {
                 Logger.trace("Draw preview 2D");
-                preview2DCanvas.draw(editedWorldMap(), colors);
+                preview2DCanvas.draw(editedWorldMap(), colorScheme);
             } catch (Exception x) {
                 Logger.error(x);
             }
         }
-    }
-
-    private void drawSelectedPalette(TerrainMapColorScheme colors) {
-        Palette selectedPalette = palettes[selectedPaletteID()];
-        selectedPalette.draw();
     }
 
     // Controller part
@@ -1409,7 +1411,7 @@ public class TileMapEditor {
             case TileMapEditor.PALETTE_ID_FOOD -> editFoodAtTile(tile, erase);
             case TileMapEditor.PALETTE_ID_ACTORS -> {
                 if (selectedPalette().isToolSelected()) {
-                    selectedPalette().selectedTool().apply(this, editedWorldMap(), LayerID.TERRAIN, tile);
+                    selectedPalette().selectedTool().apply(this, LayerID.TERRAIN, tile);
                     changeManager.setTerrainMapChanged();
                     changeManager.setEdited(true);
                 }
@@ -1422,7 +1424,7 @@ public class TileMapEditor {
         if (erase) {
             clearTerrainTileValue(tile);
         } else if (selectedPalette().isToolSelected()) {
-            selectedPalette().selectedTool().apply(this, editedWorldMap(), LayerID.TERRAIN, tile);
+            selectedPalette().selectedTool().apply(this, LayerID.TERRAIN, tile);
         }
         changeManager.setTerrainMapChanged();
         changeManager.setEdited(true);
@@ -1432,7 +1434,7 @@ public class TileMapEditor {
         if (erase) {
             clearFoodTileValue(tile);
         } else if (selectedPalette().isToolSelected()) {
-            selectedPalette().selectedTool().apply(this, editedWorldMap(), LayerID.FOOD, tile);
+            selectedPalette().selectedTool().apply(this, LayerID.FOOD, tile);
         }
         changeManager.setFoodMapChanged();
         changeManager.setEdited(true);
