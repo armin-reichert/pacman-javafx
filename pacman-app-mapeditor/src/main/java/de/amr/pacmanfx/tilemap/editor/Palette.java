@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tilemap.editor;
 
 import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer;
-import de.amr.pacmanfx.uilib.tilemap.TileMapRenderer;
+import de.amr.pacmanfx.uilib.tilemap.TileRenderer;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -30,7 +30,7 @@ public class Palette {
     private final GraphicsContext ctx;
     private final List<Tool> tools;
 
-    private TileMapRenderer renderer;
+    private TileRenderer renderer;
     private Tool selectedTool;
     private Tooltip tooltip;
     private int selectedRow;

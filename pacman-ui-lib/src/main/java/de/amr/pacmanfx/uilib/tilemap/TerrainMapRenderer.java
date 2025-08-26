@@ -25,7 +25,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Vector renderer for terrain tile maps.
  */
-public class TerrainMapRenderer extends BaseCanvasRenderer implements TileMapRenderer {
+public class TerrainMapRenderer extends BaseCanvasRenderer implements TileRenderer {
 
     public static final double DEFAULT_DOUBLE_STROKE_OUTER_WIDTH = 4;
     public static final double DEFAULT_DOUBLE_STROKE_INNER_WIDTH = 2;

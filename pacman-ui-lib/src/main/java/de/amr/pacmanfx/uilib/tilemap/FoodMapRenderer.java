@@ -16,7 +16,7 @@ import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static java.util.Objects.requireNonNull;
 
-public class FoodMapRenderer extends BaseCanvasRenderer implements TileMapRenderer {
+public class FoodMapRenderer extends BaseCanvasRenderer implements TileRenderer {
 
     private static final double PELLET_SIZE = 2;
     private static final double ENERGIZER_SIZE = 8;

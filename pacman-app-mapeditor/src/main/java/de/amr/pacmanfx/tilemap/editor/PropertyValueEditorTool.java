@@ -10,7 +10,7 @@ import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.lib.tilemap.WorldMapFormatter;
 import de.amr.pacmanfx.model.WorldMapProperty;
-import de.amr.pacmanfx.uilib.tilemap.TileMapRenderer;
+import de.amr.pacmanfx.uilib.tilemap.TileRenderer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -19,12 +19,12 @@ import static de.amr.pacmanfx.tilemap.editor.ArcadeMap.PAC_SPRITE;
 import static de.amr.pacmanfx.tilemap.editor.ArcadeMap.SPRITE_SHEET;
 
 public class PropertyValueEditorTool implements Tool {
-    private final TileMapRenderer renderer;
+    private final TileRenderer renderer;
     private final double size;
     private final String propertyName;
     private final String description;
 
-    public PropertyValueEditorTool(TileMapRenderer renderer, double size, String propertyName, String description) {
+    public PropertyValueEditorTool(TileRenderer renderer, double size, String propertyName, String description) {
         this.renderer = renderer;
         this.size = size;
         this.propertyName = propertyName;
@@ -32,7 +32,7 @@ public class PropertyValueEditorTool implements Tool {
     }
 
     @Override
-    public TileMapRenderer renderer() {
+    public TileRenderer renderer() {
         return renderer;
     }
 
