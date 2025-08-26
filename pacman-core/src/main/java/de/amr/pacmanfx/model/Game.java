@@ -10,46 +10,39 @@ import de.amr.pacmanfx.model.actors.ActorSpeedControl;
 import java.util.Optional;
 import java.util.OptionalInt;
 
-import static java.util.Objects.requireNonNull;
-
 public interface Game extends GameLifecycle, GameEvents {
-    GameEventManager eventManager();
-    ScoreManager scoreManager();
-    SimulationStep simulationStep();
-    ActorSpeedControl actorSpeedControl();
-    HuntingTimer huntingTimer();
-    MapSelector mapSelector();
+    GameEventManager     eventManager();
+    ScoreManager         scoreManager();
+    SimulationStep       simulationStep();
+    ActorSpeedControl    actorSpeedControl();
+    HuntingTimer         huntingTimer();
+    MapSelector          mapSelector();
     Optional<GateKeeper> optGateKeeper();
-    Optional<GameLevel> optGameLevel();
+    Optional<GameLevel>  optGameLevel();
 
-    HUDData hudData();
-    int visibleLifeCount();
-    void setVisibleLifeCount(int count);
-    default int maxLivesDisplayed() { return 5; }
+    HUDData              hudData();
 
-    boolean     cutScenesEnabled();
-    void        setCutScenesEnabled(boolean enabled);
-    OptionalInt optCutSceneNumber(int levelNumber);
+    boolean             cutScenesEnabled();
+    void                setCutScenesEnabled(boolean enabled);
+    OptionalInt         optCutSceneNumber(int levelNumber);
 
-    int     initialLifeCount();
-    void    setInitialLifeCount(int numLives);
-    int     lifeCount();
-    void    addLives(int numLives);
-    boolean isPlaying();
-    void    setPlaying(boolean playing);
-    boolean isLevelCompleted();
-    int     lastLevelNumber();
-    boolean canContinueOnGameOver();
-    boolean hasPacManBeenKilled();
-    boolean haveGhostsBeenKilled();
+    int                 initialLifeCount();
+    void                setInitialLifeCount(int numLives);
+    int                 lifeCount();
+    int                 visibleLifeCount();
+    void                setVisibleLifeCount(int count);
+    default int         maxLivesDisplayed() { return 5; }
+    void                addLives(int numLives);
+    boolean             isPlaying();
+    void                setPlaying(boolean playing);
+    boolean             isLevelCompleted();
+    int                 lastLevelNumber();
+    boolean             canContinueOnGameOver();
+    boolean             hasPacManBeenKilled();
+    boolean             haveGhostsBeenKilled();
 
-    double pacPowerFadingSeconds(GameLevel gameLevel);
-    double pacPowerSeconds(GameLevel level);
+    double              pacPowerFadingSeconds(GameLevel gameLevel);
+    double              pacPowerSeconds(GameLevel level);
 
-    default void showMessage(GameLevel gameLevel, MessageType type) {
-        requireNonNull(type);
-        GameLevelMessage message = new GameLevelMessage(type);
-        message.setPosition(gameLevel.defaultMessagePosition());
-        gameLevel.setMessage(message);
-    }
+    void                showMessage(GameLevel gameLevel, MessageType type);
 }

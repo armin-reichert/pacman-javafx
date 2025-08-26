@@ -17,6 +17,7 @@ import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Common base class of all Pac-Man game models.
@@ -63,6 +64,14 @@ public abstract class AbstractGameModel implements Game {
     @Override
     public void addLives(int n) {
         setLifeCount(lifeCount() + n);
+    }
+
+    @Override
+    public void showMessage(GameLevel gameLevel, MessageType type) {
+        requireNonNull(type);
+        GameLevelMessage message = new GameLevelMessage(type);
+        message.setPosition(gameLevel.defaultMessagePosition());
+        gameLevel.setMessage(message);
     }
 
     @Override
