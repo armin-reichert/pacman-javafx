@@ -1,8 +1,6 @@
-package de.amr.pacmanfx.arcade.pacman;
+package de.amr.pacmanfx.model;
 
-import de.amr.pacmanfx.model.HUDData;
-
-public class ArcadePacMan_HUDData implements HUDData {
+public class DefaultHUDData implements HUDData {
 
     private boolean visible = true;
     private boolean creditVisible;

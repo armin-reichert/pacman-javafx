@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.model;
 
 /**
- * Data which are typically displayed in a Heads-Up Display (HUD).
+ * Controls which data are shown in Heads-Up Display (HUD).
  */
 public interface HUDData {
 
