@@ -21,8 +21,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.Node;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
@@ -195,7 +193,7 @@ public class TileMapEditor {
     private EditCanvas editCanvas;
     private ScrollPane spEditCanvas;
     private ScrollPane spPreview2D;
-    private Canvas canvasPreview2D;
+    private Preview2DCanvas preview2DCanvas;
     private TextArea sourceView;
     private ScrollPane spTemplateImage;
     private Pane dropTargetForTemplateImage;
@@ -671,8 +669,10 @@ public class TileMapEditor {
     private void createRenderers(TerrainMapColorScheme colors, Color foodColor) {
         terrainTileRenderer = new TerrainTileMapRenderer(editCanvas.canvas());
         terrainTileRenderer.setColorScheme(colors);
-        terrainPathRenderer = new TerrainMapRenderer(canvasPreview2D);
+
+        terrainPathRenderer = new TerrainMapRenderer(preview2DCanvas);
         terrainPathRenderer.setColorScheme(colors);
+
         foodRenderer = new FoodMapRenderer(editCanvas.canvas());
         foodRenderer.setPelletColor(foodColor);
         foodRenderer.setEnergizerColor(foodColor);
@@ -700,10 +700,15 @@ public class TileMapEditor {
     }
 
     private void createPreview2D() {
-        canvasPreview2D = new Canvas();
-        canvasPreview2D.widthProperty().bind(editCanvas.canvas().widthProperty());
-        canvasPreview2D.heightProperty().bind(editCanvas.canvas().heightProperty());
-        spPreview2D = new ScrollPane(canvasPreview2D);
+        preview2DCanvas = new Preview2DCanvas();
+        preview2DCanvas.widthProperty().bind(editCanvas.canvas().widthProperty());
+        preview2DCanvas.heightProperty().bind(editCanvas.canvas().heightProperty());
+        preview2DCanvas.gridSizeProperty().bind(gridSizeProperty());
+        preview2DCanvas.terrainVisibleProperty().bind(terrainVisibleProperty());
+        preview2DCanvas.foodVisibleProperty().bind(foodVisibleProperty());
+        preview2DCanvas.actorsVisibleProperty().bind(actorsVisibleProperty());
+
+        spPreview2D = new ScrollPane(preview2DCanvas);
         spPreview2D.setFitToHeight(true);
         spPreview2D.hvalueProperty().bindBidirectional(spEditCanvas.hvalueProperty());
         spPreview2D.vvalueProperty().bindBidirectional(spEditCanvas.vvalueProperty());
@@ -1339,37 +1344,10 @@ public class TileMapEditor {
         if (tabPreview2D.isSelected()) {
             try {
                 Logger.trace("Draw preview 2D");
-                drawPreview2D(colors);
+                preview2DCanvas.draw(editedWorldMap(), colors);
             } catch (Exception x) {
                 Logger.error(x);
             }
-        }
-    }
-
-    private void drawPreview2D(TerrainMapColorScheme colorScheme) {
-        GraphicsContext g = canvasPreview2D.getGraphicsContext2D();
-        g.setImageSmoothing(false);
-        g.setFill(colorScheme.floorColor());
-        g.fillRect(0, 0, canvasPreview2D.getWidth(), canvasPreview2D.getHeight());
-        if (isTerrainVisible()) {
-            terrainPathRenderer.setScaling(gridSize() / 8.0);
-            terrainPathRenderer.setColorScheme(colorScheme);
-            terrainPathRenderer.draw(editedWorldMap(), editedWorldMap().obstacles());
-            Vector2i houseMinTile = editedWorldMap().getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE);
-            Vector2i houseMaxTile = editedWorldMap().getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE);
-            if (houseMinTile != null && houseMaxTile != null) {
-                terrainPathRenderer.drawHouse(houseMinTile, houseMaxTile.minus(houseMinTile).plus(1, 1));
-            }
-        }
-        if (isFoodVisible()) {
-            Color foodColor = getColorFromMap(editedWorldMap(), LayerID.FOOD, WorldMapProperty.COLOR_FOOD, parseColor(MS_PACMAN_COLOR_FOOD));
-            foodRenderer.setScaling(gridSize() / 8.0);
-            foodRenderer.setEnergizerColor(foodColor);
-            foodRenderer.setPelletColor(foodColor);
-            editedWorldMap().tiles().forEach(tile -> foodRenderer.drawTile(tile, editedWorldMap().content(LayerID.FOOD, tile)));
-        }
-        if (isActorsVisible()) {
-            drawActorSprites(editedWorldMap(), gridSize());
         }
     }
 
