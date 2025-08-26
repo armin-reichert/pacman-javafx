@@ -39,8 +39,6 @@ public class GameLevel {
     public static final int EMPTY_ROWS_OVER_MAZE  = 3;
     public static final int EMPTY_ROWS_BELOW_MAZE = 2;
 
-    private static final ArcadeHouse DEFAULT_HOUSE = new ArcadeHouse(ArcadeHouse.DEFAULT_MIN_TILE);
-
     private static Vector2f halfTileRightOf(Vector2i tile) { return Vector2f.of(tile.x() * TS + HTS, tile.y() * TS); }
 
     private final int number; // 1=first level
@@ -166,7 +164,7 @@ public class GameLevel {
     private void findHouse() {
         Vector2i minTile = worldMap.getTerrainTileProperty(POS_HOUSE_MIN_TILE);
         if (minTile == null) {
-            minTile = ArcadeHouse.DEFAULT_MIN_TILE;
+            minTile = ArcadeHouse.ORIGINAL_MIN_TILE;
             Logger.warn("No house min tile found in map, using {}", minTile);
             worldMap.properties(LayerID.TERRAIN).put(POS_HOUSE_MIN_TILE, WorldMapFormatter.formatTile(minTile));
         }
