@@ -11,7 +11,6 @@ import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapColorScheme;
-import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer;
 import javafx.animation.AnimationTimer;
 import javafx.animation.FadeTransition;
 import javafx.beans.binding.Bindings;
@@ -222,10 +221,6 @@ public class TileMapEditor {
     private final Palette[] palettes = new Palette[3];
     private PropertyEditorPane terrainMapPropertiesEditor;
     private PropertyEditorPane foodMapPropertiesEditor;
-
-    private TerrainTileMapRenderer terrainTileRenderer;
-    private TerrainMapRenderer terrainPathRenderer;
-    private FoodMapRenderer foodRenderer;
 
     // Properties
 
@@ -525,10 +520,6 @@ public class TileMapEditor {
 
     public void setEditedWorldMap(WorldMap worldMap) { editedWorldMap.set(requireNonNull(worldMap)); }
 
-    public TerrainTileMapRenderer terrainTileRenderer() { return terrainTileRenderer; }
-
-    public FoodMapRenderer foodRenderer() { return foodRenderer; }
-
     public StringProperty titleProperty() { return title; }
 
     public ObjectProperty<Image> templateImageProperty() { return templateImagePy; }
@@ -578,9 +569,7 @@ public class TileMapEditor {
         createPreview3D();
         createTemplateImageCanvas();
         createMapSourceView();
-        // renderers must be created before palettes!
-        createRenderers(initialColors, parseColor(MS_PACMAN_COLOR_FOOD));
-        createPalettes();
+        createPalettes(editCanvas.terrainRenderer(), editCanvas.foodRenderer());
         createPropertyEditors();
         createTabPaneWithEditViews();
         createTabPaneWithPreviews();
@@ -664,18 +653,6 @@ public class TileMapEditor {
 
     public void showEditHelpText() {
         showMessage(translated("edit_help"), 30, MessageType.INFO);
-    }
-
-    private void createRenderers(TerrainMapColorScheme colors, Color foodColor) {
-        terrainTileRenderer = new TerrainTileMapRenderer(editCanvas);
-        terrainTileRenderer.setColorScheme(colors);
-
-        terrainPathRenderer = new TerrainMapRenderer(preview2DCanvas);
-        terrainPathRenderer.setColorScheme(colors);
-
-        foodRenderer = new FoodMapRenderer(editCanvas);
-        foodRenderer.setPelletColor(foodColor);
-        foodRenderer.setEnergizerColor(foodColor);
     }
 
     private void createFileChooser() {
@@ -853,9 +830,9 @@ public class TileMapEditor {
         splitPaneEditorAndPreviews.setDividerPositions(0.5);
     }
 
-    private void createPalettes() {
-        palettes[PALETTE_ID_ACTORS]  = createActorPalette(PALETTE_ID_ACTORS, TOOL_SIZE, this, terrainTileRenderer);
-        palettes[PALETTE_ID_TERRAIN] = createTerrainPalette(PALETTE_ID_TERRAIN, TOOL_SIZE, this, terrainTileRenderer);
+    private void createPalettes(TerrainTileMapRenderer terrainRenderer, FoodMapRenderer foodRenderer) {
+        palettes[PALETTE_ID_ACTORS]  = createActorPalette(PALETTE_ID_ACTORS, TOOL_SIZE, this, terrainRenderer);
+        palettes[PALETTE_ID_TERRAIN] = createTerrainPalette(PALETTE_ID_TERRAIN, TOOL_SIZE, this, terrainRenderer);
         palettes[PALETTE_ID_FOOD]    = createFoodPalette(PALETTE_ID_FOOD, TOOL_SIZE, this, foodRenderer);
 
         var tabTerrain = new Tab(translated("terrain"), palettes[PALETTE_ID_TERRAIN].root());
@@ -1314,15 +1291,6 @@ public class TileMapEditor {
     // Drawing
     //
 
-    public void drawActorSprites(WorldMap worldMap, double gridSize) {
-        terrainTileRenderer.drawSpriteBetweenTiles(worldMap.getTerrainTileProperty(WorldMapProperty.POS_PAC), PAC_SPRITE, gridSize);
-        terrainTileRenderer.drawSpriteBetweenTiles(worldMap.getTerrainTileProperty(WorldMapProperty.POS_RED_GHOST), RED_GHOST_SPRITE, gridSize);
-        terrainTileRenderer.drawSpriteBetweenTiles(worldMap.getTerrainTileProperty(WorldMapProperty.POS_PINK_GHOST), PINK_GHOST_SPRITE, gridSize);
-        terrainTileRenderer.drawSpriteBetweenTiles(worldMap.getTerrainTileProperty(WorldMapProperty.POS_CYAN_GHOST), CYAN_GHOST_SPRITE, gridSize);
-        terrainTileRenderer.drawSpriteBetweenTiles(worldMap.getTerrainTileProperty(WorldMapProperty.POS_ORANGE_GHOST), ORANGE_GHOST_SPRITE, gridSize);
-        terrainTileRenderer.drawSpriteBetweenTiles(worldMap.getTerrainTileProperty(WorldMapProperty.POS_BONUS), BONUS_SPRITE, gridSize);
-    }
-
     private void draw(TerrainMapColorScheme colors) {
         try {
             Logger.trace("Draw palette");
@@ -1358,12 +1326,6 @@ public class TileMapEditor {
 
     private void drawSelectedPalette(TerrainMapColorScheme colors) {
         Palette selectedPalette = palettes[selectedPaletteID()];
-        if (selectedPaletteID() == PALETTE_ID_TERRAIN) {
-            double scaling = terrainTileRenderer.scaling();
-            terrainTileRenderer.setScaling((double) TOOL_SIZE / 8);
-            terrainTileRenderer.setColorScheme(colors);
-            terrainTileRenderer.setScaling(scaling);
-        }
         selectedPalette.draw();
     }
 

@@ -33,7 +33,7 @@ import org.tinylog.Logger;
 import java.util.function.Predicate;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.tilemap.editor.ArcadeMap.MS_PACMAN_COLOR_FOOD;
+import static de.amr.pacmanfx.tilemap.editor.ArcadeMap.*;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditor.*;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.*;
 import static java.util.Objects.requireNonNull;
@@ -54,6 +54,7 @@ public class EditCanvas extends Canvas {
 
     private final TerrainTileMapRenderer terrainRenderer;
     private final FoodMapRenderer foodRenderer;
+    private final EditorActorRenderer actorRenderer;
 
     private boolean dragging = false;
 
@@ -83,6 +84,7 @@ public class EditCanvas extends Canvas {
 
         terrainRenderer = new TerrainTileMapRenderer(this);
         foodRenderer = new FoodMapRenderer(this);
+        actorRenderer = new EditorActorRenderer(this);
 
         setOnContextMenuRequested(this::onContextMenuRequested);
         setOnMouseClicked(this::onMouseClicked);
@@ -95,6 +97,14 @@ public class EditCanvas extends Canvas {
     private int gridSize() { return gridSizePy.get(); }
 
     private WorldMap worldMap() { return worldMapPy.get(); }
+
+    public TerrainTileMapRenderer terrainRenderer() {
+        return terrainRenderer;
+    }
+
+    public FoodMapRenderer foodRenderer() {
+        return foodRenderer;
+    }
 
     public ObjectProperty<Vector2i> focussedTileProperty() { return focussedTilePy; }
 
@@ -194,7 +204,13 @@ public class EditCanvas extends Canvas {
         }
 
         if (editor.isActorsVisible()) {
-            editor.drawActorSprites(worldMap(), gridSize());
+            double gridSize = editor.gridSizeProperty().get();
+            actorRenderer.drawActorSprite(worldMap().getTerrainTileProperty(WorldMapProperty.POS_PAC), PAC_SPRITE, gridSize);
+            actorRenderer.drawActorSprite(worldMap().getTerrainTileProperty(WorldMapProperty.POS_RED_GHOST), RED_GHOST_SPRITE, gridSize);
+            actorRenderer.drawActorSprite(worldMap().getTerrainTileProperty(WorldMapProperty.POS_PINK_GHOST), PINK_GHOST_SPRITE, gridSize);
+            actorRenderer.drawActorSprite(worldMap().getTerrainTileProperty(WorldMapProperty.POS_CYAN_GHOST), CYAN_GHOST_SPRITE, gridSize);
+            actorRenderer.drawActorSprite(worldMap().getTerrainTileProperty(WorldMapProperty.POS_ORANGE_GHOST), ORANGE_GHOST_SPRITE, gridSize);
+            actorRenderer.drawActorSprite(worldMap().getTerrainTileProperty(WorldMapProperty.POS_BONUS), BONUS_SPRITE, gridSize);
         }
 
         if (focussedTile() != null) {
