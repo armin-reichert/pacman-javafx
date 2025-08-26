@@ -17,6 +17,22 @@ public class EditorMenuBar extends MenuBar {
     private final Menu menuLoadMap;
     private final Menu menuView;
 
+    public Menu menuEdit() {
+        return menuEdit;
+    }
+
+    public Menu menuFile() {
+        return menuFile;
+    }
+
+    public Menu menuLoadMap() {
+        return menuLoadMap;
+    }
+
+    public Menu menuView() {
+        return menuView;
+    }
+
     public EditorMenuBar(TileMapEditor editor) {
 
         // File
@@ -33,10 +49,10 @@ public class EditorMenuBar extends MenuBar {
         });
 
         var miOpenMapFile = new MenuItem(translated("menu.file.open"));
-        miOpenMapFile.setOnAction(e -> editor.openMapFileInteractively());
+        miOpenMapFile.setOnAction(e -> EditorActions.OPEN_MAP_FILE.execute(editor));
 
         var miSaveMapFileAs = new MenuItem(translated("menu.file.save_as"));
-        miSaveMapFileAs.setOnAction(e -> editor.showSaveDialog());
+        miSaveMapFileAs.setOnAction(e -> EditorActions.SAVE_MAP_FILE.execute(editor));
 
         var miOpenTemplateImage = new MenuItem(translated("menu.file.open_template_image"));
         miOpenTemplateImage.setOnAction(e -> editor.initWorldMapForTemplateImage());
@@ -45,13 +61,13 @@ public class EditorMenuBar extends MenuBar {
         miCloseTemplateImage.setOnAction(e -> editor.closeTemplateImage());
 
         menuFile = new Menu(translated("menu.file"), NO_GRAPHIC,
-                miNewPreconfiguredMap,
-                miNewBlankMap,
-                miOpenMapFile,
-                miSaveMapFileAs,
-                new SeparatorMenuItem(),
-                miOpenTemplateImage,
-                miCloseTemplateImage);
+            miNewPreconfiguredMap,
+            miNewBlankMap,
+            miOpenMapFile,
+            miSaveMapFileAs,
+            new SeparatorMenuItem(),
+            miOpenTemplateImage,
+            miCloseTemplateImage);
 
         // Edit
         var miObstacleJoining = new CheckMenuItem(translated("menu.edit.obstacles_joining"));
@@ -103,14 +119,14 @@ public class EditorMenuBar extends MenuBar {
         miAssignDefaultColors.disableProperty().bind(editor.editModeProperty().map(mode -> mode == EditMode.INSPECT));
 
         menuEdit = new Menu(translated("menu.edit"), NO_GRAPHIC,
-                miObstacleJoining,
-                new SeparatorMenuItem(),
-                miAddBorder,
-                miAddHouse,
-                miClearTerrain,
-                miClearFood,
-                miIdentifyTiles,
-                miAssignDefaultColors);
+            miObstacleJoining,
+            new SeparatorMenuItem(),
+            miAddBorder,
+            miAddHouse,
+            miClearTerrain,
+            miClearFood,
+            miIdentifyTiles,
+            miAssignDefaultColors);
 
         // Maps
         menuLoadMap = new Menu(translated("menu.load_map"));
@@ -138,22 +154,14 @@ public class EditorMenuBar extends MenuBar {
         miObstacleInnerAreaVisible.selectedProperty().bindBidirectional(editor.obstacleInnerAreaDisplayedProperty());
 
         menuView = new Menu(translated("menu.view"), NO_GRAPHIC,
-                miPropertiesVisible,
-                miTerrainVisible,
-                miFoodVisible,
-                miActorsVisible,
-                miSegmentNumbersVisible,
-                miObstacleInnerAreaVisible,
-                miGridVisible);
+            miPropertiesVisible,
+            miTerrainVisible,
+            miFoodVisible,
+            miActorsVisible,
+            miSegmentNumbersVisible,
+            miObstacleInnerAreaVisible,
+            miGridVisible);
 
         getMenus().addAll(menuFile, menuEdit, menuLoadMap, menuView);
-
-    }
-    public Menu getFileMenu() {
-        return menuFile;
-    }
-
-    public Menu getLoadMapMenu() {
-        return menuLoadMap;
     }
 }

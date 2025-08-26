@@ -200,7 +200,6 @@ public class TileMapEditor {
     private Pane dropTargetForTemplateImage;
     private SplitPane splitPaneEditorAndPreviews;
     private Label messageLabel;
-    private FileChooser fileChooser;
     private TabPane tabPaneWithPalettes;
     private Slider sliderZoom;
     private HBox statusLine;
@@ -515,11 +514,23 @@ public class TileMapEditor {
 
     public ChangeManager changeManager() { return changeManager;}
 
+    public File currentDirectory() {
+        return currentDirectory;
+    }
+
+    public void setCurrentDirectory(File currentDirectory) {
+        this.currentDirectory = currentDirectory;
+    }
+
     public ObjectProperty<WorldMap> editedWorldMapProperty() { return editedWorldMap; }
 
     public WorldMap editedWorldMap() { return editedWorldMap.get(); }
 
     public void setEditedWorldMap(WorldMap worldMap) { editedWorldMap.set(requireNonNull(worldMap)); }
+
+    public Stage stage() {
+        return stage;
+    }
 
     public StringProperty titleProperty() { return title; }
 
@@ -550,7 +561,6 @@ public class TileMapEditor {
         this.model3DRepository = requireNonNull(model3DRepository);
         this.menuBar = new EditorMenuBar(this);
 
-        createFileChooser();
         createObstacleEditor();
         createEditCanvas();
         createPreview2D();
@@ -641,13 +651,6 @@ public class TileMapEditor {
 
     public void showEditHelpText() {
         showMessage(translated("edit_help"), 30, MessageType.INFO);
-    }
-
-    private void createFileChooser() {
-        fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().addAll(FILTER_WORLD_MAP_FILES, FILTER_ALL_FILES);
-        fileChooser.setSelectedExtensionFilter(FILTER_WORLD_MAP_FILES);
-        fileChooser.setInitialDirectory(currentDirectory);
     }
 
     private ObstacleEditor createObstacleEditor() {
@@ -992,7 +995,7 @@ public class TileMapEditor {
         requireNonNull(map);
         var miLoadMap = new MenuItem(description);
         miLoadMap.setOnAction(e -> loadMap(map));
-        menuBar.getLoadMapMenu().getItems().add(miLoadMap);
+        menuBar.menuLoadMap().getItems().add(miLoadMap);
     }
 
     public void loadMap(WorldMap worldMap) {
@@ -1016,19 +1019,7 @@ public class TileMapEditor {
         }
     }
 
-    void openMapFileInteractively() {
-        executeWithCheckForUnsavedChanges(() -> {
-            fileChooser.setTitle(translated("open_file"));
-            fileChooser.setInitialDirectory(currentDirectory);
-            File file = fileChooser.showOpenDialog(stage);
-            if (file != null) {
-                readMapFile(file);
-            }
-            changeManager.setEdited(false);
-        });
-    }
-
-    private boolean readMapFile(File file) {
+    public boolean readMapFile(File file) {
         if (file.getName().endsWith(".world")) {
             try {
                 loadMap(WorldMap.fromFile(file));
@@ -1075,29 +1066,7 @@ public class TileMapEditor {
         return Optional.empty();
     }
 
-    public void showSaveDialog() {
-        fileChooser.setTitle(translated("save_file"));
-        fileChooser.setInitialDirectory(currentDirectory);
-        File file = fileChooser.showSaveDialog(stage);
-        if (file != null) {
-            currentDirectory = file.getParentFile();
-            if (file.getName().endsWith(".world")) {
-                boolean saved = saveWorldMap(editedWorldMap(), file);
-                if (saved) {
-                    changeManager.setEdited(false);
-                    readMapFile(file);
-                    showMessage("Map saved as '%s'".formatted(file.getName()), 3, MessageType.INFO);
-                } else {
-                    showMessage("Map could not be saved!", 4, MessageType.ERROR);
-                }
-            } else {
-                Logger.error("No .world file selected");
-                showMessage("No .world file selected", 2, MessageType.WARNING);
-            }
-        }
-    }
-
-    private boolean saveWorldMap(WorldMap worldMap,File file) {
+    public boolean saveWorldMap(WorldMap worldMap,File file) {
         try (PrintWriter pw = new PrintWriter(file, StandardCharsets.UTF_8)) {
             pw.print(WorldMapFormatter.formatted(worldMap));
             return true;
@@ -1122,7 +1091,7 @@ public class TileMapEditor {
         confirmationDialog.getButtonTypes().setAll(choiceSave, choiceNoSave, choiceCancel);
         confirmationDialog.showAndWait().ifPresent(choice -> {
             if (choice == choiceSave) {
-                showSaveDialog();
+                EditorActions.SAVE_MAP_FILE.execute(this);
                 action.run();
             } else if (choice == choiceNoSave) {
                 changeManager.setEdited(false);
@@ -1555,9 +1524,9 @@ public class TileMapEditor {
         try {
             loadSampleMaps();
             addLoadMapMenuItem("Pac-Man", mapPacManGame);
-            menuBar.getLoadMapMenu().getItems().add(new SeparatorMenuItem());
+            menuBar.menuLoadMap().getItems().add(new SeparatorMenuItem());
             rangeClosed(1, 6).forEach(num -> addLoadMapMenuItem("Ms. Pac-Man " + num, mapsMsPacManGame.get(num - 1)));
-            menuBar.getLoadMapMenu().getItems().add(new SeparatorMenuItem());
+            menuBar.menuLoadMap().getItems().add(new SeparatorMenuItem());
             rangeClosed(1, 8).forEach(num -> addLoadMapMenuItem("Pac-Man XXL " + num, mapsPacManXXLGame.get(num - 1)));
         } catch (IOException x) {
             Logger.error("Could not load sample maps");
