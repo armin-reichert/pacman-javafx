@@ -21,7 +21,7 @@ public interface Game extends GameLifecycle, GameEvents {
     Optional<GateKeeper> optGateKeeper();
     Optional<GameLevel>  optGameLevel();
 
-    HUDControlData hudData();
+    HUDControlData hudControlData();
 
     void                 clearLevelCounter();
     void                 updateLevelCounter(int levelNumber, byte symbol);
@@ -36,8 +36,6 @@ public interface Game extends GameLifecycle, GameEvents {
     int                  initialLifeCount();
     void                 setInitialLifeCount(int numLives);
     int                  lifeCount();
-    int                  visibleLifeCount();
-    void                 setVisibleLifeCount(int count);
     default int          maxLivesDisplayed() { return 5; }
     void                 addLives(int numLives);
     boolean              isPlaying();

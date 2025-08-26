@@ -129,7 +129,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
         bindRendererProperties(hudRenderer, gameLevelRenderer, actorRenderer, debugInfoRenderer);
 
-        context().game().hudData().creditVisible(false).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(true);
+        context().game().hudControlData().creditVisible(false).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(true);
     }
 
     @Override
@@ -147,11 +147,11 @@ public class Arcade_PlayScene2D extends GameScene2D {
      */
     private void acceptGameLevel(GameLevel gameLevel) {
         if (gameLevel.isDemoLevel()) {
-            context().game().hudData().creditVisible(false).levelCounterVisible(true).livesCounterVisible(false);
+            context().game().hudControlData().creditVisible(false).levelCounterVisible(true).livesCounterVisible(false);
             actionBindings.assign(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
             ui.soundManager().setEnabled(false);
         } else {
-            context().game().hudData().creditVisible(false).levelCounterVisible(true).livesCounterVisible(true);
+            context().game().hudControlData().creditVisible(false).levelCounterVisible(true).livesCounterVisible(true);
             actionBindings.assign(ACTION_STEER_UP,               ui.actionBindings());
             actionBindings.assign(ACTION_STEER_DOWN,             ui.actionBindings());
             actionBindings.assign(ACTION_STEER_LEFT,             ui.actionBindings());
@@ -214,9 +214,9 @@ public class Arcade_PlayScene2D extends GameScene2D {
         if (context().gameState() == GamePlayState.STARTING_GAME && !context().gameLevel().pac().isVisible()) {
             numLivesDisplayed += 1;
         }
-        game.setVisibleLifeCount(Math.min(numLivesDisplayed, game.maxLivesDisplayed()));
+        game.hudControlData().setVisibleLifeCount(Math.min(numLivesDisplayed, game.maxLivesDisplayed()));
         //TODO this is wrong in level test state
-        game.hudData().showCredit(context().coinMechanism().isEmpty());
+        game.hudControlData().showCredit(context().coinMechanism().isEmpty());
     }
 
     private void updateSound() {
@@ -282,7 +282,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     @Override
     public void drawHUD() {
         if (hudRenderer != null) {
-            hudRenderer.drawHUD(context(), context().game().hudData(), sizeInPx());
+            hudRenderer.drawHUD(context(), context().game().hudControlData(), sizeInPx());
         }
     }
 

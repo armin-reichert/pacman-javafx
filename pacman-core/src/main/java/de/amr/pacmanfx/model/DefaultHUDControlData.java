@@ -7,6 +7,7 @@ public class DefaultHUDControlData implements HUDControlData {
     private boolean livesCounterVisible = true;
     private boolean levelCounterVisible = true;
     private boolean scoreVisible = true;
+    private int visibleLifeCount;
 
     @Override
     public void show(boolean b) { visible = b; }
@@ -37,6 +38,16 @@ public class DefaultHUDControlData implements HUDControlData {
     @Override
     public void showLivesCounter(boolean b) {
         livesCounterVisible = b;
+    }
+
+    @Override
+    public int visibleLifeCount() {
+        return visibleLifeCount;
+    }
+
+    @Override
+    public void setVisibleLifeCount(int count) {
+        visibleLifeCount = count;
     }
 
     @Override

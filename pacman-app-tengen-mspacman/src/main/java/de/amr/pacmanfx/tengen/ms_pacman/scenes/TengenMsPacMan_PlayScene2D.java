@@ -170,7 +170,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
         bindRendererProperties(hudRenderer, gameLevelRenderer, actorRenderer, debugInfoRenderer);
 
-        context().game().hudData().scoreVisible(true).levelCounterVisible(true).livesCounterVisible(true);
+        context().game().hudControlData().scoreVisible(true).levelCounterVisible(true).livesCounterVisible(true);
 
         dynamicCamera.targetTop();
     }
@@ -291,7 +291,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     }
 
     private void initForGameLevel(GameLevel gameLevel) {
-        context().game().hudData().levelCounterVisible(true).livesCounterVisible(true); // is also visible in demo level!
+        context().game().hudControlData().levelCounterVisible(true).livesCounterVisible(true); // is also visible in demo level!
         setActionsBindings(gameLevel.isDemoLevel());
 
         //TODO check if this is needed, if not, remove
@@ -475,8 +475,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     @Override
     public void drawHUD() {
         TengenMsPacMan_GameModel game = context().game();
-        game.hudData().showGameOptions(!game.optionsAreInitial());
-        hudRenderer.drawHUD(context(), game.hudData(), sizeInPx());
+        game.hudControlData().showGameOptions(!game.optionsAreInitial());
+        hudRenderer.drawHUD(context(), game.hudControlData(), sizeInPx());
     }
 
     @Override
@@ -536,8 +536,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
             numLives += 1;
         }
         numLives = Math.min(numLives, game.maxLivesDisplayed());
-        game.setVisibleLifeCount(numLives);
+        game.hudControlData().setVisibleLifeCount(numLives);
 
-        game.hudData().showLevelNumber(game.mapCategory() != MapCategory.ARCADE);
+        game.hudControlData().showLevelNumber(game.mapCategory() != MapCategory.ARCADE);
     }
 }

@@ -299,7 +299,7 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void init() {
-        context().game().hudData().showScore(true);
+        context().game().hudControlData().showScore(true);
         perspectiveIDProperty().bind(PROPERTY_3D_PERSPECTIVE);
         actionBindings.bind(droneUp, control(KeyCode.MINUS));
         actionBindings.bind(droneDown, control(KeyCode.PLUS));

@@ -48,28 +48,28 @@ public class TengenMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HU
 
         TengenMsPacMan_GameModel game = gameContext.game();
         GameLevel gameLevel = game.optGameLevel().orElse(null);
-        TengenMsPacMan_HUDControlData hudData = (TengenMsPacMan_HUDControlData) data;
 
         if (gameLevel == null) {
             return; // should never happen
         }
 
-        if (!hudData.isVisible()) return;
+        TengenMsPacMan_HUDControlData hudControlData = (TengenMsPacMan_HUDControlData) data;
+        if (!hudControlData.isVisible()) return;
 
-        if (hudData.isScoreVisible()) {
+        if (hudControlData.isScoreVisible()) {
             drawScores(game.scoreManager(), clock.tickCount(), nesColor(0x20), arcadeFontTS());
         }
 
-        if (hudData.isLivesCounterVisible()) {
-            drawLivesCounter(game, TS(2), sceneSize.y() - TS);
+        if (hudControlData.isLivesCounterVisible()) {
+            drawLivesCounter(game, hudControlData, TS(2), sceneSize.y() - TS);
         }
 
-        if (hudData.isLevelCounterVisible()) {
+        if (hudControlData.isLevelCounterVisible()) {
             float x = sceneSize.x() - TS(2), y = sceneSize.y() - TS;
-            drawLevelCounter(game, hudData, x, y);
+            drawLevelCounter(game, hudControlData, x, y);
         }
 
-        if (hudData.gameOptionsVisible()) {
+        if (hudControlData.gameOptionsVisible()) {
             drawGameOptions(game.mapCategory(), game.difficulty(), game.pacBooster(), 0.5 * sceneSize.x(), TS(2.5));
         }
     }
@@ -84,9 +84,9 @@ public class TengenMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HU
         fillText("%6d".formatted(scoreManager.highScore().points()), color, font, TS(13), TS(2));
     }
 
-    public void drawLivesCounter(TengenMsPacMan_GameModel game, float x, float y) {
+    private void drawLivesCounter(TengenMsPacMan_GameModel game, TengenMsPacMan_HUDControlData hudControlData, float x, float y) {
         RectShort sprite = spriteSheet().sprite(SpriteID.LIVES_COUNTER_SYMBOL);
-        for (int i = 0; i < game.visibleLifeCount(); ++i) {
+        for (int i = 0; i < hudControlData.visibleLifeCount(); ++i) {
             drawSprite(sprite, x + TS(i * 2), y, true);
         }
         if (game.lifeCount() > game.maxLivesDisplayed()) {

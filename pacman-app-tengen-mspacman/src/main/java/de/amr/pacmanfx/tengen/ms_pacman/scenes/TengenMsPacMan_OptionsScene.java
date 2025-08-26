@@ -93,7 +93,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         scenesRenderer = new TengenMsPacMan_ScenesRenderer(canvas, ui.currentConfig());
         scenesRenderer.scalingProperty().bind(scaling);
 
-        context().game().hudData().all(false);
+        context().game().hudControlData().all(false);
 
         var tengenActionBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().actionBindings();
         actionBindings.bind(actionSelectNextJoypadBinding, alt(KeyCode.J)); //TODO

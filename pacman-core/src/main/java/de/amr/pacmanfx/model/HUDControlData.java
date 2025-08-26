@@ -18,6 +18,9 @@ public interface HUDControlData {
     boolean isLivesCounterVisible();
     void showLivesCounter(boolean visible);
 
+    int visibleLifeCount();
+    void setVisibleLifeCount(int count);
+
     boolean isScoreVisible();
     void showScore(boolean visible);
 

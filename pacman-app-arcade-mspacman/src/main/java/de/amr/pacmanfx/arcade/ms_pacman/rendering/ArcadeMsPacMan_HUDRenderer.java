@@ -59,7 +59,7 @@ public class ArcadeMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HU
         if (hudControlData.isLivesCounterVisible()) {
             RectShort sprite = spriteSheet().sprite(SpriteID.LIVES_COUNTER_SYMBOL);
             float x = TS(2), y = sceneSize.y() - TS(2);
-            for (int i = 0; i < game.visibleLifeCount(); ++i) {
+            for (int i = 0; i < hudControlData.visibleLifeCount(); ++i) {
                 drawSprite(sprite, x + i * TS(2), y, true);
             }
             int lifeCount = game.lifeCount();

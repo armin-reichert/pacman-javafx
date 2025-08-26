@@ -285,7 +285,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     }
 
     @Override
-    public HUDControlData hudData() {
+    public HUDControlData hudControlData() {
         return hudControlData;
     }
 

@@ -85,7 +85,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
         bindRendererProperties(hudRenderer, scenesRenderer, actorRenderer);
 
-        context().game().hudData().creditVisible(true).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
+        context().game().hudControlData().creditVisible(true).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
 
         actionBindings.assign(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
         actionBindings.assign(ACTION_ARCADE_START_GAME, ui.actionBindings());
@@ -139,7 +139,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     @Override
     public void drawHUD() {
         if (hudRenderer != null) {
-            hudRenderer.drawHUD(context(), context().game().hudData(), sizeInPx());
+            hudRenderer.drawHUD(context(), context().game().hudControlData(), sizeInPx());
         }
     }
 
