@@ -12,8 +12,6 @@ public interface HUDData {
     boolean isVisible();
     void show(boolean b);
 
-    LevelCounter levelCounter();
-
     boolean isLevelCounterVisible();
     void showLevelCounter(boolean b);
 

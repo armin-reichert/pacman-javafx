@@ -7,8 +7,8 @@ package de.amr.pacmanfx.tengen.ms_pacman.rendering;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
+import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HUDData;
-import de.amr.pacmanfx.model.LevelCounter;
 import de.amr.pacmanfx.model.ScoreManager;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.*;
@@ -47,7 +47,12 @@ public class TengenMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HU
         requireNonNull(sceneSize);
 
         TengenMsPacMan_GameModel game = gameContext.game();
+        GameLevel gameLevel = game.optGameLevel().orElse(null);
         TengenMsPacMan_HUDData hudData = (TengenMsPacMan_HUDData) data;
+
+        if (gameLevel == null) {
+            return; // should never happen
+        }
 
         if (!hudData.isVisible()) return;
 
@@ -60,9 +65,9 @@ public class TengenMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HU
         }
 
         if (hudData.isLevelCounterVisible()) {
-            TengenMsPacMan_LevelCounter levelCounter = hudData.levelCounter();
             float x = sceneSize.x() - TS(2), y = sceneSize.y() - TS;
-            drawLevelCounter(levelCounter.displayedLevelNumber(), levelCounter, x, y);
+            int levelNumber = game.mapCategory() != MapCategory.ARCADE ? gameLevel.number() : 0;
+            drawLevelCounter(game, levelNumber, x, y);
         }
 
         if (hudData.gameOptionsVisible()) {
@@ -91,7 +96,7 @@ public class TengenMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HU
         }
     }
 
-    public void drawLevelCounter(int levelNumber, LevelCounter levelCounter, float x, float y) {
+    private void drawLevelCounter(TengenMsPacMan_GameModel game, int levelNumber, float x, float y) {
         if (levelNumber != 0) {
             drawLevelNumberBox(levelNumber, 0, y); // left box
             drawLevelNumberBox(levelNumber, x, y); // right box
@@ -99,7 +104,7 @@ public class TengenMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HU
         RectShort[] symbolSprites = spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS);
         x -= TS(2);
         // symbols are drawn from right to left!
-        for (byte symbol : levelCounter.symbols()) {
+        for (byte symbol : game.levelCounterSymbols()) {
             if (0 <= symbol && symbol < symbolSprites.length) {
                 drawSprite(symbolSprites[symbol], x, y, true);
             }

@@ -48,10 +48,9 @@ public class ArcadeMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HU
         }
 
         if (hudData.isLevelCounterVisible()) {
-            LevelCounter levelCounter = hudData.levelCounter();
             RectShort[] bonusSymbols = spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS);
             float x = sceneSize.x() - TS(4), y = sceneSize.y() - TS(2) + 2;
-            for (byte symbol : levelCounter.symbols()) {
+            for (byte symbol : game.levelCounterSymbols()) {
                 drawSprite(bonusSymbols[symbol], x, y, true);
                 x -= TS(2); // symbols are drawn from right to left
             }

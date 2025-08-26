@@ -60,9 +60,4 @@ public class TengenMsPacMan_HUDData implements HUDData {
     public void showScore(boolean b) {
         scoreVisible = b;
     }
-
-    @Override
-    public TengenMsPacMan_LevelCounter levelCounter() {
-        return levelCounter;
-    }
 }

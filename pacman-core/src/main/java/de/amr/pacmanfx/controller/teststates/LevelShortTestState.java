@@ -99,6 +99,6 @@ public class LevelShortTestState implements GameState {
     public void onExit(GameContext context) {
         context.coinMechanism().setNumCoins(0);
         context.game().resetEverything();
-        context.game().hudData().levelCounter().clear();
+        context.game().clearLevelCounter();
     }
 }

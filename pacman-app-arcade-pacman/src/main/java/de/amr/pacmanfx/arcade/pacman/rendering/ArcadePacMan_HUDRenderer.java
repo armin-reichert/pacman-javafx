@@ -54,10 +54,9 @@ public class ArcadePacMan_HUDRenderer extends BaseSpriteRenderer implements HUDR
         }
 
         if (data.isLevelCounterVisible()) {
-            LevelCounter levelCounter = data.levelCounter();
             RectShort[] bonusSymbols = bonusSymbols();
             float x = sceneSize.x() - TS(4), y = sceneSize.y() - TS(2) + 2;
-            for (byte symbol : levelCounter.symbols()) {
+            for (byte symbol : gameContext.game().levelCounterSymbols()) {
                 drawSprite(bonusSymbols[symbol], x, y, true);
                 x -= TS(2); // symbols are drawn from right to left
             }

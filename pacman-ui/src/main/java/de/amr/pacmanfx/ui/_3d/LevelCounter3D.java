@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.lib.Disposable;
-import de.amr.pacmanfx.model.LevelCounter;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
@@ -34,11 +34,11 @@ public class LevelCounter3D extends Group implements Disposable {
         this.animationRegistry = requireNonNull(animationRegistry);
     }
 
-    public void update(GameUI ui, LevelCounter levelCounter) {
+    public void update(GameUI ui, Game game) {
         getChildren().clear();
         float cubeSize = ui.preferences().getFloat("3d.level_counter.symbol_size");
-        for (int i = 0; i < levelCounter.symbols().size(); ++i) {
-            Image symbolImage = ui.currentConfig().bonusSymbolImage(levelCounter.symbols().get(i));
+        for (int i = 0; i < game.levelCounterSymbols().size(); ++i) {
+            Image symbolImage = ui.currentConfig().bonusSymbolImage(game.levelCounterSymbols().get(i));
             var material = new PhongMaterial(Color.WHITE);
             material.setDiffuseMap(symbolImage);
             var cube = new Box(cubeSize, cubeSize, cubeSize);

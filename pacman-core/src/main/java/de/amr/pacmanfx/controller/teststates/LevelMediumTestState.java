@@ -40,6 +40,7 @@ public class LevelMediumTestState implements GameState {
         GameLevelMessage message = new GameLevelMessage(MessageType.TEST);
         message.setPosition(gameLevel.defaultMessagePosition());
         gameLevel.setMessage(message);
+        context.game().hudData().credit(false);
         context.eventManager().publishEvent(GameEventType.STOP_ALL_SOUNDS);
     }
 
@@ -77,6 +78,6 @@ public class LevelMediumTestState implements GameState {
 
     @Override
     public void onExit(GameContext context) {
-        context.game().hudData().levelCounter().clear();
+        context.game().clearLevelCounter();
     }
 }

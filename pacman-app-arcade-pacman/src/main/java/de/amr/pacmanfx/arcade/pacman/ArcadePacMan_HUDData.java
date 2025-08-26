@@ -4,8 +4,6 @@ import de.amr.pacmanfx.model.HUDData;
 
 public class ArcadePacMan_HUDData implements HUDData {
 
-    private final ArcadePacMan_LevelCounter levelCounter = new ArcadePacMan_LevelCounter();
-
     private boolean visible = true;
     private boolean creditVisible;
     private boolean livesCounterVisible = true;
@@ -51,10 +49,5 @@ public class ArcadePacMan_HUDData implements HUDData {
     @Override
     public void showScore(boolean b) {
         scoreVisible = b;
-    }
-
-    @Override
-    public ArcadePacMan_LevelCounter levelCounter() {
-        return levelCounter;
     }
 }

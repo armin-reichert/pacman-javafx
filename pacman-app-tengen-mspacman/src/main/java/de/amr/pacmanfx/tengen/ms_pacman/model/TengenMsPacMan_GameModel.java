@@ -277,7 +277,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     public void prepareForNewGame() {
         setLifeCount(initialLifeCount());
         gameLevel = null;
-        hud.levelCounter().clear();
+        clearLevelCounter();
         setPlaying(false);
         boosterActive = false;
         scoreManager.loadHighScore();
@@ -402,7 +402,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
         } else {
             showMessage(gameLevel, MessageType.READY);
-            hud.levelCounter().update(gameLevel.number(), gameLevel.bonusSymbol(0));
+            updateLevelCounter(gameLevel.number(), gameLevel.bonusSymbol(0));
             scoreManager.score().setEnabled(true);
             scoreManager.highScore().setEnabled(true);
             Logger.info("Level {} started", gameLevel.number());
@@ -447,7 +447,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     @Override
     public void startNewGame() {
         prepareForNewGame();
-        hud.levelCounter().setStartLevel(startLevelNumber);
+        //hud.levelCounter().setStartLevel(startLevelNumber);
         buildNormalLevel(startLevelNumber);
         eventManager().publishEvent(GameEventType.GAME_STARTED);
     }
@@ -512,7 +512,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         gameLevel.setBonusSymbol(0, computeBonusSymbol(gameLevel.number()));
         gameLevel.setBonusSymbol(1, computeBonusSymbol(gameLevel.number()));
 
-        hud.levelCounter().setEnabled(levelNumber < 8);
+        setLevelCounterEnabled(levelNumber < 8);
 
         activatePacBooster(pacBooster == PacBooster.ALWAYS_ON);
     }

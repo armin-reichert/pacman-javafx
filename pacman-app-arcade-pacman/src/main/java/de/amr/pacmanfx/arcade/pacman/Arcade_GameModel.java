@@ -29,6 +29,7 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class Arcade_GameModel extends AbstractGameModel {
 
+    public static final byte LEVEL_COUNTER_MAX_SIZE = 7;
     public static final byte PELLET_VALUE = 10;
     public static final byte ENERGIZER_VALUE = 50;
     public static final int ALL_GHOSTS_IN_LEVEL_KILLED_BONUS_POINTS = 12_000;
@@ -131,7 +132,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     @Override
     public void resetEverything() {
         prepareForNewGame();
-        hudData().levelCounter().clear();
+        clearLevelCounter();
     }
 
     @Override
@@ -148,7 +149,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     @Override
     public void startNewGame() {
         prepareForNewGame();
-        hudData().levelCounter().clear();
+        clearLevelCounter();
         buildNormalLevel(1);
         eventManager().publishEvent(GameEventType.GAME_STARTED);
     }
@@ -200,7 +201,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         gameLevel.setDemoLevel(false);
         gameLevel.pac().immuneProperty().bind(gameContext.gameController().propertyImmunity());
         gameLevel.pac().usingAutopilotProperty().bind(gameContext.gameController().propertyUsingAutopilot());
-        hudData().levelCounter().setEnabled(true);
+        setLevelCounterEnabled(true);
         huntingTimer().reset();
         scoreManager().setGameLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
@@ -217,7 +218,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         gameLevel.pac().setUsingAutopilot(true);
         gameLevel.pac().setAutopilotSteering(demoLevelSteering);
         demoLevelSteering.init();
-        hudData().levelCounter().setEnabled(true);
+        setLevelCounterEnabled(true);
         huntingTimer().reset();
         scoreManager().setGameLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
@@ -236,7 +237,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             scoreManager().highScore().setEnabled(false);
             Logger.info("Demo level {} started", gameLevel.number());
         } else {
-            hudData().levelCounter().update(gameLevel.number(), gameLevel.bonusSymbol(0));
+            updateLevelCounter(gameLevel.number(), gameLevel.bonusSymbol(0));
             showMessage(gameLevel, MessageType.READY);
             scoreManager().score().setEnabled(true);
             scoreManager().highScore().setEnabled(true);

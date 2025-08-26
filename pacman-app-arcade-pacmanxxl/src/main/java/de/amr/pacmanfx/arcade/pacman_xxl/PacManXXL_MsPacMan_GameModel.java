@@ -36,7 +36,7 @@ public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
         gameLevel.pac().setUsingAutopilot(true);
         gameLevel.pac().setAutopilotSteering(demoLevelSteering);
         demoLevelSteering.init();
-        hudData().levelCounter().setEnabled(false);
+        setLevelCounterEnabled(false);
         huntingTimer().reset();
         scoreManager().setGameLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);

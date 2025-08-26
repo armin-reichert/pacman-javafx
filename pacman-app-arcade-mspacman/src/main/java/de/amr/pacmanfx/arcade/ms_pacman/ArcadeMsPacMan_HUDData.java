@@ -1,11 +1,8 @@
 package de.amr.pacmanfx.arcade.ms_pacman;
 
-import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_LevelCounter;
 import de.amr.pacmanfx.model.HUDData;
 
 public class ArcadeMsPacMan_HUDData implements HUDData {
-
-    private final ArcadePacMan_LevelCounter levelCounter = new ArcadePacMan_LevelCounter();
 
     private boolean visible = true;
     private boolean creditVisible;
@@ -52,10 +49,5 @@ public class ArcadeMsPacMan_HUDData implements HUDData {
     @Override
     public void showScore(boolean b) {
         scoreVisible = b;
-    }
-
-    @Override
-    public ArcadePacMan_LevelCounter levelCounter() {
-        return levelCounter;
     }
 }

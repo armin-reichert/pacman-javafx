@@ -317,8 +317,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         byte symbol = BONUS_SYMBOLS_BY_LEVEL_NUMBER[Math.min(levelNumber, 13)];
         gameLevel.setBonusSymbol(0, symbol);
         gameLevel.setBonusSymbol(1, symbol);
-
-        hud.levelCounter().setEnabled(true);
+        setLevelCounterEnabled(true);
     }
 
     @Override

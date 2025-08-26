@@ -35,21 +35,21 @@ public class TengenMsPacMan_LevelCounter implements LevelCounter {
     }
 
     @Override
-    public List<Byte> symbols() {
+    public List<Byte> levelCounterSymbols() {
         return Collections.unmodifiableList(symbols);
     }
 
     @Override
-    public void clear() {
+    public void clearLevelCounter() {
         symbols.clear();
     }
 
     @Override
-    public void update(int levelNumber, byte symbol) {
+    public void updateLevelCounter(int levelNumber, byte symbol) {
         if (levelNumber == 1) {
-            clear();
+            clearLevelCounter();
         }
-        if (isEnabled()) {
+        if (isLevelCounterEnabled()) {
             symbols.add(symbol);
             if (symbols.size() > LEVEL_COUNTER_MAX_SIZE) {
                 symbols.removeFirst();
@@ -58,12 +58,12 @@ public class TengenMsPacMan_LevelCounter implements LevelCounter {
     }
 
     @Override
-    public void setEnabled(boolean enabled) {
+    public void setLevelCounterEnabled(boolean enabled) {
         enabledProperty().set(enabled);
     }
 
     @Override
-    public boolean isEnabled() {
+    public boolean isLevelCounterEnabled() {
         return enabledProperty().get();
     }
 

@@ -15,6 +15,10 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import org.tinylog.Logger;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static java.util.Objects.requireNonNull;
@@ -32,6 +36,47 @@ public abstract class AbstractGameModel implements Game {
     protected final BooleanProperty cutScenesEnabled = new SimpleBooleanProperty(true);
     protected final IntegerProperty initialLifeCount = new SimpleIntegerProperty(3);
     protected final SimulationStep simulationStep = new SimulationStep();
+    protected final BooleanProperty levelCounterEnabled = new SimpleBooleanProperty(true);
+
+    protected final List<Byte> levelCounterSymbols = new ArrayList<>();
+
+    public BooleanProperty levelCounterEnabledProperty() {
+        return levelCounterEnabled;
+    }
+
+    @Override
+    public List<Byte> levelCounterSymbols() {
+        return Collections.unmodifiableList(levelCounterSymbols);
+    }
+
+    @Override
+    public void clearLevelCounter() {
+        levelCounterSymbols.clear();
+    }
+
+    @Override
+    public void updateLevelCounter(int levelNumber, byte symbol) {
+        if (levelNumber == 1) {
+            levelCounterSymbols.clear();
+        }
+        if (levelCounterEnabled()) {
+            levelCounterSymbols.add(symbol);
+            if (levelCounterSymbols.size() > 7) {
+                levelCounterSymbols.removeFirst();
+            }
+        }
+    }
+
+    @Override
+    public void setLevelCounterEnabled(boolean enabled) {
+        levelCounterEnabledProperty().set(enabled);
+    }
+
+    @Override
+    public boolean levelCounterEnabled() {
+        return levelCounterEnabledProperty().get();
+    }
+
 
     @Override
     public SimulationStep simulationStep() {
