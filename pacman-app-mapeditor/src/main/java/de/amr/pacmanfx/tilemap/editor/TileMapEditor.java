@@ -254,6 +254,10 @@ public class TileMapEditor {
         return currentFile;
     }
 
+    public File currentFile() {
+        return currentFile.get();
+    }
+
     // editedWorldMap
 
     private final ObjectProperty<WorldMap> editedWorldMap = new SimpleObjectProperty<>(WorldMap.emptyMap(28, 36)) {
@@ -1036,35 +1040,6 @@ public class TileMapEditor {
         return false;
     }
 
-    private Optional<File> selectMapFileInDirectoryFollowing(boolean forward) {
-        File currentFile = this.currentFile.get();
-        if (currentFile == null) {
-            return Optional.empty();
-        }
-        File dir = currentFile.getParentFile();
-        if (dir == null) {
-            Logger.error("Cannot load next map file for {}, parent is NULL", currentFile);
-            return Optional.empty();
-        }
-        File[] mapFiles = dir.listFiles((folder, name) -> name.endsWith(".world"));
-        if (mapFiles == null) {
-            Logger.warn("No map files found in directory {}", dir);
-            return Optional.empty();
-        }
-        Arrays.sort(mapFiles);
-        int index = Arrays.binarySearch(mapFiles, currentFile);
-        if (0 <= index && index < mapFiles.length) {
-            int next;
-            if (forward) {
-                next = index == mapFiles.length - 1 ? 0 : index + 1;
-            } else {
-                next = index > 0 ? index - 1: mapFiles.length - 1;
-            }
-            File nextFile = mapFiles[next];
-            return Optional.of(nextFile);
-        }
-        return Optional.empty();
-    }
 
     public boolean saveWorldMap(WorldMap worldMap,File file) {
         try (PrintWriter pw = new PrintWriter(file, StandardCharsets.UTF_8)) {
@@ -1177,19 +1152,18 @@ public class TileMapEditor {
         boolean alt = e.isAltDown();
 
         if (alt && key == KeyCode.LEFT) {
-            selectMapFileInDirectoryFollowing(false).ifPresent(
-                file -> {
-                    if (!readMapFile(file)) {
-                        showMessage("Map file %s could not be loaded".formatted(file.getName()), 3, MessageType.ERROR);
-                    }
-                });
-        } else if (alt && key == KeyCode.RIGHT) {
-            selectMapFileInDirectoryFollowing(true).ifPresent(
-                file -> {
-                    if (!readMapFile(file)) {
-                        showMessage("Map file %s could not be loaded".formatted(file.getName()), 3, MessageType.ERROR);
-                    }
-                });
+            EditorActions.SELECT_NEXT_MAP_FILE.setForward(false);
+            File file = (File) EditorActions.SELECT_NEXT_MAP_FILE.execute(this);
+            if (file != null && !readMapFile(file)) {
+                showMessage("Map file '%s' could not be loaded".formatted(file.getName()), 3, MessageType.ERROR);
+            }
+        }
+        else if (alt && key == KeyCode.RIGHT) {
+            EditorActions.SELECT_NEXT_MAP_FILE.setForward(true);
+            File file = (File) EditorActions.SELECT_NEXT_MAP_FILE.execute(this);
+            if (file != null && !readMapFile(file)) {
+                showMessage("Map file '%s' could not be loaded".formatted(file.getName()), 3, MessageType.ERROR);
+            }
         }
         else if (key == KeyCode.PLUS) {
             zoomIn();

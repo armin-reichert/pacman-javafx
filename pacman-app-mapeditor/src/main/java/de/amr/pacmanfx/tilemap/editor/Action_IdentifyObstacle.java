@@ -15,7 +15,7 @@ public class Action_IdentifyObstacle extends AbstractEditorAction {
     }
 
     @Override
-    public void execute(TileMapEditor editor) {
+    public Object execute(TileMapEditor editor) {
         Vector2i tile = getArg("tile", Vector2i.class);
         WorldMap worldMap = editor.editedWorldMap();
         Obstacle obstacleAtTile = worldMap.obstacles().stream()
@@ -38,5 +38,6 @@ public class Action_IdentifyObstacle extends AbstractEditorAction {
                 info = "Food #%02X (%s)".formatted(foodValue, foodValue);
             editor.showMessage(info, 4, MessageType.INFO);
         }
+        return null;
     }
 }

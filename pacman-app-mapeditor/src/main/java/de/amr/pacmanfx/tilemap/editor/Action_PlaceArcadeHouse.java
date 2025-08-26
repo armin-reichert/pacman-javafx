@@ -17,7 +17,7 @@ public class Action_PlaceArcadeHouse extends AbstractEditorAction {
     }
 
     @Override
-    public void execute(TileMapEditor editor) {
+    public Object execute(TileMapEditor editor) {
         WorldMap worldMap = getArg("worldMap", WorldMap.class);
         Vector2i houseMinTile = getArg("houseMinTile", Vector2i.class);
 
@@ -68,6 +68,7 @@ public class Action_PlaceArcadeHouse extends AbstractEditorAction {
 
         editor.changeManager().setWorldMapChanged();
         editor.changeManager().setEdited(true);
+        return null;
     }
 
     private void clearTerrainAreaOneSided(TileMapEditor editor, WorldMap worldMap, Vector2i minTile, Vector2i maxTile) {

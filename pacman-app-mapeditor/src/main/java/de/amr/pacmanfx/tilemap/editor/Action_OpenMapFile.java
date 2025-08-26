@@ -17,7 +17,7 @@ public class Action_OpenMapFile extends AbstractEditorAction {
     }
 
     @Override
-    public void execute(TileMapEditor editor) {
+    public Object execute(TileMapEditor editor) {
         FileChooser fileChooser = createFileChooser(editor.currentDirectory());
         editor.executeWithCheckForUnsavedChanges(() -> {
             fileChooser.setTitle(translated("open_file"));
@@ -28,7 +28,6 @@ public class Action_OpenMapFile extends AbstractEditorAction {
             }
             editor.changeManager().setEdited(false);
         });
+        return null;
     }
-
-
 }

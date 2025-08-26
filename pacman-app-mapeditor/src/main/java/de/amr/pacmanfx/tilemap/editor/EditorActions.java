@@ -7,5 +7,6 @@ public interface EditorActions {
     Action_OpenMapFile OPEN_MAP_FILE = new Action_OpenMapFile();
     Action_PlaceArcadeHouse PLACE_ARCADE_HOUSE = new Action_PlaceArcadeHouse();
     Action_SaveMapFile SAVE_MAP_FILE = new Action_SaveMapFile();
+    Action_SelectNextMapFile SELECT_NEXT_MAP_FILE = new Action_SelectNextMapFile();
     Action_ShowNewMapDialog SHOW_NEW_MAP_DIALOG = new Action_ShowNewMapDialog();
 }

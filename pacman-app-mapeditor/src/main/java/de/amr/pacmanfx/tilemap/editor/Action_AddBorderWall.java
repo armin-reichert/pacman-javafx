@@ -14,7 +14,7 @@ public class Action_AddBorderWall extends AbstractEditorAction {
     }
 
     @Override
-    public void execute(TileMapEditor editor) {
+    public Object execute(TileMapEditor editor) {
         WorldMap worldMap = getArg("worldMap", WorldMap.class);
         int lastRow = worldMap.numRows() - 1 - EMPTY_ROWS_BELOW_MAZE, lastCol = worldMap.numCols() - 1;
         editor.setTileValueRespectingSymmetry(worldMap, LayerID.TERRAIN, EMPTY_ROWS_BEFORE_MAZE, 0, TerrainTile.ARC_NW.$);
@@ -30,5 +30,6 @@ public class Action_AddBorderWall extends AbstractEditorAction {
             editor.setTileValueRespectingSymmetry(worldMap, LayerID.TERRAIN, lastRow, col, TerrainTile.WALL_H.$);
         }
         editor.changeManager().setTerrainMapChanged();
+        return null;
     }
 }

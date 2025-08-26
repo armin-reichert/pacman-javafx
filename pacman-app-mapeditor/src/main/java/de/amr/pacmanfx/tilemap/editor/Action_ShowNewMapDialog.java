@@ -17,7 +17,7 @@ public class Action_ShowNewMapDialog extends AbstractEditorAction {
     }
 
     @Override
-    public void execute(TileMapEditor editor) {
+    public Object execute(TileMapEditor editor) {
         boolean preconfigured = getArg("preconfigured", Boolean.class);
         editor.executeWithCheckForUnsavedChanges(() -> {
             var dialog = new TextInputDialog("28x36");
@@ -42,6 +42,7 @@ public class Action_ShowNewMapDialog extends AbstractEditorAction {
                 }
             });
         });
+        return null;
     }
 
     private void setPreconfiguredMap(TileMapEditor editor, int tilesX, int tilesY) {

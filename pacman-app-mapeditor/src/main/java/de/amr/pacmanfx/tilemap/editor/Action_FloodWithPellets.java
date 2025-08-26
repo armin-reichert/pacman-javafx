@@ -21,11 +21,11 @@ public class Action_FloodWithPellets extends AbstractEditorAction {
     }
 
     @Override
-    public void execute(TileMapEditor editor) {
+    public Object execute(TileMapEditor editor) {
         Vector2i startTile = getArg("startTile", Vector2i.class);
         Byte pelletValue = getArg("pelletValue", Byte.class);
         if (!canEditFoodAtTile(editor.editedWorldMap(), startTile)) {
-            return;
+            return null;
         }
         var q = new ArrayDeque<Vector2i>();
         Set<Vector2i> visited = new HashSet<>();
@@ -45,6 +45,6 @@ public class Action_FloodWithPellets extends AbstractEditorAction {
         }
         editor.changeManager().setFoodMapChanged();
         editor.changeManager().setEdited(true);
-
+        return null;
     }
 }

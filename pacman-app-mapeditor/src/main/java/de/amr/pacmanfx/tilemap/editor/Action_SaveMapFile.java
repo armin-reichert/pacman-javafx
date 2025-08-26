@@ -18,7 +18,7 @@ public class Action_SaveMapFile extends AbstractEditorAction {
     }
 
     @Override
-    public void execute(TileMapEditor editor) {
+    public Object execute(TileMapEditor editor) {
         FileChooser fileChooser = createFileChooser(editor.currentDirectory());
         fileChooser.setTitle(translated("save_file"));
         File file = fileChooser.showSaveDialog(editor.stage());
@@ -38,6 +38,7 @@ public class Action_SaveMapFile extends AbstractEditorAction {
                 editor.showMessage("No .world file selected", 2, MessageType.WARNING);
             }
         }
+        return null;
     }
 
 
