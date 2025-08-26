@@ -251,6 +251,10 @@ public class TileMapEditor {
 
     private final ObjectProperty<File> currentFile = new SimpleObjectProperty<>();
 
+    public ObjectProperty<File> currentFileProperty() {
+        return currentFile;
+    }
+
     // editedWorldMap
 
     private final ObjectProperty<WorldMap> editedWorldMap = new SimpleObjectProperty<>(WorldMap.emptyMap(28, 36)) {
@@ -998,36 +1002,9 @@ public class TileMapEditor {
         });
     }
 
-    void showNewMapDialog(boolean preconfigured) {
-        executeWithCheckForUnsavedChanges(() -> {
-            var dialog = new TextInputDialog("28x36");
-            dialog.setTitle(translated("new_dialog.title"));
-            dialog.setHeaderText(translated("new_dialog.header_text"));
-            dialog.setContentText(translated("new_dialog.content_text"));
-            dialog.showAndWait().ifPresent(text -> {
-                Vector2i sizeInTiles = parseSize(text);
-                if (sizeInTiles == null) {
-                    showMessage("Map size not recognized", 2, MessageType.ERROR);
-                }
-                else if (sizeInTiles.y() < 6) {
-                    showMessage("Map must have at least 6 rows", 2, MessageType.ERROR);
-                }
-                else {
-                    if (preconfigured) {
-                        setPreconfiguredMap(sizeInTiles.x(), sizeInTiles.y());
-                    } else {
-                        setBlankMap(sizeInTiles.x(), sizeInTiles.y());
-                    }
-                    currentFile.set(null);
-                }
-            });
-        });
-    }
-
-    private Vector2i parseSize(String cols_x_rows) {
+    public static Vector2i parseSize(String cols_x_rows) {
         String[] tuple = cols_x_rows.split("x");
         if (tuple.length != 2) {
-            showMessage("Map size must be given as cols x rows", 2, MessageType.ERROR);
             return null;
         }
         try {
@@ -1035,7 +1012,6 @@ public class TileMapEditor {
             int numRows = Integer.parseInt(tuple[1].trim());
             return new Vector2i(numCols, numRows);
         } catch (Exception x) {
-            showMessage("Map size must be given as cols x rows", 2, MessageType.ERROR);
             return null;
         }
     }
@@ -1386,14 +1362,14 @@ public class TileMapEditor {
         changeManager.setEdited(true);
     }
 
-    private void setBlankMap(int tilesX, int tilesY) {
+    void setBlankMap(int tilesX, int tilesY) {
         var blankMap = WorldMap.emptyMap(tilesY, tilesX);
         setDefaultColors(blankMap);
         setDefaultScatterPositions(blankMap);
         setEditedWorldMap(blankMap);
     }
 
-    private void setPreconfiguredMap(int tilesX, int tilesY) {
+    void setPreconfiguredMap(int tilesX, int tilesY) {
         var worldMap = WorldMap.emptyMap(tilesY, tilesX);
         EditorActions.ADD_BORDER_WALL.setWorldMap(worldMap);
         EditorActions.ADD_BORDER_WALL.execute(this);

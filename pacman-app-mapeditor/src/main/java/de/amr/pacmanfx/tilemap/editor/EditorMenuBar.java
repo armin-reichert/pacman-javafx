@@ -21,10 +21,16 @@ public class EditorMenuBar extends MenuBar {
 
         // File
         var miNewPreconfiguredMap = new MenuItem(translated("menu.file.new"));
-        miNewPreconfiguredMap.setOnAction(e -> editor.showNewMapDialog(true));
+        miNewPreconfiguredMap.setOnAction(e -> {
+            EditorActions.SHOW_NEW_MAP_DIALOG.setPreconfigureMap(true);
+            EditorActions.SHOW_NEW_MAP_DIALOG.execute(editor);
+        });
 
         var miNewBlankMap = new MenuItem(translated("menu.file.new_blank_map"));
-        miNewBlankMap.setOnAction(e -> editor.showNewMapDialog(false));
+        miNewBlankMap.setOnAction(e -> {
+            EditorActions.SHOW_NEW_MAP_DIALOG.setPreconfigureMap(false);
+            EditorActions.SHOW_NEW_MAP_DIALOG.execute(editor);
+        });
 
         var miOpenMapFile = new MenuItem(translated("menu.file.open"));
         miOpenMapFile.setOnAction(e -> editor.openMapFileInteractively());
