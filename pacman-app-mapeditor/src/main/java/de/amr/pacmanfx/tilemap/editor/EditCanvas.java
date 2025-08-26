@@ -58,18 +58,9 @@ public class EditCanvas extends Canvas {
 
     private boolean dragging = false;
 
-    public EditCanvas(TileMapEditor editor) {
+    public EditCanvas(TileMapEditor editor, ObstacleEditor obstacleEditor) {
         this.editor = requireNonNull(editor);
-
-        obstacleEditor = new ObstacleEditor() {
-            @Override
-            public void setValue(Vector2i tile, byte value) {
-                editor.setTileValueRespectSymmetry(editor.editedWorldMap(), LayerID.TERRAIN, tile, value);
-            }
-        };
-        obstacleEditor.joiningProperty().bind(editor.obstaclesJoiningProperty());
-        obstacleEditor.worldMapProperty().bind(worldMapPy);
-        obstacleEditor.symmetricEditModeProperty().bind(editor.symmetricEditModeProperty());
+        this.obstacleEditor = requireNonNull(obstacleEditor);
 
         gridSizePy.bind(editor.gridSizeProperty());
         worldMapPy.bind(editor.editedWorldMapProperty());

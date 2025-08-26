@@ -564,6 +564,7 @@ public class TileMapEditor {
         );
 
         createFileChooser();
+        createObstacleEditor();
         createEditCanvas();
         createPreview2D();
         createPreview3D();
@@ -662,8 +663,22 @@ public class TileMapEditor {
         fileChooser.setInitialDirectory(currentDirectory);
     }
 
+    private ObstacleEditor createObstacleEditor() {
+        var obstacleEditor = new ObstacleEditor() {
+            @Override
+            public void setValue(Vector2i tile, byte value) {
+                setTileValueRespectSymmetry(editedWorldMap(), LayerID.TERRAIN, tile, value);
+            }
+        };
+        obstacleEditor.joiningProperty().bind(obstaclesJoiningProperty());
+        obstacleEditor.worldMapProperty().bind(editedWorldMapProperty());
+        obstacleEditor.symmetricEditModeProperty().bind(symmetricEditModeProperty());
+        return obstacleEditor;
+    }
+
     private void createEditCanvas() {
-        editCanvas = new EditCanvas(this);
+        ObstacleEditor obstacleEditor = createObstacleEditor();
+        editCanvas = new EditCanvas(this, obstacleEditor);
         spEditCanvas = new ScrollPane(editCanvas);
         spEditCanvas.setFitToHeight(true);
         registerDragAndDropImageHandler(spEditCanvas);
