@@ -1338,25 +1338,7 @@ public class TileMapEditor {
         setEditedWorldMap(blankMap);
     }
 
-    void setPreconfiguredMap(int tilesX, int tilesY) {
-        var worldMap = WorldMap.emptyMap(tilesY, tilesX);
-        EditorActions.ADD_BORDER_WALL.setWorldMap(worldMap);
-        EditorActions.ADD_BORDER_WALL.execute(this);
-        setDefaultScatterPositions(worldMap);
-        if (worldMap.numRows() >= 20) {
-            Vector2i houseMinTile = Vector2i.of(tilesX / 2 - 4, tilesY / 2 - 3);
-            worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_PAC,   WorldMapFormatter.formatTile(houseMinTile.plus(3, 11)));
-            worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_BONUS, WorldMapFormatter.formatTile(houseMinTile.plus(3, 5)));
-            EditorActions.PLACE_ARCADE_HOUSE.setHouseMinTile(houseMinTile);
-            EditorActions.PLACE_ARCADE_HOUSE.setWorldMap(worldMap);
-            EditorActions.PLACE_ARCADE_HOUSE.execute(this);
-        }
-        worldMap.buildObstacleList();
-        setDefaultColors(worldMap);
-        setEditedWorldMap(worldMap);
-    }
-
-    void setDefaultColors(WorldMap worldMap) {
+    public void setDefaultColors(WorldMap worldMap) {
         worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.COLOR_WALL_STROKE, MS_PACMAN_COLOR_WALL_STROKE);
         worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.COLOR_WALL_FILL, MS_PACMAN_COLOR_WALL_FILL);
         worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.COLOR_DOOR, MS_PACMAN_COLOR_DOOR);
@@ -1365,7 +1347,7 @@ public class TileMapEditor {
         changeManager.setFoodMapChanged();
     }
 
-    private void setDefaultScatterPositions(WorldMap worldMap) {
+    public void setDefaultScatterPositions(WorldMap worldMap) {
         int numCols = worldMap.numCols(), numRows = worldMap.numRows();
         if (numCols >= 3 && numRows >= 2) {
             worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_SCATTER_RED_GHOST,    WorldMapFormatter.formatTile(Vector2i.of(numCols - 3, 0)));

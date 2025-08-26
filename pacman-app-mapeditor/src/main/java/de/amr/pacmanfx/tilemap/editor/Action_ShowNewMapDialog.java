@@ -1,6 +1,10 @@
 package de.amr.pacmanfx.tilemap.editor;
 
 import de.amr.pacmanfx.lib.Vector2i;
+import de.amr.pacmanfx.lib.tilemap.LayerID;
+import de.amr.pacmanfx.lib.tilemap.WorldMap;
+import de.amr.pacmanfx.lib.tilemap.WorldMapFormatter;
+import de.amr.pacmanfx.model.WorldMapProperty;
 import javafx.scene.control.TextInputDialog;
 
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditor.parseSize;
@@ -30,7 +34,7 @@ public class Action_ShowNewMapDialog extends AbstractEditorAction {
                 }
                 else {
                     if (preconfigured) {
-                        editor.setPreconfiguredMap(sizeInTiles.x(), sizeInTiles.y());
+                        setPreconfiguredMap(editor, sizeInTiles.x(), sizeInTiles.y());
                     } else {
                         editor.setBlankMap(sizeInTiles.x(), sizeInTiles.y());
                     }
@@ -38,5 +42,23 @@ public class Action_ShowNewMapDialog extends AbstractEditorAction {
                 }
             });
         });
+    }
+
+    private void setPreconfiguredMap(TileMapEditor editor, int tilesX, int tilesY) {
+        var worldMap = WorldMap.emptyMap(tilesY, tilesX);
+        EditorActions.ADD_BORDER_WALL.setWorldMap(worldMap);
+        EditorActions.ADD_BORDER_WALL.execute(editor);
+        editor.setDefaultScatterPositions(worldMap);
+        if (worldMap.numRows() >= 20) {
+            Vector2i houseMinTile = Vector2i.of(tilesX / 2 - 4, tilesY / 2 - 3);
+            worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_PAC,   WorldMapFormatter.formatTile(houseMinTile.plus(3, 11)));
+            worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_BONUS, WorldMapFormatter.formatTile(houseMinTile.plus(3, 5)));
+            EditorActions.PLACE_ARCADE_HOUSE.setHouseMinTile(houseMinTile);
+            EditorActions.PLACE_ARCADE_HOUSE.setWorldMap(worldMap);
+            EditorActions.PLACE_ARCADE_HOUSE.execute(editor);
+        }
+        worldMap.buildObstacleList();
+        editor.setDefaultColors(worldMap);
+        editor.setEditedWorldMap(worldMap);
     }
 }
