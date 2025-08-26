@@ -29,7 +29,7 @@ import org.tinylog.Logger;
 import java.util.function.Predicate;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.tilemap.editor.ArcadeMap.*;
+import static de.amr.pacmanfx.tilemap.editor.ArcadeSprites.*;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditor.*;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.*;
 import static java.util.Objects.requireNonNull;

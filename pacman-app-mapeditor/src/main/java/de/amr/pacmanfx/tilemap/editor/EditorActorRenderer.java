@@ -12,7 +12,6 @@ import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.tilemap.editor.ArcadeMap.SPRITE_SHEET;
 
 public class EditorActorRenderer extends BaseCanvasRenderer {
 
@@ -30,7 +29,7 @@ public class EditorActorRenderer extends BaseCanvasRenderer {
         double y = center.y() - 0.5f * sprite.height();
         ctx.save();
         ctx.scale(scaling(), scaling());
-        ctx.drawImage(SPRITE_SHEET,
+        ctx.drawImage(ArcadeSprites.SPRITE_SHEET,
                 sprite.x(), sprite.y(), sprite.width(), sprite.height(),
                 x, y, sprite.width(), sprite.height()
         );

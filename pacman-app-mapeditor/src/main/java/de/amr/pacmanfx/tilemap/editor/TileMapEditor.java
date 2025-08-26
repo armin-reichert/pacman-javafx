@@ -54,7 +54,7 @@ import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
 import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
-import static de.amr.pacmanfx.tilemap.editor.ArcadeMap.*;
+import static de.amr.pacmanfx.tilemap.editor.ArcadeSprites.*;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.*;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.IntStream.rangeClosed;
