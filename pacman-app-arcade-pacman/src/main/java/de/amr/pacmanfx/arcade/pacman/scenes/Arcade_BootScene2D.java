@@ -45,7 +45,7 @@ public class Arcade_BootScene2D extends GameScene2D {
         spriteRenderer = new BaseSpriteRenderer(canvas, spriteSheet);
         bindRendererProperties(spriteRenderer);
 
-        context().game().hudControlData().all(false);
+        context().game().hud().all(false);
 
         double width = spriteSheet.sourceImage().getWidth(), height = spriteSheet.sourceImage().getHeight();
         // ignore left half of sprite sheet image containing maze images

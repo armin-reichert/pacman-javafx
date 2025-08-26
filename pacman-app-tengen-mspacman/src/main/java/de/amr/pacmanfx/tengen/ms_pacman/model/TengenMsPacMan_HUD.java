@@ -1,8 +1,12 @@
+/*
+Copyright (c) 2021-2025 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.pacmanfx.tengen.ms_pacman.model;
 
-import de.amr.pacmanfx.model.DefaultHUDControlData;
+import de.amr.pacmanfx.model.DefaultHUD;
 
-public class TengenMsPacMan_HUDControlData extends DefaultHUDControlData {
+public class TengenMsPacMan_HUD extends DefaultHUD {
 
     private boolean levelNumberVisible;
     private boolean gameOptionsVisible;

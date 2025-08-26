@@ -711,7 +711,7 @@ public class GameLevel3D extends Group implements Disposable {
         }
         int livesCounterSize = ui.gameContext().game().lifeCount() - 1;
         // when the game starts and Pac-Man is not yet visible, show one more
-        boolean oneMore = ui.gameContext().gameState() == GamePlayState.STARTING_GAME && !gameLevel.pac().isVisible();
+        boolean oneMore = ui.gameContext().gameState() == GamePlayState.STARTING_GAME_OR_LEVEL && !gameLevel.pac().isVisible();
         if (oneMore) livesCounterSize += 1;
         livesCountProperty.set(livesCounterSize);
 

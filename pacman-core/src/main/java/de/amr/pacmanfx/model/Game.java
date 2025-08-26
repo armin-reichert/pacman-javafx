@@ -21,7 +21,7 @@ public interface Game extends GameLifecycle, GameEvents {
     Optional<GateKeeper> optGateKeeper();
     Optional<GameLevel>  optGameLevel();
 
-    HUDControlData hudControlData();
+    HUD                  hud();
 
     void                 clearLevelCounter();
     void                 updateLevelCounter(int levelNumber, byte symbol);

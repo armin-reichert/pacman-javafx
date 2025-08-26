@@ -8,7 +8,7 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.HUDControlData;
+import de.amr.pacmanfx.model.HUD;
 import de.amr.pacmanfx.model.ScoreManager;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.*;
@@ -41,7 +41,7 @@ public class TengenMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HU
     }
 
     @Override
-    public void drawHUD(GameContext gameContext, HUDControlData data, Vector2f sceneSize) {
+    public void drawHUD(GameContext gameContext, HUD data, Vector2f sceneSize) {
         requireNonNull(gameContext);
         requireNonNull(data);
         requireNonNull(sceneSize);
@@ -53,23 +53,23 @@ public class TengenMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HU
             return; // should never happen
         }
 
-        TengenMsPacMan_HUDControlData hudControlData = (TengenMsPacMan_HUDControlData) data;
-        if (!hudControlData.isVisible()) return;
+        TengenMsPacMan_HUD hud = (TengenMsPacMan_HUD) data;
+        if (!hud.isVisible()) return;
 
-        if (hudControlData.isScoreVisible()) {
+        if (hud.isScoreVisible()) {
             drawScores(game.scoreManager(), clock.tickCount(), nesColor(0x20), arcadeFontTS());
         }
 
-        if (hudControlData.isLivesCounterVisible()) {
-            drawLivesCounter(game, hudControlData, TS(2), sceneSize.y() - TS);
+        if (hud.isLivesCounterVisible()) {
+            drawLivesCounter(game, hud, TS(2), sceneSize.y() - TS);
         }
 
-        if (hudControlData.isLevelCounterVisible()) {
+        if (hud.isLevelCounterVisible()) {
             float x = sceneSize.x() - TS(2), y = sceneSize.y() - TS;
-            drawLevelCounter(game, hudControlData, x, y);
+            drawLevelCounter(game, hud, x, y);
         }
 
-        if (hudControlData.gameOptionsVisible()) {
+        if (hud.gameOptionsVisible()) {
             drawGameOptions(game.mapCategory(), game.difficulty(), game.pacBooster(), 0.5 * sceneSize.x(), TS(2.5));
         }
     }
@@ -84,7 +84,7 @@ public class TengenMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HU
         fillText("%6d".formatted(scoreManager.highScore().points()), color, font, TS(13), TS(2));
     }
 
-    private void drawLivesCounter(TengenMsPacMan_GameModel game, TengenMsPacMan_HUDControlData hudControlData, float x, float y) {
+    private void drawLivesCounter(TengenMsPacMan_GameModel game, TengenMsPacMan_HUD hudControlData, float x, float y) {
         RectShort sprite = spriteSheet().sprite(SpriteID.LIVES_COUNTER_SYMBOL);
         for (int i = 0; i < hudControlData.visibleLifeCount(); ++i) {
             drawSprite(sprite, x + TS(i * 2), y, true);
@@ -95,7 +95,7 @@ public class TengenMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HU
         }
     }
 
-    private void drawLevelCounter(TengenMsPacMan_GameModel game, TengenMsPacMan_HUDControlData hudData, float x, float y) {
+    private void drawLevelCounter(TengenMsPacMan_GameModel game, TengenMsPacMan_HUD hudData, float x, float y) {
         GameLevel gameLevel = game.optGameLevel().orElse(null);
         if (gameLevel == null) return;
 

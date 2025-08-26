@@ -66,7 +66,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
 
         bindRendererProperties(hudRenderer, actorRenderer, debugInfoRenderer);
 
-        context().game().hudControlData().creditVisible(false).scoreVisible(false).levelCounterVisible(true).livesCounterVisible(false);
+        context().game().hud().creditVisible(false).scoreVisible(false).levelCounterVisible(true).livesCounterVisible(false);
 
         actionBindings.bind(ACTION_LET_GAME_STATE_EXPIRE, ui.joypad().key(JoypadButton.START));
 
@@ -166,7 +166,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
         if (hudRenderer != null) {
             var game = context().<TengenMsPacMan_GameModel>game();
             if (game.mapCategory() != MapCategory.ARCADE) {
-                hudRenderer.drawHUD(context(), game.hudControlData(), sizeInPx().minus(0, 2 * TS));
+                hudRenderer.drawHUD(context(), game.hud(), sizeInPx().minus(0, 2 * TS));
             }
         }
     }

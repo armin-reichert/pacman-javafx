@@ -67,7 +67,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
         bindRendererProperties(hudRenderer, actorRenderer, debugInfoRenderer);
 
-        context().game().hudControlData().scoreVisible(false).levelCounterVisible(true).livesCounterVisible(false);
+        context().game().hud().scoreVisible(false).levelCounterVisible(true).livesCounterVisible(false);
 
         clapperboard = new Clapperboard(spriteSheet, 4, "THE END");
         clapperboard.setPosition(3*TS, 10*TS);
@@ -222,7 +222,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
             // draw HUD only for non-Arcade map mode
             var game = context().<TengenMsPacMan_GameModel>game();
             if (game.mapCategory() != MapCategory.ARCADE) {
-                hudRenderer.drawHUD(context(), game.hudControlData(), sizeInPx().minus(0, 2 * TS));
+                hudRenderer.drawHUD(context(), game.hud(), sizeInPx().minus(0, 2 * TS));
             }
         }
     }

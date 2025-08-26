@@ -299,7 +299,7 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void init() {
-        context().game().hudControlData().showScore(true);
+        context().game().hud().showScore(true);
         perspectiveIDProperty().bind(PROPERTY_3D_PERSPECTIVE);
         actionBindings.bind(droneUp, control(KeyCode.MINUS));
         actionBindings.bind(droneDown, control(KeyCode.PLUS));
@@ -358,7 +358,7 @@ public class PlayScene3D implements GameScene {
                 case GHOST_DYING -> gameLevel3D.onGhostDying();
                 case LEVEL_COMPLETE -> gameLevel3D.onLevelComplete(state, perspectiveIDProperty);
                 case GAME_OVER -> gameLevel3D.onGameOver(state);
-                case STARTING_GAME -> {
+                case STARTING_GAME_OR_LEVEL -> {
                     if (gameLevel3D != null) {
                         gameLevel3D.onStartingGame();
                     } else {
@@ -391,7 +391,7 @@ public class PlayScene3D implements GameScene {
         }
         else {
             switch (state) {
-                case STARTING_GAME, LEVEL_TRANSITION -> {
+                case STARTING_GAME_OR_LEVEL, LEVEL_TRANSITION -> {
                     if (!gameLevel.isDemoLevel()) {
                         if (gameLevel.house().isEmpty()) {
                             Logger.error("No house found in this game level! WTF?");

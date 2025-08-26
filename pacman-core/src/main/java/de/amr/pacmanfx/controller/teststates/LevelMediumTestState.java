@@ -40,7 +40,7 @@ public class LevelMediumTestState implements GameState {
         GameLevelMessage message = new GameLevelMessage(MessageType.TEST);
         message.setPosition(gameLevel.defaultMessagePosition());
         gameLevel.setMessage(message);
-        context.game().hudControlData().creditVisible(false);
+        context.game().hud().creditVisible(false);
         context.eventManager().publishEvent(GameEventType.STOP_ALL_SOUNDS);
     }
 

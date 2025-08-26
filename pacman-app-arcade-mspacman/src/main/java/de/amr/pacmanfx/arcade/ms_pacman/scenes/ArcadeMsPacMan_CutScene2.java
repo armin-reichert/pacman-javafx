@@ -58,7 +58,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
 
         bindRendererProperties(hudRenderer, actorSpriteRenderer);
 
-        context().game().hudControlData().scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
+        context().game().hud().scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
 
         pacMan = createPacMan();
         msPacMan = createMsPacMan();
@@ -97,7 +97,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
     @Override
     public void drawHUD() {
         if (hudRenderer != null) {
-            hudRenderer.drawHUD(context(), context().game().hudControlData(), sizeInPx());
+            hudRenderer.drawHUD(context(), context().game().hud(), sizeInPx());
         }
     }
 

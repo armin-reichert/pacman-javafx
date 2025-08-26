@@ -6,7 +6,7 @@ package de.amr.pacmanfx.uilib.rendering;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.model.HUDControlData;
+import de.amr.pacmanfx.model.HUD;
 
 public interface HUDRenderer extends CanvasRenderer {
 
@@ -14,8 +14,8 @@ public interface HUDRenderer extends CanvasRenderer {
      * Draws the Head-Up Display (score, live counter, level counter, coins inserted)
      *
      * @param gameContext the game context
-     * @param data the data displayed in the Head-Up Display
+     * @param hud the data displayed in the Head-Up Display
      * @param sceneSize scene size in pixels
      */
-    void drawHUD(GameContext gameContext, HUDControlData data, Vector2f sceneSize);
+    void drawHUD(GameContext gameContext, HUD hud, Vector2f sceneSize);
 }

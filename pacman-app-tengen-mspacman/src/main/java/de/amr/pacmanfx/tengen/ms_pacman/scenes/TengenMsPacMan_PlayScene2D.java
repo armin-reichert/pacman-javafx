@@ -170,7 +170,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
         bindRendererProperties(hudRenderer, gameLevelRenderer, actorRenderer, debugInfoRenderer);
 
-        context().game().hudControlData().scoreVisible(true).levelCounterVisible(true).livesCounterVisible(true);
+        context().game().hud().scoreVisible(true).levelCounterVisible(true).livesCounterVisible(true);
 
         dynamicCamera.targetTop();
     }
@@ -291,7 +291,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     }
 
     private void initForGameLevel(GameLevel gameLevel) {
-        context().game().hudControlData().levelCounterVisible(true).livesCounterVisible(true); // is also visible in demo level!
+        context().game().hud().levelCounterVisible(true).livesCounterVisible(true); // is also visible in demo level!
         setActionsBindings(gameLevel.isDemoLevel());
 
         //TODO check if this is needed, if not, remove
@@ -475,8 +475,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     @Override
     public void drawHUD() {
         TengenMsPacMan_GameModel game = context().game();
-        game.hudControlData().showGameOptions(!game.optionsAreInitial());
-        hudRenderer.drawHUD(context(), game.hudControlData(), sizeInPx());
+        game.hud().showGameOptions(!game.optionsAreInitial());
+        hudRenderer.drawHUD(context(), game.hud(), sizeInPx());
     }
 
     @Override
@@ -532,12 +532,12 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
         int numLives = game.lifeCount() - 1;
         // As long as Pac-Man is still invisible on start, he is shown as an additional entry in the lives counter
-        if (context().gameState() == GamePlayState.STARTING_GAME && !gameLevel.pac().isVisible()) {
+        if (context().gameState() == GamePlayState.STARTING_GAME_OR_LEVEL && !gameLevel.pac().isVisible()) {
             numLives += 1;
         }
         numLives = Math.min(numLives, game.maxLivesDisplayed());
-        game.hudControlData().setVisibleLifeCount(numLives);
+        game.hud().setVisibleLifeCount(numLives);
 
-        game.hudControlData().showLevelNumber(game.mapCategory() != MapCategory.ARCADE);
+        game.hud().showLevelNumber(game.mapCategory() != MapCategory.ARCADE);
     }
 }

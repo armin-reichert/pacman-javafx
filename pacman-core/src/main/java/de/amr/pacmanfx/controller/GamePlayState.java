@@ -45,7 +45,7 @@ public enum GamePlayState implements GameState {
         @Override
         public void onUpdate(GameContext context) {
             if (timer.hasExpired()) {
-                context.gameController().changeGameState(STARTING_GAME);
+                context.gameController().changeGameState(STARTING_GAME_OR_LEVEL);
             }
         }
     },
@@ -74,7 +74,7 @@ public enum GamePlayState implements GameState {
         }
     },
 
-    STARTING_GAME {
+    STARTING_GAME_OR_LEVEL {
         static final short TICK_NEW_GAME_SHOW_GUYS = 120;
         static final short TICK_NEW_GAME_START_HUNTING = 240;
         static final short TICK_DEMO_LEVEL_START_HUNTING = 120;
@@ -227,7 +227,7 @@ public enum GamePlayState implements GameState {
         @Override
         public void onUpdate(GameContext context) {
             if (timer.hasExpired()) {
-                context.gameController().changeGameState(STARTING_GAME);
+                context.gameController().changeGameState(STARTING_GAME_OR_LEVEL);
             }
         }
     },
@@ -282,7 +282,7 @@ public enum GamePlayState implements GameState {
                 } else {
                     context.game().addLives(-1);
                     context.gameController().changeGameState(context.game().lifeCount() == 0
-                        ? GAME_OVER : STARTING_GAME);
+                        ? GAME_OVER : STARTING_GAME_OR_LEVEL);
                 }
             }
             else if (timer.tickCount() == TICK_HIDE_GHOSTS) {

@@ -7,7 +7,7 @@ package de.amr.pacmanfx.model;
 /**
  * Controls which data are shown in Heads-Up Display (HUD).
  */
-public interface HUDControlData {
+public interface HUD {
 
     boolean isVisible();
     void show(boolean visible);
@@ -27,26 +27,33 @@ public interface HUDControlData {
     boolean isCreditVisible();
     void showCredit(boolean visible);
 
+    int numCoins();
+    void setNumCoins(int numCoins);
+
     // Fluent API
-    default HUDControlData all(boolean visible) {
+    default HUD all(boolean visible) {
         return creditVisible(visible)
             .scoreVisible(visible)
             .levelCounterVisible(visible)
             .livesCounterVisible(visible);
     }
-    default HUDControlData creditVisible(boolean visible) {
+
+    default HUD creditVisible(boolean visible) {
         showCredit(visible);
         return this;
     }
-    default HUDControlData levelCounterVisible(boolean visible) {
+
+    default HUD levelCounterVisible(boolean visible) {
         showLevelCounter(visible);
         return this;
     }
-    default HUDControlData livesCounterVisible(boolean visible) {
+
+    default HUD livesCounterVisible(boolean visible) {
         showLivesCounter(visible);
         return this;
     }
-    default HUDControlData scoreVisible(boolean visible) {
+
+    default HUD scoreVisible(boolean visible) {
         showScore(visible);
         return this;
     }

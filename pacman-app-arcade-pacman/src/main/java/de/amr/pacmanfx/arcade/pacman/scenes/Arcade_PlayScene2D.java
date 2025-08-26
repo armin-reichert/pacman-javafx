@@ -129,7 +129,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
         bindRendererProperties(hudRenderer, gameLevelRenderer, actorRenderer, debugInfoRenderer);
 
-        context().game().hudControlData().creditVisible(false).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(true);
+        context().game().hud().creditVisible(false).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(true);
     }
 
     @Override
@@ -147,11 +147,11 @@ public class Arcade_PlayScene2D extends GameScene2D {
      */
     private void acceptGameLevel(GameLevel gameLevel) {
         if (gameLevel.isDemoLevel()) {
-            context().game().hudControlData().creditVisible(false).levelCounterVisible(true).livesCounterVisible(false);
+            context().game().hud().creditVisible(false).levelCounterVisible(true).livesCounterVisible(false);
             actionBindings.assign(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
             ui.soundManager().setEnabled(false);
         } else {
-            context().game().hudControlData().creditVisible(false).levelCounterVisible(true).livesCounterVisible(true);
+            context().game().hud().creditVisible(false).levelCounterVisible(true).livesCounterVisible(true);
             actionBindings.assign(ACTION_STEER_UP,               ui.actionBindings());
             actionBindings.assign(ACTION_STEER_DOWN,             ui.actionBindings());
             actionBindings.assign(ACTION_STEER_LEFT,             ui.actionBindings());
@@ -203,20 +203,19 @@ public class Arcade_PlayScene2D extends GameScene2D {
             Logger.info("Tick {}: Game level not yet created", ui.clock().tickCount());
             return;
         }
-        updateHUD();
+        // While Pac-Man is still invisible on level start, one entry more is shown in the lives counter
+        boolean oneMore = context().gameState() == GamePlayState.STARTING_GAME_OR_LEVEL && !context().gameLevel().pac().isVisible();
+        updateHUD(context().game(), oneMore);
         updateSound();
     }
 
-    private void updateHUD() {
-        Game game = context().game();
+    private void updateHUD(Game game, boolean oneMore) {
         int numLivesDisplayed = game.lifeCount() - 1;
-        // As long as Pac-Man is still initially hidden in the maze, he is shown as an entry in the lives counter
-        if (context().gameState() == GamePlayState.STARTING_GAME && !context().gameLevel().pac().isVisible()) {
-            numLivesDisplayed += 1;
-        }
-        game.hudControlData().setVisibleLifeCount(Math.min(numLivesDisplayed, game.maxLivesDisplayed()));
+        if (oneMore) numLivesDisplayed += 1;
+        game.hud().setVisibleLifeCount(Math.min(numLivesDisplayed, game.maxLivesDisplayed()));
         //TODO this is wrong in level test state
-        game.hudControlData().showCredit(context().coinMechanism().isEmpty());
+        game.hud().showCredit(context().coinMechanism().isEmpty());
+        game.hud().setNumCoins(context().coinMechanism().numCoins());
     }
 
     private void updateSound() {
@@ -282,7 +281,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     @Override
     public void drawHUD() {
         if (hudRenderer != null) {
-            hudRenderer.drawHUD(context(), context().game().hudControlData(), sizeInPx());
+            hudRenderer.drawHUD(context(), context().game().hud(), sizeInPx());
         }
     }
 

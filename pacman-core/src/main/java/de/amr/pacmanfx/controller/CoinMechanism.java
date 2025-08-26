@@ -12,17 +12,17 @@ public class CoinMechanism {
 
     public static byte MAX_COINS = 99;
 
-    private final IntegerProperty numCoinsPy = new SimpleIntegerProperty(0);
+    private final IntegerProperty numCoins = new SimpleIntegerProperty(0);
 
-    public IntegerProperty numCoinsProperty() { return numCoinsPy; }
+    public IntegerProperty numCoinsProperty() { return numCoins; }
 
-    public int numCoins() { return numCoinsPy.get(); }
+    public int numCoins() { return numCoins.get(); }
 
     public boolean isEmpty() { return numCoins() == 0; }
 
     public void setNumCoins(int n) {
         if (n >= 0 && n <= MAX_COINS) {
-            numCoinsPy.set(n);
+            numCoins.set(n);
         } else {
             Logger.error("Cannot set number of coins to {}", n);
         }

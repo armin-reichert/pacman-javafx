@@ -1,13 +1,18 @@
+/*
+Copyright (c) 2021-2025 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.pacmanfx.model;
 
-public class DefaultHUDControlData implements HUDControlData {
+public class DefaultHUD implements HUD {
 
     private boolean visible = true;
     private boolean creditVisible;
     private boolean livesCounterVisible = true;
     private boolean levelCounterVisible = true;
     private boolean scoreVisible = true;
-    private int visibleLifeCount;
+    private int     visibleLifeCount;
+    private int     numCoins;
 
     @Override
     public void show(boolean b) { visible = b; }
@@ -19,6 +24,14 @@ public class DefaultHUDControlData implements HUDControlData {
     public boolean isCreditVisible() { return creditVisible; }
 
     public void showCredit(boolean b) { creditVisible = b; }
+
+    public void setNumCoins(int numCoins) {
+        this.numCoins = numCoins;
+    }
+
+    public int numCoins() {
+        return numCoins;
+    }
 
     @Override
     public boolean isLevelCounterVisible() {

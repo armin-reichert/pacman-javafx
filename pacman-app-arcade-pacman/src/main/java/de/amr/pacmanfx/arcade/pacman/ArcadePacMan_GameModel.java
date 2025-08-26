@@ -178,7 +178,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     protected static final byte[] BONUS_VALUE_MULTIPLIERS = { 1, 3, 5, 7, 10, 20, 30, 50 };
 
     protected final MapSelector mapSelector;
-    protected final HUDControlData hud = new DefaultHUDControlData();
+    protected final HUD hud = new DefaultHUD();
     protected final ScoreManager scoreManager;
     protected final HuntingTimer huntingTimer;
     protected final ActorSpeedControl actorSpeedControl;
@@ -264,7 +264,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     }
 
     @Override
-    public HUDControlData hudControlData() {
+    public HUD hud() {
         return hud;
     }
 

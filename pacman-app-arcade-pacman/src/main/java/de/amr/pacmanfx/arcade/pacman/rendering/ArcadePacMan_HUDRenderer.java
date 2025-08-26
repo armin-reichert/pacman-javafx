@@ -44,16 +44,16 @@ public class ArcadePacMan_HUDRenderer extends BaseSpriteRenderer implements HUDR
     }
 
     @Override
-    public void drawHUD(GameContext gameContext, HUDControlData hudControlData, Vector2f sceneSize) {
-        if (!hudControlData.isVisible()) return;
+    public void drawHUD(GameContext gameContext, HUD hud, Vector2f sceneSize) {
+        if (!hud.isVisible()) return;
 
-        if (hudControlData.isScoreVisible()) {
+        if (hud.isScoreVisible()) {
             ScoreManager scoreManager = gameContext.game().scoreManager();
             drawScore(scoreManager.score(), "SCORE", arcadeFontTS(), TS(1), TS(1));
             drawScore(scoreManager.highScore(), "HIGH SCORE", arcadeFontTS(), TS(14), TS(1));
         }
 
-        if (hudControlData.isLevelCounterVisible()) {
+        if (hud.isLevelCounterVisible()) {
             RectShort[] bonusSymbols = bonusSymbols();
             float x = sceneSize.x() - TS(4), y = sceneSize.y() - TS(2) + 2;
             for (byte symbol : gameContext.game().levelCounterSymbols()) {
@@ -62,10 +62,10 @@ public class ArcadePacMan_HUDRenderer extends BaseSpriteRenderer implements HUDR
             }
         }
 
-        if (hudControlData.isLivesCounterVisible()) {
+        if (hud.isLivesCounterVisible()) {
             RectShort sprite = livesCounterSymbol();
             float x = TS(2), y = sceneSize.y() - TS(2);
-            for (int i = 0; i < hudControlData.visibleLifeCount(); ++i) {
+            for (int i = 0; i < hud.visibleLifeCount(); ++i) {
                 drawSprite(sprite, x + i * TS(2), y, true);
             }
             int lifeCount = gameContext.game().lifeCount();
@@ -76,7 +76,7 @@ public class ArcadePacMan_HUDRenderer extends BaseSpriteRenderer implements HUDR
             }
         }
 
-        if (hudControlData.isCreditVisible()) {
+        if (hud.isCreditVisible()) {
             int credit = gameContext.coinMechanism().numCoins();
             fillText("CREDIT %2d".formatted(credit), ARCADE_WHITE, arcadeFontTS(), TS(2), sceneSize.y());
         }

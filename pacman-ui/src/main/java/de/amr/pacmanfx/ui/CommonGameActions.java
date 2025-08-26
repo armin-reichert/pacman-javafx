@@ -96,7 +96,7 @@ public interface CommonGameActions {
         @Override
         public void execute(GameUI ui) {
             ui.soundManager().stopVoice();
-            ui.gameContext().gameController().changeGameState(GamePlayState.STARTING_GAME);
+            ui.gameContext().gameController().changeGameState(GamePlayState.STARTING_GAME_OR_LEVEL);
         }
 
         @Override

@@ -29,7 +29,7 @@ public class HelpInfo {
         switch (ui.gameContext().gameState()) {
             case INTRO -> help.addInfoForIntroScene(ui.gameContext());
             case SETTING_OPTIONS_FOR_START -> help.addInfoForCreditScene(ui.gameContext());
-            case STARTING_GAME, HUNTING, PACMAN_DYING, GHOST_DYING -> {
+            case STARTING_GAME_OR_LEVEL, HUNTING, PACMAN_DYING, GHOST_DYING -> {
                 if (ui.gameContext().optGameLevel().isPresent() && ui.gameContext().gameLevel().isDemoLevel()) {
                     help.addInfoForDemoLevelPlayScene();
                 } else {

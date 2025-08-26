@@ -42,7 +42,7 @@ public interface TengenMsPacMan_Actions {
         public void execute(GameUI ui) {
             ui.soundManager().stopAll();
             ui.gameContext().game().setPlaying(false);
-            ui.gameContext().gameController().changeGameState(GamePlayState.STARTING_GAME);
+            ui.gameContext().gameController().changeGameState(GamePlayState.STARTING_GAME_OR_LEVEL);
         }
     };
 

@@ -71,7 +71,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
 
         bindRendererProperties(hudRenderer, actorSpriteRenderer);
 
-        context().game().hudControlData().scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
+        context().game().hud().scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
 
         pacMan = createPacMan();
         pacMan.setAnimations(uiConfig.createPacAnimations(pacMan));
@@ -120,7 +120,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     @Override
     public void drawHUD() {
         if (hudRenderer != null) {
-            hudRenderer.drawHUD(context(), context().game().hudControlData(), sizeInPx());
+            hudRenderer.drawHUD(context(), context().game().hud(), sizeInPx());
         }
     }
 

@@ -38,7 +38,7 @@ public class ArcadePacMan_StartScene extends GameScene2D {
 
         bindRendererProperties(hudRenderer, sceneRenderer);
 
-        context().game().hudControlData().creditVisible(true).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
+        context().game().hud().creditVisible(true).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
 
         actionBindings.assign(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
         actionBindings.assign(ACTION_ARCADE_START_GAME, ui.actionBindings());
@@ -49,7 +49,10 @@ public class ArcadePacMan_StartScene extends GameScene2D {
     }
 
     @Override
-    public void update() {}
+    public void update() {
+        //TODO use binding
+        ui.gameContext().game().hud().setNumCoins(ui.gameContext().coinMechanism().numCoins());
+    }
 
     @Override
     public void onCreditAdded(GameEvent e) {
@@ -62,7 +65,7 @@ public class ArcadePacMan_StartScene extends GameScene2D {
     @Override
     public void drawHUD() {
         if (hudRenderer != null) {
-            hudRenderer.drawHUD(context(), context().game().hudControlData(), sizeInPx());
+            hudRenderer.drawHUD(context(), context().game().hud(), sizeInPx());
         }
     }
 
