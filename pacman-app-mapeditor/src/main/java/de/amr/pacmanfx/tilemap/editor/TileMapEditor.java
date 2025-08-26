@@ -823,7 +823,8 @@ public class TileMapEditor {
                         Image image = new Image(stream);
                         boolean accepted = checkIfTemplateImageOk(image);
                         if (accepted) {
-                            acceptTemplateImage(image);
+                            templateImage.set(image);
+                            createEmptyMapFromTemplateImage(image);
                             showMessage("Select colors for tile identification!", 10, MessageType.INFO);
                             tabPaneEditorViews.getSelectionModel().select(tabTemplateImage);
                         }
@@ -1330,7 +1331,7 @@ public class TileMapEditor {
         return true;
     }
 
-    private void acceptTemplateImage(Image image) {
+    private void createEmptyMapFromTemplateImage(Image image) {
         int tilesX = (int) (image.getWidth() / TS);
         int tilesY = EMPTY_ROWS_BEFORE_MAZE + EMPTY_ROWS_BELOW_MAZE + (int) (image.getHeight() / TS);
         setBlankMap(tilesX, tilesY);
@@ -1338,14 +1339,14 @@ public class TileMapEditor {
         removeTerrainMapProperty(WorldMapProperty.COLOR_WALL_STROKE);
         removeTerrainMapProperty(WorldMapProperty.COLOR_DOOR);
         removeFoodMapProperty(WorldMapProperty.COLOR_FOOD);
-        templateImage.set(image);
     }
 
     void initWorldMapForTemplateImage() {
-        TemplateImageManager.selectImageFile(stage, translated("open_template_image"), currentDirectory())
+        TemplateImageManager.selectTemplateImage(stage, translated("open_template_image"), currentDirectory())
             .ifPresent(image -> {
                 if (checkIfTemplateImageOk(image)) {
-                    acceptTemplateImage(image);
+                    templateImage.set(image);
+                    createEmptyMapFromTemplateImage(image);
                     showMessage("Select map colors from template!", 20, MessageType.INFO);
                 }
             });
@@ -1439,7 +1440,6 @@ public class TileMapEditor {
         changeManager.setWorldMapChanged();
         changeManager.setEdited(true);
     }
-
 
     // Sample maps loading
 
