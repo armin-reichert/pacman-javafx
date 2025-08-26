@@ -683,6 +683,9 @@ public class TileMapEditor {
         editCanvas.gridSizeProperty().bind(gridSizeProperty());
         editCanvas.worldMapProperty().bind(editedWorldMapProperty());
         editCanvas.templateImageGrayProperty().bind(templateImageProperty().map(Ufx::imageToGreyscale));
+        editCanvas.terrainVisibleProperty().bind(terrainVisibleProperty());
+        editCanvas.foodVisibleProperty().bind(foodVisibleProperty());
+        editCanvas.actorsVisibleProperty().bind(actorsVisibleProperty());
 
         spEditCanvas = new ScrollPane(editCanvas);
         spEditCanvas.setFitToHeight(true);

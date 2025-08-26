@@ -13,10 +13,7 @@ import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapColorScheme;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -45,6 +42,10 @@ public class EditCanvas extends Canvas {
     private final IntegerProperty gridSize = new SimpleIntegerProperty(8);
     private final ObjectProperty<Image> templateImageGray = new SimpleObjectProperty<>();
     private final ObjectProperty<WorldMap> worldMap = new SimpleObjectProperty<>();
+    private final BooleanProperty terrainVisible = new SimpleBooleanProperty(true);
+    private final BooleanProperty foodVisible = new SimpleBooleanProperty(true);
+    private final BooleanProperty actorsVisible = new SimpleBooleanProperty(true);
+    private final BooleanProperty gridVisible = new SimpleBooleanProperty(true);
 
     private final GraphicsContext ctx;
     private final TileMapEditor editor;
@@ -64,10 +65,18 @@ public class EditCanvas extends Canvas {
         ctx = getGraphicsContext2D();
 
         heightProperty().bind(Bindings.createDoubleBinding(
-            () -> (double) worldMap().numRows() * gridSize(), worldMap, gridSize));
+            () -> {
+                WorldMap map = worldMap.get();
+                int numRows = map != null ? map.numRows() : 31;
+                return Double.valueOf(numRows * gridSize());
+            }, worldMap, gridSize));
 
         widthProperty().bind(Bindings.createDoubleBinding(
-            () -> (double) worldMap().numCols() * gridSize(), worldMap, gridSize));
+            () -> {
+                WorldMap map = worldMap.get();
+                int numCols = map != null ? map.numCols() : 28;
+                return Double.valueOf(numCols * gridSize());
+            }, worldMap, gridSize));
 
         terrainRenderer = new TerrainTileMapRenderer(this);
         foodRenderer = new FoodMapRenderer(this);
@@ -85,7 +94,7 @@ public class EditCanvas extends Canvas {
         return gridSize;
     }
 
-    private int gridSize() { return gridSize.get(); }
+    public int gridSize() { return gridSize.get(); }
 
     public ObjectProperty<Image> templateImageGrayProperty() {
         return templateImageGray;
@@ -95,7 +104,23 @@ public class EditCanvas extends Canvas {
         return worldMap;
     }
 
-    private WorldMap worldMap() { return worldMap.get(); }
+    public WorldMap worldMap() { return worldMap.get(); }
+
+    public BooleanProperty terrainVisibleProperty() {
+        return terrainVisible;
+    }
+
+    public BooleanProperty foodVisibleProperty() {
+        return foodVisible;
+    }
+
+    public BooleanProperty actorsVisibleProperty() {
+        return actorsVisible;
+    }
+
+    public BooleanProperty gridVisibleProperty() {
+        return gridVisible;
+    }
 
     public TerrainTileMapRenderer terrainRenderer() {
         return terrainRenderer;
@@ -149,7 +174,7 @@ public class EditCanvas extends Canvas {
                 width, height - (EMPTY_ROWS_BEFORE_MAZE + EMPTY_ROWS_BELOW_MAZE) * scaling * TS);
         }
 
-        if (editor.gridVisibleProperty().get()) {
+        if (gridVisibleProperty().get()) {
             drawGrid();
         }
 
@@ -163,7 +188,7 @@ public class EditCanvas extends Canvas {
         ctx.restore();
 
         // Terrain
-        if (editor.terrainVisibleProperty().get()) {
+        if (terrainVisible.get()) {
             terrainRenderer.setScaling(scaling);
             terrainRenderer.setColorScheme(colorScheme);
             terrainRenderer.setSegmentNumbersDisplayed(editor.isSegmentNumbersVisible());
@@ -194,7 +219,7 @@ public class EditCanvas extends Canvas {
         }
 
         // Food
-        if (editor.isFoodVisible()) {
+        if (foodVisible.get()) {
             Color foodColor = getColorFromMap(worldMap(), LayerID.FOOD, WorldMapProperty.COLOR_FOOD, parseColor(MS_PACMAN_COLOR_FOOD));
             foodRenderer.setScaling(scaling);
             foodRenderer.setEnergizerColor(foodColor);
@@ -202,7 +227,7 @@ public class EditCanvas extends Canvas {
             worldMap().tiles().forEach(tile -> foodRenderer.drawTile(tile, worldMap().content(LayerID.FOOD, tile)));
         }
 
-        if (editor.isActorsVisible()) {
+        if (actorsVisible.get()) {
             double gridSize = editor.gridSizeProperty().get();
             actorRenderer.drawActorSprite(worldMap().getTerrainTileProperty(WorldMapProperty.POS_PAC), PAC_SPRITE, gridSize);
             actorRenderer.drawActorSprite(worldMap().getTerrainTileProperty(WorldMapProperty.POS_RED_GHOST), RED_GHOST_SPRITE, gridSize);
