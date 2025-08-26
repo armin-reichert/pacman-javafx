@@ -39,7 +39,8 @@ public class EditCanvas extends Canvas {
     public static final Cursor CURSOR_RUBBER = Cursor.cursor(urlString("graphics/radiergummi.jpg"));
 
     private final ObjectProperty<Vector2i> focussedTile = new SimpleObjectProperty<>();
-    private final IntegerProperty gridSize = new SimpleIntegerProperty(8);
+    private final DoubleProperty gridSize = new SimpleDoubleProperty(8);
+    private final DoubleProperty scaling = new SimpleDoubleProperty(1);
     private final ObjectProperty<Image> templateImageGray = new SimpleObjectProperty<>();
     private final ObjectProperty<WorldMap> worldMap = new SimpleObjectProperty<>();
     private final BooleanProperty terrainVisible = new SimpleBooleanProperty(true);
@@ -57,7 +58,7 @@ public class EditCanvas extends Canvas {
 
     private boolean dragging = false;
 
-    public EditCanvas(TileMapEditor editor, ObstacleEditor obstacleEditor) {
+    public EditCanvas(ObstacleEditor obstacleEditor) {
         this.obstacleEditor = requireNonNull(obstacleEditor);
 
         ctx = getGraphicsContext2D();
@@ -76,17 +77,27 @@ public class EditCanvas extends Canvas {
                 return Double.valueOf(numCols * gridSize());
             }, worldMap, gridSize));
 
-        terrainRenderer = new TerrainTileMapRenderer(this);
-        foodRenderer = new FoodMapRenderer(this);
-        actorRenderer = new EditorActorRenderer(this);
+        scaling.bind(gridSize.divide(TS));
 
+        terrainRenderer = new TerrainTileMapRenderer(this);
+        terrainRenderer.scalingProperty().bind(scaling);
+
+        foodRenderer = new FoodMapRenderer(this);
+        foodRenderer.scalingProperty().bind(scaling);
+
+        actorRenderer = new EditorActorRenderer(this);
+        actorRenderer.scalingProperty().bind(scaling);
     }
 
-    public IntegerProperty gridSizeProperty() {
+    public DoubleProperty gridSizeProperty() {
         return gridSize;
     }
 
-    public int gridSize() { return gridSize.get(); }
+    public double gridSize() { return gridSize.get(); }
+
+    public double scaling() {
+        return scaling.get();
+    }
 
     public ObjectProperty<Image> templateImageGrayProperty() {
         return templateImageGray;
@@ -153,7 +164,6 @@ public class EditCanvas extends Canvas {
     }
 
     public void draw(TileMapEditor editor, TerrainMapColorScheme colorScheme) {
-        double scaling = gridSize() / (double) TS;
         double width = getWidth(), height = getHeight();
         ctx.setImageSmoothing(false);
 
@@ -162,8 +172,8 @@ public class EditCanvas extends Canvas {
 
         if (templateImageGray.get() != null) {
             ctx.drawImage(templateImageGray.get(),
-                0, EMPTY_ROWS_BEFORE_MAZE * scaling * TS,
-                width, height - (EMPTY_ROWS_BEFORE_MAZE + EMPTY_ROWS_BELOW_MAZE) * scaling * TS);
+                0, EMPTY_ROWS_BEFORE_MAZE * scaling() * TS,
+                width, height - (EMPTY_ROWS_BEFORE_MAZE + EMPTY_ROWS_BELOW_MAZE) * scaling() * TS);
         }
 
         if (gridVisibleProperty().get()) {
@@ -175,13 +185,12 @@ public class EditCanvas extends Canvas {
         ctx.setStroke(Color.grayRgb(200, 0.75));
         ctx.setLineWidth(0.75);
         ctx.setLineDashes(5, 5);
-        ctx.strokeLine(0, EMPTY_ROWS_BEFORE_MAZE * scaling * TS, width, EMPTY_ROWS_BEFORE_MAZE * scaling * TS);
-        ctx.strokeLine(0, height - EMPTY_ROWS_BELOW_MAZE * scaling * TS, width, height - EMPTY_ROWS_BELOW_MAZE * scaling * TS);
+        ctx.strokeLine(0, EMPTY_ROWS_BEFORE_MAZE * scaling() * TS, width, EMPTY_ROWS_BEFORE_MAZE * scaling() * TS);
+        ctx.strokeLine(0, height - EMPTY_ROWS_BELOW_MAZE * scaling() * TS, width, height - EMPTY_ROWS_BELOW_MAZE * scaling() * TS);
         ctx.restore();
 
         // Terrain
         if (terrainVisible.get()) {
-            terrainRenderer.setScaling(scaling);
             terrainRenderer.setColorScheme(colorScheme);
             terrainRenderer.setSegmentNumbersDisplayed(editor.isSegmentNumbersVisible());
             terrainRenderer.setObstacleInnerAreaDisplayed(editor.isObstacleInnerAreaDisplayed());
@@ -213,19 +222,18 @@ public class EditCanvas extends Canvas {
         // Food
         if (foodVisible.get()) {
             Color foodColor = getColorFromMap(worldMap(), LayerID.FOOD, WorldMapProperty.COLOR_FOOD, parseColor(MS_PACMAN_COLOR_FOOD));
-            foodRenderer.setScaling(scaling);
             foodRenderer.setEnergizerColor(foodColor);
             foodRenderer.setPelletColor(foodColor);
             worldMap().tiles().forEach(tile -> foodRenderer.drawTile(tile, worldMap().content(LayerID.FOOD, tile)));
         }
 
         if (actorsVisible.get()) {
-            actorRenderer.drawActorSprite(worldMap().getTerrainTileProperty(WorldMapProperty.POS_PAC), PAC_SPRITE, gridSize());
-            actorRenderer.drawActorSprite(worldMap().getTerrainTileProperty(WorldMapProperty.POS_RED_GHOST), RED_GHOST_SPRITE, gridSize());
-            actorRenderer.drawActorSprite(worldMap().getTerrainTileProperty(WorldMapProperty.POS_PINK_GHOST), PINK_GHOST_SPRITE, gridSize());
-            actorRenderer.drawActorSprite(worldMap().getTerrainTileProperty(WorldMapProperty.POS_CYAN_GHOST), CYAN_GHOST_SPRITE, gridSize());
-            actorRenderer.drawActorSprite(worldMap().getTerrainTileProperty(WorldMapProperty.POS_ORANGE_GHOST), ORANGE_GHOST_SPRITE, gridSize());
-            actorRenderer.drawActorSprite(worldMap().getTerrainTileProperty(WorldMapProperty.POS_BONUS), BONUS_SPRITE, gridSize());
+            actorRenderer.drawActor(worldMap().getTerrainTileProperty(WorldMapProperty.POS_PAC), PAC_SPRITE);
+            actorRenderer.drawActor(worldMap().getTerrainTileProperty(WorldMapProperty.POS_RED_GHOST), RED_GHOST_SPRITE);
+            actorRenderer.drawActor(worldMap().getTerrainTileProperty(WorldMapProperty.POS_PINK_GHOST), PINK_GHOST_SPRITE);
+            actorRenderer.drawActor(worldMap().getTerrainTileProperty(WorldMapProperty.POS_CYAN_GHOST), CYAN_GHOST_SPRITE);
+            actorRenderer.drawActor(worldMap().getTerrainTileProperty(WorldMapProperty.POS_ORANGE_GHOST), ORANGE_GHOST_SPRITE);
+            actorRenderer.drawActor(worldMap().getTerrainTileProperty(WorldMapProperty.POS_BONUS), BONUS_SPRITE);
         }
 
         if (focussedTile() != null) {
@@ -250,12 +258,12 @@ public class EditCanvas extends Canvas {
         ctx.restore();
     }
 
-    public void onMouseClicked(TileMapEditor editor, MouseEvent event) {
-        Logger.debug("Mouse clicked {}", event);
-        if (event.getButton() == MouseButton.PRIMARY) {
+    public void onMouseClicked(TileMapEditor editor, MouseEvent mouseEvent) {
+        Logger.debug("Mouse clicked {}", mouseEvent);
+        if (mouseEvent.getButton() == MouseButton.PRIMARY) {
             requestFocus();
             contextMenu.hide();
-            if (event.getClickCount() == 2 && editor.isEditMode(EditMode.INSPECT)) {
+            if (mouseEvent.getClickCount() == 2 && editor.isEditMode(EditMode.INSPECT)) {
                 editor.showEditHelpText();
             }
         }
@@ -273,25 +281,25 @@ public class EditCanvas extends Canvas {
         }
     }
 
-    public void onMouseReleased(TileMapEditor editor, MouseEvent event) {
-        if (event.getButton() == MouseButton.PRIMARY) {
+    public void onMouseReleased(TileMapEditor editor, MouseEvent mouseEvent) {
+        if (mouseEvent.getButton() == MouseButton.PRIMARY) {
             if (dragging) {
                 dragging = false;
                 obstacleEditor.endEditing();
                 editor.getChangeManager().setTerrainMapChanged();
                 editor.getChangeManager().setEdited(true);
             } else {
-                editor.editAtMousePosition(event);
+                editor.editAtMousePosition(mouseEvent);
             }
         }
     }
 
-    public void onMouseMoved(TileMapEditor editor, MouseEvent e) {
-        Vector2i tile = tileAtMousePosition(e.getX(), e.getY(), gridSize());
+    public void onMouseMoved(TileMapEditor editor, MouseEvent mouseEvent) {
+        Vector2i tile = tileAtMousePosition(mouseEvent.getX(), mouseEvent.getY(), gridSize());
         focussedTile.set(tile);
         switch (editor.editMode()) {
             case EDIT -> {
-                if (e.isShiftDown()) {
+                if (mouseEvent.isShiftDown()) {
                     switch (editor.selectedPaletteID()) {
                         case TileMapEditor.PALETTE_ID_TERRAIN -> {
                             if (editor.selectedPalette().isToolSelected()) {
@@ -312,7 +320,7 @@ public class EditCanvas extends Canvas {
                 }
             }
             case ERASE -> {
-                if (e.isShiftDown()) {
+                if (mouseEvent.isShiftDown()) {
                     switch (editor.selectedPaletteID()) {
                         case TileMapEditor.PALETTE_ID_TERRAIN -> editor.clearTerrainTileValue(tile);
                         case TileMapEditor.PALETTE_ID_FOOD -> editor.clearFoodTileValue(tile);
@@ -322,7 +330,6 @@ public class EditCanvas extends Canvas {
             case INSPECT -> {}
         }
     }
-
 
     public void onContextMenuRequested(TileMapEditor editor, ContextMenuEvent menuEvent) {
         if (editor.isEditMode(EditMode.INSPECT)) {
@@ -369,25 +376,25 @@ public class EditCanvas extends Canvas {
         contextMenu.show(this, menuEvent.getScreenX(), menuEvent.getScreenY());
     }
 
-    public void onKeyPressed(TileMapEditor editor, KeyEvent e) {
-        KeyCode key = e.getCode();
-        boolean control = e.isControlDown();
+    public void onKeyPressed(TileMapEditor editor, KeyEvent keyEvent) {
+        KeyCode key = keyEvent.getCode();
+        boolean control = keyEvent.isControlDown();
 
         if (control && key == KeyCode.LEFT) {
             editor.moveCursorAndSetFoodAtTile(Direction.LEFT);
-            e.consume();
+            keyEvent.consume();
         }
         else if (control && key == KeyCode.RIGHT) {
             editor.moveCursorAndSetFoodAtTile(Direction.RIGHT);
-            e.consume();
+            keyEvent.consume();
         }
         else if (control && key == KeyCode.UP) {
             editor.moveCursorAndSetFoodAtTile(Direction.UP);
-            e.consume();
+            keyEvent.consume();
         }
         else if (control && key == KeyCode.DOWN) {
             editor.moveCursorAndSetFoodAtTile(Direction.DOWN);
-            e.consume();
+            keyEvent.consume();
         }
         else if (key == KeyCode.LEFT) {
             moveCursor(Direction.LEFT, tile -> true);

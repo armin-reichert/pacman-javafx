@@ -267,13 +267,13 @@ public class TileMapEditor {
 
     // gridSize
 
-    private static final int DEFAULT_GRID_SIZE = 8;
+    private static final double DEFAULT_GRID_SIZE = 8;
 
-    private IntegerProperty gridSize;
+    private DoubleProperty gridSize;
 
-    public IntegerProperty gridSizeProperty() {
+    public DoubleProperty gridSizeProperty() {
         if (gridSize == null) {
-            gridSize = new SimpleIntegerProperty(DEFAULT_GRID_SIZE) {
+            gridSize = new SimpleDoubleProperty(DEFAULT_GRID_SIZE) {
                 @Override
                 protected void invalidated() {
                     changeManager.requestRedraw();
@@ -283,9 +283,9 @@ public class TileMapEditor {
         return gridSize;
     }
 
-    public int gridSize() { return gridSize.get(); }
+    public double gridSize() { return gridSize.get(); }
 
-    public void setGridSize(int size) {
+    public void setGridSize(double size) {
         gridSizeProperty().set(size);
     }
 
@@ -679,8 +679,9 @@ public class TileMapEditor {
 
     private void createEditCanvas() {
         ObstacleEditor obstacleEditor = createObstacleEditor();
-        editCanvas = new EditCanvas(this, obstacleEditor);
+        editCanvas = new EditCanvas(obstacleEditor);
         editCanvas.gridSizeProperty().bind(gridSizeProperty());
+        editCanvas.gridVisibleProperty().bind(gridVisibleProperty());
         editCanvas.worldMapProperty().bind(editedWorldMapProperty());
         editCanvas.templateImageGrayProperty().bind(templateImageProperty().map(Ufx::imageToGreyscale));
         editCanvas.terrainVisibleProperty().bind(terrainVisibleProperty());
