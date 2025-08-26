@@ -18,7 +18,7 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tilemap.editor.ArcadeMap.PAC_SPRITE;
 import static de.amr.pacmanfx.tilemap.editor.ArcadeMap.SPRITE_SHEET;
 
-public class PropertyValueEditorTool implements Tool {
+public class PropertyValueEditorTool implements TileMapEditorTool {
     private final TileRenderer renderer;
     private final double size;
     private final String propertyName;
@@ -42,7 +42,7 @@ public class PropertyValueEditorTool implements Tool {
     }
 
     @Override
-    public void apply(WorldMap worldMap, LayerID layerID, Vector2i tile) {
+    public void apply(TileMapEditor editor, WorldMap worldMap, LayerID layerID, Vector2i tile) {
         worldMap.properties(layerID).put(propertyName, WorldMapFormatter.formatTile(tile));
     }
 

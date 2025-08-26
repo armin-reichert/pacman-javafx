@@ -304,14 +304,14 @@ public class EditCanvas extends Canvas {
                     switch (editor.selectedPaletteID()) {
                         case TileMapEditor.PALETTE_ID_TERRAIN -> {
                             if (editor.selectedPalette().isToolSelected()) {
-                                editor.selectedPalette().selectedTool().apply(worldMap(), LayerID.TERRAIN, focussedTile());
+                                editor.selectedPalette().selectedTool().apply(editor, worldMap(), LayerID.TERRAIN, focussedTile());
                             }
                             editor.getChangeManager().setEdited(true);
                             editor.getChangeManager().setWorldMapChanged();
                         }
                         case TileMapEditor.PALETTE_ID_FOOD -> {
                             if (editor.selectedPalette().isToolSelected()) {
-                                editor.selectedPalette().selectedTool().apply(worldMap(), LayerID.FOOD, focussedTile());
+                                editor.selectedPalette().selectedTool().apply(editor, worldMap(), LayerID.FOOD, focussedTile());
                             }
                             editor.getChangeManager().setEdited(true);
                             editor.getChangeManager().setFoodMapChanged();

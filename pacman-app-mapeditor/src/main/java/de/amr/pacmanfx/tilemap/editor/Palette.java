@@ -28,10 +28,10 @@ public class Palette {
     private final int numRows;
     private final int numCols;
     private final GraphicsContext ctx;
-    private final List<Tool> tools;
+    private final List<TileMapEditorTool> tools;
 
     private TileRenderer renderer;
-    private Tool selectedTool;
+    private TileMapEditorTool selectedTool;
     private Tooltip tooltip;
     private int selectedRow;
     private int selectedCol;
@@ -82,7 +82,7 @@ public class Palette {
     }
 
     public TileValueEditorTool newTileTool(TileMapEditor editController, byte value, String description) {
-        return new TileValueEditorTool(editController, renderer, toolSize, value, description);
+        return new TileValueEditorTool(renderer, toolSize, value, description);
     }
 
     public PropertyValueEditorTool newPropertyTool(String propertyName, String description) {
@@ -117,7 +117,7 @@ public class Palette {
         return selectedRow * numRows + selectedCol;
     }
 
-    public Tool selectedTool() {
+    public TileMapEditorTool selectedTool() {
         return selectedTool;
     }
 
@@ -133,7 +133,7 @@ public class Palette {
         return tools.size();
     }
 
-    private Tool getToolOrNull(int index) {
+    private TileMapEditorTool getToolOrNull(int index) {
         if (index < tools.size()) {
             return tools.get(index);
         }
@@ -144,7 +144,7 @@ public class Palette {
         int row = (int) e.getY() / toolSize;
         int col = (int) e.getX() / toolSize;
         int i = row * numCols + col;
-        Tool tool = getToolOrNull(i);
+        TileMapEditorTool tool = getToolOrNull(i);
         if (tool != null) {
             selectedRow = row;
             selectedCol = col;
@@ -156,7 +156,7 @@ public class Palette {
         int row = (int) e.getY() / toolSize;
         int col = (int) e.getX() / toolSize;
         int i = row * numCols + col;
-        Tool tool = getToolOrNull(i);
+        TileMapEditorTool tool = getToolOrNull(i);
         if (tool != null) {
             String text = tool.description();
             tooltip.setText(text.isEmpty() ? "?" : text);
@@ -175,7 +175,7 @@ public class Palette {
         if (renderer != null) {
             renderer.setScaling(toolSize / 8.0);
             for (int i = 0; i < numRows * numCols; ++i) {
-                Tool tool = getToolOrNull(i);
+                TileMapEditorTool tool = getToolOrNull(i);
                 if (tool != null) {
                     tool.draw(i / numCols, i % numCols);
                 }

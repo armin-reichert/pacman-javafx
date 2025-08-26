@@ -9,11 +9,11 @@ import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.uilib.tilemap.TileRenderer;
 
-public interface Tool {
+public interface TileMapEditorTool {
 
     String description();
 
-    void apply(WorldMap worldMap, LayerID layerID, Vector2i tile);
+    void apply(TileMapEditor editor, WorldMap worldMap, LayerID layerID, Vector2i tile);
 
     TileRenderer renderer();
 

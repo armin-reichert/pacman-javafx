@@ -1409,7 +1409,7 @@ public class TileMapEditor {
             case TileMapEditor.PALETTE_ID_FOOD -> editFoodAtTile(tile, erase);
             case TileMapEditor.PALETTE_ID_ACTORS -> {
                 if (selectedPalette().isToolSelected()) {
-                    selectedPalette().selectedTool().apply(editedWorldMap(), LayerID.TERRAIN, tile);
+                    selectedPalette().selectedTool().apply(this, editedWorldMap(), LayerID.TERRAIN, tile);
                     changeManager.setTerrainMapChanged();
                     changeManager.setEdited(true);
                 }
@@ -1422,7 +1422,7 @@ public class TileMapEditor {
         if (erase) {
             clearTerrainTileValue(tile);
         } else if (selectedPalette().isToolSelected()) {
-            selectedPalette().selectedTool().apply(editedWorldMap(), LayerID.TERRAIN, tile);
+            selectedPalette().selectedTool().apply(this, editedWorldMap(), LayerID.TERRAIN, tile);
         }
         changeManager.setTerrainMapChanged();
         changeManager.setEdited(true);
@@ -1432,7 +1432,7 @@ public class TileMapEditor {
         if (erase) {
             clearFoodTileValue(tile);
         } else if (selectedPalette().isToolSelected()) {
-            selectedPalette().selectedTool().apply(editedWorldMap(), LayerID.FOOD, tile);
+            selectedPalette().selectedTool().apply(this, editedWorldMap(), LayerID.FOOD, tile);
         }
         changeManager.setFoodMapChanged();
         changeManager.setEdited(true);
