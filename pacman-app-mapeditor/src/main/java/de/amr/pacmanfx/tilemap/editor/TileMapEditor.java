@@ -1594,30 +1594,6 @@ public class TileMapEditor {
         templateImagePy.set(null);
     }
 
-    public void floodWithFoodValue(Vector2i startTile, byte value) {
-        if (!canEditFoodAtTile(startTile)) {
-            return;
-        }
-        var q = new ArrayDeque<Vector2i>();
-        Set<Vector2i> visited = new HashSet<>();
-        q.push(startTile);
-        visited.add(startTile);
-        while (!q.isEmpty()) {
-            Vector2i current = q.poll();
-            // use this method such that symmmetric editing etc. is taken into account:
-            setTileValueRespectSymmetry(editedWorldMap(), LayerID.FOOD, current, value);
-            for (Direction dir : Direction.values()) {
-                Vector2i neighborTile = current.plus(dir.vector());
-                if  (!visited.contains(neighborTile) && canEditFoodAtTile(neighborTile)) {
-                    q.push(neighborTile);
-                }
-                visited.add(neighborTile);
-            }
-        }
-        changeManager.setFoodMapChanged();
-        changeManager.setEdited(true);
-    }
-
     private boolean hasAccessibleTerrainAtTile(Vector2i tile) {
         byte value = editedWorldMap().content(LayerID.TERRAIN, tile);
         return value == TerrainTile.EMPTY.$

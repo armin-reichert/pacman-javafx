@@ -359,11 +359,21 @@ public class EditCanvas extends Canvas {
         });
 
         var miFloodWithPellets = new MenuItem(translated("menu.edit.flood_with_pellets"));
-        miFloodWithPellets.setOnAction(ae -> editor.floodWithFoodValue(tile, FoodTile.PELLET.code()));
+        miFloodWithPellets.setOnAction(ae -> {
+            var action = new Action_FloodWithPellets();
+            action.setStartTile(tile);
+            action.setPelletValue(FoodTile.PELLET.code());
+            action.execute(editor);
+        });
         miFloodWithPellets.setDisable(!editor.canEditFoodAtTile(tile));
 
         var miClearPellets = new MenuItem(translated("menu.edit.clear_food"));
-        miClearPellets.setOnAction(ae -> editor.floodWithFoodValue(tile, FoodTile.EMPTY.code()));
+        miClearPellets.setOnAction(ae -> {
+            var action = new Action_FloodWithPellets();
+            action.setStartTile(tile);
+            action.setPelletValue(FoodTile.EMPTY.code());
+            action.execute(editor);
+        });
         miClearPellets.setDisable(!editor.canEditFoodAtTile(tile));
 
         contextMenu.getItems().setAll(

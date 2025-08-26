@@ -1,0 +1,48 @@
+package de.amr.pacmanfx.tilemap.editor;
+
+import de.amr.pacmanfx.lib.Direction;
+import de.amr.pacmanfx.lib.Vector2i;
+import de.amr.pacmanfx.lib.tilemap.LayerID;
+
+import java.util.ArrayDeque;
+import java.util.HashSet;
+import java.util.Set;
+
+public class Action_FloodWithPellets extends AbstractEditorAction {
+
+    public void setStartTile(Vector2i tile) {
+        setArg("startTile", tile);
+    }
+
+    public void setPelletValue(byte value) {
+        setArg("pelletValue", value);
+    }
+
+    @Override
+    public void execute(TileMapEditor editor) {
+        Vector2i startTile = getArg("startTile", Vector2i.class);
+        Byte pelletValue = getArg("pelletValue", Byte.class);
+        if (!editor.canEditFoodAtTile(startTile)) {
+            return;
+        }
+        var q = new ArrayDeque<Vector2i>();
+        Set<Vector2i> visited = new HashSet<>();
+        q.push(startTile);
+        visited.add(startTile);
+        while (!q.isEmpty()) {
+            Vector2i current = q.poll();
+            // use this method such that symmmetric editing etc. is taken into account:
+            editor.setTileValueRespectSymmetry(editor.editedWorldMap(), LayerID.FOOD, current, pelletValue);
+            for (Direction dir : Direction.values()) {
+                Vector2i neighborTile = current.plus(dir.vector());
+                if  (!visited.contains(neighborTile) && editor.canEditFoodAtTile(neighborTile)) {
+                    q.push(neighborTile);
+                }
+                visited.add(neighborTile);
+            }
+        }
+        editor.changeManager().setFoodMapChanged();
+        editor.changeManager().setEdited(true);
+
+    }
+}
