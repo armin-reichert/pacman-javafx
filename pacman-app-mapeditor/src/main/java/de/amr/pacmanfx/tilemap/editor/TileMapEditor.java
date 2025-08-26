@@ -557,13 +557,6 @@ public class TileMapEditor {
         this.stage = requireNonNull(stage);
         this.model3DRepository = requireNonNull(model3DRepository);
 
-        TerrainMapColorScheme initialColors = new TerrainMapColorScheme(
-            Color.BLACK,
-            parseColor(MS_PACMAN_COLOR_WALL_FILL),
-            parseColor(MS_PACMAN_COLOR_WALL_STROKE),
-            parseColor(MS_PACMAN_COLOR_DOOR)
-        );
-
         createFileChooser();
         createObstacleEditor();
         createEditCanvas();
