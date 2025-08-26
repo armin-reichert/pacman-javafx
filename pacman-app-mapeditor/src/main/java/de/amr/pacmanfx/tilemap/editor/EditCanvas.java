@@ -344,7 +344,12 @@ public class EditCanvas extends Canvas {
         Vector2i tile = tileAtMousePosition(menuEvent.getX(), menuEvent.getY(), gridSize());
 
         var miPlaceHouse = new MenuItem(translated("menu.edit.place_house"));
-        miPlaceHouse.setOnAction(actionEvent -> editor.placeArcadeHouse(worldMap(), tile));
+        miPlaceHouse.setOnAction(actionEvent -> {
+            Action_PlaceArcadeHouse action = new Action_PlaceArcadeHouse();
+            action.setHouseMinTile(tile);
+            action.setWorldMap(worldMap());
+            action.execute(editor);
+        });
 
         var miInsertRow = new MenuItem(translated("menu.edit.insert_row"));
         miInsertRow.setOnAction(actionEvent -> {

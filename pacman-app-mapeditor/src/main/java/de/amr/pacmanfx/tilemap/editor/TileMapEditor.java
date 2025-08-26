@@ -84,7 +84,7 @@ public class TileMapEditor {
         }
     }
 
-    private static final byte[][] DEFAULT_HOUSE_ROWS = {
+    public static final byte[][] DEFAULT_HOUSE_ROWS = {
         { ARC_NW.$,  WALL_H.$,  WALL_H.$,  DOOR.$,    DOOR.$,    WALL_H.$,  WALL_H.$,  ARC_NE.$ },
         { WALL_V.$,  EMPTY.$,   EMPTY.$,   EMPTY.$,   EMPTY.$,   EMPTY.$,   EMPTY.$,   WALL_V.$ },
         { WALL_V.$,  EMPTY.$,   EMPTY.$,   EMPTY.$,   EMPTY.$,   EMPTY.$,   EMPTY.$,   WALL_V.$ },
@@ -1420,9 +1420,12 @@ public class TileMapEditor {
         setDefaultScatterPositions(worldMap);
         if (worldMap.numRows() >= 20) {
             Vector2i houseMinTile = Vector2i.of(tilesX / 2 - 4, tilesY / 2 - 3);
-            placeArcadeHouse(worldMap, houseMinTile);
             worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_PAC,   WorldMapFormatter.formatTile(houseMinTile.plus(3, 11)));
             worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_BONUS, WorldMapFormatter.formatTile(houseMinTile.plus(3, 5)));
+            Action_PlaceArcadeHouse action = new Action_PlaceArcadeHouse();
+            action.setHouseMinTile(houseMinTile);
+            action.setWorldMap(worldMap);
+            action.execute(this);
         }
         worldMap.buildObstacleList();
         setDefaultColors(worldMap);
@@ -1464,84 +1467,6 @@ public class TileMapEditor {
             setTileValueRespectSymmetry(worldMap, LayerID.TERRAIN, lastRow, col, TerrainTile.WALL_H.$);
         }
         changeManager.setTerrainMapChanged();
-    }
-
-    void addArcadeHouseAtMapCenter(WorldMap worldMap) {
-        int numRows = worldMap.numRows(), numCols = worldMap.numCols();
-        int houseMinX = numCols / 2 - 4, houseMinY = numRows / 2 - 3;
-        placeArcadeHouse(worldMap, Vector2i.of(houseMinX, houseMinY));
-    }
-
-    public void placeArcadeHouse(WorldMap worldMap, Vector2i houseMinTile) {
-        Vector2i houseMaxTile = houseMinTile.plus(7, 4);
-
-        Vector2i oldHouseMinTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE);
-        Vector2i oldHouseMaxTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE);
-        worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_HOUSE_MIN_TILE, WorldMapFormatter.formatTile(houseMinTile));
-        worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_HOUSE_MAX_TILE, WorldMapFormatter.formatTile(houseMaxTile));
-
-        // clear tiles where house walls/doors were located (created at runtime!)
-        if (oldHouseMinTile != null && oldHouseMaxTile != null) {
-            clearTerrainAreaOneSided(worldMap, oldHouseMinTile, oldHouseMaxTile);
-            clearFoodAreaOneSided(worldMap, oldHouseMinTile, oldHouseMaxTile);
-        }
-        // clear new house area
-        clearTerrainAreaOneSided(worldMap, houseMinTile, houseMaxTile);
-        clearFoodAreaOneSided(worldMap, houseMinTile, houseMaxTile);
-
-        // place house tile content
-        Vector2i houseSize = houseMaxTile.minus(houseMinTile).plus(1,1);
-        for (int y = 0; y < houseSize.y(); ++y) {
-            for (int x = 0; x < houseSize.x(); ++x) {
-                worldMap.setContent(LayerID.TERRAIN, houseMinTile.y() + y, houseMinTile.x() + x, DEFAULT_HOUSE_ROWS[y][x]);
-            }
-        }
-
-        worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_RED_GHOST,      WorldMapFormatter.formatTile(houseMinTile.plus(3, -1)));
-        worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_CYAN_GHOST,     WorldMapFormatter.formatTile(houseMinTile.plus(1, 2)));
-        worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_PINK_GHOST,     WorldMapFormatter.formatTile(houseMinTile.plus(3, 2)));
-        worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_ORANGE_GHOST,   WorldMapFormatter.formatTile(houseMinTile.plus(5, 2)));
-
-        // clear pellets around house
-        Vector2i minAround = houseMinTile.minus(1,1);
-        Vector2i maxAround = houseMaxTile.plus(1,1);
-        for (int x = minAround.x(); x <= maxAround.x(); ++x) {
-            // Note: parameters are row and col (y and x)
-            if (x >= 0) {
-                worldMap.setContent(LayerID.FOOD, minAround.y(), x, FoodTile.EMPTY.code());
-                worldMap.setContent(LayerID.FOOD, maxAround.y(), x, FoodTile.EMPTY.code());
-            }
-        }
-        for (int y = minAround.y(); y <= maxAround.y(); ++y) {
-            // Note: parameters are row and col (y and x)
-            worldMap.setContent(LayerID.FOOD, y, minAround.x(), FoodTile.EMPTY.code());
-            worldMap.setContent(LayerID.FOOD, y, maxAround.x(), FoodTile.EMPTY.code());
-        }
-
-        changeManager.setWorldMapChanged();
-        changeManager.setEdited(true);
-    }
-
-    private void clearTerrainAreaOneSided(WorldMap worldMap, Vector2i minTile, Vector2i maxTile) {
-        for (int row = minTile.y(); row <= maxTile.y(); ++row) {
-            for (int col = minTile.x(); col <= maxTile.x(); ++col) {
-                // No symmetric editing!
-                worldMap.setContent(LayerID.TERRAIN, row, col, TerrainTile.EMPTY.$);
-            }
-        }
-        changeManager.setTerrainMapChanged();
-        changeManager.setEdited(true);
-    }
-
-    private void clearFoodAreaOneSided(WorldMap worldMap, Vector2i minTile, Vector2i maxTile) {
-        for (int row = minTile.y(); row <= maxTile.y(); ++row) {
-            for (int col = minTile.x(); col <= maxTile.x(); ++col) {
-                // No symmetric editing!
-                worldMap.setContent(LayerID.FOOD, row, col, FoodTile.EMPTY.code());
-            }
-        }
-        changeManager.setFoodMapChanged();
-        changeManager.setEdited(true);
     }
 
     private boolean hasTemplateImageSize(Image image) {
@@ -1694,7 +1619,10 @@ public class TileMapEditor {
 
         if (houseMinTile != null && houseMaxTile != null
                 && houseMinTile.x() < houseMaxTile.x() && houseMinTile.y() < houseMaxTile.y()) {
-            placeArcadeHouse(worldMap, houseMinTile);
+            Action_PlaceArcadeHouse action = new Action_PlaceArcadeHouse();
+            action.setHouseMinTile(houseMinTile);
+            action.setWorldMap(worldMap);
+            action.execute(this);
         }
 
         java.time.Duration duration = java.time.Duration.between(startTime, LocalTime.now());

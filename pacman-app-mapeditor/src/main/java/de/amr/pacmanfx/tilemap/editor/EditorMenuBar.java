@@ -1,5 +1,6 @@
 package de.amr.pacmanfx.tilemap.editor;
 
+import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.FoodTile;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.TerrainTile;
@@ -55,7 +56,15 @@ public class EditorMenuBar extends MenuBar {
         miAddBorder.disableProperty().bind(editor.editModeProperty().map(mode -> mode == EditMode.INSPECT));
 
         var miAddHouse = new MenuItem(translated("menu.edit.add_house"));
-        miAddHouse.setOnAction(e -> editor.addArcadeHouseAtMapCenter(editor.editedWorldMap()));
+        miAddHouse.setOnAction(e -> {
+            int numRows = editor.editedWorldMap().numRows(), numCols = editor.editedWorldMap().numCols();
+            int houseMinX = numCols / 2 - 4, houseMinY = numRows / 2 - 3;
+            Action_PlaceArcadeHouse action = new Action_PlaceArcadeHouse();
+            action.setHouseMinTile(Vector2i.of(houseMinX, houseMinY));
+            action.setWorldMap(editor.editedWorldMap());
+            action.execute(editor);
+        });
+
         miAddHouse.disableProperty().bind(editor.editModeProperty().map(mode -> mode == EditMode.INSPECT));
 
         var miClearTerrain = new MenuItem(translated("menu.edit.clear_terrain"));
