@@ -667,13 +667,13 @@ public class TileMapEditor {
     }
 
     private void createRenderers(TerrainMapColorScheme colors, Color foodColor) {
-        terrainTileRenderer = new TerrainTileMapRenderer(editCanvas.canvas());
+        terrainTileRenderer = new TerrainTileMapRenderer(editCanvas);
         terrainTileRenderer.setColorScheme(colors);
 
         terrainPathRenderer = new TerrainMapRenderer(preview2DCanvas);
         terrainPathRenderer.setColorScheme(colors);
 
-        foodRenderer = new FoodMapRenderer(editCanvas.canvas());
+        foodRenderer = new FoodMapRenderer(editCanvas);
         foodRenderer.setPelletColor(foodColor);
         foodRenderer.setEnergizerColor(foodColor);
     }
@@ -687,7 +687,7 @@ public class TileMapEditor {
 
     private void createEditCanvas() {
         editCanvas = new EditCanvas(this);
-        spEditCanvas = new ScrollPane(editCanvas.canvas());
+        spEditCanvas = new ScrollPane(editCanvas);
         spEditCanvas.setFitToHeight(true);
         registerDragAndDropImageHandler(spEditCanvas);
         //TODO is there a better way to get the initial resize time of the scroll pane?
@@ -701,8 +701,8 @@ public class TileMapEditor {
 
     private void createPreview2D() {
         preview2DCanvas = new Preview2DCanvas();
-        preview2DCanvas.widthProperty().bind(editCanvas.canvas().widthProperty());
-        preview2DCanvas.heightProperty().bind(editCanvas.canvas().heightProperty());
+        preview2DCanvas.widthProperty().bind(editCanvas.widthProperty());
+        preview2DCanvas.heightProperty().bind(editCanvas.heightProperty());
         preview2DCanvas.gridSizeProperty().bind(gridSizeProperty());
         preview2DCanvas.terrainVisibleProperty().bind(terrainVisibleProperty());
         preview2DCanvas.foodVisibleProperty().bind(foodVisibleProperty());
@@ -1093,8 +1093,13 @@ public class TileMapEditor {
         miObstacleInnerAreaVisible.selectedProperty().bindBidirectional(obstacleInnerAreaDisplayedProperty());
 
         menuView = new Menu(translated("menu.view"), NO_GRAPHIC,
-            miPropertiesVisible, miTerrainVisible, miSegmentNumbersVisible, miObstacleInnerAreaVisible,
-            miFoodVisible, miActorsVisible, miGridVisible);
+            miPropertiesVisible,
+            miTerrainVisible,
+            miFoodVisible,
+            miActorsVisible,
+            miSegmentNumbersVisible,
+            miObstacleInnerAreaVisible,
+            miGridVisible);
 
         menuBar = new MenuBar(menuFile, menuEdit, menuLoadMap, menuView);
     }

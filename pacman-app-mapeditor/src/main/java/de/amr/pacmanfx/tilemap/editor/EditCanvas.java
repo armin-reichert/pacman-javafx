@@ -38,7 +38,7 @@ import static de.amr.pacmanfx.tilemap.editor.TileMapEditor.*;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.*;
 import static java.util.Objects.requireNonNull;
 
-public class EditCanvas {
+public class EditCanvas extends Canvas {
 
     public static final Cursor CURSOR_RUBBER = Cursor.cursor(urlString("graphics/radiergummi.jpg"));
 
@@ -47,7 +47,6 @@ public class EditCanvas {
     private final ObjectProperty<Image> templateImageGreyPy = new SimpleObjectProperty<>();
     private final ObjectProperty<WorldMap> worldMapPy = new SimpleObjectProperty<>();
 
-    private final Canvas canvas;
     private final GraphicsContext ctx;
     private final TileMapEditor editor;
     private final ObstacleEditor obstacleEditor;
@@ -72,23 +71,20 @@ public class EditCanvas {
         worldMapPy.bind(editor.editedWorldMapProperty());
         templateImageGreyPy.bind(editor.templateImageProperty().map(Ufx::imageToGreyscale));
 
-        canvas = new Canvas();
-        ctx = canvas.getGraphicsContext2D();
-        canvas.heightProperty().bind(Bindings.createDoubleBinding(
+        ctx = getGraphicsContext2D();
+        heightProperty().bind(Bindings.createDoubleBinding(
             () -> (double) worldMap().numRows() * gridSize(), worldMapPy, gridSizePy));
 
-        canvas.widthProperty().bind(Bindings.createDoubleBinding(
+        widthProperty().bind(Bindings.createDoubleBinding(
             () -> (double) worldMap().numCols() * gridSize(), worldMapPy, gridSizePy));
 
-        canvas.setOnContextMenuRequested(this::onContextMenuRequested);
-        canvas.setOnMouseClicked(this::onMouseClicked);
-        canvas.setOnMouseDragged(this::onMouseDragged);
-        canvas.setOnMouseMoved(this::onMouseMoved);
-        canvas.setOnMouseReleased(this::onMouseReleased);
-        canvas.setOnKeyPressed(this::onKeyPressed);
+        setOnContextMenuRequested(this::onContextMenuRequested);
+        setOnMouseClicked(this::onMouseClicked);
+        setOnMouseDragged(this::onMouseDragged);
+        setOnMouseMoved(this::onMouseMoved);
+        setOnMouseReleased(this::onMouseReleased);
+        setOnKeyPressed(this::onKeyPressed);
     }
-
-    public Canvas canvas() { return canvas; }
 
     private int gridSize() { return gridSizePy.get(); }
 
@@ -110,23 +106,23 @@ public class EditCanvas {
     }
 
     public void enterInspectMode() {
-        canvas.setCursor(Cursor.HAND); // TODO use other cursor
+        setCursor(Cursor.HAND); // TODO use other cursor
         obstacleEditor.setEnabled(false);
     }
 
     public void enterEditMode() {
-        canvas.setCursor(Cursor.DEFAULT);
+        setCursor(Cursor.DEFAULT);
         obstacleEditor.setEnabled(true);
     }
 
     public void enterEraseMode() {
-        canvas.setCursor(CURSOR_RUBBER);
+        setCursor(CURSOR_RUBBER);
         obstacleEditor.setEnabled(false);
     }
 
     public void draw(TerrainMapColorScheme terrainMapColorScheme) {
         double scaling = gridSize() / (double) TS;
-        double width = canvas.getWidth(), height = canvas.getHeight();
+        double width = getWidth(), height = getHeight();
         ctx.setImageSmoothing(false);
 
         ctx.setFill(terrainMapColorScheme.floorColor());
@@ -211,10 +207,10 @@ public class EditCanvas {
         ctx.setLineWidth(0.5);
         ctx.setStroke(Color.grayRgb(180));
         for (int row = 1; row < worldMap().numRows(); ++row) {
-            ctx.strokeLine(0, row * gridSize(), canvas.getWidth(), row * gridSize());
+            ctx.strokeLine(0, row * gridSize(), getWidth(), row * gridSize());
         }
         for (int col = 1; col < worldMap().numCols(); ++col) {
-            ctx.strokeLine(col * gridSize(), 0, col * gridSize(), canvas.getHeight());
+            ctx.strokeLine(col * gridSize(), 0, col * gridSize(), getHeight());
         }
         ctx.restore();
     }
@@ -222,7 +218,7 @@ public class EditCanvas {
     private void onMouseClicked(MouseEvent e) {
         Logger.debug("Mouse clicked {}", e);
         if (e.getButton() == MouseButton.PRIMARY) {
-            canvas.requestFocus();
+            requestFocus();
             contextMenu.hide();
             if (e.getClickCount() == 2 && editor.isEditMode(EditMode.INSPECT)) {
                 editor.showEditHelpText();
@@ -335,7 +331,7 @@ public class EditCanvas {
             miFloodWithPellets,
             miClearPellets);
 
-        contextMenu.show(canvas, menuEvent.getScreenX(), menuEvent.getScreenY());
+        contextMenu.show(this, menuEvent.getScreenX(), menuEvent.getScreenY());
     }
 
     private void onKeyPressed(KeyEvent e) {
