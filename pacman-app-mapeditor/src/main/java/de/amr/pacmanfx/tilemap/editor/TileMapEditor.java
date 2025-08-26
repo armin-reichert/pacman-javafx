@@ -225,7 +225,7 @@ public class TileMapEditor {
 
     // Properties
 
-    // editMode
+    // -- editMode
 
     public static final EditMode DEFAULT_EDIT_MODE = EditMode.INSPECT;
 
@@ -251,11 +251,11 @@ public class TileMapEditor {
         editModeProperty().set(requireNonNull(mode));
     }
 
-    // currentFile
+    // -- currentFile
 
     private final ObjectProperty<File> currentFile = new SimpleObjectProperty<>();
 
-    // editedWorldMap
+    // -- editedWorldMap
 
     private final ObjectProperty<WorldMap> editedWorldMap = new SimpleObjectProperty<>(WorldMap.emptyMap(28, 36)) {
         @Override
@@ -265,7 +265,7 @@ public class TileMapEditor {
         }
     };
 
-    // gridSize
+    // -- gridSize
 
     private static final int DEFAULT_GRID_SIZE = 8;
 
@@ -289,7 +289,7 @@ public class TileMapEditor {
         gridSizeProperty().set(size);
     }
 
-    // actorsVisible
+    // -- actorsVisible
 
     public boolean DEFAULT_ACTORS_VISIBLE = true;
 
@@ -315,7 +315,7 @@ public class TileMapEditor {
         actorsVisibleProperty().set(visible);
     }
 
-    // gridVisible
+    // -- gridVisible
 
     public static final boolean DEFAULT_GRID_VISIBLE = true;
 
@@ -333,7 +333,7 @@ public class TileMapEditor {
         return gridVisible;
     }
 
-    // foodVisible
+    // -- foodVisible
 
     public static final boolean DEFAULT_FOOD_VISIBLE = true;
 
@@ -359,7 +359,7 @@ public class TileMapEditor {
         foodVisibleProperty().set(visible);
     }
 
-    // mapPropertyEditorsVisible
+    // -- mapPropertyEditorsVisible
 
     public static final boolean DEFAULT_MAP_PROPERTY_EDITORS_VISIBLE = false;
 
@@ -385,7 +385,7 @@ public class TileMapEditor {
         propertyEditorsVisibleProperty().set(value);
     }
 
-    // obstacleInnerAreaDisplayed
+    // -- obstacleInnerAreaDisplayed
 
     public static final boolean DEFAULT_OBSTACLE_INNER_AREA_DISPLAYED = false;
 
@@ -411,7 +411,7 @@ public class TileMapEditor {
         obstacleInnerAreaDisplayedProperty().set(value);
     }
 
-    // obstaclesJoining
+    // -- obstaclesJoining
 
     public static boolean DEFAULT_OBSTACLES_JOINING = true;
 
@@ -432,7 +432,7 @@ public class TileMapEditor {
         obstaclesJoiningProperty().set(value);
     }
 
-    // segmentNumbersVisible
+    // -- segmentNumbersVisible
 
     public static final boolean DEFAULT_SEGMENT_NUMBERS_VISIBLE = false;
 
@@ -458,7 +458,7 @@ public class TileMapEditor {
         segmentNumbersVisibleProperty().set(value);
     }
 
-    // symmetric edit mode
+    // -- symmetric edit mode
 
     public static final boolean DEFAULT_SYMMETRIC_EDIT_MODE = true;
 
@@ -481,7 +481,7 @@ public class TileMapEditor {
 
     private final ObjectProperty<Image> templateImagePy = new SimpleObjectProperty<>();
 
-    // terrainVisible
+    // -- terrainVisible
 
     public static final boolean DEFAULT_TERRAIN_VISIBLE = true;
 
@@ -507,7 +507,7 @@ public class TileMapEditor {
         terrainVisibleProperty().set(visible);
     }
 
-    // title
+    // -- title
 
     private final StringProperty title = new SimpleStringProperty("Tile Map Editor");
 
@@ -683,6 +683,7 @@ public class TileMapEditor {
         editCanvas.gridSizeProperty().bind(gridSizeProperty());
         editCanvas.worldMapProperty().bind(editedWorldMapProperty());
         editCanvas.templateImageGrayProperty().bind(templateImageProperty().map(Ufx::imageToGreyscale));
+        editCanvas.segmentNumbersVisibleProperty().bind(segmentNumbersVisibleProperty());
         editCanvas.terrainVisibleProperty().bind(terrainVisibleProperty());
         editCanvas.foodVisibleProperty().bind(foodVisibleProperty());
         editCanvas.actorsVisibleProperty().bind(actorsVisibleProperty());

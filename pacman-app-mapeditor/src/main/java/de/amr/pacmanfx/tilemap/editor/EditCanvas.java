@@ -42,10 +42,12 @@ public class EditCanvas extends Canvas {
     private final IntegerProperty gridSize = new SimpleIntegerProperty(8);
     private final ObjectProperty<Image> templateImageGray = new SimpleObjectProperty<>();
     private final ObjectProperty<WorldMap> worldMap = new SimpleObjectProperty<>();
-    private final BooleanProperty terrainVisible = new SimpleBooleanProperty(true);
-    private final BooleanProperty foodVisible = new SimpleBooleanProperty(true);
+
     private final BooleanProperty actorsVisible = new SimpleBooleanProperty(true);
+    private final BooleanProperty foodVisible = new SimpleBooleanProperty(true);
     private final BooleanProperty gridVisible = new SimpleBooleanProperty(true);
+    private final BooleanProperty segmentNumbersVisible = new SimpleBooleanProperty(true);
+    private final BooleanProperty terrainVisible = new SimpleBooleanProperty(true);
 
     private final GraphicsContext ctx;
     private final TileMapEditor editor;
@@ -106,20 +108,24 @@ public class EditCanvas extends Canvas {
 
     public WorldMap worldMap() { return worldMap.get(); }
 
-    public BooleanProperty terrainVisibleProperty() {
-        return terrainVisible;
+    public BooleanProperty actorsVisibleProperty() {
+        return actorsVisible;
     }
 
     public BooleanProperty foodVisibleProperty() {
         return foodVisible;
     }
 
-    public BooleanProperty actorsVisibleProperty() {
-        return actorsVisible;
-    }
-
     public BooleanProperty gridVisibleProperty() {
         return gridVisible;
+    }
+
+    public BooleanProperty segmentNumbersVisibleProperty() {
+        return segmentNumbersVisible;
+    }
+
+    public BooleanProperty terrainVisibleProperty() {
+        return terrainVisible;
     }
 
     public TerrainTileMapRenderer terrainRenderer() {
