@@ -484,7 +484,13 @@ public class TileMapEditor {
         symmetricEditModeProperty().set(value);
     }
 
+    // -- templateImage
+
     private final ObjectProperty<Image> templateImage = new SimpleObjectProperty<>();
+
+    public Image templateImage() {
+        return templateImage.get();
+    }
 
     // terrainVisible
 
@@ -511,6 +517,11 @@ public class TileMapEditor {
     public void setTerrainVisible(boolean visible) {
         terrainVisibleProperty().set(visible);
     }
+
+    // -- templateImage
+
+    public ObjectProperty<Image> templateImageProperty() { return templateImage; }
+
 
     // title
 
@@ -539,8 +550,6 @@ public class TileMapEditor {
     }
 
     public StringProperty titleProperty() { return title; }
-
-    public ObjectProperty<Image> templateImageProperty() { return templateImage; }
 
     public byte selectedPaletteID() {
         return (Byte) tabPaneWithPalettes.getSelectionModel().getSelectedItem().getUserData();
@@ -1352,8 +1361,7 @@ public class TileMapEditor {
         templateImage.set(null);
     }
 
-    void populateMapFromTemplateImage(WorldMap worldMap) {
-        Image templateImage = this.templateImage.get();
+    void populateMapFromTemplateImage(WorldMap worldMap, Image templateImage) {
         if (templateImage == null) {
             return;
         }
