@@ -34,7 +34,6 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -50,7 +49,10 @@ import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.time.Instant;
 import java.time.LocalTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.TS;
@@ -1339,29 +1341,12 @@ public class TileMapEditor {
     }
 
     void initWorldMapForTemplateImage() {
-        selectImageFile(translated("open_template_image")).ifPresent(file -> readImageFromFile(file).ifPresentOrElse(image -> {
-            if (setBlankMapForTemplateImage(image)) {
-                showMessage("Select map colors from template!", 20, MessageType.INFO);
-            }
-        }, () -> showMessage("Could not open image file", 3, MessageType.ERROR)));
-    }
-
-    private Optional<File> selectImageFile(String title) {
-        FileChooser selector = new FileChooser();
-        selector.setTitle(title);
-        selector.setInitialDirectory(currentDirectory);
-        selector.getExtensionFilters().addAll(FILTER_IMAGE_FILES, FILTER_ALL_FILES);
-        selector.setSelectedExtensionFilter(FILTER_IMAGE_FILES);
-        return Optional.ofNullable(selector.showOpenDialog(stage));
-    }
-
-    private Optional<Image> readImageFromFile(File file) {
-        try (FileInputStream stream = new FileInputStream(file)) {
-            return Optional.of(new Image(stream));
-        } catch (IOException x) {
-            Logger.error(x);
-            return Optional.empty();
-        }
+        TemplateImageManager.selectImageFile(stage, translated("open_template_image"), currentDirectory())
+            .ifPresent(image -> {
+                if (setBlankMapForTemplateImage(image)) {
+                    showMessage("Select map colors from template!", 20, MessageType.INFO);
+                }
+            });
     }
 
     void closeTemplateImage() {
