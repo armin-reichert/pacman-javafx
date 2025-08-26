@@ -22,6 +22,8 @@ import org.tinylog.Logger;
 import java.net.URL;
 import java.util.Locale;
 
+import static de.amr.pacmanfx.tilemap.editor.TileMapEditor.EMPTY_ROWS_BEFORE_MAZE;
+import static de.amr.pacmanfx.tilemap.editor.TileMapEditor.EMPTY_ROWS_BELOW_MAZE;
 import static java.util.Objects.requireNonNull;
 
 public interface TileMapEditorUtil {
@@ -147,5 +149,32 @@ public interface TileMapEditorUtil {
 
     static Vector2i tileAtMousePosition(double mouseX, double mouseY, double gridSize) {
         return new Vector2i(fullTiles(mouseX, gridSize), fullTiles(mouseY, gridSize));
+    }
+
+    static boolean hasAccessibleTerrainAtTile(WorldMap worldMap, Vector2i tile) {
+        byte value = worldMap.content(LayerID.TERRAIN, tile);
+        return value == TerrainTile.EMPTY.$
+                || value == TerrainTile.ONE_WAY_DOWN.$
+                || value == TerrainTile.ONE_WAY_UP.$
+                || value == TerrainTile.ONE_WAY_LEFT.$
+                || value == TerrainTile.ONE_WAY_RIGHT.$;
+    }
+
+    static boolean canEditFoodAtTile(WorldMap worldMap, Vector2i tile) {
+        return !worldMap.outOfWorld(tile)
+                && tile.y() >= EMPTY_ROWS_BEFORE_MAZE
+                && tile.y() < worldMap.numRows() - EMPTY_ROWS_BELOW_MAZE
+                && !isPartOfHouse(worldMap, tile)
+                && hasAccessibleTerrainAtTile(worldMap, tile);
+    }
+
+    static boolean isPartOfHouse(WorldMap worldMap, Vector2i tile) {
+        Vector2i minTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE);
+        Vector2i maxTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE);
+        if (minTile != null && maxTile != null) {
+            return minTile.x() <= tile.x() && tile.x() <= maxTile.x()
+                    && minTile.y() <= tile.y() && tile.y() <= maxTile.y();
+        }
+        return false;
     }
 }

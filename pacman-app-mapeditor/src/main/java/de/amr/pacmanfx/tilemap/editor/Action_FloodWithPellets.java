@@ -8,6 +8,8 @@ import java.util.ArrayDeque;
 import java.util.HashSet;
 import java.util.Set;
 
+import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.canEditFoodAtTile;
+
 public class Action_FloodWithPellets extends AbstractEditorAction {
 
     public void setStartTile(Vector2i tile) {
@@ -22,7 +24,7 @@ public class Action_FloodWithPellets extends AbstractEditorAction {
     public void execute(TileMapEditor editor) {
         Vector2i startTile = getArg("startTile", Vector2i.class);
         Byte pelletValue = getArg("pelletValue", Byte.class);
-        if (!editor.canEditFoodAtTile(startTile)) {
+        if (!canEditFoodAtTile(editor.editedWorldMap(), startTile)) {
             return;
         }
         var q = new ArrayDeque<Vector2i>();
@@ -35,7 +37,7 @@ public class Action_FloodWithPellets extends AbstractEditorAction {
             editor.setTileValueRespectSymmetry(editor.editedWorldMap(), LayerID.FOOD, current, pelletValue);
             for (Direction dir : Direction.values()) {
                 Vector2i neighborTile = current.plus(dir.vector());
-                if  (!visited.contains(neighborTile) && editor.canEditFoodAtTile(neighborTile)) {
+                if  (!visited.contains(neighborTile) && canEditFoodAtTile(editor.editedWorldMap(), neighborTile)) {
                     q.push(neighborTile);
                 }
                 visited.add(neighborTile);

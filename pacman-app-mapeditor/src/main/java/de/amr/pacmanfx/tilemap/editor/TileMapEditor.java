@@ -1310,14 +1310,14 @@ public class TileMapEditor {
     }
 
     public void moveCursorAndSetFoodAtTile(Direction dir) {
-        if (editCanvas.moveCursor(dir, this::hasAccessibleTerrainAtTile)) {
+        if (editCanvas.moveCursor(dir, tile -> hasAccessibleTerrainAtTile(editedWorldMap(), tile))) {
             setFoodAtFocussedTile();
         }
     }
 
     private void setFoodAtFocussedTile() {
         if (editMode() == EditMode.EDIT && selectedPaletteID() == PALETTE_ID_FOOD) {
-            if (hasAccessibleTerrainAtTile(editCanvas.focussedTile())) {
+            if (hasAccessibleTerrainAtTile(editedWorldMap(), editCanvas.focussedTile())) {
                 editFoodAtTile(editCanvas.focussedTile(), false);
             }
         }
@@ -1361,7 +1361,7 @@ public class TileMapEditor {
         requireNonNull(layerID);
         requireNonNull(tile);
 
-        if (layerID == LayerID.FOOD && !canEditFoodAtTile(tile)) {
+        if (layerID == LayerID.FOOD && !canEditFoodAtTile(worldMap, tile)) {
             return;
         }
 
@@ -1376,7 +1376,7 @@ public class TileMapEditor {
         if (isSymmetricEditMode()) {
             Vector2i mirroredTile = worldMap.mirroredTile(tile);
             if (layerID == LayerID.FOOD) {
-                if (canEditFoodAtTile(mirroredTile)) {
+                if (canEditFoodAtTile(worldMap, mirroredTile)) {
                     worldMap.setContent(layerID, mirroredTile, value);
                 }
             } else {
@@ -1500,34 +1500,6 @@ public class TileMapEditor {
 
     void closeTemplateImage() {
         templateImagePy.set(null);
-    }
-
-    private boolean hasAccessibleTerrainAtTile(Vector2i tile) {
-        byte value = editedWorldMap().content(LayerID.TERRAIN, tile);
-        return value == TerrainTile.EMPTY.$
-            || value == TerrainTile.ONE_WAY_DOWN.$
-            || value == TerrainTile.ONE_WAY_UP.$
-            || value == TerrainTile.ONE_WAY_LEFT.$
-            || value == TerrainTile.ONE_WAY_RIGHT.$;
-    }
-
-    public boolean canEditFoodAtTile(Vector2i tile) {
-        return !editedWorldMap().outOfWorld(tile)
-                && tile.y() >= EMPTY_ROWS_BEFORE_MAZE
-                && tile.y() < editedWorldMap().numRows() - EMPTY_ROWS_BELOW_MAZE
-                && !isPartOfHouse(editedWorldMap(), tile)
-                && hasAccessibleTerrainAtTile(tile);
-    }
-
-
-    private boolean isPartOfHouse(WorldMap worldMap, Vector2i tile) {
-        Vector2i minTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE);
-        Vector2i maxTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE);
-        if (minTile != null && maxTile != null) {
-            return minTile.x() <= tile.x() && tile.x() <= maxTile.x()
-                && minTile.y() <= tile.y() && tile.y() <= maxTile.y();
-        }
-        return false;
     }
 
     void populateMapFromTemplateImage(WorldMap worldMap) {

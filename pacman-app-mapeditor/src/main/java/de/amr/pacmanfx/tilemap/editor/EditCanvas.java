@@ -368,7 +368,7 @@ public class EditCanvas extends Canvas {
             EditorActions.FLOOD_WITH_PELLETS.setPelletValue(FoodTile.PELLET.code());
             EditorActions.FLOOD_WITH_PELLETS.execute(editor);
         });
-        miFloodWithPellets.setDisable(!editor.canEditFoodAtTile(tile));
+        miFloodWithPellets.setDisable(!canEditFoodAtTile(editor.editedWorldMap(), tile));
 
         var miClearPellets = new MenuItem(translated("menu.edit.clear_food"));
         miClearPellets.setOnAction(ae -> {
@@ -376,7 +376,7 @@ public class EditCanvas extends Canvas {
             EditorActions.FLOOD_WITH_PELLETS.setPelletValue(FoodTile.EMPTY.code());
             EditorActions.FLOOD_WITH_PELLETS.execute(editor);
         });
-        miClearPellets.setDisable(!editor.canEditFoodAtTile(tile));
+        miClearPellets.setDisable(!canEditFoodAtTile(editor.editedWorldMap(), tile));
 
         contextMenu.getItems().setAll(
             miInsertRow,
