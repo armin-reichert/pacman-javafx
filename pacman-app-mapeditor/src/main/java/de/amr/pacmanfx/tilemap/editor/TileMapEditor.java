@@ -649,7 +649,7 @@ public class TileMapEditor {
         var obstacleEditor = new ObstacleEditor() {
             @Override
             public void setValue(Vector2i tile, byte value) {
-                setTileValueRespectSymmetry(editedWorldMap(), LayerID.TERRAIN, tile, value);
+                setTileValueRespectingSymmetry(editedWorldMap(), LayerID.TERRAIN, tile, value);
             }
         };
         obstacleEditor.joiningProperty().bind(obstaclesJoiningProperty());
@@ -1356,7 +1356,7 @@ public class TileMapEditor {
     /**
      * This method should be used whenever a tile value has to be set and symmetric editing should be executed.
      */
-    public void setTileValueRespectSymmetry(WorldMap worldMap, LayerID layerID, Vector2i tile, byte value) {
+    public void setTileValueRespectingSymmetry(WorldMap worldMap, LayerID layerID, Vector2i tile, byte value) {
         requireNonNull(worldMap);
         requireNonNull(layerID);
         requireNonNull(tile);
@@ -1387,9 +1387,9 @@ public class TileMapEditor {
         }
     }
 
-    public void setTileValueRespectSymmetry(WorldMap worldMap, LayerID layerID, int row, int col, byte value) {
+    public void setTileValueRespectingSymmetry(WorldMap worldMap, LayerID layerID, int row, int col, byte value) {
         Vector2i tile = new Vector2i(col, row);
-        setTileValueRespectSymmetry(worldMap, layerID, tile, value);
+        setTileValueRespectingSymmetry(worldMap, layerID, tile, value);
     }
 
 

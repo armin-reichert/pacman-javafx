@@ -34,7 +34,7 @@ public class Action_FloodWithPellets extends AbstractEditorAction {
         while (!q.isEmpty()) {
             Vector2i current = q.poll();
             // use this method such that symmmetric editing etc. is taken into account:
-            editor.setTileValueRespectSymmetry(editor.editedWorldMap(), LayerID.FOOD, current, pelletValue);
+            editor.setTileValueRespectingSymmetry(editor.editedWorldMap(), LayerID.FOOD, current, pelletValue);
             for (Direction dir : Direction.values()) {
                 Vector2i neighborTile = current.plus(dir.vector());
                 if  (!visited.contains(neighborTile) && canEditFoodAtTile(editor.editedWorldMap(), neighborTile)) {
