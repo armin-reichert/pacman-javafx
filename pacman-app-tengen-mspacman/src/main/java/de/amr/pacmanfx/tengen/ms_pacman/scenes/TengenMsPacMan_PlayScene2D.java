@@ -17,8 +17,8 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.GameOverMessage;
+import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_HUDControlData;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_ActorRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameLevelRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_HUDRenderer;
@@ -526,7 +526,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     private void updateHUD() {
         TengenMsPacMan_GameModel game = context().game();
-        TengenMsPacMan_HUDControlData hud = game.hudData();
         GameLevel gameLevel = game.optGameLevel().orElse(null);
 
         if (gameLevel == null) return;
@@ -538,5 +537,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         }
         numLives = Math.min(numLives, game.maxLivesDisplayed());
         game.setVisibleLifeCount(numLives);
+
+        game.hudData().showLevelNumber(game.mapCategory() != MapCategory.ARCADE);
     }
 }

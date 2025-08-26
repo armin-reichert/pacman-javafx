@@ -66,8 +66,7 @@ public class TengenMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HU
 
         if (hudData.isLevelCounterVisible()) {
             float x = sceneSize.x() - TS(2), y = sceneSize.y() - TS;
-            int levelNumber = game.mapCategory() != MapCategory.ARCADE ? gameLevel.number() : 0;
-            drawLevelCounter(game, levelNumber, x, y);
+            drawLevelCounter(game, hudData, x, y);
         }
 
         if (hudData.gameOptionsVisible()) {
@@ -96,10 +95,13 @@ public class TengenMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HU
         }
     }
 
-    private void drawLevelCounter(TengenMsPacMan_GameModel game, int levelNumber, float x, float y) {
-        if (levelNumber != 0) {
-            drawLevelNumberBox(levelNumber, 0, y); // left box
-            drawLevelNumberBox(levelNumber, x, y); // right box
+    private void drawLevelCounter(TengenMsPacMan_GameModel game, TengenMsPacMan_HUDControlData hudData, float x, float y) {
+        GameLevel gameLevel = game.optGameLevel().orElse(null);
+        if (gameLevel == null) return;
+
+        if (hudData.levelNumberVisible()) {
+            drawLevelNumberBox(gameLevel.number(), 0, y); // left box
+            drawLevelNumberBox(gameLevel.number(), x, y); // right box
         }
         RectShort[] symbolSprites = spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS);
         x -= TS(2);
