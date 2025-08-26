@@ -26,7 +26,10 @@ import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritablePixelFormat;
-import javafx.scene.input.*;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -50,9 +53,7 @@ import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
 import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
 import static de.amr.pacmanfx.tilemap.editor.ArcadeSprites.*;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.*;
@@ -1272,7 +1273,8 @@ public class TileMapEditor {
     public void editAtMousePosition(double x, double y, boolean erase) {
         Vector2i tile = tileAtMousePosition(x, y, gridSize());
         if (isEditMode(EditMode.INSPECT)) {
-            identifyObstacleAtTile(tile);
+            EditorActions.IDENTIFY_OBSTACLE.setTile(tile);
+            EditorActions.IDENTIFY_OBSTACLE.execute(this);
             return;
         }
         switch (selectedPaletteID()) {
@@ -1328,29 +1330,6 @@ public class TileMapEditor {
         int next = palette.selectedIndex() + 1;
         if (next == palette.numTools()) { next = 0; }
         palette.selectTool(next);
-    }
-
-    private void identifyObstacleAtTile(Vector2i tile) {
-        Obstacle obstacleAtTile = editedWorldMap().obstacles().stream()
-            .filter(obstacle -> tileAt(obstacle.startPoint().minus(HTS, 0).toVector2f()).equals(tile))
-            .findFirst().orElse(null);
-        if (obstacleAtTile != null) {
-            String encoding = obstacleAtTile.encoding();
-            Clipboard clipboard = Clipboard.getSystemClipboard();
-            ClipboardContent content = new ClipboardContent();
-            content.putString(encoding);
-            clipboard.setContent(content);
-            showMessage("Obstacle (copied to clipboard)", 5, MessageType.INFO);
-        } else {
-            byte terrainValue = editedWorldMap().content(LayerID.TERRAIN, tile);
-            byte foodValue = editedWorldMap().content(LayerID.FOOD, tile);
-            String info = "";
-            if (terrainValue != TerrainTile.EMPTY.$)
-                info = "Terrain #%02X (%s)".formatted(terrainValue, terrainValue);
-            if (foodValue != FoodTile.EMPTY.code())
-                info = "Food #%02X (%s)".formatted(foodValue, foodValue);
-            showMessage(info, 4, MessageType.INFO);
-        }
     }
 
     /**
