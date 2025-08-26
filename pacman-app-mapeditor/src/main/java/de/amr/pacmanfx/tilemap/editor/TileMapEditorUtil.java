@@ -45,6 +45,20 @@ public interface TileMapEditorUtil {
         return tileValue;
     }
 
+    static Vector2i parseSize(String cols_x_rows) {
+        String[] tuple = cols_x_rows.split("x");
+        if (tuple.length != 2) {
+            return null;
+        }
+        try {
+            int numCols = Integer.parseInt(tuple[0].trim());
+            int numRows = Integer.parseInt(tuple[1].trim());
+            return new Vector2i(numCols, numRows);
+        } catch (Exception x) {
+            return null;
+        }
+    }
+
     static Color parseColor(String text) {
         try {
             return Color.web(text);

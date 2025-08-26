@@ -7,8 +7,8 @@ import de.amr.pacmanfx.lib.tilemap.WorldMapFormatter;
 import de.amr.pacmanfx.model.WorldMapProperty;
 import javafx.scene.control.TextInputDialog;
 
-import static de.amr.pacmanfx.tilemap.editor.TileMapEditor.parseSize;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditor.translated;
+import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.parseSize;
 
 public class Action_ShowNewMapDialog extends AbstractEditorAction {
 
