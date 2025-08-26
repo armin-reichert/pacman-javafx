@@ -1422,10 +1422,9 @@ public class TileMapEditor {
             Vector2i houseMinTile = Vector2i.of(tilesX / 2 - 4, tilesY / 2 - 3);
             worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_PAC,   WorldMapFormatter.formatTile(houseMinTile.plus(3, 11)));
             worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_BONUS, WorldMapFormatter.formatTile(houseMinTile.plus(3, 5)));
-            Action_PlaceArcadeHouse action = new Action_PlaceArcadeHouse();
-            action.setHouseMinTile(houseMinTile);
-            action.setWorldMap(worldMap);
-            action.execute(this);
+            EditorActions.PLACE_ARCADE_HOUSE.setHouseMinTile(houseMinTile);
+            EditorActions.PLACE_ARCADE_HOUSE.setWorldMap(worldMap);
+            EditorActions.PLACE_ARCADE_HOUSE.execute(this);
         }
         worldMap.buildObstacleList();
         setDefaultColors(worldMap);

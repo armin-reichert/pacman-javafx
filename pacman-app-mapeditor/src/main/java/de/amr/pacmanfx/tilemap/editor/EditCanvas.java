@@ -345,10 +345,9 @@ public class EditCanvas extends Canvas {
 
         var miPlaceHouse = new MenuItem(translated("menu.edit.place_house"));
         miPlaceHouse.setOnAction(actionEvent -> {
-            Action_PlaceArcadeHouse action = new Action_PlaceArcadeHouse();
-            action.setHouseMinTile(tile);
-            action.setWorldMap(worldMap());
-            action.execute(editor);
+            EditorActions.PLACE_ARCADE_HOUSE.setHouseMinTile(tile);
+            EditorActions.PLACE_ARCADE_HOUSE.setWorldMap(worldMap());
+            EditorActions.PLACE_ARCADE_HOUSE.execute(editor);
         });
 
         var miInsertRow = new MenuItem(translated("menu.edit.insert_row"));
@@ -365,19 +364,17 @@ public class EditCanvas extends Canvas {
 
         var miFloodWithPellets = new MenuItem(translated("menu.edit.flood_with_pellets"));
         miFloodWithPellets.setOnAction(ae -> {
-            var action = new Action_FloodWithPellets();
-            action.setStartTile(tile);
-            action.setPelletValue(FoodTile.PELLET.code());
-            action.execute(editor);
+            EditorActions.FLOOD_WITH_PELLETS.setStartTile(tile);
+            EditorActions.FLOOD_WITH_PELLETS.setPelletValue(FoodTile.PELLET.code());
+            EditorActions.FLOOD_WITH_PELLETS.execute(editor);
         });
         miFloodWithPellets.setDisable(!editor.canEditFoodAtTile(tile));
 
         var miClearPellets = new MenuItem(translated("menu.edit.clear_food"));
         miClearPellets.setOnAction(ae -> {
-            var action = new Action_FloodWithPellets();
-            action.setStartTile(tile);
-            action.setPelletValue(FoodTile.EMPTY.code());
-            action.execute(editor);
+            EditorActions.FLOOD_WITH_PELLETS.setStartTile(tile);
+            EditorActions.FLOOD_WITH_PELLETS.setPelletValue(FoodTile.EMPTY.code());
+            EditorActions.FLOOD_WITH_PELLETS.execute(editor);
         });
         miClearPellets.setDisable(!editor.canEditFoodAtTile(tile));
 

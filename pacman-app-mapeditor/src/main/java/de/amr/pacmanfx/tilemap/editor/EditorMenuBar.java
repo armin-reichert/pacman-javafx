@@ -59,10 +59,9 @@ public class EditorMenuBar extends MenuBar {
         miAddHouse.setOnAction(e -> {
             int numRows = editor.editedWorldMap().numRows(), numCols = editor.editedWorldMap().numCols();
             int houseMinX = numCols / 2 - 4, houseMinY = numRows / 2 - 3;
-            Action_PlaceArcadeHouse action = new Action_PlaceArcadeHouse();
-            action.setHouseMinTile(Vector2i.of(houseMinX, houseMinY));
-            action.setWorldMap(editor.editedWorldMap());
-            action.execute(editor);
+            EditorActions.PLACE_ARCADE_HOUSE.setHouseMinTile(Vector2i.of(houseMinX, houseMinY));
+            EditorActions.PLACE_ARCADE_HOUSE.setWorldMap(editor.editedWorldMap());
+            EditorActions.PLACE_ARCADE_HOUSE.execute(editor);
         });
 
         miAddHouse.disableProperty().bind(editor.editModeProperty().map(mode -> mode == EditMode.INSPECT));
