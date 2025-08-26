@@ -9,7 +9,6 @@ import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.HUDData;
 import de.amr.pacmanfx.model.LevelCounter;
-import de.amr.pacmanfx.model.LivesCounter;
 import de.amr.pacmanfx.model.ScoreManager;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.*;
@@ -57,7 +56,7 @@ public class TengenMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HU
         }
 
         if (hudData.isLivesCounterVisible()) {
-            drawLivesCounter(hudData.livesCounter(), game.lifeCount(), TS(2), sceneSize.y() - TS);
+            drawLivesCounter(game, TS(2), sceneSize.y() - TS);
         }
 
         if (hudData.isLevelCounterVisible()) {
@@ -81,14 +80,14 @@ public class TengenMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HU
         fillText("%6d".formatted(scoreManager.highScore().points()), color, font, TS(13), TS(2));
     }
 
-    public void drawLivesCounter(LivesCounter livesCounter, int lifeCount, float x, float y) {
+    public void drawLivesCounter(TengenMsPacMan_GameModel game, float x, float y) {
         RectShort sprite = spriteSheet().sprite(SpriteID.LIVES_COUNTER_SYMBOL);
-        for (int i = 0; i < livesCounter.visibleLifeCount(); ++i) {
+        for (int i = 0; i < game.visibleLifeCount(); ++i) {
             drawSprite(sprite, x + TS(i * 2), y, true);
         }
-        if (lifeCount > livesCounter.maxLivesDisplayed()) {
+        if (game.lifeCount() > game.maxLivesDisplayed()) {
             Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
-            fillText("(%d)".formatted(lifeCount), nesColor(0x28), font, x + TS(10), y + TS);
+            fillText("(%d)".formatted(game.lifeCount()), nesColor(0x28), font, x + TS(10), y + TS);
         }
     }
 

@@ -537,8 +537,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         if (context().gameState() == GamePlayState.STARTING_GAME && !gameLevel.pac().isVisible()) {
             numLives += 1;
         }
-        numLives = Math.min(numLives, hud.livesCounter().maxLivesDisplayed());
-        hud.livesCounter().setVisibleLifeCount(numLives);
+        numLives = Math.min(numLives, game.maxLivesDisplayed());
+        game.setVisibleLifeCount(numLives);
 
         //TODO check demo level behavior in emulator. Are there demo levels for non-ARCADE maps at all?
         if (game.mapCategory() == MapCategory.ARCADE || gameLevel.isDemoLevel()) {

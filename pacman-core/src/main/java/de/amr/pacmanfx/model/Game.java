@@ -15,13 +15,17 @@ import static java.util.Objects.requireNonNull;
 public interface Game extends GameLifecycle, GameEvents {
     GameEventManager eventManager();
     ScoreManager scoreManager();
-    HUDData hudData();
     SimulationStep simulationStep();
     ActorSpeedControl actorSpeedControl();
     HuntingTimer huntingTimer();
     MapSelector mapSelector();
     Optional<GateKeeper> optGateKeeper();
     Optional<GameLevel> optGameLevel();
+
+    HUDData hudData();
+    int visibleLifeCount();
+    void setVisibleLifeCount(int count);
+    default int maxLivesDisplayed() { return 5; }
 
     boolean     cutScenesEnabled();
     void        setCutScenesEnabled(boolean enabled);

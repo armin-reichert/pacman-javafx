@@ -64,14 +64,13 @@ public class ArcadePacMan_HUDRenderer extends BaseSpriteRenderer implements HUDR
         }
 
         if (data.isLivesCounterVisible()) {
-            LivesCounter livesCounter = data.livesCounter();
             RectShort sprite = livesCounterSymbol();
             float x = TS(2), y = sceneSize.y() - TS(2);
-            for (int i = 0; i < livesCounter.visibleLifeCount(); ++i) {
+            for (int i = 0; i < gameContext.game().visibleLifeCount(); ++i) {
                 drawSprite(sprite, x + i * TS(2), y, true);
             }
             int lifeCount = gameContext.game().lifeCount();
-            if (lifeCount > livesCounter.maxLivesDisplayed()) {
+            if (lifeCount > gameContext.game().maxLivesDisplayed()) {
                 // show text indicating that more lives are available than symbols displayed (cheating may cause this)
                 Font hintFont = Font.font("Serif", FontWeight.BOLD, scaled(8));
                 fillText("%d".formatted(lifeCount), ARCADE_YELLOW, hintFont, x - 14, y + TS);

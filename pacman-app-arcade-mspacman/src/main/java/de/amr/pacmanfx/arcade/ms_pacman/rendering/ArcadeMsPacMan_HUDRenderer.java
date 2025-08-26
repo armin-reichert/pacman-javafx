@@ -36,17 +36,19 @@ public class ArcadeMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HU
     }
 
     @Override
-    public void drawHUD(GameContext gameContext, HUDData data, Vector2f sceneSize) {
-        if (!data.isVisible()) return;
+    public void drawHUD(GameContext gameContext, HUDData hudData, Vector2f sceneSize) {
+        if (!hudData.isVisible()) return;
 
-        if (data.isScoreVisible()) {
-            ScoreManager scoreManager = gameContext.game().scoreManager();
+        Game game = gameContext.game();
+
+        if (hudData.isScoreVisible()) {
+            ScoreManager scoreManager = game.scoreManager();
             drawScore(scoreManager.score(), "SCORE", arcadeFontTS(), TS(1), TS(1));
             drawScore(scoreManager.highScore(), "HIGH SCORE", arcadeFontTS(), TS(14), TS(1));
         }
 
-        if (data.isLevelCounterVisible()) {
-            LevelCounter levelCounter = data.levelCounter();
+        if (hudData.isLevelCounterVisible()) {
+            LevelCounter levelCounter = hudData.levelCounter();
             RectShort[] bonusSymbols = spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS);
             float x = sceneSize.x() - TS(4), y = sceneSize.y() - TS(2) + 2;
             for (byte symbol : levelCounter.symbols()) {
@@ -55,22 +57,21 @@ public class ArcadeMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HU
             }
         }
 
-        if (data.isLivesCounterVisible()) {
-            LivesCounter livesCounter = data.livesCounter();
+        if (hudData.isLivesCounterVisible()) {
             RectShort sprite = spriteSheet().sprite(SpriteID.LIVES_COUNTER_SYMBOL);
             float x = TS(2), y = sceneSize.y() - TS(2);
-            for (int i = 0; i < livesCounter.visibleLifeCount(); ++i) {
+            for (int i = 0; i < game.visibleLifeCount(); ++i) {
                 drawSprite(sprite, x + i * TS(2), y, true);
             }
-            int lifeCount = gameContext.game().lifeCount();
-            if (lifeCount > livesCounter.maxLivesDisplayed()) {
+            int lifeCount = game.lifeCount();
+            if (lifeCount > game.maxLivesDisplayed()) {
                 // show text indicating that more lives are available than symbols displayed (cheating may cause this)
                 Font hintFont = Font.font("Serif", FontWeight.BOLD, scaled(8));
                 fillText("%d".formatted(lifeCount), ARCADE_YELLOW, hintFont, x - 14, y + TS);
             }
         }
 
-        if (data.isCreditVisible()) {
+        if (hudData.isCreditVisible()) {
             int credit = gameContext.coinMechanism().numCoins();
             fillText("CREDIT %2d".formatted(credit), ARCADE_WHITE, arcadeFontTS(), TS(2), sceneSize.y());
         }

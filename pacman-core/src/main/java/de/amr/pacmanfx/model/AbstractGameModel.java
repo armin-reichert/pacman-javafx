@@ -27,6 +27,7 @@ public abstract class AbstractGameModel implements Game {
 
     protected final BooleanProperty playing = new SimpleBooleanProperty(false);
     protected final IntegerProperty lifeCount = new SimpleIntegerProperty(0);
+    protected final IntegerProperty visibleLifeCount = new SimpleIntegerProperty(0);
     protected final BooleanProperty cutScenesEnabled = new SimpleBooleanProperty(true);
     protected final IntegerProperty initialLifeCount = new SimpleIntegerProperty(3);
     protected final SimulationStep simulationStep = new SimulationStep();
@@ -47,6 +48,16 @@ public abstract class AbstractGameModel implements Game {
     @Override
     public int lifeCount() {
         return lifeCount.get();
+    }
+
+    @Override
+    public int visibleLifeCount() {
+        return visibleLifeCount.get();
+    }
+
+    @Override
+    public void setVisibleLifeCount(int count) {
+        visibleLifeCount.set(count);
     }
 
     @Override

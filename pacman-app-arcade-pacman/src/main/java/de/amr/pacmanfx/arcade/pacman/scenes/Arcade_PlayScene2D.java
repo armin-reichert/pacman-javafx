@@ -11,9 +11,9 @@ import de.amr.pacmanfx.controller.teststates.LevelShortTestState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HuntingTimer;
-import de.amr.pacmanfx.model.LivesCounter;
 import de.amr.pacmanfx.model.MessageType;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.MovingActor;
@@ -208,14 +208,14 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     private void updateHUD() {
-        LivesCounter livesCounter = context().game().hudData().livesCounter();
-        int numLivesDisplayed = context().game().lifeCount() - 1;
+        Game game = context().game();
+        int numLivesDisplayed = game.lifeCount() - 1;
         // As long as Pac-Man is still initially hidden in the maze, he is shown as an entry in the lives counter
         if (context().gameState() == GamePlayState.STARTING_GAME && !context().gameLevel().pac().isVisible()) {
             numLivesDisplayed += 1;
         }
-        livesCounter.setVisibleLifeCount(Math.min(numLivesDisplayed, livesCounter.maxLivesDisplayed()));
-        context().game().hudData().showCredit(context().coinMechanism().isEmpty());
+        game.setVisibleLifeCount(Math.min(numLivesDisplayed, game.maxLivesDisplayed()));
+        game.hudData().showCredit(context().coinMechanism().isEmpty());
     }
 
     private void updateSound() {

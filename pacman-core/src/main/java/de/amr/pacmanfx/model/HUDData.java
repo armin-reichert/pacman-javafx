@@ -13,7 +13,6 @@ public interface HUDData {
     void show(boolean b);
 
     LevelCounter levelCounter();
-    LivesCounter livesCounter();
 
     boolean isLevelCounterVisible();
     void showLevelCounter(boolean b);
