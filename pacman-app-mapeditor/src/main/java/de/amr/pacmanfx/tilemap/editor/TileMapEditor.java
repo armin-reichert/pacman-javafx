@@ -8,6 +8,7 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.*;
 import de.amr.pacmanfx.model.WorldMapProperty;
+import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapColorScheme;
@@ -679,6 +680,10 @@ public class TileMapEditor {
     private void createEditCanvas() {
         ObstacleEditor obstacleEditor = createObstacleEditor();
         editCanvas = new EditCanvas(this, obstacleEditor);
+        editCanvas.gridSizeProperty().bind(gridSizeProperty());
+        editCanvas.worldMapProperty().bind(editedWorldMapProperty());
+        editCanvas.templateImageGrayProperty().bind(templateImageProperty().map(Ufx::imageToGreyscale));
+
         spEditCanvas = new ScrollPane(editCanvas);
         spEditCanvas.setFitToHeight(true);
         registerDragAndDropImageHandler(spEditCanvas);

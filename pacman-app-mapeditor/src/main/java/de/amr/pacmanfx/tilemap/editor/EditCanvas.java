@@ -10,7 +10,6 @@ import de.amr.pacmanfx.lib.tilemap.FoodTile;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.WorldMapProperty;
-import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapColorScheme;
 import javafx.beans.binding.Bindings;
@@ -42,10 +41,10 @@ public class EditCanvas extends Canvas {
 
     public static final Cursor CURSOR_RUBBER = Cursor.cursor(urlString("graphics/radiergummi.jpg"));
 
-    private final ObjectProperty<Vector2i> focussedTilePy = new SimpleObjectProperty<>();
-    private final IntegerProperty gridSizePy = new SimpleIntegerProperty(8);
-    private final ObjectProperty<Image> templateImageGreyPy = new SimpleObjectProperty<>();
-    private final ObjectProperty<WorldMap> worldMapPy = new SimpleObjectProperty<>();
+    private final ObjectProperty<Vector2i> focussedTile = new SimpleObjectProperty<>();
+    private final IntegerProperty gridSize = new SimpleIntegerProperty(8);
+    private final ObjectProperty<Image> templateImageGray = new SimpleObjectProperty<>();
+    private final ObjectProperty<WorldMap> worldMap = new SimpleObjectProperty<>();
 
     private final GraphicsContext ctx;
     private final TileMapEditor editor;
@@ -62,16 +61,13 @@ public class EditCanvas extends Canvas {
         this.editor = requireNonNull(editor);
         this.obstacleEditor = requireNonNull(obstacleEditor);
 
-        gridSizePy.bind(editor.gridSizeProperty());
-        worldMapPy.bind(editor.editedWorldMapProperty());
-        templateImageGreyPy.bind(editor.templateImageProperty().map(Ufx::imageToGreyscale));
-
         ctx = getGraphicsContext2D();
+
         heightProperty().bind(Bindings.createDoubleBinding(
-            () -> (double) worldMap().numRows() * gridSize(), worldMapPy, gridSizePy));
+            () -> (double) worldMap().numRows() * gridSize(), worldMap, gridSize));
 
         widthProperty().bind(Bindings.createDoubleBinding(
-            () -> (double) worldMap().numCols() * gridSize(), worldMapPy, gridSizePy));
+            () -> (double) worldMap().numCols() * gridSize(), worldMap, gridSize));
 
         terrainRenderer = new TerrainTileMapRenderer(this);
         foodRenderer = new FoodMapRenderer(this);
@@ -85,9 +81,21 @@ public class EditCanvas extends Canvas {
         setOnKeyPressed(this::onKeyPressed);
     }
 
-    private int gridSize() { return gridSizePy.get(); }
+    public IntegerProperty gridSizeProperty() {
+        return gridSize;
+    }
 
-    private WorldMap worldMap() { return worldMapPy.get(); }
+    private int gridSize() { return gridSize.get(); }
+
+    public ObjectProperty<Image> templateImageGrayProperty() {
+        return templateImageGray;
+    }
+
+    public ObjectProperty<WorldMap> worldMapProperty() {
+        return worldMap;
+    }
+
+    private WorldMap worldMap() { return worldMap.get(); }
 
     public TerrainTileMapRenderer terrainRenderer() {
         return terrainRenderer;
@@ -97,15 +105,15 @@ public class EditCanvas extends Canvas {
         return foodRenderer;
     }
 
-    public ObjectProperty<Vector2i> focussedTileProperty() { return focussedTilePy; }
+    public ObjectProperty<Vector2i> focussedTileProperty() { return focussedTile; }
 
-    public Vector2i focussedTile() { return focussedTilePy.get(); }
+    public Vector2i focussedTile() { return focussedTile.get(); }
 
     public boolean moveCursor(Direction dir, Predicate<Vector2i> canMoveIntoTile) {
         if (focussedTile() != null) {
             Vector2i nextTile = focussedTile().plus(dir.vector());
             if (!worldMap().outOfWorld(nextTile) && canMoveIntoTile.test(nextTile)) {
-                focussedTilePy.set(nextTile);
+                focussedTile.set(nextTile);
                 return true;
             }
         }
@@ -135,8 +143,8 @@ public class EditCanvas extends Canvas {
         ctx.setFill(colorScheme.floorColor());
         ctx.fillRect(0, 0, width, height);
 
-        if (templateImageGreyPy.get() != null) {
-            ctx.drawImage(templateImageGreyPy.get(),
+        if (templateImageGray.get() != null) {
+            ctx.drawImage(templateImageGray.get(),
                 0, EMPTY_ROWS_BEFORE_MAZE * scaling * TS,
                 width, height - (EMPTY_ROWS_BEFORE_MAZE + EMPTY_ROWS_BELOW_MAZE) * scaling * TS);
         }
@@ -264,7 +272,7 @@ public class EditCanvas extends Canvas {
 
     private void onMouseMoved(MouseEvent e) {
         Vector2i tile = tileAtMousePosition(e.getX(), e.getY(), gridSize());
-        focussedTilePy.set(tile);
+        focussedTile.set(tile);
         switch (editor.editMode()) {
             case EDIT -> {
                 if (e.isShiftDown()) {
