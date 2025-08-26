@@ -302,7 +302,7 @@ public class GameUI_Implementation implements GameUI {
                 // Undo editor stage title binding change:
                 bindStageTitle(stage);
             });
-            editor.getFileMenu().getItems().addAll(new SeparatorMenuItem(), miReturnToGame);
+            editor.getMenuBar().getFileMenu().getItems().addAll(new SeparatorMenuItem(), miReturnToGame);
             editor.init(gameContext.customMapDir());
             editorView = new EditorView(editor);
         }

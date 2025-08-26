@@ -288,8 +288,8 @@ public class EditCanvas extends Canvas {
             if (dragging) {
                 dragging = false;
                 obstacleEditor.endEditing();
-                editor.getChangeManager().setTerrainMapChanged();
-                editor.getChangeManager().setEdited(true);
+                editor.changeManager().setTerrainMapChanged();
+                editor.changeManager().setEdited(true);
             } else {
                 editor.editAtMousePosition(mouseEvent.getX(), mouseEvent.getY(), mouseEvent.isControlDown());
             }
@@ -307,15 +307,15 @@ public class EditCanvas extends Canvas {
                             if (editor.selectedPalette().isToolSelected()) {
                                 editor.selectedPalette().selectedTool().apply(editor, LayerID.TERRAIN, focussedTile());
                             }
-                            editor.getChangeManager().setEdited(true);
-                            editor.getChangeManager().setWorldMapChanged();
+                            editor.changeManager().setEdited(true);
+                            editor.changeManager().setWorldMapChanged();
                         }
                         case TileMapEditor.PALETTE_ID_FOOD -> {
                             if (editor.selectedPalette().isToolSelected()) {
                                 editor.selectedPalette().selectedTool().apply(editor, LayerID.FOOD, focussedTile());
                             }
-                            editor.getChangeManager().setEdited(true);
-                            editor.getChangeManager().setFoodMapChanged();
+                            editor.changeManager().setEdited(true);
+                            editor.changeManager().setFoodMapChanged();
                         }
                         default -> {}
                     }
