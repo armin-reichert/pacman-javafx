@@ -52,6 +52,9 @@ public class EditCanvas extends Canvas {
     private final ObstacleEditor obstacleEditor;
     private final ContextMenu contextMenu = new ContextMenu();
 
+    private final TerrainTileMapRenderer terrainRenderer;
+    private final FoodMapRenderer foodRenderer;
+
     private boolean dragging = false;
 
     public EditCanvas(TileMapEditor editor) {
@@ -77,6 +80,9 @@ public class EditCanvas extends Canvas {
 
         widthProperty().bind(Bindings.createDoubleBinding(
             () -> (double) worldMap().numCols() * gridSize(), worldMapPy, gridSizePy));
+
+        terrainRenderer = new TerrainTileMapRenderer(this);
+        foodRenderer = new FoodMapRenderer(this);
 
         setOnContextMenuRequested(this::onContextMenuRequested);
         setOnMouseClicked(this::onMouseClicked);
@@ -120,12 +126,12 @@ public class EditCanvas extends Canvas {
         obstacleEditor.setEnabled(false);
     }
 
-    public void draw(TerrainMapColorScheme terrainMapColorScheme) {
+    public void draw(TerrainMapColorScheme colorScheme) {
         double scaling = gridSize() / (double) TS;
         double width = getWidth(), height = getHeight();
         ctx.setImageSmoothing(false);
 
-        ctx.setFill(terrainMapColorScheme.floorColor());
+        ctx.setFill(colorScheme.floorColor());
         ctx.fillRect(0, 0, width, height);
 
         if (templateImageGreyPy.get() != null) {
@@ -149,13 +155,12 @@ public class EditCanvas extends Canvas {
 
         // Terrain
         if (editor.terrainVisibleProperty().get()) {
-            TerrainTileMapRenderer renderer = editor.terrainTileRenderer();
-            renderer.setScaling(scaling);
-            renderer.setColorScheme(terrainMapColorScheme);
-            renderer.setSegmentNumbersDisplayed(editor.isSegmentNumbersVisible());
-            renderer.setObstacleInnerAreaDisplayed(editor.isObstacleInnerAreaDisplayed());
-            renderer.draw(worldMap(), worldMap().obstacles());
-            obstacleEditor.draw(renderer);
+            terrainRenderer.setScaling(scaling);
+            terrainRenderer.setColorScheme(colorScheme);
+            terrainRenderer.setSegmentNumbersDisplayed(editor.isSegmentNumbersVisible());
+            terrainRenderer.setObstacleInnerAreaDisplayed(editor.isObstacleInnerAreaDisplayed());
+            terrainRenderer.draw(worldMap(), worldMap().obstacles());
+            obstacleEditor.draw(terrainRenderer);
         }
 
         // Tiles that seem to be wrong
@@ -181,12 +186,11 @@ public class EditCanvas extends Canvas {
 
         // Food
         if (editor.isFoodVisible()) {
-            FoodMapRenderer renderer = editor.foodRenderer();
             Color foodColor = getColorFromMap(worldMap(), LayerID.FOOD, WorldMapProperty.COLOR_FOOD, parseColor(MS_PACMAN_COLOR_FOOD));
-            renderer.setScaling(scaling);
-            renderer.setEnergizerColor(foodColor);
-            renderer.setPelletColor(foodColor);
-            worldMap().tiles().forEach(tile -> renderer.drawTile(tile, worldMap().content(LayerID.FOOD, tile)));
+            foodRenderer.setScaling(scaling);
+            foodRenderer.setEnergizerColor(foodColor);
+            foodRenderer.setPelletColor(foodColor);
+            worldMap().tiles().forEach(tile -> foodRenderer.drawTile(tile, worldMap().content(LayerID.FOOD, tile)));
         }
 
         if (editor.isActorsVisible()) {
