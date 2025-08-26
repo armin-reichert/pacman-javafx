@@ -32,11 +32,6 @@ public class PropertyValueEditorTool implements TileMapEditorTool {
     }
 
     @Override
-    public TileRenderer renderer() {
-        return renderer;
-    }
-
-    @Override
     public String description() {
         return description;
     }
@@ -48,7 +43,7 @@ public class PropertyValueEditorTool implements TileMapEditorTool {
 
     @Override
     public void draw(int row, int col) {
-        GraphicsContext g = renderer().ctx();
+        GraphicsContext g = renderer.ctx();
         g.setFill(Color.BLACK);
         g.fillRect(col * size, row * size, size, size);
         if (renderer instanceof TerrainTileMapRenderer tr) {

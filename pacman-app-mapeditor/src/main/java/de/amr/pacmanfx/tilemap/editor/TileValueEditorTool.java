@@ -24,11 +24,6 @@ public class TileValueEditorTool implements TileMapEditorTool {
     }
 
     @Override
-    public TileRenderer renderer() {
-        return renderer;
-    }
-
-    @Override
     public String description() {
         return description;
     }
