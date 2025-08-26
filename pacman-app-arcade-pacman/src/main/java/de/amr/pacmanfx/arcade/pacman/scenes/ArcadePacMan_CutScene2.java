@@ -73,7 +73,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
         bindRendererProperties(hudRenderer, spriteRenderer, actorRenderer, debugInfoRenderer);
 
-        context().game().hudData().credit(false).score(true).levelCounter(true).livesCounter(false);
+        context().game().hudData().creditVisible(false).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
 
         pac = createPac();
         pac.setAnimations(ui.currentConfig().createPacAnimations(pac));

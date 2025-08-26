@@ -67,7 +67,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
         bindRendererProperties(hudRenderer, actorRenderer, debugInfoRenderer);
 
-        context().game().hudData().score(false).levelCounter(true).livesCounter(false);
+        context().game().hudData().scoreVisible(false).levelCounterVisible(true).livesCounterVisible(false);
 
         clapperboard = new Clapperboard(spriteSheet, 4, "THE END");
         clapperboard.setPosition(3*TS, 10*TS);

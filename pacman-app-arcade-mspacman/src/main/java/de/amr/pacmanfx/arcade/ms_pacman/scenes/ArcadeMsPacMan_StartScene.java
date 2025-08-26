@@ -40,7 +40,7 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
 
         bindRendererProperties(hudRenderer, scenesRenderer);
 
-        context().game().hudData().credit(true).score(true).levelCounter(true).livesCounter(false);
+        context().game().hudData().creditVisible(true).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
 
         var spriteSheet = (ArcadeMsPacMan_SpriteSheet) ui.currentConfig().spriteSheet();
         livesCounterSprite = spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);

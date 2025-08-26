@@ -1,6 +1,6 @@
 package de.amr.pacmanfx.model;
 
-public class DefaultHUDData implements HUDData {
+public class DefaultHUDControlData implements HUDControlData {
 
     private boolean visible = true;
     private boolean creditVisible;

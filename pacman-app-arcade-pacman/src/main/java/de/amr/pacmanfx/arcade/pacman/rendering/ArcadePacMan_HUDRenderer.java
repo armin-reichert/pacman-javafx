@@ -44,7 +44,7 @@ public class ArcadePacMan_HUDRenderer extends BaseSpriteRenderer implements HUDR
     }
 
     @Override
-    public void drawHUD(GameContext gameContext, HUDData data, Vector2f sceneSize) {
+    public void drawHUD(GameContext gameContext, HUDControlData data, Vector2f sceneSize) {
         if (!data.isVisible()) return;
 
         if (data.isScoreVisible()) {

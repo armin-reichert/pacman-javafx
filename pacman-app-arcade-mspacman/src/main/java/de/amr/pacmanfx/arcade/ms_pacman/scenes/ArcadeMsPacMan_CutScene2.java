@@ -58,7 +58,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
 
         bindRendererProperties(hudRenderer, actorSpriteRenderer);
 
-        context().game().hudData().score(true).levelCounter(true).livesCounter(false);
+        context().game().hudData().scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
 
         pacMan = createPacMan();
         msPacMan = createMsPacMan();

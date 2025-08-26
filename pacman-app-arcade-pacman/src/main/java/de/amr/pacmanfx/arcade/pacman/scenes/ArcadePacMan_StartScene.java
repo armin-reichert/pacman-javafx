@@ -38,7 +38,7 @@ public class ArcadePacMan_StartScene extends GameScene2D {
 
         bindRendererProperties(hudRenderer, sceneRenderer);
 
-        context().game().hudData().credit(true).score(true).levelCounter(true).livesCounter(false);
+        context().game().hudData().creditVisible(true).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
 
         actionBindings.assign(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
         actionBindings.assign(ACTION_ARCADE_START_GAME, ui.actionBindings());

@@ -81,7 +81,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
 
         bindRendererProperties(hudRenderer, actorSpriteRenderer, debugInfoRenderer);
 
-        context().game().hudData().credit(false).score(false).levelCounter(true).livesCounter(false);
+        context().game().hudData().creditVisible(false).scoreVisible(false).levelCounterVisible(true).livesCounterVisible(false);
 
         actionBindings.bind(ACTION_LET_GAME_STATE_EXPIRE, ui.joypad().key(JoypadButton.START));
 

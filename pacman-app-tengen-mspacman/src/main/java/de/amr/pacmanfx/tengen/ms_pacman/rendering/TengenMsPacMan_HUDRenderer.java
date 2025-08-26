@@ -8,7 +8,7 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.HUDData;
+import de.amr.pacmanfx.model.HUDControlData;
 import de.amr.pacmanfx.model.ScoreManager;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.*;
@@ -41,14 +41,14 @@ public class TengenMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HU
     }
 
     @Override
-    public void drawHUD(GameContext gameContext, HUDData data, Vector2f sceneSize) {
+    public void drawHUD(GameContext gameContext, HUDControlData data, Vector2f sceneSize) {
         requireNonNull(gameContext);
         requireNonNull(data);
         requireNonNull(sceneSize);
 
         TengenMsPacMan_GameModel game = gameContext.game();
         GameLevel gameLevel = game.optGameLevel().orElse(null);
-        TengenMsPacMan_HUDData hudData = (TengenMsPacMan_HUDData) data;
+        TengenMsPacMan_HUDControlData hudData = (TengenMsPacMan_HUDControlData) data;
 
         if (gameLevel == null) {
             return; // should never happen

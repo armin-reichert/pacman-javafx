@@ -36,18 +36,18 @@ public class ArcadeMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HU
     }
 
     @Override
-    public void drawHUD(GameContext gameContext, HUDData hudData, Vector2f sceneSize) {
-        if (!hudData.isVisible()) return;
+    public void drawHUD(GameContext gameContext, HUDControlData hudControlData, Vector2f sceneSize) {
+        if (!hudControlData.isVisible()) return;
 
         Game game = gameContext.game();
 
-        if (hudData.isScoreVisible()) {
+        if (hudControlData.isScoreVisible()) {
             ScoreManager scoreManager = game.scoreManager();
             drawScore(scoreManager.score(), "SCORE", arcadeFontTS(), TS(1), TS(1));
             drawScore(scoreManager.highScore(), "HIGH SCORE", arcadeFontTS(), TS(14), TS(1));
         }
 
-        if (hudData.isLevelCounterVisible()) {
+        if (hudControlData.isLevelCounterVisible()) {
             RectShort[] bonusSymbols = spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS);
             float x = sceneSize.x() - TS(4), y = sceneSize.y() - TS(2) + 2;
             for (byte symbol : game.levelCounterSymbols()) {
@@ -56,7 +56,7 @@ public class ArcadeMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HU
             }
         }
 
-        if (hudData.isLivesCounterVisible()) {
+        if (hudControlData.isLivesCounterVisible()) {
             RectShort sprite = spriteSheet().sprite(SpriteID.LIVES_COUNTER_SYMBOL);
             float x = TS(2), y = sceneSize.y() - TS(2);
             for (int i = 0; i < game.visibleLifeCount(); ++i) {
@@ -70,7 +70,7 @@ public class ArcadeMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HU
             }
         }
 
-        if (hudData.isCreditVisible()) {
+        if (hudControlData.isCreditVisible()) {
             int credit = gameContext.coinMechanism().numCoins();
             fillText("CREDIT %2d".formatted(credit), ARCADE_WHITE, arcadeFontTS(), TS(2), sceneSize.y());
         }

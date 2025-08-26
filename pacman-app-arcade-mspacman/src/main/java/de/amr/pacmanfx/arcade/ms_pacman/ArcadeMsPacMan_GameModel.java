@@ -210,7 +210,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
     protected final MapSelector mapSelector;
-    protected final HUDData hudData = new DefaultHUDData();
+    protected final HUDControlData hudControlData = new DefaultHUDControlData();
     protected final ScoreManager scoreManager;
     protected final HuntingTimer huntingTimer;
     protected final ActorSpeedControl actorSpeedControl;
@@ -285,8 +285,8 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     }
 
     @Override
-    public HUDData hudData() {
-        return hudData;
+    public HUDControlData hudData() {
+        return hudControlData;
     }
 
     @Override

@@ -129,7 +129,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
         bindRendererProperties(hudRenderer, gameLevelRenderer, actorRenderer, debugInfoRenderer);
 
-        context().game().hudData().credit(false).score(true).levelCounter(true).livesCounter(true);
+        context().game().hudData().creditVisible(false).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(true);
     }
 
     @Override
@@ -147,11 +147,11 @@ public class Arcade_PlayScene2D extends GameScene2D {
      */
     private void acceptGameLevel(GameLevel gameLevel) {
         if (gameLevel.isDemoLevel()) {
-            context().game().hudData().credit(false).levelCounter(true).livesCounter(false);
+            context().game().hudData().creditVisible(false).levelCounterVisible(true).livesCounterVisible(false);
             actionBindings.assign(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
             ui.soundManager().setEnabled(false);
         } else {
-            context().game().hudData().credit(false).levelCounter(true).livesCounter(true);
+            context().game().hudData().creditVisible(false).levelCounterVisible(true).livesCounterVisible(true);
             actionBindings.assign(ACTION_STEER_UP,               ui.actionBindings());
             actionBindings.assign(ACTION_STEER_DOWN,             ui.actionBindings());
             actionBindings.assign(ACTION_STEER_LEFT,             ui.actionBindings());

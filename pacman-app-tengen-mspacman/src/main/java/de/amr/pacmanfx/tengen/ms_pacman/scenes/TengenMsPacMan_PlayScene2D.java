@@ -18,7 +18,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.GameOverMessage;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_HUDData;
+import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_HUDControlData;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_ActorRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameLevelRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_HUDRenderer;
@@ -170,7 +170,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
         bindRendererProperties(hudRenderer, gameLevelRenderer, actorRenderer, debugInfoRenderer);
 
-        context().game().hudData().score(true).levelCounter(true).livesCounter(true);
+        context().game().hudData().scoreVisible(true).levelCounterVisible(true).livesCounterVisible(true);
 
         dynamicCamera.targetTop();
     }
@@ -291,7 +291,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     }
 
     private void initForGameLevel(GameLevel gameLevel) {
-        context().game().hudData().levelCounter(true).livesCounter(true); // is also visible in demo level!
+        context().game().hudData().levelCounterVisible(true).livesCounterVisible(true); // is also visible in demo level!
         setActionsBindings(gameLevel.isDemoLevel());
 
         //TODO check if this is needed, if not, remove
@@ -526,7 +526,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     private void updateHUD() {
         TengenMsPacMan_GameModel game = context().game();
-        TengenMsPacMan_HUDData hud = game.hudData();
+        TengenMsPacMan_HUDControlData hud = game.hudData();
         GameLevel gameLevel = game.optGameLevel().orElse(null);
 
         if (gameLevel == null) return;
