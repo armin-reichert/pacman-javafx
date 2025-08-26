@@ -14,7 +14,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.tilemap.editor.ArcadeSprites.PAC_SPRITE;
+import static de.amr.pacmanfx.tilemap.editor.ArcadeSprites.PAC_MAN;
 import static de.amr.pacmanfx.tilemap.editor.ArcadeSprites.SPRITE_SHEET;
 
 public class PropertyValueEditorTool implements TileMapEditorTool {
@@ -50,12 +50,12 @@ public class PropertyValueEditorTool implements TileMapEditorTool {
             Vector2i tile = new Vector2i(col, row);
             double x = col * TS, y = row * TS;
             switch (propertyName) {
-                case WorldMapProperty.POS_PAC -> drawSprite(g, x, y, PAC_SPRITE);
-                case WorldMapProperty.POS_RED_GHOST -> drawSprite(g, x, y, ArcadeSprites.RED_GHOST_SPRITE);
-                case WorldMapProperty.POS_PINK_GHOST -> drawSprite(g, x, y, ArcadeSprites.PINK_GHOST_SPRITE);
-                case WorldMapProperty.POS_CYAN_GHOST -> drawSprite(g, x, y, ArcadeSprites.CYAN_GHOST_SPRITE);
-                case WorldMapProperty.POS_ORANGE_GHOST -> drawSprite(g, x, y, ArcadeSprites.ORANGE_GHOST_SPRITE);
-                case WorldMapProperty.POS_BONUS -> drawSprite(g, x, y, ArcadeSprites. BONUS_SPRITE);
+                case WorldMapProperty.POS_PAC -> drawSprite(g, x, y, PAC_MAN);
+                case WorldMapProperty.POS_RED_GHOST -> drawSprite(g, x, y, ArcadeSprites.RED_GHOST);
+                case WorldMapProperty.POS_PINK_GHOST -> drawSprite(g, x, y, ArcadeSprites.PINK_GHOST);
+                case WorldMapProperty.POS_CYAN_GHOST -> drawSprite(g, x, y, ArcadeSprites.CYAN_GHOST);
+                case WorldMapProperty.POS_ORANGE_GHOST -> drawSprite(g, x, y, ArcadeSprites.ORANGE_GHOST);
+                case WorldMapProperty.POS_BONUS -> drawSprite(g, x, y, ArcadeSprites.STRAWBERRY);
                 case WorldMapProperty.POS_SCATTER_RED_GHOST -> tr.drawScatterTarget(tile, Color.RED);
                 case WorldMapProperty.POS_SCATTER_PINK_GHOST -> tr.drawScatterTarget(tile, Color.PINK);
                 case WorldMapProperty.POS_SCATTER_CYAN_GHOST -> tr.drawScatterTarget(tile, Color.CYAN);

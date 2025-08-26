@@ -67,14 +67,14 @@ public class EditCanvas extends Canvas {
             () -> {
                 WorldMap map = worldMap.get();
                 int numRows = map != null ? map.numRows() : 31;
-                return Double.valueOf(numRows * gridSize());
+                return numRows * gridSize();
             }, worldMap, gridSize));
 
         widthProperty().bind(Bindings.createDoubleBinding(
             () -> {
                 WorldMap map = worldMap.get();
                 int numCols = map != null ? map.numCols() : 28;
-                return Double.valueOf(numCols * gridSize());
+                return numCols * gridSize();
             }, worldMap, gridSize));
 
         scaling.bind(gridSize.divide(TS));
@@ -87,6 +87,8 @@ public class EditCanvas extends Canvas {
 
         actorRenderer = new EditorActorRenderer(this);
         actorRenderer.scalingProperty().bind(scaling);
+
+        setOnMouseDragged(this::onMouseDragged);
     }
 
     public DoubleProperty gridSizeProperty() {
@@ -228,12 +230,12 @@ public class EditCanvas extends Canvas {
         }
 
         if (actorsVisible.get()) {
-            actorRenderer.drawActor(worldMap().getTerrainTileProperty(WorldMapProperty.POS_PAC), PAC_SPRITE);
-            actorRenderer.drawActor(worldMap().getTerrainTileProperty(WorldMapProperty.POS_RED_GHOST), RED_GHOST_SPRITE);
-            actorRenderer.drawActor(worldMap().getTerrainTileProperty(WorldMapProperty.POS_PINK_GHOST), PINK_GHOST_SPRITE);
-            actorRenderer.drawActor(worldMap().getTerrainTileProperty(WorldMapProperty.POS_CYAN_GHOST), CYAN_GHOST_SPRITE);
-            actorRenderer.drawActor(worldMap().getTerrainTileProperty(WorldMapProperty.POS_ORANGE_GHOST), ORANGE_GHOST_SPRITE);
-            actorRenderer.drawActor(worldMap().getTerrainTileProperty(WorldMapProperty.POS_BONUS), BONUS_SPRITE);
+            actorRenderer.drawActor(worldMap().getTerrainTileProperty(WorldMapProperty.POS_PAC), PAC_MAN);
+            actorRenderer.drawActor(worldMap().getTerrainTileProperty(WorldMapProperty.POS_RED_GHOST), RED_GHOST);
+            actorRenderer.drawActor(worldMap().getTerrainTileProperty(WorldMapProperty.POS_PINK_GHOST), PINK_GHOST);
+            actorRenderer.drawActor(worldMap().getTerrainTileProperty(WorldMapProperty.POS_CYAN_GHOST), CYAN_GHOST);
+            actorRenderer.drawActor(worldMap().getTerrainTileProperty(WorldMapProperty.POS_ORANGE_GHOST), ORANGE_GHOST);
+            actorRenderer.drawActor(worldMap().getTerrainTileProperty(WorldMapProperty.POS_BONUS), STRAWBERRY);
         }
 
         if (focussedTile() != null) {
@@ -269,7 +271,7 @@ public class EditCanvas extends Canvas {
         }
     }
 
-    public void onMouseDragged(TileMapEditor editor, MouseEvent event) {
+    private void onMouseDragged(MouseEvent event) {
         Logger.debug("Mouse dragged {}", event);
         if (!dragging) {
             Vector2i dragStartTile = tileAtMousePosition(event.getX(), event.getY(), gridSize());
@@ -289,7 +291,7 @@ public class EditCanvas extends Canvas {
                 editor.getChangeManager().setTerrainMapChanged();
                 editor.getChangeManager().setEdited(true);
             } else {
-                editor.editAtMousePosition(mouseEvent);
+                editor.editAtMousePosition(mouseEvent.getX(), mouseEvent.getY(), mouseEvent.isControlDown());
             }
         }
     }

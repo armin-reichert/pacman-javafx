@@ -690,7 +690,6 @@ public class TileMapEditor {
 
         editCanvas.setOnContextMenuRequested(event -> editCanvas.onContextMenuRequested(this, event));
         editCanvas.setOnMouseClicked(event -> editCanvas.onMouseClicked(this, event));
-        editCanvas.setOnMouseDragged(event -> editCanvas.onMouseDragged(this, event));
         editCanvas.setOnMouseMoved(event -> editCanvas.onMouseMoved(this, event));
         editCanvas.setOnMouseReleased(event -> editCanvas.onMouseReleased(this, event));
         editCanvas.setOnKeyPressed(event -> editCanvas.onKeyPressed(this, event));
@@ -1400,13 +1399,12 @@ public class TileMapEditor {
         }
     }
 
-    public void editAtMousePosition(MouseEvent event) {
-        Vector2i tile = tileAtMousePosition(event.getX(), event.getY(), gridSize());
+    public void editAtMousePosition(double x, double y, boolean erase) {
+        Vector2i tile = tileAtMousePosition(x, y, gridSize());
         if (isEditMode(EditMode.INSPECT)) {
             identifyObstacleAtTile(tile);
             return;
         }
-        boolean erase = event.isControlDown();
         switch (selectedPaletteID()) {
             case TileMapEditor.PALETTE_ID_TERRAIN -> editTerrainAtTile(tile, erase);
             case TileMapEditor.PALETTE_ID_FOOD -> editFoodAtTile(tile, erase);

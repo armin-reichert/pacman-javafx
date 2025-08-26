@@ -20,7 +20,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.tilemap.editor.ArcadeSprites.*;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.getColorFromMap;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.parseColor;
 
@@ -76,18 +75,18 @@ public class EditorMazePreview2D extends Canvas {
             }
         }
         if (foodVisible.get()) {
-            Color foodColor = getColorFromMap(worldMap, LayerID.FOOD, WorldMapProperty.COLOR_FOOD, parseColor(MS_PACMAN_COLOR_FOOD));
+            Color foodColor = getColorFromMap(worldMap, LayerID.FOOD, WorldMapProperty.COLOR_FOOD, parseColor(ArcadeSprites.MS_PACMAN_COLOR_FOOD));
             foodMapRenderer.setEnergizerColor(foodColor);
             foodMapRenderer.setPelletColor(foodColor);
             worldMap.tiles().forEach(tile -> foodMapRenderer.drawTile(tile, worldMap.content(LayerID.FOOD, tile)));
         }
         if (actorsVisible.get()) {
-            actorRenderer.drawActor(worldMap.getTerrainTileProperty(WorldMapProperty.POS_PAC), PAC_SPRITE);
-            actorRenderer.drawActor(worldMap.getTerrainTileProperty(WorldMapProperty.POS_RED_GHOST), RED_GHOST_SPRITE);
-            actorRenderer.drawActor(worldMap.getTerrainTileProperty(WorldMapProperty.POS_PINK_GHOST), PINK_GHOST_SPRITE);
-            actorRenderer.drawActor(worldMap.getTerrainTileProperty(WorldMapProperty.POS_CYAN_GHOST), CYAN_GHOST_SPRITE);
-            actorRenderer.drawActor(worldMap.getTerrainTileProperty(WorldMapProperty.POS_ORANGE_GHOST), ORANGE_GHOST_SPRITE);
-            actorRenderer.drawActor(worldMap.getTerrainTileProperty(WorldMapProperty.POS_BONUS), BONUS_SPRITE);
+            actorRenderer.drawActor(worldMap.getTerrainTileProperty(WorldMapProperty.POS_PAC), ArcadeSprites.PAC_MAN);
+            actorRenderer.drawActor(worldMap.getTerrainTileProperty(WorldMapProperty.POS_RED_GHOST), ArcadeSprites.RED_GHOST);
+            actorRenderer.drawActor(worldMap.getTerrainTileProperty(WorldMapProperty.POS_PINK_GHOST), ArcadeSprites.PINK_GHOST);
+            actorRenderer.drawActor(worldMap.getTerrainTileProperty(WorldMapProperty.POS_CYAN_GHOST), ArcadeSprites.CYAN_GHOST);
+            actorRenderer.drawActor(worldMap.getTerrainTileProperty(WorldMapProperty.POS_ORANGE_GHOST), ArcadeSprites.ORANGE_GHOST);
+            actorRenderer.drawActor(worldMap.getTerrainTileProperty(WorldMapProperty.POS_BONUS), ArcadeSprites.STRAWBERRY);
         }
     }
 }
