@@ -193,7 +193,7 @@ public class TileMapEditor {
     private EditCanvas editCanvas;
     private ScrollPane spEditCanvas;
     private ScrollPane spPreview2D;
-    private Preview2DCanvas preview2DCanvas;
+    private EditorMazePreview2D editorMazePreview2D;
     private TextArea sourceView;
     private ScrollPane spTemplateImage;
     private Pane dropTargetForTemplateImage;
@@ -211,7 +211,7 @@ public class TileMapEditor {
     private Tab tabPreview2D;
     private Tab tabPreview3D;
     private Tab tabSourceView;
-    private MazePreview3D mazePreview3D;
+    private EditorMazePreview3D mazePreview3D;
 
     private MenuBar menuBar;
     private Menu menuFile;
@@ -708,22 +708,22 @@ public class TileMapEditor {
     }
 
     private void createPreview2D() {
-        preview2DCanvas = new Preview2DCanvas();
-        preview2DCanvas.widthProperty().bind(editCanvas.widthProperty());
-        preview2DCanvas.heightProperty().bind(editCanvas.heightProperty());
-        preview2DCanvas.gridSizeProperty().bind(gridSizeProperty());
-        preview2DCanvas.terrainVisibleProperty().bind(terrainVisibleProperty());
-        preview2DCanvas.foodVisibleProperty().bind(foodVisibleProperty());
-        preview2DCanvas.actorsVisibleProperty().bind(actorsVisibleProperty());
+        editorMazePreview2D = new EditorMazePreview2D();
+        editorMazePreview2D.widthProperty().bind(editCanvas.widthProperty());
+        editorMazePreview2D.heightProperty().bind(editCanvas.heightProperty());
+        editorMazePreview2D.gridSizeProperty().bind(gridSizeProperty());
+        editorMazePreview2D.terrainVisibleProperty().bind(terrainVisibleProperty());
+        editorMazePreview2D.foodVisibleProperty().bind(foodVisibleProperty());
+        editorMazePreview2D.actorsVisibleProperty().bind(actorsVisibleProperty());
 
-        spPreview2D = new ScrollPane(preview2DCanvas);
+        spPreview2D = new ScrollPane(editorMazePreview2D);
         spPreview2D.setFitToHeight(true);
         spPreview2D.hvalueProperty().bindBidirectional(spEditCanvas.hvalueProperty());
         spPreview2D.vvalueProperty().bindBidirectional(spEditCanvas.vvalueProperty());
     }
 
     private void createPreview3D() {
-        mazePreview3D = new MazePreview3D(this, model3DRepository, 500, 500);
+        mazePreview3D = new EditorMazePreview3D(this, model3DRepository, 500, 500);
         mazePreview3D.foodVisibleProperty().bind(foodVisibleProperty());
         mazePreview3D.terrainVisibleProperty().bind(terrainVisibleProperty());
         mazePreview3D.worldMapProperty().bind(editedWorldMap);
@@ -1348,7 +1348,7 @@ public class TileMapEditor {
         if (tabPreview2D.isSelected()) {
             try {
                 Logger.trace("Draw preview 2D");
-                preview2DCanvas.draw(editedWorldMap(), colorScheme);
+                editorMazePreview2D.draw(editedWorldMap(), colorScheme);
             } catch (Exception x) {
                 Logger.error(x);
             }

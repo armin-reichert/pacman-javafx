@@ -24,7 +24,7 @@ import static de.amr.pacmanfx.tilemap.editor.ArcadeSprites.*;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.getColorFromMap;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.parseColor;
 
-public class Preview2DCanvas extends Canvas {
+public class EditorMazePreview2D extends Canvas {
 
     private final TerrainMapRenderer terrainRenderer;
     private final FoodMapRenderer foodMapRenderer;
@@ -36,7 +36,7 @@ public class Preview2DCanvas extends Canvas {
     private final BooleanProperty foodVisible = new SimpleBooleanProperty(true);
     private final BooleanProperty actorsVisible = new SimpleBooleanProperty(true);
 
-    public Preview2DCanvas() {
+    public EditorMazePreview2D() {
         terrainRenderer = new TerrainMapRenderer(this);
         terrainRenderer.scalingProperty().bind(gridSize.divide(TS));
         foodMapRenderer = new FoodMapRenderer(this);
