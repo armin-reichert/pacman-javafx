@@ -281,7 +281,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     @Override
     public void drawHUD() {
         if (hudRenderer != null) {
-            hudRenderer.drawHUD(context(), context().game().hud(), sizeInPx());
+            hudRenderer.drawHUD(context().game(), context().game().hud(), sizeInPx());
         }
     }
 

@@ -4,10 +4,12 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.model.*;
+import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.HUD;
+import de.amr.pacmanfx.model.Score;
+import de.amr.pacmanfx.model.ScoreManager;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
 import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
@@ -44,11 +46,11 @@ public class ArcadePacMan_HUDRenderer extends BaseSpriteRenderer implements HUDR
     }
 
     @Override
-    public void drawHUD(GameContext gameContext, HUD hud, Vector2f sceneSize) {
+    public void drawHUD(Game game, HUD hud, Vector2f sceneSize) {
         if (!hud.isVisible()) return;
 
         if (hud.isScoreVisible()) {
-            ScoreManager scoreManager = gameContext.game().scoreManager();
+            ScoreManager scoreManager = game.scoreManager();
             drawScore(scoreManager.score(), "SCORE", arcadeFontTS(), TS(1), TS(1));
             drawScore(scoreManager.highScore(), "HIGH SCORE", arcadeFontTS(), TS(14), TS(1));
         }
@@ -56,7 +58,7 @@ public class ArcadePacMan_HUDRenderer extends BaseSpriteRenderer implements HUDR
         if (hud.isLevelCounterVisible()) {
             RectShort[] bonusSymbols = bonusSymbols();
             float x = sceneSize.x() - TS(4), y = sceneSize.y() - TS(2) + 2;
-            for (byte symbol : gameContext.game().levelCounterSymbols()) {
+            for (byte symbol : game.levelCounterSymbols()) {
                 drawSprite(bonusSymbols[symbol], x, y, true);
                 x -= TS(2); // symbols are drawn from right to left
             }
@@ -68,7 +70,7 @@ public class ArcadePacMan_HUDRenderer extends BaseSpriteRenderer implements HUDR
             for (int i = 0; i < hud.visibleLifeCount(); ++i) {
                 drawSprite(sprite, x + i * TS(2), y, true);
             }
-            int lifeCount = gameContext.game().lifeCount();
+            int lifeCount = game.lifeCount();
             if (lifeCount > hud.maxLivesDisplayed()) {
                 // show text indicating that more lives are available than symbols displayed (cheating may cause this)
                 Font hintFont = Font.font("Serif", FontWeight.BOLD, scaled(8));
@@ -77,8 +79,7 @@ public class ArcadePacMan_HUDRenderer extends BaseSpriteRenderer implements HUDR
         }
 
         if (hud.isCreditVisible()) {
-            int credit = gameContext.coinMechanism().numCoins();
-            fillText("CREDIT %2d".formatted(credit), ARCADE_WHITE, arcadeFontTS(), TS(2), sceneSize.y());
+            fillText("CREDIT %2d".formatted(hud.numCoins()), ARCADE_WHITE, arcadeFontTS(), TS(2), sceneSize.y());
         }
     }
 

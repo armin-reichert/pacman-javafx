@@ -4,10 +4,12 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.model.*;
+import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.HUD;
+import de.amr.pacmanfx.model.Score;
+import de.amr.pacmanfx.model.ScoreManager;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
 import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
@@ -36,10 +38,8 @@ public class ArcadeMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HU
     }
 
     @Override
-    public void drawHUD(GameContext gameContext, HUD hud, Vector2f sceneSize) {
+    public void drawHUD(Game game, HUD hud, Vector2f sceneSize) {
         if (!hud.isVisible()) return;
-
-        Game game = gameContext.game();
 
         if (hud.isScoreVisible()) {
             ScoreManager scoreManager = game.scoreManager();
@@ -71,8 +71,7 @@ public class ArcadeMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HU
         }
 
         if (hud.isCreditVisible()) {
-            int credit = gameContext.coinMechanism().numCoins();
-            fillText("CREDIT %2d".formatted(credit), ARCADE_WHITE, arcadeFontTS(), TS(2), sceneSize.y());
+            fillText("CREDIT %2d".formatted(hud.numCoins()), ARCADE_WHITE, arcadeFontTS(), TS(2), sceneSize.y());
         }
     }
 

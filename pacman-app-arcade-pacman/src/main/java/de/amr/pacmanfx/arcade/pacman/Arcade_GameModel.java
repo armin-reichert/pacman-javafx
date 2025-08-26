@@ -133,6 +133,8 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     public void resetEverything() {
         prepareForNewGame();
         clearLevelCounter();
+        hud().setNumCoins(gameContext.coinMechanism().numCoins());
+        hud().all(false);
     }
 
     @Override

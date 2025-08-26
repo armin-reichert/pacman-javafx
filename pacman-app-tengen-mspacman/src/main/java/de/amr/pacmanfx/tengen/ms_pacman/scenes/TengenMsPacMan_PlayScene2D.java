@@ -476,7 +476,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     public void drawHUD() {
         TengenMsPacMan_GameModel game = context().game();
         game.hud().showGameOptions(!game.optionsAreInitial());
-        hudRenderer.drawHUD(context(), game.hud(), sizeInPx());
+        hudRenderer.drawHUD(context().game(), game.hud(), sizeInPx());
     }
 
     @Override

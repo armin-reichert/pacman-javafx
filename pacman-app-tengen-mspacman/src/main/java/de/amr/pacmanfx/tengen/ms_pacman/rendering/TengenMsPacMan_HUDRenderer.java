@@ -4,9 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman.rendering;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HUD;
 import de.amr.pacmanfx.model.ScoreManager;
@@ -41,36 +41,37 @@ public class TengenMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HU
     }
 
     @Override
-    public void drawHUD(GameContext gameContext, HUD data, Vector2f sceneSize) {
-        requireNonNull(gameContext);
+    public void drawHUD(Game game, HUD data, Vector2f sceneSize) {
+        requireNonNull(game);
         requireNonNull(data);
         requireNonNull(sceneSize);
 
-        TengenMsPacMan_GameModel game = gameContext.game();
         GameLevel gameLevel = game.optGameLevel().orElse(null);
 
         if (gameLevel == null) {
             return; // should never happen
         }
 
+        TengenMsPacMan_GameModel tengenGame = (TengenMsPacMan_GameModel) game;
         TengenMsPacMan_HUD hud = (TengenMsPacMan_HUD) data;
+
         if (!hud.isVisible()) return;
 
         if (hud.isScoreVisible()) {
-            drawScores(game.scoreManager(), clock.tickCount(), nesColor(0x20), arcadeFontTS());
+            drawScores(tengenGame.scoreManager(), clock.tickCount(), nesColor(0x20), arcadeFontTS());
         }
 
         if (hud.isLivesCounterVisible()) {
-            drawLivesCounter(game, hud, TS(2), sceneSize.y() - TS);
+            drawLivesCounter(tengenGame, hud, TS(2), sceneSize.y() - TS);
         }
 
         if (hud.isLevelCounterVisible()) {
             float x = sceneSize.x() - TS(2), y = sceneSize.y() - TS;
-            drawLevelCounter(game, hud, x, y);
+            drawLevelCounter(tengenGame, hud, x, y);
         }
 
         if (hud.gameOptionsVisible()) {
-            drawGameOptions(game.mapCategory(), game.difficulty(), game.pacBooster(), 0.5 * sceneSize.x(), TS(2.5));
+            drawGameOptions(tengenGame.mapCategory(), tengenGame.difficulty(), tengenGame.pacBooster(), 0.5 * sceneSize.x(), TS(2.5));
         }
     }
 

@@ -109,7 +109,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
     @Override
     public void drawHUD() {
         if (hudRenderer != null) {
-            hudRenderer.drawHUD(context(), context().game().hud(), sizeInPx());
+            hudRenderer.drawHUD(context().game(), context().game().hud(), sizeInPx());
         }
     }
 
