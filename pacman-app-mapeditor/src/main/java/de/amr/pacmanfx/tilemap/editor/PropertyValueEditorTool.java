@@ -19,13 +19,11 @@ import static de.amr.pacmanfx.tilemap.editor.ArcadeMap.PAC_SPRITE;
 import static de.amr.pacmanfx.tilemap.editor.ArcadeMap.SPRITE_SHEET;
 
 public class PropertyValueEditorTool implements TileMapEditorTool {
-    private final TileRenderer renderer;
     private final double size;
     private final String propertyName;
     private final String description;
 
-    public PropertyValueEditorTool(TileRenderer renderer, double size, String propertyName, String description) {
-        this.renderer = renderer;
+    public PropertyValueEditorTool(double size, String propertyName, String description) {
         this.size = size;
         this.propertyName = propertyName;
         this.description = description;
@@ -42,7 +40,7 @@ public class PropertyValueEditorTool implements TileMapEditorTool {
     }
 
     @Override
-    public void draw(int row, int col) {
+    public void draw(TileRenderer renderer, int row, int col) {
         GraphicsContext g = renderer.ctx();
         g.setFill(Color.BLACK);
         g.fillRect(col * size, row * size, size, size);

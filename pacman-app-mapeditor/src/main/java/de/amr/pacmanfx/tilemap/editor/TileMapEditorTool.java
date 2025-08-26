@@ -7,6 +7,7 @@ package de.amr.pacmanfx.tilemap.editor;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
+import de.amr.pacmanfx.uilib.tilemap.TileRenderer;
 
 public interface TileMapEditorTool {
 
@@ -14,5 +15,5 @@ public interface TileMapEditorTool {
 
     void apply(TileMapEditor editor, WorldMap worldMap, LayerID layerID, Vector2i tile);
 
-    void draw(int row, int col);
+    void draw(TileRenderer renderer, int row, int col);
 }

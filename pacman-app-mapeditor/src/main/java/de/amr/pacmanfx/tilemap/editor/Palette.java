@@ -81,16 +81,16 @@ public class Palette {
         return id;
     }
 
-    public TileValueEditorTool newTileTool(TileMapEditor editController, byte value, String description) {
-        return new TileValueEditorTool(renderer, toolSize, value, description);
+    public TileValueEditorTool newTileTool(byte value, String description) {
+        return new TileValueEditorTool(toolSize, value, description);
     }
 
     public PropertyValueEditorTool newPropertyTool(String propertyName, String description) {
-        return new PropertyValueEditorTool(renderer, toolSize, propertyName, description);
+        return new PropertyValueEditorTool(toolSize, propertyName, description);
     }
 
     public void addTileTool(TileMapEditor editor, byte value, String description) {
-        tools.add(newTileTool(editor, value, description));
+        tools.add(newTileTool(value, description));
     }
 
     public void addPropertyTool(String propertyName, String description) {
@@ -177,7 +177,7 @@ public class Palette {
             for (int i = 0; i < numRows * numCols; ++i) {
                 TileMapEditorTool tool = getToolOrNull(i);
                 if (tool != null) {
-                    tool.draw(i / numCols, i % numCols);
+                    tool.draw(renderer, i / numCols, i % numCols);
                 }
             }
         }

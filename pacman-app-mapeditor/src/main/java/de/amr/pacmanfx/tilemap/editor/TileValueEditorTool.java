@@ -11,13 +11,11 @@ import de.amr.pacmanfx.uilib.tilemap.TileRenderer;
 import javafx.scene.paint.Color;
 
 public class TileValueEditorTool implements TileMapEditorTool {
-    private final TileRenderer renderer;
     private final double size;
     private final byte value;
     private final String description;
 
-    public TileValueEditorTool(TileRenderer renderer, double size, byte value, String description) {
-        this.renderer = renderer;
+    public TileValueEditorTool(double size, byte value, String description) {
         this.size = size;
         this.value = value;
         this.description = description;
@@ -34,7 +32,7 @@ public class TileValueEditorTool implements TileMapEditorTool {
     }
 
     @Override
-    public void draw(int row, int col) {
+    public void draw(TileRenderer renderer, int row, int col) {
         renderer.ctx().setFill(Color.BLACK);
         renderer.ctx().fillRect(col * size, row * size, size, size);
         renderer.drawTile(new Vector2i(col, row), value);
