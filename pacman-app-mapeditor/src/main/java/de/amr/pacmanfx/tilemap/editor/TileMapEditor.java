@@ -8,10 +8,7 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.*;
 import de.amr.pacmanfx.model.WorldMapProperty;
-import de.amr.pacmanfx.tilemap.editor.actions.Action_PlaceArcadeHouse;
-import de.amr.pacmanfx.tilemap.editor.actions.Action_ReplaceCurrentWorldMapChecked;
-import de.amr.pacmanfx.tilemap.editor.actions.Action_SaveMapFile;
-import de.amr.pacmanfx.tilemap.editor.actions.Action_SelectNextMapFile;
+import de.amr.pacmanfx.tilemap.editor.actions.*;
 import de.amr.pacmanfx.tilemap.editor.rendering.TerrainTileMapRenderer;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
@@ -595,7 +592,7 @@ public class TileMapEditor {
         var obstacleEditor = new ObstacleEditor() {
             @Override
             public void setValue(Vector2i tile, byte value) {
-                setTileValueRespectingSymmetry(currentWorldMap(), LayerID.TERRAIN, tile, value);
+                new Action_SetTileValue(TileMapEditor.this, currentWorldMap(), LayerID.TERRAIN, tile, value).execute();
             }
         };
         obstacleEditor.joiningProperty().bind(obstaclesJoiningProperty());
@@ -1035,43 +1032,8 @@ public class TileMapEditor {
         changeManager().setEdited(true);
     }
 
-    /**
-     * This method should be used whenever a tile value has to be set and symmetric editing should be executed.
-     */
-    public void setTileValueRespectingSymmetry(WorldMap worldMap, LayerID layerID, Vector2i tile, byte value) {
-        requireNonNull(worldMap);
-        requireNonNull(layerID);
-        requireNonNull(tile);
-
-        if (layerID == LayerID.FOOD && !canEditFoodAtTile(worldMap, tile)) {
-            return;
-        }
-
-        worldMap.setContent(layerID, tile, value);
-        if (layerID == LayerID.TERRAIN) {
-            worldMap.setContent(LayerID.FOOD, tile, FoodTile.EMPTY.code());
-        }
-
-        changeManager.setEdited(true);
-        changeManager.setWorldMapChanged();
-
-        if (isSymmetricEditMode()) {
-            Vector2i mirroredTile = worldMap.mirroredTile(tile);
-            if (layerID == LayerID.FOOD) {
-                if (canEditFoodAtTile(worldMap, mirroredTile)) {
-                    worldMap.setContent(layerID, mirroredTile, value);
-                }
-            } else {
-                byte mirroredValue = mirroredTileValue(value);
-                worldMap.setContent(layerID, mirroredTile, mirroredValue);
-                worldMap.setContent(LayerID.FOOD, mirroredTile, FoodTile.EMPTY.code());
-            }
-        }
-    }
-
-    public void setTileValueRespectingSymmetry(WorldMap worldMap, LayerID layerID, int row, int col, byte value) {
-        Vector2i tile = new Vector2i(col, row);
-        setTileValueRespectingSymmetry(worldMap, layerID, tile, value);
+    public void setTileValueRespectingSymmetry(WorldMap worldMap, LayerID layerID, int row, int col, byte code) {
+        new Action_SetTileValue(this, worldMap, layerID, new Vector2i(col, row), code).execute();
     }
 
     public WorldMap createEmptyMap(int numCols, int numRows) {
