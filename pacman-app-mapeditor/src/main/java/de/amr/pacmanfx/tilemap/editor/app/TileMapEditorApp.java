@@ -31,7 +31,7 @@ public class TileMapEditorApp extends Application  {
             var editor = new TileMapEditor(stage, model3DRepository);
 
             var miQuit = new MenuItem(translated("quit"));
-            miQuit.setOnAction(e -> editor.executeWithCheckForUnsavedChanges(stage::close));
+            miQuit.setOnAction(e -> editor.ifNoUnsavedChangesDo(stage::close));
             editor.menuBar().menuFile().getItems().addAll(new SeparatorMenuItem(), miQuit);
 
             var layout = new BorderPane();
@@ -45,7 +45,7 @@ public class TileMapEditorApp extends Application  {
             var scene = new Scene(layout, width, height);
             stage.setScene(scene);
 
-            stage.setOnCloseRequest(e -> editor.executeWithCheckForUnsavedChanges(() -> {
+            stage.setOnCloseRequest(e -> editor.ifNoUnsavedChangesDo(() -> {
                 editor.stop();
                 stage.close();
             }));

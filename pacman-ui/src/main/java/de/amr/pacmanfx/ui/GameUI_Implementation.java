@@ -298,7 +298,7 @@ public class GameUI_Implementation implements GameUI {
             var miReturnToGame = new MenuItem(assets().translated("back_to_game"));
             miReturnToGame.setOnAction(e -> {
                 editor.stop();
-                editor.executeWithCheckForUnsavedChanges(this::showStartView);
+                editor.ifNoUnsavedChangesDo(this::showStartView);
                 // Undo editor stage title binding change:
                 bindStageTitle(stage);
             });

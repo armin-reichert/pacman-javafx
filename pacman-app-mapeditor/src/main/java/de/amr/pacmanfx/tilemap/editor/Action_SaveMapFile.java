@@ -28,7 +28,7 @@ public class Action_SaveMapFile extends AbstractEditorAction {
                 boolean saved = editor.saveWorldMap(editor.currentWorldMap(), file);
                 if (saved) {
                     editor.changeManager().setEdited(false);
-                    editor.readMapFile(file);
+                    editor.readWorldMapFile(file);
                     editor.showMessage("Map saved as '%s'".formatted(file.getName()), 3, MessageType.INFO);
                 } else {
                     editor.showMessage("Map could not be saved!", 4, MessageType.ERROR);

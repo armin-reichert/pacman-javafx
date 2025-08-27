@@ -32,33 +32,33 @@ import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.*;
 
 public class TemplateImageCanvas extends Canvas {
 
-    private final IntegerProperty gridSizePy = new SimpleIntegerProperty();
-    private final BooleanProperty gridVisiblePy = new SimpleBooleanProperty();
-    private final ObjectProperty<Image> templateImagePy = new SimpleObjectProperty<>();
-    private final ObjectProperty<WorldMap> worldMapPy = new SimpleObjectProperty<>();
+    private final IntegerProperty gridSize = new SimpleIntegerProperty();
+    private final BooleanProperty gridVisible = new SimpleBooleanProperty();
+    private final ObjectProperty<Image> templateImage = new SimpleObjectProperty<>();
+    private final ObjectProperty<WorldMap> worldMap = new SimpleObjectProperty<>();
 
     private ContextMenu colorSelectionContextMenu;
     private ColorIndicator colorIndicator;
 
     public TemplateImageCanvas(TileMapEditor editor) {
-        gridSizePy.bind(editor.gridSizeProperty());
-        gridVisiblePy.bind(editor.gridVisibleProperty());
-        templateImagePy.bind(editor.templateImageProperty());
-        worldMapPy.bind(editor.currentWorldMapProperty());
+        gridSize.bind(editor.gridSizeProperty());
+        gridVisible.bind(editor.gridVisibleProperty());
+        templateImage.bind(editor.templateImageProperty());
+        worldMap.bind(editor.currentWorldMapProperty());
 
         widthProperty().bind(Bindings.createDoubleBinding(
             () -> {
-                Image templateImage = templateImagePy.get();
+                Image image = templateImage.get();
                 double scaling = gridSize() / (double)TS;
-                return templateImage != null ? templateImage.getWidth() * scaling : 0;
-            }, gridSizePy, templateImagePy));
+                return image != null ? image.getWidth() * scaling : 0;
+            }, gridSize, templateImage));
 
         heightProperty().bind(Bindings.createDoubleBinding(
             () -> {
-                Image templateImage = templateImagePy.get();
+                Image image = templateImage.get();
                 double scaling = gridSize() / (double)TS;
-                return templateImage != null ? templateImage.getHeight() * scaling : 0;
-            }, gridSizePy, templateImagePy));
+                return image != null ? image.getHeight() * scaling : 0;
+            }, gridSize, templateImage));
 
         setOnContextMenuRequested(e -> showColorSelectionContextMenu(editor, e));
 
@@ -82,17 +82,17 @@ public class TemplateImageCanvas extends Canvas {
 
         colorIndicator = new ColorIndicator(170);
         colorIndicator.setVisible(false);
-        templateImagePy.addListener((py, ov, nv) -> colorIndicator.setVisible(nv != null));
+        templateImage.addListener((py, ov, nv) -> colorIndicator.setVisible(nv != null));
     }
 
     public ColorIndicator getColorIndicator() { return colorIndicator; }
 
-    private int gridSize() { return gridSizePy.get(); }
+    private int gridSize() { return gridSize.get(); }
 
-    private WorldMap worldMap() { return worldMapPy.get(); }
+    private WorldMap worldMap() { return worldMap.get(); }
 
     private Color pickColor(double x, double y) {
-        Image image = templateImagePy.get();
+        Image image = templateImage.get();
         double pickX = x * (image.getWidth() / getBoundsInLocal().getWidth());
         double pickY = y * (image.getHeight() / getBoundsInLocal().getHeight());
         return image.getPixelReader().getColor((int) pickX, (int) pickY);
@@ -175,13 +175,13 @@ public class TemplateImageCanvas extends Canvas {
         GraphicsContext g = getGraphicsContext2D();
         g.setFill(Color.BLACK);
         g.fillRect(0, 0, getWidth(), getHeight());
-        Image image = templateImagePy.get();
+        Image image = templateImage.get();
         if (image != null) {
             double scaling = (double) gridSize() / TS;
             double width = scaling * image.getWidth(), height = scaling * image.getHeight();
             g.setImageSmoothing(false);
             g.drawImage(image, 0, 0, width, height);
-            if (gridVisiblePy.get()) {
+            if (gridVisible.get()) {
                 g.setStroke(Color.grayRgb(180));
                 g.setLineWidth(0.5);
                 for (int row = 1; row < height / TS; ++row) {

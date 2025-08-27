@@ -19,7 +19,7 @@ public class Action_ShowNewMapDialog extends AbstractEditorAction {
     @Override
     public Object execute(TileMapEditor editor) {
         boolean preconfigured = getArg("preconfigured", Boolean.class);
-        editor.executeWithCheckForUnsavedChanges(() -> {
+        editor.ifNoUnsavedChangesDo(() -> {
             var dialog = new TextInputDialog("28x36");
             dialog.setTitle(translated("new_dialog.title"));
             dialog.setHeaderText(translated("new_dialog.header_text"));

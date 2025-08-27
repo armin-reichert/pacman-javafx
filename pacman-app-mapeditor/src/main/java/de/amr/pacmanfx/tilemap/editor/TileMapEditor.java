@@ -26,7 +26,6 @@ import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritablePixelFormat;
-import javafx.scene.input.DragEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.TransferMode;
@@ -38,7 +37,6 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
@@ -52,6 +50,8 @@ import java.util.List;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tilemap.editor.ArcadeSprites.*;
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.*;
+import static de.amr.pacmanfx.tilemap.editor.TemplateImageManager.isTemplateImageSizeOk;
+import static de.amr.pacmanfx.tilemap.editor.TemplateImageManager.selectTemplateImage;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.*;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.IntStream.rangeClosed;
@@ -730,22 +730,22 @@ public class TileMapEditor {
     private void createTabPaneWithEditViews() {
         tabEditCanvas = new Tab(translated("tab_editor"), spEditCanvas);
 
-        var hint = new Button(translated("image_drop_hint"));
-        hint.setFont(FONT_DROP_HINT);
-        hint.setOnAction(ae -> initWorldMapForTemplateImage());
-        hint.disableProperty().bind(editModeProperty().map(mode -> mode == EditMode.INSPECT));
+        var dropHintButton = new Button(translated("image_drop_hint"));
+        dropHintButton.setFont(FONT_DROP_HINT);
+        dropHintButton.setOnAction(ae -> initWorldMapForTemplateImage());
+        dropHintButton.disableProperty().bind(editModeProperty().map(mode -> mode == EditMode.INSPECT));
 
-        dropTargetForTemplateImage = new BorderPane(hint);
+        dropTargetForTemplateImage = new BorderPane(dropHintButton);
         registerDragAndDropImageHandler(dropTargetForTemplateImage);
 
         var stackPane = new StackPane(spTemplateImage, dropTargetForTemplateImage);
-        templateImage.addListener((py, ov, nv) -> {
+        tabTemplateImage = new Tab(translated("tab_template_image"), stackPane);
+        templateImage.addListener((py, ov, image) -> {
             stackPane.getChildren().remove(dropTargetForTemplateImage);
-            if (nv == null) {
+            if (image == null) {
                 stackPane.getChildren().add(dropTargetForTemplateImage);
             }
         });
-        tabTemplateImage = new Tab(translated("tab_template_image"), stackPane);
 
         tabPaneEditorViews = new TabPane(tabEditCanvas, tabTemplateImage);
         tabPaneEditorViews.getTabs().forEach(tab -> tab.setClosable(false));
@@ -754,45 +754,43 @@ public class TileMapEditor {
     }
 
     private void registerDragAndDropImageHandler(Node node) {
-        node.setOnDragOver(e -> {
-            if (e.getDragboard().hasFiles()) {
-                File file = e.getDragboard().getFiles().getFirst();
-                if (isSupportedImageFile(file)  & !editModeIs(EditMode.INSPECT)
-                    || isWorldMapFile(file))
-                {
-                    e.acceptTransferModes(TransferMode.COPY);
+        node.setOnDragOver(dragEvent -> {
+            if (dragEvent.getDragboard().hasFiles()) {
+                File file = dragEvent.getDragboard().getFiles().getFirst();
+                if (isSupportedImageFile(file) && !editModeIs(EditMode.INSPECT) || isWorldMapFile(file)) {
+                    dragEvent.acceptTransferModes(TransferMode.COPY);
                 }
             }
-            e.consume();
+            dragEvent.consume();
         });
-        node.setOnDragDropped(this::onFileDroppedOnEditCanvas);
+        node.setOnDragDropped(dragEvent -> {
+            if (dragEvent.getDragboard().hasFiles()) {
+                File file = dragEvent.getDragboard().getFiles().getFirst();
+                ifNoUnsavedChangesDo(() -> onFileDroppedOnEditCanvas(file));
+            }
+            dragEvent.consume();
+        });
     }
 
-    private void onFileDroppedOnEditCanvas(DragEvent e) {
-        executeWithCheckForUnsavedChanges(() -> {
-            if (e.getDragboard().hasFiles()) {
-                File file = e.getDragboard().getFiles().getFirst();
-                if (isSupportedImageFile(file) && !editModeIs(EditMode.INSPECT)) {
-                    e.acceptTransferModes(TransferMode.COPY);
-                    try (FileInputStream stream = new FileInputStream(file)) {
-                        Image image = new Image(stream);
-                        boolean accepted = checkIfTemplateImageOk(image);
-                        if (accepted) {
-                            setTemplateImage(image);
-                            createEmptyMapFromTemplateImage(image);
-                            showMessage("Select colors for tile identification!", 10, MessageType.INFO);
-                            tabPaneEditorViews.getSelectionModel().select(tabTemplateImage);
-                        }
-                    } catch (IOException x) {
-                        showMessage("Could not open image file " + file, 3, MessageType.ERROR);
-                        Logger.error(x);
-                    }
-                } else if (isWorldMapFile(file)) {
-                    readMapFile(file);
-                }
+    private void onFileDroppedOnEditCanvas(File file) {
+        if (isWorldMapFile(file)) {
+            readWorldMapFile(file);
+        }
+        else if (isSupportedImageFile(file) && !editModeIs(EditMode.INSPECT)) {
+            Image image = loadImage(file).orElse(null);
+            if (image == null) {
+                showMessage("Could not open image file '%s'".formatted(file), 3, MessageType.ERROR);
+                return;
             }
-        });
-        e.consume();
+            if (!isTemplateImageSizeOk(image)) {
+                showMessage("Template image file '%s' has dubios size".formatted(file), 3, MessageType.ERROR);
+                return;
+            }
+            setTemplateImage(image);
+            createEmptyMapFromTemplateImage(image);
+            showMessage("Select colors for tile identification!", 10, MessageType.INFO);
+            tabPaneEditorViews.getSelectionModel().select(tabTemplateImage);
+        }
     }
 
     private void createTabPaneWithPreviews() {
@@ -950,36 +948,34 @@ public class TileMapEditor {
     }
 
     // also called from EditorPage
-    public void addLoadMapMenuItem(String description, WorldMap map) {
+    public void addLoadMapMenuItem(String description, WorldMap worldMap) {
         requireNonNull(description);
-        requireNonNull(map);
+        requireNonNull(worldMap);
         var miLoadMap = new MenuItem(description);
-        miLoadMap.setOnAction(e -> loadMap(map));
+        miLoadMap.setOnAction(e -> {
+            WorldMap copy = WorldMap.copyMap(worldMap);
+            ifNoUnsavedChangesDo(() -> setCurrentWorldMap(copy));
+        });
         menuBar.menuLoadMap().getItems().add(miLoadMap);
     }
 
-    public void loadMap(WorldMap worldMap) {
-        executeWithCheckForUnsavedChanges(() -> {
-            setCurrentWorldMap(WorldMap.copyMap(worldMap));
-            setCurrentFile(null);
-        });
-    }
-
-    public boolean readMapFile(File file) {
+    public boolean readWorldMapFile(File file) {
+        requireNonNull(file);
+        boolean success = false;
         if (file.getName().endsWith(".world")) {
             try {
-                loadMap(WorldMap.fromFile(file));
-                setCurrentDirectory(file.getParentFile());
-                setCurrentFile(file);
-                Logger.info("Map read from file {}", file);
-                return true;
+                WorldMap worldMap = WorldMap.fromFile(file);
+                ifNoUnsavedChangesDo(() -> {
+                    setCurrentWorldMap(worldMap);
+                    setCurrentDirectory(file.getParentFile());
+                    setCurrentFile(file);
+                });
+                success = true;
             } catch (IOException x) {
                 Logger.error(x);
-                Logger.info("Map could not be read from file {}", file);
-                return false;
             }
         }
-        return false;
+        return success;
     }
 
 
@@ -993,27 +989,20 @@ public class TileMapEditor {
         }
     }
 
-    public void executeWithCheckForUnsavedChanges(Runnable action) {
+    public void ifNoUnsavedChangesDo(Runnable action) {
         if (!changeManager.isEdited()) {
             action.run();
             return;
         }
-        var confirmationDialog = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmationDialog.setTitle(translated("save_dialog.title"));
-        confirmationDialog.setHeaderText(translated("save_dialog.header_text"));
-        confirmationDialog.setContentText(translated("save_dialog.content_text"));
-        var choiceSave   = new ButtonType(translated("save_changes"));
-        var choiceNoSave = new ButtonType(translated("no_save_changes"));
-        var choiceCancel = new ButtonType(translated("cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
-        confirmationDialog.getButtonTypes().setAll(choiceSave, choiceNoSave, choiceCancel);
+        SaveConfirmation confirmationDialog = new SaveConfirmation();
         confirmationDialog.showAndWait().ifPresent(choice -> {
-            if (choice == choiceSave) {
+            if (choice == SaveConfirmation.SAVE_CHANGES) {
                 EditorActions.SAVE_MAP_FILE.execute(this);
                 action.run();
-            } else if (choice == choiceNoSave) {
+            } else if (choice == SaveConfirmation.NO_SAVE_CHANGES) {
                 changeManager.setEdited(false);
                 action.run();
-            } else if (choice == choiceCancel) {
+            } else if (choice == SaveConfirmation.CLOSE) {
                 confirmationDialog.close();
             }
         });
@@ -1085,14 +1074,14 @@ public class TileMapEditor {
         if (alt && key == KeyCode.LEFT) {
             EditorActions.SELECT_NEXT_MAP_FILE.setForward(false);
             File file = (File) EditorActions.SELECT_NEXT_MAP_FILE.execute(this);
-            if (file != null && !readMapFile(file)) {
+            if (file != null && !readWorldMapFile(file)) {
                 showMessage("Map file '%s' could not be loaded".formatted(file.getName()), 3, MessageType.ERROR);
             }
         }
         else if (alt && key == KeyCode.RIGHT) {
             EditorActions.SELECT_NEXT_MAP_FILE.setForward(true);
             File file = (File) EditorActions.SELECT_NEXT_MAP_FILE.execute(this);
-            if (file != null && !readMapFile(file)) {
+            if (file != null && !readWorldMapFile(file)) {
                 showMessage("Map file '%s' could not be loaded".formatted(file.getName()), 3, MessageType.ERROR);
             }
         }
@@ -1221,7 +1210,6 @@ public class TileMapEditor {
         setTileValueRespectingSymmetry(worldMap, layerID, tile, value);
     }
 
-
     // ignores symmetric edit mode!
     public void clearTerrainTileValue(Vector2i tile) {
         currentWorldMap().setContent(LayerID.TERRAIN, tile, TerrainTile.EMPTY.$);
@@ -1263,15 +1251,6 @@ public class TileMapEditor {
         }
     }
 
-    private boolean checkIfTemplateImageOk(Image image) {
-        boolean sizeOk = image.getHeight() % TS == 0 && image.getWidth() % TS == 0;
-        if (!sizeOk) {
-            showMessage("Template image size seems dubious", 3, MessageType.WARNING);
-            return false;
-        }
-        return true;
-    }
-
     private void createEmptyMapFromTemplateImage(Image image) {
         int tilesX = (int) (image.getWidth() / TS);
         int tilesY = EMPTY_ROWS_BEFORE_MAZE + EMPTY_ROWS_BELOW_MAZE + (int) (image.getHeight() / TS);
@@ -1283,12 +1262,14 @@ public class TileMapEditor {
     }
 
     void initWorldMapForTemplateImage() {
-        TemplateImageManager.selectTemplateImage(stage, translated("open_template_image"), currentDirectory())
+        selectTemplateImage(stage, translated("open_template_image"), currentDirectory())
             .ifPresent(image -> {
-                if (checkIfTemplateImageOk(image)) {
+                if (isTemplateImageSizeOk(image)) {
                     setTemplateImage(image);
                     createEmptyMapFromTemplateImage(image);
                     showMessage("Select map colors from template!", 20, MessageType.INFO);
+                } else {
+                    showMessage("Template image size seems dubious", 3, MessageType.WARNING);
                 }
             });
     }

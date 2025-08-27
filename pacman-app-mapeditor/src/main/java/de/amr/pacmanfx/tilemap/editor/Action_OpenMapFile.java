@@ -19,12 +19,12 @@ public class Action_OpenMapFile extends AbstractEditorAction {
     @Override
     public Object execute(TileMapEditor editor) {
         FileChooser fileChooser = createFileChooser(editor.currentDirectory());
-        editor.executeWithCheckForUnsavedChanges(() -> {
+        editor.ifNoUnsavedChangesDo(() -> {
             fileChooser.setTitle(translated("open_file"));
             fileChooser.setInitialDirectory(editor.currentDirectory());
             File file = fileChooser.showOpenDialog(editor.stage());
             if (file != null) {
-                editor.readMapFile(file);
+                editor.readWorldMapFile(file);
             }
             editor.changeManager().setEdited(false);
         });
