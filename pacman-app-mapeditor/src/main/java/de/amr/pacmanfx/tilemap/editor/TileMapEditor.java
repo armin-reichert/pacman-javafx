@@ -1038,19 +1038,10 @@ public class TileMapEditor {
 
     public WorldMap createEmptyMap(int numCols, int numRows) {
         var worldMap = WorldMap.emptyMap(numRows, numCols);
-        setDefaultColors(worldMap);
+        new Action_SetDefaultMapColors(this, worldMap).execute();
         setDefaultScatterPositions(worldMap);
         changeManager.setTerrainMapChanged();
         return worldMap;
-    }
-
-    public void setDefaultColors(WorldMap worldMap) {
-        worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.COLOR_WALL_STROKE, MS_PACMAN_COLOR_WALL_STROKE);
-        worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.COLOR_WALL_FILL, MS_PACMAN_COLOR_WALL_FILL);
-        worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.COLOR_DOOR, MS_PACMAN_COLOR_DOOR);
-        worldMap.properties(LayerID.FOOD).put(WorldMapProperty.COLOR_FOOD, MS_PACMAN_COLOR_FOOD);
-        changeManager.setTerrainMapChanged();
-        changeManager.setFoodMapChanged();
     }
 
     public void setDefaultScatterPositions(WorldMap worldMap) {

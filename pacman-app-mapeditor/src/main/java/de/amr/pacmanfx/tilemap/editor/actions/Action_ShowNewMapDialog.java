@@ -64,7 +64,7 @@ public class Action_ShowNewMapDialog extends AbstractEditorAction<Void> {
             new Action_PlaceArcadeHouse(editor, worldMap, houseMinTile).execute();
         }
         worldMap.buildObstacleList();
-        editor.setDefaultColors(worldMap);
+        new Action_SetDefaultMapColors(editor, worldMap).execute();
         editor.setDefaultScatterPositions(worldMap);
         editor.setCurrentWorldMap(worldMap);
         new Action_AddBorderWall(editor, worldMap).execute();
