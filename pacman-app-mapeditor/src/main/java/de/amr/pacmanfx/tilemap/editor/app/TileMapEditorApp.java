@@ -32,11 +32,11 @@ public class TileMapEditorApp extends Application  {
 
             var miQuit = new MenuItem(translated("quit"));
             miQuit.setOnAction(e -> editor.executeWithCheckForUnsavedChanges(stage::close));
-            editor.getMenuBar().menuFile().getItems().addAll(new SeparatorMenuItem(), miQuit);
+            editor.menuBar().menuFile().getItems().addAll(new SeparatorMenuItem(), miQuit);
 
             var layout = new BorderPane();
-            layout.setCenter(editor.getContentPane());
-            layout.setTop(editor.getMenuBar());
+            layout.setCenter(editor.contentPane());
+            layout.setTop(editor.menuBar());
 
             double screenHeight = Screen.getPrimary().getVisualBounds().getHeight();
             double height = Math.max(0.8 * screenHeight, 600);

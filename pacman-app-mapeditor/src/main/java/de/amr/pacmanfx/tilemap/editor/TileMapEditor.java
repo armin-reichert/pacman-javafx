@@ -123,10 +123,10 @@ public class TileMapEditor {
     }
 
     private final ChangeManager changeManager = new ChangeManager();
+    private final UpdateTimer updateTimer;
 
-    private Instant messageCloseTime;
-    private final AnimationTimer updateLoop;
     private final List<Vector2i> tilesWithErrors = new ArrayList<>();
+    private Instant messageCloseTime;
 
     private final BorderPane contentPane = new BorderPane();
     private final Stage stage;
@@ -157,6 +157,17 @@ public class TileMapEditor {
 
     private final Model3DRepository model3DRepository;
 
+    private class UpdateTimer extends AnimationTimer {
+        @Override
+        public void handle(long now) {
+            updateAutoClosingMessage();
+            changeManager.processChanges();
+            if (changeManager.isRedrawRequested()) {
+                drawUI();
+            }
+        }
+    }
+
     public TileMapEditor(Stage stage, Model3DRepository model3DRepository) {
         this.stage = requireNonNull(stage);
         this.model3DRepository = requireNonNull(model3DRepository);
@@ -182,22 +193,27 @@ public class TileMapEditor {
         contentPane.setOnKeyTyped(this::onKeyTyped);
         contentPane.setOnKeyPressed(this::onKeyPressed);
 
-        updateLoop = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                updateAutoClosingMessage();
-                changeManager.processChanges();
-                if (changeManager.isRedrawRequested()) {
-                    var colors = new TerrainMapColorScheme(
-                        COLOR_CANVAS_BACKGROUND,
-                        getColorFromMap(currentWorldMap(), LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_FILL, parseColor(MS_PACMAN_COLOR_WALL_FILL)),
-                        getColorFromMap(currentWorldMap(), LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_STROKE, parseColor(MS_PACMAN_COLOR_WALL_STROKE)),
-                        getColorFromMap(currentWorldMap(), LayerID.TERRAIN, WorldMapProperty.COLOR_DOOR, parseColor(MS_PACMAN_COLOR_DOOR))
-                    );
-                    draw(colors);
-                }
-            }
-        };
+        updateTimer = new UpdateTimer();
+    }
+
+    public void init(File workDir) {
+        setCurrentDirectory(workDir);
+        setBlankMap(28, 36);
+        setEditMode(EditMode.INSPECT);
+        mazePreview3D.reset();
+    }
+
+    public void start(Stage stage) {
+        title.bind(createTitleBinding());
+        stage.titleProperty().bind(title);
+        contentPane.setLeft(null); // no properties editor
+        showEditHelpText();
+        updateTimer.start();
+    }
+
+    public void stop() {
+        updateTimer.stop();
+        setEditMode(EditMode.INSPECT);
     }
 
     // -- actorsVisible
@@ -531,6 +547,8 @@ public class TileMapEditor {
 
     private final StringProperty title = new SimpleStringProperty("Tile Map Editor");
 
+    public StringProperty titleProperty() { return title; }
+
     // Accessor methods
 
     public ChangeManager changeManager() { return changeManager;}
@@ -539,7 +557,13 @@ public class TileMapEditor {
         return stage;
     }
 
-    public StringProperty titleProperty() { return title; }
+    public Pane contentPane() {
+        return contentPane;
+    }
+
+    public EditorMenuBar menuBar() {
+        return menuBar;
+    }
 
     public byte selectedPaletteID() {
         return (Byte) tabPaneWithPalettes.getSelectionModel().getSelectedItem().getUserData();
@@ -549,50 +573,8 @@ public class TileMapEditor {
         return palettes[selectedPaletteID()];
     }
 
-    public Pane getContentPane() {
-        return contentPane;
-    }
-
-    public EditorMenuBar getMenuBar() {
-        return menuBar;
-    }
-
     public List<Vector2i> tilesWithErrors() {
         return tilesWithErrors;
-    }
-
-    public void init(File workDir) {
-        setCurrentDirectory(workDir);
-        setBlankMap(28, 36);
-        setEditMode(EditMode.INSPECT);
-        mazePreview3D.reset();
-    }
-
-    public void start(Stage stage) {
-        title.bind(createTitleBinding());
-        stage.titleProperty().bind(title);
-        contentPane.setLeft(null); // no properties editor
-        showEditHelpText();
-        updateLoop.start();
-    }
-
-    public void stop() {
-        updateLoop.stop();
-        setEditMode(EditMode.INSPECT);
-    }
-
-    private void updateAutoClosingMessage() {
-        if (messageCloseTime != null && Instant.now().isAfter(messageCloseTime)) {
-            messageCloseTime = null;
-            FadeTransition fadeOut = new FadeTransition(Duration.seconds(2), messageLabel);
-            fadeOut.setFromValue(1.0);
-            fadeOut.setToValue(0.0);
-            fadeOut.setOnFinished(event -> {
-                messageLabel.setText("");
-                messageLabel.setOpacity(1.0);
-            });
-            fadeOut.play();
-        }
     }
 
     public void showMessage(String message, long seconds, MessageType type) {
@@ -608,6 +590,20 @@ public class TileMapEditor {
 
     private void clearMessage() {
         showMessage("", 0, MessageType.INFO);
+    }
+
+    private void updateAutoClosingMessage() {
+        if (messageCloseTime != null && Instant.now().isAfter(messageCloseTime)) {
+            messageCloseTime = null;
+            FadeTransition fadeOut = new FadeTransition(Duration.seconds(2), messageLabel);
+            fadeOut.setFromValue(1.0);
+            fadeOut.setToValue(0.0);
+            fadeOut.setOnFinished(event -> {
+                messageLabel.setText("");
+                messageLabel.setOpacity(1.0);
+            });
+            fadeOut.play();
+        }
     }
 
     public void showEditHelpText() {
@@ -1054,7 +1050,15 @@ public class TileMapEditor {
     // Drawing
     //
 
-    private void draw(TerrainMapColorScheme colorScheme) {
+    private void drawUI() {
+        if (currentWorldMap() == null) return;
+
+        var colorScheme = new TerrainMapColorScheme(
+            COLOR_CANVAS_BACKGROUND,
+            getColorFromMap(currentWorldMap(), LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_FILL, parseColor(MS_PACMAN_COLOR_WALL_FILL)),
+            getColorFromMap(currentWorldMap(), LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_STROKE, parseColor(MS_PACMAN_COLOR_WALL_STROKE)),
+            getColorFromMap(currentWorldMap(), LayerID.TERRAIN, WorldMapProperty.COLOR_DOOR, parseColor(MS_PACMAN_COLOR_DOOR))
+        );
         try {
             Logger.trace("Draw palette");
             palettes[selectedPaletteID()].draw();

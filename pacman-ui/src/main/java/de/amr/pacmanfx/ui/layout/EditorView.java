@@ -26,8 +26,8 @@ public class EditorView implements GameUI_View {
         this.editor = requireNonNull(editor);
         // without this, Pac-Man wallpaper shines through!
         layout.setBackground(colorBackground(Color.web("#dddddd"))); // JavaFX default grey
-        layout.setCenter(editor.getContentPane());
-        layout.setTop(editor.getMenuBar());
+        layout.setCenter(editor.contentPane());
+        layout.setTop(editor.menuBar());
     }
 
     public TileMapEditor editor() {
