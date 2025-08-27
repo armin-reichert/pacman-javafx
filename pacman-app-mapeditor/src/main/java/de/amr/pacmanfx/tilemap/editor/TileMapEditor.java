@@ -1084,13 +1084,6 @@ public class TileMapEditor {
         changeManager().setEdited(true);
     }
 
-    public void selectNextPaletteEntry() {
-        Palette palette = selectedPalette();
-        int next = palette.selectedIndex() + 1;
-        if (next == palette.numTools()) { next = 0; }
-        palette.selectTool(next);
-    }
-
     /**
      * This method should be used whenever a tile value has to be set and symmetric editing should be executed.
      */
