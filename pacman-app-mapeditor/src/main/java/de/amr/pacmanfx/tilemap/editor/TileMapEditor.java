@@ -104,7 +104,7 @@ public class TileMapEditor {
                     terrainMapPropertiesEditor.setTileMap(currentWorldMap(), LayerID.TERRAIN);
                 }
                 mazePreview3D.updateTerrain();
-                updateSourceView();
+                updateSourceCode();
                 terrainMapChanged = false;
                 Logger.trace("Terrain map updated");
                 requestRedraw();
@@ -114,7 +114,7 @@ public class TileMapEditor {
                     foodMapPropertiesEditor.setTileMap(currentWorldMap(), LayerID.FOOD);
                 }
                 mazePreview3D.updateFood();
-                updateSourceView();
+                updateSourceCode();
                 foodMapChanged = false;
                 Logger.trace("Food map updated");
                 requestRedraw();
@@ -481,6 +481,11 @@ public class TileMapEditor {
         segmentNumbersVisibleProperty().set(value);
     }
 
+    // -- sourceCode
+
+    private final StringProperty sourceCode = new SimpleStringProperty("");
+
+
     // -- symmetricEditMode
 
     public static final boolean DEFAULT_SYMMETRIC_EDIT_MODE = true;
@@ -686,6 +691,7 @@ public class TileMapEditor {
         sourceView.setPrefHeight(800);
         sourceView.setFont(FONT_SOURCE_VIEW);
         sourceView.setStyle("-fx-control-inner-background:#222; -fx-text-fill: #f0f0f0;");
+        sourceView.textProperty().bind(sourceCode);
     }
 
     private void createTabPaneWithEditViews() {
@@ -961,15 +967,6 @@ public class TileMapEditor {
                 confirmationDialog.close();
             }
         });
-    }
-
-    private void updateSourceView() {
-        StringBuilder sb = new StringBuilder();
-        String[] sourceTextLines = WorldMapFormatter.formatted(currentWorldMap()).split("\n");
-        for (int i = 0; i < sourceTextLines.length; ++i) {
-            sb.append("%5d: ".formatted(i + 1)).append(sourceTextLines[i]).append("\n");
-        }
-        sourceView.setText(sb.toString());
     }
 
     private void onEditModeChanged(EditMode editMode) {
@@ -1256,6 +1253,15 @@ public class TileMapEditor {
 
         changeManager.setWorldMapChanged();
         changeManager.setEdited(true);
+    }
+
+    private void updateSourceCode() {
+        StringBuilder sb = new StringBuilder();
+        String[] sourceTextLines = WorldMapFormatter.formatted(currentWorldMap()).split("\n");
+        for (int i = 0; i < sourceTextLines.length; ++i) {
+            sb.append("%5d: ".formatted(i + 1)).append(sourceTextLines[i]).append("\n");
+        }
+        sourceCode.set(sb.toString());
     }
 
     // Sample maps loading
