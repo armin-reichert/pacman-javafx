@@ -35,7 +35,7 @@ public class PropertyValueEditorTool implements TileMapEditorTool {
 
     @Override
     public void apply(TileMapEditor editor, LayerID layerID, Vector2i tile) {
-        editor.editedWorldMap().properties(layerID).put(propertyName, WorldMapFormatter.formatTile(tile));
+        editor.currentWorldMap().properties(layerID).put(propertyName, WorldMapFormatter.formatTile(tile));
     }
 
     @Override

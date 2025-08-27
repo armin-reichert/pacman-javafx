@@ -24,7 +24,7 @@ public class Action_FloodWithPellets extends AbstractEditorAction {
     public Object execute(TileMapEditor editor) {
         Vector2i startTile = getArg("startTile", Vector2i.class);
         Byte pelletValue = getArg("pelletValue", Byte.class);
-        if (!canEditFoodAtTile(editor.editedWorldMap(), startTile)) {
+        if (!canEditFoodAtTile(editor.currentWorldMap(), startTile)) {
             return null;
         }
         var q = new ArrayDeque<Vector2i>();
@@ -34,10 +34,10 @@ public class Action_FloodWithPellets extends AbstractEditorAction {
         while (!q.isEmpty()) {
             Vector2i current = q.poll();
             // use this method such that symmmetric editing etc. is taken into account:
-            editor.setTileValueRespectingSymmetry(editor.editedWorldMap(), LayerID.FOOD, current, pelletValue);
+            editor.setTileValueRespectingSymmetry(editor.currentWorldMap(), LayerID.FOOD, current, pelletValue);
             for (Direction dir : Direction.values()) {
                 Vector2i neighborTile = current.plus(dir.vector());
-                if  (!visited.contains(neighborTile) && canEditFoodAtTile(editor.editedWorldMap(), neighborTile)) {
+                if  (!visited.contains(neighborTile) && canEditFoodAtTile(editor.currentWorldMap(), neighborTile)) {
                     q.push(neighborTile);
                 }
                 visited.add(neighborTile);

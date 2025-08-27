@@ -359,13 +359,13 @@ public class EditCanvas extends Canvas {
         var miInsertRow = new MenuItem(translated("menu.edit.insert_row"));
         miInsertRow.setOnAction(actionEvent -> {
             int rowIndex = tileAtMousePosition(menuEvent.getX(), menuEvent.getY(), gridSize()).y();
-            editor.setEditedWorldMap(worldMap().insertRowBeforeIndex(rowIndex));
+            editor.setCurrentWorldMap(worldMap().insertRowBeforeIndex(rowIndex));
         });
 
         var miDeleteRow = new MenuItem(translated("menu.edit.delete_row"));
         miDeleteRow.setOnAction(actionEvent -> {
             int rowIndex = tileAtMousePosition(menuEvent.getX(), menuEvent.getY(), gridSize()).y();
-            editor.setEditedWorldMap(worldMap().deleteRowAtIndex(rowIndex));
+            editor.setCurrentWorldMap(worldMap().deleteRowAtIndex(rowIndex));
         });
 
         var miFloodWithPellets = new MenuItem(translated("menu.edit.flood_with_pellets"));
@@ -374,7 +374,7 @@ public class EditCanvas extends Canvas {
             EditorActions.FLOOD_WITH_PELLETS.setPelletValue(FoodTile.PELLET.code());
             EditorActions.FLOOD_WITH_PELLETS.execute(editor);
         });
-        miFloodWithPellets.setDisable(!canEditFoodAtTile(editor.editedWorldMap(), tile));
+        miFloodWithPellets.setDisable(!canEditFoodAtTile(editor.currentWorldMap(), tile));
 
         var miClearPellets = new MenuItem(translated("menu.edit.clear_food"));
         miClearPellets.setOnAction(ae -> {
@@ -382,7 +382,7 @@ public class EditCanvas extends Canvas {
             EditorActions.FLOOD_WITH_PELLETS.setPelletValue(FoodTile.EMPTY.code());
             EditorActions.FLOOD_WITH_PELLETS.execute(editor);
         });
-        miClearPellets.setDisable(!canEditFoodAtTile(editor.editedWorldMap(), tile));
+        miClearPellets.setDisable(!canEditFoodAtTile(editor.currentWorldMap(), tile));
 
         contextMenu.getItems().setAll(
             miInsertRow,

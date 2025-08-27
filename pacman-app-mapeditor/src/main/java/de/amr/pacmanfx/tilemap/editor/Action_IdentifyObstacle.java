@@ -17,7 +17,7 @@ public class Action_IdentifyObstacle extends AbstractEditorAction {
     @Override
     public Object execute(TileMapEditor editor) {
         Vector2i tile = getArg("tile", Vector2i.class);
-        WorldMap worldMap = editor.editedWorldMap();
+        WorldMap worldMap = editor.currentWorldMap();
         Obstacle obstacleAtTile = worldMap.obstacles().stream()
                 .filter(obstacle -> tileAt(obstacle.startPoint().minus(HTS, 0).toVector2f()).equals(tile))
                 .findFirst().orElse(null);

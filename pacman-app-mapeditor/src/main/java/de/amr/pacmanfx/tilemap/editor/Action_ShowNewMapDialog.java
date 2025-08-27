@@ -60,6 +60,6 @@ public class Action_ShowNewMapDialog extends AbstractEditorAction {
         }
         worldMap.buildObstacleList();
         editor.setDefaultColors(worldMap);
-        editor.setEditedWorldMap(worldMap);
+        editor.setCurrentWorldMap(worldMap);
     }
 }

@@ -58,7 +58,7 @@ public class EditorMenuBar extends MenuBar {
         miOpenTemplateImage.setOnAction(e -> editor.initWorldMapForTemplateImage());
 
         var miCloseTemplateImage = new MenuItem(translated("menu.file.close_template_image"));
-        miCloseTemplateImage.setOnAction(e -> editor.closeTemplateImage());
+        miCloseTemplateImage.setOnAction(e -> editor.setTemplateImage(null));
 
         menuFile = new Menu(translated("menu.file"), NO_GRAPHIC,
             miNewPreconfiguredMap,
@@ -75,17 +75,17 @@ public class EditorMenuBar extends MenuBar {
 
         var miAddBorder = new MenuItem(translated("menu.edit.add_border"));
         miAddBorder.setOnAction(e -> {
-            EditorActions.ADD_BORDER_WALL.setWorldMap(editor.editedWorldMap());
+            EditorActions.ADD_BORDER_WALL.setWorldMap(editor.currentWorldMap());
             EditorActions.ADD_BORDER_WALL.execute(editor);
         });
         miAddBorder.disableProperty().bind(editor.editModeProperty().map(mode -> mode == EditMode.INSPECT));
 
         var miAddHouse = new MenuItem(translated("menu.edit.add_house"));
         miAddHouse.setOnAction(e -> {
-            int numRows = editor.editedWorldMap().numRows(), numCols = editor.editedWorldMap().numCols();
+            int numRows = editor.currentWorldMap().numRows(), numCols = editor.currentWorldMap().numCols();
             int houseMinX = numCols / 2 - 4, houseMinY = numRows / 2 - 3;
             EditorActions.PLACE_ARCADE_HOUSE.setHouseMinTile(Vector2i.of(houseMinX, houseMinY));
-            EditorActions.PLACE_ARCADE_HOUSE.setWorldMap(editor.editedWorldMap());
+            EditorActions.PLACE_ARCADE_HOUSE.setWorldMap(editor.currentWorldMap());
             EditorActions.PLACE_ARCADE_HOUSE.execute(editor);
         });
 
@@ -93,7 +93,7 @@ public class EditorMenuBar extends MenuBar {
 
         var miClearTerrain = new MenuItem(translated("menu.edit.clear_terrain"));
         miClearTerrain.setOnAction(e -> {
-            editor.editedWorldMap().layer(LayerID.TERRAIN).setAll(TerrainTile.EMPTY.$);
+            editor.currentWorldMap().layer(LayerID.TERRAIN).setAll(TerrainTile.EMPTY.$);
             editor.changeManager().setTerrainMapChanged();
             editor.changeManager().setEdited(true);
         });
@@ -101,7 +101,7 @@ public class EditorMenuBar extends MenuBar {
 
         var miClearFood = new MenuItem(translated("menu.edit.clear_food"));
         miClearFood.setOnAction(e -> {
-            editor.editedWorldMap().layer(LayerID.FOOD).setAll(FoodTile.EMPTY.code());
+            editor.currentWorldMap().layer(LayerID.FOOD).setAll(FoodTile.EMPTY.code());
             editor.changeManager().setFoodMapChanged();
             editor.changeManager().setEdited(true);
         });
@@ -112,10 +112,10 @@ public class EditorMenuBar extends MenuBar {
                 () -> editor.editMode() == EditMode.INSPECT
                         || editor.templateImageProperty().get() == null,
                 editor.editModeProperty(), editor.templateImageProperty()));
-        miIdentifyTiles.setOnAction(e -> editor.populateMapFromTemplateImage(editor.editedWorldMap(), editor.templateImage()));
+        miIdentifyTiles.setOnAction(e -> editor.populateMapFromTemplateImage(editor.currentWorldMap(), editor.templateImage()));
 
         var miAssignDefaultColors = new MenuItem("Assign default colors"); //TODO localize
-        miAssignDefaultColors.setOnAction(e -> editor.setDefaultColors(editor.editedWorldMap()));
+        miAssignDefaultColors.setOnAction(e -> editor.setDefaultColors(editor.currentWorldMap()));
         miAssignDefaultColors.disableProperty().bind(editor.editModeProperty().map(mode -> mode == EditMode.INSPECT));
 
         menuEdit = new Menu(translated("menu.edit"), NO_GRAPHIC,

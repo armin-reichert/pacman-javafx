@@ -95,13 +95,13 @@ public class TileMapEditor {
         private void processChanges() {
             if (!obstaclesUpToDate) {
                 tilesWithErrors.clear();
-                tilesWithErrors.addAll(editedWorldMap().buildObstacleList());
+                tilesWithErrors.addAll(currentWorldMap().buildObstacleList());
                 obstaclesUpToDate = true;
                 requestRedraw();
             }
             if (terrainMapChanged) {
                 if (terrainMapPropertiesEditor != null) {
-                    terrainMapPropertiesEditor.setTileMap(editedWorldMap(), LayerID.TERRAIN);
+                    terrainMapPropertiesEditor.setTileMap(currentWorldMap(), LayerID.TERRAIN);
                 }
                 mazePreview3D.updateTerrain();
                 updateSourceView();
@@ -111,7 +111,7 @@ public class TileMapEditor {
             }
             if (foodMapChanged) {
                 if (foodMapPropertiesEditor != null) {
-                    foodMapPropertiesEditor.setTileMap(editedWorldMap(), LayerID.FOOD);
+                    foodMapPropertiesEditor.setTileMap(currentWorldMap(), LayerID.FOOD);
                 }
                 mazePreview3D.updateFood();
                 updateSourceView();
@@ -124,7 +124,6 @@ public class TileMapEditor {
 
     private final ChangeManager changeManager = new ChangeManager();
 
-    private File currentDirectory;
     private Instant messageCloseTime;
     private final AnimationTimer updateLoop;
     private final List<Vector2i> tilesWithErrors = new ArrayList<>();
@@ -191,86 +190,14 @@ public class TileMapEditor {
                 if (changeManager.isRedrawRequested()) {
                     var colors = new TerrainMapColorScheme(
                         COLOR_CANVAS_BACKGROUND,
-                        getColorFromMap(editedWorldMap(), LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_FILL, parseColor(MS_PACMAN_COLOR_WALL_FILL)),
-                        getColorFromMap(editedWorldMap(), LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_STROKE, parseColor(MS_PACMAN_COLOR_WALL_STROKE)),
-                        getColorFromMap(editedWorldMap(), LayerID.TERRAIN, WorldMapProperty.COLOR_DOOR, parseColor(MS_PACMAN_COLOR_DOOR))
+                        getColorFromMap(currentWorldMap(), LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_FILL, parseColor(MS_PACMAN_COLOR_WALL_FILL)),
+                        getColorFromMap(currentWorldMap(), LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_STROKE, parseColor(MS_PACMAN_COLOR_WALL_STROKE)),
+                        getColorFromMap(currentWorldMap(), LayerID.TERRAIN, WorldMapProperty.COLOR_DOOR, parseColor(MS_PACMAN_COLOR_DOOR))
                     );
                     draw(colors);
                 }
             }
         };
-    }
-
-    // -- editMode
-
-    public static final EditMode DEFAULT_EDIT_MODE = EditMode.INSPECT;
-
-    private ObjectProperty<EditMode> editMode;
-
-    public ObjectProperty<EditMode> editModeProperty() {
-        if (editMode == null) {
-            editMode = new SimpleObjectProperty<>(DEFAULT_EDIT_MODE) {
-                @Override
-                protected void invalidated() {
-                    onEditModeChanged(get());
-                }
-            };
-        }
-        return editMode;
-    }
-
-    public EditMode editMode() { return editMode == null ? DEFAULT_EDIT_MODE : editModeProperty().get(); }
-
-    public void setEditMode(EditMode mode) {
-        editModeProperty().set(requireNonNull(mode));
-    }
-
-    public boolean editModeIs(EditMode mode) { return editMode() == mode; }
-
-    // -- currentFile
-
-    private final ObjectProperty<File> currentFile = new SimpleObjectProperty<>();
-
-    public ObjectProperty<File> currentFileProperty() {
-        return currentFile;
-    }
-
-    public File currentFile() {
-        return currentFile.get();
-    }
-
-    // -- editedWorldMap
-
-    private final ObjectProperty<WorldMap> editedWorldMap = new SimpleObjectProperty<>(WorldMap.emptyMap(28, 36)) {
-        @Override
-        protected void invalidated() {
-            templateImage.set(null);
-            changeManager.setWorldMapChanged();
-        }
-    };
-
-    // -- gridSize
-
-    private static final double DEFAULT_GRID_SIZE = 8;
-
-    private DoubleProperty gridSize;
-
-    public DoubleProperty gridSizeProperty() {
-        if (gridSize == null) {
-            gridSize = new SimpleDoubleProperty(DEFAULT_GRID_SIZE) {
-                @Override
-                protected void invalidated() {
-                    changeManager.requestRedraw();
-                }
-            };
-        }
-        return gridSize;
-    }
-
-    public double gridSize() { return gridSize.get(); }
-
-    public void setGridSize(double size) {
-        gridSizeProperty().set(size);
     }
 
     // -- actorsVisible
@@ -299,22 +226,98 @@ public class TileMapEditor {
         actorsVisibleProperty().set(visible);
     }
 
-    // -- gridVisible
+    // -- currentDirectory
 
-    public static final boolean DEFAULT_GRID_VISIBLE = true;
+    private final ObjectProperty<File> currentDirectory = new SimpleObjectProperty<>();
 
-    private BooleanProperty gridVisible;
+    public File currentDirectory() {
+        return currentDirectory.get();
+    }
 
-    public BooleanProperty gridVisibleProperty() {
-        if (gridVisible == null) {
-            gridVisible = new SimpleBooleanProperty(DEFAULT_GRID_VISIBLE) {
+    public void setCurrentDirectory(File dir) {
+        currentDirectory.set(dir);
+    }
+
+    // -- currentFile
+
+    private final ObjectProperty<File> currentFile = new SimpleObjectProperty<>();
+
+    public ObjectProperty<File> currentFileProperty() {
+        return currentFile;
+    }
+
+    public void setCurrentFile(File file) {
+        currentFile.set(file);
+    }
+
+    public File currentFile() {
+        return currentFile.get();
+    }
+
+    // -- currentWorldMap
+
+    private final ObjectProperty<WorldMap> currentWorldMap = new SimpleObjectProperty<>(WorldMap.emptyMap(28, 36)) {
+        @Override
+        protected void invalidated() {
+            setTemplateImage(null);
+            changeManager.setWorldMapChanged();
+        }
+    };
+
+    public ObjectProperty<WorldMap> currentWorldMapProperty() { return currentWorldMap; }
+
+    public WorldMap currentWorldMap() { return currentWorldMap.get(); }
+
+    public void setCurrentWorldMap(WorldMap worldMap) { currentWorldMap.set(worldMap); }
+
+    // -- editMode
+
+    public static final EditMode DEFAULT_EDIT_MODE = EditMode.INSPECT;
+
+    private ObjectProperty<EditMode> editMode;
+
+    public ObjectProperty<EditMode> editModeProperty() {
+        if (editMode == null) {
+            editMode = new SimpleObjectProperty<>(DEFAULT_EDIT_MODE) {
+                @Override
+                protected void invalidated() {
+                    onEditModeChanged(get());
+                }
+            };
+        }
+        return editMode;
+    }
+
+    public EditMode editMode() { return editMode == null ? DEFAULT_EDIT_MODE : editModeProperty().get(); }
+
+    public void setEditMode(EditMode mode) {
+        editModeProperty().set(requireNonNull(mode));
+    }
+
+    public boolean editModeIs(EditMode mode) { return editMode() == mode; }
+
+    // -- gridSize
+
+    private static final double DEFAULT_GRID_SIZE = 8;
+
+    private DoubleProperty gridSize;
+
+    public DoubleProperty gridSizeProperty() {
+        if (gridSize == null) {
+            gridSize = new SimpleDoubleProperty(DEFAULT_GRID_SIZE) {
                 @Override
                 protected void invalidated() {
                     changeManager.requestRedraw();
                 }
             };
         }
-        return gridVisible;
+        return gridSize;
+    }
+
+    public double gridSize() { return gridSize.get(); }
+
+    public void setGridSize(double size) {
+        gridSizeProperty().set(size);
     }
 
     // -- foodVisible
@@ -341,6 +344,24 @@ public class TileMapEditor {
 
     public void setFoodVisible(boolean visible) {
         foodVisibleProperty().set(visible);
+    }
+
+    // -- gridVisible
+
+    public static final boolean DEFAULT_GRID_VISIBLE = true;
+
+    private BooleanProperty gridVisible;
+
+    public BooleanProperty gridVisibleProperty() {
+        if (gridVisible == null) {
+            gridVisible = new SimpleBooleanProperty(DEFAULT_GRID_VISIBLE) {
+                @Override
+                protected void invalidated() {
+                    changeManager.requestRedraw();
+                }
+            };
+        }
+        return gridVisible;
     }
 
     // -- mapPropertyEditorsVisible
@@ -471,6 +492,10 @@ public class TileMapEditor {
         return templateImage.get();
     }
 
+    public void setTemplateImage(Image image) {
+        templateImage.set(image);
+    }
+
     // -- terrainVisible
 
     public static final boolean DEFAULT_TERRAIN_VISIBLE = true;
@@ -489,7 +514,7 @@ public class TileMapEditor {
         return terrainVisible;
     }
 
-    public boolean isTerrainVisible() {
+    public boolean terrainVisible() {
         return terrainVisible == null ? DEFAULT_TERRAIN_VISIBLE : terrainVisible.get();
     }
 
@@ -509,20 +534,6 @@ public class TileMapEditor {
     // Accessor methods
 
     public ChangeManager changeManager() { return changeManager;}
-
-    public File currentDirectory() {
-        return currentDirectory;
-    }
-
-    public void setCurrentDirectory(File currentDirectory) {
-        this.currentDirectory = currentDirectory;
-    }
-
-    public ObjectProperty<WorldMap> editedWorldMapProperty() { return editedWorldMap; }
-
-    public WorldMap editedWorldMap() { return editedWorldMap.get(); }
-
-    public void setEditedWorldMap(WorldMap worldMap) { editedWorldMap.set(requireNonNull(worldMap)); }
 
     public Stage stage() {
         return stage;
@@ -551,10 +562,10 @@ public class TileMapEditor {
     }
 
     public void init(File workDir) {
-        currentDirectory = workDir;
+        setCurrentDirectory(workDir);
         setBlankMap(28, 36);
-        mazePreview3D.reset();
         setEditMode(EditMode.INSPECT);
+        mazePreview3D.reset();
     }
 
     public void start(Stage stage) {
@@ -607,11 +618,11 @@ public class TileMapEditor {
         var obstacleEditor = new ObstacleEditor() {
             @Override
             public void setValue(Vector2i tile, byte value) {
-                setTileValueRespectingSymmetry(editedWorldMap(), LayerID.TERRAIN, tile, value);
+                setTileValueRespectingSymmetry(currentWorldMap(), LayerID.TERRAIN, tile, value);
             }
         };
         obstacleEditor.joiningProperty().bind(obstaclesJoiningProperty());
-        obstacleEditor.worldMapProperty().bind(editedWorldMapProperty());
+        obstacleEditor.worldMapProperty().bind(currentWorldMapProperty());
         obstacleEditor.symmetricEditModeProperty().bind(symmetricEditModeProperty());
         return obstacleEditor;
     }
@@ -621,7 +632,7 @@ public class TileMapEditor {
         editCanvas = new EditCanvas(obstacleEditor);
         editCanvas.gridSizeProperty().bind(gridSizeProperty());
         editCanvas.gridVisibleProperty().bind(gridVisibleProperty());
-        editCanvas.worldMapProperty().bind(editedWorldMapProperty());
+        editCanvas.worldMapProperty().bind(currentWorldMapProperty());
         editCanvas.templateImageGrayProperty().bind(templateImageProperty().map(Ufx::imageToGreyscale));
         editCanvas.terrainVisibleProperty().bind(terrainVisibleProperty());
         editCanvas.foodVisibleProperty().bind(foodVisibleProperty());
@@ -639,7 +650,7 @@ public class TileMapEditor {
         //TODO is there a better way to get the initial resize time of the scroll pane?
         spEditCanvas.heightProperty().addListener((py,oldHeight,newHeight) -> {
             if (oldHeight.doubleValue() == 0) { // initial resize
-                int initialGridSize = (int) Math.max(newHeight.doubleValue() / editedWorldMap().numRows(), MIN_GRID_SIZE);
+                int initialGridSize = (int) Math.max(newHeight.doubleValue() / currentWorldMap().numRows(), MIN_GRID_SIZE);
                 setGridSize(initialGridSize);
             }
         });
@@ -664,7 +675,7 @@ public class TileMapEditor {
         mazePreview3D = new EditorMazePreview3D(this, model3DRepository, 500, 500);
         mazePreview3D.foodVisibleProperty().bind(foodVisibleProperty());
         mazePreview3D.terrainVisibleProperty().bind(terrainVisibleProperty());
-        mazePreview3D.worldMapProperty().bind(editedWorldMap);
+        mazePreview3D.worldMapProperty().bind(currentWorldMap);
     }
 
     private void createTemplateImageCanvas() {
@@ -676,32 +687,32 @@ public class TileMapEditor {
 
     public void setTerrainMapPropertyValue(String propertyName, String value) {
         requireNonNull(value);
-        if (editedWorldMap().properties(LayerID.TERRAIN).containsKey(propertyName)
-            && editedWorldMap().properties(LayerID.TERRAIN).get(propertyName).equals(value))
+        if (currentWorldMap().properties(LayerID.TERRAIN).containsKey(propertyName)
+            && currentWorldMap().properties(LayerID.TERRAIN).get(propertyName).equals(value))
             return;
-        editedWorldMap().properties(LayerID.TERRAIN).put(propertyName, value);
+        currentWorldMap().properties(LayerID.TERRAIN).put(propertyName, value);
         changeManager.setTerrainMapChanged();
         changeManager.setEdited(true);
     }
 
     private void removeTerrainMapProperty(String key) {
-        editedWorldMap().properties(LayerID.TERRAIN).remove(key);
+        currentWorldMap().properties(LayerID.TERRAIN).remove(key);
         changeManager.setTerrainMapChanged();
         changeManager.setEdited(true);
     }
 
     public void setFoodMapPropertyValue(String propertyName, String value) {
         requireNonNull(value);
-        if (editedWorldMap().properties(LayerID.FOOD).containsKey(propertyName)
-            && editedWorldMap().properties(LayerID.FOOD).get(propertyName).equals(value))
+        if (currentWorldMap().properties(LayerID.FOOD).containsKey(propertyName)
+            && currentWorldMap().properties(LayerID.FOOD).get(propertyName).equals(value))
             return;
-        editedWorldMap().properties(LayerID.FOOD).put(propertyName, value);
+        currentWorldMap().properties(LayerID.FOOD).put(propertyName, value);
         changeManager.setFoodMapChanged();
         changeManager.setEdited(true);
     }
 
     private void removeFoodMapProperty(String key) {
-        editedWorldMap().properties(LayerID.FOOD).remove(key);
+        currentWorldMap().properties(LayerID.FOOD).remove(key);
         changeManager.setFoodMapChanged();
         changeManager.setEdited(true);
     }
@@ -767,7 +778,7 @@ public class TileMapEditor {
                         Image image = new Image(stream);
                         boolean accepted = checkIfTemplateImageOk(image);
                         if (accepted) {
-                            templateImage.set(image);
+                            setTemplateImage(image);
                             createEmptyMapFromTemplateImage(image);
                             showMessage("Select colors for tile identification!", 10, MessageType.INFO);
                             tabPaneEditorViews.getSelectionModel().select(tabTemplateImage);
@@ -864,7 +875,7 @@ public class TileMapEditor {
     private void createStatusLine() {
         var lblMapSize = new Label();
         lblMapSize.setFont(FONT_STATUS_LINE_NORMAL);
-        lblMapSize.textProperty().bind(editedWorldMap.map(worldMap -> (worldMap != null)
+        lblMapSize.textProperty().bind(currentWorldMap.map(worldMap -> (worldMap != null)
             ? "Cols: %d Rows: %d".formatted(worldMap.numCols(), worldMap.numRows()) : "")
         );
 
@@ -924,17 +935,17 @@ public class TileMapEditor {
 
     private StringBinding createTitleBinding() {
         return Bindings.createStringBinding(() -> {
-                File mapFile = currentFile.get();
+                File mapFile = currentFile();
                 if (mapFile != null) {
                     return "%s: [%s] - %s".formatted( translated("map_editor"), mapFile.getName(), mapFile.getPath() );
                 }
-                if (editedWorldMap() != null && editedWorldMap().url() != null) {
-                    return  "%s: [%s]".formatted( translated("map_editor"), editedWorldMap().url() );
+                if (currentWorldMap() != null && currentWorldMap().url() != null) {
+                    return  "%s: [%s]".formatted( translated("map_editor"), currentWorldMap().url() );
                 }
                 return "%s: [%s: %d rows %d cols]".formatted(
                         translated("map_editor"), translated("unsaved_map"),
-                        editedWorldMap().numRows(), editedWorldMap().numCols() );
-            }, currentFile, editedWorldMap
+                        currentWorldMap().numRows(), currentWorldMap().numCols() );
+            }, currentFile, currentWorldMap
         );
     }
 
@@ -949,8 +960,8 @@ public class TileMapEditor {
 
     public void loadMap(WorldMap worldMap) {
         executeWithCheckForUnsavedChanges(() -> {
-            setEditedWorldMap(WorldMap.copyMap(worldMap));
-            currentFile.set(null);
+            setCurrentWorldMap(WorldMap.copyMap(worldMap));
+            setCurrentFile(null);
         });
     }
 
@@ -958,8 +969,8 @@ public class TileMapEditor {
         if (file.getName().endsWith(".world")) {
             try {
                 loadMap(WorldMap.fromFile(file));
-                currentDirectory = file.getParentFile();
-                currentFile.set(file);
+                setCurrentDirectory(file.getParentFile());
+                setCurrentFile(file);
                 Logger.info("Map read from file {}", file);
                 return true;
             } catch (IOException x) {
@@ -1010,7 +1021,7 @@ public class TileMapEditor {
 
     private void updateSourceView() {
         StringBuilder sb = new StringBuilder();
-        String[] sourceTextLines = WorldMapFormatter.formatted(editedWorldMap()).split("\n");
+        String[] sourceTextLines = WorldMapFormatter.formatted(currentWorldMap()).split("\n");
         for (int i = 0; i < sourceTextLines.length; ++i) {
             sb.append("%5d: ".formatted(i + 1)).append(sourceTextLines[i]).append("\n");
         }
@@ -1069,7 +1080,7 @@ public class TileMapEditor {
         if (tabPreview2D.isSelected()) {
             try {
                 Logger.trace("Draw preview 2D");
-                editorMazePreview2D.draw(editedWorldMap(), colorScheme);
+                editorMazePreview2D.draw(currentWorldMap(), colorScheme);
             } catch (Exception x) {
                 Logger.error(x);
             }
@@ -1162,14 +1173,14 @@ public class TileMapEditor {
     }
 
     public void moveCursorAndSetFoodAtTile(Direction dir) {
-        if (editCanvas.moveCursor(dir, tile -> hasAccessibleTerrainAtTile(editedWorldMap(), tile))) {
+        if (editCanvas.moveCursor(dir, tile -> hasAccessibleTerrainAtTile(currentWorldMap(), tile))) {
             setFoodAtFocussedTile();
         }
     }
 
     private void setFoodAtFocussedTile() {
         if (editMode() == EditMode.EDIT && selectedPaletteID() == PALETTE_ID_FOOD) {
-            if (hasAccessibleTerrainAtTile(editedWorldMap(), editCanvas.focussedTile())) {
+            if (hasAccessibleTerrainAtTile(currentWorldMap(), editCanvas.focussedTile())) {
                 editFoodAtTile(editCanvas.focussedTile(), false);
             }
         }
@@ -1224,14 +1235,14 @@ public class TileMapEditor {
 
     // ignores symmetric edit mode!
     public void clearTerrainTileValue(Vector2i tile) {
-        editedWorldMap().setContent(LayerID.TERRAIN, tile, TerrainTile.EMPTY.$);
+        currentWorldMap().setContent(LayerID.TERRAIN, tile, TerrainTile.EMPTY.$);
         changeManager.setTerrainMapChanged();
         changeManager.setEdited(true);
     }
 
     // ignores symmetric edit mode!
     public void clearFoodTileValue(Vector2i tile) {
-        editedWorldMap().setContent(LayerID.FOOD, tile, FoodTile.EMPTY.code());
+        currentWorldMap().setContent(LayerID.FOOD, tile, FoodTile.EMPTY.code());
         changeManager.setFoodMapChanged();
         changeManager.setEdited(true);
     }
@@ -1240,7 +1251,7 @@ public class TileMapEditor {
         var blankMap = WorldMap.emptyMap(tilesY, tilesX);
         setDefaultColors(blankMap);
         setDefaultScatterPositions(blankMap);
-        setEditedWorldMap(blankMap);
+        setCurrentWorldMap(blankMap);
     }
 
     public void setDefaultColors(WorldMap worldMap) {
@@ -1286,15 +1297,11 @@ public class TileMapEditor {
         TemplateImageManager.selectTemplateImage(stage, translated("open_template_image"), currentDirectory())
             .ifPresent(image -> {
                 if (checkIfTemplateImageOk(image)) {
-                    templateImage.set(image);
+                    setTemplateImage(image);
                     createEmptyMapFromTemplateImage(image);
                     showMessage("Select map colors from template!", 20, MessageType.INFO);
                 }
             });
-    }
-
-    void closeTemplateImage() {
-        templateImage.set(null);
     }
 
     void populateMapFromTemplateImage(WorldMap worldMap, Image templateImage) {
