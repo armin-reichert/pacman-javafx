@@ -10,6 +10,7 @@ import de.amr.pacmanfx.lib.tilemap.FoodTile;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.WorldMapProperty;
+import de.amr.pacmanfx.tilemap.editor.actions.Action_EditTileAtMousePosition;
 import de.amr.pacmanfx.tilemap.editor.actions.Action_FloodWithPellets;
 import de.amr.pacmanfx.tilemap.editor.actions.Action_PlaceArcadeHouse;
 import de.amr.pacmanfx.tilemap.editor.rendering.EditorActorRenderer;
@@ -301,7 +302,8 @@ public class EditCanvas extends Canvas {
                 editor.changeManager().setTerrainMapChanged();
                 editor.changeManager().setEdited(true);
             } else {
-                editor.editAtMousePosition(mouseEvent.getX(), mouseEvent.getY(), mouseEvent.isControlDown());
+                boolean erase = mouseEvent.isControlDown();
+                new Action_EditTileAtMousePosition(editor, mouseEvent.getX(), mouseEvent.getY(), erase).execute();
             }
         }
     }

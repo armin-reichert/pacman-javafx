@@ -8,7 +8,6 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.*;
 import de.amr.pacmanfx.model.WorldMapProperty;
-import de.amr.pacmanfx.tilemap.editor.actions.Action_IdentifyObstacle;
 import de.amr.pacmanfx.tilemap.editor.actions.Action_PlaceArcadeHouse;
 import de.amr.pacmanfx.tilemap.editor.actions.Action_SaveMapFile;
 import de.amr.pacmanfx.tilemap.editor.actions.Action_SelectNextMapFile;
@@ -1063,46 +1062,6 @@ public class TileMapEditor {
         }
     }
 
-    public void editAtMousePosition(double x, double y, boolean erase) {
-        Vector2i tile = tileAtMousePosition(x, y, gridSize());
-        if (editModeIs(EditMode.INSPECT)) {
-            new Action_IdentifyObstacle(this, tile).execute();
-            return;
-        }
-        switch (selectedPaletteID()) {
-            case PALETTE_ID_TERRAIN -> editTerrainAtTile(tile, erase);
-            case PALETTE_ID_FOOD -> editFoodAtTile(tile, erase);
-            case PALETTE_ID_ACTORS -> {
-                if (selectedPalette().isToolSelected()) {
-                    selectedPalette().selectedTool().apply(this, LayerID.TERRAIN, tile);
-                    changeManager.setTerrainMapChanged();
-                    changeManager.setEdited(true);
-                }
-            }
-            default -> Logger.error("Unknown palette ID " + selectedPaletteID());
-        }
-    }
-
-    private void editTerrainAtTile(Vector2i tile, boolean erase) {
-        if (erase) {
-            clearTerrainTileValue(tile);
-        } else if (selectedPalette().isToolSelected()) {
-            selectedPalette().selectedTool().apply(this, LayerID.TERRAIN, tile);
-        }
-        changeManager.setTerrainMapChanged();
-        changeManager.setEdited(true);
-    }
-
-    private void editFoodAtTile(Vector2i tile, boolean erase) {
-        if (erase) {
-            clearFoodTileValue(tile);
-        } else if (selectedPalette().isToolSelected()) {
-            selectedPalette().selectedTool().apply(this, LayerID.FOOD, tile);
-        }
-        changeManager.setFoodMapChanged();
-        changeManager.setEdited(true);
-    }
-
     public void moveCursorAndSetFoodAtTile(Direction dir) {
         if (editCanvas.moveCursor(dir, tile -> hasAccessibleTerrainAtTile(currentWorldMap(), tile))) {
             setFoodAtFocussedTile();
@@ -1110,11 +1069,19 @@ public class TileMapEditor {
     }
 
     private void setFoodAtFocussedTile() {
-        if (editMode() == EditMode.EDIT && selectedPaletteID() == PALETTE_ID_FOOD) {
+        if (editModeIs(EditMode.EDIT) && selectedPaletteID() == PALETTE_ID_FOOD) {
             if (hasAccessibleTerrainAtTile(currentWorldMap(), editCanvas.focussedTile())) {
-                editFoodAtTile(editCanvas.focussedTile(), false);
+                editFoodAtTile(editCanvas.focussedTile());
             }
         }
+    }
+
+    private void editFoodAtTile(Vector2i tile) {
+        if (selectedPalette().isToolSelected()) {
+            selectedPalette().selectedTool().apply(this, LayerID.FOOD, tile);
+        }
+        changeManager().setFoodMapChanged();
+        changeManager().setEdited(true);
     }
 
     public void selectNextPaletteEntry() {
