@@ -4,9 +4,17 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.*;
 import de.amr.pacmanfx.model.WorldMapProperty;
 
-import static de.amr.pacmanfx.tilemap.editor.TileMapEditor.DEFAULT_HOUSE_ROWS;
+import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
 
 public class Action_PlaceArcadeHouse extends AbstractEditorAction {
+
+    public static final byte[][] DEFAULT_HOUSE_ROWS = {
+        { ARC_NW.$,  WALL_H.$,  WALL_H.$,  DOOR.$,    DOOR.$,    WALL_H.$,  WALL_H.$,  ARC_NE.$ },
+        { WALL_V.$,  EMPTY.$,   EMPTY.$,   EMPTY.$,   EMPTY.$,   EMPTY.$,   EMPTY.$,   WALL_V.$ },
+        { WALL_V.$,  EMPTY.$,   EMPTY.$,   EMPTY.$,   EMPTY.$,   EMPTY.$,   EMPTY.$,   WALL_V.$ },
+        { WALL_V.$,  EMPTY.$,   EMPTY.$,   EMPTY.$,   EMPTY.$,   EMPTY.$,   EMPTY.$,   WALL_V.$ },
+        { ARC_SW.$,  WALL_H.$,  WALL_H.$,  WALL_H.$,  WALL_H.$,  WALL_H.$,  WALL_H.$,  ARC_SE.$ },
+    };
 
     public void setWorldMap(WorldMap worldMap) {
         setArg("worldMap", worldMap);
