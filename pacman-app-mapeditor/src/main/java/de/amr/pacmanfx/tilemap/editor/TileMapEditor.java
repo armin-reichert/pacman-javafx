@@ -134,7 +134,7 @@ public class TileMapEditor {
     private EditCanvas editCanvas;
     private ScrollPane spEditCanvas;
     private ScrollPane spPreview2D;
-    private EditorMazePreview2D editorMazePreview2D;
+    private EditorMazePreview2D preview2D;
     private TextArea sourceView;
     private ScrollPane spTemplateImage;
     private Pane dropTargetForTemplateImage;
@@ -163,7 +163,11 @@ public class TileMapEditor {
             updateAutoClosingMessage();
             changeManager.processChanges();
             if (changeManager.isRedrawRequested()) {
-                drawUI();
+                try {
+                    drawUI();
+                } catch (Exception x) {
+                    Logger.error(x);
+                }
             }
         }
     }
@@ -653,15 +657,15 @@ public class TileMapEditor {
     }
 
     private void createPreview2D() {
-        editorMazePreview2D = new EditorMazePreview2D();
-        editorMazePreview2D.widthProperty().bind(editCanvas.widthProperty());
-        editorMazePreview2D.heightProperty().bind(editCanvas.heightProperty());
-        editorMazePreview2D.gridSizeProperty().bind(gridSizeProperty());
-        editorMazePreview2D.terrainVisibleProperty().bind(terrainVisibleProperty());
-        editorMazePreview2D.foodVisibleProperty().bind(foodVisibleProperty());
-        editorMazePreview2D.actorsVisibleProperty().bind(actorsVisibleProperty());
+        preview2D = new EditorMazePreview2D();
+        preview2D.widthProperty().bind(editCanvas.widthProperty());
+        preview2D.heightProperty().bind(editCanvas.heightProperty());
+        preview2D.gridSizeProperty().bind(gridSizeProperty());
+        preview2D.terrainVisibleProperty().bind(terrainVisibleProperty());
+        preview2D.foodVisibleProperty().bind(foodVisibleProperty());
+        preview2D.actorsVisibleProperty().bind(actorsVisibleProperty());
 
-        spPreview2D = new ScrollPane(editorMazePreview2D);
+        spPreview2D = new ScrollPane(preview2D);
         spPreview2D.setFitToHeight(true);
         spPreview2D.hvalueProperty().bindBidirectional(spEditCanvas.hvalueProperty());
         spPreview2D.vvalueProperty().bindBidirectional(spEditCanvas.vvalueProperty());
@@ -1053,41 +1057,22 @@ public class TileMapEditor {
     private void drawUI() {
         if (currentWorldMap() == null) return;
 
+        //TODO avoid creation in every draw call
         var colorScheme = new TerrainMapColorScheme(
             COLOR_CANVAS_BACKGROUND,
             getColorFromMap(currentWorldMap(), LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_FILL, parseColor(MS_PACMAN_COLOR_WALL_FILL)),
             getColorFromMap(currentWorldMap(), LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_STROKE, parseColor(MS_PACMAN_COLOR_WALL_STROKE)),
             getColorFromMap(currentWorldMap(), LayerID.TERRAIN, WorldMapProperty.COLOR_DOOR, parseColor(MS_PACMAN_COLOR_DOOR))
         );
-        try {
-            Logger.trace("Draw palette");
-            palettes[selectedPaletteID()].draw();
-        } catch (Exception x) {
-            Logger.error(x);
-        }
+        palettes[selectedPaletteID()].draw();
         if (tabEditCanvas.isSelected()) {
-            try {
-                Logger.trace("Draw edit canvas");
-                editCanvas.draw(this, colorScheme);
-            } catch (Exception x) {
-                Logger.error(x);
-            }
+            editCanvas.draw(this, colorScheme);
         }
-        if (tabTemplateImage.isSelected()) {
-            try {
-                Logger.trace("Draw template image");
-                templateImageCanvas.draw();
-            } catch (Exception x) {
-                Logger.error(x);
-            }
+        else if (tabTemplateImage.isSelected()) {
+            templateImageCanvas.draw();
         }
         if (tabPreview2D.isSelected()) {
-            try {
-                Logger.trace("Draw preview 2D");
-                editorMazePreview2D.draw(currentWorldMap(), colorScheme);
-            } catch (Exception x) {
-                Logger.error(x);
-            }
+            preview2D.draw(currentWorldMap(), colorScheme);
         }
     }
 
