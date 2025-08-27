@@ -40,10 +40,8 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.URL;
 import java.nio.IntBuffer;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -938,16 +936,6 @@ public class TileMapEditor {
             }
         }
         return success;
-    }
-
-    public boolean saveWorldMap(WorldMap worldMap,File file) {
-        try (PrintWriter pw = new PrintWriter(file, StandardCharsets.UTF_8)) {
-            pw.print(WorldMapFormatter.formatted(worldMap));
-            return true;
-        } catch (IOException x) {
-            Logger.error(x);
-            return false;
-        }
     }
 
     public void ifNoUnsavedChangesDo(Runnable action) {

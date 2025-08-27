@@ -5,10 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tilemap.editor;
 
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.lib.tilemap.FoodTile;
-import de.amr.pacmanfx.lib.tilemap.LayerID;
-import de.amr.pacmanfx.lib.tilemap.TerrainTile;
-import de.amr.pacmanfx.lib.tilemap.WorldMap;
+import de.amr.pacmanfx.lib.tilemap.*;
 import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.tilemap.editor.rendering.TerrainTileMapRenderer;
 import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
@@ -24,7 +21,9 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import java.util.Optional;
 
@@ -204,6 +203,16 @@ public interface TileMapEditorUtil {
         } catch (IOException x) {
             Logger.error(x);
             return Optional.empty();
+        }
+    }
+
+    static boolean saveWorldMap(WorldMap worldMap,File file) {
+        try (PrintWriter pw = new PrintWriter(file, StandardCharsets.UTF_8)) {
+            pw.print(WorldMapFormatter.formatted(worldMap));
+            return true;
+        } catch (IOException x) {
+            Logger.error(x);
+            return false;
         }
     }
 }

@@ -8,6 +8,7 @@ import org.tinylog.Logger;
 import java.io.File;
 
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.*;
+import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.saveWorldMap;
 
 public class Action_SaveMapFile extends AbstractEditorAction<Void> {
 
@@ -22,7 +23,7 @@ public class Action_SaveMapFile extends AbstractEditorAction<Void> {
         if (file != null) {
             editor.setCurrentDirectory(file.getParentFile());
             if (file.getName().endsWith(".world")) {
-                boolean saved = editor.saveWorldMap(editor.currentWorldMap(), file);
+                boolean saved = saveWorldMap(editor.currentWorldMap(), file);
                 if (saved) {
                     editor.changeManager().setEdited(false);
                     editor.readWorldMapFile(file);
