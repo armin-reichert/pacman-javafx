@@ -7,6 +7,7 @@ package de.amr.pacmanfx.tilemap.editor;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.WorldMapProperty;
+import de.amr.pacmanfx.tilemap.editor.actions.Action_SetFoodProperty;
 import de.amr.pacmanfx.tilemap.editor.actions.Action_SetTerrainProperty;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
@@ -132,7 +133,8 @@ public class TemplateImageCanvas extends Canvas {
 
         Color foodColor =  getColorFromMap(worldMap(), LayerID.FOOD, WorldMapProperty.COLOR_FOOD, null);
         var miPickFoodColor = createColorMenuItem(foodColor, translated("menu.pick_color.set_food_color"));
-        miPickFoodColor.setOnAction(ae -> editor.setFoodMapPropertyValue(WorldMapProperty.COLOR_FOOD, formatColor(colorToSelect)));
+        miPickFoodColor.setOnAction(ae -> new Action_SetFoodProperty(editor,
+            WorldMapProperty.COLOR_FOOD, formatColor(colorToSelect)).execute());
 
         colorSelectionContextMenu.getItems().addAll(
             miColorPreview,

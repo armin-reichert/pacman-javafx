@@ -664,16 +664,6 @@ public class TileMapEditor {
         spTemplateImage = new ScrollPane(pane);
     }
 
-    public void setFoodMapPropertyValue(String propertyName, String value) {
-        requireNonNull(value);
-        if (currentWorldMap().properties(LayerID.FOOD).containsKey(propertyName)
-            && currentWorldMap().properties(LayerID.FOOD).get(propertyName).equals(value))
-            return;
-        currentWorldMap().properties(LayerID.FOOD).put(propertyName, value);
-        changeManager.setFoodMapChanged();
-        changeManager.setEdited(true);
-    }
-
     private void createMapSourceView() {
         sourceView = new TextArea();
         sourceView.setEditable(false);

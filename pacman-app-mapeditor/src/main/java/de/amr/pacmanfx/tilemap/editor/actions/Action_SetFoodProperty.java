@@ -5,12 +5,12 @@ import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
 
 import static java.util.Objects.requireNonNull;
 
-public class Action_SetTerrainProperty extends AbstractEditorAction<Void> {
+public class Action_SetFoodProperty extends AbstractEditorAction<Void> {
 
     private final String propertyName;
     private final String value;
 
-    public Action_SetTerrainProperty(TileMapEditor editor, String propertyName, String value) {
+    public Action_SetFoodProperty(TileMapEditor editor, String propertyName, String value) {
         super(editor);
         this.propertyName = requireNonNull(propertyName);
         this.value = requireNonNull(value);
@@ -18,12 +18,12 @@ public class Action_SetTerrainProperty extends AbstractEditorAction<Void> {
 
     @Override
     public Void execute() {
-        var terrainProperties = editor.currentWorldMap().properties(LayerID.TERRAIN);
-        if (terrainProperties.containsKey(propertyName) && terrainProperties.get(propertyName).equals(value)) {
+        var foodProperties = editor.currentWorldMap().properties(LayerID.FOOD);
+        if (foodProperties.containsKey(propertyName) && foodProperties.get(propertyName).equals(value)) {
             return null;
         }
-        terrainProperties.put(propertyName, value);
-        editor.changeManager().setTerrainMapChanged();
+        foodProperties.put(propertyName, value);
+        editor.changeManager().setFoodMapChanged();
         editor.changeManager().setEdited(true);
         return null;
     }
