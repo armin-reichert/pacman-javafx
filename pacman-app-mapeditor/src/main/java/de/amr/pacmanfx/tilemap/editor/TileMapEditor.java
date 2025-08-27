@@ -138,7 +138,7 @@ public class TileMapEditor {
     private EditorMazePreview2D preview2D;
     private TextArea sourceView;
     private ScrollPane spTemplateImage;
-    private Pane dropTargetForTemplateImage;
+    private Pane templateImageDropTarget;
     private SplitPane splitPaneEditorAndPreviews;
     private Label messageLabel;
     private TabPane tabPaneWithPalettes;
@@ -281,7 +281,6 @@ public class TileMapEditor {
     private final ObjectProperty<WorldMap> currentWorldMap = new SimpleObjectProperty<>(WorldMap.emptyMap(28, 36)) {
         @Override
         protected void invalidated() {
-            setTemplateImage(null);
             changeManager.setWorldMapChanged();
         }
     };
@@ -725,15 +724,16 @@ public class TileMapEditor {
         dropHintButton.setOnAction(ae -> initWorldMapForTemplateImage());
         dropHintButton.disableProperty().bind(editModeProperty().map(mode -> mode == EditMode.INSPECT));
 
-        dropTargetForTemplateImage = new BorderPane(dropHintButton);
-        registerDragAndDropImageHandler(dropTargetForTemplateImage);
+        templateImageDropTarget = new BorderPane(dropHintButton);
+        registerDragAndDropImageHandler(templateImageDropTarget);
 
-        var stackPane = new StackPane(spTemplateImage, dropTargetForTemplateImage);
+        var stackPane = new StackPane(spTemplateImage, templateImageDropTarget);
         tabTemplateImage = new Tab(translated("tab_template_image"), stackPane);
         templateImage.addListener((py, ov, image) -> {
-            stackPane.getChildren().remove(dropTargetForTemplateImage);
+            Logger.info("Template image changed from {} to {}", ov, image);
+            stackPane.getChildren().remove(templateImageDropTarget);
             if (image == null) {
-                stackPane.getChildren().add(dropTargetForTemplateImage);
+                stackPane.getChildren().add(templateImageDropTarget);
             }
         });
 
@@ -778,8 +778,8 @@ public class TileMapEditor {
             }
             setTemplateImage(image);
             createEmptyMapFromTemplateImage(image);
-            showMessage("Select colors for tile identification!", 10, MessageType.INFO);
             tabPaneEditorViews.getSelectionModel().select(tabTemplateImage);
+            showMessage("Select colors for tile identification!", 10, MessageType.INFO);
         }
     }
 

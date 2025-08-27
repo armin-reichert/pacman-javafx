@@ -23,12 +23,9 @@ public class Action_ShowNewMapDialog extends AbstractEditorAction {
     public Object execute(TileMapEditor editor) {
         boolean preconfigured = getArg("preconfigured", Boolean.class);
         editor.ifNoUnsavedChangesDo(() -> {
-            var dialog = new TextInputDialog("28x36");
-            dialog.setTitle(translated("new_dialog.title"));
-            dialog.setHeaderText(translated("new_dialog.header_text"));
-            dialog.setContentText(translated("new_dialog.content_text"));
-            dialog.showAndWait().ifPresent(text -> {
-                Vector2i sizeInTiles = parseSize(text);
+            TextInputDialog dialog = createMapSizeInputDialog();
+            dialog.showAndWait().ifPresent(input -> {
+                Vector2i sizeInTiles = parseSize(input);
                 if (sizeInTiles == null) {
                     editor.showMessage("Map size not recognized", 2, MessageType.ERROR);
                 }
@@ -41,18 +38,24 @@ public class Action_ShowNewMapDialog extends AbstractEditorAction {
                     } else {
                         editor.setCurrentWorldMap(editor.createEmptyMap(sizeInTiles.x(), sizeInTiles.y()));
                     }
-                    editor.currentFileProperty().set(null);
+                    editor.setCurrentFile(null);
+                    editor.setTemplateImage(null);
                 }
             });
         });
         return null;
     }
 
+    private TextInputDialog createMapSizeInputDialog() {
+        var dialog = new TextInputDialog("28x36");
+        dialog.setTitle(translated("new_dialog.title"));
+        dialog.setHeaderText(translated("new_dialog.header_text"));
+        dialog.setContentText(translated("new_dialog.content_text"));
+        return dialog;
+    }
+
     private void setPreconfiguredMap(TileMapEditor editor, int tilesX, int tilesY) {
         var worldMap = WorldMap.emptyMap(tilesY, tilesX);
-        EditorActions.ADD_BORDER_WALL.setWorldMap(worldMap);
-        EditorActions.ADD_BORDER_WALL.execute(editor);
-        editor.setDefaultScatterPositions(worldMap);
         if (worldMap.numRows() >= 20) {
             Vector2i houseMinTile = Vector2i.of(tilesX / 2 - 4, tilesY / 2 - 3);
             worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_PAC,   WorldMapFormatter.formatTile(houseMinTile.plus(3, 11)));
@@ -63,6 +66,9 @@ public class Action_ShowNewMapDialog extends AbstractEditorAction {
         }
         worldMap.buildObstacleList();
         editor.setDefaultColors(worldMap);
+        editor.setDefaultScatterPositions(worldMap);
         editor.setCurrentWorldMap(worldMap);
+        EditorActions.ADD_BORDER_WALL.setWorldMap(worldMap);
+        EditorActions.ADD_BORDER_WALL.execute(editor);
     }
 }
