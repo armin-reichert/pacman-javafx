@@ -200,8 +200,8 @@ public class EditCanvas extends Canvas {
         // Terrain
         if (terrainVisible.get()) {
             terrainRenderer.setColorScheme(colorScheme);
-            terrainRenderer.setSegmentNumbersDisplayed(editor.isSegmentNumbersVisible());
-            terrainRenderer.setObstacleInnerAreaDisplayed(editor.isObstacleInnerAreaDisplayed());
+            terrainRenderer.setSegmentNumbersDisplayed(editor.segmentNumbersVisible());
+            terrainRenderer.setObstacleInnerAreaDisplayed(editor.obstacleInnerAreaDisplayed());
             terrainRenderer.draw(worldMap(), worldMap().obstacles());
             obstacleEditor.draw(terrainRenderer);
         }
@@ -218,7 +218,7 @@ public class EditCanvas extends Canvas {
         }
 
         // Vertical separator to indicate symmetric edit mode
-        if (editor.isEditMode(EditMode.EDIT) && editor.isSymmetricEditMode()) {
+        if (editor.editModeIs(EditMode.EDIT) && editor.isSymmetricEditMode()) {
             ctx.save();
             ctx.setStroke(Color.YELLOW);
             ctx.setLineWidth(0.75);
@@ -271,7 +271,7 @@ public class EditCanvas extends Canvas {
         if (mouseEvent.getButton() == MouseButton.PRIMARY) {
             requestFocus();
             contextMenu.hide();
-            if (mouseEvent.getClickCount() == 2 && editor.isEditMode(EditMode.INSPECT)) {
+            if (mouseEvent.getClickCount() == 2 && editor.editModeIs(EditMode.INSPECT)) {
                 editor.showEditHelpText();
             }
         }
@@ -340,7 +340,7 @@ public class EditCanvas extends Canvas {
     }
 
     public void onContextMenuRequested(TileMapEditor editor, ContextMenuEvent menuEvent) {
-        if (editor.isEditMode(EditMode.INSPECT)) {
+        if (editor.editModeIs(EditMode.INSPECT)) {
             return;
         }
         if (menuEvent.isKeyboardTrigger()) {

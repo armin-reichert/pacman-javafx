@@ -58,8 +58,6 @@ import static java.util.stream.IntStream.rangeClosed;
 
 public class TileMapEditor {
 
-    // Change management
-
     public class ChangeManager {
 
         private boolean edited;
@@ -124,8 +122,8 @@ public class TileMapEditor {
         }
     }
 
-    private final Model3DRepository model3DRepository;
     private final ChangeManager changeManager = new ChangeManager();
+
     private File currentDirectory;
     private Instant messageCloseTime;
     private final AnimationTimer updateLoop;
@@ -150,20 +148,60 @@ public class TileMapEditor {
     private Tab tabEditCanvas;
     private Tab tabTemplateImage;
     private TemplateImageCanvas templateImageCanvas;
-    private TabPane tabPanePreviews;
     private Tab tabPreview2D;
-    private Tab tabPreview3D;
-    private Tab tabSourceView;
     private EditorMazePreview3D mazePreview3D;
 
-    private EditorMenuBar menuBar;
+    private final EditorMenuBar menuBar;
     private final Palette[] palettes = new Palette[3];
     private PropertyEditorPane terrainMapPropertiesEditor;
     private PropertyEditorPane foodMapPropertiesEditor;
 
-    // Properties
+    private final Model3DRepository model3DRepository;
 
-    // editMode
+    public TileMapEditor(Stage stage, Model3DRepository model3DRepository) {
+        this.stage = requireNonNull(stage);
+        this.model3DRepository = requireNonNull(model3DRepository);
+        this.menuBar = new EditorMenuBar(this);
+
+        createObstacleEditor();
+        createEditCanvas();
+        createPreview2D();
+        createPreview3D();
+        createTemplateImageCanvas();
+        createMapSourceView();
+        createPalettes(editCanvas.terrainRenderer(), editCanvas.foodRenderer());
+        createPropertyEditors();
+        createTabPaneWithEditViews();
+        createTabPaneWithPreviews();
+        createMessageDisplay();
+        createZoomSlider();
+        createStatusLine();
+        loadSampleMapsAndAddMenuEntries();
+
+        arrangeMainLayout();
+
+        contentPane.setOnKeyTyped(this::onKeyTyped);
+        contentPane.setOnKeyPressed(this::onKeyPressed);
+
+        updateLoop = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                updateAutoClosingMessage();
+                changeManager.processChanges();
+                if (changeManager.isRedrawRequested()) {
+                    var colors = new TerrainMapColorScheme(
+                        COLOR_CANVAS_BACKGROUND,
+                        getColorFromMap(editedWorldMap(), LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_FILL, parseColor(MS_PACMAN_COLOR_WALL_FILL)),
+                        getColorFromMap(editedWorldMap(), LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_STROKE, parseColor(MS_PACMAN_COLOR_WALL_STROKE)),
+                        getColorFromMap(editedWorldMap(), LayerID.TERRAIN, WorldMapProperty.COLOR_DOOR, parseColor(MS_PACMAN_COLOR_DOOR))
+                    );
+                    draw(colors);
+                }
+            }
+        };
+    }
+
+    // -- editMode
 
     public static final EditMode DEFAULT_EDIT_MODE = EditMode.INSPECT;
 
@@ -183,13 +221,13 @@ public class TileMapEditor {
 
     public EditMode editMode() { return editMode == null ? DEFAULT_EDIT_MODE : editModeProperty().get(); }
 
-    public boolean isEditMode(EditMode mode) { return editMode() == mode; }
-
     public void setEditMode(EditMode mode) {
         editModeProperty().set(requireNonNull(mode));
     }
 
-    // currentFile
+    public boolean editModeIs(EditMode mode) { return editMode() == mode; }
+
+    // -- currentFile
 
     private final ObjectProperty<File> currentFile = new SimpleObjectProperty<>();
 
@@ -201,7 +239,7 @@ public class TileMapEditor {
         return currentFile.get();
     }
 
-    // editedWorldMap
+    // -- editedWorldMap
 
     private final ObjectProperty<WorldMap> editedWorldMap = new SimpleObjectProperty<>(WorldMap.emptyMap(28, 36)) {
         @Override
@@ -211,7 +249,7 @@ public class TileMapEditor {
         }
     };
 
-    // gridSize
+    // -- gridSize
 
     private static final double DEFAULT_GRID_SIZE = 8;
 
@@ -235,7 +273,7 @@ public class TileMapEditor {
         gridSizeProperty().set(size);
     }
 
-    // actorsVisible
+    // -- actorsVisible
 
     public boolean DEFAULT_ACTORS_VISIBLE = true;
 
@@ -253,7 +291,7 @@ public class TileMapEditor {
         return actorsVisible;
     }
 
-    public boolean isActorsVisible() {
+    public boolean actorsVisible() {
         return actorsVisible == null ? DEFAULT_ACTORS_VISIBLE : actorsVisibleProperty().get();
     }
 
@@ -261,7 +299,7 @@ public class TileMapEditor {
         actorsVisibleProperty().set(visible);
     }
 
-    // gridVisible
+    // -- gridVisible
 
     public static final boolean DEFAULT_GRID_VISIBLE = true;
 
@@ -279,7 +317,7 @@ public class TileMapEditor {
         return gridVisible;
     }
 
-    // foodVisible
+    // -- foodVisible
 
     public static final boolean DEFAULT_FOOD_VISIBLE = true;
 
@@ -297,7 +335,7 @@ public class TileMapEditor {
         return foodVisible;
     }
 
-    public boolean isFoodVisible() {
+    public boolean foodVisible() {
         return foodVisible == null ? DEFAULT_FOOD_VISIBLE : foodVisible.get();
     }
 
@@ -305,7 +343,7 @@ public class TileMapEditor {
         foodVisibleProperty().set(visible);
     }
 
-    // mapPropertyEditorsVisible
+    // -- mapPropertyEditorsVisible
 
     public static final boolean DEFAULT_MAP_PROPERTY_EDITORS_VISIBLE = false;
 
@@ -323,7 +361,7 @@ public class TileMapEditor {
         return mapPropertyEditorsVisible;
     }
 
-    public boolean isMapPropertyEditorsVisible() {
+    public boolean mapPropertyEditorsVisible() {
         return mapPropertyEditorsVisible == null ? DEFAULT_MAP_PROPERTY_EDITORS_VISIBLE : propertyEditorsVisibleProperty().get();
     }
 
@@ -331,7 +369,7 @@ public class TileMapEditor {
         propertyEditorsVisibleProperty().set(value);
     }
 
-    // obstacleInnerAreaDisplayed
+    // -- obstacleInnerAreaDisplayed
 
     public static final boolean DEFAULT_OBSTACLE_INNER_AREA_DISPLAYED = false;
 
@@ -349,7 +387,7 @@ public class TileMapEditor {
         return obstacleInnerAreaDisplayed;
     }
 
-    public boolean isObstacleInnerAreaDisplayed() {
+    public boolean obstacleInnerAreaDisplayed() {
         return obstacleInnerAreaDisplayed == null ? DEFAULT_OBSTACLE_INNER_AREA_DISPLAYED :obstacleInnerAreaDisplayedProperty().get();
     }
 
@@ -357,7 +395,7 @@ public class TileMapEditor {
         obstacleInnerAreaDisplayedProperty().set(value);
     }
 
-    // obstaclesJoining
+    // -- obstaclesJoining
 
     public static boolean DEFAULT_OBSTACLES_JOINING = true;
 
@@ -370,7 +408,7 @@ public class TileMapEditor {
         return obstaclesJoining;
     }
 
-    public boolean isObstaclesJoining() {
+    public boolean obstaclesJoining() {
         return obstaclesJoining == null ? DEFAULT_OBSTACLES_JOINING : obstaclesJoiningProperty().get();
     }
 
@@ -378,7 +416,7 @@ public class TileMapEditor {
         obstaclesJoiningProperty().set(value);
     }
 
-    // segmentNumbersVisible
+    // -- segmentNumbersVisible
 
     public static final boolean DEFAULT_SEGMENT_NUMBERS_VISIBLE = false;
 
@@ -396,7 +434,7 @@ public class TileMapEditor {
         return segmentNumbersVisible;
     }
 
-    public boolean isSegmentNumbersVisible() {
+    public boolean segmentNumbersVisible() {
         return segmentNumbersVisible == null ? DEFAULT_SEGMENT_NUMBERS_VISIBLE : segmentNumbersVisibleProperty().get();
     }
 
@@ -404,7 +442,7 @@ public class TileMapEditor {
         segmentNumbersVisibleProperty().set(value);
     }
 
-    // symmetric edit mode
+    // -- symmetricEditMode
 
     public static final boolean DEFAULT_SYMMETRIC_EDIT_MODE = true;
 
@@ -433,7 +471,7 @@ public class TileMapEditor {
         return templateImage.get();
     }
 
-    // terrainVisible
+    // -- terrainVisible
 
     public static final boolean DEFAULT_TERRAIN_VISIBLE = true;
 
@@ -464,7 +502,7 @@ public class TileMapEditor {
     public ObjectProperty<Image> templateImageProperty() { return templateImage; }
 
 
-    // title
+    // -- title
 
     private final StringProperty title = new SimpleStringProperty("Tile Map Editor");
 
@@ -510,49 +548,6 @@ public class TileMapEditor {
 
     public List<Vector2i> tilesWithErrors() {
         return tilesWithErrors;
-    }
-
-    public TileMapEditor(Stage stage, Model3DRepository model3DRepository) {
-        this.stage = requireNonNull(stage);
-        this.model3DRepository = requireNonNull(model3DRepository);
-        this.menuBar = new EditorMenuBar(this);
-
-        createObstacleEditor();
-        createEditCanvas();
-        createPreview2D();
-        createPreview3D();
-        createTemplateImageCanvas();
-        createMapSourceView();
-        createPalettes(editCanvas.terrainRenderer(), editCanvas.foodRenderer());
-        createPropertyEditors();
-        createTabPaneWithEditViews();
-        createTabPaneWithPreviews();
-        createMessageDisplay();
-        createZoomSlider();
-        createStatusLine();
-        loadSampleMapsAndAddMenuEntries();
-
-        arrangeMainLayout();
-
-        contentPane.setOnKeyTyped(this::onKeyTyped);
-        contentPane.setOnKeyPressed(this::onKeyPressed);
-
-        updateLoop = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                updateAutoClosingMessage();
-                changeManager.processChanges();
-                if (changeManager.isRedrawRequested()) {
-                    var colors = new TerrainMapColorScheme(
-                            COLOR_CANVAS_BACKGROUND,
-                            getColorFromMap(editedWorldMap(), LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_FILL, parseColor(MS_PACMAN_COLOR_WALL_FILL)),
-                            getColorFromMap(editedWorldMap(), LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_STROKE, parseColor(MS_PACMAN_COLOR_WALL_STROKE)),
-                            getColorFromMap(editedWorldMap(), LayerID.TERRAIN, WorldMapProperty.COLOR_DOOR, parseColor(MS_PACMAN_COLOR_DOOR))
-                    );
-                    draw(colors);
-                }
-            }
-        };
     }
 
     public void init(File workDir) {
@@ -751,7 +746,7 @@ public class TileMapEditor {
         node.setOnDragOver(e -> {
             if (e.getDragboard().hasFiles()) {
                 File file = e.getDragboard().getFiles().getFirst();
-                if (isSupportedImageFile(file)  & !isEditMode(EditMode.INSPECT)
+                if (isSupportedImageFile(file)  & !editModeIs(EditMode.INSPECT)
                     || isWorldMapFile(file))
                 {
                     e.acceptTransferModes(TransferMode.COPY);
@@ -766,7 +761,7 @@ public class TileMapEditor {
         executeWithCheckForUnsavedChanges(() -> {
             if (e.getDragboard().hasFiles()) {
                 File file = e.getDragboard().getFiles().getFirst();
-                if (isSupportedImageFile(file) && !isEditMode(EditMode.INSPECT)) {
+                if (isSupportedImageFile(file) && !editModeIs(EditMode.INSPECT)) {
                     e.acceptTransferModes(TransferMode.COPY);
                     try (FileInputStream stream = new FileInputStream(file)) {
                         Image image = new Image(stream);
@@ -791,18 +786,18 @@ public class TileMapEditor {
 
     private void createTabPaneWithPreviews() {
         tabPreview2D = new Tab(translated("preview2D"), spPreview2D);
-        tabPreview3D = new Tab(translated("preview3D"), mazePreview3D.getSubScene());
-        tabSourceView = new Tab(translated("source"), sourceView);
+        Tab tabPreview3D = new Tab(translated("preview3D"), mazePreview3D.getSubScene());
+        Tab tabSourceView = new Tab(translated("source"), sourceView);
 
-        tabPanePreviews = new TabPane(tabPreview2D, tabPreview3D, tabSourceView);
-        tabPanePreviews.setSide(Side.BOTTOM);
-        tabPanePreviews.getTabs().forEach(tab -> tab.setClosable(false));
-        tabPanePreviews.getSelectionModel().select(tabPreview2D);
+        TabPane tabPane = new TabPane(tabPreview2D, tabPreview3D, tabSourceView);
+        tabPane.setSide(Side.BOTTOM);
+        tabPane.getTabs().forEach(tab -> tab.setClosable(false));
+        tabPane.getSelectionModel().select(tabPreview2D);
 
-        mazePreview3D.getSubScene().widthProperty().bind(tabPanePreviews.widthProperty());
-        mazePreview3D.getSubScene().heightProperty().bind(tabPanePreviews.heightProperty());
+        mazePreview3D.getSubScene().widthProperty().bind(tabPane.widthProperty());
+        mazePreview3D.getSubScene().heightProperty().bind(tabPane.heightProperty());
 
-        splitPaneEditorAndPreviews = new SplitPane(tabPaneEditorViews, tabPanePreviews);
+        splitPaneEditorAndPreviews = new SplitPane(tabPaneEditorViews, tabPane);
         splitPaneEditorAndPreviews.setDividerPositions(0.5);
     }
 
@@ -1127,7 +1122,7 @@ public class TileMapEditor {
 
     public void editAtMousePosition(double x, double y, boolean erase) {
         Vector2i tile = tileAtMousePosition(x, y, gridSize());
-        if (isEditMode(EditMode.INSPECT)) {
+        if (editModeIs(EditMode.INSPECT)) {
             EditorActions.IDENTIFY_OBSTACLE.setTile(tile);
             EditorActions.IDENTIFY_OBSTACLE.execute(this);
             return;

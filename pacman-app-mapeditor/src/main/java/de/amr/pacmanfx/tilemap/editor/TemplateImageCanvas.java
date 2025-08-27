@@ -102,7 +102,7 @@ public class TemplateImageCanvas extends Canvas {
         if (colorSelectionContextMenu != null) {
             colorSelectionContextMenu.hide();
         }
-        if (editor.isEditMode(EditMode.INSPECT)) {
+        if (editor.editModeIs(EditMode.INSPECT)) {
             return;
         }
 
