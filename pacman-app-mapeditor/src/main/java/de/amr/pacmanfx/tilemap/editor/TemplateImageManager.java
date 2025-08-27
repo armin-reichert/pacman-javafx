@@ -25,7 +25,7 @@ public class TemplateImageManager {
         }
     }
 
-    public static Optional<Image> selectTemplateImage(Window window, String title, File currentDirectory) {
+    public static Optional<Image> openTemplateImage(Window window, String title, File currentDirectory) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(title);
         fileChooser.setInitialDirectory(currentDirectory);

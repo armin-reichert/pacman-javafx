@@ -44,7 +44,7 @@ import java.util.List;
 
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.*;
 import static de.amr.pacmanfx.tilemap.editor.TemplateImageManager.isTemplateImageSizeOk;
-import static de.amr.pacmanfx.tilemap.editor.TemplateImageManager.selectTemplateImage;
+import static de.amr.pacmanfx.tilemap.editor.TemplateImageManager.openTemplateImage;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.*;
 import static de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites.*;
 import static java.util.Objects.requireNonNull;
@@ -677,7 +677,7 @@ public class TileMapEditor {
 
         var dropHintButton = new Button(translated("image_drop_hint"));
         dropHintButton.setFont(FONT_DROP_HINT);
-        dropHintButton.setOnAction(ae -> initWorldMapForTemplateImage());
+        dropHintButton.setOnAction(ae -> openTemplateImageAndCreateMap());
         dropHintButton.disableProperty().bind(editModeProperty().map(mode -> mode == EditMode.INSPECT));
 
         templateImageDropTarget = new BorderPane(dropHintButton);
@@ -971,14 +971,10 @@ public class TileMapEditor {
 
     public void moveCursorAndSetFoodAtTile(Direction dir) {
         if (editCanvas.moveCursor(dir, tile -> hasAccessibleTerrainAtTile(currentWorldMap(), tile))) {
-            setFoodAtFocussedTile();
-        }
-    }
-
-    private void setFoodAtFocussedTile() {
-        if (editModeIs(EditMode.EDIT) && selectedPaletteID() == PALETTE_ID_FOOD) {
-            if (hasAccessibleTerrainAtTile(currentWorldMap(), editCanvas.focussedTile())) {
-                editFoodAtTile(editCanvas.focussedTile());
+            if (editModeIs(EditMode.EDIT) && selectedPaletteID() == PALETTE_ID_FOOD) {
+                if (hasAccessibleTerrainAtTile(currentWorldMap(), editCanvas.focussedTile())) {
+                    editFoodAtTile(editCanvas.focussedTile());
+                }
             }
         }
     }
@@ -995,18 +991,17 @@ public class TileMapEditor {
         new Action_SetTileValue(this, worldMap, layerID, new Vector2i(col, row), code).execute();
     }
 
-    void initWorldMapForTemplateImage() {
-        selectTemplateImage(stage, translated("open_template_image"), currentDirectory())
-            .ifPresent(image -> {
-                if (isTemplateImageSizeOk(image)) {
-                    setTemplateImage(image);
-                    new Action_CreateMapFromTemplate(this, image).execute();
-                    selectTemplateImageTab();
-                    messageManager.showMessage("Select map colors from template!", 20, MessageType.INFO);
-                } else {
-                    messageManager.showMessage("Template image size seems dubious", 3, MessageType.WARNING);
-                }
-            });
+    void openTemplateImageAndCreateMap() {
+        openTemplateImage(stage, translated("open_template_image"), currentDirectory()).ifPresent(image -> {
+            if (isTemplateImageSizeOk(image)) {
+                setTemplateImage(image);
+                new Action_CreateMapFromTemplate(this, image).execute();
+                selectTemplateImageTab();
+                messageManager.showMessage("Select map colors from template!", 20, MessageType.INFO);
+            } else {
+                messageManager.showMessage("Template image size seems dubious", 3, MessageType.WARNING);
+            }
+        });
     }
 
     private void updateSourceCode() {

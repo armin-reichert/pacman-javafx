@@ -50,7 +50,7 @@ public class EditorMenuBar extends MenuBar {
         miSaveMapFileAs.setOnAction(e -> new Action_SaveMapFile(editor).execute());
 
         var miOpenTemplateImage = new MenuItem(translated("menu.file.open_template_image"));
-        miOpenTemplateImage.setOnAction(e -> editor.initWorldMapForTemplateImage());
+        miOpenTemplateImage.setOnAction(e -> editor.openTemplateImageAndCreateMap());
 
         var miCloseTemplateImage = new MenuItem(translated("menu.file.close_template_image"));
         miCloseTemplateImage.setOnAction(e -> editor.setTemplateImage(null));
