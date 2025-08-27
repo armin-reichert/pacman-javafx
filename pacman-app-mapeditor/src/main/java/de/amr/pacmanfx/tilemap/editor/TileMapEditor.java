@@ -1032,7 +1032,7 @@ public class TileMapEditor {
         changeManager().setEdited(true);
     }
 
-    public void setTileValueRespectingSymmetry(WorldMap worldMap, LayerID layerID, int row, int col, byte code) {
+    public void setTileValue(WorldMap worldMap, LayerID layerID, int row, int col, byte code) {
         new Action_SetTileValue(this, worldMap, layerID, new Vector2i(col, row), code).execute();
     }
 
