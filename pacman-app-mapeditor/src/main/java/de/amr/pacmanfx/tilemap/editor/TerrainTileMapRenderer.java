@@ -25,7 +25,7 @@ import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
-import static de.amr.pacmanfx.tilemap.editor.ArcadeMap.SPRITE_SHEET;
+import static de.amr.pacmanfx.tilemap.editor.ArcadeSprites.SPRITE_SHEET;
 
 /**
  * Tile-based renderer used in editor. At runtime and in the 2D editor preview, the path based renderer is used.

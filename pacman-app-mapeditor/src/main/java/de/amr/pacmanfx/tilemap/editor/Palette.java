@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tilemap.editor;
 
 import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer;
-import de.amr.pacmanfx.uilib.tilemap.TileMapRenderer;
+import de.amr.pacmanfx.uilib.tilemap.TileRenderer;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -28,10 +28,10 @@ public class Palette {
     private final int numRows;
     private final int numCols;
     private final GraphicsContext ctx;
-    private final List<Tool> tools;
+    private final List<TileMapEditorTool> tools;
 
-    private TileMapRenderer renderer;
-    private Tool selectedTool;
+    private TileRenderer renderer;
+    private TileMapEditorTool selectedTool;
     private Tooltip tooltip;
     private int selectedRow;
     private int selectedCol;
@@ -81,16 +81,16 @@ public class Palette {
         return id;
     }
 
-    public TileValueEditorTool newTileTool(TileMapEditor editController, byte value, String description) {
-        return new TileValueEditorTool(editController, renderer, toolSize, value, description);
+    public TileValueEditorTool newTileTool(byte value, String description) {
+        return new TileValueEditorTool(toolSize, value, description);
     }
 
     public PropertyValueEditorTool newPropertyTool(String propertyName, String description) {
-        return new PropertyValueEditorTool(renderer, toolSize, propertyName, description);
+        return new PropertyValueEditorTool(toolSize, propertyName, description);
     }
 
     public void addTileTool(TileMapEditor editor, byte value, String description) {
-        tools.add(newTileTool(editor, value, description));
+        tools.add(newTileTool(value, description));
     }
 
     public void addPropertyTool(String propertyName, String description) {
@@ -117,7 +117,7 @@ public class Palette {
         return selectedRow * numRows + selectedCol;
     }
 
-    public Tool selectedTool() {
+    public TileMapEditorTool selectedTool() {
         return selectedTool;
     }
 
@@ -133,7 +133,7 @@ public class Palette {
         return tools.size();
     }
 
-    private Tool getToolOrNull(int index) {
+    private TileMapEditorTool getToolOrNull(int index) {
         if (index < tools.size()) {
             return tools.get(index);
         }
@@ -144,7 +144,7 @@ public class Palette {
         int row = (int) e.getY() / toolSize;
         int col = (int) e.getX() / toolSize;
         int i = row * numCols + col;
-        Tool tool = getToolOrNull(i);
+        TileMapEditorTool tool = getToolOrNull(i);
         if (tool != null) {
             selectedRow = row;
             selectedCol = col;
@@ -156,7 +156,7 @@ public class Palette {
         int row = (int) e.getY() / toolSize;
         int col = (int) e.getX() / toolSize;
         int i = row * numCols + col;
-        Tool tool = getToolOrNull(i);
+        TileMapEditorTool tool = getToolOrNull(i);
         if (tool != null) {
             String text = tool.description();
             tooltip.setText(text.isEmpty() ? "?" : text);
@@ -175,9 +175,9 @@ public class Palette {
         if (renderer != null) {
             renderer.setScaling(toolSize / 8.0);
             for (int i = 0; i < numRows * numCols; ++i) {
-                Tool tool = getToolOrNull(i);
+                TileMapEditorTool tool = getToolOrNull(i);
                 if (tool != null) {
-                    tool.draw(i / numCols, i % numCols);
+                    tool.draw(renderer, i / numCols, i % numCols);
                 }
             }
         }

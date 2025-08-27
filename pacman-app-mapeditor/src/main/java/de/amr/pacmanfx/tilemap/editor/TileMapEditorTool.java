@@ -6,16 +6,13 @@ package de.amr.pacmanfx.tilemap.editor;
 
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
-import de.amr.pacmanfx.lib.tilemap.WorldMap;
-import de.amr.pacmanfx.uilib.tilemap.TileMapRenderer;
+import de.amr.pacmanfx.uilib.tilemap.TileRenderer;
 
-public interface Tool {
+public interface TileMapEditorTool {
 
     String description();
 
-    void apply(WorldMap worldMap, LayerID layerID, Vector2i tile);
+    void apply(TileMapEditor editor, LayerID layerID, Vector2i tile);
 
-    TileMapRenderer renderer();
-
-    void draw(int row, int col);
+    void draw(TileRenderer renderer, int row, int col);
 }

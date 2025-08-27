@@ -7,33 +7,25 @@ package de.amr.pacmanfx.tilemap.editor;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
-import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.lib.tilemap.WorldMapFormatter;
 import de.amr.pacmanfx.model.WorldMapProperty;
-import de.amr.pacmanfx.uilib.tilemap.TileMapRenderer;
+import de.amr.pacmanfx.uilib.tilemap.TileRenderer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.tilemap.editor.ArcadeMap.PAC_SPRITE;
-import static de.amr.pacmanfx.tilemap.editor.ArcadeMap.SPRITE_SHEET;
+import static de.amr.pacmanfx.tilemap.editor.ArcadeSprites.PAC_MAN;
+import static de.amr.pacmanfx.tilemap.editor.ArcadeSprites.SPRITE_SHEET;
 
-public class PropertyValueEditorTool implements Tool {
-    private final TileMapRenderer renderer;
+public class PropertyValueEditorTool implements TileMapEditorTool {
     private final double size;
     private final String propertyName;
     private final String description;
 
-    public PropertyValueEditorTool(TileMapRenderer renderer, double size, String propertyName, String description) {
-        this.renderer = renderer;
+    public PropertyValueEditorTool(double size, String propertyName, String description) {
         this.size = size;
         this.propertyName = propertyName;
         this.description = description;
-    }
-
-    @Override
-    public TileMapRenderer renderer() {
-        return renderer;
     }
 
     @Override
@@ -42,13 +34,13 @@ public class PropertyValueEditorTool implements Tool {
     }
 
     @Override
-    public void apply(WorldMap worldMap, LayerID layerID, Vector2i tile) {
-        worldMap.properties(layerID).put(propertyName, WorldMapFormatter.formatTile(tile));
+    public void apply(TileMapEditor editor, LayerID layerID, Vector2i tile) {
+        editor.editedWorldMap().properties(layerID).put(propertyName, WorldMapFormatter.formatTile(tile));
     }
 
     @Override
-    public void draw(int row, int col) {
-        GraphicsContext g = renderer().ctx();
+    public void draw(TileRenderer renderer, int row, int col) {
+        GraphicsContext g = renderer.ctx();
         g.setFill(Color.BLACK);
         g.fillRect(col * size, row * size, size, size);
         if (renderer instanceof TerrainTileMapRenderer tr) {
@@ -58,12 +50,12 @@ public class PropertyValueEditorTool implements Tool {
             Vector2i tile = new Vector2i(col, row);
             double x = col * TS, y = row * TS;
             switch (propertyName) {
-                case WorldMapProperty.POS_PAC -> drawSprite(g, x, y, PAC_SPRITE);
-                case WorldMapProperty.POS_RED_GHOST -> drawSprite(g, x, y, ArcadeMap.RED_GHOST_SPRITE);
-                case WorldMapProperty.POS_PINK_GHOST -> drawSprite(g, x, y, ArcadeMap.PINK_GHOST_SPRITE);
-                case WorldMapProperty.POS_CYAN_GHOST -> drawSprite(g, x, y, ArcadeMap.CYAN_GHOST_SPRITE);
-                case WorldMapProperty.POS_ORANGE_GHOST -> drawSprite(g, x, y, ArcadeMap.ORANGE_GHOST_SPRITE);
-                case WorldMapProperty.POS_BONUS -> drawSprite(g, x, y, ArcadeMap. BONUS_SPRITE);
+                case WorldMapProperty.POS_PAC -> drawSprite(g, x, y, PAC_MAN);
+                case WorldMapProperty.POS_RED_GHOST -> drawSprite(g, x, y, ArcadeSprites.RED_GHOST);
+                case WorldMapProperty.POS_PINK_GHOST -> drawSprite(g, x, y, ArcadeSprites.PINK_GHOST);
+                case WorldMapProperty.POS_CYAN_GHOST -> drawSprite(g, x, y, ArcadeSprites.CYAN_GHOST);
+                case WorldMapProperty.POS_ORANGE_GHOST -> drawSprite(g, x, y, ArcadeSprites.ORANGE_GHOST);
+                case WorldMapProperty.POS_BONUS -> drawSprite(g, x, y, ArcadeSprites.STRAWBERRY);
                 case WorldMapProperty.POS_SCATTER_RED_GHOST -> tr.drawScatterTarget(tile, Color.RED);
                 case WorldMapProperty.POS_SCATTER_PINK_GHOST -> tr.drawScatterTarget(tile, Color.PINK);
                 case WorldMapProperty.POS_SCATTER_CYAN_GHOST -> tr.drawScatterTarget(tile, Color.CYAN);

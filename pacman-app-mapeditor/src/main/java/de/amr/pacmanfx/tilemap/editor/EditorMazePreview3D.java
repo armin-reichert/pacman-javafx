@@ -21,7 +21,7 @@ import javafx.scene.transform.Rotate;
 import static de.amr.pacmanfx.Globals.TS;
 import static java.util.Objects.requireNonNull;
 
-public class MazePreview3D {
+public class EditorMazePreview3D {
 
     private final ObjectProperty<WorldMap> worldMapPy = new SimpleObjectProperty<>();
     private final BooleanProperty foodVisiblePy = new SimpleBooleanProperty(true);
@@ -33,7 +33,7 @@ public class MazePreview3D {
     private double anchorX;
     private double anchorAngle;
 
-    public MazePreview3D(TileMapEditor editor, Model3DRepository model3DRepository, double width, double height) {
+    public EditorMazePreview3D(TileMapEditor editor, Model3DRepository model3DRepository, double width, double height) {
         requireNonNull(model3DRepository);
 
         maze3D = new Maze3D(editor, model3DRepository);

@@ -33,7 +33,7 @@ public class TileMapEditorApp extends Application  {
 
             var miQuit = new MenuItem(translated("quit"));
             miQuit.setOnAction(e -> editor.executeWithCheckForUnsavedChanges(stage::close));
-            editor.getFileMenu().getItems().addAll(new SeparatorMenuItem(), miQuit);
+            editor.getMenuBar().menuFile().getItems().addAll(new SeparatorMenuItem(), miQuit);
 
             var layout = new BorderPane();
             layout.setCenter(editor.getContentPane());

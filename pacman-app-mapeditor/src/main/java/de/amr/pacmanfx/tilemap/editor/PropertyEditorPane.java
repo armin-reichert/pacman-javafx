@@ -122,15 +122,15 @@ public class PropertyEditorPane extends BorderPane {
             editor.showMessage("Property %s renamed to %s".formatted(propertyName, editedName), 2, MessageType.INFO);
             propertyName = editedName;
             rebuildPropertyEditors(); // sort order might have changed
-            editor.getChangeManager().setWorldMapChanged();
-            editor.getChangeManager().setEdited(true);
+            editor.changeManager().setWorldMapChanged();
+            editor.changeManager().setEdited(true);
         }
 
         void storePropertyValue() {
             WorldMap worldMap = worldMapPy.get();
             worldMap.properties(layerID).put(propertyName, formattedPropertyValue());
-            editor.getChangeManager().setWorldMapChanged();
-            editor.getChangeManager().setEdited(true);
+            editor.changeManager().setWorldMapChanged();
+            editor.changeManager().setEdited(true);
         }
 
         abstract String formattedPropertyValue();
@@ -328,8 +328,8 @@ public class PropertyEditorPane extends BorderPane {
 
     void deleteProperty(String propertyName) {
         worldMapPy.get().properties(layerID).remove(propertyName);
-        editor.getChangeManager().setWorldMapChanged();
-        editor.getChangeManager().setEdited(true);
+        editor.changeManager().setWorldMapChanged();
+        editor.changeManager().setEdited(true);
         editor.showMessage("Property %s deleted".formatted(propertyName), 3, MessageType.INFO);
         Logger.debug("Property {} deleted", propertyName);
     }

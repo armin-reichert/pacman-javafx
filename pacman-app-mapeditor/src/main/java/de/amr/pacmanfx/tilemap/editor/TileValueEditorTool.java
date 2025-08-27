@@ -6,28 +6,18 @@ package de.amr.pacmanfx.tilemap.editor;
 
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
-import de.amr.pacmanfx.lib.tilemap.WorldMap;
-import de.amr.pacmanfx.uilib.tilemap.TileMapRenderer;
+import de.amr.pacmanfx.uilib.tilemap.TileRenderer;
 import javafx.scene.paint.Color;
 
-public class TileValueEditorTool implements Tool {
-    private final TileMapEditor editor;
-    private final TileMapRenderer renderer;
+public class TileValueEditorTool implements TileMapEditorTool {
     private final double size;
     private final byte value;
     private final String description;
 
-    public TileValueEditorTool(TileMapEditor editor, TileMapRenderer renderer, double size, byte value, String description) {
-        this.editor = editor;
-        this.renderer = renderer;
+    public TileValueEditorTool(double size, byte value, String description) {
         this.size = size;
         this.value = value;
         this.description = description;
-    }
-
-    @Override
-    public TileMapRenderer renderer() {
-        return renderer;
     }
 
     @Override
@@ -36,12 +26,12 @@ public class TileValueEditorTool implements Tool {
     }
 
     @Override
-    public void apply(WorldMap worldMap, LayerID layerID, Vector2i tile) {
-        editor.setTileValueRespectSymmetry(worldMap, layerID, tile, value);
+    public void apply(TileMapEditor editor, LayerID layerID, Vector2i tile) {
+        editor.setTileValueRespectingSymmetry(editor.editedWorldMap(), layerID, tile, value);
     }
 
     @Override
-    public void draw(int row, int col) {
+    public void draw(TileRenderer renderer, int row, int col) {
         renderer.ctx().setFill(Color.BLACK);
         renderer.ctx().fillRect(col * size, row * size, size, size);
         renderer.drawTile(new Vector2i(col, row), value);
