@@ -102,7 +102,9 @@ public class EditorMenuBar extends MenuBar {
                 () -> editor.editMode() == EditMode.INSPECT
                         || editor.templateImageProperty().get() == null,
                 editor.editModeProperty(), editor.templateImageProperty()));
-        miIdentifyTiles.setOnAction(e -> editor.populateMapFromTemplateImage(editor.currentWorldMap(), editor.templateImage()));
+
+        miIdentifyTiles.setOnAction(e -> new Action_FillMapFromTemplate(editor,
+                editor.currentWorldMap(), editor.templateImage()).execute());
 
         var miAssignDefaultColors = new MenuItem("Assign default colors"); //TODO localize
         miAssignDefaultColors.setOnAction(e -> new Action_SetDefaultMapColors(editor, editor.currentWorldMap()).execute());

@@ -6,7 +6,9 @@ package de.amr.pacmanfx.tilemap.editor;
 
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.lib.tilemap.*;
+import de.amr.pacmanfx.lib.tilemap.LayerID;
+import de.amr.pacmanfx.lib.tilemap.WorldMap;
+import de.amr.pacmanfx.lib.tilemap.WorldMapFormatter;
 import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.tilemap.editor.actions.*;
 import de.amr.pacmanfx.tilemap.editor.rendering.TerrainTileMapRenderer;
@@ -25,8 +27,6 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
-import javafx.scene.image.PixelReader;
-import javafx.scene.image.WritablePixelFormat;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.TransferMode;
@@ -39,12 +39,9 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.IntBuffer;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.*;
 import static de.amr.pacmanfx.tilemap.editor.TemplateImageManager.isTemplateImageSizeOk;
 import static de.amr.pacmanfx.tilemap.editor.TemplateImageManager.selectTemplateImage;
@@ -1024,86 +1021,6 @@ public class TileMapEditor {
             });
     }
 
-    void populateMapFromTemplateImage(WorldMap worldMap, Image templateImage) {
-        if (templateImage == null) {
-            return;
-        }
-
-        Color fillColor = getColorFromMap(worldMap, LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_FILL, null);
-        if (fillColor == null) {
-            messageManager.showMessage("No fill color defined", 3, MessageType.ERROR);
-            return;
-        }
-        Color strokeColor = getColorFromMap(worldMap, LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_STROKE, null);
-        if (strokeColor == null) {
-            messageManager.showMessage("No stroke color defined", 3, MessageType.ERROR);
-            return;
-        }
-        Color doorColor = getColorFromMap(worldMap, LayerID.TERRAIN, WorldMapProperty.COLOR_DOOR, Color.PINK);
-        if (doorColor == null) {
-            messageManager.showMessage("No door color defined", 3, MessageType.ERROR);
-            return;
-        }
-        Color foodColor = getColorFromMap(worldMap, LayerID.FOOD, WorldMapProperty.COLOR_FOOD, null);
-        if (foodColor == null) {
-            messageManager.showMessage("No food color defined", 3, MessageType.ERROR);
-            return;
-        }
-
-        TileMatcher matcher = new TileMatcher(Color.TRANSPARENT, fillColor, strokeColor, doorColor, foodColor);
-        WritablePixelFormat<IntBuffer> pixelFormat = WritablePixelFormat.getIntArgbInstance();
-        PixelReader rdr = templateImage.getPixelReader();
-        if (rdr == null) {
-            messageManager.showMessage("Could not get pixel reader for this image", 5, MessageType.ERROR);
-            return;
-        }
-
-        LocalTime startTime = LocalTime.now();
-
-        int numMazeRows = worldMap.numRows() - (EMPTY_ROWS_BEFORE_MAZE + EMPTY_ROWS_BELOW_MAZE);
-        int numMazeCols = worldMap.numCols();
-        for (int row = 0; row < numMazeRows; ++row) {
-            for (int col = 0; col < numMazeCols; ++col) {
-                Vector2i worldMapTile = Vector2i.of(col, row + EMPTY_ROWS_BEFORE_MAZE);
-                try {
-                    int[] pixelsOfTile = new int[TS*TS]; // pixels row-wise
-                    rdr.getPixels(col * TS, row * TS, TS, TS, pixelFormat, pixelsOfTile, 0, TS);
-                    byte foodValue = matcher.matchFoodTile(pixelsOfTile);
-                    if (foodValue == FoodTile.PELLET.code() || foodValue == FoodTile.ENERGIZER.code()) {
-                        worldMap.setContent(LayerID.FOOD, worldMapTile, foodValue);
-                    } else {
-                        byte terrainValue = matcher.matchTerrainTile(pixelsOfTile);
-                        worldMap.setContent(LayerID.TERRAIN, worldMapTile, terrainValue);
-                    }
-                } catch (IndexOutOfBoundsException e) {
-                    Logger.error("Could not get pixels for tile {}, maybe image has been cropped incorrectly?", worldMapTile);
-                } catch (Exception e) {
-                    Logger.error("Could not get pixels for tile {}", worldMapTile);
-                    Logger.error(e);
-                }
-            }
-        }
-
-        // Find house: requires that at least min and max tiles have been detected
-        Vector2i houseMinTile = worldMap.tiles()
-            .filter(tile -> worldMap.content(LayerID.TERRAIN, tile) == TerrainTile.DARC_NW.$)
-            .findFirst().orElse(null);
-
-        Vector2i houseMaxTile = worldMap.tiles()
-            .filter(tile -> worldMap.content(LayerID.TERRAIN, tile) == TerrainTile.DARC_SE.$)
-            .findFirst().orElse(null);
-
-        if (houseMinTile != null && houseMaxTile != null
-                && houseMinTile.x() < houseMaxTile.x() && houseMinTile.y() < houseMaxTile.y()) {
-            new Action_PlaceArcadeHouse(this, worldMap, houseMinTile).execute();
-        }
-
-        java.time.Duration duration = java.time.Duration.between(startTime, LocalTime.now());
-        messageManager.showMessage("Map creation took %d milliseconds".formatted(duration.toMillis()), 5, MessageType.INFO);
-
-        changeManager.setWorldMapChanged();
-        changeManager.setEdited(true);
-    }
 
     private void updateSourceCode() {
         StringBuilder sb = new StringBuilder();
