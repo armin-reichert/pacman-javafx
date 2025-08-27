@@ -197,7 +197,8 @@ public class TileMapEditor {
 
     public void init(File workDir) {
         setCurrentDirectory(workDir);
-        setCurrentWorldMap(createEmptyMap(28, 36));
+        WorldMap emptyMap = new Action_CreateEmptyMap(this, 36, 28).execute();
+        setCurrentWorldMap(emptyMap);
         setEditMode(EditMode.INSPECT);
         mazePreview3D.reset();
     }
@@ -1036,28 +1037,11 @@ public class TileMapEditor {
         new Action_SetTileValue(this, worldMap, layerID, new Vector2i(col, row), code).execute();
     }
 
-    public WorldMap createEmptyMap(int numCols, int numRows) {
-        var worldMap = WorldMap.emptyMap(numRows, numCols);
-        new Action_SetDefaultMapColors(this, worldMap).execute();
-        setDefaultScatterPositions(worldMap);
-        changeManager.setTerrainMapChanged();
-        return worldMap;
-    }
-
-    public void setDefaultScatterPositions(WorldMap worldMap) {
-        int numCols = worldMap.numCols(), numRows = worldMap.numRows();
-        if (numCols >= 3 && numRows >= 2) {
-            worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_SCATTER_RED_GHOST,    WorldMapFormatter.formatTile(Vector2i.of(numCols - 3, 0)));
-            worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_SCATTER_PINK_GHOST,   WorldMapFormatter.formatTile(Vector2i.of(2, 0)));
-            worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_SCATTER_CYAN_GHOST,   WorldMapFormatter.formatTile(Vector2i.of(numCols - 1, numRows - 2)));
-            worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_SCATTER_ORANGE_GHOST, WorldMapFormatter.formatTile(Vector2i.of(0, numRows - 2)));
-        }
-    }
-
     private void createEmptyMapFromTemplateImage(Image image) {
-        int tilesX = (int) (image.getWidth() / TS);
-        int tilesY = EMPTY_ROWS_BEFORE_MAZE + EMPTY_ROWS_BELOW_MAZE + (int) (image.getHeight() / TS);
-        setCurrentWorldMap(createEmptyMap(tilesX, tilesY));
+        int numRows = EMPTY_ROWS_BEFORE_MAZE + EMPTY_ROWS_BELOW_MAZE + (int) (image.getHeight() / TS);
+        int numCols = (int) (image.getWidth() / TS);
+        WorldMap emptyMap = new Action_CreateEmptyMap(this, numRows, numCols).execute();
+        setCurrentWorldMap(emptyMap);
         currentWorldMap().properties(LayerID.TERRAIN).remove(WorldMapProperty.COLOR_WALL_FILL);
         currentWorldMap().properties(LayerID.TERRAIN).remove(WorldMapProperty.COLOR_WALL_STROKE);
         currentWorldMap().properties(LayerID.TERRAIN).remove(WorldMapProperty.COLOR_DOOR);

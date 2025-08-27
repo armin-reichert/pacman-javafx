@@ -35,9 +35,10 @@ public class Action_ShowNewMapDialog extends AbstractEditorAction<Void> {
                 }
                 else {
                     if (preconfigured) {
-                        setPreconfiguredMap(editor, sizeInTiles.x(), sizeInTiles.y());
+                        setPreconfiguredMap(editor, sizeInTiles.y(), sizeInTiles.x());
                     } else {
-                        editor.setCurrentWorldMap(editor.createEmptyMap(sizeInTiles.x(), sizeInTiles.y()));
+                        WorldMap emptyMap = new Action_CreateEmptyMap(editor, sizeInTiles.y(), sizeInTiles.x()).execute();
+                        editor.setCurrentWorldMap(emptyMap);
                     }
                     editor.setCurrentFile(null);
                     editor.setTemplateImage(null);
@@ -55,18 +56,18 @@ public class Action_ShowNewMapDialog extends AbstractEditorAction<Void> {
         return dialog;
     }
 
-    private void setPreconfiguredMap(TileMapEditor editor, int tilesX, int tilesY) {
-        var worldMap = WorldMap.emptyMap(tilesY, tilesX);
+    private void setPreconfiguredMap(TileMapEditor editor, int numRows, int numCols) {
+        var worldMap = WorldMap.emptyMap(numRows, numCols);
         if (worldMap.numRows() >= 20) {
-            Vector2i houseMinTile = Vector2i.of(tilesX / 2 - 4, tilesY / 2 - 3);
+            Vector2i houseMinTile = Vector2i.of(numCols / 2 - 4, numRows / 2 - 3);
             worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_PAC,   WorldMapFormatter.formatTile(houseMinTile.plus(3, 11)));
             worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_BONUS, WorldMapFormatter.formatTile(houseMinTile.plus(3, 5)));
             new Action_PlaceArcadeHouse(editor, worldMap, houseMinTile).execute();
         }
         worldMap.buildObstacleList();
-        new Action_SetDefaultMapColors(editor, worldMap).execute();
-        editor.setDefaultScatterPositions(worldMap);
         editor.setCurrentWorldMap(worldMap);
+        new Action_SetDefaultMapColors(editor, worldMap).execute();
+        new Action_SetDefaultScatterPositions(editor, worldMap).execute();
         new Action_AddBorderWall(editor, worldMap).execute();
     }
 }
