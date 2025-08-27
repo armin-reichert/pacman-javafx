@@ -907,18 +907,6 @@ public class TileMapEditor {
         }
     }
 
-    public void zoomIn() {
-        if (gridSize() < MAX_GRID_SIZE) {
-            gridSize.set(gridSize() + 1);
-        }
-    }
-
-    public void zoomOut() {
-        if (gridSize() > MIN_GRID_SIZE) {
-            gridSize.set(gridSize() - 1);
-        }
-    }
-
     //
     // Drawing
     //
@@ -958,10 +946,10 @@ public class TileMapEditor {
             new Action_SelectNextMapFile(this, true).execute();
         }
         else if (key == KeyCode.PLUS) {
-            zoomIn();
+            new Action_ZoomIn(this).execute();
         }
         else if (key == KeyCode.MINUS) {
-            zoomOut();
+            new Action_ZoomOut(this).execute();
         }
     }
 
@@ -1020,7 +1008,6 @@ public class TileMapEditor {
                 }
             });
     }
-
 
     private void updateSourceCode() {
         StringBuilder sb = new StringBuilder();
