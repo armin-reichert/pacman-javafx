@@ -33,8 +33,6 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -46,68 +44,19 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.nio.IntBuffer;
 import java.nio.charset.StandardCharsets;
-import java.text.MessageFormat;
 import java.time.Instant;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
 import static de.amr.pacmanfx.tilemap.editor.ArcadeSprites.*;
+import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.*;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.*;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.IntStream.rangeClosed;
 
 public class TileMapEditor {
-
-    public static final short TOOL_SIZE = 32;
-    public static final short MIN_GRID_SIZE = 8;
-    public static final short MAX_GRID_SIZE = 80;
-
-    public static final int EMPTY_ROWS_BEFORE_MAZE = 3;
-    public static final int EMPTY_ROWS_BELOW_MAZE = 2;
-
-    public static final byte PALETTE_ID_ACTORS  = 0;
-    public static final byte PALETTE_ID_TERRAIN = 1;
-    public static final byte PALETTE_ID_FOOD    = 2;
-
-    public static final ResourceBundle TEXT_BUNDLE = ResourceBundle.getBundle(TileMapEditor.class.getPackageName() + ".texts");
-
-    public static String translated(String key, Object... args) {
-        try {
-            return MessageFormat.format(TEXT_BUNDLE.getString(key), args);
-        }
-        catch (MissingResourceException x) {
-            Logger.error("No resource with key {} found in {}", key, TEXT_BUNDLE);
-            return "[%s]".formatted(key);
-        }
-    }
-
-    private static boolean isSupportedImageFile(File file) {
-        return Stream.of(".bmp", ".gif", ".jpg", ".png").anyMatch(ext -> file.getName().toLowerCase().endsWith(ext));
-    }
-
-    private static boolean isWorldMapFile(File file) {
-        return file.getName().toLowerCase().endsWith(".world");
-    }
-
-    public static final Font FONT_DROP_HINT               = Font.font("Sans", FontWeight.BOLD, 16);
-    public static final Font FONT_MESSAGE                 = Font.font("Sans", FontWeight.BOLD, 14);
-    public static final Font FONT_SOURCE_VIEW             = Font.font("Consolas", FontWeight.NORMAL, 14);
-    public static final Font FONT_STATUS_LINE_EDIT_MODE   = Font.font("Sans", FontWeight.BOLD, 18);
-    public static final Font FONT_STATUS_LINE_NORMAL      = Font.font("Sans", FontWeight.NORMAL, 14);
-
-    public static final Color COLOR_CANVAS_BACKGROUND = Color.BLACK;
-
-    public static final Node NO_GRAPHIC = null;
-
-    public static final ExtensionFilter FILTER_WORLD_MAP_FILES = new ExtensionFilter("World Map Files", "*.world");
-    public static final ExtensionFilter FILTER_IMAGE_FILES     = new ExtensionFilter("Image Files", "*.bmp", "*.gif", "*.jpg", "*.png");
-    public static final ExtensionFilter FILTER_ALL_FILES       = new ExtensionFilter("All Files", "*.*");
 
     // Change management
 
@@ -1084,13 +1033,13 @@ public class TileMapEditor {
     }
 
     private void zoomIn() {
-        if (gridSize() < TileMapEditor.MAX_GRID_SIZE) {
+        if (gridSize() < MAX_GRID_SIZE) {
             gridSize.set(gridSize() + 1);
         }
     }
 
     private void zoomOut() {
-        if (gridSize() > TileMapEditor.MIN_GRID_SIZE) {
+        if (gridSize() > MIN_GRID_SIZE) {
             gridSize.set(gridSize() - 1);
         }
     }
@@ -1184,9 +1133,9 @@ public class TileMapEditor {
             return;
         }
         switch (selectedPaletteID()) {
-            case TileMapEditor.PALETTE_ID_TERRAIN -> editTerrainAtTile(tile, erase);
-            case TileMapEditor.PALETTE_ID_FOOD -> editFoodAtTile(tile, erase);
-            case TileMapEditor.PALETTE_ID_ACTORS -> {
+            case PALETTE_ID_TERRAIN -> editTerrainAtTile(tile, erase);
+            case PALETTE_ID_FOOD -> editFoodAtTile(tile, erase);
+            case PALETTE_ID_ACTORS -> {
                 if (selectedPalette().isToolSelected()) {
                     selectedPalette().selectedTool().apply(this, LayerID.TERRAIN, tile);
                     changeManager.setTerrainMapChanged();

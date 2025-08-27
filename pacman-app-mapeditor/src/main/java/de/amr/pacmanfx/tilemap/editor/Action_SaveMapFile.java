@@ -5,14 +5,14 @@ import org.tinylog.Logger;
 
 import java.io.File;
 
-import static de.amr.pacmanfx.tilemap.editor.TileMapEditor.translated;
+import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.*;
 
 public class Action_SaveMapFile extends AbstractEditorAction {
 
     private FileChooser createFileChooser(File currentDirectory) {
         var fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().addAll(TileMapEditor.FILTER_WORLD_MAP_FILES, TileMapEditor.FILTER_ALL_FILES);
-        fileChooser.setSelectedExtensionFilter(TileMapEditor.FILTER_WORLD_MAP_FILES);
+        fileChooser.getExtensionFilters().addAll(FILTER_WORLD_MAP_FILES, FILTER_ALL_FILES);
+        fileChooser.setSelectedExtensionFilter(FILTER_WORLD_MAP_FILES);
         fileChooser.setInitialDirectory(currentDirectory);
         return fileChooser;
     }

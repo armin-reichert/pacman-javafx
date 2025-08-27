@@ -10,6 +10,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Optional;
 
+import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.FILTER_ALL_FILES;
+import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.FILTER_IMAGE_FILES;
+
 public class TemplateImageManager {
 
     public static Image readImageFromFile(File file) {
@@ -22,12 +25,12 @@ public class TemplateImageManager {
     }
 
     public static Optional<Image> selectTemplateImage(Window window, String title, File currentDirectory) {
-        FileChooser selector = new FileChooser();
-        selector.setTitle(title);
-        selector.setInitialDirectory(currentDirectory);
-        selector.getExtensionFilters().addAll(TileMapEditor.FILTER_IMAGE_FILES, TileMapEditor.FILTER_ALL_FILES);
-        selector.setSelectedExtensionFilter(TileMapEditor.FILTER_IMAGE_FILES);
-        File selectedFile = selector.showOpenDialog(window);
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle(title);
+        fileChooser.setInitialDirectory(currentDirectory);
+        fileChooser.getExtensionFilters().addAll(FILTER_IMAGE_FILES, FILTER_ALL_FILES);
+        fileChooser.setSelectedExtensionFilter(FILTER_IMAGE_FILES);
+        File selectedFile = fileChooser.showOpenDialog(window);
         if (selectedFile != null) {
             Image image = readImageFromFile(selectedFile);
             if (image != null) {
@@ -36,5 +39,4 @@ public class TemplateImageManager {
         }
         return Optional.empty();
     }
-
 }

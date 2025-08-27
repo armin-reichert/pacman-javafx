@@ -7,8 +7,8 @@ import de.amr.pacmanfx.lib.tilemap.TerrainTile;
 import javafx.beans.binding.Bindings;
 import javafx.scene.control.*;
 
-import static de.amr.pacmanfx.tilemap.editor.TileMapEditor.NO_GRAPHIC;
-import static de.amr.pacmanfx.tilemap.editor.TileMapEditor.translated;
+import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.NO_GRAPHIC;
+import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.translated;
 
 public class EditorMenuBar extends MenuBar {
 

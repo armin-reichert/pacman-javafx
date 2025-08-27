@@ -30,7 +30,7 @@ import java.util.function.Predicate;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tilemap.editor.ArcadeSprites.*;
-import static de.amr.pacmanfx.tilemap.editor.TileMapEditor.*;
+import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.*;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.*;
 import static java.util.Objects.requireNonNull;
 
@@ -309,14 +309,14 @@ public class EditCanvas extends Canvas {
             case EDIT -> {
                 if (mouseEvent.isShiftDown()) {
                     switch (editor.selectedPaletteID()) {
-                        case TileMapEditor.PALETTE_ID_TERRAIN -> {
+                        case PALETTE_ID_TERRAIN -> {
                             if (editor.selectedPalette().isToolSelected()) {
                                 editor.selectedPalette().selectedTool().apply(editor, LayerID.TERRAIN, focussedTile());
                             }
                             editor.changeManager().setEdited(true);
                             editor.changeManager().setWorldMapChanged();
                         }
-                        case TileMapEditor.PALETTE_ID_FOOD -> {
+                        case PALETTE_ID_FOOD -> {
                             if (editor.selectedPalette().isToolSelected()) {
                                 editor.selectedPalette().selectedTool().apply(editor, LayerID.FOOD, focussedTile());
                             }
@@ -330,8 +330,8 @@ public class EditCanvas extends Canvas {
             case ERASE -> {
                 if (mouseEvent.isShiftDown()) {
                     switch (editor.selectedPaletteID()) {
-                        case TileMapEditor.PALETTE_ID_TERRAIN -> editor.clearTerrainTileValue(tile);
-                        case TileMapEditor.PALETTE_ID_FOOD -> editor.clearFoodTileValue(tile);
+                        case PALETTE_ID_TERRAIN -> editor.clearTerrainTileValue(tile);
+                        case PALETTE_ID_FOOD -> editor.clearFoodTileValue(tile);
                     }
                 }
             }

@@ -22,8 +22,8 @@ import org.tinylog.Logger;
 import java.net.URL;
 import java.util.Locale;
 
-import static de.amr.pacmanfx.tilemap.editor.TileMapEditor.EMPTY_ROWS_BEFORE_MAZE;
-import static de.amr.pacmanfx.tilemap.editor.TileMapEditor.EMPTY_ROWS_BELOW_MAZE;
+import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.EMPTY_ROWS_BEFORE_MAZE;
+import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.EMPTY_ROWS_BELOW_MAZE;
 import static java.util.Objects.requireNonNull;
 
 public interface TileMapEditorUtil {
