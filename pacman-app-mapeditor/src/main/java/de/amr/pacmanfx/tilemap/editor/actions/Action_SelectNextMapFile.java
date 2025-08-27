@@ -6,15 +6,17 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.util.Arrays;
 
-public class Action_SelectNextMapFile extends AbstractEditorAction {
+public class Action_SelectNextMapFile extends AbstractEditorAction<File> {
 
-    public void setForward(boolean forward) {
-        setArg("forward", forward);
+    private final boolean forward;
+
+    public Action_SelectNextMapFile(TileMapEditor editor, boolean forward) {
+        super(editor);
+        this.forward = forward;
     }
 
     @Override
-    public Object execute(TileMapEditor editor) {
-        boolean forward = getArg("forward", Boolean.class);
+    public File execute() {
         File currentFile = editor.currentFile();
         if (currentFile == null) {
             return null;

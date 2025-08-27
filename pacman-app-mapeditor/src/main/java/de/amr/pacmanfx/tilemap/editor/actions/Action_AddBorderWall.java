@@ -7,16 +7,19 @@ import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
 
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.EMPTY_ROWS_BEFORE_MAZE;
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.EMPTY_ROWS_BELOW_MAZE;
+import static java.util.Objects.requireNonNull;
 
-public class Action_AddBorderWall extends AbstractEditorAction {
+public class Action_AddBorderWall extends AbstractEditorAction<Void> {
 
-    public void setWorldMap(WorldMap worldMap) {
-        setArg("worldMap", worldMap);
+    private final WorldMap worldMap;
+
+    public Action_AddBorderWall(TileMapEditor editor, WorldMap worldMap) {
+        super(editor);
+        this.worldMap = requireNonNull(worldMap);
     }
 
     @Override
-    public Object execute(TileMapEditor editor) {
-        WorldMap worldMap = getArg("worldMap", WorldMap.class);
+    public Void execute() {
         int lastRow = worldMap.numRows() - 1 - EMPTY_ROWS_BELOW_MAZE, lastCol = worldMap.numCols() - 1;
         editor.setTileValueRespectingSymmetry(worldMap, LayerID.TERRAIN, EMPTY_ROWS_BEFORE_MAZE, 0, TerrainTile.ARC_NW.$);
         editor.setTileValueRespectingSymmetry(worldMap, LayerID.TERRAIN, EMPTY_ROWS_BEFORE_MAZE, lastCol, TerrainTile.ARC_NE.$);

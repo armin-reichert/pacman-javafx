@@ -9,20 +9,15 @@ import java.io.File;
 
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.*;
 
-public class Action_SaveMapFile extends AbstractEditorAction {
+public class Action_SaveMapFile extends AbstractEditorAction<Void> {
 
-    private FileChooser createFileChooser(File currentDirectory) {
-        var fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().addAll(FILTER_WORLD_MAP_FILES, FILTER_ALL_FILES);
-        fileChooser.setSelectedExtensionFilter(FILTER_WORLD_MAP_FILES);
-        fileChooser.setInitialDirectory(currentDirectory);
-        return fileChooser;
+    public Action_SaveMapFile(TileMapEditor editor) {
+        super(editor);
     }
 
     @Override
-    public Object execute(TileMapEditor editor) {
-        FileChooser fileChooser = createFileChooser(editor.currentDirectory());
-        fileChooser.setTitle(translated("save_file"));
+    public Void execute() {
+        FileChooser fileChooser = createFileChooser();
         File file = fileChooser.showSaveDialog(editor.stage());
         if (file != null) {
             editor.setCurrentDirectory(file.getParentFile());
@@ -43,5 +38,12 @@ public class Action_SaveMapFile extends AbstractEditorAction {
         return null;
     }
 
-
+    private FileChooser createFileChooser() {
+        var fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().addAll(FILTER_WORLD_MAP_FILES, FILTER_ALL_FILES);
+        fileChooser.setSelectedExtensionFilter(FILTER_WORLD_MAP_FILES);
+        fileChooser.setInitialDirectory(editor.currentDirectory());
+        fileChooser.setTitle(translated("save_file"));
+        return fileChooser;
+    }
 }

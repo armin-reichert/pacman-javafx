@@ -5,7 +5,6 @@ import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.lib.tilemap.WorldMapFormatter;
 import de.amr.pacmanfx.model.WorldMapProperty;
-import de.amr.pacmanfx.tilemap.editor.EditorActions;
 import de.amr.pacmanfx.tilemap.editor.MessageType;
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
 import javafx.scene.control.TextInputDialog;
@@ -13,15 +12,17 @@ import javafx.scene.control.TextInputDialog;
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.translated;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.parseSize;
 
-public class Action_ShowNewMapDialog extends AbstractEditorAction {
+public class Action_ShowNewMapDialog extends AbstractEditorAction<Void> {
 
-    public void setPreconfigureMap(boolean preconfigureMap) {
-        setArg("preconfigured", preconfigureMap);
+    private final boolean preconfigured;
+
+    public Action_ShowNewMapDialog(TileMapEditor editor, boolean preconfigured) {
+        super(editor);
+        this.preconfigured = preconfigured;
     }
 
     @Override
-    public Object execute(TileMapEditor editor) {
-        boolean preconfigured = getArg("preconfigured", Boolean.class);
+    public Void execute() {
         editor.ifNoUnsavedChangesDo(() -> {
             TextInputDialog dialog = createMapSizeInputDialog();
             dialog.showAndWait().ifPresent(input -> {
@@ -60,15 +61,12 @@ public class Action_ShowNewMapDialog extends AbstractEditorAction {
             Vector2i houseMinTile = Vector2i.of(tilesX / 2 - 4, tilesY / 2 - 3);
             worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_PAC,   WorldMapFormatter.formatTile(houseMinTile.plus(3, 11)));
             worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_BONUS, WorldMapFormatter.formatTile(houseMinTile.plus(3, 5)));
-            EditorActions.PLACE_ARCADE_HOUSE.setHouseMinTile(houseMinTile);
-            EditorActions.PLACE_ARCADE_HOUSE.setWorldMap(worldMap);
-            EditorActions.PLACE_ARCADE_HOUSE.execute(editor);
+            new Action_PlaceArcadeHouse(editor, worldMap, houseMinTile).execute();
         }
         worldMap.buildObstacleList();
         editor.setDefaultColors(worldMap);
         editor.setDefaultScatterPositions(worldMap);
         editor.setCurrentWorldMap(worldMap);
-        EditorActions.ADD_BORDER_WALL.setWorldMap(worldMap);
-        EditorActions.ADD_BORDER_WALL.execute(editor);
+        new Action_AddBorderWall(editor, worldMap).execute();
     }
 }

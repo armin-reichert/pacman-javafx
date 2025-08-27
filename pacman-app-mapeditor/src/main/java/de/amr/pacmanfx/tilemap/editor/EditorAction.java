@@ -1,6 +1,9 @@
 package de.amr.pacmanfx.tilemap.editor;
 
-public interface EditorAction {
+/**
+ * @param <R> result type
+ */
+public interface EditorAction<R> {
 
-    Object execute(TileMapEditor editor);
+    R execute();
 }

@@ -9,37 +9,41 @@ import javafx.scene.input.ClipboardContent;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
+import static java.util.Objects.requireNonNull;
 
-public class Action_IdentifyObstacle extends AbstractEditorAction {
+public class Action_IdentifyObstacle extends AbstractEditorAction<String> {
 
-    public void setTile(Vector2i tile) {
-        setArg("tile", tile);
+    private final Vector2i tile;
+
+    public Action_IdentifyObstacle(TileMapEditor editor, Vector2i tile) {
+        super(editor);
+        this.tile = requireNonNull(tile);
     }
 
     @Override
-    public Object execute(TileMapEditor editor) {
-        Vector2i tile = getArg("tile", Vector2i.class);
+    public String execute() {
         WorldMap worldMap = editor.currentWorldMap();
-        Obstacle obstacleAtTile = worldMap.obstacles().stream()
-                .filter(obstacle -> tileAt(obstacle.startPoint().minus(HTS, 0).toVector2f()).equals(tile))
-                .findFirst().orElse(null);
-        if (obstacleAtTile != null) {
-            String encoding = obstacleAtTile.encoding();
+        Obstacle obstacleStartingAtTile = worldMap.obstacles().stream()
+            .filter(obstacle -> tileAt(obstacle.startPoint().minus(HTS, 0).toVector2f()).equals(tile))
+            .findFirst().orElse(null);
+        if (obstacleStartingAtTile != null) {
+            String encoding = obstacleStartingAtTile.encoding();
             Clipboard clipboard = Clipboard.getSystemClipboard();
             ClipboardContent content = new ClipboardContent();
             content.putString(encoding);
             clipboard.setContent(content);
             editor.messageManager().showMessage("Obstacle (copied to clipboard)", 5, MessageType.INFO);
+            return encoding;
         } else {
-            byte terrainValue = worldMap.content(LayerID.TERRAIN, tile);
-            byte foodValue = worldMap.content(LayerID.FOOD, tile);
+            byte terrainCode = worldMap.content(LayerID.TERRAIN, tile);
+            byte foodCode = worldMap.content(LayerID.FOOD, tile);
             String info = "";
-            if (terrainValue != TerrainTile.EMPTY.$)
-                info = "Terrain #%02X (%s)".formatted(terrainValue, terrainValue);
-            if (foodValue != FoodTile.EMPTY.code())
-                info = "Food #%02X (%s)".formatted(foodValue, foodValue);
+            if (terrainCode != TerrainTile.EMPTY.code())
+                info = "Terrain #%02X (%s)".formatted(terrainCode, terrainCode);
+            if (foodCode != FoodTile.EMPTY.code())
+                info = "Food #%02X (%s)".formatted(foodCode, foodCode);
             editor.messageManager().showMessage(info, 4, MessageType.INFO);
+            return null;
         }
-        return null;
     }
 }

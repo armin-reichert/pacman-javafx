@@ -2,6 +2,7 @@ package de.amr.pacmanfx.tilemap.editor.actions;
 
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2i;
+import de.amr.pacmanfx.lib.tilemap.FoodTile;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
 
@@ -11,20 +12,19 @@ import java.util.Set;
 
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.canEditFoodAtTile;
 
-public class Action_FloodWithPellets extends AbstractEditorAction {
+public class Action_FloodWithPellets extends AbstractEditorAction<Void> {
 
-    public void setStartTile(Vector2i tile) {
-        setArg("startTile", tile);
-    }
+    private final Vector2i startTile;
+    private final FoodTile foodTile;
 
-    public void setPelletValue(byte value) {
-        setArg("pelletValue", value);
+    public Action_FloodWithPellets(TileMapEditor editor, Vector2i startTile, FoodTile foodTile) {
+        super(editor);
+        this.startTile = startTile;
+        this.foodTile = foodTile;
     }
 
     @Override
-    public Object execute(TileMapEditor editor) {
-        Vector2i startTile = getArg("startTile", Vector2i.class);
-        Byte pelletValue = getArg("pelletValue", Byte.class);
+    public Void execute() {
         if (!canEditFoodAtTile(editor.currentWorldMap(), startTile)) {
             return null;
         }
@@ -34,8 +34,8 @@ public class Action_FloodWithPellets extends AbstractEditorAction {
         visited.add(startTile);
         while (!q.isEmpty()) {
             Vector2i current = q.poll();
-            // use this method such that symmmetric editing etc. is taken into account:
-            editor.setTileValueRespectingSymmetry(editor.currentWorldMap(), LayerID.FOOD, current, pelletValue);
+            // use this method such that symmetric editing etc. is taken into account:
+            editor.setTileValueRespectingSymmetry(editor.currentWorldMap(), LayerID.FOOD, current, foodTile.code());
             for (Direction dir : Direction.values()) {
                 Vector2i neighborTile = current.plus(dir.vector());
                 if  (!visited.contains(neighborTile) && canEditFoodAtTile(editor.currentWorldMap(), neighborTile)) {

@@ -8,7 +8,10 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.*;
 import de.amr.pacmanfx.model.WorldMapProperty;
+import de.amr.pacmanfx.tilemap.editor.actions.Action_IdentifyObstacle;
 import de.amr.pacmanfx.tilemap.editor.actions.Action_PlaceArcadeHouse;
+import de.amr.pacmanfx.tilemap.editor.actions.Action_SaveMapFile;
+import de.amr.pacmanfx.tilemap.editor.actions.Action_SelectNextMapFile;
 import de.amr.pacmanfx.tilemap.editor.rendering.TerrainTileMapRenderer;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
@@ -950,7 +953,7 @@ public class TileMapEditor {
         SaveConfirmation confirmationDialog = new SaveConfirmation();
         confirmationDialog.showAndWait().ifPresent(choice -> {
             if (choice == SaveConfirmation.SAVE_CHANGES) {
-                EditorActions.SAVE_MAP_FILE.execute(this);
+                new Action_SaveMapFile(this).execute();
                 action.run();
             } else if (choice == SaveConfirmation.NO_SAVE_CHANGES) {
                 changeManager.setEdited(false);
@@ -1025,17 +1028,15 @@ public class TileMapEditor {
         boolean alt = e.isAltDown();
 
         if (alt && key == KeyCode.LEFT) {
-            EditorActions.SELECT_NEXT_MAP_FILE.setForward(false);
-            File file = (File) EditorActions.SELECT_NEXT_MAP_FILE.execute(this);
-            if (file != null && !readWorldMapFile(file)) {
-                messageManager.showMessage("Map file '%s' could not be loaded".formatted(file.getName()), 3, MessageType.ERROR);
+            File previousFile = new Action_SelectNextMapFile(this, false).execute();
+            if (previousFile != null && !readWorldMapFile(previousFile)) {
+                messageManager.showMessage("Map file '%s' could not be loaded".formatted(previousFile.getName()), 3, MessageType.ERROR);
             }
         }
         else if (alt && key == KeyCode.RIGHT) {
-            EditorActions.SELECT_NEXT_MAP_FILE.setForward(true);
-            File file = (File) EditorActions.SELECT_NEXT_MAP_FILE.execute(this);
-            if (file != null && !readWorldMapFile(file)) {
-                messageManager.showMessage("Map file '%s' could not be loaded".formatted(file.getName()), 3, MessageType.ERROR);
+            File nextFile = new Action_SelectNextMapFile(this, true).execute();
+            if (nextFile != null && !readWorldMapFile(nextFile)) {
+                messageManager.showMessage("Map file '%s' could not be loaded".formatted(nextFile.getName()), 3, MessageType.ERROR);
             }
         }
         else if (key == KeyCode.PLUS) {
@@ -1065,8 +1066,7 @@ public class TileMapEditor {
     public void editAtMousePosition(double x, double y, boolean erase) {
         Vector2i tile = tileAtMousePosition(x, y, gridSize());
         if (editModeIs(EditMode.INSPECT)) {
-            EditorActions.IDENTIFY_OBSTACLE.setTile(tile);
-            EditorActions.IDENTIFY_OBSTACLE.execute(this);
+            new Action_IdentifyObstacle(this, tile).execute();
             return;
         }
         switch (selectedPaletteID()) {
@@ -1302,10 +1302,7 @@ public class TileMapEditor {
 
         if (houseMinTile != null && houseMaxTile != null
                 && houseMinTile.x() < houseMaxTile.x() && houseMinTile.y() < houseMaxTile.y()) {
-            Action_PlaceArcadeHouse action = new Action_PlaceArcadeHouse();
-            action.setHouseMinTile(houseMinTile);
-            action.setWorldMap(worldMap);
-            action.execute(this);
+            new Action_PlaceArcadeHouse(this, worldMap, houseMinTile).execute();
         }
 
         java.time.Duration duration = java.time.Duration.between(startTime, LocalTime.now());

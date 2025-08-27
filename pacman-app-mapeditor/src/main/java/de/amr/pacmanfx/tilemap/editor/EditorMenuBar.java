@@ -4,6 +4,7 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.FoodTile;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.TerrainTile;
+import de.amr.pacmanfx.tilemap.editor.actions.*;
 import javafx.beans.binding.Bindings;
 import javafx.scene.control.*;
 
@@ -37,22 +38,16 @@ public class EditorMenuBar extends MenuBar {
 
         // File
         var miNewPreconfiguredMap = new MenuItem(translated("menu.file.new"));
-        miNewPreconfiguredMap.setOnAction(e -> {
-            EditorActions.SHOW_NEW_MAP_DIALOG.setPreconfigureMap(true);
-            EditorActions.SHOW_NEW_MAP_DIALOG.execute(editor);
-        });
+        miNewPreconfiguredMap.setOnAction(e -> new Action_ShowNewMapDialog(editor, true).execute());
 
         var miNewBlankMap = new MenuItem(translated("menu.file.new_blank_map"));
-        miNewBlankMap.setOnAction(e -> {
-            EditorActions.SHOW_NEW_MAP_DIALOG.setPreconfigureMap(false);
-            EditorActions.SHOW_NEW_MAP_DIALOG.execute(editor);
-        });
+        miNewBlankMap.setOnAction(e -> new Action_ShowNewMapDialog(editor, false).execute());
 
         var miOpenMapFile = new MenuItem(translated("menu.file.open"));
-        miOpenMapFile.setOnAction(e -> EditorActions.OPEN_MAP_FILE.execute(editor));
+        miOpenMapFile.setOnAction(e -> new Action_OpenMapFile(editor).execute());
 
         var miSaveMapFileAs = new MenuItem(translated("menu.file.save_as"));
-        miSaveMapFileAs.setOnAction(e -> EditorActions.SAVE_MAP_FILE.execute(editor));
+        miSaveMapFileAs.setOnAction(e -> new Action_SaveMapFile(editor).execute());
 
         var miOpenTemplateImage = new MenuItem(translated("menu.file.open_template_image"));
         miOpenTemplateImage.setOnAction(e -> editor.initWorldMapForTemplateImage());
@@ -74,19 +69,14 @@ public class EditorMenuBar extends MenuBar {
         miObstacleJoining.selectedProperty().bindBidirectional(editor.obstaclesJoiningProperty());
 
         var miAddBorder = new MenuItem(translated("menu.edit.add_border"));
-        miAddBorder.setOnAction(e -> {
-            EditorActions.ADD_BORDER_WALL.setWorldMap(editor.currentWorldMap());
-            EditorActions.ADD_BORDER_WALL.execute(editor);
-        });
+        miAddBorder.setOnAction(e -> new Action_AddBorderWall(editor, editor.currentWorldMap()).execute());
         miAddBorder.disableProperty().bind(editor.editModeProperty().map(mode -> mode == EditMode.INSPECT));
 
         var miAddHouse = new MenuItem(translated("menu.edit.add_house"));
         miAddHouse.setOnAction(e -> {
             int numRows = editor.currentWorldMap().numRows(), numCols = editor.currentWorldMap().numCols();
             int houseMinX = numCols / 2 - 4, houseMinY = numRows / 2 - 3;
-            EditorActions.PLACE_ARCADE_HOUSE.setHouseMinTile(Vector2i.of(houseMinX, houseMinY));
-            EditorActions.PLACE_ARCADE_HOUSE.setWorldMap(editor.currentWorldMap());
-            EditorActions.PLACE_ARCADE_HOUSE.execute(editor);
+            new Action_PlaceArcadeHouse(editor, editor.currentWorldMap(), Vector2i.of(houseMinX, houseMinY)).execute();
         });
 
         miAddHouse.disableProperty().bind(editor.editModeProperty().map(mode -> mode == EditMode.INSPECT));

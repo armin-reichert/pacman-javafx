@@ -10,6 +10,8 @@ import de.amr.pacmanfx.lib.tilemap.FoodTile;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.WorldMapProperty;
+import de.amr.pacmanfx.tilemap.editor.actions.Action_FloodWithPellets;
+import de.amr.pacmanfx.tilemap.editor.actions.Action_PlaceArcadeHouse;
 import de.amr.pacmanfx.tilemap.editor.rendering.EditorActorRenderer;
 import de.amr.pacmanfx.tilemap.editor.rendering.TerrainTileMapRenderer;
 import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
@@ -31,9 +33,9 @@ import org.tinylog.Logger;
 import java.util.function.Predicate;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites.*;
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.*;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.*;
+import static de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites.*;
 import static java.util.Objects.requireNonNull;
 
 public class EditCanvas extends Canvas {
@@ -352,11 +354,7 @@ public class EditCanvas extends Canvas {
         Vector2i tile = tileAtMousePosition(menuEvent.getX(), menuEvent.getY(), gridSize());
 
         var miPlaceHouse = new MenuItem(translated("menu.edit.place_house"));
-        miPlaceHouse.setOnAction(actionEvent -> {
-            EditorActions.PLACE_ARCADE_HOUSE.setHouseMinTile(tile);
-            EditorActions.PLACE_ARCADE_HOUSE.setWorldMap(worldMap());
-            EditorActions.PLACE_ARCADE_HOUSE.execute(editor);
-        });
+        miPlaceHouse.setOnAction(actionEvent -> new Action_PlaceArcadeHouse(editor, worldMap(), tile).execute());
 
         var miInsertRow = new MenuItem(translated("menu.edit.insert_row"));
         miInsertRow.setOnAction(actionEvent -> {
@@ -371,19 +369,11 @@ public class EditCanvas extends Canvas {
         });
 
         var miFloodWithPellets = new MenuItem(translated("menu.edit.flood_with_pellets"));
-        miFloodWithPellets.setOnAction(ae -> {
-            EditorActions.FLOOD_WITH_PELLETS.setStartTile(tile);
-            EditorActions.FLOOD_WITH_PELLETS.setPelletValue(FoodTile.PELLET.code());
-            EditorActions.FLOOD_WITH_PELLETS.execute(editor);
-        });
+        miFloodWithPellets.setOnAction(ae -> new Action_FloodWithPellets(editor, tile, FoodTile.PELLET).execute());
         miFloodWithPellets.setDisable(!canEditFoodAtTile(editor.currentWorldMap(), tile));
 
         var miClearPellets = new MenuItem(translated("menu.edit.clear_food"));
-        miClearPellets.setOnAction(ae -> {
-            EditorActions.FLOOD_WITH_PELLETS.setStartTile(tile);
-            EditorActions.FLOOD_WITH_PELLETS.setPelletValue(FoodTile.EMPTY.code());
-            EditorActions.FLOOD_WITH_PELLETS.execute(editor);
-        });
+        miClearPellets.setOnAction(ae -> new Action_FloodWithPellets(editor, tile, FoodTile.EMPTY).execute());
         miClearPellets.setDisable(!canEditFoodAtTile(editor.currentWorldMap(), tile));
 
         contextMenu.getItems().setAll(

@@ -1,23 +1,15 @@
 package de.amr.pacmanfx.tilemap.editor.actions;
 
 import de.amr.pacmanfx.tilemap.editor.EditorAction;
+import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
 
-import java.util.HashMap;
-import java.util.Map;
+import static java.util.Objects.requireNonNull;
 
-public abstract class AbstractEditorAction implements EditorAction {
+public abstract class AbstractEditorAction<R> implements EditorAction<R> {
 
-    private final Map<String, Object> args = new HashMap<>();
+    protected final TileMapEditor editor;
 
-    public <T> T getArg(String name, Class<T> expectedClass) {
-        Object value = args.get(name);
-        if (expectedClass.isInstance(value)) {
-            return expectedClass.cast(value);
-        }
-        throw new IllegalArgumentException("%s is not of type %s".formatted(name, expectedClass.getSimpleName()));
-    }
-
-    public void setArg(String name, Object value) {
-        args.put(name, value);
+    protected AbstractEditorAction(TileMapEditor editor) {
+        this.editor = requireNonNull(editor);
     }
 }

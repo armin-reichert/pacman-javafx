@@ -6,8 +6,9 @@ import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
 
 import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
+import static java.util.Objects.requireNonNull;
 
-public class Action_PlaceArcadeHouse extends AbstractEditorAction {
+public class Action_PlaceArcadeHouse extends AbstractEditorAction<Void> {
 
     public static final byte[][] DEFAULT_HOUSE_ROWS = {
         { ARC_NW.$,  WALL_H.$,  WALL_H.$,  DOOR.$,    DOOR.$,    WALL_H.$,  WALL_H.$,  ARC_NE.$ },
@@ -17,19 +18,17 @@ public class Action_PlaceArcadeHouse extends AbstractEditorAction {
         { ARC_SW.$,  WALL_H.$,  WALL_H.$,  WALL_H.$,  WALL_H.$,  WALL_H.$,  WALL_H.$,  ARC_SE.$ },
     };
 
-    public void setWorldMap(WorldMap worldMap) {
-        setArg("worldMap", worldMap);
-    }
+    private final WorldMap worldMap;
+    private final Vector2i houseMinTile;
 
-    public void setHouseMinTile(Vector2i houseMinTile) {
-        setArg("houseMinTile", houseMinTile);
+    public Action_PlaceArcadeHouse(TileMapEditor editor, WorldMap worldMap, Vector2i houseMinTile) {
+        super(editor);
+        this.worldMap = requireNonNull(worldMap);
+        this.houseMinTile = requireNonNull(houseMinTile);
     }
 
     @Override
-    public Object execute(TileMapEditor editor) {
-        WorldMap worldMap = getArg("worldMap", WorldMap.class);
-        Vector2i houseMinTile = getArg("houseMinTile", Vector2i.class);
-
+    public Void execute() {
         Vector2i houseMaxTile = houseMinTile.plus(7, 4);
 
         Vector2i oldHouseMinTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE);
