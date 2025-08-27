@@ -31,13 +31,13 @@ public class Action_SaveMapFile extends AbstractEditorAction {
                 if (saved) {
                     editor.changeManager().setEdited(false);
                     editor.readWorldMapFile(file);
-                    editor.showMessage("Map saved as '%s'".formatted(file.getName()), 3, MessageType.INFO);
+                    editor.messageManager().showMessage("Map saved as '%s'".formatted(file.getName()), 3, MessageType.INFO);
                 } else {
-                    editor.showMessage("Map could not be saved!", 4, MessageType.ERROR);
+                    editor.messageManager().showMessage("Map could not be saved!", 4, MessageType.ERROR);
                 }
             } else {
                 Logger.error("No .world file selected");
-                editor.showMessage("No .world file selected", 2, MessageType.WARNING);
+                editor.messageManager().showMessage("No .world file selected", 2, MessageType.WARNING);
             }
         }
         return null;

@@ -27,10 +27,10 @@ public class Action_ShowNewMapDialog extends AbstractEditorAction {
             dialog.showAndWait().ifPresent(input -> {
                 Vector2i sizeInTiles = parseSize(input);
                 if (sizeInTiles == null) {
-                    editor.showMessage("Map size not recognized", 2, MessageType.ERROR);
+                    editor.messageManager().showMessage("Map size not recognized", 2, MessageType.ERROR);
                 }
                 else if (sizeInTiles.y() < 6) {
-                    editor.showMessage("Map must have at least 6 rows", 2, MessageType.ERROR);
+                    editor.messageManager().showMessage("Map must have at least 6 rows", 2, MessageType.ERROR);
                 }
                 else {
                     if (preconfigured) {

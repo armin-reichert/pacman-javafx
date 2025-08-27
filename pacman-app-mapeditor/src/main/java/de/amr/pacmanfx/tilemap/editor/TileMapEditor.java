@@ -15,7 +15,6 @@ import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapColorScheme;
 import javafx.animation.AnimationTimer;
-import javafx.animation.FadeTransition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
@@ -35,7 +34,6 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -44,7 +42,6 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.nio.IntBuffer;
 import java.nio.charset.StandardCharsets;
-import java.time.Instant;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -124,10 +121,10 @@ public class TileMapEditor {
     }
 
     private final ChangeManager changeManager = new ChangeManager();
+    private final MessageManager messageManager = new MessageManager();
     private final UpdateTimer updateTimer;
 
     private final List<Vector2i> tilesWithErrors = new ArrayList<>();
-    private Instant messageCloseTime;
 
     private final BorderPane contentPane = new BorderPane();
     private final Stage stage;
@@ -140,7 +137,6 @@ public class TileMapEditor {
     private ScrollPane spTemplateImage;
     private Pane templateImageDropTarget;
     private SplitPane splitPaneEditorAndPreviews;
-    private Label messageLabel;
     private TabPane tabPaneWithPalettes;
     private Slider sliderZoom;
     private HBox statusLine;
@@ -161,7 +157,7 @@ public class TileMapEditor {
     private class UpdateTimer extends AnimationTimer {
         @Override
         public void handle(long now) {
-            updateAutoClosingMessage();
+            messageManager.update();
             changeManager.processChanges();
             if (changeManager.isRedrawRequested()) {
                 try {
@@ -188,7 +184,6 @@ public class TileMapEditor {
         createPropertyEditors();
         createTabPaneWithEditViews();
         createTabPaneWithPreviews();
-        createMessageDisplay();
         createZoomSlider();
         createStatusLine();
 
@@ -570,6 +565,10 @@ public class TileMapEditor {
         return menuBar;
     }
 
+    public MessageManager messageManager() {
+        return messageManager;
+    }
+
     public byte selectedPaletteID() {
         return (Byte) tabPaneWithPalettes.getSelectionModel().getSelectedItem().getUserData();
     }
@@ -582,37 +581,8 @@ public class TileMapEditor {
         return tilesWithErrors;
     }
 
-    public void showMessage(String message, long seconds, MessageType type) {
-        Color color = switch (type) {
-            case INFO -> Color.BLACK;
-            case WARNING -> Color.GREEN;
-            case ERROR -> Color.RED;
-        };
-        messageLabel.setTextFill(color);
-        messageLabel.setText(message);
-        messageCloseTime = Instant.now().plus(java.time.Duration.ofSeconds(seconds));
-    }
-
-    private void clearMessage() {
-        showMessage("", 0, MessageType.INFO);
-    }
-
-    private void updateAutoClosingMessage() {
-        if (messageCloseTime != null && Instant.now().isAfter(messageCloseTime)) {
-            messageCloseTime = null;
-            FadeTransition fadeOut = new FadeTransition(Duration.seconds(2), messageLabel);
-            fadeOut.setFromValue(1.0);
-            fadeOut.setToValue(0.0);
-            fadeOut.setOnFinished(event -> {
-                messageLabel.setText("");
-                messageLabel.setOpacity(1.0);
-            });
-            fadeOut.play();
-        }
-    }
-
     public void showEditHelpText() {
-        showMessage(translated("edit_help"), 30, MessageType.INFO);
+        messageManager.showMessage(translated("edit_help"), 30, MessageType.INFO);
     }
 
     private ObstacleEditor createObstacleEditor() {
@@ -769,17 +739,17 @@ public class TileMapEditor {
         else if (isSupportedImageFile(file) && !editModeIs(EditMode.INSPECT)) {
             Image image = loadImage(file).orElse(null);
             if (image == null) {
-                showMessage("Could not open image file '%s'".formatted(file), 3, MessageType.ERROR);
+                messageManager.showMessage("Could not open image file '%s'".formatted(file), 3, MessageType.ERROR);
                 return;
             }
             if (!isTemplateImageSizeOk(image)) {
-                showMessage("Template image file '%s' has dubios size".formatted(file), 3, MessageType.ERROR);
+                messageManager.showMessage("Template image file '%s' has dubios size".formatted(file), 3, MessageType.ERROR);
                 return;
             }
             setTemplateImage(image);
             createEmptyMapFromTemplateImage(image);
             tabPaneEditorViews.getSelectionModel().select(tabTemplateImage);
-            showMessage("Select colors for tile identification!", 10, MessageType.INFO);
+            messageManager.showMessage("Select colors for tile identification!", 10, MessageType.INFO);
         }
     }
 
@@ -842,12 +812,6 @@ public class TileMapEditor {
         propertyEditorsPane.visibleProperty().bind(propertyEditorsVisibleProperty());
     }
 
-    private void createMessageDisplay() {
-        messageLabel = new Label();
-        messageLabel.setFont(FONT_MESSAGE);
-        messageLabel.setMinWidth(200);
-    }
-
     private void createZoomSlider() {
         sliderZoom = new Slider(MIN_GRID_SIZE, MAX_GRID_SIZE, 0.5 * (MIN_GRID_SIZE + MAX_GRID_SIZE));
         sliderZoom.setShowTickLabels(false);
@@ -899,7 +863,7 @@ public class TileMapEditor {
             filler(10),
             lblFocussedTile,
             spacer(),
-            messageLabel,
+            messageManager.messageLabel(),
             spacer(),
             filler(10),
             sliderZoom,
@@ -1007,7 +971,7 @@ public class TileMapEditor {
     }
 
     private void onEditModeChanged(EditMode editMode) {
-        clearMessage();
+        messageManager.clearMessage();
         showEditHelpText();
         switch (editMode) {
             case INSPECT -> editCanvas.enterInspectMode();
@@ -1016,13 +980,13 @@ public class TileMapEditor {
         }
     }
 
-    private void zoomIn() {
+    public void zoomIn() {
         if (gridSize() < MAX_GRID_SIZE) {
             gridSize.set(gridSize() + 1);
         }
     }
 
-    private void zoomOut() {
+    public void zoomOut() {
         if (gridSize() > MIN_GRID_SIZE) {
             gridSize.set(gridSize() - 1);
         }
@@ -1064,14 +1028,14 @@ public class TileMapEditor {
             EditorActions.SELECT_NEXT_MAP_FILE.setForward(false);
             File file = (File) EditorActions.SELECT_NEXT_MAP_FILE.execute(this);
             if (file != null && !readWorldMapFile(file)) {
-                showMessage("Map file '%s' could not be loaded".formatted(file.getName()), 3, MessageType.ERROR);
+                messageManager.showMessage("Map file '%s' could not be loaded".formatted(file.getName()), 3, MessageType.ERROR);
             }
         }
         else if (alt && key == KeyCode.RIGHT) {
             EditorActions.SELECT_NEXT_MAP_FILE.setForward(true);
             File file = (File) EditorActions.SELECT_NEXT_MAP_FILE.execute(this);
             if (file != null && !readWorldMapFile(file)) {
-                showMessage("Map file '%s' could not be loaded".formatted(file.getName()), 3, MessageType.ERROR);
+                messageManager.showMessage("Map file '%s' could not be loaded".formatted(file.getName()), 3, MessageType.ERROR);
             }
         }
         else if (key == KeyCode.PLUS) {
@@ -1259,9 +1223,9 @@ public class TileMapEditor {
                 if (isTemplateImageSizeOk(image)) {
                     setTemplateImage(image);
                     createEmptyMapFromTemplateImage(image);
-                    showMessage("Select map colors from template!", 20, MessageType.INFO);
+                    messageManager.showMessage("Select map colors from template!", 20, MessageType.INFO);
                 } else {
-                    showMessage("Template image size seems dubious", 3, MessageType.WARNING);
+                    messageManager.showMessage("Template image size seems dubious", 3, MessageType.WARNING);
                 }
             });
     }
@@ -1273,22 +1237,22 @@ public class TileMapEditor {
 
         Color fillColor = getColorFromMap(worldMap, LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_FILL, null);
         if (fillColor == null) {
-            showMessage("No fill color defined", 3, MessageType.ERROR);
+            messageManager.showMessage("No fill color defined", 3, MessageType.ERROR);
             return;
         }
         Color strokeColor = getColorFromMap(worldMap, LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_STROKE, null);
         if (strokeColor == null) {
-            showMessage("No stroke color defined", 3, MessageType.ERROR);
+            messageManager.showMessage("No stroke color defined", 3, MessageType.ERROR);
             return;
         }
         Color doorColor = getColorFromMap(worldMap, LayerID.TERRAIN, WorldMapProperty.COLOR_DOOR, Color.PINK);
         if (doorColor == null) {
-            showMessage("No door color defined", 3, MessageType.ERROR);
+            messageManager.showMessage("No door color defined", 3, MessageType.ERROR);
             return;
         }
         Color foodColor = getColorFromMap(worldMap, LayerID.FOOD, WorldMapProperty.COLOR_FOOD, null);
         if (foodColor == null) {
-            showMessage("No food color defined", 3, MessageType.ERROR);
+            messageManager.showMessage("No food color defined", 3, MessageType.ERROR);
             return;
         }
 
@@ -1296,7 +1260,7 @@ public class TileMapEditor {
         WritablePixelFormat<IntBuffer> pixelFormat = WritablePixelFormat.getIntArgbInstance();
         PixelReader rdr = templateImage.getPixelReader();
         if (rdr == null) {
-            showMessage("Could not get pixel reader for this image", 5, MessageType.ERROR);
+            messageManager.showMessage("Could not get pixel reader for this image", 5, MessageType.ERROR);
             return;
         }
 
@@ -1344,7 +1308,7 @@ public class TileMapEditor {
         }
 
         java.time.Duration duration = java.time.Duration.between(startTime, LocalTime.now());
-        showMessage("Map creation took %d milliseconds".formatted(duration.toMillis()), 5, MessageType.INFO);
+        messageManager.showMessage("Map creation took %d milliseconds".formatted(duration.toMillis()), 5, MessageType.INFO);
 
         changeManager.setWorldMapChanged();
         changeManager.setEdited(true);
