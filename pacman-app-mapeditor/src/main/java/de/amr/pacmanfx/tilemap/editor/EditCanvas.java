@@ -360,7 +360,7 @@ public class EditCanvas extends Canvas {
                 return;
             }
             editor.setTemplateImage(image);
-            editor.createEmptyMapFromTemplateImage(image);
+            new Action_CreateMapFromTemplate(editor, image).execute();
             editor.selectTemplateImageTab();
             editor.messageManager().showMessage("Select colors for tile identification!", 10, MessageType.INFO);
         }

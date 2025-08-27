@@ -1010,27 +1010,13 @@ public class TileMapEditor {
         new Action_SetTileValue(this, worldMap, layerID, new Vector2i(col, row), code).execute();
     }
 
-    public void createEmptyMapFromTemplateImage(Image image) {
-        int numRows = EMPTY_ROWS_BEFORE_MAZE + EMPTY_ROWS_BELOW_MAZE + (int) (image.getHeight() / TS);
-        int numCols = (int) (image.getWidth() / TS);
-        WorldMap emptyMap = new Action_CreateEmptyMap(this, numRows, numCols).execute();
-        setCurrentWorldMap(emptyMap);
-        currentWorldMap().properties(LayerID.TERRAIN).remove(WorldMapProperty.COLOR_WALL_FILL);
-        currentWorldMap().properties(LayerID.TERRAIN).remove(WorldMapProperty.COLOR_WALL_STROKE);
-        currentWorldMap().properties(LayerID.TERRAIN).remove(WorldMapProperty.COLOR_DOOR);
-        changeManager.setTerrainMapChanged();
-        currentWorldMap().properties(LayerID.FOOD).remove(WorldMapProperty.COLOR_FOOD);
-        changeManager.setFoodMapChanged();
-        changeManager.setEdited(true);
-    }
-
     void initWorldMapForTemplateImage() {
         selectTemplateImage(stage, translated("open_template_image"), currentDirectory())
             .ifPresent(image -> {
                 if (isTemplateImageSizeOk(image)) {
                     setTemplateImage(image);
-                    createEmptyMapFromTemplateImage(image);
-                    tabPaneEditorViews.getSelectionModel().select(tabTemplateImage);
+                    new Action_CreateMapFromTemplate(this, image).execute();
+                    selectTemplateImageTab();
                     messageManager.showMessage("Select map colors from template!", 20, MessageType.INFO);
                 } else {
                     messageManager.showMessage("Template image size seems dubious", 3, MessageType.WARNING);
