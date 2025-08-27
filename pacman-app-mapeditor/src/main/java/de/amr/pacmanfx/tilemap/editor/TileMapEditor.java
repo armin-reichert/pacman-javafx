@@ -1123,20 +1123,6 @@ public class TileMapEditor {
         setTileValueRespectingSymmetry(worldMap, layerID, tile, value);
     }
 
-    // ignores symmetric edit mode!
-    public void clearTerrainTileValue(Vector2i tile) {
-        currentWorldMap().setContent(LayerID.TERRAIN, tile, TerrainTile.EMPTY.$);
-        changeManager.setTerrainMapChanged();
-        changeManager.setEdited(true);
-    }
-
-    // ignores symmetric edit mode!
-    public void clearFoodTileValue(Vector2i tile) {
-        currentWorldMap().setContent(LayerID.FOOD, tile, FoodTile.EMPTY.code());
-        changeManager.setFoodMapChanged();
-        changeManager.setEdited(true);
-    }
-
     public WorldMap createEmptyMap(int numCols, int numRows) {
         var worldMap = WorldMap.emptyMap(numRows, numCols);
         setDefaultColors(worldMap);

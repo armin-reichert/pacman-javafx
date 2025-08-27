@@ -46,7 +46,7 @@ public class Action_EditTileAtMousePosition extends AbstractEditorAction<Void> {
 
     private void editTerrainAtTile(Vector2i tile, boolean erase) {
         if (erase) {
-            editor.clearTerrainTileValue(tile);
+            new Action_ClearTerrainTile(editor, tile).execute();
         } else if (editor.selectedPalette().isToolSelected()) {
             editor.selectedPalette().selectedTool().apply(editor, LayerID.TERRAIN, tile);
         }
@@ -56,7 +56,7 @@ public class Action_EditTileAtMousePosition extends AbstractEditorAction<Void> {
 
     private void editFoodAtTile(Vector2i tile, boolean erase) {
         if (erase) {
-            editor.clearFoodTileValue(tile);
+            new Action_ClearFoodTile(editor, tile).execute();
         } else if (editor.selectedPalette().isToolSelected()) {
             editor.selectedPalette().selectedTool().apply(editor, LayerID.FOOD, tile);
         }

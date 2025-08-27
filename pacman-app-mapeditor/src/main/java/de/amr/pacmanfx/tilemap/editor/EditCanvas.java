@@ -10,10 +10,7 @@ import de.amr.pacmanfx.lib.tilemap.FoodTile;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.WorldMapProperty;
-import de.amr.pacmanfx.tilemap.editor.actions.Action_EditTileAtMousePosition;
-import de.amr.pacmanfx.tilemap.editor.actions.Action_FloodWithPellets;
-import de.amr.pacmanfx.tilemap.editor.actions.Action_PlaceArcadeHouse;
-import de.amr.pacmanfx.tilemap.editor.actions.Action_SelectNextPaletteEntry;
+import de.amr.pacmanfx.tilemap.editor.actions.*;
 import de.amr.pacmanfx.tilemap.editor.rendering.EditorActorRenderer;
 import de.amr.pacmanfx.tilemap.editor.rendering.TerrainTileMapRenderer;
 import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
@@ -337,8 +334,8 @@ public class EditCanvas extends Canvas {
             case ERASE -> {
                 if (mouseEvent.isShiftDown()) {
                     switch (editor.selectedPaletteID()) {
-                        case PALETTE_ID_TERRAIN -> editor.clearTerrainTileValue(tile);
-                        case PALETTE_ID_FOOD -> editor.clearFoodTileValue(tile);
+                        case PALETTE_ID_TERRAIN -> new Action_ClearTerrainTile(editor, tile).execute();
+                        case PALETTE_ID_FOOD -> new Action_ClearFoodTile(editor, tile).execute();
                     }
                 }
             }
