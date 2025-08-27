@@ -9,6 +9,7 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.*;
 import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.tilemap.editor.actions.Action_PlaceArcadeHouse;
+import de.amr.pacmanfx.tilemap.editor.rendering.TerrainTileMapRenderer;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
@@ -49,7 +50,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.tilemap.editor.ArcadeSprites.*;
+import static de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites.*;
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.*;
 import static de.amr.pacmanfx.tilemap.editor.TemplateImageManager.isTemplateImageSizeOk;
 import static de.amr.pacmanfx.tilemap.editor.TemplateImageManager.selectTemplateImage;

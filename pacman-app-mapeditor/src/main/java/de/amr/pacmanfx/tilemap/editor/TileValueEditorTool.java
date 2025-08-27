@@ -9,7 +9,7 @@ import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.uilib.tilemap.TileRenderer;
 import javafx.scene.paint.Color;
 
-public class TileValueEditorTool implements TileMapEditorTool {
+public class TileValueEditorTool implements EditorTool {
     private final double size;
     private final byte value;
     private final String description;

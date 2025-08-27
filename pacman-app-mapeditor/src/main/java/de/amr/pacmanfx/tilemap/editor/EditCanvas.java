@@ -10,6 +10,8 @@ import de.amr.pacmanfx.lib.tilemap.FoodTile;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.WorldMapProperty;
+import de.amr.pacmanfx.tilemap.editor.rendering.EditorActorRenderer;
+import de.amr.pacmanfx.tilemap.editor.rendering.TerrainTileMapRenderer;
 import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapColorScheme;
 import javafx.beans.binding.Bindings;
@@ -29,7 +31,7 @@ import org.tinylog.Logger;
 import java.util.function.Predicate;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.tilemap.editor.ArcadeSprites.*;
+import static de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites.*;
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.*;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.*;
 import static java.util.Objects.requireNonNull;

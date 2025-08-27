@@ -9,15 +9,17 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.WorldMapFormatter;
 import de.amr.pacmanfx.model.WorldMapProperty;
+import de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites;
+import de.amr.pacmanfx.tilemap.editor.rendering.TerrainTileMapRenderer;
 import de.amr.pacmanfx.uilib.tilemap.TileRenderer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.tilemap.editor.ArcadeSprites.PAC_MAN;
-import static de.amr.pacmanfx.tilemap.editor.ArcadeSprites.SPRITE_SHEET;
+import static de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites.PAC_MAN;
+import static de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites.SPRITE_SHEET;
 
-public class PropertyValueEditorTool implements TileMapEditorTool {
+public class PropertyValueEditorTool implements EditorTool {
     private final double size;
     private final String propertyName;
     private final String description;

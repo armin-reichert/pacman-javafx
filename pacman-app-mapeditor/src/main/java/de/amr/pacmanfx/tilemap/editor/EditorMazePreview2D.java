@@ -8,6 +8,8 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.WorldMapProperty;
+import de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites;
+import de.amr.pacmanfx.tilemap.editor.rendering.EditorActorRenderer;
 import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapColorScheme;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer;

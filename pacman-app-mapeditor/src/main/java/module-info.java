@@ -12,7 +12,8 @@ open module de.amr.pacmanfx.mapeditor {
     requires de.amr.pacmanfx.uilib;
     requires javafx.base;
 
+    exports de.amr.pacmanfx.tilemap.editor;
     exports de.amr.pacmanfx.tilemap.editor.actions;
     exports de.amr.pacmanfx.tilemap.editor.app;
-    exports de.amr.pacmanfx.tilemap.editor;
+    exports de.amr.pacmanfx.tilemap.editor.rendering;
 }

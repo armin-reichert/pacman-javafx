@@ -10,6 +10,7 @@ import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.TerrainTile;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.WorldMapProperty;
+import de.amr.pacmanfx.tilemap.editor.rendering.TerrainTileMapRenderer;
 import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer;
 import javafx.scene.Node;

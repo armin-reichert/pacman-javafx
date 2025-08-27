@@ -8,7 +8,7 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.uilib.tilemap.TileRenderer;
 
-public interface TileMapEditorTool {
+public interface EditorTool {
 
     String description();
 

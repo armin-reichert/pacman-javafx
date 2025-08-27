@@ -1,4 +1,4 @@
-package de.amr.pacmanfx.tilemap.editor;
+package de.amr.pacmanfx.tilemap.editor.rendering;
 
 import de.amr.pacmanfx.lib.RectShort;
 import javafx.scene.image.Image;

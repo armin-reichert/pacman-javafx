@@ -1,4 +1,6 @@
-package de.amr.pacmanfx.tilemap.editor;
+package de.amr.pacmanfx.tilemap.editor.actions;
+
+import de.amr.pacmanfx.tilemap.editor.EditorAction;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -7,6 +7,7 @@ package de.amr.pacmanfx.tilemap.editor;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
+import de.amr.pacmanfx.tilemap.editor.rendering.TerrainTileMapRenderer;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;

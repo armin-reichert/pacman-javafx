@@ -3,7 +3,6 @@ package de.amr.pacmanfx.tilemap.editor.actions;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.*;
 import de.amr.pacmanfx.model.WorldMapProperty;
-import de.amr.pacmanfx.tilemap.editor.AbstractEditorAction;
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
 
 import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;

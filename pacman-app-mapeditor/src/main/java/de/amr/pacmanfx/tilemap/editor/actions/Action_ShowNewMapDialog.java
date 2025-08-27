@@ -5,7 +5,6 @@ import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.lib.tilemap.WorldMapFormatter;
 import de.amr.pacmanfx.model.WorldMapProperty;
-import de.amr.pacmanfx.tilemap.editor.AbstractEditorAction;
 import de.amr.pacmanfx.tilemap.editor.EditorActions;
 import de.amr.pacmanfx.tilemap.editor.MessageType;
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;

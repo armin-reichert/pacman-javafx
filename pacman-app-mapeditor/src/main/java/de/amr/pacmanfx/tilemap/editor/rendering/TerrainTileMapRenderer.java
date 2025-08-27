@@ -2,7 +2,7 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.tilemap.editor;
+package de.amr.pacmanfx.tilemap.editor.rendering;
 
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.RectShort;
@@ -25,7 +25,7 @@ import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
-import static de.amr.pacmanfx.tilemap.editor.ArcadeSprites.SPRITE_SHEET;
+import static de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites.SPRITE_SHEET;
 
 /**
  * Tile-based renderer used in editor. At runtime and in the 2D editor preview, the path based renderer is used.
