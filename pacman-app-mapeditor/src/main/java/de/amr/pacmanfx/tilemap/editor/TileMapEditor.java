@@ -1223,6 +1223,7 @@ public class TileMapEditor {
                 if (isTemplateImageSizeOk(image)) {
                     setTemplateImage(image);
                     createEmptyMapFromTemplateImage(image);
+                    tabPaneEditorViews.getSelectionModel().select(tabTemplateImage);
                     messageManager.showMessage("Select map colors from template!", 20, MessageType.INFO);
                 } else {
                     messageManager.showMessage("Template image size seems dubious", 3, MessageType.WARNING);
