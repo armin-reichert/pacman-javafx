@@ -206,7 +206,7 @@ public interface TileMapEditorUtil {
         }
     }
 
-    static boolean saveWorldMap(WorldMap worldMap,File file) {
+    static boolean saveWorldMap(WorldMap worldMap, File file) {
         try (PrintWriter pw = new PrintWriter(file, StandardCharsets.UTF_8)) {
             pw.print(WorldMapFormatter.formatted(worldMap));
             return true;

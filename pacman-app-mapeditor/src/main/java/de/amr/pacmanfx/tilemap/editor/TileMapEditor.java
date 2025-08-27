@@ -9,6 +9,7 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.*;
 import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.tilemap.editor.actions.Action_PlaceArcadeHouse;
+import de.amr.pacmanfx.tilemap.editor.actions.Action_ReplaceCurrentWorldMapChecked;
 import de.amr.pacmanfx.tilemap.editor.actions.Action_SaveMapFile;
 import de.amr.pacmanfx.tilemap.editor.actions.Action_SelectNextMapFile;
 import de.amr.pacmanfx.tilemap.editor.rendering.TerrainTileMapRenderer;
@@ -740,7 +741,7 @@ public class TileMapEditor {
 
     private void onFileDroppedOnEditCanvas(File file) {
         if (isWorldMapFile(file)) {
-            readWorldMapFile(file);
+            new Action_ReplaceCurrentWorldMapChecked(this, file);
         }
         else if (isSupportedImageFile(file) && !editModeIs(EditMode.INSPECT)) {
             Image image = loadImage(file).orElse(null);
@@ -919,25 +920,6 @@ public class TileMapEditor {
         return menuItem;
     }
 
-    public boolean readWorldMapFile(File file) {
-        requireNonNull(file);
-        boolean success = false;
-        if (file.getName().endsWith(".world")) {
-            try {
-                WorldMap worldMap = WorldMap.fromFile(file);
-                ifNoUnsavedChangesDo(() -> {
-                    setCurrentWorldMap(worldMap);
-                    setCurrentDirectory(file.getParentFile());
-                    setCurrentFile(file);
-                });
-                success = true;
-            } catch (IOException x) {
-                Logger.error(x);
-            }
-        }
-        return success;
-    }
-
     public void ifNoUnsavedChangesDo(Runnable action) {
         if (!changeManager.isEdited()) {
             action.run();
@@ -1012,16 +994,10 @@ public class TileMapEditor {
         boolean alt = e.isAltDown();
 
         if (alt && key == KeyCode.LEFT) {
-            File previousFile = new Action_SelectNextMapFile(this, false).execute();
-            if (previousFile != null && !readWorldMapFile(previousFile)) {
-                messageManager.showMessage("Map file '%s' could not be loaded".formatted(previousFile.getName()), 3, MessageType.ERROR);
-            }
+            new Action_SelectNextMapFile(this, false).execute();
         }
         else if (alt && key == KeyCode.RIGHT) {
-            File nextFile = new Action_SelectNextMapFile(this, true).execute();
-            if (nextFile != null && !readWorldMapFile(nextFile)) {
-                messageManager.showMessage("Map file '%s' could not be loaded".formatted(nextFile.getName()), 3, MessageType.ERROR);
-            }
+            new Action_SelectNextMapFile(this, true).execute();
         }
         else if (key == KeyCode.PLUS) {
             zoomIn();

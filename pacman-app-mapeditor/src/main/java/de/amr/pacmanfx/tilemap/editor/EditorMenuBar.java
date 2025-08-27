@@ -44,7 +44,7 @@ public class EditorMenuBar extends MenuBar {
         miNewBlankMap.setOnAction(e -> new Action_ShowNewMapDialog(editor, false).execute());
 
         var miOpenMapFile = new MenuItem(translated("menu.file.open"));
-        miOpenMapFile.setOnAction(e -> new Action_OpenMapFile(editor).execute());
+        miOpenMapFile.setOnAction(e -> new Action_OpenMapFileInteractively(editor).execute());
 
         var miSaveMapFileAs = new MenuItem(translated("menu.file.save_as"));
         miSaveMapFileAs.setOnAction(e -> new Action_SaveMapFile(editor).execute());

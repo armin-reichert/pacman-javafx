@@ -23,11 +23,15 @@ public class Action_SaveMapFile extends AbstractEditorAction<Void> {
         if (file != null) {
             editor.setCurrentDirectory(file.getParentFile());
             if (file.getName().endsWith(".world")) {
-                boolean saved = saveWorldMap(editor.currentWorldMap(), file);
-                if (saved) {
+                boolean saveSuccess = saveWorldMap(editor.currentWorldMap(), file);
+                if (saveSuccess) {
                     editor.changeManager().setEdited(false);
-                    editor.readWorldMapFile(file);
-                    editor.messageManager().showMessage("Map saved as '%s'".formatted(file.getName()), 3, MessageType.INFO);
+                    boolean replaceSuccess = new Action_ReplaceCurrentWorldMapChecked(editor, file).execute();
+                    if (replaceSuccess) {
+                        editor.messageManager().showMessage("Map saved as '%s'".formatted(file.getName()), 3, MessageType.INFO);
+                    } else {
+                        editor.messageManager().showMessage("Current map could not be replaced!", 4, MessageType.ERROR);
+                    }
                 } else {
                     editor.messageManager().showMessage("Map could not be saved!", 4, MessageType.ERROR);
                 }

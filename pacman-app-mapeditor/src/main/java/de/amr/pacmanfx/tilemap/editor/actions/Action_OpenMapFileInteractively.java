@@ -7,11 +7,11 @@ import java.io.File;
 
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.*;
 
-public class Action_OpenMapFile extends AbstractEditorAction<File> {
+public class Action_OpenMapFileInteractively extends AbstractEditorAction<File> {
 
     private File file;
 
-    public Action_OpenMapFile(TileMapEditor editor) {
+    public Action_OpenMapFileInteractively(TileMapEditor editor) {
         super(editor);
     }
 
@@ -21,7 +21,7 @@ public class Action_OpenMapFile extends AbstractEditorAction<File> {
             FileChooser fileChooser = createFileChooser();
             file = fileChooser.showOpenDialog(editor.stage());
             if (file != null) {
-                editor.readWorldMapFile(file);
+                new Action_ReplaceCurrentWorldMapChecked(editor, file).execute();
             }
             editor.changeManager().setEdited(false);
         });
