@@ -190,7 +190,7 @@ public class TileMapEditor {
         createMessageDisplay();
         createZoomSlider();
         createStatusLine();
-        loadSampleMapsAndAddMenuEntries();
+        loadSampleMapsAndAddMenuEntries(menuBar.menuMaps());
 
         arrangeMainLayout();
 
@@ -948,15 +948,15 @@ public class TileMapEditor {
     }
 
     // also called from EditorPage
-    public void addLoadMapMenuItem(String description, WorldMap worldMap) {
+    public MenuItem createLoadMapMenuItem(String description, WorldMap worldMap) {
         requireNonNull(description);
         requireNonNull(worldMap);
-        var miLoadMap = new MenuItem(description);
-        miLoadMap.setOnAction(e -> {
+        var menuItem = new MenuItem(description);
+        menuItem.setOnAction(e -> {
             WorldMap copy = WorldMap.copyMap(worldMap);
             ifNoUnsavedChangesDo(() -> setCurrentWorldMap(copy));
         });
-        menuBar.menuLoadMap().getItems().add(miLoadMap);
+        return menuItem;
     }
 
     public boolean readWorldMapFile(File file) {
@@ -977,7 +977,6 @@ public class TileMapEditor {
         }
         return success;
     }
-
 
     public boolean saveWorldMap(WorldMap worldMap,File file) {
         try (PrintWriter pw = new PrintWriter(file, StandardCharsets.UTF_8)) {
@@ -1366,18 +1365,21 @@ public class TileMapEditor {
     private List<WorldMap> mapsMsPacManGame;
     private List<WorldMap> mapsPacManXXLGame;
 
-    private void loadSampleMapsAndAddMenuEntries() {
+    private void loadSampleMapsAndAddMenuEntries(Menu menu) {
         try {
             loadSampleMaps();
-            addLoadMapMenuItem("Pac-Man", mapPacManGame);
-            menuBar.menuLoadMap().getItems().add(new SeparatorMenuItem());
-            rangeClosed(1, 6).forEach(num -> addLoadMapMenuItem("Ms. Pac-Man " + num, mapsMsPacManGame.get(num - 1)));
-            menuBar.menuLoadMap().getItems().add(new SeparatorMenuItem());
-            rangeClosed(1, 8).forEach(num -> addLoadMapMenuItem("Pac-Man XXL " + num, mapsPacManXXLGame.get(num - 1)));
         } catch (IOException x) {
-            Logger.error("Could not load sample maps");
             Logger.error(x);
+            Logger.error("Error loading sample maps");
+            return;
         }
+        menu.getItems().add(createLoadMapMenuItem("Pac-Man", mapPacManGame));
+        menu.getItems().add(new SeparatorMenuItem());
+        rangeClosed(1, 6).forEach(mapNumber -> menu.getItems().add(
+            createLoadMapMenuItem("Ms. Pac-Man " + mapNumber, mapsMsPacManGame.get(mapNumber - 1))));
+        menuBar.menuMaps().getItems().add(new SeparatorMenuItem());
+        rangeClosed(1, 8).forEach(mapNumber -> menu.getItems().add(
+            createLoadMapMenuItem("Pac-Man XXL " + mapNumber, mapsPacManXXLGame.get(mapNumber - 1))));
     }
 
     private void loadSampleMaps() throws IOException {

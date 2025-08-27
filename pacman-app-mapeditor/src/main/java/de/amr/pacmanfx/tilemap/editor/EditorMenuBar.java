@@ -14,7 +14,7 @@ public class EditorMenuBar extends MenuBar {
 
     private final Menu menuFile;
     private final Menu menuEdit;
-    private final Menu menuLoadMap;
+    private final Menu menuMaps;
     private final Menu menuView;
 
     public Menu menuEdit() {
@@ -25,8 +25,8 @@ public class EditorMenuBar extends MenuBar {
         return menuFile;
     }
 
-    public Menu menuLoadMap() {
-        return menuLoadMap;
+    public Menu menuMaps() {
+        return menuMaps;
     }
 
     public Menu menuView() {
@@ -129,7 +129,7 @@ public class EditorMenuBar extends MenuBar {
             miAssignDefaultColors);
 
         // Maps
-        menuLoadMap = new Menu(translated("menu.load_map"));
+        menuMaps = new Menu(translated("menu.load_map"));
 
         // View
         var miPropertiesVisible = new CheckMenuItem(translated("menu.view.properties"));
@@ -162,6 +162,6 @@ public class EditorMenuBar extends MenuBar {
             miObstacleInnerAreaVisible,
             miGridVisible);
 
-        getMenus().addAll(menuFile, menuEdit, menuLoadMap, menuView);
+        getMenus().addAll(menuFile, menuEdit, menuMaps, menuView);
     }
 }
