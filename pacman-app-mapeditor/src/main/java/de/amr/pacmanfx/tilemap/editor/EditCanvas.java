@@ -29,10 +29,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
+import java.io.File;
 import java.util.function.Predicate;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.*;
+import static de.amr.pacmanfx.tilemap.editor.TemplateImageManager.isTemplateImageSizeOk;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.*;
 import static de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites.*;
 import static java.util.Objects.requireNonNull;
@@ -342,6 +344,28 @@ public class EditCanvas extends Canvas {
             case INSPECT -> {}
         }
     }
+
+    public void onFileDropped(TileMapEditor editor, File file) {
+        if (isWorldMapFile(file)) {
+            new Action_ReplaceCurrentWorldMapChecked(editor, file).execute();
+        }
+        else if (isSupportedImageFile(file) && !editor.editModeIs(EditMode.INSPECT)) {
+            Image image = loadImage(file).orElse(null);
+            if (image == null) {
+                editor.messageManager().showMessage("Could not open image file '%s'".formatted(file), 3, MessageType.ERROR);
+                return;
+            }
+            if (!isTemplateImageSizeOk(image)) {
+                editor.messageManager().showMessage("Template image file '%s' has dubios size".formatted(file), 3, MessageType.ERROR);
+                return;
+            }
+            editor.setTemplateImage(image);
+            editor.createEmptyMapFromTemplateImage(image);
+            editor.selectTemplateImageTab();
+            editor.messageManager().showMessage("Select colors for tile identification!", 10, MessageType.INFO);
+        }
+    }
+
 
     public void onContextMenuRequested(TileMapEditor editor, ContextMenuEvent menuEvent) {
         if (editor.editModeIs(EditMode.INSPECT)) {

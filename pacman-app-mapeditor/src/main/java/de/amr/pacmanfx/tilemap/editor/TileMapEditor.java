@@ -581,6 +581,10 @@ public class TileMapEditor {
         return palettes[selectedPaletteID()];
     }
 
+    public void selectTemplateImageTab() {
+        tabPaneEditorViews.getSelectionModel().select(tabTemplateImage);
+    }
+
     public List<Vector2i> tilesWithErrors() {
         return tilesWithErrors;
     }
@@ -721,31 +725,10 @@ public class TileMapEditor {
         node.setOnDragDropped(dragEvent -> {
             if (dragEvent.getDragboard().hasFiles()) {
                 File file = dragEvent.getDragboard().getFiles().getFirst();
-                ifNoUnsavedChangesDo(() -> onFileDroppedOnEditCanvas(file));
+                ifNoUnsavedChangesDo(() -> editCanvas.onFileDropped(this, file));
             }
             dragEvent.consume();
         });
-    }
-
-    private void onFileDroppedOnEditCanvas(File file) {
-        if (isWorldMapFile(file)) {
-            new Action_ReplaceCurrentWorldMapChecked(this, file);
-        }
-        else if (isSupportedImageFile(file) && !editModeIs(EditMode.INSPECT)) {
-            Image image = loadImage(file).orElse(null);
-            if (image == null) {
-                messageManager.showMessage("Could not open image file '%s'".formatted(file), 3, MessageType.ERROR);
-                return;
-            }
-            if (!isTemplateImageSizeOk(image)) {
-                messageManager.showMessage("Template image file '%s' has dubios size".formatted(file), 3, MessageType.ERROR);
-                return;
-            }
-            setTemplateImage(image);
-            createEmptyMapFromTemplateImage(image);
-            tabPaneEditorViews.getSelectionModel().select(tabTemplateImage);
-            messageManager.showMessage("Select colors for tile identification!", 10, MessageType.INFO);
-        }
     }
 
     private void createTabPaneWithPreviews() {
@@ -1037,7 +1020,7 @@ public class TileMapEditor {
         new Action_SetTileValue(this, worldMap, layerID, new Vector2i(col, row), code).execute();
     }
 
-    private void createEmptyMapFromTemplateImage(Image image) {
+    public void createEmptyMapFromTemplateImage(Image image) {
         int numRows = EMPTY_ROWS_BEFORE_MAZE + EMPTY_ROWS_BELOW_MAZE + (int) (image.getHeight() / TS);
         int numCols = (int) (image.getWidth() / TS);
         WorldMap emptyMap = new Action_CreateEmptyMap(this, numRows, numCols).execute();
