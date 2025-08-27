@@ -662,16 +662,6 @@ public class TileMapEditor {
         spTemplateImage = new ScrollPane(pane);
     }
 
-    public void setTerrainMapPropertyValue(String propertyName, String value) {
-        requireNonNull(value);
-        if (currentWorldMap().properties(LayerID.TERRAIN).containsKey(propertyName)
-            && currentWorldMap().properties(LayerID.TERRAIN).get(propertyName).equals(value))
-            return;
-        currentWorldMap().properties(LayerID.TERRAIN).put(propertyName, value);
-        changeManager.setTerrainMapChanged();
-        changeManager.setEdited(true);
-    }
-
     public void setFoodMapPropertyValue(String propertyName, String value) {
         requireNonNull(value);
         if (currentWorldMap().properties(LayerID.FOOD).containsKey(propertyName)
