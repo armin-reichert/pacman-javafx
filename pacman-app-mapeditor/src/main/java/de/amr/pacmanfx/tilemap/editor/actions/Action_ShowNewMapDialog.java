@@ -39,7 +39,7 @@ public class Action_ShowNewMapDialog extends AbstractEditorAction {
                     if (preconfigured) {
                         setPreconfiguredMap(editor, sizeInTiles.x(), sizeInTiles.y());
                     } else {
-                        editor.setBlankMap(sizeInTiles.x(), sizeInTiles.y());
+                        editor.setCurrentWorldMap(editor.createEmptyMap(sizeInTiles.x(), sizeInTiles.y()));
                     }
                     editor.currentFileProperty().set(null);
                 }

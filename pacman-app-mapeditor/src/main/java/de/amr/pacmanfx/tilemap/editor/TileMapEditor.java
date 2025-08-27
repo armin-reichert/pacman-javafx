@@ -204,7 +204,7 @@ public class TileMapEditor {
 
     public void init(File workDir) {
         setCurrentDirectory(workDir);
-        setBlankMap(28, 36);
+        setCurrentWorldMap(createEmptyMap(28, 36));
         setEditMode(EditMode.INSPECT);
         mazePreview3D.reset();
     }
@@ -697,24 +697,12 @@ public class TileMapEditor {
         changeManager.setEdited(true);
     }
 
-    private void removeTerrainMapProperty(String key) {
-        currentWorldMap().properties(LayerID.TERRAIN).remove(key);
-        changeManager.setTerrainMapChanged();
-        changeManager.setEdited(true);
-    }
-
     public void setFoodMapPropertyValue(String propertyName, String value) {
         requireNonNull(value);
         if (currentWorldMap().properties(LayerID.FOOD).containsKey(propertyName)
             && currentWorldMap().properties(LayerID.FOOD).get(propertyName).equals(value))
             return;
         currentWorldMap().properties(LayerID.FOOD).put(propertyName, value);
-        changeManager.setFoodMapChanged();
-        changeManager.setEdited(true);
-    }
-
-    private void removeFoodMapProperty(String key) {
-        currentWorldMap().properties(LayerID.FOOD).remove(key);
         changeManager.setFoodMapChanged();
         changeManager.setEdited(true);
     }
@@ -1225,11 +1213,11 @@ public class TileMapEditor {
         changeManager.setEdited(true);
     }
 
-    public void setBlankMap(int tilesX, int tilesY) {
-        var blankMap = WorldMap.emptyMap(tilesY, tilesX);
-        setDefaultColors(blankMap);
-        setDefaultScatterPositions(blankMap);
-        setCurrentWorldMap(blankMap);
+    public WorldMap createEmptyMap(int numCols, int numRows) {
+        var worldMap = WorldMap.emptyMap(numRows, numCols);
+        setDefaultColors(worldMap);
+        setDefaultScatterPositions(worldMap);
+        return worldMap;
     }
 
     public void setDefaultColors(WorldMap worldMap) {
@@ -1255,11 +1243,14 @@ public class TileMapEditor {
     private void createEmptyMapFromTemplateImage(Image image) {
         int tilesX = (int) (image.getWidth() / TS);
         int tilesY = EMPTY_ROWS_BEFORE_MAZE + EMPTY_ROWS_BELOW_MAZE + (int) (image.getHeight() / TS);
-        setBlankMap(tilesX, tilesY);
-        removeTerrainMapProperty(WorldMapProperty.COLOR_WALL_FILL);
-        removeTerrainMapProperty(WorldMapProperty.COLOR_WALL_STROKE);
-        removeTerrainMapProperty(WorldMapProperty.COLOR_DOOR);
-        removeFoodMapProperty(WorldMapProperty.COLOR_FOOD);
+        setCurrentWorldMap(createEmptyMap(tilesX, tilesY));
+        currentWorldMap().properties(LayerID.TERRAIN).remove(WorldMapProperty.COLOR_WALL_FILL);
+        currentWorldMap().properties(LayerID.TERRAIN).remove(WorldMapProperty.COLOR_WALL_STROKE);
+        currentWorldMap().properties(LayerID.TERRAIN).remove(WorldMapProperty.COLOR_DOOR);
+        changeManager.setTerrainMapChanged();
+        currentWorldMap().properties(LayerID.FOOD).remove(WorldMapProperty.COLOR_FOOD);
+        changeManager.setFoodMapChanged();
+        changeManager.setEdited(true);
     }
 
     void initWorldMapForTemplateImage() {
