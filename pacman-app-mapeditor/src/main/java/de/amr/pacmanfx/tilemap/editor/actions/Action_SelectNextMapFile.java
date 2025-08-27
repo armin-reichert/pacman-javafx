@@ -1,5 +1,7 @@
-package de.amr.pacmanfx.tilemap.editor;
+package de.amr.pacmanfx.tilemap.editor.actions;
 
+import de.amr.pacmanfx.tilemap.editor.AbstractEditorAction;
+import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
 import org.tinylog.Logger;
 
 import java.io.File;

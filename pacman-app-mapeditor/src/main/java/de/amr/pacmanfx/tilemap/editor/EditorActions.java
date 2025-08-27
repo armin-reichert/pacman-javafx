@@ -1,5 +1,7 @@
 package de.amr.pacmanfx.tilemap.editor;
 
+import de.amr.pacmanfx.tilemap.editor.actions.*;
+
 public interface EditorActions {
     Action_AddBorderWall ADD_BORDER_WALL = new Action_AddBorderWall();
     Action_FloodWithPellets FLOOD_WITH_PELLETS = new Action_FloodWithPellets();

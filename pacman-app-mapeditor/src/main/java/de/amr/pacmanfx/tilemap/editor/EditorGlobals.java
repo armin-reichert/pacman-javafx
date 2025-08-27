@@ -26,6 +26,8 @@ public class EditorGlobals {
     public static final byte PALETTE_ID_TERRAIN = 1;
     public static final byte PALETTE_ID_FOOD    = 2;
 
+    public static final String SAMPLE_MAPS_PATH = "/de/amr/pacmanfx/tilemap/editor/maps/";
+
     public static final ResourceBundle TEXT_BUNDLE = ResourceBundle.getBundle(TileMapEditor.class.getPackageName() + ".texts");
 
     public static boolean isSupportedImageFile(File file) {

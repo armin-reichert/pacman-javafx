@@ -1,8 +1,10 @@
-package de.amr.pacmanfx.tilemap.editor;
+package de.amr.pacmanfx.tilemap.editor.actions;
 
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
+import de.amr.pacmanfx.tilemap.editor.AbstractEditorAction;
+import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
 
 import java.util.ArrayDeque;
 import java.util.HashSet;

@@ -1,7 +1,10 @@
-package de.amr.pacmanfx.tilemap.editor;
+package de.amr.pacmanfx.tilemap.editor.actions;
 
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.*;
+import de.amr.pacmanfx.tilemap.editor.AbstractEditorAction;
+import de.amr.pacmanfx.tilemap.editor.MessageType;
+import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 

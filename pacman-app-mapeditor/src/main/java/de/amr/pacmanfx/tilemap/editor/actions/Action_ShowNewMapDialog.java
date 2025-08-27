@@ -1,10 +1,14 @@
-package de.amr.pacmanfx.tilemap.editor;
+package de.amr.pacmanfx.tilemap.editor.actions;
 
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.lib.tilemap.WorldMapFormatter;
 import de.amr.pacmanfx.model.WorldMapProperty;
+import de.amr.pacmanfx.tilemap.editor.AbstractEditorAction;
+import de.amr.pacmanfx.tilemap.editor.EditorActions;
+import de.amr.pacmanfx.tilemap.editor.MessageType;
+import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
 import javafx.scene.control.TextInputDialog;
 
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.translated;

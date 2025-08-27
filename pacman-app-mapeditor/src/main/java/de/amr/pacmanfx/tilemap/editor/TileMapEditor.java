@@ -8,6 +8,7 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.*;
 import de.amr.pacmanfx.model.WorldMapProperty;
+import de.amr.pacmanfx.tilemap.editor.actions.Action_PlaceArcadeHouse;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
@@ -190,9 +191,10 @@ public class TileMapEditor {
         createMessageDisplay();
         createZoomSlider();
         createStatusLine();
-        loadSampleMapsAndAddMenuEntries(menuBar.menuMaps());
 
         arrangeMainLayout();
+
+        loadSampleMapsAndUpdateMenu(menuBar.menuMaps());
 
         contentPane.setOnKeyTyped(this::onKeyTyped);
         contentPane.setOnKeyPressed(this::onKeyPressed);
@@ -1223,7 +1225,7 @@ public class TileMapEditor {
         changeManager.setEdited(true);
     }
 
-    void setBlankMap(int tilesX, int tilesY) {
+    public void setBlankMap(int tilesX, int tilesY) {
         var blankMap = WorldMap.emptyMap(tilesY, tilesX);
         setDefaultColors(blankMap);
         setDefaultScatterPositions(blankMap);
@@ -1359,13 +1361,11 @@ public class TileMapEditor {
 
     // Sample maps loading
 
-    static final String SAMPLE_MAPS_PATH = "/de/amr/pacmanfx/tilemap/editor/maps/";
-
     private WorldMap mapPacManGame;
     private List<WorldMap> mapsMsPacManGame;
     private List<WorldMap> mapsPacManXXLGame;
 
-    private void loadSampleMapsAndAddMenuEntries(Menu menu) {
+    private void loadSampleMapsAndUpdateMenu(Menu menu) {
         try {
             loadSampleMaps();
         } catch (IOException x) {
@@ -1373,6 +1373,7 @@ public class TileMapEditor {
             Logger.error("Error loading sample maps");
             return;
         }
+        menu.getItems().clear();
         menu.getItems().add(createLoadMapMenuItem("Pac-Man", mapPacManGame));
         menu.getItems().add(new SeparatorMenuItem());
         rangeClosed(1, 6).forEach(mapNumber -> menu.getItems().add(
