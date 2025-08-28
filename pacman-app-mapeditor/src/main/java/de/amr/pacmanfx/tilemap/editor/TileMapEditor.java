@@ -206,7 +206,7 @@ public class TileMapEditor {
 
         createEditArea();
         createPreviewArea();
-        createPalettes(editCanvas.terrainRenderer(), editCanvas.foodRenderer());
+        createPalettes(editCanvas);
         createPropertyEditors();
         createStatusLine();
         arrangeContent();
@@ -768,10 +768,11 @@ public class TileMapEditor {
         splitEditorAndPreviewArea.setDividerPositions(0.5);
     }
 
-    private void createPalettes(TerrainTileMapRenderer terrainRenderer, FoodMapRenderer foodRenderer) {
-        palettes[PALETTE_ID_TERRAIN] = createTerrainPalette(terrainRenderer);
-        palettes[PALETTE_ID_FOOD]    = createFoodPalette(foodRenderer);
-        palettes[PALETTE_ID_ACTORS]  = createActorsPalette(terrainRenderer);
+    // Must be called after edit canvas creation because it binds to the renderers of the edit canvas!
+    private void createPalettes(EditCanvas editCanvas) {
+        palettes[PALETTE_ID_TERRAIN] = createTerrainPalette(editCanvas.terrainRenderer());
+        palettes[PALETTE_ID_FOOD]    = createFoodPalette(editCanvas.foodRenderer());
+        palettes[PALETTE_ID_ACTORS]  = createActorsPalette(editCanvas.terrainRenderer());
 
         var tabTerrain = new Tab("", palettes[PALETTE_ID_TERRAIN].root());
         tabTerrain.setGraphic(new Text(translated("terrain")));
@@ -805,8 +806,8 @@ public class TileMapEditor {
         }
     }
 
-    private Palette createTerrainPalette(TerrainMapRenderer terrainMapRenderer) {
-        var palette = new Palette(this, PALETTE_ID_TERRAIN, TOOL_SIZE, 1, 13, terrainMapRenderer);
+    private Palette createTerrainPalette(TerrainMapRenderer renderer) {
+        var palette = new Palette(this, PALETTE_ID_TERRAIN, TOOL_SIZE, 1, 13);
         palette.addTileTool(this, TerrainTile.EMPTY.$, "Empty Space");
         palette.addTileTool(this, TerrainTile.WALL_H.$, "Horiz. Wall");
         palette.addTileTool(this, TerrainTile.WALL_V.$, "Vert. Wall");
@@ -822,11 +823,17 @@ public class TileMapEditor {
         palette.addTileTool(this, TerrainTile.ONE_WAY_LEFT.$, "One-Way Left");
 
         palette.selectTool(0); // "No Tile"
+
+        TerrainTileMapRenderer paletteRenderer = new TerrainTileMapRenderer(palette.canvas());
+        paletteRenderer.backgroundColorProperty().bind(renderer.backgroundColorProperty());
+        paletteRenderer.colorSchemeProperty().bind(renderer.colorSchemeProperty());
+        palette.setRenderer(paletteRenderer);
+
         return palette;
     }
 
     private Palette createActorsPalette(TerrainTileMapRenderer renderer) {
-        var palette = new Palette(this, PALETTE_ID_ACTORS, TOOL_SIZE, 1, 11, renderer);
+        var palette = new Palette(this, PALETTE_ID_ACTORS, TOOL_SIZE, 1, 11);
         palette.addTileTool(this, TerrainTile.EMPTY.$, "Nope");
         palette.addPropertyTool(WorldMapProperty.POS_PAC, "Pac-Man");
         palette.addPropertyTool(WorldMapProperty.POS_RED_GHOST, "Red Ghost");
@@ -839,15 +846,28 @@ public class TileMapEditor {
         palette.addPropertyTool(WorldMapProperty.POS_SCATTER_CYAN_GHOST, "Cyan Ghost Scatter");
         palette.addPropertyTool(WorldMapProperty.POS_SCATTER_ORANGE_GHOST, "Orange Ghost Scatter");
         palette.selectTool(0); // "No actor"
+
+        TerrainTileMapRenderer paletteRenderer = new TerrainTileMapRenderer(palette.canvas());
+        paletteRenderer.backgroundColorProperty().bind(renderer.backgroundColorProperty());
+        paletteRenderer.colorSchemeProperty().bind(renderer.colorSchemeProperty());
+        palette.setRenderer(paletteRenderer);
+
+
         return palette;
     }
 
     private Palette createFoodPalette(FoodMapRenderer renderer) {
-        var palette = new Palette(this, PALETTE_ID_FOOD, TOOL_SIZE, 1, 3, renderer);
+        var palette = new Palette(this, PALETTE_ID_FOOD, TOOL_SIZE, 1, 3);
         palette.addTileTool(this, FoodTile.EMPTY.code(), "No Food");
         palette.addTileTool(this, FoodTile.PELLET.code(), "Pellet");
         palette.addTileTool(this, FoodTile.ENERGIZER.code(), "Energizer");
         palette.selectTool(0); // "No Food"
+
+        FoodMapRenderer copy = new FoodMapRenderer(palette.canvas());
+        copy.backgroundColorProperty().bind(renderer.backgroundColorProperty());
+        copy.energizerColorProperty().bind(renderer.energizerColorProperty());
+        copy.pelletColorProperty().bind(renderer.pelletColorProperty());
+
         return palette;
     }
 

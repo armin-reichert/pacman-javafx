@@ -42,7 +42,7 @@ public class Palette {
     private int selectedRow;
     private int selectedCol;
 
-    private Palette(TileMapEditor editor, byte id, int toolSize, int numRows, int numCols) {
+    public Palette(TileMapEditor editor, byte id, int toolSize, int numRows, int numCols) {
         this.editor = requireNonNull(editor);
         canvas = new Canvas(numCols * toolSize, numRows * toolSize);
         canvas.setOnMouseClicked(this::handleMouseClick);
@@ -66,6 +66,11 @@ public class Palette {
         tooltip.setFont(Font.font("Sans", 12));
     }
 
+    public void setRenderer(TileRenderer renderer) {
+        this.renderer = renderer;
+    }
+
+/*
     public Palette(TileMapEditor editor, byte id, int toolSize, int numRows, int numCols, TerrainMapRenderer terrainMapRenderer) {
         this(editor, id, toolSize, numRows, numCols);
         TerrainTileMapRenderer copy = new TerrainTileMapRenderer(canvas);
@@ -82,9 +87,14 @@ public class Palette {
         copy.pelletColorProperty().bind(foodMapRenderer.pelletColorProperty());
         renderer = copy;
     }
+ */
 
     public byte id() {
         return id;
+    }
+
+    public Canvas canvas() {
+        return canvas;
     }
 
     public TileValueEditorTool newTileTool(byte code, String description) {
