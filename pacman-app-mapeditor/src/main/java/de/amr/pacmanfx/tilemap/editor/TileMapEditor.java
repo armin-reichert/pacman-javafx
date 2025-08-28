@@ -44,22 +44,30 @@ public class TileMapEditor {
             return tilesWithErrors;
         }
 
-        public void setEdited(boolean edited) { this.edited = edited; }
+        public void setEdited(boolean edited) {
+            this.edited = edited;
+            if (edited) {
+                requestRedraw();
+            }
+        }
 
         public boolean isEdited() { return edited; }
 
         public void setWorldMapChanged() {
             setTerrainMapChanged();
             setFoodMapChanged();
+            requestRedraw();
         }
 
         public void setTerrainMapChanged() {
             terrainMapChanged = true;
             obstaclesUpToDate = false;
+            requestRedraw();
         }
 
         public void setFoodMapChanged() {
             foodMapChanged = true;
+            requestRedraw();
         }
 
         public void requestRedraw() {
@@ -68,6 +76,10 @@ public class TileMapEditor {
 
         public boolean isRedrawRequested() {
             return redrawRequested;
+        }
+
+        public void clearRedrawRequest() {
+            redrawRequested = false;
         }
 
         private void processChanges() {
@@ -80,16 +92,17 @@ public class TileMapEditor {
             if (terrainMapChanged || foodMapChanged) {
                 sourceCode.set(sourceCode());
                 requestRedraw();
-
             }
             if (terrainMapChanged) {
                 //TODO use events?
                 ui.onTerrainMapChanged(currentWorldMap());
                 terrainMapChanged = false;
+                requestRedraw();
             }
             if (foodMapChanged) {
                 ui.onFoodMapChanged(currentWorldMap());
                 foodMapChanged = false;
+                requestRedraw();
             }
         }
 
@@ -116,6 +129,7 @@ public class TileMapEditor {
             if (changeManager.isRedrawRequested()) {
                 try {
                     ui.draw();
+                    changeManager.clearRedrawRequest();
                 } catch (Exception x) {
                     Logger.error(x);
                 }
@@ -495,7 +509,6 @@ public class TileMapEditor {
 
     public ObjectProperty<Image> templateImageProperty() { return templateImage; }
 
-
     // -- title
 
     private final StringProperty title = new SimpleStringProperty("Tile Map Editor");
@@ -504,23 +517,19 @@ public class TileMapEditor {
 
     // Accessor methods
 
-
     public TileMapEditorUI ui() {
         return ui;
     }
 
     public ChangeManager changeManager() { return changeManager;}
 
-
     public MessageManager messageManager() {
         return messageManager;
     }
 
-
     public void showEditHelpText() {
         messageManager.showMessage(translated("edit_help"), 30, MessageType.INFO);
     }
-
 
     public void ifNoUnsavedChangesDo(Runnable action) {
         if (!changeManager.isEdited()) {
@@ -551,12 +560,11 @@ public class TileMapEditor {
         }
     }
 
-    // Controller part
+    // Event handlers
 
     public void onKeyPressed(KeyEvent e) {
         KeyCode key = e.getCode();
         boolean alt = e.isAltDown();
-
         if (alt && key == KeyCode.LEFT) {
             new Action_SelectNextMapFile(this, false).execute();
         }

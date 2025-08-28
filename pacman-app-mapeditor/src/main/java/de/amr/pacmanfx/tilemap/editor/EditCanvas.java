@@ -70,10 +70,10 @@ public class EditCanvas extends Canvas {
 
     private boolean dragging = false;
 
-    public EditCanvas(TileMapEditorUI ui) {
+    public EditCanvas(TileMapEditorUI ui, TileMapEditor.ChangeManager changeManager) {
         this.ui = requireNonNull(ui);
 
-        obstacleEditor = new ObstacleEditor();
+        obstacleEditor = new ObstacleEditor(changeManager);
         obstacleEditor.joiningProperty().bind(obstaclesJoiningProperty());
         obstacleEditor.symmetricEditModeProperty().bind(symmetricEditModeProperty());
         obstacleEditor.worldMapProperty().bind(worldMapProperty());

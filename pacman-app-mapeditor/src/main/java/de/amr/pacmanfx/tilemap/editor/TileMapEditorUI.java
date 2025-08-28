@@ -113,6 +113,7 @@ public class TileMapEditorUI {
     }
 
     public void draw() {
+        Logger.info("Draw editor UI");
         final WorldMap worldMap = editor.currentWorldMap();
         //TODO avoid creation in every draw call
         var colorScheme = new TerrainMapColorScheme(
@@ -132,6 +133,7 @@ public class TileMapEditorUI {
         if (tabPreview2D.isSelected()) {
             preview2D.draw(worldMap, colorScheme);
         }
+        palettes.values().forEach(Palette::draw);
     }
 
     public Stage stage() {
@@ -163,7 +165,7 @@ public class TileMapEditorUI {
     }
 
     private void createEditCanvas() {
-        editCanvas = new EditCanvas(this);
+        editCanvas = new EditCanvas(this, editor.changeManager());
         editCanvas.editModeProperty().bind(editor.editModeProperty());
         editCanvas.gridSizeProperty().bind(editor.gridSizeProperty());
         editCanvas.gridVisibleProperty().bind(editor.gridVisibleProperty());
@@ -334,11 +336,12 @@ public class TileMapEditorUI {
         tabPaneForPalettes.setPadding(new Insets(5, 5, 5, 5));
         tabPaneForPalettes.setMinHeight(75);
 
-        tabPaneForPalettes.getSelectionModel().selectedItemProperty().addListener((py, ov, selectedItem)
-            -> editor.setPaletteID((PaletteID) selectedItem.getUserData()));
+        tabPaneForPalettes.getSelectionModel().selectedItemProperty().addListener((py, ov, selectedTab) -> {
+            editor.setPaletteID((PaletteID) selectedTab.getUserData());
+            updatePalettesTabPaneDisplay(selectedTab);
+            editor.changeManager().requestRedraw();
+        });
 
-        tabPaneForPalettes.getSelectionModel().selectedItemProperty().addListener(
-                (py, ov, selectedTab) -> updatePalettesTabPaneDisplay(selectedTab));
         updatePalettesTabPaneDisplay(tabPaneForPalettes.getSelectionModel().getSelectedItem());
     }
 
