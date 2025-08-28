@@ -806,19 +806,19 @@ public class TileMapEditor {
 
     private Palette createTerrainPalette(TerrainMapRenderer renderer) {
         var palette = new Palette(this, PALETTE_ID_TERRAIN, TOOL_SIZE, 1, 13);
-        palette.addTileTool(this, TerrainTile.EMPTY.$, "Empty Space");
-        palette.addTileTool(this, TerrainTile.WALL_H.$, "Horiz. Wall");
-        palette.addTileTool(this, TerrainTile.WALL_V.$, "Vert. Wall");
-        palette.addTileTool(this, TerrainTile.ARC_NW.$, "NW Corner");
-        palette.addTileTool(this, TerrainTile.ARC_NE.$, "NE Corner");
-        palette.addTileTool(this, TerrainTile.ARC_SW.$, "SW Corner");
-        palette.addTileTool(this, TerrainTile.ARC_SE.$, "SE Corner");
-        palette.addTileTool(this, TerrainTile.TUNNEL.$, "Tunnel");
-        palette.addTileTool(this, TerrainTile.DOOR.$, "Door");
-        palette.addTileTool(this, TerrainTile.ONE_WAY_UP.$, "One-Way Up");
-        palette.addTileTool(this, TerrainTile.ONE_WAY_RIGHT.$, "One-Way Right");
-        palette.addTileTool(this, TerrainTile.ONE_WAY_DOWN.$, "One-Way Down");
-        palette.addTileTool(this, TerrainTile.ONE_WAY_LEFT.$, "One-Way Left");
+        palette.addTileTool(TerrainTile.EMPTY.$, "Empty Space");
+        palette.addTileTool(TerrainTile.WALL_H.$, "Horiz. Wall");
+        palette.addTileTool(TerrainTile.WALL_V.$, "Vert. Wall");
+        palette.addTileTool(TerrainTile.ARC_NW.$, "NW Corner");
+        palette.addTileTool(TerrainTile.ARC_NE.$, "NE Corner");
+        palette.addTileTool(TerrainTile.ARC_SW.$, "SW Corner");
+        palette.addTileTool(TerrainTile.ARC_SE.$, "SE Corner");
+        palette.addTileTool(TerrainTile.TUNNEL.$, "Tunnel");
+        palette.addTileTool(TerrainTile.DOOR.$, "Door");
+        palette.addTileTool(TerrainTile.ONE_WAY_UP.$, "One-Way Up");
+        palette.addTileTool(TerrainTile.ONE_WAY_RIGHT.$, "One-Way Right");
+        palette.addTileTool(TerrainTile.ONE_WAY_DOWN.$, "One-Way Down");
+        palette.addTileTool(TerrainTile.ONE_WAY_LEFT.$, "One-Way Left");
 
         palette.selectTool(0); // "No Tile"
 
@@ -832,7 +832,7 @@ public class TileMapEditor {
 
     private Palette createActorsPalette(TerrainTileMapRenderer renderer) {
         var palette = new Palette(this, PALETTE_ID_ACTORS, TOOL_SIZE, 1, 11);
-        palette.addTileTool(this, TerrainTile.EMPTY.$, "Nope");
+        palette.addTileTool(TerrainTile.EMPTY.$, "Nope");
         palette.addPropertyTool(WorldMapProperty.POS_PAC, "Pac-Man");
         palette.addPropertyTool(WorldMapProperty.POS_RED_GHOST, "Red Ghost");
         palette.addPropertyTool(WorldMapProperty.POS_PINK_GHOST, "Pink Ghost");
@@ -856,9 +856,9 @@ public class TileMapEditor {
 
     private Palette createFoodPalette(FoodMapRenderer renderer) {
         var palette = new Palette(this, PALETTE_ID_FOOD, TOOL_SIZE, 1, 3);
-        palette.addTileTool(this, FoodTile.EMPTY.code(), "No Food");
-        palette.addTileTool(this, FoodTile.PELLET.code(), "Pellet");
-        palette.addTileTool(this, FoodTile.ENERGIZER.code(), "Energizer");
+        palette.addTileTool(FoodTile.EMPTY.code(), "No Food");
+        palette.addTileTool(FoodTile.PELLET.code(), "Pellet");
+        palette.addTileTool(FoodTile.ENERGIZER.code(), "Energizer");
         palette.selectTool(0); // "No Food"
 
         FoodMapRenderer copy = new FoodMapRenderer(palette.canvas());
@@ -1057,7 +1057,7 @@ public class TileMapEditor {
         boolean alt = e.isAltDown();
 
         if (alt && key == KeyCode.LEFT) {
-            File prevFile = new Action_SelectNextMapFile(this, false).execute();
+            new Action_SelectNextMapFile(this, false).execute();
         }
         else if (alt && key == KeyCode.RIGHT) {
             new Action_SelectNextMapFile(this, true).execute();

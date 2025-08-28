@@ -6,9 +6,6 @@ package de.amr.pacmanfx.tilemap.editor;
 
 import de.amr.pacmanfx.lib.tilemap.WorldMapFormatter;
 import de.amr.pacmanfx.tilemap.editor.actions.Action_SetTileCode;
-import de.amr.pacmanfx.tilemap.editor.rendering.TerrainTileMapRenderer;
-import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
-import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer;
 import de.amr.pacmanfx.uilib.tilemap.TileRenderer;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
@@ -70,25 +67,6 @@ public class Palette {
         this.renderer = renderer;
     }
 
-/*
-    public Palette(TileMapEditor editor, byte id, int toolSize, int numRows, int numCols, TerrainMapRenderer terrainMapRenderer) {
-        this(editor, id, toolSize, numRows, numCols);
-        TerrainTileMapRenderer copy = new TerrainTileMapRenderer(canvas);
-        copy.backgroundColorProperty().bind(terrainMapRenderer.backgroundColorProperty());
-        copy.colorSchemeProperty().bind(terrainMapRenderer.colorSchemeProperty());
-        renderer = copy;
-    }
-
-    public Palette(TileMapEditor editor, byte id, int toolSize, int numRows, int numCols, FoodMapRenderer foodMapRenderer) {
-        this(editor, id, toolSize, numRows, numCols);
-        FoodMapRenderer copy = new FoodMapRenderer(canvas);
-        copy.backgroundColorProperty().bind(foodMapRenderer.backgroundColorProperty());
-        copy.energizerColorProperty().bind(foodMapRenderer.energizerColorProperty());
-        copy.pelletColorProperty().bind(foodMapRenderer.pelletColorProperty());
-        renderer = copy;
-    }
- */
-
     public byte id() {
         return id;
     }
@@ -112,7 +90,7 @@ public class Palette {
             toolSize, propertyName, description);
     }
 
-    public void addTileTool(TileMapEditor editor, byte value, String description) {
+    public void addTileTool(byte value, String description) {
         tools.add(newTileTool(value, description));
     }
 
