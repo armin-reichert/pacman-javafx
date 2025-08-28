@@ -32,7 +32,7 @@ public class Palette {
     private final int toolSize;
     private final int numRows;
     private final int numCols;
-    private final GraphicsContext ctx;
+    private final Canvas canvas;
     private final List<EditorTool> tools;
 
     private final TileMapEditor editor;
@@ -44,8 +44,7 @@ public class Palette {
 
     private Palette(TileMapEditor editor, byte id, int toolSize, int numRows, int numCols) {
         this.editor = requireNonNull(editor);
-        var canvas = new Canvas(numCols * toolSize, numRows * toolSize);
-        ctx = canvas.getGraphicsContext2D();
+        canvas = new Canvas(numCols * toolSize, numRows * toolSize);
         canvas.setOnMouseClicked(this::handleMouseClick);
         canvas.setOnMouseMoved(this::handleMouseMove);
         Tooltip.install(canvas, tooltip);
@@ -69,7 +68,7 @@ public class Palette {
 
     public Palette(TileMapEditor editor, byte id, int toolSize, int numRows, int numCols, TerrainMapRenderer terrainMapRenderer) {
         this(editor, id, toolSize, numRows, numCols);
-        TerrainTileMapRenderer copy = new TerrainTileMapRenderer(ctx.getCanvas());
+        TerrainTileMapRenderer copy = new TerrainTileMapRenderer(canvas);
         copy.backgroundColorProperty().bind(terrainMapRenderer.backgroundColorProperty());
         copy.colorSchemeProperty().bind(terrainMapRenderer.colorSchemeProperty());
         renderer = copy;
@@ -77,7 +76,7 @@ public class Palette {
 
     public Palette(TileMapEditor editor, byte id, int toolSize, int numRows, int numCols, FoodMapRenderer foodMapRenderer) {
         this(editor, id, toolSize, numRows, numCols);
-        FoodMapRenderer copy = new FoodMapRenderer(ctx.getCanvas());
+        FoodMapRenderer copy = new FoodMapRenderer(canvas);
         copy.backgroundColorProperty().bind(foodMapRenderer.backgroundColorProperty());
         copy.energizerColorProperty().bind(foodMapRenderer.energizerColorProperty());
         copy.pelletColorProperty().bind(foodMapRenderer.pelletColorProperty());
@@ -112,7 +111,7 @@ public class Palette {
     }
 
     public Node root() {
-        return ctx.getCanvas();
+        return canvas;
     }
 
     public boolean isToolSelected() {
@@ -180,9 +179,10 @@ public class Palette {
     }
 
     public void draw() {
-        double width = ctx.getCanvas().getWidth(), height = ctx.getCanvas().getHeight();
-        ctx.save();
+        double width = canvas.getWidth(), height = canvas.getHeight();
 
+        GraphicsContext ctx = canvas.getGraphicsContext2D();
+        ctx.save();
         ctx.setFill(BG_COLOR);
         ctx.fillRect(0, 0, width, height);
 
