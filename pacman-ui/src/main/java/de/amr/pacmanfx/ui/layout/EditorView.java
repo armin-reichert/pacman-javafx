@@ -23,7 +23,7 @@ public class EditorView implements GameUI_View {
     public EditorView(TileMapEditor editor) {
         this.editor = requireNonNull(editor);
         // without this, Pac-Man wallpaper shines through!
-        editor.layoutPane().setBackground(colorBackground(Color.web("#dddddd"))); // JavaFX default grey
+        editor.ui().layoutPane().setBackground(colorBackground(Color.web("#dddddd"))); // JavaFX default grey
     }
 
     public TileMapEditor editor() {
@@ -35,7 +35,7 @@ public class EditorView implements GameUI_View {
 
     @Override
     public Region root() {
-        return editor.layoutPane();
+        return editor.ui().layoutPane();
     }
 
     @Override

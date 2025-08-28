@@ -302,7 +302,7 @@ public class GameUI_Implementation implements GameUI {
                 // Undo editor stage title binding change:
                 bindStageTitle(stage);
             });
-            editor.menuBar().menuFile().getItems().addAll(new SeparatorMenuItem(), miReturnToGame);
+            editor.ui().menuBar().menuFile().getItems().addAll(new SeparatorMenuItem(), miReturnToGame);
             editor.init(gameContext.customMapDir());
             editorView = new EditorView(editor);
         }
@@ -484,7 +484,7 @@ public class GameUI_Implementation implements GameUI {
             currentGameScene().ifPresent(GameScene::end);
             soundManager().stopAll();
             clock.stop();
-            ensureEditorViewExists().editor().start(stage);
+            ensureEditorViewExists().editor().start();
             selectView(editorView);
         } else {
             Logger.info("Editor view cannot be opened, game is playing");

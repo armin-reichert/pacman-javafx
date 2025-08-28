@@ -46,7 +46,7 @@ public class TileMapEditorApp extends Application  {
             }));
 
             editor.init(new File(System.getProperty("user.home")));
-            editor.start(stage);
+            editor.start();
 
             stage.show();
         } catch (Exception x) {

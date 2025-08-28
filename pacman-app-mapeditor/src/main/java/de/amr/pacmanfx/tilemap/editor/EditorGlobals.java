@@ -1,3 +1,7 @@
+/*
+Copyright (c) 2021-2025 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.pacmanfx.tilemap.editor;
 
 import javafx.scene.Node;
@@ -21,8 +25,6 @@ public class EditorGlobals {
 
     public static final int EMPTY_ROWS_BEFORE_MAZE = 3;
     public static final int EMPTY_ROWS_BELOW_MAZE = 2;
-
-    public enum PaletteID { PALETTE_ID_ACTORS, PALETTE_ID_TERRAIN, PALETTE_ID_FOOD}
 
     public static final String SAMPLE_MAPS_PATH = "/de/amr/pacmanfx/tilemap/editor/maps/";
 

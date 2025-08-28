@@ -25,7 +25,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.*;
+import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.SAMPLE_MAPS_PATH;
+import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.translated;
 import static java.util.Objects.requireNonNull;
 
 public class TileMapEditor {
@@ -138,7 +139,7 @@ public class TileMapEditor {
         ui.init();
     }
 
-    public void start(Stage stage) {
+    public void start() {
         Platform.runLater(() -> {
             showEditHelpText();
             ui.start();
