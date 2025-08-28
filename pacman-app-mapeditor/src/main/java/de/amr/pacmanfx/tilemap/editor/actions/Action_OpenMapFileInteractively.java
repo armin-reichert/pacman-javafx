@@ -17,7 +17,7 @@ public class Action_OpenMapFileInteractively extends AbstractEditorAction<File> 
 
     @Override
     public File execute() {
-        editor.ifNoUnsavedChangesDo(() -> {
+        editor.ui().ifNoUnsavedChangesDo(() -> {
             FileChooser fileChooser = createFileChooser();
             file = fileChooser.showOpenDialog(editor.ui().stage());
             if (file != null) {

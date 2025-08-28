@@ -7,14 +7,12 @@ package de.amr.pacmanfx.tilemap.editor;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.lib.tilemap.WorldMapFormatter;
-import de.amr.pacmanfx.tilemap.editor.actions.*;
+import de.amr.pacmanfx.tilemap.editor.actions.Action_CreateEmptyMap;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
@@ -453,51 +451,6 @@ public class TileMapEditor {
     }
 
     public ChangeManager changeManager() { return changeManager;}
-
-    public void ifNoUnsavedChangesDo(Runnable action) {
-        if (!changeManager.isEdited()) {
-            action.run();
-            return;
-        }
-        SaveConfirmation confirmationDialog = new SaveConfirmation();
-        confirmationDialog.showAndWait().ifPresent(choice -> {
-            if (choice == SaveConfirmation.SAVE_CHANGES) {
-                new Action_SaveMapFile(this).execute();
-                action.run();
-            } else if (choice == SaveConfirmation.NO_SAVE_CHANGES) {
-                changeManager.setEdited(false);
-                action.run();
-            } else if (choice == SaveConfirmation.CLOSE) {
-                confirmationDialog.close();
-            }
-        });
-    }
-
-    // Event handlers
-
-    public void onKeyPressed(KeyEvent e) {
-        KeyCode key = e.getCode();
-        boolean alt = e.isAltDown();
-        if (alt && key == KeyCode.LEFT) {
-            new Action_SelectNextMapFile(this, false).execute();
-        }
-        else if (alt && key == KeyCode.RIGHT) {
-            new Action_SelectNextMapFile(this, true).execute();
-        }
-        else if (key == KeyCode.PLUS) {
-            new Action_ZoomIn(this).execute();
-        }
-        else if (key == KeyCode.MINUS) {
-            new Action_ZoomOut(this).execute();
-        }
-    }
-
-    public void onKeyTyped(KeyEvent e) {
-        String ch = e.getCharacter();
-        if (ch.equals("e")) {
-            new Action_SelectNextEditMode(this).execute();
-        }
-    }
 
     // Sample maps loading
 

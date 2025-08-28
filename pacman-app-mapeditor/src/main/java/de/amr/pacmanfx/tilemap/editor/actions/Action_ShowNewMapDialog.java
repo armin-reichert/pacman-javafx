@@ -23,7 +23,7 @@ public class Action_ShowNewMapDialog extends AbstractEditorAction<Void> {
 
     @Override
     public Void execute() {
-        editor.ifNoUnsavedChangesDo(() -> {
+        editor.ui().ifNoUnsavedChangesDo(() -> {
             TextInputDialog dialog = createMapSizeInputDialog();
             dialog.showAndWait().ifPresent(input -> {
                 Vector2i sizeInTiles = parseSize(input);

@@ -6,9 +6,7 @@ package de.amr.pacmanfx.tilemap.editor;
 
 import de.amr.pacmanfx.lib.tilemap.*;
 import de.amr.pacmanfx.model.WorldMapProperty;
-import de.amr.pacmanfx.tilemap.editor.actions.Action_OpenTemplateCreateMap;
-import de.amr.pacmanfx.tilemap.editor.actions.Action_SelectNextEditMode;
-import de.amr.pacmanfx.tilemap.editor.actions.Action_SetTileCode;
+import de.amr.pacmanfx.tilemap.editor.actions.*;
 import de.amr.pacmanfx.tilemap.editor.rendering.TerrainTileMapRenderer;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
@@ -23,6 +21,8 @@ import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.effect.Glow;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -94,8 +94,8 @@ public class TileMapEditorUI {
 
         arrangeLayout();
 
-        contentPane.setOnKeyTyped(editor::onKeyTyped);
-        contentPane.setOnKeyPressed(editor::onKeyPressed);
+        contentPane.setOnKeyTyped(this::onKeyTyped);
+        contentPane.setOnKeyPressed(this::onKeyPressed);
 
         editor.propertyEditorsVisibleProperty().addListener((py, ov, visible) ->
             contentPane.setLeft(visible ? propertyEditorsPane : null));
@@ -139,6 +139,26 @@ public class TileMapEditorUI {
         }
         palettes.values().forEach(Palette::draw);
     }
+
+    public void ifNoUnsavedChangesDo(Runnable action) {
+        if (!editor.changeManager().isEdited()) {
+            action.run();
+            return;
+        }
+        SaveConfirmation confirmationDialog = new SaveConfirmation();
+        confirmationDialog.showAndWait().ifPresent(choice -> {
+            if (choice == SaveConfirmation.SAVE_CHANGES) {
+                new Action_SaveMapFile(editor).execute();
+                action.run();
+            } else if (choice == SaveConfirmation.NO_SAVE_CHANGES) {
+                editor.changeManager().setEdited(false);
+                action.run();
+            } else if (choice == SaveConfirmation.CLOSE) {
+                confirmationDialog.close();
+            }
+        });
+    }
+
 
     public void showEditHelpText() {
         messageDisplay.showMessage(translated("edit_help"), 30, MessageType.INFO);
@@ -306,7 +326,7 @@ public class TileMapEditorUI {
         node.setOnDragDropped(dragEvent -> {
             if (dragEvent.getDragboard().hasFiles()) {
                 File file = dragEvent.getDragboard().getFiles().getFirst();
-                editor.ifNoUnsavedChangesDo(() -> editCanvas.onFileDropped(editor, file));
+                editor.ui().ifNoUnsavedChangesDo(() -> editCanvas.onFileDropped(editor, file));
             }
             dragEvent.consume();
         });
@@ -587,7 +607,7 @@ public class TileMapEditorUI {
         var menuItem = new MenuItem(description);
         menuItem.setOnAction(e -> {
             WorldMap copy = WorldMap.copyMap(worldMap);
-            editor.ifNoUnsavedChangesDo(() -> editor.setCurrentWorldMap(copy));
+            editor.ui().ifNoUnsavedChangesDo(() -> editor.setCurrentWorldMap(copy));
         });
         return menuItem;
     }
@@ -605,6 +625,32 @@ public class TileMapEditorUI {
         for (int i = 0; i < maps.xxlMaps().size(); ++i) {
             menu.getItems().add(
                     createLoadMapMenuItem("Pac-Man XXL %d".formatted(i+1), maps.xxlMaps().get(i)));
+        }
+    }
+
+    // Event handlers
+
+    public void onKeyPressed(KeyEvent e) {
+        KeyCode key = e.getCode();
+        boolean alt = e.isAltDown();
+        if (alt && key == KeyCode.LEFT) {
+            new Action_SelectNextMapFile(editor, false).execute();
+        }
+        else if (alt && key == KeyCode.RIGHT) {
+            new Action_SelectNextMapFile(editor, true).execute();
+        }
+        else if (key == KeyCode.PLUS) {
+            new Action_ZoomIn(editor).execute();
+        }
+        else if (key == KeyCode.MINUS) {
+            new Action_ZoomOut(editor).execute();
+        }
+    }
+
+    public void onKeyTyped(KeyEvent e) {
+        String ch = e.getCharacter();
+        if (ch.equals("e")) {
+            new Action_SelectNextEditMode(editor).execute();
         }
     }
 
