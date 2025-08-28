@@ -71,7 +71,7 @@ public class TerrainTileMapRenderer extends TerrainMapRenderer {
         specialTile(worldMap, WorldMapProperty.POS_SCATTER_CYAN_GHOST).ifPresent(tile -> drawScatterTarget(tile, Color.CYAN));
         specialTile(worldMap, WorldMapProperty.POS_SCATTER_ORANGE_GHOST).ifPresent(tile -> drawScatterTarget(tile, Color.ORANGE));
         if (segmentNumbersDisplayed) {
-            obstacles.stream().filter(obstacle -> !startsAtBorder(obstacle, worldMap)).forEach(obstacle -> {
+            obstacles.stream().filter(obstacle -> !isBorderObstacle(obstacle, worldMap)).forEach(obstacle -> {
                 for (int i = 0; i < obstacle.numSegments(); ++i) {
                     ObstacleSegment segment = obstacle.segment(i);
                     Vector2f start = segment.startPoint().toVector2f();
@@ -90,7 +90,7 @@ public class TerrainTileMapRenderer extends TerrainMapRenderer {
             double r = 1;
             obstacles.stream()
                     .filter(Obstacle::isClosed)
-                    .filter(obstacle -> !startsAtBorder(obstacle, worldMap)).forEach(obstacle -> {
+                    .filter(obstacle -> !isBorderObstacle(obstacle, worldMap)).forEach(obstacle -> {
                 Vector2i prev = null;
                 List<RectShort> rectangles = obstacle.innerAreaRectangles();
                 for (int i = 0; i < rectangles.size(); ++i) {

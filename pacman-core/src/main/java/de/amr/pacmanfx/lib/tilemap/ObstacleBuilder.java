@@ -86,6 +86,7 @@ public class ObstacleBuilder {
         worldMap.tiles()
             .filter(not(this::isTileExplored))
             .filter(tile -> tile.x() == 0 || tile.x() == worldMap.numCols() - 1)
+            .filter(tile -> worldMap.content(LayerID.TERRAIN, tile) != EMPTY.$)
             .map(tile -> buildBorderObstacle(tile, tile.x() == 0, tilesWithErrors))
             .filter(Objects::nonNull)
             .forEach(obstacles::add);
@@ -113,7 +114,7 @@ public class ObstacleBuilder {
         setExplored(cornerNW);
         buildRestOfObstacle(obstacle, cornerNW, true, tilesWithErrors);
         if (obstacle.isClosed()) {
-            Logger.debug("Closed obstacle, top-left tile={}, map ID={}:", cornerNW, worldMap.hashCode());
+            Logger.info("Inside obstacle, top-left tile={}, map ID={}:", cornerNW, worldMap.hashCode());
             Logger.debug(obstacle);
         }
         return obstacle;
@@ -150,7 +151,7 @@ public class ObstacleBuilder {
         }
         setExplored(startTile);
         buildRestOfObstacle(obstacle, startTile, obstacle.segment(0).ccw(), tilesWithErrors);
-        Logger.debug("Open obstacle, start tile={}, segment count={}, map ID={}:",
+        Logger.info("Border obstacle, start tile={}, segment count={}, map ID={}:",
             startTile, obstacle.segments().size(), worldMap.hashCode());
         Logger.debug(obstacle);
         return obstacle;

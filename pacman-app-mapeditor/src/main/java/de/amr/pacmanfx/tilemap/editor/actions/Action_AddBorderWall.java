@@ -23,7 +23,7 @@ public class Action_AddBorderWall extends AbstractEditorAction<Void> {
 
     @Override
     public Void execute() {
-        int firstRow = EMPTY_ROWS_BELOW_MAZE;
+        int firstRow = EMPTY_ROWS_BELOW_MAZE + 1;
         int lastRow = worldMap.numRows() - 1 - EMPTY_ROWS_BELOW_MAZE;
         int firstCol = 0;
         int lastCol = worldMap.numCols() - 1;

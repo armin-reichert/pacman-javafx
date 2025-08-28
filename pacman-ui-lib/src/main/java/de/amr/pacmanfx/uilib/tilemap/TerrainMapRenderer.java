@@ -8,6 +8,7 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.Obstacle;
 import de.amr.pacmanfx.lib.tilemap.ObstacleSegment;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
+import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.uilib.rendering.BaseCanvasRenderer;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -99,13 +100,13 @@ public class TerrainMapRenderer extends BaseCanvasRenderer implements TileRender
         ctx().save();
         ctx().scale(scaling(), scaling());
         for (Obstacle obstacle : obstacles) {
-            if (startsAtBorder(obstacle, worldMap)) {
+            if (isBorderObstacle(obstacle, worldMap)) {
                 drawObstacle(obstacle, doubleStrokeOuterWidth(), false, colorScheme().wallFillColor(), colorScheme().wallStrokeColor());
                 drawObstacle(obstacle, doubleStrokeInnerWidth(), false, colorScheme().wallFillColor(), colorScheme().wallFillColor());
             }
         }
         for (Obstacle obstacle : obstacles) {
-            if (!startsAtBorder(obstacle, worldMap)) {
+            if (!isBorderObstacle(obstacle, worldMap)) {
                 //boolean hasParent = obstacle.getParent() != null;
                 drawObstacle(obstacle, singleStrokeWidth(), true, colorScheme().wallFillColor(), colorScheme().wallStrokeColor());
             }
@@ -113,10 +114,10 @@ public class TerrainMapRenderer extends BaseCanvasRenderer implements TileRender
         ctx().restore();
     }
 
-    protected boolean startsAtBorder(Obstacle obstacle, WorldMap worldMap) {
+    protected boolean isBorderObstacle(Obstacle obstacle, WorldMap worldMap) {
         Vector2i start = obstacle.startPoint();
         return start.x() <= TS || start.x() >= (worldMap.numCols() - 1) * TS
-            || start.y() <= 4*TS || start.y() >= (worldMap.numRows() - 1) * TS;
+            || start.y() <= GameLevel.EMPTY_ROWS_OVER_MAZE * TS || start.y() >= (worldMap.numRows() - 1) * TS;
     }
 
     protected void drawObstacle(Obstacle obstacle, double lineWidth, boolean fill, Color fillColor, Color strokeColor) {
