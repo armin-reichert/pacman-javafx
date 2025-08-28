@@ -4,6 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tilemap.editor;
 
+import de.amr.pacmanfx.lib.tilemap.WorldMapFormatter;
+import de.amr.pacmanfx.tilemap.editor.actions.Action_SetTileCode;
 import de.amr.pacmanfx.tilemap.editor.rendering.TerrainTileMapRenderer;
 import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer;
@@ -20,6 +22,8 @@ import javafx.util.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Objects.requireNonNull;
+
 public class Palette {
 
     public static final Color BG_COLOR = Color.WHITE;
@@ -31,13 +35,15 @@ public class Palette {
     private final GraphicsContext ctx;
     private final List<EditorTool> tools;
 
+    private final TileMapEditor editor;
     private TileRenderer renderer;
     private EditorTool selectedTool;
     private Tooltip tooltip;
     private int selectedRow;
     private int selectedCol;
 
-    private Palette(byte id, int toolSize, int numRows, int numCols) {
+    private Palette(TileMapEditor editor, byte id, int toolSize, int numRows, int numCols) {
+        this.editor = requireNonNull(editor);
         var canvas = new Canvas(numCols * toolSize, numRows * toolSize);
         ctx = canvas.getGraphicsContext2D();
         canvas.setOnMouseClicked(this::handleMouseClick);
@@ -61,16 +67,16 @@ public class Palette {
         tooltip.setFont(Font.font("Sans", 12));
     }
 
-    public Palette(byte id, int toolSize, int numRows, int numCols, TerrainMapRenderer terrainMapRenderer) {
-        this(id, toolSize, numRows, numCols);
+    public Palette(TileMapEditor editor, byte id, int toolSize, int numRows, int numCols, TerrainMapRenderer terrainMapRenderer) {
+        this(editor, id, toolSize, numRows, numCols);
         TerrainTileMapRenderer copy = new TerrainTileMapRenderer(ctx.getCanvas());
         copy.backgroundColorProperty().bind(terrainMapRenderer.backgroundColorProperty());
         copy.colorSchemeProperty().bind(terrainMapRenderer.colorSchemeProperty());
         renderer = copy;
     }
 
-    public Palette(byte id, int toolSize, int numRows, int numCols, FoodMapRenderer foodMapRenderer) {
-        this(id, toolSize, numRows, numCols);
+    public Palette(TileMapEditor editor, byte id, int toolSize, int numRows, int numCols, FoodMapRenderer foodMapRenderer) {
+        this(editor, id, toolSize, numRows, numCols);
         FoodMapRenderer copy = new FoodMapRenderer(ctx.getCanvas());
         copy.backgroundColorProperty().bind(foodMapRenderer.backgroundColorProperty());
         copy.energizerColorProperty().bind(foodMapRenderer.energizerColorProperty());
@@ -82,12 +88,19 @@ public class Palette {
         return id;
     }
 
-    public TileValueEditorTool newTileTool(byte value, String description) {
-        return new TileValueEditorTool(toolSize, value, description);
+    public TileValueEditorTool newTileTool(byte code, String description) {
+        return new TileValueEditorTool(
+            (layerID, tile) -> new Action_SetTileCode(editor, editor.currentWorldMap(), layerID, tile, code).execute(),
+            toolSize, code, description);
     }
 
     public PropertyValueEditorTool newPropertyTool(String propertyName, String description) {
-        return new PropertyValueEditorTool(toolSize, propertyName, description);
+        return new PropertyValueEditorTool(
+            (layerID, tile) -> {
+                editor.currentWorldMap().properties(layerID).put(propertyName, WorldMapFormatter.formatTile(tile));
+                editor.changeManager().setEdited(true);
+            },
+            toolSize, propertyName, description);
     }
 
     public void addTileTool(TileMapEditor editor, byte value, String description) {

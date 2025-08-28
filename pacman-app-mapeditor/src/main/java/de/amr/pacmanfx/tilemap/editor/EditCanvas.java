@@ -349,23 +349,22 @@ public class EditCanvas extends Canvas {
     public void onMouseMoved(TileMapEditor editor, MouseEvent mouseEvent) {
         Vector2i tile = tileAt(mouseEvent.getX(), mouseEvent.getY());
         focussedTile.set(tile);
-        switch (editor.editMode()) {
+        switch (editMode.get()) {
+            case INSPECT -> {}
             case EDIT -> {
                 if (mouseEvent.isShiftDown()) {
                     switch (editor.selectedPaletteID()) {
                         case PALETTE_ID_TERRAIN -> {
-                            if (editor.selectedPalette().isToolSelected()) {
-                                editor.selectedPalette().selectedTool().apply(editor, LayerID.TERRAIN, focussedTile());
+                            Palette palette = editor.selectedPalette();
+                            if (palette.isToolSelected()) {
+                                palette.selectedTool().editor().accept(LayerID.TERRAIN, focussedTile());
                             }
-                            editor.changeManager().setEdited(true);
-                            editor.changeManager().setWorldMapChanged();
                         }
                         case PALETTE_ID_FOOD -> {
-                            if (editor.selectedPalette().isToolSelected()) {
-                                editor.selectedPalette().selectedTool().apply(editor, LayerID.FOOD, focussedTile());
+                            Palette palette = editor.selectedPalette();
+                            if (palette.isToolSelected()) {
+                                palette.selectedTool().editor().accept(LayerID.FOOD, focussedTile());
                             }
-                            editor.changeManager().setEdited(true);
-                            editor.changeManager().setFoodMapChanged();
                         }
                         default -> {}
                     }
@@ -379,7 +378,6 @@ public class EditCanvas extends Canvas {
                     }
                 }
             }
-            case INSPECT -> {}
         }
     }
 

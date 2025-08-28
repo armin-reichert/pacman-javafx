@@ -33,9 +33,7 @@ public class Action_EditTileAtMousePosition extends AbstractEditorAction<Void> {
             case PALETTE_ID_FOOD -> editFoodAtTile(tile, erase);
             case PALETTE_ID_ACTORS -> {
                 if (editor.selectedPalette().isToolSelected()) {
-                    editor.selectedPalette().selectedTool().apply(editor, LayerID.TERRAIN, tile);
-                    editor.changeManager().setTerrainMapChanged();
-                    editor.changeManager().setEdited(true);
+                    editor.selectedPalette().selectedTool().editor().accept(LayerID.TERRAIN, tile);
                 }
             }
             default -> Logger.error("Unknown palette ID " + editor.selectedPaletteID());
@@ -47,7 +45,7 @@ public class Action_EditTileAtMousePosition extends AbstractEditorAction<Void> {
         if (erase) {
             new Action_ClearTerrainTile(editor, tile).execute();
         } else if (editor.selectedPalette().isToolSelected()) {
-            editor.selectedPalette().selectedTool().apply(editor, LayerID.TERRAIN, tile);
+            editor.selectedPalette().selectedTool().editor().accept(LayerID.TERRAIN, tile);
         }
         editor.changeManager().setTerrainMapChanged();
         editor.changeManager().setEdited(true);
@@ -57,7 +55,7 @@ public class Action_EditTileAtMousePosition extends AbstractEditorAction<Void> {
         if (erase) {
             new Action_ClearFoodTile(editor, tile).execute();
         } else if (editor.selectedPalette().isToolSelected()) {
-            editor.selectedPalette().selectedTool().apply(editor, LayerID.FOOD, tile);
+            editor.selectedPalette().selectedTool().editor().accept(LayerID.FOOD, tile);
         }
         editor.changeManager().setFoodMapChanged();
         editor.changeManager().setEdited(true);

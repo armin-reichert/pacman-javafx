@@ -8,11 +8,13 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.uilib.tilemap.TileRenderer;
 
+import java.util.function.BiConsumer;
+
 public interface EditorTool {
 
     String description();
 
-    void apply(TileMapEditor editor, LayerID layerID, Vector2i tile);
+    BiConsumer<LayerID, Vector2i> editor();
 
     void draw(TileRenderer renderer, int row, int col);
 }

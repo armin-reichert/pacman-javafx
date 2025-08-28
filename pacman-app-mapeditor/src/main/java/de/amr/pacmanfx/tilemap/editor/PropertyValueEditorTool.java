@@ -7,7 +7,6 @@ package de.amr.pacmanfx.tilemap.editor;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
-import de.amr.pacmanfx.lib.tilemap.WorldMapFormatter;
 import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites;
 import de.amr.pacmanfx.tilemap.editor.rendering.TerrainTileMapRenderer;
@@ -15,16 +14,23 @@ import de.amr.pacmanfx.uilib.tilemap.TileRenderer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
+import java.util.function.BiConsumer;
+
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites.PAC_MAN;
 import static de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites.SPRITE_SHEET;
+import static java.util.Objects.requireNonNull;
 
 public class PropertyValueEditorTool implements EditorTool {
+
     private final double size;
     private final String propertyName;
     private final String description;
 
-    public PropertyValueEditorTool(double size, String propertyName, String description) {
+    private final BiConsumer<LayerID, Vector2i> editor;
+
+    public PropertyValueEditorTool(BiConsumer<LayerID, Vector2i> editor, double size, String propertyName, String description) {
+        this.editor = requireNonNull(editor);
         this.size = size;
         this.propertyName = propertyName;
         this.description = description;
@@ -36,8 +42,8 @@ public class PropertyValueEditorTool implements EditorTool {
     }
 
     @Override
-    public void apply(TileMapEditor editor, LayerID layerID, Vector2i tile) {
-        editor.currentWorldMap().properties(layerID).put(propertyName, WorldMapFormatter.formatTile(tile));
+    public BiConsumer<LayerID, Vector2i> editor() {
+        return editor;
     }
 
     @Override

@@ -6,9 +6,7 @@ package de.amr.pacmanfx.tilemap.editor;
 
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.lib.tilemap.LayerID;
-import de.amr.pacmanfx.lib.tilemap.WorldMap;
-import de.amr.pacmanfx.lib.tilemap.WorldMapFormatter;
+import de.amr.pacmanfx.lib.tilemap.*;
 import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.tilemap.editor.actions.*;
 import de.amr.pacmanfx.tilemap.editor.rendering.TerrainTileMapRenderer;
@@ -16,6 +14,7 @@ import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapColorScheme;
+import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer;
 import javafx.animation.AnimationTimer;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
@@ -782,6 +781,52 @@ public class TileMapEditor {
         tabPaneForPalettes.setMinHeight(75);
     }
 
+    private Palette createTerrainPalette(byte id, int toolSize, TileMapEditor editor, TerrainMapRenderer terrainMapRenderer) {
+        var palette = new Palette(this, id, toolSize, 1, 13, terrainMapRenderer);
+        palette.addTileTool(editor, TerrainTile.EMPTY.$, "Empty Space");
+        palette.addTileTool(editor, TerrainTile.WALL_H.$, "Horiz. Wall");
+        palette.addTileTool(editor, TerrainTile.WALL_V.$, "Vert. Wall");
+        palette.addTileTool(editor, TerrainTile.ARC_NW.$, "NW Corner");
+        palette.addTileTool(editor, TerrainTile.ARC_NE.$, "NE Corner");
+        palette.addTileTool(editor, TerrainTile.ARC_SW.$, "SW Corner");
+        palette.addTileTool(editor, TerrainTile.ARC_SE.$, "SE Corner");
+        palette.addTileTool(editor, TerrainTile.TUNNEL.$, "Tunnel");
+        palette.addTileTool(editor, TerrainTile.DOOR.$, "Door");
+        palette.addTileTool(editor, TerrainTile.ONE_WAY_UP.$, "One-Way Up");
+        palette.addTileTool(editor, TerrainTile.ONE_WAY_RIGHT.$, "One-Way Right");
+        palette.addTileTool(editor, TerrainTile.ONE_WAY_DOWN.$, "One-Way Down");
+        palette.addTileTool(editor, TerrainTile.ONE_WAY_LEFT.$, "One-Way Left");
+
+        palette.selectTool(0); // "No Tile"
+        return palette;
+    }
+
+    private Palette createActorPalette(byte id, int toolSize, TileMapEditor editor, TerrainTileMapRenderer renderer) {
+        var palette = new Palette(this, id, toolSize, 1, 11, renderer);
+        palette.addTileTool(editor, TerrainTile.EMPTY.$, "Nope");
+        palette.addPropertyTool(WorldMapProperty.POS_PAC, "Pac-Man");
+        palette.addPropertyTool(WorldMapProperty.POS_RED_GHOST, "Red Ghost");
+        palette.addPropertyTool(WorldMapProperty.POS_PINK_GHOST, "Pink Ghost");
+        palette.addPropertyTool(WorldMapProperty.POS_CYAN_GHOST, "Cyan Ghost");
+        palette.addPropertyTool(WorldMapProperty.POS_ORANGE_GHOST, "Orange Ghost");
+        palette.addPropertyTool(WorldMapProperty.POS_BONUS, "Bonus");
+        palette.addPropertyTool(WorldMapProperty.POS_SCATTER_RED_GHOST, "Red Ghost Scatter");
+        palette.addPropertyTool(WorldMapProperty.POS_SCATTER_PINK_GHOST, "Pink Ghost Scatter");
+        palette.addPropertyTool(WorldMapProperty.POS_SCATTER_CYAN_GHOST, "Cyan Ghost Scatter");
+        palette.addPropertyTool(WorldMapProperty.POS_SCATTER_ORANGE_GHOST, "Orange Ghost Scatter");
+        palette.selectTool(0); // "No actor"
+        return palette;
+    }
+
+    private Palette createFoodPalette(byte id, int toolSize, TileMapEditor editor, FoodMapRenderer renderer) {
+        var palette = new Palette(this, id, toolSize, 1, 3, renderer);
+        palette.addTileTool(editor, FoodTile.EMPTY.code(), "No Food");
+        palette.addTileTool(editor, FoodTile.PELLET.code(), "Pellet");
+        palette.addTileTool(editor, FoodTile.ENERGIZER.code(), "Energizer");
+        palette.selectTool(0); // "No Food"
+        return palette;
+    }
+
     private void createPropertyEditors() {
         terrainMapPropertiesEditor = new PropertyEditorPane(this);
         terrainMapPropertiesEditor.enabledPy.bind(editModeProperty().map(mode -> mode != EditMode.INSPECT));
@@ -1000,7 +1045,7 @@ public class TileMapEditor {
 
     private void editFoodAtTile(Vector2i tile) {
         if (selectedPalette().isToolSelected()) {
-            selectedPalette().selectedTool().apply(this, LayerID.FOOD, tile);
+            selectedPalette().selectedTool().editor().accept(LayerID.FOOD, tile);
         }
         changeManager().setFoodMapChanged();
         changeManager().setEdited(true);

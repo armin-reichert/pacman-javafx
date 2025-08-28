@@ -6,16 +6,23 @@ package de.amr.pacmanfx.tilemap.editor;
 
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
-import de.amr.pacmanfx.tilemap.editor.actions.Action_SetTileCode;
 import de.amr.pacmanfx.uilib.tilemap.TileRenderer;
 import javafx.scene.paint.Color;
 
+import java.util.function.BiConsumer;
+
+import static java.util.Objects.requireNonNull;
+
 public class TileValueEditorTool implements EditorTool {
+
     private final double size;
     private final byte value;
     private final String description;
 
-    public TileValueEditorTool(double size, byte value, String description) {
+    private final BiConsumer<LayerID, Vector2i> editor;
+
+    public TileValueEditorTool(BiConsumer<LayerID, Vector2i> editor, double size, byte value, String description) {
+        this.editor = requireNonNull(editor);
         this.size = size;
         this.value = value;
         this.description = description;
@@ -27,8 +34,8 @@ public class TileValueEditorTool implements EditorTool {
     }
 
     @Override
-    public void apply(TileMapEditor editor, LayerID layerID, Vector2i tile) {
-        new Action_SetTileCode(editor, editor.currentWorldMap(), layerID, tile, value).execute();
+    public BiConsumer<LayerID, Vector2i> editor() {
+        return editor;
     }
 
     @Override
