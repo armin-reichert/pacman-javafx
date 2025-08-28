@@ -209,13 +209,11 @@ public class TileMapEditor {
         createPalettes(editCanvas);
         createPropertyEditors();
         createStatusLine();
-        arrangeContent();
 
         menuBar = new EditorMenuBar(this);
         loadSampleMapsAndUpdateMenu(menuBar.menuMaps());
 
-        layoutPane.setTop(menuBar);
-        layoutPane.setCenter(contentPane);
+        arrangeLayout();
 
         contentPane.setOnKeyTyped(this::onKeyTyped);
         contentPane.setOnKeyPressed(this::onKeyPressed);
@@ -966,14 +964,16 @@ public class TileMapEditor {
         }
     }
 
-    private void arrangeContent() {
-        var content = new VBox(tabPaneForPalettes, splitEditorAndPreviewArea, statusLine);
-        content.setPadding(new Insets(0,5,0,5));
+    private void arrangeLayout() {
+        var centerPane = new VBox(tabPaneForPalettes, splitEditorAndPreviewArea, statusLine);
+        centerPane.setPadding(new Insets(0,5,0,5));
         VBox.setVgrow(tabPaneForPalettes, Priority.NEVER);
         VBox.setVgrow(splitEditorAndPreviewArea, Priority.ALWAYS);
         VBox.setVgrow(statusLine, Priority.NEVER);
         contentPane.setLeft(propertyEditorsPane);
-        contentPane.setCenter(content);
+        contentPane.setCenter(centerPane);
+        layoutPane.setTop(menuBar);
+        layoutPane.setCenter(contentPane);
     }
 
     private StringBinding createTitleBinding() {
@@ -1057,7 +1057,7 @@ public class TileMapEditor {
         boolean alt = e.isAltDown();
 
         if (alt && key == KeyCode.LEFT) {
-            new Action_SelectNextMapFile(this, false).execute();
+            File prevFile = new Action_SelectNextMapFile(this, false).execute();
         }
         else if (alt && key == KeyCode.RIGHT) {
             new Action_SelectNextMapFile(this, true).execute();

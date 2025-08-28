@@ -1,5 +1,7 @@
 package de.amr.pacmanfx.tilemap.editor.actions;
 
+import de.amr.pacmanfx.lib.tilemap.WorldMap;
+import de.amr.pacmanfx.tilemap.editor.MessageType;
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
 import org.tinylog.Logger;
 
@@ -40,7 +42,18 @@ public class Action_SelectNextMapFile extends AbstractEditorAction<File> {
             } else {
                 next = index > 0 ? index - 1: mapFiles.length - 1;
             }
-            return mapFiles[next];
+            File file = mapFiles[next];
+            try {
+                WorldMap worldMap = WorldMap.fromFile(file);
+                editor.setCurrentWorldMap(worldMap);
+                editor.setCurrentDirectory(file.getParentFile());
+                editor.setCurrentFile(file);
+                Logger.info("World map file changed to {}", file);
+            } catch (Exception x) {
+                Logger.error(x);
+                editor.messageManager().showMessage("Could not load map file '%s'".formatted(file), 5, MessageType.ERROR);
+            }
+            return file;
         }
         return null;
     }
