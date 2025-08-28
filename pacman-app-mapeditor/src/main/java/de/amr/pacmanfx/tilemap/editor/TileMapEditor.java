@@ -33,6 +33,7 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -805,8 +806,8 @@ public class TileMapEditor {
 
         var lblFocussedTile = new Label();
         lblFocussedTile.setFont(FONT_STATUS_LINE_NORMAL);
-        lblFocussedTile.setMinWidth(70);
-        lblFocussedTile.setMaxWidth(70);
+        lblFocussedTile.setMinWidth(100);
+        lblFocussedTile.setMaxWidth(100);
         lblFocussedTile.textProperty().bind(editCanvas.focussedTileProperty().map(
             tile -> tile != null ? "(%2d,%2d)".formatted(tile.x(), tile.y()) : "n/a"));
 
@@ -833,7 +834,6 @@ public class TileMapEditor {
         public StatusIndicator() {
             Label label = new Label();
             label.setMinWidth(75);
-            label.setAlignment(Pos.CENTER_RIGHT);
             label.setFont(FONT_STATUS_LINE_EDIT_MODE);
             label.setEffect(new Glow(0.2));
             getChildren().add(label);
