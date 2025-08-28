@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static de.amr.pacmanfx.tilemap.editor.EditMode.INSPECT;
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.SAMPLE_MAPS_PATH;
 import static java.util.Objects.requireNonNull;
 
@@ -118,7 +119,7 @@ public class TileMapEditor {
         setCurrentDirectory(workDir);
         WorldMap emptyMap = new Action_CreateEmptyMap(this, 36, 28).execute();
         setCurrentWorldMap(emptyMap);
-        setEditMode(EditMode.INSPECT);
+        setEditMode(INSPECT);
         changeManager.edited = false;
         ui.init();
     }
@@ -132,7 +133,7 @@ public class TileMapEditor {
 
     public void stop() {
         updateTimer.stop();
-        setEditMode(EditMode.INSPECT);
+        setEditMode(INSPECT);
     }
 
     // -- actorsVisible
@@ -201,18 +202,13 @@ public class TileMapEditor {
 
     // -- editMode
 
-    public static final EditMode DEFAULT_EDIT_MODE = EditMode.INSPECT;
+    public static final EditMode DEFAULT_EDIT_MODE = INSPECT;
 
     private ObjectProperty<EditMode> editMode;
 
     public ObjectProperty<EditMode> editModeProperty() {
         if (editMode == null) {
-            editMode = new SimpleObjectProperty<>(DEFAULT_EDIT_MODE) {
-                @Override
-                protected void invalidated() {
-                    onEditModeChanged(get());
-                }
-            };
+            editMode = new SimpleObjectProperty<>(DEFAULT_EDIT_MODE);
         }
         return editMode;
     }
@@ -475,14 +471,6 @@ public class TileMapEditor {
                 confirmationDialog.close();
             }
         });
-    }
-
-    private void onEditModeChanged(EditMode editMode) {
-        switch (editMode) {
-            case INSPECT -> ui.editCanvas().enterInspectMode();
-            case EDIT    -> ui.editCanvas().enterEditMode();
-            case ERASE   -> ui.editCanvas().enterEraseMode();
-        }
     }
 
     // Event handlers

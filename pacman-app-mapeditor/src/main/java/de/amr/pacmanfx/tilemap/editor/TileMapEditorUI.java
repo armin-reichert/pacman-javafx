@@ -100,9 +100,14 @@ public class TileMapEditorUI {
         editor.propertyEditorsVisibleProperty().addListener((py, ov, visible) ->
             contentPane.setLeft(visible ? propertyEditorsPane : null));
 
-        editor.editModeProperty().addListener((py, on, nv) -> {
+        editor.editModeProperty().addListener((py, on, newEditMode) -> {
             messageDisplay().clearMessage();
             showEditHelpText();
+            switch (newEditMode) {
+                case INSPECT -> editCanvas.enterInspectMode();
+                case EDIT    -> editCanvas.enterEditMode();
+                case ERASE   -> editCanvas.enterEraseMode();
+            }
         });
     }
 
@@ -520,7 +525,7 @@ public class TileMapEditorUI {
 
         public StatusIndicator() {
             Label label = new Label();
-            label.setMinWidth(75);
+            label.setMinWidth(90);
             label.setFont(FONT_STATUS_LINE_EDIT_MODE);
             label.setEffect(new Glow(0.2));
             getChildren().add(label);
