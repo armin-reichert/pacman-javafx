@@ -23,11 +23,11 @@ public class Action_OpenTemplateCreateMap extends AbstractEditorAction<Void> {
 
     @Override
     public Void execute() {
-        openTemplateImage(editor.stage(), translated("open_template_image"), editor.currentDirectory()).ifPresent(image -> {
+        openTemplateImage(editor.ui().stage(), translated("open_template_image"), editor.currentDirectory()).ifPresent(image -> {
             if (isTemplateImageSizeOk(image)) {
                 editor.setTemplateImage(image);
                 new Action_CreateMapFromTemplate(editor, image).execute();
-                editor.selectTemplateImageTab();
+                editor.ui().selectTemplateImageTab();
                 editor.messageManager().showMessage("Select map colors from template!", 20, MessageType.INFO);
             } else {
                 editor.messageManager().showMessage("Template image size seems dubious", 3, MessageType.WARNING);

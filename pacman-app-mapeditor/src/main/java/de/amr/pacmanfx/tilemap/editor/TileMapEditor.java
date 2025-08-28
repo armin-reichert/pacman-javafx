@@ -4,38 +4,19 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tilemap.editor;
 
-import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.lib.tilemap.*;
-import de.amr.pacmanfx.model.WorldMapProperty;
+import de.amr.pacmanfx.lib.tilemap.LayerID;
+import de.amr.pacmanfx.lib.tilemap.WorldMap;
+import de.amr.pacmanfx.lib.tilemap.WorldMapFormatter;
 import de.amr.pacmanfx.tilemap.editor.actions.*;
-import de.amr.pacmanfx.tilemap.editor.rendering.TerrainTileMapRenderer;
-import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
-import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
-import de.amr.pacmanfx.uilib.tilemap.TerrainMapColorScheme;
-import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.geometry.Side;
-import javafx.scene.Node;
-import javafx.scene.control.*;
-import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.TransferMode;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -45,8 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.*;
-import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.*;
-import static de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites.*;
 import static java.util.Objects.requireNonNull;
 
 public class TileMapEditor {
@@ -104,17 +83,12 @@ public class TileMapEditor {
 
             }
             if (terrainMapChanged) {
-                if (terrainMapPropertiesEditor != null) {
-                    terrainMapPropertiesEditor.setTileMap(currentWorldMap(), LayerID.TERRAIN);
-                }
-                preview3D.updateTerrain();
+                //TODO use events?
+                ui.onTerrainMapChanged(currentWorldMap());
                 terrainMapChanged = false;
             }
             if (foodMapChanged) {
-                if (foodMapPropertiesEditor != null) {
-                    foodMapPropertiesEditor.setTileMap(currentWorldMap(), LayerID.FOOD);
-                }
-                preview3D.updateFood();
+                ui.onFoodMapChanged(currentWorldMap());
                 foodMapChanged = false;
             }
         }
@@ -129,40 +103,10 @@ public class TileMapEditor {
         }
     }
 
+    private final TileMapEditorUI ui;
     private final ChangeManager changeManager = new ChangeManager();
     private final MessageManager messageManager = new MessageManager();
     private final UpdateTimer updateTimer = new UpdateTimer();
-
-    private final Stage stage;
-    private final BorderPane layoutPane = new BorderPane();
-    private final BorderPane contentPane = new BorderPane();
-    private Pane propertyEditorsPane;
-    private EditCanvas editCanvas;
-    private ScrollPane spEditCanvas;
-    private Preview2D preview2D;
-    private ScrollPane spPreview2D;
-    private Preview3D preview3D;
-    private TextArea sourceView;
-    private SplitPane splitEditorAndPreviewArea;
-    private TabPane tabPaneForPalettes;
-    private HBox statusLine;
-    private Slider sliderZoom;
-    private TabPane tabPaneEditorViews;
-    private Tab tabEditCanvas;
-    private Tab tabTemplateImage;
-    private TemplateImageCanvas templateImageCanvas;
-    private Pane templateImageDropTarget;
-    private ScrollPane spTemplateImage;
-    private Tab tabPreview2D;
-
-    private final EditorMenuBar menuBar;
-
-    private final Palette[] palettes = new Palette[3];
-
-    private PropertyEditorPane terrainMapPropertiesEditor;
-    private PropertyEditorPane foodMapPropertiesEditor;
-
-    private final Model3DRepository model3DRepository;
 
     private class UpdateTimer extends AnimationTimer {
         @Override
@@ -171,52 +115,18 @@ public class TileMapEditor {
             changeManager.processChanges();
             if (changeManager.isRedrawRequested()) {
                 try {
-                    drawUI();
+                    ui.draw();
                 } catch (Exception x) {
                     Logger.error(x);
                 }
             }
         }
-
-    }
-
-    private void drawUI() {
-        //TODO avoid creation in every draw call
-        var colorScheme = new TerrainMapColorScheme(
-            COLOR_CANVAS_BACKGROUND,
-            getColorFromMap(currentWorldMap(), LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_FILL, parseColor(MS_PACMAN_COLOR_WALL_FILL)),
-            getColorFromMap(currentWorldMap(), LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_STROKE, parseColor(MS_PACMAN_COLOR_WALL_STROKE)),
-            getColorFromMap(currentWorldMap(), LayerID.TERRAIN, WorldMapProperty.COLOR_DOOR, parseColor(MS_PACMAN_COLOR_DOOR))
-        );
-        palettes[selectedPaletteID()].draw();
-        if (tabEditCanvas.isSelected()) {
-            editCanvas.draw(changeManager, colorScheme);
-        }
-        else if (tabTemplateImage.isSelected()) {
-            templateImageCanvas.draw();
-        }
-        if (tabPreview2D.isSelected()) {
-            preview2D.draw(currentWorldMap(), colorScheme);
-        }
     }
 
     public TileMapEditor(Stage stage, Model3DRepository model3DRepository) {
-        this.stage = requireNonNull(stage);
-        this.model3DRepository = requireNonNull(model3DRepository);
-
-        createEditArea();
-        createPreviewArea();
-        createPalettes(editCanvas);
-        createPropertyEditors();
-        createStatusLine();
-
-        menuBar = new EditorMenuBar(this);
-        loadSampleMapsAndUpdateMenu(menuBar.menuMaps());
-
-        arrangeLayout();
-
-        contentPane.setOnKeyTyped(this::onKeyTyped);
-        contentPane.setOnKeyPressed(this::onKeyPressed);
+        requireNonNull(stage);
+        requireNonNull(model3DRepository);
+        ui = new TileMapEditorUI(stage, this, model3DRepository);
     }
 
     public void init(File workDir) {
@@ -224,17 +134,14 @@ public class TileMapEditor {
         WorldMap emptyMap = new Action_CreateEmptyMap(this, 36, 28).execute();
         setCurrentWorldMap(emptyMap);
         setEditMode(EditMode.INSPECT);
-        preview3D.reset();
         changeManager.edited = false;
+        ui.init();
     }
 
     public void start(Stage stage) {
         Platform.runLater(() -> {
-            title.bind(createTitleBinding());
-            stage.titleProperty().bind(title);
-            contentPane.setLeft(null); // no properties editor
-            contentPane.requestFocus();
             showEditHelpText();
+            ui.start();
             updateTimer.start();
         });
     }
@@ -407,32 +314,6 @@ public class TileMapEditor {
         return gridVisible;
     }
 
-    // -- mapPropertyEditorsVisible
-
-    public static final boolean DEFAULT_MAP_PROPERTY_EDITORS_VISIBLE = false;
-
-    private BooleanProperty mapPropertyEditorsVisible;
-
-    public BooleanProperty propertyEditorsVisibleProperty() {
-        if (mapPropertyEditorsVisible == null) {
-            mapPropertyEditorsVisible = new SimpleBooleanProperty(DEFAULT_MAP_PROPERTY_EDITORS_VISIBLE) {
-                @Override
-                protected void invalidated() {
-                    contentPane.setLeft(get() ? propertyEditorsPane : null);
-                }
-            };
-        }
-        return mapPropertyEditorsVisible;
-    }
-
-    public boolean mapPropertyEditorsVisible() {
-        return mapPropertyEditorsVisible == null ? DEFAULT_MAP_PROPERTY_EDITORS_VISIBLE : propertyEditorsVisibleProperty().get();
-    }
-
-    public void setMapPropertyEditorsVisible(boolean value) {
-        propertyEditorsVisibleProperty().set(value);
-    }
-
     // -- obstacleInnerAreaDisplayed
 
     public static final boolean DEFAULT_OBSTACLE_INNER_AREA_DISPLAYED = false;
@@ -480,6 +361,43 @@ public class TileMapEditor {
         obstaclesJoiningProperty().set(value);
     }
 
+    // -- paletteID
+
+    private final ObjectProperty<PaletteID> paletteID = new SimpleObjectProperty<>(PaletteID.PALETTE_ID_TERRAIN);
+
+    public ObjectProperty<PaletteID> paletteIDProperty() {
+        return paletteID;
+    }
+
+    public PaletteID paletteID() {
+        return paletteID.get();
+    }
+
+    public void setPaletteID(PaletteID id) {
+        paletteID.set(id);
+    }
+
+    // -- propertyEditorsVisible
+
+    public static final boolean DEFAULT_PROPERTY_EDITORS_VISIBLE = false;
+
+    private BooleanProperty mapPropertyEditorsVisible;
+
+    public BooleanProperty propertyEditorsVisibleProperty() {
+        if (mapPropertyEditorsVisible == null) {
+            mapPropertyEditorsVisible = new SimpleBooleanProperty(DEFAULT_PROPERTY_EDITORS_VISIBLE);
+        }
+        return mapPropertyEditorsVisible;
+    }
+
+    public boolean propertyEditorsVisible() {
+        return mapPropertyEditorsVisible == null ? DEFAULT_PROPERTY_EDITORS_VISIBLE : propertyEditorsVisibleProperty().get();
+    }
+
+    public void setPropertyEditorsVisible(boolean value) {
+        propertyEditorsVisibleProperty().set(value);
+    }
+
     // -- segmentNumbersVisible
 
     public static final boolean DEFAULT_SEGMENT_NUMBERS_VISIBLE = false;
@@ -510,6 +428,9 @@ public class TileMapEditor {
 
     private final StringProperty sourceCode = new SimpleStringProperty("");
 
+    public StringProperty sourceCodeProperty() {
+        return sourceCode;
+    }
 
     // -- symmetricEditMode
 
@@ -583,426 +504,23 @@ public class TileMapEditor {
 
     // Accessor methods
 
+
+    public TileMapEditorUI ui() {
+        return ui;
+    }
+
     public ChangeManager changeManager() { return changeManager;}
 
-    public Stage stage() {
-        return stage;
-    }
-
-    public BorderPane layoutPane() {
-        return layoutPane;
-    }
-
-    public EditCanvas editCanvas() {
-        return editCanvas;
-    }
-
-    public EditorMenuBar menuBar() {
-        return menuBar;
-    }
 
     public MessageManager messageManager() {
         return messageManager;
     }
 
-    public byte selectedPaletteID() {
-        return (Byte) tabPaneForPalettes.getSelectionModel().getSelectedItem().getUserData();
-    }
-
-    public Palette selectedPalette() {
-        return palettes[selectedPaletteID()];
-    }
-
-    public void selectTemplateImageTab() {
-        tabPaneEditorViews.getSelectionModel().select(tabTemplateImage);
-    }
 
     public void showEditHelpText() {
         messageManager.showMessage(translated("edit_help"), 30, MessageType.INFO);
     }
 
-    private void createEditCanvas() {
-        editCanvas = new EditCanvas();
-        editCanvas.editModeProperty().bind(editModeProperty());
-        editCanvas.gridSizeProperty().bind(gridSizeProperty());
-        editCanvas.gridVisibleProperty().bind(gridVisibleProperty());
-        editCanvas.worldMapProperty().bind(currentWorldMapProperty());
-        editCanvas.obstacleInnerAreaDisplayedProperty().bind(obstacleInnerAreaDisplayedProperty());
-        editCanvas.obstaclesJoiningProperty().bind(obstaclesJoiningProperty());
-        editCanvas.segmentNumbersVisibleProperty().bind(segmentNumbersVisibleProperty());
-        editCanvas.symmetricEditModeProperty().bind(symmetricEditModeProperty());
-        editCanvas.templateImageGrayProperty().bind(templateImageProperty().map(Ufx::imageToGreyscale));
-        editCanvas.terrainVisibleProperty().bind(terrainVisibleProperty());
-        editCanvas.foodVisibleProperty().bind(foodVisibleProperty());
-        editCanvas.actorsVisibleProperty().bind(actorsVisibleProperty());
-
-        editCanvas.obstacleEditor().setOnEditTile(
-            (tile, code) -> new Action_SetTileCode(this, currentWorldMap(), LayerID.TERRAIN, tile, code).execute());
-        editCanvas.setOnContextMenuRequested(event -> editCanvas.onContextMenuRequested(this, event));
-        editCanvas.setOnMouseClicked(event -> editCanvas.onMouseClicked(this, event));
-        editCanvas.setOnMouseMoved(event -> editCanvas.onMouseMoved(this, event));
-        editCanvas.setOnMouseReleased(event -> editCanvas.onMouseReleased(this, event));
-        editCanvas.setOnKeyPressed(event -> editCanvas.onKeyPressed(this, event));
-
-        spEditCanvas = new ScrollPane(editCanvas);
-        spEditCanvas.setFitToHeight(true);
-        registerDragAndDropImageHandler(spEditCanvas);
-        //TODO is there a better way to get the initial resize time of the scroll pane?
-        spEditCanvas.heightProperty().addListener((py,oldHeight,newHeight) -> {
-            if (oldHeight.doubleValue() == 0) { // initial resize
-                int initialGridSize = (int) Math.max(newHeight.doubleValue() / currentWorldMap().numRows(), MIN_GRID_SIZE);
-                setGridSize(initialGridSize);
-            }
-        });
-    }
-
-    private void createPreview2D() {
-        preview2D = new Preview2D();
-        preview2D.widthProperty().bind(editCanvas.widthProperty());
-        preview2D.heightProperty().bind(editCanvas.heightProperty());
-        preview2D.gridSizeProperty().bind(gridSizeProperty());
-        preview2D.terrainVisibleProperty().bind(terrainVisibleProperty());
-        preview2D.foodVisibleProperty().bind(foodVisibleProperty());
-        preview2D.actorsVisibleProperty().bind(actorsVisibleProperty());
-
-        spPreview2D = new ScrollPane(preview2D);
-        spPreview2D.setFitToHeight(true);
-        spPreview2D.hvalueProperty().bindBidirectional(spEditCanvas.hvalueProperty());
-        spPreview2D.vvalueProperty().bindBidirectional(spEditCanvas.vvalueProperty());
-    }
-
-    private void createPreview3D() {
-        preview3D = new Preview3D(this, model3DRepository, 500, 500);
-        preview3D.foodVisibleProperty().bind(foodVisibleProperty());
-        preview3D.terrainVisibleProperty().bind(terrainVisibleProperty());
-        preview3D.worldMapProperty().bind(currentWorldMap);
-    }
-
-    private void createTemplateImageCanvas() {
-        templateImageCanvas = new TemplateImageCanvas(this);
-        Pane pane = new Pane(templateImageCanvas, templateImageCanvas.getColorIndicator());
-        pane.setBackground(Background.fill(Color.TRANSPARENT));
-        spTemplateImage = new ScrollPane(pane);
-    }
-
-    private void createSourceView() {
-        sourceView = new TextArea();
-        sourceView.setEditable(false);
-        sourceView.setWrapText(false);
-        sourceView.setPrefWidth(600);
-        sourceView.setPrefHeight(800);
-        sourceView.setFont(FONT_SOURCE_VIEW);
-        sourceView.setStyle("-fx-control-inner-background:#222; -fx-text-fill: #f0f0f0;");
-        sourceView.textProperty().bind(sourceCode);
-    }
-
-    private void createEditArea() {
-        createEditCanvas();
-        createTemplateImageCanvas();
-
-        tabEditCanvas = new Tab(translated("tab_editor"), spEditCanvas);
-
-        var dropHintButton = new Button(translated("image_drop_hint"));
-        dropHintButton.setFont(FONT_DROP_HINT);
-        dropHintButton.setOnAction(ae -> new Action_OpenTemplateCreateMap(this).execute());
-        dropHintButton.disableProperty().bind(editModeProperty().map(mode -> mode == EditMode.INSPECT));
-
-        templateImageDropTarget = new BorderPane(dropHintButton);
-        registerDragAndDropImageHandler(templateImageDropTarget);
-
-        var stackPane = new StackPane(spTemplateImage, templateImageDropTarget);
-        tabTemplateImage = new Tab(translated("tab_template_image"), stackPane);
-        templateImage.addListener((py, ov, image) -> {
-            Logger.info("Template image changed from {} to {}", ov, image);
-            stackPane.getChildren().remove(templateImageDropTarget);
-            if (image == null) {
-                stackPane.getChildren().add(templateImageDropTarget);
-            }
-        });
-
-        tabPaneEditorViews = new TabPane(tabEditCanvas, tabTemplateImage);
-        tabPaneEditorViews.getTabs().forEach(tab -> tab.setClosable(false));
-        tabPaneEditorViews.setSide(Side.BOTTOM);
-        tabPaneEditorViews.getSelectionModel().select(tabEditCanvas);
-    }
-
-    private void registerDragAndDropImageHandler(Node node) {
-        node.setOnDragOver(dragEvent -> {
-            if (dragEvent.getDragboard().hasFiles()) {
-                File file = dragEvent.getDragboard().getFiles().getFirst();
-                if (isSupportedImageFile(file) && !editModeIs(EditMode.INSPECT) || isWorldMapFile(file)) {
-                    dragEvent.acceptTransferModes(TransferMode.COPY);
-                }
-            }
-            dragEvent.consume();
-        });
-        node.setOnDragDropped(dragEvent -> {
-            if (dragEvent.getDragboard().hasFiles()) {
-                File file = dragEvent.getDragboard().getFiles().getFirst();
-                ifNoUnsavedChangesDo(() -> editCanvas.onFileDropped(this, file));
-            }
-            dragEvent.consume();
-        });
-    }
-
-    private void createPreviewArea() {
-        createPreview2D();
-        createPreview3D();
-        createSourceView();
-
-        tabPreview2D = new Tab(translated("preview2D"), spPreview2D);
-        Tab tabPreview3D = new Tab(translated("preview3D"), preview3D.getSubScene());
-        Tab tabSourceView = new Tab(translated("source"), sourceView);
-
-        TabPane tabPane = new TabPane(tabPreview2D, tabPreview3D, tabSourceView);
-        tabPane.setSide(Side.BOTTOM);
-        tabPane.getTabs().forEach(tab -> tab.setClosable(false));
-        tabPane.getSelectionModel().select(tabPreview2D);
-
-        preview3D.getSubScene().widthProperty().bind(tabPane.widthProperty());
-        preview3D.getSubScene().heightProperty().bind(tabPane.heightProperty());
-
-        splitEditorAndPreviewArea = new SplitPane(tabPaneEditorViews, tabPane);
-        splitEditorAndPreviewArea.setDividerPositions(0.5);
-    }
-
-    // Must be called after edit canvas creation because it binds to the renderers of the edit canvas!
-    private void createPalettes(EditCanvas editCanvas) {
-        palettes[PALETTE_ID_TERRAIN] = createTerrainPalette(editCanvas.terrainRenderer());
-        palettes[PALETTE_ID_FOOD]    = createFoodPalette(editCanvas.foodRenderer());
-        palettes[PALETTE_ID_ACTORS]  = createActorsPalette(editCanvas.terrainRenderer());
-
-        var tabTerrain = new Tab("", palettes[PALETTE_ID_TERRAIN].root());
-        tabTerrain.setGraphic(new Text(translated("terrain")));
-        tabTerrain.setClosable(false);
-        tabTerrain.setUserData(PALETTE_ID_TERRAIN);
-
-        var tabPellets = new Tab("", palettes[PALETTE_ID_FOOD].root());
-        tabPellets.setGraphic(new Text(translated("pellets")));
-        tabPellets.setClosable(false);
-        tabPellets.setUserData(PALETTE_ID_FOOD);
-
-        var tabActors = new Tab("", palettes[PALETTE_ID_ACTORS].root());
-        tabActors.setGraphic(new Text(translated("actors")));
-        tabActors.setClosable(false);
-        tabActors.setUserData(PALETTE_ID_ACTORS);
-
-        tabPaneForPalettes = new TabPane(tabTerrain, tabPellets, tabActors);
-        tabPaneForPalettes.setPadding(new Insets(5, 5, 5, 5));
-        tabPaneForPalettes.setMinHeight(75);
-
-        tabPaneForPalettes.getSelectionModel().selectedItemProperty().addListener(
-            (py, ov, selectedTab) -> updatePalettesTabPaneDisplay(selectedTab));
-        updatePalettesTabPaneDisplay(tabPaneForPalettes.getSelectionModel().getSelectedItem());
-    }
-
-    private void updatePalettesTabPaneDisplay(Tab selectedTab) {
-        for (Tab tab : tabPaneForPalettes.getTabs()) {
-            if (tab.getGraphic() instanceof Text text) {
-                text.setFont(tab == selectedTab ? FONT_SELECTED_PALETTE : FONT_UNSELECTED_PALETTE);
-            }
-        }
-    }
-
-    private Palette createTerrainPalette(TerrainMapRenderer renderer) {
-        var palette = new Palette(this, PALETTE_ID_TERRAIN, TOOL_SIZE, 1, 13);
-        palette.addTileTool(TerrainTile.EMPTY.$, "Empty Space");
-        palette.addTileTool(TerrainTile.WALL_H.$, "Horiz. Wall");
-        palette.addTileTool(TerrainTile.WALL_V.$, "Vert. Wall");
-        palette.addTileTool(TerrainTile.ARC_NW.$, "NW Corner");
-        palette.addTileTool(TerrainTile.ARC_NE.$, "NE Corner");
-        palette.addTileTool(TerrainTile.ARC_SW.$, "SW Corner");
-        palette.addTileTool(TerrainTile.ARC_SE.$, "SE Corner");
-        palette.addTileTool(TerrainTile.TUNNEL.$, "Tunnel");
-        palette.addTileTool(TerrainTile.DOOR.$, "Door");
-        palette.addTileTool(TerrainTile.ONE_WAY_UP.$, "One-Way Up");
-        palette.addTileTool(TerrainTile.ONE_WAY_RIGHT.$, "One-Way Right");
-        palette.addTileTool(TerrainTile.ONE_WAY_DOWN.$, "One-Way Down");
-        palette.addTileTool(TerrainTile.ONE_WAY_LEFT.$, "One-Way Left");
-
-        palette.selectTool(0); // "No Tile"
-
-        TerrainTileMapRenderer paletteRenderer = new TerrainTileMapRenderer(palette.canvas());
-        paletteRenderer.backgroundColorProperty().bind(renderer.backgroundColorProperty());
-        paletteRenderer.colorSchemeProperty().bind(renderer.colorSchemeProperty());
-        palette.setRenderer(paletteRenderer);
-
-        return palette;
-    }
-
-    private Palette createActorsPalette(TerrainTileMapRenderer renderer) {
-        var palette = new Palette(this, PALETTE_ID_ACTORS, TOOL_SIZE, 1, 11);
-        palette.addTileTool(TerrainTile.EMPTY.$, "Nope");
-        palette.addPropertyTool(WorldMapProperty.POS_PAC, "Pac-Man");
-        palette.addPropertyTool(WorldMapProperty.POS_RED_GHOST, "Red Ghost");
-        palette.addPropertyTool(WorldMapProperty.POS_PINK_GHOST, "Pink Ghost");
-        palette.addPropertyTool(WorldMapProperty.POS_CYAN_GHOST, "Cyan Ghost");
-        palette.addPropertyTool(WorldMapProperty.POS_ORANGE_GHOST, "Orange Ghost");
-        palette.addPropertyTool(WorldMapProperty.POS_BONUS, "Bonus");
-        palette.addPropertyTool(WorldMapProperty.POS_SCATTER_RED_GHOST, "Red Ghost Scatter");
-        palette.addPropertyTool(WorldMapProperty.POS_SCATTER_PINK_GHOST, "Pink Ghost Scatter");
-        palette.addPropertyTool(WorldMapProperty.POS_SCATTER_CYAN_GHOST, "Cyan Ghost Scatter");
-        palette.addPropertyTool(WorldMapProperty.POS_SCATTER_ORANGE_GHOST, "Orange Ghost Scatter");
-        palette.selectTool(0); // "No actor"
-
-        TerrainTileMapRenderer paletteRenderer = new TerrainTileMapRenderer(palette.canvas());
-        paletteRenderer.backgroundColorProperty().bind(renderer.backgroundColorProperty());
-        paletteRenderer.colorSchemeProperty().bind(renderer.colorSchemeProperty());
-        palette.setRenderer(paletteRenderer);
-
-
-        return palette;
-    }
-
-    private Palette createFoodPalette(FoodMapRenderer renderer) {
-        var palette = new Palette(this, PALETTE_ID_FOOD, TOOL_SIZE, 1, 3);
-        palette.addTileTool(FoodTile.EMPTY.code(), "No Food");
-        palette.addTileTool(FoodTile.PELLET.code(), "Pellet");
-        palette.addTileTool(FoodTile.ENERGIZER.code(), "Energizer");
-        palette.selectTool(0); // "No Food"
-
-        FoodMapRenderer copy = new FoodMapRenderer(palette.canvas());
-        copy.backgroundColorProperty().bind(renderer.backgroundColorProperty());
-        copy.energizerColorProperty().bind(renderer.energizerColorProperty());
-        copy.pelletColorProperty().bind(renderer.pelletColorProperty());
-
-        return palette;
-    }
-
-    private void createPropertyEditors() {
-        terrainMapPropertiesEditor = new PropertyEditorPane(this);
-        terrainMapPropertiesEditor.enabledPy.bind(editModeProperty().map(mode -> mode != EditMode.INSPECT));
-        terrainMapPropertiesEditor.setPadding(new Insets(10,0,0,0));
-
-        foodMapPropertiesEditor = new PropertyEditorPane(this);
-        foodMapPropertiesEditor.enabledPy.bind(editModeProperty().map(mode -> mode != EditMode.INSPECT));
-        foodMapPropertiesEditor.setPadding(new Insets(10,0,0,0));
-
-        var terrainPropertiesPane = new TitledPane(translated("terrain"), terrainMapPropertiesEditor);
-        terrainPropertiesPane.setMinWidth(300);
-        terrainPropertiesPane.setExpanded(true);
-
-        var foodPropertiesPane = new TitledPane(translated("pellets"), foodMapPropertiesEditor);
-        foodPropertiesPane.setExpanded(true);
-
-        propertyEditorsPane = new VBox(terrainPropertiesPane, foodPropertiesPane);
-        propertyEditorsPane.visibleProperty().bind(propertyEditorsVisibleProperty());
-    }
-
-    private void createZoomControl() {
-        sliderZoom = new Slider(MIN_GRID_SIZE, MAX_GRID_SIZE, 0.5 * (MIN_GRID_SIZE + MAX_GRID_SIZE));
-        sliderZoom.setShowTickLabels(false);
-        sliderZoom.setShowTickMarks(true);
-        sliderZoom.setPrefWidth(120);
-        Bindings.bindBidirectional(sliderZoom.valueProperty(), gridSize);
-        Tooltip tt = new Tooltip();
-        tt.setShowDelay(Duration.millis(50));
-        tt.setFont(Font.font(14));
-        tt.textProperty().bind(gridSizeProperty().map("Grid Size: %.0f"::formatted));
-        sliderZoom.setTooltip(tt);
-    }
-
-    private void createStatusLine() {
-        var lblMapSize = new Label();
-        lblMapSize.setFont(FONT_STATUS_LINE_NORMAL);
-        lblMapSize.textProperty().bind(currentWorldMap.map(worldMap -> (worldMap != null)
-            ? "Cols: %d Rows: %d".formatted(worldMap.numCols(), worldMap.numRows()) : "")
-        );
-
-        var lblFocussedTile = new Label();
-        lblFocussedTile.setFont(FONT_STATUS_LINE_NORMAL);
-        lblFocussedTile.setMinWidth(100);
-        lblFocussedTile.setMaxWidth(100);
-        lblFocussedTile.textProperty().bind(editCanvas.focussedTileProperty().map(
-            tile -> tile != null ? "(%2d,%2d)".formatted(tile.x(), tile.y()) : "n/a"));
-
-        var statusIndicator = new StatusIndicator();
-        statusIndicator.setAlignment(Pos.BASELINE_RIGHT);
-
-        createZoomControl();
-
-        statusLine = new HBox(
-            lblMapSize,
-            filler(10),
-            lblFocussedTile,
-            spacer(),
-            messageManager.messageLabel(),
-            spacer(),
-            filler(10),
-            sliderZoom,
-            filler(10),
-            statusIndicator
-        );
-        statusLine.setPadding(new Insets(6, 2, 2, 2));
-    }
-
-    private class StatusIndicator extends HBox {
-
-        public StatusIndicator() {
-            Label label = new Label();
-            label.setMinWidth(75);
-            label.setFont(FONT_STATUS_LINE_EDIT_MODE);
-            label.setEffect(new Glow(0.2));
-            getChildren().add(label);
-
-            label.textProperty().bind(Bindings.createStringBinding(
-                () -> switch (editMode()) {
-                    case INSPECT -> translated("mode.inspect");
-                    case EDIT    -> translated(symmetricEditMode() ? "mode.symmetric" : "mode.edit");
-                    case ERASE   -> translated("mode.erase");
-                }, editModeProperty(), symmetricEditModeProperty()
-            ));
-
-            label.textFillProperty().bind(editModeProperty().map(
-                mode -> switch (mode) {
-                    case INSPECT -> Color.GRAY;
-                    case EDIT    -> Color.FORESTGREEN;
-                    case ERASE   -> Color.RED;
-                }));
-
-            label.setOnMouseClicked(e -> selectNextEditMode());
-        }
-    }
-
-    private void arrangeLayout() {
-        var centerPane = new VBox(tabPaneForPalettes, splitEditorAndPreviewArea, statusLine);
-        centerPane.setPadding(new Insets(0,5,0,5));
-        VBox.setVgrow(tabPaneForPalettes, Priority.NEVER);
-        VBox.setVgrow(splitEditorAndPreviewArea, Priority.ALWAYS);
-        VBox.setVgrow(statusLine, Priority.NEVER);
-        contentPane.setLeft(propertyEditorsPane);
-        contentPane.setCenter(centerPane);
-        layoutPane.setTop(menuBar);
-        layoutPane.setCenter(contentPane);
-    }
-
-    private StringBinding createTitleBinding() {
-        return Bindings.createStringBinding(() -> {
-                File mapFile = currentFile();
-                if (mapFile != null) {
-                    return "%s: [%s] - %s".formatted( translated("map_editor"), mapFile.getName(), mapFile.getPath() );
-                }
-                if (currentWorldMap() != null && currentWorldMap().url() != null) {
-                    return  "%s: [%s]".formatted( translated("map_editor"), currentWorldMap().url() );
-                }
-                return "%s: [%s: %d rows %d cols]".formatted(
-                        translated("map_editor"), translated("unsaved_map"),
-                        currentWorldMap().numRows(), currentWorldMap().numCols() );
-            }, currentFile, currentWorldMap
-        );
-    }
-
-    // also called from EditorPage
-    public MenuItem createLoadMapMenuItem(String description, WorldMap worldMap) {
-        requireNonNull(description);
-        requireNonNull(worldMap);
-        var menuItem = new MenuItem(description);
-        menuItem.setOnAction(e -> {
-            WorldMap copy = WorldMap.copyMap(worldMap);
-            ifNoUnsavedChangesDo(() -> setCurrentWorldMap(copy));
-        });
-        return menuItem;
-    }
 
     public void ifNoUnsavedChangesDo(Runnable action) {
         if (!changeManager.isEdited()) {
@@ -1027,9 +545,9 @@ public class TileMapEditor {
         messageManager.clearMessage();
         showEditHelpText();
         switch (editMode) {
-            case INSPECT -> editCanvas.enterInspectMode();
-            case EDIT    -> editCanvas.enterEditMode();
-            case ERASE   -> editCanvas.enterEraseMode();
+            case INSPECT -> ui.editCanvas().enterInspectMode();
+            case EDIT    -> ui.editCanvas().enterEditMode();
+            case ERASE   -> ui.editCanvas().enterEraseMode();
         }
     }
 
@@ -1052,7 +570,7 @@ public class TileMapEditor {
         }
     }
 
-    private void onKeyPressed(KeyEvent e) {
+    public void onKeyPressed(KeyEvent e) {
         KeyCode key = e.getCode();
         boolean alt = e.isAltDown();
 
@@ -1070,26 +588,17 @@ public class TileMapEditor {
         }
     }
 
-    private void onKeyTyped(KeyEvent e) {
+    public void onKeyTyped(KeyEvent e) {
         String ch = e.getCharacter();
         if (ch.equals("e")) {
             selectNextEditMode();
         }
     }
 
-    public void moveCursorAndSetFoodAtTile(Direction dir) {
-        if (editCanvas.moveCursor(dir, tile -> hasAccessibleTerrainAtTile(currentWorldMap(), tile))) {
-            if (editModeIs(EditMode.EDIT) && selectedPaletteID() == PALETTE_ID_FOOD) {
-                if (hasAccessibleTerrainAtTile(currentWorldMap(), editCanvas.focussedTile())) {
-                    editFoodAtTile(editCanvas.focussedTile());
-                }
-            }
-        }
-    }
-
-    private void editFoodAtTile(Vector2i tile) {
-        if (selectedPalette().isToolSelected()) {
-            selectedPalette().selectedTool().editor().accept(LayerID.FOOD, tile);
+    //TODO make action from this
+    public void editFoodAtTile(Vector2i tile) {
+        if (ui.selectedPalette().isToolSelected()) {
+            ui.selectedPalette().selectedTool().editor().accept(LayerID.FOOD, tile);
         }
         changeManager().setFoodMapChanged();
         changeManager().setEdited(true);
@@ -1097,44 +606,29 @@ public class TileMapEditor {
 
     // Sample maps loading
 
-    record SampleMaps(WorldMap pacManMap, List<WorldMap> msPacmanMaps, List<WorldMap> xxlMaps) {}
+    public record SampleMaps(WorldMap pacManMap, List<WorldMap> msPacmanMaps, List<WorldMap> xxlMaps) {}
 
-    private void loadSampleMapsAndUpdateMenu(Menu menu) {
+    public SampleMaps loadSampleMaps() {
         try {
-            SampleMaps maps = loadSampleMaps();
-            menu.getItems().clear();
-            menu.getItems().add(createLoadMapMenuItem("Pac-Man", maps.pacManMap()));
-            menu.getItems().add(new SeparatorMenuItem());
-            for (int i = 0; i < maps.msPacmanMaps().size(); ++i) {
-                menu.getItems().add(
-                    createLoadMapMenuItem("Ms. Pac-Man %d".formatted(i+1), maps.msPacmanMaps().get(i)));
+            var pacManMap = WorldMap.fromURL(sampleMapURL("pacman/pacman.world", 1));
+            var msPacManMaps = new ArrayList<WorldMap>();
+            for (int n = 1; n <= 6; ++n) {
+                URL url = sampleMapURL("mspacman/mspacman_%d.world", n);
+                msPacManMaps.add(WorldMap.fromURL(url));
             }
-            menu.getItems().add(new SeparatorMenuItem());
-            for (int i = 0; i < maps.xxlMaps().size(); ++i) {
-                menu.getItems().add(
-                    createLoadMapMenuItem("Pac-Man XXL %d".formatted(i+1), maps.xxlMaps().get(i)));
+            msPacManMaps.trimToSize();
+            var xxlMaps = new ArrayList<WorldMap>();
+            for (int n = 1; n <= 8; ++n) {
+                URL url = sampleMapURL("pacman_xxl/masonic_%d.world", n);
+                xxlMaps.add(WorldMap.fromURL(url));
             }
+            xxlMaps.trimToSize();
+            return new SampleMaps(pacManMap, msPacManMaps, xxlMaps);
         } catch (IOException x) {
             Logger.error(x);
             Logger.error("Error loading sample maps");
+            return null;
         }
-    }
-
-    private SampleMaps loadSampleMaps() throws IOException {
-        var pacManMap = WorldMap.fromURL(sampleMapURL("pacman/pacman.world", 1));
-        var msPacManMaps = new ArrayList<WorldMap>();
-        for (int n = 1; n <= 6; ++n) {
-            URL url = sampleMapURL("mspacman/mspacman_%d.world", n);
-            msPacManMaps.add(WorldMap.fromURL(url));
-        }
-        msPacManMaps.trimToSize();
-        var xxlMaps = new ArrayList<WorldMap>();
-        for (int n = 1; n <= 8; ++n) {
-            URL url = sampleMapURL("pacman_xxl/masonic_%d.world", n);
-            xxlMaps.add(WorldMap.fromURL(url));
-        }
-        xxlMaps.trimToSize();
-        return new SampleMaps(pacManMap, msPacManMaps, xxlMaps);
     }
 
     private URL sampleMapURL(String namePattern, int number) {

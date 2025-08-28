@@ -11,7 +11,7 @@ public class Action_SelectNextPaletteEntry extends AbstractEditorAction<Void> {
 
     @Override
     public Void execute() {
-        Palette palette = editor.selectedPalette();
+        Palette palette = editor.ui().selectedPalette();
         int next = palette.selectedIndex() + 1;
         if (next == palette.numTools()) { next = 0; }
         palette.selectTool(next);

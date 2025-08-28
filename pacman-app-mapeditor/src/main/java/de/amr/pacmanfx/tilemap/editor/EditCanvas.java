@@ -36,6 +36,7 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.*;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.*;
 import static de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites.*;
+import static java.util.Objects.requireNonNull;
 
 public class EditCanvas extends Canvas {
 
@@ -65,9 +66,13 @@ public class EditCanvas extends Canvas {
     private final FoodMapRenderer foodRenderer;
     private final EditorActorRenderer actorRenderer;
 
+    private final TileMapEditorUI ui;
+
     private boolean dragging = false;
 
-    public EditCanvas() {
+    public EditCanvas(TileMapEditorUI ui) {
+        this.ui = requireNonNull(ui);
+
         obstacleEditor = new ObstacleEditor();
         obstacleEditor.joiningProperty().bind(obstaclesJoiningProperty());
         obstacleEditor.symmetricEditModeProperty().bind(symmetricEditModeProperty());
@@ -184,16 +189,26 @@ public class EditCanvas extends Canvas {
         return foodRenderer;
     }
 
-    public boolean moveCursor(Direction dir, Predicate<Vector2i> canMoveIntoTile) {
+    public void moveCursor(Direction dir, Predicate<Vector2i> canMoveIntoTile) {
         if (focussedTile() != null) {
             Vector2i nextTile = focussedTile().plus(dir.vector());
             if (!worldMap().outOfWorld(nextTile) && canMoveIntoTile.test(nextTile)) {
                 focussedTile.set(nextTile);
-                return true;
             }
         }
-        return false;
     }
+
+/*
+    public void moveCursorAndSetFoodAtTile(Direction dir) {
+        if (moveCursor(dir, tile -> hasAccessibleTerrainAtTile(editor.currentWorldMap(), tile))) {
+            if (editor.editModeIs(EditMode.EDIT) && selectedPaletteID() == PALETTE_ID_FOOD) {
+                if (hasAccessibleTerrainAtTile(editor.currentWorldMap(), editCanvas.focussedTile())) {
+                    editor.editFoodAtTile(editCanvas.focussedTile());
+                }
+            }
+        }
+    }
+   */
 
     public Vector2i tileAt(double mouseX, double mouseY) {
         return new Vector2i(fullTiles(mouseX, gridSize()), fullTiles(mouseY, gridSize()));
@@ -355,15 +370,15 @@ public class EditCanvas extends Canvas {
             case INSPECT -> {}
             case EDIT -> {
                 if (mouseEvent.isShiftDown()) {
-                    switch (editor.selectedPaletteID()) {
+                    switch (editor.paletteID()) {
                         case PALETTE_ID_TERRAIN -> {
-                            Palette palette = editor.selectedPalette();
+                            Palette palette = ui.selectedPalette();
                             if (palette.isToolSelected()) {
                                 palette.selectedTool().editor().accept(LayerID.TERRAIN, focussedTile());
                             }
                         }
                         case PALETTE_ID_FOOD -> {
-                            Palette palette = editor.selectedPalette();
+                            Palette palette = ui.selectedPalette();
                             if (palette.isToolSelected()) {
                                 palette.selectedTool().editor().accept(LayerID.FOOD, focussedTile());
                             }
@@ -374,7 +389,7 @@ public class EditCanvas extends Canvas {
             }
             case ERASE -> {
                 if (mouseEvent.isShiftDown()) {
-                    switch (editor.selectedPaletteID()) {
+                    switch (ui.selectedPaletteID()) {
                         case PALETTE_ID_TERRAIN -> new Action_ClearTerrainTile(editor, tile).execute();
                         case PALETTE_ID_FOOD -> new Action_ClearFoodTile(editor, tile).execute();
                     }
@@ -399,7 +414,7 @@ public class EditCanvas extends Canvas {
             }
             editor.setTemplateImage(image);
             new Action_CreateMapFromTemplate(editor, image).execute();
-            editor.selectTemplateImageTab();
+            ui.selectTemplateImageTab();
             editor.messageManager().showMessage("Select colors for tile identification!", 10, MessageType.INFO);
         }
     }
@@ -457,23 +472,7 @@ public class EditCanvas extends Canvas {
         KeyCode key = keyEvent.getCode();
         boolean control = keyEvent.isControlDown();
 
-        if (control && key == KeyCode.LEFT) {
-            editor.moveCursorAndSetFoodAtTile(Direction.LEFT);
-            keyEvent.consume();
-        }
-        else if (control && key == KeyCode.RIGHT) {
-            editor.moveCursorAndSetFoodAtTile(Direction.RIGHT);
-            keyEvent.consume();
-        }
-        else if (control && key == KeyCode.UP) {
-            editor.moveCursorAndSetFoodAtTile(Direction.UP);
-            keyEvent.consume();
-        }
-        else if (control && key == KeyCode.DOWN) {
-            editor.moveCursorAndSetFoodAtTile(Direction.DOWN);
-            keyEvent.consume();
-        }
-        else if (key == KeyCode.LEFT) {
+        if (key == KeyCode.LEFT) {
             moveCursor(Direction.LEFT, tile -> true);
         }
         else if (key == KeyCode.RIGHT) {

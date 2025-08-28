@@ -31,13 +31,13 @@ public class TileMapEditorApp extends Application  {
 
             var miQuit = new MenuItem(translated("quit"));
             miQuit.setOnAction(e -> editor.ifNoUnsavedChangesDo(stage::close));
-            editor.menuBar().menuFile().getItems().addAll(new SeparatorMenuItem(), miQuit);
+            editor.ui().menuBar().menuFile().getItems().addAll(new SeparatorMenuItem(), miQuit);
 
             double screenHeight = Screen.getPrimary().getVisualBounds().getHeight();
             double height = Math.max(0.8 * screenHeight, 600);
             double width = 1.25 * height;
 
-            var scene = new Scene(editor.layoutPane(), width, height);
+            var scene = new Scene(editor.ui().layoutPane(), width, height);
             stage.setScene(scene);
 
             stage.setOnCloseRequest(e -> editor.ifNoUnsavedChangesDo(() -> {

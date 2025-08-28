@@ -25,7 +25,7 @@ public class Palette {
 
     public static final Color BG_COLOR = Color.WHITE;
 
-    private final byte id;
+    private final EditorGlobals.PaletteID id;
     private final int toolSize;
     private final int numRows;
     private final int numCols;
@@ -39,7 +39,7 @@ public class Palette {
     private int selectedRow;
     private int selectedCol;
 
-    public Palette(TileMapEditor editor, byte id, int toolSize, int numRows, int numCols) {
+    public Palette(TileMapEditor editor, EditorGlobals.PaletteID id, int toolSize, int numRows, int numCols) {
         this.editor = requireNonNull(editor);
         canvas = new Canvas(numCols * toolSize, numRows * toolSize);
         canvas.setOnMouseClicked(this::handleMouseClick);
@@ -67,7 +67,7 @@ public class Palette {
         this.renderer = renderer;
     }
 
-    public byte id() {
+    public EditorGlobals.PaletteID id() {
         return id;
     }
 

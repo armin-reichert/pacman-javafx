@@ -19,7 +19,7 @@ public class Action_SaveMapFile extends AbstractEditorAction<Void> {
     @Override
     public Void execute() {
         FileChooser fileChooser = createFileChooser();
-        File file = fileChooser.showSaveDialog(editor.stage());
+        File file = fileChooser.showSaveDialog(editor.ui().stage());
         if (file != null) {
             editor.setCurrentDirectory(file.getParentFile());
             if (file.getName().endsWith(".world")) {
