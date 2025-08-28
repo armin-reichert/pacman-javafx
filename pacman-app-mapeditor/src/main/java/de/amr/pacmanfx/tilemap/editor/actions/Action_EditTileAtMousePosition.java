@@ -29,8 +29,20 @@ public class Action_EditTileAtMousePosition extends AbstractEditorAction<Void> {
             return null;
         }
         switch (editor.selectedPaletteID()) {
-            case PALETTE_ID_TERRAIN -> editTerrainAtTile(tile, erase);
-            case PALETTE_ID_FOOD -> editFoodAtTile(tile, erase);
+            case PALETTE_ID_TERRAIN -> {
+                if (erase) {
+                    new Action_ClearTerrainTile(editor, tile).execute();
+                } else if (editor.selectedPalette().isToolSelected()) {
+                    editor.selectedPalette().selectedTool().editor().accept(LayerID.TERRAIN, tile);
+                }
+            }
+            case PALETTE_ID_FOOD -> {
+                if (erase) {
+                    new Action_ClearFoodTile(editor, tile).execute();
+                } else if (editor.selectedPalette().isToolSelected()) {
+                    editor.selectedPalette().selectedTool().editor().accept(LayerID.FOOD, tile);
+                }
+            }
             case PALETTE_ID_ACTORS -> {
                 if (editor.selectedPalette().isToolSelected()) {
                     editor.selectedPalette().selectedTool().editor().accept(LayerID.TERRAIN, tile);
@@ -39,25 +51,5 @@ public class Action_EditTileAtMousePosition extends AbstractEditorAction<Void> {
             default -> Logger.error("Unknown palette ID " + editor.selectedPaletteID());
         }
         return null;
-    }
-
-    private void editTerrainAtTile(Vector2i tile, boolean erase) {
-        if (erase) {
-            new Action_ClearTerrainTile(editor, tile).execute();
-        } else if (editor.selectedPalette().isToolSelected()) {
-            editor.selectedPalette().selectedTool().editor().accept(LayerID.TERRAIN, tile);
-        }
-        editor.changeManager().setTerrainMapChanged();
-        editor.changeManager().setEdited(true);
-    }
-
-    private void editFoodAtTile(Vector2i tile, boolean erase) {
-        if (erase) {
-            new Action_ClearFoodTile(editor, tile).execute();
-        } else if (editor.selectedPalette().isToolSelected()) {
-            editor.selectedPalette().selectedTool().editor().accept(LayerID.FOOD, tile);
-        }
-        editor.changeManager().setFoodMapChanged();
-        editor.changeManager().setEdited(true);
     }
 }

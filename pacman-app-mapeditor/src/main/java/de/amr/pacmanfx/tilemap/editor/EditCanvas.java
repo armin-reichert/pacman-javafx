@@ -337,8 +337,6 @@ public class EditCanvas extends Canvas {
             if (dragging) {
                 dragging = false;
                 obstacleEditor.endEditing();
-                editor.changeManager().setTerrainMapChanged();
-                editor.changeManager().setEdited(true);
             } else {
                 boolean erase = mouseEvent.isControlDown();
                 new Action_EditTileAtMousePosition(editor, mouseEvent.getX(), mouseEvent.getY(), erase).execute();

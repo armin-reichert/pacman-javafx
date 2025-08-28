@@ -7,9 +7,6 @@ package de.amr.pacmanfx.tilemap.editor;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.*;
 import de.amr.pacmanfx.model.WorldMapProperty;
-import de.amr.pacmanfx.tilemap.editor.rendering.TerrainTileMapRenderer;
-import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
-import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
@@ -38,16 +35,16 @@ public interface TileMapEditorUtil {
         return url.toExternalForm();
     }
 
-    static byte mirroredTileValue(byte tileValue) {
-        if (tileValue == TerrainTile.ARC_NE.$)  return TerrainTile.ARC_NW.$;
-        if (tileValue == TerrainTile.ARC_NW.$)  return TerrainTile.ARC_NE.$;
-        if (tileValue == TerrainTile.ARC_SE.$)  return TerrainTile.ARC_SW.$;
-        if (tileValue == TerrainTile.ARC_SW.$)  return TerrainTile.ARC_SE.$;
-        if (tileValue == TerrainTile.DARC_NE.$) return TerrainTile.DARC_NW.$;
-        if (tileValue == TerrainTile.DARC_NW.$) return TerrainTile.DARC_NE.$;
-        if (tileValue == TerrainTile.DARC_SE.$) return TerrainTile.DARC_SW.$;
-        if (tileValue == TerrainTile.DARC_SW.$) return TerrainTile.DARC_SE.$;
-        return tileValue;
+    static byte mirroredTileCode(byte code) {
+        if (code == TerrainTile.ARC_NE.$)  return TerrainTile.ARC_NW.$;
+        if (code == TerrainTile.ARC_NW.$)  return TerrainTile.ARC_NE.$;
+        if (code == TerrainTile.ARC_SE.$)  return TerrainTile.ARC_SW.$;
+        if (code == TerrainTile.ARC_SW.$)  return TerrainTile.ARC_SE.$;
+        if (code == TerrainTile.DARC_NE.$) return TerrainTile.DARC_NW.$;
+        if (code == TerrainTile.DARC_NW.$) return TerrainTile.DARC_NE.$;
+        if (code == TerrainTile.DARC_SE.$) return TerrainTile.DARC_SW.$;
+        if (code == TerrainTile.DARC_SW.$) return TerrainTile.DARC_SE.$;
+        return code;
     }
 
     static Vector2i parseSize(String cols_x_rows) {

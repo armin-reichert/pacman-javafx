@@ -31,15 +31,14 @@ import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
-import org.tinylog.Logger;
 
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites.*;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.getColorFromMap;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.parseColor;
+import static de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites.*;
 import static de.amr.pacmanfx.uilib.Ufx.colorWithOpacity;
 import static java.util.Objects.requireNonNull;
 
@@ -242,7 +241,6 @@ public class Maze3D extends Group {
     private void addActorShape(Node actorShape, WorldMap worldMap, String actorTilePropertyName) {
         Vector2i tile = worldMap.getTerrainTileProperty(actorTilePropertyName);
         if (tile == null) {
-            Logger.warn("Tile property '{}' has no value", actorTilePropertyName);
             return;
         }
         Vector2f center = tile.scaled(TS).toVector2f().plus(TS, HTS);

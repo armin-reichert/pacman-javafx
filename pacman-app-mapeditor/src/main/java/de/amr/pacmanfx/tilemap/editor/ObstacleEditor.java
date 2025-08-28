@@ -17,16 +17,16 @@ import java.util.function.BiConsumer;
 
 import static de.amr.pacmanfx.lib.UsefulFunctions.isEven;
 import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
-import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.mirroredTileValue;
+import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.mirroredTileCode;
 import static java.util.Objects.requireNonNull;
 
 public class ObstacleEditor {
 
     private BiConsumer<Vector2i, Byte> onEditTile;
 
-    private final ObjectProperty<WorldMap> worldMapPy = new SimpleObjectProperty<>();
-    private final BooleanProperty joiningPy = new SimpleBooleanProperty();
-    private final BooleanProperty symmetricEditPy = new SimpleBooleanProperty();
+    private final BooleanProperty joining = new SimpleBooleanProperty();
+    private final BooleanProperty symmetricEdit = new SimpleBooleanProperty();
+    private final ObjectProperty<WorldMap> worldMap = new SimpleObjectProperty<>();
 
     private boolean enabled;
     private Vector2i anchor;
@@ -44,15 +44,11 @@ public class ObstacleEditor {
         }
     }
 
-    public BooleanProperty joiningProperty() { return joiningPy; }
+    public BooleanProperty joiningProperty() { return joining; }
 
-    public void setJoining(boolean join) {
-        joiningPy.set(join);
-    }
+    public BooleanProperty symmetricEditModeProperty() { return symmetricEdit; }
 
-    public BooleanProperty symmetricEditModeProperty() { return symmetricEditPy; }
-
-    public ObjectProperty<WorldMap> worldMapProperty() { return worldMapPy; }
+    public ObjectProperty<WorldMap> worldMapProperty() { return worldMap; }
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
@@ -97,38 +93,37 @@ public class ObstacleEditor {
 
     public void endEditing() {
         if (enabled) {
-            commit();
+            editTouchedRegion();
         }
         anchor = frontier = minTile = maxTile = null;
     }
 
-    public void draw(TerrainTileMapRenderer renderer) {
-        byte[][] content = editedContent();
-        if (content != null) {
-            for (int row = 0; row < content.length; ++row) {
-                for (int col = 0; col < content[0].length; ++col) {
-                    Vector2i tile = minTile.plus(col, row);
-                    renderer.drawTile(tile, content[row][col]);
-                    if (symmetricEditModeProperty().get()) {
-                        Vector2i mirroredTile = worldMapPy.get().mirroredTile(tile);
-                        renderer.drawTile(mirroredTile, mirroredTileValue(content[row][col]));
-                    }
-                }
+    private void editTouchedRegion() {
+        byte[][] editedRect = editedRect();
+        if (editedRect == null) return;
+        int numRows = editedRect.length, numCols = editedRect[0].length;
+        if (joining.get()) {
+            editedRect = joinedContent(editedRect, numRows, numCols);
+        }
+        for (int row = 0; row < numRows; ++row) {
+            for (int col = 0; col < numCols; ++col) {
+                Vector2i tile = minTile.plus(col, row);
+                editTile(tile, editedRect[row][col]);
             }
         }
     }
 
-    private void commit() {
-        byte[][] content = editedContent();
-        if (content != null) {
-            int numRows = content.length, numCols = content[0].length;
-            if (joiningPy.get()) {
-                content = joinedContent(content, numRows, numCols);
-            }
-            for (int row = 0; row < numRows; ++row) {
-               for (int col = 0; col < numCols; ++col) {
-                    var tile = new Vector2i(minTile.x() + col, minTile.y() + row);
-                    editTile(tile, content[row][col]);
+    public void draw(TerrainTileMapRenderer renderer) {
+        byte[][] editedRect = editedRect();
+        if (editedRect == null) return;
+        for (int row = 0; row < editedRect.length; ++row) {
+            for (int col = 0; col < editedRect[0].length; ++col) {
+                Vector2i tile = minTile.plus(col, row);
+                byte code = editedRect[row][col];
+                renderer.drawTile(tile, code);
+                if (symmetricEditModeProperty().get()) {
+                    Vector2i mirroredTile = worldMap.get().mirroredTile(tile);
+                    renderer.drawTile(mirroredTile, mirroredTileCode(code));
                 }
             }
         }
@@ -141,7 +136,7 @@ public class ObstacleEditor {
         }
         int crossings;
 
-        WorldMap worldMap = worldMapPy.get();
+        WorldMap worldMap = this.worldMap.get();
 
         byte minTileValue = worldMap.content(LayerID.TERRAIN, minTile);
         if       (minTileValue == ARC_NE.$) joinedContent[0][0] = WALL_H.$;
@@ -212,7 +207,7 @@ public class ObstacleEditor {
         return joinedContent;
     }
 
-    private byte[][] editedContent() {
+    private byte[][] editedRect() {
         if (minTile == null || maxTile == null) {
             return null;
         }
@@ -221,22 +216,22 @@ public class ObstacleEditor {
         if (sizeY <= 1 || sizeX <= 1) {
             return null;
         }
-        byte[][] content = new byte[sizeY][sizeX];
+        byte[][] rect = new byte[sizeY][sizeX];
         for (int y = minTile.y(); y <= maxTile.y(); ++y) {
             for (int x = minTile.x(); x <= maxTile.x(); ++x) {
-                content[y - minTile.y()][x - minTile.x()] = computeTileValue(y, x);
+                rect[y - minTile.y()][x - minTile.x()] = computeTileCode(y, x);
             }
         }
-        return content;
+        return rect;
     }
 
-    private byte computeTileValue(int y, int x) {
-        if (y == minTile.y() && x == minTile.x()) return ARC_NW.$;
-        if (y == minTile.y() && x == maxTile.x()) return ARC_NE.$;
-        if (y == maxTile.y() && x == minTile.x()) return ARC_SW.$;
-        if (y == maxTile.y() && x == maxTile.x()) return ARC_SE.$;
-        if (y == minTile.y() || y == maxTile.y()) return WALL_H.$;
-        if (x == minTile.x() || x == maxTile.x()) return WALL_V.$;
+    private byte computeTileCode(int row, int col) {
+        if (row == minTile.y() && col == minTile.x()) return ARC_NW.$;
+        if (row == minTile.y() && col == maxTile.x()) return ARC_NE.$;
+        if (row == maxTile.y() && col == minTile.x()) return ARC_SW.$;
+        if (row == maxTile.y() && col == maxTile.x()) return ARC_SE.$;
+        if (row == minTile.y() || row == maxTile.y()) return WALL_H.$;
+        if (col == minTile.x() || col == maxTile.x()) return WALL_V.$;
         return EMPTY.$;
     }
 }

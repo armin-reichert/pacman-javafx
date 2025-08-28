@@ -7,7 +7,7 @@ import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
 
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.canEditFoodAtTile;
-import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.mirroredTileValue;
+import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.mirroredTileCode;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -50,7 +50,7 @@ public class Action_SetTileCode extends AbstractEditorAction<Void> {
                     worldMap.setContent(layerID, mirroredTile, code);
                 }
             } else {
-                byte mirroredValue = mirroredTileValue(code);
+                byte mirroredValue = mirroredTileCode(code);
                 worldMap.setContent(layerID, mirroredTile, mirroredValue);
                 worldMap.setContent(LayerID.FOOD, mirroredTile, FoodTile.EMPTY.code());
             }
