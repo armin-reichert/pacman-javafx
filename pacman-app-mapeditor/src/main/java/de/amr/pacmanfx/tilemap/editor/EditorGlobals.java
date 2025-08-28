@@ -43,6 +43,8 @@ public class EditorGlobals {
     public static final Font FONT_SOURCE_VIEW             = Font.font("Consolas", FontWeight.NORMAL, 14);
     public static final Font FONT_STATUS_LINE_EDIT_MODE   = Font.font("Sans", FontWeight.BOLD, 16);
     public static final Font FONT_STATUS_LINE_NORMAL      = Font.font("Sans", FontWeight.NORMAL, 14);
+    public static final Font FONT_SELECTED_PALETTE        = Font.font("Sans", FontWeight.BOLD, 12);
+    public static final Font FONT_UNSELECTED_PALETTE      = Font.font("Sans", FontWeight.NORMAL, 12);
 
     public static final Color COLOR_CANVAS_BACKGROUND = Color.BLACK;
 

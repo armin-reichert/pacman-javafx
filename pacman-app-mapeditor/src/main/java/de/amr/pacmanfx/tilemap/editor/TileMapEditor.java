@@ -32,6 +32,7 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -764,21 +765,36 @@ public class TileMapEditor {
         palettes[PALETTE_ID_FOOD]    = createFoodPalette(PALETTE_ID_FOOD, TOOL_SIZE, this, foodRenderer);
         palettes[PALETTE_ID_ACTORS]  = createActorPalette(PALETTE_ID_ACTORS, TOOL_SIZE, this, terrainRenderer);
 
-        var tabTerrain = new Tab(translated("terrain"), palettes[PALETTE_ID_TERRAIN].root());
+        var tabTerrain = new Tab("", palettes[PALETTE_ID_TERRAIN].root());
+        tabTerrain.setGraphic(new Text(translated("terrain")));
         tabTerrain.setClosable(false);
         tabTerrain.setUserData(PALETTE_ID_TERRAIN);
 
-        var tabPellets = new Tab(translated("pellets"), palettes[PALETTE_ID_FOOD].root());
+        var tabPellets = new Tab("", palettes[PALETTE_ID_FOOD].root());
+        tabPellets.setGraphic(new Text(translated("pellets")));
         tabPellets.setClosable(false);
         tabPellets.setUserData(PALETTE_ID_FOOD);
 
-        var tabActors = new Tab(translated("actors"), palettes[PALETTE_ID_ACTORS].root());
+        var tabActors = new Tab("", palettes[PALETTE_ID_ACTORS].root());
+        tabActors.setGraphic(new Text(translated("actors")));
         tabActors.setClosable(false);
         tabActors.setUserData(PALETTE_ID_ACTORS);
 
         tabPaneForPalettes = new TabPane(tabTerrain, tabPellets, tabActors);
         tabPaneForPalettes.setPadding(new Insets(5, 5, 5, 5));
         tabPaneForPalettes.setMinHeight(75);
+
+        tabPaneForPalettes.getSelectionModel().selectedItemProperty().addListener(
+            (py, ov, selectedTab) -> updatePalettesTabPaneDisplay(selectedTab));
+        updatePalettesTabPaneDisplay(tabPaneForPalettes.getSelectionModel().getSelectedItem());
+    }
+
+    private void updatePalettesTabPaneDisplay(Tab selectedTab) {
+        for (Tab tab : tabPaneForPalettes.getTabs()) {
+            if (tab.getGraphic() instanceof Text text) {
+                text.setFont(tab == selectedTab ? FONT_SELECTED_PALETTE : FONT_UNSELECTED_PALETTE);
+            }
+        }
     }
 
     private Palette createTerrainPalette(byte id, int toolSize, TileMapEditor editor, TerrainMapRenderer terrainMapRenderer) {
