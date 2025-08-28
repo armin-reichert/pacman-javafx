@@ -36,7 +36,6 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.*;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.*;
 import static de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites.*;
-import static java.util.Objects.requireNonNull;
 
 public class EditCanvas extends Canvas {
 
@@ -53,6 +52,7 @@ public class EditCanvas extends Canvas {
     private final BooleanProperty foodVisible = new SimpleBooleanProperty(true);
     private final BooleanProperty gridVisible = new SimpleBooleanProperty(true);
     private final BooleanProperty obstacleInnerAreaDisplayed = new SimpleBooleanProperty(true);
+    private final BooleanProperty obstaclesJoining = new SimpleBooleanProperty(true);
     private final BooleanProperty segmentNumbersVisible = new SimpleBooleanProperty(true);
     private final BooleanProperty symmetricEditMode = new SimpleBooleanProperty(true);
     private final BooleanProperty terrainVisible = new SimpleBooleanProperty(true);
@@ -67,8 +67,11 @@ public class EditCanvas extends Canvas {
 
     private boolean dragging = false;
 
-    public EditCanvas(ObstacleEditor obstacleEditor) {
-        this.obstacleEditor = requireNonNull(obstacleEditor);
+    public EditCanvas() {
+        obstacleEditor = new ObstacleEditor();
+        obstacleEditor.joiningProperty().bind(obstaclesJoiningProperty());
+        obstacleEditor.symmetricEditModeProperty().bind(symmetricEditModeProperty());
+        obstacleEditor.worldMapProperty().bind(worldMapProperty());
 
         ctx = getGraphicsContext2D();
 
@@ -98,6 +101,10 @@ public class EditCanvas extends Canvas {
         actorRenderer.scalingProperty().bind(scaling);
 
         setOnMouseDragged(this::onMouseDragged);
+    }
+
+    public ObstacleEditor obstacleEditor() {
+        return obstacleEditor;
     }
 
     // -- Properties
@@ -136,6 +143,10 @@ public class EditCanvas extends Canvas {
 
     public BooleanProperty obstacleInnerAreaDisplayedProperty() {
         return obstacleInnerAreaDisplayed;
+    }
+
+    public BooleanProperty obstaclesJoiningProperty() {
+        return obstaclesJoining;
     }
 
     public double scaling() {

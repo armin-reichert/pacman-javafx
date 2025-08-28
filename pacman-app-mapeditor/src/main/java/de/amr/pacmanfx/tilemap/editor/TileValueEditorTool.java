@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tilemap.editor;
 
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
-import de.amr.pacmanfx.tilemap.editor.actions.Action_SetTileValue;
+import de.amr.pacmanfx.tilemap.editor.actions.Action_SetTileCode;
 import de.amr.pacmanfx.uilib.tilemap.TileRenderer;
 import javafx.scene.paint.Color;
 
@@ -28,7 +28,7 @@ public class TileValueEditorTool implements EditorTool {
 
     @Override
     public void apply(TileMapEditor editor, LayerID layerID, Vector2i tile) {
-        new Action_SetTileValue(editor, editor.currentWorldMap(), layerID, tile, value).execute();
+        new Action_SetTileCode(editor, editor.currentWorldMap(), layerID, tile, value).execute();
     }
 
     @Override

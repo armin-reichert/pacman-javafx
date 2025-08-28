@@ -12,7 +12,8 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import org.tinylog.Logger;
+
+import java.util.function.BiConsumer;
 
 import static de.amr.pacmanfx.lib.UsefulFunctions.isEven;
 import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
@@ -20,6 +21,8 @@ import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.mirroredTileValue
 import static java.util.Objects.requireNonNull;
 
 public class ObstacleEditor {
+
+    private BiConsumer<Vector2i, Byte> onEditTile;
 
     private final ObjectProperty<WorldMap> worldMapPy = new SimpleObjectProperty<>();
     private final BooleanProperty joiningPy = new SimpleBooleanProperty();
@@ -31,10 +34,14 @@ public class ObstacleEditor {
     private Vector2i minTile; // top left corner
     private Vector2i maxTile; // bottom right corner
 
-    public ObstacleEditor() {}
+    public void setOnEditTile(BiConsumer<Vector2i, Byte> onEditTile) {
+        this.onEditTile = onEditTile;
+    }
 
-    public void setValue(Vector2i tile, byte value) {
-        Logger.info("Tile {} got value {}", tile, value);
+    public void editTile(Vector2i tile, byte value) {
+        if (onEditTile != null) {
+            onEditTile.accept(tile, value);
+        }
     }
 
     public BooleanProperty joiningProperty() { return joiningPy; }
@@ -121,7 +128,7 @@ public class ObstacleEditor {
             for (int row = 0; row < numRows; ++row) {
                for (int col = 0; col < numCols; ++col) {
                     var tile = new Vector2i(minTile.x() + col, minTile.y() + row);
-                    setValue(tile, content[row][col]);
+                    editTile(tile, content[row][col]);
                 }
             }
         }

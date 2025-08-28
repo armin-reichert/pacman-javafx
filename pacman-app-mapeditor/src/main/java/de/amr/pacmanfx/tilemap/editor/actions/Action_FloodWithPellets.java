@@ -34,7 +34,7 @@ public class Action_FloodWithPellets extends AbstractEditorAction<Void> {
         visited.add(startTile);
         while (!q.isEmpty()) {
             Vector2i current = q.poll();
-            new Action_SetTileValue(editor, editor.currentWorldMap(), LayerID.FOOD, current, foodTile.code()).execute();
+            new Action_SetTileCode(editor, editor.currentWorldMap(), LayerID.FOOD, current, foodTile.code()).execute();
             for (Direction dir : Direction.values()) {
                 Vector2i neighborTile = current.plus(dir.vector());
                 if  (!visited.contains(neighborTile) && canEditFoodAtTile(editor.currentWorldMap(), neighborTile)) {

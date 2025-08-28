@@ -13,14 +13,14 @@ import static java.util.Objects.requireNonNull;
 /**
  * This method should be used whenever a tile value has to be set and symmetric editing should be executed.
  */
-public class Action_SetTileValue extends AbstractEditorAction<Void> {
+public class Action_SetTileCode extends AbstractEditorAction<Void> {
 
     private final WorldMap worldMap;
     private final LayerID layerID;
     private final Vector2i tile;
     private final byte code;
 
-    public Action_SetTileValue(TileMapEditor editor, WorldMap worldMap, LayerID layerID, Vector2i tile, byte code) {
+    public Action_SetTileCode(TileMapEditor editor, WorldMap worldMap, LayerID layerID, Vector2i tile, byte code) {
         super(editor);
         this.worldMap = requireNonNull(worldMap);
         this.layerID = requireNonNull(layerID);
@@ -28,7 +28,7 @@ public class Action_SetTileValue extends AbstractEditorAction<Void> {
         this.code = code;
     }
 
-    public Action_SetTileValue(TileMapEditor editor, WorldMap worldMap, LayerID layerID, int row, int col, byte code) {
+    public Action_SetTileCode(TileMapEditor editor, WorldMap worldMap, LayerID layerID, int row, int col, byte code) {
         this(editor, worldMap, layerID, Vector2i.of(col, row), code);
     }
 

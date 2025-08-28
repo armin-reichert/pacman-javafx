@@ -18,7 +18,7 @@ public class Action_AddBorderWall extends AbstractEditorAction<Void> {
     }
 
     private void setTerrain(int row, int col, TerrainTile terrainTile) {
-        new Action_SetTileValue(editor, worldMap, LayerID.TERRAIN, row, col, terrainTile.code()).execute();
+        new Action_SetTileCode(editor, worldMap, LayerID.TERRAIN, row, col, terrainTile.code()).execute();
     }
 
     @Override

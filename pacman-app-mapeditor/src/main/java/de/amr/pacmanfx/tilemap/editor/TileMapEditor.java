@@ -615,27 +615,14 @@ public class TileMapEditor {
         messageManager.showMessage(translated("edit_help"), 30, MessageType.INFO);
     }
 
-    private ObstacleEditor createObstacleEditor() {
-        var obstacleEditor = new ObstacleEditor() {
-            @Override
-            public void setValue(Vector2i tile, byte value) {
-                new Action_SetTileValue(TileMapEditor.this, currentWorldMap(), LayerID.TERRAIN, tile, value).execute();
-            }
-        };
-        obstacleEditor.joiningProperty().bind(obstaclesJoiningProperty());
-        obstacleEditor.worldMapProperty().bind(currentWorldMapProperty());
-        obstacleEditor.symmetricEditModeProperty().bind(symmetricEditModeProperty());
-        return obstacleEditor;
-    }
-
     private void createEditCanvas() {
-        ObstacleEditor obstacleEditor = createObstacleEditor();
-        editCanvas = new EditCanvas(obstacleEditor);
+        editCanvas = new EditCanvas();
         editCanvas.editModeProperty().bind(editModeProperty());
         editCanvas.gridSizeProperty().bind(gridSizeProperty());
         editCanvas.gridVisibleProperty().bind(gridVisibleProperty());
         editCanvas.worldMapProperty().bind(currentWorldMapProperty());
         editCanvas.obstacleInnerAreaDisplayedProperty().bind(obstacleInnerAreaDisplayedProperty());
+        editCanvas.obstaclesJoiningProperty().bind(obstaclesJoiningProperty());
         editCanvas.segmentNumbersVisibleProperty().bind(segmentNumbersVisibleProperty());
         editCanvas.symmetricEditModeProperty().bind(symmetricEditModeProperty());
         editCanvas.templateImageGrayProperty().bind(templateImageProperty().map(Ufx::imageToGreyscale));
@@ -643,6 +630,8 @@ public class TileMapEditor {
         editCanvas.foodVisibleProperty().bind(foodVisibleProperty());
         editCanvas.actorsVisibleProperty().bind(actorsVisibleProperty());
 
+        editCanvas.obstacleEditor().setOnEditTile(
+            (tile, code) -> new Action_SetTileCode(this, currentWorldMap(), LayerID.TERRAIN, tile, code).execute());
         editCanvas.setOnContextMenuRequested(event -> editCanvas.onContextMenuRequested(this, event));
         editCanvas.setOnMouseClicked(event -> editCanvas.onMouseClicked(this, event));
         editCanvas.setOnMouseMoved(event -> editCanvas.onMouseMoved(this, event));
