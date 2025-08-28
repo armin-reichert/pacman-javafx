@@ -12,9 +12,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Optional;
 
+import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.*;
-import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.FILTER_IMAGE_FILES;
-import static de.amr.pacmanfx.tilemap.editor.TemplateImageManager.*;
 
 public class Action_OpenTemplateCreateMap extends AbstractEditorAction<Void> {
 
@@ -35,6 +34,10 @@ public class Action_OpenTemplateCreateMap extends AbstractEditorAction<Void> {
             }
         });
         return null;
+    }
+
+    private boolean isTemplateImageSizeOk(Image image) {
+        return image.getHeight() % TS == 0 && image.getWidth() % TS == 0;
     }
 
     private Optional<Image> openTemplateImage(Window window, String title, File currentDirectory) {

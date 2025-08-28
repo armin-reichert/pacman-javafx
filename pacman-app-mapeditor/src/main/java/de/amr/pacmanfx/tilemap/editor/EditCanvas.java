@@ -34,7 +34,6 @@ import java.util.function.Predicate;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.*;
-import static de.amr.pacmanfx.tilemap.editor.TemplateImageManager.isTemplateImageSizeOk;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.*;
 import static de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites.*;
 import static java.util.Objects.requireNonNull;
@@ -370,6 +369,9 @@ public class EditCanvas extends Canvas {
         }
     }
 
+    private boolean isTemplateImageSizeOk(Image image) {
+        return image.getHeight() % TS == 0 && image.getWidth() % TS == 0;
+    }
 
     public void onContextMenuRequested(TileMapEditor editor, ContextMenuEvent menuEvent) {
         if (editor.editModeIs(EditMode.INSPECT)) {
