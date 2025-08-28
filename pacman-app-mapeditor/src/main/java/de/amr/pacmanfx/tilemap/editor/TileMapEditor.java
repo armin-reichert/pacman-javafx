@@ -61,6 +61,12 @@ public class TileMapEditor {
         private boolean obstaclesUpToDate;
         private boolean redrawRequested;
 
+        private final List<Vector2i> tilesWithErrors = new ArrayList<>();
+
+        public List<Vector2i> tilesWithErrors() {
+            return tilesWithErrors;
+        }
+
         public void setEdited(boolean edited) { this.edited = edited; }
 
         public boolean isEdited() { return edited; }
@@ -94,34 +100,40 @@ public class TileMapEditor {
                 obstaclesUpToDate = true;
                 requestRedraw();
             }
+            if (terrainMapChanged || foodMapChanged) {
+                sourceCode.set(sourceCode());
+                requestRedraw();
+
+            }
             if (terrainMapChanged) {
                 if (terrainMapPropertiesEditor != null) {
                     terrainMapPropertiesEditor.setTileMap(currentWorldMap(), LayerID.TERRAIN);
                 }
                 mazePreview3D.updateTerrain();
-                updateSourceCode();
                 terrainMapChanged = false;
-                Logger.trace("Terrain map updated");
-                requestRedraw();
             }
             if (foodMapChanged) {
                 if (foodMapPropertiesEditor != null) {
                     foodMapPropertiesEditor.setTileMap(currentWorldMap(), LayerID.FOOD);
                 }
                 mazePreview3D.updateFood();
-                updateSourceCode();
                 foodMapChanged = false;
-                Logger.trace("Food map updated");
-                requestRedraw();
             }
+        }
+
+        private String sourceCode() {
+            StringBuilder sb = new StringBuilder();
+            String[] sourceTextLines = WorldMapFormatter.formatted(currentWorldMap()).split("\n");
+            for (int i = 0; i < sourceTextLines.length; ++i) {
+                sb.append("%5d: ".formatted(i + 1)).append(sourceTextLines[i]).append("\n");
+            }
+            return sb.toString();
         }
     }
 
     private final ChangeManager changeManager = new ChangeManager();
     private final MessageManager messageManager = new MessageManager();
     private final UpdateTimer updateTimer;
-
-    private final List<Vector2i> tilesWithErrors = new ArrayList<>();
 
     private final BorderPane contentPane = new BorderPane();
     private final Stage stage;
@@ -589,10 +601,6 @@ public class TileMapEditor {
         tabPaneEditorViews.getSelectionModel().select(tabTemplateImage);
     }
 
-    public List<Vector2i> tilesWithErrors() {
-        return tilesWithErrors;
-    }
-
     public void showEditHelpText() {
         messageManager.showMessage(translated("edit_help"), 30, MessageType.INFO);
     }
@@ -1028,15 +1036,6 @@ public class TileMapEditor {
                 messageManager.showMessage("Template image size seems dubious", 3, MessageType.WARNING);
             }
         });
-    }
-
-    private void updateSourceCode() {
-        StringBuilder sb = new StringBuilder();
-        String[] sourceTextLines = WorldMapFormatter.formatted(currentWorldMap()).split("\n");
-        for (int i = 0; i < sourceTextLines.length; ++i) {
-            sb.append("%5d: ".formatted(i + 1)).append(sourceTextLines[i]).append("\n");
-        }
-        sourceCode.set(sb.toString());
     }
 
     // Sample maps loading
