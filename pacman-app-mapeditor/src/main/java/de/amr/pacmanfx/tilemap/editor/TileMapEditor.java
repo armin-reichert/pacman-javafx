@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tilemap.editor;
 
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.lib.tilemap.WorldMapFormatter;
 import de.amr.pacmanfx.tilemap.editor.actions.*;
@@ -554,23 +553,6 @@ public class TileMapEditor {
 
     // Controller part
 
-    public void selectNextEditMode() {
-        switch (editMode()) {
-            case INSPECT -> {
-                setEditMode(EditMode.EDIT);
-                setSymmetricEditMode(false);
-            }
-            case EDIT -> {
-                if (symmetricEditMode()) {
-                    setEditMode(EditMode.ERASE);
-                } else {
-                    setSymmetricEditMode(true);
-                }
-            }
-            case ERASE -> setEditMode(EditMode.INSPECT);
-        }
-    }
-
     public void onKeyPressed(KeyEvent e) {
         KeyCode key = e.getCode();
         boolean alt = e.isAltDown();
@@ -592,17 +574,8 @@ public class TileMapEditor {
     public void onKeyTyped(KeyEvent e) {
         String ch = e.getCharacter();
         if (ch.equals("e")) {
-            selectNextEditMode();
+            new Action_SelectNextEditMode(this).execute();
         }
-    }
-
-    //TODO make action from this
-    public void editFoodAtTile(Vector2i tile) {
-        if (ui.selectedPalette().isToolSelected()) {
-            ui.selectedPalette().selectedTool().editor().accept(LayerID.FOOD, tile);
-        }
-        changeManager().setFoodMapChanged();
-        changeManager().setEdited(true);
     }
 
     // Sample maps loading

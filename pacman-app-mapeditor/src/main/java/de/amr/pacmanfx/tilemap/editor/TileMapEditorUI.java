@@ -7,6 +7,7 @@ package de.amr.pacmanfx.tilemap.editor;
 import de.amr.pacmanfx.lib.tilemap.*;
 import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.tilemap.editor.actions.Action_OpenTemplateCreateMap;
+import de.amr.pacmanfx.tilemap.editor.actions.Action_SelectNextEditMode;
 import de.amr.pacmanfx.tilemap.editor.actions.Action_SetTileCode;
 import de.amr.pacmanfx.tilemap.editor.rendering.TerrainTileMapRenderer;
 import de.amr.pacmanfx.uilib.Ufx;
@@ -520,7 +521,7 @@ public class TileMapEditorUI {
                         case ERASE   -> Color.RED;
                     }));
 
-            label.setOnMouseClicked(e -> editor.selectNextEditMode());
+            label.setOnMouseClicked(e -> new Action_SelectNextEditMode(editor).execute());
         }
     }
 
