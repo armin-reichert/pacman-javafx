@@ -333,13 +333,17 @@ public class EditCanvas extends Canvas {
     }
 
     public void onMouseReleased(TileMapEditor editor, MouseEvent mouseEvent) {
-        if (mouseEvent.getButton() == MouseButton.PRIMARY) {
-            if (dragging) {
-                dragging = false;
-                obstacleEditor.endEditing();
+        if (mouseEvent.getButton() != MouseButton.PRIMARY) return;
+        if (dragging) {
+            dragging = false;
+            obstacleEditor.endEditing();
+        } else {
+            Vector2i tile = tileAt(mouseEvent.getX(), mouseEvent.getY());
+            if (editor.editModeIs(EditMode.INSPECT)) {
+                new Action_IdentifyObstacle(editor, tile).execute();
             } else {
                 boolean erase = mouseEvent.isControlDown();
-                new Action_EditTileAtMousePosition(editor, mouseEvent.getX(), mouseEvent.getY(), erase).execute();
+                new Action_EditTile(editor, tile, erase).execute();
             }
         }
     }
