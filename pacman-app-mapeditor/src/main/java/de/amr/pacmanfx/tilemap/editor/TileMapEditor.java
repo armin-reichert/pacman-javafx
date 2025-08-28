@@ -143,8 +143,8 @@ public class TileMapEditor {
     private ScrollPane spPreview2D;
     private Preview3D preview3D;
     private TextArea sourceView;
-    private SplitPane splitPaneEditorAndPreviews;
-    private TabPane tabPaneWithPalettes;
+    private SplitPane splitEditorAndPreviewArea;
+    private TabPane tabPaneForPalettes;
     private HBox statusLine;
     private Slider sliderZoom;
     private TabPane tabPaneEditorViews;
@@ -183,26 +183,18 @@ public class TileMapEditor {
         this.stage = requireNonNull(stage);
         this.model3DRepository = requireNonNull(model3DRepository);
 
-        createEditCanvas();
-        createPreview2D();
-        createPreview3D();
-        createTemplateImageCanvas();
-        createMapSourceView();
+        createEditArea();
+        createPreviewArea();
         createPalettes(editCanvas.terrainRenderer(), editCanvas.foodRenderer());
         createPropertyEditors();
-        createTabPaneWithEditViews();
-        createTabPaneWithPreviews();
-        createZoomControl();
         createStatusLine();
-
-        arrangeMainLayout();
+        arrangeContent();
 
         menuBar = new EditorMenuBar(this);
         loadSampleMapsAndUpdateMenu(menuBar.menuMaps());
 
         contentPane.setOnKeyTyped(this::onKeyTyped);
         contentPane.setOnKeyPressed(this::onKeyPressed);
-
     }
 
     public void init(File workDir) {
@@ -589,7 +581,7 @@ public class TileMapEditor {
     }
 
     public byte selectedPaletteID() {
-        return (Byte) tabPaneWithPalettes.getSelectionModel().getSelectedItem().getUserData();
+        return (Byte) tabPaneForPalettes.getSelectionModel().getSelectedItem().getUserData();
     }
 
     public Palette selectedPalette() {
@@ -675,7 +667,7 @@ public class TileMapEditor {
         spTemplateImage = new ScrollPane(pane);
     }
 
-    private void createMapSourceView() {
+    private void createSourceView() {
         sourceView = new TextArea();
         sourceView.setEditable(false);
         sourceView.setWrapText(false);
@@ -686,7 +678,10 @@ public class TileMapEditor {
         sourceView.textProperty().bind(sourceCode);
     }
 
-    private void createTabPaneWithEditViews() {
+    private void createEditArea() {
+        createEditCanvas();
+        createTemplateImageCanvas();
+
         tabEditCanvas = new Tab(translated("tab_editor"), spEditCanvas);
 
         var dropHintButton = new Button(translated("image_drop_hint"));
@@ -732,7 +727,11 @@ public class TileMapEditor {
         });
     }
 
-    private void createTabPaneWithPreviews() {
+    private void createPreviewArea() {
+        createPreview2D();
+        createPreview3D();
+        createSourceView();
+
         tabPreview2D = new Tab(translated("preview2D"), spPreview2D);
         Tab tabPreview3D = new Tab(translated("preview3D"), preview3D.getSubScene());
         Tab tabSourceView = new Tab(translated("source"), sourceView);
@@ -745,8 +744,8 @@ public class TileMapEditor {
         preview3D.getSubScene().widthProperty().bind(tabPane.widthProperty());
         preview3D.getSubScene().heightProperty().bind(tabPane.heightProperty());
 
-        splitPaneEditorAndPreviews = new SplitPane(tabPaneEditorViews, tabPane);
-        splitPaneEditorAndPreviews.setDividerPositions(0.5);
+        splitEditorAndPreviewArea = new SplitPane(tabPaneEditorViews, tabPane);
+        splitEditorAndPreviewArea.setDividerPositions(0.5);
     }
 
     private void createPalettes(TerrainTileMapRenderer terrainRenderer, FoodMapRenderer foodRenderer) {
@@ -766,9 +765,9 @@ public class TileMapEditor {
         tabActors.setClosable(false);
         tabActors.setUserData(PALETTE_ID_ACTORS);
 
-        tabPaneWithPalettes = new TabPane(tabTerrain, tabPellets, tabActors);
-        tabPaneWithPalettes.setPadding(new Insets(5, 5, 5, 5));
-        tabPaneWithPalettes.setMinHeight(75);
+        tabPaneForPalettes = new TabPane(tabTerrain, tabPellets, tabActors);
+        tabPaneForPalettes.setPadding(new Insets(5, 5, 5, 5));
+        tabPaneForPalettes.setMinHeight(75);
     }
 
     private void createPropertyEditors() {
@@ -800,7 +799,7 @@ public class TileMapEditor {
         Tooltip tt = new Tooltip();
         tt.setShowDelay(Duration.millis(50));
         tt.setFont(Font.font(14));
-        tt.textProperty().bind(gridSizeProperty().map("Grid Size: %s"::formatted));
+        tt.textProperty().bind(gridSizeProperty().map("Grid Size: %.0f"::formatted));
         sliderZoom.setTooltip(tt);
     }
 
@@ -820,6 +819,8 @@ public class TileMapEditor {
 
         var statusIndicator = new StatusIndicator();
         statusIndicator.setAlignment(Pos.BASELINE_RIGHT);
+
+        createZoomControl();
 
         statusLine = new HBox(
             lblMapSize,
@@ -864,15 +865,14 @@ public class TileMapEditor {
         }
     }
 
-    private void arrangeMainLayout() {
-        var contentArea = new VBox(tabPaneWithPalettes, splitPaneEditorAndPreviews, statusLine);
-        contentArea.setPadding(new Insets(0,5,0,5));
-        VBox.setVgrow(tabPaneWithPalettes, Priority.NEVER);
-        VBox.setVgrow(splitPaneEditorAndPreviews, Priority.ALWAYS);
+    private void arrangeContent() {
+        var content = new VBox(tabPaneForPalettes, splitEditorAndPreviewArea, statusLine);
+        content.setPadding(new Insets(0,5,0,5));
+        VBox.setVgrow(tabPaneForPalettes, Priority.NEVER);
+        VBox.setVgrow(splitEditorAndPreviewArea, Priority.ALWAYS);
         VBox.setVgrow(statusLine, Priority.NEVER);
-
         contentPane.setLeft(propertyEditorsPane);
-        contentPane.setCenter(contentArea);
+        contentPane.setCenter(content);
     }
 
     private StringBinding createTitleBinding() {
