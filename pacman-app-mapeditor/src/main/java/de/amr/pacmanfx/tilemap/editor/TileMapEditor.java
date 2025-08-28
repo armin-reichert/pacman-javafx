@@ -996,8 +996,8 @@ public class TileMapEditor {
     }
 
     private void onKeyTyped(KeyEvent e) {
-        String key = e.getCharacter();
-        if (key.equals("e")) {
+        String ch = e.getCharacter();
+        if (ch.equals("e")) {
             selectNextEditMode();
         }
     }
@@ -1018,10 +1018,6 @@ public class TileMapEditor {
         }
         changeManager().setFoodMapChanged();
         changeManager().setEdited(true);
-    }
-
-    public void setTileValue(WorldMap worldMap, LayerID layerID, int row, int col, byte code) {
-        new Action_SetTileValue(this, worldMap, layerID, new Vector2i(col, row), code).execute();
     }
 
     void openTemplateImageAndCreateMap() {

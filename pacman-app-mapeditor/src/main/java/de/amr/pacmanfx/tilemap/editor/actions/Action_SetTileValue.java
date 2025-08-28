@@ -28,6 +28,9 @@ public class Action_SetTileValue extends AbstractEditorAction<Void> {
         this.code = code;
     }
 
+    public Action_SetTileValue(TileMapEditor editor, WorldMap worldMap, LayerID layerID, int row, int col, byte code) {
+        this(editor, worldMap, layerID, Vector2i.of(col, row), code);
+    }
 
     @Override
     public Void execute() {

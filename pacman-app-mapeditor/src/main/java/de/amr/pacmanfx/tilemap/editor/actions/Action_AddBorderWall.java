@@ -5,7 +5,6 @@ import de.amr.pacmanfx.lib.tilemap.TerrainTile;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
 
-import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.EMPTY_ROWS_BEFORE_MAZE;
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.EMPTY_ROWS_BELOW_MAZE;
 import static java.util.Objects.requireNonNull;
 
@@ -18,21 +17,35 @@ public class Action_AddBorderWall extends AbstractEditorAction<Void> {
         this.worldMap = requireNonNull(worldMap);
     }
 
+    private void setTerrain(int row, int col, TerrainTile terrainTile) {
+        new Action_SetTileValue(editor, worldMap, LayerID.TERRAIN, row, col, terrainTile.code()).execute();
+    }
+
     @Override
     public Void execute() {
-        int lastRow = worldMap.numRows() - 1 - EMPTY_ROWS_BELOW_MAZE, lastCol = worldMap.numCols() - 1;
-        editor.setTileValue(worldMap, LayerID.TERRAIN, EMPTY_ROWS_BEFORE_MAZE, 0, TerrainTile.ARC_NW.$);
-        editor.setTileValue(worldMap, LayerID.TERRAIN, EMPTY_ROWS_BEFORE_MAZE, lastCol, TerrainTile.ARC_NE.$);
-        editor.setTileValue(worldMap, LayerID.TERRAIN, lastRow, 0, TerrainTile.ARC_SW.$);
-        editor.setTileValue(worldMap, LayerID.TERRAIN, lastRow, lastCol, TerrainTile.ARC_SE.$);
-        for (int row = EMPTY_ROWS_BEFORE_MAZE + 1; row < lastRow; ++row) {
-            editor.setTileValue(worldMap, LayerID.TERRAIN, row, 0, TerrainTile.WALL_V.$);
-            editor.setTileValue(worldMap, LayerID.TERRAIN, row, lastCol, TerrainTile.WALL_V.$);
+        int firstRow = EMPTY_ROWS_BELOW_MAZE;
+        int lastRow = worldMap.numRows() - 1 - EMPTY_ROWS_BELOW_MAZE;
+        int firstCol = 0;
+        int lastCol = worldMap.numCols() - 1;
+
+        // Corners
+        setTerrain(firstRow, firstCol, TerrainTile.ARC_NW);
+        setTerrain(firstRow, lastCol,  TerrainTile.ARC_NE);
+        setTerrain(lastRow,  firstCol, TerrainTile.ARC_SW);
+        setTerrain(lastRow,  lastCol,  TerrainTile.ARC_SE);
+
+        // Left and right border
+        for (int row = firstRow + 1; row < lastRow; ++row) {
+            setTerrain(row, firstCol, TerrainTile.WALL_V);
+            setTerrain(row, lastCol,  TerrainTile.WALL_V);
         }
+
+        // Top and bottom border
         for (int col = 1; col < lastCol; ++col) {
-            editor.setTileValue(worldMap, LayerID.TERRAIN, EMPTY_ROWS_BEFORE_MAZE, col, TerrainTile.WALL_H.$);
-            editor.setTileValue(worldMap, LayerID.TERRAIN, lastRow, col, TerrainTile.WALL_H.$);
+            setTerrain(firstRow, col, TerrainTile.WALL_H);
+            setTerrain(lastRow,  col, TerrainTile.WALL_H);
         }
+
         editor.changeManager().setTerrainMapChanged();
         return null;
     }
