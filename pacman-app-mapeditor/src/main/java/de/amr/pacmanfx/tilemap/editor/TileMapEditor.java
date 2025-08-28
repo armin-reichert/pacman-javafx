@@ -33,7 +33,6 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -109,14 +108,14 @@ public class TileMapEditor {
                 if (terrainMapPropertiesEditor != null) {
                     terrainMapPropertiesEditor.setTileMap(currentWorldMap(), LayerID.TERRAIN);
                 }
-                mazePreview3D.updateTerrain();
+                preview3D.updateTerrain();
                 terrainMapChanged = false;
             }
             if (foodMapChanged) {
                 if (foodMapPropertiesEditor != null) {
                     foodMapPropertiesEditor.setTileMap(currentWorldMap(), LayerID.FOOD);
                 }
-                mazePreview3D.updateFood();
+                preview3D.updateFood();
                 foodMapChanged = false;
             }
         }
@@ -133,31 +132,33 @@ public class TileMapEditor {
 
     private final ChangeManager changeManager = new ChangeManager();
     private final MessageManager messageManager = new MessageManager();
-    private final UpdateTimer updateTimer;
+    private final UpdateTimer updateTimer = new UpdateTimer();
 
-    private final BorderPane contentPane = new BorderPane();
     private final Stage stage;
+    private final BorderPane contentPane = new BorderPane();
     private Pane propertyEditorsPane;
     private EditCanvas editCanvas;
     private ScrollPane spEditCanvas;
+    private Preview2D preview2D;
     private ScrollPane spPreview2D;
-    private EditorMazePreview2D preview2D;
+    private Preview3D preview3D;
     private TextArea sourceView;
-    private ScrollPane spTemplateImage;
-    private Pane templateImageDropTarget;
     private SplitPane splitPaneEditorAndPreviews;
     private TabPane tabPaneWithPalettes;
-    private Slider sliderZoom;
     private HBox statusLine;
+    private Slider sliderZoom;
     private TabPane tabPaneEditorViews;
     private Tab tabEditCanvas;
     private Tab tabTemplateImage;
     private TemplateImageCanvas templateImageCanvas;
+    private Pane templateImageDropTarget;
+    private ScrollPane spTemplateImage;
     private Tab tabPreview2D;
-    private EditorMazePreview3D mazePreview3D;
 
     private final EditorMenuBar menuBar;
+
     private final Palette[] palettes = new Palette[3];
+
     private PropertyEditorPane terrainMapPropertiesEditor;
     private PropertyEditorPane foodMapPropertiesEditor;
 
@@ -181,9 +182,7 @@ public class TileMapEditor {
     public TileMapEditor(Stage stage, Model3DRepository model3DRepository) {
         this.stage = requireNonNull(stage);
         this.model3DRepository = requireNonNull(model3DRepository);
-        this.menuBar = new EditorMenuBar(this);
 
-        createObstacleEditor();
         createEditCanvas();
         createPreview2D();
         createPreview3D();
@@ -198,12 +197,12 @@ public class TileMapEditor {
 
         arrangeMainLayout();
 
+        menuBar = new EditorMenuBar(this);
         loadSampleMapsAndUpdateMenu(menuBar.menuMaps());
 
         contentPane.setOnKeyTyped(this::onKeyTyped);
         contentPane.setOnKeyPressed(this::onKeyPressed);
 
-        updateTimer = new UpdateTimer();
     }
 
     public void init(File workDir) {
@@ -211,7 +210,7 @@ public class TileMapEditor {
         WorldMap emptyMap = new Action_CreateEmptyMap(this, 36, 28).execute();
         setCurrentWorldMap(emptyMap);
         setEditMode(EditMode.INSPECT);
-        mazePreview3D.reset();
+        preview3D.reset();
         changeManager.edited = false;
     }
 
@@ -648,7 +647,7 @@ public class TileMapEditor {
     }
 
     private void createPreview2D() {
-        preview2D = new EditorMazePreview2D();
+        preview2D = new Preview2D();
         preview2D.widthProperty().bind(editCanvas.widthProperty());
         preview2D.heightProperty().bind(editCanvas.heightProperty());
         preview2D.gridSizeProperty().bind(gridSizeProperty());
@@ -663,10 +662,10 @@ public class TileMapEditor {
     }
 
     private void createPreview3D() {
-        mazePreview3D = new EditorMazePreview3D(this, model3DRepository, 500, 500);
-        mazePreview3D.foodVisibleProperty().bind(foodVisibleProperty());
-        mazePreview3D.terrainVisibleProperty().bind(terrainVisibleProperty());
-        mazePreview3D.worldMapProperty().bind(currentWorldMap);
+        preview3D = new Preview3D(this, model3DRepository, 500, 500);
+        preview3D.foodVisibleProperty().bind(foodVisibleProperty());
+        preview3D.terrainVisibleProperty().bind(terrainVisibleProperty());
+        preview3D.worldMapProperty().bind(currentWorldMap);
     }
 
     private void createTemplateImageCanvas() {
@@ -735,7 +734,7 @@ public class TileMapEditor {
 
     private void createTabPaneWithPreviews() {
         tabPreview2D = new Tab(translated("preview2D"), spPreview2D);
-        Tab tabPreview3D = new Tab(translated("preview3D"), mazePreview3D.getSubScene());
+        Tab tabPreview3D = new Tab(translated("preview3D"), preview3D.getSubScene());
         Tab tabSourceView = new Tab(translated("source"), sourceView);
 
         TabPane tabPane = new TabPane(tabPreview2D, tabPreview3D, tabSourceView);
@@ -743,8 +742,8 @@ public class TileMapEditor {
         tabPane.getTabs().forEach(tab -> tab.setClosable(false));
         tabPane.getSelectionModel().select(tabPreview2D);
 
-        mazePreview3D.getSubScene().widthProperty().bind(tabPane.widthProperty());
-        mazePreview3D.getSubScene().heightProperty().bind(tabPane.heightProperty());
+        preview3D.getSubScene().widthProperty().bind(tabPane.widthProperty());
+        preview3D.getSubScene().heightProperty().bind(tabPane.heightProperty());
 
         splitPaneEditorAndPreviews = new SplitPane(tabPaneEditorViews, tabPane);
         splitPaneEditorAndPreviews.setDividerPositions(0.5);

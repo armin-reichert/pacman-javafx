@@ -25,7 +25,7 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.getColorFromMap;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.parseColor;
 
-public class EditorMazePreview2D extends Canvas {
+public class Preview2D extends Canvas {
 
     private final TerrainMapRenderer terrainRenderer;
     private final FoodMapRenderer foodMapRenderer;
@@ -37,7 +37,7 @@ public class EditorMazePreview2D extends Canvas {
     private final BooleanProperty foodVisible = new SimpleBooleanProperty(true);
     private final BooleanProperty actorsVisible = new SimpleBooleanProperty(true);
 
-    public EditorMazePreview2D() {
+    public Preview2D() {
         terrainRenderer = new TerrainMapRenderer(this);
         terrainRenderer.scalingProperty().bind(gridSize.divide(TS));
         foodMapRenderer = new FoodMapRenderer(this);
