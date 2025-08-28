@@ -36,24 +36,25 @@ public class EditorMenuBar extends MenuBar {
 
     public EditorMenuBar(TileMapEditor editor) {
 
-        // File
+        // "File" menu
+
         var miNewPreconfiguredMap = new MenuItem(translated("menu.file.new"));
-        miNewPreconfiguredMap.setOnAction(e -> new Action_ShowNewMapDialog(editor, true).execute());
+        miNewPreconfiguredMap.setOnAction(actionEvent -> new Action_ShowNewMapDialog(editor, true).execute());
 
         var miNewBlankMap = new MenuItem(translated("menu.file.new_blank_map"));
-        miNewBlankMap.setOnAction(e -> new Action_ShowNewMapDialog(editor, false).execute());
+        miNewBlankMap.setOnAction(actionEvent -> new Action_ShowNewMapDialog(editor, false).execute());
 
         var miOpenMapFile = new MenuItem(translated("menu.file.open"));
-        miOpenMapFile.setOnAction(e -> new Action_OpenMapFileInteractively(editor).execute());
+        miOpenMapFile.setOnAction(actionEvent -> new Action_OpenMapFileInteractively(editor).execute());
 
         var miSaveMapFileAs = new MenuItem(translated("menu.file.save_as"));
-        miSaveMapFileAs.setOnAction(e -> new Action_SaveMapFile(editor).execute());
+        miSaveMapFileAs.setOnAction(actionEvent -> new Action_SaveMapFile(editor).execute());
 
         var miOpenTemplateImage = new MenuItem(translated("menu.file.open_template_image"));
-        miOpenTemplateImage.setOnAction(e -> editor.openTemplateImageAndCreateMap());
+        miOpenTemplateImage.setOnAction(actionEvent -> new Action_OpenTemplateCreateMap(editor).execute());
 
         var miCloseTemplateImage = new MenuItem(translated("menu.file.close_template_image"));
-        miCloseTemplateImage.setOnAction(e -> editor.setTemplateImage(null));
+        miCloseTemplateImage.setOnAction(actionEvent -> editor.setTemplateImage(null));
 
         menuFile = new Menu(translated("menu.file"), NO_GRAPHIC,
             miNewPreconfiguredMap,
@@ -64,16 +65,17 @@ public class EditorMenuBar extends MenuBar {
             miOpenTemplateImage,
             miCloseTemplateImage);
 
-        // Edit
+        // "Edit" menu
+
         var miObstacleJoining = new CheckMenuItem(translated("menu.edit.obstacles_joining"));
         miObstacleJoining.selectedProperty().bindBidirectional(editor.obstaclesJoiningProperty());
 
         var miAddBorder = new MenuItem(translated("menu.edit.add_border"));
-        miAddBorder.setOnAction(e -> new Action_AddBorderWall(editor, editor.currentWorldMap()).execute());
+        miAddBorder.setOnAction(actionEvent -> new Action_AddBorderWall(editor, editor.currentWorldMap()).execute());
         miAddBorder.disableProperty().bind(editor.editModeProperty().map(mode -> mode == EditMode.INSPECT));
 
         var miAddHouse = new MenuItem(translated("menu.edit.add_house"));
-        miAddHouse.setOnAction(e -> {
+        miAddHouse.setOnAction(actionEvent -> {
             int numRows = editor.currentWorldMap().numRows(), numCols = editor.currentWorldMap().numCols();
             int houseMinX = numCols / 2 - 4, houseMinY = numRows / 2 - 3;
             new Action_PlaceArcadeHouse(editor, editor.currentWorldMap(), Vector2i.of(houseMinX, houseMinY)).execute();
@@ -82,7 +84,7 @@ public class EditorMenuBar extends MenuBar {
         miAddHouse.disableProperty().bind(editor.editModeProperty().map(mode -> mode == EditMode.INSPECT));
 
         var miClearTerrain = new MenuItem(translated("menu.edit.clear_terrain"));
-        miClearTerrain.setOnAction(e -> {
+        miClearTerrain.setOnAction(actionEvent -> {
             editor.currentWorldMap().layer(LayerID.TERRAIN).setAll(TerrainTile.EMPTY.$);
             editor.changeManager().setTerrainMapChanged();
             editor.changeManager().setEdited(true);
@@ -90,7 +92,7 @@ public class EditorMenuBar extends MenuBar {
         miClearTerrain.disableProperty().bind(editor.editModeProperty().map(mode -> mode == EditMode.INSPECT));
 
         var miClearFood = new MenuItem(translated("menu.edit.clear_food"));
-        miClearFood.setOnAction(e -> {
+        miClearFood.setOnAction(actionEvent -> {
             editor.currentWorldMap().layer(LayerID.FOOD).setAll(FoodTile.EMPTY.code());
             editor.changeManager().setFoodMapChanged();
             editor.changeManager().setEdited(true);
@@ -103,11 +105,11 @@ public class EditorMenuBar extends MenuBar {
                         || editor.templateImageProperty().get() == null,
                 editor.editModeProperty(), editor.templateImageProperty()));
 
-        miIdentifyTiles.setOnAction(e -> new Action_FillMapFromTemplate(editor,
+        miIdentifyTiles.setOnAction(actionEvent -> new Action_FillMapFromTemplate(editor,
                 editor.currentWorldMap(), editor.templateImage()).execute());
 
         var miAssignDefaultColors = new MenuItem("Assign default colors"); //TODO localize
-        miAssignDefaultColors.setOnAction(e -> new Action_SetDefaultMapColors(editor, editor.currentWorldMap()).execute());
+        miAssignDefaultColors.setOnAction(actionEvent -> new Action_SetDefaultMapColors(editor, editor.currentWorldMap()).execute());
         miAssignDefaultColors.disableProperty().bind(editor.editModeProperty().map(mode -> mode == EditMode.INSPECT));
 
         menuEdit = new Menu(translated("menu.edit"), NO_GRAPHIC,
@@ -120,10 +122,12 @@ public class EditorMenuBar extends MenuBar {
             miIdentifyTiles,
             miAssignDefaultColors);
 
-        // Maps
+        // "Maps" menu
+
         menuMaps = new Menu(translated("menu.load_map"));
 
-        // View
+        // "View" menu
+
         var miPropertiesVisible = new CheckMenuItem(translated("menu.view.properties"));
         miPropertiesVisible.selectedProperty().bindBidirectional(editor.propertyEditorsVisibleProperty());
 
