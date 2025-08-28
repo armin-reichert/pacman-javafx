@@ -95,7 +95,6 @@ public class ObstacleEditor {
                 maxTile = anchor;
             }
         }
-        changeManager.requestRedraw();
     }
 
     public void endEditing() {

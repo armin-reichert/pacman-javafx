@@ -113,18 +113,10 @@ public class TileMapEditorUI {
     }
 
     public void draw() {
-        Logger.info("Draw editor UI");
         final WorldMap worldMap = editor.currentWorldMap();
-        //TODO avoid creation in every draw call
-        var colorScheme = new TerrainMapColorScheme(
-                COLOR_CANVAS_BACKGROUND,
-                getColorFromMap(worldMap, LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_FILL, parseColor(MS_PACMAN_COLOR_WALL_FILL)),
-                getColorFromMap(worldMap, LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_STROKE, parseColor(MS_PACMAN_COLOR_WALL_STROKE)),
-                getColorFromMap(worldMap, LayerID.TERRAIN, WorldMapProperty.COLOR_DOOR, parseColor(MS_PACMAN_COLOR_DOOR))
-        );
+        TerrainMapColorScheme colorScheme = currentColorScheme(worldMap);
         palettes.get(selectedPaletteID()).draw();
         if (tabEditCanvas.isSelected()) {
-            //TODO reconsider
             editCanvas.draw(editor.changeManager(), colorScheme);
         }
         else if (tabTemplateImage.isSelected()) {
@@ -135,6 +127,17 @@ public class TileMapEditorUI {
         }
         palettes.values().forEach(Palette::draw);
     }
+
+    //TODO avoid call in every animation frame
+    private TerrainMapColorScheme currentColorScheme(WorldMap worldMap) {
+        return new TerrainMapColorScheme(
+                COLOR_CANVAS_BACKGROUND,
+                getColorFromMap(worldMap, LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_FILL, parseColor(MS_PACMAN_COLOR_WALL_FILL)),
+                getColorFromMap(worldMap, LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_STROKE, parseColor(MS_PACMAN_COLOR_WALL_STROKE)),
+                getColorFromMap(worldMap, LayerID.TERRAIN, WorldMapProperty.COLOR_DOOR, parseColor(MS_PACMAN_COLOR_DOOR))
+        );
+    }
+
 
     public Stage stage() {
         return stage;
@@ -339,7 +342,6 @@ public class TileMapEditorUI {
         tabPaneForPalettes.getSelectionModel().selectedItemProperty().addListener((py, ov, selectedTab) -> {
             editor.setPaletteID((PaletteID) selectedTab.getUserData());
             updatePalettesTabPaneDisplay(selectedTab);
-            editor.changeManager().requestRedraw();
         });
 
         updatePalettesTabPaneDisplay(tabPaneForPalettes.getSelectionModel().getSelectedItem());

@@ -36,7 +36,6 @@ public class TileMapEditor {
         private boolean terrainMapChanged;
         private boolean foodMapChanged;
         private boolean obstaclesUpToDate;
-        private boolean redrawRequested;
 
         private final List<Vector2i> tilesWithErrors = new ArrayList<>();
 
@@ -46,9 +45,6 @@ public class TileMapEditor {
 
         public void setEdited(boolean edited) {
             this.edited = edited;
-            if (edited) {
-                requestRedraw();
-            }
         }
 
         public boolean isEdited() { return edited; }
@@ -56,30 +52,15 @@ public class TileMapEditor {
         public void setWorldMapChanged() {
             setTerrainMapChanged();
             setFoodMapChanged();
-            requestRedraw();
         }
 
         public void setTerrainMapChanged() {
             terrainMapChanged = true;
             obstaclesUpToDate = false;
-            requestRedraw();
         }
 
         public void setFoodMapChanged() {
             foodMapChanged = true;
-            requestRedraw();
-        }
-
-        public void requestRedraw() {
-            redrawRequested = true;
-        }
-
-        public boolean isRedrawRequested() {
-            return redrawRequested;
-        }
-
-        public void clearRedrawRequest() {
-            redrawRequested = false;
         }
 
         private void processChanges() {
@@ -87,22 +68,18 @@ public class TileMapEditor {
                 tilesWithErrors.clear();
                 tilesWithErrors.addAll(currentWorldMap().buildObstacleList());
                 obstaclesUpToDate = true;
-                requestRedraw();
             }
             if (terrainMapChanged || foodMapChanged) {
                 sourceCode.set(sourceCode());
-                requestRedraw();
             }
             if (terrainMapChanged) {
                 //TODO use events?
                 ui.onTerrainMapChanged(currentWorldMap());
                 terrainMapChanged = false;
-                requestRedraw();
             }
             if (foodMapChanged) {
                 ui.onFoodMapChanged(currentWorldMap());
                 foodMapChanged = false;
-                requestRedraw();
             }
         }
 
@@ -126,13 +103,10 @@ public class TileMapEditor {
         public void handle(long now) {
             messageManager.update();
             changeManager.processChanges();
-            if (changeManager.isRedrawRequested()) {
-                try {
-                    ui.draw();
-                    changeManager.clearRedrawRequest();
-                } catch (Exception x) {
-                    Logger.error(x);
-                }
+            try {
+                ui.draw();
+            } catch (Exception x) {
+                Logger.error(x);
             }
         }
     }
@@ -173,12 +147,7 @@ public class TileMapEditor {
 
     public BooleanProperty actorsVisibleProperty() {
         if (actorsVisible == null) {
-            actorsVisible = new SimpleBooleanProperty(DEFAULT_ACTORS_VISIBLE) {
-                @Override
-                protected void invalidated() {
-                    changeManager.requestRedraw();
-                }
-            };
+            actorsVisible = new SimpleBooleanProperty(DEFAULT_ACTORS_VISIBLE);
         }
         return actorsVisible;
     }
@@ -268,12 +237,7 @@ public class TileMapEditor {
 
     public DoubleProperty gridSizeProperty() {
         if (gridSize == null) {
-            gridSize = new SimpleDoubleProperty(DEFAULT_GRID_SIZE) {
-                @Override
-                protected void invalidated() {
-                    changeManager.requestRedraw();
-                }
-            };
+            gridSize = new SimpleDoubleProperty(DEFAULT_GRID_SIZE);
         }
         return gridSize;
     }
@@ -292,12 +256,7 @@ public class TileMapEditor {
 
     public BooleanProperty foodVisibleProperty() {
         if (foodVisible == null) {
-            foodVisible = new SimpleBooleanProperty(DEFAULT_FOOD_VISIBLE) {
-                @Override
-                protected void invalidated() {
-                    changeManager.requestRedraw();
-                }
-            };
+            foodVisible = new SimpleBooleanProperty(DEFAULT_FOOD_VISIBLE);
         }
         return foodVisible;
     }
@@ -318,12 +277,7 @@ public class TileMapEditor {
 
     public BooleanProperty gridVisibleProperty() {
         if (gridVisible == null) {
-            gridVisible = new SimpleBooleanProperty(DEFAULT_GRID_VISIBLE) {
-                @Override
-                protected void invalidated() {
-                    changeManager.requestRedraw();
-                }
-            };
+            gridVisible = new SimpleBooleanProperty(DEFAULT_GRID_VISIBLE);
         }
         return gridVisible;
     }
@@ -336,12 +290,7 @@ public class TileMapEditor {
 
     public BooleanProperty obstacleInnerAreaDisplayedProperty() {
         if (obstacleInnerAreaDisplayed == null) {
-            obstacleInnerAreaDisplayed = new SimpleBooleanProperty(DEFAULT_OBSTACLE_INNER_AREA_DISPLAYED) {
-                @Override
-                protected void invalidated() {
-                    changeManager.requestRedraw();
-                }
-            };
+            obstacleInnerAreaDisplayed = new SimpleBooleanProperty(DEFAULT_OBSTACLE_INNER_AREA_DISPLAYED);
         }
         return obstacleInnerAreaDisplayed;
     }
@@ -420,12 +369,7 @@ public class TileMapEditor {
 
     public BooleanProperty segmentNumbersVisibleProperty() {
         if (segmentNumbersVisible == null) {
-            segmentNumbersVisible = new SimpleBooleanProperty(DEFAULT_SEGMENT_NUMBERS_VISIBLE) {
-                @Override
-                protected void invalidated() {
-                    changeManager.requestRedraw();
-                }
-            };
+            segmentNumbersVisible = new SimpleBooleanProperty(DEFAULT_SEGMENT_NUMBERS_VISIBLE);
         }
         return segmentNumbersVisible;
     }
@@ -487,12 +431,7 @@ public class TileMapEditor {
 
     public BooleanProperty terrainVisibleProperty() {
         if (terrainVisible == null) {
-            terrainVisible = new SimpleBooleanProperty(DEFAULT_TERRAIN_VISIBLE) {
-                @Override
-                protected void invalidated() {
-                    changeManager.requestRedraw();
-                }
-            };
+            terrainVisible = new SimpleBooleanProperty(DEFAULT_TERRAIN_VISIBLE);
         }
         return terrainVisible;
     }
