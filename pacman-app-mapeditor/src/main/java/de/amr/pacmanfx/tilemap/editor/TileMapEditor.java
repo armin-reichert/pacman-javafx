@@ -175,6 +175,27 @@ public class TileMapEditor {
                 }
             }
         }
+
+    }
+
+    private void drawUI() {
+        //TODO avoid creation in every draw call
+        var colorScheme = new TerrainMapColorScheme(
+            COLOR_CANVAS_BACKGROUND,
+            getColorFromMap(currentWorldMap(), LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_FILL, parseColor(MS_PACMAN_COLOR_WALL_FILL)),
+            getColorFromMap(currentWorldMap(), LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_STROKE, parseColor(MS_PACMAN_COLOR_WALL_STROKE)),
+            getColorFromMap(currentWorldMap(), LayerID.TERRAIN, WorldMapProperty.COLOR_DOOR, parseColor(MS_PACMAN_COLOR_DOOR))
+        );
+        palettes[selectedPaletteID()].draw();
+        if (tabEditCanvas.isSelected()) {
+            editCanvas.draw(changeManager, colorScheme);
+        }
+        else if (tabTemplateImage.isSelected()) {
+            templateImageCanvas.draw();
+        }
+        if (tabPreview2D.isSelected()) {
+            preview2D.draw(currentWorldMap(), colorScheme);
+        }
     }
 
     public TileMapEditor(Stage stage, Model3DRepository model3DRepository) {
@@ -610,9 +631,13 @@ public class TileMapEditor {
     private void createEditCanvas() {
         ObstacleEditor obstacleEditor = createObstacleEditor();
         editCanvas = new EditCanvas(obstacleEditor);
+        editCanvas.editModeProperty().bind(editModeProperty());
         editCanvas.gridSizeProperty().bind(gridSizeProperty());
         editCanvas.gridVisibleProperty().bind(gridVisibleProperty());
         editCanvas.worldMapProperty().bind(currentWorldMapProperty());
+        editCanvas.obstacleInnerAreaDisplayedProperty().bind(obstacleInnerAreaDisplayedProperty());
+        editCanvas.segmentNumbersVisibleProperty().bind(segmentNumbersVisibleProperty());
+        editCanvas.symmetricEditModeProperty().bind(symmetricEditModeProperty());
         editCanvas.templateImageGrayProperty().bind(templateImageProperty().map(Ufx::imageToGreyscale));
         editCanvas.terrainVisibleProperty().bind(terrainVisibleProperty());
         editCanvas.foodVisibleProperty().bind(foodVisibleProperty());
@@ -927,32 +952,6 @@ public class TileMapEditor {
             case INSPECT -> editCanvas.enterInspectMode();
             case EDIT    -> editCanvas.enterEditMode();
             case ERASE   -> editCanvas.enterEraseMode();
-        }
-    }
-
-    //
-    // Drawing
-    //
-
-    private void drawUI() {
-        if (currentWorldMap() == null) return;
-
-        //TODO avoid creation in every draw call
-        var colorScheme = new TerrainMapColorScheme(
-            COLOR_CANVAS_BACKGROUND,
-            getColorFromMap(currentWorldMap(), LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_FILL, parseColor(MS_PACMAN_COLOR_WALL_FILL)),
-            getColorFromMap(currentWorldMap(), LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_STROKE, parseColor(MS_PACMAN_COLOR_WALL_STROKE)),
-            getColorFromMap(currentWorldMap(), LayerID.TERRAIN, WorldMapProperty.COLOR_DOOR, parseColor(MS_PACMAN_COLOR_DOOR))
-        );
-        palettes[selectedPaletteID()].draw();
-        if (tabEditCanvas.isSelected()) {
-            editCanvas.draw(this, colorScheme);
-        }
-        else if (tabTemplateImage.isSelected()) {
-            templateImageCanvas.draw();
-        }
-        if (tabPreview2D.isSelected()) {
-            preview2D.draw(currentWorldMap(), colorScheme);
         }
     }
 

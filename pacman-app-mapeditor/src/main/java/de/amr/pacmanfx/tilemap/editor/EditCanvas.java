@@ -42,6 +42,7 @@ public class EditCanvas extends Canvas {
 
     public static final Cursor CURSOR_RUBBER = Cursor.cursor(urlString("graphics/radiergummi.jpg"));
 
+    private final ObjectProperty<EditMode> editMode = new SimpleObjectProperty<>();
     private final ObjectProperty<Vector2i> focussedTile = new SimpleObjectProperty<>();
     private final DoubleProperty gridSize = new SimpleDoubleProperty(8);
     private final DoubleProperty scaling = new SimpleDoubleProperty(1);
@@ -51,7 +52,9 @@ public class EditCanvas extends Canvas {
     private final BooleanProperty actorsVisible = new SimpleBooleanProperty(true);
     private final BooleanProperty foodVisible = new SimpleBooleanProperty(true);
     private final BooleanProperty gridVisible = new SimpleBooleanProperty(true);
+    private final BooleanProperty obstacleInnerAreaDisplayed = new SimpleBooleanProperty(true);
     private final BooleanProperty segmentNumbersVisible = new SimpleBooleanProperty(true);
+    private final BooleanProperty symmetricEditMode = new SimpleBooleanProperty(true);
     private final BooleanProperty terrainVisible = new SimpleBooleanProperty(true);
 
     private final GraphicsContext ctx;
@@ -97,18 +100,62 @@ public class EditCanvas extends Canvas {
         setOnMouseDragged(this::onMouseDragged);
     }
 
+    // -- Properties
+
+    public ObjectProperty<EditMode> editModeProperty() {
+        return editMode;
+    }
+
+    public BooleanProperty actorsVisibleProperty() {
+        return actorsVisible;
+    }
+
+    public ObjectProperty<Vector2i> focussedTileProperty() {
+        return focussedTile;
+    }
+
+    public Vector2i focussedTile() {
+        return focussedTile.get();
+    }
+
+    public BooleanProperty foodVisibleProperty() {
+        return foodVisible;
+    }
+
     public DoubleProperty gridSizeProperty() {
         return gridSize;
     }
 
-    public double gridSize() { return gridSize.get(); }
+    public double gridSize() {
+        return gridSize.get();
+    }
+
+    public BooleanProperty gridVisibleProperty() {
+        return gridVisible;
+    }
+
+    public BooleanProperty obstacleInnerAreaDisplayedProperty() {
+        return obstacleInnerAreaDisplayed;
+    }
 
     public double scaling() {
         return scaling.get();
     }
 
+    public BooleanProperty segmentNumbersVisibleProperty() {
+        return segmentNumbersVisible;
+    }
+
+    public BooleanProperty symmetricEditModeProperty() {
+        return symmetricEditMode;
+    }
+
     public ObjectProperty<Image> templateImageGrayProperty() {
         return templateImageGray;
+    }
+
+    public BooleanProperty terrainVisibleProperty() {
+        return terrainVisible;
     }
 
     public ObjectProperty<WorldMap> worldMapProperty() {
@@ -117,25 +164,6 @@ public class EditCanvas extends Canvas {
 
     public WorldMap worldMap() { return worldMap.get(); }
 
-    public BooleanProperty actorsVisibleProperty() {
-        return actorsVisible;
-    }
-
-    public BooleanProperty foodVisibleProperty() {
-        return foodVisible;
-    }
-
-    public BooleanProperty gridVisibleProperty() {
-        return gridVisible;
-    }
-
-    public BooleanProperty segmentNumbersVisibleProperty() {
-        return segmentNumbersVisible;
-    }
-
-    public BooleanProperty terrainVisibleProperty() {
-        return terrainVisible;
-    }
 
     public TerrainTileMapRenderer terrainRenderer() {
         return terrainRenderer;
@@ -144,10 +172,6 @@ public class EditCanvas extends Canvas {
     public FoodMapRenderer foodRenderer() {
         return foodRenderer;
     }
-
-    public ObjectProperty<Vector2i> focussedTileProperty() { return focussedTile; }
-
-    public Vector2i focussedTile() { return focussedTile.get(); }
 
     public boolean moveCursor(Direction dir, Predicate<Vector2i> canMoveIntoTile) {
         if (focussedTile() != null) {
@@ -179,7 +203,7 @@ public class EditCanvas extends Canvas {
         obstacleEditor.setEnabled(false);
     }
 
-    public void draw(TileMapEditor editor, TerrainMapColorScheme colorScheme) {
+    public void draw(TileMapEditor.ChangeManager changeManager, TerrainMapColorScheme colorScheme) {
         double width = getWidth(), height = getHeight();
         ctx.setImageSmoothing(false);
 
@@ -208,8 +232,8 @@ public class EditCanvas extends Canvas {
         // Terrain
         if (terrainVisible.get()) {
             terrainRenderer.setColorScheme(colorScheme);
-            terrainRenderer.setSegmentNumbersDisplayed(editor.segmentNumbersVisible());
-            terrainRenderer.setObstacleInnerAreaDisplayed(editor.obstacleInnerAreaDisplayed());
+            terrainRenderer.setSegmentNumbersDisplayed(segmentNumbersVisible.get());
+            terrainRenderer.setObstacleInnerAreaDisplayed(obstacleInnerAreaDisplayed.get());
             terrainRenderer.draw(worldMap(), worldMap().obstacles());
             obstacleEditor.draw(terrainRenderer);
         }
@@ -217,16 +241,16 @@ public class EditCanvas extends Canvas {
         // Tiles that seem to be wrong
         ctx.setFont(Font.font("sans", gridSize() - 2));
         ctx.setFill(Color.grayRgb(200, 0.8));
-        for (Vector2i tile : editor.changeManager().tilesWithErrors()) {
+        for (Vector2i tile : changeManager.tilesWithErrors()) {
             ctx.fillText("?", tile.x() * gridSize() + 0.25 * gridSize(), tile.y() * gridSize() + 0.8 * gridSize());
-            if (editor.symmetricEditMode()) {
+            if (symmetricEditMode.get()) {
                 int x = worldMap().numCols() - tile.x() - 1;
                 ctx.fillText("?", x * gridSize() + 0.25 * gridSize(), tile.y() * gridSize() + 0.8 * gridSize());
             }
         }
 
         // Vertical separator to indicate symmetric edit mode
-        if (editor.editModeIs(EditMode.EDIT) && editor.symmetricEditMode()) {
+        if (editMode.get() == EditMode.EDIT && symmetricEditMode.get()) {
             ctx.save();
             ctx.setStroke(Color.YELLOW);
             ctx.setLineWidth(0.75);
