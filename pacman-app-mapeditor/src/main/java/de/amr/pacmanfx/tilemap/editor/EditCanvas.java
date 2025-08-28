@@ -161,6 +161,10 @@ public class EditCanvas extends Canvas {
         return false;
     }
 
+    public Vector2i tileAt(double mouseX, double mouseY) {
+        return new Vector2i(fullTiles(mouseX, gridSize()), fullTiles(mouseY, gridSize()));
+    }
+
     public void enterInspectMode() {
         setCursor(Cursor.HAND); // TODO use other cursor
         obstacleEditor.setEnabled(false);
@@ -285,12 +289,12 @@ public class EditCanvas extends Canvas {
     private void onMouseDragged(MouseEvent event) {
         Logger.debug("Mouse dragged {}", event);
         if (!dragging) {
-            Vector2i dragStartTile = tileAtMousePosition(event.getX(), event.getY(), gridSize());
+            Vector2i dragStartTile = tileAt(event.getX(), event.getY());
             obstacleEditor.startEditing(dragStartTile);
             dragging = true;
             Logger.debug("Dragging started at tile {}", dragStartTile);
         } else {
-            obstacleEditor.continueEditing(tileAtMousePosition(event.getX(), event.getY(), gridSize()));
+            obstacleEditor.continueEditing(tileAt(event.getX(), event.getY()));
         }
     }
 
@@ -309,7 +313,7 @@ public class EditCanvas extends Canvas {
     }
 
     public void onMouseMoved(TileMapEditor editor, MouseEvent mouseEvent) {
-        Vector2i tile = tileAtMousePosition(mouseEvent.getX(), mouseEvent.getY(), gridSize());
+        Vector2i tile = tileAt(mouseEvent.getX(), mouseEvent.getY());
         focussedTile.set(tile);
         switch (editor.editMode()) {
             case EDIT -> {
@@ -375,20 +379,20 @@ public class EditCanvas extends Canvas {
             return;
         }
 
-        Vector2i tile = tileAtMousePosition(menuEvent.getX(), menuEvent.getY(), gridSize());
+        Vector2i tile = tileAt(menuEvent.getX(), menuEvent.getY());
 
         var miPlaceHouse = new MenuItem(translated("menu.edit.place_house"));
         miPlaceHouse.setOnAction(actionEvent -> new Action_PlaceArcadeHouse(editor, worldMap(), tile).execute());
 
         var miInsertRow = new MenuItem(translated("menu.edit.insert_row"));
         miInsertRow.setOnAction(actionEvent -> {
-            int rowIndex = tileAtMousePosition(menuEvent.getX(), menuEvent.getY(), gridSize()).y();
+            int rowIndex = tileAt(menuEvent.getX(), menuEvent.getY()).y();
             editor.setCurrentWorldMap(worldMap().insertRowBeforeIndex(rowIndex));
         });
 
         var miDeleteRow = new MenuItem(translated("menu.edit.delete_row"));
         miDeleteRow.setOnAction(actionEvent -> {
-            int rowIndex = tileAtMousePosition(menuEvent.getX(), menuEvent.getY(), gridSize()).y();
+            int rowIndex = tileAt(menuEvent.getX(), menuEvent.getY()).y();
             editor.setCurrentWorldMap(worldMap().deleteRowAtIndex(rowIndex));
         });
 

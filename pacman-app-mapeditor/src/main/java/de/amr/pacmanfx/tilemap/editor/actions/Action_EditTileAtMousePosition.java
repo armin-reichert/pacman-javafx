@@ -7,7 +7,6 @@ import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.*;
-import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.tileAtMousePosition;
 
 public class Action_EditTileAtMousePosition extends AbstractEditorAction<Void> {
 
@@ -24,7 +23,7 @@ public class Action_EditTileAtMousePosition extends AbstractEditorAction<Void> {
 
     @Override
     public Void execute() {
-        Vector2i tile = tileAtMousePosition(mouseX, mouseY, editor.gridSize());
+        Vector2i tile = editor.editCanvas().tileAt(mouseX, mouseY);
         if (editor.editModeIs(EditMode.INSPECT)) {
             new Action_IdentifyObstacle(editor, tile).execute();
             return null;

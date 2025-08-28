@@ -166,10 +166,6 @@ public interface TileMapEditorUtil {
         return (int) (pixels / gridSize);
     }
 
-    static Vector2i tileAtMousePosition(double mouseX, double mouseY, double gridSize) {
-        return new Vector2i(fullTiles(mouseX, gridSize), fullTiles(mouseY, gridSize));
-    }
-
     static boolean hasAccessibleTerrainAtTile(WorldMap worldMap, Vector2i tile) {
         byte value = worldMap.content(LayerID.TERRAIN, tile);
         return value == TerrainTile.EMPTY.$

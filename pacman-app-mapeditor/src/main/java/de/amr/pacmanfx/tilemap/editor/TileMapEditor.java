@@ -563,6 +563,10 @@ public class TileMapEditor {
         return contentPane;
     }
 
+    public EditCanvas editCanvas() {
+        return editCanvas;
+    }
+
     public EditorMenuBar menuBar() {
         return menuBar;
     }
