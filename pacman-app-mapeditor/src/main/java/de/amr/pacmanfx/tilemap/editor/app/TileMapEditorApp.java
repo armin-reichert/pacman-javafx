@@ -10,7 +10,6 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
@@ -34,15 +33,11 @@ public class TileMapEditorApp extends Application  {
             miQuit.setOnAction(e -> editor.ifNoUnsavedChangesDo(stage::close));
             editor.menuBar().menuFile().getItems().addAll(new SeparatorMenuItem(), miQuit);
 
-            var layout = new BorderPane();
-            layout.setCenter(editor.contentPane());
-            layout.setTop(editor.menuBar());
-
             double screenHeight = Screen.getPrimary().getVisualBounds().getHeight();
             double height = Math.max(0.8 * screenHeight, 600);
             double width = 1.25 * height;
 
-            var scene = new Scene(layout, width, height);
+            var scene = new Scene(editor.layoutPane(), width, height);
             stage.setScene(scene);
 
             stage.setOnCloseRequest(e -> editor.ifNoUnsavedChangesDo(() -> {

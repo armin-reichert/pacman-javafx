@@ -16,6 +16,7 @@ import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapColorScheme;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer;
 import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
@@ -133,6 +134,7 @@ public class TileMapEditor {
     private final UpdateTimer updateTimer = new UpdateTimer();
 
     private final Stage stage;
+    private final BorderPane layoutPane = new BorderPane();
     private final BorderPane contentPane = new BorderPane();
     private Pane propertyEditorsPane;
     private EditCanvas editCanvas;
@@ -212,6 +214,9 @@ public class TileMapEditor {
         menuBar = new EditorMenuBar(this);
         loadSampleMapsAndUpdateMenu(menuBar.menuMaps());
 
+        layoutPane.setTop(menuBar);
+        layoutPane.setCenter(contentPane);
+
         contentPane.setOnKeyTyped(this::onKeyTyped);
         contentPane.setOnKeyPressed(this::onKeyPressed);
     }
@@ -226,11 +231,14 @@ public class TileMapEditor {
     }
 
     public void start(Stage stage) {
-        title.bind(createTitleBinding());
-        stage.titleProperty().bind(title);
-        contentPane.setLeft(null); // no properties editor
-        showEditHelpText();
-        updateTimer.start();
+        Platform.runLater(() -> {
+            title.bind(createTitleBinding());
+            stage.titleProperty().bind(title);
+            contentPane.setLeft(null); // no properties editor
+            contentPane.requestFocus();
+            showEditHelpText();
+            updateTimer.start();
+        });
     }
 
     public void stop() {
@@ -583,8 +591,8 @@ public class TileMapEditor {
         return stage;
     }
 
-    public Pane contentPane() {
-        return contentPane;
+    public BorderPane layoutPane() {
+        return layoutPane;
     }
 
     public EditCanvas editCanvas() {
