@@ -494,7 +494,7 @@ public class TileMapEditor {
         return symmetricEditMode;
     }
 
-    public boolean isSymmetricEditMode() {
+    public boolean symmetricEditMode() {
         return symmetricEditMode == null ? DEFAULT_SYMMETRIC_EDIT_MODE : symmetricEditModeProperty().get();
     }
 
@@ -808,25 +808,8 @@ public class TileMapEditor {
         lblFocussedTile.textProperty().bind(editCanvas.focussedTileProperty().map(
             tile -> tile != null ? "(%2d,%2d)".formatted(tile.x(), tile.y()) : "n/a"));
 
-        var lblEditMode = new Label();
-        lblEditMode.setAlignment(Pos.BASELINE_RIGHT);
-        lblEditMode.setMinWidth(100);
-        lblEditMode.setFont(FONT_STATUS_LINE_EDIT_MODE);
-        lblEditMode.setEffect(new Glow(0.2));
-        lblEditMode.textProperty().bind(Bindings.createStringBinding(
-            () -> switch (editMode()) {
-                case INSPECT -> translated("mode.inspect");
-                case EDIT    -> isSymmetricEditMode() ?  translated("mode.symmetric") : translated("mode.edit");
-                case ERASE   -> translated("mode.erase");
-            }, editModeProperty(), symmetricEditModeProperty()
-        ));
-        lblEditMode.textFillProperty().bind(
-            editModeProperty().map(mode -> switch (mode) {
-            case INSPECT -> Color.GRAY;
-            case EDIT    -> Color.FORESTGREEN;
-            case ERASE   -> Color.RED;
-        }));
-        lblEditMode.setOnMouseClicked(e -> showEditHelpText());
+        var statusIndicator = new StatusIndicator();
+        statusIndicator.setAlignment(Pos.BASELINE_RIGHT);
 
         statusLine = new HBox(
             lblMapSize,
@@ -838,10 +821,38 @@ public class TileMapEditor {
             filler(10),
             sliderZoom,
             filler(10),
-            lblEditMode
+            statusIndicator
         );
-
         statusLine.setPadding(new Insets(6, 2, 2, 2));
+    }
+
+    private class StatusIndicator extends HBox {
+
+        private final Label label = new Label();
+
+        public StatusIndicator() {
+            label.setMinWidth(75);
+            label.setAlignment(Pos.CENTER_RIGHT);
+            label.setFont(FONT_STATUS_LINE_EDIT_MODE);
+            label.setEffect(new Glow(0.2));
+            label.textProperty().bind(Bindings.createStringBinding(
+                () -> switch (editMode()) {
+                    case INSPECT -> translated("mode.inspect");
+                    case EDIT    -> symmetricEditMode() ?  translated("mode.symmetric") : translated("mode.edit");
+                    case ERASE   -> translated("mode.erase");
+                }, editModeProperty(), symmetricEditModeProperty()
+            ));
+            label.textFillProperty().bind(
+                editModeProperty().map(mode -> switch (mode) {
+                    case INSPECT -> Color.GRAY;
+                    case EDIT    -> Color.FORESTGREEN;
+                    case ERASE   -> Color.RED;
+                }));
+
+            label.setOnMouseClicked(e -> selectNextEditMode());
+
+            getChildren().add(label);
+        }
     }
 
     private void arrangeMainLayout() {
@@ -940,6 +951,23 @@ public class TileMapEditor {
 
     // Controller part
 
+    public void selectNextEditMode() {
+        switch (editMode()) {
+            case INSPECT -> {
+                setEditMode(EditMode.EDIT);
+                setSymmetricEditMode(false);
+            }
+            case EDIT -> {
+                if (symmetricEditMode()) {
+                    setEditMode(EditMode.ERASE);
+                } else {
+                    setSymmetricEditMode(true);
+                }
+            }
+            case ERASE -> setEditMode(EditMode.INSPECT);
+        }
+    }
+
     private void onKeyPressed(KeyEvent e) {
         KeyCode key = e.getCode();
         boolean alt = e.isAltDown();
@@ -960,17 +988,8 @@ public class TileMapEditor {
 
     private void onKeyTyped(KeyEvent e) {
         String key = e.getCharacter();
-        switch (key) {
-            case "i" -> setEditMode(EditMode.INSPECT);
-            case "e" -> {
-                setEditMode(EditMode.EDIT);
-                setSymmetricEditMode(false);
-            }
-            case "s" -> {
-                setEditMode(EditMode.EDIT);
-                setSymmetricEditMode(true);
-            }
-            case "x" -> setEditMode(EditMode.ERASE);
+        if (key.equals("e")) {
+            selectNextEditMode();
         }
     }
 

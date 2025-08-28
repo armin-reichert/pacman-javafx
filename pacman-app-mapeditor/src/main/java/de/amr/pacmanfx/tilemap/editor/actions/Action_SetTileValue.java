@@ -40,7 +40,7 @@ public class Action_SetTileValue extends AbstractEditorAction<Void> {
             worldMap.setContent(LayerID.FOOD, tile, FoodTile.EMPTY.code());
         }
 
-        if (editor.isSymmetricEditMode()) {
+        if (editor.symmetricEditMode()) {
             Vector2i mirroredTile = worldMap.mirroredTile(tile);
             if (layerID == LayerID.FOOD) {
                 if (canEditFoodAtTile(worldMap, mirroredTile)) {

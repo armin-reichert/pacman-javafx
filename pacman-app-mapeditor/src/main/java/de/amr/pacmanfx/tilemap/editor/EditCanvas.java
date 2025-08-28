@@ -220,14 +220,14 @@ public class EditCanvas extends Canvas {
         ctx.setFill(Color.grayRgb(200, 0.8));
         for (Vector2i tile : editor.tilesWithErrors()) {
             ctx.fillText("?", tile.x() * gridSize() + 0.25 * gridSize(), tile.y() * gridSize() + 0.8 * gridSize());
-            if (editor.isSymmetricEditMode()) {
+            if (editor.symmetricEditMode()) {
                 int x = worldMap().numCols() - tile.x() - 1;
                 ctx.fillText("?", x * gridSize() + 0.25 * gridSize(), tile.y() * gridSize() + 0.8 * gridSize());
             }
         }
 
         // Vertical separator to indicate symmetric edit mode
-        if (editor.editModeIs(EditMode.EDIT) && editor.isSymmetricEditMode()) {
+        if (editor.editModeIs(EditMode.EDIT) && editor.symmetricEditMode()) {
             ctx.save();
             ctx.setStroke(Color.YELLOW);
             ctx.setLineWidth(0.75);
