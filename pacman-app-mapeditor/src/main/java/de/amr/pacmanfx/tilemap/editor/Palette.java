@@ -4,8 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tilemap.editor;
 
-import de.amr.pacmanfx.lib.tilemap.WorldMapFormatter;
-import de.amr.pacmanfx.tilemap.editor.actions.Action_SetTileCode;
 import de.amr.pacmanfx.uilib.tilemap.TileRenderer;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
@@ -75,27 +73,8 @@ public class Palette {
         return canvas;
     }
 
-    public TileValueEditorTool newTileTool(byte code, String description) {
-        return new TileValueEditorTool(
-            (layerID, tile) -> new Action_SetTileCode(editor, editor.currentWorldMap(), layerID, tile, code).execute(),
-            toolSize, code, description);
-    }
-
-    public PropertyValueEditorTool newPropertyTool(String propertyName, String description) {
-        return new PropertyValueEditorTool(
-            (layerID, tile) -> {
-                editor.currentWorldMap().properties(layerID).put(propertyName, WorldMapFormatter.formatTile(tile));
-                editor.changeManager().setEdited(true);
-            },
-            toolSize, propertyName, description);
-    }
-
-    public void addTileTool(byte value, String description) {
-        tools.add(newTileTool(value, description));
-    }
-
-    public void addPropertyTool(String propertyName, String description) {
-        tools.add(newPropertyTool(propertyName, description));
+    public void addTool(EditorTool tool) {
+        tools.add(tool);
     }
 
     public Node root() {
