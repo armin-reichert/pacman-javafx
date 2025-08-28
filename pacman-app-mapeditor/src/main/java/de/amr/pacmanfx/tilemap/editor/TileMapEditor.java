@@ -198,6 +198,7 @@ public class TileMapEditor {
         setCurrentWorldMap(emptyMap);
         setEditMode(EditMode.INSPECT);
         mazePreview3D.reset();
+        changeManager.edited = false;
     }
 
     public void start(Stage stage) {
