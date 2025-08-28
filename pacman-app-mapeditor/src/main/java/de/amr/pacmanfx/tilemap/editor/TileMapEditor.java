@@ -34,6 +34,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -179,7 +180,7 @@ public class TileMapEditor {
         createPropertyEditors();
         createTabPaneWithEditViews();
         createTabPaneWithPreviews();
-        createZoomSlider();
+        createZoomControl();
         createStatusLine();
 
         arrangeMainLayout();
@@ -782,13 +783,14 @@ public class TileMapEditor {
         propertyEditorsPane.visibleProperty().bind(propertyEditorsVisibleProperty());
     }
 
-    private void createZoomSlider() {
+    private void createZoomControl() {
         sliderZoom = new Slider(MIN_GRID_SIZE, MAX_GRID_SIZE, 0.5 * (MIN_GRID_SIZE + MAX_GRID_SIZE));
         sliderZoom.setShowTickLabels(false);
         sliderZoom.setShowTickMarks(true);
         sliderZoom.setPrefWidth(120);
         Bindings.bindBidirectional(sliderZoom.valueProperty(), gridSize);
         Tooltip tt = new Tooltip();
+        tt.setShowDelay(Duration.millis(50));
         tt.setFont(Font.font(14));
         tt.textProperty().bind(gridSizeProperty().map("Grid Size: %s"::formatted));
         sliderZoom.setTooltip(tt);
@@ -828,30 +830,30 @@ public class TileMapEditor {
 
     private class StatusIndicator extends HBox {
 
-        private final Label label = new Label();
-
         public StatusIndicator() {
+            Label label = new Label();
             label.setMinWidth(75);
             label.setAlignment(Pos.CENTER_RIGHT);
             label.setFont(FONT_STATUS_LINE_EDIT_MODE);
             label.setEffect(new Glow(0.2));
+            getChildren().add(label);
+
             label.textProperty().bind(Bindings.createStringBinding(
                 () -> switch (editMode()) {
                     case INSPECT -> translated("mode.inspect");
-                    case EDIT    -> symmetricEditMode() ?  translated("mode.symmetric") : translated("mode.edit");
+                    case EDIT    -> translated(symmetricEditMode() ? "mode.symmetric" : "mode.edit");
                     case ERASE   -> translated("mode.erase");
                 }, editModeProperty(), symmetricEditModeProperty()
             ));
-            label.textFillProperty().bind(
-                editModeProperty().map(mode -> switch (mode) {
+
+            label.textFillProperty().bind(editModeProperty().map(
+                mode -> switch (mode) {
                     case INSPECT -> Color.GRAY;
                     case EDIT    -> Color.FORESTGREEN;
                     case ERASE   -> Color.RED;
                 }));
 
             label.setOnMouseClicked(e -> selectNextEditMode());
-
-            getChildren().add(label);
         }
     }
 
