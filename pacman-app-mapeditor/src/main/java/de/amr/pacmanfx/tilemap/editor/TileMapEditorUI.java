@@ -45,6 +45,7 @@ import static java.util.Objects.requireNonNull;
 public class TileMapEditorUI {
 
     private final TileMapEditor editor;
+    private final MessageDisplay messageDisplay = new MessageDisplay();
 
     private final Stage stage;
     private final BorderPane layoutPane = new BorderPane();
@@ -98,6 +99,11 @@ public class TileMapEditorUI {
 
         editor.propertyEditorsVisibleProperty().addListener((py, ov, visible) ->
             contentPane.setLeft(visible ? propertyEditorsPane : null));
+
+        editor.editModeProperty().addListener((py, on, nv) -> {
+            messageDisplay().clearMessage();
+            showEditHelpText();
+        });
     }
 
     public void init() {
@@ -110,6 +116,7 @@ public class TileMapEditorUI {
         stage.titleProperty().bind(titleBinding);
         contentPane.setLeft(null); // no properties editor
         contentPane.requestFocus();
+        showEditHelpText();
     }
 
     public void draw() {
@@ -128,6 +135,10 @@ public class TileMapEditorUI {
         palettes.values().forEach(Palette::draw);
     }
 
+    public void showEditHelpText() {
+        messageDisplay.showMessage(translated("edit_help"), 30, MessageType.INFO);
+    }
+
     //TODO avoid call in every animation frame
     private TerrainMapColorScheme currentColorScheme(WorldMap worldMap) {
         return new TerrainMapColorScheme(
@@ -138,6 +149,9 @@ public class TileMapEditorUI {
         );
     }
 
+    public MessageDisplay messageDisplay() {
+        return messageDisplay;
+    }
 
     public Stage stage() {
         return stage;
@@ -492,7 +506,7 @@ public class TileMapEditorUI {
                 filler(10),
                 lblFocussedTile,
                 spacer(),
-                editor.messageManager().messageLabel(),
+                messageDisplay,
                 spacer(),
                 filler(10),
                 sliderZoom,

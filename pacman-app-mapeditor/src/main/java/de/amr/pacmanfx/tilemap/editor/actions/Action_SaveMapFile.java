@@ -28,16 +28,16 @@ public class Action_SaveMapFile extends AbstractEditorAction<Void> {
                     editor.changeManager().setEdited(false);
                     boolean replaceSuccess = new Action_ReplaceCurrentWorldMapChecked(editor, file).execute();
                     if (replaceSuccess) {
-                        editor.messageManager().showMessage("Map saved as '%s'".formatted(file.getName()), 3, MessageType.INFO);
+                        editor.ui().messageDisplay().showMessage("Map saved as '%s'".formatted(file.getName()), 3, MessageType.INFO);
                     } else {
-                        editor.messageManager().showMessage("Current map could not be replaced!", 4, MessageType.ERROR);
+                        editor.ui().messageDisplay().showMessage("Current map could not be replaced!", 4, MessageType.ERROR);
                     }
                 } else {
-                    editor.messageManager().showMessage("Map could not be saved!", 4, MessageType.ERROR);
+                    editor.ui().messageDisplay().showMessage("Map could not be saved!", 4, MessageType.ERROR);
                 }
             } else {
                 Logger.error("No .world file selected");
-                editor.messageManager().showMessage("No .world file selected", 2, MessageType.WARNING);
+                editor.ui().messageDisplay().showMessage("No .world file selected", 2, MessageType.WARNING);
             }
         }
         return null;

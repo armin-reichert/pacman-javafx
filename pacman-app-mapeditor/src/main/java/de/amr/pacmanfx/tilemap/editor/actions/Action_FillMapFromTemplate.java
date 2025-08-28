@@ -42,29 +42,29 @@ public class Action_FillMapFromTemplate extends AbstractEditorAction<Void> {
 
         Color fillColor = getColorFromMap(worldMap, LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_FILL, null);
         if (fillColor == null) {
-            editor.messageManager().showMessage("No fill color defined", 3, MessageType.ERROR);
+            editor.ui().messageDisplay().showMessage("No fill color defined", 3, MessageType.ERROR);
             return null;
         }
         Color strokeColor = getColorFromMap(worldMap, LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_STROKE, null);
         if (strokeColor == null) {
-            editor.messageManager().showMessage("No stroke color defined", 3, MessageType.ERROR);
+            editor.ui().messageDisplay().showMessage("No stroke color defined", 3, MessageType.ERROR);
             return null;
         }
         Color doorColor = getColorFromMap(worldMap, LayerID.TERRAIN, WorldMapProperty.COLOR_DOOR, Color.PINK);
         if (doorColor == null) {
-            editor.messageManager().showMessage("No door color defined", 3, MessageType.ERROR);
+            editor.ui().messageDisplay().showMessage("No door color defined", 3, MessageType.ERROR);
             return null;
         }
         Color foodColor = getColorFromMap(worldMap, LayerID.FOOD, WorldMapProperty.COLOR_FOOD, null);
         if (foodColor == null) {
-            editor.messageManager().showMessage("No food color defined", 3, MessageType.ERROR);
+            editor.ui().messageDisplay().showMessage("No food color defined", 3, MessageType.ERROR);
             return null;
         }
         TileMatcher matcher = new TileMatcher(Color.TRANSPARENT, fillColor, strokeColor, doorColor, foodColor);
         WritablePixelFormat<IntBuffer> pixelFormat = WritablePixelFormat.getIntArgbInstance();
         PixelReader rdr = templateImage.getPixelReader();
         if (rdr == null) {
-            editor.messageManager().showMessage("Could not get pixel reader for this image", 5, MessageType.ERROR);
+            editor.ui().messageDisplay().showMessage("Could not get pixel reader for this image", 5, MessageType.ERROR);
             return null;
         }
 
@@ -109,7 +109,7 @@ public class Action_FillMapFromTemplate extends AbstractEditorAction<Void> {
         }
 
         java.time.Duration duration = java.time.Duration.between(startTime, LocalTime.now());
-        editor.messageManager().showMessage("Map creation took %d milliseconds".formatted(duration.toMillis()), 5, MessageType.INFO);
+        editor.ui().messageDisplay().showMessage("Map creation took %d milliseconds".formatted(duration.toMillis()), 5, MessageType.INFO);
 
         editor.changeManager().setWorldMapChanged();
         editor.changeManager().setEdited(true);

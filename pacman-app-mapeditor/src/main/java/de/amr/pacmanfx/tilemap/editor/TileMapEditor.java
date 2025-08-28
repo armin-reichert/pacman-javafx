@@ -20,12 +20,10 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.SAMPLE_MAPS_PATH;
-import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.translated;
 import static java.util.Objects.requireNonNull;
 
 public class TileMapEditor {
@@ -95,13 +93,12 @@ public class TileMapEditor {
 
     private final TileMapEditorUI ui;
     private final ChangeManager changeManager = new ChangeManager();
-    private final MessageManager messageManager = new MessageManager();
     private final UpdateTimer updateTimer = new UpdateTimer();
 
     private class UpdateTimer extends AnimationTimer {
         @Override
         public void handle(long now) {
-            messageManager.update();
+            ui.messageDisplay().update();
             changeManager.processChanges();
             try {
                 ui.draw();
@@ -128,7 +125,6 @@ public class TileMapEditor {
 
     public void start() {
         Platform.runLater(() -> {
-            showEditHelpText();
             ui.start();
             updateTimer.start();
         });
@@ -462,14 +458,6 @@ public class TileMapEditor {
 
     public ChangeManager changeManager() { return changeManager;}
 
-    public MessageManager messageManager() {
-        return messageManager;
-    }
-
-    public void showEditHelpText() {
-        messageManager.showMessage(translated("edit_help"), 30, MessageType.INFO);
-    }
-
     public void ifNoUnsavedChangesDo(Runnable action) {
         if (!changeManager.isEdited()) {
             action.run();
@@ -490,8 +478,6 @@ public class TileMapEditor {
     }
 
     private void onEditModeChanged(EditMode editMode) {
-        messageManager.clearMessage();
-        showEditHelpText();
         switch (editMode) {
             case INSPECT -> ui.editCanvas().enterInspectMode();
             case EDIT    -> ui.editCanvas().enterEditMode();
@@ -531,17 +517,15 @@ public class TileMapEditor {
 
     public SampleMaps loadSampleMaps() {
         try {
-            var pacManMap = WorldMap.fromURL(sampleMapURL("pacman/pacman.world", 1));
+            var pacManMap = loadMap("pacman/pacman.world", 1);
             var msPacManMaps = new ArrayList<WorldMap>();
             for (int n = 1; n <= 6; ++n) {
-                URL url = sampleMapURL("mspacman/mspacman_%d.world", n);
-                msPacManMaps.add(WorldMap.fromURL(url));
+                msPacManMaps.add(loadMap("mspacman/mspacman_%d.world", n));
             }
             msPacManMaps.trimToSize();
             var xxlMaps = new ArrayList<WorldMap>();
             for (int n = 1; n <= 8; ++n) {
-                URL url = sampleMapURL("pacman_xxl/masonic_%d.world", n);
-                xxlMaps.add(WorldMap.fromURL(url));
+                xxlMaps.add(loadMap("pacman_xxl/masonic_%d.world", n));
             }
             xxlMaps.trimToSize();
             return new SampleMaps(pacManMap, msPacManMaps, xxlMaps);
@@ -552,7 +536,7 @@ public class TileMapEditor {
         }
     }
 
-    private URL sampleMapURL(String namePattern, int number) {
-        return getClass().getResource(SAMPLE_MAPS_PATH + namePattern.formatted(number));
+    private WorldMap loadMap(String namePattern, int number) throws IOException {
+        return WorldMap.fromURL(getClass().getResource(SAMPLE_MAPS_PATH + namePattern.formatted(number)));
     }
 }

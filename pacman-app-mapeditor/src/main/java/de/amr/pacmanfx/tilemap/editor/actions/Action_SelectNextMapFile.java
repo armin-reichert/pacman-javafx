@@ -51,7 +51,7 @@ public class Action_SelectNextMapFile extends AbstractEditorAction<File> {
                 Logger.info("World map file changed to {}", file);
             } catch (Exception x) {
                 Logger.error(x);
-                editor.messageManager().showMessage("Could not load map file '%s'".formatted(file), 5, MessageType.ERROR);
+                editor.ui().messageDisplay().showMessage("Could not load map file '%s'".formatted(file), 5, MessageType.ERROR);
             }
             return file;
         }

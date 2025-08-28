@@ -198,18 +198,6 @@ public class EditCanvas extends Canvas {
         }
     }
 
-/*
-    public void moveCursorAndSetFoodAtTile(Direction dir) {
-        if (moveCursor(dir, tile -> hasAccessibleTerrainAtTile(editor.currentWorldMap(), tile))) {
-            if (editor.editModeIs(EditMode.EDIT) && selectedPaletteID() == PALETTE_ID_FOOD) {
-                if (hasAccessibleTerrainAtTile(editor.currentWorldMap(), editCanvas.focussedTile())) {
-                    editor.editFoodAtTile(editCanvas.focussedTile());
-                }
-            }
-        }
-    }
-   */
-
     public Vector2i tileAt(double mouseX, double mouseY) {
         return new Vector2i(fullTiles(mouseX, gridSize()), fullTiles(mouseY, gridSize()));
     }
@@ -330,7 +318,7 @@ public class EditCanvas extends Canvas {
             requestFocus();
             contextMenu.hide();
             if (mouseEvent.getClickCount() == 2 && editor.editModeIs(EditMode.INSPECT)) {
-                editor.showEditHelpText();
+                editor.ui().showEditHelpText();
             }
         }
     }
@@ -405,17 +393,17 @@ public class EditCanvas extends Canvas {
         else if (isSupportedImageFile(file) && !editor.editModeIs(EditMode.INSPECT)) {
             Image image = loadImage(file).orElse(null);
             if (image == null) {
-                editor.messageManager().showMessage("Could not open image file '%s'".formatted(file), 3, MessageType.ERROR);
+                ui.messageDisplay().showMessage("Could not open image file '%s'".formatted(file), 3, MessageType.ERROR);
                 return;
             }
             if (!isTemplateImageSizeOk(image)) {
-                editor.messageManager().showMessage("Template image file '%s' has dubios size".formatted(file), 3, MessageType.ERROR);
+                editor.ui().messageDisplay().showMessage("Template image file '%s' has dubios size".formatted(file), 3, MessageType.ERROR);
                 return;
             }
             editor.setTemplateImage(image);
             new Action_CreateMapFromTemplate(editor, image).execute();
             ui.selectTemplateImageTab();
-            editor.messageManager().showMessage("Select colors for tile identification!", 10, MessageType.INFO);
+            ui.messageDisplay().showMessage("Select colors for tile identification!", 10, MessageType.INFO);
         }
     }
 

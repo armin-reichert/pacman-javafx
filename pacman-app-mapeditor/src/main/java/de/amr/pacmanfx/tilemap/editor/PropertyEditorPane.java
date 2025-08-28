@@ -103,23 +103,23 @@ public class PropertyEditorPane extends BorderPane {
                     deleteProperty(propertyName);
                 } else {
                     nameEditor.setText(propertyName);
-                    editor.messageManager().showMessage("Cannot delete other property %s".formatted(deletePropertyName), 2, MessageType.ERROR);
+                    editor.ui().messageDisplay().showMessage("Cannot delete other property %s".formatted(deletePropertyName), 2, MessageType.ERROR);
                 }
                 return;
             }
             if (!isValidPropertyName(editedName)) {
                 nameEditor.setText(propertyName);
-                editor.messageManager().showMessage("Property name %s is invalid".formatted(editedName), 2, MessageType.ERROR);
+                editor.ui().messageDisplay().showMessage("Property name %s is invalid".formatted(editedName), 2, MessageType.ERROR);
                 return;
             }
             if (worldMap.properties(layerID).containsKey(editedName)) {
-                editor.messageManager().showMessage("Property name already used", 2, MessageType.ERROR);
+                editor.ui().messageDisplay().showMessage("Property name already used", 2, MessageType.ERROR);
                 nameEditor.setText(propertyName);
                 return;
             }
             worldMap.properties(layerID).remove(propertyName);
             worldMap.properties(layerID).put(editedName, formattedPropertyValue());
-            editor.messageManager().showMessage("Property %s renamed to %s".formatted(propertyName, editedName), 2, MessageType.INFO);
+            editor.ui().messageDisplay().showMessage("Property %s renamed to %s".formatted(propertyName, editedName), 2, MessageType.INFO);
             propertyName = editedName;
             rebuildPropertyEditors(); // sort order might have changed
             editor.changeManager().setWorldMapChanged();
@@ -255,7 +255,7 @@ public class PropertyEditorPane extends BorderPane {
         btnAddColorEntry.setOnAction(e -> {
             String propertyName = "color_RENAME_ME";
             worldMapPy.get().properties(layerID).put(propertyName, "green");
-            editor.messageManager().showMessage("New property %s added".formatted(propertyName), 1, MessageType.INFO);
+            editor.ui().messageDisplay().showMessage("New property %s added".formatted(propertyName), 1, MessageType.INFO);
             rebuildPropertyEditors();
         });
         btnAddColorEntry.disableProperty().bind(enabledPy.not());
@@ -264,7 +264,7 @@ public class PropertyEditorPane extends BorderPane {
         btnAddPosEntry.setOnAction(e -> {
             String propertyName = "pos_RENAME_ME";
             worldMapPy.get().properties(layerID).put(propertyName, "(0,0)");
-            editor.messageManager().showMessage("New property %s added".formatted(propertyName), 1, MessageType.INFO);
+            editor.ui().messageDisplay().showMessage("New property %s added".formatted(propertyName), 1, MessageType.INFO);
             rebuildPropertyEditors();
         });
         btnAddPosEntry.disableProperty().bind(enabledPy.not());
@@ -273,7 +273,7 @@ public class PropertyEditorPane extends BorderPane {
         btnAddGenericEntry.setOnAction(e -> {
             String propertyName = "RENAME_ME";
             worldMapPy.get().properties(layerID).put(propertyName, "any text");
-            editor.messageManager().showMessage("New property %s added".formatted(propertyName), 1, MessageType.INFO);
+            editor.ui().messageDisplay().showMessage("New property %s added".formatted(propertyName), 1, MessageType.INFO);
             rebuildPropertyEditors();
         });
         btnAddGenericEntry.disableProperty().bind(enabledPy.not());
@@ -330,7 +330,7 @@ public class PropertyEditorPane extends BorderPane {
         worldMapPy.get().properties(layerID).remove(propertyName);
         editor.changeManager().setWorldMapChanged();
         editor.changeManager().setEdited(true);
-        editor.messageManager().showMessage("Property %s deleted".formatted(propertyName), 3, MessageType.INFO);
+        editor.ui().messageDisplay().showMessage("Property %s deleted".formatted(propertyName), 3, MessageType.INFO);
         Logger.debug("Property {} deleted", propertyName);
     }
 }

@@ -28,9 +28,9 @@ public class Action_OpenTemplateCreateMap extends AbstractEditorAction<Void> {
                 editor.setTemplateImage(image);
                 new Action_CreateMapFromTemplate(editor, image).execute();
                 editor.ui().selectTemplateImageTab();
-                editor.messageManager().showMessage("Select map colors from template!", 20, MessageType.INFO);
+                editor.ui().messageDisplay().showMessage("Select map colors from template!", 20, MessageType.INFO);
             } else {
-                editor.messageManager().showMessage("Template image size seems dubious", 3, MessageType.WARNING);
+                editor.ui().messageDisplay().showMessage("Template image size seems dubious", 3, MessageType.WARNING);
             }
         });
         return null;

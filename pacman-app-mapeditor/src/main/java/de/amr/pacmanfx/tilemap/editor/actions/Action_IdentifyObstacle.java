@@ -32,7 +32,7 @@ public class Action_IdentifyObstacle extends AbstractEditorAction<String> {
             ClipboardContent content = new ClipboardContent();
             content.putString(encoding);
             clipboard.setContent(content);
-            editor.messageManager().showMessage("Obstacle (copied to clipboard)", 5, MessageType.INFO);
+            editor.ui().messageDisplay().showMessage("Obstacle (copied to clipboard)", 5, MessageType.INFO);
             return encoding;
         } else {
             byte terrainCode = worldMap.content(LayerID.TERRAIN, tile);
@@ -42,7 +42,7 @@ public class Action_IdentifyObstacle extends AbstractEditorAction<String> {
                 info = "Terrain #%02X (%s)".formatted(terrainCode, terrainCode);
             if (foodCode != FoodTile.EMPTY.code())
                 info = "Food #%02X (%s)".formatted(foodCode, foodCode);
-            editor.messageManager().showMessage(info, 4, MessageType.INFO);
+            editor.ui().messageDisplay().showMessage(info, 4, MessageType.INFO);
             return null;
         }
     }

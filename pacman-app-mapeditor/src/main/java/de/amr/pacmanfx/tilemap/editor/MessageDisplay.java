@@ -9,19 +9,13 @@ import java.time.Instant;
 
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.FONT_MESSAGE;
 
-public class MessageManager {
+public class MessageDisplay extends Label {
 
     private Instant messageCloseTime;
-    private final Label messageLabel;
 
-    public MessageManager() {
-        messageLabel = new Label();
-        messageLabel.setFont(FONT_MESSAGE);
-        messageLabel.setMinWidth(200);
-    }
-
-    public Label messageLabel() {
-        return messageLabel;
+    public MessageDisplay() {
+        setFont(FONT_MESSAGE);
+        setMinWidth(200);
     }
 
     public void showMessage(String message, long seconds, MessageType type) {
@@ -30,8 +24,8 @@ public class MessageManager {
             case WARNING -> Color.GREEN;
             case ERROR -> Color.RED;
         };
-        messageLabel.setTextFill(color);
-        messageLabel.setText(message);
+        setTextFill(color);
+        setText(message);
         messageCloseTime = Instant.now().plus(java.time.Duration.ofSeconds(seconds));
     }
 
@@ -42,18 +36,14 @@ public class MessageManager {
     public void update() {
         if (messageCloseTime != null && Instant.now().isAfter(messageCloseTime)) {
             messageCloseTime = null;
-            FadeTransition fadeOut = new FadeTransition(Duration.seconds(2), messageLabel);
+            FadeTransition fadeOut = new FadeTransition(Duration.seconds(2), this);
             fadeOut.setFromValue(1.0);
             fadeOut.setToValue(0.0);
             fadeOut.setOnFinished(event -> {
-                messageLabel.setText("");
-                messageLabel.setOpacity(1.0);
+                setText("");
+                setOpacity(1.0);
             });
             fadeOut.play();
         }
     }
-
-
-
-
 }
