@@ -3,7 +3,6 @@ package de.amr.pacmanfx.tilemap.editor.actions;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.*;
 import de.amr.pacmanfx.tilemap.editor.MessageType;
-import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
 import de.amr.pacmanfx.tilemap.editor.TileMapEditorUI;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
