@@ -10,7 +10,10 @@ import de.amr.pacmanfx.tilemap.editor.actions.Action_CreateEmptyMap;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
-import javafx.beans.property.*;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
@@ -27,18 +30,27 @@ import static java.util.Objects.requireNonNull;
 
 public class TileMapEditor {
 
+    static final WorldMap EMPTY_MAP = WorldMap.emptyMap(ARCADE_MAP_SIZE_IN_TILES.x(), ARCADE_MAP_SIZE_IN_TILES.y());
+
     private final TileMapEditorUI ui;
     private final UpdateTimer updateTimer = new UpdateTimer();
 
     private class UpdateTimer extends AnimationTimer {
+        private static final int FREQ = 30; // Hz
+        private static final long FRAME_DURATION_NS = 1_000_000_000 / FREQ;
+        private long lastUpdate = 0;
+
         @Override
         public void handle(long now) {
-            ui.messageDisplay().update();
-            processChanges();
-            try {
-                ui.draw();
-            } catch (Exception x) {
-                Logger.error(x);
+            if (now - lastUpdate >= FRAME_DURATION_NS) {
+                lastUpdate = now;
+                ui.messageDisplay().update();
+                processChanges();
+                try {
+                    ui.draw();
+                } catch (Exception x) {
+                    Logger.error(x);
+                }
             }
         }
     }
@@ -47,6 +59,7 @@ public class TileMapEditor {
         requireNonNull(stage);
         requireNonNull(model3DRepository);
         ui = new TileMapEditorUI(stage, this, model3DRepository);
+        currentWorldMap.addListener((py, ov, nv) -> setWorldMapChanged());
     }
 
     public void init(File workDir) {
@@ -154,12 +167,7 @@ public class TileMapEditor {
 
     // -- currentWorldMap
 
-    private final ObjectProperty<WorldMap> currentWorldMap = new SimpleObjectProperty<>(WorldMap.emptyMap(28, 36)) {
-        @Override
-        protected void invalidated() {
-            setWorldMapChanged();
-        }
-    };
+    private final ObjectProperty<WorldMap> currentWorldMap = new SimpleObjectProperty<>(EMPTY_MAP);
 
     public ObjectProperty<WorldMap> currentWorldMapProperty() { return currentWorldMap; }
 

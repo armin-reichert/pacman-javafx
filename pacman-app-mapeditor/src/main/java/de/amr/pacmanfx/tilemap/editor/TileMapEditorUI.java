@@ -763,18 +763,8 @@ public class TileMapEditorUI {
 
         createZoomControl();
 
-        statusLine = new HBox(
-                lblMapSize,
-                filler(10),
-                lblFocussedTile,
-                spacer(),
-                messageDisplay,
-                spacer(),
-                filler(10),
-                sliderZoom,
-                filler(10),
-                statusIndicator
-        );
+        statusLine = new HBox(lblMapSize, filler(10), lblFocussedTile, spacer(), messageDisplay, spacer(), filler(10),
+                sliderZoom, filler(10), statusIndicator);
         statusLine.setPadding(new Insets(6, 2, 2, 2));
     }
 
@@ -832,8 +822,8 @@ public class TileMapEditorUI {
                 if (worldMap.url() != null) {
                     return  "%s: [%s]".formatted( translated("map_editor"), worldMap.url() );
                 }
-                return "%s: [%s: %d rows %d cols]".formatted(
-                    translated("map_editor"), translated("unsaved_map"), worldMap.numRows(), worldMap.numCols() );
+                return "%s: [%s]".formatted(
+                    translated("map_editor"), translated("unsaved_map"));
             }, editor.currentFileProperty(), editor.currentWorldMapProperty()
         );
     }
