@@ -70,10 +70,10 @@ public class EditCanvas extends Canvas {
 
     private boolean dragging = false;
 
-    public EditCanvas(TileMapEditorUI ui, TileMapEditor.ChangeManager changeManager) {
+    public EditCanvas(TileMapEditorUI ui) {
         this.ui = requireNonNull(ui);
 
-        obstacleEditor = new ObstacleEditor(changeManager);
+        obstacleEditor = new ObstacleEditor();
         obstacleEditor.joiningProperty().bind(obstaclesJoiningProperty());
         obstacleEditor.symmetricEditModeProperty().bind(symmetricEditModeProperty());
         obstacleEditor.worldMapProperty().bind(worldMapProperty());
@@ -217,7 +217,7 @@ public class EditCanvas extends Canvas {
         obstacleEditor.setEnabled(false);
     }
 
-    public void draw(TileMapEditor.ChangeManager changeManager, TerrainMapColorScheme colorScheme) {
+    public void draw(TileMapEditor editor, TerrainMapColorScheme colorScheme) {
         double width = getWidth(), height = getHeight();
         ctx.setImageSmoothing(false);
 
@@ -255,7 +255,7 @@ public class EditCanvas extends Canvas {
         // Tiles that seem to be wrong
         ctx.setFont(Font.font("sans", gridSize() - 2));
         ctx.setFill(Color.grayRgb(200, 0.8));
-        for (Vector2i tile : changeManager.tilesWithErrors()) {
+        for (Vector2i tile : editor.tilesWithErrors()) {
             ctx.fillText("?", tile.x() * gridSize() + 0.25 * gridSize(), tile.y() * gridSize() + 0.8 * gridSize());
             if (symmetricEditMode.get()) {
                 int x = worldMap().numCols() - tile.x() - 1;

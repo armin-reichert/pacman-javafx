@@ -56,8 +56,8 @@ public class Action_SetTileCode extends AbstractEditorAction<Void> {
             }
         }
 
-        editor.changeManager().setEdited(true);
-        editor.changeManager().setWorldMapChanged();
+        editor.setEdited(true);
+        editor.setWorldMapChanged();
 
         return null;
     }

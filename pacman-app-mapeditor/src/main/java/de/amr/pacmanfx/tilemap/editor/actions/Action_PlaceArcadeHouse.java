@@ -74,8 +74,8 @@ public class Action_PlaceArcadeHouse extends AbstractEditorAction<Void> {
             worldMap.setContent(LayerID.FOOD, y, maxAround.x(), FoodTile.EMPTY.code());
         }
 
-        editor.changeManager().setWorldMapChanged();
-        editor.changeManager().setEdited(true);
+        editor.setWorldMapChanged();
+        editor.setEdited(true);
         return null;
     }
 
@@ -86,8 +86,8 @@ public class Action_PlaceArcadeHouse extends AbstractEditorAction<Void> {
                 worldMap.setContent(LayerID.TERRAIN, row, col, TerrainTile.EMPTY.$);
             }
         }
-        editor.changeManager().setTerrainMapChanged();
-        editor.changeManager().setEdited(true);
+        editor.setTerrainMapChanged();
+        editor.setEdited(true);
     }
 
     private void clearFoodAreaOneSided(TileMapEditor editor, WorldMap worldMap, Vector2i minTile, Vector2i maxTile) {
@@ -97,7 +97,7 @@ public class Action_PlaceArcadeHouse extends AbstractEditorAction<Void> {
                 worldMap.setContent(LayerID.FOOD, row, col, FoodTile.EMPTY.code());
             }
         }
-        editor.changeManager().setFoodMapChanged();
-        editor.changeManager().setEdited(true);
+        editor.setFoodMapChanged();
+        editor.setEdited(true);
     }
 }

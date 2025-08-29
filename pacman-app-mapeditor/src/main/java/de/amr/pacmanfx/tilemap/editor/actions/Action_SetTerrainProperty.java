@@ -23,8 +23,8 @@ public class Action_SetTerrainProperty extends AbstractEditorAction<Void> {
             return null;
         }
         terrainProperties.put(propertyName, value);
-        editor.changeManager().setTerrainMapChanged();
-        editor.changeManager().setEdited(true);
+        editor.setTerrainMapChanged();
+        editor.setEdited(true);
         return null;
     }
 }

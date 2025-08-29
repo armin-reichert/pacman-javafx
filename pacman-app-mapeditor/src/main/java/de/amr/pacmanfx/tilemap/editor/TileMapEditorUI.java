@@ -129,7 +129,7 @@ public class TileMapEditorUI {
         TerrainMapColorScheme colorScheme = currentColorScheme(worldMap);
         palettes.get(selectedPaletteID()).draw();
         if (tabEditCanvas.isSelected()) {
-            editCanvas.draw(editor.changeManager(), colorScheme);
+            editCanvas.draw(editor, colorScheme);
         }
         else if (tabTemplateImage.isSelected()) {
             templateImageCanvas.draw();
@@ -141,7 +141,7 @@ public class TileMapEditorUI {
     }
 
     public void ifNoUnsavedChangesDo(Runnable action) {
-        if (!editor.changeManager().isEdited()) {
+        if (!editor.isEdited()) {
             action.run();
             return;
         }
@@ -151,7 +151,7 @@ public class TileMapEditorUI {
                 new Action_SaveMapFile(editor).execute();
                 action.run();
             } else if (choice == SaveConfirmation.NO_SAVE_CHANGES) {
-                editor.changeManager().setEdited(false);
+                editor.setEdited(false);
                 action.run();
             } else if (choice == SaveConfirmation.CLOSE) {
                 confirmationDialog.close();
@@ -207,7 +207,7 @@ public class TileMapEditorUI {
     }
 
     private void createEditCanvas() {
-        editCanvas = new EditCanvas(this, editor.changeManager());
+        editCanvas = new EditCanvas(this);
         editCanvas.editModeProperty().bind(editor.editModeProperty());
         editCanvas.gridSizeProperty().bind(editor.gridSizeProperty());
         editCanvas.gridVisibleProperty().bind(editor.gridVisibleProperty());
@@ -469,7 +469,7 @@ public class TileMapEditorUI {
         return new PropertyValueEditorTool(
             (layerID, tile) -> {
                 editor.currentWorldMap().properties(layerID).put(propertyName, WorldMapFormatter.formatTile(tile));
-                editor.changeManager().setEdited(true);
+                editor.setEdited(true);
             },
             TOOL_SIZE, propertyName, description);
     }

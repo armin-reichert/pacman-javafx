@@ -29,7 +29,7 @@ public class Action_CreateMapFromTemplate extends AbstractEditorAction<Void> {
         emptyMap.properties(LayerID.TERRAIN).remove(WorldMapProperty.COLOR_DOOR);
         emptyMap.properties(LayerID.FOOD).remove(WorldMapProperty.COLOR_FOOD);
         editor.setCurrentWorldMap(emptyMap);
-        editor.changeManager().setEdited(true);
+        editor.setEdited(true);
         return null;
     }
 }

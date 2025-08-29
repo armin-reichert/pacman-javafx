@@ -46,7 +46,7 @@ public class Action_AddBorderWall extends AbstractEditorAction<Void> {
             setTerrain(lastRow,  col, TerrainTile.WALL_H);
         }
 
-        editor.changeManager().setTerrainMapChanged();
+        editor.setTerrainMapChanged();
         return null;
     }
 }

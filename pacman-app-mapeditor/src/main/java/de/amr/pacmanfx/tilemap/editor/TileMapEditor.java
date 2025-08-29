@@ -6,7 +6,6 @@ package de.amr.pacmanfx.tilemap.editor;
 
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
-import de.amr.pacmanfx.lib.tilemap.WorldMapFormatter;
 import de.amr.pacmanfx.tilemap.editor.actions.Action_CreateEmptyMap;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import javafx.animation.AnimationTimer;
@@ -23,82 +22,71 @@ import java.util.List;
 
 import static de.amr.pacmanfx.tilemap.editor.EditMode.INSPECT;
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.SAMPLE_MAPS_PATH;
+import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.sourceCode;
 import static java.util.Objects.requireNonNull;
 
 public class TileMapEditor {
 
-    public class ChangeManager {
+    // Change management
+    private boolean edited;
+    private boolean terrainMapChanged;
+    private boolean foodMapChanged;
+    private boolean obstaclesUpToDate;
 
-        private boolean edited;
-        private boolean terrainMapChanged;
-        private boolean foodMapChanged;
-        private boolean obstaclesUpToDate;
+    private final List<Vector2i> tilesWithErrors = new ArrayList<>();
 
-        private final List<Vector2i> tilesWithErrors = new ArrayList<>();
+    public List<Vector2i> tilesWithErrors() {
+        return tilesWithErrors;
+    }
 
-        public List<Vector2i> tilesWithErrors() {
-            return tilesWithErrors;
+    public void setEdited(boolean edited) {
+        this.edited = edited;
+    }
+
+    public boolean isEdited() { return edited; }
+
+    public void setWorldMapChanged() {
+        setTerrainMapChanged();
+        setFoodMapChanged();
+    }
+
+    public void setTerrainMapChanged() {
+        terrainMapChanged = true;
+        obstaclesUpToDate = false;
+    }
+
+    public void setFoodMapChanged() {
+        foodMapChanged = true;
+    }
+
+    private void processChanges() {
+        if (!obstaclesUpToDate) {
+            tilesWithErrors.clear();
+            tilesWithErrors.addAll(currentWorldMap().buildObstacleList());
+            obstaclesUpToDate = true;
         }
-
-        public void setEdited(boolean edited) {
-            this.edited = edited;
+        if (terrainMapChanged || foodMapChanged) {
+            sourceCode.set(sourceCode(currentWorldMap()));
         }
-
-        public boolean isEdited() { return edited; }
-
-        public void setWorldMapChanged() {
-            setTerrainMapChanged();
-            setFoodMapChanged();
+        if (terrainMapChanged) {
+            //TODO use events?
+            ui.onTerrainMapChanged(currentWorldMap());
+            terrainMapChanged = false;
         }
-
-        public void setTerrainMapChanged() {
-            terrainMapChanged = true;
-            obstaclesUpToDate = false;
-        }
-
-        public void setFoodMapChanged() {
-            foodMapChanged = true;
-        }
-
-        private void processChanges() {
-            if (!obstaclesUpToDate) {
-                tilesWithErrors.clear();
-                tilesWithErrors.addAll(currentWorldMap().buildObstacleList());
-                obstaclesUpToDate = true;
-            }
-            if (terrainMapChanged || foodMapChanged) {
-                sourceCode.set(sourceCode());
-            }
-            if (terrainMapChanged) {
-                //TODO use events?
-                ui.onTerrainMapChanged(currentWorldMap());
-                terrainMapChanged = false;
-            }
-            if (foodMapChanged) {
-                ui.onFoodMapChanged(currentWorldMap());
-                foodMapChanged = false;
-            }
-        }
-
-        private String sourceCode() {
-            StringBuilder sb = new StringBuilder();
-            String[] sourceTextLines = WorldMapFormatter.formatted(currentWorldMap()).split("\n");
-            for (int i = 0; i < sourceTextLines.length; ++i) {
-                sb.append("%5d: ".formatted(i + 1)).append(sourceTextLines[i]).append("\n");
-            }
-            return sb.toString();
+        if (foodMapChanged) {
+            ui.onFoodMapChanged(currentWorldMap());
+            foodMapChanged = false;
         }
     }
 
     private final TileMapEditorUI ui;
-    private final ChangeManager changeManager = new ChangeManager();
     private final UpdateTimer updateTimer = new UpdateTimer();
 
     private class UpdateTimer extends AnimationTimer {
         @Override
         public void handle(long now) {
             ui.messageDisplay().update();
-            changeManager.processChanges();
+            processChanges();
             try {
                 ui.draw();
             } catch (Exception x) {
@@ -118,7 +106,7 @@ public class TileMapEditor {
         WorldMap emptyMap = new Action_CreateEmptyMap(this, 36, 28).execute();
         setCurrentWorldMap(emptyMap);
         setEditMode(INSPECT);
-        changeManager.edited = false;
+        edited = false;
         ui.init();
     }
 
@@ -188,7 +176,7 @@ public class TileMapEditor {
     private final ObjectProperty<WorldMap> currentWorldMap = new SimpleObjectProperty<>(WorldMap.emptyMap(28, 36)) {
         @Override
         protected void invalidated() {
-            changeManager.setWorldMapChanged();
+            setWorldMapChanged();
         }
     };
 
@@ -447,8 +435,6 @@ public class TileMapEditor {
     public TileMapEditorUI ui() {
         return ui;
     }
-
-    public ChangeManager changeManager() { return changeManager;}
 
     // Sample maps loading
 

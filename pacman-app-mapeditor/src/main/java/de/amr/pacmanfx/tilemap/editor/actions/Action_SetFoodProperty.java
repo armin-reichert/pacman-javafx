@@ -23,8 +23,8 @@ public class Action_SetFoodProperty extends AbstractEditorAction<Void> {
             return null;
         }
         foodProperties.put(propertyName, value);
-        editor.changeManager().setFoodMapChanged();
-        editor.changeManager().setEdited(true);
+        editor.setFoodMapChanged();
+        editor.setEdited(true);
         return null;
     }
 }

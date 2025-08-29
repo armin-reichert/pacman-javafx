@@ -86,16 +86,16 @@ public class EditorMenuBar extends MenuBar {
         var miClearTerrain = new MenuItem(translated("menu.edit.clear_terrain"));
         miClearTerrain.setOnAction(actionEvent -> {
             editor.currentWorldMap().layer(LayerID.TERRAIN).setAll(TerrainTile.EMPTY.$);
-            editor.changeManager().setTerrainMapChanged();
-            editor.changeManager().setEdited(true);
+            editor.setTerrainMapChanged();
+            editor.setEdited(true);
         });
         miClearTerrain.disableProperty().bind(editor.editModeProperty().map(mode -> mode == EditMode.INSPECT));
 
         var miClearFood = new MenuItem(translated("menu.edit.clear_food"));
         miClearFood.setOnAction(actionEvent -> {
             editor.currentWorldMap().layer(LayerID.FOOD).setAll(FoodTile.EMPTY.code());
-            editor.changeManager().setFoodMapChanged();
-            editor.changeManager().setEdited(true);
+            editor.setFoodMapChanged();
+            editor.setEdited(true);
         });
         miClearFood.disableProperty().bind(editor.editModeProperty().map(mode -> mode == EditMode.INSPECT));
 

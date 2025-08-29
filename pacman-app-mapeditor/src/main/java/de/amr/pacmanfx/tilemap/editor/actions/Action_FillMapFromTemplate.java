@@ -111,8 +111,8 @@ public class Action_FillMapFromTemplate extends AbstractEditorAction<Void> {
         java.time.Duration duration = java.time.Duration.between(startTime, LocalTime.now());
         editor.ui().messageDisplay().showMessage("Map creation took %d milliseconds".formatted(duration.toMillis()), 5, MessageType.INFO);
 
-        editor.changeManager().setWorldMapChanged();
-        editor.changeManager().setEdited(true);
+        editor.setWorldMapChanged();
+        editor.setEdited(true);
 
         return null;
     }

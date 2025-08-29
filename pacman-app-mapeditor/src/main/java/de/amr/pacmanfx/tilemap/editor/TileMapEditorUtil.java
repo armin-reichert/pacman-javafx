@@ -5,7 +5,10 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tilemap.editor;
 
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.lib.tilemap.*;
+import de.amr.pacmanfx.lib.tilemap.LayerID;
+import de.amr.pacmanfx.lib.tilemap.TerrainTile;
+import de.amr.pacmanfx.lib.tilemap.WorldMap;
+import de.amr.pacmanfx.lib.tilemap.WorldMapFormatter;
 import de.amr.pacmanfx.model.WorldMapProperty;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -33,6 +36,15 @@ public interface TileMapEditorUtil {
     static String urlString(String resourcePath) {
         URL url = requireNonNull(TileMapEditorUtil.class.getResource(resourcePath));
         return url.toExternalForm();
+    }
+
+    static String sourceCode(WorldMap worldMap) {
+        StringBuilder sb = new StringBuilder();
+        String[] sourceTextLines = WorldMapFormatter.formatted(worldMap).split("\n");
+        for (int i = 0; i < sourceTextLines.length; ++i) {
+            sb.append("%5d: ".formatted(i + 1)).append(sourceTextLines[i]).append("\n");
+        }
+        return sb.toString();
     }
 
     static byte mirroredTileCode(byte code) {

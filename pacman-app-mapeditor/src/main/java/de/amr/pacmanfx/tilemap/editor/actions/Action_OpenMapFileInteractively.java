@@ -23,7 +23,7 @@ public class Action_OpenMapFileInteractively extends AbstractEditorAction<File> 
             if (file != null) {
                 new Action_ReplaceCurrentWorldMapChecked(editor, file).execute();
             }
-            editor.changeManager().setEdited(false);
+            editor.setEdited(false);
         });
         return file;
     }

@@ -34,12 +34,6 @@ public class ObstacleEditor {
     private Vector2i minTile; // top left corner
     private Vector2i maxTile; // bottom right corner
 
-    private final TileMapEditor.ChangeManager changeManager;
-
-    public ObstacleEditor(TileMapEditor.ChangeManager changeManager) {
-        this.changeManager = changeManager;
-    }
-
     public void setOnEditTile(BiConsumer<Vector2i, Byte> onEditTile) {
         this.onEditTile = onEditTile;
     }

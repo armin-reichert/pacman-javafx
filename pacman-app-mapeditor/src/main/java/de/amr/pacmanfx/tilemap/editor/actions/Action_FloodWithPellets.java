@@ -43,8 +43,8 @@ public class Action_FloodWithPellets extends AbstractEditorAction<Void> {
                 visited.add(neighborTile);
             }
         }
-        editor.changeManager().setFoodMapChanged();
-        editor.changeManager().setEdited(true);
+        editor.setFoodMapChanged();
+        editor.setEdited(true);
         return null;
     }
 }

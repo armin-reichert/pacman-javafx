@@ -23,10 +23,10 @@ public class Action_SetDefaultMapColors extends AbstractEditorAction<Void> {
         worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.COLOR_WALL_FILL, MS_PACMAN_COLOR_WALL_FILL);
         worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.COLOR_DOOR, MS_PACMAN_COLOR_DOOR);
         worldMap.properties(LayerID.FOOD).put(WorldMapProperty.COLOR_FOOD, MS_PACMAN_COLOR_FOOD);
-        editor.changeManager().setTerrainMapChanged();
-        editor.changeManager().setFoodMapChanged();
+        editor.setTerrainMapChanged();
+        editor.setFoodMapChanged();
         //TODO on start we don't want the initial map to be marked as changed
-        editor.changeManager().setEdited(true);
+        editor.setEdited(true);
         return null;
     }
 }

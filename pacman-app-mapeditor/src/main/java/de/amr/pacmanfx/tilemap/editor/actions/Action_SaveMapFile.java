@@ -25,7 +25,7 @@ public class Action_SaveMapFile extends AbstractEditorAction<Void> {
             if (file.getName().endsWith(".world")) {
                 boolean saveSuccess = saveWorldMap(editor.currentWorldMap(), file);
                 if (saveSuccess) {
-                    editor.changeManager().setEdited(false);
+                    editor.setEdited(false);
                     boolean replaceSuccess = new Action_ReplaceCurrentWorldMapChecked(editor, file).execute();
                     if (replaceSuccess) {
                         editor.ui().messageDisplay().showMessage("Map saved as '%s'".formatted(file.getName()), 3, MessageType.INFO);

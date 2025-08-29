@@ -20,8 +20,8 @@ public class Action_ClearTerrainTile extends AbstractEditorAction<Void> {
     @Override
     public Void execute() {
         editor.currentWorldMap().setContent(LayerID.TERRAIN, tile, TerrainTile.EMPTY.$);
-        editor.changeManager().setTerrainMapChanged();
-        editor.changeManager().setEdited(true);
+        editor.setTerrainMapChanged();
+        editor.setEdited(true);
         return null;
     }
 }
