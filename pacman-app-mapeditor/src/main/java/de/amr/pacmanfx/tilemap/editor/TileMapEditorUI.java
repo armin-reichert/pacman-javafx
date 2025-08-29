@@ -132,7 +132,7 @@ public class TileMapEditorUI {
         TerrainMapColorScheme colorScheme = currentColorScheme(worldMap);
         palettes.get(selectedPaletteID()).draw();
         if (tabEditCanvas.isSelected()) {
-            editCanvas.draw(editor, colorScheme);
+            editCanvas.draw(colorScheme);
         }
         else if (tabTemplateImage.isSelected()) {
             templateImageCanvas.draw();
@@ -226,11 +226,11 @@ public class TileMapEditorUI {
 
         editCanvas.obstacleEditor().setOnEditTile(
             (tile, code) -> new Action_SetTileCode(editor, editor.currentWorldMap(), LayerID.TERRAIN, tile, code).execute());
-        editCanvas.setOnContextMenuRequested(event -> editCanvas.onContextMenuRequested(editor, event));
-        editCanvas.setOnMouseClicked(event -> editCanvas.onMouseClicked(editor, event));
-        editCanvas.setOnMouseMoved(event -> editCanvas.onMouseMoved(editor, event));
-        editCanvas.setOnMouseReleased(event -> editCanvas.onMouseReleased(editor, event));
-        editCanvas.setOnKeyPressed(event -> editCanvas.onKeyPressed(editor, event));
+        editCanvas.setOnContextMenuRequested(event -> editCanvas.onContextMenuRequested(event));
+        editCanvas.setOnMouseClicked(event -> editCanvas.onMouseClicked(event));
+        editCanvas.setOnMouseMoved(event -> editCanvas.onMouseMoved(event));
+        editCanvas.setOnMouseReleased(event -> editCanvas.onMouseReleased(event));
+        editCanvas.setOnKeyPressed(event -> editCanvas.onKeyPressed(event));
 
         spEditCanvas = new ScrollPane(editCanvas);
         spEditCanvas.setFitToHeight(true);
@@ -329,7 +329,7 @@ public class TileMapEditorUI {
         node.setOnDragDropped(dragEvent -> {
             if (dragEvent.getDragboard().hasFiles()) {
                 File file = dragEvent.getDragboard().getFiles().getFirst();
-                decideWithCheckForUnsavedChanges(() -> editCanvas.onFileDropped(editor, file));
+                decideWithCheckForUnsavedChanges(() -> editCanvas.onFileDropped(file));
             }
             dragEvent.consume();
         });

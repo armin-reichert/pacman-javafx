@@ -1,7 +1,6 @@
 package de.amr.pacmanfx.tilemap.editor.actions;
 
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
-import de.amr.pacmanfx.tilemap.editor.MessageType;
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
 import org.tinylog.Logger;
 
@@ -51,7 +50,7 @@ public class Action_SelectNextMapFile extends AbstractEditorAction<File> {
                 Logger.info("World map file changed to {}", file);
             } catch (Exception x) {
                 Logger.error(x);
-                editor.ui().messageDisplay().showMessage("Could not load map file '%s'".formatted(file), 5, MessageType.ERROR);
+                Logger.error("Could not load map file '%s'".formatted(file));
             }
             return file;
         }

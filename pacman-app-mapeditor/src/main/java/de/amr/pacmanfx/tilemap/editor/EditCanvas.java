@@ -217,7 +217,7 @@ public class EditCanvas extends Canvas {
         obstacleEditor.setEnabled(false);
     }
 
-    public void draw(TileMapEditor editor, TerrainMapColorScheme colorScheme) {
+    public void draw(TerrainMapColorScheme colorScheme) {
         double width = getWidth(), height = getHeight();
         ctx.setImageSmoothing(false);
 
@@ -255,7 +255,7 @@ public class EditCanvas extends Canvas {
         // Tiles that seem to be wrong
         ctx.setFont(Font.font("sans", gridSize() - 2));
         ctx.setFill(Color.grayRgb(200, 0.8));
-        for (Vector2i tile : editor.tilesWithErrors()) {
+        for (Vector2i tile : ui.editor().tilesWithErrors()) {
             ctx.fillText("?", tile.x() * gridSize() + 0.25 * gridSize(), tile.y() * gridSize() + 0.8 * gridSize());
             if (symmetricEditMode.get()) {
                 int x = worldMap().numCols() - tile.x() - 1;
@@ -312,12 +312,12 @@ public class EditCanvas extends Canvas {
         ctx.restore();
     }
 
-    public void onMouseClicked(TileMapEditor editor, MouseEvent mouseEvent) {
+    public void onMouseClicked(MouseEvent mouseEvent) {
         Logger.debug("Mouse clicked {}", mouseEvent);
         if (mouseEvent.getButton() == MouseButton.PRIMARY) {
             requestFocus();
             contextMenu.hide();
-            if (mouseEvent.getClickCount() == 2 && editor.editModeIs(EditMode.INSPECT)) {
+            if (mouseEvent.getClickCount() == 2 && ui.editor().editModeIs(EditMode.INSPECT)) {
                 ui.showEditHelpText();
             }
         }
@@ -335,20 +335,20 @@ public class EditCanvas extends Canvas {
         }
     }
 
-    public void onMouseReleased(TileMapEditor editor, MouseEvent mouseEvent) {
+    public void onMouseReleased(MouseEvent mouseEvent) {
         if (mouseEvent.getButton() != MouseButton.PRIMARY) return;
         if (dragging) {
             dragging = false;
             obstacleEditor.endEditing();
         } else {
             Vector2i tile = tileAt(mouseEvent.getX(), mouseEvent.getY());
-            if (editor.editModeIs(EditMode.INSPECT)) {
-                new Action_IdentifyObstacle(editor, tile).execute();
+            if (ui.editor().editModeIs(EditMode.INSPECT)) {
+                new Action_IdentifyObstacle(ui, tile).execute();
             } else {
                 if (mouseEvent.isControlDown()) {
                     switch (ui.selectedPaletteID()) {
-                        case TERRAIN -> new Action_ClearTerrainTile(editor, tile).execute();
-                        case FOOD -> new Action_ClearFoodTile(editor, tile).execute();
+                        case TERRAIN -> new Action_ClearTerrainTile(ui.editor(), tile).execute();
+                        case FOOD -> new Action_ClearFoodTile(ui.editor(), tile).execute();
                         case ACTORS -> {}
                     }
                 } else {
@@ -358,14 +358,14 @@ public class EditCanvas extends Canvas {
         }
     }
 
-    public void onMouseMoved(TileMapEditor editor, MouseEvent mouseEvent) {
+    public void onMouseMoved(MouseEvent mouseEvent) {
         Vector2i tile = tileAt(mouseEvent.getX(), mouseEvent.getY());
         focussedTile.set(tile);
         switch (editMode.get()) {
             case INSPECT -> {}
             case EDIT -> {
                 if (mouseEvent.isShiftDown()) {
-                    switch (editor.paletteID()) {
+                    switch (ui.editor().paletteID()) {
                         case TERRAIN -> {
                             Palette palette = ui.selectedPalette();
                             if (palette.isToolSelected()) {
@@ -385,19 +385,19 @@ public class EditCanvas extends Canvas {
             case ERASE -> {
                 if (mouseEvent.isShiftDown()) {
                     switch (ui.selectedPaletteID()) {
-                        case TERRAIN -> new Action_ClearTerrainTile(editor, tile).execute();
-                        case FOOD -> new Action_ClearFoodTile(editor, tile).execute();
+                        case TERRAIN -> new Action_ClearTerrainTile(ui.editor(), tile).execute();
+                        case FOOD -> new Action_ClearFoodTile(ui.editor(), tile).execute();
                     }
                 }
             }
         }
     }
 
-    public void onFileDropped(TileMapEditor editor, File file) {
+    public void onFileDropped(File file) {
         if (isWorldMapFile(file)) {
-            new Action_ReplaceCurrentWorldMapChecked(editor, file).execute();
+            new Action_ReplaceCurrentWorldMapChecked(ui, file).execute();
         }
-        else if (isImageFile(file) && !editor.editModeIs(EditMode.INSPECT)) {
+        else if (isImageFile(file) && !ui.editor().editModeIs(EditMode.INSPECT)) {
             Image image = loadImage(file).orElse(null);
             if (image == null) {
                 ui.messageDisplay().showMessage("Could not open image file '%s'".formatted(file), 3, MessageType.ERROR);
@@ -407,8 +407,8 @@ public class EditCanvas extends Canvas {
                 ui.messageDisplay().showMessage("Template image file '%s' has dubios size".formatted(file), 3, MessageType.ERROR);
                 return;
             }
-            editor.setTemplateImage(image);
-            new Action_CreateMapFromTemplate(editor, image).execute();
+            ui.editor().setTemplateImage(image);
+            new Action_CreateMapFromTemplate(ui.editor(), image).execute();
             ui.selectTemplateImageTab();
             ui.messageDisplay().showMessage("Select colors for tile identification!", 10, MessageType.INFO);
         }
@@ -418,7 +418,9 @@ public class EditCanvas extends Canvas {
         return image.getHeight() % TS == 0 && image.getWidth() % TS == 0;
     }
 
-    public void onContextMenuRequested(TileMapEditor editor, ContextMenuEvent menuEvent) {
+    public void onContextMenuRequested(ContextMenuEvent menuEvent) {
+        final TileMapEditor editor = ui.editor();
+
         if (editor.editModeIs(EditMode.INSPECT)) {
             return;
         }
@@ -463,7 +465,7 @@ public class EditCanvas extends Canvas {
         contextMenu.show(this, menuEvent.getScreenX(), menuEvent.getScreenY());
     }
 
-    public void onKeyPressed(TileMapEditor editor, KeyEvent keyEvent) {
+    public void onKeyPressed(KeyEvent keyEvent) {
         KeyCode key = keyEvent.getCode();
         boolean control = keyEvent.isControlDown();
 
@@ -480,7 +482,7 @@ public class EditCanvas extends Canvas {
             moveCursor(Direction.DOWN, tile -> true);
         }
         else if (control && key == KeyCode.SPACE) {
-            new Action_SelectNextPaletteEntry(editor).execute();
+            new Action_SelectNextPaletteEntry(ui).execute();
         }
     }
 }
