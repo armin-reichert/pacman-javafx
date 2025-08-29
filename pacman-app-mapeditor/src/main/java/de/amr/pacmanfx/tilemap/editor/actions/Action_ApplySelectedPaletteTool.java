@@ -10,36 +10,26 @@ import static java.util.Objects.requireNonNull;
 
 public class Action_ApplySelectedPaletteTool extends AbstractEditorUIAction<Void> {
 
+    private final Palette palette;
     private final Vector2i tile;
-    private final boolean erase;
 
-    public Action_ApplySelectedPaletteTool(TileMapEditorUI ui, Vector2i tile, boolean erase) {
+    public Action_ApplySelectedPaletteTool(TileMapEditorUI ui, Palette palette, Vector2i tile) {
         super(ui);
+        this.palette = requireNonNull(palette);
         this.tile = requireNonNull(tile);
-        this.erase = erase;
     }
 
     @Override
     public Void execute() {
-        Palette palette = ui.selectedPalette();
-        switch (ui.selectedPaletteID()) {
-            case TERRAIN -> {
-                if (erase) {
-                    new Action_ClearTerrainTile(editor, tile).execute();
-                } else if (palette.isToolSelected()) {
+        switch (palette.id()) {
+            case ACTORS, TERRAIN -> {
+                if (palette.isToolSelected()) {
                     palette.selectedTool().editor().accept(LayerID.TERRAIN, tile);
                 }
             }
             case FOOD -> {
-                if (erase) {
-                    new Action_ClearFoodTile(editor, tile).execute();
-                } else if (palette.isToolSelected()) {
-                    palette.selectedTool().editor().accept(LayerID.FOOD, tile);
-                }
-            }
-            case ACTORS -> {
                 if (palette.isToolSelected()) {
-                    palette.selectedTool().editor().accept(LayerID.TERRAIN, tile);
+                    palette.selectedTool().editor().accept(LayerID.FOOD, tile);
                 }
             }
             default -> Logger.error("Unknown palette ID " + ui.selectedPaletteID());

@@ -345,8 +345,15 @@ public class EditCanvas extends Canvas {
             if (editor.editModeIs(EditMode.INSPECT)) {
                 new Action_IdentifyObstacle(editor, tile).execute();
             } else {
-                boolean erase = mouseEvent.isControlDown();
-                new Action_ApplySelectedPaletteTool(ui, tile, erase).execute();
+                if (mouseEvent.isControlDown()) {
+                    switch (ui.selectedPaletteID()) {
+                        case TERRAIN -> new Action_ClearTerrainTile(editor, tile).execute();
+                        case FOOD -> new Action_ClearFoodTile(editor, tile).execute();
+                        case ACTORS -> {}
+                    }
+                } else {
+                    new Action_ApplySelectedPaletteTool(ui, ui.selectedPalette(), tile).execute();
+                }
             }
         }
     }
