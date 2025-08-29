@@ -323,48 +323,6 @@ public class TileMapEditor {
         paletteID.set(id);
     }
 
-    // -- propertyEditorsVisible
-
-    public static final boolean DEFAULT_PROPERTY_EDITORS_VISIBLE = false;
-
-    private BooleanProperty mapPropertyEditorsVisible;
-
-    public BooleanProperty propertyEditorsVisibleProperty() {
-        if (mapPropertyEditorsVisible == null) {
-            mapPropertyEditorsVisible = new SimpleBooleanProperty(DEFAULT_PROPERTY_EDITORS_VISIBLE);
-        }
-        return mapPropertyEditorsVisible;
-    }
-
-    public boolean propertyEditorsVisible() {
-        return mapPropertyEditorsVisible == null ? DEFAULT_PROPERTY_EDITORS_VISIBLE : propertyEditorsVisibleProperty().get();
-    }
-
-    public void setPropertyEditorsVisible(boolean value) {
-        propertyEditorsVisibleProperty().set(value);
-    }
-
-    // -- segmentNumbersVisible
-
-    public static final boolean DEFAULT_SEGMENT_NUMBERS_VISIBLE = false;
-
-    private BooleanProperty segmentNumbersVisible;
-
-    public BooleanProperty segmentNumbersVisibleProperty() {
-        if (segmentNumbersVisible == null) {
-            segmentNumbersVisible = new SimpleBooleanProperty(DEFAULT_SEGMENT_NUMBERS_VISIBLE);
-        }
-        return segmentNumbersVisible;
-    }
-
-    public boolean segmentNumbersVisible() {
-        return segmentNumbersVisible == null ? DEFAULT_SEGMENT_NUMBERS_VISIBLE : segmentNumbersVisibleProperty().get();
-    }
-
-    public void setSegmentNumbersVisible(boolean value) {
-        segmentNumbersVisibleProperty().set(value);
-    }
-
     // -- sourceCode
 
     private final StringProperty sourceCode = new SimpleStringProperty("");
@@ -406,27 +364,6 @@ public class TileMapEditor {
 
     public void setTemplateImage(Image image) {
         templateImage.set(image);
-    }
-
-    // -- terrainVisible
-
-    public static final boolean DEFAULT_TERRAIN_VISIBLE = true;
-
-    private BooleanProperty terrainVisible;
-
-    public BooleanProperty terrainVisibleProperty() {
-        if (terrainVisible == null) {
-            terrainVisible = new SimpleBooleanProperty(DEFAULT_TERRAIN_VISIBLE);
-        }
-        return terrainVisible;
-    }
-
-    public boolean terrainVisible() {
-        return terrainVisible == null ? DEFAULT_TERRAIN_VISIBLE : terrainVisible.get();
-    }
-
-    public void setTerrainVisible(boolean visible) {
-        terrainVisibleProperty().set(visible);
     }
 
     // Sample maps loading

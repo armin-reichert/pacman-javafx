@@ -121,10 +121,10 @@ public class EditorMenuBar extends MenuBar {
         // "View" menu
 
         var miPropertiesVisible = new CheckMenuItem(translated("menu.view.properties"));
-        miPropertiesVisible.selectedProperty().bindBidirectional(editor.propertyEditorsVisibleProperty());
+        miPropertiesVisible.selectedProperty().bindBidirectional(ui.propertyEditorsVisibleProperty());
 
         var miTerrainVisible = new CheckMenuItem(translated("menu.view.terrain"));
-        miTerrainVisible.selectedProperty().bindBidirectional(editor.terrainVisibleProperty());
+        miTerrainVisible.selectedProperty().bindBidirectional(ui.terrainVisibleProperty());
 
         var miFoodVisible = new CheckMenuItem(translated("menu.view.food"));
         miFoodVisible.selectedProperty().bindBidirectional(editor.foodVisibleProperty());
@@ -136,7 +136,7 @@ public class EditorMenuBar extends MenuBar {
         miGridVisible.selectedProperty().bindBidirectional(editor.gridVisibleProperty());
 
         var miSegmentNumbersVisible = new CheckMenuItem(translated("menu.view.segment_numbers"));
-        miSegmentNumbersVisible.selectedProperty().bindBidirectional(editor.segmentNumbersVisibleProperty());
+        miSegmentNumbersVisible.selectedProperty().bindBidirectional(ui.segmentNumbersVisibleProperty());
 
         var miObstacleInnerAreaVisible = new CheckMenuItem(translated("inner_obstacle_area"));
         miObstacleInnerAreaVisible.selectedProperty().bindBidirectional(editor.obstacleInnerAreaDisplayedProperty());

@@ -18,6 +18,8 @@ import de.amr.pacmanfx.uilib.tilemap.TerrainMapColorScheme;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
@@ -102,7 +104,7 @@ public class TileMapEditorUI {
         contentPane.setOnKeyTyped(this::onKeyTyped);
         contentPane.setOnKeyPressed(this::onKeyPressed);
 
-        editor.propertyEditorsVisibleProperty().addListener((py, ov, visible) ->
+        propertyEditorsVisibleProperty().addListener((py, ov, visible) ->
             contentPane.setLeft(visible ? propertyEditorsPane : null));
 
         editor.editModeProperty().addListener((py, on, newEditMode) -> {
@@ -179,6 +181,72 @@ public class TileMapEditorUI {
         );
     }
 
+    // -- propertyEditorsVisible
+
+    public static final boolean DEFAULT_PROPERTY_EDITORS_VISIBLE = false;
+
+    private BooleanProperty mapPropertyEditorsVisible;
+
+    public BooleanProperty propertyEditorsVisibleProperty() {
+        if (mapPropertyEditorsVisible == null) {
+            mapPropertyEditorsVisible = new SimpleBooleanProperty(DEFAULT_PROPERTY_EDITORS_VISIBLE);
+        }
+        return mapPropertyEditorsVisible;
+    }
+
+    public boolean propertyEditorsVisible() {
+        return mapPropertyEditorsVisible == null ? DEFAULT_PROPERTY_EDITORS_VISIBLE : propertyEditorsVisibleProperty().get();
+    }
+
+    public void setPropertyEditorsVisible(boolean value) {
+        propertyEditorsVisibleProperty().set(value);
+    }
+
+
+    // -- segmentNumbersVisible
+
+    public static final boolean DEFAULT_SEGMENT_NUMBERS_VISIBLE = false;
+
+    private BooleanProperty segmentNumbersVisible;
+
+    public BooleanProperty segmentNumbersVisibleProperty() {
+        if (segmentNumbersVisible == null) {
+            segmentNumbersVisible = new SimpleBooleanProperty(DEFAULT_SEGMENT_NUMBERS_VISIBLE);
+        }
+        return segmentNumbersVisible;
+    }
+
+    public boolean segmentNumbersVisible() {
+        return segmentNumbersVisible == null ? DEFAULT_SEGMENT_NUMBERS_VISIBLE : segmentNumbersVisibleProperty().get();
+    }
+
+    public void setSegmentNumbersVisible(boolean value) {
+        segmentNumbersVisibleProperty().set(value);
+    }
+
+
+    // -- terrainVisible
+
+    public static final boolean DEFAULT_TERRAIN_VISIBLE = true;
+
+    private BooleanProperty terrainVisible;
+
+    public BooleanProperty terrainVisibleProperty() {
+        if (terrainVisible == null) {
+            terrainVisible = new SimpleBooleanProperty(DEFAULT_TERRAIN_VISIBLE);
+        }
+        return terrainVisible;
+    }
+
+    public boolean terrainVisible() {
+        return terrainVisible == null ? DEFAULT_TERRAIN_VISIBLE : terrainVisible.get();
+    }
+
+    public void setTerrainVisible(boolean visible) {
+        terrainVisibleProperty().set(visible);
+    }
+
+
     // -- title
 
     private final StringProperty title = new SimpleStringProperty("Tile Map Editor");
@@ -226,10 +294,10 @@ public class TileMapEditorUI {
         editCanvas.worldMapProperty().bind(editor.currentWorldMapProperty());
         editCanvas.obstacleInnerAreaDisplayedProperty().bind(editor.obstacleInnerAreaDisplayedProperty());
         editCanvas.obstaclesJoiningProperty().bind(editor.obstaclesJoiningProperty());
-        editCanvas.segmentNumbersVisibleProperty().bind(editor.segmentNumbersVisibleProperty());
+        editCanvas.segmentNumbersVisibleProperty().bind(segmentNumbersVisibleProperty());
         editCanvas.symmetricEditModeProperty().bind(editor.symmetricEditModeProperty());
         editCanvas.templateImageGrayProperty().bind(editor.templateImageProperty().map(Ufx::imageToGreyscale));
-        editCanvas.terrainVisibleProperty().bind(editor.terrainVisibleProperty());
+        editCanvas.terrainVisibleProperty().bind(terrainVisibleProperty());
         editCanvas.foodVisibleProperty().bind(editor.foodVisibleProperty());
         editCanvas.actorsVisibleProperty().bind(editor.actorsVisibleProperty());
 
@@ -260,7 +328,7 @@ public class TileMapEditorUI {
         preview2D.widthProperty().bind(editCanvas.widthProperty());
         preview2D.heightProperty().bind(editCanvas.heightProperty());
         preview2D.gridSizeProperty().bind(editor.gridSizeProperty());
-        preview2D.terrainVisibleProperty().bind(editor.terrainVisibleProperty());
+        preview2D.terrainVisibleProperty().bind(terrainVisibleProperty());
         preview2D.foodVisibleProperty().bind(editor.foodVisibleProperty());
         preview2D.actorsVisibleProperty().bind(editor.actorsVisibleProperty());
 
@@ -273,7 +341,7 @@ public class TileMapEditorUI {
     private void createPreview3D(Model3DRepository model3DRepository) {
         preview3D = new Preview3D(editor, model3DRepository, 500, 500);
         preview3D.foodVisibleProperty().bind(editor.foodVisibleProperty());
-        preview3D.terrainVisibleProperty().bind(editor.terrainVisibleProperty());
+        preview3D.terrainVisibleProperty().bind(terrainVisibleProperty());
         preview3D.worldMapProperty().bind(editor.currentWorldMapProperty());
     }
 
@@ -503,7 +571,7 @@ public class TileMapEditorUI {
         foodPropertiesPane.setExpanded(true);
 
         propertyEditorsPane = new VBox(terrainPropertiesPane, foodPropertiesPane);
-        propertyEditorsPane.visibleProperty().bind(editor.propertyEditorsVisibleProperty());
+        propertyEditorsPane.visibleProperty().bind(propertyEditorsVisibleProperty());
     }
 
     private void createZoomControl() {
