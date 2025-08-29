@@ -390,7 +390,7 @@ public class EditCanvas extends Canvas {
         if (isWorldMapFile(file)) {
             new Action_ReplaceCurrentWorldMapChecked(editor, file).execute();
         }
-        else if (isSupportedImageFile(file) && !editor.editModeIs(EditMode.INSPECT)) {
+        else if (isImageFile(file) && !editor.editModeIs(EditMode.INSPECT)) {
             Image image = loadImage(file).orElse(null);
             if (image == null) {
                 ui.messageDisplay().showMessage("Could not open image file '%s'".formatted(file), 3, MessageType.ERROR);

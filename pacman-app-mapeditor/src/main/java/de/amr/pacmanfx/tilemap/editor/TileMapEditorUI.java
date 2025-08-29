@@ -317,7 +317,7 @@ public class TileMapEditorUI {
         node.setOnDragOver(dragEvent -> {
             if (dragEvent.getDragboard().hasFiles()) {
                 File file = dragEvent.getDragboard().getFiles().getFirst();
-                if (isSupportedImageFile(file) && !editor.editModeIs(EditMode.INSPECT) || isWorldMapFile(file)) {
+                if (isImageFile(file) && !editor.editModeIs(EditMode.INSPECT) || isWorldMapFile(file)) {
                     dragEvent.acceptTransferModes(TransferMode.COPY);
                 }
             }
