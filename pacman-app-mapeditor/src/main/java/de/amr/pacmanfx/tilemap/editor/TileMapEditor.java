@@ -27,6 +27,49 @@ import static java.util.Objects.requireNonNull;
 
 public class TileMapEditor {
 
+    private final TileMapEditorUI ui;
+    private final UpdateTimer updateTimer = new UpdateTimer();
+
+    private class UpdateTimer extends AnimationTimer {
+        @Override
+        public void handle(long now) {
+            ui.messageDisplay().update();
+            processChanges();
+            try {
+                ui.draw();
+            } catch (Exception x) {
+                Logger.error(x);
+            }
+        }
+    }
+
+    public TileMapEditor(Stage stage, Model3DRepository model3DRepository) {
+        requireNonNull(stage);
+        requireNonNull(model3DRepository);
+        ui = new TileMapEditorUI(stage, this, model3DRepository);
+    }
+
+    public void init(File workDir) {
+        setCurrentDirectory(workDir);
+        WorldMap emptyMap = new Action_CreateEmptyMap(this, 36, 28).execute();
+        setCurrentWorldMap(emptyMap);
+        setEditMode(INSPECT);
+        edited = false;
+        ui.init();
+    }
+
+    public void start() {
+        Platform.runLater(() -> {
+            ui.start();
+            updateTimer.start();
+        });
+    }
+
+    public void stop() {
+        updateTimer.stop();
+        setEditMode(INSPECT);
+    }
+
     // Change management
     private boolean edited;
     private boolean terrainMapChanged;
@@ -77,49 +120,6 @@ public class TileMapEditor {
             ui.onFoodMapChanged(currentWorldMap());
             foodMapChanged = false;
         }
-    }
-
-    private final TileMapEditorUI ui;
-    private final UpdateTimer updateTimer = new UpdateTimer();
-
-    private class UpdateTimer extends AnimationTimer {
-        @Override
-        public void handle(long now) {
-            ui.messageDisplay().update();
-            processChanges();
-            try {
-                ui.draw();
-            } catch (Exception x) {
-                Logger.error(x);
-            }
-        }
-    }
-
-    public TileMapEditor(Stage stage, Model3DRepository model3DRepository) {
-        requireNonNull(stage);
-        requireNonNull(model3DRepository);
-        ui = new TileMapEditorUI(stage, this, model3DRepository);
-    }
-
-    public void init(File workDir) {
-        setCurrentDirectory(workDir);
-        WorldMap emptyMap = new Action_CreateEmptyMap(this, 36, 28).execute();
-        setCurrentWorldMap(emptyMap);
-        setEditMode(INSPECT);
-        edited = false;
-        ui.init();
-    }
-
-    public void start() {
-        Platform.runLater(() -> {
-            ui.start();
-            updateTimer.start();
-        });
-    }
-
-    public void stop() {
-        updateTimer.stop();
-        setEditMode(INSPECT);
     }
 
     // -- actorsVisible
