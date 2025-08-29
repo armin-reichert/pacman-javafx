@@ -42,9 +42,11 @@ public class TemplateImageCanvas extends Canvas {
     private ContextMenu colorSelectionContextMenu;
     private ColorIndicator colorIndicator;
 
-    public TemplateImageCanvas(TileMapEditor editor) {
+    public TemplateImageCanvas(TileMapEditorUI ui) {
+        final TileMapEditor editor = ui.editor();
+
         gridSize.bind(editor.gridSizeProperty());
-        gridVisible.bind(editor.gridVisibleProperty());
+        gridVisible.bind(ui.gridVisibleProperty());
         templateImage.bind(editor.templateImageProperty());
         worldMap.bind(editor.currentWorldMapProperty());
 

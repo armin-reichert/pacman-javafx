@@ -181,6 +181,19 @@ public class TileMapEditorUI {
         );
     }
 
+    // -- gridVisible
+
+    public static final boolean DEFAULT_GRID_VISIBLE = true;
+
+    private BooleanProperty gridVisible;
+
+    public BooleanProperty gridVisibleProperty() {
+        if (gridVisible == null) {
+            gridVisible = new SimpleBooleanProperty(DEFAULT_GRID_VISIBLE);
+        }
+        return gridVisible;
+    }
+
     // -- obstacleInnerAreaDisplayed
 
     public static final boolean DEFAULT_OBSTACLE_INNER_AREA_DISPLAYED = false;
@@ -311,7 +324,7 @@ public class TileMapEditorUI {
         editCanvas = new EditCanvas(this);
         editCanvas.editModeProperty().bind(editor.editModeProperty());
         editCanvas.gridSizeProperty().bind(editor.gridSizeProperty());
-        editCanvas.gridVisibleProperty().bind(editor.gridVisibleProperty());
+        editCanvas.gridVisibleProperty().bind(gridVisibleProperty());
         editCanvas.worldMapProperty().bind(editor.currentWorldMapProperty());
         editCanvas.obstacleInnerAreaDisplayedProperty().bind(obstacleInnerAreaDisplayedProperty());
         editCanvas.obstaclesJoiningProperty().bind(editor.obstaclesJoiningProperty());
@@ -367,7 +380,7 @@ public class TileMapEditorUI {
     }
 
     private void createTemplateImageCanvas() {
-        templateImageCanvas = new TemplateImageCanvas(editor);
+        templateImageCanvas = new TemplateImageCanvas(this);
         Pane pane = new Pane(templateImageCanvas, templateImageCanvas.getColorIndicator());
         pane.setBackground(Background.fill(Color.TRANSPARENT));
         spTemplateImage = new ScrollPane(pane);

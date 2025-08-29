@@ -133,7 +133,7 @@ public class EditorMenuBar extends MenuBar {
         miActorsVisible.selectedProperty().bindBidirectional(editor.actorsVisibleProperty());
 
         var miGridVisible = new CheckMenuItem(translated("menu.view.grid"));
-        miGridVisible.selectedProperty().bindBidirectional(editor.gridVisibleProperty());
+        miGridVisible.selectedProperty().bindBidirectional(ui.gridVisibleProperty());
 
         var miSegmentNumbersVisible = new CheckMenuItem(translated("menu.view.segment_numbers"));
         miSegmentNumbersVisible.selectedProperty().bindBidirectional(ui.segmentNumbersVisibleProperty());
