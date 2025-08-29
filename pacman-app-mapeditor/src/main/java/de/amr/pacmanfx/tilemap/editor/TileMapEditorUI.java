@@ -186,10 +186,6 @@ public class TileMapEditorUI {
         return layoutPane;
     }
 
-    public EditCanvas editCanvas() {
-        return editCanvas;
-    }
-
     public EditorMenuBar menuBar() {
         return menuBar;
     }
@@ -222,7 +218,7 @@ public class TileMapEditorUI {
         editCanvas.actorsVisibleProperty().bind(editor.actorsVisibleProperty());
 
         editCanvas.obstacleEditor().setOnEditTile(
-                (tile, code) -> new Action_SetTileCode(editor, editor.currentWorldMap(), LayerID.TERRAIN, tile, code).execute());
+            (tile, code) -> new Action_SetTileCode(editor, editor.currentWorldMap(), LayerID.TERRAIN, tile, code).execute());
         editCanvas.setOnContextMenuRequested(event -> editCanvas.onContextMenuRequested(editor, event));
         editCanvas.setOnMouseClicked(event -> editCanvas.onMouseClicked(editor, event));
         editCanvas.setOnMouseMoved(event -> editCanvas.onMouseMoved(editor, event));
