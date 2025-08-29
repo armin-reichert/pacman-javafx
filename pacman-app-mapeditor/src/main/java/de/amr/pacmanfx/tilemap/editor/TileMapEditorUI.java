@@ -279,7 +279,7 @@ public class TileMapEditorUI {
         sourceView.setPrefWidth(600);
         sourceView.setPrefHeight(800);
         sourceView.setFont(FONT_SOURCE_VIEW);
-        sourceView.setStyle("-fx-control-inner-background:#222; -fx-text-fill: #f0f0f0;");
+        sourceView.setStyle(STYLE_SOURCE_VIEW);
         sourceView.textProperty().bind(editor.sourceCodeProperty());
     }
 

@@ -405,6 +405,8 @@ public class TileMapEditor {
 
     private final ObjectProperty<Image> templateImage = new SimpleObjectProperty<>();
 
+    public ObjectProperty<Image> templateImageProperty() { return templateImage; }
+
     public Image templateImage() {
         return templateImage.get();
     }
@@ -433,10 +435,6 @@ public class TileMapEditor {
     public void setTerrainVisible(boolean visible) {
         terrainVisibleProperty().set(visible);
     }
-
-    // -- templateImage
-
-    public ObjectProperty<Image> templateImageProperty() { return templateImage; }
 
     // -- title
 
