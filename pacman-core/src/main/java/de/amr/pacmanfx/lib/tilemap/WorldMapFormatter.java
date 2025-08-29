@@ -21,6 +21,10 @@ public interface WorldMapFormatter {
         return String.format(TILE_FORMAT, tile.x(), tile.y());
     }
 
+    static String formatTile(int tileX, int tileY) {
+        return String.format(TILE_FORMAT, tileX, tileY);
+    }
+
     static String formatted(WorldMap worldMap) {
         var sw = new StringWriter();
         var pw = new PrintWriter(sw);

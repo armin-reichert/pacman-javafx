@@ -9,6 +9,7 @@ import de.amr.pacmanfx.tilemap.editor.MessageType;
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
 import javafx.scene.control.TextInputDialog;
 
+import static de.amr.pacmanfx.lib.tilemap.WorldMapFormatter.formatTile;
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.translated;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.parseSize;
 
@@ -60,8 +61,8 @@ public class Action_ShowNewMapDialog extends AbstractEditorAction<Void> {
         var worldMap = WorldMap.emptyMap(numRows, numCols);
         if (worldMap.numRows() >= 20) {
             Vector2i houseMinTile = Vector2i.of(numCols / 2 - 4, numRows / 2 - 3);
-            worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_PAC,   WorldMapFormatter.formatTile(houseMinTile.plus(3, 11)));
-            worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_BONUS, WorldMapFormatter.formatTile(houseMinTile.plus(3, 5)));
+            worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_PAC,   formatTile(houseMinTile.plus(3, 11)));
+            worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_BONUS, formatTile(houseMinTile.plus(3, 5)));
             new Action_PlaceArcadeHouse(editor, worldMap, houseMinTile).execute();
         }
         worldMap.buildObstacleList();

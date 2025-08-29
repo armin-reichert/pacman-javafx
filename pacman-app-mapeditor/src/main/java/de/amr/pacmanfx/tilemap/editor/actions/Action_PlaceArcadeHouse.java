@@ -6,6 +6,7 @@ import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
 
 import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
+import static de.amr.pacmanfx.lib.tilemap.WorldMapFormatter.formatTile;
 import static java.util.Objects.requireNonNull;
 
 public class Action_PlaceArcadeHouse extends AbstractEditorAction<Void> {
@@ -33,8 +34,8 @@ public class Action_PlaceArcadeHouse extends AbstractEditorAction<Void> {
 
         Vector2i oldHouseMinTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE);
         Vector2i oldHouseMaxTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE);
-        worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_HOUSE_MIN_TILE, WorldMapFormatter.formatTile(houseMinTile));
-        worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_HOUSE_MAX_TILE, WorldMapFormatter.formatTile(houseMaxTile));
+        worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_HOUSE_MIN_TILE, formatTile(houseMinTile));
+        worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_HOUSE_MAX_TILE, formatTile(houseMaxTile));
 
         // clear tiles where house walls/doors were located (created at runtime!)
         if (oldHouseMinTile != null && oldHouseMaxTile != null) {
@@ -53,10 +54,10 @@ public class Action_PlaceArcadeHouse extends AbstractEditorAction<Void> {
             }
         }
 
-        worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_RED_GHOST,      WorldMapFormatter.formatTile(houseMinTile.plus(3, -1)));
-        worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_CYAN_GHOST,     WorldMapFormatter.formatTile(houseMinTile.plus(1, 2)));
-        worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_PINK_GHOST,     WorldMapFormatter.formatTile(houseMinTile.plus(3, 2)));
-        worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_ORANGE_GHOST,   WorldMapFormatter.formatTile(houseMinTile.plus(5, 2)));
+        worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_RED_GHOST,      formatTile(houseMinTile.plus(3, -1)));
+        worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_CYAN_GHOST,     formatTile(houseMinTile.plus(1, 2)));
+        worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_PINK_GHOST,     formatTile(houseMinTile.plus(3, 2)));
+        worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_ORANGE_GHOST,   formatTile(houseMinTile.plus(5, 2)));
 
         // clear pellets around house
         Vector2i minAround = houseMinTile.minus(1,1);

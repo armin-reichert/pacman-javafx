@@ -239,7 +239,7 @@ public class PropertyEditorPane extends BorderPane {
 
         @Override
         protected String formattedPropertyValue() {
-            return WorldMapFormatter.formatTile(new Vector2i(spinnerX.getValue(), spinnerY.getValue()));
+            return WorldMapFormatter.formatTile(spinnerX.getValue(), spinnerY.getValue());
         }
 
         @Override

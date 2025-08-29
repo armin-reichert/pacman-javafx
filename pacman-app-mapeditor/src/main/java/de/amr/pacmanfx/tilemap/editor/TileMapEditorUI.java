@@ -36,6 +36,7 @@ import java.io.File;
 import java.util.EnumMap;
 import java.util.Map;
 
+import static de.amr.pacmanfx.lib.tilemap.WorldMapFormatter.formatTile;
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.*;
 import static de.amr.pacmanfx.tilemap.editor.PaletteID.*;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.*;
@@ -464,7 +465,7 @@ public class TileMapEditorUI {
     protected PropertyValueEditorTool makePropertyTool(String propertyName, String description) {
         return new PropertyValueEditorTool(
             (layerID, tile) -> {
-                editor.currentWorldMap().properties(layerID).put(propertyName, WorldMapFormatter.formatTile(tile));
+                editor.currentWorldMap().properties(layerID).put(propertyName, formatTile(tile));
                 editor.setEdited(true);
             },
             TOOL_SIZE, propertyName, description);
