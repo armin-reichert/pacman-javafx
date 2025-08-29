@@ -183,6 +183,10 @@ public class TileMapEditorUI {
         return stage;
     }
 
+    public TileMapEditor editor() {
+        return editor;
+    }
+
     public BorderPane layoutPane() {
         return layoutPane;
     }
@@ -394,8 +398,8 @@ public class TileMapEditorUI {
     private Palette createTerrainPalette(TerrainMapRenderer renderer) {
         var palette = new Palette(PALETTE_ID_TERRAIN, TOOL_SIZE, 1, 13);
         palette.addTool(makeTileTool(TerrainTile.EMPTY.$, "Empty Space"));
-        palette.addTool(makeTileTool(TerrainTile.WALL_H.$, "Horiz. Wall"));
-        palette.addTool(makeTileTool(TerrainTile.WALL_V.$, "Vert. Wall"));
+        palette.addTool(makeTileTool(TerrainTile.WALL_H.$, "Horizontal Wall"));
+        palette.addTool(makeTileTool(TerrainTile.WALL_V.$, "Vertical Wall"));
         palette.addTool(makeTileTool(TerrainTile.ARC_NW.$, "NW Corner"));
         palette.addTool(makeTileTool(TerrainTile.ARC_NE.$, "NE Corner"));
         palette.addTool(makeTileTool(TerrainTile.ARC_SW.$, "SW Corner"));
@@ -472,11 +476,11 @@ public class TileMapEditorUI {
     }
 
     private void createPropertyEditors() {
-        terrainMapPropertiesEditor = new PropertyEditorPane(editor);
+        terrainMapPropertiesEditor = new PropertyEditorPane(this);
         terrainMapPropertiesEditor.enabledPy.bind(editor.editModeProperty().map(mode -> mode != EditMode.INSPECT));
         terrainMapPropertiesEditor.setPadding(new Insets(10,0,0,0));
 
-        foodMapPropertiesEditor = new PropertyEditorPane(editor);
+        foodMapPropertiesEditor = new PropertyEditorPane(this);
         foodMapPropertiesEditor.enabledPy.bind(editor.editModeProperty().map(mode -> mode != EditMode.INSPECT));
         foodMapPropertiesEditor.setPadding(new Insets(10,0,0,0));
 

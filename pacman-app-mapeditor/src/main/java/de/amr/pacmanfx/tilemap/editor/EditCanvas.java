@@ -397,7 +397,7 @@ public class EditCanvas extends Canvas {
                 return;
             }
             if (!isTemplateImageSizeOk(image)) {
-                editor.ui().messageDisplay().showMessage("Template image file '%s' has dubios size".formatted(file), 3, MessageType.ERROR);
+                ui.messageDisplay().showMessage("Template image file '%s' has dubios size".formatted(file), 3, MessageType.ERROR);
                 return;
             }
             editor.setTemplateImage(image);
