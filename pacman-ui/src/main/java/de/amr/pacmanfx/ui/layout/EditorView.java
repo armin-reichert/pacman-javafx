@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
+import de.amr.pacmanfx.tilemap.editor.TileMapEditorUI;
 import de.amr.pacmanfx.ui.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.api.ActionBindingsManager;
 import javafx.scene.layout.Region;
@@ -18,16 +19,16 @@ import static java.util.Objects.requireNonNull;
 
 public class EditorView implements GameUI_View {
 
-    private final TileMapEditor editor;
+    private final TileMapEditorUI editorUI;
 
-    public EditorView(TileMapEditor editor) {
-        this.editor = requireNonNull(editor);
+    public EditorView(TileMapEditorUI editorUI) {
+        this.editorUI = requireNonNull(editorUI);
         // without this, Pac-Man wallpaper shines through!
-        editor.ui().layoutPane().setBackground(colorBackground(Color.web("#dddddd"))); // JavaFX default grey
+        editorUI.layoutPane().setBackground(colorBackground(Color.web("#dddddd"))); // JavaFX default grey
     }
 
     public TileMapEditor editor() {
-        return editor;
+        return editorUI.editor();
     }
 
     @Override
@@ -35,11 +36,11 @@ public class EditorView implements GameUI_View {
 
     @Override
     public Region root() {
-        return editor.ui().layoutPane();
+        return editorUI.layoutPane();
     }
 
     @Override
     public Optional<Supplier<String>> titleSupplier() {
-        return Optional.of(editor.titleProperty()::get);
+        return Optional.of(editorUI.titleProperty()::get);
     }
 }

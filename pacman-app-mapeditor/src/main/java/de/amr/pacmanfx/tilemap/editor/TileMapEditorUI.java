@@ -18,6 +18,8 @@ import de.amr.pacmanfx.uilib.tilemap.TerrainMapColorScheme;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
@@ -120,7 +122,7 @@ public class TileMapEditorUI {
 
     public void start() {
         StringBinding titleBinding = createTitleBinding();
-        editor.titleProperty().bind(titleBinding);
+        titleProperty().bind(titleBinding);
         stage.titleProperty().bind(titleBinding);
         contentPane.setLeft(null); // no properties editor
         contentPane.requestFocus();
@@ -176,6 +178,13 @@ public class TileMapEditorUI {
                 getColorFromMap(worldMap, LayerID.TERRAIN, WorldMapProperty.COLOR_DOOR, parseColor(MS_PACMAN_COLOR_DOOR))
         );
     }
+
+    // -- title
+
+    private final StringProperty title = new SimpleStringProperty("Tile Map Editor");
+
+    public StringProperty titleProperty() { return title; }
+
 
     public MessageDisplay messageDisplay() {
         return messageDisplay;

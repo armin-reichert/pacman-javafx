@@ -428,12 +428,6 @@ public class TileMapEditor {
         terrainVisibleProperty().set(visible);
     }
 
-    // -- title
-
-    private final StringProperty title = new SimpleStringProperty("Tile Map Editor");
-
-    public StringProperty titleProperty() { return title; }
-
     // Sample maps loading
 
     public record SampleMaps(WorldMap pacManMap, List<WorldMap> msPacmanMaps, List<WorldMap> xxlMaps) {}

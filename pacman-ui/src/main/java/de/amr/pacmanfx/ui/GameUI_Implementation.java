@@ -304,7 +304,7 @@ public class GameUI_Implementation implements GameUI {
             });
             editor.ui().menuBar().menuFile().getItems().addAll(new SeparatorMenuItem(), miReturnToGame);
             editor.init(gameContext.customMapDir());
-            editorView = new EditorView(editor);
+            editorView = new EditorView(editor.ui());
         }
         return editorView;
     }
