@@ -33,10 +33,10 @@ public class Preview3D {
     private double anchorX;
     private double anchorAngle;
 
-    public Preview3D(TileMapEditor editor, Model3DRepository model3DRepository, double width, double height) {
+    public Preview3D(TileMapEditorUI ui, Model3DRepository model3DRepository, double width, double height) {
         requireNonNull(model3DRepository);
 
-        maze3D = new Maze3D(editor, model3DRepository);
+        maze3D = new Maze3D(ui, model3DRepository);
         maze3D.foodVisibleProperty().bind(foodVisiblePy);
         maze3D.terrainVisibleProperty().bind(terrainVisiblePy);
 

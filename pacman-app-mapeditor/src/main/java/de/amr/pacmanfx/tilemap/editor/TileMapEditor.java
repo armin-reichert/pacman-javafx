@@ -124,27 +124,6 @@ public class TileMapEditor {
         }
     }
 
-    // -- actorsVisible
-
-    public boolean DEFAULT_ACTORS_VISIBLE = true;
-
-    private BooleanProperty actorsVisible;
-
-    public BooleanProperty actorsVisibleProperty() {
-        if (actorsVisible == null) {
-            actorsVisible = new SimpleBooleanProperty(DEFAULT_ACTORS_VISIBLE);
-        }
-        return actorsVisible;
-    }
-
-    public boolean actorsVisible() {
-        return actorsVisible == null ? DEFAULT_ACTORS_VISIBLE : actorsVisibleProperty().get();
-    }
-
-    public void setActorsVisible(boolean visible) {
-        actorsVisibleProperty().set(visible);
-    }
-
     // -- currentDirectory
 
     private final ObjectProperty<File> currentDirectory = new SimpleObjectProperty<>();

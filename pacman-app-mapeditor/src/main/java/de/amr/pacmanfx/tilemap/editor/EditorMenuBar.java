@@ -130,7 +130,7 @@ public class EditorMenuBar extends MenuBar {
         miFoodVisible.selectedProperty().bindBidirectional(ui.foodVisibleProperty());
 
         var miActorsVisible = new CheckMenuItem("Actors"); //TODO localize
-        miActorsVisible.selectedProperty().bindBidirectional(editor.actorsVisibleProperty());
+        miActorsVisible.selectedProperty().bindBidirectional(ui.actorsVisibleProperty());
 
         var miGridVisible = new CheckMenuItem(translated("menu.view.grid"));
         miGridVisible.selectedProperty().bindBidirectional(ui.gridVisibleProperty());

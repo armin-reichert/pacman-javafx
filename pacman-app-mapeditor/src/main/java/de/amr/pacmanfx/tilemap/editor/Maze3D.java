@@ -73,10 +73,10 @@ public class Maze3D extends Group {
     private final Node pacmanShape3D;
     private final GhostBody[] ghostShapes;
 
-    private final TileMapEditor editor;
+    private final TileMapEditorUI ui;
 
-    public Maze3D(TileMapEditor editor, Model3DRepository model3DRepository) {
-        this.editor = requireNonNull(editor);
+    public Maze3D(TileMapEditorUI ui, Model3DRepository model3DRepository) {
+        this.ui = requireNonNull(ui);
         requireNonNull(model3DRepository);
 
         camera = new PerspectiveCamera(true);
@@ -92,7 +92,7 @@ public class Maze3D extends Group {
         foodGroup.visibleProperty().bind(foodVisiblePy);
 
         pacmanShape3D = model3DRepository.createPacBody(ACTOR_SIZE, Color.YELLOW, Color.BLACK, Color.GRAY);
-        pacmanShape3D.visibleProperty().bind(editor.actorsVisibleProperty());
+        pacmanShape3D.visibleProperty().bind(ui.actorsVisibleProperty());
 
         ghostShapes = new GhostBody[4];
         ghostShapes[0] = model3DRepository.createGhostBody(ACTOR_SIZE, Color.RED, 0);
@@ -100,7 +100,7 @@ public class Maze3D extends Group {
         ghostShapes[2] = model3DRepository.createGhostBody(ACTOR_SIZE, Color.CYAN, 270);
         ghostShapes[3] = model3DRepository.createGhostBody(ACTOR_SIZE, Color.ORANGE, 270);
         for (var ghostShape : ghostShapes) {
-            ghostShape.visibleProperty().bind(editor.actorsVisibleProperty());
+            ghostShape.visibleProperty().bind(ui.actorsVisibleProperty());
         }
     }
 
