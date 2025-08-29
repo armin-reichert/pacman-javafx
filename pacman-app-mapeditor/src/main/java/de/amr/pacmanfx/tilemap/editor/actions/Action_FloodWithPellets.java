@@ -4,7 +4,7 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.FoodTile;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
-import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
+import de.amr.pacmanfx.tilemap.editor.TileMapEditorUI;
 
 import java.util.ArrayDeque;
 import java.util.HashSet;
@@ -12,13 +12,13 @@ import java.util.Set;
 
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.canEditFoodAtTile;
 
-public class Action_FloodWithPellets extends AbstractEditorAction<Void> {
+public class Action_FloodWithPellets extends AbstractEditorUIAction<Void> {
 
     private final Vector2i startTile;
     private final FoodTile foodTile;
 
-    public Action_FloodWithPellets(TileMapEditor editor, Vector2i startTile, FoodTile foodTile) {
-        super(editor);
+    public Action_FloodWithPellets(TileMapEditorUI ui, Vector2i startTile, FoodTile foodTile) {
+        super(ui);
         this.startTile = startTile;
         this.foodTile = foodTile;
     }
@@ -34,7 +34,7 @@ public class Action_FloodWithPellets extends AbstractEditorAction<Void> {
         visited.add(startTile);
         while (!q.isEmpty()) {
             Vector2i current = q.poll();
-            new Action_SetTileCode(editor, editor.currentWorldMap(), LayerID.FOOD, current, foodTile.code()).execute();
+            new Action_SetTileCode(ui, editor.currentWorldMap(), LayerID.FOOD, current, foodTile.code()).execute();
             for (Direction dir : Direction.values()) {
                 Vector2i neighborTile = current.plus(dir.vector());
                 if  (!visited.contains(neighborTile) && canEditFoodAtTile(editor.currentWorldMap(), neighborTile)) {

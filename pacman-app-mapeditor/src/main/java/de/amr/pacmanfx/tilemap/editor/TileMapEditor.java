@@ -175,27 +175,6 @@ public class TileMapEditor {
         return sourceCode;
     }
 
-    // -- symmetricEditMode
-
-    public static final boolean DEFAULT_SYMMETRIC_EDIT_MODE = true;
-
-    private BooleanProperty symmetricEditMode;
-
-    public BooleanProperty symmetricEditModeProperty() {
-        if (symmetricEditMode == null) {
-            symmetricEditMode = new SimpleBooleanProperty(DEFAULT_SYMMETRIC_EDIT_MODE);
-        }
-        return symmetricEditMode;
-    }
-
-    public boolean symmetricEditMode() {
-        return symmetricEditMode == null ? DEFAULT_SYMMETRIC_EDIT_MODE : symmetricEditModeProperty().get();
-    }
-
-    public void setSymmetricEditMode(boolean value) {
-        symmetricEditModeProperty().set(value);
-    }
-
     // -- templateImage
 
     private final ObjectProperty<Image> templateImage = new SimpleObjectProperty<>();

@@ -4,7 +4,7 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.FoodTile;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
-import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
+import de.amr.pacmanfx.tilemap.editor.TileMapEditorUI;
 
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.canEditFoodAtTile;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.mirroredTileCode;
@@ -13,28 +13,28 @@ import static java.util.Objects.requireNonNull;
 /**
  * This action should be used whenever a tile value has to be set and symmetric editing should be taken into account.
  */
-public class Action_SetTileCode extends AbstractEditorAction<Void> {
+public class Action_SetTileCode extends AbstractEditorUIAction<Void> {
 
     private final WorldMap worldMap;
     private final LayerID layerID;
     private final Vector2i tile;
     private final byte code;
 
-    public Action_SetTileCode(TileMapEditor editor, WorldMap worldMap, LayerID layerID, Vector2i tile, byte code) {
-        super(editor);
+    public Action_SetTileCode(TileMapEditorUI ui, WorldMap worldMap, LayerID layerID, Vector2i tile, byte code) {
+        super(ui);
         this.worldMap = requireNonNull(worldMap);
         this.layerID = requireNonNull(layerID);
         this.tile = requireNonNull(tile);
         this.code = code;
     }
 
-    public Action_SetTileCode(TileMapEditor editor, WorldMap worldMap, LayerID layerID, int row, int col, byte code) {
-        this(editor, worldMap, layerID, Vector2i.of(col, row), code);
+    public Action_SetTileCode(TileMapEditorUI ui, WorldMap worldMap, LayerID layerID, int row, int col, byte code) {
+        this(ui, worldMap, layerID, Vector2i.of(col, row), code);
     }
 
     @Override
     public Void execute() {
-        boolean symmetric = editor.symmetricEditMode();
+        boolean symmetric = ui.symmetricEditMode();
         switch (layerID) {
             case FOOD    -> setFoodTile(symmetric);
             case TERRAIN -> setTerrainTile(symmetric);

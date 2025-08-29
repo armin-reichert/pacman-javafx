@@ -69,6 +69,6 @@ public class Action_ShowNewMapDialog extends AbstractEditorUIAction<Void> {
         editor.setCurrentWorldMap(worldMap);
         new Action_SetDefaultMapColors(editor, worldMap).execute();
         new Action_SetDefaultScatterPositions(editor, worldMap).execute();
-        new Action_AddBorderWall(editor, worldMap).execute();
+        new Action_AddBorderWall(ui, worldMap).execute();
     }
 }

@@ -3,22 +3,22 @@ package de.amr.pacmanfx.tilemap.editor.actions;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.TerrainTile;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
-import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
+import de.amr.pacmanfx.tilemap.editor.TileMapEditorUI;
 
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.EMPTY_ROWS_BELOW_MAZE;
 import static java.util.Objects.requireNonNull;
 
-public class Action_AddBorderWall extends AbstractEditorAction<Void> {
+public class Action_AddBorderWall extends AbstractEditorUIAction<Void> {
 
     private final WorldMap worldMap;
 
-    public Action_AddBorderWall(TileMapEditor editor, WorldMap worldMap) {
-        super(editor);
+    public Action_AddBorderWall(TileMapEditorUI ui, WorldMap worldMap) {
+        super(ui);
         this.worldMap = requireNonNull(worldMap);
     }
 
     private void setTerrain(int row, int col, TerrainTile terrainTile) {
-        new Action_SetTileCode(editor, worldMap, LayerID.TERRAIN, row, col, terrainTile.code()).execute();
+        new Action_SetTileCode(ui, worldMap, LayerID.TERRAIN, row, col, terrainTile.code()).execute();
     }
 
     @Override

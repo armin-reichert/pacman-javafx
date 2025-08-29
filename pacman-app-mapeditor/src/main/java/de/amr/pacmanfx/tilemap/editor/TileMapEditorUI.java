@@ -360,6 +360,26 @@ public class TileMapEditorUI {
         segmentNumbersVisibleProperty().set(value);
     }
 
+    // -- symmetricEditMode
+
+    public static final boolean DEFAULT_SYMMETRIC_EDIT_MODE = true;
+
+    private BooleanProperty symmetricEditMode;
+
+    public BooleanProperty symmetricEditModeProperty() {
+        if (symmetricEditMode == null) {
+            symmetricEditMode = new SimpleBooleanProperty(DEFAULT_SYMMETRIC_EDIT_MODE);
+        }
+        return symmetricEditMode;
+    }
+
+    public boolean symmetricEditMode() {
+        return symmetricEditMode == null ? DEFAULT_SYMMETRIC_EDIT_MODE : symmetricEditModeProperty().get();
+    }
+
+    public void setSymmetricEditMode(boolean value) {
+        symmetricEditModeProperty().set(value);
+    }
 
     // -- terrainVisible
 
@@ -431,14 +451,14 @@ public class TileMapEditorUI {
         editCanvas.obstacleInnerAreaDisplayedProperty().bind(obstacleInnerAreaDisplayedProperty());
         editCanvas.obstaclesJoiningProperty().bind(obstaclesJoiningProperty());
         editCanvas.segmentNumbersVisibleProperty().bind(segmentNumbersVisibleProperty());
-        editCanvas.symmetricEditModeProperty().bind(editor.symmetricEditModeProperty());
+        editCanvas.symmetricEditModeProperty().bind(symmetricEditModeProperty());
         editCanvas.templateImageGrayProperty().bind(editor.templateImageProperty().map(Ufx::imageToGreyscale));
         editCanvas.terrainVisibleProperty().bind(terrainVisibleProperty());
         editCanvas.foodVisibleProperty().bind(foodVisibleProperty());
         editCanvas.actorsVisibleProperty().bind(actorsVisibleProperty());
 
         editCanvas.obstacleEditor().setOnEditTile(
-            (tile, code) -> new Action_SetTileCode(editor, editor.currentWorldMap(), LayerID.TERRAIN, tile, code).execute());
+            (tile, code) -> new Action_SetTileCode(this, editor.currentWorldMap(), LayerID.TERRAIN, tile, code).execute());
         editCanvas.setOnContextMenuRequested(event -> editCanvas.onContextMenuRequested(event));
         editCanvas.setOnMouseClicked(event -> editCanvas.onMouseClicked(event));
         editCanvas.setOnMouseMoved(event -> editCanvas.onMouseMoved(event));
@@ -676,7 +696,7 @@ public class TileMapEditorUI {
 
     private TileValueEditorTool makeTileTool(byte code, String description) {
         return new TileValueEditorTool(
-            (layerID, tile) -> new Action_SetTileCode(editor, editor.currentWorldMap(), layerID, tile, code).execute(),
+            (layerID, tile) -> new Action_SetTileCode(this, editor.currentWorldMap(), layerID, tile, code).execute(),
             TOOL_SIZE, code, description);
     }
 
@@ -766,19 +786,20 @@ public class TileMapEditorUI {
             getChildren().add(label);
 
             label.textProperty().bind(Bindings.createStringBinding(
-                    () -> switch (editMode()) {
-                        case INSPECT -> translated("mode.inspect");
-                        case EDIT    -> translated(editor.symmetricEditMode() ? "mode.symmetric" : "mode.edit");
-                        case ERASE   -> translated("mode.erase");
-                    }, editModeProperty(), editor.symmetricEditModeProperty()
+                () -> switch (editMode()) {
+                    case INSPECT -> translated("mode.inspect");
+                    case EDIT    -> translated(symmetricEditMode() ? "mode.symmetric" : "mode.edit");
+                    case ERASE   -> translated("mode.erase");
+                }, editModeProperty(), symmetricEditModeProperty()
             ));
 
             label.textFillProperty().bind(editModeProperty().map(
-                    mode -> switch (mode) {
-                        case INSPECT -> Color.GRAY;
-                        case EDIT    -> Color.FORESTGREEN;
-                        case ERASE   -> Color.RED;
-                    }));
+                mode -> switch (mode) {
+                    case INSPECT -> Color.GRAY;
+                    case EDIT    -> Color.FORESTGREEN;
+                    case ERASE   -> Color.RED;
+                }
+            ));
 
             label.setOnMouseClicked(e -> new Action_SelectNextEditMode(TileMapEditorUI.this).execute());
         }

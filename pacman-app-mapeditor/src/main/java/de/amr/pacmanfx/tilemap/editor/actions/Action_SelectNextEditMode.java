@@ -16,13 +16,13 @@ public class Action_SelectNextEditMode extends AbstractEditorUIAction<Void> {
         switch (ui.editMode()) {
             case INSPECT -> {
                 ui.setEditMode(EditMode.EDIT);
-                editor.setSymmetricEditMode(false);
+                ui.setSymmetricEditMode(false);
             }
             case EDIT -> {
-                if (editor.symmetricEditMode()) {
+                if (ui.symmetricEditMode()) {
                     ui.setEditMode(EditMode.ERASE);
                 } else {
-                    editor.setSymmetricEditMode(true);
+                    ui.setSymmetricEditMode(true);
                 }
             }
             case ERASE -> ui.setEditMode(INSPECT);
