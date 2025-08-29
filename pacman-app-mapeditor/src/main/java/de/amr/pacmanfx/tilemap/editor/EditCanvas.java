@@ -318,7 +318,7 @@ public class EditCanvas extends Canvas {
             requestFocus();
             contextMenu.hide();
             if (mouseEvent.getClickCount() == 2 && editor.editModeIs(EditMode.INSPECT)) {
-                editor.ui().showEditHelpText();
+                ui.showEditHelpText();
             }
         }
     }
@@ -346,7 +346,7 @@ public class EditCanvas extends Canvas {
                 new Action_IdentifyObstacle(editor, tile).execute();
             } else {
                 boolean erase = mouseEvent.isControlDown();
-                new Action_EditTile(editor, tile, erase).execute();
+                new Action_ApplySelectedPaletteTool(ui, tile, erase).execute();
             }
         }
     }

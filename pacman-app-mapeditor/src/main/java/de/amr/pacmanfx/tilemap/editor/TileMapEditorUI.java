@@ -329,7 +329,7 @@ public class TileMapEditorUI {
         node.setOnDragDropped(dragEvent -> {
             if (dragEvent.getDragboard().hasFiles()) {
                 File file = dragEvent.getDragboard().getFiles().getFirst();
-                editor.ui().ifNoUnsavedChangesDo(() -> editCanvas.onFileDropped(editor, file));
+                ifNoUnsavedChangesDo(() -> editCanvas.onFileDropped(editor, file));
             }
             dragEvent.consume();
         });
@@ -610,7 +610,7 @@ public class TileMapEditorUI {
         var menuItem = new MenuItem(description);
         menuItem.setOnAction(e -> {
             WorldMap copy = WorldMap.copyMap(worldMap);
-            editor.ui().ifNoUnsavedChangesDo(() -> editor.setCurrentWorldMap(copy));
+            ifNoUnsavedChangesDo(() -> editor.setCurrentWorldMap(copy));
         });
         return menuItem;
     }

@@ -70,6 +70,10 @@ public class TileMapEditor {
         setEditMode(INSPECT);
     }
 
+    public TileMapEditorUI ui() {
+        return ui;
+    }
+
     // Change management
     private boolean edited;
     private boolean terrainMapChanged;
@@ -429,12 +433,6 @@ public class TileMapEditor {
     private final StringProperty title = new SimpleStringProperty("Tile Map Editor");
 
     public StringProperty titleProperty() { return title; }
-
-    // Accessor methods
-
-    public TileMapEditorUI ui() {
-        return ui;
-    }
 
     // Sample maps loading
 
