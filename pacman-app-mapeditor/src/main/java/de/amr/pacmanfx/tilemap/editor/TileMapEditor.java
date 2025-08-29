@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tilemap.editor;
 
+import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.tilemap.editor.actions.Action_CreateEmptyMap;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_TILES;
 import static de.amr.pacmanfx.tilemap.editor.EditMode.INSPECT;
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.SAMPLE_MAPS_PATH;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.sourceCode;
@@ -51,7 +53,7 @@ public class TileMapEditor {
 
     public void init(File workDir) {
         setCurrentDirectory(workDir);
-        WorldMap emptyMap = new Action_CreateEmptyMap(this, 36, 28).execute();
+        WorldMap emptyMap = new Action_CreateEmptyMap(this, ARCADE_MAP_SIZE_IN_TILES.y(), ARCADE_MAP_SIZE_IN_TILES.x()).execute();
         setCurrentWorldMap(emptyMap);
         setEditMode(INSPECT);
         edited = false;

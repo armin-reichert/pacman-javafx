@@ -72,7 +72,7 @@ public interface Globals {
     static float TS(double numTiles) { return (float) (numTiles * TS); }
 
     /**
-     * Arcade maps have a size 28x36 tiles (including the empty rows over and under the maze).
+     * Arcade maps have a size 28 cols and 36 rows (including the empty rows over and under the maze).
      */
     Vector2i ARCADE_MAP_SIZE_IN_TILES = new Vector2i(28, 36);
 
