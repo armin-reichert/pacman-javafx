@@ -11,7 +11,7 @@ import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.mirroredTileCode;
 import static java.util.Objects.requireNonNull;
 
 /**
- * This method should be used whenever a tile value has to be set and symmetric editing should be executed.
+ * This action should be used whenever a tile value has to be set and symmetric editing should be taken into account.
  */
 public class Action_SetTileCode extends AbstractEditorAction<Void> {
 
@@ -34,31 +34,37 @@ public class Action_SetTileCode extends AbstractEditorAction<Void> {
 
     @Override
     public Void execute() {
-        if (layerID == LayerID.FOOD && !canEditFoodAtTile(worldMap, tile)) {
-            return null;
+        boolean symmetric = editor.symmetricEditMode();
+        switch (layerID) {
+            case FOOD    -> setFoodTile(symmetric);
+            case TERRAIN -> setTerrainTile(symmetric);
         }
+        return null;
+    }
 
-        worldMap.setContent(layerID, tile, code);
-        if (layerID == LayerID.TERRAIN) {
-            worldMap.setContent(LayerID.FOOD, tile, FoodTile.EMPTY.code());
-        }
-
-        if (editor.symmetricEditMode()) {
+    private void setTerrainTile(boolean symmetric) {
+        worldMap.setContent(LayerID.TERRAIN, tile, code);
+        worldMap.setContent(LayerID.FOOD, tile, FoodTile.EMPTY.code());
+        if (symmetric) {
             Vector2i mirroredTile = worldMap.mirroredTile(tile);
-            if (layerID == LayerID.FOOD) {
-                if (canEditFoodAtTile(worldMap, mirroredTile)) {
-                    worldMap.setContent(layerID, mirroredTile, code);
-                }
-            } else {
-                byte mirroredValue = mirroredTileCode(code);
-                worldMap.setContent(layerID, mirroredTile, mirroredValue);
-                worldMap.setContent(LayerID.FOOD, mirroredTile, FoodTile.EMPTY.code());
-            }
+            byte mirroredCode = mirroredTileCode(code);
+            worldMap.setContent(LayerID.TERRAIN, mirroredTile, mirroredCode);
+            worldMap.setContent(LayerID.FOOD, mirroredTile, FoodTile.EMPTY.code());
         }
-
         editor.setEdited(true);
         editor.setWorldMapChanged();
+    }
 
-        return null;
+    private void setFoodTile(boolean symmetric) {
+        if (!canEditFoodAtTile(worldMap, tile)) return;
+        worldMap.setContent(LayerID.FOOD, tile, code);
+        if (symmetric) {
+            Vector2i mirroredTile = worldMap.mirroredTile(tile);
+            if (canEditFoodAtTile(worldMap, mirroredTile)) {
+                worldMap.setContent(LayerID.FOOD, mirroredTile, code);
+            }
+        }
+        editor.setEdited(true);
+        editor.setFoodMapChanged();
     }
 }
