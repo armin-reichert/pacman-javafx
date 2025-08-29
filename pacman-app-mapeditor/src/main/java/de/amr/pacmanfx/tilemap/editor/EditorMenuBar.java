@@ -14,13 +14,7 @@ import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.translated;
 public class EditorMenuBar extends MenuBar {
 
     private final Menu menuFile;
-    private final Menu menuEdit;
     private final Menu menuMaps;
-    private final Menu menuView;
-
-    public Menu menuEdit() {
-        return menuEdit;
-    }
 
     public Menu menuFile() {
         return menuFile;
@@ -28,10 +22,6 @@ public class EditorMenuBar extends MenuBar {
 
     public Menu menuMaps() {
         return menuMaps;
-    }
-
-    public Menu menuView() {
-        return menuView;
     }
 
     public EditorMenuBar(TileMapEditorUI ui) {
@@ -50,7 +40,7 @@ public class EditorMenuBar extends MenuBar {
         miOpenMapFile.setOnAction(actionEvent -> new Action_OpenMapFileInteractively(ui).execute());
 
         var miSaveMapFileAs = new MenuItem(translated("menu.file.save_as"));
-        miSaveMapFileAs.setOnAction(actionEvent -> new Action_SaveMapFile(editor).execute());
+        miSaveMapFileAs.setOnAction(actionEvent -> new Action_SaveMapFileInteractively(ui).execute());
 
         var miOpenTemplateImage = new MenuItem(translated("menu.file.open_template_image"));
         miOpenTemplateImage.setOnAction(actionEvent -> new Action_OpenTemplateCreateMap(ui).execute());
@@ -114,7 +104,7 @@ public class EditorMenuBar extends MenuBar {
         miAssignDefaultColors.setOnAction(actionEvent -> new Action_SetDefaultMapColors(editor, editor.currentWorldMap()).execute());
         miAssignDefaultColors.disableProperty().bind(editor.editModeProperty().map(mode -> mode == EditMode.INSPECT));
 
-        menuEdit = new Menu(translated("menu.edit"), NO_GRAPHIC,
+        Menu menuEdit = new Menu(translated("menu.edit"), NO_GRAPHIC,
             miObstacleJoining,
             new SeparatorMenuItem(),
             miAddBorder,
@@ -151,7 +141,7 @@ public class EditorMenuBar extends MenuBar {
         var miObstacleInnerAreaVisible = new CheckMenuItem(translated("inner_obstacle_area"));
         miObstacleInnerAreaVisible.selectedProperty().bindBidirectional(editor.obstacleInnerAreaDisplayedProperty());
 
-        menuView = new Menu(translated("menu.view"), NO_GRAPHIC,
+        Menu menuView = new Menu(translated("menu.view"), NO_GRAPHIC,
             miPropertiesVisible,
             miTerrainVisible,
             miFoodVisible,

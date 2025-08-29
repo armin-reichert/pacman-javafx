@@ -21,7 +21,7 @@ public class Action_OpenMapFileInteractively extends AbstractEditorUIAction<File
             FileChooser fileChooser = createFileChooser();
             file = fileChooser.showOpenDialog(ui.stage());
             if (file != null) {
-                new Action_ReplaceCurrentWorldMapChecked(editor, file).execute();
+                new Action_ReplaceCurrentWorldMapChecked(ui, file).execute();
             }
             editor.setEdited(false);
         });

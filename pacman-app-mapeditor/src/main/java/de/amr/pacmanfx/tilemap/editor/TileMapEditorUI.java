@@ -151,7 +151,7 @@ public class TileMapEditorUI {
         SaveConfirmation confirmationDialog = new SaveConfirmation();
         confirmationDialog.showAndWait().ifPresent(choice -> {
             if (choice == SaveConfirmation.SAVE_CHANGES) {
-                new Action_SaveMapFile(editor).execute();
+                new Action_SaveMapFileInteractively(this).execute();
                 action.run();
             } else if (choice == SaveConfirmation.NO_SAVE_CHANGES) {
                 editor.setEdited(false);
