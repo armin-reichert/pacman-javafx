@@ -49,7 +49,7 @@ public class TemplateImageCanvas extends Canvas {
         this.ui = requireNonNull(ui);
         final TileMapEditor editor = ui.editor();
 
-        gridSize.bind(editor.gridSizeProperty());
+        gridSize.bind(ui.gridSizeProperty());
         gridVisible.bind(ui.gridVisibleProperty());
         templateImage.bind(editor.templateImageProperty());
         worldMap.bind(editor.currentWorldMapProperty());

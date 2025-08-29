@@ -167,25 +167,6 @@ public class TileMapEditor {
 
     public void setCurrentWorldMap(WorldMap worldMap) { currentWorldMap.set(worldMap); }
 
-    // -- gridSize
-
-    private static final double DEFAULT_GRID_SIZE = 8;
-
-    private DoubleProperty gridSize;
-
-    public DoubleProperty gridSizeProperty() {
-        if (gridSize == null) {
-            gridSize = new SimpleDoubleProperty(DEFAULT_GRID_SIZE);
-        }
-        return gridSize;
-    }
-
-    public double gridSize() { return gridSize.get(); }
-
-    public void setGridSize(double size) {
-        gridSizeProperty().set(size);
-    }
-
     // -- obstaclesJoining
 
     public static boolean DEFAULT_OBSTACLES_JOINING = true;

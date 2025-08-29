@@ -243,6 +243,25 @@ public class TileMapEditorUI {
         foodVisibleProperty().set(visible);
     }
 
+    // -- gridSize
+
+    private static final double DEFAULT_GRID_SIZE = 8;
+
+    private DoubleProperty gridSize;
+
+    public DoubleProperty gridSizeProperty() {
+        if (gridSize == null) {
+            gridSize = new SimpleDoubleProperty(DEFAULT_GRID_SIZE);
+        }
+        return gridSize;
+    }
+
+    public double gridSize() { return gridSize.get(); }
+
+    public void setGridSize(double size) {
+        gridSizeProperty().set(size);
+    }
+
     // -- gridVisible
 
     public static final boolean DEFAULT_GRID_VISIBLE = true;
@@ -385,7 +404,7 @@ public class TileMapEditorUI {
     private void createEditCanvas() {
         editCanvas = new EditCanvas(this);
         editCanvas.editModeProperty().bind(editModeProperty());
-        editCanvas.gridSizeProperty().bind(editor.gridSizeProperty());
+        editCanvas.gridSizeProperty().bind(gridSizeProperty());
         editCanvas.gridVisibleProperty().bind(gridVisibleProperty());
         editCanvas.worldMapProperty().bind(editor.currentWorldMapProperty());
         editCanvas.obstacleInnerAreaDisplayedProperty().bind(obstacleInnerAreaDisplayedProperty());
@@ -414,7 +433,7 @@ public class TileMapEditorUI {
         spEditCanvas.heightProperty().addListener((py,oldHeight,newHeight) -> {
             if (oldHeight.doubleValue() == 0) { // initial resize
                 int initialGridSize = (int) Math.max(newHeight.doubleValue() / editor.currentWorldMap().numRows(), MIN_GRID_SIZE);
-                editor.setGridSize(initialGridSize);
+                setGridSize(initialGridSize);
             }
         });
     }
@@ -423,7 +442,7 @@ public class TileMapEditorUI {
         preview2D = new Preview2D();
         preview2D.widthProperty().bind(editCanvas.widthProperty());
         preview2D.heightProperty().bind(editCanvas.heightProperty());
-        preview2D.gridSizeProperty().bind(editor.gridSizeProperty());
+        preview2D.gridSizeProperty().bind(gridSizeProperty());
         preview2D.terrainVisibleProperty().bind(terrainVisibleProperty());
         preview2D.foodVisibleProperty().bind(foodVisibleProperty());
         preview2D.actorsVisibleProperty().bind(actorsVisibleProperty());
@@ -675,11 +694,11 @@ public class TileMapEditorUI {
         sliderZoom.setShowTickLabels(false);
         sliderZoom.setShowTickMarks(true);
         sliderZoom.setPrefWidth(120);
-        Bindings.bindBidirectional(sliderZoom.valueProperty(), editor.gridSizeProperty());
+        Bindings.bindBidirectional(sliderZoom.valueProperty(), gridSizeProperty());
         Tooltip tt = new Tooltip();
         tt.setShowDelay(Duration.millis(50));
         tt.setFont(Font.font(14));
-        tt.textProperty().bind(editor.gridSizeProperty().map("Grid Size: %.0f"::formatted));
+        tt.textProperty().bind(gridSizeProperty().map("Grid Size: %.0f"::formatted));
         sliderZoom.setTooltip(tt);
     }
 
@@ -816,10 +835,10 @@ public class TileMapEditorUI {
             new Action_SelectNextMapFile(editor, true).execute();
         }
         else if (key == KeyCode.PLUS) {
-            new Action_ZoomIn(editor).execute();
+            new Action_ZoomIn(this).execute();
         }
         else if (key == KeyCode.MINUS) {
-            new Action_ZoomOut(editor).execute();
+            new Action_ZoomOut(this).execute();
         }
     }
 
