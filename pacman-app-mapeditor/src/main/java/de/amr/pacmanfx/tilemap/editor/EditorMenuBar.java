@@ -139,7 +139,7 @@ public class EditorMenuBar extends MenuBar {
         miSegmentNumbersVisible.selectedProperty().bindBidirectional(ui.segmentNumbersVisibleProperty());
 
         var miObstacleInnerAreaVisible = new CheckMenuItem(translated("inner_obstacle_area"));
-        miObstacleInnerAreaVisible.selectedProperty().bindBidirectional(editor.obstacleInnerAreaDisplayedProperty());
+        miObstacleInnerAreaVisible.selectedProperty().bindBidirectional(ui.obstacleInnerAreaDisplayedProperty());
 
         Menu menuView = new Menu(translated("menu.view"), NO_GRAPHIC,
             miPropertiesVisible,

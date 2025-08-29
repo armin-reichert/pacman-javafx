@@ -265,27 +265,6 @@ public class TileMapEditor {
         return gridVisible;
     }
 
-    // -- obstacleInnerAreaDisplayed
-
-    public static final boolean DEFAULT_OBSTACLE_INNER_AREA_DISPLAYED = false;
-
-    private BooleanProperty obstacleInnerAreaDisplayed;
-
-    public BooleanProperty obstacleInnerAreaDisplayedProperty() {
-        if (obstacleInnerAreaDisplayed == null) {
-            obstacleInnerAreaDisplayed = new SimpleBooleanProperty(DEFAULT_OBSTACLE_INNER_AREA_DISPLAYED);
-        }
-        return obstacleInnerAreaDisplayed;
-    }
-
-    public boolean obstacleInnerAreaDisplayed() {
-        return obstacleInnerAreaDisplayed == null ? DEFAULT_OBSTACLE_INNER_AREA_DISPLAYED :obstacleInnerAreaDisplayedProperty().get();
-    }
-
-    public void setObstacleInnerAreaDisplayed(boolean value) {
-        obstacleInnerAreaDisplayedProperty().set(value);
-    }
-
     // -- obstaclesJoining
 
     public static boolean DEFAULT_OBSTACLES_JOINING = true;

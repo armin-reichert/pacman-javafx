@@ -181,6 +181,27 @@ public class TileMapEditorUI {
         );
     }
 
+    // -- obstacleInnerAreaDisplayed
+
+    public static final boolean DEFAULT_OBSTACLE_INNER_AREA_DISPLAYED = false;
+
+    private BooleanProperty obstacleInnerAreaDisplayed;
+
+    public BooleanProperty obstacleInnerAreaDisplayedProperty() {
+        if (obstacleInnerAreaDisplayed == null) {
+            obstacleInnerAreaDisplayed = new SimpleBooleanProperty(DEFAULT_OBSTACLE_INNER_AREA_DISPLAYED);
+        }
+        return obstacleInnerAreaDisplayed;
+    }
+
+    public boolean obstacleInnerAreaDisplayed() {
+        return obstacleInnerAreaDisplayed == null ? DEFAULT_OBSTACLE_INNER_AREA_DISPLAYED :obstacleInnerAreaDisplayedProperty().get();
+    }
+
+    public void setObstacleInnerAreaDisplayed(boolean value) {
+        obstacleInnerAreaDisplayedProperty().set(value);
+    }
+
     // -- propertyEditorsVisible
 
     public static final boolean DEFAULT_PROPERTY_EDITORS_VISIBLE = false;
@@ -292,7 +313,7 @@ public class TileMapEditorUI {
         editCanvas.gridSizeProperty().bind(editor.gridSizeProperty());
         editCanvas.gridVisibleProperty().bind(editor.gridVisibleProperty());
         editCanvas.worldMapProperty().bind(editor.currentWorldMapProperty());
-        editCanvas.obstacleInnerAreaDisplayedProperty().bind(editor.obstacleInnerAreaDisplayedProperty());
+        editCanvas.obstacleInnerAreaDisplayedProperty().bind(obstacleInnerAreaDisplayedProperty());
         editCanvas.obstaclesJoiningProperty().bind(editor.obstaclesJoiningProperty());
         editCanvas.segmentNumbersVisibleProperty().bind(segmentNumbersVisibleProperty());
         editCanvas.symmetricEditModeProperty().bind(editor.symmetricEditModeProperty());
