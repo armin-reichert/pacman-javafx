@@ -433,6 +433,9 @@ public class EditCanvas extends Canvas {
         var miPlaceHouse = new MenuItem(translated("menu.edit.place_house"));
         miPlaceHouse.setOnAction(actionEvent -> new Action_PlaceArcadeHouse(editor, worldMap(), tile).execute());
 
+        var miClearFoodAroundHouse = new MenuItem(translated("menu.edit.clear_food_around_house"));
+        miClearFoodAroundHouse.setOnAction(actionEvent -> new Action_ClearFoodAroundHouse(editor, worldMap()).execute());
+
         var miInsertRow = new MenuItem(translated("menu.edit.insert_row"));
         miInsertRow.setOnAction(actionEvent -> {
             int rowIndex = tileAt(menuEvent.getX(), menuEvent.getY()).y();
@@ -458,6 +461,7 @@ public class EditCanvas extends Canvas {
             miDeleteRow,
             new SeparatorMenuItem(),
             miPlaceHouse,
+            miClearFoodAroundHouse,
             new SeparatorMenuItem(),
             miFloodWithPellets,
             miClearPellets);
