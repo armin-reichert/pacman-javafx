@@ -359,13 +359,13 @@ public class EditCanvas extends Canvas {
             case EDIT -> {
                 if (mouseEvent.isShiftDown()) {
                     switch (editor.paletteID()) {
-                        case PALETTE_ID_TERRAIN -> {
+                        case TERRAIN -> {
                             Palette palette = ui.selectedPalette();
                             if (palette.isToolSelected()) {
                                 palette.selectedTool().editor().accept(LayerID.TERRAIN, focussedTile());
                             }
                         }
-                        case PALETTE_ID_FOOD -> {
+                        case FOOD -> {
                             Palette palette = ui.selectedPalette();
                             if (palette.isToolSelected()) {
                                 palette.selectedTool().editor().accept(LayerID.FOOD, focussedTile());
@@ -378,8 +378,8 @@ public class EditCanvas extends Canvas {
             case ERASE -> {
                 if (mouseEvent.isShiftDown()) {
                     switch (ui.selectedPaletteID()) {
-                        case PALETTE_ID_TERRAIN -> new Action_ClearTerrainTile(editor, tile).execute();
-                        case PALETTE_ID_FOOD -> new Action_ClearFoodTile(editor, tile).execute();
+                        case TERRAIN -> new Action_ClearTerrainTile(editor, tile).execute();
+                        case FOOD -> new Action_ClearFoodTile(editor, tile).execute();
                     }
                 }
             }

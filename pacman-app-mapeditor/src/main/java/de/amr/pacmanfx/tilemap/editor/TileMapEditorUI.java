@@ -356,24 +356,24 @@ public class TileMapEditorUI {
 
     // Must be called after edit canvas creation because it binds to the renderers of the edit canvas!
     private void createPalettes(EditCanvas editCanvas) {
-        palettes.put(PALETTE_ID_TERRAIN, createTerrainPalette(editCanvas.terrainRenderer()));
-        palettes.put(PALETTE_ID_FOOD, createFoodPalette(editCanvas.foodRenderer()));
-        palettes.put(PALETTE_ID_ACTORS, createActorsPalette(editCanvas.terrainRenderer()));
+        palettes.put(PaletteID.TERRAIN, createTerrainPalette(editCanvas.terrainRenderer()));
+        palettes.put(PaletteID.FOOD, createFoodPalette(editCanvas.foodRenderer()));
+        palettes.put(PaletteID.ACTORS, createActorsPalette(editCanvas.terrainRenderer()));
 
-        var tabTerrain = new Tab("", palettes.get(PALETTE_ID_TERRAIN).root());
+        var tabTerrain = new Tab("", palettes.get(PaletteID.TERRAIN).root());
         tabTerrain.setGraphic(new Text(translated("terrain")));
         tabTerrain.setClosable(false);
-        tabTerrain.setUserData(PALETTE_ID_TERRAIN);
+        tabTerrain.setUserData(PaletteID.TERRAIN);
 
-        var tabPellets = new Tab("", palettes.get(PALETTE_ID_FOOD).root());
+        var tabPellets = new Tab("", palettes.get(PaletteID.FOOD).root());
         tabPellets.setGraphic(new Text(translated("pellets")));
         tabPellets.setClosable(false);
-        tabPellets.setUserData(PALETTE_ID_FOOD);
+        tabPellets.setUserData(PaletteID.FOOD);
 
-        var tabActors = new Tab("", palettes.get(PALETTE_ID_ACTORS).root());
+        var tabActors = new Tab("", palettes.get(PaletteID.ACTORS).root());
         tabActors.setGraphic(new Text(translated("actors")));
         tabActors.setClosable(false);
-        tabActors.setUserData(PALETTE_ID_ACTORS);
+        tabActors.setUserData(PaletteID.ACTORS);
 
         tabPaneForPalettes = new TabPane(tabTerrain, tabPellets, tabActors);
         tabPaneForPalettes.setPadding(new Insets(5, 5, 5, 5));
@@ -396,7 +396,7 @@ public class TileMapEditorUI {
     }
 
     private Palette createTerrainPalette(TerrainMapRenderer renderer) {
-        var palette = new Palette(PALETTE_ID_TERRAIN, TOOL_SIZE, 1, 13);
+        var palette = new Palette(PaletteID.TERRAIN, TOOL_SIZE, 1, 13);
         palette.addTool(makeTileTool(TerrainTile.EMPTY.$, "Empty Space"));
         palette.addTool(makeTileTool(TerrainTile.WALL_H.$, "Horizontal Wall"));
         palette.addTool(makeTileTool(TerrainTile.WALL_V.$, "Vertical Wall"));
@@ -422,7 +422,7 @@ public class TileMapEditorUI {
     }
 
     private Palette createActorsPalette(TerrainTileMapRenderer renderer) {
-        var palette = new Palette(PALETTE_ID_ACTORS, TOOL_SIZE, 1, 11);
+        var palette = new Palette(PaletteID.ACTORS, TOOL_SIZE, 1, 11);
         palette.addTool(makeTileTool(TerrainTile.EMPTY.$, "Nope"));
         palette.addTool(makePropertyTool(WorldMapProperty.POS_PAC, "Pac-Man"));
         palette.addTool(makePropertyTool(WorldMapProperty.POS_RED_GHOST, "Red Ghost"));
@@ -445,7 +445,7 @@ public class TileMapEditorUI {
     }
 
     private Palette createFoodPalette(FoodMapRenderer renderer) {
-        var palette = new Palette(PALETTE_ID_FOOD, TOOL_SIZE, 1, 3);
+        var palette = new Palette(PaletteID.FOOD, TOOL_SIZE, 1, 3);
         palette.addTool(makeTileTool(FoodTile.EMPTY.code(), "No Food"));
         palette.addTool(makeTileTool(FoodTile.PELLET.code(), "Pellet"));
         palette.addTool(makeTileTool(FoodTile.ENERGIZER.code(), "Energizer"));

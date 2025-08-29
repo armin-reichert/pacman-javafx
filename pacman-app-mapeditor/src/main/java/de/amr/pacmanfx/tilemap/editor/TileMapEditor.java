@@ -304,7 +304,7 @@ public class TileMapEditor {
 
     // -- paletteID
 
-    private final ObjectProperty<PaletteID> paletteID = new SimpleObjectProperty<>(PaletteID.PALETTE_ID_TERRAIN);
+    private final ObjectProperty<PaletteID> paletteID = new SimpleObjectProperty<>(PaletteID.TERRAIN);
 
     public ObjectProperty<PaletteID> paletteIDProperty() {
         return paletteID;

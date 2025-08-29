@@ -21,21 +21,21 @@ public class Action_EditTile extends AbstractEditorAction<Void> {
     @Override
     public Void execute() {
         switch (editor.ui().selectedPaletteID()) {
-            case PALETTE_ID_TERRAIN -> {
+            case TERRAIN -> {
                 if (erase) {
                     new Action_ClearTerrainTile(editor, tile).execute();
                 } else if (editor.ui().selectedPalette().isToolSelected()) {
                     editor.ui().selectedPalette().selectedTool().editor().accept(LayerID.TERRAIN, tile);
                 }
             }
-            case PALETTE_ID_FOOD -> {
+            case FOOD -> {
                 if (erase) {
                     new Action_ClearFoodTile(editor, tile).execute();
                 } else if (editor.ui().selectedPalette().isToolSelected()) {
                     editor.ui().selectedPalette().selectedTool().editor().accept(LayerID.FOOD, tile);
                 }
             }
-            case PALETTE_ID_ACTORS -> {
+            case ACTORS -> {
                 if (editor.ui().selectedPalette().isToolSelected()) {
                     editor.ui().selectedPalette().selectedTool().editor().accept(LayerID.TERRAIN, tile);
                 }
