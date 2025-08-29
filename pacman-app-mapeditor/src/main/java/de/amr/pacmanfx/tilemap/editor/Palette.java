@@ -17,8 +17,6 @@ import javafx.util.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.Objects.requireNonNull;
-
 public class Palette {
 
     public static final Color BG_COLOR = Color.WHITE;
@@ -30,15 +28,13 @@ public class Palette {
     private final Canvas canvas;
     private final List<EditorTool> tools;
 
-    private final TileMapEditor editor;
     private TileRenderer renderer;
     private EditorTool selectedTool;
     private Tooltip tooltip;
     private int selectedRow;
     private int selectedCol;
 
-    public Palette(TileMapEditor editor, PaletteID id, int toolSize, int numRows, int numCols) {
-        this.editor = requireNonNull(editor);
+    public Palette(PaletteID id, int toolSize, int numRows, int numCols) {
         canvas = new Canvas(numCols * toolSize, numRows * toolSize);
         canvas.setOnMouseClicked(this::handleMouseClick);
         canvas.setOnMouseMoved(this::handleMouseMove);
@@ -83,14 +79,6 @@ public class Palette {
 
     public boolean isToolSelected() {
         return selectedTool != null;
-    }
-
-    public int getSelectedEntryRow() {
-        return selectedRow;
-    }
-
-    public int getSelectedEntryCol() {
-        return selectedCol;
     }
 
     public int selectedIndex() {

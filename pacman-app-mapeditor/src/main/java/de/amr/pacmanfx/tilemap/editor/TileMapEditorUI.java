@@ -395,7 +395,7 @@ public class TileMapEditorUI {
     }
 
     private Palette createTerrainPalette(TerrainMapRenderer renderer) {
-        var palette = new Palette(editor, PALETTE_ID_TERRAIN, TOOL_SIZE, 1, 13);
+        var palette = new Palette(PALETTE_ID_TERRAIN, TOOL_SIZE, 1, 13);
         palette.addTool(makeTileTool(TerrainTile.EMPTY.$, "Empty Space"));
         palette.addTool(makeTileTool(TerrainTile.WALL_H.$, "Horiz. Wall"));
         palette.addTool(makeTileTool(TerrainTile.WALL_V.$, "Vert. Wall"));
@@ -421,7 +421,7 @@ public class TileMapEditorUI {
     }
 
     private Palette createActorsPalette(TerrainTileMapRenderer renderer) {
-        var palette = new Palette(editor, PALETTE_ID_ACTORS, TOOL_SIZE, 1, 11);
+        var palette = new Palette(PALETTE_ID_ACTORS, TOOL_SIZE, 1, 11);
         palette.addTool(makeTileTool(TerrainTile.EMPTY.$, "Nope"));
         palette.addTool(makePropertyTool(WorldMapProperty.POS_PAC, "Pac-Man"));
         palette.addTool(makePropertyTool(WorldMapProperty.POS_RED_GHOST, "Red Ghost"));
@@ -444,7 +444,7 @@ public class TileMapEditorUI {
     }
 
     private Palette createFoodPalette(FoodMapRenderer renderer) {
-        var palette = new Palette(editor, PALETTE_ID_FOOD, TOOL_SIZE, 1, 3);
+        var palette = new Palette(PALETTE_ID_FOOD, TOOL_SIZE, 1, 3);
         palette.addTool(makeTileTool(FoodTile.EMPTY.code(), "No Food"));
         palette.addTool(makeTileTool(FoodTile.PELLET.code(), "Pellet"));
         palette.addTool(makeTileTool(FoodTile.ENERGIZER.code(), "Energizer"));
