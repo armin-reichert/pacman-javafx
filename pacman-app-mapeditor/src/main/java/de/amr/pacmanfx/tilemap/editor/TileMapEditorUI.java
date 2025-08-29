@@ -703,8 +703,10 @@ public class TileMapEditorUI {
     protected PropertyValueEditorTool makePropertyTool(String propertyName, String description) {
         return new PropertyValueEditorTool(
             (layerID, tile) -> {
-                editor.currentWorldMap().properties(layerID).put(propertyName, formatTile(tile));
-                editor.setEdited(true);
+                switch (layerID) {
+                    case FOOD -> new Action_SetFoodProperty(editor, propertyName, formatTile(tile)).execute();
+                    case TERRAIN -> new Action_SetTerrainProperty(editor, propertyName, formatTile(tile)).execute();
+                }
             },
             TOOL_SIZE, propertyName, description);
     }
