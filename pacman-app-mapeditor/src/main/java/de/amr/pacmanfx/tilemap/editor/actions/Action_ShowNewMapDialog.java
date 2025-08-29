@@ -6,32 +6,33 @@ import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.tilemap.editor.MessageType;
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
+import de.amr.pacmanfx.tilemap.editor.TileMapEditorUI;
 import javafx.scene.control.TextInputDialog;
 
 import static de.amr.pacmanfx.lib.tilemap.WorldMapFormatter.formatTile;
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.translated;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.parseSize;
 
-public class Action_ShowNewMapDialog extends AbstractEditorAction<Void> {
+public class Action_ShowNewMapDialog extends AbstractEditorUIAction<Void> {
 
     private final boolean preconfigured;
 
-    public Action_ShowNewMapDialog(TileMapEditor editor, boolean preconfigured) {
-        super(editor);
+    public Action_ShowNewMapDialog(TileMapEditorUI ui, boolean preconfigured) {
+        super(ui);
         this.preconfigured = preconfigured;
     }
 
     @Override
     public Void execute() {
-        editor.ui().decideWithCheckForUnsavedChanges(() -> {
+        ui.decideWithCheckForUnsavedChanges(() -> {
             TextInputDialog dialog = createMapSizeInputDialog();
             dialog.showAndWait().ifPresent(input -> {
                 Vector2i sizeInTiles = parseSize(input);
                 if (sizeInTiles == null) {
-                    editor.ui().messageDisplay().showMessage("Map size not recognized", 2, MessageType.ERROR);
+                    ui.messageDisplay().showMessage("Map size not recognized", 2, MessageType.ERROR);
                 }
                 else if (sizeInTiles.y() < 6) {
-                    editor.ui().messageDisplay().showMessage("Map must have at least 6 rows", 2, MessageType.ERROR);
+                    ui.messageDisplay().showMessage("Map must have at least 6 rows", 2, MessageType.ERROR);
                 }
                 else {
                     if (preconfigured) {
