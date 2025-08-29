@@ -231,27 +231,6 @@ public class TileMapEditor {
         gridSizeProperty().set(size);
     }
 
-    // -- foodVisible
-
-    public static final boolean DEFAULT_FOOD_VISIBLE = true;
-
-    private BooleanProperty foodVisible;
-
-    public BooleanProperty foodVisibleProperty() {
-        if (foodVisible == null) {
-            foodVisible = new SimpleBooleanProperty(DEFAULT_FOOD_VISIBLE);
-        }
-        return foodVisible;
-    }
-
-    public boolean foodVisible() {
-        return foodVisible == null ? DEFAULT_FOOD_VISIBLE : foodVisible.get();
-    }
-
-    public void setFoodVisible(boolean visible) {
-        foodVisibleProperty().set(visible);
-    }
-
     // -- obstaclesJoining
 
     public static boolean DEFAULT_OBSTACLES_JOINING = true;

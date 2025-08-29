@@ -181,6 +181,27 @@ public class TileMapEditorUI {
         );
     }
 
+    // -- foodVisible
+
+    public static final boolean DEFAULT_FOOD_VISIBLE = true;
+
+    private BooleanProperty foodVisible;
+
+    public BooleanProperty foodVisibleProperty() {
+        if (foodVisible == null) {
+            foodVisible = new SimpleBooleanProperty(DEFAULT_FOOD_VISIBLE);
+        }
+        return foodVisible;
+    }
+
+    public boolean foodVisible() {
+        return foodVisible == null ? DEFAULT_FOOD_VISIBLE : foodVisible.get();
+    }
+
+    public void setFoodVisible(boolean visible) {
+        foodVisibleProperty().set(visible);
+    }
+
     // -- gridVisible
 
     public static final boolean DEFAULT_GRID_VISIBLE = true;
@@ -332,7 +353,7 @@ public class TileMapEditorUI {
         editCanvas.symmetricEditModeProperty().bind(editor.symmetricEditModeProperty());
         editCanvas.templateImageGrayProperty().bind(editor.templateImageProperty().map(Ufx::imageToGreyscale));
         editCanvas.terrainVisibleProperty().bind(terrainVisibleProperty());
-        editCanvas.foodVisibleProperty().bind(editor.foodVisibleProperty());
+        editCanvas.foodVisibleProperty().bind(foodVisibleProperty());
         editCanvas.actorsVisibleProperty().bind(editor.actorsVisibleProperty());
 
         editCanvas.obstacleEditor().setOnEditTile(
@@ -363,7 +384,7 @@ public class TileMapEditorUI {
         preview2D.heightProperty().bind(editCanvas.heightProperty());
         preview2D.gridSizeProperty().bind(editor.gridSizeProperty());
         preview2D.terrainVisibleProperty().bind(terrainVisibleProperty());
-        preview2D.foodVisibleProperty().bind(editor.foodVisibleProperty());
+        preview2D.foodVisibleProperty().bind(foodVisibleProperty());
         preview2D.actorsVisibleProperty().bind(editor.actorsVisibleProperty());
 
         spPreview2D = new ScrollPane(preview2D);
@@ -374,7 +395,7 @@ public class TileMapEditorUI {
 
     private void createPreview3D(Model3DRepository model3DRepository) {
         preview3D = new Preview3D(editor, model3DRepository, 500, 500);
-        preview3D.foodVisibleProperty().bind(editor.foodVisibleProperty());
+        preview3D.foodVisibleProperty().bind(foodVisibleProperty());
         preview3D.terrainVisibleProperty().bind(terrainVisibleProperty());
         preview3D.worldMapProperty().bind(editor.currentWorldMapProperty());
     }
