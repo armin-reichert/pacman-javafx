@@ -64,7 +64,7 @@ public class EditorMenuBar extends MenuBar {
 
         var miAddBorder = new MenuItem(translated("menu.edit.add_border"));
         miAddBorder.setOnAction(actionEvent -> new Action_AddBorderWall(editor, editor.currentWorldMap()).execute());
-        miAddBorder.disableProperty().bind(editor.editModeProperty().map(mode -> mode == EditMode.INSPECT));
+        miAddBorder.disableProperty().bind(ui.editModeProperty().map(mode -> mode == EditMode.INSPECT));
 
         var miAddHouse = new MenuItem(translated("menu.edit.add_house"));
         miAddHouse.setOnAction(actionEvent -> {
@@ -73,7 +73,7 @@ public class EditorMenuBar extends MenuBar {
             new Action_PlaceArcadeHouse(editor, editor.currentWorldMap(), Vector2i.of(houseMinX, houseMinY)).execute();
         });
 
-        miAddHouse.disableProperty().bind(editor.editModeProperty().map(mode -> mode == EditMode.INSPECT));
+        miAddHouse.disableProperty().bind(ui.editModeProperty().map(mode -> mode == EditMode.INSPECT));
 
         var miClearTerrain = new MenuItem(translated("menu.edit.clear_terrain"));
         miClearTerrain.setOnAction(actionEvent -> {
@@ -81,7 +81,7 @@ public class EditorMenuBar extends MenuBar {
             editor.setTerrainMapChanged();
             editor.setEdited(true);
         });
-        miClearTerrain.disableProperty().bind(editor.editModeProperty().map(mode -> mode == EditMode.INSPECT));
+        miClearTerrain.disableProperty().bind(ui.editModeProperty().map(mode -> mode == EditMode.INSPECT));
 
         var miClearFood = new MenuItem(translated("menu.edit.clear_food"));
         miClearFood.setOnAction(actionEvent -> {
@@ -89,20 +89,20 @@ public class EditorMenuBar extends MenuBar {
             editor.setFoodMapChanged();
             editor.setEdited(true);
         });
-        miClearFood.disableProperty().bind(editor.editModeProperty().map(mode -> mode == EditMode.INSPECT));
+        miClearFood.disableProperty().bind(ui.editModeProperty().map(mode -> mode == EditMode.INSPECT));
 
         var miIdentifyTiles = new MenuItem(translated("menu.edit.identify_tiles"));
         miIdentifyTiles.disableProperty().bind(Bindings.createBooleanBinding(
-                () -> editor.editMode() == EditMode.INSPECT
+                () -> ui.editMode() == EditMode.INSPECT
                         || editor.templateImageProperty().get() == null,
-                editor.editModeProperty(), editor.templateImageProperty()));
+                ui.editModeProperty(), editor.templateImageProperty()));
 
         miIdentifyTiles.setOnAction(actionEvent -> new Action_FillMapFromTemplate(ui,
                 editor.currentWorldMap(), editor.templateImage()).execute());
 
         var miAssignDefaultColors = new MenuItem("Assign default colors"); //TODO localize
         miAssignDefaultColors.setOnAction(actionEvent -> new Action_SetDefaultMapColors(editor, editor.currentWorldMap()).execute());
-        miAssignDefaultColors.disableProperty().bind(editor.editModeProperty().map(mode -> mode == EditMode.INSPECT));
+        miAssignDefaultColors.disableProperty().bind(ui.editModeProperty().map(mode -> mode == EditMode.INSPECT));
 
         Menu menuEdit = new Menu(translated("menu.edit"), NO_GRAPHIC,
             miObstacleJoining,

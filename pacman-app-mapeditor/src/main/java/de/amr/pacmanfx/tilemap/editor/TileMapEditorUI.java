@@ -18,10 +18,7 @@ import de.amr.pacmanfx.uilib.tilemap.TerrainMapColorScheme;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
@@ -44,6 +41,7 @@ import java.util.EnumMap;
 import java.util.Map;
 
 import static de.amr.pacmanfx.lib.tilemap.WorldMapFormatter.formatTile;
+import static de.amr.pacmanfx.tilemap.editor.EditMode.INSPECT;
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.*;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.*;
 import static de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites.*;
@@ -107,7 +105,7 @@ public class TileMapEditorUI {
         propertyEditorsVisibleProperty().addListener((py, ov, visible) ->
             contentPane.setLeft(visible ? propertyEditorsPane : null));
 
-        editor.editModeProperty().addListener((py, on, newEditMode) -> {
+        editModeProperty().addListener((py, on, newEditMode) -> {
             messageDisplay().clearMessage();
             showEditHelpText();
             switch (newEditMode) {
@@ -120,6 +118,7 @@ public class TileMapEditorUI {
 
     public void init() {
         preview3D.reset();
+        setEditMode(INSPECT);
     }
 
     public void start() {
@@ -180,6 +179,27 @@ public class TileMapEditorUI {
                 getColorFromMap(worldMap, LayerID.TERRAIN, WorldMapProperty.COLOR_DOOR, parseColor(MS_PACMAN_COLOR_DOOR))
         );
     }
+
+    // -- editMode
+
+    public static final EditMode DEFAULT_EDIT_MODE = INSPECT;
+
+    private ObjectProperty<EditMode> editMode;
+
+    public ObjectProperty<EditMode> editModeProperty() {
+        if (editMode == null) {
+            editMode = new SimpleObjectProperty<>(DEFAULT_EDIT_MODE);
+        }
+        return editMode;
+    }
+
+    public EditMode editMode() { return editMode == null ? DEFAULT_EDIT_MODE : editModeProperty().get(); }
+
+    public void setEditMode(EditMode mode) {
+        editModeProperty().set(requireNonNull(mode));
+    }
+
+    public boolean editModeIs(EditMode mode) { return editMode() == mode; }
 
     // -- foodVisible
 
@@ -343,7 +363,7 @@ public class TileMapEditorUI {
 
     private void createEditCanvas() {
         editCanvas = new EditCanvas(this);
-        editCanvas.editModeProperty().bind(editor.editModeProperty());
+        editCanvas.editModeProperty().bind(editModeProperty());
         editCanvas.gridSizeProperty().bind(editor.gridSizeProperty());
         editCanvas.gridVisibleProperty().bind(gridVisibleProperty());
         editCanvas.worldMapProperty().bind(editor.currentWorldMapProperty());
@@ -427,7 +447,7 @@ public class TileMapEditorUI {
         var dropHintButton = new Button(translated("image_drop_hint"));
         dropHintButton.setFont(FONT_DROP_HINT);
         dropHintButton.setOnAction(ae -> new Action_OpenTemplateCreateMap(this).execute());
-        dropHintButton.disableProperty().bind(editor.editModeProperty().map(mode -> mode == EditMode.INSPECT));
+        dropHintButton.disableProperty().bind(editModeProperty().map(mode -> mode == EditMode.INSPECT));
 
         templateImageDropTarget = new BorderPane(dropHintButton);
         registerDragAndDropImageHandler(templateImageDropTarget);
@@ -452,7 +472,7 @@ public class TileMapEditorUI {
         node.setOnDragOver(dragEvent -> {
             if (dragEvent.getDragboard().hasFiles()) {
                 File file = dragEvent.getDragboard().getFiles().getFirst();
-                if (isImageFile(file) && !editor.editModeIs(EditMode.INSPECT) || isWorldMapFile(file)) {
+                if (isImageFile(file) && !editModeIs(EditMode.INSPECT) || isWorldMapFile(file)) {
                     dragEvent.acceptTransferModes(TransferMode.COPY);
                 }
             }
@@ -611,11 +631,11 @@ public class TileMapEditorUI {
 
     private void createPropertyEditors() {
         terrainMapPropertiesEditor = new PropertyEditorPane(this);
-        terrainMapPropertiesEditor.enabledPy.bind(editor.editModeProperty().map(mode -> mode != EditMode.INSPECT));
+        terrainMapPropertiesEditor.enabledPy.bind(editModeProperty().map(mode -> mode != EditMode.INSPECT));
         terrainMapPropertiesEditor.setPadding(new Insets(10,0,0,0));
 
         foodMapPropertiesEditor = new PropertyEditorPane(this);
-        foodMapPropertiesEditor.enabledPy.bind(editor.editModeProperty().map(mode -> mode != EditMode.INSPECT));
+        foodMapPropertiesEditor.enabledPy.bind(editModeProperty().map(mode -> mode != EditMode.INSPECT));
         foodMapPropertiesEditor.setPadding(new Insets(10,0,0,0));
 
         var terrainPropertiesPane = new TitledPane(translated("terrain"), terrainMapPropertiesEditor);
@@ -686,21 +706,21 @@ public class TileMapEditorUI {
             getChildren().add(label);
 
             label.textProperty().bind(Bindings.createStringBinding(
-                    () -> switch (editor.editMode()) {
+                    () -> switch (editMode()) {
                         case INSPECT -> translated("mode.inspect");
                         case EDIT    -> translated(editor.symmetricEditMode() ? "mode.symmetric" : "mode.edit");
                         case ERASE   -> translated("mode.erase");
-                    }, editor.editModeProperty(), editor.symmetricEditModeProperty()
+                    }, editModeProperty(), editor.symmetricEditModeProperty()
             ));
 
-            label.textFillProperty().bind(editor.editModeProperty().map(
+            label.textFillProperty().bind(editModeProperty().map(
                     mode -> switch (mode) {
                         case INSPECT -> Color.GRAY;
                         case EDIT    -> Color.FORESTGREEN;
                         case ERASE   -> Color.RED;
                     }));
 
-            label.setOnMouseClicked(e -> new Action_SelectNextEditMode(editor).execute());
+            label.setOnMouseClicked(e -> new Action_SelectNextEditMode(TileMapEditorUI.this).execute());
         }
     }
 
@@ -785,7 +805,7 @@ public class TileMapEditorUI {
     public void onKeyTyped(KeyEvent e) {
         String ch = e.getCharacter();
         if (ch.equals("e")) {
-            new Action_SelectNextEditMode(editor).execute();
+            new Action_SelectNextEditMode(this).execute();
         }
     }
 

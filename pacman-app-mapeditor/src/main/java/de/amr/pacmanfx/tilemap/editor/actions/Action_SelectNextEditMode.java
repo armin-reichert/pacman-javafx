@@ -1,29 +1,31 @@
 package de.amr.pacmanfx.tilemap.editor.actions;
 
 import de.amr.pacmanfx.tilemap.editor.EditMode;
-import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
+import de.amr.pacmanfx.tilemap.editor.TileMapEditorUI;
 
-public class Action_SelectNextEditMode extends AbstractEditorAction<Void> {
+import static de.amr.pacmanfx.tilemap.editor.EditMode.INSPECT;
 
-    public Action_SelectNextEditMode(TileMapEditor editor) {
-        super(editor);
+public class Action_SelectNextEditMode extends AbstractEditorUIAction<Void> {
+
+    public Action_SelectNextEditMode(TileMapEditorUI ui) {
+        super(ui);
     }
 
     @Override
     public Void execute() {
-        switch (editor.editMode()) {
+        switch (ui.editMode()) {
             case INSPECT -> {
-                editor.setEditMode(EditMode.EDIT);
+                ui.setEditMode(EditMode.EDIT);
                 editor.setSymmetricEditMode(false);
             }
             case EDIT -> {
                 if (editor.symmetricEditMode()) {
-                    editor.setEditMode(EditMode.ERASE);
+                    ui.setEditMode(EditMode.ERASE);
                 } else {
                     editor.setSymmetricEditMode(true);
                 }
             }
-            case ERASE -> editor.setEditMode(EditMode.INSPECT);
+            case ERASE -> ui.setEditMode(INSPECT);
         }
         return null;
     }

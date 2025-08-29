@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_TILES;
-import static de.amr.pacmanfx.tilemap.editor.EditMode.INSPECT;
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.SAMPLE_MAPS_PATH;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.sourceCode;
 import static java.util.Objects.requireNonNull;
@@ -54,7 +53,6 @@ public class TileMapEditor {
         setCurrentDirectory(workDir);
         WorldMap emptyMap = new Action_CreateEmptyMap(this, ARCADE_MAP_SIZE_IN_TILES.y(), ARCADE_MAP_SIZE_IN_TILES.x()).execute();
         setCurrentWorldMap(emptyMap);
-        setEditMode(INSPECT);
         edited = false;
         ui.init();
     }
@@ -68,7 +66,6 @@ public class TileMapEditor {
 
     public void stop() {
         updateTimer.stop();
-        setEditMode(INSPECT);
     }
 
     public TileMapEditorUI ui() {
@@ -190,27 +187,6 @@ public class TileMapEditor {
     public WorldMap currentWorldMap() { return currentWorldMap.get(); }
 
     public void setCurrentWorldMap(WorldMap worldMap) { currentWorldMap.set(worldMap); }
-
-    // -- editMode
-
-    public static final EditMode DEFAULT_EDIT_MODE = INSPECT;
-
-    private ObjectProperty<EditMode> editMode;
-
-    public ObjectProperty<EditMode> editModeProperty() {
-        if (editMode == null) {
-            editMode = new SimpleObjectProperty<>(DEFAULT_EDIT_MODE);
-        }
-        return editMode;
-    }
-
-    public EditMode editMode() { return editMode == null ? DEFAULT_EDIT_MODE : editModeProperty().get(); }
-
-    public void setEditMode(EditMode mode) {
-        editModeProperty().set(requireNonNull(mode));
-    }
-
-    public boolean editModeIs(EditMode mode) { return editMode() == mode; }
 
     // -- gridSize
 

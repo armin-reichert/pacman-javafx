@@ -31,6 +31,7 @@ import javafx.scene.text.Text;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.translated;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.*;
+import static java.util.Objects.requireNonNull;
 
 public class TemplateImageCanvas extends Canvas {
 
@@ -39,10 +40,13 @@ public class TemplateImageCanvas extends Canvas {
     private final ObjectProperty<Image> templateImage = new SimpleObjectProperty<>();
     private final ObjectProperty<WorldMap> worldMap = new SimpleObjectProperty<>();
 
+    private final TileMapEditorUI ui;
+
     private ContextMenu colorSelectionContextMenu;
     private ColorIndicator colorIndicator;
 
     public TemplateImageCanvas(TileMapEditorUI ui) {
+        this.ui = requireNonNull(ui);
         final TileMapEditor editor = ui.editor();
 
         gridSize.bind(editor.gridSizeProperty());
@@ -106,7 +110,7 @@ public class TemplateImageCanvas extends Canvas {
         if (colorSelectionContextMenu != null) {
             colorSelectionContextMenu.hide();
         }
-        if (editor.editModeIs(EditMode.INSPECT)) {
+        if (ui.editModeIs(EditMode.INSPECT)) {
             return;
         }
 

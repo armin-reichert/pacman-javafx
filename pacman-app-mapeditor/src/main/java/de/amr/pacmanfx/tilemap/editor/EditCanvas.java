@@ -317,7 +317,7 @@ public class EditCanvas extends Canvas {
         if (mouseEvent.getButton() == MouseButton.PRIMARY) {
             requestFocus();
             contextMenu.hide();
-            if (mouseEvent.getClickCount() == 2 && ui.editor().editModeIs(EditMode.INSPECT)) {
+            if (mouseEvent.getClickCount() == 2 && ui.editModeIs(EditMode.INSPECT)) {
                 ui.showEditHelpText();
             }
         }
@@ -342,7 +342,7 @@ public class EditCanvas extends Canvas {
             obstacleEditor.endEditing();
         } else {
             Vector2i tile = tileAt(mouseEvent.getX(), mouseEvent.getY());
-            if (ui.editor().editModeIs(EditMode.INSPECT)) {
+            if (ui.editModeIs(EditMode.INSPECT)) {
                 new Action_IdentifyObstacle(ui, tile).execute();
             } else {
                 if (mouseEvent.isControlDown()) {
@@ -397,7 +397,7 @@ public class EditCanvas extends Canvas {
         if (isWorldMapFile(file)) {
             new Action_ReplaceCurrentWorldMapChecked(ui, file).execute();
         }
-        else if (isImageFile(file) && !ui.editor().editModeIs(EditMode.INSPECT)) {
+        else if (isImageFile(file) && !ui.editModeIs(EditMode.INSPECT)) {
             Image image = loadImage(file).orElse(null);
             if (image == null) {
                 ui.messageDisplay().showMessage("Could not open image file '%s'".formatted(file), 3, MessageType.ERROR);
@@ -421,7 +421,7 @@ public class EditCanvas extends Canvas {
     public void onContextMenuRequested(ContextMenuEvent menuEvent) {
         final TileMapEditor editor = ui.editor();
 
-        if (editor.editModeIs(EditMode.INSPECT)) {
+        if (ui.editModeIs(EditMode.INSPECT)) {
             return;
         }
         if (menuEvent.isKeyboardTrigger()) {
