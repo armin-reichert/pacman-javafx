@@ -7,7 +7,7 @@ import de.amr.pacmanfx.lib.tilemap.TerrainTile;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.tilemap.editor.MessageType;
-import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
+import de.amr.pacmanfx.tilemap.editor.TileMapEditorUI;
 import de.amr.pacmanfx.tilemap.editor.TileMatcher;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
@@ -23,13 +23,13 @@ import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.EMPTY_ROWS_BEFORE_MAZ
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.EMPTY_ROWS_BELOW_MAZE;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.getColorFromMap;
 
-public class Action_FillMapFromTemplate extends AbstractEditorAction<Void> {
+public class Action_FillMapFromTemplate extends AbstractEditorUIAction<Void> {
 
     private final WorldMap worldMap;
     private final Image templateImage;
 
-    public Action_FillMapFromTemplate(TileMapEditor editor, WorldMap worldMap, Image templateImage) {
-        super(editor);
+    public Action_FillMapFromTemplate(TileMapEditorUI ui, WorldMap worldMap, Image templateImage) {
+        super(ui);
         this.worldMap = worldMap;
         this.templateImage = templateImage;
     }
@@ -42,29 +42,29 @@ public class Action_FillMapFromTemplate extends AbstractEditorAction<Void> {
 
         Color fillColor = getColorFromMap(worldMap, LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_FILL, null);
         if (fillColor == null) {
-            editor.ui().messageDisplay().showMessage("No fill color defined", 3, MessageType.ERROR);
+            ui.messageDisplay().showMessage("No fill color defined", 3, MessageType.ERROR);
             return null;
         }
         Color strokeColor = getColorFromMap(worldMap, LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_STROKE, null);
         if (strokeColor == null) {
-            editor.ui().messageDisplay().showMessage("No stroke color defined", 3, MessageType.ERROR);
+            ui.messageDisplay().showMessage("No stroke color defined", 3, MessageType.ERROR);
             return null;
         }
         Color doorColor = getColorFromMap(worldMap, LayerID.TERRAIN, WorldMapProperty.COLOR_DOOR, Color.PINK);
         if (doorColor == null) {
-            editor.ui().messageDisplay().showMessage("No door color defined", 3, MessageType.ERROR);
+            ui.messageDisplay().showMessage("No door color defined", 3, MessageType.ERROR);
             return null;
         }
         Color foodColor = getColorFromMap(worldMap, LayerID.FOOD, WorldMapProperty.COLOR_FOOD, null);
         if (foodColor == null) {
-            editor.ui().messageDisplay().showMessage("No food color defined", 3, MessageType.ERROR);
+            ui.messageDisplay().showMessage("No food color defined", 3, MessageType.ERROR);
             return null;
         }
         TileMatcher matcher = new TileMatcher(Color.TRANSPARENT, fillColor, strokeColor, doorColor, foodColor);
         WritablePixelFormat<IntBuffer> pixelFormat = WritablePixelFormat.getIntArgbInstance();
         PixelReader rdr = templateImage.getPixelReader();
         if (rdr == null) {
-            editor.ui().messageDisplay().showMessage("Could not get pixel reader for this image", 5, MessageType.ERROR);
+            ui.messageDisplay().showMessage("Could not get pixel reader for this image", 5, MessageType.ERROR);
             return null;
         }
 
@@ -109,7 +109,7 @@ public class Action_FillMapFromTemplate extends AbstractEditorAction<Void> {
         }
 
         java.time.Duration duration = java.time.Duration.between(startTime, LocalTime.now());
-        editor.ui().messageDisplay().showMessage("Map creation took %d milliseconds".formatted(duration.toMillis()), 5, MessageType.INFO);
+        ui.messageDisplay().showMessage("Map creation took %d milliseconds".formatted(duration.toMillis()), 5, MessageType.INFO);
 
         editor.setWorldMapChanged();
         editor.setEdited(true);
