@@ -25,7 +25,7 @@ public class Action_ReplaceCurrentWorldMapChecked extends AbstractEditorAction<B
         if (file.getName().endsWith(".world")) {
             try {
                 WorldMap worldMap = WorldMap.fromFile(file);
-                editor.ui().ifNoUnsavedChangesDo(() -> {
+                editor.ui().decideWithCheckForUnsavedChanges(() -> {
                     editor.setCurrentWorldMap(worldMap);
                     editor.setCurrentDirectory(file.getParentFile());
                     editor.setCurrentFile(file);

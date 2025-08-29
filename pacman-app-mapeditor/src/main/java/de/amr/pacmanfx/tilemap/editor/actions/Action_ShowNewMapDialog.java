@@ -3,7 +3,6 @@ package de.amr.pacmanfx.tilemap.editor.actions;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
-import de.amr.pacmanfx.lib.tilemap.WorldMapFormatter;
 import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.tilemap.editor.MessageType;
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
@@ -24,7 +23,7 @@ public class Action_ShowNewMapDialog extends AbstractEditorAction<Void> {
 
     @Override
     public Void execute() {
-        editor.ui().ifNoUnsavedChangesDo(() -> {
+        editor.ui().decideWithCheckForUnsavedChanges(() -> {
             TextInputDialog dialog = createMapSizeInputDialog();
             dialog.showAndWait().ifPresent(input -> {
                 Vector2i sizeInTiles = parseSize(input);

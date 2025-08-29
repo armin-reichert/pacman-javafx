@@ -30,7 +30,7 @@ public class TileMapEditorApp extends Application  {
             var editor = new TileMapEditor(stage, model3DRepository);
 
             var miQuit = new MenuItem(translated("quit"));
-            miQuit.setOnAction(e -> editor.ui().ifNoUnsavedChangesDo(stage::close));
+            miQuit.setOnAction(e -> editor.ui().decideWithCheckForUnsavedChanges(stage::close));
             editor.ui().menuBar().menuFile().getItems().addAll(new SeparatorMenuItem(), miQuit);
 
             double screenHeight = Screen.getPrimary().getVisualBounds().getHeight();
@@ -40,7 +40,7 @@ public class TileMapEditorApp extends Application  {
             var scene = new Scene(editor.ui().layoutPane(), width, height);
             stage.setScene(scene);
 
-            stage.setOnCloseRequest(e -> editor.ui().ifNoUnsavedChangesDo(() -> {
+            stage.setOnCloseRequest(e -> editor.ui().decideWithCheckForUnsavedChanges(() -> {
                 editor.stop();
                 stage.close();
             }));

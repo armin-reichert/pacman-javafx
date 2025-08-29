@@ -60,7 +60,7 @@ public class TileMapEditorUI {
     private ScrollPane spPreview2D;
     private Preview3D preview3D;
     private TextArea sourceView;
-    private SplitPane splitEditorAndPreviewArea;
+    private SplitPane splitPaneMapEditorAndPreviews;
     private TabPane tabPaneForPalettes;
     private HBox statusLine;
     private Slider sliderZoom;
@@ -143,7 +143,7 @@ public class TileMapEditorUI {
         palettes.values().forEach(Palette::draw);
     }
 
-    public void ifNoUnsavedChangesDo(Runnable action) {
+    public void decideWithCheckForUnsavedChanges(Runnable action) {
         if (!editor.isEdited()) {
             action.run();
             return;
@@ -329,7 +329,7 @@ public class TileMapEditorUI {
         node.setOnDragDropped(dragEvent -> {
             if (dragEvent.getDragboard().hasFiles()) {
                 File file = dragEvent.getDragboard().getFiles().getFirst();
-                ifNoUnsavedChangesDo(() -> editCanvas.onFileDropped(editor, file));
+                decideWithCheckForUnsavedChanges(() -> editCanvas.onFileDropped(editor, file));
             }
             dragEvent.consume();
         });
@@ -352,8 +352,8 @@ public class TileMapEditorUI {
         preview3D.getSubScene().widthProperty().bind(tabPane.widthProperty());
         preview3D.getSubScene().heightProperty().bind(tabPane.heightProperty());
 
-        splitEditorAndPreviewArea = new SplitPane(tabPaneEditorViews, tabPane);
-        splitEditorAndPreviewArea.setDividerPositions(0.5);
+        splitPaneMapEditorAndPreviews = new SplitPane(tabPaneEditorViews, tabPane);
+        splitPaneMapEditorAndPreviews.setDividerPositions(0.5);
     }
 
     // Must be called after edit canvas creation because it binds to the renderers of the edit canvas!
@@ -573,10 +573,10 @@ public class TileMapEditorUI {
     }
 
     private void arrangeLayout() {
-        var centerPane = new VBox(tabPaneForPalettes, splitEditorAndPreviewArea, statusLine);
+        var centerPane = new VBox(tabPaneForPalettes, splitPaneMapEditorAndPreviews, statusLine);
         centerPane.setPadding(new Insets(0,5,0,5));
         VBox.setVgrow(tabPaneForPalettes, Priority.NEVER);
-        VBox.setVgrow(splitEditorAndPreviewArea, Priority.ALWAYS);
+        VBox.setVgrow(splitPaneMapEditorAndPreviews, Priority.ALWAYS);
         VBox.setVgrow(statusLine, Priority.NEVER);
         contentPane.setLeft(propertyEditorsPane);
         contentPane.setCenter(centerPane);
@@ -610,7 +610,7 @@ public class TileMapEditorUI {
         var menuItem = new MenuItem(description);
         menuItem.setOnAction(e -> {
             WorldMap copy = WorldMap.copyMap(worldMap);
-            ifNoUnsavedChangesDo(() -> editor.setCurrentWorldMap(copy));
+            decideWithCheckForUnsavedChanges(() -> editor.setCurrentWorldMap(copy));
         });
         return menuItem;
     }
