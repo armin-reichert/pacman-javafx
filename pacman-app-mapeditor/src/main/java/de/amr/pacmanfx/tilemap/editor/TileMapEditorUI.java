@@ -595,7 +595,6 @@ public class TileMapEditorUI {
         tabPaneForPalettes.setMinHeight(75);
 
         tabPaneForPalettes.getSelectionModel().selectedItemProperty().addListener((py, ov, selectedTab) -> {
-            editor.setPaletteID((PaletteID) selectedTab.getUserData());
             updatePalettesTabPaneDisplay(selectedTab);
         });
 

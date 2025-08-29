@@ -365,7 +365,7 @@ public class EditCanvas extends Canvas {
             case INSPECT -> {}
             case EDIT -> {
                 if (mouseEvent.isShiftDown()) {
-                    switch (ui.editor().paletteID()) {
+                    switch (ui.selectedPaletteID()) {
                         case TERRAIN -> {
                             Palette palette = ui.selectedPalette();
                             if (palette.isToolSelected()) {

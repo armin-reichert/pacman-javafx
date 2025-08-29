@@ -167,22 +167,6 @@ public class TileMapEditor {
 
     public void setCurrentWorldMap(WorldMap worldMap) { currentWorldMap.set(worldMap); }
 
-    // -- paletteID
-
-    private final ObjectProperty<PaletteID> paletteID = new SimpleObjectProperty<>(PaletteID.TERRAIN);
-
-    public ObjectProperty<PaletteID> paletteIDProperty() {
-        return paletteID;
-    }
-
-    public PaletteID paletteID() {
-        return paletteID.get();
-    }
-
-    public void setPaletteID(PaletteID id) {
-        paletteID.set(id);
-    }
-
     // -- sourceCode
 
     private final StringProperty sourceCode = new SimpleStringProperty("");
