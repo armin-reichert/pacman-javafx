@@ -4,6 +4,7 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.*;
 import de.amr.pacmanfx.tilemap.editor.MessageType;
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
+import de.amr.pacmanfx.tilemap.editor.TileMapEditorUI;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 
@@ -11,12 +12,12 @@ import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
 import static java.util.Objects.requireNonNull;
 
-public class Action_IdentifyObstacle extends AbstractEditorAction<String> {
+public class Action_IdentifyObstacle extends AbstractEditorUIAction<String> {
 
     private final Vector2i tile;
 
-    public Action_IdentifyObstacle(TileMapEditor editor, Vector2i tile) {
-        super(editor);
+    public Action_IdentifyObstacle(TileMapEditorUI ui, Vector2i tile) {
+        super(ui);
         this.tile = requireNonNull(tile);
     }
 
@@ -32,7 +33,7 @@ public class Action_IdentifyObstacle extends AbstractEditorAction<String> {
             ClipboardContent content = new ClipboardContent();
             content.putString(encoding);
             clipboard.setContent(content);
-            editor.ui().messageDisplay().showMessage("Obstacle (copied to clipboard)", 5, MessageType.INFO);
+            ui.messageDisplay().showMessage("Obstacle (copied to clipboard)", 5, MessageType.INFO);
             return encoding;
         } else {
             byte terrainCode = worldMap.content(LayerID.TERRAIN, tile);
@@ -42,7 +43,7 @@ public class Action_IdentifyObstacle extends AbstractEditorAction<String> {
                 info = "Terrain #%02X (%s)".formatted(terrainCode, terrainCode);
             if (foodCode != FoodTile.EMPTY.code())
                 info = "Food #%02X (%s)".formatted(foodCode, foodCode);
-            editor.ui().messageDisplay().showMessage(info, 4, MessageType.INFO);
+            ui.messageDisplay().showMessage(info, 4, MessageType.INFO);
             return null;
         }
     }
