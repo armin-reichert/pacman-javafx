@@ -167,27 +167,6 @@ public class TileMapEditor {
 
     public void setCurrentWorldMap(WorldMap worldMap) { currentWorldMap.set(worldMap); }
 
-    // -- obstaclesJoining
-
-    public static boolean DEFAULT_OBSTACLES_JOINING = true;
-
-    private BooleanProperty obstaclesJoining;
-
-    public BooleanProperty obstaclesJoiningProperty() {
-        if (obstaclesJoining == null) {
-            obstaclesJoining = new SimpleBooleanProperty(DEFAULT_OBSTACLES_JOINING);
-        }
-        return obstaclesJoining;
-    }
-
-    public boolean obstaclesJoining() {
-        return obstaclesJoining == null ? DEFAULT_OBSTACLES_JOINING : obstaclesJoiningProperty().get();
-    }
-
-    public void setObstaclesJoining(boolean value) {
-        obstaclesJoiningProperty().set(value);
-    }
-
     // -- paletteID
 
     private final ObjectProperty<PaletteID> paletteID = new SimpleObjectProperty<>(PaletteID.TERRAIN);

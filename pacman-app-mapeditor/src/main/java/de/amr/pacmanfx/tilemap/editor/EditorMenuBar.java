@@ -60,7 +60,7 @@ public class EditorMenuBar extends MenuBar {
         // "Edit" menu
 
         var miObstacleJoining = new CheckMenuItem(translated("menu.edit.obstacles_joining"));
-        miObstacleJoining.selectedProperty().bindBidirectional(editor.obstaclesJoiningProperty());
+        miObstacleJoining.selectedProperty().bindBidirectional(ui.obstaclesJoiningProperty());
 
         var miAddBorder = new MenuItem(translated("menu.edit.add_border"));
         miAddBorder.setOnAction(actionEvent -> new Action_AddBorderWall(editor, editor.currentWorldMap()).execute());
