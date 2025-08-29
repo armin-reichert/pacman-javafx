@@ -73,10 +73,7 @@ public class Maze3D extends Group {
     private final Node pacmanShape3D;
     private final GhostBody[] ghostShapes;
 
-    private final TileMapEditorUI ui;
-
     public Maze3D(TileMapEditorUI ui, Model3DRepository model3DRepository) {
-        this.ui = requireNonNull(ui);
         requireNonNull(model3DRepository);
 
         camera = new PerspectiveCamera(true);
