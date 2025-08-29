@@ -4,7 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tilemap.editor;
 
-import de.amr.pacmanfx.lib.tilemap.*;
+import de.amr.pacmanfx.lib.tilemap.FoodTile;
+import de.amr.pacmanfx.lib.tilemap.LayerID;
+import de.amr.pacmanfx.lib.tilemap.TerrainTile;
+import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.tilemap.editor.actions.*;
 import de.amr.pacmanfx.tilemap.editor.rendering.TerrainTileMapRenderer;
@@ -38,7 +41,6 @@ import java.util.Map;
 
 import static de.amr.pacmanfx.lib.tilemap.WorldMapFormatter.formatTile;
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.*;
-import static de.amr.pacmanfx.tilemap.editor.PaletteID.*;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.*;
 import static de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites.*;
 import static java.util.Objects.requireNonNull;
@@ -87,7 +89,7 @@ public class TileMapEditorUI {
         createPropertyEditors();
         createStatusLine();
 
-        menuBar = new EditorMenuBar(editor);
+        menuBar = new EditorMenuBar(this);
         TileMapEditor.SampleMaps sampleMaps = editor.loadSampleMaps();
         if (sampleMaps != null) {
             addSampleMapMenuEntries(sampleMaps);
@@ -292,7 +294,7 @@ public class TileMapEditorUI {
 
         var dropHintButton = new Button(translated("image_drop_hint"));
         dropHintButton.setFont(FONT_DROP_HINT);
-        dropHintButton.setOnAction(ae -> new Action_OpenTemplateCreateMap(editor).execute());
+        dropHintButton.setOnAction(ae -> new Action_OpenTemplateCreateMap(this).execute());
         dropHintButton.disableProperty().bind(editor.editModeProperty().map(mode -> mode == EditMode.INSPECT));
 
         templateImageDropTarget = new BorderPane(dropHintButton);

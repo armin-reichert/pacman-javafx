@@ -1,7 +1,7 @@
 package de.amr.pacmanfx.tilemap.editor.actions;
 
 import de.amr.pacmanfx.tilemap.editor.MessageType;
-import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
+import de.amr.pacmanfx.tilemap.editor.TileMapEditorUI;
 import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
@@ -15,22 +15,22 @@ import java.util.Optional;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.*;
 
-public class Action_OpenTemplateCreateMap extends AbstractEditorAction<Void> {
+public class Action_OpenTemplateCreateMap extends AbstractEditorUIAction<Void> {
 
-    public Action_OpenTemplateCreateMap(TileMapEditor editor) {
-        super(editor);
+    public Action_OpenTemplateCreateMap(TileMapEditorUI ui) {
+        super(ui);
     }
 
     @Override
     public Void execute() {
-        openTemplateImage(editor.ui().stage(), translated("open_template_image"), editor.currentDirectory()).ifPresent(image -> {
+        openTemplateImage(ui.stage(), translated("open_template_image"), editor.currentDirectory()).ifPresent(image -> {
             if (isTemplateImageSizeOk(image)) {
                 editor.setTemplateImage(image);
                 new Action_CreateMapFromTemplate(editor, image).execute();
-                editor.ui().selectTemplateImageTab();
-                editor.ui().messageDisplay().showMessage("Select map colors from template!", 20, MessageType.INFO);
+                ui.selectTemplateImageTab();
+                ui.messageDisplay().showMessage("Select map colors from template!", 20, MessageType.INFO);
             } else {
-                editor.ui().messageDisplay().showMessage("Template image size seems dubious", 3, MessageType.WARNING);
+                ui.messageDisplay().showMessage("Template image size seems dubious", 3, MessageType.WARNING);
             }
         });
         return null;

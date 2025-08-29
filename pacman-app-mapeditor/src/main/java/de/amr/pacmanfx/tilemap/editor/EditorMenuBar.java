@@ -34,7 +34,9 @@ public class EditorMenuBar extends MenuBar {
         return menuView;
     }
 
-    public EditorMenuBar(TileMapEditor editor) {
+    public EditorMenuBar(TileMapEditorUI ui) {
+
+        final TileMapEditor editor = ui.editor();
 
         // "File" menu
 
@@ -45,13 +47,13 @@ public class EditorMenuBar extends MenuBar {
         miNewBlankMap.setOnAction(actionEvent -> new Action_ShowNewMapDialog(editor, false).execute());
 
         var miOpenMapFile = new MenuItem(translated("menu.file.open"));
-        miOpenMapFile.setOnAction(actionEvent -> new Action_OpenMapFileInteractively(editor).execute());
+        miOpenMapFile.setOnAction(actionEvent -> new Action_OpenMapFileInteractively(ui).execute());
 
         var miSaveMapFileAs = new MenuItem(translated("menu.file.save_as"));
         miSaveMapFileAs.setOnAction(actionEvent -> new Action_SaveMapFile(editor).execute());
 
         var miOpenTemplateImage = new MenuItem(translated("menu.file.open_template_image"));
-        miOpenTemplateImage.setOnAction(actionEvent -> new Action_OpenTemplateCreateMap(editor).execute());
+        miOpenTemplateImage.setOnAction(actionEvent -> new Action_OpenTemplateCreateMap(ui).execute());
 
         var miCloseTemplateImage = new MenuItem(translated("menu.file.close_template_image"));
         miCloseTemplateImage.setOnAction(actionEvent -> editor.setTemplateImage(null));

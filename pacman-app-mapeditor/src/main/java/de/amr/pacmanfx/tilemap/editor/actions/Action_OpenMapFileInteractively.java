@@ -1,25 +1,25 @@
 package de.amr.pacmanfx.tilemap.editor.actions;
 
-import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
+import de.amr.pacmanfx.tilemap.editor.TileMapEditorUI;
 import javafx.stage.FileChooser;
 
 import java.io.File;
 
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.*;
 
-public class Action_OpenMapFileInteractively extends AbstractEditorAction<File> {
+public class Action_OpenMapFileInteractively extends AbstractEditorUIAction<File> {
 
     private File file;
 
-    public Action_OpenMapFileInteractively(TileMapEditor editor) {
-        super(editor);
+    public Action_OpenMapFileInteractively(TileMapEditorUI ui) {
+        super(ui);
     }
 
     @Override
     public File execute() {
-        editor.ui().ifNoUnsavedChangesDo(() -> {
+        ui.ifNoUnsavedChangesDo(() -> {
             FileChooser fileChooser = createFileChooser();
-            file = fileChooser.showOpenDialog(editor.ui().stage());
+            file = fileChooser.showOpenDialog(ui.stage());
             if (file != null) {
                 new Action_ReplaceCurrentWorldMapChecked(editor, file).execute();
             }
@@ -36,5 +36,4 @@ public class Action_OpenMapFileInteractively extends AbstractEditorAction<File> 
         fileChooser.setTitle(translated("open_file"));
         return fileChooser;
     }
-
 }
