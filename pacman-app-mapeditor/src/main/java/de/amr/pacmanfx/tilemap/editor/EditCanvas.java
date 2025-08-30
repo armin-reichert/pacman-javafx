@@ -13,6 +13,7 @@ import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.tilemap.editor.actions.*;
 import de.amr.pacmanfx.tilemap.editor.rendering.EditorActorRenderer;
 import de.amr.pacmanfx.tilemap.editor.rendering.TerrainTileMapRenderer;
+import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapColorScheme;
 import javafx.beans.binding.Bindings;
@@ -95,7 +96,20 @@ public class EditCanvas extends Canvas {
                 return numCols * gridSize();
             }, worldMap, gridSize));
 
-        scaling.bind(gridSize.divide(TS));
+
+        actorsVisibleProperty().bind(ui.actorsVisibleProperty());
+        editModeProperty().bind(ui.editModeProperty());
+        foodVisibleProperty().bind(ui.foodVisibleProperty());
+        gridSizeProperty().bind(ui.gridSizeProperty());
+        gridVisibleProperty().bind(ui.gridVisibleProperty());
+        obstacleInnerAreaDisplayedProperty().bind(ui.obstacleInnerAreaDisplayedProperty());
+        obstaclesJoiningProperty().bind(ui.obstaclesJoiningProperty());
+        segmentNumbersVisibleProperty().bind(ui.segmentNumbersVisibleProperty());
+        scalingProperty().bind(gridSize.divide(TS));
+        symmetricEditModeProperty().bind(ui.symmetricEditModeProperty());
+        templateImageGrayProperty().bind(ui.editor().templateImageProperty().map(Ufx::imageToGreyscale));
+        terrainVisibleProperty().bind(ui.terrainVisibleProperty());
+        worldMapProperty().bind(ui.editor().currentWorldMapProperty());
 
         terrainRenderer = new TerrainTileMapRenderer(this);
         terrainRenderer.scalingProperty().bind(scaling);
@@ -106,7 +120,12 @@ public class EditCanvas extends Canvas {
         actorRenderer = new EditorActorRenderer(this);
         actorRenderer.scalingProperty().bind(scaling);
 
+        setOnContextMenuRequested(this::onContextMenuRequested);
+        setOnKeyPressed(this::onKeyPressed);
+        setOnMouseClicked(this::onMouseClicked);
         setOnMouseDragged(this::onMouseDragged);
+        setOnMouseMoved(this::onMouseMoved);
+        setOnMouseReleased(this::onMouseReleased);
     }
 
     // -- Properties
@@ -149,6 +168,10 @@ public class EditCanvas extends Canvas {
 
     public BooleanProperty obstaclesJoiningProperty() {
         return obstaclesJoining;
+    }
+
+    public DoubleProperty scalingProperty() {
+        return scaling;
     }
 
     public double scaling() {

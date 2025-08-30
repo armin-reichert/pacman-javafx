@@ -11,7 +11,6 @@ import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.tilemap.editor.actions.*;
 import de.amr.pacmanfx.tilemap.editor.rendering.TerrainTileMapRenderer;
-import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapColorScheme;
@@ -64,7 +63,7 @@ public class EditorUI {
     private Preview3D preview3D;
     private TextArea sourceView;
     private SplitPane splitPaneMapEditorAndPreviews;
-    private TabPane tabPaneForPalettes;
+    private TabPane tabPanePalettes;
     private HBox statusLine;
     private Slider sliderZoom;
     private TabPane tabPaneEditorViews;
@@ -432,7 +431,7 @@ public class EditorUI {
     }
 
     public PaletteID selectedPaletteID() {
-        return (PaletteID) tabPaneForPalettes.getSelectionModel().getSelectedItem().getUserData();
+        return (PaletteID) tabPanePalettes.getSelectionModel().getSelectedItem().getUserData();
     }
 
     public Palette selectedPalette() {
@@ -445,29 +444,9 @@ public class EditorUI {
 
     private void createEditCanvas() {
         editCanvas = new EditCanvas(this);
-        editCanvas.worldMapProperty().bind(editor.currentWorldMapProperty());
-        editCanvas.templateImageGrayProperty().bind(editor.templateImageProperty().map(Ufx::imageToGreyscale));
-
-        editCanvas.editModeProperty().bind(editModeProperty());
-        editCanvas.gridSizeProperty().bind(gridSizeProperty());
-        editCanvas.gridVisibleProperty().bind(gridVisibleProperty());
-        editCanvas.obstacleInnerAreaDisplayedProperty().bind(obstacleInnerAreaDisplayedProperty());
-        editCanvas.obstaclesJoiningProperty().bind(obstaclesJoiningProperty());
-        editCanvas.segmentNumbersVisibleProperty().bind(segmentNumbersVisibleProperty());
-        editCanvas.symmetricEditModeProperty().bind(symmetricEditModeProperty());
-        editCanvas.terrainVisibleProperty().bind(terrainVisibleProperty());
-        editCanvas.foodVisibleProperty().bind(foodVisibleProperty());
-        editCanvas.actorsVisibleProperty().bind(actorsVisibleProperty());
-
-        editCanvas.setOnContextMenuRequested(editCanvas::onContextMenuRequested);
-        editCanvas.setOnMouseClicked(editCanvas::onMouseClicked);
-        editCanvas.setOnMouseMoved(editCanvas::onMouseMoved);
-        editCanvas.setOnMouseReleased(editCanvas::onMouseReleased);
-        editCanvas.setOnKeyPressed(editCanvas::onKeyPressed);
 
         spEditCanvas = new ScrollPane(editCanvas);
         spEditCanvas.setFitToHeight(true);
-
         registerDragAndDropImageHandler(spEditCanvas);
 
         Platform.runLater(() -> {
@@ -608,19 +587,18 @@ public class EditorUI {
         tabActors.setClosable(false);
         tabActors.setUserData(PaletteID.ACTORS);
 
-        tabPaneForPalettes = new TabPane(tabTerrain, tabPellets, tabActors);
-        tabPaneForPalettes.setPadding(new Insets(5, 5, 5, 5));
-        tabPaneForPalettes.setMinHeight(75);
+        tabPanePalettes = new TabPane(tabTerrain, tabPellets, tabActors);
+        tabPanePalettes.setPadding(new Insets(5, 5, 5, 5));
+        tabPanePalettes.setMinHeight(75);
 
-        tabPaneForPalettes.getSelectionModel().selectedItemProperty().addListener((py, ov, selectedTab) -> {
-            updatePalettesTabPaneDisplay(selectedTab);
-        });
+        tabPanePalettes.getSelectionModel().selectedItemProperty().addListener((py, ov, selectedTab)
+            -> markSelectedPalettesTab(selectedTab));
 
-        updatePalettesTabPaneDisplay(tabPaneForPalettes.getSelectionModel().getSelectedItem());
+        markSelectedPalettesTab(tabPanePalettes.getSelectionModel().getSelectedItem());
     }
 
-    private void updatePalettesTabPaneDisplay(Tab selectedTab) {
-        for (Tab tab : tabPaneForPalettes.getTabs()) {
+    private void markSelectedPalettesTab(Tab selectedTab) {
+        for (Tab tab : tabPanePalettes.getTabs()) {
             if (tab.getGraphic() instanceof Text text) {
                 text.setFont(tab == selectedTab ? FONT_SELECTED_PALETTE : FONT_UNSELECTED_PALETTE);
             }
@@ -796,9 +774,9 @@ public class EditorUI {
     }
 
     private void arrangeLayout() {
-        var centerPane = new VBox(tabPaneForPalettes, splitPaneMapEditorAndPreviews, statusLine);
+        var centerPane = new VBox(tabPanePalettes, splitPaneMapEditorAndPreviews, statusLine);
         centerPane.setPadding(new Insets(0,5,0,5));
-        VBox.setVgrow(tabPaneForPalettes, Priority.NEVER);
+        VBox.setVgrow(tabPanePalettes, Priority.NEVER);
         VBox.setVgrow(splitPaneMapEditorAndPreviews, Priority.ALWAYS);
         VBox.setVgrow(statusLine, Priority.NEVER);
         contentPane.setLeft(propertyEditorsPane);
