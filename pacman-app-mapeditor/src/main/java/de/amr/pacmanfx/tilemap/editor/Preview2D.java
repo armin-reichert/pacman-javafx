@@ -22,8 +22,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.getColorFromMap;
-import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.parseColor;
+import static de.amr.pacmanfx.tilemap.editor.EditorUtil.getColorFromMap;
+import static de.amr.pacmanfx.tilemap.editor.EditorUtil.parseColor;
 
 public class Preview2D extends Canvas {
 

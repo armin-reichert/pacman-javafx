@@ -1,6 +1,6 @@
 package de.amr.pacmanfx.tilemap.editor.actions;
 
-import de.amr.pacmanfx.tilemap.editor.TileMapEditorUI;
+import de.amr.pacmanfx.tilemap.editor.EditorUI;
 import javafx.stage.FileChooser;
 
 import java.io.File;
@@ -11,7 +11,7 @@ public class Action_OpenMapFileInteractively extends AbstractEditorUIAction<File
 
     private File file;
 
-    public Action_OpenMapFileInteractively(TileMapEditorUI ui) {
+    public Action_OpenMapFileInteractively(EditorUI ui) {
         super(ui);
     }
 

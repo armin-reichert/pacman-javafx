@@ -36,8 +36,8 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.getColorFromMap;
-import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.parseColor;
+import static de.amr.pacmanfx.tilemap.editor.EditorUtil.getColorFromMap;
+import static de.amr.pacmanfx.tilemap.editor.EditorUtil.parseColor;
 import static de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites.*;
 import static de.amr.pacmanfx.uilib.Ufx.colorWithOpacity;
 import static java.util.Objects.requireNonNull;
@@ -73,7 +73,7 @@ public class Maze3D extends Group {
     private final Node pacmanShape3D;
     private final GhostBody[] ghostShapes;
 
-    public Maze3D(TileMapEditorUI ui, Model3DRepository model3DRepository) {
+    public Maze3D(EditorUI ui, Model3DRepository model3DRepository) {
         requireNonNull(model3DRepository);
 
         camera = new PerspectiveCamera(true);

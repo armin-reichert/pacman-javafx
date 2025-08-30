@@ -24,7 +24,7 @@ public class EditorMenuBar extends MenuBar {
         return menuMaps;
     }
 
-    public EditorMenuBar(TileMapEditorUI ui) {
+    public EditorMenuBar(EditorUI ui) {
 
         final TileMapEditor editor = ui.editor();
 
@@ -150,6 +150,6 @@ public class EditorMenuBar extends MenuBar {
             miObstacleInnerAreaVisible,
             miGridVisible);
 
-        getMenus().addAll(menuFile, menuEdit, menuMaps, menuView);
+        getMenus().addAll(menuFile, menuEdit, menuView, menuMaps);
     }
 }

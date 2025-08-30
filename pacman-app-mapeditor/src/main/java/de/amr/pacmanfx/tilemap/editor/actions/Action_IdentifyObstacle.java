@@ -3,7 +3,7 @@ package de.amr.pacmanfx.tilemap.editor.actions;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.*;
 import de.amr.pacmanfx.tilemap.editor.MessageType;
-import de.amr.pacmanfx.tilemap.editor.TileMapEditorUI;
+import de.amr.pacmanfx.tilemap.editor.EditorUI;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 
@@ -15,7 +15,7 @@ public class Action_IdentifyObstacle extends AbstractEditorUIAction<String> {
 
     private final Vector2i tile;
 
-    public Action_IdentifyObstacle(TileMapEditorUI ui, Vector2i tile) {
+    public Action_IdentifyObstacle(EditorUI ui, Vector2i tile) {
         super(ui);
         this.tile = requireNonNull(tile);
     }

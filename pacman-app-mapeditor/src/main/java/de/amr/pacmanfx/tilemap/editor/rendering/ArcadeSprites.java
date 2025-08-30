@@ -3,7 +3,7 @@ package de.amr.pacmanfx.tilemap.editor.rendering;
 import de.amr.pacmanfx.lib.RectShort;
 import javafx.scene.image.Image;
 
-import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.urlString;
+import static de.amr.pacmanfx.tilemap.editor.EditorUtil.urlString;
 
 public class ArcadeSprites {
 

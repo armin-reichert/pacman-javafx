@@ -1,18 +1,18 @@
 package de.amr.pacmanfx.tilemap.editor.actions;
 
 import de.amr.pacmanfx.tilemap.editor.MessageType;
-import de.amr.pacmanfx.tilemap.editor.TileMapEditorUI;
+import de.amr.pacmanfx.tilemap.editor.EditorUI;
 import javafx.stage.FileChooser;
 import org.tinylog.Logger;
 
 import java.io.File;
 
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.*;
-import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.saveWorldMap;
+import static de.amr.pacmanfx.tilemap.editor.EditorUtil.saveWorldMap;
 
 public class Action_SaveMapFileInteractively extends AbstractEditorUIAction<Void> {
 
-    public Action_SaveMapFileInteractively(TileMapEditorUI ui) {
+    public Action_SaveMapFileInteractively(EditorUI ui) {
         super(ui);
     }
 

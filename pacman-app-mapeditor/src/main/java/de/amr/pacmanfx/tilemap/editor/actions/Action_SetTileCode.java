@@ -4,10 +4,10 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.FoodTile;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
-import de.amr.pacmanfx.tilemap.editor.TileMapEditorUI;
+import de.amr.pacmanfx.tilemap.editor.EditorUI;
 
-import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.canEditFoodAtTile;
-import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.mirroredTileCode;
+import static de.amr.pacmanfx.tilemap.editor.EditorUtil.canEditFoodAtTile;
+import static de.amr.pacmanfx.tilemap.editor.EditorUtil.mirroredTileCode;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -20,7 +20,7 @@ public class Action_SetTileCode extends AbstractEditorUIAction<Void> {
     private final Vector2i tile;
     private final byte code;
 
-    public Action_SetTileCode(TileMapEditorUI ui, WorldMap worldMap, LayerID layerID, Vector2i tile, byte code) {
+    public Action_SetTileCode(EditorUI ui, WorldMap worldMap, LayerID layerID, Vector2i tile, byte code) {
         super(ui);
         this.worldMap = requireNonNull(worldMap);
         this.layerID = requireNonNull(layerID);
@@ -28,7 +28,7 @@ public class Action_SetTileCode extends AbstractEditorUIAction<Void> {
         this.code = code;
     }
 
-    public Action_SetTileCode(TileMapEditorUI ui, WorldMap worldMap, LayerID layerID, int row, int col, byte code) {
+    public Action_SetTileCode(EditorUI ui, WorldMap worldMap, LayerID layerID, int row, int col, byte code) {
         this(ui, worldMap, layerID, Vector2i.of(col, row), code);
     }
 

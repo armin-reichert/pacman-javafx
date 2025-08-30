@@ -43,11 +43,11 @@ import java.util.Map;
 import static de.amr.pacmanfx.lib.tilemap.WorldMapFormatter.formatTile;
 import static de.amr.pacmanfx.tilemap.editor.EditMode.INSPECT;
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.*;
-import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.*;
+import static de.amr.pacmanfx.tilemap.editor.EditorUtil.*;
 import static de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites.*;
 import static java.util.Objects.requireNonNull;
 
-public class TileMapEditorUI {
+public class EditorUI {
 
     private final TileMapEditor editor;
     private final MessageDisplay messageDisplay = new MessageDisplay();
@@ -81,7 +81,7 @@ public class TileMapEditorUI {
     private PropertyEditorPane terrainMapPropertiesEditor;
     private PropertyEditorPane foodMapPropertiesEditor;
 
-    public TileMapEditorUI(Stage stage, TileMapEditor editor, Model3DRepository model3DRepository) {
+    public EditorUI(Stage stage, TileMapEditor editor, Model3DRepository model3DRepository) {
         this.stage = requireNonNull(stage);
         this.editor = editor;
 
@@ -105,7 +105,7 @@ public class TileMapEditorUI {
         propertyEditorsVisibleProperty().addListener((py, ov, visible) ->
             contentPane.setLeft(visible ? propertyEditorsPane : null));
 
-        editModeProperty().addListener((py, on, newEditMode) -> {
+        editModeProperty().addListener((py, ov, newEditMode) -> {
             messageDisplay().clearMessage();
             showEditHelpText();
             switch (newEditMode) {
@@ -793,7 +793,7 @@ public class TileMapEditorUI {
                 }
             ));
 
-            label.setOnMouseClicked(e -> new Action_SelectNextEditMode(TileMapEditorUI.this).execute());
+            label.setOnMouseClicked(e -> new Action_SelectNextEditMode(EditorUI.this).execute());
         }
     }
 

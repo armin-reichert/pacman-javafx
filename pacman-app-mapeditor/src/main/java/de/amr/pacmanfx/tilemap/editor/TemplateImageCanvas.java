@@ -30,7 +30,7 @@ import javafx.scene.text.Text;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.translated;
-import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.*;
+import static de.amr.pacmanfx.tilemap.editor.EditorUtil.*;
 import static java.util.Objects.requireNonNull;
 
 public class TemplateImageCanvas extends Canvas {
@@ -40,12 +40,12 @@ public class TemplateImageCanvas extends Canvas {
     private final ObjectProperty<Image> templateImage = new SimpleObjectProperty<>();
     private final ObjectProperty<WorldMap> worldMap = new SimpleObjectProperty<>();
 
-    private final TileMapEditorUI ui;
+    private final EditorUI ui;
 
     private ContextMenu colorSelectionContextMenu;
     private ColorIndicator colorIndicator;
 
-    public TemplateImageCanvas(TileMapEditorUI ui) {
+    public TemplateImageCanvas(EditorUI ui) {
         this.ui = requireNonNull(ui);
         final TileMapEditor editor = ui.editor();
 

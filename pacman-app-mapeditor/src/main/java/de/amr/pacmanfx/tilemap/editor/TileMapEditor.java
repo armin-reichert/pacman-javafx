@@ -25,14 +25,14 @@ import java.util.List;
 
 import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_TILES;
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.SAMPLE_MAPS_PATH;
-import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.sourceCode;
+import static de.amr.pacmanfx.tilemap.editor.EditorUtil.sourceCode;
 import static java.util.Objects.requireNonNull;
 
 public class TileMapEditor {
 
     static final WorldMap EMPTY_MAP = WorldMap.emptyMap(ARCADE_MAP_SIZE_IN_TILES.x(), ARCADE_MAP_SIZE_IN_TILES.y());
 
-    private final TileMapEditorUI ui;
+    private final EditorUI ui;
     private final UpdateTimer updateTimer = new UpdateTimer();
 
     private class UpdateTimer extends AnimationTimer {
@@ -58,7 +58,7 @@ public class TileMapEditor {
     public TileMapEditor(Stage stage, Model3DRepository model3DRepository) {
         requireNonNull(stage);
         requireNonNull(model3DRepository);
-        ui = new TileMapEditorUI(stage, this, model3DRepository);
+        ui = new EditorUI(stage, this, model3DRepository);
         currentWorldMap.addListener((py, ov, nv) -> setWorldMapChanged());
     }
 
@@ -81,7 +81,7 @@ public class TileMapEditor {
         updateTimer.stop();
     }
 
-    public TileMapEditorUI ui() {
+    public EditorUI ui() {
         return ui;
     }
 

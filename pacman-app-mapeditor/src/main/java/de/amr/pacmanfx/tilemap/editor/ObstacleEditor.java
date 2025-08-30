@@ -17,7 +17,7 @@ import java.util.function.BiConsumer;
 
 import static de.amr.pacmanfx.lib.UsefulFunctions.isEven;
 import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
-import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.mirroredTileCode;
+import static de.amr.pacmanfx.tilemap.editor.EditorUtil.mirroredTileCode;
 import static java.util.Objects.requireNonNull;
 
 public class ObstacleEditor {

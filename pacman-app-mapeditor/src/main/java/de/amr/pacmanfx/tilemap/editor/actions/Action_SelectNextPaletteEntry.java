@@ -1,11 +1,11 @@
 package de.amr.pacmanfx.tilemap.editor.actions;
 
 import de.amr.pacmanfx.tilemap.editor.Palette;
-import de.amr.pacmanfx.tilemap.editor.TileMapEditorUI;
+import de.amr.pacmanfx.tilemap.editor.EditorUI;
 
 public class Action_SelectNextPaletteEntry extends AbstractEditorUIAction<Void> {
 
-    public Action_SelectNextPaletteEntry(TileMapEditorUI ui) {
+    public Action_SelectNextPaletteEntry(EditorUI ui) {
         super(ui);
     }
 

@@ -4,20 +4,20 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.FoodTile;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
-import de.amr.pacmanfx.tilemap.editor.TileMapEditorUI;
+import de.amr.pacmanfx.tilemap.editor.EditorUI;
 
 import java.util.ArrayDeque;
 import java.util.HashSet;
 import java.util.Set;
 
-import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.canEditFoodAtTile;
+import static de.amr.pacmanfx.tilemap.editor.EditorUtil.canEditFoodAtTile;
 
 public class Action_FloodWithPellets extends AbstractEditorUIAction<Void> {
 
     private final Vector2i startTile;
     private final FoodTile foodTile;
 
-    public Action_FloodWithPellets(TileMapEditorUI ui, Vector2i startTile, FoodTile foodTile) {
+    public Action_FloodWithPellets(EditorUI ui, Vector2i startTile, FoodTile foodTile) {
         super(ui);
         this.startTile = startTile;
         this.foodTile = foodTile;

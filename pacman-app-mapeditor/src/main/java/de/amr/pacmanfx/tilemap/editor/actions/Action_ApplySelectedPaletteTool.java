@@ -3,7 +3,7 @@ package de.amr.pacmanfx.tilemap.editor.actions;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.tilemap.editor.Palette;
-import de.amr.pacmanfx.tilemap.editor.TileMapEditorUI;
+import de.amr.pacmanfx.tilemap.editor.EditorUI;
 import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
@@ -13,7 +13,7 @@ public class Action_ApplySelectedPaletteTool extends AbstractEditorUIAction<Void
     private final Palette palette;
     private final Vector2i tile;
 
-    public Action_ApplySelectedPaletteTool(TileMapEditorUI ui, Palette palette, Vector2i tile) {
+    public Action_ApplySelectedPaletteTool(EditorUI ui, Palette palette, Vector2i tile) {
         super(ui);
         this.palette = requireNonNull(palette);
         this.tile = requireNonNull(tile);

@@ -34,7 +34,7 @@ import java.util.function.Predicate;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.*;
-import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.*;
+import static de.amr.pacmanfx.tilemap.editor.EditorUtil.*;
 import static de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites.*;
 import static java.util.Objects.requireNonNull;
 
@@ -66,11 +66,11 @@ public class EditCanvas extends Canvas {
     private final FoodMapRenderer foodRenderer;
     private final EditorActorRenderer actorRenderer;
 
-    private final TileMapEditorUI ui;
+    private final EditorUI ui;
 
     private boolean dragging = false;
 
-    public EditCanvas(TileMapEditorUI ui) {
+    public EditCanvas(EditorUI ui) {
         this.ui = requireNonNull(ui);
 
         obstacleEditor = new ObstacleEditor();

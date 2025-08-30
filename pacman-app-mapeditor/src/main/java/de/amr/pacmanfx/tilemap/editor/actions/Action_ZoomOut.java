@@ -1,12 +1,12 @@
 package de.amr.pacmanfx.tilemap.editor.actions;
 
-import de.amr.pacmanfx.tilemap.editor.TileMapEditorUI;
+import de.amr.pacmanfx.tilemap.editor.EditorUI;
 
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.MIN_GRID_SIZE;
 
 public class Action_ZoomOut extends AbstractEditorUIAction<Void> {
 
-    public Action_ZoomOut(TileMapEditorUI ui) {
+    public Action_ZoomOut(EditorUI ui) {
         super(ui);
     }
 

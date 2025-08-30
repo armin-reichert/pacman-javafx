@@ -7,7 +7,7 @@ import de.amr.pacmanfx.lib.tilemap.TerrainTile;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.tilemap.editor.MessageType;
-import de.amr.pacmanfx.tilemap.editor.TileMapEditorUI;
+import de.amr.pacmanfx.tilemap.editor.EditorUI;
 import de.amr.pacmanfx.tilemap.editor.TileMatcher;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
@@ -21,14 +21,14 @@ import java.time.LocalTime;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.EMPTY_ROWS_BEFORE_MAZE;
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.EMPTY_ROWS_BELOW_MAZE;
-import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.getColorFromMap;
+import static de.amr.pacmanfx.tilemap.editor.EditorUtil.getColorFromMap;
 
 public class Action_FillMapFromTemplate extends AbstractEditorUIAction<Void> {
 
     private final WorldMap worldMap;
     private final Image templateImage;
 
-    public Action_FillMapFromTemplate(TileMapEditorUI ui, WorldMap worldMap, Image templateImage) {
+    public Action_FillMapFromTemplate(EditorUI ui, WorldMap worldMap, Image templateImage) {
         super(ui);
         this.worldMap = worldMap;
         this.templateImage = templateImage;

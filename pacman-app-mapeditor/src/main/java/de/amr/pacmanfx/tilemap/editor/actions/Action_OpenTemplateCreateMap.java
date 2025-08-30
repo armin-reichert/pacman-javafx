@@ -1,7 +1,7 @@
 package de.amr.pacmanfx.tilemap.editor.actions;
 
 import de.amr.pacmanfx.tilemap.editor.MessageType;
-import de.amr.pacmanfx.tilemap.editor.TileMapEditorUI;
+import de.amr.pacmanfx.tilemap.editor.EditorUI;
 import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
@@ -17,7 +17,7 @@ import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.*;
 
 public class Action_OpenTemplateCreateMap extends AbstractEditorUIAction<Void> {
 
-    public Action_OpenTemplateCreateMap(TileMapEditorUI ui) {
+    public Action_OpenTemplateCreateMap(EditorUI ui) {
         super(ui);
     }
 

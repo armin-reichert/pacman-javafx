@@ -31,10 +31,10 @@ import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.EMPTY_ROWS_BEFORE_MAZ
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.EMPTY_ROWS_BELOW_MAZE;
 import static java.util.Objects.requireNonNull;
 
-public interface TileMapEditorUtil {
+public interface EditorUtil {
 
     static String urlString(String resourcePath) {
-        URL url = requireNonNull(TileMapEditorUtil.class.getResource(resourcePath));
+        URL url = requireNonNull(EditorUtil.class.getResource(resourcePath));
         return url.toExternalForm();
     }
 

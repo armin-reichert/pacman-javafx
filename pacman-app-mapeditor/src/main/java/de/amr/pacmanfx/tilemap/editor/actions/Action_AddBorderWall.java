@@ -3,7 +3,7 @@ package de.amr.pacmanfx.tilemap.editor.actions;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.TerrainTile;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
-import de.amr.pacmanfx.tilemap.editor.TileMapEditorUI;
+import de.amr.pacmanfx.tilemap.editor.EditorUI;
 
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.EMPTY_ROWS_BELOW_MAZE;
 import static java.util.Objects.requireNonNull;
@@ -12,7 +12,7 @@ public class Action_AddBorderWall extends AbstractEditorUIAction<Void> {
 
     private final WorldMap worldMap;
 
-    public Action_AddBorderWall(TileMapEditorUI ui, WorldMap worldMap) {
+    public Action_AddBorderWall(EditorUI ui, WorldMap worldMap) {
         super(ui);
         this.worldMap = requireNonNull(worldMap);
     }

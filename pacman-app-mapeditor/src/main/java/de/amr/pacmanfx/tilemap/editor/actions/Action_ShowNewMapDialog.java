@@ -6,18 +6,18 @@ import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.tilemap.editor.MessageType;
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
-import de.amr.pacmanfx.tilemap.editor.TileMapEditorUI;
+import de.amr.pacmanfx.tilemap.editor.EditorUI;
 import javafx.scene.control.TextInputDialog;
 
 import static de.amr.pacmanfx.lib.tilemap.WorldMapFormatter.formatTile;
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.translated;
-import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.parseSize;
+import static de.amr.pacmanfx.tilemap.editor.EditorUtil.parseSize;
 
 public class Action_ShowNewMapDialog extends AbstractEditorUIAction<Void> {
 
     private final boolean preconfigured;
 
-    public Action_ShowNewMapDialog(TileMapEditorUI ui, boolean preconfigured) {
+    public Action_ShowNewMapDialog(EditorUI ui, boolean preconfigured) {
         super(ui);
         this.preconfigured = preconfigured;
     }

@@ -26,8 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.formatColor;
-import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.parseColor;
+import static de.amr.pacmanfx.tilemap.editor.EditorUtil.formatColor;
+import static de.amr.pacmanfx.tilemap.editor.EditorUtil.parseColor;
 import static java.util.Objects.requireNonNull;
 
 public class PropertyEditorPane extends BorderPane {
@@ -72,7 +72,7 @@ public class PropertyEditorPane extends BorderPane {
         rebuildPropertyEditors();
     }
 
-    private final TileMapEditorUI ui;
+    private final EditorUI ui;
     private final GridPane grid = new GridPane();
     private final List<AbstractPropertyEditor> propertyEditors = new ArrayList<>();
 
@@ -248,7 +248,7 @@ public class PropertyEditorPane extends BorderPane {
         }
     }
 
-    public PropertyEditorPane(TileMapEditorUI ui) {
+    public PropertyEditorPane(EditorUI ui) {
         this.ui = requireNonNull(ui);
 
         var btnAddColorEntry = new Button("Color");

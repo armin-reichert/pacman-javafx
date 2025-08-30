@@ -1,7 +1,7 @@
 package de.amr.pacmanfx.tilemap.editor.actions;
 
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
-import de.amr.pacmanfx.tilemap.editor.TileMapEditorUI;
+import de.amr.pacmanfx.tilemap.editor.EditorUI;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -13,7 +13,7 @@ public class Action_ReplaceCurrentWorldMapChecked extends AbstractEditorUIAction
 
     private final File file;
 
-    public Action_ReplaceCurrentWorldMapChecked(TileMapEditorUI ui, File file) {
+    public Action_ReplaceCurrentWorldMapChecked(EditorUI ui, File file) {
         super(ui);
         this.file = file;
     }

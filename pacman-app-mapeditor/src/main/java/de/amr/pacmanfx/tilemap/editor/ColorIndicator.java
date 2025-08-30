@@ -14,7 +14,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
-import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.formatColorHex;
+import static de.amr.pacmanfx.tilemap.editor.EditorUtil.formatColorHex;
 
 public class ColorIndicator extends HBox {
     private final VBox colorBox = new VBox();

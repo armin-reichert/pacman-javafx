@@ -1,13 +1,13 @@
 package de.amr.pacmanfx.tilemap.editor.actions;
 
 import de.amr.pacmanfx.tilemap.editor.EditMode;
-import de.amr.pacmanfx.tilemap.editor.TileMapEditorUI;
+import de.amr.pacmanfx.tilemap.editor.EditorUI;
 
 import static de.amr.pacmanfx.tilemap.editor.EditMode.INSPECT;
 
 public class Action_SelectNextEditMode extends AbstractEditorUIAction<Void> {
 
-    public Action_SelectNextEditMode(TileMapEditorUI ui) {
+    public Action_SelectNextEditMode(EditorUI ui) {
         super(ui);
     }
 
