@@ -93,9 +93,7 @@ public class EditorUI {
 
         menuBar = new EditorMenuBar(this);
         TileMapEditor.SampleMaps sampleMaps = editor.loadSampleMaps();
-        if (sampleMaps != null) {
-            addSampleMapMenuEntries(sampleMaps);
-        }
+        addSampleMapMenuEntries(sampleMaps);
 
         arrangeLayout();
 
@@ -819,16 +817,24 @@ public class EditorUI {
     public void addSampleMapMenuEntries(TileMapEditor.SampleMaps maps) {
         Menu menu = menuBar.menuMaps();
         menu.getItems().clear();
-        menu.getItems().add(createLoadMapMenuItem("Pac-Man", maps.pacManMap()));
-        menu.getItems().add(new SeparatorMenuItem());
-        for (int i = 0; i < maps.msPacmanMaps().size(); ++i) {
-            menu.getItems().add(
-                    createLoadMapMenuItem("Ms. Pac-Man %d".formatted(i+1), maps.msPacmanMaps().get(i)));
+        if (maps.pacManMap() != null) {
+            menu.getItems().add(createLoadMapMenuItem("Pac-Man", maps.pacManMap()));
+            menu.getItems().add(new SeparatorMenuItem());
         }
-        menu.getItems().add(new SeparatorMenuItem());
+        for (int i = 0; i < maps.msPacmanMaps().size(); ++i) {
+            if (maps.msPacmanMaps().get(i) != null) {
+                MenuItem item = createLoadMapMenuItem("Ms. Pac-Man %d".formatted(i+1), maps.msPacmanMaps().get(i));
+                menu.getItems().add(item);
+            }
+        }
         for (int i = 0; i < maps.xxlMaps().size(); ++i) {
-            menu.getItems().add(
-                    createLoadMapMenuItem("Pac-Man XXL %d".formatted(i+1), maps.xxlMaps().get(i)));
+            if (maps.xxlMaps().get(i) != null) {
+                MenuItem item = createLoadMapMenuItem("Pac-Man XXL %d".formatted(i+1), maps.xxlMaps().get(i));
+                if (i == 0) {
+                    menu.getItems().add(new SeparatorMenuItem());
+                }
+                menu.getItems().add(item);
+            }
         }
     }
 

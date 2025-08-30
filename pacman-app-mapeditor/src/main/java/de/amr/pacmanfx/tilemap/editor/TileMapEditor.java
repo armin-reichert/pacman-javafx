@@ -20,8 +20,10 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_TILES;
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.SAMPLE_MAPS_PATH;
@@ -202,27 +204,38 @@ public class TileMapEditor {
     public record SampleMaps(WorldMap pacManMap, List<WorldMap> msPacmanMaps, List<WorldMap> xxlMaps) {}
 
     public SampleMaps loadSampleMaps() {
+        WorldMap pacManMap = null;
+        ArrayList<WorldMap> msPacManMaps = new ArrayList<>();
+        ArrayList<WorldMap> xxlMaps = new ArrayList<>();
         try {
-            var pacManMap = loadMap("pacman/pacman.world", 1);
-            var msPacManMaps = new ArrayList<WorldMap>();
+            pacManMap = loadMap("pacman/pacman.world", 1).orElse(null);
             for (int n = 1; n <= 6; ++n) {
-                msPacManMaps.add(loadMap("mspacman/mspacman_%d.world", n));
+                loadMap("mspacman/mspacman_%d.world", n).ifPresent(msPacManMaps::add);
             }
-            msPacManMaps.trimToSize();
-            var xxlMaps = new ArrayList<WorldMap>();
             for (int n = 1; n <= 8; ++n) {
-                xxlMaps.add(loadMap("pacman_xxl/masonic_%d.world", n));
+                loadMap("pacman_xxl/masonic_%d.world", n).ifPresent(xxlMaps::add);
             }
-            xxlMaps.trimToSize();
-            return new SampleMaps(pacManMap, msPacManMaps, xxlMaps);
-        } catch (IOException x) {
+        } catch (Exception x) {
             Logger.error(x);
-            Logger.error("Error loading sample maps");
-            return null;
         }
+        msPacManMaps.trimToSize();
+        xxlMaps.trimToSize();
+        return new SampleMaps(pacManMap, msPacManMaps, xxlMaps);
     }
 
-    private WorldMap loadMap(String namePattern, int number) throws IOException {
-        return WorldMap.fromURL(getClass().getResource(SAMPLE_MAPS_PATH + namePattern.formatted(number)));
+    private Optional<WorldMap> loadMap(String namePattern, int number) {
+        String path = SAMPLE_MAPS_PATH + namePattern.formatted(number);
+        URL url = getClass().getResource(path);
+        if (url == null) {
+            Logger.error("Could not access resource with URL path '{}'", path);
+            return Optional.empty();
+        }
+        try {
+            return Optional.of(WorldMap.fromURL(url));
+        } catch (IOException x) {
+            Logger.error(x);
+            Logger.error("Could not loaf world map from URL '{}'", url);
+            return Optional.empty();
+        }
     }
 }
