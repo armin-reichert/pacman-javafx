@@ -114,7 +114,7 @@ public class ObstacleBuilder {
         setExplored(cornerNW);
         buildRestOfObstacle(obstacle, cornerNW, true, tilesWithErrors);
         if (obstacle.isClosed()) {
-            Logger.info("Inside obstacle, top-left tile={}, map ID={}:", cornerNW, worldMap.hashCode());
+            Logger.debug("Inner-map obstacle, top-left tile={}, map ID={}:", cornerNW, worldMap.hashCode());
             Logger.debug(obstacle);
         }
         return obstacle;
@@ -151,7 +151,7 @@ public class ObstacleBuilder {
         }
         setExplored(startTile);
         buildRestOfObstacle(obstacle, startTile, obstacle.segment(0).ccw(), tilesWithErrors);
-        Logger.info("Border obstacle, start tile={}, segment count={}, map ID={}:",
+        Logger.debug("Border obstacle, start tile={}, segment count={}, map ID={}:",
             startTile, obstacle.segments().size(), worldMap.hashCode());
         Logger.debug(obstacle);
         return obstacle;
