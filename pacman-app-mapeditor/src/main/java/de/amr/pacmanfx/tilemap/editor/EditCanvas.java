@@ -313,21 +313,16 @@ public class EditCanvas extends Canvas {
         if (mouseEvent.getButton() == MouseButton.PRIMARY) {
             requestFocus();
             contextMenu.hide();
-            if (mouseEvent.getClickCount() == 2 && ui.editModeIs(EditMode.INSPECT)) {
-                ui.showEditHelpText();
-            }
         }
     }
 
-    private void onMouseDragged(MouseEvent event) {
-        Logger.debug("Mouse dragged {}", event);
+    private void onMouseDragged(MouseEvent mouseEvent) {
+        Vector2i tileAtMouse = tileAt(mouseEvent.getX(), mouseEvent.getY());
         if (!dragging) {
-            Vector2i dragStartTile = tileAt(event.getX(), event.getY());
-            obstacleEditor.startEditing(dragStartTile);
+            obstacleEditor.startEditing(tileAtMouse);
             dragging = true;
-            Logger.debug("Dragging started at tile {}", dragStartTile);
         } else {
-            obstacleEditor.continueEditing(tileAt(event.getX(), event.getY()));
+            obstacleEditor.continueEditing(tileAtMouse);
         }
     }
 
