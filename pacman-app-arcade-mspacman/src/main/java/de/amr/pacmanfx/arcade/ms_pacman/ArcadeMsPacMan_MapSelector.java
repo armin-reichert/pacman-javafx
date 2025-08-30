@@ -31,7 +31,7 @@ public class ArcadeMsPacMan_MapSelector implements MapSelector {
     @Override
     public void loadAllMaps() {
         if (maps.isEmpty()) {
-            maps = WorldMap.loadMapsFromModule(getClass(), "maps/mspacman_%d.world", 4);
+            maps = MapSelector.loadMapsFromModule(getClass(), "maps/mspacman_%d.world", 4);
         }
     }
 
@@ -61,7 +61,7 @@ public class ArcadeMsPacMan_MapSelector implements MapSelector {
             case 10, 11, 12, 13 -> 4;
             default -> (levelNumber - 14) % 8 < 4 ? 3 : 4;
         };
-        var worldMap = WorldMap.copyMap(maps.get(mapNumber - 1));
+        var worldMap = WorldMap.copyOfMap(maps.get(mapNumber - 1));
         worldMap.setConfigValue("mapNumber", mapNumber);
 
         // 1->0, 2->1, 3->2, 4->3 if level <= 13; 3->4; 4->5 if level >= 14

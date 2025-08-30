@@ -237,7 +237,7 @@ public class TileMapEditor {
             return Optional.empty();
         }
         try {
-            return Optional.of(WorldMap.fromURL(url));
+            return Optional.of(WorldMap.mapFromURL(url));
         } catch (IOException x) {
             Logger.error(x);
             Logger.error("Could not loaf world map from URL '{}'", url);

@@ -807,7 +807,7 @@ public class EditorUI {
         requireNonNull(worldMap);
         var menuItem = new MenuItem(description);
         menuItem.setOnAction(e -> {
-            WorldMap copy = WorldMap.copyMap(worldMap);
+            WorldMap copy = WorldMap.copyOfMap(worldMap);
             decideWithCheckForUnsavedChanges(() -> editor.setCurrentWorldMap(copy));
         });
         return menuItem;

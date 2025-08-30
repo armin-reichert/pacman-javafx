@@ -30,12 +30,12 @@ public class WorldMap {
     public static final String MARKER_BEGIN_FOOD_LAYER = "!food";
     public static final String MARKER_BEGIN_DATA_SECTION = "!data";
 
-    private static boolean isValidTerrainValue(byte value) {
-        return Stream.of(TerrainTile.values()).anyMatch(tile -> tile.$ == value);
+    public static boolean isValidTerrainCode(byte code) {
+        return Stream.of(TerrainTile.values()).anyMatch(tile -> tile.$ == code);
     }
 
-    private static boolean isValidFoodValue(byte value) {
-        return Stream.of(FoodTile.values()).anyMatch(tile -> tile.code() == value);
+    public static boolean isValidFoodCode(byte code) {
+        return Stream.of(FoodTile.values()).anyMatch(tile -> tile.code() == code);
     }
 
     private static void assertValidLayerID(LayerID id) {
@@ -46,17 +46,17 @@ public class WorldMap {
     }
 
     public static WorldMap emptyMap(int numRows, int numCols) {
-        WorldMap worldMap = new WorldMap();
-        worldMap.numRows = requireNonNegativeInt(numRows);
-        worldMap.numCols = requireNonNegativeInt(numCols);
-        worldMap.terrainLayer = new WorldMapLayer(numRows, numCols);
-        worldMap.foodLayer = new WorldMapLayer(numRows, numCols);
-        return worldMap;
+        var empty = new WorldMap();
+        empty.numRows = requireNonNegativeInt(numRows);
+        empty.numCols = requireNonNegativeInt(numCols);
+        empty.terrainLayer = new WorldMapLayer(numRows, numCols);
+        empty.foodLayer = new WorldMapLayer(numRows, numCols);
+        return empty;
     }
 
-    public static WorldMap copyMap(WorldMap original) {
+    public static WorldMap copyOfMap(WorldMap original) {
         requireNonNull(original);
-        WorldMap copy = new WorldMap();
+        var copy = new WorldMap();
         copy.numRows = original.numRows;
         copy.numCols = original.numCols;
         copy.terrainLayer = new WorldMapLayer(original.terrainLayer);
@@ -67,43 +67,17 @@ public class WorldMap {
         return copy;
     }
 
-    public static WorldMap fromURL(URL url) throws IOException {
+    public static WorldMap mapFromURL(URL url) throws IOException {
         requireNonNull(url);
         try (var reader = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8))) {
-            WorldMap worldMap = WorldMapParser.parse(reader.lines(), WorldMap::isValidTerrainValue, WorldMap::isValidFoodValue);
+            WorldMap worldMap = WorldMapParser.parse(reader.lines(), WorldMap::isValidTerrainCode, WorldMap::isValidFoodCode);
             worldMap.url = URLDecoder.decode(url.toExternalForm(), StandardCharsets.UTF_8);
             return worldMap;
         }
     }
 
-    public static WorldMap fromFile(File file) throws IOException {
-        return fromURL(file.toURI().toURL());
-    }
-
-    /**
-     * @param mapPattern path (pattern) to access the map files inside resources folder,
-     *                   counting from 1, e.g. <code>"maps/masonic_%d.world"</code>
-     * @param mapCount number of maps to be loaded
-     */
-    public static List<WorldMap> loadMapsFromModule(Class<?> loaderClass, String mapPattern, int mapCount) {
-        var maps = new ArrayList<WorldMap>();
-        for (int n = 1; n <= mapCount; ++n) {
-            String name = mapPattern.formatted(n);
-            URL url = loaderClass.getResource(name);
-            if (url == null) {
-                Logger.error("Map not found for resource name='{}'", name);
-                throw new IllegalArgumentException();
-            }
-            try {
-                WorldMap worldMap = WorldMap.fromURL(url);
-                maps.add(worldMap);
-                Logger.info("Map loaded, URL='{}'", url);
-            } catch (IOException x) {
-                Logger.error("Could not load map, URL='{}'", url);
-                throw new IllegalArgumentException(x);
-            }
-        }
-        return maps;
+    public static WorldMap mapFromFile(File file) throws IOException {
+        return mapFromURL(file.toURI().toURL());
     }
 
     // Package access for parser

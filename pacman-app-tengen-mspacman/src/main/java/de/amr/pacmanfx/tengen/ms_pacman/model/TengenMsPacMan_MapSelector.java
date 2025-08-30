@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 
 import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
 import static de.amr.pacmanfx.lib.nes.NES_ColorScheme.*;
-import static de.amr.pacmanfx.lib.tilemap.WorldMap.loadMapsFromModule;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.MAPS_PATH;
 import static de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory.*;
 import static java.util.Objects.requireNonNull;
@@ -38,10 +37,10 @@ public class TengenMsPacMan_MapSelector implements MapSelector {
     @Override
     public void loadAllMaps() {
         if (mapRepository.isEmpty()) {
-            mapRepository.put(MapCategory.ARCADE,  loadMapsFromModule(getClass(), MAPS_PATH + "arcade%d.world",     4));
-            mapRepository.put(MapCategory.MINI,    loadMapsFromModule(getClass(), MAPS_PATH + "mini%d.world",       6));
-            mapRepository.put(MapCategory.BIG,     loadMapsFromModule(getClass(), MAPS_PATH + "big%02d.world",     11));
-            mapRepository.put(MapCategory.STRANGE, loadMapsFromModule(getClass(), MAPS_PATH + "strange%02d.world", 15));
+            mapRepository.put(MapCategory.ARCADE,  MapSelector.loadMapsFromModule(getClass(), MAPS_PATH + "arcade%d.world",     4));
+            mapRepository.put(MapCategory.MINI,    MapSelector.loadMapsFromModule(getClass(), MAPS_PATH + "mini%d.world",       6));
+            mapRepository.put(MapCategory.BIG,     MapSelector.loadMapsFromModule(getClass(), MAPS_PATH + "big%02d.world",     11));
+            mapRepository.put(MapCategory.STRANGE, MapSelector.loadMapsFromModule(getClass(), MAPS_PATH + "strange%02d.world", 15));
         }
     }
 
@@ -70,7 +69,7 @@ public class TengenMsPacMan_MapSelector implements MapSelector {
     }
 
     private WorldMap configuration(MapCategory category, int number, NES_ColorScheme colorScheme) {
-        WorldMap worldMap = WorldMap.copyMap(mapRepository.get(category).get(number - 1));
+        WorldMap worldMap = WorldMap.copyOfMap(mapRepository.get(category).get(number - 1));
         worldMap.setConfigValue("mapCategory", category);
         worldMap.setConfigValue("mapNumber", number);
         worldMap.setConfigValue("nesColorScheme", colorScheme);

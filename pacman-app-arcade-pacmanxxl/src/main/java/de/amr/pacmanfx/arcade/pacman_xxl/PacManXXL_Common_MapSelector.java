@@ -72,7 +72,7 @@ public class PacManXXL_Common_MapSelector implements MapSelector {
         customMapsByFile.clear();
         for (File mapFile : mapFiles) {
             try {
-                WorldMap worldMap = WorldMap.fromFile(mapFile);
+                WorldMap worldMap = WorldMap.mapFromFile(mapFile);
                 customMapsByFile.add(worldMap);
                 Logger.info("Custom map loaded from file {}", mapFile);
             } catch (IOException x) {
@@ -85,7 +85,7 @@ public class PacManXXL_Common_MapSelector implements MapSelector {
     @Override
     public void loadAllMaps() {
         if (builtinMaps.isEmpty()) {
-            List<WorldMap> maps = WorldMap.loadMapsFromModule(getClass(), "maps/masonic_%d.world", 8);
+            List<WorldMap> maps = MapSelector.loadMapsFromModule(getClass(), "maps/masonic_%d.world", 8);
             builtinMaps.addAll(maps);
         }
         loadCustomMaps();
@@ -112,7 +112,7 @@ public class PacManXXL_Common_MapSelector implements MapSelector {
                 yield maps.get(randomInt(0, maps.size()));
             }
         };
-        WorldMap worldMap = WorldMap.copyMap(selectedMap);
+        WorldMap worldMap = WorldMap.copyOfMap(selectedMap);
         // if selected map is a built-in map, use a random color scheme to make it not so boring
         Map<String, String> colorScheme = builtinMaps.contains(selectedMap)
                 ? MAP_COLOR_SCHEMES.get(randomInt(0, MAP_COLOR_SCHEMES.size()))

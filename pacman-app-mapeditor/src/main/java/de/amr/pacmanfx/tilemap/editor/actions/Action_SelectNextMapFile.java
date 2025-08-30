@@ -43,7 +43,7 @@ public class Action_SelectNextMapFile extends AbstractEditorAction<File> {
             }
             File file = mapFiles[next];
             try {
-                WorldMap worldMap = WorldMap.fromFile(file);
+                WorldMap worldMap = WorldMap.mapFromFile(file);
                 editor.setCurrentWorldMap(worldMap);
                 editor.setCurrentDirectory(file.getParentFile());
                 editor.setCurrentFile(file);

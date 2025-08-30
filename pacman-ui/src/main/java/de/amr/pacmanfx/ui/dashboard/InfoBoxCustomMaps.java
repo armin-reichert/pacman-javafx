@@ -87,7 +87,7 @@ public class InfoBoxCustomMaps extends InfoBox {
         }
         for (File file : mapFiles) {
             try {
-                WorldMap worldMap = WorldMap.fromFile(file);
+                WorldMap worldMap = WorldMap.mapFromFile(file);
                 customMaps.add(worldMap);
                 Logger.info("Custom map loaded from file {}", file);
             } catch (IOException x) {

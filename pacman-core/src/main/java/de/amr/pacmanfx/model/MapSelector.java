@@ -6,7 +6,11 @@ package de.amr.pacmanfx.model;
 
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
+import org.tinylog.Logger;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +20,32 @@ public interface MapSelector {
     List<WorldMap> customMaps();
     void loadCustomMaps();
     void loadAllMaps();
+
+    /**
+     * @param mapPattern path (pattern) to access the map files inside resources folder,
+     *                   counting from 1, e.g. <code>"maps/masonic_%d.world"</code>
+     * @param mapCount number of maps to be loaded
+     */
+    static List<WorldMap> loadMapsFromModule(Class<?> loaderClass, String mapPattern, int mapCount) {
+        var maps = new ArrayList<WorldMap>();
+        for (int n = 1; n <= mapCount; ++n) {
+            String name = mapPattern.formatted(n);
+            URL url = loaderClass.getResource(name);
+            if (url == null) {
+                Logger.error("Map not found for resource name='{}'", name);
+                throw new IllegalArgumentException();
+            }
+            try {
+                WorldMap worldMap = WorldMap.mapFromURL(url);
+                maps.add(worldMap);
+                Logger.info("Map loaded, URL='{}'", url);
+            } catch (IOException x) {
+                Logger.error("Could not load map, URL='{}'", url);
+                throw new IllegalArgumentException(x);
+            }
+        }
+        return maps;
+    }
 
     static Map<String, String> extractColorMap(WorldMap worldMap) {
         return Map.of(

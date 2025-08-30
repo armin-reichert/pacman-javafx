@@ -38,7 +38,7 @@ public class ArcadePacMan_MapSelector implements MapSelector {
                 throw new IllegalStateException();
             }
             try {
-                var worldMap = WorldMap.fromURL(mapURL);
+                var worldMap = WorldMap.mapFromURL(mapURL);
                 worldMap.setConfigValue("mapNumber", 1);
                 //TODO get rid of this, use "colorMap" everywhere
                 worldMap.setConfigValue("colorMapIndex", 0);
