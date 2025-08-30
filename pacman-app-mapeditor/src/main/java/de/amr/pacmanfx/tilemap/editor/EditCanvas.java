@@ -274,7 +274,7 @@ public class EditCanvas extends Canvas {
         // Tiles that seem to be wrong
         ctx.setFont(Font.font("sans", gridSize() - 2));
         ctx.setFill(Color.grayRgb(200, 0.8));
-        for (Vector2i tile : ui.editor().tilesWithErrors()) {
+        for (Vector2i tile : ui.editor().checkResult().tilesWithErrors()) {
             ctx.fillText("?", tile.x() * gridSize() + 0.25 * gridSize(), tile.y() * gridSize() + 0.8 * gridSize());
             if (symmetricEditMode.get()) {
                 int x = worldMap().numCols() - tile.x() - 1;

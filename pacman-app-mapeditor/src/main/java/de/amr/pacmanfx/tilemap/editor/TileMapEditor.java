@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tilemap.editor;
 
-import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
+import de.amr.pacmanfx.lib.tilemap.WorldMapChecker;
 import de.amr.pacmanfx.tilemap.editor.actions.Action_CreateEmptyMap;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import javafx.animation.AnimationTimer;
@@ -88,17 +88,12 @@ public class TileMapEditor {
         return ui;
     }
 
+    private WorldMapChecker.WorldMapCheckResult checkResult;
+
     // Change management
     private boolean edited;
     private boolean terrainMapChanged;
     private boolean foodMapChanged;
-    private boolean obstaclesUpToDate;
-
-    private final List<Vector2i> tilesWithErrors = new ArrayList<>();
-
-    public List<Vector2i> tilesWithErrors() {
-        return tilesWithErrors;
-    }
 
     public void setEdited(boolean edited) {
         this.edited = edited;
@@ -113,7 +108,6 @@ public class TileMapEditor {
 
     public void setTerrainMapChanged() {
         terrainMapChanged = true;
-        obstaclesUpToDate = false;
     }
 
     public void setFoodMapChanged() {
@@ -121,12 +115,8 @@ public class TileMapEditor {
     }
 
     private void processChanges() {
-        if (!obstaclesUpToDate) {
-            tilesWithErrors.clear();
-            tilesWithErrors.addAll(currentWorldMap().buildObstacleList());
-            obstaclesUpToDate = true;
-        }
         if (terrainMapChanged || foodMapChanged) {
+            checkResult = WorldMapChecker.check(currentWorldMap());
             sourceCode.set(generateSourceCode(currentWorldMap()));
         }
         if (terrainMapChanged) {
@@ -138,6 +128,13 @@ public class TileMapEditor {
             ui.onFoodMapChanged(currentWorldMap());
             foodMapChanged = false;
         }
+    }
+
+    public WorldMapChecker.WorldMapCheckResult checkResult() {
+        if (checkResult == null) {
+            checkResult = WorldMapChecker.check(currentWorldMap()); // ensures not null initially
+        }
+        return checkResult;
     }
 
     // -- currentDirectory
