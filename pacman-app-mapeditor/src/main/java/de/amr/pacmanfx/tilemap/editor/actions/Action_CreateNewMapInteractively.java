@@ -4,6 +4,7 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.WorldMapProperty;
+import de.amr.pacmanfx.tilemap.editor.EditMode;
 import de.amr.pacmanfx.tilemap.editor.MessageType;
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
 import de.amr.pacmanfx.tilemap.editor.EditorUI;
@@ -13,11 +14,11 @@ import static de.amr.pacmanfx.lib.tilemap.WorldMapFormatter.formatTile;
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.translated;
 import static de.amr.pacmanfx.tilemap.editor.EditorUtil.parseSize;
 
-public class Action_ShowNewMapDialog extends AbstractEditorUIAction<Void> {
+public class Action_CreateNewMapInteractively extends AbstractEditorUIAction<Void> {
 
     private final boolean preconfigured;
 
-    public Action_ShowNewMapDialog(EditorUI ui, boolean preconfigured) {
+    public Action_CreateNewMapInteractively(EditorUI ui, boolean preconfigured) {
         super(ui);
         this.preconfigured = preconfigured;
     }
@@ -36,13 +37,18 @@ public class Action_ShowNewMapDialog extends AbstractEditorUIAction<Void> {
                 }
                 else {
                     if (preconfigured) {
-                        setPreconfiguredMap(editor, sizeInTiles.y(), sizeInTiles.x());
+                        WorldMap preconfiguredMap = createPreconfiguredMap(editor, sizeInTiles.y(), sizeInTiles.x());
+                        editor.setCurrentWorldMap(preconfiguredMap);
                     } else {
                         WorldMap emptyMap = new Action_CreateEmptyMap(editor, sizeInTiles.y(), sizeInTiles.x()).execute();
                         editor.setCurrentWorldMap(emptyMap);
                     }
                     editor.setCurrentFile(null);
                     editor.setTemplateImage(null);
+                    if (ui.editModeIs(EditMode.INSPECT)) {
+                        ui.setEditMode(EditMode.EDIT);
+                        ui.setSymmetricEditMode(true);
+                    }
                 }
             });
         });
@@ -57,7 +63,7 @@ public class Action_ShowNewMapDialog extends AbstractEditorUIAction<Void> {
         return dialog;
     }
 
-    private void setPreconfiguredMap(TileMapEditor editor, int numRows, int numCols) {
+    private WorldMap createPreconfiguredMap(TileMapEditor editor, int numRows, int numCols) {
         var worldMap = WorldMap.emptyMap(numRows, numCols);
         if (worldMap.numRows() >= 20) {
             Vector2i houseMinTile = Vector2i.of(numCols / 2 - 4, numRows / 2 - 3);
@@ -66,9 +72,9 @@ public class Action_ShowNewMapDialog extends AbstractEditorUIAction<Void> {
             new Action_PlaceArcadeHouse(editor, worldMap, houseMinTile).execute();
         }
         worldMap.buildObstacleList();
-        editor.setCurrentWorldMap(worldMap);
         new Action_SetDefaultMapColors(editor, worldMap).execute();
         new Action_SetDefaultScatterPositions(editor, worldMap).execute();
         new Action_AddBorderWall(ui, worldMap).execute();
+        return worldMap;
     }
 }
