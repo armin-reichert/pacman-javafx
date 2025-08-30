@@ -92,8 +92,7 @@ public class EditorUI {
         createStatusLine();
 
         menuBar = new EditorMenuBar(this);
-        TileMapEditor.SampleMaps sampleMaps = editor.loadSampleMaps();
-        addSampleMapMenuEntries(sampleMaps);
+        addSampleMapMenuEntries(editor.sampleMaps());
 
         arrangeLayout();
 

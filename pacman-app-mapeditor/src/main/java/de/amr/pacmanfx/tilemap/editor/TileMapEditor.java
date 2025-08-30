@@ -34,6 +34,7 @@ public class TileMapEditor {
 
     static final WorldMap EMPTY_MAP = WorldMap.emptyMap(ARCADE_MAP_SIZE_IN_TILES.x(), ARCADE_MAP_SIZE_IN_TILES.y());
 
+    private SampleMaps sampleMaps;
     private final EditorUI ui;
     private final UpdateTimer updateTimer = new UpdateTimer();
 
@@ -60,6 +61,7 @@ public class TileMapEditor {
     public TileMapEditor(Stage stage, Model3DRepository model3DRepository) {
         requireNonNull(stage);
         requireNonNull(model3DRepository);
+        loadSampleMaps();
         ui = new EditorUI(stage, this, model3DRepository);
         currentWorldMap.addListener((py, ov, nv) -> setWorldMapChanged());
     }
@@ -203,7 +205,11 @@ public class TileMapEditor {
 
     public record SampleMaps(WorldMap pacManMap, List<WorldMap> msPacmanMaps, List<WorldMap> xxlMaps) {}
 
-    public SampleMaps loadSampleMaps() {
+    public SampleMaps sampleMaps() {
+        return sampleMaps;
+    }
+
+    private void loadSampleMaps() {
         WorldMap pacManMap = null;
         ArrayList<WorldMap> msPacManMaps = new ArrayList<>();
         ArrayList<WorldMap> xxlMaps = new ArrayList<>();
@@ -220,7 +226,7 @@ public class TileMapEditor {
         }
         msPacManMaps.trimToSize();
         xxlMaps.trimToSize();
-        return new SampleMaps(pacManMap, msPacManMaps, xxlMaps);
+        sampleMaps = new SampleMaps(pacManMap, msPacManMaps, xxlMaps);
     }
 
     private Optional<WorldMap> loadMap(String namePattern, int number) {
