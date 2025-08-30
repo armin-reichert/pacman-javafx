@@ -156,12 +156,11 @@ public class EditorUI {
             } else if (choice == SaveConfirmation.NO_SAVE_CHANGES) {
                 editor.setEdited(false);
                 action.run();
-            } else if (choice == SaveConfirmation.CLOSE) {
+            } else if (choice == ButtonType.CANCEL) {
                 confirmationDialog.close();
             }
         });
     }
-
 
     public void showEditHelpText() {
         messageDisplay.showMessage(translated("edit_help"), 30, MessageType.INFO);
