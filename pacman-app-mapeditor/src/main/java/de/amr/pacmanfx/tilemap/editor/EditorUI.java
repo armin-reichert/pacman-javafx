@@ -16,6 +16,7 @@ import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapColorScheme;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
@@ -444,38 +445,35 @@ public class EditorUI {
 
     private void createEditCanvas() {
         editCanvas = new EditCanvas(this);
+        editCanvas.worldMapProperty().bind(editor.currentWorldMapProperty());
+        editCanvas.templateImageGrayProperty().bind(editor.templateImageProperty().map(Ufx::imageToGreyscale));
+
         editCanvas.editModeProperty().bind(editModeProperty());
         editCanvas.gridSizeProperty().bind(gridSizeProperty());
         editCanvas.gridVisibleProperty().bind(gridVisibleProperty());
-        editCanvas.worldMapProperty().bind(editor.currentWorldMapProperty());
         editCanvas.obstacleInnerAreaDisplayedProperty().bind(obstacleInnerAreaDisplayedProperty());
         editCanvas.obstaclesJoiningProperty().bind(obstaclesJoiningProperty());
         editCanvas.segmentNumbersVisibleProperty().bind(segmentNumbersVisibleProperty());
         editCanvas.symmetricEditModeProperty().bind(symmetricEditModeProperty());
-        editCanvas.templateImageGrayProperty().bind(editor.templateImageProperty().map(Ufx::imageToGreyscale));
         editCanvas.terrainVisibleProperty().bind(terrainVisibleProperty());
         editCanvas.foodVisibleProperty().bind(foodVisibleProperty());
         editCanvas.actorsVisibleProperty().bind(actorsVisibleProperty());
 
-        editCanvas.obstacleEditor().setOnEditTile(
-            (tile, code) -> new Action_SetTileCode(this, editor.currentWorldMap(), LayerID.TERRAIN, tile, code).execute());
-        editCanvas.setOnContextMenuRequested(event -> editCanvas.onContextMenuRequested(event));
-        editCanvas.setOnMouseClicked(event -> editCanvas.onMouseClicked(event));
-        editCanvas.setOnMouseMoved(event -> editCanvas.onMouseMoved(event));
-        editCanvas.setOnMouseReleased(event -> editCanvas.onMouseReleased(event));
-        editCanvas.setOnKeyPressed(event -> editCanvas.onKeyPressed(event));
+        editCanvas.setOnContextMenuRequested(editCanvas::onContextMenuRequested);
+        editCanvas.setOnMouseClicked(editCanvas::onMouseClicked);
+        editCanvas.setOnMouseMoved(editCanvas::onMouseMoved);
+        editCanvas.setOnMouseReleased(editCanvas::onMouseReleased);
+        editCanvas.setOnKeyPressed(editCanvas::onKeyPressed);
 
         spEditCanvas = new ScrollPane(editCanvas);
         spEditCanvas.setFitToHeight(true);
 
         registerDragAndDropImageHandler(spEditCanvas);
 
-        //TODO is there a better way to get the initial resize time of the scroll pane?
-        spEditCanvas.heightProperty().addListener((py,oldHeight,newHeight) -> {
-            if (oldHeight.doubleValue() == 0) { // initial resize
-                int initialGridSize = (int) Math.max(newHeight.doubleValue() / editor.currentWorldMap().numRows(), MIN_GRID_SIZE);
-                setGridSize(initialGridSize);
-            }
+        Platform.runLater(() -> {
+            double height = spEditCanvas.getHeight();
+            int gridSize = (int) Math.max(height / editor.currentWorldMap().numRows(), MIN_GRID_SIZE);
+            setGridSize(gridSize);
         });
     }
 

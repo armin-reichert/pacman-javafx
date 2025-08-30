@@ -72,13 +72,14 @@ public class EditCanvas extends Canvas {
 
     public EditCanvas(EditorUI ui) {
         this.ui = requireNonNull(ui);
+        ctx = getGraphicsContext2D();
 
         obstacleEditor = new ObstacleEditor();
         obstacleEditor.joiningProperty().bind(obstaclesJoiningProperty());
         obstacleEditor.symmetricEditModeProperty().bind(symmetricEditModeProperty());
         obstacleEditor.worldMapProperty().bind(worldMapProperty());
-
-        ctx = getGraphicsContext2D();
+        obstacleEditor.setOnEditTile(
+            (tile, code) -> new Action_SetTileCode(ui, worldMap(), LayerID.TERRAIN, tile, code).execute());
 
         heightProperty().bind(Bindings.createDoubleBinding(
             () -> {
@@ -106,10 +107,6 @@ public class EditCanvas extends Canvas {
         actorRenderer.scalingProperty().bind(scaling);
 
         setOnMouseDragged(this::onMouseDragged);
-    }
-
-    public ObstacleEditor obstacleEditor() {
-        return obstacleEditor;
     }
 
     // -- Properties
@@ -179,7 +176,6 @@ public class EditCanvas extends Canvas {
     }
 
     public WorldMap worldMap() { return worldMap.get(); }
-
 
     public TerrainTileMapRenderer terrainRenderer() {
         return terrainRenderer;
