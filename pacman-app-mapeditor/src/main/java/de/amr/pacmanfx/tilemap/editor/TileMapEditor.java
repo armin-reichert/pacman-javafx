@@ -27,7 +27,7 @@ import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_TILES;
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.SAMPLE_MAPS_PATH;
-import static de.amr.pacmanfx.tilemap.editor.EditorUtil.sourceCode;
+import static de.amr.pacmanfx.tilemap.editor.EditorUtil.generateSourceCode;
 import static java.util.Objects.requireNonNull;
 
 public class TileMapEditor {
@@ -39,8 +39,7 @@ public class TileMapEditor {
     private final UpdateTimer updateTimer = new UpdateTimer();
 
     private class UpdateTimer extends AnimationTimer {
-        private static final int FREQ = 30; // Hz
-        private static final long FRAME_DURATION_NS = 1_000_000_000 / FREQ;
+        private static final long FRAME_DURATION_NS = 1_000_000_000 / EditorGlobals.UPDATE_FREQ;
         private long lastUpdate = 0;
 
         @Override
@@ -128,7 +127,7 @@ public class TileMapEditor {
             obstaclesUpToDate = true;
         }
         if (terrainMapChanged || foodMapChanged) {
-            sourceCode.set(sourceCode(currentWorldMap()));
+            sourceCode.set(generateSourceCode(currentWorldMap()));
         }
         if (terrainMapChanged) {
             //TODO use events?
@@ -240,7 +239,7 @@ public class TileMapEditor {
             return Optional.of(WorldMap.mapFromURL(url));
         } catch (IOException x) {
             Logger.error(x);
-            Logger.error("Could not loaf world map from URL '{}'", url);
+            Logger.error("Could not load world map from URL '{}'", url);
             return Optional.empty();
         }
     }

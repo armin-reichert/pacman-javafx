@@ -20,6 +20,8 @@ import static java.util.Objects.requireNonNull;
 
 public class EditorGlobals {
 
+    public static final int UPDATE_FREQ = 30; // Hz
+
     public static final short TOOL_SIZE = 32;
     public static final short MIN_GRID_SIZE = 8;
     public static final short MAX_GRID_SIZE = 80;

@@ -38,7 +38,7 @@ public interface EditorUtil {
         return url.toExternalForm();
     }
 
-    static String sourceCode(WorldMap worldMap) {
+    static String generateSourceCode(WorldMap worldMap) {
         StringBuilder sb = new StringBuilder();
         String[] sourceTextLines = WorldMapFormatter.formatted(worldMap).split("\n");
         for (int i = 0; i < sourceTextLines.length; ++i) {
