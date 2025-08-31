@@ -48,16 +48,21 @@ public class Action_FloodWithPellets extends AbstractEditorUIAction<Void> {
                 }
             }
         }
-        // Actors occupy 2 tiles! Clear food on both.
         for (Vector2i tile : actorTiles()) {
-            new Action_SetTileCode(ui, worldMap, LayerID.FOOD, tile, FoodTile.EMPTY.code()).execute();
-            Vector2i rightNeighborTile = tile.plus(Direction.RIGHT.vector());
-            if (isAccessible(rightNeighborTile)) {
-                new Action_SetTileCode(ui, worldMap, LayerID.FOOD, rightNeighborTile, FoodTile.EMPTY.code()).execute();
-            }
+            clearBothTilesOccupiedByActor(tile);
         }
 
         return null;
+    }
+
+    // The actor tile stored as a map property is the left one of a pair of tiles which are reserved for the actor
+    // initially. Both tiles are not allowed to carry food. So we clear both tiles after flooding.
+    private void clearBothTilesOccupiedByActor(Vector2i leftActorTile) {
+        new Action_SetTileCode(ui, worldMap, LayerID.FOOD, leftActorTile, FoodTile.EMPTY.code()).execute();
+        Vector2i rightActorTile = leftActorTile.plus(Direction.RIGHT.vector());
+        if (isAccessible(rightActorTile)) {
+            new Action_SetTileCode(ui, worldMap, LayerID.FOOD, rightActorTile, FoodTile.EMPTY.code()).execute();
+        }
     }
 
     private boolean isAccessible(Vector2i tile) {
