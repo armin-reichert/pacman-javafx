@@ -6,7 +6,7 @@ import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.tilemap.editor.EditorUI;
 
-import static de.amr.pacmanfx.tilemap.editor.EditorUtil.canEditFoodAtTile;
+import static de.amr.pacmanfx.tilemap.editor.EditorUtil.canPlaceFoodAtTile;
 import static de.amr.pacmanfx.tilemap.editor.EditorUtil.mirroredTileCode;
 import static java.util.Objects.requireNonNull;
 
@@ -43,24 +43,29 @@ public class Action_SetTileCode extends AbstractEditorUIAction<Void> {
     }
 
     private void setTerrainTile(boolean symmetric) {
+        byte oldCode = worldMap.layer(LayerID.TERRAIN).get(tile);
+        if (code == oldCode) return;
         worldMap.setContent(LayerID.TERRAIN, tile, code);
         worldMap.setContent(LayerID.FOOD, tile, FoodTile.EMPTY.code());
         if (symmetric) {
             Vector2i mirroredTile = worldMap.mirroredTile(tile);
             byte mirroredCode = mirroredTileCode(code);
-            worldMap.setContent(LayerID.TERRAIN, mirroredTile, mirroredCode);
-            worldMap.setContent(LayerID.FOOD, mirroredTile, FoodTile.EMPTY.code());
+            byte oldMirroredCode = worldMap.layer(LayerID.TERRAIN).get(mirroredTile);
+            if (mirroredCode != oldMirroredCode) {
+                worldMap.setContent(LayerID.TERRAIN, mirroredTile, mirroredCode);
+                worldMap.setContent(LayerID.FOOD, mirroredTile, FoodTile.EMPTY.code());
+            }
         }
         editor.setEdited(true);
         editor.setWorldMapChanged();
     }
 
     private void setFoodTile(boolean symmetric) {
-        if (!canEditFoodAtTile(worldMap, tile)) return;
+        if (!canPlaceFoodAtTile(worldMap, tile)) return;
         worldMap.setContent(LayerID.FOOD, tile, code);
         if (symmetric) {
             Vector2i mirroredTile = worldMap.mirroredTile(tile);
-            if (canEditFoodAtTile(worldMap, mirroredTile)) {
+            if (canPlaceFoodAtTile(worldMap, mirroredTile)) {
                 worldMap.setContent(LayerID.FOOD, mirroredTile, code);
             }
         }

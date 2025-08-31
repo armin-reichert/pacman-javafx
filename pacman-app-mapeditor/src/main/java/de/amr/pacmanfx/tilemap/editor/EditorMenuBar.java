@@ -1,9 +1,6 @@
 package de.amr.pacmanfx.tilemap.editor;
 
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.lib.tilemap.FoodTile;
-import de.amr.pacmanfx.lib.tilemap.LayerID;
-import de.amr.pacmanfx.lib.tilemap.TerrainTile;
 import de.amr.pacmanfx.tilemap.editor.actions.*;
 import javafx.beans.binding.Bindings;
 import javafx.scene.control.*;
@@ -76,19 +73,11 @@ public class EditorMenuBar extends MenuBar {
         miAddHouse.disableProperty().bind(ui.editModeProperty().map(mode -> mode == EditMode.INSPECT));
 
         var miClearTerrain = new MenuItem(translated("menu.edit.clear_terrain"));
-        miClearTerrain.setOnAction(actionEvent -> {
-            editor.currentWorldMap().layer(LayerID.TERRAIN).setAll(TerrainTile.EMPTY.$);
-            editor.setTerrainMapChanged();
-            editor.setEdited(true);
-        });
+        miClearTerrain.setOnAction(actionEvent -> new Action_ClearTerrain(editor).execute());
         miClearTerrain.disableProperty().bind(ui.editModeProperty().map(mode -> mode == EditMode.INSPECT));
 
         var miClearFood = new MenuItem(translated("menu.edit.clear_food"));
-        miClearFood.setOnAction(actionEvent -> {
-            editor.currentWorldMap().layer(LayerID.FOOD).setAll(FoodTile.EMPTY.code());
-            editor.setFoodMapChanged();
-            editor.setEdited(true);
-        });
+        miClearFood.setOnAction(actionEvent -> new Action_ClearFood(editor).execute());
         miClearFood.disableProperty().bind(ui.editModeProperty().map(mode -> mode == EditMode.INSPECT));
 
         var miIdentifyTiles = new MenuItem(translated("menu.edit.identify_tiles"));

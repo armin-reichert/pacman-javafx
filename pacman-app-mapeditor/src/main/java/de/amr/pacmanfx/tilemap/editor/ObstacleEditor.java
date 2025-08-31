@@ -5,15 +5,15 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tilemap.editor;
 
 import de.amr.pacmanfx.lib.Vector2i;
+import de.amr.pacmanfx.lib.tilemap.FoodTile;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
+import de.amr.pacmanfx.tilemap.editor.actions.Action_SetTileCode;
 import de.amr.pacmanfx.tilemap.editor.rendering.TerrainTileMapRenderer;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
-
-import java.util.function.BiConsumer;
 
 import static de.amr.pacmanfx.lib.UsefulFunctions.isEven;
 import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
@@ -21,8 +21,6 @@ import static de.amr.pacmanfx.tilemap.editor.EditorUtil.mirroredTileCode;
 import static java.util.Objects.requireNonNull;
 
 public class ObstacleEditor {
-
-    private BiConsumer<Vector2i, Byte> onEditTile;
 
     private final BooleanProperty joining = new SimpleBooleanProperty();
     private final BooleanProperty symmetricEdit = new SimpleBooleanProperty();
@@ -34,14 +32,10 @@ public class ObstacleEditor {
     private Vector2i minTile; // top left corner
     private Vector2i maxTile; // bottom right corner
 
-    public void setOnEditTile(BiConsumer<Vector2i, Byte> onEditTile) {
-        this.onEditTile = onEditTile;
-    }
+    private final EditorUI ui;
 
-    public void editTile(Vector2i tile, byte value) {
-        if (onEditTile != null) {
-            onEditTile.accept(tile, value);
-        }
+    public ObstacleEditor(EditorUI ui) {
+        this.ui = requireNonNull(ui);
     }
 
     public BooleanProperty joiningProperty() { return joining; }
@@ -49,6 +43,10 @@ public class ObstacleEditor {
     public BooleanProperty symmetricEditModeProperty() { return symmetricEdit; }
 
     public ObjectProperty<WorldMap> worldMapProperty() { return worldMap; }
+
+    public WorldMap worldMap() {
+        return worldMap.get();
+    }
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
@@ -108,7 +106,8 @@ public class ObstacleEditor {
         for (int row = 0; row < numRows; ++row) {
             for (int col = 0; col < numCols; ++col) {
                 Vector2i tile = minTile.plus(col, row);
-                editTile(tile, editedRect[row][col]);
+                new Action_SetTileCode(ui, worldMap(), LayerID.TERRAIN, tile, editedRect[row][col]).execute();
+                new Action_SetTileCode(ui, worldMap(), LayerID.FOOD, tile, FoodTile.EMPTY.code()).execute();
             }
         }
     }

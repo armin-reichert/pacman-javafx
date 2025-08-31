@@ -138,7 +138,7 @@ public interface EditorUtil {
                 || value == TerrainTile.ONE_WAY_RIGHT.$;
     }
 
-    static boolean canEditFoodAtTile(WorldMap worldMap, Vector2i tile) {
+    static boolean canPlaceFoodAtTile(WorldMap worldMap, Vector2i tile) {
         return !worldMap.outOfWorld(tile)
                 && tile.y() >= EMPTY_ROWS_BEFORE_MAZE
                 && tile.y() < worldMap.numRows() - EMPTY_ROWS_BELOW_MAZE

@@ -4,41 +4,52 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.lib.tilemap;
 
+import de.amr.pacmanfx.lib.Vector2i;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 public class WorldMapLayer {
+
     private final Map<String, String> properties = new HashMap<>();
-    private final byte[][] values;
+    private final byte[][] codes;
 
     public WorldMapLayer(int numRows, int numCols) {
-        values = new byte[numRows][numCols];
+        codes = new byte[numRows][numCols];
     }
 
     public WorldMapLayer(WorldMapLayer other) {
-        int numRows = other.values.length, numCols = other.values[0].length;
+        int numRows = other.codes.length, numCols = other.codes[0].length;
         properties.putAll(other.properties);
-        values = new byte[numRows][];
+        codes = new byte[numRows][];
         for (int row = 0; row < numRows; ++row) {
-            values[row] = Arrays.copyOf(other.values[row], numCols);
+            codes[row] = Arrays.copyOf(other.codes[row], numCols);
         }
     }
 
-    public int numRows() { return values.length; }
-    public int numCols() { return values[0].length; }
+    public int numRows() { return codes.length; }
+    public int numCols() { return codes[0].length; }
 
     public byte get(int row, int col) {
-        return values[row][col];
+        return codes[row][col];
     }
 
-    public void set(int row, int col, byte value) {
-        values[row][col] = value;
+    public byte get(Vector2i tile) {
+        return get(tile.y(), tile.x()); // Note order y=row, x=col
     }
 
-    public void setAll(byte value) {
-        for (byte[] row : values) {
-            Arrays.fill(row, value);
+    public void set(int row, int col, byte code) {
+        codes[row][col] = code;
+    }
+
+    public void set(Vector2i tile, byte code) {
+        set(tile.y(), tile.x(), code);
+    }
+
+    public void setAll(byte code) {
+        for (byte[] row : codes) {
+            Arrays.fill(row, code);
         }
     }
 

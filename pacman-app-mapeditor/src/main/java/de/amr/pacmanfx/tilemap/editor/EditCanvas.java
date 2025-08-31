@@ -6,7 +6,6 @@ package de.amr.pacmanfx.tilemap.editor;
 
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.lib.tilemap.FoodTile;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.WorldMapProperty;
@@ -75,12 +74,10 @@ public class EditCanvas extends Canvas {
         this.ui = requireNonNull(ui);
         ctx = getGraphicsContext2D();
 
-        obstacleEditor = new ObstacleEditor();
+        obstacleEditor = new ObstacleEditor(ui);
         obstacleEditor.joiningProperty().bind(obstaclesJoiningProperty());
         obstacleEditor.symmetricEditModeProperty().bind(symmetricEditModeProperty());
         obstacleEditor.worldMapProperty().bind(worldMapProperty());
-        obstacleEditor.setOnEditTile(
-            (tile, code) -> new Action_SetTileCode(ui, worldMap(), LayerID.TERRAIN, tile, code).execute());
 
         heightProperty().bind(Bindings.createDoubleBinding(
             () -> {
@@ -463,12 +460,11 @@ public class EditCanvas extends Canvas {
         });
 
         var miFloodWithPellets = new MenuItem(translated("menu.edit.flood_with_pellets"));
-        miFloodWithPellets.setOnAction(ae -> new Action_FloodWithPellets(ui, tile, FoodTile.PELLET).execute());
-        miFloodWithPellets.setDisable(!canEditFoodAtTile(editor.currentWorldMap(), tile));
+        miFloodWithPellets.setOnAction(ae -> new Action_FloodWithPellets(ui, worldMap(), tile).execute());
+        miFloodWithPellets.setDisable(!canPlaceFoodAtTile(worldMap(), tile));
 
         var miClearPellets = new MenuItem(translated("menu.edit.clear_food"));
-        miClearPellets.setOnAction(ae -> new Action_FloodWithPellets(ui, tile, FoodTile.EMPTY).execute());
-        miClearPellets.setDisable(!canEditFoodAtTile(editor.currentWorldMap(), tile));
+        miClearPellets.setOnAction(ae -> new Action_ClearFood(editor).execute());
 
         contextMenu.getItems().setAll(
             miInsertRow,
