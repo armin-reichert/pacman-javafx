@@ -48,7 +48,7 @@ public class Action_FloodWithPellets extends AbstractEditorUIAction<Void> {
                 }
             }
         }
-        // Actors occupy 2 tiles! Clear food on  both.
+        // Actors occupy 2 tiles! Clear food on both.
         for (Vector2i tile : actorTiles()) {
             new Action_SetTileCode(ui, worldMap, LayerID.FOOD, tile, FoodTile.EMPTY.code()).execute();
             Vector2i rightNeighborTile = tile.plus(Direction.RIGHT.vector());
