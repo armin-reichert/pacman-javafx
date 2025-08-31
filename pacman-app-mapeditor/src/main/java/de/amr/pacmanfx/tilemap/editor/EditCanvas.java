@@ -44,18 +44,18 @@ public class EditCanvas extends Canvas {
 
     private final ObjectProperty<EditMode> editMode = new SimpleObjectProperty<>();
     private final ObjectProperty<Vector2i> focussedTile = new SimpleObjectProperty<>();
-    private final DoubleProperty gridSize = new SimpleDoubleProperty(8);
-    private final DoubleProperty scaling = new SimpleDoubleProperty(1);
-    private final ObjectProperty<Image> templateImageGray = new SimpleObjectProperty<>();
+    private final DoubleProperty           gridSize = new SimpleDoubleProperty(8);
+    private final DoubleProperty           scaling = new SimpleDoubleProperty(1);
+    private final ObjectProperty<Image>    templateImageGray = new SimpleObjectProperty<>();
     private final ObjectProperty<WorldMap> worldMap = new SimpleObjectProperty<>();
 
     private final BooleanProperty actorsVisible = new SimpleBooleanProperty(true);
     private final BooleanProperty foodVisible = new SimpleBooleanProperty(true);
     private final BooleanProperty gridVisible = new SimpleBooleanProperty(true);
-    private final BooleanProperty obstacleInnerAreaDisplayed = new SimpleBooleanProperty(true);
+    private final BooleanProperty obstacleInnerAreaDisplayed = new SimpleBooleanProperty(false);
     private final BooleanProperty obstaclesJoining = new SimpleBooleanProperty(true);
-    private final BooleanProperty segmentNumbersVisible = new SimpleBooleanProperty(true);
-    private final BooleanProperty symmetricEditMode = new SimpleBooleanProperty(true);
+    private final BooleanProperty segmentNumbersVisible = new SimpleBooleanProperty(false);
+    private final BooleanProperty symmetricEditMode = new SimpleBooleanProperty(false);
     private final BooleanProperty terrainVisible = new SimpleBooleanProperty(true);
 
     private final GraphicsContext ctx;
@@ -460,11 +460,11 @@ public class EditCanvas extends Canvas {
         });
 
         var miFloodWithPellets = new MenuItem(translated("menu.edit.flood_with_pellets"));
-        miFloodWithPellets.setOnAction(ae -> new Action_FloodWithPellets(ui, worldMap(), tile).execute());
+        miFloodWithPellets.setOnAction(actionEvent -> new Action_FloodWithPellets(ui, worldMap(), tile).execute());
         miFloodWithPellets.setDisable(!canPlaceFoodAtTile(worldMap(), tile));
 
         var miClearPellets = new MenuItem(translated("menu.edit.clear_food"));
-        miClearPellets.setOnAction(ae -> new Action_ClearFood(editor).execute());
+        miClearPellets.setOnAction(actionEvent -> new Action_ClearFood(editor).execute());
 
         contextMenu.getItems().setAll(
             miInsertRow,

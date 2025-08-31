@@ -242,7 +242,7 @@ public class EditorUI {
 
     // -- gridSize
 
-    private static final double DEFAULT_GRID_SIZE = 8;
+    private static final double DEFAULT_GRID_SIZE = 16;
 
     private DoubleProperty gridSize;
 
@@ -448,7 +448,7 @@ public class EditorUI {
 
         Platform.runLater(() -> {
             double height = spEditCanvas.getHeight();
-            int gridSize = (int) Math.max(height / editor.currentWorldMap().numRows(), MIN_GRID_SIZE);
+            int gridSize = (int) Math.max(height / editor.currentWorldMap().numRows(), DEFAULT_GRID_SIZE);
             setGridSize(gridSize);
         });
     }
