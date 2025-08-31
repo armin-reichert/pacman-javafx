@@ -40,6 +40,7 @@ import java.io.File;
 import java.util.EnumMap;
 import java.util.Map;
 
+import static de.amr.pacmanfx.lib.tilemap.WorldMap.copyOfMap;
 import static de.amr.pacmanfx.lib.tilemap.WorldMapFormatter.formatTile;
 import static de.amr.pacmanfx.tilemap.editor.EditMode.INSPECT;
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.*;
@@ -143,7 +144,7 @@ public class EditorUI {
         palettes.values().forEach(Palette::draw);
     }
 
-    public void decideWithCheckForUnsavedChanges(Runnable action) {
+    public void afterCheckForUnsavedChanges(Runnable action) {
         if (!editor.isEdited()) {
             action.run();
             return;
@@ -535,7 +536,7 @@ public class EditorUI {
         node.setOnDragDropped(dragEvent -> {
             if (dragEvent.getDragboard().hasFiles()) {
                 File file = dragEvent.getDragboard().getFiles().getFirst();
-                decideWithCheckForUnsavedChanges(() -> editCanvas.onFileDropped(file));
+                afterCheckForUnsavedChanges(() -> editCanvas.onFileDropped(file));
             }
             dragEvent.consume();
         });
@@ -801,14 +802,11 @@ public class EditorUI {
     }
 
     // also called from EditorPage
-    public MenuItem createLoadMapMenuItem(String description, WorldMap worldMap) {
-        requireNonNull(description);
+    public MenuItem createLoadMapMenuItem(String title, WorldMap worldMap) {
+        requireNonNull(title);
         requireNonNull(worldMap);
-        var menuItem = new MenuItem(description);
-        menuItem.setOnAction(e -> {
-            WorldMap copy = WorldMap.copyOfMap(worldMap);
-            decideWithCheckForUnsavedChanges(() -> editor.setCurrentWorldMap(copy));
-        });
+        var menuItem = new MenuItem(title);
+        menuItem.setOnAction(e -> afterCheckForUnsavedChanges(() -> editor.setCurrentWorldMap(copyOfMap(worldMap))));
         return menuItem;
     }
 

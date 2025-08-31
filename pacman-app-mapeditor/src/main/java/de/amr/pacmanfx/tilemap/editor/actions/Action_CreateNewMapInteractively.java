@@ -25,7 +25,7 @@ public class Action_CreateNewMapInteractively extends AbstractEditorUIAction<Voi
 
     @Override
     public Void execute() {
-        ui.decideWithCheckForUnsavedChanges(() -> {
+        ui.afterCheckForUnsavedChanges(() -> {
             TextInputDialog dialog = createMapSizeInputDialog();
             dialog.showAndWait().ifPresent(input -> {
                 Vector2i sizeInTiles = parseSize(input);
