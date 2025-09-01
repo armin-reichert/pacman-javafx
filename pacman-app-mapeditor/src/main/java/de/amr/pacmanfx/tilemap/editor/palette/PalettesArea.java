@@ -94,13 +94,12 @@ public class PalettesArea extends TabPane {
 
     private Palette createActorsPalette(EditorUI ui, TerrainTileMapRenderer renderer) {
         var palette = new Palette(PaletteID.ACTORS, TOOL_SIZE, 1, 11);
-        palette.addTool(makeTileTool(ui, TerrainTile.EMPTY.$, "Nope"));
-        palette.addTool(makePropertyTool(ui, WorldMapProperty.POS_PAC, "Pac-Man"));
-        palette.addTool(makePropertyTool(ui, WorldMapProperty.POS_RED_GHOST, "Red Ghost"));
-        palette.addTool(makePropertyTool(ui, WorldMapProperty.POS_PINK_GHOST, "Pink Ghost"));
-        palette.addTool(makePropertyTool(ui, WorldMapProperty.POS_CYAN_GHOST, "Cyan Ghost"));
-        palette.addTool(makePropertyTool(ui, WorldMapProperty.POS_ORANGE_GHOST, "Orange Ghost"));
-        palette.addTool(makePropertyTool(ui, WorldMapProperty.POS_BONUS, "Bonus"));
+        palette.addTool(makeActorTool(ui, WorldMapProperty.POS_PAC, "Pac-Man"));
+        palette.addTool(makeActorTool(ui, WorldMapProperty.POS_RED_GHOST, "Red Ghost"));
+        palette.addTool(makeActorTool(ui, WorldMapProperty.POS_PINK_GHOST, "Pink Ghost"));
+        palette.addTool(makeActorTool(ui, WorldMapProperty.POS_CYAN_GHOST, "Cyan Ghost"));
+        palette.addTool(makeActorTool(ui, WorldMapProperty.POS_ORANGE_GHOST, "Orange Ghost"));
+        palette.addTool(makeActorTool(ui, WorldMapProperty.POS_BONUS, "Bonus"));
         palette.addTool(makePropertyTool(ui, WorldMapProperty.POS_SCATTER_RED_GHOST, "Red Ghost Scatter"));
         palette.addTool(makePropertyTool(ui, WorldMapProperty.POS_SCATTER_PINK_GHOST, "Pink Ghost Scatter"));
         palette.addTool(makePropertyTool(ui, WorldMapProperty.POS_SCATTER_CYAN_GHOST, "Cyan Ghost Scatter"));
@@ -145,6 +144,12 @@ public class PalettesArea extends TabPane {
                     case TERRAIN -> new Action_SetTerrainProperty(ui.editor(), propertyName, formatTile(tile)).execute();
                 }
             },
+            TOOL_SIZE, propertyName, description);
+    }
+
+    protected ActorTool makeActorTool(EditorUI ui, String propertyName, String description) {
+        return new ActorTool(
+            (layerID, tile) -> new Action_SetTerrainProperty(ui.editor(), propertyName, formatTile(tile)).execute(),
             TOOL_SIZE, propertyName, description);
     }
 

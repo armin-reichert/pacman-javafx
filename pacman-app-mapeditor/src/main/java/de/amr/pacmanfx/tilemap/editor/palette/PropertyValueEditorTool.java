@@ -8,7 +8,6 @@ import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.model.WorldMapProperty;
-import de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites;
 import de.amr.pacmanfx.tilemap.editor.rendering.TerrainTileMapRenderer;
 import de.amr.pacmanfx.uilib.tilemap.TileRenderer;
 import javafx.scene.canvas.GraphicsContext;
@@ -17,17 +16,16 @@ import javafx.scene.paint.Color;
 import java.util.function.BiConsumer;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites.PAC_MAN;
 import static de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites.SPRITE_SHEET;
 import static java.util.Objects.requireNonNull;
 
 public class PropertyValueEditorTool implements EditorTool {
 
-    private final double size;
-    private final String propertyName;
-    private final String description;
+    protected final double size;
+    protected final String propertyName;
+    protected final String description;
 
-    private final BiConsumer<LayerID, Vector2i> editor;
+    protected final BiConsumer<LayerID, Vector2i> editor;
 
     public PropertyValueEditorTool(BiConsumer<LayerID, Vector2i> editor, double size, String propertyName, String description) {
         this.editor = requireNonNull(editor);
@@ -58,12 +56,6 @@ public class PropertyValueEditorTool implements EditorTool {
             Vector2i tile = new Vector2i(col, row);
             double x = col * TS, y = row * TS;
             switch (propertyName) {
-                case WorldMapProperty.POS_PAC -> drawSprite(g, x, y, PAC_MAN);
-                case WorldMapProperty.POS_RED_GHOST -> drawSprite(g, x, y, ArcadeSprites.RED_GHOST);
-                case WorldMapProperty.POS_PINK_GHOST -> drawSprite(g, x, y, ArcadeSprites.PINK_GHOST);
-                case WorldMapProperty.POS_CYAN_GHOST -> drawSprite(g, x, y, ArcadeSprites.CYAN_GHOST);
-                case WorldMapProperty.POS_ORANGE_GHOST -> drawSprite(g, x, y, ArcadeSprites.ORANGE_GHOST);
-                case WorldMapProperty.POS_BONUS -> drawSprite(g, x, y, ArcadeSprites.STRAWBERRY);
                 case WorldMapProperty.POS_SCATTER_RED_GHOST -> tr.drawScatterTarget(tile, Color.RED);
                 case WorldMapProperty.POS_SCATTER_PINK_GHOST -> tr.drawScatterTarget(tile, Color.PINK);
                 case WorldMapProperty.POS_SCATTER_CYAN_GHOST -> tr.drawScatterTarget(tile, Color.CYAN);
@@ -74,7 +66,7 @@ public class PropertyValueEditorTool implements EditorTool {
         }
     }
 
-    private void drawSprite(GraphicsContext g, double x, double y, RectShort sprite) {
+    protected void drawSprite(GraphicsContext g, double x, double y, RectShort sprite) {
         g.drawImage(SPRITE_SHEET,
             sprite.x(), sprite.y(), sprite.width(), sprite.height(),
             x + 1, y + 1, TS - 2, TS - 2);
