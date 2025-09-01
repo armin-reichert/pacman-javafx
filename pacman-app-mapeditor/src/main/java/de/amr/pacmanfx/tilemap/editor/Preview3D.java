@@ -109,7 +109,7 @@ public class Preview3D {
     private void onKeyTyped(KeyEvent e) {
         String key = e.getCharacter();
         if (key.equals("w")) {
-            maze3D.toggleWireframe();
+            maze3D.actionToggleWireframe.execute();
         }
     }
 }

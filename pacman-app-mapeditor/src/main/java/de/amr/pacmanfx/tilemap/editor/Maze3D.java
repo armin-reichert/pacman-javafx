@@ -112,6 +112,11 @@ public class Maze3D extends Group {
         return null;
     };
 
+    public final EditorAction<Void> actionToggleWireframe = () -> {
+        wireframe.set(!wireframe.get());
+        return null;
+    };
+
     private final Group mazeGroup = new Group();
     private final Group foodGroup = new Group();
 
@@ -158,10 +163,6 @@ public class Maze3D extends Group {
     public void rotateBy(double angle) {
         setRotationAxis(Rotate.Z_AXIS);
         setRotate(getRotate() + angle);
-    }
-
-    public void toggleWireframe() {
-        wireframe.set(!wireframe.get());
     }
 
     private void updateMaze() {
