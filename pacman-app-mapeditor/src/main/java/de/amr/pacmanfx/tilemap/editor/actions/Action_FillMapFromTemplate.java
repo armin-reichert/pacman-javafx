@@ -5,9 +5,10 @@ import de.amr.pacmanfx.lib.tilemap.FoodTile;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.TerrainTile;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
+import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.WorldMapProperty;
-import de.amr.pacmanfx.tilemap.editor.MessageType;
 import de.amr.pacmanfx.tilemap.editor.EditorUI;
+import de.amr.pacmanfx.tilemap.editor.MessageType;
 import de.amr.pacmanfx.tilemap.editor.TileMatcher;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
@@ -19,8 +20,6 @@ import java.nio.IntBuffer;
 import java.time.LocalTime;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.EMPTY_ROWS_BEFORE_MAZE;
-import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.EMPTY_ROWS_BELOW_MAZE;
 import static de.amr.pacmanfx.tilemap.editor.EditorUtil.getColorFromMap;
 
 public class Action_FillMapFromTemplate extends AbstractEditorUIAction<Void> {
@@ -70,11 +69,11 @@ public class Action_FillMapFromTemplate extends AbstractEditorUIAction<Void> {
 
         LocalTime startTime = LocalTime.now();
 
-        int numMazeRows = worldMap.numRows() - (EMPTY_ROWS_BEFORE_MAZE + EMPTY_ROWS_BELOW_MAZE);
+        int numMazeRows = worldMap.numRows() - (GameLevel.EMPTY_ROWS_OVER_MAZE + GameLevel.EMPTY_ROWS_BELOW_MAZE);
         int numMazeCols = worldMap.numCols();
         for (int row = 0; row < numMazeRows; ++row) {
             for (int col = 0; col < numMazeCols; ++col) {
-                Vector2i worldMapTile = Vector2i.of(col, row + EMPTY_ROWS_BEFORE_MAZE);
+                Vector2i worldMapTile = Vector2i.of(col, row + GameLevel.EMPTY_ROWS_OVER_MAZE);
                 try {
                     int[] pixelsOfTile = new int[TS*TS]; // pixels row-wise
                     rdr.getPixels(col * TS, row * TS, TS, TS, pixelFormat, pixelsOfTile, 0, TS);

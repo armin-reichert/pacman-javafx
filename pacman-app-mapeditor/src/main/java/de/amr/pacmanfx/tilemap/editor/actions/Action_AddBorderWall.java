@@ -3,9 +3,9 @@ package de.amr.pacmanfx.tilemap.editor.actions;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.TerrainTile;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
+import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.tilemap.editor.EditorUI;
 
-import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.EMPTY_ROWS_BELOW_MAZE;
 import static java.util.Objects.requireNonNull;
 
 public class Action_AddBorderWall extends AbstractEditorUIAction<Void> {
@@ -23,8 +23,8 @@ public class Action_AddBorderWall extends AbstractEditorUIAction<Void> {
 
     @Override
     public Void execute() {
-        int firstRow = EMPTY_ROWS_BELOW_MAZE + 1;
-        int lastRow = worldMap.numRows() - 1 - EMPTY_ROWS_BELOW_MAZE;
+        int firstRow = GameLevel.EMPTY_ROWS_BELOW_MAZE + 1;
+        int lastRow = worldMap.numRows() - 1 - GameLevel.EMPTY_ROWS_BELOW_MAZE;
         int firstCol = 0;
         int lastCol = worldMap.numCols() - 1;
 

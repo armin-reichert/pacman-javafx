@@ -8,6 +8,7 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
+import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.tilemap.editor.actions.*;
 import de.amr.pacmanfx.tilemap.editor.rendering.ActorSpriteRenderer;
@@ -245,8 +246,8 @@ public class EditCanvas extends Canvas {
 
         if (templateImageGray.get() != null) {
             ctx.drawImage(templateImageGray.get(),
-                0, EMPTY_ROWS_BEFORE_MAZE * scaling() * TS,
-                width, height - (EMPTY_ROWS_BEFORE_MAZE + EMPTY_ROWS_BELOW_MAZE) * scaling() * TS);
+                0, GameLevel.EMPTY_ROWS_OVER_MAZE * scaling() * TS,
+                width, height - (GameLevel.EMPTY_ROWS_OVER_MAZE + GameLevel.EMPTY_ROWS_BELOW_MAZE) * scaling() * TS);
         }
 
         if (gridVisibleProperty().get()) {
@@ -258,8 +259,8 @@ public class EditCanvas extends Canvas {
         ctx.setStroke(Color.grayRgb(200, 0.75));
         ctx.setLineWidth(0.75);
         ctx.setLineDashes(5, 5);
-        ctx.strokeLine(0, EMPTY_ROWS_BEFORE_MAZE * scaling() * TS, width, EMPTY_ROWS_BEFORE_MAZE * scaling() * TS);
-        ctx.strokeLine(0, height - EMPTY_ROWS_BELOW_MAZE * scaling() * TS, width, height - EMPTY_ROWS_BELOW_MAZE * scaling() * TS);
+        ctx.strokeLine(0, GameLevel.EMPTY_ROWS_OVER_MAZE * scaling() * TS, width, GameLevel.EMPTY_ROWS_OVER_MAZE * scaling() * TS);
+        ctx.strokeLine(0, height - GameLevel.EMPTY_ROWS_BELOW_MAZE * scaling() * TS, width, height - GameLevel.EMPTY_ROWS_BELOW_MAZE * scaling() * TS);
         ctx.restore();
 
         // Terrain

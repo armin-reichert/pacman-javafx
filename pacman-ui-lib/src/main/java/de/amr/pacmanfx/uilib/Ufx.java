@@ -5,7 +5,11 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.uilib;
 
 import de.amr.pacmanfx.lib.RectShort;
+import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.nes.NES_Palette;
+import de.amr.pacmanfx.lib.tilemap.Obstacle;
+import de.amr.pacmanfx.lib.tilemap.WorldMap;
+import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.assets.UIPreferences;
 import javafx.animation.Animation;
@@ -36,6 +40,8 @@ import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static de.amr.pacmanfx.Globals.HTS;
+import static de.amr.pacmanfx.Globals.TS;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -365,4 +371,21 @@ public interface Ufx {
         text.getStyleClass().add("custom-menu-title");
         return new CustomMenuItem(text, false);
     }
+
+    public static boolean isBorderObstacle(WorldMap worldMap, Obstacle obstacle) {
+        Vector2i start = obstacle.startPoint();
+        if (obstacle.isClosed()) {
+            return start.x() == TS || start.y() == GameLevel.EMPTY_ROWS_OVER_MAZE * TS + HTS;
+        } else {
+            return start.x() == 0 || start.x() == worldMap.numCols() * TS;
+        }
+    }
+
+    /*
+    private boolean isBorderObstacle(Obstacle obstacle, WorldMap worldMap) {
+        Vector2i start = obstacle.startPoint();
+        return start.x() <= TS || start.x() >= (worldMap.numCols() - 1) * TS
+                || start.y() <= GameLevel.EMPTY_ROWS_OVER_MAZE * TS || start.y() >= (worldMap.numRows() - 1) * TS;
+    }
+     */
 }

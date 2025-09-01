@@ -20,7 +20,6 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import static de.amr.pacmanfx.model.WorldMapProperty.*;
-import static de.amr.pacmanfx.model.WorldMapProperty.POS_BONUS;
 import static java.util.Objects.requireNonNull;
 
 public class EditorGlobals {
@@ -30,9 +29,6 @@ public class EditorGlobals {
     public static final short TOOL_SIZE = 32;
     public static final short MIN_GRID_SIZE = 8;
     public static final short MAX_GRID_SIZE = 80;
-
-    public static final int EMPTY_ROWS_BEFORE_MAZE = 3;
-    public static final int EMPTY_ROWS_BELOW_MAZE = 2;
 
     public static final String SAMPLE_MAPS_PATH = "/de/amr/pacmanfx/tilemap/editor/maps/";
 
@@ -95,4 +91,5 @@ public class EditorGlobals {
             return "[%s]".formatted(key);
         }
     }
+
 }

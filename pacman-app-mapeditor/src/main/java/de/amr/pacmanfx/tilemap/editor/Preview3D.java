@@ -23,9 +23,9 @@ import static java.util.Objects.requireNonNull;
 
 public class Preview3D {
 
-    private final ObjectProperty<WorldMap> worldMapPy = new SimpleObjectProperty<>();
-    private final BooleanProperty foodVisiblePy = new SimpleBooleanProperty(true);
-    private final BooleanProperty terrainVisiblePy = new SimpleBooleanProperty(true);
+    private final ObjectProperty<WorldMap> worldMap = new SimpleObjectProperty<>();
+    private final BooleanProperty foodVisible = new SimpleBooleanProperty(true);
+    private final BooleanProperty terrainVisible = new SimpleBooleanProperty(true);
     private final SubScene subScene;
     private final Maze3D maze3D;
 
@@ -38,8 +38,8 @@ public class Preview3D {
 
         maze3D = new Maze3D(ui, model3DRepository);
         maze3D.worldMapProperty().bind(ui.editor().currentWorldMapProperty());
-        maze3D.foodVisibleProperty().bind(foodVisiblePy);
-        maze3D.terrainVisibleProperty().bind(terrainVisiblePy);
+        maze3D.foodVisibleProperty().bind(foodVisible);
+        maze3D.terrainVisibleProperty().bind(terrainVisible);
 
         subScene = new SubScene(maze3D, width, height, true, SceneAntialiasing.BALANCED);
         subScene.setCamera(maze3D.camera());
@@ -59,19 +59,19 @@ public class Preview3D {
         subScene.setOnKeyTyped(this::onKeyTyped);
     }
 
-    public ObjectProperty<WorldMap> worldMapProperty() { return worldMapPy; }
-    public BooleanProperty terrainVisibleProperty() { return terrainVisiblePy; }
-    public BooleanProperty foodVisibleProperty() { return foodVisiblePy; }
+    public ObjectProperty<WorldMap> worldMapProperty() { return worldMap; }
+    public BooleanProperty terrainVisibleProperty() { return terrainVisible; }
+    public BooleanProperty foodVisibleProperty() { return foodVisible; }
 
     public SubScene getSubScene() { return subScene; }
 
     public void updateFood() {
-        maze3D.updateFood(worldMapPy.get());
+        maze3D.updateFood(worldMap.get());
     }
 
     public void reset() {
-        double mapWidth = worldMapPy.get().numCols() * TS;
-        double mapHeight = worldMapPy.get().numRows() * TS;
+        double mapWidth = worldMap.get().numCols() * TS;
+        double mapHeight = worldMap.get().numRows() * TS;
         PerspectiveCamera camera = maze3D.camera();
         camera.setRotationAxis(Rotate.X_AXIS);
         camera.setRotate(60);

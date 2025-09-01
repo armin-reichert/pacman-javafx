@@ -2,13 +2,12 @@ package de.amr.pacmanfx.tilemap.editor.actions;
 
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
+import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
 import javafx.scene.image.Image;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.EMPTY_ROWS_BEFORE_MAZE;
-import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.EMPTY_ROWS_BELOW_MAZE;
 
 public class Action_CreateMapFromTemplate extends AbstractEditorAction<Void> {
 
@@ -21,7 +20,7 @@ public class Action_CreateMapFromTemplate extends AbstractEditorAction<Void> {
 
     @Override
     public Void execute() {
-        int numRows = EMPTY_ROWS_BEFORE_MAZE + EMPTY_ROWS_BELOW_MAZE + (int) (image.getHeight() / TS);
+        int numRows = GameLevel.EMPTY_ROWS_OVER_MAZE + GameLevel.EMPTY_ROWS_BELOW_MAZE + (int) (image.getHeight() / TS);
         int numCols = (int) (image.getWidth() / TS);
         WorldMap emptyMap = new Action_CreateEmptyMap(editor, numRows, numCols).execute();
         emptyMap.properties(LayerID.TERRAIN).remove(WorldMapProperty.COLOR_WALL_FILL);

@@ -11,6 +11,7 @@ import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.Obstacle;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.WorldMapProperty;
+import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.model3D.GhostBody;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import de.amr.pacmanfx.uilib.model3D.TerrainRenderer3D;
@@ -33,7 +34,6 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.EMPTY_ROWS_BEFORE_MAZE;
 import static de.amr.pacmanfx.tilemap.editor.EditorUtil.getColorFromMap;
 import static de.amr.pacmanfx.tilemap.editor.EditorUtil.parseColor;
 import static de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites.*;
@@ -177,7 +177,7 @@ public class Maze3D extends Group {
             return wall3D;
         });
         for (Obstacle obstacle : worldMap().obstacles()) {
-            boolean worldBorder = isWorldBorder(worldMap(), obstacle);
+            boolean worldBorder = Ufx.isBorderObstacle(worldMap(), obstacle);
             r3D.renderObstacle3D(obstacle, worldBorder, 2, HTS);
         }
         r3D.setOnWallCreated(null);
@@ -236,15 +236,6 @@ public class Maze3D extends Group {
             door.visibleProperty().bind(terrainVisibleProperty());
             mazeGroup.getChildren().add(door);
         });
-    }
-
-    private boolean isWorldBorder(WorldMap worldMap, Obstacle obstacle) {
-        Vector2i start = obstacle.startPoint();
-        if (obstacle.isClosed()) {
-            return start.x() == TS || start.y() == EMPTY_ROWS_BEFORE_MAZE * TS + HTS;
-        } else {
-            return start.x() == 0 || start.x() == worldMap.numCols() * TS;
-        }
     }
 
     private void addActorShape(Node actorShape, WorldMap worldMap, String actorTilePropertyName) {

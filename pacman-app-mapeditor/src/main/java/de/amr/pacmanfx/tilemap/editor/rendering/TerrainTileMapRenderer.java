@@ -9,8 +9,8 @@ import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.*;
-import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.WorldMapProperty;
+import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.rendering.BaseCanvasRenderer;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapColorScheme;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer;
@@ -99,7 +99,7 @@ public class TerrainTileMapRenderer extends BaseCanvasRenderer implements Terrai
         specialTile(worldMap, WorldMapProperty.POS_SCATTER_CYAN_GHOST).ifPresent(tile -> drawScatterTarget(tile, Color.CYAN));
         specialTile(worldMap, WorldMapProperty.POS_SCATTER_ORANGE_GHOST).ifPresent(tile -> drawScatterTarget(tile, Color.ORANGE));
         if (segmentNumbersDisplayed) {
-            obstacles.stream().filter(obstacle -> !isBorderObstacle(obstacle, worldMap)).forEach(obstacle -> {
+            obstacles.stream().filter(obstacle -> !Ufx.isBorderObstacle(worldMap, obstacle)).forEach(obstacle -> {
                 for (int i = 0; i < obstacle.numSegments(); ++i) {
                     ObstacleSegment segment = obstacle.segment(i);
                     Vector2f start = segment.startPoint().toVector2f();
@@ -118,7 +118,7 @@ public class TerrainTileMapRenderer extends BaseCanvasRenderer implements Terrai
             double r = 1;
             obstacles.stream()
                     .filter(Obstacle::isClosed)
-                    .filter(obstacle -> !isBorderObstacle(obstacle, worldMap)).forEach(obstacle -> {
+                    .filter(obstacle -> !Ufx.isBorderObstacle(worldMap, obstacle)).forEach(obstacle -> {
                 Vector2i prev = null;
                 List<RectShort> rectangles = obstacle.innerAreaRectangles();
                 for (int i = 0; i < rectangles.size(); ++i) {
@@ -153,13 +153,6 @@ public class TerrainTileMapRenderer extends BaseCanvasRenderer implements Terrai
         ctx().scale(scaling(), scaling());
         drawTileUnscaled(tile, content);
         ctx().restore();
-    }
-
-    //TODO move elsewhere
-    private boolean isBorderObstacle(Obstacle obstacle, WorldMap worldMap) {
-        Vector2i start = obstacle.startPoint();
-        return start.x() <= TS || start.x() >= (worldMap.numCols() - 1) * TS
-            || start.y() <= GameLevel.EMPTY_ROWS_OVER_MAZE * TS || start.y() >= (worldMap.numRows() - 1) * TS;
     }
 
     private Optional<Vector2i> specialTile(WorldMap worldMap, String propertyName) {

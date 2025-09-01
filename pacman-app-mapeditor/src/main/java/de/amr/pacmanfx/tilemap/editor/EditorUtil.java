@@ -9,6 +9,7 @@ import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.TerrainTile;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.lib.tilemap.WorldMapFormatter;
+import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.WorldMapProperty;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -27,8 +28,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import java.util.Optional;
 
-import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.EMPTY_ROWS_BEFORE_MAZE;
-import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.EMPTY_ROWS_BELOW_MAZE;
 import static java.util.Objects.requireNonNull;
 
 public interface EditorUtil {
@@ -140,8 +139,8 @@ public interface EditorUtil {
 
     static boolean canPlaceFoodAtTile(WorldMap worldMap, Vector2i tile) {
         return !worldMap.outOfWorld(tile)
-                && tile.y() >= EMPTY_ROWS_BEFORE_MAZE
-                && tile.y() < worldMap.numRows() - EMPTY_ROWS_BELOW_MAZE
+                && tile.y() >= GameLevel.EMPTY_ROWS_OVER_MAZE
+                && tile.y() < worldMap.numRows() - GameLevel.EMPTY_ROWS_BELOW_MAZE
                 && !isPartOfHouse(worldMap, tile)
                 && hasAccessibleTerrainAtTile(worldMap, tile);
     }
