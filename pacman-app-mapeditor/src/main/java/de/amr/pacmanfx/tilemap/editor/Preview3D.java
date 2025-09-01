@@ -37,6 +37,7 @@ public class Preview3D {
         requireNonNull(model3DRepository);
 
         maze3D = new Maze3D(ui, model3DRepository);
+        maze3D.worldMapProperty().bind(ui.editor().currentWorldMapProperty());
         maze3D.foodVisibleProperty().bind(foodVisiblePy);
         maze3D.terrainVisibleProperty().bind(terrainVisiblePy);
 
@@ -66,10 +67,6 @@ public class Preview3D {
 
     public void updateFood() {
         maze3D.updateFood(worldMapPy.get());
-    }
-
-    public void updateTerrain() {
-        maze3D.updateMaze(worldMapPy.get());
     }
 
     public void reset() {

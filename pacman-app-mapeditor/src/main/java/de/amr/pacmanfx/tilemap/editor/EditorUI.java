@@ -33,7 +33,6 @@ import org.tinylog.Logger;
 import java.io.File;
 
 import static de.amr.pacmanfx.lib.tilemap.WorldMap.copyOfMap;
-import static de.amr.pacmanfx.lib.tilemap.WorldMapFormatter.formatTile;
 import static de.amr.pacmanfx.tilemap.editor.EditMode.INSPECT;
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.*;
 import static de.amr.pacmanfx.tilemap.editor.EditorUtil.*;
@@ -744,7 +743,6 @@ public class EditorUI {
         if (terrainPropertiesEditorPane != null) {
             terrainPropertiesEditorPane.setTileMap(worldMap, LayerID.TERRAIN);
         }
-        preview3D.updateTerrain();
     }
 
     public void onFoodMapChanged(WorldMap worldMap) {

@@ -15,10 +15,7 @@ import de.amr.pacmanfx.uilib.model3D.GhostBody;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import de.amr.pacmanfx.uilib.model3D.TerrainRenderer3D;
 import de.amr.pacmanfx.uilib.model3D.Wall3D;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.*;
 import javafx.geometry.Point3D;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
@@ -36,6 +33,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.EMPTY_ROWS_BEFORE_MAZE;
 import static de.amr.pacmanfx.tilemap.editor.EditorUtil.getColorFromMap;
 import static de.amr.pacmanfx.tilemap.editor.EditorUtil.parseColor;
 import static de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites.*;
@@ -43,8 +41,6 @@ import static de.amr.pacmanfx.uilib.Ufx.colorWithOpacity;
 import static java.util.Objects.requireNonNull;
 
 public class Maze3D extends Group {
-
-    private static final int EMPTY_ROWS_OVER_MAZE = 3;
 
     public static final float ACTOR_SIZE = 12.0f;
     public static final float HOUSE_WALL_HEIGHT = 12;
@@ -58,11 +54,33 @@ public class Maze3D extends Group {
         return material;
     }
 
-    private final DoubleProperty widthPy = new SimpleDoubleProperty(800);
-    private final DoubleProperty heightPy = new SimpleDoubleProperty(400);
-    private final BooleanProperty wireframePy = new SimpleBooleanProperty(false);
-    private final BooleanProperty foodVisiblePy = new SimpleBooleanProperty(true);
-    private final BooleanProperty terrainVisiblePy = new SimpleBooleanProperty(true);
+    private final ObjectProperty<WorldMap> worldMap = new SimpleObjectProperty<>();
+
+    public ObjectProperty<WorldMap> worldMapProperty() {
+        return worldMap;
+    }
+
+    public WorldMap worldMap() {
+        return worldMap.get();
+    }
+
+    private final DoubleProperty width = new SimpleDoubleProperty(800);
+
+    public DoubleProperty widthProperty() { return width; }
+
+    private final DoubleProperty height = new SimpleDoubleProperty(400);
+
+    public DoubleProperty heightProperty() { return height; }
+
+    private final BooleanProperty wireframe = new SimpleBooleanProperty(false);
+
+    private final BooleanProperty foodVisible = new SimpleBooleanProperty(true);
+
+    public BooleanProperty foodVisibleProperty() { return foodVisible; }
+
+    private final BooleanProperty terrainVisible = new SimpleBooleanProperty(true);
+
+    public BooleanProperty terrainVisibleProperty() { return terrainVisible; }
 
     private final Group mazeGroup = new Group();
     private final Group foodGroup = new Group();
@@ -86,7 +104,7 @@ public class Maze3D extends Group {
         AmbientLight ambientLight = new AmbientLight(Color.WHITE);
         getChildren().addAll(ambientLight, mazeGroup, foodGroup);
 
-        foodGroup.visibleProperty().bind(foodVisiblePy);
+        foodGroup.visibleProperty().bind(foodVisible);
 
         pacmanShape3D = model3DRepository.createPacBody(ACTOR_SIZE, Color.YELLOW, Color.BLACK, Color.GRAY);
         pacmanShape3D.visibleProperty().bind(ui.actorsVisibleProperty());
@@ -99,6 +117,8 @@ public class Maze3D extends Group {
         for (var ghostShape : ghostShapes) {
             ghostShape.visibleProperty().bind(ui.actorsVisibleProperty());
         }
+
+        worldMapProperty().addListener((py, ov, nv) -> updateMaze());
     }
 
     public PerspectiveCamera camera() {
@@ -123,20 +143,12 @@ public class Maze3D extends Group {
     }
 
     public void toggleWireframe() {
-        wireframePy.set(!wireframePy.get());
+        wireframe.set(!wireframe.get());
     }
 
-    public DoubleProperty widthProperty() { return widthPy; }
-
-    public DoubleProperty heightProperty() { return heightPy; }
-
-    public BooleanProperty foodVisibleProperty() { return foodVisiblePy; }
-
-    public BooleanProperty terrainVisibleProperty() { return terrainVisiblePy; }
-
-    public void updateMaze(WorldMap worldMap) {
-        double worldWidth = worldMap.numCols() * TS;
-        double worldHeight = worldMap.numRows() * TS;
+    private void updateMaze() {
+        final double worldWidth = worldMap().numCols() * TS;
+        final double worldHeight = worldMap().numRows() * TS;
 
         mazeGroup.getChildren().clear();
 
@@ -147,9 +159,9 @@ public class Maze3D extends Group {
         floor.setMaterial(coloredMaterial(Color.BLACK));
         mazeGroup.getChildren().add(floor);
 
-        Color wallBaseColor = getColorFromMap(worldMap, LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_STROKE,
+        Color wallBaseColor = getColorFromMap(worldMap(), LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_STROKE,
                 parseColor(MS_PACMAN_COLOR_WALL_STROKE));
-        Color wallTopColor = getColorFromMap(worldMap, LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_FILL,
+        Color wallTopColor = getColorFromMap(worldMap(), LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_FILL,
                 parseColor(MS_PACMAN_COLOR_WALL_FILL));
 
         PhongMaterial wallBaseMaterial = coloredMaterial(wallBaseColor);
@@ -164,26 +176,26 @@ public class Maze3D extends Group {
             mazeGroup.getChildren().addAll(wall3D.base(), wall3D.top());
             return wall3D;
         });
-        for (Obstacle obstacle : worldMap.obstacles()) {
-            boolean worldBorder = isWorldBorder(worldMap, obstacle);
+        for (Obstacle obstacle : worldMap().obstacles()) {
+            boolean worldBorder = isWorldBorder(worldMap(), obstacle);
             r3D.renderObstacle3D(obstacle, worldBorder, 2, HTS);
         }
         r3D.setOnWallCreated(null);
 
-        addHouse(worldMap, wallBaseColor, wallTopColor);
+        addHouse(worldMap(), wallBaseColor, wallTopColor);
 
         // exclude normal pellets from wireframe display
         mazeGroup.lookupAll("*").stream()
                 .filter(Shape3D.class::isInstance)
                 .map(Shape3D.class::cast)
                 .forEach(shape3D -> shape3D.drawModeProperty()
-                        .bind(wireframePy.map(wireframe -> wireframe ? DrawMode.LINE : DrawMode.FILL)));
+                        .bind(wireframe.map(wireframe -> wireframe ? DrawMode.LINE : DrawMode.FILL)));
 
-        addActorShape(pacmanShape3D, worldMap, WorldMapProperty.POS_PAC);
-        addActorShape(ghostShapes[0], worldMap, WorldMapProperty.POS_RED_GHOST);
-        addActorShape(ghostShapes[1], worldMap, WorldMapProperty.POS_PINK_GHOST);
-        addActorShape(ghostShapes[2], worldMap, WorldMapProperty.POS_CYAN_GHOST);
-        addActorShape(ghostShapes[3], worldMap, WorldMapProperty.POS_ORANGE_GHOST);
+        addActorShape(pacmanShape3D,  worldMap(), WorldMapProperty.POS_PAC);
+        addActorShape(ghostShapes[0], worldMap(), WorldMapProperty.POS_RED_GHOST);
+        addActorShape(ghostShapes[1], worldMap(), WorldMapProperty.POS_PINK_GHOST);
+        addActorShape(ghostShapes[2], worldMap(), WorldMapProperty.POS_CYAN_GHOST);
+        addActorShape(ghostShapes[3], worldMap(), WorldMapProperty.POS_ORANGE_GHOST);
     }
 
     private void addHouse(WorldMap worldMap, Color wallBaseColor, Color wallTopColor) {
@@ -229,7 +241,7 @@ public class Maze3D extends Group {
     private boolean isWorldBorder(WorldMap worldMap, Obstacle obstacle) {
         Vector2i start = obstacle.startPoint();
         if (obstacle.isClosed()) {
-            return start.x() == TS || start.y() == EMPTY_ROWS_OVER_MAZE * TS + HTS;
+            return start.x() == TS || start.y() == EMPTY_ROWS_BEFORE_MAZE * TS + HTS;
         } else {
             return start.x() == 0 || start.x() == worldMap.numCols() * TS;
         }
