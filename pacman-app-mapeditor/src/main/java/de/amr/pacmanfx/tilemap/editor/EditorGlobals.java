@@ -4,6 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tilemap.editor;
 
+import de.amr.pacmanfx.lib.RectShort;
+import de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -13,9 +15,12 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.text.MessageFormat;
+import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+import static de.amr.pacmanfx.model.WorldMapProperty.*;
+import static de.amr.pacmanfx.model.WorldMapProperty.POS_BONUS;
 import static java.util.Objects.requireNonNull;
 
 public class EditorGlobals {
@@ -52,6 +57,15 @@ public class EditorGlobals {
     public static final ExtensionFilter FILTER_WORLD_MAP_FILES = new ExtensionFilter("World Map", "*.world");
     public static final ExtensionFilter FILTER_IMAGE_FILES     = new ExtensionFilter("Image", "*.bmp", "*.gif", "*.jpg", "*.png");
     public static final ExtensionFilter FILTER_ALL_FILES       = new ExtensionFilter("Any File", "*.*");
+
+    public static final Map<String, RectShort> ACTOR_SPRITES = Map.of(
+        POS_PAC,          ArcadeSprites.PAC_MAN,
+        POS_RED_GHOST,    ArcadeSprites.RED_GHOST,
+        POS_PINK_GHOST,   ArcadeSprites.PINK_GHOST,
+        POS_CYAN_GHOST,   ArcadeSprites.CYAN_GHOST,
+        POS_ORANGE_GHOST, ArcadeSprites.ORANGE_GHOST,
+        POS_BONUS,        ArcadeSprites.STRAWBERRY
+    );
 
     public static boolean matchesExtensionFilter(File file, ExtensionFilter filter) {
         requireNonNull(file);

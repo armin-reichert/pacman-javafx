@@ -10,7 +10,8 @@ import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.tilemap.editor.actions.*;
-import de.amr.pacmanfx.tilemap.editor.rendering.EditorActorRenderer;
+import de.amr.pacmanfx.tilemap.editor.rendering.ActorSpriteRenderer;
+import de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites;
 import de.amr.pacmanfx.tilemap.editor.rendering.TerrainTileMapRenderer;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
@@ -35,10 +36,16 @@ import java.util.function.Predicate;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.*;
 import static de.amr.pacmanfx.tilemap.editor.EditorUtil.*;
-import static de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites.*;
 import static java.util.Objects.requireNonNull;
 
 public class EditCanvas extends Canvas {
+
+    static class EditorTerrainRenderer extends TerrainTileMapRenderer implements ActorSpriteRenderer {
+
+        public EditorTerrainRenderer(Canvas canvas) {
+            super(canvas);
+        }
+    }
 
     public static final Cursor CURSOR_RUBBER = Cursor.cursor(urlString("graphics/radiergummi.jpg"));
 
@@ -62,9 +69,8 @@ public class EditCanvas extends Canvas {
     private final ObstacleEditor obstacleEditor;
     private final ContextMenu contextMenu = new ContextMenu();
 
-    private final TerrainTileMapRenderer terrainRenderer;
+    private final EditorTerrainRenderer terrainRenderer;
     private final FoodMapRenderer foodRenderer;
-    private final EditorActorRenderer actorRenderer;
 
     private final EditorUI ui;
 
@@ -108,14 +114,11 @@ public class EditCanvas extends Canvas {
         terrainVisibleProperty().bind(ui.terrainVisibleProperty());
         worldMapProperty().bind(ui.editor().currentWorldMapProperty());
 
-        terrainRenderer = new TerrainTileMapRenderer(this);
+        terrainRenderer = new EditorTerrainRenderer(this);
         terrainRenderer.scalingProperty().bind(scaling);
 
         foodRenderer = new FoodMapRenderer(this);
         foodRenderer.scalingProperty().bind(scaling);
-
-        actorRenderer = new EditorActorRenderer(this);
-        actorRenderer.scalingProperty().bind(scaling);
 
         setOnContextMenuRequested(this::onContextMenuRequested);
         setOnKeyPressed(this::onKeyPressed);
@@ -291,19 +294,19 @@ public class EditCanvas extends Canvas {
 
         // Food
         if (foodVisible.get()) {
-            Color foodColor = getColorFromMap(worldMap(), LayerID.FOOD, WorldMapProperty.COLOR_FOOD, parseColor(MS_PACMAN_COLOR_FOOD));
+            Color foodColor = getColorFromMap(worldMap(), LayerID.FOOD, WorldMapProperty.COLOR_FOOD, parseColor(ArcadeSprites.MS_PACMAN_COLOR_FOOD));
             foodRenderer.setEnergizerColor(foodColor);
             foodRenderer.setPelletColor(foodColor);
             worldMap().tiles().forEach(tile -> foodRenderer.drawTile(tile, worldMap().content(LayerID.FOOD, tile)));
         }
 
         if (actorsVisible.get()) {
-            actorRenderer.drawActor(worldMap().getTerrainTileProperty(WorldMapProperty.POS_PAC), PAC_MAN);
-            actorRenderer.drawActor(worldMap().getTerrainTileProperty(WorldMapProperty.POS_RED_GHOST), RED_GHOST);
-            actorRenderer.drawActor(worldMap().getTerrainTileProperty(WorldMapProperty.POS_PINK_GHOST), PINK_GHOST);
-            actorRenderer.drawActor(worldMap().getTerrainTileProperty(WorldMapProperty.POS_CYAN_GHOST), CYAN_GHOST);
-            actorRenderer.drawActor(worldMap().getTerrainTileProperty(WorldMapProperty.POS_ORANGE_GHOST), ORANGE_GHOST);
-            actorRenderer.drawActor(worldMap().getTerrainTileProperty(WorldMapProperty.POS_BONUS), STRAWBERRY);
+            ACTOR_SPRITES.forEach((positionProperty, sprite) -> {
+                Vector2i tile = worldMap().getTerrainTileProperty(positionProperty);
+                if (tile != null) {
+                    terrainRenderer.drawActorSprite(tile, sprite);
+                }
+            });
         }
 
         if (focussedTile() != null) {

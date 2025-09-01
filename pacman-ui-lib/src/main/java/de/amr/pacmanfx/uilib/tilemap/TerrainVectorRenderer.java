@@ -26,7 +26,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Vector renderer for terrain tile maps.
  */
-public class TerrainMapRenderer extends BaseCanvasRenderer implements TileRenderer {
+public class TerrainVectorRenderer extends BaseCanvasRenderer implements TileRenderer {
 
     public static final double DEFAULT_DOUBLE_STROKE_OUTER_WIDTH = 4;
     public static final double DEFAULT_DOUBLE_STROKE_INNER_WIDTH = 2;
@@ -38,14 +38,14 @@ public class TerrainMapRenderer extends BaseCanvasRenderer implements TileRender
     protected final DoubleProperty doubleStrokeInnerWidth = new SimpleDoubleProperty(DEFAULT_DOUBLE_STROKE_INNER_WIDTH);
     protected final DoubleProperty singleStrokeWidth = new SimpleDoubleProperty(DEFAULT_SINGLE_STROKE_WIDTH);
 
-    public TerrainMapRenderer(Canvas canvas) {
+    public TerrainVectorRenderer(Canvas canvas) {
         super(canvas);
     }
 
     @Override
     public void drawTile(Vector2i tile, byte content) {
         // this renderer doesn't draw tiles individually but complete paths
-        //TODO adjust renderer types
+        //TODO adjust renderer type hierarchy
     }
 
     public ObjectProperty<TerrainMapColorScheme> colorSchemeProperty() {

@@ -14,7 +14,7 @@ import de.amr.pacmanfx.tilemap.editor.rendering.TerrainTileMapRenderer;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapColorScheme;
-import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer;
+import de.amr.pacmanfx.uilib.tilemap.TerrainVectorRenderer;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
@@ -602,7 +602,7 @@ public class EditorUI {
         }
     }
 
-    private Palette createTerrainPalette(TerrainMapRenderer renderer) {
+    private Palette createTerrainPalette(TerrainVectorRenderer renderer) {
         var palette = new Palette(PaletteID.TERRAIN, TOOL_SIZE, 1, 13);
         palette.addTool(makeTileTool(TerrainTile.EMPTY.$, "Empty Space"));
         palette.addTool(makeTileTool(TerrainTile.WALL_H.$, "Horizontal Wall"));

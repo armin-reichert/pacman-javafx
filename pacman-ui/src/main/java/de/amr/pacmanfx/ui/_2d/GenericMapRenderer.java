@@ -10,7 +10,7 @@ import de.amr.pacmanfx.uilib.rendering.BaseCanvasRenderer;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
 import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapColorScheme;
-import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer;
+import de.amr.pacmanfx.uilib.tilemap.TerrainVectorRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
@@ -23,14 +23,14 @@ import static java.util.function.Predicate.not;
  */
 public class GenericMapRenderer extends BaseCanvasRenderer {
 
-    private final TerrainMapRenderer terrainRenderer;
+    private final TerrainVectorRenderer terrainRenderer;
     private final FoodMapRenderer foodRenderer;
     private TerrainMapColorScheme blinkingOnColors;
     private TerrainMapColorScheme blinkingOffColors;
 
     public GenericMapRenderer(Canvas canvas) {
         super(canvas);
-        terrainRenderer = new TerrainMapRenderer(canvas);
+        terrainRenderer = new TerrainVectorRenderer(canvas);
         terrainRenderer.backgroundColorProperty().bind(backgroundColorProperty());
         terrainRenderer.scalingProperty().bind(scalingProperty());
         foodRenderer = new FoodMapRenderer(canvas);

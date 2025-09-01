@@ -10,7 +10,7 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.*;
 import de.amr.pacmanfx.model.WorldMapProperty;
-import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer;
+import de.amr.pacmanfx.uilib.tilemap.TerrainVectorRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
@@ -30,7 +30,7 @@ import static de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites.SPRITE_SHEE
 /**
  * Tile-based renderer used in editor. At runtime and in the 2D editor preview, the path based renderer is used.
  */
-public class TerrainTileMapRenderer extends TerrainMapRenderer {
+public class TerrainTileMapRenderer extends TerrainVectorRenderer {
 
     private static final Color[] RANDOM_COLORS = new Color[30];
     static {
