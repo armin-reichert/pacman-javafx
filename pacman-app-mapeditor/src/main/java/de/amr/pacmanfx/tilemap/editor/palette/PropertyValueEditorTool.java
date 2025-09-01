@@ -9,7 +9,7 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.tilemap.editor.rendering.TerrainTileMapRenderer;
-import de.amr.pacmanfx.uilib.tilemap.TileRenderer;
+import de.amr.pacmanfx.uilib.rendering.CanvasRenderer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -25,10 +25,16 @@ public class PropertyValueEditorTool implements EditorTool {
     protected final String propertyName;
     protected final String description;
 
-    protected final BiConsumer<LayerID, Vector2i> editor;
+    protected BiConsumer<LayerID, Vector2i> editor;
 
     public PropertyValueEditorTool(BiConsumer<LayerID, Vector2i> editor, double size, String propertyName, String description) {
         this.editor = requireNonNull(editor);
+        this.size = size;
+        this.propertyName = propertyName;
+        this.description = description;
+    }
+
+    protected PropertyValueEditorTool(double size, String propertyName, String description) {
         this.size = size;
         this.propertyName = propertyName;
         this.description = description;
@@ -45,7 +51,7 @@ public class PropertyValueEditorTool implements EditorTool {
     }
 
     @Override
-    public void draw(TileRenderer renderer, int row, int col) {
+    public void draw(CanvasRenderer renderer, int row, int col) {
         GraphicsContext g = renderer.ctx();
         g.setFill(Color.BLACK);
         g.fillRect(col * size, row * size, size, size);
@@ -54,7 +60,6 @@ public class PropertyValueEditorTool implements EditorTool {
             g.setImageSmoothing(true);
             g.scale(size / (double) TS, size / (double) TS);
             Vector2i tile = new Vector2i(col, row);
-            double x = col * TS, y = row * TS;
             switch (propertyName) {
                 case WorldMapProperty.POS_SCATTER_RED_GHOST -> tr.drawScatterTarget(tile, Color.RED);
                 case WorldMapProperty.POS_SCATTER_PINK_GHOST -> tr.drawScatterTarget(tile, Color.PINK);

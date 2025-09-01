@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tilemap.editor.palette;
 
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
-import de.amr.pacmanfx.uilib.tilemap.TileRenderer;
+import de.amr.pacmanfx.uilib.rendering.CanvasRenderer;
 
 import java.util.function.BiConsumer;
 
@@ -16,5 +16,5 @@ public interface EditorTool {
 
     BiConsumer<LayerID, Vector2i> editor();
 
-    void draw(TileRenderer renderer, int row, int col);
+    void draw(CanvasRenderer renderer, int row, int col);
 }

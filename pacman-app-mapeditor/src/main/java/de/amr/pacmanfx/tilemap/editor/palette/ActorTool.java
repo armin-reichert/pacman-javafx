@@ -1,26 +1,33 @@
+/*
+Copyright (c) 2021-2025 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.pacmanfx.tilemap.editor.palette;
 
-import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.lib.tilemap.LayerID;
-import de.amr.pacmanfx.model.WorldMapProperty;
-import de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites;
-import de.amr.pacmanfx.uilib.tilemap.TileRenderer;
+import de.amr.pacmanfx.lib.RectShort;
+import de.amr.pacmanfx.tilemap.editor.EditorUI;
+import de.amr.pacmanfx.tilemap.editor.actions.Action_SetTerrainProperty;
+import de.amr.pacmanfx.uilib.rendering.CanvasRenderer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-import java.util.function.BiConsumer;
-
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites.PAC_MAN;
+import static de.amr.pacmanfx.lib.tilemap.WorldMapFormatter.formatTile;
+import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.TOOL_SIZE;
+import static java.util.Objects.requireNonNull;
 
 public class ActorTool extends PropertyValueEditorTool {
 
-    public ActorTool(BiConsumer<LayerID, Vector2i> editor, double size, String propertyName, String description) {
-        super(editor, size, propertyName, description);
+    private final RectShort sprite;
+
+    public ActorTool(EditorUI ui, String propertyName, String description, RectShort sprite) {
+        super(TOOL_SIZE, propertyName, description);
+        this.sprite = requireNonNull(sprite);
+        editor = (layerID, tile) -> new Action_SetTerrainProperty(ui.editor(), propertyName, formatTile(tile)).execute();
     }
 
     @Override
-    public void draw(TileRenderer renderer, int row, int col) {
+    public void draw(CanvasRenderer renderer, int row, int col) {
         GraphicsContext g = renderer.ctx();
         g.setFill(Color.BLACK);
         g.fillRect(col * size, row * size, size, size);
@@ -28,14 +35,7 @@ public class ActorTool extends PropertyValueEditorTool {
         g.setImageSmoothing(true);
         g.scale(size / (double) TS, size / (double) TS);
         double x = col * TS, y = row * TS;
-        switch (propertyName) {
-            case WorldMapProperty.POS_PAC -> drawSprite(g, x, y, PAC_MAN);
-            case WorldMapProperty.POS_RED_GHOST -> drawSprite(g, x, y, ArcadeSprites.RED_GHOST);
-            case WorldMapProperty.POS_PINK_GHOST -> drawSprite(g, x, y, ArcadeSprites.PINK_GHOST);
-            case WorldMapProperty.POS_CYAN_GHOST -> drawSprite(g, x, y, ArcadeSprites.CYAN_GHOST);
-            case WorldMapProperty.POS_ORANGE_GHOST -> drawSprite(g, x, y, ArcadeSprites.ORANGE_GHOST);
-            case WorldMapProperty.POS_BONUS -> drawSprite(g, x, y, ArcadeSprites.STRAWBERRY);
-        }
+        drawSprite(g, x, y, sprite);
         g.restore();
     }
 }

@@ -6,6 +6,7 @@ package de.amr.pacmanfx.tilemap.editor.palette;
 
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
+import de.amr.pacmanfx.uilib.rendering.CanvasRenderer;
 import de.amr.pacmanfx.uilib.tilemap.TileRenderer;
 import javafx.scene.paint.Color;
 
@@ -39,9 +40,11 @@ public class TileValueEditorTool implements EditorTool {
     }
 
     @Override
-    public void draw(TileRenderer renderer, int row, int col) {
+    public void draw(CanvasRenderer renderer, int row, int col) {
         renderer.ctx().setFill(Color.BLACK);
         renderer.ctx().fillRect(col * size, row * size, size, size);
-        renderer.drawTile(new Vector2i(col, row), value);
+        if (renderer instanceof TileRenderer tileRenderer) {
+            tileRenderer.drawTile(new Vector2i(col, row), value);
+        }
     }
 }
