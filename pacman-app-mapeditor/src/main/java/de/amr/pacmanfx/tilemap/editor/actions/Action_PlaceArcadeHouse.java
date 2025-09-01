@@ -7,6 +7,7 @@ import de.amr.pacmanfx.lib.tilemap.TerrainTile;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
+import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
 import static de.amr.pacmanfx.lib.tilemap.WorldMapFormatter.formatTile;
@@ -34,6 +35,11 @@ public class Action_PlaceArcadeHouse extends AbstractEditorAction<Void> {
     @Override
     public Void execute() {
         Vector2i houseMaxTile = houseMinTile.plus(7, 4);
+
+        if (worldMap.outOfWorld(houseMinTile) || worldMap.outOfWorld(houseMaxTile)) {
+            Logger.error("Illegal house position min: {} max: {}", houseMinTile, houseMaxTile);
+            return null;
+        }
 
         Vector2i oldHouseMinTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE);
         Vector2i oldHouseMaxTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE);
@@ -67,12 +73,16 @@ public class Action_PlaceArcadeHouse extends AbstractEditorAction<Void> {
         Vector2i maxAround = houseMaxTile.plus(1,1);
         for (int x = minAround.x(); x <= maxAround.x(); ++x) {
             // Note: parameters are row and col (y and x)
+            if (worldMap.outOfWorld(minAround.y(), x)) continue;
+            if (worldMap.outOfWorld(maxAround.y(), x)) continue;
             if (x >= 0) {
                 worldMap.setContent(LayerID.FOOD, minAround.y(), x, FoodTile.EMPTY.code());
                 worldMap.setContent(LayerID.FOOD, maxAround.y(), x, FoodTile.EMPTY.code());
             }
         }
         for (int y = minAround.y(); y <= maxAround.y(); ++y) {
+            if (worldMap.outOfWorld(y, minAround.x())) continue;
+            if (worldMap.outOfWorld(y, maxAround.x())) continue;
             // Note: parameters are row and col (y and x)
             worldMap.setContent(LayerID.FOOD, y, minAround.x(), FoodTile.EMPTY.code());
             worldMap.setContent(LayerID.FOOD, y, maxAround.x(), FoodTile.EMPTY.code());
