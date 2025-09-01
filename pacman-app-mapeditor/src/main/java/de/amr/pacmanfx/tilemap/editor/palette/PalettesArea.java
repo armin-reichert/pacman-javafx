@@ -2,11 +2,12 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.tilemap.editor;
+package de.amr.pacmanfx.tilemap.editor.palette;
 
 import de.amr.pacmanfx.lib.tilemap.FoodTile;
 import de.amr.pacmanfx.lib.tilemap.TerrainTile;
 import de.amr.pacmanfx.model.WorldMapProperty;
+import de.amr.pacmanfx.tilemap.editor.EditorUI;
 import de.amr.pacmanfx.tilemap.editor.actions.Action_SetFoodProperty;
 import de.amr.pacmanfx.tilemap.editor.actions.Action_SetTerrainProperty;
 import de.amr.pacmanfx.tilemap.editor.actions.Action_SetTileCode;

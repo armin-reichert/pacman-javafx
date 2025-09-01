@@ -1,7 +1,7 @@
 package de.amr.pacmanfx.tilemap.editor.actions;
 
-import de.amr.pacmanfx.tilemap.editor.Palette;
 import de.amr.pacmanfx.tilemap.editor.EditorUI;
+import de.amr.pacmanfx.tilemap.editor.palette.Palette;
 
 public class Action_SelectNextPaletteEntry extends AbstractEditorUIAction<Void> {
 

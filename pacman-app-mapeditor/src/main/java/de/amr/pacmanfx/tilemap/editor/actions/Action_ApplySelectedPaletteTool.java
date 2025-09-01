@@ -2,8 +2,8 @@ package de.amr.pacmanfx.tilemap.editor.actions;
 
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
-import de.amr.pacmanfx.tilemap.editor.Palette;
 import de.amr.pacmanfx.tilemap.editor.EditorUI;
+import de.amr.pacmanfx.tilemap.editor.palette.Palette;
 import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;

@@ -11,6 +11,7 @@ import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.tilemap.editor.actions.*;
+import de.amr.pacmanfx.tilemap.editor.palette.Palette;
 import de.amr.pacmanfx.tilemap.editor.rendering.ActorSpriteRenderer;
 import de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites;
 import de.amr.pacmanfx.tilemap.editor.rendering.TerrainTileMapRenderer;
@@ -467,9 +468,6 @@ public class EditCanvas extends Canvas {
         miFloodWithPellets.setOnAction(actionEvent -> new Action_FloodWithPellets(ui, worldMap(), tile).execute());
         miFloodWithPellets.setDisable(!canPlaceFoodAtTile(worldMap(), tile));
 
-        var miClearPellets = new MenuItem(translated("menu.edit.clear_food"));
-        miClearPellets.setOnAction(actionEvent -> new Action_ClearFood(editor).execute());
-
         contextMenu.getItems().setAll(
             miInsertRow,
             miDeleteRow,
@@ -477,8 +475,7 @@ public class EditCanvas extends Canvas {
             miPlaceHouse,
             miClearFoodAroundHouse,
             new SeparatorMenuItem(),
-            miFloodWithPellets,
-            miClearPellets);
+            miFloodWithPellets);
 
         contextMenu.show(this, menuEvent.getScreenX(), menuEvent.getScreenY());
     }
