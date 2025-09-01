@@ -16,7 +16,10 @@ import de.amr.pacmanfx.uilib.model3D.GhostBody;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import de.amr.pacmanfx.uilib.model3D.TerrainRenderer3D;
 import de.amr.pacmanfx.uilib.model3D.Wall3D;
-import javafx.beans.property.*;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Point3D;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
@@ -63,14 +66,6 @@ public class Maze3D extends Group {
     public WorldMap worldMap() {
         return worldMap.get();
     }
-
-    private final DoubleProperty width = new SimpleDoubleProperty(800);
-
-    public DoubleProperty widthProperty() { return width; }
-
-    private final DoubleProperty height = new SimpleDoubleProperty(400);
-
-    public DoubleProperty heightProperty() { return height; }
 
     private final BooleanProperty wireframe = new SimpleBooleanProperty(false);
 
