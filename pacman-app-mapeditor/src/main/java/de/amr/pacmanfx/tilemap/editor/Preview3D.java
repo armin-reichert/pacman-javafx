@@ -45,7 +45,7 @@ public class Preview3D {
         requireNonNull(ui.editor());
         requireNonNull(model3DRepository);
 
-        maze3D = new Maze3D(ui, model3DRepository);
+        maze3D = new Maze3D(model3DRepository);
         maze3D.actorsVisibleProperty().bind(ui.actorsVisibleProperty());
         maze3D.worldMapProperty().bind(ui.editor().currentWorldMapProperty());
         maze3D.foodVisibleProperty().bind(foodVisible);

@@ -127,7 +127,7 @@ public class Maze3D extends Group {
     private final Node pacmanShape3D;
     private final GhostBody[] ghostShapes;
 
-    public Maze3D(EditorUI ui, Model3DRepository model3DRepository) {
+    public Maze3D(Model3DRepository model3DRepository) {
         requireNonNull(model3DRepository);
 
         camera = new PerspectiveCamera(true);
