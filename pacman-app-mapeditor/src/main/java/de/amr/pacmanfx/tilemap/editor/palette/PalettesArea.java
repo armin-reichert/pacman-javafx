@@ -48,8 +48,9 @@ public class PalettesArea extends TabPane {
         tabActors.setUserData(PaletteID.ACTORS);
 
         getTabs().setAll(tabTerrain, tabPellets, tabActors);
+
+        setMinHeight(80);
         setPadding(new Insets(5, 5, 5, 5));
-        setMinHeight(75);
 
         getSelectionModel().selectedItemProperty().addListener((py, ov, selectedTab) -> markSelectedPalettesTab(selectedTab));
         markSelectedPalettesTab(getSelectionModel().getSelectedItem());
@@ -64,7 +65,7 @@ public class PalettesArea extends TabPane {
     }
 
     private Palette createTerrainPalette(EditorUI ui, TerrainTileMapRenderer renderer) {
-        var palette = new Palette(PaletteID.TERRAIN, TOOL_SIZE, 1, 13);
+        var palette = new Palette(PaletteID.TERRAIN, 1, 13);
         palette.addTool(new TileCodeEditorTool(ui, TerrainTile.EMPTY.$, "Empty Space"));
         palette.addTool(new TileCodeEditorTool(ui, TerrainTile.WALL_H.$, "Horizontal Wall"));
         palette.addTool(new TileCodeEditorTool(ui, TerrainTile.WALL_V.$, "Vertical Wall"));
@@ -90,7 +91,7 @@ public class PalettesArea extends TabPane {
     }
 
     private Palette createActorsPalette(EditorUI ui, TerrainTileMapRenderer renderer) {
-        var palette = new Palette(PaletteID.ACTORS, TOOL_SIZE, 1, 11);
+        var palette = new Palette(PaletteID.ACTORS, 1, 11);
         palette.addTool(new ActorTool(ui, WorldMapProperty.POS_PAC, "Pac-Man", ArcadeSprites.PAC_MAN));
         palette.addTool(new ActorTool(ui, WorldMapProperty.POS_RED_GHOST, "Red Ghost", ArcadeSprites.RED_GHOST));
         palette.addTool(new ActorTool(ui, WorldMapProperty.POS_PINK_GHOST, "Pink Ghost", ArcadeSprites.PINK_GHOST));
@@ -112,7 +113,7 @@ public class PalettesArea extends TabPane {
     }
 
     private Palette createFoodPalette(EditorUI ui, FoodMapRenderer renderer) {
-        var palette = new Palette(PaletteID.FOOD, TOOL_SIZE, 1, 3);
+        var palette = new Palette(PaletteID.FOOD, 1, 3);
         palette.addTool(new TileCodeEditorTool(ui, FoodTile.EMPTY.code(), "No Food"));
         palette.addTool(new TileCodeEditorTool(ui, FoodTile.PELLET.code(), "Pellet"));
         palette.addTool(new TileCodeEditorTool(ui, FoodTile.ENERGIZER.code(), "Energizer"));
