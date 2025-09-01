@@ -10,9 +10,11 @@ import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.tilemap.editor.rendering.ActorSpriteRenderer;
 import de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites;
+import de.amr.pacmanfx.uilib.tilemap.ArcadeHouseRenderer;
 import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapColorScheme;
 import de.amr.pacmanfx.uilib.tilemap.TerrainVectorRenderer;
+import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -36,6 +38,7 @@ public class Preview2D extends Canvas {
 
     private final PreviewRenderer terrainRenderer;
     private final FoodMapRenderer foodRenderer;
+    private final ArcadeHouseRenderer houseRenderer;
 
     private final DoubleProperty gridSize = new SimpleDoubleProperty(TS);
     private final BooleanProperty terrainVisible = new SimpleBooleanProperty(true);
@@ -43,10 +46,14 @@ public class Preview2D extends Canvas {
     private final BooleanProperty actorsVisible = new SimpleBooleanProperty(true);
 
     public Preview2D() {
+        DoubleBinding scaling = gridSize.divide(TS);
         terrainRenderer = new PreviewRenderer(this);
-        terrainRenderer.scalingProperty().bind(gridSize.divide(TS));
+        terrainRenderer.scalingProperty().bind(scaling);
         foodRenderer = new FoodMapRenderer(this);
-        foodRenderer.scalingProperty().bind(gridSize.divide(TS));
+        foodRenderer.scalingProperty().bind(scaling);
+        houseRenderer = new ArcadeHouseRenderer(this);
+        houseRenderer.scalingProperty().bind(scaling);
+        houseRenderer.colorSchemeProperty().bind(terrainRenderer.colorSchemeProperty());
     }
 
     public DoubleProperty gridSizeProperty() {
@@ -68,8 +75,10 @@ public class Preview2D extends Canvas {
     private void drawHouse(WorldMap worldMap) {
         Vector2i minTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE);
         Vector2i maxTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE);
+        double outerWidth = terrainRenderer.doubleStrokeOuterWidth();
+        double innerWidth = terrainRenderer.doubleStrokeInnerWidth();
         if (minTile != null && maxTile != null) {
-            terrainRenderer.drawHouse(minTile, maxTile.minus(minTile).plus(1, 1));
+            houseRenderer.drawHouse(minTile, maxTile.minus(minTile).plus(1, 1), outerWidth, innerWidth);
         }
     }
 

@@ -26,26 +26,20 @@ import static java.util.Objects.requireNonNull;
 /**
  * Vector renderer for terrain tile maps.
  */
-public class TerrainVectorRenderer extends BaseCanvasRenderer implements TileRenderer {
+public class TerrainVectorRenderer extends BaseCanvasRenderer implements TerrainMapRenderer {
 
     public static final double DEFAULT_DOUBLE_STROKE_OUTER_WIDTH = 4;
     public static final double DEFAULT_DOUBLE_STROKE_INNER_WIDTH = 2;
     public static final double DEFAULT_SINGLE_STROKE_WIDTH = 1;
     public static final TerrainMapColorScheme DEFAULT_COLOR_SCHEME = new TerrainMapColorScheme(Color.BLACK, Color.RED,  Color.GOLD, Color.PINK);
 
-    protected final ObjectProperty<TerrainMapColorScheme> colorScheme = new SimpleObjectProperty<>(DEFAULT_COLOR_SCHEME);
-    protected final DoubleProperty doubleStrokeOuterWidth = new SimpleDoubleProperty(DEFAULT_DOUBLE_STROKE_OUTER_WIDTH);
-    protected final DoubleProperty doubleStrokeInnerWidth = new SimpleDoubleProperty(DEFAULT_DOUBLE_STROKE_INNER_WIDTH);
-    protected final DoubleProperty singleStrokeWidth = new SimpleDoubleProperty(DEFAULT_SINGLE_STROKE_WIDTH);
+    private final ObjectProperty<TerrainMapColorScheme> colorScheme = new SimpleObjectProperty<>(DEFAULT_COLOR_SCHEME);
+    private final DoubleProperty doubleStrokeOuterWidth = new SimpleDoubleProperty(DEFAULT_DOUBLE_STROKE_OUTER_WIDTH);
+    private final DoubleProperty doubleStrokeInnerWidth = new SimpleDoubleProperty(DEFAULT_DOUBLE_STROKE_INNER_WIDTH);
+    private final DoubleProperty singleStrokeWidth = new SimpleDoubleProperty(DEFAULT_SINGLE_STROKE_WIDTH);
 
     public TerrainVectorRenderer(Canvas canvas) {
         super(canvas);
-    }
-
-    @Override
-    public void drawTile(Vector2i tile, byte content) {
-        // this renderer doesn't draw tiles individually but complete paths
-        //TODO adjust renderer type hierarchy
     }
 
     public ObjectProperty<TerrainMapColorScheme> colorSchemeProperty() {
@@ -114,13 +108,14 @@ public class TerrainVectorRenderer extends BaseCanvasRenderer implements TileRen
         ctx().restore();
     }
 
-    protected boolean isBorderObstacle(Obstacle obstacle, WorldMap worldMap) {
+    //TODO move elsewhere
+    private boolean isBorderObstacle(Obstacle obstacle, WorldMap worldMap) {
         Vector2i start = obstacle.startPoint();
         return start.x() <= TS || start.x() >= (worldMap.numCols() - 1) * TS
             || start.y() <= GameLevel.EMPTY_ROWS_OVER_MAZE * TS || start.y() >= (worldMap.numRows() - 1) * TS;
     }
 
-    protected void drawObstacle(Obstacle obstacle, double lineWidth, boolean fill, Color fillColor, Color strokeColor) {
+    private void drawObstacle(Obstacle obstacle, double lineWidth, boolean fill, Color fillColor, Color strokeColor) {
         int r = HTS;
         Vector2i p = obstacle.startPoint();
         ctx().beginPath();
@@ -172,41 +167,5 @@ public class TerrainVectorRenderer extends BaseCanvasRenderer implements TileRen
         ctx().setLineWidth(lineWidth);
         ctx().setStroke(strokeColor);
         ctx().stroke();
-    }
-
-    public void drawHouse(Vector2i origin, Vector2i size) {
-        ctx().save();
-        ctx().scale(scaling(), scaling());
-        drawHouseWalls(origin, size, colorScheme().wallStrokeColor(), doubleStrokeOuterWidth());
-        drawHouseWalls(origin, size, colorScheme().wallFillColor(), doubleStrokeInnerWidth());
-        drawDoors(origin.plus((size.x() / 2 - 1), 0));
-        ctx().restore();
-    }
-
-    protected void drawHouseWalls(Vector2i origin, Vector2i size, Color color, double lineWidth) {
-        Vector2i p = origin.scaled(TS).plus(HTS, HTS);
-        double w = (size.x() - 1) * TS, h = (size.y() - 1) * TS - 2;
-        ctx().save();
-        ctx().beginPath();
-        ctx().moveTo(p.x(), p.y());
-        ctx().lineTo(p.x(), p.y() + h);
-        ctx().lineTo(p.x() + w, p.y() + h);
-        ctx().lineTo(p.x() + w, p.y());
-        ctx().lineTo(p.x() + w - 2 * TS, p.y());
-        ctx().moveTo(p.x(), p.y());
-        ctx().lineTo(p.x() + 2 * TS, p.y());
-        ctx().setLineWidth(lineWidth);
-        ctx().setStroke(color);
-        ctx().stroke();
-        ctx().restore();
-    }
-
-    // assume we always have a pair of horizontally neighbored doors
-    protected void drawDoors(Vector2i tile) {
-        double x = tile.x() * TS, y = tile.y() * TS + 3;
-        ctx().setFill(colorScheme().floorColor());
-        ctx().fillRect(x, y - 1, 2 * TS, 4);
-        ctx().setFill(colorScheme().doorColor());
-        ctx().fillRect(x-2, y, 2 * TS + 4, 2);
     }
 }

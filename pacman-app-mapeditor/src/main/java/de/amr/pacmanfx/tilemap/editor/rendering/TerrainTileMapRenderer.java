@@ -9,8 +9,14 @@ import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.*;
+import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.WorldMapProperty;
-import de.amr.pacmanfx.uilib.tilemap.TerrainVectorRenderer;
+import de.amr.pacmanfx.uilib.rendering.BaseCanvasRenderer;
+import de.amr.pacmanfx.uilib.tilemap.TerrainMapColorScheme;
+import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer;
+import de.amr.pacmanfx.uilib.tilemap.TileRenderer;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
@@ -30,7 +36,11 @@ import static de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites.SPRITE_SHEE
 /**
  * Tile-based renderer used in editor. At runtime and in the 2D editor preview, the path based renderer is used.
  */
-public class TerrainTileMapRenderer extends TerrainVectorRenderer {
+public class TerrainTileMapRenderer extends BaseCanvasRenderer implements TerrainMapRenderer, TileRenderer {
+
+    private static final TerrainMapColorScheme DEFAULT_COLOR_SCHEME = new TerrainMapColorScheme(
+        Color.BLACK, Color.GRAY, Color.BLUE, Color.PINK
+    );
 
     private static final Color[] RANDOM_COLORS = new Color[30];
     static {
@@ -38,6 +48,7 @@ public class TerrainTileMapRenderer extends TerrainVectorRenderer {
             RANDOM_COLORS[i] = Color.rgb(randomInt(0, 256), randomInt(0, 256), randomInt(0, 256));
         }
     }
+
     private static final Color SEGMENT_NUMBER_FILL_COLOR = Color.LIGHTGRAY;
     private static final Color SEGMENT_NUMBER_STROKE_COLOR = Color.BLACK;
     private static final double SEGMENT_NUMBER_FONT_SIZE = 4;
@@ -49,8 +60,23 @@ public class TerrainTileMapRenderer extends TerrainVectorRenderer {
     private final double[] xp = new double[3];
     private final double[] yp = new double[3];
 
+    private final ObjectProperty<TerrainMapColorScheme> colorScheme = new SimpleObjectProperty<>(DEFAULT_COLOR_SCHEME);
+
     public TerrainTileMapRenderer(Canvas canvas) {
         super(canvas);
+    }
+
+    public void setColorScheme(TerrainMapColorScheme colorScheme) {
+        this.colorScheme.set(colorScheme);
+    }
+
+    public TerrainMapColorScheme colorScheme() {
+        return colorScheme.get();
+    }
+
+    @Override
+    public ObjectProperty<TerrainMapColorScheme> colorSchemeProperty() {
+        return colorScheme;
     }
 
     public void setSegmentNumbersDisplayed(boolean segmentNumbersDisplayed) {
@@ -65,7 +91,10 @@ public class TerrainTileMapRenderer extends TerrainVectorRenderer {
     public void draw(WorldMap worldMap, Set<Obstacle> obstacles) {
         ctx().save();
         ctx().scale(scaling(), scaling());
-        worldMap.tiles().forEach(tile -> drawTileUnscaled(tile, worldMap.content(LayerID.TERRAIN, tile)));
+        worldMap.tiles().forEach(tile -> {
+            byte code = worldMap.content(LayerID.TERRAIN, tile);
+            drawTileUnscaled(tile, code);
+        });
         specialTile(worldMap, WorldMapProperty.POS_SCATTER_RED_GHOST).ifPresent(tile -> drawScatterTarget(tile, Color.RED));
         specialTile(worldMap, WorldMapProperty.POS_SCATTER_PINK_GHOST).ifPresent(tile -> drawScatterTarget(tile, Color.PINK));
         specialTile(worldMap, WorldMapProperty.POS_SCATTER_CYAN_GHOST).ifPresent(tile -> drawScatterTarget(tile, Color.CYAN));
@@ -117,11 +146,15 @@ public class TerrainTileMapRenderer extends TerrainVectorRenderer {
             });
         }
         ctx().restore();
+
+        /*
         Vector2i houseMinTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE);
         Vector2i houseMaxTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE);
         if (houseMinTile != null && houseMaxTile != null) {
             drawHouse(houseMinTile, houseMaxTile.minus(houseMinTile).plus(1, 1));
         }
+         */
+
     }
 
     @Override
@@ -130,6 +163,13 @@ public class TerrainTileMapRenderer extends TerrainVectorRenderer {
         ctx().scale(scaling(), scaling());
         drawTileUnscaled(tile, content);
         ctx().restore();
+    }
+
+    //TODO move elsewhere
+    private boolean isBorderObstacle(Obstacle obstacle, WorldMap worldMap) {
+        Vector2i start = obstacle.startPoint();
+        return start.x() <= TS || start.x() >= (worldMap.numCols() - 1) * TS
+            || start.y() <= GameLevel.EMPTY_ROWS_OVER_MAZE * TS || start.y() >= (worldMap.numRows() - 1) * TS;
     }
 
     private Optional<Vector2i> specialTile(WorldMap worldMap, String propertyName) {

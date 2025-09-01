@@ -8,6 +8,7 @@ import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.uilib.rendering.BaseCanvasRenderer;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
+import de.amr.pacmanfx.uilib.tilemap.ArcadeHouseRenderer;
 import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapColorScheme;
 import de.amr.pacmanfx.uilib.tilemap.TerrainVectorRenderer;
@@ -25,17 +26,25 @@ public class GenericMapRenderer extends BaseCanvasRenderer {
 
     private final TerrainVectorRenderer terrainRenderer;
     private final FoodMapRenderer foodRenderer;
+    private final ArcadeHouseRenderer houseRenderer;
+
     private TerrainMapColorScheme blinkingOnColors;
     private TerrainMapColorScheme blinkingOffColors;
 
     public GenericMapRenderer(Canvas canvas) {
         super(canvas);
+
         terrainRenderer = new TerrainVectorRenderer(canvas);
         terrainRenderer.backgroundColorProperty().bind(backgroundColorProperty());
         terrainRenderer.scalingProperty().bind(scalingProperty());
+
         foodRenderer = new FoodMapRenderer(canvas);
         foodRenderer.backgroundColorProperty().bind(backgroundColorProperty());
         foodRenderer.scalingProperty().bind(scalingProperty());
+
+        houseRenderer = new ArcadeHouseRenderer(canvas);
+        houseRenderer.scalingProperty().bind(scalingProperty());
+
         backgroundColorProperty().addListener((py, ov, newColor) -> updateColors(newColor));
         updateColors(backgroundColor());
     }
@@ -61,7 +70,11 @@ public class GenericMapRenderer extends BaseCanvasRenderer {
             terrainRenderer.setColorScheme(colorScheme);
             terrainRenderer.draw(worldMap, worldMap.obstacles());
 
-            gameLevel.house().ifPresent(house -> terrainRenderer.drawHouse(house.minTile(), house.sizeInTiles()));
+            gameLevel.house().ifPresent(house -> {
+                houseRenderer.setColorScheme(colorScheme);
+                houseRenderer.drawHouse(house.minTile(), house.sizeInTiles(),
+                    terrainRenderer.doubleStrokeOuterWidth(),terrainRenderer.doubleStrokeInnerWidth());
+            });
 
             // this is set by the map selector
             Map<String, String> colorMap = gameLevel.worldMap().getConfigValue("colorMap");
