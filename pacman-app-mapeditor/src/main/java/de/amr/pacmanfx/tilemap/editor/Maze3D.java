@@ -82,6 +82,36 @@ public class Maze3D extends Group {
 
     public BooleanProperty terrainVisibleProperty() { return terrainVisible; }
 
+    public final EditorAction<Void> actionRotateLeft = () -> {
+        rotateBy(-2);
+        return null;
+    };
+
+    public final EditorAction<Void> actionRotateRight = () -> {
+        rotateBy(2);
+        return null;
+    };
+
+    public final EditorAction<Void> actionMoveTowardsUser = () -> {
+        setTranslateY(getTranslateY() + 10);
+        return null;
+    };
+
+    public final EditorAction<Void> actionMoveAwayFromUser = () -> {
+        setTranslateY(getTranslateY() - 10);
+        return null;
+    };
+
+    public final EditorAction<Void> actionMoveRight = () -> {
+        setTranslateX(getTranslateX() + 10);
+        return null;
+    };
+
+    public final EditorAction<Void> actionMoveLeft = () -> {
+        setTranslateX(getTranslateX() - 10);
+        return null;
+    };
+
     private final Group mazeGroup = new Group();
     private final Group foodGroup = new Group();
 
@@ -123,18 +153,6 @@ public class Maze3D extends Group {
 
     public PerspectiveCamera camera() {
         return camera;
-    }
-
-    public void moveTowardsUser(double pixels) {
-        setTranslateY(getTranslateY() + pixels);
-    }
-
-    public void moveLeft(double pixels) {
-        setTranslateX(getTranslateX() - pixels);
-    }
-
-    public void moveRight(double pixels) {
-        setTranslateX(getTranslateX() + pixels);
     }
 
     public void rotateBy(double angle) {

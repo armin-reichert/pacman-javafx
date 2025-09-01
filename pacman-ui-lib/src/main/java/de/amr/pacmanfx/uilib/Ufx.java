@@ -372,7 +372,8 @@ public interface Ufx {
         return new CustomMenuItem(text, false);
     }
 
-    public static boolean isBorderObstacle(WorldMap worldMap, Obstacle obstacle) {
+    //TODO check if this covers all cases
+    static boolean isBorderObstacle(WorldMap worldMap, Obstacle obstacle) {
         Vector2i start = obstacle.startPoint();
         if (obstacle.isClosed()) {
             return start.x() == TS || start.y() == GameLevel.EMPTY_ROWS_OVER_MAZE * TS + HTS;
@@ -380,12 +381,4 @@ public interface Ufx {
             return start.x() == 0 || start.x() == worldMap.numCols() * TS;
         }
     }
-
-    /*
-    private boolean isBorderObstacle(Obstacle obstacle, WorldMap worldMap) {
-        Vector2i start = obstacle.startPoint();
-        return start.x() <= TS || start.x() >= (worldMap.numCols() - 1) * TS
-                || start.y() <= GameLevel.EMPTY_ROWS_OVER_MAZE * TS || start.y() >= (worldMap.numRows() - 1) * TS;
-    }
-     */
 }

@@ -12,12 +12,7 @@ import static de.amr.pacmanfx.Globals.TS;
 
 public class ArcadeHouseRenderer extends BaseCanvasRenderer {
 
-    private static final TerrainMapColorScheme DEFAULT_COLOR_SCHEME = new TerrainMapColorScheme(
-        Color.BLACK, Color.GRAY, Color.BLUE, Color.PINK
-    );
-
-
-    private final ObjectProperty<TerrainMapColorScheme> colorScheme = new SimpleObjectProperty<>(DEFAULT_COLOR_SCHEME);
+    private final ObjectProperty<TerrainMapColorScheme> colorScheme = new SimpleObjectProperty<>(TerrainMapRenderer.DEFAULT_COLOR_SCHEME);
 
     public void setColorScheme(TerrainMapColorScheme colorScheme) {
         this.colorScheme.set(colorScheme);

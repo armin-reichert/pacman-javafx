@@ -37,10 +37,6 @@ import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
  */
 public class TerrainTileMapRenderer extends BaseCanvasRenderer implements TerrainMapRenderer, TileRenderer {
 
-    private static final TerrainMapColorScheme DEFAULT_COLOR_SCHEME = new TerrainMapColorScheme(
-        Color.BLACK, Color.GRAY, Color.BLUE, Color.PINK
-    );
-
     private static final Color[] RANDOM_COLORS = new Color[30];
     static {
         for (int i = 0; i < RANDOM_COLORS.length; ++i) {

@@ -31,7 +31,6 @@ public class TerrainVectorRenderer extends BaseCanvasRenderer implements Terrain
     public static final double DEFAULT_DOUBLE_STROKE_OUTER_WIDTH = 4;
     public static final double DEFAULT_DOUBLE_STROKE_INNER_WIDTH = 2;
     public static final double DEFAULT_SINGLE_STROKE_WIDTH = 1;
-    public static final TerrainMapColorScheme DEFAULT_COLOR_SCHEME = new TerrainMapColorScheme(Color.BLACK, Color.RED,  Color.GOLD, Color.PINK);
 
     private final ObjectProperty<TerrainMapColorScheme> colorScheme = new SimpleObjectProperty<>(DEFAULT_COLOR_SCHEME);
     private final DoubleProperty doubleStrokeOuterWidth = new SimpleDoubleProperty(DEFAULT_DOUBLE_STROKE_OUTER_WIDTH);

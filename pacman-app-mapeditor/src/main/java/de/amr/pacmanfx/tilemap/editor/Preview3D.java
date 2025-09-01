@@ -87,22 +87,22 @@ public class Preview3D {
         boolean control = e.isControlDown(), shift = e.isShiftDown();
         KeyCode key = e.getCode();
         if (control && !shift && key == KeyCode.LEFT) {
-            maze3D.rotateBy(-2);
+            maze3D.actionRotateLeft.execute();
         }
         else if (control && !shift && key == KeyCode.RIGHT) {
-            maze3D.rotateBy(2);
+            maze3D.actionRotateRight.execute();
         }
         else if (control && shift && key == KeyCode.UP) {
-            maze3D.moveTowardsUser(10);
+            maze3D.actionMoveTowardsUser.execute();
         }
         else if (control && shift && key == KeyCode.DOWN) {
-            maze3D.moveTowardsUser(-10);
+            maze3D.actionMoveAwayFromUser.execute();
         }
         else  if (control && shift && key == KeyCode.LEFT) {
-            maze3D.moveRight(10);
+            maze3D.actionMoveLeft.execute();
         }
         else if (control && shift && key == KeyCode.RIGHT) {
-            maze3D.moveLeft(10);
+            maze3D.actionMoveRight.execute();
         }
     }
 
