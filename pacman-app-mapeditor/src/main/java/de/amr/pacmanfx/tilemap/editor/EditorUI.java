@@ -743,6 +743,7 @@ public class EditorUI {
         if (terrainPropertiesEditorPane != null) {
             terrainPropertiesEditorPane.setTileMap(worldMap, LayerID.TERRAIN);
         }
+        preview3D.updateMaze();
     }
 
     public void onFoodMapChanged(WorldMap worldMap) {

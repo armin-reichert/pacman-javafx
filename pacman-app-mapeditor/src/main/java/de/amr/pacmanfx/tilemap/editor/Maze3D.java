@@ -155,7 +155,9 @@ public class Maze3D extends Group {
             ghostShape.visibleProperty().bind(actorsVisibleProperty());
         }
 
-        worldMapProperty().addListener((py, ov, nv) -> updateMaze());
+        worldMapProperty().addListener((py, oldMap, newMap) -> {
+            if (newMap != null) updateMaze();
+        });
     }
 
     public PerspectiveCamera camera() {
@@ -167,7 +169,7 @@ public class Maze3D extends Group {
         setRotate(getRotate() + angle);
     }
 
-    private void updateMaze() {
+    public void updateMaze() {
         final double worldWidth = worldMap().numCols() * TS;
         final double worldHeight = worldMap().numRows() * TS;
 
@@ -203,7 +205,7 @@ public class Maze3D extends Group {
         }
         r3D.setOnWallCreated(null);
 
-        addHouse(worldMap(), wallBaseColor, wallTopColor);
+        addHouse(wallBaseColor, wallTopColor);
 
         // exclude normal pellets from wireframe display
         mazeGroup.lookupAll("*").stream()
@@ -212,16 +214,16 @@ public class Maze3D extends Group {
                 .forEach(shape3D -> shape3D.drawModeProperty()
                         .bind(wireframe.map(wireframe -> wireframe ? DrawMode.LINE : DrawMode.FILL)));
 
-        addActorShape(pacmanShape3D,  worldMap(), WorldMapProperty.POS_PAC);
-        addActorShape(ghostShapes[0], worldMap(), WorldMapProperty.POS_RED_GHOST);
-        addActorShape(ghostShapes[1], worldMap(), WorldMapProperty.POS_PINK_GHOST);
-        addActorShape(ghostShapes[2], worldMap(), WorldMapProperty.POS_CYAN_GHOST);
-        addActorShape(ghostShapes[3], worldMap(), WorldMapProperty.POS_ORANGE_GHOST);
+        addActorShape(pacmanShape3D,  WorldMapProperty.POS_PAC);
+        addActorShape(ghostShapes[0], WorldMapProperty.POS_RED_GHOST);
+        addActorShape(ghostShapes[1], WorldMapProperty.POS_PINK_GHOST);
+        addActorShape(ghostShapes[2], WorldMapProperty.POS_CYAN_GHOST);
+        addActorShape(ghostShapes[3], WorldMapProperty.POS_ORANGE_GHOST);
     }
 
-    private void addHouse(WorldMap worldMap, Color wallBaseColor, Color wallTopColor) {
-        Vector2i houseMinTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE);
-        Vector2i houseMaxTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE);
+    private void addHouse(Color wallBaseColor, Color wallTopColor) {
+        Vector2i houseMinTile = worldMap().getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE);
+        Vector2i houseMaxTile = worldMap().getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE);
         if (houseMinTile == null || houseMaxTile == null) {
             return;
         }
@@ -246,7 +248,7 @@ public class Maze3D extends Group {
         r3D.createWallBetweenTileCoordinates(houseLeftLower, houseMaxTile, Wall3D.DEFAULT_WALL_THICKNESS);
         r3D.createWallBetweenTileCoordinates(houseMaxTile, houseRightUpper, Wall3D.DEFAULT_WALL_THICKNESS);
 
-        Color doorColor = getColorFromMap(worldMap, LayerID.TERRAIN, WorldMapProperty.COLOR_DOOR, parseColor(MS_PACMAN_COLOR_DOOR));
+        Color doorColor = getColorFromMap(worldMap(), LayerID.TERRAIN, WorldMapProperty.COLOR_DOOR, parseColor(MS_PACMAN_COLOR_DOOR));
         var doorMaterial = coloredMaterial(doorColor);
         Stream.of(houseMinTile.plus(3, 0), houseMinTile.plus(4, 0)).forEach(doorTile -> {
             Box door = new Box(TS + HTS, 2, HOUSE_DOOR_HEIGHT);
@@ -259,8 +261,8 @@ public class Maze3D extends Group {
         });
     }
 
-    private void addActorShape(Node actorShape, WorldMap worldMap, String actorTilePropertyName) {
-        Vector2i tile = worldMap.getTerrainTileProperty(actorTilePropertyName);
+    private void addActorShape(Node actorShape, String actorTilePropertyName) {
+        Vector2i tile = worldMap().getTerrainTileProperty(actorTilePropertyName);
         if (tile == null) {
             return;
         }
@@ -271,13 +273,16 @@ public class Maze3D extends Group {
         mazeGroup.getChildren().add(actorShape);
     }
 
-    public void updateFood(WorldMap worldMap) {
-        Color foodColor = getColorFromMap(worldMap, LayerID.FOOD, WorldMapProperty.COLOR_FOOD, parseColor(MS_PACMAN_COLOR_FOOD));
+    public void updateFood() {
+        if (worldMap() == null) {
+            return;
+        }
+        Color foodColor = getColorFromMap(worldMap(), LayerID.FOOD, WorldMapProperty.COLOR_FOOD, parseColor(MS_PACMAN_COLOR_FOOD));
         var foodMaterial = coloredMaterial(foodColor);
         foodGroup.getChildren().clear();
-        worldMap.tiles().filter(tile -> hasFoodAt(worldMap, tile)).forEach(tile -> {
+        worldMap().tiles().filter(this::hasFoodAt).forEach(tile -> {
             Point3D position = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -4);
-            boolean energizer = hasEnergizerAt(worldMap, tile);
+            boolean energizer = hasEnergizerAt(tile);
             var pellet = new Sphere(energizer ? 4 : 1, 32);
             pellet.setMaterial(foodMaterial);
             pellet.setTranslateX(position.getX());
@@ -287,11 +292,11 @@ public class Maze3D extends Group {
         });
     }
 
-    private boolean hasFoodAt(WorldMap worldMap, Vector2i tile) {
-        return worldMap.content(LayerID.FOOD, tile) != FoodTile.EMPTY.code();
+    private boolean hasFoodAt(Vector2i tile) {
+        return worldMap().content(LayerID.FOOD, tile) != FoodTile.EMPTY.code();
     }
 
-    private boolean hasEnergizerAt(WorldMap worldMap, Vector2i tile) {
-        return worldMap.content(LayerID.FOOD, tile) == FoodTile.ENERGIZER.code();
+    private boolean hasEnergizerAt(Vector2i tile) {
+        return worldMap().content(LayerID.FOOD, tile) == FoodTile.ENERGIZER.code();
     }
 }

@@ -90,9 +90,11 @@ public class Preview3D {
     }
 
     public void updateFood() {
-        if (worldMap() != null) {
-            maze3D.updateFood(worldMap());
-        }
+        maze3D.updateFood();
+    }
+
+    public void updateMaze() {
+        maze3D.updateMaze();
     }
 
     public void reset() {
