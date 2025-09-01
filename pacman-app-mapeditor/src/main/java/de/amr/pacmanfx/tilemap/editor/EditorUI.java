@@ -546,7 +546,7 @@ public class EditorUI {
         createSourceView();
 
         tabPreview2D = new Tab(translated("preview2D"), spPreview2D);
-        Tab tabPreview3D = new Tab(translated("preview3D"), preview3D.getSubScene());
+        Tab tabPreview3D = new Tab(translated("preview3D"), preview3D.subScene());
         Tab tabSourceView = new Tab(translated("source"), sourceView);
 
         TabPane tabPane = new TabPane(tabPreview2D, tabPreview3D, tabSourceView);
@@ -554,8 +554,8 @@ public class EditorUI {
         tabPane.getTabs().forEach(tab -> tab.setClosable(false));
         tabPane.getSelectionModel().select(tabPreview2D);
 
-        preview3D.getSubScene().widthProperty().bind(tabPane.widthProperty());
-        preview3D.getSubScene().heightProperty().bind(tabPane.heightProperty());
+        preview3D.subScene().widthProperty().bind(tabPane.widthProperty());
+        preview3D.subScene().heightProperty().bind(tabPane.heightProperty());
 
         splitPaneMapEditorAndPreviews = new SplitPane(tabPaneEditorViews, tabPane);
         splitPaneMapEditorAndPreviews.setDividerPositions(0.5);

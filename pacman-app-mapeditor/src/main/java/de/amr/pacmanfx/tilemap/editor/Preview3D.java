@@ -23,10 +23,17 @@ import static java.util.Objects.requireNonNull;
 
 public class Preview3D {
 
+    public static final int DEFAULT_CAMERA_ROTATE = 60;
+    public static final double DEFAULT_SCROLL_SPEED = 0.25;
+
     private final ObjectProperty<WorldMap> worldMap = new SimpleObjectProperty<>();
+
     private final BooleanProperty foodVisible = new SimpleBooleanProperty(true);
+
     private final BooleanProperty terrainVisible = new SimpleBooleanProperty(true);
+
     private final SubScene subScene;
+
     private final Maze3D maze3D;
 
     // for rotating 3D preview
@@ -34,6 +41,8 @@ public class Preview3D {
     private double anchorAngle;
 
     public Preview3D(EditorUI ui, Model3DRepository model3DRepository, double width, double height) {
+        requireNonNull(ui);
+        requireNonNull(ui.editor());
         requireNonNull(model3DRepository);
 
         maze3D = new Maze3D(ui, model3DRepository);
@@ -54,55 +63,71 @@ public class Preview3D {
             anchorAngle = maze3D.getRotate();
         });
         subScene.setOnMouseDragged(e -> maze3D.setRotate(anchorAngle + anchorX - e.getSceneX()));
-        subScene.setOnScroll(e -> maze3D.setTranslateY(maze3D.getTranslateY() + e.getDeltaY() * 0.25));
+        subScene.setOnScroll(e -> maze3D.setTranslateY(maze3D.getTranslateY() + e.getDeltaY() * DEFAULT_SCROLL_SPEED));
         subScene.setOnKeyPressed(this::onKeyPressed);
         subScene.setOnKeyTyped(this::onKeyTyped);
     }
 
-    public ObjectProperty<WorldMap> worldMapProperty() { return worldMap; }
-    public BooleanProperty terrainVisibleProperty() { return terrainVisible; }
-    public BooleanProperty foodVisibleProperty() { return foodVisible; }
+    public ObjectProperty<WorldMap> worldMapProperty() {
+        return worldMap;
+    }
 
-    public SubScene getSubScene() { return subScene; }
+    public WorldMap worldMap() {
+        return worldMap.get();
+    }
+
+    public BooleanProperty terrainVisibleProperty() {
+        return terrainVisible;
+    }
+
+    public BooleanProperty foodVisibleProperty() {
+        return foodVisible;
+    }
+
+    public SubScene subScene() {
+        return subScene;
+    }
 
     public void updateFood() {
-        maze3D.updateFood(worldMap.get());
+        if (worldMap() != null) {
+            maze3D.updateFood(worldMap());
+        }
     }
 
     public void reset() {
-        double mapWidth = worldMap.get().numCols() * TS;
-        double mapHeight = worldMap.get().numRows() * TS;
         PerspectiveCamera camera = maze3D.camera();
         camera.setRotationAxis(Rotate.X_AXIS);
-        camera.setRotate(60);
-        camera.setTranslateX(mapWidth * 0.5);
-        camera.setTranslateY(mapHeight);
-        camera.setTranslateZ(-mapWidth * 0.5);
-        maze3D.setRotate(0);
-        maze3D.setTranslateX(0);
-        maze3D.setTranslateY(-0.5 * mapHeight);
+        camera.setRotate(DEFAULT_CAMERA_ROTATE);
+        if (worldMap() != null) {
+            double mapWidth = worldMap().numCols() * TS;
+            double mapHeight = worldMap().numRows() * TS;
+            camera.setTranslateX(mapWidth * 0.5);
+            camera.setTranslateY(mapHeight);
+            camera.setTranslateZ(-mapWidth * 0.5);
+            maze3D.setRotate(0);
+            maze3D.setTranslateX(0);
+            maze3D.setTranslateY(-0.5 * mapHeight);
+        }
     }
 
     private void onKeyPressed(KeyEvent e) {
         boolean control = e.isControlDown(), shift = e.isShiftDown();
         KeyCode key = e.getCode();
-        if (control && !shift && key == KeyCode.LEFT) {
-            maze3D.actionRotateLeft.execute();
-        }
-        else if (control && !shift && key == KeyCode.RIGHT) {
-            maze3D.actionRotateRight.execute();
-        }
-        else if (control && shift && key == KeyCode.UP) {
-            maze3D.actionMoveTowardsUser.execute();
-        }
-        else if (control && shift && key == KeyCode.DOWN) {
-            maze3D.actionMoveAwayFromUser.execute();
-        }
-        else  if (control && shift && key == KeyCode.LEFT) {
-            maze3D.actionMoveLeft.execute();
-        }
-        else if (control && shift && key == KeyCode.RIGHT) {
-            maze3D.actionMoveRight.execute();
+        switch (key) {
+            case KeyCode.LEFT -> {
+                if (control && shift)  maze3D.actionMoveLeft.execute();
+                if (control && !shift) maze3D.actionRotateLeft.execute();
+            }
+            case KeyCode.RIGHT -> {
+                if (control && shift)  maze3D.actionMoveRight.execute();
+                if (control && !shift) maze3D.actionRotateRight.execute();
+            }
+            case KeyCode.UP -> {
+                if (control && shift) maze3D.actionMoveTowardsUser.execute();
+            }
+            case KeyCode.DOWN -> {
+                if (control && shift) maze3D.actionMoveAwayFromUser.execute();
+            }
         }
     }
 
