@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tilemap.editor;
 
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.lib.tilemap.WorldMapChecker;
-import de.amr.pacmanfx.tilemap.editor.actions.Action_CreateEmptyMap;
+import de.amr.pacmanfx.tilemap.editor.actions.Action_SetDefaultMapColors;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
@@ -25,20 +25,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_TILES;
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.SAMPLE_MAPS_PATH;
 import static de.amr.pacmanfx.tilemap.editor.EditorUtil.generateSourceCode;
 import static java.util.Objects.requireNonNull;
 
 public class TileMapEditor {
 
-    static final WorldMap EMPTY_MAP = WorldMap.emptyMap(ARCADE_MAP_SIZE_IN_TILES.x(), ARCADE_MAP_SIZE_IN_TILES.y());
-
     private SampleMaps sampleMaps;
     private final EditorUI ui;
-    private final UpdateTimer updateTimer = new UpdateTimer();
 
-    private class UpdateTimer extends AnimationTimer {
+    private final AnimationTimer updateTimer = new AnimationTimer() {
         private static final long FRAME_DURATION_NS = 1_000_000_000 / EditorGlobals.UPDATE_FREQ;
         private long lastUpdate = 0;
 
@@ -55,20 +51,20 @@ public class TileMapEditor {
                 }
             }
         }
-    }
+    };
 
     public TileMapEditor(Stage stage, Model3DRepository model3DRepository) {
         requireNonNull(stage);
         requireNonNull(model3DRepository);
-        loadSampleMaps();
         ui = new EditorUI(stage, this, model3DRepository);
         currentWorldMap.addListener((py, ov, nv) -> setWorldMapChanged());
     }
 
     public void init(File workDir) {
+        loadSampleMaps();
         setCurrentDirectory(workDir);
-        WorldMap emptyMap = new Action_CreateEmptyMap(this, ARCADE_MAP_SIZE_IN_TILES.y(), ARCADE_MAP_SIZE_IN_TILES.x()).execute();
-        setCurrentWorldMap(emptyMap);
+        setCurrentWorldMap(WorldMap.emptyMap(28, 36));
+        new Action_SetDefaultMapColors(this, currentWorldMap()).execute();
         edited = false;
         ui.init();
     }
@@ -167,7 +163,7 @@ public class TileMapEditor {
 
     // -- currentWorldMap
 
-    private final ObjectProperty<WorldMap> currentWorldMap = new SimpleObjectProperty<>(EMPTY_MAP);
+    private final ObjectProperty<WorldMap> currentWorldMap = new SimpleObjectProperty<>();
 
     public ObjectProperty<WorldMap> currentWorldMapProperty() { return currentWorldMap; }
 

@@ -16,7 +16,7 @@ public class Action_CreateEmptyMap extends AbstractEditorAction<WorldMap> {
 
     @Override
     public WorldMap execute() {
-        var worldMap = WorldMap.emptyMap(numRows, numCols);
+        var worldMap = WorldMap.emptyMap(numCols, numRows);
         new Action_SetDefaultMapColors(editor, worldMap).execute();
         new Action_SetDefaultScatterPositions(editor, worldMap).execute();
         return worldMap;

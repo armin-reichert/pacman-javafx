@@ -93,7 +93,6 @@ public class EditorUI {
         createStatusLine();
 
         menuBar = new EditorMenuBar(this);
-        addSampleMapMenuEntries(editor.sampleMaps());
 
         arrangeLayout();
 
@@ -115,8 +114,14 @@ public class EditorUI {
     }
 
     public void init() {
+        replaceSampleMapMenuEntries(editor.sampleMaps());
         preview3D.reset();
         setEditMode(INSPECT);
+        Platform.runLater(() -> {
+            double height = spEditCanvas.getHeight();
+            int gridSize = (int) Math.max(height / editor.currentWorldMap().numRows(), DEFAULT_GRID_SIZE);
+            setGridSize(gridSize);
+        });
     }
 
     public void start() {
@@ -445,12 +450,6 @@ public class EditorUI {
         spEditCanvas = new ScrollPane(editCanvas);
         spEditCanvas.setFitToHeight(true);
         registerDragAndDropImageHandler(spEditCanvas);
-
-        Platform.runLater(() -> {
-            double height = spEditCanvas.getHeight();
-            int gridSize = (int) Math.max(height / editor.currentWorldMap().numRows(), DEFAULT_GRID_SIZE);
-            setGridSize(gridSize);
-        });
     }
 
     private void createPreview2D() {
@@ -810,7 +809,7 @@ public class EditorUI {
         return menuItem;
     }
 
-    public void addSampleMapMenuEntries(TileMapEditor.SampleMaps maps) {
+    public void replaceSampleMapMenuEntries(TileMapEditor.SampleMaps maps) {
         Menu menu = menuBar.menuMaps();
         menu.getItems().clear();
         if (maps.pacManMap() != null) {

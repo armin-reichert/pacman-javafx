@@ -64,7 +64,7 @@ public class Action_CreateNewMapInteractively extends AbstractEditorUIAction<Voi
     }
 
     private WorldMap createPreconfiguredMap(TileMapEditor editor, int numRows, int numCols) {
-        var worldMap = WorldMap.emptyMap(numRows, numCols);
+        var worldMap = WorldMap.emptyMap(numCols, numRows);
         if (worldMap.numRows() >= 20) {
             Vector2i houseMinTile = Vector2i.of(numCols / 2 - 4, numRows / 2 - 3);
             worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_PAC,   formatTile(houseMinTile.plus(3, 11)));

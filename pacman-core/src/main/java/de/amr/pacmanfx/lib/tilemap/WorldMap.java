@@ -45,12 +45,12 @@ public class WorldMap {
         }
     }
 
-    public static WorldMap emptyMap(int numRows, int numCols) {
+    public static WorldMap emptyMap(int tilesX, int tilesY) {
         var empty = new WorldMap();
-        empty.numRows = requireNonNegativeInt(numRows);
-        empty.numCols = requireNonNegativeInt(numCols);
-        empty.terrainLayer = new WorldMapLayer(numRows, numCols);
-        empty.foodLayer = new WorldMapLayer(numRows, numCols);
+        empty.numRows = requireNonNegativeInt(tilesY);
+        empty.numCols = requireNonNegativeInt(tilesX);
+        empty.terrainLayer = new WorldMapLayer(tilesY, tilesX);
+        empty.foodLayer = new WorldMapLayer(tilesY, tilesX);
         return empty;
     }
 
@@ -109,7 +109,7 @@ public class WorldMap {
         if (rowIndex < 0 || rowIndex > numRows) {
             throw new IllegalArgumentException("Illegal row index for inserting row: " + rowIndex);
         }
-        WorldMap newMap = emptyMap(numRows + 1, numCols);
+        WorldMap newMap = WorldMap.emptyMap(numCols, numRows + 1);
         newMap.terrainLayer.replaceProperties(terrainLayer.properties());
         newMap.foodLayer.replaceProperties(foodLayer.properties());
         for (int row = 0; row < newMap.numRows; ++row) {
@@ -139,7 +139,7 @@ public class WorldMap {
         if (rowIndexToDelete < 0 || rowIndexToDelete > numRows - 1) {
             throw new IllegalArgumentException("Illegal row index for deleting row: " + rowIndexToDelete);
         }
-        WorldMap newMap = emptyMap(numRows - 1, numCols);
+        WorldMap newMap = WorldMap.emptyMap(numCols, numRows - 1);
         newMap.terrainLayer.replaceProperties(terrainLayer.properties());
         newMap.foodLayer.replaceProperties(foodLayer.properties());
         for (int row = 0; row < newMap.numRows; ++row) {

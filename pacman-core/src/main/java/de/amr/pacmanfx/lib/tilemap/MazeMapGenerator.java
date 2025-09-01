@@ -31,7 +31,7 @@ public class MazeMapGenerator {
         MazeGenerators.createMazeByRecursiveDivision(graph);
 
         // create map from maze (3 times larger!)
-        var map = WorldMap.emptyMap(3 * numRows + EMPTY_ROWS_ABOVE + EMPTY_ROWS_BELOW, 3 * numCols);
+        var map = WorldMap.emptyMap(3 * numCols, 3 * numRows + EMPTY_ROWS_ABOVE + EMPTY_ROWS_BELOW);
         for (int v = 0; v < graph.numVertices(); ++v) {
             // center of 3x3 "macro" cell
             int row = 3 * graph.row(v) + 1 + EMPTY_ROWS_ABOVE, col = 3 * graph.col(v) + 1;
