@@ -31,7 +31,6 @@ import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
-import static de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites.SPRITE_SHEET;
 
 /**
  * Tile-based renderer used in editor. At runtime and in the 2D editor preview, the path based renderer is used.
@@ -146,15 +145,6 @@ public class TerrainTileMapRenderer extends BaseCanvasRenderer implements Terrai
             });
         }
         ctx().restore();
-
-        /*
-        Vector2i houseMinTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE);
-        Vector2i houseMaxTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE);
-        if (houseMinTile != null && houseMaxTile != null) {
-            drawHouse(houseMinTile, houseMaxTile.minus(houseMinTile).plus(1, 1));
-        }
-         */
-
     }
 
     @Override
@@ -327,20 +317,5 @@ public class TerrainTileMapRenderer extends BaseCanvasRenderer implements Terrai
             yp[0]=y; yp[1]=yp[2]=cy-d;
             ctx().strokePolyline(xp,yp,xp.length);
         }
-    }
-
-    public void drawSpriteBetweenTiles(Vector2i leftTile, RectShort sprite, double gridSize) {
-        if (leftTile != null) {
-            double spriteSize = 1.75 * gridSize;
-            drawSpriteImage(sprite, gridSize,
-                (leftTile.x() + 0.5) * gridSize, // sprite image is draw between left tile and right neighbor tile!
-                leftTile.y() * gridSize,
-                spriteSize, spriteSize);
-        }
-    }
-
-    private void drawSpriteImage(RectShort sprite, double gridSize, double x, double y, double w, double h) {
-        double ox = 0.5 * (w - gridSize), oy = 0.5 * (h - gridSize);
-        ctx().drawImage(SPRITE_SHEET, sprite.x(), sprite.y(), sprite.width(), sprite.height(), x - ox, y - oy, w, h);
     }
 }

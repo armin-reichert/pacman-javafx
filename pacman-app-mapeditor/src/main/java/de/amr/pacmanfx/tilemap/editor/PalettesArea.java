@@ -12,7 +12,6 @@ import de.amr.pacmanfx.tilemap.editor.actions.Action_SetTerrainProperty;
 import de.amr.pacmanfx.tilemap.editor.actions.Action_SetTileCode;
 import de.amr.pacmanfx.tilemap.editor.rendering.TerrainTileMapRenderer;
 import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
-import de.amr.pacmanfx.uilib.tilemap.TerrainVectorRenderer;
 import javafx.geometry.Insets;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
