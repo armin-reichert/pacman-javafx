@@ -57,6 +57,12 @@ public class Maze3D extends Group {
         return material;
     }
 
+    private final BooleanProperty actorsVisible = new SimpleBooleanProperty(true);
+
+    public BooleanProperty actorsVisibleProperty() {
+        return actorsVisible;
+    }
+
     private final ObjectProperty<WorldMap> worldMap = new SimpleObjectProperty<>();
 
     public ObjectProperty<WorldMap> worldMapProperty() {
@@ -137,15 +143,16 @@ public class Maze3D extends Group {
         foodGroup.visibleProperty().bind(foodVisible);
 
         pacmanShape3D = model3DRepository.createPacBody(ACTOR_SIZE, Color.YELLOW, Color.BLACK, Color.GRAY);
-        pacmanShape3D.visibleProperty().bind(ui.actorsVisibleProperty());
+        pacmanShape3D.visibleProperty().bind(actorsVisibleProperty());
 
-        ghostShapes = new GhostBody[4];
-        ghostShapes[0] = model3DRepository.createGhostBody(ACTOR_SIZE, Color.RED, 0);
-        ghostShapes[1] = model3DRepository.createGhostBody(ACTOR_SIZE, Color.PINK, 90);
-        ghostShapes[2] = model3DRepository.createGhostBody(ACTOR_SIZE, Color.CYAN, 270);
-        ghostShapes[3] = model3DRepository.createGhostBody(ACTOR_SIZE, Color.ORANGE, 270);
+        ghostShapes = new GhostBody[] {
+            model3DRepository.createGhostBody(ACTOR_SIZE, Color.RED, 0),
+            model3DRepository.createGhostBody(ACTOR_SIZE, Color.PINK, 90),
+            model3DRepository.createGhostBody(ACTOR_SIZE, Color.CYAN, 270),
+            model3DRepository.createGhostBody(ACTOR_SIZE, Color.ORANGE, 270)
+        };
         for (var ghostShape : ghostShapes) {
-            ghostShape.visibleProperty().bind(ui.actorsVisibleProperty());
+            ghostShape.visibleProperty().bind(actorsVisibleProperty());
         }
 
         worldMapProperty().addListener((py, ov, nv) -> updateMaze());
