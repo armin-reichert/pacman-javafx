@@ -545,13 +545,21 @@ public class EditorUI {
         });
     }
 
-    private Text createPreview3DNavigationHint() {
-        var text = new Text();
+    private Node createPreview3DNavigationHint() {
+        var text = new Label();
+        text.setStyle("-fx-border-color: #ccc; -fx-border-width: 1; -fx-border-radius: 10; -fx-padding: 10;");
         text.setText( translated("preview3D.navigation_hint.no_focus"));
         text.setTextAlignment(TextAlignment.CENTER);
-        text.setFill(COLOR_PREVIEW_3D_OVERLAY);
+        text.setTextFill(COLOR_PREVIEW_3D_OVERLAY);
         text.setFont(FONT_PREVIEW_3D_OVERLAY);
         text.setMouseTransparent(true);
+        //TODO There is still an issue: While the mouse is pressed inside the 3D view, the unfocused text is displayed!
+        preview3D.subScene().focusedProperty().addListener((py, ov, focused) -> {
+            text.setText(translated(focused
+                ? "preview3D.navigation_hint"
+                : "preview3D.navigation_hint.no_focus"));
+        });
+
         StackPane.setAlignment(text, Pos.BOTTOM_CENTER);
         StackPane.setMargin(text, new Insets(0,0,50,0)); // without this, the text is not completely visible
         return text;
@@ -564,14 +572,8 @@ public class EditorUI {
 
         tabPreview2D = new Tab(translated("preview2D"), spPreview2D);
 
-        Text navigationHint = createPreview3DNavigationHint();
+        var navigationHint = createPreview3DNavigationHint();
         var preview3DPane = new StackPane(preview3D.subScene(), navigationHint);
-
-        preview3D.subScene().focusedProperty().addListener((py, ov, focused) -> {
-            navigationHint.setText(translated(focused
-                ? "preview3D.navigation_hint"
-                : "preview3D.navigation_hint.no_focus"));
-        });
 
         Tab tabPreview3D = new Tab(translated("preview3D"), preview3DPane);
 
@@ -582,6 +584,7 @@ public class EditorUI {
         tabPane.getTabs().forEach(tab -> tab.setClosable(false));
         tabPane.getSelectionModel().select(tabPreview2D);
 
+        // Let 3D preview sub-scene fill the complete tab content
         preview3D.subScene().widthProperty().bind(tabPane.widthProperty());
         preview3D.subScene().heightProperty().bind(tabPane.heightProperty());
 
