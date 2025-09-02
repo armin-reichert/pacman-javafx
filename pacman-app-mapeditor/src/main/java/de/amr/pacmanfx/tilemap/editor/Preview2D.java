@@ -75,9 +75,9 @@ public class Preview2D extends Canvas {
     private void drawHouse(WorldMap worldMap) {
         Vector2i minTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE);
         Vector2i maxTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE);
-        double outerWidth = terrainRenderer.borderWallFullWidth();
-        double innerWidth = terrainRenderer.borderWallInnerWidth();
         if (minTile != null && maxTile != null) {
+            double outerWidth = terrainRenderer.borderWallFullWidth();
+            double innerWidth = terrainRenderer.borderWallInnerWidth();
             houseRenderer.drawHouse(minTile, maxTile.minus(minTile).plus(1, 1), outerWidth, innerWidth);
         }
     }

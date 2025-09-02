@@ -167,26 +167,21 @@ public class TerrainMapTileRenderer extends BaseCanvasRenderer implements Terrai
     }
 
     private void drawTileUnscaled(Vector2i tile, byte code) {
-        if       (code == WALL_H.$) drawWallH(tile);
-        else  if (code == WALL_V.$) drawWallV(tile);
-
-        else if (code == ARC_NW.$) drawArc(tile, code);
-        else if (code == ARC_NE.$) drawArc(tile, code);
-        else if (code == ARC_SW.$) drawArc(tile, code);
-        else if (code == ARC_SE.$) drawArc(tile, code);
-
-        else if (code == DARC_NW.$) drawDCorner(tile, code, xp, yp);
-        else if (code == DARC_NE.$) drawDCorner(tile, code, xp, yp);
-        else if (code == DARC_SW.$) drawDCorner(tile, code, xp, yp);
-        else if (code == DARC_SE.$) drawDCorner(tile, code, xp, yp);
-
-        else if (code == DOOR.$)   drawDoor(tile, colorScheme().doorColor());
-        else if (code == TUNNEL.$) drawTunnel(tile);
-
-        else if (code == ONE_WAY_UP.$)    drawOneWaySign(tile, Direction.UP);
-        else if (code == ONE_WAY_RIGHT.$) drawOneWaySign(tile, Direction.RIGHT);
-        else if (code == ONE_WAY_DOWN.$)  drawOneWaySign(tile, Direction.DOWN);
-        else if (code == ONE_WAY_LEFT.$)  drawOneWaySign(tile, Direction.LEFT);
+        switch (code) {
+            case 0x01 -> drawWallH(tile);
+            case 0x02 -> drawWallV(tile);
+            case 0x03, 0x04, 0x05, 0x06 -> drawArc(tile, code);
+            case 0x07 -> drawTunnel(tile);
+            case 0x0e -> drawDoor(tile, colorScheme().doorColor());
+            case 0x10 -> drawDCorner(tile, DARC_NW, xp, yp);
+            case 0x11 -> drawDCorner(tile, DARC_NE, xp, yp);
+            case 0x12 -> drawDCorner(tile, DARC_SE, xp, yp);
+            case 0x13 -> drawDCorner(tile, DARC_SW, xp, yp);
+            case 0x14 -> drawOneWaySign(tile, Direction.UP);
+            case 0x15 -> drawOneWaySign(tile, Direction.RIGHT);
+            case 0x16 -> drawOneWaySign(tile, Direction.DOWN);
+            case 0x17 -> drawOneWaySign(tile, Direction.LEFT);
+        }
     }
 
     private void drawDoor(Vector2i tile, Color color) {
@@ -271,48 +266,66 @@ public class TerrainMapTileRenderer extends BaseCanvasRenderer implements Terrai
         if (cornerType == ARC_SW.$) ctx().strokeArc(x + 4, y - 4, TS, TS, 180, 90, ArcType.OPEN);
     }
 
-    private void drawDCorner(Vector2i tile, byte cornerType, double[] xp, double[] yp) {
+    private void drawDCorner(Vector2i tile, TerrainTile cornerTile, double[] xp, double[] yp) {
         double x = tile.x() * TS, y = tile.y() * TS;
         double cx = x + HTS, cy = y + HTS;
         double rightEdge = x + TS, bottomEdge = y + TS;
         double d = 1;
         ctx().setStroke(colorScheme().wallStrokeColor());
         ctx().setLineWidth(1);
-        if (cornerType == DARC_NW.$) {
-            xp[0]=xp[1]=cx-d; xp[2]=rightEdge;
-            yp[0]=bottomEdge; yp[1]=yp[2]=cy-d;
-            ctx().strokePolyline(xp,yp,xp.length);
+        switch (cornerTile) {
+            case DARC_NW  -> {
+                xp[0] = xp[1] = cx - d;
+                xp[2] = rightEdge;
+                yp[0] = bottomEdge;
+                yp[1] = yp[2] = cy - d;
+                ctx().strokePolyline(xp, yp, xp.length);
 
-            xp[0]=xp[1]=cx+d; xp[2]=rightEdge;
-            yp[0]=bottomEdge; yp[1]=yp[2]=cy+d;
-            ctx().strokePolyline(xp,yp,xp.length);
-        }
-        else if (cornerType == DARC_NE.$) {
-            xp[0]=x; xp[1]=xp[2]=cx+d;
-            yp[0]=yp[1]=cy-d; yp[2]=bottomEdge;
-            ctx().strokePolyline(xp,yp,xp.length);
+                xp[0] = xp[1] = cx + d;
+                xp[2] = rightEdge;
+                yp[0] = bottomEdge;
+                yp[1] = yp[2] = cy + d;
+                ctx().strokePolyline(xp, yp, xp.length);
+            }
+            case DARC_NE -> {
+                xp[0] = x;
+                xp[1] = xp[2] = cx + d;
+                yp[0] = yp[1] = cy - d;
+                yp[2] = bottomEdge;
+                ctx().strokePolyline(xp, yp, xp.length);
 
-            xp[0]=x; xp[1]=xp[2]=cx-d;
-            yp[0]=yp[1]=cy+d; yp[2]=bottomEdge;
-            ctx().strokePolyline(xp,yp,xp.length);
-        }
-        else if (cornerType == DARC_SE.$) {
-            xp[0]=x; xp[1]=xp[2]=cx-d;
-            yp[0]=yp[1]=cy-d; yp[2]=y;
-            ctx().strokePolyline(xp,yp,xp.length);
+                xp[0] = x;
+                xp[1] = xp[2] = cx - d;
+                yp[0] = yp[1] = cy + d;
+                yp[2] = bottomEdge;
+                ctx().strokePolyline(xp, yp, xp.length);
+            }
+            case DARC_SE -> {
+                xp[0] = x;
+                xp[1] = xp[2] = cx - d;
+                yp[0] = yp[1] = cy - d;
+                yp[2] = y;
+                ctx().strokePolyline(xp, yp, xp.length);
 
-            xp[0]=x; xp[1]=xp[2]=cx+d;
-            yp[0]=yp[1]=cy+d; yp[2]=y;
-            ctx().strokePolyline(xp,yp,xp.length);
-        }
-        else if (cornerType == DARC_SW.$) {
-            xp[0]=xp[1]=cx-d; xp[2]=rightEdge;
-            yp[0]=y; yp[1]=yp[2]=cy+d;
-            ctx().strokePolyline(xp,yp,xp.length);
+                xp[0] = x;
+                xp[1] = xp[2] = cx + d;
+                yp[0] = yp[1] = cy + d;
+                yp[2] = y;
+                ctx().strokePolyline(xp, yp, xp.length);
+            }
+            case ARC_SW -> {
+                xp[0] = xp[1] = cx - d;
+                xp[2] = rightEdge;
+                yp[0] = y;
+                yp[1] = yp[2] = cy + d;
+                ctx().strokePolyline(xp, yp, xp.length);
 
-            xp[0]=xp[1]=cx+d; xp[2]=rightEdge;
-            yp[0]=y; yp[1]=yp[2]=cy-d;
-            ctx().strokePolyline(xp,yp,xp.length);
+                xp[0] = xp[1] = cx + d;
+                xp[2] = rightEdge;
+                yp[0] = y;
+                yp[1] = yp[2] = cy - d;
+                ctx().strokePolyline(xp, yp, xp.length);
+            }
         }
     }
 }
