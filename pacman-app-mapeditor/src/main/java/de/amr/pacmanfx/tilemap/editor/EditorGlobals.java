@@ -37,6 +37,16 @@ public class EditorGlobals {
     public static final Font FONT_DROP_HINT               = Font.font("Sans", FontWeight.BOLD, 16);
     public static final Font FONT_MESSAGE                 = Font.font("Sans", FontWeight.BOLD, 14);
 
+    //TODO localize
+    public static final String PREVIEW_3D_OVERLAY_TEXT =
+        "Ctrl+Shift+Cursor=Navigate\n"
+        + "Ctrl+Right/Left=Rotate\n"
+        + "Double-Click=Reset\n"
+        + "(Click to activate)";
+
+    public static final Color COLOR_PREVIEW_3D_OVERLAY    = Color.LIGHTGRAY;
+    public static final Font FONT_PREVIEW_3D_OVERLAY      = Font.font("Sans", FontWeight.BOLD, 16);
+
     public static final Font FONT_SOURCE_VIEW             = Font.font("Consolas", FontWeight.NORMAL, 14);
     public static final String STYLE_SOURCE_VIEW          = "-fx-control-inner-background:#222; -fx-text-fill:#f0f0f0";
 

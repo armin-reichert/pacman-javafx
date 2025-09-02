@@ -29,6 +29,8 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -543,13 +545,27 @@ public class EditorUI {
         });
     }
 
+    private Node createPreview3DOverlay() {
+        var text = new Text(PREVIEW_3D_OVERLAY_TEXT);
+        text.setTextAlignment(TextAlignment.CENTER);
+        text.setFill(COLOR_PREVIEW_3D_OVERLAY);
+        text.setFont(FONT_PREVIEW_3D_OVERLAY);
+        text.setMouseTransparent(true);
+        StackPane.setAlignment(text, Pos.BOTTOM_CENTER);
+        StackPane.setMargin(text, new Insets(0,0,50,0)); // without this, the text is not completely visible
+        return text;
+    }
+
     private void createPreviewArea(Model3DRepository model3DRepository) {
         createPreview2D();
         createPreview3D(model3DRepository);
         createSourceView();
 
         tabPreview2D = new Tab(translated("preview2D"), spPreview2D);
-        Tab tabPreview3D = new Tab(translated("preview3D"), preview3D.subScene());
+
+        var preview3DPane = new StackPane(preview3D.subScene(), createPreview3DOverlay());
+        Tab tabPreview3D = new Tab(translated("preview3D"), preview3DPane);
+
         Tab tabSourceView = new Tab(translated("source"), sourceView);
 
         TabPane tabPane = new TabPane(tabPreview2D, tabPreview3D, tabSourceView);
