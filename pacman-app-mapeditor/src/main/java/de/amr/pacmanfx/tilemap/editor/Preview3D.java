@@ -118,11 +118,11 @@ public class Preview3D {
         switch (keyEvent.getCode()) {
             case KeyCode.LEFT -> {
                 if (control && shift) maze3D.actionMoveLeft.execute();
-                if (control)          maze3D.actionRotateLeft.execute();
+                else if (control)     maze3D.actionRotateLeft.execute();
             }
             case KeyCode.RIGHT -> {
                 if (control && shift) maze3D.actionMoveRight.execute();
-                if (control)          maze3D.actionRotateRight.execute();
+                else if (control)     maze3D.actionRotateRight.execute();
             }
             case KeyCode.UP -> {
                 if (control && shift) maze3D.actionMoveTowardsUser.execute();
