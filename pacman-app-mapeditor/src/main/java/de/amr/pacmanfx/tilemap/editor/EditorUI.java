@@ -545,8 +545,9 @@ public class EditorUI {
         });
     }
 
-    private Node createPreview3DOverlay() {
-        var text = new Text(PREVIEW_3D_OVERLAY_TEXT);
+    private Text createPreview3DNavigationHint() {
+        var text = new Text();
+        text.setText( translated("preview3D.navigation_hint.no_focus"));
         text.setTextAlignment(TextAlignment.CENTER);
         text.setFill(COLOR_PREVIEW_3D_OVERLAY);
         text.setFont(FONT_PREVIEW_3D_OVERLAY);
@@ -563,7 +564,15 @@ public class EditorUI {
 
         tabPreview2D = new Tab(translated("preview2D"), spPreview2D);
 
-        var preview3DPane = new StackPane(preview3D.subScene(), createPreview3DOverlay());
+        Text navigationHint = createPreview3DNavigationHint();
+        var preview3DPane = new StackPane(preview3D.subScene(), navigationHint);
+
+        preview3D.subScene().focusedProperty().addListener((py, ov, focused) -> {
+            navigationHint.setText(translated(focused
+                ? "preview3D.navigation_hint"
+                : "preview3D.navigation_hint.no_focus"));
+        });
+
         Tab tabPreview3D = new Tab(translated("preview3D"), preview3DPane);
 
         Tab tabSourceView = new Tab(translated("source"), sourceView);
