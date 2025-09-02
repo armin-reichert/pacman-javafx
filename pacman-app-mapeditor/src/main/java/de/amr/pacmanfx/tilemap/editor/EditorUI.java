@@ -29,7 +29,6 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -547,7 +546,15 @@ public class EditorUI {
 
     private Node createPreview3DNavigationHint() {
         var text = new Label();
-        text.setStyle("-fx-border-color: #ccc; -fx-border-width: 1; -fx-border-radius: 10; -fx-padding: 10;");
+        String css = """
+                -fx-padding: 10;
+                -fx-background-color: #80808064;
+                -fx-background-radius: 10;
+                -fx-border-color: #ccc;
+                -fx-border-width: 1;
+                -fx-border-radius: 10;
+                """;
+        text.setStyle(css);
         text.setText( translated("preview3D.navigation_hint.no_focus"));
         text.setTextAlignment(TextAlignment.CENTER);
         text.setTextFill(COLOR_PREVIEW_3D_OVERLAY);
@@ -560,8 +567,8 @@ public class EditorUI {
                 : "preview3D.navigation_hint.no_focus"));
         });
 
-        StackPane.setAlignment(text, Pos.BOTTOM_CENTER);
-        StackPane.setMargin(text, new Insets(0,0,50,0)); // without this, the text is not completely visible
+        StackPane.setAlignment(text, Pos.TOP_CENTER);
+        StackPane.setMargin(text, new Insets(20,0,0,0));
         return text;
     }
 
