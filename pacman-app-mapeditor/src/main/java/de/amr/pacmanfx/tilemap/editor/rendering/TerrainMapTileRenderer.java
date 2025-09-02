@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tilemap.editor.rendering;
 
-import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
@@ -173,14 +172,8 @@ public class TerrainMapTileRenderer extends BaseCanvasRenderer implements Terrai
             case 0x03, 0x04, 0x05, 0x06 -> drawArc(tile, code);
             case 0x07 -> drawTunnel(tile);
             case 0x0e -> drawDoor(tile, colorScheme().doorColor());
-            case 0x10 -> drawDCorner(tile, DARC_NW, xp, yp);
-            case 0x11 -> drawDCorner(tile, DARC_NE, xp, yp);
-            case 0x12 -> drawDCorner(tile, DARC_SE, xp, yp);
-            case 0x13 -> drawDCorner(tile, DARC_SW, xp, yp);
-            case 0x14 -> drawOneWaySign(tile, Direction.UP);
-            case 0x15 -> drawOneWaySign(tile, Direction.RIGHT);
-            case 0x16 -> drawOneWaySign(tile, Direction.DOWN);
-            case 0x17 -> drawOneWaySign(tile, Direction.LEFT);
+            case 0x10, 0x11, 0x12, 0x13 -> drawDCorner(tile, code, xp, yp);
+            case 0x14,0x15,0x16,0x17 -> drawOneWaySign(tile, code);
         }
     }
 
@@ -202,31 +195,30 @@ public class TerrainMapTileRenderer extends BaseCanvasRenderer implements Terrai
         ctx().strokeLine(x, y + 0.5 * TS, x + TS, y + 0.5 * TS);
     }
 
-    private void drawOneWaySign(Vector2i tile, Direction dir) {
+    private void drawOneWaySign(Vector2i tile, byte code) {
         double x = tile.x() * TS, y = tile.y() * TS;
         ctx().save();
         ctx().beginPath();
-        switch (dir) {
-            case UP -> {
+        switch (code) {
+            case 0x14 -> {
                 ctx().moveTo(x, y+8);
                 ctx().lineTo(x+4, y);
                 ctx().lineTo(x+8,y+8);
             }
-            case RIGHT -> {
+            case 0x15 -> {
                 ctx().moveTo(x, y);
                 ctx().lineTo(x+8, y+4);
                 ctx().lineTo(x,y+8);
             }
-            case DOWN -> {
+            case 0x16 -> {
                 ctx().moveTo(x, y);
                 ctx().lineTo(x+4, y+8);
                 ctx().lineTo(x+8,y);
             }
-            case LEFT -> {
+            case 0x17 -> {
                 ctx().moveTo(x+8, y);
                 ctx().lineTo(x, y+4);
                 ctx().lineTo(x+8,y+8);
-
             }
         }
         ctx().closePath();
@@ -266,15 +258,15 @@ public class TerrainMapTileRenderer extends BaseCanvasRenderer implements Terrai
         if (cornerType == ARC_SW.$) ctx().strokeArc(x + 4, y - 4, TS, TS, 180, 90, ArcType.OPEN);
     }
 
-    private void drawDCorner(Vector2i tile, TerrainTile cornerTile, double[] xp, double[] yp) {
+    private void drawDCorner(Vector2i tile, byte code, double[] xp, double[] yp) {
         double x = tile.x() * TS, y = tile.y() * TS;
         double cx = x + HTS, cy = y + HTS;
         double rightEdge = x + TS, bottomEdge = y + TS;
         double d = 1;
         ctx().setStroke(colorScheme().wallStrokeColor());
         ctx().setLineWidth(1);
-        switch (cornerTile) {
-            case DARC_NW  -> {
+        switch (code) {
+            case 0x10 -> {
                 xp[0] = xp[1] = cx - d;
                 xp[2] = rightEdge;
                 yp[0] = bottomEdge;
@@ -287,7 +279,7 @@ public class TerrainMapTileRenderer extends BaseCanvasRenderer implements Terrai
                 yp[1] = yp[2] = cy + d;
                 ctx().strokePolyline(xp, yp, xp.length);
             }
-            case DARC_NE -> {
+            case 0x11 -> {
                 xp[0] = x;
                 xp[1] = xp[2] = cx + d;
                 yp[0] = yp[1] = cy - d;
@@ -300,7 +292,7 @@ public class TerrainMapTileRenderer extends BaseCanvasRenderer implements Terrai
                 yp[2] = bottomEdge;
                 ctx().strokePolyline(xp, yp, xp.length);
             }
-            case DARC_SE -> {
+            case 0x12 -> {
                 xp[0] = x;
                 xp[1] = xp[2] = cx - d;
                 yp[0] = yp[1] = cy - d;
@@ -313,7 +305,7 @@ public class TerrainMapTileRenderer extends BaseCanvasRenderer implements Terrai
                 yp[2] = y;
                 ctx().strokePolyline(xp, yp, xp.length);
             }
-            case ARC_SW -> {
+            case 0x13 -> {
                 xp[0] = xp[1] = cx - d;
                 xp[2] = rightEdge;
                 yp[0] = y;
