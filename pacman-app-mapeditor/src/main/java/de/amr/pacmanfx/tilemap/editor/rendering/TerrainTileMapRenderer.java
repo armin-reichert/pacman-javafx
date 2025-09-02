@@ -95,52 +95,60 @@ public class TerrainTileMapRenderer extends BaseCanvasRenderer implements Terrai
         specialTile(worldMap, WorldMapProperty.POS_SCATTER_CYAN_GHOST).ifPresent(tile -> drawScatterTarget(tile, Color.CYAN));
         specialTile(worldMap, WorldMapProperty.POS_SCATTER_ORANGE_GHOST).ifPresent(tile -> drawScatterTarget(tile, Color.ORANGE));
         if (segmentNumbersDisplayed) {
-            obstacles.stream().filter(obstacle -> !Ufx.isBorderObstacle(worldMap, obstacle)).forEach(obstacle -> {
-                for (int i = 0; i < obstacle.numSegments(); ++i) {
-                    ObstacleSegment segment = obstacle.segment(i);
-                    Vector2f start = segment.startPoint().toVector2f();
-                    Vector2f end = segment.endPoint().toVector2f();
-                    Vector2f  middle = start.midpoint(end);
-                    ctx().setFont(SEGMENT_NUMBER_FONT);
-                    ctx().setFill(SEGMENT_NUMBER_FILL_COLOR);
-                    ctx().setStroke(SEGMENT_NUMBER_STROKE_COLOR);
-                    ctx().setLineWidth(0.1);
-                    ctx().fillText(String.valueOf(i), middle.x() - 0.5 * SEGMENT_NUMBER_FONT_SIZE, middle.y());
-                    ctx().strokeText(String.valueOf(i), middle.x() - 0.5 * SEGMENT_NUMBER_FONT_SIZE, middle.y());
-                }
-            });
+            drawObstacleSegmentNumbers(worldMap, obstacles);
         }
         if (obstacleInnerAreaDisplayed) {
-            double r = 1;
-            obstacles.stream()
-                    .filter(Obstacle::isClosed)
-                    .filter(obstacle -> !Ufx.isBorderObstacle(worldMap, obstacle)).forEach(obstacle -> {
-                Vector2i prev = null;
-                List<RectShort> rectangles = obstacle.innerAreaRectangles();
-                for (int i = 0; i < rectangles.size(); ++i) {
-                    RectShort rect = rectangles.get(i);
-                    ctx().setFill(RANDOM_COLORS[i % RANDOM_COLORS.length]);
-                    ctx().fillRect(rect.x(), rect.y(), rect.width(), rect.height());
-                }
-                ctx().setFill(Color.grayRgb(200));
-                ctx().setStroke(Color.grayRgb(200));
-                ctx().setLineWidth(0.5);
-                for (Vector2i p : obstacle.computeInnerPolygon()) {
-                    ctx().fillOval(p.x() - r, p.y() - r, 2*r, 2*r);
-                    if (prev != null) {
-                        ctx().strokeLine(prev.x(), prev.y(), p.x(), p.y());
-                    }
-                    prev = p;
-                }
-                for (int i = 0; i < rectangles.size(); ++i) {
-                    RectShort rect = rectangles.get(i);
-                    ctx().setFill(Color.WHITE);
-                    ctx().setFont(Font.font("Sans", FontWeight.BOLD, 3.5));
-                    ctx().fillText("R" + (i+1), rect.x() + rect.width() * 0.5 - 3, rect.y() + rect.height() * 0.5 + 1);
-                }
-            });
+            drawObstacleInnerAreas(worldMap, obstacles);
         }
         ctx().restore();
+    }
+
+    private void drawObstacleInnerAreas(WorldMap worldMap, Set<Obstacle> obstacles) {
+        double r = 1;
+        obstacles.stream()
+                .filter(Obstacle::isClosed)
+                .filter(obstacle -> !Ufx.isBorderObstacle(worldMap, obstacle)).forEach(obstacle -> {
+            Vector2i prev = null;
+            List<RectShort> rectangles = obstacle.innerAreaRectangles();
+            for (int i = 0; i < rectangles.size(); ++i) {
+                RectShort rect = rectangles.get(i);
+                ctx().setFill(RANDOM_COLORS[i % RANDOM_COLORS.length]);
+                ctx().fillRect(rect.x(), rect.y(), rect.width(), rect.height());
+            }
+            ctx().setFill(Color.grayRgb(200));
+            ctx().setStroke(Color.grayRgb(200));
+            ctx().setLineWidth(0.5);
+            for (Vector2i p : obstacle.computeInnerPolygon()) {
+                ctx().fillOval(p.x() - r, p.y() - r, 2*r, 2*r);
+                if (prev != null) {
+                    ctx().strokeLine(prev.x(), prev.y(), p.x(), p.y());
+                }
+                prev = p;
+            }
+            for (int i = 0; i < rectangles.size(); ++i) {
+                RectShort rect = rectangles.get(i);
+                ctx().setFill(Color.WHITE);
+                ctx().setFont(Font.font("Sans", FontWeight.BOLD, 3.5));
+                ctx().fillText("R" + (i+1), rect.x() + rect.width() * 0.5 - 3, rect.y() + rect.height() * 0.5 + 1);
+            }
+        });
+    }
+
+    private void drawObstacleSegmentNumbers(WorldMap worldMap, Set<Obstacle> obstacles) {
+        obstacles.stream().filter(obstacle -> !Ufx.isBorderObstacle(worldMap, obstacle)).forEach(obstacle -> {
+            for (int i = 0; i < obstacle.numSegments(); ++i) {
+                ObstacleSegment segment = obstacle.segment(i);
+                Vector2f start = segment.startPoint().toVector2f();
+                Vector2f end = segment.endPoint().toVector2f();
+                Vector2f  middle = start.midpoint(end);
+                ctx().setFont(SEGMENT_NUMBER_FONT);
+                ctx().setFill(SEGMENT_NUMBER_FILL_COLOR);
+                ctx().setStroke(SEGMENT_NUMBER_STROKE_COLOR);
+                ctx().setLineWidth(0.1);
+                ctx().fillText(String.valueOf(i), middle.x() - 0.5 * SEGMENT_NUMBER_FONT_SIZE, middle.y());
+                ctx().strokeText(String.valueOf(i), middle.x() - 0.5 * SEGMENT_NUMBER_FONT_SIZE, middle.y());
+            }
+        });
     }
 
     @Override
@@ -158,27 +166,27 @@ public class TerrainTileMapRenderer extends BaseCanvasRenderer implements Terrai
         return Optional.empty();
     }
 
-    private void drawTileUnscaled(Vector2i tile, byte content) {
-        if       (content == WALL_H.$) drawWallH(tile);
-        else  if (content == WALL_V.$) drawWallV(tile);
+    private void drawTileUnscaled(Vector2i tile, byte code) {
+        if       (code == WALL_H.$) drawWallH(tile);
+        else  if (code == WALL_V.$) drawWallV(tile);
 
-        else if (content == ARC_NW.$) drawArc(tile, content);
-        else if (content == ARC_NE.$) drawArc(tile, content);
-        else if (content == ARC_SW.$) drawArc(tile, content);
-        else if (content == ARC_SE.$) drawArc(tile, content);
+        else if (code == ARC_NW.$) drawArc(tile, code);
+        else if (code == ARC_NE.$) drawArc(tile, code);
+        else if (code == ARC_SW.$) drawArc(tile, code);
+        else if (code == ARC_SE.$) drawArc(tile, code);
 
-        else if (content == DARC_NW.$) drawDCorner(tile, content, xp, yp);
-        else if (content == DARC_NE.$) drawDCorner(tile, content, xp, yp);
-        else if (content == DARC_SW.$) drawDCorner(tile, content, xp, yp);
-        else if (content == DARC_SE.$) drawDCorner(tile, content, xp, yp);
+        else if (code == DARC_NW.$) drawDCorner(tile, code, xp, yp);
+        else if (code == DARC_NE.$) drawDCorner(tile, code, xp, yp);
+        else if (code == DARC_SW.$) drawDCorner(tile, code, xp, yp);
+        else if (code == DARC_SE.$) drawDCorner(tile, code, xp, yp);
 
-        else if (content == DOOR.$)   drawDoor(tile, colorScheme().doorColor());
-        else if (content == TUNNEL.$) drawTunnel(tile);
+        else if (code == DOOR.$)   drawDoor(tile, colorScheme().doorColor());
+        else if (code == TUNNEL.$) drawTunnel(tile);
 
-        else if (content == ONE_WAY_UP.$)    drawOneWaySign(tile, Direction.UP);
-        else if (content == ONE_WAY_RIGHT.$) drawOneWaySign(tile, Direction.RIGHT);
-        else if (content == ONE_WAY_DOWN.$)  drawOneWaySign(tile, Direction.DOWN);
-        else if (content == ONE_WAY_LEFT.$)  drawOneWaySign(tile, Direction.LEFT);
+        else if (code == ONE_WAY_UP.$)    drawOneWaySign(tile, Direction.UP);
+        else if (code == ONE_WAY_RIGHT.$) drawOneWaySign(tile, Direction.RIGHT);
+        else if (code == ONE_WAY_DOWN.$)  drawOneWaySign(tile, Direction.DOWN);
+        else if (code == ONE_WAY_LEFT.$)  drawOneWaySign(tile, Direction.LEFT);
     }
 
     private void drawDoor(Vector2i tile, Color color) {
