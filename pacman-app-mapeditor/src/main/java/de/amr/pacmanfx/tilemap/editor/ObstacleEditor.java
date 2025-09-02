@@ -9,7 +9,7 @@ import de.amr.pacmanfx.lib.tilemap.FoodTile;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.tilemap.editor.actions.Action_SetTileCode;
-import de.amr.pacmanfx.tilemap.editor.rendering.TerrainTileMapRenderer;
+import de.amr.pacmanfx.tilemap.editor.rendering.TerrainMapTileRenderer;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -112,7 +112,7 @@ public class ObstacleEditor {
         }
     }
 
-    public void draw(TerrainTileMapRenderer renderer) {
+    public void draw(TerrainMapTileRenderer renderer) {
         byte[][] editedRect = editedRect();
         if (editedRect == null) return;
         for (int row = 0; row < editedRect.length; ++row) {

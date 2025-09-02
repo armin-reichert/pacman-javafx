@@ -11,7 +11,7 @@ import de.amr.pacmanfx.uilib.rendering.RenderInfo;
 import de.amr.pacmanfx.uilib.tilemap.ArcadeHouseRenderer;
 import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapColorScheme;
-import de.amr.pacmanfx.uilib.tilemap.TerrainVectorRenderer;
+import de.amr.pacmanfx.uilib.tilemap.TerrainMapVectorRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
@@ -24,7 +24,7 @@ import static java.util.function.Predicate.not;
  */
 public class GenericMapRenderer extends BaseCanvasRenderer {
 
-    private final TerrainVectorRenderer terrainRenderer;
+    private final TerrainMapVectorRenderer terrainRenderer;
     private final FoodMapRenderer foodRenderer;
     private final ArcadeHouseRenderer houseRenderer;
 
@@ -34,7 +34,7 @@ public class GenericMapRenderer extends BaseCanvasRenderer {
     public GenericMapRenderer(Canvas canvas) {
         super(canvas);
 
-        terrainRenderer = new TerrainVectorRenderer(canvas);
+        terrainRenderer = new TerrainMapVectorRenderer(canvas);
         terrainRenderer.backgroundColorProperty().bind(backgroundColorProperty());
         terrainRenderer.scalingProperty().bind(scalingProperty());
 
@@ -73,7 +73,7 @@ public class GenericMapRenderer extends BaseCanvasRenderer {
             gameLevel.house().ifPresent(house -> {
                 houseRenderer.setColorScheme(colorScheme);
                 houseRenderer.drawHouse(house.minTile(), house.sizeInTiles(),
-                    terrainRenderer.doubleStrokeOuterWidth(),terrainRenderer.doubleStrokeInnerWidth());
+                    terrainRenderer.borderWallFullWidth(),terrainRenderer.borderWallInnerWidth());
             });
 
             // this is set by the map selector

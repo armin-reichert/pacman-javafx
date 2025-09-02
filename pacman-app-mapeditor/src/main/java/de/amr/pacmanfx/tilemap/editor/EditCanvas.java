@@ -14,7 +14,7 @@ import de.amr.pacmanfx.tilemap.editor.actions.*;
 import de.amr.pacmanfx.tilemap.editor.palette.Palette;
 import de.amr.pacmanfx.tilemap.editor.rendering.ActorSpriteRenderer;
 import de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites;
-import de.amr.pacmanfx.tilemap.editor.rendering.TerrainTileMapRenderer;
+import de.amr.pacmanfx.tilemap.editor.rendering.TerrainMapTileRenderer;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapColorScheme;
@@ -42,9 +42,9 @@ import static java.util.Objects.requireNonNull;
 
 public class EditCanvas extends Canvas {
 
-    static class EditorTerrainRenderer extends TerrainTileMapRenderer implements ActorSpriteRenderer {
+    static class EditorTerrainTileRenderer extends TerrainMapTileRenderer implements ActorSpriteRenderer {
 
-        public EditorTerrainRenderer(Canvas canvas) {
+        public EditorTerrainTileRenderer(Canvas canvas) {
             super(canvas);
         }
     }
@@ -71,7 +71,7 @@ public class EditCanvas extends Canvas {
     private final ObstacleEditor obstacleEditor;
     private final ContextMenu contextMenu = new ContextMenu();
 
-    private final EditorTerrainRenderer terrainRenderer;
+    private final EditorTerrainTileRenderer terrainRenderer;
     private final FoodMapRenderer foodRenderer;
 
     private final EditorUI ui;
@@ -116,7 +116,7 @@ public class EditCanvas extends Canvas {
         terrainVisibleProperty().bind(ui.terrainVisibleProperty());
         worldMapProperty().bind(ui.editor().currentWorldMapProperty());
 
-        terrainRenderer = new EditorTerrainRenderer(this);
+        terrainRenderer = new EditorTerrainTileRenderer(this);
         terrainRenderer.scalingProperty().bind(scaling);
 
         foodRenderer = new FoodMapRenderer(this);
@@ -202,7 +202,7 @@ public class EditCanvas extends Canvas {
 
     public WorldMap worldMap() { return worldMap.get(); }
 
-    public TerrainTileMapRenderer terrainRenderer() {
+    public TerrainMapTileRenderer terrainRenderer() {
         return terrainRenderer;
     }
 

@@ -13,7 +13,7 @@ import de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites;
 import de.amr.pacmanfx.uilib.tilemap.ArcadeHouseRenderer;
 import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapColorScheme;
-import de.amr.pacmanfx.uilib.tilemap.TerrainVectorRenderer;
+import de.amr.pacmanfx.uilib.tilemap.TerrainMapVectorRenderer;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -30,7 +30,7 @@ import static de.amr.pacmanfx.tilemap.editor.EditorUtil.parseColor;
 
 public class Preview2D extends Canvas {
 
-    static class PreviewRenderer extends TerrainVectorRenderer implements ActorSpriteRenderer {
+    static class PreviewRenderer extends TerrainMapVectorRenderer implements ActorSpriteRenderer {
         public PreviewRenderer(Canvas canvas) {
             super(canvas);
         }
@@ -75,8 +75,8 @@ public class Preview2D extends Canvas {
     private void drawHouse(WorldMap worldMap) {
         Vector2i minTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE);
         Vector2i maxTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE);
-        double outerWidth = terrainRenderer.doubleStrokeOuterWidth();
-        double innerWidth = terrainRenderer.doubleStrokeInnerWidth();
+        double outerWidth = terrainRenderer.borderWallFullWidth();
+        double innerWidth = terrainRenderer.borderWallInnerWidth();
         if (minTile != null && maxTile != null) {
             houseRenderer.drawHouse(minTile, maxTile.minus(minTile).plus(1, 1), outerWidth, innerWidth);
         }

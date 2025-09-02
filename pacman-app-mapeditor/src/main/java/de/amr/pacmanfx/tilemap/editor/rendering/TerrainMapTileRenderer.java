@@ -35,7 +35,7 @@ import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
 /**
  * Tile-based renderer used in editor. At runtime and in the 2D editor preview, the path based renderer is used.
  */
-public class TerrainTileMapRenderer extends BaseCanvasRenderer implements TerrainMapRenderer, TileRenderer {
+public class TerrainMapTileRenderer extends BaseCanvasRenderer implements TerrainMapRenderer, TileRenderer {
 
     private static final Color[] RANDOM_COLORS = new Color[30];
     static {
@@ -57,7 +57,7 @@ public class TerrainTileMapRenderer extends BaseCanvasRenderer implements Terrai
 
     private final ObjectProperty<TerrainMapColorScheme> colorScheme = new SimpleObjectProperty<>(DEFAULT_COLOR_SCHEME);
 
-    public TerrainTileMapRenderer(Canvas canvas) {
+    public TerrainMapTileRenderer(Canvas canvas) {
         super(canvas);
     }
 

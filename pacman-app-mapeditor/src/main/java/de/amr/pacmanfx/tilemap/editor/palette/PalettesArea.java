@@ -9,7 +9,7 @@ import de.amr.pacmanfx.lib.tilemap.TerrainTile;
 import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.tilemap.editor.EditorUI;
 import de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites;
-import de.amr.pacmanfx.tilemap.editor.rendering.TerrainTileMapRenderer;
+import de.amr.pacmanfx.tilemap.editor.rendering.TerrainMapTileRenderer;
 import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
 import javafx.geometry.Insets;
 import javafx.scene.control.Tab;
@@ -26,7 +26,7 @@ public class PalettesArea extends TabPane {
     private final Map<PaletteID, Palette> palettes = new EnumMap<>(PaletteID.class);
 
     // Must be called after edit canvas creation because it binds to the renderers of the edit canvas!
-    public PalettesArea(EditorUI ui, TerrainTileMapRenderer terrainRenderer, FoodMapRenderer foodRenderer) {
+    public PalettesArea(EditorUI ui, TerrainMapTileRenderer terrainRenderer, FoodMapRenderer foodRenderer) {
 
         palettes.put(PaletteID.TERRAIN, createTerrainPalette(ui, terrainRenderer));
         palettes.put(PaletteID.FOOD, createFoodPalette(ui, foodRenderer));
@@ -64,7 +64,7 @@ public class PalettesArea extends TabPane {
         }
     }
 
-    private Palette createTerrainPalette(EditorUI ui, TerrainTileMapRenderer renderer) {
+    private Palette createTerrainPalette(EditorUI ui, TerrainMapTileRenderer renderer) {
         var palette = new Palette(PaletteID.TERRAIN, 1, 13);
         palette.addTool(new TileCodeEditorTool(ui, TerrainTile.EMPTY.$, "Empty Space"));
         palette.addTool(new TileCodeEditorTool(ui, TerrainTile.WALL_H.$, "Horizontal Wall"));
@@ -82,7 +82,7 @@ public class PalettesArea extends TabPane {
 
         palette.selectTool(0); // "No Tile"
 
-        TerrainTileMapRenderer paletteRenderer = new TerrainTileMapRenderer(palette.canvas());
+        TerrainMapTileRenderer paletteRenderer = new TerrainMapTileRenderer(palette.canvas());
         paletteRenderer.backgroundColorProperty().bind(renderer.backgroundColorProperty());
         paletteRenderer.colorSchemeProperty().bind(renderer.colorSchemeProperty());
         palette.setRenderer(paletteRenderer);
@@ -90,7 +90,7 @@ public class PalettesArea extends TabPane {
         return palette;
     }
 
-    private Palette createActorsPalette(EditorUI ui, TerrainTileMapRenderer renderer) {
+    private Palette createActorsPalette(EditorUI ui, TerrainMapTileRenderer renderer) {
         var palette = new Palette(PaletteID.ACTORS, 1, 11);
         palette.addTool(new ActorTool(ui, WorldMapProperty.POS_PAC, "Pac-Man", ArcadeSprites.PAC_MAN));
         palette.addTool(new ActorTool(ui, WorldMapProperty.POS_RED_GHOST, "Red Ghost", ArcadeSprites.RED_GHOST));
@@ -104,7 +104,7 @@ public class PalettesArea extends TabPane {
         palette.addTool(new ScatterTileTool(ui, WorldMapProperty.POS_SCATTER_ORANGE_GHOST, "Orange Ghost Scatter"));
         palette.selectTool(0); // "No actor"
 
-        TerrainTileMapRenderer paletteRenderer = new TerrainTileMapRenderer(palette.canvas());
+        TerrainMapTileRenderer paletteRenderer = new TerrainMapTileRenderer(palette.canvas());
         paletteRenderer.backgroundColorProperty().bind(renderer.backgroundColorProperty());
         paletteRenderer.colorSchemeProperty().bind(renderer.colorSchemeProperty());
         palette.setRenderer(paletteRenderer);

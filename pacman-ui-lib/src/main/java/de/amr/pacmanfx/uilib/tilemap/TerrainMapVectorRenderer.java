@@ -24,22 +24,22 @@ import static de.amr.pacmanfx.Globals.TS;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Vector renderer for terrain tile maps.
+ * Renderer for terrain layer of world map that renders precomputed paths for (closed) inner obstacles and border walls.
+ * Border walls are drawn as double lines where area between these lines is filled with wall fill color,
+ * inner obstacles are drawn with single line border and inner area filled with wall fill color.
  */
-public class TerrainVectorRenderer extends BaseCanvasRenderer implements TerrainMapRenderer {
+public class TerrainMapVectorRenderer extends BaseCanvasRenderer implements TerrainMapRenderer {
 
-    public static final double DEFAULT_DOUBLE_STROKE_OUTER_WIDTH = 4;
-    public static final double DEFAULT_DOUBLE_STROKE_INNER_WIDTH = 2;
-    public static final double DEFAULT_SINGLE_STROKE_WIDTH = 1;
+    /** Width of double lines used for border walls. */
+    public static final double DEFAULT_BORDER_WALL_FULL_WIDTH = 4;
+
+    /** Width of space between border wall double lines. */
+    public static final double DEFAULT_BORDER_WALL_INNER_WIDTH = 2;
+
+    /** Width of inner obstacle edges. */
+    public static final double DEFAULT_INNER_WALL_WIDTH = 1;
 
     private final ObjectProperty<TerrainMapColorScheme> colorScheme = new SimpleObjectProperty<>(DEFAULT_COLOR_SCHEME);
-    private final DoubleProperty doubleStrokeOuterWidth = new SimpleDoubleProperty(DEFAULT_DOUBLE_STROKE_OUTER_WIDTH);
-    private final DoubleProperty doubleStrokeInnerWidth = new SimpleDoubleProperty(DEFAULT_DOUBLE_STROKE_INNER_WIDTH);
-    private final DoubleProperty singleStrokeWidth = new SimpleDoubleProperty(DEFAULT_SINGLE_STROKE_WIDTH);
-
-    public TerrainVectorRenderer(Canvas canvas) {
-        super(canvas);
-    }
 
     public ObjectProperty<TerrainMapColorScheme> colorSchemeProperty() {
         return colorScheme;
@@ -49,44 +49,54 @@ public class TerrainVectorRenderer extends BaseCanvasRenderer implements Terrain
         return colorScheme.get();
     }
 
-    public void setColorScheme(TerrainMapColorScheme colorScheme) {
-        this.colorScheme.set(requireNonNull(colorScheme));
+    public void setColorScheme(TerrainMapColorScheme scheme) {
+        colorScheme.set(requireNonNull(scheme));
     }
 
-    public DoubleProperty doubleStrokeInnerWidthProperty() {
-        return doubleStrokeInnerWidth;
+    private final DoubleProperty borderWallFullWidth = new SimpleDoubleProperty(DEFAULT_BORDER_WALL_FULL_WIDTH);
+
+    public DoubleProperty borderWallFullWidthProperty() {
+        return borderWallFullWidth;
     }
 
-    public void setDoubleStrokeInnerWidth(double width) {
-        doubleStrokeInnerWidth.set(width);
+    public void setBorderWallFullWidth(double width) {
+        borderWallFullWidth.set(width);
     }
 
-    public double doubleStrokeInnerWidth() {
-        return doubleStrokeInnerWidth.get();
+    public double borderWallFullWidth() {
+        return borderWallFullWidth.get();
     }
 
-    public DoubleProperty doubleStrokeOuterWidthProperty() {
-        return doubleStrokeOuterWidth;
+    private final DoubleProperty borderWallInnerWidth = new SimpleDoubleProperty(DEFAULT_BORDER_WALL_INNER_WIDTH);
+
+    public DoubleProperty borderWallInnerWidthProperty() {
+        return borderWallInnerWidth;
     }
 
-    public void setDoubleStrokeOuterWidth(double width) {
-        doubleStrokeOuterWidth.set(width);
+    public void setBorderWallInnerWidth(double width) {
+        borderWallInnerWidth.set(width);
     }
 
-    public double doubleStrokeOuterWidth() {
-        return doubleStrokeOuterWidth.get();
+    public double borderWallInnerWidth() {
+        return borderWallInnerWidth.get();
     }
 
-    public DoubleProperty singleStrokeWidthProperty() {
-        return singleStrokeWidth;
+    private final DoubleProperty innerWallWidth = new SimpleDoubleProperty(DEFAULT_INNER_WALL_WIDTH);
+
+    public DoubleProperty innerWallWidthProperty() {
+        return innerWallWidth;
     }
 
-    public void setSingleStrokeWidth(double width) {
-        singleStrokeWidth.set(width);
+    public void setInnerWallWidth(double width) {
+        innerWallWidth.set(width);
     }
 
-    public double singleStrokeWidth() {
-        return singleStrokeWidth.get();
+    public double innerWallWidth() {
+        return innerWallWidth.get();
+    }
+
+    public TerrainMapVectorRenderer(Canvas canvas) {
+        super(canvas);
     }
 
     public void draw(WorldMap worldMap, Set<Obstacle> obstacles) {
@@ -94,27 +104,23 @@ public class TerrainVectorRenderer extends BaseCanvasRenderer implements Terrain
         ctx().scale(scaling(), scaling());
         for (Obstacle obstacle : obstacles) {
             if (isBorderObstacle(obstacle, worldMap)) {
-                drawObstacle(obstacle, doubleStrokeOuterWidth(), false, colorScheme().wallFillColor(), colorScheme().wallStrokeColor());
-                drawObstacle(obstacle, doubleStrokeInnerWidth(), false, colorScheme().wallFillColor(), colorScheme().wallFillColor());
-            }
-        }
-        for (Obstacle obstacle : obstacles) {
-            if (!isBorderObstacle(obstacle, worldMap)) {
-                //boolean hasParent = obstacle.getParent() != null;
-                drawObstacle(obstacle, singleStrokeWidth(), true, colorScheme().wallFillColor(), colorScheme().wallStrokeColor());
+                drawObstacle(obstacle, borderWallFullWidth(), false, colorScheme().wallFillColor(), colorScheme().wallStrokeColor());
+                drawObstacle(obstacle, borderWallInnerWidth(), false, colorScheme().wallFillColor(), colorScheme().wallFillColor());
+            } else {
+                drawObstacle(obstacle, innerWallWidth(), true, colorScheme().wallFillColor(), colorScheme().wallStrokeColor());
             }
         }
         ctx().restore();
     }
 
-    //TODO move elsewhere
+    //TODO mark obstacles on creation as "border" vs. "inner"
     private boolean isBorderObstacle(Obstacle obstacle, WorldMap worldMap) {
         Vector2i start = obstacle.startPoint();
         return start.x() <= TS || start.x() >= (worldMap.numCols() - 1) * TS
             || start.y() <= GameLevel.EMPTY_ROWS_OVER_MAZE * TS || start.y() >= (worldMap.numRows() - 1) * TS;
     }
 
-    private void drawObstacle(Obstacle obstacle, double lineWidth, boolean fill, Color fillColor, Color strokeColor) {
+    private void drawObstacle(Obstacle obstacle, double lineWidth, boolean fillInside, Color fillColor, Color strokeColor) {
         int r = HTS;
         Vector2i p = obstacle.startPoint();
         ctx().beginPath();
@@ -158,7 +164,7 @@ public class TerrainVectorRenderer extends BaseCanvasRenderer implements Terrain
         }
         if (obstacle.isClosed()) {
             ctx().closePath();
-            if (fill) {
+            if (fillInside) {
                 ctx().setFill(fillColor);
                 ctx().fill();
             }
