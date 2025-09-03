@@ -21,6 +21,8 @@ import java.util.Map;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.timer.TickTimer.secToTicks;
 import static de.amr.pacmanfx.lib.timer.TickTimer.ticksToString;
+import static de.amr.pacmanfx.ui.api.GameUI_Config.PROPERTY_COLOR_MAP;
+import static de.amr.pacmanfx.ui.api.GameUI_Config.PROPERTY_COLOR_MAP_INDEX;
 import static de.amr.pacmanfx.uilib.Ufx.formatColorHex;
 
 /**
@@ -46,6 +48,7 @@ public class InfoBoxGameInfo extends InfoBox {
         }));
         addDynamicLabeledValue("Fill/Stroke/Pellet", ifGameLevelPresent(level -> {
             WorldMap worldMap = level.worldMap();
+            //TODO create "plugin" mechanism for variant-specific info
             if (worldMap.hasConfigValue("nesColorScheme")) {
                 // Tengen Ms. Pac-Man
                 var nesColors = (NES_ColorScheme) worldMap.getConfigValue("nesColorScheme");
@@ -53,14 +56,14 @@ public class InfoBoxGameInfo extends InfoBox {
                 Color strokeColor = Color.web(nesColors.strokeColorRGB());
                 Color pelletColor = Color.web(nesColors.pelletColorRGB());
                 return "%s / %s / %s".formatted(formatColorHex(fillColor), formatColorHex(strokeColor), formatColorHex(pelletColor));
-            } else if (worldMap.hasConfigValue("colorMap")) {
+            } else if (worldMap.hasConfigValue(PROPERTY_COLOR_MAP)) {
                 // Pac-Man XXL game
-                Map<String, String> colorMap = worldMap.getConfigValue("colorMap");
+                Map<String, String> colorMap = worldMap.getConfigValue(PROPERTY_COLOR_MAP);
                 Color fillColor = Color.web(colorMap.get("fill"));
                 Color strokeColor = Color.web(colorMap.get("stroke"));
                 Color pelletColor = Color.web(colorMap.get("pellet"));
                 return "%s / %s / %s".formatted(formatColorHex(fillColor), formatColorHex(strokeColor), formatColorHex(pelletColor));
-            } else if (worldMap.hasConfigValue("colorMapIndex")) {
+            } else if (worldMap.hasConfigValue(PROPERTY_COLOR_MAP_INDEX)) {
                 // Arcade games
                 WorldMapColorScheme coloring = ui.currentConfig().colorScheme(worldMap);
                 return "%s / %s / %s".formatted(formatColorHex(coloring.fill()), formatColorHex(coloring.stroke()), formatColorHex(coloring.pellet()));

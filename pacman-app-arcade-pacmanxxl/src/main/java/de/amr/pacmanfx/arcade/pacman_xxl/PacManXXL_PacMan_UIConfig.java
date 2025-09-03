@@ -42,7 +42,6 @@ import java.util.OptionalInt;
 import java.util.ResourceBundle;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.PROPERTY_COLOR_MAP;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
 import static de.amr.pacmanfx.ui.api.GameScene_Config.sceneID_CutScene;
 import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_3D_ENABLED;

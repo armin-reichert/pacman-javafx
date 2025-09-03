@@ -25,6 +25,10 @@ import javafx.scene.image.Image;
 
 public interface GameUI_Config extends GameScene_Config, Disposable {
 
+    String PROPERTY_COLOR_MAP       = "colorMap";
+    String PROPERTY_COLOR_MAP_INDEX = "colorMapIndex";
+    String PROPERTY_MAP_NUMBER      = "mapNumber";
+
     AssetStorage assets();
 
     void loadAssets();

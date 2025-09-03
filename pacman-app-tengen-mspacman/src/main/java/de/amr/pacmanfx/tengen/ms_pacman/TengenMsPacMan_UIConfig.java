@@ -69,7 +69,6 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     public static final ResourceBundle TEXT_BUNDLE = ResourceBundle.getBundle("de.amr.pacmanfx.tengen.ms_pacman.localized_texts");
 
     public static final String PROPERTY_MAP_CATEGORY          = "mapCategory";
-    public static final String PROPERTY_MAP_NUMBER            = "mapNumber";
     // Name of configuration property under which the correctly recolored maze sprite set is stored
     public static final String PROPERTY_MAZE_ID               = "mazeID";
     public static final String PROPERTY_MAZE_SPRITE_SET       = "mazeSpriteSet";

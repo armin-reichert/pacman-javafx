@@ -7,8 +7,8 @@ package de.amr.pacmanfx.ui._2d;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.uilib.rendering.BaseCanvasRenderer;
-import de.amr.pacmanfx.uilib.rendering.RenderInfo;
 import de.amr.pacmanfx.uilib.rendering.CommonRenderInfo;
+import de.amr.pacmanfx.uilib.rendering.RenderInfo;
 import de.amr.pacmanfx.uilib.tilemap.ArcadeHouseRenderer;
 import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapColorScheme;
@@ -18,6 +18,7 @@ import javafx.scene.paint.Color;
 
 import java.util.Map;
 
+import static de.amr.pacmanfx.ui.api.GameUI_Config.PROPERTY_COLOR_MAP;
 import static java.util.function.Predicate.not;
 
 /**
@@ -78,8 +79,7 @@ public class GenericMapRenderer extends BaseCanvasRenderer {
             });
 
             // this is set by the map selector
-            //TODO define constant that is used by all game variants
-            Map<String, String> colorMap = gameLevel.worldMap().getConfigValue("colorMap");
+            Map<String, String> colorMap = gameLevel.worldMap().getConfigValue(PROPERTY_COLOR_MAP);
 
             foodRenderer.setPelletColor(Color.web(colorMap.get("pellet")));
             gameLevel.tiles()
