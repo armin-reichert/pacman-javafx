@@ -65,10 +65,16 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
     public static final String MAPS_PATH = "/de/amr/pacmanfx/tengen/ms_pacman/maps/";
 
+    public static final ResourceBundle TEXT_BUNDLE = ResourceBundle.getBundle("de.amr.pacmanfx.tengen.ms_pacman.localized_texts");
+
+    public static final String PROPERTY_MAP_CATEGORY          = "mapCategory";
+    public static final String PROPERTY_MAP_NUMBER            = "mapNumber";
     // Name of configuration property under which the correctly recolored maze sprite set is stored
-    public static final String PROPERTY_MAZE_SPRITE_SET = "mazeSpriteSet";
-    public static final String PROPERTY_MAZE_IMAGE      = "mazeImage";
-    public static final String PROPERTY_MAZE_SPRITE     = "mazeSprite";
+    public static final String PROPERTY_MAZE_SPRITE_SET       = "mazeSpriteSet";
+    public static final String PROPERTY_MAZE_IMAGE            = "mazeImage";
+    public static final String PROPERTY_MAZE_SPRITE           = "mazeSprite";
+    public static final String PROPERTY_MULTIPLE_FLASH_COLORS = "multipleFlashColors";
+    public static final String PROPERTY_NES_COLOR_SCHEME      = "nesColorScheme";
 
     /** 32x30 */
     public static final Vector2i NES_TILES = new Vector2i(32, 30);
@@ -120,7 +126,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     public TengenMsPacMan_UIConfig(GameUI ui) {
         this.ui = requireNonNull(ui);
 
-        assets.setTextResources(ResourceBundle.getBundle("de.amr.pacmanfx.tengen.ms_pacman.localized_texts"));
+        assets.setTextResources(TEXT_BUNDLE);
 
         spriteSheet              = new TengenMsPacMan_SpriteSheet(RES_TENGEN.loadImage(SPRITE_SHEET_PATH));
         arcadeMapsSpriteSheet    = new ArcadeMapsSpriteSheet(RES_TENGEN.loadImage(ARCADE_MAZES_IMAGE_PATH));
@@ -152,20 +158,19 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
     @Override
     public void loadAssets() {
-        assets.set("app_icon",         RES_TENGEN.loadImage("graphics/icons/mspacman.png"));
+        assets.set("app_icon",                         RES_TENGEN.loadImage("graphics/icons/mspacman.png"));
+        assets.set("startpage.image1",                 RES_TENGEN.loadImage("graphics/f1.png"));
+        assets.set("startpage.image2",                 RES_TENGEN.loadImage("graphics/f2.png"));
 
-        assets.set("startpage.image1", RES_TENGEN.loadImage("graphics/f1.png"));
-        assets.set("startpage.image2", RES_TENGEN.loadImage("graphics/f2.png"));
+        assets.set("color.game_over_message",          nesColor(0x11));
+        assets.set("color.ready_message",              nesColor(0x28));
 
-        assets.set("color.game_over_message",  nesColor(0x11));
-        assets.set("color.ready_message",      nesColor(0x28));
-
-        assets.set("pac.color.head",           nesColor(0x28));
-        assets.set("pac.color.eyes",           nesColor(0x02));
-        assets.set("pac.color.palate",         nesColor(0x2d));
-        assets.set("pac.color.boobs",          nesColor(0x28).deriveColor(0, 1.0, 0.96, 1.0));
-        assets.set("pac.color.hairbow",        nesColor(0x05));
-        assets.set("pac.color.hairbow.pearls", nesColor(0x02));
+        assets.set("pac.color.head",                   nesColor(0x28));
+        assets.set("pac.color.eyes",                   nesColor(0x02));
+        assets.set("pac.color.palate",                 nesColor(0x2d));
+        assets.set("pac.color.boobs",                  nesColor(0x28).deriveColor(0, 1.0, 0.96, 1.0));
+        assets.set("pac.color.hairbow",                nesColor(0x05));
+        assets.set("pac.color.hairbow.pearls",         nesColor(0x02));
 
         assets.set("ghost.0.color.normal.dress",       nesColor(0x05));
         assets.set("ghost.0.color.normal.eyeballs",    nesColor(0x20));
@@ -302,7 +307,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
     @Override
     public WorldMapColorScheme colorScheme(WorldMap worldMap) {
-        NES_ColorScheme scheme = worldMap.getConfigValue("nesColorScheme");
+        NES_ColorScheme scheme = worldMap.getConfigValue(PROPERTY_NES_COLOR_SCHEME);
         return new WorldMapColorScheme(scheme.fillColorRGB(), scheme.strokeColorRGB(), scheme.strokeColorRGB(), scheme.pelletColorRGB());
     }
 
@@ -449,8 +454,8 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     }
 
     public void configureNormalMazeRenderInfo(RenderInfo info, TengenMsPacMan_GameModel game, GameLevel gameLevel, long tick) {
-        int mapNumber = gameLevel.worldMap().getConfigValue("mapNumber");
-        MazeSpriteSet mazeSpriteSet = gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.PROPERTY_MAZE_SPRITE_SET);
+        int mapNumber = gameLevel.worldMap().getConfigValue(PROPERTY_MAP_NUMBER);
+        MazeSpriteSet mazeSpriteSet = gameLevel.worldMap().getConfigValue(PROPERTY_MAZE_SPRITE_SET);
         info.put(PROPERTY_MAZE_IMAGE, mazeSpriteSet.mazeImage().spriteSheetImage());
         if (game.mapCategory() == MapCategory.STRANGE && mapNumber == 15) {
             TengenMsPacMan_UIConfig uiConfig = ui.currentConfig();
@@ -481,10 +486,10 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
     public MazeSpriteSet createMazeSpriteSet(WorldMap worldMap, int flashCount) {
         final MapCategory mapCategory = worldMap.getConfigValue("mapCategory");
-        final int mapNumber = worldMap.getConfigValue("mapNumber");
-        final NES_ColorScheme requestedColorScheme = worldMap.getConfigValue("nesColorScheme");
+        final int mapNumber = worldMap.getConfigValue(PROPERTY_MAP_NUMBER);
+        final NES_ColorScheme requestedColorScheme = worldMap.getConfigValue(PROPERTY_NES_COLOR_SCHEME);
         // for randomly colored maps (levels 28-31, non-ARCADE maps), multiple random flash colors appear
-        final boolean randomFlashColors = worldMap.getConfigValue("multipleFlashColors");
+        final boolean randomFlashColors = worldMap.getConfigValue(PROPERTY_MULTIPLE_FLASH_COLORS);
 
         return switch (mapCategory) {
             case ARCADE  -> arcadeMazeSpriteSet(mapNumber, requestedColorScheme, flashCount);

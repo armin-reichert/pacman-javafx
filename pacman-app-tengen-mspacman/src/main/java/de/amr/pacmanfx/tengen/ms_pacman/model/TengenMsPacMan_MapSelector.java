@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
 import static de.amr.pacmanfx.lib.nes.NES_ColorScheme.*;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.MAPS_PATH;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory.*;
 import static java.util.Objects.requireNonNull;
 
@@ -70,16 +70,16 @@ public class TengenMsPacMan_MapSelector implements MapSelector {
 
     private WorldMap configuration(MapCategory category, int number, NES_ColorScheme colorScheme) {
         WorldMap worldMap = WorldMap.copyOfMap(mapRepository.get(category).get(number - 1));
-        worldMap.setConfigValue("mapCategory", category);
-        worldMap.setConfigValue("mapNumber", number);
-        worldMap.setConfigValue("nesColorScheme", colorScheme);
-        worldMap.setConfigValue("multipleFlashColors", false);
+        worldMap.setConfigValue(PROPERTY_MAP_CATEGORY, category);
+        worldMap.setConfigValue(PROPERTY_MAP_NUMBER, number);
+        worldMap.setConfigValue(PROPERTY_NES_COLOR_SCHEME, colorScheme);
+        worldMap.setConfigValue(PROPERTY_MULTIPLE_FLASH_COLORS, false);
         return worldMap;
     }
 
     private WorldMap randomConfiguration(MapCategory category, int number) {
         WorldMap worldMap = configuration(category, number, NES_ColorScheme.randomScheme());
-        worldMap.setConfigValue("multipleFlashColors", true);
+        worldMap.setConfigValue(PROPERTY_MULTIPLE_FLASH_COLORS, true);
         return worldMap;
     }
 

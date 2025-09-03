@@ -120,7 +120,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseCanvasRenderer impleme
 
     private void drawMessage(GameLevel gameLevel) {
         gameLevel.optMessage().ifPresent(message -> {
-            NES_ColorScheme colorScheme = gameLevel.worldMap().getConfigValue("nesColorScheme");
+            NES_ColorScheme colorScheme = gameLevel.worldMap().getConfigValue(PROPERTY_NES_COLOR_SCHEME);
             String text = messageText(gameLevel, message.type());
             switch (message.type()) {
                 case GAME_OVER -> {
