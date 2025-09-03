@@ -48,7 +48,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
     private Clapperboard clapperboard;
 
     private ArcadeMsPacMan_HUDRenderer hudRenderer;
-    private ArcadeMsPacMan_ActorRenderer actorSpriteRenderer;
+    private ArcadeMsPacMan_ActorRenderer actorRenderer;
 
     public ArcadeMsPacMan_CutScene3(GameUI ui) {
         super(ui);
@@ -59,27 +59,28 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         GameUI_Config uiConfig = ui.currentConfig();
 
         hudRenderer = (ArcadeMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas);
-        actorSpriteRenderer = (ArcadeMsPacMan_ActorRenderer) uiConfig.createActorRenderer(canvas);
+        actorRenderer = (ArcadeMsPacMan_ActorRenderer) uiConfig.createActorRenderer(canvas);
 
-        bindRendererProperties(hudRenderer, actorSpriteRenderer);
+        bindRendererProperties(hudRenderer, actorRenderer);
 
-        var spriteSheet = (ArcadeMsPacMan_SpriteSheet) ui.currentConfig().spriteSheet();
+        var spriteSheet = (ArcadeMsPacMan_SpriteSheet) uiConfig.spriteSheet();
 
         context().game().hud().scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
 
         pacMan = createPacMan();
+        pacMan.setAnimations(uiConfig.createPacAnimations(pacMan));
+
         msPacMan = createMsPacMan();
+        msPacMan.setAnimations(uiConfig.createPacAnimations(msPacMan));
+
         stork = new Stork(spriteSheet);
+
         bag = new Bag(spriteSheet);
         bag.setOpen(false);
 
-        GameUI_Config config = ui.currentConfig();
-        msPacMan.setAnimations(config.createPacAnimations(msPacMan));
-        pacMan.setAnimations(config.createPacAnimations(pacMan));
-
         clapperboard = new Clapperboard("3", "JUNIOR");
         clapperboard.setPosition(TS(3), TS(10));
-        clapperboard.setFont(actorSpriteRenderer.arcadeFontTS());
+        clapperboard.setFont(sceneRenderer.arcadeFontTS());
         clapperboard.startAnimation();
 
         setSceneState(STATE_CLAPPERBOARD, TickTimer.INDEFINITE);
@@ -115,8 +116,8 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        if (actorSpriteRenderer != null) {
-            Stream.of(clapperboard, msPacMan, pacMan, stork, bag).forEach(actorSpriteRenderer::drawActor);
+        if (actorRenderer != null) {
+            Stream.of(clapperboard, msPacMan, pacMan, stork, bag).forEach(actorRenderer::drawActor);
         }
     }
 

@@ -52,7 +52,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     private Ghost pinky;
 
     private ArcadeMsPacMan_HUDRenderer hudRenderer;
-    private ArcadeMsPacMan_ActorRenderer actorSpriteRenderer;
+    private ArcadeMsPacMan_ActorRenderer actorRenderer;
 
     private SingleSpriteActor heart;
     private Clapperboard clapperboard;
@@ -67,9 +67,9 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         final var spriteSheet = (ArcadeMsPacMan_SpriteSheet) uiConfig.spriteSheet();
 
         hudRenderer = (ArcadeMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas);
-        actorSpriteRenderer = (ArcadeMsPacMan_ActorRenderer) uiConfig.createActorRenderer(canvas);
+        actorRenderer = (ArcadeMsPacMan_ActorRenderer) uiConfig.createActorRenderer(canvas);
 
-        bindRendererProperties(hudRenderer, actorSpriteRenderer);
+        bindRendererProperties(hudRenderer, actorRenderer);
 
         context().game().hud().scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
 
@@ -89,7 +89,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
 
         clapperboard = new Clapperboard("1", "THEY MEET");
         clapperboard.setPosition(TS(3), TS(10));
-        clapperboard.setFont(actorSpriteRenderer.arcadeFontTS());
+        clapperboard.setFont(actorRenderer.arcadeFontTS());
         clapperboard.startAnimation();
 
         setState(STATE_CLAPPERBOARD, 120);
@@ -126,8 +126,8 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        if (actorSpriteRenderer != null) {
-            Stream.of(clapperboard, msPacMan, pacMan, inky, pinky, heart).forEach(actorSpriteRenderer::drawActor);
+        if (actorRenderer != null) {
+            Stream.of(clapperboard, msPacMan, pacMan, inky, pinky, heart).forEach(actorRenderer::drawActor);
         }
     }
 

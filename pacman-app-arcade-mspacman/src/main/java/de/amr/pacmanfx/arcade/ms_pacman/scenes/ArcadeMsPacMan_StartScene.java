@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_HUDRenderer;
-import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_ScenesRenderer;
+import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SceneRenderer;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.event.GameEvent;
@@ -25,7 +25,7 @@ import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_ORANGE;
 public class ArcadeMsPacMan_StartScene extends GameScene2D {
 
     private ArcadeMsPacMan_HUDRenderer hudRenderer;
-    private ArcadeMsPacMan_ScenesRenderer scenesRenderer;
+    private ArcadeMsPacMan_SceneRenderer scenesRenderer;
 
     private RectShort livesCounterSprite;
 
@@ -36,7 +36,7 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
     @Override
     public void doInit() {
         hudRenderer = (ArcadeMsPacMan_HUDRenderer) ui.currentConfig().createHUDRenderer(canvas);
-        scenesRenderer = new ArcadeMsPacMan_ScenesRenderer(canvas, ui.currentConfig());
+        scenesRenderer = new ArcadeMsPacMan_SceneRenderer(canvas, ui.currentConfig());
 
         bindRendererProperties(hudRenderer, scenesRenderer);
 

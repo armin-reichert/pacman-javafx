@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_HUDRenderer;
-import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_ScenesRenderer;
+import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SceneRenderer;
 import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Direction;
@@ -56,7 +56,6 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     private final StateMachine<SceneState, ArcadeMsPacMan_IntroScene> sceneController;
 
     private ArcadeMsPacMan_HUDRenderer hudRenderer;
-    private ArcadeMsPacMan_ScenesRenderer scenesRenderer;
     private ActorRenderer actorRenderer;
 
     private Marquee marquee;
@@ -80,10 +79,10 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         GameUI_Config uiConfig = ui.currentConfig();
 
         hudRenderer = (ArcadeMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas);
-        scenesRenderer = new ArcadeMsPacMan_ScenesRenderer(canvas, ui.currentConfig());
+        sceneRenderer = new ArcadeMsPacMan_SceneRenderer(canvas, ui.currentConfig());
         actorRenderer = uiConfig.createActorRenderer(canvas);
 
-        bindRendererProperties(hudRenderer, scenesRenderer, actorRenderer);
+        bindRendererProperties(hudRenderer, sceneRenderer, actorRenderer);
 
         context().game().hud().creditVisible(true).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
 
@@ -98,22 +97,23 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         marquee.setBulbOnColor(ARCADE_WHITE);
 
         msPacMan = createMsPacMan();
+        msPacMan.setAnimations(uiConfig.createPacAnimations(msPacMan));
+        msPacMan.selectAnimation(ANIM_PAC_MUNCHING);
+
         ghosts = List.of(
             createGhost(RED_GHOST_SHADOW),
             createGhost(PINK_GHOST_SPEEDY),
             createGhost(CYAN_GHOST_BASHFUL),
             createGhost(ORANGE_GHOST_POKEY)
         );
+        for (Ghost ghost : ghosts) {
+            ghost.setAnimations(uiConfig.createGhostAnimations(ghost));
+            ghost.selectAnimation(ANIM_GHOST_NORMAL);
+        }
+
         presentedGhostCharacter = RED_GHOST_SHADOW;
         numTicksBeforeRising = 0;
 
-        msPacMan.setAnimations(ui.currentConfig().createPacAnimations(msPacMan));
-        msPacMan.selectAnimation(ANIM_PAC_MUNCHING);
-        for (Ghost ghost : ghosts) {
-            AnimationManager animations = ui.currentConfig().createGhostAnimations(ghost);
-            ghost.setAnimations(animations);
-            animations.select(ANIM_GHOST_NORMAL);
-        }
         sceneController.restart(SceneState.STARTING);
     }
 
@@ -145,9 +145,11 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        scenesRenderer.ctx().setFont(scenesRenderer.arcadeFontTS());
-        scenesRenderer.fillText(TITLE, ARCADE_ORANGE, TITLE_X, TITLE_Y);
-        scenesRenderer.drawMarquee(marquee);
+        var msPacManSceneRenderer = (ArcadeMsPacMan_SceneRenderer) sceneRenderer;
+
+        ctx().setFont(sceneRenderer.arcadeFontTS());
+        sceneRenderer.fillText(TITLE, ARCADE_ORANGE, TITLE_X, TITLE_Y);
+        msPacManSceneRenderer.drawMarquee(marquee);
 
         ghosts.forEach(actorRenderer::drawActor);
         actorRenderer.drawActor(msPacMan);
@@ -157,18 +159,18 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                 String ghostName = GHOST_NAMES[presentedGhostCharacter];
                 Color ghostColor = GHOST_COLORS[presentedGhostCharacter];
                 if (presentedGhostCharacter == RED_GHOST_SHADOW) {
-                    scenesRenderer.fillText("WITH", ARCADE_WHITE, TITLE_X, TOP_Y + TS(3));
+                    sceneRenderer.fillText("WITH", ARCADE_WHITE, TITLE_X, TOP_Y + TS(3));
                 }
                 double x = TITLE_X + (ghostName.length() < 4 ? TS(4) : TS(3));
                 double y = TOP_Y + TS(6);
-                scenesRenderer.fillText(ghostName, ghostColor, x, y);
+                sceneRenderer.fillText(ghostName, ghostColor, x, y);
             }
             case MS_PACMAN_MARCHING_IN, READY_TO_PLAY -> {
-                scenesRenderer.fillText("STARRING", ARCADE_WHITE, TITLE_X, TOP_Y + TS(3));
-                scenesRenderer.fillText("MS PAC-MAN", ARCADE_YELLOW, TITLE_X, TOP_Y + TS(6));
+                sceneRenderer.fillText("STARRING", ARCADE_WHITE, TITLE_X, TOP_Y + TS(3));
+                sceneRenderer.fillText("MS PAC-MAN", ARCADE_YELLOW, TITLE_X, TOP_Y + TS(6));
             }
         }
-        scenesRenderer.drawMidwayCopyright(TS(6), TS(28));
+        msPacManSceneRenderer.drawMidwayCopyright(TS(6), TS(28));
     }
 
     // Scene controller FSM

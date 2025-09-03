@@ -14,11 +14,11 @@ import javafx.scene.image.Image;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_RED;
 
-public class ArcadeMsPacMan_ScenesRenderer extends BaseSpriteRenderer {
+public class ArcadeMsPacMan_SceneRenderer extends BaseSpriteRenderer {
 
     private final GameUI_Config uiConfig;
 
-    public ArcadeMsPacMan_ScenesRenderer(Canvas canvas, GameUI_Config uiConfig) {
+    public ArcadeMsPacMan_SceneRenderer(Canvas canvas, GameUI_Config uiConfig) {
         super(canvas, uiConfig.spriteSheet());
         this.uiConfig = uiConfig;
     }

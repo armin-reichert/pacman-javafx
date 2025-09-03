@@ -43,7 +43,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
     private Clapperboard clapperboard;
 
     private ArcadeMsPacMan_HUDRenderer hudRenderer;
-    private ArcadeMsPacMan_ActorRenderer actorSpriteRenderer;
+    private ArcadeMsPacMan_ActorRenderer actorRenderer;
 
     public ArcadeMsPacMan_CutScene2(GameUI ui) {
         super(ui);
@@ -54,21 +54,21 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
         GameUI_Config uiConfig = ui.currentConfig();
 
         hudRenderer = (ArcadeMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas);
-        actorSpriteRenderer = (ArcadeMsPacMan_ActorRenderer) uiConfig.createActorRenderer(canvas);
+        actorRenderer = (ArcadeMsPacMan_ActorRenderer) uiConfig.createActorRenderer(canvas);
 
-        bindRendererProperties(hudRenderer, actorSpriteRenderer);
+        bindRendererProperties(hudRenderer, actorRenderer);
 
         context().game().hud().scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
 
         pacMan = createPacMan();
-        msPacMan = createMsPacMan();
+        pacMan.setAnimations(uiConfig.createPacAnimations(pacMan));
 
-        msPacMan.setAnimations(ui.currentConfig().createPacAnimations(msPacMan));
-        pacMan.setAnimations(ui.currentConfig().createPacAnimations(pacMan));
+        msPacMan = createMsPacMan();
+        msPacMan.setAnimations(uiConfig.createPacAnimations(msPacMan));
 
         clapperboard = new Clapperboard("2", "THE CHASE");
         clapperboard.setPosition(TS(3), TS(10));
-        clapperboard.setFont(actorSpriteRenderer.arcadeFontTS());
+        clapperboard.setFont(sceneRenderer.arcadeFontTS());
         clapperboard.startAnimation();
 
         setSceneState(STATE_CLAPPERBOARD, 120);
@@ -103,8 +103,8 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        if (actorSpriteRenderer != null) {
-            Stream.of(clapperboard, msPacMan, pacMan).forEach(actor -> actorSpriteRenderer.drawActor(actor));
+        if (actorRenderer != null) {
+            Stream.of(clapperboard, msPacMan, pacMan).forEach(actor -> actorRenderer.drawActor(actor));
         }
     }
 
