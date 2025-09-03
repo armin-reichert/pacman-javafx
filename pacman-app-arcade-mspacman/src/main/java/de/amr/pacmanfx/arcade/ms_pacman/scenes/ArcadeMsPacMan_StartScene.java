@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
+import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_HUDRenderer;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SceneRenderer;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
@@ -25,7 +26,6 @@ import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_ORANGE;
 public class ArcadeMsPacMan_StartScene extends GameScene2D {
 
     private ArcadeMsPacMan_HUDRenderer hudRenderer;
-    private ArcadeMsPacMan_SceneRenderer scenesRenderer;
 
     private RectShort livesCounterSprite;
 
@@ -35,14 +35,15 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
     
     @Override
     public void doInit() {
-        hudRenderer = (ArcadeMsPacMan_HUDRenderer) ui.currentConfig().createHUDRenderer(canvas);
-        scenesRenderer = new ArcadeMsPacMan_SceneRenderer(canvas, ui.currentConfig());
+        ArcadeMsPacMan_UIConfig uiConfig = ui.currentConfig();
+        var spriteSheet = (ArcadeMsPacMan_SpriteSheet) uiConfig.spriteSheet();
 
-        bindRendererProperties(hudRenderer, scenesRenderer);
+        sceneRenderer = new ArcadeMsPacMan_SceneRenderer(canvas, uiConfig);
+        hudRenderer = (ArcadeMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas);
+        bindRendererProperties(hudRenderer, sceneRenderer);
 
         context().game().hud().creditVisible(true).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
 
-        var spriteSheet = (ArcadeMsPacMan_SpriteSheet) ui.currentConfig().spriteSheet();
         livesCounterSprite = spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
 
         actionBindings.assign(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
@@ -50,8 +51,7 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
     }
 
     @Override
-    protected void doEnd() {
-    }
+    protected void doEnd() {}
 
     @Override
     public void update() {
@@ -76,13 +76,15 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        Font font6 = scenesRenderer.arcadeFont6();
-        Font font8 = scenesRenderer.arcadeFontTS();
-        scenesRenderer.fillText("PUSH START BUTTON", ARCADE_ORANGE, font8, TS(6), TS(16));
-        scenesRenderer.fillText("1 PLAYER ONLY", ARCADE_ORANGE, font8, TS(8), TS(18));
-        scenesRenderer.fillText("ADDITIONAL    AT 10000", ARCADE_ORANGE, font8,TS(2), TS(25));
-        scenesRenderer.drawSprite(livesCounterSprite, TS(13), TS(23) + 1, true);
-        scenesRenderer.fillText("PTS", ARCADE_ORANGE, font6, TS(25), TS(25));
-        scenesRenderer.drawMidwayCopyright(TS * 6, TS * 28);
+        Font font6 = sceneRenderer.arcadeFont6();
+        Font font8 = sceneRenderer.arcadeFontTS();
+        sceneRenderer.fillText("PUSH START BUTTON", ARCADE_ORANGE, font8, TS(6), TS(16));
+        sceneRenderer.fillText("1 PLAYER ONLY", ARCADE_ORANGE, font8, TS(8), TS(18));
+        sceneRenderer.fillText("ADDITIONAL    AT 10000", ARCADE_ORANGE, font8,TS(2), TS(25));
+        sceneRenderer.drawSprite(livesCounterSprite, TS(13), TS(23) + 1, true);
+        sceneRenderer.fillText("PTS", ARCADE_ORANGE, font6, TS(25), TS(25));
+        if (sceneRenderer instanceof ArcadeMsPacMan_SceneRenderer msPacManSceneRenderer) {
+            msPacManSceneRenderer.drawMidwayCopyright(TS * 6, TS * 28);
+        }
     }
 }
