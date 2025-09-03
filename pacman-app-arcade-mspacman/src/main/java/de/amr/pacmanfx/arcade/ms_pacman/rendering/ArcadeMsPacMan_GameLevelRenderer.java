@@ -53,7 +53,7 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseSpriteRenderer impleme
         if (info.getBoolean(RenderInfoProperties.MAZE_BRIGHT)) {
             Image mazeImage = uiConfig.assets().image("maze.bright.%d".formatted(colorMapIndex));
             ctx.drawImage(mazeImage, 0, emptySpaceOverMaze);
-        } else if (info.getBoolean("empty")) {
+        } else if (info.getBoolean(RenderInfoProperties.MAZE_EMPTY)) {
             RectShort mazeSprite = spriteSheet().spriteSequence(SpriteID.EMPTY_MAZES)[colorMapIndex];
             drawSprite(mazeSprite, 0, emptySpaceOverMaze, false);
         } else {

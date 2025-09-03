@@ -57,7 +57,7 @@ public class ArcadePacMan_GameLevelRenderer extends BaseSpriteRenderer implement
             Image brightMazeImage = uiConfig.assets().image("maze.bright");
             ctx().drawImage(brightMazeImage, 0, emptySpaceOverMaze);
         }
-        else if (info.getBoolean("empty")) {
+        else if (info.getBoolean(RenderInfoProperties.MAZE_EMPTY)) {
             drawSprite(spriteSheet().sprite(SpriteID.MAP_EMPTY), 0, emptySpaceOverMaze, false);
             // over-paint door tiles
             gameLevel.house().map(House::leftDoorTile) .ifPresent(tile -> fillSquareAtTileCenter(tile, TS + 0.5));
