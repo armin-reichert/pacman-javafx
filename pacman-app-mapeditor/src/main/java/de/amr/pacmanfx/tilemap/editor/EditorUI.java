@@ -560,6 +560,7 @@ public class EditorUI {
         text.setTextFill(COLOR_PREVIEW_3D_OVERLAY);
         text.setFont(FONT_PREVIEW_3D_OVERLAY);
         text.setMouseTransparent(true);
+
         //TODO There is still an issue: While the mouse is pressed inside the 3D view, the unfocused text is displayed!
         preview3D.subScene().focusedProperty().addListener((py, ov, focused) -> {
             text.setText(translated(focused
@@ -623,7 +624,7 @@ public class EditorUI {
         sliderZoom = new Slider(MIN_GRID_SIZE, MAX_GRID_SIZE, 0.5 * (MIN_GRID_SIZE + MAX_GRID_SIZE));
         sliderZoom.setShowTickLabels(false);
         sliderZoom.setShowTickMarks(true);
-        sliderZoom.setPrefWidth(120);
+        sliderZoom.setPrefWidth(160);
         Bindings.bindBidirectional(sliderZoom.valueProperty(), gridSizeProperty());
         Tooltip tt = new Tooltip();
         tt.setShowDelay(Duration.millis(50));
@@ -636,7 +637,7 @@ public class EditorUI {
         var lblMapSize = new Label();
         lblMapSize.setFont(FONT_STATUS_LINE_NORMAL);
         lblMapSize.textProperty().bind(editor.currentWorldMapProperty().map(worldMap -> (worldMap != null)
-                ? "Cols: %d Rows: %d".formatted(worldMap.numCols(), worldMap.numRows()) : "")
+                ? "H: %d tiles V: %d tiles".formatted(worldMap.numCols(), worldMap.numRows()) : "")
         );
 
         var lblFocussedTile = new Label();
@@ -647,41 +648,48 @@ public class EditorUI {
                 tile -> tile != null ? "(%2d,%2d)".formatted(tile.x(), tile.y()) : "n/a"));
 
         var statusIndicator = new StatusIndicator();
-        statusIndicator.setAlignment(Pos.BASELINE_RIGHT);
-
         createZoomControl();
 
-        statusLine = new HBox(lblMapSize, filler(10), lblFocussedTile, spacer(), messageDisplay, spacer(), filler(10),
-                sliderZoom, filler(10), statusIndicator);
-        statusLine.setPadding(new Insets(6, 2, 2, 2));
+        statusLine = new HBox(
+                statusIndicator, filler(10),
+                lblMapSize, filler(10),
+                lblFocussedTile, spacer(),
+                messageDisplay, spacer(),
+                filler(10), sliderZoom);
+
+        statusLine.setPadding(new Insets(10, 2, 2, 2));
     }
 
-    private class StatusIndicator extends HBox {
+    private class StatusIndicator extends Label {
 
         public StatusIndicator() {
-            Label label = new Label();
-            label.setMinWidth(90);
-            label.setFont(FONT_STATUS_LINE_EDIT_MODE);
-            label.setEffect(new Glow(0.2));
-            getChildren().add(label);
+            setMinWidth(90);
+            setFont(FONT_STATUS_LINE_EDIT_MODE);
+            setEffect(new Glow(0.2));
+            setAlignment(Pos.CENTER);
+            setTextAlignment(TextAlignment.CENTER);
+            setBorder(Border.stroke(Color.LIGHTGRAY));
+            Tooltip tooltip = new Tooltip(translated("editmode_label.tooltip"));
+            tooltip.setShowDelay(Duration.millis(50));
+            tooltip.setFont(Font.font(14));
+            setOnMouseClicked(e -> new Action_SelectNextEditMode(EditorUI.this).execute());
+            setTooltip(tooltip);
 
-            label.textProperty().bind(Bindings.createStringBinding(
-                () -> switch (editMode()) {
+            textProperty().bind(Bindings.createStringBinding(() ->
+                switch (editMode()) {
                     case INSPECT -> translated("mode.inspect");
                     case EDIT    -> translated(symmetricEditMode() ? "mode.symmetric" : "mode.edit");
                     case ERASE   -> translated("mode.erase");
                 }, editModeProperty(), symmetricEditModeProperty()
             ));
 
-            label.textFillProperty().bind(editModeProperty().map(
-                mode -> switch (mode) {
+            textFillProperty().bind(editModeProperty().map(mode ->
+                switch (mode) {
                     case INSPECT -> Color.GRAY;
                     case EDIT    -> Color.FORESTGREEN;
                     case ERASE   -> Color.RED;
                 }
             ));
-
-            label.setOnMouseClicked(e -> new Action_SelectNextEditMode(EditorUI.this).execute());
         }
     }
 
