@@ -1,6 +1,6 @@
 package de.amr.pacmanfx.uilib.rendering;
 
-public interface RenderInfoProperties {
+public interface CommonRenderInfo {
 
     String MAZE_BRIGHT = "bright";
     String MAZE_BLINKING = "blinkingOn";

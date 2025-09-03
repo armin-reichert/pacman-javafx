@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
+import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.*;
+
 public class ArcadePacMan_MapSelector implements MapSelector {
 
     private static final String MAP_PATH = "/de/amr/pacmanfx/arcade/pacman/maps/pacman.world";
@@ -39,12 +41,9 @@ public class ArcadePacMan_MapSelector implements MapSelector {
             }
             try {
                 var worldMap = WorldMap.mapFromURL(mapURL);
-                worldMap.setConfigValue("mapNumber", 1);
-                //TODO get rid of this, use "colorMap" everywhere
-                worldMap.setConfigValue("colorMapIndex", 0);
-
-                worldMap.setConfigValue("colorMap", MapSelector.extractColorMap(worldMap));
-
+                worldMap.setConfigValue(PROPERTY_MAP_NUMBER, 1);
+                worldMap.setConfigValue(PROPERTY_COLOR_MAP_INDEX, 0);
+                worldMap.setConfigValue(PROPERTY_COLOR_MAP, MapSelector.extractColorMap(worldMap));
                 Logger.info("Pac-Man Arcade map loaded, URL='{}'", worldMap.url());
                 worldMaps = List.of(worldMap);
             } catch (IOException x) {

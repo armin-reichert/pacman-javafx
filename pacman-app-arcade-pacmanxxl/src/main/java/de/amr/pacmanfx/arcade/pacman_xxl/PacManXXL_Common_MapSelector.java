@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.PROPERTY_COLOR_MAP;
 import static de.amr.pacmanfx.lib.RandomNumberSupport.randomInt;
 import static java.util.Objects.requireNonNull;
 
@@ -117,7 +118,7 @@ public class PacManXXL_Common_MapSelector implements MapSelector {
         Map<String, String> colorScheme = builtinMaps.contains(selectedMap)
                 ? MAP_COLOR_SCHEMES.get(randomInt(0, MAP_COLOR_SCHEMES.size()))
                 : MapSelector.extractColorMap(selectedMap);
-        worldMap.setConfigValue("colorMap", colorScheme);
+        worldMap.setConfigValue(PROPERTY_COLOR_MAP, colorScheme);
         Logger.info("Map selected (Mode {}): {}", mapSelectionMode, worldMap.url());
         return worldMap;
     }

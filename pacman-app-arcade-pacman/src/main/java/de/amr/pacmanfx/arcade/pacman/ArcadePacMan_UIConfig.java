@@ -51,6 +51,11 @@ public class ArcadePacMan_UIConfig implements GameUI_Config {
     private static final ResourceManager RES_GAME_UI = () -> GameUI_Implementation.class;
     private static final ResourceManager RES_ARCADE_PAC_MAN = () -> ArcadePacMan_UIConfig.class;
 
+    public static final String PROPERTY_MAP_NUMBER = "mapNumber";
+    public static final String PROPERTY_COLOR_MAP = "colorMap";
+    public static final String PROPERTY_COLOR_MAP_INDEX = "colorMapIndex";
+
+
     public static final String ANIM_BIG_PAC_MAN               = "big_pac_man";
     public static final String ANIM_BLINKY_DAMAGED            = "blinky_damaged";
     public static final String ANIM_BLINKY_PATCHED            = "blinky_patched";

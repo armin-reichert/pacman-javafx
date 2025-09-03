@@ -44,6 +44,7 @@ import java.util.OptionalInt;
 import java.util.ResourceBundle;
 import java.util.stream.Stream;
 
+import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig.PROPERTY_COLOR_MAP;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
 import static de.amr.pacmanfx.ui.api.GameScene_Config.sceneID_CutScene;
 import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_3D_ENABLED;
@@ -158,7 +159,7 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config {
 
     @Override
     public WorldMapColorScheme colorScheme(WorldMap worldMap) {
-        Map<String, String> colorMap = worldMap.getConfigValue("colorMap");
+        Map<String, String> colorMap = worldMap.getConfigValue(PROPERTY_COLOR_MAP);
         return new WorldMapColorScheme(
             colorMap.get("fill"), colorMap.get("stroke"), colorMap.get("door"), colorMap.get("pellet"));
     }

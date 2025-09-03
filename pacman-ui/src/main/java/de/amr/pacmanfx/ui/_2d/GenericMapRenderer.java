@@ -8,7 +8,7 @@ import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.uilib.rendering.BaseCanvasRenderer;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
-import de.amr.pacmanfx.uilib.rendering.RenderInfoProperties;
+import de.amr.pacmanfx.uilib.rendering.CommonRenderInfo;
 import de.amr.pacmanfx.uilib.tilemap.ArcadeHouseRenderer;
 import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapColorScheme;
@@ -62,8 +62,8 @@ public class GenericMapRenderer extends BaseCanvasRenderer {
 
     public void drawMaze(GameLevel gameLevel, RenderInfo info) {
         WorldMap worldMap = gameLevel.worldMap();
-        if (info.getBoolean(RenderInfoProperties.MAZE_BRIGHT)) {
-            terrainRenderer.setColorScheme(info.getBoolean(RenderInfoProperties.MAZE_BLINKING) ? blinkingOnColors : blinkingOffColors);
+        if (info.getBoolean(CommonRenderInfo.MAZE_BRIGHT)) {
+            terrainRenderer.setColorScheme(info.getBoolean(CommonRenderInfo.MAZE_BLINKING) ? blinkingOnColors : blinkingOffColors);
             terrainRenderer.draw(worldMap, worldMap.obstacles());
         }
         else {
@@ -78,6 +78,7 @@ public class GenericMapRenderer extends BaseCanvasRenderer {
             });
 
             // this is set by the map selector
+            //TODO define constant that is used by all game variants
             Map<String, String> colorMap = gameLevel.worldMap().getConfigValue("colorMap");
 
             foodRenderer.setPelletColor(Color.web(colorMap.get("pellet")));
@@ -86,7 +87,7 @@ public class GenericMapRenderer extends BaseCanvasRenderer {
                 .filter(not(gameLevel::isEnergizerPosition))
                 .forEach(foodRenderer::drawPellet);
 
-            if (info.getBoolean(RenderInfoProperties.MAZE_BLINKING)) {
+            if (info.getBoolean(CommonRenderInfo.MAZE_BLINKING)) {
                 foodRenderer.setEnergizerColor(Color.web(colorMap.get("pellet")));
                 gameLevel.energizerPositions().stream()
                     .filter(gameLevel::tileContainsFood)

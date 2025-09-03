@@ -58,16 +58,16 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseCanvasRenderer impleme
     @Override
     public void drawGameLevel(GameLevel gameLevel, RenderInfo info) {
         applyLevelSettings(gameLevel, info);
-        if (info.getBoolean(RenderInfoProperties.MAZE_BRIGHT)) {
-            int flashingIndex = info.get(RenderInfoProperties.MAZE_FLASHING_INDEX, Integer.class);
+        if (info.getBoolean(CommonRenderInfo.MAZE_BRIGHT)) {
+            int flashingIndex = info.get(CommonRenderInfo.MAZE_FLASHING_INDEX, Integer.class);
             uiConfig.configureHighlightedMazeRenderInfo(info, gameLevel, flashingIndex);
         } else {
-            long tick = info.get(RenderInfoProperties.TICK, Long.class);
+            long tick = info.get(CommonRenderInfo.TICK, Long.class);
             MapCategory mapCategory = info.get(PROPERTY_MAP_CATEGORY, MapCategory.class);
             uiConfig.configureNormalMazeRenderInfo(info, mapCategory, gameLevel.worldMap(), tick);
         }
-        Image mazeImage = info.get(RenderInfoProperties.MAZE_IMAGE, Image.class);
-        RectShort mazeSprite = info.get(RenderInfoProperties.MAZE_SPRITE, RectShort.class);
+        Image mazeImage = info.get(CommonRenderInfo.MAZE_IMAGE, Image.class);
+        RectShort mazeSprite = info.get(CommonRenderInfo.MAZE_SPRITE, RectShort.class);
         ctx().setImageSmoothing(false);
         int x = 0, y = GameLevel.EMPTY_ROWS_OVER_MAZE * TS;
         ctx().drawImage(mazeImage,

@@ -62,7 +62,7 @@ public class TengenMsPacMan_MapSelector implements MapSelector {
             case STRANGE -> {
                 WorldMap worldMap = createConfiguredStrangeMap(levelNumber);
                 // Hack: Store mazeID in map properties to make renderer happy
-                worldMap.setConfigValue("mazeID", NonArcadeMapsSpriteSheet.MazeID.values()[levelNumber - 1]);
+                worldMap.setConfigValue(PROPERTY_MAZE_ID, NonArcadeMapsSpriteSheet.MazeID.values()[levelNumber - 1]);
                 yield worldMap;
             }
         };

@@ -36,7 +36,7 @@ import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.MsPacMan3D;
 import de.amr.pacmanfx.uilib.model3D.MsPacManBody;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
-import de.amr.pacmanfx.uilib.rendering.RenderInfoProperties;
+import de.amr.pacmanfx.uilib.rendering.CommonRenderInfo;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -71,6 +71,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     public static final String PROPERTY_MAP_CATEGORY          = "mapCategory";
     public static final String PROPERTY_MAP_NUMBER            = "mapNumber";
     // Name of configuration property under which the correctly recolored maze sprite set is stored
+    public static final String PROPERTY_MAZE_ID               = "mazeID";
     public static final String PROPERTY_MAZE_SPRITE_SET       = "mazeSpriteSet";
     public static final String PROPERTY_MULTIPLE_FLASH_COLORS = "multipleFlashColors";
     public static final String PROPERTY_NES_COLOR_SCHEME      = "nesColorScheme";
@@ -448,19 +449,19 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
         WorldMap worldMap = gameLevel.worldMap();
         MazeSpriteSet mazeSpriteSet = worldMap.getConfigValue(PROPERTY_MAZE_SPRITE_SET);
         ColoredSpriteImage flashingMazeSprite = mazeSpriteSet.flashingMazeImages().get(frame);
-        info.put(RenderInfoProperties.MAZE_IMAGE, flashingMazeSprite.spriteSheetImage());
-        info.put(RenderInfoProperties.MAZE_SPRITE, flashingMazeSprite.sprite());
+        info.put(CommonRenderInfo.MAZE_IMAGE, flashingMazeSprite.spriteSheetImage());
+        info.put(CommonRenderInfo.MAZE_SPRITE, flashingMazeSprite.sprite());
     }
 
     public void configureNormalMazeRenderInfo(RenderInfo info, MapCategory mapCategory, WorldMap worldMap, long tick) {
         int mapNumber = worldMap.getConfigValue(PROPERTY_MAP_NUMBER);
         MazeSpriteSet mazeSpriteSet = worldMap.getConfigValue(PROPERTY_MAZE_SPRITE_SET);
-        info.put(RenderInfoProperties.MAZE_IMAGE, mazeSpriteSet.mazeImage().spriteSheetImage());
+        info.put(CommonRenderInfo.MAZE_IMAGE, mazeSpriteSet.mazeImage().spriteSheetImage());
         if (mapCategory == MapCategory.STRANGE && mapNumber == 15) {
             int spriteIndex = mazeAnimationSpriteIndex(tick);
-            info.put(RenderInfoProperties.MAZE_SPRITE, nonArcadeMapsSpriteSheet().spriteSequence(MAZE32_ANIMATED)[spriteIndex]);
+            info.put(CommonRenderInfo.MAZE_SPRITE, nonArcadeMapsSpriteSheet().spriteSequence(MAZE32_ANIMATED)[spriteIndex]);
         } else {
-            info.put(RenderInfoProperties.MAZE_SPRITE, mazeSpriteSet.mazeImage().sprite());
+            info.put(CommonRenderInfo.MAZE_SPRITE, mazeSpriteSet.mazeImage().sprite());
         }
     }
 
@@ -483,7 +484,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
      */
 
     public MazeSpriteSet createMazeSpriteSet(WorldMap worldMap, int flashCount) {
-        final MapCategory mapCategory = worldMap.getConfigValue("mapCategory");
+        final MapCategory mapCategory = worldMap.getConfigValue(PROPERTY_MAP_CATEGORY);
         final int mapNumber = worldMap.getConfigValue(PROPERTY_MAP_NUMBER);
         final NES_ColorScheme requestedColorScheme = worldMap.getConfigValue(PROPERTY_NES_COLOR_SCHEME);
         // for randomly colored maps (levels 28-31, non-ARCADE maps), multiple random flash colors appear
@@ -494,7 +495,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
             case MINI    -> miniMazeSpriteSet(mapNumber, requestedColorScheme, flashCount, randomFlashColors);
             case BIG     -> bigMazeSpriteSet(mapNumber, requestedColorScheme, flashCount, randomFlashColors);
             case STRANGE -> {
-                NonArcadeMapsSpriteSheet.MazeID mazeID = worldMap.getConfigValue("mazeID"); // set by map selector!
+                NonArcadeMapsSpriteSheet.MazeID mazeID = worldMap.getConfigValue(PROPERTY_MAZE_ID); // set by map selector!
                 yield strangeMazeSpriteSet(
                     mazeID,
                     randomFlashColors ? requestedColorScheme : null,

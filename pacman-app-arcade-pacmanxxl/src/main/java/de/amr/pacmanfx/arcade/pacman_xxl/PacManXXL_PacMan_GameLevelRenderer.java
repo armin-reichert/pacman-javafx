@@ -14,6 +14,8 @@ import javafx.scene.paint.Color;
 
 import java.util.Map;
 
+import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.PROPERTY_COLOR_MAP;
+
 /**
  * Renderer for "Pac-Man XXL" game variant. Uses the vector graphics map renderer that can render any custom map.
  */
@@ -30,7 +32,7 @@ public class PacManXXL_PacMan_GameLevelRenderer extends ArcadePacMan_GameLevelRe
 
     @Override
     public void applyLevelSettings(GameLevel gameLevel, RenderInfo info) {
-        Map<String, String> colorMap = gameLevel.worldMap().getConfigValue("colorMap");
+        Map<String, String> colorMap = gameLevel.worldMap().getConfigValue(PROPERTY_COLOR_MAP);
         var terrainMapColorScheme = new TerrainMapColorScheme(
                 backgroundColor(),
                 Color.web(colorMap.get("fill")),

@@ -10,6 +10,8 @@ import de.amr.pacmanfx.model.MapSelector;
 import java.util.List;
 
 import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
+import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig.PROPERTY_COLOR_MAP;
+import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig.PROPERTY_COLOR_MAP_INDEX;
 
 public class ArcadeMsPacMan_MapSelector implements MapSelector {
 
@@ -66,8 +68,9 @@ public class ArcadeMsPacMan_MapSelector implements MapSelector {
 
         // 1->0, 2->1, 3->2, 4->3 if level <= 13; 3->4; 4->5 if level >= 14
         int index = levelNumber < 14 ? mapNumber - 1 : mapNumber + 1;
-        worldMap.setConfigValue("colorMapIndex", index);
-        worldMap.setConfigValue("colorMap", ArcadeMsPacMan_GameModel.WORLD_MAP_COLOR_SCHEMES.get(index).toColorMap());
+        worldMap.setConfigValue(PROPERTY_COLOR_MAP_INDEX, index);
+        worldMap.setConfigValue(PROPERTY_COLOR_MAP,
+            ArcadeMsPacMan_GameModel.WORLD_MAP_COLOR_SCHEMES.get(index).toColorMap());
 
         return worldMap;
     }
