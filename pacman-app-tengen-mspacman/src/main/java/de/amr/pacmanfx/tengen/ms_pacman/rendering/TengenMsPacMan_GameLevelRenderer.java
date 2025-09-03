@@ -26,7 +26,7 @@ import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesColor;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
@@ -49,10 +49,10 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseCanvasRenderer impleme
     public void applyLevelSettings(GameLevel gameLevel, RenderInfo info) {
         WorldMap worldMap = gameLevel.worldMap();
         // store the maze sprite set with the correct colors for this level in the map configuration:
-        if (!worldMap.hasConfigValue(TengenMsPacMan_UIConfig.MAZE_SPRITE_SET_PROPERTY)) {
+        if (!worldMap.hasConfigValue(TengenMsPacMan_UIConfig.PROPERTY_MAZE_SPRITE_SET)) {
             int numFlashes = gameLevel.data().numFlashes();
             MazeSpriteSet mazeSpriteSet = uiConfig.createMazeSpriteSet(worldMap, numFlashes);
-            worldMap.setConfigValue(TengenMsPacMan_UIConfig.MAZE_SPRITE_SET_PROPERTY, mazeSpriteSet);
+            worldMap.setConfigValue(TengenMsPacMan_UIConfig.PROPERTY_MAZE_SPRITE_SET, mazeSpriteSet);
             Logger.info("Maze sprite set created: {}", mazeSpriteSet);
         }
     }
@@ -60,8 +60,8 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseCanvasRenderer impleme
     @Override
     public void drawGameLevel(GameLevel gameLevel, RenderInfo info) {
         applyLevelSettings(gameLevel, info);
-        Image mazeImage = info.get("mazeImage", Image.class);
-        RectShort mazeSprite = info.get("mazeSprite", RectShort.class);
+        Image mazeImage = info.get(PROPERTY_MAZE_IMAGE, Image.class);
+        RectShort mazeSprite = info.get(PROPERTY_MAZE_SPRITE, RectShort.class);
         drawGameLevel(gameLevel, mazeImage, mazeSprite);
         drawMessage(gameLevel);
     }
@@ -82,7 +82,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseCanvasRenderer impleme
         requireNonNull(gameLevel);
         ctx().save();
         ctx().scale(scaling(), scaling());
-        MazeSpriteSet recoloredMaze =  gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.MAZE_SPRITE_SET_PROPERTY);
+        MazeSpriteSet recoloredMaze =  gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.PROPERTY_MAZE_SPRITE_SET);
         Color pelletColor = Color.web(recoloredMaze.mazeImage().colorScheme().pelletColorRGB());
         drawPellets(gameLevel, pelletColor);
         drawEnergizers(gameLevel, pelletColor);

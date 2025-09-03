@@ -66,7 +66,9 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     public static final String MAPS_PATH = "/de/amr/pacmanfx/tengen/ms_pacman/maps/";
 
     // Name of configuration property under which the correctly recolored maze sprite set is stored
-    public static final String MAZE_SPRITE_SET_PROPERTY = "mazeSpriteSet";
+    public static final String PROPERTY_MAZE_SPRITE_SET = "mazeSpriteSet";
+    public static final String PROPERTY_MAZE_IMAGE      = "mazeImage";
+    public static final String PROPERTY_MAZE_SPRITE     = "mazeSprite";
 
     /** 32x30 */
     public static final Vector2i NES_TILES = new Vector2i(32, 30);
@@ -440,22 +442,22 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
     public void configureHighlightedMazeRenderInfo(RenderInfo info, GameLevel gameLevel, int frame) {
         WorldMap worldMap = gameLevel.worldMap();
-        MazeSpriteSet mazeSpriteSet = worldMap.getConfigValue(TengenMsPacMan_UIConfig.MAZE_SPRITE_SET_PROPERTY);
+        MazeSpriteSet mazeSpriteSet = worldMap.getConfigValue(PROPERTY_MAZE_SPRITE_SET);
         ColoredSpriteImage flashingMazeSprite = mazeSpriteSet.flashingMazeImages().get(frame);
-        info.put("mazeImage", flashingMazeSprite.spriteSheetImage());
-        info.put("mazeSprite", flashingMazeSprite.sprite());
+        info.put(PROPERTY_MAZE_IMAGE, flashingMazeSprite.spriteSheetImage());
+        info.put(PROPERTY_MAZE_SPRITE, flashingMazeSprite.sprite());
     }
 
     public void configureNormalMazeRenderInfo(RenderInfo info, TengenMsPacMan_GameModel game, GameLevel gameLevel, long tick) {
         int mapNumber = gameLevel.worldMap().getConfigValue("mapNumber");
-        MazeSpriteSet mazeSpriteSet = gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.MAZE_SPRITE_SET_PROPERTY);
-        info.put("mazeImage", mazeSpriteSet.mazeImage().spriteSheetImage());
+        MazeSpriteSet mazeSpriteSet = gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.PROPERTY_MAZE_SPRITE_SET);
+        info.put(PROPERTY_MAZE_IMAGE, mazeSpriteSet.mazeImage().spriteSheetImage());
         if (game.mapCategory() == MapCategory.STRANGE && mapNumber == 15) {
             TengenMsPacMan_UIConfig uiConfig = ui.currentConfig();
             int spriteIndex = mazeAnimationSpriteIndex(tick);
-            info.put("mazeSprite", uiConfig.nonArcadeMapsSpriteSheet().spriteSequence(MAZE32_ANIMATED)[spriteIndex]);
+            info.put(PROPERTY_MAZE_SPRITE, uiConfig.nonArcadeMapsSpriteSheet().spriteSequence(MAZE32_ANIMATED)[spriteIndex]);
         } else {
-            info.put("mazeSprite", mazeSpriteSet.mazeImage().sprite());
+            info.put(PROPERTY_MAZE_SPRITE, mazeSpriteSet.mazeImage().sprite());
         }
     }
 
