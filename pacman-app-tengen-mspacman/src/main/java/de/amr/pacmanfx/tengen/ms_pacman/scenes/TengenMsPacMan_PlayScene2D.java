@@ -459,7 +459,17 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
             // map width is 28 tiles but NES screen width is 32 tiles: move 2 tiles right and clip one tile on each side
             ctx().translate(scaled(TS(2)), 0);
             canvas.setClip(clipRect);
-            drawGameLevel(gameLevel);
+
+            var renderInfo = new RenderInfo();
+            if (levelCompletedAnimation != null && mazeHighlighted.get()) {
+                renderInfo.put("bright", true);
+                renderInfo.put("flashingIndex", levelCompletedAnimation.flashingIndex());
+            } else {
+                renderInfo.put("bright", false);
+            }
+            renderInfo.put("tick", ui.clock().tickCount());
+            gameLevelRenderer.drawGameLevel(gameLevel, renderInfo);
+
             drawActors(gameLevel);
             drawHUD();
             if (debugInfoVisible.get() && debugInfoRenderer != null) {
@@ -471,6 +481,21 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
             ctx().restore();
         });
     }
+
+    /*
+    private void drawGameLevel(GameLevel gameLevel) {
+        TengenMsPacMan_UIConfig uiConfig = ui.currentConfig();
+        RenderInfo info = new RenderInfo();
+        gameLevelRenderer.applyLevelSettings(gameLevel, info); // ensure maze sprite set is stored in render info
+        boolean bright = levelCompletedAnimation != null && mazeHighlighted.get();
+        if (bright) {
+            uiConfig.configureHighlightedMazeRenderInfo(info, gameLevel, levelCompletedAnimation.flashingIndex());
+        } else {
+            uiConfig.configureNormalMazeRenderInfo(info, context().game(), gameLevel, ui.clock().tickCount());
+        }
+        gameLevelRenderer.drawGameLevel(gameLevel, info);
+    }
+     */
 
     @Override
     public void drawHUD() {
@@ -504,19 +529,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         actorsInZOrder.add(gameLevel.pac());
         ghostsByZ(gameLevel).forEach(actorsInZOrder::add);
         actorsInZOrder.forEach(actor -> actorRenderer.drawActor(actor));
-    }
-
-    private void drawGameLevel(GameLevel gameLevel) {
-        TengenMsPacMan_UIConfig uiConfig = ui.currentConfig();
-        RenderInfo info = new RenderInfo();
-        gameLevelRenderer.applyLevelSettings(gameLevel, info); // ensure maze sprite set is stored in render info
-        boolean bright = levelCompletedAnimation != null && mazeHighlighted.get();
-        if (bright) {
-            uiConfig.configureHighlightedMazeRenderInfo(info, gameLevel, levelCompletedAnimation.flashingIndex());
-        } else {
-            uiConfig.configureNormalMazeRenderInfo(info, context().game(), gameLevel, ui.clock().tickCount());
-        }
-        gameLevelRenderer.drawGameLevel(gameLevel, info);
     }
 
     //TODO the ghost state should also be taken into account

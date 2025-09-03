@@ -12,6 +12,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.House;
 import de.amr.pacmanfx.model.MessageType;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
+import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.uilib.rendering.BaseCanvasRenderer;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
@@ -60,13 +61,16 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseCanvasRenderer impleme
     @Override
     public void drawGameLevel(GameLevel gameLevel, RenderInfo info) {
         applyLevelSettings(gameLevel, info);
+        if (info.getBoolean("bright")) {
+            int flashingIndex = info.get("flashingIndex", Integer.class);
+            uiConfig.configureHighlightedMazeRenderInfo(info, gameLevel, flashingIndex);
+        } else {
+            long tick = info.get("tick", Long.class);
+            MapCategory mapCategory = info.get(PROPERTY_MAP_CATEGORY, MapCategory.class);
+            uiConfig.configureNormalMazeRenderInfo(info, mapCategory, gameLevel.worldMap(), tick);
+        }
         Image mazeImage = info.get(PROPERTY_MAZE_IMAGE, Image.class);
         RectShort mazeSprite = info.get(PROPERTY_MAZE_SPRITE, RectShort.class);
-        drawGameLevel(gameLevel, mazeImage, mazeSprite);
-        drawMessage(gameLevel);
-    }
-
-    private void drawGameLevel(GameLevel gameLevel, Image mazeImage, RectShort mazeSprite) {
         ctx().setImageSmoothing(false);
         int x = 0, y = GameLevel.EMPTY_ROWS_OVER_MAZE * TS;
         ctx().drawImage(mazeImage,
@@ -75,6 +79,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseCanvasRenderer impleme
         );
         overPaintActorSprites(gameLevel);
         drawFood(gameLevel);
+        drawMessage(gameLevel);
         drawMessage(gameLevel);
     }
 

@@ -453,14 +453,13 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
         info.put(PROPERTY_MAZE_SPRITE, flashingMazeSprite.sprite());
     }
 
-    public void configureNormalMazeRenderInfo(RenderInfo info, TengenMsPacMan_GameModel game, GameLevel gameLevel, long tick) {
-        int mapNumber = gameLevel.worldMap().getConfigValue(PROPERTY_MAP_NUMBER);
-        MazeSpriteSet mazeSpriteSet = gameLevel.worldMap().getConfigValue(PROPERTY_MAZE_SPRITE_SET);
+    public void configureNormalMazeRenderInfo(RenderInfo info, MapCategory mapCategory, WorldMap worldMap, long tick) {
+        int mapNumber = worldMap.getConfigValue(PROPERTY_MAP_NUMBER);
+        MazeSpriteSet mazeSpriteSet = worldMap.getConfigValue(PROPERTY_MAZE_SPRITE_SET);
         info.put(PROPERTY_MAZE_IMAGE, mazeSpriteSet.mazeImage().spriteSheetImage());
-        if (game.mapCategory() == MapCategory.STRANGE && mapNumber == 15) {
-            TengenMsPacMan_UIConfig uiConfig = ui.currentConfig();
+        if (mapCategory == MapCategory.STRANGE && mapNumber == 15) {
             int spriteIndex = mazeAnimationSpriteIndex(tick);
-            info.put(PROPERTY_MAZE_SPRITE, uiConfig.nonArcadeMapsSpriteSheet().spriteSequence(MAZE32_ANIMATED)[spriteIndex]);
+            info.put(PROPERTY_MAZE_SPRITE, nonArcadeMapsSpriteSheet().spriteSequence(MAZE32_ANIMATED)[spriteIndex]);
         } else {
             info.put(PROPERTY_MAZE_SPRITE, mazeSpriteSet.mazeImage().sprite());
         }

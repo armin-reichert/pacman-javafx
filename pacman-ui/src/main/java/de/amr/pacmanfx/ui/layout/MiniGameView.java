@@ -143,10 +143,12 @@ public class MiniGameView extends VBox {
             var info = RenderInfo.build(Map.of(
                 "bright", false,
                 "blinkingOn", gameLevel.blinking().isOn(),
-                "empty", gameLevel.uneatenFoodCount() == 0
+                "empty", gameLevel.uneatenFoodCount() == 0,
+                "tick", ui.clock().tickCount()
             ));
             gameLevelRenderer.applyLevelSettings(gameLevel, info);
             gameLevelRenderer.drawGameLevel(gameLevel, info);
+
             gameLevel.bonus().ifPresent(bonus -> actorRenderer.drawActor(bonus));
             actorRenderer.drawActor(gameLevel.pac());
             Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW)
