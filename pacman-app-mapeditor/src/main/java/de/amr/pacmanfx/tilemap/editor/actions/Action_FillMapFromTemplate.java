@@ -10,7 +10,6 @@ import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.tilemap.editor.EditorUI;
 import de.amr.pacmanfx.tilemap.editor.MessageType;
 import de.amr.pacmanfx.tilemap.editor.TileMatcher;
-import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritablePixelFormat;
 import javafx.scene.paint.Color;
@@ -24,21 +23,18 @@ import static de.amr.pacmanfx.tilemap.editor.EditorUtil.getColorFromMap;
 
 public class Action_FillMapFromTemplate extends AbstractEditorUIAction<Void> {
 
-    private final WorldMap worldMap;
-    private final Image templateImage;
-
-    public Action_FillMapFromTemplate(EditorUI ui, WorldMap worldMap, Image templateImage) {
+    public Action_FillMapFromTemplate(EditorUI ui) {
         super(ui);
-        this.worldMap = worldMap;
-        this.templateImage = templateImage;
     }
 
     @Override
     public Void execute() {
-        if (templateImage == null) {
+        if (editor.templateImage() == null) {
             return null;
         }
 
+        final WorldMap worldMap = editor.currentWorldMap();
+        
         Color fillColor = getColorFromMap(worldMap, LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_FILL, null);
         if (fillColor == null) {
             ui.messageDisplay().showMessage("No fill color defined", 3, MessageType.ERROR);
@@ -61,7 +57,7 @@ public class Action_FillMapFromTemplate extends AbstractEditorUIAction<Void> {
         }
         TileMatcher matcher = new TileMatcher(Color.TRANSPARENT, fillColor, strokeColor, doorColor, foodColor);
         WritablePixelFormat<IntBuffer> pixelFormat = WritablePixelFormat.getIntArgbInstance();
-        PixelReader rdr = templateImage.getPixelReader();
+        PixelReader rdr = editor.templateImage().getPixelReader();
         if (rdr == null) {
             ui.messageDisplay().showMessage("Could not get pixel reader for this image", 5, MessageType.ERROR);
             return null;
@@ -107,11 +103,15 @@ public class Action_FillMapFromTemplate extends AbstractEditorUIAction<Void> {
             new Action_PlaceArcadeHouse(editor, worldMap, houseMinTile).execute();
         }
 
-        java.time.Duration duration = java.time.Duration.between(startTime, LocalTime.now());
-        ui.messageDisplay().showMessage("Map creation took %d milliseconds".formatted(duration.toMillis()), 5, MessageType.INFO);
-
         editor.setWorldMapChanged();
         editor.setEdited(true);
+
+        java.time.Duration duration = java.time.Duration.between(startTime, LocalTime.now());
+        ui.messageDisplay().showMessage("Map creation took %d milliseconds".formatted(duration.toMillis()), 5, MessageType.INFO);
+        ui.selectEditCanvasTab();
+
+        //TODO localize
+        ui.messageDisplay().showMessage("Add tunnels and missing actor positions if needed!", 5, MessageType.INFO);
 
         return null;
     }

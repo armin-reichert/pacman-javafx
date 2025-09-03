@@ -439,6 +439,10 @@ public class EditorUI {
         tabPaneEditorViews.getSelectionModel().select(tabTemplateImage);
     }
 
+    public void selectEditCanvasTab() {
+        tabPaneEditorViews.getSelectionModel().select(tabEditCanvas);
+    }
+
     public PaletteID selectedPaletteID() {
         return palettesArea.selectedPaletteID();
     }

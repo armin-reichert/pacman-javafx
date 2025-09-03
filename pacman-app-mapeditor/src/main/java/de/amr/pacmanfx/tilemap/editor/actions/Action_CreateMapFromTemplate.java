@@ -1,20 +1,19 @@
 package de.amr.pacmanfx.tilemap.editor.actions;
 
-import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.WorldMapProperty;
-import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
+import de.amr.pacmanfx.tilemap.editor.EditorUI;
+import de.amr.pacmanfx.tilemap.editor.MessageType;
 import javafx.scene.image.Image;
 
 import static de.amr.pacmanfx.Globals.TS;
 
-public class Action_CreateMapFromTemplate extends AbstractEditorAction<Void> {
+public class Action_CreateMapFromTemplate extends AbstractEditorUIAction<Void> {
 
     private final Image image;
 
-    public Action_CreateMapFromTemplate(TileMapEditor editor, Image image) {
-        super(editor);
+    public Action_CreateMapFromTemplate(EditorUI ui, Image image) {
+        super(ui);
         this.image = image;
     }
 
@@ -22,13 +21,11 @@ public class Action_CreateMapFromTemplate extends AbstractEditorAction<Void> {
     public Void execute() {
         int numRows = GameLevel.EMPTY_ROWS_OVER_MAZE + GameLevel.EMPTY_ROWS_BELOW_MAZE + (int) (image.getHeight() / TS);
         int numCols = (int) (image.getWidth() / TS);
-        WorldMap emptyMap = new Action_CreateEmptyMap(editor, numRows, numCols).execute();
-        emptyMap.properties(LayerID.TERRAIN).remove(WorldMapProperty.COLOR_WALL_FILL);
-        emptyMap.properties(LayerID.TERRAIN).remove(WorldMapProperty.COLOR_WALL_STROKE);
-        emptyMap.properties(LayerID.TERRAIN).remove(WorldMapProperty.COLOR_DOOR);
-        emptyMap.properties(LayerID.FOOD).remove(WorldMapProperty.COLOR_FOOD);
+        WorldMap emptyMap = WorldMap.emptyMap(numCols, numRows);
         editor.setCurrentWorldMap(emptyMap);
         editor.setEdited(true);
+        ui.selectTemplateImageTab();
+        ui.messageDisplay().showMessage("Select colors for tile identification!", 10, MessageType.INFO);
         return null;
     }
 }

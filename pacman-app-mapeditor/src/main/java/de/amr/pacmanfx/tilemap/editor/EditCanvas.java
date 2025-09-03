@@ -422,9 +422,7 @@ public class EditCanvas extends Canvas {
                 return;
             }
             ui.editor().setTemplateImage(image);
-            new Action_CreateMapFromTemplate(ui.editor(), image).execute();
-            ui.selectTemplateImageTab();
-            ui.messageDisplay().showMessage("Select colors for tile identification!", 10, MessageType.INFO);
+            new Action_CreateMapFromTemplate(ui, image).execute();
         }
     }
 

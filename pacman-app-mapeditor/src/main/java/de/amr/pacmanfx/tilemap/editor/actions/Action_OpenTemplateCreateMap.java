@@ -1,7 +1,7 @@
 package de.amr.pacmanfx.tilemap.editor.actions;
 
-import de.amr.pacmanfx.tilemap.editor.MessageType;
 import de.amr.pacmanfx.tilemap.editor.EditorUI;
+import de.amr.pacmanfx.tilemap.editor.MessageType;
 import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
@@ -26,9 +26,7 @@ public class Action_OpenTemplateCreateMap extends AbstractEditorUIAction<Void> {
         openTemplateImage(ui.stage(), translated("open_template_image"), editor.currentDirectory()).ifPresent(image -> {
             if (isTemplateImageSizeOk(image)) {
                 editor.setTemplateImage(image);
-                new Action_CreateMapFromTemplate(editor, image).execute();
-                ui.selectTemplateImageTab();
-                ui.messageDisplay().showMessage("Select map colors from template!", 20, MessageType.INFO);
+                new Action_CreateMapFromTemplate(ui, image).execute();
             } else {
                 ui.messageDisplay().showMessage("Template image size seems dubious", 3, MessageType.WARNING);
             }
