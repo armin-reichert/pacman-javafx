@@ -36,6 +36,7 @@ import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.MsPacMan3D;
 import de.amr.pacmanfx.uilib.model3D.MsPacManBody;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
+import de.amr.pacmanfx.uilib.rendering.RenderInfoProperties;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -71,8 +72,6 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     public static final String PROPERTY_MAP_NUMBER            = "mapNumber";
     // Name of configuration property under which the correctly recolored maze sprite set is stored
     public static final String PROPERTY_MAZE_SPRITE_SET       = "mazeSpriteSet";
-    public static final String PROPERTY_MAZE_IMAGE            = "mazeImage";
-    public static final String PROPERTY_MAZE_SPRITE           = "mazeSprite";
     public static final String PROPERTY_MULTIPLE_FLASH_COLORS = "multipleFlashColors";
     public static final String PROPERTY_NES_COLOR_SCHEME      = "nesColorScheme";
 
@@ -449,19 +448,19 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
         WorldMap worldMap = gameLevel.worldMap();
         MazeSpriteSet mazeSpriteSet = worldMap.getConfigValue(PROPERTY_MAZE_SPRITE_SET);
         ColoredSpriteImage flashingMazeSprite = mazeSpriteSet.flashingMazeImages().get(frame);
-        info.put(PROPERTY_MAZE_IMAGE, flashingMazeSprite.spriteSheetImage());
-        info.put(PROPERTY_MAZE_SPRITE, flashingMazeSprite.sprite());
+        info.put(RenderInfoProperties.MAZE_IMAGE, flashingMazeSprite.spriteSheetImage());
+        info.put(RenderInfoProperties.MAZE_SPRITE, flashingMazeSprite.sprite());
     }
 
     public void configureNormalMazeRenderInfo(RenderInfo info, MapCategory mapCategory, WorldMap worldMap, long tick) {
         int mapNumber = worldMap.getConfigValue(PROPERTY_MAP_NUMBER);
         MazeSpriteSet mazeSpriteSet = worldMap.getConfigValue(PROPERTY_MAZE_SPRITE_SET);
-        info.put(PROPERTY_MAZE_IMAGE, mazeSpriteSet.mazeImage().spriteSheetImage());
+        info.put(RenderInfoProperties.MAZE_IMAGE, mazeSpriteSet.mazeImage().spriteSheetImage());
         if (mapCategory == MapCategory.STRANGE && mapNumber == 15) {
             int spriteIndex = mazeAnimationSpriteIndex(tick);
-            info.put(PROPERTY_MAZE_SPRITE, nonArcadeMapsSpriteSheet().spriteSequence(MAZE32_ANIMATED)[spriteIndex]);
+            info.put(RenderInfoProperties.MAZE_SPRITE, nonArcadeMapsSpriteSheet().spriteSequence(MAZE32_ANIMATED)[spriteIndex]);
         } else {
-            info.put(PROPERTY_MAZE_SPRITE, mazeSpriteSet.mazeImage().sprite());
+            info.put(RenderInfoProperties.MAZE_SPRITE, mazeSpriteSet.mazeImage().sprite());
         }
     }
 

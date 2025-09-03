@@ -25,10 +25,7 @@ import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
-import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
-import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
-import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
-import de.amr.pacmanfx.uilib.rendering.RenderInfo;
+import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.CheckMenuItem;
@@ -292,8 +289,8 @@ public class Arcade_PlayScene2D extends GameScene2D {
         }
         final GameLevel gameLevel = context().gameLevel();
         RenderInfo info = new RenderInfo();
-        info.put("bright", mazeHighlighted.get());
-        info.put("blinkingOn", gameLevel.blinking().isOn());
+        info.put(RenderInfoProperties.MAZE_BRIGHT, mazeHighlighted.get());
+        info.put(RenderInfoProperties.MAZE_BLINKING, gameLevel.blinking().isOn());
         info.put("empty", context().gameLevel().uneatenFoodCount() == 0);
         gameLevelRenderer.applyLevelSettings(gameLevel, info);
         gameLevelRenderer.drawGameLevel(gameLevel, info);

@@ -30,6 +30,7 @@ import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
+import de.amr.pacmanfx.uilib.rendering.RenderInfoProperties;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -54,8 +55,7 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.controller.GamePlayState.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Actions.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Properties.PROPERTY_PLAY_SCENE_DISPLAY_MODE;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_TILES;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.ui.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_CANVAS_BACKGROUND_COLOR;
 import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_MUTED;
@@ -462,10 +462,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
             var renderInfo = new RenderInfo();
             if (levelCompletedAnimation != null && mazeHighlighted.get()) {
-                renderInfo.put("bright", true);
-                renderInfo.put("flashingIndex", levelCompletedAnimation.flashingIndex());
+                renderInfo.put(RenderInfoProperties.MAZE_BRIGHT, true);
+                renderInfo.put(RenderInfoProperties.MAZE_FLASHING_INDEX, levelCompletedAnimation.flashingIndex());
             } else {
-                renderInfo.put("bright", false);
+                renderInfo.put(RenderInfoProperties.MAZE_BRIGHT, false);
             }
             renderInfo.put("tick", ui.clock().tickCount());
             gameLevelRenderer.drawGameLevel(gameLevel, renderInfo);

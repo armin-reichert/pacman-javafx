@@ -7,10 +7,7 @@ package de.amr.pacmanfx.ui.layout;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.api.GameUI;
-import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
-import de.amr.pacmanfx.uilib.rendering.BaseCanvasRenderer;
-import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
-import de.amr.pacmanfx.uilib.rendering.RenderInfo;
+import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
 import javafx.beans.binding.Bindings;
@@ -141,8 +138,8 @@ public class MiniGameView extends VBox {
         GameLevel gameLevel = ui.gameContext().gameLevel();
         if (gameLevel != null) {
             var info = RenderInfo.build(Map.of(
-                "bright", false,
-                "blinkingOn", gameLevel.blinking().isOn(),
+                RenderInfoProperties.MAZE_BRIGHT, false,
+                RenderInfoProperties.MAZE_BLINKING, gameLevel.blinking().isOn(),
                 "empty", gameLevel.uneatenFoodCount() == 0,
                 "tick", ui.clock().tickCount()
             ));

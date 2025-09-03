@@ -13,10 +13,7 @@ import de.amr.pacmanfx.model.House;
 import de.amr.pacmanfx.model.MessageType;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
-import de.amr.pacmanfx.uilib.rendering.BaseCanvasRenderer;
-import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
-import de.amr.pacmanfx.uilib.rendering.RenderInfo;
-import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
+import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -61,16 +58,16 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseCanvasRenderer impleme
     @Override
     public void drawGameLevel(GameLevel gameLevel, RenderInfo info) {
         applyLevelSettings(gameLevel, info);
-        if (info.getBoolean("bright")) {
-            int flashingIndex = info.get("flashingIndex", Integer.class);
+        if (info.getBoolean(RenderInfoProperties.MAZE_BRIGHT)) {
+            int flashingIndex = info.get(RenderInfoProperties.MAZE_FLASHING_INDEX, Integer.class);
             uiConfig.configureHighlightedMazeRenderInfo(info, gameLevel, flashingIndex);
         } else {
-            long tick = info.get("tick", Long.class);
+            long tick = info.get(RenderInfoProperties.TICK, Long.class);
             MapCategory mapCategory = info.get(PROPERTY_MAP_CATEGORY, MapCategory.class);
             uiConfig.configureNormalMazeRenderInfo(info, mapCategory, gameLevel.worldMap(), tick);
         }
-        Image mazeImage = info.get(PROPERTY_MAZE_IMAGE, Image.class);
-        RectShort mazeSprite = info.get(PROPERTY_MAZE_SPRITE, RectShort.class);
+        Image mazeImage = info.get(RenderInfoProperties.MAZE_IMAGE, Image.class);
+        RectShort mazeSprite = info.get(RenderInfoProperties.MAZE_SPRITE, RectShort.class);
         ctx().setImageSmoothing(false);
         int x = 0, y = GameLevel.EMPTY_ROWS_OVER_MAZE * TS;
         ctx().drawImage(mazeImage,

@@ -12,6 +12,7 @@ import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
+import de.amr.pacmanfx.uilib.rendering.RenderInfoProperties;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 
@@ -52,7 +53,7 @@ public class ArcadePacMan_GameLevelRenderer extends BaseSpriteRenderer implement
         int emptySpaceOverMaze = GameLevel.EMPTY_ROWS_OVER_MAZE * TS;
         ctx().save();
         ctx().scale(scaling(), scaling());
-        if (info.getBoolean("bright")) {
+        if (info.getBoolean(RenderInfoProperties.MAZE_BRIGHT)) {
             Image brightMazeImage = uiConfig.assets().image("maze.bright");
             ctx().drawImage(brightMazeImage, 0, emptySpaceOverMaze);
         }
@@ -71,7 +72,7 @@ public class ArcadePacMan_GameLevelRenderer extends BaseSpriteRenderer implement
                 .forEach(tile -> fillSquareAtTileCenter(tile, 4));
             // Over-paint eaten or dark-blinking energizer tiles
             gameLevel.energizerPositions().stream()
-                .filter(tile -> !info.getBoolean("blinkingOn") || gameLevel.tileContainsEatenFood(tile))
+                .filter(tile -> !info.getBoolean(RenderInfoProperties.MAZE_BLINKING) || gameLevel.tileContainsEatenFood(tile))
                 .forEach(tile -> fillSquareAtTileCenter(tile, 10));
         }
         ctx().restore();
