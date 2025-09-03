@@ -16,7 +16,6 @@ import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
-import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -49,7 +48,6 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
     private ArcadePacMan_HUDRenderer hudRenderer;
     private ActorRenderer actorRenderer;
-    private BaseSpriteRenderer spriteRenderer;
 
     public ArcadePacMan_CutScene2(GameUI ui) {
         super(ui);
@@ -59,8 +57,8 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     public void doInit() {
         GameUI_Config uiConfig = ui.currentConfig();
 
+        sceneRenderer.setSpriteSheet(uiConfig.spriteSheet());
         hudRenderer = new ArcadePacMan_HUDRenderer(canvas, uiConfig);
-        spriteRenderer = new BaseSpriteRenderer(canvas, uiConfig.spriteSheet());
         actorRenderer = uiConfig.createActorRenderer(canvas);
         debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas) {
             @Override
@@ -70,8 +68,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
                 fillText(text, debugTextFill, debugTextFont, TS(1), TS(5));
             }
         };
-
-        bindRendererProperties(hudRenderer, spriteRenderer, actorRenderer, debugInfoRenderer);
+        bindRendererProperties(hudRenderer, actorRenderer, debugInfoRenderer);
 
         context().game().hud().creditVisible(false).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
 
@@ -156,7 +153,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        spriteRenderer.drawSprite(nailDressRaptureAnimation.currentSprite(), TS(14), TS(19) + 3, true);
+        sceneRenderer.drawSprite(nailDressRaptureAnimation.currentSprite(), TS(14), TS(19) + 3, true);
         actorsInZOrder.forEach(actor -> actorRenderer.drawActor(actor));
     }
 

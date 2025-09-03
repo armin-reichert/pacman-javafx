@@ -38,7 +38,7 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
     private Ghost blinky;
 
     private ArcadePacMan_HUDRenderer hudRenderer;
-    private ArcadePacMan_ActorRenderer actorSpriteRenderer;
+    private ArcadePacMan_ActorRenderer actorRenderer;
 
     public ArcadePacMan_CutScene3(GameUI ui) {
         super(ui);
@@ -49,7 +49,7 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
         GameUI_Config uiConfig = ui.currentConfig();
 
         hudRenderer = new ArcadePacMan_HUDRenderer(canvas, uiConfig);
-        actorSpriteRenderer = new ArcadePacMan_ActorRenderer(canvas, uiConfig);
+        actorRenderer = new ArcadePacMan_ActorRenderer(canvas, uiConfig);
         debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas) {
             @Override
             public void drawDebugInfo() {
@@ -59,7 +59,7 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
                 fillText(text, debugTextFill, debugTextFont, TS(1), TS(5));
             }
         };
-        bindRendererProperties(hudRenderer, actorSpriteRenderer, debugInfoRenderer);
+        bindRendererProperties(hudRenderer, actorRenderer, debugInfoRenderer);
 
         context().game().hud().creditVisible(false).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
 
@@ -119,8 +119,8 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        if (actorSpriteRenderer != null) {
-            actorsInZOrder.forEach(actor -> actorSpriteRenderer.drawActor(actor));
+        if (actorRenderer != null) {
+            actorsInZOrder.forEach(actor -> actorRenderer.drawActor(actor));
         }
     }
 

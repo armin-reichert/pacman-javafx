@@ -10,6 +10,7 @@ import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Direction;
+import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
@@ -23,7 +24,6 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
-import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
@@ -60,9 +60,8 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     private ArcadePacMan_SpriteSheet spriteSheet;
 
-    private BaseSpriteRenderer spriteRenderer;
     private ArcadePacMan_HUDRenderer hudRenderer;
-    private ArcadePacMan_ActorRenderer actorSpriteRenderer;
+    private ArcadePacMan_ActorRenderer actorRenderer;
 
     private Pulse blinking;
     private Pac pacMan;
@@ -83,9 +82,11 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     public void doInit() {
         GameUI_Config uiConfig = ui.currentConfig();
 
-        spriteRenderer = new BaseSpriteRenderer(canvas, uiConfig.spriteSheet());
+        spriteSheet = (ArcadePacMan_SpriteSheet) uiConfig.spriteSheet();
+        sceneRenderer.setSpriteSheet(spriteSheet);
+
         hudRenderer = (ArcadePacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas);
-        actorSpriteRenderer = new ArcadePacMan_ActorRenderer(canvas, uiConfig);
+        actorRenderer = (ArcadePacMan_ActorRenderer) uiConfig.createActorRenderer(canvas);
         debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas) {
             @Override
             public void drawDebugInfo() {
@@ -93,7 +94,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 ctx.fillText("Scene timer %d".formatted(sceneController.state().timer().tickCount()), 0, scaled(5 * TS));
             }
         };
-        bindRendererProperties(spriteRenderer, hudRenderer, actorSpriteRenderer, debugInfoRenderer);
+        bindRendererProperties(hudRenderer, actorRenderer, debugInfoRenderer);
 
         context().game().hud().creditVisible(true).scoreVisible(true).livesCounterVisible(false).levelCounterVisible(true);
 
@@ -103,21 +104,24 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         actionBindings.assign(ACTION_TEST_LEVELS_SHORT, ui.actionBindings());
         actionBindings.assign(ACTION_TEST_LEVELS_MEDIUM, ui.actionBindings());
 
-        spriteSheet = (ArcadePacMan_SpriteSheet) ui.currentConfig().spriteSheet();
-
         blinking = new Pulse(10, true);
+
         pacMan = createPac();
-        pacMan.setAnimations(ui.currentConfig().createPacAnimations(pacMan));
+        pacMan.setAnimations(uiConfig.createPacAnimations(pacMan));
         pacMan.selectAnimation(ANIM_PAC_MUNCHING);
+
         ghosts = List.of(
             createGhost(RED_GHOST_SHADOW),
             createGhost(PINK_GHOST_SPEEDY),
             createGhost(CYAN_GHOST_BASHFUL),
-            createGhost(ORANGE_GHOST_POKEY));
-        ghosts.forEach(ghost -> ghost.setAnimations(ui.currentConfig().createGhostAnimations(ghost)));
+            createGhost(ORANGE_GHOST_POKEY)
+        );
+        ghosts.forEach(ghost -> ghost.setAnimations(uiConfig.createGhostAnimations(ghost)));
+
         ghostImageVisible     = new boolean[4];
         ghostNicknameVisible  = new boolean[4];
         ghostCharacterVisible = new boolean[4];
+
         victims = new ArrayList<>(4);
         titleVisible = false;
         ghostIndex = 0;
@@ -162,35 +166,31 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 drawPoints();
                 drawBlinkingEnergizer(TS(LEFT_TILE_X), TS(20));
                 drawGuys(true);
-                actorSpriteRenderer.fillText(MIDWAY_MFG_CO, ARCADE_PINK, actorSpriteRenderer.arcadeFontTS(), TS(4), TS(32));
+                sceneRenderer.fillText(MIDWAY_MFG_CO, ARCADE_PINK, sceneRenderer.arcadeFontTS(), TS(4), TS(32));
             }
             case CHASING_GHOSTS, READY_TO_PLAY -> {
                 drawPoints();
                 drawGuys(false);
-                actorSpriteRenderer.fillText(MIDWAY_MFG_CO, ARCADE_PINK, actorSpriteRenderer.arcadeFontTS(), TS(4), TS(32));
+                sceneRenderer.fillText(MIDWAY_MFG_CO, ARCADE_PINK, sceneRenderer.arcadeFontTS(), TS(4), TS(32));
             }
         }
     }
 
     private void drawGallery() {
-        actorSpriteRenderer.ctx().setFont(actorSpriteRenderer.arcadeFontTS());
+        sceneRenderer.ctx().setFont(sceneRenderer.arcadeFontTS());
         if (titleVisible) {
-            actorSpriteRenderer.fillText("CHARACTER / NICKNAME", ARCADE_WHITE,
-                TS(LEFT_TILE_X + 3), TS(6));
+            sceneRenderer.fillText("CHARACTER / NICKNAME", ARCADE_WHITE, TS(LEFT_TILE_X + 3), TS(6));
         }
-        for (byte personality = RED_GHOST_SHADOW; personality <= ORANGE_GHOST_POKEY; ++personality) {
-            if (ghostImageVisible[personality]) {
-                spriteRenderer.drawSpriteCentered(
-                    Vector2f.of(TS(LEFT_TILE_X) + TS, TS(7 + 3 * personality) + HTS),
-                    spriteSheet.spriteSequence(GALLERY_GHOSTS)[personality]);
+        for (byte p = RED_GHOST_SHADOW; p <= ORANGE_GHOST_POKEY; ++p) {
+            if (ghostImageVisible[p]) {
+                RectShort sprite = spriteSheet.spriteSequence(GALLERY_GHOSTS)[p];
+                sceneRenderer.drawSpriteCentered(TS(LEFT_TILE_X + 1), TS(7.5 + 3 * p), sprite);
             }
-            if (ghostCharacterVisible[personality]) {
-                actorSpriteRenderer.fillText("-" + GHOST_CHARACTERS[personality], GHOST_COLORS[personality],
-                    TS(LEFT_TILE_X + 3), TS(8 + 3 * personality));
+            if (ghostCharacterVisible[p]) {
+                sceneRenderer.fillText("-" + GHOST_CHARACTERS[p], GHOST_COLORS[p], TS(LEFT_TILE_X + 3), TS(8 + 3 * p));
             }
-            if (ghostNicknameVisible[personality]) {
-                actorSpriteRenderer.fillText(GHOST_NICKNAMES[personality], GHOST_COLORS[personality],
-                    TS(LEFT_TILE_X + 14), TS(8 + 3 * personality));
+            if (ghostNicknameVisible[p]) {
+                sceneRenderer.fillText(GHOST_NICKNAMES[p], GHOST_COLORS[p], TS(LEFT_TILE_X + 14), TS(8 + 3 * p));
             }
         }
     }
@@ -200,41 +200,41 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         long tick = sceneController.state().timer().tickCount();
         int shakingAmount = shaking ? (tick % 5 < 2 ? 0 : -1) : 0;
         if (shakingAmount == 0) {
-            ghosts.forEach(ghost -> actorSpriteRenderer.drawActor(ghost));
+            ghosts.forEach(ghost -> actorRenderer.drawActor(ghost));
         } else {
-            actorSpriteRenderer.drawActor(ghosts.get(RED_GHOST_SHADOW));
-            actorSpriteRenderer.drawActor(ghosts.get(ORANGE_GHOST_POKEY));
-            actorSpriteRenderer.ctx().save();
-            actorSpriteRenderer.ctx().translate(shakingAmount, 0);
-            actorSpriteRenderer.drawActor(ghosts.get(PINK_GHOST_SPEEDY));
-            actorSpriteRenderer.drawActor(ghosts.get(CYAN_GHOST_BASHFUL));
-            actorSpriteRenderer.ctx().restore();
+            actorRenderer.drawActor(ghosts.get(RED_GHOST_SHADOW));
+            actorRenderer.drawActor(ghosts.get(ORANGE_GHOST_POKEY));
+            actorRenderer.ctx().save();
+            actorRenderer.ctx().translate(shakingAmount, 0);
+            actorRenderer.drawActor(ghosts.get(PINK_GHOST_SPEEDY));
+            actorRenderer.drawActor(ghosts.get(CYAN_GHOST_BASHFUL));
+            actorRenderer.ctx().restore();
         }
-        actorSpriteRenderer.drawActor(pacMan);
+        actorRenderer.drawActor(pacMan);
     }
 
     private void drawPoints() {
-        actorSpriteRenderer.ctx().setFill(ARCADE_ROSE);
+        ctx().setFill(ARCADE_ROSE);
         // normal pellet
-        actorSpriteRenderer.ctx().fillRect(scaled(TS(LEFT_TILE_X + 6) + 4), scaled(TS(24) + 4), scaled(2), scaled(2));
-        actorSpriteRenderer.fillText("10",  ARCADE_WHITE, actorSpriteRenderer.arcadeFontTS(), TS(LEFT_TILE_X + 8), TS(25));
-        actorSpriteRenderer.fillText("PTS", ARCADE_WHITE, actorSpriteRenderer.arcadeFont6(), TS(LEFT_TILE_X + 11), TS(25));
+        ctx().fillRect(scaled(TS(LEFT_TILE_X + 6) + 4), scaled(TS(24) + 4), scaled(2), scaled(2));
+        sceneRenderer.fillText("10",  ARCADE_WHITE, sceneRenderer.arcadeFontTS(), TS(LEFT_TILE_X + 8), TS(25));
+        sceneRenderer.fillText("PTS", ARCADE_WHITE, sceneRenderer.arcadeFont6(), TS(LEFT_TILE_X + 11), TS(25));
         // energizer
         drawBlinkingEnergizer(TS(LEFT_TILE_X + 6), TS(26));
-        actorSpriteRenderer.fillText("50",  ARCADE_WHITE, actorSpriteRenderer.arcadeFontTS(), TS(LEFT_TILE_X + 8), TS(27));
-        actorSpriteRenderer.fillText("PTS", ARCADE_WHITE, actorSpriteRenderer.arcadeFont6(), TS(LEFT_TILE_X + 11), TS(27));
+        sceneRenderer.fillText("50",  ARCADE_WHITE, sceneRenderer.arcadeFontTS(), TS(LEFT_TILE_X + 8), TS(27));
+        sceneRenderer.fillText("PTS", ARCADE_WHITE, sceneRenderer.arcadeFont6(), TS(LEFT_TILE_X + 11), TS(27));
     }
 
     private void drawBlinkingEnergizer(double x, double y) {
         if (blinking.isOn()) {
-            actorSpriteRenderer.ctx().save();
-            actorSpriteRenderer.ctx().scale(scaling(), scaling());
-            actorSpriteRenderer.ctx().setFill(ARCADE_ROSE);
+            ctx().save();
+            ctx().scale(scaling(), scaling());
+            ctx().setFill(ARCADE_ROSE);
             // draw pixelated "circle"
-            actorSpriteRenderer.ctx().fillRect(x + 2, y, 4, 8);
-            actorSpriteRenderer.ctx().fillRect(x, y + 2, 8, 4);
-            actorSpriteRenderer.ctx().fillRect(x + 1, y + 1, 6, 6);
-            actorSpriteRenderer.ctx().restore();
+            ctx().fillRect(x + 2, y, 4, 8);
+            ctx().fillRect(x, y + 2, 8, 4);
+            ctx().fillRect(x + 1, y + 1, 6, 6);
+            ctx().restore();
         }
     }
 

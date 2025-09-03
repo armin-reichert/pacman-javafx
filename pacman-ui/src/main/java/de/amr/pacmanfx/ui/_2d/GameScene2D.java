@@ -13,6 +13,7 @@ import de.amr.pacmanfx.ui.api.ActionBindingsManager;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
 import de.amr.pacmanfx.uilib.rendering.CanvasRenderer;
 import de.amr.pacmanfx.uilib.rendering.DebugInfoRenderer;
 import javafx.beans.property.*;
@@ -40,6 +41,7 @@ public abstract class GameScene2D implements GameScene {
     protected final List<Actor> actorsInZOrder = new ArrayList<>();
 
     protected Canvas canvas;
+    protected BaseSpriteRenderer sceneRenderer;
     protected DebugInfoRenderer debugInfoRenderer;
 
     protected GameScene2D(GameUI ui) {
@@ -56,8 +58,9 @@ public abstract class GameScene2D implements GameScene {
     @Override
     public final void init() {
         requireNonNull(canvas, "No canvas has been assigned to game scene");
+        sceneRenderer = new BaseSpriteRenderer(canvas);
         debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas);
-        bindRendererProperties(debugInfoRenderer);
+        bindRendererProperties(sceneRenderer, debugInfoRenderer);
         doInit();
         actionBindings.installBindings(ui.keyboard());
         ui.keyboard().logCurrentBindings();
@@ -96,26 +99,54 @@ public abstract class GameScene2D implements GameScene {
         ui.updateGameScene(true);
     }
 
-    public void  setScaling(double scaling) { this.scaling.set((float) scaling); }
-    public double scaling() { return scaling.get(); }
-    public double scaled(double value) { return (float) value * scaling(); }
+    public Canvas canvas() {
+        return canvas;
+    }
 
-    public ObjectProperty<Color> backgroundColorProperty() { return backgroundColor; }
-    public Color backgroundColor() { return backgroundColor.get(); }
-    public void setBackgroundColor(Color color) { backgroundColor.set(color); }
-
-    public Canvas canvas() { return canvas; }
-    public void setCanvas(Canvas canvas) { this.canvas = canvas; }
+    public void setCanvas(Canvas canvas) {
+        this.canvas = canvas;
+    }
 
     public GraphicsContext ctx() {
         requireNonNull(canvas);
         return canvas.getGraphicsContext2D();
     }
 
-    public BooleanProperty debugInfoVisibleProperty() { return debugInfoVisible; }
-    public boolean isDebugInfoVisible() { return debugInfoVisible.get(); }
+    public DoubleProperty scalingProperty() {
+        return scaling;
+    }
 
-    public DoubleProperty scalingProperty() { return scaling; }
+    public void setScaling(double value) {
+        scaling.set(value);
+    }
+
+    public double scaling() { return
+        scaling.get();
+    }
+
+    public double scaled(double value) {
+        return value * scaling();
+    }
+
+    public ObjectProperty<Color> backgroundColorProperty() {
+        return backgroundColor;
+    }
+
+    public Color backgroundColor() {
+        return backgroundColor.get();
+    }
+
+    public void setBackgroundColor(Color color) {
+        backgroundColor.set(color);
+    }
+
+    public BooleanProperty debugInfoVisibleProperty() {
+        return debugInfoVisible;
+    }
+
+    public boolean debugInfoVisible() {
+        return debugInfoVisible.get();
+    }
 
     /**
      * @return (unscaled) scene size in pixels e.g. 224x288
@@ -127,14 +158,17 @@ public abstract class GameScene2D implements GameScene {
      * clears the canvas and draws the scores (if on), scene content and debug information (if on).
      */
     public void draw() {
-        debugInfoRenderer.clearCanvas();
+        sceneRenderer.clearCanvas();
         drawSceneContent();
-        if (debugInfoVisible.get() && debugInfoRenderer != null) {
+        if (debugInfoVisible() && debugInfoRenderer != null) {
             debugInfoRenderer.drawDebugInfo();
         }
         drawHUD();
     }
 
+    /**
+     * Draws the Heads-Up-Display (HUD).
+     */
     public abstract void drawHUD();
 
     /**

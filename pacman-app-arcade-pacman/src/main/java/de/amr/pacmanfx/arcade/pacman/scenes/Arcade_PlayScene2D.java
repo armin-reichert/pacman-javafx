@@ -287,6 +287,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
         if (context().optGameLevel().isEmpty()) {
             return; // Scene is drawn already 2 ticks before level has been created
         }
+
         final GameLevel gameLevel = context().gameLevel();
         RenderInfo info = new RenderInfo();
         info.put(CommonRenderInfo.MAZE_BRIGHT, mazeHighlighted.get());

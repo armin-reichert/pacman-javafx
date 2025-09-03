@@ -12,7 +12,6 @@ import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
-import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
 
 import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.Globals.TS;
@@ -29,7 +28,6 @@ public class Arcade_BootScene2D extends GameScene2D {
 
     private static final int RASTER_SIZE = 16;
 
-    private BaseSpriteRenderer spriteRenderer;
     private Vector2f minPoint, maxPoint;
 
     public Arcade_BootScene2D(GameUI ui) {
@@ -39,11 +37,9 @@ public class Arcade_BootScene2D extends GameScene2D {
     @Override
     public void doInit() {
         GameUI_Config uiConfig = ui.currentConfig();
-        // This can be different spritesheet types!
+        // This can be different sprite-sheet types!
         SpriteSheet<?> spriteSheet = uiConfig.spriteSheet();
-
-        spriteRenderer = new BaseSpriteRenderer(canvas, spriteSheet);
-        bindRendererProperties(spriteRenderer);
+        sceneRenderer.setSpriteSheet(spriteSheet);
 
         context().game().hud().all(false);
 
@@ -71,7 +67,7 @@ public class Arcade_BootScene2D extends GameScene2D {
     @Override
     public void draw() {
         if (context().gameState().timer().tickCount() == 1) {
-            spriteRenderer.clearCanvas();
+            sceneRenderer.clearCanvas();
         } else {
             drawSceneContent();
         }
@@ -89,14 +85,14 @@ public class Arcade_BootScene2D extends GameScene2D {
         // during first second, nothing happens...
         if (timer.betweenSeconds(1, 2) && timer.tickCount() % 4 == 0) {
             // change pattern every 4th tick
-            spriteRenderer.clearCanvas();
+            sceneRenderer.clearCanvas();
             drawRandomHexDigits();
         } else if (timer.betweenSeconds(2, 3.5) && timer.tickCount() % 4 == 0) {
             // change pattern every 4th tick
-            spriteRenderer.clearCanvas();
+            sceneRenderer.clearCanvas();
             drawRandomSpriteFragments();
         } else if (timer.atSecond(3.5)) {
-            spriteRenderer.clearCanvas();
+            sceneRenderer.clearCanvas();
             drawGridLines();
         }
     }
@@ -105,7 +101,7 @@ public class Arcade_BootScene2D extends GameScene2D {
         int numRows = (int) (ARCADE_MAP_SIZE_IN_PIXELS.y() / TS);
         int numCols = (int) (ARCADE_MAP_SIZE_IN_PIXELS.x() / TS);
         ctx().setFill(ARCADE_WHITE);
-        ctx().setFont(spriteRenderer.arcadeFontTS());
+        ctx().setFont(sceneRenderer.arcadeFontTS());
         for (int row = 0; row < numRows; ++row) {
             double y = scaled(TS(row + 1));
             for (int col = 0; col < numCols; ++col) {
@@ -123,7 +119,7 @@ public class Arcade_BootScene2D extends GameScene2D {
             RectShort fragment1 = randomSpriteFragment(), fragment2 = randomSpriteFragment();
             int split = numCols / 8 + randomInt(0, numCols / 4);
             for (int col = 0; col < numCols; ++col) {
-                spriteRenderer.drawSprite(col < split ? fragment1 : fragment2, RASTER_SIZE * col, RASTER_SIZE * row, true);
+                sceneRenderer.drawSprite(col < split ? fragment1 : fragment2, RASTER_SIZE * col, RASTER_SIZE * row, true);
             }
         }
     }

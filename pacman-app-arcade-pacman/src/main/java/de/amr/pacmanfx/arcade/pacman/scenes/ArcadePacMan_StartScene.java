@@ -25,7 +25,6 @@ import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
 public class ArcadePacMan_StartScene extends GameScene2D {
 
     private ArcadePacMan_HUDRenderer hudRenderer;
-    private BaseCanvasRenderer sceneRenderer;
 
     public ArcadePacMan_StartScene(GameUI ui) {
         super(ui);
@@ -34,19 +33,14 @@ public class ArcadePacMan_StartScene extends GameScene2D {
     @Override
     public void doInit() {
         hudRenderer = new ArcadePacMan_HUDRenderer(canvas, ui.currentConfig());
-        sceneRenderer = new BaseCanvasRenderer(canvas);
-
-        bindRendererProperties(hudRenderer, sceneRenderer);
-
+        bindRendererProperties(hudRenderer);
         context().game().hud().creditVisible(true).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
-
         actionBindings.assign(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
         actionBindings.assign(ACTION_ARCADE_START_GAME, ui.actionBindings());
     }
 
     @Override
-    protected void doEnd() {
-    }
+    protected void doEnd() {}
 
     @Override
     public void update() {
