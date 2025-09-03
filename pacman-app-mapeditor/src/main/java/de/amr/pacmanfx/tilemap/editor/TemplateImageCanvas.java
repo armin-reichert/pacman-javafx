@@ -17,7 +17,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.CustomMenuItem;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.input.ContextMenuEvent;
@@ -144,14 +143,11 @@ public class TemplateImageCanvas extends Canvas {
         miPickFoodColor.setOnAction(ae -> new Action_SetFoodProperty(editor,
             WorldMapProperty.COLOR_FOOD, formatColor(colorToSelect)).execute());
 
-        var miCreateMap = new MenuItem();
-        Text text = new Text();
-        //TODO localize
-        text.setText("Create Map");
+        var text = new Text("Create Map using these colors"); //TODO localize
         text.setFont(Font.font("Sans", FontWeight.BOLD, 16));
-        miCreateMap.setGraphic(text);
+        var miCreateMap = new CustomMenuItem(text);
         miCreateMap.setOnAction(actionEvent -> new Action_FillMapFromTemplate(ui).execute());
-
+        miCreateMap.setDisable(fillColor == null || strokeColor == null || doorColor == null || foodColor == null);
 
         colorSelectionContextMenu.getItems().addAll(
             miColorPreview,
@@ -160,6 +156,7 @@ public class TemplateImageCanvas extends Canvas {
             miPickStrokeColor,
             miPickDoorColor,
             miPickFoodColor,
+            new SeparatorMenuItem(),
             miCreateMap
         );
         colorSelectionContextMenu.show(this, e.getScreenX(), e.getScreenY());
