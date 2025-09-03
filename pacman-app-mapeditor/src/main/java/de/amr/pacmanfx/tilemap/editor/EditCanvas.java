@@ -358,9 +358,7 @@ public class EditCanvas extends Canvas {
             obstacleEditor.endEditing();
         } else {
             Vector2i tile = tileAt(mouseEvent.getX(), mouseEvent.getY());
-            if (ui.editModeIs(EditMode.INSPECT)) {
-                new Action_IdentifyObstacle(ui, tile).execute();
-            } else {
+            if (!ui.editModeIs(EditMode.INSPECT)) {
                 if (mouseEvent.isControlDown()) {
                     switch (ui.selectedPaletteID()) {
                         case TERRAIN -> new Action_ClearTerrainTile(ui.editor(), tile).execute();
@@ -378,7 +376,7 @@ public class EditCanvas extends Canvas {
         Vector2i tile = tileAt(mouseEvent.getX(), mouseEvent.getY());
         focussedTile.set(tile);
         switch (editMode.get()) {
-            case INSPECT -> {}
+            case INSPECT -> new Action_IdentifyObstacle(ui, tile).execute();
             case EDIT -> {
                 if (mouseEvent.isShiftDown()) {
                     switch (ui.selectedPaletteID()) {
