@@ -26,7 +26,6 @@ import javafx.scene.paint.Color;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.ACTOR_SPRITES;
 import static de.amr.pacmanfx.tilemap.editor.EditorUtil.getColorFromMap;
-import static de.amr.pacmanfx.tilemap.editor.EditorUtil.parseColor;
 
 public class Preview2D extends Canvas {
 
@@ -93,7 +92,7 @@ public class Preview2D extends Canvas {
             drawHouse(worldMap);
         }
         if (foodVisible.get()) {
-            Color foodColor = getColorFromMap(worldMap, LayerID.FOOD, WorldMapProperty.COLOR_FOOD, parseColor(ArcadeSprites.MS_PACMAN_COLOR_FOOD));
+            Color foodColor = getColorFromMap(worldMap, LayerID.FOOD, WorldMapProperty.COLOR_FOOD, ArcadeSprites.MS_PACMAN_COLOR_FOOD);
             foodRenderer.setEnergizerColor(foodColor);
             foodRenderer.setPelletColor(foodColor);
             worldMap.tiles().forEach(tile -> foodRenderer.drawTile(tile, worldMap.content(LayerID.FOOD, tile)));

@@ -38,7 +38,6 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tilemap.editor.EditorUtil.getColorFromMap;
-import static de.amr.pacmanfx.tilemap.editor.EditorUtil.parseColor;
 import static de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites.*;
 import static de.amr.pacmanfx.uilib.Ufx.colorWithOpacity;
 import static java.util.Objects.requireNonNull;
@@ -182,10 +181,8 @@ public class Maze3D extends Group {
         floor.setMaterial(coloredMaterial(Color.BLACK));
         mazeGroup.getChildren().add(floor);
 
-        Color wallBaseColor = getColorFromMap(worldMap(), LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_STROKE,
-                parseColor(MS_PACMAN_COLOR_WALL_STROKE));
-        Color wallTopColor = getColorFromMap(worldMap(), LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_FILL,
-                parseColor(MS_PACMAN_COLOR_WALL_FILL));
+        Color wallBaseColor = getColorFromMap(worldMap(), LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_STROKE, MS_PACMAN_COLOR_WALL_STROKE);
+        Color wallTopColor = getColorFromMap(worldMap(), LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_FILL, MS_PACMAN_COLOR_WALL_FILL);
 
         PhongMaterial wallBaseMaterial = coloredMaterial(wallBaseColor);
         PhongMaterial wallTopMaterial = coloredMaterial(wallTopColor);
@@ -248,7 +245,7 @@ public class Maze3D extends Group {
         r3D.createWallBetweenTileCoordinates(houseLeftLower, houseMaxTile, Wall3D.DEFAULT_WALL_THICKNESS);
         r3D.createWallBetweenTileCoordinates(houseMaxTile, houseRightUpper, Wall3D.DEFAULT_WALL_THICKNESS);
 
-        Color doorColor = getColorFromMap(worldMap(), LayerID.TERRAIN, WorldMapProperty.COLOR_DOOR, parseColor(MS_PACMAN_COLOR_DOOR));
+        Color doorColor = getColorFromMap(worldMap(), LayerID.TERRAIN, WorldMapProperty.COLOR_DOOR, MS_PACMAN_COLOR_DOOR);
         var doorMaterial = coloredMaterial(doorColor);
         Stream.of(houseMinTile.plus(3, 0), houseMinTile.plus(4, 0)).forEach(doorTile -> {
             Box door = new Box(TS + HTS, 2, HOUSE_DOOR_HEIGHT);
@@ -277,7 +274,7 @@ public class Maze3D extends Group {
         if (worldMap() == null) {
             return;
         }
-        Color foodColor = getColorFromMap(worldMap(), LayerID.FOOD, WorldMapProperty.COLOR_FOOD, parseColor(MS_PACMAN_COLOR_FOOD));
+        Color foodColor = getColorFromMap(worldMap(), LayerID.FOOD, WorldMapProperty.COLOR_FOOD, MS_PACMAN_COLOR_FOOD);
         var foodMaterial = coloredMaterial(foodColor);
         foodGroup.getChildren().clear();
         worldMap().tiles().filter(this::hasFoodAt).forEach(tile -> {

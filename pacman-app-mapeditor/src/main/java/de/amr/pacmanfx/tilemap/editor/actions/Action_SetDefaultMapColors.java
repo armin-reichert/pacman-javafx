@@ -5,6 +5,7 @@ import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
 
+import static de.amr.pacmanfx.tilemap.editor.EditorUtil.formatColor;
 import static de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites.*;
 import static java.util.Objects.requireNonNull;
 
@@ -19,10 +20,10 @@ public class Action_SetDefaultMapColors extends AbstractEditorAction<Void> {
 
     @Override
     public Void execute() {
-        worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.COLOR_WALL_STROKE, MS_PACMAN_COLOR_WALL_STROKE);
-        worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.COLOR_WALL_FILL, MS_PACMAN_COLOR_WALL_FILL);
-        worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.COLOR_DOOR, MS_PACMAN_COLOR_DOOR);
-        worldMap.properties(LayerID.FOOD).put(WorldMapProperty.COLOR_FOOD, MS_PACMAN_COLOR_FOOD);
+        worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.COLOR_WALL_STROKE, formatColor(MS_PACMAN_COLOR_WALL_STROKE));
+        worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.COLOR_WALL_FILL, formatColor(MS_PACMAN_COLOR_WALL_FILL));
+        worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.COLOR_DOOR, formatColor(MS_PACMAN_COLOR_DOOR));
+        worldMap.properties(LayerID.FOOD).put(WorldMapProperty.COLOR_FOOD, formatColor(MS_PACMAN_COLOR_FOOD));
         editor.setTerrainMapChanged();
         editor.setFoodMapChanged();
         editor.setEdited(true);

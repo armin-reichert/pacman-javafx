@@ -74,7 +74,7 @@ public interface EditorUtil {
 
     static Color parseColor(String text) {
         try {
-            return Color.web(text);
+            return Color.valueOf(text);
         } catch (Exception x) {
             Logger.error(x);
             return Color.WHITE;
@@ -95,16 +95,16 @@ public interface EditorUtil {
     }
 
     static Color getColorFromMap(WorldMap worldMap, LayerID layerID, String key, Color defaultColor) {
-        if (worldMap.properties(layerID).containsKey(key)) {
-            String colorSpec = worldMap.properties(layerID).get(key);
-            try {
-                return Color.web(colorSpec);
-            } catch (Exception x) {
-                Logger.error("Could not create color from value '{}'", colorSpec);
-                return defaultColor;
-            }
+        requireNonNull(worldMap);
+        requireNonNull(layerID);
+        requireNonNull(key);
+        String colorExpression = worldMap.properties(layerID).get(key);
+        try {
+            return Color.valueOf(colorExpression);
+        } catch (Exception x) {
+            Logger.error("Could not create color from spec '{}'", colorExpression);
+            return defaultColor;
         }
-        return defaultColor;
     }
 
     static Node filler(int pixels) {

@@ -44,9 +44,8 @@ import static java.util.Objects.requireNonNull;
 
 public class EditCanvas extends Canvas {
 
-    static class EditorTerrainTileRenderer extends TerrainMapTileRenderer implements ActorSpriteRenderer {
-
-        public EditorTerrainTileRenderer(Canvas canvas) {
+    static class EditCanvasRenderer extends TerrainMapTileRenderer implements ActorSpriteRenderer {
+        public EditCanvasRenderer(Canvas canvas) {
             super(canvas);
         }
     }
@@ -74,7 +73,7 @@ public class EditCanvas extends Canvas {
     private final ObstacleEditor obstacleEditor;
     private final ContextMenu contextMenu = new ContextMenu();
 
-    private final EditorTerrainTileRenderer terrainRenderer;
+    private final EditCanvasRenderer renderer;
     private final FoodMapRenderer foodRenderer;
 
     private final EditorUI ui;
@@ -103,22 +102,22 @@ public class EditCanvas extends Canvas {
             }, worldMap, gridSize));
 
 
-        actorsVisibleProperty().bind(ui.actorsVisibleProperty());
-        editModeProperty().bind(ui.editModeProperty());
-        foodVisibleProperty().bind(ui.foodVisibleProperty());
-        gridSizeProperty().bind(ui.gridSizeProperty());
-        gridVisibleProperty().bind(ui.gridVisibleProperty());
+        actorsVisibleProperty()             .bind(ui.actorsVisibleProperty());
+        editModeProperty()                  .bind(ui.editModeProperty());
+        foodVisibleProperty()               .bind(ui.foodVisibleProperty());
+        gridSizeProperty()                  .bind(ui.gridSizeProperty());
+        gridVisibleProperty()               .bind(ui.gridVisibleProperty());
         obstacleInnerAreaDisplayedProperty().bind(ui.obstacleInnerAreaDisplayedProperty());
-        obstaclesJoiningProperty().bind(ui.obstaclesJoiningProperty());
-        segmentNumbersVisibleProperty().bind(ui.segmentNumbersVisibleProperty());
-        scalingProperty().bind(gridSize.divide(TS));
-        symmetricEditModeProperty().bind(ui.symmetricEditModeProperty());
-        templateImageGrayProperty().bind(ui.editor().templateImageProperty().map(Ufx::imageToGreyscale));
-        terrainVisibleProperty().bind(ui.terrainVisibleProperty());
-        worldMapProperty().bind(ui.editor().currentWorldMapProperty());
+        obstaclesJoiningProperty()          .bind(ui.obstaclesJoiningProperty());
+        segmentNumbersVisibleProperty()     .bind(ui.segmentNumbersVisibleProperty());
+        scalingProperty()                   .bind(gridSize.divide(TS));
+        symmetricEditModeProperty()         .bind(ui.symmetricEditModeProperty());
+        templateImageGrayProperty()         .bind(ui.editor().templateImageProperty().map(Ufx::imageToGreyscale));
+        terrainVisibleProperty()            .bind(ui.terrainVisibleProperty());
+        worldMapProperty()                  .bind(ui.editor().currentWorldMapProperty());
 
-        terrainRenderer = new EditorTerrainTileRenderer(this);
-        terrainRenderer.scalingProperty().bind(scaling);
+        renderer = new EditCanvasRenderer(this);
+        renderer.scalingProperty().bind(scaling);
 
         foodRenderer = new FoodMapRenderer(this);
         foodRenderer.scalingProperty().bind(scaling);
@@ -217,7 +216,7 @@ public class EditCanvas extends Canvas {
     public WorldMap worldMap() { return worldMap.get(); }
 
     public TerrainMapTileRenderer terrainRenderer() {
-        return terrainRenderer;
+        return renderer;
     }
 
     public FoodMapRenderer foodRenderer() {
@@ -286,11 +285,11 @@ public class EditCanvas extends Canvas {
 
         // Terrain
         if (terrainVisible.get()) {
-            terrainRenderer.setColorScheme(colorScheme);
-            terrainRenderer.setSegmentNumbersDisplayed(segmentNumbersVisible.get());
-            terrainRenderer.setObstacleInnerAreaDisplayed(obstacleInnerAreaDisplayed.get());
-            terrainRenderer.draw(worldMap(), worldMap().obstacles());
-            obstacleEditor.draw(terrainRenderer);
+            renderer.setColorScheme(colorScheme);
+            renderer.setSegmentNumbersDisplayed(segmentNumbersVisible.get());
+            renderer.setObstacleInnerAreaDisplayed(obstacleInnerAreaDisplayed.get());
+            renderer.draw(worldMap(), worldMap().obstacles());
+            obstacleEditor.draw(renderer);
         }
 
         // Tiles that seem to be wrong
@@ -316,7 +315,7 @@ public class EditCanvas extends Canvas {
 
         // Food
         if (foodVisible.get()) {
-            Color foodColor = getColorFromMap(worldMap(), LayerID.FOOD, WorldMapProperty.COLOR_FOOD, parseColor(ArcadeSprites.MS_PACMAN_COLOR_FOOD));
+            Color foodColor = getColorFromMap(worldMap(), LayerID.FOOD, WorldMapProperty.COLOR_FOOD, ArcadeSprites.MS_PACMAN_COLOR_FOOD);
             foodRenderer.setEnergizerColor(foodColor);
             foodRenderer.setPelletColor(foodColor);
             worldMap().tiles().forEach(tile -> foodRenderer.drawTile(tile, worldMap().content(LayerID.FOOD, tile)));
@@ -326,7 +325,7 @@ public class EditCanvas extends Canvas {
             ACTOR_SPRITES.forEach((positionProperty, sprite) -> {
                 Vector2i tile = worldMap().getTerrainTileProperty(positionProperty);
                 if (tile != null) {
-                    terrainRenderer.drawActorSprite(tile, sprite);
+                    renderer.drawActorSprite(tile, sprite);
                 }
             });
         }

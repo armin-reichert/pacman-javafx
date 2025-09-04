@@ -426,9 +426,9 @@ public class EditorUI {
     private TerrainMapColorScheme currentColorScheme(WorldMap worldMap) {
         return new TerrainMapColorScheme(
                 COLOR_CANVAS_BACKGROUND,
-                getColorFromMap(worldMap, LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_FILL, parseColor(MS_PACMAN_COLOR_WALL_FILL)),
-                getColorFromMap(worldMap, LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_STROKE, parseColor(MS_PACMAN_COLOR_WALL_STROKE)),
-                getColorFromMap(worldMap, LayerID.TERRAIN, WorldMapProperty.COLOR_DOOR, parseColor(MS_PACMAN_COLOR_DOOR))
+                getColorFromMap(worldMap, LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_FILL, MS_PACMAN_COLOR_WALL_FILL),
+                getColorFromMap(worldMap, LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_STROKE, MS_PACMAN_COLOR_WALL_STROKE),
+                getColorFromMap(worldMap, LayerID.TERRAIN, WorldMapProperty.COLOR_DOOR, MS_PACMAN_COLOR_DOOR)
         );
     }
 
