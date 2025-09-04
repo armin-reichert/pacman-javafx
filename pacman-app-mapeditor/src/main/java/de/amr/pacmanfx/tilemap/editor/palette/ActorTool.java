@@ -17,7 +17,7 @@ import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.TOOL_SIZE;
 import static de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites.SPRITE_SHEET;
 import static java.util.Objects.requireNonNull;
 
-public class ActorTool extends PropertyValueEditorTool {
+public class ActorTool extends PropertyValuePaletteTool {
 
     private final RectShort sprite;
 

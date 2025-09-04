@@ -2,12 +2,12 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.tilemap.editor.palette;
+package de.amr.pacmanfx.tilemap.editor;
 
 import de.amr.pacmanfx.lib.tilemap.FoodTile;
 import de.amr.pacmanfx.lib.tilemap.TerrainTile;
 import de.amr.pacmanfx.model.WorldMapProperty;
-import de.amr.pacmanfx.tilemap.editor.EditorUI;
+import de.amr.pacmanfx.tilemap.editor.palette.*;
 import de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites;
 import de.amr.pacmanfx.tilemap.editor.rendering.TerrainMapTileRenderer;
 import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
@@ -20,10 +20,9 @@ import java.util.Optional;
 
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.*;
 
-public class PalettesArea extends TabPane {
+public class EditorPaletteTabPane extends TabPane {
 
-    // Must be called after creating edit canvas because it binds to the renderers of the edit canvas!
-    public PalettesArea(EditorUI ui, TerrainMapTileRenderer terrainRenderer, FoodMapRenderer foodRenderer) {
+    public EditorPaletteTabPane(EditorUI ui, TerrainMapTileRenderer terrainRenderer, FoodMapRenderer foodRenderer) {
         setMinHeight(80);
         setPadding(new Insets(5, 5, 5, 5));
 
@@ -68,19 +67,19 @@ public class PalettesArea extends TabPane {
     private Palette createTerrainPalette(EditorUI ui, TerrainMapTileRenderer prototype) {
         var palette = new Palette(PaletteID.TERRAIN, 1, 13);
 
-        palette.addTool(new TileCodeEditorTool(ui, TerrainTile.EMPTY.$, "Empty Space"));
-        palette.addTool(new TileCodeEditorTool(ui, TerrainTile.WALL_H.$, "Horizontal Wall"));
-        palette.addTool(new TileCodeEditorTool(ui, TerrainTile.WALL_V.$, "Vertical Wall"));
-        palette.addTool(new TileCodeEditorTool(ui, TerrainTile.ARC_NW.$, "NW Corner"));
-        palette.addTool(new TileCodeEditorTool(ui, TerrainTile.ARC_NE.$, "NE Corner"));
-        palette.addTool(new TileCodeEditorTool(ui, TerrainTile.ARC_SW.$, "SW Corner"));
-        palette.addTool(new TileCodeEditorTool(ui, TerrainTile.ARC_SE.$, "SE Corner"));
-        palette.addTool(new TileCodeEditorTool(ui, TerrainTile.TUNNEL.$, "Tunnel"));
-        palette.addTool(new TileCodeEditorTool(ui, TerrainTile.DOOR.$, "Door"));
-        palette.addTool(new TileCodeEditorTool(ui, TerrainTile.ONE_WAY_UP.$, "One-Way Up"));
-        palette.addTool(new TileCodeEditorTool(ui, TerrainTile.ONE_WAY_RIGHT.$, "One-Way Right"));
-        palette.addTool(new TileCodeEditorTool(ui, TerrainTile.ONE_WAY_DOWN.$, "One-Way Down"));
-        palette.addTool(new TileCodeEditorTool(ui, TerrainTile.ONE_WAY_LEFT.$, "One-Way Left"));
+        palette.addTool(new TileCodePaletteTool(ui, TerrainTile.EMPTY.$, "Empty Space"));
+        palette.addTool(new TileCodePaletteTool(ui, TerrainTile.WALL_H.$, "Horizontal Wall"));
+        palette.addTool(new TileCodePaletteTool(ui, TerrainTile.WALL_V.$, "Vertical Wall"));
+        palette.addTool(new TileCodePaletteTool(ui, TerrainTile.ARC_NW.$, "NW Corner"));
+        palette.addTool(new TileCodePaletteTool(ui, TerrainTile.ARC_NE.$, "NE Corner"));
+        palette.addTool(new TileCodePaletteTool(ui, TerrainTile.ARC_SW.$, "SW Corner"));
+        palette.addTool(new TileCodePaletteTool(ui, TerrainTile.ARC_SE.$, "SE Corner"));
+        palette.addTool(new TileCodePaletteTool(ui, TerrainTile.TUNNEL.$, "Tunnel"));
+        palette.addTool(new TileCodePaletteTool(ui, TerrainTile.DOOR.$, "Door"));
+        palette.addTool(new TileCodePaletteTool(ui, TerrainTile.ONE_WAY_UP.$, "One-Way Up"));
+        palette.addTool(new TileCodePaletteTool(ui, TerrainTile.ONE_WAY_RIGHT.$, "One-Way Right"));
+        palette.addTool(new TileCodePaletteTool(ui, TerrainTile.ONE_WAY_DOWN.$, "One-Way Down"));
+        palette.addTool(new TileCodePaletteTool(ui, TerrainTile.ONE_WAY_LEFT.$, "One-Way Left"));
 
         palette.selectTool(0); // "No Tile"
 
@@ -119,9 +118,9 @@ public class PalettesArea extends TabPane {
     private Palette createFoodPalette(EditorUI ui, FoodMapRenderer prototype) {
         var palette = new Palette(PaletteID.FOOD, 1, 3);
 
-        palette.addTool(new TileCodeEditorTool(ui, FoodTile.EMPTY.code(), "No Food"));
-        palette.addTool(new TileCodeEditorTool(ui, FoodTile.PELLET.code(), "Pellet"));
-        palette.addTool(new TileCodeEditorTool(ui, FoodTile.ENERGIZER.code(), "Energizer"));
+        palette.addTool(new TileCodePaletteTool(ui, FoodTile.EMPTY.code(), "No Food"));
+        palette.addTool(new TileCodePaletteTool(ui, FoodTile.PELLET.code(), "Pellet"));
+        palette.addTool(new TileCodePaletteTool(ui, FoodTile.ENERGIZER.code(), "Energizer"));
 
         palette.selectTool(0); // "No Food"
 

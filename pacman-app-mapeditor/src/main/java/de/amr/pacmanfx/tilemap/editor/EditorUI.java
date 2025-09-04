@@ -10,7 +10,6 @@ import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.tilemap.editor.actions.*;
 import de.amr.pacmanfx.tilemap.editor.palette.Palette;
 import de.amr.pacmanfx.tilemap.editor.palette.PaletteID;
-import de.amr.pacmanfx.tilemap.editor.palette.PalettesArea;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapColorScheme;
 import javafx.application.Platform;
@@ -57,7 +56,7 @@ public class EditorUI {
     private final BorderPane contentPane = new BorderPane();
     private SplitPane splitPaneMapEditorAndPreviews;
 
-    private final PalettesArea palettesArea;
+    private final EditorPaletteTabPane editorPaletteTabPane;
 
     private Pane propertyEditorsPane;
     private PropertyEditorPane terrainPropertiesEditorPane;
@@ -325,7 +324,7 @@ public class EditorUI {
         createPropertyEditors();
         createStatusLine();
 
-        palettesArea = new PalettesArea(this, editCanvas.terrainRenderer(), editCanvas.foodRenderer());
+        editorPaletteTabPane = new EditorPaletteTabPane(this, editCanvas.terrainRenderer(), editCanvas.foodRenderer());
 
         menuBar = new EditorMenuBar(this);
 
@@ -369,7 +368,7 @@ public class EditorUI {
     }
 
     public void draw() {
-        palettesArea.selectedPalette().ifPresent(Palette::draw);
+        editorPaletteTabPane.selectedPalette().ifPresent(Palette::draw);
         final WorldMap worldMap = editor.currentWorldMap();
         TerrainMapColorScheme colorScheme = currentColorScheme(worldMap);
         if (tabEditCanvas.isSelected()) {
@@ -445,11 +444,11 @@ public class EditorUI {
     }
 
     public Optional<PaletteID> selectedPaletteID() {
-        return palettesArea.selectedPalette().map(Palette::id);
+        return editorPaletteTabPane.selectedPalette().map(Palette::id);
     }
 
     public Optional<Palette> selectedPalette() {
-        return palettesArea.selectedPalette();
+        return editorPaletteTabPane.selectedPalette();
     }
 
     private void createEditCanvas() {
@@ -696,9 +695,9 @@ public class EditorUI {
     }
 
     private void arrangeLayout() {
-        var centerPane = new VBox(palettesArea, splitPaneMapEditorAndPreviews, statusLine);
+        var centerPane = new VBox(editorPaletteTabPane, splitPaneMapEditorAndPreviews, statusLine);
         centerPane.setPadding(new Insets(0,5,0,5));
-        VBox.setVgrow(palettesArea, Priority.NEVER);
+        VBox.setVgrow(editorPaletteTabPane, Priority.NEVER);
         VBox.setVgrow(splitPaneMapEditorAndPreviews, Priority.ALWAYS);
         VBox.setVgrow(statusLine, Priority.NEVER);
         contentPane.setLeft(propertyEditorsPane);

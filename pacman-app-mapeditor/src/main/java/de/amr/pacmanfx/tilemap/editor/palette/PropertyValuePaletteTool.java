@@ -15,20 +15,20 @@ import java.util.function.BiConsumer;
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.TOOL_SIZE;
 import static java.util.Objects.requireNonNull;
 
-public abstract class PropertyValueEditorTool implements EditorTool {
+public abstract class PropertyValuePaletteTool implements PaletteTool {
 
     protected final String propertyName;
     protected final String description;
 
     protected BiConsumer<LayerID, Vector2i> editor;
 
-    public PropertyValueEditorTool(BiConsumer<LayerID, Vector2i> editor, String propertyName, String description) {
+    public PropertyValuePaletteTool(BiConsumer<LayerID, Vector2i> editor, String propertyName, String description) {
         this.editor = requireNonNull(editor);
         this.propertyName = propertyName;
         this.description = description;
     }
 
-    protected PropertyValueEditorTool(String propertyName, String description) {
+    protected PropertyValuePaletteTool(String propertyName, String description) {
         this.propertyName = propertyName;
         this.description = description;
     }

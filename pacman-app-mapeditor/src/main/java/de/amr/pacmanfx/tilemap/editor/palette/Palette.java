@@ -24,7 +24,7 @@ public class Palette extends Canvas {
     private final PaletteID id;
     private final int numRows;
     private final int numCols;
-    private final List<EditorTool> tools = new ArrayList<>();
+    private final List<PaletteTool> tools = new ArrayList<>();
     private final Tooltip tooltip;
 
     private TileRenderer renderer;
@@ -57,7 +57,7 @@ public class Palette extends Canvas {
         return id;
     }
 
-    public void addTool(EditorTool tool) {
+    public void addTool(PaletteTool tool) {
         tools.add(tool);
     }
 
@@ -77,7 +77,7 @@ public class Palette extends Canvas {
         return selectedToolIndex != -1 ? selectedToolIndex % numCols : -1;
     }
 
-    public EditorTool selectedTool() {
+    public PaletteTool selectedTool() {
         return selectedToolIndex != -1 ? tools.get(selectedToolIndex) : null;
     }
 
@@ -91,7 +91,7 @@ public class Palette extends Canvas {
         return tools.size();
     }
 
-    private EditorTool getToolOrNull(int index) {
+    private PaletteTool getToolOrNull(int index) {
         if (index < tools.size()) {
             return tools.get(index);
         }
@@ -102,7 +102,7 @@ public class Palette extends Canvas {
         int row = (int) e.getY() / TOOL_SIZE;
         int col = (int) e.getX() / TOOL_SIZE;
         int index = row * numCols + col;
-        EditorTool tool = getToolOrNull(index);
+        PaletteTool tool = getToolOrNull(index);
         if (tool != null) {
             selectedToolIndex = index;
         }
@@ -112,7 +112,7 @@ public class Palette extends Canvas {
         int row = (int) e.getY() / TOOL_SIZE;
         int col = (int) e.getX() / TOOL_SIZE;
         int i = row * numCols + col;
-        EditorTool tool = getToolOrNull(i);
+        PaletteTool tool = getToolOrNull(i);
         if (tool != null) {
             String text = tool.description();
             tooltip.setText(text.isEmpty() ? "?" : text);
@@ -131,7 +131,7 @@ public class Palette extends Canvas {
         if (renderer != null) {
             renderer.setScaling(TOOL_SIZE / 8.0);
             for (int i = 0; i < numRows * numCols; ++i) {
-                EditorTool tool = getToolOrNull(i);
+                PaletteTool tool = getToolOrNull(i);
                 if (tool != null) {
                     tool.draw(renderer, i / numCols, i % numCols);
                 }

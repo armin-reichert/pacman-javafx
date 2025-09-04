@@ -10,11 +10,24 @@ import de.amr.pacmanfx.uilib.rendering.CanvasRenderer;
 
 import java.util.function.BiConsumer;
 
-public interface EditorTool {
+public interface PaletteTool {
 
+    /**
+     * @return descriptive text, displayed e.g. as a tooltip
+     */
     String description();
 
+    /**
+     * @return function that realizes the editing of the current tile
+     */
     BiConsumer<LayerID, Vector2i> editor();
 
+    /**
+     * Draws the palette tile.
+     *
+     * @param renderer renderer used for drawing the tile
+     * @param row grid row of the tile in the palette
+     * @param col grid column of the tile in the palette
+     */
     void draw(CanvasRenderer renderer, int row, int col);
 }

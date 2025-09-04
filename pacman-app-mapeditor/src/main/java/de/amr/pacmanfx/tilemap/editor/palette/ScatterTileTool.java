@@ -16,9 +16,9 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.tilemap.WorldMapFormatter.formatTile;
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.TOOL_SIZE;
 
-public class ScatterTileTool extends PropertyValueEditorTool {
+public class ScatterTileTool extends PropertyValuePaletteTool {
 
-    protected ScatterTileTool(EditorUI ui, String propertyName, String description) {
+    public ScatterTileTool(EditorUI ui, String propertyName, String description) {
         super(propertyName, description);
         editor = (layerID, tile) -> new Action_SetTerrainProperty(ui.editor(), propertyName, formatTile(tile)).execute();
     }
