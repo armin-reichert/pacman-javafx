@@ -21,7 +21,7 @@ import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.TOOL_SIZE;
 import static de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites.SPRITE_SHEET;
 import static java.util.Objects.requireNonNull;
 
-public class ActorTool extends PropertyValuePaletteTool {
+public class ActorTool extends PropertyValueEditorTool {
 
     private final BiConsumer<LayerID, Vector2i> editor;
     private final RectShort sprite;

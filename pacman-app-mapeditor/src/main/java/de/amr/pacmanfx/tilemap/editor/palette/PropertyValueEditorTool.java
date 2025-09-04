@@ -10,12 +10,12 @@ import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.TOOL_SIZE;
 
-public abstract class PropertyValuePaletteTool implements PaletteTool {
+public abstract class PropertyValueEditorTool implements PaletteTool {
 
     protected final String propertyName;
     protected final String description;
 
-    protected PropertyValuePaletteTool(String propertyName, String description) {
+    protected PropertyValueEditorTool(String propertyName, String description) {
         this.propertyName = propertyName;
         this.description = description;
     }

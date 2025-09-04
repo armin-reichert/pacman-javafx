@@ -67,19 +67,19 @@ public class EditorPaletteTabPane extends TabPane {
     private Palette createTerrainPalette(EditorUI ui, TerrainMapTileRenderer prototype) {
         var palette = new Palette(PaletteID.TERRAIN, 1, 13);
 
-        palette.addTool(new TileCodePaletteTool(ui, TerrainTile.EMPTY.$, "Empty Space"));
-        palette.addTool(new TileCodePaletteTool(ui, TerrainTile.WALL_H.$, "Horizontal Wall"));
-        palette.addTool(new TileCodePaletteTool(ui, TerrainTile.WALL_V.$, "Vertical Wall"));
-        palette.addTool(new TileCodePaletteTool(ui, TerrainTile.ARC_NW.$, "NW Corner"));
-        palette.addTool(new TileCodePaletteTool(ui, TerrainTile.ARC_NE.$, "NE Corner"));
-        palette.addTool(new TileCodePaletteTool(ui, TerrainTile.ARC_SW.$, "SW Corner"));
-        palette.addTool(new TileCodePaletteTool(ui, TerrainTile.ARC_SE.$, "SE Corner"));
-        palette.addTool(new TileCodePaletteTool(ui, TerrainTile.TUNNEL.$, "Tunnel"));
-        palette.addTool(new TileCodePaletteTool(ui, TerrainTile.DOOR.$, "Door"));
-        palette.addTool(new TileCodePaletteTool(ui, TerrainTile.ONE_WAY_UP.$, "One-Way Up"));
-        palette.addTool(new TileCodePaletteTool(ui, TerrainTile.ONE_WAY_RIGHT.$, "One-Way Right"));
-        palette.addTool(new TileCodePaletteTool(ui, TerrainTile.ONE_WAY_DOWN.$, "One-Way Down"));
-        palette.addTool(new TileCodePaletteTool(ui, TerrainTile.ONE_WAY_LEFT.$, "One-Way Left"));
+        palette.addTool(new TileCodeEditorTool(ui, TerrainTile.EMPTY.$, "Empty Space"));
+        palette.addTool(new TileCodeEditorTool(ui, TerrainTile.WALL_H.$, "Horizontal Wall"));
+        palette.addTool(new TileCodeEditorTool(ui, TerrainTile.WALL_V.$, "Vertical Wall"));
+        palette.addTool(new TileCodeEditorTool(ui, TerrainTile.ARC_NW.$, "NW Corner"));
+        palette.addTool(new TileCodeEditorTool(ui, TerrainTile.ARC_NE.$, "NE Corner"));
+        palette.addTool(new TileCodeEditorTool(ui, TerrainTile.ARC_SW.$, "SW Corner"));
+        palette.addTool(new TileCodeEditorTool(ui, TerrainTile.ARC_SE.$, "SE Corner"));
+        palette.addTool(new TileCodeEditorTool(ui, TerrainTile.TUNNEL.$, "Tunnel"));
+        palette.addTool(new TileCodeEditorTool(ui, TerrainTile.DOOR.$, "Door"));
+        palette.addTool(new TileCodeEditorTool(ui, TerrainTile.ONE_WAY_UP.$, "One-Way Up"));
+        palette.addTool(new TileCodeEditorTool(ui, TerrainTile.ONE_WAY_RIGHT.$, "One-Way Right"));
+        palette.addTool(new TileCodeEditorTool(ui, TerrainTile.ONE_WAY_DOWN.$, "One-Way Down"));
+        palette.addTool(new TileCodeEditorTool(ui, TerrainTile.ONE_WAY_LEFT.$, "One-Way Left"));
 
         palette.selectTool(0); // "No Tile"
 
@@ -100,10 +100,10 @@ public class EditorPaletteTabPane extends TabPane {
         palette.addTool(new ActorTool(ui, WorldMapProperty.POS_CYAN_GHOST, "Cyan Ghost", ArcadeSprites.CYAN_GHOST));
         palette.addTool(new ActorTool(ui, WorldMapProperty.POS_ORANGE_GHOST, "Orange Ghost", ArcadeSprites.ORANGE_GHOST));
         palette.addTool(new ActorTool(ui, WorldMapProperty.POS_BONUS, "Bonus", ArcadeSprites.STRAWBERRY));
-        palette.addTool(new ScatterTileTool(ui, WorldMapProperty.POS_SCATTER_RED_GHOST, "Red Ghost Scatter"));
-        palette.addTool(new ScatterTileTool(ui, WorldMapProperty.POS_SCATTER_PINK_GHOST, "Pink Ghost Scatter"));
-        palette.addTool(new ScatterTileTool(ui, WorldMapProperty.POS_SCATTER_CYAN_GHOST, "Cyan Ghost Scatter"));
-        palette.addTool(new ScatterTileTool(ui, WorldMapProperty.POS_SCATTER_ORANGE_GHOST, "Orange Ghost Scatter"));
+        palette.addTool(new ScatterTileEditorTool(ui, WorldMapProperty.POS_SCATTER_RED_GHOST, "Red Ghost Scatter"));
+        palette.addTool(new ScatterTileEditorTool(ui, WorldMapProperty.POS_SCATTER_PINK_GHOST, "Pink Ghost Scatter"));
+        palette.addTool(new ScatterTileEditorTool(ui, WorldMapProperty.POS_SCATTER_CYAN_GHOST, "Cyan Ghost Scatter"));
+        palette.addTool(new ScatterTileEditorTool(ui, WorldMapProperty.POS_SCATTER_ORANGE_GHOST, "Orange Ghost Scatter"));
 
         palette.selectTool(0); // "No actor"
 
@@ -118,9 +118,9 @@ public class EditorPaletteTabPane extends TabPane {
     private Palette createFoodPalette(EditorUI ui, FoodMapRenderer prototype) {
         var palette = new Palette(PaletteID.FOOD, 1, 3);
 
-        palette.addTool(new TileCodePaletteTool(ui, FoodTile.EMPTY.code(), "No Food"));
-        palette.addTool(new TileCodePaletteTool(ui, FoodTile.PELLET.code(), "Pellet"));
-        palette.addTool(new TileCodePaletteTool(ui, FoodTile.ENERGIZER.code(), "Energizer"));
+        palette.addTool(new TileCodeEditorTool(ui, FoodTile.EMPTY.code(), "No Food"));
+        palette.addTool(new TileCodeEditorTool(ui, FoodTile.PELLET.code(), "Pellet"));
+        palette.addTool(new TileCodeEditorTool(ui, FoodTile.ENERGIZER.code(), "Energizer"));
 
         palette.selectTool(0); // "No Food"
 

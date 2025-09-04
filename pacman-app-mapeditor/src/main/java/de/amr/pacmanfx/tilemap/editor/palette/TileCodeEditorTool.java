@@ -16,14 +16,14 @@ import java.util.function.BiConsumer;
 
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.TOOL_SIZE;
 
-public class TileCodePaletteTool implements PaletteTool {
+public class TileCodeEditorTool implements PaletteTool {
 
     private final byte code;
     private final String description;
 
     private final BiConsumer<LayerID, Vector2i> editor;
 
-    public TileCodePaletteTool(EditorUI ui, byte code, String description) {
+    public TileCodeEditorTool(EditorUI ui, byte code, String description) {
         this.code = code;
         this.description = description;
         editor = (layerID, tile) -> new Action_SetTileCode(ui, layerID, tile, code).execute();
