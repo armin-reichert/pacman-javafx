@@ -259,6 +259,12 @@ public class EditCanvas extends Canvas {
         ctx.setFill(colorScheme.floorColor());
         ctx.fillRect(0, 0, width, height);
 
+        if (isFocused()) {
+            ctx.setStroke(Color.RED);
+            ctx.setLineWidth(4);
+            ctx.strokeRect(0, 0, width, height);
+        }
+
         if (templateImageGray.get() != null) {
             ctx.drawImage(templateImageGray.get(),
                 0, GameLevel.EMPTY_ROWS_OVER_MAZE * scaling() * TS,
@@ -365,38 +371,42 @@ public class EditCanvas extends Canvas {
     }
 
     public void onMouseClicked(MouseEvent mouseEvent) {
-        if (mouseEvent.getButton() == MouseButton.PRIMARY) {
-            Logger.info("Mouse clicked {}", mouseEvent);
-            requestFocus();
-            contextMenu.hide();
-            mouseEvent.consume();
-        }
+        if (mouseEvent.getButton() != MouseButton.PRIMARY)
+            return;
+
+        Logger.info("Mouse clicked {}", mouseEvent);
+        requestFocus();
+        contextMenu.hide();
+        mouseEvent.consume();
     }
 
     private void onDragDetected(MouseEvent mouseEvent) {
+        if (editMode.get() != EditMode.EDIT)
+            return;
+
         Logger.info("onDragDetected");
-        if (editMode.get() == EditMode.EDIT) {
-            Vector2i tileAtMouse = tileAt(mouseEvent.getX(), mouseEvent.getY());
-            setDragging(true);
-            obstacleEditor.startEditing(tileAtMouse);
-            Logger.info("Start editing obstacle");
-            mouseEvent.consume();
-        }
+        Vector2i tileAtMouse = tileAt(mouseEvent.getX(), mouseEvent.getY());
+        setDragging(true);
+        obstacleEditor.startEditing(tileAtMouse);
+        Logger.info("Start editing obstacle");
+        mouseEvent.consume();
     }
 
     private void onMouseDragged(MouseEvent mouseEvent) {
         if (!dragging()) {
             return;
         }
-        Logger.info("onMouseDragged");
+        Logger.debug("onMouseDragged");
         Vector2i tileAtMouse = tileAt(mouseEvent.getX(), mouseEvent.getY());
         obstacleEditor.continueEditing(tileAtMouse);
         mouseEvent.consume();
     }
 
     public void onMouseReleased(MouseEvent mouseEvent) {
+        if (mouseEvent.getButton() != MouseButton.PRIMARY)
+            return;
+
         Logger.info("onMouseReleased");
-        if (mouseEvent.getButton() != MouseButton.PRIMARY) return;
         if (dragging()) {
             setDragging(false);
             obstacleEditor.endEditing();
