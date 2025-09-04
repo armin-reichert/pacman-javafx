@@ -17,33 +17,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.TOOL_SIZE;
+import static java.util.Objects.requireNonNull;
 
 public class Palette extends Canvas {
-
-    public static final Color BG_COLOR = Color.WHITE;
 
     private final PaletteID id;
     private final int numRows;
     private final int numCols;
-    private final List<EditorTool> tools;
+    private final List<EditorTool> tools = new ArrayList<>();
+    private final Tooltip tooltip;
 
     private TileRenderer renderer;
-    private EditorTool selectedTool;
-    private Tooltip tooltip;
-    private int selectedRow;
-    private int selectedCol;
+    private int selectedToolIndex;
 
     public Palette(PaletteID id, int numRows, int numCols) {
         super(numCols * TOOL_SIZE, numRows * TOOL_SIZE);
 
-        this.id = id;
+        this.id = requireNonNull(id);
         this.numRows = numRows;
         this.numCols = numCols;
-        tools = new ArrayList<>();
-
-        selectedTool = null;
-        selectedRow = -1;
-        selectedCol = -1;
+        selectedToolIndex = -1;
 
         // Tooltip for tool :-)
         tooltip = new Tooltip("This tool does...");
@@ -69,22 +62,28 @@ public class Palette extends Canvas {
     }
 
     public boolean isToolSelected() {
-        return selectedTool != null;
+        return selectedToolIndex != -1;
     }
 
     public int selectedIndex() {
-        return selectedRow * numRows + selectedCol;
+        return selectedToolIndex;
+    }
+
+    public int selectedRowIndex() {
+        return selectedToolIndex != -1 ? selectedToolIndex / numCols : -1;
+    }
+
+    public int selectedColIndex() {
+        return selectedToolIndex != -1 ? selectedToolIndex % numCols : -1;
     }
 
     public EditorTool selectedTool() {
-        return selectedTool;
+        return selectedToolIndex != -1 ? tools.get(selectedToolIndex) : null;
     }
 
     public void selectTool(int index) {
         if (index >= 0 && index < tools.size()) {
-            selectedTool = tools.get(index);
-            selectedRow = index / numCols;
-            selectedCol = index % numCols;
+            selectedToolIndex = index;
         }
     }
 
@@ -102,12 +101,10 @@ public class Palette extends Canvas {
     private void handleMouseClick(MouseEvent e) {
         int row = (int) e.getY() / TOOL_SIZE;
         int col = (int) e.getX() / TOOL_SIZE;
-        int i = row * numCols + col;
-        EditorTool tool = getToolOrNull(i);
+        int index = row * numCols + col;
+        EditorTool tool = getToolOrNull(index);
         if (tool != null) {
-            selectedRow = row;
-            selectedCol = col;
-            selectedTool = tool;
+            selectedToolIndex = index;
         }
     }
 
@@ -129,8 +126,7 @@ public class Palette extends Canvas {
         GraphicsContext ctx = getGraphicsContext2D();
 
         ctx.save();
-        ctx.setFill(BG_COLOR);
-        ctx.fillRect(0, 0, width, height);
+        ctx.clearRect(0, 0, width, height);
 
         if (renderer != null) {
             renderer.setScaling(TOOL_SIZE / 8.0);
@@ -153,10 +149,10 @@ public class Palette extends Canvas {
         }
 
         // mark selected tool
-        if (selectedRow != -1 && selectedCol != -1) {
+        if (selectedToolIndex != -1) {
             ctx.setStroke(Color.RED);
             ctx.setLineWidth(2);
-            ctx.strokeRect(selectedCol * TOOL_SIZE + 1, selectedRow * TOOL_SIZE + 1, TOOL_SIZE - 2, TOOL_SIZE - 2);
+            ctx.strokeRect(selectedColIndex() * TOOL_SIZE + 1, selectedRowIndex() * TOOL_SIZE + 1, TOOL_SIZE - 2, TOOL_SIZE - 2);
         }
 
         ctx.restore();
