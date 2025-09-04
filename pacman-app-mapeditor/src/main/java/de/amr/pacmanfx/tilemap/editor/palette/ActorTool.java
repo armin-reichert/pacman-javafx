@@ -6,14 +6,13 @@ package de.amr.pacmanfx.tilemap.editor.palette;
 
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.tilemap.editor.EditorUI;
 import de.amr.pacmanfx.tilemap.editor.actions.Action_SetTerrainProperty;
 import de.amr.pacmanfx.uilib.rendering.CanvasRenderer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.tilemap.WorldMapFormatter.formatTile;
@@ -23,17 +22,17 @@ import static java.util.Objects.requireNonNull;
 
 public class ActorTool extends PropertyValueEditorTool {
 
-    private final BiConsumer<LayerID, Vector2i> editor;
+    private final Consumer<Vector2i> editor;
     private final RectShort sprite;
 
     public ActorTool(EditorUI ui, String propertyName, String description, RectShort sprite) {
         super(propertyName, description);
         this.sprite = requireNonNull(sprite);
-        editor = (layerID, tile) -> new Action_SetTerrainProperty(ui.editor(), propertyName, formatTile(tile)).execute();
+        editor = tile -> new Action_SetTerrainProperty(ui.editor(), propertyName, formatTile(tile)).execute();
     }
 
     @Override
-    public BiConsumer<LayerID, Vector2i> editor() {
+    public Consumer<Vector2i> editor() {
         return editor;
     }
 

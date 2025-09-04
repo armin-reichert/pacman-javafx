@@ -12,7 +12,7 @@ import de.amr.pacmanfx.uilib.rendering.CanvasRenderer;
 import de.amr.pacmanfx.uilib.tilemap.TileRenderer;
 import javafx.scene.paint.Color;
 
-import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.TOOL_SIZE;
 
@@ -21,12 +21,12 @@ public class TileCodeEditorTool implements PaletteTool {
     private final byte code;
     private final String description;
 
-    private final BiConsumer<LayerID, Vector2i> editor;
+    private final Consumer<Vector2i> editor;
 
-    public TileCodeEditorTool(EditorUI ui, byte code, String description) {
+    public TileCodeEditorTool(EditorUI ui, LayerID layerID, byte code, String description) {
         this.code = code;
         this.description = description;
-        editor = (layerID, tile) -> new Action_SetTileCode(ui, layerID, tile, code).execute();
+        editor = tile -> new Action_SetTileCode(ui, layerID, tile, code).execute();
     }
 
     @Override
@@ -35,7 +35,7 @@ public class TileCodeEditorTool implements PaletteTool {
     }
 
     @Override
-    public BiConsumer<LayerID, Vector2i> editor() {
+    public Consumer<Vector2i> editor() {
         return editor;
     }
 

@@ -9,6 +9,7 @@ import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.uilib.rendering.CanvasRenderer;
 
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public interface PaletteTool {
 
@@ -20,7 +21,7 @@ public interface PaletteTool {
     /**
      * @return function that realizes the editing of the current tile
      */
-    BiConsumer<LayerID, Vector2i> editor();
+    Consumer<Vector2i> editor();
 
     /**
      * Draws the palette tile.

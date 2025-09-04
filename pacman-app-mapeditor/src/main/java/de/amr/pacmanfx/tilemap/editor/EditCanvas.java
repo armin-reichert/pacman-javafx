@@ -381,14 +381,9 @@ public class EditCanvas extends Canvas {
                 if (mouseEvent.isShiftDown()) {
                     ui.selectedPalette().ifPresent(palette -> {
                         switch (palette.id()) {
-                            case TERRAIN -> {
+                            case TERRAIN, FOOD -> {
                                 if (palette.isToolSelected()) {
-                                    palette.selectedTool().editor().accept(LayerID.TERRAIN, focussedTile());
-                                }
-                            }
-                            case FOOD -> {
-                                if (palette.isToolSelected()) {
-                                    palette.selectedTool().editor().accept(LayerID.FOOD, focussedTile());
+                                    palette.selectedTool().editor().accept(focussedTile());
                                 }
                             }
                         }

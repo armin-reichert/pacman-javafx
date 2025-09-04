@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tilemap.editor;
 
 import de.amr.pacmanfx.lib.tilemap.FoodTile;
+import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.TerrainTile;
 import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.tilemap.editor.palette.*;
@@ -67,19 +68,19 @@ public class EditorPaletteTabPane extends TabPane {
     private Palette createTerrainPalette(EditorUI ui, TerrainMapTileRenderer prototype) {
         var palette = new Palette(PaletteID.TERRAIN, 1, 13);
 
-        palette.addTool(new TileCodeEditorTool(ui, TerrainTile.EMPTY.$, "Empty Space"));
-        palette.addTool(new TileCodeEditorTool(ui, TerrainTile.WALL_H.$, "Horizontal Wall"));
-        palette.addTool(new TileCodeEditorTool(ui, TerrainTile.WALL_V.$, "Vertical Wall"));
-        palette.addTool(new TileCodeEditorTool(ui, TerrainTile.ARC_NW.$, "NW Corner"));
-        palette.addTool(new TileCodeEditorTool(ui, TerrainTile.ARC_NE.$, "NE Corner"));
-        palette.addTool(new TileCodeEditorTool(ui, TerrainTile.ARC_SW.$, "SW Corner"));
-        palette.addTool(new TileCodeEditorTool(ui, TerrainTile.ARC_SE.$, "SE Corner"));
-        palette.addTool(new TileCodeEditorTool(ui, TerrainTile.TUNNEL.$, "Tunnel"));
-        palette.addTool(new TileCodeEditorTool(ui, TerrainTile.DOOR.$, "Door"));
-        palette.addTool(new TileCodeEditorTool(ui, TerrainTile.ONE_WAY_UP.$, "One-Way Up"));
-        palette.addTool(new TileCodeEditorTool(ui, TerrainTile.ONE_WAY_RIGHT.$, "One-Way Right"));
-        palette.addTool(new TileCodeEditorTool(ui, TerrainTile.ONE_WAY_DOWN.$, "One-Way Down"));
-        palette.addTool(new TileCodeEditorTool(ui, TerrainTile.ONE_WAY_LEFT.$, "One-Way Left"));
+        palette.addTool(new TileCodeEditorTool(ui, LayerID.TERRAIN, TerrainTile.EMPTY.$, "Empty Space"));
+        palette.addTool(new TileCodeEditorTool(ui, LayerID.TERRAIN, TerrainTile.WALL_H.$, "Horizontal Wall"));
+        palette.addTool(new TileCodeEditorTool(ui, LayerID.TERRAIN, TerrainTile.WALL_V.$, "Vertical Wall"));
+        palette.addTool(new TileCodeEditorTool(ui, LayerID.TERRAIN, TerrainTile.ARC_NW.$, "NW Corner"));
+        palette.addTool(new TileCodeEditorTool(ui, LayerID.TERRAIN, TerrainTile.ARC_NE.$, "NE Corner"));
+        palette.addTool(new TileCodeEditorTool(ui, LayerID.TERRAIN, TerrainTile.ARC_SW.$, "SW Corner"));
+        palette.addTool(new TileCodeEditorTool(ui, LayerID.TERRAIN, TerrainTile.ARC_SE.$, "SE Corner"));
+        palette.addTool(new TileCodeEditorTool(ui, LayerID.TERRAIN, TerrainTile.TUNNEL.$, "Tunnel"));
+        palette.addTool(new TileCodeEditorTool(ui, LayerID.TERRAIN, TerrainTile.DOOR.$, "Door"));
+        palette.addTool(new TileCodeEditorTool(ui, LayerID.TERRAIN, TerrainTile.ONE_WAY_UP.$, "One-Way Up"));
+        palette.addTool(new TileCodeEditorTool(ui, LayerID.TERRAIN, TerrainTile.ONE_WAY_RIGHT.$, "One-Way Right"));
+        palette.addTool(new TileCodeEditorTool(ui, LayerID.TERRAIN, TerrainTile.ONE_WAY_DOWN.$, "One-Way Down"));
+        palette.addTool(new TileCodeEditorTool(ui, LayerID.TERRAIN, TerrainTile.ONE_WAY_LEFT.$, "One-Way Left"));
 
         palette.selectTool(0); // "No Tile"
 
@@ -118,9 +119,9 @@ public class EditorPaletteTabPane extends TabPane {
     private Palette createFoodPalette(EditorUI ui, FoodMapRenderer prototype) {
         var palette = new Palette(PaletteID.FOOD, 1, 3);
 
-        palette.addTool(new TileCodeEditorTool(ui, FoodTile.EMPTY.code(), "No Food"));
-        palette.addTool(new TileCodeEditorTool(ui, FoodTile.PELLET.code(), "Pellet"));
-        palette.addTool(new TileCodeEditorTool(ui, FoodTile.ENERGIZER.code(), "Energizer"));
+        palette.addTool(new TileCodeEditorTool(ui, LayerID.FOOD, FoodTile.EMPTY.code(), "No Food"));
+        palette.addTool(new TileCodeEditorTool(ui, LayerID.FOOD, FoodTile.PELLET.code(), "Pellet"));
+        palette.addTool(new TileCodeEditorTool(ui, LayerID.FOOD, FoodTile.ENERGIZER.code(), "Energizer"));
 
         palette.selectTool(0); // "No Food"
 
