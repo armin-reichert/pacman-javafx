@@ -26,7 +26,7 @@ public class TileCodeEditorTool implements EditorTool {
     public TileCodeEditorTool(EditorUI ui, byte code, String description) {
         this.code = code;
         this.description = description;
-        editor = (layerID, tile) -> new Action_SetTileCode(ui, ui.editor().currentWorldMap(), layerID, tile, code).execute();
+        editor = (layerID, tile) -> new Action_SetTileCode(ui, layerID, tile, code).execute();
     }
 
     @Override

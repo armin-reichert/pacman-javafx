@@ -462,7 +462,7 @@ public class EditCanvas extends Canvas {
         });
 
         var miFloodWithPellets = new MenuItem(translated("menu.edit.flood_with_pellets"));
-        miFloodWithPellets.setOnAction(actionEvent -> new Action_FloodWithPellets(ui, worldMap(), tile).execute());
+        miFloodWithPellets.setOnAction(actionEvent -> new Action_FloodWithPellets(ui, tile).execute());
         miFloodWithPellets.setDisable(!canPlaceFoodAtTile(worldMap(), tile));
 
         contextMenu.getItems().setAll(

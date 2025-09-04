@@ -15,34 +15,32 @@ import static java.util.Objects.requireNonNull;
  */
 public class Action_SetTileCode extends AbstractEditorUIAction<Void> {
 
-    private final WorldMap worldMap;
     private final LayerID layerID;
     private final Vector2i tile;
     private final byte code;
 
-    public Action_SetTileCode(EditorUI ui, WorldMap worldMap, LayerID layerID, Vector2i tile, byte code) {
+    public Action_SetTileCode(EditorUI ui, LayerID layerID, Vector2i tile, byte code) {
         super(ui);
-        this.worldMap = requireNonNull(worldMap);
         this.layerID = requireNonNull(layerID);
         this.tile = requireNonNull(tile);
         this.code = code;
     }
 
-    public Action_SetTileCode(EditorUI ui, WorldMap worldMap, LayerID layerID, int row, int col, byte code) {
-        this(ui, worldMap, layerID, Vector2i.of(col, row), code);
+    public Action_SetTileCode(EditorUI ui, LayerID layerID, int row, int col, byte code) {
+        this(ui, layerID, Vector2i.of(col, row), code);
     }
 
     @Override
     public Void execute() {
         boolean symmetric = ui.symmetricEditMode();
         switch (layerID) {
-            case FOOD    -> setFoodTile(symmetric);
-            case TERRAIN -> setTerrainTile(symmetric);
+            case FOOD    -> setFoodTile(editor.currentWorldMap(), symmetric);
+            case TERRAIN -> setTerrainTile(editor.currentWorldMap(), symmetric);
         }
         return null;
     }
 
-    private void setTerrainTile(boolean symmetric) {
+    private void setTerrainTile(WorldMap worldMap, boolean symmetric) {
         byte oldCode = worldMap.layer(LayerID.TERRAIN).get(tile);
         if (code == oldCode) return;
         worldMap.setContent(LayerID.TERRAIN, tile, code);
@@ -60,7 +58,7 @@ public class Action_SetTileCode extends AbstractEditorUIAction<Void> {
         editor.setWorldMapChanged();
     }
 
-    private void setFoodTile(boolean symmetric) {
+    private void setFoodTile(WorldMap worldMap, boolean symmetric) {
         if (!canPlaceFoodAtTile(worldMap, tile)) return;
         worldMap.setContent(LayerID.FOOD, tile, code);
         if (symmetric) {
