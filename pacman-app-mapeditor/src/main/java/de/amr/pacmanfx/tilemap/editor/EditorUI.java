@@ -35,6 +35,7 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.io.File;
+import java.util.Optional;
 
 import static de.amr.pacmanfx.lib.tilemap.WorldMap.copyOfMap;
 import static de.amr.pacmanfx.tilemap.editor.EditMode.INSPECT;
@@ -368,7 +369,7 @@ public class EditorUI {
     }
 
     public void draw() {
-        palettesArea.draw();
+        palettesArea.selectedPalette().ifPresent(Palette::draw);
         final WorldMap worldMap = editor.currentWorldMap();
         TerrainMapColorScheme colorScheme = currentColorScheme(worldMap);
         if (tabEditCanvas.isSelected()) {
@@ -443,11 +444,11 @@ public class EditorUI {
         tabPaneEditorViews.getSelectionModel().select(tabEditCanvas);
     }
 
-    public PaletteID selectedPaletteID() {
-        return palettesArea.selectedPaletteID();
+    public Optional<PaletteID> selectedPaletteID() {
+        return palettesArea.selectedPalette().map(Palette::id);
     }
 
-    public Palette selectedPalette() {
+    public Optional<Palette> selectedPalette() {
         return palettesArea.selectedPalette();
     }
 
@@ -566,11 +567,8 @@ public class EditorUI {
         text.setMouseTransparent(true);
 
         //TODO There is still an issue: While the mouse is pressed inside the 3D view, the unfocused text is displayed!
-        preview3D.subScene().focusedProperty().addListener((py, ov, focused) -> {
-            text.setText(translated(focused
-                ? "preview3D.navigation_hint"
-                : "preview3D.navigation_hint.no_focus"));
-        });
+        preview3D.subScene().focusedProperty().addListener((py, ov, focused) ->
+            text.setText(translated(focused ? "preview3D.navigation_hint" : "preview3D.navigation_hint.no_focus")));
 
         StackPane.setAlignment(text, Pos.TOP_CENTER);
         StackPane.setMargin(text, new Insets(20,0,0,0));

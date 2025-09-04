@@ -1,7 +1,6 @@
 package de.amr.pacmanfx.tilemap.editor.actions;
 
 import de.amr.pacmanfx.tilemap.editor.EditorUI;
-import de.amr.pacmanfx.tilemap.editor.palette.Palette;
 
 public class Action_SelectNextPaletteEntry extends AbstractEditorUIAction<Void> {
 
@@ -11,10 +10,14 @@ public class Action_SelectNextPaletteEntry extends AbstractEditorUIAction<Void> 
 
     @Override
     public Void execute() {
-        Palette palette = ui.selectedPalette();
-        int next = palette.selectedIndex() + 1;
-        if (next == palette.numTools()) { next = 0; }
-        palette.selectTool(next);
+        ui.selectedPalette().ifPresent(palette -> {
+            int next = palette.selectedIndex() + 1;
+            if (next == palette.numTools()) {
+                palette.selectTool(0);
+            } else {
+                palette.selectTool(next);
+            }
+        });
         return null;
     }
 }

@@ -16,47 +16,48 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.text.Text;
 
-import java.util.EnumMap;
-import java.util.Map;
+import java.util.Optional;
 
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.*;
 
 public class PalettesArea extends TabPane {
 
-    private final Map<PaletteID, Palette> palettes = new EnumMap<>(PaletteID.class);
-
-    // Must be called after edit canvas creation because it binds to the renderers of the edit canvas!
+    // Must be called after creating edit canvas because it binds to the renderers of the edit canvas!
     public PalettesArea(EditorUI ui, TerrainMapTileRenderer terrainRenderer, FoodMapRenderer foodRenderer) {
-
-        palettes.put(PaletteID.TERRAIN, createTerrainPalette(ui, terrainRenderer));
-        palettes.put(PaletteID.FOOD, createFoodPalette(ui, foodRenderer));
-        palettes.put(PaletteID.ACTORS, createActorsPalette(ui, terrainRenderer));
-
-        var tabTerrain = new Tab("", palettes.get(PaletteID.TERRAIN).root());
-        tabTerrain.setGraphic(new Text(translated("terrain")));
-        tabTerrain.setClosable(false);
-        tabTerrain.setUserData(PaletteID.TERRAIN);
-
-        var tabPellets = new Tab("", palettes.get(PaletteID.FOOD).root());
-        tabPellets.setGraphic(new Text(translated("pellets")));
-        tabPellets.setClosable(false);
-        tabPellets.setUserData(PaletteID.FOOD);
-
-        var tabActors = new Tab("", palettes.get(PaletteID.ACTORS).root());
-        tabActors.setGraphic(new Text(translated("actors")));
-        tabActors.setClosable(false);
-        tabActors.setUserData(PaletteID.ACTORS);
-
-        getTabs().setAll(tabTerrain, tabPellets, tabActors);
-
         setMinHeight(80);
         setPadding(new Insets(5, 5, 5, 5));
 
-        getSelectionModel().selectedItemProperty().addListener((py, ov, selectedTab) -> markSelectedPalettesTab(selectedTab));
-        markSelectedPalettesTab(getSelectionModel().getSelectedItem());
+        Palette terrainPalette = createTerrainPalette(ui, terrainRenderer);
+        var tabTerrain = new Tab("", terrainPalette);
+        tabTerrain.setGraphic(new Text(translated("terrain")));
+        tabTerrain.setClosable(false);
+
+        Palette foodPalette = createFoodPalette(ui, foodRenderer);
+        var tabFood = new Tab("", foodPalette);
+        tabFood.setGraphic(new Text(translated("pellets")));
+        tabFood.setClosable(false);
+
+        Palette actorPalette = createActorsPalette(ui, terrainRenderer);
+        var tabActors = new Tab("", actorPalette);
+        tabActors.setGraphic(new Text(translated("actors")));
+        tabActors.setClosable(false);
+
+        getTabs().setAll(tabTerrain, tabFood, tabActors);
+        getSelectionModel().select(tabTerrain);
+
+        getSelectionModel().selectedItemProperty().addListener((py, ov, selectedTab) -> highlightSelectedTab(selectedTab));
+        highlightSelectedTab(getSelectionModel().getSelectedItem());
     }
 
-    private void markSelectedPalettesTab(Tab selectedTab) {
+    public Optional<Palette> selectedPalette() {
+        Tab selectedTab = getSelectionModel().getSelectedItem();
+        if (selectedTab != null && selectedTab.getContent() instanceof Palette palette) {
+            return Optional.of(palette);
+        }
+        return Optional.empty();
+    }
+
+    private void highlightSelectedTab(Tab selectedTab) {
         for (Tab tab : getTabs()) {
             if (tab.getGraphic() instanceof Text text) {
                 text.setFont(tab == selectedTab ? FONT_SELECTED_PALETTE : FONT_UNSELECTED_PALETTE);
@@ -64,8 +65,9 @@ public class PalettesArea extends TabPane {
         }
     }
 
-    private Palette createTerrainPalette(EditorUI ui, TerrainMapTileRenderer renderer) {
+    private Palette createTerrainPalette(EditorUI ui, TerrainMapTileRenderer prototype) {
         var palette = new Palette(PaletteID.TERRAIN, 1, 13);
+
         palette.addTool(new TileCodeEditorTool(ui, TerrainTile.EMPTY.$, "Empty Space"));
         palette.addTool(new TileCodeEditorTool(ui, TerrainTile.WALL_H.$, "Horizontal Wall"));
         palette.addTool(new TileCodeEditorTool(ui, TerrainTile.WALL_V.$, "Vertical Wall"));
@@ -82,16 +84,17 @@ public class PalettesArea extends TabPane {
 
         palette.selectTool(0); // "No Tile"
 
-        TerrainMapTileRenderer paletteRenderer = new TerrainMapTileRenderer(palette.canvas());
-        paletteRenderer.backgroundColorProperty().bind(renderer.backgroundColorProperty());
-        paletteRenderer.colorSchemeProperty().bind(renderer.colorSchemeProperty());
-        palette.setRenderer(paletteRenderer);
+        var terrainRenderer = new TerrainMapTileRenderer(palette);
+        terrainRenderer.backgroundColorProperty().bind(prototype.backgroundColorProperty());
+        terrainRenderer.colorSchemeProperty().bind(prototype.colorSchemeProperty());
+        palette.setRenderer(terrainRenderer);
 
         return palette;
     }
 
-    private Palette createActorsPalette(EditorUI ui, TerrainMapTileRenderer renderer) {
+    private Palette createActorsPalette(EditorUI ui, TerrainMapTileRenderer prototype) {
         var palette = new Palette(PaletteID.ACTORS, 1, 11);
+
         palette.addTool(new ActorTool(ui, WorldMapProperty.POS_PAC, "Pac-Man", ArcadeSprites.PAC_MAN));
         palette.addTool(new ActorTool(ui, WorldMapProperty.POS_RED_GHOST, "Red Ghost", ArcadeSprites.RED_GHOST));
         palette.addTool(new ActorTool(ui, WorldMapProperty.POS_PINK_GHOST, "Pink Ghost", ArcadeSprites.PINK_GHOST));
@@ -102,42 +105,32 @@ public class PalettesArea extends TabPane {
         palette.addTool(new ScatterTileTool(ui, WorldMapProperty.POS_SCATTER_PINK_GHOST, "Pink Ghost Scatter"));
         palette.addTool(new ScatterTileTool(ui, WorldMapProperty.POS_SCATTER_CYAN_GHOST, "Cyan Ghost Scatter"));
         palette.addTool(new ScatterTileTool(ui, WorldMapProperty.POS_SCATTER_ORANGE_GHOST, "Orange Ghost Scatter"));
+
         palette.selectTool(0); // "No actor"
 
-        TerrainMapTileRenderer paletteRenderer = new TerrainMapTileRenderer(palette.canvas());
-        paletteRenderer.backgroundColorProperty().bind(renderer.backgroundColorProperty());
-        paletteRenderer.colorSchemeProperty().bind(renderer.colorSchemeProperty());
-        palette.setRenderer(paletteRenderer);
+        var actorRenderer = new TerrainMapTileRenderer(palette);
+        actorRenderer.backgroundColorProperty().bind(prototype.backgroundColorProperty());
+        actorRenderer.colorSchemeProperty().bind(prototype.colorSchemeProperty());
+        palette.setRenderer(actorRenderer);
 
         return palette;
     }
 
-    private Palette createFoodPalette(EditorUI ui, FoodMapRenderer renderer) {
+    private Palette createFoodPalette(EditorUI ui, FoodMapRenderer prototype) {
         var palette = new Palette(PaletteID.FOOD, 1, 3);
+
         palette.addTool(new TileCodeEditorTool(ui, FoodTile.EMPTY.code(), "No Food"));
         palette.addTool(new TileCodeEditorTool(ui, FoodTile.PELLET.code(), "Pellet"));
         palette.addTool(new TileCodeEditorTool(ui, FoodTile.ENERGIZER.code(), "Energizer"));
+
         palette.selectTool(0); // "No Food"
 
-        FoodMapRenderer foodRenderer = new FoodMapRenderer(palette.canvas());
-        foodRenderer.backgroundColorProperty().bind(renderer.backgroundColorProperty());
-        foodRenderer.energizerColorProperty().bind(renderer.energizerColorProperty());
-        foodRenderer.pelletColorProperty().bind(renderer.pelletColorProperty());
+        var foodRenderer = new FoodMapRenderer(palette);
+        foodRenderer.backgroundColorProperty().bind(prototype.backgroundColorProperty());
+        foodRenderer.energizerColorProperty().bind(prototype.energizerColorProperty());
+        foodRenderer.pelletColorProperty().bind(prototype.pelletColorProperty());
         palette.setRenderer(foodRenderer);
 
         return palette;
-    }
-
-    public void draw() {
-        palettes.values().forEach(Palette::draw);
-        palettes.get(selectedPaletteID()).draw();
-    }
-
-    public PaletteID selectedPaletteID() {
-        return (PaletteID) getSelectionModel().getSelectedItem().getUserData();
-    }
-
-    public Palette selectedPalette() {
-        return palettes.get(selectedPaletteID());
     }
 }

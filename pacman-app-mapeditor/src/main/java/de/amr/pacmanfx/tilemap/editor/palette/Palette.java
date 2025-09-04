@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tilemap.editor.palette;
 
 import de.amr.pacmanfx.uilib.tilemap.TileRenderer;
-import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Tooltip;
@@ -19,14 +18,13 @@ import java.util.List;
 
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.TOOL_SIZE;
 
-public class Palette {
+public class Palette extends Canvas {
 
     public static final Color BG_COLOR = Color.WHITE;
 
     private final PaletteID id;
     private final int numRows;
     private final int numCols;
-    private final Canvas canvas;
     private final List<EditorTool> tools;
 
     private TileRenderer renderer;
@@ -36,10 +34,7 @@ public class Palette {
     private int selectedCol;
 
     public Palette(PaletteID id, int numRows, int numCols) {
-        canvas = new Canvas(numCols * TOOL_SIZE, numRows * TOOL_SIZE);
-        canvas.setOnMouseClicked(this::handleMouseClick);
-        canvas.setOnMouseMoved(this::handleMouseMove);
-        Tooltip.install(canvas, tooltip);
+        super(numCols * TOOL_SIZE, numRows * TOOL_SIZE);
 
         this.id = id;
         this.numRows = numRows;
@@ -55,6 +50,10 @@ public class Palette {
         tooltip.setShowDelay(Duration.seconds(0.1));
         tooltip.setHideDelay(Duration.seconds(0.5));
         tooltip.setFont(Font.font("Sans", 12));
+        Tooltip.install(this, tooltip);
+
+        setOnMouseClicked(this::handleMouseClick);
+        setOnMouseMoved(this::handleMouseMove);
     }
 
     public void setRenderer(TileRenderer renderer) {
@@ -65,16 +64,8 @@ public class Palette {
         return id;
     }
 
-    public Canvas canvas() {
-        return canvas;
-    }
-
     public void addTool(EditorTool tool) {
         tools.add(tool);
-    }
-
-    public Node root() {
-        return canvas;
     }
 
     public boolean isToolSelected() {
@@ -134,9 +125,9 @@ public class Palette {
     }
 
     public void draw() {
-        double width = canvas.getWidth(), height = canvas.getHeight();
+        double width = getWidth(), height = getHeight();
+        GraphicsContext ctx = getGraphicsContext2D();
 
-        GraphicsContext ctx = canvas.getGraphicsContext2D();
         ctx.save();
         ctx.setFill(BG_COLOR);
         ctx.fillRect(0, 0, width, height);

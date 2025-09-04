@@ -11,7 +11,6 @@ import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.tilemap.editor.actions.*;
-import de.amr.pacmanfx.tilemap.editor.palette.Palette;
 import de.amr.pacmanfx.tilemap.editor.rendering.ActorSpriteRenderer;
 import de.amr.pacmanfx.tilemap.editor.rendering.ArcadeSprites;
 import de.amr.pacmanfx.tilemap.editor.rendering.TerrainMapTileRenderer;
@@ -360,13 +359,14 @@ public class EditCanvas extends Canvas {
             Vector2i tile = tileAt(mouseEvent.getX(), mouseEvent.getY());
             if (!ui.editModeIs(EditMode.INSPECT)) {
                 if (mouseEvent.isControlDown()) {
-                    switch (ui.selectedPaletteID()) {
-                        case TERRAIN -> new Action_ClearTerrainTile(ui.editor(), tile).execute();
-                        case FOOD -> new Action_ClearFoodTile(ui.editor(), tile).execute();
-                        case ACTORS -> {}
-                    }
+                    ui.selectedPaletteID().ifPresent(paletteID -> {
+                        switch (paletteID) {
+                            case TERRAIN -> new Action_ClearTerrainTile(ui.editor(), tile).execute();
+                            case FOOD    -> new Action_ClearFoodTile(ui.editor(), tile).execute();
+                        }
+                    });
                 } else {
-                    new Action_ApplySelectedPaletteTool(ui, ui.selectedPalette(), tile).execute();
+                    ui.selectedPalette().ifPresent(palette -> new Action_ApplySelectedPaletteTool(ui, palette, tile).execute());
                 }
             }
         }
@@ -379,29 +379,30 @@ public class EditCanvas extends Canvas {
             case INSPECT -> new Action_IdentifyObstacle(ui, tile).execute();
             case EDIT -> {
                 if (mouseEvent.isShiftDown()) {
-                    switch (ui.selectedPaletteID()) {
-                        case TERRAIN -> {
-                            Palette palette = ui.selectedPalette();
-                            if (palette.isToolSelected()) {
-                                palette.selectedTool().editor().accept(LayerID.TERRAIN, focussedTile());
+                    ui.selectedPalette().ifPresent(palette -> {
+                        switch (palette.id()) {
+                            case TERRAIN -> {
+                                if (palette.isToolSelected()) {
+                                    palette.selectedTool().editor().accept(LayerID.TERRAIN, focussedTile());
+                                }
+                            }
+                            case FOOD -> {
+                                if (palette.isToolSelected()) {
+                                    palette.selectedTool().editor().accept(LayerID.FOOD, focussedTile());
+                                }
                             }
                         }
-                        case FOOD -> {
-                            Palette palette = ui.selectedPalette();
-                            if (palette.isToolSelected()) {
-                                palette.selectedTool().editor().accept(LayerID.FOOD, focussedTile());
-                            }
-                        }
-                        default -> {}
-                    }
+                    });
                 }
             }
             case ERASE -> {
                 if (mouseEvent.isShiftDown()) {
-                    switch (ui.selectedPaletteID()) {
-                        case TERRAIN -> new Action_ClearTerrainTile(ui.editor(), tile).execute();
-                        case FOOD -> new Action_ClearFoodTile(ui.editor(), tile).execute();
-                    }
+                    ui.selectedPalette().ifPresent(palette -> {
+                        switch (palette.id()) {
+                            case TERRAIN -> new Action_ClearTerrainTile(ui.editor(), tile).execute();
+                            case FOOD -> new Action_ClearFoodTile(ui.editor(), tile).execute();
+                        }
+                    });
                 }
             }
         }
