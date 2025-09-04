@@ -31,11 +31,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
-import java.io.File;
 import java.util.function.Predicate;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.*;
+import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.ACTOR_SPRITES;
+import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.translated;
 import static de.amr.pacmanfx.tilemap.editor.EditorUtil.*;
 import static java.util.Objects.requireNonNull;
 
@@ -58,6 +58,7 @@ public class EditCanvas extends Canvas {
     private final ObjectProperty<WorldMap> worldMap = new SimpleObjectProperty<>();
 
     private final BooleanProperty actorsVisible = new SimpleBooleanProperty(true);
+    private final BooleanProperty dragging = new SimpleBooleanProperty(false);
     private final BooleanProperty foodVisible = new SimpleBooleanProperty(true);
     private final BooleanProperty gridVisible = new SimpleBooleanProperty(true);
     private final BooleanProperty obstacleInnerAreaDisplayed = new SimpleBooleanProperty(false);
@@ -74,8 +75,6 @@ public class EditCanvas extends Canvas {
     private final FoodMapRenderer foodRenderer;
 
     private final EditorUI ui;
-
-    private boolean dragging = false;
 
     public EditCanvas(EditorUI ui) {
         this.ui = requireNonNull(ui);
@@ -124,6 +123,7 @@ public class EditCanvas extends Canvas {
         setOnContextMenuRequested(this::onContextMenuRequested);
         setOnKeyPressed(this::onKeyPressed);
         setOnMouseClicked(this::onMouseClicked);
+        setOnDragDetected(this::onDragDetected);
         setOnMouseDragged(this::onMouseDragged);
         setOnMouseMoved(this::onMouseMoved);
         setOnMouseReleased(this::onMouseReleased);
@@ -131,12 +131,24 @@ public class EditCanvas extends Canvas {
 
     // -- Properties
 
-    public ObjectProperty<EditMode> editModeProperty() {
-        return editMode;
-    }
-
     public BooleanProperty actorsVisibleProperty() {
         return actorsVisible;
+    }
+
+    public BooleanProperty draggingProperty() {
+        return dragging;
+    }
+
+    public boolean dragging() {
+        return dragging.get();
+    }
+
+    private void setDragging(boolean b) {
+        dragging.set(b);
+    }
+
+    public ObjectProperty<EditMode> editModeProperty() {
+        return editMode;
     }
 
     public ObjectProperty<Vector2i> focussedTileProperty() {
@@ -332,41 +344,88 @@ public class EditCanvas extends Canvas {
         ctx.restore();
     }
 
+    // Event handlers
+
+    public void onKeyPressed(KeyEvent keyEvent) {
+        KeyCode key = keyEvent.getCode();
+        boolean control = keyEvent.isControlDown();
+
+        if (key == KeyCode.LEFT) {
+            moveCursor(Direction.LEFT, tile -> true);
+        }
+        else if (key == KeyCode.RIGHT) {
+            moveCursor(Direction.RIGHT, tile -> true);
+        }
+        else if (key == KeyCode.UP) {
+            moveCursor(Direction.UP, tile -> true);
+        }
+        else if (key == KeyCode.DOWN) {
+            moveCursor(Direction.DOWN, tile -> true);
+        }
+        else if (control && key == KeyCode.SPACE) {
+            new Action_SelectNextPaletteEntry(ui).execute();
+        }
+    }
+
     public void onMouseClicked(MouseEvent mouseEvent) {
-        Logger.debug("Mouse clicked {}", mouseEvent);
         if (mouseEvent.getButton() == MouseButton.PRIMARY) {
+            Logger.info("Mouse clicked {}", mouseEvent);
             requestFocus();
             contextMenu.hide();
+            mouseEvent.consume();
+        }
+    }
+
+    private void onDragDetected(MouseEvent mouseEvent) {
+        Logger.info("onDragDetected");
+        if (editMode.get() == EditMode.EDIT) {
+            Vector2i tileAtMouse = tileAt(mouseEvent.getX(), mouseEvent.getY());
+            setDragging(true);
+            obstacleEditor.startEditing(tileAtMouse);
+            Logger.info("Start editing obstacle");
+            mouseEvent.consume();
         }
     }
 
     private void onMouseDragged(MouseEvent mouseEvent) {
-        Vector2i tileAtMouse = tileAt(mouseEvent.getX(), mouseEvent.getY());
-        if (!dragging) {
-            obstacleEditor.startEditing(tileAtMouse);
-            dragging = true;
-        } else {
-            obstacleEditor.continueEditing(tileAtMouse);
+        if (!dragging()) {
+            return;
         }
+        Logger.info("onMouseDragged");
+        Vector2i tileAtMouse = tileAt(mouseEvent.getX(), mouseEvent.getY());
+        obstacleEditor.continueEditing(tileAtMouse);
+        mouseEvent.consume();
     }
 
     public void onMouseReleased(MouseEvent mouseEvent) {
+        Logger.info("onMouseReleased");
         if (mouseEvent.getButton() != MouseButton.PRIMARY) return;
-        if (dragging) {
-            dragging = false;
+        if (dragging()) {
+            setDragging(false);
             obstacleEditor.endEditing();
+            mouseEvent.consume();
+            Logger.info("End editing of obstacle");
         } else {
             Vector2i tile = tileAt(mouseEvent.getX(), mouseEvent.getY());
             if (!ui.editModeIs(EditMode.INSPECT)) {
                 if (mouseEvent.isControlDown()) {
                     ui.selectedPaletteID().ifPresent(paletteID -> {
                         switch (paletteID) {
-                            case TERRAIN -> new Action_ClearTerrainTile(ui.editor(), tile).execute();
-                            case FOOD    -> new Action_ClearFoodTile(ui.editor(), tile).execute();
+                            case TERRAIN -> {
+                                mouseEvent.consume();
+                                new Action_ClearTerrainTile(ui.editor(), tile).execute();
+                            }
+                            case FOOD -> {
+                                mouseEvent.consume();
+                                new Action_ClearFoodTile(ui.editor(), tile).execute();
+                            }
                         }
                     });
                 } else {
-                    ui.selectedPalette().ifPresent(palette -> new Action_ApplySelectedPaletteTool(ui, palette, tile).execute());
+                    ui.selectedPalette().ifPresent(palette -> {
+                        mouseEvent.consume();
+                        new Action_ApplySelectedPaletteTool(ui, palette, tile).execute();
+                    });
                 }
             }
         }
@@ -398,29 +457,7 @@ public class EditCanvas extends Canvas {
                 }
             }
         }
-    }
-
-    public void onFileDropped(File file) {
-        if (isWorldMapFile(file)) {
-            new Action_ReplaceCurrentWorldMapChecked(ui, file).execute();
-        }
-        else if (isImageFile(file) && !ui.editModeIs(EditMode.INSPECT)) {
-            Image image = loadImage(file).orElse(null);
-            if (image == null) {
-                ui.messageDisplay().showMessage("Could not open image file '%s'".formatted(file), 3, MessageType.ERROR);
-                return;
-            }
-            if (!isTemplateImageSizeOk(image)) {
-                ui.messageDisplay().showMessage("Template image file '%s' has dubios size".formatted(file), 3, MessageType.ERROR);
-                return;
-            }
-            ui.editor().setTemplateImage(image);
-            new Action_CreateMapFromTemplate(ui, image).execute();
-        }
-    }
-
-    private boolean isTemplateImageSizeOk(Image image) {
-        return image.getHeight() % TS == 0 && image.getWidth() % TS == 0;
+        mouseEvent.consume();
     }
 
     public void onContextMenuRequested(ContextMenuEvent menuEvent) {
@@ -467,26 +504,5 @@ public class EditCanvas extends Canvas {
             miFloodWithPellets);
 
         contextMenu.show(this, menuEvent.getScreenX(), menuEvent.getScreenY());
-    }
-
-    public void onKeyPressed(KeyEvent keyEvent) {
-        KeyCode key = keyEvent.getCode();
-        boolean control = keyEvent.isControlDown();
-
-        if (key == KeyCode.LEFT) {
-            moveCursor(Direction.LEFT, tile -> true);
-        }
-        else if (key == KeyCode.RIGHT) {
-            moveCursor(Direction.RIGHT, tile -> true);
-        }
-        else if (key == KeyCode.UP) {
-            moveCursor(Direction.UP, tile -> true);
-        }
-        else if (key == KeyCode.DOWN) {
-            moveCursor(Direction.DOWN, tile -> true);
-        }
-        else if (control && key == KeyCode.SPACE) {
-            new Action_SelectNextPaletteEntry(ui).execute();
-        }
     }
 }

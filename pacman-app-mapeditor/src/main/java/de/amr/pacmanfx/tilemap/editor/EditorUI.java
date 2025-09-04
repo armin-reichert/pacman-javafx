@@ -22,12 +22,12 @@ import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.effect.Glow;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -36,6 +36,7 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.util.Optional;
 
+import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.tilemap.WorldMap.copyOfMap;
 import static de.amr.pacmanfx.tilemap.editor.EditMode.INSPECT;
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.*;
@@ -103,6 +104,20 @@ public class EditorUI {
 
     public void setActorsVisible(boolean visible) {
         actorsVisibleProperty().set(visible);
+    }
+
+    private final BooleanProperty inputDisabled = new SimpleBooleanProperty(false);
+
+    public BooleanProperty inputDisabledProperty() {
+        return inputDisabled;
+    }
+
+    public void setInputDisabled(boolean disabled) {
+        inputDisabled.set(disabled);
+    }
+
+    public boolean inputDisabled() {
+        return inputDisabled.get();
     }
 
     // -- editMode
@@ -345,6 +360,8 @@ public class EditorUI {
                 case ERASE   -> editCanvas.enterEraseMode();
             }
         });
+
+        inputDisabled.bind(editCanvas.draggingProperty());
     }
 
     public void init() {
@@ -542,10 +559,33 @@ public class EditorUI {
         node.setOnDragDropped(dragEvent -> {
             if (dragEvent.getDragboard().hasFiles()) {
                 File file = dragEvent.getDragboard().getFiles().getFirst();
-                afterCheckForUnsavedChanges(() -> editCanvas.onFileDropped(file));
+                afterCheckForUnsavedChanges(() -> onFileDropped(file));
             }
             dragEvent.consume();
         });
+    }
+
+    private void onFileDropped(File file) {
+        if (isWorldMapFile(file)) {
+            new Action_ReplaceCurrentWorldMapChecked(this, file).execute();
+        }
+        else if (isImageFile(file) && !editModeIs(EditMode.INSPECT)) {
+            Image image = loadImage(file).orElse(null);
+            if (image == null) {
+                messageDisplay().showMessage("Could not open image file '%s'".formatted(file), 3, MessageType.ERROR);
+                return;
+            }
+            if (!isTemplateImageSizeOk(image)) {
+                messageDisplay().showMessage("Template image file '%s' has dubios size".formatted(file), 3, MessageType.ERROR);
+                return;
+            }
+            editor().setTemplateImage(image);
+            new Action_CreateMapFromTemplate(this, image).execute();
+        }
+    }
+
+    private boolean isTemplateImageSizeOk(Image image) {
+        return image.getHeight() % TS == 0 && image.getWidth() % TS == 0;
     }
 
     private Node createPreview3DNavigationHint() {
@@ -761,6 +801,8 @@ public class EditorUI {
     // Event handlers
 
     public void onKeyPressed(KeyEvent e) {
+        if (inputDisabled()) return;
+
         KeyCode key = e.getCode();
         boolean alt = e.isAltDown();
         if (alt && key == KeyCode.LEFT) {
@@ -778,6 +820,8 @@ public class EditorUI {
     }
 
     public void onKeyTyped(KeyEvent e) {
+        if (inputDisabled()) return;
+
         String ch = e.getCharacter();
         if (ch.equals("e")) {
             new Action_SelectNextEditMode(this).execute();
