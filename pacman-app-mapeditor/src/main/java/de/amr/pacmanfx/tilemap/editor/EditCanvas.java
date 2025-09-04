@@ -26,7 +26,10 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.Image;
-import javafx.scene.input.*;
+import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
@@ -347,23 +350,17 @@ public class EditCanvas extends Canvas {
     // Event handlers
 
     public void onKeyPressed(KeyEvent keyEvent) {
-        KeyCode key = keyEvent.getCode();
         boolean control = keyEvent.isControlDown();
-
-        if (key == KeyCode.LEFT) {
-            moveCursor(Direction.LEFT, tile -> true);
-        }
-        else if (key == KeyCode.RIGHT) {
-            moveCursor(Direction.RIGHT, tile -> true);
-        }
-        else if (key == KeyCode.UP) {
-            moveCursor(Direction.UP, tile -> true);
-        }
-        else if (key == KeyCode.DOWN) {
-            moveCursor(Direction.DOWN, tile -> true);
-        }
-        else if (control && key == KeyCode.SPACE) {
-            new Action_SelectNextPaletteEntry(ui).execute();
+        switch (keyEvent.getCode()) {
+            case LEFT  -> moveCursor(Direction.LEFT, tile -> true);
+            case RIGHT -> moveCursor(Direction.RIGHT, tile -> true);
+            case UP    -> moveCursor(Direction.UP, tile -> true);
+            case DOWN  -> moveCursor(Direction.DOWN, tile -> true);
+            case SPACE -> {
+                if (control) {
+                    new Action_SelectNextPaletteEntry(ui).execute();
+                }
+            }
         }
     }
 
