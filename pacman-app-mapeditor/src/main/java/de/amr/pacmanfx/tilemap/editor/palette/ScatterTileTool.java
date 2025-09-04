@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tilemap.editor.palette;
 
 import de.amr.pacmanfx.lib.Vector2i;
+import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.tilemap.editor.EditorUI;
 import de.amr.pacmanfx.tilemap.editor.actions.Action_SetTerrainProperty;
@@ -12,15 +13,24 @@ import de.amr.pacmanfx.uilib.rendering.CanvasRenderer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
+import java.util.function.BiConsumer;
+
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.tilemap.WorldMapFormatter.formatTile;
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.TOOL_SIZE;
 
 public class ScatterTileTool extends PropertyValuePaletteTool {
 
+    protected BiConsumer<LayerID, Vector2i> editor;
+
     public ScatterTileTool(EditorUI ui, String propertyName, String description) {
         super(propertyName, description);
         editor = (layerID, tile) -> new Action_SetTerrainProperty(ui.editor(), propertyName, formatTile(tile)).execute();
+    }
+
+    @Override
+    public BiConsumer<LayerID, Vector2i> editor() {
+        return editor;
     }
 
     @Override
