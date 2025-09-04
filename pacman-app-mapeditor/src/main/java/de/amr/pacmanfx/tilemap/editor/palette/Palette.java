@@ -15,7 +15,9 @@ import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.FONT_TOOL_TIPS;
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.TOOL_SIZE;
 import static java.util.Objects.requireNonNull;
 
@@ -42,7 +44,7 @@ public class Palette extends Canvas {
         tooltip = new Tooltip("This tool does...");
         tooltip.setShowDelay(Duration.seconds(0.1));
         tooltip.setHideDelay(Duration.seconds(0.5));
-        tooltip.setFont(Font.font("Sans", 12));
+        tooltip.setFont(FONT_TOOL_TIPS);
         Tooltip.install(this, tooltip);
 
         setOnMouseClicked(this::handleMouseClick);
@@ -61,10 +63,6 @@ public class Palette extends Canvas {
         tools.add(tool);
     }
 
-    public boolean isToolSelected() {
-        return selectedToolIndex != -1;
-    }
-
     public int selectedIndex() {
         return selectedToolIndex;
     }
@@ -77,8 +75,8 @@ public class Palette extends Canvas {
         return selectedToolIndex != -1 ? selectedToolIndex % numCols : -1;
     }
 
-    public PaletteTool selectedTool() {
-        return selectedToolIndex != -1 ? tools.get(selectedToolIndex) : null;
+    public Optional<PaletteTool> selectedTool() {
+        return selectedToolIndex != -1 ? Optional.of(tools.get(selectedToolIndex)) : Optional.empty();
     }
 
     public void selectTool(int index) {

@@ -19,9 +19,7 @@ public class Action_ApplySelectedPaletteTool extends AbstractEditorUIAction<Void
 
     @Override
     public Void execute() {
-        if (palette.isToolSelected()) {
-            palette.selectedTool().editor().accept(tile);
-        }
+        palette.selectedTool().ifPresent(paletteTool -> paletteTool.editor().accept(tile));
         return null;
     }
 }

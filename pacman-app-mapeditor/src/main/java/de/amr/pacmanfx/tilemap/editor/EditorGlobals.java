@@ -34,6 +34,8 @@ public class EditorGlobals {
 
     public static final ResourceBundle TEXT_BUNDLE = ResourceBundle.getBundle(TileMapEditor.class.getPackageName() + ".texts");
 
+    public static final Font FONT_TOOL_TIPS               = Font.font("Sans", FontWeight.NORMAL, 12);
+
     public static final Font FONT_DROP_HINT               = Font.font("Sans", FontWeight.BOLD, 16);
     public static final Font FONT_MESSAGE                 = Font.font("Sans", FontWeight.BOLD, 14);
 

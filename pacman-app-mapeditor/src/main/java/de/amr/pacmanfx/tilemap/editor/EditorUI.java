@@ -629,7 +629,7 @@ public class EditorUI {
         Bindings.bindBidirectional(sliderZoom.valueProperty(), gridSizeProperty());
         Tooltip tt = new Tooltip();
         tt.setShowDelay(Duration.millis(50));
-        tt.setFont(Font.font(14));
+        tt.setFont(FONT_TOOL_TIPS);
         tt.textProperty().bind(gridSizeProperty().map("Grid Size: %.0f"::formatted));
         sliderZoom.setTooltip(tt);
     }
@@ -672,7 +672,7 @@ public class EditorUI {
             setBorder(Border.stroke(Color.LIGHTGRAY));
             Tooltip tooltip = new Tooltip(translated("editmode_label.tooltip"));
             tooltip.setShowDelay(Duration.millis(50));
-            tooltip.setFont(Font.font(14));
+            tooltip.setFont(FONT_TOOL_TIPS);
             setOnMouseClicked(e -> new Action_SelectNextEditMode(EditorUI.this).execute());
             setTooltip(tooltip);
 
