@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tilemap.editor.rendering;
 
+import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
@@ -16,6 +17,7 @@ import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer;
 import de.amr.pacmanfx.uilib.tilemap.TileRenderer;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
@@ -23,6 +25,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -36,9 +39,17 @@ import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
  */
 public class TerrainMapTileRenderer extends BaseCanvasRenderer implements TerrainMapRenderer, TileRenderer {
 
+    public static final Font SYMBOL_FONT = Font.font("Monospace", FontWeight.NORMAL, 8);
+    public static final Color SYMBOL_COLOR = Color.gray(0.6);
+
     public static final String TUNNEL_SYMBOL = "\uD83D\uDE87";
-    public static final Font TUNNEL_SYMBOL_FONT = Font.font("Serif", FontWeight.NORMAL, 8);
-    public static final Color TUNNEL_SYMBOL_COLOR = Color.LIGHTGRAY;
+
+    public static final Map<Direction, String> ONE_WAY_SYMBOLS = Map.of(
+            Direction.UP, "\u2191",
+            Direction.DOWN, "\u2193",
+            Direction.LEFT, "\u2190",
+            Direction.RIGHT, "\u2192"
+    );
 
     private static final Color[] RANDOM_COLORS = new Color[30];
 
@@ -202,42 +213,29 @@ public class TerrainMapTileRenderer extends BaseCanvasRenderer implements Terrai
 
     private void drawOneWaySign(Vector2i tile, byte code) {
         double x = tile.x() * TS, y = tile.y() * TS;
-        ctx.save();
-        ctx.beginPath();
-        switch (code) {
-            case 0x14 -> {
-                ctx.moveTo(x, y+8);
-                ctx.lineTo(x+4, y);
-                ctx.lineTo(x+8,y+8);
-            }
-            case 0x15 -> {
-                ctx.moveTo(x, y);
-                ctx.lineTo(x+8, y+4);
-                ctx.lineTo(x,y+8);
-            }
-            case 0x16 -> {
-                ctx.moveTo(x, y);
-                ctx.lineTo(x+4, y+8);
-                ctx.lineTo(x+8,y);
-            }
-            case 0x17 -> {
-                ctx.moveTo(x+8, y);
-                ctx.lineTo(x, y+4);
-                ctx.lineTo(x+8,y+8);
-            }
-        }
-        ctx.closePath();
-        ctx.setStroke(Color.grayRgb(222));
-        ctx.setLineWidth(0.4);
-        ctx.setLineDashes(0.5, 1);
-        ctx.stroke();
-        ctx.restore();
+        Direction dir = switch (code) {
+            case 0x14 -> Direction.UP;
+            case 0x15 -> Direction.RIGHT;
+            case 0x16 -> Direction.DOWN;
+            case 0x17 -> Direction.LEFT;
+            default -> throw new IllegalArgumentException("Illegal one-way tile code: " + code);
+        };
+        Point2D offset = switch (code) {
+            case 0x14 -> new Point2D(1.5, 5);
+            case 0x15 -> new Point2D(1, 6);
+            case 0x16 -> new Point2D(1.5, 5);
+            case 0x17 -> new Point2D(1, 6);
+            default -> throw new IllegalArgumentException("Illegal one-way tile code: " + code);
+        };
+        ctx.setFont(SYMBOL_FONT);
+        ctx.setFill(SYMBOL_COLOR);
+        ctx.fillText(ONE_WAY_SYMBOLS.get(dir), x + offset.getX(), y + offset.getY());
     }
 
     private void drawTunnel(Vector2i tile) {
         double x = tile.x() * TS, y = tile.y() * TS;
-        ctx.setFont(TUNNEL_SYMBOL_FONT);
-        ctx.setFill(TUNNEL_SYMBOL_COLOR);
+        ctx.setFont(SYMBOL_FONT);
+        ctx.setFill(SYMBOL_COLOR);
         ctx.fillText(TUNNEL_SYMBOL, x, y + 7);
     }
 
