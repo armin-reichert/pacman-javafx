@@ -23,7 +23,6 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
@@ -106,18 +105,18 @@ public class EditorUI {
         actorsVisibleProperty().set(visible);
     }
 
-    private final BooleanProperty inputDisabled = new SimpleBooleanProperty(false);
+    private final BooleanProperty inputEnabled = new SimpleBooleanProperty(true);
 
-    public BooleanProperty inputDisabledProperty() {
-        return inputDisabled;
+    public BooleanProperty inputEnabledProperty() {
+        return inputEnabled;
     }
 
-    public void setInputDisabled(boolean disabled) {
-        inputDisabled.set(disabled);
+    public void setInputEnabled(boolean enabled) {
+        inputEnabled.set(enabled);
     }
 
-    public boolean inputDisabled() {
-        return inputDisabled.get();
+    public boolean inputEnabled() {
+        return inputEnabled.get();
     }
 
     // -- editMode
@@ -345,8 +344,13 @@ public class EditorUI {
 
         arrangeLayout();
 
-        contentPane.setOnKeyTyped(this::onKeyTyped);
-        contentPane.setOnKeyPressed(this::onKeyPressed);
+        contentPane.setOnKeyTyped(keyEvent -> {
+            if (inputEnabled()) onKeyTyped(keyEvent);
+        });
+
+        contentPane.setOnKeyPressed(keyEvent -> {
+            if (inputEnabled()) onKeyPressed(keyEvent);
+        });
 
         propertyEditorsVisibleProperty().addListener((py, ov, visible) ->
             contentPane.setLeft(visible ? propertyEditorsPane : null));
@@ -361,7 +365,7 @@ public class EditorUI {
             }
         });
 
-        inputDisabled.bind(editCanvas.draggingProperty());
+        inputEnabled.bind(editCanvas.draggingProperty().not());
     }
 
     public void init() {
@@ -800,30 +804,22 @@ public class EditorUI {
 
     // Event handlers
 
-    public void onKeyPressed(KeyEvent e) {
-        if (inputDisabled()) return;
-
-        KeyCode key = e.getCode();
-        boolean alt = e.isAltDown();
-        if (alt && key == KeyCode.LEFT) {
-            new Action_SelectNextMapFile(editor, false).execute();
-        }
-        else if (alt && key == KeyCode.RIGHT) {
-            new Action_SelectNextMapFile(editor, true).execute();
-        }
-        else if (key == KeyCode.PLUS) {
-            new Action_ZoomIn(this).execute();
-        }
-        else if (key == KeyCode.MINUS) {
-            new Action_ZoomOut(this).execute();
+    private void onKeyPressed(KeyEvent keyEvent) {
+        boolean alt = keyEvent.isAltDown();
+        switch (keyEvent.getCode()) {
+            case LEFT -> {
+                if (alt) new Action_SelectNextMapFile(editor, false).execute();
+            }
+            case RIGHT -> {
+                if (alt) new Action_SelectNextMapFile(editor, true).execute();
+            }
+            case PLUS -> new Action_ZoomIn(this).execute();
+            case MINUS -> new Action_ZoomOut(this).execute();
         }
     }
 
-    public void onKeyTyped(KeyEvent e) {
-        if (inputDisabled()) return;
-
-        String ch = e.getCharacter();
-        if (ch.equals("e")) {
+    private void onKeyTyped(KeyEvent e) {
+        if ("e".equals(e.getCharacter())) {
             new Action_SelectNextEditMode(this).execute();
         }
     }
