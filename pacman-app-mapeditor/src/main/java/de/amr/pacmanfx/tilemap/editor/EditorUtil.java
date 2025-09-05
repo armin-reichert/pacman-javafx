@@ -99,10 +99,14 @@ public interface EditorUtil {
         requireNonNull(layerID);
         requireNonNull(key);
         String colorExpression = worldMap.properties(layerID).get(key);
+        if (colorExpression == null) {
+            return defaultColor;
+        }
         try {
             return Color.valueOf(colorExpression);
         } catch (Exception x) {
-            Logger.error("Could not create color from spec '{}'", colorExpression);
+            Logger.error(x);
+            Logger.error("Error parsing color expression '{}', using default color {}", colorExpression, defaultColor);
             return defaultColor;
         }
     }

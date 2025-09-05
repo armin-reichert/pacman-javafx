@@ -1,10 +1,10 @@
 package de.amr.pacmanfx.tilemap.editor.actions;
 
+import de.amr.pacmanfx.tilemap.editor.EditMode;
 import de.amr.pacmanfx.tilemap.editor.EditorUI;
 import de.amr.pacmanfx.tilemap.editor.MessageType;
 import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
-import javafx.stage.Window;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -23,9 +23,12 @@ public class Action_OpenTemplateCreateMap extends AbstractEditorUIAction<Void> {
 
     @Override
     public Void execute() {
-        openTemplateImage(ui.stage(), translated("open_template_image"), editor.currentDirectory()).ifPresent(image -> {
+        openTemplateImage().ifPresent(image -> {
             if (isTemplateImageSizeOk(image)) {
                 editor.setTemplateImage(image);
+                if (ui.editModeIs(EditMode.INSPECT) || ui.editModeIs(EditMode.ERASE)) {
+                    ui.setEditMode(EditMode.EDIT);
+                }
                 new Action_CreateMapFromTemplate(ui, image).execute();
             } else {
                 ui.messageDisplay().showMessage("Template image size seems dubious", 3, MessageType.WARNING);
@@ -38,28 +41,22 @@ public class Action_OpenTemplateCreateMap extends AbstractEditorUIAction<Void> {
         return image.getHeight() % TS == 0 && image.getWidth() % TS == 0;
     }
 
-    private Optional<Image> openTemplateImage(Window window, String title, File currentDirectory) {
+    private Optional<Image> openTemplateImage() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle(title);
-        fileChooser.setInitialDirectory(currentDirectory);
+        fileChooser.setTitle(translated("open_template_image"));
+        fileChooser.setInitialDirectory(editor.currentDirectory());
         fileChooser.getExtensionFilters().addAll(FILTER_IMAGE_FILES, FILTER_ALL_FILES);
         fileChooser.setSelectedExtensionFilter(FILTER_IMAGE_FILES);
-        File selectedFile = fileChooser.showOpenDialog(window);
-        if (selectedFile != null) {
-            Image image = readImageFromFile(selectedFile);
-            if (image != null) {
-                return Optional.of(image);
-            }
-        }
-        return Optional.empty();
+        File file = fileChooser.showOpenDialog(ui.stage());
+        return file == null ? Optional.empty() : readImage(file);
     }
 
-    private Image readImageFromFile(File file) {
-        try (FileInputStream stream = new FileInputStream(file)) {
-            return new Image(stream);
+    private Optional<Image> readImage(File file) {
+        try (FileInputStream fis = new FileInputStream(file)) {
+            return Optional.of(new Image(fis));
         } catch (IOException x) {
             Logger.error(x);
-            return null;
+            return Optional.empty();
         }
     }
 }
