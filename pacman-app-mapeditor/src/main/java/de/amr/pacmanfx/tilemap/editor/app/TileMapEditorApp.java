@@ -26,8 +26,7 @@ public class TileMapEditorApp extends Application  {
     @Override
     public void start(Stage stage) {
         try {
-            Model3DRepository model3DRepository = new Model3DRepository();
-            var editor = new TileMapEditor(stage, model3DRepository);
+            var editor = new TileMapEditor(stage, new Model3DRepository());
 
             var miQuit = new MenuItem(translated("quit"));
             miQuit.setOnAction(e -> editor.ui().afterCheckForUnsavedChanges(stage::close));

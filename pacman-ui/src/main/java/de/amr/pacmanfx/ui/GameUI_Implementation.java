@@ -223,8 +223,7 @@ public class GameUI_Implementation implements GameUI {
         boolean mode3D = PROPERTY_3D_ENABLED.get();
         boolean modeDebug = PROPERTY_DEBUG_INFO_VISIBLE.get();
         String assetKey       = clock().isPaused() ? "app.title.paused" : "app.title";
-        String translatedMode = assets().translated(mode3D ? "threeD" : "twoD");
-
+        String translatedMode = assets.translated(mode3D ? "threeD" : "twoD");
         String shortTitle     = currentConfig().assets().translated(assetKey, translatedMode);
 
         var currentGameScene = currentGameScene().orElse(null);
@@ -294,8 +293,8 @@ public class GameUI_Implementation implements GameUI {
 
     private EditorView ensureEditorViewExists() {
         if (editorView == null) {
-            var editor = new TileMapEditor(stage, assets().theModel3DRepository());
-            var miReturnToGame = new MenuItem(assets().translated("back_to_game"));
+            var editor = new TileMapEditor(stage, assets.theModel3DRepository());
+            var miReturnToGame = new MenuItem(assets.translated("back_to_game"));
             miReturnToGame.setOnAction(e -> {
                 editor.stop();
                 editor.ui().afterCheckForUnsavedChanges(this::showStartView);
