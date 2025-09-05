@@ -36,7 +36,12 @@ import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
  */
 public class TerrainMapTileRenderer extends BaseCanvasRenderer implements TerrainMapRenderer, TileRenderer {
 
+    public static final String TUNNEL_SYMBOL = "\uD83D\uDE87";
+    public static final Font TUNNEL_SYMBOL_FONT = Font.font("Serif", FontWeight.NORMAL, 8);
+    public static final Color TUNNEL_SYMBOL_COLOR = Color.LIGHTGRAY;
+
     private static final Color[] RANDOM_COLORS = new Color[30];
+
     static {
         for (int i = 0; i < RANDOM_COLORS.length; ++i) {
             RANDOM_COLORS[i] = Color.rgb(randomInt(0, 256), randomInt(0, 256), randomInt(0, 256));
@@ -231,8 +236,9 @@ public class TerrainMapTileRenderer extends BaseCanvasRenderer implements Terrai
 
     private void drawTunnel(Vector2i tile) {
         double x = tile.x() * TS, y = tile.y() * TS;
-        ctx().setFill(Color.GRAY);
-        ctx().fillRect(x, y, TS, TS);
+        ctx.setFont(TUNNEL_SYMBOL_FONT);
+        ctx.setFill(TUNNEL_SYMBOL_COLOR);
+        ctx.fillText(TUNNEL_SYMBOL, x, y + 7);
     }
 
     private void drawWallH(Vector2i tile) {
