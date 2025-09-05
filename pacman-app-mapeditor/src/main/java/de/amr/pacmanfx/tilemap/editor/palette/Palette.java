@@ -10,7 +10,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
@@ -96,10 +95,14 @@ public class Palette extends Canvas {
         return null;
     }
 
+    private int indexFromPosition(double x, double y) {
+        int row = (int) y / TOOL_SIZE;
+        int col = (int) x / TOOL_SIZE;
+        return row * numCols + col;
+    }
+
     private void handleMouseClick(MouseEvent e) {
-        int row = (int) e.getY() / TOOL_SIZE;
-        int col = (int) e.getX() / TOOL_SIZE;
-        int index = row * numCols + col;
+        int index = indexFromPosition(e.getX(), e.getY());
         PaletteTool tool = getToolOrNull(index);
         if (tool != null) {
             selectedToolIndex = index;
@@ -107,10 +110,8 @@ public class Palette extends Canvas {
     }
 
     private void handleMouseMove(MouseEvent e) {
-        int row = (int) e.getY() / TOOL_SIZE;
-        int col = (int) e.getX() / TOOL_SIZE;
-        int i = row * numCols + col;
-        PaletteTool tool = getToolOrNull(i);
+        int index = indexFromPosition(e.getX(), e.getY());
+        PaletteTool tool = getToolOrNull(index);
         if (tool != null) {
             String text = tool.description();
             tooltip.setText(text.isEmpty() ? "?" : text);
