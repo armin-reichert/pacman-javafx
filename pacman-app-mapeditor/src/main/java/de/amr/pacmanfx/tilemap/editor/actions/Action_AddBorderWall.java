@@ -8,7 +8,7 @@ import de.amr.pacmanfx.tilemap.editor.EditorUI;
 
 public class Action_AddBorderWall extends AbstractEditorUIAction<Void> {
 
-    public Action_AddBorderWall(EditorUI ui, WorldMap worldMap) {
+    public Action_AddBorderWall(EditorUI ui) {
         super(ui);
     }
 
