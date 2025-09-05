@@ -5,6 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tilemap.editor.palette;
 
 import de.amr.pacmanfx.uilib.tilemap.TileRenderer;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Tooltip;
@@ -29,7 +31,7 @@ public class Palette extends Canvas {
     private final Tooltip tooltip;
 
     private TileRenderer renderer;
-    private int selectedToolIndex;
+    private final IntegerProperty selectedToolIndex = new SimpleIntegerProperty(-1);
 
     public Palette(PaletteID id, int numRows, int numCols) {
         super(numCols * TOOL_SIZE, numRows * TOOL_SIZE);
@@ -37,7 +39,6 @@ public class Palette extends Canvas {
         this.id = requireNonNull(id);
         this.numRows = numRows;
         this.numCols = numCols;
-        selectedToolIndex = -1;
 
         // Tooltip for tool :-)
         tooltip = new Tooltip("This tool does...");
@@ -62,25 +63,25 @@ public class Palette extends Canvas {
         tools.add(tool);
     }
 
-    public int selectedIndex() {
-        return selectedToolIndex;
-    }
-
     public int selectedRowIndex() {
-        return selectedToolIndex != -1 ? selectedToolIndex / numCols : -1;
+        return selectedToolIndex() != -1 ? selectedToolIndex() / numCols : -1;
     }
 
     public int selectedColIndex() {
-        return selectedToolIndex != -1 ? selectedToolIndex % numCols : -1;
+        return selectedToolIndex() != -1 ? selectedToolIndex() % numCols : -1;
     }
 
     public Optional<PaletteTool> selectedTool() {
-        return selectedToolIndex != -1 ? Optional.of(tools.get(selectedToolIndex)) : Optional.empty();
+        return selectedToolIndex() != -1 ? Optional.of(tools.get(selectedToolIndex())) : Optional.empty();
     }
 
-    public void selectTool(int index) {
+    public int selectedToolIndex() {
+        return selectedToolIndex.get();
+    }
+
+    public void setSelectedToolIndex(int index) {
         if (index >= 0 && index < tools.size()) {
-            selectedToolIndex = index;
+            selectedToolIndex.set(index);
         }
     }
 
@@ -89,10 +90,8 @@ public class Palette extends Canvas {
     }
 
     private PaletteTool getToolOrNull(int index) {
-        if (index < tools.size()) {
-            return tools.get(index);
-        }
-        return null;
+        if (tools.isEmpty()) return null;
+        return 0 <= index && index < tools.size() ? tools.get(index) : null;
     }
 
     private int indexFromPosition(double x, double y) {
@@ -103,9 +102,8 @@ public class Palette extends Canvas {
 
     private void handleMouseClick(MouseEvent e) {
         int index = indexFromPosition(e.getX(), e.getY());
-        PaletteTool tool = getToolOrNull(index);
-        if (tool != null) {
-            selectedToolIndex = index;
+        if (getToolOrNull(index) != null) {
+            selectedToolIndex.set(index);
         }
     }
 
@@ -116,16 +114,23 @@ public class Palette extends Canvas {
             String text = tool.description();
             tooltip.setText(text.isEmpty() ? "?" : text);
         } else {
-            tooltip.setText("No selection");
+            tooltip.setText("");
         }
     }
 
     public void draw() {
-        double width = getWidth(), height = getHeight();
         GraphicsContext ctx = getGraphicsContext2D();
+        double width = getWidth(), height = getHeight();
 
         ctx.save();
-        ctx.clearRect(0, 0, width, height);
+        ctx.setFill(Color.BLACK);
+        ctx.fillRect(0, 0, width, height);
+
+        // mark selected tool
+        if (selectedToolIndex() != -1) {
+            ctx.setFill(Color.grayRgb(100));
+            ctx.fillRect(selectedColIndex() * TOOL_SIZE, selectedRowIndex() * TOOL_SIZE, TOOL_SIZE, TOOL_SIZE);
+        }
 
         if (renderer != null) {
             renderer.setScaling(TOOL_SIZE / 8.0);
@@ -145,13 +150,6 @@ public class Palette extends Canvas {
         }
         for (int col = 1; col < numCols; ++col) {
             ctx.strokeLine(col * TOOL_SIZE, 0, col * TOOL_SIZE, height);
-        }
-
-        // mark selected tool
-        if (selectedToolIndex != -1) {
-            ctx.setStroke(Color.RED);
-            ctx.setLineWidth(2);
-            ctx.strokeRect(selectedColIndex() * TOOL_SIZE + 1, selectedRowIndex() * TOOL_SIZE + 1, TOOL_SIZE - 2, TOOL_SIZE - 2);
         }
 
         ctx.restore();

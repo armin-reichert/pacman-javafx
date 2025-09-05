@@ -41,8 +41,6 @@ public class TileCodeEditorTool implements PaletteTool {
 
     @Override
     public void draw(CanvasRenderer renderer, int row, int col) {
-        renderer.ctx().setFill(Color.BLACK);
-        renderer.ctx().fillRect(col * TOOL_SIZE, row * TOOL_SIZE, TOOL_SIZE, TOOL_SIZE);
         if (renderer instanceof TileRenderer tileRenderer) {
             tileRenderer.drawTile(new Vector2i(col, row), code);
         }

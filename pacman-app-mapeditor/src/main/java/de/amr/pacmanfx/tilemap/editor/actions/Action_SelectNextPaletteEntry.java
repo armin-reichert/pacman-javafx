@@ -11,11 +11,11 @@ public class Action_SelectNextPaletteEntry extends AbstractEditorUIAction<Void> 
     @Override
     public Void execute() {
         ui.selectedPalette().ifPresent(palette -> {
-            int next = palette.selectedIndex() + 1;
+            int next = palette.selectedToolIndex() + 1;
             if (next == palette.numTools()) {
-                palette.selectTool(0);
+                palette.setSelectedToolIndex(0);
             } else {
-                palette.selectTool(next);
+                palette.setSelectedToolIndex(next);
             }
         });
         return null;

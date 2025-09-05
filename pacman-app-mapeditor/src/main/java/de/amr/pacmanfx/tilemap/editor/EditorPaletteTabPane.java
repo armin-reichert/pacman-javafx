@@ -82,7 +82,7 @@ public class EditorPaletteTabPane extends TabPane {
         palette.addTool(new TileCodeEditorTool(ui, LayerID.TERRAIN, TerrainTile.ONE_WAY_DOWN.$, "One-Way Down"));
         palette.addTool(new TileCodeEditorTool(ui, LayerID.TERRAIN, TerrainTile.ONE_WAY_LEFT.$, "One-Way Left"));
 
-        palette.selectTool(0); // "No Tile"
+        palette.setSelectedToolIndex(0); // "No Tile"
 
         var terrainRenderer = new TerrainMapTileRenderer(palette);
         terrainRenderer.backgroundColorProperty().bind(prototype.backgroundColorProperty());
@@ -106,7 +106,7 @@ public class EditorPaletteTabPane extends TabPane {
         palette.addTool(new ScatterTileEditorTool(ui, WorldMapProperty.POS_SCATTER_CYAN_GHOST, "Cyan Ghost Scatter"));
         palette.addTool(new ScatterTileEditorTool(ui, WorldMapProperty.POS_SCATTER_ORANGE_GHOST, "Orange Ghost Scatter"));
 
-        palette.selectTool(0); // "No actor"
+        palette.setSelectedToolIndex(0); // "No actor"
 
         var actorRenderer = new TerrainMapTileRenderer(palette);
         actorRenderer.backgroundColorProperty().bind(prototype.backgroundColorProperty());
@@ -123,7 +123,7 @@ public class EditorPaletteTabPane extends TabPane {
         palette.addTool(new TileCodeEditorTool(ui, LayerID.FOOD, FoodTile.PELLET.code(), "Pellet"));
         palette.addTool(new TileCodeEditorTool(ui, LayerID.FOOD, FoodTile.ENERGIZER.code(), "Energizer"));
 
-        palette.selectTool(0); // "No Food"
+        palette.setSelectedToolIndex(0); // "No Food"
 
         var foodRenderer = new FoodMapRenderer(palette);
         foodRenderer.backgroundColorProperty().bind(prototype.backgroundColorProperty());
