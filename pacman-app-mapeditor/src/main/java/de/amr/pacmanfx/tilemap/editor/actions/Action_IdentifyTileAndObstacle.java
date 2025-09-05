@@ -25,14 +25,14 @@ public class Action_IdentifyTileAndObstacle extends AbstractEditorUIAction<Strin
         WorldMap worldMap = editor.currentWorldMap();
         byte terrainCode = worldMap.content(LayerID.TERRAIN, tile), foodCode = worldMap.content(LayerID.FOOD, tile);
         boolean terrainEmpty = terrainCode == TerrainTile.EMPTY.code(), foodEmpty = foodCode == FoodTile.EMPTY.code();
-        String info = "";
+        StringBuilder info = new StringBuilder();
         if (!terrainEmpty) {
-            info += " Terrain 0x%02X (%s)".formatted(terrainCode, terrainTileName(terrainCode));
+            info.append(" ").append(terrainInfo(terrainCode));
         }
         if (!foodEmpty) {
-            info += " Food 0x%02X (%s)".formatted(foodCode, foodTileName(foodCode));
+            info.append(" ").append(foodInfo(foodCode));
         }
-        ui.messageDisplay().showMessage(info.trim(), 4, MessageType.INFO);
+        ui.messageDisplay().showMessage(info.toString().trim(), 4, MessageType.INFO);
 
         return identifyObstacleStartingAtTile(worldMap);
     }
