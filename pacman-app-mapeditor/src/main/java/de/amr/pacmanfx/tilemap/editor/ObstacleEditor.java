@@ -8,7 +8,8 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.FoodTile;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
-import de.amr.pacmanfx.tilemap.editor.actions.Action_SetTileCode;
+import de.amr.pacmanfx.tilemap.editor.actions.Action_SetFoodTileCode;
+import de.amr.pacmanfx.tilemap.editor.actions.Action_SetTerrainTileCode;
 import de.amr.pacmanfx.tilemap.editor.rendering.TerrainMapTileRenderer;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -106,8 +107,8 @@ public class ObstacleEditor {
         for (int row = 0; row < numRows; ++row) {
             for (int col = 0; col < numCols; ++col) {
                 Vector2i tile = minTile.plus(col, row);
-                new Action_SetTileCode(ui.editor(), LayerID.TERRAIN, tile, editedRect[row][col]).execute();
-                new Action_SetTileCode(ui.editor(), LayerID.FOOD, tile, FoodTile.EMPTY.code()).execute();
+                new Action_SetTerrainTileCode(ui.editor(), tile, editedRect[row][col]).execute();
+                new Action_SetFoodTileCode(ui.editor(), tile, FoodTile.EMPTY.code()).execute();
             }
         }
     }

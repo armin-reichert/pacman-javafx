@@ -7,7 +7,8 @@ package de.amr.pacmanfx.tilemap.editor.palette;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
-import de.amr.pacmanfx.tilemap.editor.actions.Action_SetTileCode;
+import de.amr.pacmanfx.tilemap.editor.actions.Action_SetFoodTileCode;
+import de.amr.pacmanfx.tilemap.editor.actions.Action_SetTerrainTileCode;
 import de.amr.pacmanfx.uilib.rendering.CanvasRenderer;
 import de.amr.pacmanfx.uilib.tilemap.TileRenderer;
 
@@ -23,7 +24,10 @@ public class TileCodeEditorTool implements PaletteTool {
     public TileCodeEditorTool(TileMapEditor editor, LayerID layerID, byte code, String description) {
         this.code = code;
         this.description = description;
-        tileEditor = tile -> new Action_SetTileCode(editor, layerID, tile, code).execute();
+        tileEditor = switch (layerID) {
+            case TERRAIN -> tile -> new Action_SetTerrainTileCode(editor, tile, code).execute();
+            case FOOD -> tile -> new Action_SetFoodTileCode(editor, tile, code).execute();
+        };
     }
 
     @Override

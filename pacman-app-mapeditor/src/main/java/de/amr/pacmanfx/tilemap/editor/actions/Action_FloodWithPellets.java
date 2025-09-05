@@ -37,7 +37,7 @@ public class Action_FloodWithPellets extends AbstractEditorUIAction<Void> {
         while (!q.isEmpty()) {
             Vector2i current = q.poll();
             if (canPlacePelletAt(worldMap, current)) {
-                new Action_SetTileCode(editor, LayerID.FOOD, current, FoodTile.PELLET.code()).execute();
+                new Action_SetFoodTileCode(editor, current, FoodTile.PELLET.code()).execute();
             }
             for (Direction dir : Direction.values()) {
                 Vector2i neighborTile = current.plus(dir.vector());
@@ -58,10 +58,10 @@ public class Action_FloodWithPellets extends AbstractEditorUIAction<Void> {
     // The actor tile stored as a map property is the left one of a pair of tiles which are reserved for the actor
     // initially. Both tiles are not allowed to carry food. So we clear both tiles after flooding.
     private void clearBothTilesOccupiedByActor(WorldMap worldMap, Vector2i leftActorTile) {
-        new Action_SetTileCode(editor, LayerID.FOOD, leftActorTile, FoodTile.EMPTY.code()).execute();
+        new Action_SetFoodTileCode(editor, leftActorTile, FoodTile.EMPTY.code()).execute();
         Vector2i rightActorTile = leftActorTile.plus(Direction.RIGHT.vector());
         if (isAccessible(worldMap, rightActorTile)) {
-            new Action_SetTileCode(editor, LayerID.FOOD, rightActorTile, FoodTile.EMPTY.code()).execute();
+            new Action_SetFoodTileCode(editor, rightActorTile, FoodTile.EMPTY.code()).execute();
         }
     }
 

@@ -1,6 +1,5 @@
 package de.amr.pacmanfx.tilemap.editor.actions;
 
-import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.TerrainTile;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
@@ -13,7 +12,7 @@ public class Action_AddBorderWall extends AbstractEditorAction<Void> {
     }
 
     private void setTerrain(int row, int col, TerrainTile terrainTile) {
-        new Action_SetTileCode(editor, LayerID.TERRAIN, row, col, terrainTile.code()).execute();
+        new Action_SetTerrainTileCode(editor, row, col, terrainTile.code()).execute();
     }
 
     @Override
