@@ -441,7 +441,7 @@ public class EditCanvas extends Canvas {
         Vector2i tile = tileAt(mouseEvent.getX(), mouseEvent.getY());
         focussedTile.set(tile);
         switch (editMode.get()) {
-            case INSPECT -> new Action_IdentifyObstacle(ui, tile).execute();
+            case INSPECT -> new Action_IdentifyTileAndObstacle(ui, tile).execute();
             case EDIT -> {
                 if (mouseEvent.isShiftDown()) {
                     ui.selectedPalette().ifPresent(palette -> {

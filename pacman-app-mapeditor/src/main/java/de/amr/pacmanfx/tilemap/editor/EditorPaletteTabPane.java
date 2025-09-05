@@ -75,12 +75,12 @@ public class EditorPaletteTabPane extends TabPane {
         palette.addTool(new TileCodeEditorTool(ui, LayerID.TERRAIN, TerrainTile.ARC_NE.$, "NE Corner"));
         palette.addTool(new TileCodeEditorTool(ui, LayerID.TERRAIN, TerrainTile.ARC_SW.$, "SW Corner"));
         palette.addTool(new TileCodeEditorTool(ui, LayerID.TERRAIN, TerrainTile.ARC_SE.$, "SE Corner"));
-        palette.addTool(new TileCodeEditorTool(ui, LayerID.TERRAIN, TerrainTile.TUNNEL.$, "Tunnel"));
         palette.addTool(new TileCodeEditorTool(ui, LayerID.TERRAIN, TerrainTile.DOOR.$, "Door"));
+        palette.addTool(new TileCodeEditorTool(ui, LayerID.TERRAIN, TerrainTile.TUNNEL.$, "Tunnel"));
         palette.addTool(new TileCodeEditorTool(ui, LayerID.TERRAIN, TerrainTile.ONE_WAY_UP.$, "One-Way Up"));
-        palette.addTool(new TileCodeEditorTool(ui, LayerID.TERRAIN, TerrainTile.ONE_WAY_RIGHT.$, "One-Way Right"));
         palette.addTool(new TileCodeEditorTool(ui, LayerID.TERRAIN, TerrainTile.ONE_WAY_DOWN.$, "One-Way Down"));
         palette.addTool(new TileCodeEditorTool(ui, LayerID.TERRAIN, TerrainTile.ONE_WAY_LEFT.$, "One-Way Left"));
+        palette.addTool(new TileCodeEditorTool(ui, LayerID.TERRAIN, TerrainTile.ONE_WAY_RIGHT.$, "One-Way Right"));
 
         palette.setSelectedToolIndex(0); // "No Tile"
 

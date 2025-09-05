@@ -11,11 +11,11 @@ import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
 import static java.util.Objects.requireNonNull;
 
-public class Action_IdentifyObstacle extends AbstractEditorUIAction<String> {
+public class Action_IdentifyTileAndObstacle extends AbstractEditorUIAction<String> {
 
     private final Vector2i tile;
 
-    public Action_IdentifyObstacle(EditorUI ui, Vector2i tile) {
+    public Action_IdentifyTileAndObstacle(EditorUI ui, Vector2i tile) {
         super(ui);
         this.tile = requireNonNull(tile);
     }
@@ -23,16 +23,26 @@ public class Action_IdentifyObstacle extends AbstractEditorUIAction<String> {
     @Override
     public String execute() {
         WorldMap worldMap = editor.currentWorldMap();
-        byte terrainCode = worldMap.content(LayerID.TERRAIN, tile);
-        byte foodCode = worldMap.content(LayerID.FOOD, tile);
+        byte terrainCode = worldMap.content(LayerID.TERRAIN, tile), foodCode = worldMap.content(LayerID.FOOD, tile);
+        boolean terrainEmpty = terrainCode == TerrainTile.EMPTY.code(), foodEmpty = foodCode == FoodTile.EMPTY.code();
         String info = "";
-        if (terrainCode != TerrainTile.EMPTY.code())
-            info = "Terrain 0x%02X (%s)".formatted(terrainCode, terrainTileName(terrainCode));
-        if (foodCode != FoodTile.EMPTY.code())
-            info = "Food 0x%02X (%s)".formatted(foodCode, foodTileName(foodCode));
-        ui.messageDisplay().showMessage(info, 4, MessageType.INFO);
+        if (!terrainEmpty) {
+            info += " Terrain 0x%02X (%s)".formatted(terrainCode, terrainTileName(terrainCode));
+        }
+        if (!foodEmpty) {
+            info += " Food 0x%02X (%s)".formatted(foodCode, foodTileName(foodCode));
+        }
+        ui.messageDisplay().showMessage(info.trim(), 4, MessageType.INFO);
 
         return identifyObstacleStartingAtTile(worldMap);
+    }
+
+    private String terrainInfo(byte terrainCode) {
+        return "Terrain 0x%02X (%s)".formatted(terrainCode, terrainTileName(terrainCode));
+    }
+
+    private String foodInfo(byte foodCode) {
+        return "Food 0x%02X (%s)".formatted(foodCode, foodTileName(foodCode));
     }
 
     private String identifyObstacleStartingAtTile(WorldMap worldMap) {
