@@ -93,7 +93,7 @@ public class EditorPaletteTabPane extends TabPane {
     }
 
     private Palette createActorsPalette(EditorUI ui, TerrainMapTileRenderer prototype) {
-        var palette = new Palette(PaletteID.ACTORS, 1, 11);
+        var palette = new Palette(PaletteID.ACTORS, 1, 10);
 
         palette.addTool(new ActorTool(ui, WorldMapProperty.POS_PAC, "Pac-Man", ArcadeSprites.PAC_MAN));
         palette.addTool(new ActorTool(ui, WorldMapProperty.POS_RED_GHOST, "Red Ghost", ArcadeSprites.RED_GHOST));
