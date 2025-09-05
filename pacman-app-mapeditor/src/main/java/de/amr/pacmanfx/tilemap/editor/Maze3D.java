@@ -103,12 +103,12 @@ public class Maze3D extends Group {
     };
 
     public final EditorAction<Void> actionMoveRight = () -> {
-        setTranslateX(getTranslateX() + 10);
+        setTranslateX(getTranslateX() - 10);
         return null;
     };
 
     public final EditorAction<Void> actionMoveLeft = () -> {
-        setTranslateX(getTranslateX() - 10);
+        setTranslateX(getTranslateX() + 10);
         return null;
     };
 
