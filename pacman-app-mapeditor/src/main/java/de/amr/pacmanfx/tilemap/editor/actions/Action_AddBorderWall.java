@@ -4,16 +4,16 @@ import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.TerrainTile;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.tilemap.editor.EditorUI;
+import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
 
-public class Action_AddBorderWall extends AbstractEditorUIAction<Void> {
+public class Action_AddBorderWall extends AbstractEditorAction<Void> {
 
-    public Action_AddBorderWall(EditorUI ui) {
-        super(ui);
+    public Action_AddBorderWall(TileMapEditor editor) {
+        super(editor);
     }
 
     private void setTerrain(int row, int col, TerrainTile terrainTile) {
-        new Action_SetTileCode(ui, LayerID.TERRAIN, row, col, terrainTile.code()).execute();
+        new Action_SetTileCode(editor, LayerID.TERRAIN, row, col, terrainTile.code()).execute();
     }
 
     @Override

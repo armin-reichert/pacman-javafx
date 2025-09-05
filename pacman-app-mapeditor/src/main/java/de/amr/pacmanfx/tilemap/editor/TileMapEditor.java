@@ -10,10 +10,7 @@ import de.amr.pacmanfx.tilemap.editor.actions.Action_SetDefaultMapColors;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
@@ -177,6 +174,27 @@ public class TileMapEditor {
 
     public StringProperty sourceCodeProperty() {
         return sourceCode;
+    }
+
+    // -- symmetricEditMode
+
+    public static final boolean DEFAULT_SYMMETRIC_EDIT_MODE = true;
+
+    private BooleanProperty symmetricEditMode;
+
+    public BooleanProperty symmetricEditModeProperty() {
+        if (symmetricEditMode == null) {
+            symmetricEditMode = new SimpleBooleanProperty(DEFAULT_SYMMETRIC_EDIT_MODE);
+        }
+        return symmetricEditMode;
+    }
+
+    public boolean symmetricEditMode() {
+        return symmetricEditMode == null ? DEFAULT_SYMMETRIC_EDIT_MODE : symmetricEditModeProperty().get();
+    }
+
+    public void setSymmetricEditMode(boolean value) {
+        symmetricEditModeProperty().set(value);
     }
 
     // -- templateImage

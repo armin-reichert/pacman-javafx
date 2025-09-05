@@ -46,7 +46,7 @@ public class Action_CreateNewMapInteractively extends AbstractEditorUIAction<Voi
                     editor.setTemplateImage(null);
                     if (ui.editModeIs(EditMode.INSPECT)) {
                         ui.setEditMode(EditMode.EDIT);
-                        ui.setSymmetricEditMode(true);
+                        editor.setSymmetricEditMode(true);
                     }
                 }
             });
@@ -74,6 +74,6 @@ public class Action_CreateNewMapInteractively extends AbstractEditorUIAction<Voi
         editor.setCurrentWorldMap(worldMap);
         new Action_SetDefaultMapColors(editor, worldMap).execute();
         new Action_SetDefaultScatterPositions(editor, worldMap).execute();
-        new Action_AddBorderWall(ui).execute();
+        new Action_AddBorderWall(editor).execute();
     }
 }

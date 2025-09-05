@@ -6,27 +6,24 @@ package de.amr.pacmanfx.tilemap.editor.palette;
 
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
-import de.amr.pacmanfx.tilemap.editor.EditorUI;
+import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
 import de.amr.pacmanfx.tilemap.editor.actions.Action_SetTileCode;
 import de.amr.pacmanfx.uilib.rendering.CanvasRenderer;
 import de.amr.pacmanfx.uilib.tilemap.TileRenderer;
-import javafx.scene.paint.Color;
 
 import java.util.function.Consumer;
-
-import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.TOOL_SIZE;
 
 public class TileCodeEditorTool implements PaletteTool {
 
     private final byte code;
     private final String description;
 
-    private final Consumer<Vector2i> editor;
+    private final Consumer<Vector2i> tileEditor;
 
-    public TileCodeEditorTool(EditorUI ui, LayerID layerID, byte code, String description) {
+    public TileCodeEditorTool(TileMapEditor editor, LayerID layerID, byte code, String description) {
         this.code = code;
         this.description = description;
-        editor = tile -> new Action_SetTileCode(ui, layerID, tile, code).execute();
+        tileEditor = tile -> new Action_SetTileCode(editor, layerID, tile, code).execute();
     }
 
     @Override
@@ -36,7 +33,7 @@ public class TileCodeEditorTool implements PaletteTool {
 
     @Override
     public Consumer<Vector2i> editor() {
-        return editor;
+        return tileEditor;
     }
 
     @Override

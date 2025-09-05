@@ -278,27 +278,6 @@ public class EditorUI {
         segmentNumbersVisibleProperty().set(value);
     }
 
-    // -- symmetricEditMode
-
-    public static final boolean DEFAULT_SYMMETRIC_EDIT_MODE = true;
-
-    private BooleanProperty symmetricEditMode;
-
-    public BooleanProperty symmetricEditModeProperty() {
-        if (symmetricEditMode == null) {
-            symmetricEditMode = new SimpleBooleanProperty(DEFAULT_SYMMETRIC_EDIT_MODE);
-        }
-        return symmetricEditMode;
-    }
-
-    public boolean symmetricEditMode() {
-        return symmetricEditMode == null ? DEFAULT_SYMMETRIC_EDIT_MODE : symmetricEditModeProperty().get();
-    }
-
-    public void setSymmetricEditMode(boolean value) {
-        symmetricEditModeProperty().set(value);
-    }
-
     // -- terrainVisible
 
     public static final boolean DEFAULT_TERRAIN_VISIBLE = true;
@@ -723,9 +702,9 @@ public class EditorUI {
             textProperty().bind(Bindings.createStringBinding(() ->
                 switch (editMode()) {
                     case INSPECT -> translated("mode.inspect");
-                    case EDIT    -> translated(symmetricEditMode() ? "mode.symmetric" : "mode.edit");
+                    case EDIT    -> translated(editor.symmetricEditMode() ? "mode.symmetric" : "mode.edit");
                     case ERASE   -> translated("mode.erase");
-                }, editModeProperty(), symmetricEditModeProperty()
+                }, editModeProperty(), editor.symmetricEditModeProperty()
             ));
 
             textFillProperty().bind(editModeProperty().map(mode ->

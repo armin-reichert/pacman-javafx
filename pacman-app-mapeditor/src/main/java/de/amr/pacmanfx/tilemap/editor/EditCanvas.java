@@ -111,7 +111,7 @@ public class EditCanvas extends Canvas {
         obstaclesJoiningProperty()          .bind(ui.obstaclesJoiningProperty());
         segmentNumbersVisibleProperty()     .bind(ui.segmentNumbersVisibleProperty());
         scalingProperty()                   .bind(gridSize.divide(TS));
-        symmetricEditModeProperty()         .bind(ui.symmetricEditModeProperty());
+        symmetricEditModeProperty()         .bind(ui.editor().symmetricEditModeProperty());
         templateImageGrayProperty()         .bind(ui.editor().templateImageProperty().map(Ufx::imageToGreyscale));
         terrainVisibleProperty()            .bind(ui.terrainVisibleProperty());
         worldMapProperty()                  .bind(ui.editor().currentWorldMapProperty());
