@@ -807,6 +807,7 @@ public class EditorUI {
 
     public void onTerrainMapChanged(WorldMap worldMap) {
         if (terrainPropertiesEditorPane != null) {
+            //TODO rebuilding all property editors is not always needed
             terrainPropertiesEditorPane.rebuildPropertyEditors();
         }
         preview3D.updateMaze();
@@ -814,6 +815,7 @@ public class EditorUI {
 
     public void onFoodMapChanged(WorldMap worldMap) {
         if (foodPropertiesEditorPane != null) {
+            //TODO rebuilding all property editors is not always needed
             foodPropertiesEditorPane.rebuildPropertyEditors();
         }
         preview3D.updateFood();
