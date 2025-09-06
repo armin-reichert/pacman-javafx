@@ -260,30 +260,15 @@ public class WorldMapLayerPropertiesEditor extends BorderPane {
         worldMap.bind(editor.currentWorldMapProperty());
 
         var btnAddColorEntry = new Button("Color");
-        btnAddColorEntry.setOnAction(e -> {
-            String propertyName = "color_RENAME_ME";
-            worldMap.get().properties(layerID).put(propertyName, "green");
-            messageDisplay.showMessage("New property %s added".formatted(propertyName), 1, MessageType.INFO);
-            rebuildPropertyEditors();
-        });
         btnAddColorEntry.disableProperty().bind(enabled.not());
+        btnAddColorEntry.setOnAction(e -> addNewColorProperty("color_RENAME_ME"));
 
         var btnAddPosEntry = new Button("Position");
-        btnAddPosEntry.setOnAction(e -> {
-            String propertyName = "pos_RENAME_ME";
-            worldMap.get().properties(layerID).put(propertyName, "(0,0)");
-            messageDisplay.showMessage("New property %s added".formatted(propertyName), 1, MessageType.INFO);
-            rebuildPropertyEditors();
-        });
+        btnAddPosEntry.setOnAction(e -> addNewPositionProperty("pos_RENAME_ME"));
         btnAddPosEntry.disableProperty().bind(enabled.not());
 
         var btnAddTextEntry = new Button("Text");
-        btnAddTextEntry.setOnAction(e -> {
-            String propertyName = "RENAME_ME";
-            worldMap.get().properties(layerID).put(propertyName, "any text");
-            messageDisplay.showMessage("New property %s added".formatted(propertyName), 1, MessageType.INFO);
-            rebuildPropertyEditors();
-        });
+        btnAddTextEntry.setOnAction(e -> addNewTextProperty("RENAME_ME"));
         btnAddTextEntry.disableProperty().bind(enabled.not());
 
         var buttonBar = new HBox(new Label("New"), btnAddColorEntry, btnAddPosEntry, btnAddTextEntry);
@@ -296,6 +281,52 @@ public class WorldMapLayerPropertiesEditor extends BorderPane {
 
         setTop(buttonBar);
         setCenter(grid);
+    }
+
+    private void addNewColorProperty(String propertyName) {
+        if (worldMap.get().properties(layerID).containsKey(propertyName)) {
+            messageDisplay.showMessage("Property %s already exists".formatted(propertyName), 1, MessageType.INFO);
+            return;
+        }
+        worldMap.get().properties(layerID).put(propertyName, "green");
+        editor.setWorldMapChanged();
+        editor.setEdited(true);
+        messageDisplay.showMessage("New property %s added".formatted(propertyName), 1, MessageType.INFO);
+        rebuildPropertyEditors();
+    }
+
+    private void addNewPositionProperty(String propertyName) {
+        if (worldMap.get().properties(layerID).containsKey(propertyName)) {
+            messageDisplay.showMessage("Property %s already exists".formatted(propertyName), 1, MessageType.INFO);
+            return;
+        }
+        worldMap.get().properties(layerID).put(propertyName, "(0,0)");
+        messageDisplay.showMessage("New property %s added".formatted(propertyName), 1, MessageType.INFO);
+        editor.setWorldMapChanged();
+        editor.setEdited(true);
+        rebuildPropertyEditors();
+    }
+
+    private void addNewTextProperty(String propertyName) {
+        if (worldMap.get().properties(layerID).containsKey(propertyName)) {
+            messageDisplay.showMessage("Property %s already exists".formatted(propertyName), 1, MessageType.INFO);
+            return;
+        }
+        worldMap.get().properties(layerID).put(propertyName, "any text");
+        editor.setWorldMapChanged();
+        editor.setEdited(true);
+        messageDisplay.showMessage("New property %s added".formatted(propertyName), 1, MessageType.INFO);
+        rebuildPropertyEditors();
+    }
+
+
+    private void deleteProperty(String propertyName) {
+        if (worldMap().properties(layerID).containsKey(propertyName)) {
+            worldMap().properties(layerID).remove(propertyName);
+            editor.setWorldMapChanged();
+            editor.setEdited(true);
+            messageDisplay.showMessage("Property '%s' deleted".formatted(propertyName), 3, MessageType.INFO);
+        }
     }
 
     public BooleanProperty enabledProperty() {
@@ -349,12 +380,5 @@ public class WorldMapLayerPropertiesEditor extends BorderPane {
         }
 
         updatePropertyEditorValues();
-    }
-
-    private void deleteProperty(String propertyName) {
-        if (worldMap().properties(layerID).containsKey(propertyName)) {
-            worldMap().properties(layerID).remove(propertyName);
-            messageDisplay.showMessage("Property '%s' deleted".formatted(propertyName), 3, MessageType.INFO);
-        }
     }
 }
