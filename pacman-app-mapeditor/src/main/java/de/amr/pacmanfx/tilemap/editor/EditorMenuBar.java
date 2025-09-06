@@ -72,6 +72,10 @@ public class EditorMenuBar extends MenuBar {
 
         miAddHouse.disableProperty().bind(ui.editModeProperty().map(mode -> mode == EditMode.INSPECT));
 
+        var miDeleteHouse = new MenuItem(translated("menu.edit.delete_house"));
+        miDeleteHouse.setOnAction(actionEvent -> new Action_DeleteArcadeHouse(editor).execute());
+        miDeleteHouse.disableProperty().bind(ui.editModeProperty().map(mode -> mode == EditMode.INSPECT));
+
         var miClearTerrain = new MenuItem(translated("menu.edit.clear_terrain"));
         miClearTerrain.setOnAction(actionEvent -> new Action_ClearTerrain(editor).execute());
         miClearTerrain.disableProperty().bind(ui.editModeProperty().map(mode -> mode == EditMode.INSPECT));
@@ -97,6 +101,7 @@ public class EditorMenuBar extends MenuBar {
             new SeparatorMenuItem(),
             miAddBorder,
             miAddHouse,
+            miDeleteHouse,
             miClearTerrain,
             miClearFood,
             miIdentifyTiles,
