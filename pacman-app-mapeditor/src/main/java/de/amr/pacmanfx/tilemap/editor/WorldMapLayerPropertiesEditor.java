@@ -33,19 +33,28 @@ public class WorldMapLayerPropertiesEditor extends BorderPane {
     static final int NAME_EDITOR_MIN_WIDTH = 180;
     static final String SYMBOL_DELETE = "\u274C";
 
-    private abstract class SinglePropertyEditor {
+    private static abstract class SinglePropertyEditor {
 
+        protected final BooleanProperty enabled = new SimpleBooleanProperty(true);
         protected final ObjectProperty<WorldMap> worldMap = new SimpleObjectProperty<>();
+
+        protected final LayerID layerID;
         protected PropertyInfo propertyInfo;
         protected final TextField nameEditor;
 
-        protected SinglePropertyEditor(PropertyInfo propertyInfo) {
+        protected SinglePropertyEditor(EditorUI ui, LayerID layerID, PropertyInfo propertyInfo) {
+            requireNonNull(ui);
+            this.layerID = requireNonNull(layerID);
             this.propertyInfo = requireNonNull(propertyInfo);
 
             nameEditor = new TextField(propertyInfo.name());
             nameEditor.setMinWidth(NAME_EDITOR_MIN_WIDTH);
             nameEditor.disableProperty().bind(enabled.not());
-            nameEditor.setOnAction(e -> onPropertyNameEdited());
+            nameEditor.setOnAction(e -> onPropertyNameEdited(ui));
+        }
+
+        public BooleanProperty enabledProperty() {
+            return enabled;
         }
 
         public ObjectProperty<WorldMap> worldMapProperty() {
@@ -56,7 +65,7 @@ public class WorldMapLayerPropertiesEditor extends BorderPane {
             return worldMap.get();
         }
 
-        protected void onPropertyNameEdited() {
+        protected void onPropertyNameEdited(EditorUI ui) {
             if (worldMap() == null) {
                 return;
             }
@@ -70,31 +79,33 @@ public class WorldMapLayerPropertiesEditor extends BorderPane {
             }
             if (!PropertyInfo.isValidPropertyName(editedName)) {
                 nameEditor.setText(propertyInfo.name());
-                messageDisplay.showMessage("Property name '%s' is invalid".formatted(editedName), 2, MessageType.ERROR);
+                ui.messageDisplay().showMessage("Property name '%s' is invalid".formatted(editedName), 2, MessageType.ERROR);
                 return;
             }
             if (worldMap().properties(layerID).containsKey(editedName)) {
-                messageDisplay.showMessage("Property name already in use", 2, MessageType.ERROR);
+                ui.messageDisplay().showMessage("Property name already in use", 2, MessageType.ERROR);
                 nameEditor.setText(propertyInfo.name());
                 return;
             }
-            messageDisplay.showMessage("Property '%s' renamed to '%s'"
+            ui.messageDisplay().showMessage("Property '%s' renamed to '%s'"
                 .formatted(propertyInfo.name(), editedName), 2, MessageType.INFO);
 
-            worldMap().properties(layerID).remove(propertyInfo.name());
-            worldMap().properties(layerID).put(editedName, formattedPropertyValue());
+            worldMap().properties(layerID()).remove(propertyInfo.name());
+            worldMap().properties(layerID()).put(editedName, formattedPropertyValue());
             propertyInfo = new PropertyInfo(editedName, propertyInfo.type());
 
-            rebuildPropertyEditors(); // sort order might have changed
-
-            editor.setWorldMapChanged();
-            editor.setEdited(true);
+            ui.editor().setWorldMapChanged();
+            ui.editor().setEdited(true);
         }
 
-        protected void storePropertyValue() {
-            worldMap().properties(layerID).put(propertyInfo.name(), formattedPropertyValue());
-            editor.setWorldMapChanged();
-            editor.setEdited(true);
+        protected void storePropertyValue(EditorUI ui) {
+            worldMap().properties(layerID()).put(propertyInfo.name(), formattedPropertyValue());
+            ui.editor().setWorldMapChanged();
+            ui.editor().setEdited(true);
+        }
+
+        protected LayerID layerID() {
+            return layerID;
         }
 
         protected abstract String formattedPropertyValue();
@@ -108,16 +119,16 @@ public class WorldMapLayerPropertiesEditor extends BorderPane {
         }
     }
 
-    private class TextPropertyEditor extends SinglePropertyEditor {
+    private static class TextPropertyEditor extends SinglePropertyEditor {
 
         private final TextField textEditor;
 
-        public TextPropertyEditor(PropertyInfo propertyInfo, String propertyValue) {
-            super(propertyInfo);
+        public TextPropertyEditor(EditorUI ui, LayerID layerID, PropertyInfo propertyInfo, String propertyValue) {
+            super(ui, layerID, propertyInfo);
             textEditor = new TextField();
             textEditor.setText(propertyValue);
             textEditor.disableProperty().bind(enabled.not());
-            textEditor.setOnAction(e -> storePropertyValue());
+            textEditor.setOnAction(e -> storePropertyValue(ui));
         }
 
         @Override
@@ -137,16 +148,16 @@ public class WorldMapLayerPropertiesEditor extends BorderPane {
         }
     }
 
-    private class ColorPropertyEditor extends SinglePropertyEditor {
+    private static class ColorPropertyEditor extends SinglePropertyEditor {
 
         private final ColorPicker colorPicker;
 
-        public ColorPropertyEditor(PropertyInfo propertyInfo, String propertyValue) {
-            super(propertyInfo);
+        public ColorPropertyEditor(EditorUI ui, LayerID layerID, PropertyInfo propertyInfo, String propertyValue) {
+            super(ui, layerID, propertyInfo);
             colorPicker = new ColorPicker();
             colorPicker.setValue(parseColor(propertyValue));
             colorPicker.disableProperty().bind(enabled.not());
-            colorPicker.setOnAction(e -> storePropertyValue());
+            colorPicker.setOnAction(e -> storePropertyValue(ui));
         }
 
         @Override
@@ -166,7 +177,7 @@ public class WorldMapLayerPropertiesEditor extends BorderPane {
         }
     }
 
-    private class TilePropertyEditor extends SinglePropertyEditor {
+    private static class TilePropertyEditor extends SinglePropertyEditor {
 
         private final Spinner<Integer> spinnerX;
         private final Spinner<Integer> spinnerY;
@@ -174,8 +185,8 @@ public class WorldMapLayerPropertiesEditor extends BorderPane {
         private final SpinnerValueFactory.IntegerSpinnerValueFactory spinnerYModel;
         private final HBox valueEditorPane;
 
-        public TilePropertyEditor(PropertyInfo propertyInfo, String propertyValue) {
-            super(propertyInfo);
+        public TilePropertyEditor(EditorUI ui, LayerID layerID, PropertyInfo propertyInfo, String propertyValue) {
+            super(ui, layerID, propertyInfo);
 
             spinnerX = new Spinner<>(0, 1000, 0);
             spinnerXModel = (SpinnerValueFactory.IntegerSpinnerValueFactory) spinnerX.getValueFactory();
@@ -192,8 +203,8 @@ public class WorldMapLayerPropertiesEditor extends BorderPane {
                 spinnerY.getValueFactory().setValue(tile.y());
             });
 
-            spinnerX.valueProperty().addListener((py,ov,nv) -> storePropertyValue());
-            spinnerY.valueProperty().addListener((py,ov,nv) -> storePropertyValue());
+            spinnerX.valueProperty().addListener((py,ov,nv) -> storePropertyValue(ui));
+            spinnerY.valueProperty().addListener((py,ov,nv) -> storePropertyValue(ui));
 
             valueEditorPane = new HBox(spinnerX, spinnerY);
         }
@@ -222,27 +233,19 @@ public class WorldMapLayerPropertiesEditor extends BorderPane {
 
     // main class
 
-    private final TileMapEditor editor;
-    private final MessageDisplay messageDisplay;
+    private final EditorUI ui;
     private final LayerID layerID;
 
     private final BooleanProperty enabled = new SimpleBooleanProperty(true);
 
-    private final ObjectProperty<WorldMap> worldMap = new SimpleObjectProperty<>() {
-        @Override
-        protected void invalidated() {
-            rebuildPropertyEditors();
-        }
-    };
-
     private final List<SinglePropertyEditor> propertyEditors = new ArrayList<>();
     private final GridPane grid = new GridPane();
 
-    public WorldMapLayerPropertiesEditor(TileMapEditor editor, MessageDisplay messageDisplay, LayerID layerID) {
-        this.editor = requireNonNull(editor);
-        this.messageDisplay = requireNonNull(messageDisplay);
+    public WorldMapLayerPropertiesEditor(EditorUI ui, LayerID layerID) {
+        this.ui = requireNonNull(ui);
         this.layerID = requireNonNull(layerID);
-        worldMap.bind(editor.currentWorldMapProperty());
+
+        ui.editor().currentWorldMapProperty().addListener((py, ov, nv) -> rebuildPropertyEditors());
 
         var btnAddColorEntry = new Button("Color");
         btnAddColorEntry.disableProperty().bind(enabled.not());
@@ -267,40 +270,44 @@ public class WorldMapLayerPropertiesEditor extends BorderPane {
         setTop(buttonBar);
         setCenter(grid);
     }
+    
+    private WorldMap worldMap() {
+        return ui.editor().currentWorldMap();
+    }
 
     private void addNewColorProperty(String propertyName) {
-        if (worldMap.get().properties(layerID).containsKey(propertyName)) {
-            messageDisplay.showMessage("Property %s already exists".formatted(propertyName), 1, MessageType.INFO);
+        if (worldMap().properties(layerID).containsKey(propertyName)) {
+            ui.messageDisplay().showMessage("Property %s already exists".formatted(propertyName), 1, MessageType.INFO);
             return;
         }
-        worldMap.get().properties(layerID).put(propertyName, "green");
-        editor.setWorldMapChanged();
-        editor.setEdited(true);
-        messageDisplay.showMessage("New property %s added".formatted(propertyName), 1, MessageType.INFO);
+        worldMap().properties(layerID).put(propertyName, "green");
+        ui.editor().setWorldMapChanged();
+        ui.editor().setEdited(true);
+        ui.messageDisplay().showMessage("New property %s added".formatted(propertyName), 1, MessageType.INFO);
         rebuildPropertyEditors();
     }
 
     private void addNewPositionProperty(String propertyName) {
-        if (worldMap.get().properties(layerID).containsKey(propertyName)) {
-            messageDisplay.showMessage("Property %s already exists".formatted(propertyName), 1, MessageType.INFO);
+        if (worldMap().properties(layerID).containsKey(propertyName)) {
+            ui.messageDisplay().showMessage("Property %s already exists".formatted(propertyName), 1, MessageType.INFO);
             return;
         }
-        worldMap.get().properties(layerID).put(propertyName, "(0,0)");
-        messageDisplay.showMessage("New property %s added".formatted(propertyName), 1, MessageType.INFO);
-        editor.setWorldMapChanged();
-        editor.setEdited(true);
+        worldMap().properties(layerID).put(propertyName, "(0,0)");
+        ui.messageDisplay().showMessage("New property %s added".formatted(propertyName), 1, MessageType.INFO);
+        ui.editor().setWorldMapChanged();
+        ui.editor().setEdited(true);
         rebuildPropertyEditors();
     }
 
     private void addNewTextProperty(String propertyName) {
-        if (worldMap.get().properties(layerID).containsKey(propertyName)) {
-            messageDisplay.showMessage("Property %s already exists".formatted(propertyName), 1, MessageType.INFO);
+        if (worldMap().properties(layerID).containsKey(propertyName)) {
+            ui.messageDisplay().showMessage("Property %s already exists".formatted(propertyName), 1, MessageType.INFO);
             return;
         }
-        worldMap.get().properties(layerID).put(propertyName, "any text");
-        editor.setWorldMapChanged();
-        editor.setEdited(true);
-        messageDisplay.showMessage("New property %s added".formatted(propertyName), 1, MessageType.INFO);
+        worldMap().properties(layerID).put(propertyName, "any text");
+        ui.editor().setWorldMapChanged();
+        ui.editor().setEdited(true);
+        ui.messageDisplay().showMessage("New property %s added".formatted(propertyName), 1, MessageType.INFO);
         rebuildPropertyEditors();
     }
 
@@ -308,18 +315,14 @@ public class WorldMapLayerPropertiesEditor extends BorderPane {
     private void deleteProperty(String propertyName) {
         if (worldMap().properties(layerID).containsKey(propertyName)) {
             worldMap().properties(layerID).remove(propertyName);
-            editor.setWorldMapChanged();
-            editor.setEdited(true);
-            messageDisplay.showMessage("Property '%s' deleted".formatted(propertyName), 3, MessageType.INFO);
+            ui.editor().setWorldMapChanged();
+            ui.editor().setEdited(true);
+            ui.messageDisplay().showMessage("Property '%s' deleted".formatted(propertyName), 3, MessageType.INFO);
         }
     }
 
     public BooleanProperty enabledProperty() {
         return enabled;
-    }
-
-    public WorldMap worldMap() {
-        return worldMap.get();
     }
 
     public void updatePropertyEditorValues() {
@@ -335,17 +338,17 @@ public class WorldMapLayerPropertiesEditor extends BorderPane {
             return;
         }
         worldMap().propertyNames(layerID).forEach(propertyName -> {
-            String propertyValue = worldMap.get().properties(layerID).get(propertyName);
             // primitive way of discriminating but fulfills its purpose
-            SinglePropertyEditor propertyEditor;
+            PropertyInfo propertyInfo;
             if (propertyName.startsWith("color_")) {
-                propertyEditor = new ColorPropertyEditor(new PropertyInfo(propertyName, PropertyType.COLOR), propertyValue);
+                propertyInfo = new PropertyInfo(propertyName, PropertyType.COLOR);
             } else if (propertyName.startsWith("pos_") || propertyName.startsWith("tile_") || propertyName.startsWith("vec_")) {
-                propertyEditor = new TilePropertyEditor(new PropertyInfo(propertyName, PropertyType.TILE), propertyValue);
+                propertyInfo = new PropertyInfo(propertyName, PropertyType.TILE);
             } else {
-                propertyEditor = new TextPropertyEditor(new PropertyInfo(propertyName, PropertyType.STRING), propertyValue);
+                propertyInfo = new PropertyInfo(propertyName, PropertyType.STRING);
             }
-            propertyEditor.worldMapProperty().bind(worldMap);
+            String propertyValue = worldMap().properties(layerID).get(propertyName);
+            SinglePropertyEditor propertyEditor = createEditor(ui, propertyInfo, propertyValue);
             propertyEditors.add(propertyEditor);
         });
 
@@ -365,5 +368,16 @@ public class WorldMapLayerPropertiesEditor extends BorderPane {
         }
 
         updatePropertyEditorValues();
+    }
+
+    private SinglePropertyEditor createEditor(EditorUI ui, PropertyInfo info, String initialValue) {
+        SinglePropertyEditor propertyEditor = switch (info.type()) {
+            case COLOR -> new ColorPropertyEditor(ui, layerID, new PropertyInfo(info.name(), PropertyType.COLOR), initialValue);
+            case TILE -> new TilePropertyEditor(ui, layerID, new PropertyInfo(info.name(), PropertyType.TILE), initialValue);
+            case STRING -> new TextPropertyEditor(ui, layerID, new PropertyInfo(info.name(), PropertyType.STRING), initialValue);
+        };
+        propertyEditor.enabledProperty().bind(enabled);
+        propertyEditor.worldMapProperty().bind(ui.editor().currentWorldMapProperty());
+        return propertyEditor;
     }
 }
