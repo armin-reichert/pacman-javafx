@@ -114,11 +114,11 @@ public class TileMapEditor {
         }
         if (terrainMapChanged) {
             //TODO use events?
-            ui.onTerrainMapChanged(currentWorldMap());
+            ui.onTerrainMapChanged();
             terrainMapChanged = false;
         }
         if (foodMapChanged) {
-            ui.onFoodMapChanged(currentWorldMap());
+            ui.onFoodMapChanged();
             foodMapChanged = false;
         }
     }

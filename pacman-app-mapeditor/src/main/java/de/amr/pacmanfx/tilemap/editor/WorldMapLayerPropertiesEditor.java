@@ -317,6 +317,7 @@ public class WorldMapLayerPropertiesEditor extends BorderPane {
             worldMap().properties(layerID).remove(propertyName);
             ui.editor().setWorldMapChanged();
             ui.editor().setEdited(true);
+            rebuildPropertyEditors();
             ui.messageDisplay().showMessage("Property '%s' deleted".formatted(propertyName), 3, MessageType.INFO);
         }
     }

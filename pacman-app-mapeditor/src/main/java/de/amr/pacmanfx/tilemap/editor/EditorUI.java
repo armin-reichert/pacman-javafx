@@ -349,6 +349,8 @@ public class EditorUI {
 
     public void init() {
         replaceSampleMapMenuEntries(editor.sampleMaps());
+        terrainPropertiesEditorPane.rebuildPropertyEditors();
+        foodPropertiesEditorPane.rebuildPropertyEditors();
         preview3D.reset();
         setEditMode(INSPECT);
         Platform.runLater(() -> {
@@ -805,19 +807,11 @@ public class EditorUI {
 
     // Model change handling
 
-    public void onTerrainMapChanged(WorldMap worldMap) {
-        if (terrainPropertiesEditorPane != null) {
-            //TODO rebuilding all property editors is not always needed
-            terrainPropertiesEditorPane.rebuildPropertyEditors();
-        }
+    public void onTerrainMapChanged() {
         preview3D.updateMaze();
     }
 
-    public void onFoodMapChanged(WorldMap worldMap) {
-        if (foodPropertiesEditorPane != null) {
-            //TODO rebuilding all property editors is not always needed
-            foodPropertiesEditorPane.rebuildPropertyEditors();
-        }
+    public void onFoodMapChanged() {
         preview3D.updateFood();
     }
 }
