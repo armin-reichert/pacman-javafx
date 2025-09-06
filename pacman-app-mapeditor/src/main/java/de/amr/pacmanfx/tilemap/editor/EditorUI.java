@@ -808,10 +808,20 @@ public class EditorUI {
     // Model change handling
 
     public void onTerrainMapChanged() {
+        terrainPropertiesEditorPane.rebuildPropertyEditors();
         preview3D.updateMaze();
     }
 
+    public void onTerrainMapPropertyChanged() {
+        terrainPropertiesEditorPane.rebuildPropertyEditors();
+    }
+
     public void onFoodMapChanged() {
+        foodPropertiesEditorPane.rebuildPropertyEditors();
         preview3D.updateFood();
+    }
+
+    public void onFoodMapPropertyChanged() {
+        foodPropertiesEditorPane.rebuildPropertyEditors();
     }
 }

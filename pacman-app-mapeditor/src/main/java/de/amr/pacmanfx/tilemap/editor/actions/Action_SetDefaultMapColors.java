@@ -31,8 +31,9 @@ public class Action_SetDefaultMapColors extends AbstractEditorAction<Void> {
         worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.COLOR_WALL_FILL, formatColor(MS_PACMAN_COLOR_WALL_FILL));
         worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.COLOR_DOOR, formatColor(MS_PACMAN_COLOR_DOOR));
         worldMap.properties(LayerID.FOOD).put(WorldMapProperty.COLOR_FOOD, formatColor(MS_PACMAN_COLOR_FOOD));
-        editor.setTerrainMapChanged();
-        editor.setFoodMapChanged();
+
+        editor.setTerrainMapPropertyChanged();
+        editor.setFoodMapPropertyChanged();
         editor.setEdited(true);
         return null;
     }

@@ -86,7 +86,9 @@ public class TileMapEditor {
     // Change management
     private boolean edited;
     private boolean terrainMapChanged;
+    private boolean terrainMapPropertyChanged;
     private boolean foodMapChanged;
+    private boolean foodMapPropertyChanged;
 
     public void setEdited(boolean edited) {
         this.edited = edited;
@@ -103,8 +105,16 @@ public class TileMapEditor {
         terrainMapChanged = true;
     }
 
+    public void setTerrainMapPropertyChanged() {
+        this.terrainMapPropertyChanged = true;
+    }
+
     public void setFoodMapChanged() {
         foodMapChanged = true;
+    }
+
+    public void setFoodMapPropertyChanged() {
+        this.foodMapPropertyChanged = true;
     }
 
     private void processChanges() {
@@ -117,9 +127,17 @@ public class TileMapEditor {
             ui.onTerrainMapChanged();
             terrainMapChanged = false;
         }
+        if (terrainMapPropertyChanged) {
+            ui.onTerrainMapPropertyChanged();
+            terrainMapPropertyChanged = false;
+        }
         if (foodMapChanged) {
             ui.onFoodMapChanged();
             foodMapChanged = false;
+        }
+        if (foodMapPropertyChanged) {
+            ui.onFoodMapPropertyChanged();
+            foodMapPropertyChanged = false;
         }
     }
 
