@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tilemap.editor;
 
-import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.lib.tilemap.WorldMapFormatter;
@@ -20,12 +19,10 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import static de.amr.pacmanfx.tilemap.editor.EditorUtil.formatColor;
 import static de.amr.pacmanfx.tilemap.editor.EditorUtil.parseColor;
@@ -34,12 +31,7 @@ import static java.util.Objects.requireNonNull;
 public class WorldMapLayerPropertiesEditor extends BorderPane {
 
     static final int NAME_EDITOR_MIN_WIDTH = 180;
-    static final Pattern PATTERN_PROPERTY_NAME = Pattern.compile("[a-zA-Z]([a-zA-Z0-9_])*");
     static final String SYMBOL_DELETE = "\u274C";
-
-    private static boolean isValidPropertyName(String s) {
-        return PATTERN_PROPERTY_NAME.matcher(s).matches();
-    }
 
     private abstract class SinglePropertyEditor {
 
@@ -76,7 +68,7 @@ public class WorldMapLayerPropertiesEditor extends BorderPane {
             if (propertyInfo.name().equals(editedName)) {
                 return;
             }
-            if (!isValidPropertyName(editedName)) {
+            if (!PropertyInfo.isValidPropertyName(editedName)) {
                 nameEditor.setText(propertyInfo.name());
                 messageDisplay.showMessage("Property name '%s' is invalid".formatted(editedName), 2, MessageType.ERROR);
                 return;
@@ -347,11 +339,11 @@ public class WorldMapLayerPropertiesEditor extends BorderPane {
             // primitive way of discriminating but fulfills its purpose
             SinglePropertyEditor propertyEditor;
             if (propertyName.startsWith("color_")) {
-                propertyEditor = new ColorPropertyEditor(new PropertyInfo(propertyName, Color.class), propertyValue);
+                propertyEditor = new ColorPropertyEditor(new PropertyInfo(propertyName, PropertyType.COLOR), propertyValue);
             } else if (propertyName.startsWith("pos_") || propertyName.startsWith("tile_") || propertyName.startsWith("vec_")) {
-                propertyEditor = new TilePropertyEditor(new PropertyInfo(propertyName, Vector2i.class), propertyValue);
+                propertyEditor = new TilePropertyEditor(new PropertyInfo(propertyName, PropertyType.TILE), propertyValue);
             } else {
-                propertyEditor = new TextPropertyEditor(new PropertyInfo(propertyName, String.class), propertyValue);
+                propertyEditor = new TextPropertyEditor(new PropertyInfo(propertyName, PropertyType.STRING), propertyValue);
             }
             propertyEditor.worldMapProperty().bind(worldMap);
             propertyEditors.add(propertyEditor);
