@@ -12,13 +12,13 @@ public record PropertyInfo(String name, PropertyType type, boolean permanent) {
 
     public static final Pattern PATTERN_PROPERTY_NAME = Pattern.compile("[a-zA-Z]([a-zA-Z0-9_])*");
 
-    public static boolean isValidPropertyName(String s) {
-        return PATTERN_PROPERTY_NAME.matcher(s).matches();
+    public static boolean isInValidPropertyName(String s) {
+        return s == null || !PATTERN_PROPERTY_NAME.matcher(s).matches();
     }
 
     public PropertyInfo {
         requireNonNull(name);
-        if (!isValidPropertyName(name)) {
+        if (isInValidPropertyName(name)) {
             throw new IllegalArgumentException("Invalid property name: '%s'".formatted(name));
         }
         requireNonNull(type);

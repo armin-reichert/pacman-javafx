@@ -92,7 +92,7 @@ public class WorldMapLayerPropertiesEditor extends BorderPane {
             if (propertyInfo.name().equals(editedName)) {
                 return;
             }
-            if (!PropertyInfo.isValidPropertyName(editedName)) {
+            if (PropertyInfo.isInValidPropertyName(editedName)) {
                 nameEditor.setText(propertyInfo.name());
                 ui.messageDisplay().showMessage("Property name '%s' is invalid".formatted(editedName), 2, MessageType.ERROR);
                 return;
