@@ -178,16 +178,20 @@ public class WorldMapLayerPropertiesEditor extends BorderPane {
 
         private final Spinner<Integer> spinnerX;
         private final Spinner<Integer> spinnerY;
+        private final SpinnerValueFactory.IntegerSpinnerValueFactory spinnerXModel;
+        private final SpinnerValueFactory.IntegerSpinnerValueFactory spinnerYModel;
         private final HBox valueEditorPane;
 
         public TilePropertyEditor(PropertyInfo propertyInfo, String propertyValue) {
             super(propertyInfo);
 
             spinnerX = new Spinner<>(0, 1000, 0);
+            spinnerXModel = (SpinnerValueFactory.IntegerSpinnerValueFactory) spinnerX.getValueFactory();
             spinnerX.setMaxWidth(60);
             spinnerX.disableProperty().bind(enabled.not());
 
             spinnerY = new Spinner<>(0, 1000, 0);
+            spinnerYModel = (SpinnerValueFactory.IntegerSpinnerValueFactory) spinnerY.getValueFactory();
             spinnerY.setMaxWidth(60);
             spinnerY.disableProperty().bind(enabled.not());
 
@@ -204,19 +208,8 @@ public class WorldMapLayerPropertiesEditor extends BorderPane {
 
         @Override
         protected void updateEditorFromProperty() {
-            // what an idiotic API or am I the idiot?
-            if (spinnerX.getValueFactory() instanceof SpinnerValueFactory.IntegerSpinnerValueFactory ivf
-                && ivf.getMax() != worldMap().numCols() - 1) {
-                    spinnerX.setValueFactory(
-                        new SpinnerValueFactory.IntegerSpinnerValueFactory(
-                            0, worldMap().numCols() - 1, spinnerX.getValue()));
-            }
-            if (spinnerY.getValueFactory() instanceof SpinnerValueFactory.IntegerSpinnerValueFactory ivf
-                && ivf.getMax() != worldMap().numRows() - 1) {
-                    spinnerY.setValueFactory(
-                        new SpinnerValueFactory.IntegerSpinnerValueFactory(
-                            0, worldMap().numRows() - 1, spinnerY.getValue()));
-            }
+            spinnerXModel.setMax(worldMap().numCols() - 1);
+            spinnerYModel.setMax(worldMap().numRows() - 1);
             String propertyValue = worldMap().properties(layerID).get(propertyInfo.name());
             WorldMapParser.parseTile(propertyValue).ifPresent(tile -> {
                 spinnerX.getValueFactory().setValue(tile.x());
