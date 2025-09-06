@@ -59,8 +59,8 @@ public class EditorUI {
     private final EditorPaletteTabPane editorPaletteTabPane;
 
     private Pane propertyEditorsPane;
-    private PropertyEditorPane terrainPropertiesEditorPane;
-    private PropertyEditorPane foodPropertiesEditorPane;
+    private WorldMapLayerPropertiesEditor terrainPropertiesEditorPane;
+    private WorldMapLayerPropertiesEditor foodPropertiesEditorPane;
 
     private TabPane tabPaneEditorViews;
     private Tab tabEditCanvas;
@@ -625,12 +625,12 @@ public class EditorUI {
     }
 
     private void createPropertyEditors() {
-        terrainPropertiesEditorPane = new PropertyEditorPane(this);
-        terrainPropertiesEditorPane.enabledPy.bind(editModeProperty().map(mode -> mode != EditMode.INSPECT));
+        terrainPropertiesEditorPane = new WorldMapLayerPropertiesEditor(this, LayerID.TERRAIN);
+        terrainPropertiesEditorPane.enabledProperty().bind(editModeProperty().map(mode -> mode != EditMode.INSPECT));
         terrainPropertiesEditorPane.setPadding(new Insets(10,0,0,0));
 
-        foodPropertiesEditorPane = new PropertyEditorPane(this);
-        foodPropertiesEditorPane.enabledPy.bind(editModeProperty().map(mode -> mode != EditMode.INSPECT));
+        foodPropertiesEditorPane = new WorldMapLayerPropertiesEditor(this, LayerID.FOOD);
+        foodPropertiesEditorPane.enabledProperty().bind(editModeProperty().map(mode -> mode != EditMode.INSPECT));
         foodPropertiesEditorPane.setPadding(new Insets(10,0,0,0));
 
         var terrainPropertiesPane = new TitledPane(translated("terrain"), terrainPropertiesEditorPane);
@@ -807,14 +807,14 @@ public class EditorUI {
 
     public void onTerrainMapChanged(WorldMap worldMap) {
         if (terrainPropertiesEditorPane != null) {
-            terrainPropertiesEditorPane.setTileMap(worldMap, LayerID.TERRAIN);
+            terrainPropertiesEditorPane.rebuildPropertyEditors();
         }
         preview3D.updateMaze();
     }
 
     public void onFoodMapChanged(WorldMap worldMap) {
         if (foodPropertiesEditorPane != null) {
-            foodPropertiesEditorPane.setTileMap(worldMap, LayerID.FOOD);
+            foodPropertiesEditorPane.rebuildPropertyEditors();
         }
         preview3D.updateFood();
     }
