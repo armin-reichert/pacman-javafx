@@ -21,6 +21,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
@@ -385,8 +386,9 @@ public class WorldMapLayerPropertiesEditor extends BorderPane {
                 grid.add(btnDelete, 2, row);
             }
             else {
-                var dummy = new Label("");
-                grid.add(dummy, 2, row);
+                var spacer = new Region();
+                spacer.setMinWidth(30);
+                grid.add(spacer, 2, row);
             }
             ++row;
         }
