@@ -8,23 +8,12 @@ import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
 import static de.amr.pacmanfx.lib.tilemap.WorldMapFormatter.formatTile;
 import static de.amr.pacmanfx.model.WorldMapProperty.*;
+import static de.amr.pacmanfx.tilemap.editor.TileMapEditor.*;
 import static java.util.Objects.requireNonNull;
 
 public class Action_PlaceArcadeHouse extends AbstractEditorAction<Void> {
-
-    public static final int ARCADE_HOUSE_WIDTH = 8;
-    public static final int ARCADE_HOUSE_HEIGHT = 5;
-
-    public static final byte[][] ARCADE_HOUSE_CODE = {
-        { ARC_NW.$,  WALL_H.$,  WALL_H.$,  DOOR  .$,  DOOR  .$, WALL_H.$, WALL_H.$, ARC_NE.$ },
-        { WALL_V.$,  EMPTY .$,  EMPTY .$,  EMPTY .$,  EMPTY .$, EMPTY .$, EMPTY .$, WALL_V.$ },
-        { WALL_V.$,  EMPTY .$,  EMPTY .$,  EMPTY .$,  EMPTY .$, EMPTY .$, EMPTY .$, WALL_V.$ },
-        { WALL_V.$,  EMPTY .$,  EMPTY .$,  EMPTY .$,  EMPTY .$, EMPTY .$, EMPTY .$, WALL_V.$ },
-        { ARC_SW.$,  WALL_H.$,  WALL_H.$,  WALL_H.$,  WALL_H.$, WALL_H.$, WALL_H.$, ARC_SE.$ },
-    };
 
     private final Vector2i minTile;
     private final Vector2i maxTile;

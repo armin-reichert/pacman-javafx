@@ -9,6 +9,7 @@ import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.lib.tilemap.WorldMapFormatter;
 import de.amr.pacmanfx.lib.tilemap.WorldMapParser;
 import de.amr.pacmanfx.model.WorldMapProperty;
+import de.amr.pacmanfx.tilemap.editor.actions.Action_DeleteArcadeHouse;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -25,6 +26,8 @@ import org.tinylog.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
+import static de.amr.pacmanfx.model.WorldMapProperty.POS_HOUSE_MAX_TILE;
+import static de.amr.pacmanfx.model.WorldMapProperty.POS_HOUSE_MIN_TILE;
 import static de.amr.pacmanfx.tilemap.editor.EditorUtil.formatColor;
 import static de.amr.pacmanfx.tilemap.editor.EditorUtil.parseColor;
 import static java.util.Objects.requireNonNull;
@@ -296,7 +299,6 @@ public class WorldMapLayerPropertiesEditor extends BorderPane {
         ui.editor().setWorldMapChanged();
         ui.editor().setEdited(true);
         ui.messageDisplay().showMessage("New property %s added".formatted(propertyName), 1, MessageType.INFO);
-        rebuildPropertyEditors();
     }
 
     private void addNewPositionProperty(String propertyName) {
@@ -308,7 +310,6 @@ public class WorldMapLayerPropertiesEditor extends BorderPane {
         ui.messageDisplay().showMessage("New property %s added".formatted(propertyName), 1, MessageType.INFO);
         ui.editor().setWorldMapChanged();
         ui.editor().setEdited(true);
-        rebuildPropertyEditors();
     }
 
     private void addNewTextProperty(String propertyName) {
@@ -320,17 +321,20 @@ public class WorldMapLayerPropertiesEditor extends BorderPane {
         ui.editor().setWorldMapChanged();
         ui.editor().setEdited(true);
         ui.messageDisplay().showMessage("New property %s added".formatted(propertyName), 1, MessageType.INFO);
-        rebuildPropertyEditors();
     }
 
-
     private void deleteProperty(String propertyName) {
-        if (worldMap().properties(layerID).containsKey(propertyName)) {
-            worldMap().properties(layerID).remove(propertyName);
+        var layerProperties = worldMap().properties(layerID);
+        if (layerProperties.containsKey(propertyName)) {
+            //TODO find more general solution
+            if (POS_HOUSE_MIN_TILE.equals(propertyName) || POS_HOUSE_MAX_TILE.equals(propertyName)) {
+                new Action_DeleteArcadeHouse(ui.editor()).execute();
+            } else {
+                layerProperties.remove(propertyName);
+                ui.messageDisplay().showMessage("Property '%s' deleted".formatted(propertyName), 3, MessageType.INFO);
+            }
             ui.editor().setWorldMapChanged();
             ui.editor().setEdited(true);
-            rebuildPropertyEditors();
-            ui.messageDisplay().showMessage("Property '%s' deleted".formatted(propertyName), 3, MessageType.INFO);
         }
     }
 

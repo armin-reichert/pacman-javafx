@@ -22,11 +22,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.SAMPLE_MAPS_PATH;
 import static de.amr.pacmanfx.tilemap.editor.EditorUtil.generateSourceCode;
 import static java.util.Objects.requireNonNull;
 
 public class TileMapEditor {
+
+    public static final int ARCADE_HOUSE_WIDTH = 8;
+    public static final int ARCADE_HOUSE_HEIGHT = 5;
+
+    public static final byte[][] ARCADE_HOUSE_CODE = {
+            { ARC_NW.$,  WALL_H.$,  WALL_H.$,  DOOR  .$,  DOOR  .$, WALL_H.$, WALL_H.$, ARC_NE.$ },
+            { WALL_V.$,  EMPTY .$,  EMPTY .$,  EMPTY .$,  EMPTY .$, EMPTY .$, EMPTY .$, WALL_V.$ },
+            { WALL_V.$,  EMPTY .$,  EMPTY .$,  EMPTY .$,  EMPTY .$, EMPTY .$, EMPTY .$, WALL_V.$ },
+            { WALL_V.$,  EMPTY .$,  EMPTY .$,  EMPTY .$,  EMPTY .$, EMPTY .$, EMPTY .$, WALL_V.$ },
+            { ARC_SW.$,  WALL_H.$,  WALL_H.$,  WALL_H.$,  WALL_H.$, WALL_H.$, WALL_H.$, ARC_SE.$ },
+    };
+
 
     private SampleMaps sampleMaps;
     private final EditorUI ui;
