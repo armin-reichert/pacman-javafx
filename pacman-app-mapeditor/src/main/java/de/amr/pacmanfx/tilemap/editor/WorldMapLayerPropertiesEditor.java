@@ -59,12 +59,12 @@ public class WorldMapLayerPropertiesEditor extends BorderPane {
 
             nameEditor = new TextField(propertyInfo.name());
             nameEditor.setMinWidth(NAME_EDITOR_MIN_WIDTH);
-            if (!propertyInfo.permanent()) {
-                nameEditor.disableProperty().bind(enabled.not());
-                nameEditor.setOnAction(e -> onPropertyNameEdited(ui));
+            if (propertyInfo.permanent()) {
+                nameEditor.setDisable(true);
             }
             else {
-                //nameEditor.setDisable(true);
+                nameEditor.disableProperty().bind(enabled.not());
+                nameEditor.setOnAction(e -> onPropertyNameEdited(ui));
             }
         }
 
