@@ -625,11 +625,11 @@ public class EditorUI {
     }
 
     private void createPropertyEditors() {
-        terrainPropertiesEditorPane = new WorldMapLayerPropertiesEditor(this, LayerID.TERRAIN);
+        terrainPropertiesEditorPane = new WorldMapLayerPropertiesEditor(editor, messageDisplay, LayerID.TERRAIN);
         terrainPropertiesEditorPane.enabledProperty().bind(editModeProperty().map(mode -> mode != EditMode.INSPECT));
         terrainPropertiesEditorPane.setPadding(new Insets(10,0,0,0));
 
-        foodPropertiesEditorPane = new WorldMapLayerPropertiesEditor(this, LayerID.FOOD);
+        foodPropertiesEditorPane = new WorldMapLayerPropertiesEditor(editor, messageDisplay, LayerID.FOOD);
         foodPropertiesEditorPane.enabledProperty().bind(editModeProperty().map(mode -> mode != EditMode.INSPECT));
         foodPropertiesEditorPane.setPadding(new Insets(10,0,0,0));
 
