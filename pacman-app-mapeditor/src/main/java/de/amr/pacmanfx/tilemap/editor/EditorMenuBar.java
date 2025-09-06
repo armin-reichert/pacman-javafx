@@ -67,7 +67,7 @@ public class EditorMenuBar extends MenuBar {
         miAddHouse.setOnAction(actionEvent -> {
             int numRows = editor.currentWorldMap().numRows(), numCols = editor.currentWorldMap().numCols();
             int houseMinX = numCols / 2 - 4, houseMinY = numRows / 2 - 3;
-            new Action_PlaceArcadeHouse(editor, editor.currentWorldMap(), Vector2i.of(houseMinX, houseMinY)).execute();
+            new Action_PlaceArcadeHouse(editor, Vector2i.of(houseMinX, houseMinY)).execute();
         });
 
         miAddHouse.disableProperty().bind(ui.editModeProperty().map(mode -> mode == EditMode.INSPECT));
@@ -89,7 +89,7 @@ public class EditorMenuBar extends MenuBar {
         miIdentifyTiles.setOnAction(actionEvent -> new Action_FillMapFromTemplate(ui).execute());
 
         var miAssignDefaultColors = new MenuItem("Assign default colors"); //TODO localize
-        miAssignDefaultColors.setOnAction(actionEvent -> new Action_SetDefaultMapColors(editor, editor.currentWorldMap()).execute());
+        miAssignDefaultColors.setOnAction(actionEvent -> new Action_SetDefaultMapColors(editor).execute());
         miAssignDefaultColors.disableProperty().bind(ui.editModeProperty().map(mode -> mode == EditMode.INSPECT));
 
         Menu menuEdit = new Menu(translated("menu.edit"), NO_GRAPHIC,

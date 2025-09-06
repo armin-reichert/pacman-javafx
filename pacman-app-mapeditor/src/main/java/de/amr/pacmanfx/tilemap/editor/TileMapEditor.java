@@ -61,7 +61,7 @@ public class TileMapEditor {
         loadSampleMaps();
         setCurrentDirectory(workDir);
         setCurrentWorldMap(WorldMap.emptyMap(28, 36));
-        new Action_SetDefaultMapColors(this, currentWorldMap()).execute();
+        new Action_SetDefaultMapColors(this).execute();
         edited = false;
         ui.init();
     }

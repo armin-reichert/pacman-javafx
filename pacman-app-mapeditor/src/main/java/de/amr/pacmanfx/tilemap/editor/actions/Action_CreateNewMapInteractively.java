@@ -63,17 +63,17 @@ public class Action_CreateNewMapInteractively extends AbstractEditorUIAction<Voi
     }
 
     private void createPreconfiguredMap(TileMapEditor editor, int numRows, int numCols) {
-        var worldMap = WorldMap.emptyMap(numCols, numRows);
+        editor.setCurrentWorldMap(WorldMap.emptyMap(numCols, numRows));
+        WorldMap worldMap = editor.currentWorldMap();
+        new Action_SetDefaultMapColors(editor).execute();
+        new Action_SetDefaultScatterPositions(editor).execute();
+        new Action_AddBorderWall(editor).execute();
         if (worldMap.numRows() >= 20) {
             Vector2i houseMinTile = Vector2i.of(numCols / 2 - 4, numRows / 2 - 3);
             worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_PAC,   formatTile(houseMinTile.plus(3, 11)));
             worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_BONUS, formatTile(houseMinTile.plus(3, 5)));
-            new Action_PlaceArcadeHouse(editor, worldMap, houseMinTile).execute();
+            new Action_PlaceArcadeHouse(editor, houseMinTile).execute();
         }
         worldMap.buildObstacleList();
-        editor.setCurrentWorldMap(worldMap);
-        new Action_SetDefaultMapColors(editor, worldMap).execute();
-        new Action_SetDefaultScatterPositions(editor, worldMap).execute();
-        new Action_AddBorderWall(editor).execute();
     }
 }

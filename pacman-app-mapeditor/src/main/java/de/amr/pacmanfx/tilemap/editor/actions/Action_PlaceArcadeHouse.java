@@ -23,17 +23,16 @@ public class Action_PlaceArcadeHouse extends AbstractEditorAction<Void> {
         { ARC_SW.$,  WALL_H.$,  WALL_H.$,  WALL_H.$,  WALL_H.$,  WALL_H.$,  WALL_H.$,  ARC_SE.$ },
     };
 
-    private final WorldMap worldMap;
     private final Vector2i houseMinTile;
 
-    public Action_PlaceArcadeHouse(TileMapEditor editor, WorldMap worldMap, Vector2i houseMinTile) {
+    public Action_PlaceArcadeHouse(TileMapEditor editor, Vector2i houseMinTile) {
         super(editor);
-        this.worldMap = requireNonNull(worldMap);
         this.houseMinTile = requireNonNull(houseMinTile);
     }
 
     @Override
     public Void execute() {
+        WorldMap worldMap = editor.currentWorldMap();
         Vector2i houseMaxTile = houseMinTile.plus(7, 4);
 
         if (worldMap.outOfWorld(houseMinTile) || worldMap.outOfWorld(houseMaxTile)) {

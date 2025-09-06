@@ -11,7 +11,11 @@ import static java.util.Objects.requireNonNull;
 
 public class Action_SetDefaultMapColors extends AbstractEditorAction<Void> {
 
-    private final WorldMap worldMap;
+    private WorldMap worldMap;
+
+    public Action_SetDefaultMapColors(TileMapEditor editor) {
+        super(editor);
+    }
 
     public Action_SetDefaultMapColors(TileMapEditor editor, WorldMap worldMap) {
         super(editor);
@@ -20,6 +24,9 @@ public class Action_SetDefaultMapColors extends AbstractEditorAction<Void> {
 
     @Override
     public Void execute() {
+        if (worldMap == null) {
+            worldMap =  editor.currentWorldMap();
+        }
         worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.COLOR_WALL_STROKE, formatColor(MS_PACMAN_COLOR_WALL_STROKE));
         worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.COLOR_WALL_FILL, formatColor(MS_PACMAN_COLOR_WALL_FILL));
         worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.COLOR_DOOR, formatColor(MS_PACMAN_COLOR_DOOR));

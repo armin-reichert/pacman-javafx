@@ -100,7 +100,7 @@ public class Action_FillMapFromTemplate extends AbstractEditorUIAction<Void> {
 
         if (houseMinTile != null && houseMaxTile != null
                 && houseMinTile.x() < houseMaxTile.x() && houseMinTile.y() < houseMaxTile.y()) {
-            new Action_PlaceArcadeHouse(editor, worldMap, houseMinTile).execute();
+            new Action_PlaceArcadeHouse(editor, houseMinTile).execute();
         }
 
         editor.setWorldMapChanged();
