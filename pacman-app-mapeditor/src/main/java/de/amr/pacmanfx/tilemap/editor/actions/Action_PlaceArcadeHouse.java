@@ -15,19 +15,23 @@ import static java.util.Objects.requireNonNull;
 
 public class Action_PlaceArcadeHouse extends AbstractEditorAction<Void> {
 
+    private final WorldMap worldMap;
     private final Vector2i minTile;
     private final Vector2i maxTile;
 
     public Action_PlaceArcadeHouse(TileMapEditor editor, Vector2i minTile) {
+        this(editor, editor.currentWorldMap(), minTile);
+    }
+
+    public Action_PlaceArcadeHouse(TileMapEditor editor, WorldMap worldMap, Vector2i minTile) {
         super(editor);
+        this.worldMap = requireNonNull(worldMap);
         this.minTile = requireNonNull(minTile);
         this.maxTile = minTile.plus(ARCADE_HOUSE_WIDTH - 1, ARCADE_HOUSE_HEIGHT - 1);
     }
 
     @Override
     public Void execute() {
-        WorldMap worldMap = editor.currentWorldMap();
-
         if (worldMap.outOfWorld(minTile) || worldMap.outOfWorld(maxTile)) {
             Logger.error("Illegal house position min: {} max: {}", minTile, maxTile);
             return null;

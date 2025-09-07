@@ -10,8 +10,8 @@ public class Action_CreateEmptyMap extends AbstractEditorAction<WorldMap> {
 
     public Action_CreateEmptyMap(TileMapEditor editor, int numRows, int numCols) {
         super(editor);
-        this.numCols = numCols;
         this.numRows = numRows;
+        this.numCols = numCols;
     }
 
     @Override

@@ -52,13 +52,14 @@ public class Action_CreateNewMapInteractively extends AbstractEditorUIAction<Voi
         dialog.showAndWait().ifPresent(input -> {
             Vector2i sizeInTiles = parseSize(input).orElse(null);
             if (sizeInTiles != null) {
-                int cols = sizeInTiles.x(), rows = sizeInTiles.y();
+                int numCols = sizeInTiles.x(), numRows = sizeInTiles.y();
                 if (preconfigured) {
-                    createPreconfiguredMap(rows, cols);
+                    WorldMap newMap = new Action_CreatePreconfiguredMap(editor, numRows, numCols).execute();
+                    editor.setCurrentWorldMap(newMap);
                 } else {
-                    WorldMap emptyMap = WorldMap.emptyMap(cols, rows);
-                    new Action_SetDefaultMapColors(editor, emptyMap).execute();
-                    editor.setCurrentWorldMap(emptyMap);
+                    WorldMap newMap = WorldMap.emptyMap(numCols, numRows);
+                    new Action_SetDefaultMapColors(editor, newMap).execute();
+                    editor.setCurrentWorldMap(newMap);
                 }
                 editor.setCurrentFile(null);
                 editor.setTemplateImage(null);
@@ -86,21 +87,5 @@ public class Action_CreateNewMapInteractively extends AbstractEditorUIAction<Voi
             return false;
         }
         return true;
-    }
-
-    //TODO create action
-    private void createPreconfiguredMap(int numRows, int numCols) {
-        WorldMap worldMap = WorldMap.emptyMap(numCols, numRows);
-        editor.setCurrentWorldMap(worldMap);
-        new Action_SetDefaultMapColors(editor).execute();
-        new Action_SetDefaultScatterPositions(editor).execute();
-        new Action_AddBorderWall(editor).execute();
-        if (worldMap.numRows() >= 20) {
-            Vector2i houseMinTile = Vector2i.of(numCols / 2 - 4, numRows / 2 - 3);
-            new Action_PlaceArcadeHouse(editor, houseMinTile).execute();
-            worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_PAC,   formatTile(houseMinTile.plus(3, 11)));
-            worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_BONUS, formatTile(houseMinTile.plus(3, 5)));
-        }
-        worldMap.buildObstacleList();
     }
 }

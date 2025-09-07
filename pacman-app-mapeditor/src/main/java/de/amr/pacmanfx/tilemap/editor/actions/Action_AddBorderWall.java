@@ -5,20 +5,27 @@ import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
 
+import static java.util.Objects.requireNonNull;
+
 public class Action_AddBorderWall extends AbstractEditorAction<Void> {
 
+    private final WorldMap worldMap;
+
     public Action_AddBorderWall(TileMapEditor editor) {
+        this(editor, editor.currentWorldMap());
+    }
+
+    public Action_AddBorderWall(TileMapEditor editor, WorldMap worldMap) {
         super(editor);
+        this.worldMap = requireNonNull(worldMap);
     }
 
     private void setTerrain(int row, int col, TerrainTile terrainTile) {
-        new Action_SetTerrainTileCode(editor, row, col, terrainTile.code()).execute();
+        new Action_SetTerrainTileCode(editor, worldMap, row, col, terrainTile.code()).execute();
     }
 
     @Override
     public Void execute() {
-        WorldMap worldMap = editor.currentWorldMap();
-
         int firstRow = GameLevel.EMPTY_ROWS_BELOW_MAZE + 1;
         int lastRow = worldMap.numRows() - 1 - GameLevel.EMPTY_ROWS_BELOW_MAZE;
         int firstCol = 0;

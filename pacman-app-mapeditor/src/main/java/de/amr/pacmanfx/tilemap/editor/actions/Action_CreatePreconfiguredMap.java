@@ -1,0 +1,37 @@
+package de.amr.pacmanfx.tilemap.editor.actions;
+
+import de.amr.pacmanfx.lib.Vector2i;
+import de.amr.pacmanfx.lib.tilemap.LayerID;
+import de.amr.pacmanfx.lib.tilemap.WorldMap;
+import de.amr.pacmanfx.model.WorldMapProperty;
+import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
+
+import static de.amr.pacmanfx.lib.tilemap.WorldMapFormatter.formatTile;
+
+public class Action_CreatePreconfiguredMap extends AbstractEditorAction<WorldMap> {
+
+    private final int numRows;
+    private final int numCols;
+
+    public Action_CreatePreconfiguredMap(TileMapEditor editor, int numRows, int numCols) {
+        super(editor);
+        this.numRows = numRows;
+        this.numCols = numCols;
+    }
+
+    @Override
+    public WorldMap execute() {
+        WorldMap newMap = WorldMap.emptyMap(numCols, numRows);
+        new Action_SetDefaultMapColors(editor, newMap).execute();
+        new Action_SetDefaultScatterPositions(editor, newMap).execute();
+        new Action_AddBorderWall(editor, newMap).execute();
+        if (newMap.numRows() >= 20) {
+            Vector2i houseMinTile = Vector2i.of(numCols / 2 - 4, numRows / 2 - 3);
+            new Action_PlaceArcadeHouse(editor, newMap, houseMinTile).execute();
+            newMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_PAC,   formatTile(houseMinTile.plus(3, 11)));
+            newMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_BONUS, formatTile(houseMinTile.plus(3, 5)));
+        }
+        newMap.buildObstacleList();
+        return newMap;
+    }
+}
