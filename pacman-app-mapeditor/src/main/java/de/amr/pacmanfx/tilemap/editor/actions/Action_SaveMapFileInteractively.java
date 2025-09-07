@@ -1,7 +1,11 @@
+/*
+Copyright (c) 2021-2025 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.pacmanfx.tilemap.editor.actions;
 
-import de.amr.pacmanfx.tilemap.editor.MessageType;
 import de.amr.pacmanfx.tilemap.editor.EditorUI;
+import de.amr.pacmanfx.tilemap.editor.MessageType;
 import javafx.stage.FileChooser;
 import org.tinylog.Logger;
 
