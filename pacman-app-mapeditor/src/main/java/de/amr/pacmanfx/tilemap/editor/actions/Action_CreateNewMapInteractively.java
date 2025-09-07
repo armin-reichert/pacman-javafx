@@ -1,9 +1,7 @@
 package de.amr.pacmanfx.tilemap.editor.actions;
 
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
-import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.tilemap.editor.EditMode;
 import de.amr.pacmanfx.tilemap.editor.EditorUI;
 import de.amr.pacmanfx.tilemap.editor.MessageType;
@@ -12,7 +10,6 @@ import javafx.scene.Node;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextInputDialog;
 
-import static de.amr.pacmanfx.lib.tilemap.WorldMapFormatter.formatTile;
 import static de.amr.pacmanfx.tilemap.editor.EditorGlobals.translated;
 import static de.amr.pacmanfx.tilemap.editor.EditorUtil.parseSize;
 
@@ -53,14 +50,10 @@ public class Action_CreateNewMapInteractively extends AbstractEditorUIAction<Voi
             Vector2i sizeInTiles = parseSize(input).orElse(null);
             if (sizeInTiles != null) {
                 int numCols = sizeInTiles.x(), numRows = sizeInTiles.y();
-                if (preconfigured) {
-                    WorldMap newMap = new Action_CreatePreconfiguredMap(editor, numRows, numCols).execute();
-                    editor.setCurrentWorldMap(newMap);
-                } else {
-                    WorldMap newMap = WorldMap.emptyMap(numCols, numRows);
-                    new Action_SetDefaultMapColors(editor, newMap).execute();
-                    editor.setCurrentWorldMap(newMap);
-                }
+                WorldMap newMap = preconfigured
+                    ? new Action_CreatePreconfiguredMap(editor, numRows, numCols).execute()
+                    : new Action_CreateEmptyMap(editor, numRows, numCols).execute();
+                editor.setCurrentWorldMap(newMap);
                 editor.setCurrentFile(null);
                 editor.setTemplateImage(null);
                 if (ui.editModeIs(EditMode.INSPECT)) {
