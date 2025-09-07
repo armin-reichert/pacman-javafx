@@ -10,6 +10,7 @@ import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.tilemap.editor.actions.*;
 import de.amr.pacmanfx.tilemap.editor.palette.Palette;
 import de.amr.pacmanfx.tilemap.editor.palette.PaletteID;
+import de.amr.pacmanfx.tilemap.editor.properties.MapPropertiesEditor;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapColorScheme;
 import javafx.application.Platform;

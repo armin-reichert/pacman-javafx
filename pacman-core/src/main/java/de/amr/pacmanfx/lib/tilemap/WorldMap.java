@@ -296,7 +296,7 @@ public class WorldMap {
 
     public Stream<String> propertyNames(LayerID layerID) {
         assertValidLayerID(layerID);
-        return properties(layerID).keySet().stream().sorted();
+        return properties(layerID).keySet().stream();
     }
 
     public Vector2i getTileProperty(LayerID layerID, String propertyName, Vector2i defaultTile) {
