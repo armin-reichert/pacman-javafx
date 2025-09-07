@@ -29,7 +29,7 @@ public class Action_OpenTemplateCreateMap extends AbstractEditorUIAction<Void> {
                 if (ui.editModeIs(EditMode.INSPECT) || ui.editModeIs(EditMode.ERASE)) {
                     ui.setEditMode(EditMode.EDIT);
                 }
-                new Action_CreateMapFromTemplate(ui, image).execute();
+                new Action_SetEmptyMapFromTemplateImage(ui, image).execute();
             } else {
                 ui.messageDisplay().showMessage("Template image size seems dubious", 3, MessageType.WARNING);
             }

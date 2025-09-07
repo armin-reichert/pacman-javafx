@@ -565,7 +565,7 @@ public class EditorUI {
                 return;
             }
             editor().setTemplateImage(image);
-            new Action_CreateMapFromTemplate(this, image).execute();
+            new Action_SetEmptyMapFromTemplateImage(this, image).execute();
         }
     }
 

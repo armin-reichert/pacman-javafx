@@ -8,11 +8,11 @@ import javafx.scene.image.Image;
 
 import static de.amr.pacmanfx.Globals.TS;
 
-public class Action_CreateMapFromTemplate extends AbstractEditorUIAction<Void> {
+public class Action_SetEmptyMapFromTemplateImage extends AbstractEditorUIAction<Void> {
 
     private final Image image;
 
-    public Action_CreateMapFromTemplate(EditorUI ui, Image image) {
+    public Action_SetEmptyMapFromTemplateImage(EditorUI ui, Image image) {
         super(ui);
         this.image = image;
     }
