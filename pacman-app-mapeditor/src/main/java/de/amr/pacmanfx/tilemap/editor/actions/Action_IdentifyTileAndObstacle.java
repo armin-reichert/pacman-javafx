@@ -9,6 +9,7 @@ import javafx.scene.input.ClipboardContent;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
+import static de.amr.pacmanfx.model.WorldMapProperty.*;
 import static java.util.Objects.requireNonNull;
 
 public class Action_IdentifyTileAndObstacle extends AbstractEditorUIAction<String> {
@@ -24,12 +25,9 @@ public class Action_IdentifyTileAndObstacle extends AbstractEditorUIAction<Strin
     public String execute() {
         WorldMap worldMap = editor.currentWorldMap();
         byte terrainCode = worldMap.content(LayerID.TERRAIN, tile), foodCode = worldMap.content(LayerID.FOOD, tile);
-        boolean terrainEmpty = terrainCode == TerrainTile.EMPTY.code(), foodEmpty = foodCode == FoodTile.EMPTY.code();
         StringBuilder info = new StringBuilder();
-        if (!terrainEmpty) {
-            info.append(" ").append(terrainInfo(terrainCode));
-        }
-        if (!foodEmpty) {
+        info.append(" ").append(terrainInfo(worldMap, terrainCode));
+        if (foodCode != FoodTile.EMPTY.$) {
             info.append(" ").append(foodInfo(foodCode));
         }
         ui.messageDisplay().showMessage(info.toString().trim(), 4, MessageType.INFO);
@@ -37,8 +35,29 @@ public class Action_IdentifyTileAndObstacle extends AbstractEditorUIAction<Strin
         return identifyObstacleStartingAtTile(worldMap);
     }
 
-    private String terrainInfo(byte terrainCode) {
-        return "Terrain 0x%02X (%s)".formatted(terrainCode, terrainTileName(terrainCode));
+    private boolean isScatterTarget(WorldMap worldMap, String propertyName) {
+        Vector2i scatterTile = worldMap.getTerrainTileProperty(propertyName);
+        return scatterTile != null && scatterTile.equals(tile);
+    }
+
+    private String terrainInfo(WorldMap worldMap, byte terrainCode) {
+        if (terrainCode == TerrainTile.EMPTY.$) {
+            if (isScatterTarget(worldMap, POS_SCATTER_RED_GHOST)) {
+                return "Red Ghost Scatter Target";
+            }
+            if (isScatterTarget(worldMap, POS_SCATTER_PINK_GHOST)) {
+                return "Pink Ghost Scatter Target";
+            }
+            if (isScatterTarget(worldMap, POS_SCATTER_CYAN_GHOST)) {
+                return "Cyan Ghost Scatter Target";
+            }
+            if (isScatterTarget(worldMap, POS_SCATTER_ORANGE_GHOST)) {
+                return "Orange Ghost Scatter Target";
+            }
+        } else {
+            return "Terrain 0x%02X (%s)".formatted(terrainCode, terrainTileName(terrainCode));
+        }
+        return "";
     }
 
     private String foodInfo(byte foodCode) {
