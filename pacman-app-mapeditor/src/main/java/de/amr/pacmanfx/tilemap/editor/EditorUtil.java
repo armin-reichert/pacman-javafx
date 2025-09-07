@@ -58,7 +58,7 @@ public interface EditorUtil {
         return code;
     }
 
-    static Optional<Vector2i> parseSize(String cols_x_rows) {
+    static Optional<Vector2i> parseMapSize(String cols_x_rows) {
         String[] tuple = cols_x_rows.split("x");
         if (tuple.length != 2) {
             return Optional.empty();

@@ -28,10 +28,10 @@ public class EditorMenuBar extends MenuBar {
         // "File" menu
 
         var miNewPreconfiguredMap = new MenuItem(translated("menu.file.new"));
-        miNewPreconfiguredMap.setOnAction(actionEvent -> new Action_CreateNewMapInteractively(ui, true).execute());
+        miNewPreconfiguredMap.setOnAction(actionEvent -> new Action_SetNewMapInteractively(ui, true).execute());
 
         var miNewBlankMap = new MenuItem(translated("menu.file.new_blank_map"));
-        miNewBlankMap.setOnAction(actionEvent -> new Action_CreateNewMapInteractively(ui, false).execute());
+        miNewBlankMap.setOnAction(actionEvent -> new Action_SetNewMapInteractively(ui, false).execute());
 
         var miOpenMapFile = new MenuItem(translated("menu.file.open"));
         miOpenMapFile.setOnAction(actionEvent -> new Action_OpenMapFileInteractively(ui).execute());
