@@ -59,8 +59,8 @@ public class EditorUI {
     private final EditorPaletteTabPane editorPaletteTabPane;
 
     private Pane propertyEditorsPane;
-    private WorldMapLayerPropertiesEditor terrainPropertiesEditorPane;
-    private WorldMapLayerPropertiesEditor foodPropertiesEditorPane;
+    private MapPropertiesEditor terrainPropertiesEditorPane;
+    private MapPropertiesEditor foodPropertiesEditorPane;
 
     private TabPane tabPaneEditorViews;
     private Tab tabEditCanvas;
@@ -627,11 +627,11 @@ public class EditorUI {
     }
 
     private void createPropertyEditors() {
-        terrainPropertiesEditorPane = new WorldMapLayerPropertiesEditor(this, LayerID.TERRAIN);
+        terrainPropertiesEditorPane = new MapPropertiesEditor(this, LayerID.TERRAIN);
         terrainPropertiesEditorPane.enabledProperty().bind(editModeProperty().map(mode -> mode != EditMode.INSPECT));
         terrainPropertiesEditorPane.setPadding(new Insets(10,0,0,0));
 
-        foodPropertiesEditorPane = new WorldMapLayerPropertiesEditor(this, LayerID.FOOD);
+        foodPropertiesEditorPane = new MapPropertiesEditor(this, LayerID.FOOD);
         foodPropertiesEditorPane.enabledProperty().bind(editModeProperty().map(mode -> mode != EditMode.INSPECT));
         foodPropertiesEditorPane.setPadding(new Insets(10,0,0,0));
 

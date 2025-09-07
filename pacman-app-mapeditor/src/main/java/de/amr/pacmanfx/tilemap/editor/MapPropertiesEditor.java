@@ -33,7 +33,7 @@ import static de.amr.pacmanfx.tilemap.editor.EditorUtil.formatColor;
 import static de.amr.pacmanfx.tilemap.editor.EditorUtil.parseColor;
 import static java.util.Objects.requireNonNull;
 
-public class WorldMapLayerPropertiesEditor extends BorderPane {
+public class MapPropertiesEditor extends BorderPane {
 
     static final int NAME_EDITOR_MIN_WIDTH = 180;
     static final String SYMBOL_DELETE = "\u274C";
@@ -69,6 +69,11 @@ public class WorldMapLayerPropertiesEditor extends BorderPane {
             else {
                 nameEditor.disableProperty().bind(enabled.not());
                 nameEditor.setOnAction(e -> onPropertyNameEdited(ui));
+                nameEditor.focusedProperty().addListener((py, ov, hasFocus) -> {
+                    if (!hasFocus) {
+                        onPropertyNameEdited(ui);
+                    }
+                });
             }
         }
 
@@ -257,7 +262,7 @@ public class WorldMapLayerPropertiesEditor extends BorderPane {
     private final List<SinglePropertyEditor> propertyEditors = new ArrayList<>();
     private final GridPane grid = new GridPane();
 
-    public WorldMapLayerPropertiesEditor(EditorUI ui, LayerID layerID) {
+    public MapPropertiesEditor(EditorUI ui, LayerID layerID) {
         this.ui = requireNonNull(ui);
         this.layerID = requireNonNull(layerID);
 
