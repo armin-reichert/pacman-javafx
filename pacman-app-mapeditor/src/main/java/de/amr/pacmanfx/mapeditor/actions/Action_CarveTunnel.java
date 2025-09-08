@@ -31,64 +31,68 @@ public class Action_CarveTunnel extends EditorAction<Void> {
     public Void execute() {
         int depth = tunnelExit.x() + 1;
         if (canCarveTunnel(depth)) {
-            boolean symmetricModeBefore = editor.symmetricEditMode();
+            boolean savedSymmetricMode = editor.symmetricEditMode();
             editor.setSymmetricEditMode(true);
-            switch (depth) {
-                case 1 -> carveTunnelOfDepthOne();
-                default -> carveTunnel();
+            if (tunnelExit.x() == 0) {
+                carveTunnelOfDepthOne();
+            } else {
+                carveTunnel();
             }
-            editor.setSymmetricEditMode(symmetricModeBefore);
+            editor.setSymmetricEditMode(savedSymmetricMode);
         }
         return null;
     }
 
     private boolean canCarveTunnel(int depth) {
-        int x = tunnelExit.x(), y = tunnelExit.y();
-        if (x >= worldMap.numCols() / 2) {
+        int col = tunnelExit.x(), row = tunnelExit.y();
+        if (col >= worldMap.numCols() / 2) {
             return false;
         }
         int upperBorderY = GameLevel.EMPTY_ROWS_OVER_MAZE;
         int lowerBorderY = worldMap.numRows() - 1 - GameLevel.EMPTY_ROWS_BELOW_MAZE;
         if (depth == 1) {
-            return y > upperBorderY && y < lowerBorderY;
+            return row > upperBorderY && row < lowerBorderY;
         }
         else {
-            return y - 2 > upperBorderY && y + 2 < lowerBorderY;
+            return row - 2 > upperBorderY && row + 2 < lowerBorderY;
         }
     }
 
     private void carveTunnelOfDepthOne() {
-        Vector2i tileAbove = tunnelExit.minus(0, 1);
-        Vector2i tileBelow = tunnelExit.plus(0, 1);
-        byte above = tileAbove.y() == GameLevel.EMPTY_ROWS_OVER_MAZE ? TerrainTile.WALL_H.$ : TerrainTile.ARC_SE.$;
-        byte below = tileBelow.y() == worldMap.numRows() - 1 - GameLevel.EMPTY_ROWS_BELOW_MAZE ? TerrainTile.WALL_H.$ : TerrainTile.ARC_NE.$;
-        new Action_SetTerrainTileCode(editor, worldMap, tileAbove, above).execute();
-        new Action_SetTerrainTileCode(editor, worldMap, tunnelExit, TerrainTile.TUNNEL.$).execute();
-        new Action_SetTerrainTileCode(editor, worldMap, tileBelow, below).execute();
+        int col = tunnelExit.x(), row = tunnelExit.y();;
+        int upperBorderY = GameLevel.EMPTY_ROWS_OVER_MAZE;
+        int lowerBorderY = worldMap.numRows() - 1 - GameLevel.EMPTY_ROWS_BELOW_MAZE;
+        placeSymmetric(row - 1, col, row == upperBorderY + 1 ? TerrainTile.WALL_H.$ : TerrainTile.ARC_SE.$);
+        placeSymmetric(row, col, TerrainTile.TUNNEL.$);
+        placeSymmetric(row + 1, col, row == lowerBorderY - 1 ? TerrainTile.WALL_H.$ : TerrainTile.ARC_NE.$);
     }
 
     private void carveTunnel() {
         int row = tunnelExit.y();;
         for (int x = tunnelExit.x(); x >= 0; --x) {
             if (x == 0) {
-                new Action_SetTerrainTileCode(editor, worldMap, row - 2, x, TerrainTile.ARC_SW.$).execute();
-                new Action_SetTerrainTileCode(editor, worldMap, row - 1, x, TerrainTile.WALL_H.$).execute();
-                new Action_SetTerrainTileCode(editor, worldMap, row + 1, x, TerrainTile.WALL_H.$).execute();
-                new Action_SetTerrainTileCode(editor, worldMap, row + 2, x, TerrainTile.ARC_NW.$).execute();
+                placeSymmetric(row - 2, x, TerrainTile.ARC_SW.$);
+                placeSymmetric(row - 1, x, TerrainTile.WALL_H.$);
+                placeSymmetric(row + 1, x, TerrainTile.WALL_H.$);
+                placeSymmetric(row + 2, x, TerrainTile.ARC_NW.$);
             }
             else if (x == tunnelExit.x()) {
-                new Action_SetTerrainTileCode(editor, worldMap, row - 2, x, TerrainTile.ARC_NE.$).execute();
-                new Action_SetTerrainTileCode(editor, worldMap, row - 1, x, TerrainTile.ARC_SE.$).execute();
-                new Action_SetTerrainTileCode(editor, worldMap, row + 1, x, TerrainTile.ARC_NE.$).execute();
-                new Action_SetTerrainTileCode(editor, worldMap, row + 2, x, TerrainTile.ARC_SE.$).execute();
+                placeSymmetric(row - 2, x, TerrainTile.ARC_NE.$);
+                placeSymmetric(row - 1, x, TerrainTile.ARC_SE.$);
+                placeSymmetric(row + 1, x, TerrainTile.ARC_NE.$);
+                placeSymmetric(row + 2, x, TerrainTile.ARC_SE.$);
             }
             else {
-                new Action_SetTerrainTileCode(editor, worldMap, row - 2, x, TerrainTile.WALL_H.$).execute();
-                new Action_SetTerrainTileCode(editor, worldMap, row - 1, x, TerrainTile.WALL_H.$).execute();
-                new Action_SetTerrainTileCode(editor, worldMap, row + 1, x, TerrainTile.WALL_H.$).execute();
-                new Action_SetTerrainTileCode(editor, worldMap, row + 2, x, TerrainTile.WALL_H.$).execute();
+                placeSymmetric(row - 2, x, TerrainTile.WALL_H.$);
+                placeSymmetric(row - 1, x, TerrainTile.WALL_H.$);
+                placeSymmetric(row + 1, x, TerrainTile.WALL_H.$);
+                placeSymmetric(row + 2, x, TerrainTile.WALL_H.$);
             }
-            new Action_SetTerrainTileCode(editor, worldMap, row,     x, TerrainTile.TUNNEL.$).execute();
+            placeSymmetric(row, x, TerrainTile.TUNNEL.$);
         }
+    }
+
+    private void placeSymmetric(int row, int col, byte code) {
+        new Action_SetTerrainTileCode(editor, worldMap, row, col, code).execute();
     }
 }
