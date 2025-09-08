@@ -81,39 +81,32 @@ public class Maze3D extends Group {
 
     public BooleanProperty terrainVisibleProperty() { return terrainVisible; }
 
-    public final EditorAction<Void> actionRotateLeft = () -> {
+    public final Runnable actionRotateLeft = () -> {
         rotateBy(-2);
-        return null;
     };
 
-    public final EditorAction<Void> actionRotateRight = () -> {
+    public final Runnable actionRotateRight = () -> {
         rotateBy(2);
-        return null;
     };
 
-    public final EditorAction<Void> actionMoveTowardsUser = () -> {
+    public final Runnable actionMoveTowardsUser = () -> {
         setTranslateY(getTranslateY() + 10);
-        return null;
     };
 
-    public final EditorAction<Void> actionMoveAwayFromUser = () -> {
+    public final Runnable actionMoveAwayFromUser = () -> {
         setTranslateY(getTranslateY() - 10);
-        return null;
     };
 
-    public final EditorAction<Void> actionMoveRight = () -> {
+    public final Runnable actionMoveRight = () -> {
         setTranslateX(getTranslateX() - 10);
-        return null;
     };
 
-    public final EditorAction<Void> actionMoveLeft = () -> {
+    public final Runnable actionMoveLeft = () -> {
         setTranslateX(getTranslateX() + 10);
-        return null;
     };
 
-    public final EditorAction<Void> actionToggleWireframe = () -> {
+    public final Runnable actionToggleWireframe = () -> {
         wireframe.set(!wireframe.get());
-        return null;
     };
 
     private final Group mazeGroup = new Group();

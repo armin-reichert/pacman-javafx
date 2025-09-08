@@ -117,18 +117,18 @@ public class Preview3D {
         boolean control = keyEvent.isControlDown(), shift = keyEvent.isShiftDown();
         switch (keyEvent.getCode()) {
             case KeyCode.LEFT -> {
-                if (control && shift) maze3D.actionMoveLeft.execute();
-                else if (control)     maze3D.actionRotateLeft.execute();
+                if (control && shift) maze3D.actionMoveLeft.run();
+                else if (control)     maze3D.actionRotateLeft.run();
             }
             case KeyCode.RIGHT -> {
-                if (control && shift) maze3D.actionMoveRight.execute();
-                else if (control)     maze3D.actionRotateRight.execute();
+                if (control && shift) maze3D.actionMoveRight.run();
+                else if (control)     maze3D.actionRotateRight.run();
             }
             case KeyCode.UP -> {
-                if (control && shift) maze3D.actionMoveTowardsUser.execute();
+                if (control && shift) maze3D.actionMoveTowardsUser.run();
             }
             case KeyCode.DOWN -> {
-                if (control && shift) maze3D.actionMoveAwayFromUser.execute();
+                if (control && shift) maze3D.actionMoveAwayFromUser.run();
             }
         }
     }
@@ -136,7 +136,7 @@ public class Preview3D {
     private void onKeyTyped(KeyEvent e) {
         String key = e.getCharacter();
         if (key.equals("w")) {
-            maze3D.actionToggleWireframe.execute();
+            maze3D.actionToggleWireframe.run();
         }
     }
 }
