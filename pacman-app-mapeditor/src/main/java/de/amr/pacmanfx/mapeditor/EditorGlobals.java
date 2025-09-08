@@ -16,7 +16,6 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.text.MessageFormat;
 import java.util.Map;
-import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import static de.amr.pacmanfx.model.WorldMapProperty.*;
@@ -24,7 +23,7 @@ import static java.util.Objects.requireNonNull;
 
 public class EditorGlobals {
 
-    public static final int UPDATE_FREQ = 30; // Hz
+    public static final int UPDATE_FREQ = 20; // Hz
 
     public static final short TOOL_SIZE = 32;
     public static final short MIN_GRID_SIZE = 8;
@@ -91,10 +90,9 @@ public class EditorGlobals {
         try {
             return MessageFormat.format(TEXT_BUNDLE.getString(key), args);
         }
-        catch (MissingResourceException x) {
-            Logger.error("No resource with key {} found in {}", key, TEXT_BUNDLE);
+        catch (Exception x) {
+            Logger.error("Error processing translated text with key {} from bundle {}", key, TEXT_BUNDLE);
             return "[%s]".formatted(key);
         }
     }
-
 }
