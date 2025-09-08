@@ -298,7 +298,7 @@ public abstract class MovingActor extends Actor {
                 }
             }
         }
-        // if not directory could be determined, reverse move direction (leave dead-end)
+        // if no direction could be determined, reverse (exit from dead-end)
         setWishDir(candidateDir != null ? candidateDir : moveDir().opposite());
     }
 
