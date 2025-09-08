@@ -68,27 +68,27 @@ public class Action_CarveTunnel extends EditorAction<Void> {
     }
 
     private void carveTunnel() {
-        int row = tunnelExit.y();;
-        for (int x = tunnelExit.x(); x >= 0; --x) {
-            if (x == 0) {
-                placeSymmetric(row - 2, x, TerrainTile.ARC_SW.$);
-                placeSymmetric(row - 1, x, TerrainTile.WALL_H.$);
-                placeSymmetric(row + 1, x, TerrainTile.WALL_H.$);
-                placeSymmetric(row + 2, x, TerrainTile.ARC_NW.$);
+        int row = tunnelExit.y();
+        for (int col = tunnelExit.x(); col >= 0; --col) {
+            if (col == 0) {
+                placeSymmetric(row - 2, col, TerrainTile.ARC_SW.$);
+                placeSymmetric(row - 1, col, TerrainTile.WALL_H.$);
+                placeSymmetric(row + 1, col, TerrainTile.WALL_H.$);
+                placeSymmetric(row + 2, col, TerrainTile.ARC_NW.$);
             }
-            else if (x == tunnelExit.x()) {
-                placeSymmetric(row - 2, x, TerrainTile.ARC_NE.$);
-                placeSymmetric(row - 1, x, TerrainTile.ARC_SE.$);
-                placeSymmetric(row + 1, x, TerrainTile.ARC_NE.$);
-                placeSymmetric(row + 2, x, TerrainTile.ARC_SE.$);
+            else if (col == tunnelExit.x()) {
+                placeSymmetric(row - 2, col, TerrainTile.ARC_NE.$);
+                placeSymmetric(row - 1, col, TerrainTile.ARC_SE.$);
+                placeSymmetric(row + 1, col, TerrainTile.ARC_NE.$);
+                placeSymmetric(row + 2, col, TerrainTile.ARC_SE.$);
             }
             else {
-                placeSymmetric(row - 2, x, TerrainTile.WALL_H.$);
-                placeSymmetric(row - 1, x, TerrainTile.WALL_H.$);
-                placeSymmetric(row + 1, x, TerrainTile.WALL_H.$);
-                placeSymmetric(row + 2, x, TerrainTile.WALL_H.$);
+                placeSymmetric(row - 2, col, TerrainTile.WALL_H.$);
+                placeSymmetric(row - 1, col, TerrainTile.WALL_H.$);
+                placeSymmetric(row + 1, col, TerrainTile.WALL_H.$);
+                placeSymmetric(row + 2, col, TerrainTile.WALL_H.$);
             }
-            placeSymmetric(row, x, TerrainTile.TUNNEL.$);
+            placeSymmetric(row, col, TerrainTile.TUNNEL.$);
         }
     }
 
