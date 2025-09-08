@@ -13,7 +13,7 @@ import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
 
-public class Action_CarveTunnel extends AbstractEditorUIAction<Void> {
+public class Action_CarveTunnel extends EditorUIAction<Void> {
 
     private final WorldMap worldMap;
     private final Vector2i borderTile;

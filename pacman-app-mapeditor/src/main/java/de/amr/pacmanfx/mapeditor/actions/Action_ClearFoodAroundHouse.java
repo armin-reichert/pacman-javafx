@@ -15,7 +15,7 @@ import static de.amr.pacmanfx.model.WorldMapProperty.POS_HOUSE_MAX_TILE;
 import static de.amr.pacmanfx.model.WorldMapProperty.POS_HOUSE_MIN_TILE;
 import static java.util.Objects.requireNonNull;
 
-public class Action_ClearFoodAroundHouse extends AbstractEditorAction<Void> {
+public class Action_ClearFoodAroundHouse extends EditorAction<Void> {
 
     private final WorldMap worldMap;
 

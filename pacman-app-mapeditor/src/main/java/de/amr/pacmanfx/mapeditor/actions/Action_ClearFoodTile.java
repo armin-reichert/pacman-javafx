@@ -14,7 +14,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Ignores symmetric edit mode!
  */
-public class Action_ClearFoodTile extends AbstractEditorAction<Void> {
+public class Action_ClearFoodTile extends EditorAction<Void> {
 
     private final Vector2i tile;
 

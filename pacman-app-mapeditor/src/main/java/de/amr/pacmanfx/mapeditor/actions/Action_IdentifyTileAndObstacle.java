@@ -16,7 +16,7 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
 import static de.amr.pacmanfx.model.WorldMapProperty.*;
 import static java.util.Objects.requireNonNull;
 
-public class Action_IdentifyTileAndObstacle extends AbstractEditorUIAction<String> {
+public class Action_IdentifyTileAndObstacle extends EditorUIAction<String> {
 
     private final Vector2i tile;
 

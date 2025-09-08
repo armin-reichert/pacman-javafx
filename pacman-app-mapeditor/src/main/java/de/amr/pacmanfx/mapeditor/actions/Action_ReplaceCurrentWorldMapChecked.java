@@ -13,7 +13,7 @@ import java.io.IOException;
 
 import static java.util.Objects.requireNonNull;
 
-public class Action_ReplaceCurrentWorldMapChecked extends AbstractEditorUIAction<Boolean> {
+public class Action_ReplaceCurrentWorldMapChecked extends EditorUIAction<Boolean> {
 
     private final File file;
 

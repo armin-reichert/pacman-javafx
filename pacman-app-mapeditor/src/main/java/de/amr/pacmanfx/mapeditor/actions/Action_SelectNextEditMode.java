@@ -9,7 +9,7 @@ import de.amr.pacmanfx.mapeditor.EditorUI;
 
 import static de.amr.pacmanfx.mapeditor.EditMode.INSPECT;
 
-public class Action_SelectNextEditMode extends AbstractEditorUIAction<Void> {
+public class Action_SelectNextEditMode extends EditorUIAction<Void> {
 
     public Action_SelectNextEditMode(EditorUI ui) {
         super(ui);

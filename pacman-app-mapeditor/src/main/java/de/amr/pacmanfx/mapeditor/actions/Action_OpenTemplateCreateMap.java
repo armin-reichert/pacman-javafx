@@ -19,7 +19,7 @@ import java.util.Optional;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.mapeditor.EditorGlobals.*;
 
-public class Action_OpenTemplateCreateMap extends AbstractEditorUIAction<Void> {
+public class Action_OpenTemplateCreateMap extends EditorUIAction<Void> {
 
     public Action_OpenTemplateCreateMap(EditorUI ui) {
         super(ui);

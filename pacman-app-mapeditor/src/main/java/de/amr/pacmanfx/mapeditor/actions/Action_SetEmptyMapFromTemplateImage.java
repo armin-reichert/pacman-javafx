@@ -12,7 +12,7 @@ import javafx.scene.image.Image;
 
 import static de.amr.pacmanfx.Globals.TS;
 
-public class Action_SetEmptyMapFromTemplateImage extends AbstractEditorUIAction<Void> {
+public class Action_SetEmptyMapFromTemplateImage extends EditorUIAction<Void> {
 
     private final Image image;
 

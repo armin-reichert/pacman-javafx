@@ -25,7 +25,7 @@ import java.time.LocalTime;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.mapeditor.EditorUtil.getColorFromMap;
 
-public class Action_FillMapFromTemplate extends AbstractEditorUIAction<Void> {
+public class Action_FillMapFromTemplate extends EditorUIAction<Void> {
 
     public Action_FillMapFromTemplate(EditorUI ui) {
         super(ui);

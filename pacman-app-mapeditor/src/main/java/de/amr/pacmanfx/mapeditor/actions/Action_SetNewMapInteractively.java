@@ -18,7 +18,7 @@ import javafx.scene.control.TextInputDialog;
 import static de.amr.pacmanfx.mapeditor.EditorGlobals.translated;
 import static de.amr.pacmanfx.mapeditor.EditorUtil.parseMapSize;
 
-public class Action_SetNewMapInteractively extends AbstractEditorUIAction<Void> {
+public class Action_SetNewMapInteractively extends EditorUIAction<Void> {
 
     record ValidationResult(boolean ok, String message) {}
 

@@ -12,7 +12,7 @@ import de.amr.pacmanfx.mapeditor.TileMapEditor;
 
 import static de.amr.pacmanfx.lib.worldmap.WorldMapFormatter.formatTile;
 
-public class Action_CreatePreconfiguredMap extends AbstractEditorAction<WorldMap> {
+public class Action_CreatePreconfiguredMap extends EditorAction<WorldMap> {
 
     private final int numRows;
     private final int numCols;

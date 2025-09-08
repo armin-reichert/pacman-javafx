@@ -8,7 +8,7 @@ import de.amr.pacmanfx.lib.worldmap.FoodTile;
 import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 
-public class Action_ClearFood extends AbstractEditorAction<Void> {
+public class Action_ClearFood extends EditorAction<Void> {
 
     public Action_ClearFood(TileMapEditor editor) {
         super(editor);

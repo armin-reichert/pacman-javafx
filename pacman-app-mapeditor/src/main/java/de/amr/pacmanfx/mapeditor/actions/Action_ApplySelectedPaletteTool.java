@@ -10,7 +10,7 @@ import de.amr.pacmanfx.mapeditor.EditorUI;
 
 import static java.util.Objects.requireNonNull;
 
-public class Action_ApplySelectedPaletteTool extends AbstractEditorUIAction<Void> {
+public class Action_ApplySelectedPaletteTool extends EditorUIAction<Void> {
 
     private final Palette palette;
     private final Vector2i tile;

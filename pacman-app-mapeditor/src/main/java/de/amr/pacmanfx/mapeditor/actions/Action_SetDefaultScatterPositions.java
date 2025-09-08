@@ -12,7 +12,7 @@ import static de.amr.pacmanfx.lib.worldmap.WorldMapFormatter.formatTile;
 import static de.amr.pacmanfx.model.WorldMapProperty.*;
 import static java.util.Objects.requireNonNull;
 
-public class Action_SetDefaultScatterPositions extends AbstractEditorAction<Void> {
+public class Action_SetDefaultScatterPositions extends EditorAction<Void> {
 
     private final WorldMap worldMap;
 

@@ -9,7 +9,7 @@ import de.amr.pacmanfx.mapeditor.TileMapEditor;
 
 import static java.util.Objects.requireNonNull;
 
-public class Action_SetFoodProperty extends AbstractEditorAction<Void> {
+public class Action_SetFoodProperty extends EditorAction<Void> {
 
     private final String propertyName;
     private final String value;

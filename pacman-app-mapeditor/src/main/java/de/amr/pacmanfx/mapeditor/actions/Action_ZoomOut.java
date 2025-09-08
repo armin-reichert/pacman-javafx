@@ -8,7 +8,7 @@ import de.amr.pacmanfx.mapeditor.EditorUI;
 
 import static de.amr.pacmanfx.mapeditor.EditorGlobals.MIN_GRID_SIZE;
 
-public class Action_ZoomOut extends AbstractEditorUIAction<Void> {
+public class Action_ZoomOut extends EditorUIAction<Void> {
 
     public Action_ZoomOut(EditorUI ui) {
         super(ui);

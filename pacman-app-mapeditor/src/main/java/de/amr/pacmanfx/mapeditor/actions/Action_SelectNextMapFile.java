@@ -11,7 +11,7 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.util.Arrays;
 
-public class Action_SelectNextMapFile extends AbstractEditorAction<File> {
+public class Action_SelectNextMapFile extends EditorAction<File> {
 
     private final boolean forward;
 

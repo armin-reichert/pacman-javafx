@@ -16,7 +16,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * This action should be used whenever a tile value has to be set and symmetric editing should be taken into account.
  */
-public class Action_SetTerrainTileCode extends AbstractEditorAction<Void> {
+public class Action_SetTerrainTileCode extends EditorAction<Void> {
 
     private final WorldMap worldMap;
     private final Vector2i tile;

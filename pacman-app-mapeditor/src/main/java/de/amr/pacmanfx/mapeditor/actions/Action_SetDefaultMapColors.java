@@ -13,7 +13,7 @@ import static de.amr.pacmanfx.mapeditor.EditorUtil.formatColor;
 import static de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites.*;
 import static java.util.Objects.requireNonNull;
 
-public class Action_SetDefaultMapColors extends AbstractEditorAction<Void> {
+public class Action_SetDefaultMapColors extends EditorAction<Void> {
 
     private final WorldMap worldMap;
 

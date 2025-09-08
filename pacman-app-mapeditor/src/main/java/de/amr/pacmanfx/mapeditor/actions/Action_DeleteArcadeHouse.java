@@ -12,7 +12,7 @@ import de.amr.pacmanfx.mapeditor.TileMapEditor;
 
 import static de.amr.pacmanfx.model.WorldMapProperty.*;
 
-public class Action_DeleteArcadeHouse extends AbstractEditorAction<Void> {
+public class Action_DeleteArcadeHouse extends EditorAction<Void> {
 
     public Action_DeleteArcadeHouse(TileMapEditor editor) {
         super(editor);

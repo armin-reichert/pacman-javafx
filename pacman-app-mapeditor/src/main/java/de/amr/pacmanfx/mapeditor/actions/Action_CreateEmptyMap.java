@@ -7,7 +7,7 @@ package de.amr.pacmanfx.mapeditor.actions;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 
-public class Action_CreateEmptyMap extends AbstractEditorAction<WorldMap> {
+public class Action_CreateEmptyMap extends EditorAction<WorldMap> {
 
     private final int numRows;
     private final int numCols;

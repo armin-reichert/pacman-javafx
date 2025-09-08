@@ -8,7 +8,7 @@ import de.amr.pacmanfx.mapeditor.EditorUI;
 
 import static de.amr.pacmanfx.mapeditor.EditorGlobals.MAX_GRID_SIZE;
 
-public class Action_ZoomIn extends AbstractEditorUIAction<Void> {
+public class Action_ZoomIn extends EditorUIAction<Void> {
 
     public Action_ZoomIn(EditorUI ui) {
         super(ui);

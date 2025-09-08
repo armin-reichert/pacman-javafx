@@ -8,11 +8,11 @@ import de.amr.pacmanfx.mapeditor.EditorUI;
 
 import static java.util.Objects.requireNonNull;
 
-public abstract class AbstractEditorUIAction<R> extends AbstractEditorAction<R> {
+public abstract class EditorUIAction<R> extends EditorAction<R> {
 
     protected final EditorUI ui;
 
-    protected AbstractEditorUIAction(EditorUI ui) {
+    protected EditorUIAction(EditorUI ui) {
         super(requireNonNull(ui).editor());
         this.ui = ui;
     }

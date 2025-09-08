@@ -17,7 +17,7 @@ import java.util.Set;
 
 import static de.amr.pacmanfx.mapeditor.EditorUtil.canPlaceFoodAtTile;
 
-public class Action_FloodWithPellets extends AbstractEditorUIAction<Void> {
+public class Action_FloodWithPellets extends EditorUIAction<Void> {
 
     private final Vector2i startTile;
 

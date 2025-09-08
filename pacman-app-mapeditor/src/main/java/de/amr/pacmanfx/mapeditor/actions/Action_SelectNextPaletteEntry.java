@@ -6,7 +6,7 @@ package de.amr.pacmanfx.mapeditor.actions;
 
 import de.amr.pacmanfx.mapeditor.EditorUI;
 
-public class Action_SelectNextPaletteEntry extends AbstractEditorUIAction<Void> {
+public class Action_SelectNextPaletteEntry extends EditorUIAction<Void> {
 
     public Action_SelectNextPaletteEntry(EditorUI ui) {
         super(ui);

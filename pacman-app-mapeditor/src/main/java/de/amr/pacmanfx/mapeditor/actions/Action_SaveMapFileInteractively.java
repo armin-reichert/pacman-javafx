@@ -14,7 +14,7 @@ import java.io.File;
 import static de.amr.pacmanfx.mapeditor.EditorGlobals.*;
 import static de.amr.pacmanfx.mapeditor.EditorUtil.saveWorldMap;
 
-public class Action_SaveMapFileInteractively extends AbstractEditorUIAction<Void> {
+public class Action_SaveMapFileInteractively extends EditorUIAction<Void> {
 
     public Action_SaveMapFileInteractively(EditorUI ui) {
         super(ui);

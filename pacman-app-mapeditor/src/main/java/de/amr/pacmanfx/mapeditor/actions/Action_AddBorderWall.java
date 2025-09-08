@@ -12,7 +12,7 @@ import de.amr.pacmanfx.mapeditor.TileMapEditor;
 
 import static java.util.Objects.requireNonNull;
 
-public class Action_AddBorderWall extends AbstractEditorAction<Void> {
+public class Action_AddBorderWall extends EditorAction<Void> {
 
     private final WorldMap worldMap;
 

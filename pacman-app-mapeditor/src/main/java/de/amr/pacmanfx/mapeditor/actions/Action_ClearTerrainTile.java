@@ -12,7 +12,7 @@ import de.amr.pacmanfx.mapeditor.TileMapEditor;
 /**
  * Ignores symmetric edit mode!
  */
-public class Action_ClearTerrainTile extends AbstractEditorAction<Void> {
+public class Action_ClearTerrainTile extends EditorAction<Void> {
 
     private final Vector2i tile;
 

@@ -8,7 +8,7 @@ import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.lib.worldmap.TerrainTile;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 
-public class Action_ClearTerrain extends AbstractEditorAction<Void> {
+public class Action_ClearTerrain extends EditorAction<Void> {
 
     public Action_ClearTerrain(TileMapEditor editor) {
         super(editor);

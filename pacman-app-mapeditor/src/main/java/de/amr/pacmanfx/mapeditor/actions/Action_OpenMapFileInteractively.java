@@ -11,7 +11,7 @@ import java.io.File;
 
 import static de.amr.pacmanfx.mapeditor.EditorGlobals.*;
 
-public class Action_OpenMapFileInteractively extends AbstractEditorUIAction<File> {
+public class Action_OpenMapFileInteractively extends EditorUIAction<File> {
 
     private File file;
 

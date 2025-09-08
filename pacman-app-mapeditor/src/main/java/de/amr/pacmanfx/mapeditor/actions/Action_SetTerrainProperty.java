@@ -9,7 +9,7 @@ import de.amr.pacmanfx.mapeditor.TileMapEditor;
 
 import static java.util.Objects.requireNonNull;
 
-public class Action_SetTerrainProperty extends AbstractEditorAction<Void> {
+public class Action_SetTerrainProperty extends EditorAction<Void> {
 
     private final String propertyName;
     private final String value;

@@ -15,7 +15,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * This action should be used whenever a tile value has to be set and symmetric editing should be taken into account.
  */
-public class Action_SetFoodTileCode extends AbstractEditorAction<Void> {
+public class Action_SetFoodTileCode extends EditorAction<Void> {
 
     private final Vector2i tile;
     private final byte code;
