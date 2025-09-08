@@ -19,7 +19,8 @@ import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.lib.Direction.*;
+import static de.amr.pacmanfx.lib.Direction.RIGHT;
+import static de.amr.pacmanfx.lib.Direction.UP;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
 import static java.util.Objects.requireNonNull;
 
@@ -32,6 +33,9 @@ public abstract class MovingActor extends Actor {
     public static final Direction DEFAULT_WISH_DIR = RIGHT;
     public static final Vector2i DEFAULT_TARGET_TILE = null;
     public static final boolean DEFAULT_CAN_TELEPORT = true;
+
+    /** Order in which directions are selected when navigation decision is met. */
+    public static final List<Direction> NAVIGATION_ORDER = List.of(Direction.UP, Direction.LEFT, Direction.DOWN, Direction.RIGHT);
 
     protected final MoveResult moveInfo = new MoveResult();
 
@@ -281,8 +285,7 @@ public abstract class MovingActor extends Actor {
         }
         Direction candidateDir = null;
         double minDistToTarget = Double.MAX_VALUE;
-        // Order in which directions are selected when navigation decision is met.
-        for (Direction dir : List.of(UP, LEFT, DOWN, RIGHT)) {
+        for (Direction dir : NAVIGATION_ORDER) {
             if (dir == moveDir().opposite()) {
                 continue; // reversing the move direction is not allowed  (except to get out of dead-ends, see below)
             }
