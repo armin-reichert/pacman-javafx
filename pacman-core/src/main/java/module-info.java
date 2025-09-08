@@ -19,4 +19,5 @@ module de.amr.pacmanfx.core {
     exports de.amr.pacmanfx.steering;
     exports de.amr.pacmanfx;
     exports de.amr.pacmanfx.controller.teststates;
+    exports de.amr.pacmanfx.lib.mazemap;
 }

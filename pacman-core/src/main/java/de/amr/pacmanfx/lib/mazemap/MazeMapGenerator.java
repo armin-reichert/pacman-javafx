@@ -2,13 +2,14 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.lib.worldmap;
+package de.amr.pacmanfx.lib.mazemap;
 
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.graph.Dir;
 import de.amr.pacmanfx.lib.graph.GridGraph;
 import de.amr.pacmanfx.lib.graph.GridGraphImpl;
+import de.amr.pacmanfx.lib.worldmap.*;
 import de.amr.pacmanfx.model.WorldMapProperty;
 import org.tinylog.Logger;
 

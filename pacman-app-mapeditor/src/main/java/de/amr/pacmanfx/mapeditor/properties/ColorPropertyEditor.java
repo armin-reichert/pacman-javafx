@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.mapeditor.properties;
 
 import de.amr.pacmanfx.lib.worldmap.LayerID;
+import de.amr.pacmanfx.lib.worldmap.WorldMapPropertyInfo;
 import de.amr.pacmanfx.mapeditor.EditorUI;
 import de.amr.pacmanfx.mapeditor.EditorUtil;
 import javafx.scene.Node;
@@ -14,7 +15,7 @@ class ColorPropertyEditor extends SinglePropertyEditor {
 
     private final ColorPicker colorPicker;
 
-    public ColorPropertyEditor(EditorUI ui, LayerID layerID, PropertyInfo propertyInfo, String propertyValue) {
+    public ColorPropertyEditor(EditorUI ui, LayerID layerID, WorldMapPropertyInfo propertyInfo, String propertyValue) {
         super(ui, layerID, propertyInfo);
         colorPicker = new ColorPicker();
         colorPicker.setValue(EditorUtil.parseColor(propertyValue));

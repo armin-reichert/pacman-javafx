@@ -6,6 +6,7 @@ package de.amr.pacmanfx.mapeditor.properties;
 
 import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
+import de.amr.pacmanfx.lib.worldmap.WorldMapPropertyInfo;
 import de.amr.pacmanfx.mapeditor.EditorUI;
 import de.amr.pacmanfx.mapeditor.MessageType;
 import javafx.beans.property.BooleanProperty;
@@ -23,10 +24,10 @@ abstract class SinglePropertyEditor {
     protected final ObjectProperty<WorldMap> worldMap = new SimpleObjectProperty<>();
 
     protected final LayerID layerID;
-    protected PropertyInfo propertyInfo;
+    protected WorldMapPropertyInfo propertyInfo;
     protected final TextField nameEditor;
 
-    protected SinglePropertyEditor(EditorUI ui, LayerID layerID, PropertyInfo propertyInfo) {
+    protected SinglePropertyEditor(EditorUI ui, LayerID layerID, WorldMapPropertyInfo propertyInfo) {
         requireNonNull(ui);
         this.layerID = requireNonNull(layerID);
         this.propertyInfo = requireNonNull(propertyInfo);
@@ -70,7 +71,7 @@ abstract class SinglePropertyEditor {
         if (propertyInfo.name().equals(editedName)) {
             return;
         }
-        if (PropertyInfo.isInValidPropertyName(editedName)) {
+        if (WorldMapPropertyInfo.isInValidPropertyName(editedName)) {
             nameEditor.setText(propertyInfo.name());
             ui.messageDisplay().showMessage("Property name '%s' is invalid".formatted(editedName), 2, MessageType.ERROR);
             return;
@@ -86,7 +87,7 @@ abstract class SinglePropertyEditor {
         worldMap().properties(layerID).remove(propertyInfo.name());
         worldMap().properties(layerID).put(editedName, formattedPropertyValue());
         boolean permanent = MapPropertiesEditor.isDefaultColorProperty(editedName, layerID);
-        propertyInfo = new PropertyInfo(editedName, propertyInfo.type(), permanent);
+        propertyInfo = new WorldMapPropertyInfo(editedName, propertyInfo.type(), permanent);
 
         ui.editor().setWorldMapChanged();
         ui.editor().setEdited(true);

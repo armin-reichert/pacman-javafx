@@ -2,13 +2,13 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.mapeditor.properties;
+package de.amr.pacmanfx.lib.worldmap;
 
 import java.util.regex.Pattern;
 
 import static java.util.Objects.requireNonNull;
 
-public record PropertyInfo(String name, PropertyType type, boolean permanent) {
+public record WorldMapPropertyInfo(String name, WorldMapPropertyType type, boolean permanent) {
 
     public static final Pattern PATTERN_PROPERTY_NAME = Pattern.compile("[a-zA-Z]([a-zA-Z0-9_])*");
 
@@ -16,7 +16,7 @@ public record PropertyInfo(String name, PropertyType type, boolean permanent) {
         return s == null || !PATTERN_PROPERTY_NAME.matcher(s).matches();
     }
 
-    public PropertyInfo {
+    public WorldMapPropertyInfo {
         requireNonNull(name);
         if (isInValidPropertyName(name)) {
             throw new IllegalArgumentException("Invalid property name: '%s'".formatted(name));

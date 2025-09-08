@@ -7,6 +7,7 @@ package de.amr.pacmanfx.mapeditor.properties;
 import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.lib.worldmap.WorldMapFormatter;
 import de.amr.pacmanfx.lib.worldmap.WorldMapParser;
+import de.amr.pacmanfx.lib.worldmap.WorldMapPropertyInfo;
 import de.amr.pacmanfx.mapeditor.EditorUI;
 import javafx.scene.Node;
 import javafx.scene.control.Spinner;
@@ -21,7 +22,7 @@ class TilePropertyEditor extends SinglePropertyEditor {
     private final SpinnerValueFactory.IntegerSpinnerValueFactory spinnerYModel;
     private final HBox valueEditorPane;
 
-    public TilePropertyEditor(EditorUI ui, LayerID layerID, PropertyInfo propertyInfo, String propertyValue) {
+    public TilePropertyEditor(EditorUI ui, LayerID layerID, WorldMapPropertyInfo propertyInfo, String propertyValue) {
         super(ui, layerID, propertyInfo);
 
         spinnerX = new Spinner<>(0, 1000, 0);

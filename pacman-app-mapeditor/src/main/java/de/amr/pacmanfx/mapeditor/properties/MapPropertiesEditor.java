@@ -6,6 +6,8 @@ package de.amr.pacmanfx.mapeditor.properties;
 
 import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
+import de.amr.pacmanfx.lib.worldmap.WorldMapPropertyInfo;
+import de.amr.pacmanfx.lib.worldmap.WorldMapPropertyType;
 import de.amr.pacmanfx.mapeditor.EditorGlobals;
 import de.amr.pacmanfx.mapeditor.EditorUI;
 import de.amr.pacmanfx.mapeditor.MessageType;
@@ -161,14 +163,14 @@ public class MapPropertiesEditor extends BorderPane {
 
         propertyNames.forEach(propertyName -> {
             // primitive way of discriminating but fulfills its purpose
-            PropertyInfo propertyInfo;
+            WorldMapPropertyInfo propertyInfo;
             if (propertyName.startsWith("color_")) {
                 boolean permanent = isDefaultColorProperty(propertyName, layerID);
-                propertyInfo = new PropertyInfo(propertyName, PropertyType.COLOR, permanent);
+                propertyInfo = new WorldMapPropertyInfo(propertyName, WorldMapPropertyType.COLOR, permanent);
             } else if (propertyName.startsWith("pos_") || propertyName.startsWith("tile_") || propertyName.startsWith("vec_")) {
-                propertyInfo = new PropertyInfo(propertyName, PropertyType.TILE, false);
+                propertyInfo = new WorldMapPropertyInfo(propertyName, WorldMapPropertyType.TILE, false);
             } else {
-                propertyInfo = new PropertyInfo(propertyName, PropertyType.STRING, false);
+                propertyInfo = new WorldMapPropertyInfo(propertyName, WorldMapPropertyType.STRING, false);
             }
             String propertyValue = worldMap().properties(layerID).get(propertyName);
             SinglePropertyEditor propertyEditor = createEditor(ui, propertyInfo, propertyValue);
@@ -200,7 +202,7 @@ public class MapPropertiesEditor extends BorderPane {
         updatePropertyEditorValues();
     }
 
-    private SinglePropertyEditor createEditor(EditorUI ui, PropertyInfo info, String initialValue) {
+    private SinglePropertyEditor createEditor(EditorUI ui, WorldMapPropertyInfo info, String initialValue) {
         SinglePropertyEditor propertyEditor = switch (info.type()) {
             case COLOR -> new ColorPropertyEditor(ui, layerID, info, initialValue);
             case TILE -> new TilePropertyEditor(ui, layerID, info, initialValue);
