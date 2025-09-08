@@ -9,7 +9,7 @@ import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
-import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
+import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.*;
 import de.amr.pacmanfx.ui.input.Joypad;

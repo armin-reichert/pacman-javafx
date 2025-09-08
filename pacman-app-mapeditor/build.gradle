@@ -14,7 +14,7 @@ dependencies {
 
 application {
     mainModule = "de.amr.pacmanfx.mapeditor"
-    mainClass  = "de.amr.pacmanfx.tilemap.editor.app.Main"
+    mainClass  = "de.amr.pacmanfx.mapeditor.app.Main"
 }
 
 javafx {
