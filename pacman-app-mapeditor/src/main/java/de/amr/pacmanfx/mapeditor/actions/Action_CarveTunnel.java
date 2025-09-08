@@ -7,27 +7,27 @@ package de.amr.pacmanfx.mapeditor.actions;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.TerrainTile;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
+import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.mapeditor.EditorUI;
 import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
 
-public class Action_CarveTunnel extends EditorUIAction<Void> {
+public class Action_CarveTunnel extends EditorAction<Void> {
 
     private final WorldMap worldMap;
     private final Vector2i borderTile;
     private final int depth;
 
-    public Action_CarveTunnel(EditorUI ui, WorldMap worldMap, Vector2i borderTile, int depth) {
-        super(ui);
+    public Action_CarveTunnel(TileMapEditor editor, WorldMap worldMap, Vector2i borderTile, int depth) {
+        super(editor);
         this.worldMap = requireNonNull(worldMap);
         this.borderTile = requireNonNull(borderTile);
         this.depth = depth;
     }
 
-    public Action_CarveTunnel(EditorUI ui, Vector2i borderTile, int depth) {
-        this(ui, ui.editor().currentWorldMap(), borderTile, depth);
+    public Action_CarveTunnel(TileMapEditor editor, Vector2i borderTile, int depth) {
+        this(editor, editor.currentWorldMap(), borderTile, depth);
     }
 
     @Override

@@ -479,7 +479,7 @@ public class EditCanvas extends Canvas {
         Vector2i tile = tileAt(menuEvent.getX(), menuEvent.getY());
 
         var miCarveTunnel = new MenuItem(translated("menu.edit.carve_tunnel"));
-        miCarveTunnel.setOnAction(actionEvent -> new Action_CarveTunnel(ui, tile, 1).execute());
+        miCarveTunnel.setOnAction(actionEvent -> new Action_CarveTunnel(editor, tile, 1).execute());
 
         var miPlaceHouse = new MenuItem(translated("menu.edit.place_house"));
         miPlaceHouse.setOnAction(actionEvent -> new Action_PlaceArcadeHouse(editor, tile).execute());
