@@ -44,7 +44,7 @@ public class Action_SetTerrainTileCode extends EditorAction<Void> {
     @Override
     public Void execute() {
         byte oldCode = worldMap.layer(LayerID.TERRAIN).get(tile);
-        if (code == oldCode) return null;
+        if (code == oldCode && !editor.symmetricEditMode()) return null;
         worldMap.setContent(LayerID.TERRAIN, tile, code);
         worldMap.setContent(LayerID.FOOD, tile, FoodTile.EMPTY.code());
         if (editor.symmetricEditMode()) {
