@@ -34,8 +34,8 @@ public class Action_CarveTunnel extends EditorAction<Void> {
             boolean symmetricModeBefore = editor.symmetricEditMode();
             editor.setSymmetricEditMode(true);
             switch (depth) {
-                case 1 -> carveTunnel1();
-                default -> carveTunnel(depth);
+                case 1 -> carveTunnelOfDepthOne();
+                default -> carveTunnel();
             }
             editor.setSymmetricEditMode(symmetricModeBefore);
         }
@@ -57,7 +57,7 @@ public class Action_CarveTunnel extends EditorAction<Void> {
         }
     }
 
-    private void carveTunnel1() {
+    private void carveTunnelOfDepthOne() {
         Vector2i tileAbove = tunnelExit.minus(0, 1);
         Vector2i tileBelow = tunnelExit.plus(0, 1);
         byte above = tileAbove.y() == GameLevel.EMPTY_ROWS_OVER_MAZE ? TerrainTile.WALL_H.$ : TerrainTile.ARC_SE.$;
@@ -67,7 +67,7 @@ public class Action_CarveTunnel extends EditorAction<Void> {
         new Action_SetTerrainTileCode(editor, worldMap, tileBelow, below).execute();
     }
 
-    private void carveTunnel(int depth) {
+    private void carveTunnel() {
         int row = tunnelExit.y();;
         for (int x = tunnelExit.x(); x >= 0; --x) {
             if (x == 0) {
