@@ -10,11 +10,11 @@ import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.mapeditor.actions.*;
 import de.amr.pacmanfx.mapeditor.palette.PaletteID;
-import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.mapeditor.rendering.ActorSpriteRenderer;
 import de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites;
 import de.amr.pacmanfx.mapeditor.rendering.TerrainMapTileRenderer;
+import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapColorScheme;
@@ -500,7 +500,7 @@ public class EditCanvas extends Canvas {
         });
 
         var miFloodWithPellets = new MenuItem(translated("menu.edit.flood_with_pellets"));
-        miFloodWithPellets.setOnAction(actionEvent -> new Action_FloodWithPellets(ui, tile).execute());
+        miFloodWithPellets.setOnAction(actionEvent -> new Action_FloodWithPellets(editor, tile).execute());
         miFloodWithPellets.setDisable(!EditorUtil.canPlaceFoodAtTile(worldMap(), tile));
 
         contextMenu.getItems().setAll(

@@ -7,8 +7,8 @@ package de.amr.pacmanfx.mapeditor.actions;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.*;
+import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.model.WorldMapProperty;
-import de.amr.pacmanfx.mapeditor.EditorUI;
 
 import java.util.ArrayDeque;
 import java.util.HashSet;
@@ -17,12 +17,12 @@ import java.util.Set;
 
 import static de.amr.pacmanfx.mapeditor.EditorUtil.canPlaceFoodAtTile;
 
-public class Action_FloodWithPellets extends EditorUIAction<Void> {
+public class Action_FloodWithPellets extends EditorAction<Void> {
 
     private final Vector2i startTile;
 
-    public Action_FloodWithPellets(EditorUI ui, Vector2i startTile) {
-        super(ui);
+    public Action_FloodWithPellets(TileMapEditor editor, Vector2i startTile) {
+        super(editor);
         this.startTile = startTile;
     }
 
