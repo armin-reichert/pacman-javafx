@@ -4,9 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.mapeditor.properties;
 
-import de.amr.pacmanfx.lib.tilemap.LayerID;
-import de.amr.pacmanfx.lib.tilemap.WorldMapFormatter;
-import de.amr.pacmanfx.lib.tilemap.WorldMapParser;
+import de.amr.pacmanfx.lib.worldmap.LayerID;
+import de.amr.pacmanfx.lib.worldmap.WorldMapFormatter;
+import de.amr.pacmanfx.lib.worldmap.WorldMapParser;
 import de.amr.pacmanfx.mapeditor.EditorUI;
 import javafx.scene.Node;
 import javafx.scene.control.Spinner;

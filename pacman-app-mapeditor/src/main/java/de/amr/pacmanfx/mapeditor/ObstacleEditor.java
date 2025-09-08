@@ -5,9 +5,9 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.mapeditor;
 
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.lib.tilemap.FoodTile;
-import de.amr.pacmanfx.lib.tilemap.LayerID;
-import de.amr.pacmanfx.lib.tilemap.WorldMap;
+import de.amr.pacmanfx.lib.worldmap.FoodTile;
+import de.amr.pacmanfx.lib.worldmap.LayerID;
+import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.mapeditor.actions.Action_SetFoodTileCode;
 import de.amr.pacmanfx.mapeditor.actions.Action_SetTerrainTileCode;
 import de.amr.pacmanfx.mapeditor.rendering.TerrainMapTileRenderer;
@@ -17,7 +17,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
 import static de.amr.pacmanfx.lib.UsefulFunctions.isEven;
-import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
+import static de.amr.pacmanfx.lib.worldmap.TerrainTile.*;
 import static java.util.Objects.requireNonNull;
 
 public class ObstacleEditor {

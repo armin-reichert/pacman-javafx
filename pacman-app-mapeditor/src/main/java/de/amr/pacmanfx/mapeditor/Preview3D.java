@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.mapeditor;
 
-import de.amr.pacmanfx.lib.tilemap.WorldMap;
+import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;

@@ -2,9 +2,9 @@ package experiments;
 
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.lib.tilemap.Obstacle;
-import de.amr.pacmanfx.lib.tilemap.ObstacleSegment;
-import de.amr.pacmanfx.lib.tilemap.TerrainTile;
+import de.amr.pacmanfx.lib.worldmap.Obstacle;
+import de.amr.pacmanfx.lib.worldmap.ObstacleSegment;
+import de.amr.pacmanfx.lib.worldmap.TerrainTile;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;

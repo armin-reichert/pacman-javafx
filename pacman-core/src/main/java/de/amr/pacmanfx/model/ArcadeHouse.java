@@ -11,7 +11,7 @@ import de.amr.pacmanfx.model.actors.GhostID;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
+import static de.amr.pacmanfx.lib.worldmap.TerrainTile.*;
 import static java.util.Objects.requireNonNull;
 
 /**

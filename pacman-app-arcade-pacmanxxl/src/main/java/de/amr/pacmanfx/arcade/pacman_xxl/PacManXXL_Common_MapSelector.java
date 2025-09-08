@@ -1,6 +1,6 @@
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
-import de.amr.pacmanfx.lib.tilemap.WorldMap;
+import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.MapSelectionMode;
 import de.amr.pacmanfx.model.MapSelector;
 import javafx.collections.FXCollections;

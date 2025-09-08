@@ -6,8 +6,8 @@ package de.amr.pacmanfx.uilib.model3D;
 
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.lib.tilemap.Obstacle;
-import de.amr.pacmanfx.lib.tilemap.ObstacleSegment;
+import de.amr.pacmanfx.lib.worldmap.Obstacle;
+import de.amr.pacmanfx.lib.worldmap.ObstacleSegment;
 import javafx.util.Callback;
 import org.tinylog.Logger;
 

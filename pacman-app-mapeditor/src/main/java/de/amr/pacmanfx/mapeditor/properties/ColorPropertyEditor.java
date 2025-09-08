@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.mapeditor.properties;
 
-import de.amr.pacmanfx.lib.tilemap.LayerID;
+import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.mapeditor.EditorUI;
 import de.amr.pacmanfx.mapeditor.EditorUtil;
 import javafx.scene.Node;

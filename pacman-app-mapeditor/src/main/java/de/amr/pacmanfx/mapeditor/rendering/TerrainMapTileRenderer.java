@@ -8,7 +8,7 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.lib.tilemap.*;
+import de.amr.pacmanfx.lib.worldmap.*;
 import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.rendering.BaseCanvasRenderer;
@@ -32,7 +32,7 @@ import java.util.Set;
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.RandomNumberSupport.randomInt;
-import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
+import static de.amr.pacmanfx.lib.worldmap.TerrainTile.*;
 
 /**
  * Tile-based renderer used in editor. At runtime and in the 2D editor preview, the path based renderer is used.

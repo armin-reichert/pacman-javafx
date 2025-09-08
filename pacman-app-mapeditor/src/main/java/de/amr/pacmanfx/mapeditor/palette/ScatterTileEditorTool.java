@@ -16,7 +16,7 @@ import javafx.scene.paint.Color;
 import java.util.function.Consumer;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.lib.tilemap.WorldMapFormatter.formatTile;
+import static de.amr.pacmanfx.lib.worldmap.WorldMapFormatter.formatTile;
 
 public class ScatterTileEditorTool extends PropertyValueEditorTool {
 

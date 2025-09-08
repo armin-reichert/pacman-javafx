@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.tilemap;
 
-import de.amr.pacmanfx.lib.tilemap.Obstacle;
-import de.amr.pacmanfx.lib.tilemap.WorldMap;
+import de.amr.pacmanfx.lib.worldmap.Obstacle;
+import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.uilib.rendering.CanvasRenderer;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.paint.Color;

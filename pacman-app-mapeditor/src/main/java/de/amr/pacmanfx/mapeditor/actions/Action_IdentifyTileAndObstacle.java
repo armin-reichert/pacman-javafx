@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.mapeditor.actions;
 
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.lib.tilemap.*;
+import de.amr.pacmanfx.lib.worldmap.*;
 import de.amr.pacmanfx.mapeditor.EditorUI;
 import de.amr.pacmanfx.mapeditor.MessageType;
 import javafx.scene.input.Clipboard;

@@ -1,4 +1,4 @@
-package de.amr.pacmanfx.lib.tilemap;
+package de.amr.pacmanfx.lib.worldmap;
 
 import de.amr.pacmanfx.lib.StopWatch;
 import de.amr.pacmanfx.lib.Vector2i;

@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.mapeditor;
 
-import de.amr.pacmanfx.lib.tilemap.LayerID;
-import de.amr.pacmanfx.lib.tilemap.WorldMap;
+import de.amr.pacmanfx.lib.worldmap.LayerID;
+import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.mapeditor.actions.*;
 import de.amr.pacmanfx.mapeditor.palette.Palette;
 import de.amr.pacmanfx.mapeditor.palette.PaletteID;
@@ -37,7 +37,7 @@ import java.io.File;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.lib.tilemap.WorldMap.copyOfMap;
+import static de.amr.pacmanfx.lib.worldmap.WorldMap.copyOfMap;
 import static de.amr.pacmanfx.mapeditor.EditMode.INSPECT;
 import static de.amr.pacmanfx.mapeditor.EditorGlobals.*;
 import static de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites.*;

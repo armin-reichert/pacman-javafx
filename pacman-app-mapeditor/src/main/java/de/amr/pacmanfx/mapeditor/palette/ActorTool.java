@@ -15,7 +15,7 @@ import javafx.scene.paint.Color;
 import java.util.function.Consumer;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.lib.tilemap.WorldMapFormatter.formatTile;
+import static de.amr.pacmanfx.lib.worldmap.WorldMapFormatter.formatTile;
 import static de.amr.pacmanfx.mapeditor.EditorGlobals.TOOL_SIZE;
 import static de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites.SPRITE_SHEET;
 import static java.util.Objects.requireNonNull;

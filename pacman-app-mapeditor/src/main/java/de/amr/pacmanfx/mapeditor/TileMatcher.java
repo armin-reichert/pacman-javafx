@@ -4,14 +4,14 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.mapeditor;
 
-import de.amr.pacmanfx.lib.tilemap.FoodTile;
+import de.amr.pacmanfx.lib.worldmap.FoodTile;
 import javafx.scene.paint.Color;
 
 import java.util.Arrays;
 import java.util.stream.IntStream;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
+import static de.amr.pacmanfx.lib.worldmap.TerrainTile.*;
 
 public class TileMatcher {
 

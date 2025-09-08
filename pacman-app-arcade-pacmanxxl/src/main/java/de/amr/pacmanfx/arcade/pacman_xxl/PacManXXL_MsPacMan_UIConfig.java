@@ -13,7 +13,7 @@ import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
 import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.controller.teststates.CutScenesTestState;
 import de.amr.pacmanfx.lib.RectShort;
-import de.amr.pacmanfx.lib.tilemap.WorldMap;
+import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
