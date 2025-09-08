@@ -96,7 +96,7 @@ public class EditorMenuBar extends MenuBar {
 
         miIdentifyTiles.setOnAction(actionEvent -> new Action_FillMapFromTemplate(ui).execute());
 
-        var miAssignDefaultColors = new MenuItem("menu.edit.assign_default_colors");
+        var miAssignDefaultColors = new MenuItem(translated("menu.edit.assign_default_colors"));
         miAssignDefaultColors.setOnAction(actionEvent -> new Action_SetDefaultMapColors(editor).execute());
         miAssignDefaultColors.disableProperty().bind(ui.editModeProperty().map(mode -> mode == EditMode.INSPECT));
 
