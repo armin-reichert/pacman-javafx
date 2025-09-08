@@ -7,6 +7,7 @@ package de.amr.pacmanfx.lib;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Stream;
 
 /**
@@ -24,6 +25,10 @@ public enum Direction {
         List<Direction> dirs = Arrays.asList(values());
         Collections.shuffle(dirs);
         return dirs;
+    }
+
+    public static Direction random() {
+        return Direction.values()[new Random().nextInt(4)];
     }
 
     private final Vector2i vector;

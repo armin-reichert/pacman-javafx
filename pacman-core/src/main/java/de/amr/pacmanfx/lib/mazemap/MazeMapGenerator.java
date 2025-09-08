@@ -6,7 +6,6 @@ package de.amr.pacmanfx.lib.mazemap;
 
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.lib.graph.Dir;
 import de.amr.pacmanfx.lib.graph.GridGraph;
 import de.amr.pacmanfx.lib.graph.GridGraphImpl;
 import de.amr.pacmanfx.lib.worldmap.*;
@@ -40,13 +39,13 @@ public class MazeMapGenerator {
                 continue;
             }
             set(map, LayerID.TERRAIN, row - 1, col - 1, BLOCKED);
-            set(map, LayerID.TERRAIN, row - 1, col, graph.connected(v, Dir.N) ? FREE : BLOCKED);
+            set(map, LayerID.TERRAIN, row - 1, col, graph.connected(v, Direction.UP) ? FREE : BLOCKED);
             set(map, LayerID.TERRAIN, row - 1, col + 1, BLOCKED);
-            set(map, LayerID.TERRAIN, row, col - 1, graph.connected(v, Dir.W) ? FREE : BLOCKED);
+            set(map, LayerID.TERRAIN, row, col - 1, graph.connected(v, Direction.LEFT) ? FREE : BLOCKED);
             set(map, LayerID.TERRAIN, row, col, FREE);
-            set(map, LayerID.TERRAIN, row, col + 1, graph.connected(v, Dir.E) ? FREE : BLOCKED);
+            set(map, LayerID.TERRAIN, row, col + 1, graph.connected(v, Direction.RIGHT) ? FREE : BLOCKED);
             set(map, LayerID.TERRAIN, row + 1, col - 1, BLOCKED);
-            set(map, LayerID.TERRAIN, row + 1, col, graph.connected(v, Dir.S) ? FREE : BLOCKED);
+            set(map, LayerID.TERRAIN, row + 1, col, graph.connected(v, Direction.DOWN) ? FREE : BLOCKED);
             set(map, LayerID.TERRAIN, row + 1, col + 1, BLOCKED);
         }
         computeWallContour(map, new Vector2i(0, EMPTY_ROWS_ABOVE));

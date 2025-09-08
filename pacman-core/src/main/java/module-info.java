@@ -5,6 +5,7 @@ module de.amr.pacmanfx.core {
 
     requires org.tinylog.api;
     requires javafx.base;
+    requires java.desktop;
 
     exports de.amr.pacmanfx.controller;
     exports de.amr.pacmanfx.event;

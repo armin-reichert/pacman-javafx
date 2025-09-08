@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.lib.mazemap;
 
-import de.amr.pacmanfx.lib.graph.Dir;
+import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.graph.DirMap;
 import de.amr.pacmanfx.lib.graph.GridGraph;
 
@@ -30,7 +30,7 @@ public interface MazeGenerators {
         // random walk until a tree vertex is touched
         int vertex = start;
         while (!visited.get(vertex)) {
-            Dir walkDir = Dir.random();
+            Direction walkDir = Direction.random();
             int neighbor = grid.neighbor(vertex, walkDir);
             if (neighbor != -1) {
                 lastWalkDir.set(vertex, walkDir);
@@ -40,7 +40,7 @@ public interface MazeGenerators {
         // add the (loop-erased) random walk to the tree
         vertex = start;
         while (!visited.get(vertex)) {
-            Dir walkDir = lastWalkDir.get(vertex);
+            Direction walkDir = lastWalkDir.get(vertex);
             int neighbor = grid.neighbor(vertex, walkDir);
             if (neighbor != -1) {
                 visited.set(vertex);
@@ -57,10 +57,10 @@ public interface MazeGenerators {
             for (int col = 0; col < grid.numCols(); ++col) {
                 int vertex = grid.vertex(row, col);
                 if (row > 0) {
-                    grid.connect(vertex, Dir.N);
+                    grid.connect(vertex, Direction.UP);
                 }
                 if (col > 0) {
-                    grid.connect(vertex, Dir.W);
+                    grid.connect(vertex, Direction.LEFT);
                 }
             }
         }
@@ -77,7 +77,7 @@ public interface MazeGenerators {
             int door = x0 + rnd.nextInt(w);
             for (int x = x0; x < x0 + w; ++x) {
                 if (x != door) {
-                    grid.disconnect(grid.vertex(y - 1, x), Dir.S);
+                    grid.disconnect(grid.vertex(y - 1, x), Direction.DOWN);
                 }
             }
             divide(grid, rnd, x0, y0, w, y - y0);
@@ -88,7 +88,7 @@ public interface MazeGenerators {
             int door = y0 + rnd.nextInt(h);
             for (int y = y0; y < y0 + h; ++y) {
                 if (y != door) {
-                    grid.disconnect(grid.vertex(y, x - 1), Dir.E);
+                    grid.disconnect(grid.vertex(y, x - 1), Direction.RIGHT);
                 }
             }
             divide(grid, rnd, x0, y0, x - x0, h);

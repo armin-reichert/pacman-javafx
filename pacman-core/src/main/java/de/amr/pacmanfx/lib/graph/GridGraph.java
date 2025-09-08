@@ -1,5 +1,7 @@
 package de.amr.pacmanfx.lib.graph;
 
+import de.amr.pacmanfx.lib.Direction;
+
 /**
  * Grid graph interface as used by maze generation algorithms.
  * 
@@ -23,17 +25,17 @@ public interface GridGraph {
 
 	int vertex(int row, int col);
 
-	int neighbor(int vertex, Dir dir);
+	int neighbor(int vertex, Direction dir);
 
 	String name(int vertex);
 
-	void connect(int vertex, Dir dir);
+	void connect(int vertex, Direction dir);
 
 	void connect(int vertex, int neighbor);
 
-	void disconnect(int vertex, Dir dir);
+	void disconnect(int vertex, Direction dir);
 
 	void disconnect(int vertex, int neighbor);
 
-	boolean connected(int vertex, Dir dir);
+	boolean connected(int vertex, Direction dir);
 }

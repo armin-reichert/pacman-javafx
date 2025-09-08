@@ -1,5 +1,7 @@
 package de.amr.pacmanfx.lib.graph;
 
+import de.amr.pacmanfx.lib.Direction;
+
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
@@ -57,24 +59,24 @@ public class GridGraphImpl implements GridGraph {
 	}
 
 	@Override
-	public int neighbor(int vertex, Dir dir) {
+	public int neighbor(int vertex, Direction dir) {
 		int row = row(vertex);
 		int col = col(vertex);
 		return switch (dir) {
-			case N -> row - 1 >= 0 ? vertex(row - 1, col) : -1;
-			case E -> col + 1 < cols ? vertex(row, col + 1) : -1;
-			case S -> row + 1 < rows ? vertex(row + 1, col) : -1;
-			case W -> col - 1 >= 0 ? vertex(row, col - 1) : -1;
+			case UP -> row - 1 >= 0 ? vertex(row - 1, col) : -1;
+			case RIGHT -> col + 1 < cols ? vertex(row, col + 1) : -1;
+			case DOWN -> row + 1 < rows ? vertex(row + 1, col) : -1;
+			case LEFT -> col - 1 >= 0 ? vertex(row, col - 1) : -1;
 		};
 	}
 
 	@Override
-	public boolean connected(int vertex, Dir dir) {
+	public boolean connected(int vertex, Direction dir) {
 		return edges.get(4 * vertex + dir.ordinal());
 	}
 
 	@Override
-	public void connect(int vertex, Dir dir) {
+	public void connect(int vertex, Direction dir) {
 		if (connected(vertex, dir)) {
 			throw new IllegalStateException(String.format("Already connected: %s, %s", name(vertex), dir));
 		}
@@ -89,7 +91,7 @@ public class GridGraphImpl implements GridGraph {
 
 	@Override
 	public void connect(int vertex, int neighbor) {
-		for (Dir dir : Dir.values()) {
+		for (Direction dir : Direction.values()) {
 			if (neighbor == neighbor(vertex, dir)) {
 				connect(vertex, dir);
 				return;
@@ -99,7 +101,7 @@ public class GridGraphImpl implements GridGraph {
 	}
 
 	@Override
-	public void disconnect(int vertex, Dir dir) {
+	public void disconnect(int vertex, Direction dir) {
 		if (!connected(vertex, dir)) {
 			throw new IllegalStateException(String.format("Not connected: %s, %s", name(vertex), dir));
 		}
@@ -114,7 +116,7 @@ public class GridGraphImpl implements GridGraph {
 
 	@Override
 	public void disconnect(int vertex, int neighbor) {
-		for (Dir dir : Dir.values()) {
+		for (Direction dir : Direction.values()) {
 			if (neighbor == neighbor(vertex, dir)) {
 				disconnect(vertex, dir);
 				return;
@@ -127,7 +129,7 @@ public class GridGraphImpl implements GridGraph {
 	public Iterable<Edge> edges() {
 		List<Edge> edgeList = new ArrayList<>();
 		for (int vertex = 0; vertex < numVertices(); ++vertex) {
-			for (Dir dir : new Dir[] { Dir.E, Dir.S }) {
+			for (Direction dir : new Direction[] { Direction.RIGHT, Direction.DOWN }) {
 				if (connected(vertex, dir)) {
 					edgeList.add(new Edge(this, vertex, neighbor(vertex, dir)));
 				}
