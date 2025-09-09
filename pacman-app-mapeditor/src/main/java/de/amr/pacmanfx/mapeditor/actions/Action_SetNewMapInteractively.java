@@ -24,21 +24,20 @@ public class Action_SetNewMapInteractively extends EditorUIAction<Void> {
     private static final int DEFAULT_NUM_ROWS = 31;
 
     private final boolean preconfigured;
-    private final Dialog<Vector2i> dialog;
 
     public Action_SetNewMapInteractively(EditorUI ui, boolean preconfigured) {
         super(ui);
         this.preconfigured = preconfigured;
-        this.dialog = new SizeInputDialog(
+    }
+
+    @Override
+    public Void execute() {
+        var dialog = new SizeInputDialog(
             MIN_NUM_COLS, MAX_NUM_COLS, DEFAULT_NUM_COLS,
             MIN_NUM_ROWS, MAX_NUM_ROWS, DEFAULT_NUM_ROWS);
         dialog.setTitle(translated("new_dialog.title"));
         dialog.setHeaderText(translated("new_dialog.header_text"));
         dialog.setContentText(translated("new_dialog.content_text"));
-    }
-
-    @Override
-    public Void execute() {
         ui.afterCheckForUnsavedChanges(() -> dialog.showAndWait().ifPresent(this::createNewMap));
         return null;
     }
