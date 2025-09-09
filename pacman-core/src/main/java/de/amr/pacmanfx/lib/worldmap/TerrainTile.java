@@ -25,11 +25,10 @@ public enum TerrainTile {
     ONE_WAY_DOWN   (0x16),
     ONE_WAY_LEFT   (0x17);
 
+    /** The code for this tile. */
     public final byte $;
 
     TerrainTile(int code) { $ = (byte) code; }
-
-    public byte code() { return $; }
 
     /**
      * @param code terrain tile code

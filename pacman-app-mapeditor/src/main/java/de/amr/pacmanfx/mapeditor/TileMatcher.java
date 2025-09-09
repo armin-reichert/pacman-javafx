@@ -43,9 +43,9 @@ public class TileMatcher {
     }
 
     public byte matchFoodTile(int[] tilePixels) {
-        if (isEnergizer(tilePixels)) return FoodTile.ENERGIZER.code();
-        if (isPellet(tilePixels)) return FoodTile.PELLET.code();
-        return FoodTile.EMPTY.code();
+        if (isEnergizer(tilePixels)) return FoodTile.ENERGIZER.$;
+        if (isPellet(tilePixels)) return FoodTile.PELLET.$;
+        return FoodTile.EMPTY.$;
     }
 
     private boolean isEnergizer(int[] tilePixels) {

@@ -107,7 +107,7 @@ public class ObstacleEditor {
             for (int col = 0; col < numCols; ++col) {
                 Vector2i tile = minTile.plus(col, row);
                 new Action_SetTerrainTileCode(ui.editor(), tile, editedRect[row][col]).execute();
-                new Action_SetFoodTileCode(ui.editor(), tile, FoodTile.EMPTY.code()).execute();
+                new Action_SetFoodTileCode(ui.editor(), tile, FoodTile.EMPTY.$).execute();
             }
         }
     }

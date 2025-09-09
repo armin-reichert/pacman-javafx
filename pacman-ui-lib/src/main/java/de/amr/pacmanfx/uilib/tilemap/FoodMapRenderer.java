@@ -40,8 +40,8 @@ public class FoodMapRenderer extends BaseCanvasRenderer implements TileRenderer 
 
     @Override
     public void drawTile(Vector2i tile, byte content) {
-        if      (content == FoodTile.PELLET.code()) drawPellet(tile);
-        else if (content == FoodTile.ENERGIZER.code()) drawEnergizer(tile);
+        if      (content == FoodTile.PELLET.$) drawPellet(tile);
+        else if (content == FoodTile.ENERGIZER.$) drawEnergizer(tile);
     }
 
     public void drawPellet(Vector2i tile) {

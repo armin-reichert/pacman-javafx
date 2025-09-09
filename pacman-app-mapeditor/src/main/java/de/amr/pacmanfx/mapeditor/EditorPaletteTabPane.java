@@ -122,9 +122,9 @@ public class EditorPaletteTabPane extends TabPane {
     private Palette createFoodPalette(EditorUI ui, FoodMapRenderer prototype) {
         var palette = new Palette(PaletteID.FOOD, 3);
 
-        palette.addTool(new TileCodeEditorTool(ui.editor(), LayerID.FOOD, FoodTile.EMPTY.code(), "No Food"));
-        palette.addTool(new TileCodeEditorTool(ui.editor(), LayerID.FOOD, FoodTile.PELLET.code(), "Pellet"));
-        palette.addTool(new TileCodeEditorTool(ui.editor(), LayerID.FOOD, FoodTile.ENERGIZER.code(), "Energizer"));
+        palette.addTool(new TileCodeEditorTool(ui.editor(), LayerID.FOOD, FoodTile.EMPTY.$, "No Food"));
+        palette.addTool(new TileCodeEditorTool(ui.editor(), LayerID.FOOD, FoodTile.PELLET.$, "Pellet"));
+        palette.addTool(new TileCodeEditorTool(ui.editor(), LayerID.FOOD, FoodTile.ENERGIZER.$, "Energizer"));
 
         palette.setSelectedToolIndex(0); // "No Food"
 

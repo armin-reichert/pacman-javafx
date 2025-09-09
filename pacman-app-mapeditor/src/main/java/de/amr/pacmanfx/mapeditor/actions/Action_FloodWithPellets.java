@@ -41,7 +41,7 @@ public class Action_FloodWithPellets extends EditorAction<Void> {
         while (!q.isEmpty()) {
             Vector2i current = q.poll();
             if (canPlacePelletAt(worldMap, current)) {
-                new Action_SetFoodTileCode(editor, current, FoodTile.PELLET.code()).execute();
+                new Action_SetFoodTileCode(editor, current, FoodTile.PELLET.$).execute();
             }
             for (Direction dir : Direction.values()) {
                 Vector2i neighborTile = current.plus(dir.vector());
@@ -62,22 +62,22 @@ public class Action_FloodWithPellets extends EditorAction<Void> {
     // The actor tile stored as a map property is the left one of a pair of tiles which are reserved for the actor
     // initially. Both tiles are not allowed to carry food. So we clear both tiles after flooding.
     private void clearBothTilesOccupiedByActor(WorldMap worldMap, Vector2i leftActorTile) {
-        new Action_SetFoodTileCode(editor, leftActorTile, FoodTile.EMPTY.code()).execute();
+        new Action_SetFoodTileCode(editor, leftActorTile, FoodTile.EMPTY.$).execute();
         Vector2i rightActorTile = leftActorTile.plus(Direction.RIGHT.vector());
         if (isAccessible(worldMap, rightActorTile)) {
-            new Action_SetFoodTileCode(editor, rightActorTile, FoodTile.EMPTY.code()).execute();
+            new Action_SetFoodTileCode(editor, rightActorTile, FoodTile.EMPTY.$).execute();
         }
     }
 
     private boolean isAccessible(WorldMap worldMap, Vector2i tile) {
         if (worldMap.outOfWorld(tile)) return false;
-        return worldMap.layer(LayerID.TERRAIN).get(tile) == TerrainTile.EMPTY.code();
+        return worldMap.layer(LayerID.TERRAIN).get(tile) == TerrainTile.EMPTY.$;
     }
 
     private boolean canPlacePelletAt(WorldMap worldMap, Vector2i tile) {
         if (!canPlaceFoodAtTile(worldMap, tile)) return false;
         // Avoid overwriting energizers
-        return worldMap.layer(LayerID.FOOD).get(tile) != FoodTile.ENERGIZER.code();
+        return worldMap.layer(LayerID.FOOD).get(tile) != FoodTile.ENERGIZER.$;
     }
 
     private Set<Vector2i> actorTiles(WorldMap worldMap) {

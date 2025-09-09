@@ -9,9 +9,8 @@ public enum FoodTile {
     PELLET    (0x01),
     ENERGIZER (0x02);
 
+    /** The code for this tile. */
     public final byte $;
 
     FoodTile(int code) { $ = (byte) code; }
-
-    public byte code() { return $; }
 }

@@ -35,7 +35,7 @@ public class WorldMap {
     }
 
     public static boolean isValidFoodCode(byte code) {
-        return Stream.of(FoodTile.values()).anyMatch(tile -> tile.code() == code);
+        return Stream.of(FoodTile.values()).anyMatch(tile -> tile.$ == code);
     }
 
     private static void assertValidLayerID(LayerID id) {
@@ -115,7 +115,7 @@ public class WorldMap {
         for (int row = 0; row < newMap.numRows; ++row) {
             for (int col = 0; col < newMap.numCols; ++col) {
                 byte terrainValue = TerrainTile.EMPTY.$;
-                byte foodValue = FoodTile.EMPTY.code();
+                byte foodValue = FoodTile.EMPTY.$;
                 if (row < rowIndex) {
                     terrainValue = content(LayerID.TERRAIN, row, col);
                     foodValue = content(LayerID.FOOD, row, col);

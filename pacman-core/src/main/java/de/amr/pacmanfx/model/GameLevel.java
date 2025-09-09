@@ -7,10 +7,10 @@ package de.amr.pacmanfx.model;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
+import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.worldmap.FoodTile;
 import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
-import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.model.actors.*;
 import org.tinylog.Logger;
 
@@ -87,8 +87,8 @@ public class GameLevel {
         findHouse();
 
         currentBonusIndex = -1;
-        energizerPositions = worldMap.tilesContaining(LayerID.FOOD, ENERGIZER.code()).collect(Collectors.toSet());
-        totalFoodCount = (int) worldMap.tilesContaining(LayerID.FOOD, PELLET.code()).count() + energizerPositions.size();
+        energizerPositions = worldMap.tilesContaining(LayerID.FOOD, ENERGIZER.$).collect(Collectors.toSet());
+        totalFoodCount = (int) worldMap.tilesContaining(LayerID.FOOD, PELLET.$).count() + energizerPositions.size();
         uneatenFoodCount = totalFoodCount;
         eatenFoodBits = new BitSet(worldMap.numCols() * worldMap.numRows());
 
@@ -411,7 +411,7 @@ public class GameLevel {
     }
 
     public boolean isFoodPosition(Vector2i tile) {
-        return isTileInsideWorld(tile) && worldMap.content(LayerID.FOOD, tile) != FoodTile.EMPTY.code();
+        return isTileInsideWorld(tile) && worldMap.content(LayerID.FOOD, tile) != FoodTile.EMPTY.$;
     }
 
     public Set<Vector2i> energizerPositions() { return Collections.unmodifiableSet(energizerPositions); }

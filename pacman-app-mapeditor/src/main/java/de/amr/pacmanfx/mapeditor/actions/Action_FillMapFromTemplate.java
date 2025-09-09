@@ -9,11 +9,11 @@ import de.amr.pacmanfx.lib.worldmap.FoodTile;
 import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.lib.worldmap.TerrainTile;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
-import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.mapeditor.EditorUI;
 import de.amr.pacmanfx.mapeditor.MessageType;
 import de.amr.pacmanfx.mapeditor.TileMatcher;
+import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.WorldMapProperty;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritablePixelFormat;
 import javafx.scene.paint.Color;
@@ -78,7 +78,7 @@ public class Action_FillMapFromTemplate extends EditorUIAction<Void> {
                     int[] pixelsOfTile = new int[TS*TS]; // pixels row-wise
                     rdr.getPixels(col * TS, row * TS, TS, TS, pixelFormat, pixelsOfTile, 0, TS);
                     byte foodValue = matcher.matchFoodTile(pixelsOfTile);
-                    if (foodValue == FoodTile.PELLET.code() || foodValue == FoodTile.ENERGIZER.code()) {
+                    if (foodValue == FoodTile.PELLET.$ || foodValue == FoodTile.ENERGIZER.$) {
                         worldMap.setContent(LayerID.FOOD, worldMapTile, foodValue);
                     } else {
                         byte terrainValue = matcher.matchTerrainTile(pixelsOfTile);

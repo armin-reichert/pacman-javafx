@@ -112,7 +112,7 @@ public class MazeMapGenerator {
             for (int col = 0; col < map.numCols(); ++col) {
                 if (map.content(LayerID.TERRAIN, row, col) == TerrainTile.EMPTY.$
                         && new Random().nextInt(100) < 40) {
-                    map.setContent(LayerID.FOOD, row, col, FoodTile.PELLET.code());
+                    map.setContent(LayerID.FOOD, row, col, FoodTile.PELLET.$);
                 }
             }
         }

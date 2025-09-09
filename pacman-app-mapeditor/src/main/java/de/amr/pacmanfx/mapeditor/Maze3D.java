@@ -81,33 +81,19 @@ public class Maze3D extends Group {
 
     public BooleanProperty terrainVisibleProperty() { return terrainVisible; }
 
-    public final Runnable actionRotateLeft = () -> {
-        rotateBy(-2);
-    };
+    public final Runnable actionRotateLeft = () -> rotateBy(-2);
 
-    public final Runnable actionRotateRight = () -> {
-        rotateBy(2);
-    };
+    public final Runnable actionRotateRight = () -> rotateBy(2);
 
-    public final Runnable actionMoveTowardsUser = () -> {
-        setTranslateY(getTranslateY() + 10);
-    };
+    public final Runnable actionMoveTowardsUser = () -> setTranslateY(getTranslateY() + 10);
 
-    public final Runnable actionMoveAwayFromUser = () -> {
-        setTranslateY(getTranslateY() - 10);
-    };
+    public final Runnable actionMoveAwayFromUser = () -> setTranslateY(getTranslateY() - 10);
 
-    public final Runnable actionMoveRight = () -> {
-        setTranslateX(getTranslateX() - 10);
-    };
+    public final Runnable actionMoveRight = () -> setTranslateX(getTranslateX() - 10);
 
-    public final Runnable actionMoveLeft = () -> {
-        setTranslateX(getTranslateX() + 10);
-    };
+    public final Runnable actionMoveLeft = () -> setTranslateX(getTranslateX() + 10);
 
-    public final Runnable actionToggleWireframe = () -> {
-        wireframe.set(!wireframe.get());
-    };
+    public final Runnable actionToggleWireframe = () -> wireframe.set(!wireframe.get());
 
     private final Group mazeGroup = new Group();
     private final Group foodGroup = new Group();
@@ -282,10 +268,10 @@ public class Maze3D extends Group {
     }
 
     private boolean hasFoodAt(Vector2i tile) {
-        return worldMap().content(LayerID.FOOD, tile) != FoodTile.EMPTY.code();
+        return worldMap().content(LayerID.FOOD, tile) != FoodTile.EMPTY.$;
     }
 
     private boolean hasEnergizerAt(Vector2i tile) {
-        return worldMap().content(LayerID.FOOD, tile) == FoodTile.ENERGIZER.code();
+        return worldMap().content(LayerID.FOOD, tile) == FoodTile.ENERGIZER.$;
     }
 }
