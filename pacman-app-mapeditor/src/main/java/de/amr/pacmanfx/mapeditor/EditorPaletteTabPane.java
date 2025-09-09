@@ -27,7 +27,7 @@ import static de.amr.pacmanfx.model.WorldMapProperty.*;
 public class EditorPaletteTabPane extends TabPane {
 
     public EditorPaletteTabPane(EditorUI ui, TerrainMapTileRenderer terrainRenderer, FoodMapRenderer foodRenderer) {
-        setMinHeight(80);
+        setMinHeight(90);
         setPadding(new Insets(5, 5, 5, 5));
 
         Palette terrainPalette = createTerrainPalette(ui, terrainRenderer);
@@ -69,7 +69,7 @@ public class EditorPaletteTabPane extends TabPane {
     }
 
     private Palette createTerrainPalette(EditorUI ui, TerrainMapTileRenderer prototype) {
-        var palette = new Palette(PaletteID.TERRAIN, 1, 13);
+        var palette = new Palette(PaletteID.TERRAIN, 13);
 
         palette.addTool(new TileCodeEditorTool(ui.editor(), LayerID.TERRAIN, TerrainTile.EMPTY.$, "Empty Space"));
         palette.addTool(new TileCodeEditorTool(ui.editor(), LayerID.TERRAIN, TerrainTile.WALL_H.$, "Horizontal Wall"));
@@ -96,7 +96,7 @@ public class EditorPaletteTabPane extends TabPane {
     }
 
     private Palette createActorsPalette(EditorUI ui, TerrainMapTileRenderer prototype) {
-        var palette = new Palette(PaletteID.ACTORS, 1, 10);
+        var palette = new Palette(PaletteID.ACTORS, 10);
 
         palette.addTool(new ActorTool(ui, POS_PAC,                  "Pac-Man", ArcadeSprites.PAC_MAN));
         palette.addTool(new ActorTool(ui, POS_RED_GHOST,            "Red Ghost", ArcadeSprites.RED_GHOST));
@@ -120,7 +120,7 @@ public class EditorPaletteTabPane extends TabPane {
     }
 
     private Palette createFoodPalette(EditorUI ui, FoodMapRenderer prototype) {
-        var palette = new Palette(PaletteID.FOOD, 1, 3);
+        var palette = new Palette(PaletteID.FOOD, 3);
 
         palette.addTool(new TileCodeEditorTool(ui.editor(), LayerID.FOOD, FoodTile.EMPTY.code(), "No Food"));
         palette.addTool(new TileCodeEditorTool(ui.editor(), LayerID.FOOD, FoodTile.PELLET.code(), "Pellet"));

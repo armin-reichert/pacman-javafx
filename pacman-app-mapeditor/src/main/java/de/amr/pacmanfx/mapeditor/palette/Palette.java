@@ -12,6 +12,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
@@ -24,21 +25,23 @@ import static java.util.Objects.requireNonNull;
 
 public class Palette extends Canvas {
 
+    private static final String CHECK_MARK_SYMBOL = "\u2713";
+    private static final Font CHECK_MARK_FONT = Font.font(16);
+    private static final Color CHECK_MARK_FILL = Color.grayRgb(42);
+
+    private static final int BOTTOM_HEIGHT = 25;
+
     private final PaletteID id;
-    private final int numRows;
-    private final int numCols;
     private final List<PaletteTool> tools = new ArrayList<>();
     private final Tooltip tooltip;
 
     private TileRenderer renderer;
     private final IntegerProperty selectedToolIndex = new SimpleIntegerProperty(-1);
 
-    public Palette(PaletteID id, int numRows, int numCols) {
-        super(numCols * TOOL_SIZE, numRows * TOOL_SIZE);
+    public Palette(PaletteID id, int maxEntries) {
+        super(maxEntries * TOOL_SIZE, TOOL_SIZE + BOTTOM_HEIGHT);
 
         this.id = requireNonNull(id);
-        this.numRows = numRows;
-        this.numCols = numCols;
 
         // Tooltip for tool :-)
         tooltip = new Tooltip("This tool does...");
@@ -61,14 +64,6 @@ public class Palette extends Canvas {
 
     public void addTool(PaletteTool tool) {
         tools.add(tool);
-    }
-
-    public int selectedRowIndex() {
-        return selectedToolIndex() != -1 ? selectedToolIndex() / numCols : -1;
-    }
-
-    public int selectedColIndex() {
-        return selectedToolIndex() != -1 ? selectedToolIndex() % numCols : -1;
     }
 
     public Optional<PaletteTool> selectedTool() {
@@ -95,9 +90,7 @@ public class Palette extends Canvas {
     }
 
     private int indexFromPosition(double x, double y) {
-        int row = (int) y / TOOL_SIZE;
-        int col = (int) x / TOOL_SIZE;
-        return row * numCols + col;
+        return (int) x / TOOL_SIZE;
     }
 
     private void handleMouseClick(MouseEvent e) {
@@ -120,35 +113,35 @@ public class Palette extends Canvas {
 
     public void draw() {
         GraphicsContext ctx = getGraphicsContext2D();
-        double width = getWidth(), height = getHeight();
+        double width = getWidth(), height = getHeight(), toolHeight = height - BOTTOM_HEIGHT;
 
         ctx.save();
+        ctx.setFill(Color.LIGHTGRAY);
+        ctx.fillRect(0, 0, width, toolHeight + BOTTOM_HEIGHT);
         ctx.setFill(Color.BLACK);
-        ctx.fillRect(0, 0, width, height);
-
-        // mark selected tool
-        if (selectedToolIndex() != -1) {
-            ctx.setFill(Color.grayRgb(200));
-            ctx.fillRect(selectedColIndex() * TOOL_SIZE, selectedRowIndex() * TOOL_SIZE, TOOL_SIZE, TOOL_SIZE);
-        }
+        ctx.fillRect(0, 0, width, toolHeight + 1); //TODO check
 
         if (renderer != null) {
             renderer.setScaling(TOOL_SIZE / 8.0);
-            for (int i = 0; i < numRows * numCols; ++i) {
+            for (int i = 0; i < numTools(); ++i) {
                 PaletteTool tool = getToolOrNull(i);
                 if (tool != null) {
-                    tool.draw(renderer, i / numCols, i % numCols);
+                    tool.draw(renderer, 0, i % numTools());
                 }
             }
         }
 
-        // Grid lines
-        ctx.setStroke(Color.LIGHTGRAY);
-        ctx.setLineWidth(1);
-        for (int row = 1; row < numRows; ++row) {
-            ctx.strokeLine(0, row * TOOL_SIZE, width, row * TOOL_SIZE);
+        // mark selected tool
+        if (selectedToolIndex() != -1) {
+            ctx.setFont(CHECK_MARK_FONT);
+            ctx.setFill(CHECK_MARK_FILL);
+            ctx.fillText(CHECK_MARK_SYMBOL, selectedToolIndex() * TOOL_SIZE + 0.5 * TOOL_SIZE - 8, TOOL_SIZE + 0.6 * BOTTOM_HEIGHT);
         }
-        for (int col = 1; col < numCols; ++col) {
+
+        // Separators
+        ctx.setStroke(Color.LIGHTGRAY);
+        ctx.setLineWidth(0.5);
+        for (int col = 1; col < numTools(); ++col) {
             ctx.strokeLine(col * TOOL_SIZE, 0, col * TOOL_SIZE, height);
         }
 
