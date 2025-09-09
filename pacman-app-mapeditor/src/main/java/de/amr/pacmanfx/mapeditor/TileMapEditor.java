@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -250,7 +251,8 @@ public class TileMapEditor {
             }
             msPacManMaps.trimToSize();
             masonicMaps.trimToSize();
-            sampleMaps = new SampleMaps(pacManMap, msPacManMaps, masonicMaps);
+            sampleMaps = new SampleMaps(
+                pacManMap, Collections.unmodifiableList(msPacManMaps), Collections.unmodifiableList(masonicMaps));
         }
         return sampleMaps;
     }
