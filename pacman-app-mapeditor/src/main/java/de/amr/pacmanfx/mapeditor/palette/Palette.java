@@ -113,13 +113,15 @@ public class Palette extends Canvas {
 
     public void draw() {
         GraphicsContext ctx = getGraphicsContext2D();
-        double width = getWidth(), height = getHeight(), toolHeight = height - BOTTOM_HEIGHT;
+        double width = getWidth(), height = getHeight();
+        double separatorY = TOOL_SIZE + 1;
 
         ctx.save();
-        ctx.setFill(Color.LIGHTGRAY);
-        ctx.fillRect(0, 0, width, toolHeight + BOTTOM_HEIGHT);
         ctx.setFill(Color.BLACK);
-        ctx.fillRect(0, 0, width, toolHeight + 1); //TODO check
+        ctx.fillRect(0, 0, width, TOOL_SIZE + 1);
+        // bottom area with checkmarks
+        ctx.setFill(Color.LIGHTGRAY);
+        ctx.fillRect(0, separatorY, width, BOTTOM_HEIGHT);
 
         if (renderer != null) {
             renderer.setScaling(TOOL_SIZE / 8.0);
@@ -139,10 +141,13 @@ public class Palette extends Canvas {
         }
 
         // Separators
-        ctx.setStroke(Color.LIGHTGRAY);
-        ctx.setLineWidth(0.5);
+        ctx.setLineWidth(0.25);
         for (int col = 1; col < numTools(); ++col) {
-            ctx.strokeLine(col * TOOL_SIZE, 0, col * TOOL_SIZE, height);
+            int x = col * TOOL_SIZE;
+            ctx.setStroke(Color.WHITE);
+            ctx.strokeLine(x, 0, x, TOOL_SIZE);
+            ctx.setStroke(Color.BLACK);
+            ctx.strokeLine(x, TOOL_SIZE, x, height);
         }
 
         ctx.restore();

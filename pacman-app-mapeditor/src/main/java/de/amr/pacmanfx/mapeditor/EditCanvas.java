@@ -259,9 +259,11 @@ public class EditCanvas extends Canvas {
         ctx.fillRect(0, 0, width, height);
 
         if (isFocused()) {
-            ctx.setStroke(Color.RED);
-            ctx.setLineWidth(4);
+            ctx.setStroke(Color.YELLOW);
+            ctx.setLineWidth(2);
+            ctx.setLineDashes(2, 10);
             ctx.strokeRect(0, 0, width, height);
+            ctx.setLineDashes();
         }
 
         if (templateImageGray.get() != null) {
