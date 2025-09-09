@@ -7,8 +7,8 @@ package de.amr.pacmanfx.mapeditor.actions;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
-import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
+import de.amr.pacmanfx.model.WorldMapProperty;
 
 import static de.amr.pacmanfx.lib.worldmap.WorldMapFormatter.formatTile;
 
@@ -17,10 +17,10 @@ public class Action_CreatePreconfiguredMap extends EditorAction<WorldMap> {
     private final int numRows;
     private final int numCols;
 
-    public Action_CreatePreconfiguredMap(TileMapEditor editor, int numRows, int numCols) {
+    public Action_CreatePreconfiguredMap(TileMapEditor editor, int numCols, int numRows) {
         super(editor);
-        this.numRows = numRows;
         this.numCols = numCols;
+        this.numRows = numRows;
     }
 
     @Override

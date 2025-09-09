@@ -44,8 +44,8 @@ public class Action_SetNewMapInteractively extends EditorUIAction<Void> {
     private void createNewMap(Vector2i sizeInTiles) {
         int numCols = sizeInTiles.x(), numRows = sizeInTiles.y();
         WorldMap newMap = preconfigured
-            ? new Action_CreatePreconfiguredMap(editor, numRows, numCols).execute()
-            : new Action_CreateEmptyMap(editor, numRows, numCols).execute();
+            ? new Action_CreatePreconfiguredMap(editor, numCols, numRows).execute()
+            : new Action_CreateEmptyMap(editor, numCols, numRows).execute();
         editor.setCurrentWorldMap(newMap);
         editor.setCurrentFile(null);
         editor.setTemplateImage(null);
