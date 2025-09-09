@@ -58,7 +58,6 @@ public class TileMapEditor {
     }
 
     public void init(File workDir) {
-        loadSampleMaps();
         setCurrentDirectory(workDir);
         setCurrentWorldMap(WorldMap.emptyMap(28, 36));
         new Action_SetDefaultMapColors(this).execute();
@@ -234,27 +233,26 @@ public class TileMapEditor {
     public record SampleMaps(WorldMap pacManMap, List<WorldMap> msPacmanMaps, List<WorldMap> masonicMaps) {}
 
     public SampleMaps sampleMaps() {
-        return sampleMaps;
-    }
-
-    private void loadSampleMaps() {
-        WorldMap pacManMap = null;
-        ArrayList<WorldMap> msPacManMaps = new ArrayList<>();
-        ArrayList<WorldMap> masonicMaps = new ArrayList<>();
-        try {
-            pacManMap = loadMap(SAMPLE_MAP_PATH_PACMAN, 1).orElse(null);
-            for (int n = 1; n <= 6; ++n) {
-                loadMap(SAMPLE_MAP_PATH_MS_PACMAN, n).ifPresent(msPacManMaps::add);
+        if (sampleMaps == null) {
+            WorldMap pacManMap = null;
+            ArrayList<WorldMap> msPacManMaps = new ArrayList<>();
+            ArrayList<WorldMap> masonicMaps = new ArrayList<>();
+            try {
+                pacManMap = loadMap(SAMPLE_MAP_PATH_PACMAN, 1).orElse(null);
+                for (int number = 1; number <= 6; ++number) {
+                    loadMap(SAMPLE_MAP_PATH_MS_PACMAN, number).ifPresent(msPacManMaps::add);
+                }
+                for (int number = 1; number <= 8; ++number) {
+                    loadMap(SAMPLE_MAP_PATH_MASONIC, number).ifPresent(masonicMaps::add);
+                }
+            } catch (Exception x) {
+                Logger.error(x);
             }
-            for (int n = 1; n <= 8; ++n) {
-                loadMap(SAMPLE_MAP_PATH_MASONIC, n).ifPresent(masonicMaps::add);
-            }
-        } catch (Exception x) {
-            Logger.error(x);
+            msPacManMaps.trimToSize();
+            masonicMaps.trimToSize();
+            sampleMaps = new SampleMaps(pacManMap, msPacManMaps, masonicMaps);
         }
-        msPacManMaps.trimToSize();
-        masonicMaps.trimToSize();
-        sampleMaps = new SampleMaps(pacManMap, msPacManMaps, masonicMaps);
+        return sampleMaps;
     }
 
     private Optional<WorldMap> loadMap(String pathPattern, int number) {
