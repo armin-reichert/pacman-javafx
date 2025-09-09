@@ -8,78 +8,38 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.mapeditor.EditMode;
 import de.amr.pacmanfx.mapeditor.EditorUI;
-import de.amr.pacmanfx.mapeditor.EditorUtil;
-import de.amr.pacmanfx.mapeditor.MessageType;
-import javafx.event.ActionEvent;
-import javafx.scene.Node;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TextInputDialog;
+import de.amr.pacmanfx.mapeditor.SizeInputDialog;
+import javafx.scene.control.Dialog;
 
 import static de.amr.pacmanfx.mapeditor.EditorGlobals.translated;
-import static de.amr.pacmanfx.mapeditor.EditorUtil.parseMapSize;
 
 public class Action_SetNewMapInteractively extends EditorUIAction<Void> {
 
-    record ValidationResult(boolean ok, String message) {}
+    private static final int MIN_NUM_COLS = 10;
+    private static final int MAX_NUM_COLS = 100;
+    private static final int DEFAULT_NUM_COLS = 28;
 
-    private static final int MIN_MAP_ROWS = 16;
-
-    private static final ValidationResult VALIDATION_OK = new ValidationResult(true, "");
-
-    private static final ValidationResult VALIDATION_ERR_MAP_FORMAT
-        = new ValidationResult(false, "Enter map size as cols x rows e.g. 28x36"); // TODO localize
-
-    private static final ValidationResult VALIDATION_ERR_MAP_TOO_SMALL
-        = new ValidationResult(false, "Map must have at least %d rows".formatted(MIN_MAP_ROWS)); // TODO localize
-
-    private static ValidationResult validate(String input) {
-        if (input.trim().isBlank()) {
-            return VALIDATION_ERR_MAP_FORMAT;
-        }
-        Vector2i sizeInTiles = parseMapSize(input).orElse(null);
-        if (sizeInTiles == null) {
-            return VALIDATION_ERR_MAP_FORMAT;
-        }
-        if (sizeInTiles.y() < MIN_MAP_ROWS) {
-            return VALIDATION_ERR_MAP_TOO_SMALL;
-        }
-        return VALIDATION_OK;
-    }
-
-    private static TextInputDialog createSizeInputDialog(EditorUI ui) {
-        var dialog = new TextInputDialog("28x36");
-        dialog.setTitle(translated("new_dialog.title"));
-        dialog.setHeaderText(translated("new_dialog.header_text"));
-        dialog.setContentText(translated("new_dialog.content_text"));
-
-        // Keep dialog open until valid input has been entered
-        Node okButton = dialog.getDialogPane().lookupButton(ButtonType.OK);
-        okButton.addEventFilter(ActionEvent.ACTION, event -> {
-            String input = dialog.getEditor().getText();
-            ValidationResult validation = validate(input);
-            if (!validation.ok()) {
-                ui.messageDisplay().showMessage(validation.message(), 2, MessageType.ERROR);
-                event.consume(); // Prevent dialog from closing
-            }
-        });
-        return dialog;
-    }
+    private static final int MIN_NUM_ROWS = 16;
+    private static final int MAX_NUM_ROWS = 100;
+    private static final int DEFAULT_NUM_ROWS = 31;
 
     private final boolean preconfigured;
-    private final TextInputDialog dialog;
+    private final Dialog<Vector2i> dialog;
 
     public Action_SetNewMapInteractively(EditorUI ui, boolean preconfigured) {
         super(ui);
         this.preconfigured = preconfigured;
-        this.dialog = createSizeInputDialog(ui);
+        this.dialog = new SizeInputDialog(
+            MIN_NUM_COLS, MAX_NUM_COLS, DEFAULT_NUM_COLS,
+            MIN_NUM_ROWS, MAX_NUM_ROWS, DEFAULT_NUM_ROWS);
+        dialog.setTitle(translated("new_dialog.title"));
+        dialog.setHeaderText(translated("new_dialog.header_text"));
+        dialog.setContentText(translated("new_dialog.content_text"));
     }
 
     @Override
     public Void execute() {
-        ui.afterCheckForUnsavedChanges(() -> dialog.showAndWait()
-            .flatMap(EditorUtil::parseMapSize)
-            .ifPresent(this::createNewMap));
-
+        ui.afterCheckForUnsavedChanges(() -> dialog.showAndWait().ifPresent(this::createNewMap));
         return null;
     }
 
