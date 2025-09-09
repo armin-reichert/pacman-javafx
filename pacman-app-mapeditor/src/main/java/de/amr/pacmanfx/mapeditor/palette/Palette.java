@@ -128,7 +128,7 @@ public class Palette extends Canvas {
 
         // mark selected tool
         if (selectedToolIndex() != -1) {
-            ctx.setFill(Color.grayRgb(100));
+            ctx.setFill(Color.grayRgb(200));
             ctx.fillRect(selectedColIndex() * TOOL_SIZE, selectedRowIndex() * TOOL_SIZE, TOOL_SIZE, TOOL_SIZE);
         }
 

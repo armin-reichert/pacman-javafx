@@ -60,14 +60,12 @@ public class ActorTool extends PropertyValueEditorTool {
     private void drawScatterTarget(GraphicsContext ctx, Vector2i tile, Color color) {
         double x = tile.x() * TS, y = tile.y() * TS;
         ctx.setFill(color);
-        ctx.fillRect(x, y, TS, TS);
+        ctx.fillOval(x + 2, y + 2, TS - 4, TS - 4);
         ctx.setStroke(Color.WHITE);
-        ctx.setLineWidth(0.5);
-        ctx.strokeOval(x + 2, y + 2, TS - 4, TS - 4);
+        ctx.setLineWidth(0.4);
         ctx.strokeLine(x + 0.5 * TS, y, x + 0.5 * TS, y + TS);
         ctx.strokeLine(x, y + 0.5 * TS, x + TS, y + 0.5 * TS);
     }
-
 
     private void drawSprite(GraphicsContext g, double x, double y, RectShort sprite) {
         g.drawImage(SPRITE_SHEET,
