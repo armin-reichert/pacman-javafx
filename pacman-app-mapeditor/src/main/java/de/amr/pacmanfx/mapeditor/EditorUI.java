@@ -9,8 +9,8 @@ import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.mapeditor.actions.*;
 import de.amr.pacmanfx.mapeditor.palette.Palette;
 import de.amr.pacmanfx.mapeditor.palette.PaletteID;
-import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.mapeditor.properties.MapPropertiesEditor;
+import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapColorScheme;
 import javafx.application.Platform;
@@ -772,9 +772,9 @@ public class EditorUI {
                 menu.getItems().add(item);
             }
         }
-        for (int i = 0; i < maps.xxlMaps().size(); ++i) {
-            if (maps.xxlMaps().get(i) != null) {
-                MenuItem item = createLoadMapMenuItem("Pac-Man XXL %d".formatted(i+1), maps.xxlMaps().get(i));
+        for (int i = 0; i < maps.masonicMaps().size(); ++i) {
+            if (maps.masonicMaps().get(i) != null) {
+                MenuItem item = createLoadMapMenuItem("Pac-Man XXL %d".formatted(i+1), maps.masonicMaps().get(i));
                 if (i == 0) {
                     menu.getItems().add(new SeparatorMenuItem());
                 }

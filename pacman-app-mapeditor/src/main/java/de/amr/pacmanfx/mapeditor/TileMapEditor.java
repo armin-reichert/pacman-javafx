@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static de.amr.pacmanfx.mapeditor.EditorGlobals.SAMPLE_MAPS_PATH;
+import static de.amr.pacmanfx.mapeditor.EditorGlobals.*;
 import static de.amr.pacmanfx.mapeditor.EditorUtil.generateSourceCode;
 import static java.util.Objects.requireNonNull;
 
@@ -231,7 +231,7 @@ public class TileMapEditor {
 
     // Sample maps loading
 
-    public record SampleMaps(WorldMap pacManMap, List<WorldMap> msPacmanMaps, List<WorldMap> xxlMaps) {}
+    public record SampleMaps(WorldMap pacManMap, List<WorldMap> msPacmanMaps, List<WorldMap> masonicMaps) {}
 
     public SampleMaps sampleMaps() {
         return sampleMaps;
@@ -240,25 +240,25 @@ public class TileMapEditor {
     private void loadSampleMaps() {
         WorldMap pacManMap = null;
         ArrayList<WorldMap> msPacManMaps = new ArrayList<>();
-        ArrayList<WorldMap> xxlMaps = new ArrayList<>();
+        ArrayList<WorldMap> masonicMaps = new ArrayList<>();
         try {
-            pacManMap = loadMap("pacman/pacman.world", 1).orElse(null);
+            pacManMap = loadMap(SAMPLE_MAP_PATH_PACMAN, 1).orElse(null);
             for (int n = 1; n <= 6; ++n) {
-                loadMap("mspacman/mspacman_%d.world", n).ifPresent(msPacManMaps::add);
+                loadMap(SAMPLE_MAP_PATH_MS_PACMAN, n).ifPresent(msPacManMaps::add);
             }
             for (int n = 1; n <= 8; ++n) {
-                loadMap("pacman_xxl/masonic_%d.world", n).ifPresent(xxlMaps::add);
+                loadMap(SAMPLE_MAP_PATH_MASONIC, n).ifPresent(masonicMaps::add);
             }
         } catch (Exception x) {
             Logger.error(x);
         }
         msPacManMaps.trimToSize();
-        xxlMaps.trimToSize();
-        sampleMaps = new SampleMaps(pacManMap, msPacManMaps, xxlMaps);
+        masonicMaps.trimToSize();
+        sampleMaps = new SampleMaps(pacManMap, msPacManMaps, masonicMaps);
     }
 
-    private Optional<WorldMap> loadMap(String namePattern, int number) {
-        String path = SAMPLE_MAPS_PATH + namePattern.formatted(number);
+    private Optional<WorldMap> loadMap(String pathPattern, int number) {
+        String path = pathPattern.formatted(number);
         URL url = getClass().getResource(path);
         if (url == null) {
             Logger.error("Could not access resource with URL path '{}'", path);

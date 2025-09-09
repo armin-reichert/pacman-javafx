@@ -30,7 +30,10 @@ public interface EditorGlobals {
     short MIN_GRID_SIZE = 8;
     short MAX_GRID_SIZE = 80;
 
-    String SAMPLE_MAPS_PATH = "/de/amr/pacmanfx/mapeditor/maps/";
+    String SAMPLE_MAPS_PATH_PREFIX = "/de/amr/pacmanfx/mapeditor/maps/";
+    String SAMPLE_MAP_PATH_PACMAN = SAMPLE_MAPS_PATH_PREFIX + "pacman/pacman.world";
+    String SAMPLE_MAP_PATH_MS_PACMAN = SAMPLE_MAPS_PATH_PREFIX + "mspacman/mspacman_%d.world";
+    String SAMPLE_MAP_PATH_MASONIC = SAMPLE_MAPS_PATH_PREFIX + "pacman_xxl/masonic_%d.world";
 
     ResourceBundle TEXT_BUNDLE = ResourceBundle.getBundle(TileMapEditor.class.getPackageName() + ".texts");
 
