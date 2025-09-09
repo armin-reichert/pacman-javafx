@@ -6,7 +6,7 @@ package de.amr.pacmanfx.mapeditor;
 
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.lib.worldmap.WorldMapChecker;
-import de.amr.pacmanfx.mapeditor.actions.Action_SetDefaultMapColors;
+import de.amr.pacmanfx.mapeditor.actions.Action_CreateEmptyMap;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
@@ -59,8 +59,8 @@ public class TileMapEditor {
 
     public void init(File workDir) {
         setCurrentDirectory(workDir);
-        setCurrentWorldMap(WorldMap.emptyMap(28, 36));
-        new Action_SetDefaultMapColors(this).execute();
+        WorldMap worldMap = new Action_CreateEmptyMap(this, 28, 36).execute();
+        setCurrentWorldMap(worldMap);
         edited = false;
         ui.init();
     }

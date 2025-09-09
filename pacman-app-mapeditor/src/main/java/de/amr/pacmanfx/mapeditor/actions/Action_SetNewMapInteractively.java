@@ -9,7 +9,6 @@ import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.mapeditor.EditMode;
 import de.amr.pacmanfx.mapeditor.EditorUI;
 import de.amr.pacmanfx.mapeditor.SizeInputDialog;
-import javafx.scene.control.Dialog;
 
 import static de.amr.pacmanfx.mapeditor.EditorGlobals.translated;
 
@@ -21,7 +20,7 @@ public class Action_SetNewMapInteractively extends EditorUIAction<Void> {
 
     private static final int MIN_NUM_ROWS = 16;
     private static final int MAX_NUM_ROWS = 100;
-    private static final int DEFAULT_NUM_ROWS = 31;
+    private static final int DEFAULT_NUM_ROWS = 36;
 
     private final boolean preconfigured;
 
