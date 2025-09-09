@@ -8,6 +8,7 @@ import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.mapeditor.actions.Action_SetTerrainProperty;
 import de.amr.pacmanfx.mapeditor.EditorUI;
+import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.uilib.rendering.CanvasRenderer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -38,16 +39,35 @@ public class ActorTool extends PropertyValueEditorTool {
 
     @Override
     public void draw(CanvasRenderer renderer, int row, int col) {
-        GraphicsContext g = renderer.ctx();
-        g.setFill(Color.BLACK);
-        g.fillRect(col * TOOL_SIZE, row * TOOL_SIZE, TOOL_SIZE, TOOL_SIZE);
-        g.save();
-        g.setImageSmoothing(true);
-        g.scale(TOOL_SIZE / (double) TS, TOOL_SIZE / (double) TS);
-        double x = col * TS, y = row * TS;
-        drawSprite(g, x, y, sprite);
-        g.restore();
+        GraphicsContext ctx = renderer.ctx();
+        ctx.save();
+        ctx.setImageSmoothing(true);
+        ctx.scale(TOOL_SIZE / (double) TS, TOOL_SIZE / (double) TS);
+        Vector2i tile = new Vector2i(col, row);
+        switch (propertyName) {
+            case WorldMapProperty.POS_SCATTER_RED_GHOST -> drawScatterTarget(ctx, tile, Color.RED);
+            case WorldMapProperty.POS_SCATTER_PINK_GHOST -> drawScatterTarget(ctx, tile, Color.PINK);
+            case WorldMapProperty.POS_SCATTER_CYAN_GHOST -> drawScatterTarget(ctx, tile, Color.CYAN);
+            case WorldMapProperty.POS_SCATTER_ORANGE_GHOST -> drawScatterTarget(ctx, tile, Color.ORANGE);
+            default -> {
+                double x = col * TS, y = row * TS;
+                drawSprite(ctx, x, y, sprite);
+            }
+        }
+        ctx.restore();
     }
+
+    private void drawScatterTarget(GraphicsContext ctx, Vector2i tile, Color color) {
+        double x = tile.x() * TS, y = tile.y() * TS;
+        ctx.setFill(color);
+        ctx.fillRect(x, y, TS, TS);
+        ctx.setStroke(Color.WHITE);
+        ctx.setLineWidth(0.5);
+        ctx.strokeOval(x + 2, y + 2, TS - 4, TS - 4);
+        ctx.strokeLine(x + 0.5 * TS, y, x + 0.5 * TS, y + TS);
+        ctx.strokeLine(x, y + 0.5 * TS, x + TS, y + 0.5 * TS);
+    }
+
 
     private void drawSprite(GraphicsContext g, double x, double y, RectShort sprite) {
         g.drawImage(SPRITE_SHEET,
