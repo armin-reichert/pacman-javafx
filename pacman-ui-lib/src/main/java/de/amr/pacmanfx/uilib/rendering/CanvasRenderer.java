@@ -6,51 +6,29 @@ package de.amr.pacmanfx.uilib.rendering;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
-import static java.util.Objects.requireNonNull;
-
 public interface CanvasRenderer {
-
-    Canvas canvas();
 
     GraphicsContext ctx();
 
     DoubleProperty scalingProperty();
 
-    default double scaling() {
-        return scalingProperty().get();
-    }
+    double scaling();
 
-    default void setScaling(double value) {
-        if (value <= 0) {
-            throw new IllegalArgumentException("Scaling value must be positive but is %.2f".formatted(value));
-        }
-        scalingProperty().set(value);
-    }
+    void setScaling(double value);
 
     default double scaled(double value) { return scaling() * value; }
 
     ObjectProperty<Color> backgroundColorProperty();
 
-    default void setBackgroundColor(Color color) {
-        requireNonNull(color);
-        backgroundColorProperty().set(color);
-    }
+    void setBackgroundColor(Color color);
 
-    default Color backgroundColor() {
-        return backgroundColorProperty().get();
-    }
+    Color backgroundColor();
 
-    default void fillCanvas(Paint paint) {
-        requireNonNull(canvas());
-        requireNonNull(paint);
-        ctx().setFill(paint);
-        ctx().fillRect(0, 0, canvas().getWidth(), canvas().getHeight());
-    }
+    void fillCanvas(Paint paint);
 
     default void clearCanvas() {
         fillCanvas(backgroundColor());

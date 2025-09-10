@@ -13,6 +13,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 
@@ -44,21 +45,46 @@ public class BaseCanvasRenderer implements CanvasRenderer {
     }
 
     @Override
-    public Canvas canvas() {
-        return ctx.getCanvas();
+    public GraphicsContext ctx() {
+        return ctx;
     }
 
     @Override
-    public GraphicsContext ctx() {
-        return ctx;
+    public void fillCanvas(Paint paint) {
+        requireNonNull(paint);
+        ctx.setFill(paint);
+        ctx.fillRect(0, 0, ctx.getCanvas().getWidth(), ctx.getCanvas().getHeight());
     }
 
     @Override
     public DoubleProperty scalingProperty() { return scaling; }
 
     @Override
+    public double scaling() {
+        return scaling.get();
+    }
+
+    public void setScaling(double value) {
+        if (value <= 0) {
+            throw new IllegalArgumentException("Scaling value must be positive but is %.2f".formatted(value));
+        }
+        scalingProperty().set(value);
+    }
+
+    @Override
     public ObjectProperty<Color> backgroundColorProperty() {
         return backgroundColor;
+    }
+
+    @Override
+    public void setBackgroundColor(Color color) {
+        requireNonNull(color);
+        backgroundColor.set(color);
+    }
+
+    @Override
+    public Color backgroundColor() {
+        return backgroundColor.get();
     }
 
     /**
