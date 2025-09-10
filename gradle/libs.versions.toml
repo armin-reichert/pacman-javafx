@@ -1,6 +1,6 @@
 # Version catalog
 
-# Usage: libs.versions.tinylog.get()
+# Usage: libs.versions.xyz.get()
 [versions]
 iconli  = "12.3.1"
 java    = "21"
@@ -8,14 +8,14 @@ javafx  = "21.0.8"
 junit5  = "5.10.3"
 tinylog = "2.7.0"
 
-# Usage: alias(libs.plugins.jlink)
+# Usage: alias(libs.plugins.xyz)
 [plugins]
 javafx     = { id = "org.openjfx.javafxplugin", version = "0.1.0" }
 jlink      = { id = "org.beryx.jlink", version = "3.1.1" }
 osdetector = { id = "com.google.osdetector", version = "1.7.3" }
 
 # Usage: (dot-separated!)
-#    implementation libs.bundles.tinylog
+#    implementation libs.bundles.xyz
 #    testImplementation libs.junit.jupiter.api
 [libraries]
 iconli-fontawesome   = { module = "org.kordamp.ikonli:ikonli-fontawesome5-pack",     version.ref = "iconli" }
@@ -25,7 +25,7 @@ junit-jupiter-engine = { group = "org.junit.jupiter", name = "junit-jupiter-engi
 tinylog-api          = { module = "org.tinylog:tinylog-api",                         version.ref = "tinylog"}
 tinylog-impl         = { module = "org.tinylog:tinylog-impl",                        version.ref = "tinylog"}
 
-# Usage: implementation libs.bundles.iconli
+# Usage: implementation libs.bundles.xyz
 [bundles]
 iconli  = ["iconli-javafx", "iconli-fontawesome" ]
 tinylog = ["tinylog-api", "tinylog-impl"]
