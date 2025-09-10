@@ -9,10 +9,10 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.uilib.rendering.BaseCanvasRenderer;
 import de.amr.pacmanfx.uilib.rendering.CommonRenderInfo;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
-import de.amr.pacmanfx.uilib.tilemap.ArcadeHouseRenderer;
-import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
-import de.amr.pacmanfx.uilib.tilemap.TerrainMapColorScheme;
-import de.amr.pacmanfx.uilib.tilemap.TerrainMapVectorRenderer;
+import de.amr.pacmanfx.uilib.rendering.ArcadeHouseRenderer;
+import de.amr.pacmanfx.uilib.rendering.FoodMapRenderer;
+import de.amr.pacmanfx.uilib.rendering.TerrainMapColorScheme;
+import de.amr.pacmanfx.uilib.rendering.TerrainMapVectorRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 

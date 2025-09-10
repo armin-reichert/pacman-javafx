@@ -10,7 +10,7 @@ import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.mapeditor.actions.Action_SetFoodTileCode;
 import de.amr.pacmanfx.mapeditor.actions.Action_SetTerrainTileCode;
 import de.amr.pacmanfx.uilib.rendering.CanvasRenderer;
-import de.amr.pacmanfx.uilib.tilemap.TileRenderer;
+import de.amr.pacmanfx.uilib.rendering.TileRenderer;
 
 import java.util.function.Consumer;
 

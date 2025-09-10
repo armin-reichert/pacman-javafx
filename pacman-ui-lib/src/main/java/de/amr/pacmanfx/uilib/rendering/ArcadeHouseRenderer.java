@@ -1,7 +1,6 @@
-package de.amr.pacmanfx.uilib.tilemap;
+package de.amr.pacmanfx.uilib.rendering;
 
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.uilib.rendering.BaseCanvasRenderer;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;

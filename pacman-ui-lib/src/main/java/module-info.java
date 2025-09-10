@@ -15,5 +15,4 @@ open module de.amr.pacmanfx.uilib {
     exports de.amr.pacmanfx.uilib.rendering;
     exports de.amr.pacmanfx.uilib.widgets;
     exports de.amr.pacmanfx.uilib.animation;
-    exports de.amr.pacmanfx.uilib.tilemap;
 }

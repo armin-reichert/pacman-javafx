@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.mapeditor.palette;
 
-import de.amr.pacmanfx.uilib.tilemap.TileRenderer;
+import de.amr.pacmanfx.uilib.rendering.TileRenderer;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.canvas.Canvas;
