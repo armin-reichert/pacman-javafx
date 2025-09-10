@@ -17,25 +17,33 @@ import org.tinylog.Logger;
 
 /**
  * Game clock with modifiable frame rate.
- *
- * @author Armin Reichert
  */
 public class GameClock {
 
-    private final DoubleProperty targetFrameRatePy = new SimpleDoubleProperty(this, "targetFrameRate", 60) {
+    public static final int DEFAULT_TARGET_FRAME_RATE = 60;
+
+    private final DoubleProperty targetFrameRate = new SimpleDoubleProperty(DEFAULT_TARGET_FRAME_RATE) {
         @Override
         protected void invalidated() {
-            handleTargetFrameRateChanged();
+            boolean runningWhenChanged = isRunning();
+            if (runningWhenChanged) {
+                stop();
+            }
+            createClockWork();
+            if (runningWhenChanged) {
+                start();
+            }
         }
     };
 
-    private final BooleanProperty pausedPy = new SimpleBooleanProperty(this, "paused", false);
+    private final BooleanProperty paused = new SimpleBooleanProperty(false);
 
-    private final BooleanProperty timeMeasuredPy = new SimpleBooleanProperty(this, "timeMeasured", false);
+    private final BooleanProperty timeMeasured = new SimpleBooleanProperty(false);
 
+    private Timeline clockWork;
     private Runnable pausableAction = () -> {};
     private Runnable permanentAction = () -> {};
-    private Timeline clockWork;
+
     private long updateCount;
     private long tickCount;
 
@@ -44,7 +52,7 @@ public class GameClock {
     private long ticksInFrame;
 
     public GameClock() {
-        createClockWork(targetFrameRatePy.get());
+        createClockWork();
     }
 
     public void setPausableAction(Runnable action) {
@@ -56,23 +64,29 @@ public class GameClock {
     }
 
     public DoubleProperty targetFrameRateProperty() {
-        return targetFrameRatePy;
+        return targetFrameRate;
     }
 
-    public BooleanProperty pausedProperty() { return pausedPy; }
-
-    public BooleanProperty timeMeasuredProperty() { return timeMeasuredPy; }
-
     public double targetFrameRate() {
-        return targetFrameRatePy.get();
+        return targetFrameRate.get();
     }
 
     public void setTargetFrameRate(double fps) {
-        targetFrameRatePy.set(fps);
+        targetFrameRate.set(fps);
     }
 
+    public BooleanProperty pausedProperty() { return paused; }
+
+    public void setPaused(boolean b) {
+        paused.set(b);
+    }
+
+    public boolean isPaused() { return paused.get(); }
+
+    public BooleanProperty timeMeasuredProperty() { return timeMeasured; }
+
     public void start() {
-        pausedProperty().set(false);
+        setPaused(false);
         clockWork.play();
     }
 
@@ -83,8 +97,6 @@ public class GameClock {
     public boolean isRunning() {
         return clockWork.getStatus() == Status.RUNNING;
     }
-
-    public boolean isPaused() { return pausedPy.get(); }
 
     public double lastTicksPerSecond() {
         return lastTicksPerSec;
@@ -131,26 +143,16 @@ public class GameClock {
         return true;
     }
 
-    private void createClockWork(double frameRate) {
-        clockWork = new Timeline(frameRate, new KeyFrame(Duration.seconds(1.0 / frameRate), e -> makeOneStep(!isPaused())));
+    private void createClockWork() {
+        Duration period = Duration.seconds(1.0 / targetFrameRate());
+        clockWork = new Timeline(targetFrameRate(), new KeyFrame(period, e -> makeOneStep(!isPaused())));
         clockWork.setCycleCount(Animation.INDEFINITE);
         clockWork.statusProperty().addListener((py, oldStatus, newStatus) ->
             Logger.info("{} -> {}, target freq: {} Hz", oldStatus, newStatus, targetFrameRate()));
     }
 
-    private void handleTargetFrameRateChanged() {
-        boolean running = clockWork.getStatus() == Status.RUNNING;
-        if (running) {
-            clockWork.stop();
-        }
-        createClockWork(targetFrameRatePy.get());
-        if (running) {
-            start();
-        }
-    }
-
     private void execute(Runnable action, String logMessage) {
-        if (timeMeasuredPy.get()) {
+        if (timeMeasured.get()) {
             double start = System.nanoTime();
             action.run();
             double duration = System.nanoTime() - start;
