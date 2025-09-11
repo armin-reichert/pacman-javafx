@@ -12,13 +12,16 @@ import de.amr.pacmanfx.ui.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.api.ActionBindingsManager;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
+import de.amr.pacmanfx.ui.api.GameUI_Properties;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
 import de.amr.pacmanfx.uilib.rendering.CanvasRenderer;
 import de.amr.pacmanfx.uilib.rendering.DebugInfoRenderer;
-import javafx.beans.property.*;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +33,6 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class GameScene2D implements GameScene {
 
-    protected final ObjectProperty<Color> backgroundColor = new SimpleObjectProperty<>(Color.BLACK);
     protected final BooleanProperty debugInfoVisible = new SimpleBooleanProperty(false);
     protected final DoubleProperty scaling = new SimpleDoubleProperty(1.0f);
 
@@ -80,7 +82,7 @@ public abstract class GameScene2D implements GameScene {
     }
 
     public void createRenderers(Canvas canvas) {
-        requireNonNull(canvas, "No canvas has been assigned to game scene");
+        requireNonNull(canvas);
         sceneRenderer = new BaseSpriteRenderer(canvas);
         debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas);
         bindRendererProperties(sceneRenderer, debugInfoRenderer);
@@ -88,7 +90,7 @@ public abstract class GameScene2D implements GameScene {
 
     protected void bindRendererProperties(CanvasRenderer... renderers) {
         for (CanvasRenderer renderer : renderers) {
-            renderer.backgroundColorProperty().bind(backgroundColor);
+            renderer.backgroundColorProperty().bind(GameUI_Properties.PROPERTY_CANVAS_BACKGROUND_COLOR);
             renderer.scalingProperty().bind(scaling);
         }
     }
@@ -119,18 +121,6 @@ public abstract class GameScene2D implements GameScene {
 
     public double scaled(double value) {
         return value * scaling();
-    }
-
-    public ObjectProperty<Color> backgroundColorProperty() {
-        return backgroundColor;
-    }
-
-    public Color backgroundColor() {
-        return backgroundColor.get();
-    }
-
-    public void setBackgroundColor(Color color) {
-        backgroundColor.set(color);
     }
 
     public BooleanProperty debugInfoVisibleProperty() {

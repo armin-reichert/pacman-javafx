@@ -285,7 +285,6 @@ public class PlayView extends StackPane implements GameUI_View {
     // 2D game scenes without sub-scene/camera (Arcade play scene, cut scenes) are drawn into the canvas provided by this play view
     private void embedGameScene2DWithoutSubScene(GameScene2D gameScene2D) {
         gameScene2D.createRenderers(canvasWithFrame.canvas());
-        gameScene2D.backgroundColorProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
         gameScene2D.scalingProperty().bind(canvasWithFrame.scalingProperty().map(
             scaling -> Math.min(scaling.doubleValue(), ui.preferences().getFloat("scene2d.max_scaling"))));
 
