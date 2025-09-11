@@ -93,5 +93,4 @@ public class DynamicCamera extends ParallelCamera {
     public void setFollowTarget(boolean focus) {
         followTarget = focus;
     }
-
 }
