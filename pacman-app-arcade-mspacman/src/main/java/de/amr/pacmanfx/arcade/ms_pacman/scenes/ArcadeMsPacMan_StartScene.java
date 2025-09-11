@@ -42,6 +42,11 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
     }
 
     @Override
+    public ArcadeMsPacMan_HUDRenderer hudRenderer() {
+        return hudRenderer;
+    }
+
+    @Override
     public void doInit() {
         context().game().hud().creditVisible(true).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
 
@@ -66,13 +71,6 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
     @Override
     public void onCreditAdded(GameEvent e) {
         ui.soundManager().play(SoundID.COIN_INSERTED);
-    }
-
-    @Override
-    public void drawHUD() {
-        if (hudRenderer != null) {
-            hudRenderer.drawHUD(context().game(), context().game().hud(), sizeInPx());
-        }
     }
 
     @Override

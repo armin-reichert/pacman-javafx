@@ -19,6 +19,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.AbstractGameAction;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
+import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.canvas.Canvas;
@@ -93,6 +94,11 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     public void createRenderers(Canvas canvas) {
         super.createRenderers(canvas);
         sceneRenderer = configureRenderer(new TengenMsPacMan_SceneRenderer(canvas, ui.currentConfig()));
+    }
+
+    @Override
+    protected HUDRenderer hudRenderer() {
+        return null;
     }
 
     @Override
@@ -243,12 +249,6 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     }
 
     // Drawing
-
-
-    @Override
-    public void drawHUD() {
-        // No HUD
-    }
 
     @Override
     public void drawSceneContent() {

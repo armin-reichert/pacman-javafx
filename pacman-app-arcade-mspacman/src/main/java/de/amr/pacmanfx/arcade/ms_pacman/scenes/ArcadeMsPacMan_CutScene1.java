@@ -72,6 +72,11 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     }
 
     @Override
+    public ArcadeMsPacMan_HUDRenderer hudRenderer() {
+        return hudRenderer;
+    }
+
+    @Override
     public void doInit() {
         final GameUI_Config uiConfig = ui.currentConfig();
         final var spriteSheet = (ArcadeMsPacMan_SpriteSheet) uiConfig.spriteSheet();
@@ -115,13 +120,6 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
             default -> throw new IllegalStateException("Illegal scene state: " + sceneState);
         }
         sceneTimer.doTick();
-    }
-
-    @Override
-    public void drawHUD() {
-        if (hudRenderer != null) {
-            hudRenderer.drawHUD(context().game(), context().game().hud(), sizeInPx());
-        }
     }
 
     @Override

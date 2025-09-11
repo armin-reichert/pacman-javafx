@@ -45,6 +45,28 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
     }
     
     @Override
+    public void createRenderers(Canvas canvas) {
+        super.createRenderers(canvas);
+
+        GameUI_Config uiConfig = ui.currentConfig();
+        hudRenderer       = configureRenderer(new ArcadePacMan_HUDRenderer(canvas, uiConfig));
+        actorRenderer     = configureRenderer(uiConfig.createActorRenderer(canvas));
+        debugInfoRenderer = configureRenderer(new DefaultDebugInfoRenderer(ui, canvas) {
+            @Override
+            public void drawDebugInfo() {
+                super.drawDebugInfo();
+                String text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
+                fillText(text, debugTextFill, debugTextFont, TS(1), TS(5));
+            }
+        });
+    }
+
+    @Override
+    public ArcadePacMan_HUDRenderer hudRenderer() {
+        return hudRenderer;
+    }
+
+    @Override
     public void doInit() {
         GameUI_Config uiConfig = ui.currentConfig();
 
@@ -60,23 +82,6 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
         actorsInZOrder.add(blinky);
 
         frame = -1;
-    }
-
-    @Override
-    public void createRenderers(Canvas canvas) {
-        super.createRenderers(canvas);
-
-        GameUI_Config uiConfig = ui.currentConfig();
-        hudRenderer       = configureRenderer(new ArcadePacMan_HUDRenderer(canvas, uiConfig));
-        actorRenderer     = configureRenderer(uiConfig.createActorRenderer(canvas));
-        debugInfoRenderer = configureRenderer(new DefaultDebugInfoRenderer(ui, canvas) {
-            @Override
-            public void drawDebugInfo() {
-                super.drawDebugInfo();
-                String text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
-                fillText(text, debugTextFill, debugTextFont, TS(1), TS(5));
-            }
-        });
     }
 
     @Override
@@ -128,12 +133,5 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
     @Override
     public void drawSceneContent() {
         actorsInZOrder.forEach(actor -> actorRenderer.drawActor(actor));
-    }
-
-    @Override
-    public void drawHUD() {
-        if (hudRenderer != null) {
-            hudRenderer.drawHUD(context().game(), context().game().hud(), sizeInPx());
-        }
     }
 }

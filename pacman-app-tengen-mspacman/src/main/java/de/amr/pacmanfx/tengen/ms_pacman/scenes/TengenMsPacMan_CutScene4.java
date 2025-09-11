@@ -68,6 +68,11 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     }
 
     @Override
+    public TengenMsPacMan_HUDRenderer hudRenderer() {
+        return hudRenderer;
+    }
+
+    @Override
     protected void doInit() {
         context().game().hud().scoreVisible(false).levelCounterVisible(true).livesCounterVisible(false);
 
@@ -222,7 +227,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     public Vector2f sizeInPx() { return NES_SIZE_PX; }
 
     @Override
-    public void drawHUD() {
+    protected void drawHUD() {
         if (hudRenderer != null) {
             // draw HUD only for non-Arcade map mode
             var game = context().<TengenMsPacMan_GameModel>game();

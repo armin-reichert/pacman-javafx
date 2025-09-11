@@ -82,6 +82,11 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
     }
 
     @Override
+    public TengenMsPacMan_HUDRenderer hudRenderer() {
+        return hudRenderer;
+    }
+
+    @Override
     public void doInit() {
         context().game().hud().creditVisible(false).scoreVisible(false).levelCounterVisible(true).livesCounterVisible(false);
 
@@ -238,7 +243,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
     public Vector2f sizeInPx() { return NES_SIZE_PX; }
 
     @Override
-    public void drawHUD() {
+    protected void drawHUD() {
         if (hudRenderer != null) {
             var game = context().<TengenMsPacMan_GameModel>game();
             if (game.mapCategory() != MapCategory.ARCADE) {

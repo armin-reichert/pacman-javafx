@@ -11,6 +11,7 @@ import de.amr.pacmanfx.ui.ActionBinding;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
+import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
 import javafx.scene.canvas.Canvas;
 
 import java.util.Set;
@@ -45,6 +46,11 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
     }
 
     @Override
+    protected HUDRenderer hudRenderer() {
+        return null;
+    }
+
+    @Override
     protected void doInit() {
         context().game().hud().creditVisible(false).scoreVisible(false).levelCounterVisible(false).livesCounterVisible(false);
 
@@ -68,11 +74,6 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
     @Override
     public Vector2f sizeInPx() { return NES_SIZE_PX; }
-
-    @Override
-    public void drawHUD() {
-        // No HUD
-    }
 
     @Override
     public void drawSceneContent() {

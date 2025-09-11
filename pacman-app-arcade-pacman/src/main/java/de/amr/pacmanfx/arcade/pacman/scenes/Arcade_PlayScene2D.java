@@ -58,11 +58,6 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    protected void doInit() {
-        context().game().hud().creditVisible(false).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(true);
-    }
-
-    @Override
     public void createRenderers(Canvas canvas) {
         super.createRenderers(canvas);
 
@@ -71,6 +66,16 @@ public class Arcade_PlayScene2D extends GameScene2D {
         gameLevelRenderer = configureRenderer(uiConfig.createGameLevelRenderer(canvas));
         actorRenderer     = configureRenderer(uiConfig.createActorRenderer(canvas));
         debugInfoRenderer = configureRenderer(new Arcade_PlayScene2DDebugInfoRenderer(ui, this, canvas));
+    }
+
+    @Override
+    public HUDRenderer hudRenderer() {
+        return hudRenderer;
+    }
+
+    @Override
+    protected void doInit() {
+        context().game().hud().creditVisible(false).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(true);
     }
 
     @Override
@@ -217,13 +222,6 @@ public class Arcade_PlayScene2D extends GameScene2D {
             new SeparatorMenuItem(),
             miMuted,
             miQuit);
-    }
-
-    @Override
-    public void drawHUD() {
-        if (hudRenderer != null) {
-            hudRenderer.drawHUD(context().game(), context().game().hud(), sizeInPx());
-        }
     }
 
     @Override

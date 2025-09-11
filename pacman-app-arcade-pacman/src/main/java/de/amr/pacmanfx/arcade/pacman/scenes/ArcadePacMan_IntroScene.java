@@ -79,6 +79,31 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     }
 
     @Override
+    public void createRenderers(Canvas canvas) {
+        super.createRenderers(canvas);
+
+        GameUI_Config uiConfig = ui.currentConfig();
+
+        spriteSheet = (ArcadePacMan_SpriteSheet) uiConfig.spriteSheet();
+        sceneRenderer.setSpriteSheet(spriteSheet);
+
+        hudRenderer       = configureRenderer((ArcadePacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas));
+        actorRenderer     = configureRenderer((ArcadePacMan_ActorRenderer) uiConfig.createActorRenderer(canvas));
+        debugInfoRenderer = configureRenderer(new DefaultDebugInfoRenderer(ui, canvas) {
+            @Override
+            public void drawDebugInfo() {
+                super.drawDebugInfo();
+                ctx.fillText("Scene timer %d".formatted(sceneController.state().timer().tickCount()), 0, scaled(5 * TS));
+            }
+        });
+    }
+
+    @Override
+    public ArcadePacMan_HUDRenderer hudRenderer() {
+        return hudRenderer;
+    }
+
+    @Override
     public void doInit() {
         context().game().hud().creditVisible(true).scoreVisible(true).livesCounterVisible(false).levelCounterVisible(true);
 
@@ -117,26 +142,6 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     }
 
     @Override
-    public void createRenderers(Canvas canvas) {
-        super.createRenderers(canvas);
-
-        GameUI_Config uiConfig = ui.currentConfig();
-
-        spriteSheet = (ArcadePacMan_SpriteSheet) uiConfig.spriteSheet();
-        sceneRenderer.setSpriteSheet(spriteSheet);
-
-        hudRenderer       = configureRenderer((ArcadePacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas));
-        actorRenderer     = configureRenderer((ArcadePacMan_ActorRenderer) uiConfig.createActorRenderer(canvas));
-        debugInfoRenderer = configureRenderer(new DefaultDebugInfoRenderer(ui, canvas) {
-            @Override
-            public void drawDebugInfo() {
-                super.drawDebugInfo();
-                ctx.fillText("Scene timer %d".formatted(sceneController.state().timer().tickCount()), 0, scaled(5 * TS));
-            }
-        });
-    }
-
-    @Override
     protected void doEnd() {
         blinking.stop();
     }
@@ -149,13 +154,6 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     @Override
     public void onCreditAdded(GameEvent e) {
         ui.soundManager().play(SoundID.COIN_INSERTED);
-    }
-
-    @Override
-    public void drawHUD() {
-        if (hudRenderer != null) {
-            hudRenderer.drawHUD(context().game(), context().game().hud(), sizeInPx());
-        }
     }
 
     @Override

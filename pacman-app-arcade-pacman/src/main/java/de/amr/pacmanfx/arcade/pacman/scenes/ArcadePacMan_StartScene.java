@@ -29,16 +29,21 @@ public class ArcadePacMan_StartScene extends GameScene2D {
     }
 
     @Override
+    public void createRenderers(Canvas canvas) {
+        super.createRenderers(canvas);
+        hudRenderer = configureRenderer(new ArcadePacMan_HUDRenderer(canvas, ui.currentConfig()));
+    }
+
+    @Override
+    public ArcadePacMan_HUDRenderer hudRenderer() {
+        return hudRenderer;
+    }
+
+    @Override
     public void doInit() {
         context().game().hud().creditVisible(true).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
         actionBindings.assign(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
         actionBindings.assign(ACTION_ARCADE_START_GAME, ui.actionBindings());
-    }
-
-    @Override
-    public void createRenderers(Canvas canvas) {
-        super.createRenderers(canvas);
-        hudRenderer = configureRenderer(new ArcadePacMan_HUDRenderer(canvas, ui.currentConfig()));
     }
 
     @Override
@@ -53,13 +58,6 @@ public class ArcadePacMan_StartScene extends GameScene2D {
     @Override
     public void onCreditAdded(GameEvent e) {
         ui.soundManager().play(SoundID.COIN_INSERTED);
-    }
-
-    @Override
-    public void drawHUD() {
-        if (hudRenderer != null) {
-            hudRenderer.drawHUD(context().game(), context().game().hud(), sizeInPx());
-        }
     }
 
     @Override

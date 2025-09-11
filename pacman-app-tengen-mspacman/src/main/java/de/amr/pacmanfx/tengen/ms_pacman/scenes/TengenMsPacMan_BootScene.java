@@ -13,6 +13,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_ActorRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
+import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
@@ -47,6 +48,11 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
 
         final GameUI_Config uiConfig = ui.currentConfig();
         actorRenderer = configureRenderer((TengenMsPacMan_ActorRenderer) uiConfig.createActorRenderer(canvas));
+    }
+
+    @Override
+    protected HUDRenderer hudRenderer() {
+        return null;
     }
 
     @Override
@@ -108,11 +114,6 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     @Override
     public Vector2f sizeInPx() {
         return NES_SIZE_PX;
-    }
-
-    @Override
-    public void drawHUD() {
-        // No HUD
     }
 
     @Override

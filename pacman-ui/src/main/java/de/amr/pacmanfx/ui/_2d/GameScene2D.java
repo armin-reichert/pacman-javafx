@@ -18,6 +18,7 @@ import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
 import de.amr.pacmanfx.uilib.rendering.CanvasRenderer;
 import de.amr.pacmanfx.uilib.rendering.DebugInfoRenderer;
+import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -80,6 +81,8 @@ public abstract class GameScene2D implements GameScene {
     public BaseSpriteRenderer sceneRenderer() {
         return sceneRenderer;
     }
+
+    protected abstract HUDRenderer hudRenderer();
 
     public void createRenderers(Canvas canvas) {
         requireNonNull(canvas);
@@ -153,10 +156,11 @@ public abstract class GameScene2D implements GameScene {
         drawHUD();
     }
 
-    /**
-     * Draws the Heads-Up-Display (HUD).
-     */
-    public abstract void drawHUD();
+    protected void drawHUD() {
+        if (hudRenderer() != null) {
+            hudRenderer().drawHUD(context().game(), context().game().hud(), sizeInPx());
+        }
+    }
 
     /**
      * Draws the scene content using the already scaled game renderer.

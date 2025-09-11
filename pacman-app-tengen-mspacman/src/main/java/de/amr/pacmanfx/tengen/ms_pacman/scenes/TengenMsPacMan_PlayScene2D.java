@@ -177,6 +177,11 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
     }
 
     @Override
+    public TengenMsPacMan_HUDRenderer hudRenderer() {
+        return hudRenderer;
+    }
+
+    @Override
     public void doInit() {
         context().game().hud().scoreVisible(true).levelCounterVisible(true).livesCounterVisible(true);
         dynamicCamera.targetTop();

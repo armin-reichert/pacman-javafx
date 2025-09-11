@@ -12,6 +12,7 @@ import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
+import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_PIXELS;
@@ -45,6 +46,11 @@ public class Arcade_BootScene2D extends GameScene2D {
     }
 
     @Override
+    protected HUDRenderer hudRenderer() {
+        return null;
+    }
+
+    @Override
     public void doInit() {
         context().game().hud().all(false);
 
@@ -74,12 +80,6 @@ public class Arcade_BootScene2D extends GameScene2D {
         } else {
             drawSceneContent();
         }
-        drawHUD();
-    }
-
-    @Override
-    public void drawHUD() {
-        // No HUD
     }
 
     @Override
