@@ -267,10 +267,11 @@ public class PlayView extends StackPane implements GameUI_View {
             SubScene subScene = gameScene.optSubScene().get();
             subScene.widthProperty().bind(parentScene.widthProperty());
             subScene.heightProperty().bind(parentScene.heightProperty());
-            getChildren().set(0, subScene);
-            if (gameScene instanceof CanvasProvider canvasProvider) {
-                canvasProvider.createRenderers(canvasProvider.canvas());
+            //TODO this ugly code handles the Tengen PlayScene2D case where the canvas is provided by the game scene itself
+            if (gameScene instanceof CanvasProvider canvasProvider && gameScene instanceof GameScene2D gameScene2D) {
+                gameScene2D.createRenderers(canvasProvider.canvas());
             }
+            getChildren().set(0, subScene);
         }
         else if (gameScene instanceof GameScene2D gameScene2D) {
             embedGameScene2DWithoutSubScene(gameScene2D);
