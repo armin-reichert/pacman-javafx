@@ -153,6 +153,10 @@ public abstract class GameScene2D implements GameScene {
      */
     public abstract Vector2f sizeInPx();
 
+    public List<Actor> actorsInZOrder() {
+        return actorsInZOrder;
+    }
+
     /**
      * Default implementation: scales the renderer to the current scene scaling,
      * clears the canvas and draws the scores (if on), scene content and debug information (if on).

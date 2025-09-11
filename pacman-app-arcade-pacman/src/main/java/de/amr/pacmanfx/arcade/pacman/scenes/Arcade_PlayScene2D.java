@@ -4,21 +4,18 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
+import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_PlayScene2DDebugInfoRenderer;
 import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.controller.teststates.LevelMediumTestState;
 import de.amr.pacmanfx.controller.teststates.LevelShortTestState;
 import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.MessageType;
 import de.amr.pacmanfx.model.actors.GhostState;
-import de.amr.pacmanfx.model.actors.MovingActor;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.api.GameScene;
@@ -31,7 +28,6 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import java.util.List;
@@ -56,56 +52,6 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     private LevelCompletedAnimation levelCompletedAnimation;
 
-    private class PlaySceneDebugInfoRenderer extends DefaultDebugInfoRenderer {
-
-        public PlaySceneDebugInfoRenderer(GameUI ui) {
-            super(ui, canvas);
-        }
-
-        @Override
-        public void drawDebugInfo() {
-            drawTileGrid(sizeInPx().x(), sizeInPx().y(), Color.LIGHTGRAY);
-            if (context().optGameLevel().isPresent()) {
-                // assuming all ghosts have the same set of special terrain tiles
-                context().gameLevel().ghost(RED_GHOST_SHADOW).specialTerrainTiles().forEach(tile -> {
-                    double x = scaled(tile.x() * TS), y = scaled(tile.y() * TS + HTS), size = scaled(TS);
-                    ctx.setFill(Color.RED);
-                    ctx.fillRect(x, y, size, 2);
-                });
-
-                // mark intersection tiles
-                List<Direction> clockOrder = List.of(Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT);
-                context().gameLevel().tiles().filter(context().gameLevel()::isIntersection).forEach(tile -> {
-                    double cx = tile.x() * TS + HTS, cy = tile.y() * TS + HTS;
-                    for (Direction dir : clockOrder) {
-                        if (!context().gameLevel().isTileBlocked(tile.plus(dir.vector()))) {
-                            double x = cx + dir.vector().x() * HTS;
-                            double y = cy + dir.vector().y() * HTS;
-                            ctx.setFill(Color.gray(0.6));
-                            ctx.setLineWidth(1);
-                            ctx.strokeLine(scaled(cx), scaled(cy), scaled(x), scaled(y));
-                        }
-                    }
-                });
-
-                String gameStateText = context().gameState().name() + " (Tick %d)".formatted(context().gameState().timer().tickCount());
-                String huntingPhaseText = "";
-                if (context().gameState() == GamePlayState.HUNTING) {
-                    HuntingTimer huntingTimer = context().game().huntingTimer();
-                    huntingPhaseText = " %s (Tick %d)".formatted(huntingTimer.phase(), huntingTimer.tickCount());
-                }
-                ctx.setFill(debugTextFill);
-                ctx.setStroke(debugTextStroke);
-                ctx.setFont(debugTextFont);
-                ctx.fillText("%s%s".formatted(gameStateText, huntingPhaseText), 0, TS(8));
-            }
-            actorsInZOrder.stream()
-                .filter(MovingActor.class::isInstance)
-                .map(MovingActor.class::cast)
-                .forEach(actor -> drawMovingActorInfo(ctx(), scaling(), actor));
-        }
-    }
-
     public Arcade_PlayScene2D(GameUI ui) {
         super(ui);
     }
@@ -118,7 +64,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
         hudRenderer = uiConfig.createHUDRenderer(canvas);
         gameLevelRenderer = uiConfig.createGameLevelRenderer(canvas);
         actorRenderer = uiConfig.createActorRenderer(canvas);
-        debugInfoRenderer = new PlaySceneDebugInfoRenderer(ui);
+        debugInfoRenderer = new Arcade_PlayScene2DDebugInfoRenderer(ui, this);
 
         bindRendererProperties(hudRenderer, gameLevelRenderer, actorRenderer, debugInfoRenderer);
 
