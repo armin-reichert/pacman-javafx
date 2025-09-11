@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_ScenesRenderer;
+import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SceneRenderer;
 import de.amr.pacmanfx.ui.ActionBinding;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
@@ -30,7 +30,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
     private int y;
     private float fadeProgress = 0;
 
-    private TengenMsPacMan_ScenesRenderer scenesRenderer;
+    private TengenMsPacMan_SceneRenderer scenesRenderer;
 
     public TengenMsPacMan_CreditsScene(GameUI ui) {
         super(ui);
@@ -41,8 +41,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
         super.createRenderers(canvas);
 
         final GameUI_Config uiConfig = ui.currentConfig();
-        scenesRenderer = new TengenMsPacMan_ScenesRenderer(canvas, uiConfig);
-        bindRendererProperties(scenesRenderer);
+        scenesRenderer = configureRenderer(new TengenMsPacMan_SceneRenderer(canvas, uiConfig));
     }
 
     @Override

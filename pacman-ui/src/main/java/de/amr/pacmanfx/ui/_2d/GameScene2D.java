@@ -83,16 +83,14 @@ public abstract class GameScene2D implements GameScene {
 
     public void createRenderers(Canvas canvas) {
         requireNonNull(canvas);
-        sceneRenderer = new BaseSpriteRenderer(canvas);
-        debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas);
-        bindRendererProperties(sceneRenderer, debugInfoRenderer);
+        sceneRenderer     = configureRenderer(new BaseSpriteRenderer(canvas));
+        debugInfoRenderer = configureRenderer(new DefaultDebugInfoRenderer(ui, canvas));
     }
 
-    protected void bindRendererProperties(CanvasRenderer... renderers) {
-        for (CanvasRenderer renderer : renderers) {
-            renderer.backgroundColorProperty().bind(GameUI_Properties.PROPERTY_CANVAS_BACKGROUND_COLOR);
-            renderer.scalingProperty().bind(scaling);
-        }
+    protected final <T extends CanvasRenderer> T configureRenderer(T renderer) {
+        renderer.backgroundColorProperty().bind(GameUI_Properties.PROPERTY_CANVAS_BACKGROUND_COLOR);
+        renderer.scalingProperty().bind(scaling);
+        return renderer;
     }
 
     @Override

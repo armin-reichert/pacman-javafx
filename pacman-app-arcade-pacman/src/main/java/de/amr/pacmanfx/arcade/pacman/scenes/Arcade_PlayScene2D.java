@@ -67,12 +67,10 @@ public class Arcade_PlayScene2D extends GameScene2D {
         super.createRenderers(canvas);
 
         GameUI_Config uiConfig = ui.currentConfig();
-        hudRenderer = uiConfig.createHUDRenderer(canvas);
-        gameLevelRenderer = uiConfig.createGameLevelRenderer(canvas);
-        actorRenderer = uiConfig.createActorRenderer(canvas);
-        debugInfoRenderer = new Arcade_PlayScene2DDebugInfoRenderer(ui, this, canvas);
-
-        bindRendererProperties(hudRenderer, gameLevelRenderer, actorRenderer, debugInfoRenderer);
+        hudRenderer       = configureRenderer(uiConfig.createHUDRenderer(canvas));
+        gameLevelRenderer = configureRenderer(uiConfig.createGameLevelRenderer(canvas));
+        actorRenderer     = configureRenderer(uiConfig.createActorRenderer(canvas));
+        debugInfoRenderer = configureRenderer(new Arcade_PlayScene2DDebugInfoRenderer(ui, this, canvas));
     }
 
     @Override

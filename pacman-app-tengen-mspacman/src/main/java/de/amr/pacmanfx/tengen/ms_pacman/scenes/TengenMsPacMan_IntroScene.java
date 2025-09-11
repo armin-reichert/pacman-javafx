@@ -14,7 +14,7 @@ import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.SpriteID;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_ScenesRenderer;
+import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SceneRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
@@ -49,7 +49,6 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
     private final StateMachine<SceneState, TengenMsPacMan_IntroScene> sceneController;
 
     private ActorRenderer actorRenderer;
-    private TengenMsPacMan_ScenesRenderer scenesRenderer;
 
     private TengenMsPacMan_SpriteSheet spriteSheet;
     private Color[] ghostColors;
@@ -77,9 +76,8 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
         super.createRenderers(canvas);
 
         final GameUI_Config uiConfig = ui.currentConfig();
-        scenesRenderer = new TengenMsPacMan_ScenesRenderer(canvas, uiConfig);
-        actorRenderer = uiConfig.createActorRenderer(canvas);
-        bindRendererProperties(scenesRenderer, actorRenderer);
+        sceneRenderer = configureRenderer(new TengenMsPacMan_SceneRenderer(canvas, uiConfig));
+        actorRenderer  = configureRenderer(uiConfig.createActorRenderer(canvas));
     }
 
     @Override
@@ -126,47 +124,47 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
     @Override
     public void drawSceneContent() {
         long tick = sceneController.state().timer().tickCount();
-        scenesRenderer.ctx().setFont(scenesRenderer.arcadeFontTS());
-        scenesRenderer.ctx().setImageSmoothing(false);
+        sceneRenderer.ctx().setFont(sceneRenderer.arcadeFontTS());
+        sceneRenderer.ctx().setImageSmoothing(false);
         switch (sceneController.state()) {
             case WAITING_FOR_START -> {
                 if (!dark) {
                     boolean showPressStart = tick % 60 < 30;
-                    scenesRenderer.fillText("TENGEN PRESENTS", blueShadedColor(tick), presentsText.x(), presentsText.y());
-                    scenesRenderer.drawSprite(spriteSheet.sprite(SpriteID.LARGE_MS_PAC_MAN_TEXT), 6 * TS, MARQUEE_Y, true);
-                    if (showPressStart) scenesRenderer.fillText("PRESS START", nesColor(0x20), 11 * TS, MARQUEE_Y + 9 * TS);
-                    scenesRenderer.fillText("MS PAC-MAN TM NAMCO LTD", nesColor(0x25), 6 * TS, MARQUEE_Y + 15 * TS);
-                    scenesRenderer.fillText("©1990 TENGEN INC",        nesColor(0x25), 8 * TS, MARQUEE_Y + 16 * TS);
-                    scenesRenderer.fillText("ALL RIGHTS RESERVED",     nesColor(0x25), 7 * TS, MARQUEE_Y + 17 * TS);
+                    sceneRenderer.fillText("TENGEN PRESENTS", blueShadedColor(tick), presentsText.x(), presentsText.y());
+                    sceneRenderer.drawSprite(spriteSheet.sprite(SpriteID.LARGE_MS_PAC_MAN_TEXT), 6 * TS, MARQUEE_Y, true);
+                    if (showPressStart) sceneRenderer.fillText("PRESS START", nesColor(0x20), 11 * TS, MARQUEE_Y + 9 * TS);
+                    sceneRenderer.fillText("MS PAC-MAN TM NAMCO LTD", nesColor(0x25), 6 * TS, MARQUEE_Y + 15 * TS);
+                    sceneRenderer.fillText("©1990 TENGEN INC",        nesColor(0x25), 8 * TS, MARQUEE_Y + 16 * TS);
+                    sceneRenderer.fillText("ALL RIGHTS RESERVED",     nesColor(0x25), 7 * TS, MARQUEE_Y + 17 * TS);
                 }
             }
             case SHOWING_MARQUEE -> {
-                marquee.draw(scenesRenderer.ctx());
-                scenesRenderer.fillText("\"MS PAC-MAN\"", nesColor(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
+                marquee.draw(sceneRenderer.ctx());
+                sceneRenderer.fillText("\"MS PAC-MAN\"", nesColor(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
             }
             case GHOSTS_MARCHING_IN -> {
-                marquee.draw(scenesRenderer.ctx());
-                scenesRenderer.fillText("\"MS PAC-MAN\"", nesColor(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
+                marquee.draw(sceneRenderer.ctx());
+                sceneRenderer.fillText("\"MS PAC-MAN\"", nesColor(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
                 if (ghostIndex == 0) {
-                    scenesRenderer.fillText("WITH", nesColor(0x20), MARQUEE_X + 12, MARQUEE_Y + 23);
+                    sceneRenderer.fillText("WITH", nesColor(0x20), MARQUEE_X + 12, MARQUEE_Y + 23);
                 }
                 Ghost currentGhost = ghosts.get(ghostIndex);
                 Color ghostColor = ghostColors[currentGhost.id().personality()];
-                scenesRenderer.fillText(currentGhost.name().toUpperCase(), ghostColor, MARQUEE_X + 44, MARQUEE_Y + 41);
+                sceneRenderer.fillText(currentGhost.name().toUpperCase(), ghostColor, MARQUEE_X + 44, MARQUEE_Y + 41);
                 ghosts.forEach(ghost -> actorRenderer.drawActor(ghost));
             }
             case MS_PACMAN_MARCHING_IN -> {
-                marquee.draw(scenesRenderer.ctx());
-                scenesRenderer.fillText("\"MS PAC-MAN\"", nesColor(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
-                scenesRenderer.fillText("STARRING", nesColor(0x20), MARQUEE_X + 12, MARQUEE_Y + 22);
-                scenesRenderer.fillText("MS PAC-MAN", nesColor(0x28), MARQUEE_X + 28, MARQUEE_Y + 38);
+                marquee.draw(sceneRenderer.ctx());
+                sceneRenderer.fillText("\"MS PAC-MAN\"", nesColor(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
+                sceneRenderer.fillText("STARRING", nesColor(0x20), MARQUEE_X + 12, MARQUEE_Y + 22);
+                sceneRenderer.fillText("MS PAC-MAN", nesColor(0x28), MARQUEE_X + 28, MARQUEE_Y + 38);
                 ghosts.forEach(ghost -> actorRenderer.drawActor(ghost));
                 actorRenderer.drawActor(msPacMan);
             }
         }
 
-        if (PROPERTY_JOYPAD_BINDINGS_DISPLAYED.get()) {
-            scenesRenderer.drawJoypadKeyBinding(ui.joypad().currentKeyBinding());
+        if (PROPERTY_JOYPAD_BINDINGS_DISPLAYED.get() && sceneRenderer instanceof TengenMsPacMan_SceneRenderer tengenSceneRenderer) {
+            tengenSceneRenderer.drawJoypadKeyBinding(ui.joypad().currentKeyBinding());
         }
     }
 

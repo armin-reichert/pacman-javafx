@@ -14,7 +14,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.tengen.ms_pacman.model.PacBooster;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.SpriteID;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_ScenesRenderer;
+import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SceneRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.AbstractGameAction;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
@@ -80,7 +80,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         }
     };
 
-    private TengenMsPacMan_ScenesRenderer sceneRenderer;
+    private TengenMsPacMan_SceneRenderer sceneRenderer;
 
     private int idleTicks;
     private int initialDelay;
@@ -92,8 +92,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     @Override
     public void createRenderers(Canvas canvas) {
         super.createRenderers(canvas);
-        sceneRenderer = new TengenMsPacMan_ScenesRenderer(canvas, ui.currentConfig());
-        bindRendererProperties(sceneRenderer);
+        sceneRenderer = configureRenderer(new TengenMsPacMan_SceneRenderer(canvas, ui.currentConfig()));
     }
 
     @Override

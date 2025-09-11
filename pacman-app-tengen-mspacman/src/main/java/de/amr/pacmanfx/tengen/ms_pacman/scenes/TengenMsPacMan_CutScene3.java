@@ -64,10 +64,9 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         super.createRenderers(canvas);
 
         final GameUI_Config uiConfig = ui.currentConfig();
-        hudRenderer = (TengenMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas);
-        actorRenderer = (TengenMsPacMan_ActorRenderer) uiConfig.createActorRenderer(canvas);
-        debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas);
-        bindRendererProperties(hudRenderer, actorRenderer, debugInfoRenderer);
+        hudRenderer       = configureRenderer((TengenMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas));
+        actorRenderer     = configureRenderer((TengenMsPacMan_ActorRenderer) uiConfig.createActorRenderer(canvas));
+        debugInfoRenderer = configureRenderer(new DefaultDebugInfoRenderer(ui, canvas));
     }
 
     @Override

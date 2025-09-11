@@ -126,16 +126,15 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         spriteSheet = (ArcadePacMan_SpriteSheet) uiConfig.spriteSheet();
         sceneRenderer.setSpriteSheet(spriteSheet);
 
-        hudRenderer = (ArcadePacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas);
-        actorRenderer = (ArcadePacMan_ActorRenderer) uiConfig.createActorRenderer(canvas);
-        debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas) {
+        hudRenderer       = configureRenderer((ArcadePacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas));
+        actorRenderer     = configureRenderer((ArcadePacMan_ActorRenderer) uiConfig.createActorRenderer(canvas));
+        debugInfoRenderer = configureRenderer(new DefaultDebugInfoRenderer(ui, canvas) {
             @Override
             public void drawDebugInfo() {
                 super.drawDebugInfo();
                 ctx.fillText("Scene timer %d".formatted(sceneController.state().timer().tickCount()), 0, scaled(5 * TS));
             }
-        };
-        bindRendererProperties(hudRenderer, actorRenderer, debugInfoRenderer);
+        });
     }
 
     @Override
