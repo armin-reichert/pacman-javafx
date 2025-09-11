@@ -66,12 +66,14 @@ public class DynamicCamera extends ParallelCamera {
 
     //TODO clarify
     public double minY() {
-        return scaling() * (-9 * TS);
+        double s = scaling();
+        return -9 * TS * s;
     }
 
     //TODO clarify
     public double maxY() {
-        return scaling() * (verticalRangeInTiles - 35) * TS;
+        double s = scaling();
+        return (verticalRangeInTiles - 34) * TS * s;
     }
 
     public FloatProperty scalingProperty() {
