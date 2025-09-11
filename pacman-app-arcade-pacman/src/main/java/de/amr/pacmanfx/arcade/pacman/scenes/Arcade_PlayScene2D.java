@@ -67,7 +67,6 @@ public class Arcade_PlayScene2D extends GameScene2D {
         debugInfoRenderer = new Arcade_PlayScene2DDebugInfoRenderer(ui, this);
 
         bindRendererProperties(hudRenderer, gameLevelRenderer, actorRenderer, debugInfoRenderer);
-
         context().game().hud().creditVisible(false).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(true);
     }
 
@@ -79,10 +78,9 @@ public class Arcade_PlayScene2D extends GameScene2D {
         }
     }
 
-    /**
-      Note: If the corresponding 3D scene is displayed when the game level gets created,
-      the onLevelCreated() handler of this scene is not called!
-      So we have to initialize the scene also with the game level when switching from the 3D scene.
+    /*
+      If the corresponding 3D scene is shown when the game level gets created, the onLevelCreated() method of this
+      scene is not called, so we have to apply the game level to the scene again when switching from 3D to 2D.
      */
     private void acceptGameLevel(GameLevel gameLevel) {
         if (gameLevel.isDemoLevel()) {
@@ -137,18 +135,19 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void update() {
-        // update() is call already 2 ticks before the game level gets created!
-        if (context().optGameLevel().isEmpty()) {
+        if (context().optGameLevel().isPresent()) {
+            updateHUD();
+            updateSound();
+        } else {
+            // update() is called already 2 ticks before the game level gets created!
             Logger.info("Tick {}: Game level not yet created", ui.clock().tickCount());
-            return;
         }
-        // While Pac-Man is still invisible on level start, one entry more is shown in the lives counter
-        boolean oneMore = context().gameState() == GamePlayState.STARTING_GAME_OR_LEVEL && !context().gameLevel().pac().isVisible();
-        updateHUD(context().game(), oneMore);
-        updateSound();
     }
 
-    private void updateHUD(Game game, boolean oneMore) {
+    private void updateHUD() {
+        Game game = context().game();
+        // While Pac-Man is still invisible on level start, one entry more is shown in the lives counter
+        boolean oneMore = context().gameState() == GamePlayState.STARTING_GAME_OR_LEVEL && !context().gameLevel().pac().isVisible();
         int numLivesDisplayed = game.lifeCount() - 1;
         if (oneMore) numLivesDisplayed += 1;
         game.hud().setVisibleLifeCount(Math.min(numLivesDisplayed, game.hud().maxLivesDisplayed()));
@@ -238,7 +237,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
         gameLevelRenderer.applyLevelSettings(gameLevel, info);
         gameLevelRenderer.drawGameLevel(gameLevel, info);
 
-        createActorDrawingOrder(gameLevel);
+        updateActorDrawingOrder(gameLevel);
         actorsInZOrder.forEach(actor -> actorRenderer.drawActor(actor));
     }
 
@@ -247,19 +246,21 @@ public class Arcade_PlayScene2D extends GameScene2D {
             && levelCompletedAnimation.isRunning() && levelCompletedAnimation.highlightedProperty().get();
     }
 
-    private void createActorDrawingOrder(GameLevel gameLevel) {
-        // Collect actors in drawing z-order: Bonus < Pac-Man < Ghosts in order. TODO: also take ghost state into account!
+    private void updateActorDrawingOrder(GameLevel gameLevel) {
+        // Actor drawing order: (Bonus) < Pac-Man < Ghosts in order. TODO: also take ghost state into account!
         actorsInZOrder.clear();
         gameLevel.bonus().ifPresent(actorsInZOrder::add);
         actorsInZOrder.add(gameLevel.pac());
-        Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW).map(gameLevel::ghost).forEach(actorsInZOrder::add);
+        Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW).map(gameLevel::ghost)
+            .forEach(actorsInZOrder::add);
     }
 
     @Override
     public void onEnterGameState(GameState state) {
         if (state == GamePlayState.LEVEL_COMPLETE) {
             ui.soundManager().stopAll();
-            startLevelCompleteAnimation();
+            createLevelCompletedAnimation();
+            levelCompletedAnimation.playFromStart();
         }
         else if (state == GamePlayState.GAME_OVER) {
             ui.soundManager().stopAll();
@@ -267,12 +268,10 @@ public class Arcade_PlayScene2D extends GameScene2D {
         }
     }
 
-    private void startLevelCompleteAnimation() {
+    private void createLevelCompletedAnimation() {
         levelCompletedAnimation = new LevelCompletedAnimation(animationRegistry);
         levelCompletedAnimation.setGameLevel(context().gameLevel());
-        levelCompletedAnimation.setSingleFlashMillis(333);
         levelCompletedAnimation.getOrCreateAnimationFX().setOnFinished(e -> context().gameController().letCurrentGameStateExpire());
-        levelCompletedAnimation.playFromStart();
     }
 
     @Override

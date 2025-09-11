@@ -40,6 +40,7 @@ public class LevelCompletedAnimation extends ManagedAnimation {
 
     public LevelCompletedAnimation(AnimationRegistry animationRegistry) {
         super(animationRegistry, "Level_Completed");
+        singleFlashMillis = 333;
     }
 
     @Override
