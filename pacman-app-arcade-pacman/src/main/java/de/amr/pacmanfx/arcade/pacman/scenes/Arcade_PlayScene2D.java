@@ -26,8 +26,6 @@ import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.rendering.*;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -51,8 +49,6 @@ import static de.amr.pacmanfx.uilib.Ufx.createContextMenuTitle;
  *       game, so no garbage collection occurs!
  */
 public class Arcade_PlayScene2D extends GameScene2D {
-
-    private final BooleanProperty mazeHighlighted = new SimpleBooleanProperty(false);
 
     private HUDRenderer hudRenderer;
     private GameLevelRenderer gameLevelRenderer;
@@ -290,7 +286,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
         final GameLevel gameLevel = context().gameLevel();
         RenderInfo info = new RenderInfo();
-        info.put(CommonRenderInfo.MAZE_BRIGHT, mazeHighlighted.get());
+        info.put(CommonRenderInfo.MAZE_BRIGHT, isMazeHighlighted());
         info.put(CommonRenderInfo.MAZE_BLINKING, gameLevel.blinking().isOn());
         info.put(CommonRenderInfo.MAZE_EMPTY, context().gameLevel().uneatenFoodCount() == 0);
         gameLevelRenderer.applyLevelSettings(gameLevel, info);
@@ -298,6 +294,11 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
         createActorDrawingOrder(gameLevel);
         actorsInZOrder.forEach(actor -> actorRenderer.drawActor(actor));
+    }
+
+    private boolean isMazeHighlighted() {
+        return levelCompletedAnimation != null
+            && levelCompletedAnimation.isRunning() && levelCompletedAnimation.highlightedProperty().get();
     }
 
     private void createActorDrawingOrder(GameLevel gameLevel) {
@@ -324,11 +325,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
         levelCompletedAnimation = new LevelCompletedAnimation(animationRegistry);
         levelCompletedAnimation.setGameLevel(context().gameLevel());
         levelCompletedAnimation.setSingleFlashMillis(333);
-        levelCompletedAnimation.getOrCreateAnimationFX().setOnFinished(e -> {
-            mazeHighlighted.unbind();
-            context().gameController().letCurrentGameStateExpire();
-        });
-        mazeHighlighted.bind(levelCompletedAnimation.highlightedProperty());
+        levelCompletedAnimation.getOrCreateAnimationFX().setOnFinished(e -> context().gameController().letCurrentGameStateExpire());
         levelCompletedAnimation.playFromStart();
     }
 
