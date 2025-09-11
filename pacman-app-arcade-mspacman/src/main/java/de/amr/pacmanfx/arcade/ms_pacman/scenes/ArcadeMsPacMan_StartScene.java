@@ -15,6 +15,7 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_PIXELS;
@@ -32,17 +33,23 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
     public ArcadeMsPacMan_StartScene(GameUI ui) {
         super(ui);
     }
-    
-    @Override
-    public void doInit() {
-        GameUI_Config uiConfig = ui.currentConfig();
-        var spriteSheet = (ArcadeMsPacMan_SpriteSheet) uiConfig.spriteSheet();
 
+    @Override
+    public void createRenderers(Canvas canvas) {
+        super.createRenderers(canvas);
+
+        final GameUI_Config uiConfig = ui.currentConfig();
         sceneRenderer = new ArcadeMsPacMan_SceneRenderer(canvas, uiConfig);
         hudRenderer = (ArcadeMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas);
         bindRendererProperties(hudRenderer, sceneRenderer);
+    }
 
+    @Override
+    public void doInit() {
         context().game().hud().creditVisible(true).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
+
+        final GameUI_Config uiConfig = ui.currentConfig();
+        final var spriteSheet = (ArcadeMsPacMan_SpriteSheet) uiConfig.spriteSheet();
 
         livesCounterSprite = spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
 

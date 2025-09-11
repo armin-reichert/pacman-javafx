@@ -11,6 +11,7 @@ import de.amr.pacmanfx.ui.ActionBinding;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
+import javafx.scene.canvas.Canvas;
 
 import java.util.Set;
 
@@ -36,13 +37,16 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
     }
 
     @Override
-    protected void doInit() {
-        GameUI_Config uiConfig = ui.currentConfig();
+    public void createRenderers(Canvas canvas) {
+        super.createRenderers(canvas);
 
+        final GameUI_Config uiConfig = ui.currentConfig();
         scenesRenderer = new TengenMsPacMan_ScenesRenderer(canvas, uiConfig);
-
         bindRendererProperties(scenesRenderer);
+    }
 
+    @Override
+    protected void doInit() {
         context().game().hud().creditVisible(false).scoreVisible(false).levelCounterVisible(false).livesCounterVisible(false);
 
         Set<ActionBinding> tengenActionBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().actionBindings();
@@ -75,15 +79,14 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
     public void drawSceneContent() {
         scenesRenderer.drawHorizontalBar(nesColor(0x20), nesColor(0x13), sizeInPx().x(), TS, 20);
         scenesRenderer.drawHorizontalBar(nesColor(0x20), nesColor(0x13), sizeInPx().x(), TS, 212);
-        ctx().setFont(scenesRenderer.arcadeFontTS());
+        scenesRenderer.ctx().setFont(scenesRenderer.arcadeFontTS());
         y = 7 * TS; // important: reset on every draw!
         if (context().gameState().timer().betweenSeconds(0, 0.5 * DISPLAY_SECONDS)) {
             drawOriginalCreditsText();
         } else {
-            ctx().setGlobalAlpha(fadeProgress);
+            scenesRenderer.ctx().setGlobalAlpha(fadeProgress);
             drawRemakeCreditsText();
-            ctx().setGlobalAlpha(1);
-
+            scenesRenderer.ctx().setGlobalAlpha(1);
         }
     }
 

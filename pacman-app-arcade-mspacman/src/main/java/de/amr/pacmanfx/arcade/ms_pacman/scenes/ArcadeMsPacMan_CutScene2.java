@@ -13,6 +13,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
+import javafx.scene.canvas.Canvas;
 
 import java.util.stream.Stream;
 
@@ -48,17 +49,22 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
     public ArcadeMsPacMan_CutScene2(GameUI ui) {
         super(ui);
     }
-    
-    @Override
-    public void doInit() {
-        GameUI_Config uiConfig = ui.currentConfig();
 
+    @Override
+    public void createRenderers(Canvas canvas) {
+        super.createRenderers(canvas);
+
+        final GameUI_Config uiConfig = ui.currentConfig();
         hudRenderer = (ArcadeMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas);
         actorRenderer = (ArcadeMsPacMan_ActorRenderer) uiConfig.createActorRenderer(canvas);
-
         bindRendererProperties(hudRenderer, actorRenderer);
+    }
 
+    @Override
+    public void doInit() {
         context().game().hud().scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
+
+        final GameUI_Config uiConfig = ui.currentConfig();
 
         pacMan = createPacMan();
         pacMan.setAnimations(uiConfig.createPacAnimations(pacMan));

@@ -23,6 +23,7 @@ import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.rendering.*;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -58,16 +59,20 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     protected void doInit() {
-        GameUI_Config uiConfig = ui.currentConfig();
+        context().game().hud().creditVisible(false).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(true);
+    }
 
-        // Can be Pac-Man or Ms.Pac-Man renderer!
+    @Override
+    public void createRenderers(Canvas canvas) {
+        super.createRenderers(canvas);
+
+        GameUI_Config uiConfig = ui.currentConfig();
         hudRenderer = uiConfig.createHUDRenderer(canvas);
         gameLevelRenderer = uiConfig.createGameLevelRenderer(canvas);
         actorRenderer = uiConfig.createActorRenderer(canvas);
-        debugInfoRenderer = new Arcade_PlayScene2DDebugInfoRenderer(ui, this);
+        debugInfoRenderer = new Arcade_PlayScene2DDebugInfoRenderer(ui, this, canvas);
 
         bindRendererProperties(hudRenderer, gameLevelRenderer, actorRenderer, debugInfoRenderer);
-        context().game().hud().creditVisible(false).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(true);
     }
 
     @Override

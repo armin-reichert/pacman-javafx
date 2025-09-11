@@ -16,6 +16,7 @@ import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
+import javafx.scene.canvas.Canvas;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -55,8 +56,34 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
     @Override
     public void doInit() {
+        context().game().hud().creditVisible(false).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
+
         GameUI_Config uiConfig = ui.currentConfig();
 
+        pac = createPac();
+        pac.setAnimations(uiConfig.createPacAnimations(pac));
+
+        blinky = createGhost(RED_GHOST_SHADOW);
+        blinky.setSpeed(0);
+        blinky.hide();
+
+        AnimationManager blinkyAnimations = uiConfig.createGhostAnimations(blinky);
+        blinky.setAnimations(blinkyAnimations);
+        blinkyNormal = (SpriteAnimation) blinkyAnimations.animation(ANIM_GHOST_NORMAL);
+        nailDressRaptureAnimation = (SpriteAnimation) blinkyAnimations.animation(ANIM_BLINKY_NAIL_DRESS_RAPTURE);
+        blinkyDamaged = (SpriteAnimation) blinkyAnimations.animation(ANIM_BLINKY_DAMAGED);
+
+        actorsInZOrder.add(pac);
+        actorsInZOrder.add(blinky);
+
+        frame = -1;
+    }
+
+    @Override
+    public void createRenderers(Canvas canvas) {
+        super.createRenderers(canvas);
+
+        GameUI_Config uiConfig = ui.currentConfig();
         sceneRenderer.setSpriteSheet(uiConfig.spriteSheet());
         hudRenderer = new ArcadePacMan_HUDRenderer(canvas, uiConfig);
         actorRenderer = uiConfig.createActorRenderer(canvas);
@@ -69,26 +96,6 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
             }
         };
         bindRendererProperties(hudRenderer, actorRenderer, debugInfoRenderer);
-
-        context().game().hud().creditVisible(false).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
-
-        pac = createPac();
-        pac.setAnimations(ui.currentConfig().createPacAnimations(pac));
-
-        blinky = createGhost(RED_GHOST_SHADOW);
-        blinky.setSpeed(0);
-        blinky.hide();
-
-        AnimationManager blinkyAnimations = ui.currentConfig().createGhostAnimations(blinky);
-        blinky.setAnimations(blinkyAnimations);
-        blinkyNormal = (SpriteAnimation) blinkyAnimations.animation(ANIM_GHOST_NORMAL);
-        nailDressRaptureAnimation = (SpriteAnimation) blinkyAnimations.animation(ANIM_BLINKY_NAIL_DRESS_RAPTURE);
-        blinkyDamaged = (SpriteAnimation) blinkyAnimations.animation(ANIM_BLINKY_DAMAGED);
-
-        actorsInZOrder.add(pac);
-        actorsInZOrder.add(blinky);
-
-        frame = -1;
     }
 
     @Override

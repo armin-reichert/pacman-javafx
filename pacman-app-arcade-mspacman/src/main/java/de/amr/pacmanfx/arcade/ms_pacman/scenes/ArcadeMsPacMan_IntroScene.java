@@ -22,6 +22,7 @@ import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
 import java.util.List;
@@ -75,15 +76,18 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     }
 
     @Override
-    public void doInit() {
-        GameUI_Config uiConfig = ui.currentConfig();
+    public void createRenderers(Canvas canvas) {
+        super.createRenderers(canvas);
 
+        final GameUI_Config uiConfig = ui.currentConfig();
         hudRenderer = (ArcadeMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas);
         sceneRenderer = new ArcadeMsPacMan_SceneRenderer(canvas, ui.currentConfig());
         actorRenderer = uiConfig.createActorRenderer(canvas);
-
         bindRendererProperties(hudRenderer, sceneRenderer, actorRenderer);
+    }
 
+    @Override
+    public void doInit() {
         context().game().hud().creditVisible(true).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
 
         actionBindings.assign(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
@@ -95,6 +99,8 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         marquee = new Marquee(60, 88, 132, 60, 96, 6, 16);
         marquee.setBulbOffColor(ARCADE_RED);
         marquee.setBulbOnColor(ARCADE_WHITE);
+
+        final GameUI_Config uiConfig = ui.currentConfig();
 
         msPacMan = createMsPacMan();
         msPacMan.setAnimations(uiConfig.createPacAnimations(msPacMan));
@@ -147,7 +153,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     public void drawSceneContent() {
         var msPacManSceneRenderer = (ArcadeMsPacMan_SceneRenderer) sceneRenderer;
 
-        ctx().setFont(sceneRenderer.arcadeFontTS());
+        sceneRenderer.ctx().setFont(sceneRenderer.arcadeFontTS());
         sceneRenderer.fillText(TITLE, ARCADE_ORANGE, TITLE_X, TITLE_Y);
         msPacManSceneRenderer.drawMarquee(marquee);
 

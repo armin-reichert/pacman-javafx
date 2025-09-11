@@ -13,6 +13,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_ActorRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -41,16 +42,21 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     }
 
     @Override
-    public void doInit() {
-        GameUI_Config uiConfig = ui.currentConfig();
+    public void createRenderers(Canvas canvas) {
+        super.createRenderers(canvas);
 
+        final GameUI_Config uiConfig = ui.currentConfig();
         actorRenderer = (TengenMsPacMan_ActorRenderer) uiConfig.createActorRenderer(canvas);
         bindRendererProperties(actorRenderer);
+    }
 
+    @Override
+    public void doInit() {
         movingText = new Actor();
         movingText.setPosition(TS(9), sizeInPx().y()); // lower border of screen
         movingText.setVelocity(Vector2f.ZERO);
 
+        final GameUI_Config uiConfig = ui.currentConfig();
         ghost = createGhost(RED_GHOST_SHADOW);
         ghost.setSpeed(0);
         ghost.setAnimations(uiConfig.createGhostAnimations(ghost));

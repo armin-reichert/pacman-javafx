@@ -21,6 +21,7 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.animation.SingleSpriteActor;
+import javafx.scene.canvas.Canvas;
 
 import java.util.stream.Stream;
 
@@ -71,19 +72,24 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
     }
 
     @Override
-    public void doInit() {
-        GameUI_Config uiConfig = ui.currentConfig();
-        var spriteSheet = (TengenMsPacMan_SpriteSheet) uiConfig.spriteSheet();
+    public void createRenderers(Canvas canvas) {
+        super.createRenderers(canvas);
 
+        final GameUI_Config uiConfig = ui.currentConfig();
         hudRenderer = (TengenMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas);
         actorSpriteRenderer = (TengenMsPacMan_ActorRenderer) uiConfig.createActorRenderer(canvas);
         debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas);
-
         bindRendererProperties(hudRenderer, actorSpriteRenderer, debugInfoRenderer);
+    }
 
+    @Override
+    public void doInit() {
         context().game().hud().creditVisible(false).scoreVisible(false).levelCounterVisible(true).livesCounterVisible(false);
 
         actionBindings.bind(ACTION_LET_GAME_STATE_EXPIRE, ui.joypad().key(JoypadButton.START));
+
+        final GameUI_Config uiConfig = ui.currentConfig();
+        final var spriteSheet = (TengenMsPacMan_SpriteSheet) uiConfig.spriteSheet();
 
         clapperboard = new Clapperboard(spriteSheet, 1, "THEY MEET");
         clapperboard.setPosition(3 * TS, 10 * TS);

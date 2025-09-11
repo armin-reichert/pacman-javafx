@@ -17,6 +17,7 @@ import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
+import javafx.scene.canvas.Canvas;
 
 import java.util.stream.Stream;
 
@@ -54,21 +55,25 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
     public TengenMsPacMan_CutScene2(GameUI ui) {
         super(ui);
     }
-    
-    @Override
-    public void doInit() {
-        GameUI_Config uiConfig = ui.currentConfig();
-        var spriteSheet = (TengenMsPacMan_SpriteSheet) uiConfig.spriteSheet();
 
+    @Override
+    public void createRenderers(Canvas canvas) {
+        super.createRenderers(canvas);
+
+        final GameUI_Config uiConfig = ui.currentConfig();
         hudRenderer = (TengenMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas);
         actorRenderer = (TengenMsPacMan_ActorRenderer) uiConfig.createActorRenderer(canvas);
         debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas);
-
         bindRendererProperties(hudRenderer, actorRenderer, debugInfoRenderer);
+    }
 
+    @Override
+    public void doInit() {
         context().game().hud().creditVisible(false).scoreVisible(false).levelCounterVisible(true).livesCounterVisible(false);
-
         actionBindings.bind(ACTION_LET_GAME_STATE_EXPIRE, ui.joypad().key(JoypadButton.START));
+
+        final GameUI_Config uiConfig = ui.currentConfig();
+        final var spriteSheet = (TengenMsPacMan_SpriteSheet) uiConfig.spriteSheet();
 
         clapperboard = new Clapperboard(spriteSheet, 2, "THE CHASE");
         clapperboard.setPosition(3 * TS, 10 * TS);

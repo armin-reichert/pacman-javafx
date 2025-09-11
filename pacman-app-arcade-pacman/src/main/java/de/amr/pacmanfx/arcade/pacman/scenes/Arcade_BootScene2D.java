@@ -12,6 +12,7 @@ import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
+import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.Globals.TS;
@@ -35,14 +36,19 @@ public class Arcade_BootScene2D extends GameScene2D {
     }
 
     @Override
-    public void doInit() {
-        GameUI_Config uiConfig = ui.currentConfig();
-        // This can be different sprite-sheet types!
-        SpriteSheet<?> spriteSheet = uiConfig.spriteSheet();
-        sceneRenderer.setSpriteSheet(spriteSheet);
+    public void createRenderers(Canvas canvas) {
+        super.createRenderers(canvas);
 
+        final GameUI_Config uiConfig = ui.currentConfig();
+        // This can be different sprite-sheet types!
+        sceneRenderer.setSpriteSheet(uiConfig.spriteSheet());
+    }
+
+    @Override
+    public void doInit() {
         context().game().hud().all(false);
 
+        SpriteSheet<?> spriteSheet = sceneRenderer().spriteSheet();
         double width = spriteSheet.sourceImage().getWidth(), height = spriteSheet.sourceImage().getHeight();
         // ignore left half of sprite sheet image containing maze images
         minPoint = Vector2f.of(width / 2, 0);
@@ -100,13 +106,13 @@ public class Arcade_BootScene2D extends GameScene2D {
     private void drawRandomHexDigits() {
         int numRows = (int) (ARCADE_MAP_SIZE_IN_PIXELS.y() / TS);
         int numCols = (int) (ARCADE_MAP_SIZE_IN_PIXELS.x() / TS);
-        ctx().setFill(ARCADE_WHITE);
-        ctx().setFont(sceneRenderer.arcadeFontTS());
+        sceneRenderer.ctx().setFill(ARCADE_WHITE);
+        sceneRenderer.ctx().setFont(sceneRenderer.arcadeFontTS());
         for (int row = 0; row < numRows; ++row) {
             double y = scaled(TS(row + 1));
             for (int col = 0; col < numCols; ++col) {
                 int hexDigit = randomInt(0, 16);
-                ctx().fillText(Integer.toHexString(hexDigit), scaled(TS(col)), y);
+                sceneRenderer.ctx().fillText(Integer.toHexString(hexDigit), scaled(TS(col)), y);
             }
         }
     }
@@ -137,16 +143,16 @@ public class Arcade_BootScene2D extends GameScene2D {
         int numRows = (int) (ARCADE_MAP_SIZE_IN_PIXELS.y() / RASTER_SIZE);
         int numCols = (int) (ARCADE_MAP_SIZE_IN_PIXELS.x() / RASTER_SIZE);
         double thin = scaled(2), thick = scaled(4);
-        ctx().setStroke(ARCADE_WHITE);
+        sceneRenderer.ctx().setStroke(ARCADE_WHITE);
         for (int row = 0; row <= numRows; ++row) {
-            ctx().setLineWidth(row == 0 || row == numRows ? thick : thin);
+            sceneRenderer.ctx().setLineWidth(row == 0 || row == numRows ? thick : thin);
             double y = scaled(row * RASTER_SIZE);
-            ctx().strokeLine(0, y, gridWidth, y);
+            sceneRenderer.ctx().strokeLine(0, y, gridWidth, y);
         }
         for (int col = 0; col <= numCols; ++col) {
-            ctx().setLineWidth(col == 0 || col == numCols ? thick : thin);
+            sceneRenderer.ctx().setLineWidth(col == 0 || col == numCols ? thick : thin);
             double x = scaled(col * RASTER_SIZE);
-            ctx().strokeLine(x, 0, x, gridHeight);
+            sceneRenderer.ctx().strokeLine(x, 0, x, gridHeight);
         }
     }
 }

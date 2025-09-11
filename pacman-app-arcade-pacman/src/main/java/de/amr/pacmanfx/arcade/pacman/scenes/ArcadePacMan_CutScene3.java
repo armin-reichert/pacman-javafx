@@ -14,6 +14,7 @@ import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
+import javafx.scene.canvas.Canvas;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -46,8 +47,27 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
     
     @Override
     public void doInit() {
+        context().game().hud().creditVisible(false).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
+
         GameUI_Config uiConfig = ui.currentConfig();
 
+        pac = createPac();
+        pac.setAnimations(uiConfig.createPacAnimations(pac));
+
+        blinky = createGhost(RED_GHOST_SHADOW);
+        blinky.setAnimations(uiConfig.createGhostAnimations(blinky));
+
+        actorsInZOrder.add(pac);
+        actorsInZOrder.add(blinky);
+
+        frame = -1;
+    }
+
+    @Override
+    public void createRenderers(Canvas canvas) {
+        super.createRenderers(canvas);
+
+        GameUI_Config uiConfig = ui.currentConfig();
         hudRenderer = new ArcadePacMan_HUDRenderer(canvas, uiConfig);
         actorRenderer = new ArcadePacMan_ActorRenderer(canvas, uiConfig);
         debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas) {
@@ -55,24 +75,11 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
             public void drawDebugInfo() {
                 super.drawDebugInfo();
                 String text = frame < ANIMATION_START
-                        ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
+                    ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
                 fillText(text, debugTextFill, debugTextFont, TS(1), TS(5));
             }
         };
         bindRendererProperties(hudRenderer, actorRenderer, debugInfoRenderer);
-
-        context().game().hud().creditVisible(false).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
-
-        pac = createPac();
-        pac.setAnimations(ui.currentConfig().createPacAnimations(pac));
-
-        blinky = createGhost(RED_GHOST_SHADOW);
-        blinky.setAnimations(ui.currentConfig().createGhostAnimations(blinky));
-
-        actorsInZOrder.add(pac);
-        actorsInZOrder.add(blinky);
-
-        frame = -1;
     }
 
     @Override

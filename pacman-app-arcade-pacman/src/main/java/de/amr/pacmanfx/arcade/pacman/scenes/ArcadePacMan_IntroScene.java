@@ -24,6 +24,7 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
@@ -80,22 +81,6 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        GameUI_Config uiConfig = ui.currentConfig();
-
-        spriteSheet = (ArcadePacMan_SpriteSheet) uiConfig.spriteSheet();
-        sceneRenderer.setSpriteSheet(spriteSheet);
-
-        hudRenderer = (ArcadePacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas);
-        actorRenderer = (ArcadePacMan_ActorRenderer) uiConfig.createActorRenderer(canvas);
-        debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas) {
-            @Override
-            public void drawDebugInfo() {
-                super.drawDebugInfo();
-                ctx.fillText("Scene timer %d".formatted(sceneController.state().timer().tickCount()), 0, scaled(5 * TS));
-            }
-        };
-        bindRendererProperties(hudRenderer, actorRenderer, debugInfoRenderer);
-
         context().game().hud().creditVisible(true).scoreVisible(true).livesCounterVisible(false).levelCounterVisible(true);
 
         actionBindings.assign(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
@@ -105,6 +90,8 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         actionBindings.assign(ACTION_TEST_LEVELS_MEDIUM, ui.actionBindings());
 
         blinking = new Pulse(10, true);
+
+        GameUI_Config uiConfig = ui.currentConfig();
 
         pacMan = createPac();
         pacMan.setAnimations(uiConfig.createPacAnimations(pacMan));
@@ -128,6 +115,27 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         ghostKilledTime = 0;
 
         sceneController.restart(SceneState.STARTING);
+    }
+
+    @Override
+    public void createRenderers(Canvas canvas) {
+        super.createRenderers(canvas);
+
+        GameUI_Config uiConfig = ui.currentConfig();
+
+        spriteSheet = (ArcadePacMan_SpriteSheet) uiConfig.spriteSheet();
+        sceneRenderer.setSpriteSheet(spriteSheet);
+
+        hudRenderer = (ArcadePacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas);
+        actorRenderer = (ArcadePacMan_ActorRenderer) uiConfig.createActorRenderer(canvas);
+        debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas) {
+            @Override
+            public void drawDebugInfo() {
+                super.drawDebugInfo();
+                ctx.fillText("Scene timer %d".formatted(sceneController.state().timer().tickCount()), 0, scaled(5 * TS));
+            }
+        };
+        bindRendererProperties(hudRenderer, actorRenderer, debugInfoRenderer);
     }
 
     @Override
@@ -214,9 +222,9 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     }
 
     private void drawPoints() {
-        ctx().setFill(ARCADE_ROSE);
+        sceneRenderer.ctx().setFill(ARCADE_ROSE);
         // normal pellet
-        ctx().fillRect(scaled(TS(LEFT_TILE_X + 6) + 4), scaled(TS(24) + 4), scaled(2), scaled(2));
+        sceneRenderer.ctx().fillRect(scaled(TS(LEFT_TILE_X + 6) + 4), scaled(TS(24) + 4), scaled(2), scaled(2));
         sceneRenderer.fillText("10",  ARCADE_WHITE, sceneRenderer.arcadeFontTS(), TS(LEFT_TILE_X + 8), TS(25));
         sceneRenderer.fillText("PTS", ARCADE_WHITE, sceneRenderer.arcadeFont6(), TS(LEFT_TILE_X + 11), TS(25));
         // energizer
@@ -227,14 +235,14 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     private void drawBlinkingEnergizer(double x, double y) {
         if (blinking.isOn()) {
-            ctx().save();
-            ctx().scale(scaling(), scaling());
-            ctx().setFill(ARCADE_ROSE);
+            sceneRenderer.ctx().save();
+            sceneRenderer.ctx().scale(scaling(), scaling());
+            sceneRenderer.ctx().setFill(ARCADE_ROSE);
             // draw pixelated "circle"
-            ctx().fillRect(x + 2, y, 4, 8);
-            ctx().fillRect(x, y + 2, 8, 4);
-            ctx().fillRect(x + 1, y + 1, 6, 6);
-            ctx().restore();
+            sceneRenderer.ctx().fillRect(x + 2, y, 4, 8);
+            sceneRenderer.ctx().fillRect(x, y + 2, 8, 4);
+            sceneRenderer.ctx().fillRect(x + 1, y + 1, 6, 6);
+            sceneRenderer.ctx().restore();
         }
     }
 

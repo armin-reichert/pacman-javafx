@@ -10,7 +10,7 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
-import de.amr.pacmanfx.uilib.rendering.BaseCanvasRenderer;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_PIXELS;
@@ -32,11 +32,16 @@ public class ArcadePacMan_StartScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        hudRenderer = new ArcadePacMan_HUDRenderer(canvas, ui.currentConfig());
-        bindRendererProperties(hudRenderer);
         context().game().hud().creditVisible(true).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
         actionBindings.assign(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
         actionBindings.assign(ACTION_ARCADE_START_GAME, ui.actionBindings());
+    }
+
+    @Override
+    public void createRenderers(Canvas canvas) {
+        super.createRenderers(canvas);
+        hudRenderer = new ArcadePacMan_HUDRenderer(canvas, ui.currentConfig());
+        bindRendererProperties(hudRenderer);
     }
 
     @Override

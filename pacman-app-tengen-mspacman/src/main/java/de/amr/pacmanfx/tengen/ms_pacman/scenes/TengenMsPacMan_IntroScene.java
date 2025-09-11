@@ -20,6 +20,7 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
@@ -72,14 +73,19 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
     }
 
     @Override
-    public void doInit() {
-        GameUI_Config uiConfig = ui.currentConfig();
-        spriteSheet = (TengenMsPacMan_SpriteSheet) uiConfig.spriteSheet();
+    public void createRenderers(Canvas canvas) {
+        super.createRenderers(canvas);
 
+        final GameUI_Config uiConfig = ui.currentConfig();
         scenesRenderer = new TengenMsPacMan_ScenesRenderer(canvas, uiConfig);
         actorRenderer = uiConfig.createActorRenderer(canvas);
-
         bindRendererProperties(scenesRenderer, actorRenderer);
+    }
+
+    @Override
+    public void doInit() {
+        final GameUI_Config uiConfig = ui.currentConfig();
+        spriteSheet = (TengenMsPacMan_SpriteSheet) uiConfig.spriteSheet();
 
         var tengenActionBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().actionBindings();
         actionBindings.assign(ACTION_ENTER_START_SCREEN, tengenActionBindings);
@@ -120,8 +126,8 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
     @Override
     public void drawSceneContent() {
         long tick = sceneController.state().timer().tickCount();
-        ctx().setFont(scenesRenderer.arcadeFontTS());
-        ctx().setImageSmoothing(false);
+        scenesRenderer.ctx().setFont(scenesRenderer.arcadeFontTS());
+        scenesRenderer.ctx().setImageSmoothing(false);
         switch (sceneController.state()) {
             case WAITING_FOR_START -> {
                 if (!dark) {
@@ -135,11 +141,11 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 }
             }
             case SHOWING_MARQUEE -> {
-                marquee.draw(ctx());
+                marquee.draw(scenesRenderer.ctx());
                 scenesRenderer.fillText("\"MS PAC-MAN\"", nesColor(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
             }
             case GHOSTS_MARCHING_IN -> {
-                marquee.draw(ctx());
+                marquee.draw(scenesRenderer.ctx());
                 scenesRenderer.fillText("\"MS PAC-MAN\"", nesColor(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
                 if (ghostIndex == 0) {
                     scenesRenderer.fillText("WITH", nesColor(0x20), MARQUEE_X + 12, MARQUEE_Y + 23);
@@ -150,7 +156,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 ghosts.forEach(ghost -> actorRenderer.drawActor(ghost));
             }
             case MS_PACMAN_MARCHING_IN -> {
-                marquee.draw(ctx());
+                marquee.draw(scenesRenderer.ctx());
                 scenesRenderer.fillText("\"MS PAC-MAN\"", nesColor(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
                 scenesRenderer.fillText("STARRING", nesColor(0x20), MARQUEE_X + 12, MARQUEE_Y + 22);
                 scenesRenderer.fillText("MS PAC-MAN", nesColor(0x28), MARQUEE_X + 28, MARQUEE_Y + 38);

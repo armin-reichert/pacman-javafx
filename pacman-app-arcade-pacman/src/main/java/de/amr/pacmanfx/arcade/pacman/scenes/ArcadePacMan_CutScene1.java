@@ -14,6 +14,7 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
+import javafx.scene.canvas.Canvas;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -47,6 +48,25 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
     public void doInit() {
         GameUI_Config uiConfig = ui.currentConfig();
 
+        context().game().hud().creditVisible(false).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
+
+        pac = createPac();
+        pac.setAnimations(uiConfig.createPacAnimations(pac));
+
+        blinky = createGhost(RED_GHOST_SHADOW);
+        blinky.setAnimations(uiConfig.createGhostAnimations(blinky));
+
+        actorsInZOrder.add(pac);
+        actorsInZOrder.add(blinky);
+
+        frame = -1;
+    }
+
+    @Override
+    public void createRenderers(Canvas canvas) {
+        super.createRenderers(canvas);
+
+        GameUI_Config uiConfig = ui.currentConfig();
         hudRenderer = new ArcadePacMan_HUDRenderer(canvas, uiConfig);
         actorRenderer = uiConfig.createActorRenderer(canvas);
         debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas) {
@@ -58,19 +78,6 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
             }
         };
         bindRendererProperties(hudRenderer, actorRenderer, debugInfoRenderer);
-
-        context().game().hud().creditVisible(false).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
-
-        pac = createPac();
-        pac.setAnimations(ui.currentConfig().createPacAnimations(pac));
-
-        blinky = createGhost(RED_GHOST_SHADOW);
-        blinky.setAnimations(ui.currentConfig().createGhostAnimations(blinky));
-
-        actorsInZOrder.add(pac);
-        actorsInZOrder.add(blinky);
-
-        frame = -1;
     }
 
     @Override

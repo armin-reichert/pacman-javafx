@@ -17,6 +17,7 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.animation.SingleSpriteActor;
+import javafx.scene.canvas.Canvas;
 
 import java.util.stream.Stream;
 
@@ -60,16 +61,21 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     public ArcadeMsPacMan_CutScene1(GameUI ui) {
         super(ui);
     }
-    
+
+    @Override
+    public void createRenderers(Canvas canvas) {
+        super.createRenderers(canvas);
+
+        final GameUI_Config uiConfig = ui.currentConfig();
+        hudRenderer = (ArcadeMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas);
+        actorRenderer = (ArcadeMsPacMan_ActorRenderer) uiConfig.createActorRenderer(canvas);
+        bindRendererProperties(hudRenderer, actorRenderer);
+    }
+
     @Override
     public void doInit() {
         final GameUI_Config uiConfig = ui.currentConfig();
         final var spriteSheet = (ArcadeMsPacMan_SpriteSheet) uiConfig.spriteSheet();
-
-        hudRenderer = (ArcadeMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas);
-        actorRenderer = (ArcadeMsPacMan_ActorRenderer) uiConfig.createActorRenderer(canvas);
-
-        bindRendererProperties(hudRenderer, actorRenderer);
 
         context().game().hud().scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
 

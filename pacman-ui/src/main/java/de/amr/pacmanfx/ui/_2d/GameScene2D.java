@@ -18,7 +18,6 @@ import de.amr.pacmanfx.uilib.rendering.CanvasRenderer;
 import de.amr.pacmanfx.uilib.rendering.DebugInfoRenderer;
 import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
@@ -40,7 +39,6 @@ public abstract class GameScene2D implements GameScene {
     protected final AnimationRegistry animationRegistry;
     protected final List<Actor> actorsInZOrder = new ArrayList<>();
 
-    protected Canvas canvas;
     protected BaseSpriteRenderer sceneRenderer;
     protected DebugInfoRenderer debugInfoRenderer;
 
@@ -57,10 +55,6 @@ public abstract class GameScene2D implements GameScene {
 
     @Override
     public final void init() {
-        requireNonNull(canvas, "No canvas has been assigned to game scene");
-        sceneRenderer = new BaseSpriteRenderer(canvas);
-        debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas);
-        bindRendererProperties(sceneRenderer, debugInfoRenderer);
         doInit();
         actionBindings.installBindings(ui.keyboard());
         ui.keyboard().logCurrentBindings();
@@ -78,7 +72,19 @@ public abstract class GameScene2D implements GameScene {
     }
 
     protected abstract void doInit();
+
     protected abstract void doEnd();
+
+    public BaseSpriteRenderer sceneRenderer() {
+        return sceneRenderer;
+    }
+
+    public void createRenderers(Canvas canvas) {
+        requireNonNull(canvas, "No canvas has been assigned to game scene");
+        sceneRenderer = new BaseSpriteRenderer(canvas);
+        debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas);
+        bindRendererProperties(sceneRenderer, debugInfoRenderer);
+    }
 
     protected void bindRendererProperties(CanvasRenderer... renderers) {
         for (CanvasRenderer renderer : renderers) {
@@ -97,19 +103,6 @@ public abstract class GameScene2D implements GameScene {
     public void onUnspecifiedChange(GameEvent event) {
         // TODO: remove (this is only used by game state GameState.TESTING_CUT_SCENES)
         ui.updateGameScene(true);
-    }
-
-    public Canvas canvas() {
-        return canvas;
-    }
-
-    public void setCanvas(Canvas canvas) {
-        this.canvas = canvas;
-    }
-
-    public GraphicsContext ctx() {
-        requireNonNull(canvas);
-        return canvas.getGraphicsContext2D();
     }
 
     public DoubleProperty scalingProperty() {

@@ -23,6 +23,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_ActorRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameLevelRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_HUDRenderer;
 import de.amr.pacmanfx.ui.ActionBinding;
+import de.amr.pacmanfx.ui._2d.CanvasProvider;
 import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
@@ -64,7 +65,7 @@ import static de.amr.pacmanfx.uilib.Ufx.createContextMenuTitle;
 /**
  * Tengen Ms. Pac-Man play scene, uses vertical scrolling by default to accommodate to NES screen size.
  */
-public class TengenMsPacMan_PlayScene2D extends GameScene2D {
+public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasProvider {
 
     /** Unscaled canvas width: 32 tiles (NES screen width) */
     public static final int UNSCALED_CANVAS_WIDTH = NES_TILES.x() * TS;
@@ -82,7 +83,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     private class TengenPlaySceneDebugInfoRenderer extends DefaultDebugInfoRenderer {
 
-        public TengenPlaySceneDebugInfoRenderer(GameUI ui) {
+        public TengenPlaySceneDebugInfoRenderer(GameUI ui, Canvas canvas) {
             super(ui, canvas);
         }
 
@@ -102,6 +103,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         }
     }
 
+    private final Canvas canvas = new Canvas();
     private TengenMsPacMan_HUDRenderer hudRenderer;
     private TengenMsPacMan_GameLevelRenderer gameLevelRenderer;
     private TengenMsPacMan_ActorRenderer actorRenderer;
@@ -115,7 +117,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         displayModeProperty.bind(PROPERTY_PLAY_SCENE_DISPLAY_MODE);
 
         // Play scene uses its own canvas, not the one from the game view
-        canvas = new Canvas();
         canvas.widthProperty() .bind(scalingProperty().multiply(UNSCALED_CANVAS_WIDTH));
         canvas.heightProperty().bind(scalingProperty().multiply(UNSCALED_CANVAS_HEIGHT));
 
@@ -160,18 +161,25 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void doInit() {
-        TengenMsPacMan_UIConfig uiConfig = ui.currentConfig();
+    public Canvas canvas() {
+        return canvas;
+    }
 
+    @Override
+    public void createRenderers(Canvas canvas) {
+        super.createRenderers(canvas);
+
+        TengenMsPacMan_UIConfig uiConfig = ui.currentConfig();
         hudRenderer       = uiConfig.createHUDRenderer(canvas);
         gameLevelRenderer = uiConfig.createGameLevelRenderer(canvas);
         actorRenderer     = uiConfig.createActorRenderer(canvas);
-        debugInfoRenderer = new TengenPlaySceneDebugInfoRenderer(ui);
-
+        debugInfoRenderer = new TengenPlaySceneDebugInfoRenderer(ui, canvas);
         bindRendererProperties(hudRenderer, gameLevelRenderer, actorRenderer, debugInfoRenderer);
+    }
 
+    @Override
+    public void doInit() {
         context().game().hud().scoreVisible(true).levelCounterVisible(true).livesCounterVisible(true);
-
         dynamicCamera.targetTop();
     }
 
@@ -452,12 +460,14 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void draw() {
-        gameLevelRenderer.clearCanvas();
+        if (sceneRenderer != null) {
+            sceneRenderer.clearCanvas();
+        }
         context().optGameLevel().ifPresent(gameLevel -> {
             updateScaling(gameLevel);
-            ctx().save();
+            gameLevelRenderer.ctx().save();
             // map width is 28 tiles but NES screen width is 32 tiles: move 2 tiles right and clip one tile on each side
-            ctx().translate(scaled(TS(2)), 0);
+            gameLevelRenderer.ctx().translate(scaled(TS(2)), 0);
             canvas.setClip(clipRect);
 
             var renderInfo = new RenderInfo();
@@ -475,10 +485,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
             if (debugInfoVisible.get() && debugInfoRenderer != null) {
                 // debug info also used normally clipped area
                 canvas.setClip(null);
-                ctx().translate(scaled(-TS(2)), 0);
+                gameLevelRenderer.ctx().translate(scaled(-TS(2)), 0);
                 debugInfoRenderer.drawDebugInfo();
             }
-            ctx().restore();
+            gameLevelRenderer.ctx().restore();
         });
     }
 

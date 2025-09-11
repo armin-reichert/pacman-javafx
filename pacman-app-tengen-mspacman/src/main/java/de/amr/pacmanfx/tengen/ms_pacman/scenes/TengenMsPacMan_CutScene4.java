@@ -18,6 +18,7 @@ import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
+import javafx.scene.canvas.Canvas;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
@@ -55,22 +56,27 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     public TengenMsPacMan_CutScene4(GameUI ui) {
         super(ui);
     }
-    
-    @Override
-    protected void doInit() {
-        GameUI_Config uiConfig = ui.currentConfig();
-        var spriteSheet = (TengenMsPacMan_SpriteSheet) ui.currentConfig().spriteSheet();
 
+    @Override
+    public void createRenderers(Canvas canvas) {
+        super.createRenderers(canvas);
+
+        final GameUI_Config uiConfig = ui.currentConfig();
         hudRenderer = (TengenMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas);
         actorRenderer = (TengenMsPacMan_ActorRenderer) uiConfig.createActorRenderer(canvas);
         debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas);
-
         bindRendererProperties(hudRenderer, actorRenderer, debugInfoRenderer);
+    }
 
+    @Override
+    protected void doInit() {
         context().game().hud().scoreVisible(false).levelCounterVisible(true).livesCounterVisible(false);
 
+        final GameUI_Config uiConfig = ui.currentConfig();
+        final var spriteSheet = (TengenMsPacMan_SpriteSheet) uiConfig.spriteSheet();
+
         clapperboard = new Clapperboard(spriteSheet, 4, "THE END");
-        clapperboard.setPosition(3*TS, 10*TS);
+        clapperboard.setPosition(TS(3), TS(10));
         clapperboard.setFont(actorRenderer.arcadeFontTS());
         clapperboard.setVisible(true);
         clapperboard.startAnimation();

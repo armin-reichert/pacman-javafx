@@ -12,6 +12,7 @@ import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.actors.MovingActor;
 import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
 import de.amr.pacmanfx.ui.api.GameUI;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
 import java.util.List;
@@ -24,8 +25,8 @@ public class Arcade_PlayScene2DDebugInfoRenderer extends DefaultDebugInfoRendere
 
     private final Arcade_PlayScene2D scene2D;
 
-    public Arcade_PlayScene2DDebugInfoRenderer(GameUI ui, Arcade_PlayScene2D scene2D) {
-        super(ui, scene2D.canvas());
+    public Arcade_PlayScene2DDebugInfoRenderer(GameUI ui, Arcade_PlayScene2D scene2D, Canvas canvas) {
+        super(ui, canvas);
         this.scene2D = scene2D;
     }
 
