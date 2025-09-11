@@ -68,9 +68,6 @@ public class Arcade_BootScene2D extends GameScene2D {
     }
 
     @Override
-    public Vector2f sizeInPx() { return ARCADE_MAP_SIZE_IN_PIXELS; }
-
-    @Override
     public void draw() {
         if (context().gameState().timer().tickCount() == 1) {
             sceneRenderer.clearCanvas();

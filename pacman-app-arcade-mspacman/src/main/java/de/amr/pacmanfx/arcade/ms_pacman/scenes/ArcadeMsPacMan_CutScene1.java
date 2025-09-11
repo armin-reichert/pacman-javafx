@@ -118,11 +118,6 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     }
 
     @Override
-    public Vector2f sizeInPx() {
-        return ARCADE_MAP_SIZE_IN_PIXELS;
-    }
-
-    @Override
     public void drawHUD() {
         if (hudRenderer != null) {
             hudRenderer.drawHUD(context().game(), context().game().hud(), sizeInPx());

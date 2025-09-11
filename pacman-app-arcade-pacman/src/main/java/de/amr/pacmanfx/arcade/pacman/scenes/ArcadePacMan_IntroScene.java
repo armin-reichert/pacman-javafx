@@ -11,7 +11,6 @@ import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.RectShort;
-import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.timer.Pulse;
@@ -151,10 +150,6 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     public void onCreditAdded(GameEvent e) {
         ui.soundManager().play(SoundID.COIN_INSERTED);
     }
-
-    @Override
-    public Vector2f sizeInPx() { return ARCADE_MAP_SIZE_IN_PIXELS; }
-
 
     @Override
     public void drawHUD() {

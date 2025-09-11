@@ -6,14 +6,12 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_HUDRenderer;
 import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.text.Font;
 
-import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.CommonGameActions.ACTION_ARCADE_INSERT_COIN;
 import static de.amr.pacmanfx.ui.CommonGameActions.ACTION_ARCADE_START_GAME;
@@ -56,9 +54,6 @@ public class ArcadePacMan_StartScene extends GameScene2D {
     public void onCreditAdded(GameEvent e) {
         ui.soundManager().play(SoundID.COIN_INSERTED);
     }
-
-    @Override
-    public Vector2f sizeInPx() { return ARCADE_MAP_SIZE_IN_PIXELS; }
 
     @Override
     public void drawHUD() {

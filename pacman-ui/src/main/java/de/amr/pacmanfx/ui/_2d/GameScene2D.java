@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui._2d;
 
 import de.amr.pacmanfx.GameContext;
+import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.actors.Actor;
@@ -131,7 +132,9 @@ public abstract class GameScene2D implements GameScene {
     /**
      * @return (unscaled) scene size in pixels e.g. 224x288
      */
-    public abstract Vector2f sizeInPx();
+    public Vector2f sizeInPx() {
+        return Globals.ARCADE_MAP_SIZE_IN_PIXELS;
+    }
 
     public List<Actor> actorsInZOrder() {
         return actorsInZOrder;

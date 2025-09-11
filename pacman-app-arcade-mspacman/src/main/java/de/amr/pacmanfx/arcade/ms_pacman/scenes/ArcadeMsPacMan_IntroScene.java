@@ -9,7 +9,6 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SceneRenderer;
 import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.timer.TickTimer;
@@ -129,11 +128,6 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     @Override
     public void update() {
         sceneController.update();
-    }
-
-    @Override
-    public Vector2f sizeInPx() {
-        return ARCADE_MAP_SIZE_IN_PIXELS;
     }
 
     @Override

@@ -19,7 +19,6 @@ import javafx.scene.canvas.Canvas;
 
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.createMsPacMan;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.createPacMan;
@@ -104,11 +103,6 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
             default -> throw new IllegalStateException("Illegal scene state: " + sceneState);
         }
         sceneTimer.doTick();
-    }
-
-    @Override
-    public Vector2f sizeInPx() {
-        return ARCADE_MAP_SIZE_IN_PIXELS;
     }
 
     @Override
