@@ -42,20 +42,24 @@ public final class Keyboard {
     }
 
     private final Set<KeyCode> pressedKeys = new HashSet<>();
-    private final Map<KeyCombination, ActionBindingsManager> actionBindingMaps = new HashMap<>();
+    private final Map<KeyCombination, ActionBindingsManager> actionBindings = new HashMap<>();
     private final List<KeyCombination> matches = new ArrayList<>(3);
 
-    public void setBinding(KeyCombination combination, ActionBindingsManager actionBindingSupport) {
-        if (actionBindingMaps.get(combination) == actionBindingSupport) {
-            Logger.debug("Key combination '{}' already bound to action {}", combination, actionBindingSupport);
+    public void setBinding(KeyCombination combination, ActionBindingsManager bindingsManager) {
+        if (actionBindings.get(combination) == bindingsManager) {
+            Logger.debug("Key combination '{}' already bound to action {}", combination, bindingsManager);
         } else {
-            actionBindingMaps.put(combination, actionBindingSupport);
-            Logger.debug("Key combination '{}' is bound to action {}", combination, actionBindingSupport);
+            actionBindings.put(combination, bindingsManager);
+            Logger.debug("Key combination '{}' is bound to action {}", combination, bindingsManager);
         }
     }
 
+    public Map<KeyCombination, ActionBindingsManager> actionBindings() {
+        return actionBindings;
+    }
+
     public void removeBinding(KeyCombination combination, ActionBindingsManager client) {
-        boolean removed = actionBindingMaps.remove(combination, client);
+        boolean removed = actionBindings.remove(combination, client);
         if (removed) {
             Logger.debug("Key code combination '{}' bound to {}", combination, client);
         }
@@ -64,7 +68,7 @@ public final class Keyboard {
     public void onKeyPressed(KeyEvent key) {
         Logger.trace("Key pressed: {}", key);
         pressedKeys.add(key.getCode());
-        actionBindingMaps.keySet().stream().filter(combination -> combination.match(key)).forEach(matches::add);
+        actionBindings.keySet().stream().filter(combination -> combination.match(key)).forEach(matches::add);
     }
 
     public void onKeyReleased(KeyEvent key) {
@@ -79,16 +83,5 @@ public final class Keyboard {
 
     public boolean isPressed(KeyCode keyCode) {
         return pressedKeys.contains(keyCode);
-    }
-
-    public void logCurrentBindings() {
-        Logger.debug("--------------------------");
-        actionBindingMaps.keySet().stream()
-            .sorted(Comparator.comparing(KeyCombination::getDisplayText))
-            .forEach(combination -> {
-                ActionBindingsManager actionBindingsManager = actionBindingMaps.get(combination);
-                Logger.debug("{}: {}", combination, actionBindingsManager.getClass().getSimpleName());
-        });
-        Logger.debug("--------------------------");
     }
 }
