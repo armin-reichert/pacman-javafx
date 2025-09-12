@@ -62,11 +62,4 @@ public interface GameScene extends GameEventListener {
      * @return menu items provided by this game scene which are merged into the final context menu
      */
     default List<MenuItem> supplyContextMenuItems(ContextMenuEvent e, ContextMenu menu) { return List.of(); }
-
-    /**
-     * @return scene name as used by logging output
-     */
-    default String displayName() {
-        return getClass().getSimpleName();
-    }
 }
