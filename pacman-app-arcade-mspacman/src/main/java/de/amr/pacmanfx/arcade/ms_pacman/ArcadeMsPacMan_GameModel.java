@@ -254,7 +254,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         };
         huntingTimer.phaseIndexProperty().addListener((py, ov, nv) -> {
             if (nv.intValue() > 0) {
-                gameLevel.ghosts(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE)
+                gameLevel().ghosts(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE)
                     .forEach(Ghost::reverseAtNextOccasion);
             }
         });
@@ -312,22 +312,22 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     @Override
     public void createLevel(int levelNumber) {
         WorldMap worldMap = mapSelector.getWorldMap(levelNumber);
-        gameLevel = new GameLevel(levelNumber, worldMap, createLevelData(levelNumber));
-        gameLevel.setGameOverStateTicks(150);
+        setGameLevel(new GameLevel(levelNumber, worldMap, createLevelData(levelNumber)));
+        gameLevel().setGameOverStateTicks(150);
 
-        gameLevel.setPac(createMsPacMan());
-        gameLevel.pac().setAutopilotSteering(autopilot);
+        gameLevel().setPac(createMsPacMan());
+        gameLevel().pac().setAutopilotSteering(autopilot);
 
-        gameLevel.setGhosts(
+        gameLevel().setGhosts(
             createGhost(RED_GHOST_SHADOW),
             createGhost(PINK_GHOST_SPEEDY),
             createGhost(CYAN_GHOST_BASHFUL),
             createGhost(ORANGE_GHOST_POKEY)
         );
-        gameLevel.ghosts().forEach(MovingActor::reset);
+        gameLevel().ghosts().forEach(MovingActor::reset);
 
-        gameLevel.setBonusSymbol(0, computeBonusSymbol(gameLevel.number()));
-        gameLevel.setBonusSymbol(1, computeBonusSymbol(gameLevel.number()));
+        gameLevel().setBonusSymbol(0, computeBonusSymbol(gameLevel().number()));
+        gameLevel().setBonusSymbol(1, computeBonusSymbol(gameLevel().number()));
 
         /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
          * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
@@ -336,8 +336,8 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
     @Override
     protected boolean isPacManSafeInDemoLevel() {
-        float levelDurationInSec = (System.currentTimeMillis() - gameLevel.startTime()) / 1000f;
-        if (gameLevel.isDemoLevel() && levelDurationInSec < DEMO_LEVEL_MIN_DURATION_SEC) {
+        float levelDurationInSec = (System.currentTimeMillis() - gameLevel().startTime()) / 1000f;
+        if (gameLevel().isDemoLevel() && levelDurationInSec < DEMO_LEVEL_MIN_DURATION_SEC) {
             Logger.info("Pac-Man remains alive, demo level has just been running for {} sec", levelDurationInSec);
             return true;
         }
@@ -356,7 +356,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
     @Override
     protected boolean isBonusReached() {
-        return gameLevel.eatenFoodCount() == 64 || gameLevel.eatenFoodCount() == 176;
+        return gameLevel().eatenFoodCount() == 64 || gameLevel().eatenFoodCount() == 176;
     }
 
     /**
@@ -408,42 +408,42 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
      **/
     @Override
     public void activateNextBonus() {
-        if (gameLevel.isBonusEdible()) {
+        if (gameLevel().isBonusEdible()) {
             Logger.info("Previous bonus is still active, skip this one");
             return;
         }
-        gameLevel.selectNextBonus();
+        gameLevel().selectNextBonus();
 
-        if (gameLevel.portals().isEmpty()) {
+        if (gameLevel().portals().isEmpty()) {
             return; // should not happen
         }
-        House house = gameLevel.house().orElse(null);
+        House house = gameLevel().house().orElse(null);
         if (house == null) {
             Logger.error("No house exists in this level!");
             return;
         }
 
-        Vector2i entryTile = gameLevel.worldMap().getTerrainTileProperty(WorldMapProperty.POS_BONUS);
+        Vector2i entryTile = gameLevel().worldMap().getTerrainTileProperty(WorldMapProperty.POS_BONUS);
         Vector2i exitTile;
         boolean crossingLeftToRight;
         if (entryTile != null) {
-                int exitPortalIndex = new Random().nextInt(gameLevel.portals().size());
+                int exitPortalIndex = new Random().nextInt(gameLevel().portals().size());
             if (entryTile.x() == 0) { // enter maze at left border
-                exitTile = gameLevel.portals().get(exitPortalIndex).rightTunnelEnd().plus(1, 0);
+                exitTile = gameLevel().portals().get(exitPortalIndex).rightTunnelEnd().plus(1, 0);
                 crossingLeftToRight = true;
             } else { // enter maze  at right border
-                exitTile = gameLevel.portals().get(exitPortalIndex).leftTunnelEnd().minus(1, 0);
+                exitTile = gameLevel().portals().get(exitPortalIndex).leftTunnelEnd().minus(1, 0);
                 crossingLeftToRight = false;
             }
         }
         else { // choose random crossing direction and random entry and exit portals
             crossingLeftToRight = new Random().nextBoolean();
             if (crossingLeftToRight) {
-                entryTile = randomPortal(gameLevel).leftTunnelEnd();
-                exitTile  = randomPortal(gameLevel).rightTunnelEnd().plus(1, 0);
+                entryTile = randomPortal(gameLevel()).leftTunnelEnd();
+                exitTile  = randomPortal(gameLevel()).rightTunnelEnd().plus(1, 0);
             } else {
-                entryTile = randomPortal(gameLevel).rightTunnelEnd();
-                exitTile = randomPortal(gameLevel).leftTunnelEnd().minus(1, 0);
+                entryTile = randomPortal(gameLevel()).rightTunnelEnd();
+                exitTile = randomPortal(gameLevel()).leftTunnelEnd().minus(1, 0);
             }
         }
 
@@ -452,14 +452,14 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         List<Waypoint> route = Stream.of(entryTile, houseEntry, backyard, houseEntry, exitTile)
             .map(Waypoint::new).toList();
 
-        byte symbol = gameLevel.bonusSymbol(gameLevel.currentBonusIndex());
+        byte symbol = gameLevel().bonusSymbol(gameLevel().currentBonusIndex());
         var bonus = new Bonus(symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100, new Pulse(10, false));
         bonus.setEdibleTicks(TickTimer.INDEFINITE);
         bonus.setRoute(gameContext, route, crossingLeftToRight);
         Logger.info("Moving bonus created, route: {} (crossing {})", route,
             crossingLeftToRight ? "left to right" : "right to left");
 
-        gameLevel.setBonus(bonus);
+        gameLevel().setBonus(bonus);
         eventManager().publishEvent(GameEventType.BONUS_ACTIVATED, bonus.tile());
     }
 

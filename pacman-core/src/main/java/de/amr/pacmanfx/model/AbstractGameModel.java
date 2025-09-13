@@ -9,15 +9,13 @@ import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.*;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.*;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
@@ -36,8 +34,22 @@ public abstract class AbstractGameModel implements Game {
     protected final IntegerProperty initialLifeCount = new SimpleIntegerProperty(3);
     protected final SimulationStep simulationStep = new SimulationStep();
     protected final BooleanProperty levelCounterEnabled = new SimpleBooleanProperty(true);
+    protected final ObjectProperty<GameLevel> gameLevel = new SimpleObjectProperty<>();
 
     protected final List<Byte> levelCounterSymbols = new ArrayList<>();
+
+    @Override
+    public Optional<GameLevel> optGameLevel() {
+        return Optional.ofNullable(gameLevel.get());
+    }
+
+    protected void setGameLevel(GameLevel gameLevel) {
+        this.gameLevel.set(gameLevel);
+    }
+
+    protected GameLevel gameLevel() {
+        return optGameLevel().orElse(null);
+    }
 
     public BooleanProperty levelCounterEnabledProperty() {
         return levelCounterEnabled;
