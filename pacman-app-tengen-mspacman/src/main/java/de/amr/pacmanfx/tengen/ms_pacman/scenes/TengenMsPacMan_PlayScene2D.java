@@ -67,8 +67,8 @@ import static de.amr.pacmanfx.uilib.Ufx.createContextMenuTitle;
  */
 public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasProvider {
 
-    private final DoubleProperty canvasWidth  = new SimpleDoubleProperty(NES_SIZE_PX.x());
-    private final DoubleProperty canvasHeight = new SimpleDoubleProperty(NES_SIZE_PX.y());
+    private final DoubleProperty canvasWidthUnscaled = new SimpleDoubleProperty(NES_SIZE_PX.x());
+    private final DoubleProperty canvasHeightUnscaled = new SimpleDoubleProperty(NES_SIZE_PX.y());
 
     private final SubScene subScene;
     private final DynamicCamera dynamicCamera = new DynamicCamera();
@@ -91,7 +91,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
 
         @Override
         public void drawDebugInfo() {
-            drawTileGrid(canvasWidth.get(), canvasHeight.get(), Color.LIGHTGRAY);
+            drawTileGrid(canvasWidthUnscaled.get(), canvasHeightUnscaled.get(), Color.LIGHTGRAY);
             ctx.save();
             ctx.translate(scaled(2 * TS), 0);
             ctx.setFill(debugTextFill);
@@ -117,8 +117,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         subScene.cameraProperty().bind(PROPERTY_PLAY_SCENE_DISPLAY_MODE.map(mode ->
             mode == SceneDisplayMode.SCROLLING ? dynamicCamera : fixedCamera));
 
-        canvas.widthProperty() .bind(scalingProperty().multiply(canvasWidth));
-        canvas.heightProperty().bind(scalingProperty().multiply(canvasHeight));
+        canvas.widthProperty() .bind(scalingProperty().multiply(canvasWidthUnscaled));
+        canvas.heightProperty().bind(scalingProperty().multiply(canvasHeightUnscaled));
 
         // All maps are 28 tiles wide but the NES screen is 32 tiles wide. To accommodate, the maps are displayed
         // horizontally centered and the unused tiles (2 on each side) are clipped.
@@ -138,8 +138,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         if (subScene.getCamera() == fixedCamera) {
             // scale such that the complete scene height fits into the sub-scene
             if (context().optGameLevel().isPresent()) {
-                int numRows = context().gameLevel().worldMap().numRows();
-                newScaling = subScene.getHeight() / TS(numRows + 2); // 2 extra rows for level counter
+                newScaling = subScene.getHeight() / canvasHeightUnscaled.get();
             }
         }
         scaling.set(newScaling);
@@ -207,7 +206,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
     public void update() {
         context().optGameLevel().ifPresent(gameLevel -> {
             int numRows = gameLevel.worldMap().numRows();
-            canvasHeight.set(TS(numRows + 2)); // 2 additional rows for level counter
+            canvasHeightUnscaled.set(TS(numRows + 2)); // 2 additional rows for level counter
             if (gameLevel.isDemoLevel()) {
                 ui.soundManager().setEnabled(false);
             } else {
