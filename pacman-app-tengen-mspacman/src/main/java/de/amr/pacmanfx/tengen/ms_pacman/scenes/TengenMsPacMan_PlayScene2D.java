@@ -57,7 +57,6 @@ import static de.amr.pacmanfx.controller.GamePlayState.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Actions.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Properties.PROPERTY_PLAY_SCENE_DISPLAY_MODE;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_TILES;
 import static de.amr.pacmanfx.ui.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_CANVAS_BACKGROUND_COLOR;
 import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_MUTED;
@@ -68,10 +67,8 @@ import static de.amr.pacmanfx.uilib.Ufx.createContextMenuTitle;
  */
 public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasProvider {
 
-    private static final double CANVAS_WIDTH  = NES_SIZE_PX.x();
-
-    private final DoubleProperty canvasWidth = new SimpleDoubleProperty(CANVAS_WIDTH);
-    private final DoubleProperty canvasHeight = new SimpleDoubleProperty();
+    private final DoubleProperty canvasWidth  = new SimpleDoubleProperty(NES_SIZE_PX.x());
+    private final DoubleProperty canvasHeight = new SimpleDoubleProperty(NES_SIZE_PX.y());
 
     private final SubScene subScene;
     private final DynamicCamera dynamicCamera = new DynamicCamera();
@@ -117,23 +114,22 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         // Scene size gets bound to parent scene size when embedded in game view so initial size is 88 ("doesn't matter")
         subScene = new SubScene(rootPane, 88, 88);
         subScene.fillProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
-
-        //TODO make dynamic camera work again properly
         subScene.cameraProperty().bind(PROPERTY_PLAY_SCENE_DISPLAY_MODE.map(mode ->
             mode == SceneDisplayMode.SCROLLING ? dynamicCamera : fixedCamera));
 
-        canvas.widthProperty().bind(scalingProperty().multiply(canvasWidth));
+        canvas.widthProperty() .bind(scalingProperty().multiply(canvasWidth));
         canvas.heightProperty().bind(scalingProperty().multiply(canvasHeight));
 
         // All maps are 28 tiles wide but the NES screen is 32 tiles wide. To accommodate, the maps are displayed
         // horizontally centered and the unused tiles (2 on each side) are clipped.
         clipRect.xProperty().bind(canvas.translateXProperty().add(scalingProperty().multiply(2 * TS)));
         clipRect.yProperty().bind(canvas.translateYProperty());
-        clipRect.widthProperty().bind(canvas.widthProperty().subtract(scalingProperty().multiply(4 * TS)));
+        clipRect.widthProperty() .bind(canvas.widthProperty().subtract(scalingProperty().multiply(4 * TS)));
         clipRect.heightProperty().bind(canvas.heightProperty());
 
         subScene.heightProperty().addListener((py, ov, nv) -> recomputeScaling());
         subScene.cameraProperty().addListener((py, ov, nv) -> recomputeScaling());
+        //TODO why is this needed? Sub-scene seems not to get all resize events.
         ui.stage().heightProperty().addListener((py, ov, nv) -> recomputeScaling());
     }
 
@@ -143,7 +139,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
             // scale such that the complete scene height fits into the sub-scene
             if (context().optGameLevel().isPresent()) {
                 int numRows = context().gameLevel().worldMap().numRows();
-                newScaling = subScene.getHeight() / TS(numRows + 2);
+                newScaling = subScene.getHeight() / TS(numRows + 2); // 2 extra rows for level counter
             }
         }
         scaling.set(newScaling);
@@ -195,14 +191,15 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
     @Override
     public void doInit() {
         context().game().hud().scoreVisible(true).levelCounterVisible(true).livesCounterVisible(true);
-        dynamicCamera.targetTopOfMaze();
         recomputeScaling();
+        dynamicCamera.targetTopOfMaze();
     }
 
     @Override
     protected void doEnd() {
         if (levelCompletedAnimation != null) {
             levelCompletedAnimation.dispose();
+            levelCompletedAnimation = null;
         }
     }
 
@@ -222,18 +219,18 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
                     .ifPresent(GameOverMessage::update);
                 updateSound();
             }
-            updateDynamicCamera(gameLevel);
+            updateCamera(gameLevel);
             updateHUD();
         });
     }
 
     private void initDynamicCamera(GameLevel gameLevel) {
-        dynamicCamera.idleTicks = 90;
         int numRows = gameLevel.worldMap().numRows();
         dynamicCamera.minY = scaled(minTile(numRows)*TS);
         dynamicCamera.maxY = scaled(maxTile(numRows)*TS);
         dynamicCamera.moveTopOfMaze();
         dynamicCamera.targetBottomOfMaze();
+        dynamicCamera.idleTicks = 90;
     }
 
     // TODO: these values are the result of trial and error
@@ -256,7 +253,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         };
     }
 
-    private void updateDynamicCamera(GameLevel gameLevel) {
+    private void updateCamera(GameLevel gameLevel) {
         if (subScene.getCamera() == dynamicCamera) {
             dynamicCamera.followTarget = context().gameState() == HUNTING;
             double frac = gameLevel.pac().y() / (dynamicCamera.maxY - dynamicCamera.minY);
