@@ -260,16 +260,12 @@ public class SmoothingGroups {
         int faceElementSize = mesh.getFaceElementSize();
         int[][] faces = new int[flatFaces.length / faceElementSize][faceElementSize];
         for (int f = 0; f < faces.length; f++) {
-            for (int e = 0; e < faceElementSize; e++) {
-                faces[f][e] = flatFaces[f * faceElementSize + e];
-            }
+            System.arraycopy(flatFaces, f * faceElementSize, faces[f], 0, faceElementSize);
         }
         int pointElementSize = mesh.getPointElementSize();
         int[][] faceNormals = new int[flatFaceNormals.length / pointElementSize][pointElementSize];
         for (int f = 0; f < faceNormals.length; f++) {
-            for (int e = 0; e < pointElementSize; e++) {
-                faceNormals[f][e] = flatFaceNormals[f * pointElementSize + e];
-            }
+            System.arraycopy(flatFaceNormals, f * pointElementSize, faceNormals[f], 0, pointElementSize);
         }
         SmoothingGroups smoothGroups = new SmoothingGroups(faces, faceNormals, normals);
         return smoothGroups.computeSmoothingGroups();
