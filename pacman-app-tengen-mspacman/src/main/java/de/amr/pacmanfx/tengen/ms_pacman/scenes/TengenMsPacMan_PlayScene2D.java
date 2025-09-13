@@ -214,26 +214,28 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
     private void initDynamicCamera(GameLevel gameLevel) {
         dynamicCamera.idleTicks = 90;
         int numRows = gameLevel.worldMap().numRows();
-        dynamicCamera.minY = minY(numRows);
-        dynamicCamera.maxY = maxY(numRows);
+        dynamicCamera.minY = scaled(minTile(numRows)*TS);
+        dynamicCamera.maxY = scaled(maxTile(numRows)*TS);
         dynamicCamera.moveTopOfMaze();
         dynamicCamera.targetBottomOfMaze();
     }
 
-    private double minY(int numRows) {
+    // TODO: these values are the result of trial and error
+
+    private int minTile(int numRows) {
         return switch (numRows) {
-            case 30 -> scaled(-4 *TS);
-            case 35,36 -> scaled(-6 *TS);
-            case 42 -> scaled(-9 *TS);
+            case 30 -> -4;
+            case 35,36 -> -6;
+            case 42 -> -9;
             default -> throw new IllegalArgumentException("Illegal row count: " + numRows);
         };
     }
 
-    private double maxY(int numRows) {
+    private int maxTile(int numRows) {
         return switch (numRows) {
-            case 30 -> scaled(2 *TS);
-            case 35,36 -> scaled(6 *TS);
-            case 42 -> scaled(9 *TS);
+            case 30 -> 2;
+            case 35,36 -> 6;
+            case 42 -> 9;
             default -> throw new IllegalArgumentException("Illegal row count: " + numRows);
         };
     }
