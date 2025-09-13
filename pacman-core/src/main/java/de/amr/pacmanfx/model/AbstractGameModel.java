@@ -28,13 +28,19 @@ public abstract class AbstractGameModel implements Game {
 
     public static final double BONUS_EATEN_SECONDS = 2;
 
-    protected final BooleanProperty playing = new SimpleBooleanProperty(false);
-    protected final IntegerProperty lifeCount = new SimpleIntegerProperty(0);
     protected final BooleanProperty cutScenesEnabled = new SimpleBooleanProperty(true);
-    protected final IntegerProperty initialLifeCount = new SimpleIntegerProperty(3);
-    protected final SimulationStep simulationStep = new SimulationStep();
-    protected final BooleanProperty levelCounterEnabled = new SimpleBooleanProperty(true);
+
     protected final ObjectProperty<GameLevel> gameLevel = new SimpleObjectProperty<>();
+
+    protected final BooleanProperty levelCounterEnabled = new SimpleBooleanProperty(true);
+
+    protected final IntegerProperty lifeCount = new SimpleIntegerProperty(0);
+
+    protected final IntegerProperty initialLifeCount = new SimpleIntegerProperty(3);
+
+    protected final BooleanProperty playing = new SimpleBooleanProperty(false);
+
+    protected final SimulationStep simulationStep = new SimulationStep();
 
     protected final List<Byte> levelCounterSymbols = new ArrayList<>();
 
