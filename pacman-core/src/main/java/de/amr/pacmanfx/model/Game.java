@@ -20,7 +20,6 @@ public interface Game extends GameLifecycle, GameEvents {
     MapSelector          mapSelector();
     Optional<GateKeeper> optGateKeeper();
     Optional<GameLevel>  optGameLevel();
-
     HUD                  hud();
 
     void                 clearLevelCounter();
@@ -37,13 +36,6 @@ public interface Game extends GameLifecycle, GameEvents {
     void                 setInitialLifeCount(int numLives);
     int                  lifeCount();
     void                 addLives(int numLives);
-    boolean              isPlaying();
-    void                 setPlaying(boolean playing);
-    boolean              isLevelCompleted();
-    int                  lastLevelNumber();
-    boolean              canContinueOnGameOver();
-    boolean              hasPacManBeenKilled();
-    boolean              haveGhostsBeenKilled();
 
     double               pacPowerFadingSeconds(GameLevel gameLevel);
     double               pacPowerSeconds(GameLevel level);

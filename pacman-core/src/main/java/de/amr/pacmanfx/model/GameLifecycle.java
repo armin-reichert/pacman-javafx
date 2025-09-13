@@ -12,13 +12,20 @@ public interface GameLifecycle {
     void prepareForNewGame();
     boolean canStartNewGame();
     void startNewGame();
+    boolean isPlaying();
+    void setPlaying(boolean playing);
     void continueGame();
+    boolean canContinueOnGameOver();
     void buildNormalLevel(int levelNumber);
     void buildDemoLevel();
     void createLevel(int levelNumber);
     void startLevel();
+    boolean isLevelCompleted();
+    int lastLevelNumber();
     void startNextLevel();
     void startHunting();
     void doHuntingStep(GameContext gameContext);
     void activateNextBonus();
+    boolean hasPacManBeenKilled();
+    boolean haveGhostsBeenKilled();
 }
