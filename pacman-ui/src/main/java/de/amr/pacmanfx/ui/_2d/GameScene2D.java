@@ -8,6 +8,7 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
+import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.ui.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.api.ActionBindingsManager;
@@ -135,7 +136,7 @@ public abstract class GameScene2D implements GameScene {
     /**
      * @return (unscaled) scene size in pixels e.g. 224x288
      */
-    public Vector2f sizeInPx() {
+    public Vector2i sizeInPx() {
         return Globals.ARCADE_MAP_SIZE_IN_PIXELS;
     }
 

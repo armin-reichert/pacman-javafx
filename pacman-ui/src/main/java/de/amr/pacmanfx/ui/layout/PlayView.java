@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.lib.Vector2f;
+import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.AbstractGameAction;
 import de.amr.pacmanfx.ui.DefaultActionBindingsManager;
@@ -288,7 +288,7 @@ public class PlayView extends StackPane implements GameUI_View {
         gameScene2D.scalingProperty().bind(canvasWithFrame.scalingProperty().map(
             scaling -> Math.min(scaling.doubleValue(), ui.preferences().getFloat("scene2d.max_scaling"))));
 
-        Vector2f gameSceneSizePx = gameScene2D.sizeInPx();
+        Vector2i gameSceneSizePx = gameScene2D.sizeInPx();
         canvasWithFrame.setUnscaledCanvasSize(gameSceneSizePx.x(), gameSceneSizePx.y());
         canvasWithFrame.resizeTo(parentScene.getWidth(), parentScene.getHeight());
         canvasWithFrame.backgroundProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR.map(Ufx::colorBackground));

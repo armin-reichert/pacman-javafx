@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.pacmanfx.lib.RectShort;
-import de.amr.pacmanfx.lib.Vector2f;
+import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.HUD;
 import de.amr.pacmanfx.model.Score;
@@ -38,7 +38,7 @@ public class ArcadeMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HU
     }
 
     @Override
-    public void drawHUD(Game game, HUD hud, Vector2f sceneSize) {
+    public void drawHUD(Game game, HUD hud, Vector2i sceneSize) {
         if (!hud.isVisible()) return;
 
         if (hud.isScoreVisible()) {

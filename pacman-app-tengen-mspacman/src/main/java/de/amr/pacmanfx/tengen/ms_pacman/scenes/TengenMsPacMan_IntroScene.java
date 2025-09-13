@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
 import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.lib.Vector2f;
+import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.timer.TickTimer;
@@ -120,7 +120,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
     }
 
     @Override
-    public Vector2f sizeInPx() { return NES_SIZE_PX; }
+    public Vector2i sizeInPx() { return NES_SIZE_PX; }
 
     @Override
     public void drawSceneContent() {

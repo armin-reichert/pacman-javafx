@@ -9,7 +9,7 @@ import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.controller.teststates.LevelMediumTestState;
 import de.amr.pacmanfx.controller.teststates.LevelShortTestState;
 import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.lib.Vector2f;
+import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.MessageType;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -67,7 +67,7 @@ import static de.amr.pacmanfx.uilib.Ufx.createContextMenuTitle;
  */
 public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasProvider {
 
-    private static final int CANVAS_WIDTH  = 32 * TS;
+    private static final double CANVAS_WIDTH  = NES_SIZE_PX.x();
 
     private final DoubleProperty canvasWidth = new SimpleDoubleProperty(CANVAS_WIDTH);
     private final DoubleProperty canvasHeight = new SimpleDoubleProperty();
@@ -313,7 +313,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
     }
 
     @Override
-    public Vector2f sizeInPx() {
+    public Vector2i sizeInPx() {
         return context().optGameLevel().map(GameLevel::worldSizePx).orElse(NES_SIZE_PX);
     }
 

@@ -233,7 +233,7 @@ public class GameLevel {
             return Vector2f.of(cx, cy);
         }
         else {
-            Vector2f worldSize = worldSizePx();
+            Vector2i worldSize = worldSizePx();
             return Vector2f.of(worldSize.x() * 0.5f, worldSize.y() * 0.5f); // should not happen
         }
     }
@@ -293,8 +293,8 @@ public class GameLevel {
     /**
      * @return world size in pixels as (size-x, size-y)
      */
-    public Vector2f worldSizePx() {
-        return new Vector2f(worldMap.numCols() * TS, worldMap.numRows() * TS);
+    public Vector2i worldSizePx() {
+        return new Vector2i(worldMap.numCols() * TS, worldMap.numRows() * TS);
     }
 
     public Stream<Vector2i> tiles() {

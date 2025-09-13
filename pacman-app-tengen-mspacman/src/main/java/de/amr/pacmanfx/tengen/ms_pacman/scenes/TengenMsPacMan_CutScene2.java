@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.lib.Vector2f;
+import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
@@ -172,7 +172,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
     }
 
     @Override
-    public Vector2f sizeInPx() { return NES_SIZE_PX; }
+    public Vector2i sizeInPx() { return NES_SIZE_PX; }
 
     @Override
     protected void drawHUD() {

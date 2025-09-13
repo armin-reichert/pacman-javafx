@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
-import de.amr.pacmanfx.lib.Vector2f;
+import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SceneRenderer;
 import de.amr.pacmanfx.ui.ActionBinding;
@@ -73,7 +73,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
     }
 
     @Override
-    public Vector2f sizeInPx() { return NES_SIZE_PX; }
+    public Vector2i sizeInPx() { return NES_SIZE_PX; }
 
     @Override
     public void drawSceneContent() {

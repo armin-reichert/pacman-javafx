@@ -10,7 +10,7 @@ import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.controller.teststates.LevelMediumTestState;
 import de.amr.pacmanfx.controller.teststates.LevelShortTestState;
 import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.lib.Vector2f;
+import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.MessageType;
@@ -196,7 +196,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public Vector2f sizeInPx() {
+    public Vector2i sizeInPx() {
         // Note: scene is also used in Pac-Man XXL game variant where world can have any size
         return context().optGameLevel().map(GameLevel::worldSizePx).orElse(ARCADE_MAP_SIZE_IN_PIXELS);
     }

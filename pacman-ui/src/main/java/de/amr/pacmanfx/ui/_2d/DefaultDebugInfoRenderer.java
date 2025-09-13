@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui._2d;
 
 import de.amr.pacmanfx.lib.Vector2f;
+import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.MovingActor;
@@ -47,7 +48,7 @@ public class DefaultDebugInfoRenderer extends DebugInfoRenderer {
         ctx().fillText(stateText, 0, scaled(3 * TS));
 
         if (ui.currentGameScene().isPresent() && ui.currentGameScene().get() instanceof GameScene2D gameScene2D) {
-            Vector2f size = gameScene2D.sizeInPx();
+            Vector2i size = gameScene2D.sizeInPx();
             drawTileGrid(size.x(), size.y(), Color.LIGHTGRAY);
 
         }

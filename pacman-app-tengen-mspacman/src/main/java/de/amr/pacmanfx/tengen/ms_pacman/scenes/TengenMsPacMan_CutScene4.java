@@ -7,6 +7,7 @@ package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
+import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.actors.AnimationManager;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
@@ -227,7 +228,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     }
 
     @Override
-    public Vector2f sizeInPx() { return NES_SIZE_PX; }
+    public Vector2i sizeInPx() { return NES_SIZE_PX; }
 
     @Override
     protected void drawHUD() {

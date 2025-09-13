@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.dashboard;
 
 import de.amr.pacmanfx.lib.Vector2f;
+import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import de.amr.pacmanfx.ui.api.GameScene;
@@ -131,8 +132,9 @@ public class InfoBox3DSettings extends InfoBox {
 
         GameScene gameScene = ui.currentGameScene().get();
         if (gameScene instanceof GameScene2D gameScene2D) {
-            Vector2f size = gameScene2D.sizeInPx(), scaledSize = size.scaled(gameScene2D.scaling());
-            return "%.0fx%.0f (scaled: %.0fx%.0f)".formatted(size.x(), size.y(), scaledSize.x(), scaledSize.y());
+            Vector2i size = gameScene2D.sizeInPx();
+            Vector2f scaledSize = size.scaled(gameScene2D.scaling());
+            return "%dx%d (scaled: %.0fx%.0f)".formatted(size.x(), size.y(), scaledSize.x(), scaledSize.y());
         }
         if (ui.gameContext().optGameLevel().isPresent()) {
             var worldMap = ui.gameContext().gameLevel().worldMap();

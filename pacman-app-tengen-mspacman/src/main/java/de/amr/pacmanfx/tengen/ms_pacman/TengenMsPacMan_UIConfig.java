@@ -7,7 +7,6 @@ package de.amr.pacmanfx.tengen.ms_pacman;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.controller.teststates.CutScenesTestState;
 import de.amr.pacmanfx.lib.RectShort;
-import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
@@ -35,8 +34,8 @@ import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.MsPacMan3D;
 import de.amr.pacmanfx.uilib.model3D.MsPacManBody;
-import de.amr.pacmanfx.uilib.rendering.RenderInfo;
 import de.amr.pacmanfx.uilib.rendering.CommonRenderInfo;
+import de.amr.pacmanfx.uilib.rendering.RenderInfo;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -79,7 +78,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     public static final Vector2i NES_TILES = new Vector2i(32, 30);
 
     /** 256x240 */
-    public static final Vector2f NES_SIZE_PX = new Vector2f(256, 240);
+    public static final Vector2i NES_SIZE_PX = new Vector2i(256, 240);
 
     /** 32/30 = 1.0666 */
     public static final float NES_ASPECT = 32f / 30f;

@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman.rendering;
 
 import de.amr.pacmanfx.lib.RectShort;
-import de.amr.pacmanfx.lib.Vector2f;
+import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HUD;
@@ -41,7 +41,7 @@ public class TengenMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HU
     }
 
     @Override
-    public void drawHUD(Game game, HUD data, Vector2f sceneSize) {
+    public void drawHUD(Game game, HUD data, Vector2i sceneSize) {
         requireNonNull(game);
         requireNonNull(data);
         requireNonNull(sceneSize);

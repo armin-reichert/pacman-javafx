@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.layout;
 
-import de.amr.pacmanfx.lib.Vector2f;
+import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.uilib.rendering.*;
@@ -35,13 +35,11 @@ import static java.util.Objects.requireNonNull;
 
 public class MiniGameView extends VBox {
 
-    public static final Vector2f ARCADE_SIZE = Vector2f.of(28*TS, 36*TS);
-
     public static final Duration SLIDE_IN_DURATION = Duration.seconds(1);
     public static final Duration SLIDE_OUT_DURATION = Duration.seconds(2);
 
     private final DoubleProperty scaling = new SimpleDoubleProperty(1.0f);
-    private final ObjectProperty<Vector2f> worldSize = new SimpleObjectProperty<>(ARCADE_SIZE);
+    private final ObjectProperty<Vector2i> worldSize = new SimpleObjectProperty<>(ARCADE_MAP_SIZE_IN_PIXELS);
 
     private final HBox layout;
     private final Canvas canvas;
@@ -64,8 +62,8 @@ public class MiniGameView extends VBox {
         canvas.heightProperty().bind(PROPERTY_MINI_VIEW_HEIGHT);
         canvas.widthProperty().bind(Bindings.createDoubleBinding(
             () -> {
-                Vector2f size = worldSize.get();
-                double aspect = size.x() / size.y();
+                Vector2i size = worldSize.get();
+                double aspect = (double) size.x() / size.y();
                 return aspect * canvas.getHeight();
             },
             worldSize, canvas.heightProperty()
