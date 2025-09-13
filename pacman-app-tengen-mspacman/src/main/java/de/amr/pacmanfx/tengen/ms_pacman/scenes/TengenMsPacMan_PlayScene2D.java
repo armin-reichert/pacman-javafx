@@ -33,11 +33,11 @@ import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.rendering.CommonRenderInfo;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.ParallelCamera;
+import javafx.scene.PerspectiveCamera;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
@@ -57,7 +57,6 @@ import static de.amr.pacmanfx.controller.GamePlayState.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Actions.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Properties.PROPERTY_PLAY_SCENE_DISPLAY_MODE;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_TILES;
 import static de.amr.pacmanfx.ui.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_CANVAS_BACKGROUND_COLOR;
 import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_MUTED;
@@ -68,19 +67,23 @@ import static de.amr.pacmanfx.uilib.Ufx.createContextMenuTitle;
  */
 public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasProvider {
 
-    /** Unscaled canvas width: 32 tiles (NES screen width) */
-    public static final int UNSCALED_CANVAS_WIDTH = NES_TILES.x() * TS;
+    private static final int CANVAS_WIDTH  = 32 * TS;
 
-    /** Unscaled canvas height: 42 tiles (BIG maps height) + 2 extra rows */
-    public static final int UNSCALED_CANVAS_HEIGHT = 44 * TS;
-
-    private final ObjectProperty<SceneDisplayMode> displayModeProperty = new SimpleObjectProperty<>(SceneDisplayMode.SCROLLING);
-    private final BooleanProperty mazeHighlighted = new SimpleBooleanProperty(false);
+    private final DoubleProperty canvasWidth = new SimpleDoubleProperty(CANVAS_WIDTH);
+    private final DoubleProperty canvasHeight = new SimpleDoubleProperty();
 
     private final SubScene subScene;
     private final DynamicCamera dynamicCamera = new DynamicCamera();
-    private final ParallelCamera fixedCamera  = new ParallelCamera();
+    private final PerspectiveCamera fixedCamera  = new PerspectiveCamera(false);
+    private final Canvas canvas = new Canvas();
     private final Rectangle clipRect = new Rectangle();
+
+    private TengenMsPacMan_HUDRenderer hudRenderer;
+    private TengenMsPacMan_GameLevelRenderer gameLevelRenderer;
+    private TengenMsPacMan_ActorRenderer actorRenderer;
+
+    private LevelCompletedAnimation levelCompletedAnimation;
+    private final BooleanProperty mazeHighlighted = new SimpleBooleanProperty(false);
 
     private class TengenPlaySceneDebugInfoRenderer extends DefaultDebugInfoRenderer {
 
@@ -90,7 +93,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
 
         @Override
         public void drawDebugInfo() {
-            drawTileGrid(UNSCALED_CANVAS_WIDTH, UNSCALED_CANVAS_HEIGHT, Color.LIGHTGRAY);
+            drawTileGrid(canvasWidth.get(), canvasHeight.get(), Color.LIGHTGRAY);
             ctx.save();
             ctx.translate(scaled(2 * TS), 0);
             ctx.setFill(debugTextFill);
@@ -104,28 +107,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         }
     }
 
-    private final Canvas canvas = new Canvas();
-    private TengenMsPacMan_HUDRenderer hudRenderer;
-    private TengenMsPacMan_GameLevelRenderer gameLevelRenderer;
-    private TengenMsPacMan_ActorRenderer actorRenderer;
-
-    private LevelCompletedAnimation levelCompletedAnimation;
-
     public TengenMsPacMan_PlayScene2D(GameUI ui) {
         super(ui);
-
-        displayModeProperty.bind(PROPERTY_PLAY_SCENE_DISPLAY_MODE);
-
-        // Play scene uses its own canvas, not the one from the game view
-        canvas.widthProperty() .bind(scalingProperty().multiply(UNSCALED_CANVAS_WIDTH));
-        canvas.heightProperty().bind(scalingProperty().multiply(UNSCALED_CANVAS_HEIGHT));
-
-        // The maps are 28 tiles wide while the NES screen is 32 tiles wide. The map is displayed horizontally centered
-        // on the NES screen and the unused 2 tiles on each side are clipped.
-        clipRect.xProperty().bind(canvas.translateXProperty().add(scalingProperty().multiply(2 * TS)));
-        clipRect.yProperty().bind(canvas.translateYProperty());
-        clipRect.widthProperty().bind(canvas.widthProperty().subtract(scalingProperty().multiply(4 * TS)));
-        clipRect.heightProperty().bind(canvas.heightProperty());
 
         var rootPane = new StackPane(canvas);
         rootPane.setBackground(null);
@@ -133,9 +116,22 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         // Scene size gets bound to parent scene size when embedded in game view so initial size is 88 ("doesn't matter")
         subScene = new SubScene(rootPane, 88, 88);
         subScene.fillProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
-        subScene.cameraProperty().bind(displayModeProperty.map(mode -> mode == SceneDisplayMode.SCROLLING ? dynamicCamera : fixedCamera));
 
-        dynamicCamera.scalingProperty().bind(scalingProperty());
+        //TODO make dynamic camera work again properly
+        subScene.cameraProperty().bind(PROPERTY_PLAY_SCENE_DISPLAY_MODE.map(mode ->
+            mode == SceneDisplayMode.SCROLLING ? dynamicCamera : fixedCamera));
+
+        canvas.widthProperty().bind(scalingProperty().multiply(canvasWidth));
+        canvas.heightProperty().bind(scalingProperty().multiply(canvasHeight));
+
+        // All maps are 28 tiles wide but the NES screen is 32 tiles wide. To accommodate, the maps are displayed
+        // horizontally centered and the unused tiles (2 on each side) are clipped.
+        clipRect.xProperty().bind(canvas.translateXProperty().add(scalingProperty().multiply(2 * TS)));
+        clipRect.yProperty().bind(canvas.translateYProperty());
+        clipRect.widthProperty().bind(canvas.widthProperty().subtract(scalingProperty().multiply(4 * TS)));
+        clipRect.heightProperty().bind(canvas.heightProperty());
+
+        scaling.bind(subScene.heightProperty().divide(30*TS));
     }
 
     private void setActionsBindings(boolean demoLevel) {
@@ -197,6 +193,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
     @Override
     public void update() {
         context().optGameLevel().ifPresent(gameLevel -> {
+            int numRows = gameLevel.worldMap().numRows();
+            canvasHeight.set(TS(numRows + 2)); // 2 additional rows for level counter
             if (gameLevel.isDemoLevel()) {
                 ui.soundManager().setEnabled(false);
             } else {
@@ -208,17 +206,44 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
                     .ifPresent(GameOverMessage::update);
                 updateSound();
             }
-            updateCamera(gameLevel);
+            updateDynamicCamera(gameLevel);
             updateHUD();
         });
     }
 
-    private void updateCamera(GameLevel gameLevel) {
+    private void initDynamicCamera(GameLevel gameLevel) {
+        dynamicCamera.idleTicks = 90;
+        //TODO make dependent from maze size type (big, mini, Arcade)
+        int numRows = gameLevel.worldMap().numRows();
+        dynamicCamera.minY = minY(numRows);
+        dynamicCamera.maxY = maxY(numRows);
+        dynamicCamera.moveTop();
+        dynamicCamera.targetBottom();
+    }
+
+    private double minY(int numRows) {
+        return switch (numRows) {
+            case 30 -> scaled(-4 *TS);
+            case 35,36 -> scaled(-6 *TS);
+            case 42 -> scaled(-9 *TS);
+            default -> throw new IllegalArgumentException("Illegal row count: " + numRows);
+        };
+    }
+
+    private double maxY(int numRows) {
+        return switch (numRows) {
+            case 30 -> scaled(2 *TS);
+            case 35,36 -> scaled(6 *TS);
+            case 42 -> scaled(9 *TS);
+            default -> throw new IllegalArgumentException("Illegal row count: " + numRows);
+        };
+    }
+
+    private void updateDynamicCamera(GameLevel gameLevel) {
         if (subScene.getCamera() == dynamicCamera) {
-            //TODO check if this is correct
-            dynamicCamera.setFollowTarget(context().gameState() == HUNTING);
-            dynamicCamera.setVerticalRangeInTiles(gameLevel.worldMap().numRows());
-            dynamicCamera.update(gameLevel.pac());
+            dynamicCamera.followTarget = context().gameState() == HUNTING;
+            double frac = gameLevel.pac().y() / (dynamicCamera.maxY - dynamicCamera.minY);
+            dynamicCamera.update(frac);
         }
     }
 
@@ -324,9 +349,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
 
     @Override
     public void onLevelStarted(GameEvent e) {
-        dynamicCamera.setIdleTime(90);
-        dynamicCamera.moveTop();
-        dynamicCamera.targetBottom();
+        initDynamicCamera(context().gameLevel());
     }
 
     @Override
@@ -468,7 +491,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
             sceneRenderer.clearCanvas();
         }
         context().optGameLevel().ifPresent(gameLevel -> {
-            updateScaling(gameLevel);
             gameLevelRenderer.ctx().save();
             // map width is 28 tiles but NES screen width is 32 tiles: move 2 tiles right and clip one tile on each side
             gameLevelRenderer.ctx().translate(scaled(TS(2)), 0);
@@ -506,20 +528,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
     @Override
     public void drawSceneContent() {
         // draw() is overridden and does the job
-    }
-
-    private void updateScaling(GameLevel gameLevel) {
-        double scaling = switch (displayModeProperty.get()) {
-            case SCALED_TO_FIT -> {
-                //TODO this code smells
-                int tilesY = gameLevel.worldMap().numRows() + 3;
-                double y = scaled((tilesY - 46) * HTS);
-                fixedCamera.setTranslateY(y);
-                yield subScene.getHeight() / TS(tilesY);
-            }
-            case SCROLLING -> subScene.getHeight() / NES_SIZE_PX.y();
-        };
-        setScaling(scaling);
     }
 
     private void drawActors(GameLevel gameLevel) {
