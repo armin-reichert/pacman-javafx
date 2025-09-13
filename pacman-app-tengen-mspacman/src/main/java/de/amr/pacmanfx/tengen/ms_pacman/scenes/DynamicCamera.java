@@ -48,16 +48,16 @@ class DynamicCamera extends ParallelCamera {
         }
     }
 
-    public void moveTop() {
+    public void moveTopOfMaze() {
         setTranslateY(minY);
     }
 
-    public void targetTop() {
+    public void targetTopOfMaze() {
         followTarget = false;
         targetY = minY;
     }
 
-    public void targetBottom() {
+    public void targetBottomOfMaze() {
         followTarget = false;
         targetY = maxY;
     }

@@ -180,7 +180,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
     @Override
     public void doInit() {
         context().game().hud().scoreVisible(true).levelCounterVisible(true).livesCounterVisible(true);
-        dynamicCamera.targetTop();
+        dynamicCamera.targetTopOfMaze();
     }
 
     @Override
@@ -213,12 +213,11 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
 
     private void initDynamicCamera(GameLevel gameLevel) {
         dynamicCamera.idleTicks = 90;
-        //TODO make dependent from maze size type (big, mini, Arcade)
         int numRows = gameLevel.worldMap().numRows();
         dynamicCamera.minY = minY(numRows);
         dynamicCamera.maxY = maxY(numRows);
-        dynamicCamera.moveTop();
-        dynamicCamera.targetBottom();
+        dynamicCamera.moveTopOfMaze();
+        dynamicCamera.targetBottomOfMaze();
     }
 
     private double minY(int numRows) {
@@ -361,7 +360,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
             }
             case GAME_OVER -> {
                 ui.soundManager().stopAll();
-                dynamicCamera.targetTop();
+                dynamicCamera.targetTopOfMaze();
                 startGameOverMessageAnimation(context().gameLevel());
             }
             default -> {}
@@ -423,7 +422,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
 
     @Override
     public void onPacDead(GameEvent e) {
-        dynamicCamera.targetTop();
+        dynamicCamera.targetTopOfMaze();
         context().gameController().letCurrentGameStateExpire();
     }
 
