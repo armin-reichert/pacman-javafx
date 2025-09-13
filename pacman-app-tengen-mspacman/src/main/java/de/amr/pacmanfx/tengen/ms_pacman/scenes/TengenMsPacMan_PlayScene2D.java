@@ -57,6 +57,7 @@ import static de.amr.pacmanfx.controller.GamePlayState.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Actions.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Properties.PROPERTY_PLAY_SCENE_DISPLAY_MODE;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_TILES;
 import static de.amr.pacmanfx.ui.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_CANVAS_BACKGROUND_COLOR;
 import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_MUTED;
@@ -131,7 +132,21 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         clipRect.widthProperty().bind(canvas.widthProperty().subtract(scalingProperty().multiply(4 * TS)));
         clipRect.heightProperty().bind(canvas.heightProperty());
 
-        scaling.bind(subScene.heightProperty().divide(30*TS));
+        subScene.heightProperty().addListener((py, ov, nv) -> recomputeScaling());
+        subScene.cameraProperty().addListener((py, ov, nv) -> recomputeScaling());
+        ui.stage().heightProperty().addListener((py, ov, nv) -> recomputeScaling());
+    }
+
+    private void recomputeScaling() {
+        double newScaling = subScene.getHeight() / NES_SIZE_PX.y();
+        if (subScene.getCamera() == fixedCamera) {
+            // scale such that the complete scene height fits into the sub-scene
+            if (context().optGameLevel().isPresent()) {
+                int numRows = context().gameLevel().worldMap().numRows();
+                newScaling = subScene.getHeight() / TS(numRows + 2);
+            }
+        }
+        scaling.set(newScaling);
     }
 
     private void setActionsBindings(boolean demoLevel) {
@@ -181,6 +196,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
     public void doInit() {
         context().game().hud().scoreVisible(true).levelCounterVisible(true).livesCounterVisible(true);
         dynamicCamera.targetTopOfMaze();
+        recomputeScaling();
     }
 
     @Override
