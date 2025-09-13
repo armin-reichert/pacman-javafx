@@ -7,8 +7,8 @@ package de.amr.pacmanfx.mapeditor.actions;
 import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.lib.worldmap.TerrainTile;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
-import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
+import de.amr.pacmanfx.model.GameLevel;
 
 import static java.util.Objects.requireNonNull;
 

@@ -6,13 +6,7 @@ package de.amr.pacmanfx.ui._2d;
 
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.uilib.rendering.BaseCanvasRenderer;
-import de.amr.pacmanfx.uilib.rendering.CommonRenderInfo;
-import de.amr.pacmanfx.uilib.rendering.RenderInfo;
-import de.amr.pacmanfx.uilib.rendering.ArcadeHouseRenderer;
-import de.amr.pacmanfx.uilib.rendering.FoodMapRenderer;
-import de.amr.pacmanfx.uilib.rendering.TerrainMapColorScheme;
-import de.amr.pacmanfx.uilib.rendering.TerrainMapVectorRenderer;
+import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 

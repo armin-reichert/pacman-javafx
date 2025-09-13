@@ -6,8 +6,8 @@ package de.amr.pacmanfx.mapeditor.actions;
 
 import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
-import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
+import de.amr.pacmanfx.model.WorldMapProperty;
 
 import static de.amr.pacmanfx.mapeditor.EditorUtil.formatColor;
 import static de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites.*;
