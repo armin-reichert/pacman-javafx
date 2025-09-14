@@ -103,7 +103,7 @@ public class ObstacleBuilder {
                     worldMap.content(LayerID.TERRAIN, tile) == ARC_NW.$ ||
                     worldMap.content(LayerID.TERRAIN, tile) == DARC_NW.$) // house top-left corner
             .map(cornerNW -> {
-                Obstacle obstacle = buildInsideObstacle(cornerNW, tilesWithErrors);
+                Obstacle obstacle = buildObstacle(cornerNW, tilesWithErrors);
                 // Handle special case where left-upper corner of closed border is not at x == 0:
                 if (cornerNW.equals(firstNonEmptyTile)) {
                     obstacle.setBorderObstacle(true);
@@ -117,7 +117,7 @@ public class ObstacleBuilder {
         return optimize(obstacles);
     }
 
-    private Obstacle buildInsideObstacle(Vector2i cornerNW, List<Vector2i> tilesWithErrors) {
+    private Obstacle buildObstacle(Vector2i cornerNW, List<Vector2i> tilesWithErrors) {
         Vector2i startPoint = cornerNW.scaled(TS).plus(TS, HTS);
         byte startTileContent = worldMap.content(LayerID.TERRAIN, cornerNW);
         Obstacle obstacle = new Obstacle(startPoint);
