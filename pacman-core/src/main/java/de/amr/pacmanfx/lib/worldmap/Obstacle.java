@@ -23,8 +23,18 @@ public class Obstacle {
     private final List<ObstacleSegment> segments = new ArrayList<>();
     private List<RectShort> innerAreaRectangles = List.of();
 
+    private boolean borderObstacle;
+
     public Obstacle(Vector2i startPoint) {
         this.startPoint = Objects.requireNonNull(startPoint);
+    }
+
+    public void setBorderObstacle(boolean borderObstacle) {
+        this.borderObstacle = borderObstacle;
+    }
+
+    public boolean borderObstacle() {
+        return borderObstacle;
     }
 
     public void addSegment(Vector2i vector, boolean counterClockwise, byte content) {

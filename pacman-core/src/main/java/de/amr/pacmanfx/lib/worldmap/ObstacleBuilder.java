@@ -81,13 +81,19 @@ public class ObstacleBuilder {
 
         Set<Obstacle> obstacles = new HashSet<>();
 
+        final Vector2i firstNonEmptyTile = worldMap.tiles()
+            .filter(tile -> worldMap.content(LayerID.TERRAIN, tile) != EMPTY.$)
+            .findFirst()
+            .orElse(null);
+
         // Note: order of detection matters! Otherwise, when searching for closed
         // obstacles first, each failed attempt must set its visited tile set to unvisited!
         worldMap.tiles()
             .filter(not(this::isTileExplored))
             .filter(tile -> tile.x() == 0 || tile.x() == worldMap.numCols() - 1)
             .filter(tile -> worldMap.content(LayerID.TERRAIN, tile) != EMPTY.$)
-            .map(tile -> buildBorderObstacle(tile, tile.x() == 0, tilesWithErrors))
+            .map(tile -> buildBorderObstacle(tile,
+                tile.x() == 0, tilesWithErrors))
             .filter(Objects::nonNull)
             .forEach(obstacles::add);
 
@@ -96,7 +102,14 @@ public class ObstacleBuilder {
             .filter(tile ->
                     worldMap.content(LayerID.TERRAIN, tile) == ARC_NW.$ ||
                     worldMap.content(LayerID.TERRAIN, tile) == DARC_NW.$) // house top-left corner
-            .map(cornerNW -> buildInsideObstacle(cornerNW, tilesWithErrors))
+            .map(cornerNW -> {
+                Obstacle obstacle = buildInsideObstacle(cornerNW, tilesWithErrors);
+                // Handle special case where left-upper corner of closed border is not at x == 0:
+                if (cornerNW.equals(firstNonEmptyTile)) {
+                    obstacle.setBorderObstacle(true);
+                }
+                return obstacle;
+            })
             .forEach(obstacles::add);
 
         Logger.debug("Found {} obstacles", obstacles.size());
@@ -154,6 +167,7 @@ public class ObstacleBuilder {
         Logger.debug("Border obstacle, start tile={}, segment count={}, map ID={}:",
             startTile, obstacle.segments().size(), worldMap.hashCode());
         Logger.debug(obstacle);
+        obstacle.setBorderObstacle(true);
         return obstacle;
     }
 
@@ -268,6 +282,7 @@ public class ObstacleBuilder {
         var optimizedObstacles = new HashSet<Obstacle>();
         for (Obstacle obstacle : obstacles) {
             Obstacle optimized = new Obstacle(obstacle.startPoint());
+            optimized.setBorderObstacle(obstacle.borderObstacle());
             optimizedObstacles.add(optimized);
             boolean merging = false;
             Vector2i mergedVector = null;

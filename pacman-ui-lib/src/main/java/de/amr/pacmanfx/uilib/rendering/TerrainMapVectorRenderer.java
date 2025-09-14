@@ -102,7 +102,7 @@ public class TerrainMapVectorRenderer extends BaseCanvasRenderer implements Terr
         ctx().save();
         ctx().scale(scaling(), scaling());
         for (Obstacle obstacle : obstacles) {
-            if (isBorderObstacle(obstacle, worldMap)) {
+            if (obstacle.borderObstacle()) {
                 drawObstacle(obstacle, borderWallFullWidth(), false, colorScheme().wallFillColor(), colorScheme().wallStrokeColor());
                 drawObstacle(obstacle, borderWallInnerWidth(), false, colorScheme().wallFillColor(), colorScheme().wallFillColor());
             } else {
@@ -110,13 +110,6 @@ public class TerrainMapVectorRenderer extends BaseCanvasRenderer implements Terr
             }
         }
         ctx().restore();
-    }
-
-    //TODO mark obstacles on creation as "border" vs. "inner"
-    private boolean isBorderObstacle(Obstacle obstacle, WorldMap worldMap) {
-        Vector2i start = obstacle.startPoint();
-        return start.x() <= TS || start.x() >= (worldMap.numCols() - 1) * TS
-            || start.y() <= GameLevel.EMPTY_ROWS_OVER_MAZE * TS || start.y() >= (worldMap.numRows() - 1) * TS;
     }
 
     private void drawObstacle(Obstacle obstacle, double lineWidth, boolean fillInside, Color fillColor, Color strokeColor) {
