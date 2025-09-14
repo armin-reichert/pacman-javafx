@@ -480,7 +480,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         // For non-Arcade game levels, give some extra time for "game over" text animation
         gameLevel().setGameOverStateTicks(mapCategory == MapCategory.ARCADE ? 420 : 600);
 
-        var msPacMan = createMsPacMan();
+        Pac msPacMan = createMsPacMan();
         msPacMan.setAutopilotSteering(autopilot);
         gameLevel().setPac(msPacMan);
 
