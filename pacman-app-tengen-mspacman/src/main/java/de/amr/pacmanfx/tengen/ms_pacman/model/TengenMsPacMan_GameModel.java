@@ -408,8 +408,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     @Override
     public void showMessage(GameLevel gameLevel, MessageType type) {
         if (type == MessageType.GAME_OVER && mapCategory != MapCategory.ARCADE) {
-            var gameOverMessage = new GameOverMessage(gameLevel().defaultMessagePosition(), GAME_OVER_MESSAGE_DELAY);
-            gameLevel().setMessage(gameOverMessage);
+            var message = new MovingGameLevelMessage(type, gameLevel.defaultMessagePosition(), GAME_OVER_MESSAGE_DELAY);
+            gameLevel.setMessage(message);
         } else {
             super.showMessage(gameLevel, type);
         }

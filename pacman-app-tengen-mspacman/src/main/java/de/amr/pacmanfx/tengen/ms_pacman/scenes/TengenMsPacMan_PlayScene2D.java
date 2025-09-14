@@ -16,8 +16,8 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
-import de.amr.pacmanfx.tengen.ms_pacman.model.GameOverMessage;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
+import de.amr.pacmanfx.tengen.ms_pacman.model.MovingGameLevelMessage;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_ActorRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameLevelRenderer;
@@ -213,9 +213,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
                 ui.soundManager().setEnabled(true);
                 // Update moving "game over" message if present
                 gameLevel.optMessage()
-                    .filter(GameOverMessage.class::isInstance)
-                    .map(GameOverMessage.class::cast)
-                    .ifPresent(GameOverMessage::update);
+                    .filter(MovingGameLevelMessage.class::isInstance)
+                    .map(MovingGameLevelMessage.class::cast)
+                    .ifPresent(MovingGameLevelMessage::update);
                 updateSound();
             }
             updateCamera(gameLevel);
@@ -395,11 +395,11 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
 
     private void startGameOverMessageAnimation(GameLevel gameLevel) {
         gameLevel.optMessage()
-            .filter(GameOverMessage.class::isInstance)
-            .map(GameOverMessage.class::cast)
-            .ifPresent(gameOverMessage -> {
+            .filter(MovingGameLevelMessage.class::isInstance)
+            .map(MovingGameLevelMessage.class::cast)
+            .ifPresent(movingGameLevelMessage -> {
                 double width = gameLevelRenderer.messageTextWidth(gameLevel, MessageType.GAME_OVER);
-                gameOverMessage.start(sizeInPx().x(), width);
+                movingGameLevelMessage.start(sizeInPx().x(), width);
             });
     }
 

@@ -14,7 +14,7 @@ import static java.util.Objects.requireNonNull;
  * The "game over" message in Tengen Ms. Pac-Man (in non-Arcade maps) moves (after some delay) from the center of the
  * scene to the right border, wraps around and moves from the left border back to the center.
  */
-public class GameOverMessage extends GameLevelMessage {
+public class MovingGameLevelMessage extends GameLevelMessage {
 
     private final Vector2f startPosition;
     private float wrapX;
@@ -23,8 +23,8 @@ public class GameOverMessage extends GameLevelMessage {
     private long delayTicks;
     private boolean playing;
 
-    public GameOverMessage(Vector2f startPosition, int delayTicks) {
-        super(MessageType.GAME_OVER);
+    public MovingGameLevelMessage(MessageType messageType, Vector2f startPosition, int delayTicks) {
+        super(messageType);
         this.startPosition = requireNonNull(startPosition);
         this.delayTicks = delayTicks;
         setPosition(startPosition);
