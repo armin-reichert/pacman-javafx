@@ -30,7 +30,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel.createGhost;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel.createPac;
 import static de.amr.pacmanfx.arcade.pacman.rendering.SpriteID.GALLERY_GHOSTS;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
@@ -122,12 +121,11 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         pacMan.selectAnimation(ANIM_PAC_MUNCHING);
 
         ghosts = List.of(
-            createGhost(RED_GHOST_SHADOW),
-            createGhost(PINK_GHOST_SPEEDY),
-            createGhost(CYAN_GHOST_BASHFUL),
-            createGhost(ORANGE_GHOST_POKEY)
+            uiConfig.createGhost(RED_GHOST_SHADOW),
+            uiConfig.createGhost(PINK_GHOST_SPEEDY),
+            uiConfig.createGhost(CYAN_GHOST_BASHFUL),
+            uiConfig.createGhost(ORANGE_GHOST_POKEY)
         );
-        ghosts.forEach(ghost -> ghost.setAnimations(uiConfig.createGhostAnimations(ghost)));
 
         ghostImageVisible     = new boolean[4];
         ghostNicknameVisible  = new boolean[4];

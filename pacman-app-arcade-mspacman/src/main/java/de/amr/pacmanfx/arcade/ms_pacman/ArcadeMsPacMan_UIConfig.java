@@ -14,6 +14,7 @@ import de.amr.pacmanfx.controller.teststates.CutScenesTestState;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
@@ -192,6 +193,14 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config {
         var actorRenderer = new ArcadeMsPacMan_ActorRenderer(canvas, this);
         actorRenderer.setImageSmoothing(true);
         return actorRenderer;
+    }
+
+    @Override
+    public Ghost createGhost(byte personality) {
+        Ghost ghost = ArcadeMsPacMan_GameModel.createGhost(personality);
+        ghost.setAnimations(createGhostAnimations(ghost));
+        ghost.selectAnimation(CommonAnimationID.ANIM_GHOST_NORMAL);
+        return ghost;
     }
 
     @Override

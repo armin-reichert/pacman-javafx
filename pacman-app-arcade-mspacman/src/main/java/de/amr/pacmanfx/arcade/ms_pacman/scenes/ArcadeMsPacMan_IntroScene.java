@@ -110,15 +110,11 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         msPacMan.selectAnimation(ANIM_PAC_MUNCHING);
 
         ghosts = List.of(
-            createGhost(RED_GHOST_SHADOW),
-            createGhost(PINK_GHOST_SPEEDY),
-            createGhost(CYAN_GHOST_BASHFUL),
-            createGhost(ORANGE_GHOST_POKEY)
+            uiConfig.createGhost(RED_GHOST_SHADOW),
+            uiConfig.createGhost(PINK_GHOST_SPEEDY),
+            uiConfig.createGhost(CYAN_GHOST_BASHFUL),
+            uiConfig.createGhost(ORANGE_GHOST_POKEY)
         );
-        for (Ghost ghost : ghosts) {
-            ghost.setAnimations(uiConfig.createGhostAnimations(ghost));
-            ghost.selectAnimation(ANIM_GHOST_NORMAL);
-        }
 
         presentedGhostCharacter = RED_GHOST_SHADOW;
         numTicksBeforeRising = 0;

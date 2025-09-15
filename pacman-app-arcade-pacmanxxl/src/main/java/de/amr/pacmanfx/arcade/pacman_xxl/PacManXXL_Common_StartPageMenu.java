@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel.createGhost;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel.createPac;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_3D_ENABLED;
@@ -49,21 +48,34 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
     private static class ChaseAnimation {
 
         private final GraphicsContext ctx;
-        private final Pac pac;
-        private final List<Ghost> ghosts;
+        private Pac pac;
+        private List<Ghost> ghosts;
         private ActorRenderer actorRenderer;
         private boolean chasingGhosts;
         private boolean running;
 
         ChaseAnimation(Canvas canvas) {
             ctx = canvas.getGraphicsContext2D();
+        }
+
+        void setGameConfig(GameUI_Config uiConfig) {
+            createActors(uiConfig);
+            actorRenderer = uiConfig.createActorRenderer(ctx.getCanvas());
+            reset();
+            start();
+        }
+
+        private void createActors(GameUI_Config uiConfig) {
             pac = createPac();
+            pac.setAnimations(uiConfig.createPacAnimations(pac));
+            pac.playAnimation(ANIM_PAC_MUNCHING);
             ghosts = List.of(
-                createGhost(RED_GHOST_SHADOW),
-                createGhost(PINK_GHOST_SPEEDY),
-                createGhost(CYAN_GHOST_BASHFUL),
-                createGhost(ORANGE_GHOST_POKEY)
+                uiConfig.createGhost(RED_GHOST_SHADOW),
+                uiConfig.createGhost(PINK_GHOST_SPEEDY),
+                uiConfig.createGhost(CYAN_GHOST_BASHFUL),
+                uiConfig.createGhost(ORANGE_GHOST_POKEY)
             );
+            ghosts.forEach(Ghost::playAnimation);
         }
 
         void start() {
@@ -72,19 +84,21 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
 
         void reset() {
             chasingGhosts = false;
-
-            pac.setX(42 * TS);
-            pac.setMoveDir(Direction.LEFT);
-            pac.setWishDir(Direction.LEFT);
-            pac.setSpeed(1.0f);
-            pac.setVisible(true);
-
-            for (Ghost ghost : ghosts) {
-                ghost.setX(46 * TS + ghost.id().personality() * 18);
-                ghost.setMoveDir(Direction.LEFT);
-                ghost.setWishDir(Direction.LEFT);
-                ghost.setSpeed(1.05f);
-                ghost.setVisible(true);
+            if (pac != null) {
+                pac.setX(42 * TS);
+                pac.setMoveDir(Direction.LEFT);
+                pac.setWishDir(Direction.LEFT);
+                pac.setSpeed(1.0f);
+                pac.setVisible(true);
+            }
+            if (ghosts != null) {
+                for (Ghost ghost : ghosts) {
+                    ghost.setX(46 * TS + ghost.id().personality() * 18);
+                    ghost.setMoveDir(Direction.LEFT);
+                    ghost.setWishDir(Direction.LEFT);
+                    ghost.setSpeed(1.05f);
+                    ghost.setVisible(true);
+                }
             }
         }
 
@@ -148,18 +162,6 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
             ctx.restore();
         }
 
-        void setGameConfig(GameUI_Config uiConfig) {
-            actorRenderer = uiConfig.createActorRenderer(ctx.getCanvas());
-            pac.setAnimations(uiConfig.createPacAnimations(pac));
-            pac.playAnimation(ANIM_PAC_MUNCHING);
-            for (Ghost ghost : ghosts) {
-                if (ghost.animations().isEmpty()) {
-                    ghost.setAnimations(uiConfig.createGhostAnimations(ghost));
-                    ghost.playAnimation(ANIM_GHOST_NORMAL);
-                }
-            }
-            start();
-        }
     }
 
     // Entries

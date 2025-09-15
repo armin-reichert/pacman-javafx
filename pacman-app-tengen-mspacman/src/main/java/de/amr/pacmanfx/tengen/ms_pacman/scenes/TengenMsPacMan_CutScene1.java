@@ -116,15 +116,13 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         pacMan.setPosition(LEFT_BORDER, UPPER_LANE);
         pacMan.setSpeed(0);
 
-        inky = createGhost(CYAN_GHOST_BASHFUL);
-        inky.setAnimations(uiConfig.createGhostAnimations(inky));
+        inky = uiConfig.createGhost(CYAN_GHOST_BASHFUL);
         inky.setMoveDir(Direction.RIGHT);
         inky.setWishDir(Direction.RIGHT);
         inky.setPosition(LEFT_BORDER, UPPER_LANE);
         inky.setSpeed(0);
 
-        pinky = createGhost(PINK_GHOST_SPEEDY);
-        pinky.setAnimations(uiConfig.createGhostAnimations(pinky));
+        pinky = uiConfig.createGhost(PINK_GHOST_SPEEDY);
         pinky.setMoveDir(Direction.LEFT);
         pinky.setWishDir(Direction.LEFT);
         pinky.setPosition(RIGHT_BORDER, LOWER_LANE);

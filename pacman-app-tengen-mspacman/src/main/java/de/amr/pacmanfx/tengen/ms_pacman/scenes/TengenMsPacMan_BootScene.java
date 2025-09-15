@@ -19,9 +19,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
-import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel.createGhost;
 
 /**
  * Shows moving and color changing "TENGEN PRESENTS" text and ghost running through scene.
@@ -61,9 +59,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
         movingText.setPosition(TS(9), sizeInPx().y()); // lower border of screen
 
         final GameUI_Config uiConfig = ui.currentConfig();
-        ghost = createGhost(RED_GHOST_SHADOW);
-        ghost.setAnimations(uiConfig.createGhostAnimations(ghost));
-        ghost.selectAnimation(ANIM_GHOST_NORMAL);
+        ghost = uiConfig.createGhost(RED_GHOST_SHADOW);
     }
 
     @Override
