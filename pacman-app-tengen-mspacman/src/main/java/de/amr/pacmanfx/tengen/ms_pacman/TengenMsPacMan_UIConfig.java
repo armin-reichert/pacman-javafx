@@ -313,14 +313,14 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     @Override
     public Ghost createGhost(byte personality) {
         Ghost ghost = TengenMsPacMan_GameModel.createGhost(personality);
-        ghost.setAnimations(createGhostAnimations(ghost));
+        ghost.setAnimations(createGhostAnimations(personality));
         ghost.selectAnimation(ANIM_GHOST_NORMAL);
         return ghost;
     }
 
     @Override
-    public TengenMsPacMan_GhostAnimationManager createGhostAnimations(Ghost ghost) {
-        return new TengenMsPacMan_GhostAnimationManager(spriteSheet(), ghost.id().personality());
+    public TengenMsPacMan_GhostAnimationManager createGhostAnimations(byte personality) {
+        return new TengenMsPacMan_GhostAnimationManager(spriteSheet(), personality);
     }
 
     @Override

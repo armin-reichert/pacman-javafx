@@ -186,14 +186,14 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config {
     @Override
     public Ghost createGhost(byte personality) {
         Ghost ghost = PacManXXL_MsPacMan_GameModel.createGhost(personality);
-        ghost.setAnimations(createGhostAnimations(ghost));
+        ghost.setAnimations(createGhostAnimations(personality));
         ghost.selectAnimation(CommonAnimationID.ANIM_GHOST_NORMAL);
         return ghost;
     }
 
     @Override
-    public SpriteAnimationManager<SpriteID> createGhostAnimations(Ghost ghost) {
-        return new ArcadeMsPacMan_GhostAnimationManager(spriteSheet, ghost.id().personality());
+    public SpriteAnimationManager<SpriteID> createGhostAnimations(byte personality) {
+        return new ArcadeMsPacMan_GhostAnimationManager(spriteSheet, personality);
     }
 
     @Override

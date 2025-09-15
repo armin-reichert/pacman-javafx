@@ -198,14 +198,14 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config {
     @Override
     public Ghost createGhost(byte personality) {
         Ghost ghost = ArcadeMsPacMan_GameModel.createGhost(personality);
-        ghost.setAnimations(createGhostAnimations(ghost));
+        ghost.setAnimations(createGhostAnimations(personality));
         ghost.selectAnimation(CommonAnimationID.ANIM_GHOST_NORMAL);
         return ghost;
     }
 
     @Override
-    public ArcadeMsPacMan_GhostAnimationManager createGhostAnimations(Ghost ghost) {
-        return new ArcadeMsPacMan_GhostAnimationManager(spriteSheet, ghost.id().personality());
+    public ArcadeMsPacMan_GhostAnimationManager createGhostAnimations(byte personality) {
+        return new ArcadeMsPacMan_GhostAnimationManager(spriteSheet, personality);
     }
 
     @Override

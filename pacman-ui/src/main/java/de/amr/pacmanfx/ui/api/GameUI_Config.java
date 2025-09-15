@@ -49,7 +49,7 @@ public interface GameUI_Config extends GameScene_Config, Disposable {
 
     Ghost createGhost(byte personality);
 
-    AnimationManager createGhostAnimations(Ghost ghost);
+    AnimationManager createGhostAnimations(byte personality);
 
     AnimationManager createPacAnimations(Pac pac);
 
