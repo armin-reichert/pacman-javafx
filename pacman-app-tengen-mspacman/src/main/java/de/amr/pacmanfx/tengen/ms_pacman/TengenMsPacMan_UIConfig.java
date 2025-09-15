@@ -104,7 +104,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     /**
      * Blue color, changing from dark to brighter blue. Cycles through NES palette indices 0x01, 0x11, 0x21, 0x31 each 16 ticks.
      */
-    public static Color blueShadedColor(long tick) {
+    public static Color shadeOfBlue(long tick) {
         return BLUE_SHADES[(int) (tick % 64) / 16];
     }
 

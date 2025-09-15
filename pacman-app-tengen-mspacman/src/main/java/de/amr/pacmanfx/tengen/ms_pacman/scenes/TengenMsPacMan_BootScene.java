@@ -29,15 +29,14 @@ import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel.cr
 public class TengenMsPacMan_BootScene extends GameScene2D {
 
     public static final String TENGEN_PRESENTS = "TENGEN PRESENTS";
-    public static final Color GRAY = nesColor(0x10);
 
     private static final float GHOST_Y = TS(21.5);
 
-    private int tick;
-    private boolean grayScreen;
+    private boolean gray;
     private Actor movingText;
     private Ghost ghost;
     private TengenMsPacMan_ActorRenderer actorRenderer;
+    private Color shadeOfBlue;
 
     public TengenMsPacMan_BootScene(GameUI ui) {
         super(ui);
@@ -60,32 +59,24 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     public void doInit() {
         movingText = new Actor();
         movingText.setPosition(TS(9), sizeInPx().y()); // lower border of screen
-        movingText.setVelocity(Vector2f.ZERO);
 
         final GameUI_Config uiConfig = ui.currentConfig();
         ghost = createGhost(RED_GHOST_SHADOW);
-        ghost.setSpeed(0);
         ghost.setAnimations(uiConfig.createGhostAnimations(ghost));
         ghost.selectAnimation(ANIM_GHOST_NORMAL);
     }
-
-    private void grayOn()  { grayScreen = true; }
-    private void grayOff() { grayScreen = false; }
 
     @Override
     protected void doEnd() {}
 
     @Override
     public void update() {
-        tick = (int) context().gameState().timer().tickCount();
-
-        ghost.move();
-        movingText.move();
-
+        int tick = (int) context().gameState().timer().tickCount();
+        shadeOfBlue = shadeOfBlue(tick);
         switch (tick) {
-            case   1 -> grayOff();
-            case   7 -> grayOn();
-            case  12 -> grayOff();
+            case   1 -> gray(false);
+            case   7 -> gray(true);
+            case  12 -> gray(false);
             case  21 -> {
                 movingText.setVelocity(0, -HTS);
                 movingText.show();
@@ -103,13 +94,18 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
             }
             case 181 -> movingText.setVelocity(0, TS);
             case 203 -> {
-                grayOn();
                 movingText.hide();
                 ghost.hide();
             }
-            case 214 -> grayOff();
-            case 220 -> context().gameController().changeGameState(GamePlayState.INTRO);
+            case 204 -> gray(true);
+            case 214 -> gray(false);
+            case 220 -> {
+                context().gameController().changeGameState(GamePlayState.INTRO);
+                return;
+            }
         }
+        ghost.move();
+        movingText.move();
     }
 
     @Override
@@ -119,11 +115,13 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        if (grayScreen) {
-            actorRenderer.fillCanvas(GRAY);
+        if (gray) {
+            actorRenderer.fillCanvas(nesColor(0x10));
         } else {
-            actorRenderer.fillText(TENGEN_PRESENTS, blueShadedColor(tick), actorRenderer.arcadeFontTS(), movingText.x(), movingText.y());
+            actorRenderer.fillText(TENGEN_PRESENTS, shadeOfBlue, actorRenderer.arcadeFontTS(), movingText.x(), movingText.y());
             actorRenderer.drawActor(ghost);
         }
     }
+
+    private void gray(boolean b)  { gray = b; }
 }
