@@ -36,6 +36,7 @@ public class BaseCanvasRenderer implements CanvasRenderer {
     private final ObjectProperty<Font> arcadeFont6 = new SimpleObjectProperty<>();
 
     protected final GraphicsContext ctx;
+    private boolean imageSmoothing;
 
     public BaseCanvasRenderer(Canvas canvas) {
         ctx = requireNonNull(canvas).getGraphicsContext2D();

@@ -305,9 +305,6 @@ public class PlayView extends StackPane implements GameUI_View {
         PROPERTY_CANVAS_FONT_SMOOTHING.addListener((py, ov, smooth)
             -> canvasWithFrame.canvas().getGraphicsContext2D().setFontSmoothingType(smooth ? FontSmoothingType.LCD : FontSmoothingType.GRAY));
 
-        PROPERTY_CANVAS_IMAGE_SMOOTHING.addListener((py, ov, smooth)
-            -> canvasWithFrame.canvas().getGraphicsContext2D().setImageSmoothing(smooth));
-
         PROPERTY_DEBUG_INFO_VISIBLE.addListener((py, ov, debug)
             -> {
                canvasLayer.setBackground(debug ? colorBackground(Color.TEAL) : null);

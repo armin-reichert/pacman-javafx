@@ -63,11 +63,10 @@ public class InfoBoxGeneral extends InfoBox {
         var sliderTargetFPS = addSlider("Simulation Speed", MIN_FRAME_RATE, MAX_FRAME_RATE, 60, false, false);
         setEditor(sliderTargetFPS, ui.clock().targetFrameRateProperty());
 
-        addDynamicLabeledValue("", () -> "Framerate: %.1f (Target: %.1f)".formatted(ui.clock().lastTicksPerSecond(), ui.clock().targetFrameRate()));
+        addDynamicLabeledValue("", () -> "Frame Rate: %.1f (Target: %.1f)".formatted(ui.clock().lastTicksPerSecond(), ui.clock().targetFrameRate()));
         addDynamicLabeledValue("Total Updates",  ui.clock()::updateCount);
 
         addColorPicker("Canvas Color", PROPERTY_CANVAS_BACKGROUND_COLOR);
-        addCheckBox("Image Smoothing", PROPERTY_CANVAS_IMAGE_SMOOTHING);
         addCheckBox("Font Smoothing", PROPERTY_CANVAS_FONT_SMOOTHING);
         addCheckBox("Show Debug Info", PROPERTY_DEBUG_INFO_VISIBLE);
         addCheckBox("Time Measured", ui.clock().timeMeasuredProperty());

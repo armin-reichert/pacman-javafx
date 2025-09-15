@@ -148,12 +148,16 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config {
 
     @Override
     public HUDRenderer createHUDRenderer(Canvas canvas) {
-        return new ArcadePacMan_HUDRenderer(canvas, this);
+        var hudRenderer = new ArcadePacMan_HUDRenderer(canvas, this);
+        hudRenderer.setImageSmoothing(true);
+        return hudRenderer;
     }
 
     @Override
     public ActorRenderer createActorRenderer(Canvas canvas) {
-        return new ArcadePacMan_ActorRenderer(canvas, this);
+        var actorRenderer = new ArcadePacMan_ActorRenderer(canvas, this);
+        actorRenderer.setImageSmoothing(true);
+        return actorRenderer;
     }
 
     @Override

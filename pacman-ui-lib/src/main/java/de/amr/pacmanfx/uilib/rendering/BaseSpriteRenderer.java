@@ -6,6 +6,7 @@ import javafx.scene.canvas.Canvas;
 public class BaseSpriteRenderer extends BaseCanvasRenderer implements SpriteRenderer {
 
     private SpriteSheet<?> spriteSheet;
+    private boolean imageSmoothing;
 
     public BaseSpriteRenderer(Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(canvas);
@@ -18,6 +19,16 @@ public class BaseSpriteRenderer extends BaseCanvasRenderer implements SpriteRend
 
     public void setSpriteSheet(SpriteSheet<?> spriteSheet) {
         this.spriteSheet = spriteSheet;
+    }
+
+    @Override
+    public void setImageSmoothing(boolean imageSmoothing) {
+        this.imageSmoothing = imageSmoothing;
+    }
+
+    @Override
+    public boolean imageSmoothing() {
+        return imageSmoothing;
     }
 
     @Override

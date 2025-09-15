@@ -13,7 +13,10 @@ import de.amr.pacmanfx.model.House;
 import de.amr.pacmanfx.model.MessageType;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
-import de.amr.pacmanfx.uilib.rendering.*;
+import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
+import de.amr.pacmanfx.uilib.rendering.CommonRenderInfo;
+import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
+import de.amr.pacmanfx.uilib.rendering.RenderInfo;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -28,7 +31,7 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
-public class TengenMsPacMan_GameLevelRenderer extends BaseCanvasRenderer implements GameLevelRenderer, SpriteRenderer {
+public class TengenMsPacMan_GameLevelRenderer extends BaseSpriteRenderer implements GameLevelRenderer {
 
     private final TengenMsPacMan_UIConfig uiConfig;
 
@@ -68,7 +71,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseCanvasRenderer impleme
         }
         Image mazeImage = info.get(CommonRenderInfo.MAZE_IMAGE, Image.class);
         RectShort mazeSprite = info.get(CommonRenderInfo.MAZE_SPRITE, RectShort.class);
-        ctx().setImageSmoothing(false);
+        ctx().setImageSmoothing(imageSmoothing());
         int x = 0, y = GameLevel.EMPTY_ROWS_OVER_MAZE * TS;
         ctx().drawImage(mazeImage,
             mazeSprite.x(), mazeSprite.y(), mazeSprite.width(), mazeSprite.height(),

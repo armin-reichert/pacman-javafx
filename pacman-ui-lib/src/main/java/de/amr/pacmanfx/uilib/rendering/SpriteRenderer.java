@@ -10,6 +10,10 @@ public interface SpriteRenderer extends CanvasRenderer {
 
     SpriteSheet<?> spriteSheet();
 
+    boolean imageSmoothing();
+
+    void setImageSmoothing(boolean b);
+
     /**
      * Draws a sprite (region inside sprite sheet) unscaled at the given position.
      *
@@ -21,6 +25,7 @@ public interface SpriteRenderer extends CanvasRenderer {
     default void drawSprite(RectShort sprite, double x, double y, boolean scaled) {
         requireNonNull(sprite);
         double s = scaled ? scaling() : 1;
+        ctx().setImageSmoothing(imageSmoothing());
         ctx().drawImage(spriteSheet().sourceImage(),
             sprite.x(), sprite.y(), sprite.width(), sprite.height(),
             s * x, s * y, s * sprite.width(), s * sprite.height());
