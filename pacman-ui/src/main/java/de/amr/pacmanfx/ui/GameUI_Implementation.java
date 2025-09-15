@@ -48,7 +48,7 @@ public class GameUI_Implementation implements GameUI {
     private static final int MIN_STAGE_WIDTH  = 280;
     private static final int MIN_STAGE_HEIGHT = 360;
 
-    private final Set<ActionBinding> defaultActionBindings = Set.of(
+    private static final Set<ActionBinding> DEFAULT_ACTION_BINDINGS = Set.of(
         new ActionBinding(ACTION_ARCADE_INSERT_COIN,          nude(KeyCode.DIGIT5), nude(KeyCode.NUMPAD5)),
         new ActionBinding(ACTION_ARCADE_START_GAME,           nude(KeyCode.DIGIT1), nude(KeyCode.NUMPAD1)),
         new ActionBinding(ACTION_BOOT_SHOW_PLAY_VIEW,         nude(KeyCode.F3)),
@@ -237,9 +237,9 @@ public class GameUI_Implementation implements GameUI {
     }
 
     private void defineGlobalActionBindings() {
-        globalActionBindings.assign(ACTION_ENTER_FULLSCREEN, defaultActionBindings);
-        globalActionBindings.assign(ACTION_OPEN_EDITOR, defaultActionBindings);
-        globalActionBindings.assign(ACTION_TOGGLE_MUTED, defaultActionBindings);
+        globalActionBindings.assign(ACTION_ENTER_FULLSCREEN, DEFAULT_ACTION_BINDINGS);
+        globalActionBindings.assign(ACTION_OPEN_EDITOR, DEFAULT_ACTION_BINDINGS);
+        globalActionBindings.assign(ACTION_TOGGLE_MUTED, DEFAULT_ACTION_BINDINGS);
         globalActionBindings.installBindings(keyboard);
     }
 
@@ -312,7 +312,7 @@ public class GameUI_Implementation implements GameUI {
 
     @Override
     public Set<ActionBinding> actionBindings() {
-        return defaultActionBindings;
+        return DEFAULT_ACTION_BINDINGS;
     }
 
     @Override
