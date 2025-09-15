@@ -205,7 +205,7 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config {
     }
 
     @Override
-    public ArcadePacMan_PacAnimationManager createPacAnimations(Pac pac) {
+    public ArcadePacMan_PacAnimationManager createPacAnimations() {
         return new ArcadePacMan_PacAnimationManager(spriteSheet);
     }
 

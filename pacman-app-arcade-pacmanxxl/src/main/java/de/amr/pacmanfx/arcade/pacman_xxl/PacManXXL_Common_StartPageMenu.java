@@ -67,7 +67,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
 
         private void createActors(GameUI_Config uiConfig) {
             pac = createPac();
-            pac.setAnimations(uiConfig.createPacAnimations(pac));
+            pac.setAnimations(uiConfig.createPacAnimations());
             pac.playAnimation(ANIM_PAC_MUNCHING);
             ghosts = List.of(
                 uiConfig.createGhost(RED_GHOST_SHADOW),

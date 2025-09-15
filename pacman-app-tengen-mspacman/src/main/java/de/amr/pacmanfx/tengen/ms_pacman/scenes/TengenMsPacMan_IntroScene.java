@@ -196,7 +196,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 GameUI_Config uiConfig = scene.ui.currentConfig();
 
                 scene.msPacMan = createMsPacMan();
-                scene.msPacMan.setAnimations(scene.ui.currentConfig().createPacAnimations(scene.msPacMan));
+                scene.msPacMan.setAnimations(scene.ui.currentConfig().createPacAnimations());
                 scene.msPacMan.playAnimation(ANIM_PAC_MUNCHING);
 
                 scene.msPacMan.setPosition(TS * 33, ACTOR_Y);

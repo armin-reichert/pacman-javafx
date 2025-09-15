@@ -84,10 +84,10 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         context().game().hud().scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
 
         pacMan = createPacMan();
-        pacMan.setAnimations(uiConfig.createPacAnimations(pacMan));
+        pacMan.setAnimations(uiConfig.createPacAnimations());
 
         msPacMan = createMsPacMan();
-        msPacMan.setAnimations(uiConfig.createPacAnimations(msPacMan));
+        msPacMan.setAnimations(uiConfig.createPacAnimations());
 
         inky = uiConfig.createGhost(CYAN_GHOST_BASHFUL);
 

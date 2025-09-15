@@ -90,10 +90,10 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         clapperboard.startAnimation();
 
         msPacMan = createMsPacMan();
-        msPacMan.setAnimations(uiConfig.createPacAnimations(msPacMan));
+        msPacMan.setAnimations(uiConfig.createPacAnimations());
 
         pacMan = createPacMan();
-        pacMan.setAnimations(uiConfig.createPacAnimations(pacMan));
+        pacMan.setAnimations(uiConfig.createPacAnimations());
 
         juniors = new ArrayList<>();
         juniorCreationTime = new ArrayList<>();
@@ -180,7 +180,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         junior.setPosition((float) randomX, sizeInPx().y() - 4 * TS);
         junior.setMoveDir(Direction.UP);
         junior.setSpeed(2);
-        junior.setAnimations(ui.currentConfig().createPacAnimations(junior));
+        junior.setAnimations(ui.currentConfig().createPacAnimations());
         junior.selectAnimation(ANIM_JUNIOR);
         junior.show();
         juniors.add(junior);

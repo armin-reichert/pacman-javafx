@@ -105,13 +105,13 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         clapperboard.startAnimation();
 
         msPacMan = createMsPacMan();
-        msPacMan.setAnimations(uiConfig.createPacAnimations(msPacMan));
+        msPacMan.setAnimations(uiConfig.createPacAnimations());
         msPacMan.setMoveDir(Direction.LEFT);
         msPacMan.setPosition(RIGHT_BORDER, LOWER_LANE);
         msPacMan.setSpeed(0);
 
         pacMan = createPacMan();
-        pacMan.setAnimations(uiConfig.createPacAnimations(pacMan));
+        pacMan.setAnimations(uiConfig.createPacAnimations());
         pacMan.setMoveDir(Direction.RIGHT);
         pacMan.setPosition(LEFT_BORDER, UPPER_LANE);
         pacMan.setSpeed(0);

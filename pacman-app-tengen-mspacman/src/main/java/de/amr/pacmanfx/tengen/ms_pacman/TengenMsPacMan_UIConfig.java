@@ -324,7 +324,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     }
 
     @Override
-    public TengenMsPacMan_PacAnimationManager createPacAnimations(Pac pac) {
+    public TengenMsPacMan_PacAnimationManager createPacAnimations() {
         return new TengenMsPacMan_PacAnimationManager(spriteSheet());
     }
 

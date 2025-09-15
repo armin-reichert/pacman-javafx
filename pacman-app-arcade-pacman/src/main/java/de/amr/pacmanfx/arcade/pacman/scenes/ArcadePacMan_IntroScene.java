@@ -117,7 +117,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         GameUI_Config uiConfig = ui.currentConfig();
 
         pacMan = createPac();
-        pacMan.setAnimations(uiConfig.createPacAnimations(pacMan));
+        pacMan.setAnimations(uiConfig.createPacAnimations());
         pacMan.selectAnimation(ANIM_PAC_MUNCHING);
 
         ghosts = List.of(

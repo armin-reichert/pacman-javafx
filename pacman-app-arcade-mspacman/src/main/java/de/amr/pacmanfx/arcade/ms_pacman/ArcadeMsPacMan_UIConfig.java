@@ -209,7 +209,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config {
     }
 
     @Override
-    public ArcadeMsPacMan_PacAnimationManager createPacAnimations(Pac pac) {
+    public ArcadeMsPacMan_PacAnimationManager createPacAnimations() {
         return new ArcadeMsPacMan_PacAnimationManager(spriteSheet);
     }
 

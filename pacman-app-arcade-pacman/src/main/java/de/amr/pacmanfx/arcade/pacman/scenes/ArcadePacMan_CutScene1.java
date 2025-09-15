@@ -18,7 +18,6 @@ import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel.createGhost;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel.createPac;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ANIM_BIG_PAC_MAN;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
@@ -73,7 +72,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
         context().game().hud().creditVisible(false).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
 
         pac = createPac();
-        pac.setAnimations(uiConfig.createPacAnimations(pac));
+        pac.setAnimations(uiConfig.createPacAnimations());
 
         blinky = uiConfig.createGhost(RED_GHOST_SHADOW);
 

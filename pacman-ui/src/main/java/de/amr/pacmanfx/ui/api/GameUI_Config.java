@@ -51,7 +51,7 @@ public interface GameUI_Config extends GameScene_Config, Disposable {
 
     AnimationManager createGhostAnimations(byte personality);
 
-    AnimationManager createPacAnimations(Pac pac);
+    AnimationManager createPacAnimations();
 
     PacBase3D createPac3D(AnimationRegistry animationMgr, GameLevel gameLevel, Pac pac);
 
