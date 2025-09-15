@@ -860,11 +860,17 @@ public class GameLevel3D extends Group implements Disposable {
     }
 
     private void handleDrawModeChange(ObservableValue<? extends DrawMode> obs, DrawMode oldDrawMode, DrawMode newDrawMode) {
-        Predicate<Node> includeAll = excludedNode -> false;
-        setDrawModeUnder(maze3D, node -> node instanceof Shape3D && pellets3D.contains(node), newDrawMode);
-        setDrawModeUnder(pac3D, includeAll, newDrawMode);
-        setDrawModeUnder(livesCounter3D, includeAll, newDrawMode);
-        ghosts3D.forEach(ghost3D -> setDrawModeUnder(ghost3D, includeAll, newDrawMode));
+        try {
+            Predicate<Node> includeAll = excludedNode -> false;
+            setDrawModeUnder(maze3D, node -> node instanceof Shape3D && pellets3D.contains(node), newDrawMode);
+            setDrawModeUnder(pac3D, includeAll, newDrawMode);
+            setDrawModeUnder(livesCounter3D, includeAll, newDrawMode);
+            ghosts3D.forEach(ghost3D -> setDrawModeUnder(ghost3D, includeAll, newDrawMode));
+        }
+        catch (Exception x) {
+            Logger.error(x);
+            Logger.error("Could not change 3D draw mode");
+        }
     }
 
     private static void setDrawModeUnder(Node node, Predicate<Node> exclusionFilter, DrawMode drawMode) {
