@@ -46,7 +46,6 @@ public class GameLevel {
 
     private final WorldMap worldMap;
     private final Vector2f pacStartPosition;
-    private final Vector2f[] ghostStartPositions = new Vector2f[4];
     private final Vector2i[] ghostScatterTiles = new Vector2i[4];
     private final Direction[] ghostStartDirections = new Direction[4];
     private final Set<Vector2i> energizerPositions;
@@ -98,30 +97,6 @@ public class GameLevel {
         }
         pacStartPosition = halfTileRightOf(pacTile);
 
-        Vector2i redGhostTile = worldMap.getTerrainTileProperty(POS_RED_GHOST);
-        if (redGhostTile == null) {
-            throw new IllegalArgumentException("No red ghost position stored in map");
-        }
-        ghostStartPositions[RED_GHOST_SHADOW] = halfTileRightOf(redGhostTile);
-
-        Vector2i pinkGhostTile = worldMap.getTerrainTileProperty(POS_PINK_GHOST);
-        if (pinkGhostTile == null) {
-            throw new IllegalArgumentException("No pink ghost position stored in map");
-        }
-        ghostStartPositions[PINK_GHOST_SPEEDY] = halfTileRightOf(pinkGhostTile);
-
-        Vector2i cyanGhostTile = worldMap.getTerrainTileProperty(POS_CYAN_GHOST);
-        if (cyanGhostTile == null) {
-            throw new IllegalArgumentException("No cyan ghost position stored in map");
-        }
-        ghostStartPositions[CYAN_GHOST_BASHFUL] = halfTileRightOf(cyanGhostTile);
-
-        Vector2i orangeGhostTile = worldMap.getTerrainTileProperty(POS_ORANGE_GHOST);
-        if (orangeGhostTile == null) {
-            throw new IllegalArgumentException("No orange ghost position stored in map");
-        }
-        ghostStartPositions[ORANGE_GHOST_POKEY] = halfTileRightOf(orangeGhostTile);
-
         setGhostStartDirection(RED_GHOST_SHADOW, Direction.LEFT);
         setGhostStartDirection(PINK_GHOST_SPEEDY, Direction.DOWN);
         setGhostStartDirection(CYAN_GHOST_BASHFUL, Direction.UP);
@@ -140,6 +115,21 @@ public class GameLevel {
 
         ghostScatterTiles[ORANGE_GHOST_POKEY] = worldMap.getTerrainTileProperty(POS_SCATTER_ORANGE_GHOST,
             Vector2i.of(worldMap.numRows() - EMPTY_ROWS_BELOW_MAZE, 0));
+    }
+
+    private Vector2f findGhostStartPosition(byte ghostPersonality) {
+        String propertyName = switch (ghostPersonality) {
+            case RED_GHOST_SHADOW ->  POS_RED_GHOST;
+            case PINK_GHOST_SPEEDY -> POS_PINK_GHOST;
+            case CYAN_GHOST_BASHFUL -> POS_CYAN_GHOST;
+            case ORANGE_GHOST_POKEY -> POS_ORANGE_GHOST;
+            default -> throw new IllegalArgumentException("Illegal ghost personality: %d".formatted(ghostPersonality));
+        };
+        Vector2i tile = worldMap.getTerrainTileProperty(propertyName);
+        if (tile == null) {
+            throw new IllegalArgumentException("Terrain property with name '%s' not found!".formatted(propertyName));
+        }
+        return halfTileRightOf(tile);
     }
 
     private Portal[] findPortals(WorldMap worldMap) {
@@ -180,7 +170,7 @@ public class GameLevel {
         pac.powerTimer().resetIndefiniteTime();
         ghosts().forEach(ghost -> {
             ghost.reset(); // initially invisible!
-            ghost.setPosition(ghostStartPosition(ghost.id().personality()));
+            ghost.setPosition(ghost.startPosition());
             ghost.setMoveDir(ghostStartDirection(ghost.id().personality()));
             ghost.setWishDir(ghostStartDirection(ghost.id().personality()));
             ghost.setState(GhostState.LOCKED);
@@ -245,6 +235,7 @@ public class GameLevel {
         this.ghosts = requireNonNull(ghosts);
         for (Ghost ghost : ghosts) {
             byte personality = ghost.id().personality();
+            ghost.setStartPosition(findGhostStartPosition(personality));
             Vector2i tile = switch (personality) {
                 case RED_GHOST_SHADOW, PINK_GHOST_SPEEDY -> worldMap.getTerrainTileProperty(POS_PINK_GHOST);
                 case CYAN_GHOST_BASHFUL -> worldMap.getTerrainTileProperty(POS_CYAN_GHOST);
@@ -356,16 +347,6 @@ public class GameLevel {
 
     public Vector2f pacStartPosition() {
         return pacStartPosition;
-    }
-
-    public void setGhostStartPosition(byte personality, Vector2f position) {
-        requireValidGhostPersonality(personality);
-        ghostStartPositions[personality] = position;
-    }
-
-    public Vector2f ghostStartPosition(byte personality) {
-        requireValidGhostPersonality(personality);
-        return ghostStartPositions[personality];
     }
 
     public void setGhostStartDirection(byte personality, Direction dir) {

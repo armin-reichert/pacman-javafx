@@ -490,12 +490,13 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             createGhost(CYAN_GHOST_BASHFUL),
             createGhost(ORANGE_GHOST_POKEY)
         );
-        gameLevel().ghosts().forEach(MovingActor::reset);
-
-        // Ghosts inside house start at bottom of house instead at middle (as marked in map)
-        Stream.of(PINK_GHOST_SPEEDY, CYAN_GHOST_BASHFUL, ORANGE_GHOST_POKEY)
-            .forEach(personality -> gameLevel().setGhostStartPosition(personality, gameLevel().ghostStartPosition(personality).plus(0, HTS))
-        );
+        gameLevel().ghosts().forEach(ghost -> {
+            ghost.reset();
+            // Ghosts inside house start at bottom of house instead at middle (as stored in terrain tile property)
+            if (ghost.id().personality() != RED_GHOST_SHADOW) {
+                ghost.setStartPosition(ghost.startPosition().plus(0, HTS));
+            }
+        });
 
         gameLevel().setGhostStartDirection(RED_GHOST_SHADOW, Direction.LEFT);
         gameLevel().setGhostStartDirection(PINK_GHOST_SPEEDY, Direction.DOWN);

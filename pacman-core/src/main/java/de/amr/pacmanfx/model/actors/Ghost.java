@@ -41,6 +41,8 @@ public abstract class Ghost extends MovingActor {
     private AnimationManager animations;
     private List<Vector2i> specialTerrainTiles = List.of();
 
+    private Vector2f startPosition;
+
     /**
      * @param personality
      *        ghost personality, allowed values:<br>
@@ -97,6 +99,14 @@ public abstract class Ghost extends MovingActor {
 
     public List<Vector2i> specialTerrainTiles() {
         return specialTerrainTiles;
+    }
+
+    public void setStartPosition(Vector2f startPosition) {
+        this.startPosition = startPosition;
+    }
+
+    public Vector2f startPosition() {
+        return startPosition;
     }
 
     /**
