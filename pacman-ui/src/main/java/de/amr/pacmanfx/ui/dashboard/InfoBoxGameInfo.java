@@ -120,8 +120,8 @@ public class InfoBoxGameInfo extends InfoBox {
 
     private String fmtPelletCount(GameLevel level) {
         return "%d of %d (%d energizers)".formatted(
-                level.uneatenFoodCount(),
-                level.totalFoodCount(),
+                level.foodStore().uneatenFoodCount(),
+                level.foodStore().totalFoodCount(),
                 level.energizerPositions().size()
         );
     }

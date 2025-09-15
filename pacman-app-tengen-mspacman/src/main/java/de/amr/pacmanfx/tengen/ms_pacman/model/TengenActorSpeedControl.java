@@ -65,7 +65,7 @@ public class TengenActorSpeedControl implements ActorSpeedControl {
         byte units = 0;
         TengenMsPacMan_GameModel game = gameContext.game();
         if (game.difficulty() == Difficulty.NORMAL && level.number() >= 5) {
-            int dotsLeft = level.uneatenFoodCount();
+            int dotsLeft = level.foodStore().uneatenFoodCount();
             if (dotsLeft <= 7) {
                 units = 5;
             } else if (dotsLeft <= 15) {

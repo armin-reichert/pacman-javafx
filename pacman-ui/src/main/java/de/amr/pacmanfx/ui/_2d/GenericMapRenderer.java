@@ -77,14 +77,14 @@ public class GenericMapRenderer extends BaseCanvasRenderer {
 
             foodRenderer.setPelletColor(Color.web(colorMap.get("pellet")));
             gameLevel.tiles()
-                .filter(gameLevel::tileContainsFood)
+                .filter(gameLevel.foodStore()::tileContainsFood)
                 .filter(not(gameLevel::isEnergizerPosition))
                 .forEach(foodRenderer::drawPellet);
 
             if (info.getBoolean(CommonRenderInfo.MAZE_BLINKING)) {
                 foodRenderer.setEnergizerColor(Color.web(colorMap.get("pellet")));
                 gameLevel.energizerPositions().stream()
-                    .filter(gameLevel::tileContainsFood)
+                    .filter(gameLevel.foodStore()::tileContainsFood)
                     .forEach(foodRenderer::drawEnergizer);
             }
         }

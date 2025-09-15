@@ -207,7 +207,8 @@ public abstract class AbstractGameModel implements Game {
 
     @Override
     public boolean isLevelCompleted() {
-        return optGameLevel().isPresent() && optGameLevel().get().uneatenFoodCount() == 0;
+        Optional<FoodStore> optFoodStore = optGameLevel().map(GameLevel::foodStore);
+        return optFoodStore.isPresent() && optFoodStore.get().uneatenFoodCount() == 0;
     }
 
     @Override
@@ -224,7 +225,7 @@ public abstract class AbstractGameModel implements Game {
             Logger.info("Power timer stopped and reset to zero.");
             gameLevel.bonus().ifPresent(Bonus::setInactive);
             // when cheat triggered end of level, there might still be remaining food:
-            gameLevel.eatAllFood();
+            gameLevel.foodStore().eatAllFood();
             Logger.trace("Game level #{} completed.", gameLevel.number());
         });
     }

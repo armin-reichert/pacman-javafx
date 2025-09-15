@@ -425,9 +425,9 @@ public class PlayScene3D implements GameScene {
 
         gameLevel3D.pac3D().init(gameLevel);
         gameLevel3D.pac3D().update(gameLevel);
-        gameLevel3D.pellets3D().forEach(pellet -> pellet.setVisible(!gameLevel.tileContainsEatenFood((Vector2i) pellet.getUserData())));
+        gameLevel3D.pellets3D().forEach(pellet -> pellet.setVisible(!gameLevel.foodStore().tileContainsEatenFood((Vector2i) pellet.getUserData())));
         gameLevel3D.energizers3D().forEach(energizer ->
-                energizer.shape().setVisible(!gameLevel.tileContainsEatenFood(energizer.tile())));
+                energizer.shape().setVisible(!gameLevel.foodStore().tileContainsEatenFood(energizer.tile())));
         if (isOneOf(context().gameState(), HUNTING, GHOST_DYING)) { //TODO check this
             gameLevel3D.energizers3D().stream()
                 .filter(energizer3D -> energizer3D.shape().isVisible())

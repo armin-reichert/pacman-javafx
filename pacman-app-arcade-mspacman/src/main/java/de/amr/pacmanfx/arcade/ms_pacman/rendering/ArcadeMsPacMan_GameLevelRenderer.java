@@ -62,11 +62,11 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseSpriteRenderer impleme
             // Over-paint the eaten pellets (pellets are part of the maze image)
             gameLevel.tiles()
                 .filter(not(gameLevel::isEnergizerPosition))
-                .filter(gameLevel::tileContainsEatenFood)
+                .filter(gameLevel.foodStore()::tileContainsEatenFood)
                 .forEach(tile -> fillSquareAtTileCenter(tile, 4));
             // Over-paint eaten and dark-phase energizers
             gameLevel.energizerPositions().stream()
-                .filter(tile -> !info.getBoolean(CommonRenderInfo.MAZE_BLINKING) || gameLevel.tileContainsEatenFood(tile))
+                .filter(tile -> !info.getBoolean(CommonRenderInfo.MAZE_BLINKING) || gameLevel.foodStore().tileContainsEatenFood(tile))
                 .forEach(tile -> fillSquareAtTileCenter(tile, 10));
         }
         ctx().restore();

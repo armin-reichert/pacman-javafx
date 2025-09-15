@@ -17,7 +17,6 @@ import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
@@ -46,11 +45,6 @@ public class Bonus extends MovingActor {
         canTeleport = false; // override default value
         ticksRemaining = 0;
         state = BonusState.INACTIVE;
-    }
-
-    @Override
-    public Optional<AnimationManager> animations() {
-        return Optional.empty();
     }
 
     public void setRoute(GameContext gameContext, List<Waypoint> route, boolean leftToRight) {
@@ -88,7 +82,7 @@ public class Bonus extends MovingActor {
         GameLevel level = gameContext.gameLevel();
 
         // Portal tiles are the only tiles outside the world map that can be accessed
-        if (!level.isTileInsideWorld(tile)) {
+        if (level.worldMap().outOfWorld(tile)) {
             return level.isTileInPortalSpace(tile);
         }
         if (level.house().isPresent() && level.house().get().isTileInHouseArea(tile)) {

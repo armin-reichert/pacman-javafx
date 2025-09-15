@@ -578,7 +578,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     protected boolean isBonusReached() {
-        return gameLevel().eatenFoodCount() == 64 || gameLevel().eatenFoodCount() == 176;
+        return gameLevel().foodStore().eatenFoodCount() == 64 || gameLevel().foodStore().eatenFoodCount() == 176;
     }
 
     private byte computeBonusSymbol(int levelNumber) {
@@ -637,9 +637,9 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     @Override
     protected void checkIfPacManFindsFood() {
         Vector2i tile = gameLevel().pac().tile();
-        if (gameLevel().tileContainsFood(tile)) {
+        if (gameLevel().foodStore().tileContainsFood(tile)) {
             gameLevel().pac().starvingIsOver();
-            gameLevel().registerFoodEatenAt(tile);
+            gameLevel().foodStore().registerFoodEatenAt(tile);
             optGateKeeper().ifPresent(gateKeeper -> gateKeeper.registerFoodEaten(gameLevel()));
             if (gameLevel().isEnergizerPosition(tile)) {
                 simulationStep.foundEnergizerAtTile = tile;

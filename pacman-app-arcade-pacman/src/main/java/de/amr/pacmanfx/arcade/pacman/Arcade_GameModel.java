@@ -172,9 +172,9 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     @Override
     protected void checkIfPacManFindsFood() {
         Vector2i tile = gameLevel().pac().tile();
-        if (gameLevel().tileContainsFood(tile)) {
+        if (gameLevel().foodStore().tileContainsFood(tile)) {
             gameLevel().pac().starvingIsOver();
-            gameLevel().registerFoodEatenAt(tile);
+            gameLevel().foodStore().registerFoodEatenAt(tile);
             if (gameLevel().isEnergizerPosition(tile)) {
                 onEnergizerEaten(tile);
             } else {
@@ -268,9 +268,9 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     private void updateCruiseElroyMode() {
-        if (gameLevel().uneatenFoodCount() == gameLevel().data().elroy1DotsLeft()) {
+        if (gameLevel().foodStore().uneatenFoodCount() == gameLevel().data().elroy1DotsLeft()) {
             cruiseElroy = 1;
-        } else if (gameLevel().uneatenFoodCount() == gameLevel().data().elroy2DotsLeft()) {
+        } else if (gameLevel().foodStore().uneatenFoodCount() == gameLevel().data().elroy2DotsLeft()) {
             cruiseElroy = 2;
         }
     }

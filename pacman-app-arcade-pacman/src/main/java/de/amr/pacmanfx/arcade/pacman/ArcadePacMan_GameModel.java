@@ -327,7 +327,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
 
     @Override
     protected boolean isBonusReached() {
-        return gameLevel().eatenFoodCount() == 70 || gameLevel().eatenFoodCount() == 170;
+        return gameLevel().foodStore().eatenFoodCount() == 70 || gameLevel().foodStore().eatenFoodCount() == 170;
     }
 
     @Override

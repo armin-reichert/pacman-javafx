@@ -172,7 +172,7 @@ public abstract class Ghost extends MovingActor {
         GameLevel level = gameContext.gameLevel();
 
         // Portal tiles are the only tiles outside the world map that can be accessed
-        if (!level.isTileInsideWorld(tile)) {
+        if (level.worldMap().outOfWorld(tile)) {
             return level.isTileInPortalSpace(tile);
         }
         // Hunting ghosts cannot enter some tiles in Pac-Man game from below

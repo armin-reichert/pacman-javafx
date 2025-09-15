@@ -8,7 +8,6 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.timer.Pulse;
-import de.amr.pacmanfx.lib.worldmap.FoodTile;
 import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.actors.*;
@@ -22,7 +21,6 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
 import static de.amr.pacmanfx.lib.worldmap.FoodTile.ENERGIZER;
-import static de.amr.pacmanfx.lib.worldmap.FoodTile.PELLET;
 import static de.amr.pacmanfx.lib.worldmap.TerrainTile.TUNNEL;
 import static de.amr.pacmanfx.lib.worldmap.TerrainTile.isBlocked;
 import static de.amr.pacmanfx.lib.worldmap.WorldMapFormatter.formatTile;
@@ -48,15 +46,10 @@ public class GameLevel {
     private final Vector2f pacStartPosition;
     private final Vector2i[] ghostScatterTiles = new Vector2i[4];
     private final Direction[] ghostStartDirections = new Direction[4];
-    private final Set<Vector2i> energizerPositions;
+    private final Set<Vector2i> energizerTiles;
     private final Portal[] portals;
 
     private House house;
-
-    // instead of Set<Vector2i> we use a bit-set indexed by top-down-left-to-right tile index
-    private final BitSet eatenFoodBits;
-    private final int totalFoodCount;
-    private int uneatenFoodCount;
 
     private boolean demoLevel;
 
@@ -75,6 +68,8 @@ public class GameLevel {
     private int gameOverStateTicks;
     private long startTime;
 
+    private final FoodStore foodStore;
+
     public GameLevel(int number, WorldMap worldMap, LevelData data) {
         this.number = requireValidLevelNumber(number);
         this.worldMap = requireNonNull(worldMap);
@@ -86,10 +81,7 @@ public class GameLevel {
         findHouse();
 
         currentBonusIndex = -1;
-        energizerPositions = worldMap.tilesContaining(LayerID.FOOD, ENERGIZER.$).collect(Collectors.toSet());
-        totalFoodCount = (int) worldMap.tilesContaining(LayerID.FOOD, PELLET.$).count() + energizerPositions.size();
-        uneatenFoodCount = totalFoodCount;
-        eatenFoodBits = new BitSet(worldMap.numCols() * worldMap.numRows());
+        energizerTiles = worldMap.tilesContaining(LayerID.FOOD, ENERGIZER.$).collect(Collectors.toSet());
 
         Vector2i pacTile = worldMap.getTerrainTileProperty(POS_PAC);
         if (pacTile == null) {
@@ -115,6 +107,8 @@ public class GameLevel {
 
         ghostScatterTiles[ORANGE_GHOST_POKEY] = worldMap.getTerrainTileProperty(POS_SCATTER_ORANGE_GHOST,
             Vector2i.of(worldMap.numRows() - EMPTY_ROWS_BELOW_MAZE, 0));
+
+        foodStore = new FoodStore(worldMap, energizerTiles);
     }
 
     private Vector2f findGhostStartPosition(byte ghostPersonality) {
@@ -191,6 +185,10 @@ public class GameLevel {
 
     public void setData(LevelData data) { this.data = data; }
     public LevelData data() { return data; }
+
+    public FoodStore foodStore() {
+        return foodStore;
+    }
 
     public List<Ghost> victims() { return victims; }
 
@@ -292,20 +290,18 @@ public class GameLevel {
         return worldMap.tiles();
     }
 
-    public boolean isTileInsideWorld(Vector2i tile) { return !worldMap.outOfWorld(tile); }
-
     public Stream<Vector2i> neighborTilesOutsideWorld(Vector2i tile) {
         requireNonNull(tile);
         return Stream.of(Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT)
             .map(dir -> tile.plus(dir.vector()))
-            .filter(not(this::isTileInsideWorld));
+            .filter(worldMap::outOfWorld);
     }
 
     public Stream<Vector2i> neighborTilesInsideWorld(Vector2i tile) {
         requireNonNull(tile);
         return Stream.of(Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT)
             .map(dir -> tile.plus(dir.vector()))
-            .filter(this::isTileInsideWorld);
+            .filter(not(worldMap::outOfWorld));
     }
 
     public List<Portal> portals() { return Arrays.asList(portals); }
@@ -316,11 +312,11 @@ public class GameLevel {
     }
 
     public boolean isTileBlocked(Vector2i tile) {
-        return isTileInsideWorld(tile) && isBlocked(worldMap.content(LayerID.TERRAIN, tile));
+        return !worldMap.outOfWorld(tile) && isBlocked(worldMap.content(LayerID.TERRAIN, tile));
     }
 
     public boolean isTunnel(Vector2i tile) {
-        return isTileInsideWorld(tile) && worldMap.content(LayerID.TERRAIN, tile) == TUNNEL.$;
+        return !worldMap.outOfWorld(tile) && worldMap.content(LayerID.TERRAIN, tile) == TUNNEL.$;
     }
 
     public boolean isIntersection(Vector2i tile) {
@@ -343,6 +339,12 @@ public class GameLevel {
         return Optional.ofNullable(house);
     }
 
+    public Set<Vector2i> energizerPositions() { return Collections.unmodifiableSet(energizerTiles); }
+
+    public boolean isEnergizerPosition(Vector2i tile) {
+        return energizerTiles.contains(tile);
+    }
+
     // Actor positions
 
     public Vector2f pacStartPosition() {
@@ -358,54 +360,5 @@ public class GameLevel {
     public Direction ghostStartDirection(byte personality) {
         requireValidGhostPersonality(personality);
         return ghostStartDirections[personality];
-    }
-
-    // Food
-
-    public int totalFoodCount() {
-        return totalFoodCount;
-    }
-
-    public int uneatenFoodCount() {
-        return uneatenFoodCount;
-    }
-
-    public int eatenFoodCount() {
-        return totalFoodCount - uneatenFoodCount;
-    }
-
-    public void registerFoodEatenAt(Vector2i tile) {
-        if (tileContainsFood(tile)) {
-            eatenFoodBits.set(worldMap.indexInRowWiseOrder(tile));
-            --uneatenFoodCount;
-        } else {
-            Logger.warn("Attempt to eat foot at tile {} that has none", tile);
-        }
-    }
-
-    public void eatAllPellets() {
-        tiles().filter(this::tileContainsFood).filter(not(this::isEnergizerPosition)).forEach(this::registerFoodEatenAt);
-    }
-
-    public void eatAllFood() {
-        tiles().filter(this::tileContainsFood).forEach(this::registerFoodEatenAt);
-    }
-
-    public boolean isFoodPosition(Vector2i tile) {
-        return isTileInsideWorld(tile) && worldMap.content(LayerID.FOOD, tile) != FoodTile.EMPTY.$;
-    }
-
-    public Set<Vector2i> energizerPositions() { return Collections.unmodifiableSet(energizerPositions); }
-
-    public boolean isEnergizerPosition(Vector2i tile) {
-        return energizerPositions.contains(tile);
-    }
-
-    public boolean tileContainsFood(Vector2i tile) {
-        return isFoodPosition(tile) && !tileContainsEatenFood(tile);
-    }
-
-    public boolean tileContainsEatenFood(Vector2i tile) {
-        return eatenFoodBits.get(worldMap.indexInRowWiseOrder(tile));
     }
 }

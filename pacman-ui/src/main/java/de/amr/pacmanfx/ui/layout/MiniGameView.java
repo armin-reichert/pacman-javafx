@@ -138,7 +138,7 @@ public class MiniGameView extends VBox {
             var info = RenderInfo.build(Map.of(
                 CommonRenderInfo.MAZE_BRIGHT, false,
                 CommonRenderInfo.MAZE_BLINKING, gameLevel.blinking().isOn(),
-                CommonRenderInfo.MAZE_EMPTY, gameLevel.uneatenFoodCount() == 0,
+                CommonRenderInfo.MAZE_EMPTY, gameLevel.foodStore().uneatenFoodCount() == 0,
                 CommonRenderInfo.TICK, ui.clock().tickCount()
             ));
             gameLevelRenderer.applyLevelSettings(gameLevel, info);

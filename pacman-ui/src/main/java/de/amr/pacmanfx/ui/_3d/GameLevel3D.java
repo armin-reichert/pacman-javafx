@@ -593,7 +593,7 @@ public class GameLevel3D extends Group implements Disposable {
         double maxExtent = Math.max(Math.max(bounds.getWidth(), bounds.getHeight()), bounds.getDepth());
         double scaling = (2 * radius) / maxExtent;
         var scale = new Scale(scaling, scaling, scaling);
-        pellets3D = gameLevel.tiles().filter(gameLevel::tileContainsFood)
+        pellets3D = gameLevel.tiles().filter(gameLevel.foodStore()::tileContainsFood)
             .filter(tile -> !gameLevel.isEnergizerPosition(tile))
             .map(tile -> createPellet3D(mesh, scale, tile))
             .collect(Collectors.toCollection(HashSet::new));
@@ -637,7 +637,7 @@ public class GameLevel3D extends Group implements Disposable {
             revivalPositionCenter(ghostRevivalTiles[ORANGE_GHOST_POKEY])
         };
 
-        energizers3D = gameLevel.tiles().filter(gameLevel::tileContainsFood)
+        energizers3D = gameLevel.tiles().filter(gameLevel.foodStore()::tileContainsFood)
             .filter(gameLevel::isEnergizerPosition)
             .map(tile -> createEnergizer3D(tile, radius, minScaling, maxScaling, ghostDressMaterials, ghostRevivalCenters))
             .collect(Collectors.toCollection(HashSet::new));

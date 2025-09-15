@@ -95,10 +95,10 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseSpriteRenderer impleme
     }
 
     private void drawPellets(GameLevel gameLevel, Color pelletColor) {
-        gameLevel.tiles().filter(gameLevel::isFoodPosition).filter(not(gameLevel::isEnergizerPosition)).forEach(tile -> {
+        gameLevel.tiles().filter(gameLevel.foodStore()::isFoodPosition).filter(not(gameLevel::isEnergizerPosition)).forEach(tile -> {
             ctx().setFill(backgroundColor());
             fillSquareAtTileCenter(tile, 4);
-            if (!gameLevel.tileContainsEatenFood(tile)) {
+            if (!gameLevel.foodStore().tileContainsEatenFood(tile)) {
                 // draw pellet using the right color
                 ctx().setFill(pelletColor);
                 fillSquareAtTileCenter(tile, 2);
@@ -112,7 +112,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseSpriteRenderer impleme
         gameLevel.tiles().filter(gameLevel::isEnergizerPosition).forEach(tile -> {
             ctx().setFill(backgroundColor());
             fillSquareAtTileCenter(tile, TS + 2);
-            if (!gameLevel.tileContainsEatenFood(tile) && gameLevel.blinking().isOn()) {
+            if (!gameLevel.foodStore().tileContainsEatenFood(tile) && gameLevel.blinking().isOn()) {
                 ctx().setFill(pelletColor);
                 // draw pixelated "circle"
                 double cx = tile.x() * TS, cy = tile.y() * TS;
