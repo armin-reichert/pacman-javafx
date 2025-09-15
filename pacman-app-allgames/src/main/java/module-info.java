@@ -3,7 +3,7 @@ Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
 
-module org.amr.pacmanfx.all {
+module pacmanfx.all {
     requires javafx.graphics;
     requires de.amr.pacmanfx.core;
     requires de.amr.pacmanfx.uilib;
