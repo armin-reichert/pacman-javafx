@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.rendering;
 
-import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.Obstacle;
 import de.amr.pacmanfx.lib.worldmap.ObstacleSegment;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
@@ -118,12 +117,13 @@ public class TerrainMapVectorRenderer extends BaseRenderer implements TerrainMap
 
     private void drawObstacle(Obstacle obstacle, double lineWidth, boolean fillInside, Color fillColor, Color strokeColor) {
         int r = HTS;
-        Vector2i p = obstacle.startPoint();
+        int x = obstacle.startPoint().x();
+        int y = obstacle.startPoint().y();
         ctx().beginPath();
-        ctx().moveTo(p.x(), p.y());
+        ctx().moveTo(x, y);
         for (ObstacleSegment segment : obstacle.segments()) {
-            p = p.plus(segment.vector());
-            double x = p.x(), y = p.y();
+            x += segment.vector().x();
+            y += segment.vector().y();
             if (segment.isStraightLine()) {
                 ctx().lineTo(x, y);
             } else {
