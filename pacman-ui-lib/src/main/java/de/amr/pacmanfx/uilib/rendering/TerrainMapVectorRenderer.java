@@ -6,6 +6,7 @@ package de.amr.pacmanfx.uilib.rendering;
 
 import de.amr.pacmanfx.lib.worldmap.Obstacle;
 import de.amr.pacmanfx.lib.worldmap.ObstacleSegment;
+import de.amr.pacmanfx.lib.worldmap.TerrainTile;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -128,33 +129,36 @@ public class TerrainMapVectorRenderer extends BaseRenderer implements TerrainMap
                 ctx().lineTo(x, y);
             } else {
                 boolean counterClockwise = segment.ccw();
-                if (segment.isRoundedNWCorner()) {
-                    if (counterClockwise) ctx().arc(x+r, y, r, r,  90, 90); else ctx().arc(x, y+r, r, r, 180, -90);
-                }
-                else if (segment.isRoundedSWCorner()) {
-                    if (counterClockwise) ctx().arc(x, y-r, r, r, 180, 90); else ctx().arc(x+r, y, r, r, 270, -90);
-                }
-                else if (segment.isRoundedSECorner()) {
-                    if (counterClockwise) ctx().arc(x-r, y, r, r, 270, 90); else ctx().arc(x, y-r, r, r, 0, -90);
-                }
-                else if (segment.isRoundedNECorner()) {
-                    if (counterClockwise) ctx().arc(x, y+r, r, r, 0, 90); else ctx().arc(x-r, y, r, r, 90, -90);
-                }
-                else if (segment.isAngularNWCorner()) {
-                    if (counterClockwise) ctx().lineTo(x,y-r); else ctx().lineTo(x-r, y);
-                    ctx().lineTo(x, y);
-                }
-                else if (segment.isAngularSWCorner()) {
-                    if (counterClockwise) ctx().lineTo(x-r, y); else ctx().lineTo(x, y+r);
-                    ctx().lineTo(x, y);
-                }
-                else if (segment.isAngularSECorner()) {
-                    if (counterClockwise) ctx().lineTo(x,y+r); else ctx().lineTo(x-r, y);
-                    ctx().lineTo(x, y);
-                }
-                else if (segment.isAngularNECorner()) {
-                    if (counterClockwise) ctx().lineTo(x+r, y); else ctx().lineTo(x-r, y-r);
-                    ctx().lineTo(x, y);
+                TerrainTile terrainTile = TerrainTile.values()[segment.encoding()];
+                switch (terrainTile) {
+                    case ARC_NW -> {
+                        if (counterClockwise) ctx().arc(x+r, y, r, r,  90, 90); else ctx().arc(x, y+r, r, r, 180, -90);
+                    }
+                    case ARC_SW -> {
+                        if (counterClockwise) ctx().arc(x, y-r, r, r, 180, 90); else ctx().arc(x+r, y, r, r, 270, -90);
+                    }
+                    case ARC_SE -> {
+                        if (counterClockwise) ctx().arc(x-r, y, r, r, 270, 90); else ctx().arc(x, y-r, r, r, 0, -90);
+                    }
+                    case ARC_NE -> {
+                        if (counterClockwise) ctx().arc(x, y+r, r, r, 0, 90); else ctx().arc(x-r, y, r, r, 90, -90);
+                    }
+                    case ANG_ARC_NW -> {
+                        if (counterClockwise) ctx().lineTo(x,y-r); else ctx().lineTo(x-r, y);
+                        ctx().lineTo(x, y);
+                    }
+                    case ANG_ARC_SW -> {
+                        if (counterClockwise) ctx().lineTo(x-r, y); else ctx().lineTo(x, y+r);
+                        ctx().lineTo(x, y);
+                    }
+                    case ANG_ARC_SE -> {
+                        if (counterClockwise) ctx().lineTo(x,y+r); else ctx().lineTo(x-r, y);
+                        ctx().lineTo(x, y);
+                    }
+                    case ANG_ARC_NE -> {
+                        if (counterClockwise) ctx().lineTo(x+r, y); else ctx().lineTo(x-r, y-r);
+                        ctx().lineTo(x, y);
+                    }
                 }
             }
         }

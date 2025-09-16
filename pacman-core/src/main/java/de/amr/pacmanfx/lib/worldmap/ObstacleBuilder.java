@@ -101,7 +101,7 @@ public class ObstacleBuilder {
             .filter(not(this::isTileExplored))
             .filter(tile ->
                     worldMap.content(LayerID.TERRAIN, tile) == ARC_NW.$ ||
-                    worldMap.content(LayerID.TERRAIN, tile) == DARC_NW.$) // house top-left corner
+                    worldMap.content(LayerID.TERRAIN, tile) == ANG_ARC_NW.$) // house top-left corner
             .map(cornerNW -> {
                 Obstacle obstacle = buildObstacle(cornerNW, tilesWithErrors);
                 // Handle special case where left-upper corner of closed border is not at x == 0:
@@ -209,7 +209,7 @@ public class ObstacleBuilder {
                     errorAtCurrentTile(tilesWithErrors);
                 }
             }
-            else if (tileContent == ARC_SW.$ || tileContent == DARC_SW.$) {
+            else if (tileContent == ARC_SW.$ || tileContent == ANG_ARC_SW.$) {
                 if (cursor.points(Direction.DOWN)) {
                     ccw = true;
                     obstacle.addSegment(SEG_ARC_SW_DOWN, ccw, tileContent);
@@ -222,7 +222,7 @@ public class ObstacleBuilder {
                     errorAtCurrentTile(tilesWithErrors);
                 }
             }
-            else if (tileContent == ARC_SE.$ || tileContent == DARC_SE.$) {
+            else if (tileContent == ARC_SE.$ || tileContent == ANG_ARC_SE.$) {
                 if (cursor.points(Direction.DOWN)) {
                     ccw = false;
                     obstacle.addSegment(SEG_ARC_SE_DOWN, ccw, tileContent);
@@ -237,7 +237,7 @@ public class ObstacleBuilder {
                     errorAtCurrentTile(tilesWithErrors);
                 }
             }
-            else if (tileContent == ARC_NE.$ || tileContent == DARC_NE.$) {
+            else if (tileContent == ARC_NE.$ || tileContent == ANG_ARC_NE.$) {
                 if (cursor.points(Direction.UP)) {
                     ccw = true;
                     obstacle.addSegment(SEG_ARC_NE_UP, ccw, tileContent);
@@ -252,7 +252,7 @@ public class ObstacleBuilder {
                     errorAtCurrentTile(tilesWithErrors);
                 }
             }
-            else if (tileContent == ARC_NW.$ || tileContent == DARC_NW.$) {
+            else if (tileContent == ARC_NW.$ || tileContent == ANG_ARC_NW.$) {
                 if (cursor.points(Direction.UP)) {
                     ccw = false;
                     obstacle.addSegment(SEG_ARC_NW_UP, ccw, tileContent);

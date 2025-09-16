@@ -59,10 +59,10 @@ public class TileMatcher {
     }
 
     public byte matchTerrainTile(int[] tilePixels) {
-        if (matchesAngularDoubleNWCorner(tilePixels)) return DARC_NW.$;
-        if (matchesAngularDoubleSWCorner(tilePixels)) return DARC_SW.$;
-        if (matchesAngularDoubleSECorner(tilePixels)) return DARC_SE.$;
-        if (matchesAngularDoubleNECorner(tilePixels)) return DARC_NE.$;
+        if (matchesAngularDoubleNWCorner(tilePixels)) return ANG_ARC_NW.$;
+        if (matchesAngularDoubleSWCorner(tilePixels)) return ANG_ARC_SW.$;
+        if (matchesAngularDoubleSECorner(tilePixels)) return ANG_ARC_SE.$;
+        if (matchesAngularDoubleNECorner(tilePixels)) return ANG_ARC_NE.$;
         //TODO: what if door and fill color are equal?
         if (matchesDoor(tilePixels))     return DOOR.$;
         if (matchesHWall(tilePixels))    return WALL_H.$;

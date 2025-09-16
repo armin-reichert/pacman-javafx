@@ -8,18 +8,24 @@ public enum TerrainTile {
     EMPTY          (0x00),
     WALL_H         (0x01),
     WALL_V         (0x02),
+
+    // Rounded arcs
     ARC_NW         (0x03),
     ARC_NE         (0x04),
     ARC_SE         (0x05),
     ARC_SW         (0x06),
+
     TUNNEL         (0x07),
     // 0x08..0x0d
     DOOR           (0x0e),
     // 0x0f
-    DARC_NW        (0x10),
-    DARC_NE        (0x11),
-    DARC_SE        (0x12),
-    DARC_SW        (0x13),
+
+    // Angular arcs
+    ANG_ARC_NW     (0x10),
+    ANG_ARC_NE     (0x11),
+    ANG_ARC_SE     (0x12),
+    ANG_ARC_SW     (0x13),
+
     ONE_WAY_UP     (0x14),
     ONE_WAY_RIGHT  (0x15),
     ONE_WAY_DOWN   (0x16),
@@ -41,9 +47,9 @@ public enum TerrainTile {
             || code == ARC_NW.$
             || code == ARC_SE.$
             || code == ARC_SW.$
-            || code == DARC_NE.$
-            || code == DARC_NW.$
-            || code == DARC_SE.$
-            || code == DARC_SW.$;
+            || code == ANG_ARC_NE.$
+            || code == ANG_ARC_NW.$
+            || code == ANG_ARC_SE.$
+            || code == ANG_ARC_SW.$;
     }
 }

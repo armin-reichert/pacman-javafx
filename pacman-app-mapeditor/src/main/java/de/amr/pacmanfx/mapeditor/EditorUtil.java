@@ -51,10 +51,10 @@ public interface EditorUtil {
         if (code == TerrainTile.ARC_NW.$)  return TerrainTile.ARC_NE.$;
         if (code == TerrainTile.ARC_SE.$)  return TerrainTile.ARC_SW.$;
         if (code == TerrainTile.ARC_SW.$)  return TerrainTile.ARC_SE.$;
-        if (code == TerrainTile.DARC_NE.$) return TerrainTile.DARC_NW.$;
-        if (code == TerrainTile.DARC_NW.$) return TerrainTile.DARC_NE.$;
-        if (code == TerrainTile.DARC_SE.$) return TerrainTile.DARC_SW.$;
-        if (code == TerrainTile.DARC_SW.$) return TerrainTile.DARC_SE.$;
+        if (code == TerrainTile.ANG_ARC_NE.$) return TerrainTile.ANG_ARC_NW.$;
+        if (code == TerrainTile.ANG_ARC_NW.$) return TerrainTile.ANG_ARC_NE.$;
+        if (code == TerrainTile.ANG_ARC_SE.$) return TerrainTile.ANG_ARC_SW.$;
+        if (code == TerrainTile.ANG_ARC_SW.$) return TerrainTile.ANG_ARC_SE.$;
         return code;
     }
 

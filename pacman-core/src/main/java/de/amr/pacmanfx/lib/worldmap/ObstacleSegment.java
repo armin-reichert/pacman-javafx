@@ -24,10 +24,10 @@ public record ObstacleSegment(Vector2i startPoint, Vector2i vector, boolean ccw,
     public boolean isRoundedSECorner() { return encoding == TerrainTile.ARC_SE.$; }
     public boolean isRoundedNECorner() { return encoding == TerrainTile.ARC_NE.$; }
 
-    public boolean isAngularNWCorner() { return encoding == TerrainTile.DARC_NW.$; }
-    public boolean isAngularSWCorner() { return encoding == TerrainTile.DARC_SW.$; }
-    public boolean isAngularSECorner() { return encoding == TerrainTile.DARC_SE.$;}
-    public boolean isAngularNECorner() { return encoding == TerrainTile.DARC_NE.$; }
+    public boolean isAngularNWCorner() { return encoding == TerrainTile.ANG_ARC_NW.$; }
+    public boolean isAngularSWCorner() { return encoding == TerrainTile.ANG_ARC_SW.$; }
+    public boolean isAngularSECorner() { return encoding == TerrainTile.ANG_ARC_SE.$;}
+    public boolean isAngularNECorner() { return encoding == TerrainTile.ANG_ARC_NE.$; }
 
     public boolean isNWCorner() {
         return isRoundedNWCorner() || isAngularNWCorner();
