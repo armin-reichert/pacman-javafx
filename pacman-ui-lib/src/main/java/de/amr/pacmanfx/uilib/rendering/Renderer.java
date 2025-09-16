@@ -13,8 +13,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
-import static java.util.Objects.requireNonNull;
-
 public interface Renderer {
 
     GraphicsContext ctx();
@@ -53,14 +51,7 @@ public interface Renderer {
      * @param y           y-coordinate of left-upper corner
      * @param scaled      tells is the destination rectangle's position and size is scaled using the current scaling value
      */
-    default void drawSprite(RectShort sprite, double x, double y, boolean scaled) {
-        requireNonNull(sprite);
-        double s = scaled ? scaling() : 1;
-        ctx().setImageSmoothing(imageSmoothing());
-        ctx().drawImage(spriteSheet().sourceImage(),
-            sprite.x(), sprite.y(), sprite.width(), sprite.height(),
-            s * x, s * y, s * sprite.width(), s * sprite.height());
-    }
+    void drawSprite(RectShort sprite, double x, double y, boolean scaled);
 
     /**
      * Draws the sprite centered over the given position. The target position is scaled using the current scaling value.
@@ -68,11 +59,14 @@ public interface Renderer {
      * @param center position over which sprite gets drawn
      * @param sprite the actor sprite
      */
-    default void drawSpriteCentered(Vector2f center, RectShort sprite) {
-        drawSpriteCentered(center.x(), center.y(), sprite);
-    }
+    void drawSpriteCentered(Vector2f center, RectShort sprite);
 
-    default void drawSpriteCentered(double centerX, double centerY, RectShort sprite) {
-        drawSprite(sprite, centerX - 0.5 * sprite.width(), centerY - 0.5 * sprite.height(), true);
-    }
+    /**
+     * Draws the sprite centered over the given position. The target position is scaled using the current scaling value.
+     *
+     * @param centerX x-position over which sprite gets drawn
+     * @param centerY y-position over which sprite gets drawn
+     * @param sprite the actor sprite
+     */
+    void drawSpriteCentered(double centerX, double centerY, RectShort sprite);
 }

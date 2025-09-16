@@ -4,6 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.rendering;
 
+import de.amr.pacmanfx.lib.RectShort;
+import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
@@ -52,7 +54,6 @@ public class BaseRenderer implements Renderer {
         this.spriteSheet = spriteSheet;
     }
 
-
     @Override
     public GraphicsContext ctx() {
         return ctx;
@@ -96,6 +97,17 @@ public class BaseRenderer implements Renderer {
         return backgroundColor.get();
     }
 
+
+    @Override
+    public void setImageSmoothing(boolean imageSmoothing) {
+        this.imageSmoothing = imageSmoothing;
+    }
+
+    @Override
+    public boolean imageSmoothing() {
+        return imageSmoothing;
+    }
+
     /**
      * @return Arcade font at size "one tile" (8px) scaled with the current renderer scaling.
      */
@@ -107,14 +119,6 @@ public class BaseRenderer implements Renderer {
      * @return Arcade font at size 6px scaled with the current renderer scaling.
      */
     public Font arcadeFont6() { return arcadeFont6.get(); }
-
-    /**
-     * @param size unscaled font size
-     * @return the Arcade font at the given size scaled by the current renderer scaling value
-     */
-    public Font arcadeFont(double size) {
-        return Font.font(ARCADE_FONT_TS.getFamily(), scaled(size));
-    }
 
     /**
      * Fills a square at the center of the given tile with the current fill color. Used to hide pellets, energizers
@@ -179,18 +183,28 @@ public class BaseRenderer implements Renderer {
     }
 
     @Override
-    public void setImageSmoothing(boolean imageSmoothing) {
-        this.imageSmoothing = imageSmoothing;
-    }
-
-    @Override
-    public boolean imageSmoothing() {
-        return imageSmoothing;
-    }
-
-    @Override
     public SpriteSheet<?> spriteSheet() {
         return spriteSheet;
+    }
+
+    @Override
+    public void drawSprite(RectShort sprite, double x, double y, boolean scaled) {
+        requireNonNull(sprite);
+        double s = scaled ? scaling() : 1;
+        ctx().setImageSmoothing(imageSmoothing());
+        ctx().drawImage(spriteSheet().sourceImage(),
+            sprite.x(), sprite.y(), sprite.width(), sprite.height(),
+            s * x, s * y, s * sprite.width(), s * sprite.height());
+    }
+
+    @Override
+    public void drawSpriteCentered(Vector2f center, RectShort sprite) {
+        drawSpriteCentered(center.x(), center.y(), sprite);
+    }
+
+    @Override
+    public void drawSpriteCentered(double centerX, double centerY, RectShort sprite) {
+        drawSprite(sprite, centerX - 0.5 * sprite.width(), centerY - 0.5 * sprite.height(), true);
     }
 
     public void drawTileGrid(double sizeX, double sizeY, Color gridColor) {
