@@ -290,7 +290,7 @@ public class EditCanvas extends Canvas {
             renderer.setColorScheme(colorScheme);
             renderer.setSegmentNumbersDisplayed(segmentNumbersVisible.get());
             renderer.setObstacleInnerAreaDisplayed(obstacleInnerAreaDisplayed.get());
-            renderer.draw(worldMap(), worldMap().obstacles());
+            renderer.draw(worldMap());
             obstacleEditor.draw(renderer);
         }
 

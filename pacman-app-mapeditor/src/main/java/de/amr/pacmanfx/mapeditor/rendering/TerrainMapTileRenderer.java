@@ -45,10 +45,10 @@ public class TerrainMapTileRenderer extends BaseRenderer implements TerrainMapRe
     public static final String TUNNEL_SYMBOL = "\uD83D\uDE87";
 
     public static final Map<Direction, String> ONE_WAY_SYMBOLS = Map.of(
-            Direction.UP, "\u2191",
-            Direction.DOWN, "\u2193",
-            Direction.LEFT, "\u2190",
-            Direction.RIGHT, "\u2192"
+        Direction.LEFT,  "\u2190",
+        Direction.UP,    "\u2191",
+        Direction.RIGHT, "\u2192",
+        Direction.DOWN,  "\u2193"
     );
 
     private static final Color[] RANDOM_COLORS = new Color[30];
@@ -98,7 +98,7 @@ public class TerrainMapTileRenderer extends BaseRenderer implements TerrainMapRe
     }
 
     @Override
-    public void draw(WorldMap worldMap, Set<Obstacle> obstacles) {
+    public void draw(WorldMap worldMap) {
         ctx.save();
         ctx.scale(scaling(), scaling());
         worldMap.tiles().forEach(tile -> {
@@ -110,10 +110,10 @@ public class TerrainMapTileRenderer extends BaseRenderer implements TerrainMapRe
         specialTile(worldMap, WorldMapProperty.POS_SCATTER_CYAN_GHOST).ifPresent(tile -> drawScatterTarget(tile, Color.CYAN));
         specialTile(worldMap, WorldMapProperty.POS_SCATTER_ORANGE_GHOST).ifPresent(tile -> drawScatterTarget(tile, Color.ORANGE));
         if (segmentNumbersDisplayed) {
-            drawObstacleSegmentNumbers(worldMap, obstacles);
+            drawObstacleSegmentNumbers(worldMap, worldMap.obstacles());
         }
         if (obstacleInnerAreaDisplayed) {
-            drawObstacleInnerAreas(worldMap, obstacles);
+            drawObstacleInnerAreas(worldMap, worldMap.obstacles());
         }
         ctx.restore();
     }

@@ -15,10 +15,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
-import java.util.Set;
-
 import static de.amr.pacmanfx.Globals.HTS;
-import static de.amr.pacmanfx.Globals.TS;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -97,18 +94,26 @@ public class TerrainMapVectorRenderer extends BaseRenderer implements TerrainMap
         super(canvas);
     }
 
-    public void draw(WorldMap worldMap, Set<Obstacle> obstacles) {
+    public void draw(WorldMap worldMap) {
         ctx().save();
         ctx().scale(scaling(), scaling());
-        for (Obstacle obstacle : obstacles) {
+        for (Obstacle obstacle : worldMap.obstacles()) {
             if (obstacle.borderObstacle()) {
-                drawObstacle(obstacle, borderWallFullWidth(), false, colorScheme().wallFillColor(), colorScheme().wallStrokeColor());
-                drawObstacle(obstacle, borderWallInnerWidth(), false, colorScheme().wallFillColor(), colorScheme().wallFillColor());
+                drawDoubleStripedObstacle(obstacle);
             } else {
-                drawObstacle(obstacle, innerWallWidth(), true, colorScheme().wallFillColor(), colorScheme().wallStrokeColor());
+                drawSingleStripedObstacle(obstacle);
             }
         }
         ctx().restore();
+    }
+
+    private void drawDoubleStripedObstacle(Obstacle obstacle) {
+        drawObstacle(obstacle, borderWallFullWidth(),  false, colorScheme().wallFillColor(), colorScheme().wallStrokeColor());
+        drawObstacle(obstacle, borderWallInnerWidth(), false, colorScheme().wallFillColor(), colorScheme().wallFillColor());
+    }
+
+    private void drawSingleStripedObstacle(Obstacle obstacle) {
+        drawObstacle(obstacle, innerWallWidth(), true, colorScheme().wallFillColor(), colorScheme().wallStrokeColor());
     }
 
     private void drawObstacle(Obstacle obstacle, double lineWidth, boolean fillInside, Color fillColor, Color strokeColor) {

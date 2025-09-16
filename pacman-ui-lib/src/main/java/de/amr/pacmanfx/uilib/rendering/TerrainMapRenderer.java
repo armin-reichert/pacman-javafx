@@ -17,5 +17,5 @@ public interface TerrainMapRenderer extends Renderer {
 
     ObjectProperty<TerrainMapColorScheme> colorSchemeProperty();
 
-    void draw(WorldMap worldMap, Set<Obstacle> obstacles);
+    void draw(WorldMap worldMap);
 }

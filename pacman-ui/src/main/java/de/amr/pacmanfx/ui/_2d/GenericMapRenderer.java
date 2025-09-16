@@ -59,12 +59,12 @@ public class GenericMapRenderer extends BaseRenderer {
         WorldMap worldMap = gameLevel.worldMap();
         if (info.getBoolean(CommonRenderInfoKey.MAZE_BRIGHT)) {
             terrainRenderer.setColorScheme(info.getBoolean(CommonRenderInfoKey.MAZE_BLINKING) ? blinkingOnColors : blinkingOffColors);
-            terrainRenderer.draw(worldMap, worldMap.obstacles());
+            terrainRenderer.draw(worldMap);
         }
         else {
             TerrainMapColorScheme colorScheme = info.get("terrainMapColorScheme", TerrainMapColorScheme.class);
             terrainRenderer.setColorScheme(colorScheme);
-            terrainRenderer.draw(worldMap, worldMap.obstacles());
+            terrainRenderer.draw(worldMap);
 
             gameLevel.house().ifPresent(house -> {
                 houseRenderer.setColorScheme(colorScheme);
