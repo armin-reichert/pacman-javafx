@@ -50,11 +50,11 @@ public class ArcadePacMan_GameLevelRenderer extends BaseRenderer implements Game
         int emptySpaceOverMaze = GameLevel.EMPTY_ROWS_OVER_MAZE * TS;
         ctx().save();
         ctx().scale(scaling(), scaling());
-        if (info.getBoolean(CommonRenderInfo.MAZE_BRIGHT)) {
+        if (info.getBoolean(CommonRenderInfoKey.MAZE_BRIGHT)) {
             Image brightMazeImage = uiConfig.assets().image("maze.bright");
             ctx().drawImage(brightMazeImage, 0, emptySpaceOverMaze);
         }
-        else if (info.getBoolean(CommonRenderInfo.MAZE_EMPTY)) {
+        else if (info.getBoolean(CommonRenderInfoKey.MAZE_EMPTY)) {
             drawSprite(spriteSheet().sprite(SpriteID.MAP_EMPTY), 0, emptySpaceOverMaze, false);
             // over-paint door tiles
             gameLevel.house().map(House::leftDoorTile) .ifPresent(tile -> fillSquareAtTileCenter(tile, TS + 0.5));
@@ -69,7 +69,7 @@ public class ArcadePacMan_GameLevelRenderer extends BaseRenderer implements Game
                 .forEach(tile -> fillSquareAtTileCenter(tile, 4));
             // Over-paint eaten or dark-blinking energizer tiles
             gameLevel.energizerPositions().stream()
-                .filter(tile -> !info.getBoolean(CommonRenderInfo.MAZE_BLINKING) || gameLevel.foodStore().tileContainsEatenFood(tile))
+                .filter(tile -> !info.getBoolean(CommonRenderInfoKey.MAZE_BLINKING) || gameLevel.foodStore().tileContainsEatenFood(tile))
                 .forEach(tile -> fillSquareAtTileCenter(tile, 10));
         }
         ctx().restore();

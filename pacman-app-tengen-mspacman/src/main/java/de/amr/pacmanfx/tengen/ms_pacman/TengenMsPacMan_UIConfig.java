@@ -34,7 +34,7 @@ import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.MsPacMan3D;
 import de.amr.pacmanfx.uilib.model3D.MsPacManBody;
-import de.amr.pacmanfx.uilib.rendering.CommonRenderInfo;
+import de.amr.pacmanfx.uilib.rendering.CommonRenderInfoKey;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -456,19 +456,19 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
         WorldMap worldMap = gameLevel.worldMap();
         MazeSpriteSet mazeSpriteSet = worldMap.getConfigValue(PROPERTY_MAZE_SPRITE_SET);
         ColoredSpriteImage flashingMazeSprite = mazeSpriteSet.flashingMazeImages().get(frame);
-        info.put(CommonRenderInfo.MAZE_IMAGE, flashingMazeSprite.spriteSheetImage());
-        info.put(CommonRenderInfo.MAZE_SPRITE, flashingMazeSprite.sprite());
+        info.put(CommonRenderInfoKey.MAZE_IMAGE, flashingMazeSprite.spriteSheetImage());
+        info.put(CommonRenderInfoKey.MAZE_SPRITE, flashingMazeSprite.sprite());
     }
 
     public void configureNormalMazeRenderInfo(RenderInfo info, MapCategory mapCategory, WorldMap worldMap, long tick) {
         int mapNumber = worldMap.getConfigValue(PROPERTY_MAP_NUMBER);
         MazeSpriteSet mazeSpriteSet = worldMap.getConfigValue(PROPERTY_MAZE_SPRITE_SET);
-        info.put(CommonRenderInfo.MAZE_IMAGE, mazeSpriteSet.mazeImage().spriteSheetImage());
+        info.put(CommonRenderInfoKey.MAZE_IMAGE, mazeSpriteSet.mazeImage().spriteSheetImage());
         if (mapCategory == MapCategory.STRANGE && mapNumber == 15) {
             int spriteIndex = mazeAnimationSpriteIndex(tick);
-            info.put(CommonRenderInfo.MAZE_SPRITE, nonArcadeMapsSpriteSheet().spriteSequence(MAZE32_ANIMATED)[spriteIndex]);
+            info.put(CommonRenderInfoKey.MAZE_SPRITE, nonArcadeMapsSpriteSheet().spriteSequence(MAZE32_ANIMATED)[spriteIndex]);
         } else {
-            info.put(CommonRenderInfo.MAZE_SPRITE, mazeSpriteSet.mazeImage().sprite());
+            info.put(CommonRenderInfoKey.MAZE_SPRITE, mazeSpriteSet.mazeImage().sprite());
         }
     }
 

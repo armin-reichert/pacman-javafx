@@ -30,7 +30,7 @@ import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
-import de.amr.pacmanfx.uilib.rendering.CommonRenderInfo;
+import de.amr.pacmanfx.uilib.rendering.CommonRenderInfoKey;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -511,10 +511,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
 
             var renderInfo = new RenderInfo();
             if (levelCompletedAnimation != null && mazeHighlighted.get()) {
-                renderInfo.put(CommonRenderInfo.MAZE_BRIGHT, true);
-                renderInfo.put(CommonRenderInfo.MAZE_FLASHING_INDEX, levelCompletedAnimation.flashingIndex());
+                renderInfo.put(CommonRenderInfoKey.MAZE_BRIGHT, true);
+                renderInfo.put(CommonRenderInfoKey.MAZE_FLASHING_INDEX, levelCompletedAnimation.flashingIndex());
             } else {
-                renderInfo.put(CommonRenderInfo.MAZE_BRIGHT, false);
+                renderInfo.put(CommonRenderInfoKey.MAZE_BRIGHT, false);
             }
             renderInfo.put("tick", ui.clock().tickCount());
             gameLevelRenderer.drawGameLevel(gameLevel, renderInfo);

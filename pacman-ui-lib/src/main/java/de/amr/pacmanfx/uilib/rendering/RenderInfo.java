@@ -3,14 +3,18 @@ package de.amr.pacmanfx.uilib.rendering;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.util.Objects.requireNonNull;
+
 public class RenderInfo {
 
     private final Map<String, Object> map = new HashMap<>();
 
-    public static RenderInfo build(Map<String, Object> map) {
-        var info = new RenderInfo();
-        info.map.putAll(map);
-        return info;
+    public RenderInfo() {
+    }
+
+    public RenderInfo(Map<String, Object> map) {
+        requireNonNull(map);
+        this.map.putAll(map);
     }
 
     public boolean getBoolean(String key) {

@@ -10,7 +10,7 @@ import de.amr.pacmanfx.model.GameLevelMessage;
 import de.amr.pacmanfx.model.MessageType;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.CommonRenderInfo;
+import de.amr.pacmanfx.uilib.rendering.CommonRenderInfoKey;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
 import javafx.scene.canvas.Canvas;
@@ -50,10 +50,10 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements Ga
         int colorMapIndex = gameLevel.worldMap().getConfigValue("colorMapIndex");
         ctx().save();
         ctx().scale(scaling(), scaling());
-        if (info.getBoolean(CommonRenderInfo.MAZE_BRIGHT)) {
+        if (info.getBoolean(CommonRenderInfoKey.MAZE_BRIGHT)) {
             Image mazeImage = uiConfig.assets().image("maze.bright.%d".formatted(colorMapIndex));
             ctx.drawImage(mazeImage, 0, emptySpaceOverMaze);
-        } else if (info.getBoolean(CommonRenderInfo.MAZE_EMPTY)) {
+        } else if (info.getBoolean(CommonRenderInfoKey.MAZE_EMPTY)) {
             RectShort mazeSprite = spriteSheet().spriteSequence(SpriteID.EMPTY_MAZES)[colorMapIndex];
             drawSprite(mazeSprite, 0, emptySpaceOverMaze, false);
         } else {
@@ -66,7 +66,7 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements Ga
                 .forEach(tile -> fillSquareAtTileCenter(tile, 4));
             // Over-paint eaten and dark-phase energizers
             gameLevel.energizerPositions().stream()
-                .filter(tile -> !info.getBoolean(CommonRenderInfo.MAZE_BLINKING) || gameLevel.foodStore().tileContainsEatenFood(tile))
+                .filter(tile -> !info.getBoolean(CommonRenderInfoKey.MAZE_BLINKING) || gameLevel.foodStore().tileContainsEatenFood(tile))
                 .forEach(tile -> fillSquareAtTileCenter(tile, 10));
         }
         ctx().restore();
