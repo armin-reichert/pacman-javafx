@@ -22,45 +22,39 @@ import static de.amr.pacmanfx.Globals.TS;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Displays a Pac-Man shape for each live remaining.
+ * Displays a Pac-Man shape sitting on a pillar for each live remaining.
  */
 public class LivesCounter3D extends Group implements Disposable {
 
-    private final ObjectProperty<Color>         pillarColorProperty = new SimpleObjectProperty<>(Color.grayRgb(120));
-    private final ObjectProperty<PhongMaterial> pillarMaterialProperty = new SimpleObjectProperty<>(new PhongMaterial());
-    private final DoubleProperty                pillarHeightProperty = new SimpleDoubleProperty(8);
+    private final ObjectProperty<Color> pillarColor = new SimpleObjectProperty<>(Color.grayRgb(120));
+    private final ObjectProperty<PhongMaterial> pillarMaterial = new SimpleObjectProperty<>(new PhongMaterial());
+    private final DoubleProperty pillarHeight = new SimpleDoubleProperty(8);
 
-    private final ObjectProperty<Color>         plateColorProperty = new SimpleObjectProperty<>(Color.grayRgb(180));
-    private final ObjectProperty<PhongMaterial> plateMaterialProperty = new SimpleObjectProperty<>(new PhongMaterial());
-    private final DoubleProperty                plateThicknessProperty = new SimpleDoubleProperty(1);
-    private final DoubleProperty                plateRadiusProperty = new SimpleDoubleProperty(6);
+    private final DoubleProperty plateThickness = new SimpleDoubleProperty(1);
+    private final DoubleProperty plateRadius = new SimpleDoubleProperty(6);
+    private final ObjectProperty<Color> plateColor = new SimpleObjectProperty<>(Color.grayRgb(180));
+    private final ObjectProperty<PhongMaterial> plateMaterial = new SimpleObjectProperty<>(new PhongMaterial());
 
-    private final IntegerProperty               livesCountProperty = new SimpleIntegerProperty(0);
+    private final IntegerProperty livesCount = new SimpleIntegerProperty(0);
 
-    private final List<NodeTracker> trackers;
-    //private final PointLight light = new PointLight();
+    private final List<NodePositionTracker> trackers;
 
     public void startTracking(Node target) {
-        for (NodeTracker tracker : trackers) {
-            tracker.startTracking(target);
+        for (NodePositionTracker tracker : trackers) {
+            tracker.startTrackingTarget(target);
         }
     }
 
     public void stopTracking() {
-        for (NodeTracker tracker : trackers) {
+        for (NodePositionTracker tracker : trackers) {
             tracker.stopTracking();
         }
     }
 
     public LivesCounter3D(AnimationRegistry animationRegistry, Node[] pacShapeArray) {
         requireNonNull(animationRegistry);
-        pillarMaterialProperty.bind(pillarColorProperty.map(Ufx::coloredPhongMaterial));
-        plateMaterialProperty.bind((plateColorProperty.map(Ufx::coloredPhongMaterial)));
-
-        //light.setMaxRange  (TS * (pacShapeArray.length + 1));
-        //light.setTranslateX(TS * (pacShapeArray.length - 1));
-        //light.setTranslateY(TS * (-1));
-        //light.translateZProperty().bind(pillarHeightProperty.add(20).multiply(-1));
+        pillarMaterial.bind(pillarColor.map(Ufx::coloredPhongMaterial));
+        plateMaterial.bind((plateColor.map(Ufx::coloredPhongMaterial)));
 
         var standsGroup = new Group();
         for (int i = 0; i < pacShapeArray.length; ++i) {
@@ -71,22 +65,22 @@ public class LivesCounter3D extends Group implements Disposable {
             pacShape.setUserData(i);
             pacShape.setTranslateX(x);
             pacShape.setTranslateY(0);
-            pacShape.visibleProperty().bind(livesCountProperty.map(count -> count.intValue() > (int) pacShape.getUserData()));
+            pacShape.visibleProperty().bind(livesCount.map(count -> count.intValue() > (int) pacShape.getUserData()));
 
             var pillar = new Cylinder(1, 0.1);
-            pillar.heightProperty().bind(pillarHeightProperty.add(i % 2 == 0 ? 0 : 4));
-            pillar.materialProperty().bind(pillarMaterialProperty);
+            pillar.heightProperty().bind(pillarHeight.add(i % 2 == 0 ? 0 : 4));
+            pillar.materialProperty().bind(pillarMaterial);
             pillar.setTranslateX(x);
             pillar.translateZProperty().bind(pillar.heightProperty().multiply(-0.5));
             pillar.setRotationAxis(Rotate.X_AXIS);
             pillar.setRotate(90);
 
             var podium = new Cylinder();
-            podium.radiusProperty().bind(plateRadiusProperty);
-            podium.heightProperty().bind(plateThicknessProperty);
-            podium.materialProperty().bind(plateMaterialProperty);
+            podium.radiusProperty().bind(plateRadius);
+            podium.heightProperty().bind(plateThickness);
+            podium.materialProperty().bind(plateMaterial);
             podium.setTranslateX(x);
-            podium.translateZProperty().bind(pillar.heightProperty().add(plateThicknessProperty).negate());
+            podium.translateZProperty().bind(pillar.heightProperty().add(plateThickness).negate());
             podium.setRotationAxis(Rotate.X_AXIS);
             podium.setRotate(90);
 
@@ -94,32 +88,40 @@ public class LivesCounter3D extends Group implements Disposable {
             standsGroup.getChildren().add(stand);
 
             // let Pac shape sit on top of plate
-            pacShape.translateZProperty().bind(pillar.heightProperty().add(plateThicknessProperty).add(shapeRadius).negate());
+            pacShape.translateZProperty().bind(pillar.heightProperty().add(plateThickness).add(shapeRadius).negate());
 
             getChildren().add(pacShape);
         }
         getChildren().addAll(standsGroup /*, light*/);
 
         trackers = new ArrayList<>();
-        for (Node shape : pacShapeArray) {
-            trackers.add(new NodeTracker(shape));
+        for (Node pacShape : pacShapeArray) {
+            trackers.add(new NodePositionTracker(pacShape));
         }
     }
 
-    public IntegerProperty livesCountProperty() { return livesCountProperty; }
-    public ObjectProperty<Color> pillarColorProperty() { return pillarColorProperty; }
-    public ObjectProperty<Color> plateColorProperty() { return plateColorProperty; }
+    public IntegerProperty livesCountProperty() {
+        return livesCount;
+    }
+
+    public ObjectProperty<Color> pillarColorProperty() {
+        return pillarColor;
+    }
+
+    public ObjectProperty<Color> plateColorProperty() {
+        return plateColor;
+    }
 
     @Override
     public void dispose() {
         stopTracking();
-        livesCountProperty.unbind();
-        pillarHeightProperty.unbind();
-        pillarMaterialProperty.unbind();
-        pillarColorProperty.unbind();
-        plateColorProperty.unbind();
-        plateThicknessProperty.unbind();
-        plateRadiusProperty.unbind();
-        plateMaterialProperty.unbind();
+        livesCount.unbind();
+        pillarHeight.unbind();
+        pillarMaterial.unbind();
+        pillarColor.unbind();
+        plateColor.unbind();
+        plateThickness.unbind();
+        plateRadius.unbind();
+        plateMaterial.unbind();
     }
 }

@@ -11,7 +11,12 @@ import javafx.scene.transform.Rotate;
 
 import static java.util.Objects.requireNonNull;
 
-public class NodeTracker {
+/**
+ * Keeps the rotation of an observer node always directed towards the current location of an observed node. Used to let
+ * the Pac-Man shapes in the life counter keep looking at the current Pac-Man position.
+ */
+public class NodePositionTracker {
+    private static final float SMOOTHING_FACTOR = 0.2f;
     private static final int ANGLE_TOWARDS_VIEWER = -90;
 
     private final AnimationTimer timer;
@@ -19,17 +24,19 @@ public class NodeTracker {
     private Node target;
     private double currentAngle;
 
-    public NodeTracker(Node observer) {
+    public NodePositionTracker(Node observer) {
         this.observer = requireNonNull(observer);
         timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                updateObserverRotation();
+                if (target != null) {
+                    rotateTowardsTarget();
+                }
             }
         };
     }
 
-    public void startTracking(Node target) {
+    public void startTrackingTarget(Node target) {
         this.target = requireNonNull(target);
         timer.start();
     }
@@ -38,16 +45,14 @@ public class NodeTracker {
         timer.stop();
     }
 
-    private void updateObserverRotation() {
-        if (target == null) return;
-        Point2D targetPos = target.localToScene(Point2D.ZERO);
+    private void rotateTowardsTarget() {
         Point2D observerPos = observer.localToScene(Point2D.ZERO);
-        Point2D arrow = (targetPos.subtract(observerPos)).normalize();
-        double phi = Math.toDegrees(Math.atan2(arrow.getX(), arrow.getY()));
+        Point2D targetPos = target.localToScene(Point2D.ZERO);
+        Point2D dirVector = (targetPos.subtract(observerPos)).normalize();
+        double phi = Math.toDegrees(Math.atan2(dirVector.getX(), dirVector.getY()));
         double angle = ANGLE_TOWARDS_VIEWER - phi;
+        currentAngle += (angle - currentAngle) * SMOOTHING_FACTOR;
         observer.setRotationAxis(Rotate.Z_AXIS);
-
-        currentAngle += (angle - currentAngle) * 0.2; // smoothing
         observer.setRotate(angle);
     }
 }
