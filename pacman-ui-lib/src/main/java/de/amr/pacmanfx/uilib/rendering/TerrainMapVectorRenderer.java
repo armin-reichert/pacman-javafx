@@ -8,7 +8,6 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.Obstacle;
 import de.amr.pacmanfx.lib.worldmap.ObstacleSegment;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
-import de.amr.pacmanfx.model.GameLevel;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -27,7 +26,7 @@ import static java.util.Objects.requireNonNull;
  * Border walls are drawn as double lines where area between these lines is filled with wall fill color,
  * inner obstacles are drawn with single line border and inner area filled with wall fill color.
  */
-public class TerrainMapVectorRenderer extends BaseCanvasRenderer implements TerrainMapRenderer {
+public class TerrainMapVectorRenderer extends BaseRenderer implements TerrainMapRenderer {
 
     /** Width of double lines used for border walls. */
     public static final double DEFAULT_BORDER_WALL_FULL_WIDTH = 4;

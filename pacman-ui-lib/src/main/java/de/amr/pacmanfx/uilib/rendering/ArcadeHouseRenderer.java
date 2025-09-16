@@ -9,7 +9,7 @@ import javafx.scene.paint.Color;
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 
-public class ArcadeHouseRenderer extends BaseCanvasRenderer {
+public class ArcadeHouseRenderer extends BaseRenderer {
 
     private final ObjectProperty<TerrainMapColorScheme> colorScheme = new SimpleObjectProperty<>(TerrainMapRenderer.DEFAULT_COLOR_SCHEME);
 

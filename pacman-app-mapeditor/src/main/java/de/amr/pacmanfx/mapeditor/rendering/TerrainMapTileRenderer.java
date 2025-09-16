@@ -11,7 +11,7 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.*;
 import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.uilib.Ufx;
-import de.amr.pacmanfx.uilib.rendering.BaseCanvasRenderer;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapColorScheme;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapRenderer;
 import de.amr.pacmanfx.uilib.rendering.TileRenderer;
@@ -37,7 +37,7 @@ import static de.amr.pacmanfx.lib.worldmap.TerrainTile.*;
 /**
  * Tile-based renderer used in editor. At runtime and in the 2D editor preview, the path based renderer is used.
  */
-public class TerrainMapTileRenderer extends BaseCanvasRenderer implements TerrainMapRenderer, TileRenderer {
+public class TerrainMapTileRenderer extends BaseRenderer implements TerrainMapRenderer, TileRenderer {
 
     public static final Font SYMBOL_FONT = Font.font("Monospace", FontWeight.NORMAL, 8);
     public static final Color SYMBOL_COLOR = Color.gray(0.6);

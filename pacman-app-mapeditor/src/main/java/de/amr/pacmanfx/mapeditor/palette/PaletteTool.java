@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.mapeditor.palette;
 
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.uilib.rendering.CanvasRenderer;
+import de.amr.pacmanfx.uilib.rendering.Renderer;
 
 import java.util.function.Consumer;
 
@@ -28,5 +28,5 @@ public interface PaletteTool {
      * @param row grid row of the tile in the palette
      * @param col grid column of the tile in the palette
      */
-    void draw(CanvasRenderer renderer, int row, int col);
+    void draw(Renderer renderer, int row, int col);
 }

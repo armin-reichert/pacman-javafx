@@ -13,7 +13,8 @@ import de.amr.pacmanfx.model.ScoreManager;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.*;
 import de.amr.pacmanfx.uilib.GameClock;
-import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.rendering.Renderer;
 import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -24,7 +25,7 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesColor;
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HUDRenderer {
+public class TengenMsPacMan_HUDRenderer extends BaseRenderer implements HUDRenderer, Renderer {
 
     private final TengenMsPacMan_UIConfig uiConfig;
     private final GameClock clock;

@@ -2,7 +2,7 @@ package de.amr.pacmanfx.uilib.rendering;
 
 import de.amr.pacmanfx.model.actors.Actor;
 
-public interface ActorRenderer extends CanvasRenderer {
+public interface ActorRenderer extends Renderer {
 
     /**
      * Draws an actor (Pac-Man, ghost, moving bonus, etc.) if it is visible.

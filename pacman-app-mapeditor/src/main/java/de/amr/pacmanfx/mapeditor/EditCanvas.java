@@ -44,8 +44,8 @@ import static java.util.Objects.requireNonNull;
 
 public class EditCanvas extends Canvas {
 
-    static class EditCanvasRenderer extends TerrainMapTileRenderer implements ActorSpriteRenderer {
-        public EditCanvasRenderer(Canvas canvas) {
+    static class EditRenderer extends TerrainMapTileRenderer implements ActorSpriteRenderer {
+        public EditRenderer(Canvas canvas) {
             super(canvas);
         }
     }
@@ -73,7 +73,7 @@ public class EditCanvas extends Canvas {
     private final ObstacleEditor obstacleEditor;
     private final ContextMenu contextMenu = new ContextMenu();
 
-    private final EditCanvasRenderer renderer;
+    private final EditRenderer renderer;
     private final FoodMapRenderer foodRenderer;
 
     private final EditorUI ui;
@@ -116,7 +116,7 @@ public class EditCanvas extends Canvas {
         terrainVisibleProperty()            .bind(ui.terrainVisibleProperty());
         worldMapProperty()                  .bind(ui.editor().currentWorldMapProperty());
 
-        renderer = new EditCanvasRenderer(this);
+        renderer = new EditRenderer(this);
         renderer.scalingProperty().bind(scaling);
 
         foodRenderer = new FoodMapRenderer(this);

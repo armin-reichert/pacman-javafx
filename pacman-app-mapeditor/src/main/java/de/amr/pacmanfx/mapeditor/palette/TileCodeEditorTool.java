@@ -9,7 +9,7 @@ import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.mapeditor.actions.Action_SetFoodTileCode;
 import de.amr.pacmanfx.mapeditor.actions.Action_SetTerrainTileCode;
-import de.amr.pacmanfx.uilib.rendering.CanvasRenderer;
+import de.amr.pacmanfx.uilib.rendering.Renderer;
 import de.amr.pacmanfx.uilib.rendering.TileRenderer;
 
 import java.util.function.Consumer;
@@ -41,7 +41,7 @@ public class TileCodeEditorTool implements PaletteTool {
     }
 
     @Override
-    public void draw(CanvasRenderer renderer, int row, int col) {
+    public void draw(Renderer renderer, int row, int col) {
         if (renderer instanceof TileRenderer tileRenderer) {
             tileRenderer.drawTile(new Vector2i(col, row), code);
         }

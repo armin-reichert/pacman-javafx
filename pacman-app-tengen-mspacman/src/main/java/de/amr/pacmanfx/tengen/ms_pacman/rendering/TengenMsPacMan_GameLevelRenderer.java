@@ -13,10 +13,7 @@ import de.amr.pacmanfx.model.House;
 import de.amr.pacmanfx.model.MessageType;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
-import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
-import de.amr.pacmanfx.uilib.rendering.CommonRenderInfo;
-import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
-import de.amr.pacmanfx.uilib.rendering.RenderInfo;
+import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -31,7 +28,7 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
-public class TengenMsPacMan_GameLevelRenderer extends BaseSpriteRenderer implements GameLevelRenderer {
+public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements GameLevelRenderer, Renderer {
 
     private final TengenMsPacMan_UIConfig uiConfig;
 

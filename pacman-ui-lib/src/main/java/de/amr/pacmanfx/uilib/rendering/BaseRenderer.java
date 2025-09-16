@@ -6,6 +6,7 @@ package de.amr.pacmanfx.uilib.rendering;
 
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -21,12 +22,12 @@ import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static java.util.Objects.requireNonNull;
 
-public class BaseCanvasRenderer implements CanvasRenderer {
+public class BaseRenderer implements Renderer {
 
     public static final Font ARCADE_FONT_TS;
 
     static {
-        ResourceManager rm = () -> BaseCanvasRenderer.class;
+        ResourceManager rm = () -> BaseRenderer.class;
         ARCADE_FONT_TS = rm.loadFont("/de/amr/pacmanfx/uilib/fonts/emulogic.ttf", TS);
     }
 
@@ -36,14 +37,21 @@ public class BaseCanvasRenderer implements CanvasRenderer {
     private final ObjectProperty<Font> arcadeFont6 = new SimpleObjectProperty<>();
 
     protected final GraphicsContext ctx;
-    private boolean imageSmoothing;
+    protected boolean imageSmoothing;
+    protected SpriteSheet<?> spriteSheet;
 
-    public BaseCanvasRenderer(Canvas canvas) {
+    public BaseRenderer(Canvas canvas) {
         ctx = requireNonNull(canvas).getGraphicsContext2D();
         ctx.setImageSmoothing(false);
         arcadeFontTS.bind(scaling.map(s -> Font.font(ARCADE_FONT_TS.getFamily(), scaled(TS))));
         arcadeFont6.bind(scaling.map(s -> Font.font(ARCADE_FONT_TS.getFamily(), scaled(6))));
     }
+
+    public BaseRenderer(Canvas canvas, SpriteSheet<?> spriteSheet) {
+        this(canvas);
+        this.spriteSheet = spriteSheet;
+    }
+
 
     @Override
     public GraphicsContext ctx() {
@@ -164,6 +172,25 @@ public class BaseCanvasRenderer implements CanvasRenderer {
         ctx.setTextAlign(TextAlignment.CENTER);
         fillText(text, color, font, x, y);
         ctx.restore();
+    }
+
+    public void setSpriteSheet(SpriteSheet<?> spriteSheet) {
+        this.spriteSheet = spriteSheet;
+    }
+
+    @Override
+    public void setImageSmoothing(boolean imageSmoothing) {
+        this.imageSmoothing = imageSmoothing;
+    }
+
+    @Override
+    public boolean imageSmoothing() {
+        return imageSmoothing;
+    }
+
+    @Override
+    public SpriteSheet<?> spriteSheet() {
+        return spriteSheet;
     }
 
     public void drawTileGrid(double sizeX, double sizeY, Color gridColor) {

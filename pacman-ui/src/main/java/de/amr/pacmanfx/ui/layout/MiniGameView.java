@@ -46,7 +46,7 @@ public class MiniGameView extends VBox {
 
     private final GameUI ui;
 
-    private final BaseCanvasRenderer canvasRenderer;
+    private final BaseRenderer canvasRenderer;
     private GameLevelRenderer gameLevelRenderer;
     private ActorRenderer actorRenderer;
 
@@ -69,7 +69,7 @@ public class MiniGameView extends VBox {
             worldSize, canvas.heightProperty()
         ));
 
-        canvasRenderer = new BaseCanvasRenderer(canvas);
+        canvasRenderer = new BaseRenderer(canvas);
 
         // The VBox fills the complete parent container height (why?), so we put the canvas
         // into an HBox that does not grow in height and provides some padding around the canvas.

@@ -18,7 +18,7 @@ import static java.util.function.Predicate.not;
 /**
  * Draws wall and obstacle paths generated at runtime from the 2D tile map data.
  */
-public class GenericMapRenderer extends BaseCanvasRenderer {
+public class GenericMapRenderer extends BaseRenderer {
 
     private final TerrainMapVectorRenderer terrainRenderer;
     private final FoodMapRenderer foodRenderer;

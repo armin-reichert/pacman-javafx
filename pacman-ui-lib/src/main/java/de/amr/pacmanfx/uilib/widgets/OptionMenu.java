@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.widgets;
 
-import de.amr.pacmanfx.uilib.rendering.BaseCanvasRenderer;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -50,7 +50,7 @@ public class OptionMenu {
     private final BorderPane root = new BorderPane();
     protected final Canvas canvas = new Canvas();
     protected final GraphicsContext g = canvas.getGraphicsContext2D();
-    protected final BaseCanvasRenderer canvasRenderer = new BaseCanvasRenderer(canvas);
+    protected final BaseRenderer canvasRenderer = new BaseRenderer(canvas);
 
     private OptionMenuStyle style = OptionMenuStyle.DEFAULT_OPTION_MENU_STYLE;
     private final Timeline animation;

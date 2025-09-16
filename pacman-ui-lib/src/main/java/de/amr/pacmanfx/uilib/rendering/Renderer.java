@@ -1,12 +1,43 @@
+/*
+Copyright (c) 2021-2025 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.pacmanfx.uilib.rendering;
 
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 import static java.util.Objects.requireNonNull;
 
-public interface SpriteRenderer extends CanvasRenderer {
+public interface Renderer {
+
+    GraphicsContext ctx();
+
+    DoubleProperty scalingProperty();
+
+    double scaling();
+
+    void setScaling(double value);
+
+    default double scaled(double value) { return scaling() * value; }
+
+    ObjectProperty<Color> backgroundColorProperty();
+
+    void setBackgroundColor(Color color);
+
+    Color backgroundColor();
+
+    void fillCanvas(Paint paint);
+
+    default void clearCanvas() {
+        fillCanvas(backgroundColor());
+    }
 
     SpriteSheet<?> spriteSheet();
 

@@ -9,7 +9,7 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.mapeditor.EditorUI;
 import de.amr.pacmanfx.mapeditor.actions.Action_SetTerrainProperty;
 import de.amr.pacmanfx.model.WorldMapProperty;
-import de.amr.pacmanfx.uilib.rendering.CanvasRenderer;
+import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -38,7 +38,7 @@ public class ActorTool extends PropertyValueEditorTool {
     }
 
     @Override
-    public void draw(CanvasRenderer renderer, int row, int col) {
+    public void draw(Renderer renderer, int row, int col) {
         GraphicsContext ctx = renderer.ctx();
         ctx.save();
         ctx.setImageSmoothing(true);

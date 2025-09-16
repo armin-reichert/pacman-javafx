@@ -15,10 +15,10 @@ import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Properties;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
-import de.amr.pacmanfx.uilib.rendering.CanvasRenderer;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.DebugInfoRenderer;
 import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
+import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -43,7 +43,7 @@ public abstract class GameScene2D implements GameScene {
     protected final AnimationRegistry animationRegistry;
     protected final List<Actor> actorsInZOrder = new ArrayList<>();
 
-    protected BaseSpriteRenderer sceneRenderer;
+    protected BaseRenderer sceneRenderer;
     protected DebugInfoRenderer debugInfoRenderer;
 
     protected GameScene2D(GameUI ui) {
@@ -78,7 +78,7 @@ public abstract class GameScene2D implements GameScene {
 
     protected abstract void doEnd();
 
-    public BaseSpriteRenderer sceneRenderer() {
+    public Renderer sceneRenderer() {
         return sceneRenderer;
     }
 
@@ -86,11 +86,11 @@ public abstract class GameScene2D implements GameScene {
 
     public void createRenderers(Canvas canvas) {
         requireNonNull(canvas);
-        sceneRenderer     = configureRenderer(new BaseSpriteRenderer(canvas));
+        sceneRenderer     = configureRenderer(new BaseRenderer(canvas));
         debugInfoRenderer = configureRenderer(new DefaultDebugInfoRenderer(ui, canvas));
     }
 
-    protected final <T extends CanvasRenderer> T configureRenderer(T renderer) {
+    protected final <T extends Renderer> T configureRenderer(T renderer) {
         renderer.backgroundColorProperty().bind(GameUI_Properties.PROPERTY_CANVAS_BACKGROUND_COLOR);
         renderer.scalingProperty().bind(scaling);
         return renderer;

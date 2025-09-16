@@ -11,7 +11,7 @@ import javafx.scene.paint.Color;
 
 import java.util.Set;
 
-public interface TerrainMapRenderer extends CanvasRenderer {
+public interface TerrainMapRenderer extends Renderer {
 
     TerrainMapColorScheme DEFAULT_COLOR_SCHEME = new TerrainMapColorScheme(Color.BLACK, Color.RED,  Color.GOLD, Color.PINK);
 

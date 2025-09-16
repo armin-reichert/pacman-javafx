@@ -17,7 +17,8 @@ import de.amr.pacmanfx.tengen.ms_pacman.scenes.Stork;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
-import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.scene.canvas.Canvas;
 import org.tinylog.Logger;
 
@@ -25,7 +26,7 @@ import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesColor;
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_ActorRenderer extends BaseSpriteRenderer implements ActorRenderer {
+public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements ActorRenderer, Renderer {
 
     private final TengenMsPacMan_UIConfig uiConfig;
 

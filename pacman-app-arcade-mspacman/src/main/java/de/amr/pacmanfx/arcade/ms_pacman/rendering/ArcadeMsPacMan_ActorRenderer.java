@@ -10,13 +10,13 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
-import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_WHITE;
 import static java.util.Objects.requireNonNull;
 
-public class ArcadeMsPacMan_ActorRenderer extends BaseSpriteRenderer implements ActorRenderer {
+public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements ActorRenderer {
 
     protected final GameUI_Config uiConfig;
 

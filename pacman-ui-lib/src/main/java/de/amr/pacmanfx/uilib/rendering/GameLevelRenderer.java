@@ -6,7 +6,7 @@ package de.amr.pacmanfx.uilib.rendering;
 
 import de.amr.pacmanfx.model.GameLevel;
 
-public interface GameLevelRenderer extends CanvasRenderer {
+public interface GameLevelRenderer extends Renderer {
 
     /**
      * Applies settings specific to the given game level to this renderer. This can be for example
