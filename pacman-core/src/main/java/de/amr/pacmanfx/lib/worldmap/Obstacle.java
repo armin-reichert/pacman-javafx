@@ -94,12 +94,8 @@ public class Obstacle {
             : segments.getLast().startPoint().plus(segments.getLast().vector());
     }
 
-    public Vector2i point(int i) {
-        return i < numSegments() ? segment(i).startPoint() : segment(i).endPoint();
-    }
-
     public boolean isClosed() {
-        return startPoint().equals(endPoint());
+        return startPoint.equals(endPoint());
     }
 
     public List<ObstacleSegment> segments() {
@@ -112,16 +108,6 @@ public class Obstacle {
 
     public ObstacleSegment segment(int i) {
         return segments.get(i);
-    }
-
-    public Vector2i cornerCenter(int segmentIndex) {
-        ObstacleSegment corner = segment(segmentIndex);
-        byte code = corner.encoding();
-        if (code == ARC_NW.$) return point(segmentIndex).plus(0, HTS);
-        if (code == ARC_SW.$) return point(segmentIndex).plus(HTS, 0);
-        if (code == ARC_SE.$) return point(segmentIndex).plus(0, -HTS);
-        if (code == ARC_NE.$) return point(segmentIndex).plus(-HTS, 0);
-        throw new IllegalStateException("No corner tile at index " + segmentIndex);
     }
 
     public Vector2f[] cornerCenterPoints() {
@@ -139,7 +125,7 @@ public class Obstacle {
     }
 
     public List<Vector2i> computeInnerPolygon() {
-        Vector2i start = startPoint();
+        Vector2i start = startPoint;
         List<Vector2i> edges1 = replaceDiagonalCornerEdges();
         List<Vector2i> edges2 = removeInversePairs(edges1);
         // Handle degenerate case
