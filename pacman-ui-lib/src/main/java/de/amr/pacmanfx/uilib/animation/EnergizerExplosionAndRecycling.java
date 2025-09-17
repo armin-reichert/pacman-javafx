@@ -5,8 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.uilib.animation;
 
 import de.amr.pacmanfx.lib.Disposable;
-import de.amr.pacmanfx.lib.Vec3f;
 import de.amr.pacmanfx.lib.Vector2f;
+import de.amr.pacmanfx.lib.Vector3f;
 import de.amr.pacmanfx.uilib.model3D.ArcadeHouse3D;
 import javafx.animation.Animation;
 import javafx.animation.Transition;
@@ -59,15 +59,16 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
     private static final float PARTICLE_SPEED_MOVING_HOME_MAX = 0.8f;
 
     private static final float GRAVITY_Z = 0.18f;
+    private static final Vector3f GRAVITY = new Vector3f(0, 0, 0.18f);
 
     public static class Particle extends Sphere implements Disposable {
         public boolean moving_home = false;
         public boolean part_of_swirl = false;
         public byte ghost_personality = -1;
         public Point3D houseTargetPosition;
-        public Vec3f velocity;
+        public Vector3f velocity;
 
-        public Particle(double radius, Material material, Vec3f velocity, Point3D origin) {
+        public Particle(double radius, Material material, Vector3f velocity, Point3D origin) {
             super(radius, PARTICLE_DIVISIONS);
             this.velocity = velocity;
             setMaterial(material);
@@ -92,13 +93,14 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
 
         public void fly() {
             move();
-            velocity.z += GRAVITY_Z;
+            velocity = velocity.add(GRAVITY);
+            //velocity.z += GRAVITY_Z;
         }
 
         public void move() {
-            setTranslateX(getTranslateX() + velocity.x);
-            setTranslateY(getTranslateY() + velocity.y);
-            setTranslateZ(getTranslateZ() + velocity.z);
+            setTranslateX(getTranslateX() + velocity.x());
+            setTranslateY(getTranslateY() + velocity.y());
+            setTranslateZ(getTranslateZ() + velocity.z());
         }
     }
 
@@ -184,10 +186,10 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
 
             float speed = randomFloat(PARTICLE_SPEED_MOVING_HOME_MIN, PARTICLE_SPEED_MOVING_HOME_MAX);
             Point3D center = particle.center();
-            particle.velocity.x = (float) (particle.houseTargetPosition.getX() - center.getX());
-            particle.velocity.y = (float) (particle.houseTargetPosition.getY() - center.getY());
-            particle.velocity.z = 0;
-            particle.velocity.normalize().multiply(speed);
+            particle.velocity = new Vector3f(
+                (float) (particle.houseTargetPosition.getX() - center.getX()),
+                (float) (particle.houseTargetPosition.getY() - center.getY()),
+                0).normalized().mul(speed);
         }
 
         private boolean moveHome(Particle particle) {
@@ -196,7 +198,7 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
             double distXY = Math.hypot(
                 center.getX() - particle.houseTargetPosition.getX(),
                 center.getY() - particle.houseTargetPosition.getY());
-            boolean homePositionReached = distXY < particle.velocity.magnitude();
+            boolean homePositionReached = distXY < particle.velocity.length();
             if (!homePositionReached) {
                 particle.move();
             }
@@ -223,8 +225,7 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
             particle.setTranslateX(particle.houseTargetPosition.getX() - swirl.getTranslateX());
             particle.setTranslateY(particle.houseTargetPosition.getY() - swirl.getTranslateY());
             particle.setTranslateZ(particle.houseTargetPosition.getZ());
-            particle.velocity.x = particle.velocity.y = 0;
-            particle.velocity.z = -SWIRL_RISING_SPEED;
+            particle.velocity = new Vector3f(0, 0, -SWIRL_RISING_SPEED);
             Platform.runLater(() -> {
                 particlesGroup.getChildren().remove(particle);
                 swirl.getChildren().add(particle);
@@ -258,7 +259,7 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
             super.stop();
             if (particles != null) {
                 for (Particle particle : particles) {
-                    particle.velocity = Vec3f.ZERO;
+                    particle.velocity = Vector3f.ZERO;
                 }
             }
         }
@@ -267,7 +268,7 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
             particles = new ArrayList<>();
             for (int i = 0; i < PARTICLE_COUNT; ++i) {
                 double radius = randomParticleRadius();
-                Vec3f velocity = randomParticleVelocity();
+                Vector3f velocity = randomParticleVelocity();
                 Particle particle = new Particle(radius, particleMaterial, velocity, origin);
                 particle.setVisible(true);
                 particles.add(particle);
@@ -281,10 +282,10 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
             return scaling * PARTICLE_MEAN_RADIUS_UNSCALED;
         }
 
-        private Vec3f randomParticleVelocity() {
+        private Vector3f randomParticleVelocity() {
             int xDir = RND.nextBoolean() ? -1 : 1;
             int yDir = RND.nextBoolean() ? -1 : 1;
-            return new Vec3f(
+            return new Vector3f(
                 xDir * randomFloat(PARTICLE_SPEED_EXPLODING_XY_MIN, PARTICLE_SPEED_EXPLODING_XY_MAX),
                 yDir * randomFloat(PARTICLE_SPEED_EXPLODING_XY_MIN, PARTICLE_SPEED_EXPLODING_XY_MAX),
                 -randomFloat(PARTICLE_SPEED_EXPLODING_Z_MIN, PARTICLE_SPEED_EXPLODING_Z_MAX)

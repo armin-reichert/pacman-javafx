@@ -25,6 +25,10 @@ public record Vector3f(float x, float y, float z) {
         return new Vector3f(x + v.x, y + v.y, z + v.z);
     }
 
+    public Vector3f mul(float s) {
+        return new Vector3f(s*x, s*y, s*z);
+    }
+
     /**
      * Computes the dot product of this vector and the given vector.
      *
