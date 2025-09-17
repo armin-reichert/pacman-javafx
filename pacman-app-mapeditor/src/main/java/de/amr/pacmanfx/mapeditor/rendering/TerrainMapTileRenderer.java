@@ -28,11 +28,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.BiPredicate;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.lib.worldmap.TerrainTile.*;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Tile-based renderer used in editor. At runtime and in the 2D editor preview, the path based renderer is used.
@@ -64,8 +66,13 @@ public class TerrainMapTileRenderer extends BaseRenderer implements TerrainMapRe
     private static final double SEGMENT_NUMBER_FONT_SIZE = 4;
     private static final Font SEGMENT_NUMBER_FONT = Font.font("Sans", FontWeight.BOLD, SEGMENT_NUMBER_FONT_SIZE);
 
-    private boolean segmentNumbersDisplayed;
-    private boolean obstacleInnerAreaDisplayed;
+    private boolean obstacleInnerAreaDisplayed = false;
+    private boolean scatterTargetsDisplayed = true;
+    private boolean segmentNumbersDisplayed = false;
+    private boolean specialTilesDisplayed = true;
+    private boolean tunnelIconsDisplayed = true;
+
+    private BiPredicate<WorldMap, Vector2i> terrainFilter = (worldMap, tile) -> true;
 
     private final double[] xp = new double[3];
     private final double[] yp = new double[3];
@@ -89,26 +96,45 @@ public class TerrainMapTileRenderer extends BaseRenderer implements TerrainMapRe
         return colorScheme;
     }
 
+
+    public void setObstacleInnerAreaDisplayed(boolean obstacleInnerAreaDisplayed) {
+        this.obstacleInnerAreaDisplayed = obstacleInnerAreaDisplayed;
+    }
+
+    public void setScatterTargetsDisplayed(boolean scatterTargetsDisplayed) {
+        this.scatterTargetsDisplayed = scatterTargetsDisplayed;
+    }
+
     public void setSegmentNumbersDisplayed(boolean segmentNumbersDisplayed) {
         this.segmentNumbersDisplayed = segmentNumbersDisplayed;
     }
 
-    public void setObstacleInnerAreaDisplayed(boolean obstacleInnerAreaDisplayed) {
-        this.obstacleInnerAreaDisplayed = obstacleInnerAreaDisplayed;
+    public void setSpecialTilesDisplayed(boolean specialTilesDisplayed) {
+        this.specialTilesDisplayed = specialTilesDisplayed;
+    }
+
+    public void setTunnelIconsDisplayed(boolean tunnelIconsDisplayed) {
+        this.tunnelIconsDisplayed = tunnelIconsDisplayed;
+    }
+
+    public void setTerrainFilter(BiPredicate<WorldMap, Vector2i> terrainFilter) {
+        this.terrainFilter = requireNonNull(terrainFilter);
     }
 
     @Override
     public void draw(WorldMap worldMap) {
         ctx.save();
         ctx.scale(scaling(), scaling());
-        worldMap.tiles().forEach(tile -> {
+        worldMap.tiles().filter(tile -> terrainFilter.test(worldMap, tile)).forEach(tile -> {
             byte code = worldMap.content(LayerID.TERRAIN, tile);
             drawTileUnscaled(tile, code);
         });
-        specialTile(worldMap, WorldMapProperty.POS_SCATTER_RED_GHOST).ifPresent(tile -> drawScatterTarget(tile, Color.RED));
-        specialTile(worldMap, WorldMapProperty.POS_SCATTER_PINK_GHOST).ifPresent(tile -> drawScatterTarget(tile, Color.PINK));
-        specialTile(worldMap, WorldMapProperty.POS_SCATTER_CYAN_GHOST).ifPresent(tile -> drawScatterTarget(tile, Color.CYAN));
-        specialTile(worldMap, WorldMapProperty.POS_SCATTER_ORANGE_GHOST).ifPresent(tile -> drawScatterTarget(tile, Color.ORANGE));
+        if (specialTilesDisplayed) {
+            specialTile(worldMap, WorldMapProperty.POS_SCATTER_RED_GHOST).ifPresent(tile -> drawScatterTarget(tile, Color.RED));
+            specialTile(worldMap, WorldMapProperty.POS_SCATTER_PINK_GHOST).ifPresent(tile -> drawScatterTarget(tile, Color.PINK));
+            specialTile(worldMap, WorldMapProperty.POS_SCATTER_CYAN_GHOST).ifPresent(tile -> drawScatterTarget(tile, Color.CYAN));
+            specialTile(worldMap, WorldMapProperty.POS_SCATTER_ORANGE_GHOST).ifPresent(tile -> drawScatterTarget(tile, Color.ORANGE));
+        }
         if (segmentNumbersDisplayed) {
             drawObstacleSegmentNumbers(worldMap, worldMap.obstacles());
         }
@@ -187,7 +213,7 @@ public class TerrainMapTileRenderer extends BaseRenderer implements TerrainMapRe
             case 0x01 -> drawWallH(tile);
             case 0x02 -> drawWallV(tile);
             case 0x03, 0x04, 0x05, 0x06 -> drawArc(tile, code);
-            case 0x07 -> drawTunnel(tile);
+            case 0x07 -> drawTunnelIcon(tile);
             case 0x0e -> drawDoor(tile, colorScheme().doorColor());
             case 0x10, 0x11, 0x12, 0x13 -> drawDCorner(tile, code, xp, yp);
             case 0x14,0x15,0x16,0x17 -> drawOneWaySign(tile, code);
@@ -202,14 +228,16 @@ public class TerrainMapTileRenderer extends BaseRenderer implements TerrainMapRe
     }
 
     public void drawScatterTarget(Vector2i tile, Color color) {
-        double x = tile.x() * TS, y = tile.y() * TS;
-        ctx.setFill(color);
-        ctx.fillRect(x, y, TS, TS);
-        ctx.setStroke(Color.WHITE);
-        ctx.setLineWidth(0.5);
-        ctx.strokeOval(x + 2, y + 2, TS - 4, TS - 4);
-        ctx.strokeLine(x + 0.5 * TS, y, x + 0.5 * TS, y + TS);
-        ctx.strokeLine(x, y + 0.5 * TS, x + TS, y + 0.5 * TS);
+        if (scatterTargetsDisplayed) {
+            double x = tile.x() * TS, y = tile.y() * TS;
+            ctx.setFill(color);
+            ctx.fillRect(x, y, TS, TS);
+            ctx.setStroke(Color.WHITE);
+            ctx.setLineWidth(0.5);
+            ctx.strokeOval(x + 2, y + 2, TS - 4, TS - 4);
+            ctx.strokeLine(x + 0.5 * TS, y, x + 0.5 * TS, y + TS);
+            ctx.strokeLine(x, y + 0.5 * TS, x + TS, y + 0.5 * TS);
+        }
     }
 
     private void drawOneWaySign(Vector2i tile, byte code) {
@@ -233,11 +261,13 @@ public class TerrainMapTileRenderer extends BaseRenderer implements TerrainMapRe
         ctx.fillText(ONE_WAY_SYMBOLS.get(dir), x + offset.getX(), y + offset.getY());
     }
 
-    private void drawTunnel(Vector2i tile) {
-        double x = tile.x() * TS, y = tile.y() * TS;
-        ctx.setFont(SYMBOL_FONT);
-        ctx.setFill(SYMBOL_COLOR);
-        ctx.fillText(TUNNEL_SYMBOL, x, y + 7);
+    private void drawTunnelIcon(Vector2i tile) {
+        if (tunnelIconsDisplayed) {
+            double x = tile.x() * TS, y = tile.y() * TS;
+            ctx.setFont(SYMBOL_FONT);
+            ctx.setFill(SYMBOL_COLOR);
+            ctx.fillText(TUNNEL_SYMBOL, x, y + 7);
+        }
     }
 
     private void drawWallH(Vector2i tile) {

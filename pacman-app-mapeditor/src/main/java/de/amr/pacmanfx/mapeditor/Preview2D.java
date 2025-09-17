@@ -6,9 +6,11 @@ package de.amr.pacmanfx.mapeditor;
 
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.LayerID;
+import de.amr.pacmanfx.lib.worldmap.TerrainTile;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.mapeditor.rendering.ActorSpriteRenderer;
 import de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites;
+import de.amr.pacmanfx.mapeditor.rendering.TerrainMapTileRenderer;
 import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.uilib.rendering.ArcadeHouseRenderer;
 import de.amr.pacmanfx.uilib.rendering.FoodMapRenderer;
@@ -35,6 +37,7 @@ public class Preview2D extends Canvas {
         }
     }
 
+    private final TerrainMapTileRenderer terrainTileRenderer;
     private final PreviewRenderer terrainRenderer;
     private final FoodMapRenderer foodRenderer;
     private final ArcadeHouseRenderer houseRenderer;
@@ -45,14 +48,30 @@ public class Preview2D extends Canvas {
     private final BooleanProperty actorsVisible = new SimpleBooleanProperty(true);
 
     public Preview2D() {
-        DoubleBinding scaling = gridSize.divide(TS);
         terrainRenderer = new PreviewRenderer(this);
-        terrainRenderer.scalingProperty().bind(scaling);
         foodRenderer = new FoodMapRenderer(this);
-        foodRenderer.scalingProperty().bind(scaling);
         houseRenderer = new ArcadeHouseRenderer(this);
-        houseRenderer.scalingProperty().bind(scaling);
         houseRenderer.colorSchemeProperty().bind(terrainRenderer.colorSchemeProperty());
+
+        // Fallback renderer for tiles that belong to incomplete obstacles
+        terrainTileRenderer = new TerrainMapTileRenderer(this);
+        terrainTileRenderer.setScatterTargetsDisplayed(false);
+        terrainTileRenderer.setTunnelIconsDisplayed(false);
+        terrainTileRenderer.setTerrainFilter((worldMap, tile) -> {
+            byte code = worldMap.content(LayerID.TERRAIN, tile);
+            return code == TerrainTile.ARC_SE.$
+                || code == TerrainTile.ARC_NE.$
+                || code == TerrainTile.ARC_SW.$
+                || code == TerrainTile.ARC_NW.$
+                || code == TerrainTile.WALL_H.$
+                || code == TerrainTile.WALL_V.$;
+        });
+
+        DoubleBinding scaling = gridSize.divide(TS);
+        terrainRenderer.scalingProperty().bind(scaling);
+        terrainTileRenderer.scalingProperty().bind(scaling);
+        foodRenderer.scalingProperty().bind(scaling);
+        houseRenderer.scalingProperty().bind(scaling);
     }
 
     public DoubleProperty gridSizeProperty() {
@@ -88,6 +107,8 @@ public class Preview2D extends Canvas {
         g.fillRect(0, 0, getWidth(), getHeight());
         if (terrainVisible.get()) {
             terrainRenderer.setColorScheme(colorScheme);
+            terrainTileRenderer.setColorScheme(colorScheme);
+            terrainTileRenderer.draw(worldMap);
             terrainRenderer.draw(worldMap);
             drawHouse(worldMap);
         }
