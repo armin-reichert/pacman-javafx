@@ -21,7 +21,7 @@ import static java.lang.Math.signum;
 public class Obstacle {
     private final Vector2i startPoint;
     private final List<ObstacleSegment> segments = new ArrayList<>();
-    private List<RectShort> innerAreaRectangles = List.of();
+    private List<RectShort> innerAreaRectangles;
 
     private boolean borderObstacle;
 
@@ -40,20 +40,22 @@ public class Obstacle {
     public void addSegment(Vector2i vector, boolean counterClockwise, byte content) {
         Objects.requireNonNull(vector);
         segments.add(new ObstacleSegment(endPoint(), vector, counterClockwise, content));
-        if (isClosed()) {
-            try {
-                Collection<Vector2i> innerPolygon = computeInnerPolygon();
-                PolygonToRectangleConverter<RectShort> converter = RectShort::new;
-                innerAreaRectangles = converter.convertPolygonToRectangles(innerPolygon);
-            } catch (Exception x) {
-                Logger.warn("Inner area rectangle partition could not be computed");
-                Logger.error(x);
-            }
-        }
     }
 
     public List<RectShort> innerAreaRectangles() {
-        return Collections.unmodifiableList(innerAreaRectangles);
+        if (innerAreaRectangles == null) {
+            if (isClosed()) {
+                try {
+                    Collection<Vector2i> innerPolygon = computeInnerPolygon();
+                    PolygonToRectangleConverter<RectShort> converter = RectShort::new;
+                    innerAreaRectangles = converter.convertPolygonToRectangles(innerPolygon);
+                } catch (Exception x) {
+                    Logger.warn("Inner area rectangle partition could not be computed");
+                    Logger.error(x);
+                }
+            }
+        }
+        return innerAreaRectangles == null ? List.of() : Collections.unmodifiableList(innerAreaRectangles);
     }
 
     public Vector2i[] points() {
@@ -135,7 +137,7 @@ public class Obstacle {
         return centerPoints.toArray(Vector2f[]::new);
     }
 
-    public Collection<Vector2i> computeInnerPolygon() {
+    public List<Vector2i> computeInnerPolygon() {
         Vector2i start = startPoint();
         List<Vector2i> edges1 = replaceDiagonalCornerEdges();
         List<Vector2i> edges2 = removeInversePairs(edges1);
