@@ -133,7 +133,8 @@ public class TerrainMapTileRenderer extends BaseRenderer implements TerrainMapRe
             ctx.setFill(Color.grayRgb(200));
             ctx.setStroke(Color.grayRgb(200));
             ctx.setLineWidth(0.5);
-            for (Vector2i p : obstacle.computeInnerPolygon()) {
+            List<Vector2i> innerPolygon = obstacle.computeInnerPolygon();
+            for (Vector2i p : innerPolygon) {
                 ctx.fillOval(p.x() - r, p.y() - r, 2*r, 2*r);
                 if (prev != null) {
                     ctx.strokeLine(prev.x(), prev.y(), p.x(), p.y());

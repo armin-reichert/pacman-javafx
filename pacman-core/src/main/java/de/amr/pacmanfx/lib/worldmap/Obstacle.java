@@ -40,6 +40,7 @@ public class Obstacle {
     public void addSegment(Vector2i vector, boolean counterClockwise, byte content) {
         Objects.requireNonNull(vector);
         segments.add(new ObstacleSegment(endPoint(), vector, counterClockwise, content));
+        innerAreaRectangles = null; // force recomputation when queried
     }
 
     public List<RectShort> innerAreaRectangles() {
