@@ -41,6 +41,7 @@ import java.util.List;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.CommonGameActions.*;
+import static de.amr.pacmanfx.ui.api.GameScene_Config.SCENE_ID_PLAY_SCENE_3D;
 import static de.amr.pacmanfx.ui.api.GameUI_Config.SCENE_ID_PLAY_SCENE_2D;
 import static de.amr.pacmanfx.ui.api.GameUI_Properties.*;
 import static de.amr.pacmanfx.uilib.Ufx.*;
@@ -70,7 +71,7 @@ public class PlayView extends StackPane implements GameUI_View {
 
     private final ActionBindingsManager actionBindings = new DefaultActionBindingsManager();
     private final GameUI ui;
-    private final Scene parentScene;
+    private final MainScene parentScene;
     private final Dashboard dashboard;
     private final CanvasWithFrame canvasWithFrame = new CanvasWithFrame();
     private final MiniGameView miniView;
@@ -80,7 +81,7 @@ public class PlayView extends StackPane implements GameUI_View {
     private final BorderPane dashboardAndMiniViewLayer = new BorderPane();
     private HelpLayer helpLayer; // help
 
-    public PlayView(GameUI ui, Scene parentScene) {
+    public PlayView(GameUI ui, MainScene parentScene) {
         this.ui = requireNonNull(ui);
         this.parentScene = requireNonNull(parentScene);
 
@@ -88,6 +89,10 @@ public class PlayView extends StackPane implements GameUI_View {
         dashboard.setVisible(false);
 
         miniView = new MiniGameView(ui);
+        miniView.visibleProperty().bind(Bindings.createObjectBinding(
+            () -> PROPERTY_MINI_VIEW_ON.get() && ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D),
+            PROPERTY_MINI_VIEW_ON, parentScene.currentGameSceneProperty()
+        ));
 
         configureCanvasWithFrame();
         createLayout();
@@ -101,7 +106,7 @@ public class PlayView extends StackPane implements GameUI_View {
             }
         });
 
-        PROPERTY_CURRENT_GAME_SCENE.addListener((py, ov, gameScene) -> {
+        parentScene.currentGameSceneProperty().addListener((py, ov, gameScene) -> {
             contextMenu.hide();
             if (gameScene != null) embedGameScene(parentScene, gameScene);
         });
@@ -258,7 +263,7 @@ public class PlayView extends StackPane implements GameUI_View {
         }
 
         if (changing) {
-            PROPERTY_CURRENT_GAME_SCENE.set(nextGameScene);
+            parentScene.currentGameSceneProperty().set(nextGameScene);
         }
     }
 

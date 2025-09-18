@@ -84,10 +84,6 @@ public class MiniGameView extends VBox {
             () -> canvas.getHeight() / worldSize.get().y(),
             canvas.heightProperty(), worldSize
         ));
-        visibleProperty().bind(Bindings.createObjectBinding(
-            () -> PROPERTY_MINI_VIEW_ON.get() && ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D),
-            PROPERTY_MINI_VIEW_ON, PROPERTY_CURRENT_GAME_SCENE
-        ));
 
         slideInAnimation = new TranslateTransition(SLIDE_IN_DURATION, this);
         slideInAnimation.setToY(0);

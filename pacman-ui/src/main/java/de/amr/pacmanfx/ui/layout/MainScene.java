@@ -17,6 +17,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
+import org.tinylog.Logger;
 
 import java.net.URL;
 import java.util.Optional;
@@ -25,7 +26,9 @@ import static java.util.Objects.requireNonNull;
 
 public class MainScene extends Scene {
 
-    private final ObjectProperty<GameUI_View> propertyCurrentView = new SimpleObjectProperty<>() {
+    private static final String CONTEXT_MENU_STYLE_PATH = "/de/amr/pacmanfx/ui/css/menu-style.css";
+
+    private final ObjectProperty<GameUI_View> currentView = new SimpleObjectProperty<>() {
         @Override
         protected void invalidated() {
             GameUI_View newView = get();
@@ -36,7 +39,7 @@ public class MainScene extends Scene {
         }
     };
 
-    private final ObjectProperty<GameScene> propertyCurrentGameScene = new SimpleObjectProperty<>();
+    private final ObjectProperty<GameScene> currentGameScene = new SimpleObjectProperty<>();
 
     private final FlashMessageView flashMessageLayer;
     private final FontIcon pausedIcon;
@@ -45,22 +48,26 @@ public class MainScene extends Scene {
     public MainScene(GameUI ui, double width, double height) {
         super(new StackPane(), width, height);
         requireNonNull(ui);
-        this.flashMessageLayer = new FlashMessageView();
 
-        URL url = getClass().getResource("/de/amr/pacmanfx/ui/css/menu-style.css");
+        flashMessageLayer = new FlashMessageView();
+
+        URL url = getClass().getResource(CONTEXT_MENU_STYLE_PATH);
         if (url != null) {
             getStylesheets().add(url.toExternalForm());
+        } else {
+            Logger.error("Could not access menu style CSS file at '{}'", CONTEXT_MENU_STYLE_PATH);
         }
 
-        // Large "paused" icon appears at center of UI
+        // Large "paused" icon wich appears at center of scene
         pausedIcon = FontIcon.of(FontAwesomeSolid.PAUSE, 80, ArcadePalette.ARCADE_WHITE);
         StackPane.setAlignment(pausedIcon, Pos.CENTER);
 
-        // Status icon box appears at bottom-left corner of any view except editor
+        // Status icon box appears at bottom-left corner of all views except editor view
         statusIconBox = new StatusIconBox();
         StackPane.setAlignment(statusIconBox, Pos.BOTTOM_LEFT);
 
-        addEventFilter(KeyEvent.KEY_PRESSED, ui.keyboard()::onKeyPressed);
+        // Keyboard events are processed by global keyboard instance and key state is stored
+        addEventFilter(KeyEvent.KEY_PRESSED,  ui.keyboard()::onKeyPressed);
         addEventFilter(KeyEvent.KEY_RELEASED, ui.keyboard()::onKeyReleased);
 
         var viewPlaceholder = new Region();
@@ -84,18 +91,18 @@ public class MainScene extends Scene {
     }
 
     public ObjectProperty<GameUI_View> currentViewProperty() {
-        return propertyCurrentView;
+        return currentView;
     }
 
     public GameUI_View currentView() {
-        return propertyCurrentView.get();
+        return currentView.get();
     }
 
     public ObjectProperty<GameScene> currentGameSceneProperty() {
-        return propertyCurrentGameScene;
+        return currentGameScene;
     }
 
     public Optional<GameScene> currentGameScene() {
-        return Optional.ofNullable(propertyCurrentGameScene.get());
+        return Optional.ofNullable(currentGameScene.get());
     }
 }

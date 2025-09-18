@@ -13,7 +13,6 @@ import javafx.scene.shape.DrawMode;
 public class GameUI_Properties {
     public static final ObjectProperty<Color>            PROPERTY_CANVAS_BACKGROUND_COLOR = new SimpleObjectProperty<>(Color.BLACK);
     public static final BooleanProperty                  PROPERTY_CANVAS_FONT_SMOOTHING = new SimpleBooleanProperty(false);
-    public static final ObjectProperty<GameScene>        PROPERTY_CURRENT_GAME_SCENE = new SimpleObjectProperty<>();
     public static final ObjectProperty<GameUI_View>      PROPERTY_CURRENT_VIEW = new SimpleObjectProperty<>();
     public static final BooleanProperty                  PROPERTY_DEBUG_INFO_VISIBLE = new SimpleBooleanProperty(false);
     public static final IntegerProperty                  PROPERTY_MINI_VIEW_HEIGHT = new SimpleIntegerProperty(400);

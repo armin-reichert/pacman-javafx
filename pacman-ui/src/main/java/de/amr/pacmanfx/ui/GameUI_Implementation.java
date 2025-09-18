@@ -130,7 +130,6 @@ public class GameUI_Implementation implements GameUI {
     }
 
     private void configureMainScene() {
-        mainScene.currentGameSceneProperty().bindBidirectional(PROPERTY_CURRENT_GAME_SCENE);
         mainScene.currentViewProperty().bindBidirectional(PROPERTY_CURRENT_VIEW);
 
         // Check if a global action is defined for the key press, otherwise let the current view handle it.
@@ -146,7 +145,7 @@ public class GameUI_Implementation implements GameUI {
         mainScene.rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
             () -> assets.background(isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D)
                 ? "background.play_scene3d" : "background.scene"),
-            PROPERTY_CURRENT_VIEW, PROPERTY_CURRENT_GAME_SCENE
+            PROPERTY_CURRENT_VIEW, mainScene.currentGameSceneProperty()
         ));
 
         // Show paused icon only in play view
@@ -178,7 +177,7 @@ public class GameUI_Implementation implements GameUI {
         stage.titleProperty().bind(createStringBinding(
             this::computeStageTitle,
             PROPERTY_CURRENT_VIEW,
-            PROPERTY_CURRENT_GAME_SCENE,
+            mainScene.currentGameSceneProperty(),
             PROPERTY_DEBUG_INFO_VISIBLE,
             PROPERTY_3D_ENABLED,
             clock().pausedProperty(),
