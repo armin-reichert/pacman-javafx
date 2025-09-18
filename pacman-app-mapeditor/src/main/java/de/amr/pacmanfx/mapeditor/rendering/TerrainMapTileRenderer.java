@@ -10,7 +10,6 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.*;
 import de.amr.pacmanfx.model.WorldMapProperty;
-import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapColorScheme;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapRenderer;
@@ -18,11 +17,13 @@ import de.amr.pacmanfx.uilib.rendering.TileRenderer;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Point2D;
+import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.TextAlignment;
 
 import java.util.List;
 import java.util.Map;
@@ -44,6 +45,8 @@ public class TerrainMapTileRenderer extends BaseRenderer implements TerrainMapRe
 
     public static final Font SYMBOL_FONT = Font.font("Monospace", FontWeight.NORMAL, 8);
     public static final Color SYMBOL_COLOR = Color.gray(0.6);
+
+    public static final Font INNER_RECT_FONT = Font.font("Sans", FontWeight.BOLD, 3.5);
 
     public static final String TUNNEL_SYMBOL = "\uD83D\uDE87";
 
@@ -146,9 +149,7 @@ public class TerrainMapTileRenderer extends BaseRenderer implements TerrainMapRe
 
     private void drawObstacleInnerAreas(Set<Obstacle> obstacles) {
         double r = 1;
-        obstacles.stream()
-                .filter(Obstacle::isClosed)
-                .filter(not(Obstacle::borderObstacle)).forEach(obstacle -> {
+        obstacles.stream().filter(Obstacle::isClosed).filter(not(Obstacle::borderObstacle)).forEach(obstacle -> {
             Vector2i prev = null;
             List<RectShort> rectangles = obstacle.innerAreaRectangles();
             for (int i = 0; i < rectangles.size(); ++i) {
@@ -156,10 +157,10 @@ public class TerrainMapTileRenderer extends BaseRenderer implements TerrainMapRe
                 ctx.setFill(RANDOM_COLORS[i % RANDOM_COLORS.length]);
                 ctx.fillRect(rect.x(), rect.y(), rect.width(), rect.height());
             }
+            List<Vector2i> innerPolygon = obstacle.computeInnerPolygon();
             ctx.setFill(Color.grayRgb(200));
             ctx.setStroke(Color.grayRgb(200));
             ctx.setLineWidth(0.5);
-            List<Vector2i> innerPolygon = obstacle.computeInnerPolygon();
             for (Vector2i p : innerPolygon) {
                 ctx.fillOval(p.x() - r, p.y() - r, 2*r, 2*r);
                 if (prev != null) {
@@ -167,12 +168,17 @@ public class TerrainMapTileRenderer extends BaseRenderer implements TerrainMapRe
                 }
                 prev = p;
             }
+            ctx.save();
+            ctx.setFill(Color.WHITE);
+            ctx.setFont(INNER_RECT_FONT);
+            ctx.setTextAlign(TextAlignment.CENTER);
+            ctx.setTextBaseline(VPos.CENTER);
             for (int i = 0; i < rectangles.size(); ++i) {
                 RectShort rect = rectangles.get(i);
-                ctx.setFill(Color.WHITE);
-                ctx.setFont(Font.font("Sans", FontWeight.BOLD, 3.5));
-                ctx.fillText("R" + (i+1), rect.x() + rect.width() * 0.5 - 3, rect.y() + rect.height() * 0.5 + 1);
+                String text = "R" + (i+1);
+                ctx.fillText(text, rect.x() + 0.5 * rect.width(), rect.y() + 0.5 * rect.height());
             }
+            ctx.restore();
         });
     }
 
@@ -187,8 +193,12 @@ public class TerrainMapTileRenderer extends BaseRenderer implements TerrainMapRe
                 Vector2f startPoint = segment.startPoint().toVector2f();
                 Vector2f endPoint = segment.endPoint().toVector2f();
                 Vector2f midpoint = startPoint.midpoint(endPoint);
-                ctx.fillText(String.valueOf(i), midpoint.x() - 0.5 * SEGMENT_NUMBER_FONT_SIZE, midpoint.y());
-                ctx.strokeText(String.valueOf(i), midpoint.x() - 0.5 * SEGMENT_NUMBER_FONT_SIZE, midpoint.y());
+                String text = String.valueOf(i);
+                ctx.save();
+                ctx.setTextAlign(TextAlignment.CENTER);
+                ctx.fillText  (text, midpoint.x(), midpoint.y());
+                ctx.strokeText(text, midpoint.x(), midpoint.y());
+                ctx.restore();
             }
         });
     }
