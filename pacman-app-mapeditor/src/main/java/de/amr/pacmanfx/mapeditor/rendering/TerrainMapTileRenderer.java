@@ -35,6 +35,7 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.lib.worldmap.TerrainTile.*;
 import static java.util.Objects.requireNonNull;
+import static java.util.function.Predicate.not;
 
 /**
  * Tile-based renderer used in editor. At runtime and in the 2D editor preview, the path based renderer is used.
@@ -61,10 +62,10 @@ public class TerrainMapTileRenderer extends BaseRenderer implements TerrainMapRe
         }
     }
 
-    private static final Color SEGMENT_NUMBER_FILL_COLOR = Color.LIGHTGRAY;
-    private static final Color SEGMENT_NUMBER_STROKE_COLOR = Color.BLACK;
+    private static final Color  SEGMENT_NUMBER_FILL_COLOR = Color.LIGHTGRAY;
+    private static final Color  SEGMENT_NUMBER_STROKE_COLOR = Color.BLACK;
     private static final double SEGMENT_NUMBER_FONT_SIZE = 4;
-    private static final Font SEGMENT_NUMBER_FONT = Font.font("Sans", FontWeight.BOLD, SEGMENT_NUMBER_FONT_SIZE);
+    private static final Font   SEGMENT_NUMBER_FONT = Font.font("Sans", FontWeight.BOLD, SEGMENT_NUMBER_FONT_SIZE);
 
     private boolean obstacleInnerAreaDisplayed = false;
     private boolean scatterTargetsDisplayed = true;
@@ -95,7 +96,6 @@ public class TerrainMapTileRenderer extends BaseRenderer implements TerrainMapRe
     public ObjectProperty<TerrainMapColorScheme> colorSchemeProperty() {
         return colorScheme;
     }
-
 
     public void setObstacleInnerAreaDisplayed(boolean obstacleInnerAreaDisplayed) {
         this.obstacleInnerAreaDisplayed = obstacleInnerAreaDisplayed;
@@ -177,18 +177,18 @@ public class TerrainMapTileRenderer extends BaseRenderer implements TerrainMapRe
     }
 
     private void drawObstacleSegmentNumbers(WorldMap worldMap, Set<Obstacle> obstacles) {
-        obstacles.stream().filter(obstacle -> !Ufx.isBorderObstacle(worldMap, obstacle)).forEach(obstacle -> {
+        ctx.setFont(SEGMENT_NUMBER_FONT);
+        ctx.setFill(SEGMENT_NUMBER_FILL_COLOR);
+        ctx.setStroke(SEGMENT_NUMBER_STROKE_COLOR);
+        ctx.setLineWidth(0.1);
+        obstacles.stream().filter(not(Obstacle::borderObstacle)).forEach(obstacle -> {
             for (int i = 0; i < obstacle.numSegments(); ++i) {
                 ObstacleSegment segment = obstacle.segment(i);
-                Vector2f start = segment.startPoint().toVector2f();
-                Vector2f end = segment.endPoint().toVector2f();
-                Vector2f  middle = start.midpoint(end);
-                ctx.setFont(SEGMENT_NUMBER_FONT);
-                ctx.setFill(SEGMENT_NUMBER_FILL_COLOR);
-                ctx.setStroke(SEGMENT_NUMBER_STROKE_COLOR);
-                ctx.setLineWidth(0.1);
-                ctx.fillText(String.valueOf(i), middle.x() - 0.5 * SEGMENT_NUMBER_FONT_SIZE, middle.y());
-                ctx.strokeText(String.valueOf(i), middle.x() - 0.5 * SEGMENT_NUMBER_FONT_SIZE, middle.y());
+                Vector2f startPoint = segment.startPoint().toVector2f();
+                Vector2f endPoint = segment.endPoint().toVector2f();
+                Vector2f midpoint = startPoint.midpoint(endPoint);
+                ctx.fillText(String.valueOf(i), midpoint.x() - 0.5 * SEGMENT_NUMBER_FONT_SIZE, midpoint.y());
+                ctx.strokeText(String.valueOf(i), midpoint.x() - 0.5 * SEGMENT_NUMBER_FONT_SIZE, midpoint.y());
             }
         });
     }
