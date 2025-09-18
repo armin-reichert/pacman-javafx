@@ -130,8 +130,6 @@ public class GameUI_Implementation implements GameUI {
     }
 
     private void configureMainScene() {
-        mainScene.currentViewProperty().bindBidirectional(PROPERTY_CURRENT_VIEW);
-
         // Check if a global action is defined for the key press, otherwise let the current view handle it.
         mainScene.setOnKeyPressed(e -> {
             AbstractGameAction matchingAction = globalActionBindings.matchingAction(keyboard).orElse(null);
@@ -145,18 +143,18 @@ public class GameUI_Implementation implements GameUI {
         mainScene.rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
             () -> assets.background(isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D)
                 ? "background.play_scene3d" : "background.scene"),
-            PROPERTY_CURRENT_VIEW, mainScene.currentGameSceneProperty()
+            mainScene.currentViewProperty(), mainScene.currentGameSceneProperty()
         ));
 
         // Show paused icon only in play view
         mainScene.pausedIcon().visibleProperty().bind(Bindings.createBooleanBinding(
             () -> currentView() == playView() && clock.isPaused(),
-            PROPERTY_CURRENT_VIEW, clock.pausedProperty())
+            mainScene.currentViewProperty(), clock.pausedProperty())
         );
 
         // hide icon box if editor view is active, avoid creation of editor view in binding expression!
         StatusIconBox statusIcons = mainScene.statusIconBox();
-        statusIcons.visibleProperty().bind(PROPERTY_CURRENT_VIEW
+        statusIcons.visibleProperty().bind(mainScene.currentViewProperty()
             .map(currentView -> optEditorView().isEmpty() || currentView != optEditorView().get()));
 
         statusIcons.iconMuted()    .visibleProperty().bind(PROPERTY_MUTED);
@@ -176,7 +174,7 @@ public class GameUI_Implementation implements GameUI {
     private void bindStageTitle(Stage stage) {
         stage.titleProperty().bind(createStringBinding(
             this::computeStageTitle,
-            PROPERTY_CURRENT_VIEW,
+            mainScene.currentViewProperty(),
             mainScene.currentGameSceneProperty(),
             PROPERTY_DEBUG_INFO_VISIBLE,
             PROPERTY_3D_ENABLED,
@@ -187,7 +185,7 @@ public class GameUI_Implementation implements GameUI {
 
     // Asset key: "app.title" or "app.title.paused"
     private String computeStageTitle() {
-        var currentView = PROPERTY_CURRENT_VIEW.get();
+        var currentView = mainScene.currentViewProperty().get();
         if (currentView == null) {
             return "No View?";
         }
@@ -229,7 +227,7 @@ public class GameUI_Implementation implements GameUI {
         }
         view.actionBindingsManager().installBindings(keyboard);
         gameContext.eventManager().addEventListener(view);
-        PROPERTY_CURRENT_VIEW.set(view);
+        mainScene.currentViewProperty().set(view);
     }
 
     /**
@@ -237,7 +235,7 @@ public class GameUI_Implementation implements GameUI {
      *
      * @see <a href="https://de.wikipedia.org/wiki/Steel_Buddies_%E2%80%93_Stahlharte_Gesch%C3%A4fte">Katastrophe!</a>
      */
-    private void ka_tas_trooo_phe(Throwable reason) {
+    private void ka_tas_tro_phe(Throwable reason) {
         Logger.error(reason);
         Logger.error("SOMETHING VERY BAD HAPPENED!");
         showFlashMessage(Duration.seconds(10), "KA-TA-STROOO-PHE!\nSOMEONE CALL AN AMBULANCE!");
@@ -250,7 +248,7 @@ public class GameUI_Implementation implements GameUI {
             gameContext.game().simulationStep().logState();
             currentGameScene().ifPresent(GameScene::update);
         } catch (Throwable x) {
-            ka_tas_trooo_phe(x);
+            ka_tas_tro_phe(x);
         }
     }
 
@@ -261,7 +259,7 @@ public class GameUI_Implementation implements GameUI {
             }
             mainScene.flashMessageLayer().update();
         } catch (Throwable x) {
-            ka_tas_trooo_phe(x);
+            ka_tas_tro_phe(x);
         }
     }
 
