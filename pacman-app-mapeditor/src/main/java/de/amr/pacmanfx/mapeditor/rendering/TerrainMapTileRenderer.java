@@ -136,19 +136,19 @@ public class TerrainMapTileRenderer extends BaseRenderer implements TerrainMapRe
             specialTile(worldMap, WorldMapProperty.POS_SCATTER_ORANGE_GHOST).ifPresent(tile -> drawScatterTarget(tile, Color.ORANGE));
         }
         if (segmentNumbersDisplayed) {
-            drawObstacleSegmentNumbers(worldMap, worldMap.obstacles());
+            drawObstacleSegmentNumbers(worldMap.obstacles());
         }
         if (obstacleInnerAreaDisplayed) {
-            drawObstacleInnerAreas(worldMap, worldMap.obstacles());
+            drawObstacleInnerAreas(worldMap.obstacles());
         }
         ctx.restore();
     }
 
-    private void drawObstacleInnerAreas(WorldMap worldMap, Set<Obstacle> obstacles) {
+    private void drawObstacleInnerAreas(Set<Obstacle> obstacles) {
         double r = 1;
         obstacles.stream()
                 .filter(Obstacle::isClosed)
-                .filter(obstacle -> !Ufx.isBorderObstacle(worldMap, obstacle)).forEach(obstacle -> {
+                .filter(not(Obstacle::borderObstacle)).forEach(obstacle -> {
             Vector2i prev = null;
             List<RectShort> rectangles = obstacle.innerAreaRectangles();
             for (int i = 0; i < rectangles.size(); ++i) {
@@ -176,7 +176,7 @@ public class TerrainMapTileRenderer extends BaseRenderer implements TerrainMapRe
         });
     }
 
-    private void drawObstacleSegmentNumbers(WorldMap worldMap, Set<Obstacle> obstacles) {
+    private void drawObstacleSegmentNumbers(Set<Obstacle> obstacles) {
         ctx.setFont(SEGMENT_NUMBER_FONT);
         ctx.setFill(SEGMENT_NUMBER_FILL_COLOR);
         ctx.setStroke(SEGMENT_NUMBER_STROKE_COLOR);
