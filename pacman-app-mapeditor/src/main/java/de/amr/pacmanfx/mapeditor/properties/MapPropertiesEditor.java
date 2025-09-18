@@ -9,7 +9,7 @@ import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.lib.worldmap.WorldMapPropertyInfo;
 import de.amr.pacmanfx.lib.worldmap.WorldMapPropertyType;
 import de.amr.pacmanfx.mapeditor.EditorGlobals;
-import de.amr.pacmanfx.mapeditor.EditorUI;
+import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import de.amr.pacmanfx.mapeditor.MessageType;
 import de.amr.pacmanfx.mapeditor.actions.Action_DeleteArcadeHouse;
 import de.amr.pacmanfx.model.WorldMapProperty;
@@ -48,7 +48,7 @@ public class MapPropertiesEditor extends BorderPane {
         };
     }
 
-    private final EditorUI ui;
+    private final TileMapEditorUI ui;
     private final LayerID layerID;
 
     private final BooleanProperty enabled = new SimpleBooleanProperty(true);
@@ -57,7 +57,7 @@ public class MapPropertiesEditor extends BorderPane {
     private final List<SinglePropertyEditor> propertyEditors = new ArrayList<>();
     private final GridPane grid = new GridPane();
 
-    public MapPropertiesEditor(EditorUI ui, LayerID layerID) {
+    public MapPropertiesEditor(TileMapEditorUI ui, LayerID layerID) {
         this.ui = requireNonNull(ui);
         this.layerID = requireNonNull(layerID);
 
@@ -202,7 +202,7 @@ public class MapPropertiesEditor extends BorderPane {
         updatePropertyEditorValues();
     }
 
-    private SinglePropertyEditor createEditor(EditorUI ui, WorldMapPropertyInfo info, String initialValue) {
+    private SinglePropertyEditor createEditor(TileMapEditorUI ui, WorldMapPropertyInfo info, String initialValue) {
         SinglePropertyEditor propertyEditor = switch (info.type()) {
             case COLOR -> new ColorPropertyEditor(ui, layerID, info, initialValue);
             case TILE -> new TilePropertyEditor(ui, layerID, info, initialValue);

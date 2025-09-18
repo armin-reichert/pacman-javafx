@@ -9,7 +9,9 @@ import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
+import de.amr.pacmanfx.mapeditor.SaveConfirmationDialog;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
+import de.amr.pacmanfx.mapeditor.actions.Action_SaveMapFileInteractively;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.*;
 import de.amr.pacmanfx.ui.input.Joypad;
@@ -20,6 +22,7 @@ import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.assets.UIPreferences;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.Image;
@@ -28,6 +31,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -269,18 +273,47 @@ public class GameUI_Implementation implements GameUI {
         }
     }
 
-    private EditorView ensureEditorViewExists() {
+    private void quitEditor(TileMapEditor editor) {
+        editor.stop();
+        bindStageTitle(stage);
+        showStartView();
+    }
+
+    private MenuItem createQuitEditorMenuItem(TileMapEditor editor) {
+        var miQuitEditor = new MenuItem(assets.translated("back_to_game"));
+        miQuitEditor.setOnAction(e -> {
+            if (!editor.isEdited()) {
+                quitEditor(editor);
+                return;
+            }
+            var saveDialog = new SaveConfirmationDialog();
+            saveDialog.showAndWait().ifPresent(choice -> {
+                if (choice == SaveConfirmationDialog.SAVE) {
+                    File selectedFile = new Action_SaveMapFileInteractively(editor.ui()).execute();
+                    if (selectedFile == null) { // File selection and saving was canceled
+                        e.consume();
+                    } else {
+                        quitEditor(editor);
+                    }
+                }
+                else if (choice == SaveConfirmationDialog.DONT_SAVE) {
+                    editor.setEdited(false);
+                    quitEditor(editor);
+                }
+                else if (choice == ButtonType.CANCEL) {
+                    e.consume();
+                }
+            });
+        });
+        return miQuitEditor;
+    }
+
+    private EditorView getOrCreateEditView() {
         if (editorView == null) {
             var editor = new TileMapEditor(stage, assets.theModel3DRepository());
-            var miReturnToGame = new MenuItem(assets.translated("back_to_game"));
-            miReturnToGame.setOnAction(e -> {
-                editor.stop();
-                editor.ui().afterCheckForUnsavedChanges(this::showStartView);
-                // Undo editor stage title binding change:
-                bindStageTitle(stage);
-            });
-            editor.ui().menuBar().menuFile().getItems().addAll(new SeparatorMenuItem(), miReturnToGame);
             editor.init(gameContext.customMapDir());
+            MenuItem miQuitEditor = createQuitEditorMenuItem(editor);
+            editor.ui().menuBar().menuFile().getItems().addAll(new SeparatorMenuItem(), miQuitEditor);
             editorView = new EditorView(editor.ui());
         }
         return editorView;
@@ -461,7 +494,7 @@ public class GameUI_Implementation implements GameUI {
             currentGameScene().ifPresent(GameScene::end);
             soundManager().stopAll();
             clock.stop();
-            ensureEditorViewExists().editor().start();
+            getOrCreateEditView().editor().start();
             selectView(editorView);
         } else {
             Logger.info("Editor view cannot be opened, game is playing");

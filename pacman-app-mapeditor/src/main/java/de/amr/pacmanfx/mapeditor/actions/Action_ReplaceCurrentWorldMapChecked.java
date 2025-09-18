@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.mapeditor.actions;
 
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
-import de.amr.pacmanfx.mapeditor.EditorUI;
+import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -17,7 +17,7 @@ public class Action_ReplaceCurrentWorldMapChecked extends EditorUIAction<Boolean
 
     private final File file;
 
-    public Action_ReplaceCurrentWorldMapChecked(EditorUI ui, File file) {
+    public Action_ReplaceCurrentWorldMapChecked(TileMapEditorUI ui, File file) {
         super(ui);
         this.file = file;
     }

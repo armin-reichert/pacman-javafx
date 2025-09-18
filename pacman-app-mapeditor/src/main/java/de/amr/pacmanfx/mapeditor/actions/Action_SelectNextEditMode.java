@@ -5,13 +5,13 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.mapeditor.actions;
 
 import de.amr.pacmanfx.mapeditor.EditMode;
-import de.amr.pacmanfx.mapeditor.EditorUI;
+import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 
 import static de.amr.pacmanfx.mapeditor.EditMode.INSPECT;
 
 public class Action_SelectNextEditMode extends EditorUIAction<Void> {
 
-    public Action_SelectNextEditMode(EditorUI ui) {
+    public Action_SelectNextEditMode(TileMapEditorUI ui) {
         super(ui);
     }
 

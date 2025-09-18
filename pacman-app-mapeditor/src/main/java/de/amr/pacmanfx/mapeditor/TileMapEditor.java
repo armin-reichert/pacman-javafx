@@ -30,7 +30,7 @@ import static java.util.Objects.requireNonNull;
 public class TileMapEditor {
 
     private SampleMaps sampleMaps;
-    private final EditorUI ui;
+    private final TileMapEditorUI ui;
 
     private final AnimationTimer updateTimer = new AnimationTimer() {
         private static final long FRAME_DURATION_NS = 1_000_000_000 / EditorGlobals.UPDATE_FREQ;
@@ -54,7 +54,7 @@ public class TileMapEditor {
     public TileMapEditor(Stage stage, Model3DRepository model3DRepository) {
         requireNonNull(stage);
         requireNonNull(model3DRepository);
-        ui = new EditorUI(stage, this, model3DRepository);
+        ui = new TileMapEditorUI(stage, this, model3DRepository);
         currentWorldMap.addListener((py, ov, nv) -> setWorldMapChanged());
     }
 
@@ -77,7 +77,7 @@ public class TileMapEditor {
         updateTimer.stop();
     }
 
-    public EditorUI ui() {
+    public TileMapEditorUI ui() {
         return ui;
     }
 

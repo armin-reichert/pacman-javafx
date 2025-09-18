@@ -40,7 +40,7 @@ public class Preview3D {
     private double anchorX;
     private double anchorAngle;
 
-    public Preview3D(EditorUI ui, Model3DRepository model3DRepository, double width, double height) {
+    public Preview3D(TileMapEditorUI ui, Model3DRepository model3DRepository, double width, double height) {
         requireNonNull(ui);
         requireNonNull(ui.editor());
         requireNonNull(model3DRepository);

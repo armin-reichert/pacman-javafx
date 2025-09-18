@@ -32,9 +32,9 @@ public class ObstacleEditor {
     private Vector2i minTile; // top left corner
     private Vector2i maxTile; // bottom right corner
 
-    private final EditorUI ui;
+    private final TileMapEditorUI ui;
 
-    public ObstacleEditor(EditorUI ui) {
+    public ObstacleEditor(TileMapEditorUI ui) {
         this.ui = requireNonNull(ui);
     }
 

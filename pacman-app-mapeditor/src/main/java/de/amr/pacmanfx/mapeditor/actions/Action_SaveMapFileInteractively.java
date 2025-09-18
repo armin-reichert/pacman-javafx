@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.mapeditor.actions;
 
-import de.amr.pacmanfx.mapeditor.EditorUI;
+import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import de.amr.pacmanfx.mapeditor.MessageType;
 import javafx.stage.FileChooser;
 import org.tinylog.Logger;
@@ -14,14 +14,14 @@ import java.io.File;
 import static de.amr.pacmanfx.mapeditor.EditorGlobals.*;
 import static de.amr.pacmanfx.mapeditor.EditorUtil.saveWorldMap;
 
-public class Action_SaveMapFileInteractively extends EditorUIAction<Void> {
+public class Action_SaveMapFileInteractively extends EditorUIAction<File> {
 
-    public Action_SaveMapFileInteractively(EditorUI ui) {
+    public Action_SaveMapFileInteractively(TileMapEditorUI ui) {
         super(ui);
     }
 
     @Override
-    public Void execute() {
+    public File execute() {
         FileChooser fileChooser = createFileChooser();
         File file = fileChooser.showSaveDialog(ui.stage());
         if (file != null) {
@@ -44,7 +44,7 @@ public class Action_SaveMapFileInteractively extends EditorUIAction<Void> {
                 ui.messageDisplay().showMessage("No .world file selected", 2, MessageType.WARNING);
             }
         }
-        return null;
+        return file;
     }
 
     private FileChooser createFileChooser() {

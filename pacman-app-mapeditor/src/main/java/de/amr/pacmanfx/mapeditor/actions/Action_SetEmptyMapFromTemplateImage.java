@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.mapeditor.actions;
 
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
-import de.amr.pacmanfx.mapeditor.EditorUI;
+import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import de.amr.pacmanfx.mapeditor.MessageType;
 import de.amr.pacmanfx.model.GameLevel;
 import javafx.scene.image.Image;
@@ -16,7 +16,7 @@ public class Action_SetEmptyMapFromTemplateImage extends EditorUIAction<Void> {
 
     private final Image image;
 
-    public Action_SetEmptyMapFromTemplateImage(EditorUI ui, Image image) {
+    public Action_SetEmptyMapFromTemplateImage(TileMapEditorUI ui, Image image) {
         super(ui);
         this.image = image;
     }

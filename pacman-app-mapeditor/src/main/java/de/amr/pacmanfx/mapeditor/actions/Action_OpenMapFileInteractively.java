@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.mapeditor.actions;
 
-import de.amr.pacmanfx.mapeditor.EditorUI;
+import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import javafx.stage.FileChooser;
 
 import java.io.File;
@@ -15,7 +15,7 @@ public class Action_OpenMapFileInteractively extends EditorUIAction<File> {
 
     private File file;
 
-    public Action_OpenMapFileInteractively(EditorUI ui) {
+    public Action_OpenMapFileInteractively(TileMapEditorUI ui) {
         super(ui);
     }
 

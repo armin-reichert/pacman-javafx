@@ -76,9 +76,9 @@ public class EditCanvas extends Canvas {
     private final EditRenderer renderer;
     private final FoodMapRenderer foodRenderer;
 
-    private final EditorUI ui;
+    private final TileMapEditorUI ui;
 
-    public EditCanvas(EditorUI ui) {
+    public EditCanvas(TileMapEditorUI ui) {
         this.ui = requireNonNull(ui);
         ctx = getGraphicsContext2D();
 

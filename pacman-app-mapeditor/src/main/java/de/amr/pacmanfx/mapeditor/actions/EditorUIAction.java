@@ -4,15 +4,15 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.mapeditor.actions;
 
-import de.amr.pacmanfx.mapeditor.EditorUI;
+import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 
 import static java.util.Objects.requireNonNull;
 
 public abstract class EditorUIAction<R> extends EditorAction<R> {
 
-    protected final EditorUI ui;
+    protected final TileMapEditorUI ui;
 
-    protected EditorUIAction(EditorUI ui) {
+    protected EditorUIAction(TileMapEditorUI ui) {
         super(requireNonNull(ui).editor());
         this.ui = ui;
     }

@@ -39,11 +39,6 @@ public class TileMapEditorApp extends Application  {
             var scene = new Scene(editor.ui().layoutPane(), width, height);
             stage.setScene(scene);
 
-            stage.setOnCloseRequest(e -> editor.ui().afterCheckForUnsavedChanges(() -> {
-                editor.stop();
-                stage.close();
-            }));
-
             editor.init(new File(System.getProperty("user.home")));
             editor.start();
 

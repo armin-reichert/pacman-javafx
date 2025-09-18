@@ -9,7 +9,7 @@ import de.amr.pacmanfx.lib.worldmap.FoodTile;
 import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.lib.worldmap.TerrainTile;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
-import de.amr.pacmanfx.mapeditor.EditorUI;
+import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import de.amr.pacmanfx.mapeditor.MessageType;
 import de.amr.pacmanfx.mapeditor.TileMatcher;
 import de.amr.pacmanfx.model.GameLevel;
@@ -27,7 +27,7 @@ import static de.amr.pacmanfx.mapeditor.EditorUtil.getColorFromMap;
 
 public class Action_FillMapFromTemplate extends EditorUIAction<Void> {
 
-    public Action_FillMapFromTemplate(EditorUI ui) {
+    public Action_FillMapFromTemplate(TileMapEditorUI ui) {
         super(ui);
     }
 

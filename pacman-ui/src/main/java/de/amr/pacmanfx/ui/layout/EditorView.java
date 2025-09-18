@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.layout;
 
-import de.amr.pacmanfx.mapeditor.EditorUI;
+import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.ui.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.api.ActionBindingsManager;
@@ -19,9 +19,9 @@ import static java.util.Objects.requireNonNull;
 
 public class EditorView implements GameUI_View {
 
-    private final EditorUI editorUI;
+    private final TileMapEditorUI editorUI;
 
-    public EditorView(EditorUI editorUI) {
+    public EditorView(TileMapEditorUI editorUI) {
         this.editorUI = requireNonNull(editorUI);
         // without this, Pac-Man wallpaper shines through!
         editorUI.layoutPane().setBackground(colorBackground(Color.web("#dddddd"))); // JavaFX default grey

@@ -4,13 +4,13 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.mapeditor.actions;
 
-import de.amr.pacmanfx.mapeditor.EditorUI;
+import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 
 import static de.amr.pacmanfx.mapeditor.EditorGlobals.MIN_GRID_SIZE;
 
 public class Action_ZoomOut extends EditorUIAction<Void> {
 
-    public Action_ZoomOut(EditorUI ui) {
+    public Action_ZoomOut(TileMapEditorUI ui) {
         super(ui);
     }
 

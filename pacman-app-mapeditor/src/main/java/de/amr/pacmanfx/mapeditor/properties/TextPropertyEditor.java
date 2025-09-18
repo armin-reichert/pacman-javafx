@@ -6,7 +6,7 @@ package de.amr.pacmanfx.mapeditor.properties;
 
 import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.lib.worldmap.WorldMapPropertyInfo;
-import de.amr.pacmanfx.mapeditor.EditorUI;
+import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
 
@@ -14,7 +14,7 @@ class TextPropertyEditor extends SinglePropertyEditor {
 
     private final TextField textEditor;
 
-    public TextPropertyEditor(EditorUI ui, LayerID layerID, WorldMapPropertyInfo propertyInfo, String propertyValue) {
+    public TextPropertyEditor(TileMapEditorUI ui, LayerID layerID, WorldMapPropertyInfo propertyInfo, String propertyValue) {
         super(ui, layerID, propertyInfo);
         textEditor = new TextField();
         textEditor.setText(propertyValue);

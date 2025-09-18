@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.mapeditor.actions;
 
 import de.amr.pacmanfx.mapeditor.EditMode;
-import de.amr.pacmanfx.mapeditor.EditorUI;
+import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import de.amr.pacmanfx.mapeditor.MessageType;
 import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
@@ -21,7 +21,7 @@ import static de.amr.pacmanfx.mapeditor.EditorGlobals.*;
 
 public class Action_OpenTemplateCreateMap extends EditorUIAction<Void> {
 
-    public Action_OpenTemplateCreateMap(EditorUI ui) {
+    public Action_OpenTemplateCreateMap(TileMapEditorUI ui) {
         super(ui);
     }
 

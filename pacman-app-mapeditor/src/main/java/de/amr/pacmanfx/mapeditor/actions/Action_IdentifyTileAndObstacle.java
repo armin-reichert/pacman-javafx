@@ -6,7 +6,7 @@ package de.amr.pacmanfx.mapeditor.actions;
 
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.*;
-import de.amr.pacmanfx.mapeditor.EditorUI;
+import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import de.amr.pacmanfx.mapeditor.MessageType;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
@@ -20,7 +20,7 @@ public class Action_IdentifyTileAndObstacle extends EditorUIAction<String> {
 
     private final Vector2i tile;
 
-    public Action_IdentifyTileAndObstacle(EditorUI ui, Vector2i tile) {
+    public Action_IdentifyTileAndObstacle(TileMapEditorUI ui, Vector2i tile) {
         super(ui);
         this.tile = requireNonNull(tile);
     }

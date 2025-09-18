@@ -6,7 +6,7 @@ package de.amr.pacmanfx.mapeditor.palette;
 
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.mapeditor.EditorUI;
+import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import de.amr.pacmanfx.mapeditor.actions.Action_SetTerrainProperty;
 import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
@@ -26,7 +26,7 @@ public class ActorTool extends PropertyValueEditorTool {
     private final Consumer<Vector2i> editor;
     private final RectShort sprite;
 
-    public ActorTool(EditorUI ui, String propertyName, String description, RectShort sprite) {
+    public ActorTool(TileMapEditorUI ui, String propertyName, String description, RectShort sprite) {
         super(propertyName, description);
         this.sprite = requireNonNull(sprite);
         editor = tile -> new Action_SetTerrainProperty(ui.editor(), propertyName, formatTile(tile)).execute();

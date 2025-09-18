@@ -30,6 +30,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
@@ -43,7 +44,7 @@ import static de.amr.pacmanfx.mapeditor.EditorGlobals.*;
 import static de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites.*;
 import static java.util.Objects.requireNonNull;
 
-public class EditorUI {
+public class TileMapEditorUI {
 
     private final TileMapEditor editor;
 
@@ -308,7 +309,7 @@ public class EditorUI {
 
     // end of property section
 
-    public EditorUI(Stage stage, TileMapEditor editor, Model3DRepository model3DRepository) {
+    public TileMapEditorUI(Stage stage, TileMapEditor editor, Model3DRepository model3DRepository) {
         this.stage = requireNonNull(stage);
         this.editor = editor;
 
@@ -316,11 +317,8 @@ public class EditorUI {
         createPreviewArea(model3DRepository);
         createPropertyEditors();
         createStatusLine();
-
         editorPaletteTabPane = new EditorPaletteTabPane(this, editCanvas.terrainRenderer(), editCanvas.foodRenderer());
-
         menuBar = new EditorMenuBar(this);
-
         arrangeLayout();
 
         contentPane.setOnKeyTyped(keyEvent -> {
@@ -345,6 +343,28 @@ public class EditorUI {
         });
 
         inputEnabled.bind(editCanvas.draggingProperty().not());
+
+        stage.setOnCloseRequest(this::handleCloseEvent);
+    }
+
+    private void handleCloseEvent(WindowEvent e) {
+        if (editor.isEdited()) {
+            SaveConfirmationDialog saveDialog = new SaveConfirmationDialog();
+            saveDialog.showAndWait().ifPresent(choice -> {
+                if (choice == SaveConfirmationDialog.SAVE) {
+                    File selectedFile = new Action_SaveMapFileInteractively(this).execute();
+                    if (selectedFile == null) { // File selection was canceled
+                        e.consume();
+                    }
+                }
+                else if (choice == SaveConfirmationDialog.DONT_SAVE) {
+                    editor.setEdited(false);
+                }
+                else if (choice == ButtonType.CANCEL) {
+                    e.consume();
+                }
+            });
+        }
     }
 
     public void init() {
@@ -389,12 +409,12 @@ public class EditorUI {
             action.run();
             return;
         }
-        SaveConfirmation confirmationDialog = new SaveConfirmation();
+        SaveConfirmationDialog confirmationDialog = new SaveConfirmationDialog();
         confirmationDialog.showAndWait().ifPresent(choice -> {
-            if (choice == SaveConfirmation.SAVE_CHANGES) {
+            if (choice == SaveConfirmationDialog.SAVE) {
                 new Action_SaveMapFileInteractively(this).execute();
                 action.run();
-            } else if (choice == SaveConfirmation.NO_SAVE_CHANGES) {
+            } else if (choice == SaveConfirmationDialog.DONT_SAVE) {
                 editor.setEdited(false);
                 action.run();
             } else if (choice == ButtonType.CANCEL) {
@@ -698,7 +718,7 @@ public class EditorUI {
             Tooltip tooltip = new Tooltip(translated("editmode_label.tooltip"));
             tooltip.setShowDelay(Duration.millis(50));
             tooltip.setFont(FONT_TOOL_TIPS);
-            setOnMouseClicked(e -> new Action_SelectNextEditMode(EditorUI.this).execute());
+            setOnMouseClicked(e -> new Action_SelectNextEditMode(TileMapEditorUI.this).execute());
             setTooltip(tooltip);
 
             textProperty().bind(Bindings.createStringBinding(() ->

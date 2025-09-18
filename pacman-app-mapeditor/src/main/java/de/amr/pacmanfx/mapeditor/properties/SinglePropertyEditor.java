@@ -7,7 +7,7 @@ package de.amr.pacmanfx.mapeditor.properties;
 import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.lib.worldmap.WorldMapPropertyInfo;
-import de.amr.pacmanfx.mapeditor.EditorUI;
+import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import de.amr.pacmanfx.mapeditor.MessageType;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -27,7 +27,7 @@ abstract class SinglePropertyEditor {
     protected WorldMapPropertyInfo propertyInfo;
     protected final TextField nameEditor;
 
-    protected SinglePropertyEditor(EditorUI ui, LayerID layerID, WorldMapPropertyInfo propertyInfo) {
+    protected SinglePropertyEditor(TileMapEditorUI ui, LayerID layerID, WorldMapPropertyInfo propertyInfo) {
         requireNonNull(ui);
         this.layerID = requireNonNull(layerID);
         this.propertyInfo = requireNonNull(propertyInfo);
@@ -59,7 +59,7 @@ abstract class SinglePropertyEditor {
         return worldMap.get();
     }
 
-    protected void onPropertyNameEdited(EditorUI ui) {
+    protected void onPropertyNameEdited(TileMapEditorUI ui) {
         if (worldMap() == null) {
             return;
         }
@@ -93,7 +93,7 @@ abstract class SinglePropertyEditor {
         ui.editor().setEdited(true);
     }
 
-    protected void storePropertyValue(EditorUI ui) {
+    protected void storePropertyValue(TileMapEditorUI ui) {
         worldMap().properties(layerID).put(propertyInfo.name(), formattedPropertyValue());
         ui.editor().setWorldMapChanged();
         ui.editor().setEdited(true);

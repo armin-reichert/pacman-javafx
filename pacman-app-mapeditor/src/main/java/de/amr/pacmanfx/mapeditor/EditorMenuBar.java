@@ -25,7 +25,7 @@ public class EditorMenuBar extends MenuBar {
         return menuMaps;
     }
 
-    public EditorMenuBar(EditorUI ui) {
+    public EditorMenuBar(TileMapEditorUI ui) {
 
         final TileMapEditor editor = ui.editor();
 

@@ -4,11 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.mapeditor.actions;
 
-import de.amr.pacmanfx.mapeditor.EditorUI;
+import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 
 public class Action_SelectNextPaletteEntry extends EditorUIAction<Void> {
 
-    public Action_SelectNextPaletteEntry(EditorUI ui) {
+    public Action_SelectNextPaletteEntry(TileMapEditorUI ui) {
         super(ui);
     }
 
