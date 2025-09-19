@@ -94,7 +94,7 @@ public class GameUI_Implementation implements GameUI {
     private final UIPreferences prefs;
 
     private final ActionBindingsManager globalActionBindings = new DefaultActionBindingsManager();
-    private final Map<String, Class<?>> configMap;
+    private final Map<String, Class<?>> configClassesByGameVariant;
     private final Map<String, GameUI_Config> configByGameVariant = new HashMap<>();
     private final MainScene mainScene;
 
@@ -103,8 +103,8 @@ public class GameUI_Implementation implements GameUI {
     private PlayView playView;
     private EditorView editorView;
 
-    public GameUI_Implementation(Map<String, Class<?>> configMap, GameContext gameContext, Stage stage, double mainSceneWidth, double mainSceneHeight) {
-        this.configMap = requireNonNull(configMap, "UI configuration map is null");
+    public GameUI_Implementation(Map<String, Class<?>> configClassesByGameVariant, GameContext gameContext, Stage stage, double mainSceneWidth, double mainSceneHeight) {
+        this.configClassesByGameVariant = requireNonNull(configClassesByGameVariant, "UI configuration map is null");
         this.gameContext = requireNonNull(gameContext, "Game context is null");
         this.stage = requireNonNull(stage, "Stage is null");
         Validations.requireNonNegative(mainSceneWidth, "Main scene width must be a positive number");
@@ -498,8 +498,22 @@ public class GameUI_Implementation implements GameUI {
     public GameUI_Config config(String gameVariant) {
         GameUI_Config config = configByGameVariant.get(gameVariant);
         if (config == null) {
-            config = createGameUIConfig(gameVariant, configMap.get(gameVariant));
-            configByGameVariant.put(gameVariant, config);
+            Class<?> configClass = configClassesByGameVariant.get(gameVariant);
+            try {
+                config = (GameUI_Config) configClass.getDeclaredConstructor(GameUI.class).newInstance(this);
+                config.createGameScenes();
+                config.gameScenes().forEach(scene -> {
+                    if (scene instanceof GameScene2D gameScene2D) {
+                        gameScene2D.debugInfoVisibleProperty().bind(PROPERTY_DEBUG_INFO_VISIBLE);
+                    }
+                });
+                configByGameVariant.put(gameVariant, config);
+            }
+            catch (Exception x) {
+                Logger.error("Could not create UI configuration for game variant {} and configuration class {}",
+                    gameVariant, configClass);
+                throw new IllegalStateException(x);
+            }
         }
         return config;
     }
@@ -508,22 +522,5 @@ public class GameUI_Implementation implements GameUI {
     @SuppressWarnings("unchecked")
     public <T extends GameUI_Config> T currentConfig() {
         return (T) config(gameContext.gameController().selectedGameVariant());
-    }
-
-    private GameUI_Config createGameUIConfig(String gameVariant, Class<?> configClass) {
-        try {
-            GameUI_Config config = (GameUI_Config) configClass.getDeclaredConstructor(GameUI.class).newInstance(this);
-            config.createGameScenes();
-            Logger.info("Game scenes for game variant '{}' created", gameVariant);
-            config.gameScenes().forEach(scene -> {
-                if (scene instanceof GameScene2D gameScene2D) {
-                    gameScene2D.debugInfoVisibleProperty().bind(PROPERTY_DEBUG_INFO_VISIBLE);
-                }
-            });
-            return config;
-        } catch (Exception x) {
-            Logger.error("Could not apply UI configuration of class {}", configClass);
-            throw new IllegalStateException(x);
-        }
     }
 }
