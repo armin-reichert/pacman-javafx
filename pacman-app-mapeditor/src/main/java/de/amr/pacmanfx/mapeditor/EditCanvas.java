@@ -484,10 +484,7 @@ public class EditCanvas extends Canvas {
         miCarveTunnel.setOnAction(actionEvent -> new Action_CarveTunnel(editor, tile).execute());
 
         var miPlaceHouse = new MenuItem(translated("menu.edit.place_house"));
-        miPlaceHouse.setOnAction(actionEvent -> {
-            new Action_DeleteArcadeHouse(editor).execute();
-            new Action_PlaceArcadeHouse(editor, tile).execute();
-        });
+        miPlaceHouse.setOnAction(actionEvent -> new Action_MoveArcadeHouse(editor, tile).execute());
 
         var miClearFoodAroundHouse = new MenuItem(translated("menu.edit.clear_food_around_house"));
         miClearFoodAroundHouse.setOnAction(actionEvent -> new Action_ClearFoodAroundHouse(editor, worldMap()).execute());

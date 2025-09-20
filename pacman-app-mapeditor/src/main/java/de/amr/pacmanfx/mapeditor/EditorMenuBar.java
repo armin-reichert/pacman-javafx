@@ -69,10 +69,8 @@ public class EditorMenuBar extends MenuBar {
 
         var miAddHouse = new MenuItem(translated("menu.edit.add_house"));
         miAddHouse.setOnAction(actionEvent -> {
-            new Action_DeleteArcadeHouse(editor).execute();
             int numRows = editor.currentWorldMap().numRows(), numCols = editor.currentWorldMap().numCols();
-            int houseMinX = numCols / 2 - 4, houseMinY = numRows / 2 - 3;
-            new Action_PlaceArcadeHouse(editor, Vector2i.of(houseMinX, houseMinY)).execute();
+            new Action_MoveArcadeHouse(editor, Vector2i.of(numCols / 2 - 4, numRows / 2 - 3)).execute();
         });
 
         miAddHouse.disableProperty().bind(ui.editModeProperty().map(mode -> mode == EditMode.INSPECT));

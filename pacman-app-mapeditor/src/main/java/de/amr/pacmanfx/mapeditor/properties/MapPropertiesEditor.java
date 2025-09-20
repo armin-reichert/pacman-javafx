@@ -137,13 +137,8 @@ public class MapPropertiesEditor extends BorderPane {
     private void deleteProperty(String propertyName) {
         var layerProperties = worldMap().properties(layerID);
         if (layerProperties.containsKey(propertyName)) {
-            //TODO find more general solution
-            if (POS_HOUSE_MIN_TILE.equals(propertyName) || POS_HOUSE_MAX_TILE.equals(propertyName)) {
-                new Action_DeleteArcadeHouse(ui.editor()).execute();
-            } else {
-                layerProperties.remove(propertyName);
-                ui.messageDisplay().showMessage("Property '%s' deleted".formatted(propertyName), 3, MessageType.INFO);
-            }
+            layerProperties.remove(propertyName);
+            ui.messageDisplay().showMessage("Property '%s' deleted".formatted(propertyName), 3, MessageType.INFO);
             ui.editor().setWorldMapChanged();
             ui.editor().setEdited(true);
         }
