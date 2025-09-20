@@ -4,14 +4,13 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.mapeditor.properties;
 
-import de.amr.pacmanfx.lib.worldmap.LayerID;
-import de.amr.pacmanfx.lib.worldmap.WorldMap;
-import de.amr.pacmanfx.lib.worldmap.WorldMapPropertyInfo;
-import de.amr.pacmanfx.lib.worldmap.WorldMapPropertyType;
+import de.amr.pacmanfx.lib.Vector2i;
+import de.amr.pacmanfx.lib.worldmap.*;
 import de.amr.pacmanfx.mapeditor.EditorGlobals;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import de.amr.pacmanfx.mapeditor.MessageType;
 import de.amr.pacmanfx.mapeditor.actions.Action_DeleteArcadeHouse;
+import de.amr.pacmanfx.mapeditor.actions.Action_PlaceArcadeHouse;
 import de.amr.pacmanfx.model.WorldMapProperty;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -214,11 +213,26 @@ public class MapPropertiesEditor extends BorderPane {
     private SinglePropertyEditor createEditor(TileMapEditorUI ui, WorldMapPropertyInfo info, String initialValue) {
         SinglePropertyEditor propertyEditor = switch (info.type()) {
             case COLOR -> new ColorPropertyEditor(ui, layerID, info, initialValue);
-            case TILE -> new TilePropertyEditor(ui, layerID, info, initialValue);
+            case TILE -> info.name().equals(POS_HOUSE_MIN_TILE)
+                    ? createHouseMinPosEditor(ui, info, initialValue)
+                    : new TilePropertyEditor(ui, layerID, info, initialValue);
             case STRING -> new TextPropertyEditor(ui, layerID, info, initialValue);
         };
         propertyEditor.enabledProperty().bind(enabled);
         propertyEditor.worldMapProperty().bind(ui.editor().currentWorldMapProperty());
         return propertyEditor;
     }
+
+    //TODO hack. Need general concept for "dependent" properties
+    private TilePropertyEditor createHouseMinPosEditor(TileMapEditorUI ui, WorldMapPropertyInfo propertyInfo, String initialValue) {
+        return new TilePropertyEditor(ui, layerID, propertyInfo, initialValue) {
+            @Override
+            protected void storePropertyValue(TileMapEditorUI ui) {
+                super.storePropertyValue(ui);
+                Vector2i minTile = worldMap().getTerrainTileProperty(propertyInfo.name());
+                new Action_PlaceArcadeHouse(ui.editor(), worldMap(), minTile).execute();
+            }
+        };
+    }
+
 }

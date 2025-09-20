@@ -160,7 +160,6 @@ public class WorldMap {
         List<Vector2i> tilesWithErrors = new ArrayList<>();
         obstacles = ObstacleBuilder.buildObstacles(this, tilesWithErrors);
 
-        // remove house obstacle
         Vector2i houseMinTile = getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE);
         if (houseMinTile == null) {
             Logger.info("Could not remove house placeholder from obstacle list, house min tile not set");
