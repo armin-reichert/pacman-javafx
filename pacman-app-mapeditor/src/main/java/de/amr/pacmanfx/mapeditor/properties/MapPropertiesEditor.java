@@ -4,13 +4,14 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.mapeditor.properties;
 
-import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.lib.worldmap.*;
+import de.amr.pacmanfx.lib.worldmap.LayerID;
+import de.amr.pacmanfx.lib.worldmap.WorldMap;
+import de.amr.pacmanfx.lib.worldmap.WorldMapPropertyInfo;
+import de.amr.pacmanfx.lib.worldmap.WorldMapPropertyType;
 import de.amr.pacmanfx.mapeditor.EditorGlobals;
-import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import de.amr.pacmanfx.mapeditor.MessageType;
+import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import de.amr.pacmanfx.mapeditor.actions.Action_DeleteArcadeHouse;
-import de.amr.pacmanfx.mapeditor.actions.Action_PlaceArcadeHouse;
 import de.amr.pacmanfx.model.WorldMapProperty;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -29,8 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.model.WorldMapProperty.POS_HOUSE_MAX_TILE;
-import static de.amr.pacmanfx.model.WorldMapProperty.POS_HOUSE_MIN_TILE;
+import static de.amr.pacmanfx.model.WorldMapProperty.*;
 import static java.util.Objects.requireNonNull;
 
 public class MapPropertiesEditor extends BorderPane {
@@ -45,9 +45,10 @@ public class MapPropertiesEditor extends BorderPane {
 
     public static boolean isProtectedProperty(String propertyName, LayerID layerID) {
         return switch (layerID) {
-            case TERRAIN -> WorldMapProperty.COLOR_WALL_FILL.equals(propertyName)
-                || WorldMapProperty.COLOR_WALL_STROKE.equals(propertyName)
-                || WorldMapProperty.COLOR_DOOR.equals(propertyName)
+            case TERRAIN -> COLOR_WALL_FILL.equals(propertyName)
+                || COLOR_WALL_STROKE.equals(propertyName)
+                || COLOR_DOOR.equals(propertyName)
+                || POS_HOUSE_MIN_TILE.equals(propertyName)
                 || POS_HOUSE_MAX_TILE.equals(propertyName);
             case FOOD -> WorldMapProperty.COLOR_FOOD.equals(propertyName);
         };
@@ -213,26 +214,12 @@ public class MapPropertiesEditor extends BorderPane {
     private SinglePropertyEditor createEditor(TileMapEditorUI ui, WorldMapPropertyInfo info, String initialValue) {
         SinglePropertyEditor propertyEditor = switch (info.type()) {
             case COLOR -> new ColorPropertyEditor(ui, layerID, info, initialValue);
-            case TILE -> info.name().equals(POS_HOUSE_MIN_TILE)
-                    ? createHouseMinPosEditor(ui, info, initialValue)
-                    : new TilePropertyEditor(ui, layerID, info, initialValue);
+            case TILE ->  new TilePropertyEditor(ui, layerID, info, initialValue);
             case STRING -> new TextPropertyEditor(ui, layerID, info, initialValue);
         };
         propertyEditor.enabledProperty().bind(enabled);
         propertyEditor.worldMapProperty().bind(ui.editor().currentWorldMapProperty());
         return propertyEditor;
-    }
-
-    //TODO hack. Need general concept for "dependent" properties
-    private TilePropertyEditor createHouseMinPosEditor(TileMapEditorUI ui, WorldMapPropertyInfo propertyInfo, String initialValue) {
-        return new TilePropertyEditor(ui, layerID, propertyInfo, initialValue) {
-            @Override
-            protected void storePropertyValue(TileMapEditorUI ui) {
-                super.storePropertyValue(ui);
-                Vector2i minTile = worldMap().getTerrainTileProperty(propertyInfo.name());
-                new Action_PlaceArcadeHouse(ui.editor(), worldMap(), minTile).execute();
-            }
-        };
     }
 
 }

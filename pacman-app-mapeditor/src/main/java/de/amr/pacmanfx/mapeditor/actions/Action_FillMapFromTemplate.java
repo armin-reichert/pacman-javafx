@@ -104,6 +104,7 @@ public class Action_FillMapFromTemplate extends EditorUIAction<Void> {
 
         if (houseMinTile != null && houseMaxTile != null
                 && houseMinTile.x() < houseMaxTile.x() && houseMinTile.y() < houseMaxTile.y()) {
+            new Action_DeleteArcadeHouse(editor).execute();
             new Action_PlaceArcadeHouse(editor, houseMinTile).execute();
         }
 
