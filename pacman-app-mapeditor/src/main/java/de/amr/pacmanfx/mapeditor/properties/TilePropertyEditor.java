@@ -28,12 +28,20 @@ class TilePropertyEditor extends SinglePropertyEditor {
         spinnerX = new Spinner<>(0, 1000, 0);
         spinnerXModel = (SpinnerValueFactory.IntegerSpinnerValueFactory) spinnerX.getValueFactory();
         spinnerX.setMaxWidth(60);
-        spinnerX.disableProperty().bind(enabled.not());
+        if (propertyInfo.protectedProperty()) {
+            spinnerX.setDisable(true);
+        } else {
+            spinnerX.disableProperty().bind(enabled.not());
+        }
 
         spinnerY = new Spinner<>(0, 1000, 0);
         spinnerYModel = (SpinnerValueFactory.IntegerSpinnerValueFactory) spinnerY.getValueFactory();
         spinnerY.setMaxWidth(60);
-        spinnerY.disableProperty().bind(enabled.not());
+        if (propertyInfo.protectedProperty()) {
+            spinnerY.setDisable(true);
+        } else {
+            spinnerY.disableProperty().bind(enabled.not());
+        }
 
         WorldMapParser.parseTile(propertyValue).ifPresent(tile -> {
             spinnerX.getValueFactory().setValue(tile.x());

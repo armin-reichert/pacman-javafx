@@ -37,13 +37,19 @@ import static java.util.Objects.requireNonNull;
 public class MapPropertiesEditor extends BorderPane {
 
     public static final int NAME_EDITOR_MIN_WIDTH = 180;
+
+    private static final String NEW_COLOR_PROPERTY_NAME = "color_RENAME_ME";
+    private static final String NEW_POSITION_PROPERTY_NAME = "pos_RENAME_ME";
+    private static final String NEW_TEXT_PROPERTY_NAME  = "RENAME_ME";
+
     private static final String SYMBOL_DELETE = "\u274C";
 
-    public static boolean isDefaultColorProperty(String propertyName, LayerID layerID) {
+    public static boolean isProtectedProperty(String propertyName, LayerID layerID) {
         return switch (layerID) {
             case TERRAIN -> WorldMapProperty.COLOR_WALL_FILL.equals(propertyName)
-                    || WorldMapProperty.COLOR_WALL_STROKE.equals(propertyName)
-                    || WorldMapProperty.COLOR_DOOR.equals(propertyName);
+                || WorldMapProperty.COLOR_WALL_STROKE.equals(propertyName)
+                || WorldMapProperty.COLOR_DOOR.equals(propertyName)
+                || POS_HOUSE_MAX_TILE.equals(propertyName);
             case FOOD -> WorldMapProperty.COLOR_FOOD.equals(propertyName);
         };
     }
@@ -66,14 +72,14 @@ public class MapPropertiesEditor extends BorderPane {
 
         var btnAddColorEntry = new Button("Color");
         btnAddColorEntry.disableProperty().bind(enabled.not());
-        btnAddColorEntry.setOnAction(e -> addNewColorProperty("color_RENAME_ME"));
+        btnAddColorEntry.setOnAction(e -> addNewColorProperty());
 
         var btnAddPosEntry = new Button("Position");
-        btnAddPosEntry.setOnAction(e -> addNewPositionProperty("pos_RENAME_ME"));
+        btnAddPosEntry.setOnAction(e -> addNewPositionProperty());
         btnAddPosEntry.disableProperty().bind(enabled.not());
 
         var btnAddTextEntry = new Button("Text");
-        btnAddTextEntry.setOnAction(e -> addNewTextProperty("RENAME_ME"));
+        btnAddTextEntry.setOnAction(e -> addNewTextProperty());
         btnAddTextEntry.disableProperty().bind(enabled.not());
 
         var buttonBar = new HBox(new Label("New"), btnAddColorEntry, btnAddPosEntry, btnAddTextEntry);
@@ -92,7 +98,8 @@ public class MapPropertiesEditor extends BorderPane {
         return ui.editor().currentWorldMap();
     }
 
-    private void addNewColorProperty(String propertyName) {
+    private void addNewColorProperty() {
+        String propertyName = NEW_COLOR_PROPERTY_NAME;
         if (worldMap().properties(layerID).containsKey(propertyName)) {
             ui.messageDisplay().showMessage("Property %s already exists".formatted(propertyName), 1, MessageType.INFO);
             return;
@@ -103,7 +110,8 @@ public class MapPropertiesEditor extends BorderPane {
         ui.messageDisplay().showMessage("New property %s added".formatted(propertyName), 1, MessageType.INFO);
     }
 
-    private void addNewPositionProperty(String propertyName) {
+    private void addNewPositionProperty() {
+        String propertyName = NEW_POSITION_PROPERTY_NAME;
         if (worldMap().properties(layerID).containsKey(propertyName)) {
             ui.messageDisplay().showMessage("Property %s already exists".formatted(propertyName), 1, MessageType.INFO);
             return;
@@ -114,7 +122,8 @@ public class MapPropertiesEditor extends BorderPane {
         ui.editor().setEdited(true);
     }
 
-    private void addNewTextProperty(String propertyName) {
+    private void addNewTextProperty() {
+        String propertyName = NEW_TEXT_PROPERTY_NAME;
         if (worldMap().properties(layerID).containsKey(propertyName)) {
             ui.messageDisplay().showMessage("Property %s already exists".formatted(propertyName), 1, MessageType.INFO);
             return;
@@ -164,13 +173,13 @@ public class MapPropertiesEditor extends BorderPane {
         propertyNames.forEach(propertyName -> {
             // primitive way of discriminating but fulfills its purpose
             WorldMapPropertyInfo propertyInfo;
+            boolean protectedProperty = isProtectedProperty(propertyName, layerID);
             if (propertyName.startsWith("color_")) {
-                boolean permanent = isDefaultColorProperty(propertyName, layerID);
-                propertyInfo = new WorldMapPropertyInfo(propertyName, WorldMapPropertyType.COLOR, permanent);
+                propertyInfo = new WorldMapPropertyInfo(propertyName, WorldMapPropertyType.COLOR, protectedProperty);
             } else if (propertyName.startsWith("pos_") || propertyName.startsWith("tile_") || propertyName.startsWith("vec_")) {
-                propertyInfo = new WorldMapPropertyInfo(propertyName, WorldMapPropertyType.TILE, false);
+                propertyInfo = new WorldMapPropertyInfo(propertyName, WorldMapPropertyType.TILE, protectedProperty);
             } else {
-                propertyInfo = new WorldMapPropertyInfo(propertyName, WorldMapPropertyType.STRING, false);
+                propertyInfo = new WorldMapPropertyInfo(propertyName, WorldMapPropertyType.STRING, protectedProperty);
             }
             String propertyValue = worldMap().properties(layerID).get(propertyName);
             SinglePropertyEditor propertyEditor = createEditor(ui, propertyInfo, propertyValue);
@@ -182,7 +191,7 @@ public class MapPropertiesEditor extends BorderPane {
         for (var propertyEditor : propertyEditors) {
             grid.add(propertyEditor.nameEditor(), 0, row);
             grid.add(propertyEditor.valueEditor(), 1, row);
-            if (!propertyEditor.propertyInfo.permanent()) {
+            if (!propertyEditor.propertyInfo.protectedProperty()) {
                 var btnDelete = new Button(SYMBOL_DELETE);
                 btnDelete.disableProperty().bind(enabled.not());
                 btnDelete.setOnAction(e -> deleteProperty(propertyEditor.propertyInfo.name()));

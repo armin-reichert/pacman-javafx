@@ -34,7 +34,7 @@ abstract class SinglePropertyEditor {
 
         nameEditor = new TextField(propertyInfo.name());
         nameEditor.setMinWidth(MapPropertiesEditor.NAME_EDITOR_MIN_WIDTH);
-        if (propertyInfo.permanent()) {
+        if (propertyInfo.protectedProperty()) {
             nameEditor.setDisable(true);
         } else {
             nameEditor.disableProperty().bind(enabled.not());
@@ -86,7 +86,7 @@ abstract class SinglePropertyEditor {
 
         worldMap().properties(layerID).remove(propertyInfo.name());
         worldMap().properties(layerID).put(editedName, formattedPropertyValue());
-        boolean permanent = MapPropertiesEditor.isDefaultColorProperty(editedName, layerID);
+        boolean permanent = MapPropertiesEditor.isProtectedProperty(editedName, layerID);
         propertyInfo = new WorldMapPropertyInfo(editedName, propertyInfo.type(), permanent);
 
         ui.editor().setWorldMapChanged();

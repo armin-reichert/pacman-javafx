@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 import static java.util.Objects.requireNonNull;
 
-public record WorldMapPropertyInfo(String name, WorldMapPropertyType type, boolean permanent) {
+public record WorldMapPropertyInfo(String name, WorldMapPropertyType type, boolean protectedProperty) {
 
     public static final Pattern PATTERN_PROPERTY_NAME = Pattern.compile("[a-zA-Z]([a-zA-Z0-9_])*");
 
