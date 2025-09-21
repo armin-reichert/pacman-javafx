@@ -6,6 +6,7 @@ package de.amr.pacmanfx.mapeditor.properties;
 
 import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
+import de.amr.pacmanfx.lib.worldmap.WorldMapLayer;
 import de.amr.pacmanfx.mapeditor.MessageType;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import javafx.beans.property.BooleanProperty;
@@ -27,14 +28,16 @@ abstract class SinglePropertyEditor {
     protected final ObjectProperty<WorldMap> worldMap = new SimpleObjectProperty<>();
 
     protected final LayerID layerID;
+    protected final WorldMapLayer layer;
     protected WorldMap.Property property;
     protected final TextField nameEditor;
     protected String propertyName;
 
-    protected SinglePropertyEditor(TileMapEditorUI ui, LayerID layerID, String propertyName, WorldMap.Property property) {
+    protected SinglePropertyEditor(TileMapEditorUI ui, LayerID layerID, WorldMapLayer layer, String propertyName, WorldMap.Property property) {
         requireNonNull(ui);
         this.propertyName = requireNonNull(propertyName);
         this.layerID = requireNonNull(layerID);
+        this.layer = requireNonNull(layer);
         this.property = requireNonNull(property);
 
         nameEditor = new TextField(propertyName);
@@ -94,7 +97,7 @@ abstract class SinglePropertyEditor {
             nameEditor.setText(propertyName);
             return;
         }
-        if (worldMap().properties(layerID).containsKey(editedName)) {
+        if (layer.properties().containsKey(editedName)) {
             ui.messageDisplay().showMessage("Property name already in use", 2, MessageType.ERROR);
             nameEditor.setText(propertyName);
             return;
@@ -102,8 +105,8 @@ abstract class SinglePropertyEditor {
         ui.messageDisplay().showMessage("Property '%s' renamed to '%s'"
             .formatted(propertyName, editedName), 2, MessageType.INFO);
 
-        worldMap().properties(layerID).remove(propertyName);
-        worldMap().properties(layerID).put(editedName, formattedPropertyValue());
+        layer.properties().remove(propertyName);
+        layer.properties().put(editedName, formattedPropertyValue());
 
         property = new WorldMap.Property(property.type(), EnumSet.noneOf(WorldMap.PropertyAttribute.class));
 
@@ -112,7 +115,7 @@ abstract class SinglePropertyEditor {
     }
 
     protected void storePropertyValue(TileMapEditorUI ui) {
-        worldMap().properties(layerID).put(propertyName, formattedPropertyValue());
+        layer.properties().put(propertyName, formattedPropertyValue());
         ui.editor().setWorldMapChanged();
         ui.editor().setEdited(true);
     }

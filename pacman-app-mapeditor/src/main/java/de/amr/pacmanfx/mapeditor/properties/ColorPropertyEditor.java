@@ -6,6 +6,7 @@ package de.amr.pacmanfx.mapeditor.properties;
 
 import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
+import de.amr.pacmanfx.lib.worldmap.WorldMapLayer;
 import de.amr.pacmanfx.mapeditor.EditorUtil;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import javafx.scene.Node;
@@ -15,8 +16,8 @@ class ColorPropertyEditor extends SinglePropertyEditor {
 
     private final ColorPicker colorPicker;
 
-    public ColorPropertyEditor(TileMapEditorUI ui, LayerID layerID, String propertyName, WorldMap.Property property, String propertyValue) {
-        super(ui, layerID, propertyName, property);
+    public ColorPropertyEditor(TileMapEditorUI ui, LayerID layerID, WorldMapLayer layer, String propertyName, WorldMap.Property property, String propertyValue) {
+        super(ui, layerID, layer, propertyName, property);
         colorPicker = new ColorPicker();
         colorPicker.setPrefWidth(MapPropertiesEditor.VALUE_EDITOR_WIDTH);
         colorPicker.setValue(EditorUtil.parseColor(propertyValue));
@@ -26,7 +27,7 @@ class ColorPropertyEditor extends SinglePropertyEditor {
 
     @Override
     protected void updateEditorFromProperty() {
-        String colorExpression = worldMap().properties(layerID).get(propertyName);
+        String colorExpression = layer.properties().get(propertyName);
         colorPicker.setValue(EditorUtil.parseColor(colorExpression));
     }
 

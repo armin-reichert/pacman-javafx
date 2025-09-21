@@ -228,9 +228,9 @@ public class MapPropertiesEditor extends BorderPane {
 
     private SinglePropertyEditor createEditor(TileMapEditorUI ui, String propertyName, WorldMap.Property info, String initialValue) {
         SinglePropertyEditor propertyEditor = switch (info.type()) {
-            case COLOR_RGBA -> new ColorPropertyEditor(ui, layerID, propertyName, info, initialValue);
-            case TILE ->  new TilePropertyEditor(ui, layerID, propertyName, info, initialValue);
-            case STRING -> new TextPropertyEditor(ui, layerID, propertyName, info, initialValue);
+            case COLOR_RGBA -> new ColorPropertyEditor(ui, layerID, worldMap().layer(layerID), propertyName, info, initialValue);
+            case TILE ->  new TilePropertyEditor(ui, layerID, worldMap().layer(layerID), propertyName, info, initialValue);
+            case STRING -> new TextPropertyEditor(ui, layerID, worldMap().layer(layerID), propertyName, info, initialValue);
         };
         propertyEditor.enabledProperty().bind(enabled);
         propertyEditor.worldMapProperty().bind(ui.editor().currentWorldMapProperty());

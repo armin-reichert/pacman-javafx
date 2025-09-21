@@ -6,6 +6,7 @@ package de.amr.pacmanfx.mapeditor.properties;
 
 import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
+import de.amr.pacmanfx.lib.worldmap.WorldMapLayer;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
@@ -14,8 +15,8 @@ class TextPropertyEditor extends SinglePropertyEditor {
 
     private final TextField textEditor;
 
-    public TextPropertyEditor(TileMapEditorUI ui, LayerID layerID, String propertyName, WorldMap.Property property, String propertyValue) {
-        super(ui, layerID, propertyName, property);
+    public TextPropertyEditor(TileMapEditorUI ui, LayerID layerID, WorldMapLayer layer, String propertyName, WorldMap.Property property, String propertyValue) {
+        super(ui, layerID, layer, propertyName, property);
         textEditor = new TextField();
         textEditor.setPrefWidth(MapPropertiesEditor.NAME_EDITOR_WIDTH);
         textEditor.setMinWidth(MapPropertiesEditor.VALUE_EDITOR_WIDTH);
@@ -27,7 +28,7 @@ class TextPropertyEditor extends SinglePropertyEditor {
 
     @Override
     protected void updateEditorFromProperty() {
-        String text = worldMap().properties(layerID).get(propertyName);
+        String text = layer.properties().get(propertyName);
         textEditor.setText(text);
     }
 

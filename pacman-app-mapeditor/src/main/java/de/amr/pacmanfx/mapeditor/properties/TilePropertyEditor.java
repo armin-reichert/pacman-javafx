@@ -7,6 +7,7 @@ package de.amr.pacmanfx.mapeditor.properties;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
+import de.amr.pacmanfx.lib.worldmap.WorldMapLayer;
 import de.amr.pacmanfx.lib.worldmap.WorldMapParser;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import javafx.scene.Node;
@@ -22,8 +23,8 @@ class TilePropertyEditor extends SinglePropertyEditor {
     private final SpinnerValueFactory.IntegerSpinnerValueFactory spinnerYModel;
     private final HBox valueEditorPane;
 
-    public TilePropertyEditor(TileMapEditorUI ui, LayerID layerID, String propertyName, WorldMap.Property property, String propertyValue) {
-        super(ui, layerID, propertyName, property);
+    public TilePropertyEditor(TileMapEditorUI ui, LayerID layerID, WorldMapLayer layer, String propertyName, WorldMap.Property property, String propertyValue) {
+        super(ui, layerID, layer, propertyName, property);
 
         spinnerX = new Spinner<>(0, 1000, 0);
         spinnerXModel = (SpinnerValueFactory.IntegerSpinnerValueFactory) spinnerX.getValueFactory();
@@ -52,7 +53,7 @@ class TilePropertyEditor extends SinglePropertyEditor {
     protected void updateEditorFromProperty() {
         spinnerXModel.setMax(worldMap().numCols() - 1);
         spinnerYModel.setMax(worldMap().numRows() - 1);
-        String propertyValue = worldMap().properties(layerID).get(propertyName);
+        String propertyValue = layer.properties().get(propertyName);
         WorldMapParser.parseTile(propertyValue).ifPresent(tile -> {
             spinnerX.getValueFactory().setValue(tile.x());
             spinnerY.getValueFactory().setValue(tile.y());
