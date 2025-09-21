@@ -6,7 +6,6 @@ package de.amr.pacmanfx.mapeditor.properties;
 
 import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
-import de.amr.pacmanfx.lib.worldmap.WorldMapPropertyType;
 import de.amr.pacmanfx.mapeditor.EditorGlobals;
 import de.amr.pacmanfx.mapeditor.MessageType;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
@@ -182,11 +181,11 @@ public class MapPropertiesEditor extends BorderPane {
 
         propertyNames.forEach(propertyName -> {
             // primitive way of discriminating type but fulfills its purpose
-            WorldMapPropertyType type = WorldMapPropertyType.STRING;
+            WorldMap.PropertyType type = WorldMap.PropertyType.STRING;
             if (propertyName.startsWith("color_")) {
-                type = WorldMapPropertyType.COLOR;
+                type = WorldMap.PropertyType.COLOR;
             } else if (propertyName.startsWith("pos_") || propertyName.startsWith("tile_") || propertyName.startsWith("vec_")) {
-                type = WorldMapPropertyType.TILE;
+                type = WorldMap.PropertyType.TILE;
             }
 
             Set<WorldMap.PropertyAttribute> attributes = EnumSet.noneOf(WorldMap.PropertyAttribute.class);

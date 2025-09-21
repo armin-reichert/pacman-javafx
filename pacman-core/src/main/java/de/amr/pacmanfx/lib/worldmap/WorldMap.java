@@ -31,7 +31,11 @@ public class WorldMap {
         PREDEFINED, HIDDEN
     }
 
-    public record PropertyInfo(String name, WorldMapPropertyType type, Set<PropertyAttribute> attributes) {
+    public enum PropertyType {
+        STRING, TILE, COLOR
+    }
+
+    public record PropertyInfo(String name, PropertyType type, Set<PropertyAttribute> attributes) {
 
         public static final Pattern PATTERN_PROPERTY_NAME = Pattern.compile("[a-zA-Z]([a-zA-Z0-9_])*");
 
