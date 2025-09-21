@@ -4,14 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.mapeditor.properties;
 
-import de.amr.pacmanfx.lib.worldmap.LayerID;
-import de.amr.pacmanfx.lib.worldmap.WorldMap;
-import de.amr.pacmanfx.lib.worldmap.WorldMapPropertyInfo;
-import de.amr.pacmanfx.lib.worldmap.WorldMapPropertyType;
+import de.amr.pacmanfx.lib.worldmap.*;
 import de.amr.pacmanfx.mapeditor.EditorGlobals;
 import de.amr.pacmanfx.mapeditor.MessageType;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
-import de.amr.pacmanfx.mapeditor.actions.Action_DeleteArcadeHouse;
 import de.amr.pacmanfx.model.WorldMapProperty;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -27,7 +23,9 @@ import javafx.scene.layout.Region;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.model.WorldMapProperty.*;
@@ -43,9 +41,10 @@ public class MapPropertiesEditor extends BorderPane {
 
     private static final String SYMBOL_DELETE = "\u274C";
 
-    public static boolean isProtectedProperty(String propertyName, LayerID layerID) {
+    public static boolean isPredefinedProperty(String propertyName, LayerID layerID) {
         return switch (layerID) {
-            case TERRAIN -> COLOR_WALL_FILL.equals(propertyName)
+            case TERRAIN ->
+                   COLOR_WALL_FILL.equals(propertyName)
                 || COLOR_WALL_STROKE.equals(propertyName)
                 || COLOR_DOOR.equals(propertyName)
                 || POS_HOUSE_MIN_TILE.equals(propertyName)
@@ -53,6 +52,15 @@ public class MapPropertiesEditor extends BorderPane {
             case FOOD -> WorldMapProperty.COLOR_FOOD.equals(propertyName);
         };
     }
+
+    public static boolean isHiddenProperty(String propertyName, LayerID layerID) {
+        return switch (layerID) {
+            case TERRAIN -> POS_HOUSE_MIN_TILE.equals(propertyName)
+                || POS_HOUSE_MAX_TILE.equals(propertyName);
+            case FOOD -> false;
+        };
+    }
+
 
     private final TileMapEditorUI ui;
     private final LayerID layerID;
@@ -166,16 +174,19 @@ public class MapPropertiesEditor extends BorderPane {
             : worldMap().propertyNames(layerID);
 
         propertyNames.forEach(propertyName -> {
-            // primitive way of discriminating but fulfills its purpose
-            WorldMapPropertyInfo propertyInfo;
-            boolean protectedProperty = isProtectedProperty(propertyName, layerID);
+            // primitive way of discriminating type but fulfills its purpose
+            WorldMapPropertyType type = WorldMapPropertyType.STRING;
             if (propertyName.startsWith("color_")) {
-                propertyInfo = new WorldMapPropertyInfo(propertyName, WorldMapPropertyType.COLOR, protectedProperty);
+                type = WorldMapPropertyType.COLOR;
             } else if (propertyName.startsWith("pos_") || propertyName.startsWith("tile_") || propertyName.startsWith("vec_")) {
-                propertyInfo = new WorldMapPropertyInfo(propertyName, WorldMapPropertyType.TILE, protectedProperty);
-            } else {
-                propertyInfo = new WorldMapPropertyInfo(propertyName, WorldMapPropertyType.STRING, protectedProperty);
+                type = WorldMapPropertyType.TILE;
             }
+
+            Set<WorldMapPropertyAttribute> attributes = EnumSet.noneOf(WorldMapPropertyAttribute.class);
+            if (isPredefinedProperty(propertyName, layerID)) attributes.add(WorldMapPropertyAttribute.PREDEFINED);
+            if (isHiddenProperty(propertyName, layerID)) attributes.add((WorldMapPropertyAttribute.HIDDEN));
+
+            var propertyInfo = new WorldMapPropertyInfo(propertyName, type, attributes);
             String propertyValue = worldMap().properties(layerID).get(propertyName);
             SinglePropertyEditor propertyEditor = createEditor(ui, propertyInfo, propertyValue);
             propertyEditors.add(propertyEditor);
@@ -184,9 +195,12 @@ public class MapPropertiesEditor extends BorderPane {
         int row = 0;
         grid.getChildren().clear();
         for (var propertyEditor : propertyEditors) {
+            if (propertyEditor.propertyInfo.is(WorldMapPropertyAttribute.HIDDEN)) {
+                continue;
+            }
             grid.add(propertyEditor.nameEditor(), 0, row);
             grid.add(propertyEditor.valueEditor(), 1, row);
-            if (!propertyEditor.propertyInfo.protectedProperty()) {
+            if (!propertyEditor.propertyInfo.is(WorldMapPropertyAttribute.PREDEFINED)) {
                 var btnDelete = new Button(SYMBOL_DELETE);
                 btnDelete.disableProperty().bind(enabled.not());
                 btnDelete.setOnAction(e -> deleteProperty(propertyEditor.propertyInfo.name()));

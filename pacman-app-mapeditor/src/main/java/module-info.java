@@ -11,6 +11,7 @@ open module de.amr.pacmanfx.mapeditor {
     requires de.amr.pacmanfx.core;
     requires de.amr.pacmanfx.uilib;
     requires javafx.base;
+    requires java.desktop;
 
     exports de.amr.pacmanfx.mapeditor;
     exports de.amr.pacmanfx.mapeditor.actions;

@@ -4,10 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.mapeditor.properties;
 
-import de.amr.pacmanfx.lib.worldmap.LayerID;
-import de.amr.pacmanfx.lib.worldmap.WorldMapFormatter;
-import de.amr.pacmanfx.lib.worldmap.WorldMapParser;
-import de.amr.pacmanfx.lib.worldmap.WorldMapPropertyInfo;
+import de.amr.pacmanfx.lib.worldmap.*;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import javafx.scene.Node;
 import javafx.scene.control.Spinner;
@@ -28,20 +25,12 @@ class TilePropertyEditor extends SinglePropertyEditor {
         spinnerX = new Spinner<>(0, 1000, 0);
         spinnerXModel = (SpinnerValueFactory.IntegerSpinnerValueFactory) spinnerX.getValueFactory();
         spinnerX.setMaxWidth(60);
-        if (propertyInfo.protectedProperty()) {
-            spinnerX.setDisable(true);
-        } else {
-            spinnerX.disableProperty().bind(enabled.not());
-        }
+        spinnerX.disableProperty().bind(enabled.not());
 
         spinnerY = new Spinner<>(0, 1000, 0);
         spinnerYModel = (SpinnerValueFactory.IntegerSpinnerValueFactory) spinnerY.getValueFactory();
         spinnerY.setMaxWidth(60);
-        if (propertyInfo.protectedProperty()) {
-            spinnerY.setDisable(true);
-        } else {
-            spinnerY.disableProperty().bind(enabled.not());
-        }
+        spinnerY.disableProperty().bind(enabled.not());
 
         WorldMapParser.parseTile(propertyValue).ifPresent(tile -> {
             spinnerX.getValueFactory().setValue(tile.x());

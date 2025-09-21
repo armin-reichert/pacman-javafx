@@ -4,11 +4,12 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.lib.worldmap;
 
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import static java.util.Objects.requireNonNull;
 
-public record WorldMapPropertyInfo(String name, WorldMapPropertyType type, boolean protectedProperty) {
+public record WorldMapPropertyInfo(String name, WorldMapPropertyType type, Set<WorldMapPropertyAttribute> attributes) {
 
     public static final Pattern PATTERN_PROPERTY_NAME = Pattern.compile("[a-zA-Z]([a-zA-Z0-9_])*");
 
@@ -22,5 +23,10 @@ public record WorldMapPropertyInfo(String name, WorldMapPropertyType type, boole
             throw new IllegalArgumentException("Invalid property name: '%s'".formatted(name));
         }
         requireNonNull(type);
+        requireNonNull(attributes);
+    }
+
+    public boolean is(WorldMapPropertyAttribute attribute) {
+        return attributes.contains(attribute);
     }
 }
