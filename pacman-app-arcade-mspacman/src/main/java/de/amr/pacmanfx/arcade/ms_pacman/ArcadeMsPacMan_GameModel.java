@@ -423,7 +423,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
             return;
         }
 
-        Vector2i entryTile = gameLevel().worldMap().getTerrainTileProperty(WorldMapProperty.POS_BONUS);
+        Vector2i entryTile = gameLevel().worldMap().getTerrainTileProperty(DefaultWorldMapProperties.POS_BONUS);
         Vector2i exitTile;
         boolean crossingLeftToRight;
         if (entryTile != null) {

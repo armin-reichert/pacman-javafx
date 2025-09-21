@@ -14,7 +14,7 @@ import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.lib.worldmap.WorldMapFormatter.formatTile;
 import static de.amr.pacmanfx.mapeditor.EditorGlobals.*;
-import static de.amr.pacmanfx.model.WorldMapProperty.*;
+import static de.amr.pacmanfx.model.DefaultWorldMapProperties.*;
 import static java.util.Objects.requireNonNull;
 
 public class Action_PlaceArcadeHouse extends EditorAction<Void> {
@@ -55,10 +55,10 @@ public class Action_PlaceArcadeHouse extends EditorAction<Void> {
         }
 
         // place ghosts
-        worldMap.properties(LayerID.TERRAIN).put(POS_RED_GHOST,    formatTile(minTile.plus(3, -1)));
-        worldMap.properties(LayerID.TERRAIN).put(POS_CYAN_GHOST,   formatTile(minTile.plus(1, 2)));
-        worldMap.properties(LayerID.TERRAIN).put(POS_PINK_GHOST,   formatTile(minTile.plus(3, 2)));
-        worldMap.properties(LayerID.TERRAIN).put(POS_ORANGE_GHOST, formatTile(minTile.plus(5, 2)));
+        worldMap.properties(LayerID.TERRAIN).put(POS_GHOST_1_RED,    formatTile(minTile.plus(3, -1)));
+        worldMap.properties(LayerID.TERRAIN).put(POS_GHOST_3_CYAN,   formatTile(minTile.plus(1, 2)));
+        worldMap.properties(LayerID.TERRAIN).put(POS_GHOST_2_PINK,   formatTile(minTile.plus(3, 2)));
+        worldMap.properties(LayerID.TERRAIN).put(POS_GHOST_4_ORANGE, formatTile(minTile.plus(5, 2)));
 
         return null;
     }

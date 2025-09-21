@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 import static de.amr.pacmanfx.lib.worldmap.TerrainTile.*;
-import static de.amr.pacmanfx.model.WorldMapProperty.*;
+import static de.amr.pacmanfx.model.DefaultWorldMapProperties.*;
 import static java.util.Objects.requireNonNull;
 
 public interface EditorGlobals {
@@ -64,10 +64,10 @@ public interface EditorGlobals {
 
     Map<String, RectShort> ACTOR_SPRITES = Map.of(
         POS_PAC,          ArcadeSprites.PAC_MAN,
-        POS_RED_GHOST,    ArcadeSprites.RED_GHOST,
-        POS_PINK_GHOST,   ArcadeSprites.PINK_GHOST,
-        POS_CYAN_GHOST,   ArcadeSprites.CYAN_GHOST,
-        POS_ORANGE_GHOST, ArcadeSprites.ORANGE_GHOST,
+        POS_GHOST_1_RED,    ArcadeSprites.RED_GHOST,
+        POS_GHOST_2_PINK,   ArcadeSprites.PINK_GHOST,
+        POS_GHOST_3_CYAN,   ArcadeSprites.CYAN_GHOST,
+        POS_GHOST_4_ORANGE, ArcadeSprites.ORANGE_GHOST,
         POS_BONUS,        ArcadeSprites.STRAWBERRY
     );
 

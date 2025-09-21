@@ -11,7 +11,7 @@ import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.model.WorldMapProperty.*;
+import static de.amr.pacmanfx.model.DefaultWorldMapProperties.*;
 
 public class Action_DeleteArcadeHouse extends EditorAction<Void> {
 
@@ -44,10 +44,10 @@ public class Action_DeleteArcadeHouse extends EditorAction<Void> {
         var terrainProperties = worldMap.properties(LayerID.TERRAIN);
         terrainProperties.remove(POS_HOUSE_MIN_TILE);
         terrainProperties.remove(POS_HOUSE_MAX_TILE);
-        terrainProperties.remove(POS_RED_GHOST);
-        terrainProperties.remove(POS_PINK_GHOST);
-        terrainProperties.remove(POS_CYAN_GHOST);
-        terrainProperties.remove(POS_ORANGE_GHOST);
+        terrainProperties.remove(POS_GHOST_1_RED);
+        terrainProperties.remove(POS_GHOST_2_PINK);
+        terrainProperties.remove(POS_GHOST_3_CYAN);
+        terrainProperties.remove(POS_GHOST_4_ORANGE);
 
         editor.setWorldMapChanged();
         editor.setEdited(true);

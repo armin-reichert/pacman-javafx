@@ -13,7 +13,7 @@ import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import de.amr.pacmanfx.mapeditor.MessageType;
 import de.amr.pacmanfx.mapeditor.TileMatcher;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.WorldMapProperty;
+import de.amr.pacmanfx.model.DefaultWorldMapProperties;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritablePixelFormat;
 import javafx.scene.paint.Color;
@@ -39,22 +39,22 @@ public class Action_FillMapFromTemplate extends EditorUIAction<Void> {
 
         final WorldMap worldMap = editor.currentWorldMap();
         
-        Color fillColor = getColorFromMap(worldMap, LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_FILL, null);
+        Color fillColor = getColorFromMap(worldMap, LayerID.TERRAIN, DefaultWorldMapProperties.COLOR_WALL_FILL, null);
         if (fillColor == null) {
             ui.messageDisplay().showMessage("No fill color defined", 3, MessageType.ERROR);
             return null;
         }
-        Color strokeColor = getColorFromMap(worldMap, LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_STROKE, null);
+        Color strokeColor = getColorFromMap(worldMap, LayerID.TERRAIN, DefaultWorldMapProperties.COLOR_WALL_STROKE, null);
         if (strokeColor == null) {
             ui.messageDisplay().showMessage("No stroke color defined", 3, MessageType.ERROR);
             return null;
         }
-        Color doorColor = getColorFromMap(worldMap, LayerID.TERRAIN, WorldMapProperty.COLOR_DOOR, Color.PINK);
+        Color doorColor = getColorFromMap(worldMap, LayerID.TERRAIN, DefaultWorldMapProperties.COLOR_DOOR, Color.PINK);
         if (doorColor == null) {
             ui.messageDisplay().showMessage("No door color defined", 3, MessageType.ERROR);
             return null;
         }
-        Color foodColor = getColorFromMap(worldMap, LayerID.FOOD, WorldMapProperty.COLOR_FOOD, null);
+        Color foodColor = getColorFromMap(worldMap, LayerID.FOOD, DefaultWorldMapProperties.COLOR_FOOD, null);
         if (foodColor == null) {
             ui.messageDisplay().showMessage("No food color defined", 3, MessageType.ERROR);
             return null;

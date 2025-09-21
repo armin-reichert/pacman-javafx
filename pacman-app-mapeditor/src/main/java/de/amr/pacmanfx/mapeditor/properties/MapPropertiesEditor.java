@@ -8,7 +8,7 @@ import de.amr.pacmanfx.lib.worldmap.*;
 import de.amr.pacmanfx.mapeditor.EditorGlobals;
 import de.amr.pacmanfx.mapeditor.MessageType;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
-import de.amr.pacmanfx.model.WorldMapProperty;
+import de.amr.pacmanfx.model.DefaultWorldMapProperties;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Insets;
@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.model.WorldMapProperty.*;
+import static de.amr.pacmanfx.model.DefaultWorldMapProperties.*;
 import static java.util.Objects.requireNonNull;
 
 public class MapPropertiesEditor extends BorderPane {
@@ -54,7 +54,7 @@ public class MapPropertiesEditor extends BorderPane {
                 || COLOR_DOOR.equals(propertyName)
                 || POS_HOUSE_MIN_TILE.equals(propertyName)
                 || POS_HOUSE_MAX_TILE.equals(propertyName);
-            case FOOD -> WorldMapProperty.COLOR_FOOD.equals(propertyName);
+            case FOOD -> DefaultWorldMapProperties.COLOR_FOOD.equals(propertyName);
         };
     }
 

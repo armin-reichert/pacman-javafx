@@ -4,17 +4,20 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model;
 
-public interface WorldMapProperty {
+public interface DefaultWorldMapProperties {
     String POS_BONUS                = "pos_bonus";
     String POS_PAC                  = "pos_pac";
-    String POS_RED_GHOST            = "pos_ghost_1_red";
-    String POS_PINK_GHOST           = "pos_ghost_2_pink";
-    String POS_CYAN_GHOST           = "pos_ghost_3_cyan";
-    String POS_ORANGE_GHOST         = "pos_ghost_4_orange";
+
+    String POS_GHOST_1_RED          = "pos_ghost_1_red";
+    String POS_GHOST_2_PINK         = "pos_ghost_2_pink";
+    String POS_GHOST_3_CYAN         = "pos_ghost_3_cyan";
+    String POS_GHOST_4_ORANGE       = "pos_ghost_4_orange";
+
     String POS_SCATTER_RED_GHOST    = "pos_scatter_ghost_1_red";
     String POS_SCATTER_PINK_GHOST   = "pos_scatter_ghost_2_pink";
     String POS_SCATTER_CYAN_GHOST   = "pos_scatter_ghost_3_cyan";
     String POS_SCATTER_ORANGE_GHOST = "pos_scatter_ghost_4_orange";
+
     String POS_HOUSE_MIN_TILE       = "pos_house_min";
     String POS_HOUSE_MAX_TILE       = "pos_house_max";
 

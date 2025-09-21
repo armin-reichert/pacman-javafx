@@ -24,7 +24,7 @@ import static de.amr.pacmanfx.lib.worldmap.FoodTile.ENERGIZER;
 import static de.amr.pacmanfx.lib.worldmap.TerrainTile.TUNNEL;
 import static de.amr.pacmanfx.lib.worldmap.TerrainTile.isBlocked;
 import static de.amr.pacmanfx.lib.worldmap.WorldMapFormatter.formatTile;
-import static de.amr.pacmanfx.model.WorldMapProperty.*;
+import static de.amr.pacmanfx.model.DefaultWorldMapProperties.*;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
@@ -113,10 +113,10 @@ public class GameLevel {
 
     private Vector2f findGhostStartPosition(byte ghostPersonality) {
         String propertyName = switch (ghostPersonality) {
-            case RED_GHOST_SHADOW ->  POS_RED_GHOST;
-            case PINK_GHOST_SPEEDY -> POS_PINK_GHOST;
-            case CYAN_GHOST_BASHFUL -> POS_CYAN_GHOST;
-            case ORANGE_GHOST_POKEY -> POS_ORANGE_GHOST;
+            case RED_GHOST_SHADOW ->  POS_GHOST_1_RED;
+            case PINK_GHOST_SPEEDY -> POS_GHOST_2_PINK;
+            case CYAN_GHOST_BASHFUL -> POS_GHOST_3_CYAN;
+            case ORANGE_GHOST_POKEY -> POS_GHOST_4_ORANGE;
             default -> throw new IllegalArgumentException("Illegal ghost personality: %d".formatted(ghostPersonality));
         };
         Vector2i tile = worldMap.getTerrainTileProperty(propertyName);
@@ -235,9 +235,9 @@ public class GameLevel {
             byte personality = ghost.id().personality();
             ghost.setStartPosition(findGhostStartPosition(personality));
             Vector2i tile = switch (personality) {
-                case RED_GHOST_SHADOW, PINK_GHOST_SPEEDY -> worldMap.getTerrainTileProperty(POS_PINK_GHOST);
-                case CYAN_GHOST_BASHFUL -> worldMap.getTerrainTileProperty(POS_CYAN_GHOST);
-                case ORANGE_GHOST_POKEY -> worldMap.getTerrainTileProperty(POS_ORANGE_GHOST);
+                case RED_GHOST_SHADOW, PINK_GHOST_SPEEDY -> worldMap.getTerrainTileProperty(POS_GHOST_2_PINK);
+                case CYAN_GHOST_BASHFUL -> worldMap.getTerrainTileProperty(POS_GHOST_3_CYAN);
+                case ORANGE_GHOST_POKEY -> worldMap.getTerrainTileProperty(POS_GHOST_4_ORANGE);
                 default -> throw new IllegalArgumentException("Illegal ghost personality: %d".formatted(personality));
             };
             house.setGhostRevivalTile(ghost.id(), tile);

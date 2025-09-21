@@ -8,7 +8,7 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.*;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
-import de.amr.pacmanfx.model.WorldMapProperty;
+import de.amr.pacmanfx.model.DefaultWorldMapProperties;
 
 import java.util.ArrayDeque;
 import java.util.HashSet;
@@ -82,12 +82,12 @@ public class Action_FloodWithPellets extends EditorAction<Void> {
 
     private Set<Vector2i> actorTiles(WorldMap worldMap) {
         var actorTiles = new HashSet<Vector2i>();
-        actorTile(worldMap, WorldMapProperty.POS_PAC).ifPresent(actorTiles::add);
-        actorTile(worldMap, WorldMapProperty.POS_RED_GHOST).ifPresent(actorTiles::add);
-        actorTile(worldMap, WorldMapProperty.POS_PINK_GHOST).ifPresent(actorTiles::add);
-        actorTile(worldMap, WorldMapProperty.POS_CYAN_GHOST).ifPresent(actorTiles::add);
-        actorTile(worldMap, WorldMapProperty.POS_ORANGE_GHOST).ifPresent(actorTiles::add);
-        actorTile(worldMap, WorldMapProperty.POS_BONUS).ifPresent(actorTiles::add);
+        actorTile(worldMap, DefaultWorldMapProperties.POS_PAC).ifPresent(actorTiles::add);
+        actorTile(worldMap, DefaultWorldMapProperties.POS_GHOST_1_RED).ifPresent(actorTiles::add);
+        actorTile(worldMap, DefaultWorldMapProperties.POS_GHOST_2_PINK).ifPresent(actorTiles::add);
+        actorTile(worldMap, DefaultWorldMapProperties.POS_GHOST_3_CYAN).ifPresent(actorTiles::add);
+        actorTile(worldMap, DefaultWorldMapProperties.POS_GHOST_4_ORANGE).ifPresent(actorTiles::add);
+        actorTile(worldMap, DefaultWorldMapProperties.POS_BONUS).ifPresent(actorTiles::add);
         return actorTiles;
     }
 

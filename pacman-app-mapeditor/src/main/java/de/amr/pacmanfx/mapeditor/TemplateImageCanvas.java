@@ -9,7 +9,7 @@ import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.mapeditor.actions.Action_FillMapFromTemplate;
 import de.amr.pacmanfx.mapeditor.actions.Action_SetFoodProperty;
 import de.amr.pacmanfx.mapeditor.actions.Action_SetTerrainProperty;
-import de.amr.pacmanfx.model.WorldMapProperty;
+import de.amr.pacmanfx.model.DefaultWorldMapProperties;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.geometry.Insets;
@@ -123,25 +123,25 @@ public class TemplateImageCanvas extends Canvas {
         var miColorPreview = createColorMenuItem(colorToSelect,
                 pickColor.equals(Color.TRANSPARENT) ? "TRANSPARENT -> BLACK" : formatColorHex(colorToSelect));
 
-        Color fillColor = getColorFromMap(worldMap(), LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_FILL, null);
+        Color fillColor = getColorFromMap(worldMap(), LayerID.TERRAIN, DefaultWorldMapProperties.COLOR_WALL_FILL, null);
         var miPickFillColor = createColorMenuItem(fillColor, translated("menu.pick_color.set_fill_color"));
         miPickFillColor.setOnAction(ae -> new Action_SetTerrainProperty(editor,
-            WorldMapProperty.COLOR_WALL_FILL, formatColor(colorToSelect)).execute());
+            DefaultWorldMapProperties.COLOR_WALL_FILL, formatColor(colorToSelect)).execute());
 
-        Color strokeColor = getColorFromMap(worldMap(), LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_STROKE, null);
+        Color strokeColor = getColorFromMap(worldMap(), LayerID.TERRAIN, DefaultWorldMapProperties.COLOR_WALL_STROKE, null);
         var miPickStrokeColor = createColorMenuItem(strokeColor, translated("menu.pick_color.set_stroke_color"));
         miPickStrokeColor.setOnAction(ae -> new Action_SetTerrainProperty(editor,
-            WorldMapProperty.COLOR_WALL_STROKE, formatColor(colorToSelect)).execute());
+            DefaultWorldMapProperties.COLOR_WALL_STROKE, formatColor(colorToSelect)).execute());
 
-        Color doorColor = getColorFromMap(worldMap(), LayerID.TERRAIN, WorldMapProperty.COLOR_DOOR, null);
+        Color doorColor = getColorFromMap(worldMap(), LayerID.TERRAIN, DefaultWorldMapProperties.COLOR_DOOR, null);
         var miPickDoorColor = createColorMenuItem(doorColor, translated("menu.pick_color.set_door_color"));
         miPickDoorColor.setOnAction(ae -> new Action_SetTerrainProperty(editor,
-            WorldMapProperty.COLOR_DOOR, formatColor(colorToSelect)).execute());
+            DefaultWorldMapProperties.COLOR_DOOR, formatColor(colorToSelect)).execute());
 
-        Color foodColor = getColorFromMap(worldMap(), LayerID.FOOD, WorldMapProperty.COLOR_FOOD, null);
+        Color foodColor = getColorFromMap(worldMap(), LayerID.FOOD, DefaultWorldMapProperties.COLOR_FOOD, null);
         var miPickFoodColor = createColorMenuItem(foodColor, translated("menu.pick_color.set_food_color"));
         miPickFoodColor.setOnAction(ae -> new Action_SetFoodProperty(editor,
-            WorldMapProperty.COLOR_FOOD, formatColor(colorToSelect)).execute());
+            DefaultWorldMapProperties.COLOR_FOOD, formatColor(colorToSelect)).execute());
 
         var text = new Text("Create Map using these colors"); //TODO localize
         text.setFont(Font.font("Sans", FontWeight.BOLD, 16));

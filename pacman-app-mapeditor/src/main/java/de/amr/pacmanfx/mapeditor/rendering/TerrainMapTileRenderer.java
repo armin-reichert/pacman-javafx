@@ -9,7 +9,7 @@ import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.*;
-import de.amr.pacmanfx.model.WorldMapProperty;
+import de.amr.pacmanfx.model.DefaultWorldMapProperties;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapColorScheme;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapRenderer;
@@ -133,10 +133,10 @@ public class TerrainMapTileRenderer extends BaseRenderer implements TerrainMapRe
             drawTileUnscaled(tile, code);
         });
         if (specialTilesDisplayed) {
-            specialTile(worldMap, WorldMapProperty.POS_SCATTER_RED_GHOST).ifPresent(tile -> drawScatterTarget(tile, Color.RED));
-            specialTile(worldMap, WorldMapProperty.POS_SCATTER_PINK_GHOST).ifPresent(tile -> drawScatterTarget(tile, Color.PINK));
-            specialTile(worldMap, WorldMapProperty.POS_SCATTER_CYAN_GHOST).ifPresent(tile -> drawScatterTarget(tile, Color.CYAN));
-            specialTile(worldMap, WorldMapProperty.POS_SCATTER_ORANGE_GHOST).ifPresent(tile -> drawScatterTarget(tile, Color.ORANGE));
+            specialTile(worldMap, DefaultWorldMapProperties.POS_SCATTER_RED_GHOST).ifPresent(tile -> drawScatterTarget(tile, Color.RED));
+            specialTile(worldMap, DefaultWorldMapProperties.POS_SCATTER_PINK_GHOST).ifPresent(tile -> drawScatterTarget(tile, Color.PINK));
+            specialTile(worldMap, DefaultWorldMapProperties.POS_SCATTER_CYAN_GHOST).ifPresent(tile -> drawScatterTarget(tile, Color.CYAN));
+            specialTile(worldMap, DefaultWorldMapProperties.POS_SCATTER_ORANGE_GHOST).ifPresent(tile -> drawScatterTarget(tile, Color.ORANGE));
         }
         if (segmentNumbersDisplayed) {
             drawObstacleSegmentNumbers(worldMap.obstacles());

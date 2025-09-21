@@ -10,7 +10,7 @@ import de.amr.pacmanfx.lib.worldmap.TerrainTile;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.lib.worldmap.WorldMapFormatter;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.WorldMapProperty;
+import de.amr.pacmanfx.model.DefaultWorldMapProperties;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
@@ -151,8 +151,8 @@ public interface EditorUtil {
     }
 
     static boolean isPartOfHouse(WorldMap worldMap, Vector2i tile) {
-        Vector2i minTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE);
-        Vector2i maxTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE);
+        Vector2i minTile = worldMap.getTerrainTileProperty(DefaultWorldMapProperties.POS_HOUSE_MIN_TILE);
+        Vector2i maxTile = worldMap.getTerrainTileProperty(DefaultWorldMapProperties.POS_HOUSE_MAX_TILE);
         if (minTile != null && maxTile != null) {
             return minTile.x() <= tile.x() && tile.x() <= maxTile.x()
                     && minTile.y() <= tile.y() && tile.y() <= maxTile.y();

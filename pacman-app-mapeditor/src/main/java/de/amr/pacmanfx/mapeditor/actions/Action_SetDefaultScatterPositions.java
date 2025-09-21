@@ -9,7 +9,7 @@ import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 
 import static de.amr.pacmanfx.lib.worldmap.WorldMapFormatter.formatTile;
-import static de.amr.pacmanfx.model.WorldMapProperty.*;
+import static de.amr.pacmanfx.model.DefaultWorldMapProperties.*;
 import static java.util.Objects.requireNonNull;
 
 public class Action_SetDefaultScatterPositions extends EditorAction<Void> {

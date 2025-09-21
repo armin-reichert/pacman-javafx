@@ -14,7 +14,7 @@ import de.amr.pacmanfx.mapeditor.rendering.ActorSpriteRenderer;
 import de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites;
 import de.amr.pacmanfx.mapeditor.rendering.TerrainMapTileRenderer;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.WorldMapProperty;
+import de.amr.pacmanfx.model.DefaultWorldMapProperties;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.rendering.FoodMapRenderer;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapColorScheme;
@@ -317,7 +317,7 @@ public class EditCanvas extends Canvas {
 
         // Food
         if (foodVisible.get()) {
-            Color foodColor = EditorUtil.getColorFromMap(worldMap(), LayerID.FOOD, WorldMapProperty.COLOR_FOOD, ArcadeSprites.MS_PACMAN_COLOR_FOOD);
+            Color foodColor = EditorUtil.getColorFromMap(worldMap(), LayerID.FOOD, DefaultWorldMapProperties.COLOR_FOOD, ArcadeSprites.MS_PACMAN_COLOR_FOOD);
             foodRenderer.setEnergizerColor(foodColor);
             foodRenderer.setPelletColor(foodColor);
             worldMap().tiles().forEach(tile -> foodRenderer.drawTile(tile, worldMap().content(LayerID.FOOD, tile)));
