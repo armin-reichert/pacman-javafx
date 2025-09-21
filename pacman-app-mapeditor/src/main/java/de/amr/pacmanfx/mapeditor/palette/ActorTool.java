@@ -16,7 +16,6 @@ import javafx.scene.paint.Color;
 import java.util.function.Consumer;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.lib.worldmap.WorldMapFormatter.formatTile;
 import static de.amr.pacmanfx.mapeditor.EditorGlobals.TOOL_SIZE;
 import static de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites.SPRITE_SHEET;
 import static java.util.Objects.requireNonNull;
@@ -29,7 +28,7 @@ public class ActorTool extends PropertyValueEditorTool {
     public ActorTool(TileMapEditorUI ui, String propertyName, String description, RectShort sprite) {
         super(propertyName, description);
         this.sprite = requireNonNull(sprite);
-        editor = tile -> new Action_SetTerrainProperty(ui.editor(), propertyName, formatTile(tile)).execute();
+        editor = tile -> new Action_SetTerrainProperty(ui.editor(), propertyName, String.valueOf(tile)).execute();
     }
 
     @Override

@@ -77,7 +77,7 @@ public record Vector2i(int x, int y) {
 
     @Override
     public String toString() {
-        return String.format("(%2d,%2d)", x, y);
+        return String.format("(%d,%d)", x, y);
     }
 
     public Vector2f toVector2f() {

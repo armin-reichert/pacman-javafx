@@ -4,9 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.mapeditor.properties;
 
+import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
-import de.amr.pacmanfx.lib.worldmap.WorldMapFormatter;
 import de.amr.pacmanfx.lib.worldmap.WorldMapParser;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import javafx.scene.Node;
@@ -61,7 +61,7 @@ class TilePropertyEditor extends SinglePropertyEditor {
 
     @Override
     protected String formattedPropertyValue() {
-        return WorldMapFormatter.formatTile(spinnerX.getValue(), spinnerY.getValue());
+        return Vector2i.of(spinnerX.getValue(), spinnerY.getValue()).toString();
     }
 
     @Override

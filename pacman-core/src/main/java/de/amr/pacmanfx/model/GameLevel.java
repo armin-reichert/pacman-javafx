@@ -23,7 +23,6 @@ import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
 import static de.amr.pacmanfx.lib.worldmap.FoodTile.ENERGIZER;
 import static de.amr.pacmanfx.lib.worldmap.TerrainTile.TUNNEL;
 import static de.amr.pacmanfx.lib.worldmap.TerrainTile.isBlocked;
-import static de.amr.pacmanfx.lib.worldmap.WorldMapFormatter.formatTile;
 import static de.amr.pacmanfx.model.DefaultWorldMapProperties.*;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
@@ -150,7 +149,7 @@ public class GameLevel {
         if (minTile == null) {
             minTile = ArcadeHouse.ORIGINAL_MIN_TILE;
             Logger.warn("No house min tile found in map, using {}", minTile);
-            worldMap.properties(LayerID.TERRAIN).put(POS_HOUSE_MIN_TILE, formatTile(minTile));
+            worldMap.properties(LayerID.TERRAIN).put(POS_HOUSE_MIN_TILE, String.valueOf(minTile));
         }
         house = new ArcadeHouse(minTile);
         worldMap.setContentRect(LayerID.TERRAIN, minTile, house.content());

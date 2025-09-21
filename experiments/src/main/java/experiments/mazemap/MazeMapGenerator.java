@@ -2,13 +2,14 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.lib.mazemap;
+package experiments.mazemap;
 
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.graph.GridGraph;
 import de.amr.pacmanfx.lib.graph.GridGraphImpl;
 import de.amr.pacmanfx.lib.worldmap.*;
+import de.amr.pacmanfx.mapeditor.EditorUtil;
 import de.amr.pacmanfx.model.DefaultWorldMapProperties;
 import org.tinylog.Logger;
 
@@ -163,7 +164,7 @@ public class MazeMapGenerator {
 
     private static boolean saveWorldMap(WorldMap worldMap,File file) {
         try (PrintWriter pw = new PrintWriter(file, StandardCharsets.UTF_8)) {
-            pw.print(WorldMapFormatter.formatted(worldMap));
+            pw.print(EditorUtil.formatted(worldMap));
             return true;
         } catch (IOException x) {
             Logger.error(x);

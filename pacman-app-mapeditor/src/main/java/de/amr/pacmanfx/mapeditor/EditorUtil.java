@@ -5,10 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.mapeditor;
 
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.lib.worldmap.LayerID;
-import de.amr.pacmanfx.lib.worldmap.TerrainTile;
-import de.amr.pacmanfx.lib.worldmap.WorldMap;
-import de.amr.pacmanfx.lib.worldmap.WorldMapFormatter;
+import de.amr.pacmanfx.lib.worldmap.*;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.DefaultWorldMapProperties;
 import javafx.scene.Node;
@@ -19,13 +16,11 @@ import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
@@ -39,7 +34,7 @@ public interface EditorUtil {
 
     static String generateSourceCode(WorldMap worldMap) {
         StringBuilder sb = new StringBuilder();
-        String[] sourceTextLines = WorldMapFormatter.formatted(worldMap).split("\n");
+        String[] sourceTextLines = formatted(worldMap).split("\n");
         for (int i = 0; i < sourceTextLines.length; ++i) {
             sb.append("%5d: ".formatted(i + 1)).append(sourceTextLines[i]).append("\n");
         }
@@ -171,11 +166,49 @@ public interface EditorUtil {
 
     static boolean saveWorldMap(WorldMap worldMap, File file) {
         try (PrintWriter pw = new PrintWriter(file, StandardCharsets.UTF_8)) {
-            pw.print(WorldMapFormatter.formatted(worldMap));
+            pw.print(formatted(worldMap));
             return true;
         } catch (IOException x) {
             Logger.error(x);
             return false;
         }
+    }
+
+    String TILE_FORMAT = "(%d,%d)";
+
+    static String formatTile(Vector2i tile) {
+        requireNonNull(tile);
+        return String.format(TILE_FORMAT, tile.x(), tile.y());
+    }
+
+    static String formatTile(int tileX, int tileY) {
+        return String.format(TILE_FORMAT, tileX, tileY);
+    }
+
+    static String formatted(WorldMap worldMap) {
+        var sw = new StringWriter();
+        var pw = new PrintWriter(sw);
+        pw.println(WorldMap.MARKER_BEGIN_TERRAIN_LAYER);
+        printLayer(pw, worldMap, worldMap.layer(LayerID.TERRAIN));
+        pw.println(WorldMap.MARKER_BEGIN_FOOD_LAYER);
+        printLayer(pw, worldMap, worldMap.layer(LayerID.FOOD));
+        return sw.toString();
+    }
+
+    private static void printLayer(PrintWriter pw, WorldMap worldMap, WorldMapLayer layer) {
+        Map<String, String> properties = layer.properties();
+        properties.keySet().stream().sorted().map(name -> "%s=%s".formatted(name, properties.get(name))).forEach(pw::println);
+        pw.println(WorldMap.MARKER_BEGIN_DATA_SECTION);
+        for (int row = 0; row < worldMap.numRows(); ++row) {
+            for (int col = 0; col < worldMap.numCols(); ++col) {
+                byte value = layer.get(row, col);
+                pw.printf("#%02X", value);
+                if (col < worldMap.numCols() - 1) {
+                    pw.print(",");
+                }
+            }
+            pw.println();
+        }
+        pw.flush();
     }
 }

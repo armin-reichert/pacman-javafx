@@ -1,6 +1,7 @@
 dependencies {
     implementation project(":pacman-core")
     implementation project(":pacman-ui-lib")
+    implementation project(":pacman-app-mapeditor")
     implementation project(":pacman-ui")
     implementation libs.bundles.tinylog
 }
