@@ -10,6 +10,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 
 class TilePropertyEditor extends SinglePropertyEditor {
 
@@ -41,6 +42,8 @@ class TilePropertyEditor extends SinglePropertyEditor {
         spinnerY.valueProperty().addListener((py, ov, nv) -> storePropertyValue(ui));
 
         valueEditorPane = new HBox(spinnerX, spinnerY);
+        valueEditorPane.setPrefWidth(MapPropertiesEditor.VALUE_EDITOR_WIDTH);
+        valueEditorPane.setMinWidth(MapPropertiesEditor.VALUE_EDITOR_WIDTH);
     }
 
     @Override

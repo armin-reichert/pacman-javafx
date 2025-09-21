@@ -18,6 +18,7 @@ class ColorPropertyEditor extends SinglePropertyEditor {
     public ColorPropertyEditor(TileMapEditorUI ui, LayerID layerID, WorldMapPropertyInfo propertyInfo, String propertyValue) {
         super(ui, layerID, propertyInfo);
         colorPicker = new ColorPicker();
+        colorPicker.setPrefWidth(MapPropertiesEditor.VALUE_EDITOR_WIDTH);
         colorPicker.setValue(EditorUtil.parseColor(propertyValue));
         colorPicker.disableProperty().bind(enabled.not());
         colorPicker.setOnAction(e -> storePropertyValue(ui));

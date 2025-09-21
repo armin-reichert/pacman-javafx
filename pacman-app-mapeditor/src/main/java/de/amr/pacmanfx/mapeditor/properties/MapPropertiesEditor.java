@@ -33,13 +33,18 @@ import static java.util.Objects.requireNonNull;
 
 public class MapPropertiesEditor extends BorderPane {
 
-    public static final int NAME_EDITOR_MIN_WIDTH = 180;
+    public static final int NAME_EDITOR_WIDTH = 170;
+    public static final int VALUE_EDITOR_WIDTH = 120;
+
+    private static final String SYMBOL_DELETE = "\u274C";
 
     private static final String NEW_COLOR_PROPERTY_NAME = "color_RENAME_ME";
     private static final String NEW_POSITION_PROPERTY_NAME = "pos_RENAME_ME";
     private static final String NEW_TEXT_PROPERTY_NAME  = "RENAME_ME";
 
-    private static final String SYMBOL_DELETE = "\u274C";
+    public static final String DEFAULT_COLOR_VALUE = "rgba(0,0,0,1.0)";
+    public static final String DEFAULT_TILE_VALUE = "(0,0)";
+    public static final String DEFAULT_TEXT_VALUE = "";
 
     public static boolean isPredefinedProperty(String propertyName, LayerID layerID) {
         return switch (layerID) {
@@ -112,7 +117,7 @@ public class MapPropertiesEditor extends BorderPane {
             ui.messageDisplay().showMessage("Property %s already exists".formatted(propertyName), 1, MessageType.INFO);
             return;
         }
-        worldMap().properties(layerID).put(propertyName, "green");
+        worldMap().properties(layerID).put(propertyName, DEFAULT_COLOR_VALUE);
         ui.editor().setWorldMapChanged();
         ui.editor().setEdited(true);
         ui.messageDisplay().showMessage("New property %s added".formatted(propertyName), 1, MessageType.INFO);
@@ -124,7 +129,7 @@ public class MapPropertiesEditor extends BorderPane {
             ui.messageDisplay().showMessage("Property %s already exists".formatted(propertyName), 1, MessageType.INFO);
             return;
         }
-        worldMap().properties(layerID).put(propertyName, "(0,0)");
+        worldMap().properties(layerID).put(propertyName, DEFAULT_TILE_VALUE);
         ui.messageDisplay().showMessage("New property %s added".formatted(propertyName), 1, MessageType.INFO);
         ui.editor().setWorldMapChanged();
         ui.editor().setEdited(true);
@@ -136,7 +141,7 @@ public class MapPropertiesEditor extends BorderPane {
             ui.messageDisplay().showMessage("Property %s already exists".formatted(propertyName), 1, MessageType.INFO);
             return;
         }
-        worldMap().properties(layerID).put(propertyName, "any text");
+        worldMap().properties(layerID).put(propertyName, DEFAULT_TEXT_VALUE);
         ui.editor().setWorldMapChanged();
         ui.editor().setEdited(true);
         ui.messageDisplay().showMessage("New property %s added".formatted(propertyName), 1, MessageType.INFO);

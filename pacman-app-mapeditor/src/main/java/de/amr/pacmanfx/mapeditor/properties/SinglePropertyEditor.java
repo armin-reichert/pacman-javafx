@@ -38,7 +38,8 @@ abstract class SinglePropertyEditor {
         this.propertyInfo = requireNonNull(propertyInfo);
 
         nameEditor = new TextField(propertyInfo.name());
-        nameEditor.setMinWidth(MapPropertiesEditor.NAME_EDITOR_MIN_WIDTH);
+        nameEditor.setMinWidth(MapPropertiesEditor.NAME_EDITOR_WIDTH);
+        nameEditor.setMaxWidth(MapPropertiesEditor.NAME_EDITOR_WIDTH);
         nameEditor.disableProperty().bind(enabled.not());
         if (propertyInfo.is(WorldMapPropertyAttribute.PREDEFINED)) {
             nameEditor.setEditable(false);

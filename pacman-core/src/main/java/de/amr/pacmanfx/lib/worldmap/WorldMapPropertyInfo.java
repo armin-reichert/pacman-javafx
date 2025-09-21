@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.lib.worldmap;
 
+import java.util.Collections;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -24,6 +25,7 @@ public record WorldMapPropertyInfo(String name, WorldMapPropertyType type, Set<W
         }
         requireNonNull(type);
         requireNonNull(attributes);
+        attributes = Collections.unmodifiableSet(attributes);
     }
 
     public boolean is(WorldMapPropertyAttribute attribute) {
