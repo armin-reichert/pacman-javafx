@@ -32,7 +32,34 @@ public class WorldMap {
     }
 
     public enum PropertyType {
-        STRING, TILE, COLOR
+        STRING {
+            @Override
+            public String format(Object value) {
+                return String.valueOf(value);
+            }
+        },
+
+        TILE {
+            @Override
+            public String format(Object value) {
+                if (value instanceof Vector2i vec) {
+                    return "(%d,%d)".formatted(vec.x(), vec.y());
+                }
+                throw new IllegalArgumentException("Not a tile value: " + value);
+            }
+        },
+
+        COLOR_RGBA {
+            @Override
+            public String format(Object value) {
+                if (value instanceof ColorRGBA color) {
+                    return String.format(Locale.ENGLISH, "rgba(%d,%d,%d,%.2f)", color.red(), color.green(), color.blue(), color.alpha());
+                }
+                throw new IllegalArgumentException("Not a RGBA color value: " + value);
+            }
+        };
+
+        public abstract String format(Object value);
     }
 
     public record PropertyInfo(String name, PropertyType type, Set<PropertyAttribute> attributes) {

@@ -183,7 +183,7 @@ public class MapPropertiesEditor extends BorderPane {
             // primitive way of discriminating type but fulfills its purpose
             WorldMap.PropertyType type = WorldMap.PropertyType.STRING;
             if (propertyName.startsWith("color_")) {
-                type = WorldMap.PropertyType.COLOR;
+                type = WorldMap.PropertyType.COLOR_RGBA;
             } else if (propertyName.startsWith("pos_") || propertyName.startsWith("tile_") || propertyName.startsWith("vec_")) {
                 type = WorldMap.PropertyType.TILE;
             }
@@ -228,7 +228,7 @@ public class MapPropertiesEditor extends BorderPane {
 
     private SinglePropertyEditor createEditor(TileMapEditorUI ui, WorldMap.PropertyInfo info, String initialValue) {
         SinglePropertyEditor propertyEditor = switch (info.type()) {
-            case COLOR -> new ColorPropertyEditor(ui, layerID, info, initialValue);
+            case COLOR_RGBA -> new ColorPropertyEditor(ui, layerID, info, initialValue);
             case TILE ->  new TilePropertyEditor(ui, layerID, info, initialValue);
             case STRING -> new TextPropertyEditor(ui, layerID, info, initialValue);
         };
