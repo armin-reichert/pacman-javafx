@@ -16,6 +16,7 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -25,6 +26,35 @@ import static de.amr.pacmanfx.Validations.requireNonNegativeInt;
 import static java.util.Objects.requireNonNull;
 
 public class WorldMap {
+
+    public enum PropertyAttribute {
+        PREDEFINED, HIDDEN
+    }
+
+    public record PropertyInfo(String name, WorldMapPropertyType type, Set<PropertyAttribute> attributes) {
+
+        public static final Pattern PATTERN_PROPERTY_NAME = Pattern.compile("[a-zA-Z]([a-zA-Z0-9_])*");
+
+        public static boolean isInvalidPropertyName(String s) {
+            return s == null || !PATTERN_PROPERTY_NAME.matcher(s).matches();
+        }
+
+        public PropertyInfo {
+            requireNonNull(name);
+            if (isInvalidPropertyName(name)) {
+                throw new IllegalArgumentException("Invalid property name: '%s'".formatted(name));
+            }
+            requireNonNull(type);
+            requireNonNull(attributes);
+            attributes = Collections.unmodifiableSet(attributes);
+        }
+
+        public boolean is(PropertyAttribute attribute) {
+            return attributes.contains(attribute);
+        }
+    }
+
+
 
     public static final String MARKER_BEGIN_TERRAIN_LAYER = "!terrain";
     public static final String MARKER_BEGIN_FOOD_LAYER = "!food";

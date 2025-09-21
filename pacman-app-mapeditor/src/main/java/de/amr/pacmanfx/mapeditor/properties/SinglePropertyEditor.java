@@ -6,10 +6,8 @@ package de.amr.pacmanfx.mapeditor.properties;
 
 import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
-import de.amr.pacmanfx.lib.worldmap.WorldMapPropertyAttribute;
-import de.amr.pacmanfx.lib.worldmap.WorldMapPropertyInfo;
-import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import de.amr.pacmanfx.mapeditor.MessageType;
+import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -29,10 +27,10 @@ abstract class SinglePropertyEditor {
     protected final ObjectProperty<WorldMap> worldMap = new SimpleObjectProperty<>();
 
     protected final LayerID layerID;
-    protected WorldMapPropertyInfo propertyInfo;
+    protected WorldMap.PropertyInfo propertyInfo;
     protected final TextField nameEditor;
 
-    protected SinglePropertyEditor(TileMapEditorUI ui, LayerID layerID, WorldMapPropertyInfo propertyInfo) {
+    protected SinglePropertyEditor(TileMapEditorUI ui, LayerID layerID, WorldMap.PropertyInfo propertyInfo) {
         requireNonNull(ui);
         this.layerID = requireNonNull(layerID);
         this.propertyInfo = requireNonNull(propertyInfo);
@@ -41,7 +39,7 @@ abstract class SinglePropertyEditor {
         nameEditor.setMinWidth(MapPropertiesEditor.NAME_EDITOR_WIDTH);
         nameEditor.setMaxWidth(MapPropertiesEditor.NAME_EDITOR_WIDTH);
         nameEditor.disableProperty().bind(enabled.not());
-        if (propertyInfo.is(WorldMapPropertyAttribute.PREDEFINED)) {
+        if (propertyInfo.is(WorldMap.PropertyAttribute.PREDEFINED)) {
             nameEditor.setEditable(false);
             nameEditor.setBackground(Background.fill(Color.LIGHTGRAY));
         } else {
@@ -79,7 +77,7 @@ abstract class SinglePropertyEditor {
         if (propertyInfo.name().equals(editedName)) {
             return;
         }
-        if (WorldMapPropertyInfo.isInvalidPropertyName(editedName)) {
+        if (WorldMap.PropertyInfo.isInvalidPropertyName(editedName)) {
             nameEditor.setText(propertyInfo.name());
             ui.messageDisplay().showMessage("Property name '%s' is invalid".formatted(editedName), 2, MessageType.ERROR);
             return;
@@ -104,7 +102,7 @@ abstract class SinglePropertyEditor {
 
         worldMap().properties(layerID).remove(propertyInfo.name());
         worldMap().properties(layerID).put(editedName, formattedPropertyValue());
-        propertyInfo = new WorldMapPropertyInfo(editedName, propertyInfo.type(), EnumSet.noneOf(WorldMapPropertyAttribute.class));
+        propertyInfo = new WorldMap.PropertyInfo(editedName, propertyInfo.type(), EnumSet.noneOf(WorldMap.PropertyAttribute.class));
 
         ui.editor().setWorldMapChanged();
         ui.editor().setEdited(true);

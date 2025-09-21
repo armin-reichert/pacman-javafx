@@ -4,7 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.mapeditor.properties;
 
-import de.amr.pacmanfx.lib.worldmap.*;
+import de.amr.pacmanfx.lib.worldmap.LayerID;
+import de.amr.pacmanfx.lib.worldmap.WorldMap;
+import de.amr.pacmanfx.lib.worldmap.WorldMapPropertyType;
 import de.amr.pacmanfx.mapeditor.EditorGlobals;
 import de.amr.pacmanfx.mapeditor.MessageType;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
@@ -187,11 +189,11 @@ public class MapPropertiesEditor extends BorderPane {
                 type = WorldMapPropertyType.TILE;
             }
 
-            Set<WorldMapPropertyAttribute> attributes = EnumSet.noneOf(WorldMapPropertyAttribute.class);
-            if (isPredefinedProperty(propertyName, layerID)) attributes.add(WorldMapPropertyAttribute.PREDEFINED);
-            if (isHiddenProperty(propertyName, layerID)) attributes.add((WorldMapPropertyAttribute.HIDDEN));
+            Set<WorldMap.PropertyAttribute> attributes = EnumSet.noneOf(WorldMap.PropertyAttribute.class);
+            if (isPredefinedProperty(propertyName, layerID)) attributes.add(WorldMap.PropertyAttribute.PREDEFINED);
+            if (isHiddenProperty(propertyName, layerID)) attributes.add((WorldMap.PropertyAttribute.HIDDEN));
 
-            var propertyInfo = new WorldMapPropertyInfo(propertyName, type, attributes);
+            var propertyInfo = new WorldMap.PropertyInfo(propertyName, type, attributes);
             String propertyValue = worldMap().properties(layerID).get(propertyName);
             SinglePropertyEditor propertyEditor = createEditor(ui, propertyInfo, propertyValue);
             propertyEditors.add(propertyEditor);
@@ -200,12 +202,12 @@ public class MapPropertiesEditor extends BorderPane {
         int row = 0;
         grid.getChildren().clear();
         for (var propertyEditor : propertyEditors) {
-            if (propertyEditor.propertyInfo.is(WorldMapPropertyAttribute.HIDDEN)) {
+            if (propertyEditor.propertyInfo.is(WorldMap.PropertyAttribute.HIDDEN)) {
                 continue;
             }
             grid.add(propertyEditor.nameEditor(), 0, row);
             grid.add(propertyEditor.valueEditor(), 1, row);
-            if (!propertyEditor.propertyInfo.is(WorldMapPropertyAttribute.PREDEFINED)) {
+            if (!propertyEditor.propertyInfo.is(WorldMap.PropertyAttribute.PREDEFINED)) {
                 var btnDelete = new Button(SYMBOL_DELETE);
                 btnDelete.disableProperty().bind(enabled.not());
                 btnDelete.setOnAction(e -> deleteProperty(propertyEditor.propertyInfo.name()));
@@ -225,7 +227,7 @@ public class MapPropertiesEditor extends BorderPane {
         updatePropertyEditorValues();
     }
 
-    private SinglePropertyEditor createEditor(TileMapEditorUI ui, WorldMapPropertyInfo info, String initialValue) {
+    private SinglePropertyEditor createEditor(TileMapEditorUI ui, WorldMap.PropertyInfo info, String initialValue) {
         SinglePropertyEditor propertyEditor = switch (info.type()) {
             case COLOR -> new ColorPropertyEditor(ui, layerID, info, initialValue);
             case TILE ->  new TilePropertyEditor(ui, layerID, info, initialValue);
