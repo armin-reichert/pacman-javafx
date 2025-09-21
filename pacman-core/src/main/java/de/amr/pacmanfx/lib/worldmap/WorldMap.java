@@ -62,7 +62,7 @@ public class WorldMap {
         public abstract String format(Object value);
     }
 
-    public record PropertyInfo(String name, PropertyType type, Set<PropertyAttribute> attributes) {
+    public record Property(PropertyType type, Set<PropertyAttribute> attributes) {
 
         public static final Pattern PATTERN_PROPERTY_NAME = Pattern.compile("[a-zA-Z]([a-zA-Z0-9_])*");
 
@@ -70,11 +70,7 @@ public class WorldMap {
             return s == null || !PATTERN_PROPERTY_NAME.matcher(s).matches();
         }
 
-        public PropertyInfo {
-            requireNonNull(name);
-            if (isInvalidPropertyName(name)) {
-                throw new IllegalArgumentException("Invalid property name: '%s'".formatted(name));
-            }
+        public Property {
             requireNonNull(type);
             requireNonNull(attributes);
             attributes = Collections.unmodifiableSet(attributes);

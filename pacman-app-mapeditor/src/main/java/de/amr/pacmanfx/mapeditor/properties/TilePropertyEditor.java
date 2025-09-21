@@ -22,8 +22,8 @@ class TilePropertyEditor extends SinglePropertyEditor {
     private final SpinnerValueFactory.IntegerSpinnerValueFactory spinnerYModel;
     private final HBox valueEditorPane;
 
-    public TilePropertyEditor(TileMapEditorUI ui, LayerID layerID, WorldMap.PropertyInfo propertyInfo, String propertyValue) {
-        super(ui, layerID, propertyInfo);
+    public TilePropertyEditor(TileMapEditorUI ui, LayerID layerID, String propertyName, WorldMap.Property property, String propertyValue) {
+        super(ui, layerID, propertyName, property);
 
         spinnerX = new Spinner<>(0, 1000, 0);
         spinnerXModel = (SpinnerValueFactory.IntegerSpinnerValueFactory) spinnerX.getValueFactory();
@@ -52,7 +52,7 @@ class TilePropertyEditor extends SinglePropertyEditor {
     protected void updateEditorFromProperty() {
         spinnerXModel.setMax(worldMap().numCols() - 1);
         spinnerYModel.setMax(worldMap().numRows() - 1);
-        String propertyValue = worldMap().properties(layerID).get(propertyInfo.name());
+        String propertyValue = worldMap().properties(layerID).get(propertyName);
         WorldMapParser.parseTile(propertyValue).ifPresent(tile -> {
             spinnerX.getValueFactory().setValue(tile.x());
             spinnerY.getValueFactory().setValue(tile.y());

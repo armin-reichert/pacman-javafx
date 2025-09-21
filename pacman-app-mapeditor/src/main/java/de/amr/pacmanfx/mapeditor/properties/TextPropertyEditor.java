@@ -14,8 +14,8 @@ class TextPropertyEditor extends SinglePropertyEditor {
 
     private final TextField textEditor;
 
-    public TextPropertyEditor(TileMapEditorUI ui, LayerID layerID, WorldMap.PropertyInfo propertyInfo, String propertyValue) {
-        super(ui, layerID, propertyInfo);
+    public TextPropertyEditor(TileMapEditorUI ui, LayerID layerID, String propertyName, WorldMap.Property property, String propertyValue) {
+        super(ui, layerID, propertyName, property);
         textEditor = new TextField();
         textEditor.setPrefWidth(MapPropertiesEditor.NAME_EDITOR_WIDTH);
         textEditor.setMinWidth(MapPropertiesEditor.VALUE_EDITOR_WIDTH);
@@ -27,7 +27,7 @@ class TextPropertyEditor extends SinglePropertyEditor {
 
     @Override
     protected void updateEditorFromProperty() {
-        String text = worldMap().properties(layerID).get(propertyInfo.name());
+        String text = worldMap().properties(layerID).get(propertyName);
         textEditor.setText(text);
     }
 

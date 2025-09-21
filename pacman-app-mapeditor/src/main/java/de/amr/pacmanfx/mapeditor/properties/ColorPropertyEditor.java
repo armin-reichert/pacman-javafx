@@ -15,8 +15,8 @@ class ColorPropertyEditor extends SinglePropertyEditor {
 
     private final ColorPicker colorPicker;
 
-    public ColorPropertyEditor(TileMapEditorUI ui, LayerID layerID, WorldMap.PropertyInfo propertyInfo, String propertyValue) {
-        super(ui, layerID, propertyInfo);
+    public ColorPropertyEditor(TileMapEditorUI ui, LayerID layerID, String propertyName, WorldMap.Property property, String propertyValue) {
+        super(ui, layerID, propertyName, property);
         colorPicker = new ColorPicker();
         colorPicker.setPrefWidth(MapPropertiesEditor.VALUE_EDITOR_WIDTH);
         colorPicker.setValue(EditorUtil.parseColor(propertyValue));
@@ -26,7 +26,7 @@ class ColorPropertyEditor extends SinglePropertyEditor {
 
     @Override
     protected void updateEditorFromProperty() {
-        String colorExpression = worldMap().properties(layerID).get(propertyInfo.name());
+        String colorExpression = worldMap().properties(layerID).get(propertyName);
         colorPicker.setValue(EditorUtil.parseColor(colorExpression));
     }
 
