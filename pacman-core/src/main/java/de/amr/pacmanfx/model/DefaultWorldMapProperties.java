@@ -4,6 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model;
 
+/**
+ * Property names as stored in <code>*.world</code> files.
+ */
 public interface DefaultWorldMapProperties {
     String POS_BONUS                = "pos_bonus";
     String POS_PAC                  = "pos_pac";
