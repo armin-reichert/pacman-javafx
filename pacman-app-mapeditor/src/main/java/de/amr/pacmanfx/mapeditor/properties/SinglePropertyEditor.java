@@ -71,7 +71,7 @@ abstract class SinglePropertyEditor {
         if (propertyInfo.name().equals(editedName)) {
             return;
         }
-        if (WorldMapPropertyInfo.isInValidPropertyName(editedName)) {
+        if (WorldMapPropertyInfo.isInvalidPropertyName(editedName)) {
             nameEditor.setText(propertyInfo.name());
             ui.messageDisplay().showMessage("Property name '%s' is invalid".formatted(editedName), 2, MessageType.ERROR);
             return;

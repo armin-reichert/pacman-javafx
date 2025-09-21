@@ -12,13 +12,13 @@ public record WorldMapPropertyInfo(String name, WorldMapPropertyType type, boole
 
     public static final Pattern PATTERN_PROPERTY_NAME = Pattern.compile("[a-zA-Z]([a-zA-Z0-9_])*");
 
-    public static boolean isInValidPropertyName(String s) {
+    public static boolean isInvalidPropertyName(String s) {
         return s == null || !PATTERN_PROPERTY_NAME.matcher(s).matches();
     }
 
     public WorldMapPropertyInfo {
         requireNonNull(name);
-        if (isInValidPropertyName(name)) {
+        if (isInvalidPropertyName(name)) {
             throw new IllegalArgumentException("Invalid property name: '%s'".formatted(name));
         }
         requireNonNull(type);
