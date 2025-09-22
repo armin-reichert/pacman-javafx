@@ -194,14 +194,16 @@ public class MapPropertiesEditor extends BorderPane {
     }
     private void rebuildGrid() {
         grid.getChildren().clear();
-        for (int row = 0; row < propertyEditors.size(); ++row) {
-            PropertyEditor propertyEditor = propertyEditors.get(row);
+        int rowIndex = -1;
+        for (int i = 0; i < propertyEditors.size(); ++i) {
+            PropertyEditor propertyEditor = propertyEditors.get(i);
             WorldMapLayer.Property property = propertyEditor.property;
             if (property.is(PropertyAttribute.HIDDEN)) {
                 continue;
             }
-            grid.add(propertyEditor.nameEditor, 0, row);
-            grid.add(propertyEditor.valueEditor(), 1, row);
+            ++rowIndex;
+            grid.add(propertyEditor.nameEditor, 0, rowIndex);
+            grid.add(propertyEditor.valueEditor(), 1, rowIndex);
             if (!property.is(PropertyAttribute.PREDEFINED)) {
                 var btnDelete = new Button(SYMBOL_DELETE);
                 btnDelete.disableProperty().bind(enabled.not());
@@ -209,11 +211,11 @@ public class MapPropertiesEditor extends BorderPane {
                 Tooltip tooltip = new Tooltip("Delete"); //TODO localize
                 tooltip.setFont(EditorGlobals.FONT_TOOL_TIPS);
                 btnDelete.setTooltip(tooltip);
-                grid.add(btnDelete, 2, row);
+                grid.add(btnDelete, 2, rowIndex);
             } else {
                 var spacer = new Region();
                 spacer.setMinWidth(30);
-                grid.add(spacer, 2, row);
+                grid.add(spacer, 2, rowIndex);
             }
         }
     }
