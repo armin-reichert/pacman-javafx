@@ -10,7 +10,7 @@ import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
 
-class TextPropertyEditor extends PropertyEditorBase {
+class TextPropertyEditor extends AbstractPropertyEditor {
 
     private final TextField textEditor;
 

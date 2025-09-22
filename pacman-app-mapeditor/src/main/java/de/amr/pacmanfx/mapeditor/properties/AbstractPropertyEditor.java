@@ -23,7 +23,7 @@ import javafx.scene.paint.Color;
 
 import static java.util.Objects.requireNonNull;
 
-abstract class PropertyEditorBase {
+abstract class AbstractPropertyEditor {
 
     private static final String SYMBOL_DELETE = "\u274C";
 
@@ -37,7 +37,7 @@ abstract class PropertyEditorBase {
 
     private WorldMapLayer.Property property;
 
-    protected PropertyEditorBase(TileMapEditorUI ui, LayerID layerID, WorldMapLayer layer, WorldMapLayer.Property property) {
+    protected AbstractPropertyEditor(TileMapEditorUI ui, LayerID layerID, WorldMapLayer layer, WorldMapLayer.Property property) {
         this.ui = requireNonNull(ui);
         this.layerID = requireNonNull(layerID);
         this.layer = requireNonNull(layer);

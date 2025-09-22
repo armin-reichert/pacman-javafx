@@ -13,7 +13,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Spinner;
 import javafx.scene.layout.HBox;
 
-class TilePropertyEditor extends PropertyEditorBase {
+class TilePropertyEditor extends AbstractPropertyEditor {
 
     private final Spinner<Integer> spinnerX;
     private final Spinner<Integer> spinnerY;

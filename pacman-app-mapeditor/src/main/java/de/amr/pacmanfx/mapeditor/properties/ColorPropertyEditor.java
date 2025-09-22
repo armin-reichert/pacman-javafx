@@ -12,7 +12,7 @@ import javafx.scene.Node;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.paint.Color;
 
-class ColorPropertyEditor extends PropertyEditorBase {
+class ColorPropertyEditor extends AbstractPropertyEditor {
 
     private final ColorPicker colorPicker;
 

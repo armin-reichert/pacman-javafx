@@ -71,7 +71,7 @@ public class MapPropertiesEditor extends BorderPane {
     private final TileMapEditorUI ui;
     private final LayerID layerID;
     private final BooleanProperty enabled = new SimpleBooleanProperty(true);
-    private final List<PropertyEditorBase> propertyEditors = new ArrayList<>();
+    private final List<AbstractPropertyEditor> propertyEditors = new ArrayList<>();
     private final GridPane grid = new GridPane(2, 2);
 
     public MapPropertiesEditor(TileMapEditorUI ui, LayerID layerID) {
@@ -79,7 +79,7 @@ public class MapPropertiesEditor extends BorderPane {
         this.layerID = requireNonNull(layerID);
         setTop(createButtonBar());
         setCenter(grid);
-        ui.editor().currentWorldMapProperty().addListener((py, ov, worldMap) -> rebuildFromWorldMap(worldMap));
+        ui.editor().currentWorldMapProperty().addListener((py, ov, nv) -> rebuildFromWorldMap());
     }
 
     public void updateEditorValues() {
@@ -175,7 +175,7 @@ public class MapPropertiesEditor extends BorderPane {
         }
     }
 
-    private Optional<PropertyEditorBase> findEditorFor(WorldMapLayer.Property property) {
+    private Optional<AbstractPropertyEditor> findEditorFor(WorldMapLayer.Property property) {
         return propertyEditors.stream().filter(pe -> pe.property().name().equals(property.name())).findFirst();
     }
 
@@ -183,12 +183,12 @@ public class MapPropertiesEditor extends BorderPane {
         return enabled;
     }
 
-    private void rebuildFromWorldMap(WorldMap worldMap) {
+    private void rebuildFromWorldMap() {
         propertyEditors.clear();
-        worldMap.propertyNames(layerID).sorted().forEach(propertyName -> {
+        worldMap().propertyNames(layerID).sorted().forEach(propertyName -> {
             var property = new WorldMapLayer.Property();
             property.setName(propertyName);
-            property.setValue(worldMap.properties(layerID).get(propertyName));
+            property.setValue(layer().propertyValues().get(propertyName));
             property.setType(determinePropertyType(propertyName));
             if (PREDEFINED_PROPERTIES.get(layerID).contains(propertyName)) {
                 property.attributes().add(PropertyAttribute.PREDEFINED);
@@ -196,15 +196,14 @@ public class MapPropertiesEditor extends BorderPane {
             if (HIDDEN_PROPERTIES.get(layerID).contains(propertyName)) {
                 property.attributes().add((PropertyAttribute.HIDDEN));
             }
-
             propertyEditors.add(createEditor(property));
             Logger.info("Added editor for {}", property);
         });
         rebuildGrid();
     }
 
-    private PropertyEditorBase createEditor(WorldMapLayer.Property property) {
-        PropertyEditorBase propertyEditor = switch (property.type()) {
+    private AbstractPropertyEditor createEditor(WorldMapLayer.Property property) {
+        AbstractPropertyEditor propertyEditor = switch (property.type()) {
             case COLOR_RGBA -> new ColorPropertyEditor(ui, layerID, layer(), property);
             case TILE       -> new TilePropertyEditor(ui, layerID, layer(), property);
             case STRING     -> new TextPropertyEditor(ui, layerID, layer(), property);
@@ -217,7 +216,7 @@ public class MapPropertiesEditor extends BorderPane {
     private void rebuildGrid() {
         grid.getChildren().clear();
         int rowIndex = -1;
-        for (PropertyEditorBase editor : propertyEditors) {
+        for (AbstractPropertyEditor editor : propertyEditors) {
             if (editor.property().is(PropertyAttribute.HIDDEN)) {
                 continue;
             }
@@ -241,5 +240,4 @@ public class MapPropertiesEditor extends BorderPane {
         spacer.setPrefWidth(30);
         return spacer;
     }
-
 }
