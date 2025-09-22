@@ -195,9 +195,13 @@ public class MapPropertiesEditor extends BorderPane {
             ++rowIndex;
             grid.add(editor.nameEditor, 0, rowIndex);
             grid.add(editor.valueEditor(), 1, rowIndex);
-            grid.add(editor.property().is(PropertyAttribute.PREDEFINED)
-                ? spacer()
-                : createDeleteButton(editor), 2, rowIndex);
+            if (editor.property().is(PropertyAttribute.PREDEFINED)) {
+                grid.add(spacer(), 2, rowIndex);
+            } else {
+                Button btnDelete = createDeleteButton();
+                btnDelete.setOnAction(e -> deleteProperty(editor.property()));
+                grid.add(btnDelete, 2, rowIndex);
+            }
         }
     }
 
@@ -209,10 +213,9 @@ public class MapPropertiesEditor extends BorderPane {
         return spacer;
     }
 
-    private Button createDeleteButton(PropertyEditor editor) {
+    private Button createDeleteButton() {
         var btnDelete = new Button(SYMBOL_DELETE);
         btnDelete.disableProperty().bind(enabled.not());
-        btnDelete.setOnAction(e -> deleteProperty(editor.property()));
         Tooltip tooltip = new Tooltip("Delete"); //TODO localize
         tooltip.setFont(EditorGlobals.FONT_TOOL_TIPS);
         btnDelete.setTooltip(tooltip);
