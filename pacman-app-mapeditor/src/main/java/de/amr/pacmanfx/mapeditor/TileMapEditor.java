@@ -128,7 +128,6 @@ public class TileMapEditor {
             terrainMapChanged = false;
         }
         if (terrainMapPropertyChanged) {
-            ui.onTerrainMapPropertyChanged();
             terrainMapPropertyChanged = false;
         }
         if (foodMapChanged) {
@@ -136,7 +135,6 @@ public class TileMapEditor {
             foodMapChanged = false;
         }
         if (foodMapPropertyChanged) {
-            ui.onFoodMapPropertyChanged();
             foodMapPropertyChanged = false;
         }
     }

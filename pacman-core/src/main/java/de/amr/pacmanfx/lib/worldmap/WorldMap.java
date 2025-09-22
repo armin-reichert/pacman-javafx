@@ -16,7 +16,6 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -26,60 +25,6 @@ import static de.amr.pacmanfx.Validations.requireNonNegativeInt;
 import static java.util.Objects.requireNonNull;
 
 public class WorldMap {
-
-    public enum PropertyAttribute {
-        PREDEFINED, HIDDEN
-    }
-
-    public enum PropertyType {
-        STRING {
-            @Override
-            public String format(Object value) {
-                return String.valueOf(value);
-            }
-        },
-
-        TILE {
-            @Override
-            public String format(Object value) {
-                if (value instanceof Vector2i vec) {
-                    return "(%d,%d)".formatted(vec.x(), vec.y());
-                }
-                throw new IllegalArgumentException("Not a tile value: " + value);
-            }
-        },
-
-        COLOR_RGBA {
-            @Override
-            public String format(Object value) {
-                if (value instanceof ColorRGBA color) {
-                    return String.format(Locale.ENGLISH, "rgba(%d,%d,%d,%.2f)", color.red(), color.green(), color.blue(), color.alpha());
-                }
-                throw new IllegalArgumentException("Not a RGBA color value: " + value);
-            }
-        };
-
-        public abstract String format(Object value);
-    }
-
-    public record Property(PropertyType type, Set<PropertyAttribute> attributes) {
-
-        public static final Pattern PATTERN_PROPERTY_NAME = Pattern.compile("[a-zA-Z]([a-zA-Z0-9_])*");
-
-        public static boolean isInvalidPropertyName(String s) {
-            return s == null || !PATTERN_PROPERTY_NAME.matcher(s).matches();
-        }
-
-        public Property {
-            requireNonNull(type);
-            requireNonNull(attributes);
-            attributes = Collections.unmodifiableSet(attributes);
-        }
-
-        public boolean is(PropertyAttribute attribute) {
-            return attributes.contains(attribute);
-        }
-    }
 
     public static final String MARKER_BEGIN_TERRAIN_LAYER = "!terrain";
     public static final String MARKER_BEGIN_FOOD_LAYER = "!food";

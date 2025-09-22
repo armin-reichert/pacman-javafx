@@ -60,8 +60,6 @@ public class TileMapEditorUI {
     private final EditorPaletteTabPane editorPaletteTabPane;
 
     private Pane propertyEditorsPane;
-    private MapPropertiesEditor terrainPropertiesEditorPane;
-    private MapPropertiesEditor foodPropertiesEditorPane;
 
     private TabPane tabPaneEditorViews;
     private Tab tabEditCanvas;
@@ -105,6 +103,8 @@ public class TileMapEditorUI {
     public void setActorsVisible(boolean visible) {
         actorsVisibleProperty().set(visible);
     }
+
+    // -- inputEnabled
 
     private final BooleanProperty inputEnabled = new SimpleBooleanProperty(true);
 
@@ -369,8 +369,8 @@ public class TileMapEditorUI {
 
     public void init() {
         replaceSampleMapMenuEntries(editor.sampleMaps());
-        terrainPropertiesEditorPane.rebuildPropertyEditors();
-        foodPropertiesEditorPane.rebuildPropertyEditors();
+//        terrainPropertiesEditorPane.rebuildPropertyEditors();
+//        foodPropertiesEditorPane.rebuildPropertyEditors();
         preview3D.reset();
         setEditMode(INSPECT);
         Platform.runLater(() -> {
@@ -647,11 +647,11 @@ public class TileMapEditorUI {
     }
 
     private void createPropertyEditors() {
-        terrainPropertiesEditorPane = new MapPropertiesEditor(this, LayerID.TERRAIN);
+        var terrainPropertiesEditorPane = new MapPropertiesEditor(this, LayerID.TERRAIN);
         terrainPropertiesEditorPane.enabledProperty().bind(editModeProperty().map(mode -> mode != EditMode.INSPECT));
         terrainPropertiesEditorPane.setPadding(new Insets(10,0,0,0));
 
-        foodPropertiesEditorPane = new MapPropertiesEditor(this, LayerID.FOOD);
+        var foodPropertiesEditorPane = new MapPropertiesEditor(this, LayerID.FOOD);
         foodPropertiesEditorPane.enabledProperty().bind(editModeProperty().map(mode -> mode != EditMode.INSPECT));
         foodPropertiesEditorPane.setPadding(new Insets(10,0,0,0));
 
@@ -828,20 +828,10 @@ public class TileMapEditorUI {
     // Model change handling
 
     public void onTerrainMapChanged() {
-        terrainPropertiesEditorPane.rebuildPropertyEditors();
         preview3D.updateMaze();
     }
 
-    public void onTerrainMapPropertyChanged() {
-        terrainPropertiesEditorPane.rebuildPropertyEditors();
-    }
-
     public void onFoodMapChanged() {
-        foodPropertiesEditorPane.rebuildPropertyEditors();
         preview3D.updateFood();
-    }
-
-    public void onFoodMapPropertyChanged() {
-        foodPropertiesEditorPane.rebuildPropertyEditors();
     }
 }

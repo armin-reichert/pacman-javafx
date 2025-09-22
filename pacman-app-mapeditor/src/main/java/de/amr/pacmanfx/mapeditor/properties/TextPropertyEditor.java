@@ -5,30 +5,29 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.mapeditor.properties;
 
 import de.amr.pacmanfx.lib.worldmap.LayerID;
-import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.lib.worldmap.WorldMapLayer;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
 
-class TextPropertyEditor extends SinglePropertyEditor {
+class TextPropertyEditor extends PropertyEditor {
 
     private final TextField textEditor;
 
-    public TextPropertyEditor(TileMapEditorUI ui, LayerID layerID, WorldMapLayer layer, String propertyName, WorldMap.Property property, String propertyValue) {
-        super(ui, layerID, layer, propertyName, property);
+    public TextPropertyEditor(TileMapEditorUI ui, LayerID layerID, WorldMapLayer layer, WorldMapLayer.Property property) {
+        super(ui, layerID, layer, property);
         textEditor = new TextField();
         textEditor.setPrefWidth(MapPropertiesEditor.NAME_EDITOR_WIDTH);
         textEditor.setMinWidth(MapPropertiesEditor.VALUE_EDITOR_WIDTH);
         textEditor.setMaxWidth(MapPropertiesEditor.VALUE_EDITOR_WIDTH);
-        textEditor.setText(propertyValue);
+        textEditor.setText(property.value());
         textEditor.disableProperty().bind(enabled.not());
         textEditor.setOnAction(e -> storePropertyValue(ui));
     }
 
     @Override
     protected void updateEditorFromProperty() {
-        String text = layer.properties().get(propertyName);
+        String text = layer.properties().get(property.value());
         textEditor.setText(text);
     }
 

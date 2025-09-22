@@ -6,7 +6,6 @@ package de.amr.pacmanfx.mapeditor.properties;
 
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.LayerID;
-import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.lib.worldmap.WorldMapLayer;
 import de.amr.pacmanfx.lib.worldmap.WorldMapParser;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
@@ -15,7 +14,7 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.layout.HBox;
 
-class TilePropertyEditor extends SinglePropertyEditor {
+class TilePropertyEditor extends PropertyEditor {
 
     private final Spinner<Integer> spinnerX;
     private final Spinner<Integer> spinnerY;
@@ -23,8 +22,8 @@ class TilePropertyEditor extends SinglePropertyEditor {
     private final SpinnerValueFactory.IntegerSpinnerValueFactory spinnerYModel;
     private final HBox valueEditorPane;
 
-    public TilePropertyEditor(TileMapEditorUI ui, LayerID layerID, WorldMapLayer layer, String propertyName, WorldMap.Property property, String propertyValue) {
-        super(ui, layerID, layer, propertyName, property);
+    public TilePropertyEditor(TileMapEditorUI ui, LayerID layerID, WorldMapLayer layer, WorldMapLayer.Property property) {
+        super(ui, layerID, layer, property);
 
         spinnerX = new Spinner<>(0, 1000, 0);
         spinnerXModel = (SpinnerValueFactory.IntegerSpinnerValueFactory) spinnerX.getValueFactory();
@@ -36,7 +35,7 @@ class TilePropertyEditor extends SinglePropertyEditor {
         spinnerY.setMaxWidth(60);
         spinnerY.disableProperty().bind(enabled.not());
 
-        WorldMapParser.parseTile(propertyValue).ifPresent(tile -> {
+        WorldMapParser.parseTile(property.value()).ifPresent(tile -> {
             spinnerX.getValueFactory().setValue(tile.x());
             spinnerY.getValueFactory().setValue(tile.y());
         });
@@ -53,7 +52,7 @@ class TilePropertyEditor extends SinglePropertyEditor {
     protected void updateEditorFromProperty() {
         spinnerXModel.setMax(worldMap().numCols() - 1);
         spinnerYModel.setMax(worldMap().numRows() - 1);
-        String propertyValue = layer.properties().get(propertyName);
+        String propertyValue = layer.properties().get(property.name());
         WorldMapParser.parseTile(propertyValue).ifPresent(tile -> {
             spinnerX.getValueFactory().setValue(tile.x());
             spinnerY.getValueFactory().setValue(tile.y());

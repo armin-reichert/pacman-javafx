@@ -6,10 +6,12 @@ package de.amr.pacmanfx.mapeditor.properties;
 
 import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
+import de.amr.pacmanfx.lib.worldmap.WorldMapLayer;
+import de.amr.pacmanfx.lib.worldmap.WorldMapLayer.PropertyAttribute;
+import de.amr.pacmanfx.lib.worldmap.WorldMapLayer.PropertyType;
 import de.amr.pacmanfx.mapeditor.EditorGlobals;
 import de.amr.pacmanfx.mapeditor.MessageType;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
-import de.amr.pacmanfx.model.DefaultWorldMapProperties;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Insets;
@@ -17,14 +19,13 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
+import javafx.scene.layout.*;
 import org.tinylog.Logger;
 
-import java.util.*;
-import java.util.stream.Stream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static de.amr.pacmanfx.model.DefaultWorldMapProperties.*;
 import static java.util.Objects.requireNonNull;
@@ -42,7 +43,7 @@ public class MapPropertiesEditor extends BorderPane {
 
     public static final String DEFAULT_COLOR_VALUE = "rgba(0,0,0,1.0)";
     public static final String DEFAULT_TILE_VALUE = "(0,0)";
-    public static final String DEFAULT_TEXT_VALUE = "";
+    public static final String DEFAULT_TEXT_VALUE = "no_text";
 
     public static final Map<LayerID, Set<String>> PREDEFINED_PROPERTIES = Map.of(
         LayerID.TERRAIN, Set.of(COLOR_WALL_FILL, COLOR_WALL_STROKE, COLOR_DOOR, POS_HOUSE_MIN_TILE, POS_HOUSE_MAX_TILE),
@@ -56,20 +57,19 @@ public class MapPropertiesEditor extends BorderPane {
 
     private final TileMapEditorUI ui;
     private final LayerID layerID;
-
     private final BooleanProperty enabled = new SimpleBooleanProperty(true);
-    private final BooleanProperty sorted = new SimpleBooleanProperty(true);
-
-    private final List<SinglePropertyEditor> propertyEditors = new ArrayList<>();
-    private final GridPane grid = new GridPane();
+    private final List<PropertyEditor> propertyEditors = new ArrayList<>();
+    private final GridPane grid = new GridPane(2, 2);
 
     public MapPropertiesEditor(TileMapEditorUI ui, LayerID layerID) {
         this.ui = requireNonNull(ui);
         this.layerID = requireNonNull(layerID);
+        setTop(createButtonBar());
+        setCenter(grid);
+        ui.editor().currentWorldMapProperty().addListener((py, ov, worldMap) -> rebuildFromWorldMap(worldMap));
+    }
 
-        ui.editor().currentWorldMapProperty().addListener((py, ov, nv) -> rebuildPropertyEditors());
-        sorted.addListener((py, ov, nv) -> rebuildPropertyEditors());
-
+    private Pane createButtonBar() {
         var btnAddColorEntry = new Button("Color");
         btnAddColorEntry.disableProperty().bind(enabled.not());
         btnAddColorEntry.setOnAction(e -> addNewColorProperty());
@@ -84,63 +84,57 @@ public class MapPropertiesEditor extends BorderPane {
 
         var buttonBar = new HBox(new Label("New"), btnAddColorEntry, btnAddPosEntry, btnAddTextEntry);
         buttonBar.setSpacing(3);
-        buttonBar.setPadding(new Insets(2,2,6,2));
+        buttonBar.setPadding(new Insets(2, 2, 6, 2));
         buttonBar.setAlignment(Pos.CENTER_LEFT);
 
-        grid.setHgap(2);
-        grid.setVgap(2);
-
-        setTop(buttonBar);
-        setCenter(grid);
+        return buttonBar;
     }
     
     private WorldMap worldMap() {
         return ui.editor().currentWorldMap();
     }
 
-    private void addNewColorProperty() {
-        String propertyName = NEW_COLOR_PROPERTY_NAME;
+    private void addNewProperty(String propertyName, PropertyType type, String initialValue) {
         if (worldMap().properties(layerID).containsKey(propertyName)) {
             ui.messageDisplay().showMessage("Property %s already exists".formatted(propertyName), 1, MessageType.INFO);
             return;
         }
-        worldMap().properties(layerID).put(propertyName, DEFAULT_COLOR_VALUE);
+        WorldMapLayer.Property property = new WorldMapLayer.Property(
+            propertyName, initialValue, type, WorldMapLayer.Property.emptyAttributeSet());
+        PropertyEditor editor = createEditor(property);
+        propertyEditors.add(0, editor);
+        rebuildGrid();
+
+        worldMap().properties(layerID).put(propertyName, property.value());
         ui.editor().setWorldMapChanged();
         ui.editor().setEdited(true);
         ui.messageDisplay().showMessage("New property %s added".formatted(propertyName), 1, MessageType.INFO);
+    }
+
+    private void addNewColorProperty() {
+        addNewProperty(NEW_COLOR_PROPERTY_NAME, PropertyType.COLOR_RGBA, DEFAULT_COLOR_VALUE);
     }
 
     private void addNewPositionProperty() {
-        String propertyName = NEW_POSITION_PROPERTY_NAME;
-        if (worldMap().properties(layerID).containsKey(propertyName)) {
-            ui.messageDisplay().showMessage("Property %s already exists".formatted(propertyName), 1, MessageType.INFO);
-            return;
-        }
-        worldMap().properties(layerID).put(propertyName, DEFAULT_TILE_VALUE);
-        ui.messageDisplay().showMessage("New property %s added".formatted(propertyName), 1, MessageType.INFO);
-        ui.editor().setWorldMapChanged();
-        ui.editor().setEdited(true);
+        addNewProperty(NEW_POSITION_PROPERTY_NAME, PropertyType.TILE, DEFAULT_TILE_VALUE);
     }
 
     private void addNewTextProperty() {
-        String propertyName = NEW_TEXT_PROPERTY_NAME;
-        if (worldMap().properties(layerID).containsKey(propertyName)) {
-            ui.messageDisplay().showMessage("Property %s already exists".formatted(propertyName), 1, MessageType.INFO);
-            return;
-        }
-        worldMap().properties(layerID).put(propertyName, DEFAULT_TEXT_VALUE);
-        ui.editor().setWorldMapChanged();
-        ui.editor().setEdited(true);
-        ui.messageDisplay().showMessage("New property %s added".formatted(propertyName), 1, MessageType.INFO);
+        addNewProperty(NEW_TEXT_PROPERTY_NAME, PropertyType.STRING, DEFAULT_TEXT_VALUE);
     }
 
-    private void deleteProperty(String propertyName) {
+    private void deleteProperty(WorldMapLayer.Property property) {
         var layerProperties = worldMap().properties(layerID);
-        if (layerProperties.containsKey(propertyName)) {
-            layerProperties.remove(propertyName);
-            ui.messageDisplay().showMessage("Property '%s' deleted".formatted(propertyName), 3, MessageType.INFO);
+        if (layerProperties.containsKey(property.name())) {
+            layerProperties.remove(property.name());
+            ui.messageDisplay().showMessage("Property '%s' deleted".formatted(property.name()), 3, MessageType.INFO);
             ui.editor().setWorldMapChanged();
             ui.editor().setEdited(true);
+            propertyEditors.stream()
+                .filter(propertyEditor -> propertyEditor.property.equals(property))
+                .findFirst()
+                .ifPresent(propertyEditors::remove);
+            rebuildGrid();
         }
     }
 
@@ -154,77 +148,73 @@ public class MapPropertiesEditor extends BorderPane {
         }
     }
 
-    public void rebuildPropertyEditors() {
+    private void rebuildFromWorldMap(WorldMap worldMap) {
         propertyEditors.clear();
-        if (worldMap() == null) {
-            Logger.info("World map not yet set, cannot build property editors");
-            return;
-        }
 
-        Stream<String> propertyNames = sorted.get()
-            ? worldMap().propertyNames(layerID).sorted()
-            : worldMap().propertyNames(layerID);
+        worldMap.propertyNames(layerID).sorted().forEach(propertyName -> {
 
-        propertyNames.forEach(propertyName -> {
-            // primitive way of discriminating type but fulfills its purpose
-            WorldMap.PropertyType type = WorldMap.PropertyType.STRING;
+            // As long as the property type is not stored in the map file, we derive it from the name
+            PropertyType type = PropertyType.STRING;
             if (propertyName.startsWith("color_")) {
-                type = WorldMap.PropertyType.COLOR_RGBA;
+                type = PropertyType.COLOR_RGBA;
             } else if (propertyName.startsWith("pos_") || propertyName.startsWith("tile_") || propertyName.startsWith("vec_")) {
-                type = WorldMap.PropertyType.TILE;
+                type = PropertyType.TILE;
             }
 
-            Set<WorldMap.PropertyAttribute> attributes = EnumSet.noneOf(WorldMap.PropertyAttribute.class);
+            Set<PropertyAttribute> attributes = WorldMapLayer.Property.emptyAttributeSet();
             if (PREDEFINED_PROPERTIES.get(layerID).contains(propertyName)) {
-                attributes.add(WorldMap.PropertyAttribute.PREDEFINED);
+                attributes.add(PropertyAttribute.PREDEFINED);
             }
             if (HIDDEN_PROPERTIES.get(layerID).contains(propertyName)) {
-                attributes.add((WorldMap.PropertyAttribute.HIDDEN));
+                attributes.add((PropertyAttribute.HIDDEN));
             }
 
-            var propertyInfo = new WorldMap.Property(type, attributes);
-            String propertyValue = worldMap().properties(layerID).get(propertyName);
-            SinglePropertyEditor propertyEditor = createEditor(ui, propertyName, propertyInfo, propertyValue);
+            String propertyValue = worldMap.properties(layerID).get(propertyName);
+            var property = new WorldMapLayer.Property(propertyName, propertyValue, type, attributes);
+
+            PropertyEditor propertyEditor = createEditor(property);
             propertyEditors.add(propertyEditor);
+
+            Logger.info("Added editor for property {}", propertyEditor.property);
         });
-
-        int row = 0;
-        grid.getChildren().clear();
-        for (var propertyEditor : propertyEditors) {
-            if (propertyEditor.property.is(WorldMap.PropertyAttribute.HIDDEN)) {
-                continue;
-            }
-            grid.add(propertyEditor.nameEditor(), 0, row);
-            grid.add(propertyEditor.valueEditor(), 1, row);
-            if (!propertyEditor.property.is(WorldMap.PropertyAttribute.PREDEFINED)) {
-                var btnDelete = new Button(SYMBOL_DELETE);
-                btnDelete.disableProperty().bind(enabled.not());
-                btnDelete.setOnAction(e -> deleteProperty(propertyEditor.propertyName));
-                Tooltip tooltip = new Tooltip("Delete"); //TODO localize
-                tooltip.setFont(EditorGlobals.FONT_TOOL_TIPS);
-                btnDelete.setTooltip(tooltip);
-                grid.add(btnDelete, 2, row);
-            }
-            else {
-                var spacer = new Region();
-                spacer.setMinWidth(30);
-                grid.add(spacer, 2, row);
-            }
-            ++row;
-        }
-
         updatePropertyEditorValues();
+        rebuildGrid();
     }
 
-    private SinglePropertyEditor createEditor(TileMapEditorUI ui, String propertyName, WorldMap.Property info, String initialValue) {
-        SinglePropertyEditor propertyEditor = switch (info.type()) {
-            case COLOR_RGBA -> new ColorPropertyEditor(ui, layerID, worldMap().layer(layerID), propertyName, info, initialValue);
-            case TILE ->  new TilePropertyEditor(ui, layerID, worldMap().layer(layerID), propertyName, info, initialValue);
-            case STRING -> new TextPropertyEditor(ui, layerID, worldMap().layer(layerID), propertyName, info, initialValue);
+
+    private PropertyEditor createEditor(WorldMapLayer.Property property) {
+        PropertyEditor propertyEditor = switch (property.type()) {
+            case COLOR_RGBA -> new ColorPropertyEditor(ui, layerID, worldMap().layer(layerID), property);
+            case TILE       -> new TilePropertyEditor(ui, layerID, worldMap().layer(layerID), property);
+            case STRING     -> new TextPropertyEditor(ui, layerID, worldMap().layer(layerID), property);
         };
         propertyEditor.enabledProperty().bind(enabled);
         propertyEditor.worldMapProperty().bind(ui.editor().currentWorldMapProperty());
         return propertyEditor;
     }
-
+    private void rebuildGrid() {
+        grid.getChildren().clear();
+        for (int row = 0; row < propertyEditors.size(); ++row) {
+            PropertyEditor propertyEditor = propertyEditors.get(row);
+            WorldMapLayer.Property property = propertyEditor.property;
+            if (property.is(PropertyAttribute.HIDDEN)) {
+                continue;
+            }
+            grid.add(propertyEditor.nameEditor, 0, row);
+            grid.add(propertyEditor.valueEditor(), 1, row);
+            if (!property.is(PropertyAttribute.PREDEFINED)) {
+                var btnDelete = new Button(SYMBOL_DELETE);
+                btnDelete.disableProperty().bind(enabled.not());
+                btnDelete.setOnAction(e -> deleteProperty(property));
+                Tooltip tooltip = new Tooltip("Delete"); //TODO localize
+                tooltip.setFont(EditorGlobals.FONT_TOOL_TIPS);
+                btnDelete.setTooltip(tooltip);
+                grid.add(btnDelete, 2, row);
+            } else {
+                var spacer = new Region();
+                spacer.setMinWidth(30);
+                grid.add(spacer, 2, row);
+            }
+        }
+    }
 }
