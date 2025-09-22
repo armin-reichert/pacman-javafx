@@ -11,7 +11,7 @@ import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import javafx.scene.Node;
 import javafx.scene.control.ColorPicker;
 
-class ColorPropertyEditor extends PropertyEditor {
+class ColorPropertyEditor extends PropertyEditorBase {
 
     private final ColorPicker colorPicker;
 

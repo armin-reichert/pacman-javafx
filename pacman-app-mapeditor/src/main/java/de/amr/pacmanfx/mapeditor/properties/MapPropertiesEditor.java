@@ -49,10 +49,22 @@ public class MapPropertiesEditor extends BorderPane {
         LayerID.FOOD,    Set.of()
     );
 
+    // As long as the property type is not stored in the map file, we derive it from the name
+    public static PropertyType determinePropertyType(String propertyName) {
+        requireNonNull(propertyName);
+        if (propertyName.startsWith("color_")) {
+            return PropertyType.COLOR_RGBA;
+        }
+        if (propertyName.startsWith("pos_") || propertyName.startsWith("tile_") || propertyName.startsWith("vec_")) {
+            return  PropertyType.TILE;
+        }
+        return PropertyType.STRING;
+    }
+
     private final TileMapEditorUI ui;
     private final LayerID layerID;
     private final BooleanProperty enabled = new SimpleBooleanProperty(true);
-    private final List<PropertyEditor> propertyEditors = new ArrayList<>();
+    private final List<PropertyEditorBase> propertyEditors = new ArrayList<>();
     private final GridPane grid = new GridPane(2, 2);
 
     public MapPropertiesEditor(TileMapEditorUI ui, LayerID layerID) {
@@ -95,7 +107,7 @@ public class MapPropertiesEditor extends BorderPane {
         }
         WorldMapLayer.Property property = new WorldMapLayer.Property(
             propertyName, initialValue, type, WorldMapLayer.Property.emptyAttributeSet());
-        PropertyEditor editor = createEditor(property);
+        PropertyEditorBase editor = createEditor(property);
         propertyEditors.add(0, editor);
         rebuildGrid();
 
@@ -129,7 +141,7 @@ public class MapPropertiesEditor extends BorderPane {
         }
     }
 
-    private Optional<PropertyEditor> findEditorFor(WorldMapLayer.Property property) {
+    private Optional<PropertyEditorBase> findEditorFor(WorldMapLayer.Property property) {
         return propertyEditors.stream().filter(pe -> pe.property().name().equals(property.name())).findFirst();
     }
 
@@ -142,14 +154,7 @@ public class MapPropertiesEditor extends BorderPane {
 
         worldMap.propertyNames(layerID).sorted().forEach(propertyName -> {
 
-            // As long as the property type is not stored in the map file, we derive it from the name
-            PropertyType type = PropertyType.STRING;
-            if (propertyName.startsWith("color_")) {
-                type = PropertyType.COLOR_RGBA;
-            } else if (propertyName.startsWith("pos_") || propertyName.startsWith("tile_") || propertyName.startsWith("vec_")) {
-                type = PropertyType.TILE;
-            }
-
+            PropertyType type = determinePropertyType(propertyName);
             Set<PropertyAttribute> attributes = WorldMapLayer.Property.emptyAttributeSet();
             if (PREDEFINED_PROPERTIES.get(layerID).contains(propertyName)) {
                 attributes.add(PropertyAttribute.PREDEFINED);
@@ -161,7 +166,7 @@ public class MapPropertiesEditor extends BorderPane {
             String propertyValue = worldMap.properties(layerID).get(propertyName);
             var property = new WorldMapLayer.Property(propertyName, propertyValue, type, attributes);
 
-            PropertyEditor propertyEditor = createEditor(property);
+            PropertyEditorBase propertyEditor = createEditor(property);
             propertyEditors.add(propertyEditor);
 
             Logger.info("Added editor for property {}", propertyEditor.property());
@@ -170,8 +175,8 @@ public class MapPropertiesEditor extends BorderPane {
         rebuildGrid();
     }
 
-    private PropertyEditor createEditor(WorldMapLayer.Property property) {
-        PropertyEditor propertyEditor = switch (property.type()) {
+    private PropertyEditorBase createEditor(WorldMapLayer.Property property) {
+        PropertyEditorBase propertyEditor = switch (property.type()) {
             case COLOR_RGBA -> new ColorPropertyEditor(ui, layerID, worldMap().layer(layerID), property);
             case TILE       -> new TilePropertyEditor(ui, layerID, worldMap().layer(layerID), property);
             case STRING     -> new TextPropertyEditor(ui, layerID, worldMap().layer(layerID), property);
@@ -184,7 +189,7 @@ public class MapPropertiesEditor extends BorderPane {
     private void rebuildGrid() {
         grid.getChildren().clear();
         int rowIndex = -1;
-        for (PropertyEditor editor : propertyEditors) {
+        for (PropertyEditorBase editor : propertyEditors) {
             if (editor.property().is(PropertyAttribute.HIDDEN)) {
                 continue;
             }

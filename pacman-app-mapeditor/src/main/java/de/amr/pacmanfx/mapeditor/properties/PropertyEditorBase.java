@@ -23,7 +23,7 @@ import javafx.scene.paint.Color;
 
 import static java.util.Objects.requireNonNull;
 
-abstract class PropertyEditor {
+abstract class PropertyEditorBase {
 
     private static final String SYMBOL_DELETE = "\u274C";
 
@@ -37,7 +37,7 @@ abstract class PropertyEditor {
 
     private WorldMapLayer.Property property;
 
-    protected PropertyEditor(TileMapEditorUI ui, LayerID layerID, WorldMapLayer layer, WorldMapLayer.Property property) {
+    protected PropertyEditorBase(TileMapEditorUI ui, LayerID layerID, WorldMapLayer layer, WorldMapLayer.Property property) {
         this.ui = requireNonNull(ui);
         this.layerID = requireNonNull(layerID);
         this.layer = requireNonNull(layer);
@@ -52,10 +52,10 @@ abstract class PropertyEditor {
             nameEditor.setBackground(Background.fill(Color.LIGHTGRAY));
         } else {
             nameEditor.setEditable(true);
-            nameEditor.setOnAction(e -> onPropertyNameEdited());
+            nameEditor.setOnAction(e -> editPropertyName());
             nameEditor.focusedProperty().addListener((py, ov, hasFocus) -> {
-                if (!hasFocus) {
-                    onPropertyNameEdited();
+                if (!hasFocus) { // focus lost
+                    editPropertyName();
                 }
             });
         }
@@ -90,51 +90,56 @@ abstract class PropertyEditor {
         return worldMap.get();
     }
 
-    protected void onPropertyNameEdited() {
-        String newPropertyName = nameEditor.getText().trim();
-        if (property.name().equals(newPropertyName)) {
+    private void editPropertyName() {
+        String newName = nameEditor.getText().trim();
+        if (property.name().equals(newName)) {
             return;
         }
-        if (newPropertyName.isBlank()) {
+        if (newName.isBlank()) {
             nameEditor.setText(property.name());
             return;
         }
-        if (WorldMapLayer.Property.isInvalidPropertyName(newPropertyName)) {
+        if (WorldMapLayer.Property.isInvalidPropertyName(newName)) {
             nameEditor.setText(property.name());
-            ui.messageDisplay().showMessage("Property name '%s' is invalid".formatted(newPropertyName), 2, MessageType.ERROR);
+            ui.messageDisplay().showMessage("Property name '%s' is invalid".formatted(newName), 2, MessageType.ERROR);
             return;
         }
-        if (MapPropertiesEditor.PREDEFINED_PROPERTIES.get(layerID).contains(newPropertyName)) {
-            nameEditor.setText(property.name());
-            ui.messageDisplay().showMessage("Property name is reserved", 2, MessageType.ERROR);
-            return;
-        }
-        if (MapPropertiesEditor.HIDDEN_PROPERTIES.get(layerID).contains(newPropertyName)) {
+        if (MapPropertiesEditor.PREDEFINED_PROPERTIES.get(layerID).contains(newName)) {
             nameEditor.setText(property.name());
             ui.messageDisplay().showMessage("Property name is reserved", 2, MessageType.ERROR);
             return;
         }
-        if (layer.properties().containsKey(newPropertyName)) {
+        if (MapPropertiesEditor.HIDDEN_PROPERTIES.get(layerID).contains(newName)) {
+            nameEditor.setText(property.name());
+            ui.messageDisplay().showMessage("Property name is reserved", 2, MessageType.ERROR);
+            return;
+        }
+        if (layer.properties().containsKey(newName)) {
             ui.messageDisplay().showMessage("Property name already in use", 2, MessageType.ERROR);
             nameEditor.setText(property.name());
             return;
         }
-        ui.messageDisplay().showMessage("Property '%s' renamed to '%s'".formatted(
-            property.name(), newPropertyName), 2, MessageType.INFO);
 
-        //TODO handle change of property type!
+        WorldMapLayer.PropertyType newType = MapPropertiesEditor.determinePropertyType(newName);
+        if (newType != property.type()) {
+            ui.messageDisplay().showMessage("Renaming would change property type", 2, MessageType.ERROR);
+            nameEditor.setText(property.name());
+            return;
+        }
 
-        layer.properties().remove(property.name());
-        layer.properties().put(newPropertyName, formattedValue());
+        String oldName = property.name();
+        layer.properties().remove(oldName);
+        layer.properties().put(newName, formattedValue());
+        ui.editor().setWorldMapChanged();
+        ui.editor().setEdited(true);
 
         property = new WorldMapLayer.Property(
-            newPropertyName,
+            newName,
             formattedValue(),
             property.type(),
             WorldMapLayer.Property.emptyAttributeSet());
 
-        ui.editor().setWorldMapChanged();
-        ui.editor().setEdited(true);
+        ui.messageDisplay().showMessage("Property '%s' renamed to '%s'".formatted(oldName, newName), 2, MessageType.INFO);
     }
 
     protected void storePropertyValue(TileMapEditorUI ui) {
