@@ -7,6 +7,7 @@ package de.amr.pacmanfx.mapeditor.properties;
 import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.lib.worldmap.WorldMapLayer;
+import de.amr.pacmanfx.mapeditor.EditorGlobals;
 import de.amr.pacmanfx.mapeditor.MessageType;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import javafx.beans.property.BooleanProperty;
@@ -14,13 +15,17 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
 
 import static java.util.Objects.requireNonNull;
 
 abstract class PropertyEditor {
+
+    private static final String SYMBOL_DELETE = "\u274C";
 
     protected final BooleanProperty enabled = new SimpleBooleanProperty(true);
     protected final ObjectProperty<WorldMap> worldMap = new SimpleObjectProperty<>();
@@ -54,6 +59,15 @@ abstract class PropertyEditor {
                 }
             });
         }
+    }
+
+    public Button createDeleteButton() {
+        var btnDelete = new Button(SYMBOL_DELETE);
+        btnDelete.disableProperty().bind(enabled.not());
+        Tooltip tooltip = new Tooltip("Delete"); //TODO localize
+        tooltip.setFont(EditorGlobals.FONT_TOOL_TIPS);
+        btnDelete.setTooltip(tooltip);
+        return btnDelete;
     }
 
     public WorldMapLayer.Property property() {

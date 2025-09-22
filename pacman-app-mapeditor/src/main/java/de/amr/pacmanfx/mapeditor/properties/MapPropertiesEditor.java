@@ -9,7 +9,6 @@ import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.lib.worldmap.WorldMapLayer;
 import de.amr.pacmanfx.lib.worldmap.WorldMapLayer.PropertyAttribute;
 import de.amr.pacmanfx.lib.worldmap.WorldMapLayer.PropertyType;
-import de.amr.pacmanfx.mapeditor.EditorGlobals;
 import de.amr.pacmanfx.mapeditor.MessageType;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import javafx.beans.property.BooleanProperty;
@@ -19,7 +18,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Tooltip;
 import javafx.scene.layout.*;
 import org.tinylog.Logger;
 
@@ -32,8 +30,6 @@ public class MapPropertiesEditor extends BorderPane {
 
     public static final int NAME_EDITOR_WIDTH = 170;
     public static final int VALUE_EDITOR_WIDTH = 120;
-
-    private static final String SYMBOL_DELETE = "\u274C";
 
     private static final String NEW_COLOR_PROPERTY_NAME = "color_RENAME_ME";
     private static final String NEW_POSITION_PROPERTY_NAME = "pos_RENAME_ME";
@@ -198,7 +194,7 @@ public class MapPropertiesEditor extends BorderPane {
             if (editor.property().is(PropertyAttribute.PREDEFINED)) {
                 grid.add(spacer(), 2, rowIndex);
             } else {
-                Button btnDelete = createDeleteButton();
+                Button btnDelete = editor.createDeleteButton();
                 btnDelete.setOnAction(e -> deleteProperty(editor.property()));
                 grid.add(btnDelete, 2, rowIndex);
             }
@@ -213,12 +209,4 @@ public class MapPropertiesEditor extends BorderPane {
         return spacer;
     }
 
-    private Button createDeleteButton() {
-        var btnDelete = new Button(SYMBOL_DELETE);
-        btnDelete.disableProperty().bind(enabled.not());
-        Tooltip tooltip = new Tooltip("Delete"); //TODO localize
-        tooltip.setFont(EditorGlobals.FONT_TOOL_TIPS);
-        btnDelete.setTooltip(tooltip);
-        return btnDelete;
-    }
 }
