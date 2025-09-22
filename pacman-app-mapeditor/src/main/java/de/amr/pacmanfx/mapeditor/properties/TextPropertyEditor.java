@@ -26,12 +26,6 @@ class TextPropertyEditor extends PropertyEditor {
     }
 
     @Override
-    protected void updateFromLayerProperty() {
-        String text = layer.properties().get(property.value());
-        textEditor.setText(text);
-    }
-
-    @Override
     protected Node valueEditor() {
         return textEditor;
     }

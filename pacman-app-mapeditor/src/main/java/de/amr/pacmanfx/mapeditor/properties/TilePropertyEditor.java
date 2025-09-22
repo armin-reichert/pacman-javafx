@@ -11,27 +11,22 @@ import de.amr.pacmanfx.lib.worldmap.WorldMapParser;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import javafx.scene.Node;
 import javafx.scene.control.Spinner;
-import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.layout.HBox;
 
 class TilePropertyEditor extends PropertyEditor {
 
     private final Spinner<Integer> spinnerX;
     private final Spinner<Integer> spinnerY;
-    private final SpinnerValueFactory.IntegerSpinnerValueFactory spinnerXModel;
-    private final SpinnerValueFactory.IntegerSpinnerValueFactory spinnerYModel;
     private final HBox valueEditorPane;
 
     public TilePropertyEditor(TileMapEditorUI ui, LayerID layerID, WorldMapLayer layer, WorldMapLayer.Property property) {
         super(ui, layerID, layer, property);
 
         spinnerX = new Spinner<>(0, 1000, 0);
-        spinnerXModel = (SpinnerValueFactory.IntegerSpinnerValueFactory) spinnerX.getValueFactory();
         spinnerX.setMaxWidth(60);
         spinnerX.disableProperty().bind(enabled.not());
 
         spinnerY = new Spinner<>(0, 1000, 0);
-        spinnerYModel = (SpinnerValueFactory.IntegerSpinnerValueFactory) spinnerY.getValueFactory();
         spinnerY.setMaxWidth(60);
         spinnerY.disableProperty().bind(enabled.not());
 
@@ -46,17 +41,6 @@ class TilePropertyEditor extends PropertyEditor {
         valueEditorPane = new HBox(spinnerX, spinnerY);
         valueEditorPane.setPrefWidth(MapPropertiesEditor.VALUE_EDITOR_WIDTH);
         valueEditorPane.setMinWidth(MapPropertiesEditor.VALUE_EDITOR_WIDTH);
-    }
-
-    @Override
-    protected void updateFromLayerProperty() {
-        spinnerXModel.setMax(worldMap().numCols() - 1);
-        spinnerYModel.setMax(worldMap().numRows() - 1);
-        String propertyValue = layer.properties().get(property.name());
-        WorldMapParser.parseTile(propertyValue).ifPresent(tile -> {
-            spinnerX.getValueFactory().setValue(tile.x());
-            spinnerY.getValueFactory().setValue(tile.y());
-        });
     }
 
     @Override

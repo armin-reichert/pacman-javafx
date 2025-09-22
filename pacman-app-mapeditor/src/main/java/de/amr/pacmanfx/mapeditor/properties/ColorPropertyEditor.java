@@ -25,12 +25,6 @@ class ColorPropertyEditor extends PropertyEditor {
     }
 
     @Override
-    protected void updateFromLayerProperty() {
-        String value = layer.properties().get(property.name());
-        colorPicker.setValue(EditorUtil.parseColor(value));
-    }
-
-    @Override
     protected Node valueEditor() {
         return colorPicker;
     }

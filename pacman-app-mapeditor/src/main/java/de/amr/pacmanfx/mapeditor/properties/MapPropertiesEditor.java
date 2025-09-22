@@ -143,12 +143,6 @@ public class MapPropertiesEditor extends BorderPane {
         return enabled;
     }
 
-    public void updatePropertyEditorValues() {
-        for (var propertyEditor : propertyEditors) {
-            propertyEditor.updateFromLayerProperty();
-        }
-    }
-
     private void rebuildFromWorldMap(WorldMap worldMap) {
         propertyEditors.clear();
 
@@ -178,10 +172,9 @@ public class MapPropertiesEditor extends BorderPane {
 
             Logger.info("Added editor for property {}", propertyEditor.property);
         });
-        updatePropertyEditorValues();
+
         rebuildGrid();
     }
-
 
     private PropertyEditor createEditor(WorldMapLayer.Property property) {
         PropertyEditor propertyEditor = switch (property.type()) {
