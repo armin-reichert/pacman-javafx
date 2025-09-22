@@ -369,8 +369,6 @@ public class TileMapEditorUI {
 
     public void init() {
         replaceSampleMapMenuEntries(editor.sampleMaps());
-//        terrainPropertiesEditorPane.rebuildPropertyEditors();
-//        foodPropertiesEditorPane.rebuildPropertyEditors();
         preview3D.reset();
         setEditMode(INSPECT);
         Platform.runLater(() -> {
@@ -822,6 +820,9 @@ public class TileMapEditorUI {
     private void onKeyTyped(KeyEvent e) {
         if ("e".equals(e.getCharacter())) {
             new Action_SelectNextEditMode(this).execute();
+        }
+        else if ("p".equals(e.getCharacter())) {
+            setPropertyEditorsVisible(!propertyEditorsVisible());
         }
     }
 
