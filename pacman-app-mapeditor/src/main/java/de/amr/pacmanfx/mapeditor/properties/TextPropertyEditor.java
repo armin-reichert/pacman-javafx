@@ -26,6 +26,11 @@ class TextPropertyEditor extends PropertyEditorBase {
     }
 
     @Override
+    public void updateState(String value) {
+        textEditor.setText(value);
+    }
+
+    @Override
     protected Node valueEditor() {
         return textEditor;
     }

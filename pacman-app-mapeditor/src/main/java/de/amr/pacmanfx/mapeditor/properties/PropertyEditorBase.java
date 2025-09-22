@@ -61,6 +61,12 @@ abstract class PropertyEditorBase {
         }
     }
 
+    protected abstract String formattedValue();
+
+    protected abstract Node valueEditor();
+
+    public abstract void updateState(String value);
+
     public Button createDeleteButton() {
         var btnDelete = new Button(SYMBOL_DELETE);
         btnDelete.disableProperty().bind(enabled.not());
@@ -155,8 +161,4 @@ abstract class PropertyEditorBase {
         ui.editor().setWorldMapChanged();
         ui.editor().setEdited(true);
     }
-
-    protected abstract String formattedValue();
-
-    protected abstract Node valueEditor();
 }

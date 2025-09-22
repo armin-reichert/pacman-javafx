@@ -22,11 +22,11 @@ class TilePropertyEditor extends PropertyEditorBase {
     public TilePropertyEditor(TileMapEditorUI ui, LayerID layerID, WorldMapLayer layer, WorldMapLayer.Property property) {
         super(ui, layerID, layer, property);
 
-        spinnerX = new Spinner<>(0, 1000, 0);
+        spinnerX = new Spinner<>(0, layer.numCols() - 1, 0);
         spinnerX.setMaxWidth(60);
         spinnerX.disableProperty().bind(enabled.not());
 
-        spinnerY = new Spinner<>(0, 1000, 0);
+        spinnerY = new Spinner<>(0, layer.numRows() - 1, 0);
         spinnerY.setMaxWidth(60);
         spinnerY.disableProperty().bind(enabled.not());
 
@@ -41,6 +41,14 @@ class TilePropertyEditor extends PropertyEditorBase {
         valueEditorPane = new HBox(spinnerX, spinnerY);
         valueEditorPane.setPrefWidth(MapPropertiesEditor.VALUE_EDITOR_WIDTH);
         valueEditorPane.setMinWidth(MapPropertiesEditor.VALUE_EDITOR_WIDTH);
+    }
+
+    @Override
+    public void updateState(String value) {
+        WorldMapParser.parseTile(value).ifPresent(tile -> {
+            spinnerX.getValueFactory().setValue(tile.x());
+            spinnerY.getValueFactory().setValue(tile.y());
+        });
     }
 
     @Override

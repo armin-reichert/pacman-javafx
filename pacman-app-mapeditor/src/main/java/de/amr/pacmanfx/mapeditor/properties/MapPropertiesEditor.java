@@ -82,6 +82,17 @@ public class MapPropertiesEditor extends BorderPane {
         ui.editor().currentWorldMapProperty().addListener((py, ov, worldMap) -> rebuildFromWorldMap(worldMap));
     }
 
+    public void updateEditorValues() {
+        propertyEditors.forEach(editor -> {
+            WorldMapLayer.Property property = editor.property();
+            String value = worldMap().layer(layerID).properties().get(property.name());
+            //TODO this is crap, store value outside of property
+            WorldMapLayer.Property newProperty = new WorldMapLayer.Property(property, value);
+            editor.setProperty(newProperty);
+            editor.updateState(value);
+        });
+    }
+
     private Pane createButtonBar() {
         var btnAddColorEntry = new Button("Color");
         btnAddColorEntry.disableProperty().bind(enabled.not());

@@ -10,6 +10,7 @@ import de.amr.pacmanfx.mapeditor.EditorUtil;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import javafx.scene.Node;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.paint.Color;
 
 class ColorPropertyEditor extends PropertyEditorBase {
 
@@ -22,6 +23,11 @@ class ColorPropertyEditor extends PropertyEditorBase {
         colorPicker.setValue(EditorUtil.parseColor(property.value()));
         colorPicker.disableProperty().bind(enabled.not());
         colorPicker.setOnAction(e -> storeValueInMapLayer());
+    }
+
+    @Override
+    public void updateState(String value) {
+        colorPicker.setValue(Color.valueOf(value));
     }
 
     @Override

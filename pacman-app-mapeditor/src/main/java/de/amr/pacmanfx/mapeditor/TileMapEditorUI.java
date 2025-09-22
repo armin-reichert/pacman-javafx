@@ -60,6 +60,8 @@ public class TileMapEditorUI {
     private final EditorPaletteTabPane editorPaletteTabPane;
 
     private Pane propertyEditorsPane;
+    private MapPropertiesEditor terrainPropertiesEditor;
+    private MapPropertiesEditor foodPropertiesEditor;
 
     private TabPane tabPaneEditorViews;
     private Tab tabEditCanvas;
@@ -645,19 +647,19 @@ public class TileMapEditorUI {
     }
 
     private void createPropertyEditors() {
-        var terrainPropertiesEditorPane = new MapPropertiesEditor(this, LayerID.TERRAIN);
-        terrainPropertiesEditorPane.enabledProperty().bind(editModeProperty().map(mode -> mode != EditMode.INSPECT));
-        terrainPropertiesEditorPane.setPadding(new Insets(10,0,0,0));
+        terrainPropertiesEditor = new MapPropertiesEditor(this, LayerID.TERRAIN);
+        terrainPropertiesEditor.enabledProperty().bind(editModeProperty().map(mode -> mode != EditMode.INSPECT));
+        terrainPropertiesEditor.setPadding(new Insets(10,0,0,0));
 
-        var foodPropertiesEditorPane = new MapPropertiesEditor(this, LayerID.FOOD);
-        foodPropertiesEditorPane.enabledProperty().bind(editModeProperty().map(mode -> mode != EditMode.INSPECT));
-        foodPropertiesEditorPane.setPadding(new Insets(10,0,0,0));
+        foodPropertiesEditor = new MapPropertiesEditor(this, LayerID.FOOD);
+        foodPropertiesEditor.enabledProperty().bind(editModeProperty().map(mode -> mode != EditMode.INSPECT));
+        foodPropertiesEditor.setPadding(new Insets(10,0,0,0));
 
-        var terrainPropertiesPane = new TitledPane(translated("terrain"), terrainPropertiesEditorPane);
+        var terrainPropertiesPane = new TitledPane(translated("terrain"), terrainPropertiesEditor);
         terrainPropertiesPane.setMinWidth(300);
         terrainPropertiesPane.setExpanded(true);
 
-        var foodPropertiesPane = new TitledPane(translated("pellets"), foodPropertiesEditorPane);
+        var foodPropertiesPane = new TitledPane(translated("pellets"), foodPropertiesEditor);
         foodPropertiesPane.setExpanded(true);
 
         propertyEditorsPane = new VBox(terrainPropertiesPane, foodPropertiesPane);
@@ -830,9 +832,11 @@ public class TileMapEditorUI {
 
     public void onTerrainMapChanged() {
         preview3D.updateMaze();
+        terrainPropertiesEditor.updateEditorValues();
     }
 
     public void onFoodMapChanged() {
         preview3D.updateFood();
+        foodPropertiesEditor.updateEditorValues();
     }
 }

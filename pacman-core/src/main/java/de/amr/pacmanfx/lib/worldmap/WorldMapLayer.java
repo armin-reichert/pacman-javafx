@@ -83,6 +83,10 @@ public class WorldMapLayer {
             requireNonNull(attributes);
         }
 
+        public Property(Property other, String value) {
+            this(other.name, value, other.type, other.attributes);
+        }
+
         public boolean is(PropertyAttribute attribute) {
             return attributes.contains(attribute);
         }
