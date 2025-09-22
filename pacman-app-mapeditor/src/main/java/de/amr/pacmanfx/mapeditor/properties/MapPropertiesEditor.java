@@ -120,10 +120,10 @@ public class MapPropertiesEditor extends BorderPane {
         return worldMap().layer(layerID);
     }
 
-    private void addNewProperty(String propertyName, PropertyType type, String initialValue) {
+    private WorldMapLayer.Property addNewProperty(String propertyName, PropertyType type, String initialValue) {
         if (worldMap().properties(layerID).containsKey(propertyName)) {
             ui.messageDisplay().showMessage("Property %s already exists".formatted(propertyName), 1, MessageType.INFO);
-            return;
+            return null;
         }
 
         WorldMapLayer.Property property = new WorldMapLayer.Property();
@@ -138,18 +138,38 @@ public class MapPropertiesEditor extends BorderPane {
         ui.editor().setWorldMapChanged();
         ui.editor().setEdited(true);
         ui.messageDisplay().showMessage("New property %s added".formatted(propertyName), 1, MessageType.INFO);
+
+        return property;
     }
 
     private void addNewColorProperty() {
-        addNewProperty(NEW_COLOR_PROPERTY_NAME, PropertyType.COLOR_RGBA, DEFAULT_COLOR_VALUE);
+        WorldMapLayer.Property property = addNewProperty(NEW_COLOR_PROPERTY_NAME, PropertyType.COLOR_RGBA, DEFAULT_COLOR_VALUE);
+        if (property != null) {
+            findEditorFor(property).ifPresent(editor -> {
+                editor.nameEditor.selectAll();
+                editor.nameEditor.requestFocus();
+            });
+        }
     }
 
     private void addNewPositionProperty() {
-        addNewProperty(NEW_POSITION_PROPERTY_NAME, PropertyType.TILE, DEFAULT_TILE_VALUE);
+        WorldMapLayer.Property property = addNewProperty(NEW_POSITION_PROPERTY_NAME, PropertyType.TILE, DEFAULT_TILE_VALUE);
+        if (property != null) {
+            findEditorFor(property).ifPresent(editor -> {
+                editor.nameEditor.selectAll();
+                editor.nameEditor.requestFocus();
+            });
+        }
     }
 
     private void addNewTextProperty() {
-        addNewProperty(NEW_TEXT_PROPERTY_NAME, PropertyType.STRING, DEFAULT_TEXT_VALUE);
+        WorldMapLayer.Property property = addNewProperty(NEW_TEXT_PROPERTY_NAME, PropertyType.STRING, DEFAULT_TEXT_VALUE);
+        if (property != null) {
+            findEditorFor(property).ifPresent(editor -> {
+                editor.nameEditor.selectAll();
+                editor.nameEditor.requestFocus();
+            });
+        }
     }
 
     private void deleteProperty(WorldMapLayer.Property property) {
