@@ -124,7 +124,7 @@ abstract class PropertyEditor {
 
     protected abstract String formattedValue();
 
-    protected abstract void updateEditorFromProperty();
+    protected abstract void updateFromLayerProperty();
 
     protected abstract Node valueEditor();
 }

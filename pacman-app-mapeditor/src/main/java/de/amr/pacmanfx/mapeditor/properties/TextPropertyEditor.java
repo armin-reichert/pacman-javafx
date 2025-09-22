@@ -26,7 +26,7 @@ class TextPropertyEditor extends PropertyEditor {
     }
 
     @Override
-    protected void updateEditorFromProperty() {
+    protected void updateFromLayerProperty() {
         String text = layer.properties().get(property.value());
         textEditor.setText(text);
     }

@@ -145,7 +145,7 @@ public class MapPropertiesEditor extends BorderPane {
 
     public void updatePropertyEditorValues() {
         for (var propertyEditor : propertyEditors) {
-            propertyEditor.updateEditorFromProperty();
+            propertyEditor.updateFromLayerProperty();
         }
     }
 

@@ -49,7 +49,7 @@ class TilePropertyEditor extends PropertyEditor {
     }
 
     @Override
-    protected void updateEditorFromProperty() {
+    protected void updateFromLayerProperty() {
         spinnerXModel.setMax(worldMap().numCols() - 1);
         spinnerYModel.setMax(worldMap().numRows() - 1);
         String propertyValue = layer.properties().get(property.name());
