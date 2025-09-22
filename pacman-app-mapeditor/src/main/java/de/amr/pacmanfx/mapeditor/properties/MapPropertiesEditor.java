@@ -23,10 +23,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import org.tinylog.Logger;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.model.DefaultWorldMapProperties.*;
@@ -47,26 +44,15 @@ public class MapPropertiesEditor extends BorderPane {
     public static final String DEFAULT_TILE_VALUE = "(0,0)";
     public static final String DEFAULT_TEXT_VALUE = "";
 
-    public static boolean isPredefinedProperty(String propertyName, LayerID layerID) {
-        return switch (layerID) {
-            case TERRAIN ->
-                   COLOR_WALL_FILL.equals(propertyName)
-                || COLOR_WALL_STROKE.equals(propertyName)
-                || COLOR_DOOR.equals(propertyName)
-                || POS_HOUSE_MIN_TILE.equals(propertyName)
-                || POS_HOUSE_MAX_TILE.equals(propertyName);
-            case FOOD -> DefaultWorldMapProperties.COLOR_FOOD.equals(propertyName);
-        };
-    }
+    public static final Map<LayerID, Set<String>> PREDEFINED_PROPERTIES = Map.of(
+        LayerID.TERRAIN, Set.of(COLOR_WALL_FILL, COLOR_WALL_STROKE, COLOR_DOOR, POS_HOUSE_MIN_TILE, POS_HOUSE_MAX_TILE),
+        LayerID.FOOD,    Set.of(COLOR_FOOD)
+    );
 
-    public static boolean isHiddenProperty(String propertyName, LayerID layerID) {
-        return switch (layerID) {
-            case TERRAIN -> POS_HOUSE_MIN_TILE.equals(propertyName)
-                || POS_HOUSE_MAX_TILE.equals(propertyName);
-            case FOOD -> false;
-        };
-    }
-
+    public static final Map<LayerID, Set<String>> HIDDEN_PROPERTIES = Map.of(
+        LayerID.TERRAIN, Set.of(POS_HOUSE_MIN_TILE, POS_HOUSE_MAX_TILE),
+        LayerID.FOOD,    Set.of()
+    );
 
     private final TileMapEditorUI ui;
     private final LayerID layerID;
@@ -189,8 +175,12 @@ public class MapPropertiesEditor extends BorderPane {
             }
 
             Set<WorldMap.PropertyAttribute> attributes = EnumSet.noneOf(WorldMap.PropertyAttribute.class);
-            if (isPredefinedProperty(propertyName, layerID)) attributes.add(WorldMap.PropertyAttribute.PREDEFINED);
-            if (isHiddenProperty(propertyName, layerID)) attributes.add((WorldMap.PropertyAttribute.HIDDEN));
+            if (PREDEFINED_PROPERTIES.get(layerID).contains(propertyName)) {
+                attributes.add(WorldMap.PropertyAttribute.PREDEFINED);
+            }
+            if (HIDDEN_PROPERTIES.get(layerID).contains(propertyName)) {
+                attributes.add((WorldMap.PropertyAttribute.HIDDEN));
+            }
 
             var propertyInfo = new WorldMap.Property(type, attributes);
             String propertyValue = worldMap().properties(layerID).get(propertyName);

@@ -87,12 +87,12 @@ abstract class SinglePropertyEditor {
             ui.messageDisplay().showMessage("Property name '%s' is invalid".formatted(editedName), 2, MessageType.ERROR);
             return;
         }
-        if (MapPropertiesEditor.isPredefinedProperty(editedName, layerID)) {
+        if (MapPropertiesEditor.PREDEFINED_PROPERTIES.get(layerID).contains(editedName)) {
             ui.messageDisplay().showMessage("Property name is reserved", 2, MessageType.ERROR);
             nameEditor.setText(propertyName);
             return;
         }
-        if (MapPropertiesEditor.isHiddenProperty(editedName, layerID)) {
+        if (MapPropertiesEditor.HIDDEN_PROPERTIES.get(layerID).contains(editedName)) {
             ui.messageDisplay().showMessage("Property name is reserved", 2, MessageType.ERROR);
             nameEditor.setText(propertyName);
             return;
