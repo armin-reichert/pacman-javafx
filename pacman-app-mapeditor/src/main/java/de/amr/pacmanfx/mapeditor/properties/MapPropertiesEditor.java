@@ -115,7 +115,7 @@ public class MapPropertiesEditor extends BorderPane {
         WorldMapLayer.Property property = new WorldMapLayer.Property(
             propertyName, initialValue, type, WorldMapLayer.Property.emptyAttributeSet());
         PropertyEditorBase editor = createEditor(property);
-        propertyEditors.add(0, editor);
+        propertyEditors.addFirst(editor);
         rebuildGrid();
 
         worldMap().properties(layerID).put(propertyName, property.value());
