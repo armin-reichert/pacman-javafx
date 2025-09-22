@@ -109,7 +109,7 @@ public interface WorldMapParser {
 
         // Second pass: read data and build new tile map
         var tileMap = new WorldMapLayer(numDataRows, numDataCols);
-        tileMap.properties().putAll(parseProperties(propertySection.toString()));
+        tileMap.propertyValues().putAll(parseProperties(propertySection.toString()));
 
         for (int lineIndex = dataStartIndex; lineIndex < lines.size(); ++lineIndex) {
             String line = lines.get(lineIndex);

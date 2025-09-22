@@ -85,7 +85,7 @@ public class MapPropertiesEditor extends BorderPane {
     public void updateEditorValues() {
         propertyEditors.forEach(editor -> {
             WorldMapLayer.Property property = editor.property();
-            String value = worldMap().layer(layerID).properties().get(property.name());
+            String value = worldMap().layer(layerID).propertyValues().get(property.name());
             property.setValue(value);
             editor.updateState();
         });

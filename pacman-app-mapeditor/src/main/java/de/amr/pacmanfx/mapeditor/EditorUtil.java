@@ -5,9 +5,12 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.mapeditor;
 
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.lib.worldmap.*;
-import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.lib.worldmap.LayerID;
+import de.amr.pacmanfx.lib.worldmap.TerrainTile;
+import de.amr.pacmanfx.lib.worldmap.WorldMap;
+import de.amr.pacmanfx.lib.worldmap.WorldMapLayer;
 import de.amr.pacmanfx.model.DefaultWorldMapProperties;
+import de.amr.pacmanfx.model.GameLevel;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
@@ -196,7 +199,7 @@ public interface EditorUtil {
     }
 
     private static void printLayer(PrintWriter pw, WorldMap worldMap, WorldMapLayer layer) {
-        Map<String, String> properties = layer.properties();
+        Map<String, String> properties = layer.propertyValues();
         properties.keySet().stream().sorted().map(name -> "%s=%s".formatted(name, properties.get(name))).forEach(pw::println);
         pw.println(WorldMap.MARKER_BEGIN_DATA_SECTION);
         for (int row = 0; row < worldMap.numRows(); ++row) {

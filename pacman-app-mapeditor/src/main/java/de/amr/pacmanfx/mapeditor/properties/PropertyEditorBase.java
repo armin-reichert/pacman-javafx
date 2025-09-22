@@ -122,7 +122,7 @@ abstract class PropertyEditorBase {
             rejectName(newName, "Property name '%s' is reserved");
             return;
         }
-        if (layer.properties().containsKey(newName)) {
+        if (layer.propertyValues().containsKey(newName)) {
             rejectName(newName, "Property name '%s' already in use");
             return;
         }
@@ -144,8 +144,8 @@ abstract class PropertyEditorBase {
         String oldName = property.name();
         property.setName(newName);
 
-        layer.properties().remove(oldName);
-        layer.properties().put(newName, formattedValue());
+        layer.propertyValues().remove(oldName);
+        layer.propertyValues().put(newName, formattedValue());
 
         ui.editor().setWorldMapChanged();
         ui.editor().setEdited(true);
@@ -153,7 +153,7 @@ abstract class PropertyEditorBase {
     }
 
     protected void storeValueInMapLayer() {
-        layer.properties().put(property.name(), formattedValue());
+        layer.propertyValues().put(property.name(), formattedValue());
         ui.editor().setWorldMapChanged();
         ui.editor().setEdited(true);
     }

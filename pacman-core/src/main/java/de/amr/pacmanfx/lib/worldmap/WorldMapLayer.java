@@ -105,27 +105,28 @@ public class WorldMapLayer {
         }
     }
 
-    private final Map<String, String> properties = new HashMap<>();
-    private final byte[][] codes;
+    private final Map<String, String> propertyValues = new HashMap<>();
+    private final byte[][] tileContent;
 
     public WorldMapLayer(int numRows, int numCols) {
-        codes = new byte[numRows][numCols];
+        tileContent = new byte[numRows][numCols];
     }
 
     public WorldMapLayer(WorldMapLayer other) {
-        int numRows = other.codes.length, numCols = other.codes[0].length;
-        properties.putAll(other.properties);
-        codes = new byte[numRows][];
+        int numRows = other.tileContent.length, numCols = other.tileContent[0].length;
+        propertyValues.putAll(other.propertyValues);
+        tileContent = new byte[numRows][];
         for (int row = 0; row < numRows; ++row) {
-            codes[row] = Arrays.copyOf(other.codes[row], numCols);
+            tileContent[row] = Arrays.copyOf(other.tileContent[row], numCols);
         }
     }
 
-    public int numRows() { return codes.length; }
-    public int numCols() { return codes[0].length; }
+    public int numRows() { return tileContent.length; }
+
+    public int numCols() { return tileContent[0].length; }
 
     public byte get(int row, int col) {
-        return codes[row][col];
+        return tileContent[row][col];
     }
 
     public byte get(Vector2i tile) {
@@ -133,7 +134,7 @@ public class WorldMapLayer {
     }
 
     public void set(int row, int col, byte code) {
-        codes[row][col] = code;
+        tileContent[row][col] = code;
     }
 
     public void set(Vector2i tile, byte code) {
@@ -141,17 +142,17 @@ public class WorldMapLayer {
     }
 
     public void setAll(byte code) {
-        for (byte[] row : codes) {
+        for (byte[] row : tileContent) {
             Arrays.fill(row, code);
         }
     }
 
-    public Map<String, String> properties() {
-        return properties;
+    public Map<String, String> propertyValues() {
+        return propertyValues;
     }
 
-    public void replaceProperties(Map<String, String> otherProperties) {
-        properties.clear();
-        properties.putAll(otherProperties);
+    public void replacePropertyValues(Map<String, String> other) {
+        propertyValues.clear();
+        propertyValues.putAll(other);
     }
 }
