@@ -90,6 +90,11 @@ abstract class PropertyEditorBase {
         return worldMap.get();
     }
 
+    private void rejectName(String newName, String reason) {
+        nameEditor.setText(property.name());
+        ui.messageDisplay().showMessage(reason.formatted(newName), 2, MessageType.ERROR);
+    }
+
     private void editPropertyName() {
         String newName = nameEditor.getText().trim();
         if (property.name().equals(newName)) {
@@ -100,30 +105,33 @@ abstract class PropertyEditorBase {
             return;
         }
         if (WorldMapLayer.Property.isInvalidPropertyName(newName)) {
-            nameEditor.setText(property.name());
-            ui.messageDisplay().showMessage("Property name '%s' is invalid".formatted(newName), 2, MessageType.ERROR);
+            rejectName(newName, "Property name '%s' is invalid");
             return;
         }
         if (MapPropertiesEditor.PREDEFINED_PROPERTIES.get(layerID).contains(newName)) {
-            nameEditor.setText(property.name());
-            ui.messageDisplay().showMessage("Property name is reserved", 2, MessageType.ERROR);
+            rejectName(newName, "Property name '%s' is reserved");
             return;
         }
         if (MapPropertiesEditor.HIDDEN_PROPERTIES.get(layerID).contains(newName)) {
-            nameEditor.setText(property.name());
-            ui.messageDisplay().showMessage("Property name is reserved", 2, MessageType.ERROR);
+            rejectName(newName, "Property name '%s' is reserved");
             return;
         }
         if (layer.properties().containsKey(newName)) {
-            ui.messageDisplay().showMessage("Property name already in use", 2, MessageType.ERROR);
-            nameEditor.setText(property.name());
+            rejectName(newName, "Property name '%s' already in use");
+            return;
+        }
+        if (MapPropertiesEditor.COLOR_PREFIXES.contains(newName)) {
+            rejectName(newName, "Color property name '%s' is too short");
+            return;
+        }
+        if (MapPropertiesEditor.TILE_PREFIXES.contains(newName)) {
+            rejectName(newName, "Tile property name '%s' is too short");
             return;
         }
 
         WorldMapLayer.PropertyType newType = MapPropertiesEditor.determinePropertyType(newName);
         if (newType != property.type()) {
-            ui.messageDisplay().showMessage("Renaming would change property type", 2, MessageType.ERROR);
-            nameEditor.setText(property.name());
+            rejectName(newName, "Renaming property to '%s' would change type");
             return;
         }
 
@@ -139,7 +147,7 @@ abstract class PropertyEditorBase {
             property.type(),
             WorldMapLayer.Property.emptyAttributeSet());
 
-        ui.messageDisplay().showMessage("Property '%s' renamed to '%s'".formatted(oldName, newName), 2, MessageType.INFO);
+        ui.messageDisplay().showMessage("Renamed property '%s' to '%s'".formatted(oldName, newName), 2, MessageType.INFO);
     }
 
     protected void storePropertyValue(TileMapEditorUI ui) {

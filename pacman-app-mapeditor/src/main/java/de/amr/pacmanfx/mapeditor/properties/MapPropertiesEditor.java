@@ -49,14 +49,21 @@ public class MapPropertiesEditor extends BorderPane {
         LayerID.FOOD,    Set.of()
     );
 
+    public static final Set<String> COLOR_PREFIXES = Set.of("color_");
+    public static final Set<String> TILE_PREFIXES = Set.of("pos_", "tile_", "vec_");
+
     // As long as the property type is not stored in the map file, we derive it from the name
     public static PropertyType determinePropertyType(String propertyName) {
         requireNonNull(propertyName);
-        if (propertyName.startsWith("color_")) {
-            return PropertyType.COLOR_RGBA;
+        for (String prefix : COLOR_PREFIXES) {
+            if (propertyName.startsWith(prefix)) {
+                return PropertyType.COLOR_RGBA;
+            }
         }
-        if (propertyName.startsWith("pos_") || propertyName.startsWith("tile_") || propertyName.startsWith("vec_")) {
-            return  PropertyType.TILE;
+        for (String prefix : TILE_PREFIXES) {
+            if (propertyName.startsWith(prefix)) {
+                return PropertyType.TILE;
+            }
         }
         return PropertyType.STRING;
     }
