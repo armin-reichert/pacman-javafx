@@ -85,7 +85,7 @@ public class MapPropertiesEditor extends BorderPane {
     public void updateEditorValues() {
         propertyEditors.forEach(editor -> {
             WorldMapLayer.Property property = editor.property();
-            String value = worldMap().layer(layerID).propertyValues().get(property.name());
+            String value = layer().propertyValues().get(property.name());
             property.setValue(value);
             editor.updateState();
         });
@@ -114,6 +114,10 @@ public class MapPropertiesEditor extends BorderPane {
     
     private WorldMap worldMap() {
         return ui.editor().currentWorldMap();
+    }
+
+    private WorldMapLayer layer() {
+        return worldMap().layer(layerID);
     }
 
     private void addNewProperty(String propertyName, PropertyType type, String initialValue) {
@@ -190,9 +194,9 @@ public class MapPropertiesEditor extends BorderPane {
 
     private PropertyEditorBase createEditor(WorldMapLayer.Property property) {
         PropertyEditorBase propertyEditor = switch (property.type()) {
-            case COLOR_RGBA -> new ColorPropertyEditor(ui, layerID, worldMap().layer(layerID), property);
-            case TILE       -> new TilePropertyEditor(ui, layerID, worldMap().layer(layerID), property);
-            case STRING     -> new TextPropertyEditor(ui, layerID, worldMap().layer(layerID), property);
+            case COLOR_RGBA -> new ColorPropertyEditor(ui, layerID, layer(), property);
+            case TILE       -> new TilePropertyEditor(ui, layerID, layer(), property);
+            case STRING     -> new TextPropertyEditor(ui, layerID, layer(), property);
         };
         propertyEditor.enabledProperty().bind(enabled);
         propertyEditor.worldMapProperty().bind(ui.editor().currentWorldMapProperty());
