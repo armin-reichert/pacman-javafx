@@ -143,27 +143,18 @@ public class MapPropertiesEditor extends BorderPane {
     }
 
     private void addNewColorProperty() {
-        WorldMapLayer.Property property = addNewProperty(NEW_COLOR_PROPERTY_NAME, PropertyType.COLOR_RGBA, DEFAULT_COLOR_VALUE);
-        if (property != null) {
-            findEditorFor(property).ifPresent(editor -> {
-                editor.nameEditor.selectAll();
-                editor.nameEditor.requestFocus();
-            });
-        }
+        focusAndSelect(addNewProperty(NEW_COLOR_PROPERTY_NAME, PropertyType.COLOR_RGBA, DEFAULT_COLOR_VALUE));
     }
 
     private void addNewPositionProperty() {
-        WorldMapLayer.Property property = addNewProperty(NEW_POSITION_PROPERTY_NAME, PropertyType.TILE, DEFAULT_TILE_VALUE);
-        if (property != null) {
-            findEditorFor(property).ifPresent(editor -> {
-                editor.nameEditor.selectAll();
-                editor.nameEditor.requestFocus();
-            });
-        }
+        focusAndSelect(addNewProperty(NEW_POSITION_PROPERTY_NAME, PropertyType.TILE, DEFAULT_TILE_VALUE));
     }
 
     private void addNewTextProperty() {
-        WorldMapLayer.Property property = addNewProperty(NEW_TEXT_PROPERTY_NAME, PropertyType.STRING, DEFAULT_TEXT_VALUE);
+        focusAndSelect(addNewProperty(NEW_TEXT_PROPERTY_NAME, PropertyType.STRING, DEFAULT_TEXT_VALUE));
+    }
+
+    private void focusAndSelect(WorldMapLayer.Property property) {
         if (property != null) {
             findEditorFor(property).ifPresent(editor -> {
                 editor.nameEditor.selectAll();
