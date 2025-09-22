@@ -65,7 +65,7 @@ abstract class PropertyEditorBase {
 
     protected abstract Node valueEditor();
 
-    public abstract void updateState(String value);
+    public abstract void updateState();
 
     public Button createDeleteButton() {
         var btnDelete = new Button(SYMBOL_DELETE);
@@ -142,17 +142,13 @@ abstract class PropertyEditorBase {
         }
 
         String oldName = property.name();
+        property.setName(newName);
+
         layer.properties().remove(oldName);
         layer.properties().put(newName, formattedValue());
+
         ui.editor().setWorldMapChanged();
         ui.editor().setEdited(true);
-
-        property = new WorldMapLayer.Property(
-            newName,
-            formattedValue(),
-            property.type(),
-            WorldMapLayer.Property.emptyAttributeSet());
-
         ui.messageDisplay().showMessage("Renamed property '%s' to '%s'".formatted(oldName, newName), 2, MessageType.INFO);
     }
 

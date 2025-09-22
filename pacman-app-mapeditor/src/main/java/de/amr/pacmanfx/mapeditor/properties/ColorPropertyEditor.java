@@ -26,8 +26,8 @@ class ColorPropertyEditor extends PropertyEditorBase {
     }
 
     @Override
-    public void updateState(String value) {
-        colorPicker.setValue(Color.valueOf(value));
+    public void updateState() {
+        colorPicker.setValue(Color.valueOf(property().value()));
     }
 
     @Override

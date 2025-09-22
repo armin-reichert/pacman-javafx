@@ -44,8 +44,8 @@ class TilePropertyEditor extends PropertyEditorBase {
     }
 
     @Override
-    public void updateState(String value) {
-        WorldMapParser.parseTile(value).ifPresent(tile -> {
+    public void updateState() {
+        WorldMapParser.parseTile(property().value()).ifPresent(tile -> {
             spinnerX.getValueFactory().setValue(tile.x());
             spinnerY.getValueFactory().setValue(tile.y());
         });

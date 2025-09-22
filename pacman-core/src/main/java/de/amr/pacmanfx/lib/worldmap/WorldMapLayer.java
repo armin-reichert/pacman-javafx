@@ -9,8 +9,6 @@ import de.amr.pacmanfx.lib.Vector2i;
 import java.util.*;
 import java.util.regex.Pattern;
 
-import static java.util.Objects.requireNonNull;
-
 public class WorldMapLayer {
 
     public enum PropertyAttribute {
@@ -23,48 +21,32 @@ public class WorldMapLayer {
             public String format(Object value) {
                 return String.valueOf(value);
             }
-
-            @Override
-            public String defaultValue() {
-                return "";
-            }
         },
 
         TILE {
             @Override
             public String format(Object value) {
-                if (value instanceof Vector2i vec) {
-                    return "(%d,%d)".formatted(vec.x(), vec.y());
+                if (value instanceof Vector2i(int x, int y)) {
+                    return "(%d,%d)".formatted(x, y);
                 }
                 throw new IllegalArgumentException("Not a tile value: " + value);
-            }
-
-            @Override
-            public String defaultValue() {
-                return format(Vector2i.ZERO);
             }
         },
 
         COLOR_RGBA {
             @Override
             public String format(Object value) {
-                if (value instanceof ColorRGBA color) {
-                    return String.format(Locale.ENGLISH, "rgba(%d,%d,%d,%.2f)", color.red(), color.green(), color.blue(), color.alpha());
+                if (value instanceof ColorRGBA(byte red, byte green, byte blue, double alpha)) {
+                    return String.format(Locale.ENGLISH, "rgba(%d,%d,%d,%.2f)", red, green, blue, alpha);
                 }
                 throw new IllegalArgumentException("Not a RGBA color value: " + value);
             }
-
-            @Override
-            public String defaultValue() {
-                return format(ColorRGBA.BLACK);
-            }
         };
 
-        public abstract String defaultValue();
         public abstract String format(Object value);
     }
 
-    public record Property(String name, String value, PropertyType type, Set<PropertyAttribute> attributes) {
+    public static class Property {
 
         public static final Pattern PATTERN_PROPERTY_NAME = Pattern.compile("[a-zA-Z]([a-zA-Z0-9_])*");
 
@@ -76,19 +58,50 @@ public class WorldMapLayer {
             return EnumSet.noneOf(PropertyAttribute.class);
         }
 
-        public Property {
-            requireNonNull(name);
-            requireNonNull(value);
-            requireNonNull(type);
-            requireNonNull(attributes);
+        private String name;
+        private String value;
+        private PropertyType type;
+        private final Set<PropertyAttribute> attributes = Property.emptyAttributeSet();
+
+        public String name() {
+            return name;
         }
 
-        public Property(Property other, String value) {
-            this(other.name, value, other.type, other.attributes);
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String value() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        public PropertyType type() {
+            return type;
+        }
+
+        public void setType(PropertyType type) {
+            this.type = type;
+        }
+
+        public Set<PropertyAttribute> attributes() {
+            return attributes;
         }
 
         public boolean is(PropertyAttribute attribute) {
             return attributes.contains(attribute);
+        }
+
+        @Override
+        public String toString() {
+            return "Property{" + "name='" + name + '\'' +
+                    ", value='" + value + '\'' +
+                    ", type=" + type +
+                    ", attributes=" + attributes +
+                    '}';
         }
     }
 

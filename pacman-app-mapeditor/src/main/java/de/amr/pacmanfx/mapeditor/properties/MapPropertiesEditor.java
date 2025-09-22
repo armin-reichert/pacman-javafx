@@ -86,10 +86,8 @@ public class MapPropertiesEditor extends BorderPane {
         propertyEditors.forEach(editor -> {
             WorldMapLayer.Property property = editor.property();
             String value = worldMap().layer(layerID).properties().get(property.name());
-            //TODO this is crap, store value outside of property
-            WorldMapLayer.Property newProperty = new WorldMapLayer.Property(property, value);
-            editor.setProperty(newProperty);
-            editor.updateState(value);
+            property.setValue(value);
+            editor.updateState();
         });
     }
 
@@ -123,10 +121,13 @@ public class MapPropertiesEditor extends BorderPane {
             ui.messageDisplay().showMessage("Property %s already exists".formatted(propertyName), 1, MessageType.INFO);
             return;
         }
-        WorldMapLayer.Property property = new WorldMapLayer.Property(
-            propertyName, initialValue, type, WorldMapLayer.Property.emptyAttributeSet());
-        PropertyEditorBase editor = createEditor(property);
-        propertyEditors.addFirst(editor);
+
+        WorldMapLayer.Property property = new WorldMapLayer.Property();
+        property.setName(propertyName);
+        property.setValue(initialValue);
+        property.setType(type);
+
+        propertyEditors.addFirst(createEditor(property));
         rebuildGrid();
 
         worldMap().properties(layerID).put(propertyName, property.value());
@@ -169,27 +170,21 @@ public class MapPropertiesEditor extends BorderPane {
 
     private void rebuildFromWorldMap(WorldMap worldMap) {
         propertyEditors.clear();
-
         worldMap.propertyNames(layerID).sorted().forEach(propertyName -> {
-
-            PropertyType type = determinePropertyType(propertyName);
-            Set<PropertyAttribute> attributes = WorldMapLayer.Property.emptyAttributeSet();
+            var property = new WorldMapLayer.Property();
+            property.setName(propertyName);
+            property.setValue(worldMap.properties(layerID).get(propertyName));
+            property.setType(determinePropertyType(propertyName));
             if (PREDEFINED_PROPERTIES.get(layerID).contains(propertyName)) {
-                attributes.add(PropertyAttribute.PREDEFINED);
+                property.attributes().add(PropertyAttribute.PREDEFINED);
             }
             if (HIDDEN_PROPERTIES.get(layerID).contains(propertyName)) {
-                attributes.add((PropertyAttribute.HIDDEN));
+                property.attributes().add((PropertyAttribute.HIDDEN));
             }
 
-            String propertyValue = worldMap.properties(layerID).get(propertyName);
-            var property = new WorldMapLayer.Property(propertyName, propertyValue, type, attributes);
-
-            PropertyEditorBase propertyEditor = createEditor(property);
-            propertyEditors.add(propertyEditor);
-
-            Logger.info("Added editor for property {}", propertyEditor.property());
+            propertyEditors.add(createEditor(property));
+            Logger.info("Added editor for {}", property);
         });
-
         rebuildGrid();
     }
 
