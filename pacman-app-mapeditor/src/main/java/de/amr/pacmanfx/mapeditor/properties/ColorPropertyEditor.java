@@ -36,7 +36,7 @@ class ColorPropertyEditor extends PropertyEditor {
     }
 
     @Override
-    protected String formattedPropertyValue() {
+    protected String formattedValue() {
         return EditorUtil.formatColor(colorPicker.getValue());
     }
 }

@@ -104,11 +104,11 @@ abstract class PropertyEditor {
         //TODO handle change of property type!
 
         layer.properties().remove(property.name());
-        layer.properties().put(newPropertyName, formattedPropertyValue());
+        layer.properties().put(newPropertyName, formattedValue());
 
         property = new WorldMapLayer.Property(
             newPropertyName,
-            formattedPropertyValue(),
+            formattedValue(),
             property.type(),
             WorldMapLayer.Property.emptyAttributeSet());
 
@@ -117,12 +117,12 @@ abstract class PropertyEditor {
     }
 
     protected void storePropertyValue(TileMapEditorUI ui) {
-        layer.properties().put(property.name(), formattedPropertyValue());
+        layer.properties().put(property.name(), formattedValue());
         ui.editor().setWorldMapChanged();
         ui.editor().setEdited(true);
     }
 
-    protected abstract String formattedPropertyValue();
+    protected abstract String formattedValue();
 
     protected abstract void updateEditorFromProperty();
 

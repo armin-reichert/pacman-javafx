@@ -60,8 +60,8 @@ class TilePropertyEditor extends PropertyEditor {
     }
 
     @Override
-    protected String formattedPropertyValue() {
-        return Vector2i.of(spinnerX.getValue(), spinnerY.getValue()).toString();
+    protected String formattedValue() {
+        return WorldMapLayer.PropertyType.TILE.format(Vector2i.of(spinnerX.getValue(), spinnerY.getValue()));
     }
 
     @Override
