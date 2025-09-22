@@ -16,6 +16,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
@@ -192,31 +193,38 @@ public class MapPropertiesEditor extends BorderPane {
         propertyEditor.worldMapProperty().bind(ui.editor().currentWorldMapProperty());
         return propertyEditor;
     }
+
     private void rebuildGrid() {
         grid.getChildren().clear();
         int rowIndex = -1;
-        for (int i = 0; i < propertyEditors.size(); ++i) {
-            PropertyEditor propertyEditor = propertyEditors.get(i);
-            WorldMapLayer.Property property = propertyEditor.property;
-            if (property.is(PropertyAttribute.HIDDEN)) {
+        for (PropertyEditor editor : propertyEditors) {
+            if (editor.property.is(PropertyAttribute.HIDDEN)) {
                 continue;
             }
             ++rowIndex;
-            grid.add(propertyEditor.nameEditor, 0, rowIndex);
-            grid.add(propertyEditor.valueEditor(), 1, rowIndex);
-            if (!property.is(PropertyAttribute.PREDEFINED)) {
-                var btnDelete = new Button(SYMBOL_DELETE);
-                btnDelete.disableProperty().bind(enabled.not());
-                btnDelete.setOnAction(e -> deleteProperty(property));
-                Tooltip tooltip = new Tooltip("Delete"); //TODO localize
-                tooltip.setFont(EditorGlobals.FONT_TOOL_TIPS);
-                btnDelete.setTooltip(tooltip);
-                grid.add(btnDelete, 2, rowIndex);
-            } else {
-                var spacer = new Region();
-                spacer.setMinWidth(30);
-                grid.add(spacer, 2, rowIndex);
-            }
+            grid.add(editor.nameEditor, 0, rowIndex);
+            grid.add(editor.valueEditor(), 1, rowIndex);
+            grid.add(editor.property.is(PropertyAttribute.PREDEFINED)
+                ? spacer()
+                : createDeleteButton(editor.property), 2, rowIndex);
         }
+    }
+
+    private Node spacer() {
+        var spacer = new Region();
+        spacer.setMinWidth(30);
+        spacer.setMaxWidth(30);
+        spacer.setPrefWidth(30);
+        return spacer;
+    }
+
+    private Button createDeleteButton(WorldMapLayer.Property property) {
+        var btnDelete = new Button(SYMBOL_DELETE);
+        btnDelete.disableProperty().bind(enabled.not());
+        btnDelete.setOnAction(e -> deleteProperty(property));
+        Tooltip tooltip = new Tooltip("Delete"); //TODO localize
+        tooltip.setFont(EditorGlobals.FONT_TOOL_TIPS);
+        btnDelete.setTooltip(tooltip);
+        return btnDelete;
     }
 }
