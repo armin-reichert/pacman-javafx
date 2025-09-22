@@ -21,7 +21,7 @@ class ColorPropertyEditor extends PropertyEditorBase {
         colorPicker.setPrefWidth(MapPropertiesEditor.VALUE_EDITOR_WIDTH);
         colorPicker.setValue(EditorUtil.parseColor(property.value()));
         colorPicker.disableProperty().bind(enabled.not());
-        colorPicker.setOnAction(e -> storePropertyValue(ui));
+        colorPicker.setOnAction(e -> storeValueInMapLayer());
     }
 
     @Override

@@ -150,7 +150,7 @@ abstract class PropertyEditorBase {
         ui.messageDisplay().showMessage("Renamed property '%s' to '%s'".formatted(oldName, newName), 2, MessageType.INFO);
     }
 
-    protected void storePropertyValue(TileMapEditorUI ui) {
+    protected void storeValueInMapLayer() {
         layer.properties().put(property.name(), formattedValue());
         ui.editor().setWorldMapChanged();
         ui.editor().setEdited(true);

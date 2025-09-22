@@ -35,8 +35,8 @@ class TilePropertyEditor extends PropertyEditorBase {
             spinnerY.getValueFactory().setValue(tile.y());
         });
 
-        spinnerX.valueProperty().addListener((py, ov, nv) -> storePropertyValue(ui));
-        spinnerY.valueProperty().addListener((py, ov, nv) -> storePropertyValue(ui));
+        spinnerX.valueProperty().addListener((py, ov, nv) -> storeValueInMapLayer());
+        spinnerY.valueProperty().addListener((py, ov, nv) -> storeValueInMapLayer());
 
         valueEditorPane = new HBox(spinnerX, spinnerY);
         valueEditorPane.setPrefWidth(MapPropertiesEditor.VALUE_EDITOR_WIDTH);

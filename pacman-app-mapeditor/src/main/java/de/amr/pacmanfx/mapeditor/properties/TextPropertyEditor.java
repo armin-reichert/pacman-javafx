@@ -22,7 +22,7 @@ class TextPropertyEditor extends PropertyEditorBase {
         textEditor.setMaxWidth(MapPropertiesEditor.VALUE_EDITOR_WIDTH);
         textEditor.setText(property.value());
         textEditor.disableProperty().bind(enabled.not());
-        textEditor.setOnAction(e -> storePropertyValue(ui));
+        textEditor.setOnAction(e -> storeValueInMapLayer());
     }
 
     @Override
