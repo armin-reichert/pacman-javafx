@@ -25,13 +25,15 @@ abstract class PropertyEditor {
     protected final BooleanProperty enabled = new SimpleBooleanProperty(true);
     protected final ObjectProperty<WorldMap> worldMap = new SimpleObjectProperty<>();
 
+    protected final TileMapEditorUI ui;
     protected final LayerID layerID;
     protected final WorldMapLayer layer;
-    protected WorldMapLayer.Property property;
     protected final TextField nameEditor;
 
+    private WorldMapLayer.Property property;
+
     protected PropertyEditor(TileMapEditorUI ui, LayerID layerID, WorldMapLayer layer, WorldMapLayer.Property property) {
-        requireNonNull(ui);
+        this.ui = requireNonNull(ui);
         this.layerID = requireNonNull(layerID);
         this.layer = requireNonNull(layer);
         this.property = requireNonNull(property);
@@ -45,13 +47,21 @@ abstract class PropertyEditor {
             nameEditor.setBackground(Background.fill(Color.LIGHTGRAY));
         } else {
             nameEditor.setEditable(true);
-            nameEditor.setOnAction(e -> onPropertyNameEdited(ui));
+            nameEditor.setOnAction(e -> onPropertyNameEdited());
             nameEditor.focusedProperty().addListener((py, ov, hasFocus) -> {
                 if (!hasFocus) {
-                    onPropertyNameEdited(ui);
+                    onPropertyNameEdited();
                 }
             });
         }
+    }
+
+    public WorldMapLayer.Property property() {
+        return property;
+    }
+
+    public void setProperty(WorldMapLayer.Property property) {
+        this.property = property;
     }
 
     public BooleanProperty enabledProperty() {
@@ -66,10 +76,7 @@ abstract class PropertyEditor {
         return worldMap.get();
     }
 
-    protected void onPropertyNameEdited(TileMapEditorUI ui) {
-        if (worldMap() == null) {
-            return;
-        }
+    protected void onPropertyNameEdited() {
         String newPropertyName = nameEditor.getText().trim();
         if (property.name().equals(newPropertyName)) {
             return;
@@ -98,7 +105,7 @@ abstract class PropertyEditor {
             nameEditor.setText(property.name());
             return;
         }
-        ui.messageDisplay().showMessage("Property '%s' will be renamed to '%s'".formatted(
+        ui.messageDisplay().showMessage("Property '%s' renamed to '%s'".formatted(
             property.name(), newPropertyName), 2, MessageType.INFO);
 
         //TODO handle change of property type!

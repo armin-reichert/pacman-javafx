@@ -23,10 +23,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.*;
 import org.tinylog.Logger;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static de.amr.pacmanfx.model.DefaultWorldMapProperties.*;
 import static java.util.Objects.requireNonNull;
@@ -131,12 +128,13 @@ public class MapPropertiesEditor extends BorderPane {
             ui.messageDisplay().showMessage("Property '%s' deleted".formatted(property.name()), 3, MessageType.INFO);
             ui.editor().setWorldMapChanged();
             ui.editor().setEdited(true);
-            propertyEditors.stream()
-                .filter(propertyEditor -> propertyEditor.property.equals(property))
-                .findFirst()
-                .ifPresent(propertyEditors::remove);
+            findEditorFor(property).ifPresent(propertyEditors::remove);
             rebuildGrid();
         }
+    }
+
+    private Optional<PropertyEditor> findEditorFor(WorldMapLayer.Property property) {
+        return propertyEditors.stream().filter(pe -> pe.property().name().equals(property.name())).findFirst();
     }
 
     public BooleanProperty enabledProperty() {
@@ -170,7 +168,7 @@ public class MapPropertiesEditor extends BorderPane {
             PropertyEditor propertyEditor = createEditor(property);
             propertyEditors.add(propertyEditor);
 
-            Logger.info("Added editor for property {}", propertyEditor.property);
+            Logger.info("Added editor for property {}", propertyEditor.property());
         });
 
         rebuildGrid();
@@ -191,15 +189,15 @@ public class MapPropertiesEditor extends BorderPane {
         grid.getChildren().clear();
         int rowIndex = -1;
         for (PropertyEditor editor : propertyEditors) {
-            if (editor.property.is(PropertyAttribute.HIDDEN)) {
+            if (editor.property().is(PropertyAttribute.HIDDEN)) {
                 continue;
             }
             ++rowIndex;
             grid.add(editor.nameEditor, 0, rowIndex);
             grid.add(editor.valueEditor(), 1, rowIndex);
-            grid.add(editor.property.is(PropertyAttribute.PREDEFINED)
+            grid.add(editor.property().is(PropertyAttribute.PREDEFINED)
                 ? spacer()
-                : createDeleteButton(editor.property), 2, rowIndex);
+                : createDeleteButton(editor), 2, rowIndex);
         }
     }
 
@@ -211,10 +209,10 @@ public class MapPropertiesEditor extends BorderPane {
         return spacer;
     }
 
-    private Button createDeleteButton(WorldMapLayer.Property property) {
+    private Button createDeleteButton(PropertyEditor editor) {
         var btnDelete = new Button(SYMBOL_DELETE);
         btnDelete.disableProperty().bind(enabled.not());
-        btnDelete.setOnAction(e -> deleteProperty(property));
+        btnDelete.setOnAction(e -> deleteProperty(editor.property()));
         Tooltip tooltip = new Tooltip("Delete"); //TODO localize
         tooltip.setFont(EditorGlobals.FONT_TOOL_TIPS);
         btnDelete.setTooltip(tooltip);
