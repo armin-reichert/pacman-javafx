@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.mapeditor.EditorGlobals.*;
-import static de.amr.pacmanfx.mapeditor.EditorUtil.generateSourceCode;
 import static java.util.Objects.requireNonNull;
 
 public class TileMapEditor {
@@ -120,7 +119,7 @@ public class TileMapEditor {
     private void processChanges() {
         if (terrainMapChanged || foodMapChanged) {
             checkResult = WorldMapChecker.check(currentWorldMap());
-            sourceCode.set(generateSourceCode(currentWorldMap()));
+            sourceCode.set(currentWorldMap().sourceCodeWithLineNumbers());
         }
         if (terrainMapChanged) {
             //TODO use events?

@@ -152,7 +152,7 @@ public class GameLevel {
             worldMap.properties(LayerID.TERRAIN).put(POS_HOUSE_MIN_TILE, String.valueOf(minTile));
         }
         house = new ArcadeHouse(minTile);
-        worldMap.setContentRect(LayerID.TERRAIN, minTile, house.content());
+        worldMap.setContent(LayerID.TERRAIN, minTile, house.content());
     }
 
     public void getReadyToPlay() {

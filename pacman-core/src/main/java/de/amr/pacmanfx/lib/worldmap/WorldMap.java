@@ -8,10 +8,7 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.DefaultWorldMapProperties;
 import org.tinylog.Logger;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -29,6 +26,17 @@ public class WorldMap {
     public static final String MARKER_BEGIN_TERRAIN_LAYER = "!terrain";
     public static final String MARKER_BEGIN_FOOD_LAYER = "!food";
     public static final String MARKER_BEGIN_DATA_SECTION = "!data";
+
+    public static final String TILE_FORMAT = "(%d,%d)";
+
+    public static String formatTile(Vector2i tile) {
+        requireNonNull(tile);
+        return String.format(TILE_FORMAT, tile.x(), tile.y());
+    }
+
+    public static String formatTile(int tileX, int tileY) {
+        return String.format(TILE_FORMAT, tileX, tileY);
+    }
 
     public static boolean isValidTerrainCode(byte code) {
         return Stream.of(TerrainTile.values()).anyMatch(tile -> tile.$ == code);
@@ -378,13 +386,76 @@ public class WorldMap {
         setContent(layerID, tile.y(), tile.x(), code);
     }
 
-    public void setContentRect(LayerID layerID, Vector2i leftTopTile, byte[][] rect) {
-        requireNonNull(rect);
-        int numCols = rect[0].length, numRows = rect.length;
+    /**
+     * Sets map data for a rectangular region.
+     *
+     * @param layerID Layer ID
+     * @param origin top-left tile of region
+     * @param content content of region
+     */
+    public void setContent(LayerID layerID, Vector2i origin, byte[][] content) {
+        requireNonNull(layerID);
+        requireNonNull(origin);
+        requireNonNull(content);
+        int numCols = content[0].length, numRows = content.length;
         for (int x = 0; x < numCols; ++x) {
             for (int y = 0; y < numRows; ++y) {
-                layer(layerID).set(leftTopTile.y() + y, leftTopTile.x() + x, rect[y][x]);
+                layer(layerID).set(origin.y() + y, origin.x() + x, content[y][x]);
             }
         }
+    }
+
+    /**
+     * Saves this map to given file (UTF-8 character encoding).
+     *
+     * @param file file to save to
+     * @return {@code true} if saving succeeded
+     */
+    public boolean saveToFile(File file) {
+        try (var pw = new PrintWriter(file, StandardCharsets.UTF_8)) {
+            pw.print(sourceCode());
+            return true;
+        } catch (IOException x) {
+            Logger.error(x);
+            return false;
+        }
+    }
+
+    private void printLayer(PrintWriter pw, WorldMapLayer layer) {
+        layer.propertyValues().entrySet().stream()
+            .sorted(Map.Entry.comparingByKey())
+            .map(entry -> "%s=%s".formatted(entry.getKey(), entry.getValue()))
+            .forEach(pw::println);
+        pw.println(WorldMap.MARKER_BEGIN_DATA_SECTION);
+        for (int row = 0; row < layer.numRows(); ++row) {
+            for (int col = 0; col < layer.numCols(); ++col) {
+                byte value = layer.get(row, col);
+                pw.printf("#%02X", value);
+                if (col < layer.numCols() - 1) {
+                    pw.print(",");
+                }
+            }
+            pw.println();
+        }
+    }
+
+    public String sourceCode() {
+        var sw = new StringWriter();
+        var pw = new PrintWriter(sw);
+        pw.println(WorldMap.MARKER_BEGIN_TERRAIN_LAYER);
+        printLayer(pw, layer(LayerID.TERRAIN));
+        pw.println(WorldMap.MARKER_BEGIN_FOOD_LAYER);
+        printLayer(pw, layer(LayerID.FOOD));
+        pw.flush();
+        return sw.toString();
+    }
+
+    public String sourceCodeWithLineNumbers() {
+        StringBuilder sb = new StringBuilder();
+        String[] lines = sourceCode().split("\n");
+        for (int i = 0; i < lines.length; ++i) {
+            sb.append("%5d: ".formatted(i + 1)).append(lines[i]).append("\n");
+        }
+        return sb.toString();
     }
 }

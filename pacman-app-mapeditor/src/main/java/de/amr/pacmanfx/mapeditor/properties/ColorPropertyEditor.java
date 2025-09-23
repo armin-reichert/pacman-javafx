@@ -37,6 +37,6 @@ class ColorPropertyEditor extends AbstractPropertyEditor {
 
     @Override
     protected String formattedValue() {
-        return EditorUtil.formatColor(colorPicker.getValue());
+        return EditorUtil.formatRGBA(colorPicker.getValue());
     }
 }

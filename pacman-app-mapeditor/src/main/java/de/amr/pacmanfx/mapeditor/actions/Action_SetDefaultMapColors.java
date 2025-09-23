@@ -9,7 +9,7 @@ import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.model.DefaultWorldMapProperties;
 
-import static de.amr.pacmanfx.mapeditor.EditorUtil.formatColor;
+import static de.amr.pacmanfx.mapeditor.EditorUtil.formatRGBA;
 import static de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites.*;
 import static java.util.Objects.requireNonNull;
 
@@ -28,10 +28,10 @@ public class Action_SetDefaultMapColors extends EditorAction<Void> {
 
     @Override
     public Void execute() {
-        worldMap.properties(LayerID.TERRAIN).put(DefaultWorldMapProperties.COLOR_WALL_STROKE, formatColor(MS_PACMAN_COLOR_WALL_STROKE));
-        worldMap.properties(LayerID.TERRAIN).put(DefaultWorldMapProperties.COLOR_WALL_FILL, formatColor(MS_PACMAN_COLOR_WALL_FILL));
-        worldMap.properties(LayerID.TERRAIN).put(DefaultWorldMapProperties.COLOR_DOOR, formatColor(MS_PACMAN_COLOR_DOOR));
-        worldMap.properties(LayerID.FOOD).put(DefaultWorldMapProperties.COLOR_FOOD, formatColor(MS_PACMAN_COLOR_FOOD));
+        worldMap.properties(LayerID.TERRAIN).put(DefaultWorldMapProperties.COLOR_WALL_STROKE, formatRGBA(MS_PACMAN_COLOR_WALL_STROKE));
+        worldMap.properties(LayerID.TERRAIN).put(DefaultWorldMapProperties.COLOR_WALL_FILL, formatRGBA(MS_PACMAN_COLOR_WALL_FILL));
+        worldMap.properties(LayerID.TERRAIN).put(DefaultWorldMapProperties.COLOR_DOOR, formatRGBA(MS_PACMAN_COLOR_DOOR));
+        worldMap.properties(LayerID.FOOD).put(DefaultWorldMapProperties.COLOR_FOOD, formatRGBA(MS_PACMAN_COLOR_FOOD));
 
         editor.setTerrainMapPropertyChanged();
         editor.setFoodMapPropertyChanged();

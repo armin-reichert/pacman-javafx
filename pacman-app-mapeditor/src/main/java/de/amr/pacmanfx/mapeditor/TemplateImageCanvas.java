@@ -121,27 +121,27 @@ public class TemplateImageCanvas extends Canvas {
         final Color colorToSelect = pickColor.equals(Color.TRANSPARENT) ? Color.BLACK : pickColor;
 
         var miColorPreview = createColorMenuItem(colorToSelect,
-                pickColor.equals(Color.TRANSPARENT) ? "TRANSPARENT -> BLACK" : formatColorHex(colorToSelect));
+                pickColor.equals(Color.TRANSPARENT) ? "TRANSPARENT -> BLACK" : formatRGBHex(colorToSelect));
 
         Color fillColor = getColorFromMap(worldMap(), LayerID.TERRAIN, DefaultWorldMapProperties.COLOR_WALL_FILL, null);
         var miPickFillColor = createColorMenuItem(fillColor, translated("menu.pick_color.set_fill_color"));
         miPickFillColor.setOnAction(ae -> new Action_SetTerrainProperty(editor,
-            DefaultWorldMapProperties.COLOR_WALL_FILL, formatColor(colorToSelect)).execute());
+            DefaultWorldMapProperties.COLOR_WALL_FILL, formatRGBA(colorToSelect)).execute());
 
         Color strokeColor = getColorFromMap(worldMap(), LayerID.TERRAIN, DefaultWorldMapProperties.COLOR_WALL_STROKE, null);
         var miPickStrokeColor = createColorMenuItem(strokeColor, translated("menu.pick_color.set_stroke_color"));
         miPickStrokeColor.setOnAction(ae -> new Action_SetTerrainProperty(editor,
-            DefaultWorldMapProperties.COLOR_WALL_STROKE, formatColor(colorToSelect)).execute());
+            DefaultWorldMapProperties.COLOR_WALL_STROKE, formatRGBA(colorToSelect)).execute());
 
         Color doorColor = getColorFromMap(worldMap(), LayerID.TERRAIN, DefaultWorldMapProperties.COLOR_DOOR, null);
         var miPickDoorColor = createColorMenuItem(doorColor, translated("menu.pick_color.set_door_color"));
         miPickDoorColor.setOnAction(ae -> new Action_SetTerrainProperty(editor,
-            DefaultWorldMapProperties.COLOR_DOOR, formatColor(colorToSelect)).execute());
+            DefaultWorldMapProperties.COLOR_DOOR, formatRGBA(colorToSelect)).execute());
 
         Color foodColor = getColorFromMap(worldMap(), LayerID.FOOD, DefaultWorldMapProperties.COLOR_FOOD, null);
         var miPickFoodColor = createColorMenuItem(foodColor, translated("menu.pick_color.set_food_color"));
         miPickFoodColor.setOnAction(ae -> new Action_SetFoodProperty(editor,
-            DefaultWorldMapProperties.COLOR_FOOD, formatColor(colorToSelect)).execute());
+            DefaultWorldMapProperties.COLOR_FOOD, formatRGBA(colorToSelect)).execute());
 
         var text = new Text("Create Map using these colors"); //TODO localize
         text.setFont(Font.font("Sans", FontWeight.BOLD, 16));

@@ -40,6 +40,6 @@ public class ColorIndicator extends HBox {
 
     public void setColor(Color color) {
         colorBox.setBackground(Background.fill(color));
-        colorText.setText(color.equals(Color.TRANSPARENT) ? "Transparent" : EditorUtil.formatColorHex(color));
+        colorText.setText(color.equals(Color.TRANSPARENT) ? "Transparent" : EditorUtil.formatRGBHex(color));
     }
 }

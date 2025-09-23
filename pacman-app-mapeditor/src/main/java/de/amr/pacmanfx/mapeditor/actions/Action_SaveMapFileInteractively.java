@@ -12,7 +12,6 @@ import org.tinylog.Logger;
 import java.io.File;
 
 import static de.amr.pacmanfx.mapeditor.EditorGlobals.*;
-import static de.amr.pacmanfx.mapeditor.EditorUtil.saveWorldMap;
 
 public class Action_SaveMapFileInteractively extends EditorUIAction<File> {
 
@@ -27,7 +26,7 @@ public class Action_SaveMapFileInteractively extends EditorUIAction<File> {
         if (file != null) {
             editor.setCurrentDirectory(file.getParentFile());
             if (file.getName().endsWith(".world")) {
-                boolean saveSuccess = saveWorldMap(editor.currentWorldMap(), file);
+                boolean saveSuccess = editor.currentWorldMap().saveToFile(file);
                 if (saveSuccess) {
                     editor.setEdited(false);
                     boolean replaceSuccess = new Action_ReplaceCurrentWorldMapChecked(ui, file).execute();

@@ -8,7 +8,6 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.lib.worldmap.TerrainTile;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
-import de.amr.pacmanfx.lib.worldmap.WorldMapLayer;
 import de.amr.pacmanfx.model.DefaultWorldMapProperties;
 import de.amr.pacmanfx.model.GameLevel;
 import javafx.scene.Node;
@@ -19,11 +18,11 @@ import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
@@ -33,15 +32,6 @@ public interface EditorUtil {
     static String urlString(String resourcePath) {
         URL url = requireNonNull(EditorUtil.class.getResource(resourcePath));
         return url.toExternalForm();
-    }
-
-    static String generateSourceCode(WorldMap worldMap) {
-        StringBuilder sb = new StringBuilder();
-        String[] sourceTextLines = formatted(worldMap).split("\n");
-        for (int i = 0; i < sourceTextLines.length; ++i) {
-            sb.append("%5d: ".formatted(i + 1)).append(sourceTextLines[i]).append("\n");
-        }
-        return sb.toString();
     }
 
     static byte mirroredTileCode(byte code) {
@@ -81,16 +71,21 @@ public interface EditorUtil {
     }
 
     // Note: String.format is locale-dependent! This may produce illegal color format if locale is not ENGLISH!
-    static String formatColor(Color color) {
+    static String formatRGBA(Color color) {
         return String.format(Locale.ENGLISH, "rgba(%d,%d,%d,%.2f)",
-                (int) (color.getRed()   * 255),
-                (int) (color.getGreen() * 255),
-                (int) (color.getBlue()  * 255),
-                color.getOpacity());
+            (int) (color.getRed()   * 255),
+            (int) (color.getGreen() * 255),
+            (int) (color.getBlue()  * 255),
+            color.getOpacity()
+        );
     }
 
-    static String formatColorHex(Color color) {
-        return String.format("#%02x%02x%02x", (int)(color.getRed()*255), (int)(color.getGreen()*255), (int)(color.getBlue()*255));
+    static String formatRGBHex(Color color) {
+        return String.format(Locale.ENGLISH, "#%02x%02x%02x",
+            (int) (color.getRed()   * 255),
+            (int) (color.getGreen() * 255),
+            (int) (color.getBlue()  * 255)
+        );
     }
 
     static Color getColorFromMap(WorldMap worldMap, LayerID layerID, String key, Color defaultColor) {
@@ -165,53 +160,5 @@ public interface EditorUtil {
             Logger.error(x);
             return Optional.empty();
         }
-    }
-
-    static boolean saveWorldMap(WorldMap worldMap, File file) {
-        try (PrintWriter pw = new PrintWriter(file, StandardCharsets.UTF_8)) {
-            pw.print(formatted(worldMap));
-            return true;
-        } catch (IOException x) {
-            Logger.error(x);
-            return false;
-        }
-    }
-
-    String TILE_FORMAT = "(%d,%d)";
-
-    static String formatTile(Vector2i tile) {
-        requireNonNull(tile);
-        return String.format(TILE_FORMAT, tile.x(), tile.y());
-    }
-
-    static String formatTile(int tileX, int tileY) {
-        return String.format(TILE_FORMAT, tileX, tileY);
-    }
-
-    static String formatted(WorldMap worldMap) {
-        var sw = new StringWriter();
-        var pw = new PrintWriter(sw);
-        pw.println(WorldMap.MARKER_BEGIN_TERRAIN_LAYER);
-        printLayer(pw, worldMap, worldMap.layer(LayerID.TERRAIN));
-        pw.println(WorldMap.MARKER_BEGIN_FOOD_LAYER);
-        printLayer(pw, worldMap, worldMap.layer(LayerID.FOOD));
-        return sw.toString();
-    }
-
-    private static void printLayer(PrintWriter pw, WorldMap worldMap, WorldMapLayer layer) {
-        Map<String, String> properties = layer.propertyValues();
-        properties.keySet().stream().sorted().map(name -> "%s=%s".formatted(name, properties.get(name))).forEach(pw::println);
-        pw.println(WorldMap.MARKER_BEGIN_DATA_SECTION);
-        for (int row = 0; row < worldMap.numRows(); ++row) {
-            for (int col = 0; col < worldMap.numCols(); ++col) {
-                byte value = layer.get(row, col);
-                pw.printf("#%02X", value);
-                if (col < worldMap.numCols() - 1) {
-                    pw.print(",");
-                }
-            }
-            pw.println();
-        }
-        pw.flush();
     }
 }
