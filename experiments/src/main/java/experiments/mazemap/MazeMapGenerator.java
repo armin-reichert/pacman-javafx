@@ -8,8 +8,10 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.graph.GridGraph;
 import de.amr.pacmanfx.lib.graph.GridGraphImpl;
-import de.amr.pacmanfx.lib.worldmap.*;
-import de.amr.pacmanfx.mapeditor.EditorUtil;
+import de.amr.pacmanfx.lib.worldmap.FoodTile;
+import de.amr.pacmanfx.lib.worldmap.LayerID;
+import de.amr.pacmanfx.lib.worldmap.TerrainTile;
+import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.DefaultWorldMapPropertyName;
 import org.tinylog.Logger;
 
@@ -140,10 +142,10 @@ public class MazeMapGenerator {
     }
 
     private void setColors(WorldMap map) {
-        map.properties(LayerID.TERRAIN).put(DefaultWorldMapPropertyName.COLOR_DOOR, "#fcb5ff");
-        map.properties(LayerID.TERRAIN).put(DefaultWorldMapPropertyName.COLOR_WALL_FILL, "#47b7ff");
-        map.properties(LayerID.TERRAIN).put(DefaultWorldMapPropertyName.COLOR_WALL_STROKE, "#dedeff");
-        map.properties(LayerID.FOOD).put(DefaultWorldMapPropertyName.COLOR_FOOD, "#ffff00");
+        map.terrainLayer().propertyMap().put(DefaultWorldMapPropertyName.COLOR_DOOR, "#fcb5ff");
+        map.terrainLayer().propertyMap().put(DefaultWorldMapPropertyName.COLOR_WALL_FILL, "#47b7ff");
+        map.terrainLayer().propertyMap().put(DefaultWorldMapPropertyName.COLOR_WALL_STROKE, "#dedeff");
+        map.foodLayer().propertyMap().put(DefaultWorldMapPropertyName.COLOR_FOOD, "#ffff00");
     }
 
     public static void main(String[] args)  {
@@ -164,7 +166,7 @@ public class MazeMapGenerator {
 
     private static boolean saveWorldMap(WorldMap worldMap,File file) {
         try (PrintWriter pw = new PrintWriter(file, StandardCharsets.UTF_8)) {
-            pw.print(EditorUtil.formatted(worldMap));
+            pw.print(worldMap.sourceCode());
             return true;
         } catch (IOException x) {
             Logger.error(x);
