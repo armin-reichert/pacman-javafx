@@ -149,7 +149,7 @@ public class GameLevel {
         if (minTile == null) {
             minTile = ArcadeHouse.ORIGINAL_MIN_TILE;
             Logger.warn("No house min tile found in map, using {}", minTile);
-            worldMap.properties(LayerID.TERRAIN).put(POS_HOUSE_MIN_TILE, String.valueOf(minTile));
+            worldMap.layer(LayerID.TERRAIN).propertyMap().put(POS_HOUSE_MIN_TILE, String.valueOf(minTile));
         }
         house = new ArcadeHouse(minTile);
         worldMap.setContent(LayerID.TERRAIN, minTile, house.content());

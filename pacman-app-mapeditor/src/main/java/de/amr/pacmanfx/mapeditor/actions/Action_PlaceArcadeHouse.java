@@ -39,8 +39,8 @@ public class Action_PlaceArcadeHouse extends EditorAction<Void> {
             return null;
         }
 
-        worldMap.properties(LayerID.TERRAIN).put(POS_HOUSE_MIN_TILE, String.valueOf(minTile));
-        worldMap.properties(LayerID.TERRAIN).put(POS_HOUSE_MAX_TILE, String.valueOf(maxTile));
+        worldMap.layer(LayerID.TERRAIN).propertyMap().put(POS_HOUSE_MIN_TILE, String.valueOf(minTile));
+        worldMap.layer(LayerID.TERRAIN).propertyMap().put(POS_HOUSE_MAX_TILE, String.valueOf(maxTile));
 
         // clear new house area
         clearArea(minTile, maxTile);
@@ -54,10 +54,11 @@ public class Action_PlaceArcadeHouse extends EditorAction<Void> {
         }
 
         // place ghosts
-        worldMap.properties(LayerID.TERRAIN).put(POS_GHOST_1_RED,    String.valueOf(minTile.plus(3, -1)));
-        worldMap.properties(LayerID.TERRAIN).put(POS_GHOST_3_CYAN,   String.valueOf(minTile.plus(1, 2)));
-        worldMap.properties(LayerID.TERRAIN).put(POS_GHOST_2_PINK,   String.valueOf(minTile.plus(3, 2)));
-        worldMap.properties(LayerID.TERRAIN).put(POS_GHOST_4_ORANGE, String.valueOf(minTile.plus(5, 2)));
+        var terrainProperties = worldMap.layer(LayerID.TERRAIN).propertyMap();
+        terrainProperties.put(POS_GHOST_1_RED,    String.valueOf(minTile.plus(3, -1)));
+        terrainProperties.put(POS_GHOST_3_CYAN,   String.valueOf(minTile.plus(1, 2)));
+        terrainProperties.put(POS_GHOST_2_PINK,   String.valueOf(minTile.plus(3, 2)));
+        terrainProperties.put(POS_GHOST_4_ORANGE, String.valueOf(minTile.plus(5, 2)));
 
         return null;
     }

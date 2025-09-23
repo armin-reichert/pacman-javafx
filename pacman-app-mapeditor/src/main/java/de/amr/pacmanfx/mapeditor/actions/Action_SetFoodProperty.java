@@ -22,7 +22,7 @@ public class Action_SetFoodProperty extends EditorAction<Void> {
 
     @Override
     public Void execute() {
-        var foodProperties = editor.currentWorldMap().properties(LayerID.FOOD);
+        var foodProperties = editor.currentWorldMap().layer(LayerID.FOOD).propertyMap();
         if (foodProperties.containsKey(propertyName) && foodProperties.get(propertyName).equals(value)) {
             return null;
         }

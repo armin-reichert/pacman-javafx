@@ -45,7 +45,7 @@ public interface EditorUtil {
     static Color getColorFromMapLayer(WorldMapLayer layer, String key, Color defaultColor) {
         requireNonNull(layer);
         requireNonNull(key);
-        String colorExpression = layer.propertyValues().get(key);
+        String colorExpression = layer.propertyMap().get(key);
         if (colorExpression == null) {
             return defaultColor;
         }

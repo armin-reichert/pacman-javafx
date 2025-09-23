@@ -85,7 +85,7 @@ public class MapPropertiesEditor extends BorderPane {
     public void updateEditorValues() {
         propertyEditors.forEach(editor -> {
             WorldMapLayer.Property property = editor.property();
-            String value = layer().propertyValues().get(property.name());
+            String value = layer().propertyMap().get(property.name());
             property.setValue(value);
             editor.updateState();
         });
@@ -121,12 +121,12 @@ public class MapPropertiesEditor extends BorderPane {
     }
 
     private WorldMapLayer.Property addNewProperty(String propertyName, PropertyType type, String initialValue) {
-        if (worldMap().properties(layerID).containsKey(propertyName)) {
-            ui.messageDisplay().showMessage("Property %s already exists".formatted(propertyName), 1, MessageType.INFO);
+        if (layer().propertyMap().containsKey(propertyName)) {
+            ui.messageDisplay().showMessage("Property %s already exists".formatted(propertyName), 2, MessageType.INFO);
             return null;
         }
 
-        WorldMapLayer.Property property = new WorldMapLayer.Property();
+        var property = new WorldMapLayer.Property();
         property.setName(propertyName);
         property.setValue(initialValue);
         property.setType(type);
@@ -134,9 +134,10 @@ public class MapPropertiesEditor extends BorderPane {
         propertyEditors.addFirst(createEditor(property));
         rebuildGrid();
 
-        worldMap().properties(layerID).put(propertyName, property.value());
+        layer().propertyMap().put(propertyName, property.value());
         ui.editor().setWorldMapChanged();
         ui.editor().setEdited(true);
+
         ui.messageDisplay().showMessage("New property %s added".formatted(propertyName), 1, MessageType.INFO);
 
         return property;
@@ -164,14 +165,13 @@ public class MapPropertiesEditor extends BorderPane {
     }
 
     private void deleteProperty(WorldMapLayer.Property property) {
-        var layerProperties = worldMap().properties(layerID);
-        if (layerProperties.containsKey(property.name())) {
-            layerProperties.remove(property.name());
-            ui.messageDisplay().showMessage("Property '%s' deleted".formatted(property.name()), 3, MessageType.INFO);
+        if (layer().propertyMap().containsKey(property.name())) {
+            layer().propertyMap().remove(property.name());
             ui.editor().setWorldMapChanged();
             ui.editor().setEdited(true);
             findEditorFor(property).ifPresent(propertyEditors::remove);
             rebuildGrid();
+            ui.messageDisplay().showMessage("Property '%s' deleted".formatted(property.name()), 3, MessageType.INFO);
         }
     }
 
@@ -188,7 +188,7 @@ public class MapPropertiesEditor extends BorderPane {
         worldMap().propertyNames(layerID).sorted().forEach(propertyName -> {
             var property = new WorldMapLayer.Property();
             property.setName(propertyName);
-            property.setValue(layer().propertyValues().get(propertyName));
+            property.setValue(layer().propertyMap().get(propertyName));
             property.setType(determinePropertyType(propertyName));
             if (PREDEFINED_PROPERTIES.get(layerID).contains(propertyName)) {
                 property.attributes().add(PropertyAttribute.PREDEFINED);

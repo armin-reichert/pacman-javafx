@@ -29,10 +29,10 @@ public class Action_SetDefaultScatterPositions extends EditorAction<Void> {
     public Void execute() {
         int numCols = worldMap.numCols(), numRows = worldMap.numRows();
         if (numCols >= 3 && numRows >= 2) {
-            worldMap.properties(LayerID.TERRAIN).put(POS_SCATTER_RED_GHOST,    String.valueOf(Vector2i.of(numCols - 3, 0)));
-            worldMap.properties(LayerID.TERRAIN).put(POS_SCATTER_PINK_GHOST,   String.valueOf(Vector2i.of(2, 0)));
-            worldMap.properties(LayerID.TERRAIN).put(POS_SCATTER_CYAN_GHOST,   String.valueOf(Vector2i.of(numCols - 1, numRows - 2)));
-            worldMap.properties(LayerID.TERRAIN).put(POS_SCATTER_ORANGE_GHOST, String.valueOf(Vector2i.of(0, numRows - 2)));
+            worldMap.layer(LayerID.TERRAIN).propertyMap().put(POS_SCATTER_RED_GHOST,    String.valueOf(Vector2i.of(numCols - 3, 0)));
+            worldMap.layer(LayerID.TERRAIN).propertyMap().put(POS_SCATTER_PINK_GHOST,   String.valueOf(Vector2i.of(2, 0)));
+            worldMap.layer(LayerID.TERRAIN).propertyMap().put(POS_SCATTER_CYAN_GHOST,   String.valueOf(Vector2i.of(numCols - 1, numRows - 2)));
+            worldMap.layer(LayerID.TERRAIN).propertyMap().put(POS_SCATTER_ORANGE_GHOST, String.valueOf(Vector2i.of(0, numRows - 2)));
             editor.setTerrainMapChanged();
         }
         return null;

@@ -22,7 +22,7 @@ public class Action_SetTerrainProperty extends EditorAction<Void> {
 
     @Override
     public Void execute() {
-        var terrainProperties = editor.currentWorldMap().properties(LayerID.TERRAIN);
+        var terrainProperties = editor.currentWorldMap().layer(LayerID.TERRAIN).propertyMap();
         if (terrainProperties.containsKey(propertyName) && terrainProperties.get(propertyName).equals(value)) {
             return null;
         }

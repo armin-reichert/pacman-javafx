@@ -122,7 +122,7 @@ abstract class AbstractPropertyEditor {
             rejectName(newName, "Property name '%s' is reserved");
             return;
         }
-        if (layer.propertyValues().containsKey(newName)) {
+        if (layer.propertyMap().containsKey(newName)) {
             rejectName(newName, "Property name '%s' already in use");
             return;
         }
@@ -144,8 +144,8 @@ abstract class AbstractPropertyEditor {
         String oldName = property.name();
         property.setName(newName);
 
-        layer.propertyValues().remove(oldName);
-        layer.propertyValues().put(newName, formattedValue());
+        layer.propertyMap().remove(oldName);
+        layer.propertyMap().put(newName, formattedValue());
 
         ui.editor().setWorldMapChanged();
         ui.editor().setEdited(true);
@@ -153,7 +153,7 @@ abstract class AbstractPropertyEditor {
     }
 
     protected void storeValueInMapLayer() {
-        layer.propertyValues().put(property.name(), formattedValue());
+        layer.propertyMap().put(property.name(), formattedValue());
         ui.editor().setWorldMapChanged();
         ui.editor().setEdited(true);
     }

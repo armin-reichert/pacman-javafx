@@ -147,11 +147,11 @@ public class WorldMapLayer {
         }
     }
 
-    public Map<String, String> propertyValues() {
+    public Map<String, String> propertyMap() {
         return propertyValues;
     }
 
-    public void replacePropertyValues(Map<String, String> other) {
+    public void replacePropertyMap(Map<String, String> other) {
         propertyValues.clear();
         propertyValues.putAll(other);
     }

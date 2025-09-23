@@ -118,8 +118,8 @@ public class WorldMap {
             throw new IllegalArgumentException("Illegal row index for inserting row: " + rowIndex);
         }
         WorldMap newMap = WorldMap.emptyMap(numCols, numRows + 1);
-        newMap.terrainLayer.replacePropertyValues(terrainLayer.propertyValues());
-        newMap.foodLayer.replacePropertyValues(foodLayer.propertyValues());
+        newMap.terrainLayer.replacePropertyMap(terrainLayer.propertyMap());
+        newMap.foodLayer.replacePropertyMap(foodLayer.propertyMap());
         for (int row = 0; row < newMap.numRows; ++row) {
             for (int col = 0; col < newMap.numCols; ++col) {
                 byte terrainValue = TerrainTile.EMPTY.$;
@@ -148,8 +148,8 @@ public class WorldMap {
             throw new IllegalArgumentException("Illegal row index for deleting row: " + rowIndexToDelete);
         }
         WorldMap newMap = WorldMap.emptyMap(numCols, numRows - 1);
-        newMap.terrainLayer.replacePropertyValues(terrainLayer.propertyValues());
-        newMap.foodLayer.replacePropertyValues(foodLayer.propertyValues());
+        newMap.terrainLayer.replacePropertyMap(terrainLayer.propertyMap());
+        newMap.foodLayer.replacePropertyMap(foodLayer.propertyMap());
         for (int row = 0; row < newMap.numRows; ++row) {
             for (int col = 0; col < newMap.numCols; ++col) {
                 if (row < rowIndexToDelete) {
@@ -294,23 +294,16 @@ public class WorldMap {
         return configMap;
     }
 
-    // Properties map by layer
-
-    public Map<String, String> properties(LayerID layerID) {
-        assertValidLayerID(layerID);
-        return layer(layerID).propertyValues();
-    }
-
     public Stream<String> propertyNames(LayerID layerID) {
         assertValidLayerID(layerID);
-        return properties(layerID).keySet().stream();
+        return layer(layerID).propertyMap().keySet().stream();
     }
 
     public Vector2i getTileProperty(LayerID layerID, String propertyName, Vector2i defaultTile) {
         assertValidLayerID(layerID);
         requireNonNull(propertyName);
-        if (properties(layerID).containsKey(propertyName)) {
-            String value = properties(layerID).get(propertyName);
+        if (layer(layerID).propertyMap().containsKey(propertyName)) {
+            String value = layer(layerID).propertyMap().get(propertyName);
             return WorldMapParser.parseTile(value).orElse(defaultTile);
         }
         return defaultTile;
@@ -422,7 +415,7 @@ public class WorldMap {
     }
 
     private void printLayer(PrintWriter pw, WorldMapLayer layer) {
-        layer.propertyValues().entrySet().stream()
+        layer.propertyMap().entrySet().stream()
             .sorted(Map.Entry.comparingByKey())
             .map(entry -> "%s=%s".formatted(entry.getKey(), entry.getValue()))
             .forEach(pw::println);

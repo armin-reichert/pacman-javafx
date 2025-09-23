@@ -41,7 +41,7 @@ public class Action_DeleteArcadeHouse extends EditorAction<Void> {
             }
         }
 
-        var terrainProperties = worldMap.properties(LayerID.TERRAIN);
+        var terrainProperties = worldMap.layer(LayerID.TERRAIN).propertyMap();
         terrainProperties.remove(POS_HOUSE_MIN_TILE);
         terrainProperties.remove(POS_HOUSE_MAX_TILE);
         terrainProperties.remove(POS_GHOST_1_RED);
