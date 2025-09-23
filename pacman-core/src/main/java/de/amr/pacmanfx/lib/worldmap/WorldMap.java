@@ -27,17 +27,6 @@ public class WorldMap {
     public static final String MARKER_BEGIN_FOOD_LAYER = "!food";
     public static final String MARKER_BEGIN_DATA_SECTION = "!data";
 
-    public static final String TILE_FORMAT = "(%d,%d)";
-
-    public static String formatTile(Vector2i tile) {
-        requireNonNull(tile);
-        return String.format(TILE_FORMAT, tile.x(), tile.y());
-    }
-
-    public static String formatTile(int tileX, int tileY) {
-        return String.format(TILE_FORMAT, tileX, tileY);
-    }
-
     public static boolean isValidTerrainCode(byte code) {
         return Stream.of(TerrainTile.values()).anyMatch(tile -> tile.$ == code);
     }
@@ -253,7 +242,7 @@ public class WorldMap {
      * @param tile some tile
      * @return The tile at the mirrored position wrt vertical mirror axis.
      */
-    public Vector2i mirroredTile(Vector2i tile) {
+    public Vector2i mirrorPosition(Vector2i tile) {
         assertInsideWorld(tile);
         return Vector2i.of(numCols - 1 - tile.x(), tile.y());
     }

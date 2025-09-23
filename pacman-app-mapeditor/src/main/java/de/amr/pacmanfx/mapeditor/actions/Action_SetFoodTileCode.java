@@ -36,7 +36,7 @@ public class Action_SetFoodTileCode extends EditorAction<Void> {
         if (!canPlaceFoodAtTile(worldMap, tile)) return null;
         worldMap.setContent(LayerID.FOOD, tile, code);
         if (editor.symmetricEditMode()) {
-            Vector2i mirroredTile = worldMap.mirroredTile(tile);
+            Vector2i mirroredTile = worldMap.mirrorPosition(tile);
             if (canPlaceFoodAtTile(worldMap, mirroredTile)) {
                 worldMap.setContent(LayerID.FOOD, mirroredTile, code);
             }
