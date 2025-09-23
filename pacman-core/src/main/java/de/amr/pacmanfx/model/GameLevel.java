@@ -23,7 +23,7 @@ import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
 import static de.amr.pacmanfx.lib.worldmap.FoodTile.ENERGIZER;
 import static de.amr.pacmanfx.lib.worldmap.TerrainTile.TUNNEL;
 import static de.amr.pacmanfx.lib.worldmap.TerrainTile.isBlocked;
-import static de.amr.pacmanfx.model.DefaultWorldMapProperties.*;
+import static de.amr.pacmanfx.model.DefaultWorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 

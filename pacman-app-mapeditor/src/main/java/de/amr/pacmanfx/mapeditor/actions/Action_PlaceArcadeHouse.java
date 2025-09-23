@@ -13,7 +13,7 @@ import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.mapeditor.EditorGlobals.*;
-import static de.amr.pacmanfx.model.DefaultWorldMapProperties.*;
+import static de.amr.pacmanfx.model.DefaultWorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;
 
 public class Action_PlaceArcadeHouse extends EditorAction<Void> {

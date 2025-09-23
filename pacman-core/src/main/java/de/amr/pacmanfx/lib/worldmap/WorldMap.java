@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.lib.worldmap;
 
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.model.DefaultWorldMapProperties;
+import de.amr.pacmanfx.model.DefaultWorldMapPropertyName;
 import org.tinylog.Logger;
 
 import java.io.*;
@@ -168,7 +168,7 @@ public class WorldMap {
         List<Vector2i> tilesWithErrors = new ArrayList<>();
         obstacles = ObstacleBuilder.buildObstacles(this, tilesWithErrors);
 
-        Vector2i houseMinTile = getTerrainTileProperty(DefaultWorldMapProperties.POS_HOUSE_MIN_TILE);
+        Vector2i houseMinTile = getTerrainTileProperty(DefaultWorldMapPropertyName.POS_HOUSE_MIN_TILE);
         if (houseMinTile == null) {
             Logger.info("Could not remove house placeholder from obstacle list, house min tile not set");
         } else {

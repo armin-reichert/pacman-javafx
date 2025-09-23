@@ -23,7 +23,7 @@ import org.tinylog.Logger;
 
 import java.util.*;
 
-import static de.amr.pacmanfx.model.DefaultWorldMapProperties.*;
+import static de.amr.pacmanfx.model.DefaultWorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;
 
 public class MapPropertiesEditor extends BorderPane {

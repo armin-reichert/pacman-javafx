@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 import static de.amr.pacmanfx.lib.worldmap.TerrainTile.*;
-import static de.amr.pacmanfx.model.DefaultWorldMapProperties.*;
+import static de.amr.pacmanfx.model.DefaultWorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;
 
 public interface EditorGlobals {

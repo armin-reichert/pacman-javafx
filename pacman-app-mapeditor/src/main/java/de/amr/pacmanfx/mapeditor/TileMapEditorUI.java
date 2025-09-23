@@ -6,11 +6,12 @@ package de.amr.pacmanfx.mapeditor;
 
 import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
+import de.amr.pacmanfx.lib.worldmap.WorldMapLayer;
 import de.amr.pacmanfx.mapeditor.actions.*;
 import de.amr.pacmanfx.mapeditor.palette.Palette;
 import de.amr.pacmanfx.mapeditor.palette.PaletteID;
 import de.amr.pacmanfx.mapeditor.properties.MapPropertiesEditor;
-import de.amr.pacmanfx.model.DefaultWorldMapProperties;
+import de.amr.pacmanfx.model.DefaultWorldMapPropertyName;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapColorScheme;
 import javafx.application.Platform;
@@ -429,11 +430,12 @@ public class TileMapEditorUI {
 
     //TODO avoid call in every animation frame
     private TerrainMapColorScheme currentColorScheme(WorldMap worldMap) {
+        WorldMapLayer terrain = worldMap.layer(LayerID.TERRAIN);
         return new TerrainMapColorScheme(
-                COLOR_CANVAS_BACKGROUND,
-                EditorUtil.getColorFromMap(worldMap, LayerID.TERRAIN, DefaultWorldMapProperties.COLOR_WALL_FILL, MS_PACMAN_COLOR_WALL_FILL),
-                EditorUtil.getColorFromMap(worldMap, LayerID.TERRAIN, DefaultWorldMapProperties.COLOR_WALL_STROKE, MS_PACMAN_COLOR_WALL_STROKE),
-                EditorUtil.getColorFromMap(worldMap, LayerID.TERRAIN, DefaultWorldMapProperties.COLOR_DOOR, MS_PACMAN_COLOR_DOOR)
+            COLOR_CANVAS_BACKGROUND,
+            EditorUtil.getColorFromMapLayer(terrain, DefaultWorldMapPropertyName.COLOR_WALL_FILL, MS_PACMAN_COLOR_WALL_FILL),
+            EditorUtil.getColorFromMapLayer(terrain, DefaultWorldMapPropertyName.COLOR_WALL_STROKE, MS_PACMAN_COLOR_WALL_STROKE),
+            EditorUtil.getColorFromMapLayer(terrain, DefaultWorldMapPropertyName.COLOR_DOOR, MS_PACMAN_COLOR_DOOR)
         );
     }
 

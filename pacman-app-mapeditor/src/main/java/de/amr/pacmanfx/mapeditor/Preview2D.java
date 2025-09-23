@@ -11,7 +11,7 @@ import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.mapeditor.rendering.ActorSpriteRenderer;
 import de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites;
 import de.amr.pacmanfx.mapeditor.rendering.TerrainMapTileRenderer;
-import de.amr.pacmanfx.model.DefaultWorldMapProperties;
+import de.amr.pacmanfx.model.DefaultWorldMapPropertyName;
 import de.amr.pacmanfx.uilib.rendering.ArcadeHouseRenderer;
 import de.amr.pacmanfx.uilib.rendering.FoodMapRenderer;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapColorScheme;
@@ -27,7 +27,7 @@ import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.mapeditor.EditorGlobals.ACTOR_SPRITES;
-import static de.amr.pacmanfx.mapeditor.EditorUtil.getColorFromMap;
+import static de.amr.pacmanfx.mapeditor.EditorUtil.getColorFromMapLayer;
 
 public class Preview2D extends Canvas {
 
@@ -91,8 +91,8 @@ public class Preview2D extends Canvas {
     }
 
     private void drawHouse(WorldMap worldMap) {
-        Vector2i minTile = worldMap.getTerrainTileProperty(DefaultWorldMapProperties.POS_HOUSE_MIN_TILE);
-        Vector2i maxTile = worldMap.getTerrainTileProperty(DefaultWorldMapProperties.POS_HOUSE_MAX_TILE);
+        Vector2i minTile = worldMap.getTerrainTileProperty(DefaultWorldMapPropertyName.POS_HOUSE_MIN_TILE);
+        Vector2i maxTile = worldMap.getTerrainTileProperty(DefaultWorldMapPropertyName.POS_HOUSE_MAX_TILE);
         if (minTile != null && maxTile != null) {
             double outerWidth = terrainRenderer.borderWallFullWidth();
             double innerWidth = terrainRenderer.borderWallInnerWidth();
@@ -113,7 +113,8 @@ public class Preview2D extends Canvas {
             drawHouse(worldMap);
         }
         if (foodVisible.get()) {
-            Color foodColor = getColorFromMap(worldMap, LayerID.FOOD, DefaultWorldMapProperties.COLOR_FOOD, ArcadeSprites.MS_PACMAN_COLOR_FOOD);
+            Color foodColor = getColorFromMapLayer(worldMap.layer(LayerID.FOOD),
+                DefaultWorldMapPropertyName.COLOR_FOOD, ArcadeSprites.MS_PACMAN_COLOR_FOOD);
             foodRenderer.setEnergizerColor(foodColor);
             foodRenderer.setPelletColor(foodColor);
             worldMap.tiles().forEach(tile -> foodRenderer.drawTile(tile, worldMap.content(LayerID.FOOD, tile)));

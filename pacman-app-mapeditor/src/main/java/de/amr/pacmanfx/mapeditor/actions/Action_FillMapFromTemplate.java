@@ -5,15 +5,12 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.mapeditor.actions;
 
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.lib.worldmap.FoodTile;
-import de.amr.pacmanfx.lib.worldmap.LayerID;
-import de.amr.pacmanfx.lib.worldmap.TerrainTile;
-import de.amr.pacmanfx.lib.worldmap.WorldMap;
+import de.amr.pacmanfx.lib.worldmap.*;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import de.amr.pacmanfx.mapeditor.MessageType;
 import de.amr.pacmanfx.mapeditor.TileMatcher;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.DefaultWorldMapProperties;
+import de.amr.pacmanfx.model.DefaultWorldMapPropertyName;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritablePixelFormat;
 import javafx.scene.paint.Color;
@@ -23,7 +20,7 @@ import java.nio.IntBuffer;
 import java.time.LocalTime;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.mapeditor.EditorUtil.getColorFromMap;
+import static de.amr.pacmanfx.mapeditor.EditorUtil.getColorFromMapLayer;
 
 public class Action_FillMapFromTemplate extends EditorUIAction<Void> {
 
@@ -38,27 +35,29 @@ public class Action_FillMapFromTemplate extends EditorUIAction<Void> {
         }
 
         final WorldMap worldMap = editor.currentWorldMap();
-        
-        Color fillColor = getColorFromMap(worldMap, LayerID.TERRAIN, DefaultWorldMapProperties.COLOR_WALL_FILL, null);
+        final WorldMapLayer terrain = worldMap.layer(LayerID.TERRAIN);
+
+        Color fillColor = getColorFromMapLayer(terrain, DefaultWorldMapPropertyName.COLOR_WALL_FILL, null);
         if (fillColor == null) {
             ui.messageDisplay().showMessage("No fill color defined", 3, MessageType.ERROR);
             return null;
         }
-        Color strokeColor = getColorFromMap(worldMap, LayerID.TERRAIN, DefaultWorldMapProperties.COLOR_WALL_STROKE, null);
+        Color strokeColor = getColorFromMapLayer(terrain, DefaultWorldMapPropertyName.COLOR_WALL_STROKE, null);
         if (strokeColor == null) {
             ui.messageDisplay().showMessage("No stroke color defined", 3, MessageType.ERROR);
             return null;
         }
-        Color doorColor = getColorFromMap(worldMap, LayerID.TERRAIN, DefaultWorldMapProperties.COLOR_DOOR, Color.PINK);
+        Color doorColor = getColorFromMapLayer(terrain, DefaultWorldMapPropertyName.COLOR_DOOR, Color.PINK);
         if (doorColor == null) {
             ui.messageDisplay().showMessage("No door color defined", 3, MessageType.ERROR);
             return null;
         }
-        Color foodColor = getColorFromMap(worldMap, LayerID.FOOD, DefaultWorldMapProperties.COLOR_FOOD, null);
+        Color foodColor = getColorFromMapLayer(worldMap.layer(LayerID.FOOD), DefaultWorldMapPropertyName.COLOR_FOOD, null);
         if (foodColor == null) {
             ui.messageDisplay().showMessage("No food color defined", 3, MessageType.ERROR);
             return null;
         }
+
         TileMatcher matcher = new TileMatcher(Color.TRANSPARENT, fillColor, strokeColor, doorColor, foodColor);
         WritablePixelFormat<IntBuffer> pixelFormat = WritablePixelFormat.getIntArgbInstance();
         PixelReader rdr = editor.templateImage().getPixelReader();

@@ -10,7 +10,7 @@ import de.amr.pacmanfx.lib.graph.GridGraph;
 import de.amr.pacmanfx.lib.graph.GridGraphImpl;
 import de.amr.pacmanfx.lib.worldmap.*;
 import de.amr.pacmanfx.mapeditor.EditorUtil;
-import de.amr.pacmanfx.model.DefaultWorldMapProperties;
+import de.amr.pacmanfx.model.DefaultWorldMapPropertyName;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -140,10 +140,10 @@ public class MazeMapGenerator {
     }
 
     private void setColors(WorldMap map) {
-        map.properties(LayerID.TERRAIN).put(DefaultWorldMapProperties.COLOR_DOOR, "#fcb5ff");
-        map.properties(LayerID.TERRAIN).put(DefaultWorldMapProperties.COLOR_WALL_FILL, "#47b7ff");
-        map.properties(LayerID.TERRAIN).put(DefaultWorldMapProperties.COLOR_WALL_STROKE, "#dedeff");
-        map.properties(LayerID.FOOD).put(DefaultWorldMapProperties.COLOR_FOOD, "#ffff00");
+        map.properties(LayerID.TERRAIN).put(DefaultWorldMapPropertyName.COLOR_DOOR, "#fcb5ff");
+        map.properties(LayerID.TERRAIN).put(DefaultWorldMapPropertyName.COLOR_WALL_FILL, "#47b7ff");
+        map.properties(LayerID.TERRAIN).put(DefaultWorldMapPropertyName.COLOR_WALL_STROKE, "#dedeff");
+        map.properties(LayerID.FOOD).put(DefaultWorldMapPropertyName.COLOR_FOOD, "#ffff00");
     }
 
     public static void main(String[] args)  {

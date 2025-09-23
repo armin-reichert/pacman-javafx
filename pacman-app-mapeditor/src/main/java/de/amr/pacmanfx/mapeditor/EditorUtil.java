@@ -8,7 +8,8 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.lib.worldmap.TerrainTile;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
-import de.amr.pacmanfx.model.DefaultWorldMapProperties;
+import de.amr.pacmanfx.lib.worldmap.WorldMapLayer;
+import de.amr.pacmanfx.model.DefaultWorldMapPropertyName;
 import de.amr.pacmanfx.model.GameLevel;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -67,11 +68,10 @@ public interface EditorUtil {
         );
     }
 
-    static Color getColorFromMap(WorldMap worldMap, LayerID layerID, String key, Color defaultColor) {
-        requireNonNull(worldMap);
-        requireNonNull(layerID);
+    static Color getColorFromMapLayer(WorldMapLayer layer, String key, Color defaultColor) {
+        requireNonNull(layer);
         requireNonNull(key);
-        String colorExpression = worldMap.properties(layerID).get(key);
+        String colorExpression = layer.propertyValues().get(key);
         if (colorExpression == null) {
             return defaultColor;
         }
@@ -123,8 +123,8 @@ public interface EditorUtil {
     }
 
     static boolean isPartOfHouse(WorldMap worldMap, Vector2i tile) {
-        Vector2i minTile = worldMap.getTerrainTileProperty(DefaultWorldMapProperties.POS_HOUSE_MIN_TILE);
-        Vector2i maxTile = worldMap.getTerrainTileProperty(DefaultWorldMapProperties.POS_HOUSE_MAX_TILE);
+        Vector2i minTile = worldMap.getTerrainTileProperty(DefaultWorldMapPropertyName.POS_HOUSE_MIN_TILE);
+        Vector2i maxTile = worldMap.getTerrainTileProperty(DefaultWorldMapPropertyName.POS_HOUSE_MAX_TILE);
         if (minTile != null && maxTile != null) {
             return minTile.x() <= tile.x() && tile.x() <= maxTile.x()
                     && minTile.y() <= tile.y() && tile.y() <= maxTile.y();

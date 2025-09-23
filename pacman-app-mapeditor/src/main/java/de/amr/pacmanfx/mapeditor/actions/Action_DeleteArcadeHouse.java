@@ -11,7 +11,7 @@ import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.model.DefaultWorldMapProperties.*;
+import static de.amr.pacmanfx.model.DefaultWorldMapPropertyName.*;
 
 public class Action_DeleteArcadeHouse extends EditorAction<Void> {
 

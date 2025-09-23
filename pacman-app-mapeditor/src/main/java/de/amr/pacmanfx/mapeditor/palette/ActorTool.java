@@ -8,7 +8,7 @@ import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import de.amr.pacmanfx.mapeditor.actions.Action_SetTerrainProperty;
-import de.amr.pacmanfx.model.DefaultWorldMapProperties;
+import de.amr.pacmanfx.model.DefaultWorldMapPropertyName;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -44,10 +44,10 @@ public class ActorTool extends PropertyValueEditorTool {
         ctx.scale(TOOL_SIZE / (double) TS, TOOL_SIZE / (double) TS);
         Vector2i tile = new Vector2i(col, row);
         switch (propertyName) {
-            case DefaultWorldMapProperties.POS_SCATTER_RED_GHOST -> drawScatterTarget(ctx, tile, Color.RED);
-            case DefaultWorldMapProperties.POS_SCATTER_PINK_GHOST -> drawScatterTarget(ctx, tile, Color.PINK);
-            case DefaultWorldMapProperties.POS_SCATTER_CYAN_GHOST -> drawScatterTarget(ctx, tile, Color.CYAN);
-            case DefaultWorldMapProperties.POS_SCATTER_ORANGE_GHOST -> drawScatterTarget(ctx, tile, Color.ORANGE);
+            case DefaultWorldMapPropertyName.POS_SCATTER_RED_GHOST -> drawScatterTarget(ctx, tile, Color.RED);
+            case DefaultWorldMapPropertyName.POS_SCATTER_PINK_GHOST -> drawScatterTarget(ctx, tile, Color.PINK);
+            case DefaultWorldMapPropertyName.POS_SCATTER_CYAN_GHOST -> drawScatterTarget(ctx, tile, Color.CYAN);
+            case DefaultWorldMapPropertyName.POS_SCATTER_ORANGE_GHOST -> drawScatterTarget(ctx, tile, Color.ORANGE);
             default -> {
                 double x = col * TS, y = row * TS;
                 drawSprite(ctx, x, y, sprite);
