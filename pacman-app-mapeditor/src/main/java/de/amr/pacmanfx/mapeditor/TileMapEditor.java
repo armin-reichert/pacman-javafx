@@ -262,7 +262,7 @@ public class TileMapEditor {
             return Optional.empty();
         }
         try {
-            return Optional.of(WorldMap.mapFromURL(url));
+            return Optional.of(WorldMap.loadFromURL(url));
         } catch (IOException x) {
             Logger.error(x);
             Logger.error("Could not load world map from URL '{}'", url);

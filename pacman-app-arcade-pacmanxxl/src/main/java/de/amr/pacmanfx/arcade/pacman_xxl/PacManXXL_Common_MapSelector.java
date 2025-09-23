@@ -73,7 +73,7 @@ public class PacManXXL_Common_MapSelector implements MapSelector {
         customMapsByFile.clear();
         for (File mapFile : mapFiles) {
             try {
-                WorldMap worldMap = WorldMap.mapFromFile(mapFile);
+                WorldMap worldMap = WorldMap.loadFromFile(mapFile);
                 customMapsByFile.add(worldMap);
                 Logger.info("Custom map loaded from file {}", mapFile);
             } catch (IOException x) {

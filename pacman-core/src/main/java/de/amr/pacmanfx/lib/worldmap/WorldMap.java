@@ -64,27 +64,45 @@ public class WorldMap {
         return copy;
     }
 
-    public static WorldMap mapFromURL(URL url) throws IOException {
+    public static WorldMap loadFromURL(URL url) throws IOException {
         requireNonNull(url);
-        try (var reader = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8))) {
-            WorldMap worldMap = WorldMapParser.parse(reader.lines(), WorldMap::isValidTerrainCode, WorldMap::isValidFoodCode);
+        try (var br = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8))) {
+            WorldMap worldMap = WorldMapParser.parse(br.lines(), WorldMap::isValidTerrainCode, WorldMap::isValidFoodCode);
             worldMap.url = URLDecoder.decode(url.toExternalForm(), StandardCharsets.UTF_8);
             return worldMap;
         }
     }
 
-    public static WorldMap mapFromFile(File file) throws IOException {
-        return mapFromURL(file.toURI().toURL());
+    public static WorldMap loadFromFile(File file) throws IOException {
+        requireNonNull(file);
+        return loadFromURL(file.toURI().toURL());
     }
 
-    // Package access for parser
+    /**
+     * Saves this map to given file (UTF-8 character encoding).
+     *
+     * @param file file to save to
+     * @return {@code true} if saving succeeded
+     */
+    public boolean saveToFile(File file) {
+        try (var pw = new PrintWriter(file, StandardCharsets.UTF_8)) {
+            pw.print(sourceCode());
+            return true;
+        } catch (IOException x) {
+            Logger.error(x);
+            return false;
+        }
+    }
 
-    String url;
+
+    // Package-visible for access by parser methods
+
     int numCols;
     int numRows;
+    String url;
     WorldMapLayer terrainLayer;
     WorldMapLayer foodLayer;
-    Set<Obstacle> obstacles = null; // uninitialized!
+    Set<Obstacle> obstacles; // uninitialized!
     Map<String, Object> configMap = new HashMap<>();
 
     WorldMap() {}
@@ -286,22 +304,17 @@ public class WorldMap {
         return layer(layerID).propertyMap().keySet().stream();
     }
 
-    public Vector2i getTileProperty(LayerID layerID, String propertyName, Vector2i defaultTile) {
-        assertValidLayerID(layerID);
-        requireNonNull(propertyName);
-        if (layer(layerID).propertyMap().containsKey(propertyName)) {
-            String value = layer(layerID).propertyMap().get(propertyName);
-            return WorldMapParser.parseTile(value).orElse(defaultTile);
-        }
-        return defaultTile;
-    }
-
     /**
      * @param propertyName property name
+     * @param defaultTile tile returned if property map does not contain property name (can be null)
      * @return tile value of property in terrain layer or default value
      */
     public Vector2i getTerrainTileProperty(String propertyName, Vector2i defaultTile) {
-        return getTileProperty(LayerID.TERRAIN, propertyName, defaultTile);
+        requireNonNull(propertyName);
+        String value = terrainLayer.propertyMap().get(propertyName);
+        return value != null
+            ? WorldMapParser.parseTile(value).orElse(defaultTile)
+            : defaultTile;
     }
 
     /**
@@ -309,7 +322,7 @@ public class WorldMap {
      * @return tile value of property in terrain layer or <code>null</code>
      */
     public Vector2i getTerrainTileProperty(String propertyName) {
-        return getTileProperty(LayerID.TERRAIN, propertyName, null);
+        return getTerrainTileProperty(propertyName, null);
     }
 
     /**
@@ -382,22 +395,6 @@ public class WorldMap {
             for (int y = 0; y < numRows; ++y) {
                 layer(layerID).set(origin.y() + y, origin.x() + x, content[y][x]);
             }
-        }
-    }
-
-    /**
-     * Saves this map to given file (UTF-8 character encoding).
-     *
-     * @param file file to save to
-     * @return {@code true} if saving succeeded
-     */
-    public boolean saveToFile(File file) {
-        try (var pw = new PrintWriter(file, StandardCharsets.UTF_8)) {
-            pw.print(sourceCode());
-            return true;
-        } catch (IOException x) {
-            Logger.error(x);
-            return false;
         }
     }
 

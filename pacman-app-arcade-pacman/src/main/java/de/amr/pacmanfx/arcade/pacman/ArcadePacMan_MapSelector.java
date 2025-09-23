@@ -40,7 +40,7 @@ public class ArcadePacMan_MapSelector implements MapSelector {
                 throw new IllegalStateException();
             }
             try {
-                var worldMap = WorldMap.mapFromURL(mapURL);
+                var worldMap = WorldMap.loadFromURL(mapURL);
                 worldMap.setConfigValue(PROPERTY_MAP_NUMBER, 1);
                 worldMap.setConfigValue(PROPERTY_COLOR_MAP_INDEX, 0);
                 worldMap.setConfigValue(PROPERTY_COLOR_MAP, MapSelector.extractColorMap(worldMap));

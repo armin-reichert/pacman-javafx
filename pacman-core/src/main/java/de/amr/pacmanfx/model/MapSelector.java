@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model;
 
-import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import org.tinylog.Logger;
 
@@ -41,7 +40,7 @@ public interface MapSelector {
                 throw new IllegalArgumentException();
             }
             try {
-                WorldMap worldMap = WorldMap.mapFromURL(url);
+                WorldMap worldMap = WorldMap.loadFromURL(url);
                 maps.add(worldMap);
                 Logger.info("Map loaded, URL='{}'", url);
             } catch (IOException x) {

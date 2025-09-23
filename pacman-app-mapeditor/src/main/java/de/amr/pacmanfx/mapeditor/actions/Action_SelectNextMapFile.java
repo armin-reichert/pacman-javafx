@@ -47,7 +47,7 @@ public class Action_SelectNextMapFile extends EditorAction<File> {
             }
             File file = mapFiles[next];
             try {
-                WorldMap worldMap = WorldMap.mapFromFile(file);
+                WorldMap worldMap = WorldMap.loadFromFile(file);
                 editor.setCurrentWorldMap(worldMap);
                 editor.setCurrentDirectory(file.getParentFile());
                 editor.setCurrentFile(file);
