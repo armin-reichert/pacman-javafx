@@ -80,7 +80,7 @@ public class GameLevel {
         findHouse();
 
         currentBonusIndex = -1;
-        energizerTiles = worldMap.tilesContaining(LayerID.FOOD, ENERGIZER.$).collect(Collectors.toSet());
+        energizerTiles = worldMap.layer(LayerID.FOOD).tilesContaining(ENERGIZER.$).collect(Collectors.toSet());
 
         Vector2i pacTile = worldMap.getTerrainTileProperty(POS_PAC);
         if (pacTile == null) {

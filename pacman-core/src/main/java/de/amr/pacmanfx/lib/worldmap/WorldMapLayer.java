@@ -8,6 +8,8 @@ import de.amr.pacmanfx.lib.Vector2i;
 
 import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class WorldMapLayer {
 
@@ -154,5 +156,28 @@ public class WorldMapLayer {
     public void replacePropertyMap(Map<String, String> other) {
         propertyValues.clear();
         propertyValues.putAll(other);
+    }
+
+    /**
+     * @param index tile index in order top-to-bottom, left-to-right
+     * @return tile with given index
+     */
+    public Vector2i tile(int index) {
+        return Vector2i.of(index % numCols(), index / numCols());
+    }
+
+    /**
+     * @return stream of all tiles of this map (row-by-row)
+     */
+    public Stream<Vector2i> tiles() {
+        return IntStream.range(0, numCols() * numRows()).mapToObj(this::tile);
+    }
+
+    /**
+     * @param content value to search for
+     * @return stream of all tiles of this map with given content (row-by-row)
+     */
+    public Stream<Vector2i> tilesContaining(byte content) {
+        return tiles().filter(tile -> get(tile) == content);
     }
 }

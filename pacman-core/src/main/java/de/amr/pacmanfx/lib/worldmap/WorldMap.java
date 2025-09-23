@@ -250,16 +250,6 @@ public class WorldMap {
     }
 
     /**
-     * @param layerID the layer ID
-     * @param content value to search for
-     * @return stream of all tiles of this map with given content (row-by-row)
-     */
-    public Stream<Vector2i> tilesContaining(LayerID layerID, byte content) {
-        assertValidLayerID(layerID);
-        return tiles().filter(tile -> content(layerID, tile) == content);
-    }
-
-    /**
      * @param tile some tile
      * @return The tile at the mirrored position wrt vertical mirror axis.
      */
