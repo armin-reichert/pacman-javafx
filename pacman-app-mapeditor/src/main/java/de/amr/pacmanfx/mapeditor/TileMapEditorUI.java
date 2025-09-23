@@ -577,11 +577,7 @@ public class TileMapEditorUI {
             new Action_ReplaceCurrentWorldMapChecked(this, file).execute();
         }
         else if (isImageFile(file) && !editModeIs(EditMode.INSPECT)) {
-            Image image = EditorUtil.loadImage(file).orElse(null);
-            if (image == null) {
-                messageDisplay().showMessage("Could not open image file '%s'".formatted(file), 3, MessageType.ERROR);
-                return;
-            }
+            Image image = new Image(file.toURI().toString());
             if (!isTemplateImageSizeOk(image)) {
                 messageDisplay().showMessage("Template image file '%s' has dubios size".formatted(file), 3, MessageType.ERROR);
                 return;

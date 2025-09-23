@@ -12,18 +12,13 @@ import de.amr.pacmanfx.lib.worldmap.WorldMapLayer;
 import de.amr.pacmanfx.model.DefaultWorldMapPropertyName;
 import de.amr.pacmanfx.model.GameLevel;
 import javafx.scene.Node;
-import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.Locale;
-import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
@@ -109,14 +104,5 @@ public interface EditorUtil {
                     && minTile.y() <= tile.y() && tile.y() <= maxTile.y();
         }
         return false;
-    }
-
-    static Optional<Image> loadImage(File file) {
-        try (FileInputStream stream = new FileInputStream(file)) {
-            return Optional.of(new Image(stream));
-        } catch (IOException x) {
-            Logger.error(x);
-            return Optional.empty();
-        }
     }
 }
