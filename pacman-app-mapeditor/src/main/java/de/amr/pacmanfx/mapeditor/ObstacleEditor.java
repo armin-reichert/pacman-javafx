@@ -7,6 +7,7 @@ package de.amr.pacmanfx.mapeditor;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.FoodTile;
 import de.amr.pacmanfx.lib.worldmap.LayerID;
+import de.amr.pacmanfx.lib.worldmap.TerrainTile;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.mapeditor.actions.Action_SetFoodTileCode;
 import de.amr.pacmanfx.mapeditor.actions.Action_SetTerrainTileCode;
@@ -122,7 +123,7 @@ public class ObstacleEditor {
                 renderer.drawTile(tile, code);
                 if (symmetricEditModeProperty().get()) {
                     Vector2i mirroredTile = worldMap.get().mirroredTile(tile);
-                    renderer.drawTile(mirroredTile, EditorUtil.mirroredTileCode(code));
+                    renderer.drawTile(mirroredTile, TerrainTile.mirroredCode(code));
                 }
             }
         }

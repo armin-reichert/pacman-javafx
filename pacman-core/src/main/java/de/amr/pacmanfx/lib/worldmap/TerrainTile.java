@@ -52,4 +52,16 @@ public enum TerrainTile {
             || code == ANG_ARC_SE.$
             || code == ANG_ARC_SW.$;
     }
+
+    public static byte mirroredCode(byte code) {
+        if (code == TerrainTile.ARC_NE.$)  return TerrainTile.ARC_NW.$;
+        if (code == TerrainTile.ARC_NW.$)  return TerrainTile.ARC_NE.$;
+        if (code == TerrainTile.ARC_SE.$)  return TerrainTile.ARC_SW.$;
+        if (code == TerrainTile.ARC_SW.$)  return TerrainTile.ARC_SE.$;
+        if (code == TerrainTile.ANG_ARC_NE.$) return TerrainTile.ANG_ARC_NW.$;
+        if (code == TerrainTile.ANG_ARC_NW.$) return TerrainTile.ANG_ARC_NE.$;
+        if (code == TerrainTile.ANG_ARC_SE.$) return TerrainTile.ANG_ARC_SW.$;
+        if (code == TerrainTile.ANG_ARC_SW.$) return TerrainTile.ANG_ARC_SE.$;
+        return code;
+    }
 }

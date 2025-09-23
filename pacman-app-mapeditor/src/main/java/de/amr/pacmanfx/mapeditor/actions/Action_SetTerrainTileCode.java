@@ -7,10 +7,10 @@ package de.amr.pacmanfx.mapeditor.actions;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.FoodTile;
 import de.amr.pacmanfx.lib.worldmap.LayerID;
+import de.amr.pacmanfx.lib.worldmap.TerrainTile;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 
-import static de.amr.pacmanfx.mapeditor.EditorUtil.mirroredTileCode;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -49,7 +49,7 @@ public class Action_SetTerrainTileCode extends EditorAction<Void> {
         worldMap.setContent(LayerID.FOOD, tile, FoodTile.EMPTY.$);
         if (editor.symmetricEditMode()) {
             Vector2i mirroredTile = worldMap.mirroredTile(tile);
-            byte mirroredCode = mirroredTileCode(code);
+            byte mirroredCode = TerrainTile.mirroredCode(code);
             byte oldMirroredCode = worldMap.layer(LayerID.TERRAIN).get(mirroredTile);
             if (mirroredCode != oldMirroredCode) {
                 worldMap.setContent(LayerID.TERRAIN, mirroredTile, mirroredCode);
