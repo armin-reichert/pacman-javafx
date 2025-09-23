@@ -22,33 +22,12 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Locale;
 import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
 public interface EditorUtil {
-
-    static String urlString(String resourcePath) {
-        URL url = requireNonNull(EditorUtil.class.getResource(resourcePath));
-        return url.toExternalForm();
-    }
-
-    static Optional<Vector2i> parseMapSize(String cols_x_rows) {
-        String[] tuple = cols_x_rows.split("x");
-        if (tuple.length != 2) {
-            return Optional.empty();
-        }
-        try {
-            int numCols = Integer.parseInt(tuple[0].trim());
-            int numRows = Integer.parseInt(tuple[1].trim());
-            return Optional.of(new Vector2i(numCols, numRows));
-        } catch (Exception x) {
-            Logger.error("Could not parse '{}' as size value (cols x rows)", cols_x_rows);
-            return Optional.empty();
-        }
-    }
 
     // Note: String.format is locale-dependent! This may produce illegal color format if locale is not ENGLISH!
     static String formatRGBA(Color color) {

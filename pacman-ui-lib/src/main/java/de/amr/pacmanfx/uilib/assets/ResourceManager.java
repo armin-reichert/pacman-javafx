@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.assets;
 
+import javafx.scene.Cursor;
 import javafx.scene.image.Image;
 import javafx.scene.media.AudioClip;
 import javafx.scene.text.Font;
@@ -94,5 +95,9 @@ public interface ResourceManager {
      */
     default Image loadImage(String path) {
         return new Image(url(path).toExternalForm());
+    }
+
+    default Cursor cursor(String path) {
+        return Cursor.cursor(url(path).toExternalForm());
     }
 }

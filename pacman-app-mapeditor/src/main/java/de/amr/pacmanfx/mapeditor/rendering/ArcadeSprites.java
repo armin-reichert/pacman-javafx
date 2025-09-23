@@ -5,13 +5,15 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.mapeditor.rendering;
 
 import de.amr.pacmanfx.lib.RectShort;
-import de.amr.pacmanfx.mapeditor.EditorUtil;
+import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 public class ArcadeSprites {
 
-    public static final Image SPRITE_SHEET = new Image(EditorUtil.urlString("graphics/pacman_spritesheet.png"));
+    private static final ResourceManager RESOURCE_MANAGER = () -> ArcadeSprites.class;
+
+    public static final Image SPRITE_SHEET = RESOURCE_MANAGER.loadImage("/de/amr/pacmanfx/mapeditor/graphics/pacman_spritesheet.png");
 
     public static final RectShort PAC_MAN      = new RectShort(473,  16, 14, 14);
     public static final RectShort RED_GHOST    = new RectShort(505,  65, 14, 14);

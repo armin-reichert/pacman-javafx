@@ -13,9 +13,10 @@ import de.amr.pacmanfx.mapeditor.palette.PaletteID;
 import de.amr.pacmanfx.mapeditor.rendering.ActorSpriteRenderer;
 import de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites;
 import de.amr.pacmanfx.mapeditor.rendering.TerrainMapTileRenderer;
-import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.DefaultWorldMapPropertyName;
+import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.uilib.Ufx;
+import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.rendering.FoodMapRenderer;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapColorScheme;
 import javafx.beans.binding.Bindings;
@@ -50,7 +51,9 @@ public class EditCanvas extends Canvas {
         }
     }
 
-    public static final Cursor CURSOR_RUBBER = Cursor.cursor(EditorUtil.urlString("graphics/radiergummi.jpg"));
+    private static final ResourceManager RESOURCE_MANAGER = () -> EditCanvas.class;
+
+    public static final Cursor CURSOR_RUBBER = RESOURCE_MANAGER.cursor("/de/amr/pacmanfx/mapeditor/graphics/radiergummi.jpg");
 
     private final ObjectProperty<EditMode> editMode = new SimpleObjectProperty<>();
     private final ObjectProperty<Vector2i> focussedTile = new SimpleObjectProperty<>();
