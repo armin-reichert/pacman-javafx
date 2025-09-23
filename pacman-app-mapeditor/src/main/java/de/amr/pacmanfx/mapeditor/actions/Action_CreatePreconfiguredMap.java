@@ -30,8 +30,8 @@ public class Action_CreatePreconfiguredMap extends EditorAction<WorldMap> {
         if (newMap.numRows() >= 20) {
             Vector2i houseMinTile = Vector2i.of(numCols / 2 - 4, numRows / 2 - 3);
             new Action_PlaceArcadeHouse(editor, newMap, houseMinTile).execute();
-            newMap.layer(LayerID.TERRAIN).propertyMap().put(DefaultWorldMapPropertyName.POS_PAC,   String.valueOf(houseMinTile.plus(3, 11)));
-            newMap.layer(LayerID.TERRAIN).propertyMap().put(DefaultWorldMapPropertyName.POS_BONUS, String.valueOf(houseMinTile.plus(3, 5)));
+            newMap.terrainLayer().propertyMap().put(DefaultWorldMapPropertyName.POS_PAC,   String.valueOf(houseMinTile.plus(3, 11)));
+            newMap.terrainLayer().propertyMap().put(DefaultWorldMapPropertyName.POS_BONUS, String.valueOf(houseMinTile.plus(3, 5)));
         }
         newMap.buildObstacleList();
         return newMap;

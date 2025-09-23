@@ -430,7 +430,7 @@ public class TileMapEditorUI {
 
     //TODO avoid call in every animation frame
     private TerrainMapColorScheme currentColorScheme(WorldMap worldMap) {
-        WorldMapLayer terrain = worldMap.layer(LayerID.TERRAIN);
+        WorldMapLayer terrain = worldMap.terrainLayer();
         return new TerrainMapColorScheme(
             COLOR_CANVAS_BACKGROUND,
             EditorUtil.getColorFromMapLayer(terrain, DefaultWorldMapPropertyName.COLOR_WALL_FILL, MS_PACMAN_COLOR_WALL_FILL),

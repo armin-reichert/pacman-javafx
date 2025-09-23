@@ -26,7 +26,7 @@ public class Action_AddBorderWall extends EditorAction<Void> {
     }
 
     private void setTerrain(int row, int col, TerrainTile terrainTile) {
-        worldMap.layer(LayerID.TERRAIN).set(row, col, terrainTile.$);
+        worldMap.terrainLayer().set(row, col, terrainTile.$);
     }
 
     @Override

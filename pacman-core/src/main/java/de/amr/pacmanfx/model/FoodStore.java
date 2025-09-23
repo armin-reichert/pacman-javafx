@@ -28,7 +28,7 @@ public class FoodStore {
     public FoodStore(WorldMap worldMap, Set<Vector2i> energizerTiles) {
         this.worldMap = worldMap;
         this.energizerTiles = energizerTiles;
-        totalFoodCount = (int) worldMap.layer(LayerID.FOOD).tilesContaining(PELLET.$).count() + energizerTiles.size();
+        totalFoodCount = (int) worldMap.foodLayer().tilesContaining(PELLET.$).count() + energizerTiles.size();
         uneatenFoodCount = totalFoodCount;
         eatenFoodBits = new BitSet(worldMap.numCols() * worldMap.numRows());
     }

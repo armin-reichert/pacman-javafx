@@ -80,7 +80,7 @@ public class GameLevel {
         findHouse();
 
         currentBonusIndex = -1;
-        energizerTiles = worldMap.layer(LayerID.FOOD).tilesContaining(ENERGIZER.$).collect(Collectors.toSet());
+        energizerTiles = worldMap.foodLayer().tilesContaining(ENERGIZER.$).collect(Collectors.toSet());
 
         Vector2i pacTile = worldMap.getTerrainTileProperty(POS_PAC);
         if (pacTile == null) {
@@ -149,7 +149,7 @@ public class GameLevel {
         if (minTile == null) {
             minTile = ArcadeHouse.ORIGINAL_MIN_TILE;
             Logger.warn("No house min tile found in map, using {}", minTile);
-            worldMap.layer(LayerID.TERRAIN).propertyMap().put(POS_HOUSE_MIN_TILE, String.valueOf(minTile));
+            worldMap.terrainLayer().propertyMap().put(POS_HOUSE_MIN_TILE, String.valueOf(minTile));
         }
         house = new ArcadeHouse(minTile);
         worldMap.setContent(LayerID.TERRAIN, minTile, house.content());

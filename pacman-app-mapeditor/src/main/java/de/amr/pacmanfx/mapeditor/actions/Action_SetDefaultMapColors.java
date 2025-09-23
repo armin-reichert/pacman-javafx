@@ -28,10 +28,10 @@ public class Action_SetDefaultMapColors extends EditorAction<Void> {
 
     @Override
     public Void execute() {
-        worldMap.layer(LayerID.TERRAIN).propertyMap().put(DefaultWorldMapPropertyName.COLOR_WALL_STROKE, formatRGBA(MS_PACMAN_COLOR_WALL_STROKE));
-        worldMap.layer(LayerID.TERRAIN).propertyMap().put(DefaultWorldMapPropertyName.COLOR_WALL_FILL, formatRGBA(MS_PACMAN_COLOR_WALL_FILL));
-        worldMap.layer(LayerID.TERRAIN).propertyMap().put(DefaultWorldMapPropertyName.COLOR_DOOR, formatRGBA(MS_PACMAN_COLOR_DOOR));
-        worldMap.layer(LayerID.FOOD)   .propertyMap().put(DefaultWorldMapPropertyName.COLOR_FOOD, formatRGBA(MS_PACMAN_COLOR_FOOD));
+        worldMap.terrainLayer().propertyMap().put(DefaultWorldMapPropertyName.COLOR_WALL_STROKE, formatRGBA(MS_PACMAN_COLOR_WALL_STROKE));
+        worldMap.terrainLayer().propertyMap().put(DefaultWorldMapPropertyName.COLOR_WALL_FILL, formatRGBA(MS_PACMAN_COLOR_WALL_FILL));
+        worldMap.terrainLayer().propertyMap().put(DefaultWorldMapPropertyName.COLOR_DOOR, formatRGBA(MS_PACMAN_COLOR_DOOR));
+        worldMap.foodLayer()   .propertyMap().put(DefaultWorldMapPropertyName.COLOR_FOOD, formatRGBA(MS_PACMAN_COLOR_FOOD));
 
         editor.setTerrainMapPropertyChanged();
         editor.setFoodMapPropertyChanged();

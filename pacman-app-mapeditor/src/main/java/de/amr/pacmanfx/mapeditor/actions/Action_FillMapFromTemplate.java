@@ -35,7 +35,7 @@ public class Action_FillMapFromTemplate extends EditorUIAction<Void> {
         }
 
         final WorldMap worldMap = editor.currentWorldMap();
-        final WorldMapLayer terrain = worldMap.layer(LayerID.TERRAIN);
+        final WorldMapLayer terrain = worldMap.terrainLayer();
 
         Color fillColor = getColorFromMapLayer(terrain, DefaultWorldMapPropertyName.COLOR_WALL_FILL, null);
         if (fillColor == null) {
@@ -52,7 +52,7 @@ public class Action_FillMapFromTemplate extends EditorUIAction<Void> {
             ui.messageDisplay().showMessage("No door color defined", 3, MessageType.ERROR);
             return null;
         }
-        Color foodColor = getColorFromMapLayer(worldMap.layer(LayerID.FOOD), DefaultWorldMapPropertyName.COLOR_FOOD, null);
+        Color foodColor = getColorFromMapLayer(worldMap.foodLayer(), DefaultWorldMapPropertyName.COLOR_FOOD, null);
         if (foodColor == null) {
             ui.messageDisplay().showMessage("No food color defined", 3, MessageType.ERROR);
             return null;

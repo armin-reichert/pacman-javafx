@@ -113,7 +113,7 @@ public class Preview2D extends Canvas {
             drawHouse(worldMap);
         }
         if (foodVisible.get()) {
-            Color foodColor = getColorFromMapLayer(worldMap.layer(LayerID.FOOD),
+            Color foodColor = getColorFromMapLayer(worldMap.foodLayer(),
                 DefaultWorldMapPropertyName.COLOR_FOOD, ArcadeSprites.MS_PACMAN_COLOR_FOOD);
             foodRenderer.setEnergizerColor(foodColor);
             foodRenderer.setPelletColor(foodColor);

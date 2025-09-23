@@ -180,6 +180,14 @@ public class WorldMap {
         return Collections.unmodifiableSet(obstacles);
     }
 
+    public WorldMapLayer terrainLayer() {
+        return terrainLayer;
+    }
+
+    public WorldMapLayer foodLayer() {
+        return foodLayer;
+    }
+
     public WorldMapLayer layer(LayerID id) {
         assertValidLayerID(id);
         return switch (id) {

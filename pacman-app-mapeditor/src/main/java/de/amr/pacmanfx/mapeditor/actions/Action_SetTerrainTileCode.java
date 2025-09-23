@@ -43,14 +43,14 @@ public class Action_SetTerrainTileCode extends EditorAction<Void> {
 
     @Override
     public Void execute() {
-        byte oldCode = worldMap.layer(LayerID.TERRAIN).get(tile);
+        byte oldCode = worldMap.terrainLayer().get(tile);
         if (code == oldCode && !editor.symmetricEditMode()) return null;
         worldMap.setContent(LayerID.TERRAIN, tile, code);
         worldMap.setContent(LayerID.FOOD, tile, FoodTile.EMPTY.$);
         if (editor.symmetricEditMode()) {
             Vector2i mirroredTile = worldMap.mirrorPosition(tile);
             byte mirroredCode = TerrainTile.mirroredCode(code);
-            byte oldMirroredCode = worldMap.layer(LayerID.TERRAIN).get(mirroredTile);
+            byte oldMirroredCode = worldMap.terrainLayer().get(mirroredTile);
             if (mirroredCode != oldMirroredCode) {
                 worldMap.setContent(LayerID.TERRAIN, mirroredTile, mirroredCode);
                 worldMap.setContent(LayerID.FOOD, mirroredTile, FoodTile.EMPTY.$);

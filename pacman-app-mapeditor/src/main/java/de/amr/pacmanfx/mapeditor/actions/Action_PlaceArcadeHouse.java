@@ -39,8 +39,8 @@ public class Action_PlaceArcadeHouse extends EditorAction<Void> {
             return null;
         }
 
-        worldMap.layer(LayerID.TERRAIN).propertyMap().put(POS_HOUSE_MIN_TILE, String.valueOf(minTile));
-        worldMap.layer(LayerID.TERRAIN).propertyMap().put(POS_HOUSE_MAX_TILE, String.valueOf(maxTile));
+        worldMap.terrainLayer().propertyMap().put(POS_HOUSE_MIN_TILE, String.valueOf(minTile));
+        worldMap.terrainLayer().propertyMap().put(POS_HOUSE_MAX_TILE, String.valueOf(maxTile));
 
         // clear new house area
         clearArea(minTile, maxTile);
@@ -54,7 +54,7 @@ public class Action_PlaceArcadeHouse extends EditorAction<Void> {
         }
 
         // place ghosts
-        var terrainProperties = worldMap.layer(LayerID.TERRAIN).propertyMap();
+        var terrainProperties = worldMap.terrainLayer().propertyMap();
         terrainProperties.put(POS_GHOST_1_RED,    String.valueOf(minTile.plus(3, -1)));
         terrainProperties.put(POS_GHOST_3_CYAN,   String.valueOf(minTile.plus(1, 2)));
         terrainProperties.put(POS_GHOST_2_PINK,   String.valueOf(minTile.plus(3, 2)));

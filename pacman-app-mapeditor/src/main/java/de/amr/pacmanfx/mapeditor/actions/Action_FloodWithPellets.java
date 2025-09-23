@@ -71,13 +71,13 @@ public class Action_FloodWithPellets extends EditorAction<Void> {
 
     private boolean isAccessible(WorldMap worldMap, Vector2i tile) {
         if (worldMap.outOfWorld(tile)) return false;
-        return worldMap.layer(LayerID.TERRAIN).get(tile) == TerrainTile.EMPTY.$;
+        return worldMap.terrainLayer().get(tile) == TerrainTile.EMPTY.$;
     }
 
     private boolean canPlacePelletAt(WorldMap worldMap, Vector2i tile) {
         if (!canPlaceFoodAtTile(worldMap, tile)) return false;
         // Avoid overwriting energizers
-        return worldMap.layer(LayerID.FOOD).get(tile) != FoodTile.ENERGIZER.$;
+        return worldMap.foodLayer().get(tile) != FoodTile.ENERGIZER.$;
     }
 
     private Set<Vector2i> actorTiles(WorldMap worldMap) {
@@ -92,7 +92,7 @@ public class Action_FloodWithPellets extends EditorAction<Void> {
     }
 
     private Optional<Vector2i> actorTile(WorldMap worldMap, String actorPosProperty) {
-        var terrainProperties = worldMap.layer(LayerID.TERRAIN).propertyMap();
+        var terrainProperties = worldMap.terrainLayer().propertyMap();
         String posString = terrainProperties.getOrDefault(actorPosProperty, null);
         return posString != null ? WorldMapParser.parseTile(posString) : Optional.empty();
     }

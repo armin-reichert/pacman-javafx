@@ -54,10 +54,10 @@ public interface MapSelector {
 
     static Map<String, String> extractColorMap(WorldMap worldMap) {
         return Map.of(
-            "fill",   worldMap.layer(LayerID.TERRAIN).propertyMap().getOrDefault(DefaultWorldMapPropertyName.COLOR_WALL_FILL,   "000000"),
-            "stroke", worldMap.layer(LayerID.TERRAIN).propertyMap().getOrDefault(DefaultWorldMapPropertyName.COLOR_WALL_STROKE, "0000ff"),
-            "door",   worldMap.layer(LayerID.TERRAIN).propertyMap().getOrDefault(DefaultWorldMapPropertyName.COLOR_DOOR,        "00ffff"),
-            "pellet", worldMap.layer(LayerID.FOOD)   .propertyMap().getOrDefault(DefaultWorldMapPropertyName.COLOR_FOOD,        "ffffff")
+            "fill",   worldMap.terrainLayer().propertyMap().getOrDefault(DefaultWorldMapPropertyName.COLOR_WALL_FILL,   "000000"),
+            "stroke", worldMap.terrainLayer().propertyMap().getOrDefault(DefaultWorldMapPropertyName.COLOR_WALL_STROKE, "0000ff"),
+            "door",   worldMap.terrainLayer().propertyMap().getOrDefault(DefaultWorldMapPropertyName.COLOR_DOOR,        "00ffff"),
+            "pellet", worldMap.foodLayer()   .propertyMap().getOrDefault(DefaultWorldMapPropertyName.COLOR_FOOD,        "ffffff")
         );
     }
 }

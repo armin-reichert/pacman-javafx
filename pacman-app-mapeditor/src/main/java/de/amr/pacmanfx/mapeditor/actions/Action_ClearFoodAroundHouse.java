@@ -26,8 +26,8 @@ public class Action_ClearFoodAroundHouse extends EditorAction<Void> {
 
     @Override
     public Void execute() {
-        String minTileValue = worldMap.layer(LayerID.TERRAIN).propertyMap().get(POS_HOUSE_MIN_TILE);
-        String maxTileValue = worldMap.layer(LayerID.TERRAIN).propertyMap().get(POS_HOUSE_MAX_TILE);
+        String minTileValue = worldMap.terrainLayer().propertyMap().get(POS_HOUSE_MIN_TILE);
+        String maxTileValue = worldMap.terrainLayer().propertyMap().get(POS_HOUSE_MAX_TILE);
         if (minTileValue != null && maxTileValue != null) {
             Vector2i minTile = parseTile(minTileValue).orElse(null);
             Vector2i maxTile = parseTile(maxTileValue).orElse(null);
