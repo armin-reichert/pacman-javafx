@@ -49,15 +49,6 @@ public interface EditorUtil {
         }
     }
 
-    static Color parseColor(String text) {
-        try {
-            return Color.valueOf(text);
-        } catch (Exception x) {
-            Logger.error(x);
-            return Color.WHITE;
-        }
-    }
-
     // Note: String.format is locale-dependent! This may produce illegal color format if locale is not ENGLISH!
     static String formatRGBA(Color color) {
         return String.format(Locale.ENGLISH, "rgba(%d,%d,%d,%.2f)",
