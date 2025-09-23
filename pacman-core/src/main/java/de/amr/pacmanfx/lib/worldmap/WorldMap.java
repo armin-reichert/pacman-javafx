@@ -423,9 +423,9 @@ public class WorldMap {
         var sw = new StringWriter();
         var pw = new PrintWriter(sw);
         pw.println(WorldMap.MARKER_BEGIN_TERRAIN_LAYER);
-        printLayer(pw, layer(LayerID.TERRAIN));
+        printLayer(pw, terrainLayer);
         pw.println(WorldMap.MARKER_BEGIN_FOOD_LAYER);
-        printLayer(pw, layer(LayerID.FOOD));
+        printLayer(pw, foodLayer);
         pw.flush();
         return sw.toString();
     }

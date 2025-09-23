@@ -320,7 +320,7 @@ public class EditCanvas extends Canvas {
 
         // Food
         if (foodVisible.get()) {
-            Color foodColor = EditorUtil.getColorFromMapLayer(worldMap().layer(LayerID.FOOD),
+            Color foodColor = EditorUtil.getColorFromMapLayer(worldMap().foodLayer(),
                 DefaultWorldMapPropertyName.COLOR_FOOD, ArcadeSprites.MS_PACMAN_COLOR_FOOD);
             foodRenderer.setEnergizerColor(foodColor);
             foodRenderer.setPelletColor(foodColor);
