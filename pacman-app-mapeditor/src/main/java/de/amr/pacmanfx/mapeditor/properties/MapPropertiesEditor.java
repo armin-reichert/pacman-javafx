@@ -77,7 +77,11 @@ public class MapPropertiesEditor extends BorderPane {
         this.layerID = requireNonNull(layerID);
         setTop(createButtonBar());
         setCenter(grid);
-        ui.editor().currentWorldMapProperty().addListener((py, ov, nv) -> rebuildFromWorldMap());
+        ui.editor().currentWorldMapProperty().addListener((py, ov, nv) -> createPropertyEditors());
+    }
+
+    public BooleanProperty enabledProperty() {
+        return enabled;
     }
 
     public void updateEditorValues() {
@@ -86,6 +90,28 @@ public class MapPropertiesEditor extends BorderPane {
             editor.property().setValue(value);
             editor.updateState();
         });
+    }
+
+    private void createPropertyEditors() {
+        propertyEditors.clear();
+        layer().propertiesSortedByName().forEach(property -> {
+            String propertyName = property.getKey();
+            String propertyValue = property.getValue();
+
+            var editorProperty = new MapEditorProperty();
+            editorProperty.setName(propertyName);
+            editorProperty.setValue(propertyValue);
+            editorProperty.setType(determinePropertyType(propertyName));
+            if (PREDEFINED_PROPERTY_NAMES.get(layerID).contains(propertyName)) {
+                editorProperty.attributes().add(MapEditorPropertyAttribute.PREDEFINED);
+            }
+            if (HIDDEN_PROPERTY_NAMES.get(layerID).contains(propertyName)) {
+                editorProperty.attributes().add((MapEditorPropertyAttribute.HIDDEN));
+            }
+            propertyEditors.add(createEditor(editorProperty));
+            Logger.info("Added editor for {}", editorProperty);
+        });
+        rebuildGrid();
     }
 
     private Pane createButtonBar() {
@@ -119,7 +145,7 @@ public class MapPropertiesEditor extends BorderPane {
 
     private MapEditorProperty addEditorProperty(String propertyName, MapEditorPropertyType type, String initialValue) {
         if (layer().propertyMap().containsKey(propertyName)) {
-            ui.messageDisplay().showMessage("Property %s already exists".formatted(propertyName), 2, MessageType.INFO);
+            ui.messageDisplay().showMessage("Property '%s' already exists".formatted(propertyName), 2, MessageType.WARNING);
             return null;
         }
 
@@ -131,11 +157,11 @@ public class MapPropertiesEditor extends BorderPane {
         propertyEditors.addFirst(createEditor(editorProperty));
         rebuildGrid();
 
-        layer().propertyMap().put(propertyName, editorProperty.value());
+        layer().propertyMap().put(propertyName, initialValue);
         ui.editor().setWorldMapChanged();
         ui.editor().setEdited(true);
 
-        ui.messageDisplay().showMessage("New property %s added".formatted(propertyName), 1, MessageType.INFO);
+        ui.messageDisplay().showMessage("New property '%s' added".formatted(propertyName), 2, MessageType.INFO);
 
         return editorProperty;
     }
@@ -173,33 +199,7 @@ public class MapPropertiesEditor extends BorderPane {
     }
 
     private Optional<AbstractPropertyEditor> findEditorFor(MapEditorProperty editorProperty) {
-        return propertyEditors.stream().filter(pe -> pe.property().name().equals(editorProperty.name())).findFirst();
-    }
-
-    public BooleanProperty enabledProperty() {
-        return enabled;
-    }
-
-    private void rebuildFromWorldMap() {
-        propertyEditors.clear();
-        layer().propertiesSortedByName().forEach(property -> {
-            String propertyName = property.getKey();
-            String propertyValue = property.getValue();
-
-            var editorProperty = new MapEditorProperty();
-            editorProperty.setName(propertyName);
-            editorProperty.setValue(propertyValue);
-            editorProperty.setType(determinePropertyType(propertyName));
-            if (PREDEFINED_PROPERTY_NAMES.get(layerID).contains(propertyName)) {
-                editorProperty.attributes().add(MapEditorPropertyAttribute.PREDEFINED);
-            }
-            if (HIDDEN_PROPERTY_NAMES.get(layerID).contains(propertyName)) {
-                editorProperty.attributes().add((MapEditorPropertyAttribute.HIDDEN));
-            }
-            propertyEditors.add(createEditor(editorProperty));
-            Logger.info("Added editor for {}", editorProperty);
-        });
-        rebuildGrid();
+        return propertyEditors.stream().filter(editor -> editor.property().name().equals(editorProperty.name())).findFirst();
     }
 
     private AbstractPropertyEditor createEditor(MapEditorProperty editorProperty) {
