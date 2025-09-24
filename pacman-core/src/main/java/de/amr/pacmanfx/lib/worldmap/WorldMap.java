@@ -398,16 +398,16 @@ public class WorldMap {
         }
     }
 
-    private void printLayer(PrintWriter pw, WorldMapLayer layer) {
+    private void printLayer(PrintWriter pw, WorldMapLayer layer, String layerMarker) {
+        pw.println(layerMarker);
         layer.propertyMap().entrySet().stream()
             .sorted(Map.Entry.comparingByKey())
             .map(entry -> "%s=%s".formatted(entry.getKey(), entry.getValue()))
             .forEach(pw::println);
-        pw.println(WorldMap.MARKER_BEGIN_DATA_SECTION);
+        pw.println(MARKER_BEGIN_DATA_SECTION);
         for (int row = 0; row < layer.numRows(); ++row) {
             for (int col = 0; col < layer.numCols(); ++col) {
-                byte value = layer.get(row, col);
-                pw.printf("#%02X", value);
+                pw.printf("#%02X", layer.get(row, col));
                 if (col < layer.numCols() - 1) {
                     pw.print(",");
                 }
@@ -419,11 +419,8 @@ public class WorldMap {
     public String sourceCode() {
         var sw = new StringWriter();
         var pw = new PrintWriter(sw);
-        pw.println(WorldMap.MARKER_BEGIN_TERRAIN_LAYER);
-        printLayer(pw, terrainLayer);
-        pw.println(WorldMap.MARKER_BEGIN_FOOD_LAYER);
-        printLayer(pw, foodLayer);
-        pw.flush();
+        printLayer(pw, terrainLayer, MARKER_BEGIN_TERRAIN_LAYER);
+        printLayer(pw, foodLayer, MARKER_BEGIN_FOOD_LAYER);
         return sw.toString();
     }
 
