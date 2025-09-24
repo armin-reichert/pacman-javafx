@@ -6,108 +6,15 @@ package de.amr.pacmanfx.lib.worldmap;
 
 import de.amr.pacmanfx.lib.Vector2i;
 
-import java.util.*;
-import java.util.regex.Pattern;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class WorldMapLayer {
 
-    public enum PropertyAttribute {
-        PREDEFINED, HIDDEN
-    }
-
-    public enum PropertyType {
-        STRING {
-            @Override
-            public String format(Object value) {
-                return String.valueOf(value);
-            }
-        },
-
-        TILE {
-            @Override
-            public String format(Object value) {
-                if (value instanceof Vector2i(int x, int y)) {
-                    return "(%d,%d)".formatted(x, y);
-                }
-                throw new IllegalArgumentException("Not a tile value: " + value);
-            }
-        },
-
-        COLOR_RGBA {
-            @Override
-            public String format(Object value) {
-                if (value instanceof ColorRGBA(byte red, byte green, byte blue, double alpha)) {
-                    return String.format(Locale.ENGLISH, "rgba(%d,%d,%d,%.2f)", red, green, blue, alpha);
-                }
-                throw new IllegalArgumentException("Not a RGBA color value: " + value);
-            }
-        };
-
-        public abstract String format(Object value);
-    }
-
-    public static class Property {
-
-        public static final Pattern PATTERN_PROPERTY_NAME = Pattern.compile("[a-zA-Z]([a-zA-Z0-9_])*");
-
-        public static boolean isInvalidPropertyName(String s) {
-            return s == null || !PATTERN_PROPERTY_NAME.matcher(s).matches();
-        }
-
-        public static Set<PropertyAttribute> emptyAttributeSet() {
-            return EnumSet.noneOf(PropertyAttribute.class);
-        }
-
-        private String name;
-        private String value;
-        private PropertyType type;
-        private final Set<PropertyAttribute> attributes = Property.emptyAttributeSet();
-
-        public String name() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String value() {
-            return value;
-        }
-
-        public void setValue(String value) {
-            this.value = value;
-        }
-
-        public PropertyType type() {
-            return type;
-        }
-
-        public void setType(PropertyType type) {
-            this.type = type;
-        }
-
-        public Set<PropertyAttribute> attributes() {
-            return attributes;
-        }
-
-        public boolean is(PropertyAttribute attribute) {
-            return attributes.contains(attribute);
-        }
-
-        @Override
-        public String toString() {
-            return "Property{" + "name='" + name + '\'' +
-                    ", value='" + value + '\'' +
-                    ", type=" + type +
-                    ", attributes=" + attributes +
-                    '}';
-        }
-    }
-
-    private final Map<String, String> propertyValues = new HashMap<>();
+    private final Map<String, String> propertyMap = new HashMap<>();
     private final byte[][] tileContent;
 
     public WorldMapLayer(int numRows, int numCols) {
@@ -115,11 +22,10 @@ public class WorldMapLayer {
     }
 
     public WorldMapLayer(WorldMapLayer other) {
-        int numRows = other.tileContent.length, numCols = other.tileContent[0].length;
-        propertyValues.putAll(other.propertyValues);
-        tileContent = new byte[numRows][];
-        for (int row = 0; row < numRows; ++row) {
-            tileContent[row] = Arrays.copyOf(other.tileContent[row], numCols);
+        propertyMap.putAll(other.propertyMap);
+        tileContent = new byte[other.numRows()][];
+        for (int row = 0; row < other.numRows(); ++row) {
+            tileContent[row] = Arrays.copyOf(other.tileContent[row], other.numCols());
         }
     }
 
@@ -150,12 +56,16 @@ public class WorldMapLayer {
     }
 
     public Map<String, String> propertyMap() {
-        return propertyValues;
+        return propertyMap;
+    }
+
+    public Stream<Map.Entry<String, String>> propertiesSortedByName() {
+        return propertyMap.entrySet().stream().sorted(Map.Entry.comparingByKey());
     }
 
     public void replacePropertyMap(Map<String, String> other) {
-        propertyValues.clear();
-        propertyValues.putAll(other);
+        propertyMap.clear();
+        propertyMap.putAll(other);
     }
 
     /**

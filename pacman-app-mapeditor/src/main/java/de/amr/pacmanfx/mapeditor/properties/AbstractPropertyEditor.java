@@ -35,9 +35,9 @@ abstract class AbstractPropertyEditor {
     protected final WorldMapLayer layer;
     protected final TextField nameEditor;
 
-    private WorldMapLayer.Property property;
+    private MapEditorProperty property;
 
-    protected AbstractPropertyEditor(TileMapEditorUI ui, LayerID layerID, WorldMapLayer layer, WorldMapLayer.Property property) {
+    protected AbstractPropertyEditor(TileMapEditorUI ui, LayerID layerID, WorldMapLayer layer, MapEditorProperty property) {
         this.ui = requireNonNull(ui);
         this.layerID = requireNonNull(layerID);
         this.layer = requireNonNull(layer);
@@ -47,7 +47,7 @@ abstract class AbstractPropertyEditor {
         nameEditor.setMinWidth(MapPropertiesEditor.NAME_EDITOR_WIDTH);
         nameEditor.setMaxWidth(MapPropertiesEditor.NAME_EDITOR_WIDTH);
         nameEditor.disableProperty().bind(enabled.not());
-        if (property.is(WorldMapLayer.PropertyAttribute.PREDEFINED)) {
+        if (property.is(MapEditorPropertyAttribute.PREDEFINED)) {
             nameEditor.setEditable(false);
             nameEditor.setBackground(Background.fill(Color.LIGHTGRAY));
         } else {
@@ -76,11 +76,11 @@ abstract class AbstractPropertyEditor {
         return btnDelete;
     }
 
-    public WorldMapLayer.Property property() {
+    public MapEditorProperty property() {
         return property;
     }
 
-    public void setProperty(WorldMapLayer.Property property) {
+    public void setProperty(MapEditorProperty property) {
         this.property = property;
     }
 
@@ -110,15 +110,15 @@ abstract class AbstractPropertyEditor {
             nameEditor.setText(property.name());
             return;
         }
-        if (WorldMapLayer.Property.isInvalidPropertyName(newName)) {
+        if (MapEditorProperty.isInvalidPropertyName(newName)) {
             rejectName(newName, "Property name '%s' is invalid");
             return;
         }
-        if (MapPropertiesEditor.PREDEFINED_PROPERTIES.get(layerID).contains(newName)) {
+        if (MapPropertiesEditor.PREDEFINED_PROPERTY_NAMES.get(layerID).contains(newName)) {
             rejectName(newName, "Property name '%s' is reserved");
             return;
         }
-        if (MapPropertiesEditor.HIDDEN_PROPERTIES.get(layerID).contains(newName)) {
+        if (MapPropertiesEditor.HIDDEN_PROPERTY_NAMES.get(layerID).contains(newName)) {
             rejectName(newName, "Property name '%s' is reserved");
             return;
         }
@@ -135,7 +135,7 @@ abstract class AbstractPropertyEditor {
             return;
         }
 
-        WorldMapLayer.PropertyType newType = MapPropertiesEditor.determinePropertyType(newName);
+        MapEditorPropertyType newType = MapPropertiesEditor.determinePropertyType(newName);
         if (newType != property.type()) {
             rejectName(newName, "Renaming property to '%s' would change type");
             return;

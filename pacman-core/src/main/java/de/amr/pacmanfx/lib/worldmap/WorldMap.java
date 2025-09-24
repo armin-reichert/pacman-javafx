@@ -299,11 +299,6 @@ public class WorldMap {
         return configMap;
     }
 
-    public Stream<String> propertyNames(LayerID layerID) {
-        assertValidLayerID(layerID);
-        return layer(layerID).propertyMap().keySet().stream();
-    }
-
     /**
      * @param propertyName property name
      * @param defaultTile tile returned if property map does not contain property name (can be null)
@@ -427,8 +422,8 @@ public class WorldMap {
     public String sourceCodeWithLineNumbers() {
         StringBuilder sb = new StringBuilder();
         String[] lines = sourceCode().split("\n");
-        for (int i = 0; i < lines.length; ++i) {
-            sb.append("%5d: ".formatted(i + 1)).append(lines[i]).append("\n");
+        for (int lineNum = 1; lineNum <= lines.length; ++lineNum) {
+            sb.append("%5d: %s\n".formatted(lineNum, lines[lineNum-1]));
         }
         return sb.toString();
     }

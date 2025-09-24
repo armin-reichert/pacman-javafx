@@ -19,7 +19,7 @@ class TilePropertyEditor extends AbstractPropertyEditor {
     private final Spinner<Integer> spinnerY;
     private final HBox valueEditorPane;
 
-    public TilePropertyEditor(TileMapEditorUI ui, LayerID layerID, WorldMapLayer layer, WorldMapLayer.Property property) {
+    public TilePropertyEditor(TileMapEditorUI ui, LayerID layerID, WorldMapLayer layer, MapEditorProperty property) {
         super(ui, layerID, layer, property);
 
         spinnerX = new Spinner<>(0, layer.numCols() - 1, 0);
@@ -53,7 +53,7 @@ class TilePropertyEditor extends AbstractPropertyEditor {
 
     @Override
     protected String formattedValue() {
-        return WorldMapLayer.PropertyType.TILE.format(Vector2i.of(spinnerX.getValue(), spinnerY.getValue()));
+        return MapEditorPropertyType.TILE.format(Vector2i.of(spinnerX.getValue(), spinnerY.getValue()));
     }
 
     @Override

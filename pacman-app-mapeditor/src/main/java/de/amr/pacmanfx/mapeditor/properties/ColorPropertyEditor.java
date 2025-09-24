@@ -16,7 +16,7 @@ class ColorPropertyEditor extends AbstractPropertyEditor {
 
     private final ColorPicker colorPicker;
 
-    public ColorPropertyEditor(TileMapEditorUI ui, LayerID layerID, WorldMapLayer layer, WorldMapLayer.Property property) {
+    public ColorPropertyEditor(TileMapEditorUI ui, LayerID layerID, WorldMapLayer layer, MapEditorProperty property) {
         super(ui, layerID, layer, property);
         colorPicker = new ColorPicker();
         colorPicker.setPrefWidth(MapPropertiesEditor.VALUE_EDITOR_WIDTH);
