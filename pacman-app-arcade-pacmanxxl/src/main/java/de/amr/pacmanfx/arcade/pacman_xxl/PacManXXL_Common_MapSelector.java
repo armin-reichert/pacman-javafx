@@ -9,6 +9,7 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +39,33 @@ public class PacManXXL_Common_MapSelector implements MapSelector {
     public PacManXXL_Common_MapSelector(File customMapDir) {
         this.customMapDir = requireNonNull(customMapDir);
         mapSelectionMode = MapSelectionMode.CUSTOM_MAPS_FIRST;
+
+        addJuniorPacMaps(customMapDir);
+    }
+
+    private void addJuniorPacMaps(File dir) {
+        requireNonNull(dir);
+        File[] files = dir.listFiles();
+        if (files == null) {
+            Logger.error("Could not access directory {}", dir);
+            return;
+        }
+        if (files.length == 0) {
+            Logger.info("Custom map directory is empty, fill with Junior Pac-Man maps...");
+            for (int i = 1; i <= 15; ++i) {
+                String mapName = "Jr. Pac-Man %02d.world".formatted(i);
+                String path = "/de/amr/pacmanfx/arcade/pacman_xxl/maps/junior_pacman/" + mapName;
+                URL url = getClass().getResource(path);
+                if (url != null) {
+                    try {
+                        WorldMap worldMap = WorldMap.loadFromURL(url);
+                        worldMap.saveToFile(new File(dir, mapName));
+                    } catch (IOException e) {
+                        Logger.error("Could not load map from {}", path);
+                    }
+                }
+            }
+        }
     }
 
     public MapSelectionMode mapSelectionMode() {
