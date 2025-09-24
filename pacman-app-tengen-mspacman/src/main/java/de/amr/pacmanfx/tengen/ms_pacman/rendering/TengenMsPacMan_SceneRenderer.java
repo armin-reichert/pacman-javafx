@@ -40,32 +40,32 @@ public class TengenMsPacMan_SceneRenderer extends BaseRenderer implements Render
     public void drawHorizontalBar(Color edgeColor, Color innerColor, double width, double height, double topY) {
         requireNonNull(edgeColor);
         requireNonNull(innerColor);
-        ctx().save();
-        ctx().scale(scaling(), scaling());
-        ctx().setFill(edgeColor);
-        ctx().fillRect(0, topY, width, height);
-        ctx().setFill(innerColor);
-        ctx().fillRect(0, topY + 1, width, height - 2);
-        ctx().restore();
+        ctx.save();
+        ctx.scale(scaling(), scaling());
+        ctx.setFill(edgeColor);
+        ctx.fillRect(0, topY, width, height);
+        ctx.setFill(innerColor);
+        ctx.fillRect(0, topY + 1, width, height - 2);
+        ctx.restore();
     }
 
     public void drawJoypadKeyBinding(JoypadKeyBinding binding) {
-        ctx().save();
+        ctx.save();
         requireNonNull(binding);
-        ctx().setFont(Font.font("Sans", scaled(TS)));
-        ctx().setStroke(Color.WHITE);
-        ctx().strokeText(" [SELECT]=%s   [START]=%s   [BUTTON B]=%s   [BUTTON A]=%s".formatted(
+        ctx.setFont(Font.font(scaled(6)));
+        ctx.setStroke(Color.WHITE);
+        ctx.strokeText(" [SELECT]=%s   [START]=%s   [BUTTON B]=%s   [BUTTON A]=%s".formatted(
             binding.key(JoypadButton.SELECT),
             binding.key(JoypadButton.START),
             binding.key(JoypadButton.B),
             binding.key(JoypadButton.A)
         ), 0, scaled(TS));
-        ctx().strokeText(" [UP]=%s   [DOWN]=%s   [LEFT]=%s   [RIGHT]=%s".formatted(
+        ctx.strokeText(" [UP]=%s   [DOWN]=%s   [LEFT]=%s   [RIGHT]=%s".formatted(
             binding.key(JoypadButton.UP),
             binding.key(JoypadButton.DOWN),
             binding.key(JoypadButton.LEFT),
             binding.key(JoypadButton.RIGHT)
         ), 0, scaled(2*TS));
-        ctx().restore();
+        ctx.restore();
     }
 }
