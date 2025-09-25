@@ -119,23 +119,21 @@ public abstract class Ghost extends MovingActor {
             Roam if you want to, without anything but the love we feel!
      </cite>
      */
-    public void roam(GameContext gameContext) {
-        if (gameContext.optGameLevel().isEmpty()) return;
-
-        GameLevel level = gameContext.gameLevel();
+    public void roam(GameLevel gameLevel) {
+        requireNonNull(gameLevel);
         Vector2i currentTile = tile();
-        if (!level.isTileInPortalSpace(currentTile) && (isNewTileEntered() || !moveInfo.moved)) {
-            Direction dir = computeRoamingDirection(gameContext, currentTile);
+        if (!gameLevel.isTileInPortalSpace(currentTile) && (isNewTileEntered() || !moveInfo.moved)) {
+            Direction dir = computeRoamingDirection(gameLevel, currentTile);
             setWishDir(dir);
         }
-        findMyWayThroughThisCruelWorld(gameContext);
+        findMyWayThroughThisCruelWorld(gameLevel);
     }
 
     // try a random direction towards an accessible tile, do not turn back unless there is no other way
-    private Direction computeRoamingDirection(GameContext gameContext, Vector2i currentTile) {
+    private Direction computeRoamingDirection(GameLevel gameLevel, Vector2i currentTile) {
         Direction dir = pseudoRandomDirection();
         int turns = 0;
-        while (dir == moveDir().opposite() || !canAccessTile(gameContext, currentTile.plus(dir.vector()))) {
+        while (dir == moveDir().opposite() || !canAccessTile(gameLevel, currentTile.plus(dir.vector()))) {
             dir = dir.nextClockwise();
             if (++turns > 4) {
                 return moveDir().opposite();  // avoid endless loop
@@ -153,28 +151,25 @@ public abstract class Ghost extends MovingActor {
     }
 
     @Override
-    public boolean canAccessTile(GameContext gameContext, Vector2i tile) {
-        if (gameContext.optGameLevel().isEmpty()) return true;
-        GameLevel level = gameContext.gameLevel();
-
+    public boolean canAccessTile(GameLevel gameLevel, Vector2i tile) {
         // Portal tiles are the only tiles outside the world map that can be accessed
-        if (level.worldMap().outOfWorld(tile)) {
-            return level.isTileInPortalSpace(tile);
+        if (gameLevel.worldMap().outOfWorld(tile)) {
+            return gameLevel.isTileInPortalSpace(tile);
         }
         // Hunting ghosts cannot enter some tiles in Pac-Man game from below
         // TODO: this is game-specific and does not belong here
         if (specialTerrainTiles.contains(tile)
                 && state() == GhostState.HUNTING_PAC
-                && level.worldMap().content(LayerID.TERRAIN, tile) == TerrainTile.ONE_WAY_DOWN.$
+                && gameLevel.worldMap().content(LayerID.TERRAIN, tile) == TerrainTile.ONE_WAY_DOWN.$
                 && tile.equals(tile().plus(UP.vector()))
         ) {
             Logger.debug("Hunting {} cannot move up to special tile {}", name(), tile);
             return false;
         }
-        if (level.house().isPresent() && level.house().get().isDoorAt(tile)) {
+        if (gameLevel.house().isPresent() && gameLevel.house().get().isDoorAt(tile)) {
             return inAnyOfStates(GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE);
         }
-        return !level.isTileBlocked(tile);
+        return !gameLevel.isTileBlocked(tile);
     }
 
     @Override
@@ -395,7 +390,7 @@ public abstract class Ghost extends MovingActor {
             ? speedControl.ghostTunnelSpeed(gameContext, gameLevel, this)
             : speedControl.ghostFrightenedSpeed(gameContext, gameLevel, this);
         setSpeed(speed);
-        roam(gameContext);
+        roam(gameLevel);
         playFrightenedAnimation(gameContext, gameLevel.pac());
     }
 
@@ -439,8 +434,8 @@ public abstract class Ghost extends MovingActor {
             } else {
                 setSpeed(speed);
                 setTargetTile(house.leftDoorTile());
-                navigateTowardsTarget(gameContext);
-                findMyWayThroughThisCruelWorld(gameContext);
+                navigateTowardsTarget(gameLevel);
+                findMyWayThroughThisCruelWorld(gameLevel);
             }
         });
     }

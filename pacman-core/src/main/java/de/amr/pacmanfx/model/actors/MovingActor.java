@@ -101,11 +101,11 @@ public abstract class MovingActor extends Actor {
     public abstract boolean canReverse();
 
     /**
-     * @param gameContext the game context
+     * @param gameLevel the game level we are in (not null)
      * @param tile some tile inside or outside the world
      * @return if this actor can access the given tile in its game context
      */
-    public abstract boolean canAccessTile(GameContext gameContext, Vector2i tile);
+    public abstract boolean canAccessTile(GameLevel gameLevel, Vector2i tile);
 
     public final ObjectProperty<Vector2i> targetTileProperty() {
         if (targetTile == null) {
@@ -270,17 +270,15 @@ public abstract class MovingActor extends Actor {
         return newTileEntered;
     }
 
-    public void navigateTowardsTarget(GameContext gameContext) {
-        if (gameContext == null || gameContext.optGameLevel().isEmpty()) return;
-
-        GameLevel level = gameContext.gameLevel();
+    public void navigateTowardsTarget(GameLevel gameLevel) {
+        requireNonNull(gameLevel);
 
         if (!newTileEntered && moveInfo.moved || targetTile() == null) {
             return; // we don't need no navigation, dim dit didit didit...
         }
 
         final Vector2i currentTile = tile();
-        if (level.isTileInPortalSpace(currentTile)) {
+        if (gameLevel.isTileInPortalSpace(currentTile)) {
             return;
         }
         Direction candidateDir = null;
@@ -290,7 +288,7 @@ public abstract class MovingActor extends Actor {
                 continue; // reversing the move direction is not allowed  (except to get out of dead-ends, see below)
             }
             final Vector2i neighborTile = currentTile.plus(dir.vector());
-            if (canAccessTile(gameContext, neighborTile)) {
+            if (canAccessTile(gameLevel, neighborTile)) {
                 double dist = neighborTile.euclideanDist(targetTile());
                 if (dist < minDistToTarget) {
                     minDistToTarget = dist;
@@ -307,11 +305,11 @@ public abstract class MovingActor extends Actor {
      *
      * @param targetTile target tile this actor tries to reach
      */
-    public void tryMovingTowardsTargetTile(GameContext gameContext, Vector2i targetTile) {
-        if (gameContext == null || gameContext.optGameLevel().isEmpty()) return;
+    public void tryMovingTowardsTargetTile(GameLevel gameLevel, Vector2i targetTile) {
+        requireNonNull(gameLevel);
         setTargetTile(targetTile);
-        navigateTowardsTarget(gameContext);
-        findMyWayThroughThisCruelWorld(gameContext);
+        navigateTowardsTarget(gameLevel);
+        findMyWayThroughThisCruelWorld(gameLevel);
     }
 
     private void tryTeleport(Vector2i currentTile, Portal portal) {
@@ -333,14 +331,12 @@ public abstract class MovingActor extends Actor {
      * First checks if the actor can be teleported, then if the actor can move to its wish direction. If this is not
      * possible, it keeps moving to its current move direction.
      */
-    public void findMyWayThroughThisCruelWorld(GameContext gameContext) {
-        if (gameContext == null || gameContext.optGameLevel().isEmpty()) return;
-
-        GameLevel level = gameContext.gameLevel();
+    public void findMyWayThroughThisCruelWorld(GameLevel gameLevel) {
+        requireNonNull(gameLevel);
         final Vector2i currentTile = tile();
         moveInfo.clear();
         if (canTeleport) {
-            for (Portal portal : level.portals()) {
+            for (Portal portal : gameLevel.portals()) {
                 tryTeleport(currentTile, portal);
                 if (moveInfo.teleported) {
                     return;
@@ -353,22 +349,22 @@ public abstract class MovingActor extends Actor {
                 Logger.trace("{}: turned around at tile {}", name(), tile());
                 gotReverseCommand = false;
             }
-            tryMovingTowards(gameContext, level, currentTile, wishDir());
+            tryMovingTowards(gameLevel, currentTile, wishDir());
             if (moveInfo.moved) {
                 setMoveDir(wishDir());
             } else {
-                tryMovingTowards(gameContext, level, currentTile, moveDir());
+                tryMovingTowards(gameLevel, currentTile, moveDir());
             }
         }
     }
 
-    private void tryMovingTowards(GameContext gameContext, GameLevel level, Vector2i tileBeforeMoving, Direction dir) {
+    private void tryMovingTowards(GameLevel gameLevel, Vector2i tileBeforeMoving, Direction dir) {
         final Vector2f newVelocity = dir.vector().scaled(velocity().length());
         final Vector2f touchPosition = center().plus(dir.vector().scaled((float) HTS)).plus(newVelocity);
         final Vector2i touchedTile = tileAt(touchPosition);
         final boolean turn = dir.vector().isOrthogonalTo(moveDir().vector());
 
-        if (!canAccessTile(gameContext, touchedTile)) {
+        if (!canAccessTile(gameLevel, touchedTile)) {
             if (!turn) {
                 placeAtTile(tile()); // adjust over tile (would move forward against wall)
             }
@@ -403,8 +399,8 @@ public abstract class MovingActor extends Actor {
         newTileEntered = !tileBeforeMoving.equals(tileAfterMoving);
 
         moveInfo.moved = true;
-        moveInfo.tunnelEntered = level.isTunnel(tileAfterMoving) && !level.isTunnel(tileBeforeMoving) && !level.isTileInPortalSpace(tileBeforeMoving);
-        moveInfo.tunnelLeft = !level.isTunnel(tileAfterMoving) && level.isTunnel(tileBeforeMoving)  && !level.isTileInPortalSpace(tileAfterMoving);
+        moveInfo.tunnelEntered = gameLevel.isTunnel(tileAfterMoving) && !gameLevel.isTunnel(tileBeforeMoving) && !gameLevel.isTileInPortalSpace(tileBeforeMoving);
+        moveInfo.tunnelLeft = !gameLevel.isTunnel(tileAfterMoving) && gameLevel.isTunnel(tileBeforeMoving)  && !gameLevel.isTileInPortalSpace(tileAfterMoving);
 
         moveInfo.log(String.format("%5s (%.2f pixels)", dir, newVelocity.length()));
         if (moveInfo.tunnelEntered) { Logger.trace("{} entered tunnel", name()); }

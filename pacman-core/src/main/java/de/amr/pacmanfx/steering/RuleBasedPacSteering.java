@@ -109,15 +109,15 @@ public class RuleBasedPacSteering implements Steering {
     }
 
     private void takeAction(GameContext gameContext, CollectedData data) {
-        GameLevel level = gameContext.game().optGameLevel().orElseThrow();
-        var pac = level.pac();
+        GameLevel gameLevel = gameContext.game().optGameLevel().orElseThrow();
+        var pac = gameLevel.pac();
         if (data.hunterAhead != null) {
             Direction escapeDir;
             if (data.hunterBehind != null) {
-                escapeDir = findEscapeDirectionExcluding(gameContext, level, EnumSet.of(pac.moveDir(), pac.moveDir().opposite()));
+                escapeDir = findEscapeDirectionExcluding(gameLevel, EnumSet.of(pac.moveDir(), pac.moveDir().opposite()));
                 Logger.trace("Detected ghost {} behind, escape direction is {}", data.hunterAhead.name(), escapeDir);
             } else {
-                escapeDir = findEscapeDirectionExcluding(gameContext, level, EnumSet.of(pac.moveDir()));
+                escapeDir = findEscapeDirectionExcluding(gameLevel, EnumSet.of(pac.moveDir()));
                 Logger.trace("Detected ghost {} ahead, escape direction is {}", data.hunterAhead.name(), escapeDir);
             }
             if (escapeDir != null) {
@@ -127,22 +127,22 @@ public class RuleBasedPacSteering implements Steering {
         }
 
         // when not escaping ghost, keep move direction at least until next intersection
-        if (pac.moveInfo().moved && !level.isIntersection(pac.tile()))
+        if (pac.moveInfo().moved && !gameLevel.isIntersection(pac.tile()))
             return;
 
-        if (!data.frightenedGhosts.isEmpty() && level.pac().powerTimer().remainingTicks() >= Globals.NUM_TICKS_PER_SEC) {
+        if (!data.frightenedGhosts.isEmpty() && gameLevel.pac().powerTimer().remainingTicks() >= Globals.NUM_TICKS_PER_SEC) {
             Ghost prey = data.frightenedGhosts.getFirst();
             Logger.trace("Detected frightened ghost {} {} tiles away", prey.name(),
                 prey.tile().manhattanDist(pac.tile()));
             pac.setTargetTile(prey.tile());
         } else if (isEdibleBonusNearPac(gameContext.game(), pac)) {
             Logger.trace("Active bonus detected, get it!");
-            level.bonus().ifPresent(bonus -> pac.setTargetTile(tileAt(bonus.position())));
+            gameLevel.bonus().ifPresent(bonus -> pac.setTargetTile(tileAt(bonus.position())));
         } else {
-            pac.setTargetTile(findTileFarthestFromGhosts(pac, findNearestFoodTiles(level)));
+            pac.setTargetTile(findTileFarthestFromGhosts(pac, findNearestFoodTiles(gameLevel)));
         }
         pac.optTargetTile().ifPresent(target -> {
-            pac.navigateTowardsTarget(gameContext);
+            pac.navigateTowardsTarget(gameLevel);
             Logger.trace("Navigated towards {}, moveDir={} wishDir={}", pac.targetTile(), pac.moveDir(), pac.wishDir());
         });
     }
@@ -158,21 +158,21 @@ public class RuleBasedPacSteering implements Steering {
         return false;
     }
 
-    private Ghost findHuntingGhostAhead(GameLevel level) {
-        var pac = level.pac();
+    private Ghost findHuntingGhostAhead(GameLevel gameLevel) {
+        var pac = gameLevel.pac();
         Vector2i pacManTile = pac.tile();
         boolean energizerFound = false;
         for (int i = 1; i <= CollectedData.MAX_GHOST_AHEAD_DETECTION_DIST; ++i) {
             Vector2i ahead = pacManTile.plus(pac.moveDir().vector().scaled(i));
-            if (!pac.canAccessTile(gameContext, ahead)) {
+            if (!pac.canAccessTile(gameLevel, ahead)) {
                 break;
             }
-            if (level.isEnergizerPosition(ahead) && !level.foodStore().tileContainsEatenFood(ahead)) {
+            if (gameLevel.isEnergizerPosition(ahead) && !gameLevel.foodStore().tileContainsEatenFood(ahead)) {
                 energizerFound = true;
             }
             var aheadLeft = ahead.plus(pac.moveDir().nextCounterClockwise().vector());
             var aheadRight = ahead.plus(pac.moveDir().nextClockwise().vector());
-            Iterable<Ghost> huntingGhosts = level.ghosts(GhostState.HUNTING_PAC)::iterator;
+            Iterable<Ghost> huntingGhosts = gameLevel.ghosts(GhostState.HUNTING_PAC)::iterator;
             for (var ghost : huntingGhosts) {
                 if (ghost.tile().equals(ahead) || ghost.tile().equals(aheadLeft) || ghost.tile().equals(aheadRight)) {
                     if (energizerFound) {
@@ -187,14 +187,14 @@ public class RuleBasedPacSteering implements Steering {
     }
 
     private Ghost findHuntingGhostBehind(Pac pac) {
-        GameLevel level = gameContext.game().optGameLevel().orElseThrow();
+        GameLevel gameLevel = gameContext.game().optGameLevel().orElseThrow();
         var pacManTile = pac.tile();
         for (int i = 1; i <= CollectedData.MAX_GHOST_BEHIND_DETECTION_DIST; ++i) {
             var behind = pacManTile.plus(pac.moveDir().opposite().vector().scaled(i));
-            if (!pac.canAccessTile(gameContext, behind)) {
+            if (!pac.canAccessTile(gameLevel, behind)) {
                 break;
             }
-            Iterable<Ghost> huntingGhosts = level.ghosts(GhostState.HUNTING_PAC)::iterator;
+            Iterable<Ghost> huntingGhosts = gameLevel.ghosts(GhostState.HUNTING_PAC)::iterator;
             for (Ghost ghost : huntingGhosts) {
                 if (ghost.tile().equals(behind)) {
                     return ghost;
@@ -204,8 +204,8 @@ public class RuleBasedPacSteering implements Steering {
         return null;
     }
 
-    private Direction findEscapeDirectionExcluding(GameContext gameContext, GameLevel level, Collection<Direction> forbidden) {
-        var pac = level.pac();
+    private Direction findEscapeDirectionExcluding(GameLevel gameLevel, Collection<Direction> forbidden) {
+        var pac = gameLevel.pac();
         Vector2i pacManTile = pac.tile();
         List<Direction> escapes = new ArrayList<>(4);
         for (Direction dir : Direction.shuffled()) {
@@ -213,13 +213,13 @@ public class RuleBasedPacSteering implements Steering {
                 continue;
             }
             Vector2i neighbor = pacManTile.plus(dir.vector());
-            if (pac.canAccessTile(gameContext, neighbor)) {
+            if (pac.canAccessTile(gameLevel, neighbor)) {
                 escapes.add(dir);
             }
         }
         for (Direction escape : escapes) {
             Vector2i escapeTile = pacManTile.plus(escape.vector());
-            if (level.isTunnel(escapeTile)) {
+            if (gameLevel.isTunnel(escapeTile)) {
                 return escape;
             }
         }

@@ -123,16 +123,16 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         @Override
         public void hunt(GameContext gameContext) {
             if (gameContext == null || gameContext.optGameLevel().isEmpty()) return;
-            GameLevel level = gameContext.gameLevel();
+            GameLevel gameLevel = gameContext.gameLevel();
 
-            float speed = gameContext.game().actorSpeedControl().ghostAttackSpeed(gameContext, level, this);
+            float speed = gameContext.game().actorSpeedControl().ghostAttackSpeed(gameContext, gameLevel, this);
             setSpeed(speed);
             if (gameContext.game().huntingTimer().phaseIndex() == 0) {
-                roam(gameContext);
+                roam(gameLevel);
             } else {
                 boolean chase = gameContext.game().huntingTimer().phase() == HuntingPhase.CHASING;
-                Vector2i targetTile = chase ? chasingTargetTile(gameContext) : level.ghostScatterTile(personality());
-                tryMovingTowardsTargetTile(gameContext, targetTile);
+                Vector2i targetTile = chase ? chasingTargetTile(gameContext) : gameLevel.ghostScatterTile(personality());
+                tryMovingTowardsTargetTile(gameLevel, targetTile);
             }
         }
 
@@ -158,16 +158,16 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         @Override
         public void hunt(GameContext gameContext) {
             if (gameContext == null || gameContext.optGameLevel().isEmpty()) return;
-            GameLevel level = gameContext.gameLevel();
+            GameLevel gameLevel = gameContext.gameLevel();
 
-            float speed = gameContext.game().actorSpeedControl().ghostAttackSpeed(gameContext, level, this);
+            float speed = gameContext.game().actorSpeedControl().ghostAttackSpeed(gameContext, gameLevel, this);
             setSpeed(speed);
             if (gameContext.game().huntingTimer().phaseIndex() == 0) {
-                roam(gameContext);
+                roam(gameLevel);
             } else {
                 boolean chase = gameContext.game().huntingTimer().phase() == HuntingPhase.CHASING;
-                Vector2i targetTile = chase ? chasingTargetTile(gameContext) : level.ghostScatterTile(personality());
-                tryMovingTowardsTargetTile(gameContext, targetTile);
+                Vector2i targetTile = chase ? chasingTargetTile(gameContext) : gameLevel.ghostScatterTile(personality());
+                tryMovingTowardsTargetTile(gameLevel, targetTile);
             }
         }
 
@@ -193,13 +193,13 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         @Override
         public void hunt(GameContext gameContext) {
             if (gameContext == null || gameContext.optGameLevel().isEmpty()) return;
-            GameLevel level = gameContext.gameLevel();
+            GameLevel gameLevel = gameContext.gameLevel();
 
-            float speed = gameContext.game().actorSpeedControl().ghostAttackSpeed(gameContext, level, this);
+            float speed = gameContext.game().actorSpeedControl().ghostAttackSpeed(gameContext, gameLevel, this);
             boolean chase = gameContext.game().huntingTimer().phase() == HuntingPhase.CHASING;
-            Vector2i targetTile = chase ? chasingTargetTile(gameContext) : level.ghostScatterTile(personality());
+            Vector2i targetTile = chase ? chasingTargetTile(gameContext) : gameLevel.ghostScatterTile(personality());
             setSpeed(speed);
-            tryMovingTowardsTargetTile(gameContext, targetTile);
+            tryMovingTowardsTargetTile(gameLevel, targetTile);
         }
 
         @Override
@@ -225,12 +225,12 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         @Override
         public void hunt(GameContext gameContext) {
             if (gameContext == null || gameContext.optGameLevel().isEmpty()) return;
-            GameLevel level = gameContext.gameLevel();
-            float speed = gameContext.game().actorSpeedControl().ghostAttackSpeed(gameContext, level, this);
+            GameLevel gameLevel = gameContext.gameLevel();
+            float speed = gameContext.game().actorSpeedControl().ghostAttackSpeed(gameContext, gameLevel, this);
             boolean chase = gameContext.game().huntingTimer().phase() == HuntingPhase.CHASING;
-            Vector2i targetTile = chase ? chasingTargetTile(gameContext) : level.ghostScatterTile(personality());
+            Vector2i targetTile = chase ? chasingTargetTile(gameContext) : gameLevel.ghostScatterTile(personality());
             setSpeed(speed);
-            tryMovingTowardsTargetTile(gameContext, targetTile);
+            tryMovingTowardsTargetTile(gameLevel, targetTile);
         }
 
         @Override

@@ -71,13 +71,13 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         @Override
         public void hunt(GameContext gameContext) {
             if (gameContext == null || gameContext.optGameLevel().isEmpty()) return;
-            GameLevel level = gameContext.gameLevel();
+            GameLevel gameLevel = gameContext.gameLevel();
             var arcadeGame = (Arcade_GameModel) gameContext.game();
 
             boolean chase = arcadeGame.huntingTimer().phase() == HuntingPhase.CHASING || arcadeGame.cruiseElroy() > 0;
-            Vector2i targetTile = chase ? chasingTargetTile(gameContext) : level.ghostScatterTile(personality());
-            setSpeed(gameContext.game().actorSpeedControl().ghostAttackSpeed(gameContext, level, this));
-            tryMovingTowardsTargetTile(gameContext, targetTile);
+            Vector2i targetTile = chase ? chasingTargetTile(gameContext) : gameLevel.ghostScatterTile(personality());
+            setSpeed(gameContext.game().actorSpeedControl().ghostAttackSpeed(gameContext, gameLevel, this));
+            tryMovingTowardsTargetTile(gameLevel, targetTile);
         }
 
         @Override
@@ -104,12 +104,12 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         @Override
         public void hunt(GameContext gameContext) {
             if (gameContext == null || gameContext.optGameLevel().isEmpty()) return;
-            GameLevel level = gameContext.gameLevel();
+            GameLevel gameLevel = gameContext.gameLevel();
 
             boolean chase = gameContext.game().huntingTimer().phase() == HuntingPhase.CHASING;
-            Vector2i targetTile = chase ? chasingTargetTile(gameContext) : level.ghostScatterTile(personality());
-            setSpeed(gameContext.game().actorSpeedControl().ghostAttackSpeed(gameContext, level, this));
-            tryMovingTowardsTargetTile(gameContext, targetTile);
+            Vector2i targetTile = chase ? chasingTargetTile(gameContext) : gameLevel.ghostScatterTile(personality());
+            setSpeed(gameContext.game().actorSpeedControl().ghostAttackSpeed(gameContext, gameLevel, this));
+            tryMovingTowardsTargetTile(gameLevel, targetTile);
         }
 
         @Override
@@ -135,12 +135,12 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         @Override
         public void hunt(GameContext gameContext) {
             if (gameContext == null || gameContext.optGameLevel().isEmpty()) return;
-            GameLevel level = gameContext.gameLevel();
+            GameLevel gameLevel = gameContext.gameLevel();
 
             boolean chase = gameContext.game().huntingTimer().phase() == HuntingPhase.CHASING;
-            Vector2i targetTile = chase ? chasingTargetTile(gameContext) : level.ghostScatterTile(personality());
-            setSpeed(gameContext.game().actorSpeedControl().ghostAttackSpeed(gameContext, level, this));
-            tryMovingTowardsTargetTile(gameContext, targetTile);
+            Vector2i targetTile = chase ? chasingTargetTile(gameContext) : gameLevel.ghostScatterTile(personality());
+            setSpeed(gameContext.game().actorSpeedControl().ghostAttackSpeed(gameContext, gameLevel, this));
+            tryMovingTowardsTargetTile(gameLevel, targetTile);
         }
 
         @Override
@@ -168,12 +168,12 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         @Override
         public void hunt(GameContext gameContext) {
             if (gameContext == null || gameContext.optGameLevel().isEmpty()) return;
-            GameLevel level = gameContext.gameLevel();
+            GameLevel gameLevel = gameContext.gameLevel();
 
             boolean chase = gameContext.game().huntingTimer().phase() == HuntingPhase.CHASING;
-            Vector2i targetTile = chase ? chasingTargetTile(gameContext) : level.ghostScatterTile(personality());
-            setSpeed(gameContext.game().actorSpeedControl().ghostAttackSpeed(gameContext, level, this));
-            tryMovingTowardsTargetTile(gameContext, targetTile);
+            Vector2i targetTile = chase ? chasingTargetTile(gameContext) : gameLevel.ghostScatterTile(personality());
+            setSpeed(gameContext.game().actorSpeedControl().ghostAttackSpeed(gameContext, gameLevel, this));
+            tryMovingTowardsTargetTile(gameLevel, targetTile);
         }
 
         @Override
@@ -278,7 +278,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
             }
         });
 
-        demoLevelSteering = new RouteBasedSteering(gameContext, List.of(
+        demoLevelSteering = new RouteBasedSteering(List.of(
             wp(9, 26), wp(9, 29), wp(12,29), wp(12, 32), wp(26,32),
             wp(26,29), wp(24,29), wp(24,26), wp(26,26), wp(26,23),
             wp(21,23), wp(18,23), wp(18,14), wp(9,14), wp(9,17),

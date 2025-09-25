@@ -72,20 +72,17 @@ public class Pac extends MovingActor {
     }
 
     @Override
-    public boolean canAccessTile(GameContext gameContext, Vector2i tile) {
+    public boolean canAccessTile(GameLevel gameLevel, Vector2i tile) {
+        requireNonNull(gameLevel);
         requireNonNull(tile);
-
-        if (gameContext == null || gameContext.optGameLevel().isEmpty()) return true;
-
-        GameLevel level = gameContext.gameLevel();
         // Portal tiles are the only tiles outside the world map that can be accessed
-        if (level.worldMap().outOfWorld(tile)) {
-            return level.isTileInPortalSpace(tile);
+        if (gameLevel.worldMap().outOfWorld(tile)) {
+            return gameLevel.isTileInPortalSpace(tile);
         }
-        if (level.house().isPresent() && level.house().get().isTileInHouseArea(tile)) {
+        if (gameLevel.house().isPresent() && gameLevel.house().get().isTileInHouseArea(tile)) {
             return false; // Schieb ab, Alter!
         }
-        return !level.isTileBlocked(tile);
+        return !gameLevel.isTileBlocked(tile);
     }
 
     @Override
@@ -166,7 +163,7 @@ public class Pac extends MovingActor {
         setSpeed(powerTimer.isRunning()
             ? gameContext.game().actorSpeedControl().pacPowerSpeed(gameContext, gameContext.gameLevel())
             : gameContext.game().actorSpeedControl().pacNormalSpeed(gameContext, gameContext.gameLevel()));
-        findMyWayThroughThisCruelWorld(gameContext);
+        findMyWayThroughThisCruelWorld(gameContext.gameLevel());
 
         if (moveInfo.moved) {
             animations().ifPresent(AnimationManager::play);
