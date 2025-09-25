@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.model;
 
 import de.amr.pacmanfx.Validations;
+import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -75,7 +76,14 @@ public class ArcadeHouse implements House {
 
     @Override
     public Vector2i rightDoorTile() {
-        return leftDoorTile().plus(1, 0);
+        return minTile.plus(4, 0);
+    }
+
+    /**
+     * @return position at which ghosts can enter the house, one tile above and horizontally between the two door tiles
+     */
+    public Vector2f entryPosition() {
+        return rightDoorTile().toVector2f().scaled(TS).minus(HTS, TS);
     }
 
     /**

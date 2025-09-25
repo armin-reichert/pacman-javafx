@@ -24,6 +24,11 @@ public interface House {
 
     Vector2i rightDoorTile();
 
+    /**
+     * @return position at which ghosts can enter the house, one tile above and horizontally between the two door tiles
+     */
+    Vector2f entryPosition();
+
     void setGhostRevivalTile(byte personality, Vector2i tile);
 
     Vector2i ghostRevivalTile(byte personality);
@@ -36,7 +41,6 @@ public interface House {
         requireNonNull(tile);
         return tile.equals(leftDoorTile()) || tile.equals(rightDoorTile());
     }
-
 
     /**
      * @return center position under house, used e.g. as anchor for level messages
@@ -61,15 +65,6 @@ public interface House {
      */
     default boolean isVisitedBy(Actor actor) {
         return isTileInHouseArea(requireNonNull(actor).tile());
-    }
-
-    /**
-     * @return position at which ghosts can enter the house, one tile above and horizontally between the two door tiles
-     */
-    default Vector2f entryPosition() {
-        return Vector2f.of(
-            TS * rightDoorTile().x() - HTS,
-            TS * (rightDoorTile().y() - 1));
     }
 
     default Vector2f center() {
