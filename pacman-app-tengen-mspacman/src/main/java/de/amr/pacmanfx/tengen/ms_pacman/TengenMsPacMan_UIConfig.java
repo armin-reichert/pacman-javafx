@@ -47,6 +47,8 @@ import java.util.*;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.controller.GamePlayState.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Actions.*;
@@ -312,7 +314,14 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
     @Override
     public Ghost createGhost(byte personality) {
-        Ghost ghost = TengenMsPacMan_GameModel.createGhost(personality);
+        requireValidGhostPersonality(personality);
+        Ghost ghost = switch (personality) {
+            case RED_GHOST_SHADOW   -> new TengenMsPacMan_GameModel.Blinky();
+            case PINK_GHOST_SPEEDY  -> new TengenMsPacMan_GameModel.Pinky();
+            case CYAN_GHOST_BASHFUL -> new TengenMsPacMan_GameModel.Inky();
+            case ORANGE_GHOST_POKEY -> new TengenMsPacMan_GameModel.Sue();
+            default -> throw new IllegalArgumentException("Illegal ghost personality " + personality);
+        };
         ghost.setAnimations(createGhostAnimations(personality));
         ghost.selectAnimation(ANIM_GHOST_NORMAL);
         return ghost;
