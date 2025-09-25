@@ -44,6 +44,8 @@ import java.util.OptionalInt;
 import java.util.ResourceBundle;
 import java.util.stream.Stream;
 
+import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
 import static de.amr.pacmanfx.ui.api.GameScene_Config.sceneID_CutScene;
 import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_3D_ENABLED;
@@ -195,9 +197,15 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config {
         return actorRenderer;
     }
 
-    @Override
     public Ghost createGhost(byte personality) {
-        Ghost ghost = ArcadeMsPacMan_GameModel.createGhost(personality);
+        requireValidGhostPersonality(personality);
+        Ghost ghost = switch (personality) {
+            case RED_GHOST_SHADOW -> new ArcadeMsPacMan_GameModel.Blinky();
+            case PINK_GHOST_SPEEDY -> new ArcadeMsPacMan_GameModel.Pinky();
+            case CYAN_GHOST_BASHFUL -> new ArcadeMsPacMan_GameModel.Inky();
+            case ORANGE_GHOST_POKEY -> new ArcadeMsPacMan_GameModel.Sue();
+            default -> throw new IllegalArgumentException("Illegal ghost personality " + personality);
+        };
         ghost.setAnimations(createGhostAnimations(personality));
         ghost.selectAnimation(CommonAnimationID.ANIM_GHOST_NORMAL);
         return ghost;

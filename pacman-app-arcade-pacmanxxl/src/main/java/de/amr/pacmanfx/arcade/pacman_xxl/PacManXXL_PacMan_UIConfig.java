@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.pacmanfx.GameContext;
+import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.rendering.*;
 import de.amr.pacmanfx.arcade.pacman.scenes.*;
@@ -43,6 +44,8 @@ import java.util.OptionalInt;
 import java.util.ResourceBundle;
 import java.util.stream.Stream;
 
+import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Globals.ORANGE_GHOST_POKEY;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
 import static de.amr.pacmanfx.ui.api.GameScene_Config.sceneID_CutScene;
 import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_3D_ENABLED;
@@ -193,7 +196,13 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config {
 
     @Override
     public Ghost createGhost(byte personality) {
-        Ghost ghost = PacManXXL_MsPacMan_GameModel.createGhost(personality);
+        Ghost ghost = switch (personality) {
+            case RED_GHOST_SHADOW -> new ArcadePacMan_GameModel.Blinky();
+            case PINK_GHOST_SPEEDY -> new ArcadePacMan_GameModel.Pinky();
+            case CYAN_GHOST_BASHFUL -> new ArcadePacMan_GameModel.Inky();
+            case ORANGE_GHOST_POKEY -> new ArcadePacMan_GameModel.Clyde();
+            default -> throw new IllegalArgumentException("Illegal ghost personality: " + personality);
+        };
         ghost.setAnimations(createGhostAnimations(personality));
         ghost.selectAnimation(CommonAnimationID.ANIM_GHOST_NORMAL);
         return ghost;
