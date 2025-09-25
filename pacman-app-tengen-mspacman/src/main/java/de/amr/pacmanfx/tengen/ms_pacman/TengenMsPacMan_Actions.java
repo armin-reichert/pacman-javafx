@@ -71,17 +71,19 @@ public interface TengenMsPacMan_Actions {
     AbstractGameAction ACTION_TOGGLE_PAC_BOOSTER = new AbstractGameAction("TOGGLE_PAC_BOOSTER") {
         @Override
         public void execute(GameUI ui) {
-            var gameModel = ui.gameContext().<TengenMsPacMan_GameModel>game();
-            gameModel.activatePacBooster(!gameModel.isBoosterActive());
-            if (gameModel.isBoosterActive()) {
-                ui.showFlashMessage("Booster!");
-            }
+            ui.gameContext().optGameLevel().ifPresent(gameLevel -> {
+                var game = ui.gameContext().<TengenMsPacMan_GameModel>game();
+                game.activatePacBooster(gameLevel.pac(), !game.isBoosterActive());
+                if (game.isBoosterActive()) {
+                    ui.showFlashMessage("Booster!");
+                }
+            });
         }
 
         @Override
         public boolean isEnabled(GameUI ui) {
             var gameModel = ui.gameContext().<TengenMsPacMan_GameModel>game();
-            return gameModel.pacBooster() == PacBooster.USE_A_OR_B;
+            return gameModel.pacBooster() == PacBooster.USE_A_OR_B && gameModel.optGameLevel().isPresent();
         }
     };
 }

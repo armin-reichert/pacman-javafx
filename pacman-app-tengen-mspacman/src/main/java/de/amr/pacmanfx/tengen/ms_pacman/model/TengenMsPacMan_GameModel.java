@@ -7,7 +7,6 @@ package de.amr.pacmanfx.tengen.ms_pacman.model;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.event.GameEventType;
-import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.Waypoint;
 import de.amr.pacmanfx.lib.timer.Pulse;
@@ -398,7 +397,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         gameLevel().getReadyToPlay();
         resetPacManAndGhostAnimations();
         if (pacBooster == PacBooster.ALWAYS_ON) {
-            activatePacBooster(true);
+            activatePacBooster(gameLevel().pac(), true);
         }
         if (gameLevel().isDemoLevel()) {
             showMessage(gameLevel(), MessageType.GAME_OVER);
@@ -470,9 +469,9 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         }));
     }
 
-    public void activatePacBooster(boolean state) {
-        boosterActive = state;
-        gameLevel().pac().selectAnimation(boosterActive ? ANIM_MS_PAC_MAN_BOOSTER : ANIM_PAC_MUNCHING);
+    public void activatePacBooster(Pac pac, boolean active) {
+        boosterActive = active;
+        pac.selectAnimation(boosterActive ? ANIM_MS_PAC_MAN_BOOSTER : ANIM_PAC_MUNCHING);
     }
 
     @Override
@@ -487,6 +486,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     public void createLevel(int levelNumber) {
+        setLevelCounterEnabled(levelNumber < 8);
+
         WorldMap worldMap = mapSelector.createConfiguredWorldMap(mapCategory, levelNumber);
         setGameLevel(new GameLevel(levelNumber, worldMap, createLevelData()));
         // For non-Arcade game levels, give some extra time for "game over" text animation
@@ -495,6 +496,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         Pac msPacMan = createMsPacMan();
         msPacMan.setAutopilotSteering(autopilot);
         gameLevel().setPac(msPacMan);
+        activatePacBooster(msPacMan, pacBooster == PacBooster.ALWAYS_ON);
 
         gameLevel().setGhosts(new Blinky(), new Pinky(), new Inky(), new Sue());
         gameLevel().ghosts().forEach(ghost -> {
@@ -505,18 +507,9 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             }
         });
 
-        gameLevel().setGhostStartDirection(RED_GHOST_SHADOW, Direction.LEFT);
-        gameLevel().setGhostStartDirection(PINK_GHOST_SPEEDY, Direction.DOWN);
-        gameLevel().setGhostStartDirection(CYAN_GHOST_BASHFUL, Direction.UP);
-        gameLevel().setGhostStartDirection(ORANGE_GHOST_POKEY, Direction.UP);
-
         //TODO this might not be appropriate for Tengen Ms. Pac-Man
         gameLevel().setBonusSymbol(0, computeBonusSymbol(gameLevel().number()));
         gameLevel().setBonusSymbol(1, computeBonusSymbol(gameLevel().number()));
-
-        setLevelCounterEnabled(levelNumber < 8);
-
-        activatePacBooster(pacBooster == PacBooster.ALWAYS_ON);
     }
 
     //TODO needed?
