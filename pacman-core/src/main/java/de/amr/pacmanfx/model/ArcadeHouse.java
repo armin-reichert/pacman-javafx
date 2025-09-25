@@ -6,7 +6,6 @@ package de.amr.pacmanfx.model;
 
 import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.model.actors.GhostID;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -46,7 +45,8 @@ public class ArcadeHouse implements House {
     public static final Vector2i SIZE_IN_TILES = Vector2i.of(8, 5);
 
     private final Vector2i minTile;
-    private final Map<GhostID, Vector2i> ghostRevivalTileMap = new HashMap<>(4);
+
+    private final Map<Byte, Vector2i> ghostRevivalTileMap = new HashMap<>(4);
 
     public ArcadeHouse() {
         this(ORIGINAL_MIN_TILE);
@@ -84,17 +84,15 @@ public class ArcadeHouse implements House {
     }
 
     @Override
-    public void setGhostRevivalTile(GhostID ghostID, Vector2i tile) {
-        requireNonNull(ghostID);
-        Validations.requireValidGhostPersonality(ghostID.personality());
+    public void setGhostRevivalTile(byte personality, Vector2i tile) {
+        Validations.requireValidGhostPersonality(personality);
         requireNonNull(tile);
-        ghostRevivalTileMap.put(ghostID, tile);
+        ghostRevivalTileMap.put(personality, tile);
     }
 
     @Override
-    public Vector2i ghostRevivalTile(GhostID ghostID) {
-        requireNonNull(ghostID);
-        Validations.requireValidGhostPersonality(ghostID.personality());
-        return ghostRevivalTileMap.get(ghostID);
+    public Vector2i ghostRevivalTile(byte personality) {
+        Validations.requireValidGhostPersonality(personality);
+        return ghostRevivalTileMap.get(personality);
     }
 }

@@ -77,7 +77,7 @@ public class GameLevel {
         blinking = new Pulse(10, Pulse.OFF);
         portals = findPortals(worldMap);
 
-        findHouse();
+        addGhostHouse();
 
         currentBonusIndex = -1;
         energizerTiles = worldMap.foodLayer().tilesContaining(ENERGIZER.$).collect(Collectors.toSet());
@@ -87,11 +87,6 @@ public class GameLevel {
             throw new IllegalArgumentException("No Pac position stored in map");
         }
         pacStartPosition = halfTileRightOf(pacTile);
-
-        setGhostStartDirection(RED_GHOST_SHADOW, Direction.LEFT);
-        setGhostStartDirection(PINK_GHOST_SPEEDY, Direction.DOWN);
-        setGhostStartDirection(CYAN_GHOST_BASHFUL, Direction.UP);
-        setGhostStartDirection(ORANGE_GHOST_POKEY, Direction.UP);
 
         // Scatter tiles
 
@@ -108,21 +103,6 @@ public class GameLevel {
             Vector2i.of(worldMap.numRows() - EMPTY_ROWS_BELOW_MAZE, 0));
 
         foodStore = new FoodStore(worldMap, energizerTiles);
-    }
-
-    private Vector2f findGhostStartPosition(byte ghostPersonality) {
-        String propertyName = switch (ghostPersonality) {
-            case RED_GHOST_SHADOW ->  POS_GHOST_1_RED;
-            case PINK_GHOST_SPEEDY -> POS_GHOST_2_PINK;
-            case CYAN_GHOST_BASHFUL -> POS_GHOST_3_CYAN;
-            case ORANGE_GHOST_POKEY -> POS_GHOST_4_ORANGE;
-            default -> throw new IllegalArgumentException("Illegal ghost personality: %d".formatted(ghostPersonality));
-        };
-        Vector2i tile = worldMap.getTerrainTileProperty(propertyName);
-        if (tile == null) {
-            throw new IllegalArgumentException("Terrain property with name '%s' not found!".formatted(propertyName));
-        }
-        return halfTileRightOf(tile);
     }
 
     private Portal[] findPortals(WorldMap worldMap) {
@@ -144,7 +124,7 @@ public class GameLevel {
      * and doors is working. The obstacle detection algorithm will then also detect the house and create a
      * closed obstacle representing the house boundary.
      */
-    private void findHouse() {
+    private void addGhostHouse() {
         Vector2i minTile = worldMap.getTerrainTileProperty(POS_HOUSE_MIN_TILE);
         if (minTile == null) {
             minTile = ArcadeHouse.ORIGINAL_MIN_TILE;
@@ -153,6 +133,18 @@ public class GameLevel {
         }
         house = new ArcadeHouse(minTile);
         worldMap.setContent(LayerID.TERRAIN, minTile, house.content());
+
+        // these directions would in general depend on the house type, here they are fixed:
+        setGhostStartDirection(RED_GHOST_SHADOW, Direction.LEFT);
+        setGhostStartDirection(PINK_GHOST_SPEEDY, Direction.DOWN);
+        setGhostStartDirection(CYAN_GHOST_BASHFUL, Direction.UP);
+        setGhostStartDirection(ORANGE_GHOST_POKEY, Direction.UP);
+
+        house.setGhostRevivalTile(RED_GHOST_SHADOW,    worldMap.getTerrainTileProperty(POS_GHOST_2_PINK)); // Note!
+        house.setGhostRevivalTile(PINK_GHOST_SPEEDY,   worldMap.getTerrainTileProperty(POS_GHOST_2_PINK));
+        house.setGhostRevivalTile(CYAN_GHOST_BASHFUL,   worldMap.getTerrainTileProperty(POS_GHOST_3_CYAN));
+        house.setGhostRevivalTile(ORANGE_GHOST_POKEY, worldMap.getTerrainTileProperty(POS_GHOST_4_ORANGE));
+
     }
 
     public void getReadyToPlay() {
@@ -226,21 +218,21 @@ public class GameLevel {
     }
 
     public void setPac(Pac pac) { this.pac = pac; }
+
     public Pac pac() { return pac; }
 
-    public void setGhosts(Ghost... ghosts) {
-        this.ghosts = requireNonNull(ghosts);
-        for (Ghost ghost : ghosts) {
-            byte personality = ghost.id().personality();
-            ghost.setStartPosition(findGhostStartPosition(personality));
-            Vector2i tile = switch (personality) {
-                case RED_GHOST_SHADOW, PINK_GHOST_SPEEDY -> worldMap.getTerrainTileProperty(POS_GHOST_2_PINK);
-                case CYAN_GHOST_BASHFUL -> worldMap.getTerrainTileProperty(POS_GHOST_3_CYAN);
-                case ORANGE_GHOST_POKEY -> worldMap.getTerrainTileProperty(POS_GHOST_4_ORANGE);
-                default -> throw new IllegalArgumentException("Illegal ghost personality: %d".formatted(personality));
-            };
-            house.setGhostRevivalTile(ghost.id(), tile);
-        }
+    public void setGhosts(Ghost redGhost, Ghost pinkGhost, Ghost cyanGhost, Ghost orangeGhost) {
+        requireNonNull(redGhost);
+        requireNonNull(pinkGhost);
+        requireNonNull(cyanGhost);
+        requireNonNull(orangeGhost);
+
+        ghosts = new Ghost[] {redGhost, pinkGhost, cyanGhost, orangeGhost};
+
+        redGhost   .setStartPosition(halfTileRightOf(worldMap.getTerrainTileProperty(POS_GHOST_1_RED)));
+        pinkGhost  .setStartPosition(halfTileRightOf(worldMap.getTerrainTileProperty(POS_GHOST_2_PINK)));
+        cyanGhost  .setStartPosition(halfTileRightOf(worldMap.getTerrainTileProperty(POS_GHOST_3_CYAN)));
+        orangeGhost.setStartPosition(halfTileRightOf(worldMap.getTerrainTileProperty(POS_GHOST_4_ORANGE)));
     }
 
     public Ghost ghost(byte id) { return ghosts != null ? ghosts[requireValidGhostPersonality(id)] : null; }

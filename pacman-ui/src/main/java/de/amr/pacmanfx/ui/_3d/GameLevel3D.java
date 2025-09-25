@@ -522,9 +522,9 @@ public class GameLevel3D extends Group implements Disposable {
 
         gameLevel.house().ifPresent(house -> {
             Vector2i[] ghostRevivalTiles = {
-                house.ghostRevivalTile(gameLevel.ghost(CYAN_GHOST_BASHFUL).id()),
-                house.ghostRevivalTile(gameLevel.ghost(PINK_GHOST_SPEEDY).id()),
-                house.ghostRevivalTile(gameLevel.ghost(ORANGE_GHOST_POKEY).id()),
+                house.ghostRevivalTile(CYAN_GHOST_BASHFUL),
+                house.ghostRevivalTile(PINK_GHOST_SPEEDY),
+                house.ghostRevivalTile(ORANGE_GHOST_POKEY)
             };
             // Note: revival tile is the left of the pair of tiles in the house where the ghost is placed. The center
             //       of the 3D shape is one tile to the right and a half tile to the bottom from the tile origin.
@@ -624,10 +624,10 @@ public class GameLevel3D extends Group implements Disposable {
         };
         House house = gameLevel.house().orElseThrow();
         Vector2i[] ghostRevivalTiles = {
-            house.ghostRevivalTile(gameLevel.ghost(RED_GHOST_SHADOW).id()),
-            house.ghostRevivalTile(gameLevel.ghost(PINK_GHOST_SPEEDY).id()),
-            house.ghostRevivalTile(gameLevel.ghost(CYAN_GHOST_BASHFUL).id()),
-            house.ghostRevivalTile(gameLevel.ghost(ORANGE_GHOST_POKEY).id()),
+            house.ghostRevivalTile(RED_GHOST_SHADOW),
+            house.ghostRevivalTile(PINK_GHOST_SPEEDY),
+            house.ghostRevivalTile(CYAN_GHOST_BASHFUL),
+            house.ghostRevivalTile(ORANGE_GHOST_POKEY),
         };
 
         Vector2f[] ghostRevivalCenters = {

@@ -7,7 +7,6 @@ package de.amr.pacmanfx.model;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.model.actors.GhostID;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
@@ -25,9 +24,9 @@ public interface House {
 
     Vector2i rightDoorTile();
 
-    void setGhostRevivalTile(GhostID ghostID, Vector2i tile);
+    void setGhostRevivalTile(byte personality, Vector2i tile);
 
-    Vector2i ghostRevivalTile(GhostID ghostID);
+    Vector2i ghostRevivalTile(byte personality);
 
     default Vector2i sizeInTiles() {
         return maxTile().minus(minTile()).plus(1, 1);
