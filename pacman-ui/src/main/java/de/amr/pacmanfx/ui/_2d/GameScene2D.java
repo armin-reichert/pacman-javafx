@@ -24,6 +24,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.Canvas;
+import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,6 +68,7 @@ public abstract class GameScene2D implements GameScene {
     public final void end() {
         doEnd();
         ui.soundManager().stopAll();
+        Logger.info("{} ends", getClass().getSimpleName());
     }
 
     @Override

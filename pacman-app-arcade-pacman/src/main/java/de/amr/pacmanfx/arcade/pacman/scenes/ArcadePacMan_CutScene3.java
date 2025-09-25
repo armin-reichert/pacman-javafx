@@ -14,7 +14,6 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import javafx.scene.canvas.Canvas;
-import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
 import static de.amr.pacmanfx.Globals.TS;
@@ -86,8 +85,6 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
 
     @Override
     protected void doEnd() {
-        ui.soundManager().stop(MUSIC_ID);
-        Logger.info("{} ends", getClass().getSimpleName());
     }
 
     @Override

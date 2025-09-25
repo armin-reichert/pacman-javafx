@@ -105,7 +105,6 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
 
     @Override
     protected void doEnd() {
-        ui.soundManager().stop(MUSIC_ID);
     }
 
     @Override
