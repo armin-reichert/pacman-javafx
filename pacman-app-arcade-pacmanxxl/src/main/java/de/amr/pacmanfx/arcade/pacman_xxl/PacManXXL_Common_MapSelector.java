@@ -90,21 +90,23 @@ public class PacManXXL_Common_MapSelector implements MapSelector {
     public WorldMap getWorldMap(int levelNumber) {
         WorldMap map = switch (selectionMode) {
             case NO_CUSTOM_MAPS -> {
+                // first pick built-in maps in order, then randomly
                 int index = levelNumber <= builtinMaps.size() ? levelNumber - 1: randomInt(0, builtinMaps.size());
                 yield builtinMaps.get(index);
             }
             case CUSTOM_MAPS_FIRST -> {
-                List<WorldMap> maps = new ArrayList<>();
-                maps.addAll(customMaps);
-                maps.addAll(builtinMaps);
-                int index = levelNumber <= maps.size() ? levelNumber - 1 : randomInt(0, maps.size());
-                yield maps.get(index);
+                if (levelNumber <= customMaps.size()) {
+                    // pick custom maps in order
+                    yield customMaps.get(levelNumber - 1);
+                }
+                else {
+                    // pick random built-in map
+                    yield builtinMaps.get(randomInt(0, builtinMaps().size()));
+                }
             }
             case ALL_RANDOM -> {
-                List<WorldMap> maps = new ArrayList<>();
-                maps.addAll(customMaps);
-                maps.addAll(builtinMaps);
-                yield maps.get(randomInt(0, maps.size()));
+                int index = randomInt(0, customMaps().size() + builtinMaps().size());
+                yield index < customMaps().size() ? customMaps.get(index) : builtinMaps.get(index - customMaps().size());
             }
         };
         WorldMap worldMap = WorldMap.copyOfMap(map);
