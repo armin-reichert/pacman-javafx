@@ -57,8 +57,8 @@ public class TengenActorSpeedControl implements ActorSpeedControl {
      * <p>
      * By the way, there's an additional quirk regarding ghosts' speed.
      * On normal difficulty ONLY and in levels 5 and above, the ghosts become slightly faster if there are few dots remain.
-     * if there are 31 or less dots, the speed is increased. the base increase value is 2, which is further increased by 1 for every 8 dots eaten.
-     * (I should note it's in subunits. it if was times 2, that would've been crazy)
+     * if there are 31 or fewer dots, the speed is increased. the base increase value is 2, which is further increased
+     * by 1 for every 8 dots eaten. (I should note it's in subunits. it if was times 2, that would've been crazy)
      * </p>
      */
     public float ghostSpeedIncreaseByFoodRemaining(GameContext gameContext, GameLevel level) {
@@ -143,7 +143,7 @@ public class TengenActorSpeedControl implements ActorSpeedControl {
         TengenMsPacMan_GameModel game = gameContext.game();
         float speed = ghostBaseSpeedInLevel(level.number());
         speed += ghostDifficultySpeedDelta(game.difficulty());
-        speed += ghostSpeedDelta(ghost.id().personality());
+        speed += ghostSpeedDelta(ghost.personality());
         float foodDelta = ghostSpeedIncreaseByFoodRemaining(gameContext, level);
         if (foodDelta > 0) {
             speed += foodDelta;

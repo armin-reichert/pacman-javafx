@@ -423,9 +423,9 @@ public class GameLevel3D extends Group implements Disposable {
     private void createGhosts3D(GameContext gameContext) {
         ghosts3D = gameLevel.ghosts().map(ghost -> {
             var ghostColoring = new GhostColoring(
-                ui.currentConfig().assets().color("ghost.%d.color.normal.dress".formatted(ghost.id().personality())),
-                ui.currentConfig().assets().color("ghost.%d.color.normal.pupils".formatted(ghost.id().personality())),
-                ui.currentConfig().assets().color("ghost.%d.color.normal.eyeballs".formatted(ghost.id().personality())),
+                ui.currentConfig().assets().color("ghost.%d.color.normal.dress".formatted(ghost.personality())),
+                ui.currentConfig().assets().color("ghost.%d.color.normal.pupils".formatted(ghost.personality())),
+                ui.currentConfig().assets().color("ghost.%d.color.normal.eyeballs".formatted(ghost.personality())),
                 ui.currentConfig().assets().color("ghost.color.frightened.dress"),
                 ui.currentConfig().assets().color("ghost.color.frightened.pupils"),
                 ui.currentConfig().assets().color("ghost.color.frightened.eyeballs"),
@@ -437,9 +437,9 @@ public class GameLevel3D extends Group implements Disposable {
                 gameLevel,
                 ghost,
                 ghostColoring,
-                ghostDressMeshViews[ghost.id().personality()],
-                ghostPupilsMeshViews[ghost.id().personality()],
-                ghostEyesMeshViews[ghost.id().personality()],
+                ghostDressMeshViews[ghost.personality()],
+                ghostPupilsMeshViews[ghost.personality()],
+                ghostEyesMeshViews[ghost.personality()],
                 ui.preferences().getFloat("3d.ghost.size"),
                 gameLevel.data().numFlashes()
             );
@@ -757,7 +757,7 @@ public class GameLevel3D extends Group implements Disposable {
 
     public void onGhostDying() {
         ui.gameContext().game().simulationStep().killedGhosts.forEach(killedGhost -> {
-            byte personality = killedGhost.id().personality();
+            byte personality = killedGhost.personality();
             int killedIndex = gameLevel.victims().indexOf(killedGhost);
             Image pointsImage = ui.currentConfig().killedGhostPointsImage(killedGhost, killedIndex);
             ghosts3D.get(personality).setNumberImage(pointsImage);

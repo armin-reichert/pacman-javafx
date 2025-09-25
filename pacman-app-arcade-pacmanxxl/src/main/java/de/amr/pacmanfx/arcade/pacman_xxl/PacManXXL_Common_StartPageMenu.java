@@ -93,7 +93,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
             }
             if (ghosts != null) {
                 for (Ghost ghost : ghosts) {
-                    ghost.setX(46 * TS + ghost.id().personality() * 18);
+                    ghost.setX(46 * TS + ghost.personality() * 18);
                     ghost.setMoveDir(Direction.LEFT);
                     ghost.setWishDir(Direction.LEFT);
                     ghost.setSpeed(1.05f);
@@ -112,7 +112,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
                 pac.setX(-36 * TS);
                 for (Ghost ghost : ghosts) {
                     ghost.setVisible(true);
-                    ghost.setX(pac.x() + 22 * TS + ghost.id().personality() * 18);
+                    ghost.setX(pac.x() + 22 * TS + ghost.personality() * 18);
                     ghost.setMoveDir(ghost.moveDir().opposite());
                     ghost.setWishDir(ghost.moveDir().opposite());
                     ghost.setSpeed(0.58f);
@@ -128,7 +128,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
                     ghost.setVisible(true);
                     ghost.setMoveDir(Direction.LEFT);
                     ghost.setWishDir(Direction.LEFT);
-                    ghost.setX(46 * TS + ghost.id().personality() * 2 * TS);
+                    ghost.setX(46 * TS + ghost.personality() * 2 * TS);
                     ghost.setSpeed(1.05f);
                     ghost.playAnimation(ANIM_GHOST_NORMAL);
                 }

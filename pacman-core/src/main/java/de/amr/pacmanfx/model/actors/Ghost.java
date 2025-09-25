@@ -36,61 +36,28 @@ public abstract class Ghost extends MovingActor {
 
     public static final GhostState DEFAULT_STATE = GhostState.LOCKED;
 
-    private final GhostID id;
     private ObjectProperty<GhostState> state;
     private AnimationManager animations;
     private List<Vector2i> specialTerrainTiles = List.of();
-
     private Vector2f startPosition;
 
-    /**
-     * @param personality
-     *        ghost personality, allowed values:<br>
-     *           {@link de.amr.pacmanfx.Globals#RED_GHOST_SHADOW},<br>
-     *           {@link de.amr.pacmanfx.Globals#PINK_GHOST_SPEEDY},<br>
-     *           {@link de.amr.pacmanfx.Globals#CYAN_GHOST_BASHFUL},<br>
-     *           {@link de.amr.pacmanfx.Globals#ORANGE_GHOST_POKEY}.
-     * @param name readable name, used for logging and debugging
-     */
-    protected Ghost(byte personality, String name) {
-        id = new GhostID(personality, name);
+    protected Ghost() {
         corneringSpeedUp = -1.25f;
     }
 
-    public GhostID id() {
-        return id;
-    }
+    /**
+     * @return this ghost's personality, see {@link de.amr.pacmanfx.Globals#RED_GHOST_SHADOW},
+     * {@link de.amr.pacmanfx.Globals#PINK_GHOST_SPEEDY}, {@link de.amr.pacmanfx.Globals#CYAN_GHOST_BASHFUL} and
+     * {@link de.amr.pacmanfx.Globals#ORANGE_GHOST_POKEY}.
+     */
+    public abstract byte personality();
 
     public void setAnimations(AnimationManager animations) {
         this.animations = requireNonNull(animations);
     }
 
-    @Override
-    public String name() {
-        return id.name();
-    }
-
     public Optional<AnimationManager> animations() {
         return Optional.ofNullable(animations);
-    }
-
-    @Override
-    public String toString() {
-        return "Ghost{" +
-                "id=" + id +
-                ", state=" + (state != null ? state() : DEFAULT_STATE) +
-                ", visible=" + isVisible() +
-                ", position=" + position() +
-                ", velocity=" + velocity() +
-                ", acceleration=" + acceleration() +
-                ", moveDir=" + moveDir() +
-                ", wishDir=" + wishDir() +
-                ", targetTile=" + targetTile() +
-                ", newTileEntered=" + newTileEntered +
-                ", gotReverseCommand=" + gotReverseCommand +
-                ", canTeleport=" + canTeleport +
-                ", corneringSpeedUp" + corneringSpeedUp +
-            '}';
     }
 
     public void setSpecialTerrainTiles(List<Vector2i> tiles) {
@@ -107,6 +74,25 @@ public abstract class Ghost extends MovingActor {
 
     public Vector2f startPosition() {
         return startPosition;
+    }
+
+    @Override
+    public String toString() {
+        return "Ghost{" +
+                "name=" + name() +
+                ", state=" + (state != null ? state() : DEFAULT_STATE) +
+                ", visible=" + isVisible() +
+                ", position=" + position() +
+                ", velocity=" + velocity() +
+                ", acceleration=" + acceleration() +
+                ", moveDir=" + moveDir() +
+                ", wishDir=" + wishDir() +
+                ", targetTile=" + targetTile() +
+                ", newTileEntered=" + newTileEntered +
+                ", gotReverseCommand=" + gotReverseCommand +
+                ", canTeleport=" + canTeleport +
+                ", corneringSpeedUp" + corneringSpeedUp +
+                '}';
     }
 
     /**
@@ -182,7 +168,7 @@ public abstract class Ghost extends MovingActor {
                 && level.worldMap().content(LayerID.TERRAIN, tile) == TerrainTile.ONE_WAY_DOWN.$
                 && tile.equals(tile().plus(UP.vector()))
         ) {
-            Logger.debug("Hunting {} cannot move up to special tile {}", id.name(), tile);
+            Logger.debug("Hunting {} cannot move up to special tile {}", name(), tile);
             return false;
         }
         if (level.house().isPresent() && level.house().get().isDoorAt(tile)) {
@@ -230,7 +216,7 @@ public abstract class Ghost extends MovingActor {
     public void setState(GhostState newState) {
         requireNonNull(newState);
         if (state() == newState) {
-            Logger.debug("{} is already in state {}", id.name(), newState);
+            Logger.debug("{} is already in state {}", name(), newState);
         }
         stateProperty().set(newState);
 
@@ -437,14 +423,13 @@ public abstract class Ghost extends MovingActor {
      * to the ghost house to be revived. Hallelujah!
      */
     private void updateStateReturningToHouse(GameContext gameContext) {
-        if (gameContext.optGameLevel().isPresent()) {
-            GameLevel level = gameContext.gameLevel();
-            House house = level.house().orElse(null);
+        gameContext.optGameLevel().ifPresent(gameLevel -> {
+            House house = gameLevel.house().orElse(null);
             if (house == null) {
                 Logger.error("No ghost house in level? WTF!");
                 return;
             }
-            float speed = gameContext.game().actorSpeedControl().ghostSpeedReturningToHouse(gameContext, level, this);
+            float speed = gameContext.game().actorSpeedControl().ghostSpeedReturningToHouse(gameContext, gameLevel, this);
             Vector2f houseEntry = house.entryPosition();
             if (position().roughlyEquals(houseEntry, speed, 0)) {
                 setPosition(houseEntry);
@@ -457,7 +442,7 @@ public abstract class Ghost extends MovingActor {
                 navigateTowardsTarget(gameContext);
                 findMyWayThroughThisCruelWorld(gameContext);
             }
-        }
+        });
     }
 
     // --- ENTERING_HOUSE ---
@@ -467,16 +452,17 @@ public abstract class Ghost extends MovingActor {
      * then moves up again (if the house center is his revival position), or moves sidewards towards his revival position.
      */
     private void updateStateEnteringHouse(GameContext gameContext) {
-        if (gameContext.optGameLevel().isPresent()) {
-            GameLevel level = gameContext.gameLevel();
-            House house = level.house().orElse(null);
+        gameContext.optGameLevel().ifPresent(gameLevel -> {
+            House house = gameLevel.house().orElse(null);
             if (house == null) {
                 Logger.error("No ghost house in level? WTF!");
                 return;
             }
-            float speed = gameContext.game().actorSpeedControl().ghostSpeedReturningToHouse(gameContext, level, this);
+            float speed = gameContext.game().actorSpeedControl().ghostSpeedReturningToHouse(gameContext, gameLevel, this);
             Vector2f position = position();
-            Vector2f revivalPosition = house.ghostRevivalTile(id.personality()).scaled((float)TS).plus(HTS, 0);
+
+            //TODO get rid of personality() call
+            Vector2f revivalPosition = house.ghostRevivalTile(personality()).scaled(TS).plus(HTS, 0).toVector2f();
             if (position.roughlyEquals(revivalPosition, 0.5f * speed, 0.5f * speed)) {
                 setPosition(revivalPosition);
                 setMoveDir(UP);
@@ -496,6 +482,6 @@ public abstract class Ghost extends MovingActor {
             }
             setSpeed(speed);
             move();
-        }
+        });
     }
 }

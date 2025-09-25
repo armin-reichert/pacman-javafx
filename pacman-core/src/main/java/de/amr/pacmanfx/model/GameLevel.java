@@ -140,9 +140,9 @@ public class GameLevel {
         setGhostStartDirection(CYAN_GHOST_BASHFUL, Direction.UP);
         setGhostStartDirection(ORANGE_GHOST_POKEY, Direction.UP);
 
-        house.setGhostRevivalTile(RED_GHOST_SHADOW,    worldMap.getTerrainTileProperty(POS_GHOST_2_PINK)); // Note!
-        house.setGhostRevivalTile(PINK_GHOST_SPEEDY,   worldMap.getTerrainTileProperty(POS_GHOST_2_PINK));
-        house.setGhostRevivalTile(CYAN_GHOST_BASHFUL,   worldMap.getTerrainTileProperty(POS_GHOST_3_CYAN));
+        house.setGhostRevivalTile(RED_GHOST_SHADOW,   worldMap.getTerrainTileProperty(POS_GHOST_2_PINK)); // !
+        house.setGhostRevivalTile(PINK_GHOST_SPEEDY,  worldMap.getTerrainTileProperty(POS_GHOST_2_PINK));
+        house.setGhostRevivalTile(CYAN_GHOST_BASHFUL, worldMap.getTerrainTileProperty(POS_GHOST_3_CYAN));
         house.setGhostRevivalTile(ORANGE_GHOST_POKEY, worldMap.getTerrainTileProperty(POS_GHOST_4_ORANGE));
 
     }
@@ -156,8 +156,8 @@ public class GameLevel {
         ghosts().forEach(ghost -> {
             ghost.reset(); // initially invisible!
             ghost.setPosition(ghost.startPosition());
-            ghost.setMoveDir(ghostStartDirection(ghost.id().personality()));
-            ghost.setWishDir(ghostStartDirection(ghost.id().personality()));
+            ghost.setMoveDir(ghostStartDirection(ghost.personality()));
+            ghost.setWishDir(ghostStartDirection(ghost.personality()));
             ghost.setState(GhostState.LOCKED);
         });
         blinking.setStartPhase(Pulse.ON); // Energizers are visible when ON
