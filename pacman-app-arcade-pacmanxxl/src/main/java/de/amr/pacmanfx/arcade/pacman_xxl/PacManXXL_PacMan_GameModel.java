@@ -40,7 +40,7 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
         int randomIndex = randomInt(0, DEMO_LEVEL_NUMBERS.length);
         int levelNumber = DEMO_LEVEL_NUMBERS[randomIndex];
         scoreManager().setGameLevelNumber(levelNumber);
-        mapSelector().setMapSelectionMode(MapSelectionMode.NO_CUSTOM_MAPS);
+        mapSelector().setSelectionMode(MapSelectionMode.NO_CUSTOM_MAPS);
         createLevel(levelNumber);
         gameLevel().setData(createLevelData(1)); // always run with settings (speed etc.) of first level
         gameLevel().setDemoLevel(true);

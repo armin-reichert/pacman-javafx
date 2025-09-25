@@ -302,7 +302,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
 
         state.play3D = PROPERTY_3D_ENABLED.get();
         state.cutScenesEnabled = game.cutScenesEnabled();
-        state.mapOrder = mapSelector.mapSelectionMode();
+        state.mapOrder = mapSelector.selectionMode();
         logState();
 
         entryGameVariant.selectValue(state.gameVariant);
@@ -348,7 +348,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         Game game = gameContext.gameController().game(state.gameVariant);
         game.setCutScenesEnabled(state.cutScenesEnabled);
         var mapSelector = (PacManXXL_Common_MapSelector) game.mapSelector();
-        mapSelector.setMapSelectionMode(state.mapOrder);
+        mapSelector.setSelectionMode(state.mapOrder);
         mapSelector.loadAllMaps();
         ui.selectGameVariant(state.gameVariant);
     }
