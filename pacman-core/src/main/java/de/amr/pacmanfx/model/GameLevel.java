@@ -127,7 +127,7 @@ public class GameLevel {
     private void addGhostHouse() {
         Vector2i minTile = worldMap.getTerrainTileProperty(POS_HOUSE_MIN_TILE);
         if (minTile == null) {
-            minTile = ArcadeHouse.ORIGINAL_MIN_TILE;
+            minTile = ArcadeHouse.ARCADE_MAP_HOUSE_MIN_TILE;
             Logger.warn("No house min tile found in map, using {}", minTile);
             worldMap.terrainLayer().propertyMap().put(POS_HOUSE_MIN_TILE, String.valueOf(minTile));
         }
