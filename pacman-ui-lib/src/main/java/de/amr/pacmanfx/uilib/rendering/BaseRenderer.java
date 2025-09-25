@@ -44,7 +44,7 @@ public class BaseRenderer implements Renderer {
 
     public BaseRenderer(Canvas canvas) {
         ctx = requireNonNull(canvas).getGraphicsContext2D();
-        ctx.setImageSmoothing(false);
+        ctx.setImageSmoothing(imageSmoothing);
         arcadeFontTS.bind(scaling.map(s -> Font.font(ARCADE_FONT_TS.getFamily(), scaled(TS))));
         arcadeFont6.bind(scaling.map(s -> Font.font(ARCADE_FONT_TS.getFamily(), scaled(6))));
     }
@@ -191,8 +191,8 @@ public class BaseRenderer implements Renderer {
     public void drawSprite(RectShort sprite, double x, double y, boolean scaled) {
         requireNonNull(sprite);
         double s = scaled ? scaling() : 1;
-        ctx().setImageSmoothing(imageSmoothing());
-        ctx().drawImage(spriteSheet().sourceImage(),
+        ctx.setImageSmoothing(imageSmoothing);
+        ctx.drawImage(spriteSheet().sourceImage(),
             sprite.x(), sprite.y(), sprite.width(), sprite.height(),
             s * x, s * y, s * sprite.width(), s * sprite.height());
     }

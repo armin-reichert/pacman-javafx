@@ -35,7 +35,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Ga
     public TengenMsPacMan_GameLevelRenderer(Canvas canvas, TengenMsPacMan_UIConfig uiConfig) {
         super(canvas);
         this.uiConfig = requireNonNull(uiConfig);
-        ctx().setImageSmoothing(false);
+        ctx.setImageSmoothing(false);
     }
 
     @Override
@@ -68,9 +68,9 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Ga
         }
         Image mazeImage = info.get(CommonRenderInfoKey.MAZE_IMAGE, Image.class);
         RectShort mazeSprite = info.get(CommonRenderInfoKey.MAZE_SPRITE, RectShort.class);
-        ctx().setImageSmoothing(imageSmoothing());
+        ctx.setImageSmoothing(imageSmoothing());
         int x = 0, y = GameLevel.EMPTY_ROWS_OVER_MAZE * TS;
-        ctx().drawImage(mazeImage,
+        ctx.drawImage(mazeImage,
             mazeSprite.x(), mazeSprite.y(), mazeSprite.width(), mazeSprite.height(),
             scaled(x), scaled(y), scaled(mazeSprite.width()), scaled(mazeSprite.height())
         );
@@ -82,22 +82,22 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Ga
 
     private void drawFood(GameLevel gameLevel) {
         requireNonNull(gameLevel);
-        ctx().save();
-        ctx().scale(scaling(), scaling());
+        ctx.save();
+        ctx.scale(scaling(), scaling());
         MazeSpriteSet recoloredMaze =  gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.PROPERTY_MAZE_SPRITE_SET);
         Color pelletColor = Color.web(recoloredMaze.mazeImage().colorScheme().pelletColorRGB());
         drawPellets(gameLevel, pelletColor);
         drawEnergizers(gameLevel, pelletColor);
-        ctx().restore();
+        ctx.restore();
     }
 
     private void drawPellets(GameLevel gameLevel, Color pelletColor) {
         gameLevel.tiles().filter(gameLevel.foodStore()::isFoodPosition).filter(not(gameLevel::isEnergizerPosition)).forEach(tile -> {
-            ctx().setFill(backgroundColor());
+            ctx.setFill(backgroundColor());
             fillSquareAtTileCenter(tile, 4);
             if (!gameLevel.foodStore().tileContainsEatenFood(tile)) {
                 // draw pellet using the right color
-                ctx().setFill(pelletColor);
+                ctx.setFill(pelletColor);
                 fillSquareAtTileCenter(tile, 2);
             }
         });
@@ -107,15 +107,15 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Ga
         double size = TS;
         double offset = 0.5 * HTS;
         gameLevel.tiles().filter(gameLevel::isEnergizerPosition).forEach(tile -> {
-            ctx().setFill(backgroundColor());
+            ctx.setFill(backgroundColor());
             fillSquareAtTileCenter(tile, TS + 2);
             if (!gameLevel.foodStore().tileContainsEatenFood(tile) && gameLevel.blinking().isOn()) {
-                ctx().setFill(pelletColor);
+                ctx.setFill(pelletColor);
                 // draw pixelated "circle"
                 double cx = tile.x() * TS, cy = tile.y() * TS;
-                ctx().fillRect(cx + offset, cy, HTS, size);
-                ctx().fillRect(cx, cy + offset, size, HTS);
-                ctx().fillRect(cx + 1, cy + 1, size - 2, size - 2);
+                ctx.fillRect(cx + offset, cy, HTS, size);
+                ctx.fillRect(cx, cy + offset, size, HTS);
+                ctx.fillRect(cx + 1, cy + 1, size - 2, size - 2);
             }
         });
     }
@@ -172,8 +172,8 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Ga
             s * 2 - margin
         );
 
-        ctx().setFill(backgroundColor());
-        ctx().fillRect(inHouseArea.getMinX(), inHouseArea.getMinY(), inHouseArea.getWidth(), inHouseArea.getHeight());
+        ctx.setFill(backgroundColor());
+        ctx.fillRect(inHouseArea.getMinX(), inHouseArea.getMinY(), inHouseArea.getWidth(), inHouseArea.getHeight());
 
         // Now the actor sprites outside the house. Be careful not to over-paint nearby obstacle edges!
         Vector2i pacTile = level.worldMap().getTerrainTileProperty("pos_pac", Vector2i.of(14, 26));
@@ -186,7 +186,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Ga
     private void overPaintActorSprite(Vector2i tile, double margin) {
         double halfMargin = 0.5f * margin;
         double overPaintSize = scaled(2 * TS) - margin;
-        ctx().fillRect(
+        ctx.fillRect(
             halfMargin + scaled(tile.x() * TS),
             halfMargin + scaled(tile.y() * TS - HTS),
             overPaintSize, overPaintSize);

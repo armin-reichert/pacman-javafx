@@ -48,7 +48,6 @@ public class TengenMsPacMan_HUDRenderer extends BaseRenderer implements HUDRende
         requireNonNull(sceneSize);
 
         GameLevel gameLevel = game.optGameLevel().orElse(null);
-
         if (gameLevel == null) {
             return; // should never happen
         }
