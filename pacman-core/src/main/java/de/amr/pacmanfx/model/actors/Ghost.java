@@ -98,16 +98,19 @@ public abstract class Ghost extends MovingActor {
     /**
      * Subclasses implement this method to define the behavior of the ghost when hunting Pac-Man through
      * the current game level.
+     *
+     * @param gameLevel the game level this ghost lives in
      */
-    public abstract void hunt(GameContext gameContext);
+    public abstract void hunt(GameLevel gameLevel);
 
     /**
      * Subclasses implement this method to define the target tile of the ghost when hunting Pac-Man through
      * the current game level.
      *
+     * @param gameLevel the game level this ghost lives in
      * @return the current target tile when chasing Pac-Man
      */
-    public abstract Vector2i chasingTargetTile(GameContext gameContext);
+    public abstract Vector2i chasingTargetTile(GameLevel gameLevel);
 
     /**
      * Lets the ghost roam through the current level's world.
@@ -232,7 +235,7 @@ public abstract class Ghost extends MovingActor {
         switch (state()) {
             case LOCKED         -> updateStateLocked(gameContext);
             case LEAVING_HOUSE  -> updateStateLeavingHouse(gameContext);
-            case HUNTING_PAC    -> updateStateHuntingPac(gameContext);
+            case HUNTING_PAC    -> updateStateHuntingPac(gameContext.gameLevel());
             case FRIGHTENED     -> updateStateFrightened(gameContext.gameLevel());
             case EATEN          -> updateStateEaten();
             case RETURNING_HOME -> updateStateReturningToHouse(gameContext);
@@ -355,13 +358,12 @@ public abstract class Ghost extends MovingActor {
      * start chasing Pac-Man according to their character ("Shadow", "Speedy", "Bashful", "Pokey"). The last hunting phase
      * is an "infinite" chasing phase.
      * <p>
+     * @param gameLevel the game level this ghost lives in
      */
-    private void updateStateHuntingPac(GameContext gameContext) {
-        if (gameContext.optGameLevel().isPresent()) {
-            // The specific hunting behaviour is defined by the game variant. For example, in Ms. Pac-Man,
-            // the red and pink ghosts are not chasing Pac-Man during the first scatter phase, but roam the maze randomly.
-            hunt(gameContext);
-        }
+    private void updateStateHuntingPac(GameLevel gameLevel) {
+        // The specific hunting behaviour is defined by the game variant. For example, in Ms. Pac-Man,
+        // the red and pink ghosts are not chasing Pac-Man during the first scatter phase, but roam the maze randomly.
+        hunt(gameLevel);
     }
 
     // --- FRIGHTENED ---
