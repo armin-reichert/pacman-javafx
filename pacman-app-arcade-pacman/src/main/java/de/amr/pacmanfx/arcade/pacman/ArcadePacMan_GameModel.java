@@ -50,13 +50,19 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     public static final WorldMapColorScheme MAP_COLOR_SCHEME = new WorldMapColorScheme(
         "#000000", "#2121ff", "#ffb7ff", "#febdb4");
 
-    public static Pac createPac() {
-        var pac = new Pac("Pac-Man");
-        pac.reset();
-        return pac;
+    public static class PacMan extends Pac {
+
+        public PacMan() {
+            super("Pac-Man");
+            reset();
+        }
     }
 
     public static class Blinky extends Ghost {
+
+        public Blinky() {
+            reset();
+        }
 
         @Override
         public String name() {
@@ -91,6 +97,10 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
 
     public static class Pinky extends Ghost {
 
+        public Pinky() {
+            reset();
+        }
+
         @Override
         public String name() {
             return "Pinky";
@@ -121,6 +131,10 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     }
 
     public static class Inky extends Ghost {
+
+        public Inky() {
+            reset();
+        }
 
         @Override
         public String name() {
@@ -154,6 +168,10 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     }
 
     public static class Clyde extends Ghost {
+
+        public Clyde() {
+            reset();
+        }
 
         @Override
         public String name() {
@@ -304,6 +322,11 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     }
 
     @Override
+    public GameEventManager eventManager() {
+        return gameContext.eventManager();
+    }
+
+    @Override
     public ScoreManager scoreManager() {
         return scoreManager;
     }
@@ -335,29 +358,29 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
 
     @Override
     public void createLevel(int levelNumber) {
-        WorldMap worldMap = mapSelector.getWorldMap(levelNumber);
-        setGameLevel(new GameLevel(this, levelNumber, worldMap, createLevelData(levelNumber)));
-        gameLevel().setGameOverStateTicks(90);
+        final WorldMap worldMap = mapSelector.getWorldMap(levelNumber);
 
-        Pac pacMan = createPac();
+        final GameLevel newGameLevel = new GameLevel(this, levelNumber, worldMap, createLevelData(levelNumber));
+        newGameLevel.setGameOverStateTicks(90);
+
+        Pac pacMan = new PacMan();
         pacMan.setAutopilotSteering(autopilot);
-        gameLevel().setPac(pacMan);
+        newGameLevel.setPac(pacMan);
 
+        newGameLevel.setGhosts(new Blinky(), new Pinky(), new Inky(), new Clyde());
         // Special tiles where attacking ghosts cannot move up
         List<Vector2i> oneWayDownTiles = worldMap.tiles()
             .filter(tile -> worldMap.content(LayerID.TERRAIN, tile) == TerrainTile.ONE_WAY_DOWN.$)
             .toList();
-        gameLevel().setGhosts(new Blinky(), new Pinky(), new Inky(), new Clyde());
-        gameLevel().ghosts().forEach(ghost -> {
-            ghost.reset();
-            ghost.setSpecialTerrainTiles(oneWayDownTiles);
-        });
+        newGameLevel.ghosts().forEach(ghost -> ghost.setSpecialTerrainTiles(oneWayDownTiles));
 
-        // Each level has a single bonus symbol appearing twice during the level. From level 13 on, the same symbol
-        // (7 = "key") appears.
+        // Each level has a single bonus symbol appearing twice during the level.
+        // From level 13 on, the same symbol (7, "key") appears.
         byte symbol = BONUS_SYMBOLS_BY_LEVEL_NUMBER[Math.min(levelNumber, 13)];
-        gameLevel().setBonusSymbol(0, symbol);
-        gameLevel().setBonusSymbol(1, symbol);
+        newGameLevel.setBonusSymbol(0, symbol);
+        newGameLevel.setBonusSymbol(1, symbol);
+
+        setGameLevel(newGameLevel);
         setLevelCounterEnabled(true);
     }
 
@@ -381,10 +404,5 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         bonus.setEdible(randomInt(9 * NUM_TICKS_PER_SEC, 10 * NUM_TICKS_PER_SEC));
         gameLevel().setBonus(bonus);
         eventManager().publishEvent(GameEventType.BONUS_ACTIVATED, bonus.tile());
-    }
-
-    @Override
-    public GameEventManager eventManager() {
-        return gameContext.eventManager();
     }
 }
