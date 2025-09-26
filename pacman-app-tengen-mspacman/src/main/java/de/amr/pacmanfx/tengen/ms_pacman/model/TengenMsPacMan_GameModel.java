@@ -513,7 +513,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         setLevelCounterEnabled(levelNumber < 8);
 
         WorldMap worldMap = mapSelector.createConfiguredWorldMap(mapCategory, levelNumber);
-        setGameLevel(new GameLevel(levelNumber, worldMap, createLevelData()));
+        setGameLevel(new GameLevel(this, levelNumber, worldMap, createLevelData()));
         // For non-Arcade game levels, give some extra time for "game over" text animation
         gameLevel().setGameOverStateTicks(mapCategory == MapCategory.ARCADE ? 420 : 600);
 

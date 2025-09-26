@@ -38,8 +38,8 @@ public class GameLevel {
 
     private static Vector2f halfTileRightOf(Vector2i tile) { return Vector2f.of(tile.x() * TS + HTS, tile.y() * TS); }
 
+    private final Game game;
     private final int number; // 1=first level
-    private LevelData data;
 
     private final WorldMap worldMap;
     private final Vector2f pacStartPosition;
@@ -48,10 +48,10 @@ public class GameLevel {
     private final Set<Vector2i> energizerTiles;
     private final Portal[] portals;
 
-    private House house;
-
+    private LevelData data;
     private boolean demoLevel;
 
+    private House house;
     private Pac pac;
     private Ghost[] ghosts;
     private final List<Ghost> victims = new ArrayList<>();
@@ -69,7 +69,8 @@ public class GameLevel {
 
     private final FoodStore foodStore;
 
-    public GameLevel(int number, WorldMap worldMap, LevelData data) {
+    public GameLevel(Game game, int number, WorldMap worldMap, LevelData data) {
+        this.game = requireNonNull(game);
         this.number = requireValidLevelNumber(number);
         this.worldMap = requireNonNull(worldMap);
         this.data = requireNonNull(data);
@@ -176,6 +177,10 @@ public class GameLevel {
 
     public void setData(LevelData data) { this.data = data; }
     public LevelData data() { return data; }
+
+    public Game game() {
+        return game;
+    }
 
     public FoodStore foodStore() {
         return foodStore;

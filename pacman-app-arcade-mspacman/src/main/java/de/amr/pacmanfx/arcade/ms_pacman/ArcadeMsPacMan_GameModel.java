@@ -341,7 +341,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     @Override
     public void createLevel(int levelNumber) {
         WorldMap worldMap = mapSelector.getWorldMap(levelNumber);
-        setGameLevel(new GameLevel(levelNumber, worldMap, createLevelData(levelNumber)));
+        setGameLevel(new GameLevel(this, levelNumber, worldMap, createLevelData(levelNumber)));
         gameLevel().setGameOverStateTicks(150);
 
         gameLevel().setPac(createMsPacMan());
