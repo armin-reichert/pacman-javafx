@@ -204,7 +204,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         huntingTimer().reset();
         scoreManager().setGameLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
-        gameLevel().house().ifPresent(house -> gateKeeper.setHouse(house)); //TODO what if no house exists?
+        gameLevel().optHouse().ifPresent(house -> gateKeeper.setHouse(house)); //TODO what if no house exists?
         eventManager().publishEvent(GameEventType.LEVEL_CREATED);
     }
 
@@ -221,7 +221,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         huntingTimer().reset();
         scoreManager().setGameLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
-        gameLevel().house().ifPresent(house -> gateKeeper.setHouse(house)); //TODO what if no house exists?
+        gameLevel().optHouse().ifPresent(house -> gateKeeper.setHouse(house)); //TODO what if no house exists?
         eventManager().publishEvent(GameEventType.LEVEL_CREATED);
     }
 

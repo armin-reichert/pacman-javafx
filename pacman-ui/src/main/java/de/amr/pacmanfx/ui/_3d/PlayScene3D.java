@@ -393,10 +393,10 @@ public class PlayScene3D implements GameScene {
             switch (state) {
                 case STARTING_GAME_OR_LEVEL, LEVEL_TRANSITION -> {
                     if (!gameLevel.isDemoLevel()) {
-                        if (gameLevel.house().isEmpty()) {
+                        if (gameLevel.optHouse().isEmpty()) {
                             Logger.error("No house found in this game level! WTF?");
                         } else {
-                            Vector2f messageCenter = gameLevel.house().get().centerPositionUnderHouse();
+                            Vector2f messageCenter = gameLevel.optHouse().get().centerPositionUnderHouse();
                             gameLevel3D.showAnimatedMessage("READY!", 2.5f, messageCenter.x(), messageCenter.y());
                         }
                         setPlayerSteeringActionBindings();
@@ -479,10 +479,10 @@ public class PlayScene3D implements GameScene {
     @Override
     public void onGameContinued(GameEvent e) {
         if (gameLevel3D != null) {
-            if (context().gameLevel().house().isEmpty()) {
+            if (context().gameLevel().optHouse().isEmpty()) {
                 Logger.error("No house found in this game level! WTF?");
             } else {
-                Vector2f messageCenter = context().gameLevel().house().get().centerPositionUnderHouse();
+                Vector2f messageCenter = context().gameLevel().optHouse().get().centerPositionUnderHouse();
                 gameLevel3D.showAnimatedMessage("READY!", 2.5f, messageCenter.x(), messageCenter.y());
             }
         }

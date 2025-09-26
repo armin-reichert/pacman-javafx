@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.model;
 
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.lib.RandomNumberSupport;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.timer.Pulse;
@@ -340,7 +339,7 @@ public class GameLevel {
         return inaccessible <= 1;
     }
 
-    public Optional<House> house() {
+    public Optional<House> optHouse() {
         return Optional.ofNullable(house);
     }
 

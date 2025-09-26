@@ -452,7 +452,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
             return;
         }
 
-        final House house = gameLevel().house().orElse(null);
+        final House house = gameLevel().optHouse().orElse(null);
         if (house == null) {
             Logger.error("Moving bonus cannot be activated, no house exists in this level!");
             return;

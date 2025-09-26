@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._3d;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.Disposable;
@@ -513,14 +512,14 @@ public class GameLevel3D extends Group implements Disposable {
         for (Obstacle obstacle : gameLevel.worldMap().obstacles()) {
             // exclude house placeholder
             Vector2i startTile = tileAt(obstacle.startPoint().toVector2f());
-            if (gameLevel.house().isPresent() && !gameLevel.house().get().isTileInHouseArea(startTile)) {
+            if (gameLevel.optHouse().isPresent() && !gameLevel.optHouse().get().isTileInHouseArea(startTile)) {
                 r3D.renderObstacle3D(obstacle, isWorldBorder(gameLevel.worldMap(), obstacle), wallThickness, cornerRadius);
             }
         }
         var passedTimeMillis = stopWatch.passedTime().toMillis();
         Logger.info("Built 3D maze with {} composite walls in {} milliseconds", wall3DCount, passedTimeMillis);
 
-        gameLevel.house().ifPresent(house -> {
+        gameLevel.optHouse().ifPresent(house -> {
             Vector2i[] ghostRevivalTiles = {
                 house.ghostRevivalTile(CYAN_GHOST_BASHFUL),
                 house.ghostRevivalTile(PINK_GHOST_SPEEDY),
@@ -622,7 +621,7 @@ public class GameLevel3D extends Group implements Disposable {
             ghosts3D.get(CYAN_GHOST_BASHFUL).ghost3D().dressMaterialNormal(),
             ghosts3D.get(ORANGE_GHOST_POKEY).ghost3D().dressMaterialNormal(),
         };
-        House house = gameLevel.house().orElseThrow();
+        House house = gameLevel.optHouse().orElseThrow();
         Vector2i[] ghostRevivalTiles = {
             house.ghostRevivalTile(RED_GHOST_SHADOW),
             house.ghostRevivalTile(PINK_GHOST_SPEEDY),

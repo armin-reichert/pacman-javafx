@@ -79,7 +79,7 @@ public class Pac extends MovingActor {
         if (gameLevel.worldMap().outOfWorld(tile)) {
             return gameLevel.isTileInPortalSpace(tile);
         }
-        if (gameLevel.house().isPresent() && gameLevel.house().get().isTileInHouseArea(tile)) {
+        if (gameLevel.optHouse().isPresent() && gameLevel.optHouse().get().isTileInHouseArea(tile)) {
             return false; // Schieb ab, Alter!
         }
         return !gameLevel.isTileBlocked(tile);

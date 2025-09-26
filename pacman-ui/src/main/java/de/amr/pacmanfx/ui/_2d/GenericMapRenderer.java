@@ -66,7 +66,7 @@ public class GenericMapRenderer extends BaseRenderer {
             terrainRenderer.setColorScheme(colorScheme);
             terrainRenderer.draw(worldMap);
 
-            gameLevel.house().ifPresent(house -> {
+            gameLevel.optHouse().ifPresent(house -> {
                 houseRenderer.setColorScheme(colorScheme);
                 houseRenderer.drawHouse(house.minTile(), house.sizeInTiles(),
                     terrainRenderer.borderWallFullWidth(),terrainRenderer.borderWallInnerWidth());

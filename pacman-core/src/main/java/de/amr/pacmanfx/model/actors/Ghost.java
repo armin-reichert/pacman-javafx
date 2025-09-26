@@ -169,7 +169,7 @@ public abstract class Ghost extends MovingActor {
             Logger.debug("Hunting {} cannot move up to special tile {}", name(), tile);
             return false;
         }
-        if (gameLevel.house().isPresent() && gameLevel.house().get().isDoorAt(tile)) {
+        if (gameLevel.optHouse().isPresent() && gameLevel.optHouse().get().isDoorAt(tile)) {
             return inAnyOfStates(GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE);
         }
         return !gameLevel.isTileBlocked(tile);
@@ -232,15 +232,17 @@ public abstract class Ghost extends MovingActor {
      */
     @Override
     public void tick(GameContext gameContext) {
-        switch (state()) {
-            case LOCKED         -> updateStateLocked(gameContext.gameLevel());
-            case LEAVING_HOUSE  -> updateStateLeavingHouse(gameContext.gameLevel());
-            case HUNTING_PAC    -> updateStateHuntingPac(gameContext.gameLevel());
-            case FRIGHTENED     -> updateStateFrightened(gameContext.gameLevel());
-            case EATEN          -> updateStateEaten();
-            case RETURNING_HOME -> updateStateReturningToHouse(gameContext.gameLevel());
-            case ENTERING_HOUSE -> updateStateEnteringHouse(gameContext.gameLevel());
-        }
+        gameContext.optGameLevel().ifPresent(gameLevel -> gameLevel.optHouse().ifPresent(house -> {
+            switch (state()) {
+                case LOCKED         -> updateStateLocked(gameLevel, house);
+                case LEAVING_HOUSE  -> updateStateLeavingHouse(gameLevel, house);
+                case HUNTING_PAC    -> updateStateHuntingPac(gameLevel);
+                case FRIGHTENED     -> updateStateFrightened(gameLevel);
+                case EATEN          -> updateStateEaten();
+                case RETURNING_HOME -> updateStateReturningToHouse(gameLevel);
+                case ENTERING_HOUSE -> updateStateEnteringHouse(gameLevel, house);
+            }
+        }));
     }
 
     // --- LOCKED ---
@@ -249,13 +251,7 @@ public abstract class Ghost extends MovingActor {
      * In locked state, ghosts inside the house are bouncing up and down. They become blue when Pac-Man gets power
      * and start blinking when Pac-Man's power starts fading. After that, they return to their normal color.
      */
-    private void updateStateLocked(GameLevel gameLevel) {
-        Optional<House> optHouse = gameLevel.house();
-        if (optHouse.isEmpty()) {
-            Logger.error("No house? WTF!");
-            return;
-        }
-        House house = optHouse.get();
+    private void updateStateLocked(GameLevel gameLevel, House house) {
         if (house.isVisitedBy(this)) {
             float minY = (house.minTile().y() + 1) * TS + HTS;
             float maxY = (house.maxTile().y() - 1) * TS - HTS;
@@ -291,14 +287,7 @@ public abstract class Ghost extends MovingActor {
      * <p>
      * The ghost speed is slower than outside, but I do not know the exact value.
      */
-    private void updateStateLeavingHouse(GameLevel gameLevel) {
-        Optional<House> optHouse = gameLevel.house();
-        if (optHouse.isEmpty()) {
-            Logger.error("No house? WTF!");
-            return;
-        }
-        House house = optHouse.get();
-
+    private void updateStateLeavingHouse(GameLevel gameLevel, House house) {
         Vector2f position = position();
         Vector2f houseEntryPosition = house.entryPosition();
         if (position.y() <= houseEntryPosition.y()) {
@@ -402,7 +391,7 @@ public abstract class Ghost extends MovingActor {
      * to the ghost house to be revived. Hallelujah!
      */
     private void updateStateReturningToHouse(GameLevel gameLevel) {
-        House house = gameLevel.house().orElse(null);
+        House house = gameLevel.optHouse().orElse(null);
         if (house == null) {
             Logger.error("No ghost house in level? WTF!");
             return;
@@ -428,12 +417,7 @@ public abstract class Ghost extends MovingActor {
      * When an eaten ghost has arrived at the ghost house door, he falls down to the center of the house,
      * then moves up again (if the house center is his revival position), or moves sidewards towards his revival position.
      */
-    private void updateStateEnteringHouse(GameLevel gameLevel) {
-        House house = gameLevel.house().orElse(null);
-        if (house == null) {
-            Logger.error("No ghost house in level? WTF!");
-            return;
-        }
+    private void updateStateEnteringHouse(GameLevel gameLevel, House house) {
         float speed = gameLevel.game().actorSpeedControl().ghostSpeedReturningToHouse(gameLevel, this);
         Vector2f position = position();
 

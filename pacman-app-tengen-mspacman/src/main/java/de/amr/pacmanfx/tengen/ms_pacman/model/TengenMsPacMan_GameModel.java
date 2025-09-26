@@ -548,7 +548,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         scoreManager.setGameLevelNumber(levelNumber);
         optGateKeeper().ifPresent(gateKeeper -> {
             gateKeeper.setLevelNumber(levelNumber);
-            gameLevel().house().ifPresent(gateKeeper::setHouse); //TODO what if no house exists?
+            gameLevel().optHouse().ifPresent(gateKeeper::setHouse); //TODO what if no house exists?
         });
         eventManager().publishEvent(GameEventType.LEVEL_CREATED);
     }
@@ -566,7 +566,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         scoreManager.setGameLevelNumber(1);
         optGateKeeper().ifPresent(gateKeeper -> {
             gateKeeper.setLevelNumber(1);
-            gameLevel().house().ifPresent(gateKeeper::setHouse); //TODO what if no house exists?
+            gameLevel().optHouse().ifPresent(gateKeeper::setHouse); //TODO what if no house exists?
         });
         eventManager().publishEvent(GameEventType.LEVEL_CREATED);
     }
@@ -611,7 +611,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             Logger.error("No portal found in current maze");
             return; // TODO: can this happen?
         }
-        House house = gameLevel().house().orElse(null);
+        House house = gameLevel().optHouse().orElse(null);
         if (house == null) {
             Logger.error("No house exists in game level!");
             return;
