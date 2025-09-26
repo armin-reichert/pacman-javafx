@@ -13,8 +13,6 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.MessageType;
 import de.amr.pacmanfx.model.actors.*;
 
-import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;
-
 /**
  * States of the Pac-Man game play state machine. Game controller FSM also contains some additional test states.
  */
@@ -289,7 +287,7 @@ public enum GamePlayState implements GameState {
                 context.gameLevel().ghosts().forEach(Ghost::hide);
                 //TODO this does not belong here
                 context.gameLevel().pac().animationManager().ifPresent(am -> {
-                    am.select(ANIM_PAC_DYING);
+                    am.select(Actor.ANIM_PAC_DYING);
                     am.reset();
                 });
             }

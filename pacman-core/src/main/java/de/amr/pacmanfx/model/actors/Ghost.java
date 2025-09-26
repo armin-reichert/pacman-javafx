@@ -26,7 +26,6 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.Validations.differsAtMost;
 import static de.amr.pacmanfx.Validations.isOneOf;
 import static de.amr.pacmanfx.lib.Direction.*;
-import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 import static java.util.Objects.requireNonNull;
 
 /**

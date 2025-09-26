@@ -28,8 +28,8 @@ import javafx.scene.paint.Color;
 import java.util.List;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
-import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
+import static de.amr.pacmanfx.model.actors.Actor.ANIM_GHOST_NORMAL;
+import static de.amr.pacmanfx.model.actors.Actor.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.ui.CommonGameActions.*;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
 

@@ -20,7 +20,7 @@ import org.tinylog.Logger;
 
 import java.util.Optional;
 
-import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NUMBER;
+import static de.amr.pacmanfx.model.actors.Actor.ANIM_GHOST_NUMBER;
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
 import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
 import static java.util.Objects.requireNonNull;

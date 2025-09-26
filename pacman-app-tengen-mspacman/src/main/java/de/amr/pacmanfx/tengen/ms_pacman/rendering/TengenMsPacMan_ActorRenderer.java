@@ -22,7 +22,7 @@ import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.scene.canvas.Canvas;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;
+import static de.amr.pacmanfx.model.actors.Actor.ANIM_PAC_DYING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesColor;
 import static java.util.Objects.requireNonNull;
 

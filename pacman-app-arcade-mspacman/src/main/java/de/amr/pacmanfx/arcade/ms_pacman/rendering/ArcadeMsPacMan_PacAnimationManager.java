@@ -11,8 +11,8 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 
-import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;
-import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
+import static de.amr.pacmanfx.model.actors.Actor.ANIM_PAC_DYING;
+import static de.amr.pacmanfx.model.actors.Actor.ANIM_PAC_MUNCHING;
 
 public class ArcadeMsPacMan_PacAnimationManager extends SpriteAnimationManager<SpriteID> {
 

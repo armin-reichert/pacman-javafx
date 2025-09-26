@@ -17,8 +17,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
-import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
+import static de.amr.pacmanfx.model.actors.Actor.ANIM_GHOST_NORMAL;
+import static de.amr.pacmanfx.model.actors.Actor.ANIM_PAC_MUNCHING;
 import static java.util.Objects.requireNonNull;
 
 /**

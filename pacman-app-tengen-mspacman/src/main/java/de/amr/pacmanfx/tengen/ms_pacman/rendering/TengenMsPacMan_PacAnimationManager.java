@@ -12,8 +12,8 @@ import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 
 import java.util.Arrays;
 
-import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;
-import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
+import static de.amr.pacmanfx.model.actors.Actor.ANIM_PAC_DYING;
+import static de.amr.pacmanfx.model.actors.Actor.ANIM_PAC_MUNCHING;
 
 public class TengenMsPacMan_PacAnimationManager extends SpriteAnimationManager<SpriteID> {
 

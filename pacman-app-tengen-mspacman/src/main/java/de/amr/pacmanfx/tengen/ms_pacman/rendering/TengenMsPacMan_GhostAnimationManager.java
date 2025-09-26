@@ -13,7 +13,7 @@ import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
-import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
+import static de.amr.pacmanfx.model.actors.Actor.*;
 
 public class TengenMsPacMan_GhostAnimationManager extends SpriteAnimationManager<SpriteID> {
 

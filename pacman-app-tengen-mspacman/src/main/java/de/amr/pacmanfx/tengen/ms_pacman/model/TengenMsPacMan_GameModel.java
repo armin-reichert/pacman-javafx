@@ -26,7 +26,7 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.RandomNumberSupport.randomByte;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
 import static de.amr.pacmanfx.lib.timer.TickTimer.secToTicks;
-import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
+import static de.amr.pacmanfx.model.actors.Actor.*;
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
 import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
 import static de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_PacAnimationManager.ANIM_MS_PAC_MAN_BOOSTER;

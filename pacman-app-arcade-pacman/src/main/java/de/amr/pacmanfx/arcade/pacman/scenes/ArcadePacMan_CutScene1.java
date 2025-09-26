@@ -19,7 +19,7 @@ import javafx.scene.canvas.Canvas;
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ANIM_BIG_PAC_MAN;
-import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
+import static de.amr.pacmanfx.model.actors.Actor.*;
 
 /**
  * First cut scene in Arcade Pac-Man game:<br>
