@@ -54,7 +54,7 @@ public abstract class AbstractGameModel implements Game {
     }
 
     protected GameLevel gameLevel() {
-        return optGameLevel().orElse(null);
+        return gameLevel.get();
     }
 
     public BooleanProperty levelCounterEnabledProperty() {

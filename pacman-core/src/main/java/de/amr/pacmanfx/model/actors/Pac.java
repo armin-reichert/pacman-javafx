@@ -205,11 +205,13 @@ public class Pac extends MovingActor {
     }
 
     /**
-     *  @return number of ticks passed since pellet or energizer was eaten.
+     *  @return number of ticks passed since a pellet or an energizer has been eaten.
      */
     public long starvingTicks() { return starvingTicks; }
-    public void starvingIsOver() { starvingTicks = 0; }
-    public void starve() { ++starvingTicks; }
+
+    public void setStarvingTicks(long starvingTicks) {
+        this.starvingTicks = starvingTicks;
+    }
 
     /**
      * @return {@code true} if Pac-Man has run against a wall and could not move, its speed is zero

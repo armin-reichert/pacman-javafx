@@ -14,6 +14,7 @@ import de.amr.pacmanfx.model.GateKeeper;
 import de.amr.pacmanfx.model.MessageType;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
+import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.steering.Steering;
 import org.tinylog.Logger;
 
@@ -29,7 +30,6 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class Arcade_GameModel extends AbstractGameModel {
 
-    public static final byte LEVEL_COUNTER_MAX_SIZE = 7;
     public static final byte PELLET_VALUE = 10;
     public static final byte ENERGIZER_VALUE = 50;
     public static final int ALL_GHOSTS_IN_LEVEL_KILLED_BONUS_POINTS = 12_000;
@@ -171,24 +171,27 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     @Override
     protected void checkIfPacManFindsFood() {
-        Vector2i tile = gameLevel().pac().tile();
-        if (gameLevel().foodStore().tileContainsFood(tile)) {
-            gameLevel().pac().starvingIsOver();
-            gameLevel().foodStore().registerFoodEatenAt(tile);
-            if (gameLevel().isEnergizerPosition(tile)) {
-                onEnergizerEaten(tile);
+        optGameLevel().ifPresent(gameLevel -> {
+            final Pac pac = gameLevel.pac();
+            final Vector2i tile = pac.tile();
+            if (gameLevel.foodStore().tileContainsFood(tile)) {
+                pac.setStarvingTicks(0);
+                gameLevel.foodStore().registerFoodEatenAt(tile);
+                if (gameLevel.isEnergizerPosition(tile)) {
+                    onEnergizerEaten(tile);
+                } else {
+                    onPelletEaten();
+                }
+                gateKeeper.registerFoodEaten(gameLevel);
+                if (isBonusReached()) {
+                    activateNextBonus();
+                    simulationStep.bonusIndex = gameLevel.currentBonusIndex();
+                }
+                eventManager().publishEvent(GameEventType.PAC_FOUND_FOOD, tile);
             } else {
-                onPelletEaten();
+                pac.setStarvingTicks(pac.starvingTicks() + 1);
             }
-            gateKeeper.registerFoodEaten(gameLevel());
-            if (isBonusReached()) {
-                activateNextBonus();
-                simulationStep.bonusIndex = gameLevel().currentBonusIndex();
-            }
-            eventManager().publishEvent(GameEventType.PAC_FOUND_FOOD, tile);
-        } else {
-            gameLevel().pac().starve();
-        }
+        });
     }
 
     @Override

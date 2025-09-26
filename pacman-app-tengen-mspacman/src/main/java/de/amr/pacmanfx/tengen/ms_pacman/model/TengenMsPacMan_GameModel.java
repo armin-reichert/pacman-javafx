@@ -660,25 +660,28 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     protected void checkIfPacManFindsFood() {
-        Vector2i tile = gameLevel().pac().tile();
-        if (gameLevel().foodStore().tileContainsFood(tile)) {
-            gameLevel().pac().starvingIsOver();
-            gameLevel().foodStore().registerFoodEatenAt(tile);
-            optGateKeeper().ifPresent(gateKeeper -> gateKeeper.registerFoodEaten(gameLevel()));
-            if (gameLevel().isEnergizerPosition(tile)) {
-                simulationStep.foundEnergizerAtTile = tile;
-                onEnergizerEaten();
+        optGameLevel().ifPresent(gameLevel -> {
+            final Pac pac = gameLevel.pac();
+            final Vector2i tile = pac.tile();
+            if (gameLevel.foodStore().tileContainsFood(tile)) {
+                pac.setStarvingTicks(0);
+                gameLevel.foodStore().registerFoodEatenAt(tile);
+                optGateKeeper().ifPresent(gateKeeper -> gateKeeper.registerFoodEaten(gameLevel));
+                if (gameLevel.isEnergizerPosition(tile)) {
+                    simulationStep.foundEnergizerAtTile = tile;
+                    onEnergizerEaten();
+                } else {
+                    scoreManager.scorePoints(PELLET_VALUE);
+                }
+                if (isBonusReached()) {
+                    activateNextBonus();
+                    simulationStep.bonusIndex = gameLevel.currentBonusIndex();
+                }
+                eventManager().publishEvent(GameEventType.PAC_FOUND_FOOD, tile);
             } else {
-                scoreManager.scorePoints(PELLET_VALUE);
+                pac.setStarvingTicks(pac.starvingTicks() + 1);
             }
-            if (isBonusReached()) {
-                activateNextBonus();
-                simulationStep.bonusIndex = gameLevel().currentBonusIndex();
-            }
-            eventManager().publishEvent(GameEventType.PAC_FOUND_FOOD, tile);
-        } else {
-            gameLevel().pac().starve();
-        }
+        });
     }
 
     @Override
