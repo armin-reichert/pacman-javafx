@@ -60,11 +60,11 @@ public class TengenActorSpeedControl implements ActorSpeedControl {
      * by 1 for every 8 dots eaten. (I should note it's in subunits. it if was times 2, that would've been crazy)
      * </p>
      */
-    public float ghostSpeedIncreaseByFoodRemaining(GameLevel level) {
+    public float ghostSpeedIncreaseByFoodRemaining(GameLevel gameLevel) {
         byte units = 0;
-        TengenMsPacMan_GameModel game = (TengenMsPacMan_GameModel) level.game();
-        if (game.difficulty() == Difficulty.NORMAL && level.number() >= 5) {
-            int dotsLeft = level.foodStore().uneatenFoodCount();
+        TengenMsPacMan_GameModel game = (TengenMsPacMan_GameModel) gameLevel.game();
+        if (game.difficulty() == Difficulty.NORMAL && gameLevel.number() >= 5) {
+            int dotsLeft = gameLevel.foodStore().uneatenFoodCount();
             if (dotsLeft <= 7) {
                 units = 5;
             } else if (dotsLeft <= 15) {
@@ -114,12 +114,12 @@ public class TengenActorSpeedControl implements ActorSpeedControl {
     }
 
     @Override
-    public float pacNormalSpeed(GameLevel level) {
-        if (level == null) {
+    public float pacNormalSpeed(GameLevel gameLevel) {
+        if (gameLevel == null) {
             return 0;
         }
-        TengenMsPacMan_GameModel game = (TengenMsPacMan_GameModel) level.game();
-        float speed = pacBaseSpeedInLevel(level.number());
+        TengenMsPacMan_GameModel game = (TengenMsPacMan_GameModel) gameLevel.game();
+        float speed = pacBaseSpeedInLevel(gameLevel.number());
         speed += pacDifficultySpeedDelta(game.difficulty());
         if (game.pacBooster() == PacBooster.ALWAYS_ON
             || game.pacBooster() == PacBooster.USE_A_OR_B && game.isBoosterActive()) {
@@ -129,21 +129,21 @@ public class TengenActorSpeedControl implements ActorSpeedControl {
     }
 
     @Override
-    public float pacPowerSpeed(GameLevel level) {
+    public float pacPowerSpeed(GameLevel gameLevel) {
         //TODO is this correct?
-        return level.pac() != null ? 1.1f * pacNormalSpeed(level) : 0;
+        return gameLevel.pac() != null ? 1.1f * pacNormalSpeed(gameLevel) : 0;
     }
 
     @Override
-    public float ghostAttackSpeed(GameLevel level, Ghost ghost) {
-        if (level.isTunnel(ghost.tile())) {
-            return ghostTunnelSpeed(level, ghost);
+    public float ghostAttackSpeed(GameLevel gameLevel, Ghost ghost) {
+        if (gameLevel.isTunnel(ghost.tile())) {
+            return ghostTunnelSpeed(gameLevel, ghost);
         }
-        TengenMsPacMan_GameModel game = (TengenMsPacMan_GameModel) level.game();
-        float speed = ghostBaseSpeedInLevel(level.number());
+        TengenMsPacMan_GameModel game = (TengenMsPacMan_GameModel) gameLevel.game();
+        float speed = ghostBaseSpeedInLevel(gameLevel.number());
         speed += ghostDifficultySpeedDelta(game.difficulty());
         speed += ghostSpeedDelta(ghost.personality());
-        float foodDelta = ghostSpeedIncreaseByFoodRemaining(level);
+        float foodDelta = ghostSpeedIncreaseByFoodRemaining(gameLevel);
         if (foodDelta > 0) {
             speed += foodDelta;
             Logger.debug("Ghost speed increased by {} units to {0.00} px/tick for {}", foodDelta, speed, ghost.name());
@@ -152,23 +152,23 @@ public class TengenActorSpeedControl implements ActorSpeedControl {
     }
 
     @Override
-    public float ghostSpeedInsideHouse(GameLevel level, Ghost ghost) {
+    public float ghostSpeedInsideHouse(GameLevel gameLevel, Ghost ghost) {
         return 0.5f;
     }
 
     @Override
-    public float ghostSpeedReturningToHouse(GameLevel level, Ghost ghost) {
+    public float ghostSpeedReturningToHouse(GameLevel gameLevel, Ghost ghost) {
         return 2;
     }
 
     @Override
-    public float ghostFrightenedSpeed(GameLevel level, Ghost ghost) {
+    public float ghostFrightenedSpeed(GameLevel gameLevel, Ghost ghost) {
         //TODO is this correct?
-        return 0.5f * ghostAttackSpeed(level, ghost);
+        return 0.5f * ghostAttackSpeed(gameLevel, ghost);
     }
 
     @Override
-    public float ghostTunnelSpeed(GameLevel level, Ghost ghost) {
+    public float ghostTunnelSpeed(GameLevel gameLevel, Ghost ghost) {
         //TODO is this correct?
         return 0.4f;
     }
