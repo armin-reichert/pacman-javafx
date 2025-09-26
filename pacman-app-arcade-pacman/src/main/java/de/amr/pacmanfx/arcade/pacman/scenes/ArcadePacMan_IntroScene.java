@@ -117,7 +117,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         GameUI_Config uiConfig = ui.currentConfig();
 
         pacMan = new ArcadePacMan_GameModel.PacMan();
-        pacMan.setAnimations(uiConfig.createPacAnimations());
+        pacMan.setAnimationManager(uiConfig.createPacAnimations());
         pacMan.selectAnimation(ANIM_PAC_MUNCHING);
 
         ghosts = List.of(
@@ -364,7 +364,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                             ghost.stopAnimation();
                         });
                         victim.setState(EATEN);
-                        victim.selectAnimationFrame(ANIM_GHOST_NUMBER, scene.victims.size() - 1);
+                        victim.selectAnimationAt(ANIM_GHOST_NUMBER, scene.victims.size() - 1);
                     });
 
                 // After 50 ticks, Pac-Man and the surviving ghosts get visible again and move on

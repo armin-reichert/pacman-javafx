@@ -38,7 +38,7 @@ public class Pac extends MovingActor {
     private byte restingTicks;
     private long starvingTicks;
     private Steering autopilotSteering;
-    private AnimationManager animations;
+    private AnimationManager animationManager;
 
     /**
      * @param name a readable name. Any honest Pac-Man and Pac-Woman should have a name! Period.
@@ -163,7 +163,7 @@ public class Pac extends MovingActor {
         moveThroughThisCruelWorld(gameContext.gameLevel());
 
         if (moveInfo.moved) {
-            animations().ifPresent(AnimationManager::play);
+            this.animationManager().ifPresent(AnimationManager::play);
         } else {
             stopAnimation();
         }
@@ -175,7 +175,7 @@ public class Pac extends MovingActor {
     public void stopAndShowInFullBeauty() {
         setSpeed(0);
         setRestingTicks(INDEFINITELY);
-        animations().ifPresent(am -> {
+        this.animationManager().ifPresent(am -> {
             am.stop();
             am.select(ANIM_PAC_MUNCHING);
             am.reset();
@@ -222,11 +222,11 @@ public class Pac extends MovingActor {
         autopilotSteering = requireNonNull(steering);
     }
 
-    public void setAnimations(AnimationManager animations) {
-        this.animations = requireNonNull(animations);
+    public void setAnimationManager(AnimationManager animationManager) {
+        this.animationManager = requireNonNull(animationManager);
     }
 
-    public Optional<AnimationManager> animations() {
-        return Optional.ofNullable(animations);
+    public Optional<AnimationManager> animationManager() {
+        return Optional.ofNullable(animationManager);
     }
 }

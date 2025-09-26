@@ -34,8 +34,8 @@ public class LevelMediumTestState implements GameState {
         final GameLevel gameLevel = context.gameLevel();
         gameLevel.pac().usingAutopilotProperty().unbind();
         gameLevel.pac().setUsingAutopilot(true);
-        gameLevel.pac().animations().ifPresent(AnimationManager::play);
-        gameLevel.ghosts().forEach(ghost -> ghost.animations().ifPresent(AnimationManager::play));
+        gameLevel.pac().animationManager().ifPresent(AnimationManager::play);
+        gameLevel.ghosts().forEach(ghost -> ghost.animationManager().ifPresent(AnimationManager::play));
         gameLevel.showPacAndGhosts();
         GameLevelMessage message = new GameLevelMessage(MessageType.TEST);
         message.setPosition(gameLevel.defaultMessagePosition());

@@ -483,11 +483,11 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     public void resetPacManAndGhostAnimations() {
-        gameLevel().pac().animations().ifPresent(am -> {
+        gameLevel().pac().animationManager().ifPresent(am -> {
             am.select(boosterActive ? ANIM_MS_PAC_MAN_BOOSTER : ANIM_PAC_MUNCHING);
             am.reset();
         });
-        gameLevel().ghosts().forEach(ghost -> ghost.animations().ifPresent(am -> {
+        gameLevel().ghosts().forEach(ghost -> ghost.animationManager().ifPresent(am -> {
             am.select(ANIM_GHOST_NORMAL);
             am.reset();
         }));
@@ -748,7 +748,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         int points = 100 * KILLED_GHOST_VALUE_FACTORS[killedSoFar];
         gameLevel().victims().add(ghost);
         ghost.setState(GhostState.EATEN);
-        ghost.selectAnimationFrame(ANIM_GHOST_NUMBER, killedSoFar);
+        ghost.selectAnimationAt(ANIM_GHOST_NUMBER, killedSoFar);
         scoreManager.scorePoints(points);
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
     }

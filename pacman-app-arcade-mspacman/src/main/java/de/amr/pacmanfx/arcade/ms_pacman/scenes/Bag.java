@@ -17,23 +17,23 @@ import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.BLUE_BAG;
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.JUNIOR_PAC;
 
 class Bag extends Actor {
-    private final SpriteAnimationManager<SpriteID> animationMgr;
+    private final SpriteAnimationManager<SpriteID> animationManager;
     private boolean open;
 
     public Bag(ArcadeMsPacMan_SpriteSheet spriteSheet) {
-        animationMgr = new SpriteAnimationManager<>(spriteSheet);
-        animationMgr.setAnimation("junior", SpriteAnimation.build().ofSprite(spriteSheet.sprite(JUNIOR_PAC)).once());
-        animationMgr.setAnimation("bag", SpriteAnimation.build().ofSprite(spriteSheet.sprite(BLUE_BAG)).once());
+        animationManager = new SpriteAnimationManager<>(spriteSheet);
+        animationManager.setAnimation("junior", SpriteAnimation.build().ofSprite(spriteSheet.sprite(JUNIOR_PAC)).once());
+        animationManager.setAnimation("bag", SpriteAnimation.build().ofSprite(spriteSheet.sprite(BLUE_BAG)).once());
     }
 
     @Override
-    public Optional<AnimationManager> animations() {
-        return Optional.of(animationMgr);
+    public Optional<AnimationManager> animationManager() {
+        return Optional.of(animationManager);
     }
 
     public void setOpen(boolean open) {
         this.open = open;
-        animationMgr.select(open ? "junior" : "bag");
+        animationManager.select(open ? "junior" : "bag");
     }
 
     public boolean isOpen() {

@@ -75,10 +75,10 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         final var spriteSheet = (ArcadeMsPacMan_SpriteSheet) uiConfig.spriteSheet();
 
         pacMan = new ArcadeMsPacMan_GameModel.PacMan();
-        pacMan.setAnimations(uiConfig.createPacAnimations());
+        pacMan.setAnimationManager(uiConfig.createPacAnimations());
 
         msPacMan = new ArcadeMsPacMan_GameModel.MsPacMan();
-        msPacMan.setAnimations(uiConfig.createPacAnimations());
+        msPacMan.setAnimationManager(uiConfig.createPacAnimations());
 
         stork = new Stork(spriteSheet);
 

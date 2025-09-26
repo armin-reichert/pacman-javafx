@@ -105,7 +105,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         final GameUI_Config uiConfig = ui.currentConfig();
 
         msPacMan = new ArcadeMsPacMan_GameModel.MsPacMan();
-        msPacMan.setAnimations(uiConfig.createPacAnimations());
+        msPacMan.setAnimationManager(uiConfig.createPacAnimations());
         msPacMan.selectAnimation(ANIM_PAC_MUNCHING);
 
         ghosts = List.of(
@@ -232,7 +232,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                     }
                     else if (ghost.y() <= endPositionY) {
                         ghost.setSpeed(0);
-                        ghost.animations().ifPresent(am -> {
+                        ghost.animationManager().ifPresent(am -> {
                             am.stop();
                             am.reset();
                         });
@@ -253,7 +253,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                 scene.msPacMan.move();
                 if (scene.msPacMan.x() <= STOP_X_MS_PACMAN) {
                     scene.msPacMan.setSpeed(0);
-                    scene.msPacMan.animations().ifPresent(AnimationManager::reset);
+                    scene.msPacMan.animationManager().ifPresent(AnimationManager::reset);
                     scene.sceneController.changeState(READY_TO_PLAY);
                 }
             }

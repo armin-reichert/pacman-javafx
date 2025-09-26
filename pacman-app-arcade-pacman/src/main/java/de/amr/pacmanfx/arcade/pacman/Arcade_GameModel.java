@@ -95,7 +95,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         int points = 100 * KILLED_GHOST_VALUE_FACTORS[killedSoFar];
         gameLevel().victims().add(ghost);
         ghost.setState(GhostState.EATEN);
-        ghost.selectAnimationFrame(ANIM_GHOST_NUMBER, killedSoFar);
+        ghost.selectAnimationAt(ANIM_GHOST_NUMBER, killedSoFar);
         scoreManager().scorePoints(points);
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
         gameLevel().registerGhostKilled();

@@ -322,7 +322,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
             case ORANGE_GHOST_POKEY -> new TengenMsPacMan_GameModel.Sue();
             default -> throw new IllegalArgumentException("Illegal ghost personality " + personality);
         };
-        ghost.setAnimations(createGhostAnimations(personality));
+        ghost.setAnimationManager(createGhostAnimations(personality));
         ghost.selectAnimation(ANIM_GHOST_NORMAL);
         return ghost;
     }

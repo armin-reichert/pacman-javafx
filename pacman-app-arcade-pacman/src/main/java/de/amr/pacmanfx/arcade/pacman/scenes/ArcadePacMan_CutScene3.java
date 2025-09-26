@@ -73,7 +73,7 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
         GameUI_Config uiConfig = ui.currentConfig();
 
         pac = new ArcadePacMan_GameModel.PacMan();
-        pac.setAnimations(uiConfig.createPacAnimations());
+        pac.setAnimationManager(uiConfig.createPacAnimations());
 
         blinky = uiConfig.createGhost(RED_GHOST_SHADOW);
 

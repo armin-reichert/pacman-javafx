@@ -67,7 +67,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
 
         private void createActors(GameUI_Config uiConfig) {
             pac = new ArcadePacMan_GameModel.PacMan();
-            pac.setAnimations(uiConfig.createPacAnimations());
+            pac.setAnimationManager(uiConfig.createPacAnimations());
             pac.playAnimation(ANIM_PAC_MUNCHING);
             ghosts = List.of(
                 uiConfig.createGhost(RED_GHOST_SHADOW),
@@ -136,7 +136,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
             else if (chasingGhosts) {
                 IntStream.range(0, 4).forEach(i -> {
                     if (Math.abs(pac.x() - ghosts.get(i).x()) < 1) {
-                        ghosts.get(i).selectAnimationFrame(ANIM_GHOST_NUMBER, i);
+                        ghosts.get(i).selectAnimationAt(ANIM_GHOST_NUMBER, i);
                         if (i > 0) {
                             ghosts.get(i-1).setVisible(false);
                         }

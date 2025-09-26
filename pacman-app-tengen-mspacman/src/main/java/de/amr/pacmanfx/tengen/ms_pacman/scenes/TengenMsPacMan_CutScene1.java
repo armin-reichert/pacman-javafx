@@ -30,7 +30,8 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
-import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel.*;
+import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel.createMsPacMan;
+import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel.createPacMan;
 import static de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_PacAnimationManager.ANIM_PAC_MAN_MUNCHING;
 import static de.amr.pacmanfx.ui.CommonGameActions.ACTION_LET_GAME_STATE_EXPIRE;
 
@@ -105,13 +106,13 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         clapperboard.startAnimation();
 
         msPacMan = createMsPacMan();
-        msPacMan.setAnimations(uiConfig.createPacAnimations());
+        msPacMan.setAnimationManager(uiConfig.createPacAnimations());
         msPacMan.setMoveDir(Direction.LEFT);
         msPacMan.setPosition(RIGHT_BORDER, LOWER_LANE);
         msPacMan.setSpeed(0);
 
         pacMan = createPacMan();
-        pacMan.setAnimations(uiConfig.createPacAnimations());
+        pacMan.setAnimationManager(uiConfig.createPacAnimations());
         pacMan.setMoveDir(Direction.RIGHT);
         pacMan.setPosition(LEFT_BORDER, UPPER_LANE);
         pacMan.setSpeed(0);
@@ -224,8 +225,8 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
                 msPacMan.setMoveDir(Direction.RIGHT);
             }
             case 545 -> {
-                pacMan.animations().ifPresent(AnimationManager::reset);
-                msPacMan.animations().ifPresent(AnimationManager::reset);
+                pacMan.animationManager().ifPresent(AnimationManager::reset);
+                msPacMan.animationManager().ifPresent(AnimationManager::reset);
             }
             case 560 -> {
                 heart.setPosition(0.5f * (pacMan.x() + msPacMan.x()), pacMan.y() - TS(2));

@@ -148,8 +148,8 @@ public abstract class AbstractGameModel implements Game {
     @Override
     public void startHunting() {
         optGameLevel().ifPresent(gameLevel -> {
-            gameLevel.pac().animations().ifPresent(AnimationManager::play);
-            gameLevel.ghosts().forEach(ghost -> ghost.animations().ifPresent(AnimationManager::play));
+            gameLevel.pac().animationManager().ifPresent(AnimationManager::play);
+            gameLevel.ghosts().forEach(ghost -> ghost.animationManager().ifPresent(AnimationManager::play));
             gameLevel.blinking().setStartPhase(Pulse.ON);
             gameLevel.blinking().restart(Integer.MAX_VALUE);
             huntingTimer().startFirstHuntingPhase(gameLevel.number());
@@ -233,11 +233,11 @@ public abstract class AbstractGameModel implements Game {
 
     protected void resetPacManAndGhostAnimations() {
         optGameLevel().ifPresent(gameLevel -> {
-            gameLevel.pac().animations().ifPresent(am -> {
+            gameLevel.pac().animationManager().ifPresent(am -> {
                 am.select(ANIM_PAC_MUNCHING);
                 am.reset();
             });
-            gameLevel.ghosts().forEach(ghost -> ghost.animations().ifPresent(am -> {
+            gameLevel.ghosts().forEach(ghost -> ghost.animationManager().ifPresent(am -> {
                 am.select(ANIM_GHOST_NORMAL);
                 am.reset();
             }));

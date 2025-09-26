@@ -217,8 +217,8 @@ public class PlayView extends StackPane implements GameUI_View {
         GameLevel gameLevel = ui.gameContext().gameLevel();
         GameUI_Config uiConfig = ui.currentConfig();
 
-        gameLevel.pac().setAnimations(uiConfig.createPacAnimations());
-        gameLevel.ghosts().forEach(ghost -> ghost.setAnimations(uiConfig.createGhostAnimations(ghost.personality())));
+        gameLevel.pac().setAnimationManager(uiConfig.createPacAnimations());
+        gameLevel.ghosts().forEach(ghost -> ghost.setAnimationManager(uiConfig.createGhostAnimations(ghost.personality())));
 
         miniView.onGameLevelCreated(gameLevel);
         miniView.slideIn();

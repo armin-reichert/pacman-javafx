@@ -6,24 +6,24 @@ package de.amr.pacmanfx.uilib.animation;
 
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.model.actors.Animated;
 import de.amr.pacmanfx.model.actors.AnimationManager;
+import de.amr.pacmanfx.model.actors.AnimationSupport;
 
 import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
-public class SingleSpriteActor extends Actor implements Animated {
+public class SingleSpriteActor extends Actor implements AnimationSupport {
 
-    private final SingleSpriteNoAnimation singleSpriteMap;
+    private final SingleSpriteWithoutAnimation animationManager;
 
     public SingleSpriteActor(RectShort sprite) {
         requireNonNull(sprite);
-        singleSpriteMap = new SingleSpriteNoAnimation(sprite);
+        animationManager = new SingleSpriteWithoutAnimation(sprite);
     }
 
     @Override
-    public Optional<AnimationManager> animations() {
-        return Optional.of(singleSpriteMap);
+    public Optional<AnimationManager> animationManager() {
+        return Optional.of(animationManager);
     }
 }

@@ -66,7 +66,7 @@ public class DefaultDebugInfoRenderer extends DebugInfoRenderer {
             ctx.setFont(Font.font("Monospaced", scaling * (6)));
             ctx.fillText(text, scaling * (pac.x() - 4), scaling * (pac.y() + 16));
         }
-        movingActor.animations()
+        movingActor.animationManager()
             .filter(SpriteAnimationManager.class::isInstance)
             .map(SpriteAnimationManager.class::cast)
             .ifPresent(spriteAnimationMap -> {

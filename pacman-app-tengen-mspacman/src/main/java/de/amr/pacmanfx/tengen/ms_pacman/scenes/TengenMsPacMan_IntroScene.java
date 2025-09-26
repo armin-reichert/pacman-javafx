@@ -196,7 +196,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 GameUI_Config uiConfig = scene.ui.currentConfig();
 
                 scene.msPacMan = createMsPacMan();
-                scene.msPacMan.setAnimations(scene.ui.currentConfig().createPacAnimations());
+                scene.msPacMan.setAnimationManager(scene.ui.currentConfig().createPacAnimations());
                 scene.msPacMan.playAnimation(ANIM_PAC_MUNCHING);
 
                 scene.msPacMan.setPosition(TS * 33, ACTOR_Y);
@@ -298,7 +298,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 scene.msPacMan.move();
                 if (scene.msPacMan.x() <= MS_PAC_MAN_STOP_X) {
                     scene.msPacMan.setSpeed(0);
-                    scene.msPacMan.animations().ifPresent(AnimationManager::reset);
+                    scene.msPacMan.animationManager().ifPresent(AnimationManager::reset);
                 }
                 if (timer.atSecond(8)) {
                     // start demo level or show options

@@ -237,7 +237,7 @@ public enum GamePlayState implements GameState {
         public void onEnter(GameContext context) {
             timer.restartSeconds(1);
             context.gameLevel().pac().hide();
-            context.gameLevel().ghosts().forEach(Animated::stopAnimation);
+            context.gameLevel().ghosts().forEach(AnimationSupport::stopAnimation);
             context.eventManager().publishEvent(GameEventType.GHOST_EATEN);
         }
 
@@ -257,7 +257,7 @@ public enum GamePlayState implements GameState {
             context.gameLevel().pac().show();
             context.gameLevel().ghosts(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_HOME));
             context.gameLevel().ghosts()
-                .forEach(ghost -> ghost.animations().ifPresent(AnimationManager::play));
+                .forEach(ghost -> ghost.animationManager().ifPresent(AnimationManager::play));
         }
     },
 
@@ -288,13 +288,13 @@ public enum GamePlayState implements GameState {
             else if (timer.tickCount() == TICK_HIDE_GHOSTS) {
                 context.gameLevel().ghosts().forEach(Ghost::hide);
                 //TODO this does not belong here
-                context.gameLevel().pac().animations().ifPresent(am -> {
+                context.gameLevel().pac().animationManager().ifPresent(am -> {
                     am.select(ANIM_PAC_DYING);
                     am.reset();
                 });
             }
             else if (timer.tickCount() == TICK_START_PAC_ANIMATION) {
-                context.gameLevel().pac().animations().ifPresent(AnimationManager::play);
+                context.gameLevel().pac().animationManager().ifPresent(AnimationManager::play);
                 context.eventManager().publishEvent(GameEventType.PAC_DYING, context.gameLevel().pac().tile());
             }
             else if (timer.tickCount() == TICK_HIDE_PAC) {

@@ -85,10 +85,10 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         context().game().hud().scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
 
         pacMan = new PacMan();
-        pacMan.setAnimations(uiConfig.createPacAnimations());
+        pacMan.setAnimationManager(uiConfig.createPacAnimations());
 
         msPacMan = new MsPacMan();
-        msPacMan.setAnimations(uiConfig.createPacAnimations());
+        msPacMan.setAnimationManager(uiConfig.createPacAnimations());
 
         inky = uiConfig.createGhost(CYAN_GHOST_BASHFUL);
 
@@ -262,14 +262,14 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     private void enterStateInHeaven() {
         pacMan.setSpeed(0);
         pacMan.setMoveDir(Direction.LEFT);
-        pacMan.animations().ifPresent(am -> {
+        pacMan.animationManager().ifPresent(am -> {
             am.stop();
             am.reset();
         });
 
         msPacMan.setSpeed(0);
         msPacMan.setMoveDir(Direction.RIGHT);
-        msPacMan.animations().ifPresent(am -> {
+        msPacMan.animationManager().ifPresent(am -> {
             am.stop();
             am.reset();
         });

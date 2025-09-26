@@ -194,7 +194,7 @@ public class ArcadePacMan_UIConfig implements GameUI_Config {
             case ORANGE_GHOST_POKEY -> new ArcadePacMan_GameModel.Clyde();
             default -> throw new IllegalArgumentException("Illegal ghost personality: " + personality);
         };
-        ghost.setAnimations(createGhostAnimations(personality));
+        ghost.setAnimationManager(createGhostAnimations(personality));
         ghost.selectAnimation(CommonAnimationID.ANIM_GHOST_NORMAL);
         return ghost;
     }

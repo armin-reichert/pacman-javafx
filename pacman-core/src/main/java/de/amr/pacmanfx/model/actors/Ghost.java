@@ -37,7 +37,7 @@ public abstract class Ghost extends MovingActor {
     public static final GhostState DEFAULT_STATE = GhostState.LOCKED;
 
     private ObjectProperty<GhostState> state;
-    private AnimationManager animations;
+    private AnimationManager animationManager;
     private List<Vector2i> specialTerrainTiles = List.of();
     private Vector2f startPosition;
 
@@ -52,12 +52,12 @@ public abstract class Ghost extends MovingActor {
      */
     public abstract byte personality();
 
-    public void setAnimations(AnimationManager animations) {
-        this.animations = requireNonNull(animations);
+    public void setAnimationManager(AnimationManager animationManager) {
+        this.animationManager = requireNonNull(animationManager);
     }
 
-    public Optional<AnimationManager> animations() {
-        return Optional.ofNullable(animations);
+    public Optional<AnimationManager> animationManager() {
+        return Optional.ofNullable(animationManager);
     }
 
     public void setSpecialTerrainTiles(List<Vector2i> tiles) {

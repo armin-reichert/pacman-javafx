@@ -90,10 +90,10 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         clapperboard.startAnimation();
 
         msPacMan = createMsPacMan();
-        msPacMan.setAnimations(uiConfig.createPacAnimations());
+        msPacMan.setAnimationManager(uiConfig.createPacAnimations());
 
         pacMan = createPacMan();
-        pacMan.setAnimations(uiConfig.createPacAnimations());
+        pacMan.setAnimationManager(uiConfig.createPacAnimations());
 
         juniors = new ArrayList<>();
         juniorCreationTime = new ArrayList<>();
@@ -133,12 +133,12 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
                 msPacMan.show();
             } case 230 -> {
                 pacMan.setSpeed(0);
-                pacMan.animations().ifPresent(am -> {
+                pacMan.animationManager().ifPresent(am -> {
                     am.stop();
                     am.reset();
                 });
                 msPacMan.setSpeed(0);
-                msPacMan.animations().ifPresent(am -> {
+                msPacMan.animationManager().ifPresent(am -> {
                     am.stop();
                     am.reset();
                 });
@@ -152,8 +152,8 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
                 msPacMan.selectAnimation(ANIM_MS_PAC_MAN_WAVING_HAND);
             }
             case 527 -> {
-                pacMan.animations().ifPresent(AnimationManager::play);
-                msPacMan.animations().ifPresent(AnimationManager::play);
+                pacMan.animationManager().ifPresent(AnimationManager::play);
+                msPacMan.animationManager().ifPresent(AnimationManager::play);
             }
             case 648 -> {
                 pacMan.playAnimation(ANIM_PAC_MAN_TURNING_AWAY);
@@ -180,7 +180,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         junior.setPosition((float) randomX, sizeInPx().y() - 4 * TS);
         junior.setMoveDir(Direction.UP);
         junior.setSpeed(2);
-        junior.setAnimations(ui.currentConfig().createPacAnimations());
+        junior.setAnimationManager(ui.currentConfig().createPacAnimations());
         junior.selectAnimation(ANIM_JUNIOR);
         junior.show();
         juniors.add(junior);

@@ -38,7 +38,7 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements ActorR
         switch (actor) {
             case Bonus bonus -> drawBonus(bonus);
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
-            default -> actor.animations()
+            default -> actor.animationManager()
                     .map(animations -> animations.currentSprite(actor))
                     .ifPresent(sprite -> drawSpriteCentered(actor.center(), sprite));
 

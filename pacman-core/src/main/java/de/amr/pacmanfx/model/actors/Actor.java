@@ -11,8 +11,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
-import java.util.Optional;
-
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
@@ -24,7 +22,7 @@ import static java.util.Objects.requireNonNull;
  * Each actor has a position, velocity, acceleration and visibility property.
  * </p>
  */
-public class Actor implements Animated {
+public class Actor implements AnimationSupport {
 
     public static final Vector2f DEFAULT_ACCELERATION = Vector2f.ZERO;
     public static final Vector2f DEFAULT_POSITION = Vector2f.ZERO;
@@ -35,11 +33,6 @@ public class Actor implements Animated {
     private BooleanProperty visible;
     private ObjectProperty<Vector2f> velocity;
     private ObjectProperty<Vector2f> acceleration;
-
-    @Override
-    public Optional<AnimationManager> animations() {
-        return Optional.empty();
-    }
 
     /**
      * Resets all properties of this actor thingy to their default state. Note: actor is invisible by default!

@@ -45,7 +45,6 @@ import java.util.ResourceBundle;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.Globals.ORANGE_GHOST_POKEY;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
 import static de.amr.pacmanfx.ui.api.GameScene_Config.sceneID_CutScene;
 import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_3D_ENABLED;
@@ -203,7 +202,7 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config {
             case ORANGE_GHOST_POKEY -> new ArcadePacMan_GameModel.Clyde();
             default -> throw new IllegalArgumentException("Illegal ghost personality: " + personality);
         };
-        ghost.setAnimations(createGhostAnimations(personality));
+        ghost.setAnimationManager(createGhostAnimations(personality));
         ghost.selectAnimation(CommonAnimationID.ANIM_GHOST_NORMAL);
         return ghost;
     }

@@ -10,11 +10,11 @@ import de.amr.pacmanfx.model.actors.AnimationManager;
 
 import static java.util.Objects.requireNonNull;
 
-public class SingleSpriteNoAnimation implements AnimationManager {
+public class SingleSpriteWithoutAnimation implements AnimationManager {
 
     private final RectShort sprite;
 
-    public SingleSpriteNoAnimation(RectShort sprite) {
+    public SingleSpriteWithoutAnimation(RectShort sprite) {
         this.sprite = requireNonNull(sprite);
     }
 

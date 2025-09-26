@@ -15,24 +15,24 @@ import java.util.Optional;
 
 public class Bag extends Actor {
 
-    private final SpriteAnimationManager<SpriteID> spriteAnimations;
+    private final SpriteAnimationManager<SpriteID> animationManager;
     private boolean open;
 
     public Bag(TengenMsPacMan_SpriteSheet spriteSheet) {
-        spriteAnimations = new SpriteAnimationManager<>(spriteSheet);
-        spriteAnimations.setAnimation("junior", SpriteAnimation.build().ofSprite(spriteSheet.sprite(SpriteID.JUNIOR_PAC)).once());
-        spriteAnimations.setAnimation("bag", SpriteAnimation.build().ofSprite(spriteSheet.sprite(SpriteID.BLUE_BAG)).once());
+        animationManager = new SpriteAnimationManager<>(spriteSheet);
+        animationManager.setAnimation("junior", SpriteAnimation.build().ofSprite(spriteSheet.sprite(SpriteID.JUNIOR_PAC)).once());
+        animationManager.setAnimation("bag", SpriteAnimation.build().ofSprite(spriteSheet.sprite(SpriteID.BLUE_BAG)).once());
         setOpen(false);
     }
 
     @Override
-    public Optional<AnimationManager> animations() {
-        return Optional.of(spriteAnimations);
+    public Optional<AnimationManager> animationManager() {
+        return Optional.of(animationManager);
     }
 
     public void setOpen(boolean open) {
         this.open = open;
-        spriteAnimations.select(open ? "junior" : "bag");
+        animationManager.select(open ? "junior" : "bag");
     }
 
     public boolean isOpen() {

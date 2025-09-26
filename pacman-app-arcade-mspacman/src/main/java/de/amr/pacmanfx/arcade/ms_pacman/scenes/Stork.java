@@ -17,16 +17,16 @@ class Stork extends Actor {
 
     public static final String ANIM_FLYING = "flying";
 
-    private final SpriteAnimationManager<SpriteID> spriteAnimations;
+    private final SpriteAnimationManager<SpriteID> animationManager;
 
     public Stork(ArcadeMsPacMan_SpriteSheet spriteSheet) {
-        spriteAnimations = new SpriteAnimationManager<>(spriteSheet);
-        spriteAnimations.setAnimation(ANIM_FLYING,
+        animationManager = new SpriteAnimationManager<>(spriteSheet);
+        animationManager.setAnimation(ANIM_FLYING,
             SpriteAnimation.build().of(spriteSheet.spriteSequence(SpriteID.STORK)).frameTicks(8).forever());
     }
 
     @Override
-    public Optional<AnimationManager> animations() {
-        return Optional.of(spriteAnimations);
+    public Optional<AnimationManager> animationManager() {
+        return Optional.of(animationManager);
     }
 }

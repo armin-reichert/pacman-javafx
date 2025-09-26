@@ -19,12 +19,12 @@ public class Stork extends Actor {
 
     public static final String ANIM_FLYING = "flying";
 
-    private final SpriteAnimationManager<SpriteID> spriteAnimations;
+    private final SpriteAnimationManager<SpriteID> animationManager;
     private boolean bagReleasedFromBeak;
 
     public Stork(TengenMsPacMan_SpriteSheet spriteSheet) {
-        spriteAnimations = new SpriteAnimationManager<>(spriteSheet);
-        spriteAnimations.setAnimation(ANIM_FLYING,
+        animationManager = new SpriteAnimationManager<>(spriteSheet);
+        animationManager.setAnimation(ANIM_FLYING,
             SpriteAnimation.build().of(spriteSheet.spriteSequence(STORK)).frameTicks(8).forever());
     }
 
@@ -37,7 +37,7 @@ public class Stork extends Actor {
     }
 
     @Override
-    public Optional<AnimationManager> animations() {
-        return Optional.of(spriteAnimations);
+    public Optional<AnimationManager> animationManager() {
+        return Optional.of(animationManager);
     }
 }
