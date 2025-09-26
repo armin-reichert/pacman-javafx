@@ -13,10 +13,7 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.timer.TickTimer;
-import de.amr.pacmanfx.model.actors.AnimationManager;
-import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.GhostState;
-import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
@@ -28,8 +25,6 @@ import javafx.scene.paint.Color;
 import java.util.List;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.model.actors.Actor.ANIM_GHOST_NORMAL;
-import static de.amr.pacmanfx.model.actors.Actor.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.ui.CommonGameActions.*;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
 
@@ -106,7 +101,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
         msPacMan = new ArcadeMsPacMan_GameModel.MsPacMan();
         msPacMan.setAnimationManager(uiConfig.createPacAnimations());
-        msPacMan.selectAnimation(ANIM_PAC_MUNCHING);
+        msPacMan.selectAnimation(AnimationSupport.ANIM_PAC_MUNCHING);
 
         ghosts = List.of(
             uiConfig.createGhost(RED_GHOST_SHADOW),
@@ -177,7 +172,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                 scene.msPacMan.setMoveDir(Direction.LEFT);
                 scene.msPacMan.setSpeed(ACTOR_SPEED);
                 scene.msPacMan.setVisible(true);
-                scene.msPacMan.playAnimation(ANIM_PAC_MUNCHING);
+                scene.msPacMan.playAnimation(AnimationSupport.ANIM_PAC_MUNCHING);
                 for (Ghost ghost : scene.ghosts) {
                     ghost.setPosition(TS * 33.5f, TS * 20);
                     ghost.setMoveDir(Direction.LEFT);
@@ -185,7 +180,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                     ghost.setSpeed(ACTOR_SPEED);
                     ghost.setState(GhostState.HUNTING_PAC);
                     ghost.setVisible(true);
-                    ghost.playAnimation(ANIM_GHOST_NORMAL);
+                    ghost.playAnimation(AnimationSupport.ANIM_GHOST_NORMAL);
                 }
                 scene.presentedGhostCharacter = RED_GHOST_SHADOW;
             }

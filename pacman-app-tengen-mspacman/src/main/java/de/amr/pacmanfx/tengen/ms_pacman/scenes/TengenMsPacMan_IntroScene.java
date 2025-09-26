@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.model.actors.Actor.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Actions.ACTION_ENTER_START_SCREEN;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Actions.ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Properties.PROPERTY_JOYPAD_BINDINGS_DISPLAYED;
@@ -197,7 +196,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
                 scene.msPacMan = createMsPacMan();
                 scene.msPacMan.setAnimationManager(scene.ui.currentConfig().createPacAnimations());
-                scene.msPacMan.playAnimation(ANIM_PAC_MUNCHING);
+                scene.msPacMan.playAnimation(AnimationSupport.ANIM_PAC_MUNCHING);
 
                 scene.msPacMan.setPosition(TS * 33, ACTOR_Y);
                 scene.msPacMan.setMoveDir(Direction.LEFT);

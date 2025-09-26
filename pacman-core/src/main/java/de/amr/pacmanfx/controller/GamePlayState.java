@@ -287,7 +287,7 @@ public enum GamePlayState implements GameState {
                 context.gameLevel().ghosts().forEach(Ghost::hide);
                 //TODO this does not belong here
                 context.gameLevel().pac().animationManager().ifPresent(am -> {
-                    am.select(Actor.ANIM_PAC_DYING);
+                    am.select(AnimationSupport.ANIM_PAC_DYING);
                     am.reset();
                 });
             }

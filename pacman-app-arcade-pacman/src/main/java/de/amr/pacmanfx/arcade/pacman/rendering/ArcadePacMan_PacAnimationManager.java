@@ -7,13 +7,12 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.model.actors.Actor;
+import de.amr.pacmanfx.model.actors.AnimationSupport;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ANIM_BIG_PAC_MAN;
-import static de.amr.pacmanfx.model.actors.Actor.ANIM_PAC_DYING;
-import static de.amr.pacmanfx.model.actors.Actor.ANIM_PAC_MUNCHING;
 
 public class ArcadePacMan_PacAnimationManager extends SpriteAnimationManager<SpriteID> {
 
@@ -24,8 +23,8 @@ public class ArcadePacMan_PacAnimationManager extends SpriteAnimationManager<Spr
     @Override
     protected SpriteAnimation createAnimation(String id) {
         return switch (id) {
-            case ANIM_PAC_MUNCHING -> SpriteAnimation.build().of(pacMunchingSprites(Direction.LEFT)).forever();
-            case ANIM_PAC_DYING    -> SpriteAnimation.build().of(spriteSheet().spriteSequence(SpriteID.PACMAN_DYING)).frameTicks(8).once();
+            case AnimationSupport.ANIM_PAC_MUNCHING -> SpriteAnimation.build().of(pacMunchingSprites(Direction.LEFT)).forever();
+            case AnimationSupport.ANIM_PAC_DYING    -> SpriteAnimation.build().of(spriteSheet().spriteSequence(SpriteID.PACMAN_DYING)).frameTicks(8).once();
             case ANIM_BIG_PAC_MAN  -> SpriteAnimation.build().of(spriteSheet().spriteSequence(SpriteID.PACMAN_BIG)).frameTicks(3).forever();
             default -> throw new IllegalArgumentException("Illegal animation ID: " + id);
         };
@@ -38,7 +37,7 @@ public class ArcadePacMan_PacAnimationManager extends SpriteAnimationManager<Spr
 
     @Override
     protected void updateActorSprites(Actor actor) {
-        if (actor instanceof Pac pac && isCurrentAnimationID(ANIM_PAC_MUNCHING)) {
+        if (actor instanceof Pac pac && isCurrentAnimationID(AnimationSupport.ANIM_PAC_MUNCHING)) {
             currentAnimation().setSprites(pacMunchingSprites(pac.moveDir()));
         }
     }

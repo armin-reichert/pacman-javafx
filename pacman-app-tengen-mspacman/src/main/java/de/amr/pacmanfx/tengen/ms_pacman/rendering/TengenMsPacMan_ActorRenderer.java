@@ -7,10 +7,7 @@ package de.amr.pacmanfx.tengen.ms_pacman.rendering;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.model.actors.Bonus;
-import de.amr.pacmanfx.model.actors.MovingActor;
-import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.Clapperboard;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.Stork;
@@ -22,7 +19,6 @@ import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.scene.canvas.Canvas;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.model.actors.Actor.ANIM_PAC_DYING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesColor;
 import static java.util.Objects.requireNonNull;
 
@@ -109,7 +105,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements ActorR
                 Logger.error("No sprite animation found for {}", pac);
                 return;
             }
-            if (ANIM_PAC_DYING.equals(spriteAnimations.selectedID())) {
+            if (AnimationSupport.ANIM_PAC_DYING.equals(spriteAnimations.selectedID())) {
                 drawPacDyingAnimation(pac, spriteAnimation);
             } else {
                 drawMovingActorSprite(pac, pac.moveDir(), spriteAnimation.currentSprite());

@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.model.actors.Actor;
+import de.amr.pacmanfx.model.actors.AnimationSupport;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
@@ -14,7 +15,6 @@ import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.*;
-import static de.amr.pacmanfx.model.actors.Actor.*;
 
 public class ArcadePacMan_GhostAnimationManager extends SpriteAnimationManager<SpriteID> {
 
@@ -28,15 +28,15 @@ public class ArcadePacMan_GhostAnimationManager extends SpriteAnimationManager<S
     @Override
     public SpriteAnimation createAnimation(String id) {
         return switch (id) {
-            case ANIM_GHOST_NORMAL
+            case AnimationSupport.ANIM_GHOST_NORMAL
                 -> SpriteAnimation.build().of(ghostNormalSprites(Direction.LEFT)).frameTicks(8).forever();
-            case ANIM_GHOST_FRIGHTENED
+            case AnimationSupport.ANIM_GHOST_FRIGHTENED
                 -> SpriteAnimation.build().of(spriteSheet().spriteSequence(SpriteID.GHOST_FRIGHTENED)).frameTicks(8).forever();
-            case ANIM_GHOST_FLASHING
+            case AnimationSupport.ANIM_GHOST_FLASHING
                 -> SpriteAnimation.build().of(spriteSheet().spriteSequence(SpriteID.GHOST_FLASHING)).frameTicks(7).forever();
-            case ANIM_GHOST_EYES
+            case AnimationSupport.ANIM_GHOST_EYES
                 -> SpriteAnimation.build().of(ghostEyesSprites(Direction.LEFT)).once();
-            case ANIM_GHOST_NUMBER
+            case AnimationSupport.ANIM_GHOST_NUMBER
                 -> SpriteAnimation.build().of(spriteSheet().spriteSequence(SpriteID.GHOST_NUMBERS)).once();
             case ANIM_BLINKY_DAMAGED
                 -> SpriteAnimation.build().of(spriteSheet().spriteSequence(SpriteID.RED_GHOST_DAMAGED)).once();
@@ -59,18 +59,18 @@ public class ArcadePacMan_GhostAnimationManager extends SpriteAnimationManager<S
     @Override
     public void selectFrame(String id, int frameIndex) {
         super.selectFrame(id, frameIndex);
-        if (ANIM_GHOST_NUMBER.equals(id)) {
-            animation(ANIM_GHOST_NUMBER).setFrameIndex(frameIndex);
+        if (AnimationSupport.ANIM_GHOST_NUMBER.equals(id)) {
+            animation(AnimationSupport.ANIM_GHOST_NUMBER).setFrameIndex(frameIndex);
         }
     }
 
     @Override
     protected void updateActorSprites(Actor actor) {
         if (actor instanceof Ghost ghost) {
-            if (isCurrentAnimationID(ANIM_GHOST_NORMAL)) {
+            if (isCurrentAnimationID(AnimationSupport.ANIM_GHOST_NORMAL)) {
                 currentAnimation().setSprites(ghostNormalSprites(ghost.wishDir()));
             }
-            if (isCurrentAnimationID(ANIM_GHOST_EYES)) {
+            if (isCurrentAnimationID(AnimationSupport.ANIM_GHOST_EYES)) {
                 currentAnimation().setSprites(ghostEyesSprites(ghost.wishDir()));
             }
         }

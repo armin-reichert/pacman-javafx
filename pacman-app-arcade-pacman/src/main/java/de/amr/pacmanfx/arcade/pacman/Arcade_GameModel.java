@@ -12,6 +12,7 @@ import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GateKeeper;
 import de.amr.pacmanfx.model.MessageType;
+import de.amr.pacmanfx.model.actors.AnimationSupport;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -20,7 +21,6 @@ import org.tinylog.Logger;
 
 import java.util.Optional;
 
-import static de.amr.pacmanfx.model.actors.Actor.ANIM_GHOST_NUMBER;
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
 import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
 import static java.util.Objects.requireNonNull;
@@ -95,7 +95,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         int points = 100 * KILLED_GHOST_VALUE_FACTORS[killedSoFar];
         gameLevel().victims().add(ghost);
         ghost.setState(GhostState.EATEN);
-        ghost.selectAnimationAt(ANIM_GHOST_NUMBER, killedSoFar);
+        ghost.selectAnimationAt(AnimationSupport.ANIM_GHOST_NUMBER, killedSoFar);
         scoreManager().scorePoints(points);
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
         gameLevel().registerGhostKilled();

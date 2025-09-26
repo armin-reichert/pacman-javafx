@@ -6,14 +6,12 @@ package de.amr.pacmanfx.tengen.ms_pacman.rendering;
 
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.model.actors.Actor;
+import de.amr.pacmanfx.model.actors.AnimationSupport;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 
 import java.util.Arrays;
-
-import static de.amr.pacmanfx.model.actors.Actor.ANIM_PAC_DYING;
-import static de.amr.pacmanfx.model.actors.Actor.ANIM_PAC_MUNCHING;
 
 public class TengenMsPacMan_PacAnimationManager extends SpriteAnimationManager<SpriteID> {
 
@@ -33,8 +31,8 @@ public class TengenMsPacMan_PacAnimationManager extends SpriteAnimationManager<S
     @Override
     protected SpriteAnimation createAnimation(String id) {
         return switch (id) {
-            case ANIM_PAC_DYING               -> SpriteAnimation.build().of(pacDyingSprites()).frameTicks(8).once();
-            case ANIM_PAC_MUNCHING            -> SpriteAnimation.build().of(spriteSheet.spriteSequence(SpriteID.MS_PAC_MUNCHING)).forever();
+            case AnimationSupport.ANIM_PAC_DYING               -> SpriteAnimation.build().of(pacDyingSprites()).frameTicks(8).once();
+            case AnimationSupport.ANIM_PAC_MUNCHING            -> SpriteAnimation.build().of(spriteSheet.spriteSequence(SpriteID.MS_PAC_MUNCHING)).forever();
             case ANIM_MS_PAC_MAN_BOOSTER      -> SpriteAnimation.build().of(spriteSheet.spriteSequence(SpriteID.MS_PAC_MUNCHING_BOOSTER)).forever();
             case ANIM_MS_PAC_MAN_WAVING_HAND  -> SpriteAnimation.build().of(spriteSheet.spriteSequence(SpriteID.MS_PAC_WAVING_HAND)).frameTicks(8).forever();
             case ANIM_MS_PAC_MAN_TURNING_AWAY -> SpriteAnimation.build().of(spriteSheet.spriteSequence(SpriteID.MS_PAC_TURNING_AWAY)).frameTicks(15).once();
@@ -55,7 +53,7 @@ public class TengenMsPacMan_PacAnimationManager extends SpriteAnimationManager<S
     @Override
     protected void updateActorSprites(Actor actor) {
         if (actor instanceof Pac) {
-            if (isCurrentAnimationID(ANIM_PAC_MUNCHING)) {
+            if (isCurrentAnimationID(AnimationSupport.ANIM_PAC_MUNCHING)) {
                 currentAnimation().setSprites(spriteSheet.spriteSequence(SpriteID.MS_PAC_MUNCHING));
             }
             if (isCurrentAnimationID(ANIM_MS_PAC_MAN_BOOSTER)) {

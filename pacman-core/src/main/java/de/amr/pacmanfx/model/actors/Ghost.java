@@ -219,9 +219,9 @@ public abstract class Ghost extends MovingActor {
 
         // "onEntry" action:
         switch (newState) {
-            case LOCKED, HUNTING_PAC -> selectAnimation(ANIM_GHOST_NORMAL);
-            case ENTERING_HOUSE, RETURNING_HOME -> selectAnimation(ANIM_GHOST_EYES);
-            case FRIGHTENED -> playAnimation(ANIM_GHOST_FRIGHTENED);
+            case LOCKED, HUNTING_PAC -> selectAnimation(AnimationSupport.ANIM_GHOST_NORMAL);
+            case ENTERING_HOUSE, RETURNING_HOME -> selectAnimation(AnimationSupport.ANIM_GHOST_EYES);
+            case FRIGHTENED -> playAnimation(AnimationSupport.ANIM_GHOST_FRIGHTENED);
             case EATEN -> {}
         }
     }
@@ -273,7 +273,7 @@ public abstract class Ghost extends MovingActor {
         if (gameLevel.pac().powerTimer().isRunning() && !gameLevel.victims().contains(this)) {
             playFrightenedAnimation(gameLevel, gameLevel.pac());
         } else {
-            selectAnimation(ANIM_GHOST_NORMAL);
+            selectAnimation(AnimationSupport.ANIM_GHOST_NORMAL);
         }
     }
 
@@ -321,7 +321,7 @@ public abstract class Ghost extends MovingActor {
             if (gameLevel.pac().powerTimer().isRunning() && !gameLevel.victims().contains(this)) {
                 playFrightenedAnimation(gameLevel, gameLevel.pac());
             } else {
-                selectAnimation(ANIM_GHOST_NORMAL);
+                selectAnimation(AnimationSupport.ANIM_GHOST_NORMAL);
             }
         }
     }
@@ -368,9 +368,9 @@ public abstract class Ghost extends MovingActor {
 
     private void playFrightenedAnimation(GameLevel gameLevel, Pac pac) {
         if (pac.isPowerFadingStarting(gameLevel)) {
-            playAnimation(ANIM_GHOST_FLASHING);
+            playAnimation(AnimationSupport.ANIM_GHOST_FLASHING);
         } else if (!pac.isPowerFading(gameLevel)) {
-            playAnimation(ANIM_GHOST_FRIGHTENED);
+            playAnimation(AnimationSupport.ANIM_GHOST_FRIGHTENED);
         }
     }
 

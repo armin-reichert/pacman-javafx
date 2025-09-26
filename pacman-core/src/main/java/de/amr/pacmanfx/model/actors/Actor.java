@@ -24,14 +24,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class Actor implements AnimationSupport {
 
-    public static final String ANIM_PAC_MUNCHING     = "pac_munching";
-    public static final String ANIM_PAC_DYING        = "pac_dying";
-    public static final String ANIM_GHOST_NORMAL     = "ghost_normal";
-    public static final String ANIM_GHOST_FRIGHTENED = "ghost_frightened";
-    public static final String ANIM_GHOST_EYES       = "ghost_eyes";
-    public static final String ANIM_GHOST_FLASHING   = "ghost_flashing";
-    public static final String ANIM_GHOST_NUMBER     = "ghost_number";
-
     public static final Vector2f DEFAULT_ACCELERATION = Vector2f.ZERO;
     public static final Vector2f DEFAULT_POSITION = Vector2f.ZERO;
     public static final Vector2f DEFAULT_VELOCITY = Vector2f.ZERO;

@@ -17,8 +17,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static de.amr.pacmanfx.model.actors.Actor.ANIM_GHOST_NORMAL;
-import static de.amr.pacmanfx.model.actors.Actor.ANIM_PAC_MUNCHING;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -234,11 +232,11 @@ public abstract class AbstractGameModel implements Game {
     protected void resetPacManAndGhostAnimations() {
         optGameLevel().ifPresent(gameLevel -> {
             gameLevel.pac().animationManager().ifPresent(am -> {
-                am.select(ANIM_PAC_MUNCHING);
+                am.select(AnimationSupport.ANIM_PAC_MUNCHING);
                 am.reset();
             });
             gameLevel.ghosts().forEach(ghost -> ghost.animationManager().ifPresent(am -> {
-                am.select(ANIM_GHOST_NORMAL);
+                am.select(AnimationSupport.ANIM_GHOST_NORMAL);
                 am.reset();
             }));
         });

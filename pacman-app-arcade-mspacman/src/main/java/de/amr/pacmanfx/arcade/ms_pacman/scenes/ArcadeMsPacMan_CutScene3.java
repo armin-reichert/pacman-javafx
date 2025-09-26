@@ -12,6 +12,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.timer.TickTimer;
+import de.amr.pacmanfx.model.actors.AnimationSupport;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
@@ -22,7 +23,6 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_PacAnimationManager.PAC_MAN_MUNCHING;
-import static de.amr.pacmanfx.model.actors.Actor.ANIM_PAC_MUNCHING;
 
 /**
  * Intermission scene 3: "Junior".
@@ -147,7 +147,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
 
         msPacMan.setMoveDir(Direction.RIGHT);
         msPacMan.setPosition(TS * 5, LANE_Y - 4);
-        msPacMan.selectAnimation(ANIM_PAC_MUNCHING);
+        msPacMan.selectAnimation(AnimationSupport.ANIM_PAC_MUNCHING);
         msPacMan.show();
 
         stork.setPosition(TS * 30, TS * 12);

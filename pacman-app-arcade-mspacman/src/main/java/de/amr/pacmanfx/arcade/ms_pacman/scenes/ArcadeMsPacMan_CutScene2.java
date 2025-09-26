@@ -9,6 +9,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_ActorRenderer;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_HUDRenderer;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.timer.TickTimer;
+import de.amr.pacmanfx.model.actors.AnimationSupport;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
@@ -19,7 +20,6 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_PacAnimationManager.PAC_MAN_MUNCHING;
-import static de.amr.pacmanfx.model.actors.Actor.ANIM_PAC_MUNCHING;
 
 /**
  * Intermission scene 2: "The chase".
@@ -129,7 +129,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
         pacMan.playAnimation(PAC_MAN_MUNCHING);
 
         msPacMan.setMoveDir(Direction.RIGHT);
-        msPacMan.playAnimation(ANIM_PAC_MUNCHING);
+        msPacMan.playAnimation(AnimationSupport.ANIM_PAC_MUNCHING);
 
         setSceneState(STATE_CHASING, TickTimer.INDEFINITE);
     }

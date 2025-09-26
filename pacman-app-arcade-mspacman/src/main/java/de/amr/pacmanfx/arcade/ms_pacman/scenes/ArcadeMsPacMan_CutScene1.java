@@ -11,6 +11,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.timer.TickTimer;
+import de.amr.pacmanfx.model.actors.AnimationSupport;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
@@ -25,8 +26,6 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.MsPacMan;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.PacMan;
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_PacAnimationManager.PAC_MAN_MUNCHING;
-import static de.amr.pacmanfx.model.actors.Actor.ANIM_GHOST_NORMAL;
-import static de.amr.pacmanfx.model.actors.Actor.ANIM_PAC_MUNCHING;
 
 /**
  * Intermission scene 1: "They meet".
@@ -163,20 +162,20 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         inky.setWishDir(Direction.RIGHT);
         inky.setPosition(pacMan.x() - 6 * TS, pacMan.y());
         inky.setSpeed(SPEED_GHOST_CHASING);
-        inky.playAnimation(ANIM_GHOST_NORMAL);
+        inky.playAnimation(AnimationSupport.ANIM_GHOST_NORMAL);
         inky.show();
 
         msPacMan.setMoveDir(Direction.LEFT);
         msPacMan.setPosition(TS * 30, LOWER_LANE_Y);
         msPacMan.setSpeed(SPEED_PAC_CHASING);
-        msPacMan.playAnimation(ANIM_PAC_MUNCHING);
+        msPacMan.playAnimation(AnimationSupport.ANIM_PAC_MUNCHING);
         msPacMan.show();
 
         pinky.setMoveDir(Direction.LEFT);
         pinky.setWishDir(Direction.LEFT);
         pinky.setPosition(msPacMan.x() + 6 * TS, msPacMan.y());
         pinky.setSpeed(SPEED_GHOST_CHASING);
-        pinky.playAnimation(ANIM_GHOST_NORMAL);
+        pinky.playAnimation(AnimationSupport.ANIM_GHOST_NORMAL);
         pinky.show();
 
         setState(STATE_CHASED_BY_GHOSTS, TickTimer.INDEFINITE);

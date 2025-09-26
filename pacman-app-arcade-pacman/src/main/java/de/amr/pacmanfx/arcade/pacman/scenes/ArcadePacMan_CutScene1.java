@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_HUDRenderer;
 import de.amr.pacmanfx.lib.Direction;
+import de.amr.pacmanfx.model.actors.AnimationSupport;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
@@ -19,7 +20,6 @@ import javafx.scene.canvas.Canvas;
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ANIM_BIG_PAC_MAN;
-import static de.amr.pacmanfx.model.actors.Actor.*;
 
 /**
  * First cut scene in Arcade Pac-Man game:<br>
@@ -94,14 +94,14 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
             pac.placeAtTile(29, 20);
             pac.setMoveDir(Direction.LEFT);
             pac.setSpeed(1.25f);
-            pac.playAnimation(ANIM_PAC_MUNCHING);
+            pac.playAnimation(AnimationSupport.ANIM_PAC_MUNCHING);
             pac.show();
 
             blinky.placeAtTile(32, 20);
             blinky.setMoveDir(Direction.LEFT);
             blinky.setWishDir(Direction.LEFT);
             blinky.setSpeed(1.3f);
-            blinky.playAnimation(ANIM_GHOST_NORMAL);
+            blinky.playAnimation(AnimationSupport.ANIM_GHOST_NORMAL);
             blinky.show();
         }
         else if (frame == ANIMATION_START + 260) {
@@ -109,7 +109,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
             blinky.setMoveDir(Direction.RIGHT);
             blinky.setWishDir(Direction.RIGHT);
             blinky.setSpeed(0.75f);
-            blinky.playAnimation(ANIM_GHOST_FRIGHTENED);
+            blinky.playAnimation(AnimationSupport.ANIM_GHOST_FRIGHTENED);
         }
         else if (frame == ANIMATION_START + 400) {
             pac.placeAtTile(-3, 18, 0, 6.5f);

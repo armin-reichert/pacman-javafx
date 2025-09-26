@@ -12,6 +12,7 @@ import de.amr.pacmanfx.controller.teststates.CutScenesTestState;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.actors.AnimationSupport;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
@@ -42,7 +43,6 @@ import java.util.ResourceBundle;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.model.actors.Actor.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
 import static de.amr.pacmanfx.ui.api.GameScene_Config.sceneID_CutScene;
 import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_3D_ENABLED;
@@ -195,7 +195,7 @@ public class ArcadePacMan_UIConfig implements GameUI_Config {
             default -> throw new IllegalArgumentException("Illegal ghost personality: " + personality);
         };
         ghost.setAnimationManager(createGhostAnimations(personality));
-        ghost.selectAnimation(ANIM_GHOST_NORMAL);
+        ghost.selectAnimation(AnimationSupport.ANIM_GHOST_NORMAL);
         return ghost;
     }
 
