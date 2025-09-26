@@ -71,7 +71,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config {
     private Image brightMaze(int index) {
         RectShort mazeSprite = spriteSheet().spriteSequence(SpriteID.FULL_MAZES)[index];
         Image mazeImage = spriteSheet.image(mazeSprite);
-        WorldMapColorScheme colorScheme = ArcadeMsPacMan_GameModel.WORLD_MAP_COLOR_SCHEMES.get(index);
+        WorldMapColorScheme colorScheme = ArcadeMsPacMan_MapSelector.WORLD_MAP_COLOR_SCHEMES.get(index);
         Map<Color, Color> changes = Map.of(
             colorScheme.stroke(), ARCADE_WHITE,
             colorScheme.door(), Color.TRANSPARENT
@@ -92,7 +92,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config {
         assets.set("startpage.image1",        RES_ARCADE_MS_PAC_MAN.loadImage("graphics/f1.jpg"));
         assets.set("startpage.image2",        RES_ARCADE_MS_PAC_MAN.loadImage("graphics/f2.jpg"));
 
-        for (int i = 0; i < ArcadeMsPacMan_GameModel.WORLD_MAP_COLOR_SCHEMES.size(); ++i) {
+        for (int i = 0; i < ArcadeMsPacMan_MapSelector.WORLD_MAP_COLOR_SCHEMES.size(); ++i) {
             assets.set("maze.bright.%d".formatted(i), brightMaze(i));
         }
 
@@ -175,7 +175,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config {
     @Override
     public WorldMapColorScheme colorScheme(WorldMap worldMap) {
         int index = worldMap.getConfigValue("colorMapIndex");
-        return ArcadeMsPacMan_GameModel.WORLD_MAP_COLOR_SCHEMES.get(index);
+        return ArcadeMsPacMan_MapSelector.WORLD_MAP_COLOR_SCHEMES.get(index);
     }
 
     @Override

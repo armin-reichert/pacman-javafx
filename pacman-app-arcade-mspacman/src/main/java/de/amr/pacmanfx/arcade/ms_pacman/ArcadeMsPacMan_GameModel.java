@@ -46,15 +46,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
-    public static final List<WorldMapColorScheme> WORLD_MAP_COLOR_SCHEMES = List.of(
-        new WorldMapColorScheme("FFB7AE", "FF0000", "FCB5FF", "DEDEFF"),
-        new WorldMapColorScheme("47B7FF", "DEDEFF", "FCB5FF", "FFFF00"),
-        new WorldMapColorScheme("DE9751", "DEDEFF", "FCB5FF", "FF0000"),
-        new WorldMapColorScheme("2121FF", "FFB751", "FCB5FF", "DEDEFF"),
-        new WorldMapColorScheme("FFB7FF", "FFFF00", "FCB5FF", "00FFFF"),
-        new WorldMapColorScheme("FFB7AE", "FF0000", "FCB5FF", "DEDEFF")
-    );
-
     private static final byte[] BONUS_VALUE_MULTIPLIERS = {1, 2, 5, 7, 10, 20, 50}; // points = value * 100
 
     public static Pac createMsPacMan() {
