@@ -331,7 +331,7 @@ public class PlayScene3D implements GameScene {
             return;
         }
         ui.soundManager().setEnabled(!context().gameLevel().isDemoLevel());
-        gameLevel3D.tick(context());
+        gameLevel3D.tick();
         updateCamera();
         updateHUD();
         updateSound();
@@ -353,7 +353,7 @@ public class PlayScene3D implements GameScene {
         else {
             switch (state) {
                 case BOOT, INTRO, SETTING_OPTIONS_FOR_START, SHOWING_CREDITS, LEVEL_TRANSITION, INTERMISSION -> {}
-                case HUNTING -> gameLevel3D.onHuntingStart(context());
+                case HUNTING -> gameLevel3D.onHuntingStart();
                 case PACMAN_DYING -> gameLevel3D.onPacManDying(state);
                 case GHOST_DYING -> gameLevel3D.onGhostDying();
                 case LEVEL_COMPLETE -> gameLevel3D.onLevelComplete(state, perspectiveIDProperty);
@@ -574,7 +574,7 @@ public class PlayScene3D implements GameScene {
         gameLevel3DParent.getChildren().setAll(gameLevel3D);
 
         gameLevel3D.pac3D().init(context().gameLevel());
-        gameLevel3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context(), context().gameLevel()));
+        gameLevel3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context().gameLevel()));
         Logger.info("Initialized actors of game level 3D");
 
 

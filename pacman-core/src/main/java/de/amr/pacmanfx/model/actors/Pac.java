@@ -131,17 +131,13 @@ public class Pac extends MovingActor {
         return powerTimer;
     }
 
-    public boolean isPowerFading(GameContext gameContext) {
-        if (gameContext == null || gameContext.optGameLevel().isEmpty()) return false;
-
-        long fadingTicks = secToTicks(gameContext.game().pacPowerFadingSeconds(gameContext.gameLevel()));
+    public boolean isPowerFading(GameLevel gameLevel) {
+        long fadingTicks = secToTicks(gameLevel.game().pacPowerFadingSeconds(gameLevel));
         return powerTimer.isRunning() && powerTimer.remainingTicks() <= fadingTicks;
     }
 
-    public boolean isPowerFadingStarting(GameContext gameContext) {
-        if (gameContext == null || gameContext.optGameLevel().isEmpty()) return false;
-
-        long fadingTicks = secToTicks(gameContext.game().pacPowerFadingSeconds(gameContext.gameLevel()));
+    public boolean isPowerFadingStarting(GameLevel gameLevel) {
+        long fadingTicks = secToTicks(gameLevel.game().pacPowerFadingSeconds(gameLevel));
         return powerTimer.isRunning() && powerTimer.remainingTicks() == fadingTicks
             || powerTimer.durationTicks() < fadingTicks && powerTimer.tickCount() == 1;
     }
@@ -149,6 +145,7 @@ public class Pac extends MovingActor {
     @Override
     public void tick(GameContext gameContext) {
         if (gameContext == null || gameContext.optGameLevel().isEmpty()) return;
+        GameLevel gameLevel = gameContext.gameLevel();
 
         if (dead || restingTicks == INDEFINITELY) {
             return;
@@ -161,8 +158,8 @@ public class Pac extends MovingActor {
             autopilotSteering.steer(this, gameContext.gameLevel());
         }
         setSpeed(powerTimer.isRunning()
-            ? gameContext.game().actorSpeedControl().pacPowerSpeed(gameContext, gameContext.gameLevel())
-            : gameContext.game().actorSpeedControl().pacNormalSpeed(gameContext, gameContext.gameLevel()));
+            ? gameContext.game().actorSpeedControl().pacPowerSpeed(gameLevel)
+            : gameContext.game().actorSpeedControl().pacNormalSpeed(gameLevel));
         moveThroughThisCruelWorld(gameContext.gameLevel());
 
         if (moveInfo.moved) {

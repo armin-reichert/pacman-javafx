@@ -233,7 +233,7 @@ public abstract class Ghost extends MovingActor {
             case LOCKED         -> updateStateLocked(gameContext);
             case LEAVING_HOUSE  -> updateStateLeavingHouse(gameContext);
             case HUNTING_PAC    -> updateStateHuntingPac(gameContext);
-            case FRIGHTENED     -> updateStateFrightened(gameContext);
+            case FRIGHTENED     -> updateStateFrightened(gameContext.gameLevel());
             case EATEN          -> updateStateEaten();
             case RETURNING_HOME -> updateStateReturningToHouse(gameContext);
             case ENTERING_HOUSE -> updateStateEnteringHouse(gameContext);
@@ -263,7 +263,7 @@ public abstract class Ghost extends MovingActor {
             float minY = (house.minTile().y() + 1) * TS + HTS;
             float maxY = (house.maxTile().y() - 1) * TS - HTS;
             ActorSpeedControl speedControl = gameContext.game().actorSpeedControl();
-            float speed = speedControl.ghostSpeedInsideHouse(gameContext, gameLevel, this);
+            float speed = speedControl.ghostSpeedInsideHouse(gameLevel, this);
             setSpeed(speed);
             move();
             float y = position().y();
@@ -279,7 +279,7 @@ public abstract class Ghost extends MovingActor {
             setSpeed(0);
         }
         if (gameLevel.pac().powerTimer().isRunning() && !gameLevel.victims().contains(this)) {
-            playFrightenedAnimation(gameContext, gameLevel.pac());
+            playFrightenedAnimation(gameLevel, gameLevel.pac());
         } else {
             selectAnimation(ANIM_GHOST_NORMAL);
         }
@@ -324,7 +324,7 @@ public abstract class Ghost extends MovingActor {
         }
         else {
             // still inside house
-            float speed = gameContext.game().actorSpeedControl().ghostSpeedInsideHouse(gameContext, gameLevel, this);
+            float speed = gameContext.game().actorSpeedControl().ghostSpeedInsideHouse(gameLevel, this);
             float centerX = position.x() + HTS;
             float houseCenterX = house.center().x();
             if (differsAtMost(0.5f * speed, centerX, houseCenterX)) {
@@ -340,7 +340,7 @@ public abstract class Ghost extends MovingActor {
             setSpeed(speed);
             move();
             if (gameLevel.pac().powerTimer().isRunning() && !gameLevel.victims().contains(this)) {
-                playFrightenedAnimation(gameContext, gameLevel.pac());
+                playFrightenedAnimation(gameLevel, gameLevel.pac());
             } else {
                 selectAnimation(ANIM_GHOST_NORMAL);
             }
@@ -378,26 +378,20 @@ public abstract class Ghost extends MovingActor {
      *
      * @see <a href="https://www.youtube.com/watch?v=eFP0_rkjwlY">YouTube: How Frightened Ghosts Decide Where to Go</a>
      */
-    private void updateStateFrightened(GameContext gameContext) {
-        Optional<GameLevel> optGameLevel = gameContext.optGameLevel();
-        if (optGameLevel.isEmpty()) {
-            Logger.error("No game level? WTF!");
-            return;
-        }
-        GameLevel gameLevel = optGameLevel.get();
-        ActorSpeedControl speedControl = gameContext.game().actorSpeedControl();
+    private void updateStateFrightened(GameLevel gameLevel) {
+        ActorSpeedControl speedControl = gameLevel.game().actorSpeedControl();
         float speed = gameLevel.isTunnel(tile())
-            ? speedControl.ghostTunnelSpeed(gameContext, gameLevel, this)
-            : speedControl.ghostFrightenedSpeed(gameContext, gameLevel, this);
+            ? speedControl.ghostTunnelSpeed(gameLevel, this)
+            : speedControl.ghostFrightenedSpeed(gameLevel, this);
         setSpeed(speed);
         roam(gameLevel);
-        playFrightenedAnimation(gameContext, gameLevel.pac());
+        playFrightenedAnimation(gameLevel, gameLevel.pac());
     }
 
-    private void playFrightenedAnimation(GameContext gameContext, Pac pac) {
-        if (pac.isPowerFadingStarting(gameContext)) {
+    private void playFrightenedAnimation(GameLevel gameLevel, Pac pac) {
+        if (pac.isPowerFadingStarting(gameLevel)) {
             playAnimation(ANIM_GHOST_FLASHING);
-        } else if (!pac.isPowerFading(gameContext)) {
+        } else if (!pac.isPowerFading(gameLevel)) {
             playAnimation(ANIM_GHOST_FRIGHTENED);
         }
     }
@@ -424,7 +418,7 @@ public abstract class Ghost extends MovingActor {
                 Logger.error("No ghost house in level? WTF!");
                 return;
             }
-            float speed = gameContext.game().actorSpeedControl().ghostSpeedReturningToHouse(gameContext, gameLevel, this);
+            float speed = gameContext.game().actorSpeedControl().ghostSpeedReturningToHouse(gameLevel, this);
             Vector2f houseEntry = house.entryPosition();
             if (position().roughlyEquals(houseEntry, speed, 0)) {
                 setPosition(houseEntry);
@@ -453,7 +447,7 @@ public abstract class Ghost extends MovingActor {
                 Logger.error("No ghost house in level? WTF!");
                 return;
             }
-            float speed = gameContext.game().actorSpeedControl().ghostSpeedReturningToHouse(gameContext, gameLevel, this);
+            float speed = gameContext.game().actorSpeedControl().ghostSpeedReturningToHouse(gameLevel, this);
             Vector2f position = position();
 
             //TODO get rid of personality() call

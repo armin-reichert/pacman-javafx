@@ -290,7 +290,7 @@ public class GameLevel3D extends Group implements Disposable {
         createLevelCounter3D();
         createLivesCounter3D();
         createPac3D();
-        createGhosts3D(ui.gameContext());
+        createGhosts3D();
         createMaze3D();
         createPellets3D();
         createEnergizers3D();
@@ -420,7 +420,7 @@ public class GameLevel3D extends Group implements Disposable {
         }
     }
 
-    private void createGhosts3D(GameContext gameContext) {
+    private void createGhosts3D() {
         ghosts3D = gameLevel.ghosts().map(ghost -> {
             var ghostColoring = new GhostColoring(
                 ui.currentConfig().assets().color("ghost.%d.color.normal.dress".formatted(ghost.personality())),
@@ -444,7 +444,7 @@ public class GameLevel3D extends Group implements Disposable {
                 gameLevel.data().numFlashes()
             );
         }).toList();
-        ghosts3D.forEach(ghost3D -> ghost3D.init(gameContext, gameLevel));
+        ghosts3D.forEach(ghost3D -> ghost3D.init(gameLevel));
     }
 
     private void createPac3D() {
@@ -702,9 +702,9 @@ public class GameLevel3D extends Group implements Disposable {
     /**
      * Called on each clock tick (frame).
      */
-    public void tick(GameContext gameContext) {
+    public void tick() {
         pac3D.update(gameLevel);
-        ghosts3D.forEach(ghost3D -> ghost3D.update(gameContext, gameLevel));
+        ghosts3D.forEach(ghost3D -> ghost3D.update(gameLevel));
         bonus3D().ifPresent(bonus3D -> bonus3D.update(ui.gameContext()));
         if (house3D != null) {
             house3D.tick(gameLevel);
@@ -728,9 +728,9 @@ public class GameLevel3D extends Group implements Disposable {
         }
     }
 
-    public void onHuntingStart(GameContext gameContext) {
+    public void onHuntingStart() {
         pac3D.init(gameLevel);
-        ghosts3D.forEach(ghost3D -> ghost3D.init(gameContext, gameLevel));
+        ghosts3D.forEach(ghost3D -> ghost3D.init(gameLevel));
         energizers3D().forEach(Energizer3D::startPumping);
         house3D.startSwirlAnimations();
         ghostLightAnimation.playFromStart();

@@ -171,7 +171,7 @@ public abstract class AbstractGameModel implements Game {
             checkIfGhostsKilled();
             if (haveGhostsBeenKilled()) return;
             checkIfPacManFindsFood();
-            updatePacPower(gameContext);
+            updatePacPower();
             gameLevel.bonus().ifPresent(this::checkIfPacManCanEatBonus);
         });
     }
@@ -263,11 +263,11 @@ public abstract class AbstractGameModel implements Game {
 
     protected abstract boolean isPacManSafeInDemoLevel();
 
-    protected void updatePacPower(GameContext gameContext) {
+    protected void updatePacPower() {
         optGameLevel().ifPresent(gameLevel -> {
             final TickTimer powerTimer = gameLevel.pac().powerTimer();
             powerTimer.doTick();
-            if (gameLevel.pac().isPowerFadingStarting(gameContext)) {
+            if (gameLevel.pac().isPowerFadingStarting(gameLevel)) {
                 simulationStep.pacStartsLosingPower = true;
                 eventManager().publishEvent(GameEventType.PAC_STARTS_LOSING_POWER);
             } else if (powerTimer.hasExpired()) {

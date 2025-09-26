@@ -8,11 +8,11 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.model.GameLevel;
 
 public interface ActorSpeedControl {
-    float ghostAttackSpeed(GameContext gameContext, GameLevel level, Ghost ghost);
-    float ghostFrightenedSpeed(GameContext gameContext, GameLevel level, Ghost ghost);
-    float ghostSpeedInsideHouse(GameContext gameContext, GameLevel level, Ghost ghost);
-    float ghostSpeedReturningToHouse(GameContext gameContext, GameLevel level, Ghost ghost);
-    float ghostTunnelSpeed(GameContext gameContext, GameLevel level, Ghost ghost);
-    float pacNormalSpeed(GameContext gameContext, GameLevel level);
-    float pacPowerSpeed(GameContext gameContext, GameLevel level);
+    float ghostAttackSpeed(GameLevel level, Ghost ghost);
+    float ghostFrightenedSpeed(GameLevel level, Ghost ghost);
+    float ghostSpeedInsideHouse(GameLevel level, Ghost ghost);
+    float ghostSpeedReturningToHouse(GameLevel level, Ghost ghost);
+    float ghostTunnelSpeed(GameLevel level, Ghost ghost);
+    float pacNormalSpeed(GameLevel level);
+    float pacPowerSpeed(GameLevel level);
 }

@@ -76,7 +76,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
 
             boolean chase = arcadeGame.huntingTimer().phase() == HuntingPhase.CHASING || arcadeGame.cruiseElroy() > 0;
             Vector2i targetTile = chase ? chasingTargetTile(gameContext) : gameLevel.ghostScatterTile(personality());
-            setSpeed(gameContext.game().actorSpeedControl().ghostAttackSpeed(gameContext, gameLevel, this));
+            setSpeed(gameContext.game().actorSpeedControl().ghostAttackSpeed(gameLevel, this));
             tryMovingTowardsTargetTile(gameLevel, targetTile);
         }
 
@@ -108,7 +108,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
 
             boolean chase = gameContext.game().huntingTimer().phase() == HuntingPhase.CHASING;
             Vector2i targetTile = chase ? chasingTargetTile(gameContext) : gameLevel.ghostScatterTile(personality());
-            setSpeed(gameContext.game().actorSpeedControl().ghostAttackSpeed(gameContext, gameLevel, this));
+            setSpeed(gameContext.game().actorSpeedControl().ghostAttackSpeed(gameLevel, this));
             tryMovingTowardsTargetTile(gameLevel, targetTile);
         }
 
@@ -139,7 +139,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
 
             boolean chase = gameContext.game().huntingTimer().phase() == HuntingPhase.CHASING;
             Vector2i targetTile = chase ? chasingTargetTile(gameContext) : gameLevel.ghostScatterTile(personality());
-            setSpeed(gameContext.game().actorSpeedControl().ghostAttackSpeed(gameContext, gameLevel, this));
+            setSpeed(gameContext.game().actorSpeedControl().ghostAttackSpeed(gameLevel, this));
             tryMovingTowardsTargetTile(gameLevel, targetTile);
         }
 
@@ -172,7 +172,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
 
             boolean chase = gameContext.game().huntingTimer().phase() == HuntingPhase.CHASING;
             Vector2i targetTile = chase ? chasingTargetTile(gameContext) : gameLevel.ghostScatterTile(personality());
-            setSpeed(gameContext.game().actorSpeedControl().ghostAttackSpeed(gameContext, gameLevel, this));
+            setSpeed(gameContext.game().actorSpeedControl().ghostAttackSpeed(gameLevel, this));
             tryMovingTowardsTargetTile(gameLevel, targetTile);
         }
 

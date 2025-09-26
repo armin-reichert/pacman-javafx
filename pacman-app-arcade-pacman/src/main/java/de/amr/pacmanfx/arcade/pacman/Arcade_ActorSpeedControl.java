@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.ActorSpeedControl;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -16,23 +15,23 @@ public class Arcade_ActorSpeedControl implements ActorSpeedControl {
     public static final float BASE_SPEED_1_PERCENT = 0.0125f;
 
     @Override
-    public float pacNormalSpeed(GameContext gameContext, GameLevel level) {
+    public float pacNormalSpeed(GameLevel level) {
         byte percentage = level.data().pacSpeedPercentage();
         return percentage > 0 ? percentage * BASE_SPEED_1_PERCENT : BASE_SPEED;
     }
 
     @Override
-    public float pacPowerSpeed(GameContext gameContext, GameLevel level) {
+    public float pacPowerSpeed(GameLevel level) {
         byte percentage = level.data().pacSpeedPoweredPercentage();
-        return percentage > 0 ? percentage * BASE_SPEED_1_PERCENT : pacNormalSpeed(gameContext, level);
+        return percentage > 0 ? percentage * BASE_SPEED_1_PERCENT : pacNormalSpeed(level);
     }
 
     @Override
-    public float ghostAttackSpeed(GameContext gameContext, GameLevel level, Ghost ghost) {
+    public float ghostAttackSpeed(GameLevel level, Ghost ghost) {
         if (level.isTunnel(ghost.tile())) {
-            return ghostTunnelSpeed(gameContext, level, ghost);
+            return ghostTunnelSpeed(level, ghost);
         }
-        var arcadeGame = (Arcade_GameModel) gameContext.game();
+        var arcadeGame = (Arcade_GameModel) level.game();
         if (arcadeGame.cruiseElroy() == 1) {
             return level.data().elroy1SpeedPercentage() * BASE_SPEED_1_PERCENT;
         }
@@ -43,23 +42,23 @@ public class Arcade_ActorSpeedControl implements ActorSpeedControl {
     }
 
     @Override
-    public float ghostSpeedInsideHouse(GameContext gameContext, GameLevel level, Ghost ghost) {
+    public float ghostSpeedInsideHouse(GameLevel level, Ghost ghost) {
         return 0.5f;
     }
 
     @Override
-    public float ghostSpeedReturningToHouse(GameContext gameContext, GameLevel level, Ghost ghost) {
+    public float ghostSpeedReturningToHouse(GameLevel level, Ghost ghost) {
         return 2;
     }
 
     @Override
-    public float ghostFrightenedSpeed(GameContext gameContext, GameLevel level, Ghost ghost) {
+    public float ghostFrightenedSpeed(GameLevel level, Ghost ghost) {
         float percentage = level.data().ghostSpeedFrightenedPercentage();
         return percentage > 0 ? percentage * BASE_SPEED_1_PERCENT : BASE_SPEED;
     }
 
     @Override
-    public float ghostTunnelSpeed(GameContext gameContext, GameLevel level, Ghost ghost) {
+    public float ghostTunnelSpeed(GameLevel level, Ghost ghost) {
         return level.data().ghostSpeedTunnelPercentage() * BASE_SPEED_1_PERCENT;
     }
 }

@@ -76,7 +76,7 @@ public class GameLevel {
         this.data = requireNonNull(data);
 
         blinking = new Pulse(10, Pulse.OFF);
-        portals = findPortals(worldMap);
+        portals = findPortals();
 
         addGhostHouse();
 
@@ -106,7 +106,7 @@ public class GameLevel {
         foodStore = new FoodStore(worldMap, energizerTiles);
     }
 
-    private Portal[] findPortals(WorldMap worldMap) {
+    private Portal[] findPortals() {
         var portals = new ArrayList<Portal>();
         int firstColumn = 0, lastColumn = worldMap.numCols() - 1;
         for (int row = 0; row < worldMap.numRows(); ++row) {
