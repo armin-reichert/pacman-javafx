@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
+import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_ActorRenderer;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_HUDRenderer;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
@@ -30,7 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel.createPac;
 import static de.amr.pacmanfx.arcade.pacman.rendering.SpriteID.GALLERY_GHOSTS;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 import static de.amr.pacmanfx.model.actors.GhostState.EATEN;
@@ -116,7 +116,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
         GameUI_Config uiConfig = ui.currentConfig();
 
-        pacMan = createPac();
+        pacMan = new ArcadePacMan_GameModel.PacMan();
         pacMan.setAnimations(uiConfig.createPacAnimations());
         pacMan.selectAnimation(ANIM_PAC_MUNCHING);
 

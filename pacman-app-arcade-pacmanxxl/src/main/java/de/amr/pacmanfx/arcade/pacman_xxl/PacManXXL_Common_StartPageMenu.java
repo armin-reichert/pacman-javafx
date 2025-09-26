@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.pacmanfx.GameContext;
+import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.model.DefaultGameVariants;
 import de.amr.pacmanfx.model.Game;
@@ -29,7 +30,6 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel.createPac;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_3D_ENABLED;
 import static de.amr.pacmanfx.ui.input.Keyboard.nude;
@@ -66,7 +66,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         }
 
         private void createActors(GameUI_Config uiConfig) {
-            pac = createPac();
+            pac = new ArcadePacMan_GameModel.PacMan();
             pac.setAnimations(uiConfig.createPacAnimations());
             pac.playAnimation(ANIM_PAC_MUNCHING);
             ghosts = List.of(
