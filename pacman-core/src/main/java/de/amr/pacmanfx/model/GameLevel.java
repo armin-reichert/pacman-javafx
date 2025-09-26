@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.model;
 
 import de.amr.pacmanfx.lib.Direction;
+import de.amr.pacmanfx.lib.RandomNumberSupport;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.timer.Pulse;
@@ -20,6 +21,7 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
+import static de.amr.pacmanfx.lib.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.lib.worldmap.FoodTile.ENERGIZER;
 import static de.amr.pacmanfx.lib.worldmap.TerrainTile.TUNNEL;
 import static de.amr.pacmanfx.lib.worldmap.TerrainTile.isBlocked;
@@ -301,6 +303,13 @@ public class GameLevel {
     }
 
     public List<Portal> portals() { return Arrays.asList(portals); }
+
+    public Optional<Portal> randomPortal() {
+        if (portals.length == 0) {
+            return Optional.empty();
+        }
+        return Optional.of(portals[randomInt(0, portals.length)]);
+    }
 
     public boolean isTileInPortalSpace(Vector2i tile) {
         requireNonNull(tile);

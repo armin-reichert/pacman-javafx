@@ -10,6 +10,10 @@ public interface RandomNumberSupport {
 
     Random RND = new Random();
 
+    static boolean randomBoolean() {
+        return RND.nextBoolean();
+    }
+
     /**
      * @param min left interval bound
      * @param maxExclusive right (open) interval bound

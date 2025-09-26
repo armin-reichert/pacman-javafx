@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
+import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_HUDRenderer;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SceneRenderer;
 import de.amr.pacmanfx.controller.GamePlayState;
@@ -27,7 +28,6 @@ import javafx.scene.paint.Color;
 import java.util.List;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.createMsPacMan;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.ui.CommonGameActions.*;
@@ -104,7 +104,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
         final GameUI_Config uiConfig = ui.currentConfig();
 
-        msPacMan = createMsPacMan();
+        msPacMan = new ArcadeMsPacMan_GameModel.MsPacMan();
         msPacMan.setAnimations(uiConfig.createPacAnimations());
         msPacMan.selectAnimation(ANIM_PAC_MUNCHING);
 

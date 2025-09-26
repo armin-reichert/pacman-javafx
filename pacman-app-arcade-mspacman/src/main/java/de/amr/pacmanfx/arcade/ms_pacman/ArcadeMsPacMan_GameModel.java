@@ -22,11 +22,11 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.util.List;
 import java.util.OptionalInt;
-import java.util.Random;
 import java.util.Set;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.lib.RandomNumberSupport.randomBoolean;
 import static de.amr.pacmanfx.lib.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
 import static java.util.Objects.requireNonNull;
@@ -47,19 +47,27 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
     private static final byte[] BONUS_VALUE_MULTIPLIERS = {1, 2, 5, 7, 10, 20, 50}; // points = value * 100
 
-    public static Pac createMsPacMan() {
-        var pac = new Pac("Ms. Pac-Man");
-        pac.reset();
-        return pac;
+    public static class MsPacMan extends Pac {
+
+        public MsPacMan() {
+            super("Ms. Pac-Man");
+            reset();
+        }
     }
 
-    public static Pac createPacMan() {
-        var pac = new Pac("Pac-Man");
-        pac.reset();
-        return pac;
+    public static class PacMan extends Pac {
+
+        public PacMan() {
+            super("Pac-Man");
+            reset();
+        }
     }
 
     public static class Blinky extends Ghost {
+
+        public Blinky() {
+            reset();
+        }
 
         @Override
         public String name() {
@@ -105,6 +113,10 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
      * */
     public static class Pinky extends Ghost {
 
+        public Pinky() {
+            reset();
+        }
+
         @Override
         public String name() {
             return "Pinky";
@@ -141,6 +153,10 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
     public static class Inky extends Ghost {
 
+        public Inky() {
+            reset();
+        }
+
         @Override
         public String name() {
             return "Inky";
@@ -173,6 +189,10 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     }
 
     public static class Sue extends Ghost {
+
+        public Sue() {
+            reset();
+        }
 
         @Override
         public String name() {
@@ -309,6 +329,11 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     }
 
     @Override
+    public GameEventManager eventManager() {
+        return gameContext.eventManager();
+    }
+
+    @Override
     public ScoreManager scoreManager() {
         return scoreManager;
     }
@@ -340,18 +365,18 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
     @Override
     public void createLevel(int levelNumber) {
-        WorldMap worldMap = mapSelector.getWorldMap(levelNumber);
-        setGameLevel(new GameLevel(this, levelNumber, worldMap, createLevelData(levelNumber)));
-        gameLevel().setGameOverStateTicks(150);
+        final WorldMap worldMap = mapSelector.getWorldMap(levelNumber);
 
-        gameLevel().setPac(createMsPacMan());
-        gameLevel().pac().setAutopilotSteering(autopilot);
+        final GameLevel newGameLevel = new GameLevel(this, levelNumber, worldMap, createLevelData(levelNumber));
+        final MsPacMan msPacMan = new MsPacMan();
+        msPacMan.setAutopilotSteering(autopilot);
+        newGameLevel.setPac(msPacMan);
+        newGameLevel.setGhosts(new Blinky(), new Pinky(), new Inky(), new Sue());
+        newGameLevel.setBonusSymbol(0, computeBonusSymbol(levelNumber));
+        newGameLevel.setBonusSymbol(1, computeBonusSymbol(levelNumber));
+        newGameLevel.setGameOverStateTicks(150);
 
-        gameLevel().setGhosts(new Blinky(), new Pinky(), new Inky(), new Sue());
-        gameLevel().ghosts().forEach(MovingActor::reset);
-
-        gameLevel().setBonusSymbol(0, computeBonusSymbol(gameLevel().number()));
-        gameLevel().setBonusSymbol(1, computeBonusSymbol(gameLevel().number()));
+        setGameLevel(newGameLevel);
 
         /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
          * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
@@ -433,66 +458,63 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     @Override
     public void activateNextBonus() {
         if (gameLevel().isBonusEdible()) {
-            Logger.info("Previous bonus is still active, skip this one");
+            Logger.info("Previous bonus is still active, skip this bonus");
             return;
         }
-        gameLevel().selectNextBonus();
 
-        if (gameLevel().portals().isEmpty()) {
-            return; // should not happen
+        final List<Portal> portals = gameLevel().portals();
+        if (portals.isEmpty()) {
+            Logger.error("Moving bonus cannot be activated, game level does not contain any portals");
+            return;
         }
-        House house = gameLevel().house().orElse(null);
+
+        final House house = gameLevel().house().orElse(null);
         if (house == null) {
-            Logger.error("No house exists in this level!");
+            Logger.error("Moving bonus cannot be activated, no house exists in this level!");
             return;
         }
 
         Vector2i entryTile = gameLevel().worldMap().getTerrainTileProperty(DefaultWorldMapPropertyName.POS_BONUS);
         Vector2i exitTile;
-        boolean crossingLeftToRight;
-        if (entryTile != null) {
-                int exitPortalIndex = new Random().nextInt(gameLevel().portals().size());
+        boolean leftToRight;
+        if (entryTile != null) { // Map defines bonus entry tile
+            int exitPortalIndex = randomInt(0, portals.size());
+            Portal exitPortal = portals.get(exitPortalIndex);
             if (entryTile.x() == 0) { // enter maze at left border
-                exitTile = gameLevel().portals().get(exitPortalIndex).rightTunnelEnd().plus(1, 0);
-                crossingLeftToRight = true;
-            } else { // enter maze  at right border
-                exitTile = gameLevel().portals().get(exitPortalIndex).leftTunnelEnd().minus(1, 0);
-                crossingLeftToRight = false;
+                exitTile = exitPortal.rightTunnelEnd().plus(1, 0);
+                leftToRight = true;
+            } else { // bonus entry is at right map border
+                exitTile = exitPortal.leftTunnelEnd().minus(1, 0);
+                leftToRight = false;
             }
         }
         else { // choose random crossing direction and random entry and exit portals
-            crossingLeftToRight = new Random().nextBoolean();
-            if (crossingLeftToRight) {
-                entryTile = randomPortal(gameLevel()).leftTunnelEnd();
-                exitTile  = randomPortal(gameLevel()).rightTunnelEnd().plus(1, 0);
+            Portal entryPortal = portals.get(randomInt(0, portals.size()));
+            Portal exitPortal = portals.get(randomInt(0, portals.size()));
+            leftToRight = randomBoolean();
+            if (leftToRight) {
+                entryTile = entryPortal.leftTunnelEnd();
+                exitTile  = exitPortal.rightTunnelEnd().plus(1, 0);
             } else {
-                entryTile = randomPortal(gameLevel()).rightTunnelEnd();
-                exitTile = randomPortal(gameLevel()).leftTunnelEnd().minus(1, 0);
+                entryTile = entryPortal.rightTunnelEnd();
+                exitTile = exitPortal.leftTunnelEnd().minus(1, 0);
             }
         }
 
         Vector2i houseEntry = tileAt(house.entryPosition());
         Vector2i backyard = houseEntry.plus(0, house.sizeInTiles().y() + 1);
-        List<Waypoint> route = Stream.of(entryTile, houseEntry, backyard, houseEntry, exitTile)
-            .map(Waypoint::new).toList();
+        List<Waypoint> route = Stream.of(entryTile, houseEntry, backyard, houseEntry, exitTile).map(Waypoint::new).toList();
 
+        gameLevel().selectNextBonus();
         byte symbol = gameLevel().bonusSymbol(gameLevel().currentBonusIndex());
-        var bonus = new Bonus(symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100, new Pulse(10, false));
+        Pulse jumpAnimation = new Pulse(10, false);
+        var bonus = new Bonus(symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100, jumpAnimation);
         bonus.setEdible(TickTimer.INDEFINITE);
-        bonus.setRoute(route, crossingLeftToRight);
-        Logger.info("Moving bonus created, route: {} (crossing {})", route,
-            crossingLeftToRight ? "left to right" : "right to left");
-
+        bonus.setRoute(route, leftToRight);
         gameLevel().setBonus(bonus);
+
+        Logger.info("Moving bonus created, route: {} (crossing {})", route, leftToRight ? "left to right" : "right to left");
+
         eventManager().publishEvent(GameEventType.BONUS_ACTIVATED, bonus.tile());
-    }
-
-    protected Portal randomPortal(GameLevel level) {
-        return level.portals().get(new Random().nextInt(level.portals().size()));
-    }
-
-    @Override
-    public GameEventManager eventManager() {
-        return gameContext.eventManager();
     }
 }

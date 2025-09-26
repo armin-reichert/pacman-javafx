@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.pacmanfx.Globals;
+import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_ActorRenderer;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_HUDRenderer;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
@@ -20,8 +21,6 @@ import javafx.scene.canvas.Canvas;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.createMsPacMan;
-import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.createPacMan;
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_PacAnimationManager.PAC_MAN_MUNCHING;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 
@@ -75,10 +74,10 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         final GameUI_Config uiConfig = ui.currentConfig();
         final var spriteSheet = (ArcadeMsPacMan_SpriteSheet) uiConfig.spriteSheet();
 
-        pacMan = createPacMan();
+        pacMan = new ArcadeMsPacMan_GameModel.PacMan();
         pacMan.setAnimations(uiConfig.createPacAnimations());
 
-        msPacMan = createMsPacMan();
+        msPacMan = new ArcadeMsPacMan_GameModel.MsPacMan();
         msPacMan.setAnimations(uiConfig.createPacAnimations());
 
         stork = new Stork(spriteSheet);
