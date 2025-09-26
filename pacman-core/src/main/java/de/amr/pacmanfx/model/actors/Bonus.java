@@ -47,7 +47,7 @@ public class Bonus extends MovingActor {
         state = BonusState.INACTIVE;
     }
 
-    public void setRoute(GameContext gameContext, List<Waypoint> route, boolean leftToRight) {
+    public void setRoute(List<Waypoint> route, boolean leftToRight) {
         requireNonNull(route);
         var mutableRoute = new ArrayList<>(route);
         placeAtTile(mutableRoute.getFirst().tile());
@@ -60,7 +60,8 @@ public class Bonus extends MovingActor {
 
     @Override
     public String toString() {
-        return "Bonus{symbol=%s, points=%d, countdown=%d, state=%s, animation=%s}".formatted(symbol, points, ticksRemaining, state, jumpAnimation);
+        return "Bonus{symbol=%s, points=%d, countdown=%d, state=%s, animation=%s}"
+            .formatted(symbol, points, ticksRemaining, state, jumpAnimation);
     }
 
     @Override
@@ -109,23 +110,29 @@ public class Bonus extends MovingActor {
         Logger.trace("Bonus inactive: {}", this);
     }
 
-    public void setEdibleTicks(long edibleTicks) {
+    /**
+     * @param ticks number of ticks the bonus stays edible
+     */
+    public void setEdible(long ticks) {
         if (jumpAnimation != null) {
             jumpAnimation.restart();
             setSpeed(0.5f); // how fast in the original game?
             setTargetTile(null);
         }
-        ticksRemaining = edibleTicks;
+        ticksRemaining = ticks;
         show();
         state = BonusState.EDIBLE;
         Logger.trace("Bonus edible: {}", this);
     }
 
-    public void setEaten(long eatenDurationTicks) {
+    /**
+     * @param ticks number of ticks the eaten bonus is displayed as the number of points won
+     */
+    public void setEaten(long ticks) {
         if (jumpAnimation != null) {
             jumpAnimation.stop();
         }
-        ticksRemaining = eatenDurationTicks;
+        ticksRemaining = ticks;
         state = BonusState.EATEN;
         Logger.trace("Bonus eaten: {}", this);
     }
@@ -133,40 +140,33 @@ public class Bonus extends MovingActor {
     @Override
     public void tick(GameContext gameContext) {
         switch (state) {
-            case INACTIVE -> {}
             case EDIBLE -> {
-                boolean expired;
-                if (jumpAnimation != null) {
-                    expired = jumpThroughWorldAndLeaveThroughPortal(gameContext);
-                } else {
-                    expired = countdown();
-                }
-                if (expired) {
+                countDownTimer();
+                boolean leftWorld = jumpAnimation != null && tumbleEventuallyLeaveThroughPortal(gameContext);
+                if (leftWorld || ticksRemaining == 0) {
+                    setInactive();
                     gameContext.eventManager().publishEvent(GameEventType.BONUS_EXPIRED, tile());
                 }
             }
             case EATEN -> {
-                boolean expired = countdown();
-                if (expired) {
+                countDownTimer();
+                if (ticksRemaining == 0) {
+                    setInactive();
                     gameContext.eventManager().publishEvent(GameEventType.BONUS_EXPIRED, tile());
                 }
             }
+            case INACTIVE -> {}
         }
     }
 
-    // Waits for countdown to reach 0 then expires
-    private boolean countdown() {
-        if (ticksRemaining == 0) {
-            setInactive();
-            return true;
-        } else if (ticksRemaining != TickTimer.INDEFINITE) {
+    private void countDownTimer() {
+        if (ticksRemaining > 0 && ticksRemaining != TickTimer.INDEFINITE) {
             --ticksRemaining;
         }
-        return false;
     }
 
     // moves, when end of route is reached, expires
-    private boolean jumpThroughWorldAndLeaveThroughPortal(GameContext gameContext) {
+    private boolean tumbleEventuallyLeaveThroughPortal(GameContext gameContext) {
         if (gameContext.optGameLevel().isPresent()) {
             steering.steer(this, gameContext.gameLevel());
             if (steering.isComplete()) {

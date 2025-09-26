@@ -17,7 +17,6 @@ import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
-import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -479,8 +478,8 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
         byte symbol = gameLevel().bonusSymbol(gameLevel().currentBonusIndex());
         var bonus = new Bonus(symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100, new Pulse(10, false));
-        bonus.setEdibleTicks(TickTimer.INDEFINITE);
-        bonus.setRoute(gameContext, route, crossingLeftToRight);
+        bonus.setEdible(TickTimer.INDEFINITE);
+        bonus.setRoute(route, crossingLeftToRight);
         Logger.info("Moving bonus created, route: {} (crossing {})", route,
             crossingLeftToRight ? "left to right" : "right to left");
 
