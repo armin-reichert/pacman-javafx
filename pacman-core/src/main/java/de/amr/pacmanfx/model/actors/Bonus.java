@@ -57,7 +57,6 @@ public class Bonus extends MovingActor {
         steering = new RouteBasedSteering(mutableRoute);
     }
 
-
     @Override
     public String toString() {
         return "Bonus{symbol=%s, points=%d, countdown=%d, state=%s, animation=%s}"
@@ -142,7 +141,7 @@ public class Bonus extends MovingActor {
         switch (state) {
             case EDIBLE -> {
                 countDownTimer();
-                boolean leftWorld = jumpAnimation != null && tumbleEventuallyLeaveThroughPortal(gameContext);
+                boolean leftWorld = jumpAnimation != null && tumbleEventuallyLeaveThroughPortal(gameContext.gameLevel());
                 if (leftWorld || ticksRemaining == 0) {
                     setInactive();
                     gameContext.eventManager().publishEvent(GameEventType.BONUS_EXPIRED, tile());
@@ -165,22 +164,19 @@ public class Bonus extends MovingActor {
         }
     }
 
-    // moves, when end of route is reached, expires
-    private boolean tumbleEventuallyLeaveThroughPortal(GameContext gameContext) {
-        if (gameContext.optGameLevel().isPresent()) {
-            steering.steer(this, gameContext.gameLevel());
-            if (steering.isComplete()) {
-                setInactive();
-                return true;
-            } else {
-                navigateTowardsTarget(gameContext.gameLevel());
-                findMyWayThroughThisCruelWorld(gameContext.gameLevel());
-                jumpAnimation.tick();
-            }
+    // Moves through level, when end of route is reached, expires.
+    private boolean tumbleEventuallyLeaveThroughPortal(GameLevel gameLevel) {
+        steering.steer(this, gameLevel);
+        if (steering.isComplete()) {
+            return true;
         }
+        navigateTowardsTarget(gameLevel);
+        moveThroughThisCruelWorld(gameLevel);
+        jumpAnimation.tick();
         return false;
     }
 
+    //TODO check in emulator what's really going on
     public float jumpHeight() {
         if (jumpAnimation == null || !jumpAnimation.isRunning()) {
             return 0;

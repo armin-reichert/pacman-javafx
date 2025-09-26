@@ -309,7 +309,7 @@ public abstract class MovingActor extends Actor {
         requireNonNull(gameLevel);
         setTargetTile(targetTile);
         navigateTowardsTarget(gameLevel);
-        findMyWayThroughThisCruelWorld(gameLevel);
+        moveThroughThisCruelWorld(gameLevel);
     }
 
     private void tryTeleport(Vector2i currentTile, Portal portal) {
@@ -331,7 +331,7 @@ public abstract class MovingActor extends Actor {
      * First checks if the actor can be teleported, then if the actor can move to its wish direction. If this is not
      * possible, it keeps moving to its current move direction.
      */
-    public void findMyWayThroughThisCruelWorld(GameLevel gameLevel) {
+    public void moveThroughThisCruelWorld(GameLevel gameLevel) {
         requireNonNull(gameLevel);
         final Vector2i currentTile = tile();
         moveInfo.clear();

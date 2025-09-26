@@ -163,7 +163,7 @@ public class Pac extends MovingActor {
         setSpeed(powerTimer.isRunning()
             ? gameContext.game().actorSpeedControl().pacPowerSpeed(gameContext, gameContext.gameLevel())
             : gameContext.game().actorSpeedControl().pacNormalSpeed(gameContext, gameContext.gameLevel()));
-        findMyWayThroughThisCruelWorld(gameContext.gameLevel());
+        moveThroughThisCruelWorld(gameContext.gameLevel());
 
         if (moveInfo.moved) {
             animations().ifPresent(AnimationManager::play);

@@ -126,7 +126,7 @@ public abstract class Ghost extends MovingActor {
             Direction dir = computeRoamingDirection(gameLevel, currentTile);
             setWishDir(dir);
         }
-        findMyWayThroughThisCruelWorld(gameLevel);
+        moveThroughThisCruelWorld(gameLevel);
     }
 
     // try a random direction towards an accessible tile, do not turn back unless there is no other way
@@ -435,7 +435,7 @@ public abstract class Ghost extends MovingActor {
                 setSpeed(speed);
                 setTargetTile(house.leftDoorTile());
                 navigateTowardsTarget(gameLevel);
-                findMyWayThroughThisCruelWorld(gameLevel);
+                moveThroughThisCruelWorld(gameLevel);
             }
         });
     }
