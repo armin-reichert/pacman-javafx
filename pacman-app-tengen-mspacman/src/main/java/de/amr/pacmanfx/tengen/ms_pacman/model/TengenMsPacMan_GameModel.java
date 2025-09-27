@@ -483,12 +483,12 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public OptionalInt optCutSceneNumber(int levelNumber) {
+    public Optional<Integer> optCutSceneNumber(int levelNumber) {
          return switch (levelNumber) {
-             case 2 -> OptionalInt.of(1);
-             case 5 -> OptionalInt.of(2);
-             case 9, 13, 17 -> OptionalInt.of(3);
-             default -> levelNumber == LAST_LEVEL_NUMBER ? OptionalInt.of(4) : OptionalInt.empty();
+             case 2 -> Optional.of(1);
+             case 5 -> Optional.of(2);
+             case 9, 13, 17 -> Optional.of(3);
+             default -> levelNumber == LAST_LEVEL_NUMBER ? Optional.of(4) : Optional.empty();
         };
     }
 

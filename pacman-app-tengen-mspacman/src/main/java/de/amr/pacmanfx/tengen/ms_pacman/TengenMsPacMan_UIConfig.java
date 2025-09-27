@@ -396,11 +396,11 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
                     throw new IllegalStateException("Cannot determine cut scene, no game level available");
                 }
                 int levelNumber = gameContext.gameLevel().number();
-                OptionalInt optCutSceneNumber = gameContext.game().optCutSceneNumber(levelNumber);
+                Optional<Integer> optCutSceneNumber = gameContext.game().optCutSceneNumber(levelNumber);
                 if (optCutSceneNumber.isEmpty()) {
                     throw new IllegalStateException("Cannot determine cut scene after level %d".formatted(levelNumber));
                 }
-                yield sceneID_CutScene(optCutSceneNumber.getAsInt());
+                yield sceneID_CutScene(optCutSceneNumber.get());
             }
             case CutScenesTestState testState -> sceneID_CutScene(testState.testedCutSceneNumber);
             default -> PROPERTY_3D_ENABLED.get() ? SCENE_ID_PLAY_SCENE_3D : SCENE_ID_PLAY_SCENE_2D;

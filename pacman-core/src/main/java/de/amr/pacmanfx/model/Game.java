@@ -29,7 +29,7 @@ public interface Game extends GameLifecycle, GameEvents, ActorSpeedControl {
 
     boolean              cutScenesEnabled();
     void                 setCutScenesEnabled(boolean enabled);
-    OptionalInt          optCutSceneNumber(int levelNumber);
+    Optional<Integer>    optCutSceneNumber(int levelNumber);
 
     int                  initialLifeCount();
     void                 setInitialLifeCount(int numLives);

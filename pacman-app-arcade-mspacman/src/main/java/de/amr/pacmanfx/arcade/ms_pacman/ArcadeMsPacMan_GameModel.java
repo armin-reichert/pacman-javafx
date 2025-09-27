@@ -22,10 +22,7 @@ import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.List;
-import java.util.OptionalInt;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -245,6 +242,14 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
+    protected static final Map<Integer, Integer> CUT_SCENE_AFTER_LEVEL = Map.of(
+        2, 1, // after level #2, play cut scene #1
+        5, 2,
+        9, 3,
+        13, 3,
+        17, 3
+    );
+
     protected final MapSelector mapSelector;
     protected final HUD hud = new DefaultHUD();
     protected final ScoreManager scoreManager;
@@ -343,13 +348,9 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     }
 
     @Override
-    public OptionalInt optCutSceneNumber(int levelNumber) {
-        return switch (levelNumber) {
-            case 2 -> OptionalInt.of(1);
-            case 5 -> OptionalInt.of(2);
-            case 9, 13, 17 -> OptionalInt.of(3);
-            default -> OptionalInt.empty();
-        };
+    public Optional<Integer> optCutSceneNumber(int levelNumber) {
+        Integer cutSceneNumber = CUT_SCENE_AFTER_LEVEL.get(levelNumber);
+        return Optional.ofNullable(cutSceneNumber);
     }
 
     @Override
