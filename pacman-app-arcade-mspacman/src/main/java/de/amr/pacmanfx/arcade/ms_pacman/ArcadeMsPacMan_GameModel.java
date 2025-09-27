@@ -160,15 +160,6 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         }
 
         @Override
-        public void hunt(GameLevel gameLevel) {
-            float speed = gameLevel.game().ghostAttackSpeed(gameLevel, this);
-            boolean chase = gameLevel.game().huntingTimer().phase() == HuntingPhase.CHASING;
-            Vector2i targetTile = chase ? chasingTargetTile(gameLevel) : gameLevel.ghostScatterTile(personality());
-            setSpeed(speed);
-            tryMovingTowardsTargetTile(gameLevel, targetTile);
-        }
-
-        @Override
         public Vector2i chasingTargetTile(GameLevel gameLevel) {
             // Inky (cyan ghost) attacks from opposite side as Blinky
             Ghost blinky = gameLevel.ghost(RED_GHOST_SHADOW);
@@ -190,15 +181,6 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         @Override
         public byte personality() {
             return ORANGE_GHOST_POKEY;
-        }
-
-        @Override
-        public void hunt(GameLevel gameLevel) {
-            float speed = gameLevel.game().ghostAttackSpeed(gameLevel, this);
-            boolean chase = gameLevel.game().huntingTimer().phase() == HuntingPhase.CHASING;
-            Vector2i targetTile = chase ? chasingTargetTile(gameLevel) : gameLevel.ghostScatterTile(personality());
-            setSpeed(speed);
-            tryMovingTowardsTargetTile(gameLevel, targetTile);
         }
 
         @Override

@@ -77,8 +77,8 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
 
         @Override
         public void hunt(GameLevel gameLevel) {
+            // Blinky overrides hunt method to take Cruise Elroy mode into account
             var arcadeGame = (Arcade_GameModel) gameLevel.game();
-
             boolean chase = arcadeGame.huntingTimer().phase() == HuntingPhase.CHASING || arcadeGame.cruiseElroy() > 0;
             Vector2i targetTile = chase ? chasingTargetTile(gameLevel) : gameLevel.ghostScatterTile(personality());
             setSpeed(gameLevel.game().ghostAttackSpeed(gameLevel, this));
@@ -109,14 +109,6 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         }
 
         @Override
-        public void hunt(GameLevel gameLevel) {
-            boolean chase = gameLevel.game().huntingTimer().phase() == HuntingPhase.CHASING;
-            Vector2i targetTile = chase ? chasingTargetTile(gameLevel) : gameLevel.ghostScatterTile(personality());
-            setSpeed(gameLevel.game().ghostAttackSpeed(gameLevel, this));
-            tryMovingTowardsTargetTile(gameLevel, targetTile);
-        }
-
-        @Override
         public Vector2i chasingTargetTile(GameLevel gameLevel) {
             // Pinky (pink ghost) ambushes Pac-Man
             return gameLevel.pac().tilesAheadWithOverflowBug(4);
@@ -140,14 +132,6 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         }
 
         @Override
-        public void hunt(GameLevel gameLevel) {
-            boolean chase = gameLevel.game().huntingTimer().phase() == HuntingPhase.CHASING;
-            Vector2i targetTile = chase ? chasingTargetTile(gameLevel) : gameLevel.ghostScatterTile(personality());
-            setSpeed(gameLevel.game().ghostAttackSpeed(gameLevel, this));
-            tryMovingTowardsTargetTile(gameLevel, targetTile);
-        }
-
-        @Override
         public Vector2i chasingTargetTile(GameLevel gameLevel) {
             // Inky (cyan ghost) attacks from opposite side as Blinky
             return gameLevel.pac().tilesAheadWithOverflowBug(2).scaled(2).minus(gameLevel.ghost(RED_GHOST_SHADOW).tile());
@@ -168,14 +152,6 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         @Override
         public byte personality() {
             return ORANGE_GHOST_POKEY;
-        }
-
-        @Override
-        public void hunt(GameLevel gameLevel) {
-            boolean chase = gameLevel.game().huntingTimer().phase() == HuntingPhase.CHASING;
-            Vector2i targetTile = chase ? chasingTargetTile(gameLevel) : gameLevel.ghostScatterTile(personality());
-            setSpeed(gameLevel.game().ghostAttackSpeed(gameLevel, this));
-            tryMovingTowardsTargetTile(gameLevel, targetTile);
         }
 
         @Override

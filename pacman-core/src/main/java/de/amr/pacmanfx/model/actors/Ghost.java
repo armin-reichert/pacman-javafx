@@ -13,6 +13,7 @@ import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.lib.worldmap.TerrainTile;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.House;
+import de.amr.pacmanfx.model.HuntingPhase;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.tinylog.Logger;
@@ -95,12 +96,17 @@ public abstract class Ghost extends MovingActor {
     }
 
     /**
-     * Subclasses implement this method to define the behavior of the ghost when hunting Pac-Man through
-     * the current game level.
+     * Default hunting behavior is to retreat towards the scatter tile in scatter phase
+     * and to go towards current target tile in chasing phase.
      *
      * @param gameLevel the game level this ghost lives in
      */
-    public abstract void hunt(GameLevel gameLevel);
+    public void hunt(GameLevel gameLevel) {
+        boolean chase = gameLevel.game().huntingTimer().phase() == HuntingPhase.CHASING;
+        Vector2i targetTile = chase ? chasingTargetTile(gameLevel) : gameLevel.ghostScatterTile(personality());
+        setSpeed(gameLevel.game().ghostAttackSpeed(gameLevel, this));
+        tryMovingTowardsTargetTile(gameLevel, targetTile);
+    }
 
     /**
      * Subclasses implement this method to define the target tile of the ghost when hunting Pac-Man through

@@ -19,7 +19,10 @@ import de.amr.pacmanfx.steering.Steering;
 import org.tinylog.Logger;
 
 import java.io.File;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -122,6 +125,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
         @Override
         public void hunt(GameLevel gameLevel) {
+            //TODO Clarify hunting behavior of Blinky
             float speed = gameLevel.game().ghostAttackSpeed(gameLevel, this);
             setSpeed(speed);
             if (gameLevel.game().huntingTimer().phaseIndex() == 0) {
@@ -153,6 +157,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
         @Override
         public void hunt(GameLevel gameLevel) {
+            //TODO Clarify hunting behavior of Pinky
             float speed = gameLevel.game().ghostAttackSpeed(gameLevel, this);
             setSpeed(speed);
             if (gameLevel.game().huntingTimer().phaseIndex() == 0) {
@@ -183,15 +188,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         }
 
         @Override
-        public void hunt(GameLevel gameLevel) {
-            float speed = gameLevel.game().ghostAttackSpeed(gameLevel, this);
-            boolean chase = gameLevel.game().huntingTimer().phase() == HuntingPhase.CHASING;
-            Vector2i targetTile = chase ? chasingTargetTile(gameLevel) : gameLevel.ghostScatterTile(personality());
-            setSpeed(speed);
-            tryMovingTowardsTargetTile(gameLevel, targetTile);
-        }
-
-        @Override
         public Vector2i chasingTargetTile(GameLevel gameLevel) {
             Ghost blinky = gameLevel.ghost(RED_GHOST_SHADOW);
             return gameLevel.pac().tilesAhead(2).scaled(2).minus(blinky.tile());
@@ -208,15 +204,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         @Override
         public byte personality() {
             return ORANGE_GHOST_POKEY;
-        }
-
-        @Override
-        public void hunt(GameLevel gameLevel) {
-            float speed = gameLevel.game().ghostAttackSpeed(gameLevel, this);
-            boolean chase = gameLevel.game().huntingTimer().phase() == HuntingPhase.CHASING;
-            Vector2i targetTile = chase ? chasingTargetTile(gameLevel) : gameLevel.ghostScatterTile(personality());
-            setSpeed(speed);
-            tryMovingTowardsTargetTile(gameLevel, targetTile);
         }
 
         @Override
