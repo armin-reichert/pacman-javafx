@@ -11,11 +11,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.OptionalInt;
 
-public interface Game extends GameLifecycle, GameEvents {
+public interface Game extends GameLifecycle, GameEvents, ActorSpeedControl {
     GameEventManager     eventManager();
     ScoreManager         scoreManager();
     SimulationStep       simulationStep();
-    ActorSpeedControl    actorSpeedControl();
     HuntingTimer         huntingTimer();
     MapSelector          mapSelector();
     Optional<GateKeeper> optGateKeeper();

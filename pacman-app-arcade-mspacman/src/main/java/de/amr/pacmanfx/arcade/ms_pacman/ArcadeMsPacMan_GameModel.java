@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.arcade.pacman.Arcade_ActorSpeedControl;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameModel;
 import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.event.GameEventType;
@@ -15,7 +14,10 @@ import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.*;
-import de.amr.pacmanfx.model.actors.*;
+import de.amr.pacmanfx.model.actors.Bonus;
+import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.model.actors.GhostState;
+import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
 
@@ -82,7 +84,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         @Override
         public void hunt(GameLevel gameLevel) {
             var game = (ArcadeMsPacMan_GameModel) gameLevel.game();
-            float speed = game.actorSpeedControl().ghostAttackSpeed(gameLevel, this);
+            float speed = game.ghostAttackSpeed(gameLevel, this);
             setSpeed(speed);
             if (game.huntingTimer().phaseIndex() == 0) {
                 roam(gameLevel);
@@ -125,7 +127,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
         @Override
         public void hunt(GameLevel gameLevel) {
-            float speed = gameLevel.game().actorSpeedControl().ghostAttackSpeed(gameLevel, this);
+            float speed = gameLevel.game().ghostAttackSpeed(gameLevel, this);
             setSpeed(speed);
             if (gameLevel.game().huntingTimer().phaseIndex() == 0) {
                 roam(gameLevel);
@@ -161,7 +163,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
         @Override
         public void hunt(GameLevel gameLevel) {
-            float speed = gameLevel.game().actorSpeedControl().ghostAttackSpeed(gameLevel, this);
+            float speed = gameLevel.game().ghostAttackSpeed(gameLevel, this);
             boolean chase = gameLevel.game().huntingTimer().phase() == HuntingPhase.CHASING;
             Vector2i targetTile = chase ? chasingTargetTile(gameLevel) : gameLevel.ghostScatterTile(personality());
             setSpeed(speed);
@@ -194,7 +196,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
         @Override
         public void hunt(GameLevel gameLevel) {
-            float speed = gameLevel.game().actorSpeedControl().ghostAttackSpeed(gameLevel, this);
+            float speed = gameLevel.game().ghostAttackSpeed(gameLevel, this);
             boolean chase = gameLevel.game().huntingTimer().phase() == HuntingPhase.CHASING;
             Vector2i targetTile = chase ? chasingTargetTile(gameLevel) : gameLevel.ghostScatterTile(personality());
             setSpeed(speed);
@@ -246,7 +248,6 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     protected final HUD hud = new DefaultHUD();
     protected final ScoreManager scoreManager;
     protected final HuntingTimer huntingTimer;
-    protected final ActorSpeedControl actorSpeedControl;
 
     /**
      * Called via reflection by builder.
@@ -292,8 +293,6 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
             }
         });
 
-        actorSpeedControl = new Arcade_ActorSpeedControl();
-
         gateKeeper = new GateKeeper(this);
         gateKeeper.setOnGhostReleased(prisoner -> {
             if (prisoner.personality() == ORANGE_GHOST_POKEY && !isCruiseElroyModeActive()) {
@@ -330,11 +329,6 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     @Override
     public HuntingTimer huntingTimer() {
         return huntingTimer;
-    }
-
-    @Override
-    public ActorSpeedControl actorSpeedControl() {
-        return actorSpeedControl;
     }
 
     @Override

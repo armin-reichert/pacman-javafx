@@ -157,8 +157,8 @@ public class Pac extends MovingActor {
             autopilotSteering.steer(this, gameContext.gameLevel());
         }
         setSpeed(powerTimer.isRunning()
-            ? gameContext.game().actorSpeedControl().pacPowerSpeed(gameLevel)
-            : gameContext.game().actorSpeedControl().pacNormalSpeed(gameLevel));
+            ? gameContext.game().pacPowerSpeed(gameLevel)
+            : gameContext.game().pacNormalSpeed(gameLevel));
         moveThroughThisCruelWorld(gameContext.gameLevel());
 
         if (moveInfo.moved) {

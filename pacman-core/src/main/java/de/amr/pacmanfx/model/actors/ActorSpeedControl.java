@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model.actors;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.model.GameLevel;
 
 public interface ActorSpeedControl {

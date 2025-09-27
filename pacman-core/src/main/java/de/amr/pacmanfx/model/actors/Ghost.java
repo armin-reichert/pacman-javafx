@@ -254,8 +254,7 @@ public abstract class Ghost extends MovingActor {
         if (house.isVisitedBy(this)) {
             float minY = (house.minTile().y() + 1) * TS + HTS;
             float maxY = (house.maxTile().y() - 1) * TS - HTS;
-            ActorSpeedControl speedControl = gameLevel.game().actorSpeedControl();
-            float speed = speedControl.ghostSpeedInsideHouse(gameLevel, this);
+            float speed = gameLevel.game().ghostSpeedInsideHouse(gameLevel, this);
             setSpeed(speed);
             move();
             float y = position().y();
@@ -303,7 +302,7 @@ public abstract class Ghost extends MovingActor {
         }
         else {
             // still inside house
-            float speed = gameLevel.game().actorSpeedControl().ghostSpeedInsideHouse(gameLevel, this);
+            float speed = gameLevel.game().ghostSpeedInsideHouse(gameLevel, this);
             float centerX = position.x() + HTS;
             float houseCenterX = house.center().x();
             if (differsAtMost(0.5f * speed, centerX, houseCenterX)) {
@@ -357,10 +356,9 @@ public abstract class Ghost extends MovingActor {
      * @see <a href="https://www.youtube.com/watch?v=eFP0_rkjwlY">YouTube: How Frightened Ghosts Decide Where to Go</a>
      */
     private void updateStateFrightened(GameLevel gameLevel) {
-        ActorSpeedControl speedControl = gameLevel.game().actorSpeedControl();
         float speed = gameLevel.isTunnel(tile())
-            ? speedControl.ghostTunnelSpeed(gameLevel, this)
-            : speedControl.ghostFrightenedSpeed(gameLevel, this);
+            ? gameLevel.game().ghostTunnelSpeed(gameLevel, this)
+            : gameLevel.game().ghostFrightenedSpeed(gameLevel, this);
         setSpeed(speed);
         roam(gameLevel);
         playFrightenedAnimation(gameLevel, gameLevel.pac());
@@ -395,7 +393,7 @@ public abstract class Ghost extends MovingActor {
             Logger.error("No ghost house in level? WTF!");
             return;
         }
-        float speed = gameLevel.game().actorSpeedControl().ghostSpeedReturningToHouse(gameLevel, this);
+        float speed = gameLevel.game().ghostSpeedReturningToHouse(gameLevel, this);
         Vector2f houseEntry = house.entryPosition();
         if (position().roughlyEquals(houseEntry, speed, 0)) {
             setPosition(houseEntry);
@@ -417,7 +415,7 @@ public abstract class Ghost extends MovingActor {
      * then moves up again (if the house center is his revival position), or moves sidewards towards his revival position.
      */
     private void updateStateEnteringHouse(GameLevel gameLevel, House house) {
-        float speed = gameLevel.game().actorSpeedControl().ghostSpeedReturningToHouse(gameLevel, this);
+        float speed = gameLevel.game().ghostSpeedReturningToHouse(gameLevel, this);
         Vector2f position = position();
 
         //TODO get rid of personality() call

@@ -13,7 +13,10 @@ import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.lib.worldmap.TerrainTile;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.*;
-import de.amr.pacmanfx.model.actors.*;
+import de.amr.pacmanfx.model.actors.Bonus;
+import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.model.actors.GhostState;
+import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.steering.RouteBasedSteering;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
@@ -80,7 +83,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
 
             boolean chase = arcadeGame.huntingTimer().phase() == HuntingPhase.CHASING || arcadeGame.cruiseElroy() > 0;
             Vector2i targetTile = chase ? chasingTargetTile(gameLevel) : gameLevel.ghostScatterTile(personality());
-            setSpeed(gameLevel.game().actorSpeedControl().ghostAttackSpeed(gameLevel, this));
+            setSpeed(gameLevel.game().ghostAttackSpeed(gameLevel, this));
             tryMovingTowardsTargetTile(gameLevel, targetTile);
         }
 
@@ -111,7 +114,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         public void hunt(GameLevel gameLevel) {
             boolean chase = gameLevel.game().huntingTimer().phase() == HuntingPhase.CHASING;
             Vector2i targetTile = chase ? chasingTargetTile(gameLevel) : gameLevel.ghostScatterTile(personality());
-            setSpeed(gameLevel.game().actorSpeedControl().ghostAttackSpeed(gameLevel, this));
+            setSpeed(gameLevel.game().ghostAttackSpeed(gameLevel, this));
             tryMovingTowardsTargetTile(gameLevel, targetTile);
         }
 
@@ -142,7 +145,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         public void hunt(GameLevel gameLevel) {
             boolean chase = gameLevel.game().huntingTimer().phase() == HuntingPhase.CHASING;
             Vector2i targetTile = chase ? chasingTargetTile(gameLevel) : gameLevel.ghostScatterTile(personality());
-            setSpeed(gameLevel.game().actorSpeedControl().ghostAttackSpeed(gameLevel, this));
+            setSpeed(gameLevel.game().ghostAttackSpeed(gameLevel, this));
             tryMovingTowardsTargetTile(gameLevel, targetTile);
         }
 
@@ -173,7 +176,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         public void hunt(GameLevel gameLevel) {
             boolean chase = gameLevel.game().huntingTimer().phase() == HuntingPhase.CHASING;
             Vector2i targetTile = chase ? chasingTargetTile(gameLevel) : gameLevel.ghostScatterTile(personality());
-            setSpeed(gameLevel.game().actorSpeedControl().ghostAttackSpeed(gameLevel, this));
+            setSpeed(gameLevel.game().ghostAttackSpeed(gameLevel, this));
             tryMovingTowardsTargetTile(gameLevel, targetTile);
         }
 
@@ -225,7 +228,6 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     protected final HUD hud = new DefaultHUD();
     protected final ScoreManager scoreManager;
     protected final HuntingTimer huntingTimer;
-    protected final ActorSpeedControl actorSpeedControl;
 
     public ArcadePacMan_GameModel(GameContext gameContext, File highScoreFile) {
         this(gameContext, new ArcadePacMan_MapSelector(), highScoreFile);
@@ -266,8 +268,6 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
                     .forEach(Ghost::requestTurnBack);
             }
         });
-
-        actorSpeedControl = new Arcade_ActorSpeedControl();
 
         gateKeeper = new GateKeeper(this);
         gateKeeper.setOnGhostReleased(prisoner -> {
@@ -320,11 +320,6 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     @Override
     public HuntingTimer huntingTimer() {
         return huntingTimer;
-    }
-
-    @Override
-    public ActorSpeedControl actorSpeedControl() {
-        return actorSpeedControl;
     }
 
     @Override
