@@ -50,10 +50,15 @@ public abstract class MovingActor extends Actor {
     //TODO this is just a primitive way to provide cornering speed differences
     protected float corneringSpeedUp;
 
+    /**
+     * Called on every tick of the game clock.
+     *
+     * @param gameContext the game context
+     */
     public abstract void tick(GameContext gameContext);
 
     /**
-     * @return readable name, used for UI and logging
+     * @return readable name, used in UI and logging
      */
     public abstract String name();
 
@@ -306,25 +311,30 @@ public abstract class MovingActor extends Actor {
     /**
      * Lets an actor move towards the given target tile.
      *
+     * @param gameLevel the game level we are in
      * @param targetTile target tile this actor tries to reach
      */
     public void tryMovingTowardsTargetTile(GameLevel gameLevel, Vector2i targetTile) {
         requireNonNull(gameLevel);
-        setTargetTile(targetTile);
-        navigateTowardsTarget(gameLevel);
-        moveThroughThisCruelWorld(gameLevel);
+        if (targetTile != null) {
+            setTargetTile(targetTile);
+            navigateTowardsTarget(gameLevel);
+            moveThroughThisCruelWorld(gameLevel);
+        }
     }
 
     private void tryTeleport(Vector2i currentTile, Portal portal) {
         Vector2f oldPosition = position();
-        if (currentTile.y() == portal.leftTunnelEnd().y() && oldPosition.x() < portal.leftTunnelEnd().x() - portal.depth() * TS) {
+        if (currentTile.y() == portal.leftTunnelEnd().y()
+            && oldPosition.x() < portal.leftTunnelEnd().x() - portal.depth() * TS) {
             placeAtTile(portal.rightTunnelEnd());
             moveInfo.teleported = true;
-            moveInfo.log(String.format("%s: Teleported from %s to %s", name(), oldPosition,position()));
-        } else if (currentTile.equals(portal.rightTunnelEnd().plus(portal.depth(), 0))) {
+            moveInfo.log(String.format("%s: Teleported from %s to %s", name(), oldPosition, position()));
+        }
+        else if (currentTile.equals(portal.rightTunnelEnd().plus(portal.depth(), 0))) {
             placeAtTile(portal.leftTunnelEnd().minus(portal.depth(), 0));
             moveInfo.teleported = true;
-            moveInfo.log(String.format("%s: Teleported from %s to %s", name(), oldPosition,position()));
+            moveInfo.log(String.format("%s: Teleported from %s to %s", name(), oldPosition, position()));
         }
     }
 
@@ -333,6 +343,8 @@ public abstract class MovingActor extends Actor {
      * <p>
      * First checks if the actor can be teleported, then if the actor can move to its wish direction. If this is not
      * possible, it keeps moving to its current move direction.
+     *
+     * @param gameLevel the game level we are in
      */
     public void moveThroughThisCruelWorld(GameLevel gameLevel) {
         requireNonNull(gameLevel);
@@ -346,18 +358,16 @@ public abstract class MovingActor extends Actor {
                 }
             }
         }
-        if (!moveInfo.teleported) {
-            if (turnBackRequested && canTurnBack()) {
-                setWishDir(moveDir().opposite());
-                Logger.trace("{}: turned back at tile {}", name(), tile());
-                turnBackRequested = false;
-            }
-            tryMovingTowards(gameLevel, currentTile, wishDir());
-            if (moveInfo.moved) {
-                setMoveDir(wishDir());
-            } else {
-                tryMovingTowards(gameLevel, currentTile, moveDir());
-            }
+        if (turnBackRequested && canTurnBack()) {
+            setWishDir(moveDir().opposite());
+            Logger.trace("{}: turned back at tile {}", name(), tile());
+            turnBackRequested = false;
+        }
+        tryMovingTowards(gameLevel, currentTile, wishDir());
+        if (moveInfo.moved) {
+            setMoveDir(wishDir());
+        } else {
+            tryMovingTowards(gameLevel, currentTile, moveDir());
         }
     }
 
