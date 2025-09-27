@@ -29,8 +29,6 @@ public interface House {
      */
     Vector2f entryPosition();
 
-    void setGhostRevivalTile(byte personality, Vector2i tile);
-
     Vector2i ghostRevivalTile(byte personality);
 
     default Vector2i sizeInTiles() {

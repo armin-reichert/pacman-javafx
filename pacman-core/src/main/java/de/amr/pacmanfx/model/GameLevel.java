@@ -131,11 +131,6 @@ public class GameLevel {
         setGhostStartDirection(PINK_GHOST_SPEEDY, Direction.DOWN);
         setGhostStartDirection(CYAN_GHOST_BASHFUL, Direction.UP);
         setGhostStartDirection(ORANGE_GHOST_POKEY, Direction.UP);
-
-        house.setGhostRevivalTile(RED_GHOST_SHADOW,   worldMap.getTerrainTileProperty(POS_GHOST_2_PINK)); // !
-        house.setGhostRevivalTile(PINK_GHOST_SPEEDY,  worldMap.getTerrainTileProperty(POS_GHOST_2_PINK));
-        house.setGhostRevivalTile(CYAN_GHOST_BASHFUL, worldMap.getTerrainTileProperty(POS_GHOST_3_CYAN));
-        house.setGhostRevivalTile(ORANGE_GHOST_POKEY, worldMap.getTerrainTileProperty(POS_GHOST_4_ORANGE));
     }
 
     public void getReadyToPlay() {

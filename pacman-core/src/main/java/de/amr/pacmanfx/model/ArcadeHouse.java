@@ -85,13 +85,6 @@ public class ArcadeHouse implements House {
     }
 
     @Override
-    public void setGhostRevivalTile(byte personality, Vector2i tile) {
-        Validations.requireValidGhostPersonality(personality);
-        requireNonNull(tile);
-        ghostRevivalTiles[personality] = tile;
-    }
-
-    @Override
     public Vector2i ghostRevivalTile(byte personality) {
         Validations.requireValidGhostPersonality(personality);
         return ghostRevivalTiles[personality];
