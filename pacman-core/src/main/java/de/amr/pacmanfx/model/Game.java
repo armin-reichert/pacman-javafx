@@ -39,5 +39,6 @@ public interface Game extends GameLifecycle, GameEvents, ActorSpeedControl {
     double               pacPowerFadingSeconds(GameLevel gameLevel);
     double               pacPowerSeconds(GameLevel level);
 
+    int                  numFlashes(GameLevel gameLevel);
     void                 showMessage(GameLevel gameLevel, MessageType type);
 }

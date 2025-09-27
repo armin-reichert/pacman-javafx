@@ -134,7 +134,7 @@ public class GameLevel3D extends Group implements Disposable {
             return new SequentialTransition(
                 doNow(() -> sometimesLevelCompleteMessage(gameLevel.number())),
                 pauseSec(0.5, () -> gameLevel.ghosts().forEach(Ghost::hide)),
-                wallsMovingUpAndDown(gameLevel.data().numFlashes()),
+                wallsMovingUpAndDown(gameLevel.game().numFlashes(gameLevel)),
                 pauseSec(0.5, () -> gameLevel.pac().hide()),
                 pauseSec(0.5),
                 levelSpinningAroundAxis(new Random().nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS),
@@ -181,7 +181,7 @@ public class GameLevel3D extends Group implements Disposable {
             return new SequentialTransition(
                 pauseSec(0.5, () -> gameLevel.ghosts().forEach(Ghost::hide)),
                 pauseSec(0.5),
-                wallsMovingUpAndDown(gameLevel.data().numFlashes()),
+                wallsMovingUpAndDown(gameLevel.game().numFlashes(gameLevel)),
                 pauseSec(0.5, () -> gameLevel.pac().hide())
             );
         }
@@ -440,7 +440,7 @@ public class GameLevel3D extends Group implements Disposable {
                 ghostPupilsMeshViews[ghost.personality()],
                 ghostEyesMeshViews[ghost.personality()],
                 ui.preferences().getFloat("3d.ghost.size"),
-                gameLevel.data().numFlashes()
+                gameLevel.game().numFlashes(gameLevel)
             );
         }).toList();
         ghosts3D.forEach(ghost3D -> ghost3D.init(gameLevel));

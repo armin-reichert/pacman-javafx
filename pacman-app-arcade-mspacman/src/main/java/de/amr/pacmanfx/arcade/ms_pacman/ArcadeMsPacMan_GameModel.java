@@ -22,6 +22,7 @@ import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 import java.util.OptionalInt;
 import java.util.Set;
@@ -214,7 +215,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
     // Level settings as specified in the "Pac-Man dossier" for Pac-Man game
     // TODO: Are these values also correct for *Ms.* Pac-Man?
-    protected static final byte[][] LEVEL_DATA = {
+    protected static final byte[][] RAW_LEVEL_DATA = {
             /* 1*/ { 80, 75, 40,  20,  80, 10,  85,  90, 50, 6, 5},
             /* 2*/ { 90, 85, 45,  30,  90, 15,  95,  95, 55, 5, 5},
             /* 3*/ { 90, 85, 45,  40,  90, 20,  95,  95, 55, 4, 5},
@@ -238,9 +239,9 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
             /*21*/ { 90, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0},
     };
 
-    protected LevelData createLevelData(int levelNumber) {
-        return new LevelData(LEVEL_DATA[Math.min(levelNumber - 1, LEVEL_DATA.length - 1)]);
-    }
+    protected static final ArcadeLevelData[] LEVEL_DATA = Arrays.stream(RAW_LEVEL_DATA)
+        .map(ArcadeLevelData::new)
+        .toArray(ArcadeLevelData[]::new);
 
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
@@ -306,6 +307,16 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         mapSelector.loadAllMaps();
     }
 
+    protected ArcadeLevelData levelData(int levelNumber) {
+        int row = Math.min(levelNumber - 1, LEVEL_DATA.length - 1);
+        return LEVEL_DATA[row];
+    }
+
+    @Override
+    protected ArcadeLevelData levelData(GameLevel gameLevel) {
+        return levelData(gameLevel.number());
+    }
+
     @Override
     public MapSelector mapSelector() {
         return mapSelector;
@@ -345,7 +356,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     public void createLevel(int levelNumber) {
         final WorldMap worldMap = mapSelector.getWorldMap(levelNumber);
 
-        final GameLevel newGameLevel = new GameLevel(this, levelNumber, worldMap, createLevelData(levelNumber));
+        final GameLevel newGameLevel = new GameLevel(this, levelNumber, worldMap);
         final MsPacMan msPacMan = new MsPacMan();
         msPacMan.setAutopilotSteering(autopilot);
         newGameLevel.setPac(msPacMan);

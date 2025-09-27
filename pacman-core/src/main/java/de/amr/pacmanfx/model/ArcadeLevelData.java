@@ -4,10 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model;
 
-/**
- * @author Armin Reichert
- */
-public record LevelData(
+public record ArcadeLevelData(
     byte pacSpeedPercentage,             // Relative Pac-Man speed (percentage of base speed)
     byte ghostSpeedPercentage,           // Relative ghost speed when hunting or scattering
     byte ghostSpeedTunnelPercentage,     // Relative ghost speed inside tunnel
@@ -20,7 +17,7 @@ public record LevelData(
     byte pacPowerSeconds,                // Number of seconds Pac-Man gets power
     byte numFlashes)                     // Number of maze flashes at end of this level
 {
-    public LevelData(byte[] data) {
+    public ArcadeLevelData(byte[] data) {
         this(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10]);
     }
 }

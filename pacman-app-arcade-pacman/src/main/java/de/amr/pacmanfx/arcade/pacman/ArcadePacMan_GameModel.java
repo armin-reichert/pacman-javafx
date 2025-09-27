@@ -23,6 +23,7 @@ import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import org.tinylog.Logger;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 import java.util.OptionalInt;
 import java.util.Set;
@@ -190,7 +191,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     }
 
     // Level data as given in the "Pac-Man dossier"
-    protected static final byte[][] LEVEL_DATA = {
+    protected static final byte[][] RAW_LEVEL_DATA = {
         /* 1*/ { 80, 75, 40,  20,  80, 10,  85,  90, 50, 6, 5},
         /* 2*/ { 90, 85, 45,  30,  90, 15,  95,  95, 55, 5, 5},
         /* 3*/ { 90, 85, 45,  40,  90, 20,  95,  95, 55, 4, 5},
@@ -214,9 +215,9 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         /*21*/ { 90, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0},
     };
 
-    protected static LevelData createLevelData(int levelNumber) {
-        return new LevelData(LEVEL_DATA[Math.min(levelNumber - 1, LEVEL_DATA.length - 1)]);
-    }
+    protected static final ArcadeLevelData[] LEVEL_DATA = Arrays.stream(RAW_LEVEL_DATA)
+        .map(ArcadeLevelData::new)
+        .toArray(ArcadeLevelData[]::new);
 
     // Note: level numbering starts with 1
     protected static final byte[] BONUS_SYMBOLS_BY_LEVEL_NUMBER = { -1, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7 };
@@ -297,6 +298,16 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         mapSelector.loadAllMaps();
     }
 
+    protected ArcadeLevelData levelData(int levelNumber) {
+        int row = Math.min(levelNumber - 1, LEVEL_DATA.length - 1);
+        return LEVEL_DATA[row];
+    }
+
+    @Override
+    protected ArcadeLevelData levelData(GameLevel gameLevel) {
+        return levelData(gameLevel.number());
+    }
+
     @Override
     public MapSelector mapSelector() {
         return mapSelector;
@@ -336,7 +347,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     public void createLevel(int levelNumber) {
         final WorldMap worldMap = mapSelector.getWorldMap(levelNumber);
 
-        final GameLevel newGameLevel = new GameLevel(this, levelNumber, worldMap, createLevelData(levelNumber));
+        final GameLevel newGameLevel = new GameLevel(this, levelNumber, worldMap);
         newGameLevel.setGameOverStateTicks(90);
 
         Pac pacMan = new PacMan();

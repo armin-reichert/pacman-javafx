@@ -8,10 +8,7 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.timer.TickTimer;
-import de.amr.pacmanfx.model.AbstractGameModel;
-import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.GateKeeper;
-import de.amr.pacmanfx.model.MessageType;
+import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.AnimationSupport;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
@@ -46,6 +43,8 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         this.gameContext = requireNonNull(gameContext);
     }
 
+    protected abstract ArcadeLevelData levelData(GameLevel gameLevel);
+    
     // GameEvents interface
 
     @Override
@@ -161,12 +160,12 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     @Override
     public double pacPowerSeconds(GameLevel level) {
-        return level.data().pacPowerSeconds();
+        return levelData(level).pacPowerSeconds();
     }
 
     @Override
     public double pacPowerFadingSeconds(GameLevel level) {
-        return level.data().numFlashes() * 0.5;
+        return levelData(level).numFlashes() * 0.5;
     }
 
     @Override
@@ -257,6 +256,11 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         return Integer.MAX_VALUE;
     }
 
+    @Override
+    public int numFlashes(GameLevel gameLevel) {
+        return levelData(gameLevel).numFlashes();
+    }
+
     /**
      * @return "Cruise Elroy" state (changes behavior of red ghost).
      * <p>0=off, 1=Elroy1, 2=Elroy2, -1=Elroy1 (disabled), -2=Elroy2 (disabled).</p>
@@ -271,9 +275,9 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     private void updateCruiseElroyMode() {
-        if (gameLevel().foodStore().uneatenFoodCount() == gameLevel().data().elroy1DotsLeft()) {
+        if (gameLevel().foodStore().uneatenFoodCount() == levelData(gameLevel()).elroy1DotsLeft()) {
             cruiseElroy = 1;
-        } else if (gameLevel().foodStore().uneatenFoodCount() == gameLevel().data().elroy2DotsLeft()) {
+        } else if (gameLevel().foodStore().uneatenFoodCount() == levelData(gameLevel()).elroy2DotsLeft()) {
             cruiseElroy = 2;
         }
     }
@@ -286,13 +290,13 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     @Override
     public float pacNormalSpeed(GameLevel gameLevel) {
-        byte percentage = gameLevel.data().pacSpeedPercentage();
+        byte percentage = levelData(gameLevel).pacSpeedPercentage();
         return percentage > 0 ? percentage * BASE_SPEED_1_PERCENT : BASE_SPEED;
     }
 
     @Override
     public float pacPowerSpeed(GameLevel gameLevel) {
-        byte percentage = gameLevel.data().pacSpeedPoweredPercentage();
+        byte percentage = levelData(gameLevel).pacSpeedPoweredPercentage();
         return percentage > 0 ? percentage * BASE_SPEED_1_PERCENT : pacNormalSpeed(gameLevel);
     }
 
@@ -303,12 +307,12 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         }
         var arcadeGame = (Arcade_GameModel) gameLevel.game();
         if (arcadeGame.cruiseElroy() == 1) {
-            return gameLevel.data().elroy1SpeedPercentage() * BASE_SPEED_1_PERCENT;
+            return levelData(gameLevel).elroy1SpeedPercentage() * BASE_SPEED_1_PERCENT;
         }
         if (arcadeGame.cruiseElroy() == 2) {
-            return gameLevel.data().elroy2SpeedPercentage() * BASE_SPEED_1_PERCENT;
+            return levelData(gameLevel).elroy2SpeedPercentage() * BASE_SPEED_1_PERCENT;
         }
-        return gameLevel.data().ghostSpeedPercentage() * BASE_SPEED_1_PERCENT;
+        return levelData(gameLevel).ghostSpeedPercentage() * BASE_SPEED_1_PERCENT;
     }
 
     @Override
@@ -323,13 +327,12 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     @Override
     public float ghostFrightenedSpeed(GameLevel gameLevel, Ghost ghost) {
-        float percentage = gameLevel.data().ghostSpeedFrightenedPercentage();
+        float percentage = levelData(gameLevel).ghostSpeedFrightenedPercentage();
         return percentage > 0 ? percentage * BASE_SPEED_1_PERCENT : BASE_SPEED;
     }
 
     @Override
     public float ghostTunnelSpeed(GameLevel gameLevel, Ghost ghost) {
-        return gameLevel.data().ghostSpeedTunnelPercentage() * BASE_SPEED_1_PERCENT;
+        return levelData(gameLevel).ghostSpeedTunnelPercentage() * BASE_SPEED_1_PERCENT;
     }
-
 }

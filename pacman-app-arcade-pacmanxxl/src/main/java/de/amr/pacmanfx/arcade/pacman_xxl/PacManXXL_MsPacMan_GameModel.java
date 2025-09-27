@@ -7,6 +7,8 @@ package de.amr.pacmanfx.arcade.pacman_xxl;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.event.GameEventType;
+import de.amr.pacmanfx.model.ArcadeLevelData;
+import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.MapSelectionMode;
 import de.amr.pacmanfx.model.MapSelector;
 
@@ -30,7 +32,6 @@ public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
         int levelNumber = levelNumbers[new Random().nextInt(levelNumbers.length)];
         mapSelector().setSelectionMode(MapSelectionMode.NO_CUSTOM_MAPS);
         createLevel(levelNumber);
-        gameLevel().setData(createLevelData(1)); // use settings (speed etc.) of first level
         gameLevel().setDemoLevel(true);
         gameLevel().pac().setImmune(false);
         gameLevel().pac().setUsingAutopilot(true);
@@ -42,5 +43,13 @@ public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
         gateKeeper.setLevelNumber(levelNumber);
         gameLevel().optHouse().ifPresent(house -> gateKeeper.setHouse(house)); //TODO what if no house exists?
         eventManager().publishEvent(GameEventType.LEVEL_CREATED);
+    }
+
+    @Override
+    protected ArcadeLevelData levelData(GameLevel gameLevel) {
+        if (gameLevel.isDemoLevel()) {
+            return levelData(1);
+        }
+        return super.levelData(gameLevel);
     }
 }

@@ -366,6 +366,11 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         return startLevelNumber;
     }
 
+    @Override
+    public int numFlashes(GameLevel gameLevel) {
+        return 5; //TODO check if this is correct
+    }
+
     public int numContinues() {
         return numContinues;
     }
@@ -449,7 +454,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     public double pacPowerFadingSeconds(GameLevel level) {
-        return level != null ? level.data().numFlashes() * 0.5 : 0; // TODO check in emulator
+        return level != null ? level.game().numFlashes(level) * 0.5 : 0; // TODO check in emulator
     }
 
     @Override
@@ -492,7 +497,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         setLevelCounterEnabled(levelNumber < 8);
 
         WorldMap worldMap = mapSelector.createConfiguredWorldMap(mapCategory, levelNumber);
-        setGameLevel(new GameLevel(this, levelNumber, worldMap, createLevelData()));
+        setGameLevel(new GameLevel(this, levelNumber, worldMap));
         // For non-Arcade game levels, give some extra time for "game over" text animation
         gameLevel().setGameOverStateTicks(mapCategory == MapCategory.ARCADE ? 420 : 600);
 
@@ -513,24 +518,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         //TODO this might not be appropriate for Tengen Ms. Pac-Man
         gameLevel().setBonusSymbol(0, computeBonusSymbol(gameLevel().number()));
         gameLevel().setBonusSymbol(1, computeBonusSymbol(gameLevel().number()));
-    }
-
-    //TODO needed?
-    private LevelData createLevelData() {
-        // Note: only number of flashes is taken from level data
-        return new LevelData(
-            (byte) 0, // Pac speed %
-            (byte) 0, // Ghost speed %
-            (byte) 0, // Ghost tunnel speed %
-            (byte) 0, // Elroy dots 1
-            (byte) 0, // Elroy speed 1 %
-            (byte) 0, // Elroy dots 2
-            (byte) 0, // Elroy speed 2 %
-            (byte) 0, // Pac speed powered %
-            (byte) 0, // Ghost speed frightened %
-            (byte) 0, // Pac power seconds
-            (byte) 5  // Number of flashes
-        );
     }
 
     @Override
