@@ -358,13 +358,20 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         final WorldMap worldMap = mapSelector.getWorldMap(levelNumber);
 
         final GameLevel newGameLevel = new GameLevel(this, levelNumber, worldMap);
+        if (newGameLevel.optHouse().isEmpty()) {
+            Logger.error("Illegal Arcade Pac-Man game level: No ghost house exists");
+            return; //TODO who to handle this error?
+        }
+        newGameLevel.setGameOverStateTicks(150);
+
         final MsPacMan msPacMan = new MsPacMan();
         msPacMan.setAutopilotSteering(autopilot);
         newGameLevel.setPac(msPacMan);
+
         newGameLevel.setGhosts(new Blinky(), new Pinky(), new Inky(), new Sue());
+
         newGameLevel.setBonusSymbol(0, computeBonusSymbol(levelNumber));
         newGameLevel.setBonusSymbol(1, computeBonusSymbol(levelNumber));
-        newGameLevel.setGameOverStateTicks(150);
 
         setGameLevel(newGameLevel);
 

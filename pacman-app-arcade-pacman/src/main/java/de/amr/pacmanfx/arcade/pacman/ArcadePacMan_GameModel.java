@@ -349,15 +349,19 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         final WorldMap worldMap = mapSelector.getWorldMap(levelNumber);
 
         final GameLevel newGameLevel = new GameLevel(this, levelNumber, worldMap);
+        if (newGameLevel.optHouse().isEmpty()) {
+            Logger.error("Illegal Arcade Pac-Man game level: No ghost house exists");
+            return; //TODO who to handle this error?
+        }
         newGameLevel.setGameOverStateTicks(90);
 
-        Pac pacMan = new PacMan();
+        final Pac pacMan = new PacMan();
         pacMan.setAutopilotSteering(autopilot);
         newGameLevel.setPac(pacMan);
 
         newGameLevel.setGhosts(new Blinky(), new Pinky(), new Inky(), new Clyde());
         // Special tiles where attacking ghosts cannot move up
-        List<Vector2i> oneWayDownTiles = worldMap.tiles()
+        final List<Vector2i> oneWayDownTiles = worldMap.tiles()
             .filter(tile -> worldMap.content(LayerID.TERRAIN, tile) == TerrainTile.ONE_WAY_DOWN.$)
             .toList();
         newGameLevel.ghosts().forEach(ghost -> ghost.setSpecialTerrainTiles(oneWayDownTiles));
