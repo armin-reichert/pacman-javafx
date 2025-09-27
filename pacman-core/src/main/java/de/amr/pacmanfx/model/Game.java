@@ -9,7 +9,6 @@ import de.amr.pacmanfx.model.actors.ActorSpeedControl;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.OptionalInt;
 
 public interface Game extends GameLifecycle, GameEvents, ActorSpeedControl {
     GameEventManager     eventManager();

@@ -40,7 +40,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameController implements GameContext {
 
-    public static GameController THE_ONE;
+    public static GameController THE_GAME_CONTROLLER;
 
     public static final Pattern GAME_VARIANT_PATTERN = Pattern.compile("[a-zA-Z][a-zA-Z_0-9]*");
 

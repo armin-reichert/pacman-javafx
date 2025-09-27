@@ -85,13 +85,13 @@ public interface Globals {
      * @return the global object which provides access to different other global objects
      */
     static GameContext theGameContext() {
-        if (GameController.THE_ONE == null) {
+        if (GameController.THE_GAME_CONTROLLER == null) {
             List<GameState> states = new ArrayList<>(List.of(GamePlayState.values()));
             states.add(new LevelShortTestState());
             states.add(new LevelMediumTestState());
             states.add(new CutScenesTestState());
-            GameController.THE_ONE = new GameController(states);
+            GameController.THE_GAME_CONTROLLER = new GameController(states);
         }
-        return GameController.THE_ONE;
+        return GameController.THE_GAME_CONTROLLER;
     }
 }

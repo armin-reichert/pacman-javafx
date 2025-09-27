@@ -141,7 +141,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         setLifeCount(initialLifeCount());
         setGameLevel(null);
         scoreManager().loadHighScore();
-        scoreManager().resetScore();
+        scoreManager().score().reset();
         gateKeeper.reset();
         huntingTimer().reset();
     }
@@ -206,7 +206,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         gameLevel().pac().usingAutopilotProperty().bind(gameContext.gameController().propertyUsingAutopilot());
         setLevelCounterEnabled(true);
         huntingTimer().reset();
-        scoreManager().setGameLevelNumber(levelNumber);
+        scoreManager().score().setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
         gameLevel().optHouse().ifPresent(house -> gateKeeper.setHouse(house)); //TODO what if no house exists?
         eventManager().publishEvent(GameEventType.LEVEL_CREATED);
@@ -223,7 +223,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         demoLevelSteering.init();
         setLevelCounterEnabled(true);
         huntingTimer().reset();
-        scoreManager().setGameLevelNumber(levelNumber);
+        scoreManager().score().setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
         gameLevel().optHouse().ifPresent(house -> gateKeeper.setHouse(house)); //TODO what if no house exists?
         eventManager().publishEvent(GameEventType.LEVEL_CREATED);
@@ -310,11 +310,10 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         if (gameLevel.isTunnel(ghost.tile())) {
             return ghostTunnelSpeed(gameLevel, ghost);
         }
-        var arcadeGame = (Arcade_GameModel) gameLevel.game();
-        if (arcadeGame.cruiseElroy() == 1) {
+        if (cruiseElroy() == 1) {
             return levelData(gameLevel).elroy1SpeedPercentage() * BASE_SPEED_1_PERCENT;
         }
-        if (arcadeGame.cruiseElroy() == 2) {
+        if (cruiseElroy() == 2) {
             return levelData(gameLevel).elroy2SpeedPercentage() * BASE_SPEED_1_PERCENT;
         }
         return levelData(gameLevel).ghostSpeedPercentage() * BASE_SPEED_1_PERCENT;

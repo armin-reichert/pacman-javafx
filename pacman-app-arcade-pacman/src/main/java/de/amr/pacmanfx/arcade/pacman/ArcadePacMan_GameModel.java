@@ -23,7 +23,10 @@ import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import org.tinylog.Logger;
 
 import java.io.File;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.RandomNumberSupport.randomInt;
@@ -226,8 +229,8 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
 
         this.mapSelector = requireNonNull(mapSelector);
 
-        scoreManager = new DefaultScoreManager(this, highScoreFile);
-        scoreManager.setExtraLifeScores(Set.of(EXTRA_LIFE_SCORE));
+        scoreManager = new ScoreManager(this, highScoreFile);
+        scoreManager.setExtraLifeScores(EXTRA_LIFE_SCORE);
 
         huntingTimer = new HuntingTimer("ArcadePacMan-HuntingTimer", 8) {
             // Ticks of scatter and chasing phases, -1 = INFINITE

@@ -22,7 +22,6 @@ import java.io.File;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
-import java.util.Set;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -254,7 +253,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     public TengenMsPacMan_GameModel(GameContext gameContext, File highScoreFile) {
         this.gameContext = requireNonNull(gameContext);
-        scoreManager = new DefaultScoreManager(this, highScoreFile);
+        scoreManager = new ScoreManager(this, highScoreFile);
         mapSelector = new TengenMsPacMan_MapSelector();
         gateKeeper = new GateKeeper(this); //TODO implement original house logic
         huntingTimer = new TengenMsPacMan_HuntingTimer();
@@ -302,7 +301,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         setPlaying(false);
         boosterActive = false;
         scoreManager.loadHighScore();
-        scoreManager.resetScore();
+        scoreManager.score().reset();
         gateKeeper.reset();
     }
 
@@ -347,9 +346,9 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             a score normally unachievable without cheat codes, since all maze sets end after 32 stages.
             This was most likely done to simulate the Arcade game only giving one extra life per game.
             */
-            scoreManager.setExtraLifeScores(Set.of(10_000, 970_000, 980_000, 990_000));
+            scoreManager.setExtraLifeScores(10_000, 970_000, 980_000, 990_000);
         } else {
-            scoreManager.setExtraLifeScores(Set.of(10_000, 50_000, 100_000, 300_000));
+            scoreManager.setExtraLifeScores(10_000, 50_000, 100_000, 300_000);
         }
     }
 
@@ -546,7 +545,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         gameLevel().pac().immuneProperty().bind(gameContext.gameController().propertyImmunity());
         gameLevel().pac().usingAutopilotProperty().bind(gameContext.gameController().propertyUsingAutopilot());
         huntingTimer().reset();
-        scoreManager.setGameLevelNumber(levelNumber);
+        scoreManager.score().setLevelNumber(levelNumber);
         optGateKeeper().ifPresent(gateKeeper -> {
             gateKeeper.setLevelNumber(levelNumber);
             gameLevel().optHouse().ifPresent(gateKeeper::setHouse); //TODO what if no house exists?
@@ -564,7 +563,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         gameLevel().pac().setAutopilotSteering(demoLevelSteering);
         demoLevelSteering.init();
         huntingTimer.reset();
-        scoreManager.setGameLevelNumber(1);
+        scoreManager.score().setLevelNumber(1);
         optGateKeeper().ifPresent(gateKeeper -> {
             gateKeeper.setLevelNumber(1);
             gameLevel().optHouse().ifPresent(gateKeeper::setHouse); //TODO what if no house exists?

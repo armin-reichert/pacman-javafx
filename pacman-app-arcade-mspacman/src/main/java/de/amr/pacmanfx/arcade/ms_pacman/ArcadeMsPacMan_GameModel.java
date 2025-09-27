@@ -22,7 +22,10 @@ import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
 
 import java.io.File;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -257,8 +260,8 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         super(gameContext);
         this.mapSelector = requireNonNull(mapSelector);
 
-        scoreManager = new DefaultScoreManager(this, highScoreFile);
-        scoreManager.setExtraLifeScores(Set.of(EXTRA_LIFE_SCORE));
+        scoreManager = new ScoreManager(this, highScoreFile);
+        scoreManager.setExtraLifeScores(EXTRA_LIFE_SCORE);
 
         /*
          * Details are from a conversation with user @damselindis on Reddit. I am not sure if they are correct.
