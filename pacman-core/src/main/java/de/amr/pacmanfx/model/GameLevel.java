@@ -44,7 +44,6 @@ public class GameLevel {
     private final House house;
     private final Vector2f pacStartPosition;
     private final Vector2i[] ghostScatterTiles = new Vector2i[4];
-    private final Direction[] ghostStartDirections = new Direction[4];
     private final Set<Vector2i> energizerTiles;
     private final Portal[] portals;
 
@@ -125,12 +124,6 @@ public class GameLevel {
      */
     private void addGhostHouse(House house) {
         worldMap.setContent(LayerID.TERRAIN, house.minTile(), house.content());
-
-        // these directions would in general depend on the house type, here they are fixed:
-        setGhostStartDirection(RED_GHOST_SHADOW, Direction.LEFT);
-        setGhostStartDirection(PINK_GHOST_SPEEDY, Direction.DOWN);
-        setGhostStartDirection(CYAN_GHOST_BASHFUL, Direction.UP);
-        setGhostStartDirection(ORANGE_GHOST_POKEY, Direction.UP);
     }
 
     public void getReadyToPlay() {
@@ -142,8 +135,8 @@ public class GameLevel {
         ghosts().forEach(ghost -> {
             ghost.reset(); // initially invisible!
             ghost.setPosition(ghost.startPosition());
-            ghost.setMoveDir(ghostStartDirection(ghost.personality()));
-            ghost.setWishDir(ghostStartDirection(ghost.personality()));
+            ghost.setMoveDir(house.ghostStartDirection(ghost.personality()));
+            ghost.setWishDir(house.ghostStartDirection(ghost.personality()));
             ghost.setState(GhostState.LOCKED);
         });
         blinking.setStartPhase(Pulse.ON); // Energizers are visible when ON
@@ -317,16 +310,5 @@ public class GameLevel {
 
     public Vector2f pacStartPosition() {
         return pacStartPosition;
-    }
-
-    public void setGhostStartDirection(byte personality, Direction dir) {
-        requireValidGhostPersonality(personality);
-        requireNonNull(dir);
-        ghostStartDirections[personality] = dir;
-    }
-
-    public Direction ghostStartDirection(byte personality) {
-        requireValidGhostPersonality(personality);
-        return ghostStartDirections[personality];
     }
 }

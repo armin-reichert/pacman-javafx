@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model;
 
+import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.actors.Actor;
@@ -28,6 +29,8 @@ public interface House {
      * @return position at which ghosts can enter the house, one tile above and horizontally between the two door tiles
      */
     Vector2f entryPosition();
+
+    Direction ghostStartDirection(byte personality);
 
     Vector2i ghostRevivalTile(byte personality);
 
