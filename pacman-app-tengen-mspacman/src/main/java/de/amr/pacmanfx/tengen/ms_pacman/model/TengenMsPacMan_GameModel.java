@@ -368,7 +368,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     public int numFlashes(GameLevel gameLevel) {
-        return 5; //TODO check if this is correct
+        return 3; //TODO check if this is correct
     }
 
     public int numContinues() {
