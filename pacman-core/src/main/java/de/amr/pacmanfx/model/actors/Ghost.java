@@ -269,7 +269,7 @@ public abstract class Ghost extends MovingActor {
                 setWishDir(DOWN);
             } else if (y >= maxY) {
                 setMoveDir(UP);
-                setWishDir(DOWN);
+                setWishDir(UP);
             }
             setY(Math.clamp(y, minY, maxY));
         } else {
