@@ -63,7 +63,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         updateCruiseElroyMode();
 
         gameLevel().victims().clear();
-        gameLevel().ghosts(FRIGHTENED, HUNTING_PAC).forEach(Ghost::reverseAtNextOccasion);
+        gameLevel().ghosts(FRIGHTENED, HUNTING_PAC).forEach(Ghost::requestTurnBack);
 
         double powerSeconds = pacPowerSeconds(gameLevel());
         if (powerSeconds > 0) {

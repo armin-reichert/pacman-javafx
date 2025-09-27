@@ -61,7 +61,7 @@ public class InfoBoxActorInfo extends InfoBox {
         if (movingActor == null) return NO_INFO;
         var speed = movingActor.velocity().length() * 60f;
         var blocked = !movingActor.moveInfo().moved;
-        var reverseText = movingActor.gotReverseCommand() ? "REV!" : "";
+        var reverseText = movingActor.turnBackRequested() ? "REV!" : "";
         return blocked
             ? "BLOCKED!"
             : "%.2fpx/s %s (%s)%s".formatted(speed, movingActor.moveDir(), movingActor.wishDir(), reverseText);

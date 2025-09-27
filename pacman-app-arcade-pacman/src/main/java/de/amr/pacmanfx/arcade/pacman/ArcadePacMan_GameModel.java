@@ -263,7 +263,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         huntingTimer.phaseIndexProperty().addListener((py, ov, nv) -> {
             if (nv.intValue() > 0) {
                 gameLevel().ghosts(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE)
-                    .forEach(Ghost::reverseAtNextOccasion);
+                    .forEach(Ghost::requestTurnBack);
             }
         });
 

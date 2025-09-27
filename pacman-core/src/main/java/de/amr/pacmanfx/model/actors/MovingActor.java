@@ -37,36 +37,53 @@ public abstract class MovingActor extends Actor {
     /** Order in which directions are selected when navigation decision is met. */
     public static final List<Direction> NAVIGATION_ORDER = List.of(Direction.UP, Direction.LEFT, Direction.DOWN, Direction.RIGHT);
 
-    protected final MoveResult moveInfo = new MoveResult();
+    protected final MoveInfo moveInfo = new MoveInfo();
 
     protected ObjectProperty<Direction> moveDir;
     protected ObjectProperty<Direction> wishDir;
     protected ObjectProperty<Vector2i> targetTile;
 
     protected boolean newTileEntered;
-    protected boolean gotReverseCommand;
+    protected boolean turnBackRequested;
     protected boolean canTeleport = DEFAULT_CAN_TELEPORT;
 
-    //TODO this is just a cheap method to provide cornering speed differences
+    //TODO this is just a primitive way to provide cornering speed differences
     protected float corneringSpeedUp;
 
     public abstract void tick(GameContext gameContext);
 
+    /**
+     * @return readable name, used for UI and logging
+     */
+    public abstract String name();
+
+    /**
+     * @param gameLevel the game level we are in (not null)
+     * @param tile some tile inside or outside the world
+     * @return if this actor can access the given tile in its game context
+     */
+    public abstract boolean canAccessTile(GameLevel gameLevel, Vector2i tile);
+
+    /**
+     * @return {@code true} if this actor can reverse ist direction in its current state
+     */
+    public abstract boolean canTurnBack();
+
     @Override
     public String toString() {
         return "WorldMovingActor{" +
-                "visible=" + isVisible() +
-                ", position=" + position() +
-                ", velocity=" + velocity() +
-                ", acceleration=" + acceleration() +
-                ", moveDir=" + moveDir() +
-                ", wishDir=" + wishDir() +
-                ", targetTile=" + targetTile() +
-                ", newTileEntered=" + newTileEntered +
-                ", gotReverseCommand=" + gotReverseCommand +
-                ", canTeleport=" + canTeleport +
-                ", corneringSpeedUp" + corneringSpeedUp +
-                '}';
+            "visible=" + isVisible() +
+            ", position=" + position() +
+            ", velocity=" + velocity() +
+            ", acceleration=" + acceleration() +
+            ", moveDir=" + moveDir() +
+            ", wishDir=" + wishDir() +
+            ", targetTile=" + targetTile() +
+            ", newTileEntered=" + newTileEntered +
+            ", turnBackRequested=" + turnBackRequested +
+            ", canTeleport=" + canTeleport +
+            ", corneringSpeedUp" + corneringSpeedUp +
+            '}';
     }
 
     public void reset() {
@@ -83,29 +100,12 @@ public abstract class MovingActor extends Actor {
         }
         canTeleport = DEFAULT_CAN_TELEPORT;
         newTileEntered = true;
-        gotReverseCommand = false;
+        turnBackRequested = false;
     }
 
-    public MoveResult moveInfo() {
+    public MoveInfo moveInfo() {
         return moveInfo;
     }
-
-    /**
-     * @return readable name, used for UI and logging
-     */
-    public abstract String name();
-
-    /**
-     * @return {@code true} if this actor can reverse ist direction in its current state
-     */
-    public abstract boolean canReverse();
-
-    /**
-     * @param gameLevel the game level we are in (not null)
-     * @param tile some tile inside or outside the world
-     * @return if this actor can access the given tile in its game context
-     */
-    public abstract boolean canAccessTile(GameLevel gameLevel, Vector2i tile);
 
     public final ObjectProperty<Vector2i> targetTileProperty() {
         if (targetTile == null) {
@@ -245,13 +245,16 @@ public abstract class MovingActor extends Actor {
     /**
      * Signals that this actor should reverse its move direction as soon as possible.
      */
-    public void reverseAtNextOccasion() {
-        gotReverseCommand = true;
-        Logger.debug("Reverse! {}", this);
+    public void requestTurnBack() {
+        turnBackRequested = true;
+        Logger.debug("Turn back ASAP! {}", this);
     }
 
-    public boolean gotReverseCommand() {
-        return gotReverseCommand;
+    /**
+     * @return {@code true} if the ghost should revert its direction at the next occasion
+     */
+    public boolean turnBackRequested() {
+        return turnBackRequested;
     }
 
     /**
@@ -344,10 +347,10 @@ public abstract class MovingActor extends Actor {
             }
         }
         if (!moveInfo.teleported) {
-            if (gotReverseCommand && canReverse()) {
+            if (turnBackRequested && canTurnBack()) {
                 setWishDir(moveDir().opposite());
-                Logger.trace("{}: turned around at tile {}", name(), tile());
-                gotReverseCommand = false;
+                Logger.trace("{}: turned back at tile {}", name(), tile());
+                turnBackRequested = false;
             }
             tryMovingTowards(gameLevel, currentTile, wishDir());
             if (moveInfo.moved) {

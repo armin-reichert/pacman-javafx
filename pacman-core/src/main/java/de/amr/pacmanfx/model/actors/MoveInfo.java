@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * @author Armin Reichert
  */
-public class MoveResult {
+public class MoveInfo {
     public boolean moved;
     public boolean tunnelEntered;
     public boolean tunnelLeft;

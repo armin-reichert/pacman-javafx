@@ -88,7 +88,7 @@ public abstract class Ghost extends MovingActor {
                 ", wishDir=" + wishDir() +
                 ", targetTile=" + targetTile() +
                 ", newTileEntered=" + newTileEntered +
-                ", gotReverseCommand=" + gotReverseCommand +
+                ", turnBackRequested=" + turnBackRequested +
                 ", canTeleport=" + canTeleport +
                 ", corneringSpeedUp" + corneringSpeedUp +
                 '}';
@@ -175,7 +175,7 @@ public abstract class Ghost extends MovingActor {
     }
 
     @Override
-    public boolean canReverse() {
+    public boolean canTurnBack() {
         return newTileEntered && inAnyOfStates(GhostState.HUNTING_PAC, GhostState.FRIGHTENED);
     }
 

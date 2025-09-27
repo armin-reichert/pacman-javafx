@@ -66,7 +66,7 @@ public class Pac extends MovingActor {
     }
 
     @Override
-    public boolean canReverse() {
+    public boolean canTurnBack() {
         return newTileEntered;
     }
 

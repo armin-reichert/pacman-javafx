@@ -252,7 +252,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         huntingTimer.phaseIndexProperty().addListener((py, ov, nv) -> {
             if (nv.intValue() > 0) {
                 gameLevel().ghosts(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE)
-                    .forEach(Ghost::reverseAtNextOccasion);
+                    .forEach(Ghost::requestTurnBack);
             }
         });
         autopilot = new RuleBasedPacSteering(gameContext);
@@ -679,7 +679,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         scoreManager().scorePoints(ENERGIZER_VALUE);
         gameLevel().pac().setRestingTicks(3);
         gameLevel().victims().clear();
-        gameLevel().ghosts(FRIGHTENED, HUNTING_PAC).forEach(Ghost::reverseAtNextOccasion);
+        gameLevel().ghosts(FRIGHTENED, HUNTING_PAC).forEach(Ghost::requestTurnBack);
         double powerSeconds = pacPowerSeconds(gameLevel());
         if (powerSeconds > 0) {
             huntingTimer().stop();
@@ -705,11 +705,11 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             gameLevel().pac().powerTimer().restartTicks(powerTicks);
             Logger.info("Power timer restarted, duration={} ticks ({0.00} sec)", powerTicks, powerSeconds);
             gameLevel().ghosts(GhostState.HUNTING_PAC).forEach(ghost -> ghost.setState(GhostState.FRIGHTENED));
-            gameLevel().ghosts(GhostState.FRIGHTENED).forEach(Ghost::reverseAtNextOccasion);
+            gameLevel().ghosts(GhostState.FRIGHTENED).forEach(Ghost::requestTurnBack);
             simulationStep.pacGotPower = true;
             eventManager().publishEvent(GameEventType.PAC_GETS_POWER);
         } else {
-            gameLevel().ghosts(GhostState.FRIGHTENED, GhostState.HUNTING_PAC).forEach(Ghost::reverseAtNextOccasion);
+            gameLevel().ghosts(GhostState.FRIGHTENED, GhostState.HUNTING_PAC).forEach(Ghost::requestTurnBack);
         }
     }
 

@@ -69,7 +69,7 @@ public class Bonus extends MovingActor {
     }
 
     @Override
-    public boolean canReverse() {
+    public boolean canTurnBack() {
         return false;
     }
 
