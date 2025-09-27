@@ -28,8 +28,10 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.inClosedRange;
 import static de.amr.pacmanfx.lib.RandomNumberSupport.randomByte;
+import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
 import static de.amr.pacmanfx.lib.timer.TickTimer.secToTicks;
+import static de.amr.pacmanfx.model.DefaultWorldMapPropertyName.*;
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
 import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
 import static de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_PacAnimationManager.ANIM_MS_PAC_MAN_BOOSTER;
@@ -41,6 +43,11 @@ import static java.util.Objects.requireNonNull;
  * @see <a href="https://github.com/RussianManSMWC/Ms.-Pac-Man-NES-Tengen-Disassembly">Ms.Pac-Man-NES-Tengen-Disassembly</a>
  */
 public class TengenMsPacMan_GameModel extends AbstractGameModel {
+
+    /**
+     * Top-left tile of ghost house in original Arcade maps (Pac-Man, Ms. Pac-Man).
+     */
+    public static final Vector2i HOUSE_MIN_TILE = Vector2i.of(10, 15);
 
     public static final byte FIRST_LEVEL_NUMBER = 1;
     public static final byte LAST_LEVEL_NUMBER = 32;
@@ -113,6 +120,10 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     public static class Blinky extends Ghost {
 
+        public Blinky() {
+            reset();
+        }
+
         @Override
         public String name() {
             return "Blinky";
@@ -144,6 +155,10 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     public static class Pinky extends Ghost {
+
+        public Pinky() {
+            reset();
+        }
 
         @Override
         public String name() {
@@ -177,6 +192,10 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     public static class Inky extends Ghost {
 
+        public Inky() {
+            reset();
+        }
+
         @Override
         public String name() {
             return "Inky";
@@ -195,6 +214,10 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     public static class Sue extends Ghost {
+
+        public Sue() {
+            reset();
+        }
 
         @Override
         public String name() {
@@ -481,30 +504,39 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     public void createLevel(int levelNumber) {
-        setLevelCounterEnabled(levelNumber < 8);
+        final WorldMap worldMap = mapSelector.createConfiguredWorldMap(mapCategory, levelNumber);
 
-        WorldMap worldMap = mapSelector.createConfiguredWorldMap(mapCategory, levelNumber);
-        setGameLevel(new GameLevel(this, levelNumber, worldMap));
+        final ArcadeHouse house = new ArcadeHouse(HOUSE_MIN_TILE);
+
+        final GameLevel newGameLevel = new GameLevel(this, levelNumber, worldMap, house);
         // For non-Arcade game levels, give some extra time for "game over" text animation
-        gameLevel().setGameOverStateTicks(mapCategory == MapCategory.ARCADE ? 420 : 600);
+        newGameLevel.setGameOverStateTicks(mapCategory == MapCategory.ARCADE ? 420 : 600);
 
-        Pac msPacMan = createMsPacMan();
+        final Pac msPacMan = createMsPacMan();
         msPacMan.setAutopilotSteering(autopilot);
-        gameLevel().setPac(msPacMan);
         activatePacBooster(msPacMan, pacBooster == PacBooster.ALWAYS_ON);
+        newGameLevel.setPac(msPacMan);
 
-        gameLevel().setGhosts(new Blinky(), new Pinky(), new Inky(), new Sue());
-        gameLevel().ghosts().forEach(ghost -> {
-            ghost.reset();
-            // Ghosts inside house start at bottom of house instead at middle (as stored in terrain tile property)
-            if (ghost.personality() != RED_GHOST_SHADOW) {
-                ghost.setStartPosition(ghost.startPosition().plus(0, HTS));
-            }
-        });
+        final Blinky blinky = new Blinky();
+        final Pinky pinky = new Pinky();
+        final Inky inky = new Inky();
+        final Sue sue = new Sue();
+
+        // Ghosts inside house start at bottom of house instead at middle (as stored in terrain tile property)
+        blinky.setStartPosition(halfTileRightOf(worldMap.getTerrainTileProperty(POS_GHOST_1_RED)));
+        pinky .setStartPosition(halfTileRightOf(worldMap.getTerrainTileProperty(POS_GHOST_2_PINK)).plus(0, HTS));
+        inky  .setStartPosition(halfTileRightOf(worldMap.getTerrainTileProperty(POS_GHOST_3_CYAN)).plus(0, HTS));
+        sue   .setStartPosition(halfTileRightOf(worldMap.getTerrainTileProperty(POS_GHOST_4_ORANGE)).plus(0, HTS));
+
+        newGameLevel.setGhosts(blinky, pinky, inky, sue);
 
         //TODO this might not be appropriate for Tengen Ms. Pac-Man
-        gameLevel().setBonusSymbol(0, computeBonusSymbol(gameLevel().number()));
-        gameLevel().setBonusSymbol(1, computeBonusSymbol(gameLevel().number()));
+        newGameLevel.setBonusSymbol(0, computeBonusSymbol(newGameLevel.number()));
+        newGameLevel.setBonusSymbol(1, computeBonusSymbol(newGameLevel.number()));
+
+        setGameLevel(newGameLevel);
+
+        setLevelCounterEnabled(levelNumber < 8);
     }
 
     @Override

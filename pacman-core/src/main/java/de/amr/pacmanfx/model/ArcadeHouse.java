@@ -18,11 +18,6 @@ import static java.util.Objects.requireNonNull;
 public class ArcadeHouse implements House {
 
     /**
-     * Top-left tile of ghost house in original Arcade maps (Pac-Man, Ms. Pac-Man).
-     */
-    public static final Vector2i ARCADE_MAP_HOUSE_MIN_TILE = Vector2i.of(10, 15);
-
-    /**
      * Size of house in tiles (x=width, y=height).
      */
     public static final Vector2i SIZE_IN_TILES = Vector2i.of(8, 5);
@@ -47,16 +42,12 @@ public class ArcadeHouse implements House {
 
     private final Vector2i[] ghostRevivalTiles = new Vector2i[4];
 
-    public ArcadeHouse() {
-        this(ARCADE_MAP_HOUSE_MIN_TILE);
-        ghostRevivalTiles[RED_GHOST_SHADOW]   = Vector2i.of(13, 17);
-        ghostRevivalTiles[PINK_GHOST_SPEEDY]  = Vector2i.of(13, 17);
-        ghostRevivalTiles[CYAN_GHOST_BASHFUL] = Vector2i.of(11, 17);
-        ghostRevivalTiles[ORANGE_GHOST_POKEY] = Vector2i.of(15, 17);
-    }
-
     public ArcadeHouse(Vector2i minTile) {
         this.minTile = requireNonNull(minTile);
+        ghostRevivalTiles[RED_GHOST_SHADOW]   = minTile.plus(3, 2);
+        ghostRevivalTiles[PINK_GHOST_SPEEDY]  = minTile.plus(3, 2);
+        ghostRevivalTiles[CYAN_GHOST_BASHFUL] = minTile.plus(1, 2);
+        ghostRevivalTiles[ORANGE_GHOST_POKEY] = minTile.plus(5, 2);
     }
 
     @Override

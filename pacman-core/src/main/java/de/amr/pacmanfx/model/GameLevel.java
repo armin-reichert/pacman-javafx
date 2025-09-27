@@ -11,7 +11,6 @@ import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.actors.*;
-import org.tinylog.Logger;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -42,6 +41,7 @@ public class GameLevel {
     private final int number; // 1=first level
 
     private final WorldMap worldMap;
+    private final House house;
     private final Vector2f pacStartPosition;
     private final Vector2i[] ghostScatterTiles = new Vector2i[4];
     private final Direction[] ghostStartDirections = new Direction[4];
@@ -50,7 +50,6 @@ public class GameLevel {
 
     private boolean demoLevel;
 
-    private House house;
     private Pac pac;
     private Ghost[] ghosts;
     private final List<Ghost> victims = new ArrayList<>();
@@ -68,15 +67,16 @@ public class GameLevel {
 
     private final FoodStore foodStore;
 
-    public GameLevel(Game game, int number, WorldMap worldMap) {
+    public GameLevel(Game game, int number, WorldMap worldMap, House house) {
         this.game = requireNonNull(game);
         this.number = requireValidLevelNumber(number);
         this.worldMap = requireNonNull(worldMap);
+        this.house = requireNonNull(house);
 
         blinking = new Pulse(10, Pulse.OFF);
         portals = findPortals();
 
-        addGhostHouse();
+        addGhostHouse(house);
 
         currentBonusIndex = -1;
         energizerTiles = worldMap.foodLayer().tilesContaining(ENERGIZER.$).collect(Collectors.toSet());
@@ -123,15 +123,8 @@ public class GameLevel {
      * and doors is working. The obstacle detection algorithm will then also detect the house and create a
      * closed obstacle representing the house boundary.
      */
-    private void addGhostHouse() {
-        Vector2i minTile = worldMap.getTerrainTileProperty(POS_HOUSE_MIN_TILE);
-        if (minTile == null) {
-            minTile = ArcadeHouse.ARCADE_MAP_HOUSE_MIN_TILE;
-            Logger.warn("No house min tile found in map, using {}", minTile);
-            worldMap.terrainLayer().propertyMap().put(POS_HOUSE_MIN_TILE, String.valueOf(minTile));
-        }
-        house = new ArcadeHouse(minTile);
-        worldMap.setContent(LayerID.TERRAIN, minTile, house.content());
+    private void addGhostHouse(House house) {
+        worldMap.setContent(LayerID.TERRAIN, house.minTile(), house.content());
 
         // these directions would in general depend on the house type, here they are fixed:
         setGhostStartDirection(RED_GHOST_SHADOW, Direction.LEFT);
@@ -143,7 +136,6 @@ public class GameLevel {
         house.setGhostRevivalTile(PINK_GHOST_SPEEDY,  worldMap.getTerrainTileProperty(POS_GHOST_2_PINK));
         house.setGhostRevivalTile(CYAN_GHOST_BASHFUL, worldMap.getTerrainTileProperty(POS_GHOST_3_CYAN));
         house.setGhostRevivalTile(ORANGE_GHOST_POKEY, worldMap.getTerrainTileProperty(POS_GHOST_4_ORANGE));
-
     }
 
     public void getReadyToPlay() {
@@ -222,17 +214,7 @@ public class GameLevel {
     public Pac pac() { return pac; }
 
     public void setGhosts(Ghost redGhost, Ghost pinkGhost, Ghost cyanGhost, Ghost orangeGhost) {
-        requireNonNull(redGhost);
-        requireNonNull(pinkGhost);
-        requireNonNull(cyanGhost);
-        requireNonNull(orangeGhost);
-
-        ghosts = new Ghost[] {redGhost, pinkGhost, cyanGhost, orangeGhost};
-
-        redGhost   .setStartPosition(halfTileRightOf(worldMap.getTerrainTileProperty(POS_GHOST_1_RED)));
-        pinkGhost  .setStartPosition(halfTileRightOf(worldMap.getTerrainTileProperty(POS_GHOST_2_PINK)));
-        cyanGhost  .setStartPosition(halfTileRightOf(worldMap.getTerrainTileProperty(POS_GHOST_3_CYAN)));
-        orangeGhost.setStartPosition(halfTileRightOf(worldMap.getTerrainTileProperty(POS_GHOST_4_ORANGE)));
+        ghosts = new Ghost[] {requireNonNull(redGhost), requireNonNull(pinkGhost), requireNonNull(cyanGhost), requireNonNull(orangeGhost)};
     }
 
     public Ghost ghost(byte id) { return ghosts != null ? ghosts[requireValidGhostPersonality(id)] : null; }

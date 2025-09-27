@@ -7,13 +7,16 @@ package de.amr.pacmanfx.arcade.pacman_xxl;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.event.GameEventType;
-import de.amr.pacmanfx.model.ArcadeLevelData;
-import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.MapSelectionMode;
-import de.amr.pacmanfx.model.MapSelector;
+import de.amr.pacmanfx.lib.Vector2i;
+import de.amr.pacmanfx.lib.worldmap.WorldMap;
+import de.amr.pacmanfx.model.*;
+import org.tinylog.Logger;
 
 import java.io.File;
 import java.util.Random;
+
+import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
+import static de.amr.pacmanfx.model.DefaultWorldMapPropertyName.*;
 
 public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
 
@@ -24,6 +27,47 @@ public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
 
     @Override
     public PacManXXL_Common_MapSelector mapSelector() { return (PacManXXL_Common_MapSelector) mapSelector; }
+
+    @Override
+    public void createLevel(int levelNumber) {
+        final WorldMap worldMap = mapSelector.getWorldMap(levelNumber);
+
+        Vector2i houseMinTile = worldMap.getTerrainTileProperty(POS_HOUSE_MIN_TILE);
+        if (houseMinTile == null) {
+            houseMinTile = ARCADE_MAP_HOUSE_MIN_TILE;
+            Logger.warn("No house min tile found in map, using {}", houseMinTile);
+            worldMap.terrainLayer().propertyMap().put(POS_HOUSE_MIN_TILE,  String.valueOf(houseMinTile));
+        }
+        final ArcadeHouse house = new ArcadeHouse(houseMinTile);
+
+        final GameLevel newGameLevel = new GameLevel(this, levelNumber, worldMap, house);
+        newGameLevel.setGameOverStateTicks(150);
+
+        final MsPacMan msPacMan = new MsPacMan();
+        msPacMan.setAutopilotSteering(autopilot);
+        newGameLevel.setPac(msPacMan);
+
+        final Blinky blinky = new Blinky();
+        final Pinky pinky = new Pinky();
+        final Inky inky = new Inky();
+        final Sue sue = new Sue();
+
+        blinky.setStartPosition(halfTileRightOf(worldMap.getTerrainTileProperty(POS_GHOST_1_RED)));
+        pinky .setStartPosition(halfTileRightOf(worldMap.getTerrainTileProperty(POS_GHOST_2_PINK)));
+        inky  .setStartPosition(halfTileRightOf(worldMap.getTerrainTileProperty(POS_GHOST_3_CYAN)));
+        sue   .setStartPosition(halfTileRightOf(worldMap.getTerrainTileProperty(POS_GHOST_4_ORANGE)));
+
+        newGameLevel.setGhosts(blinky, pinky, inky, sue);
+
+        newGameLevel.setBonusSymbol(0, computeBonusSymbol(levelNumber));
+        newGameLevel.setBonusSymbol(1, computeBonusSymbol(levelNumber));
+
+        setGameLevel(newGameLevel);
+
+        /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
+         * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
+        setLevelCounterEnabled(levelNumber < 8);
+    }
 
     @Override
     public void buildDemoLevel() {

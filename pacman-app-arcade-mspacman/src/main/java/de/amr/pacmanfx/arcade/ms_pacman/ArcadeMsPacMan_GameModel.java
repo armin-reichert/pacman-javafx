@@ -28,7 +28,9 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.RandomNumberSupport.randomBoolean;
 import static de.amr.pacmanfx.lib.RandomNumberSupport.randomInt;
+import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
+import static de.amr.pacmanfx.model.DefaultWorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -338,19 +340,26 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     @Override
     public void createLevel(int levelNumber) {
         final WorldMap worldMap = mapSelector.getWorldMap(levelNumber);
+        final ArcadeHouse house = new ArcadeHouse(ARCADE_MAP_HOUSE_MIN_TILE);
 
-        final GameLevel newGameLevel = new GameLevel(this, levelNumber, worldMap);
-        if (newGameLevel.optHouse().isEmpty()) {
-            Logger.error("Illegal Arcade Pac-Man game level: No ghost house exists");
-            return; //TODO who to handle this error?
-        }
+        final GameLevel newGameLevel = new GameLevel(this, levelNumber, worldMap, house);
         newGameLevel.setGameOverStateTicks(150);
 
         final MsPacMan msPacMan = new MsPacMan();
         msPacMan.setAutopilotSteering(autopilot);
         newGameLevel.setPac(msPacMan);
 
-        newGameLevel.setGhosts(new Blinky(), new Pinky(), new Inky(), new Sue());
+        final Blinky blinky = new Blinky();
+        final Pinky pinky = new Pinky();
+        final Inky inky = new Inky();
+        final Sue sue = new Sue();
+
+        blinky.setStartPosition(halfTileRightOf(worldMap.getTerrainTileProperty(POS_GHOST_1_RED)));
+        pinky .setStartPosition(halfTileRightOf(worldMap.getTerrainTileProperty(POS_GHOST_2_PINK)));
+        inky  .setStartPosition(halfTileRightOf(worldMap.getTerrainTileProperty(POS_GHOST_3_CYAN)));
+        sue   .setStartPosition(halfTileRightOf(worldMap.getTerrainTileProperty(POS_GHOST_4_ORANGE)));
+
+        newGameLevel.setGhosts(blinky, pinky, inky, sue);
 
         newGameLevel.setBonusSymbol(0, computeBonusSymbol(levelNumber));
         newGameLevel.setBonusSymbol(1, computeBonusSymbol(levelNumber));

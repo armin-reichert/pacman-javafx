@@ -27,6 +27,11 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class Arcade_GameModel extends AbstractGameModel {
 
+    /**
+     * Top-left tile of ghost house in original Arcade maps (Pac-Man, Ms. Pac-Man).
+     */
+    public static final Vector2i ARCADE_MAP_HOUSE_MIN_TILE = Vector2i.of(10, 15);
+
     public static final byte PELLET_VALUE = 10;
     public static final byte ENERGIZER_VALUE = 50;
     public static final int ALL_GHOSTS_IN_LEVEL_KILLED_BONUS_POINTS = 12_000;
