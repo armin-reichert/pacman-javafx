@@ -74,7 +74,7 @@ public class WorldMap {
      */
     public boolean saveToFile(File file) {
         try (var pw = new PrintWriter(file, StandardCharsets.UTF_8)) {
-            pw.print(sourceCode());
+            pw.print(sourceCode(false));
             return true;
         } catch (IOException x) {
             Logger.error(x);
@@ -249,20 +249,21 @@ public class WorldMap {
         }
     }
 
-    public String sourceCode() {
+    public String sourceCode(boolean lineNumbers) {
         var sw = new StringWriter();
         var pw = new PrintWriter(sw);
         printLayer(pw, terrainLayer, MARKER_BEGIN_TERRAIN_LAYER);
         printLayer(pw, foodLayer, MARKER_BEGIN_FOOD_LAYER);
-        return sw.toString();
-    }
-
-    public String sourceCodeWithLineNumbers() {
-        StringBuilder sb = new StringBuilder();
-        String[] lines = sourceCode().split("\n");
-        for (int lineNum = 1; lineNum <= lines.length; ++lineNum) {
-            sb.append("%5d: %s\n".formatted(lineNum, lines[lineNum-1]));
+        String source = sw.toString();
+        if (lineNumbers) {
+            StringBuilder sb = new StringBuilder();
+            String[] lines = source.split("\n");
+            for (int lineNum = 1; lineNum <= lines.length; ++lineNum) {
+                sb.append("%5d: %s\n".formatted(lineNum, lines[lineNum-1]));
+            }
+            return sb.toString();
+        } else {
+            return source;
         }
-        return sb.toString();
     }
 }

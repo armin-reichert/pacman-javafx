@@ -283,10 +283,6 @@ public class TileMapEditorUI {
         segmentNumbersVisibleProperty().set(value);
     }
 
-    // -- sourceCodeLineNumbers
-
-    private final BooleanProperty sourceCodeLineNumbers = new SimpleBooleanProperty(true);
-
     // -- terrainVisible
 
     public static final boolean DEFAULT_TERRAIN_VISIBLE = true;
@@ -349,12 +345,6 @@ public class TileMapEditorUI {
                 case ERASE   -> editCanvas.enterEraseMode();
             }
         });
-
-        sourceCodeLineNumbers.addListener((py, ov, lineNumbers) -> {
-            editor.sourceCodeProperty().set(lineNumbers
-                ? editor.currentWorldMap().sourceCodeWithLineNumbers()
-                : editor.currentWorldMap().sourceCode());
-;        });
 
         inputEnabled.bind(editCanvas.draggingProperty().not());
 
@@ -542,7 +532,7 @@ public class TileMapEditorUI {
                         -fx-font-size: 12px;
                         """);
                 CheckMenuItem item = new CheckMenuItem(translated("sourceCodeView.menu.showLineNumbers"));
-                item.selectedProperty().bindBidirectional(sourceCodeLineNumbers);
+                item.selectedProperty().bindBidirectional(editor.sourceCodeLineNumbers());
                 sourceViewContextMenu.getItems().add(item);
             } else if (sourceViewContextMenu.isShowing()) {
                 sourceViewContextMenu.hide();

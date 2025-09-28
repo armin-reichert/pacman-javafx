@@ -55,6 +55,7 @@ public class TileMapEditor {
         requireNonNull(model3DRepository);
         ui = new TileMapEditorUI(stage, this, model3DRepository);
         currentWorldMap.addListener((py, ov, nv) -> setWorldMapChanged());
+        sourceCodeLineNumbers.addListener((py, ov, lineNumbers) -> sourceCode.set(currentWorldMap().sourceCode(lineNumbers)));
     }
 
     public void init(File workDir) {
@@ -119,7 +120,7 @@ public class TileMapEditor {
     private void processChanges() {
         if (terrainMapChanged || foodMapChanged) {
             checkResult = WorldMapChecker.check(currentWorldMap());
-            sourceCode.set(currentWorldMap().sourceCodeWithLineNumbers());
+            sourceCode.set(currentWorldMap().sourceCode(sourceCodeLineNumbers.get()));
         }
         if (terrainMapChanged) {
             //TODO use events?
@@ -189,6 +190,14 @@ public class TileMapEditor {
 
     public StringProperty sourceCodeProperty() {
         return sourceCode;
+    }
+
+    // -- sourceCodeLineNumbers
+
+    private final BooleanProperty sourceCodeLineNumbers = new SimpleBooleanProperty(true);
+
+    public BooleanProperty sourceCodeLineNumbers() {
+        return sourceCodeLineNumbers;
     }
 
     // -- symmetricEditMode
