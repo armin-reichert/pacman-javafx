@@ -6,7 +6,6 @@ package de.amr.pacmanfx.mapeditor.actions;
 
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.FoodTile;
-import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.lib.worldmap.TerrainTile;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
@@ -49,7 +48,7 @@ public class Action_PlaceArcadeHouse extends EditorAction<Void> {
         Vector2i houseSize = maxTile.minus(minTile).plus(1,1);
         for (int y = 0; y < houseSize.y(); ++y) {
             for (int x = 0; x < houseSize.x(); ++x) {
-                worldMap.setContent(LayerID.TERRAIN, minTile.y() + y, minTile.x() + x, ARCADE_HOUSE_CODE[y][x]);
+                worldMap.terrainLayer().set(minTile.y() + y, minTile.x() + x, ARCADE_HOUSE_CODE[y][x]);
             }
         }
 
@@ -67,8 +66,8 @@ public class Action_PlaceArcadeHouse extends EditorAction<Void> {
         for (int row = minTile.y(); row <= maxTile.y(); ++row) {
             for (int col = minTile.x(); col <= maxTile.x(); ++col) {
                 // No symmetric editing!
-                worldMap.setContent(LayerID.TERRAIN, row, col, TerrainTile.EMPTY.$);
-                worldMap.setContent(LayerID.FOOD,    row, col, FoodTile.EMPTY.$);
+                worldMap.terrainLayer().set(row, col, TerrainTile.EMPTY.$);
+                worldMap.foodLayer().set(row, col, FoodTile.EMPTY.$);
             }
         }
     }

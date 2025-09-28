@@ -333,7 +333,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         final ArcadeHouse house = new ArcadeHouse(ARCADE_MAP_HOUSE_MIN_TILE);
         worldMap.terrainLayer().setHouse(house);
         //TODO check if this is still needed:
-        worldMap.setContent(LayerID.TERRAIN, house.minTile(), house.content());
+        worldMap.setContentArea(LayerID.TERRAIN, house.minTile(), house.content());
 
         final GameLevel newGameLevel = new GameLevel(this, levelNumber, worldMap);
         newGameLevel.setGameOverStateTicks(90);

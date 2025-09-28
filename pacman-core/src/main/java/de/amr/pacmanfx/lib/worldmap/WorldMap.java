@@ -130,8 +130,8 @@ public class WorldMap {
                         terrainValue = TerrainTile.WALL_V.$; // keep vertical border wall
                     }
                 }
-                newMap.setContent(LayerID.TERRAIN, row, col, terrainValue);
-                newMap.setContent(LayerID.FOOD, row, col, foodValue);
+                newMap.terrainLayer.set(row, col, terrainValue);
+                newMap.foodLayer.set(row, col, foodValue);
             }
         }
         return newMap;
@@ -147,11 +147,11 @@ public class WorldMap {
         for (int row = 0; row < newMap.numRows; ++row) {
             for (int col = 0; col < newMap.numCols; ++col) {
                 if (row < rowIndexToDelete) {
-                    newMap.setContent(LayerID.TERRAIN, row, col, terrainLayer.get(row, col));
-                    newMap.setContent(LayerID.FOOD, row, col, foodLayer.get(row, col));
+                    newMap.terrainLayer.set(row, col, terrainLayer.get(row, col));
+                    newMap.foodLayer.set(row, col, foodLayer.get(row, col));
                 } else {
-                    newMap.setContent(LayerID.TERRAIN, row, col, terrainLayer.get(row + 1, col));
-                    newMap.setContent(LayerID.FOOD, row, col, foodLayer.get(row + 1, col));
+                    newMap.terrainLayer.set(row, col, terrainLayer.get(row + 1, col));
+                    newMap.foodLayer.set(row, col, foodLayer.get(row + 1, col));
                 }
             }
         }
@@ -213,39 +213,13 @@ public class WorldMap {
     }
 
     /**
-     * Sets map layer data at position inside map bounds.
-     *
-     * @param layerID Layer ID
-     * @param row row inside map bounds
-     * @param col column inside map bounds
-     * @param code map value
-     * @throws IllegalArgumentException if tile outside map bounds
-     */
-    public void setContent(LayerID layerID, int row, int col, byte code) {
-        assertValidLayerID(layerID);
-        layer(layerID).set(row, col, code);
-    }
-
-    /**
-     * Sets map data at position inside map bounds
-     *
-     * @param layerID Layer ID
-     * @param tile tile inside map bounds
-     * @param code map value
-     * @throws IllegalArgumentException if tile outside map bounds
-     */
-    public void setContent(LayerID layerID, Vector2i tile, byte code) {
-        setContent(layerID, tile.y(), tile.x(), code);
-    }
-
-    /**
      * Sets map data for a rectangular region.
      *
      * @param layerID Layer ID
      * @param origin top-left tile of region
      * @param content content of region
      */
-    public void setContent(LayerID layerID, Vector2i origin, byte[][] content) {
+    public void setContentArea(LayerID layerID, Vector2i origin, byte[][] content) {
         requireNonNull(layerID);
         requireNonNull(origin);
         requireNonNull(content);

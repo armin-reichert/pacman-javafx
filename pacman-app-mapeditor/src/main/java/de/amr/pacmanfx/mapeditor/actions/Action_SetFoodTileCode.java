@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.mapeditor.actions;
 
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 
@@ -34,11 +33,11 @@ public class Action_SetFoodTileCode extends EditorAction<Void> {
     public Void execute() {
         WorldMap worldMap = editor.currentWorldMap();
         if (!canPlaceFoodAtTile(worldMap, tile)) return null;
-        worldMap.setContent(LayerID.FOOD, tile, code);
+        worldMap.foodLayer().set(tile, code);
         if (editor.symmetricEditMode()) {
             Vector2i mirroredTile = worldMap.foodLayer().mirrorPosition(tile);
             if (canPlaceFoodAtTile(worldMap, mirroredTile)) {
-                worldMap.setContent(LayerID.FOOD, mirroredTile, code);
+                worldMap.foodLayer().set(mirroredTile, code);
             }
         }
         editor.setEdited(true);

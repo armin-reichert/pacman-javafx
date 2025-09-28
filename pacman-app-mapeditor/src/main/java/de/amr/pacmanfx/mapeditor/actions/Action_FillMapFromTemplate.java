@@ -5,7 +5,10 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.mapeditor.actions;
 
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.lib.worldmap.*;
+import de.amr.pacmanfx.lib.worldmap.FoodTile;
+import de.amr.pacmanfx.lib.worldmap.TerrainTile;
+import de.amr.pacmanfx.lib.worldmap.WorldMap;
+import de.amr.pacmanfx.lib.worldmap.WorldMapLayer;
 import de.amr.pacmanfx.mapeditor.MessageType;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import de.amr.pacmanfx.mapeditor.TileMatcher;
@@ -78,10 +81,10 @@ public class Action_FillMapFromTemplate extends EditorUIAction<Void> {
                     rdr.getPixels(col * TS, row * TS, TS, TS, pixelFormat, pixelsOfTile, 0, TS);
                     byte foodValue = matcher.matchFoodTile(pixelsOfTile);
                     if (foodValue == FoodTile.PELLET.$ || foodValue == FoodTile.ENERGIZER.$) {
-                        worldMap.setContent(LayerID.FOOD, worldMapTile, foodValue);
+                        worldMap.foodLayer().set(worldMapTile, foodValue);
                     } else {
                         byte terrainValue = matcher.matchTerrainTile(pixelsOfTile);
-                        worldMap.setContent(LayerID.TERRAIN, worldMapTile, terrainValue);
+                        worldMap.terrainLayer().set(worldMapTile, terrainValue);
                     }
                 } catch (IndexOutOfBoundsException e) {
                     Logger.error("Could not get pixels for tile {}, maybe image has been cropped incorrectly?", worldMapTile);

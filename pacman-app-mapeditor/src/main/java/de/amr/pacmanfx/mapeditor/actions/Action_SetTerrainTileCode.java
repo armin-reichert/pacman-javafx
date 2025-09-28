@@ -6,7 +6,6 @@ package de.amr.pacmanfx.mapeditor.actions;
 
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.FoodTile;
-import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.lib.worldmap.TerrainTile;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
@@ -45,15 +44,15 @@ public class Action_SetTerrainTileCode extends EditorAction<Void> {
     public Void execute() {
         byte oldCode = worldMap.terrainLayer().get(tile);
         if (code == oldCode && !editor.symmetricEditMode()) return null;
-        worldMap.setContent(LayerID.TERRAIN, tile, code);
-        worldMap.setContent(LayerID.FOOD, tile, FoodTile.EMPTY.$);
+        worldMap.terrainLayer().set(tile, code);
+        worldMap.foodLayer().set(tile, FoodTile.EMPTY.$);
         if (editor.symmetricEditMode()) {
             Vector2i mirroredTile = worldMap.terrainLayer().mirrorPosition(tile);
             byte mirroredCode = TerrainTile.mirroredCode(code);
             byte oldMirroredCode = worldMap.terrainLayer().get(mirroredTile);
             if (mirroredCode != oldMirroredCode) {
-                worldMap.setContent(LayerID.TERRAIN, mirroredTile, mirroredCode);
-                worldMap.setContent(LayerID.FOOD, mirroredTile, FoodTile.EMPTY.$);
+                worldMap.terrainLayer().set(mirroredTile, mirroredCode);
+                worldMap.foodLayer().set(mirroredTile, FoodTile.EMPTY.$);
             }
         }
         editor.setEdited(true);

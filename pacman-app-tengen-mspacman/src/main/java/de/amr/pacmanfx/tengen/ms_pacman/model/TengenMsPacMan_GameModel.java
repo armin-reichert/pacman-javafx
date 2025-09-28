@@ -515,7 +515,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         final ArcadeHouse house = new ArcadeHouse(HOUSE_MIN_TILE);
         worldMap.terrainLayer().setHouse(house);
         //TODO check if this is still needed:
-        worldMap.setContent(LayerID.TERRAIN, house.minTile(), house.content());
+        worldMap.setContentArea(LayerID.TERRAIN, house.minTile(), house.content());
 
         final GameLevel newGameLevel = new GameLevel(this, levelNumber, worldMap);
         // For non-Arcade game levels, give some extra time for "game over" text animation

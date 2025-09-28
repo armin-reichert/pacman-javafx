@@ -6,7 +6,6 @@ package de.amr.pacmanfx.mapeditor.actions;
 
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.FoodTile;
-import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 
 import static java.util.Objects.requireNonNull;
@@ -25,7 +24,7 @@ public class Action_ClearFoodTile extends EditorAction<Void> {
 
     @Override
     public Void execute() {
-        editor.currentWorldMap().setContent(LayerID.FOOD, tile, FoodTile.EMPTY.$);
+        editor.currentWorldMap().foodLayer().set(tile, FoodTile.EMPTY.$);
         editor.setFoodMapChanged();
         editor.setEdited(true);
         return null;

@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.mapeditor.actions;
 
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.lib.worldmap.TerrainTile;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
@@ -35,7 +34,7 @@ public class Action_ClearFoodAroundHouse extends EditorAction<Void> {
                 for (int col = minTile.x() - 1; col <= maxTile.x() + 1; ++col) {
                     for (int row = minTile.y() - 1; row <= maxTile.y() + 1; ++row) {
                         if (worldMap.foodLayer().outOfBounds(row, col)) continue;
-                        worldMap.setContent(LayerID.FOOD, row, col, TerrainTile.EMPTY.$);
+                        worldMap.foodLayer().set(row, col, TerrainTile.EMPTY.$);
                         editor.setFoodMapChanged();
                         editor.setEdited(true);
                     }
