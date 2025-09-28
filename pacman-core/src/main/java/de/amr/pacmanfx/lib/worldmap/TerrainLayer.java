@@ -1,6 +1,7 @@
 package de.amr.pacmanfx.lib.worldmap;
 
 import de.amr.pacmanfx.lib.Direction;
+import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.House;
 import de.amr.pacmanfx.model.Portal;
@@ -11,25 +12,40 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.worldmap.TerrainTile.TUNNEL;
 import static de.amr.pacmanfx.lib.worldmap.TerrainTile.isBlocked;
+import static de.amr.pacmanfx.model.DefaultWorldMapPropertyName.POS_PAC;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
 public class TerrainLayer extends WorldMapLayer {
 
-    private final Portal[] portals;
+    private static Vector2f halfTileRightOf(Vector2i tile) { return Vector2f.of(tile.x() * TS + HTS, tile.y() * TS); }
+
+
+    private Vector2f pacStartPosition;
+    private Portal[] portals;
     private House house;
 
     public TerrainLayer(int numRows, int numCols) {
         super(numRows, numCols);
-        portals = findPortals();
     }
 
     public TerrainLayer(WorldMapLayer layer) {
         super(layer);
         portals = findPortals();
+        Vector2i pacTile = getTileProperty(POS_PAC);
+        if (pacTile == null) {
+            throw new IllegalArgumentException("No Pac position stored in map");
+        }
+        pacStartPosition = halfTileRightOf(pacTile);
+
+    }
+
+    public Vector2f pacStartPosition() {
+        return pacStartPosition;
     }
 
     public void setHouse(House house) {
