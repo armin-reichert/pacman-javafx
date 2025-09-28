@@ -62,8 +62,9 @@ public class GameLevel {
         ghosts().forEach(ghost -> {
             ghost.reset(); // initially invisible!
             ghost.setPosition(ghost.startPosition());
-            ghost.setMoveDir(worldMap.terrainLayer().house().ghostStartDirection(ghost.personality()));
-            ghost.setWishDir(worldMap.terrainLayer().house().ghostStartDirection(ghost.personality()));
+            Direction dir = worldMap.terrainLayer().house().ghostStartDirection(ghost.personality());
+            ghost.setMoveDir(dir);
+            ghost.setWishDir(dir);
             ghost.setState(GhostState.LOCKED);
         });
         blinking.setStartPhase(Pulse.ON); // Energizers are visible when ON
