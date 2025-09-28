@@ -10,7 +10,6 @@ import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.lib.worldmap.FoodLayer;
-import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.lib.worldmap.TerrainTile;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.*;
@@ -332,8 +331,6 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         final WorldMap worldMap = mapSelector.getWorldMapCopy(levelNumber);
         final ArcadeHouse house = new ArcadeHouse(ARCADE_MAP_HOUSE_MIN_TILE);
         worldMap.terrainLayer().setHouse(house);
-        //TODO check if this is still needed:
-        worldMap.setContentArea(LayerID.TERRAIN, house.minTile(), house.content());
 
         final GameLevel newGameLevel = new GameLevel(this, levelNumber, worldMap);
         newGameLevel.setGameOverStateTicks(90);

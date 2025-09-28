@@ -51,6 +51,7 @@ public class Action_PlaceArcadeHouse extends EditorAction<Void> {
                 worldMap.terrainLayer().set(minTile.y() + y, minTile.x() + x, ARCADE_HOUSE_CODE[y][x]);
             }
         }
+        editor.setTerrainMapChanged();
 
         // place ghosts
         var terrainProperties = worldMap.terrainLayer().propertyMap();
@@ -58,6 +59,7 @@ public class Action_PlaceArcadeHouse extends EditorAction<Void> {
         terrainProperties.put(POS_GHOST_3_CYAN,   String.valueOf(minTile.plus(1, 2)));
         terrainProperties.put(POS_GHOST_2_PINK,   String.valueOf(minTile.plus(3, 2)));
         terrainProperties.put(POS_GHOST_4_ORANGE, String.valueOf(minTile.plus(5, 2)));
+        editor.setTerrainMapPropertyChanged();
 
         return null;
     }

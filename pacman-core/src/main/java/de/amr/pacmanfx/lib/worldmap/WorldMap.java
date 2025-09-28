@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.lib.worldmap;
 
-import de.amr.pacmanfx.lib.Vector2i;
 import org.tinylog.Logger;
 
 import java.io.*;
@@ -207,25 +206,6 @@ public class WorldMap {
             configMap = new HashMap<>();
         }
         return configMap;
-    }
-
-    /**
-     * Sets map data for a rectangular region.
-     *
-     * @param layerID Layer ID
-     * @param origin top-left tile of region
-     * @param content content of region
-     */
-    public void setContentArea(LayerID layerID, Vector2i origin, byte[][] content) {
-        requireNonNull(layerID);
-        requireNonNull(origin);
-        requireNonNull(content);
-        int numCols = content[0].length, numRows = content.length;
-        for (int x = 0; x < numCols; ++x) {
-            for (int y = 0; y < numRows; ++y) {
-                layer(layerID).set(origin.y() + y, origin.x() + x, content[y][x]);
-            }
-        }
     }
 
     private void printLayer(PrintWriter pw, WorldMapLayer layer, String layerMarker) {

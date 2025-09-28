@@ -8,7 +8,6 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.lib.worldmap.TerrainTile;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.*;
@@ -54,8 +53,6 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
         }
         final ArcadeHouse house = new ArcadeHouse(houseMinTile);
         worldMap.terrainLayer().setHouse(house);
-        //TODO check if this is still needed:
-        worldMap.setContentArea(LayerID.TERRAIN, house.minTile(), house.content());
 
         final GameLevel newGameLevel = new GameLevel(this, levelNumber, worldMap);
         newGameLevel.setGameOverStateTicks(90);

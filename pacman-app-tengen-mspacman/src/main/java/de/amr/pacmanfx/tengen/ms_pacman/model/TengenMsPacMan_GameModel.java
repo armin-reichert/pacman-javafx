@@ -12,7 +12,6 @@ import de.amr.pacmanfx.lib.Waypoint;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.lib.worldmap.FoodLayer;
-import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.*;
@@ -514,8 +513,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         final WorldMap worldMap = mapSelector.getWorldMapCopy(levelNumber, mapCategory);
         final ArcadeHouse house = new ArcadeHouse(HOUSE_MIN_TILE);
         worldMap.terrainLayer().setHouse(house);
-        //TODO check if this is still needed:
-        worldMap.setContentArea(LayerID.TERRAIN, house.minTile(), house.content());
 
         final GameLevel newGameLevel = new GameLevel(this, levelNumber, worldMap);
         // For non-Arcade game levels, give some extra time for "game over" text animation
