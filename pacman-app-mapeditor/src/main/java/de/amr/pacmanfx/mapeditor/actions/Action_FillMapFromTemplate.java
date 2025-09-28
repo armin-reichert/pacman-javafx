@@ -6,11 +6,11 @@ package de.amr.pacmanfx.mapeditor.actions;
 
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.*;
-import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import de.amr.pacmanfx.mapeditor.MessageType;
+import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import de.amr.pacmanfx.mapeditor.TileMatcher;
-import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.DefaultWorldMapPropertyName;
+import de.amr.pacmanfx.model.GameLevel;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritablePixelFormat;
 import javafx.scene.paint.Color;
@@ -94,11 +94,11 @@ public class Action_FillMapFromTemplate extends EditorUIAction<Void> {
 
         // Find house: requires that at least min and max tiles have been detected
         Vector2i houseMinTile = worldMap.terrainLayer().tiles()
-                .filter(tile -> worldMap.content(LayerID.TERRAIN, tile) == TerrainTile.ANG_ARC_NW.$)
+                .filter(tile -> worldMap.terrainLayer().get(tile) == TerrainTile.ANG_ARC_NW.$)
                 .findFirst().orElse(null);
 
         Vector2i houseMaxTile = worldMap.terrainLayer().tiles()
-                .filter(tile -> worldMap.content(LayerID.TERRAIN, tile) == TerrainTile.ANG_ARC_SE.$)
+                .filter(tile -> worldMap.terrainLayer().get(tile) == TerrainTile.ANG_ARC_SE.$)
                 .findFirst().orElse(null);
 
         if (houseMinTile != null && houseMaxTile != null

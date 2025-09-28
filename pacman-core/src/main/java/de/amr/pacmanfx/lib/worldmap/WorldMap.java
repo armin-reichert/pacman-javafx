@@ -119,14 +119,14 @@ public class WorldMap {
                 byte terrainValue = TerrainTile.EMPTY.$;
                 byte foodValue = FoodTile.EMPTY.$;
                 if (row < rowIndex) {
-                    terrainValue = content(LayerID.TERRAIN, row, col);
-                    foodValue = content(LayerID.FOOD, row, col);
+                    terrainValue = terrainLayer.get(row, col);
+                    foodValue = foodLayer.get(row, col);
                 } else if (row > rowIndex) {
-                    terrainValue = content(LayerID.TERRAIN, row - 1, col);
-                    foodValue = content(LayerID.FOOD, row - 1, col);
+                    terrainValue = terrainLayer.get(row - 1, col);
+                    foodValue = foodLayer.get(row - 1, col);
                 } else {
                     if ((col == 0 || col == numCols - 1)
-                        && content(LayerID.TERRAIN, row, col) == TerrainTile.WALL_V.$) {
+                        && terrainLayer.get(row, col) == TerrainTile.WALL_V.$) {
                         terrainValue = TerrainTile.WALL_V.$; // keep vertical border wall
                     }
                 }
@@ -147,11 +147,11 @@ public class WorldMap {
         for (int row = 0; row < newMap.numRows; ++row) {
             for (int col = 0; col < newMap.numCols; ++col) {
                 if (row < rowIndexToDelete) {
-                    newMap.setContent(LayerID.TERRAIN, row, col, content(LayerID.TERRAIN, row, col));
-                    newMap.setContent(LayerID.FOOD, row, col, content(LayerID.FOOD, row, col));
+                    newMap.setContent(LayerID.TERRAIN, row, col, terrainLayer.get(row, col));
+                    newMap.setContent(LayerID.FOOD, row, col, foodLayer.get(row, col));
                 } else {
-                    newMap.setContent(LayerID.TERRAIN, row, col, content(LayerID.TERRAIN, row + 1, col));
-                    newMap.setContent(LayerID.FOOD, row, col, content(LayerID.FOOD, row + 1, col));
+                    newMap.setContent(LayerID.TERRAIN, row, col, terrainLayer.get(row + 1, col));
+                    newMap.setContent(LayerID.FOOD, row, col, foodLayer.get(row + 1, col));
                 }
             }
         }
@@ -210,28 +210,6 @@ public class WorldMap {
             configMap = new HashMap<>();
         }
         return configMap;
-    }
-
-    /**
-     * @param layerID Layer ID
-     * @param row row inside map bounds
-     * @param col column inside map bounds
-     * @return map data at position
-     * @throws IllegalArgumentException if tile outside map bounds
-     */
-    public byte content(LayerID layerID, int row, int col) {
-        assertValidLayerID(layerID);
-        return layer(layerID).get(row, col);
-    }
-
-    /**
-     * @param layerID Layer ID
-     * @param tile tile inside map bounds
-     * @return map data at tile position
-     * @throws IllegalArgumentException if tile outside map bounds
-     */
-    public byte content(LayerID layerID, Vector2i tile) {
-        return content(layerID, tile.y(), tile.x());
     }
 
     /**

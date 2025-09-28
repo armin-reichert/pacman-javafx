@@ -6,7 +6,6 @@ package de.amr.pacmanfx.mapeditor;
 
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.mapeditor.actions.*;
 import de.amr.pacmanfx.mapeditor.palette.PaletteID;
@@ -324,7 +323,7 @@ public class EditCanvas extends Canvas {
                 DefaultWorldMapPropertyName.COLOR_FOOD, ArcadeSprites.MS_PACMAN_COLOR_FOOD);
             foodRenderer.setEnergizerColor(foodColor);
             foodRenderer.setPelletColor(foodColor);
-            worldMap().terrainLayer().tiles().forEach(tile -> foodRenderer.drawTile(tile, worldMap().content(LayerID.FOOD, tile)));
+            worldMap().terrainLayer().tiles().forEach(tile -> foodRenderer.drawTile(tile, worldMap().foodLayer().get(tile)));
         }
 
         if (actorsVisible.get()) {

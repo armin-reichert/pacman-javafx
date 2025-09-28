@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.mapeditor;
 
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.lib.worldmap.TerrainTile;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.mapeditor.rendering.ActorSpriteRenderer;
@@ -58,7 +57,7 @@ public class Preview2D extends Canvas {
         terrainTileRenderer.setScatterTargetsDisplayed(false);
         terrainTileRenderer.setTunnelIconsDisplayed(false);
         terrainTileRenderer.setTerrainFilter((worldMap, tile) -> {
-            byte code = worldMap.content(LayerID.TERRAIN, tile);
+            byte code = worldMap.terrainLayer().get(tile);
             return code == TerrainTile.ARC_SE.$
                 || code == TerrainTile.ARC_NE.$
                 || code == TerrainTile.ARC_SW.$
@@ -117,7 +116,7 @@ public class Preview2D extends Canvas {
                 DefaultWorldMapPropertyName.COLOR_FOOD, ArcadeSprites.MS_PACMAN_COLOR_FOOD);
             foodRenderer.setEnergizerColor(foodColor);
             foodRenderer.setPelletColor(foodColor);
-            worldMap.terrainLayer().tiles().forEach(tile -> foodRenderer.drawTile(tile, worldMap.content(LayerID.FOOD, tile)));
+            worldMap.terrainLayer().tiles().forEach(tile -> foodRenderer.drawTile(tile, worldMap.foodLayer().get(tile)));
         }
         if (actorsVisible.get()) {
             ACTOR_SPRITES.forEach((positionProperty, sprite) -> {

@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.mapeditor;
 
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.lib.worldmap.TerrainTile;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.lib.worldmap.WorldMapLayer;
@@ -80,7 +79,7 @@ public interface EditorUtil {
     }
 
     static boolean hasAccessibleTerrainAtTile(WorldMap worldMap, Vector2i tile) {
-        byte value = worldMap.content(LayerID.TERRAIN, tile);
+        byte value = worldMap.terrainLayer().get(tile);
         return value == TerrainTile.EMPTY.$
                 || value == TerrainTile.ONE_WAY_DOWN.$
                 || value == TerrainTile.ONE_WAY_UP.$

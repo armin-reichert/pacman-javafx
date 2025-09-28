@@ -5,7 +5,10 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.mapeditor.actions;
 
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.lib.worldmap.*;
+import de.amr.pacmanfx.lib.worldmap.FoodTile;
+import de.amr.pacmanfx.lib.worldmap.Obstacle;
+import de.amr.pacmanfx.lib.worldmap.TerrainTile;
+import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.mapeditor.MessageType;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import javafx.scene.input.Clipboard;
@@ -28,7 +31,7 @@ public class Action_IdentifyTileAndObstacle extends EditorUIAction<String> {
     @Override
     public String execute() {
         WorldMap worldMap = editor.currentWorldMap();
-        byte terrainCode = worldMap.content(LayerID.TERRAIN, tile), foodCode = worldMap.content(LayerID.FOOD, tile);
+        byte terrainCode = worldMap.terrainLayer().get(tile), foodCode = worldMap.foodLayer().get(tile);
         StringBuilder info = new StringBuilder();
         info.append(" ").append(terrainInfo(worldMap, terrainCode));
         if (foodCode != FoodTile.EMPTY.$) {

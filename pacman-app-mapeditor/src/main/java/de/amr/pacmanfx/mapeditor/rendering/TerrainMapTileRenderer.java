@@ -8,7 +8,10 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.lib.worldmap.*;
+import de.amr.pacmanfx.lib.worldmap.Obstacle;
+import de.amr.pacmanfx.lib.worldmap.ObstacleSegment;
+import de.amr.pacmanfx.lib.worldmap.WorldMap;
+import de.amr.pacmanfx.lib.worldmap.WorldMapParser;
 import de.amr.pacmanfx.model.DefaultWorldMapPropertyName;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapColorScheme;
@@ -129,7 +132,7 @@ public class TerrainMapTileRenderer extends BaseRenderer implements TerrainMapRe
         ctx.save();
         ctx.scale(scaling(), scaling());
         worldMap.terrainLayer().tiles().filter(tile -> terrainFilter.test(worldMap, tile)).forEach(tile -> {
-            byte code = worldMap.content(LayerID.TERRAIN, tile);
+            byte code = worldMap.terrainLayer().get(tile);
             drawTileUnscaled(tile, code);
         });
         if (specialTilesDisplayed) {

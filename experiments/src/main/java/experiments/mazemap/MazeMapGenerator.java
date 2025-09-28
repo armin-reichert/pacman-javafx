@@ -71,9 +71,9 @@ public class MazeMapGenerator {
         move();
         while (inRange(current, map)) {
             Vector2i tileAtRightHand = current.plus(moveDir.nextClockwise().vector());
-            if (map.content(LayerID.TERRAIN, tileAtRightHand) == FREE) {
+            if (map.terrainLayer().get(tileAtRightHand) == FREE) {
                 Vector2i tileAhead = current.plus(moveDir.vector());
-                if (map.content(LayerID.TERRAIN, tileAhead) == BLOCKED) {
+                if (map.terrainLayer().get(tileAhead) == BLOCKED) {
                     set(map, LayerID.TERRAIN, current,
                             moveDir.isHorizontal() ? TerrainTile.WALL_H.$
                                 : TerrainTile.WALL_V.$);
@@ -113,7 +113,7 @@ public class MazeMapGenerator {
     private void addFood(WorldMap map) {
         for (int row = EMPTY_ROWS_ABOVE; row < map.numRows() - EMPTY_ROWS_BELOW; ++row) {
             for (int col = 0; col < map.numCols(); ++col) {
-                if (map.content(LayerID.TERRAIN, row, col) == TerrainTile.EMPTY.$
+                if (map.terrainLayer().get(row, col) == TerrainTile.EMPTY.$
                         && new Random().nextInt(100) < 40) {
                     map.setContent(LayerID.FOOD, row, col, FoodTile.PELLET.$);
                 }

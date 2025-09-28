@@ -7,7 +7,6 @@ package de.amr.pacmanfx.mapeditor;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.FoodTile;
-import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.lib.worldmap.Obstacle;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.DefaultWorldMapPropertyName;
@@ -272,10 +271,10 @@ public class Maze3D extends Group {
     }
 
     private boolean hasFoodAt(Vector2i tile) {
-        return worldMap().content(LayerID.FOOD, tile) != FoodTile.EMPTY.$;
+        return worldMap().foodLayer().get(tile) != FoodTile.EMPTY.$;
     }
 
     private boolean hasEnergizerAt(Vector2i tile) {
-        return worldMap().content(LayerID.FOOD, tile) == FoodTile.ENERGIZER.$;
+        return worldMap().foodLayer().get(tile) == FoodTile.ENERGIZER.$;
     }
 }
