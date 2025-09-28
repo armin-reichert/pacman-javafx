@@ -19,32 +19,28 @@ import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
 import static java.util.Objects.requireNonNull;
 
 /**
- * A game level contains the world, the actors and the food management.
+ * A game level contains the world and the actors.
  */
 public class GameLevel {
 
-    //TODO should this be stored in world map instead of hardcoding?
+    //TODO should this be make configurable instead of hardcoding?
     public static final int EMPTY_ROWS_OVER_MAZE  = 3;
     public static final int EMPTY_ROWS_BELOW_MAZE = 2;
 
     private final Game game;
     private final int number; // 1=first level
-
     private final WorldMap worldMap;
-
-    private boolean demoLevel;
+    private final Pulse blinking;
+    private final List<Ghost> victims = new ArrayList<>();
+    private final byte[] bonusSymbols = new byte[2];
 
     private Pac pac;
     private Ghost[] ghosts;
-    private final List<Ghost> victims = new ArrayList<>();
     private Bonus bonus;
-    private final byte[] bonusSymbols = new byte[2];
     private int currentBonusIndex; // -1=no bonus, 0=first, 1=second
-
     private GameLevelMessage message;
 
-    private final Pulse blinking;
-
+    private boolean demoLevel;
     private int numGhostsKilled;
     private int gameOverStateTicks;
     private long startTime;
@@ -147,8 +143,6 @@ public class GameLevel {
     public Pulse blinking() {
         return blinking;
     }
-
     public int number() { return number; }
-
     public WorldMap worldMap() { return worldMap; }
 }

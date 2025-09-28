@@ -82,7 +82,6 @@ public class WorldMap {
         }
     }
 
-
     // Package-visible for access by parser methods
 
     int numCols;
