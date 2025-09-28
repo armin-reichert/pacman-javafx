@@ -44,8 +44,8 @@ abstract class AbstractPropertyEditor {
         this.property = requireNonNull(property);
 
         nameEditor = new TextField(property.name());
-        nameEditor.setMinWidth(MapPropertiesEditor.NAME_EDITOR_WIDTH);
-        nameEditor.setMaxWidth(MapPropertiesEditor.NAME_EDITOR_WIDTH);
+        nameEditor.setMinWidth(MapLayerPropertiesEditor.NAME_EDITOR_WIDTH);
+        nameEditor.setMaxWidth(MapLayerPropertiesEditor.NAME_EDITOR_WIDTH);
         nameEditor.disableProperty().bind(enabled.not());
         if (property.is(MapEditorPropertyAttribute.PREDEFINED)) {
             nameEditor.setEditable(false);
@@ -114,11 +114,11 @@ abstract class AbstractPropertyEditor {
             rejectName(newName, "Property name '%s' is invalid");
             return;
         }
-        if (MapPropertiesEditor.PREDEFINED_PROPERTY_NAMES.get(layerID).contains(newName)) {
+        if (MapLayerPropertiesEditor.PREDEFINED_PROPERTY_NAMES.get(layerID).contains(newName)) {
             rejectName(newName, "Property name '%s' is reserved");
             return;
         }
-        if (MapPropertiesEditor.HIDDEN_PROPERTY_NAMES.get(layerID).contains(newName)) {
+        if (MapLayerPropertiesEditor.HIDDEN_PROPERTY_NAMES.get(layerID).contains(newName)) {
             rejectName(newName, "Property name '%s' is reserved");
             return;
         }
@@ -126,16 +126,16 @@ abstract class AbstractPropertyEditor {
             rejectName(newName, "Property name '%s' already in use");
             return;
         }
-        if (MapPropertiesEditor.COLOR_PREFIXES.contains(newName)) {
+        if (MapLayerPropertiesEditor.COLOR_PREFIXES.contains(newName)) {
             rejectName(newName, "Color property name '%s' is too short");
             return;
         }
-        if (MapPropertiesEditor.TILE_PREFIXES.contains(newName)) {
+        if (MapLayerPropertiesEditor.TILE_PREFIXES.contains(newName)) {
             rejectName(newName, "Tile property name '%s' is too short");
             return;
         }
 
-        MapEditorPropertyType newType = MapPropertiesEditor.determinePropertyType(newName);
+        MapEditorPropertyType newType = MapLayerPropertiesEditor.determinePropertyType(newName);
         if (newType != property.type()) {
             rejectName(newName, "Renaming property to '%s' would change type");
             return;

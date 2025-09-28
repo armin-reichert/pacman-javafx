@@ -24,7 +24,7 @@ import java.util.*;
 import static de.amr.pacmanfx.model.DefaultWorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;
 
-public class MapPropertiesEditor extends BorderPane {
+public class MapLayerPropertiesEditor extends BorderPane {
 
     public static final int NAME_EDITOR_WIDTH = 170;
     public static final int VALUE_EDITOR_WIDTH = 120;
@@ -72,7 +72,7 @@ public class MapPropertiesEditor extends BorderPane {
     private final List<AbstractPropertyEditor> propertyEditors = new ArrayList<>();
     private final GridPane grid = new GridPane(2, 2);
 
-    public MapPropertiesEditor(TileMapEditorUI ui, LayerID layerID) {
+    public MapLayerPropertiesEditor(TileMapEditorUI ui, LayerID layerID) {
         this.ui = requireNonNull(ui);
         this.layerID = requireNonNull(layerID);
         setTop(createButtonBar());

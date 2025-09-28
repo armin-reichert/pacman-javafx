@@ -39,8 +39,8 @@ class TilePropertyEditor extends AbstractPropertyEditor {
         spinnerY.valueProperty().addListener((py, ov, nv) -> storeValueInMapLayer());
 
         valueEditorPane = new HBox(spinnerX, spinnerY);
-        valueEditorPane.setPrefWidth(MapPropertiesEditor.VALUE_EDITOR_WIDTH);
-        valueEditorPane.setMinWidth(MapPropertiesEditor.VALUE_EDITOR_WIDTH);
+        valueEditorPane.setPrefWidth(MapLayerPropertiesEditor.VALUE_EDITOR_WIDTH);
+        valueEditorPane.setMinWidth(MapLayerPropertiesEditor.VALUE_EDITOR_WIDTH);
     }
 
     @Override

@@ -17,9 +17,9 @@ class TextPropertyEditor extends AbstractPropertyEditor {
     public TextPropertyEditor(TileMapEditorUI ui, LayerID layerID, WorldMapLayer layer, MapEditorProperty property) {
         super(ui, layerID, layer, property);
         textEditor = new TextField();
-        textEditor.setPrefWidth(MapPropertiesEditor.NAME_EDITOR_WIDTH);
-        textEditor.setMinWidth(MapPropertiesEditor.VALUE_EDITOR_WIDTH);
-        textEditor.setMaxWidth(MapPropertiesEditor.VALUE_EDITOR_WIDTH);
+        textEditor.setPrefWidth(MapLayerPropertiesEditor.NAME_EDITOR_WIDTH);
+        textEditor.setMinWidth(MapLayerPropertiesEditor.VALUE_EDITOR_WIDTH);
+        textEditor.setMaxWidth(MapLayerPropertiesEditor.VALUE_EDITOR_WIDTH);
         textEditor.setText(property.value());
         textEditor.disableProperty().bind(enabled.not());
         textEditor.setOnAction(e -> storeValueInMapLayer());
