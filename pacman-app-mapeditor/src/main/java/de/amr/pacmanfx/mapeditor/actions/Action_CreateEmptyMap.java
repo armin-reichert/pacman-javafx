@@ -20,7 +20,7 @@ public class Action_CreateEmptyMap extends EditorAction<WorldMap> {
 
     @Override
     public WorldMap execute() {
-        var worldMap = WorldMap.emptyMap(numCols, numRows);
+        var worldMap = new WorldMap(numCols, numRows);
         new Action_SetDefaultMapColors(editor, worldMap).execute();
         return worldMap;
     }

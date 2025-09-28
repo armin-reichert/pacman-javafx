@@ -5,8 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.mapeditor.actions;
 
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
-import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import de.amr.pacmanfx.mapeditor.MessageType;
+import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import de.amr.pacmanfx.model.GameLevel;
 import javafx.scene.image.Image;
 
@@ -25,7 +25,7 @@ public class Action_SetEmptyMapFromTemplateImage extends EditorUIAction<Void> {
     public Void execute() {
         int numRows = GameLevel.EMPTY_ROWS_OVER_MAZE + GameLevel.EMPTY_ROWS_BELOW_MAZE + (int) (image.getHeight() / TS);
         int numCols = (int) (image.getWidth() / TS);
-        WorldMap emptyMap = WorldMap.emptyMap(numCols, numRows);
+        WorldMap emptyMap = new WorldMap(numCols, numRows);
         editor.setCurrentWorldMap(emptyMap);
         editor.setEdited(true);
         ui.selectTemplateImageTab();

@@ -31,13 +31,11 @@ public class WorldMap {
         }
     }
 
-    public static WorldMap emptyMap(int tilesX, int tilesY) {
-        var empty = new WorldMap();
-        empty.numRows = requireNonNegativeInt(tilesY);
-        empty.numCols = requireNonNegativeInt(tilesX);
-        empty.terrainLayer = new TerrainLayer(tilesY, tilesX);
-        empty.foodLayer = new FoodLayer(tilesY, tilesX);
-        return empty;
+    public WorldMap(int tilesX, int tilesY) {
+        numRows = requireNonNegativeInt(tilesY);
+        numCols = requireNonNegativeInt(tilesX);
+        terrainLayer = new TerrainLayer(tilesY, tilesX);
+        foodLayer = new FoodLayer(tilesY, tilesX);
     }
 
     public static WorldMap copyOf(WorldMap original) {
@@ -110,7 +108,7 @@ public class WorldMap {
         if (rowIndex < 0 || rowIndex > numRows) {
             throw new IllegalArgumentException("Illegal row index for inserting row: " + rowIndex);
         }
-        WorldMap newMap = WorldMap.emptyMap(numCols, numRows + 1);
+        WorldMap newMap = new WorldMap(numCols, numRows + 1);
         newMap.terrainLayer.replacePropertyMap(terrainLayer.propertyMap());
         newMap.foodLayer.replacePropertyMap(foodLayer.propertyMap());
         for (int row = 0; row < newMap.numRows; ++row) {
@@ -140,7 +138,7 @@ public class WorldMap {
         if (rowIndexToDelete < 0 || rowIndexToDelete > numRows - 1) {
             throw new IllegalArgumentException("Illegal row index for deleting row: " + rowIndexToDelete);
         }
-        WorldMap newMap = WorldMap.emptyMap(numCols, numRows - 1);
+        WorldMap newMap = new WorldMap(numCols, numRows - 1);
         newMap.terrainLayer.replacePropertyMap(terrainLayer.propertyMap());
         newMap.foodLayer.replacePropertyMap(foodLayer.propertyMap());
         for (int row = 0; row < newMap.numRows; ++row) {

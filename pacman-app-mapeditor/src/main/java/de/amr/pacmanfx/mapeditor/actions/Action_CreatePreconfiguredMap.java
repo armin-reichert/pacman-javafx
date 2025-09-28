@@ -22,7 +22,7 @@ public class Action_CreatePreconfiguredMap extends EditorAction<WorldMap> {
 
     @Override
     public WorldMap execute() {
-        WorldMap newMap = WorldMap.emptyMap(numCols, numRows);
+        WorldMap newMap = new WorldMap(numCols, numRows);
         new Action_SetDefaultMapColors(editor, newMap).execute();
         new Action_SetDefaultScatterPositions(editor, newMap).execute();
         new Action_AddBorderWall(editor, newMap).execute();
