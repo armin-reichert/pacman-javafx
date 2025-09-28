@@ -17,10 +17,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Globals.HTS;
+import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
-import static de.amr.pacmanfx.model.DefaultWorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -38,7 +38,6 @@ public class GameLevel {
     private final int number; // 1=first level
 
     private final WorldMap worldMap;
-    private final Vector2i[] ghostScatterTiles = new Vector2i[4];
 
     private boolean demoLevel;
 
@@ -68,20 +67,6 @@ public class GameLevel {
 
         blinking = new Pulse(10, Pulse.OFF);
         currentBonusIndex = -1;
-
-        // Scatter tiles
-
-        ghostScatterTiles[RED_GHOST_SHADOW] = worldMap.terrainLayer().getTileProperty(POS_SCATTER_RED_GHOST,
-            Vector2i.of(0, worldMap.numCols() - 3));
-
-        ghostScatterTiles[PINK_GHOST_SPEEDY] = worldMap.terrainLayer().getTileProperty(POS_SCATTER_PINK_GHOST,
-            Vector2i.of(0, 3));
-
-        ghostScatterTiles[CYAN_GHOST_BASHFUL] = worldMap.terrainLayer().getTileProperty(POS_SCATTER_CYAN_GHOST,
-            Vector2i.of(worldMap.numRows() - EMPTY_ROWS_BELOW_MAZE, worldMap.numCols() - 1));
-
-        ghostScatterTiles[ORANGE_GHOST_POKEY] = worldMap.terrainLayer().getTileProperty(POS_SCATTER_ORANGE_GHOST,
-            Vector2i.of(worldMap.numRows() - EMPTY_ROWS_BELOW_MAZE, 0));
     }
 
     public void getReadyToPlay() {
@@ -138,20 +123,6 @@ public class GameLevel {
         return Optional.ofNullable(message);
     }
 
-    public Vector2f defaultMessagePosition() {
-        House house = worldMap.terrainLayer().house();
-        if (house != null) {
-            Vector2i houseSize = house.sizeInTiles();
-            float cx = TS(house.minTile().x() + houseSize.x() * 0.5f);
-            float cy = TS(house.minTile().y() + houseSize.y() + 1);
-            return Vector2f.of(cx, cy);
-        }
-        else {
-            Vector2i worldSize = worldMap.terrainLayer().sizeInPixel();
-            return Vector2f.of(worldSize.x() * 0.5f, worldSize.y() * 0.5f); // should not happen
-        }
-    }
-
     public void setPac(Pac pac) { this.pac = pac; }
 
     public Pac pac() { return pac; }
@@ -187,10 +158,6 @@ public class GameLevel {
 
     public Pulse blinking() {
         return blinking;
-    }
-
-    public Vector2i ghostScatterTile(byte personality) {
-        return ghostScatterTiles[requireValidGhostPersonality(personality)];
     }
 
     public int number() { return number; }

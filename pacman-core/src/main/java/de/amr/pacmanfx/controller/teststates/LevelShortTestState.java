@@ -41,7 +41,7 @@ public class LevelShortTestState implements GameState {
         context.game().startLevel();
         context.gameLevel().showPacAndGhosts();
         GameLevelMessage message = new GameLevelMessage(MessageType.TEST);
-        message.setPosition(context.gameLevel().defaultMessagePosition());
+        message.setPosition(context.gameLevel().worldMap().terrainLayer().defaultMessagePosition());
         context.gameLevel().setMessage(message);
     }
 
@@ -89,7 +89,7 @@ public class LevelShortTestState implements GameState {
                 timer.restartIndefinitely();
                 context.game().startNextLevel();
                 GameLevelMessage message = new GameLevelMessage(MessageType.TEST);
-                message.setPosition(context.gameLevel().defaultMessagePosition());
+                message.setPosition(context.gameLevel().worldMap().terrainLayer().defaultMessagePosition());
                 context.gameLevel().setMessage(message);
             }
         }

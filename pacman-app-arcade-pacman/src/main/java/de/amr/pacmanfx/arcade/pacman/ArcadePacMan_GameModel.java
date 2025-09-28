@@ -86,7 +86,9 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
             // Blinky overrides hunt method to take Cruise Elroy mode into account
             var arcadeGame = (Arcade_GameModel) gameLevel.game();
             boolean chase = huntingTimer.phase() == HuntingPhase.CHASING || arcadeGame.cruiseElroy() > 0;
-            Vector2i targetTile = chase ? chasingTargetTile(gameLevel) : gameLevel.ghostScatterTile(personality());
+            Vector2i targetTile = chase
+                ? chasingTargetTile(gameLevel)
+                : gameLevel.worldMap().terrainLayer().ghostScatterTile(personality());
             setSpeed(gameLevel.game().ghostAttackSpeed(gameLevel, this));
             tryMovingTowardsTargetTile(gameLevel, targetTile);
         }
@@ -164,7 +166,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         public Vector2i chasingTargetTile(GameLevel gameLevel) {
             // Attacks directly or retreats towards scatter target if Pac is near
             return tile().euclideanDist(gameLevel.pac().tile()) < 8
-                ? gameLevel.ghostScatterTile(personality())
+                ? gameLevel.worldMap().terrainLayer().ghostScatterTile(personality())
                 : gameLevel.pac().tile();
         }
     }

@@ -94,7 +94,9 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
                 roam(gameLevel);
             } else {
                 boolean chase = huntingTimer.phase() == HuntingPhase.CHASING || game.isCruiseElroyModeActive();
-                Vector2i targetTile = chase ? chasingTargetTile(gameLevel) : gameLevel.ghostScatterTile(personality());
+                Vector2i targetTile = chase
+                    ? chasingTargetTile(gameLevel)
+                    : gameLevel.worldMap().terrainLayer().ghostScatterTile(personality());
                 tryMovingTowardsTargetTile(gameLevel, targetTile);
             }
         }
@@ -136,8 +138,9 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
             if (huntingTimer.phaseIndex() == 0) {
                 roam(gameLevel);
             } else {
-                boolean chase = huntingTimer.phase() == HuntingPhase.CHASING;
-                Vector2i targetTile = chase ? chasingTargetTile(gameLevel) : gameLevel.ghostScatterTile(personality());
+                Vector2i targetTile = huntingTimer.phase() == HuntingPhase.CHASING
+                    ? chasingTargetTile(gameLevel)
+                    : gameLevel.worldMap().terrainLayer().ghostScatterTile(personality());
                 tryMovingTowardsTargetTile(gameLevel, targetTile);
             }
         }
@@ -193,7 +196,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         public Vector2i chasingTargetTile(GameLevel gameLevel) {
             // Attacks directly or retreats towards scatter target if Pac is near
             return tile().euclideanDist(gameLevel.pac().tile()) < 8
-                ? gameLevel.ghostScatterTile(personality())
+                ? gameLevel.worldMap().terrainLayer().ghostScatterTile(personality())
                 : gameLevel.pac().tile();
         }
     }

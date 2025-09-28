@@ -15,11 +15,12 @@ import org.tinylog.Logger;
 import java.util.*;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.Globals.HTS;
-import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.lib.worldmap.TerrainTile.TUNNEL;
 import static de.amr.pacmanfx.lib.worldmap.TerrainTile.isBlocked;
-import static de.amr.pacmanfx.model.DefaultWorldMapPropertyName.POS_PAC;
+import static de.amr.pacmanfx.model.DefaultWorldMapPropertyName.*;
+import static de.amr.pacmanfx.model.GameLevel.EMPTY_ROWS_BELOW_MAZE;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
@@ -36,6 +37,7 @@ public class TerrainLayer extends WorldMapLayer {
     private Vector2f pacStartPosition;
     private Portal[] portals;
     private House house;
+    private final Vector2i[] ghostScatterTiles = new Vector2i[4];
 
     public TerrainLayer(int numRows, int numCols) {
         super(numRows, numCols);
@@ -49,10 +51,25 @@ public class TerrainLayer extends WorldMapLayer {
             throw new IllegalArgumentException("No Pac position stored in map");
         }
         pacStartPosition = halfTileRightOf(pacTile);
+        ghostScatterTiles[RED_GHOST_SHADOW] = getTileProperty(POS_SCATTER_RED_GHOST,
+                Vector2i.of(0, numCols() - 3));
+
+        ghostScatterTiles[PINK_GHOST_SPEEDY] = getTileProperty(POS_SCATTER_PINK_GHOST,
+                Vector2i.of(0, 3));
+
+        ghostScatterTiles[CYAN_GHOST_BASHFUL] = getTileProperty(POS_SCATTER_CYAN_GHOST,
+                Vector2i.of(numRows() - EMPTY_ROWS_BELOW_MAZE, numCols() - 1));
+
+        ghostScatterTiles[ORANGE_GHOST_POKEY] = getTileProperty(POS_SCATTER_ORANGE_GHOST,
+                Vector2i.of(numRows() - EMPTY_ROWS_BELOW_MAZE, 0));
     }
 
     public Vector2f pacStartPosition() {
         return pacStartPosition;
+    }
+
+    public Vector2i ghostScatterTile(byte personality) {
+        return ghostScatterTiles[requireValidGhostPersonality(personality)];
     }
 
     public void setHouse(House house) {
@@ -65,6 +82,19 @@ public class TerrainLayer extends WorldMapLayer {
 
     public Optional<House> optHouse() {
         return Optional.ofNullable(house);
+    }
+
+    public Vector2f defaultMessagePosition() {
+        if (house != null) {
+            Vector2i houseSize = house.sizeInTiles();
+            float cx = TS(house.minTile().x() + houseSize.x() * 0.5f);
+            float cy = TS(house.minTile().y() + houseSize.y() + 1);
+            return Vector2f.of(cx, cy);
+        }
+        else {
+            Vector2i worldSize = sizeInPixel();
+            return Vector2f.of(worldSize.x() * 0.5f, worldSize.y() * 0.5f); // should not happen
+        }
     }
 
     public List<Portal> portals() { return Arrays.asList(portals); }

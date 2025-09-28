@@ -122,7 +122,7 @@ public abstract class AbstractGameModel implements Game {
     public void showMessage(GameLevel gameLevel, MessageType type) {
         requireNonNull(type);
         GameLevelMessage message = new GameLevelMessage(type);
-        message.setPosition(gameLevel.defaultMessagePosition());
+        message.setPosition(gameLevel.worldMap().terrainLayer().defaultMessagePosition());
         gameLevel.setMessage(message);
     }
 

@@ -106,7 +106,7 @@ public abstract class Ghost extends MovingActor {
     public void hunt(GameLevel gameLevel, HuntingTimer huntingTimer) {
         Vector2i targetTile = huntingTimer.phase() == HuntingPhase.CHASING
             ? chasingTargetTile(gameLevel)
-            : gameLevel.ghostScatterTile(personality());
+            : gameLevel.worldMap().terrainLayer().ghostScatterTile(personality());
         setSpeed(gameLevel.game().ghostAttackSpeed(gameLevel, this));
         tryMovingTowardsTargetTile(gameLevel, targetTile);
     }

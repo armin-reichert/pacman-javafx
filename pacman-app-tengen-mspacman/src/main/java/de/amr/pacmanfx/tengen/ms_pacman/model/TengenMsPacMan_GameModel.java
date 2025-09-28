@@ -142,8 +142,9 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             if (huntingTimer.phaseIndex() == 0) {
                 roam(gameLevel);
             } else {
-                boolean chase = huntingTimer.phase() == HuntingPhase.CHASING;
-                Vector2i targetTile = chase ? chasingTargetTile(gameLevel) : gameLevel.ghostScatterTile(personality());
+                Vector2i targetTile = huntingTimer.phase() == HuntingPhase.CHASING
+                    ? chasingTargetTile(gameLevel)
+                    : gameLevel.worldMap().terrainLayer().ghostScatterTile(personality());
                 tryMovingTowardsTargetTile(gameLevel, targetTile);
             }
         }
@@ -178,8 +179,9 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             if (huntingTimer.phaseIndex() == 0) {
                 roam(gameLevel);
             } else {
-                boolean chase = huntingTimer.phase() == HuntingPhase.CHASING;
-                Vector2i targetTile = chase ? chasingTargetTile(gameLevel) : gameLevel.ghostScatterTile(personality());
+                Vector2i targetTile = huntingTimer.phase() == HuntingPhase.CHASING
+                    ? chasingTargetTile(gameLevel)
+                    : gameLevel.worldMap().terrainLayer().ghostScatterTile(personality());
                 tryMovingTowardsTargetTile(gameLevel, targetTile);
             }
         }
@@ -231,7 +233,9 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
         @Override
         public Vector2i chasingTargetTile(GameLevel gameLevel) {
-            return tile().euclideanDist(gameLevel.pac().tile()) < 8 ? gameLevel.ghostScatterTile(personality()) : gameLevel.pac().tile();
+            return tile().euclideanDist(gameLevel.pac().tile()) < 8
+                ? gameLevel.worldMap().terrainLayer().ghostScatterTile(personality())
+                : gameLevel.pac().tile();
         }
     }
 
@@ -438,7 +442,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     @Override
     public void showMessage(GameLevel gameLevel, MessageType type) {
         if (type == MessageType.GAME_OVER && mapCategory != MapCategory.ARCADE) {
-            var message = new MovingGameLevelMessage(type, gameLevel.defaultMessagePosition(), GAME_OVER_MESSAGE_DELAY);
+            var message = new MovingGameLevelMessage(type, gameLevel.worldMap().terrainLayer().defaultMessagePosition(),
+                    GAME_OVER_MESSAGE_DELAY);
             gameLevel.setMessage(message);
         } else {
             super.showMessage(gameLevel, type);
