@@ -35,7 +35,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     public static final byte PELLET_VALUE = 10;
     public static final byte ENERGIZER_VALUE = 50;
-    public static final int ALL_GHOSTS_IN_LEVEL_KILLED_BONUS_POINTS = 12_000;
+    public static final int ALL_GHOSTS_IN_LEVEL_KILLED_POINTS = 12_000;
     public static final int EXTRA_LIFE_SCORE = 10_000;
     public static final byte[] KILLED_GHOST_VALUE_FACTORS = {2, 4, 8, 16}; // points = factor * 100
 
@@ -107,9 +107,8 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
         gameLevel().registerGhostKilled();
         if (gameLevel().numGhostsKilled() == 16) {
-            scoreManager().scorePoints(ALL_GHOSTS_IN_LEVEL_KILLED_BONUS_POINTS);
-            Logger.info("Scored {} points for killing all ghosts in level {}",
-                    ALL_GHOSTS_IN_LEVEL_KILLED_BONUS_POINTS, gameLevel().number());
+            scoreManager().scorePoints(ALL_GHOSTS_IN_LEVEL_KILLED_POINTS);
+            Logger.info("Scored {} points for killing all ghosts in level {}", ALL_GHOSTS_IN_LEVEL_KILLED_POINTS, gameLevel().number());
         }
     }
 
@@ -204,8 +203,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     @Override
     public void buildNormalLevel(int levelNumber) {
-        createLevel(levelNumber);
-        gameLevel().setDemoLevel(false);
+        createLevel(levelNumber, false);
         gameLevel().pac().immuneProperty().bind(gameContext.gameController().propertyImmunity());
         gameLevel().pac().usingAutopilotProperty().bind(gameContext.gameController().propertyUsingAutopilot());
         setLevelCounterEnabled(true);
@@ -219,8 +217,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     @Override
     public void buildDemoLevel() {
         int levelNumber = 1;
-        createLevel(levelNumber);
-        gameLevel().setDemoLevel(true);
+        createLevel(levelNumber, true);
         gameLevel().pac().setImmune(false);
         gameLevel().pac().setUsingAutopilot(true);
         gameLevel().pac().setAutopilotSteering(demoLevelSteering);

@@ -509,12 +509,13 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void createLevel(int levelNumber) {
+    public void createLevel(int levelNumber, boolean demoLevel) {
         final WorldMap worldMap = mapSelector.getWorldMapCopy(levelNumber, mapCategory);
         final ArcadeHouse house = new ArcadeHouse(HOUSE_MIN_TILE);
         worldMap.terrainLayer().setHouse(house);
 
         final GameLevel newGameLevel = new GameLevel(this, levelNumber, worldMap);
+        newGameLevel.setDemoLevel(demoLevel);
         // For non-Arcade game levels, give some extra time for "game over" text animation
         newGameLevel.setGameOverStateTicks(mapCategory == MapCategory.ARCADE ? 420 : 600);
 
@@ -547,8 +548,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     public void buildNormalLevel(int levelNumber) {
-        createLevel(levelNumber);
-        gameLevel().setDemoLevel(false);
+        createLevel(levelNumber, false);
         gameLevel().pac().immuneProperty().bind(gameContext.gameController().propertyImmunity());
         gameLevel().pac().usingAutopilotProperty().bind(gameContext.gameController().propertyUsingAutopilot());
         huntingTimer().reset();
@@ -562,8 +562,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     public void buildDemoLevel() {
-        createLevel(1);
-        gameLevel().setDemoLevel(true);
+        createLevel(1, true);
         gameLevel().setGameOverStateTicks(120);
         gameLevel().pac().setImmune(false);
         gameLevel().pac().setUsingAutopilot(true);

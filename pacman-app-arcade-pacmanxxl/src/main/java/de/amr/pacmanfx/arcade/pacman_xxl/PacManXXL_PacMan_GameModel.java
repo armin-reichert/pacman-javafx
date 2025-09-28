@@ -42,7 +42,7 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
     public PacManXXL_Common_MapSelector mapSelector() { return (PacManXXL_Common_MapSelector) mapSelector; }
 
     @Override
-    public void createLevel(int levelNumber) {
+    public void createLevel(int levelNumber, boolean demoLevel) {
         final WorldMap worldMap = mapSelector.getWorldMapCopy(levelNumber);
 
         Vector2i houseMinTile = worldMap.terrainLayer().getTileProperty(POS_HOUSE_MIN_TILE);
@@ -55,6 +55,7 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
         worldMap.terrainLayer().setHouse(house);
 
         final GameLevel newGameLevel = new GameLevel(this, levelNumber, worldMap);
+        newGameLevel.setDemoLevel(demoLevel);
         newGameLevel.setGameOverStateTicks(90);
 
         final Pac pacMan = new PacMan();
@@ -96,8 +97,7 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
         int levelNumber = DEMO_LEVEL_NUMBERS[randomIndex];
         scoreManager().score().setLevelNumber(levelNumber);
         mapSelector().setSelectionMode(MapSelectionMode.NO_CUSTOM_MAPS);
-        createLevel(levelNumber);
-        gameLevel().setDemoLevel(true);
+        createLevel(levelNumber, true);
         gameLevel().pac().setImmune(false);
         gameLevel().pac().setUsingAutopilot(true);
         gameLevel().pac().setAutopilotSteering(demoLevelSteering);
