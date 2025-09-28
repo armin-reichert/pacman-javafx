@@ -14,7 +14,7 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.EnergizerExplosionAndRecycling;
-import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
+import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
 import javafx.animation.*;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -70,8 +70,8 @@ public class ArcadeHouse3D extends Group implements Disposable {
 
     private float doorSensitivity = 10;
 
-    private ManagedAnimation doorsMeltingAnimation;
-    private List<ManagedAnimation> swirlAnimations = new ArrayList<>(3);
+    private RegisteredAnimation doorsMeltingAnimation;
+    private List<RegisteredAnimation> swirlAnimations = new ArrayList<>(3);
 
     public ArcadeHouse3D(
         AnimationRegistry animationRegistry,
@@ -149,11 +149,11 @@ public class ArcadeHouse3D extends Group implements Disposable {
             swirls[i] = new Group();
             swirls[i].setTranslateX(ghostRevivalPositionCenters[i].x());
             swirls[i].setTranslateY(ghostRevivalPositionCenters[i].y());
-            ManagedAnimation animation = createSwirlAnimation(animationRegistry, "Swirl_%d".formatted(i), swirls[i]);
+            RegisteredAnimation animation = createSwirlAnimation(animationRegistry, "Swirl_%d".formatted(i), swirls[i]);
             swirlAnimations.add(animation);
         }
 
-        doorsMeltingAnimation = new ManagedAnimation(animationRegistry, "Doors_Melting") {
+        doorsMeltingAnimation = new RegisteredAnimation(animationRegistry, "Doors_Melting") {
             @Override
             protected Animation createAnimationFX() {
                 return new Timeline(
@@ -164,9 +164,9 @@ public class ArcadeHouse3D extends Group implements Disposable {
         };
     }
 
-    private ManagedAnimation createSwirlAnimation(AnimationRegistry animationRegistry, String label, Group swirl) {
+    private RegisteredAnimation createSwirlAnimation(AnimationRegistry animationRegistry, String label, Group swirl) {
         Duration rotationTime = Duration.seconds(EnergizerExplosionAndRecycling.SWIRL_ROTATION_SEC);
-        return new ManagedAnimation(animationRegistry, label) {
+        return new RegisteredAnimation(animationRegistry, label) {
             @Override
             protected Animation createAnimationFX() {
                 var rotation = new RotateTransition(rotationTime, swirl);
@@ -262,7 +262,7 @@ public class ArcadeHouse3D extends Group implements Disposable {
         doors.setVisible(visible);
     }
 
-    public ManagedAnimation doorsOpenCloseAnimation() {
+    public RegisteredAnimation doorsOpenCloseAnimation() {
         return doorsMeltingAnimation;
     }
 
@@ -272,14 +272,14 @@ public class ArcadeHouse3D extends Group implements Disposable {
 
     public void startSwirlAnimations() {
         if (swirlAnimations != null) {
-            swirlAnimations.forEach(ManagedAnimation::playFromStart);
+            swirlAnimations.forEach(RegisteredAnimation::playFromStart);
             Logger.info("Swirl animations started");
         }
     }
 
     public void stopSwirlAnimations() {
         if (swirlAnimations != null) {
-            swirlAnimations.forEach(ManagedAnimation::stop);
+            swirlAnimations.forEach(RegisteredAnimation::stop);
         }
     }
 
@@ -290,7 +290,7 @@ public class ArcadeHouse3D extends Group implements Disposable {
         doorsMeltingAnimation = null;
 
         if (swirlAnimations != null) {
-            for (ManagedAnimation swirlAnimation : swirlAnimations) {
+            for (RegisteredAnimation swirlAnimation : swirlAnimations) {
                 swirlAnimation.dispose();
             }
             swirlAnimations.clear();

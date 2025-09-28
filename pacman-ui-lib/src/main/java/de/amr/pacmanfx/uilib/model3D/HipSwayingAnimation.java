@@ -6,7 +6,7 @@ package de.amr.pacmanfx.uilib.model3D;
 
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
+import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
@@ -16,7 +16,7 @@ import javafx.util.Duration;
 
 import static java.util.Objects.requireNonNull;
 
-public class HipSwayingAnimation extends ManagedAnimation {
+public class HipSwayingAnimation extends RegisteredAnimation {
     private static final short HIP_ANGLE_FROM = -20;
     private static final short HIP_ANGLE_TO = 20;
     private static final Duration SWING_TIME = Duration.seconds(0.4);

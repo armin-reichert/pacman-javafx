@@ -75,7 +75,8 @@ public class GameLevel {
         blinking = new Pulse(10, Pulse.OFF);
         portals = findPortals();
 
-        addGhostHouse(house);
+        //TODO check if this is still needed:
+        worldMap.setContent(LayerID.TERRAIN, house.minTile(), house.content());
 
         currentBonusIndex = -1;
         energizerTiles = worldMap.foodLayer().tilesContaining(ENERGIZER.$).collect(Collectors.toSet());
@@ -114,16 +115,6 @@ public class GameLevel {
             }
         }
         return portals.toArray(new Portal[0]);
-    }
-
-    /**
-     * The ghost house is stored in the world map using property "pos_house_min" (left upper tile).
-     * We add the corresponding map content here at runtime such that collision of actors with house walls
-     * and doors is working. The obstacle detection algorithm will then also detect the house and create a
-     * closed obstacle representing the house boundary.
-     */
-    private void addGhostHouse(House house) {
-        worldMap.setContent(LayerID.TERRAIN, house.minTile(), house.content());
     }
 
     public void getReadyToPlay() {
@@ -202,16 +193,18 @@ public class GameLevel {
     public Pac pac() { return pac; }
 
     public void setGhosts(Ghost redGhost, Ghost pinkGhost, Ghost cyanGhost, Ghost orangeGhost) {
-        ghosts = new Ghost[] {requireNonNull(redGhost), requireNonNull(pinkGhost), requireNonNull(cyanGhost), requireNonNull(orangeGhost)};
+        ghosts = new Ghost[] {
+            requireNonNull(redGhost), requireNonNull(pinkGhost), requireNonNull(cyanGhost), requireNonNull(orangeGhost)
+        };
     }
 
-    public Ghost ghost(byte id) { return ghosts != null ? ghosts[requireValidGhostPersonality(id)] : null; }
+    public Ghost ghost(byte id) {
+        return ghosts[requireValidGhostPersonality(id)];
+    }
 
     public Stream<Ghost> ghosts(GhostState... states) {
         requireNonNull(states);
-        if (ghosts == null) {
-            return Stream.empty();
-        }
+        requireNonNull(ghosts);
         return states.length == 0 ? Stream.of(ghosts) : Stream.of(ghosts).filter(ghost -> ghost.inAnyOfStates(states));
     }
 

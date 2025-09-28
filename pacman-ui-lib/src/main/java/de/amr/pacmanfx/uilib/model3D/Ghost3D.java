@@ -10,7 +10,7 @@ import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
+import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
 import javafx.animation.*;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -32,7 +32,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class Ghost3D extends Group implements Disposable {
 
-    public class FlashingAnimation extends ManagedAnimation {
+    public class FlashingAnimation extends RegisteredAnimation {
         private Duration totalDuration = Duration.seconds(3);
         private int numFlashes = 5;
 
@@ -97,7 +97,7 @@ public class Ghost3D extends Group implements Disposable {
 
     private Group dressGroup;
 
-    private ManagedAnimation dressAnimation;
+    private RegisteredAnimation dressAnimation;
     private FlashingAnimation flashingAnimation;
 
     private final GhostColoring coloring;
@@ -201,7 +201,7 @@ public class Ghost3D extends Group implements Disposable {
         );
         getTransforms().add(scale);
 
-        dressAnimation = new ManagedAnimation(animationRegistry, "Ghost_DressMoving_%s".formatted(ghost.name())) {
+        dressAnimation = new RegisteredAnimation(animationRegistry, "Ghost_DressMoving_%s".formatted(ghost.name())) {
             @Override
             protected Animation createAnimationFX() {
                 var animation = new RotateTransition(Duration.seconds(0.3), dressGroup);
@@ -266,7 +266,7 @@ public class Ghost3D extends Group implements Disposable {
         return dressMaterialNormal;
     }
 
-    public ManagedAnimation dressAnimation() {
+    public RegisteredAnimation dressAnimation() {
         return dressAnimation;
     }
 

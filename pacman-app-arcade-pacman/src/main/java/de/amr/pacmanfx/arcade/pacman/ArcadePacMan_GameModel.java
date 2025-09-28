@@ -53,7 +53,8 @@ import static java.util.Objects.requireNonNull;
 public class ArcadePacMan_GameModel extends Arcade_GameModel {
 
     public static final WorldMapColorScheme MAP_COLOR_SCHEME = new WorldMapColorScheme(
-        "#000000", "#2121ff", "#ffb7ff", "#febdb4");
+        "#000000", "#2121ff", "#ffb7ff", "#febdb4"
+    );
 
     public static class PacMan extends Pac {
 

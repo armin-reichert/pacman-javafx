@@ -10,7 +10,7 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
+import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
@@ -65,8 +65,8 @@ public class MutatingGhost3D extends Group implements Disposable {
     private Ghost3D ghost3D;
     private Box numberBox;
 
-    private ManagedAnimation brakeAnimation;
-    private ManagedAnimation pointsAnimation;
+    private RegisteredAnimation brakeAnimation;
+    private RegisteredAnimation pointsAnimation;
 
     public MutatingGhost3D(
         AnimationRegistry animationRegistry,
@@ -101,7 +101,7 @@ public class MutatingGhost3D extends Group implements Disposable {
 
         getChildren().setAll(ghost3D, numberBox);
 
-        pointsAnimation = new ManagedAnimation(animationRegistry, "Ghost_Points_%s".formatted(ghost.name())) {
+        pointsAnimation = new RegisteredAnimation(animationRegistry, "Ghost_Points_%s".formatted(ghost.name())) {
             @Override
             protected Animation createAnimationFX() {
                 var numberBoxRotation = new RotateTransition(Duration.seconds(1), numberBox);
@@ -114,7 +114,7 @@ public class MutatingGhost3D extends Group implements Disposable {
             }
         };
 
-        brakeAnimation = new ManagedAnimation(animationRegistry, "Ghost_Braking_%s".formatted(ghost.name())) {
+        brakeAnimation = new RegisteredAnimation(animationRegistry, "Ghost_Braking_%s".formatted(ghost.name())) {
             @Override
             protected Animation createAnimationFX() {
                 var rotateTransition = new RotateTransition(Duration.seconds(0.5), MutatingGhost3D.this);

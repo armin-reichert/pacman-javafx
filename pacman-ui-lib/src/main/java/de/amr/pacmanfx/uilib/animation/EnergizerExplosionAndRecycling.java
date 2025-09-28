@@ -31,7 +31,7 @@ import static java.util.Objects.requireNonNull;
  * When an energizer explodes, the particles are sucked in by 3 swirls inside the ghost house where they accumulate
  * to colored ghost shapes.
  */
-public class EnergizerExplosionAndRecycling extends ManagedAnimation {
+public class EnergizerExplosionAndRecycling extends RegisteredAnimation {
 
     public static final float SWIRL_RADIUS = 7;
     public static final float SWIRL_HEIGHT = 12;

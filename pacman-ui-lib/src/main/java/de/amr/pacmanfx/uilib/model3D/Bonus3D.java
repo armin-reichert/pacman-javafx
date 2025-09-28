@@ -12,7 +12,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.BonusState;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
+import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
@@ -47,9 +47,9 @@ public class Bonus3D extends Box implements Disposable {
     private PhongMaterial pointsTexture;
 
     private EdibleAnimation edibleAnimation;
-    private ManagedAnimation eatenAnimation;
+    private RegisteredAnimation eatenAnimation;
 
-    private class EdibleAnimation extends ManagedAnimation {
+    private class EdibleAnimation extends RegisteredAnimation {
 
         public EdibleAnimation(AnimationRegistry animationRegistry) {
             super(animationRegistry, "Bonus_Edible");
@@ -106,7 +106,7 @@ public class Bonus3D extends Box implements Disposable {
 
         edibleAnimation = new EdibleAnimation(animationRegistry);
 
-        eatenAnimation = new ManagedAnimation(animationRegistry, "Bonus_Eaten") {
+        eatenAnimation = new RegisteredAnimation(animationRegistry, "Bonus_Eaten") {
             @Override
             protected Animation createAnimationFX() {
                 var animation = new RotateTransition(Duration.seconds(1), Bonus3D.this);

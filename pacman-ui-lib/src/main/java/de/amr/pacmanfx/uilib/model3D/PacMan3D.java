@@ -7,7 +7,7 @@ package de.amr.pacmanfx.uilib.model3D;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
+import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
 import javafx.animation.*;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
@@ -28,7 +28,7 @@ public class PacMan3D extends PacBase3D {
     {
         super(model3DRepository, animationRegistry, pac, size, headColor, eyesColor, palateColor);
 
-        dyingAnimation = new ManagedAnimation(animationRegistry, "PacMan_Dying") {
+        dyingAnimation = new RegisteredAnimation(animationRegistry, "PacMan_Dying") {
             @Override
             protected Animation createAnimationFX() {
                 Duration duration = Duration.seconds(1.5);

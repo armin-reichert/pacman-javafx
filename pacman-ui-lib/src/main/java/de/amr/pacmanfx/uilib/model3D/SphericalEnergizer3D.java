@@ -6,7 +6,7 @@ package de.amr.pacmanfx.uilib.model3D;
 
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
+import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.ScaleTransition;
@@ -21,8 +21,8 @@ import static java.util.Objects.requireNonNull;
 public class SphericalEnergizer3D implements Energizer3D {
 
     private final Sphere sphere;
-    private ManagedAnimation pumpingAnimation;
-    private ManagedAnimation eatenAnimation;
+    private RegisteredAnimation pumpingAnimation;
+    private RegisteredAnimation eatenAnimation;
 
     public SphericalEnergizer3D(
         AnimationRegistry animationRegistry,
@@ -44,7 +44,7 @@ public class SphericalEnergizer3D implements Energizer3D {
 
         sphere.setUserData(requireNonNull(tile));
 
-        pumpingAnimation = new ManagedAnimation(animationRegistry, "Energizer_Pumping") {
+        pumpingAnimation = new RegisteredAnimation(animationRegistry, "Energizer_Pumping") {
             @Override
             protected Animation createAnimationFX() {
                 // 3 full pumping cycles per second = 6 compress/expand cycles
@@ -95,7 +95,7 @@ public class SphericalEnergizer3D implements Energizer3D {
         pumpingAnimation.pause();
     }
 
-    public void setEatenAnimation(ManagedAnimation animation) {
+    public void setEatenAnimation(RegisteredAnimation animation) {
         eatenAnimation = requireNonNull(animation);
     }
 

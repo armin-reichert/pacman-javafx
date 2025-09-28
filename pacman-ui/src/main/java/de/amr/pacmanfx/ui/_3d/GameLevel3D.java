@@ -21,7 +21,7 @@ import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.EnergizerExplosionAndRecycling;
-import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
+import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.*;
 import de.amr.pacmanfx.uilib.widgets.MessageView;
@@ -72,10 +72,10 @@ public class GameLevel3D extends Group implements Disposable {
     protected final WorldMapColorScheme colorScheme;
 
     private final AnimationRegistry animationRegistry = new AnimationRegistry();
-    private ManagedAnimation wallColorFlashingAnimation;
-    private ManagedAnimation levelCompletedFullAnimation;
-    private ManagedAnimation levelCompletedShortAnimation;
-    private ManagedAnimation ghostLightAnimation;
+    private RegisteredAnimation wallColorFlashingAnimation;
+    private RegisteredAnimation levelCompletedFullAnimation;
+    private RegisteredAnimation levelCompletedShortAnimation;
+    private RegisteredAnimation ghostLightAnimation;
 
     private MeshView[] ghostDressMeshViews;
     private MeshView[] ghostPupilsMeshViews;
@@ -121,7 +121,7 @@ public class GameLevel3D extends Group implements Disposable {
         return timeline;
     }
 
-    private class LevelCompletedAnimation extends ManagedAnimation {
+    private class LevelCompletedAnimation extends RegisteredAnimation {
         private static final int MESSAGE_FREQUENCY = 20; // 20% of cases
         private static final float SPINNING_SECONDS = 1.5f;
 
@@ -170,7 +170,7 @@ public class GameLevel3D extends Group implements Disposable {
         }
     }
 
-    private class LevelCompletedAnimationShort extends ManagedAnimation {
+    private class LevelCompletedAnimationShort extends RegisteredAnimation {
 
         public LevelCompletedAnimationShort(AnimationRegistry animationRegistry) {
             super(animationRegistry, "Level_Complete_Short_Animation");
@@ -187,7 +187,7 @@ public class GameLevel3D extends Group implements Disposable {
         }
     }
 
-    private class WallColorFlashingAnimation extends ManagedAnimation {
+    private class WallColorFlashingAnimation extends RegisteredAnimation {
 
         public WallColorFlashingAnimation(AnimationRegistry animationRegistry) {
             super(animationRegistry, "MazeWallColorFlashing");
@@ -219,7 +219,7 @@ public class GameLevel3D extends Group implements Disposable {
         }
     }
 
-    private class GhostLightAnimation extends ManagedAnimation {
+    private class GhostLightAnimation extends RegisteredAnimation {
 
         private byte currentlyLightedGhost;
 
@@ -781,7 +781,7 @@ public class GameLevel3D extends Group implements Disposable {
             messageView.setVisible(false);
         }
         boolean cutSceneFollows = ui.gameContext().game().optCutSceneNumber(gameLevel.number()).isPresent();
-        ManagedAnimation levelCompletedAnimation = cutSceneFollows
+        RegisteredAnimation levelCompletedAnimation = cutSceneFollows
             ? levelCompletedShortAnimation
             : levelCompletedFullAnimation;
 
@@ -917,7 +917,7 @@ public class GameLevel3D extends Group implements Disposable {
         if (!animationRegistry.animations().isEmpty()) {
             Logger.info("There are {} un-disposed animations left:", animationRegistry.animations().size());
             // create a copy to avoid CME
-            for (ManagedAnimation animation : new ArrayList<>(animationRegistry.animations())) {
+            for (RegisteredAnimation animation : new ArrayList<>(animationRegistry.animations())) {
                 Logger.info("\tDisposing" + animation.label());
                 animation.dispose();
             }

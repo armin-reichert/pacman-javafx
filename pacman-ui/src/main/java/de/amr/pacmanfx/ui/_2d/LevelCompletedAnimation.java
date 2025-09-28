@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui._2d;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
+import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.SequentialTransition;
@@ -31,7 +31,7 @@ import static java.util.Objects.requireNonNull;
  * After each flashing cycle, the flashing index is incremented. This is used by the Tengen play scene renderer to
  * draw a different map color for each flashing cycle (only for the non-ARCADE maps starting at level 28)
  */
-public class LevelCompletedAnimation extends ManagedAnimation {
+public class LevelCompletedAnimation extends RegisteredAnimation {
 
     private GameLevel gameLevel;
     private int singleFlashMillis;

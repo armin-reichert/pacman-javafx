@@ -6,7 +6,7 @@ package de.amr.pacmanfx.uilib.model3D;
 
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
+import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
@@ -17,7 +17,7 @@ import javafx.util.Duration;
 
 import static java.util.Objects.requireNonNull;
 
-public class HeadBangingAnimation extends ManagedAnimation {
+public class HeadBangingAnimation extends RegisteredAnimation {
     private static final short BANG_ANGLE_FROM = -10;
     private static final short BANG_ANGLE_TO = 15;
     private static final Duration BANG_TIME = Duration.seconds(0.3);

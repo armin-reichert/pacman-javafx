@@ -17,30 +17,30 @@ import static java.util.Objects.requireNonNull;
  */
 public class AnimationRegistry {
 
-    private final Set<ManagedAnimation> registeredAnimations = new HashSet<>();
-    private final Set<ManagedAnimation> disposedAnimations = new HashSet<>();
+    private final Set<RegisteredAnimation> registeredAnimations = new HashSet<>();
+    private final Set<RegisteredAnimation> disposedAnimations = new HashSet<>();
 
-    void register(ManagedAnimation managedAnimation) {
-        requireNonNull(managedAnimation);
-        if (registeredAnimations.contains(managedAnimation)) {
-            Logger.warn("Animation '{}' is already registered", managedAnimation.label());
+    void register(RegisteredAnimation registeredAnimation) {
+        requireNonNull(registeredAnimation);
+        if (registeredAnimations.contains(registeredAnimation)) {
+            Logger.warn("Animation '{}' is already registered", registeredAnimation.label());
         } else {
-            registeredAnimations.add(managedAnimation);
-            Logger.trace("Animation '{}' registered", managedAnimation.label());
+            registeredAnimations.add(registeredAnimation);
+            Logger.trace("Animation '{}' registered", registeredAnimation.label());
         }
     }
 
-    void markDisposed(ManagedAnimation managedAnimation) {
-        if (disposedAnimations.contains(managedAnimation)) {
-            Logger.warn("Animation '{}' has already been disposed", managedAnimation.label());
+    void markDisposed(RegisteredAnimation registeredAnimation) {
+        if (disposedAnimations.contains(registeredAnimation)) {
+            Logger.warn("Animation '{}' has already been disposed", registeredAnimation.label());
             return;
         }
-        if (!registeredAnimations.contains(managedAnimation)) {
-            Logger.error("Animation '{}' is not registered, cannot be marked as disposed", managedAnimation.label());
+        if (!registeredAnimations.contains(registeredAnimation)) {
+            Logger.error("Animation '{}' is not registered, cannot be marked as disposed", registeredAnimation.label());
             return;
         }
-        registeredAnimations.remove(managedAnimation);
-        disposedAnimations.add(managedAnimation);
+        registeredAnimations.remove(registeredAnimation);
+        disposedAnimations.add(registeredAnimation);
     }
 
     public void clear() {
@@ -49,20 +49,20 @@ public class AnimationRegistry {
     }
 
     public void stopAllAnimations() {
-        registeredAnimations.forEach(ManagedAnimation::stop);
+        registeredAnimations.forEach(RegisteredAnimation::stop);
     }
 
     public void disposeAllAnimations() {
-        registeredAnimations.forEach(ManagedAnimation::dispose);
+        registeredAnimations.forEach(RegisteredAnimation::dispose);
         registeredAnimations.clear();
         Logger.info("All animations disposed and removed");
     }
 
-    public Set<ManagedAnimation> disposedAnimations() {
+    public Set<RegisteredAnimation> disposedAnimations() {
         return Collections.unmodifiableSet(disposedAnimations);
     }
 
-    public Set<ManagedAnimation> animations() {
+    public Set<RegisteredAnimation> animations() {
         return Collections.unmodifiableSet(registeredAnimations);
     }
 }

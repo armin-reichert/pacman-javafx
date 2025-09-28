@@ -16,7 +16,7 @@ import static java.util.Objects.requireNonNull;
  * A wrapper around a JavaFX animation. Such an animation is registered in its associated animation repository and
  * the embedded JavaFX animation is created on demand.
  */
-public abstract class ManagedAnimation implements Disposable {
+public abstract class RegisteredAnimation implements Disposable {
 
     private final String label;
     private final AnimationRegistry registry;
@@ -24,7 +24,7 @@ public abstract class ManagedAnimation implements Disposable {
 
     protected abstract Animation createAnimationFX();
 
-    protected ManagedAnimation(AnimationRegistry registry, String label) {
+    protected RegisteredAnimation(AnimationRegistry registry, String label) {
         this.registry = requireNonNull(registry);
         this.label = requireNonNull(label);
         registry.register(this);
