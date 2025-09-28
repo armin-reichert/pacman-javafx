@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public class WorldMapLayer {
+public class WorldMapLayer implements RectangularTileRegion {
 
     private final Map<String, String> propertyMap = new HashMap<>();
     private final byte[][] tileContent;
@@ -29,25 +29,11 @@ public class WorldMapLayer {
         }
     }
 
+    @Override
     public int numRows() { return tileContent.length; }
 
+    @Override
     public int numCols() { return tileContent[0].length; }
-
-    public boolean outOfBounds(Vector2i tile) {
-        return outOfBounds(tile.y(), tile.x());
-    }
-
-    public boolean outOfBounds(int row, int col) {
-        return row < 0 || row >= numRows() || col < 0 || col >= numCols();
-    }
-
-    /**
-     * @param tile tile inside map bounds
-     * @return index in row-by-row order
-     */
-    public int indexInRowWiseOrder(Vector2i tile) {
-        return numCols() * tile.y() + tile.x();
-    }
 
     public byte get(int row, int col) {
         return tileContent[row][col];
@@ -82,21 +68,6 @@ public class WorldMapLayer {
     public void replacePropertyMap(Map<String, String> other) {
         propertyMap.clear();
         propertyMap.putAll(other);
-    }
-
-    /**
-     * @param index tile index in order top-to-bottom, left-to-right
-     * @return tile with given index
-     */
-    public Vector2i tile(int index) {
-        return Vector2i.of(index % numCols(), index / numCols());
-    }
-
-    /**
-     * @return stream of all tiles of this map (row-by-row)
-     */
-    public Stream<Vector2i> tiles() {
-        return IntStream.range(0, numCols() * numRows()).mapToObj(this::tile);
     }
 
     /**
