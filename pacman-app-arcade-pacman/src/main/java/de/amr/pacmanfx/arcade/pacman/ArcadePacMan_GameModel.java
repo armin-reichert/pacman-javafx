@@ -81,10 +81,10 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         }
 
         @Override
-        public void hunt(GameLevel gameLevel) {
+        public void hunt(GameLevel gameLevel, HuntingTimer huntingTimer) {
             // Blinky overrides hunt method to take Cruise Elroy mode into account
             var arcadeGame = (Arcade_GameModel) gameLevel.game();
-            boolean chase = arcadeGame.huntingTimer().phase() == HuntingPhase.CHASING || arcadeGame.cruiseElroy() > 0;
+            boolean chase = huntingTimer.phase() == HuntingPhase.CHASING || arcadeGame.cruiseElroy() > 0;
             Vector2i targetTile = chase ? chasingTargetTile(gameLevel) : gameLevel.ghostScatterTile(personality());
             setSpeed(gameLevel.game().ghostAttackSpeed(gameLevel, this));
             tryMovingTowardsTargetTile(gameLevel, targetTile);

@@ -14,6 +14,7 @@ import de.amr.pacmanfx.lib.worldmap.TerrainTile;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.House;
 import de.amr.pacmanfx.model.HuntingPhase;
+import de.amr.pacmanfx.model.HuntingTimer;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.tinylog.Logger;
@@ -100,10 +101,12 @@ public abstract class Ghost extends MovingActor {
      * and to go towards current target tile in chasing phase.
      *
      * @param gameLevel the game level this ghost lives in
+     * @param huntingTimer hunting timer
      */
-    public void hunt(GameLevel gameLevel) {
-        boolean chase = gameLevel.game().huntingTimer().phase() == HuntingPhase.CHASING;
-        Vector2i targetTile = chase ? chasingTargetTile(gameLevel) : gameLevel.ghostScatterTile(personality());
+    public void hunt(GameLevel gameLevel, HuntingTimer huntingTimer) {
+        Vector2i targetTile = huntingTimer.phase() == HuntingPhase.CHASING
+            ? chasingTargetTile(gameLevel)
+            : gameLevel.ghostScatterTile(personality());
         setSpeed(gameLevel.game().ghostAttackSpeed(gameLevel, this));
         tryMovingTowardsTargetTile(gameLevel, targetTile);
     }
@@ -344,7 +347,7 @@ public abstract class Ghost extends MovingActor {
     private void updateStateHuntingPac(GameLevel gameLevel) {
         // The specific hunting behaviour is defined by the game variant. For example, in Ms. Pac-Man,
         // the red and pink ghosts are not chasing Pac-Man during the first scatter phase, but roam the maze randomly.
-        hunt(gameLevel);
+        hunt(gameLevel, gameLevel.game().huntingTimer());
     }
 
     // --- FRIGHTENED ---

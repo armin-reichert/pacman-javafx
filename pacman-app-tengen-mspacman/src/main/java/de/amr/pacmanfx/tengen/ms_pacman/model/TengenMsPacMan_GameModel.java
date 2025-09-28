@@ -134,14 +134,14 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         }
 
         @Override
-        public void hunt(GameLevel gameLevel) {
+        public void hunt(GameLevel gameLevel, HuntingTimer huntingTimer) {
             //TODO Clarify hunting behavior of Blinky
             float speed = gameLevel.game().ghostAttackSpeed(gameLevel, this);
             setSpeed(speed);
-            if (gameLevel.game().huntingTimer().phaseIndex() == 0) {
+            if (huntingTimer.phaseIndex() == 0) {
                 roam(gameLevel);
             } else {
-                boolean chase = gameLevel.game().huntingTimer().phase() == HuntingPhase.CHASING;
+                boolean chase = huntingTimer.phase() == HuntingPhase.CHASING;
                 Vector2i targetTile = chase ? chasingTargetTile(gameLevel) : gameLevel.ghostScatterTile(personality());
                 tryMovingTowardsTargetTile(gameLevel, targetTile);
             }
@@ -170,14 +170,14 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         }
 
         @Override
-        public void hunt(GameLevel gameLevel) {
+        public void hunt(GameLevel gameLevel, HuntingTimer huntingTimer) {
             //TODO Clarify hunting behavior of Pinky
             float speed = gameLevel.game().ghostAttackSpeed(gameLevel, this);
             setSpeed(speed);
-            if (gameLevel.game().huntingTimer().phaseIndex() == 0) {
+            if (huntingTimer.phaseIndex() == 0) {
                 roam(gameLevel);
             } else {
-                boolean chase = gameLevel.game().huntingTimer().phase() == HuntingPhase.CHASING;
+                boolean chase = huntingTimer.phase() == HuntingPhase.CHASING;
                 Vector2i targetTile = chase ? chasingTargetTile(gameLevel) : gameLevel.ghostScatterTile(personality());
                 tryMovingTowardsTargetTile(gameLevel, targetTile);
             }
