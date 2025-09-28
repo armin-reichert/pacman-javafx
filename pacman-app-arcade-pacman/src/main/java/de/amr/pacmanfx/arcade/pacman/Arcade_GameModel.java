@@ -39,6 +39,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     public static final byte[] KILLED_GHOST_VALUE_FACTORS = {2, 4, 8, 16}; // points = factor * 100
 
     protected final GameContext gameContext;
+    protected final ScoreManager scoreManager;
     protected GateKeeper gateKeeper;
     protected Steering autopilot;
     protected Steering demoLevelSteering;
@@ -46,6 +47,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     protected Arcade_GameModel(GameContext gameContext) {
         this.gameContext = requireNonNull(gameContext);
+        scoreManager = new ScoreManager(this);
     }
 
     protected abstract ArcadeLevelData levelData(GameLevel gameLevel);

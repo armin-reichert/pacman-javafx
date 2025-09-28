@@ -34,7 +34,7 @@ public class Action_PlaceArcadeHouse extends EditorAction<Void> {
     @Override
     public Void execute() {
         var maxTile = minTile.plus(ARCADE_HOUSE_WIDTH - 1, ARCADE_HOUSE_HEIGHT - 1);
-        if (worldMap.outOfWorld(minTile) || worldMap.outOfWorld(maxTile)) {
+        if (worldMap.outOfBounds(minTile) || worldMap.outOfBounds(maxTile)) {
             Logger.error("Illegal house position min: {} max: {}", minTile, maxTile);
             return null;
         }

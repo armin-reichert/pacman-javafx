@@ -70,7 +70,7 @@ public class Action_FloodWithPellets extends EditorAction<Void> {
     }
 
     private boolean isAccessible(WorldMap worldMap, Vector2i tile) {
-        if (worldMap.outOfWorld(tile)) return false;
+        if (worldMap.outOfBounds(tile)) return false;
         return worldMap.terrainLayer().get(tile) == TerrainTile.EMPTY.$;
     }
 

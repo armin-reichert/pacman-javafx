@@ -226,17 +226,17 @@ public class WorldMap {
         return url;
     }
 
-    public boolean outOfWorld(Vector2i tile) {
-        return outOfWorld(tile.y(), tile.x());
+    public boolean outOfBounds(Vector2i tile) {
+        return outOfBounds(tile.y(), tile.x());
     }
 
-    public boolean outOfWorld(int row, int col) {
+    public boolean outOfBounds(int row, int col) {
         return row < 0 || row >= numRows || col < 0 || col >= numCols;
     }
 
     public void assertInsideWorld(Vector2i tile) {
         requireNonNull(tile);
-        if (outOfWorld(tile)) {
+        if (outOfBounds(tile)) {
             throw new IllegalArgumentException("Tile %s is not inside world".formatted(tile));
         }
     }
@@ -329,7 +329,7 @@ public class WorldMap {
      */
     public byte content(LayerID layerID, int row, int col) {
         assertValidLayerID(layerID);
-        if (outOfWorld(row, col)) {
+        if (outOfBounds(row, col)) {
             throw new IllegalArgumentException(String.format("Illegal map coordinate row=%d col=%d", row, col));
         }
         return layer(layerID).get(row, col);
@@ -356,7 +356,7 @@ public class WorldMap {
      */
     public void setContent(LayerID layerID, int row, int col, byte code) {
         assertValidLayerID(layerID);
-        if (outOfWorld(row, col)) {
+        if (outOfBounds(row, col)) {
             throw new IllegalArgumentException(String.format("Illegal map coordinate row=%d col=%d", row, col));
         }
         layer(layerID).set(row, col, code);

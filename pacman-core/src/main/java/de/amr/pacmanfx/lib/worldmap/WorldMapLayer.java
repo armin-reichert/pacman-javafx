@@ -33,6 +33,22 @@ public class WorldMapLayer {
 
     public int numCols() { return tileContent[0].length; }
 
+    public boolean outOfBounds(Vector2i tile) {
+        return outOfBounds(tile.y(), tile.x());
+    }
+
+    public boolean outOfBounds(int row, int col) {
+        return row < 0 || row >= numRows() || col < 0 || col >= numCols();
+    }
+
+    /**
+     * @param tile tile inside map bounds
+     * @return index in row-by-row order
+     */
+    public int indexInRowWiseOrder(Vector2i tile) {
+        return numCols() * tile.y() + tile.x();
+    }
+
     public byte get(int row, int col) {
         return tileContent[row][col];
     }

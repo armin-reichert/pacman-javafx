@@ -101,7 +101,7 @@ public class GameLevel {
         ghostScatterTiles[ORANGE_GHOST_POKEY] = worldMap.getTerrainTileProperty(POS_SCATTER_ORANGE_GHOST,
             Vector2i.of(worldMap.numRows() - EMPTY_ROWS_BELOW_MAZE, 0));
 
-        foodStore = new FoodStore(worldMap, energizerTiles);
+        foodStore = new FoodStore(worldMap.foodLayer(), energizerTiles);
     }
 
     private Portal[] findPortals() {
@@ -248,14 +248,14 @@ public class GameLevel {
         requireNonNull(tile);
         return Stream.of(Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT)
             .map(dir -> tile.plus(dir.vector()))
-            .filter(worldMap::outOfWorld);
+            .filter(worldMap::outOfBounds);
     }
 
     public Stream<Vector2i> neighborTilesInsideWorld(Vector2i tile) {
         requireNonNull(tile);
         return Stream.of(Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT)
             .map(dir -> tile.plus(dir.vector()))
-            .filter(not(worldMap::outOfWorld));
+            .filter(not(worldMap::outOfBounds));
     }
 
     public List<Portal> portals() { return Arrays.asList(portals); }
@@ -266,15 +266,15 @@ public class GameLevel {
     }
 
     public boolean isTileBlocked(Vector2i tile) {
-        return !worldMap.outOfWorld(tile) && isBlocked(worldMap.content(LayerID.TERRAIN, tile));
+        return !worldMap.outOfBounds(tile) && isBlocked(worldMap.content(LayerID.TERRAIN, tile));
     }
 
     public boolean isTunnel(Vector2i tile) {
-        return !worldMap.outOfWorld(tile) && worldMap.content(LayerID.TERRAIN, tile) == TUNNEL.$;
+        return !worldMap.outOfBounds(tile) && worldMap.content(LayerID.TERRAIN, tile) == TUNNEL.$;
     }
 
     public boolean isIntersection(Vector2i tile) {
-        if (worldMap.outOfWorld(tile) || isTileBlocked(tile)) {
+        if (worldMap.outOfBounds(tile) || isTileBlocked(tile)) {
             return false;
         }
         if (house != null && house.isTileInHouseArea(tile)) {

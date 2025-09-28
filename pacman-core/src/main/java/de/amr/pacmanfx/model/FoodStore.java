@@ -6,18 +6,18 @@ package de.amr.pacmanfx.model;
 
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.FoodTile;
-import de.amr.pacmanfx.lib.worldmap.LayerID;
-import de.amr.pacmanfx.lib.worldmap.WorldMap;
+import de.amr.pacmanfx.lib.worldmap.WorldMapLayer;
 import org.tinylog.Logger;
 
 import java.util.BitSet;
 import java.util.Set;
 
 import static de.amr.pacmanfx.lib.worldmap.FoodTile.PELLET;
+import static java.util.Objects.requireNonNull;
 
 public class FoodStore {
 
-    private final WorldMap worldMap;
+    private final WorldMapLayer foodLayer;
     private final Set<Vector2i> energizerTiles;
 
     // instead of Set<Vector2i> we use a bit-set indexed by top-down-left-to-right tile index
@@ -25,12 +25,12 @@ public class FoodStore {
     private final int totalFoodCount;
     private int uneatenFoodCount;
 
-    public FoodStore(WorldMap worldMap, Set<Vector2i> energizerTiles) {
-        this.worldMap = worldMap;
-        this.energizerTiles = energizerTiles;
-        totalFoodCount = (int) worldMap.foodLayer().tilesContaining(PELLET.$).count() + energizerTiles.size();
+    public FoodStore(WorldMapLayer foodLayer, Set<Vector2i> energizerTiles) {
+        this.foodLayer = requireNonNull(foodLayer);
+        this.energizerTiles = requireNonNull(energizerTiles);
+        totalFoodCount = (int) foodLayer.tilesContaining(PELLET.$).count() + energizerTiles.size();
         uneatenFoodCount = totalFoodCount;
-        eatenFoodBits = new BitSet(worldMap.numCols() * worldMap.numRows());
+        eatenFoodBits = new BitSet(foodLayer.numCols() * foodLayer.numRows());
     }
 
     public int totalFoodCount() {
@@ -47,7 +47,7 @@ public class FoodStore {
 
     public void registerFoodEatenAt(Vector2i tile) {
         if (tileContainsFood(tile)) {
-            eatenFoodBits.set(worldMap.indexInRowWiseOrder(tile));
+            eatenFoodBits.set(foodLayer.indexInRowWiseOrder(tile));
             --uneatenFoodCount;
         } else {
             Logger.warn("Attempt to eat foot at tile {} that has none", tile);
@@ -55,15 +55,15 @@ public class FoodStore {
     }
 
     public void eatAllPellets() {
-        worldMap.tiles().filter(this::tileContainsFood).filter(tile -> !energizerTiles.contains(tile)).forEach(this::registerFoodEatenAt);
+        foodLayer.tiles().filter(this::tileContainsFood).filter(tile -> !energizerTiles.contains(tile)).forEach(this::registerFoodEatenAt);
     }
 
     public void eatAllFood() {
-        worldMap.tiles().filter(this::tileContainsFood).forEach(this::registerFoodEatenAt);
+        foodLayer.tiles().filter(this::tileContainsFood).forEach(this::registerFoodEatenAt);
     }
 
     public boolean isFoodPosition(Vector2i tile) {
-        return !worldMap.outOfWorld(tile) && worldMap.content(LayerID.FOOD, tile) != FoodTile.EMPTY.$;
+        return !foodLayer.outOfBounds(tile) && foodLayer.get(tile) != FoodTile.EMPTY.$;
     }
 
     public boolean tileContainsFood(Vector2i tile) {
@@ -71,6 +71,6 @@ public class FoodStore {
     }
 
     public boolean tileContainsEatenFood(Vector2i tile) {
-        return eatenFoodBits.get(worldMap.indexInRowWiseOrder(tile));
+        return eatenFoodBits.get(foodLayer.indexInRowWiseOrder(tile));
     }
 }

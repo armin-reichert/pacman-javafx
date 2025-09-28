@@ -75,7 +75,7 @@ public class Pac extends MovingActor {
         requireNonNull(gameLevel);
         requireNonNull(tile);
         // Portal tiles are the only tiles outside the world map that can be accessed
-        if (gameLevel.worldMap().outOfWorld(tile)) {
+        if (gameLevel.worldMap().outOfBounds(tile)) {
             return gameLevel.isTileInPortalSpace(tile);
         }
         if (gameLevel.optHouse().isPresent() && gameLevel.optHouse().get().isTileInHouseArea(tile)) {

@@ -21,12 +21,15 @@ public class ScoreManager {
 
     private final Score score = new Score();
     private final Score highScore = new Score();
-    private final File highScoreFile;
+    private File highScoreFile;
     private Set<Integer> extraLifeScores = Set.of();
 
-    public ScoreManager(Game game, File highScoreFile) {
-        this.highScoreFile = requireNonNull(highScoreFile);
+    public ScoreManager(Game game) {
         score.pointsProperty().addListener((py, ov, nv) -> onScoreChanged(game, ov.intValue(), nv.intValue()));
+    }
+
+    public void setHighScoreFile(File highScoreFile) {
+        this.highScoreFile = requireNonNull(highScoreFile);
     }
 
     private void onScoreChanged(Game game, int oldScore, int newScore) {

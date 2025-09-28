@@ -213,7 +213,6 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
 
     protected final MapSelector mapSelector;
     protected final HUD hud = new DefaultHUD();
-    protected final ScoreManager scoreManager;
     protected final HuntingTimer huntingTimer;
 
     public ArcadePacMan_GameModel(GameContext gameContext, File highScoreFile) {
@@ -230,7 +229,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
 
         this.mapSelector = requireNonNull(mapSelector);
 
-        scoreManager = new ScoreManager(this, highScoreFile);
+        scoreManager.setHighScoreFile(highScoreFile);
         scoreManager.setExtraLifeScores(EXTRA_LIFE_SCORE);
 
         huntingTimer = new HuntingTimer("ArcadePacMan-HuntingTimer", 8) {

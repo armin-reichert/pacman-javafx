@@ -271,7 +271,7 @@ public class ObstacleBuilder {
                 errorAtCurrentTile(tilesWithErrors);
             }
 
-            if (cursor.currentTile.equals(startTile) || worldMap.outOfWorld(cursor.currentTile)) {
+            if (cursor.currentTile.equals(startTile) || worldMap.outOfBounds(cursor.currentTile)) {
                 break;
             }
         }

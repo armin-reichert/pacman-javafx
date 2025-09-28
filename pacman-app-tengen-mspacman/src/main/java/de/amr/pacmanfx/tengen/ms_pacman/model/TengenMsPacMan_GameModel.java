@@ -253,7 +253,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     public TengenMsPacMan_GameModel(GameContext gameContext, File highScoreFile) {
         this.gameContext = requireNonNull(gameContext);
-        scoreManager = new ScoreManager(this, highScoreFile);
+        scoreManager = new ScoreManager(this);
+        scoreManager.setHighScoreFile(highScoreFile);
         mapSelector = new TengenMsPacMan_MapSelector();
         gateKeeper = new GateKeeper(this); //TODO implement original house logic
         huntingTimer = new TengenMsPacMan_HuntingTimer();
@@ -901,5 +902,4 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         //TODO is this correct?
         return 0.4f;
     }
-
 }

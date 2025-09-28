@@ -229,7 +229,7 @@ public class EditCanvas extends Canvas {
     public void moveCursor(Direction dir, Predicate<Vector2i> canMoveIntoTile) {
         if (focussedTile() != null) {
             Vector2i nextTile = focussedTile().plus(dir.vector());
-            if (!worldMap().outOfWorld(nextTile) && canMoveIntoTile.test(nextTile)) {
+            if (!worldMap().outOfBounds(nextTile) && canMoveIntoTile.test(nextTile)) {
                 focussedTile.set(nextTile);
             }
         }
