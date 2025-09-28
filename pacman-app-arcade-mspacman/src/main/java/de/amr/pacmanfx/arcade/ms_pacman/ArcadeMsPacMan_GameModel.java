@@ -13,6 +13,7 @@ import de.amr.pacmanfx.lib.Waypoint;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.lib.worldmap.FoodLayer;
+import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.Bonus;
@@ -347,8 +348,11 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     public void createLevel(int levelNumber) {
         final WorldMap worldMap = mapSelector.getWorldMapCopy(levelNumber);
         final ArcadeHouse house = new ArcadeHouse(ARCADE_MAP_HOUSE_MIN_TILE);
+        worldMap.terrainLayer().setHouse(house);
+        //TODO check if this is still needed:
+        worldMap.setContent(LayerID.TERRAIN, house.minTile(), house.content());
 
-        final GameLevel newGameLevel = new GameLevel(this, levelNumber, worldMap, house);
+        final GameLevel newGameLevel = new GameLevel(this, levelNumber, worldMap);
         newGameLevel.setGameOverStateTicks(150);
 
         final MsPacMan msPacMan = new MsPacMan();

@@ -6,7 +6,6 @@ package de.amr.pacmanfx.model;
 
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.timer.Pulse;
-import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.actors.*;
 
@@ -50,15 +49,10 @@ public class GameLevel {
     private int gameOverStateTicks;
     private long startTime;
 
-    public GameLevel(Game game, int number, WorldMap worldMap, House house) {
+    public GameLevel(Game game, int number, WorldMap worldMap) {
         this.game = requireNonNull(game);
         this.number = requireValidLevelNumber(number);
         this.worldMap = requireNonNull(worldMap);
-
-        worldMap.terrainLayer().setHouse(requireNonNull(house));
-        //TODO check if this is still needed:
-        worldMap.setContent(LayerID.TERRAIN, house.minTile(), house.content());
-
         blinking = new Pulse(10, Pulse.OFF);
         currentBonusIndex = -1;
     }

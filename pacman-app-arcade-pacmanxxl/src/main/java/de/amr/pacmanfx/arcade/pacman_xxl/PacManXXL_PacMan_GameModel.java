@@ -53,8 +53,11 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
             worldMap.terrainLayer().propertyMap().put(POS_HOUSE_MIN_TILE,  String.valueOf(houseMinTile));
         }
         final ArcadeHouse house = new ArcadeHouse(houseMinTile);
+        worldMap.terrainLayer().setHouse(house);
+        //TODO check if this is still needed:
+        worldMap.setContent(LayerID.TERRAIN, house.minTile(), house.content());
 
-        final GameLevel newGameLevel = new GameLevel(this, levelNumber, worldMap, house);
+        final GameLevel newGameLevel = new GameLevel(this, levelNumber, worldMap);
         newGameLevel.setGameOverStateTicks(90);
 
         final Pac pacMan = new PacMan();
