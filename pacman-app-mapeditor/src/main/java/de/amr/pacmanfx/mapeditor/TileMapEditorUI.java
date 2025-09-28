@@ -82,6 +82,7 @@ public class TileMapEditorUI {
     private Preview3D preview3D;
 
     private TextArea sourceView;
+    private ContextMenu sourceViewContextMenu;
 
     private HBox statusLine;
     private Slider sliderZoom;
@@ -282,6 +283,10 @@ public class TileMapEditorUI {
         segmentNumbersVisibleProperty().set(value);
     }
 
+    // -- sourceCodeLineNumbers
+
+    private final BooleanProperty sourceCodeLineNumbers = new SimpleBooleanProperty(true);
+
     // -- terrainVisible
 
     public static final boolean DEFAULT_TERRAIN_VISIBLE = true;
@@ -344,6 +349,12 @@ public class TileMapEditorUI {
                 case ERASE   -> editCanvas.enterEraseMode();
             }
         });
+
+        sourceCodeLineNumbers.addListener((py, ov, lineNumbers) -> {
+            editor.sourceCodeProperty().set(lineNumbers
+                ? editor.currentWorldMap().sourceCodeWithLineNumbers()
+                : editor.currentWorldMap().sourceCode());
+;        });
 
         inputEnabled.bind(editCanvas.draggingProperty().not());
 
@@ -521,6 +532,23 @@ public class TileMapEditorUI {
         sourceView.setFont(FONT_SOURCE_VIEW);
         sourceView.setStyle(STYLE_SOURCE_VIEW);
         sourceView.textProperty().bind(editor.sourceCodeProperty());
+        sourceView.setOnContextMenuRequested(e -> {
+            if (sourceViewContextMenu == null) {
+                sourceViewContextMenu = new ContextMenu();
+                // overwrite style of TextArea
+                sourceViewContextMenu.setStyle("""
+                        -fx-background-color: white;
+                        -fx-text-fill: black;
+                        -fx-font-size: 12px;
+                        """);
+                CheckMenuItem item = new CheckMenuItem(translated("sourceCodeView.menu.showLineNumbers"));
+                item.selectedProperty().bindBidirectional(sourceCodeLineNumbers);
+                sourceViewContextMenu.getItems().add(item);
+            } else if (sourceViewContextMenu.isShowing()) {
+                sourceViewContextMenu.hide();
+            }
+            sourceViewContextMenu.show(sourceView, e.getScreenX(), e.getScreenY());
+        });
     }
 
     private void createEditArea() {
