@@ -97,8 +97,8 @@ public interface EditorUtil {
     }
 
     static boolean isPartOfHouse(WorldMap worldMap, Vector2i tile) {
-        Vector2i minTile = worldMap.getTerrainTileProperty(DefaultWorldMapPropertyName.POS_HOUSE_MIN_TILE);
-        Vector2i maxTile = worldMap.getTerrainTileProperty(DefaultWorldMapPropertyName.POS_HOUSE_MAX_TILE);
+        Vector2i minTile = worldMap.terrainLayer().getTileProperty(DefaultWorldMapPropertyName.POS_HOUSE_MIN_TILE);
+        Vector2i maxTile = worldMap.terrainLayer().getTileProperty(DefaultWorldMapPropertyName.POS_HOUSE_MAX_TILE);
         if (minTile != null && maxTile != null) {
             return minTile.x() <= tile.x() && tile.x() <= maxTile.x()
                     && minTile.y() <= tile.y() && tile.y() <= maxTile.y();

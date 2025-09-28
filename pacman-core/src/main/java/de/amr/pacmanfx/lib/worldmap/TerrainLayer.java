@@ -108,4 +108,25 @@ public class TerrainLayer extends WorldMapLayer {
     public Vector2i sizeInPixel() {
         return new Vector2i(numCols() * TS, numRows() * TS);
     }
+
+    /**
+     * @param propertyName property name
+     * @param defaultTile tile returned if property map does not contain property name (can be null)
+     * @return tile value of property in terrain layer or default value
+     */
+    public Vector2i getTileProperty(String propertyName, Vector2i defaultTile) {
+        requireNonNull(propertyName);
+        String value = propertyMap().get(propertyName);
+        return value != null
+            ? WorldMapParser.parseTile(value).orElse(defaultTile)
+            : defaultTile;
+    }
+
+    /**
+     * @param propertyName property name
+     * @return tile value of property in terrain layer or <code>null</code>
+     */
+    public Vector2i getTileProperty(String propertyName) {
+        return getTileProperty(propertyName, null);
+    }
 }

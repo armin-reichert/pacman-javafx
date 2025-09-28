@@ -23,13 +23,13 @@ public class Action_DeleteArcadeHouse extends EditorAction<Void> {
     public Void execute() {
         WorldMap worldMap = editor.currentWorldMap();
 
-        Vector2i minTile = worldMap.getTerrainTileProperty(POS_HOUSE_MIN_TILE);
+        Vector2i minTile = worldMap.terrainLayer().getTileProperty(POS_HOUSE_MIN_TILE);
         if (minTile == null) {
             Logger.error("Cannot delete Arcade house, minTile is null");
             return null;
         }
 
-        Vector2i maxTile = worldMap.getTerrainTileProperty(POS_HOUSE_MAX_TILE);
+        Vector2i maxTile = worldMap.terrainLayer().getTileProperty(POS_HOUSE_MAX_TILE);
         if (maxTile == null) {
             Logger.error("Cannot delete Arcade house, maxTile is null");
             return null;

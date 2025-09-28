@@ -91,8 +91,8 @@ public class Preview2D extends Canvas {
     }
 
     private void drawHouse(WorldMap worldMap) {
-        Vector2i minTile = worldMap.getTerrainTileProperty(DefaultWorldMapPropertyName.POS_HOUSE_MIN_TILE);
-        Vector2i maxTile = worldMap.getTerrainTileProperty(DefaultWorldMapPropertyName.POS_HOUSE_MAX_TILE);
+        Vector2i minTile = worldMap.terrainLayer().getTileProperty(DefaultWorldMapPropertyName.POS_HOUSE_MIN_TILE);
+        Vector2i maxTile = worldMap.terrainLayer().getTileProperty(DefaultWorldMapPropertyName.POS_HOUSE_MAX_TILE);
         if (minTile != null && maxTile != null) {
             double outerWidth = terrainRenderer.borderWallFullWidth();
             double innerWidth = terrainRenderer.borderWallInnerWidth();
@@ -121,7 +121,7 @@ public class Preview2D extends Canvas {
         }
         if (actorsVisible.get()) {
             ACTOR_SPRITES.forEach((positionProperty, sprite) -> {
-                Vector2i tile = worldMap.getTerrainTileProperty(positionProperty);
+                Vector2i tile = worldMap.terrainLayer().getTileProperty(positionProperty);
                 if (tile != null) {
                     terrainRenderer.drawActorSprite(tile, sprite);
                 }

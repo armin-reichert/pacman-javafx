@@ -9,6 +9,7 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.worldmap.LayerID;
+import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.actors.*;
 
@@ -63,14 +64,16 @@ public class GameLevel {
         this.number = requireValidLevelNumber(number);
         this.worldMap = requireNonNull(worldMap);
 
-        worldMap.terrainLayer().setHouse(requireNonNull(house));
-        //TODO check if this is still needed:
+        final TerrainLayer terrainLayer = worldMap.terrainLayer();
+
+        //TODO check this stuff
+        terrainLayer.setHouse(requireNonNull(house));
         worldMap.setContent(LayerID.TERRAIN, house.minTile(), house.content());
 
         blinking = new Pulse(10, Pulse.OFF);
         currentBonusIndex = -1;
 
-        Vector2i pacTile = worldMap.getTerrainTileProperty(POS_PAC);
+        Vector2i pacTile = terrainLayer.getTileProperty(POS_PAC);
         if (pacTile == null) {
             throw new IllegalArgumentException("No Pac position stored in map");
         }
@@ -78,16 +81,16 @@ public class GameLevel {
 
         // Scatter tiles
 
-        ghostScatterTiles[RED_GHOST_SHADOW] = worldMap.getTerrainTileProperty(POS_SCATTER_RED_GHOST,
+        ghostScatterTiles[RED_GHOST_SHADOW] = terrainLayer.getTileProperty(POS_SCATTER_RED_GHOST,
             Vector2i.of(0, worldMap.numCols() - 3));
 
-        ghostScatterTiles[PINK_GHOST_SPEEDY] = worldMap.getTerrainTileProperty(POS_SCATTER_PINK_GHOST,
+        ghostScatterTiles[PINK_GHOST_SPEEDY] = terrainLayer.getTileProperty(POS_SCATTER_PINK_GHOST,
             Vector2i.of(0, 3));
 
-        ghostScatterTiles[CYAN_GHOST_BASHFUL] = worldMap.getTerrainTileProperty(POS_SCATTER_CYAN_GHOST,
+        ghostScatterTiles[CYAN_GHOST_BASHFUL] = terrainLayer.getTileProperty(POS_SCATTER_CYAN_GHOST,
             Vector2i.of(worldMap.numRows() - EMPTY_ROWS_BELOW_MAZE, worldMap.numCols() - 1));
 
-        ghostScatterTiles[ORANGE_GHOST_POKEY] = worldMap.getTerrainTileProperty(POS_SCATTER_ORANGE_GHOST,
+        ghostScatterTiles[ORANGE_GHOST_POKEY] = terrainLayer.getTileProperty(POS_SCATTER_ORANGE_GHOST,
             Vector2i.of(worldMap.numRows() - EMPTY_ROWS_BELOW_MAZE, 0));
     }
 

@@ -329,7 +329,7 @@ public class EditCanvas extends Canvas {
 
         if (actorsVisible.get()) {
             ACTOR_SPRITES.forEach((positionProperty, sprite) -> {
-                Vector2i tile = worldMap().getTerrainTileProperty(positionProperty);
+                Vector2i tile = worldMap().terrainLayer().getTileProperty(positionProperty);
                 if (tile != null) {
                     renderer.drawActorSprite(tile, sprite);
                 }

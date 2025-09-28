@@ -46,7 +46,7 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
     public void createLevel(int levelNumber) {
         final WorldMap worldMap = mapSelector.getWorldMapCopy(levelNumber);
 
-        Vector2i houseMinTile = worldMap.getTerrainTileProperty(POS_HOUSE_MIN_TILE);
+        Vector2i houseMinTile = worldMap.terrainLayer().getTileProperty(POS_HOUSE_MIN_TILE);
         if (houseMinTile == null) {
             houseMinTile = ARCADE_MAP_HOUSE_MIN_TILE;
             Logger.warn("No house min tile found in map, using {}", houseMinTile);
@@ -66,10 +66,10 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
         final Inky inky = new Inky();
         final Clyde clyde = new Clyde();
 
-        blinky.setStartPosition(halfTileRightOf(worldMap.getTerrainTileProperty(POS_GHOST_1_RED)));
-        pinky .setStartPosition(halfTileRightOf(worldMap.getTerrainTileProperty(POS_GHOST_2_PINK)));
-        inky  .setStartPosition(halfTileRightOf(worldMap.getTerrainTileProperty(POS_GHOST_3_CYAN)));
-        clyde .setStartPosition(halfTileRightOf(worldMap.getTerrainTileProperty(POS_GHOST_4_ORANGE)));
+        blinky.setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_1_RED)));
+        pinky .setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_2_PINK)));
+        inky  .setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_3_CYAN)));
+        clyde .setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_4_ORANGE)));
 
         newGameLevel.setGhosts(blinky, pinky, inky, clyde);
 

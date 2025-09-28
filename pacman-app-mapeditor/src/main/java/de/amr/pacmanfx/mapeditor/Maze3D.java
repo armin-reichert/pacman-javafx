@@ -199,8 +199,8 @@ public class Maze3D extends Group {
     }
 
     private void addHouse(Color wallBaseColor, Color wallTopColor) {
-        Vector2i houseMinTile = worldMap().getTerrainTileProperty(DefaultWorldMapPropertyName.POS_HOUSE_MIN_TILE);
-        Vector2i houseMaxTile = worldMap().getTerrainTileProperty(DefaultWorldMapPropertyName.POS_HOUSE_MAX_TILE);
+        Vector2i houseMinTile = worldMap().terrainLayer().getTileProperty(DefaultWorldMapPropertyName.POS_HOUSE_MIN_TILE);
+        Vector2i houseMaxTile = worldMap().terrainLayer().getTileProperty(DefaultWorldMapPropertyName.POS_HOUSE_MAX_TILE);
         if (houseMinTile == null || houseMaxTile == null) {
             return;
         }
@@ -240,7 +240,7 @@ public class Maze3D extends Group {
     }
 
     private void addActorShape(Node actorShape, String actorTilePropertyName) {
-        Vector2i tile = worldMap().getTerrainTileProperty(actorTilePropertyName);
+        Vector2i tile = worldMap().terrainLayer().getTileProperty(actorTilePropertyName);
         if (tile == null) {
             return;
         }

@@ -342,10 +342,10 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         final Inky inky = new Inky();
         final Clyde clyde = new Clyde();
 
-        blinky.setStartPosition(halfTileRightOf(worldMap.getTerrainTileProperty(POS_GHOST_1_RED)));
-        pinky .setStartPosition(halfTileRightOf(worldMap.getTerrainTileProperty(POS_GHOST_2_PINK)));
-        inky  .setStartPosition(halfTileRightOf(worldMap.getTerrainTileProperty(POS_GHOST_3_CYAN)));
-        clyde .setStartPosition(halfTileRightOf(worldMap.getTerrainTileProperty(POS_GHOST_4_ORANGE)));
+        blinky.setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_1_RED)));
+        pinky .setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_2_PINK)));
+        inky  .setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_3_CYAN)));
+        clyde .setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_4_ORANGE)));
 
         newGameLevel.setGhosts(blinky, pinky, inky, clyde);
 
@@ -381,7 +381,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         gameLevel().selectNextBonus();
         byte symbol = gameLevel().bonusSymbol(gameLevel().currentBonusIndex());
         var bonus = new Bonus(symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100, null);
-        Vector2i bonusTile = gameLevel().worldMap().getTerrainTileProperty(DefaultWorldMapPropertyName.POS_BONUS, new Vector2i(13, 20));
+        Vector2i bonusTile = gameLevel().worldMap().terrainLayer().getTileProperty(DefaultWorldMapPropertyName.POS_BONUS, new Vector2i(13, 20));
         bonus.setPosition(halfTileRightOf(bonusTile));
         bonus.setEdible(randomInt(9 * NUM_TICKS_PER_SEC, 10 * NUM_TICKS_PER_SEC));
         gameLevel().setBonus(bonus);

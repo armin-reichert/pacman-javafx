@@ -174,7 +174,7 @@ public class WorldMap {
         List<Vector2i> tilesWithErrors = new ArrayList<>();
         obstacles = ObstacleBuilder.buildObstacles(this, tilesWithErrors);
 
-        Vector2i houseMinTile = getTerrainTileProperty(DefaultWorldMapPropertyName.POS_HOUSE_MIN_TILE);
+        Vector2i houseMinTile = terrainLayer.getTileProperty(DefaultWorldMapPropertyName.POS_HOUSE_MIN_TILE);
         if (houseMinTile == null) {
             Logger.info("Could not remove house placeholder from obstacle list, house min tile not set");
         } else {
@@ -249,27 +249,6 @@ public class WorldMap {
             configMap = new HashMap<>();
         }
         return configMap;
-    }
-
-    /**
-     * @param propertyName property name
-     * @param defaultTile tile returned if property map does not contain property name (can be null)
-     * @return tile value of property in terrain layer or default value
-     */
-    public Vector2i getTerrainTileProperty(String propertyName, Vector2i defaultTile) {
-        requireNonNull(propertyName);
-        String value = terrainLayer.propertyMap().get(propertyName);
-        return value != null
-            ? WorldMapParser.parseTile(value).orElse(defaultTile)
-            : defaultTile;
-    }
-
-    /**
-     * @param propertyName property name
-     * @return tile value of property in terrain layer or <code>null</code>
-     */
-    public Vector2i getTerrainTileProperty(String propertyName) {
-        return getTerrainTileProperty(propertyName, null);
     }
 
     /**

@@ -357,10 +357,10 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         final Inky inky = new Inky();
         final Sue sue = new Sue();
 
-        blinky.setStartPosition(halfTileRightOf(worldMap.getTerrainTileProperty(POS_GHOST_1_RED)));
-        pinky .setStartPosition(halfTileRightOf(worldMap.getTerrainTileProperty(POS_GHOST_2_PINK)));
-        inky  .setStartPosition(halfTileRightOf(worldMap.getTerrainTileProperty(POS_GHOST_3_CYAN)));
-        sue   .setStartPosition(halfTileRightOf(worldMap.getTerrainTileProperty(POS_GHOST_4_ORANGE)));
+        blinky.setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_1_RED)));
+        pinky .setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_2_PINK)));
+        inky  .setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_3_CYAN)));
+        sue   .setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_4_ORANGE)));
 
         newGameLevel.setGhosts(blinky, pinky, inky, sue);
 
@@ -466,7 +466,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
             return;
         }
 
-        Vector2i entryTile = gameLevel().worldMap().getTerrainTileProperty(DefaultWorldMapPropertyName.POS_BONUS);
+        Vector2i entryTile = gameLevel().worldMap().terrainLayer().getTileProperty(DefaultWorldMapPropertyName.POS_BONUS);
         Vector2i exitTile;
         boolean leftToRight;
         if (entryTile != null) { // Map defines bonus entry tile

@@ -523,10 +523,10 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         final Sue sue = new Sue();
 
         // Ghosts inside house start at bottom of house instead at middle (as stored in terrain tile property)
-        blinky.setStartPosition(halfTileRightOf(worldMap.getTerrainTileProperty(POS_GHOST_1_RED)));
-        pinky .setStartPosition(halfTileRightOf(worldMap.getTerrainTileProperty(POS_GHOST_2_PINK)).plus(0, HTS));
-        inky  .setStartPosition(halfTileRightOf(worldMap.getTerrainTileProperty(POS_GHOST_3_CYAN)).plus(0, HTS));
-        sue   .setStartPosition(halfTileRightOf(worldMap.getTerrainTileProperty(POS_GHOST_4_ORANGE)).plus(0, HTS));
+        blinky.setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_1_RED)));
+        pinky .setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_2_PINK)).plus(0, HTS));
+        inky  .setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_3_CYAN)).plus(0, HTS));
+        sue   .setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_4_ORANGE)).plus(0, HTS));
 
         newGameLevel.setGhosts(blinky, pinky, inky, sue);
 

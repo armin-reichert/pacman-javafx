@@ -40,7 +40,7 @@ public class Action_IdentifyTileAndObstacle extends EditorUIAction<String> {
     }
 
     private boolean isScatterTarget(WorldMap worldMap, String propertyName) {
-        Vector2i scatterTile = worldMap.getTerrainTileProperty(propertyName);
+        Vector2i scatterTile = worldMap.terrainLayer().getTileProperty(propertyName);
         return scatterTile != null && scatterTile.equals(tile);
     }
 
