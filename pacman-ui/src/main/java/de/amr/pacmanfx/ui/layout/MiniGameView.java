@@ -98,7 +98,7 @@ public class MiniGameView extends VBox {
     }
 
     public void onGameLevelCreated(GameLevel gameLevel) {
-        worldSize.set(gameLevel.worldSizePx());
+        worldSize.set(gameLevel.worldMap().terrainLayer().sizeInPixel());
         /* TODO: The renderers cannot be created in the constructor because the game controller has not yet
             selected a game variant when the constructor is called, so no UI configuration is available! */
 

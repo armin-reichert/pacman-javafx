@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.worldmap.TerrainTile.TUNNEL;
 import static de.amr.pacmanfx.lib.worldmap.TerrainTile.isBlocked;
 import static java.util.Objects.requireNonNull;
@@ -99,5 +100,12 @@ public class TerrainLayer extends WorldMapLayer {
             inaccessible += neighborTilesInsideWorld(tile).filter(house::isDoorAt).count();
         }
         return inaccessible <= 1;
+    }
+
+    /**
+     * @return world size in pixels as (size-x, size-y)
+     */
+    public Vector2i sizeInPixel() {
+        return new Vector2i(numCols() * TS, numRows() * TS);
     }
 }

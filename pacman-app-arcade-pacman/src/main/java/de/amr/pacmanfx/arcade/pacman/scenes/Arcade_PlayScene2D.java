@@ -198,7 +198,8 @@ public class Arcade_PlayScene2D extends GameScene2D {
     @Override
     public Vector2i sizeInPx() {
         // Note: scene is also used in Pac-Man XXL game variant where world can have any size
-        return context().optGameLevel().map(GameLevel::worldSizePx).orElse(ARCADE_MAP_SIZE_IN_PIXELS);
+        return context().optGameLevel().map(gameLevel -> gameLevel.worldMap().terrainLayer().sizeInPixel())
+            .orElse(ARCADE_MAP_SIZE_IN_PIXELS);
     }
 
     @Override

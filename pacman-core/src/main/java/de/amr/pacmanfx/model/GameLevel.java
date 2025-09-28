@@ -154,7 +154,7 @@ public class GameLevel {
             return Vector2f.of(cx, cy);
         }
         else {
-            Vector2i worldSize = worldSizePx();
+            Vector2i worldSize = worldMap.terrainLayer().sizeInPixel();
             return Vector2f.of(worldSize.x() * 0.5f, worldSize.y() * 0.5f); // should not happen
         }
     }
@@ -203,13 +203,6 @@ public class GameLevel {
     public int number() { return number; }
 
     public WorldMap worldMap() { return worldMap; }
-
-    /**
-     * @return world size in pixels as (size-x, size-y)
-     */
-    public Vector2i worldSizePx() {
-        return new Vector2i(worldMap.numCols() * TS, worldMap.numRows() * TS);
-    }
 
     public Vector2f pacStartPosition() {
         return pacStartPosition;

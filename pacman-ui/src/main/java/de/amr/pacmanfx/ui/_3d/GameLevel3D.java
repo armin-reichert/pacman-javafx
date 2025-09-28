@@ -554,7 +554,7 @@ public class GameLevel3D extends Group implements Disposable {
     private void createFloor3D() {
         float padding   = ui.preferences().getFloat("3d.floor.padding");
         float thickness = ui.preferences().getFloat("3d.floor.thickness");
-        Vector2i worldSizePx = gameLevel.worldSizePx();
+        Vector2i worldSizePx = gameLevel.worldMap().terrainLayer().sizeInPixel();
         float sizeX = worldSizePx.x() + 2 * padding;
         float sizeY = worldSizePx.y();
         floor3D = new Box(sizeX, sizeY, thickness);
@@ -569,7 +569,7 @@ public class GameLevel3D extends Group implements Disposable {
     }
 
     private boolean particleTouchesFloor(EnergizerExplosionAndRecycling.Particle particle) {
-        Vector2i worldSizePx = gameLevel.worldSizePx();
+        Vector2i worldSizePx = gameLevel.worldMap().terrainLayer().sizeInPixel();
         Point3D center = particle.center();
         double r = particle.getRadius(), cx = center.getX(), cy = center.getY();
         if (cx + r < 0 || cx - r > worldSizePx.x()) return false;
