@@ -11,6 +11,7 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.Waypoint;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
+import de.amr.pacmanfx.lib.worldmap.FoodLayer;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.*;
@@ -279,7 +280,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     public void init() {
-        mapSelector.loadAllMaps();
+        mapSelector.loadAllMapPrototypes();
         setInitialLifeCount(3);
         resetEverything();
     }
@@ -504,8 +505,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     public void createLevel(int levelNumber) {
-        final WorldMap worldMap = mapSelector.createConfiguredWorldMap(mapCategory, levelNumber);
-
+        final WorldMap worldMap = mapSelector.getWorldMapCopy(levelNumber, mapCategory);
         final ArcadeHouse house = new ArcadeHouse(HOUSE_MIN_TILE);
 
         final GameLevel newGameLevel = new GameLevel(this, levelNumber, worldMap, house);
@@ -587,7 +587,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     protected boolean isBonusReached() {
-        return gameLevel().foodStore().eatenFoodCount() == 64 || gameLevel().foodStore().eatenFoodCount() == 176;
+        FoodLayer foodLayer = gameLevel().worldMap().foodLayer();
+        return foodLayer.eatenFoodCount() == 64 || foodLayer.eatenFoodCount() == 176;
     }
 
     private byte computeBonusSymbol(int levelNumber) {
@@ -646,13 +647,14 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     @Override
     protected void checkIfPacManFindsFood() {
         optGameLevel().ifPresent(gameLevel -> {
+            final FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
             final Pac pac = gameLevel.pac();
             final Vector2i tile = pac.tile();
-            if (gameLevel.foodStore().tileContainsFood(tile)) {
+            if (foodLayer.tileContainsFood(tile)) {
                 pac.setStarvingTicks(0);
-                gameLevel.foodStore().registerFoodEatenAt(tile);
+                foodLayer.registerFoodEatenAt(tile);
                 optGateKeeper().ifPresent(gateKeeper -> gateKeeper.registerFoodEaten(gameLevel));
-                if (gameLevel.isEnergizerPosition(tile)) {
+                if (foodLayer.isEnergizerPosition(tile)) {
                     simulationStep.foundEnergizerAtTile = tile;
                     onEnergizerEaten();
                 } else {
@@ -794,7 +796,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         byte units = 0;
         TengenMsPacMan_GameModel game = (TengenMsPacMan_GameModel) gameLevel.game();
         if (game.difficulty() == Difficulty.NORMAL && gameLevel.number() >= 5) {
-            int dotsLeft = gameLevel.foodStore().uneatenFoodCount();
+            int dotsLeft = gameLevel.worldMap().foodLayer().uneatenFoodCount();
             if (dotsLeft <= 7) {
                 units = 5;
             } else if (dotsLeft <= 15) {

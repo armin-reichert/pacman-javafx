@@ -8,6 +8,7 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.timer.TickTimer;
+import de.amr.pacmanfx.lib.worldmap.FoodLayer;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.AnimationSupport;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -178,12 +179,13 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     @Override
     protected void checkIfPacManFindsFood() {
         optGameLevel().ifPresent(gameLevel -> {
+            FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
             final Pac pac = gameLevel.pac();
             final Vector2i tile = pac.tile();
-            if (gameLevel.foodStore().tileContainsFood(tile)) {
+            if (foodLayer.tileContainsFood(tile)) {
                 pac.setStarvingTicks(0);
-                gameLevel.foodStore().registerFoodEatenAt(tile);
-                if (gameLevel.isEnergizerPosition(tile)) {
+                foodLayer.registerFoodEatenAt(tile);
+                if (foodLayer.isEnergizerPosition(tile)) {
                     onEnergizerEaten(tile);
                 } else {
                     onPelletEaten();
@@ -282,9 +284,10 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     private void updateCruiseElroyMode() {
-        if (gameLevel().foodStore().uneatenFoodCount() == levelData(gameLevel()).elroy1DotsLeft()) {
+        FoodLayer foodLayer = gameLevel().worldMap().foodLayer();
+        if (foodLayer.uneatenFoodCount() == levelData(gameLevel()).elroy1DotsLeft()) {
             cruiseElroy = 1;
-        } else if (gameLevel().foodStore().uneatenFoodCount() == levelData(gameLevel()).elroy2DotsLeft()) {
+        } else if (foodLayer.uneatenFoodCount() == levelData(gameLevel()).elroy2DotsLeft()) {
             cruiseElroy = 2;
         }
     }

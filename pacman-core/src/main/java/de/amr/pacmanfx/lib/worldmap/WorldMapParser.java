@@ -75,8 +75,7 @@ public interface WorldMapParser {
         worldMap.terrainLayer = parseLayer(terrainLayerRows, validTerrainValueTest);
         worldMap.numRows = worldMap.terrainLayer.numRows();
         worldMap.numCols = worldMap.terrainLayer.numCols();
-        worldMap.foodLayer = parseLayer(foodLayerRows, validFoodValueTest);
-
+        worldMap.foodLayer = new FoodLayer(parseLayer(foodLayerRows, validFoodValueTest));
         return worldMap;
     }
 

@@ -12,14 +12,15 @@ import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.actors.*;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
-import static de.amr.pacmanfx.lib.worldmap.FoodTile.ENERGIZER;
 import static de.amr.pacmanfx.lib.worldmap.TerrainTile.TUNNEL;
 import static de.amr.pacmanfx.lib.worldmap.TerrainTile.isBlocked;
 import static de.amr.pacmanfx.model.DefaultWorldMapPropertyName.*;
@@ -44,7 +45,6 @@ public class GameLevel {
     private final House house;
     private final Vector2f pacStartPosition;
     private final Vector2i[] ghostScatterTiles = new Vector2i[4];
-    private final Set<Vector2i> energizerTiles;
     private final Portal[] portals;
 
     private boolean demoLevel;
@@ -64,8 +64,6 @@ public class GameLevel {
     private int gameOverStateTicks;
     private long startTime;
 
-    private final FoodStore foodStore;
-
     public GameLevel(Game game, int number, WorldMap worldMap, House house) {
         this.game = requireNonNull(game);
         this.number = requireValidLevelNumber(number);
@@ -79,7 +77,6 @@ public class GameLevel {
         worldMap.setContent(LayerID.TERRAIN, house.minTile(), house.content());
 
         currentBonusIndex = -1;
-        energizerTiles = worldMap.foodLayer().tilesContaining(ENERGIZER.$).collect(Collectors.toSet());
 
         Vector2i pacTile = worldMap.getTerrainTileProperty(POS_PAC);
         if (pacTile == null) {
@@ -100,8 +97,6 @@ public class GameLevel {
 
         ghostScatterTiles[ORANGE_GHOST_POKEY] = worldMap.getTerrainTileProperty(POS_SCATTER_ORANGE_GHOST,
             Vector2i.of(worldMap.numRows() - EMPTY_ROWS_BELOW_MAZE, 0));
-
-        foodStore = new FoodStore(worldMap.foodLayer(), energizerTiles);
     }
 
     private Portal[] findPortals() {
@@ -146,10 +141,6 @@ public class GameLevel {
 
     public Game game() {
         return game;
-    }
-
-    public FoodStore foodStore() {
-        return foodStore;
     }
 
     public List<Ghost> victims() { return victims; }
@@ -291,12 +282,6 @@ public class GameLevel {
 
     public Optional<House> optHouse() {
         return Optional.ofNullable(house);
-    }
-
-    public Set<Vector2i> energizerPositions() { return Collections.unmodifiableSet(energizerTiles); }
-
-    public boolean isEnergizerPosition(Vector2i tile) {
-        return energizerTiles.contains(tile);
     }
 
     // Actor positions

@@ -8,6 +8,7 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2i;
+import de.amr.pacmanfx.lib.worldmap.FoodLayer;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.*;
@@ -162,12 +163,13 @@ public class RuleBasedPacSteering implements Steering {
         var pac = gameLevel.pac();
         Vector2i pacManTile = pac.tile();
         boolean energizerFound = false;
+        FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
         for (int i = 1; i <= CollectedData.MAX_GHOST_AHEAD_DETECTION_DIST; ++i) {
             Vector2i ahead = pacManTile.plus(pac.moveDir().vector().scaled(i));
             if (!pac.canAccessTile(gameLevel, ahead)) {
                 break;
             }
-            if (gameLevel.isEnergizerPosition(ahead) && !gameLevel.foodStore().tileContainsEatenFood(ahead)) {
+            if (foodLayer.isEnergizerPosition(ahead) && !foodLayer.tileContainsEatenFood(ahead)) {
                 energizerFound = true;
             }
             var aheadLeft = ahead.plus(pac.moveDir().nextCounterClockwise().vector());
@@ -232,14 +234,16 @@ public class RuleBasedPacSteering implements Steering {
         List<Vector2i> foodTiles = new ArrayList<>();
         Vector2i pacManTile = pac.tile();
         float minDist = Float.MAX_VALUE;
+        FoodLayer foodLayer = level.worldMap().foodLayer();
         for (int x = 0; x < level.worldMap().numCols(); ++x) {
             for (int y = 0; y < level.worldMap().numRows(); ++y) {
                 Vector2i tile = new Vector2i(x, y);
-                if (!level.foodStore().isFoodPosition(tile) || level.foodStore().tileContainsEatenFood(tile)) {
+                if (!foodLayer.isFoodPosition(tile) || foodLayer.tileContainsEatenFood(tile)) {
                     continue;
                 }
-                if (level.isEnergizerPosition(tile) && level.pac().powerTimer().remainingTicks() > 2 * Globals.NUM_TICKS_PER_SEC
-                    && level.foodStore().uneatenFoodCount() > 1) {
+                if (level.worldMap().foodLayer().isEnergizerPosition(tile)
+                    && level.pac().powerTimer().remainingTicks() > 2 * Globals.NUM_TICKS_PER_SEC
+                    && foodLayer.uneatenFoodCount() > 1) {
                     continue;
                 }
                 float dist = pacManTile.manhattanDist(tile);

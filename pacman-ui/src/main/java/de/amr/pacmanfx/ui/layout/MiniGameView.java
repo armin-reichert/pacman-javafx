@@ -29,7 +29,6 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.ui.api.GameUI_Config.SCENE_ID_PLAY_SCENE_3D;
 import static de.amr.pacmanfx.ui.api.GameUI_Properties.*;
 import static java.util.Objects.requireNonNull;
 
@@ -134,7 +133,7 @@ public class MiniGameView extends VBox {
             var info = new RenderInfo(Map.of(
                 CommonRenderInfoKey.MAZE_BRIGHT, false,
                 CommonRenderInfoKey.MAZE_BLINKING, gameLevel.blinking().isOn(),
-                CommonRenderInfoKey.MAZE_EMPTY, gameLevel.foodStore().uneatenFoodCount() == 0,
+                CommonRenderInfoKey.MAZE_EMPTY, gameLevel.worldMap().foodLayer().uneatenFoodCount() == 0,
                 CommonRenderInfoKey.TICK, ui.clock().tickCount()
             ));
             gameLevelRenderer.applyLevelSettings(gameLevel, info);

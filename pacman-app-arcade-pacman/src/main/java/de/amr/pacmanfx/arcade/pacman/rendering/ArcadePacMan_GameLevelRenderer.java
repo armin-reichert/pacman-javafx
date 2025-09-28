@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
+import de.amr.pacmanfx.lib.worldmap.FoodLayer;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelMessage;
 import de.amr.pacmanfx.model.House;
@@ -63,13 +64,14 @@ public class ArcadePacMan_GameLevelRenderer extends BaseRenderer implements Game
         else {
             drawSprite(spriteSheet().sprite(SpriteID.MAP_FULL), 0, emptySpaceOverMaze, false);
             // Over-paint eaten food tiles
-            gameLevel.tiles()
-                .filter(not(gameLevel::isEnergizerPosition))
-                .filter(gameLevel.foodStore()::tileContainsEatenFood)
+            FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
+            foodLayer.tiles()
+                .filter(not(foodLayer::isEnergizerPosition))
+                .filter(foodLayer::tileContainsEatenFood)
                 .forEach(tile -> fillSquareAtTileCenter(tile, 4));
             // Over-paint eaten or dark-blinking energizer tiles
-            gameLevel.energizerPositions().stream()
-                .filter(tile -> !info.getBoolean(CommonRenderInfoKey.MAZE_BLINKING) || gameLevel.foodStore().tileContainsEatenFood(tile))
+            foodLayer.energizerPositions().stream()
+                .filter(tile -> !info.getBoolean(CommonRenderInfoKey.MAZE_BLINKING) || foodLayer.tileContainsEatenFood(tile))
                 .forEach(tile -> fillSquareAtTileCenter(tile, 10));
         }
         ctx().restore();

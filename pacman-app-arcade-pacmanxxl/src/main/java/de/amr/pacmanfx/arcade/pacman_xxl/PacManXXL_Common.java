@@ -28,7 +28,7 @@ public interface PacManXXL_Common {
         Map.of("fill", "#5036d9", "stroke", "#5f8bcf", "door", "#fcb5ff", "pellet", "#feb8ae")
     );
 
-    static void addSampleCustomMaps(File dir) {
+    static void addSampleCustomMapPrototypes(File dir) {
         requireNonNull(dir);
         File[] files = dir.listFiles();
         if (files == null) {

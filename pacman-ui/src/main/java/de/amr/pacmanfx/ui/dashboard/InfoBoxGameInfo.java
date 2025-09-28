@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.dashboard;
 
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.lib.timer.TickTimer;
+import de.amr.pacmanfx.lib.worldmap.FoodLayer;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HuntingPhase;
@@ -119,10 +120,11 @@ public class InfoBoxGameInfo extends InfoBox {
     }
 
     private String fmtPelletCount(GameLevel level) {
+        FoodLayer foodLayer = level.worldMap().foodLayer();
         return "%d of %d (%d energizers)".formatted(
-                level.foodStore().uneatenFoodCount(),
-                level.foodStore().totalFoodCount(),
-                level.energizerPositions().size()
+                foodLayer.uneatenFoodCount(),
+                foodLayer.totalFoodCount(),
+                foodLayer.energizerPositions().size()
         );
     }
 

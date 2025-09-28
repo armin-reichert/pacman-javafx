@@ -10,6 +10,7 @@ import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.StopWatch;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
+import de.amr.pacmanfx.lib.worldmap.FoodLayer;
 import de.amr.pacmanfx.lib.worldmap.Obstacle;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
@@ -592,8 +593,9 @@ public class GameLevel3D extends Group implements Disposable {
         double maxExtent = Math.max(Math.max(bounds.getWidth(), bounds.getHeight()), bounds.getDepth());
         double scaling = (2 * radius) / maxExtent;
         var scale = new Scale(scaling, scaling, scaling);
-        pellets3D = gameLevel.tiles().filter(gameLevel.foodStore()::tileContainsFood)
-            .filter(tile -> !gameLevel.isEnergizerPosition(tile))
+        FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
+        pellets3D = foodLayer.tiles().filter(foodLayer::tileContainsFood)
+            .filter(tile -> !foodLayer.isEnergizerPosition(tile))
             .map(tile -> createPellet3D(mesh, scale, tile))
             .collect(Collectors.toCollection(HashSet::new));
     }
@@ -636,8 +638,9 @@ public class GameLevel3D extends Group implements Disposable {
             revivalPositionCenter(ghostRevivalTiles[ORANGE_GHOST_POKEY])
         };
 
-        energizers3D = gameLevel.tiles().filter(gameLevel.foodStore()::tileContainsFood)
-            .filter(gameLevel::isEnergizerPosition)
+        FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
+        energizers3D = foodLayer.tiles().filter(foodLayer::tileContainsFood)
+            .filter(foodLayer::isEnergizerPosition)
             .map(tile -> createEnergizer3D(tile, radius, minScaling, maxScaling, ghostDressMaterials, ghostRevivalCenters))
             .collect(Collectors.toCollection(HashSet::new));
     }

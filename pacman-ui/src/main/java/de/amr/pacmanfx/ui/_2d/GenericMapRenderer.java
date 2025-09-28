@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._2d;
 
+import de.amr.pacmanfx.lib.worldmap.FoodLayer;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.uilib.rendering.*;
@@ -76,15 +77,16 @@ public class GenericMapRenderer extends BaseRenderer {
             Map<String, String> colorMap = gameLevel.worldMap().getConfigValue(PROPERTY_COLOR_MAP);
 
             foodRenderer.setPelletColor(Color.web(colorMap.get("pellet")));
+            FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
             gameLevel.tiles()
-                .filter(gameLevel.foodStore()::tileContainsFood)
-                .filter(not(gameLevel::isEnergizerPosition))
+                .filter(foodLayer::tileContainsFood)
+                .filter(not(foodLayer::isEnergizerPosition))
                 .forEach(foodRenderer::drawPellet);
 
             if (info.getBoolean(CommonRenderInfoKey.MAZE_BLINKING)) {
                 foodRenderer.setEnergizerColor(Color.web(colorMap.get("pellet")));
-                gameLevel.energizerPositions().stream()
-                    .filter(gameLevel.foodStore()::tileContainsFood)
+                foodLayer.energizerPositions().stream()
+                    .filter(foodLayer::tileContainsFood)
                     .forEach(foodRenderer::drawEnergizer);
             }
         }

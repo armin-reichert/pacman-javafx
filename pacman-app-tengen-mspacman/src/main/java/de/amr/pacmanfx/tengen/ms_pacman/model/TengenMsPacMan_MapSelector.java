@@ -18,24 +18,23 @@ import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
 import static de.amr.pacmanfx.lib.nes.NES_ColorScheme.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory.*;
-import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_MapSelector implements MapSelector {
 
     private final Map<MapCategory, List<WorldMap>> mapRepository = new EnumMap<>(MapCategory.class);
 
     @Override
-    public List<WorldMap> builtinMaps() {
+    public List<WorldMap> builtinMapPrototypes() {
         return mapRepository.values().stream().flatMap(List::stream).collect(Collectors.toList());
     }
 
     @Override
-    public List<WorldMap> customMaps() {
+    public List<WorldMap> customMapPrototypes() {
         return List.of();
     }
 
     @Override
-    public void loadAllMaps() {
+    public void loadAllMapPrototypes() {
         if (mapRepository.isEmpty()) {
             mapRepository.put(MapCategory.ARCADE,  MapSelector.loadMapsFromModule(getClass(), MAPS_PATH + "arcade%d.world",     4));
             mapRepository.put(MapCategory.MINI,    MapSelector.loadMapsFromModule(getClass(), MAPS_PATH + "mini%d.world",       6));
@@ -45,31 +44,33 @@ public class TengenMsPacMan_MapSelector implements MapSelector {
     }
 
     @Override
-    public void loadCustomMaps() {}
+    public void loadCustomMapPrototypes() {}
 
     @Override
-    public WorldMap getWorldMap(int levelNumber) {
-        throw new UnsupportedOperationException(); //TODO ugly! Reconsider API
-    }
-
-    public WorldMap createConfiguredWorldMap(MapCategory mapCategory, int levelNumber) {
-        requireNonNull(mapCategory);
-        requireValidLevelNumber(levelNumber);
-        return switch (mapCategory) {
-            case ARCADE -> createConfiguredArcadeMap(levelNumber);
-            case MINI   -> createConfiguredMiniMap(levelNumber);
-            case BIG    -> createConfiguredBigMap(levelNumber);
-            case STRANGE -> {
-                WorldMap worldMap = createConfiguredStrangeMap(levelNumber);
-                // Hack: Store mazeID in map properties to make renderer happy
-                worldMap.setConfigValue(PROPERTY_MAZE_ID, NonArcadeMapsSpriteSheet.MazeID.values()[levelNumber - 1]);
-                yield worldMap;
-            }
-        };
+    public WorldMap getWorldMapCopy(int levelNumber, Object... args) {
+        if (args == null || args.length == 0) {
+            throw new IllegalArgumentException("Insufficient information for computing map");
+        }
+        if (args[0] instanceof MapCategory mapCategory) {
+            requireValidLevelNumber(levelNumber);
+            return switch (mapCategory) {
+                case ARCADE -> createConfiguredArcadeMap(levelNumber);
+                case MINI -> createConfiguredMiniMap(levelNumber);
+                case BIG -> createConfiguredBigMap(levelNumber);
+                case STRANGE -> {
+                    WorldMap worldMap = createConfiguredStrangeMap(levelNumber);
+                    // Hack: Store mazeID in map properties to make renderer happy
+                    worldMap.setConfigValue(PROPERTY_MAZE_ID, NonArcadeMapsSpriteSheet.MazeID.values()[levelNumber - 1]);
+                    yield worldMap;
+                }
+            };
+        } else {
+            throw new IllegalArgumentException("Supplied argument must be a map category");
+        }
     }
 
     private WorldMap configuration(MapCategory category, int number, NES_ColorScheme colorScheme) {
-        WorldMap worldMap = WorldMap.copyOfMap(mapRepository.get(category).get(number - 1));
+        WorldMap worldMap = WorldMap.copyOf(mapRepository.get(category).get(number - 1));
         worldMap.setConfigValue(PROPERTY_MAP_CATEGORY, category);
         worldMap.setConfigValue(PROPERTY_MAP_NUMBER, number);
         worldMap.setConfigValue(PROPERTY_NES_COLOR_SCHEME, colorScheme);

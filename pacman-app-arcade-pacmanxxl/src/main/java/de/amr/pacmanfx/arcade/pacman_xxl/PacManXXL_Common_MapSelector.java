@@ -24,14 +24,14 @@ import static java.util.Objects.requireNonNull;
 public class PacManXXL_Common_MapSelector implements MapSelector {
 
     private final File customMapDir;
-    private final ObservableList<WorldMap> customMaps = FXCollections.observableArrayList();
-    private final List<WorldMap> builtinMaps = new ArrayList<>();
+    private final ObservableList<WorldMap> customMapPrototypes = FXCollections.observableArrayList();
+    private final List<WorldMap> builtinMapPrototypes = new ArrayList<>();
     private MapSelectionMode selectionMode;
 
     public PacManXXL_Common_MapSelector(File dir) {
         customMapDir = requireNonNull(dir);
         selectionMode = MapSelectionMode.CUSTOM_MAPS_FIRST;
-        PacManXXL_Common.addSampleCustomMaps(dir);
+        PacManXXL_Common.addSampleCustomMapPrototypes(dir);
     }
 
     public MapSelectionMode selectionMode() {
@@ -43,17 +43,17 @@ public class PacManXXL_Common_MapSelector implements MapSelector {
     }
 
     @Override
-    public List<WorldMap> builtinMaps() {
-        return builtinMaps;
+    public List<WorldMap> builtinMapPrototypes() {
+        return builtinMapPrototypes;
     }
 
     @Override
-    public ObservableList<WorldMap> customMaps() {
-        return customMaps;
+    public ObservableList<WorldMap> customMapPrototypes() {
+        return customMapPrototypes;
     }
 
     @Override
-    public void loadCustomMaps() {
+    public void loadCustomMapPrototypes() {
         File[] mapFiles = customMapDir.listFiles((dir, name) -> name.endsWith(".world"));
         if (mapFiles == null) {
             Logger.error("An error occurred accessing custom map directory {}", customMapDir);
@@ -64,11 +64,11 @@ public class PacManXXL_Common_MapSelector implements MapSelector {
         } else {
             Logger.info("{} custom map(s) found", mapFiles.length);
         }
-        customMaps.clear();
+        customMapPrototypes.clear();
         for (File file : mapFiles) {
             try {
                 WorldMap worldMap = WorldMap.loadFromFile(file);
-                customMaps.add(worldMap);
+                customMapPrototypes.add(worldMap);
                 Logger.info("Custom map loaded from file {}", file);
             } catch (IOException x) {
                 Logger.error(x);
@@ -78,42 +78,43 @@ public class PacManXXL_Common_MapSelector implements MapSelector {
     }
 
     @Override
-    public void loadAllMaps() {
-        if (builtinMaps.isEmpty()) {
+    public void loadAllMapPrototypes() {
+        if (builtinMapPrototypes.isEmpty()) {
             List<WorldMap> maps = MapSelector.loadMapsFromModule(getClass(), "maps/masonic_%d.world", 8);
-            builtinMaps.addAll(maps);
+            builtinMapPrototypes.addAll(maps);
         }
-        loadCustomMaps();
+        loadCustomMapPrototypes();
     }
 
     @Override
-    public WorldMap getWorldMap(int levelNumber) {
-        WorldMap map = switch (selectionMode) {
+    public WorldMap getWorldMapCopy(int levelNumber, Object... args) {
+        WorldMap prototype = switch (selectionMode) {
             case NO_CUSTOM_MAPS -> {
                 // first pick built-in maps in order, then randomly
-                int index = levelNumber <= builtinMaps.size() ? levelNumber - 1: randomInt(0, builtinMaps.size());
-                yield builtinMaps.get(index);
+                int index = levelNumber <= builtinMapPrototypes.size() ? levelNumber - 1: randomInt(0, builtinMapPrototypes.size());
+                yield builtinMapPrototypes.get(index);
             }
             case CUSTOM_MAPS_FIRST -> {
-                if (levelNumber <= customMaps.size()) {
+                if (levelNumber <= customMapPrototypes.size()) {
                     // pick custom maps in order
-                    yield customMaps.get(levelNumber - 1);
+                    yield customMapPrototypes.get(levelNumber - 1);
                 }
                 else {
                     // pick random built-in map
-                    yield builtinMaps.get(randomInt(0, builtinMaps().size()));
+                    yield builtinMapPrototypes.get(randomInt(0, builtinMapPrototypes().size()));
                 }
             }
             case ALL_RANDOM -> {
-                int index = randomInt(0, customMaps().size() + builtinMaps().size());
-                yield index < customMaps().size() ? customMaps.get(index) : builtinMaps.get(index - customMaps().size());
+                int index = randomInt(0, customMapPrototypes().size() + builtinMapPrototypes().size());
+                yield index < customMapPrototypes().size() ? customMapPrototypes.get(index) : builtinMapPrototypes.get(index - customMapPrototypes().size());
             }
         };
-        WorldMap worldMap = WorldMap.copyOfMap(map);
+
+        WorldMap worldMap = WorldMap.copyOf(prototype);
         // if selected map is a built-in map, use a random color scheme to make it not so boring
-        Map<String, String> colorScheme = builtinMaps.contains(map)
+        Map<String, String> colorScheme = builtinMapPrototypes.contains(prototype)
             ? PacManXXL_Common.MAP_COLOR_SCHEMES.get(randomInt(0, PacManXXL_Common.MAP_COLOR_SCHEMES.size()))
-            : MapSelector.extractColorMap(map);
+            : MapSelector.extractColorMap(prototype);
         worldMap.setConfigValue(PROPERTY_COLOR_MAP, colorScheme);
         Logger.info("Map selected (Mode {}): {}", selectionMode, worldMap.url());
 

@@ -144,7 +144,7 @@ public interface CommonGameActions {
     AbstractGameAction ACTION_CHEAT_EAT_ALL_PELLETS = new AbstractGameAction("CHEAT_EAT_ALL_PELLETS") {
         @Override
         public void execute(GameUI ui) {
-            ui.gameContext().gameLevel().foodStore().eatAllPellets();
+            ui.gameContext().gameLevel().worldMap().foodLayer().eatAllPellets();
             ui.soundManager().pause(SoundID.PAC_MAN_MUNCHING);
             ui.gameContext().eventManager().publishEvent(GameEventType.PAC_FOUND_FOOD);
         }

@@ -69,7 +69,7 @@ public class PacManGames3dApp extends Application {
                     DashboardID.ABOUT)
                 .build();
 
-            ui.directoryWatchdog().addEventListener(watchEvents -> mapSelectorXXL.loadCustomMaps());
+            ui.directoryWatchdog().addEventListener(watchEvents -> mapSelectorXXL.loadCustomMapPrototypes());
             ui.showUI();
         } catch (Exception x) {
             Logger.error(x);

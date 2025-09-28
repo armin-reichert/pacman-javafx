@@ -26,25 +26,25 @@ public class ArcadeMsPacMan_MapSelector implements MapSelector {
         new WorldMapColorScheme("FFB7AE", "FF0000", "FCB5FF", "DEDEFF")
     );
 
-    private List<WorldMap> maps = List.of();
+    private List<WorldMap> mapPrototypes = List.of();
 
     @Override
-    public List<WorldMap> builtinMaps() {
-        return maps;
+    public List<WorldMap> builtinMapPrototypes() {
+        return mapPrototypes;
     }
 
     @Override
-    public List<WorldMap> customMaps() {
+    public List<WorldMap> customMapPrototypes() {
         return List.of();
     }
 
     @Override
-    public void loadCustomMaps() {}
+    public void loadCustomMapPrototypes() {}
 
     @Override
-    public void loadAllMaps() {
-        if (maps.isEmpty()) {
-            maps = MapSelector.loadMapsFromModule(getClass(), "maps/mspacman_%d.world", 4);
+    public void loadAllMapPrototypes() {
+        if (mapPrototypes.isEmpty()) {
+            mapPrototypes = MapSelector.loadMapsFromModule(getClass(), "maps/mspacman_%d.world", 4);
         }
     }
 
@@ -67,7 +67,7 @@ public class ArcadeMsPacMan_MapSelector implements MapSelector {
      * @param levelNumber level number (starts at 1)
      */
     @Override
-    public WorldMap getWorldMap(int levelNumber) {
+    public WorldMap getWorldMapCopy(int levelNumber, Object... args) {
         requireValidLevelNumber(levelNumber);
 
         // Map number
@@ -78,9 +78,9 @@ public class ArcadeMsPacMan_MapSelector implements MapSelector {
             case 10, 11, 12, 13 -> 4;
             default -> (levelNumber - 14) % 8 < 4 ? 3 : 4;
         };
-        var worldMap = WorldMap.copyOfMap(maps.get(mapNumber - 1));
+        WorldMap prototype = mapPrototypes.get(mapNumber - 1);
+        WorldMap worldMap = WorldMap.copyOf(prototype);
         worldMap.setConfigValue(PROPERTY_MAP_NUMBER, mapNumber);
-
         // Color scheme index
         // 1->0, 2->1, 3->2, 4->3   level 1..13;
         // 3->4; 4->5               level 14+

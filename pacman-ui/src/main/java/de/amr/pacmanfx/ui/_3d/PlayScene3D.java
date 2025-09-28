@@ -11,6 +11,7 @@ import de.amr.pacmanfx.controller.teststates.LevelShortTestState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
+import de.amr.pacmanfx.lib.worldmap.FoodLayer;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Score;
@@ -425,9 +426,13 @@ public class PlayScene3D implements GameScene {
 
         gameLevel3D.pac3D().init(gameLevel);
         gameLevel3D.pac3D().update(gameLevel);
-        gameLevel3D.pellets3D().forEach(pellet -> pellet.setVisible(!gameLevel.foodStore().tileContainsEatenFood((Vector2i) pellet.getUserData())));
-        gameLevel3D.energizers3D().forEach(energizer ->
-                energizer.shape().setVisible(!gameLevel.foodStore().tileContainsEatenFood(energizer.tile())));
+
+        FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
+        gameLevel3D.pellets3D().forEach(pellet3D ->
+            pellet3D.setVisible(!foodLayer.tileContainsEatenFood((Vector2i) pellet3D.getUserData())));
+        gameLevel3D.energizers3D().forEach(energizer3D ->
+                energizer3D.shape().setVisible(!foodLayer.tileContainsEatenFood(energizer3D.tile())));
+
         if (isOneOf(context().gameState(), HUNTING, GHOST_DYING)) { //TODO check this
             gameLevel3D.energizers3D().stream()
                 .filter(energizer3D -> energizer3D.shape().isVisible())

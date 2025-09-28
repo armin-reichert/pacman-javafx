@@ -8,6 +8,7 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
+import de.amr.pacmanfx.lib.worldmap.FoodLayer;
 import de.amr.pacmanfx.model.actors.*;
 import javafx.beans.property.*;
 import org.tinylog.Logger;
@@ -206,8 +207,8 @@ public abstract class AbstractGameModel implements Game {
 
     @Override
     public boolean isLevelCompleted() {
-        Optional<FoodStore> optFoodStore = optGameLevel().map(GameLevel::foodStore);
-        return optFoodStore.isPresent() && optFoodStore.get().uneatenFoodCount() == 0;
+        Optional<FoodLayer> optFoodLayer = optGameLevel().map(gameLevel -> gameLevel.worldMap().foodLayer());
+        return optFoodLayer.isPresent() && optFoodLayer.get().uneatenFoodCount() == 0;
     }
 
     @Override
@@ -224,7 +225,7 @@ public abstract class AbstractGameModel implements Game {
             Logger.info("Power timer stopped and reset to zero.");
             gameLevel.bonus().ifPresent(Bonus::setInactive);
             // when cheat triggered end of level, there might still be remaining food:
-            gameLevel.foodStore().eatAllFood();
+            gameLevel.worldMap().foodLayer().eatAllFood();
             Logger.trace("Game level #{} completed.", gameLevel.number());
         });
     }

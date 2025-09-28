@@ -46,17 +46,17 @@ public class WorldMap implements RectangularTileRegion {
         empty.numRows = requireNonNegativeInt(tilesY);
         empty.numCols = requireNonNegativeInt(tilesX);
         empty.terrainLayer = new WorldMapLayer(tilesY, tilesX);
-        empty.foodLayer = new WorldMapLayer(tilesY, tilesX);
+        empty.foodLayer = new FoodLayer(tilesY, tilesX);
         return empty;
     }
 
-    public static WorldMap copyOfMap(WorldMap original) {
+    public static WorldMap copyOf(WorldMap original) {
         requireNonNull(original);
         var copy = new WorldMap();
         copy.numRows = original.numRows;
         copy.numCols = original.numCols;
         copy.terrainLayer = new WorldMapLayer(original.terrainLayer);
-        copy.foodLayer = new WorldMapLayer(original.foodLayer);
+        copy.foodLayer = new FoodLayer(original.foodLayer);
         copy.obstacles = original.obstacles != null ? new HashSet<>(original.obstacles) : null;
         copy.configMap = new HashMap<>(original.configMap);
         copy.url = original.url;
@@ -100,7 +100,7 @@ public class WorldMap implements RectangularTileRegion {
     int numRows;
     String url;
     WorldMapLayer terrainLayer;
-    WorldMapLayer foodLayer;
+    FoodLayer foodLayer;
     Set<Obstacle> obstacles; // uninitialized!
     Map<String, Object> configMap = new HashMap<>();
 
@@ -201,7 +201,7 @@ public class WorldMap implements RectangularTileRegion {
         return terrainLayer;
     }
 
-    public WorldMapLayer foodLayer() {
+    public FoodLayer foodLayer() {
         return foodLayer;
     }
 

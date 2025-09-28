@@ -16,45 +16,44 @@ import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.*;
 
 public class ArcadePacMan_MapSelector implements MapSelector {
 
-    private static final String MAP_PATH = "/de/amr/pacmanfx/arcade/pacman/maps/pacman.world";
+    private static final String MAP_PROTOTYPE_PATH = "/de/amr/pacmanfx/arcade/pacman/maps/pacman.world";
 
-    private List<WorldMap> worldMaps;
-
-    @Override
-    public List<WorldMap> builtinMaps() { return worldMaps; }
+    private WorldMap worldMapPrototype;
 
     @Override
-    public List<WorldMap> customMaps() {
+    public List<WorldMap> builtinMapPrototypes() { return List.of(worldMapPrototype); }
+
+    @Override
+    public List<WorldMap> customMapPrototypes() {
         return List.of();
     }
 
     @Override
-    public void loadCustomMaps() {}
+    public void loadCustomMapPrototypes() {}
 
     @Override
-    public void loadAllMaps() {
-        if (worldMaps == null) {
-            URL mapURL = getClass().getResource(MAP_PATH);
-            if (mapURL == null) {
-                Logger.error("Could not locate Pac-Man Arcade map, path='{}'", MAP_PATH);
+    public void loadAllMapPrototypes() {
+        if (worldMapPrototype == null) {
+            URL url = getClass().getResource(MAP_PROTOTYPE_PATH);
+            if (url == null) {
+                Logger.error("Could not locate Pac-Man Arcade map, path='{}'", MAP_PROTOTYPE_PATH);
                 throw new IllegalStateException();
             }
             try {
-                var worldMap = WorldMap.loadFromURL(mapURL);
-                worldMap.setConfigValue(PROPERTY_MAP_NUMBER, 1);
-                worldMap.setConfigValue(PROPERTY_COLOR_MAP_INDEX, 0);
-                worldMap.setConfigValue(PROPERTY_COLOR_MAP, MapSelector.extractColorMap(worldMap));
-                Logger.info("Pac-Man Arcade map loaded, URL='{}'", worldMap.url());
-                worldMaps = List.of(worldMap);
+                worldMapPrototype = WorldMap.loadFromURL(url);
+                worldMapPrototype.setConfigValue(PROPERTY_MAP_NUMBER, 1);
+                worldMapPrototype.setConfigValue(PROPERTY_COLOR_MAP_INDEX, 0);
+                worldMapPrototype.setConfigValue(PROPERTY_COLOR_MAP, MapSelector.extractColorMap(worldMapPrototype));
+                Logger.info("Pac-Man Arcade map loaded, URL='{}'", worldMapPrototype.url());
             } catch (IOException x) {
-                Logger.error("Could not load Pac-Man Arcade map, path={}", MAP_PATH);
+                Logger.error("Could not load Pac-Man Arcade map, URL={}", url);
                 throw new IllegalStateException(x);
             }
         }
     }
 
     @Override
-    public WorldMap getWorldMap(int levelNumber) {
-        return worldMaps.getFirst();
+    public WorldMap getWorldMapCopy(int levelNumber, Object... args) {
+        return WorldMap.copyOf(worldMapPrototype);
     }
 }

@@ -12,6 +12,7 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.Waypoint;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
+import de.amr.pacmanfx.lib.worldmap.FoodLayer;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.Bonus;
@@ -295,7 +296,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
         demoLevelSteering = new RuleBasedPacSteering(gameContext);
         autopilot = new RuleBasedPacSteering(gameContext);
-        mapSelector.loadAllMaps();
+        mapSelector.loadAllMapPrototypes();
     }
 
     protected ArcadeLevelData levelData(int levelNumber) {
@@ -341,7 +342,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
     @Override
     public void createLevel(int levelNumber) {
-        final WorldMap worldMap = mapSelector.getWorldMap(levelNumber);
+        final WorldMap worldMap = mapSelector.getWorldMapCopy(levelNumber);
         final ArcadeHouse house = new ArcadeHouse(ARCADE_MAP_HOUSE_MIN_TILE);
 
         final GameLevel newGameLevel = new GameLevel(this, levelNumber, worldMap, house);
@@ -395,7 +396,8 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
     @Override
     protected boolean isBonusReached() {
-        return gameLevel().foodStore().eatenFoodCount() == 64 || gameLevel().foodStore().eatenFoodCount() == 176;
+        FoodLayer foodLayer = gameLevel().worldMap().foodLayer();
+        return foodLayer.eatenFoodCount() == 64 || foodLayer.eatenFoodCount() == 176;
     }
 
     /**

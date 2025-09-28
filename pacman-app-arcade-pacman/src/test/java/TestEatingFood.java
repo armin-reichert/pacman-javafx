@@ -1,4 +1,5 @@
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel;
+import de.amr.pacmanfx.lib.worldmap.FoodLayer;
 import de.amr.pacmanfx.model.GameLevel;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,10 +40,11 @@ public class TestEatingFood {
     }
 
     private void eatNextEnergizer(GameLevel gameLevel) {
+        FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
         gameLevel.energizerPositions().stream()
-            .filter(gameLevel::tileContainsFood)
+            .filter(foodLayer::tileContainsFood)
             .findFirst().ifPresent(tile -> {
-                gameLevel.registerFoodEatenAt(tile);
+                foodLayer.registerFoodEatenAt(tile);
                 pacManGame().onEnergizerEaten(tile);
             });
     }

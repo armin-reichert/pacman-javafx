@@ -15,15 +15,26 @@ import java.util.Map;
 
 public interface MapSelector {
 
-    WorldMap getWorldMap(int levelNumber);
+    /**
+     * @param levelNumber level number (1..)
+     * @param args additional arguments
+     * @return Fresh copy of the world map prototype for specified level.
+     */
+    WorldMap getWorldMapCopy(int levelNumber, Object... args);
 
-    List<WorldMap> builtinMaps();
+    /**
+     * @return list of the built-in maps. Users should create a copy because the prototypes are modifiable!
+     */
+    List<WorldMap> builtinMapPrototypes();
 
-    List<WorldMap> customMaps();
+    /**
+     * @return list of the built-in maps. Users should create a copy because the prototypes are modifiable!
+     */
+    List<WorldMap> customMapPrototypes();
 
-    void loadCustomMaps();
+    void loadCustomMapPrototypes();
 
-    void loadAllMaps();
+    void loadAllMapPrototypes();
 
     /**
      * @param mapPattern path (pattern) to access the map files inside resources folder,

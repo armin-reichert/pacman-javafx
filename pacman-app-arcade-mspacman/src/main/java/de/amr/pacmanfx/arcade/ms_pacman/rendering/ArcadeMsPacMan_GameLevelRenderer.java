@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.pacmanfx.lib.RectShort;
+import de.amr.pacmanfx.lib.worldmap.FoodLayer;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelMessage;
 import de.amr.pacmanfx.model.MessageType;
@@ -60,13 +61,14 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements Ga
             RectShort mazeSprite = spriteSheet().spriteSequence(SpriteID.FULL_MAZES)[colorMapIndex];
             drawSprite(mazeSprite, 0, emptySpaceOverMaze, false);
             // Over-paint the eaten pellets (pellets are part of the maze image)
-            gameLevel.tiles()
-                .filter(not(gameLevel::isEnergizerPosition))
-                .filter(gameLevel.foodStore()::tileContainsEatenFood)
+            FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
+            foodLayer.tiles()
+                .filter(not(foodLayer::isEnergizerPosition))
+                .filter(foodLayer::tileContainsEatenFood)
                 .forEach(tile -> fillSquareAtTileCenter(tile, 4));
             // Over-paint eaten and dark-phase energizers
-            gameLevel.energizerPositions().stream()
-                .filter(tile -> !info.getBoolean(CommonRenderInfoKey.MAZE_BLINKING) || gameLevel.foodStore().tileContainsEatenFood(tile))
+            foodLayer.energizerPositions().stream()
+                .filter(tile -> !info.getBoolean(CommonRenderInfoKey.MAZE_BLINKING) || foodLayer.tileContainsEatenFood(tile))
                 .forEach(tile -> fillSquareAtTileCenter(tile, 10));
         }
         ctx().restore();
