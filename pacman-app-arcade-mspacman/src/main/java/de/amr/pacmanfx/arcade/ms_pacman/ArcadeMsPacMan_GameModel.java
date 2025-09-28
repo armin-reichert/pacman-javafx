@@ -454,13 +454,13 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
             return;
         }
 
-        final List<Portal> portals = gameLevel().portals();
+        final List<Portal> portals = gameLevel().worldMap().terrainLayer().portals();
         if (portals.isEmpty()) {
             Logger.error("Moving bonus cannot be activated, game level does not contain any portals");
             return;
         }
 
-        final House house = gameLevel().optHouse().orElse(null);
+        final House house = gameLevel().worldMap().terrainLayer().optHouse().orElse(null);
         if (house == null) {
             Logger.error("Moving bonus cannot be activated, no house exists in this level!");
             return;

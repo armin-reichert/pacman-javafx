@@ -128,7 +128,7 @@ public class RuleBasedPacSteering implements Steering {
         }
 
         // when not escaping ghost, keep move direction at least until next intersection
-        if (pac.moveInfo().moved && !gameLevel.isIntersection(pac.tile()))
+        if (pac.moveInfo().moved && !gameLevel.worldMap().terrainLayer().isIntersection(pac.tile()))
             return;
 
         if (!data.frightenedGhosts.isEmpty() && gameLevel.pac().powerTimer().remainingTicks() >= Globals.NUM_TICKS_PER_SEC) {
@@ -221,7 +221,7 @@ public class RuleBasedPacSteering implements Steering {
         }
         for (Direction escape : escapes) {
             Vector2i escapeTile = pacManTile.plus(escape.vector());
-            if (gameLevel.isTunnel(escapeTile)) {
+            if (gameLevel.worldMap().terrainLayer().isTunnel(escapeTile)) {
                 return escape;
             }
         }

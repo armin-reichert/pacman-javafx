@@ -510,17 +510,18 @@ public class GameLevel3D extends Group implements Disposable {
         float cornerRadius = ui.preferences().getFloat("3d.obstacle.corner_radius");
         wall3DCount = 0;
         var stopWatch = new StopWatch();
+        Optional<House> optionalHouse = gameLevel.worldMap().terrainLayer().optHouse();
         for (Obstacle obstacle : gameLevel.worldMap().obstacles()) {
             // exclude house placeholder
             Vector2i startTile = tileAt(obstacle.startPoint().toVector2f());
-            if (gameLevel.optHouse().isPresent() && !gameLevel.optHouse().get().isTileInHouseArea(startTile)) {
+            if (optionalHouse.isPresent() && !optionalHouse.get().isTileInHouseArea(startTile)) {
                 r3D.renderObstacle3D(obstacle, isWorldBorder(gameLevel.worldMap(), obstacle), wallThickness, cornerRadius);
             }
         }
         var passedTimeMillis = stopWatch.passedTime().toMillis();
         Logger.info("Built 3D maze with {} composite walls in {} milliseconds", wall3DCount, passedTimeMillis);
 
-        gameLevel.optHouse().ifPresent(house -> {
+        optionalHouse.ifPresent(house -> {
             Vector2i[] ghostRevivalTiles = {
                 house.ghostRevivalTile(CYAN_GHOST_BASHFUL),
                 house.ghostRevivalTile(PINK_GHOST_SPEEDY),
@@ -623,7 +624,7 @@ public class GameLevel3D extends Group implements Disposable {
             ghosts3D.get(CYAN_GHOST_BASHFUL).ghost3D().dressMaterialNormal(),
             ghosts3D.get(ORANGE_GHOST_POKEY).ghost3D().dressMaterialNormal(),
         };
-        House house = gameLevel.optHouse().orElseThrow();
+        House house = gameLevel.worldMap().terrainLayer().optHouse().orElseThrow();
         Vector2i[] ghostRevivalTiles = {
             house.ghostRevivalTile(RED_GHOST_SHADOW),
             house.ghostRevivalTile(PINK_GHOST_SPEEDY),

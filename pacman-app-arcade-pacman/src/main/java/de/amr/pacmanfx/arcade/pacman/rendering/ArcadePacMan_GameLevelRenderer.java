@@ -58,8 +58,8 @@ public class ArcadePacMan_GameLevelRenderer extends BaseRenderer implements Game
         else if (info.getBoolean(CommonRenderInfoKey.MAZE_EMPTY)) {
             drawSprite(spriteSheet().sprite(SpriteID.MAP_EMPTY), 0, emptySpaceOverMaze, false);
             // over-paint door tiles
-            gameLevel.optHouse().map(House::leftDoorTile) .ifPresent(tile -> fillSquareAtTileCenter(tile, TS + 0.5));
-            gameLevel.optHouse().map(House::rightDoorTile).ifPresent(tile -> fillSquareAtTileCenter(tile, TS + 0.5));
+            gameLevel.worldMap().terrainLayer().optHouse().map(House::leftDoorTile) .ifPresent(tile -> fillSquareAtTileCenter(tile, TS + 0.5));
+            gameLevel.worldMap().terrainLayer().optHouse().map(House::rightDoorTile).ifPresent(tile -> fillSquareAtTileCenter(tile, TS + 0.5));
         }
         else {
             drawSprite(spriteSheet().sprite(SpriteID.MAP_FULL), 0, emptySpaceOverMaze, false);

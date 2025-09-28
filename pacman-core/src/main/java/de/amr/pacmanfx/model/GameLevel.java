@@ -13,7 +13,6 @@ import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.actors.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -21,11 +20,8 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
-import static de.amr.pacmanfx.lib.worldmap.TerrainTile.TUNNEL;
-import static de.amr.pacmanfx.lib.worldmap.TerrainTile.isBlocked;
 import static de.amr.pacmanfx.model.DefaultWorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;
-import static java.util.function.Predicate.not;
 
 /**
  * A game level contains the world, the actors and the food management.
@@ -42,10 +38,8 @@ public class GameLevel {
     private final int number; // 1=first level
 
     private final WorldMap worldMap;
-    private final House house;
     private final Vector2f pacStartPosition;
     private final Vector2i[] ghostScatterTiles = new Vector2i[4];
-    private final Portal[] portals;
 
     private boolean demoLevel;
 
@@ -68,14 +62,12 @@ public class GameLevel {
         this.game = requireNonNull(game);
         this.number = requireValidLevelNumber(number);
         this.worldMap = requireNonNull(worldMap);
-        this.house = requireNonNull(house);
 
-        blinking = new Pulse(10, Pulse.OFF);
-        portals = findPortals();
-
+        worldMap.terrainLayer().setHouse(requireNonNull(house));
         //TODO check if this is still needed:
         worldMap.setContent(LayerID.TERRAIN, house.minTile(), house.content());
 
+        blinking = new Pulse(10, Pulse.OFF);
         currentBonusIndex = -1;
 
         Vector2i pacTile = worldMap.getTerrainTileProperty(POS_PAC);
@@ -99,19 +91,6 @@ public class GameLevel {
             Vector2i.of(worldMap.numRows() - EMPTY_ROWS_BELOW_MAZE, 0));
     }
 
-    private Portal[] findPortals() {
-        var portals = new ArrayList<Portal>();
-        int firstColumn = 0, lastColumn = worldMap.numCols() - 1;
-        for (int row = 0; row < worldMap.numRows(); ++row) {
-            Vector2i leftBorderTile = Vector2i.of(firstColumn, row), rightBorderTile = Vector2i.of(lastColumn, row);
-            if (worldMap.content(LayerID.TERRAIN, row, firstColumn) == TUNNEL.$
-                && worldMap.content(LayerID.TERRAIN, row, lastColumn) == TUNNEL.$) {
-                portals.add(new Portal(leftBorderTile, rightBorderTile, 2));
-            }
-        }
-        return portals.toArray(new Portal[0]);
-    }
-
     public void getReadyToPlay() {
         pac.reset(); // initially invisible!
         pac.setPosition(pacStartPosition());
@@ -121,8 +100,8 @@ public class GameLevel {
         ghosts().forEach(ghost -> {
             ghost.reset(); // initially invisible!
             ghost.setPosition(ghost.startPosition());
-            ghost.setMoveDir(house.ghostStartDirection(ghost.personality()));
-            ghost.setWishDir(house.ghostStartDirection(ghost.personality()));
+            ghost.setMoveDir(worldMap.terrainLayer().house().ghostStartDirection(ghost.personality()));
+            ghost.setWishDir(worldMap.terrainLayer().house().ghostStartDirection(ghost.personality()));
             ghost.setState(GhostState.LOCKED);
         });
         blinking.setStartPhase(Pulse.ON); // Energizers are visible when ON
@@ -167,6 +146,7 @@ public class GameLevel {
     }
 
     public Vector2f defaultMessagePosition() {
+        House house = worldMap.terrainLayer().house();
         if (house != null) {
             Vector2i houseSize = house.sizeInTiles();
             float cx = TS(house.minTile().x() + houseSize.x() * 0.5f);
@@ -229,55 +209,6 @@ public class GameLevel {
      */
     public Vector2i worldSizePx() {
         return new Vector2i(worldMap.numCols() * TS, worldMap.numRows() * TS);
-    }
-
-    public Stream<Vector2i> neighborTilesOutsideWorld(Vector2i tile) {
-        requireNonNull(tile);
-        return Stream.of(Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT)
-            .map(dir -> tile.plus(dir.vector()))
-            .filter(worldMap.terrainLayer()::outOfBounds);
-    }
-
-    public Stream<Vector2i> neighborTilesInsideWorld(Vector2i tile) {
-        requireNonNull(tile);
-        return Stream.of(Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT)
-            .map(dir -> tile.plus(dir.vector()))
-            .filter(not(worldMap.terrainLayer()::outOfBounds));
-    }
-
-    public List<Portal> portals() { return Arrays.asList(portals); }
-
-    public boolean isTileInPortalSpace(Vector2i tile) {
-        requireNonNull(tile);
-        return portals().stream().anyMatch(portal -> portal.contains(tile));
-    }
-
-    public boolean isTileBlocked(Vector2i tile) {
-        return !worldMap.terrainLayer().outOfBounds(tile) && isBlocked(worldMap.content(LayerID.TERRAIN, tile));
-    }
-
-    public boolean isTunnel(Vector2i tile) {
-        return !worldMap.terrainLayer().outOfBounds(tile) && worldMap.content(LayerID.TERRAIN, tile) == TUNNEL.$;
-    }
-
-    public boolean isIntersection(Vector2i tile) {
-        if (worldMap.terrainLayer().outOfBounds(tile) || isTileBlocked(tile)) {
-            return false;
-        }
-        if (house != null && house.isTileInHouseArea(tile)) {
-            return false;
-        }
-        long inaccessible = 0;
-        inaccessible += neighborTilesOutsideWorld(tile).count();
-        inaccessible += neighborTilesInsideWorld(tile).filter(this::isTileBlocked).count();
-        if (house != null) {
-            inaccessible += neighborTilesInsideWorld(tile).filter(house::isDoorAt).count();
-        }
-        return inaccessible <= 1;
-    }
-
-    public Optional<House> optHouse() {
-        return Optional.ofNullable(house);
     }
 
     public Vector2f pacStartPosition() {

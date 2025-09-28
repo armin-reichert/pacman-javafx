@@ -8,6 +8,7 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.timer.TickTimer;
+import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.steering.Steering;
 import javafx.beans.property.BooleanProperty;
@@ -74,14 +75,15 @@ public class Pac extends MovingActor {
     public boolean canAccessTile(GameLevel gameLevel, Vector2i tile) {
         requireNonNull(gameLevel);
         requireNonNull(tile);
+        TerrainLayer terrainLayer = gameLevel.worldMap().terrainLayer();
         // Portal tiles are the only tiles outside the world map that can be accessed
-        if (gameLevel.worldMap().terrainLayer().outOfBounds(tile)) {
-            return gameLevel.isTileInPortalSpace(tile);
+        if (terrainLayer.outOfBounds(tile)) {
+            return terrainLayer.isTileInPortalSpace(tile);
         }
-        if (gameLevel.optHouse().isPresent() && gameLevel.optHouse().get().isTileInHouseArea(tile)) {
+        if (terrainLayer.optHouse().isPresent() && terrainLayer.optHouse().get().isTileInHouseArea(tile)) {
             return false; // Schieb ab, Alter!
         }
-        return !gameLevel.isTileBlocked(tile);
+        return !terrainLayer.isTileBlocked(tile);
     }
 
     @Override

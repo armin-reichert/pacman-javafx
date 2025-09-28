@@ -8,6 +8,7 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
+import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Portal;
 import javafx.beans.property.ObjectProperty;
@@ -286,7 +287,7 @@ public abstract class MovingActor extends Actor {
         }
 
         final Vector2i currentTile = tile();
-        if (gameLevel.isTileInPortalSpace(currentTile)) {
+        if (gameLevel.worldMap().terrainLayer().isTileInPortalSpace(currentTile)) {
             return;
         }
         Direction candidateDir = null;
@@ -351,7 +352,7 @@ public abstract class MovingActor extends Actor {
         final Vector2i currentTile = tile();
         moveInfo.clear();
         if (canTeleport) {
-            for (Portal portal : gameLevel.portals()) {
+            for (Portal portal : gameLevel.worldMap().terrainLayer().portals()) {
                 tryTeleport(currentTile, portal);
                 if (moveInfo.teleported) {
                     return;
@@ -412,8 +413,13 @@ public abstract class MovingActor extends Actor {
         newTileEntered = !tileBeforeMoving.equals(tileAfterMoving);
 
         moveInfo.moved = true;
-        moveInfo.tunnelEntered = gameLevel.isTunnel(tileAfterMoving) && !gameLevel.isTunnel(tileBeforeMoving) && !gameLevel.isTileInPortalSpace(tileBeforeMoving);
-        moveInfo.tunnelLeft = !gameLevel.isTunnel(tileAfterMoving) && gameLevel.isTunnel(tileBeforeMoving)  && !gameLevel.isTileInPortalSpace(tileAfterMoving);
+        TerrainLayer terrainLayer = gameLevel.worldMap().terrainLayer();
+        moveInfo.tunnelEntered = terrainLayer.isTunnel(tileAfterMoving)
+            && !terrainLayer.isTunnel(tileBeforeMoving)
+            && !terrainLayer.isTileInPortalSpace(tileBeforeMoving);
+        moveInfo.tunnelLeft = !terrainLayer.isTunnel(tileAfterMoving)
+            && terrainLayer.isTunnel(tileBeforeMoving)
+            && !terrainLayer.isTileInPortalSpace(tileAfterMoving);
 
         moveInfo.log(String.format("%5s (%.2f pixels)", dir, newVelocity.length()));
         if (moveInfo.tunnelEntered) { Logger.trace("{} entered tunnel", name()); }

@@ -235,7 +235,7 @@ public class ArcadeHouse3D extends Group implements Disposable {
             .anyMatch(Ghost::isVisible);
         light.lightOnProperty().set(accessRequested);
 
-        gameLevel.optHouse().ifPresent(house -> {
+        gameLevel.worldMap().terrainLayer().optHouse().ifPresent(house -> {
             boolean ghostNearHouseEntry = gameLevel
                 .ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
                 .filter(ghost -> ghost.position().euclideanDist(house.entryPosition()) <= doorSensitivity)

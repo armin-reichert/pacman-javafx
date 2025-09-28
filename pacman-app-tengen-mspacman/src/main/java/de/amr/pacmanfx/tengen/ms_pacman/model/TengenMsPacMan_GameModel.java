@@ -549,7 +549,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         scoreManager.score().setLevelNumber(levelNumber);
         optGateKeeper().ifPresent(gateKeeper -> {
             gateKeeper.setLevelNumber(levelNumber);
-            gameLevel().optHouse().ifPresent(gateKeeper::setHouse); //TODO what if no house exists?
+            gameLevel().worldMap().terrainLayer().optHouse().ifPresent(gateKeeper::setHouse); //TODO what if no house exists?
         });
         eventManager().publishEvent(GameEventType.LEVEL_CREATED);
     }
@@ -567,7 +567,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         scoreManager.score().setLevelNumber(1);
         optGateKeeper().ifPresent(gateKeeper -> {
             gateKeeper.setLevelNumber(1);
-            gameLevel().optHouse().ifPresent(gateKeeper::setHouse); //TODO what if no house exists?
+            gameLevel().worldMap().terrainLayer().optHouse().ifPresent(gateKeeper::setHouse); //TODO what if no house exists?
         });
         eventManager().publishEvent(GameEventType.LEVEL_CREATED);
     }
@@ -609,21 +609,22 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         }
 
         // compute possible bonus route
-        if (gameLevel().portals().isEmpty()) {
+        if (gameLevel().worldMap().terrainLayer().portals().isEmpty()) {
             Logger.error("No portal found in current maze");
             return; // TODO: can this happen?
         }
-        House house = gameLevel().optHouse().orElse(null);
+        House house = gameLevel().worldMap().terrainLayer().optHouse().orElse(null);
         if (house == null) {
             Logger.error("No house exists in game level!");
             return;
         }
 
+        List<Portal> portals = gameLevel().worldMap().terrainLayer().portals();
         boolean leftToRight = new Random().nextBoolean();
         Vector2i houseEntry = tileAt(house.entryPosition());
         Vector2i houseEntryOpposite = houseEntry.plus(0, house.sizeInTiles().y() + 1);
-        Portal entryPortal = gameLevel().portals().get(new Random().nextInt(gameLevel().portals().size()));
-        Portal exitPortal  = gameLevel().portals().get(new Random().nextInt(gameLevel().portals().size()));
+        Portal entryPortal = portals.get(new Random().nextInt(portals.size()));
+        Portal exitPortal  = portals.get(new Random().nextInt(portals.size()));
         List<Waypoint> route = Stream.of(
                 leftToRight ? entryPortal.leftTunnelEnd() : entryPortal.rightTunnelEnd(),
                 houseEntry,
@@ -868,7 +869,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     public float ghostAttackSpeed(GameLevel gameLevel, Ghost ghost) {
-        if (gameLevel.isTunnel(ghost.tile())) {
+        if (gameLevel.worldMap().terrainLayer().isTunnel(ghost.tile())) {
             return ghostTunnelSpeed(gameLevel, ghost);
         }
         TengenMsPacMan_GameModel game = (TengenMsPacMan_GameModel) gameLevel.game();

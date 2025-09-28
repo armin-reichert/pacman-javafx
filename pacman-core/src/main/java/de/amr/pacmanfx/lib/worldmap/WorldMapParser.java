@@ -72,10 +72,13 @@ public interface WorldMapParser {
                 Logger.error("Line skipped: '{}'", line);
             }
         }
-        worldMap.terrainLayer = parseLayer(terrainLayerRows, validTerrainValueTest);
+        worldMap.terrainLayer = new TerrainLayer(parseLayer(terrainLayerRows, validTerrainValueTest));
+        worldMap.foodLayer = new FoodLayer(parseLayer(foodLayerRows, validFoodValueTest));
+
+        //TODO
         worldMap.numRows = worldMap.terrainLayer.numRows();
         worldMap.numCols = worldMap.terrainLayer.numCols();
-        worldMap.foodLayer = new FoodLayer(parseLayer(foodLayerRows, validFoodValueTest));
+
         return worldMap;
     }
 

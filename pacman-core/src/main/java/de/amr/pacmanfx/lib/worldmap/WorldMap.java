@@ -45,7 +45,7 @@ public class WorldMap {
         var empty = new WorldMap();
         empty.numRows = requireNonNegativeInt(tilesY);
         empty.numCols = requireNonNegativeInt(tilesX);
-        empty.terrainLayer = new WorldMapLayer(tilesY, tilesX);
+        empty.terrainLayer = new TerrainLayer(tilesY, tilesX);
         empty.foodLayer = new FoodLayer(tilesY, tilesX);
         return empty;
     }
@@ -55,7 +55,7 @@ public class WorldMap {
         var copy = new WorldMap();
         copy.numRows = original.numRows;
         copy.numCols = original.numCols;
-        copy.terrainLayer = new WorldMapLayer(original.terrainLayer);
+        copy.terrainLayer = new TerrainLayer(original.terrainLayer);
         copy.foodLayer = new FoodLayer(original.foodLayer);
         copy.obstacles = original.obstacles != null ? new HashSet<>(original.obstacles) : null;
         copy.configMap = new HashMap<>(original.configMap);
@@ -99,7 +99,7 @@ public class WorldMap {
     int numCols;
     int numRows;
     String url;
-    WorldMapLayer terrainLayer;
+    TerrainLayer terrainLayer;
     FoodLayer foodLayer;
     Set<Obstacle> obstacles; // uninitialized!
     Map<String, Object> configMap = new HashMap<>();
@@ -197,7 +197,7 @@ public class WorldMap {
         return Collections.unmodifiableSet(obstacles);
     }
 
-    public WorldMapLayer terrainLayer() {
+    public TerrainLayer terrainLayer() {
         return terrainLayer;
     }
 

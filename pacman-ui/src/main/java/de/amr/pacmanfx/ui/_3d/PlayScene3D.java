@@ -14,6 +14,7 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.FoodLayer;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.House;
 import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.model.ScoreManager;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -394,10 +395,11 @@ public class PlayScene3D implements GameScene {
             switch (state) {
                 case STARTING_GAME_OR_LEVEL, LEVEL_TRANSITION -> {
                     if (!gameLevel.isDemoLevel()) {
-                        if (gameLevel.optHouse().isEmpty()) {
+                        Optional<House> optionalHouse = gameLevel.worldMap().terrainLayer().optHouse();
+                        if (optionalHouse.isEmpty()) {
                             Logger.error("No house found in this game level! WTF?");
                         } else {
-                            Vector2f messageCenter = gameLevel.optHouse().get().centerPositionUnderHouse();
+                            Vector2f messageCenter = optionalHouse.get().centerPositionUnderHouse();
                             gameLevel3D.showAnimatedMessage("READY!", 2.5f, messageCenter.x(), messageCenter.y());
                         }
                         setPlayerSteeringActionBindings();
@@ -484,10 +486,11 @@ public class PlayScene3D implements GameScene {
     @Override
     public void onGameContinued(GameEvent e) {
         if (gameLevel3D != null) {
-            if (context().gameLevel().optHouse().isEmpty()) {
+            Optional<House> optionalHouse = context().gameLevel().worldMap().terrainLayer().optHouse();
+            if (optionalHouse.isEmpty()) {
                 Logger.error("No house found in this game level! WTF?");
             } else {
-                Vector2f messageCenter = context().gameLevel().optHouse().get().centerPositionUnderHouse();
+                Vector2f messageCenter = optionalHouse.get().centerPositionUnderHouse();
                 gameLevel3D.showAnimatedMessage("READY!", 2.5f, messageCenter.x(), messageCenter.y());
             }
         }

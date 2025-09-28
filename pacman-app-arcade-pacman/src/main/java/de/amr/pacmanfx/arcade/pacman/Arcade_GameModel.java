@@ -212,7 +212,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         huntingTimer().reset();
         scoreManager().score().setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
-        gameLevel().optHouse().ifPresent(house -> gateKeeper.setHouse(house)); //TODO what if no house exists?
+        gameLevel().worldMap().terrainLayer().optHouse().ifPresent(house -> gateKeeper.setHouse(house)); //TODO what if no house exists?
         eventManager().publishEvent(GameEventType.LEVEL_CREATED);
     }
 
@@ -229,7 +229,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         huntingTimer().reset();
         scoreManager().score().setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
-        gameLevel().optHouse().ifPresent(house -> gateKeeper.setHouse(house)); //TODO what if no house exists?
+        gameLevel().worldMap().terrainLayer().optHouse().ifPresent(house -> gateKeeper.setHouse(house)); //TODO what if no house exists?
         eventManager().publishEvent(GameEventType.LEVEL_CREATED);
     }
 
@@ -312,7 +312,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     @Override
     public float ghostAttackSpeed(GameLevel gameLevel, Ghost ghost) {
-        if (gameLevel.isTunnel(ghost.tile())) {
+        if (gameLevel.worldMap().terrainLayer().isTunnel(ghost.tile())) {
             return ghostTunnelSpeed(gameLevel, ghost);
         }
         if (cruiseElroy() == 1) {

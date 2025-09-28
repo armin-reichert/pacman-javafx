@@ -13,6 +13,7 @@ open module de.amr.pacmanfx.tengen.ms_pacman {
     requires de.amr.pacmanfx.core;
     requires de.amr.pacmanfx.uilib;
     requires de.amr.pacmanfx.ui;
+    requires java.desktop;
 
     exports de.amr.pacmanfx.tengen.ms_pacman;
     exports de.amr.pacmanfx.tengen.ms_pacman.app;

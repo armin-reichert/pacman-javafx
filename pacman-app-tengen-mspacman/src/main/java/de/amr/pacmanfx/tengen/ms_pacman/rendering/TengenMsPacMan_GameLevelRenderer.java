@@ -160,7 +160,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Ga
     }
 
     private void overPaintActorSprites(GameLevel level) {
-        House house = level.optHouse().orElse(null);
+        House house = level.worldMap().terrainLayer().optHouse().orElse(null);
         if (house == null) {
             Logger.error("No house exists in game level!");
             return;

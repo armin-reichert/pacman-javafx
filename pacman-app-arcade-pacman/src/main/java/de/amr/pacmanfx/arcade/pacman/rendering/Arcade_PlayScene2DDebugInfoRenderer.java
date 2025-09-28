@@ -8,7 +8,7 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
 import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.lib.worldmap.WorldMapLayer;
+import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
 import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.actors.MovingActor;
 import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
@@ -44,11 +44,11 @@ public class Arcade_PlayScene2DDebugInfoRenderer extends DefaultDebugInfoRendere
             });
 
             // mark intersection tiles
-            WorldMapLayer terrainLayer = gameContext.gameLevel().worldMap().terrainLayer();
-            terrainLayer.tiles().filter(gameContext.gameLevel()::isIntersection).forEach(tile -> {
+            TerrainLayer terrainLayer = gameContext.gameLevel().worldMap().terrainLayer();
+            terrainLayer.tiles().filter(terrainLayer::isIntersection).forEach(tile -> {
                 double cx = tile.x() * TS + HTS, cy = tile.y() * TS + HTS;
                 for (Direction dir : CLOCK_ORDER) {
-                    if (!gameContext.gameLevel().isTileBlocked(tile.plus(dir.vector()))) {
+                    if (!terrainLayer.isTileBlocked(tile.plus(dir.vector()))) {
                         double x = cx + dir.vector().x() * HTS;
                         double y = cy + dir.vector().y() * HTS;
                         ctx.setFill(Color.gray(0.6));

@@ -9,7 +9,7 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.RandomNumberSupport;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.lib.worldmap.LayerID;
+import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
 import de.amr.pacmanfx.lib.worldmap.TerrainTile;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.House;
@@ -133,7 +133,8 @@ public abstract class Ghost extends MovingActor {
     public void roam(GameLevel gameLevel) {
         requireNonNull(gameLevel);
         Vector2i currentTile = tile();
-        if (!gameLevel.isTileInPortalSpace(currentTile) && (isNewTileEntered() || !moveInfo.moved)) {
+        if (!gameLevel.worldMap().terrainLayer().isTileInPortalSpace(currentTile)
+            && (isNewTileEntered() || !moveInfo.moved)) {
             Direction dir = computeRoamingDirection(gameLevel, currentTile);
             setWishDir(dir);
         }
@@ -163,24 +164,25 @@ public abstract class Ghost extends MovingActor {
 
     @Override
     public boolean canAccessTile(GameLevel gameLevel, Vector2i tile) {
+        TerrainLayer terrainLayer = gameLevel.worldMap().terrainLayer();
         // Portal tiles are the only tiles outside the world map that can be accessed
-        if (gameLevel.worldMap().terrainLayer().outOfBounds(tile)) {
-            return gameLevel.isTileInPortalSpace(tile);
+        if (terrainLayer.outOfBounds(tile)) {
+            return terrainLayer.isTileInPortalSpace(tile);
         }
         // Hunting ghosts cannot enter some tiles in Pac-Man game from below
         // TODO: this is game-specific and does not belong here
         if (specialTerrainTiles.contains(tile)
                 && state() == GhostState.HUNTING_PAC
-                && gameLevel.worldMap().content(LayerID.TERRAIN, tile) == TerrainTile.ONE_WAY_DOWN.$
+                && terrainLayer.get(tile) == TerrainTile.ONE_WAY_DOWN.$
                 && tile.equals(tile().plus(UP.vector()))
         ) {
             Logger.debug("Hunting {} cannot move up to special tile {}", name(), tile);
             return false;
         }
-        if (gameLevel.optHouse().isPresent() && gameLevel.optHouse().get().isDoorAt(tile)) {
+        if (terrainLayer.optHouse().isPresent() && terrainLayer.optHouse().get().isDoorAt(tile)) {
             return inAnyOfStates(GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE);
         }
-        return !gameLevel.isTileBlocked(tile);
+        return !terrainLayer.isTileBlocked(tile);
     }
 
     @Override
@@ -240,17 +242,18 @@ public abstract class Ghost extends MovingActor {
      */
     @Override
     public void tick(GameContext gameContext) {
-        gameContext.optGameLevel().ifPresent(gameLevel -> gameLevel.optHouse().ifPresent(house -> {
-            switch (state()) {
-                case LOCKED         -> updateStateLocked(gameLevel, house);
-                case LEAVING_HOUSE  -> updateStateLeavingHouse(gameLevel, house);
-                case HUNTING_PAC    -> updateStateHuntingPac(gameLevel);
-                case FRIGHTENED     -> updateStateFrightened(gameLevel);
-                case EATEN          -> updateStateEaten();
-                case RETURNING_HOME -> updateStateReturningToHouse(gameLevel);
-                case ENTERING_HOUSE -> updateStateEnteringHouse(gameLevel, house);
-            }
-        }));
+        gameContext.optGameLevel().ifPresent(gameLevel ->
+            gameLevel.worldMap().terrainLayer().optHouse().ifPresent(house -> {
+                switch (state()) {
+                    case LOCKED         -> updateStateLocked(gameLevel, house);
+                    case LEAVING_HOUSE  -> updateStateLeavingHouse(gameLevel, house);
+                    case HUNTING_PAC    -> updateStateHuntingPac(gameLevel);
+                    case FRIGHTENED     -> updateStateFrightened(gameLevel);
+                    case EATEN          -> updateStateEaten();
+                    case RETURNING_HOME -> updateStateReturningToHouse(gameLevel);
+                    case ENTERING_HOUSE -> updateStateEnteringHouse(gameLevel, house);
+                }
+            }));
     }
 
     // --- LOCKED ---
@@ -365,7 +368,7 @@ public abstract class Ghost extends MovingActor {
      * @see <a href="https://www.youtube.com/watch?v=eFP0_rkjwlY">YouTube: How Frightened Ghosts Decide Where to Go</a>
      */
     private void updateStateFrightened(GameLevel gameLevel) {
-        float speed = gameLevel.isTunnel(tile())
+        float speed = gameLevel.worldMap().terrainLayer().isTunnel(tile())
             ? gameLevel.game().ghostTunnelSpeed(gameLevel, this)
             : gameLevel.game().ghostFrightenedSpeed(gameLevel, this);
         setSpeed(speed);
@@ -397,7 +400,7 @@ public abstract class Ghost extends MovingActor {
      * to the ghost house to be revived. Hallelujah!
      */
     private void updateStateReturningToHouse(GameLevel gameLevel) {
-        House house = gameLevel.optHouse().orElse(null);
+        House house = gameLevel.worldMap().terrainLayer().optHouse().orElse(null);
         if (house == null) {
             Logger.error("No ghost house in level? WTF!");
             return;
