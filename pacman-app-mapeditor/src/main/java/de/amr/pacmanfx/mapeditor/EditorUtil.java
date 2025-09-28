@@ -89,7 +89,7 @@ public interface EditorUtil {
     }
 
     static boolean canPlaceFoodAtTile(WorldMap worldMap, Vector2i tile) {
-        return !worldMap.outOfBounds(tile)
+        return !worldMap.terrainLayer().outOfBounds(tile)
                 && tile.y() >= GameLevel.EMPTY_ROWS_OVER_MAZE
                 && tile.y() < worldMap.numRows() - GameLevel.EMPTY_ROWS_BELOW_MAZE
                 && !isPartOfHouse(worldMap, tile)

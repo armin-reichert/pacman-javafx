@@ -117,7 +117,7 @@ public class Preview2D extends Canvas {
                 DefaultWorldMapPropertyName.COLOR_FOOD, ArcadeSprites.MS_PACMAN_COLOR_FOOD);
             foodRenderer.setEnergizerColor(foodColor);
             foodRenderer.setPelletColor(foodColor);
-            worldMap.tiles().forEach(tile -> foodRenderer.drawTile(tile, worldMap.content(LayerID.FOOD, tile)));
+            worldMap.terrainLayer().tiles().forEach(tile -> foodRenderer.drawTile(tile, worldMap.content(LayerID.FOOD, tile)));
         }
         if (actorsVisible.get()) {
             ACTOR_SPRITES.forEach((positionProperty, sprite) -> {

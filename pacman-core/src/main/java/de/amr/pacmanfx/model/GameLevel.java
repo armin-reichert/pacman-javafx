@@ -231,22 +231,18 @@ public class GameLevel {
         return new Vector2i(worldMap.numCols() * TS, worldMap.numRows() * TS);
     }
 
-    public Stream<Vector2i> tiles() {
-        return worldMap.tiles();
-    }
-
     public Stream<Vector2i> neighborTilesOutsideWorld(Vector2i tile) {
         requireNonNull(tile);
         return Stream.of(Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT)
             .map(dir -> tile.plus(dir.vector()))
-            .filter(worldMap::outOfBounds);
+            .filter(worldMap.terrainLayer()::outOfBounds);
     }
 
     public Stream<Vector2i> neighborTilesInsideWorld(Vector2i tile) {
         requireNonNull(tile);
         return Stream.of(Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT)
             .map(dir -> tile.plus(dir.vector()))
-            .filter(not(worldMap::outOfBounds));
+            .filter(not(worldMap.terrainLayer()::outOfBounds));
     }
 
     public List<Portal> portals() { return Arrays.asList(portals); }
@@ -257,15 +253,15 @@ public class GameLevel {
     }
 
     public boolean isTileBlocked(Vector2i tile) {
-        return !worldMap.outOfBounds(tile) && isBlocked(worldMap.content(LayerID.TERRAIN, tile));
+        return !worldMap.terrainLayer().outOfBounds(tile) && isBlocked(worldMap.content(LayerID.TERRAIN, tile));
     }
 
     public boolean isTunnel(Vector2i tile) {
-        return !worldMap.outOfBounds(tile) && worldMap.content(LayerID.TERRAIN, tile) == TUNNEL.$;
+        return !worldMap.terrainLayer().outOfBounds(tile) && worldMap.content(LayerID.TERRAIN, tile) == TUNNEL.$;
     }
 
     public boolean isIntersection(Vector2i tile) {
-        if (worldMap.outOfBounds(tile) || isTileBlocked(tile)) {
+        if (worldMap.terrainLayer().outOfBounds(tile) || isTileBlocked(tile)) {
             return false;
         }
         if (house != null && house.isTileInHouseArea(tile)) {
@@ -283,8 +279,6 @@ public class GameLevel {
     public Optional<House> optHouse() {
         return Optional.ofNullable(house);
     }
-
-    // Actor positions
 
     public Vector2f pacStartPosition() {
         return pacStartPosition;

@@ -164,7 +164,7 @@ public abstract class Ghost extends MovingActor {
     @Override
     public boolean canAccessTile(GameLevel gameLevel, Vector2i tile) {
         // Portal tiles are the only tiles outside the world map that can be accessed
-        if (gameLevel.worldMap().outOfBounds(tile)) {
+        if (gameLevel.worldMap().terrainLayer().outOfBounds(tile)) {
             return gameLevel.isTileInPortalSpace(tile);
         }
         // Hunting ghosts cannot enter some tiles in Pac-Man game from below

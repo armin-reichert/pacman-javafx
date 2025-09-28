@@ -229,7 +229,7 @@ public class EditCanvas extends Canvas {
     public void moveCursor(Direction dir, Predicate<Vector2i> canMoveIntoTile) {
         if (focussedTile() != null) {
             Vector2i nextTile = focussedTile().plus(dir.vector());
-            if (!worldMap().outOfBounds(nextTile) && canMoveIntoTile.test(nextTile)) {
+            if (!worldMap().terrainLayer().outOfBounds(nextTile) && canMoveIntoTile.test(nextTile)) {
                 focussedTile.set(nextTile);
             }
         }
@@ -324,7 +324,7 @@ public class EditCanvas extends Canvas {
                 DefaultWorldMapPropertyName.COLOR_FOOD, ArcadeSprites.MS_PACMAN_COLOR_FOOD);
             foodRenderer.setEnergizerColor(foodColor);
             foodRenderer.setPelletColor(foodColor);
-            worldMap().tiles().forEach(tile -> foodRenderer.drawTile(tile, worldMap().content(LayerID.FOOD, tile)));
+            worldMap().terrainLayer().tiles().forEach(tile -> foodRenderer.drawTile(tile, worldMap().content(LayerID.FOOD, tile)));
         }
 
         if (actorsVisible.get()) {

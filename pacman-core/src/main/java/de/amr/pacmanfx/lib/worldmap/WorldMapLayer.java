@@ -9,7 +9,6 @@ import de.amr.pacmanfx.lib.Vector2i;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class WorldMapLayer implements RectangularTileRegion {
@@ -36,6 +35,7 @@ public class WorldMapLayer implements RectangularTileRegion {
     public int numCols() { return tileContent[0].length; }
 
     public byte get(int row, int col) {
+        assertInsideWorld(row, col);
         return tileContent[row][col];
     }
 
@@ -44,6 +44,7 @@ public class WorldMapLayer implements RectangularTileRegion {
     }
 
     public void set(int row, int col, byte code) {
+        assertInsideWorld(row, col);
         tileContent[row][col] = code;
     }
 

@@ -259,7 +259,7 @@ public class Maze3D extends Group {
             DefaultWorldMapPropertyName.COLOR_FOOD, MS_PACMAN_COLOR_FOOD);
         var foodMaterial = coloredMaterial(foodColor);
         foodGroup.getChildren().clear();
-        worldMap().tiles().filter(this::hasFoodAt).forEach(tile -> {
+        worldMap().terrainLayer().tiles().filter(this::hasFoodAt).forEach(tile -> {
             Point3D position = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -4);
             boolean energizer = hasEnergizerAt(tile);
             var pellet = new Sphere(energizer ? 4 : 1, 32);

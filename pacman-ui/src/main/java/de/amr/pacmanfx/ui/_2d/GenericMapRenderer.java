@@ -78,7 +78,7 @@ public class GenericMapRenderer extends BaseRenderer {
 
             foodRenderer.setPelletColor(Color.web(colorMap.get("pellet")));
             FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
-            gameLevel.tiles()
+            foodLayer.tiles()
                 .filter(foodLayer::tileContainsFood)
                 .filter(not(foodLayer::isEnergizerPosition))
                 .forEach(foodRenderer::drawPellet);

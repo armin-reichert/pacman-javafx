@@ -24,7 +24,13 @@ public interface RectangularTileRegion {
     default void assertInsideWorld(Vector2i tile) {
         requireNonNull(tile);
         if (outOfBounds(tile)) {
-            throw new IllegalArgumentException("Tile %s is not inside world".formatted(tile));
+            throw new IllegalArgumentException("Tile %s is outside world".formatted(tile));
+        }
+    }
+
+    default void assertInsideWorld(int row, int col) {
+        if (outOfBounds(row, col)) {
+            throw new IllegalArgumentException("Coordinate (row=%d, col=%d) is outside world".formatted(row, col));
         }
     }
 

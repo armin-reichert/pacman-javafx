@@ -74,7 +74,7 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
         newGameLevel.setGhosts(blinky, pinky, inky, clyde);
 
         // Special tiles where attacking ghosts cannot move up
-        final List<Vector2i> oneWayDownTiles = worldMap.tiles()
+        final List<Vector2i> oneWayDownTiles = worldMap.terrainLayer().tiles()
                 .filter(tile -> worldMap.content(LayerID.TERRAIN, tile) == TerrainTile.ONE_WAY_DOWN.$)
                 .toList();
         newGameLevel.ghosts().forEach(ghost -> ghost.setSpecialTerrainTiles(oneWayDownTiles));

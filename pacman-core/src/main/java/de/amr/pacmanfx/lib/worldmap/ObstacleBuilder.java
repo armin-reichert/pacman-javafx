@@ -66,11 +66,11 @@ public class ObstacleBuilder {
     }
 
     private boolean isTileExplored(Vector2i tile) {
-        return exploredTiles.get(worldMap.indexInRowWiseOrder(tile));
+        return exploredTiles.get(worldMap.terrainLayer().indexInRowWiseOrder(tile));
     }
 
     private void setExplored(Vector2i tile) {
-        exploredTiles.set(worldMap.indexInRowWiseOrder(tile));
+        exploredTiles.set(worldMap.terrainLayer().indexInRowWiseOrder(tile));
     }
 
     private Set<Obstacle> buildObstacles(List<Vector2i> tilesWithErrors) {
@@ -81,14 +81,14 @@ public class ObstacleBuilder {
 
         Set<Obstacle> obstacles = new HashSet<>();
 
-        final Vector2i firstNonEmptyTile = worldMap.tiles()
+        final Vector2i firstNonEmptyTile = worldMap.terrainLayer().tiles()
             .filter(tile -> worldMap.content(LayerID.TERRAIN, tile) != EMPTY.$)
             .findFirst()
             .orElse(null);
 
         // Note: order of detection matters! Otherwise, when searching for closed
         // obstacles first, each failed attempt must set its visited tile set to unvisited!
-        worldMap.tiles()
+        worldMap.terrainLayer().tiles()
             .filter(not(this::isTileExplored))
             .filter(tile -> tile.x() == 0 || tile.x() == worldMap.numCols() - 1)
             .filter(tile -> worldMap.content(LayerID.TERRAIN, tile) != EMPTY.$)
@@ -97,7 +97,7 @@ public class ObstacleBuilder {
             .filter(Objects::nonNull)
             .forEach(obstacles::add);
 
-        worldMap.tiles()
+        worldMap.terrainLayer().tiles()
             .filter(not(this::isTileExplored))
             .filter(tile ->
                     worldMap.content(LayerID.TERRAIN, tile) == ARC_NW.$ ||
@@ -271,7 +271,7 @@ public class ObstacleBuilder {
                 errorAtCurrentTile(tilesWithErrors);
             }
 
-            if (cursor.currentTile.equals(startTile) || worldMap.outOfBounds(cursor.currentTile)) {
+            if (cursor.currentTile.equals(startTile) || worldMap.terrainLayer().outOfBounds(cursor.currentTile)) {
                 break;
             }
         }

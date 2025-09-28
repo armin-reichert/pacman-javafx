@@ -20,7 +20,7 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.Validations.requireNonNegativeInt;
 import static java.util.Objects.requireNonNull;
 
-public class WorldMap implements RectangularTileRegion {
+public class WorldMap {
 
     public static final String MARKER_BEGIN_TERRAIN_LAYER = "!terrain";
     public static final String MARKER_BEGIN_FOOD_LAYER = "!food";
@@ -213,12 +213,10 @@ public class WorldMap implements RectangularTileRegion {
         };
     }
 
-    @Override
     public int numCols() {
         return numCols;
     }
 
-    @Override
     public int numRows() {
         return numRows;
     }
@@ -283,9 +281,6 @@ public class WorldMap implements RectangularTileRegion {
      */
     public byte content(LayerID layerID, int row, int col) {
         assertValidLayerID(layerID);
-        if (outOfBounds(row, col)) {
-            throw new IllegalArgumentException(String.format("Illegal map coordinate row=%d col=%d", row, col));
-        }
         return layer(layerID).get(row, col);
     }
 
@@ -310,9 +305,6 @@ public class WorldMap implements RectangularTileRegion {
      */
     public void setContent(LayerID layerID, int row, int col, byte code) {
         assertValidLayerID(layerID);
-        if (outOfBounds(row, col)) {
-            throw new IllegalArgumentException(String.format("Illegal map coordinate row=%d col=%d", row, col));
-        }
         layer(layerID).set(row, col, code);
     }
 

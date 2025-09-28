@@ -122,7 +122,7 @@ public class ObstacleEditor {
                 byte code = editedRect[row][col];
                 renderer.drawTile(tile, code);
                 if (symmetricEditModeProperty().get()) {
-                    Vector2i mirroredTile = worldMap.get().mirrorPosition(tile);
+                    Vector2i mirroredTile = worldMap.get().terrainLayer().mirrorPosition(tile);
                     renderer.drawTile(mirroredTile, TerrainTile.mirroredCode(code));
                 }
             }

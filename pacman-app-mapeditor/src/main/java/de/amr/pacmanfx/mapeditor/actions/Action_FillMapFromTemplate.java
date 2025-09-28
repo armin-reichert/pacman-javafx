@@ -93,11 +93,11 @@ public class Action_FillMapFromTemplate extends EditorUIAction<Void> {
         }
 
         // Find house: requires that at least min and max tiles have been detected
-        Vector2i houseMinTile = worldMap.tiles()
+        Vector2i houseMinTile = worldMap.terrainLayer().tiles()
                 .filter(tile -> worldMap.content(LayerID.TERRAIN, tile) == TerrainTile.ANG_ARC_NW.$)
                 .findFirst().orElse(null);
 
-        Vector2i houseMaxTile = worldMap.tiles()
+        Vector2i houseMaxTile = worldMap.terrainLayer().tiles()
                 .filter(tile -> worldMap.content(LayerID.TERRAIN, tile) == TerrainTile.ANG_ARC_SE.$)
                 .findFirst().orElse(null);
 
