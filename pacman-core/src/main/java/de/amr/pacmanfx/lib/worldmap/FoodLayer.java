@@ -11,11 +11,16 @@ import java.util.BitSet;
 import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.lib.worldmap.FoodTile.ENERGIZER;
 import static de.amr.pacmanfx.lib.worldmap.FoodTile.PELLET;
 
 public class FoodLayer extends WorldMapLayer {
+
+    public static boolean isValidFoodCode(byte code) {
+        return Stream.of(FoodTile.values()).anyMatch(tile -> tile.$ == code);
+    }
 
     // instead of Set<Vector2i> we use a bit-set indexed by top-down-left-to-right tile index
     private BitSet eatenFoodBits;

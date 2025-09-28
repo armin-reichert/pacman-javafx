@@ -1,3 +1,7 @@
+/*
+Copyright (c) 2021-2025 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.pacmanfx.lib.worldmap;
 
 import de.amr.pacmanfx.lib.Direction;
@@ -20,6 +24,10 @@ import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
 public class TerrainLayer extends WorldMapLayer {
+
+    public static boolean isValidTerrainCode(byte code) {
+        return Stream.of(TerrainTile.values()).anyMatch(tile -> tile.$ == code);
+    }
 
     private static Vector2f halfTileRightOf(Vector2i tile) { return Vector2f.of(tile.x() * TS + HTS, tile.y() * TS); }
 

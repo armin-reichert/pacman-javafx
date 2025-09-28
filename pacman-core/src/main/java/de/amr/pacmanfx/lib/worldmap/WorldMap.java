@@ -24,14 +24,6 @@ public class WorldMap {
     public static final String MARKER_BEGIN_FOOD_LAYER = "!food";
     public static final String MARKER_BEGIN_DATA_SECTION = "!data";
 
-    public static boolean isValidTerrainCode(byte code) {
-        return Stream.of(TerrainTile.values()).anyMatch(tile -> tile.$ == code);
-    }
-
-    public static boolean isValidFoodCode(byte code) {
-        return Stream.of(FoodTile.values()).anyMatch(tile -> tile.$ == code);
-    }
-
     private static void assertValidLayerID(LayerID id) {
         requireNonNull(id);
         if (Stream.of(LayerID.values()).noneMatch(layerID -> layerID == id)) {
@@ -63,7 +55,7 @@ public class WorldMap {
     public static WorldMap loadFromURL(URL url) throws IOException {
         requireNonNull(url);
         try (var br = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8))) {
-            WorldMap worldMap = WorldMapParser.parse(br.lines(), WorldMap::isValidTerrainCode, WorldMap::isValidFoodCode);
+            WorldMap worldMap = WorldMapParser.parse(br.lines(), TerrainLayer::isValidTerrainCode, FoodLayer::isValidFoodCode);
             worldMap.url = URLDecoder.decode(url.toExternalForm(), StandardCharsets.UTF_8);
             return worldMap;
         }
