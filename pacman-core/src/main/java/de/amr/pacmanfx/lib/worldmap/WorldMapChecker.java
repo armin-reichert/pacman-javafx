@@ -13,7 +13,7 @@ public interface WorldMapChecker {
 
     static WorldMapCheckResult check(WorldMap worldMap) {
         StopWatch stopWatch = new StopWatch();
-        var tilesWithErrors = worldMap.buildObstacleList();
+        var tilesWithErrors = worldMap.terrainLayer.buildObstacleList();
 
         Duration passedTime = stopWatch.passedTime();
         Logger.info("World map check took {} milliseconds", passedTime.toMillis());

@@ -5,18 +5,16 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.lib.worldmap;
 
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.model.DefaultWorldMapPropertyName;
 import org.tinylog.Logger;
 
 import java.io.*;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.Globals.HTS;
-import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.Validations.requireNonNegativeInt;
 import static java.util.Objects.requireNonNull;
 
@@ -57,7 +55,6 @@ public class WorldMap {
         copy.numCols = original.numCols;
         copy.terrainLayer = new TerrainLayer(original.terrainLayer);
         copy.foodLayer = new FoodLayer(original.foodLayer);
-        copy.obstacles = original.obstacles != null ? new HashSet<>(original.obstacles) : null;
         copy.configMap = new HashMap<>(original.configMap);
         copy.url = original.url;
         return copy;
@@ -101,7 +98,6 @@ public class WorldMap {
     String url;
     TerrainLayer terrainLayer;
     FoodLayer foodLayer;
-    Set<Obstacle> obstacles; // uninitialized!
     Map<String, Object> configMap = new HashMap<>();
 
     WorldMap() {}
@@ -168,33 +164,6 @@ public class WorldMap {
             }
         }
         return newMap;
-    }
-
-    public List<Vector2i> buildObstacleList() {
-        List<Vector2i> tilesWithErrors = new ArrayList<>();
-        obstacles = ObstacleBuilder.buildObstacles(this, tilesWithErrors);
-
-        Vector2i houseMinTile = terrainLayer.getTileProperty(DefaultWorldMapPropertyName.POS_HOUSE_MIN_TILE);
-        if (houseMinTile == null) {
-            Logger.info("Could not remove house placeholder from obstacle list, house min tile not set");
-        } else {
-            Vector2i houseStartPoint = houseMinTile.scaled(TS).plus(TS, HTS);
-            obstacles.stream()
-                .filter(obstacle -> obstacle.startPoint().equals(houseStartPoint))
-                .findFirst().ifPresent(houseObstacle -> {
-                    Logger.debug("Removing house placeholder-obstacle starting at tile {}, point {}", houseMinTile, houseStartPoint);
-                    obstacles.remove(houseObstacle);
-                });
-        }
-        Logger.info("{} obstacles found in map ", obstacles.size(), this);
-        return tilesWithErrors;
-    }
-
-    public Set<Obstacle> obstacles() {
-        if (obstacles == null) { // first access
-            buildObstacleList();
-        }
-        return Collections.unmodifiableSet(obstacles);
     }
 
     public TerrainLayer terrainLayer() {

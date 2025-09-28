@@ -97,7 +97,7 @@ public class TerrainMapVectorRenderer extends BaseRenderer implements TerrainMap
     public void draw(WorldMap worldMap) {
         ctx.save();
         ctx.scale(scaling(), scaling());
-        for (Obstacle obstacle : worldMap.obstacles()) {
+        for (Obstacle obstacle : worldMap.terrainLayer().obstacles()) {
             if (obstacle.borderObstacle()) {
                 drawDoubleStripedObstacle(obstacle);
             } else {

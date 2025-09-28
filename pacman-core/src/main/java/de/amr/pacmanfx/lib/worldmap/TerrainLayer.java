@@ -3,13 +3,12 @@ package de.amr.pacmanfx.lib.worldmap;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
+import de.amr.pacmanfx.model.DefaultWorldMapPropertyName;
 import de.amr.pacmanfx.model.House;
 import de.amr.pacmanfx.model.Portal;
+import org.tinylog.Logger;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.HTS;
@@ -24,6 +23,7 @@ public class TerrainLayer extends WorldMapLayer {
 
     private static Vector2f halfTileRightOf(Vector2i tile) { return Vector2f.of(tile.x() * TS + HTS, tile.y() * TS); }
 
+    private Set<Obstacle> obstacles; // uninitialized!
 
     private Vector2f pacStartPosition;
     private Portal[] portals;
@@ -41,7 +41,6 @@ public class TerrainLayer extends WorldMapLayer {
             throw new IllegalArgumentException("No Pac position stored in map");
         }
         pacStartPosition = halfTileRightOf(pacTile);
-
     }
 
     public Vector2f pacStartPosition() {
@@ -73,6 +72,33 @@ public class TerrainLayer extends WorldMapLayer {
             }
         }
         return portals.toArray(new Portal[0]);
+    }
+
+    public List<Vector2i> buildObstacleList() {
+        List<Vector2i> tilesWithErrors = new ArrayList<>();
+        obstacles = ObstacleBuilder.buildObstacles(this, tilesWithErrors);
+
+        Vector2i houseMinTile = getTileProperty(DefaultWorldMapPropertyName.POS_HOUSE_MIN_TILE);
+        if (houseMinTile == null) {
+            Logger.info("Could not remove house placeholder from obstacle list, house min tile not set");
+        } else {
+            Vector2i houseStartPoint = houseMinTile.scaled(TS).plus(TS, HTS);
+            obstacles.stream()
+                    .filter(obstacle -> obstacle.startPoint().equals(houseStartPoint))
+                    .findFirst().ifPresent(houseObstacle -> {
+                        Logger.debug("Removing house placeholder-obstacle starting at tile {}, point {}", houseMinTile, houseStartPoint);
+                        obstacles.remove(houseObstacle);
+                    });
+        }
+        Logger.info("{} obstacles found in map ", obstacles.size(), this);
+        return tilesWithErrors;
+    }
+
+    public Set<Obstacle> obstacles() {
+        if (obstacles == null) { // first access
+            buildObstacleList();
+        }
+        return Collections.unmodifiableSet(obstacles);
     }
 
     public Stream<Vector2i> neighborTilesOutsideWorld(Vector2i tile) {

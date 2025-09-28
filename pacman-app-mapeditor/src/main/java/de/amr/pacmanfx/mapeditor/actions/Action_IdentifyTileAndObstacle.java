@@ -6,8 +6,8 @@ package de.amr.pacmanfx.mapeditor.actions;
 
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.*;
-import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import de.amr.pacmanfx.mapeditor.MessageType;
+import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 
@@ -69,7 +69,7 @@ public class Action_IdentifyTileAndObstacle extends EditorUIAction<String> {
     }
 
     private String identifyObstacleStartingAtTile(WorldMap worldMap) {
-        Obstacle obstacleStartingAtTile = worldMap.obstacles().stream()
+        Obstacle obstacleStartingAtTile = worldMap.terrainLayer().obstacles().stream()
             .filter(obstacle -> tileAt(obstacle.startPoint().minus(HTS, 0).toVector2f()).equals(tile))
             .findFirst().orElse(null);
         if (obstacleStartingAtTile == null) return null;

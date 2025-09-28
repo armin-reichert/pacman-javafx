@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.mapeditor.actions;
 
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.model.DefaultWorldMapPropertyName;
@@ -33,7 +32,7 @@ public class Action_CreatePreconfiguredMap extends EditorAction<WorldMap> {
             newMap.terrainLayer().propertyMap().put(DefaultWorldMapPropertyName.POS_PAC,   String.valueOf(houseMinTile.plus(3, 11)));
             newMap.terrainLayer().propertyMap().put(DefaultWorldMapPropertyName.POS_BONUS, String.valueOf(houseMinTile.plus(3, 5)));
         }
-        newMap.buildObstacleList();
+        newMap.terrainLayer().buildObstacleList();
         return newMap;
     }
 }

@@ -139,10 +139,10 @@ public class TerrainMapTileRenderer extends BaseRenderer implements TerrainMapRe
             specialTile(worldMap, DefaultWorldMapPropertyName.POS_SCATTER_ORANGE_GHOST).ifPresent(tile -> drawScatterTarget(tile, Color.ORANGE));
         }
         if (segmentNumbersDisplayed) {
-            drawObstacleSegmentNumbers(worldMap.obstacles());
+            drawObstacleSegmentNumbers(worldMap.terrainLayer().obstacles());
         }
         if (obstacleInnerAreaDisplayed) {
-            drawObstacleInnerAreas(worldMap.obstacles());
+            drawObstacleInnerAreas(worldMap.terrainLayer().obstacles());
         }
         ctx.restore();
     }

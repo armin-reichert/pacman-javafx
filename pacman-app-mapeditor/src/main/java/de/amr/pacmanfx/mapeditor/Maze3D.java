@@ -176,7 +176,7 @@ public class Maze3D extends Group {
             mazeGroup.getChildren().addAll(wall3D.base(), wall3D.top());
             return wall3D;
         });
-        for (Obstacle obstacle : worldMap().obstacles()) {
+        for (Obstacle obstacle : worldMap().terrainLayer().obstacles()) {
             boolean worldBorder = Ufx.isBorderObstacle(worldMap(), obstacle);
             r3D.renderObstacle3D(obstacle, worldBorder, 2, HTS);
         }

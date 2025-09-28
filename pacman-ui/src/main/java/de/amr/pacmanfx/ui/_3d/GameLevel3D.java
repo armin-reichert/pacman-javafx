@@ -511,7 +511,7 @@ public class GameLevel3D extends Group implements Disposable {
         wall3DCount = 0;
         var stopWatch = new StopWatch();
         Optional<House> optionalHouse = gameLevel.worldMap().terrainLayer().optHouse();
-        for (Obstacle obstacle : gameLevel.worldMap().obstacles()) {
+        for (Obstacle obstacle : gameLevel.worldMap().terrainLayer().obstacles()) {
             // exclude house placeholder
             Vector2i startTile = tileAt(obstacle.startPoint().toVector2f());
             if (optionalHouse.isPresent() && !optionalHouse.get().isTileInHouseArea(startTile)) {
