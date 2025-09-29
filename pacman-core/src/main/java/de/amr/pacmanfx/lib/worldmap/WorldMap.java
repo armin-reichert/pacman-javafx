@@ -22,18 +22,6 @@ public class WorldMap {
     public static final String MARKER_BEGIN_FOOD_LAYER = "!food";
     public static final String MARKER_BEGIN_DATA_SECTION = "!data";
 
-    public static WorldMap copyOf(WorldMap original) {
-        requireNonNull(original);
-        var copy = new WorldMap();
-        copy.numRows = original.numRows;
-        copy.numCols = original.numCols;
-        copy.terrainLayer = new TerrainLayer(original.terrainLayer);
-        copy.foodLayer = new FoodLayer(original.foodLayer);
-        copy.configMap = new HashMap<>(original.configMap);
-        copy.url = original.url;
-        return copy;
-    }
-
     public static WorldMap loadFromURL(URL url) throws IOException {
         requireNonNull(url);
         try (var br = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8))) {
@@ -73,14 +61,22 @@ public class WorldMap {
     FoodLayer foodLayer;
     Map<String, Object> configMap = new HashMap<>();
 
-    WorldMap() {
-    }
+    WorldMap() {}
 
     public WorldMap(int tilesX, int tilesY) {
         numRows = requireNonNegativeInt(tilesY);
         numCols = requireNonNegativeInt(tilesX);
         terrainLayer = new TerrainLayer(tilesY, tilesX);
         foodLayer = new FoodLayer(tilesY, tilesX);
+    }
+
+    public WorldMap(WorldMap template) {
+        numRows = template.numRows;
+        numCols = template.numCols;
+        url = template.url;
+        terrainLayer = new TerrainLayer(template.terrainLayer);
+        foodLayer = new FoodLayer(template.foodLayer);
+        configMap = new HashMap<>(template.configMap);
     }
 
     @Override

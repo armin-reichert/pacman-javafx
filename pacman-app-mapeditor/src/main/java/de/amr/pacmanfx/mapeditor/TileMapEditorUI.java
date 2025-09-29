@@ -39,7 +39,6 @@ import java.io.File;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.lib.worldmap.WorldMap.copyOf;
 import static de.amr.pacmanfx.mapeditor.EditMode.INSPECT;
 import static de.amr.pacmanfx.mapeditor.EditorGlobals.*;
 import static de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites.*;
@@ -791,7 +790,7 @@ public class TileMapEditorUI {
         requireNonNull(title);
         requireNonNull(worldMap);
         var menuItem = new MenuItem(title);
-        menuItem.setOnAction(e -> afterCheckForUnsavedChanges(() -> editor.setCurrentWorldMap(copyOf(worldMap))));
+        menuItem.setOnAction(e -> afterCheckForUnsavedChanges(() -> editor.setCurrentWorldMap(new WorldMap(worldMap))));
         return menuItem;
     }
 
