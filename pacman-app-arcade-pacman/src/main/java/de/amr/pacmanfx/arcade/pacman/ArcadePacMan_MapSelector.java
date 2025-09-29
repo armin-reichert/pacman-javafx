@@ -54,6 +54,6 @@ public class ArcadePacMan_MapSelector implements MapSelector {
 
     @Override
     public WorldMap getWorldMapCopy(int levelNumber, Object... args) {
-        return WorldMap.copyOf(worldMapPrototype);
+        return new WorldMap(worldMapPrototype);
     }
 }

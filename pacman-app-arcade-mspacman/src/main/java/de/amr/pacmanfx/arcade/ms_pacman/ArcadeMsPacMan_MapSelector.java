@@ -79,7 +79,7 @@ public class ArcadeMsPacMan_MapSelector implements MapSelector {
             default -> (levelNumber - 14) % 8 < 4 ? 3 : 4;
         };
         WorldMap prototype = mapPrototypes.get(mapNumber - 1);
-        WorldMap worldMap = WorldMap.copyOf(prototype);
+        WorldMap worldMap = new WorldMap(prototype);
         worldMap.setConfigValue(PROPERTY_MAP_NUMBER, mapNumber);
         // Color scheme index
         // 1->0, 2->1, 3->2, 4->3   level 1..13;

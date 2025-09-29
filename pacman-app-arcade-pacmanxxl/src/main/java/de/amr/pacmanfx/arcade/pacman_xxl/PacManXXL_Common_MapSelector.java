@@ -110,7 +110,7 @@ public class PacManXXL_Common_MapSelector implements MapSelector {
             }
         };
 
-        WorldMap worldMap = WorldMap.copyOf(prototype);
+        WorldMap worldMap = new WorldMap(prototype);
         // if selected map is a built-in map, use a random color scheme to make it not so boring
         Map<String, String> colorScheme = builtinMapPrototypes.contains(prototype)
             ? PacManXXL_Common.MAP_COLOR_SCHEMES.get(randomInt(0, PacManXXL_Common.MAP_COLOR_SCHEMES.size()))
