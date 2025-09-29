@@ -12,7 +12,6 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Validations.requireNonNegativeInt;
 import static java.util.Objects.requireNonNull;
@@ -22,20 +21,6 @@ public class WorldMap {
     public static final String MARKER_BEGIN_TERRAIN_LAYER = "!terrain";
     public static final String MARKER_BEGIN_FOOD_LAYER = "!food";
     public static final String MARKER_BEGIN_DATA_SECTION = "!data";
-
-    private static void assertValidLayerID(LayerID id) {
-        requireNonNull(id);
-        if (Stream.of(LayerID.values()).noneMatch(layerID -> layerID == id)) {
-            throw new IllegalArgumentException("Illegal map layer ID: '%s'".formatted(id));
-        }
-    }
-
-    public WorldMap(int tilesX, int tilesY) {
-        numRows = requireNonNegativeInt(tilesY);
-        numCols = requireNonNegativeInt(tilesX);
-        terrainLayer = new TerrainLayer(tilesY, tilesX);
-        foodLayer = new FoodLayer(tilesY, tilesX);
-    }
 
     public static WorldMap copyOf(WorldMap original) {
         requireNonNull(original);
@@ -88,7 +73,15 @@ public class WorldMap {
     FoodLayer foodLayer;
     Map<String, Object> configMap = new HashMap<>();
 
-    WorldMap() {}
+    WorldMap() {
+    }
+
+    public WorldMap(int tilesX, int tilesY) {
+        numRows = requireNonNegativeInt(tilesY);
+        numCols = requireNonNegativeInt(tilesX);
+        terrainLayer = new TerrainLayer(tilesY, tilesX);
+        foodLayer = new FoodLayer(tilesY, tilesX);
+    }
 
     @Override
     public String toString() {
@@ -163,7 +156,6 @@ public class WorldMap {
     }
 
     public WorldMapLayer layer(LayerID id) {
-        assertValidLayerID(id);
         return switch (id) {
             case TERRAIN -> terrainLayer;
             case FOOD -> foodLayer;
@@ -210,8 +202,7 @@ public class WorldMap {
 
     private void printLayer(PrintWriter pw, WorldMapLayer layer, String layerMarker) {
         pw.println(layerMarker);
-        layer.propertyMap().entrySet().stream()
-            .sorted(Map.Entry.comparingByKey())
+        layer.propertiesSortedByName()
             .map(entry -> "%s=%s".formatted(entry.getKey(), entry.getValue()))
             .forEach(pw::println);
         pw.println(MARKER_BEGIN_DATA_SECTION);

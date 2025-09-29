@@ -92,8 +92,7 @@ public class ObstacleBuilder {
             .filter(not(this::isTileExplored))
             .filter(tile -> tile.x() == 0 || tile.x() == terrainLayer.numCols() - 1)
             .filter(tile -> terrainLayer.get(tile) != EMPTY.$)
-            .map(tile -> buildBorderObstacle(tile,
-                tile.x() == 0, tilesWithErrors))
+            .map(tile -> buildBorderObstacle(tile, tile.x() == 0, tilesWithErrors))
             .filter(Objects::nonNull)
             .forEach(obstacles::add);
 
@@ -111,8 +110,6 @@ public class ObstacleBuilder {
                 return obstacle;
             })
             .forEach(obstacles::add);
-
-        Logger.debug("Found {} obstacles", obstacles.size());
 
         return optimize(obstacles);
     }
@@ -172,8 +169,7 @@ public class ObstacleBuilder {
     }
 
     private void errorAtCurrentTile(List<Vector2i> tilesWithErrors) {
-        Logger.debug("Did not expect content {} at tile {}",
-                terrainLayer.get(cursor.currentTile), cursor.currentTile);
+        Logger.debug("Did not expect content {} at tile {}", terrainLayer.get(cursor.currentTile), cursor.currentTile);
         tilesWithErrors.add(cursor.currentTile);
     }
 
