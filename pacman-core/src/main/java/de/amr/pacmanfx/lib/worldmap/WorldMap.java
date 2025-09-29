@@ -221,7 +221,7 @@ public class WorldMap {
         String source = sw.toString();
         if (lineNumbers) {
             StringBuilder sb = new StringBuilder();
-            String[] lines = source.split("\n");
+            String[] lines = source.split("\\R");
             for (int lineNum = 1; lineNum <= lines.length; ++lineNum) {
                 sb.append("%5d: %s\n".formatted(lineNum, lines[lineNum-1]));
             }
