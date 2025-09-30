@@ -280,18 +280,17 @@ public class GameLevel3D extends Group implements Disposable {
         setMouseTransparent(true); // this increases performance, they say...
 
         colorScheme = createWorldMapColorScheme();
+
+        Model3DRepository model3DRepository = ui.assets().theModel3DRepository();
         createMaterials();
-        createGhostMeshViews(
-            (int) gameLevel.ghosts().count(),
-            ui.assets().theModel3DRepository().ghostDressMesh(),
-            ui.assets().theModel3DRepository().ghostPupilsMesh(),
-            ui.assets().theModel3DRepository().ghostEyeballsMesh()
-        );
+        ghostDressMeshViews  = createGhostComponentMeshViews(model3DRepository.ghostDressMesh());
+        ghostPupilsMeshViews = createGhostComponentMeshViews(model3DRepository.ghostPupilsMesh());
+        ghostEyesMeshViews   = createGhostComponentMeshViews(model3DRepository.ghostEyeballsMesh());
 
         createLevelCounter3D();
         createLivesCounter3D();
         createPac3D();
-        createGhosts3D();
+        ghosts3D = createGhosts3D();
         createMaze3D();
         createPellets3D();
         createEnergizers3D();
@@ -324,27 +323,17 @@ public class GameLevel3D extends Group implements Disposable {
     }
 
     private void createMaterials() {
-        pelletMaterial = new PhongMaterial(colorScheme.pellet());
-        pelletMaterial.setSpecularColor(colorScheme.pellet().brighter());
+        pelletMaterial = defaultPhongMaterial(colorScheme.pellet());
+        particleMaterial = defaultPhongMaterial(colorScheme.pellet().deriveColor(0, 0.5, 1.5, 0.5));
 
-        particleMaterial = new PhongMaterial(colorScheme.pellet().deriveColor(0, 0.5, 1.5, 0.5));
-        particleMaterial.setSpecularColor(particleMaterial.getDiffuseColor().brighter());
-
-        floorMaterial = new PhongMaterial();
-        floorMaterial.diffuseColorProperty().bind(PROPERTY_3D_FLOOR_COLOR);
-        floorMaterial.specularColorProperty().bind(floorMaterial.diffuseColorProperty().map(Color::brighter));
+        floorMaterial = defaultPhongMaterial(PROPERTY_3D_FLOOR_COLOR);
         floorMaterial.setSpecularPower(128);
 
-        wallBaseMaterial = new PhongMaterial();
-        //TODO the opacity change does not work as expected. Why?
         var diffuseColor = wallOpacityProperty.map(opacity -> colorWithOpacity(colorScheme.stroke(), opacity.doubleValue()));
-        wallBaseMaterial.diffuseColorProperty().bind(diffuseColor);
-        wallBaseMaterial.specularColorProperty().bind(diffuseColor.map(Color::brighter));
+        wallBaseMaterial = defaultPhongMaterial(diffuseColor);
         wallBaseMaterial.setSpecularPower(64);
 
-        wallTopMaterial = new PhongMaterial();
-        wallTopMaterial.setDiffuseColor(colorScheme.fill());
-        wallTopMaterial.setSpecularColor(colorScheme.fill().brighter());
+        wallTopMaterial = defaultPhongMaterial(colorScheme.fill());
     }
 
     private void disposeMaterials() {
@@ -386,10 +375,8 @@ public class GameLevel3D extends Group implements Disposable {
             : proposedColorScheme;
     }
 
-    private void createGhostMeshViews(int numGhosts, Mesh ghostDressMesh, Mesh ghostPupilsMesh, Mesh ghostEyeballsMesh) {
-        ghostDressMeshViews  = IntStream.range(0, numGhosts).mapToObj(i -> new MeshView(ghostDressMesh)).toArray(MeshView[]::new);
-        ghostPupilsMeshViews = IntStream.range(0, numGhosts).mapToObj(i -> new MeshView(ghostPupilsMesh)).toArray(MeshView[]::new);
-        ghostEyesMeshViews   = IntStream.range(0, numGhosts).mapToObj(i -> new MeshView(ghostEyeballsMesh)).toArray(MeshView[]::new);
+    private MeshView[] createGhostComponentMeshViews(Mesh componentMesh) {
+        return IntStream.range(0, 4).mapToObj(i -> new MeshView(componentMesh)).toArray(MeshView[]::new);
     }
 
     private void disposeGhostMeshViews() {
@@ -425,17 +412,17 @@ public class GameLevel3D extends Group implements Disposable {
     private GhostColorSet createGhostColorSet(byte personality) {
         AssetStorage assets = ui.currentConfig().assets();
         return new GhostColorSet(
-            new GhostColoring(
+            new GhostComponentColors(
                 assets.color("ghost.%d.color.normal.dress".formatted(personality)),
                 assets.color("ghost.%d.color.normal.pupils".formatted(personality)),
                 assets.color("ghost.%d.color.normal.eyeballs".formatted(personality))
             ),
-            new GhostColoring(
+            new GhostComponentColors(
                 assets.color("ghost.color.frightened.dress"),
                 assets.color("ghost.color.frightened.pupils"),
                 assets.color("ghost.color.frightened.eyeballs")
             ),
-            new GhostColoring(
+            new GhostComponentColors(
                 assets.color("ghost.color.flashing.dress"),
                 assets.color("ghost.color.flashing.pupils"),
                 assets.color("ghost.color.frightened.eyeballs")
@@ -443,8 +430,8 @@ public class GameLevel3D extends Group implements Disposable {
         );
     }
 
-    private void createGhosts3D() {
-        ghosts3D = gameLevel.ghosts().map(ghost -> new MutatingGhost3D(
+    private List<MutatingGhost3D> createGhosts3D() {
+        return gameLevel.ghosts().map(ghost -> new MutatingGhost3D(
             animationRegistry,
             gameLevel,
             ghost,
@@ -611,29 +598,23 @@ public class GameLevel3D extends Group implements Disposable {
             .collect(Collectors.toCollection(HashSet::new));
     }
 
-    private Shape3D createPellet3D(Mesh mesh, Scale scale, Vector2i tile) {
-        var meshView = new MeshView(mesh);
-        meshView.setMaterial(pelletMaterial);
-        meshView.setRotationAxis(Rotate.Z_AXIS);
-        meshView.setRotate(90);
-        meshView.setTranslateX(tile.x() * TS + HTS);
-        meshView.setTranslateY(tile.y() * TS + HTS);
-        meshView.setTranslateZ(-floorTopZ() - 6);
-        meshView.getTransforms().add(scale);
-        meshView.setUserData(tile);
-        return meshView;
+    private Shape3D createPellet3D(Mesh pelletMesh, Scale scale, Vector2i tile) {
+        var pelletShape = new MeshView(pelletMesh);
+        pelletShape.setMaterial(pelletMaterial);
+        pelletShape.setRotationAxis(Rotate.Z_AXIS);
+        pelletShape.setRotate(90);
+        pelletShape.setTranslateX(tile.x() * TS + HTS);
+        pelletShape.setTranslateY(tile.y() * TS + HTS);
+        pelletShape.setTranslateZ(-floorTopZ() - 6);
+        pelletShape.getTransforms().add(scale);
+        pelletShape.setUserData(tile);
+        return pelletShape;
     }
 
     private void createEnergizers3D() {
         float radius     = ui.preferences().getFloat("3d.energizer.radius");
         float minScaling = ui.preferences().getFloat("3d.energizer.scaling.min");
         float maxScaling = ui.preferences().getFloat("3d.energizer.scaling.max");
-        Material[] ghostDressMaterials = {
-            ghosts3D.get(RED_GHOST_SHADOW).ghost3D().dressMaterialNormal(),
-            ghosts3D.get(PINK_GHOST_SPEEDY).ghost3D().dressMaterialNormal(),
-            ghosts3D.get(CYAN_GHOST_BASHFUL).ghost3D().dressMaterialNormal(),
-            ghosts3D.get(ORANGE_GHOST_POKEY).ghost3D().dressMaterialNormal(),
-        };
         House house = gameLevel.worldMap().terrainLayer().optHouse().orElseThrow();
         Vector2i[] ghostRevivalTiles = {
             house.ghostRevivalTile(RED_GHOST_SHADOW),
@@ -650,9 +631,15 @@ public class GameLevel3D extends Group implements Disposable {
         };
 
         FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
+        Material[] ghostParticleMaterials = {
+            ghosts3D.get(RED_GHOST_SHADOW).ghost3D().normalMaterialSet().dress(),
+            ghosts3D.get(PINK_GHOST_SPEEDY).ghost3D().normalMaterialSet().dress(),
+            ghosts3D.get(CYAN_GHOST_BASHFUL).ghost3D().normalMaterialSet().dress(),
+            ghosts3D.get(ORANGE_GHOST_POKEY).ghost3D().normalMaterialSet().dress(),
+        };
         energizers3D = foodLayer.tiles().filter(foodLayer::tileContainsFood)
             .filter(foodLayer::isEnergizerPosition)
-            .map(tile -> createEnergizer3D(tile, radius, minScaling, maxScaling, ghostDressMaterials, ghostRevivalCenters))
+            .map(tile -> createEnergizer3D(tile, radius, minScaling, maxScaling, ghostParticleMaterials, ghostRevivalCenters))
             .collect(Collectors.toCollection(HashSet::new));
     }
 
@@ -665,7 +652,7 @@ public class GameLevel3D extends Group implements Disposable {
         float energizerRadius,
         float minScaling,
         float maxScaling,
-        Material[] ghostDressMaterials,
+        Material[] ghostParticleMaterials,
         Vector2f[] ghostRevivalPositions)
     {
         var energizerCenter = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, floorTopZ() - 6);
@@ -685,7 +672,7 @@ public class GameLevel3D extends Group implements Disposable {
             ghostRevivalPositions,
             particleGroupsContainer,
             particleMaterial,
-            ghostDressMaterials,
+            ghostParticleMaterials,
             this::particleTouchesFloor);
 
         energizer3D.setEatenAnimation(explosion);
@@ -697,9 +684,13 @@ public class GameLevel3D extends Group implements Disposable {
     }
 
     public PacBase3D pac3D() { return pac3D; }
+
     public List<MutatingGhost3D> ghosts3D() { return Collections.unmodifiableList(ghosts3D); }
+
     public Optional<Bonus3D> bonus3D() { return Optional.ofNullable(bonus3D); }
+
     public Set<Shape3D> pellets3D() { return Collections.unmodifiableSet(pellets3D); }
+
     public Set<Energizer3D> energizers3D() { return Collections.unmodifiableSet(energizers3D); }
 
     public AnimationRegistry animationManager() { return animationRegistry; }

@@ -17,6 +17,8 @@ import javafx.animation.PauseTransition;
 import javafx.animation.Transition;
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.scene.control.CustomMenuItem;
 import javafx.scene.control.MenuItem;
@@ -160,6 +162,18 @@ public interface Ufx {
         requireNonNull(color);
         var material = new PhongMaterial(color);
         material.setSpecularColor(color.brighter());
+        return material;
+    }
+
+    /**
+     * @param colorProperty color property
+     * @return material with Phong shading (diffuse=color, specular=color.brighter)
+     */
+    static PhongMaterial defaultPhongMaterial(ObservableValue<Color> colorProperty) {
+        requireNonNull(colorProperty);
+        var material = new PhongMaterial();
+        material.diffuseColorProperty().bind(colorProperty);
+        material.specularColorProperty().bind(colorProperty.map(Color::brighter));
         return material;
     }
 

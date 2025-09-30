@@ -88,14 +88,7 @@ public class MutatingGhost3D extends Group implements Disposable {
         this.size = requireNonNegative(size);
         this.numFlashes = requireNonNegativeInt(numFlashes);
 
-        ghost3D = new Ghost3D(
-            animationRegistry,
-            ghost,
-            colorSet,
-            dressShape,
-            pupilsShape,
-            eyeballsShape,
-            size);
+        ghost3D = new Ghost3D(animationRegistry, ghost, colorSet, dressShape, pupilsShape, eyeballsShape, size);
 
         numberBox = new Box(14, 8, 8);
 

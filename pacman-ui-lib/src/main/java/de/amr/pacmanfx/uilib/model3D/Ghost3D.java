@@ -200,8 +200,8 @@ public class Ghost3D extends Group implements Disposable {
         flashingMaterialSet = null;
     }
 
-    public PhongMaterial dressMaterialNormal() {
-        return normalMaterialSet.dress();
+    public MaterialSet normalMaterialSet() {
+        return normalMaterialSet;
     }
 
     public RegisteredAnimation dressAnimation() {
