@@ -46,6 +46,10 @@ import static java.util.Objects.requireNonNull;
  */
 public class MutableGhost3D extends Group implements Disposable {
 
+    private static final int NUMBER_BOX_SIZE_X = 14;
+    private static final int NUMBER_BOX_SIZE_Y = 8;
+    private static final int NUMBER_BOX_SIZE_Z = 8;
+
     private static final double GHOST_OVER_FLOOR_DIST = 2.0;
 
     public static GhostAppearance selectAppearance(
@@ -157,16 +161,15 @@ public class MutableGhost3D extends Group implements Disposable {
         this.numFlashes = requireNonNegativeInt(numFlashes);
 
         ghost3D = new Ghost3D(animationRegistry, ghost, colorSet, dressShape, pupilsShape, eyeballsShape, size);
-        numberBox = new Box(14, 8, 8);
+        numberBox = new Box(NUMBER_BOX_SIZE_X, NUMBER_BOX_SIZE_Y, NUMBER_BOX_SIZE_Z);
         getChildren().setAll(ghost3D, numberBox);
 
         pointsAnimation = new PointsAnimation(animationRegistry);
         brakeAnimation = new BrakeAnimation(animationRegistry);
 
+        appearance.addListener(this::handleAppearanceChange);
         ghost.positionProperty().addListener(this::handleGhostPositionChange);
         ghost.wishDirProperty().addListener(this::handleGhostWishDirChange);
-
-        appearance.addListener(this::handleAppearanceChange);
 
         update3DTransform();
         appearance.set(GhostAppearance.NORMAL);
@@ -190,7 +193,7 @@ public class MutableGhost3D extends Group implements Disposable {
     public void init(GameLevel gameLevel) {
         stopAllAnimations();
         update3DTransform();
-        selectAppearance(gameLevel);
+        updateAppearance(gameLevel);
     }
 
     /**
@@ -199,15 +202,13 @@ public class MutableGhost3D extends Group implements Disposable {
      * @param gameLevel the game level
      */
     public void update(GameLevel gameLevel) {
-        selectAppearance(gameLevel);
+        updateAppearance(gameLevel);
         if (ghost.isVisible()) {
             ghost3D.dressAnimation().playOrContinue();
         } else {
             ghost3D.dressAnimation().stop();
         }
     }
-
-    public GhostAppearance appearance() { return appearance.get(); }
 
     public void setNumberImage(Image numberImage) {
         if (!numberMaterialCache.containsKey(numberImage)) {
@@ -245,19 +246,13 @@ public class MutableGhost3D extends Group implements Disposable {
         }
     }
 
-    private void handleGhostPositionChange(
-        ObservableValue<? extends Vector2f> property,
-        Vector2f oldPosition,
-        Vector2f newPosition)
-    {
+    // Separate method such that listener can be removed
+    private void handleGhostPositionChange(ObservableValue<? extends Vector2f> obs, Vector2f oldPosition, Vector2f newPosition) {
         update3DTransform();
     }
 
-    private void handleGhostWishDirChange(
-        ObservableValue<? extends Direction> property,
-        Direction oldDir,
-        Direction newDir)
-    {
+    // Separate method such that listener can be removed
+    private void handleGhostWishDirChange(ObservableValue<? extends Direction> obs, Direction oldDir, Direction newDir) {
         update3DTransform();
     }
 
@@ -271,16 +266,16 @@ public class MutableGhost3D extends Group implements Disposable {
         }
     }
 
-    private void selectAppearance(GameLevel gameLevel) {
-        boolean powerFading = gameLevel.pac().isPowerFading(gameLevel);
+    private void updateAppearance(GameLevel gameLevel) {
         boolean powerActive = gameLevel.pac().powerTimer().isRunning();
-        // ghost that got killed already during the current power phase do not look frightened anymore
-        boolean killedDuringCurrentPhase = gameLevel.victims().contains(ghost);
+        boolean powerFading = gameLevel.pac().isPowerFading(gameLevel);
+        // ghost that got already killed in the current power phase do not look frightened anymore
+        boolean killedInCurrentPhase = gameLevel.victims().contains(ghost);
         GhostAppearance newAppearance = selectAppearance(
             ghost.state(),
             powerActive,
             powerFading,
-            killedDuringCurrentPhase);
+            killedInCurrentPhase);
         appearance.set(newAppearance);
     }
 
