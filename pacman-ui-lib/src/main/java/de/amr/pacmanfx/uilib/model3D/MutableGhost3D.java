@@ -40,8 +40,8 @@ import static java.util.Objects.requireNonNull;
  * <li>{@link GhostAppearance#NORMAL}: colored ghost, blue eyes,
  * <li>{@link GhostAppearance#FRIGHTENED}: blue ghost, empty, "pinkish" eyes (looking blind),
  * <li>{@link GhostAppearance#FLASHING}: blue-white flashing skin, pink-red flashing eyes,
- * <li>{@link GhostAppearance#EATEN} eyes only,
- * <li>{@link GhostAppearance#VALUE}: eaten ghost's point value.
+ * <li>{@link GhostAppearance#EYES} eyes only,
+ * <li>{@link GhostAppearance#NUMBER}: eaten ghost's point value.
  * </ul>
  */
 public class MutableGhost3D extends Group implements Disposable {
@@ -63,8 +63,8 @@ public class MutableGhost3D extends Group implements Disposable {
             case LEAVING_HOUSE, LOCKED -> powerActive && !killedInCurrentPhase ?
                     frightenedOrFlashing(powerFading) : GhostAppearance.NORMAL;
             case FRIGHTENED -> frightenedOrFlashing(powerFading);
-            case ENTERING_HOUSE, RETURNING_HOME -> GhostAppearance.EATEN;
-            case EATEN -> GhostAppearance.VALUE;
+            case ENTERING_HOUSE, RETURNING_HOME -> GhostAppearance.EYES;
+            case EATEN -> GhostAppearance.NUMBER;
             default -> GhostAppearance.NORMAL;
         };
     }
@@ -77,8 +77,8 @@ public class MutableGhost3D extends Group implements Disposable {
     private final double size;
     private final int numFlashes;
 
-    private Ghost3D ghost3D;
-    private Box numberBox;
+    private Ghost3D ghostShape3D;
+    private Box numberShape3D;
 
     private class BrakeAnimation extends RegisteredAnimation {
 
@@ -128,7 +128,7 @@ public class MutableGhost3D extends Group implements Disposable {
 
         @Override
         protected Animation createAnimationFX() {
-            var numberBoxRotation = new RotateTransition(Duration.seconds(1), numberBox);
+            var numberBoxRotation = new RotateTransition(Duration.seconds(1), numberShape3D);
             numberBoxRotation.setAxis(Rotate.X_AXIS);
             numberBoxRotation.setFromAngle(0);
             numberBoxRotation.setToAngle(360);
@@ -160,9 +160,9 @@ public class MutableGhost3D extends Group implements Disposable {
         this.size = requireNonNegative(size);
         this.numFlashes = requireNonNegativeInt(numFlashes);
 
-        ghost3D = new Ghost3D(animationRegistry, ghost, colorSet, dressShape, pupilsShape, eyeballsShape, size);
-        numberBox = new Box(NUMBER_BOX_SIZE_X, NUMBER_BOX_SIZE_Y, NUMBER_BOX_SIZE_Z);
-        getChildren().setAll(ghost3D, numberBox);
+        ghostShape3D = new Ghost3D(animationRegistry, ghost, colorSet, dressShape, pupilsShape, eyeballsShape, size);
+        numberShape3D = new Box(NUMBER_BOX_SIZE_X, NUMBER_BOX_SIZE_Y, NUMBER_BOX_SIZE_Z);
+        getChildren().setAll(ghostShape3D, numberShape3D);
 
         pointsAnimation = new PointsAnimation(animationRegistry);
         brakeAnimation = new BrakeAnimation(animationRegistry);
@@ -176,7 +176,7 @@ public class MutableGhost3D extends Group implements Disposable {
     }
 
     public Ghost3D ghost3D() {
-        return ghost3D;
+        return ghostShape3D;
     }
 
     public GhostColorSet colorSet() {
@@ -186,8 +186,8 @@ public class MutableGhost3D extends Group implements Disposable {
     public void stopAllAnimations() {
         brakeAnimation.stop();
         pointsAnimation.stop();
-        ghost3D.dressAnimation().stop();
-        ghost3D.flashingAnimation().stop();
+        ghostShape3D.dressAnimation().stop();
+        ghostShape3D.flashingAnimation().stop();
     }
 
     public void init(GameLevel gameLevel) {
@@ -204,9 +204,9 @@ public class MutableGhost3D extends Group implements Disposable {
     public void update(GameLevel gameLevel) {
         updateAppearance(gameLevel);
         if (ghost.isVisible()) {
-            ghost3D.dressAnimation().playOrContinue();
+            ghostShape3D.dressAnimation().playOrContinue();
         } else {
-            ghost3D.dressAnimation().stop();
+            ghostShape3D.dressAnimation().stop();
         }
     }
 
@@ -216,7 +216,7 @@ public class MutableGhost3D extends Group implements Disposable {
             numberMaterial.setDiffuseMap(numberImage);
             numberMaterialCache.put(numberImage, numberMaterial);
         }
-        numberBox.setMaterial(numberMaterialCache.get(numberImage));
+        numberShape3D.setMaterial(numberMaterialCache.get(numberImage));
     }
 
     private void handleAppearanceChange(
@@ -224,26 +224,26 @@ public class MutableGhost3D extends Group implements Disposable {
         GhostAppearance oldAppearance,
         GhostAppearance newAppearance)
     {
-        Logger.debug("Ghost {} now has appearance {}", ghost.name(), newAppearance);
-        if (newAppearance == GhostAppearance.VALUE) {
-            numberBox.setVisible(true);
-            ghost3D.setVisible(false);
-            ghost3D.dressAnimation().stop();
+        if (newAppearance == GhostAppearance.NUMBER) {
+            numberShape3D.setVisible(true);
+            ghostShape3D.setVisible(false);
+            ghostShape3D.dressAnimation().stop();
             pointsAnimation.playFromStart();
         } else {
-            numberBox.setVisible(false);
-            ghost3D.setVisible(true);
+            numberShape3D.setVisible(false);
+            ghostShape3D.setVisible(true);
             switch (newAppearance) {
-                case NORMAL     -> ghost3D.setNormalLook();
-                case FRIGHTENED -> ghost3D.setFrightenedLook();
-                case EATEN      -> ghost3D.setEyesOnlyLook();
-                case FLASHING   -> ghost3D.setFlashingLook(numFlashes);
+                case NORMAL     -> ghostShape3D.setNormalLook();
+                case FRIGHTENED -> ghostShape3D.setFrightenedLook();
+                case EYES -> ghostShape3D.setEyesOnlyLook();
+                case FLASHING   -> ghostShape3D.setFlashingLook(numFlashes);
             }
             pointsAnimation.stop();
             if (ghost.moveInfo().tunnelEntered) {
                 brakeAnimation.playFromStart();
             }
         }
+        Logger.info("{} 3D appearance set to {}", ghost.name(), newAppearance);
     }
 
     // Separate method such that listener can be removed
@@ -261,8 +261,8 @@ public class MutableGhost3D extends Group implements Disposable {
         setTranslateX(center.x());
         setTranslateY(center.y());
         setTranslateZ(-0.5 * size - GHOST_OVER_FLOOR_DIST);
-        if (ghost3D != null) {
-            ghost3D.turnTowards(ghost.wishDir());
+        if (ghostShape3D != null) {
+            ghostShape3D.turnTowards(ghost.wishDir());
         }
     }
 
@@ -303,10 +303,10 @@ public class MutableGhost3D extends Group implements Disposable {
             pointsAnimation = null;
         }
         getChildren().clear();
-        if (ghost3D != null) {
-            ghost3D.dispose();
-            ghost3D = null;
+        if (ghostShape3D != null) {
+            ghostShape3D.dispose();
+            ghostShape3D = null;
         }
-        numberBox = null;
+        numberShape3D = null;
     }
 }

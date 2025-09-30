@@ -4,4 +4,4 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.model3D;
 
-public enum GhostAppearance {NORMAL, FRIGHTENED, FLASHING, EATEN, VALUE}
+public enum GhostAppearance {NORMAL, FRIGHTENED, FLASHING, EYES, NUMBER}
