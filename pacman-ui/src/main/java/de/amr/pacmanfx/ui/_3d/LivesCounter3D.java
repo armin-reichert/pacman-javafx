@@ -53,8 +53,8 @@ public class LivesCounter3D extends Group implements Disposable {
 
     public LivesCounter3D(AnimationRegistry animationRegistry, Node[] pacShapeArray) {
         requireNonNull(animationRegistry);
-        pillarMaterial.bind(pillarColor.map(Ufx::coloredPhongMaterial));
-        plateMaterial.bind((plateColor.map(Ufx::coloredPhongMaterial)));
+        pillarMaterial.bind(pillarColor.map(Ufx::defaultPhongMaterial));
+        plateMaterial.bind((plateColor.map(Ufx::defaultPhongMaterial)));
 
         var standsGroup = new Group();
         for (int i = 0; i < pacShapeArray.length; ++i) {

@@ -8,15 +8,11 @@ import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
 import javafx.animation.*;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
@@ -25,12 +21,15 @@ import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 
 import static de.amr.pacmanfx.Validations.requireNonNegative;
+import static de.amr.pacmanfx.uilib.Ufx.defaultPhongMaterial;
 import static java.util.Objects.requireNonNull;
 
 /**
  * 3D representation of a ghost.
  */
 public class Ghost3D extends Group implements Disposable {
+
+    public record MaterialSet(PhongMaterial dress, PhongMaterial eyeballs, PhongMaterial pupils) {}
 
     public class FlashingAnimation extends RegisteredAnimation {
         private Duration totalDuration = Duration.seconds(3);
@@ -55,41 +54,28 @@ public class Ghost3D extends Group implements Disposable {
             Duration flashEndTime = totalDuration.divide(numFlashes), highlightTime = flashEndTime.divide(3);
             var flashingTimeline = new Timeline(
                 new KeyFrame(highlightTime,
-                    new KeyValue(dressColorProperty,  coloring.flashingDressColor()),
-                    new KeyValue(pupilsColorProperty, coloring.flashingPupilsColor())
+                    new KeyValue(flashingMaterialSet.dress().diffuseColorProperty(),  coloring.flashingDressColor()),
+                    new KeyValue(flashingMaterialSet.pupils().diffuseColorProperty(), coloring.flashingPupilsColor())
                 ),
                 new KeyFrame(flashEndTime,
-                    new KeyValue(dressColorProperty,  coloring.frightenedDressColor()),
-                    new KeyValue(pupilsColorProperty, coloring.frightenedPupilsColor())
+                    new KeyValue(flashingMaterialSet.dress().diffuseColorProperty(),  coloring.frightenedDressColor()),
+                    new KeyValue(flashingMaterialSet.pupils().diffuseColorProperty(), coloring.frightenedPupilsColor())
                 )
             );
             flashingTimeline.setCycleCount(numFlashes);
             flashingTimeline.setOnFinished(e -> {
-                dressColorProperty.set(coloring.frightenedDressColor());
-                pupilsColorProperty.set(coloring.frightenedPupilsColor());
+                flashingMaterialSet.dress().setDiffuseColor(coloring.frightenedDressColor());
+                flashingMaterialSet.dress().setSpecularColor(coloring.frightenedDressColor().brighter());
+                flashingMaterialSet.pupils().setDiffuseColor(coloring.frightenedPupilsColor());
+                flashingMaterialSet.pupils().setSpecularColor(coloring.frightenedPupilsColor().brighter());
             });
             return flashingTimeline;
         }
     }
 
-    private final ObjectProperty<Color> dressColorProperty = new SimpleObjectProperty<>(Color.ORANGE);
-    private final ObjectProperty<Color> eyeballsColorProperty = new SimpleObjectProperty<>(Color.WHITE);
-    private final ObjectProperty<Color> pupilsColorProperty = new SimpleObjectProperty<>(Color.BLUE);
-
-    private PhongMaterial dressMaterialNormal;
-    private PhongMaterial pupilsMaterialNormal;
-    private PhongMaterial eyeballsMaterialNormal;
-
-    private PhongMaterial dressMaterialFrightened;
-    private PhongMaterial pupilsMaterialFrightened;
-    private PhongMaterial eyeballsMaterialFrightened;
-
-    private PhongMaterial dressMaterialFlashing;
-    private PhongMaterial pupilsMaterialFlashing;
-
-    private final ObjectProperty<PhongMaterial> dressMaterial = new SimpleObjectProperty<>();
-    private final ObjectProperty<PhongMaterial> pupilsMaterial = new SimpleObjectProperty<>();
-    private final ObjectProperty<PhongMaterial> eyeballsMaterial = new SimpleObjectProperty<>();
+    private MaterialSet normalMaterialSet;
+    private MaterialSet frightenedMaterialSet;
+    private MaterialSet flashingMaterialSet;
 
     private MeshView dressShape;
     private MeshView pupilsShape;
@@ -111,71 +97,36 @@ public class Ghost3D extends Group implements Disposable {
         MeshView eyeballsShape,
         double size)
     {
+        requireNonNull(animationRegistry);
         requireNonNull(ghost);
-
-        this.dressShape = requireNonNull(dressShape);
-        this.pupilsShape = requireNonNull(pupilsShape);
+        this.coloring      = requireNonNull(coloring);
+        this.dressShape    = requireNonNull(dressShape);
+        this.pupilsShape   = requireNonNull(pupilsShape);
         this.eyeballsShape = requireNonNull(eyeballsShape);
-
-        this.coloring = coloring;
-        requireNonNull(pupilsShape);
-        requireNonNull(eyeballsShape);
         requireNonNegative(size);
 
-        dressMaterialNormal = Ufx.coloredPhongMaterial(coloring.normalDressColor());
-        eyeballsMaterialNormal = Ufx.coloredPhongMaterial(coloring.normalEyeballsColor());
-        pupilsMaterialNormal = Ufx.coloredPhongMaterial(coloring.normalPupilsColor());
+        normalMaterialSet = new MaterialSet(
+            defaultPhongMaterial(coloring.normalDressColor()),
+            defaultPhongMaterial(coloring.normalEyeballsColor()),
+            defaultPhongMaterial(coloring.normalPupilsColor())
+        );
 
-        dressMaterialFrightened = Ufx.coloredPhongMaterial(coloring.frightenedDressColor());
-        eyeballsMaterialFrightened = Ufx.coloredPhongMaterial(coloring.frightenedEyeballsColor());
-        pupilsMaterialFrightened = Ufx.coloredPhongMaterial(coloring.frightenedPupilsColor());
+        frightenedMaterialSet = new MaterialSet(
+            defaultPhongMaterial(coloring.frightenedDressColor()),
+            defaultPhongMaterial(coloring.frightenedEyeballsColor()),
+            defaultPhongMaterial(coloring.frightenedPupilsColor())
+        );
 
-        dressMaterialFlashing = Ufx.coloredPhongMaterial(coloring.flashingDressColor());
-        dressMaterialFlashing.diffuseColorProperty().bind(dressColorProperty);
-        pupilsMaterialFlashing = Ufx.coloredPhongMaterial(coloring.flashingPupilsColor());
-        pupilsMaterialFlashing.diffuseColorProperty().bind(pupilsColorProperty);
+        flashingMaterialSet = new MaterialSet(
+            defaultPhongMaterial(coloring.flashingDressColor()),
+            defaultPhongMaterial(coloring.frightenedEyeballsColor()),
+            defaultPhongMaterial(coloring.flashingPupilsColor())
+        );
 
-        dressColorProperty.set(coloring.normalDressColor());
-        dressMaterial.bind(dressColorProperty.map(dressColor -> {
-            if (dressColor.equals(coloring.normalDressColor())) {
-                return dressMaterialNormal;
-            }
-            if (dressColor.equals(coloring.frightenedDressColor())) {
-                return dressMaterialFrightened;
-            }
-            return dressMaterialFlashing;
-        }));
-        dressShape.materialProperty().bind(dressMaterial);
-
-        pupilsColorProperty.set(coloring.normalPupilsColor());
-        pupilsMaterial.bind(pupilsColorProperty.map(pupilsColor -> {
-            if (pupilsColor.equals(coloring.normalPupilsColor())) {
-                return pupilsMaterialNormal;
-            }
-            if (pupilsColor.equals(coloring.frightenedPupilsColor())) {
-                return pupilsMaterialFrightened;
-            }
-            return pupilsMaterialFlashing;
-        }));
-        pupilsShape.materialProperty().bind(pupilsMaterial);
-
-        eyeballsColorProperty.set(coloring.normalEyeballsColor());
-        eyeballsMaterial.bind(eyeballsColorProperty.map(eyeballsColor -> {
-            if (eyeballsColor.equals(coloring.normalEyeballsColor())) {
-                return eyeballsMaterialNormal;
-            }
-            if (eyeballsColor.equals(coloring.frightenedEyeballsColor())) {
-                return eyeballsMaterialFrightened;
-            }
-            // TODO: check this
-            return eyeballsMaterialFrightened;
-        }));
-        eyeballsShape.materialProperty().bind(eyeballsMaterial);
-
-        var eyesGroup = new Group(pupilsShape, eyeballsShape);
+        var eyes = new Group(pupilsShape, eyeballsShape);
         dressGroup = new Group(dressShape);
 
-        getChildren().setAll(dressGroup, eyesGroup);
+        getChildren().setAll(dressGroup, eyes);
 
         Bounds dressBounds = dressShape.getBoundsInLocal();
         var centeredOverOrigin = new Translate(
@@ -184,7 +135,7 @@ public class Ghost3D extends Group implements Disposable {
             -dressBounds.getCenterZ()
         );
         dressShape.getTransforms().add(centeredOverOrigin);
-        eyesGroup.getTransforms().add(centeredOverOrigin);
+        eyes.getTransforms().add(centeredOverOrigin);
 
         // TODO: change orientation in OBJ file?
         getTransforms().addAll(
@@ -219,9 +170,6 @@ public class Ghost3D extends Group implements Disposable {
 
     @Override
     public void dispose() {
-        dressColorProperty.unbind();
-        eyeballsColorProperty.unbind();
-        pupilsColorProperty.unbind();
         getChildren().clear();
 
         dressShape.setMesh(null);
@@ -247,23 +195,13 @@ public class Ghost3D extends Group implements Disposable {
         flashingAnimation.dispose();
         flashingAnimation = null;
 
-        dressMaterial.unbind();
-        dressMaterialNormal = null;
-        dressMaterialFrightened = null;
-        dressMaterialFlashing = null;
-
-        eyeballsMaterial.unbind();
-        eyeballsMaterialNormal = null;
-        eyeballsMaterialFrightened = null;
-
-        pupilsMaterial.unbind();
-        pupilsMaterialNormal = null;
-        pupilsMaterialFrightened = null;
-        pupilsMaterialFlashing = null;
+        normalMaterialSet = null;
+        frightenedMaterialSet = null;
+        flashingMaterialSet = null;
     }
 
     public PhongMaterial dressMaterialNormal() {
-        return dressMaterialNormal;
+        return normalMaterialSet.dress();
     }
 
     public RegisteredAnimation dressAnimation() {
@@ -287,38 +225,40 @@ public class Ghost3D extends Group implements Disposable {
     public void setFlashingLook(int numFlashes) {
         if (numFlashes == 0) {
             setFrightenedLook();
-        } else {
-            dressShape.setVisible(true);
-            flashingAnimation.setNumFlashes(numFlashes);
-            // TODO (fixme): Total flashing time must be shorter than Pac power fading time (2s)!
-            flashingAnimation.setTotalDuration(Duration.millis(1966));
-            flashingAnimation.playFromStart();
+            return;
         }
+        setMaterialSet(flashingMaterialSet);
+        dressShape.setVisible(true);
+        flashingAnimation.setNumFlashes(numFlashes);
+        // TODO (fixme): Total flashing time must be shorter than Pac power fading time (2s)!
+        flashingAnimation.setTotalDuration(Duration.millis(1990));
+        flashingAnimation.playFromStart();
     }
 
-    public void setFrightenedLook() {
-        flashingAnimation.stop();
-        dressAnimation.playOrContinue();
-        dressColorProperty.set(coloring.frightenedDressColor());
-        eyeballsColorProperty.set(coloring.frightenedEyeballsColor());
-        pupilsColorProperty.set(coloring.frightenedPupilsColor());
-        dressShape.setVisible(true);
+    private void setMaterialSet(MaterialSet materialSet) {
+        dressShape.setMaterial(materialSet.dress);
+        pupilsShape.setMaterial(materialSet.pupils);
+        eyeballsShape.setMaterial(materialSet.eyeballs);
     }
 
     public void setNormalLook() {
         flashingAnimation.stop();
         dressAnimation.playOrContinue();
-        dressColorProperty.set(coloring.normalDressColor());
-        eyeballsColorProperty.set(coloring.normalEyeballsColor());
-        pupilsColorProperty.set(coloring.normalPupilsColor());
         dressShape.setVisible(true);
+        setMaterialSet(normalMaterialSet);
+    }
+
+    public void setFrightenedLook() {
+        flashingAnimation.stop();
+        dressAnimation.playOrContinue();
+        dressShape.setVisible(true);
+        setMaterialSet(frightenedMaterialSet);
     }
 
     public void setEyesOnlyLook() {
         flashingAnimation.stop();
         dressAnimation.pause();
-        eyeballsColorProperty.set(coloring.normalEyeballsColor());
-        pupilsColorProperty.set(coloring.normalPupilsColor());
         dressShape.setVisible(false);
+        setMaterialSet(normalMaterialSet);
     }
 }

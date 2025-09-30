@@ -152,7 +152,11 @@ public interface Ufx {
         return Font.font(font.getFamily(), scaling * font.getSize());
     }
 
-    static PhongMaterial coloredPhongMaterial(Color color) {
+    /**
+     * @param color color
+     * @return material with Phong shading (diffuse=color, specular=color.brighter)
+     */
+    static PhongMaterial defaultPhongMaterial(Color color) {
         requireNonNull(color);
         var material = new PhongMaterial(color);
         material.setSpecularColor(color.brighter());

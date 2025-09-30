@@ -32,7 +32,7 @@ public class ExperimentsApp extends Application {
 
     private static final double WALL_WIDTH = 5;
     private static final double WALL_HEIGHT = 10;
-    private static final PhongMaterial WALL_MATERIAL = Ufx.coloredPhongMaterial(Color.BROWN);
+    private static final PhongMaterial WALL_MATERIAL = Ufx.defaultPhongMaterial(Color.BROWN);
 
     private static final int SCENE_SIZE_X = 800, SCENE_SIZE_Y = 600;
     private static final double MAZE_SIZE_X = 100 * 8, MAZE_SIZE_Y = 160 * 8, MAZE_SIZE_Z = 2 * 8;
@@ -81,28 +81,28 @@ public class ExperimentsApp extends Application {
             Box wallNorth = new Box(MAZE_SIZE_X, 5, MAZE_SIZE_Z);
             wallNorth.setTranslateX(ox + wallNorth.getWidth() * 0.5);
             wallNorth.setTranslateY(oy + wallNorth.getHeight() * 0.5);
-            wallNorth.setMaterial(Ufx.coloredPhongMaterial(Color.RED));
+            wallNorth.setMaterial(Ufx.defaultPhongMaterial(Color.RED));
             content.getChildren().add(wallNorth);
         }
         {
             Box wallSouth = new Box(MAZE_SIZE_X, 5, MAZE_SIZE_Z);
             wallSouth.setTranslateX(ox + wallSouth.getWidth() * 0.5);
             wallSouth.setTranslateY(oy + MAZE_SIZE_Y + wallSouth.getHeight() * 0.5);
-            wallSouth.setMaterial(Ufx.coloredPhongMaterial(Color.GREEN));
+            wallSouth.setMaterial(Ufx.defaultPhongMaterial(Color.GREEN));
             content.getChildren().add(wallSouth);
         }
         {
             Box wallWest = new Box(5, MAZE_SIZE_Y, MAZE_SIZE_Z);
             wallWest.setTranslateX(ox + wallWest.getWidth() * 0.5);
             wallWest.setTranslateY(oy + wallWest.getHeight() * 0.5);
-            wallWest.setMaterial(Ufx.coloredPhongMaterial(Color.BLUE));
+            wallWest.setMaterial(Ufx.defaultPhongMaterial(Color.BLUE));
             content.getChildren().add(wallWest);
         }
         {
             Box wallEast = new Box(5, MAZE_SIZE_Y, MAZE_SIZE_Z);
             wallEast.setTranslateX(ox + MAZE_SIZE_X + wallEast.getWidth() * 0.5);
             wallEast.setTranslateY(oy + wallEast.getHeight() * 0.5);
-            wallEast.setMaterial(Ufx.coloredPhongMaterial(Color.PINK));
+            wallEast.setMaterial(Ufx.defaultPhongMaterial(Color.PINK));
             content.getChildren().add(wallEast);
         }
 
@@ -219,7 +219,7 @@ public class ExperimentsApp extends Application {
         ball.setTranslateX(ox);
         ball.setTranslateY(oy);
         ball.setTranslateZ(oz);
-        ball.setMaterial(Ufx.coloredPhongMaterial(Color.BLUE));
+        ball.setMaterial(Ufx.defaultPhongMaterial(Color.BLUE));
         content.getChildren().add(ball);
 
         cycling = new Transition() {
