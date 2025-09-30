@@ -58,7 +58,7 @@ public class MutatingGhost3D extends Group implements Disposable {
 
     private final Map<Image, PhongMaterial> numberMaterialCache = new WeakHashMap<>();
     private final Ghost ghost;
-    private final GhostColoring coloring;
+    private final GhostColorSet colorSet;
     private final double size;
     private final int numFlashes;
 
@@ -72,7 +72,7 @@ public class MutatingGhost3D extends Group implements Disposable {
         AnimationRegistry animationRegistry,
         GameLevel gameLevel,
         Ghost ghost,
-        GhostColoring coloring,
+        GhostColorSet colorSet,
         MeshView dressShape,
         MeshView pupilsShape,
         MeshView eyeballsShape,
@@ -81,7 +81,7 @@ public class MutatingGhost3D extends Group implements Disposable {
     {
         requireNonNull(animationRegistry);
         this.ghost = requireNonNull(ghost);
-        this.coloring = requireNonNull(coloring);
+        this.colorSet = requireNonNull(colorSet);
         requireNonNull(dressShape);
         requireNonNull(pupilsShape);
         requireNonNull(eyeballsShape);
@@ -91,7 +91,7 @@ public class MutatingGhost3D extends Group implements Disposable {
         ghost3D = new Ghost3D(
             animationRegistry,
             ghost,
-            coloring,
+            colorSet,
             dressShape,
             pupilsShape,
             eyeballsShape,
@@ -167,8 +167,8 @@ public class MutatingGhost3D extends Group implements Disposable {
         return ghost3D;
     }
 
-    public GhostColoring coloring() {
-        return coloring;
+    public GhostColorSet colorSet() {
+        return colorSet;
     }
 
     private void handleAppearanceChange(

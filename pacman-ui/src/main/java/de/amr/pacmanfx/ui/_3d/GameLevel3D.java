@@ -23,6 +23,7 @@ import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.EnergizerExplosionAndRecycling;
 import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
+import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.*;
 import de.amr.pacmanfx.uilib.widgets.MessageView;
@@ -240,7 +241,7 @@ public class GameLevel3D extends Group implements Disposable {
                         }
                     }
                     MutatingGhost3D currentGhost3D = ghosts3D.get(currentlyLightedGhost);
-                    ghostLight.setColor(currentGhost3D.coloring().normalDressColor());
+                    ghostLight.setColor(currentGhost3D.colorSet().normal().dress());
                     ghostLight.translateXProperty().bind(currentGhost3D.translateXProperty());
                     ghostLight.translateYProperty().bind(currentGhost3D.translateYProperty());
                     ghostLight.setTranslateZ(-25);
@@ -318,6 +319,7 @@ public class GameLevel3D extends Group implements Disposable {
         getChildren().add(ambientLight);
         getChildren().add(ghostLight);
 
+        ghosts3D.forEach(ghost3D -> ghost3D.init(gameLevel));
         house3D.startSwirlAnimations();
     }
 
@@ -420,31 +422,39 @@ public class GameLevel3D extends Group implements Disposable {
         }
     }
 
+    private GhostColorSet createGhostColorSet(byte personality) {
+        AssetStorage assets = ui.currentConfig().assets();
+        return new GhostColorSet(
+            new GhostColoring(
+                assets.color("ghost.%d.color.normal.dress".formatted(personality)),
+                assets.color("ghost.%d.color.normal.pupils".formatted(personality)),
+                assets.color("ghost.%d.color.normal.eyeballs".formatted(personality))
+            ),
+            new GhostColoring(
+                assets.color("ghost.color.frightened.dress"),
+                assets.color("ghost.color.frightened.pupils"),
+                assets.color("ghost.color.frightened.eyeballs")
+            ),
+            new GhostColoring(
+                assets.color("ghost.color.flashing.dress"),
+                assets.color("ghost.color.flashing.pupils"),
+                assets.color("ghost.color.frightened.eyeballs")
+            )
+        );
+    }
+
     private void createGhosts3D() {
-        ghosts3D = gameLevel.ghosts().map(ghost -> {
-            var ghostColoring = new GhostColoring(
-                ui.currentConfig().assets().color("ghost.%d.color.normal.dress".formatted(ghost.personality())),
-                ui.currentConfig().assets().color("ghost.%d.color.normal.pupils".formatted(ghost.personality())),
-                ui.currentConfig().assets().color("ghost.%d.color.normal.eyeballs".formatted(ghost.personality())),
-                ui.currentConfig().assets().color("ghost.color.frightened.dress"),
-                ui.currentConfig().assets().color("ghost.color.frightened.pupils"),
-                ui.currentConfig().assets().color("ghost.color.frightened.eyeballs"),
-                ui.currentConfig().assets().color("ghost.color.flashing.dress"),
-                ui.currentConfig().assets().color("ghost.color.flashing.pupils")
-            );
-            return new MutatingGhost3D(
-                animationRegistry,
-                gameLevel,
-                ghost,
-                ghostColoring,
-                ghostDressMeshViews[ghost.personality()],
-                ghostPupilsMeshViews[ghost.personality()],
-                ghostEyesMeshViews[ghost.personality()],
-                ui.preferences().getFloat("3d.ghost.size"),
-                gameLevel.game().numFlashes(gameLevel)
-            );
-        }).toList();
-        ghosts3D.forEach(ghost3D -> ghost3D.init(gameLevel));
+        ghosts3D = gameLevel.ghosts().map(ghost -> new MutatingGhost3D(
+            animationRegistry,
+            gameLevel,
+            ghost,
+            createGhostColorSet(ghost.personality()),
+            ghostDressMeshViews[ghost.personality()],
+            ghostPupilsMeshViews[ghost.personality()],
+            ghostEyesMeshViews[ghost.personality()],
+            ui.preferences().getFloat("3d.ghost.size"),
+            gameLevel.game().numFlashes(gameLevel)
+        )).toList();
     }
 
     private void createPac3D() {

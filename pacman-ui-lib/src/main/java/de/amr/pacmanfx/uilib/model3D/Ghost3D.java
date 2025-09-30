@@ -54,20 +54,20 @@ public class Ghost3D extends Group implements Disposable {
             Duration flashEndTime = totalDuration.divide(numFlashes), highlightTime = flashEndTime.divide(3);
             var flashingTimeline = new Timeline(
                 new KeyFrame(highlightTime,
-                    new KeyValue(flashingMaterialSet.dress().diffuseColorProperty(),  coloring.flashingDressColor()),
-                    new KeyValue(flashingMaterialSet.pupils().diffuseColorProperty(), coloring.flashingPupilsColor())
+                    new KeyValue(flashingMaterialSet.dress().diffuseColorProperty(),  colorSet.flashing().dress()),
+                    new KeyValue(flashingMaterialSet.pupils().diffuseColorProperty(), colorSet.flashing().pupils())
                 ),
                 new KeyFrame(flashEndTime,
-                    new KeyValue(flashingMaterialSet.dress().diffuseColorProperty(),  coloring.frightenedDressColor()),
-                    new KeyValue(flashingMaterialSet.pupils().diffuseColorProperty(), coloring.frightenedPupilsColor())
+                    new KeyValue(flashingMaterialSet.dress().diffuseColorProperty(),  colorSet.frightened().dress()),
+                    new KeyValue(flashingMaterialSet.pupils().diffuseColorProperty(), colorSet.frightened().pupils())
                 )
             );
             flashingTimeline.setCycleCount(numFlashes);
             flashingTimeline.setOnFinished(e -> {
-                flashingMaterialSet.dress().setDiffuseColor(coloring.frightenedDressColor());
-                flashingMaterialSet.dress().setSpecularColor(coloring.frightenedDressColor().brighter());
-                flashingMaterialSet.pupils().setDiffuseColor(coloring.frightenedPupilsColor());
-                flashingMaterialSet.pupils().setSpecularColor(coloring.frightenedPupilsColor().brighter());
+                flashingMaterialSet.dress().setDiffuseColor(colorSet.frightened().dress());
+                flashingMaterialSet.dress().setSpecularColor(colorSet.frightened().dress().brighter());
+                flashingMaterialSet.pupils().setDiffuseColor(colorSet.frightened().pupils());
+                flashingMaterialSet.pupils().setSpecularColor(colorSet.frightened().pupils().brighter());
             });
             return flashingTimeline;
         }
@@ -86,12 +86,12 @@ public class Ghost3D extends Group implements Disposable {
     private RegisteredAnimation dressAnimation;
     private FlashingAnimation flashingAnimation;
 
-    private final GhostColoring coloring;
+    private final GhostColorSet colorSet;
 
     public Ghost3D(
         AnimationRegistry animationRegistry,
         Ghost ghost,
-        GhostColoring coloring,
+        GhostColorSet colorSet,
         MeshView dressShape,
         MeshView pupilsShape,
         MeshView eyeballsShape,
@@ -99,28 +99,28 @@ public class Ghost3D extends Group implements Disposable {
     {
         requireNonNull(animationRegistry);
         requireNonNull(ghost);
-        this.coloring      = requireNonNull(coloring);
+        this.colorSet      = requireNonNull(colorSet);
         this.dressShape    = requireNonNull(dressShape);
         this.pupilsShape   = requireNonNull(pupilsShape);
         this.eyeballsShape = requireNonNull(eyeballsShape);
         requireNonNegative(size);
 
         normalMaterialSet = new MaterialSet(
-            defaultPhongMaterial(coloring.normalDressColor()),
-            defaultPhongMaterial(coloring.normalEyeballsColor()),
-            defaultPhongMaterial(coloring.normalPupilsColor())
+            defaultPhongMaterial(colorSet.normal().dress()),
+            defaultPhongMaterial(colorSet.normal().eyeballs()),
+            defaultPhongMaterial(colorSet.normal().pupils())
         );
 
         frightenedMaterialSet = new MaterialSet(
-            defaultPhongMaterial(coloring.frightenedDressColor()),
-            defaultPhongMaterial(coloring.frightenedEyeballsColor()),
-            defaultPhongMaterial(coloring.frightenedPupilsColor())
+            defaultPhongMaterial(colorSet.frightened().dress()),
+            defaultPhongMaterial(colorSet.frightened().eyeballs()),
+            defaultPhongMaterial(colorSet.frightened().pupils())
         );
 
         flashingMaterialSet = new MaterialSet(
-            defaultPhongMaterial(coloring.flashingDressColor()),
-            defaultPhongMaterial(coloring.frightenedEyeballsColor()),
-            defaultPhongMaterial(coloring.flashingPupilsColor())
+            defaultPhongMaterial(colorSet.flashing().dress()),
+            defaultPhongMaterial(colorSet.flashing().eyeballs()),
+            defaultPhongMaterial(colorSet.flashing().pupils())
         );
 
         var eyes = new Group(pupilsShape, eyeballsShape);
