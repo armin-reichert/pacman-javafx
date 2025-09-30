@@ -50,11 +50,7 @@ public class MutatingGhost3D extends Group implements Disposable {
 
     private static final double GHOST_OVER_FLOOR_DIST = 2.0;
 
-    private static boolean isPositionOutsideWorld(GameLevel gameLevel, Vector2f center) {
-        return center.x() < HTS || center.x() > gameLevel.worldMap().numCols() * TS - HTS;
-    }
-
-    private final ObjectProperty<GhostAppearance> appearanceProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<GhostAppearance> appearance = new SimpleObjectProperty<>();
 
     private final Map<Image, PhongMaterial> numberMaterialCache = new WeakHashMap<>();
     private final Ghost ghost;
@@ -65,8 +61,66 @@ public class MutatingGhost3D extends Group implements Disposable {
     private Ghost3D ghost3D;
     private Box numberBox;
 
-    private RegisteredAnimation brakeAnimation;
-    private RegisteredAnimation pointsAnimation;
+    private class BrakeAnimation extends RegisteredAnimation {
+
+        public BrakeAnimation(AnimationRegistry animationRegistry) {
+            super(animationRegistry, "Ghost_Braking_%s".formatted(ghost.name()));
+        }
+
+        @Override
+        protected Animation createAnimationFX() {
+            var rotateTransition = new RotateTransition(Duration.seconds(0.5), MutatingGhost3D.this);
+            rotateTransition.setAxis(Rotate.Y_AXIS);
+            rotateTransition.setAutoReverse(true);
+            rotateTransition.setCycleCount(2);
+            rotateTransition.setInterpolator(Interpolator.EASE_OUT);
+            return rotateTransition;
+        }
+
+        @Override
+        public void playFromStart() {
+            var rotateTransition = (RotateTransition) getOrCreateAnimationFX();
+            rotateTransition.stop();
+            rotateTransition.setByAngle(ghost.moveDir() == Direction.LEFT ? -35 : 35);
+            rotateTransition.playFromStart();
+        }
+
+        @Override
+        public void playOrContinue() {
+            var rotateTransition = (RotateTransition) getOrCreateAnimationFX();
+            rotateTransition.stop();
+            rotateTransition.setByAngle(ghost.moveDir() == Direction.LEFT ? -35 : 35);
+            rotateTransition.play();
+        }
+
+        @Override
+        public void stop() {
+            super.stop();
+            setRotationAxis(Rotate.Y_AXIS);
+            setRotate(0);
+        }
+    }
+
+    private class PointsAnimation extends RegisteredAnimation {
+
+        public PointsAnimation(AnimationRegistry animationRegistry) {
+            super(animationRegistry, "Ghost_Points_%s".formatted(ghost.name()));
+        }
+
+        @Override
+        protected Animation createAnimationFX() {
+            var numberBoxRotation = new RotateTransition(Duration.seconds(1), numberBox);
+            numberBoxRotation.setAxis(Rotate.X_AXIS);
+            numberBoxRotation.setFromAngle(0);
+            numberBoxRotation.setToAngle(360);
+            numberBoxRotation.setInterpolator(Interpolator.LINEAR);
+            numberBoxRotation.setRate(0.75);
+            return numberBoxRotation;
+        }
+    }
+
+    private BrakeAnimation brakeAnimation;
+    private PointsAnimation pointsAnimation;
 
     public MutatingGhost3D(
         AnimationRegistry animationRegistry,
@@ -89,68 +143,16 @@ public class MutatingGhost3D extends Group implements Disposable {
         this.numFlashes = requireNonNegativeInt(numFlashes);
 
         ghost3D = new Ghost3D(animationRegistry, ghost, colorSet, dressShape, pupilsShape, eyeballsShape, size);
-
         numberBox = new Box(14, 8, 8);
-
         getChildren().setAll(ghost3D, numberBox);
 
-        pointsAnimation = new RegisteredAnimation(animationRegistry, "Ghost_Points_%s".formatted(ghost.name())) {
-            @Override
-            protected Animation createAnimationFX() {
-                var numberBoxRotation = new RotateTransition(Duration.seconds(1), numberBox);
-                numberBoxRotation.setAxis(Rotate.X_AXIS);
-                numberBoxRotation.setFromAngle(0);
-                numberBoxRotation.setToAngle(360);
-                numberBoxRotation.setInterpolator(Interpolator.LINEAR);
-                numberBoxRotation.setRate(0.75);
-                return numberBoxRotation;
-            }
-        };
-
-        brakeAnimation = new RegisteredAnimation(animationRegistry, "Ghost_Braking_%s".formatted(ghost.name())) {
-            @Override
-            protected Animation createAnimationFX() {
-                var rotateTransition = new RotateTransition(Duration.seconds(0.5), MutatingGhost3D.this);
-                rotateTransition.setAxis(Rotate.Y_AXIS);
-                rotateTransition.setAutoReverse(true);
-                rotateTransition.setCycleCount(2);
-                rotateTransition.setInterpolator(Interpolator.EASE_OUT);
-                return rotateTransition;
-            }
-
-            @Override
-            public void playFromStart() {
-                var rotateTransition = (RotateTransition) getOrCreateAnimationFX();
-                rotateTransition.stop();
-                rotateTransition.setByAngle(ghost.moveDir() == Direction.LEFT ? -35 : 35);
-                rotateTransition.playFromStart();
-            }
-
-            @Override
-            public void playOrContinue() {
-                var rotateTransition = (RotateTransition) getOrCreateAnimationFX();
-                rotateTransition.stop();
-                rotateTransition.setByAngle(ghost.moveDir() == Direction.LEFT ? -35 : 35);
-                rotateTransition.play();
-            }
-
-            @Override
-            public void stop() {
-                super.stop();
-                setRotationAxis(Rotate.Y_AXIS);
-                setRotate(0);
-            }
-        };
+        pointsAnimation = new PointsAnimation(animationRegistry);
+        brakeAnimation = new BrakeAnimation(animationRegistry);
 
         ghost.positionProperty().addListener(this::handleGhostPositionChange);
         ghost.wishDirProperty().addListener(this::handleGhostWishDirChange);
 
-        visibleProperty().bind(Bindings.createBooleanBinding(
-                () -> ghost.isVisible() && !isPositionOutsideWorld(gameLevel, ghost.center()),
-                ghost.visibleProperty(), ghost.positionProperty()
-        ));
-
-        appearanceProperty.addListener(this::handleAppearanceChange);
+        appearance.addListener(this::handleAppearanceChange);
 
         update3DTransform();
         setAppearance(GhostAppearance.NORMAL);
@@ -198,7 +200,7 @@ public class MutatingGhost3D extends Group implements Disposable {
             ghost.wishDirProperty().removeListener(this::handleGhostWishDirChange);
         }
         visibleProperty().unbind();
-        appearanceProperty.removeListener(this::handleAppearanceChange);
+        appearance.removeListener(this::handleAppearanceChange);
         numberMaterialCache.clear();
 
         stopAllAnimations();
@@ -245,12 +247,12 @@ public class MutatingGhost3D extends Group implements Disposable {
         }
     }
 
-    public GhostAppearance appearance() { return appearanceProperty.get(); }
+    public GhostAppearance appearance() { return appearance.get(); }
 
     public void setAppearance(GhostAppearance newAppearance) {
         requireNonNull(newAppearance);
         if (newAppearance != appearance()) {
-            appearanceProperty.set(newAppearance);
+            appearance.set(newAppearance);
         }
     }
 

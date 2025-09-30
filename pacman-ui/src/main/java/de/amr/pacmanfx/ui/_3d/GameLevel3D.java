@@ -28,6 +28,7 @@ import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.*;
 import de.amr.pacmanfx.uilib.widgets.MessageView;
 import javafx.animation.*;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Bounds;
@@ -290,7 +291,7 @@ public class GameLevel3D extends Group implements Disposable {
         createLevelCounter3D();
         createLivesCounter3D();
         createPac3D();
-        ghosts3D = createGhosts3D();
+        ghosts3D = gameLevel.ghosts().map(this::createMutatingGhost3D).toList();
         createMaze3D();
         createPellets3D();
         createEnergizers3D();
@@ -336,35 +337,6 @@ public class GameLevel3D extends Group implements Disposable {
         wallTopMaterial = defaultPhongMaterial(colorScheme.fill());
     }
 
-    private void disposeMaterials() {
-        if (pelletMaterial != null) {
-            pelletMaterial.diffuseColorProperty().unbind();
-            pelletMaterial.specularColorProperty().unbind();
-            pelletMaterial = null;
-        }
-        if (particleMaterial != null) {
-            particleMaterial.diffuseColorProperty().unbind();
-            particleMaterial.specularColorProperty().unbind();
-            particleMaterial = null;
-        }
-        if (floorMaterial != null) {
-            floorMaterial.diffuseColorProperty().unbind();
-            floorMaterial.specularColorProperty().unbind();
-            floorMaterial = null;
-        }
-        if (wallBaseMaterial != null) {
-            wallBaseMaterial.diffuseColorProperty().unbind();
-            wallBaseMaterial.specularColorProperty().unbind();
-            wallBaseMaterial = null;
-        }
-        if (wallTopMaterial != null) {
-            wallTopMaterial.diffuseColorProperty().unbind();
-            wallTopMaterial.specularColorProperty().unbind();
-            wallTopMaterial = null;
-        }
-        Logger.info("Unbound material references");
-    }
-
     private WorldMapColorScheme createWorldMapColorScheme() {
         WorldMap worldMap = gameLevel.worldMap();
         WorldMapColorScheme proposedColorScheme = ui.currentConfig().colorScheme(worldMap);
@@ -377,36 +349,6 @@ public class GameLevel3D extends Group implements Disposable {
 
     private MeshView[] createGhostComponentMeshViews(Mesh componentMesh) {
         return IntStream.range(0, 4).mapToObj(i -> new MeshView(componentMesh)).toArray(MeshView[]::new);
-    }
-
-    private void disposeGhostMeshViews() {
-        if (ghostDressMeshViews != null) {
-            for (MeshView meshView : ghostDressMeshViews) {
-                meshView.setMesh(null);
-                meshView.materialProperty().unbind();
-                meshView.setMaterial(null);
-            }
-            ghostDressMeshViews = null;
-            Logger.info("Cleared dress mesh views");
-        }
-        if (ghostPupilsMeshViews != null) {
-            for (MeshView meshView : ghostPupilsMeshViews) {
-                meshView.setMesh(null);
-                meshView.materialProperty().unbind();
-                meshView.setMaterial(null);
-            }
-            ghostPupilsMeshViews = null;
-            Logger.info("Cleared pupils mesh views");
-        }
-        if (ghostEyesMeshViews != null) {
-            for (MeshView meshView : ghostEyesMeshViews) {
-                meshView.setMesh(null);
-                meshView.materialProperty().unbind();
-                meshView.setMaterial(null);
-            }
-            ghostEyesMeshViews = null;
-            Logger.info("Cleared eyes mesh views");
-        }
     }
 
     private GhostColorSet createGhostColorSet(byte personality) {
@@ -430,8 +372,8 @@ public class GameLevel3D extends Group implements Disposable {
         );
     }
 
-    private List<MutatingGhost3D> createGhosts3D() {
-        return gameLevel.ghosts().map(ghost -> new MutatingGhost3D(
+    private MutatingGhost3D createMutatingGhost3D(Ghost ghost) {
+        var mutatingGhost3D = new MutatingGhost3D(
             animationRegistry,
             gameLevel,
             ghost,
@@ -441,7 +383,17 @@ public class GameLevel3D extends Group implements Disposable {
             ghostEyesMeshViews[ghost.personality()],
             ui.preferences().getFloat("3d.ghost.size"),
             gameLevel.game().numFlashes(gameLevel)
-        )).toList();
+        );
+        mutatingGhost3D.visibleProperty().bind(Bindings.createBooleanBinding(
+            () -> ghost.isVisible() && !outsideWorld(ghost),
+            ghost.visibleProperty(), ghost.positionProperty()
+        ));
+        return mutatingGhost3D;
+    }
+
+    private boolean outsideWorld(Ghost ghost) {
+        Vector2f center = ghost.center();
+        return center.x() < HTS || center.x() > gameLevel.worldMap().numCols() * TS - HTS;
     }
 
     private void createPac3D() {
@@ -1028,5 +980,64 @@ public class GameLevel3D extends Group implements Disposable {
 
         disposeGhostMeshViews();
         disposeMaterials();
+    }
+
+    private void disposeGhostMeshViews() {
+        if (ghostDressMeshViews != null) {
+            for (MeshView meshView : ghostDressMeshViews) {
+                meshView.setMesh(null);
+                meshView.materialProperty().unbind();
+                meshView.setMaterial(null);
+            }
+            ghostDressMeshViews = null;
+            Logger.info("Cleared dress mesh views");
+        }
+        if (ghostPupilsMeshViews != null) {
+            for (MeshView meshView : ghostPupilsMeshViews) {
+                meshView.setMesh(null);
+                meshView.materialProperty().unbind();
+                meshView.setMaterial(null);
+            }
+            ghostPupilsMeshViews = null;
+            Logger.info("Cleared pupils mesh views");
+        }
+        if (ghostEyesMeshViews != null) {
+            for (MeshView meshView : ghostEyesMeshViews) {
+                meshView.setMesh(null);
+                meshView.materialProperty().unbind();
+                meshView.setMaterial(null);
+            }
+            ghostEyesMeshViews = null;
+            Logger.info("Cleared eyes mesh views");
+        }
+    }
+
+    private void disposeMaterials() {
+        if (pelletMaterial != null) {
+            pelletMaterial.diffuseColorProperty().unbind();
+            pelletMaterial.specularColorProperty().unbind();
+            pelletMaterial = null;
+        }
+        if (particleMaterial != null) {
+            particleMaterial.diffuseColorProperty().unbind();
+            particleMaterial.specularColorProperty().unbind();
+            particleMaterial = null;
+        }
+        if (floorMaterial != null) {
+            floorMaterial.diffuseColorProperty().unbind();
+            floorMaterial.specularColorProperty().unbind();
+            floorMaterial = null;
+        }
+        if (wallBaseMaterial != null) {
+            wallBaseMaterial.diffuseColorProperty().unbind();
+            wallBaseMaterial.specularColorProperty().unbind();
+            wallBaseMaterial = null;
+        }
+        if (wallTopMaterial != null) {
+            wallTopMaterial.diffuseColorProperty().unbind();
+            wallTopMaterial.specularColorProperty().unbind();
+            wallTopMaterial = null;
+        }
+        Logger.info("Unbound material references");
     }
 }
