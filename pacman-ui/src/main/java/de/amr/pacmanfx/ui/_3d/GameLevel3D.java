@@ -660,17 +660,17 @@ public class GameLevel3D extends Group implements Disposable {
     public void tick() {
         pac3D.update(gameLevel);
         mutableGhosts3D.forEach(ghost3D -> ghost3D.update(gameLevel));
-        bonus3D().ifPresent(bonus3D -> bonus3D.update(ui.gameContext()));
+        bonus3D().ifPresent(bonus3D -> bonus3D.update(gameLevel));
         if (house3D != null) {
             house3D.tick(gameLevel);
         }
-        int livesCounterSize = ui.gameContext().game().lifeCount() - 1;
+        int livesCounterSize = gameLevel.game().lifeCount() - 1;
         // when the game starts and Pac-Man is not yet visible, show one more
         boolean oneMore = ui.gameContext().gameState() == GamePlayState.STARTING_GAME_OR_LEVEL && !gameLevel.pac().isVisible();
         if (oneMore) livesCounterSize += 1;
         livesCountProperty.set(livesCounterSize);
 
-        boolean visible = ui.gameContext().game().canStartNewGame();
+        boolean visible = gameLevel.game().canStartNewGame();
         if (livesCounter3D != null) {
             livesCounter3D.setVisible(visible);
         }
@@ -679,7 +679,7 @@ public class GameLevel3D extends Group implements Disposable {
     public void onStartingGame() {
         energizers3D().forEach(Energizer3D::stopPumping);
         if (levelCounter3D != null) {
-            levelCounter3D.update(ui, ui.gameContext().game());
+            levelCounter3D.update(ui, gameLevel.game());
         }
     }
 
@@ -711,7 +711,7 @@ public class GameLevel3D extends Group implements Disposable {
     }
 
     public void onGhostDying() {
-        ui.gameContext().game().simulationStep().killedGhosts.forEach(killedGhost -> {
+        gameLevel.game().simulationStep().killedGhosts.forEach(killedGhost -> {
             byte personality = killedGhost.personality();
             int killedIndex = gameLevel.victims().indexOf(killedGhost);
             Image pointsImage = ui.currentConfig().killedGhostPointsImage(killedGhost, killedIndex);
@@ -736,7 +736,7 @@ public class GameLevel3D extends Group implements Disposable {
         if (messageView != null) {
             messageView.setVisible(false);
         }
-        boolean cutSceneFollows = ui.gameContext().game().optCutSceneNumber(gameLevel.number()).isPresent();
+        boolean cutSceneFollows = gameLevel.game().optCutSceneNumber(gameLevel.number()).isPresent();
         RegisteredAnimation levelCompletedAnimation = cutSceneFollows
             ? levelCompletedShortAnimation
             : levelCompletedFullAnimation;
@@ -804,7 +804,7 @@ public class GameLevel3D extends Group implements Disposable {
 
     public void updateLevelCounter3D() {
         if (levelCounter3D != null) {
-            levelCounter3D.update(ui, ui.gameContext().game());
+            levelCounter3D.update(ui, gameLevel.game());
         }
     }
 

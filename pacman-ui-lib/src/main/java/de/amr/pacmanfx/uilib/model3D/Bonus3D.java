@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.model3D;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.Vector2f;
@@ -130,12 +129,12 @@ public class Bonus3D extends Box implements Disposable {
         eatenAnimation = null;
     }
 
-    public void update(GameContext gameContext) {
+    public void update(GameLevel gameLevel) {
         Vector2f center = bonus.center();
         setTranslateX(center.x());
         setTranslateY(center.y());
         setTranslateZ(-HTS);
-        gameContext.optGameLevel().ifPresent(edibleAnimation::update);
+        edibleAnimation.update(gameLevel);
     }
 
     public void showEdible() {
