@@ -9,12 +9,12 @@ import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
@@ -30,25 +30,43 @@ import org.tinylog.Logger;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import static de.amr.pacmanfx.Globals.HTS;
-import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.Validations.requireNonNegative;
 import static de.amr.pacmanfx.Validations.requireNonNegativeInt;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Appearances of a 3D ghost. One of:
+ * Represents the different 3D appearances of a ghost. One of:
  * <ul>
- * <li>{@link GhostAppearance#NORMAL}: colored ghost with blue eyes,
- * <li>{@link GhostAppearance#FRIGHTENED}: blue ghost with empty, "pinkish" eyes (looking blind),
+ * <li>{@link GhostAppearance#NORMAL}: colored ghost, blue eyes,
+ * <li>{@link GhostAppearance#FRIGHTENED}: blue ghost, empty, "pinkish" eyes (looking blind),
  * <li>{@link GhostAppearance#FLASHING}: blue-white flashing skin, pink-red flashing eyes,
  * <li>{@link GhostAppearance#EATEN} eyes only,
- * <li>{@link GhostAppearance#VALUE}: showing eaten ghost's value.
+ * <li>{@link GhostAppearance#VALUE}: eaten ghost's point value.
  * </ul>
  */
-public class MutatingGhost3D extends Group implements Disposable {
+public class MutableGhost3D extends Group implements Disposable {
 
     private static final double GHOST_OVER_FLOOR_DIST = 2.0;
+
+    public static GhostAppearance selectAppearance(
+        GhostState ghostState,
+        boolean powerActive,
+        boolean powerFading,
+        boolean killedDuringCurrentPhase)
+    {
+        if (ghostState == null) {
+            return GhostAppearance.NORMAL; //TODO can this happen?
+        }
+        return switch (ghostState) {
+            case LEAVING_HOUSE, LOCKED -> powerActive && !killedDuringCurrentPhase
+                    ? frightenedOrFlashing(powerFading)
+                    : GhostAppearance.NORMAL;
+            case FRIGHTENED -> frightenedOrFlashing(powerFading);
+            case ENTERING_HOUSE, RETURNING_HOME -> GhostAppearance.EATEN;
+            case EATEN -> GhostAppearance.VALUE;
+            default -> GhostAppearance.NORMAL;
+        };
+    }
 
     private final ObjectProperty<GhostAppearance> appearance = new SimpleObjectProperty<>();
 
@@ -69,7 +87,7 @@ public class MutatingGhost3D extends Group implements Disposable {
 
         @Override
         protected Animation createAnimationFX() {
-            var rotateTransition = new RotateTransition(Duration.seconds(0.5), MutatingGhost3D.this);
+            var rotateTransition = new RotateTransition(Duration.seconds(0.5), MutableGhost3D.this);
             rotateTransition.setAxis(Rotate.Y_AXIS);
             rotateTransition.setAutoReverse(true);
             rotateTransition.setCycleCount(2);
@@ -122,9 +140,8 @@ public class MutatingGhost3D extends Group implements Disposable {
     private BrakeAnimation brakeAnimation;
     private PointsAnimation pointsAnimation;
 
-    public MutatingGhost3D(
+    public MutableGhost3D(
         AnimationRegistry animationRegistry,
-        GameLevel gameLevel,
         Ghost ghost,
         GhostColorSet colorSet,
         MeshView dressShape,
@@ -191,33 +208,6 @@ public class MutatingGhost3D extends Group implements Disposable {
                 brakeAnimation.playFromStart();
             }
         }
-    }
-
-    @Override
-    public void dispose() {
-        if (ghost != null) {
-            ghost.positionProperty().removeListener(this::handleGhostPositionChange);
-            ghost.wishDirProperty().removeListener(this::handleGhostWishDirChange);
-        }
-        visibleProperty().unbind();
-        appearance.removeListener(this::handleAppearanceChange);
-        numberMaterialCache.clear();
-
-        stopAllAnimations();
-        if (brakeAnimation != null) {
-            brakeAnimation.dispose();
-            brakeAnimation = null;
-        }
-        if (pointsAnimation != null) {
-            pointsAnimation.dispose();
-            pointsAnimation = null;
-        }
-        getChildren().clear();
-        if (ghost3D != null) {
-            ghost3D.dispose();
-            ghost3D = null;
-        }
-        numberBox = null;
     }
 
     public void stopAllAnimations() {
@@ -296,11 +286,42 @@ public class MutatingGhost3D extends Group implements Disposable {
         boolean powerActive = gameLevel.pac().powerTimer().isRunning();
         // ghost that got killed already during the current power phase do not look frightened anymore
         boolean killedDuringCurrentPhase = gameLevel.victims().contains(ghost);
-        GhostAppearance appearance = GhostAppearanceSelector.selectAppearance(
+        GhostAppearance appearance = selectAppearance(
             ghost.state(),
             powerActive,
             powerFading,
             killedDuringCurrentPhase);
         setAppearance(appearance);
+    }
+
+    private static GhostAppearance frightenedOrFlashing(boolean powerFading) {
+        return powerFading ? GhostAppearance.FLASHING : GhostAppearance.FRIGHTENED;
+    }
+
+    @Override
+    public void dispose() {
+        if (ghost != null) {
+            ghost.positionProperty().removeListener(this::handleGhostPositionChange);
+            ghost.wishDirProperty().removeListener(this::handleGhostWishDirChange);
+        }
+        visibleProperty().unbind();
+        appearance.removeListener(this::handleAppearanceChange);
+        numberMaterialCache.clear();
+
+        stopAllAnimations();
+        if (brakeAnimation != null) {
+            brakeAnimation.dispose();
+            brakeAnimation = null;
+        }
+        if (pointsAnimation != null) {
+            pointsAnimation.dispose();
+            pointsAnimation = null;
+        }
+        getChildren().clear();
+        if (ghost3D != null) {
+            ghost3D.dispose();
+            ghost3D = null;
+        }
+        numberBox = null;
     }
 }
