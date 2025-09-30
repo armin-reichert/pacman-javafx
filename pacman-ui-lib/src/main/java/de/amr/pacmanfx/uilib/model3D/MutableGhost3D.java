@@ -169,7 +169,7 @@ public class MutableGhost3D extends Group implements Disposable {
         appearance.addListener(this::handleAppearanceChange);
 
         update3DTransform();
-        setAppearance(GhostAppearance.NORMAL);
+        appearance.set(GhostAppearance.NORMAL);
     }
 
     public Ghost3D ghost3D() {
@@ -178,33 +178,6 @@ public class MutableGhost3D extends Group implements Disposable {
 
     public GhostColorSet colorSet() {
         return colorSet;
-    }
-
-    private void handleAppearanceChange(
-            ObservableValue<? extends GhostAppearance> property,
-            GhostAppearance oldAppearance,
-            GhostAppearance newAppearance)
-    {
-        Logger.debug("Ghost {} now has appearance {}", ghost.name(), newAppearance);
-        if (newAppearance == GhostAppearance.VALUE) {
-            numberBox.setVisible(true);
-            ghost3D.setVisible(false);
-            ghost3D.dressAnimation().stop();
-            pointsAnimation.playFromStart();
-        } else {
-            numberBox.setVisible(false);
-            ghost3D.setVisible(true);
-            switch (newAppearance) {
-                case NORMAL     -> ghost3D.setNormalLook();
-                case FRIGHTENED -> ghost3D.setFrightenedLook();
-                case EATEN      -> ghost3D.setEyesOnlyLook();
-                case FLASHING   -> ghost3D.setFlashingLook(numFlashes);
-            }
-            pointsAnimation.stop();
-            if (ghost.moveInfo().tunnelEntered) {
-                brakeAnimation.playFromStart();
-            }
-        }
     }
 
     public void stopAllAnimations() {
@@ -236,13 +209,6 @@ public class MutableGhost3D extends Group implements Disposable {
 
     public GhostAppearance appearance() { return appearance.get(); }
 
-    public void setAppearance(GhostAppearance newAppearance) {
-        requireNonNull(newAppearance);
-        if (newAppearance != appearance()) {
-            appearance.set(newAppearance);
-        }
-    }
-
     public void setNumberImage(Image numberImage) {
         if (!numberMaterialCache.containsKey(numberImage)) {
             var numberMaterial = new PhongMaterial();
@@ -250,6 +216,33 @@ public class MutableGhost3D extends Group implements Disposable {
             numberMaterialCache.put(numberImage, numberMaterial);
         }
         numberBox.setMaterial(numberMaterialCache.get(numberImage));
+    }
+
+    private void handleAppearanceChange(
+        ObservableValue<? extends GhostAppearance> property,
+        GhostAppearance oldAppearance,
+        GhostAppearance newAppearance)
+    {
+        Logger.debug("Ghost {} now has appearance {}", ghost.name(), newAppearance);
+        if (newAppearance == GhostAppearance.VALUE) {
+            numberBox.setVisible(true);
+            ghost3D.setVisible(false);
+            ghost3D.dressAnimation().stop();
+            pointsAnimation.playFromStart();
+        } else {
+            numberBox.setVisible(false);
+            ghost3D.setVisible(true);
+            switch (newAppearance) {
+                case NORMAL     -> ghost3D.setNormalLook();
+                case FRIGHTENED -> ghost3D.setFrightenedLook();
+                case EATEN      -> ghost3D.setEyesOnlyLook();
+                case FLASHING   -> ghost3D.setFlashingLook(numFlashes);
+            }
+            pointsAnimation.stop();
+            if (ghost.moveInfo().tunnelEntered) {
+                brakeAnimation.playFromStart();
+            }
+        }
     }
 
     private void handleGhostPositionChange(
@@ -283,12 +276,12 @@ public class MutableGhost3D extends Group implements Disposable {
         boolean powerActive = gameLevel.pac().powerTimer().isRunning();
         // ghost that got killed already during the current power phase do not look frightened anymore
         boolean killedDuringCurrentPhase = gameLevel.victims().contains(ghost);
-        GhostAppearance appearance = selectAppearance(
+        GhostAppearance newAppearance = selectAppearance(
             ghost.state(),
             powerActive,
             powerFading,
             killedDuringCurrentPhase);
-        setAppearance(appearance);
+        appearance.set(newAppearance);
     }
 
     private static GhostAppearance frightenedOrFlashing(boolean powerFading) {
