@@ -52,15 +52,12 @@ public class MutableGhost3D extends Group implements Disposable {
         GhostState ghostState,
         boolean powerActive,
         boolean powerFading,
-        boolean killedDuringCurrentPhase)
+        boolean killedInCurrentPhase)
     {
-        if (ghostState == null) {
-            return GhostAppearance.NORMAL; //TODO can this happen?
-        }
         return switch (ghostState) {
-            case LEAVING_HOUSE, LOCKED -> powerActive && !killedDuringCurrentPhase
-                    ? frightenedOrFlashing(powerFading)
-                    : GhostAppearance.NORMAL;
+            case null -> GhostAppearance.NORMAL; //TODO can this happen?
+            case LEAVING_HOUSE, LOCKED -> powerActive && !killedInCurrentPhase ?
+                    frightenedOrFlashing(powerFading) : GhostAppearance.NORMAL;
             case FRIGHTENED -> frightenedOrFlashing(powerFading);
             case ENTERING_HOUSE, RETURNING_HOME -> GhostAppearance.EATEN;
             case EATEN -> GhostAppearance.VALUE;
