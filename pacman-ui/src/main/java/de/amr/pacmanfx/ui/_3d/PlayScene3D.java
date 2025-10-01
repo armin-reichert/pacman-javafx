@@ -13,10 +13,7 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.FoodLayer;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
-import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.House;
-import de.amr.pacmanfx.model.Score;
-import de.amr.pacmanfx.model.ScoreManager;
+import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -48,6 +45,7 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.isOneOf;
@@ -323,7 +321,8 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void update() {
-        if (context().optGameLevel().isEmpty()) {
+        GameLevel gameLevel = context().gameLevel();
+        if (gameLevel == null) {
             // Scene is already updated 2 ticks before the game level gets created!
             Logger.info("Tick #{}: Game level not yet created, update ignored", ui.clock().tickCount());
             return;
@@ -332,11 +331,11 @@ public class PlayScene3D implements GameScene {
             Logger.info("Tick #{}: 3D game level not yet created", ui.clock().tickCount());
             return;
         }
-        ui.soundManager().setEnabled(!context().gameLevel().isDemoLevel());
         gameLevel3D.tick();
         updateCamera();
         updateHUD();
-        updateSound();
+        ui.soundManager().setEnabled(!gameLevel.isDemoLevel());
+        updateSound(gameLevel, context().gameState());
     }
 
     @Override
@@ -613,10 +612,8 @@ public class PlayScene3D implements GameScene {
         scores3D.showHighScore(highScore.points(), highScore.levelNumber());
     }
 
-    protected void updateSound() {
-        if (!ui.soundManager().isEnabled()) return;
-        Pac pac = context().gameLevel().pac();
-        boolean pacChased = context().gameState() == HUNTING && !pac.powerTimer().isRunning();
+    protected void updateSiren(Pac pac) {
+        boolean pacChased = !pac.powerTimer().isRunning();
         if (pacChased) {
             // siren numbers are 1..4, hunting phase index = 0..7
             int huntingPhase = context().game().huntingTimer().phaseIndex();
@@ -629,18 +626,32 @@ public class PlayScene3D implements GameScene {
                 default -> throw new IllegalArgumentException("Illegal siren number " + sirenNumber);
             }
         }
+    }
 
+    //TODO this is still crap!
+    protected void updatePacMunchingSound(Pac pac) {
         // TODO Still not sure how to do this right
         if (pac.starvingTicks() >= 10 && !ui.soundManager().isPaused(SoundID.PAC_MAN_MUNCHING)) {
             ui.soundManager().pause(SoundID.PAC_MAN_MUNCHING);
         }
+    }
 
-        boolean isGhostReturningHome = context().gameLevel().pac().isAlive()
-            && context().gameLevel().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).findAny().isPresent();
-        if (isGhostReturningHome) {
+    protected void updateGhostSounds(Pac pac, Stream<Ghost> ghosts) {
+        boolean returningHome = pac.isAlive() && ghosts.anyMatch(ghost ->
+            ghost.state() == GhostState.RETURNING_HOME || ghost.state() == GhostState.ENTERING_HOUSE);
+        if (returningHome) {
             ui.soundManager().loop(SoundID.GHOST_RETURNS);
         } else {
             ui.soundManager().stop(SoundID.GHOST_RETURNS);
+        }
+    }
+
+    protected void updateSound(GameLevel gameLevel, GameState gameState) {
+        if (!ui.soundManager().isEnabled()) return;
+        if (gameState == HUNTING) {
+            updateSiren(gameLevel.pac());
+            updatePacMunchingSound(gameLevel.pac());
+            updateGhostSounds(gameLevel.pac(), gameLevel.ghosts());
         }
     }
 

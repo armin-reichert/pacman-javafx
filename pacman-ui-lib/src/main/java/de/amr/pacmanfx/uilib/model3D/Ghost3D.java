@@ -31,12 +31,43 @@ public class Ghost3D extends Group implements Disposable {
 
     public record MaterialSet(PhongMaterial dress, PhongMaterial eyeballs, PhongMaterial pupils) {}
 
+    private final Ghost ghost;
+    private final GhostColorSet colorSet;
+
+    private MaterialSet normalMaterialSet;
+    private MaterialSet frightenedMaterialSet;
+    private MaterialSet flashingMaterialSet;
+
+    private MeshView dressShape;
+    private MeshView pupilsShape;
+    private MeshView eyeballsShape;
+
+    private Group dressGroup;
+
+    public class DressAnimation extends RegisteredAnimation {
+
+        public DressAnimation(AnimationRegistry animationRegistry) {
+            super(animationRegistry, "Ghost_DressAnimation_%s".formatted(ghost.name()));
+        }
+
+        @Override
+        protected Animation createAnimationFX() {
+            var animation = new RotateTransition(Duration.seconds(0.3), dressGroup);
+            // TODO I expected this should be the z-axis but... (transforms messed-up?)
+            animation.setAxis(Rotate.Y_AXIS);
+            animation.setByAngle(30);
+            animation.setCycleCount(Animation.INDEFINITE);
+            animation.setAutoReverse(true);
+            return animation;
+        }
+    }
+
     public class FlashingAnimation extends RegisteredAnimation {
         private Duration totalDuration = Duration.seconds(3);
         private int numFlashes = 5;
 
-        public FlashingAnimation(AnimationRegistry animationRegistry, String ghostName) {
-            super(animationRegistry, "Ghost_Flashing_%s".formatted(ghostName));
+        public FlashingAnimation(AnimationRegistry animationRegistry) {
+            super(animationRegistry, "Ghost_Flashing_%s".formatted(ghost.name()));
         }
 
         public void setTotalDuration(Duration totalDuration) {
@@ -73,20 +104,8 @@ public class Ghost3D extends Group implements Disposable {
         }
     }
 
-    private MaterialSet normalMaterialSet;
-    private MaterialSet frightenedMaterialSet;
-    private MaterialSet flashingMaterialSet;
-
-    private MeshView dressShape;
-    private MeshView pupilsShape;
-    private MeshView eyeballsShape;
-
-    private Group dressGroup;
-
-    private RegisteredAnimation dressAnimation;
+    private DressAnimation dressAnimation;
     private FlashingAnimation flashingAnimation;
-
-    private final GhostColorSet colorSet;
 
     public Ghost3D(
         AnimationRegistry animationRegistry,
@@ -98,7 +117,7 @@ public class Ghost3D extends Group implements Disposable {
         double size)
     {
         requireNonNull(animationRegistry);
-        requireNonNull(ghost);
+        this.ghost = requireNonNull(ghost);
         this.colorSet      = requireNonNull(colorSet);
         this.dressShape    = requireNonNull(dressShape);
         this.pupilsShape   = requireNonNull(pupilsShape);
@@ -152,52 +171,8 @@ public class Ghost3D extends Group implements Disposable {
         );
         getTransforms().add(scale);
 
-        dressAnimation = new RegisteredAnimation(animationRegistry, "Ghost_DressMoving_%s".formatted(ghost.name())) {
-            @Override
-            protected Animation createAnimationFX() {
-                var animation = new RotateTransition(Duration.seconds(0.3), dressGroup);
-                // TODO I expected this should be the z-axis but... (transforms messed-up?)
-                animation.setAxis(Rotate.Y_AXIS);
-                animation.setByAngle(30);
-                animation.setCycleCount(Animation.INDEFINITE);
-                animation.setAutoReverse(true);
-                return animation;
-            }
-        };
-
-        flashingAnimation = new FlashingAnimation(animationRegistry, ghost.name());
-    }
-
-    @Override
-    public void dispose() {
-        getChildren().clear();
-
-        dressShape.setMesh(null);
-        dressShape.materialProperty().unbind();
-        dressShape.setMaterial(null);
-        dressShape = null;
-
-        pupilsShape.setMesh(null);
-        pupilsShape.materialProperty().unbind();
-        pupilsShape.setMaterial(null);
-        pupilsShape = null;
-
-        eyeballsShape.setMesh(null);
-        eyeballsShape.materialProperty().unbind();
-        eyeballsShape.setMaterial(null);
-        eyeballsShape = null;
-
-        dressGroup.getChildren().clear();
-        dressGroup = null;
-
-        dressAnimation.dispose();
-        dressAnimation = null;
-        flashingAnimation.dispose();
-        flashingAnimation = null;
-
-        normalMaterialSet = null;
-        frightenedMaterialSet = null;
-        flashingMaterialSet = null;
+        dressAnimation = new DressAnimation(animationRegistry);
+        flashingAnimation = new FlashingAnimation(animationRegistry);
     }
 
     public MaterialSet normalMaterialSet() {
@@ -260,5 +235,37 @@ public class Ghost3D extends Group implements Disposable {
         dressAnimation.pause();
         dressShape.setVisible(false);
         setMaterialSet(normalMaterialSet);
+    }
+
+    @Override
+    public void dispose() {
+        getChildren().clear();
+
+        dressShape.setMesh(null);
+        dressShape.materialProperty().unbind();
+        dressShape.setMaterial(null);
+        dressShape = null;
+
+        pupilsShape.setMesh(null);
+        pupilsShape.materialProperty().unbind();
+        pupilsShape.setMaterial(null);
+        pupilsShape = null;
+
+        eyeballsShape.setMesh(null);
+        eyeballsShape.materialProperty().unbind();
+        eyeballsShape.setMaterial(null);
+        eyeballsShape = null;
+
+        dressGroup.getChildren().clear();
+        dressGroup = null;
+
+        dressAnimation.dispose();
+        dressAnimation = null;
+        flashingAnimation.dispose();
+        flashingAnimation = null;
+
+        normalMaterialSet = null;
+        frightenedMaterialSet = null;
+        flashingMaterialSet = null;
     }
 }
