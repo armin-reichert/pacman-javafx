@@ -61,16 +61,16 @@ import static java.util.Objects.requireNonNull;
  * 3D play scene.
  *
  * <p>Provides different camera perspectives that can be stepped through using key combinations
- * <code>Alt+LEFT</code> and <code>Alt+RIGHT</code> (Did he really said Alt-Right?).
+ * <code>Alt+LEFT</code> and <code>Alt+RIGHT</code>.
  */
 public class PlayScene3D implements GameScene {
 
     private static final Color SUB_SCENE_FILL_DARK = Color.BLACK;
     private static final Color SUB_SCENE_FILL_BRIGHT = Color.TRANSPARENT;
 
-    private final Map<PerspectiveID, Perspective> perspectiveMap = new EnumMap<>(PerspectiveID.class);
+    private final Map<PerspectiveID, Perspective> perspectivesByID = new EnumMap<>(PerspectiveID.class);
 
-    private final ObjectProperty<PerspectiveID> perspectiveIDProperty = new SimpleObjectProperty<>() {
+    private final ObjectProperty<PerspectiveID> perspectiveID = new SimpleObjectProperty<>() {
         @Override
         protected void invalidated() {
             if (get() != null) {
@@ -79,36 +79,35 @@ public class PlayScene3D implements GameScene {
         }
     };
 
-    private final AbstractGameAction droneUp = new AbstractGameAction("DroneUp") {
+    private final AbstractGameAction actionDroneUp = new AbstractGameAction("DroneUp") {
         @Override
         public void execute(GameUI ui) {
-            if (perspectiveMap.get(PerspectiveID.DRONE) instanceof DronePerspective dronePerspective) {
+            if (perspectivesByID.get(PerspectiveID.DRONE) instanceof DronePerspective dronePerspective) {
                 dronePerspective.moveUp();
             }
         }
         @Override
         public boolean isEnabled(GameUI ui) {
-            return perspectiveIDProperty.get() == PerspectiveID.DRONE;
+            return perspectiveID.get() == PerspectiveID.DRONE;
         }
     };
 
-    private final AbstractGameAction droneDown = new AbstractGameAction("DroneDown") {
+    private final AbstractGameAction actionDroneDown = new AbstractGameAction("DroneDown") {
         @Override
         public void execute(GameUI ui) {
-            if (perspectiveMap.get(PerspectiveID.DRONE) instanceof DronePerspective dronePerspective) {
+            if (perspectivesByID.get(PerspectiveID.DRONE) instanceof DronePerspective dronePerspective) {
                 dronePerspective.moveDown();
             }
         }
-
         @Override
         public boolean isEnabled(GameUI ui) {
-            return perspectiveIDProperty.get() == PerspectiveID.DRONE;
+            return perspectiveID.get() == PerspectiveID.DRONE;
         }
     };
 
     protected final GameUI ui;
     protected final SubScene subScene;
-    protected final PerspectiveCamera camera = new PerspectiveCamera(true);
+    protected final PerspectiveCamera camera;
     protected final ActionBindingsManager actionBindings;
     protected final Group gameLevel3DParent = new Group();
     protected GameLevel3D gameLevel3D;
@@ -116,22 +115,20 @@ public class PlayScene3D implements GameScene {
 
     public PlayScene3D(GameUI ui) {
         this.ui = requireNonNull(ui);
-        this.actionBindings = new DefaultActionBindingsManager();
+        actionBindings = new DefaultActionBindingsManager();
+        camera = new PerspectiveCamera(true);
 
-        createPerspectives();
+        perspectivesByID.put(PerspectiveID.DRONE, new DronePerspective());
+        perspectivesByID.put(PerspectiveID.TOTAL, new TotalPerspective());
+        perspectivesByID.put(PerspectiveID.TRACK_PLAYER, new TrackingPlayerPerspective());
+        perspectivesByID.put(PerspectiveID.NEAR_PLAYER, new StalkingPlayerPerspective());
 
-        var root = new Group();
-        // initial size is irrelevant because size gets bound to parent scene size later
-        subScene = new SubScene(root, 88, 88, true, SceneAntialiasing.BALANCED);
-        subScene.setCamera(camera);
-        subScene.setFill(SUB_SCENE_FILL_DARK);
-
-        // The score is always displayed in full view, regardless which perspective is used
         scores3D = new Scores3D(
             ui.assets().translated("score.score"),
             ui.assets().translated("score.high_score"),
             ui.assets().arcadeFont(TS)
         );
+        // The score is always displayed in full view, regardless which perspective is used
         scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
         scores3D.rotateProperty().bind(camera.rotateProperty());
 
@@ -144,34 +141,33 @@ public class PlayScene3D implements GameScene {
         var coordinateSystem = new CoordinateSystem();
         coordinateSystem.visibleProperty().bind(PROPERTY_3D_AXES_VISIBLE);
 
+        var root = new Group();
+        // initial size is irrelevant because size gets bound to parent scene size later
+        subScene = new SubScene(root, 88, 88, true, SceneAntialiasing.BALANCED);
+        subScene.setCamera(camera);
+        subScene.setFill(SUB_SCENE_FILL_DARK);
+
         root.getChildren().setAll(gameLevel3DParent, scores3D, coordinateSystem);
     }
 
     public ObjectProperty<PerspectiveID> perspectiveIDProperty() {
-        return perspectiveIDProperty;
-    }
-
-    private void createPerspectives() {
-        perspectiveMap.put(PerspectiveID.DRONE, new DronePerspective());
-        perspectiveMap.put(PerspectiveID.TOTAL, new TotalPerspective());
-        perspectiveMap.put(PerspectiveID.TRACK_PLAYER, new TrackingPlayerPerspective());
-        perspectiveMap.put(PerspectiveID.NEAR_PLAYER, new StalkingPlayerPerspective());
+        return perspectiveID;
     }
 
     private void handleScrollEvent(ScrollEvent e) {
         if (ui.currentGameScene().isPresent() && ui.currentGameScene().get() == this) {
             if (e.getDeltaY() < 0) {
-                droneUp.executeIfEnabled(ui);
+                actionDroneUp.executeIfEnabled(ui);
             } else if (e.getDeltaY() > 0) {
-                droneDown.executeIfEnabled(ui);
+                actionDroneDown.executeIfEnabled(ui);
             }
         }
     }
 
     private void initPerspective() {
-        PerspectiveID id = perspectiveIDProperty.get();
-        if (id != null && perspectiveMap.containsKey(id)) {
-            perspectiveMap.get(id).init(camera);
+        PerspectiveID id = perspectiveID.get();
+        if (id != null && perspectivesByID.containsKey(id)) {
+            perspectivesByID.get(id).init(camera);
         } else {
             Logger.error("Cannot init camera perspective with ID '{}'", id);
         }
@@ -301,8 +297,8 @@ public class PlayScene3D implements GameScene {
     public void init() {
         context().game().hud().showScore(true);
         perspectiveIDProperty().bind(PROPERTY_3D_PERSPECTIVE);
-        actionBindings.bind(droneUp, control(KeyCode.MINUS));
-        actionBindings.bind(droneDown, control(KeyCode.PLUS));
+        actionBindings.bind(actionDroneUp, control(KeyCode.MINUS));
+        actionBindings.bind(actionDroneDown, control(KeyCode.PLUS));
         actionBindings.installBindings(ui.keyboard());
         // TODO: integrate into input framework?
         ui.stage().getScene().addEventHandler(ScrollEvent.SCROLL, this::handleScrollEvent);
@@ -357,7 +353,7 @@ public class PlayScene3D implements GameScene {
                 case HUNTING -> gameLevel3D.onHuntingStart();
                 case PACMAN_DYING -> gameLevel3D.onPacManDying(state);
                 case GHOST_DYING -> gameLevel3D.onGhostDying();
-                case LEVEL_COMPLETE -> gameLevel3D.onLevelComplete(state, perspectiveIDProperty);
+                case LEVEL_COMPLETE -> gameLevel3D.onLevelComplete(state, perspectiveID);
                 case GAME_OVER -> gameLevel3D.onGameOver(state);
                 case STARTING_GAME_OR_LEVEL -> {
                     if (gameLevel3D != null) {
@@ -589,9 +585,9 @@ public class PlayScene3D implements GameScene {
     }
 
     protected void updateCamera() {
-        PerspectiveID id = perspectiveIDProperty.get();
-        if (id != null && perspectiveMap.containsKey(id)) {
-            perspectiveMap.get(id).update(camera, context());
+        PerspectiveID id = perspectiveID.get();
+        if (id != null && perspectivesByID.containsKey(id)) {
+            perspectivesByID.get(id).update(camera, context());
         }
         else {
             Logger.error("No perspective with ID '{}' exists", id);
