@@ -752,7 +752,7 @@ public class GameLevel3D extends Group implements Disposable {
         );
         animation.setOnFinished(e -> {
             wallBaseHeightProperty.bind(PROPERTY_3D_WALL_HEIGHT);
-            perspectiveIDProperty.bind(PROPERTY_3D_PERSPECTIVE);
+            perspectiveIDProperty.bind(PROPERTY_3D_PERSPECTIVE_ID);
             ui.gameContext().gameController().letCurrentGameStateExpire();
         });
         animation.play();

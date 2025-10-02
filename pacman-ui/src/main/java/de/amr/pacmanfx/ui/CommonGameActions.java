@@ -205,8 +205,8 @@ public interface CommonGameActions {
     AbstractGameAction ACTION_PERSPECTIVE_NEXT = new AbstractGameAction("PERSPECTIVE_NEXT") {
         @Override
         public void execute(GameUI ui) {
-            PerspectiveID id = PROPERTY_3D_PERSPECTIVE.get().next();
-            PROPERTY_3D_PERSPECTIVE.set(id);
+            PerspectiveID id = PROPERTY_3D_PERSPECTIVE_ID.get().next();
+            PROPERTY_3D_PERSPECTIVE_ID.set(id);
             String msgKey = ui.assets().translated("camera_perspective", ui.assets().translated("perspective_id_" + id.name()));
             ui.showFlashMessage(msgKey);
         }
@@ -215,8 +215,8 @@ public interface CommonGameActions {
     AbstractGameAction ACTION_PERSPECTIVE_PREVIOUS = new AbstractGameAction("PERSPECTIVE_PREVIOUS") {
         @Override
         public void execute(GameUI ui) {
-            PerspectiveID id = PROPERTY_3D_PERSPECTIVE.get().prev();
-            PROPERTY_3D_PERSPECTIVE.set(id);
+            PerspectiveID id = PROPERTY_3D_PERSPECTIVE_ID.get().prev();
+            PROPERTY_3D_PERSPECTIVE_ID.set(id);
             String msgKey = ui.assets().translated("camera_perspective", ui.assets().translated("perspective_id_" + id.name()));
             ui.showFlashMessage(msgKey);
         }

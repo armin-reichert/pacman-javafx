@@ -9,21 +9,21 @@ import javafx.beans.property.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 
-public class GameUI_Properties {
-    public static final ObjectProperty<Color>            PROPERTY_CANVAS_BACKGROUND_COLOR = new SimpleObjectProperty<>(Color.BLACK);
-    public static final BooleanProperty                  PROPERTY_CANVAS_FONT_SMOOTHING = new SimpleBooleanProperty(false);
-    public static final BooleanProperty                  PROPERTY_DEBUG_INFO_VISIBLE = new SimpleBooleanProperty(false);
-    public static final IntegerProperty                  PROPERTY_MINI_VIEW_HEIGHT = new SimpleIntegerProperty(400);
-    public static final BooleanProperty                  PROPERTY_MINI_VIEW_ON = new SimpleBooleanProperty(false);
-    public static final IntegerProperty                  PROPERTY_MINI_VIEW_OPACITY_PERCENT = new SimpleIntegerProperty(69);
-    public static final BooleanProperty                  PROPERTY_MUTED = new SimpleBooleanProperty(false);
-    public static final IntegerProperty                  PROPERTY_SIMULATION_STEPS = new SimpleIntegerProperty(1);
-    public static final BooleanProperty                  PROPERTY_3D_AXES_VISIBLE = new SimpleBooleanProperty(false);
-    public static final ObjectProperty<DrawMode>         PROPERTY_3D_DRAW_MODE = new SimpleObjectProperty<>(DrawMode.FILL);
-    public static final BooleanProperty                  PROPERTY_3D_ENABLED = new SimpleBooleanProperty(false);
-    public static final ObjectProperty<Color>            PROPERTY_3D_FLOOR_COLOR = new SimpleObjectProperty<>(Color.rgb(20,20,20));
-    public static final ObjectProperty<Color>            PROPERTY_3D_LIGHT_COLOR = new SimpleObjectProperty<>(Color.WHITE);
-    public static final ObjectProperty<PerspectiveID>    PROPERTY_3D_PERSPECTIVE = new SimpleObjectProperty<>(PerspectiveID.TRACK_PLAYER);
-    public static final DoubleProperty                   PROPERTY_3D_WALL_HEIGHT = new SimpleDoubleProperty();
-    public static final DoubleProperty                   PROPERTY_3D_WALL_OPACITY = new SimpleDoubleProperty(1.0);
+public interface GameUI_Properties {
+    ObjectProperty<Color>         PROPERTY_CANVAS_BACKGROUND_COLOR = new SimpleObjectProperty<>(Color.BLACK);
+    BooleanProperty               PROPERTY_CANVAS_FONT_SMOOTHING = new SimpleBooleanProperty(false);
+    BooleanProperty               PROPERTY_DEBUG_INFO_VISIBLE = new SimpleBooleanProperty(false);
+    IntegerProperty               PROPERTY_MINI_VIEW_HEIGHT = new SimpleIntegerProperty(400);
+    BooleanProperty               PROPERTY_MINI_VIEW_ON = new SimpleBooleanProperty(false);
+    IntegerProperty               PROPERTY_MINI_VIEW_OPACITY_PERCENT = new SimpleIntegerProperty(69);
+    BooleanProperty               PROPERTY_MUTED = new SimpleBooleanProperty(false);
+    IntegerProperty               PROPERTY_SIMULATION_STEPS = new SimpleIntegerProperty(1);
+    BooleanProperty               PROPERTY_3D_AXES_VISIBLE = new SimpleBooleanProperty(false);
+    ObjectProperty<DrawMode>      PROPERTY_3D_DRAW_MODE = new SimpleObjectProperty<>(DrawMode.FILL);
+    BooleanProperty               PROPERTY_3D_ENABLED = new SimpleBooleanProperty(false);
+    ObjectProperty<Color>         PROPERTY_3D_FLOOR_COLOR = new SimpleObjectProperty<>(Color.rgb(20,20,20));
+    ObjectProperty<Color>         PROPERTY_3D_LIGHT_COLOR = new SimpleObjectProperty<>(Color.WHITE);
+    ObjectProperty<PerspectiveID> PROPERTY_3D_PERSPECTIVE_ID = new SimpleObjectProperty<>(PerspectiveID.TRACK_PLAYER);
+    DoubleProperty                PROPERTY_3D_WALL_HEIGHT = new SimpleDoubleProperty();
+    DoubleProperty                PROPERTY_3D_WALL_OPACITY = new SimpleDoubleProperty(1.0);
 }

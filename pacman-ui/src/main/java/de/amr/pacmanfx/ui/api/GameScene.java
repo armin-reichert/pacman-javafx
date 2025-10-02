@@ -10,6 +10,7 @@ import javafx.scene.SubScene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.input.ScrollEvent;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,6 +27,8 @@ public interface GameScene extends GameEventListener {
     ActionBindingsManager actionBindings();
 
     void handleKeyboardInput();
+
+    default void handleScrollEvent(ScrollEvent e) {}
 
     /**
      * Called when the scene becomes the current one.

@@ -13,7 +13,10 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.FoodLayer;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
-import de.amr.pacmanfx.model.*;
+import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.House;
+import de.amr.pacmanfx.model.Score;
+import de.amr.pacmanfx.model.ScoreManager;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -220,35 +223,29 @@ public class PlayScene3D implements GameScene {
             var item = new RadioMenuItem(ui.assets().translated("perspective_id_" + id.name()));
             item.setUserData(id);
             item.setToggleGroup(perspectiveToggleGroup);
-            if (id == PROPERTY_3D_PERSPECTIVE.get())  {
+            if (id == PROPERTY_3D_PERSPECTIVE_ID.get())  {
                 item.setSelected(true);
             }
-            item.setOnAction(e -> PROPERTY_3D_PERSPECTIVE.set(id));
+            item.setOnAction(e -> PROPERTY_3D_PERSPECTIVE_ID.set(id));
             items.add(item);
         }
-        Logger.info("Added listener to UI property3DPerspective property");
-        PROPERTY_3D_PERSPECTIVE.addListener(this::handle3DPerspectiveChange);
-        menu.setOnHidden(e -> {
-            PROPERTY_3D_PERSPECTIVE.removeListener(this::handle3DPerspectiveChange);
-            Logger.info("Removed listener from UI property3DPerspective property");
-        });
+        PROPERTY_3D_PERSPECTIVE_ID.addListener(this::handlePerspectiveIDChange);
+        menu.setOnHidden(e -> PROPERTY_3D_PERSPECTIVE_ID.removeListener(this::handlePerspectiveIDChange));
         return items;
     }
 
-    private void handleScrollEvent(ScrollEvent e) {
+    @Override
+    public void handleScrollEvent(ScrollEvent e) {
         if (e.getDeltaY() < 0) {
             actionDroneUp.executeIfEnabled(ui);
-        } else if (e.getDeltaY() > 0) {
+        } else {
             actionDroneDown.executeIfEnabled(ui);
         }
     }
 
-    private void handle3DPerspectiveChange(
-        ObservableValue<? extends PerspectiveID> property,
-        PerspectiveID oldPerspectiveID,
-        PerspectiveID newPerspectiveID) {
+    private void handlePerspectiveIDChange(ObservableValue<? extends PerspectiveID> property, PerspectiveID oldID, PerspectiveID newID) {
         for (Toggle toggle : perspectiveToggleGroup.getToggles()) {
-            if (toggle.getUserData() == newPerspectiveID) {
+            if (toggle.getUserData() == newID) {
                 perspectiveToggleGroup.selectToggle(toggle);
             }
         }
@@ -274,7 +271,7 @@ public class PlayScene3D implements GameScene {
     }
 
     /**
-     * Overridden by Tengen Ms. Pac-Man play scene 3D to use keys representing "Joypad" buttons.
+     * Overridden by "Tengen Ms. Pac-Man" subclass to bind to keys representing the Joypad buttons.
      */
     protected void setPlayerSteeringActionBindings() {
         actionBindings.assign(ACTION_STEER_UP, ui.actionBindings());
@@ -286,17 +283,14 @@ public class PlayScene3D implements GameScene {
     @Override
     public void init() {
         context().game().hud().showScore(true);
-        perspectiveIDProperty().bind(PROPERTY_3D_PERSPECTIVE);
+        perspectiveIDProperty().bind(PROPERTY_3D_PERSPECTIVE_ID);
         actionBindings.bind(actionDroneUp, control(KeyCode.MINUS));
         actionBindings.bind(actionDroneDown, control(KeyCode.PLUS));
         actionBindings.installBindings(ui.keyboard());
-        // TODO: integrate into input framework?
-        ui.stage().getScene().addEventHandler(ScrollEvent.SCROLL, this::handleScrollEvent);
     }
 
     @Override
     public void end() {
-        ui.stage().removeEventHandler(ScrollEvent.SCROLL, this::handleScrollEvent);
         ui.soundManager().stopAll();
         if (gameLevel3D != null) {
             gameLevel3D.dispose();
@@ -335,7 +329,7 @@ public class PlayScene3D implements GameScene {
         if (state.is(LevelShortTestState.class) || state.is(LevelMediumTestState.class)) {
             replaceGameLevel3D();
             showLevelTestMessage();
-            PROPERTY_3D_PERSPECTIVE.set(PerspectiveID.TOTAL);
+            PROPERTY_3D_PERSPECTIVE_ID.set(PerspectiveID.TOTAL);
         }
         else {
             switch (state) {

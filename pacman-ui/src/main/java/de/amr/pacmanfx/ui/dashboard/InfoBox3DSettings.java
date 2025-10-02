@@ -88,7 +88,7 @@ public class InfoBox3DSettings extends InfoBox {
         setEditor(sliderMiniViewOpacity, PROPERTY_MINI_VIEW_OPACITY_PERCENT);
         setEditor(sliderWallHeight, PROPERTY_3D_WALL_HEIGHT);
         setEditor(sliderWallOpacity, PROPERTY_3D_WALL_OPACITY);
-        setEditor(comboPerspectives, PROPERTY_3D_PERSPECTIVE);
+        setEditor(comboPerspectives, PROPERTY_3D_PERSPECTIVE_ID);
 
         cbUsePlayScene3D.setOnAction(e -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.executeIfEnabled(ui));
         cbWireframeMode.setOnAction(e -> ACTION_TOGGLE_DRAW_MODE.executeIfEnabled(ui));
@@ -97,14 +97,14 @@ public class InfoBox3DSettings extends InfoBox {
     @Override
     public void update() {
         super.update();
-        comboPerspectives.setValue(PROPERTY_3D_PERSPECTIVE.get());
+        comboPerspectives.setValue(PROPERTY_3D_PERSPECTIVE_ID.get());
         sliderMiniViewSceneHeight.setValue(PROPERTY_MINI_VIEW_HEIGHT.get());
         sliderMiniViewOpacity.setValue(PROPERTY_MINI_VIEW_OPACITY_PERCENT.get());
         sliderWallHeight.setValue(PROPERTY_3D_WALL_HEIGHT.get());
         sliderWallOpacity.setValue(PROPERTY_3D_WALL_OPACITY.get());
         cbUsePlayScene3D.setSelected(PROPERTY_3D_ENABLED.get());
         cbMiniViewVisible.setSelected(PROPERTY_MINI_VIEW_ON.getValue());
-        comboPerspectives.setValue(PROPERTY_3D_PERSPECTIVE.get());
+        comboPerspectives.setValue(PROPERTY_3D_PERSPECTIVE_ID.get());
         cbAxesVisible.setSelected(PROPERTY_3D_AXES_VISIBLE.get());
         cbWireframeMode.setSelected(PROPERTY_3D_DRAW_MODE.get() == DrawMode.LINE);
     }

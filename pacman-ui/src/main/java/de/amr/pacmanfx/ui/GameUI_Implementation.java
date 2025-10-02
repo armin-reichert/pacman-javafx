@@ -21,6 +21,7 @@ import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.ScrollEvent;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -139,7 +140,7 @@ public class GameUI_Implementation implements GameUI {
                 currentView().handleKeyboardInput(this);
             }
         });
-
+        mainScene.setOnScroll(this::handleScrollEvent);
         mainScene.rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
             () -> assets.background(isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D)
                 ? "background.play_scene3d" : "background.scene"),
@@ -161,6 +162,10 @@ public class GameUI_Implementation implements GameUI {
         statusIcons.icon3D()       .visibleProperty().bind(PROPERTY_3D_ENABLED);
         statusIcons.iconAutopilot().visibleProperty().bind(gameContext().gameController().propertyUsingAutopilot());
         statusIcons.iconImmune()   .visibleProperty().bind(gameContext().gameController().propertyImmunity());
+    }
+
+    private void handleScrollEvent(ScrollEvent scrollEvent) {
+        currentGameScene().ifPresent(gameScene -> gameScene.handleScrollEvent(scrollEvent));
     }
 
     private void configureStage(Stage stage) {
