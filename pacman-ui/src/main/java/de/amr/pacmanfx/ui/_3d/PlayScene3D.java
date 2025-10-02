@@ -56,8 +56,7 @@ import static de.amr.pacmanfx.controller.GamePlayState.*;
 import static de.amr.pacmanfx.ui.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.api.GameUI_Properties.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.control;
-import static de.amr.pacmanfx.uilib.Ufx.createContextMenuTitle;
-import static de.amr.pacmanfx.uilib.Ufx.pauseSec;
+import static de.amr.pacmanfx.uilib.Ufx.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -83,12 +82,18 @@ public class PlayScene3D implements GameScene {
         }
     };
 
+    private Optional<Perspective> currentPerspective() {
+        return perspectiveID.get() == null ? Optional.empty() : Optional.of(perspectivesByID.get(perspectiveID.get()));
+    }
+
     private final AbstractGameAction actionDroneUp = new AbstractGameAction("DroneUp") {
         @Override
         public void execute(GameUI ui) {
-            if (perspectivesByID.get(PerspectiveID.DRONE) instanceof DronePerspective dronePerspective) {
-                dronePerspective.moveUp();
-            }
+            currentPerspective().ifPresent(perspective -> {
+                if (perspective instanceof DronePerspective dronePerspective) {
+                    dronePerspective.moveUp();
+                }
+            });
         }
         @Override
         public boolean isEnabled(GameUI ui) {
@@ -99,9 +104,11 @@ public class PlayScene3D implements GameScene {
     private final AbstractGameAction actionDroneDown = new AbstractGameAction("DroneDown") {
         @Override
         public void execute(GameUI ui) {
-            if (perspectivesByID.get(PerspectiveID.DRONE) instanceof DronePerspective dronePerspective) {
-                dronePerspective.moveDown();
-            }
+            currentPerspective().ifPresent(perspective -> {
+                if (perspective instanceof DronePerspective dronePerspective) {
+                    dronePerspective.moveDown();
+                }
+            });
         }
         @Override
         public boolean isEnabled(GameUI ui) {
@@ -161,6 +168,15 @@ public class PlayScene3D implements GameScene {
     @Override
     public void handleKeyboardInput() {
         actionBindings.matchingAction(ui.keyboard()).ifPresent(gameAction -> gameAction.executeIfEnabled(ui));
+    }
+
+    @Override
+    public void handleScrollEvent(ScrollEvent e) {
+        if (e.getDeltaY() < 0) {
+            actionDroneUp.executeIfEnabled(ui);
+        } else {
+            actionDroneDown.executeIfEnabled(ui);
+        }
     }
 
     @Override
@@ -232,15 +248,6 @@ public class PlayScene3D implements GameScene {
         PROPERTY_3D_PERSPECTIVE_ID.addListener(this::handlePerspectiveIDChange);
         menu.setOnHidden(e -> PROPERTY_3D_PERSPECTIVE_ID.removeListener(this::handlePerspectiveIDChange));
         return items;
-    }
-
-    @Override
-    public void handleScrollEvent(ScrollEvent e) {
-        if (e.getDeltaY() < 0) {
-            actionDroneUp.executeIfEnabled(ui);
-        } else {
-            actionDroneDown.executeIfEnabled(ui);
-        }
     }
 
     private void handlePerspectiveIDChange(ObservableValue<? extends PerspectiveID> property, PerspectiveID oldID, PerspectiveID newID) {
@@ -328,7 +335,7 @@ public class PlayScene3D implements GameScene {
         requireNonNull(state);
         if (state.is(LevelShortTestState.class) || state.is(LevelMediumTestState.class)) {
             replaceGameLevel3D();
-            showLevelTestMessage();
+            showLevelTestMessage(context().gameLevel());
             PROPERTY_3D_PERSPECTIVE_ID.set(PerspectiveID.TOTAL);
         }
         else {
@@ -368,7 +375,7 @@ public class PlayScene3D implements GameScene {
         if (state.is(LevelShortTestState.class) || state.is(LevelMediumTestState.class)) {
             replaceGameLevel3D(); //TODO check when to destroy previous level
             gameLevel3D.energizers3D().forEach(Energizer3D::startPumping);
-            showLevelTestMessage();
+            showLevelTestMessage(gameLevel);
         }
         else {
             switch (state) {
@@ -390,7 +397,7 @@ public class PlayScene3D implements GameScene {
 
         gameLevel3D.updateLevelCounter3D();
         setActionBindings();
-        fadeInGameLevel3D();
+        playSubSceneFadingInAnimation();
     }
 
     @Override
@@ -429,7 +436,7 @@ public class PlayScene3D implements GameScene {
         gameLevel3D.updateLevelCounter3D();
         updateHUD();
         setActionBindings();
-        fadeInGameLevel3D();
+        playSubSceneFadingInAnimation();
     }
 
     @Override
@@ -635,27 +642,27 @@ public class PlayScene3D implements GameScene {
         }
     }
 
-    protected void showLevelTestMessage() {
-        WorldMap worldMap = context().gameLevel().worldMap();
-        int levelNumber = context().gameLevel().number();
+    protected void showLevelTestMessage(GameLevel gameLevel) {
+        WorldMap worldMap = gameLevel.worldMap();
         double x = worldMap.numCols() * HTS;
         double y = (worldMap.numRows() - 2) * TS;
-        gameLevel3D.showAnimatedMessage("LEVEL %d (TEST)".formatted(levelNumber), 5, x, y);
+        gameLevel3D.showAnimatedMessage("LEVEL %d (TEST)".formatted(gameLevel.number()), 5, x, y);
     }
 
-    protected void fadeInGameLevel3D() {
-        perspectivesByID.get(perspectiveID.get()).init(camera);
-        gameLevel3D.setVisible(false);
-        scores3D.setVisible(false);
+    protected void playSubSceneFadingInAnimation() {
         subScene.setFill(SUB_SCENE_FILL_DARK);
-        var makeVisibleAfterDelay = pauseSec(0.5, () -> {
-            gameLevel3D.setVisible(true);
-            scores3D.setVisible(true);
-        });
-        var fadeFillColorIn = new Timeline(
-            new KeyFrame(Duration.seconds(3),
-                new KeyValue(subScene.fillProperty(), SUB_SCENE_FILL_BRIGHT, Interpolator.EASE_OUT)));
-        new SequentialTransition(makeVisibleAfterDelay, fadeFillColorIn).play();
+        float fadingInSec = 3;
+        new SequentialTransition(
+            doNow(() -> {
+                currentPerspective().ifPresent(perspective -> perspective.init(camera));
+                gameLevel3D.setVisible(true);
+                scores3D.setVisible(true);
+            }),
+            new Timeline(
+                new KeyFrame(Duration.seconds(fadingInSec),
+                    new KeyValue(subScene.fillProperty(), SUB_SCENE_FILL_BRIGHT, Interpolator.LINEAR))
+            )
+        ).play();
     }
 
     protected void eatPellet3D(Shape3D pellet3D) {
