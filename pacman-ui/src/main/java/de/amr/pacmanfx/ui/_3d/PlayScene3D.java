@@ -72,15 +72,7 @@ public class PlayScene3D implements GameScene {
 
     private final Map<PerspectiveID, Perspective> perspectivesByID = new EnumMap<>(PerspectiveID.class);
 
-    private final ObjectProperty<PerspectiveID> perspectiveID = new SimpleObjectProperty<>() {
-        @Override
-        protected void invalidated() {
-            PerspectiveID id = get();
-            if (id != null) {
-                perspectivesByID.get(id).init(camera);
-            }
-        }
-    };
+    private final ObjectProperty<PerspectiveID> perspectiveID = new SimpleObjectProperty<>();
 
     private Optional<Perspective> currentPerspective() {
         return perspectiveID.get() == null ? Optional.empty() : Optional.of(perspectivesByID.get(perspectiveID.get()));
@@ -133,6 +125,20 @@ public class PlayScene3D implements GameScene {
         perspectivesByID.put(PerspectiveID.TOTAL, new TotalPerspective());
         perspectivesByID.put(PerspectiveID.TRACK_PLAYER, new TrackingPlayerPerspective());
         perspectivesByID.put(PerspectiveID.NEAR_PLAYER, new StalkingPlayerPerspective());
+
+        perspectiveID.addListener((py, ov, nv) -> {
+            if (ov != null) {
+                Perspective oldPerspective = perspectivesByID.get(ov);
+                oldPerspective.detach(camera);
+            }
+            if (nv != null) {
+                Perspective newPerspective = perspectivesByID.get(nv);
+                newPerspective.attach(camera);
+            }
+            else {
+                Logger.error("New perspective ID is NULL!");
+            }
+        });
 
         scores3D = new Scores3D(
             ui.assets().translated("score.score"),
@@ -654,7 +660,7 @@ public class PlayScene3D implements GameScene {
         float fadingInSec = 3;
         new SequentialTransition(
             doNow(() -> {
-                currentPerspective().ifPresent(perspective -> perspective.init(camera));
+                currentPerspective().ifPresent(perspective -> perspective.attach(camera));
                 gameLevel3D.setVisible(true);
                 scores3D.setVisible(true);
             }),

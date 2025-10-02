@@ -17,10 +17,10 @@ public class DronePerspective implements Perspective {
     static final int MIN_HEIGHT_OVER_GROUND = 25;
     static final int MAX_HEIGHT_OVER_GROUND = 1500;
 
-    private final IntegerProperty heightOfGroundProperty = new SimpleIntegerProperty(200);
+    private final IntegerProperty heightOverGround = new SimpleIntegerProperty(200);
 
     @Override
-    public void init(PerspectiveCamera camera) {
+    public void attach(PerspectiveCamera camera) {
         camera.setNearClip(0.1);
         camera.setFarClip(10000.0);
         camera.setFieldOfView(40); // default: 30
@@ -28,7 +28,12 @@ public class DronePerspective implements Perspective {
         camera.setRotate(0);
         camera.setTranslateX(0);
         camera.setTranslateY(0);
-        camera.translateZProperty().bind(heightOfGroundProperty.negate());
+        camera.translateZProperty().bind(heightOverGround.negate());
+    }
+
+    @Override
+    public void detach(PerspectiveCamera camera) {
+        camera.translateZProperty().unbind();
     }
 
     @Override
@@ -51,11 +56,11 @@ public class DronePerspective implements Perspective {
     }
 
     private void changeHeight(int delta) {
-        heightOfGroundProperty.set(Math.clamp(heightOfGroundProperty.get() + delta, MIN_HEIGHT_OVER_GROUND, MAX_HEIGHT_OVER_GROUND));
+        heightOverGround.set(Math.clamp(heightOverGround.get() + delta, MIN_HEIGHT_OVER_GROUND, MAX_HEIGHT_OVER_GROUND));
     }
 
     private int currentHeightDelta() {
-        int height = heightOfGroundProperty.get();
+        int height = heightOverGround.get();
         if (height > 100) return height / 10;
         return 5;
     }

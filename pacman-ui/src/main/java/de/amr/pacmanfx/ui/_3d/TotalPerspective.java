@@ -13,8 +13,7 @@ import static de.amr.pacmanfx.Globals.TS;
 public class TotalPerspective implements Perspective {
 
     @Override
-    public void init(PerspectiveCamera camera) {
-        unbindProperties(camera);
+    public void attach(PerspectiveCamera camera) {
         camera.setNearClip(0.1);
         camera.setFarClip(10000.0);
         camera.setFieldOfView(40); // default: 30
