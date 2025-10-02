@@ -73,8 +73,9 @@ public class PlayScene3D implements GameScene {
     private final ObjectProperty<PerspectiveID> perspectiveID = new SimpleObjectProperty<>() {
         @Override
         protected void invalidated() {
-            if (get() != null) {
-                initPerspective();
+            PerspectiveID id = get();
+            if (id != null) {
+                perspectivesByID.get(id).init(camera);
             }
         }
     };
@@ -152,25 +153,6 @@ public class PlayScene3D implements GameScene {
 
     public ObjectProperty<PerspectiveID> perspectiveIDProperty() {
         return perspectiveID;
-    }
-
-    private void handleScrollEvent(ScrollEvent e) {
-        if (ui.currentGameScene().isPresent() && ui.currentGameScene().get() == this) {
-            if (e.getDeltaY() < 0) {
-                actionDroneUp.executeIfEnabled(ui);
-            } else if (e.getDeltaY() > 0) {
-                actionDroneDown.executeIfEnabled(ui);
-            }
-        }
-    }
-
-    private void initPerspective() {
-        PerspectiveID id = perspectiveID.get();
-        if (id != null && perspectivesByID.containsKey(id)) {
-            perspectivesByID.get(id).init(camera);
-        } else {
-            Logger.error("Cannot init camera perspective with ID '{}'", id);
-        }
     }
 
     @Override
@@ -251,6 +233,14 @@ public class PlayScene3D implements GameScene {
             Logger.info("Removed listener from UI property3DPerspective property");
         });
         return items;
+    }
+
+    private void handleScrollEvent(ScrollEvent e) {
+        if (e.getDeltaY() < 0) {
+            actionDroneUp.executeIfEnabled(ui);
+        } else if (e.getDeltaY() > 0) {
+            actionDroneDown.executeIfEnabled(ui);
+        }
     }
 
     private void handle3DPerspectiveChange(
@@ -660,7 +650,7 @@ public class PlayScene3D implements GameScene {
     }
 
     protected void fadeInGameLevel3D() {
-        initPerspective();
+        perspectivesByID.get(perspectiveID.get()).init(camera);
         gameLevel3D.setVisible(false);
         scores3D.setVisible(false);
         subScene.setFill(SUB_SCENE_FILL_DARK);
