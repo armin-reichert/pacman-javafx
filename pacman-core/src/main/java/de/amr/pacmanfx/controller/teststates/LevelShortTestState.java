@@ -63,9 +63,10 @@ public class LevelShortTestState implements GameState {
         else if (timer.atSecond(2.5)) {
             gameLevel.clearMessage();
             context.game().activateNextBonus(gameLevel);
+            gameLevel.bonus().ifPresent(bonus -> bonus.setEatenTicks(60));
         }
         else if (timer.atSecond(4.5)) {
-            gameLevel.bonus().ifPresent(bonus -> bonus.setEaten(Globals.NUM_TICKS_PER_SEC));
+            gameLevel.bonus().ifPresent(Bonus::setEaten);
             context.eventManager().publishEvent(GameEventType.BONUS_EATEN);
         }
         else if (timer.atSecond(6.5)) {
@@ -73,7 +74,7 @@ public class LevelShortTestState implements GameState {
             context.game().activateNextBonus(gameLevel);
         }
         else if (timer.atSecond(8.5)) {
-            gameLevel.bonus().ifPresent(bonus -> bonus.setEaten(Globals.NUM_TICKS_PER_SEC));
+            gameLevel.bonus().ifPresent(Bonus::setEaten);
             context.eventManager().publishEvent(GameEventType.BONUS_EATEN);
         }
         else if (timer.atSecond(10.0)) {

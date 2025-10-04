@@ -34,6 +34,7 @@ public class Bonus extends MovingActor {
     private final int points;
     private long ticksRemaining;
     private BonusState state;
+    private long eatenTicks;
 
     private final Pulse jumpAnimation;
     private RouteBasedSteering steering;
@@ -46,6 +47,10 @@ public class Bonus extends MovingActor {
         canTeleport = false; // override default value
         ticksRemaining = 0;
         state = BonusState.INACTIVE;
+    }
+
+    public void setEatenTicks(long eatenTicks) {
+        this.eatenTicks = eatenTicks;
     }
 
     public void setRoute(List<Waypoint> route, boolean leftToRight) {
@@ -126,14 +131,11 @@ public class Bonus extends MovingActor {
         Logger.trace("Bonus edible: {}", this);
     }
 
-    /**
-     * @param ticks number of ticks the eaten bonus is displayed as the number of points won
-     */
-    public void setEaten(long ticks) {
+    public void setEaten() {
         if (jumpAnimation != null) {
             jumpAnimation.stop();
         }
-        ticksRemaining = ticks;
+        ticksRemaining = eatenTicks;
         state = BonusState.EATEN;
         Logger.trace("Bonus eaten: {}", this);
     }

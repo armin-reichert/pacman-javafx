@@ -126,13 +126,13 @@ public class PlayScene3D implements GameScene {
         perspectivesByID.put(PerspectiveID.TRACK_PLAYER, new TrackingPlayerPerspective());
         perspectivesByID.put(PerspectiveID.NEAR_PLAYER, new StalkingPlayerPerspective());
 
-        perspectiveID.addListener((py, ov, nv) -> {
-            if (ov != null) {
-                Perspective oldPerspective = perspectivesByID.get(ov);
+        perspectiveID.addListener((py, oldID, newID) -> {
+            if (oldID != null) {
+                Perspective oldPerspective = perspectivesByID.get(oldID);
                 oldPerspective.detach(camera);
             }
-            if (nv != null) {
-                Perspective newPerspective = perspectivesByID.get(nv);
+            if (newID != null) {
+                Perspective newPerspective = perspectivesByID.get(newID);
                 newPerspective.attach(camera);
             }
             else {

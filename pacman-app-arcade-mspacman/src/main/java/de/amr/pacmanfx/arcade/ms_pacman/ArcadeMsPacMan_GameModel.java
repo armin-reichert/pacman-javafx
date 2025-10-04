@@ -354,6 +354,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         Pulse jumpAnimation = new Pulse(10, false);
         var bonus = new Bonus(symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100, jumpAnimation);
         bonus.setEdible(TickTimer.INDEFINITE);
+        bonus.setEatenTicks(TickTimer.secToTicks(BONUS_EATEN_SECONDS));
         bonus.setRoute(route, leftToRight);
         gameLevel.setBonus(bonus);
 
