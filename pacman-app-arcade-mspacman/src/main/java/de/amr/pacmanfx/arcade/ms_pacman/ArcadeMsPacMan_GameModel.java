@@ -13,7 +13,6 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.Waypoint;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
-import de.amr.pacmanfx.lib.worldmap.FoodLayer;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.Bonus;
@@ -248,8 +247,8 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
     @Override
     public boolean isBonusReached(GameLevel gameLevel) {
-        FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
-        return foodLayer.eatenFoodCount() == 64 || foodLayer.eatenFoodCount() == 176;
+        int eatenFoodCount = gameLevel.worldMap().foodLayer().eatenFoodCount();
+        return eatenFoodCount == 64 || eatenFoodCount == 176;
     }
 
     /**

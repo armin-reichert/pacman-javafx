@@ -594,8 +594,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     public boolean isBonusReached(GameLevel gameLevel) {
-        FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
-        return foodLayer.eatenFoodCount() == 64 || foodLayer.eatenFoodCount() == 176;
+        int eatenFoodCount = gameLevel.worldMap().foodLayer().eatenFoodCount();
+        return eatenFoodCount == 64 || eatenFoodCount == 176;
     }
 
     private byte computeBonusSymbol(int levelNumber) {

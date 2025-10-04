@@ -11,36 +11,36 @@ import java.util.List;
 import java.util.Optional;
 
 public interface Game extends GameLifecycle, GameEvents, ActorSpeedControl {
-    GameEventManager     eventManager();
-    ScoreManager         scoreManager();
+    GameEventManager      eventManager();
+    ScoreManager          scoreManager();
     SimulationStepResults simulationStepResults();
-    HuntingTimer         huntingTimer();
-    MapSelector          mapSelector();
-    Optional<GateKeeper> optGateKeeper();
-    Optional<GameLevel>  optGameLevel();
-    HUD                  hud();
+    HuntingTimer          huntingTimer();
+    MapSelector           mapSelector();
+    Optional<GateKeeper>  optGateKeeper();
+    Optional<GameLevel>   optGameLevel();
+    HUD                   hud();
 
-    void checkPacFindsFood(GameLevel gameLevel);
-    boolean              isBonusReached(GameLevel gameLevel);
+    void                  checkPacFindsFood(GameLevel gameLevel);
+    boolean               isBonusReached(GameLevel gameLevel);
 
-    void                 clearLevelCounter();
-    void                 updateLevelCounter(int levelNumber, byte symbol);
-    void                 setLevelCounterEnabled(boolean enabled);
-    boolean              levelCounterEnabled();
-    List<Byte>           levelCounterSymbols();
+    void                  clearLevelCounter();
+    void                  updateLevelCounter(int levelNumber, byte symbol);
+    void                  setLevelCounterEnabled(boolean enabled);
+    boolean               levelCounterEnabled();
+    List<Byte>            levelCounterSymbols();
 
-    boolean              cutScenesEnabled();
-    void                 setCutScenesEnabled(boolean enabled);
-    Optional<Integer>    optCutSceneNumber(int levelNumber);
+    boolean               cutScenesEnabled();
+    void                  setCutScenesEnabled(boolean enabled);
+    Optional<Integer>     optCutSceneNumber(int levelNumber);
 
-    int                  initialLifeCount();
-    void                 setInitialLifeCount(int numLives);
-    int                  lifeCount();
-    void                 addLives(int numLives);
+    int                   initialLifeCount();
+    void                  setInitialLifeCount(int numLives);
+    int                   lifeCount();
+    void                  addLives(int numLives);
 
-    double               pacPowerFadingSeconds(GameLevel gameLevel);
-    double               pacPowerSeconds(GameLevel level);
+    double                pacPowerFadingSeconds(GameLevel gameLevel);
+    double                pacPowerSeconds(GameLevel level);
 
-    int                  numFlashes(GameLevel gameLevel);
-    void                 showMessage(GameLevel gameLevel, MessageType type);
+    int                   numFlashes(GameLevel gameLevel);
+    void                  showMessage(GameLevel gameLevel, MessageType type);
 }
