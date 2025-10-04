@@ -176,29 +176,27 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     @Override
-    protected void checkIfPacManFindsFood() {
-        optGameLevel().ifPresent(gameLevel -> {
-            FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
-            final Pac pac = gameLevel.pac();
-            final Vector2i tile = pac.tile();
-            if (foodLayer.tileContainsFood(tile)) {
-                pac.setStarvingTicks(0);
-                foodLayer.registerFoodEatenAt(tile);
-                if (foodLayer.isEnergizerPosition(tile)) {
-                    onEnergizerEaten(tile);
-                } else {
-                    onPelletEaten();
-                }
-                gateKeeper.registerFoodEaten(gameLevel);
-                if (isBonusReached()) {
-                    activateNextBonus(gameLevel);
-                    simulationStep.bonusIndex = gameLevel.currentBonusIndex();
-                }
-                eventManager().publishEvent(GameEventType.PAC_FOUND_FOOD, tile);
+    protected void checkIfPacManFindsFood(GameLevel gameLevel) {
+        FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
+        final Pac pac = gameLevel.pac();
+        final Vector2i tile = pac.tile();
+        if (foodLayer.tileContainsFood(tile)) {
+            pac.setStarvingTicks(0);
+            foodLayer.registerFoodEatenAt(tile);
+            if (foodLayer.isEnergizerPosition(tile)) {
+                onEnergizerEaten(tile);
             } else {
-                pac.setStarvingTicks(pac.starvingTicks() + 1);
+                onPelletEaten();
             }
-        });
+            gateKeeper.registerFoodEaten(gameLevel);
+            if (isBonusReached()) {
+                activateNextBonus(gameLevel);
+                simulationStep.bonusIndex = gameLevel.currentBonusIndex();
+            }
+            eventManager().publishEvent(GameEventType.PAC_FOUND_FOOD, tile);
+        } else {
+            pac.setStarvingTicks(pac.starvingTicks() + 1);
+        }
     }
 
     @Override

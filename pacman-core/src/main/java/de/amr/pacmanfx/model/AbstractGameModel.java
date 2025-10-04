@@ -169,7 +169,7 @@ public abstract class AbstractGameModel implements Game {
             if (hasPacManBeenKilled()) return;
             checkIfGhostsKilled();
             if (haveGhostsBeenKilled()) return;
-            checkIfPacManFindsFood();
+            checkIfPacManFindsFood(gameLevel);
             updatePacPower();
             gameLevel.bonus().ifPresent(this::checkIfPacManCanEatBonus);
         });
@@ -289,7 +289,7 @@ public abstract class AbstractGameModel implements Game {
             .forEach(this::onGhostKilled));
     }
 
-    protected abstract void checkIfPacManFindsFood();
+    protected abstract void checkIfPacManFindsFood(GameLevel gameLevel);
 
     protected abstract boolean isBonusReached();
 
