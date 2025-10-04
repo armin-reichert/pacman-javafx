@@ -27,8 +27,7 @@ import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
+import javafx.scene.paint.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
@@ -100,6 +99,20 @@ public interface Ufx {
     static Color colorWithOpacity(Color color, double opacity) {
         requireNonNull(color);
         return Color.color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
+    }
+
+    static Paint createGradient() {
+        Stop[] stops = new Stop[] {
+            new Stop(0, Color.LIGHTBLUE),
+            new Stop(1, Color.DARKBLUE)
+        };
+
+        return new LinearGradient(
+            0, 0, 0, 1, // vertical
+            true,       // proportional coordinates
+            CycleMethod.NO_CYCLE,
+            stops
+        );
     }
 
     static Background colorBackground(Color color) {
