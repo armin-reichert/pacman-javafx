@@ -9,6 +9,7 @@ import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.timer.TickTimer;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelMessage;
 import de.amr.pacmanfx.model.MessageType;
@@ -56,22 +57,27 @@ public class LevelMediumTestState implements GameState {
 
     @Override
     public void onUpdate(GameContext context) {
-        context.game().doHuntingStep(context);
+        final Game game = context.game();
+        final GameLevel gameLevel = context.gameLevel();
+        gameLevel.pac().tick(context);
+        gameLevel.ghosts().forEach(ghost -> ghost.tick(context));
+        gameLevel.bonus().ifPresent(bonus -> bonus.tick(context));
+        game.doHuntingStep(gameLevel);
         if (timer().hasExpired()) {
-            if (context.gameLevel().number() == lastTestedLevelNumber) {
+            if (gameLevel.number() == lastTestedLevelNumber) {
                 context.eventManager().publishEvent(GameEventType.STOP_ALL_SOUNDS);
                 context.gameController().changeGameState(GamePlayState.INTRO);
             } else {
                 timer().restartSeconds(TEST_DURATION_SEC);
-                context.game().startNextLevel();
+                game.startNextLevel();
                 configureLevelForTest(context);
             }
         }
-        else if (context.game().isLevelCompleted()) {
+        else if (game.isLevelCompleted()) {
             context.gameController().changeGameState(GamePlayState.INTRO);
-        } else if (context.game().hasPacManBeenKilled()) {
+        } else if (game.hasPacManBeenKilled()) {
             timer.expire();
-        } else if (context.game().haveGhostsBeenKilled()) {
+        } else if (game.haveGhostsBeenKilled()) {
             context.gameController().changeGameState(GamePlayState.GHOST_DYING);
         }
     }

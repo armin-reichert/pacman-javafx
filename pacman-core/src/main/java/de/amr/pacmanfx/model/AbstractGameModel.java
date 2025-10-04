@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
@@ -153,22 +152,17 @@ public abstract class AbstractGameModel implements Game {
     }
 
     @Override
-    public void doHuntingStep(GameContext gameContext) {
-        optGameLevel().ifPresent(gameLevel -> {
-            optGateKeeper().ifPresent(gateKeeper -> gateKeeper.unlockGhosts(gameLevel));
-            huntingTimer().update(gameLevel.number());
-            gameLevel.blinking().tick();
-            gameLevel.pac().tick(gameContext);
-            gameLevel.ghosts().forEach(ghost -> ghost.tick(gameContext));
-            gameLevel.bonus().ifPresent(bonus -> bonus.tick(gameContext));
-            checkIfPacManGetsKilled(gameLevel.pac());
-            if (hasPacManBeenKilled()) return;
-            checkIfGhostsKilled();
-            if (haveGhostsBeenKilled()) return;
-            checkIfPacManFindsFood(gameLevel);
-            updatePacPower();
-            gameLevel.bonus().ifPresent(bonus -> checkIfPacManCanEatBonus(gameLevel, bonus));
-        });
+    public void doHuntingStep(GameLevel gameLevel) {
+        optGateKeeper().ifPresent(gateKeeper -> gateKeeper.unlockGhosts(gameLevel));
+        huntingTimer().update(gameLevel.number());
+        gameLevel.blinking().tick();
+        checkIfPacManGetsKilled(gameLevel.pac());
+        if (hasPacManBeenKilled()) return;
+        checkIfGhostsKilled();
+        if (haveGhostsBeenKilled()) return;
+        checkIfPacManFindsFood(gameLevel);
+        updatePacPower();
+        gameLevel.bonus().ifPresent(bonus -> checkIfPacManCanEatBonus(gameLevel, bonus));
     }
 
     @Override

@@ -9,6 +9,7 @@ import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.DefaultGameVariants;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.MessageType;
 import de.amr.pacmanfx.model.actors.*;
@@ -152,21 +153,23 @@ public enum GamePlayState implements GameState {
             if (timer.tickCount() < delay) {
                 return;
             }
+            final Game game = context.game();
+            final GameLevel gameLevel = context.gameLevel();
             if (timer.tickCount() == delay) {
-                context.game().startHunting(context.gameLevel());
-                context.gameLevel().optMessage().ifPresent(message -> {
-                    // leave TEST message alone
-                    if (message.type() == MessageType.READY) {
-                        context.gameLevel().clearMessage();
-                    }
+                gameLevel.optMessage().filter(message -> message.type() == MessageType.READY).ifPresent(message -> {
+                    gameLevel.clearMessage(); // leave TEST message alone
                 });
+                game.startHunting(gameLevel);
             }
-            context.game().doHuntingStep(context);
-            if (context.game().isLevelCompleted()) {
+            gameLevel.pac().tick(context);
+            gameLevel.ghosts().forEach(ghost -> ghost.tick(context));
+            gameLevel.bonus().ifPresent(bonus -> bonus.tick(context));
+            game.doHuntingStep(gameLevel);
+            if (game.isLevelCompleted()) {
                 context.gameController().changeGameState(LEVEL_COMPLETE);
-            } else if (context.game().hasPacManBeenKilled()) {
+            } else if (game.hasPacManBeenKilled()) {
                 context.gameController().changeGameState(PACMAN_DYING);
-            } else if (context.game().haveGhostsBeenKilled()) {
+            } else if (game.haveGhostsBeenKilled()) {
                 context.gameController().changeGameState(GHOST_DYING);
             }
         }
