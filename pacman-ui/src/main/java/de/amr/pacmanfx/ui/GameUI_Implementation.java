@@ -248,9 +248,9 @@ public class GameUI_Implementation implements GameUI {
 
     private void doSimulationStepAndUpdateGameScene() {
         try {
-            gameContext.game().simulationStep().start(clock.tickCount());
+            gameContext.game().simulationStepResults().reset(clock.tickCount());
             gameContext.gameController().updateGameState();
-            gameContext.game().simulationStep().logState();
+            gameContext.game().simulationStepResults().printLog();
             currentGameScene().ifPresent(GameScene::update);
         } catch (Throwable x) {
             ka_tas_tro_phe(x);

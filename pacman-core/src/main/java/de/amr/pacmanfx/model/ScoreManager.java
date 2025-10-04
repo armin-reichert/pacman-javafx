@@ -36,8 +36,8 @@ public class ScoreManager {
         for (int extraLifeScore : extraLifeScores) {
             // has extra life score been crossed?
             if (oldScore < extraLifeScore && newScore >= extraLifeScore) {
-                game.simulationStep().extraLifeWon = true;
-                game.simulationStep().extraLifeScore = extraLifeScore;
+                game.simulationStepResults().extraLifeWon = true;
+                game.simulationStepResults().extraLifeScore = extraLifeScore;
                 game.addLives(1);
                 GameEvent event = new GameEvent(game, GameEventType.SPECIAL_SCORE_REACHED);
                 game.eventManager().publishEvent(event);

@@ -12,11 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Stores what happened during a simulation step.
+ * Stores what happened during the current simulation step.
  *
  * @author Armin Reichert
  */
-public class SimulationStep {
+public class SimulationStepResults {
     public long       tick;
     public Vector2i   foundEnergizerAtTile;
     public int        bonusIndex = -1;
@@ -32,7 +32,7 @@ public class SimulationStep {
     public String     ghostReleaseInfo;
     public final List<Ghost> killedGhosts = new ArrayList<>();
 
-    public void start(long tick) {
+    public void reset(long tick) {
         this.tick = tick;
         foundEnergizerAtTile = null;
         bonusIndex = -1;
@@ -86,7 +86,7 @@ public class SimulationStep {
         return messages;
     }
 
-    public void logState() {
+    public void printLog() {
         var report = createReport();
         if (!report.isEmpty()) {
             Logger.info("Simulation step #{}:", tick);

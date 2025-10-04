@@ -38,7 +38,7 @@ public abstract class AbstractGameModel implements Game {
 
     protected final BooleanProperty playing = new SimpleBooleanProperty(false);
 
-    protected final SimulationStep simulationStep = new SimulationStep();
+    protected final SimulationStepResults simulationStepResults = new SimulationStepResults();
 
     protected final List<Byte> levelCounterSymbols = new ArrayList<>();
 
@@ -104,8 +104,8 @@ public abstract class AbstractGameModel implements Game {
 
 
     @Override
-    public SimulationStep simulationStep() {
-        return simulationStep;
+    public SimulationStepResults simulationStepResults() {
+        return simulationStepResults;
     }
 
     @Override
@@ -168,12 +168,12 @@ public abstract class AbstractGameModel implements Game {
 
     @Override
     public boolean hasPacManBeenKilled() {
-        return simulationStep.pacKilledTile != null;
+        return simulationStepResults.pacKilledTile != null;
     }
 
     @Override
     public boolean haveGhostsBeenKilled() {
-        return !simulationStep.killedGhosts.isEmpty();
+        return !simulationStepResults.killedGhosts.isEmpty();
     }
 
     @Override
@@ -238,7 +238,7 @@ public abstract class AbstractGameModel implements Game {
         final TickTimer powerTimer = gameLevel.pac().powerTimer();
         powerTimer.doTick();
         if (gameLevel.pac().isPowerFadingStarting(gameLevel)) {
-            simulationStep.pacStartsLosingPower = true;
+            simulationStepResults.pacStartsLosingPower = true;
             eventManager().publishEvent(GameEventType.PAC_STARTS_LOSING_POWER);
         } else if (powerTimer.hasExpired()) {
             powerTimer.stop();
@@ -248,7 +248,7 @@ public abstract class AbstractGameModel implements Game {
             huntingTimer().start();
             Logger.info("Hunting timer restarted because Pac-Man lost power");
             gameLevel.ghosts(GhostState.FRIGHTENED).forEach(ghost -> ghost.setState(GhostState.HUNTING_PAC));
-            simulationStep.pacLostPower = true;
+            simulationStepResults.pacLostPower = true;
             eventManager().publishEvent(GameEventType.PAC_LOST_POWER);
         }
     }
@@ -269,8 +269,8 @@ public abstract class AbstractGameModel implements Game {
                 pacDies = !pac.isImmune();
             }
             if (pacDies) {
-                simulationStep.pacKiller = assassin;
-                simulationStep.pacKilledTile = assassin.tile();
+                simulationStepResults.pacKiller = assassin;
+                simulationStepResults.pacKilledTile = assassin.tile();
             }
         });
     }
@@ -280,7 +280,7 @@ public abstract class AbstractGameModel implements Game {
             bonus.setEaten(TickTimer.secToTicks(BONUS_EATEN_SECONDS));
             scoreManager().scorePoints(bonus.points());
             Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
-            simulationStep.bonusEatenTile = bonus.tile();
+            simulationStepResults.bonusEatenTile = bonus.tile();
             eventManager().publishEvent(GameEventType.BONUS_EATEN);
         }
     }

@@ -218,8 +218,8 @@ public class GateKeeper {
             .findFirst().ifPresent(prisoner -> {
                 String releaseReason = checkReleaseOf(level, prisoner);
                 if (releaseReason != null) {
-                    game.simulationStep().releasedGhost = prisoner;
-                    game.simulationStep().ghostReleaseInfo = releaseReason;
+                    game.simulationStepResults().releasedGhost = prisoner;
+                    game.simulationStepResults().ghostReleaseInfo = releaseReason;
                     prisoner.setMoveDir(Direction.UP);
                     prisoner.setWishDir(Direction.UP);
                     prisoner.setState(GhostState.LEAVING_HOUSE);

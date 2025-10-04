@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface Game extends GameLifecycle, GameEvents, ActorSpeedControl {
     GameEventManager     eventManager();
     ScoreManager         scoreManager();
-    SimulationStep       simulationStep();
+    SimulationStepResults simulationStepResults();
     HuntingTimer         huntingTimer();
     MapSelector          mapSelector();
     Optional<GateKeeper> optGateKeeper();
