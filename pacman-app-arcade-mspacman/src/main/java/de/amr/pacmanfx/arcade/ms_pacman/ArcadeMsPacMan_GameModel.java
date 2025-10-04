@@ -191,7 +191,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     }
 
     @Override
-    public void createLevel(int levelNumber, boolean demoLevel) {
+    public GameLevel createLevel(int levelNumber, boolean demoLevel) {
         final WorldMap worldMap = mapSelector.getWorldMapCopy(levelNumber);
         final ArcadeHouse house = new ArcadeHouse(ARCADE_MAP_HOUSE_MIN_TILE);
         worldMap.terrainLayer().setHouse(house);
@@ -219,11 +219,11 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         newGameLevel.setBonusSymbol(0, computeBonusSymbol(levelNumber));
         newGameLevel.setBonusSymbol(1, computeBonusSymbol(levelNumber));
 
-        setGameLevel(newGameLevel);
-
         /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
          * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
         setLevelCounterEnabled(levelNumber < 8);
+
+        return newGameLevel;
     }
 
     @Override

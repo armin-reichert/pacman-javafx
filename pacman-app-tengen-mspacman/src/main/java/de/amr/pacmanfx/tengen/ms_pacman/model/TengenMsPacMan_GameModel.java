@@ -508,7 +508,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void createLevel(int levelNumber, boolean demoLevel) {
+    public GameLevel createLevel(int levelNumber, boolean demoLevel) {
         final WorldMap worldMap = mapSelector.getWorldMapCopy(levelNumber, mapCategory);
         final ArcadeHouse house = new ArcadeHouse(HOUSE_MIN_TILE);
         worldMap.terrainLayer().setHouse(house);
@@ -541,38 +541,41 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         newGameLevel.setBonusSymbol(1, computeBonusSymbol(newGameLevel.number()));
 
         setGameLevel(newGameLevel);
-
         setLevelCounterEnabled(levelNumber < 8);
+
+        return newGameLevel;
     }
 
     @Override
     public void buildNormalLevel(int levelNumber) {
-        createLevel(levelNumber, false);
-        gameLevel().pac().immuneProperty().bind(gameContext.gameController().propertyImmunity());
-        gameLevel().pac().usingAutopilotProperty().bind(gameContext.gameController().propertyUsingAutopilot());
+        final GameLevel normalLevel = createLevel(levelNumber, false);
+        normalLevel.pac().immuneProperty().bind(gameContext.gameController().propertyImmunity());
+        normalLevel.pac().usingAutopilotProperty().bind(gameContext.gameController().propertyUsingAutopilot());
         huntingTimer().reset();
         scoreManager.score().setLevelNumber(levelNumber);
         optGateKeeper().ifPresent(gateKeeper -> {
             gateKeeper.setLevelNumber(levelNumber);
-            gameLevel().worldMap().terrainLayer().optHouse().ifPresent(gateKeeper::setHouse); //TODO what if no house exists?
+            normalLevel.worldMap().terrainLayer().optHouse().ifPresent(gateKeeper::setHouse); //TODO what if no house exists?
         });
+        setGameLevel(normalLevel);
         eventManager().publishEvent(GameEventType.LEVEL_CREATED);
     }
 
     @Override
     public void buildDemoLevel() {
-        createLevel(1, true);
-        gameLevel().setGameOverStateTicks(120);
-        gameLevel().pac().setImmune(false);
-        gameLevel().pac().setUsingAutopilot(true);
-        gameLevel().pac().setAutopilotSteering(demoLevelSteering);
+        final GameLevel demoLevel = createLevel(1, true);
+        demoLevel.setGameOverStateTicks(120);
+        demoLevel.pac().setImmune(false);
+        demoLevel.pac().setUsingAutopilot(true);
+        demoLevel.pac().setAutopilotSteering(demoLevelSteering);
         demoLevelSteering.init();
         huntingTimer.reset();
         scoreManager.score().setLevelNumber(1);
         optGateKeeper().ifPresent(gateKeeper -> {
             gateKeeper.setLevelNumber(1);
-            gameLevel().worldMap().terrainLayer().optHouse().ifPresent(gateKeeper::setHouse); //TODO what if no house exists?
+            demoLevel.worldMap().terrainLayer().optHouse().ifPresent(gateKeeper::setHouse); //TODO what if no house exists?
         });
+        setGameLevel(demoLevel);
         eventManager().publishEvent(GameEventType.LEVEL_CREATED);
     }
 

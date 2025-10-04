@@ -202,8 +202,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     @Override
     public void buildNormalLevel(int levelNumber) {
-        createLevel(levelNumber, false);
-        final GameLevel normalLevel = gameLevel();
+        final GameLevel normalLevel = createLevel(levelNumber, false);
         normalLevel.pac().immuneProperty().bind(gameContext.gameController().propertyImmunity());
         normalLevel.pac().usingAutopilotProperty().bind(gameContext.gameController().propertyUsingAutopilot());
         setLevelCounterEnabled(true);
@@ -212,14 +211,14 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         gateKeeper.setLevelNumber(levelNumber);
         //TODO handle case when no house exists
         normalLevel.worldMap().terrainLayer().optHouse().ifPresent(house -> gateKeeper.setHouse(house));
+        setGameLevel(normalLevel);
         eventManager().publishEvent(GameEventType.LEVEL_CREATED);
     }
 
     @Override
     public void buildDemoLevel() {
         int levelNumber = 1;
-        createLevel(levelNumber, true);
-        final GameLevel demoLevel = gameLevel();
+        final GameLevel demoLevel = createLevel(levelNumber, true);
         demoLevel.pac().setImmune(false);
         demoLevel.pac().setUsingAutopilot(true);
         demoLevel.pac().setAutopilotSteering(demoLevelSteering);
@@ -230,6 +229,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         gateKeeper.setLevelNumber(levelNumber);
         //TODO handle case when no house exists
         demoLevel.worldMap().terrainLayer().optHouse().ifPresent(house -> gateKeeper.setHouse(house));
+        setGameLevel(demoLevel);
         eventManager().publishEvent(GameEventType.LEVEL_CREATED);
     }
 

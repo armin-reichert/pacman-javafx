@@ -43,7 +43,7 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
     public PacManXXL_Common_MapSelector mapSelector() { return (PacManXXL_Common_MapSelector) mapSelector; }
 
     @Override
-    public void createLevel(int levelNumber, boolean demoLevel) {
+    public GameLevel createLevel(int levelNumber, boolean demoLevel) {
         final WorldMap worldMap = mapSelector.getWorldMapCopy(levelNumber);
 
         Vector2i houseMinTile = worldMap.terrainLayer().getTileProperty(POS_HOUSE_MIN_TILE);
@@ -87,8 +87,9 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
         newGameLevel.setBonusSymbol(0, symbol);
         newGameLevel.setBonusSymbol(1, symbol);
 
-        setGameLevel(newGameLevel);
         setLevelCounterEnabled(true);
+
+        return newGameLevel;
     }
 
     @Override
@@ -98,15 +99,16 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
         int levelNumber = DEMO_LEVEL_NUMBERS[randomIndex];
         scoreManager().score().setLevelNumber(levelNumber);
         mapSelector().setSelectionMode(MapSelectionMode.NO_CUSTOM_MAPS);
-        createLevel(levelNumber, true);
-        gameLevel().pac().setImmune(false);
-        gameLevel().pac().setUsingAutopilot(true);
-        gameLevel().pac().setAutopilotSteering(demoLevelSteering);
+        final GameLevel demoLevel = createLevel(levelNumber, true);
+        demoLevel.pac().setImmune(false);
+        demoLevel.pac().setUsingAutopilot(true);
+        demoLevel.pac().setAutopilotSteering(demoLevelSteering);
         demoLevelSteering.init();
         setLevelCounterEnabled(false);
         huntingTimer().reset();
         gateKeeper.setLevelNumber(levelNumber);
-        gameLevel().worldMap().terrainLayer().optHouse().ifPresent(house -> gateKeeper.setHouse(house));
+        demoLevel.worldMap().terrainLayer().optHouse().ifPresent(house -> gateKeeper.setHouse(house));
+        setGameLevel(demoLevel);
         eventManager().publishEvent(GameEventType.LEVEL_CREATED);
     }
 

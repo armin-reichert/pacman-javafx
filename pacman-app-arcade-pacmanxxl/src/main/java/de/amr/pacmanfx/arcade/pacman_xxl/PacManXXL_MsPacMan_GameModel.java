@@ -30,7 +30,7 @@ public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
     public PacManXXL_Common_MapSelector mapSelector() { return (PacManXXL_Common_MapSelector) mapSelector; }
 
     @Override
-    public void createLevel(int levelNumber, boolean demoLevel) {
+    public GameLevel createLevel(int levelNumber, boolean demoLevel) {
         final WorldMap worldMap = mapSelector.getWorldMapCopy(levelNumber);
 
         Vector2i houseMinTile = worldMap.terrainLayer().getTileProperty(POS_HOUSE_MIN_TILE);
@@ -65,11 +65,11 @@ public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
         newGameLevel.setBonusSymbol(0, computeBonusSymbol(levelNumber));
         newGameLevel.setBonusSymbol(1, computeBonusSymbol(levelNumber));
 
-        setGameLevel(newGameLevel);
-
         /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
          * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
         setLevelCounterEnabled(levelNumber < 8);
+
+        return newGameLevel;
     }
 
     @Override
@@ -78,16 +78,17 @@ public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
         int[] levelNumbers = { 1, 3, 6, 10, 14, 18 };
         int levelNumber = levelNumbers[new Random().nextInt(levelNumbers.length)];
         mapSelector().setSelectionMode(MapSelectionMode.NO_CUSTOM_MAPS);
-        createLevel(levelNumber, true);
-        gameLevel().pac().setImmune(false);
-        gameLevel().pac().setUsingAutopilot(true);
-        gameLevel().pac().setAutopilotSteering(demoLevelSteering);
+        final GameLevel demoLevel = createLevel(levelNumber, true);
+        demoLevel.pac().setImmune(false);
+        demoLevel.pac().setUsingAutopilot(true);
+        demoLevel.pac().setAutopilotSteering(demoLevelSteering);
         demoLevelSteering.init();
         setLevelCounterEnabled(false);
         huntingTimer().reset();
         scoreManager().score().setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
-        gameLevel().worldMap().terrainLayer().optHouse().ifPresent(house -> gateKeeper.setHouse(house)); //TODO what if no house exists?
+        demoLevel.worldMap().terrainLayer().optHouse().ifPresent(house -> gateKeeper.setHouse(house)); //TODO what if no house exists?
+        setGameLevel(demoLevel);
         eventManager().publishEvent(GameEventType.LEVEL_CREATED);
     }
 
