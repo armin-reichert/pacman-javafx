@@ -24,12 +24,12 @@ import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import org.tinylog.Logger;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Globals.NUM_TICKS_PER_SEC;
+import static de.amr.pacmanfx.Globals.ORANGE_GHOST_POKEY;
 import static de.amr.pacmanfx.lib.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
 import static de.amr.pacmanfx.lib.Waypoint.wp;
@@ -58,33 +58,29 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     );
 
     // Level data as given in the "Pac-Man dossier"
-    protected static final byte[][] RAW_LEVEL_DATA = {
-        /* 1*/ { 80, 75, 40,  20,  80, 10,  85,  90, 50, 6, 5},
-        /* 2*/ { 90, 85, 45,  30,  90, 15,  95,  95, 55, 5, 5},
-        /* 3*/ { 90, 85, 45,  40,  90, 20,  95,  95, 55, 4, 5},
-        /* 4*/ { 90, 85, 45,  40,  90, 20,  95,  95, 55, 3, 5},
-        /* 5*/ {100, 95, 50,  40, 100, 20, 105, 100, 60, 2, 5},
-        /* 6*/ {100, 95, 50,  50, 100, 25, 105, 100, 60, 5, 5},
-        /* 7*/ {100, 95, 50,  50, 100, 25, 105, 100, 60, 2, 5},
-        /* 8*/ {100, 95, 50,  50, 100, 25, 105, 100, 60, 2, 5},
-        /* 9*/ {100, 95, 50,  60, 100, 30, 105, 100, 60, 1, 3},
-        /*10*/ {100, 95, 50,  60, 100, 30, 105, 100, 60, 5, 5},
-        /*11*/ {100, 95, 50,  60, 100, 30, 105, 100, 60, 2, 5},
-        /*12*/ {100, 95, 50,  80, 100, 40, 105, 100, 60, 1, 3},
-        /*13*/ {100, 95, 50,  80, 100, 40, 105, 100, 60, 1, 3},
-        /*14*/ {100, 95, 50,  80, 100, 40, 105, 100, 60, 3, 5},
-        /*15*/ {100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3},
-        /*16*/ {100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3},
-        /*17*/ {100, 95, 50, 100, 100, 50, 105,   0,  0, 0, 0},
-        /*18*/ {100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3},
-        /*19*/ {100, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0},
-        /*20*/ {100, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0},
-        /*21*/ { 90, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0},
+    protected static final ArcadeLevelData[] LEVEL_DATA = {
+        /* 1*/ new ArcadeLevelData( 80, 75, 40,  20,  80, 10,  85,  90, 50, 6, 5),
+        /* 2*/ new ArcadeLevelData( 90, 85, 45,  30,  90, 15,  95,  95, 55, 5, 5),
+        /* 3*/ new ArcadeLevelData( 90, 85, 45,  40,  90, 20,  95,  95, 55, 4, 5),
+        /* 4*/ new ArcadeLevelData( 90, 85, 45,  40,  90, 20,  95,  95, 55, 3, 5),
+        /* 5*/ new ArcadeLevelData(100, 95, 50,  40, 100, 20, 105, 100, 60, 2, 5),
+        /* 6*/ new ArcadeLevelData(100, 95, 50,  50, 100, 25, 105, 100, 60, 5, 5),
+        /* 7*/ new ArcadeLevelData(100, 95, 50,  50, 100, 25, 105, 100, 60, 2, 5),
+        /* 8*/ new ArcadeLevelData(100, 95, 50,  50, 100, 25, 105, 100, 60, 2, 5),
+        /* 9*/ new ArcadeLevelData(100, 95, 50,  60, 100, 30, 105, 100, 60, 1, 3),
+        /*10*/ new ArcadeLevelData(100, 95, 50,  60, 100, 30, 105, 100, 60, 5, 5),
+        /*11*/ new ArcadeLevelData(100, 95, 50,  60, 100, 30, 105, 100, 60, 2, 5),
+        /*12*/ new ArcadeLevelData(100, 95, 50,  80, 100, 40, 105, 100, 60, 1, 3),
+        /*13*/ new ArcadeLevelData(100, 95, 50,  80, 100, 40, 105, 100, 60, 1, 3),
+        /*14*/ new ArcadeLevelData(100, 95, 50,  80, 100, 40, 105, 100, 60, 3, 5),
+        /*15*/ new ArcadeLevelData(100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3),
+        /*16*/ new ArcadeLevelData(100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3),
+        /*17*/ new ArcadeLevelData(100, 95, 50, 100, 100, 50, 105,   0,  0, 0, 0),
+        /*18*/ new ArcadeLevelData(100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3),
+        /*19*/ new ArcadeLevelData(100, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0),
+        /*20*/ new ArcadeLevelData(100, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0),
+        /*21*/ new ArcadeLevelData( 90, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0),
     };
-
-    protected static final ArcadeLevelData[] LEVEL_DATA = Arrays.stream(RAW_LEVEL_DATA)
-        .map(ArcadeLevelData::new)
-        .toArray(ArcadeLevelData[]::new);
 
     // Note: level numbering starts with 1
     protected static final byte[] BONUS_SYMBOLS_BY_LEVEL_NUMBER = { -1, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7 };

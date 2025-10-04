@@ -17,7 +17,30 @@ public record ArcadeLevelData(
     byte pacPowerSeconds,         // Number of seconds Pac-Man gets power
     byte numFlashes)              // Number of maze flashes at end of this level
 {
-    public ArcadeLevelData(byte[] bytes) {
-        this(bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], bytes[5], bytes[6], bytes[7], bytes[8], bytes[9], bytes[10]);
+    public ArcadeLevelData(
+        int pacSpeedPct,
+        int ghostSpeedPct,
+        int ghostSpeedTunnelPct,
+        int elroy1DotsLeft,
+        int elroy1SpeedPct,
+        int elroy2DotsLeft,
+        int elroy2SpeedPct,
+        int pacSpeedPoweredPct,
+        int ghostSpeedFrightenedPct,
+        int pacPowerSeconds,
+        int numFlashes)
+    {
+        this(
+            (byte) pacSpeedPct,
+            (byte) ghostSpeedPct,
+            (byte) ghostSpeedTunnelPct,
+            (byte) elroy1DotsLeft,
+            (byte) elroy1SpeedPct,
+            (byte) elroy2DotsLeft,
+            (byte) elroy2SpeedPct,
+            (byte) pacSpeedPoweredPct,
+            (byte) ghostSpeedFrightenedPct,
+            (byte) pacPowerSeconds,
+            (byte) numFlashes);
     }
 }
