@@ -297,13 +297,13 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     @Override
     public float pacNormalSpeed(GameLevel gameLevel) {
-        byte percentage = levelData(gameLevel).pacSpeedPercentage();
+        byte percentage = levelData(gameLevel).pacSpeedPct();
         return percentage > 0 ? percentage * BASE_SPEED_1_PERCENT : BASE_SPEED;
     }
 
     @Override
     public float pacPowerSpeed(GameLevel gameLevel) {
-        byte percentage = levelData(gameLevel).pacSpeedPoweredPercentage();
+        byte percentage = levelData(gameLevel).pacSpeedPoweredPct();
         return percentage > 0 ? percentage * BASE_SPEED_1_PERCENT : pacNormalSpeed(gameLevel);
     }
 
@@ -313,12 +313,12 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             return ghostTunnelSpeed(gameLevel, ghost);
         }
         if (cruiseElroy() == 1) {
-            return levelData(gameLevel).elroy1SpeedPercentage() * BASE_SPEED_1_PERCENT;
+            return levelData(gameLevel).elroy1SpeedPct() * BASE_SPEED_1_PERCENT;
         }
         if (cruiseElroy() == 2) {
-            return levelData(gameLevel).elroy2SpeedPercentage() * BASE_SPEED_1_PERCENT;
+            return levelData(gameLevel).elroy2SpeedPct() * BASE_SPEED_1_PERCENT;
         }
-        return levelData(gameLevel).ghostSpeedPercentage() * BASE_SPEED_1_PERCENT;
+        return levelData(gameLevel).ghostSpeedPct() * BASE_SPEED_1_PERCENT;
     }
 
     @Override
@@ -333,12 +333,12 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     @Override
     public float ghostFrightenedSpeed(GameLevel gameLevel, Ghost ghost) {
-        float percentage = levelData(gameLevel).ghostSpeedFrightenedPercentage();
+        float percentage = levelData(gameLevel).ghostSpeedFrightenedPct();
         return percentage > 0 ? percentage * BASE_SPEED_1_PERCENT : BASE_SPEED;
     }
 
     @Override
     public float ghostTunnelSpeed(GameLevel gameLevel, Ghost ghost) {
-        return levelData(gameLevel).ghostSpeedTunnelPercentage() * BASE_SPEED_1_PERCENT;
+        return levelData(gameLevel).ghostSpeedTunnelPct() * BASE_SPEED_1_PERCENT;
     }
 }
