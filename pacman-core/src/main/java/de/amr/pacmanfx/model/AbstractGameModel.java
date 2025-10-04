@@ -157,10 +157,10 @@ public abstract class AbstractGameModel implements Game {
         gameLevel.blinking().tick();
         checkPacKilled(gameLevel);
         if (hasPacManBeenKilled()) return;
-        checkIfGhostsKilled();
+        checkIfGhostsKilled(gameLevel);
         if (haveGhostsBeenKilled()) return;
         checkIfPacManFindsFood(gameLevel);
-        updatePacPower();
+        updatePacPower(gameLevel);
         gameLevel.bonus().ifPresent(bonus -> checkIfPacManCanEatBonus(gameLevel, bonus));
     }
 
@@ -250,31 +250,27 @@ public abstract class AbstractGameModel implements Game {
 
     protected abstract boolean isPacManSafeInDemoLevel();
 
-    protected void updatePacPower() {
-        optGameLevel().ifPresent(gameLevel -> {
-            final TickTimer powerTimer = gameLevel.pac().powerTimer();
-            powerTimer.doTick();
-            if (gameLevel.pac().isPowerFadingStarting(gameLevel)) {
-                simulationStep.pacStartsLosingPower = true;
-                eventManager().publishEvent(GameEventType.PAC_STARTS_LOSING_POWER);
-            } else if (powerTimer.hasExpired()) {
-                powerTimer.stop();
-                powerTimer.reset(0);
-                Logger.info("Power timer stopped and reset to zero");
-                gameLevel.victims().clear();
-                huntingTimer().start();
-                Logger.info("Hunting timer restarted because Pac-Man lost power");
-                gameLevel.ghosts(GhostState.FRIGHTENED).forEach(ghost -> ghost.setState(GhostState.HUNTING_PAC));
-                simulationStep.pacLostPower = true;
-                eventManager().publishEvent(GameEventType.PAC_LOST_POWER);
-            }
-        });
+    protected void updatePacPower(GameLevel gameLevel) {
+        final TickTimer powerTimer = gameLevel.pac().powerTimer();
+        powerTimer.doTick();
+        if (gameLevel.pac().isPowerFadingStarting(gameLevel)) {
+            simulationStep.pacStartsLosingPower = true;
+            eventManager().publishEvent(GameEventType.PAC_STARTS_LOSING_POWER);
+        } else if (powerTimer.hasExpired()) {
+            powerTimer.stop();
+            powerTimer.reset(0);
+            Logger.info("Power timer stopped and reset to zero");
+            gameLevel.victims().clear();
+            huntingTimer().start();
+            Logger.info("Hunting timer restarted because Pac-Man lost power");
+            gameLevel.ghosts(GhostState.FRIGHTENED).forEach(ghost -> ghost.setState(GhostState.HUNTING_PAC));
+            simulationStep.pacLostPower = true;
+            eventManager().publishEvent(GameEventType.PAC_LOST_POWER);
+        }
     }
 
-    protected void checkIfGhostsKilled() {
-        optGameLevel().ifPresent(gameLevel -> gameLevel.ghosts(GhostState.FRIGHTENED)
-            .filter(ghost -> gameLevel.pac().sameTilePosition(ghost))
-            .forEach(this::onGhostKilled));
+    protected void checkIfGhostsKilled(GameLevel gameLevel) {
+        gameLevel.ghosts(GhostState.FRIGHTENED).filter(ghost -> gameLevel.pac().sameTilePosition(ghost)).forEach(this::onGhostKilled);
     }
 
     protected abstract void checkIfPacManFindsFood(GameLevel gameLevel);
