@@ -5,6 +5,10 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.pacmanfx.GameContext;
+import de.amr.pacmanfx.arcade.pacman.actors.Blinky;
+import de.amr.pacmanfx.arcade.pacman.actors.Clyde;
+import de.amr.pacmanfx.arcade.pacman.actors.Inky;
+import de.amr.pacmanfx.arcade.pacman.actors.Pinky;
 import de.amr.pacmanfx.arcade.pacman.rendering.*;
 import de.amr.pacmanfx.arcade.pacman.scenes.*;
 import de.amr.pacmanfx.controller.GamePlayState;
@@ -185,10 +189,10 @@ public class ArcadePacMan_UIConfig implements GameUI_Config {
     @Override
     public Ghost createGhost(byte personality) {
         Ghost ghost = switch (personality) {
-            case RED_GHOST_SHADOW -> new ArcadePacMan_GameModel.Blinky();
-            case PINK_GHOST_SPEEDY -> new ArcadePacMan_GameModel.Pinky();
-            case CYAN_GHOST_BASHFUL -> new ArcadePacMan_GameModel.Inky();
-            case ORANGE_GHOST_POKEY -> new ArcadePacMan_GameModel.Clyde();
+            case RED_GHOST_SHADOW -> new Blinky();
+            case PINK_GHOST_SPEEDY -> new Pinky();
+            case CYAN_GHOST_BASHFUL -> new Inky();
+            case ORANGE_GHOST_POKEY -> new Clyde();
             default -> throw new IllegalArgumentException("Illegal ghost personality: " + personality);
         };
         ghost.setAnimationManager(createGhostAnimations(personality));

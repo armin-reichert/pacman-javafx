@@ -15,6 +15,7 @@ open module de.amr.pacmanfx.arcade.pacman {
     requires jdk.dynalink;
 
     exports de.amr.pacmanfx.arcade.pacman;
+    exports de.amr.pacmanfx.arcade.pacman.actors;
     exports de.amr.pacmanfx.arcade.pacman.app;
     exports de.amr.pacmanfx.arcade.pacman.rendering;
     exports de.amr.pacmanfx.arcade.pacman.scenes;

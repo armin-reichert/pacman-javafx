@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
-import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel;
+import de.amr.pacmanfx.arcade.pacman.actors.PacMan;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_ActorRenderer;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_HUDRenderer;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
@@ -116,7 +116,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
         GameUI_Config uiConfig = ui.currentConfig();
 
-        pacMan = new ArcadePacMan_GameModel.PacMan();
+        pacMan = new PacMan();
         pacMan.setAnimationManager(uiConfig.createPacAnimations());
         pacMan.selectAnimation(AnimationSupport.ANIM_PAC_MUNCHING);
 

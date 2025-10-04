@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel;
+import de.amr.pacmanfx.arcade.pacman.actors.PacMan;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.model.DefaultGameVariants;
 import de.amr.pacmanfx.model.Game;
@@ -66,7 +66,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         }
 
         private void createActors(GameUI_Config uiConfig) {
-            pac = new ArcadePacMan_GameModel.PacMan();
+            pac = new PacMan();
             pac.setAnimationManager(uiConfig.createPacAnimations());
             pac.playAnimation(AnimationSupport.ANIM_PAC_MUNCHING);
             ghosts = List.of(
