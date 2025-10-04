@@ -591,8 +591,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    protected boolean isBonusReached() {
-        FoodLayer foodLayer = gameLevel().worldMap().foodLayer();
+    protected boolean isBonusReached(GameLevel gameLevel) {
+        FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
         return foodLayer.eatenFoodCount() == 64 || foodLayer.eatenFoodCount() == 176;
     }
 
@@ -664,7 +664,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             } else {
                 scoreManager.scorePoints(PELLET_VALUE);
             }
-            if (isBonusReached()) {
+            if (isBonusReached(gameLevel)) {
                 activateNextBonus(gameLevel);
                 simulationStep.bonusIndex = gameLevel.currentBonusIndex();
             }

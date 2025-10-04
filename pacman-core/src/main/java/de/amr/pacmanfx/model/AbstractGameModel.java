@@ -291,7 +291,7 @@ public abstract class AbstractGameModel implements Game {
 
     protected abstract void checkIfPacManFindsFood(GameLevel gameLevel);
 
-    protected abstract boolean isBonusReached();
+    protected abstract boolean isBonusReached(GameLevel gameLevel);
 
     protected void checkIfPacManCanEatBonus(Bonus bonus) {
         optGameLevel().ifPresent(gameLevel -> {

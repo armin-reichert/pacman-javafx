@@ -247,8 +247,8 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     }
 
     @Override
-    protected boolean isBonusReached() {
-        FoodLayer foodLayer = gameLevel().worldMap().foodLayer();
+    protected boolean isBonusReached(GameLevel gameLevel) {
+        FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
         return foodLayer.eatenFoodCount() == 64 || foodLayer.eatenFoodCount() == 176;
     }
 
