@@ -24,6 +24,7 @@ import static java.util.Objects.requireNonNull;
 public abstract class AbstractGameModel implements Game {
 
     public static final double BONUS_EATEN_SECONDS = 2;
+
     public static final int MAX_LEVEL_COUNTER_SYMBOLS = 7;
 
     protected final BooleanProperty cutScenesEnabled = new SimpleBooleanProperty(true);
@@ -143,30 +144,6 @@ public abstract class AbstractGameModel implements Game {
     }
 
     @Override
-    public void startHunting(GameLevel gameLevel) {
-        gameLevel.pac().animationManager().ifPresent(AnimationManager::play);
-        gameLevel.ghosts().forEach(ghost -> ghost.animationManager().ifPresent(AnimationManager::play));
-        gameLevel.blinking().setStartPhase(Pulse.ON);
-        gameLevel.blinking().restart(Integer.MAX_VALUE);
-        huntingTimer().startFirstHuntingPhase(gameLevel.number());
-        eventManager().publishEvent(GameEventType.HUNTING_PHASE_STARTED);
-    }
-
-    @Override
-    public void doHuntingStep(GameLevel gameLevel) {
-        optGateKeeper().ifPresent(gateKeeper -> gateKeeper.unlockGhosts(gameLevel));
-        huntingTimer().update(gameLevel.number());
-        gameLevel.blinking().tick();
-        checkPacKilled(gameLevel);
-        if (hasPacManBeenKilled()) return;
-        checkPacKillsGhosts(gameLevel);
-        if (haveGhostsBeenKilled()) return;
-        checkPacFindsFood(gameLevel);
-        gameLevel.bonus().ifPresent(bonus -> checkPacEatsBonus(gameLevel, bonus));
-        updatePacPower(gameLevel);
-    }
-
-    @Override
     public boolean hasPacManBeenKilled() {
         return simulationStepResults.pacKilledTile != null;
     }
@@ -221,6 +198,30 @@ public abstract class AbstractGameModel implements Game {
         gameLevel.worldMap().foodLayer().eatAllFood();
 
         Logger.trace("Game level #{} completed.", gameLevel.number());
+    }
+
+    @Override
+    public void startHunting(GameLevel gameLevel) {
+        gameLevel.pac().animationManager().ifPresent(AnimationManager::play);
+        gameLevel.ghosts().forEach(ghost -> ghost.animationManager().ifPresent(AnimationManager::play));
+        gameLevel.blinking().setStartPhase(Pulse.ON);
+        gameLevel.blinking().restart(Integer.MAX_VALUE);
+        huntingTimer().startFirstHuntingPhase(gameLevel.number());
+        eventManager().publishEvent(GameEventType.HUNTING_PHASE_STARTED);
+    }
+
+    @Override
+    public void doHuntingStep(GameLevel gameLevel) {
+        optGateKeeper().ifPresent(gateKeeper -> gateKeeper.unlockGhosts(gameLevel));
+        huntingTimer().update(gameLevel.number());
+        gameLevel.blinking().tick();
+        checkPacKilled(gameLevel);
+        if (hasPacManBeenKilled()) return;
+        checkPacKillsGhosts(gameLevel);
+        if (haveGhostsBeenKilled()) return;
+        checkPacFindsFood(gameLevel);
+        gameLevel.bonus().ifPresent(bonus -> checkPacEatsBonus(gameLevel, bonus));
+        updatePacPower(gameLevel);
     }
 
     protected void resetPacManAndGhostAnimations(GameLevel gameLevel) {
