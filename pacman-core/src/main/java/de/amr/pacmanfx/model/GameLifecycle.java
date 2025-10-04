@@ -23,7 +23,7 @@ public interface GameLifecycle {
     boolean isLevelCompleted();
     int lastLevelNumber();
     void startNextLevel();
-    void startHunting();
+    void startHunting(GameLevel gameLevel);
     void doHuntingStep(GameContext gameContext);
     void activateNextBonus(GameLevel gameLevel);
     boolean hasPacManBeenKilled();

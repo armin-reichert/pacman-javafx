@@ -153,7 +153,7 @@ public enum GamePlayState implements GameState {
                 return;
             }
             if (timer.tickCount() == delay) {
-                context.game().startHunting();
+                context.game().startHunting(context.gameLevel());
                 context.gameLevel().optMessage().ifPresent(message -> {
                     // leave TEST message alone
                     if (message.type() == MessageType.READY) {
