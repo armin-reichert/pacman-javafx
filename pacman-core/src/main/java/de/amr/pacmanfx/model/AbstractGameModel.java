@@ -42,17 +42,27 @@ public abstract class AbstractGameModel implements Game {
 
     protected final List<Byte> levelCounterSymbols = new ArrayList<>();
 
-    @Override
-    public Optional<GameLevel> optGameLevel() {
-        return Optional.ofNullable(gameLevel.get());
+    protected abstract boolean isPacManSafeInDemoLevel();
+
+    public void setLifeCount(int n) {
+        if (n >= 0) {
+            lifeCount.set(n);
+        } else {
+            Logger.error("Cannot set life count to negative number");
+        }
     }
 
-    protected void setGameLevel(GameLevel gameLevel) {
+    public void setGameLevel(GameLevel gameLevel) {
         this.gameLevel.set(gameLevel);
     }
 
-    protected GameLevel gameLevel() {
+    public GameLevel gameLevel() {
         return gameLevel.get();
+    }
+
+    @Override
+    public Optional<GameLevel> optGameLevel() {
+        return Optional.ofNullable(gameLevel.get());
     }
 
     public BooleanProperty levelCounterEnabledProperty() {
@@ -96,14 +106,6 @@ public abstract class AbstractGameModel implements Game {
     @Override
     public SimulationStep simulationStep() {
         return simulationStep;
-    }
-
-    protected void setLifeCount(int n) {
-        if (n >= 0) {
-            lifeCount.set(n);
-        } else {
-            Logger.error("Cannot set life count to negative number");
-        }
     }
 
     @Override
@@ -157,11 +159,11 @@ public abstract class AbstractGameModel implements Game {
         gameLevel.blinking().tick();
         checkPacKilled(gameLevel);
         if (hasPacManBeenKilled()) return;
-        checkIfGhostsKilled(gameLevel);
+        checkPacKillsGhosts(gameLevel);
         if (haveGhostsBeenKilled()) return;
-        checkIfPacManFindsFood(gameLevel);
+        checkPacFindsFood(gameLevel);
+        gameLevel.bonus().ifPresent(bonus -> checkPacEatsBonus(gameLevel, bonus));
         updatePacPower(gameLevel);
-        gameLevel.bonus().ifPresent(bonus -> checkIfPacManCanEatBonus(gameLevel, bonus));
     }
 
     @Override
@@ -232,24 +234,6 @@ public abstract class AbstractGameModel implements Game {
         }));
     }
 
-    protected void checkPacKilled(GameLevel gameLevel) {
-        final Pac pac = gameLevel.pac();
-        gameLevel.ghosts(GhostState.HUNTING_PAC).filter(pac::sameTilePosition).findFirst().ifPresent(assassin -> {
-            boolean pacDies;
-            if (gameLevel.isDemoLevel()) {
-                pacDies = !isPacManSafeInDemoLevel();
-            } else {
-                pacDies = !pac.isImmune();
-            }
-            if (pacDies) {
-                simulationStep.pacKiller = assassin;
-                simulationStep.pacKilledTile = assassin.tile();
-            }
-        });
-    }
-
-    protected abstract boolean isPacManSafeInDemoLevel();
-
     protected void updatePacPower(GameLevel gameLevel) {
         final TickTimer powerTimer = gameLevel.pac().powerTimer();
         powerTimer.doTick();
@@ -269,17 +253,29 @@ public abstract class AbstractGameModel implements Game {
         }
     }
 
-    protected void checkIfGhostsKilled(GameLevel gameLevel) {
+    protected void checkPacKillsGhosts(GameLevel gameLevel) {
         gameLevel.ghosts(GhostState.FRIGHTENED)
             .filter(ghost -> gameLevel.pac().sameTilePosition(ghost))
             .forEach(ghost -> onGhostKilled(gameLevel, ghost));
     }
 
-    protected abstract void checkIfPacManFindsFood(GameLevel gameLevel);
+    protected void checkPacKilled(GameLevel gameLevel) {
+        final Pac pac = gameLevel.pac();
+        gameLevel.ghosts(GhostState.HUNTING_PAC).filter(pac::sameTilePosition).findFirst().ifPresent(assassin -> {
+            boolean pacDies;
+            if (gameLevel.isDemoLevel()) {
+                pacDies = !isPacManSafeInDemoLevel();
+            } else {
+                pacDies = !pac.isImmune();
+            }
+            if (pacDies) {
+                simulationStep.pacKiller = assassin;
+                simulationStep.pacKilledTile = assassin.tile();
+            }
+        });
+    }
 
-    protected abstract boolean isBonusReached(GameLevel gameLevel);
-
-    protected void checkIfPacManCanEatBonus(GameLevel gameLevel, Bonus bonus) {
+    protected void checkPacEatsBonus(GameLevel gameLevel, Bonus bonus) {
         if (bonus.state() == BonusState.EDIBLE && gameLevel.pac().sameTilePosition(bonus)) {
             bonus.setEaten(TickTimer.secToTicks(BONUS_EATEN_SECONDS));
             scoreManager().scorePoints(bonus.points());

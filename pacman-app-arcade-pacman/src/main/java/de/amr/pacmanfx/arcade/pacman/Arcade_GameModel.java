@@ -177,7 +177,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     @Override
-    protected void checkIfPacManFindsFood(GameLevel gameLevel) {
+    public void checkPacFindsFood(GameLevel gameLevel) {
         FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
         final Pac pac = gameLevel.pac();
         final Vector2i tile = pac.tile();

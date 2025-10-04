@@ -593,7 +593,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    protected boolean isBonusReached(GameLevel gameLevel) {
+    public boolean isBonusReached(GameLevel gameLevel) {
         FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
         return foodLayer.eatenFoodCount() == 64 || foodLayer.eatenFoodCount() == 176;
     }
@@ -652,7 +652,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    protected void checkIfPacManFindsFood(GameLevel gameLevel) {
+    public void checkPacFindsFood(GameLevel gameLevel) {
         final FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
         final Pac pac = gameLevel.pac();
         final Vector2i tile = pac.tile();

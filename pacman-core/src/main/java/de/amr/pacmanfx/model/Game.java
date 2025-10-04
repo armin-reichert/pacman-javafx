@@ -20,6 +20,9 @@ public interface Game extends GameLifecycle, GameEvents, ActorSpeedControl {
     Optional<GameLevel>  optGameLevel();
     HUD                  hud();
 
+    void checkPacFindsFood(GameLevel gameLevel);
+    boolean              isBonusReached(GameLevel gameLevel);
+
     void                 clearLevelCounter();
     void                 updateLevelCounter(int levelNumber, byte symbol);
     void                 setLevelCounterEnabled(boolean enabled);
