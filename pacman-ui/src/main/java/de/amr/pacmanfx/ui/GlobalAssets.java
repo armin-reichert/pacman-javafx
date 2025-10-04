@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui;
 
-import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
@@ -14,6 +13,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.uilib.Ufx.createImageBackground;
+import static de.amr.pacmanfx.uilib.Ufx.topLeftToBottomRightGradient;
 
 /**
  * Global assets used in the Pac-Man games UI.
@@ -33,7 +33,7 @@ public class GlobalAssets extends AssetStorage {
         pickGameOverText      = RandomTextPicker.fromBundle(textResources(), "game.over");
         pickLevelCompleteText = RandomTextPicker.fromBundle(textResources(), "level.complete");
 
-        set("background.play_scene3d", Background.fill(Ufx.createTopLeftToBottomRightGradient(Color.web("#1e90ff"), Color.web("#99badd"))));
+        set("background.play_scene3d", Background.fill(topLeftToBottomRightGradient(Color.web("#99badd"), Color.web("#1e90ff"))));
 
         set("background.scene",        createImageBackground(GAME_UI_RES.loadImage("graphics/pacman_wallpaper.png")));
 

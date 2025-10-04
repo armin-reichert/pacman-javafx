@@ -113,7 +113,7 @@ public interface Ufx {
         );
     }
 
-    static Paint createTopLeftToBottomRightGradient(Color topColor, Color bottomColor) {
+    static Paint topLeftToBottomRightGradient(Color topColor, Color bottomColor) {
         Stop[] stops = new Stop[] {
                 new Stop(0, topColor),
                 new Stop(1, bottomColor)
