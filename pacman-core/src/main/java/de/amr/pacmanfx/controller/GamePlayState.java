@@ -101,7 +101,7 @@ public enum GamePlayState implements GameState {
 
         private void continueGame(GameContext context) {
             if (timer.tickCount() == 1) {
-                context.game().continueGame();
+                context.game().continueGame(context.gameLevel());
             } else if (timer.tickCount() == TICK_RESUME_HUNTING) {
                 context.gameController().changeGameState(GamePlayState.HUNTING);
             }

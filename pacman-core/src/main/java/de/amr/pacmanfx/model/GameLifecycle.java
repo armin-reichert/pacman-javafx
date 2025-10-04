@@ -14,7 +14,7 @@ public interface GameLifecycle {
     void startNewGame();
     boolean isPlaying();
     void setPlaying(boolean playing);
-    void continueGame();
+    void continueGame(GameLevel gameLevel);
     boolean canContinueOnGameOver();
     void buildNormalLevel(int levelNumber);
     void buildDemoLevel();

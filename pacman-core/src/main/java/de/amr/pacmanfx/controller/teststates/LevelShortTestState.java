@@ -54,7 +54,7 @@ public class LevelShortTestState implements GameState {
             gameLevel.bonus().ifPresent(bonus -> bonus.tick(context));
         }
         if (timer.atSecond(1.0)) {
-            context.game().continueGame();
+            context.game().continueGame(gameLevel);
         }
         else if (timer.atSecond(2)) {
             gameLevel.blinking().setStartPhase(Pulse.ON);
