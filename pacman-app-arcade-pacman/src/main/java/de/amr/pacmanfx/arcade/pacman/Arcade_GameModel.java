@@ -232,7 +232,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     public void startLevel(GameLevel gameLevel) {
         gameLevel.setStartTime(System.currentTimeMillis());
         gameLevel.getReadyToPlay();
-        resetPacManAndGhostAnimations();
+        resetPacManAndGhostAnimations(gameLevel);
         if (gameLevel.isDemoLevel()) {
             showMessage(gameLevel, MessageType.GAME_OVER);
             scoreManager().score().setEnabled(false);

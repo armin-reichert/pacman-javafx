@@ -418,7 +418,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     public void startLevel(GameLevel gameLevel) {
         gameLevel.setStartTime(System.currentTimeMillis());
         gameLevel.getReadyToPlay();
-        resetPacManAndGhostAnimations();
+        resetPacManAndGhostAnimations(gameLevel);
         if (pacBooster == PacBooster.ALWAYS_ON) {
             activatePacBooster(gameLevel.pac(), true);
         }
@@ -481,12 +481,12 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void resetPacManAndGhostAnimations() {
-        gameLevel().pac().animationManager().ifPresent(am -> {
+    public void resetPacManAndGhostAnimations(GameLevel gameLevel) {
+        gameLevel.pac().animationManager().ifPresent(am -> {
             am.select(boosterActive ? ANIM_MS_PAC_MAN_BOOSTER : AnimationSupport.ANIM_PAC_MUNCHING);
             am.reset();
         });
-        gameLevel().ghosts().forEach(ghost -> ghost.animationManager().ifPresent(am -> {
+        gameLevel.ghosts().forEach(ghost -> ghost.animationManager().ifPresent(am -> {
             am.select(AnimationSupport.ANIM_GHOST_NORMAL);
             am.reset();
         }));

@@ -134,7 +134,7 @@ public abstract class AbstractGameModel implements Game {
 
     @Override
     public void continueGame(GameLevel gameLevel) {
-        resetPacManAndGhostAnimations();
+        resetPacManAndGhostAnimations(gameLevel);
         gameLevel.getReadyToPlay();
         gameLevel.showPacAndGhosts();
         eventManager().publishEvent(GameEventType.GAME_CONTINUED);
@@ -155,7 +155,7 @@ public abstract class AbstractGameModel implements Game {
         optGateKeeper().ifPresent(gateKeeper -> gateKeeper.unlockGhosts(gameLevel));
         huntingTimer().update(gameLevel.number());
         gameLevel.blinking().tick();
-        checkIfPacManGetsKilled(gameLevel.pac());
+        checkPacKilled(gameLevel);
         if (hasPacManBeenKilled()) return;
         checkIfGhostsKilled();
         if (haveGhostsBeenKilled()) return;
@@ -221,34 +221,31 @@ public abstract class AbstractGameModel implements Game {
         Logger.trace("Game level #{} completed.", gameLevel.number());
     }
 
-    protected void resetPacManAndGhostAnimations() {
-        optGameLevel().ifPresent(gameLevel -> {
-            gameLevel.pac().animationManager().ifPresent(am -> {
-                am.select(AnimationSupport.ANIM_PAC_MUNCHING);
-                am.reset();
-            });
-            gameLevel.ghosts().forEach(ghost -> ghost.animationManager().ifPresent(am -> {
-                am.select(AnimationSupport.ANIM_GHOST_NORMAL);
-                am.reset();
-            }));
+    protected void resetPacManAndGhostAnimations(GameLevel gameLevel) {
+        gameLevel.pac().animationManager().ifPresent(am -> {
+            am.select(AnimationSupport.ANIM_PAC_MUNCHING);
+            am.reset();
         });
+        gameLevel.ghosts().forEach(ghost -> ghost.animationManager().ifPresent(am -> {
+            am.select(AnimationSupport.ANIM_GHOST_NORMAL);
+            am.reset();
+        }));
     }
 
-    protected void checkIfPacManGetsKilled(Pac pac) {
-        optGameLevel().ifPresent(level -> level.ghosts(GhostState.HUNTING_PAC)
-            .filter(pac::sameTilePosition)
-            .findFirst().ifPresent(killer -> {
-                boolean killed;
-                if (level.isDemoLevel()) {
-                    killed = !isPacManSafeInDemoLevel();
-                } else {
-                    killed = !pac.isImmune();
-                }
-                if (killed) {
-                    simulationStep.pacKiller = killer;
-                    simulationStep.pacKilledTile = killer.tile();
-                }
-            }));
+    protected void checkPacKilled(GameLevel gameLevel) {
+        final Pac pac = gameLevel.pac();
+        gameLevel.ghosts(GhostState.HUNTING_PAC).filter(pac::sameTilePosition).findFirst().ifPresent(assassin -> {
+            boolean pacDies;
+            if (gameLevel.isDemoLevel()) {
+                pacDies = !isPacManSafeInDemoLevel();
+            } else {
+                pacDies = !pac.isImmune();
+            }
+            if (pacDies) {
+                simulationStep.pacKiller = assassin;
+                simulationStep.pacKilledTile = assassin.tile();
+            }
+        });
     }
 
     protected abstract boolean isPacManSafeInDemoLevel();
