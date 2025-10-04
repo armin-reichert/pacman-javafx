@@ -73,13 +73,13 @@ public class Bonus extends MovingActor {
 
     private boolean move(GameLevel gameLevel) {
         steering.steer(this, gameLevel);
-        if (steering.isComplete()) {
-            return true;
+        boolean complete = steering.isComplete();
+        if (!complete) {
+            navigateTowardsTarget(gameLevel);
+            moveThroughThisCruelWorld(gameLevel);
+            movementAnimation.tick();
         }
-        navigateTowardsTarget(gameLevel);
-        moveThroughThisCruelWorld(gameLevel);
-        movementAnimation.tick();
-        return false;
+        return complete;
     }
 
     private void expireOnWorldLeftOrTimeout(GameContext gameContext) {
