@@ -8,10 +8,10 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.actors.Ghost;
 
 public interface GameEvents {
-    void onPelletEaten();
-    void onEnergizerEaten(Vector2i tile);
+    void onPelletEaten(GameLevel gameLevel);
+    void onEnergizerEaten(GameLevel gameLevel, Vector2i tile);
     void onLevelCompleted(GameLevel gameLevel);
-    void onPacKilled();
-    void onGhostKilled(Ghost ghost);
-    void onGameEnding();
+    void onPacKilled(GameLevel gameLevel);
+    void onGhostKilled(GameLevel gameLevel, Ghost ghost);
+    void onGameEnding(GameLevel gameLevel);
 }

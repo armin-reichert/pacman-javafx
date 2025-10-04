@@ -312,10 +312,10 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void onGameEnding() {
+    public void onGameEnding(GameLevel gameLevel) {
         setPlaying(false);
         scoreManager.updateHighScore();
-        showMessage(gameLevel(), MessageType.GAME_OVER);
+        showMessage(gameLevel, MessageType.GAME_OVER);
     }
 
     @Override
@@ -674,26 +674,26 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void onPelletEaten() {
+    public void onPelletEaten(GameLevel gameLevel) {
         scoreManager().scorePoints(PELLET_VALUE);
-        gameLevel().pac().setRestingTicks(1);
+        gameLevel.pac().setRestingTicks(1);
     }
 
     @Override
-    public void onEnergizerEaten(Vector2i tile) {
+    public void onEnergizerEaten(GameLevel gameLevel, Vector2i tile) {
         simulationStep.foundEnergizerAtTile = tile;
         scoreManager().scorePoints(ENERGIZER_VALUE);
-        gameLevel().pac().setRestingTicks(3);
-        gameLevel().victims().clear();
-        gameLevel().ghosts(FRIGHTENED, HUNTING_PAC).forEach(Ghost::requestTurnBack);
-        double powerSeconds = pacPowerSeconds(gameLevel());
+        gameLevel.pac().setRestingTicks(3);
+        gameLevel.victims().clear();
+        gameLevel.ghosts(FRIGHTENED, HUNTING_PAC).forEach(Ghost::requestTurnBack);
+        double powerSeconds = pacPowerSeconds(gameLevel);
         if (powerSeconds > 0) {
             huntingTimer().stop();
             Logger.debug("Hunting stopped (Pac-Man got power)");
             long ticks = TickTimer.secToTicks(powerSeconds);
-            gameLevel().pac().powerTimer().restartTicks(ticks);
+            gameLevel.pac().powerTimer().restartTicks(ticks);
             Logger.debug("Power timer restarted, {} ticks ({0.00} sec)", ticks, powerSeconds);
-            gameLevel().ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
+            gameLevel.ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
             simulationStep.pacGotPower = true;
             eventManager().publishEvent(GameEventType.PAC_GETS_POWER);
         }
@@ -720,22 +720,23 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void onPacKilled() {
+    public void onPacKilled(GameLevel gameLevel) {
+        final Pac pac = gameLevel.pac();
         huntingTimer.stop();
         Logger.info("Hunting timer stopped");
-        gameLevel().pac().powerTimer().stop();
-        gameLevel().pac().powerTimer().reset(0);
-        Logger.info("Power timer stopped and set to zero");
         gateKeeper.resetCounterAndSetEnabled(true); // TODO how is that realized in original game?
-        gameLevel().pac().sayGoodbyeCruelWorld();
+        pac.powerTimer().stop();
+        pac.powerTimer().reset(0);
+        Logger.info("Power timer stopped and set to zero");
+        pac.sayGoodbyeCruelWorld();
     }
 
     @Override
-    public void onGhostKilled(Ghost ghost) {
+    public void onGhostKilled(GameLevel gameLevel, Ghost ghost) {
         simulationStep.killedGhosts.add(ghost);
-        int killedSoFar = gameLevel().victims().size();
+        int killedSoFar = gameLevel.victims().size();
         int points = 100 * KILLED_GHOST_VALUE_FACTORS[killedSoFar];
-        gameLevel().victims().add(ghost);
+        gameLevel.victims().add(ghost);
         ghost.setState(GhostState.EATEN);
         ghost.selectAnimationAt(AnimationSupport.ANIM_GHOST_NUMBER, killedSoFar);
         scoreManager.scorePoints(points);

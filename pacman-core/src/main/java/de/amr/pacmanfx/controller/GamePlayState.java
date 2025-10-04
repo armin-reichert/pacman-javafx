@@ -271,7 +271,7 @@ public enum GamePlayState implements GameState {
         @Override
         public void onEnter(GameContext context) {
             timer.restartIndefinitely();
-            context.game().onPacKilled();
+            context.game().onPacKilled(context.gameLevel());
             context.eventManager().publishEvent(GameEventType.STOP_ALL_SOUNDS);
         }
 
@@ -320,14 +320,14 @@ public enum GamePlayState implements GameState {
         @Override
         public void onEnter(GameContext context) {
             timer.restartTicks(context.gameLevel().gameOverStateTicks());
-            context.game().onGameEnding();
+            context.game().onGameEnding(context.gameLevel());
         }
 
         @Override
         public void onUpdate(GameContext context) {
             if (timer.hasExpired()) {
                 //TODO find unified solution
-                if (context.gameController().isSelected("MS_PACMAN_TENGEN")) {
+                if (context.gameController().isSelected(DefaultGameVariants.MS_PACMAN_TENGEN.name())) {
                     if (context.gameLevel().isDemoLevel()) {
                         context.gameController().changeGameState(SHOWING_CREDITS);
                     } else {

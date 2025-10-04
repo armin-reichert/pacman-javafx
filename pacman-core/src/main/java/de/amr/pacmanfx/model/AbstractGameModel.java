@@ -270,7 +270,9 @@ public abstract class AbstractGameModel implements Game {
     }
 
     protected void checkIfGhostsKilled(GameLevel gameLevel) {
-        gameLevel.ghosts(GhostState.FRIGHTENED).filter(ghost -> gameLevel.pac().sameTilePosition(ghost)).forEach(this::onGhostKilled);
+        gameLevel.ghosts(GhostState.FRIGHTENED)
+            .filter(ghost -> gameLevel.pac().sameTilePosition(ghost))
+            .forEach(ghost -> onGhostKilled(gameLevel, ghost));
     }
 
     protected abstract void checkIfPacManFindsFood(GameLevel gameLevel);

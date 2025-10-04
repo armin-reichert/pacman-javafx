@@ -160,11 +160,11 @@ public interface CommonGameActions {
     AbstractGameAction ACTION_CHEAT_KILL_GHOSTS = new AbstractGameAction("CHEAT_KILL_GHOSTS") {
         @Override
         public void execute(GameUI ui) {
-            GameLevel level = ui.gameContext().gameLevel();
-            List<Ghost> vulnerableGhosts = level.ghosts(FRIGHTENED, HUNTING_PAC).toList();
+            GameLevel gameLevel = ui.gameContext().gameLevel();
+            List<Ghost> vulnerableGhosts = gameLevel.ghosts(FRIGHTENED, HUNTING_PAC).toList();
             if (!vulnerableGhosts.isEmpty()) {
-                level.victims().clear(); // resets value of next killed ghost to 200
-                vulnerableGhosts.forEach(ui.gameContext().game()::onGhostKilled);
+                gameLevel.victims().clear(); // resets value of next killed ghost to 200
+                vulnerableGhosts.forEach(ghost -> gameLevel.game().onGhostKilled(gameLevel, ghost));
                 ui.gameContext().gameController().changeGameState(GamePlayState.GHOST_DYING);
             }
         }
