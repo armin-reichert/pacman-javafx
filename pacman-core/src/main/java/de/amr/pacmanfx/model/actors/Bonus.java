@@ -37,19 +37,68 @@ public class Bonus extends MovingActor {
     private long edibleTicks;
     private long eatenTicks;
 
-    private final Pulse jumpAnimation;
+    private final Pulse movementAnimation;
     private RouteBasedSteering steering;
 
-    public Bonus(byte symbol, int points, Pulse jumpAnimation) {
+    public Bonus(byte symbol, int points, Pulse movementAnimation) {
         this.symbol = symbol;
         this.points = points;
-        this.jumpAnimation = jumpAnimation;
+        this.movementAnimation = movementAnimation;
         reset();
         canTeleport = false; // override default value
         edibleTicks = TickTimer.secToTicks(9.5);
         eatenTicks = TickTimer.secToTicks(2);
         ticksRemaining = 0;
         state = BonusState.INACTIVE;
+    }
+
+    @Override
+    public void tick(GameContext gameContext) {
+        switch (state) {
+            case EDIBLE -> {
+                countdown();
+                expireOnWorldLeftOrTimeout(gameContext);
+            }
+            case EATEN -> {
+                countdown();
+                expireOnTimeout(gameContext);
+            }
+            case INACTIVE -> {}
+        }
+    }
+
+    private boolean canMove() {
+        return movementAnimation != null;
+    }
+
+    private boolean move(GameLevel gameLevel) {
+        steering.steer(this, gameLevel);
+        if (steering.isComplete()) {
+            return true;
+        }
+        navigateTowardsTarget(gameLevel);
+        moveThroughThisCruelWorld(gameLevel);
+        movementAnimation.tick();
+        return false;
+    }
+
+    private void expireOnWorldLeftOrTimeout(GameContext gameContext) {
+        boolean expired = ticksRemaining == 0 || (canMove() && move(gameContext.gameLevel()));
+        if (expired) {
+            expire(gameContext);
+        }
+    }
+
+    private void expireOnTimeout(GameContext gameContext) {
+        if (ticksRemaining == 0) {
+            expire(gameContext);
+        }
+    }
+
+    private void expire(GameContext gameContext) {
+        setInactive();
+        gameContext.eventManager().publishEvent(GameEventType.BONUS_EXPIRED, tile());
+        Logger.info("{} expired", this);
     }
 
     public void setEdibleTicks(long edibleTicks) {
@@ -73,12 +122,12 @@ public class Bonus extends MovingActor {
     @Override
     public String toString() {
         return "Bonus{symbol=%s, points=%d, countdown=%d, state=%s, animation=%s}"
-            .formatted(symbol, points, ticksRemaining, state, jumpAnimation);
+            .formatted(symbol, points, ticksRemaining, state, movementAnimation);
     }
 
     @Override
     public String name() {
-        return "%sBonus_symbol=%s_points=%s".formatted((jumpAnimation != null ? "Moving" : "Static"), symbol, points);
+        return "%sBonus_symbol=%s_points=%s".formatted((movementAnimation != null ? "Moving" : "Static"), symbol, points);
     }
 
     @Override
@@ -114,8 +163,8 @@ public class Bonus extends MovingActor {
     }
 
     public void setInactive() {
-        if (jumpAnimation != null) {
-            jumpAnimation.stop();
+        if (movementAnimation != null) {
+            movementAnimation.stop();
             setSpeed(0);
         }
         state = BonusState.INACTIVE;
@@ -124,8 +173,8 @@ public class Bonus extends MovingActor {
     }
 
     public void setEdible() {
-        if (jumpAnimation != null) {
-            jumpAnimation.restart();
+        if (movementAnimation != null) {
+            movementAnimation.restart();
             setSpeed(0.5f); // how fast in the original game?
             setTargetTile(null);
         }
@@ -136,8 +185,8 @@ public class Bonus extends MovingActor {
     }
 
     public void setEaten() {
-        if (jumpAnimation != null) {
-            jumpAnimation.stop();
+        if (movementAnimation != null) {
+            movementAnimation.stop();
         }
         ticksRemaining = eatenTicks;
         state = BonusState.EATEN;
@@ -145,51 +194,17 @@ public class Bonus extends MovingActor {
         Logger.trace("Bonus eaten: {}", this);
     }
 
-    @Override
-    public void tick(GameContext gameContext) {
-        switch (state) {
-            case EDIBLE -> {
-                countDownTimer();
-                boolean leftWorld = jumpAnimation != null && tumbleEventuallyLeaveThroughPortal(gameContext.gameLevel());
-                if (leftWorld || ticksRemaining == 0) {
-                    setInactive();
-                    gameContext.eventManager().publishEvent(GameEventType.BONUS_EXPIRED, tile());
-                }
-            }
-            case EATEN -> {
-                countDownTimer();
-                if (ticksRemaining == 0) {
-                    setInactive();
-                    gameContext.eventManager().publishEvent(GameEventType.BONUS_EXPIRED, tile());
-                }
-            }
-            case INACTIVE -> {}
-        }
-    }
-
-    private void countDownTimer() {
+    private void countdown() {
         if (ticksRemaining > 0 && ticksRemaining != TickTimer.INDEFINITE) {
             --ticksRemaining;
         }
     }
 
-    // Moves through level, when end of route is reached, expires.
-    private boolean tumbleEventuallyLeaveThroughPortal(GameLevel gameLevel) {
-        steering.steer(this, gameLevel);
-        if (steering.isComplete()) {
-            return true;
-        }
-        navigateTowardsTarget(gameLevel);
-        moveThroughThisCruelWorld(gameLevel);
-        jumpAnimation.tick();
-        return false;
-    }
-
     //TODO check in emulator what's really going on
     public float jumpHeight() {
-        if (jumpAnimation == null || !jumpAnimation.isRunning()) {
+        if (movementAnimation == null || !movementAnimation.isRunning()) {
             return 0;
         }
-        return jumpAnimation.isOn() ? -3f : 3f;
+        return movementAnimation.isOn() ? -3f : 3f;
     }
 }
