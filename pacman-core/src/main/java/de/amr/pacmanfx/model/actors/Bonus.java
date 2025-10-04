@@ -34,6 +34,7 @@ public class Bonus extends MovingActor {
     private final int points;
     private long ticksRemaining;
     private BonusState state;
+    private long edibleTicks;
     private long eatenTicks;
 
     private final Pulse jumpAnimation;
@@ -45,8 +46,14 @@ public class Bonus extends MovingActor {
         this.jumpAnimation = jumpAnimation;
         reset();
         canTeleport = false; // override default value
+        edibleTicks = TickTimer.secToTicks(9.5);
+        eatenTicks = TickTimer.secToTicks(2);
         ticksRemaining = 0;
         state = BonusState.INACTIVE;
+    }
+
+    public void setEdibleTicks(long edibleTicks) {
+        this.edibleTicks = edibleTicks;
     }
 
     public void setEatenTicks(long eatenTicks) {
@@ -111,23 +118,20 @@ public class Bonus extends MovingActor {
             jumpAnimation.stop();
             setSpeed(0);
         }
-        hide();
         state = BonusState.INACTIVE;
+        hide();
         Logger.trace("Bonus inactive: {}", this);
     }
 
-    /**
-     * @param ticks number of ticks the bonus stays edible
-     */
-    public void setEdible(long ticks) {
+    public void setEdible() {
         if (jumpAnimation != null) {
             jumpAnimation.restart();
             setSpeed(0.5f); // how fast in the original game?
             setTargetTile(null);
         }
-        ticksRemaining = ticks;
-        show();
+        ticksRemaining = edibleTicks;
         state = BonusState.EDIBLE;
+        show();
         Logger.trace("Bonus edible: {}", this);
     }
 
@@ -137,6 +141,7 @@ public class Bonus extends MovingActor {
         }
         ticksRemaining = eatenTicks;
         state = BonusState.EATEN;
+        show();
         Logger.trace("Bonus eaten: {}", this);
     }
 
