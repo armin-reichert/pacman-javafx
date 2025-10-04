@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.pacmanfx.GameContext;
+import de.amr.pacmanfx.arcade.ms_pacman.actors.*;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameModel;
 import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.event.GameEventType;
@@ -18,7 +19,6 @@ import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
-import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
 
@@ -52,154 +52,6 @@ import static java.util.Objects.requireNonNull;
 public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
     private static final byte[] BONUS_VALUE_MULTIPLIERS = {1, 2, 5, 7, 10, 20, 50}; // points = value * 100
-
-    public static class MsPacMan extends Pac {
-
-        public MsPacMan() {
-            super("Ms. Pac-Man");
-            reset();
-        }
-    }
-
-    public static class PacMan extends Pac {
-
-        public PacMan() {
-            super("Pac-Man");
-            reset();
-        }
-    }
-
-    public static class Blinky extends Ghost {
-
-        public Blinky() {
-            reset();
-        }
-
-        @Override
-        public String name() {
-            return "Blinky";
-        }
-
-        @Override
-        public byte personality() {
-            return RED_GHOST_SHADOW;
-        }
-
-        @Override
-        public void hunt(GameLevel gameLevel, HuntingTimer huntingTimer) {
-            var game = (ArcadeMsPacMan_GameModel) gameLevel.game();
-            float speed = game.ghostAttackSpeed(gameLevel, this);
-            setSpeed(speed);
-            if (huntingTimer.phaseIndex() == 0) {
-                roam(gameLevel);
-            } else {
-                boolean chase = huntingTimer.phase() == HuntingPhase.CHASING || game.isCruiseElroyModeActive();
-                Vector2i targetTile = chase
-                    ? chasingTargetTile(gameLevel)
-                    : gameLevel.worldMap().terrainLayer().ghostScatterTile(personality());
-                tryMovingTowardsTargetTile(gameLevel, targetTile);
-            }
-        }
-
-        @Override
-        public Vector2i chasingTargetTile(GameLevel gameLevel) {
-            // Blinky (red ghost) attacks Pac-Man directly
-            return gameLevel.pac().tile();
-        }
-    }
-
-    /**
-     * In Ms. Pac-Man, Blinky and Pinky move randomly during the *first* scatter phase. Some say,
-     * the original intention had been to randomize the scatter target of *all* ghosts but because of a bug,
-     * only the scatter target of Blinky and Pinky would have been affected. Who knows?
-     *
-     * @see <a href="http://www.donhodges.com/pacman_pinky_explanation.htm">Overflow bug explanation</a>.
-     * */
-    public static class Pinky extends Ghost {
-
-        public Pinky() {
-            reset();
-        }
-
-        @Override
-        public String name() {
-            return "Pinky";
-        }
-
-        @Override
-        public byte personality() {
-            return PINK_GHOST_SPEEDY;
-        }
-
-        @Override
-        public void hunt(GameLevel gameLevel, HuntingTimer huntingTimer) {
-            float speed = gameLevel.game().ghostAttackSpeed(gameLevel, this);
-            setSpeed(speed);
-            if (huntingTimer.phaseIndex() == 0) {
-                roam(gameLevel);
-            } else {
-                Vector2i targetTile = huntingTimer.phase() == HuntingPhase.CHASING
-                    ? chasingTargetTile(gameLevel)
-                    : gameLevel.worldMap().terrainLayer().ghostScatterTile(personality());
-                tryMovingTowardsTargetTile(gameLevel, targetTile);
-            }
-        }
-
-        @Override
-        public Vector2i chasingTargetTile(GameLevel gameLevel) {
-            // Pinky (pink ghost) ambushes Pac-Man
-            return gameLevel.pac().tilesAheadWithOverflowBug(4);
-        }
-    }
-
-    public static class Inky extends Ghost {
-
-        public Inky() {
-            reset();
-        }
-
-        @Override
-        public String name() {
-            return "Inky";
-        }
-
-        @Override
-        public byte personality() {
-            return CYAN_GHOST_BASHFUL;
-        }
-
-        @Override
-        public Vector2i chasingTargetTile(GameLevel gameLevel) {
-            // Inky (cyan ghost) attacks from opposite side as Blinky
-            Ghost blinky = gameLevel.ghost(RED_GHOST_SHADOW);
-            return gameLevel.pac().tilesAheadWithOverflowBug(2).scaled(2).minus(blinky.tile());
-        }
-    }
-
-    public static class Sue extends Ghost {
-
-        public Sue() {
-            reset();
-        }
-
-        @Override
-        public String name() {
-            return "Sue";
-        }
-
-        @Override
-        public byte personality() {
-            return ORANGE_GHOST_POKEY;
-        }
-
-        @Override
-        public Vector2i chasingTargetTile(GameLevel gameLevel) {
-            // Attacks directly or retreats towards scatter target if Pac is near
-            return tile().euclideanDist(gameLevel.pac().tile()) < 8
-                ? gameLevel.worldMap().terrainLayer().ghostScatterTile(personality())
-                : gameLevel.pac().tile();
-        }
-    }
 
     // Level settings as specified in the "Pac-Man dossier" for Pac-Man game
     // TODO: Are these values also correct for *Ms.* Pac-Man?

@@ -23,8 +23,9 @@ import javafx.scene.canvas.Canvas;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.MsPacMan;
-import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.PacMan;
+
+import de.amr.pacmanfx.arcade.ms_pacman.actors.MsPacMan;
+import de.amr.pacmanfx.arcade.ms_pacman.actors.PacMan;
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_PacAnimationManager.PAC_MAN_MUNCHING;
 
 /**
