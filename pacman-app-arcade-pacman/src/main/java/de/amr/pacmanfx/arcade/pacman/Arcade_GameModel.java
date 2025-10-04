@@ -203,13 +203,15 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     @Override
     public void buildNormalLevel(int levelNumber) {
         createLevel(levelNumber, false);
-        gameLevel().pac().immuneProperty().bind(gameContext.gameController().propertyImmunity());
-        gameLevel().pac().usingAutopilotProperty().bind(gameContext.gameController().propertyUsingAutopilot());
+        final GameLevel normalLevel = gameLevel();
+        normalLevel.pac().immuneProperty().bind(gameContext.gameController().propertyImmunity());
+        normalLevel.pac().usingAutopilotProperty().bind(gameContext.gameController().propertyUsingAutopilot());
         setLevelCounterEnabled(true);
         huntingTimer().reset();
         scoreManager().score().setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
-        gameLevel().worldMap().terrainLayer().optHouse().ifPresent(house -> gateKeeper.setHouse(house)); //TODO what if no house exists?
+        //TODO handle case when no house exists
+        normalLevel.worldMap().terrainLayer().optHouse().ifPresent(house -> gateKeeper.setHouse(house));
         eventManager().publishEvent(GameEventType.LEVEL_CREATED);
     }
 
@@ -217,15 +219,17 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     public void buildDemoLevel() {
         int levelNumber = 1;
         createLevel(levelNumber, true);
-        gameLevel().pac().setImmune(false);
-        gameLevel().pac().setUsingAutopilot(true);
-        gameLevel().pac().setAutopilotSteering(demoLevelSteering);
+        final GameLevel demoLevel = gameLevel();
+        demoLevel.pac().setImmune(false);
+        demoLevel.pac().setUsingAutopilot(true);
+        demoLevel.pac().setAutopilotSteering(demoLevelSteering);
         demoLevelSteering.init();
         setLevelCounterEnabled(true);
         huntingTimer().reset();
         scoreManager().score().setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
-        gameLevel().worldMap().terrainLayer().optHouse().ifPresent(house -> gateKeeper.setHouse(house)); //TODO what if no house exists?
+        //TODO handle case when no house exists
+        demoLevel.worldMap().terrainLayer().optHouse().ifPresent(house -> gateKeeper.setHouse(house));
         eventManager().publishEvent(GameEventType.LEVEL_CREATED);
     }
 
