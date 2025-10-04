@@ -300,25 +300,25 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
      *
      **/
     @Override
-    public void activateNextBonus() {
-        if (gameLevel().isBonusEdible()) {
+    public void activateNextBonus(GameLevel gameLevel) {
+        if (gameLevel.isBonusEdible()) {
             Logger.info("Previous bonus is still active, skip this bonus");
             return;
         }
 
-        final List<Portal> portals = gameLevel().worldMap().terrainLayer().portals();
+        final List<Portal> portals = gameLevel.worldMap().terrainLayer().portals();
         if (portals.isEmpty()) {
             Logger.error("Moving bonus cannot be activated, game level does not contain any portals");
             return;
         }
 
-        final House house = gameLevel().worldMap().terrainLayer().optHouse().orElse(null);
+        final House house = gameLevel.worldMap().terrainLayer().optHouse().orElse(null);
         if (house == null) {
             Logger.error("Moving bonus cannot be activated, no house exists in this level!");
             return;
         }
 
-        Vector2i entryTile = gameLevel().worldMap().terrainLayer().getTileProperty(DefaultWorldMapPropertyName.POS_BONUS);
+        Vector2i entryTile = gameLevel.worldMap().terrainLayer().getTileProperty(DefaultWorldMapPropertyName.POS_BONUS);
         Vector2i exitTile;
         boolean leftToRight;
         if (entryTile != null) { // Map defines bonus entry tile
@@ -349,13 +349,13 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         Vector2i backyard = houseEntry.plus(0, house.sizeInTiles().y() + 1);
         List<Waypoint> route = Stream.of(entryTile, houseEntry, backyard, houseEntry, exitTile).map(Waypoint::new).toList();
 
-        gameLevel().selectNextBonus();
-        byte symbol = gameLevel().bonusSymbol(gameLevel().currentBonusIndex());
+        gameLevel.selectNextBonus();
+        byte symbol = gameLevel.bonusSymbol(gameLevel.currentBonusIndex());
         Pulse jumpAnimation = new Pulse(10, false);
         var bonus = new Bonus(symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100, jumpAnimation);
         bonus.setEdible(TickTimer.INDEFINITE);
         bonus.setRoute(route, leftToRight);
-        gameLevel().setBonus(bonus);
+        gameLevel.setBonus(bonus);
 
         Logger.info("Moving bonus created, route: {} (crossing {})", route, leftToRight ? "left to right" : "right to left");
 

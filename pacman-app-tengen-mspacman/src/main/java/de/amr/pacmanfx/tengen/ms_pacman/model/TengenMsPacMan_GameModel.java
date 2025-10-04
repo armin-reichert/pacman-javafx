@@ -606,25 +606,25 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void activateNextBonus() {
+    public void activateNextBonus(GameLevel gameLevel) {
         //TODO Find out how Tengen really implemented this
-        if (gameLevel().isBonusEdible()) {
+        if (gameLevel.isBonusEdible()) {
             Logger.info("Previous bonus is still active, skip");
             return;
         }
 
         // compute possible bonus route
-        if (gameLevel().worldMap().terrainLayer().portals().isEmpty()) {
+        if (gameLevel.worldMap().terrainLayer().portals().isEmpty()) {
             Logger.error("No portal found in current maze");
             return; // TODO: can this happen?
         }
-        House house = gameLevel().worldMap().terrainLayer().optHouse().orElse(null);
+        House house = gameLevel.worldMap().terrainLayer().optHouse().orElse(null);
         if (house == null) {
             Logger.error("No house exists in game level!");
             return;
         }
 
-        List<Portal> portals = gameLevel().worldMap().terrainLayer().portals();
+        List<Portal> portals = gameLevel.worldMap().terrainLayer().portals();
         boolean leftToRight = new Random().nextBoolean();
         Vector2i houseEntry = tileAt(house.entryPosition());
         Vector2i houseEntryOpposite = houseEntry.plus(0, house.sizeInTiles().y() + 1);
@@ -638,15 +638,14 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
                 leftToRight ? exitPortal.rightTunnelEnd().plus(1, 0) : exitPortal.leftTunnelEnd().minus(1, 0)
         ).map(Waypoint::new).toList();
 
-        gameLevel().selectNextBonus();
-        byte symbol = gameLevel().bonusSymbol(gameLevel().currentBonusIndex());
+        gameLevel.selectNextBonus();
+        byte symbol = gameLevel.bonusSymbol(gameLevel.currentBonusIndex());
         var bonus = new Bonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100, new Pulse(10, false));
         bonus.setEdible(TickTimer.INDEFINITE);
         bonus.setRoute(route, leftToRight);
-        //bonus.setBaseSpeed(0.9f * level.speedControl().pacNormalSpeed(level)); // TODO how fast is the bonus really moving?
         Logger.debug("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
 
-        gameLevel().setBonus(bonus);
+        gameLevel.setBonus(bonus);
         eventManager().publishEvent(GameEventType.BONUS_ACTIVATED, bonus.tile());
     }
 
@@ -667,7 +666,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
                     scoreManager.scorePoints(PELLET_VALUE);
                 }
                 if (isBonusReached()) {
-                    activateNextBonus();
+                    activateNextBonus(gameLevel);
                     simulationStep.bonusIndex = gameLevel.currentBonusIndex();
                 }
                 eventManager().publishEvent(GameEventType.PAC_FOUND_FOOD, tile);
