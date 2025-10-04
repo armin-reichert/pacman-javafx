@@ -78,7 +78,7 @@ public class LevelShortTestState implements GameState {
         }
         else if (timer.atSecond(10.0)) {
             gameLevel.hidePacAndGhosts();
-            context.game().onLevelCompleted();
+            context.game().onLevelCompleted(gameLevel);
         }
         else if (timer.atSecond(11.0)) {
             if (gameLevel.number() == lastTestedLevelNumber) {

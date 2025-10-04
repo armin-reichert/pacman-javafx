@@ -200,22 +200,25 @@ public abstract class AbstractGameModel implements Game {
     }
 
     @Override
-    public void onLevelCompleted() {
-        optGameLevel().ifPresent(gameLevel -> {
-            huntingTimer().stop();
-            Logger.info("Hunting timer stopped.");
-            gameLevel.blinking().setStartPhase(Pulse.OFF);
-            gameLevel.blinking().reset();
-            Logger.info("Energizer blinking stopped.");
-            gameLevel.pac().stopAndShowInFullBeauty();
-            gameLevel.pac().powerTimer().stop();
-            gameLevel.pac().powerTimer().reset(0);
-            Logger.info("Power timer stopped and reset to zero.");
-            gameLevel.bonus().ifPresent(Bonus::setInactive);
-            // when cheat triggered end of level, there might still be remaining food:
-            gameLevel.worldMap().foodLayer().eatAllFood();
-            Logger.trace("Game level #{} completed.", gameLevel.number());
-        });
+    public void onLevelCompleted(GameLevel gameLevel) {
+        huntingTimer().stop();
+        Logger.info("Hunting timer stopped.");
+
+        gameLevel.blinking().setStartPhase(Pulse.OFF);
+        gameLevel.blinking().reset();
+        Logger.info("Energizer blinking stopped.");
+
+        gameLevel.pac().stopAndShowInFullBeauty();
+        gameLevel.pac().powerTimer().stop();
+        gameLevel.pac().powerTimer().reset(0);
+        Logger.info("Power timer stopped and reset to zero.");
+
+        gameLevel.bonus().ifPresent(Bonus::setInactive);
+
+        // If level was ended by cheat, there might still be food remaining, so eat it:
+        gameLevel.worldMap().foodLayer().eatAllFood();
+
+        Logger.trace("Game level #{} completed.", gameLevel.number());
     }
 
     protected void resetPacManAndGhostAnimations() {

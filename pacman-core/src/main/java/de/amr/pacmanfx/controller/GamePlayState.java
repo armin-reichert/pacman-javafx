@@ -194,7 +194,7 @@ public enum GamePlayState implements GameState {
         @Override
         public void onUpdate(GameContext context) {
             if (timer.tickCount() == 1) {
-                context.game().onLevelCompleted();
+                context.game().onLevelCompleted(context.gameLevel());
             }
 
             //TODO this is crap. Maybe Tengen Ms. Pac-Man needs its own state machine?
