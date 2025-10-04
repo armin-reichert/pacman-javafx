@@ -171,7 +171,7 @@ public abstract class AbstractGameModel implements Game {
             if (haveGhostsBeenKilled()) return;
             checkIfPacManFindsFood(gameLevel);
             updatePacPower();
-            gameLevel.bonus().ifPresent(this::checkIfPacManCanEatBonus);
+            gameLevel.bonus().ifPresent(bonus -> checkIfPacManCanEatBonus(gameLevel, bonus));
         });
     }
 
@@ -293,15 +293,13 @@ public abstract class AbstractGameModel implements Game {
 
     protected abstract boolean isBonusReached(GameLevel gameLevel);
 
-    protected void checkIfPacManCanEatBonus(Bonus bonus) {
-        optGameLevel().ifPresent(gameLevel -> {
-            if (bonus.state() == BonusState.EDIBLE && gameLevel.pac().sameTilePosition(bonus)) {
-                bonus.setEaten(TickTimer.secToTicks(BONUS_EATEN_SECONDS));
-                scoreManager().scorePoints(bonus.points());
-                Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
-                simulationStep.bonusEatenTile = bonus.tile();
-                eventManager().publishEvent(GameEventType.BONUS_EATEN);
-            }
-        });
+    protected void checkIfPacManCanEatBonus(GameLevel gameLevel, Bonus bonus) {
+        if (bonus.state() == BonusState.EDIBLE && gameLevel.pac().sameTilePosition(bonus)) {
+            bonus.setEaten(TickTimer.secToTicks(BONUS_EATEN_SECONDS));
+            scoreManager().scorePoints(bonus.points());
+            Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
+            simulationStep.bonusEatenTile = bonus.tile();
+            eventManager().publishEvent(GameEventType.BONUS_EATEN);
+        }
     }
 }
