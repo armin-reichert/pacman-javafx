@@ -111,7 +111,7 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
     }
 
     @Override
-    protected ArcadeLevelData levelData(GameLevel gameLevel) {
+    public ArcadeLevelData levelData(GameLevel gameLevel) {
         if (gameLevel.isDemoLevel()) {
             return levelData(1);
         }

@@ -51,7 +51,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         scoreManager = new ScoreManager(this);
     }
 
-    protected abstract ArcadeLevelData levelData(GameLevel gameLevel);
+    public abstract ArcadeLevelData levelData(GameLevel gameLevel);
     
     // GameEvents interface
 
@@ -229,21 +229,21 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void startLevel() {
-        gameLevel().setStartTime(System.currentTimeMillis());
-        gameLevel().getReadyToPlay();
+    public void startLevel(GameLevel gameLevel) {
+        gameLevel.setStartTime(System.currentTimeMillis());
+        gameLevel.getReadyToPlay();
         resetPacManAndGhostAnimations();
-        if (gameLevel().isDemoLevel()) {
-            showMessage(gameLevel(), MessageType.GAME_OVER);
+        if (gameLevel.isDemoLevel()) {
+            showMessage(gameLevel, MessageType.GAME_OVER);
             scoreManager().score().setEnabled(false);
             scoreManager().highScore().setEnabled(false);
-            Logger.info("Demo level {} started", gameLevel().number());
+            Logger.info("Demo level {} started", gameLevel.number());
         } else {
-            updateLevelCounter(gameLevel().number(), gameLevel().bonusSymbol(0));
-            showMessage(gameLevel(), MessageType.READY);
+            updateLevelCounter(gameLevel.number(), gameLevel.bonusSymbol(0));
+            showMessage(gameLevel, MessageType.READY);
             scoreManager().score().setEnabled(true);
             scoreManager().highScore().setEnabled(true);
-            Logger.info("Level {} started", gameLevel().number());
+            Logger.info("Level {} started", gameLevel.number());
         }
         // Note: This event is very important because it triggers the creation of the actor animations!
         eventManager().publishEvent(GameEventType.LEVEL_STARTED);
@@ -252,7 +252,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     @Override
     public void startNextLevel() {
         buildNormalLevel(gameLevel().number() + 1);
-        startLevel();
+        startLevel(gameLevel());
     }
 
     @Override

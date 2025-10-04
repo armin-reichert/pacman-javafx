@@ -89,7 +89,7 @@ public enum GamePlayState implements GameState {
                 context.game().startNewGame();
             }
             else if (timer.tickCount() == 2) {
-                context.game().startLevel();
+                context.game().startLevel(context.gameLevel());
             }
             else if (timer.tickCount() == TICK_NEW_GAME_SHOW_GUYS) {
                 context.gameLevel().showPacAndGhosts();
@@ -114,7 +114,7 @@ public enum GamePlayState implements GameState {
                 context.eventManager().publishEvent(GameEventType.LEVEL_CREATED);
             }
             else if (timer.tickCount() == 2) {
-                context.game().startLevel();
+                context.game().startLevel(context.gameLevel());
             }
             else if (timer.tickCount() == 3) {
                 // Now, actor animations are available
@@ -165,7 +165,7 @@ public enum GamePlayState implements GameState {
             gameLevel.ghosts().forEach(ghost -> ghost.tick(context));
             gameLevel.bonus().ifPresent(bonus -> bonus.tick(context));
             game.doHuntingStep(gameLevel);
-            if (game.isLevelCompleted()) {
+            if (game.isLevelCompleted(gameLevel)) {
                 context.gameController().changeGameState(LEVEL_COMPLETE);
             } else if (game.hasPacManBeenKilled()) {
                 context.gameController().changeGameState(PACMAN_DYING);

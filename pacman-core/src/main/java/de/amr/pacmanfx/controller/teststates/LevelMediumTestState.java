@@ -51,7 +51,7 @@ public class LevelMediumTestState implements GameState {
         timer.restartSeconds(TEST_DURATION_SEC);
         context.game().prepareForNewGame();
         context.game().buildNormalLevel(1);
-        context.game().startLevel();
+        context.game().startLevel(context.gameLevel());
         configureLevelForTest(context);
     }
 
@@ -73,7 +73,7 @@ public class LevelMediumTestState implements GameState {
                 configureLevelForTest(context);
             }
         }
-        else if (game.isLevelCompleted()) {
+        else if (game.isLevelCompleted(gameLevel)) {
             context.gameController().changeGameState(GamePlayState.INTRO);
         } else if (game.hasPacManBeenKilled()) {
             timer.expire();

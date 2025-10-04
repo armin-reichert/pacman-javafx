@@ -38,7 +38,7 @@ public class LevelShortTestState implements GameState {
         timer.restartIndefinitely();
         context.game().prepareForNewGame();
         context.game().buildNormalLevel(1);
-        context.game().startLevel();
+        context.game().startLevel(context.gameLevel());
         context.gameLevel().showPacAndGhosts();
         GameLevelMessage message = new GameLevelMessage(MessageType.TEST);
         message.setPosition(context.gameLevel().worldMap().terrainLayer().defaultMessagePosition());

@@ -7,7 +7,6 @@ package de.amr.pacmanfx.model;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
-import de.amr.pacmanfx.lib.worldmap.FoodLayer;
 import de.amr.pacmanfx.model.actors.*;
 import javafx.beans.property.*;
 import org.tinylog.Logger;
@@ -196,9 +195,8 @@ public abstract class AbstractGameModel implements Game {
     }
 
     @Override
-    public boolean isLevelCompleted() {
-        Optional<FoodLayer> optFoodLayer = optGameLevel().map(gameLevel -> gameLevel.worldMap().foodLayer());
-        return optFoodLayer.isPresent() && optFoodLayer.get().uneatenFoodCount() == 0;
+    public boolean isLevelCompleted(GameLevel gameLevel) {
+        return gameLevel.worldMap().foodLayer().uneatenFoodCount() == 0;
     }
 
     @Override

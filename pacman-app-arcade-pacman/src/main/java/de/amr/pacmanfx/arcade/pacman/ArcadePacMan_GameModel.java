@@ -174,7 +174,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     }
 
     @Override
-    protected ArcadeLevelData levelData(GameLevel gameLevel) {
+    public ArcadeLevelData levelData(GameLevel gameLevel) {
         return levelData(gameLevel.number());
     }
 

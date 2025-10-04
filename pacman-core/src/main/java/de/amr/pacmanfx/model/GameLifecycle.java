@@ -19,8 +19,8 @@ public interface GameLifecycle {
     void buildNormalLevel(int levelNumber);
     void buildDemoLevel();
     void createLevel(int levelNumber, boolean demoLevel);
-    void startLevel();
-    boolean isLevelCompleted();
+    void startLevel(GameLevel gameLevel);
+    boolean isLevelCompleted(GameLevel gameLevel);
     int lastLevelNumber();
     void startNextLevel();
     void startHunting(GameLevel gameLevel);
