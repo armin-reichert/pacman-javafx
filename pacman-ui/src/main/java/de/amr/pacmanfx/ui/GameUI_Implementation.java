@@ -32,7 +32,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import static de.amr.pacmanfx.ui.CommonGameActions.*;
-import static de.amr.pacmanfx.ui.api.GameUI_Config.SCENE_ID_PLAY_SCENE_3D;
+import static de.amr.pacmanfx.ui.api.GameScene_Config.SCENE_ID_PLAY_SCENE_3D;
 import static de.amr.pacmanfx.ui.api.GameUI_Properties.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.*;
 import static java.util.Objects.requireNonNull;

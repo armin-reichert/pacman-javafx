@@ -17,7 +17,6 @@ import javafx.animation.PauseTransition;
 import javafx.animation.Transition;
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.scene.control.CustomMenuItem;
@@ -101,17 +100,29 @@ public interface Ufx {
         return Color.color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
     }
 
-    static Paint createGradient() {
+    static Paint createTopToBottomGradient(Color topColor, Color bottomColor) {
         Stop[] stops = new Stop[] {
-            new Stop(0, Color.LIGHTBLUE),
-            new Stop(1, Color.DARKBLUE)
+            new Stop(0, topColor),
+            new Stop(1, bottomColor)
         };
-
         return new LinearGradient(
-            0, 0, 0, 1, // vertical
+            0, 0, 0, 1, // top to bottom
             true,       // proportional coordinates
             CycleMethod.NO_CYCLE,
             stops
+        );
+    }
+
+    static Paint createTopLeftToBottomRightGradient(Color topColor, Color bottomColor) {
+        Stop[] stops = new Stop[] {
+                new Stop(0, topColor),
+                new Stop(1, bottomColor)
+        };
+        return new LinearGradient(
+                0, 0, 1, 1, // top-left to bottom-right
+                true,       // proportional coordinates
+                CycleMethod.NO_CYCLE,
+                stops
         );
     }
 

@@ -4,10 +4,13 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui;
 
+import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
+import javafx.scene.layout.Background;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.uilib.Ufx.createImageBackground;
@@ -30,8 +33,9 @@ public class GlobalAssets extends AssetStorage {
         pickGameOverText      = RandomTextPicker.fromBundle(textResources(), "game.over");
         pickLevelCompleteText = RandomTextPicker.fromBundle(textResources(), "level.complete");
 
+        set("background.play_scene3d", Background.fill(Ufx.createTopLeftToBottomRightGradient(Color.web("#1e90ff"), Color.web("#99badd"))));
+
         set("background.scene",        createImageBackground(GAME_UI_RES.loadImage("graphics/pacman_wallpaper.png")));
-        set("background.play_scene3d", createImageBackground(GAME_UI_RES.loadImage("graphics/blue_sky.jpg")));
 
         set("font.arcade",             GAME_UI_RES.loadFont("fonts/emulogic.ttf", 8));
         set("font.handwriting",        GAME_UI_RES.loadFont("fonts/Molle-Italic.ttf", 9));
