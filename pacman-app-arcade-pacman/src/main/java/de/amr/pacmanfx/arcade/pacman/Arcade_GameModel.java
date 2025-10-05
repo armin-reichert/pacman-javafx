@@ -39,6 +39,8 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     public static final int EXTRA_LIFE_SCORE = 10_000;
     public static final byte[] KILLED_GHOST_VALUE_FACTORS = {2, 4, 8, 16}; // points = factor * 100
 
+    public static final byte BONUS_EATEN_SECONDS = 2;
+
     protected final GameContext gameContext;
     protected final ScoreManager scoreManager;
     protected GateKeeper gateKeeper;

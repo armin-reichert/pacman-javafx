@@ -23,8 +23,6 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class AbstractGameModel implements Game {
 
-    public static final double BONUS_EATEN_SECONDS = 2;
-
     public static final int MAX_LEVEL_COUNTER_SYMBOLS = 7;
 
     protected final BooleanProperty cutScenesEnabled = new SimpleBooleanProperty(true);
