@@ -17,6 +17,7 @@ import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import de.amr.pacmanfx.steering.Steering;
+import de.amr.pacmanfx.tengen.ms_pacman.model.actors.*;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -105,139 +106,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     private static final byte[] KILLED_GHOST_VALUE_FACTORS = {2, 4, 8, 16}; // points = factor * 100
-
-    public static Pac createMsPacMan() {
-        var msPacMan = new Pac("Ms. Pac-Man");
-        msPacMan.reset();
-        return msPacMan;
-    }
-
-    public static Pac createPacMan() {
-        var pacMan = new Pac("Pac-Man");
-        pacMan.reset();
-        return pacMan;
-    }
-
-    public static class Blinky extends Ghost {
-
-        public Blinky() {
-            reset();
-        }
-
-        @Override
-        public String name() {
-            return "Blinky";
-        }
-
-        @Override
-        public byte personality() {
-            return RED_GHOST_SHADOW;
-        }
-
-        @Override
-        public void hunt(GameLevel gameLevel, HuntingTimer huntingTimer) {
-            //TODO Clarify hunting behavior of Blinky
-            float speed = gameLevel.game().ghostAttackSpeed(gameLevel, this);
-            setSpeed(speed);
-            if (huntingTimer.phaseIndex() == 0) {
-                roam(gameLevel);
-            } else {
-                Vector2i targetTile = huntingTimer.phase() == HuntingPhase.CHASING
-                    ? chasingTargetTile(gameLevel)
-                    : gameLevel.worldMap().terrainLayer().ghostScatterTile(personality());
-                tryMovingTowardsTargetTile(gameLevel, targetTile);
-            }
-        }
-
-        @Override
-        public Vector2i chasingTargetTile(GameLevel gameLevel) {
-            return gameLevel.pac().tile();
-        }
-    }
-
-    public static class Pinky extends Ghost {
-
-        public Pinky() {
-            reset();
-        }
-
-        @Override
-        public String name() {
-            return "Pinky";
-        }
-
-        @Override
-        public byte personality() {
-            return PINK_GHOST_SPEEDY;
-        }
-
-        @Override
-        public void hunt(GameLevel gameLevel, HuntingTimer huntingTimer) {
-            //TODO Clarify hunting behavior of Pinky
-            float speed = gameLevel.game().ghostAttackSpeed(gameLevel, this);
-            setSpeed(speed);
-            if (huntingTimer.phaseIndex() == 0) {
-                roam(gameLevel);
-            } else {
-                Vector2i targetTile = huntingTimer.phase() == HuntingPhase.CHASING
-                    ? chasingTargetTile(gameLevel)
-                    : gameLevel.worldMap().terrainLayer().ghostScatterTile(personality());
-                tryMovingTowardsTargetTile(gameLevel, targetTile);
-            }
-        }
-
-        @Override
-        public Vector2i chasingTargetTile(GameLevel gameLevel) {
-            return gameLevel.pac().tilesAhead(4);
-        }
-    }
-
-    public static class Inky extends Ghost {
-
-        public Inky() {
-            reset();
-        }
-
-        @Override
-        public String name() {
-            return "Inky";
-        }
-
-        @Override
-        public byte personality() {
-            return CYAN_GHOST_BASHFUL;
-        }
-
-        @Override
-        public Vector2i chasingTargetTile(GameLevel gameLevel) {
-            Ghost blinky = gameLevel.ghost(RED_GHOST_SHADOW);
-            return gameLevel.pac().tilesAhead(2).scaled(2).minus(blinky.tile());
-        }
-    }
-
-    public static class Sue extends Ghost {
-
-        public Sue() {
-            reset();
-        }
-
-        @Override
-        public String name() {
-            return "Sue";
-        }
-
-        @Override
-        public byte personality() {
-            return ORANGE_GHOST_POKEY;
-        }
-
-        @Override
-        public Vector2i chasingTargetTile(GameLevel gameLevel) {
-            return tile().euclideanDist(gameLevel.pac().tile()) < 8
-                ? gameLevel.worldMap().terrainLayer().ghostScatterTile(personality())
-                : gameLevel.pac().tile();
-        }
-    }
 
     private final GameContext gameContext;
     private final ScoreManager scoreManager;
@@ -510,6 +378,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     @Override
     public GameLevel createLevel(int levelNumber, boolean demoLevel) {
         final WorldMap worldMap = mapSelector.getWorldMapCopy(levelNumber, mapCategory);
+
+        //TODO is this still needed?
         final ArcadeHouse house = new ArcadeHouse(HOUSE_MIN_TILE);
         worldMap.terrainLayer().setHouse(house);
 
@@ -518,31 +388,33 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         // For non-Arcade game levels, give some extra time for "game over" text animation
         newGameLevel.setGameOverStateTicks(mapCategory == MapCategory.ARCADE ? 420 : 600);
 
-        final Pac msPacMan = createMsPacMan();
+        final MsPacMan msPacMan = new MsPacMan();
         msPacMan.setAutopilotSteering(autopilot);
         activatePacBooster(msPacMan, pacBooster == PacBooster.ALWAYS_ON);
-        newGameLevel.setPac(msPacMan);
-
-        final Blinky blinky = new Blinky();
-        final Pinky pinky = new Pinky();
-        final Inky inky = new Inky();
-        final Sue sue = new Sue();
 
         // Ghosts inside house start at bottom of house instead at middle (as stored in terrain tile property)
+        final Blinky blinky = new Blinky();
         blinky.setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_1_RED)));
-        pinky .setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_2_PINK)).plus(0, HTS));
-        inky  .setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_3_CYAN)).plus(0, HTS));
-        sue   .setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_4_ORANGE)).plus(0, HTS));
 
+        final Pinky pinky = new Pinky();
+        pinky.setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_2_PINK)).plus(0, HTS));
+
+        final Inky inky = new Inky();
+        inky.setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_3_CYAN)).plus(0, HTS));
+
+        final Sue sue = new Sue();
+        sue.setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_4_ORANGE)).plus(0, HTS));
+
+        newGameLevel.setPac(msPacMan);
         newGameLevel.setGhosts(blinky, pinky, inky, sue);
 
         //TODO this might not be appropriate for Tengen Ms. Pac-Man
         newGameLevel.setBonusSymbol(0, computeBonusSymbol(newGameLevel.number()));
         newGameLevel.setBonusSymbol(1, computeBonusSymbol(newGameLevel.number()));
 
-        setGameLevel(newGameLevel);
         setLevelCounterEnabled(levelNumber < 8);
 
+        setGameLevel(newGameLevel);
         return newGameLevel;
     }
 

@@ -18,6 +18,10 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
+import de.amr.pacmanfx.tengen.ms_pacman.model.actors.Blinky;
+import de.amr.pacmanfx.tengen.ms_pacman.model.actors.Inky;
+import de.amr.pacmanfx.tengen.ms_pacman.model.actors.Pinky;
+import de.amr.pacmanfx.tengen.ms_pacman.model.actors.Sue;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.*;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.*;
 import de.amr.pacmanfx.ui.ActionBinding;
@@ -316,10 +320,10 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     public Ghost createGhost(byte personality) {
         requireValidGhostPersonality(personality);
         Ghost ghost = switch (personality) {
-            case RED_GHOST_SHADOW   -> new TengenMsPacMan_GameModel.Blinky();
-            case PINK_GHOST_SPEEDY  -> new TengenMsPacMan_GameModel.Pinky();
-            case CYAN_GHOST_BASHFUL -> new TengenMsPacMan_GameModel.Inky();
-            case ORANGE_GHOST_POKEY -> new TengenMsPacMan_GameModel.Sue();
+            case RED_GHOST_SHADOW   -> new Blinky();
+            case PINK_GHOST_SPEEDY  -> new Pinky();
+            case CYAN_GHOST_BASHFUL -> new Inky();
+            case ORANGE_GHOST_POKEY -> new Sue();
             default -> throw new IllegalArgumentException("Illegal ghost personality " + personality);
         };
         ghost.setAnimationManager(createGhostAnimations(personality));

@@ -14,6 +14,8 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_HUD;
+import de.amr.pacmanfx.tengen.ms_pacman.model.actors.MsPacMan;
+import de.amr.pacmanfx.tengen.ms_pacman.model.actors.PacMan;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_ActorRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_HUDRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
@@ -32,8 +34,6 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_TILES;
-import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel.createMsPacMan;
-import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel.createPacMan;
 import static de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_PacAnimationManager.*;
 
 public class TengenMsPacMan_CutScene4 extends GameScene2D {
@@ -89,10 +89,10 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         clapperboard.setVisible(true);
         clapperboard.startAnimation();
 
-        msPacMan = createMsPacMan();
+        msPacMan = new MsPacMan();
         msPacMan.setAnimationManager(uiConfig.createPacAnimations());
 
-        pacMan = createPacMan();
+        pacMan = new PacMan();
         pacMan.setAnimationManager(uiConfig.createPacAnimations());
 
         juniors = new ArrayList<>();
@@ -175,7 +175,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     }
 
     private void spawnJunior(int tick) {
-        var junior = createPacMan();
+        var junior = new PacMan();
         double randomX = 8 * TS + (8 * TS) * Math.random();
         junior.setPosition((float) randomX, sizeInPx().y() - 4 * TS);
         junior.setMoveDir(Direction.UP);
