@@ -32,7 +32,7 @@ public class GlobalAssets extends AssetStorage {
         pickGameOverText      = RandomTextPicker.fromBundle(textResources(), "game.over");
         pickLevelCompleteText = RandomTextPicker.fromBundle(textResources(), "level.complete");
 
-        set("background.play_scene3d", Background.fill(Gradients.PRINCE_TO_KING));
+        set("background.play_scene3d", Background.fill(Gradients.BLUE_BELL_DREAMS));
 
         set("background.scene",        createImageBackground(GAME_UI_RES.loadImage("graphics/pacman_wallpaper.png")));
 

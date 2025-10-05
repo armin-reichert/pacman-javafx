@@ -41,4 +41,5 @@ public interface Gradients {
     Paint FINDING_NEMO = createGradient("#0047ab", "#1ca9c9", Progress.LEFT_TO_RIGHT);
     Paint PRINCE_TO_KING = createGradient("#4169e1", "#89CFF0", Progress.LEFT_TO_RIGHT);
     Paint STARRY_NIGHT = createGradient("#003366", "#0f52ba", Progress.LEFT_TO_RIGHT);
+    Paint TOP_GUN_FLYOVER = createGradient("#000080", "#00bfff", Progress.LEFT_TO_RIGHT);
 }
