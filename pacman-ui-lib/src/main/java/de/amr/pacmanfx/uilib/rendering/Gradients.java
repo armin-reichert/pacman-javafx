@@ -44,6 +44,7 @@ public interface Gradients {
 
     Paint BLUE_BELL_DREAMS = createGradient("#6495ed", "#7c9ec3", Axis.HORIZONTAL);
     Paint FINDING_NEMO = createGradient("#0047ab", "#1ca9c9", Axis.HORIZONTAL);
+    Paint MOON_SPOT = createGradient("#8c92ac", "#f5f5f5", Axis.HORIZONTAL);
     Paint PRINCE_TO_KING = createGradient("#4169e1", "#89CFF0", Axis.HORIZONTAL);
     Paint STARRY_NIGHT = createGradient("#003366", "#0f52ba", Axis.HORIZONTAL);
     Paint TOP_GUN_FLYOVER = createGradient("#000080", "#00bfff", Axis.HORIZONTAL);

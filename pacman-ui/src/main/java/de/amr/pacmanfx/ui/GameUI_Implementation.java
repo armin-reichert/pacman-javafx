@@ -22,6 +22,7 @@ import javafx.beans.binding.Bindings;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.layout.Background;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -31,6 +32,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import static de.amr.pacmanfx.lib.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.ui.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.api.GameScene_Config.SCENE_ID_PLAY_SCENE_3D;
 import static de.amr.pacmanfx.ui.api.GameUI_Properties.*;
@@ -142,8 +144,13 @@ public class GameUI_Implementation implements GameUI {
         });
         mainScene.setOnScroll(this::handleScrollEvent);
         mainScene.rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
-            () -> assets.background(isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D)
-                ? "background.play_scene3d" : "background.scene"),
+            () -> {
+                if (isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D)) {
+                    Background[] choices = assets.asset("background.play_scene3d", Background[].class);
+                    return choices[randomInt(0, choices.length)];
+                }
+                return assets.background("background.scene");
+            },
             mainScene.currentViewProperty(), mainScene.currentGameSceneProperty()
         ));
 
