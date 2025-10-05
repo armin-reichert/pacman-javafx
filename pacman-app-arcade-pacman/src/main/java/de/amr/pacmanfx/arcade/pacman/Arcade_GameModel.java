@@ -237,7 +237,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     @Override
     public void startLevel(GameLevel gameLevel) {
-        gameLevel.setStartTime(System.currentTimeMillis());
+        gameLevel.setStartTimeMillis(System.currentTimeMillis());
         gameLevel.getReadyToPlay();
         resetPacManAndGhostAnimations(gameLevel);
         if (gameLevel.isDemoLevel()) {

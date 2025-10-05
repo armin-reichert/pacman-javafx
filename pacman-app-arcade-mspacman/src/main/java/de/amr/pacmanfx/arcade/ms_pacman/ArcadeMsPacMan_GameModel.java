@@ -78,7 +78,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         /*21*/ new Arcade_LevelData( 90, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0),
     };
 
-    private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
+    private static final int DEMO_LEVEL_MIN_DURATION_MILLIS = 20_000;
 
     protected static final Map<Integer, Integer> CUT_SCENE_AFTER_LEVEL = Map.of(
         2, 1, // after level #2, play cut scene #1
@@ -234,10 +234,10 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     }
 
     @Override
-    protected boolean isPacManSafeInDemoLevel() {
-        float levelDurationInSec = (System.currentTimeMillis() - gameLevel().startTime()) / 1000f;
-        if (gameLevel().isDemoLevel() && levelDurationInSec < DEMO_LEVEL_MIN_DURATION_SEC) {
-            Logger.info("Pac-Man remains alive, demo level has just been running for {} sec", levelDurationInSec);
+    protected boolean isPacManSafeInDemoLevel(GameLevel demoLevel) {
+        float runningMillis = System.currentTimeMillis() - demoLevel.startTimeMillis();
+        if (runningMillis <= DEMO_LEVEL_MIN_DURATION_MILLIS) {
+            Logger.info("Pac-Man dead ignored, demo level is running since {} milliseconds", runningMillis);
             return true;
         }
         return false;

@@ -30,7 +30,7 @@ public abstract class AbstractGameModel implements Game {
 
     protected final SimulationStepResults simulationStepResults = new SimulationStepResults();
 
-    protected abstract boolean isPacManSafeInDemoLevel();
+    protected abstract boolean isPacManSafeInDemoLevel(GameLevel demoLevel);
 
     public void setLifeCount(int n) {
         if (n >= 0) {
@@ -206,7 +206,7 @@ public abstract class AbstractGameModel implements Game {
         gameLevel.ghosts(GhostState.HUNTING_PAC).filter(pac::sameTilePosition).findFirst().ifPresent(assassin -> {
             boolean pacDies;
             if (gameLevel.isDemoLevel()) {
-                pacDies = !isPacManSafeInDemoLevel();
+                pacDies = !isPacManSafeInDemoLevel(gameLevel);
             } else {
                 pacDies = !pac.isImmune();
             }

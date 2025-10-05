@@ -53,7 +53,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     public static final byte FIRST_LEVEL_NUMBER = 1;
     public static final byte LAST_LEVEL_NUMBER = 32;
 
-    public static final byte DEMO_LEVEL_MIN_DURATION_SEC = 20;
+    public static final int DEMO_LEVEL_MIN_DURATION_MILLIS = 20_000;
     public static final byte GAME_OVER_MESSAGE_DELAY_SEC = 2;
 
     public static final byte PELLET_VALUE = 10;
@@ -303,7 +303,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     public void startLevel(GameLevel gameLevel) {
-        gameLevel.setStartTime(System.currentTimeMillis());
+        gameLevel.setStartTimeMillis(System.currentTimeMillis());
         gameLevel.getReadyToPlay();
         resetPacManAndGhostAnimations(gameLevel);
         if (pacBooster == PacBooster.ALWAYS_ON) {
@@ -478,10 +478,10 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     public int lastLevelNumber() { return LAST_LEVEL_NUMBER; }
 
     @Override
-    protected boolean isPacManSafeInDemoLevel() {
-        float levelRunningSeconds = (System.currentTimeMillis() - gameLevel().startTime()) / 1000f;
-        if (gameLevel().isDemoLevel() && levelRunningSeconds < DEMO_LEVEL_MIN_DURATION_SEC) {
-            Logger.info("Pac-Man dead ignored, demo level is running since {} seconds", levelRunningSeconds);
+    protected boolean isPacManSafeInDemoLevel(GameLevel demoLevel) {
+        float runningMillis = System.currentTimeMillis() - demoLevel.startTimeMillis();
+        if (runningMillis <= DEMO_LEVEL_MIN_DURATION_MILLIS) {
+            Logger.info("Pac-Man dead ignored, demo level is running since {} milliseconds", runningMillis);
             return true;
         }
         return false;

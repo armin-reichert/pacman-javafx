@@ -43,7 +43,7 @@ public class GameLevel {
     private boolean demoLevel;
     private int numGhostsKilled;
     private int gameOverStateTicks;
-    private long startTime;
+    private long startTimeMillis;
 
     public GameLevel(Game game, int number, WorldMap worldMap) {
         this.game = requireNonNull(game);
@@ -90,8 +90,8 @@ public class GameLevel {
     public boolean isDemoLevel() { return demoLevel; }
     public void setDemoLevel(boolean demoLevel) { this.demoLevel = demoLevel; }
 
-    public void setStartTime(long startTime) { this.startTime = startTime; }
-    public long startTime() { return startTime; }
+    public void setStartTimeMillis(long millis) { this.startTimeMillis = millis; }
+    public long startTimeMillis() { return startTimeMillis; }
 
     public void setGameOverStateTicks(int ticks) { gameOverStateTicks = ticks; }
     public int gameOverStateTicks() { return gameOverStateTicks; }
