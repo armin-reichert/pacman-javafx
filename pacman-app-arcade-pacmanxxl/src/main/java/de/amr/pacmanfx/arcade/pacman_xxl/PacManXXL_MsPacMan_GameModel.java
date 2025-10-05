@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.arcade.ms_pacman.actors.*;
+import de.amr.pacmanfx.arcade.pacman.Arcade_LevelData;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
@@ -93,7 +94,7 @@ public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
     }
 
     @Override
-    public ArcadeLevelData levelData(GameLevel gameLevel) {
+    public Arcade_LevelData levelData(GameLevel gameLevel) {
         if (gameLevel.isDemoLevel()) {
             return levelData(1);
         }

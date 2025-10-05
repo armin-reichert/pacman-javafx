@@ -2,9 +2,9 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.model;
+package de.amr.pacmanfx.arcade.pacman;
 
-public record ArcadeLevelData(
+public record Arcade_LevelData(
     byte pacSpeedPct,             // Relative Pac-Man speed (percentage of base speed)
     byte ghostSpeedPct,           // Relative ghost speed when hunting or scattering
     byte ghostSpeedTunnelPct,     // Relative ghost speed inside tunnel
@@ -17,7 +17,7 @@ public record ArcadeLevelData(
     byte pacPowerSeconds,         // Number of seconds Pac-Man gets power
     byte numFlashes)              // Number of maze flashes at end of this level
 {
-    public ArcadeLevelData(
+    public Arcade_LevelData(
         int pacSpeedPct,
         int ghostSpeedPct,
         int ghostSpeedTunnelPct,

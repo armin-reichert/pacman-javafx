@@ -53,7 +53,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         scoreManager = new ScoreManager(this);
     }
 
-    public abstract ArcadeLevelData levelData(GameLevel gameLevel);
+    public abstract Arcade_LevelData levelData(GameLevel gameLevel);
     
     // GameEvents interface
 

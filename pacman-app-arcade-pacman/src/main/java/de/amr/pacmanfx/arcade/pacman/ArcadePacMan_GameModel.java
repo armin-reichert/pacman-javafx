@@ -57,28 +57,28 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     );
 
     // Level data as given in the "Pac-Man dossier"
-    protected static final ArcadeLevelData[] LEVEL_DATA = {
-        /* 1*/ new ArcadeLevelData( 80, 75, 40,  20,  80, 10,  85,  90, 50, 6, 5),
-        /* 2*/ new ArcadeLevelData( 90, 85, 45,  30,  90, 15,  95,  95, 55, 5, 5),
-        /* 3*/ new ArcadeLevelData( 90, 85, 45,  40,  90, 20,  95,  95, 55, 4, 5),
-        /* 4*/ new ArcadeLevelData( 90, 85, 45,  40,  90, 20,  95,  95, 55, 3, 5),
-        /* 5*/ new ArcadeLevelData(100, 95, 50,  40, 100, 20, 105, 100, 60, 2, 5),
-        /* 6*/ new ArcadeLevelData(100, 95, 50,  50, 100, 25, 105, 100, 60, 5, 5),
-        /* 7*/ new ArcadeLevelData(100, 95, 50,  50, 100, 25, 105, 100, 60, 2, 5),
-        /* 8*/ new ArcadeLevelData(100, 95, 50,  50, 100, 25, 105, 100, 60, 2, 5),
-        /* 9*/ new ArcadeLevelData(100, 95, 50,  60, 100, 30, 105, 100, 60, 1, 3),
-        /*10*/ new ArcadeLevelData(100, 95, 50,  60, 100, 30, 105, 100, 60, 5, 5),
-        /*11*/ new ArcadeLevelData(100, 95, 50,  60, 100, 30, 105, 100, 60, 2, 5),
-        /*12*/ new ArcadeLevelData(100, 95, 50,  80, 100, 40, 105, 100, 60, 1, 3),
-        /*13*/ new ArcadeLevelData(100, 95, 50,  80, 100, 40, 105, 100, 60, 1, 3),
-        /*14*/ new ArcadeLevelData(100, 95, 50,  80, 100, 40, 105, 100, 60, 3, 5),
-        /*15*/ new ArcadeLevelData(100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3),
-        /*16*/ new ArcadeLevelData(100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3),
-        /*17*/ new ArcadeLevelData(100, 95, 50, 100, 100, 50, 105,   0,  0, 0, 0),
-        /*18*/ new ArcadeLevelData(100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3),
-        /*19*/ new ArcadeLevelData(100, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0),
-        /*20*/ new ArcadeLevelData(100, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0),
-        /*21*/ new ArcadeLevelData( 90, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0),
+    protected static final Arcade_LevelData[] LEVEL_DATA = {
+        /* 1*/ new Arcade_LevelData( 80, 75, 40,  20,  80, 10,  85,  90, 50, 6, 5),
+        /* 2*/ new Arcade_LevelData( 90, 85, 45,  30,  90, 15,  95,  95, 55, 5, 5),
+        /* 3*/ new Arcade_LevelData( 90, 85, 45,  40,  90, 20,  95,  95, 55, 4, 5),
+        /* 4*/ new Arcade_LevelData( 90, 85, 45,  40,  90, 20,  95,  95, 55, 3, 5),
+        /* 5*/ new Arcade_LevelData(100, 95, 50,  40, 100, 20, 105, 100, 60, 2, 5),
+        /* 6*/ new Arcade_LevelData(100, 95, 50,  50, 100, 25, 105, 100, 60, 5, 5),
+        /* 7*/ new Arcade_LevelData(100, 95, 50,  50, 100, 25, 105, 100, 60, 2, 5),
+        /* 8*/ new Arcade_LevelData(100, 95, 50,  50, 100, 25, 105, 100, 60, 2, 5),
+        /* 9*/ new Arcade_LevelData(100, 95, 50,  60, 100, 30, 105, 100, 60, 1, 3),
+        /*10*/ new Arcade_LevelData(100, 95, 50,  60, 100, 30, 105, 100, 60, 5, 5),
+        /*11*/ new Arcade_LevelData(100, 95, 50,  60, 100, 30, 105, 100, 60, 2, 5),
+        /*12*/ new Arcade_LevelData(100, 95, 50,  80, 100, 40, 105, 100, 60, 1, 3),
+        /*13*/ new Arcade_LevelData(100, 95, 50,  80, 100, 40, 105, 100, 60, 1, 3),
+        /*14*/ new Arcade_LevelData(100, 95, 50,  80, 100, 40, 105, 100, 60, 3, 5),
+        /*15*/ new Arcade_LevelData(100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3),
+        /*16*/ new Arcade_LevelData(100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3),
+        /*17*/ new Arcade_LevelData(100, 95, 50, 100, 100, 50, 105,   0,  0, 0, 0),
+        /*18*/ new Arcade_LevelData(100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3),
+        /*19*/ new Arcade_LevelData(100, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0),
+        /*20*/ new Arcade_LevelData(100, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0),
+        /*21*/ new Arcade_LevelData( 90, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0),
     };
 
     // Note: level numbering starts with 1
@@ -170,13 +170,13 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         mapSelector.loadAllMapPrototypes();
     }
 
-    protected ArcadeLevelData levelData(int levelNumber) {
+    protected Arcade_LevelData levelData(int levelNumber) {
         int row = Math.min(levelNumber - 1, LEVEL_DATA.length - 1);
         return LEVEL_DATA[row];
     }
 
     @Override
-    public ArcadeLevelData levelData(GameLevel gameLevel) {
+    public Arcade_LevelData levelData(GameLevel gameLevel) {
         return levelData(gameLevel.number());
     }
 
