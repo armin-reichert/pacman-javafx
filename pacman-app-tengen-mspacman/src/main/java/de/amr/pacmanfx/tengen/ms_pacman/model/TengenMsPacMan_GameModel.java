@@ -18,6 +18,8 @@ import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import de.amr.pacmanfx.steering.Steering;
 import de.amr.pacmanfx.tengen.ms_pacman.model.actors.*;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -45,27 +47,16 @@ import static java.util.Objects.requireNonNull;
  */
 public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
-    /**
-     * Top-left tile of ghost house in original Arcade maps (Pac-Man, Ms. Pac-Man).
-     */
     public static final Vector2i HOUSE_MIN_TILE = Vector2i.of(10, 15);
 
     public static final byte FIRST_LEVEL_NUMBER = 1;
     public static final byte LAST_LEVEL_NUMBER = 32;
-    public static final byte DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
-    public static final int GAME_OVER_MESSAGE_DELAY = 120;
+    public static final byte DEMO_LEVEL_MIN_DURATION_SEC = 20;
+    public static final byte GAME_OVER_MESSAGE_DELAY_SEC = 2;
 
     public static final byte PELLET_VALUE = 10;
     public static final byte ENERGIZER_VALUE = 50;
-
-    // See https://github.com/RussianManSMWC/Ms.-Pac-Man-NES-Tengen-Disassembly/blob/main/Data/PowerPelletTimes.asm
-    // Hex value divided by 16 gives the duration in seconds
-    private static final byte[] POWER_PELLET_TIMES = {
-        0x60, 0x50, 0x40, 0x30, 0x20, 0x50, 0x20, 0x1C, // levels 1-8
-        0x18, 0x40, 0x20, 0x1C, 0x18, 0x20, 0x1C, 0x18, // levels 9-16
-        0x00, 0x18, 0x20                                // levels 17, 18, then 19+
-    };
 
     // Bonus symbols in Arcade, Mini and Big mazes
     public static final byte BONUS_CHERRY      = 0;
@@ -107,7 +98,18 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     private static final byte[] KILLED_GHOST_VALUE_FACTORS = {2, 4, 8, 16}; // points = factor * 100
 
-    private final GameContext gameContext;
+    // See https://github.com/RussianManSMWC/Ms.-Pac-Man-NES-Tengen-Disassembly/blob/main/Data/PowerPelletTimes.asm
+    // Hex value divided by 16 gives the duration in seconds
+    private static final byte[] POWER_PELLET_TIMES = {
+        0x60, 0x50, 0x40, 0x30, 0x20, 0x50, 0x20, 0x1C, // levels 1-8
+        0x18, 0x40, 0x20, 0x1C, 0x18, 0x20, 0x1C, 0x18, // levels 9-16
+        0x00, 0x18, 0x20                                // levels 17, 18, then 19+
+    };
+
+    private final BooleanProperty pacImmunity = new SimpleBooleanProperty();
+    private final BooleanProperty pacUsingAutopilot = new SimpleBooleanProperty();
+
+    private final GameEventManager eventManager;
     private final ScoreManager scoreManager;
     private final TengenMsPacMan_HUD hud = new TengenMsPacMan_HUD();
     private final TengenMsPacMan_MapSelector mapSelector;
@@ -125,7 +127,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     private int numContinues;
 
     public TengenMsPacMan_GameModel(GameContext gameContext, File highScoreFile) {
-        this.gameContext = requireNonNull(gameContext);
+        eventManager = gameContext.eventManager();
         scoreManager = new ScoreManager(this);
         scoreManager.setHighScoreFile(highScoreFile);
         mapSelector = new TengenMsPacMan_MapSelector();
@@ -139,6 +141,13 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         });
         autopilot = new RuleBasedPacSteering(gameContext);
         demoLevelSteering = new RuleBasedPacSteering(gameContext);
+        pacImmunity.bind(gameContext.gameController().propertyImmunity());
+        pacUsingAutopilot.bind(gameContext.gameController().propertyUsingAutopilot());
+    }
+
+    @Override
+    public GameEventManager eventManager() {
+        return eventManager;
     }
 
     @Override
@@ -309,8 +318,10 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     @Override
     public void showMessage(GameLevel gameLevel, MessageType type) {
         if (type == MessageType.GAME_OVER && mapCategory != MapCategory.ARCADE) {
-            var message = new MovingGameLevelMessage(type, gameLevel.worldMap().terrainLayer().defaultMessagePosition(),
-                    GAME_OVER_MESSAGE_DELAY);
+            // Non-Arcade maps have a moving "Game Over" message
+            var message = new MovingGameLevelMessage(type,
+                gameLevel.worldMap().terrainLayer().defaultMessagePosition(),
+                GAME_OVER_MESSAGE_DELAY_SEC * NUM_TICKS_PER_SEC);
             gameLevel.setMessage(message);
         } else {
             super.showMessage(gameLevel, type);
@@ -421,8 +432,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     @Override
     public void buildNormalLevel(int levelNumber) {
         final GameLevel normalLevel = createLevel(levelNumber, false);
-        normalLevel.pac().immuneProperty().bind(gameContext.gameController().propertyImmunity());
-        normalLevel.pac().usingAutopilotProperty().bind(gameContext.gameController().propertyUsingAutopilot());
+        normalLevel.pac().immuneProperty().bind(pacImmunity);
+        normalLevel.pac().usingAutopilotProperty().bind(pacUsingAutopilot);
         huntingTimer().reset();
         scoreManager.score().setLevelNumber(levelNumber);
         optGateKeeper().ifPresent(gateKeeper -> {
@@ -618,11 +629,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         ghost.selectAnimationAt(AnimationSupport.ANIM_GHOST_NUMBER, killedSoFar);
         scoreManager.scorePoints(points);
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
-    }
-
-    @Override
-    public GameEventManager eventManager() {
-        return gameContext.eventManager();
     }
 
     // ActorSpeedControl interface
