@@ -84,6 +84,6 @@ public class LevelMediumTestState implements GameState {
 
     @Override
     public void onExit(GameContext context) {
-        context.game().clearLevelCounter();
+        context.game().levelCounter().clear();
     }
 }

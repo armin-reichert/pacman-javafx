@@ -107,7 +107,7 @@ public class TengenMsPacMan_HUDRenderer extends BaseRenderer implements HUDRende
         RectShort[] symbolSprites = spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS);
         x -= TS(2);
         // symbols are drawn from right to left!
-        for (byte symbol : game.levelCounterSymbols()) {
+        for (byte symbol : game.levelCounter().symbols()) {
             if (0 <= symbol && symbol < symbolSprites.length) {
                 drawSprite(symbolSprites[symbol], x, y, true);
             }

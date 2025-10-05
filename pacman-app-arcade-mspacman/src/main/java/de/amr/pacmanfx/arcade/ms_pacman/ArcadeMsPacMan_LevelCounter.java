@@ -2,30 +2,23 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.tengen.ms_pacman.model;
+package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.pacmanfx.model.LevelCounter;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-public class TengenMsPacMan_LevelCounter implements LevelCounter {
+public class ArcadeMsPacMan_LevelCounter implements LevelCounter {
 
-    public static final byte LEVEL_COUNTER_MAX_SIZE = 7;
+    public static final int MAX_LEVEL_COUNTER_SYMBOLS = 7;
 
     private final BooleanProperty enabled = new SimpleBooleanProperty(true);
     private final List<Byte> symbols = new ArrayList<>();
 
-    public BooleanProperty enabledProperty() {
-        return enabled;
-    }
-
-    @Override
-    public List<Byte> symbols() {
-        return Collections.unmodifiableList(symbols);
+    public ArcadeMsPacMan_LevelCounter() {
     }
 
     @Override
@@ -36,23 +29,25 @@ public class TengenMsPacMan_LevelCounter implements LevelCounter {
     @Override
     public void update(int levelNumber, byte symbol) {
         if (levelNumber == 1) {
-            clear();
+            symbols.clear();
         }
-        if (enabled()) {
+        if (levelNumber < MAX_LEVEL_COUNTER_SYMBOLS && enabled()) {
             symbols.add(symbol);
-            if (symbols.size() > LEVEL_COUNTER_MAX_SIZE) {
-                symbols.removeFirst();
-            }
         }
     }
 
     @Override
     public void setEnabled(boolean enabled) {
-        enabledProperty().set(enabled);
+        this.enabled.set(enabled);
     }
 
     @Override
     public boolean enabled() {
-        return enabledProperty().get();
+        return this.enabled.get();
+    }
+
+    @Override
+    public List<Byte> symbols() {
+        return symbols;
     }
 }

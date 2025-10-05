@@ -135,7 +135,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     @Override
     public void resetEverything() {
         prepareForNewGame();
-        clearLevelCounter();
+        levelCounter().clear();
         hud().setNumCoins(gameContext.coinMechanism().numCoins());
         hud().all(false);
     }
@@ -154,7 +154,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     @Override
     public void startNewGame() {
         prepareForNewGame();
-        clearLevelCounter();
+        levelCounter().clear();
         buildNormalLevel(1);
         eventManager().publishEvent(GameEventType.GAME_STARTED);
     }
@@ -207,7 +207,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         final GameLevel normalLevel = createLevel(levelNumber, false);
         normalLevel.pac().immuneProperty().bind(gameContext.gameController().propertyImmunity());
         normalLevel.pac().usingAutopilotProperty().bind(gameContext.gameController().propertyUsingAutopilot());
-        setLevelCounterEnabled(true);
+        levelCounter().setEnabled(true);
         huntingTimer().reset();
         scoreManager().score().setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
@@ -225,7 +225,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         demoLevel.pac().setUsingAutopilot(true);
         demoLevel.pac().setAutopilotSteering(demoLevelSteering);
         demoLevelSteering.init();
-        setLevelCounterEnabled(true);
+        levelCounter().setEnabled(true);
         huntingTimer().reset();
         scoreManager().score().setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
@@ -246,7 +246,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             scoreManager().highScore().setEnabled(false);
             Logger.info("Demo level {} started", gameLevel.number());
         } else {
-            updateLevelCounter(gameLevel.number(), gameLevel.bonusSymbol(0));
+            levelCounter().update(gameLevel.number(), gameLevel.bonusSymbol(0));
             showMessage(gameLevel, MessageType.READY);
             scoreManager().score().setEnabled(true);
             scoreManager().highScore().setEnabled(true);

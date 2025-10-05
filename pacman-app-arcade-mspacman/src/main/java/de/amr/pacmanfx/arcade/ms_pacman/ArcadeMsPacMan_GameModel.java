@@ -88,6 +88,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     );
 
     protected final MapSelector mapSelector;
+    protected final ArcadeMsPacMan_LevelCounter levelCounter;
     protected final HUD hud = new DefaultHUD();
     protected final HuntingTimer huntingTimer;
 
@@ -112,6 +113,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         scoreManager.setHighScoreFile(highScoreFile);
         scoreManager.setExtraLifeScores(EXTRA_LIFE_SCORE);
 
+        levelCounter = new ArcadeMsPacMan_LevelCounter();
         /*
          * Details are from a conversation with user @damselindis on Reddit. I am not sure if they are correct.
          *
@@ -161,6 +163,11 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     @Override
     public MapSelector mapSelector() {
         return mapSelector;
+    }
+
+    @Override
+    public ArcadeMsPacMan_LevelCounter levelCounter() {
+        return levelCounter;
     }
 
     @Override
@@ -220,7 +227,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
         /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
          * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
-        setLevelCounterEnabled(levelNumber < 8);
+        levelCounter().setEnabled(levelNumber < 8);
 
         return newGameLevel;
     }
@@ -233,16 +240,6 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
             return true;
         }
         return false;
-    }
-
-    @Override
-    public void updateLevelCounter(int levelNumber, byte symbol) {
-        if (levelNumber == 1) {
-            levelCounterSymbols.clear();
-        }
-        if (levelNumber <= 7 && levelCounterEnabled()) {
-            levelCounterSymbols.add(symbol);
-        }
     }
 
     @Override

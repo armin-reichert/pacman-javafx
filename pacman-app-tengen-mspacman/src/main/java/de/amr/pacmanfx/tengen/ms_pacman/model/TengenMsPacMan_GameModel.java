@@ -116,6 +116,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     private final ScoreManager scoreManager;
     private final TengenMsPacMan_HUD hud = new TengenMsPacMan_HUD();
     private final TengenMsPacMan_MapSelector mapSelector;
+    private final TengenMsPacMan_LevelCounter levelCounter;
     private final GateKeeper gateKeeper;
     private final HuntingTimer huntingTimer;
     private final Steering autopilot;
@@ -134,6 +135,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         scoreManager = new ScoreManager(this);
         scoreManager.setHighScoreFile(highScoreFile);
         mapSelector = new TengenMsPacMan_MapSelector();
+        levelCounter = new TengenMsPacMan_LevelCounter();
         gateKeeper = new GateKeeper(this); //TODO implement original house logic
         huntingTimer = new TengenMsPacMan_HuntingTimer();
         huntingTimer.phaseIndexProperty().addListener((py, ov, nv) -> {
@@ -156,6 +158,11 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     @Override
     public ScoreManager scoreManager() {
         return scoreManager;
+    }
+
+    @Override
+    public TengenMsPacMan_LevelCounter levelCounter() {
+        return levelCounter;
     }
 
     @Override
@@ -183,7 +190,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     public void prepareForNewGame() {
         setLifeCount(initialLifeCount());
         setGameLevel(null);
-        clearLevelCounter();
+        levelCounter().clear();
         setPlaying(false);
         boosterActive = false;
         scoreManager.loadHighScore();
@@ -309,7 +316,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             Logger.info("Demo level {} started", gameLevel.number());
         } else {
             showMessage(gameLevel, MessageType.READY);
-            updateLevelCounter(gameLevel.number(), gameLevel.bonusSymbol(0));
+            levelCounter().update(gameLevel.number(), gameLevel.bonusSymbol(0));
             scoreManager.score().setEnabled(true);
             scoreManager.highScore().setEnabled(true);
             Logger.info("Level {} started", gameLevel.number());
@@ -431,7 +438,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         newGameLevel.setBonusSymbol(0, computeBonusSymbol(newGameLevel.number()));
         newGameLevel.setBonusSymbol(1, computeBonusSymbol(newGameLevel.number()));
 
-        setLevelCounterEnabled(levelNumber < 8);
+        levelCounter().setEnabled(levelNumber < 8);
 
         setGameLevel(newGameLevel);
         return newGameLevel;

@@ -23,11 +23,7 @@ public interface Game extends GameLifecycle, GameEvents, ActorSpeedControl {
     void                  checkPacFindsFood(GameLevel gameLevel);
     boolean               isBonusReached(GameLevel gameLevel);
 
-    void                  clearLevelCounter();
-    void                  updateLevelCounter(int levelNumber, byte symbol);
-    void                  setLevelCounterEnabled(boolean enabled);
-    boolean               levelCounterEnabled();
-    List<Byte>            levelCounterSymbols();
+    LevelCounter          levelCounter();
 
     boolean               cutScenesEnabled();
     void                  setCutScenesEnabled(boolean enabled);

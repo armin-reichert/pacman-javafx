@@ -96,6 +96,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     );
 
     protected final MapSelector mapSelector;
+    protected final ArcadePacMan_LevelCounter levelCounter;
     protected final HUD hud = new DefaultHUD();
     protected final HuntingTimer huntingTimer;
 
@@ -112,6 +113,8 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         super(gameContext);
 
         this.mapSelector = requireNonNull(mapSelector);
+
+        levelCounter = new ArcadePacMan_LevelCounter();
 
         scoreManager.setHighScoreFile(highScoreFile);
         scoreManager.setExtraLifeScores(EXTRA_LIFE_SCORE);
@@ -193,6 +196,11 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     }
 
     @Override
+    public ArcadePacMan_LevelCounter levelCounter() {
+        return levelCounter;
+    }
+
+    @Override
     public HUD hud() {
         return hud;
     }
@@ -246,7 +254,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         newGameLevel.setBonusSymbol(0, symbol);
         newGameLevel.setBonusSymbol(1, symbol);
 
-        setLevelCounterEnabled(true);
+        levelCounter.setEnabled(true);
 
         return newGameLevel;
     }

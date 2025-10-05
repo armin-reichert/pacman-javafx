@@ -11,9 +11,6 @@ import de.amr.pacmanfx.model.actors.*;
 import javafx.beans.property.*;
 import org.tinylog.Logger;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
@@ -23,13 +20,9 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class AbstractGameModel implements Game {
 
-    public static final int MAX_LEVEL_COUNTER_SYMBOLS = 7;
-
     protected final BooleanProperty cutScenesEnabled = new SimpleBooleanProperty(true);
 
     protected final ObjectProperty<GameLevel> gameLevel = new SimpleObjectProperty<>();
-
-    protected final BooleanProperty levelCounterEnabled = new SimpleBooleanProperty(true);
 
     protected final IntegerProperty lifeCount = new SimpleIntegerProperty(0);
 
@@ -38,8 +31,6 @@ public abstract class AbstractGameModel implements Game {
     protected final BooleanProperty playing = new SimpleBooleanProperty(false);
 
     protected final SimulationStepResults simulationStepResults = new SimulationStepResults();
-
-    protected final List<Byte> levelCounterSymbols = new ArrayList<>();
 
     protected abstract boolean isPacManSafeInDemoLevel();
 
@@ -63,44 +54,6 @@ public abstract class AbstractGameModel implements Game {
     public Optional<GameLevel> optGameLevel() {
         return Optional.ofNullable(gameLevel.get());
     }
-
-    public BooleanProperty levelCounterEnabledProperty() {
-        return levelCounterEnabled;
-    }
-
-    @Override
-    public List<Byte> levelCounterSymbols() {
-        return Collections.unmodifiableList(levelCounterSymbols);
-    }
-
-    @Override
-    public void clearLevelCounter() {
-        levelCounterSymbols.clear();
-    }
-
-    @Override
-    public void updateLevelCounter(int levelNumber, byte symbol) {
-        if (levelNumber == 1) {
-            levelCounterSymbols.clear();
-        }
-        if (levelCounterEnabled()) {
-            levelCounterSymbols.add(symbol);
-            if (levelCounterSymbols.size() > MAX_LEVEL_COUNTER_SYMBOLS) {
-                levelCounterSymbols.removeFirst();
-            }
-        }
-    }
-
-    @Override
-    public void setLevelCounterEnabled(boolean enabled) {
-        levelCounterEnabledProperty().set(enabled);
-    }
-
-    @Override
-    public boolean levelCounterEnabled() {
-        return levelCounterEnabledProperty().get();
-    }
-
 
     @Override
     public SimulationStepResults simulationStepResults() {
