@@ -8,12 +8,11 @@ import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
+import de.amr.pacmanfx.uilib.rendering.Gradients;
 import javafx.scene.layout.Background;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.uilib.Ufx.createImageBackground;
-import static de.amr.pacmanfx.uilib.Ufx.topLeftToBottomRightGradient;
 
 /**
  * Global assets used in the Pac-Man games UI.
@@ -33,7 +32,7 @@ public class GlobalAssets extends AssetStorage {
         pickGameOverText      = RandomTextPicker.fromBundle(textResources(), "game.over");
         pickLevelCompleteText = RandomTextPicker.fromBundle(textResources(), "level.complete");
 
-        set("background.play_scene3d", Background.fill(topLeftToBottomRightGradient(Color.web("#99badd"), Color.web("#1e90ff"))));
+        set("background.play_scene3d", Background.fill(Gradients.PRINCE_TO_KING));
 
         set("background.scene",        createImageBackground(GAME_UI_RES.loadImage("graphics/pacman_wallpaper.png")));
 
