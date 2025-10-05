@@ -49,7 +49,7 @@ public class GameLevel {
         this.game = requireNonNull(game);
         this.number = requireValidLevelNumber(number);
         this.worldMap = requireNonNull(worldMap);
-        blinking = new Pulse(10, Pulse.OFF);
+        blinking = new Pulse(10, Pulse.State.OFF);
         currentBonusIndex = -1;
     }
 
@@ -67,7 +67,7 @@ public class GameLevel {
             ghost.setWishDir(dir);
             ghost.setState(GhostState.LOCKED);
         });
-        blinking.setStartPhase(Pulse.ON); // Energizers are visible when ON
+        blinking.setStartState(Pulse.State.ON); // Energizers are visible when ON
         blinking.reset();
     }
 

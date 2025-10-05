@@ -10,6 +10,7 @@ import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.controller.test.TestGameState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2i;
+import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.MessageType;
@@ -231,7 +232,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
         final GameLevel gameLevel = context().gameLevel();
         RenderInfo info = new RenderInfo();
         info.put(CommonRenderInfoKey.MAZE_BRIGHT, isMazeHighlighted());
-        info.put(CommonRenderInfoKey.MAZE_BLINKING, gameLevel.blinking().isOn());
+        info.put(CommonRenderInfoKey.MAZE_BLINKING, gameLevel.blinking().state() == Pulse.State.ON);
         info.put(CommonRenderInfoKey.MAZE_EMPTY, context().gameLevel().worldMap().foodLayer().uneatenFoodCount() == 0);
         gameLevelRenderer.applyLevelSettings(gameLevel, info);
         gameLevelRenderer.drawGameLevel(gameLevel, info);

@@ -5,37 +5,34 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.lib.timer;
 
 /**
- * @author Armin Reichert
+ * A pulse switches between states ON and OFF and keeps each state for <code>halfPeriod</code> ticks.
  */
 public class Pulse {
 
-    public static final boolean ON = true;
-    public static final boolean OFF = false;
+    public enum State {
+        ON, OFF;
 
-    private final int ticksPerPhase;
-    private boolean startPhase;
-    private int numPhases;
-    private boolean phase;
-    private int tick;
-    private int numPhasesCompleted;
-    private boolean running;
-
-    public Pulse(int numPhases, int ticksPerPhase, boolean startPhase) {
-        this.numPhases = numPhases;
-        this.ticksPerPhase = ticksPerPhase;
-        this.startPhase = startPhase;
-        reset();
+        public State inverse() {
+            return this == ON ? OFF : ON;
+        }
     }
 
-    public Pulse(int ticksPerPhase, boolean startPhase) {
-        this(Integer.MAX_VALUE, ticksPerPhase, startPhase);
+    private final int halfPeriod;
+    private State startState;
+    private State state;
+    private int tick;
+    private boolean running;
+
+    public Pulse(int halfPeriod, State startState) {
+        this.halfPeriod = halfPeriod;
+        this.startState = startState;
+        reset();
     }
 
     public void reset() {
         stop();
         tick = 0;
-        numPhasesCompleted = 0;
-        phase = startPhase;
+        state = startState;
     }
 
     public void restart() {
@@ -43,34 +40,21 @@ public class Pulse {
         start();
     }
 
-    public void restart(int numPhases) {
-        this.numPhases = numPhases;
-        reset();
-        start();
-    }
-
     public void tick() {
-        if (!running || numPhasesCompleted == numPhases) {
-            return;
-        }
+        if (!running) return;
         ++tick;
-        if (tick == ticksPerPhase) {
-            numPhasesCompleted++;
-            phase = !phase;
+        if (tick == halfPeriod) {
+            state = state.inverse();
             tick = 0;
         }
     }
 
-    public void setStartPhase(boolean startPhase) {
-        this.startPhase = startPhase;
+    public State state() {
+        return state;
     }
 
-    public boolean isOn() {
-        return phase;
-    }
-
-    public boolean isOff() {
-        return !phase;
+    public void setStartState(State startState) {
+        this.startState = startState;
     }
 
     public void start() {
@@ -83,9 +67,5 @@ public class Pulse {
 
     public boolean isRunning() {
         return running;
-    }
-
-    public int getNumPhasesCompleted() {
-        return numPhasesCompleted;
     }
 }

@@ -7,7 +7,6 @@ package de.amr.pacmanfx.controller.test;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.controller.GamePlayState;
-import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
@@ -57,7 +56,7 @@ public class LevelShortTestState implements TestGameState {
             context.game().continueGame(gameLevel);
         }
         else if (timer.atSecond(2)) {
-            gameLevel.blinking().setStartPhase(Pulse.ON);
+            gameLevel.blinking().setStartState(Pulse.State.ON);
             gameLevel.blinking().restart();
         }
         else if (timer.atSecond(2.5)) {

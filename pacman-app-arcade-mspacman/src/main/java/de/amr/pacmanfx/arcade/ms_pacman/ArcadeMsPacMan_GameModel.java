@@ -6,8 +6,8 @@ package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.ms_pacman.actors.*;
-import de.amr.pacmanfx.arcade.pacman.Arcade_LevelData;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameModel;
+import de.amr.pacmanfx.arcade.pacman.Arcade_LevelData;
 import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Vector2i;
@@ -348,7 +348,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
         gameLevel.selectNextBonus();
         byte symbol = gameLevel.bonusSymbol(gameLevel.currentBonusIndex());
-        Pulse jumpAnimation = new Pulse(10, false);
+        Pulse jumpAnimation = new Pulse(10, Pulse.State.OFF);
         var bonus = new Bonus(symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100, jumpAnimation);
         bonus.setEdibleTicks(TickTimer.INDEFINITE);
         bonus.setEatenTicks(TickTimer.secToTicks(BONUS_EATEN_SECONDS));

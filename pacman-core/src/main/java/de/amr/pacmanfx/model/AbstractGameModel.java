@@ -124,7 +124,7 @@ public abstract class AbstractGameModel implements Game {
         huntingTimer().stop();
         Logger.info("Hunting timer stopped.");
 
-        gameLevel.blinking().setStartPhase(Pulse.OFF);
+        gameLevel.blinking().setStartState(Pulse.State.OFF);
         gameLevel.blinking().reset();
         Logger.info("Energizer blinking stopped.");
 
@@ -145,8 +145,8 @@ public abstract class AbstractGameModel implements Game {
     public void startHunting(GameLevel gameLevel) {
         gameLevel.pac().animationManager().ifPresent(AnimationManager::play);
         gameLevel.ghosts().forEach(ghost -> ghost.animationManager().ifPresent(AnimationManager::play));
-        gameLevel.blinking().setStartPhase(Pulse.ON);
-        gameLevel.blinking().restart(Integer.MAX_VALUE);
+        gameLevel.blinking().setStartState(Pulse.State.ON);
+        gameLevel.blinking().restart();
         huntingTimer().startFirstHuntingPhase(gameLevel.number());
         eventManager().publishEvent(GameEventType.HUNTING_PHASE_STARTED);
     }

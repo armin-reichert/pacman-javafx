@@ -112,7 +112,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         actionBindings.assign(ACTION_TEST_LEVELS_SHORT, ui.actionBindings());
         actionBindings.assign(ACTION_TEST_LEVELS_MEDIUM, ui.actionBindings());
 
-        blinking = new Pulse(10, true);
+        blinking = new Pulse(10, Pulse.State.ON);
 
         GameUI_Config uiConfig = ui.currentConfig();
 
@@ -224,7 +224,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     }
 
     private void drawBlinkingEnergizer(double x, double y) {
-        if (blinking.isOn()) {
+        if (blinking.state() == Pulse.State.ON) {
             sceneRenderer.ctx().save();
             sceneRenderer.ctx().scale(scaling(), scaling());
             sceneRenderer.ctx().setFill(ARCADE_ROSE);

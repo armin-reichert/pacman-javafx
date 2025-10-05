@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.lib.Vector2i;
+import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.uilib.rendering.*;
@@ -132,7 +133,7 @@ public class MiniGameView extends VBox {
         if (gameLevel != null) {
             var info = new RenderInfo(Map.of(
                 CommonRenderInfoKey.MAZE_BRIGHT, false,
-                CommonRenderInfoKey.MAZE_BLINKING, gameLevel.blinking().isOn(),
+                CommonRenderInfoKey.MAZE_BLINKING, gameLevel.blinking().state() == Pulse.State.ON,
                 CommonRenderInfoKey.MAZE_EMPTY, gameLevel.worldMap().foodLayer().uneatenFoodCount() == 0,
                 CommonRenderInfoKey.TICK, ui.clock().tickCount()
             ));

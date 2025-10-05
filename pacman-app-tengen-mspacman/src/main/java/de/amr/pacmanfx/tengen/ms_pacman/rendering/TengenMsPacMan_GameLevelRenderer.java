@@ -7,6 +7,7 @@ package de.amr.pacmanfx.tengen.ms_pacman.rendering;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
+import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.worldmap.FoodLayer;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
@@ -114,7 +115,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Ga
         foodLayer.tiles().filter(foodLayer::isEnergizerPosition).forEach(tile -> {
             ctx.setFill(backgroundColor());
             fillSquareAtTileCenter(tile, TS + 2);
-            if (!foodLayer.tileContainsEatenFood(tile) && gameLevel.blinking().isOn()) {
+            if (!foodLayer.tileContainsEatenFood(tile) && gameLevel.blinking().state() == Pulse.State.ON) {
                 ctx.setFill(pelletColor);
                 // draw pixelated "circle"
                 double cx = tile.x() * TS, cy = tile.y() * TS;

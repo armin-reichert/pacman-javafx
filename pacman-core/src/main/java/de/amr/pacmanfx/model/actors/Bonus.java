@@ -205,6 +205,6 @@ public class Bonus extends MovingActor {
         if (movementAnimation == null || !movementAnimation.isRunning()) {
             return 0;
         }
-        return movementAnimation.isOn() ? -3f : 3f;
+        return movementAnimation.state() == Pulse.State.ON ? -3f : 3f;
     }
 }
