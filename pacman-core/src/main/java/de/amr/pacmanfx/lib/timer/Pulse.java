@@ -20,7 +20,7 @@ public class Pulse {
     private final int halfPeriod;
     private State startState;
     private State state;
-    private int tick;
+    private long tick;
     private boolean running;
 
     public Pulse(int halfPeriod, State startState) {
@@ -43,9 +43,8 @@ public class Pulse {
     public void tick() {
         if (!running) return;
         ++tick;
-        if (tick == halfPeriod) {
+        if (tick % halfPeriod == 0) {
             state = state.inverse();
-            tick = 0;
         }
     }
 
