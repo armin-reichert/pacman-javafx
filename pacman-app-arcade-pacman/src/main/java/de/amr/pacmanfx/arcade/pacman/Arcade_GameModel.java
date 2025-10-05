@@ -272,6 +272,14 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         return levelData(gameLevel).numFlashes();
     }
 
+    @Override
+    public void showMessage(GameLevel gameLevel, MessageType type) {
+        requireNonNull(type);
+        GameLevelMessage message = new GameLevelMessage(type);
+        message.setPosition(gameLevel.worldMap().terrainLayer().defaultMessagePosition());
+        gameLevel.setMessage(message);
+    }
+
     /**
      * @return "Cruise Elroy" state (changes behavior of red ghost).
      * <p>0=off, 1=Elroy1, 2=Elroy2, -1=Elroy1 (disabled), -2=Elroy2 (disabled).</p>

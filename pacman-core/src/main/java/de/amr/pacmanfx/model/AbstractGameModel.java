@@ -13,8 +13,6 @@ import org.tinylog.Logger;
 
 import java.util.Optional;
 
-import static java.util.Objects.requireNonNull;
-
 /**
  * Common base class of all Pac-Man game models.
  */
@@ -24,9 +22,9 @@ public abstract class AbstractGameModel implements Game {
 
     protected final ObjectProperty<GameLevel> gameLevel = new SimpleObjectProperty<>();
 
-    protected final IntegerProperty lifeCount = new SimpleIntegerProperty(0);
-
     protected final IntegerProperty initialLifeCount = new SimpleIntegerProperty(3);
+
+    protected final IntegerProperty lifeCount = new SimpleIntegerProperty(0);
 
     protected final BooleanProperty playing = new SimpleBooleanProperty(false);
 
@@ -68,14 +66,6 @@ public abstract class AbstractGameModel implements Game {
     @Override
     public void addLives(int n) {
         setLifeCount(lifeCount() + n);
-    }
-
-    @Override
-    public void showMessage(GameLevel gameLevel, MessageType type) {
-        requireNonNull(type);
-        GameLevelMessage message = new GameLevelMessage(type);
-        message.setPosition(gameLevel.worldMap().terrainLayer().defaultMessagePosition());
-        gameLevel.setMessage(message);
     }
 
     @Override
