@@ -17,6 +17,7 @@ import de.amr.pacmanfx.ui.layout.*;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.assets.UIPreferences;
+import de.amr.pacmanfx.uilib.rendering.Gradients;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.scene.image.Image;
@@ -146,8 +147,8 @@ public class GameUI_Implementation implements GameUI {
         mainScene.rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
             () -> {
                 if (isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D)) {
-                    Background[] choices = assets.asset("background.play_scene3d", Background[].class);
-                    return choices[randomInt(0, choices.length)];
+                    Gradients.PredefinedGradient[] choices = Gradients.PredefinedGradient.values();
+                    return Background.fill(choices[randomInt(0, choices.length)].gradient());
                 }
                 return assets.background("background.scene");
             },

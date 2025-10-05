@@ -4,12 +4,35 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.rendering;
 
-import javafx.scene.paint.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
 
 /**
  * @see <a href="https://www.eggradients.com/">Eggradients</a>
  */
 public interface Gradients {
+
+    enum PredefinedGradient {
+        BLUE_BELL_DREAMS("#6495ed", "#7c9ec3", Axis.HORIZONTAL),
+        CLOUD_TECH      ("#1e90ff", "#FFFFFF", Axis.HORIZONTAL),
+        FINDING_NEMO    ("#0047ab", "#1ca9c9", Axis.HORIZONTAL),
+        MOON_SPOT       ("#8c92ac", "#f5f5f5", Axis.HORIZONTAL),
+        PRINCE_TO_KING  ("#4169e1", "#89CFF0", Axis.HORIZONTAL),
+        STARRY_NIGHT    ("#003366", "#0f52ba", Axis.HORIZONTAL),
+        TOP_GUN_FLYOVER ("#000080", "#00bfff", Axis.HORIZONTAL);
+
+        private final LinearGradient gradient;
+
+        public LinearGradient gradient() {
+            return gradient;
+        }
+
+        PredefinedGradient(String startColorCode, String endColorCode, Axis axis) {
+            gradient = createGradient(startColorCode, endColorCode, axis);
+        }
+    }
 
     enum Axis {
         /** Left to Right */
@@ -21,7 +44,7 @@ public interface Gradients {
 
         public final int endX() { return endX; }
 
-        public final int endY() { return endY; };
+        public final int endY() { return endY; }
 
         private final byte endX;
         private final byte endY;
@@ -32,7 +55,7 @@ public interface Gradients {
         }
     }
 
-    static Paint createGradient(String startColorCode, String stopColorCode, Axis axis) {
+    static LinearGradient createGradient(String startColorCode, String stopColorCode, Axis axis) {
         return new LinearGradient(
             0, 0, axis.endX(), axis.endY(),
             true, // proportional coordinates
@@ -40,11 +63,4 @@ public interface Gradients {
             new Stop(0, Color.web(startColorCode)), new Stop(1, Color.web(stopColorCode))
         );
     }
-
-    Paint BLUE_BELL_DREAMS = createGradient("#6495ed", "#7c9ec3", Axis.HORIZONTAL);
-    Paint FINDING_NEMO     = createGradient("#0047ab", "#1ca9c9", Axis.HORIZONTAL);
-    Paint MOON_SPOT        = createGradient("#8c92ac", "#f5f5f5", Axis.HORIZONTAL);
-    Paint PRINCE_TO_KING   = createGradient("#4169e1", "#89CFF0", Axis.HORIZONTAL);
-    Paint STARRY_NIGHT     = createGradient("#003366", "#0f52ba", Axis.HORIZONTAL);
-    Paint TOP_GUN_FLYOVER  = createGradient("#000080", "#00bfff", Axis.HORIZONTAL);
 }

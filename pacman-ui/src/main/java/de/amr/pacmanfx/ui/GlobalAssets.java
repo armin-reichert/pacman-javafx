@@ -8,8 +8,6 @@ import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
-import de.amr.pacmanfx.uilib.rendering.Gradients;
-import javafx.scene.layout.Background;
 import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.uilib.Ufx.createImageBackground;
@@ -31,15 +29,6 @@ public class GlobalAssets extends AssetStorage {
         setTextResources(GAME_UI_RES.getModuleBundle("de.amr.pacmanfx.ui.localized_texts"));
         pickGameOverText      = RandomTextPicker.fromBundle(textResources(), "game.over");
         pickLevelCompleteText = RandomTextPicker.fromBundle(textResources(), "level.complete");
-
-        set("background.play_scene3d", new Background[] {
-            Background.fill(Gradients.BLUE_BELL_DREAMS),
-            Background.fill(Gradients.FINDING_NEMO),
-            Background.fill(Gradients.MOON_SPOT),
-            Background.fill(Gradients.PRINCE_TO_KING),
-            Background.fill(Gradients.STARRY_NIGHT),
-            Background.fill(Gradients.TOP_GUN_FLYOVER),
-        });
 
         set("background.scene",        createImageBackground(GAME_UI_RES.loadImage("graphics/pacman_wallpaper.png")));
 
