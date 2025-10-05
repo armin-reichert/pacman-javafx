@@ -7,6 +7,7 @@ package de.amr.pacmanfx.tengen.ms_pacman.model;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.event.GameEventType;
+import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.Waypoint;
 import de.amr.pacmanfx.lib.timer.Pulse;
@@ -403,23 +404,28 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         msPacMan.setAutopilotSteering(autopilot);
         activatePacBooster(msPacMan, pacBooster == PacBooster.ALWAYS_ON);
 
-        // Ghosts inside house start at bottom of house instead at middle (as stored in terrain tile property)
         final Blinky blinky = new Blinky();
-        blinky.setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_1_RED)));
+        final Vector2i blinkyStartTile = worldMap.terrainLayer().getTileProperty(POS_GHOST_1_RED);
+        blinky.setStartPosition(halfTileRightOf(blinkyStartTile));
+
+        // Ghosts inside the house start at the *bottom* of the house
+        final Vector2f offsetY = Vector2f.of(0, HTS);
 
         final Pinky pinky = new Pinky();
-        pinky.setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_2_PINK)).plus(0, HTS));
+        final Vector2i pinkyStartTile = worldMap.terrainLayer().getTileProperty(POS_GHOST_2_PINK);
+        pinky.setStartPosition(halfTileRightOf(pinkyStartTile).plus(offsetY));
 
         final Inky inky = new Inky();
-        inky.setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_3_CYAN)).plus(0, HTS));
+        final Vector2i inkyStartTile = worldMap.terrainLayer().getTileProperty(POS_GHOST_3_CYAN);
+        inky.setStartPosition(halfTileRightOf(inkyStartTile).plus(offsetY));
 
         final Sue sue = new Sue();
-        sue.setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_4_ORANGE)).plus(0, HTS));
+        final Vector2i sueStartTile = worldMap.terrainLayer().getTileProperty(POS_GHOST_4_ORANGE);
+        sue.setStartPosition(halfTileRightOf(sueStartTile).plus(offsetY));
 
         newGameLevel.setPac(msPacMan);
         newGameLevel.setGhosts(blinky, pinky, inky, sue);
-
-        //TODO this might not be appropriate for Tengen Ms. Pac-Man
+        //TODO not sure about this:
         newGameLevel.setBonusSymbol(0, computeBonusSymbol(newGameLevel.number()));
         newGameLevel.setBonusSymbol(1, computeBonusSymbol(newGameLevel.number()));
 
