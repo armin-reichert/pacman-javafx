@@ -4,8 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model;
 
-import de.amr.pacmanfx.GameContext;
-
 public interface GameLifecycle {
     void init();
     void resetEverything();
@@ -24,7 +22,7 @@ public interface GameLifecycle {
     int lastLevelNumber();
     void startNextLevel();
     void startHunting(GameLevel gameLevel);
-    void doHuntingStep(GameLevel gameLevel);
+    void updateHunting(GameLevel gameLevel);
     void activateNextBonus(GameLevel gameLevel);
     boolean hasPacManBeenKilled();
     boolean haveGhostsBeenKilled();

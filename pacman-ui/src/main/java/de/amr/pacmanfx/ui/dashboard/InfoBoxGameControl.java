@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.dashboard;
 import de.amr.pacmanfx.controller.CoinMechanism;
 import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.controller.GameState;
-import de.amr.pacmanfx.controller.teststates.CutScenesTestState;
+import de.amr.pacmanfx.controller.test.CutScenesTestState;
 import de.amr.pacmanfx.ui.CommonGameActions;
 import de.amr.pacmanfx.ui.api.GameUI;
 import javafx.scene.control.Button;
@@ -78,7 +78,7 @@ public class InfoBoxGameControl extends InfoBox {
         buttonGroupLevelActions[GAME_LEVEL_NEXT].setDisable(isBooting() || !canEnterNextLevel());
 
         buttonGroupCutScenesTest[CUT_SCENES_TEST_START].setDisable(isBooting() || state != GamePlayState.INTRO);
-        buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT].setDisable(isBooting() || !state.is(CutScenesTestState.class));
+        buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT].setDisable(isBooting() || !(state instanceof CutScenesTestState));
 
         cbAutopilot.setDisable(isBooting());
         cbImmunity.setDisable(isBooting());

@@ -152,10 +152,7 @@ public abstract class AbstractGameModel implements Game {
     }
 
     @Override
-    public void doHuntingStep(GameLevel gameLevel) {
-        optGateKeeper().ifPresent(gateKeeper -> gateKeeper.unlockGhosts(gameLevel));
-        huntingTimer().update(gameLevel.number());
-        gameLevel.blinking().tick();
+    public void updateHunting(GameLevel gameLevel) {
         checkPacKilled(gameLevel);
         if (hasPacManBeenKilled()) return;
         checkPacKillsGhosts(gameLevel);
@@ -163,6 +160,9 @@ public abstract class AbstractGameModel implements Game {
         checkPacFindsFood(gameLevel);
         gameLevel.bonus().ifPresent(bonus -> checkPacEatsBonus(gameLevel, bonus));
         updatePacPower(gameLevel);
+        gameLevel.blinking().tick();
+        huntingTimer().update(gameLevel.number());
+        optGateKeeper().ifPresent(gateKeeper -> gateKeeper.unlockGhosts(gameLevel));
     }
 
     protected void resetPacManAndGhostAnimations(GameLevel gameLevel) {

@@ -2,7 +2,7 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.controller.teststates;
+package de.amr.pacmanfx.controller.test;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
@@ -16,7 +16,7 @@ import de.amr.pacmanfx.model.GameLevelMessage;
 import de.amr.pacmanfx.model.MessageType;
 import de.amr.pacmanfx.model.actors.Bonus;
 
-public class LevelShortTestState implements GameState {
+public class LevelShortTestState implements TestGameState {
 
     private final TickTimer timer = new TickTimer("Timer_" + name());
     private int lastTestedLevelNumber;

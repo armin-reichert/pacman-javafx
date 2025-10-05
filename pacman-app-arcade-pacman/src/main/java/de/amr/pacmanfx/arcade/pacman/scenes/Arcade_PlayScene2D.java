@@ -7,8 +7,7 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_PlayScene2DDebugInfoRenderer;
 import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.controller.GameState;
-import de.amr.pacmanfx.controller.teststates.LevelMediumTestState;
-import de.amr.pacmanfx.controller.teststates.LevelShortTestState;
+import de.amr.pacmanfx.controller.test.TestGameState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.Game;
@@ -133,9 +132,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     @Override
     public void onGameStarted(GameEvent e) {
         GameState state = context().gameState();
-        boolean silent = context().gameLevel().isDemoLevel()
-                || state.is(LevelShortTestState.class)
-                || state.is(LevelMediumTestState.class);
+        boolean silent = context().gameLevel().isDemoLevel() || state instanceof TestGameState;
         if (!silent) {
             ui.soundManager().play(SoundID.GAME_READY);
         }

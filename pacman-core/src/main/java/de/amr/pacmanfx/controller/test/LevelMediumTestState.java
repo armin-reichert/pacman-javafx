@@ -2,7 +2,7 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.controller.teststates;
+package de.amr.pacmanfx.controller.test;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.controller.GamePlayState;
@@ -15,7 +15,7 @@ import de.amr.pacmanfx.model.GameLevelMessage;
 import de.amr.pacmanfx.model.MessageType;
 import de.amr.pacmanfx.model.actors.AnimationManager;
 
-public class LevelMediumTestState implements GameState {
+public class LevelMediumTestState implements TestGameState {
     static final int TEST_DURATION_SEC = 10;
 
     private final TickTimer timer = new TickTimer("Timer_" + name());
@@ -62,7 +62,7 @@ public class LevelMediumTestState implements GameState {
         gameLevel.pac().tick(context);
         gameLevel.ghosts().forEach(ghost -> ghost.tick(context));
         gameLevel.bonus().ifPresent(bonus -> bonus.tick(context));
-        game.doHuntingStep(gameLevel);
+        game.updateHunting(gameLevel);
         if (timer().hasExpired()) {
             if (gameLevel.number() == lastTestedLevelNumber) {
                 context.eventManager().publishEvent(GameEventType.STOP_ALL_SOUNDS);

@@ -164,7 +164,7 @@ public enum GamePlayState implements GameState {
             gameLevel.pac().tick(context);
             gameLevel.ghosts().forEach(ghost -> ghost.tick(context));
             gameLevel.bonus().ifPresent(bonus -> bonus.tick(context));
-            game.doHuntingStep(gameLevel);
+            game.updateHunting(gameLevel);
             if (game.isLevelCompleted(gameLevel)) {
                 context.gameController().changeGameState(LEVEL_COMPLETE);
             } else if (game.hasPacManBeenKilled()) {

@@ -13,7 +13,7 @@ import de.amr.pacmanfx.arcade.pacman.actors.Pinky;
 import de.amr.pacmanfx.arcade.pacman.rendering.*;
 import de.amr.pacmanfx.arcade.pacman.scenes.*;
 import de.amr.pacmanfx.controller.GamePlayState;
-import de.amr.pacmanfx.controller.teststates.CutScenesTestState;
+import de.amr.pacmanfx.controller.test.CutScenesTestState;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
