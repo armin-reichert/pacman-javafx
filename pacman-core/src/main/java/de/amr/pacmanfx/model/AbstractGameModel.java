@@ -32,6 +32,8 @@ public abstract class AbstractGameModel implements Game {
 
     protected abstract boolean isPacManSafeInDemoLevel(GameLevel demoLevel);
 
+    protected abstract void resetPacManAndGhostAnimations(GameLevel gameLevel);
+
     public void setLifeCount(int n) {
         if (n >= 0) {
             lifeCount.set(n);
@@ -163,17 +165,6 @@ public abstract class AbstractGameModel implements Game {
         gameLevel.blinking().tick();
         huntingTimer().update(gameLevel.number());
         optGateKeeper().ifPresent(gateKeeper -> gateKeeper.unlockGhosts(gameLevel));
-    }
-
-    protected void resetPacManAndGhostAnimations(GameLevel gameLevel) {
-        gameLevel.pac().animationManager().ifPresent(am -> {
-            am.select(AnimationSupport.ANIM_PAC_MUNCHING);
-            am.reset();
-        });
-        gameLevel.ghosts().forEach(ghost -> ghost.animationManager().ifPresent(am -> {
-            am.select(AnimationSupport.ANIM_GHOST_NORMAL);
-            am.reset();
-        }));
     }
 
     protected void updatePacPower(GameLevel gameLevel) {

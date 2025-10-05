@@ -302,6 +302,18 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         }
     }
 
+    @Override
+    protected void resetPacManAndGhostAnimations(GameLevel gameLevel) {
+        gameLevel.pac().animationManager().ifPresent(am -> {
+            am.select(AnimationSupport.ANIM_PAC_MUNCHING);
+            am.reset();
+        });
+        gameLevel.ghosts().forEach(ghost -> ghost.animationManager().ifPresent(am -> {
+            am.select(AnimationSupport.ANIM_GHOST_NORMAL);
+            am.reset();
+        }));
+    }
+
     // ActorSpeedControl interface
 
     /** Base speed is 75 px per second (=1.25 px/tick). */
