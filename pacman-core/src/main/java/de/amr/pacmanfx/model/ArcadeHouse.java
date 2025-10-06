@@ -23,7 +23,7 @@ public class ArcadeHouse implements House {
      */
     public static final Vector2i SIZE_IN_TILES = Vector2i.of(8, 5);
 
-    private static final byte[][] CONTENT = {
+    public static final byte[][] CONTENT = {
         { ARC_NW.$, WALL_H.$, WALL_H.$, DOOR.$,   DOOR.$,   WALL_H.$, WALL_H.$, ARC_NE.$ },
         { WALL_V.$, EMPTY.$,  EMPTY.$,  EMPTY.$,  EMPTY.$,  EMPTY.$,  EMPTY.$,  WALL_V.$ },
         { WALL_V.$, EMPTY.$,  EMPTY.$,  EMPTY.$,  EMPTY.$,  EMPTY.$,  EMPTY.$,  WALL_V.$ },

@@ -18,7 +18,6 @@ import java.text.MessageFormat;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-import static de.amr.pacmanfx.lib.worldmap.TerrainTile.*;
 import static de.amr.pacmanfx.model.DefaultWorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;
 
@@ -63,24 +62,13 @@ public interface EditorGlobals {
     ExtensionFilter FILTER_ALL_FILES       = new ExtensionFilter("Any File", "*.*");
 
     Map<String, RectShort> ACTOR_SPRITES = Map.of(
-        POS_PAC,          ArcadeSprites.PAC_MAN,
+        POS_PAC,            ArcadeSprites.PAC_MAN,
         POS_GHOST_1_RED,    ArcadeSprites.RED_GHOST,
         POS_GHOST_2_PINK,   ArcadeSprites.PINK_GHOST,
         POS_GHOST_3_CYAN,   ArcadeSprites.CYAN_GHOST,
         POS_GHOST_4_ORANGE, ArcadeSprites.ORANGE_GHOST,
-        POS_BONUS,        ArcadeSprites.STRAWBERRY
+        POS_BONUS,          ArcadeSprites.STRAWBERRY
     );
-
-    int ARCADE_HOUSE_WIDTH = 8;
-    int ARCADE_HOUSE_HEIGHT = 5;
-
-    byte[][] ARCADE_HOUSE_CODE = {
-            { ARC_NW.$,  WALL_H.$,  WALL_H.$,  DOOR  .$,  DOOR  .$, WALL_H.$, WALL_H.$, ARC_NE.$ },
-            { WALL_V.$,  EMPTY .$,  EMPTY .$,  EMPTY .$,  EMPTY .$, EMPTY .$, EMPTY .$, WALL_V.$ },
-            { WALL_V.$,  EMPTY .$,  EMPTY .$,  EMPTY .$,  EMPTY .$, EMPTY .$, EMPTY .$, WALL_V.$ },
-            { WALL_V.$,  EMPTY .$,  EMPTY .$,  EMPTY .$,  EMPTY .$, EMPTY .$, EMPTY .$, WALL_V.$ },
-            { ARC_SW.$,  WALL_H.$,  WALL_H.$,  WALL_H.$,  WALL_H.$, WALL_H.$, WALL_H.$, ARC_SE.$ },
-    };
 
     static boolean matchesExtensionFilter(File file, ExtensionFilter filter) {
         requireNonNull(file);

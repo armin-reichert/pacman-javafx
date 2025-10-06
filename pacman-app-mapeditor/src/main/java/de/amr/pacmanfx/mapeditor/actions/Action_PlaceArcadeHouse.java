@@ -10,11 +10,11 @@ import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
 import de.amr.pacmanfx.lib.worldmap.TerrainTile;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
+import de.amr.pacmanfx.model.ArcadeHouse;
 import org.tinylog.Logger;
 
 import java.util.Map;
 
-import static de.amr.pacmanfx.mapeditor.EditorGlobals.*;
 import static de.amr.pacmanfx.model.DefaultWorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;
 
@@ -35,10 +35,10 @@ public class Action_PlaceArcadeHouse extends EditorAction<Void> {
 
     @Override
     public Void execute() {
+        final Vector2i houseSize = ArcadeHouse.SIZE_IN_TILES;
         final TerrainLayer terrain = worldMap.terrainLayer();
         final Map<String, String> terrainProperties = terrain.propertyMap();
-        final Vector2i houseSize = Vector2i.of(ARCADE_HOUSE_WIDTH, ARCADE_HOUSE_HEIGHT);
-        final Vector2i maxTile = minTile.plus(ARCADE_HOUSE_WIDTH - 1, ARCADE_HOUSE_HEIGHT - 1);
+        final Vector2i maxTile = minTile.plus(houseSize).minus(1, 1);
         if (terrain.outOfBounds(minTile) || terrain.outOfBounds(maxTile)) {
             Logger.error("Illegal house position min: {} max: {}", minTile, maxTile);
             return null;
@@ -53,7 +53,7 @@ public class Action_PlaceArcadeHouse extends EditorAction<Void> {
         // place house tile content
         for (int y = 0; y < houseSize.y(); ++y) {
             for (int x = 0; x < houseSize.x(); ++x) {
-                terrain.set(minTile.y() + y, minTile.x() + x, ARCADE_HOUSE_CODE[y][x]);
+                terrain.set(minTile.y() + y, minTile.x() + x, ArcadeHouse.CONTENT[y][x]);
             }
         }
         editor.setTerrainMapChanged();

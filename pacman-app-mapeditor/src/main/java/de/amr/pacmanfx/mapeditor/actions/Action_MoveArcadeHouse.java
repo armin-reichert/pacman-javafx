@@ -16,6 +16,7 @@ public class Action_MoveArcadeHouse extends EditorAction<Void> {
 
     @Override
     public Void execute() {
+        //TODO if house cannot be placed at given position, do not delete it!
         new Action_DeleteArcadeHouse(editor).execute();
         new Action_PlaceArcadeHouse(editor, minTile).execute();
         return null;
