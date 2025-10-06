@@ -29,7 +29,6 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -58,46 +57,34 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
     private static final byte[] BONUS_VALUE_MULTIPLIERS = {1, 2, 5, 7, 10, 20, 50}; // points = value * 100
 
-    // Level settings as specified in the "Pac-Man dossier" for Pac-Man game
-    // TODO: Are these values also correct for *Ms.* Pac-Man?
-    protected static final Arcade_LevelData[] LEVEL_DATA = {
-        /* 1*/ new Arcade_LevelData( 80, 75, 40,  20,  80, 10,  85,  90, 50, 6, 5),
-        /* 2*/ new Arcade_LevelData( 90, 85, 45,  30,  90, 15,  95,  95, 55, 5, 5),
-        /* 3*/ new Arcade_LevelData( 90, 85, 45,  40,  90, 20,  95,  95, 55, 4, 5),
-        /* 4*/ new Arcade_LevelData( 90, 85, 45,  40,  90, 20,  95,  95, 55, 3, 5),
-        /* 5*/ new Arcade_LevelData(100, 95, 50,  40, 100, 20, 105, 100, 60, 2, 5),
-        /* 6*/ new Arcade_LevelData(100, 95, 50,  50, 100, 25, 105, 100, 60, 5, 5),
-        /* 7*/ new Arcade_LevelData(100, 95, 50,  50, 100, 25, 105, 100, 60, 2, 5),
-        /* 8*/ new Arcade_LevelData(100, 95, 50,  50, 100, 25, 105, 100, 60, 2, 5),
-        /* 9*/ new Arcade_LevelData(100, 95, 50,  60, 100, 30, 105, 100, 60, 1, 3),
-        /*10*/ new Arcade_LevelData(100, 95, 50,  60, 100, 30, 105, 100, 60, 5, 5),
-        /*11*/ new Arcade_LevelData(100, 95, 50,  60, 100, 30, 105, 100, 60, 2, 5),
-        /*12*/ new Arcade_LevelData(100, 95, 50,  80, 100, 40, 105, 100, 60, 1, 3),
-        /*13*/ new Arcade_LevelData(100, 95, 50,  80, 100, 40, 105, 100, 60, 1, 3),
-        /*14*/ new Arcade_LevelData(100, 95, 50,  80, 100, 40, 105, 100, 60, 3, 5),
-        /*15*/ new Arcade_LevelData(100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3),
-        /*16*/ new Arcade_LevelData(100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3),
-        /*17*/ new Arcade_LevelData(100, 95, 50, 100, 100, 50, 105,   0,  0, 0, 0),
-        /*18*/ new Arcade_LevelData(100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3),
-        /*19*/ new Arcade_LevelData(100, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0),
-        /*20*/ new Arcade_LevelData(100, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0),
-        /*21*/ new Arcade_LevelData( 90, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0),
-    };
-
     private static final int DEMO_LEVEL_MIN_DURATION_MILLIS = 20_000;
 
-    protected static final Map<Integer, Integer> CUT_SCENE_AFTER_LEVEL = Map.of(
-        2, 1, // after level #2, play cut scene #1
-        5, 2,
-        9, 3,
-        13, 3,
-        17, 3
-    );
+    /**
+     * Details are from a conversation with user @damselindis on Reddit. I am not sure if they are correct.
+     *
+     * @see <a href="https://www.reddit.com/r/Pacman/comments/12q4ny3/is_anyone_able_to_explain_the_ai_behind_the/">Reddit</a>
+     * @see <a href="https://github.com/armin-reichert/pacman-basic/blob/main/doc/mspacman-details-reddit-user-damselindis.md">GitHub</a>
+     */
+    public static class ArcadeMsPacMan_HuntingTimer extends HuntingTimer {
+
+        static final int[] HUNTING_TICKS_LEVEL_1_TO_4 = {420, 1200, 1, 62220, 1, 62220, 1, -1};
+        static final int[] HUNTING_TICKS_LEVEL_5_PLUS = {300, 1200, 1, 62220, 1, 62220, 1, -1};
+
+        ArcadeMsPacMan_HuntingTimer() {
+            super("ArcadeMsPacMan-HuntingTimer", 8);
+        }
+
+        @Override
+        public long huntingTicks(int levelNumber, int phaseIndex) {
+            long ticks = levelNumber < 5 ? HUNTING_TICKS_LEVEL_1_TO_4[phaseIndex] : HUNTING_TICKS_LEVEL_5_PLUS[phaseIndex];
+            return ticks != -1 ? ticks : TickTimer.INDEFINITE;
+        }
+    }
 
     protected final MapSelector mapSelector;
+    protected final ArcadeMsPacMan_HuntingTimer huntingTimer;
     protected final ArcadeMsPacMan_LevelCounter levelCounter;
     protected final HUD hud = new DefaultHUD();
-    protected final HuntingTimer huntingTimer;
 
     /**
      * Called via reflection by builder.
@@ -121,22 +108,8 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         scoreManager.setExtraLifeScores(EXTRA_LIFE_SCORE);
 
         levelCounter = new ArcadeMsPacMan_LevelCounter();
-        /*
-         * Details are from a conversation with user @damselindis on Reddit. I am not sure if they are correct.
-         *
-         * @see <a href="https://www.reddit.com/r/Pacman/comments/12q4ny3/is_anyone_able_to_explain_the_ai_behind_the/">Reddit</a>
-         * @see <a href="https://github.com/armin-reichert/pacman-basic/blob/main/doc/mspacman-details-reddit-user-damselindis.md">GitHub</a>
-         */
-        huntingTimer = new HuntingTimer("ArcadeMsPacMan-HuntingTimer", 8) {
-            static final int[] HUNTING_TICKS_LEVEL_1_TO_4 = {420, 1200, 1, 62220, 1, 62220, 1, -1};
-            static final int[] HUNTING_TICKS_LEVEL_5_PLUS = {300, 1200, 1, 62220, 1, 62220, 1, -1};
 
-            @Override
-            public long huntingTicks(int levelNumber, int phaseIndex) {
-                long ticks = levelNumber < 5 ? HUNTING_TICKS_LEVEL_1_TO_4[phaseIndex] : HUNTING_TICKS_LEVEL_5_PLUS[phaseIndex];
-                return ticks != -1 ? ticks : TickTimer.INDEFINITE;
-            }
-        };
+        huntingTimer = new ArcadeMsPacMan_HuntingTimer();
         huntingTimer.phaseIndexProperty().addListener((py, ov, nv) -> {
             if (nv.intValue() > 0) {
                 gameLevel().ghosts(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE)

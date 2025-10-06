@@ -7,7 +7,6 @@ package de.amr.pacmanfx.model;
 import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.model.actors.ActorSpeedControl;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface Game extends GameLifecycle, GameEvents, ActorSpeedControl {
@@ -16,7 +15,6 @@ public interface Game extends GameLifecycle, GameEvents, ActorSpeedControl {
     SimulationStepResults simulationStepResults();
     HuntingTimer          huntingTimer();
     MapSelector           mapSelector();
-    Optional<GateKeeper>  optGateKeeper();
     Optional<GameLevel>   optGameLevel();
     HUD                   hud();
 

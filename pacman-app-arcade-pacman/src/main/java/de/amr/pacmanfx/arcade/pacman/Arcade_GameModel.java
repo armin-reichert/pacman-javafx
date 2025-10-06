@@ -19,7 +19,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.steering.Steering;
 import org.tinylog.Logger;
 
-import java.util.Optional;
+import java.util.Map;
 
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
 import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
@@ -29,6 +29,39 @@ import static java.util.Objects.requireNonNull;
  * Common data and functionality of Pac-Man and Ms. Pac-Man Arcade games.
  */
 public abstract class Arcade_GameModel extends AbstractGameModel {
+
+    // Level data as given in the "Pac-Man dossier"
+    protected static final Arcade_LevelData[] LEVEL_DATA = {
+        /* 1*/ new Arcade_LevelData( 80, 75, 40,  20,  80, 10,  85,  90, 50, 6, 5),
+        /* 2*/ new Arcade_LevelData( 90, 85, 45,  30,  90, 15,  95,  95, 55, 5, 5),
+        /* 3*/ new Arcade_LevelData( 90, 85, 45,  40,  90, 20,  95,  95, 55, 4, 5),
+        /* 4*/ new Arcade_LevelData( 90, 85, 45,  40,  90, 20,  95,  95, 55, 3, 5),
+        /* 5*/ new Arcade_LevelData(100, 95, 50,  40, 100, 20, 105, 100, 60, 2, 5),
+        /* 6*/ new Arcade_LevelData(100, 95, 50,  50, 100, 25, 105, 100, 60, 5, 5),
+        /* 7*/ new Arcade_LevelData(100, 95, 50,  50, 100, 25, 105, 100, 60, 2, 5),
+        /* 8*/ new Arcade_LevelData(100, 95, 50,  50, 100, 25, 105, 100, 60, 2, 5),
+        /* 9*/ new Arcade_LevelData(100, 95, 50,  60, 100, 30, 105, 100, 60, 1, 3),
+        /*10*/ new Arcade_LevelData(100, 95, 50,  60, 100, 30, 105, 100, 60, 5, 5),
+        /*11*/ new Arcade_LevelData(100, 95, 50,  60, 100, 30, 105, 100, 60, 2, 5),
+        /*12*/ new Arcade_LevelData(100, 95, 50,  80, 100, 40, 105, 100, 60, 1, 3),
+        /*13*/ new Arcade_LevelData(100, 95, 50,  80, 100, 40, 105, 100, 60, 1, 3),
+        /*14*/ new Arcade_LevelData(100, 95, 50,  80, 100, 40, 105, 100, 60, 3, 5),
+        /*15*/ new Arcade_LevelData(100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3),
+        /*16*/ new Arcade_LevelData(100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3),
+        /*17*/ new Arcade_LevelData(100, 95, 50, 100, 100, 50, 105,   0,  0, 0, 0),
+        /*18*/ new Arcade_LevelData(100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3),
+        /*19*/ new Arcade_LevelData(100, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0),
+        /*20*/ new Arcade_LevelData(100, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0),
+        /*21*/ new Arcade_LevelData( 90, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0),
+    };
+
+    protected static final Map<Integer, Integer> CUT_SCENE_AFTER_LEVEL = Map.of(
+        2, 1, // after level #2, play cut scene #1
+        5, 2,
+        9, 3,
+        13, 3,
+        17, 3
+    );
 
     /**
      * Top-left tile of ghost house in original Arcade maps (Pac-Man, Ms. Pac-Man).
@@ -43,14 +76,13 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     public static final byte BONUS_EATEN_SECONDS = 2;
 
-    protected final GameContext gameContext;
-    protected final ScoreManager scoreManager;
+    protected ScoreManager scoreManager;
     protected GateKeeper gateKeeper;
     protected Steering autopilot;
     protected Steering demoLevelSteering;
 
     protected Arcade_GameModel(GameContext gameContext) {
-        this.gameContext = requireNonNull(gameContext);
+        super(gameContext);
         scoreManager = new ScoreManager(this);
     }
 
@@ -85,6 +117,14 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             gameLevel.ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
             simulationStepResults.pacGotPower = true;
             eventManager().publishEvent(GameEventType.PAC_GETS_POWER);
+        }
+    }
+
+    @Override
+    public void updateHunting(GameLevel gameLevel) {
+        super.updateHunting(gameLevel);
+        if (gateKeeper != null) {
+            gateKeeper.unlockGhosts(gameLevel);
         }
     }
 
@@ -177,9 +217,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     @Override
     public boolean canContinueOnGameOver() { return false; }
-
-    @Override
-    public Optional<GateKeeper> optGateKeeper() { return Optional.of(gateKeeper); }
 
     @Override
     public double pacPowerSeconds(GameLevel level) {

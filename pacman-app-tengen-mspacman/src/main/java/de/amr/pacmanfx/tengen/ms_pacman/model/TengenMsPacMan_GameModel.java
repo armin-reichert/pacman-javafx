@@ -131,6 +131,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     private int numContinues;
 
     public TengenMsPacMan_GameModel(GameContext gameContext, File highScoreFile) {
+        super(gameContext);
         eventManager = gameContext.eventManager();
         scoreManager = new ScoreManager(this);
         scoreManager.setHighScoreFile(highScoreFile);
@@ -207,9 +208,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     public HuntingTimer huntingTimer() { return huntingTimer; }
-
-    @Override
-    public Optional<GateKeeper> optGateKeeper() { return Optional.of(gateKeeper); }
 
     @Override
     public MapSelector mapSelector() { return mapSelector; }
@@ -448,10 +446,10 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         normalLevel.pac().usingAutopilotProperty().bind(pacUsingAutopilot);
         huntingTimer().reset();
         scoreManager.score().setLevelNumber(levelNumber);
-        optGateKeeper().ifPresent(gateKeeper -> {
+        if (gateKeeper != null) {
             gateKeeper.setLevelNumber(levelNumber);
             normalLevel.worldMap().terrainLayer().optHouse().ifPresent(gateKeeper::setHouse); //TODO what if no house exists?
-        });
+        }
         setGameLevel(normalLevel);
         eventManager().publishEvent(GameEventType.LEVEL_CREATED);
     }
@@ -466,10 +464,10 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         demoLevelSteering.init();
         huntingTimer.reset();
         scoreManager.score().setLevelNumber(1);
-        optGateKeeper().ifPresent(gateKeeper -> {
+        if (gateKeeper != null) {
             gateKeeper.setLevelNumber(1);
             demoLevel.worldMap().terrainLayer().optHouse().ifPresent(gateKeeper::setHouse); //TODO what if no house exists?
-        });
+        }
         setGameLevel(demoLevel);
         eventManager().publishEvent(GameEventType.LEVEL_CREATED);
     }
@@ -485,6 +483,14 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void updateHunting(GameLevel gameLevel) {
+        super.updateHunting(gameLevel);
+        if (gateKeeper != null) {
+            gateKeeper.unlockGhosts(gameLevel);
+        }
     }
 
     @Override
@@ -556,7 +562,9 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         if (foodLayer.tileContainsFood(tile)) {
             pac.setStarvingTicks(0);
             foodLayer.registerFoodEatenAt(tile);
-            optGateKeeper().ifPresent(gateKeeper -> gateKeeper.registerFoodEaten(gameLevel));
+            if (gateKeeper != null) {
+                gateKeeper.registerFoodEaten(gameLevel);
+            }
             if (foodLayer.isEnergizerPosition(tile)) {
                 simulationStepResults.foundEnergizerAtTile = tile;
                 onEnergizerEaten();

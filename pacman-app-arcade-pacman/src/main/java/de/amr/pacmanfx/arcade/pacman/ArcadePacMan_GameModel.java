@@ -24,7 +24,6 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -55,49 +54,38 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         "#000000", "#2121ff", "#ffb7ff", "#febdb4"
     );
 
-    // Level data as given in the "Pac-Man dossier"
-    protected static final Arcade_LevelData[] LEVEL_DATA = {
-        /* 1*/ new Arcade_LevelData( 80, 75, 40,  20,  80, 10,  85,  90, 50, 6, 5),
-        /* 2*/ new Arcade_LevelData( 90, 85, 45,  30,  90, 15,  95,  95, 55, 5, 5),
-        /* 3*/ new Arcade_LevelData( 90, 85, 45,  40,  90, 20,  95,  95, 55, 4, 5),
-        /* 4*/ new Arcade_LevelData( 90, 85, 45,  40,  90, 20,  95,  95, 55, 3, 5),
-        /* 5*/ new Arcade_LevelData(100, 95, 50,  40, 100, 20, 105, 100, 60, 2, 5),
-        /* 6*/ new Arcade_LevelData(100, 95, 50,  50, 100, 25, 105, 100, 60, 5, 5),
-        /* 7*/ new Arcade_LevelData(100, 95, 50,  50, 100, 25, 105, 100, 60, 2, 5),
-        /* 8*/ new Arcade_LevelData(100, 95, 50,  50, 100, 25, 105, 100, 60, 2, 5),
-        /* 9*/ new Arcade_LevelData(100, 95, 50,  60, 100, 30, 105, 100, 60, 1, 3),
-        /*10*/ new Arcade_LevelData(100, 95, 50,  60, 100, 30, 105, 100, 60, 5, 5),
-        /*11*/ new Arcade_LevelData(100, 95, 50,  60, 100, 30, 105, 100, 60, 2, 5),
-        /*12*/ new Arcade_LevelData(100, 95, 50,  80, 100, 40, 105, 100, 60, 1, 3),
-        /*13*/ new Arcade_LevelData(100, 95, 50,  80, 100, 40, 105, 100, 60, 1, 3),
-        /*14*/ new Arcade_LevelData(100, 95, 50,  80, 100, 40, 105, 100, 60, 3, 5),
-        /*15*/ new Arcade_LevelData(100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3),
-        /*16*/ new Arcade_LevelData(100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3),
-        /*17*/ new Arcade_LevelData(100, 95, 50, 100, 100, 50, 105,   0,  0, 0, 0),
-        /*18*/ new Arcade_LevelData(100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3),
-        /*19*/ new Arcade_LevelData(100, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0),
-        /*20*/ new Arcade_LevelData(100, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0),
-        /*21*/ new Arcade_LevelData( 90, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0),
-    };
-
     // Note: level numbering starts with 1
     protected static final byte[] BONUS_SYMBOLS_BY_LEVEL_NUMBER = { -1, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7 };
 
     // bonus points = multiplier * 100
     protected static final byte[] BONUS_VALUE_MULTIPLIERS = { 1, 3, 5, 7, 10, 20, 30, 50 };
 
-    protected static final Map<Integer, Integer> CUT_SCENE_AFTER_LEVEL = Map.of(
-         2, 1, // after level #2, play cut scene #1
-         5, 2,
-         9, 3,
-        13, 3,
-        17, 3
-    );
+    public static class ArcadePacMan_HuntingTimer extends HuntingTimer {
+
+        // Ticks of scatter and chasing phases, -1 = INFINITE
+        static final int[] TICKS_LEVEL_1     = {420, 1200, 420, 1200, 300,  1200, 300, -1};
+        static final int[] TICKS_LEVEL_2_3_4 = {420, 1200, 420, 1200, 300, 61980,   1, -1};
+        static final int[] TICKS_LEVEL_5_ON  = {300, 1200, 300, 1200, 300, 62262,   1, -1};
+
+        ArcadePacMan_HuntingTimer() {
+            super("ArcadePacMan-HuntingTimer", 8);
+        }
+
+        @Override
+        public long huntingTicks(int levelNumber, int phaseIndex) {
+            long ticks = switch (levelNumber) {
+                case 1 -> TICKS_LEVEL_1[phaseIndex];
+                case 2, 3, 4 -> TICKS_LEVEL_2_3_4[phaseIndex];
+                default -> TICKS_LEVEL_5_ON[phaseIndex];
+            };
+            return ticks != -1 ? ticks : TickTimer.INDEFINITE;
+        }
+    }
 
     protected final MapSelector mapSelector;
+    protected final HuntingTimer huntingTimer;
     protected final ArcadePacMan_LevelCounter levelCounter;
     protected final HUD hud = new DefaultHUD();
-    protected final HuntingTimer huntingTimer;
 
     public ArcadePacMan_GameModel(GameContext gameContext, File highScoreFile) {
         this(gameContext, new ArcadePacMan_MapSelector(), highScoreFile);
@@ -118,22 +106,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         scoreManager.setHighScoreFile(highScoreFile);
         scoreManager.setExtraLifeScores(EXTRA_LIFE_SCORE);
 
-        huntingTimer = new HuntingTimer("ArcadePacMan-HuntingTimer", 8) {
-            // Ticks of scatter and chasing phases, -1 = INFINITE
-            static final int[] TICKS_LEVEL_1     = {420, 1200, 420, 1200, 300,  1200, 300, -1};
-            static final int[] TICKS_LEVEL_2_3_4 = {420, 1200, 420, 1200, 300, 61980,   1, -1};
-            static final int[] TICKS_LEVEL_5_ON  = {300, 1200, 300, 1200, 300, 62262,   1, -1};
-
-            @Override
-            public long huntingTicks(int levelNumber, int phaseIndex) {
-                long ticks = switch (levelNumber) {
-                    case 1 -> TICKS_LEVEL_1[phaseIndex];
-                    case 2, 3, 4 -> TICKS_LEVEL_2_3_4[phaseIndex];
-                    default -> TICKS_LEVEL_5_ON[phaseIndex];
-                };
-                return ticks != -1 ? ticks : TickTimer.INDEFINITE;
-            }
-        };
+        huntingTimer = new ArcadePacMan_HuntingTimer();
         huntingTimer.phaseIndexProperty().addListener((py, ov, nv) -> {
             if (nv.intValue() > 0) {
                 gameLevel().ghosts(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE)
