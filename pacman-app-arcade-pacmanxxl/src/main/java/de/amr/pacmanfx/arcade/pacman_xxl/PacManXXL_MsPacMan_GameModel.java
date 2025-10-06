@@ -33,7 +33,7 @@ public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
 
     @Override
     public GameLevel createLevel(int levelNumber, boolean demoLevel) {
-        final WorldMap worldMap = mapSelector.getWorldMapCopy(levelNumber);
+        final WorldMap worldMap = mapSelector.provideWorldMap(levelNumber);
 
         Vector2i houseMinTile = worldMap.terrainLayer().getTileProperty(POS_HOUSE_MIN_TILE);
         if (houseMinTile == null) {

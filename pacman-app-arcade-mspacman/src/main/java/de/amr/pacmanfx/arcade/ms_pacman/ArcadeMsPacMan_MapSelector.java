@@ -67,7 +67,7 @@ public class ArcadeMsPacMan_MapSelector implements MapSelector {
      * @param levelNumber level number (starts at 1)
      */
     @Override
-    public WorldMap getWorldMapCopy(int levelNumber, Object... args) {
+    public WorldMap provideWorldMap(int levelNumber, Object... args) {
         requireValidLevelNumber(levelNumber);
 
         // Map number
