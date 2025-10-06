@@ -5,13 +5,17 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.arcade.pacman.*;
+import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel;
+import de.amr.pacmanfx.arcade.pacman.Arcade_LevelData;
 import de.amr.pacmanfx.arcade.pacman.actors.*;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.TerrainTile;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
-import de.amr.pacmanfx.model.*;
+import de.amr.pacmanfx.model.ArcadeHouse;
+import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.MapSelectionMode;
+import de.amr.pacmanfx.model.MapSelector;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
@@ -59,19 +63,21 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
         newGameLevel.setDemoLevel(demoLevel);
         newGameLevel.setGameOverStateTicks(90);
 
-        final Pac pacMan = new PacMan();
+        final Pac pacMan = ArcadePacMan_ActorFactory.createPacMan();
         pacMan.setAutopilotSteering(autopilot);
         newGameLevel.setPac(pacMan);
 
-        final Blinky blinky = new Blinky();
-        final Pinky pinky = new Pinky();
-        final Inky inky = new Inky();
-        final Clyde clyde = new Clyde();
-
+        final Blinky blinky = ArcadePacMan_ActorFactory.createBlinky();
         blinky.setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_1_RED)));
-        pinky .setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_2_PINK)));
-        inky  .setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_3_CYAN)));
-        clyde .setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_4_ORANGE)));
+
+        final Pinky pinky = ArcadePacMan_ActorFactory.createPinky();
+        pinky.setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_2_PINK)));
+
+        final Inky inky = ArcadePacMan_ActorFactory.createInky();
+        inky.setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_3_CYAN)));
+
+        final Clyde clyde = ArcadePacMan_ActorFactory.createClyde();
+        clyde.setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_4_ORANGE)));
 
         newGameLevel.setGhosts(blinky, pinky, inky, clyde);
 

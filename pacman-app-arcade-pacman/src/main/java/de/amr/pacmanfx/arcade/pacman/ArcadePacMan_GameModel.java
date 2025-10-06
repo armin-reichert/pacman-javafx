@@ -27,8 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static de.amr.pacmanfx.Globals.NUM_TICKS_PER_SEC;
-import static de.amr.pacmanfx.Globals.ORANGE_GHOST_POKEY;
+import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
 import static de.amr.pacmanfx.lib.Waypoint.wp;
@@ -144,9 +143,11 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
 
         gateKeeper = new GateKeeper(this);
         gateKeeper.setOnGhostReleased(prisoner -> {
-            if (prisoner.personality() == ORANGE_GHOST_POKEY && !isCruiseElroyModeActive()) {
+            Blinky blinky = (Blinky) gameLevel().ghost(RED_GHOST_SHADOW);
+            Clyde clyde = (Clyde) gameLevel().ghost(ORANGE_GHOST_POKEY);
+            if (prisoner == clyde && !blinky.isCruiseElroyModeActive()) {
                 Logger.debug("Re-enable 'Cruise Elroy' mode because {} got released:", prisoner.name());
-                activateCruiseElroyMode(true);
+                blinky.activateCruiseElroyMode(true);
             }
         });
 
@@ -226,19 +227,21 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         newGameLevel.setDemoLevel(demoLevel);
         newGameLevel.setGameOverStateTicks(90);
 
-        final Pac pacMan = new PacMan();
+        final Pac pacMan = ArcadePacMan_ActorFactory.createPacMan();
         pacMan.setAutopilotSteering(autopilot);
         newGameLevel.setPac(pacMan);
 
-        final Blinky blinky = new Blinky();
-        final Pinky pinky = new Pinky();
-        final Inky inky = new Inky();
-        final Clyde clyde = new Clyde();
-
+        final Blinky blinky = ArcadePacMan_ActorFactory.createBlinky();
         blinky.setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_1_RED)));
-        pinky .setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_2_PINK)));
-        inky  .setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_3_CYAN)));
-        clyde .setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_4_ORANGE)));
+
+        final Pinky pinky = ArcadePacMan_ActorFactory.createPinky();
+        pinky.setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_2_PINK)));
+
+        final Inky inky = ArcadePacMan_ActorFactory.createInky();
+        inky.setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_3_CYAN)));
+
+        final Clyde clyde = ArcadePacMan_ActorFactory.createClyde();
+        clyde.setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_4_ORANGE)));
 
         newGameLevel.setGhosts(blinky, pinky, inky, clyde);
 

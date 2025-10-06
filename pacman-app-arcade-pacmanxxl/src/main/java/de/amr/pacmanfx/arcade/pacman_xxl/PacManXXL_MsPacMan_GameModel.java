@@ -8,6 +8,7 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.arcade.ms_pacman.actors.*;
 import de.amr.pacmanfx.arcade.pacman.Arcade_LevelData;
+import de.amr.pacmanfx.arcade.pacman.actors.Inky;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
@@ -47,19 +48,21 @@ public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
         newGameLevel.setDemoLevel(demoLevel);
         newGameLevel.setGameOverStateTicks(150);
 
-        final MsPacMan msPacMan = new MsPacMan();
+        final MsPacMan msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
         msPacMan.setAutopilotSteering(autopilot);
         newGameLevel.setPac(msPacMan);
 
-        final Blinky blinky = new Blinky();
-        final Pinky pinky = new Pinky();
-        final Inky inky = new Inky();
-        final Sue sue = new Sue();
-
+        final Blinky blinky = ArcadeMsPacMan_ActorFactory.createBlinky();
         blinky.setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_1_RED)));
-        pinky .setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_2_PINK)));
-        inky  .setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_3_CYAN)));
-        sue   .setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_4_ORANGE)));
+
+        final Pinky pinky = ArcadeMsPacMan_ActorFactory.createPinky();
+        pinky.setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_2_PINK)));
+
+        final Inky inky = ArcadeMsPacMan_ActorFactory.createInky();
+        inky.setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_3_CYAN)));
+
+        final Sue sue = ArcadeMsPacMan_ActorFactory.createSue();
+        sue.setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_4_ORANGE)));
 
         newGameLevel.setGhosts(blinky, pinky, inky, sue);
 

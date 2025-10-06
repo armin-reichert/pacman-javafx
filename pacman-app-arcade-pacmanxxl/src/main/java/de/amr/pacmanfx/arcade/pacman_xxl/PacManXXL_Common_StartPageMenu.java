@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.arcade.pacman.actors.PacMan;
+import de.amr.pacmanfx.arcade.pacman.actors.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.model.DefaultGameVariants;
 import de.amr.pacmanfx.model.Game;
@@ -66,14 +66,14 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         }
 
         private void createActors(GameUI_Config uiConfig) {
-            pac = new PacMan();
+            pac = ArcadePacMan_ActorFactory.createPacMan();
             pac.setAnimationManager(uiConfig.createPacAnimations());
             pac.playAnimation(AnimationSupport.ANIM_PAC_MUNCHING);
             ghosts = List.of(
-                uiConfig.createGhost(RED_GHOST_SHADOW),
-                uiConfig.createGhost(PINK_GHOST_SPEEDY),
-                uiConfig.createGhost(CYAN_GHOST_BASHFUL),
-                uiConfig.createGhost(ORANGE_GHOST_POKEY)
+                uiConfig.createAnimatedGhost(RED_GHOST_SHADOW),
+                uiConfig.createAnimatedGhost(PINK_GHOST_SPEEDY),
+                uiConfig.createAnimatedGhost(CYAN_GHOST_BASHFUL),
+                uiConfig.createAnimatedGhost(ORANGE_GHOST_POKEY)
             );
             ghosts.forEach(Ghost::playAnimation);
         }

@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
-import de.amr.pacmanfx.arcade.pacman.actors.PacMan;
+import de.amr.pacmanfx.arcade.pacman.actors.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_ActorRenderer;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_HUDRenderer;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
@@ -116,15 +116,15 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
         GameUI_Config uiConfig = ui.currentConfig();
 
-        pacMan = new PacMan();
+        pacMan = ArcadePacMan_ActorFactory.createPacMan();
         pacMan.setAnimationManager(uiConfig.createPacAnimations());
         pacMan.selectAnimation(AnimationSupport.ANIM_PAC_MUNCHING);
 
         ghosts = List.of(
-            uiConfig.createGhost(RED_GHOST_SHADOW),
-            uiConfig.createGhost(PINK_GHOST_SPEEDY),
-            uiConfig.createGhost(CYAN_GHOST_BASHFUL),
-            uiConfig.createGhost(ORANGE_GHOST_POKEY)
+            uiConfig.createAnimatedGhost(RED_GHOST_SHADOW),
+            uiConfig.createAnimatedGhost(PINK_GHOST_SPEEDY),
+            uiConfig.createAnimatedGhost(CYAN_GHOST_BASHFUL),
+            uiConfig.createAnimatedGhost(ORANGE_GHOST_POKEY)
         );
 
         ghostImageVisible     = new boolean[4];

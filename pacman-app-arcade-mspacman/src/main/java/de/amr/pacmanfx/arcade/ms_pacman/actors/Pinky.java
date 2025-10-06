@@ -19,27 +19,16 @@ import static de.amr.pacmanfx.Globals.PINK_GHOST_SPEEDY;
  *
  * @see <a href="http://www.donhodges.com/pacman_pinky_explanation.htm">Overflow bug explanation</a>.
  */
-public class Pinky extends Ghost {
+public class Pinky extends de.amr.pacmanfx.arcade.pacman.actors.Pinky {
 
-    public Pinky() {
-        reset();
-    }
-
-    @Override
-    public String name() {
-        return "Pinky";
-    }
-
-    @Override
-    public byte personality() {
-        return PINK_GHOST_SPEEDY;
-    }
+    Pinky() {}
 
     @Override
     public void hunt(GameLevel gameLevel, HuntingTimer huntingTimer) {
         float speed = gameLevel.game().ghostAttackSpeed(gameLevel, this);
         setSpeed(speed);
         if (huntingTimer.phaseIndex() == 0) {
+            // first scatter phase
             roam(gameLevel);
         } else {
             Vector2i targetTile = huntingTimer.phase() == HuntingPhase.CHASING
@@ -47,11 +36,5 @@ public class Pinky extends Ghost {
                 : gameLevel.worldMap().terrainLayer().ghostScatterTile(personality());
             tryMovingTowardsTargetTile(gameLevel, targetTile);
         }
-    }
-
-    @Override
-    public Vector2i chasingTargetTile(GameLevel gameLevel) {
-        // Pinky (pink ghost) ambushes Pac-Man
-        return gameLevel.pac().tilesAheadWithOverflowBug(4);
     }
 }

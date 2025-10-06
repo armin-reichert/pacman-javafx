@@ -5,6 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.pacmanfx.GameContext;
+import de.amr.pacmanfx.Globals;
+import de.amr.pacmanfx.arcade.pacman.actors.Blinky;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.timer.TickTimer;
@@ -46,7 +48,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     protected GateKeeper gateKeeper;
     protected Steering autopilot;
     protected Steering demoLevelSteering;
-    protected int cruiseElroy;
 
     protected Arcade_GameModel(GameContext gameContext) {
         this.gameContext = requireNonNull(gameContext);
@@ -61,7 +62,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     public void onPelletEaten(GameLevel gameLevel) {
         scoreManager().scorePoints(PELLET_VALUE);
         gameLevel.pac().setRestingTicks(1);
-        updateCruiseElroyMode(gameLevel);
+        updateBlinkyCruiseElroyMode(gameLevel);
     }
 
     @Override
@@ -69,7 +70,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         simulationStepResults.foundEnergizerAtTile = tile;
         scoreManager().scorePoints(ENERGIZER_VALUE);
         gameLevel.pac().setRestingTicks(3);
-        updateCruiseElroyMode(gameLevel);
+        updateBlinkyCruiseElroyMode(gameLevel);
 
         gameLevel.victims().clear();
         gameLevel.ghosts(FRIGHTENED, HUNTING_PAC).forEach(Ghost::requestTurnBack);
@@ -87,11 +88,23 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         }
     }
 
+    private void updateBlinkyCruiseElroyMode(GameLevel gameLevel) {
+        Blinky blinky = (Blinky) gameLevel.ghost(Globals.RED_GHOST_SHADOW);
+        Arcade_LevelData data = levelData(gameLevel);
+        int uneatenFoodCount = gameLevel.worldMap().foodLayer().uneatenFoodCount();
+        if (uneatenFoodCount == data.elroy1DotsLeft()) {
+            blinky.setCruiseElroy(1);
+        } else if (uneatenFoodCount == data.elroy2DotsLeft()) {
+            blinky.setCruiseElroy(2);
+        }
+    }
+
     @Override
     public void onPacKilled(GameLevel gameLevel) {
         gateKeeper.resetCounterAndSetEnabled(true);
         huntingTimer().stop();
-        activateCruiseElroyMode(false);
+        Blinky blinky = (Blinky) gameLevel.ghost(Globals.RED_GHOST_SHADOW);
+        blinky.activateCruiseElroyMode(false);
         gameLevel.pac().powerTimer().stop();
         gameLevel.pac().powerTimer().reset(0);
         gameLevel.pac().sayGoodbyeCruelWorld();
@@ -280,28 +293,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         gameLevel.setMessage(message);
     }
 
-    /**
-     * @return "Cruise Elroy" state (changes behavior of red ghost).
-     * <p>0=off, 1=Elroy1, 2=Elroy2, -1=Elroy1 (disabled), -2=Elroy2 (disabled).</p>
-     */
-    public int cruiseElroy() { return cruiseElroy; }
-
-    public boolean isCruiseElroyModeActive() { return cruiseElroy > 0; }
-
-    protected void activateCruiseElroyMode(boolean active) {
-        int absValue = Math.abs(cruiseElroy);
-        cruiseElroy = active ? absValue : -absValue;
-    }
-
-    private void updateCruiseElroyMode(GameLevel gameLevel) {
-        FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
-        if (foodLayer.uneatenFoodCount() == levelData(gameLevel).elroy1DotsLeft()) {
-            cruiseElroy = 1;
-        } else if (foodLayer.uneatenFoodCount() == levelData(gameLevel).elroy2DotsLeft()) {
-            cruiseElroy = 2;
-        }
-    }
-
     @Override
     protected void resetPacManAndGhostAnimations(GameLevel gameLevel) {
         gameLevel.pac().animationManager().ifPresent(am -> {
@@ -337,11 +328,13 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         if (gameLevel.worldMap().terrainLayer().isTunnel(ghost.tile())) {
             return ghostTunnelSpeed(gameLevel, ghost);
         }
-        if (cruiseElroy() == 1) {
-            return levelData(gameLevel).elroy1SpeedPct() * BASE_SPEED_1_PERCENT;
-        }
-        if (cruiseElroy() == 2) {
-            return levelData(gameLevel).elroy2SpeedPct() * BASE_SPEED_1_PERCENT;
+        if (ghost instanceof Blinky blinky) {
+            if (blinky.cruiseElroy() == 1) {
+                return levelData(gameLevel).elroy1SpeedPct() * BASE_SPEED_1_PERCENT;
+            }
+            if (blinky.cruiseElroy() == 2) {
+                return levelData(gameLevel).elroy2SpeedPct() * BASE_SPEED_1_PERCENT;
+            }
         }
         return levelData(gameLevel).ghostSpeedPct() * BASE_SPEED_1_PERCENT;
     }

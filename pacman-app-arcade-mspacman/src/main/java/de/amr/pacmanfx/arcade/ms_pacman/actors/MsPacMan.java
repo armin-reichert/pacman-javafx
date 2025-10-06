@@ -8,7 +8,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 
 public class MsPacMan extends Pac {
 
-    public MsPacMan() {
+    MsPacMan() {
         super("Ms. Pac-Man");
         reset();
     }

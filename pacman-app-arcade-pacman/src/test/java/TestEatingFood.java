@@ -1,4 +1,5 @@
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel;
+import de.amr.pacmanfx.arcade.pacman.actors.Blinky;
 import de.amr.pacmanfx.lib.worldmap.FoodLayer;
 import de.amr.pacmanfx.model.GameLevel;
 import org.junit.jupiter.api.BeforeAll;
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
+import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
 import static de.amr.pacmanfx.Globals.theGameContext;
 import static java.util.function.Predicate.not;
 import static org.junit.jupiter.api.Assertions.*;
@@ -84,27 +86,28 @@ public class TestEatingFood {
     public void testCruiseElroyMode() {
         final ArcadePacMan_GameModel game = pacManGame();
         final GameLevel gameLevel = gameLevel();
+        final Blinky blinky = (Blinky) gameLevel.ghost(RED_GHOST_SHADOW);
         final FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
         while (foodLayer.uneatenFoodCount() > game.levelData(gameLevel).elroy1DotsLeft()) {
-            assertEquals(0, game.cruiseElroy());
+            assertEquals(0, blinky.cruiseElroy());
             eatNextPellet(gameLevel);
         }
-        assertEquals(1, game.cruiseElroy());
+        assertEquals(1, blinky.cruiseElroy());
         while (foodLayer.uneatenFoodCount() > game.levelData(gameLevel).elroy2DotsLeft()) {
-            assertEquals(1, game.cruiseElroy());
+            assertEquals(1, blinky.cruiseElroy());
             eatNextPellet(gameLevel);
         }
-        assertEquals(2, game.cruiseElroy());
+        assertEquals(2, blinky.cruiseElroy());
         while (foodLayer.uneatenFoodCount() > foodLayer.energizerPositions().size()) {
-            assertEquals(2, game.cruiseElroy());
+            assertEquals(2, blinky.cruiseElroy());
             eatNextPellet(gameLevel);
         }
-        assertEquals(2, game.cruiseElroy());
+        assertEquals(2, blinky.cruiseElroy());
         while (foodLayer.uneatenFoodCount() > 0) {
-            assertEquals(2, game.cruiseElroy());
+            assertEquals(2, blinky.cruiseElroy());
             eatNextEnergizer(gameLevel);
         }
-        assertEquals(2, game.cruiseElroy());
+        assertEquals(2, blinky.cruiseElroy());
     }
 
     @Test

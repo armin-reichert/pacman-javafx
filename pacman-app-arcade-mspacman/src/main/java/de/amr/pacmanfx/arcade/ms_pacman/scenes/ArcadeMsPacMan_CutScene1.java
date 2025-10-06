@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
+import de.amr.pacmanfx.arcade.ms_pacman.actors.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_ActorRenderer;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_HUDRenderer;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
@@ -23,9 +24,6 @@ import javafx.scene.canvas.Canvas;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
-
-import de.amr.pacmanfx.arcade.ms_pacman.actors.MsPacMan;
-import de.amr.pacmanfx.arcade.ms_pacman.actors.PacMan;
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_PacAnimationManager.PAC_MAN_MUNCHING;
 
 /**
@@ -84,15 +82,15 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
 
         context().game().hud().scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
 
-        pacMan = new PacMan();
+        pacMan = ArcadeMsPacMan_ActorFactory.createPacMan();
         pacMan.setAnimationManager(uiConfig.createPacAnimations());
 
-        msPacMan = new MsPacMan();
+        msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
         msPacMan.setAnimationManager(uiConfig.createPacAnimations());
 
-        inky = uiConfig.createGhost(CYAN_GHOST_BASHFUL);
+        inky = uiConfig.createAnimatedGhost(CYAN_GHOST_BASHFUL);
 
-        pinky = uiConfig.createGhost(PINK_GHOST_SPEEDY);
+        pinky = uiConfig.createAnimatedGhost(PINK_GHOST_SPEEDY);
 
         heart = new SingleSpriteActor(spriteSheet.sprite(SpriteID.HEART));
 

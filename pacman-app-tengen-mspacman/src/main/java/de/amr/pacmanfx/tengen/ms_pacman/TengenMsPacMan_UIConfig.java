@@ -317,7 +317,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     }
 
     @Override
-    public Ghost createGhost(byte personality) {
+    public Ghost createAnimatedGhost(byte personality) {
         requireValidGhostPersonality(personality);
         Ghost ghost = switch (personality) {
             case RED_GHOST_SHADOW   -> new Blinky();

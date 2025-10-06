@@ -204,10 +204,10 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 scene.msPacMan.setVisible(true);
 
                 scene.ghosts = List.of(
-                    uiConfig.createGhost(RED_GHOST_SHADOW),
-                    uiConfig.createGhost(CYAN_GHOST_BASHFUL),
-                    uiConfig.createGhost(PINK_GHOST_SPEEDY),
-                    uiConfig.createGhost(ORANGE_GHOST_POKEY)
+                    uiConfig.createAnimatedGhost(RED_GHOST_SHADOW),
+                    uiConfig.createAnimatedGhost(CYAN_GHOST_BASHFUL),
+                    uiConfig.createAnimatedGhost(PINK_GHOST_SPEEDY),
+                    uiConfig.createAnimatedGhost(ORANGE_GHOST_POKEY)
                 );
                 for (Ghost ghost : scene.ghosts) {
                     ghost.setPosition(TS * 33, ACTOR_Y);

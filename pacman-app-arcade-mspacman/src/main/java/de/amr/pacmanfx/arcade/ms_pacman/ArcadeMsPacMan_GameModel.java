@@ -5,9 +5,14 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.arcade.ms_pacman.actors.*;
+import de.amr.pacmanfx.arcade.ms_pacman.actors.ArcadeMsPacMan_ActorFactory;
+import de.amr.pacmanfx.arcade.ms_pacman.actors.MsPacMan;
+import de.amr.pacmanfx.arcade.ms_pacman.actors.Sue;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameModel;
 import de.amr.pacmanfx.arcade.pacman.Arcade_LevelData;
+import de.amr.pacmanfx.arcade.pacman.actors.Blinky;
+import de.amr.pacmanfx.arcade.pacman.actors.Inky;
+import de.amr.pacmanfx.arcade.pacman.actors.Pinky;
 import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Vector2i;
@@ -29,6 +34,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.ORANGE_GHOST_POKEY;
+import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
 import static de.amr.pacmanfx.lib.RandomNumberSupport.randomBoolean;
 import static de.amr.pacmanfx.lib.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
@@ -140,9 +146,11 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
         gateKeeper = new GateKeeper(this);
         gateKeeper.setOnGhostReleased(prisoner -> {
-            if (prisoner.personality() == ORANGE_GHOST_POKEY && !isCruiseElroyModeActive()) {
+            Blinky blinky = (Blinky) gameLevel().ghost(RED_GHOST_SHADOW);
+            Sue sue = (Sue) gameLevel().ghost(ORANGE_GHOST_POKEY);
+            if (prisoner == sue && !blinky.isCruiseElroyModeActive()) {
                 Logger.trace("Re-enable 'Cruise Elroy' mode because {} exits house:", prisoner.name());
-                activateCruiseElroyMode(true);
+                blinky.activateCruiseElroyMode(true);
             }
         });
 
@@ -207,19 +215,21 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         newGameLevel.setDemoLevel(demoLevel);
         newGameLevel.setGameOverStateTicks(150);
 
-        final MsPacMan msPacMan = new MsPacMan();
+        final MsPacMan msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
         msPacMan.setAutopilotSteering(autopilot);
         newGameLevel.setPac(msPacMan);
 
-        final Blinky blinky = new Blinky();
-        final Pinky pinky = new Pinky();
-        final Inky inky = new Inky();
-        final Sue sue = new Sue();
-
+        final Blinky blinky = ArcadeMsPacMan_ActorFactory.createBlinky();
         blinky.setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_1_RED)));
-        pinky .setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_2_PINK)));
-        inky  .setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_3_CYAN)));
-        sue   .setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_4_ORANGE)));
+
+        final Pinky pinky = ArcadeMsPacMan_ActorFactory.createPinky();
+        pinky.setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_2_PINK)));
+
+        final Inky inky = ArcadeMsPacMan_ActorFactory.createInky();
+        inky.setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_3_CYAN)));
+
+        final Sue sue = ArcadeMsPacMan_ActorFactory.createSue();
+        sue.setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_4_ORANGE)));
 
         newGameLevel.setGhosts(blinky, pinky, inky, sue);
 

@@ -5,8 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.pacmanfx.Globals;
-import de.amr.pacmanfx.arcade.ms_pacman.actors.MsPacMan;
-import de.amr.pacmanfx.arcade.ms_pacman.actors.PacMan;
+import de.amr.pacmanfx.arcade.ms_pacman.actors.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_ActorRenderer;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_HUDRenderer;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
@@ -75,10 +74,10 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         final GameUI_Config uiConfig = ui.currentConfig();
         final var spriteSheet = (ArcadeMsPacMan_SpriteSheet) uiConfig.spriteSheet();
 
-        pacMan = new PacMan();
+        pacMan = ArcadeMsPacMan_ActorFactory.createPacMan();
         pacMan.setAnimationManager(uiConfig.createPacAnimations());
 
-        msPacMan = new MsPacMan();
+        msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
         msPacMan.setAnimationManager(uiConfig.createPacAnimations());
 
         stork = new Stork(spriteSheet);

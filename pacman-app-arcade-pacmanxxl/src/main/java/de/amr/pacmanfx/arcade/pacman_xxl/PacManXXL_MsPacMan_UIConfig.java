@@ -6,10 +6,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
-import de.amr.pacmanfx.arcade.ms_pacman.actors.Inky;
-import de.amr.pacmanfx.arcade.ms_pacman.actors.Blinky;
-import de.amr.pacmanfx.arcade.ms_pacman.actors.Pinky;
-import de.amr.pacmanfx.arcade.ms_pacman.actors.Sue;
+import de.amr.pacmanfx.arcade.ms_pacman.actors.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.*;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.*;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_BootScene2D;
@@ -43,7 +40,10 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.ResourceBundle;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -187,13 +187,13 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config {
     }
 
     @Override
-    public Ghost createGhost(byte personality) {
+    public Ghost createAnimatedGhost(byte personality) {
         requireValidGhostPersonality(personality);
         Ghost ghost = switch (personality) {
-            case RED_GHOST_SHADOW -> new Blinky();
-            case PINK_GHOST_SPEEDY -> new Pinky();
-            case CYAN_GHOST_BASHFUL -> new Inky();
-            case ORANGE_GHOST_POKEY -> new Sue();
+            case RED_GHOST_SHADOW   -> ArcadeMsPacMan_ActorFactory.createBlinky();
+            case PINK_GHOST_SPEEDY  -> ArcadeMsPacMan_ActorFactory.createPinky();
+            case CYAN_GHOST_BASHFUL -> ArcadeMsPacMan_ActorFactory.createInky();
+            case ORANGE_GHOST_POKEY -> ArcadeMsPacMan_ActorFactory.createSue();
             default -> throw new IllegalArgumentException("Illegal ghost personality " + personality);
         };
         ghost.setAnimationManager(createGhostAnimations(personality));

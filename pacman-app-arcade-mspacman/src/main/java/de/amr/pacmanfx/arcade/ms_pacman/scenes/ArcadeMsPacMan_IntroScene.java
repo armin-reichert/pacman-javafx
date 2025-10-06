@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
-import de.amr.pacmanfx.arcade.ms_pacman.actors.MsPacMan;
+import de.amr.pacmanfx.arcade.ms_pacman.actors.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_HUDRenderer;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SceneRenderer;
 import de.amr.pacmanfx.controller.GamePlayState;
@@ -99,15 +99,15 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
         final GameUI_Config uiConfig = ui.currentConfig();
 
-        msPacMan = new MsPacMan();
+        msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
         msPacMan.setAnimationManager(uiConfig.createPacAnimations());
         msPacMan.selectAnimation(AnimationSupport.ANIM_PAC_MUNCHING);
 
         ghosts = List.of(
-            uiConfig.createGhost(RED_GHOST_SHADOW),
-            uiConfig.createGhost(PINK_GHOST_SPEEDY),
-            uiConfig.createGhost(CYAN_GHOST_BASHFUL),
-            uiConfig.createGhost(ORANGE_GHOST_POKEY)
+            uiConfig.createAnimatedGhost(RED_GHOST_SHADOW),
+            uiConfig.createAnimatedGhost(PINK_GHOST_SPEEDY),
+            uiConfig.createAnimatedGhost(CYAN_GHOST_BASHFUL),
+            uiConfig.createAnimatedGhost(ORANGE_GHOST_POKEY)
         );
 
         presentedGhostCharacter = RED_GHOST_SHADOW;
