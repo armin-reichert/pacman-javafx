@@ -6,10 +6,13 @@ package de.amr.pacmanfx.mapeditor.actions;
 
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.FoodTile;
+import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
 import de.amr.pacmanfx.lib.worldmap.TerrainTile;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import org.tinylog.Logger;
+
+import java.util.Map;
 
 import static de.amr.pacmanfx.mapeditor.EditorGlobals.*;
 import static de.amr.pacmanfx.model.DefaultWorldMapPropertyName.*;
@@ -32,29 +35,30 @@ public class Action_PlaceArcadeHouse extends EditorAction<Void> {
 
     @Override
     public Void execute() {
-        var maxTile = minTile.plus(ARCADE_HOUSE_WIDTH - 1, ARCADE_HOUSE_HEIGHT - 1);
-        if (worldMap.terrainLayer().outOfBounds(minTile) || worldMap.terrainLayer().outOfBounds(maxTile)) {
+        final TerrainLayer terrain = worldMap.terrainLayer();
+        final Map<String, String> terrainProperties = terrain.propertyMap();
+        final Vector2i houseSize = Vector2i.of(ARCADE_HOUSE_WIDTH, ARCADE_HOUSE_HEIGHT);
+        final Vector2i maxTile = minTile.plus(ARCADE_HOUSE_WIDTH - 1, ARCADE_HOUSE_HEIGHT - 1);
+        if (terrain.outOfBounds(minTile) || terrain.outOfBounds(maxTile)) {
             Logger.error("Illegal house position min: {} max: {}", minTile, maxTile);
             return null;
         }
 
-        worldMap.terrainLayer().propertyMap().put(POS_HOUSE_MIN_TILE, String.valueOf(minTile));
-        worldMap.terrainLayer().propertyMap().put(POS_HOUSE_MAX_TILE, String.valueOf(maxTile));
+        terrainProperties.put(POS_HOUSE_MIN_TILE, String.valueOf(minTile));
+        terrainProperties.put(POS_HOUSE_MAX_TILE, String.valueOf(maxTile));
 
         // clear new house area
         clearArea(minTile, maxTile);
 
         // place house tile content
-        Vector2i houseSize = maxTile.minus(minTile).plus(1,1);
         for (int y = 0; y < houseSize.y(); ++y) {
             for (int x = 0; x < houseSize.x(); ++x) {
-                worldMap.terrainLayer().set(minTile.y() + y, minTile.x() + x, ARCADE_HOUSE_CODE[y][x]);
+                terrain.set(minTile.y() + y, minTile.x() + x, ARCADE_HOUSE_CODE[y][x]);
             }
         }
         editor.setTerrainMapChanged();
 
         // place ghosts
-        var terrainProperties = worldMap.terrainLayer().propertyMap();
         terrainProperties.put(POS_GHOST_1_RED,    String.valueOf(minTile.plus(3, -1)));
         terrainProperties.put(POS_GHOST_3_CYAN,   String.valueOf(minTile.plus(1, 2)));
         terrainProperties.put(POS_GHOST_2_PINK,   String.valueOf(minTile.plus(3, 2)));
