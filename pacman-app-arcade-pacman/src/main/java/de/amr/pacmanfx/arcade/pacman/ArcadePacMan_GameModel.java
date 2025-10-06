@@ -19,7 +19,6 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.steering.RouteBasedSteering;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
-import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -49,10 +48,6 @@ import static java.util.Objects.requireNonNull;
  * @see <a href="https://pacman.holenet.info/">The Pac-Man Dossier by Jamey Pittman</a>
  */
 public class ArcadePacMan_GameModel extends Arcade_GameModel {
-
-    public static final WorldMapColorScheme MAP_COLOR_SCHEME = new WorldMapColorScheme(
-        "#000000", "#2121ff", "#ffb7ff", "#febdb4"
-    );
 
     // Note: level numbering starts with 1
     protected static final byte[] BONUS_SYMBOLS_BY_LEVEL_NUMBER = { -1, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7 };

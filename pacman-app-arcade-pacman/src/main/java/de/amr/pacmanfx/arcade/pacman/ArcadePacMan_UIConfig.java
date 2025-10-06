@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.arcade.pacman.actors.*;
+import de.amr.pacmanfx.arcade.pacman.actors.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.rendering.*;
 import de.amr.pacmanfx.arcade.pacman.scenes.*;
 import de.amr.pacmanfx.controller.GamePlayState;
@@ -37,7 +37,10 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.ResourceBundle;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -47,6 +50,10 @@ import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_3D_ENABLED;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_UIConfig implements GameUI_Config {
+
+    public static final WorldMapColorScheme MAP_COLOR_SCHEME = new WorldMapColorScheme(
+        "#000000", "#2121ff", "#ffb7ff", "#febdb4"
+    );
 
     private static final ResourceManager RES_GAME_UI = () -> GameUI_Implementation.class;
     private static final ResourceManager RES_ARCADE_PAC_MAN = () -> ArcadePacMan_UIConfig.class;
@@ -58,8 +65,8 @@ public class ArcadePacMan_UIConfig implements GameUI_Config {
     public static final String ANIM_BLINKY_NAKED              = "blinky_naked";
 
     private static final Map<Color, Color> BRIGHT_MAZE_COLOR_CHANGES = Map.of(
-        ArcadePacMan_GameModel.MAP_COLOR_SCHEME.stroke(), ARCADE_WHITE,   // wall color change
-        ArcadePacMan_GameModel.MAP_COLOR_SCHEME.door(), Color.TRANSPARENT // door color change
+        MAP_COLOR_SCHEME.stroke(), ARCADE_WHITE,   // wall color change
+        MAP_COLOR_SCHEME.door(), Color.TRANSPARENT // door color change
     );
 
     private final GameUI ui;
@@ -161,7 +168,7 @@ public class ArcadePacMan_UIConfig implements GameUI_Config {
 
     @Override
     public WorldMapColorScheme colorScheme(WorldMap worldMap) {
-        return ArcadePacMan_GameModel.MAP_COLOR_SCHEME;
+        return MAP_COLOR_SCHEME;
     }
 
     @Override
