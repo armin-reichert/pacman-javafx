@@ -9,6 +9,7 @@ import de.amr.pacmanfx.arcade.pacman.actors.*;
 import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Vector2i;
+import de.amr.pacmanfx.lib.Waypoint;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.lib.worldmap.TerrainTile;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
@@ -55,6 +56,22 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     // bonus points = multiplier * 100
     protected static final byte[] BONUS_VALUE_MULTIPLIERS = { 1, 3, 5, 7, 10, 20, 30, 50 };
 
+    private static final List<Waypoint> PAC_MAN_DEMO_LEVEL_ROUTE = List.of(
+        wp(9, 26), wp(9, 29), wp(12,29), wp(12, 32), wp(26,32),
+        wp(26,29), wp(24,29), wp(24,26), wp(26,26), wp(26,23),
+        wp(21,23), wp(18,23), wp(18,14), wp(9,14), wp(9,17),
+        wp(6,17), wp(6,4), wp(1,4), wp(1,8), wp(12,8),
+        wp(12,4), wp(6,4), wp(6,11), wp(1,11), wp(1,8),
+        wp(9,8), wp(9,11), wp(12,11), wp(12,14), wp(9,14),
+        wp(9,17), wp(0,17), /*warp tunnel*/ wp(21,17), wp(21,29),
+        wp(26,29), wp(26,32), wp(1,32), wp(1,29), wp(3,29),
+        wp(3,26), wp(1,26), wp(1,23), wp(12,23), wp(12,26),
+        wp(15,26), wp(15,23), wp(26,23), wp(26,26), wp(24,26),
+        wp(24,29), wp(26,29), wp(26,32), wp(1,32),
+        wp(1,29), wp(3,29), wp(3,26), wp(1,26), wp(1,23),
+        wp(6,23) /* eaten at 3,23 in original game */
+    );
+
     public static class ArcadePacMan_HuntingTimer extends HuntingTimer {
 
         // Ticks of scatter and chasing phases, -1 = INFINITE
@@ -93,8 +110,10 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
      */
     public ArcadePacMan_GameModel(GameContext gameContext, MapSelector mapSelector, File highScoreFile) {
         super(gameContext);
+        requireNonNull(mapSelector);
+        requireNonNull(highScoreFile);
 
-        this.mapSelector = requireNonNull(mapSelector);
+        this.mapSelector = mapSelector;
 
         levelCounter = new ArcadePacMan_LevelCounter();
 
@@ -102,10 +121,10 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         scoreManager.setExtraLifeScores(EXTRA_LIFE_SCORE);
 
         huntingTimer = new ArcadePacMan_HuntingTimer();
-        huntingTimer.phaseIndexProperty().addListener((py, ov, nv) -> {
-            if (nv.intValue() > 0) {
-                gameLevel().ghosts(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE)
-                    .forEach(Ghost::requestTurnBack);
+        //TODO is there a better way?
+        huntingTimer.phaseIndexProperty().addListener((py, ov, index) -> {
+            if (index.intValue() > 0 && gameLevel() != null) {
+                gameLevel().ghosts(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE).forEach(Ghost::requestTurnBack);
             }
         });
 
@@ -119,21 +138,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
             }
         });
 
-        demoLevelSteering = new RouteBasedSteering(List.of(
-            wp(9, 26), wp(9, 29), wp(12,29), wp(12, 32), wp(26,32),
-            wp(26,29), wp(24,29), wp(24,26), wp(26,26), wp(26,23),
-            wp(21,23), wp(18,23), wp(18,14), wp(9,14), wp(9,17),
-            wp(6,17), wp(6,4), wp(1,4), wp(1,8), wp(12,8),
-            wp(12,4), wp(6,4), wp(6,11), wp(1,11), wp(1,8),
-            wp(9,8), wp(9,11), wp(12,11), wp(12,14), wp(9,14),
-            wp(9,17), wp(0,17), /*warp tunnel*/ wp(21,17), wp(21,29),
-            wp(26,29), wp(26,32), wp(1,32), wp(1,29), wp(3,29),
-            wp(3,26), wp(1,26), wp(1,23), wp(12,23), wp(12,26),
-            wp(15,26), wp(15,23), wp(26,23), wp(26,26), wp(24,26),
-            wp(24,29), wp(26,29), wp(26,32), wp(1,32),
-            wp(1,29), wp(3,29), wp(3,26), wp(1,26), wp(1,23),
-            wp(6,23) /* eaten at 3,23 in original game */
-        ));
+        demoLevelSteering = new RouteBasedSteering(PAC_MAN_DEMO_LEVEL_ROUTE);
         autopilot = new RuleBasedPacSteering(gameContext);
 
         mapSelector.loadAllMapPrototypes();
