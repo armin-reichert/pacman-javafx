@@ -158,7 +158,7 @@ public abstract class AbstractGameModel implements Game {
         gameLevel.ghosts().forEach(ghost -> ghost.animationManager().ifPresent(AnimationManager::play));
         gameLevel.blinking().setStartState(Pulse.State.ON);
         gameLevel.blinking().restart();
-        gameLevel.huntingTimer().startFirstHuntingPhase();
+        gameLevel.huntingTimer().startFirstPhase();
         eventManager().publishEvent(GameEventType.HUNTING_PHASE_STARTED);
     }
 

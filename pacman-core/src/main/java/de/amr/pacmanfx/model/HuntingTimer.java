@@ -62,20 +62,20 @@ public abstract class HuntingTimer extends TickTimer {
         }
         if (hasExpired()) {
             Logger.info("Hunting phase {} ({}) ends, tick={}", phaseIndex(), phase(), tickCount());
-            startNextPhase();
+            int nextPhaseIndex = requireValidPhaseIndex(phaseIndex() + 1);
+            startPhase(nextPhaseIndex);
         } else {
             doTick();
         }
     }
 
-    public void startFirstHuntingPhase() {
+    public void startFirstPhase() {
+        if (gameLevel == null) {
+            Logger.error("Cannot start hunting timer, no game level assigned");
+            return;
+        }
         startPhase(0);
         logPhaseChange(); // no change event!
-    }
-
-    protected void startNextPhase() {
-        int nextPhaseIndex = requireValidPhaseIndex(phaseIndex() + 1);
-        startPhase(nextPhaseIndex);
     }
 
     protected void startPhase(int phaseIndex) {
