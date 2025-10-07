@@ -4,6 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.actors;
 
+import de.amr.pacmanfx.arcade.pacman.Arcade_GameModel;
+import de.amr.pacmanfx.arcade.pacman.Arcade_LevelData;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HuntingPhase;
@@ -35,6 +37,18 @@ public class Blinky extends Ghost {
     public void activateCruiseElroyMode(boolean active) {
         int absValue = Math.abs(cruiseElroy);
         cruiseElroy = active ? absValue : -absValue;
+    }
+
+    @Override
+    public void onFoodEaten(GameLevel gameLevel) {
+        final Arcade_GameModel game = (Arcade_GameModel) gameLevel.game();
+        final Arcade_LevelData data = game.levelData(gameLevel);
+        int uneatenFoodCount = gameLevel.worldMap().foodLayer().uneatenFoodCount();
+        if (uneatenFoodCount == data.elroy1DotsLeft()) {
+            setCruiseElroy(1);
+        } else if (uneatenFoodCount == data.elroy2DotsLeft()) {
+            setCruiseElroy(2);
+        }
     }
 
     @Override

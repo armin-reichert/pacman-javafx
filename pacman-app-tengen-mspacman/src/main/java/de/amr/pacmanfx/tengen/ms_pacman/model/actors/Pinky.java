@@ -19,6 +19,10 @@ public class Pinky extends Ghost {
     }
 
     @Override
+    public void onFoodEaten(GameLevel gameLevel) {
+    }
+
+    @Override
     public String name() {
         return "Pinky";
     }

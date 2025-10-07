@@ -53,6 +53,8 @@ public abstract class Ghost extends MovingActor {
      */
     public abstract byte personality();
 
+    public abstract void onFoodEaten(GameLevel gameLevel);
+
     public void setAnimationManager(AnimationManager animationManager) {
         this.animationManager = requireNonNull(animationManager);
     }

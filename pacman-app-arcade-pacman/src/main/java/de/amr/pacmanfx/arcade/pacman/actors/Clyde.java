@@ -17,6 +17,10 @@ public class Clyde extends Ghost {
     }
 
     @Override
+    public void onFoodEaten(GameLevel gameLevel) {
+    }
+
+    @Override
     public String name() {
         return "Clyde";
     }

@@ -87,14 +87,27 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     public abstract Arcade_LevelData levelData(GameLevel gameLevel);
-    
+
+    /*
+    private void updateBlinkyCruiseElroyMode(GameLevel gameLevel) {
+        Blinky blinky = (Blinky) gameLevel.ghost(Globals.RED_GHOST_SHADOW);
+        Arcade_LevelData data = levelData(gameLevel);
+        int uneatenFoodCount = gameLevel.worldMap().foodLayer().uneatenFoodCount();
+        if (uneatenFoodCount == data.elroy1DotsLeft()) {
+            blinky.setCruiseElroy(1);
+        } else if (uneatenFoodCount == data.elroy2DotsLeft()) {
+            blinky.setCruiseElroy(2);
+        }
+    }
+     */
+
     // GameEvents interface
 
     @Override
     public void onPelletEaten(GameLevel gameLevel) {
         scoreManager().scorePoints(PELLET_VALUE);
         gameLevel.pac().setRestingTicks(1);
-        updateBlinkyCruiseElroyMode(gameLevel);
+        gameLevel.ghosts().forEach(ghost -> ghost.onFoodEaten(gameLevel));
     }
 
     @Override
@@ -102,7 +115,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         simulationStepResults.foundEnergizerAtTile = tile;
         scoreManager().scorePoints(ENERGIZER_VALUE);
         gameLevel.pac().setRestingTicks(3);
-        updateBlinkyCruiseElroyMode(gameLevel);
+        gameLevel.ghosts().forEach(ghost -> ghost.onFoodEaten(gameLevel));
 
         gameLevel.victims().clear();
         gameLevel.ghosts(FRIGHTENED, HUNTING_PAC).forEach(Ghost::requestTurnBack);
@@ -125,17 +138,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         super.updateHunting(gameLevel);
         if (gateKeeper != null) {
             gateKeeper.unlockGhosts(gameLevel);
-        }
-    }
-
-    private void updateBlinkyCruiseElroyMode(GameLevel gameLevel) {
-        Blinky blinky = (Blinky) gameLevel.ghost(Globals.RED_GHOST_SHADOW);
-        Arcade_LevelData data = levelData(gameLevel);
-        int uneatenFoodCount = gameLevel.worldMap().foodLayer().uneatenFoodCount();
-        if (uneatenFoodCount == data.elroy1DotsLeft()) {
-            blinky.setCruiseElroy(1);
-        } else if (uneatenFoodCount == data.elroy2DotsLeft()) {
-            blinky.setCruiseElroy(2);
         }
     }
 
