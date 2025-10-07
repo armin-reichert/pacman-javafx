@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.arcade.pacman.actors.Blinky;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Vector2i;
@@ -132,11 +131,10 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     public void onPacKilled(GameLevel gameLevel) {
         gateKeeper.resetCounterAndSetEnabled(true);
         gameLevel.huntingTimer().stop();
-        Blinky blinky = (Blinky) gameLevel.ghost(Globals.RED_GHOST_SHADOW);
-        blinky.activateCruiseElroyMode(false);
         gameLevel.pac().powerTimer().stop();
         gameLevel.pac().powerTimer().reset(0);
         gameLevel.pac().sayGoodbyeCruelWorld();
+        gameLevel.ghosts().forEach(ghost -> ghost.onPacKilled(gameLevel));
     }
 
     @Override
@@ -352,10 +350,10 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             return ghostTunnelSpeed(gameLevel, ghost);
         }
         if (ghost instanceof Blinky blinky) {
-            if (blinky.cruiseElroy() == 1) {
+            if (blinky.cruiseElroyState() == 1) {
                 return levelData(gameLevel).elroy1SpeedPct() * BASE_SPEED_1_PERCENT;
             }
-            if (blinky.cruiseElroy() == 2) {
+            if (blinky.cruiseElroyState() == 2) {
                 return levelData(gameLevel).elroy2SpeedPct() * BASE_SPEED_1_PERCENT;
             }
         }

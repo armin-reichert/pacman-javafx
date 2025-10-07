@@ -28,7 +28,7 @@ public class Blinky extends de.amr.pacmanfx.arcade.pacman.actors.Blinky {
             // first scatter phase
             roam(gameLevel);
         } else {
-            boolean chase = huntingTimer.phase() == HuntingPhase.CHASING || isCruiseElroyModeActive();
+            boolean chase = huntingTimer.phase() == HuntingPhase.CHASING || isCruiseElroyActive();
             Vector2i targetTile = chase
                 ? chasingTargetTile(gameLevel)
                 : gameLevel.worldMap().terrainLayer().ghostScatterTile(personality());

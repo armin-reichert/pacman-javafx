@@ -16,27 +16,21 @@ import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
 
 public class Blinky extends Ghost {
 
-    private int cruiseElroy;
+    private boolean cruiseElroyActive;
+    private int cruiseElroyState;
 
     protected Blinky() {
         reset();
+        cruiseElroyActive = false;
+        cruiseElroyState = 0;
     }
 
-    /**
-     * @return "Cruise Elroy" state (changes behavior of red ghost).
-     * <p>0=off, 1=Elroy1, 2=Elroy2, -1=Elroy1 (disabled), -2=Elroy2 (disabled).</p>
-     */
-    public int cruiseElroy() { return cruiseElroy; }
+    public int cruiseElroyState() { return cruiseElroyState; }
 
-    public void setCruiseElroy(int cruiseElroy) {
-        this.cruiseElroy = cruiseElroy;
-    }
+    public boolean isCruiseElroyActive() { return cruiseElroyActive; }
 
-    public boolean isCruiseElroyModeActive() { return cruiseElroy > 0; }
-
-    public void activateCruiseElroyMode(boolean active) {
-        int absValue = Math.abs(cruiseElroy);
-        cruiseElroy = active ? absValue : -absValue;
+    public void setCruiseElroyActive(boolean active) {
+        cruiseElroyActive = active;
     }
 
     @Override
@@ -45,10 +39,15 @@ public class Blinky extends Ghost {
         final Arcade_LevelData data = game.levelData(gameLevel);
         int uneatenFoodCount = gameLevel.worldMap().foodLayer().uneatenFoodCount();
         if (uneatenFoodCount == data.elroy1DotsLeft()) {
-            setCruiseElroy(1);
+            cruiseElroyState = 1;
         } else if (uneatenFoodCount == data.elroy2DotsLeft()) {
-            setCruiseElroy(2);
+            cruiseElroyState = 2;
         }
+    }
+
+    @Override
+    public void onPacKilled(GameLevel gameLevel) {
+        setCruiseElroyActive(false);
     }
 
     @Override
@@ -64,7 +63,7 @@ public class Blinky extends Ghost {
     @Override
     public void hunt(GameLevel gameLevel, HuntingTimer huntingTimer) {
         // Blinky overrides hunt method to take "Cruise Elroy" mode into account
-        boolean chase = huntingTimer.phase() == HuntingPhase.CHASING || isCruiseElroyModeActive();
+        boolean chase = huntingTimer.phase() == HuntingPhase.CHASING || isCruiseElroyActive();
         Vector2i targetTile = chase
             ? chasingTargetTile(gameLevel)
             : gameLevel.worldMap().terrainLayer().ghostScatterTile(personality());

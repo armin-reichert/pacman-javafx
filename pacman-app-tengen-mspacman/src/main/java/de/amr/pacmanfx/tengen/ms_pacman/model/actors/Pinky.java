@@ -23,6 +23,10 @@ public class Pinky extends Ghost {
     }
 
     @Override
+    public void onPacKilled(GameLevel gameLevel) {
+    }
+
+    @Override
     public String name() {
         return "Pinky";
     }
