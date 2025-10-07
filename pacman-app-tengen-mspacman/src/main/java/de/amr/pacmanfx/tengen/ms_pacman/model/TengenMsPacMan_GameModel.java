@@ -391,8 +391,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     @Override
     public GameLevel createLevel(int levelNumber, boolean demoLevel) {
         final WorldMap worldMap = mapSelector.provideWorldMap(levelNumber, mapCategory);
-
-        //TODO is this still needed?
         final ArcadeHouse house = new ArcadeHouse(HOUSE_MIN_TILE);
         worldMap.terrainLayer().setHouse(house);
 
