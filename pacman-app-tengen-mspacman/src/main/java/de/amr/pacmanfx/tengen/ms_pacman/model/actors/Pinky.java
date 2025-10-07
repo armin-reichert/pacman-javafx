@@ -7,7 +7,6 @@ package de.amr.pacmanfx.tengen.ms_pacman.model.actors;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HuntingPhase;
-import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.actors.Ghost;
 
 import static de.amr.pacmanfx.Globals.PINK_GHOST_SPEEDY;
@@ -37,14 +36,14 @@ public class Pinky extends Ghost {
     }
 
     @Override
-    public void hunt(GameLevel gameLevel, HuntingTimer huntingTimer) {
+    public void hunt(GameLevel gameLevel) {
         //TODO Clarify hunting behavior of Pinky
         float speed = gameLevel.game().ghostAttackSpeed(gameLevel, this);
         setSpeed(speed);
-        if (huntingTimer.phaseIndex() == 0) {
+        if (gameLevel.huntingTimer().phaseIndex() == 0) {
             roam(gameLevel);
         } else {
-            Vector2i targetTile = huntingTimer.phase() == HuntingPhase.CHASING
+            Vector2i targetTile = gameLevel.huntingTimer().phase() == HuntingPhase.CHASING
                 ? chasingTargetTile(gameLevel)
                 : gameLevel.worldMap().terrainLayer().ghostScatterTile(personality());
             tryMovingTowardsTargetTile(gameLevel, targetTile);

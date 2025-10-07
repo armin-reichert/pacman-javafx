@@ -7,10 +7,6 @@ package de.amr.pacmanfx.arcade.ms_pacman.actors;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HuntingPhase;
-import de.amr.pacmanfx.model.HuntingTimer;
-import de.amr.pacmanfx.model.actors.Ghost;
-
-import static de.amr.pacmanfx.Globals.PINK_GHOST_SPEEDY;
 
 /**
  * In Ms. Pac-Man, Blinky and Pinky move randomly during the *first* scatter phase. Some say,
@@ -24,14 +20,14 @@ public class Pinky extends de.amr.pacmanfx.arcade.pacman.actors.Pinky {
     Pinky() {}
 
     @Override
-    public void hunt(GameLevel gameLevel, HuntingTimer huntingTimer) {
+    public void hunt(GameLevel gameLevel) {
         float speed = gameLevel.game().ghostAttackSpeed(gameLevel, this);
         setSpeed(speed);
-        if (huntingTimer.phaseIndex() == 0) {
+        if (gameLevel.huntingTimer().phaseIndex() == 0) {
             // first scatter phase
             roam(gameLevel);
         } else {
-            Vector2i targetTile = huntingTimer.phase() == HuntingPhase.CHASING
+            Vector2i targetTile = gameLevel.huntingTimer().phase() == HuntingPhase.CHASING
                 ? chasingTargetTile(gameLevel)
                 : gameLevel.worldMap().terrainLayer().ghostScatterTile(personality());
             tryMovingTowardsTargetTile(gameLevel, targetTile);

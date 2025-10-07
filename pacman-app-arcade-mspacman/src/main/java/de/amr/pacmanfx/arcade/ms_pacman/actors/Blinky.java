@@ -7,7 +7,6 @@ package de.amr.pacmanfx.arcade.ms_pacman.actors;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HuntingPhase;
-import de.amr.pacmanfx.model.HuntingTimer;
 
 public class Blinky extends de.amr.pacmanfx.arcade.pacman.actors.Blinky {
 
@@ -21,14 +20,14 @@ public class Blinky extends de.amr.pacmanfx.arcade.pacman.actors.Blinky {
      * @see <a href="http://www.donhodges.com/pacman_pinky_explanation.htm">Overflow bug explanation</a>.
      */
     @Override
-    public void hunt(GameLevel gameLevel, HuntingTimer huntingTimer) {
+    public void hunt(GameLevel gameLevel) {
         float speed = gameLevel.game().ghostAttackSpeed(gameLevel, this);
         setSpeed(speed);
-        if (huntingTimer.phaseIndex() == 0) {
+        if (gameLevel.huntingTimer().phaseIndex() == 0) {
             // first scatter phase
             roam(gameLevel);
         } else {
-            boolean chase = huntingTimer.phase() == HuntingPhase.CHASING || isCruiseElroyActive();
+            boolean chase = gameLevel.huntingTimer().phase() == HuntingPhase.CHASING || isCruiseElroyActive();
             Vector2i targetTile = chase
                 ? chasingTargetTile(gameLevel)
                 : gameLevel.worldMap().terrainLayer().ghostScatterTile(personality());

@@ -9,7 +9,6 @@ import de.amr.pacmanfx.arcade.pacman.Arcade_LevelData;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HuntingPhase;
-import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.actors.Ghost;
 
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
@@ -61,9 +60,9 @@ public class Blinky extends Ghost {
     }
 
     @Override
-    public void hunt(GameLevel gameLevel, HuntingTimer huntingTimer) {
+    public void hunt(GameLevel gameLevel) {
         // Blinky overrides hunt method to take "Cruise Elroy" mode into account
-        boolean chase = huntingTimer.phase() == HuntingPhase.CHASING || isCruiseElroyActive();
+        boolean chase = gameLevel.huntingTimer().phase() == HuntingPhase.CHASING || isCruiseElroyActive();
         Vector2i targetTile = chase
             ? chasingTargetTile(gameLevel)
             : gameLevel.worldMap().terrainLayer().ghostScatterTile(personality());
