@@ -48,15 +48,6 @@ public abstract class HuntingTimer {
             phaseIndex(), phase(), timer.durationTicks(), (float) timer.durationTicks() / Globals.NUM_TICKS_PER_SEC, this);
     }
 
-    public void update(int levelNumber) {
-        if (timer.hasExpired()) {
-            Logger.info("Hunting phase {} ({}) ends, tick={}", phaseIndex(), phase(), timer.tickCount());
-            startNextPhase(levelNumber);
-        } else {
-            timer.doTick();
-        }
-    }
-
     public void start() { timer.start(); }
     public void stop() { timer.stop(); }
     public boolean isStopped() { return timer.isStopped(); }
@@ -81,19 +72,31 @@ public abstract class HuntingTimer {
         return phaseIndex;
     }
 
-    public void startFirstHuntingPhase(int levelNumber) {
-        startPhase(requireValidLevelNumber(levelNumber), 0);
+    public void update() {
+        if (gameLevel == null) {
+            Logger.error("Cannot update hunting timer, no game level assigned");
+            return;
+        }
+        if (timer.hasExpired()) {
+            Logger.info("Hunting phase {} ({}) ends, tick={}", phaseIndex(), phase(), timer.tickCount());
+            startNextPhase();
+        } else {
+            timer.doTick();
+        }
+    }
+
+    public void startFirstHuntingPhase() {
+        startPhase(0);
         logPhase(); // no change event!
     }
 
-    public void startNextPhase(int levelNumber) {
-        requireValidLevelNumber(levelNumber);
+    private void startNextPhase() {
         int nextPhaseIndex = requireValidPhaseIndex(phaseIndex() + 1);
-        startPhase(levelNumber, nextPhaseIndex);
+        startPhase(nextPhaseIndex);
     }
 
-    private void startPhase(int levelNumber, int phaseIndex) {
-        long duration = huntingTicks(levelNumber, phaseIndex);
+    private void startPhase(int phaseIndex) {
+        long duration = huntingTicks(gameLevel.number(), phaseIndex);
         timer.reset(duration);
         timer.start();
         this.phaseIndex.set(phaseIndex);

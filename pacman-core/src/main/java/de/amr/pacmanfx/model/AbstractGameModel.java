@@ -158,7 +158,7 @@ public abstract class AbstractGameModel implements Game {
         gameLevel.ghosts().forEach(ghost -> ghost.animationManager().ifPresent(AnimationManager::play));
         gameLevel.blinking().setStartState(Pulse.State.ON);
         gameLevel.blinking().restart();
-        gameLevel.huntingTimer().startFirstHuntingPhase(gameLevel.number());
+        gameLevel.huntingTimer().startFirstHuntingPhase();
         eventManager().publishEvent(GameEventType.HUNTING_PHASE_STARTED);
     }
 
@@ -172,7 +172,7 @@ public abstract class AbstractGameModel implements Game {
         gameLevel.bonus().ifPresent(bonus -> checkPacEatsBonus(gameLevel, bonus));
         updatePacPower(gameLevel);
         gameLevel.blinking().tick();
-        gameLevel.huntingTimer().update(gameLevel.number());
+        gameLevel.huntingTimer().update();
     }
 
     protected void updatePacPower(GameLevel gameLevel) {
