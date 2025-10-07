@@ -194,8 +194,8 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         final GameLevel newGameLevel = new GameLevel(this, levelNumber, worldMap);
         newGameLevel.setDemoLevel(demoLevel);
         newGameLevel.setGameOverStateTicks(90);
+
         newGameLevel.setHuntingTimer(huntingTimer);
-        huntingTimer.reset();
 
         final Pac pacMan = ArcadePacMan_ActorFactory.createPacMan();
         pacMan.setAutopilotSteering(autopilot);

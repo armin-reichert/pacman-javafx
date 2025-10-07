@@ -257,7 +257,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         normalLevel.pac().immuneProperty().bind(gameContext.gameController().propertyImmunity());
         normalLevel.pac().usingAutopilotProperty().bind(gameContext.gameController().propertyUsingAutopilot());
         levelCounter().setEnabled(true);
-        normalLevel.huntingTimer().reset();
         scoreManager().score().setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
         //TODO handle case when no house exists
@@ -275,7 +274,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         demoLevel.pac().setAutopilotSteering(demoLevelSteering);
         demoLevelSteering.init();
         levelCounter().setEnabled(true);
-        demoLevel.huntingTimer().reset();
         scoreManager().score().setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
         //TODO handle case when no house exists

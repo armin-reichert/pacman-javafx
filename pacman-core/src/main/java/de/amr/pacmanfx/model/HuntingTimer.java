@@ -23,6 +23,7 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class HuntingTimer {
 
+    private GameLevel gameLevel;
     private final TickTimer timer;
     private final int numPhases;
     private final IntegerProperty phaseIndex = new SimpleIntegerProperty();
@@ -33,17 +34,18 @@ public abstract class HuntingTimer {
         phaseIndex.addListener((py, ov, nv) -> logPhase());
     }
 
+    public void setGameLevel(GameLevel gameLevel) {
+        this.gameLevel = requireNonNull(gameLevel);
+        timer.stop();
+        timer.reset(TickTimer.INDEFINITE);
+        phaseIndex.set(0);
+    }
+
     public abstract long huntingTicks(int levelNumber, int phaseIndex);
 
     public void logPhase() {
         Logger.info("Hunting phase {} ({}, {} ticks / {} seconds). {}",
             phaseIndex(), phase(), timer.durationTicks(), (float) timer.durationTicks() / Globals.NUM_TICKS_PER_SEC, this);
-    }
-
-    public void reset() {
-        timer.stop();
-        timer.reset(TickTimer.INDEFINITE);
-        phaseIndex.set(0);
     }
 
     public void update(int levelNumber) {

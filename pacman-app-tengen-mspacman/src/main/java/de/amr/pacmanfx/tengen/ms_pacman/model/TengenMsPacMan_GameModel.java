@@ -398,8 +398,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         newGameLevel.setDemoLevel(demoLevel);
         // For non-Arcade game levels, give some extra time for "game over" text animation
         newGameLevel.setGameOverStateTicks(mapCategory == MapCategory.ARCADE ? 420 : 600);
+
         newGameLevel.setHuntingTimer(huntingTimer);
-        huntingTimer.reset();
 
         final MsPacMan msPacMan = new MsPacMan();
         msPacMan.setAutopilotSteering(autopilot);
@@ -441,7 +441,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         final GameLevel normalLevel = createLevel(levelNumber, false);
         normalLevel.pac().immuneProperty().bind(pacImmunity);
         normalLevel.pac().usingAutopilotProperty().bind(pacUsingAutopilot);
-        normalLevel.huntingTimer().reset();
         scoreManager.score().setLevelNumber(levelNumber);
         if (gateKeeper != null) {
             gateKeeper.setLevelNumber(levelNumber);
@@ -459,7 +458,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         demoLevel.pac().setUsingAutopilot(true);
         demoLevel.pac().setAutopilotSteering(demoLevelSteering);
         demoLevelSteering.init();
-        huntingTimer.reset();
         scoreManager.score().setLevelNumber(1);
         if (gateKeeper != null) {
             gateKeeper.setLevelNumber(1);

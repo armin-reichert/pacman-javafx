@@ -47,8 +47,8 @@ public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
         final GameLevel newGameLevel = new GameLevel(this, levelNumber, worldMap);
         newGameLevel.setDemoLevel(demoLevel);
         newGameLevel.setGameOverStateTicks(150);
+
         newGameLevel.setHuntingTimer(huntingTimer);
-        huntingTimer.reset();
 
         final MsPacMan msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
         msPacMan.setAutopilotSteering(autopilot);
@@ -90,7 +90,6 @@ public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
         demoLevel.pac().setAutopilotSteering(demoLevelSteering);
         demoLevelSteering.init();
         levelCounter().setEnabled(false);
-        demoLevel.huntingTimer().reset();
         scoreManager().score().setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
         demoLevel.worldMap().terrainLayer().optHouse().ifPresent(house -> gateKeeper.setHouse(house)); //TODO what if no house exists?

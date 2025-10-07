@@ -57,6 +57,7 @@ public class GameLevel {
 
     public void setHuntingTimer(HuntingTimer huntingTimer) {
         this.huntingTimer = requireNonNull(huntingTimer);
+        huntingTimer.setGameLevel(this);
     }
 
     public HuntingTimer huntingTimer() {
