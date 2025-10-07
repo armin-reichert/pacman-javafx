@@ -15,8 +15,6 @@ import de.amr.pacmanfx.lib.worldmap.TerrainTile;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.Bonus;
-import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.steering.RouteBasedSteering;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
@@ -79,7 +77,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         static final int[] TICKS_LEVEL_2_3_4 = {420, 1200, 420, 1200, 300, 61980,   1, -1};
         static final int[] TICKS_LEVEL_5_ON  = {300, 1200, 300, 1200, 300, 62262,   1, -1};
 
-        ArcadePacMan_HuntingTimer() {
+        public ArcadePacMan_HuntingTimer() {
             super("ArcadePacMan-HuntingTimer", 8);
         }
 
@@ -95,7 +93,6 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     }
 
     protected final MapSelector mapSelector;
-    protected final HuntingTimer huntingTimer;
     protected final ArcadePacMan_LevelCounter levelCounter;
     protected final HUD hud = new DefaultHUD();
 
@@ -119,14 +116,6 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
 
         scoreManager.setHighScoreFile(highScoreFile);
         scoreManager.setExtraLifeScores(EXTRA_LIFE_SCORE);
-
-        huntingTimer = new ArcadePacMan_HuntingTimer();
-        //TODO is there a better way?
-        huntingTimer.phaseIndexProperty().addListener((py, ov, index) -> {
-            if (index.intValue() > 0 && gameLevel() != null) {
-                gameLevel().ghosts(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE).forEach(Ghost::requestTurnBack);
-            }
-        });
 
         gateKeeper = new GateKeeper(this);
         gateKeeper.setOnGhostReleased(prisoner -> {
@@ -195,7 +184,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         newGameLevel.setDemoLevel(demoLevel);
         newGameLevel.setGameOverStateTicks(90);
 
-        newGameLevel.setHuntingTimer(huntingTimer);
+        newGameLevel.setHuntingTimer(new ArcadePacMan_HuntingTimer());
 
         final Pac pacMan = ArcadePacMan_ActorFactory.createPacMan();
         pacMan.setAutopilotSteering(autopilot);

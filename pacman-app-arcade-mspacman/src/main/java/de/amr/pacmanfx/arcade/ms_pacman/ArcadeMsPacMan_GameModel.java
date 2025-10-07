@@ -22,8 +22,6 @@ import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.Bonus;
-import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
 
@@ -70,7 +68,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         static final int[] HUNTING_TICKS_LEVEL_1_TO_4 = {420, 1200, 1, 62220, 1, 62220, 1, -1};
         static final int[] HUNTING_TICKS_LEVEL_5_PLUS = {300, 1200, 1, 62220, 1, 62220, 1, -1};
 
-        ArcadeMsPacMan_HuntingTimer() {
+        public ArcadeMsPacMan_HuntingTimer() {
             super("ArcadeMsPacMan-HuntingTimer", 8);
         }
 
@@ -82,7 +80,6 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     }
 
     protected final MapSelector mapSelector;
-    protected final ArcadeMsPacMan_HuntingTimer huntingTimer;
     protected final ArcadeMsPacMan_LevelCounter levelCounter;
     protected final HUD hud = new DefaultHUD();
 
@@ -108,14 +105,6 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         scoreManager.setExtraLifeScores(EXTRA_LIFE_SCORE);
 
         levelCounter = new ArcadeMsPacMan_LevelCounter();
-
-        huntingTimer = new ArcadeMsPacMan_HuntingTimer();
-        huntingTimer.phaseIndexProperty().addListener((py, ov, nv) -> {
-            if (nv.intValue() > 0) {
-                gameLevel().ghosts(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE)
-                    .forEach(Ghost::requestTurnBack);
-            }
-        });
 
         gateKeeper = new GateKeeper(this);
         gateKeeper.setOnGhostReleased(prisoner -> {
@@ -183,7 +172,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         newGameLevel.setDemoLevel(demoLevel);
         newGameLevel.setGameOverStateTicks(150);
 
-        newGameLevel.setHuntingTimer(huntingTimer);
+        newGameLevel.setHuntingTimer(new ArcadeMsPacMan_HuntingTimer());
 
         final MsPacMan msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
         msPacMan.setAutopilotSteering(autopilot);

@@ -118,7 +118,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     private final TengenMsPacMan_MapSelector mapSelector;
     private final TengenMsPacMan_LevelCounter levelCounter;
     private final GateKeeper gateKeeper;
-    private final HuntingTimer huntingTimer;
     private final Steering autopilot;
     private final Steering demoLevelSteering;
 
@@ -138,13 +137,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         mapSelector = new TengenMsPacMan_MapSelector();
         levelCounter = new TengenMsPacMan_LevelCounter();
         gateKeeper = new GateKeeper(this); //TODO implement original house logic
-        huntingTimer = new TengenMsPacMan_HuntingTimer();
-        huntingTimer.phaseIndexProperty().addListener((py, ov, nv) -> {
-            if (nv.intValue() > 0) {
-                gameLevel().ghosts(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE)
-                    .forEach(Ghost::requestTurnBack);
-            }
-        });
         autopilot = new RuleBasedPacSteering(gameContext);
         demoLevelSteering = new RuleBasedPacSteering(gameContext);
         pacImmunity.bind(gameContext.gameController().propertyImmunity());
@@ -399,7 +391,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         // For non-Arcade game levels, give some extra time for "game over" text animation
         newGameLevel.setGameOverStateTicks(mapCategory == MapCategory.ARCADE ? 420 : 600);
 
-        newGameLevel.setHuntingTimer(huntingTimer);
+        newGameLevel.setHuntingTimer(new TengenMsPacMan_HuntingTimer());
 
         final MsPacMan msPacMan = new MsPacMan();
         msPacMan.setAutopilotSteering(autopilot);
@@ -609,7 +601,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         double powerSeconds = pacPowerSeconds(gameLevel());
         long powerTicks = secToTicks(powerSeconds);
         if (powerTicks > 0) {
-            huntingTimer.stop();
+            gameLevel().huntingTimer().stop();
             Logger.info("Hunting Pac-Man stopped as he got power");
             gameLevel().pac().powerTimer().restartTicks(powerTicks);
             Logger.info("Power timer restarted, duration={} ticks ({0.00} sec)", powerTicks, powerSeconds);
@@ -625,7 +617,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     @Override
     public void onPacKilled(GameLevel gameLevel) {
         final Pac pac = gameLevel.pac();
-        huntingTimer.stop();
+        gameLevel.huntingTimer().stop();
         Logger.info("Hunting timer stopped");
         gateKeeper.resetCounterAndSetEnabled(true); // TODO how is that realized in original game?
         pac.powerTimer().stop();

@@ -6,6 +6,8 @@ package de.amr.pacmanfx.model;
 
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.lib.timer.TickTimer;
+import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.model.actors.GhostState;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import org.tinylog.Logger;
@@ -36,6 +38,12 @@ public abstract class HuntingTimer {
 
     public void setGameLevel(GameLevel gameLevel) {
         this.gameLevel = requireNonNull(gameLevel);
+        phaseIndexProperty().addListener((py, ov, nv) -> {
+            if (nv.intValue() > 0) {
+                gameLevel.ghosts(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE)
+                    .forEach(Ghost::requestTurnBack);
+            }
+        });
         timer.stop();
         timer.reset(TickTimer.INDEFINITE);
         phaseIndex.set(0);
