@@ -13,6 +13,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.steering.Steering;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import org.tinylog.Logger;
 
 import java.util.Optional;
 
@@ -20,7 +21,7 @@ import static de.amr.pacmanfx.lib.timer.TickTimer.secToTicks;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Pac-Man / Ms. Pac-Man.
+ * Base class for Pac-Man / Ms. Pac-Man.
  */
 public class Pac extends MovingActor {
 
@@ -170,20 +171,22 @@ public class Pac extends MovingActor {
         }
     }
 
-    /**
-     * Pac-Man is displayed in its full beauty and does not move anymore as it does at the end of each level.
-     */
-    public void stopAndShowInFullBeauty() {
+    public void onLevelCompleted(GameLevel gameLevel) {
+        powerTimer.stop();
+        powerTimer.reset(0);
+        Logger.info("Power timer stopped and reset to zero.");
         setSpeed(0);
         setRestingTicks(INDEFINITELY);
-        this.animationManager().ifPresent(am -> {
-            am.stop();
-            am.select(AnimationSupport.ANIM_PAC_MUNCHING);
-            am.reset();
+        animationManager().ifPresent(animationManager -> {
+            animationManager.stop();
+            animationManager.select(AnimationSupport.ANIM_PAC_MUNCHING);
+            animationManager.reset();
         });
     }
 
-    public void sayGoodbyeCruelWorld() {
+    public void onKilled(GameLevel gameLevel) {
+        powerTimer.stop();
+        powerTimer.reset(0);
         setSpeed(0);
         stopAnimation();
         dead = true;

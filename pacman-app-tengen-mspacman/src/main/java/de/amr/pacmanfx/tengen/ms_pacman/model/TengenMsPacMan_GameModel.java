@@ -614,14 +614,10 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     public void onPacKilled(GameLevel gameLevel) {
-        final Pac pac = gameLevel.pac();
         gameLevel.huntingTimer().stop();
-        Logger.info("Hunting timer stopped");
-        gateKeeper.resetCounterAndSetEnabled(true); // TODO how is that realized in original game?
-        pac.powerTimer().stop();
-        pac.powerTimer().reset(0);
-        Logger.info("Power timer stopped and set to zero");
-        pac.sayGoodbyeCruelWorld();
+        gateKeeper.resetCounterAndSetEnabled(true);
+        gameLevel.pac().onKilled(gameLevel);
+        gameLevel.ghosts().forEach(ghost -> ghost.onPacKilled(gameLevel));
     }
 
     @Override
