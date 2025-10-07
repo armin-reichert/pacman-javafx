@@ -88,19 +88,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     public abstract Arcade_LevelData levelData(GameLevel gameLevel);
 
-    /*
-    private void updateBlinkyCruiseElroyMode(GameLevel gameLevel) {
-        Blinky blinky = (Blinky) gameLevel.ghost(Globals.RED_GHOST_SHADOW);
-        Arcade_LevelData data = levelData(gameLevel);
-        int uneatenFoodCount = gameLevel.worldMap().foodLayer().uneatenFoodCount();
-        if (uneatenFoodCount == data.elroy1DotsLeft()) {
-            blinky.setCruiseElroy(1);
-        } else if (uneatenFoodCount == data.elroy2DotsLeft()) {
-            blinky.setCruiseElroy(2);
-        }
-    }
-     */
-
     // GameEvents interface
 
     @Override
