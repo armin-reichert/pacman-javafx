@@ -15,12 +15,8 @@ public interface Game extends GameLifecycle, GameEvents, ActorSpeedControl {
     SimulationStepResults simulationStepResults();
     MapSelector           mapSelector();
     Optional<GameLevel>   optGameLevel();
-    HUD                   hud();
-
-    void                  checkPacFindsFood(GameLevel gameLevel);
-    boolean               isBonusReached(GameLevel gameLevel);
-
     LevelCounter          levelCounter();
+    HUD                   hud();
 
     boolean               cutScenesEnabled();
     void                  setCutScenesEnabled(boolean enabled);

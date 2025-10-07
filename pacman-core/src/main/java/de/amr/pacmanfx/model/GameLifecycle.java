@@ -24,6 +24,7 @@ public interface GameLifecycle {
     void startHunting(GameLevel gameLevel);
     void updateHunting(GameLevel gameLevel);
     void activateNextBonus(GameLevel gameLevel);
+    boolean isBonusReached(GameLevel gameLevel);
     boolean hasPacManBeenKilled();
     boolean haveGhostsBeenKilled();
 }

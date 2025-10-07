@@ -39,6 +39,8 @@ public abstract class AbstractGameModel implements Game {
         this.gameContext = requireNonNull(gameContext);
     }
 
+    protected abstract void checkPacFindsFood(GameLevel gameLevel);
+
     protected abstract boolean isPacManSafeInDemoLevel(GameLevel demoLevel);
 
     protected abstract void resetPacManAndGhostAnimations(GameLevel gameLevel);
