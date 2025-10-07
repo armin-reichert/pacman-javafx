@@ -70,28 +70,6 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         wp(6,23) /* eaten at 3,23 in original game */
     );
 
-    public static class ArcadePacMan_HuntingTimer extends HuntingTimer {
-
-        // Ticks of scatter and chasing phases, -1 = INFINITE
-        static final int[] TICKS_LEVEL_1     = {420, 1200, 420, 1200, 300,  1200, 300, -1};
-        static final int[] TICKS_LEVEL_2_3_4 = {420, 1200, 420, 1200, 300, 61980,   1, -1};
-        static final int[] TICKS_LEVEL_5_ON  = {300, 1200, 300, 1200, 300, 62262,   1, -1};
-
-        public ArcadePacMan_HuntingTimer() {
-            super("ArcadePacMan-HuntingTimer", 8);
-        }
-
-        @Override
-        public long huntingTicks(int levelNumber, int phaseIndex) {
-            long ticks = switch (levelNumber) {
-                case 1 -> TICKS_LEVEL_1[phaseIndex];
-                case 2, 3, 4 -> TICKS_LEVEL_2_3_4[phaseIndex];
-                default -> TICKS_LEVEL_5_ON[phaseIndex];
-            };
-            return ticks != -1 ? ticks : TickTimer.INDEFINITE;
-        }
-    }
-
     protected final MapSelector mapSelector;
     protected final ArcadePacMan_LevelCounter levelCounter;
     protected final HUD hud = new DefaultHUD();
