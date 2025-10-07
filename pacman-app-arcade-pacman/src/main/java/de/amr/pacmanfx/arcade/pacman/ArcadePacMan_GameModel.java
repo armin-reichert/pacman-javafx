@@ -158,11 +158,9 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         final ArcadeHouse house = new ArcadeHouse(ARCADE_MAP_HOUSE_MIN_TILE);
         worldMap.terrainLayer().setHouse(house);
 
-        final GameLevel newGameLevel = new GameLevel(this, levelNumber, worldMap);
+        final GameLevel newGameLevel = new GameLevel(this, levelNumber, worldMap, new ArcadePacMan_HuntingTimer());
         newGameLevel.setDemoLevel(demoLevel);
         newGameLevel.setGameOverStateTicks(90);
-
-        newGameLevel.setHuntingTimer(new ArcadePacMan_HuntingTimer());
 
         final Pac pacMan = ArcadePacMan_ActorFactory.createPacMan();
         pacMan.setAutopilotSteering(autopilot);

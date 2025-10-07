@@ -386,12 +386,10 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         final ArcadeHouse house = new ArcadeHouse(HOUSE_MIN_TILE);
         worldMap.terrainLayer().setHouse(house);
 
-        final GameLevel newGameLevel = new GameLevel(this, levelNumber, worldMap);
+        final GameLevel newGameLevel = new GameLevel(this, levelNumber, worldMap, new TengenMsPacMan_HuntingTimer());
         newGameLevel.setDemoLevel(demoLevel);
         // For non-Arcade game levels, give some extra time for "game over" text animation
         newGameLevel.setGameOverStateTicks(mapCategory == MapCategory.ARCADE ? 420 : 600);
-
-        newGameLevel.setHuntingTimer(new TengenMsPacMan_HuntingTimer());
 
         final MsPacMan msPacMan = new MsPacMan();
         msPacMan.setAutopilotSteering(autopilot);

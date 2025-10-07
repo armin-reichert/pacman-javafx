@@ -30,6 +30,7 @@ public class GameLevel {
     private final Game game;
     private final int number; // 1=first level
     private final WorldMap worldMap;
+    private final HuntingTimer huntingTimer;
     private final Pulse blinking;
     private final List<Ghost> victims = new ArrayList<>();
     private final byte[] bonusSymbols = new byte[2];
@@ -40,24 +41,19 @@ public class GameLevel {
     private int currentBonusIndex; // -1=no bonus, 0=first, 1=second
     private GameLevelMessage message;
 
-    private HuntingTimer huntingTimer;
-
     private boolean demoLevel;
     private int numGhostsKilled;
     private int gameOverStateTicks;
     private long startTimeMillis;
 
-    public GameLevel(Game game, int number, WorldMap worldMap) {
+    public GameLevel(Game game, int number, WorldMap worldMap, HuntingTimer huntingTimer) {
         this.game = requireNonNull(game);
         this.number = requireValidLevelNumber(number);
         this.worldMap = requireNonNull(worldMap);
-        blinking = new Pulse(10, Pulse.State.OFF);
-        currentBonusIndex = -1;
-    }
-
-    public void setHuntingTimer(HuntingTimer huntingTimer) {
         this.huntingTimer = requireNonNull(huntingTimer);
         huntingTimer.setGameLevel(this);
+        blinking = new Pulse(10, Pulse.State.OFF);
+        currentBonusIndex = -1;
     }
 
     public HuntingTimer huntingTimer() {
