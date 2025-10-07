@@ -109,7 +109,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
         double powerSeconds = pacPowerSeconds(gameLevel);
         if (powerSeconds > 0) {
-            huntingTimer().stop();
+            gameLevel.huntingTimer().stop();
             Logger.debug("Hunting stopped (Pac-Man got power)");
             long ticks = TickTimer.secToTicks(powerSeconds);
             gameLevel.pac().powerTimer().restartTicks(ticks);
@@ -142,7 +142,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     @Override
     public void onPacKilled(GameLevel gameLevel) {
         gateKeeper.resetCounterAndSetEnabled(true);
-        huntingTimer().stop();
+        gameLevel.huntingTimer().stop();
         Blinky blinky = (Blinky) gameLevel.ghost(Globals.RED_GHOST_SHADOW);
         blinky.activateCruiseElroyMode(false);
         gameLevel.pac().powerTimer().stop();
@@ -201,7 +201,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         scoreManager().loadHighScore();
         scoreManager().score().reset();
         gateKeeper.reset();
-        huntingTimer().reset();
     }
 
     @Override
@@ -258,7 +257,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         normalLevel.pac().immuneProperty().bind(gameContext.gameController().propertyImmunity());
         normalLevel.pac().usingAutopilotProperty().bind(gameContext.gameController().propertyUsingAutopilot());
         levelCounter().setEnabled(true);
-        huntingTimer().reset();
+        normalLevel.huntingTimer().reset();
         scoreManager().score().setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
         //TODO handle case when no house exists
@@ -276,7 +275,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         demoLevel.pac().setAutopilotSteering(demoLevelSteering);
         demoLevelSteering.init();
         levelCounter().setEnabled(true);
-        huntingTimer().reset();
+        demoLevel.huntingTimer().reset();
         scoreManager().score().setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
         //TODO handle case when no house exists

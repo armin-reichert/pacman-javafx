@@ -180,11 +180,6 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     }
 
     @Override
-    public HuntingTimer huntingTimer() {
-        return huntingTimer;
-    }
-
-    @Override
     public Optional<Integer> optCutSceneNumber(int levelNumber) {
         Integer cutSceneNumber = CUT_SCENE_AFTER_LEVEL.get(levelNumber);
         return Optional.ofNullable(cutSceneNumber);
@@ -199,6 +194,8 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         final GameLevel newGameLevel = new GameLevel(this, levelNumber, worldMap);
         newGameLevel.setDemoLevel(demoLevel);
         newGameLevel.setGameOverStateTicks(90);
+        newGameLevel.setHuntingTimer(huntingTimer);
+        huntingTimer.reset();
 
         final Pac pacMan = ArcadePacMan_ActorFactory.createPacMan();
         pacMan.setAutopilotSteering(autopilot);

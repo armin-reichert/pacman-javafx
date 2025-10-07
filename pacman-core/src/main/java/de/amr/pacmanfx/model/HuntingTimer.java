@@ -25,12 +25,12 @@ public abstract class HuntingTimer {
 
     private final TickTimer timer;
     private final int numPhases;
-    private final IntegerProperty phaseIndexPy = new SimpleIntegerProperty();
+    private final IntegerProperty phaseIndex = new SimpleIntegerProperty();
 
     protected HuntingTimer(String name, int numPhases) {
         this.numPhases = requireNonNegativeInt(numPhases);
         timer = new TickTimer(requireNonNull(name));
-        phaseIndexPy.addListener((py, ov, nv) -> logPhase());
+        phaseIndex.addListener((py, ov, nv) -> logPhase());
     }
 
     public abstract long huntingTicks(int levelNumber, int phaseIndex);
@@ -43,7 +43,7 @@ public abstract class HuntingTimer {
     public void reset() {
         timer.stop();
         timer.reset(TickTimer.INDEFINITE);
-        phaseIndexPy.set(0);
+        phaseIndex.set(0);
     }
 
     public void update(int levelNumber) {
@@ -61,8 +61,8 @@ public abstract class HuntingTimer {
     public long tickCount() { return timer.tickCount(); }
     public long remainingTicks() { return timer.remainingTicks(); }
 
-    public IntegerProperty phaseIndexProperty() { return phaseIndexPy; }
-    public int phaseIndex() { return phaseIndexPy.get(); }
+    public IntegerProperty phaseIndexProperty() { return phaseIndex; }
+    public int phaseIndex() { return phaseIndex.get(); }
     public Optional<Integer> currentScatterPhaseIndex() {
         return isEven(phaseIndex()) ? Optional.of(phaseIndex() / 2) : Optional.empty();
     }
@@ -94,6 +94,6 @@ public abstract class HuntingTimer {
         long duration = huntingTicks(levelNumber, phaseIndex);
         timer.reset(duration);
         timer.start();
-        phaseIndexPy.set(phaseIndex);
+        this.phaseIndex.set(phaseIndex);
     }
 }

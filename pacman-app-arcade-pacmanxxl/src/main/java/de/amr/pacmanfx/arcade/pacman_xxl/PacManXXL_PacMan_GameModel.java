@@ -62,6 +62,8 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
         final GameLevel newGameLevel = new GameLevel(this, levelNumber, worldMap);
         newGameLevel.setDemoLevel(demoLevel);
         newGameLevel.setGameOverStateTicks(90);
+        newGameLevel.setHuntingTimer(huntingTimer);
+        huntingTimer.reset();
 
         final Pac pacMan = ArcadePacMan_ActorFactory.createPacMan();
         pacMan.setAutopilotSteering(autopilot);
@@ -111,7 +113,7 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
         demoLevel.pac().setAutopilotSteering(demoLevelSteering);
         demoLevelSteering.init();
         levelCounter().setEnabled(false);
-        huntingTimer().reset();
+        demoLevel.huntingTimer().reset();
         gateKeeper.setLevelNumber(levelNumber);
         demoLevel.worldMap().terrainLayer().optHouse().ifPresent(house -> gateKeeper.setHouse(house));
         setGameLevel(demoLevel);

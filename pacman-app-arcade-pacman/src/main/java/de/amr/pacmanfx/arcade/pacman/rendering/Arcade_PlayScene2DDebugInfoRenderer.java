@@ -61,7 +61,7 @@ public class Arcade_PlayScene2DDebugInfoRenderer extends DefaultDebugInfoRendere
             String gameStateText = gameContext.gameState().name() + " (Tick %d)".formatted(gameContext.gameState().timer().tickCount());
             String huntingPhaseText = "";
             if (gameContext.gameState() == GamePlayState.HUNTING) {
-                HuntingTimer huntingTimer = gameContext.game().huntingTimer();
+                HuntingTimer huntingTimer = gameContext.gameLevel().huntingTimer();
                 huntingPhaseText = " %s (Tick %d)".formatted(huntingTimer.phase(), huntingTimer.tickCount());
             }
             ctx.setFill(debugTextFill);

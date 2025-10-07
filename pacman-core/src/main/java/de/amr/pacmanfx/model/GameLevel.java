@@ -40,6 +40,8 @@ public class GameLevel {
     private int currentBonusIndex; // -1=no bonus, 0=first, 1=second
     private GameLevelMessage message;
 
+    private HuntingTimer huntingTimer;
+
     private boolean demoLevel;
     private int numGhostsKilled;
     private int gameOverStateTicks;
@@ -51,6 +53,14 @@ public class GameLevel {
         this.worldMap = requireNonNull(worldMap);
         blinking = new Pulse(10, Pulse.State.OFF);
         currentBonusIndex = -1;
+    }
+
+    public void setHuntingTimer(HuntingTimer huntingTimer) {
+        this.huntingTimer = requireNonNull(huntingTimer);
+    }
+
+    public HuntingTimer huntingTimer() {
+        return huntingTimer;
     }
 
     public void getReadyToPlay() {

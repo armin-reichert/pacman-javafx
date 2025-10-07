@@ -110,7 +110,7 @@ public class InfoBoxActorInfo extends InfoBox {
     private String ghostState(Ghost ghost) {
         var stateText = ghost.state() != null ? ghost.state().name() : "undefined";
         if (ghost.state() == GhostState.HUNTING_PAC) {
-            stateText = ui.gameContext().game().huntingTimer().phase().name();
+            stateText = ui.gameContext().gameLevel().huntingTimer().phase().name();
         }
         return stateText;
     }

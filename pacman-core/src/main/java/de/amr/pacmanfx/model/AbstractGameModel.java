@@ -132,7 +132,7 @@ public abstract class AbstractGameModel implements Game {
 
     @Override
     public void onLevelCompleted(GameLevel gameLevel) {
-        huntingTimer().stop();
+        gameLevel.huntingTimer().stop();
         Logger.info("Hunting timer stopped.");
 
         gameLevel.blinking().setStartState(Pulse.State.OFF);
@@ -158,7 +158,7 @@ public abstract class AbstractGameModel implements Game {
         gameLevel.ghosts().forEach(ghost -> ghost.animationManager().ifPresent(AnimationManager::play));
         gameLevel.blinking().setStartState(Pulse.State.ON);
         gameLevel.blinking().restart();
-        huntingTimer().startFirstHuntingPhase(gameLevel.number());
+        gameLevel.huntingTimer().startFirstHuntingPhase(gameLevel.number());
         eventManager().publishEvent(GameEventType.HUNTING_PHASE_STARTED);
     }
 
@@ -172,7 +172,7 @@ public abstract class AbstractGameModel implements Game {
         gameLevel.bonus().ifPresent(bonus -> checkPacEatsBonus(gameLevel, bonus));
         updatePacPower(gameLevel);
         gameLevel.blinking().tick();
-        huntingTimer().update(gameLevel.number());
+        gameLevel.huntingTimer().update(gameLevel.number());
     }
 
     protected void updatePacPower(GameLevel gameLevel) {
@@ -186,7 +186,7 @@ public abstract class AbstractGameModel implements Game {
             powerTimer.reset(0);
             Logger.info("Power timer stopped and reset to zero");
             gameLevel.victims().clear();
-            huntingTimer().start();
+            gameLevel.huntingTimer().start();
             Logger.info("Hunting timer restarted because Pac-Man lost power");
             gameLevel.ghosts(GhostState.FRIGHTENED).forEach(ghost -> ghost.setState(GhostState.HUNTING_PAC));
             simulationStepResults.pacLostPower = true;

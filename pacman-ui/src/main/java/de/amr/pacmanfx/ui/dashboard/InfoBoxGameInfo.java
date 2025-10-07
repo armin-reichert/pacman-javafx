@@ -74,8 +74,8 @@ public class InfoBoxGameInfo extends InfoBox {
         }));
 
         addDynamicLabeledValue("Hunting Phase",   ifGameLevelPresent(gameLevel -> fmtHuntingPhase()));
-        addDynamicLabeledValue("",                ifGameLevelPresent(gameLevel -> fmtHuntingTicksRunning()));
-        addDynamicLabeledValue("",                ifGameLevelPresent(gameLevel -> fmtHuntingTicksRemaining()));
+        addDynamicLabeledValue("",                ifGameLevelPresent(gameLevel -> fmtHuntingTicksRunning(gameLevel.huntingTimer())));
+        addDynamicLabeledValue("",                ifGameLevelPresent(gameLevel -> fmtHuntingTicksRemaining(gameLevel.huntingTimer())));
 
         addDynamicLabeledValue("Pac-Man speed",   ifGameLevelPresent(this::fmtPacNormalSpeed));
         addDynamicLabeledValue("- empowered",     ifGameLevelPresent(this::fmtPacSpeedPowered));
@@ -100,22 +100,23 @@ public class InfoBoxGameInfo extends InfoBox {
     }
 
     private String fmtHuntingPhase() {
-        HuntingTimer huntingTimer = ui.gameContext().game().huntingTimer();
-        return "%s #%d%s".formatted(
-            huntingTimer.phase().name(),
-            huntingTimer.phase() == HuntingPhase.CHASING
-                ? huntingTimer.currentChasingPhaseIndex().orElse(42)
-                : huntingTimer.currentScatterPhaseIndex().orElse(42),
-            huntingTimer.isStopped() ? " STOPPED" : "");
+        if (ui.gameContext().gameLevel() != null) {
+            HuntingTimer huntingTimer = ui.gameContext().gameLevel().huntingTimer();
+            return "%s #%d%s".formatted(
+                huntingTimer.phase().name(),
+                huntingTimer.phase() == HuntingPhase.CHASING
+                    ? huntingTimer.currentChasingPhaseIndex().orElse(42)
+                    : huntingTimer.currentScatterPhaseIndex().orElse(42),
+                huntingTimer.isStopped() ? " STOPPED" : "");
+        }
+        return NO_INFO;
     }
 
-    private String fmtHuntingTicksRunning() {
-        HuntingTimer huntingTimer = ui.gameContext().game().huntingTimer();
+    private String fmtHuntingTicksRunning(HuntingTimer huntingTimer) {
         return "Running:   %d".formatted(huntingTimer.tickCount());
     }
 
-    private String fmtHuntingTicksRemaining() {
-        HuntingTimer huntingTimer = ui.gameContext().game().huntingTimer();
+    private String fmtHuntingTicksRemaining(HuntingTimer huntingTimer) {
         return "Remaining: %s".formatted(ticksToString(huntingTimer.remainingTicks()));
     }
 

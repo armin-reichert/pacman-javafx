@@ -606,7 +606,7 @@ public class PlayScene3D implements GameScene {
         boolean pacChased = !pac.powerTimer().isRunning();
         if (pacChased) {
             // siren numbers are 1..4, hunting phase index = 0..7
-            int huntingPhase = context().game().huntingTimer().phaseIndex();
+            int huntingPhase = context().gameLevel().huntingTimer().phaseIndex();
             int sirenNumber = 1 + huntingPhase / 2;
             switch (sirenNumber) {
                 case 1 -> ui.soundManager().playSiren(SoundID.SIREN_1, 1.0);

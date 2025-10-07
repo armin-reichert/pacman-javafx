@@ -207,9 +207,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public HuntingTimer huntingTimer() { return huntingTimer; }
-
-    @Override
     public MapSelector mapSelector() { return mapSelector; }
 
     public boolean optionsAreInitial() {
@@ -403,6 +400,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         newGameLevel.setDemoLevel(demoLevel);
         // For non-Arcade game levels, give some extra time for "game over" text animation
         newGameLevel.setGameOverStateTicks(mapCategory == MapCategory.ARCADE ? 420 : 600);
+        newGameLevel.setHuntingTimer(huntingTimer);
+        huntingTimer.reset();
 
         final MsPacMan msPacMan = new MsPacMan();
         msPacMan.setAutopilotSteering(autopilot);
@@ -444,7 +443,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         final GameLevel normalLevel = createLevel(levelNumber, false);
         normalLevel.pac().immuneProperty().bind(pacImmunity);
         normalLevel.pac().usingAutopilotProperty().bind(pacUsingAutopilot);
-        huntingTimer().reset();
+        normalLevel.huntingTimer().reset();
         scoreManager.score().setLevelNumber(levelNumber);
         if (gateKeeper != null) {
             gateKeeper.setLevelNumber(levelNumber);
@@ -596,7 +595,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         gameLevel.ghosts(FRIGHTENED, HUNTING_PAC).forEach(Ghost::requestTurnBack);
         double powerSeconds = pacPowerSeconds(gameLevel);
         if (powerSeconds > 0) {
-            huntingTimer().stop();
+            gameLevel.huntingTimer().stop();
             Logger.debug("Hunting stopped (Pac-Man got power)");
             long ticks = TickTimer.secToTicks(powerSeconds);
             gameLevel.pac().powerTimer().restartTicks(ticks);

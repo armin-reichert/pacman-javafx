@@ -350,7 +350,7 @@ public abstract class Ghost extends MovingActor {
     private void updateStateHuntingPac(GameLevel gameLevel) {
         // The specific hunting behaviour is defined by the game variant. For example, in Ms. Pac-Man,
         // the red and pink ghosts are not chasing Pac-Man during the first scatter phase, but roam the maze randomly.
-        hunt(gameLevel, gameLevel.game().huntingTimer());
+        hunt(gameLevel, gameLevel.huntingTimer());
     }
 
     // --- FRIGHTENED ---

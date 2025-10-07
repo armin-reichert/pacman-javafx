@@ -168,7 +168,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
         boolean pacChased = context().gameState() == GamePlayState.HUNTING && !pac.powerTimer().isRunning();
         if (pacChased) {
             // siren numbers are 1..4, hunting phase index = 0..7
-            int huntingPhase = context().game().huntingTimer().phaseIndex();
+            int huntingPhase = context().gameLevel().huntingTimer().phaseIndex();
             int sirenNumber = 1 + huntingPhase / 2;
             switch (sirenNumber) {
                 case 1 -> ui.soundManager().playSiren(SoundID.SIREN_1, 1.0);
