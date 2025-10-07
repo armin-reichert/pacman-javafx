@@ -6,6 +6,8 @@ package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.HuntingTimer;
+import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.model.actors.GhostState;
 
 /**
  * Details are from a conversation with user @damselindis on Reddit. I am not sure if they are correct.
@@ -20,6 +22,13 @@ public class ArcadeMsPacMan_HuntingTimer extends HuntingTimer {
 
     public ArcadeMsPacMan_HuntingTimer() {
         super("ArcadeMsPacMan-HuntingTimer", 8);
+        phaseIndex.addListener((py, ov, newPhaseIndex) -> {
+            if (gameLevel != null && newPhaseIndex.intValue() > 0) {
+                gameLevel.ghosts(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE)
+                    .forEach(Ghost::requestTurnBack);
+            }
+            logPhaseChange();
+        });
     }
 
     @Override
