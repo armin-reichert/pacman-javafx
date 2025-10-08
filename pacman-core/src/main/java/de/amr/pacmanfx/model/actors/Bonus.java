@@ -37,19 +37,22 @@ public class Bonus extends MovingActor {
     private long edibleTicks;
     private long eatenTicks;
 
-    private final Pulse movementAnimation;
+    private Pulse movementAnimation;
     private RouteBasedSteering steering;
 
-    public Bonus(byte symbol, int points, Pulse movementAnimation) {
+    public Bonus(byte symbol, int points) {
+        super.reset();
         this.symbol = symbol;
         this.points = points;
-        this.movementAnimation = movementAnimation;
-        reset();
         canTeleport = false; // override default value
         edibleTicks = TickTimer.secToTicks(9.5);
         eatenTicks = TickTimer.secToTicks(2);
         ticksRemaining = 0;
         state = BonusState.INACTIVE;
+    }
+
+    public void enableMovement() {
+        movementAnimation = new Pulse(10, Pulse.State.OFF);
     }
 
     @Override

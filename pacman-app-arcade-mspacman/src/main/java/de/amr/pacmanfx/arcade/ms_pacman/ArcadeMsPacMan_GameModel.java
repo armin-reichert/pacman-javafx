@@ -17,7 +17,6 @@ import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.Waypoint;
-import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.*;
@@ -288,8 +287,8 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
         gameLevel.selectNextBonus();
         byte symbol = gameLevel.bonusSymbol(gameLevel.currentBonusIndex());
-        Pulse jumpAnimation = new Pulse(10, Pulse.State.OFF);
-        var bonus = new Bonus(symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100, jumpAnimation);
+        var bonus = new Bonus(symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100);
+        bonus.enableMovement();
         bonus.setEdibleTicks(TickTimer.INDEFINITE);
         bonus.setEatenTicks(TickTimer.secToTicks(BONUS_EATEN_SECONDS));
         bonus.setRoute(route, leftToRight);

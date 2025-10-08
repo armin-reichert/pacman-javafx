@@ -10,7 +10,6 @@ import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.Waypoint;
-import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.lib.worldmap.FoodLayer;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
@@ -521,7 +520,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
         gameLevel.selectNextBonus();
         byte symbol = gameLevel.bonusSymbol(gameLevel.currentBonusIndex());
-        var bonus = new Bonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100, new Pulse(10, Pulse.State.OFF));
+        var bonus = new Bonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
+        bonus.enableMovement();
         bonus.setEdibleTicks(TickTimer.INDEFINITE);
         bonus.setEatenTicks(TickTimer.secToTicks(BONUS_EATEN_SECONDS));
         bonus.setRoute(route, leftToRight);
