@@ -59,7 +59,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
     protected final MapSelector mapSelector;
     protected final ArcadeMsPacMan_LevelCounter levelCounter;
-    protected final HUD hud = new DefaultHUD();
+    protected final HUD hud = new BaseHUD();
 
     /**
      * Called via reflection by builder.
@@ -85,9 +85,9 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         levelCounter = new ArcadeMsPacMan_LevelCounter();
 
         gateKeeper = new GateKeeper(this);
-        gateKeeper.setOnGhostReleased(prisoner -> {
-            Blinky blinky = (Blinky) gameLevel().ghost(RED_GHOST_SHADOW);
-            Sue sue = (Sue) gameLevel().ghost(ORANGE_GHOST_POKEY);
+        gateKeeper.setOnGhostReleased((gameLevel, prisoner) -> {
+            Blinky blinky = (Blinky) gameLevel.ghost(RED_GHOST_SHADOW);
+            Sue sue = (Sue) gameLevel.ghost(ORANGE_GHOST_POKEY);
             if (prisoner == sue && !blinky.isCruiseElroyActive()) {
                 Logger.trace("Re-enable 'Cruise Elroy' mode because {} exits house:", prisoner.name());
                 blinky.setCruiseElroyActive(true);

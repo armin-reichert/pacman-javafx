@@ -4,9 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman.model;
 
-import de.amr.pacmanfx.model.DefaultHUD;
+import de.amr.pacmanfx.model.BaseHUD;
 
-public class TengenMsPacMan_HUD extends DefaultHUD {
+public class TengenMsPacMan_HUD extends BaseHUD {
 
     private boolean levelNumberVisible;
     private boolean gameOptionsVisible;

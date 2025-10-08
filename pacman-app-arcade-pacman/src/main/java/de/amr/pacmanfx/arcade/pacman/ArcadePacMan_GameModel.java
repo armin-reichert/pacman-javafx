@@ -72,7 +72,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
 
     protected final MapSelector mapSelector;
     protected final ArcadePacMan_LevelCounter levelCounter;
-    protected final HUD hud = new DefaultHUD();
+    protected final HUD hud = new BaseHUD();
 
     public ArcadePacMan_GameModel(GameContext gameContext, File highScoreFile) {
         this(gameContext, new ArcadePacMan_MapSelector(), highScoreFile);
@@ -96,9 +96,9 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         scoreManager.setExtraLifeScores(EXTRA_LIFE_SCORE);
 
         gateKeeper = new GateKeeper(this);
-        gateKeeper.setOnGhostReleased(prisoner -> {
-            Blinky blinky = (Blinky) gameLevel().ghost(RED_GHOST_SHADOW);
-            Clyde clyde = (Clyde) gameLevel().ghost(ORANGE_GHOST_POKEY);
+        gateKeeper.setOnGhostReleased((gameLevel, prisoner) -> {
+            Blinky blinky = (Blinky) gameLevel.ghost(RED_GHOST_SHADOW);
+            Clyde clyde = (Clyde) gameLevel.ghost(ORANGE_GHOST_POKEY);
             if (prisoner == clyde && !blinky.isCruiseElroyActive()) {
                 Logger.debug("Re-enable 'Cruise Elroy' mode because {} got released:", prisoner.name());
                 blinky.setCruiseElroyActive(true);
