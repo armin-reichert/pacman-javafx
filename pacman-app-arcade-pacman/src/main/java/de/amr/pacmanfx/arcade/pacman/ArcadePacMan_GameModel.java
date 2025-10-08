@@ -15,7 +15,6 @@ import de.amr.pacmanfx.lib.worldmap.TerrainTile;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.Bonus;
-import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.steering.RouteBasedSteering;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
@@ -157,7 +156,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         newGameLevel.setDemoLevel(demoLevel);
         newGameLevel.setGameOverStateTicks(90);
 
-        final Pac pacMan = ArcadePacMan_ActorFactory.createPacMan();
+        final PacMan pacMan = ArcadePacMan_ActorFactory.createPacMan();
         pacMan.setAutopilotSteering(autopilot);
         newGameLevel.setPac(pacMan);
 
