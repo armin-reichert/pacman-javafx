@@ -15,8 +15,6 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import org.tinylog.Logger;
 
-import java.util.Optional;
-
 import static de.amr.pacmanfx.lib.timer.TickTimer.secToTicks;
 import static java.util.Objects.requireNonNull;
 
@@ -39,7 +37,6 @@ public class Pac extends MovingActor {
     private byte restingTicks;
     private long starvingTicks;
     private Steering autopilotSteering;
-    private AnimationManager animationManager;
 
     /**
      * @param name a readable name. Any honest Pac-Man and Pac-Woman should have a name! Period.
@@ -165,7 +162,7 @@ public class Pac extends MovingActor {
         moveThroughThisCruelWorld(gameContext.gameLevel());
 
         if (moveInfo.moved) {
-            this.animationManager().ifPresent(AnimationManager::play);
+            this.optAnimationManager().ifPresent(AnimationManager::play);
         } else {
             stopAnimation();
         }
@@ -177,7 +174,7 @@ public class Pac extends MovingActor {
         Logger.info("Power timer stopped and reset to zero.");
         setSpeed(0);
         setRestingTicks(INDEFINITELY);
-        animationManager().ifPresent(animationManager -> {
+        optAnimationManager().ifPresent(animationManager -> {
             animationManager.stop();
             animationManager.select(AnimationSupport.ANIM_PAC_MUNCHING);
             animationManager.reset();
@@ -224,13 +221,5 @@ public class Pac extends MovingActor {
 
     public void setAutopilotSteering(Steering steering) {
         autopilotSteering = requireNonNull(steering);
-    }
-
-    public void setAnimationManager(AnimationManager animationManager) {
-        this.animationManager = requireNonNull(animationManager);
-    }
-
-    public Optional<AnimationManager> animationManager() {
-        return Optional.ofNullable(animationManager);
     }
 }

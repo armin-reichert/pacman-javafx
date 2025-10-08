@@ -19,13 +19,13 @@ public class Stork extends Actor {
 
     public static final String ANIM_FLYING = "flying";
 
-    private final SpriteAnimationManager<SpriteID> animationManager;
     private boolean bagReleasedFromBeak;
 
     public Stork(TengenMsPacMan_SpriteSheet spriteSheet) {
-        animationManager = new SpriteAnimationManager<>(spriteSheet);
-        animationManager.setAnimation(ANIM_FLYING,
+        var spriteAnimationManager = new SpriteAnimationManager<>(spriteSheet);
+        spriteAnimationManager.setAnimation(ANIM_FLYING,
             SpriteAnimation.build().of(spriteSheet.spriteSequence(STORK)).frameTicks(8).forever());
+        setAnimationManager(spriteAnimationManager);
     }
 
     public void setBagReleasedFromBeak(boolean released) {
@@ -34,10 +34,5 @@ public class Stork extends Actor {
 
     public boolean isBagReleasedFromBeak() {
         return bagReleasedFromBeak;
-    }
-
-    @Override
-    public Optional<AnimationManager> animationManager() {
-        return Optional.of(animationManager);
     }
 }

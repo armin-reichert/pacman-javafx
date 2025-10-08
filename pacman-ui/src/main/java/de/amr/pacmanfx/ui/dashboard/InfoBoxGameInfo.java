@@ -125,7 +125,7 @@ public class InfoBoxGameInfo extends InfoBox {
         return "%d of %d (%d energizers)".formatted(
                 foodLayer.uneatenFoodCount(),
                 foodLayer.totalFoodCount(),
-                foodLayer.energizerPositions().size()
+                foodLayer.energizerTiles().size()
         );
     }
 

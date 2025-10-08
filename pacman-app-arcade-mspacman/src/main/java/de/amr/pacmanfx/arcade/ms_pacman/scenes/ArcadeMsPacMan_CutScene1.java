@@ -260,14 +260,14 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     private void enterStateInHeaven() {
         pacMan.setSpeed(0);
         pacMan.setMoveDir(Direction.LEFT);
-        pacMan.animationManager().ifPresent(am -> {
+        pacMan.optAnimationManager().ifPresent(am -> {
             am.stop();
             am.reset();
         });
 
         msPacMan.setSpeed(0);
         msPacMan.setMoveDir(Direction.RIGHT);
-        msPacMan.animationManager().ifPresent(am -> {
+        msPacMan.optAnimationManager().ifPresent(am -> {
             am.stop();
             am.reset();
         });

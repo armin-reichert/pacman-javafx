@@ -136,7 +136,7 @@ public abstract class AbstractGameModel implements Game {
     public void onLevelCompleted(GameLevel gameLevel) {
         gameLevel.huntingTimer().stop();
         // If level was ended by cheat, there might still be food remaining, so eat it:
-        gameLevel.worldMap().foodLayer().eatAllFood();
+        gameLevel.worldMap().foodLayer().eatAll();
         gameLevel.blinking().setStartState(Pulse.State.OFF);
         gameLevel.blinking().reset();
         gameLevel.pac().onLevelCompleted(gameLevel);
@@ -145,8 +145,8 @@ public abstract class AbstractGameModel implements Game {
 
     @Override
     public void startHunting(GameLevel gameLevel) {
-        gameLevel.pac().animationManager().ifPresent(AnimationManager::play);
-        gameLevel.ghosts().forEach(ghost -> ghost.animationManager().ifPresent(AnimationManager::play));
+        gameLevel.pac().optAnimationManager().ifPresent(AnimationManager::play);
+        gameLevel.ghosts().forEach(ghost -> ghost.optAnimationManager().ifPresent(AnimationManager::play));
         gameLevel.blinking().setStartState(Pulse.State.ON);
         gameLevel.blinking().restart();
         gameLevel.huntingTimer().startFirstPhase();

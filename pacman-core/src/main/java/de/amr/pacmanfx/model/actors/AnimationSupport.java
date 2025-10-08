@@ -21,30 +21,30 @@ public interface AnimationSupport {
     String ANIM_GHOST_FLASHING   = "ghost_flashing";
     String ANIM_GHOST_NUMBER     = "ghost_number";
 
-    default Optional<AnimationManager> animationManager() {
+    default Optional<AnimationManager> optAnimationManager() {
         return Optional.empty();
     }
 
     default void selectAnimation(String animationID) {
         requireNonNull(animationID);
-        animationManager().ifPresent(am -> am.select(animationID));
+        optAnimationManager().ifPresent(am -> am.select(animationID));
     }
 
     default void selectAnimationAt(String animationID, int frameIndex) {
         requireNonNull(animationID);
-        animationManager().ifPresent(am -> am.selectFrame(animationID, frameIndex));
+        optAnimationManager().ifPresent(am -> am.selectFrame(animationID, frameIndex));
     }
 
     default void playAnimation(String animationID) {
         requireNonNull(animationID);
-        animationManager().ifPresent(am -> am.play(animationID));
+        optAnimationManager().ifPresent(am -> am.play(animationID));
     }
 
     default void playAnimation() {
-        animationManager().ifPresent(AnimationManager::play);
+        optAnimationManager().ifPresent(AnimationManager::play);
     }
 
     default void stopAnimation() {
-        animationManager().ifPresent(AnimationManager::stop);
+        optAnimationManager().ifPresent(AnimationManager::stop);
     }
 }

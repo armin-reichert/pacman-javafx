@@ -96,11 +96,11 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Ga
     private void drawPellets(GameLevel gameLevel, Color pelletColor) {
         FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
         foodLayer.tiles()
-            .filter(foodLayer::isFoodPosition)
-            .filter(not(foodLayer::isEnergizerPosition)).forEach(tile -> {
+            .filter(foodLayer::isFoodTile)
+            .filter(not(foodLayer::isEnergizerTile)).forEach(tile -> {
                 ctx.setFill(backgroundColor());
                 fillSquareAtTileCenter(tile, 4);
-                if (!foodLayer.tileContainsEatenFood(tile)) {
+                if (!foodLayer.hasEatenFoodAtTile(tile)) {
                     // draw pellet using the right color
                     ctx.setFill(pelletColor);
                     fillSquareAtTileCenter(tile, 2);
@@ -112,10 +112,10 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Ga
         double size = TS;
         double offset = 0.5 * HTS;
         FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
-        foodLayer.tiles().filter(foodLayer::isEnergizerPosition).forEach(tile -> {
+        foodLayer.tiles().filter(foodLayer::isEnergizerTile).forEach(tile -> {
             ctx.setFill(backgroundColor());
             fillSquareAtTileCenter(tile, TS + 2);
-            if (!foodLayer.tileContainsEatenFood(tile) && gameLevel.blinking().state() == Pulse.State.ON) {
+            if (!foodLayer.hasEatenFoodAtTile(tile) && gameLevel.blinking().state() == Pulse.State.ON) {
                 ctx.setFill(pelletColor);
                 // draw pixelated "circle"
                 double cx = tile.x() * TS, cy = tile.y() * TS;

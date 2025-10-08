@@ -422,9 +422,9 @@ public class PlayScene3D implements GameScene {
 
         FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
         gameLevel3D.pellets3D().forEach(pellet3D ->
-            pellet3D.setVisible(!foodLayer.tileContainsEatenFood((Vector2i) pellet3D.getUserData())));
+            pellet3D.setVisible(!foodLayer.hasEatenFoodAtTile((Vector2i) pellet3D.getUserData())));
         gameLevel3D.energizers3D().forEach(energizer3D ->
-                energizer3D.shape().setVisible(!foodLayer.tileContainsEatenFood(energizer3D.tile())));
+                energizer3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(energizer3D.tile())));
 
         if (isOneOf(context().gameState(), HUNTING, GHOST_DYING)) { //TODO check this
             gameLevel3D.energizers3D().stream()

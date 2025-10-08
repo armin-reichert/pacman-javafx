@@ -227,7 +227,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                     }
                     else if (ghost.y() <= endPositionY) {
                         ghost.setSpeed(0);
-                        ghost.animationManager().ifPresent(am -> {
+                        ghost.optAnimationManager().ifPresent(am -> {
                             am.stop();
                             am.reset();
                         });
@@ -248,7 +248,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                 scene.msPacMan.move();
                 if (scene.msPacMan.x() <= STOP_X_MS_PACMAN) {
                     scene.msPacMan.setSpeed(0);
-                    scene.msPacMan.animationManager().ifPresent(AnimationManager::reset);
+                    scene.msPacMan.optAnimationManager().ifPresent(AnimationManager::reset);
                     scene.sceneController.changeState(READY_TO_PLAY);
                 }
             }

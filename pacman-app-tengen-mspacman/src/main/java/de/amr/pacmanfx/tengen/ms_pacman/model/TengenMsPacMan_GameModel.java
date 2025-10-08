@@ -355,11 +355,11 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     public void resetPacManAndGhostAnimations(GameLevel gameLevel) {
-        gameLevel.pac().animationManager().ifPresent(am -> {
+        gameLevel.pac().optAnimationManager().ifPresent(am -> {
             am.select(boosterActive ? ANIM_MS_PAC_MAN_BOOSTER : AnimationSupport.ANIM_PAC_MUNCHING);
             am.reset();
         });
-        gameLevel.ghosts().forEach(ghost -> ghost.animationManager().ifPresent(am -> {
+        gameLevel.ghosts().forEach(ghost -> ghost.optAnimationManager().ifPresent(am -> {
             am.select(AnimationSupport.ANIM_GHOST_NORMAL);
             am.reset();
         }));
@@ -544,13 +544,13 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         final FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
         final Pac pac = gameLevel.pac();
         final Vector2i tile = pac.tile();
-        if (foodLayer.tileContainsFood(tile)) {
+        if (foodLayer.hasFoodAtTile(tile)) {
             pac.setStarvingTicks(0);
             foodLayer.registerFoodEatenAt(tile);
             if (gateKeeper != null) {
                 gateKeeper.registerFoodEaten(gameLevel);
             }
-            if (foodLayer.isEnergizerPosition(tile)) {
+            if (foodLayer.isEnergizerTile(tile)) {
                 simulationStepResults.foundEnergizerAtTile = tile;
                 onEnergizerEaten();
             } else {

@@ -34,8 +34,8 @@ public class TestEatingFood {
     private void eatNextPellet(GameLevel gameLevel) {
         FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
         foodLayer.tiles()
-            .filter(foodLayer::tileContainsFood)
-            .filter(not(foodLayer::isEnergizerPosition))
+            .filter(foodLayer::hasFoodAtTile)
+            .filter(not(foodLayer::isEnergizerTile))
             .findFirst().ifPresent(tile -> {
                 foodLayer.registerFoodEatenAt(tile);
                 pacManGame().onPelletEaten(gameLevel);
@@ -44,8 +44,8 @@ public class TestEatingFood {
 
     private void eatNextEnergizer(GameLevel gameLevel) {
         FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
-        foodLayer.energizerPositions().stream()
-            .filter(foodLayer::tileContainsFood)
+        foodLayer.energizerTiles().stream()
+            .filter(foodLayer::hasFoodAtTile)
             .findFirst().ifPresent(tile -> {
                 foodLayer.registerFoodEatenAt(tile);
                 pacManGame().onEnergizerEaten(gameLevel, tile);
@@ -98,7 +98,7 @@ public class TestEatingFood {
             eatNextPellet(gameLevel);
         }
         assertEquals(2, blinky.cruiseElroyState());
-        while (foodLayer.uneatenFoodCount() > foodLayer.energizerPositions().size()) {
+        while (foodLayer.uneatenFoodCount() > foodLayer.energizerTiles().size()) {
             assertEquals(2, blinky.cruiseElroyState());
             eatNextPellet(gameLevel);
         }

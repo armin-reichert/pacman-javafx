@@ -297,7 +297,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 scene.msPacMan.move();
                 if (scene.msPacMan.x() <= MS_PAC_MAN_STOP_X) {
                     scene.msPacMan.setSpeed(0);
-                    scene.msPacMan.animationManager().ifPresent(AnimationManager::reset);
+                    scene.msPacMan.optAnimationManager().ifPresent(AnimationManager::reset);
                 }
                 if (timer.atSecond(8)) {
                     // start demo level or show options

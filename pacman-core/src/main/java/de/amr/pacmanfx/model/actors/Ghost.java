@@ -20,7 +20,6 @@ import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
@@ -37,7 +36,6 @@ public abstract class Ghost extends MovingActor {
     public static final GhostState DEFAULT_STATE = GhostState.LOCKED;
 
     private ObjectProperty<GhostState> state;
-    private AnimationManager animationManager;
     private List<Vector2i> specialTerrainTiles = List.of();
     private Vector2f startPosition;
 
@@ -55,14 +53,6 @@ public abstract class Ghost extends MovingActor {
     public abstract void onFoodEaten(GameLevel gameLevel);
 
     public abstract void onPacKilled(GameLevel gameLevel);
-
-    public void setAnimationManager(AnimationManager animationManager) {
-        this.animationManager = requireNonNull(animationManager);
-    }
-
-    public Optional<AnimationManager> animationManager() {
-        return Optional.ofNullable(animationManager);
-    }
 
     public void setSpecialTerrainTiles(List<Vector2i> tiles) {
         specialTerrainTiles = new ArrayList<>(tiles);

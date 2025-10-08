@@ -87,7 +87,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         blinky.setSpeed(0);
         blinky.hide();
 
-        blinky.animationManager().ifPresent(animations -> {
+        blinky.optAnimationManager().ifPresent(animations -> {
             blinkyNormal     = (SpriteAnimation) animations.animation(AnimationSupport.ANIM_GHOST_NORMAL);
             nailDressRapture = (SpriteAnimation) animations.animation(ANIM_BLINKY_NAIL_DRESS_RAPTURE);
             blinkyDamaged    = (SpriteAnimation) animations.animation(ANIM_BLINKY_DAMAGED);

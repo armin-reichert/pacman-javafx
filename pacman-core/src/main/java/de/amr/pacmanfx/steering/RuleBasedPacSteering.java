@@ -169,7 +169,7 @@ public class RuleBasedPacSteering implements Steering {
             if (!pac.canAccessTile(gameLevel, ahead)) {
                 break;
             }
-            if (foodLayer.isEnergizerPosition(ahead) && !foodLayer.tileContainsEatenFood(ahead)) {
+            if (foodLayer.isEnergizerTile(ahead) && !foodLayer.hasEatenFoodAtTile(ahead)) {
                 energizerFound = true;
             }
             var aheadLeft = ahead.plus(pac.moveDir().nextCounterClockwise().vector());
@@ -238,10 +238,10 @@ public class RuleBasedPacSteering implements Steering {
         for (int x = 0; x < level.worldMap().numCols(); ++x) {
             for (int y = 0; y < level.worldMap().numRows(); ++y) {
                 Vector2i tile = new Vector2i(x, y);
-                if (!foodLayer.isFoodPosition(tile) || foodLayer.tileContainsEatenFood(tile)) {
+                if (!foodLayer.isFoodTile(tile) || foodLayer.hasEatenFoodAtTile(tile)) {
                     continue;
                 }
-                if (level.worldMap().foodLayer().isEnergizerPosition(tile)
+                if (level.worldMap().foodLayer().isEnergizerTile(tile)
                     && level.pac().powerTimer().remainingTicks() > 2 * Globals.NUM_TICKS_PER_SEC
                     && foodLayer.uneatenFoodCount() > 1) {
                     continue;

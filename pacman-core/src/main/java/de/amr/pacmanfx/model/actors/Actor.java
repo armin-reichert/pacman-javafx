@@ -11,6 +11,8 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
+import java.util.Optional;
+
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
@@ -33,6 +35,8 @@ public class Actor implements AnimationSupport {
     private BooleanProperty visible;
     private ObjectProperty<Vector2f> velocity;
     private ObjectProperty<Vector2f> acceleration;
+
+    protected AnimationManager animationManager;
 
     /**
      * Resets all properties of this actor thingy to their default state. Note: actor is invisible by default!
@@ -190,5 +194,17 @@ public class Actor implements AnimationSupport {
     public boolean sameTilePosition(Actor other) {
         requireNonNull(other, "Actor to check for same tile must not be null");
         return tile().equals(other.tile());
+    }
+
+    protected AnimationManager animationManager() {
+        return animationManager;
+    }
+
+    public Optional<AnimationManager> optAnimationManager() {
+        return Optional.ofNullable(animationManager);
+    }
+
+    public void setAnimationManager(AnimationManager animationManager) {
+        this.animationManager = requireNonNull(animationManager);
     }
 }

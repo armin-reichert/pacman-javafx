@@ -15,6 +15,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.lib.worldmap.FoodTile.ENERGIZER;
 import static de.amr.pacmanfx.lib.worldmap.FoodTile.PELLET;
+import static java.util.function.Predicate.not;
 
 public class FoodLayer extends WorldMapLayer {
 
@@ -58,7 +59,7 @@ public class FoodLayer extends WorldMapLayer {
     }
 
     public void registerFoodEatenAt(Vector2i tile) {
-        if (tileContainsFood(tile)) {
+        if (hasFoodAtTile(tile)) {
             eatenFoodBits.set(indexInRowWiseOrder(tile));
             --uneatenFoodCount;
         } else {
@@ -66,29 +67,29 @@ public class FoodLayer extends WorldMapLayer {
         }
     }
 
-    public void eatAllPellets() {
-        tiles().filter(this::tileContainsFood).filter(tile -> !energizerTiles.contains(tile)).forEach(this::registerFoodEatenAt);
+    public void eatPellets() {
+        tiles().filter(this::hasFoodAtTile).filter(not(this::isEnergizerTile)).forEach(this::registerFoodEatenAt);
     }
 
-    public void eatAllFood() {
-        tiles().filter(this::tileContainsFood).forEach(this::registerFoodEatenAt);
+    public void eatAll() {
+        tiles().filter(this::hasFoodAtTile).forEach(this::registerFoodEatenAt);
     }
 
-    public boolean isFoodPosition(Vector2i tile) {
+    public Set<Vector2i> energizerTiles() { return Collections.unmodifiableSet(energizerTiles); }
+
+    public boolean isEnergizerTile(Vector2i tile) {
+        return !outOfBounds(tile) && energizerTiles.contains(tile);
+    }
+
+    public boolean isFoodTile(Vector2i tile) {
         return !outOfBounds(tile) && get(tile) != FoodTile.EMPTY.$;
     }
 
-    public Set<Vector2i> energizerPositions() { return Collections.unmodifiableSet(energizerTiles); }
-
-    public boolean isEnergizerPosition(Vector2i tile) {
-        return energizerTiles.contains(tile);
+    public boolean hasFoodAtTile(Vector2i tile) {
+        return isFoodTile(tile) && !hasEatenFoodAtTile(tile);
     }
 
-    public boolean tileContainsFood(Vector2i tile) {
-        return isFoodPosition(tile) && !tileContainsEatenFood(tile);
-    }
-
-    public boolean tileContainsEatenFood(Vector2i tile) {
-        return eatenFoodBits.get(indexInRowWiseOrder(tile));
+    public boolean hasEatenFoodAtTile(Vector2i tile) {
+        return !outOfBounds(tile) && eatenFoodBits.get(indexInRowWiseOrder(tile));
     }
 }

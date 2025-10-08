@@ -63,12 +63,12 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements Ga
             // Over-paint the eaten pellets (pellets are part of the maze image)
             FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
             foodLayer.tiles()
-                .filter(not(foodLayer::isEnergizerPosition))
-                .filter(foodLayer::tileContainsEatenFood)
+                .filter(not(foodLayer::isEnergizerTile))
+                .filter(foodLayer::hasEatenFoodAtTile)
                 .forEach(tile -> fillSquareAtTileCenter(tile, 4));
             // Over-paint eaten and dark-phase energizers
-            foodLayer.energizerPositions().stream()
-                .filter(tile -> !info.getBoolean(CommonRenderInfoKey.MAZE_BLINKING) || foodLayer.tileContainsEatenFood(tile))
+            foodLayer.energizerTiles().stream()
+                .filter(tile -> !info.getBoolean(CommonRenderInfoKey.MAZE_BLINKING) || foodLayer.hasEatenFoodAtTile(tile))
                 .forEach(tile -> fillSquareAtTileCenter(tile, 10));
         }
         ctx().restore();

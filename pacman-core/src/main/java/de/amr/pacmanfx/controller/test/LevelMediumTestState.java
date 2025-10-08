@@ -6,7 +6,6 @@ package de.amr.pacmanfx.controller.test;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.controller.GamePlayState;
-import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.Game;
@@ -35,8 +34,8 @@ public class LevelMediumTestState implements TestGameState {
         final GameLevel gameLevel = context.gameLevel();
         gameLevel.pac().usingAutopilotProperty().unbind();
         gameLevel.pac().setUsingAutopilot(true);
-        gameLevel.pac().animationManager().ifPresent(AnimationManager::play);
-        gameLevel.ghosts().forEach(ghost -> ghost.animationManager().ifPresent(AnimationManager::play));
+        gameLevel.pac().optAnimationManager().ifPresent(AnimationManager::play);
+        gameLevel.ghosts().forEach(ghost -> ghost.optAnimationManager().ifPresent(AnimationManager::play));
         gameLevel.showPacAndGhosts();
         GameLevelMessage message = new GameLevelMessage(MessageType.TEST);
         message.setPosition(gameLevel.worldMap().terrainLayer().defaultMessagePosition());

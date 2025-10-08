@@ -26,10 +26,12 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * Common data and functionality of Pac-Man and Ms. Pac-Man Arcade games.
+ *
+ * @see <a href="https://pacman.holenet.info/">The Pac-Man Dossier by Jamey Pittman</a>
  */
 public abstract class Arcade_GameModel extends AbstractGameModel {
 
-    // Level data as given in the "Pac-Man dossier"
+    // Level data as given in the "Pac-Man Dossier"
     protected static final Arcade_LevelData[] LEVEL_DATA = {
         /* 1*/ new Arcade_LevelData( 80, 75, 40,  20,  80, 10,  85,  90, 50, 6, 5),
         /* 2*/ new Arcade_LevelData( 90, 85, 45,  30,  90, 15,  95,  95, 55, 5, 5),
@@ -55,9 +57,9 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     };
 
     protected static final Map<Integer, Integer> CUT_SCENE_AFTER_LEVEL = Map.of(
-        2, 1, // after level #2, play cut scene #1
-        5, 2,
-        9, 3,
+         2, 1, // after level #2, play cut scene #1
+         5, 2,
+         9, 3,
         13, 3,
         17, 3
     );
@@ -217,10 +219,10 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
         final Pac pac = gameLevel.pac();
         final Vector2i tile = pac.tile();
-        if (foodLayer.tileContainsFood(tile)) {
+        if (foodLayer.hasFoodAtTile(tile)) {
             pac.setStarvingTicks(0);
             foodLayer.registerFoodEatenAt(tile);
-            if (foodLayer.isEnergizerPosition(tile)) {
+            if (foodLayer.isEnergizerTile(tile)) {
                 onEnergizerEaten(gameLevel, tile);
             } else {
                 onPelletEaten(gameLevel);
@@ -314,11 +316,11 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     @Override
     protected void resetPacManAndGhostAnimations(GameLevel gameLevel) {
-        gameLevel.pac().animationManager().ifPresent(am -> {
+        gameLevel.pac().optAnimationManager().ifPresent(am -> {
             am.select(AnimationSupport.ANIM_PAC_MUNCHING);
             am.reset();
         });
-        gameLevel.ghosts().forEach(ghost -> ghost.animationManager().ifPresent(am -> {
+        gameLevel.ghosts().forEach(ghost -> ghost.optAnimationManager().ifPresent(am -> {
             am.select(AnimationSupport.ANIM_GHOST_NORMAL);
             am.reset();
         }));

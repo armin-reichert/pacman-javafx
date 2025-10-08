@@ -66,7 +66,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements ActorR
     }
 
     private void drawCurrentSprite(Actor actor) {
-        actor.animationManager()
+        actor.optAnimationManager()
             .map(animations -> animations.currentSprite(actor))
             .ifPresent(sprite -> drawSpriteCentered(actor.center(), sprite));
     }
@@ -99,7 +99,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements ActorR
 
     private void drawPac(Pac pac) {
         //TODO check if this is the way to do this
-        pac.animationManager().map(SpriteAnimationManager.class::cast).ifPresent(spriteAnimations -> {
+        pac.optAnimationManager().map(SpriteAnimationManager.class::cast).ifPresent(spriteAnimations -> {
             SpriteAnimation spriteAnimation = spriteAnimations.currentAnimation();
             if (spriteAnimation == null) {
                 Logger.error("No sprite animation found for {}", pac);

@@ -543,8 +543,8 @@ public class GameLevel3D extends Group implements Disposable {
         double scaling = (2 * radius) / maxExtent;
         var scale = new Scale(scaling, scaling, scaling);
         FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
-        pellets3D = foodLayer.tiles().filter(foodLayer::tileContainsFood)
-            .filter(tile -> !foodLayer.isEnergizerPosition(tile))
+        pellets3D = foodLayer.tiles().filter(foodLayer::hasFoodAtTile)
+            .filter(tile -> !foodLayer.isEnergizerTile(tile))
             .map(tile -> createPellet3D(mesh, scale, tile))
             .collect(Collectors.toCollection(HashSet::new));
     }
@@ -588,8 +588,8 @@ public class GameLevel3D extends Group implements Disposable {
             mutableGhosts3D.get(CYAN_GHOST_BASHFUL).ghost3D().normalMaterialSet().dress(),
             mutableGhosts3D.get(ORANGE_GHOST_POKEY).ghost3D().normalMaterialSet().dress(),
         };
-        energizers3D = foodLayer.tiles().filter(foodLayer::tileContainsFood)
-            .filter(foodLayer::isEnergizerPosition)
+        energizers3D = foodLayer.tiles().filter(foodLayer::hasFoodAtTile)
+            .filter(foodLayer::isEnergizerTile)
             .map(tile -> createEnergizer3D(tile, radius, minScaling, maxScaling, ghostParticleMaterials, ghostRevivalCenters))
             .collect(Collectors.toCollection(HashSet::new));
     }
