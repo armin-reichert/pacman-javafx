@@ -77,14 +77,12 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     public static final byte BONUS_EATEN_SECONDS = 2;
 
-    protected ScoreManager scoreManager;
     protected GateKeeper gateKeeper;
     protected Steering autopilot;
     protected Steering demoLevelSteering;
 
     protected Arcade_GameModel(GameContext gameContext) {
         super(gameContext);
-        scoreManager = new ScoreManager(this);
     }
 
     public abstract Arcade_LevelData levelData(GameLevel gameLevel);
@@ -145,11 +143,11 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         gameLevel.victims().add(ghost);
         ghost.setState(GhostState.EATEN);
         ghost.selectAnimationAt(AnimationSupport.ANIM_GHOST_NUMBER, killedSoFar);
-        scoreManager().scorePoints(points);
+        scoreManager.scorePoints(points);
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
         gameLevel.registerGhostKilled();
         if (gameLevel.numGhostsKilled() == 16) {
-            scoreManager().scorePoints(ALL_GHOSTS_IN_LEVEL_KILLED_POINTS);
+            scoreManager.scorePoints(ALL_GHOSTS_IN_LEVEL_KILLED_POINTS);
             Logger.info("Scored {} points for killing all ghosts in level {}", ALL_GHOSTS_IN_LEVEL_KILLED_POINTS, gameLevel.number());
         }
     }
@@ -160,7 +158,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         if (!gameContext.coinMechanism().isEmpty()) {
             gameContext.coinMechanism().consumeCoin();
         }
-        scoreManager().updateHighScore();
+        scoreManager.updateHighScore();
         showMessage(gameLevel, MessageType.GAME_OVER);
         Logger.info("Game ended with level number {}", gameLevel.number());
     }
@@ -185,8 +183,8 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         setPlaying(false);
         setLifeCount(initialLifeCount());
         setGameLevel(null);
-        scoreManager().loadHighScore();
-        scoreManager().score().reset();
+        scoreManager.loadHighScore();
+        scoreManager.score().reset();
         gateKeeper.reset();
     }
 
@@ -244,7 +242,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         normalLevel.pac().immuneProperty().bind(gameContext.gameController().propertyImmunity());
         normalLevel.pac().usingAutopilotProperty().bind(gameContext.gameController().propertyUsingAutopilot());
         levelCounter().setEnabled(true);
-        scoreManager().score().setLevelNumber(levelNumber);
+        scoreManager.score().setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
         //TODO handle case when no house exists
         normalLevel.worldMap().terrainLayer().optHouse().ifPresent(house -> gateKeeper.setHouse(house));
@@ -261,7 +259,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         demoLevel.pac().setAutopilotSteering(demoLevelSteering);
         demoLevelSteering.init();
         levelCounter().setEnabled(true);
-        scoreManager().score().setLevelNumber(levelNumber);
+        scoreManager.score().setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
         //TODO handle case when no house exists
         demoLevel.worldMap().terrainLayer().optHouse().ifPresent(house -> gateKeeper.setHouse(house));
@@ -276,14 +274,14 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         resetPacManAndGhostAnimations(gameLevel);
         if (gameLevel.isDemoLevel()) {
             showMessage(gameLevel, MessageType.GAME_OVER);
-            scoreManager().score().setEnabled(false);
-            scoreManager().highScore().setEnabled(false);
+            scoreManager.score().setEnabled(false);
+            scoreManager.highScore().setEnabled(false);
             Logger.info("Demo level {} started", gameLevel.number());
         } else {
             levelCounter().update(gameLevel.number(), gameLevel.bonusSymbol(0));
             showMessage(gameLevel, MessageType.READY);
-            scoreManager().score().setEnabled(true);
-            scoreManager().highScore().setEnabled(true);
+            scoreManager.score().setEnabled(true);
+            scoreManager.highScore().setEnabled(true);
             Logger.info("Level {} started", gameLevel.number());
         }
         // Note: This event is very important because it triggers the creation of the actor animations!

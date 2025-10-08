@@ -125,11 +125,6 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     }
 
     @Override
-    public ScoreManager scoreManager() {
-        return scoreManager;
-    }
-
-    @Override
     public HUD hud() {
         return hud;
     }

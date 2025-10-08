@@ -34,9 +34,11 @@ public abstract class AbstractGameModel implements Game {
     protected final SimulationStepResults simulationStepResults = new SimulationStepResults();
 
     protected final GameContext gameContext;
+    protected final ScoreManager scoreManager;
 
     protected AbstractGameModel(GameContext gameContext) {
         this.gameContext = requireNonNull(gameContext);
+        this.scoreManager = new ScoreManager(this);
     }
 
     protected abstract void checkPacFindsFood(GameLevel gameLevel);
@@ -69,6 +71,11 @@ public abstract class AbstractGameModel implements Game {
     @Override
     public SimulationStepResults simulationStepResults() {
         return simulationStepResults;
+    }
+
+    @Override
+    public ScoreManager scoreManager() {
+        return scoreManager;
     }
 
     @Override
@@ -210,7 +217,7 @@ public abstract class AbstractGameModel implements Game {
     protected void checkPacEatsBonus(GameLevel gameLevel, Bonus bonus) {
         if (bonus.state() == BonusState.EDIBLE && gameLevel.pac().sameTilePosition(bonus)) {
             bonus.setEaten();
-            scoreManager().scorePoints(bonus.points());
+            scoreManager.scorePoints(bonus.points());
             Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
             simulationStepResults.bonusEatenTile = bonus.tile();
             eventManager().publishEvent(GameEventType.BONUS_EATEN);

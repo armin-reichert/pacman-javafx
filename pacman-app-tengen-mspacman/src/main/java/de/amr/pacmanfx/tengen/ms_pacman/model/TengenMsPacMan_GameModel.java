@@ -113,7 +113,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     private final BooleanProperty pacUsingAutopilot = new SimpleBooleanProperty();
 
     private final GameEventManager eventManager;
-    private final ScoreManager scoreManager;
     private final TengenMsPacMan_HUD hud = new TengenMsPacMan_HUD();
     private final TengenMsPacMan_MapSelector mapSelector;
     private final TengenMsPacMan_LevelCounter levelCounter;
@@ -132,7 +131,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     public TengenMsPacMan_GameModel(GameContext gameContext, File highScoreFile) {
         super(gameContext);
         eventManager = gameContext.eventManager();
-        scoreManager = new ScoreManager(this);
         scoreManager.setHighScoreFile(highScoreFile);
         mapSelector = new TengenMsPacMan_MapSelector();
         levelCounter = new TengenMsPacMan_LevelCounter();
@@ -146,11 +144,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     @Override
     public GameEventManager eventManager() {
         return eventManager;
-    }
-
-    @Override
-    public ScoreManager scoreManager() {
-        return scoreManager;
     }
 
     @Override

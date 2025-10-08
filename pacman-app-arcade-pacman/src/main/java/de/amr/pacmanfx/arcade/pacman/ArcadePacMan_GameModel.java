@@ -132,11 +132,6 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     }
 
     @Override
-    public ScoreManager scoreManager() {
-        return scoreManager;
-    }
-
-    @Override
     public ArcadePacMan_LevelCounter levelCounter() {
         return levelCounter;
     }
