@@ -79,7 +79,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         super(gameContext);
         this.mapSelector = requireNonNull(mapSelector);
 
-        scoreManager.setHighScoreFile(highScoreFile);
+        scoreManager.setHighScoreFile(requireNonNull(highScoreFile));
         scoreManager.setExtraLifeScores(EXTRA_LIFE_SCORE);
 
         levelCounter = new ArcadeMsPacMan_LevelCounter();
@@ -89,8 +89,8 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
             Blinky blinky = (Blinky) gameLevel.ghost(RED_GHOST_SHADOW);
             Sue sue = (Sue) gameLevel.ghost(ORANGE_GHOST_POKEY);
             if (prisoner == sue && !blinky.isCruiseElroyActive()) {
-                Logger.trace("Re-enable 'Cruise Elroy' mode because {} exits house:", prisoner.name());
                 blinky.setCruiseElroyActive(true);
+                Logger.trace("'Cruise Elroy' mode enabled because {} exits house:", prisoner.name());
             }
         });
 
