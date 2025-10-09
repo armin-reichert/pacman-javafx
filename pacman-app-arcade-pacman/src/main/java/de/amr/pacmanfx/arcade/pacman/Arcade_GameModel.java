@@ -18,7 +18,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.steering.Steering;
 import org.tinylog.Logger;
 
-import java.util.Map;
+import java.util.Optional;
 
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
 import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
@@ -55,14 +55,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         /*20*/ new Arcade_LevelData(100, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0),
         /*21*/ new Arcade_LevelData( 90, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0),
     };
-
-    protected static final Map<Integer, Integer> CUT_SCENE_AFTER_LEVEL = Map.of(
-         2, 1, // after level #2, play cut scene #1
-         5, 2,
-         9, 3,
-        13, 3,
-        17, 3
-    );
 
     /**
      * Top-left tile of ghost house in original Arcade maps (Pac-Man, Ms. Pac-Man).
@@ -234,6 +226,16 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         } else {
             pac.setStarvingTicks(pac.starvingTicks() + 1);
         }
+    }
+
+    @Override
+    public Optional<Integer> optCutSceneNumber(int levelNumber) {
+        return switch (levelNumber) {
+            case 2 -> Optional.of(1); // after level #2, play cut scene #1
+            case 5 -> Optional.of(2);
+            case 9, 13, 17 -> Optional.of(3);
+            default -> Optional.empty();
+        };
     }
 
     @Override

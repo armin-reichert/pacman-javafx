@@ -26,7 +26,6 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.ORANGE_GHOST_POKEY;
@@ -126,12 +125,6 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     @Override
     public HUD hud() {
         return hud;
-    }
-
-    @Override
-    public Optional<Integer> optCutSceneNumber(int levelNumber) {
-        Integer cutSceneNumber = CUT_SCENE_AFTER_LEVEL.get(levelNumber);
-        return Optional.ofNullable(cutSceneNumber);
     }
 
     @Override
