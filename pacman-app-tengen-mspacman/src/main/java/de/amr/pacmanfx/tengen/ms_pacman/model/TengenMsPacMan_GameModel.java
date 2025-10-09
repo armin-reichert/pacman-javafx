@@ -327,15 +327,15 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public double pacPowerSeconds(GameLevel level) {
-        if (level == null) return 0;
-        int index = level.number() <= 19 ? level.number() - 1 : 18;
+    public double pacPowerSeconds(GameLevel gameLevel) {
+        if (gameLevel == null) return 0;
+        int index = gameLevel.number() <= 19 ? gameLevel.number() - 1 : 18;
         return POWER_PELLET_TIMES[index] / 16.0;
     }
 
     @Override
-    public double pacPowerFadingSeconds(GameLevel level) {
-        return level != null ? level.game().numFlashes(level) * 0.5 : 0; // TODO check in emulator
+    public double pacPowerFadingSeconds(GameLevel gameLevel) {
+        return gameLevel != null ? gameLevel.game().numFlashes(gameLevel) * 0.5 : 0; // TODO check in emulator
     }
 
     @Override
