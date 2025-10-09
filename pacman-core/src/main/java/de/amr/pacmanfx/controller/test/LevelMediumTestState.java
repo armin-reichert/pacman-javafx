@@ -38,7 +38,7 @@ public class LevelMediumTestState implements TestGameState {
         gameLevel.ghosts().forEach(ghost -> ghost.optAnimationManager().ifPresent(AnimationManager::play));
         gameLevel.showPacAndGhosts();
         GameLevelMessage message = new GameLevelMessage(MessageType.TEST);
-        message.setPosition(gameLevel.worldMap().terrainLayer().defaultMessagePosition());
+        message.setPosition(gameLevel.worldMap().terrainLayer().messageCenterPosition());
         gameLevel.setMessage(message);
         context.game().hud().creditVisible(false);
         context.eventManager().publishEvent(GameEventType.STOP_ALL_SOUNDS);

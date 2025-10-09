@@ -91,7 +91,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     @Override
     public void onPelletEaten(GameLevel gameLevel) {
-        scoreManager().scorePoints(PELLET_VALUE);
+        scoreManager.scorePoints(PELLET_VALUE);
         gameLevel.pac().setRestingTicks(1);
         gameLevel.ghosts().forEach(ghost -> ghost.onFoodEaten(gameLevel));
     }
@@ -99,7 +99,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     @Override
     public void onEnergizerEaten(GameLevel gameLevel, Vector2i tile) {
         simulationStepResults.foundEnergizerAtTile = tile;
-        scoreManager().scorePoints(ENERGIZER_VALUE);
+        scoreManager.scorePoints(ENERGIZER_VALUE);
         gameLevel.pac().setRestingTicks(3);
         gameLevel.ghosts().forEach(ghost -> ghost.onFoodEaten(gameLevel));
 
@@ -308,7 +308,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     public void showMessage(GameLevel gameLevel, MessageType type) {
         requireNonNull(type);
         GameLevelMessage message = new GameLevelMessage(type);
-        message.setPosition(gameLevel.worldMap().terrainLayer().defaultMessagePosition());
+        message.setPosition(gameLevel.worldMap().terrainLayer().messageCenterPosition());
         gameLevel.setMessage(message);
     }
 

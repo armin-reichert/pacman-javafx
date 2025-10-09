@@ -187,6 +187,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     public void onGameEnding(GameLevel gameLevel) {
         setPlaying(false);
         scoreManager.updateHighScore();
+
         showMessage(gameLevel, MessageType.GAME_OVER);
     }
 
@@ -306,7 +307,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     public void showMessage(GameLevel gameLevel, MessageType type) {
-        Vector2f position = gameLevel.worldMap().terrainLayer().defaultMessagePosition();
+        Vector2f position = gameLevel.worldMap().terrainLayer().messageCenterPosition();
         // Non-Arcade maps have a moving "Game Over" message
         GameLevelMessage message = type == MessageType.GAME_OVER && mapCategory != MapCategory.ARCADE
             ? new MovingGameLevelMessage(type, position, GAME_OVER_MESSAGE_DELAY_SEC * NUM_TICKS_PER_SEC)

@@ -84,7 +84,10 @@ public class TerrainLayer extends WorldMapLayer {
         return Optional.ofNullable(house);
     }
 
-    public Vector2f defaultMessagePosition() {
+    /**
+     * @return position where level messages ("READY!", "GAME OVER") are displayed.
+     */
+    public Vector2f messageCenterPosition() {
         if (house != null) {
             Vector2i houseSize = house.sizeInTiles();
             float cx = TS(house.minTile().x() + houseSize.x() * 0.5f);
