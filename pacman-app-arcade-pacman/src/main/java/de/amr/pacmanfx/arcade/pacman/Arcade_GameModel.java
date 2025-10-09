@@ -90,7 +90,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     @Override
     public void onEnergizerEaten(GameLevel gameLevel, Vector2i tile) {
-        simulationStepResults.foundEnergizerAtTile = tile;
+        thisStep.foundEnergizerAtTile = tile;
         scoreManager.scorePoints(ENERGIZER_VALUE);
         gameLevel.pac().setRestingTicks(3);
         gameLevel.ghosts().forEach(ghost -> ghost.onFoodEaten(gameLevel));
@@ -106,7 +106,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             gameLevel.pac().powerTimer().restartTicks(ticks);
             Logger.debug("Power timer restarted, {} ticks ({0.00} sec)", ticks, powerSeconds);
             gameLevel.ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
-            simulationStepResults.pacGotPower = true;
+            thisStep.pacGotPower = true;
             eventManager().publishEvent(GameEventType.PAC_GETS_POWER);
         }
     }
@@ -129,7 +129,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     @Override
     public void onGhostKilled(GameLevel gameLevel, Ghost ghost) {
-        simulationStepResults.killedGhosts.add(ghost);
         int killedSoFar = gameLevel.victims().size();
         int points = 100 * KILLED_GHOST_VALUE_FACTORS[killedSoFar];
         gameLevel.victims().add(ghost);
@@ -220,7 +219,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             gateKeeper.registerFoodEaten(gameLevel);
             if (isBonusReached(gameLevel)) {
                 activateNextBonus(gameLevel);
-                simulationStepResults.bonusIndex = gameLevel.currentBonusIndex();
+                thisStep.bonusIndex = gameLevel.currentBonusIndex();
             }
             eventManager().publishEvent(GameEventType.PAC_FOUND_FOOD, tile);
         } else {

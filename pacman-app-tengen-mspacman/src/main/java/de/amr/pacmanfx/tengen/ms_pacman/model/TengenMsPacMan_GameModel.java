@@ -548,14 +548,14 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
                 gateKeeper.registerFoodEaten(gameLevel);
             }
             if (foodLayer.isEnergizerTile(tile)) {
-                simulationStepResults.foundEnergizerAtTile = tile;
+                thisStep.foundEnergizerAtTile = tile;
                 onEnergizerEaten();
             } else {
                 scoreManager.scorePoints(PELLET_VALUE);
             }
             if (isBonusReached(gameLevel)) {
                 activateNextBonus(gameLevel);
-                simulationStepResults.bonusIndex = gameLevel.currentBonusIndex();
+                thisStep.bonusIndex = gameLevel.currentBonusIndex();
             }
             eventManager().publishEvent(GameEventType.PAC_FOUND_FOOD, tile);
         } else {
@@ -571,7 +571,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     public void onEnergizerEaten(GameLevel gameLevel, Vector2i tile) {
-        simulationStepResults.foundEnergizerAtTile = tile;
+        thisStep.foundEnergizerAtTile = tile;
         scoreManager().scorePoints(ENERGIZER_VALUE);
         gameLevel.pac().setRestingTicks(3);
         gameLevel.victims().clear();
@@ -584,7 +584,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             gameLevel.pac().powerTimer().restartTicks(ticks);
             Logger.debug("Power timer restarted, {} ticks ({0.00} sec)", ticks, powerSeconds);
             gameLevel.ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
-            simulationStepResults.pacGotPower = true;
+            thisStep.pacGotPower = true;
             eventManager().publishEvent(GameEventType.PAC_GETS_POWER);
         }
     }
@@ -602,7 +602,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             Logger.info("Power timer restarted, duration={} ticks ({0.00} sec)", powerTicks, powerSeconds);
             gameLevel().ghosts(GhostState.HUNTING_PAC).forEach(ghost -> ghost.setState(GhostState.FRIGHTENED));
             gameLevel().ghosts(GhostState.FRIGHTENED).forEach(Ghost::requestTurnBack);
-            simulationStepResults.pacGotPower = true;
+            thisStep.pacGotPower = true;
             eventManager().publishEvent(GameEventType.PAC_GETS_POWER);
         } else {
             gameLevel().ghosts(GhostState.FRIGHTENED, GhostState.HUNTING_PAC).forEach(Ghost::requestTurnBack);
@@ -619,7 +619,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     public void onGhostKilled(GameLevel gameLevel, Ghost ghost) {
-        simulationStepResults.killedGhosts.add(ghost);
         int killedSoFar = gameLevel.victims().size();
         int points = 100 * KILLED_GHOST_VALUE_FACTORS[killedSoFar];
         gameLevel.victims().add(ghost);

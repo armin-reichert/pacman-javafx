@@ -8,7 +8,10 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
-import de.amr.pacmanfx.model.actors.*;
+import de.amr.pacmanfx.model.actors.AnimationManager;
+import de.amr.pacmanfx.model.actors.Bonus;
+import de.amr.pacmanfx.model.actors.BonusState;
+import de.amr.pacmanfx.model.actors.GhostState;
 import javafx.beans.property.*;
 import org.tinylog.Logger;
 
@@ -31,7 +34,7 @@ public abstract class AbstractGameModel implements Game {
 
     protected final BooleanProperty playing = new SimpleBooleanProperty(false);
 
-    protected final SimulationStepResults simulationStepResults = new SimulationStepResults();
+    protected final SimulationStepEvents thisStep = new SimulationStepEvents();
 
     protected final GameContext gameContext;
     protected final ScoreManager scoreManager;
@@ -69,8 +72,8 @@ public abstract class AbstractGameModel implements Game {
     }
 
     @Override
-    public SimulationStepResults simulationStepResults() {
-        return simulationStepResults;
+    public SimulationStepEvents simulationStepResults() {
+        return thisStep;
     }
 
     @Override
@@ -106,12 +109,12 @@ public abstract class AbstractGameModel implements Game {
 
     @Override
     public boolean hasPacManBeenKilled() {
-        return simulationStepResults.pacKilledTile != null;
+        return thisStep.pacKilledTile != null;
     }
 
     @Override
     public boolean haveGhostsBeenKilled() {
-        return !simulationStepResults.killedGhosts.isEmpty();
+        return !thisStep.killedGhosts.isEmpty();
     }
 
     @Override
@@ -140,17 +143,6 @@ public abstract class AbstractGameModel implements Game {
     }
 
     @Override
-    public void onLevelCompleted(GameLevel gameLevel) {
-        gameLevel.huntingTimer().stop();
-        // If level was ended by cheat, there might still be food remaining, so eat it:
-        gameLevel.worldMap().foodLayer().eatAll();
-        gameLevel.blinking().setStartState(Pulse.State.OFF);
-        gameLevel.blinking().reset();
-        gameLevel.pac().onLevelCompleted(gameLevel);
-        gameLevel.bonus().ifPresent(Bonus::setInactive);
-    }
-
-    @Override
     public void startHunting(GameLevel gameLevel) {
         gameLevel.pac().optAnimationManager().ifPresent(AnimationManager::play);
         gameLevel.ghosts().forEach(ghost -> ghost.optAnimationManager().ifPresent(AnimationManager::play));
@@ -162,22 +154,76 @@ public abstract class AbstractGameModel implements Game {
 
     @Override
     public void updateHunting(GameLevel gameLevel) {
-        checkPacKilled(gameLevel);
-        if (hasPacManBeenKilled()) return;
-        checkPacKillsGhosts(gameLevel);
-        if (haveGhostsBeenKilled()) return;
+        // Ghosts colliding with Pac? Collision is tile-based!
+        thisStep.ghostsCollidingWithPac.clear();
+        gameLevel.ghosts().filter(ghost -> ghost.onSameTileAs(gameLevel.pac())).forEach(thisStep.ghostsCollidingWithPac::add);
+
+        if (!thisStep.ghostsCollidingWithPac.isEmpty()) {
+            // Pac killed? Might stay alive when immune or in demo level safe time!
+            checkPacKilled(gameLevel);
+            if (hasPacManBeenKilled()) return;
+
+            // Ghost(s) killed?
+            thisStep.ghostsCollidingWithPac.stream()
+                .filter(ghost -> ghost.state() == GhostState.FRIGHTENED)
+                .forEach(thisStep.killedGhosts::add);
+            if (haveGhostsBeenKilled()) {
+                thisStep.killedGhosts.forEach(ghost -> onGhostKilled(gameLevel, ghost));
+                return;
+            }
+        }
+
         checkPacFindsFood(gameLevel);
         gameLevel.bonus().ifPresent(bonus -> checkPacEatsBonus(gameLevel, bonus));
+
         updatePacPower(gameLevel);
         gameLevel.blinking().tick();
         gameLevel.huntingTimer().update();
+    }
+
+    @Override
+    public void onLevelCompleted(GameLevel gameLevel) {
+        gameLevel.huntingTimer().stop();
+        // If level was ended by cheat, there might still be food remaining, so eat it:
+        gameLevel.worldMap().foodLayer().eatAll();
+        gameLevel.blinking().setStartState(Pulse.State.OFF);
+        gameLevel.blinking().reset();
+        gameLevel.pac().onLevelCompleted(gameLevel);
+        gameLevel.bonus().ifPresent(Bonus::setInactive);
+    }
+
+    protected void checkPacKilled(GameLevel gameLevel) {
+        thisStep.ghostsCollidingWithPac.stream()
+            .filter(ghost -> ghost.state() == GhostState.HUNTING_PAC)
+            .findFirst().ifPresent(assassin -> {
+                boolean pacDies;
+                if (gameLevel.isDemoLevel()) {
+                    pacDies = !isPacManSafeInDemoLevel(gameLevel);
+                } else {
+                    pacDies = !gameLevel.pac().isImmune();
+                }
+                if (pacDies) {
+                    thisStep.pacKiller = assassin;
+                    thisStep.pacKilledTile = assassin.tile();
+                }
+            });
+    }
+
+    protected void checkPacEatsBonus(GameLevel gameLevel, Bonus bonus) {
+        if (bonus.state() == BonusState.EDIBLE && gameLevel.pac().onSameTileAs(bonus)) {
+            bonus.setEaten();
+            scoreManager.scorePoints(bonus.points());
+            Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
+            thisStep.bonusEatenTile = bonus.tile();
+            eventManager().publishEvent(GameEventType.BONUS_EATEN);
+        }
     }
 
     protected void updatePacPower(GameLevel gameLevel) {
         final TickTimer powerTimer = gameLevel.pac().powerTimer();
         powerTimer.doTick();
         if (gameLevel.pac().isPowerFadingStarting(gameLevel)) {
-            simulationStepResults.pacStartsLosingPower = true;
+            thisStep.pacStartsLosingPower = true;
             eventManager().publishEvent(GameEventType.PAC_STARTS_LOSING_POWER);
         } else if (powerTimer.hasExpired()) {
             powerTimer.stop();
@@ -187,40 +233,8 @@ public abstract class AbstractGameModel implements Game {
             gameLevel.huntingTimer().start();
             Logger.info("Hunting timer restarted because Pac-Man lost power");
             gameLevel.ghosts(GhostState.FRIGHTENED).forEach(ghost -> ghost.setState(GhostState.HUNTING_PAC));
-            simulationStepResults.pacLostPower = true;
+            thisStep.pacLostPower = true;
             eventManager().publishEvent(GameEventType.PAC_LOST_POWER);
-        }
-    }
-
-    protected void checkPacKillsGhosts(GameLevel gameLevel) {
-        gameLevel.ghosts(GhostState.FRIGHTENED)
-            .filter(ghost -> gameLevel.pac().sameTilePosition(ghost))
-            .forEach(ghost -> onGhostKilled(gameLevel, ghost));
-    }
-
-    protected void checkPacKilled(GameLevel gameLevel) {
-        final Pac pac = gameLevel.pac();
-        gameLevel.ghosts(GhostState.HUNTING_PAC).filter(pac::sameTilePosition).findFirst().ifPresent(assassin -> {
-            boolean pacDies;
-            if (gameLevel.isDemoLevel()) {
-                pacDies = !isPacManSafeInDemoLevel(gameLevel);
-            } else {
-                pacDies = !pac.isImmune();
-            }
-            if (pacDies) {
-                simulationStepResults.pacKiller = assassin;
-                simulationStepResults.pacKilledTile = assassin.tile();
-            }
-        });
-    }
-
-    protected void checkPacEatsBonus(GameLevel gameLevel, Bonus bonus) {
-        if (bonus.state() == BonusState.EDIBLE && gameLevel.pac().sameTilePosition(bonus)) {
-            bonus.setEaten();
-            scoreManager.scorePoints(bonus.points());
-            Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
-            simulationStepResults.bonusEatenTile = bonus.tile();
-            eventManager().publishEvent(GameEventType.BONUS_EATEN);
         }
     }
 }

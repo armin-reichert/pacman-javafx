@@ -13,10 +13,8 @@ import java.util.List;
 
 /**
  * Stores what happened during the current simulation step.
- *
- * @author Armin Reichert
  */
-public class SimulationStepResults {
+public class SimulationStepEvents {
     public long       tick;
     public Vector2i   foundEnergizerAtTile;
     public int        bonusIndex = -1;
@@ -31,6 +29,7 @@ public class SimulationStepResults {
     public Ghost      releasedGhost;
     public String     ghostReleaseInfo;
     public final List<Ghost> killedGhosts = new ArrayList<>();
+    public final List<Ghost> ghostsCollidingWithPac = new ArrayList<>();
 
     public void reset(long tick) {
         this.tick = tick;
@@ -47,10 +46,14 @@ public class SimulationStepResults {
         releasedGhost = null;
         ghostReleaseInfo = null;
         killedGhosts.clear();
+        ghostsCollidingWithPac.clear();
     }
 
     public List<String> createReport() {
         var messages = new ArrayList<String>();
+        for (Ghost ghost : ghostsCollidingWithPac) {
+            messages.add("%s collided with Pac at tile %s, state after collision: %s".formatted(ghost.name(), ghost.tile(), ghost.state()));
+        }
         if (foundEnergizerAtTile != null) {
             messages.add("Energizer found at " + foundEnergizerAtTile);
         }
@@ -78,10 +81,8 @@ public class SimulationStepResults {
         if (releasedGhost != null) {
             messages.add("%s unlocked: %s".formatted(releasedGhost.name(), ghostReleaseInfo));
         }
-        if (!killedGhosts.isEmpty()) {
-            for (Ghost ghost : killedGhosts) {
-                messages.add("%s killed at %s".formatted(ghost.name(), ghost.tile()));
-            }
+        for (Ghost ghost : killedGhosts) {
+            messages.add("%s killed at %s".formatted(ghost.name(), ghost.tile()));
         }
         return messages;
     }
@@ -89,7 +90,7 @@ public class SimulationStepResults {
     public void printLog() {
         var report = createReport();
         if (!report.isEmpty()) {
-            Logger.info("Simulation step #{}:", tick);
+            Logger.info("Step #{} of simulation:", tick);
             for (var msg : report) {
                 Logger.info("- " + msg);
             }
