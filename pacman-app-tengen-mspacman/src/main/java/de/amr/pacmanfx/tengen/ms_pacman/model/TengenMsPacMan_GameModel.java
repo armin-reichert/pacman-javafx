@@ -111,7 +111,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     private final BooleanProperty pacImmunity = new SimpleBooleanProperty();
     private final BooleanProperty pacUsingAutopilot = new SimpleBooleanProperty();
 
-    private final GameEventManager eventManager;
     private final TengenMsPacMan_HUD hud = new TengenMsPacMan_HUD();
     private final TengenMsPacMan_MapSelector mapSelector;
     private final TengenMsPacMan_LevelCounter levelCounter;
@@ -129,8 +128,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     public TengenMsPacMan_GameModel(GameContext gameContext, File highScoreFile) {
         super(gameContext);
-        eventManager = gameContext.eventManager();
-        scoreManager.setHighScoreFile(highScoreFile);
+        scoreManager.setHighScoreFile(requireNonNull(highScoreFile));
         mapSelector = new TengenMsPacMan_MapSelector();
         levelCounter = new TengenMsPacMan_LevelCounter();
         gateKeeper = new GateKeeper(this); //TODO implement original house logic
@@ -142,7 +140,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     public GameEventManager eventManager() {
-        return eventManager;
+        return gameContext.eventManager();
     }
 
     @Override
