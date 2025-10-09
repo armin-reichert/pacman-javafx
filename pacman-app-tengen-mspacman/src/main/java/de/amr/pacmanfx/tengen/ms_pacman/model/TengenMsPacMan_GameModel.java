@@ -24,6 +24,7 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Stream;
@@ -51,6 +52,14 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     public static final byte FIRST_LEVEL_NUMBER = 1;
     public static final byte LAST_LEVEL_NUMBER = 32;
+
+    private static final Map<Integer, Integer> CUT_SCENE_AFTER_LEVEL = Map.of(
+         2, 1, // after level #2, play cut scene #1
+         5, 2,
+         9, 3,
+        13, 3,
+        17, 3
+    );
 
     public static final int DEMO_LEVEL_MIN_DURATION_MILLIS = 20_000;
     public static final byte GAME_OVER_MESSAGE_DELAY_SEC = 2;
@@ -326,14 +335,13 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     public double pacPowerSeconds(GameLevel gameLevel) {
-        if (gameLevel == null) return 0;
         int index = gameLevel.number() <= 19 ? gameLevel.number() - 1 : 18;
         return POWER_PELLET_TIMES[index] / 16.0;
     }
 
     @Override
     public double pacPowerFadingSeconds(GameLevel gameLevel) {
-        return gameLevel != null ? gameLevel.game().numFlashes(gameLevel) * 0.5 : 0; // TODO check in emulator
+        return gameLevel.game().numFlashes(gameLevel) * 0.5; // TODO check in emulator
     }
 
     @Override
@@ -363,12 +371,9 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     public Optional<Integer> optCutSceneNumber(int levelNumber) {
-         return switch (levelNumber) {
-             case 2 -> Optional.of(1);
-             case 5 -> Optional.of(2);
-             case 9, 13, 17 -> Optional.of(3);
-             default -> levelNumber == LAST_LEVEL_NUMBER ? Optional.of(4) : Optional.empty();
-        };
+        Integer sceneNumber = CUT_SCENE_AFTER_LEVEL.get(levelNumber);
+        if (levelNumber == LAST_LEVEL_NUMBER) sceneNumber = 4;
+        return Optional.ofNullable(sceneNumber);
     }
 
     @Override
@@ -741,7 +746,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     public float pacPowerSpeed(GameLevel gameLevel) {
-        //TODO is this correct?
+        //TODO correct?
         return gameLevel.pac() != null ? 1.1f * pacNormalSpeed(gameLevel) : 0;
     }
 
@@ -774,13 +779,13 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     public float ghostFrightenedSpeed(GameLevel gameLevel, Ghost ghost) {
-        //TODO is this correct?
+        //TODO correct?
         return 0.5f * ghostAttackSpeed(gameLevel, ghost);
     }
 
     @Override
     public float ghostTunnelSpeed(GameLevel gameLevel, Ghost ghost) {
-        //TODO is this correct?
+        //TODO correct?
         return 0.4f;
     }
 }
