@@ -18,6 +18,7 @@ import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.Waypoint;
 import de.amr.pacmanfx.lib.timer.TickTimer;
+import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.Bonus;
@@ -230,24 +231,40 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
      **/
     @Override
     public void activateNextBonus(GameLevel gameLevel) {
+        final TerrainLayer terrain = gameLevel.worldMap().terrainLayer();
+
         if (gameLevel.isBonusEdible()) {
             Logger.info("Previous bonus is still active, skip this bonus");
             return;
         }
 
-        final List<Portal> portals = gameLevel.worldMap().terrainLayer().portals();
-        if (portals.isEmpty()) {
-            Logger.error("Moving bonus cannot be activated, game level does not contain any portals");
-            return;
-        }
-
-        final House house = gameLevel.worldMap().terrainLayer().optHouse().orElse(null);
+        final House house = terrain.optHouse().orElse(null);
         if (house == null) {
             Logger.error("Moving bonus cannot be activated, no house exists in this level!");
             return;
         }
 
-        Vector2i entryTile = gameLevel.worldMap().terrainLayer().getTileProperty(DefaultWorldMapPropertyName.POS_BONUS);
+        gameLevel.selectNextBonus();
+        byte symbol = gameLevel.bonusSymbol(gameLevel.currentBonusIndex());
+        var bonus = new Bonus(symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100);
+        bonus.enableMovement();
+        bonus.setEdibleTicks(TickTimer.INDEFINITE);
+        bonus.setEatenTicks(TickTimer.secToTicks(BONUS_EATEN_SECONDS));
+        bonus.setEdible();
+        computeBonusRoute(bonus, terrain, house);
+
+        gameLevel.setBonus(bonus);
+        eventManager().publishEvent(GameEventType.BONUS_ACTIVATED, bonus.tile());
+    }
+
+    private void computeBonusRoute(Bonus bonus, TerrainLayer terrain, House house) {
+        final List<Portal> portals = terrain.portals();
+        if (portals.isEmpty()) {
+            Logger.error("Moving bonus cannot be activated, game level does not contain any portals");
+            return;
+        }
+
+        Vector2i entryTile = terrain.getTileProperty(DefaultWorldMapPropertyName.POS_BONUS);
         Vector2i exitTile;
         boolean leftToRight;
         if (entryTile != null) { // Map defines bonus entry tile
@@ -278,18 +295,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         Vector2i backyard = houseEntry.plus(0, house.sizeInTiles().y() + 1);
         List<Waypoint> route = Stream.of(entryTile, houseEntry, backyard, houseEntry, exitTile).map(Waypoint::new).toList();
 
-        gameLevel.selectNextBonus();
-        byte symbol = gameLevel.bonusSymbol(gameLevel.currentBonusIndex());
-        var bonus = new Bonus(symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100);
-        bonus.enableMovement();
-        bonus.setEdibleTicks(TickTimer.INDEFINITE);
-        bonus.setEatenTicks(TickTimer.secToTicks(BONUS_EATEN_SECONDS));
         bonus.setRoute(route, leftToRight);
-        bonus.setEdible();
-        gameLevel.setBonus(bonus);
-
-        Logger.info("Moving bonus created, route: {} (crossing {})", route, leftToRight ? "left to right" : "right to left");
-
-        eventManager().publishEvent(GameEventType.BONUS_ACTIVATED, bonus.tile());
+        Logger.info("Moving bonus route: {} (crossing {})", route, leftToRight ? "left to right" : "right to left");
     }
 }
