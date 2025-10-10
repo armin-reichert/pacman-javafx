@@ -10,6 +10,7 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HuntingPhase;
 import de.amr.pacmanfx.model.actors.Ghost;
+import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
 
@@ -30,6 +31,12 @@ public class Blinky extends Ghost {
 
     public void setCruiseElroyActive(boolean active) {
         cruiseElroyActive = active;
+        Logger.info("Cruise Elroy is: {}, active: {}", cruiseElroyValue, cruiseElroyActive);
+    }
+
+    private void setCruiseElroyValue(int value) {
+        cruiseElroyValue = (byte) value;
+        Logger.info("Cruise Elroy is: {}, active: {}", cruiseElroyValue, cruiseElroyActive);
     }
 
     @Override
@@ -41,9 +48,9 @@ public class Blinky extends Ghost {
         final Arcade_LevelData data = game.levelData(gameLevel);
         int uneatenFoodCount = gameLevel.worldMap().foodLayer().uneatenFoodCount();
         if (uneatenFoodCount == data.elroy1DotsLeft()) {
-            cruiseElroyValue = 1;
+            setCruiseElroyValue(1);
         } else if (uneatenFoodCount == data.elroy2DotsLeft()) {
-            cruiseElroyValue = 2;
+            setCruiseElroyValue(2);
         }
     }
 
