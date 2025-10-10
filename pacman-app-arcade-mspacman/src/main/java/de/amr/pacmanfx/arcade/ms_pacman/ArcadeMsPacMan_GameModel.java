@@ -131,8 +131,9 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     @Override
     public GameLevel createLevel(int levelNumber, boolean demoLevel) {
         final WorldMap worldMap = mapSelector.provideWorldMap(levelNumber);
+        final TerrainLayer terrain = worldMap.terrainLayer();
         final ArcadeHouse house = new ArcadeHouse(ARCADE_MAP_HOUSE_MIN_TILE);
-        worldMap.terrainLayer().setHouse(house);
+        terrain.setHouse(house);
 
         final GameLevel newGameLevel = new GameLevel(this, levelNumber, worldMap, new ArcadeMsPacMan_HuntingTimer());
         newGameLevel.setDemoLevel(demoLevel);
@@ -143,16 +144,16 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         newGameLevel.setPac(msPacMan);
 
         final Blinky blinky = ArcadeMsPacMan_ActorFactory.createBlinky();
-        blinky.setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_1_RED)));
+        blinky.setStartPosition(halfTileRightOf(terrain.getTileProperty(POS_GHOST_1_RED)));
 
         final Pinky pinky = ArcadeMsPacMan_ActorFactory.createPinky();
-        pinky.setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_2_PINK)));
+        pinky.setStartPosition(halfTileRightOf(terrain.getTileProperty(POS_GHOST_2_PINK)));
 
         final Inky inky = ArcadeMsPacMan_ActorFactory.createInky();
-        inky.setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_3_CYAN)));
+        inky.setStartPosition(halfTileRightOf(terrain.getTileProperty(POS_GHOST_3_CYAN)));
 
         final Sue sue = ArcadeMsPacMan_ActorFactory.createSue();
-        sue.setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_4_ORANGE)));
+        sue.setStartPosition(halfTileRightOf(terrain.getTileProperty(POS_GHOST_4_ORANGE)));
 
         newGameLevel.setGhosts(blinky, pinky, inky, sue);
 

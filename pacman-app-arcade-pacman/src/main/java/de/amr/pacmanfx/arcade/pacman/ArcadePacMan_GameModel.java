@@ -11,6 +11,7 @@ import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.Waypoint;
 import de.amr.pacmanfx.lib.timer.TickTimer;
+import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
 import de.amr.pacmanfx.lib.worldmap.TerrainTile;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.*;
@@ -142,8 +143,9 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     @Override
     public GameLevel createLevel(int levelNumber, boolean demoLevel) {
         final WorldMap worldMap = mapSelector.provideWorldMap(levelNumber);
+        final TerrainLayer terrain = worldMap.terrainLayer();
         final ArcadeHouse house = new ArcadeHouse(ARCADE_MAP_HOUSE_MIN_TILE);
-        worldMap.terrainLayer().setHouse(house);
+        terrain.setHouse(house);
 
         final GameLevel newGameLevel = new GameLevel(this, levelNumber, worldMap, new ArcadePacMan_HuntingTimer());
         newGameLevel.setDemoLevel(demoLevel);
@@ -154,22 +156,22 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         newGameLevel.setPac(pacMan);
 
         final Blinky blinky = ArcadePacMan_ActorFactory.createBlinky();
-        blinky.setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_1_RED)));
+        blinky.setStartPosition(halfTileRightOf(terrain.getTileProperty(POS_GHOST_1_RED)));
 
         final Pinky pinky = ArcadePacMan_ActorFactory.createPinky();
-        pinky.setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_2_PINK)));
+        pinky.setStartPosition(halfTileRightOf(terrain.getTileProperty(POS_GHOST_2_PINK)));
 
         final Inky inky = ArcadePacMan_ActorFactory.createInky();
-        inky.setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_3_CYAN)));
+        inky.setStartPosition(halfTileRightOf(terrain.getTileProperty(POS_GHOST_3_CYAN)));
 
         final Clyde clyde = ArcadePacMan_ActorFactory.createClyde();
-        clyde.setStartPosition(halfTileRightOf(worldMap.terrainLayer().getTileProperty(POS_GHOST_4_ORANGE)));
+        clyde.setStartPosition(halfTileRightOf(terrain.getTileProperty(POS_GHOST_4_ORANGE)));
 
         newGameLevel.setGhosts(blinky, pinky, inky, clyde);
 
         // Special tiles where attacking ghosts cannot move up
-        final List<Vector2i> oneWayDownTiles = worldMap.terrainLayer().tiles()
-            .filter(tile -> worldMap.terrainLayer().get(tile) == TerrainTile.ONE_WAY_DOWN.$)
+        final List<Vector2i> oneWayDownTiles = terrain.tiles()
+            .filter(tile -> terrain.get(tile) == TerrainTile.ONE_WAY_DOWN.$)
             .toList();
         newGameLevel.ghosts().forEach(ghost -> ghost.setSpecialTerrainTiles(oneWayDownTiles));
 
