@@ -29,6 +29,7 @@ public class FoodMapRenderer extends BaseRenderer implements TileRenderer {
     public FoodMapRenderer(Canvas canvas) {
         super(canvas);
     }
+
     public void setEnergizerColor(Color color) {
         energizerColor.set(requireNonNull(color));
     }
