@@ -17,7 +17,7 @@ import javafx.scene.control.Spinner;
 
 import java.util.List;
 
-import static de.amr.pacmanfx.Validations.isOneOf;
+import static de.amr.pacmanfx.Validations.stateIsOneOf;
 
 /**
  * Game related settings.
@@ -70,7 +70,7 @@ public class InfoBoxGameControl extends InfoBox {
 
         GameState state = ui.gameContext().gameState();
 
-        spinnerCredit.setDisable(!(isOneOf(state, GamePlayState.INTRO, GamePlayState.SETTING_OPTIONS_FOR_START)));
+        spinnerCredit.setDisable(!(stateIsOneOf(state, GamePlayState.INTRO, GamePlayState.SETTING_OPTIONS_FOR_START)));
         choiceBoxInitialLives.setDisable(state != GamePlayState.INTRO);
 
         buttonGroupLevelActions[GAME_LEVEL_START].setDisable(isBooting() || !canStartLevel());
@@ -89,10 +89,10 @@ public class InfoBoxGameControl extends InfoBox {
     }
 
     private boolean canStartLevel() {
-        return ui.gameContext().game().canStartNewGame() && isOneOf(ui.gameContext().gameState(), GamePlayState.INTRO, GamePlayState.SETTING_OPTIONS_FOR_START);
+        return ui.gameContext().game().canStartNewGame() && stateIsOneOf(ui.gameContext().gameState(), GamePlayState.INTRO, GamePlayState.SETTING_OPTIONS_FOR_START);
     }
 
     private boolean canEnterNextLevel() {
-        return ui.gameContext().game().isPlaying() && isOneOf(ui.gameContext().gameState(), GamePlayState.HUNTING);
+        return ui.gameContext().game().isPlaying() && stateIsOneOf(ui.gameContext().gameState(), GamePlayState.HUNTING);
     }
 }

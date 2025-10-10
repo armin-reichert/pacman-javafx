@@ -16,15 +16,15 @@ import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
 public class Blinky extends Ghost {
 
     private boolean cruiseElroyActive;
-    private int cruiseElroyState;
+    private byte cruiseElroyValue;
 
     protected Blinky() {
         reset();
         cruiseElroyActive = false;
-        cruiseElroyState = 0;
+        cruiseElroyValue = 0;
     }
 
-    public int cruiseElroyState() { return cruiseElroyState; }
+    public int cruiseElroyValue() { return cruiseElroyValue; }
 
     public boolean isCruiseElroyActive() { return cruiseElroyActive; }
 
@@ -33,19 +33,23 @@ public class Blinky extends Ghost {
     }
 
     @Override
-    public void onFoodEaten(GameLevel gameLevel) {
+    public void onFoodCountChange(GameLevel gameLevel) {
+        super.onFoodCountChange(gameLevel);
+
+        // "Cruise Elroy"
         final Arcade_GameModel game = (Arcade_GameModel) gameLevel.game();
         final Arcade_LevelData data = game.levelData(gameLevel);
         int uneatenFoodCount = gameLevel.worldMap().foodLayer().uneatenFoodCount();
         if (uneatenFoodCount == data.elroy1DotsLeft()) {
-            cruiseElroyState = 1;
+            cruiseElroyValue = 1;
         } else if (uneatenFoodCount == data.elroy2DotsLeft()) {
-            cruiseElroyState = 2;
+            cruiseElroyValue = 2;
         }
     }
 
     @Override
     public void onPacKilled(GameLevel gameLevel) {
+        super.onPacKilled(gameLevel);
         setCruiseElroyActive(false);
     }
 

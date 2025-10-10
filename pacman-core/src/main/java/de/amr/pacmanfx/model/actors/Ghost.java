@@ -24,7 +24,7 @@ import java.util.List;
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.Validations.differsAtMost;
-import static de.amr.pacmanfx.Validations.isOneOf;
+import static de.amr.pacmanfx.Validations.stateIsOneOf;
 import static de.amr.pacmanfx.lib.Direction.*;
 import static java.util.Objects.requireNonNull;
 
@@ -50,9 +50,9 @@ public abstract class Ghost extends MovingActor {
      */
     public abstract byte personality();
 
-    public abstract void onFoodEaten(GameLevel gameLevel);
+    public void onFoodCountChange(GameLevel gameLevel) {}
 
-    public abstract void onPacKilled(GameLevel gameLevel);
+    public void onPacKilled(GameLevel gameLevel) {}
 
     public void setSpecialTerrainTiles(List<Vector2i> tiles) {
         specialTerrainTiles = new ArrayList<>(tiles);
@@ -205,7 +205,7 @@ public abstract class Ghost extends MovingActor {
      * <code>false</code>
      */
     public boolean inAnyOfStates(GhostState... states) {
-        return state != null && isOneOf(state(), states);
+        return state != null && stateIsOneOf(state(), states);
     }
 
     /**
@@ -273,7 +273,7 @@ public abstract class Ghost extends MovingActor {
         } else {
             setSpeed(0);
         }
-        if (gameLevel.pac().powerTimer().isRunning() && !gameLevel.victims().contains(this)) {
+        if (gameLevel.pac().powerTimer().isRunning() && !gameLevel.energizerVictims().contains(this)) {
             playFrightenedAnimation(gameLevel, gameLevel.pac());
         } else {
             selectAnimation(AnimationSupport.ANIM_GHOST_NORMAL);
@@ -298,7 +298,7 @@ public abstract class Ghost extends MovingActor {
             setMoveDir(LEFT);
             setWishDir(LEFT);
             newTileEntered = false; // don't change direction until new tile is entered
-            if (gameLevel.pac().powerTimer().isRunning() && !gameLevel.victims().contains(this)) {
+            if (gameLevel.pac().powerTimer().isRunning() && !gameLevel.energizerVictims().contains(this)) {
                 setState(GhostState.FRIGHTENED);
             } else {
                 setState(GhostState.HUNTING_PAC);
@@ -321,7 +321,7 @@ public abstract class Ghost extends MovingActor {
             }
             setSpeed(speed);
             move();
-            if (gameLevel.pac().powerTimer().isRunning() && !gameLevel.victims().contains(this)) {
+            if (gameLevel.pac().powerTimer().isRunning() && !gameLevel.energizerVictims().contains(this)) {
                 playFrightenedAnimation(gameLevel, gameLevel.pac());
             } else {
                 selectAnimation(AnimationSupport.ANIM_GHOST_NORMAL);

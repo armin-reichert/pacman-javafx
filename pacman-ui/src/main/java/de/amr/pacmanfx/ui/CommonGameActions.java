@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Set;
 
 import static de.amr.pacmanfx.Globals.NUM_TICKS_PER_SEC;
-import static de.amr.pacmanfx.Validations.isOneOf;
+import static de.amr.pacmanfx.Validations.stateIsOneOf;
 import static de.amr.pacmanfx.controller.GamePlayState.INTRO;
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
 import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
@@ -163,7 +163,7 @@ public interface CommonGameActions {
             GameLevel gameLevel = ui.gameContext().gameLevel();
             List<Ghost> vulnerableGhosts = gameLevel.ghosts(FRIGHTENED, HUNTING_PAC).toList();
             if (!vulnerableGhosts.isEmpty()) {
-                gameLevel.victims().clear(); // resets value of next killed ghost to 200
+                gameLevel.energizerVictims().clear(); // resets value of next killed ghost to 200
                 vulnerableGhosts.forEach(ghost -> gameLevel.game().onGhostKilled(gameLevel, ghost));
                 ui.gameContext().gameController().changeGameState(GamePlayState.GHOST_DYING);
             }
@@ -470,7 +470,7 @@ public interface CommonGameActions {
                 || state.name().equals(LevelMediumTestState.class.getSimpleName())) {
                 return true;
             }
-            return isOneOf(state, GamePlayState.BOOT, GamePlayState.INTRO, GamePlayState.SETTING_OPTIONS_FOR_START, GamePlayState.HUNTING);
+            return stateIsOneOf(state, GamePlayState.BOOT, GamePlayState.INTRO, GamePlayState.SETTING_OPTIONS_FOR_START, GamePlayState.HUNTING);
         }
     };
 }

@@ -17,14 +17,6 @@ public class Sue extends Ghost {
     }
 
     @Override
-    public void onFoodEaten(GameLevel gameLevel) {
-    }
-
-    @Override
-    public void onPacKilled(GameLevel gameLevel) {
-    }
-
-    @Override
     public String name() {
         return "Sue";
     }

@@ -89,25 +89,25 @@ public class TestEatingFood {
         final Blinky blinky = (Blinky) gameLevel.ghost(RED_GHOST_SHADOW);
         final FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
         while (foodLayer.uneatenFoodCount() > game.levelData(gameLevel).elroy1DotsLeft()) {
-            assertEquals(0, blinky.cruiseElroyState());
+            assertEquals(0, blinky.cruiseElroyValue());
             eatNextPellet(gameLevel);
         }
-        assertEquals(1, blinky.cruiseElroyState());
+        assertEquals(1, blinky.cruiseElroyValue());
         while (foodLayer.uneatenFoodCount() > game.levelData(gameLevel).elroy2DotsLeft()) {
-            assertEquals(1, blinky.cruiseElroyState());
+            assertEquals(1, blinky.cruiseElroyValue());
             eatNextPellet(gameLevel);
         }
-        assertEquals(2, blinky.cruiseElroyState());
+        assertEquals(2, blinky.cruiseElroyValue());
         while (foodLayer.uneatenFoodCount() > foodLayer.energizerTiles().size()) {
-            assertEquals(2, blinky.cruiseElroyState());
+            assertEquals(2, blinky.cruiseElroyValue());
             eatNextPellet(gameLevel);
         }
-        assertEquals(2, blinky.cruiseElroyState());
+        assertEquals(2, blinky.cruiseElroyValue());
         while (foodLayer.uneatenFoodCount() > 0) {
-            assertEquals(2, blinky.cruiseElroyState());
+            assertEquals(2, blinky.cruiseElroyValue());
             eatNextEnergizer(gameLevel);
         }
-        assertEquals(2, blinky.cruiseElroyState());
+        assertEquals(2, blinky.cruiseElroyValue());
     }
 
     @Test

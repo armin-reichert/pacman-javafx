@@ -92,7 +92,7 @@ public class GameLevel {
         return game;
     }
 
-    public List<Ghost> victims() { return victims; }
+    public List<Ghost> energizerVictims() { return victims; }
 
     public boolean isDemoLevel() { return demoLevel; }
     public void setDemoLevel(boolean demoLevel) { this.demoLevel = demoLevel; }

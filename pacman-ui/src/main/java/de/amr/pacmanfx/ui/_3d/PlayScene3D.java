@@ -50,7 +50,7 @@ import java.util.*;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.Validations.isOneOf;
+import static de.amr.pacmanfx.Validations.stateIsOneOf;
 import static de.amr.pacmanfx.controller.GamePlayState.*;
 import static de.amr.pacmanfx.ui.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.api.GameUI_Properties.*;
@@ -426,7 +426,7 @@ public class PlayScene3D implements GameScene {
         gameLevel3D.energizers3D().forEach(energizer3D ->
                 energizer3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(energizer3D.tile())));
 
-        if (isOneOf(context().gameState(), HUNTING, GHOST_DYING)) { //TODO check this
+        if (stateIsOneOf(context().gameState(), HUNTING, GHOST_DYING)) { //TODO check this
             gameLevel3D.energizers3D().stream()
                 .filter(energizer3D -> energizer3D.shape().isVisible())
                 .forEach(Energizer3D::startPumping);

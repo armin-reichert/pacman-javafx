@@ -84,20 +84,23 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     @Override
     public void onPelletEaten(GameLevel gameLevel) {
         scoreManager.scorePoints(PELLET_VALUE);
-        gameLevel.pac().setRestingTicks(1);
-        gameLevel.ghosts().forEach(ghost -> ghost.onFoodEaten(gameLevel));
+        gameLevel.pac().onFoodEaten(false);
+        gameLevel.ghosts().forEach(ghost -> ghost.onFoodCountChange(gameLevel));
     }
 
     @Override
     public void onEnergizerEaten(GameLevel gameLevel, Vector2i tile) {
         thisStep.foundEnergizerAtTile = tile;
         scoreManager.scorePoints(ENERGIZER_VALUE);
-        gameLevel.pac().setRestingTicks(3);
-        gameLevel.ghosts().forEach(ghost -> ghost.onFoodEaten(gameLevel));
-
-        gameLevel.victims().clear();
-        gameLevel.ghosts(FRIGHTENED, HUNTING_PAC).forEach(Ghost::requestTurnBack);
-
+        gameLevel.pac().onFoodEaten(true);
+        gameLevel.ghosts().forEach(ghost -> {
+            ghost.onFoodCountChange(gameLevel);
+            if (ghost.inAnyOfStates(FRIGHTENED, HUNTING_PAC)) {
+                ghost.requestTurnBack();
+            }
+        });
+        gameLevel.energizerVictims().clear();
+        // Pac gets power?
         double powerSeconds = pacPowerSeconds(gameLevel);
         if (powerSeconds > 0) {
             gameLevel.huntingTimer().stop();
@@ -129,9 +132,9 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     @Override
     public void onGhostKilled(GameLevel gameLevel, Ghost ghost) {
-        int killedSoFar = gameLevel.victims().size();
+        int killedSoFar = gameLevel.energizerVictims().size();
         int points = 100 * KILLED_GHOST_VALUE_FACTORS[killedSoFar];
-        gameLevel.victims().add(ghost);
+        gameLevel.energizerVictims().add(ghost);
         ghost.setState(GhostState.EATEN);
         ghost.selectAnimationAt(AnimationSupport.ANIM_GHOST_NUMBER, killedSoFar);
         scoreManager.scorePoints(points);
@@ -349,10 +352,10 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             return ghostTunnelSpeed(gameLevel, ghost);
         }
         if (ghost instanceof Blinky blinky) {
-            if (blinky.cruiseElroyState() == 1) {
+            if (blinky.cruiseElroyValue() == 1) {
                 return levelData(gameLevel).elroy1SpeedPct() * BASE_SPEED_1_PERCENT;
             }
-            if (blinky.cruiseElroyState() == 2) {
+            if (blinky.cruiseElroyValue() == 2) {
                 return levelData(gameLevel).elroy2SpeedPct() * BASE_SPEED_1_PERCENT;
             }
         }

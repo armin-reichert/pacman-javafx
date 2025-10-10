@@ -270,7 +270,7 @@ public class MutableGhost3D extends Group implements Disposable {
         boolean powerActive = gameLevel.pac().powerTimer().isRunning();
         boolean powerFading = gameLevel.pac().isPowerFading(gameLevel);
         // ghost that got already killed in the current power phase do not look frightened anymore
-        boolean killedInCurrentPhase = gameLevel.victims().contains(ghost);
+        boolean killedInCurrentPhase = gameLevel.energizerVictims().contains(ghost);
         GhostAppearance newAppearance = selectAppearance(
             ghost.state(),
             powerActive,

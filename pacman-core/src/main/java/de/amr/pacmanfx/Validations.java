@@ -71,7 +71,7 @@ public interface Validations {
     }
 
     @SafeVarargs
-    static <T> boolean isOneOf(T value, T... alternatives) {
+    static <T> boolean stateIsOneOf(T value, T... alternatives) {
         if (value == null) {
             throw new IllegalArgumentException("Value is null");
         }

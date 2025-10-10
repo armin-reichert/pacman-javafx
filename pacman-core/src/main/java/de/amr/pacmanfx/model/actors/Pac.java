@@ -168,6 +168,14 @@ public class Pac extends MovingActor {
         }
     }
 
+    public void onFoodEaten(boolean energizer) {
+        if (energizer) {
+            setRestingTicks(3);
+        } else {
+            setRestingTicks(1);
+        }
+    }
+
     public void onLevelCompleted(GameLevel gameLevel) {
         powerTimer.stop();
         powerTimer.reset(0);

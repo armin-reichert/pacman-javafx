@@ -574,7 +574,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         thisStep.foundEnergizerAtTile = tile;
         scoreManager().scorePoints(ENERGIZER_VALUE);
         gameLevel.pac().setRestingTicks(3);
-        gameLevel.victims().clear();
+        gameLevel.energizerVictims().clear();
         gameLevel.ghosts(FRIGHTENED, HUNTING_PAC).forEach(Ghost::requestTurnBack);
         double powerSeconds = pacPowerSeconds(gameLevel);
         if (powerSeconds > 0) {
@@ -592,7 +592,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     private void onEnergizerEaten() {
         scoreManager.scorePoints(ENERGIZER_VALUE);
         Logger.info("Scored {} points for eating energizer", ENERGIZER_VALUE);
-        gameLevel().victims().clear();
+        gameLevel().energizerVictims().clear();
         double powerSeconds = pacPowerSeconds(gameLevel());
         long powerTicks = secToTicks(powerSeconds);
         if (powerTicks > 0) {
@@ -619,9 +619,9 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     public void onGhostKilled(GameLevel gameLevel, Ghost ghost) {
-        int killedSoFar = gameLevel.victims().size();
+        int killedSoFar = gameLevel.energizerVictims().size();
         int points = 100 * KILLED_GHOST_VALUE_FACTORS[killedSoFar];
-        gameLevel.victims().add(ghost);
+        gameLevel.energizerVictims().add(ghost);
         ghost.setState(GhostState.EATEN);
         ghost.selectAnimationAt(AnimationSupport.ANIM_GHOST_NUMBER, killedSoFar);
         scoreManager.scorePoints(points);

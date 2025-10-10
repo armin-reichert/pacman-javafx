@@ -87,7 +87,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         gateKeeper.setOnGhostReleased((gameLevel, prisoner) -> {
             Blinky blinky = (Blinky) gameLevel.ghost(RED_GHOST_SHADOW);
             Sue sue = (Sue) gameLevel.ghost(ORANGE_GHOST_POKEY);
-            if (prisoner == sue && blinky.cruiseElroyState() > 0 && !blinky.isCruiseElroyActive()) {
+            if (prisoner == sue && blinky.cruiseElroyValue() > 0 && !blinky.isCruiseElroyActive()) {
                 blinky.setCruiseElroyActive(true);
                 Logger.trace("'Cruise Elroy' mode enabled because {} exits house:", prisoner.name());
             }

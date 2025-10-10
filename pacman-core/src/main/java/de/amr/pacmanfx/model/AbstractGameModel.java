@@ -229,7 +229,7 @@ public abstract class AbstractGameModel implements Game {
             powerTimer.stop();
             powerTimer.reset(0);
             Logger.info("Power timer stopped and reset to zero");
-            gameLevel.victims().clear();
+            gameLevel.energizerVictims().clear();
             gameLevel.huntingTimer().start();
             Logger.info("Hunting timer restarted because Pac-Man lost power");
             gameLevel.ghosts(GhostState.FRIGHTENED).forEach(ghost -> ghost.setState(GhostState.HUNTING_PAC));
