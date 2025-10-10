@@ -29,8 +29,7 @@ import java.io.File;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.Globals.ORANGE_GHOST_POKEY;
-import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
+import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.RandomNumberSupport.randomBoolean;
 import static de.amr.pacmanfx.lib.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
@@ -248,13 +247,14 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         gameLevel.selectNextBonus();
         byte symbol = gameLevel.bonusSymbol(gameLevel.currentBonusIndex());
         var bonus = new Bonus(symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100);
-        bonus.setEdibleTicks(TickTimer.INDEFINITE);
         bonus.setEatenTicks(TickTimer.secToTicks(BONUS_EATEN_SECONDS));
         bonus.setEdible();
         if (!terrain.portals().isEmpty()) {
+            bonus.setEdibleTicks(TickTimer.INDEFINITE);
             bonus.enableMovement();
             computeBonusRoute(bonus, terrain, house);
         } else {
+            bonus.setEdibleTicks(randomInt(9 * NUM_TICKS_PER_SEC, 10 * NUM_TICKS_PER_SEC));
             Vector2i bonusTile = terrain.getTileProperty(DefaultWorldMapPropertyName.POS_BONUS, new Vector2i(13, 20));
             bonus.setPosition(halfTileRightOf(bonusTile));
         }
