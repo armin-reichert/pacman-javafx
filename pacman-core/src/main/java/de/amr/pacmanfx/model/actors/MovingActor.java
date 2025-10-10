@@ -326,14 +326,14 @@ public abstract class MovingActor extends Actor {
 
     private void tryTeleport(Vector2i currentTile, Portal portal) {
         Vector2f oldPosition = position();
-        if (currentTile.y() == portal.leftTunnelEnd().y()
-            && oldPosition.x() < portal.leftTunnelEnd().x() - portal.depth() * TS) {
-            placeAtTile(portal.rightTunnelEnd());
+        if (currentTile.y() == portal.leftBorderPortalEntry().y()
+            && oldPosition.x() < portal.leftBorderPortalEntry().x() - portal.depth() * TS) {
+            placeAtTile(portal.rightBorderPortalEntry());
             moveInfo.teleported = true;
             moveInfo.log(String.format("%s: Teleported from %s to %s", name(), oldPosition, position()));
         }
-        else if (currentTile.equals(portal.rightTunnelEnd().plus(portal.depth(), 0))) {
-            placeAtTile(portal.leftTunnelEnd().minus(portal.depth(), 0));
+        else if (currentTile.equals(portal.rightBorderPortalEntry().plus(portal.depth(), 0))) {
+            placeAtTile(portal.leftBorderPortalEntry().minus(portal.depth(), 0));
             moveInfo.teleported = true;
             moveInfo.log(String.format("%s: Teleported from %s to %s", name(), oldPosition, position()));
         }
