@@ -20,7 +20,8 @@ import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.lib.Direction.*;
+import static de.amr.pacmanfx.lib.Direction.RIGHT;
+import static de.amr.pacmanfx.lib.Direction.UP;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
 import static java.util.Objects.requireNonNull;
 
@@ -326,24 +327,6 @@ public abstract class MovingActor extends Actor {
         }
     }
 
-    private boolean tryTeleport(Vector2i currentTile, Portal portal) {
-        if (currentTile.y() != portal.leftBorderEntryTile().y()) {
-            return false;
-        }
-        Vector2f offset = offset();
-        Vector2i leftEnd = portal.leftBorderEntryTile().minus(portal.depth(), 0);
-        Vector2i rightEnd = portal.rightBorderEntryTile().plus(portal.depth(), 0);
-        if (moveDir() == LEFT && currentTile.equals(leftEnd) && offset.x() <= 4) {
-            placeAtTile(rightEnd);
-            return true;
-        }
-        if (moveDir() == RIGHT && currentTile.equals(rightEnd) && offset.x() >= 0) {
-            placeAtTile(leftEnd.x(), leftEnd.y(), 4, 0);
-            return true;
-        }
-        return false;
-    }
-
     /**
      * Tries moving through the current level's world.
      * <p>
@@ -359,7 +342,7 @@ public abstract class MovingActor extends Actor {
         if (canTeleport) {
             TerrainLayer terrain = gameLevel.worldMap().terrainLayer();
             for (Portal portal : terrain.portals()) {
-                boolean teleported = tryTeleport(currentTile, portal);
+                boolean teleported = portal.tryTeleporting(this);
                 if (teleported) {
                     return;
                 }
