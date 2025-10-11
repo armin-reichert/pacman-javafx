@@ -5,13 +5,9 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
 import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.model.actors.AnimationManager;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
-
-import java.util.Optional;
 
 import static de.amr.pacmanfx.tengen.ms_pacman.rendering.SpriteID.STORK;
 
@@ -24,7 +20,7 @@ public class Stork extends Actor {
     public Stork(TengenMsPacMan_SpriteSheet spriteSheet) {
         var spriteAnimationManager = new SpriteAnimationManager<>(spriteSheet);
         spriteAnimationManager.setAnimation(ANIM_FLYING,
-            SpriteAnimation.build().of(spriteSheet.spriteSequence(STORK)).frameTicks(8).forever());
+            SpriteAnimation.builder().fromSprites(spriteSheet.spriteSequence(STORK)).ticksPerFrame(8).endless());
         setAnimationManager(spriteAnimationManager);
     }
 

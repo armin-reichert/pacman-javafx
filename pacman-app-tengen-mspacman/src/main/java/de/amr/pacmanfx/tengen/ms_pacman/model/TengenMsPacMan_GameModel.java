@@ -355,18 +355,18 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     @Override
     public void resetPacManAndGhostAnimations(GameLevel gameLevel) {
         gameLevel.pac().optAnimationManager().ifPresent(am -> {
-            am.select(boosterActive ? ANIM_MS_PAC_MAN_BOOSTER : AnimationSupport.ANIM_PAC_MUNCHING);
+            am.select(boosterActive ? ANIM_MS_PAC_MAN_BOOSTER : CommonAnimationID.ANIM_PAC_MUNCHING);
             am.reset();
         });
         gameLevel.ghosts().forEach(ghost -> ghost.optAnimationManager().ifPresent(am -> {
-            am.select(AnimationSupport.ANIM_GHOST_NORMAL);
+            am.select(CommonAnimationID.ANIM_GHOST_NORMAL);
             am.reset();
         }));
     }
 
     public void activatePacBooster(Pac pac, boolean active) {
         boosterActive = active;
-        pac.selectAnimation(boosterActive ? ANIM_MS_PAC_MAN_BOOSTER : AnimationSupport.ANIM_PAC_MUNCHING);
+        pac.selectAnimation(boosterActive ? ANIM_MS_PAC_MAN_BOOSTER : CommonAnimationID.ANIM_PAC_MUNCHING);
     }
 
     @Override
@@ -623,7 +623,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         int points = 100 * KILLED_GHOST_VALUE_FACTORS[killedSoFar];
         gameLevel.energizerVictims().add(ghost);
         ghost.setState(GhostState.EATEN);
-        ghost.selectAnimationAt(AnimationSupport.ANIM_GHOST_NUMBER, killedSoFar);
+        ghost.selectAnimationAt(CommonAnimationID.ANIM_GHOST_NUMBER, killedSoFar);
         scoreManager.scorePoints(points);
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
     }

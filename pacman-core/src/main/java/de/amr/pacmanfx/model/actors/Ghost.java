@@ -222,9 +222,9 @@ public abstract class Ghost extends MovingActor {
 
         // "onEntry" action:
         switch (newState) {
-            case LOCKED, HUNTING_PAC -> selectAnimation(AnimationSupport.ANIM_GHOST_NORMAL);
-            case ENTERING_HOUSE, RETURNING_HOME -> selectAnimation(AnimationSupport.ANIM_GHOST_EYES);
-            case FRIGHTENED -> playAnimation(AnimationSupport.ANIM_GHOST_FRIGHTENED);
+            case LOCKED, HUNTING_PAC -> selectAnimation(CommonAnimationID.ANIM_GHOST_NORMAL);
+            case ENTERING_HOUSE, RETURNING_HOME -> selectAnimation(CommonAnimationID.ANIM_GHOST_EYES);
+            case FRIGHTENED -> playAnimation(CommonAnimationID.ANIM_GHOST_FRIGHTENED);
             case EATEN -> {}
         }
     }
@@ -276,7 +276,7 @@ public abstract class Ghost extends MovingActor {
         if (gameLevel.pac().powerTimer().isRunning() && !gameLevel.energizerVictims().contains(this)) {
             playFrightenedAnimation(gameLevel, gameLevel.pac());
         } else {
-            selectAnimation(AnimationSupport.ANIM_GHOST_NORMAL);
+            selectAnimation(CommonAnimationID.ANIM_GHOST_NORMAL);
         }
     }
 
@@ -324,7 +324,7 @@ public abstract class Ghost extends MovingActor {
             if (gameLevel.pac().powerTimer().isRunning() && !gameLevel.energizerVictims().contains(this)) {
                 playFrightenedAnimation(gameLevel, gameLevel.pac());
             } else {
-                selectAnimation(AnimationSupport.ANIM_GHOST_NORMAL);
+                selectAnimation(CommonAnimationID.ANIM_GHOST_NORMAL);
             }
         }
     }
@@ -370,9 +370,9 @@ public abstract class Ghost extends MovingActor {
 
     private void playFrightenedAnimation(GameLevel gameLevel, Pac pac) {
         if (pac.isPowerFadingStarting(gameLevel)) {
-            playAnimation(AnimationSupport.ANIM_GHOST_FLASHING);
+            playAnimation(CommonAnimationID.ANIM_GHOST_FLASHING);
         } else if (!pac.isPowerFading(gameLevel)) {
-            playAnimation(AnimationSupport.ANIM_GHOST_FRIGHTENED);
+            playAnimation(CommonAnimationID.ANIM_GHOST_FRIGHTENED);
         }
     }
 

@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 import de.amr.pacmanfx.arcade.pacman.actors.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_HUDRenderer;
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.model.actors.AnimationSupport;
+import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
@@ -88,7 +88,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         blinky.hide();
 
         blinky.optAnimationManager().ifPresent(animations -> {
-            blinkyNormal     = (SpriteAnimation) animations.animation(AnimationSupport.ANIM_GHOST_NORMAL);
+            blinkyNormal     = (SpriteAnimation) animations.animation(CommonAnimationID.ANIM_GHOST_NORMAL);
             nailDressRapture = (SpriteAnimation) animations.animation(ANIM_BLINKY_NAIL_DRESS_RAPTURE);
             blinkyDamaged    = (SpriteAnimation) animations.animation(ANIM_BLINKY_DAMAGED);
         });
@@ -115,7 +115,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
                 pac.placeAtTile(28, 20);
                 pac.setMoveDir(Direction.LEFT);
                 pac.setSpeed(1.15f);
-                pac.playAnimation(AnimationSupport.ANIM_PAC_MUNCHING);
+                pac.playAnimation(CommonAnimationID.ANIM_PAC_MUNCHING);
                 pac.show();
             }
             case ANIMATION_START + 111 -> {
@@ -123,7 +123,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
                 blinky.setMoveDir(Direction.LEFT);
                 blinky.setWishDir(Direction.LEFT);
                 blinky.setSpeed(1.25f);
-                blinky.playAnimation(AnimationSupport.ANIM_GHOST_NORMAL);
+                blinky.playAnimation(CommonAnimationID.ANIM_GHOST_NORMAL);
                 blinky.show();
             }
             case ANIMATION_START + 194 -> {

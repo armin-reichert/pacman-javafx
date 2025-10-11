@@ -4,17 +4,17 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
+import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.model.actors.AnimationSupport;
+import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
-import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.*;
 
 public class ArcadePacMan_GhostAnimationManager extends SpriteAnimationManager<SpriteID> {
 
@@ -28,26 +28,48 @@ public class ArcadePacMan_GhostAnimationManager extends SpriteAnimationManager<S
     @Override
     public SpriteAnimation createAnimation(String id) {
         return switch (id) {
-            case AnimationSupport.ANIM_GHOST_NORMAL
-                -> SpriteAnimation.build().of(ghostNormalSprites(Direction.LEFT)).frameTicks(8).forever();
-            case AnimationSupport.ANIM_GHOST_FRIGHTENED
-                -> SpriteAnimation.build().of(spriteSheet().spriteSequence(SpriteID.GHOST_FRIGHTENED)).frameTicks(8).forever();
-            case AnimationSupport.ANIM_GHOST_FLASHING
-                -> SpriteAnimation.build().of(spriteSheet().spriteSequence(SpriteID.GHOST_FLASHING)).frameTicks(7).forever();
-            case AnimationSupport.ANIM_GHOST_EYES
-                -> SpriteAnimation.build().of(ghostEyesSprites(Direction.LEFT)).once();
-            case AnimationSupport.ANIM_GHOST_NUMBER
-                -> SpriteAnimation.build().of(spriteSheet().spriteSequence(SpriteID.GHOST_NUMBERS)).once();
-            case ANIM_BLINKY_DAMAGED
-                -> SpriteAnimation.build().of(spriteSheet().spriteSequence(SpriteID.RED_GHOST_DAMAGED)).once();
-            case ANIM_BLINKY_NAIL_DRESS_RAPTURE
-                -> SpriteAnimation.build().of(spriteSheet().spriteSequence(SpriteID.RED_GHOST_STRETCHED)).once();
-            case ANIM_BLINKY_PATCHED
-                -> SpriteAnimation.build().of(spriteSheet().spriteSequence(SpriteID.RED_GHOST_PATCHED)).frameTicks(4).forever();
-            case ANIM_BLINKY_NAKED
-                -> SpriteAnimation.build().of(spriteSheet().spriteSequence(SpriteID.RED_GHOST_NAKED)).frameTicks(4).forever();
-            default
-                -> throw new IllegalArgumentException("Illegal animation ID: " + id);
+            case CommonAnimationID.ANIM_GHOST_NORMAL -> SpriteAnimation.builder()
+                .fromSprites(ghostNormalSprites(Direction.LEFT))
+                .ticksPerFrame(8)
+                .endless();
+
+            case CommonAnimationID.ANIM_GHOST_FRIGHTENED -> SpriteAnimation.builder()
+                .fromSprites(spriteSheet().spriteSequence(SpriteID.GHOST_FRIGHTENED))
+                .ticksPerFrame(8)
+                .endless();
+
+            case CommonAnimationID.ANIM_GHOST_FLASHING -> SpriteAnimation.builder()
+                .fromSprites(spriteSheet().spriteSequence(SpriteID.GHOST_FLASHING))
+                .ticksPerFrame(7)
+                .endless();
+
+            case CommonAnimationID.ANIM_GHOST_EYES -> SpriteAnimation.builder()
+                .fromSprites(ghostEyesSprites(Direction.LEFT))
+                .once();
+
+            case CommonAnimationID.ANIM_GHOST_NUMBER -> SpriteAnimation.builder()
+                .fromSprites(spriteSheet().spriteSequence(SpriteID.GHOST_NUMBERS))
+                .once();
+
+            case ArcadePacMan_UIConfig.ANIM_BLINKY_DAMAGED -> SpriteAnimation.builder()
+                .fromSprites(spriteSheet().spriteSequence(SpriteID.RED_GHOST_DAMAGED))
+                .once();
+
+            case ArcadePacMan_UIConfig.ANIM_BLINKY_NAIL_DRESS_RAPTURE -> SpriteAnimation.builder()
+                .fromSprites(spriteSheet().spriteSequence(SpriteID.RED_GHOST_STRETCHED))
+                .once();
+
+            case ArcadePacMan_UIConfig.ANIM_BLINKY_PATCHED -> SpriteAnimation.builder()
+                .fromSprites(spriteSheet().spriteSequence(SpriteID.RED_GHOST_PATCHED))
+                .ticksPerFrame(4)
+                .endless();
+
+            case ArcadePacMan_UIConfig.ANIM_BLINKY_NAKED -> SpriteAnimation.builder()
+                .fromSprites(spriteSheet().spriteSequence(SpriteID.RED_GHOST_NAKED))
+                .ticksPerFrame(4)
+                .endless();
+
+            default -> throw new IllegalArgumentException("Illegal animation ID: " + id);
         };
     }
 
@@ -59,18 +81,18 @@ public class ArcadePacMan_GhostAnimationManager extends SpriteAnimationManager<S
     @Override
     public void selectFrame(String id, int frameIndex) {
         super.selectFrame(id, frameIndex);
-        if (AnimationSupport.ANIM_GHOST_NUMBER.equals(id)) {
-            animation(AnimationSupport.ANIM_GHOST_NUMBER).setFrameIndex(frameIndex);
+        if (CommonAnimationID.ANIM_GHOST_NUMBER.equals(id)) {
+            animation(CommonAnimationID.ANIM_GHOST_NUMBER).setFrameIndex(frameIndex);
         }
     }
 
     @Override
     protected void updateActorSprites(Actor actor) {
         if (actor instanceof Ghost ghost) {
-            if (isCurrentAnimationID(AnimationSupport.ANIM_GHOST_NORMAL)) {
+            if (isCurrentAnimationID(CommonAnimationID.ANIM_GHOST_NORMAL)) {
                 currentAnimation().setSprites(ghostNormalSprites(ghost.wishDir()));
             }
-            if (isCurrentAnimationID(AnimationSupport.ANIM_GHOST_EYES)) {
+            if (isCurrentAnimationID(CommonAnimationID.ANIM_GHOST_EYES)) {
                 currentAnimation().setSprites(ghostEyesSprites(ghost.wishDir()));
             }
         }

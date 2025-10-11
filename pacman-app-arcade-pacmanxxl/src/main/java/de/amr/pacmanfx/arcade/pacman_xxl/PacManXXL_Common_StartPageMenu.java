@@ -10,7 +10,7 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.model.DefaultGameVariants;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.MapSelectionMode;
-import de.amr.pacmanfx.model.actors.AnimationSupport;
+import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.ArcadePalette;
@@ -68,7 +68,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         private void createActors(GameUI_Config uiConfig) {
             pac = ArcadePacMan_ActorFactory.createPacMan();
             pac.setAnimationManager(uiConfig.createPacAnimations());
-            pac.playAnimation(AnimationSupport.ANIM_PAC_MUNCHING);
+            pac.playAnimation(CommonAnimationID.ANIM_PAC_MUNCHING);
             ghosts = List.of(
                 uiConfig.createAnimatedGhost(RED_GHOST_SHADOW),
                 uiConfig.createAnimatedGhost(PINK_GHOST_SPEEDY),
@@ -116,7 +116,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
                     ghost.setMoveDir(ghost.moveDir().opposite());
                     ghost.setWishDir(ghost.moveDir().opposite());
                     ghost.setSpeed(0.58f);
-                    ghost.playAnimation(AnimationSupport.ANIM_GHOST_FRIGHTENED);
+                    ghost.playAnimation(CommonAnimationID.ANIM_GHOST_FRIGHTENED);
                 }
             }
             else if (pac.x() > 56 * TS && chasingGhosts) {
@@ -130,13 +130,13 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
                     ghost.setWishDir(Direction.LEFT);
                     ghost.setX(46 * TS + ghost.personality() * 2 * TS);
                     ghost.setSpeed(1.05f);
-                    ghost.playAnimation(AnimationSupport.ANIM_GHOST_NORMAL);
+                    ghost.playAnimation(CommonAnimationID.ANIM_GHOST_NORMAL);
                 }
             }
             else if (chasingGhosts) {
                 IntStream.range(0, 4).forEach(i -> {
                     if (Math.abs(pac.x() - ghosts.get(i).x()) < 1) {
-                        ghosts.get(i).selectAnimationAt(AnimationSupport.ANIM_GHOST_NUMBER, i);
+                        ghosts.get(i).selectAnimationAt(CommonAnimationID.ANIM_GHOST_NUMBER, i);
                         if (i > 0) {
                             ghosts.get(i-1).setVisible(false);
                         }

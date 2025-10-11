@@ -7,7 +7,7 @@ package de.amr.pacmanfx.tengen.ms_pacman.rendering;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.model.actors.AnimationSupport;
+import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
@@ -31,11 +31,11 @@ public class TengenMsPacMan_GhostAnimationManager extends SpriteAnimationManager
     @Override
     protected SpriteAnimation createAnimation(String id) {
         return switch (id) {
-            case AnimationSupport.ANIM_GHOST_NORMAL      -> SpriteAnimation.build().of(ghostNormalSprites(Direction.LEFT)).frameTicks(NORMAL_TICKS).forever();
-            case AnimationSupport.ANIM_GHOST_FRIGHTENED  -> SpriteAnimation.build().of(spriteSheet().spriteSequence(SpriteID.GHOST_FRIGHTENED)).frameTicks(FRIGHTENED_TICKS).forever();
-            case AnimationSupport.ANIM_GHOST_FLASHING    -> SpriteAnimation.build().of(spriteSheet().spriteSequence(SpriteID.GHOST_FLASHING)).frameTicks(FLASH_TICKS).forever();
-            case AnimationSupport.ANIM_GHOST_EYES        -> SpriteAnimation.build().of(ghostEyesSprites(Direction.LEFT)).once();
-            case AnimationSupport.ANIM_GHOST_NUMBER      -> SpriteAnimation.build().of(spriteSheet().spriteSequence(SpriteID.GHOST_NUMBERS)).once();
+            case CommonAnimationID.ANIM_GHOST_NORMAL      -> SpriteAnimation.builder().fromSprites(ghostNormalSprites(Direction.LEFT)).ticksPerFrame(NORMAL_TICKS).endless();
+            case CommonAnimationID.ANIM_GHOST_FRIGHTENED  -> SpriteAnimation.builder().fromSprites(spriteSheet().spriteSequence(SpriteID.GHOST_FRIGHTENED)).ticksPerFrame(FRIGHTENED_TICKS).endless();
+            case CommonAnimationID.ANIM_GHOST_FLASHING    -> SpriteAnimation.builder().fromSprites(spriteSheet().spriteSequence(SpriteID.GHOST_FLASHING)).ticksPerFrame(FLASH_TICKS).endless();
+            case CommonAnimationID.ANIM_GHOST_EYES        -> SpriteAnimation.builder().fromSprites(ghostEyesSprites(Direction.LEFT)).once();
+            case CommonAnimationID.ANIM_GHOST_NUMBER      -> SpriteAnimation.builder().fromSprites(spriteSheet().spriteSequence(SpriteID.GHOST_NUMBERS)).once();
             default -> throw new IllegalArgumentException("Illegal animation ID " + id);
         };
     }
@@ -48,18 +48,18 @@ public class TengenMsPacMan_GhostAnimationManager extends SpriteAnimationManager
     @Override
     public void selectFrame(String id, int frameIndex) {
         super.selectFrame(id, frameIndex);
-        if (AnimationSupport.ANIM_GHOST_NUMBER.equals(id)) {
-            animation(AnimationSupport.ANIM_GHOST_NUMBER).setFrameIndex(frameIndex);
+        if (CommonAnimationID.ANIM_GHOST_NUMBER.equals(id)) {
+            animation(CommonAnimationID.ANIM_GHOST_NUMBER).setFrameIndex(frameIndex);
         }
     }
 
     @Override
     protected void updateActorSprites(Actor actor) {
         if (actor instanceof Ghost ghost) {
-            if (isCurrentAnimationID(AnimationSupport.ANIM_GHOST_NORMAL)) {
+            if (isCurrentAnimationID(CommonAnimationID.ANIM_GHOST_NORMAL)) {
                 currentAnimation().setSprites(ghostNormalSprites(ghost.wishDir()));
             }
-            if (isCurrentAnimationID(AnimationSupport.ANIM_GHOST_EYES)) {
+            if (isCurrentAnimationID(CommonAnimationID.ANIM_GHOST_EYES)) {
                 currentAnimation().setSprites(ghostEyesSprites(ghost.wishDir()));
             }
         }

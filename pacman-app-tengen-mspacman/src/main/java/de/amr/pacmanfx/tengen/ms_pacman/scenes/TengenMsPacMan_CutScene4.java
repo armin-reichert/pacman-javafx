@@ -9,7 +9,7 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.actors.AnimationManager;
-import de.amr.pacmanfx.model.actors.AnimationSupport;
+import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
@@ -129,7 +129,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
                 msPacMan.setMoveDir(Direction.LEFT);
                 msPacMan.setPosition(RIGHT_BORDER, LOWER_LANE);
                 msPacMan.setSpeed(1f);
-                msPacMan.playAnimation(AnimationSupport.ANIM_PAC_MUNCHING);
+                msPacMan.playAnimation(CommonAnimationID.ANIM_PAC_MUNCHING);
                 msPacMan.show();
             } case 230 -> {
                 pacMan.setSpeed(0);
@@ -145,7 +145,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
             }
             case 400 -> {
                 pacMan.playAnimation(ANIM_PAC_MAN_MUNCHING);
-                msPacMan.playAnimation(AnimationSupport.ANIM_PAC_MUNCHING);
+                msPacMan.playAnimation(CommonAnimationID.ANIM_PAC_MUNCHING);
             }
             case 520 -> {
                 pacMan.selectAnimation(ANIM_PAC_MAN_WAVING_HAND);

@@ -8,7 +8,7 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
-import de.amr.pacmanfx.model.actors.AnimationSupport;
+import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
@@ -128,7 +128,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
                 msPacMan.setMoveDir(Direction.RIGHT);
                 msPacMan.setPosition(TS * 5, GROUND_Y - 4);
                 msPacMan.setSpeed(0);
-                msPacMan.selectAnimation(AnimationSupport.ANIM_PAC_MUNCHING);
+                msPacMan.selectAnimation(CommonAnimationID.ANIM_PAC_MUNCHING);
                 msPacMan.show();
 
                 stork.setPosition(RIGHT_BORDER, TS * 7);

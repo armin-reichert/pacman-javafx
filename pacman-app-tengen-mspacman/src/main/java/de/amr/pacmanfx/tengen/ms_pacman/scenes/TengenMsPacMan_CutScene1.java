@@ -7,10 +7,7 @@ package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
-import de.amr.pacmanfx.model.actors.AnimationManager;
-import de.amr.pacmanfx.model.actors.AnimationSupport;
-import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_HUD;
@@ -167,16 +164,16 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
                 pacMan.show();
 
                 msPacMan.setSpeed(SPEED_CHASING);
-                msPacMan.playAnimation(AnimationSupport.ANIM_PAC_MUNCHING);
+                msPacMan.playAnimation(CommonAnimationID.ANIM_PAC_MUNCHING);
                 msPacMan.show();
             }
             case 160 -> {
                 inky.setSpeed(SPEED_CHASING);
-                inky.playAnimation(AnimationSupport.ANIM_GHOST_NORMAL);
+                inky.playAnimation(CommonAnimationID.ANIM_GHOST_NORMAL);
                 inky.show();
 
                 pinky.setSpeed(SPEED_CHASING);
-                pinky.playAnimation(AnimationSupport.ANIM_GHOST_NORMAL);
+                pinky.playAnimation(CommonAnimationID.ANIM_GHOST_NORMAL);
                 pinky.show();
             }
             case 400 -> {

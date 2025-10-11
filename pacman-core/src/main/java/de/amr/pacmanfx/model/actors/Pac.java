@@ -91,7 +91,7 @@ public class Pac extends MovingActor {
         restingTicks = 0;
         starvingTicks = 0;
         corneringSpeedUp = 1.5f; // no real cornering implementation but better than nothing
-        selectAnimation(AnimationSupport.ANIM_PAC_MUNCHING);
+        selectAnimation(CommonAnimationID.ANIM_PAC_MUNCHING);
     }
 
     public BooleanProperty immuneProperty() {
@@ -184,7 +184,7 @@ public class Pac extends MovingActor {
         setRestingTicks(INDEFINITELY);
         optAnimationManager().ifPresent(animationManager -> {
             animationManager.stop();
-            animationManager.select(AnimationSupport.ANIM_PAC_MUNCHING);
+            animationManager.select(CommonAnimationID.ANIM_PAC_MUNCHING);
             animationManager.reset();
         });
     }

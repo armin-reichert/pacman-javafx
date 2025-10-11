@@ -11,10 +11,7 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.lib.worldmap.FoodLayer;
 import de.amr.pacmanfx.model.*;
-import de.amr.pacmanfx.model.actors.AnimationSupport;
-import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.GhostState;
-import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.steering.Steering;
 import org.tinylog.Logger;
 
@@ -136,7 +133,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         int points = 100 * KILLED_GHOST_VALUE_FACTORS[killedSoFar];
         gameLevel.energizerVictims().add(ghost);
         ghost.setState(GhostState.EATEN);
-        ghost.selectAnimationAt(AnimationSupport.ANIM_GHOST_NUMBER, killedSoFar);
+        ghost.selectAnimationAt(CommonAnimationID.ANIM_GHOST_NUMBER, killedSoFar);
         scoreManager.scorePoints(points);
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
         gameLevel.registerGhostKilled();
@@ -319,11 +316,11 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     @Override
     protected void resetPacManAndGhostAnimations(GameLevel gameLevel) {
         gameLevel.pac().optAnimationManager().ifPresent(am -> {
-            am.select(AnimationSupport.ANIM_PAC_MUNCHING);
+            am.select(CommonAnimationID.ANIM_PAC_MUNCHING);
             am.reset();
         });
         gameLevel.ghosts().forEach(ghost -> ghost.optAnimationManager().ifPresent(am -> {
-            am.select(AnimationSupport.ANIM_GHOST_NORMAL);
+            am.select(CommonAnimationID.ANIM_GHOST_NORMAL);
             am.reset();
         }));
     }
