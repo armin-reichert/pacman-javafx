@@ -10,7 +10,6 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.Portal;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.tinylog.Logger;
@@ -337,15 +336,11 @@ public abstract class MovingActor extends Actor {
      */
     public void moveThroughThisCruelWorld(GameLevel gameLevel) {
         requireNonNull(gameLevel);
-        final Vector2i currentTile = tile();
         moveInfo.clear();
         if (canTeleport) {
-            TerrainLayer terrain = gameLevel.worldMap().terrainLayer();
-            for (Portal portal : terrain.portals()) {
-                boolean teleported = portal.tryTeleporting(this);
-                if (teleported) {
-                    return;
-                }
+            boolean teleported = tryTeleport(gameLevel.worldMap().terrainLayer());
+            if (teleported) {
+                return;
             }
         }
         if (turnBackRequested && canTurnBack()) {
@@ -353,12 +348,20 @@ public abstract class MovingActor extends Actor {
             Logger.trace("{}: turned back at tile {}", name(), tile());
             turnBackRequested = false;
         }
-        tryMovingTowards(gameLevel, currentTile, wishDir());
+        tryMovingTowards(gameLevel, tile(), wishDir());
         if (moveInfo.moved) {
             setMoveDir(wishDir());
         } else {
-            tryMovingTowards(gameLevel, currentTile, moveDir());
+            tryMovingTowards(gameLevel, tile(), moveDir());
         }
+    }
+
+    private boolean tryTeleport(TerrainLayer terrain) {
+        return terrain.portals().stream()
+            .filter(portal -> portal.leftBorderEntryTile().y() == tile().y())
+            .findFirst()
+            .map(portal -> portal.tryTeleporting(this))
+            .orElse(false);
     }
 
     private void tryMovingTowards(GameLevel gameLevel, Vector2i tileBeforeMoving, Direction dir) {
