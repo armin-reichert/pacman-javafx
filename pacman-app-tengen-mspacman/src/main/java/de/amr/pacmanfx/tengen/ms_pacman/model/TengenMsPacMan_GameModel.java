@@ -525,11 +525,10 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         gameLevel.selectNextBonus();
         byte symbol = gameLevel.bonusSymbol(gameLevel.currentBonusIndex());
         var bonus = new Bonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
-        bonus.enableMovement();
         bonus.setEdibleTicks(TickTimer.INDEFINITE);
         bonus.setEatenTicks(TickTimer.secToTicks(BONUS_EATEN_SECONDS));
         bonus.setRoute(route, leftToRight);
-        bonus.setEdible(gameLevel.game().bonusSpeed(gameLevel));
+        bonus.setEdibleAndStartMoving(gameLevel.game().bonusSpeed(gameLevel));
         Logger.debug("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
 
         gameLevel.setBonus(bonus);

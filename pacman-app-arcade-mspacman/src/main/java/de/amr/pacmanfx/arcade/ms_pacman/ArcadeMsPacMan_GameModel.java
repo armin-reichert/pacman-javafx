@@ -252,12 +252,11 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
             bonus.setEdibleTicks(randomInt(9 * NUM_TICKS_PER_SEC, 10 * NUM_TICKS_PER_SEC));
             Vector2i bonusTile = terrain.getTileProperty(DefaultWorldMapPropertyName.POS_BONUS, new Vector2i(13, 20));
             bonus.setPosition(halfTileRightOf(bonusTile));
-            bonus.setEdible(0);
+            bonus.setEdible();
         } else {
             bonus.setEdibleTicks(TickTimer.INDEFINITE);
-            bonus.enableMovement();
             computeBonusRoute(bonus, terrain, house);
-            bonus.setEdible(gameLevel.game().bonusSpeed(gameLevel));
+            bonus.setEdibleAndStartMoving(gameLevel.game().bonusSpeed(gameLevel));
         }
 
         gameLevel.setBonus(bonus);

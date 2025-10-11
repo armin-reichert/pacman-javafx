@@ -51,10 +51,6 @@ public class Bonus extends MovingActor {
         state = BonusState.INACTIVE;
     }
 
-    public void enableMovement() {
-        movementAnimation = new Pulse(10, Pulse.State.OFF);
-    }
-
     @Override
     public void tick(GameContext gameContext) {
         switch (state) {
@@ -175,16 +171,18 @@ public class Bonus extends MovingActor {
         Logger.trace("Bonus inactive: {}", this);
     }
 
-    public void setEdible(float speed) {
-        if (speed > 0) {
-            setSpeed(speed);
-            setTargetTile(null);
-            movementAnimation.restart();
-        }
-        ticksRemaining = edibleTicks;
+    public void setEdibleAndStartMoving(float speed) {
+        setSpeed(speed);
+        setTargetTile(null);
+        movementAnimation = new Pulse(10, Pulse.State.OFF);
+        movementAnimation.restart();
+        setEdible();
+    }
+
+    public void setEdible() {
         state = BonusState.EDIBLE;
+        ticksRemaining = edibleTicks;
         show();
-        Logger.trace("Bonus edible: {}", this);
     }
 
     public void setEaten() {
