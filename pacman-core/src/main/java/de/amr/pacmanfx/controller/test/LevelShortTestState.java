@@ -62,7 +62,7 @@ public class LevelShortTestState implements TestGameState {
         else if (timer.atSecond(2.5)) {
             gameLevel.clearMessage();
             context.game().activateNextBonus(gameLevel);
-            gameLevel.bonus().ifPresent(bonus -> bonus.setEatenTicks(60));
+            gameLevel.bonus().ifPresent(bonus -> bonus.setEatenDuration(60));
         }
         else if (timer.atSecond(4.5)) {
             gameLevel.bonus().ifPresent(Bonus::setEaten);

@@ -27,6 +27,7 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
 import static de.amr.pacmanfx.lib.Waypoint.wp;
+import static de.amr.pacmanfx.lib.timer.TickTimer.secToTicks;
 import static de.amr.pacmanfx.model.DefaultWorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;
 
@@ -204,8 +205,8 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         var bonus = new Bonus(symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100);
         Vector2i bonusTile = gameLevel.worldMap().terrainLayer().getTileProperty(DefaultWorldMapPropertyName.POS_BONUS, new Vector2i(13, 20));
         bonus.setPosition(halfTileRightOf(bonusTile));
-        bonus.setEdibleTicks(randomInt(9 * NUM_TICKS_PER_SEC, 10 * NUM_TICKS_PER_SEC));
-        bonus.setEatenTicks(TickTimer.secToTicks(BONUS_EATEN_SECONDS));
+        bonus.setEdibleDuration(randomInt(9 * NUM_TICKS_PER_SEC, 10 * NUM_TICKS_PER_SEC));
+        bonus.setEatenDuration(secToTicks(BONUS_EATEN_SECONDS));
         bonus.setEdible();
         gameLevel.setBonus(bonus);
         eventManager().publishEvent(GameEventType.BONUS_ACTIVATED, bonus.tile());

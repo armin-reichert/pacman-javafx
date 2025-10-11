@@ -100,11 +100,11 @@ public class Bonus extends MovingActor {
         Logger.info("{} expired", this);
     }
 
-    public void setEdibleTicks(long edibleTicks) {
+    public void setEdibleDuration(long edibleTicks) {
         this.edibleTicks = edibleTicks;
     }
 
-    public void setEatenTicks(long eatenTicks) {
+    public void setEatenDuration(long eatenTicks) {
         this.eatenTicks = eatenTicks;
     }
 

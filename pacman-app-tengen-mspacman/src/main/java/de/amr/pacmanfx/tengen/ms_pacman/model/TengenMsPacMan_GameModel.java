@@ -525,8 +525,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         gameLevel.selectNextBonus();
         byte symbol = gameLevel.bonusSymbol(gameLevel.currentBonusIndex());
         var bonus = new Bonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
-        bonus.setEdibleTicks(TickTimer.INDEFINITE);
-        bonus.setEatenTicks(TickTimer.secToTicks(BONUS_EATEN_SECONDS));
+        bonus.setEdibleDuration(TickTimer.INDEFINITE);
+        bonus.setEatenDuration(secToTicks(BONUS_EATEN_SECONDS));
         bonus.setRoute(route, leftToRight);
         bonus.setEdibleAndStartMoving(gameLevel.game().bonusSpeed(gameLevel));
         Logger.debug("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
@@ -579,7 +579,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         if (powerSeconds > 0) {
             gameLevel.huntingTimer().stop();
             Logger.debug("Hunting stopped (Pac-Man got power)");
-            long ticks = TickTimer.secToTicks(powerSeconds);
+            long ticks = secToTicks(powerSeconds);
             gameLevel.pac().powerTimer().restartTicks(ticks);
             Logger.debug("Power timer restarted, {} ticks ({0.00} sec)", ticks, powerSeconds);
             gameLevel.ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));

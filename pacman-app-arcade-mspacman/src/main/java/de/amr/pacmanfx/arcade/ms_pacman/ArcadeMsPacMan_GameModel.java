@@ -34,6 +34,7 @@ import static de.amr.pacmanfx.lib.RandomNumberSupport.randomBoolean;
 import static de.amr.pacmanfx.lib.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
+import static de.amr.pacmanfx.lib.timer.TickTimer.secToTicks;
 import static de.amr.pacmanfx.model.DefaultWorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;
 
@@ -247,14 +248,14 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         gameLevel.selectNextBonus();
         byte symbol = gameLevel.bonusSymbol(gameLevel.currentBonusIndex());
         var bonus = new Bonus(symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100);
-        bonus.setEatenTicks(TickTimer.secToTicks(BONUS_EATEN_SECONDS));
+        bonus.setEatenDuration(secToTicks(BONUS_EATEN_SECONDS));
         if (terrain.portals().isEmpty()) {
-            bonus.setEdibleTicks(randomInt(9 * NUM_TICKS_PER_SEC, 10 * NUM_TICKS_PER_SEC));
+            bonus.setEdibleDuration(randomInt(9 * NUM_TICKS_PER_SEC, 10 * NUM_TICKS_PER_SEC));
             Vector2i bonusTile = terrain.getTileProperty(DefaultWorldMapPropertyName.POS_BONUS, new Vector2i(13, 20));
             bonus.setPosition(halfTileRightOf(bonusTile));
             bonus.setEdible();
         } else {
-            bonus.setEdibleTicks(TickTimer.INDEFINITE);
+            bonus.setEdibleDuration(TickTimer.INDEFINITE);
             computeBonusRoute(bonus, terrain, house);
             bonus.setEdibleAndStartMoving(gameLevel.game().bonusSpeed(gameLevel));
         }
