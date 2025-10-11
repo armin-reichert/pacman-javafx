@@ -14,14 +14,12 @@ public class MoveInfo {
     public boolean moved;
     public boolean tunnelEntered;
     public boolean tunnelLeft;
-    public boolean teleported;
     public final List<String> infos = new ArrayList<>(3);
 
     public void clear() {
         moved = false;
         tunnelEntered = false;
         tunnelLeft = false;
-        teleported = false;
         infos.clear();
     }
 
@@ -34,7 +32,6 @@ public class MoveInfo {
         var sb = new StringBuilder();
         sb.append(tunnelEntered ? " entered tunnel" : "");
         sb.append(tunnelLeft    ? " left tunnel" : "");
-        sb.append(teleported    ? " teleported" : "");
         sb.append(moved         ? " moved" : "");
         return sb.isEmpty() ? "" : "[" + sb.toString().trim() + "]";
     }

@@ -176,8 +176,7 @@ public class Actor implements AnimationSupport {
      *         the left-upper corner of that box
      */
     public Vector2i tile() {
-        Vector2f position = position();
-        return tileAt(position.x() + HTS, position.y() + HTS);
+        return tileAt(center());
     }
 
     /**

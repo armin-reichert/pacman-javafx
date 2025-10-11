@@ -73,15 +73,15 @@ public class Pac extends MovingActor {
     public boolean canAccessTile(GameLevel gameLevel, Vector2i tile) {
         requireNonNull(gameLevel);
         requireNonNull(tile);
-        TerrainLayer terrainLayer = gameLevel.worldMap().terrainLayer();
-        // Portal tiles are the only tiles outside the world map that can be accessed
-        if (terrainLayer.outOfBounds(tile)) {
-            return terrainLayer.isTileInPortalSpace(tile);
+        TerrainLayer terrain = gameLevel.worldMap().terrainLayer();
+        // Portal tiles are the only tiles outside the world that can be accessed
+        if (terrain.outOfBounds(tile)) {
+            return terrain.isTileInPortalSpace(tile);
         }
-        if (terrainLayer.optHouse().isPresent() && terrainLayer.optHouse().get().isTileInHouseArea(tile)) {
+        if (terrain.optHouse().isPresent() && terrain.optHouse().get().isTileInHouseArea(tile)) {
             return false; // Schieb ab, Alter!
         }
-        return !terrainLayer.isTileBlocked(tile);
+        return !terrain.isTileBlocked(tile);
     }
 
     @Override

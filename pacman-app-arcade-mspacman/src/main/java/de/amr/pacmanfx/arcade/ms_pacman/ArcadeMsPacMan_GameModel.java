@@ -278,10 +278,10 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
             int exitPortalIndex = randomInt(0, portals.size());
             Portal exitPortal = portals.get(exitPortalIndex);
             if (entryTile.x() == 0) { // enter maze at left border
-                exitTile = exitPortal.rightBorderPortalEntry().plus(1, 0);
+                exitTile = exitPortal.rightBorderEntryTile().plus(1, 0);
                 leftToRight = true;
             } else { // bonus entry is at right map border
-                exitTile = exitPortal.leftBorderPortalEntry().minus(1, 0);
+                exitTile = exitPortal.leftBorderEntryTile().minus(1, 0);
                 leftToRight = false;
             }
         }
@@ -290,11 +290,11 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
             Portal exitPortal = portals.get(randomInt(0, portals.size()));
             leftToRight = randomBoolean();
             if (leftToRight) {
-                entryTile = entryPortal.leftBorderPortalEntry();
-                exitTile  = exitPortal.rightBorderPortalEntry().plus(1, 0);
+                entryTile = entryPortal.leftBorderEntryTile();
+                exitTile  = exitPortal.rightBorderEntryTile().plus(1, 0);
             } else {
-                entryTile = entryPortal.rightBorderPortalEntry();
-                exitTile = exitPortal.leftBorderPortalEntry().minus(1, 0);
+                entryTile = entryPortal.rightBorderEntryTile();
+                exitTile = exitPortal.leftBorderEntryTile().minus(1, 0);
             }
         }
 

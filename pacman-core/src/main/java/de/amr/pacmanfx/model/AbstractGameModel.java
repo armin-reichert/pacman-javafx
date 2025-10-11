@@ -8,6 +8,7 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
+import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
 import de.amr.pacmanfx.model.actors.AnimationManager;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.BonusState;
@@ -154,9 +155,13 @@ public abstract class AbstractGameModel implements Game {
 
     @Override
     public void updateHunting(GameLevel gameLevel) {
+        final TerrainLayer terrain = gameLevel.worldMap().terrainLayer();
         // Ghosts colliding with Pac? Collision is tile-based!
         thisStep.ghostsCollidingWithPac.clear();
-        gameLevel.ghosts().filter(ghost -> ghost.onSameTileAs(gameLevel.pac())).forEach(thisStep.ghostsCollidingWithPac::add);
+        gameLevel.ghosts()
+            .filter(ghost -> !terrain.isTileInPortalSpace(ghost.tile()))
+            .filter(ghost -> ghost.onSameTileAs(gameLevel.pac()))
+            .forEach(thisStep.ghostsCollidingWithPac::add);
 
         if (!thisStep.ghostsCollidingWithPac.isEmpty()) {
             // Pac killed? Might stay alive when immune or in demo level safe time!

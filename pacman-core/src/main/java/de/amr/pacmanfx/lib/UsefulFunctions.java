@@ -6,6 +6,7 @@ package de.amr.pacmanfx.lib;
 
 import de.amr.pacmanfx.Globals;
 
+import static de.amr.pacmanfx.Globals.TS;
 import static java.util.Objects.requireNonNull;
 
 public interface UsefulFunctions {
@@ -24,7 +25,9 @@ public interface UsefulFunctions {
      * @return tile containing given position
      */
     static Vector2i tileAt(float x, float y) {
-        return Vector2i.of((int) (x / Globals.TS), (int) (y / Globals.TS));
+        float tx = x >= 0 ? x / TS : (x - TS) / TS;
+        float ty = y >= 0 ? y / TS : (y - TS) / TS;
+        return Vector2i.of((int) tx, (int) ty);
     }
 
     /**
@@ -33,7 +36,7 @@ public interface UsefulFunctions {
      * @return position  (scaled by tile size) half tile right of tile origin
      */
     static Vector2f halfTileRightOf(int tileX, int tileY) {
-        return Vector2f.of(Globals.TS * tileX + Globals.HTS, Globals.TS * tileY);
+        return Vector2f.of(TS * tileX + Globals.HTS, TS * tileY);
     }
 
     static Vector2f halfTileRightOf(Vector2i tile) {

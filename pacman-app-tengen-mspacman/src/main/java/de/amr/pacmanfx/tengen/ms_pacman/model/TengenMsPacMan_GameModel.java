@@ -515,11 +515,11 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         Portal entryPortal = portals.get(new Random().nextInt(portals.size()));
         Portal exitPortal  = portals.get(new Random().nextInt(portals.size()));
         List<Waypoint> route = Stream.of(
-                leftToRight ? entryPortal.leftBorderPortalEntry() : entryPortal.rightBorderPortalEntry(),
+                leftToRight ? entryPortal.leftBorderEntryTile() : entryPortal.rightBorderEntryTile(),
                 houseEntry,
                 houseEntryOpposite,
                 houseEntry,
-                leftToRight ? exitPortal.rightBorderPortalEntry().plus(1, 0) : exitPortal.leftBorderPortalEntry().minus(1, 0)
+                leftToRight ? exitPortal.rightBorderEntryTile().plus(1, 0) : exitPortal.leftBorderEntryTile().minus(1, 0)
         ).map(Waypoint::new).toList();
 
         gameLevel.selectNextBonus();

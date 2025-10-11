@@ -20,8 +20,7 @@ import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.lib.Direction.RIGHT;
-import static de.amr.pacmanfx.lib.Direction.UP;
+import static de.amr.pacmanfx.lib.Direction.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
 import static java.util.Objects.requireNonNull;
 
@@ -47,6 +46,7 @@ public abstract class MovingActor extends Actor {
     protected boolean newTileEntered;
     protected boolean turnBackRequested;
     protected boolean canTeleport = DEFAULT_CAN_TELEPORT;
+    protected boolean teleporting;
 
     //TODO this is just a primitive way to provide cornering speed differences
     protected float corneringSpeedUp;
@@ -88,6 +88,7 @@ public abstract class MovingActor extends Actor {
             ", newTileEntered=" + newTileEntered +
             ", turnBackRequested=" + turnBackRequested +
             ", canTeleport=" + canTeleport +
+            ", teleporting=" + teleporting +
             ", corneringSpeedUp" + corneringSpeedUp +
             '}';
     }
@@ -105,6 +106,7 @@ public abstract class MovingActor extends Actor {
             setTargetTile(DEFAULT_TARGET_TILE);
         }
         canTeleport = DEFAULT_CAN_TELEPORT;
+        teleporting = false;
         newTileEntered = true;
         turnBackRequested = false;
     }
@@ -324,19 +326,22 @@ public abstract class MovingActor extends Actor {
         }
     }
 
-    private void tryTeleport(Vector2i currentTile, Portal portal) {
-        Vector2f oldPosition = position();
-        if (currentTile.y() == portal.leftBorderPortalEntry().y()
-            && oldPosition.x() < portal.leftBorderPortalEntry().x() - portal.depth() * TS) {
-            placeAtTile(portal.rightBorderPortalEntry());
-            moveInfo.teleported = true;
-            moveInfo.log(String.format("%s: Teleported from %s to %s", name(), oldPosition, position()));
+    private boolean tryTeleport(Vector2i currentTile, Portal portal) {
+        if (currentTile.y() != portal.leftBorderEntryTile().y()) {
+            return false;
         }
-        else if (currentTile.equals(portal.rightBorderPortalEntry().plus(portal.depth(), 0))) {
-            placeAtTile(portal.leftBorderPortalEntry().minus(portal.depth(), 0));
-            moveInfo.teleported = true;
-            moveInfo.log(String.format("%s: Teleported from %s to %s", name(), oldPosition, position()));
+        Vector2f offset = offset();
+        Vector2i leftEnd = portal.leftBorderEntryTile().minus(portal.depth(), 0);
+        Vector2i rightEnd = portal.rightBorderEntryTile().plus(portal.depth(), 0);
+        if (moveDir() == LEFT && currentTile.equals(leftEnd) && offset.x() <= 4) {
+            placeAtTile(rightEnd);
+            return true;
         }
+        if (moveDir() == RIGHT && currentTile.equals(rightEnd) && offset.x() >= 0) {
+            placeAtTile(leftEnd.x(), leftEnd.y(), 4, 0);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -352,9 +357,10 @@ public abstract class MovingActor extends Actor {
         final Vector2i currentTile = tile();
         moveInfo.clear();
         if (canTeleport) {
-            for (Portal portal : gameLevel.worldMap().terrainLayer().portals()) {
-                tryTeleport(currentTile, portal);
-                if (moveInfo.teleported) {
+            TerrainLayer terrain = gameLevel.worldMap().terrainLayer();
+            for (Portal portal : terrain.portals()) {
+                boolean teleported = tryTeleport(currentTile, portal);
+                if (teleported) {
                     return;
                 }
             }
