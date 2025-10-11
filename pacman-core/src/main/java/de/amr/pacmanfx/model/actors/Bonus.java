@@ -19,6 +19,7 @@ import org.tinylog.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
+import static de.amr.pacmanfx.lib.timer.TickTimer.secToTicks;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -37,7 +38,8 @@ public class Bonus extends MovingActor {
     private long edibleTicks;
     private long eatenTicks;
 
-    private Pulse movementAnimation;
+    // moving bonus only
+    private Pulse jumpingAnimation;
     private RouteBasedSteering steering;
 
     public Bonus(byte symbol, int points) {
@@ -45,8 +47,8 @@ public class Bonus extends MovingActor {
         this.symbol = symbol;
         this.points = points;
         canTeleport = false; // override default value
-        edibleTicks = TickTimer.secToTicks(9.5);
-        eatenTicks = TickTimer.secToTicks(2);
+        edibleTicks = secToTicks(9.5);
+        eatenTicks  = secToTicks(2);
         ticksRemaining = 0;
         state = BonusState.INACTIVE;
     }
@@ -56,77 +58,69 @@ public class Bonus extends MovingActor {
         switch (state) {
             case EDIBLE -> {
                 countdown();
-                expireOnWorldLeftOrTimeout(gameContext);
+                boolean expired = ticksRemaining == 0 || (canJump() && moveThroughMaze(gameContext.gameLevel()));
+                if (expired) {
+                    setInactive();
+                    gameContext.eventManager().publishEvent(GameEventType.BONUS_EXPIRED, tile());
+                }
             }
             case EATEN -> {
                 countdown();
-                expireOnTimeout(gameContext);
+                if (ticksRemaining == 0) {
+                    setInactive();
+                    gameContext.eventManager().publishEvent(GameEventType.BONUS_EXPIRED, tile());
+                }
             }
             case INACTIVE -> {}
         }
     }
 
-    private boolean canMove() {
-        return movementAnimation != null;
+    private boolean canJump() {
+        return jumpingAnimation != null;
     }
 
-    private boolean move(GameLevel gameLevel) {
+    private boolean moveThroughMaze(GameLevel gameLevel) {
         steering.steer(this, gameLevel);
         boolean complete = steering.isComplete();
         if (!complete) {
             navigateTowardsTarget(gameLevel);
             moveThroughThisCruelWorld(gameLevel);
-            movementAnimation.tick();
+            jumpingAnimation.tick();
         }
         return complete;
     }
 
-    private void expireOnWorldLeftOrTimeout(GameContext gameContext) {
-        boolean expired = ticksRemaining == 0 || (canMove() && move(gameContext.gameLevel()));
-        if (expired) {
-            expire(gameContext);
+    public void setEdibleDuration(long ticks) {
+        this.edibleTicks = ticks;
+    }
+
+    public void setEatenDuration(long ticks) {
+        this.eatenTicks = ticks;
+    }
+
+    public void setRoute(List<Waypoint> waypoints, boolean leftToRight) {
+        requireNonNull(waypoints);
+        if (waypoints.isEmpty()) {
+            Logger.error("Bonus route must not be empty");
+            return;
         }
-    }
-
-    private void expireOnTimeout(GameContext gameContext) {
-        if (ticksRemaining == 0) {
-            expire(gameContext);
-        }
-    }
-
-    private void expire(GameContext gameContext) {
-        setInactive();
-        gameContext.eventManager().publishEvent(GameEventType.BONUS_EXPIRED, tile());
-        Logger.info("{} expired", this);
-    }
-
-    public void setEdibleDuration(long edibleTicks) {
-        this.edibleTicks = edibleTicks;
-    }
-
-    public void setEatenDuration(long eatenTicks) {
-        this.eatenTicks = eatenTicks;
-    }
-
-    public void setRoute(List<Waypoint> route, boolean leftToRight) {
-        requireNonNull(route);
-        var mutableRoute = new ArrayList<>(route);
-        placeAtTile(mutableRoute.getFirst().tile());
+        var route = new ArrayList<>(waypoints);
+        Waypoint first = route.removeFirst();
+        placeAtTile(first.tile());
         setMoveDir(leftToRight ? Direction.RIGHT : Direction.LEFT);
         setWishDir(leftToRight ? Direction.RIGHT : Direction.LEFT);
-        mutableRoute.removeFirst();
-        steering = new RouteBasedSteering(mutableRoute);
+        steering = new RouteBasedSteering(route);
     }
 
     @Override
     public String toString() {
         return "Bonus{symbol=%s, points=%d, countdown=%d, state=%s, animation=%s}"
-            .formatted(symbol, points, ticksRemaining, state, movementAnimation);
+            .formatted(symbol, points, ticksRemaining, state, jumpingAnimation);
     }
 
     @Override
     public String name() {
-        return "%sBonus_symbol=%s_points=%s".formatted((movementAnimation != null ? "Moving" : "Static"), symbol, points);
+        return "%sBonus_symbol=%s_points=%s".formatted((jumpingAnimation != null ? "Moving" : "Static"), symbol, points);
     }
 
     @Override
@@ -162,8 +156,8 @@ public class Bonus extends MovingActor {
     }
 
     public void setInactive() {
-        if (movementAnimation != null) {
-            movementAnimation.stop();
+        if (jumpingAnimation != null) {
+            jumpingAnimation.stop();
             setSpeed(0);
         }
         state = BonusState.INACTIVE;
@@ -174,8 +168,8 @@ public class Bonus extends MovingActor {
     public void setEdibleAndStartMoving(float speed) {
         setSpeed(speed);
         setTargetTile(null);
-        movementAnimation = new Pulse(10, Pulse.State.OFF);
-        movementAnimation.restart();
+        jumpingAnimation = new Pulse(10, Pulse.State.OFF);
+        jumpingAnimation.restart();
         setEdible();
     }
 
@@ -186,8 +180,8 @@ public class Bonus extends MovingActor {
     }
 
     public void setEaten() {
-        if (movementAnimation != null) {
-            movementAnimation.stop();
+        if (jumpingAnimation != null) {
+            jumpingAnimation.stop();
         }
         ticksRemaining = eatenTicks;
         state = BonusState.EATEN;
@@ -201,11 +195,12 @@ public class Bonus extends MovingActor {
         }
     }
 
-    //TODO check in emulator what's really going on
-    public float jumpHeight() {
-        if (movementAnimation == null || !movementAnimation.isRunning()) {
+    //TODO check in emulator what's exactly going on
+    public float jumpElongation() {
+        if (jumpingAnimation == null || !jumpingAnimation.isRunning()) {
             return 0;
         }
-        return movementAnimation.state() == Pulse.State.ON ? -3f : 3f;
+        int pixels = moveDir().isVertical() ? 4 : 2;
+        return jumpingAnimation.state() == Pulse.State.ON ? -pixels : pixels;
     }
 }
