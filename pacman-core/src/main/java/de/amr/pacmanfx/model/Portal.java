@@ -56,8 +56,7 @@ public record Portal(Vector2i leftBorderEntryTile, Vector2i rightBorderEntryTile
                     return true;
                 }
             }
-            default -> { // vertical teleportation not supported yet }
-            }
+            default -> { /* vertical teleportation not supported yet */ }
         }
         return false;
     }
