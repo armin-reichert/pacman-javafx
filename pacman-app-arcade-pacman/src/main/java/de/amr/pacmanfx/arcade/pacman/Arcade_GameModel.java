@@ -332,6 +332,12 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     public static final float BASE_SPEED_1_PERCENT = 0.0125f;
 
     @Override
+    public float bonusSpeed(GameLevel gameLevel) {
+        //TODO clarify exact speed
+        return 0.5f * pacNormalSpeed(gameLevel);
+    }
+
+    @Override
     public float pacNormalSpeed(GameLevel gameLevel) {
         byte percentage = levelData(gameLevel).pacSpeedPct();
         return percentage > 0 ? percentage * BASE_SPEED_1_PERCENT : BASE_SPEED;

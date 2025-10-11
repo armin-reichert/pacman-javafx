@@ -248,15 +248,16 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         byte symbol = gameLevel.bonusSymbol(gameLevel.currentBonusIndex());
         var bonus = new Bonus(symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100);
         bonus.setEatenTicks(TickTimer.secToTicks(BONUS_EATEN_SECONDS));
-        bonus.setEdible();
         if (terrain.portals().isEmpty()) {
             bonus.setEdibleTicks(randomInt(9 * NUM_TICKS_PER_SEC, 10 * NUM_TICKS_PER_SEC));
             Vector2i bonusTile = terrain.getTileProperty(DefaultWorldMapPropertyName.POS_BONUS, new Vector2i(13, 20));
             bonus.setPosition(halfTileRightOf(bonusTile));
+            bonus.setEdible(0);
         } else {
             bonus.setEdibleTicks(TickTimer.INDEFINITE);
             bonus.enableMovement();
             computeBonusRoute(bonus, terrain, house);
+            bonus.setEdible(gameLevel.game().bonusSpeed(gameLevel));
         }
 
         gameLevel.setBonus(bonus);

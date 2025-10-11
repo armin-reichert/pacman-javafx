@@ -175,11 +175,11 @@ public class Bonus extends MovingActor {
         Logger.trace("Bonus inactive: {}", this);
     }
 
-    public void setEdible() {
-        if (movementAnimation != null) {
-            movementAnimation.restart();
-            setSpeed(0.5f); // how fast in the original game?
+    public void setEdible(float speed) {
+        if (speed > 0) {
+            setSpeed(speed);
             setTargetTile(null);
+            movementAnimation.restart();
         }
         ticksRemaining = edibleTicks;
         state = BonusState.EDIBLE;

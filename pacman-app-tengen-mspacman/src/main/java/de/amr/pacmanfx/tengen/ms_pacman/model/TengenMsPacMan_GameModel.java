@@ -529,7 +529,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         bonus.setEdibleTicks(TickTimer.INDEFINITE);
         bonus.setEatenTicks(TickTimer.secToTicks(BONUS_EATEN_SECONDS));
         bonus.setRoute(route, leftToRight);
-        bonus.setEdible();
+        bonus.setEdible(gameLevel.game().bonusSpeed(gameLevel));
         Logger.debug("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
 
         gameLevel.setBonus(bonus);
@@ -726,6 +726,12 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             units = 0x28;
         }
         return speedUnitsToPixels(units);
+    }
+
+    @Override
+    public float bonusSpeed(GameLevel gameLevel) {
+        //TODO clarify exact speed
+        return 0.5f * pacNormalSpeed(gameLevel);
     }
 
     @Override

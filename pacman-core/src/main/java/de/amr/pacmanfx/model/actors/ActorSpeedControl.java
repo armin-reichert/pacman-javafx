@@ -7,6 +7,7 @@ package de.amr.pacmanfx.model.actors;
 import de.amr.pacmanfx.model.GameLevel;
 
 public interface ActorSpeedControl {
+    float bonusSpeed(GameLevel gameLevel);
     float ghostAttackSpeed(GameLevel level, Ghost ghost);
     float ghostFrightenedSpeed(GameLevel level, Ghost ghost);
     float ghostSpeedInsideHouse(GameLevel level, Ghost ghost);
