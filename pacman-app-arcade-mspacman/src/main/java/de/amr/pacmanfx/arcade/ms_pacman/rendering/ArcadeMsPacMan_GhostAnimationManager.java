@@ -28,11 +28,29 @@ public class ArcadeMsPacMan_GhostAnimationManager extends SpriteAnimationManager
     @Override
     protected SpriteAnimation createAnimation(String id) {
         return switch (id) {
-            case CommonAnimationID.ANIM_GHOST_NORMAL     -> SpriteAnimation.builder().fromSprites(ghostNormalSprites(Direction.LEFT)).ticksPerFrame(8).endless();
-            case CommonAnimationID.ANIM_GHOST_FRIGHTENED -> SpriteAnimation.builder().fromSprites(spriteSheet().spriteSequence(SpriteID.GHOST_FRIGHTENED)).ticksPerFrame(8).endless();
-            case CommonAnimationID.ANIM_GHOST_FLASHING   -> SpriteAnimation.builder().fromSprites(spriteSheet().spriteSequence(SpriteID.GHOST_FLASHING)).ticksPerFrame(7).endless();
-            case CommonAnimationID.ANIM_GHOST_EYES       -> SpriteAnimation.builder().fromSprites(ghostEyesSprites(Direction.LEFT)).once();
-            case CommonAnimationID.ANIM_GHOST_NUMBER     -> SpriteAnimation.builder().fromSprites(spriteSheet().spriteSequence(SpriteID.GHOST_NUMBERS)).once();
+            case CommonAnimationID.ANIM_GHOST_NORMAL -> SpriteAnimation.builder()
+                .fromSprites(ghostNormalSprites(Direction.LEFT))
+                .ticksPerFrame(8)
+                .endless();
+
+            case CommonAnimationID.ANIM_GHOST_FRIGHTENED -> SpriteAnimation.builder()
+                .fromSprites(spriteSheet().spriteSequence(SpriteID.GHOST_FRIGHTENED))
+                .ticksPerFrame(8)
+                .endless();
+
+            case CommonAnimationID.ANIM_GHOST_FLASHING -> SpriteAnimation.builder()
+                .fromSprites(spriteSheet().spriteSequence(SpriteID.GHOST_FLASHING))
+                .ticksPerFrame(7)
+                .endless();
+
+            case CommonAnimationID.ANIM_GHOST_EYES -> SpriteAnimation.builder()
+                .fromSprites(ghostEyesSprites(Direction.LEFT))
+                .once();
+
+            case CommonAnimationID.ANIM_GHOST_NUMBER -> SpriteAnimation.builder()
+                .fromSprites(spriteSheet().spriteSequence(SpriteID.GHOST_NUMBERS))
+                .once();
+
             default -> throw new IllegalArgumentException("Illegal animation ID: " + id);
         };
     }
