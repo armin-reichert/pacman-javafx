@@ -216,7 +216,7 @@ public abstract class AbstractGameModel implements Game {
 
     protected void checkPacEatsBonus(GameLevel gameLevel, Bonus bonus) {
         if (bonus.state() == BonusState.EDIBLE && gameLevel.pac().onSameTileAs(bonus)) {
-            bonus.setEaten();
+            bonus.setEaten(2);
             scoreManager.scorePoints(bonus.points());
             Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
             thisStep.bonusEatenTile = bonus.tile();

@@ -19,7 +19,6 @@ import org.tinylog.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.pacmanfx.lib.timer.TickTimer.secToTicks;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -37,8 +36,6 @@ public class Bonus extends MovingActor {
 
     private final TickTimer timer = new TickTimer("Bonus-Timer");
 
-    private long eatenTicks;
-
     // moving bonus only
     private Pulse jumpingAnimation;
     private RouteBasedSteering steering;
@@ -49,7 +46,6 @@ public class Bonus extends MovingActor {
         this.points = points;
         canTeleport = false; // override default value
         state = BonusState.INACTIVE;
-        eatenTicks  = secToTicks(2);
     }
 
     public void setInactive() {
@@ -78,9 +74,9 @@ public class Bonus extends MovingActor {
         show();
     }
 
-    public void setEaten() {
+    public void setEaten(float seconds) {
         state = BonusState.EATEN;
-        timer.restartTicks(eatenTicks);
+        timer.restartSeconds(seconds);
         if (jumpingAnimation != null) {
             jumpingAnimation.stop();
         }
@@ -120,10 +116,6 @@ public class Bonus extends MovingActor {
             jumpingAnimation.tick();
         }
         return reachedExit;
-    }
-
-    public void setEatenDuration(long ticks) {
-        this.eatenTicks = ticks;
     }
 
     public void initRoute(List<Waypoint> waypoints, boolean leftToRight) {

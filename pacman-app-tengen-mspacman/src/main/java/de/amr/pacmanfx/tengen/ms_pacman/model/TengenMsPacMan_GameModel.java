@@ -88,8 +88,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     // Bonus value = factor * 100
     private static final byte[] BONUS_VALUE_FACTORS = new byte[14];
 
-    private static final byte BONUS_EATEN_SECONDS = 2;
-
     static {
         BONUS_VALUE_FACTORS[BONUS_CHERRY]        = 1;
         BONUS_VALUE_FACTORS[BONUS_STRAWBERRY]    = 2;
@@ -525,7 +523,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         gameLevel.selectNextBonus();
         byte symbol = gameLevel.bonusSymbol(gameLevel.currentBonusIndex());
         var bonus = new Bonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
-        bonus.setEatenDuration(secToTicks(BONUS_EATEN_SECONDS));
         bonus.initRoute(route, leftToRight);
         bonus.setEdibleAndStartJumpingAtSpeed(gameLevel.game().bonusSpeed(gameLevel));
         Logger.debug("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
