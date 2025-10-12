@@ -48,7 +48,7 @@ public abstract class AbstractGameModel implements Game {
 
     protected abstract void checkPacFindsBonus(GameLevel gameLevel, Bonus bonus);
 
-    protected abstract boolean isPacManSafeInDemoLevel(GameLevel demoLevel);
+    protected abstract boolean isPacSafeInDemoLevel(GameLevel demoLevel);
 
     protected abstract void resetPacManAndGhostAnimations(GameLevel gameLevel);
 
@@ -202,13 +202,9 @@ public abstract class AbstractGameModel implements Game {
         thisStep.ghostsCollidingWithPac.stream()
             .filter(ghost -> ghost.state() == GhostState.HUNTING_PAC)
             .findFirst().ifPresent(assassin -> {
-                boolean pacDies;
-                if (gameLevel.isDemoLevel()) {
-                    pacDies = !isPacManSafeInDemoLevel(gameLevel);
-                } else {
-                    pacDies = !gameLevel.pac().isImmune();
-                }
-                if (pacDies) {
+                boolean pacSurvives = gameLevel.isDemoLevel() && isPacSafeInDemoLevel(gameLevel)
+                    || !gameLevel.isDemoLevel() && gameLevel.pac().isImmune();
+                if (!pacSurvives) {
                     thisStep.pacKiller = assassin;
                 }
             });

@@ -456,7 +456,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     public int lastLevelNumber() { return LAST_LEVEL_NUMBER; }
 
     @Override
-    protected boolean isPacManSafeInDemoLevel(GameLevel demoLevel) {
+    protected boolean isPacSafeInDemoLevel(GameLevel demoLevel) {
         float runningMillis = System.currentTimeMillis() - demoLevel.startTimeMillis();
         if (runningMillis <= DEMO_LEVEL_MIN_DURATION_MILLIS) {
             Logger.info("Pac-Man dead ignored, demo level is running since {} milliseconds", runningMillis);

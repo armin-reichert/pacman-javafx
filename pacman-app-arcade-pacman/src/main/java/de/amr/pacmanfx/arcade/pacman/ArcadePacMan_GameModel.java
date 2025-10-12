@@ -187,7 +187,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     }
 
     @Override
-    protected boolean isPacManSafeInDemoLevel(GameLevel demoLevel) {
+    protected boolean isPacSafeInDemoLevel(GameLevel demoLevel) {
         return false;
     }
 
