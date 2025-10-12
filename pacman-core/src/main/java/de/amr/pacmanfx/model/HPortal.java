@@ -41,20 +41,20 @@ public record HPortal(Vector2i leftBorderEntryTile, Vector2i rightBorderEntryTil
         if (actorTile.y() != leftBorderEntryTile().y()) {
             return false;
         }
-        final Vector2i leftEnd = leftBorderEntryTile().minus(depth, 0);
-        final Vector2i rightEnd = rightBorderEntryTile().plus(depth, 0);
+        final Vector2i leftWrappingTile = leftBorderEntryTile().minus(depth, 0);
+        final Vector2i rightWrappingTile = rightBorderEntryTile().plus(depth, 0);
         switch (actor.moveDir()) {
             case LEFT -> {
-                if (actorTile.equals(leftEnd) && offset.x() <= 4) {
-                    actor.placeAtTile(rightEnd);
-                    Logger.info("{} teleported from {} to {}", actor.name(), actorTile, rightEnd);
+                if (actorTile.equals(leftWrappingTile) && offset.x() <= 4) {
+                    actor.placeAtTile(rightWrappingTile);
+                    Logger.info("{} teleported from {} to {}", actor.name(), actorTile, rightWrappingTile);
                     return true;
                 }
             }
             case RIGHT -> {
-                if (actorTile.equals(rightEnd) && offset.x() >= 0) {
-                    actor.placeAtTile(leftEnd.x(), leftEnd.y(), 4, 0);
-                    Logger.info("{} teleported from {} to {}", actor.name(), actorTile, leftEnd);
+                if (actorTile.equals(rightWrappingTile) && offset.x() >= 0) {
+                    actor.placeAtTile(leftWrappingTile.x(), leftWrappingTile.y(), 4, 0);
+                    Logger.info("{} teleported from {} to {}", actor.name(), actorTile, leftWrappingTile);
                     return true;
                 }
             }

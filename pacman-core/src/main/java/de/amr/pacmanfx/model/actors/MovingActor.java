@@ -338,7 +338,7 @@ public abstract class MovingActor extends Actor {
         requireNonNull(gameLevel);
         moveInfo.clear();
         if (canTeleport) {
-            boolean teleported = tryTeleport(gameLevel.worldMap().terrainLayer());
+            boolean teleported = tryHorizontalTeleport(gameLevel.worldMap().terrainLayer());
             if (teleported) {
                 return;
             }
@@ -356,7 +356,10 @@ public abstract class MovingActor extends Actor {
         }
     }
 
-    private boolean tryTeleport(TerrainLayer terrain) {
+    private boolean tryHorizontalTeleport(TerrainLayer terrain) {
+        if (moveDir().isVertical()) {
+            return false;
+        }
         return terrain.horizontalPortals().stream()
             .filter(portal -> portal.leftBorderEntryTile().y() == tile().y())
             .findFirst()
