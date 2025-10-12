@@ -47,7 +47,7 @@ public abstract class AbstractGameModel implements Game {
 
     protected abstract void checkPacFindsFood(GameLevel gameLevel);
 
-    protected abstract void checkPacFindsBonus(GameLevel gameLevel, Bonus bonus);
+    protected abstract void checkPacFindsBonus(GameLevel gameLevel);
 
     protected abstract boolean isPacSafeInDemoLevel(GameLevel demoLevel);
 
@@ -180,7 +180,7 @@ public abstract class AbstractGameModel implements Game {
         }
 
         checkPacFindsFood(gameLevel);
-        gameLevel.bonus().ifPresent(bonus -> checkPacFindsBonus(gameLevel, bonus));
+        checkPacFindsBonus(gameLevel);
 
         updatePacPower(gameLevel);
         gameLevel.blinking().tick();

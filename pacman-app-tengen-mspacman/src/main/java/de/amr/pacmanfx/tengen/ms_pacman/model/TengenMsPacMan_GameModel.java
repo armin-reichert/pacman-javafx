@@ -552,14 +552,16 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    protected void checkPacFindsBonus(GameLevel gameLevel, Bonus bonus) {
-        if (bonus.state() == BonusState.EDIBLE && gameLevel.pac().onSameTileAs(bonus)) {
-            bonus.setEaten(BONUS_EATEN_SECONDS);
-            scoreManager.scorePoints(bonus.points());
-            Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
-            thisStep.bonusEatenTile = bonus.tile();
-            eventManager().publishEvent(GameEventType.BONUS_EATEN);
-        }
+    protected void checkPacFindsBonus(GameLevel gameLevel) {
+        gameLevel.bonus().filter(bonus -> bonus.state() == BonusState.EDIBLE).ifPresent(bonus -> {
+            if (gameLevel.pac().onSameTileAs(bonus)) {
+                bonus.setEaten(BONUS_EATEN_SECONDS);
+                scoreManager.scorePoints(bonus.points());
+                Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
+                thisStep.bonusEatenTile = bonus.tile();
+                eventManager().publishEvent(GameEventType.BONUS_EATEN);
+            }
+        });
     }
 
     @Override
