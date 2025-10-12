@@ -30,22 +30,34 @@ import static java.util.Objects.requireNonNull;
  */
 public class Bonus extends MovingActor {
 
+    private final TickTimer timer = new TickTimer("Bonus-Timer");
     private final byte symbol;
     private final int points;
-    private BonusState state;
 
-    private final TickTimer timer = new TickTimer("Bonus-Timer");
+    private BonusState state;
 
     // moving bonus only
     private Pulse jumpingAnimation;
     private RouteBasedSteering steering;
 
     public Bonus(byte symbol, int points) {
-        super.reset();
         this.symbol = symbol;
         this.points = points;
-        canTeleport = false; // override default value
-        state = BonusState.INACTIVE;
+        reset();
+        canTeleport = false; // override default value (true)
+        setInactive();
+    }
+
+    public BonusState state() {
+        return state;
+    }
+
+    public byte symbol() {
+        return symbol;
+    }
+
+    public int points() {
+        return points;
     }
 
     public void setInactive() {
@@ -53,8 +65,9 @@ public class Bonus extends MovingActor {
         timer.restartIndefinitely();
         if (jumpingAnimation != null) {
             jumpingAnimation.stop();
-            setSpeed(0);
+            jumpingAnimation.reset();
         }
+        setSpeed(0);
         hide();
     }
 
@@ -169,17 +182,5 @@ public class Bonus extends MovingActor {
             return false;
         }
         return !terrain.isTileBlocked(tile);
-    }
-
-    public BonusState state() {
-        return state;
-    }
-
-    public byte symbol() {
-        return symbol;
-    }
-
-    public int points() {
-        return points;
     }
 }
