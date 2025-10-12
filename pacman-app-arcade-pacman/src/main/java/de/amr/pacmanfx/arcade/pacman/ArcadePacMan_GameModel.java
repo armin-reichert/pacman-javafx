@@ -10,7 +10,6 @@ import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.Waypoint;
-import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
 import de.amr.pacmanfx.lib.worldmap.TerrainTile;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
@@ -23,8 +22,9 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.util.List;
 
-import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.lib.RandomNumberSupport.randomInt;
+import static de.amr.pacmanfx.Globals.ORANGE_GHOST_POKEY;
+import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
+import static de.amr.pacmanfx.lib.RandomNumberSupport.randomFloat;
 import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
 import static de.amr.pacmanfx.lib.Waypoint.wp;
 import static de.amr.pacmanfx.lib.timer.TickTimer.secToTicks;
@@ -205,9 +205,8 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         var bonus = new Bonus(symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100);
         Vector2i bonusTile = gameLevel.worldMap().terrainLayer().getTileProperty(DefaultWorldMapPropertyName.POS_BONUS, new Vector2i(13, 20));
         bonus.setPosition(halfTileRightOf(bonusTile));
-        bonus.setEdibleDuration(randomInt(9 * NUM_TICKS_PER_SEC, 10 * NUM_TICKS_PER_SEC));
         bonus.setEatenDuration(secToTicks(BONUS_EATEN_SECONDS));
-        bonus.setEdible();
+        bonus.setEdible(randomFloat(9, 10));
         gameLevel.setBonus(bonus);
         eventManager().publishEvent(GameEventType.BONUS_ACTIVATED, bonus.tile());
     }

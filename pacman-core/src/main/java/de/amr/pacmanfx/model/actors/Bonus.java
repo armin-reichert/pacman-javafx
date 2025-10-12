@@ -37,7 +37,6 @@ public class Bonus extends MovingActor {
 
     private final TickTimer timer = new TickTimer("Bonus-Timer");
 
-    private long edibleTicks;
     private long eatenTicks;
 
     // moving bonus only
@@ -50,7 +49,6 @@ public class Bonus extends MovingActor {
         this.points = points;
         canTeleport = false; // override default value
         state = BonusState.INACTIVE;
-        edibleTicks = secToTicks(9.5);
         eatenTicks  = secToTicks(2);
     }
 
@@ -64,18 +62,20 @@ public class Bonus extends MovingActor {
         hide();
     }
 
-    public void setEdible() {
+    public void setEdible(float seconds) {
         state = BonusState.EDIBLE;
-        timer.restartTicks(edibleTicks);
+        timer.restartSeconds(seconds);
         show();
     }
 
-    public void setEdibleAndStartJumping(float speed) {
+    public void setEdibleAndStartJumpingAtSpeed(float speed) {
         jumpingAnimation = new Pulse(10, Pulse.State.OFF);
         jumpingAnimation.restart();
         setSpeed(speed);
         setTargetTile(null);
-        setEdible();
+        state = BonusState.EDIBLE;
+        timer.restartIndefinitely();
+        show();
     }
 
     public void setEaten() {
@@ -120,10 +120,6 @@ public class Bonus extends MovingActor {
             jumpingAnimation.tick();
         }
         return reachedExit;
-    }
-
-    public void setEdibleDuration(long ticks) {
-        this.edibleTicks = ticks;
     }
 
     public void setEatenDuration(long ticks) {

@@ -17,7 +17,6 @@ import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.Waypoint;
-import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.*;
@@ -30,8 +29,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.lib.RandomNumberSupport.randomBoolean;
-import static de.amr.pacmanfx.lib.RandomNumberSupport.randomInt;
+import static de.amr.pacmanfx.lib.RandomNumberSupport.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
 import static de.amr.pacmanfx.lib.timer.TickTimer.secToTicks;
@@ -250,14 +248,12 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         var bonus = new Bonus(symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100);
         bonus.setEatenDuration(secToTicks(BONUS_EATEN_SECONDS));
         if (terrain.portals().isEmpty()) {
-            bonus.setEdibleDuration(randomInt(9 * NUM_TICKS_PER_SEC, 10 * NUM_TICKS_PER_SEC));
             Vector2i bonusTile = terrain.getTileProperty(DefaultWorldMapPropertyName.POS_BONUS, new Vector2i(13, 20));
             bonus.setPosition(halfTileRightOf(bonusTile));
-            bonus.setEdible();
+            bonus.setEdible(randomFloat(9, 10));
         } else {
-            bonus.setEdibleDuration(TickTimer.INDEFINITE);
             computeBonusRoute(bonus, terrain, house);
-            bonus.setEdibleAndStartJumping(gameLevel.game().bonusSpeed(gameLevel));
+            bonus.setEdibleAndStartJumpingAtSpeed(gameLevel.game().bonusSpeed(gameLevel));
         }
 
         gameLevel.setBonus(bonus);
