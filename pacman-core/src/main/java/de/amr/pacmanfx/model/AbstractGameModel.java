@@ -155,8 +155,7 @@ public abstract class AbstractGameModel implements Game {
         eventManager().publishEvent(GameEventType.HUNTING_PHASE_STARTED);
     }
 
-    @Override
-    public void updateHunting(GameLevel gameLevel) {
+    protected void makeHuntingStep(GameLevel gameLevel) {
         final TerrainLayer terrain = gameLevel.worldMap().terrainLayer();
         // Ghosts colliding with Pac? Collision is tile-based!
         thisStep.ghostsCollidingWithPac.clear();

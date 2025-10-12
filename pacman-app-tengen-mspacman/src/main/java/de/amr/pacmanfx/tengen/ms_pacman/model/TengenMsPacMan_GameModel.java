@@ -139,7 +139,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         scoreManager.setHighScoreFile(requireNonNull(highScoreFile));
         mapSelector = new TengenMsPacMan_MapSelector();
         levelCounter = new TengenMsPacMan_LevelCounter();
-        gateKeeper = new GateKeeper(this); //TODO implement original house logic
+        gateKeeper = new GateKeeper(this); //TODO implement original logic from Tengen game
         autopilot = new RuleBasedPacSteering(gameContext);
         demoLevelSteering = new RuleBasedPacSteering(gameContext);
         pacImmunity.bind(gameContext.gameController().propertyImmunity());
@@ -427,10 +427,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         normalLevel.pac().immuneProperty().bind(pacImmunity);
         normalLevel.pac().usingAutopilotProperty().bind(pacUsingAutopilot);
         scoreManager.score().setLevelNumber(levelNumber);
-        if (gateKeeper != null) {
-            gateKeeper.setLevelNumber(levelNumber);
-            normalLevel.worldMap().terrainLayer().optHouse().ifPresent(gateKeeper::setHouse); //TODO what if no house exists?
-        }
+        gateKeeper.setLevelNumber(levelNumber);
+        normalLevel.worldMap().terrainLayer().optHouse().ifPresent(gateKeeper::setHouse); //TODO what if no house exists?
         setGameLevel(normalLevel);
         eventManager().publishEvent(GameEventType.LEVEL_CREATED);
     }
@@ -444,10 +442,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         demoLevel.pac().setAutopilotSteering(demoLevelSteering);
         demoLevelSteering.init();
         scoreManager.score().setLevelNumber(1);
-        if (gateKeeper != null) {
-            gateKeeper.setLevelNumber(1);
-            demoLevel.worldMap().terrainLayer().optHouse().ifPresent(gateKeeper::setHouse); //TODO what if no house exists?
-        }
+        gateKeeper.setLevelNumber(1);
+        demoLevel.worldMap().terrainLayer().optHouse().ifPresent(gateKeeper::setHouse); //TODO what if no house exists?
         setGameLevel(demoLevel);
         eventManager().publishEvent(GameEventType.LEVEL_CREATED);
     }
@@ -467,10 +463,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     public void updateHunting(GameLevel gameLevel) {
-        super.updateHunting(gameLevel);
-        if (gateKeeper != null) {
-            gateKeeper.unlockGhosts(gameLevel);
-        }
+        makeHuntingStep(gameLevel);
+        gateKeeper.unlockGhosts(gameLevel);
     }
 
     @Override
@@ -540,9 +534,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         if (foodLayer.hasFoodAtTile(tile)) {
             pac.setStarvingTicks(0);
             foodLayer.registerFoodEatenAt(tile);
-            if (gateKeeper != null) {
-                gateKeeper.registerFoodEaten(gameLevel);
-            }
+            gateKeeper.registerFoodEaten(gameLevel);
             if (foodLayer.isEnergizerTile(tile)) {
                 thisStep.foundEnergizerAtTile = tile;
                 onEnergizerEaten();

@@ -113,7 +113,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     @Override
     public void updateHunting(GameLevel gameLevel) {
-        super.updateHunting(gameLevel);
+        makeHuntingStep(gameLevel);
         if (gateKeeper != null) {
             gateKeeper.unlockGhosts(gameLevel);
         }
