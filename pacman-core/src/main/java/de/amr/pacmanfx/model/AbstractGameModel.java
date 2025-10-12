@@ -111,7 +111,7 @@ public abstract class AbstractGameModel implements Game {
 
     @Override
     public boolean hasPacManBeenKilled() {
-        return thisStep.pacKilledTile != null;
+        return thisStep.pacKiller != null;
     }
 
     @Override
@@ -210,7 +210,6 @@ public abstract class AbstractGameModel implements Game {
                 }
                 if (pacDies) {
                     thisStep.pacKiller = assassin;
-                    thisStep.pacKilledTile = assassin.tile();
                 }
             });
     }

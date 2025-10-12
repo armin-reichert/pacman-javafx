@@ -22,7 +22,6 @@ public class SimulationStepEvents {
     public boolean    pacGotPower;
     public boolean    pacStartsLosingPower;
     public boolean    pacLostPower;
-    public Vector2i   pacKilledTile;
     public Ghost      pacKiller;
     public boolean    extraLifeWon;
     public int        extraLifeScore;
@@ -39,7 +38,6 @@ public class SimulationStepEvents {
         pacGotPower = false;
         pacStartsLosingPower = false;
         pacLostPower = false;
-        pacKilledTile = null;
         pacKiller = null;
         extraLifeWon = false;
         extraLifeScore = 0;
@@ -73,7 +71,7 @@ public class SimulationStepEvents {
             messages.add("Pac lost power");
         }
         if (pacKiller != null) {
-            messages.add("Pac killed by %s at %s".formatted(pacKiller.name(), pacKilledTile));
+            messages.add("Pac killed by %s at tile %s".formatted(pacKiller.name(), pacKiller.tile()));
         }
         if (extraLifeWon) {
             messages.add("Extra life won for scoring %d points".formatted(extraLifeScore));
