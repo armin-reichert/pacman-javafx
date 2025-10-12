@@ -48,9 +48,10 @@ public class TerrainLayer extends WorldMapLayer {
         hPortals = findHorizontalPortals();
         Vector2i pacTile = getTileProperty(POS_PAC);
         if (pacTile == null) {
-            throw new IllegalArgumentException("No Pac position stored in map");
+            Logger.error("No Pac position stored in map");
+        } else {
+            pacStartPosition = halfTileRightOf(pacTile);
         }
-        pacStartPosition = halfTileRightOf(pacTile);
         ghostScatterTiles[RED_GHOST_SHADOW] = getTileProperty(POS_SCATTER_RED_GHOST,
                 Vector2i.of(0, numCols() - 3));
 
