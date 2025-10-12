@@ -10,7 +10,6 @@ import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.Waypoint;
-import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.lib.worldmap.FoodLayer;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.*;
@@ -104,6 +103,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         BONUS_VALUE_FACTORS[BONUS_RING]          = 90;
         BONUS_VALUE_FACTORS[BONUS_FLOWER]        = 100;
     }
+
+    private static final float BONUS_EATEN_SECONDS = 2;
 
     private static final byte[] KILLED_GHOST_VALUE_FACTORS = {2, 4, 8, 16}; // points = factor * 100
 
@@ -555,6 +556,17 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             eventManager().publishEvent(GameEventType.PAC_FOUND_FOOD, tile);
         } else {
             pac.setStarvingTicks(pac.starvingTicks() + 1);
+        }
+    }
+
+    @Override
+    protected void checkPacFindsBonus(GameLevel gameLevel, Bonus bonus) {
+        if (bonus.state() == BonusState.EDIBLE && gameLevel.pac().onSameTileAs(bonus)) {
+            bonus.setEaten(BONUS_EATEN_SECONDS);
+            scoreManager.scorePoints(bonus.points());
+            Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
+            thisStep.bonusEatenTile = bonus.tile();
+            eventManager().publishEvent(GameEventType.BONUS_EATEN);
         }
     }
 

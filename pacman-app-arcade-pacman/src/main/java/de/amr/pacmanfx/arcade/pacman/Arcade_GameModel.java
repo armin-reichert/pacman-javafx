@@ -64,6 +64,8 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     public static final int EXTRA_LIFE_SCORE = 10_000;
     public static final byte[] KILLED_GHOST_VALUE_FACTORS = {2, 4, 8, 16}; // points = factor * 100
 
+    private static final float BONUS_EATEN_SECONDS = 2;
+
     protected GateKeeper gateKeeper;
     protected Steering autopilot;
     protected Steering demoLevelSteering;
@@ -222,6 +224,17 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             eventManager().publishEvent(GameEventType.PAC_FOUND_FOOD, tile);
         } else {
             pac.setStarvingTicks(pac.starvingTicks() + 1);
+        }
+    }
+
+    @Override
+    protected void checkPacFindsBonus(GameLevel gameLevel, Bonus bonus) {
+        if (bonus.state() == BonusState.EDIBLE && gameLevel.pac().onSameTileAs(bonus)) {
+            bonus.setEaten(BONUS_EATEN_SECONDS);
+            scoreManager.scorePoints(bonus.points());
+            Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
+            thisStep.bonusEatenTile = bonus.tile();
+            eventManager().publishEvent(GameEventType.BONUS_EATEN);
         }
     }
 

@@ -11,7 +11,6 @@ import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
 import de.amr.pacmanfx.model.actors.AnimationManager;
 import de.amr.pacmanfx.model.actors.Bonus;
-import de.amr.pacmanfx.model.actors.BonusState;
 import de.amr.pacmanfx.model.actors.GhostState;
 import javafx.beans.property.*;
 import org.tinylog.Logger;
@@ -46,6 +45,8 @@ public abstract class AbstractGameModel implements Game {
     }
 
     protected abstract void checkPacFindsFood(GameLevel gameLevel);
+
+    protected abstract void checkPacFindsBonus(GameLevel gameLevel, Bonus bonus);
 
     protected abstract boolean isPacManSafeInDemoLevel(GameLevel demoLevel);
 
@@ -179,7 +180,7 @@ public abstract class AbstractGameModel implements Game {
         }
 
         checkPacFindsFood(gameLevel);
-        gameLevel.bonus().ifPresent(bonus -> checkPacEatsBonus(gameLevel, bonus));
+        gameLevel.bonus().ifPresent(bonus -> checkPacFindsBonus(gameLevel, bonus));
 
         updatePacPower(gameLevel);
         gameLevel.blinking().tick();
@@ -212,16 +213,6 @@ public abstract class AbstractGameModel implements Game {
                     thisStep.pacKilledTile = assassin.tile();
                 }
             });
-    }
-
-    protected void checkPacEatsBonus(GameLevel gameLevel, Bonus bonus) {
-        if (bonus.state() == BonusState.EDIBLE && gameLevel.pac().onSameTileAs(bonus)) {
-            bonus.setEaten(2);
-            scoreManager.scorePoints(bonus.points());
-            Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
-            thisStep.bonusEatenTile = bonus.tile();
-            eventManager().publishEvent(GameEventType.BONUS_EATEN);
-        }
     }
 
     protected void updatePacPower(GameLevel gameLevel) {
