@@ -8,8 +8,8 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.DefaultWorldMapPropertyName;
+import de.amr.pacmanfx.model.HPortal;
 import de.amr.pacmanfx.model.House;
-import de.amr.pacmanfx.model.Portal;
 import org.tinylog.Logger;
 
 import java.util.*;
@@ -35,7 +35,7 @@ public class TerrainLayer extends WorldMapLayer {
     private Set<Obstacle> obstacles; // uninitialized!
 
     private Vector2f pacStartPosition;
-    private Portal[] portals;
+    private HPortal[] hPortals;
     private House house;
     private final Vector2i[] ghostScatterTiles = new Vector2i[4];
 
@@ -45,7 +45,7 @@ public class TerrainLayer extends WorldMapLayer {
 
     public TerrainLayer(WorldMapLayer layer) {
         super(layer);
-        portals = findPortals();
+        hPortals = findHorizontalPortals();
         Vector2i pacTile = getTileProperty(POS_PAC);
         if (pacTile == null) {
             throw new IllegalArgumentException("No Pac position stored in map");
@@ -100,19 +100,19 @@ public class TerrainLayer extends WorldMapLayer {
         }
     }
 
-    public List<Portal> portals() { return Arrays.asList(portals); }
+    public List<HPortal> horizontalPortals() { return Arrays.asList(hPortals); }
 
-    private Portal[] findPortals() {
-        var portals = new ArrayList<Portal>();
+    private HPortal[] findHorizontalPortals() {
+        var portals = new ArrayList<HPortal>();
         int firstColumn = 0, lastColumn = numCols() - 1;
         for (int row = 0; row < numRows(); ++row) {
             Vector2i leftBorderTile = Vector2i.of(firstColumn, row);
             Vector2i rightBorderTile = Vector2i.of(lastColumn, row);
             if (get(row, firstColumn) == TUNNEL.$ && get(row, lastColumn) == TUNNEL.$) {
-                portals.add(new Portal(leftBorderTile, rightBorderTile, 2));
+                portals.add(new HPortal(leftBorderTile, rightBorderTile, 2));
             }
         }
-        return portals.toArray(new Portal[0]);
+        return portals.toArray(new HPortal[0]);
     }
 
     public List<Vector2i> buildObstacleList() {
@@ -158,7 +158,7 @@ public class TerrainLayer extends WorldMapLayer {
 
     public boolean isTileInPortalSpace(Vector2i tile) {
         requireNonNull(tile);
-        return portals().stream().anyMatch(portal -> portal.contains(tile));
+        return horizontalPortals().stream().anyMatch(portal -> portal.contains(tile));
     }
 
     public boolean isTileBlocked(Vector2i tile) {

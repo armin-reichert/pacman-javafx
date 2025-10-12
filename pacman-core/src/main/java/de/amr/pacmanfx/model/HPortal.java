@@ -10,12 +10,14 @@ import de.amr.pacmanfx.model.actors.MovingActor;
 import org.tinylog.Logger;
 
 /**
- * A portal connects two border tiles on the left and right map border. Traveling through the portal corresponds to
- * moving over <code>2 * portalDepth</code> tiles.
+ * A horizontal portal connects two border tiles on the left and right map border. Traveling through the portal
+ * corresponds to moving <code>portalDepth</code> tiles into the "portal space", wrapping around and traveling
+ * <code>portalDepth</code> tiles back into the maze. So an actor moving through a portal moves in total
+ * <code>2*portalDepth - 1</code> tiles outside the maze.
  */
-public record Portal(Vector2i leftBorderEntryTile, Vector2i rightBorderEntryTile, int depth) {
+public record HPortal(Vector2i leftBorderEntryTile, Vector2i rightBorderEntryTile, int depth) {
 
-    public Portal {
+    public HPortal {
         if (leftBorderEntryTile.y() != rightBorderEntryTile.y()) {
             throw new IllegalArgumentException("Left portal entry tile y (%d) is different from right portal entry tile y (%d)"
                     .formatted(leftBorderEntryTile.y(), rightBorderEntryTile.y()));
@@ -56,7 +58,7 @@ public record Portal(Vector2i leftBorderEntryTile, Vector2i rightBorderEntryTile
                     return true;
                 }
             }
-            default -> { /* vertical teleportation not supported yet */ }
+            default -> throw new IllegalStateException("Actor moving %s cannot be teleported horizontally".formatted(actor.moveDir()));
         }
         return false;
     }

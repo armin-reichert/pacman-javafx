@@ -28,11 +28,11 @@ import java.io.File;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Globals.ORANGE_GHOST_POKEY;
+import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
 import static de.amr.pacmanfx.lib.RandomNumberSupport.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
-import static de.amr.pacmanfx.lib.timer.TickTimer.secToTicks;
 import static de.amr.pacmanfx.model.DefaultWorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;
 
@@ -246,7 +246,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         gameLevel.selectNextBonus();
         byte symbol = gameLevel.bonusSymbol(gameLevel.currentBonusIndex());
         var bonus = new Bonus(symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100);
-        if (terrain.portals().isEmpty()) {
+        if (terrain.horizontalPortals().isEmpty()) {
             Vector2i bonusTile = terrain.getTileProperty(DefaultWorldMapPropertyName.POS_BONUS, new Vector2i(13, 20));
             bonus.setPosition(halfTileRightOf(bonusTile));
             bonus.setEdible(randomFloat(9, 10));
@@ -260,7 +260,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     }
 
     private void computeBonusRoute(Bonus bonus, TerrainLayer terrain, House house) {
-        final List<Portal> portals = terrain.portals();
+        final List<HPortal> portals = terrain.horizontalPortals();
         if (portals.isEmpty()) {
             Logger.error("Moving bonus cannot be activated, game level does not contain any portals");
             return;
@@ -271,7 +271,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         boolean leftToRight;
         if (entryTile != null) { // Map defines bonus entry tile
             int exitPortalIndex = randomInt(0, portals.size());
-            Portal exitPortal = portals.get(exitPortalIndex);
+            HPortal exitPortal = portals.get(exitPortalIndex);
             if (entryTile.x() == 0) { // enter maze at left border
                 exitTile = exitPortal.rightBorderEntryTile().plus(1, 0);
                 leftToRight = true;
@@ -281,8 +281,8 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
             }
         }
         else { // choose random crossing direction and random entry and exit portals
-            Portal entryPortal = portals.get(randomInt(0, portals.size()));
-            Portal exitPortal = portals.get(randomInt(0, portals.size()));
+            HPortal entryPortal = portals.get(randomInt(0, portals.size()));
+            HPortal exitPortal = portals.get(randomInt(0, portals.size()));
             leftToRight = randomBoolean();
             if (leftToRight) {
                 entryTile = entryPortal.leftBorderEntryTile();

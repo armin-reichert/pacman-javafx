@@ -491,7 +491,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         }
 
         // compute possible bonus route
-        if (gameLevel.worldMap().terrainLayer().portals().isEmpty()) {
+        if (gameLevel.worldMap().terrainLayer().horizontalPortals().isEmpty()) {
             Logger.error("No portal found in current maze");
             return; // TODO: can this happen?
         }
@@ -501,12 +501,12 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             return;
         }
 
-        List<Portal> portals = gameLevel.worldMap().terrainLayer().portals();
+        List<HPortal> portals = gameLevel.worldMap().terrainLayer().horizontalPortals();
         boolean leftToRight = new Random().nextBoolean();
         Vector2i houseEntry = tileAt(house.entryPosition());
         Vector2i houseEntryOpposite = houseEntry.plus(0, house.sizeInTiles().y() + 1);
-        Portal entryPortal = portals.get(new Random().nextInt(portals.size()));
-        Portal exitPortal  = portals.get(new Random().nextInt(portals.size()));
+        HPortal entryPortal = portals.get(new Random().nextInt(portals.size()));
+        HPortal exitPortal  = portals.get(new Random().nextInt(portals.size()));
         List<Waypoint> route = Stream.of(
                 leftToRight ? entryPortal.leftBorderEntryTile() : entryPortal.rightBorderEntryTile(),
                 houseEntry,

@@ -357,7 +357,7 @@ public abstract class MovingActor extends Actor {
     }
 
     private boolean tryTeleport(TerrainLayer terrain) {
-        return terrain.portals().stream()
+        return terrain.horizontalPortals().stream()
             .filter(portal -> portal.leftBorderEntryTile().y() == tile().y())
             .findFirst()
             .map(portal -> portal.tryTeleporting(this))
