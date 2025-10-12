@@ -199,15 +199,13 @@ public abstract class AbstractGameModel implements Game {
     }
 
     protected void checkPacKilled(GameLevel gameLevel) {
-        thisStep.ghostsCollidingWithPac.stream()
+        boolean demoLevel = gameLevel.isDemoLevel();
+        if (demoLevel && isPacSafeInDemoLevel(gameLevel) || !demoLevel && gameLevel.pac().isImmune()) {
+            return;
+        }
+        thisStep.pacKiller = thisStep.ghostsCollidingWithPac.stream()
             .filter(ghost -> ghost.state() == GhostState.HUNTING_PAC)
-            .findFirst().ifPresent(assassin -> {
-                boolean pacSurvives = gameLevel.isDemoLevel() && isPacSafeInDemoLevel(gameLevel)
-                    || !gameLevel.isDemoLevel() && gameLevel.pac().isImmune();
-                if (!pacSurvives) {
-                    thisStep.pacKiller = assassin;
-                }
-            });
+            .findFirst().orElse(null);
     }
 
     protected void updatePacPower(GameLevel gameLevel) {
@@ -217,6 +215,7 @@ public abstract class AbstractGameModel implements Game {
             thisStep.pacStartsLosingPower = true;
             eventManager().publishEvent(GameEventType.PAC_STARTS_LOSING_POWER);
         } else if (powerTimer.hasExpired()) {
+            thisStep.pacLostPower = true;
             powerTimer.stop();
             powerTimer.reset(0);
             Logger.info("Power timer stopped and reset to zero");
@@ -224,7 +223,6 @@ public abstract class AbstractGameModel implements Game {
             gameLevel.huntingTimer().start();
             Logger.info("Hunting timer restarted because Pac-Man lost power");
             gameLevel.ghosts(GhostState.FRIGHTENED).forEach(ghost -> ghost.setState(GhostState.HUNTING_PAC));
-            thisStep.pacLostPower = true;
             eventManager().publishEvent(GameEventType.PAC_LOST_POWER);
         }
     }
