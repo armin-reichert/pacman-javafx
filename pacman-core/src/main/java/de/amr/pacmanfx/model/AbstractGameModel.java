@@ -12,6 +12,7 @@ import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
 import de.amr.pacmanfx.model.actors.AnimationManager;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.GhostState;
+import de.amr.pacmanfx.model.actors.Pac;
 import javafx.beans.property.*;
 import org.tinylog.Logger;
 
@@ -209,19 +210,22 @@ public abstract class AbstractGameModel implements Game {
     }
 
     protected void updatePacPower(GameLevel gameLevel) {
-        final TickTimer powerTimer = gameLevel.pac().powerTimer();
+        final Pac pac = gameLevel.pac();
+        final TickTimer powerTimer = pac.powerTimer();
         powerTimer.doTick();
-        if (gameLevel.pac().isPowerFadingStarting(gameLevel)) {
+        if (pac.isPowerFadingStarting(gameLevel)) {
             thisStep.pacStartsLosingPower = true;
+            Logger.info("{} starts losing power", pac.name());
             eventManager().publishEvent(GameEventType.PAC_STARTS_LOSING_POWER);
         } else if (powerTimer.hasExpired()) {
             thisStep.pacLostPower = true;
+            Logger.info("{} lost power", pac.name());
             powerTimer.stop();
             powerTimer.reset(0);
             Logger.info("Power timer stopped and reset to zero");
             gameLevel.energizerVictims().clear();
             gameLevel.huntingTimer().start();
-            Logger.info("Hunting timer restarted because Pac-Man lost power");
+            Logger.info("Hunting timer restarted because {} lost power", pac.name());
             gameLevel.ghosts(GhostState.FRIGHTENED).forEach(ghost -> ghost.setState(GhostState.HUNTING_PAC));
             eventManager().publishEvent(GameEventType.PAC_LOST_POWER);
         }
