@@ -257,7 +257,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         } else {
             bonus.setEdibleDuration(TickTimer.INDEFINITE);
             computeBonusRoute(bonus, terrain, house);
-            bonus.setEdibleAndStartMoving(gameLevel.game().bonusSpeed(gameLevel));
+            bonus.setEdibleAndStartJumping(gameLevel.game().bonusSpeed(gameLevel));
         }
 
         gameLevel.setBonus(bonus);
@@ -302,7 +302,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         Vector2i backyard = houseEntry.plus(0, house.sizeInTiles().y() + 1);
         List<Waypoint> route = Stream.of(entryTile, houseEntry, backyard, houseEntry, exitTile).map(Waypoint::new).toList();
 
-        bonus.setRoute(route, leftToRight);
+        bonus.initRoute(route, leftToRight);
         Logger.info("Moving bonus route: {} (crossing {})", route, leftToRight ? "left to right" : "right to left");
     }
 }

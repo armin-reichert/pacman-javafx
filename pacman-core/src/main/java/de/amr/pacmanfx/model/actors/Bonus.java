@@ -23,7 +23,7 @@ import static de.amr.pacmanfx.lib.timer.TickTimer.secToTicks;
 import static java.util.Objects.requireNonNull;
 
 /**
- * A bonus that either stays at a fixed position or tumbles through the world, starting at some portal,
+ * A bonus that either stays at a fixed position or jumps through the world, starting at some portal,
  * making one round around the ghost house and leaving the world at some portal at the other border.
  *
  * <p>
@@ -33,8 +33,10 @@ public class Bonus extends MovingActor {
 
     private final byte symbol;
     private final int points;
-    private long ticksRemaining;
     private BonusState state;
+
+    private final TickTimer timer = new TickTimer("Bonus-Timer");
+
     private long edibleTicks;
     private long eatenTicks;
 
@@ -47,26 +49,60 @@ public class Bonus extends MovingActor {
         this.symbol = symbol;
         this.points = points;
         canTeleport = false; // override default value
+        state = BonusState.INACTIVE;
         edibleTicks = secToTicks(9.5);
         eatenTicks  = secToTicks(2);
-        ticksRemaining = 0;
+    }
+
+    public void setInactive() {
         state = BonusState.INACTIVE;
+        timer.restartIndefinitely();
+        if (jumpingAnimation != null) {
+            jumpingAnimation.stop();
+            setSpeed(0);
+        }
+        hide();
+    }
+
+    public void setEdible() {
+        state = BonusState.EDIBLE;
+        timer.restartTicks(edibleTicks);
+        show();
+    }
+
+    public void setEdibleAndStartJumping(float speed) {
+        jumpingAnimation = new Pulse(10, Pulse.State.OFF);
+        jumpingAnimation.restart();
+        setSpeed(speed);
+        setTargetTile(null);
+        setEdible();
+    }
+
+    public void setEaten() {
+        state = BonusState.EATEN;
+        timer.restartTicks(eatenTicks);
+        if (jumpingAnimation != null) {
+            jumpingAnimation.stop();
+        }
+        show();
     }
 
     @Override
     public void tick(GameContext gameContext) {
+        timer.doTick();
         switch (state) {
             case EDIBLE -> {
-                countdown();
-                boolean expired = ticksRemaining == 0 || (canJump() && moveThroughMaze(gameContext.gameLevel()));
-                if (expired) {
+                boolean reachedExit = false;
+                if (jumpingAnimation != null) {
+                     reachedExit = jumpThroughMaze(gameContext.gameLevel());
+                }
+                if (timer.hasExpired() || reachedExit) {
                     setInactive();
                     gameContext.eventManager().publishEvent(GameEventType.BONUS_EXPIRED, tile());
                 }
             }
             case EATEN -> {
-                countdown();
-                if (ticksRemaining == 0) {
+                if (timer.hasExpired()) {
                     setInactive();
                     gameContext.eventManager().publishEvent(GameEventType.BONUS_EXPIRED, tile());
                 }
@@ -75,19 +111,15 @@ public class Bonus extends MovingActor {
         }
     }
 
-    private boolean canJump() {
-        return jumpingAnimation != null;
-    }
-
-    private boolean moveThroughMaze(GameLevel gameLevel) {
+    private boolean jumpThroughMaze(GameLevel gameLevel) {
         steering.steer(this, gameLevel);
-        boolean complete = steering.isComplete();
-        if (!complete) {
+        boolean reachedExit = steering.isComplete();
+        if (!reachedExit) {
             navigateTowardsTarget(gameLevel);
             moveThroughThisCruelWorld(gameLevel);
             jumpingAnimation.tick();
         }
-        return complete;
+        return reachedExit;
     }
 
     public void setEdibleDuration(long ticks) {
@@ -98,7 +130,7 @@ public class Bonus extends MovingActor {
         this.eatenTicks = ticks;
     }
 
-    public void setRoute(List<Waypoint> waypoints, boolean leftToRight) {
+    public void initRoute(List<Waypoint> waypoints, boolean leftToRight) {
         requireNonNull(waypoints);
         if (waypoints.isEmpty()) {
             Logger.error("Bonus route must not be empty");
@@ -112,15 +144,24 @@ public class Bonus extends MovingActor {
         steering = new RouteBasedSteering(route);
     }
 
+    public float verticalElongation() {
+        if (jumpingAnimation == null || !jumpingAnimation.isRunning()) {
+            return 0;
+        }
+        //TODO check in emulator what's exactly going on
+        int pixels = moveDir().isVertical() ? 4 : 2;
+        return jumpingAnimation.state() == Pulse.State.ON ? -pixels : pixels;
+    }
+
     @Override
     public String toString() {
-        return "Bonus{symbol=%s, points=%d, countdown=%d, state=%s, animation=%s}"
-            .formatted(symbol, points, ticksRemaining, state, jumpingAnimation);
+        return "Bonus{symbol=%s, points=%d, ticksRemaining=%d, state=%s, animation=%s}"
+            .formatted(symbol, points, timer.remainingTicks(), state, jumpingAnimation);
     }
 
     @Override
     public String name() {
-        return "%sBonus_symbol=%s_points=%s".formatted((jumpingAnimation != null ? "Moving" : "Static"), symbol, points);
+        return "%sBonus_symbol=%s_points=%s".formatted((jumpingAnimation != null ? "Jumping" : "Static"), symbol, points);
     }
 
     @Override
@@ -132,15 +173,14 @@ public class Bonus extends MovingActor {
     public boolean canAccessTile(GameLevel gameLevel, Vector2i tile) {
         requireNonNull(gameLevel);
         requireNonNull(tile);
-        TerrainLayer terrainLayer = gameLevel.worldMap().terrainLayer();
-        // Portal tiles are the only tiles outside the world map that can be accessed
-        if (terrainLayer.outOfBounds(tile)) {
-            return terrainLayer.isTileInPortalSpace(tile);
+        final TerrainLayer terrain = gameLevel.worldMap().terrainLayer();
+        if (terrain.outOfBounds(tile)) {
+            return terrain.isTileInPortalSpace(tile);
         }
-        if (terrainLayer.optHouse().isPresent() && terrainLayer.optHouse().get().isTileInHouseArea(tile)) {
+        if (terrain.optHouse().isPresent() && terrain.optHouse().get().isTileInHouseArea(tile)) {
             return false;
         }
-        return !terrainLayer.isTileBlocked(tile);
+        return !terrain.isTileBlocked(tile);
     }
 
     public BonusState state() {
@@ -153,54 +193,5 @@ public class Bonus extends MovingActor {
 
     public int points() {
         return points;
-    }
-
-    public void setInactive() {
-        if (jumpingAnimation != null) {
-            jumpingAnimation.stop();
-            setSpeed(0);
-        }
-        state = BonusState.INACTIVE;
-        hide();
-        Logger.trace("Bonus inactive: {}", this);
-    }
-
-    public void setEdibleAndStartMoving(float speed) {
-        setSpeed(speed);
-        setTargetTile(null);
-        jumpingAnimation = new Pulse(10, Pulse.State.OFF);
-        jumpingAnimation.restart();
-        setEdible();
-    }
-
-    public void setEdible() {
-        state = BonusState.EDIBLE;
-        ticksRemaining = edibleTicks;
-        show();
-    }
-
-    public void setEaten() {
-        if (jumpingAnimation != null) {
-            jumpingAnimation.stop();
-        }
-        ticksRemaining = eatenTicks;
-        state = BonusState.EATEN;
-        show();
-        Logger.trace("Bonus eaten: {}", this);
-    }
-
-    private void countdown() {
-        if (ticksRemaining > 0 && ticksRemaining != TickTimer.INDEFINITE) {
-            --ticksRemaining;
-        }
-    }
-
-    //TODO check in emulator what's exactly going on
-    public float jumpElongation() {
-        if (jumpingAnimation == null || !jumpingAnimation.isRunning()) {
-            return 0;
-        }
-        int pixels = moveDir().isVertical() ? 4 : 2;
-        return jumpingAnimation.state() == Pulse.State.ON ? -pixels : pixels;
     }
 }

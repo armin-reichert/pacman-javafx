@@ -69,7 +69,7 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements ActorR
                 int index = bonus.symbol();
                 if (0 <= index && index < sprites.length) {
                     ctx().save();
-                    ctx().translate(0, bonus.jumpElongation());
+                    ctx().translate(0, bonus.verticalElongation());
                     drawSpriteCentered(bonus.center(), sprites[index]);
                     ctx().restore();
                 }
