@@ -104,19 +104,19 @@ public class WorldMap {
                 byte terrainValue = TerrainTile.EMPTY.$;
                 byte foodValue = FoodTile.EMPTY.$;
                 if (row < rowIndex) {
-                    terrainValue = terrainLayer.get(row, col);
-                    foodValue = foodLayer.get(row, col);
+                    terrainValue = terrainLayer.content(row, col);
+                    foodValue = foodLayer.content(row, col);
                 } else if (row > rowIndex) {
-                    terrainValue = terrainLayer.get(row - 1, col);
-                    foodValue = foodLayer.get(row - 1, col);
+                    terrainValue = terrainLayer.content(row - 1, col);
+                    foodValue = foodLayer.content(row - 1, col);
                 } else {
                     if ((col == 0 || col == numCols - 1)
-                        && terrainLayer.get(row, col) == TerrainTile.WALL_V.$) {
+                        && terrainLayer.content(row, col) == TerrainTile.WALL_V.$) {
                         terrainValue = TerrainTile.WALL_V.$; // keep vertical border wall
                     }
                 }
-                newMap.terrainLayer.set(row, col, terrainValue);
-                newMap.foodLayer.set(row, col, foodValue);
+                newMap.terrainLayer.setContent(row, col, terrainValue);
+                newMap.foodLayer.setContent(row, col, foodValue);
             }
         }
         return newMap;
@@ -132,11 +132,11 @@ public class WorldMap {
         for (int row = 0; row < newMap.numRows; ++row) {
             for (int col = 0; col < newMap.numCols; ++col) {
                 if (row < rowIndexToDelete) {
-                    newMap.terrainLayer.set(row, col, terrainLayer.get(row, col));
-                    newMap.foodLayer.set(row, col, foodLayer.get(row, col));
+                    newMap.terrainLayer.setContent(row, col, terrainLayer.content(row, col));
+                    newMap.foodLayer.setContent(row, col, foodLayer.content(row, col));
                 } else {
-                    newMap.terrainLayer.set(row, col, terrainLayer.get(row + 1, col));
-                    newMap.foodLayer.set(row, col, foodLayer.get(row + 1, col));
+                    newMap.terrainLayer.setContent(row, col, terrainLayer.content(row + 1, col));
+                    newMap.foodLayer.setContent(row, col, foodLayer.content(row + 1, col));
                 }
             }
         }
@@ -204,7 +204,7 @@ public class WorldMap {
         pw.println(MARKER_BEGIN_DATA_SECTION);
         for (int row = 0; row < layer.numRows(); ++row) {
             for (int col = 0; col < layer.numCols(); ++col) {
-                pw.printf("#%02X", layer.get(row, col));
+                pw.printf("#%02X", layer.content(row, col));
                 if (col < layer.numCols() - 1) {
                     pw.print(",");
                 }

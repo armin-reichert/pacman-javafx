@@ -108,7 +108,7 @@ public class TerrainLayer extends WorldMapLayer {
         for (int row = 0; row < numRows(); ++row) {
             Vector2i leftBorderTile = Vector2i.of(firstColumn, row);
             Vector2i rightBorderTile = Vector2i.of(lastColumn, row);
-            if (get(row, firstColumn) == TUNNEL.$ && get(row, lastColumn) == TUNNEL.$) {
+            if (content(row, firstColumn) == TUNNEL.$ && content(row, lastColumn) == TUNNEL.$) {
                 portals.add(new HPortal(leftBorderTile, rightBorderTile, 2));
             }
         }
@@ -162,11 +162,11 @@ public class TerrainLayer extends WorldMapLayer {
     }
 
     public boolean isTileBlocked(Vector2i tile) {
-        return !outOfBounds(tile) && isBlocked(get(tile));
+        return !outOfBounds(tile) && isBlocked(content(tile));
     }
 
     public boolean isTunnel(Vector2i tile) {
-        return !outOfBounds(tile) && get(tile) == TUNNEL.$;
+        return !outOfBounds(tile) && content(tile) == TUNNEL.$;
     }
 
     public boolean isIntersection(Vector2i tile) {

@@ -132,7 +132,7 @@ public class TerrainMapTileRenderer extends BaseRenderer implements TerrainMapRe
         ctx.save();
         ctx.scale(scaling(), scaling());
         worldMap.terrainLayer().tiles().filter(tile -> terrainFilter.test(worldMap, tile)).forEach(tile -> {
-            byte code = worldMap.terrainLayer().get(tile);
+            byte code = worldMap.terrainLayer().content(tile);
             drawTileUnscaled(tile, code);
         });
         if (specialTilesDisplayed) {

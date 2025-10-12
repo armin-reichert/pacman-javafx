@@ -171,7 +171,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
 
         // Special tiles where attacking ghosts cannot move up
         final List<Vector2i> oneWayDownTiles = terrain.tiles()
-            .filter(tile -> terrain.get(tile) == TerrainTile.ONE_WAY_DOWN.$)
+            .filter(tile -> terrain.content(tile) == TerrainTile.ONE_WAY_DOWN.$)
             .toList();
         newGameLevel.ghosts().forEach(ghost -> ghost.setSpecialTerrainTiles(oneWayDownTiles));
 

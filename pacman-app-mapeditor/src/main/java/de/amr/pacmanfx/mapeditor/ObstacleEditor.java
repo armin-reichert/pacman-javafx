@@ -137,27 +137,27 @@ public class ObstacleEditor {
 
         WorldMap worldMap = this.worldMap.get();
 
-        byte minTileValue = worldMap.terrainLayer().get(minTile);
+        byte minTileValue = worldMap.terrainLayer().content(minTile);
         if       (minTileValue == ARC_NE.$) joinedContent[0][0] = WALL_H.$;
         else if (minTileValue == ARC_SW.$)  joinedContent[0][0] = WALL_V.$;
         else if (minTileValue == WALL_V.$)  joinedContent[0][0] = ARC_SW.$;
         else if (minTileValue == WALL_H.$)  joinedContent[0][0] = ARC_NE.$;
 
         Vector2i lowerLeftCorner = new Vector2i(minTile.x(), maxTile.y());
-        byte lowerLeftValue = worldMap.terrainLayer().get(lowerLeftCorner);
+        byte lowerLeftValue = worldMap.terrainLayer().content(lowerLeftCorner);
         if      (lowerLeftValue == WALL_H.$) joinedContent[numRows-1][0] = ARC_SE.$;
         else if (lowerLeftValue == WALL_V.$) joinedContent[numRows-1][0] = ARC_NW.$;
         else if (lowerLeftValue == ARC_SE.$) joinedContent[numRows-1][0] = WALL_H.$;
         else if (lowerLeftValue == ARC_NW.$) joinedContent[numRows-1][0] = WALL_V.$;
 
         Vector2i upperRightCorner = new Vector2i(maxTile.x(), minTile.y());
-        byte upperRightValue = worldMap.terrainLayer().get(upperRightCorner);
+        byte upperRightValue = worldMap.terrainLayer().content(upperRightCorner);
         if      (upperRightValue == WALL_V.$) joinedContent[0][numCols-1] = ARC_SE.$;
         else if (upperRightValue == WALL_H.$) joinedContent[0][numCols-1] = ARC_NW.$;
         else if (upperRightValue == ARC_SE.$) joinedContent[0][numCols-1] = WALL_V.$;
         else if (upperRightValue == ARC_NW.$) joinedContent[0][numCols-1] = WALL_H.$;
 
-        byte maxTileValue = worldMap.terrainLayer().get(maxTile);
+        byte maxTileValue = worldMap.terrainLayer().content(maxTile);
         if (maxTileValue == WALL_V.$) joinedContent[numRows-1][numCols-1] = ARC_NE.$;
         if (maxTileValue == WALL_H.$) joinedContent[numRows-1][numCols-1] = ARC_SW.$;
         if (maxTileValue == ARC_SW.$) joinedContent[numRows-1][numCols-1] = WALL_H.$;
@@ -167,7 +167,7 @@ public class ObstacleEditor {
         int leftBorder = minTile.x();
         for (int row = minTile.y(); row < maxTile.y(); ++row) {
             int x = 0, y = row - minTile.y();
-            if (editedContent[y][x] == WALL_V.$ && worldMap.terrainLayer().get(row, leftBorder) == WALL_H.$) {
+            if (editedContent[y][x] == WALL_V.$ && worldMap.terrainLayer().content(row, leftBorder) == WALL_H.$) {
                 joinedContent[y][x] = isEven(crossings) ? ARC_SE.$ : ARC_NE.$;
             }
             ++crossings;
@@ -177,7 +177,7 @@ public class ObstacleEditor {
         int rightBorder = maxTile.x();
         for (int row = minTile.y(); row < maxTile.y(); ++row) {
             int x = rightBorder - minTile.x(), y = row - minTile.y();
-            if (editedContent[y][x] == WALL_V.$ && worldMap.terrainLayer().get(row, leftBorder) == WALL_H.$) {
+            if (editedContent[y][x] == WALL_V.$ && worldMap.terrainLayer().content(row, leftBorder) == WALL_H.$) {
                 joinedContent[y][x] = isEven(crossings) ? ARC_SW.$ : ARC_NW.$;
             }
             ++crossings;
@@ -187,7 +187,7 @@ public class ObstacleEditor {
         int upperBorder = minTile.y(); // upper border
         for (int col = minTile.x(); col < maxTile.x(); ++col) {
             int x = col - minTile.x(), y = upperBorder - minTile.y();
-            if (editedContent[y][x] == WALL_H.$ && worldMap.terrainLayer().get(upperBorder, col) == WALL_V.$) {
+            if (editedContent[y][x] == WALL_H.$ && worldMap.terrainLayer().content(upperBorder, col) == WALL_V.$) {
                 joinedContent[y][x] = isEven(crossings) ? ARC_SE.$ : ARC_SW.$;
             }
             ++crossings;
@@ -197,7 +197,7 @@ public class ObstacleEditor {
         int lowerBorder = maxTile.y(); // lower border
         for (int col = minTile.x(); col < maxTile.x(); ++col) {
             int x = col - minTile.x(), y = lowerBorder - minTile.y();
-            if (editedContent[y][x] == WALL_H.$ && worldMap.terrainLayer().get(lowerBorder, col) == WALL_V.$) {
+            if (editedContent[y][x] == WALL_H.$ && worldMap.terrainLayer().content(lowerBorder, col) == WALL_V.$) {
                 joinedContent[y][x] = isEven(crossings) ? ARC_NE.$ : ARC_NW.$;
             }
             ++crossings;

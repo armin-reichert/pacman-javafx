@@ -31,7 +31,7 @@ public class Action_IdentifyTileAndObstacle extends EditorUIAction<String> {
     @Override
     public String execute() {
         WorldMap worldMap = editor.currentWorldMap();
-        byte terrainCode = worldMap.terrainLayer().get(tile), foodCode = worldMap.foodLayer().get(tile);
+        byte terrainCode = worldMap.terrainLayer().content(tile), foodCode = worldMap.foodLayer().content(tile);
         StringBuilder info = new StringBuilder();
         info.append(" ").append(terrainInfo(worldMap, terrainCode));
         if (foodCode != FoodTile.EMPTY.$) {

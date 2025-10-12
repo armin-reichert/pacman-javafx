@@ -323,7 +323,7 @@ public class EditCanvas extends Canvas {
                 DefaultWorldMapPropertyName.COLOR_FOOD, ArcadeSprites.MS_PACMAN_COLOR_FOOD);
             foodRenderer.setEnergizerColor(foodColor);
             foodRenderer.setPelletColor(foodColor);
-            worldMap().terrainLayer().tiles().forEach(tile -> foodRenderer.drawTile(tile, worldMap().foodLayer().get(tile)));
+            worldMap().terrainLayer().tiles().forEach(tile -> foodRenderer.drawTile(tile, worldMap().foodLayer().content(tile)));
         }
 
         if (actorsVisible.get()) {

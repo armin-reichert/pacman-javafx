@@ -79,7 +79,7 @@ public interface EditorUtil {
     }
 
     static boolean hasAccessibleTerrainAtTile(WorldMap worldMap, Vector2i tile) {
-        byte value = worldMap.terrainLayer().get(tile);
+        byte value = worldMap.terrainLayer().content(tile);
         return value == TerrainTile.EMPTY.$
                 || value == TerrainTile.ONE_WAY_DOWN.$
                 || value == TerrainTile.ONE_WAY_UP.$

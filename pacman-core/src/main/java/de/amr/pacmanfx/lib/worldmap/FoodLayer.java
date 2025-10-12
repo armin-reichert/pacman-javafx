@@ -82,7 +82,7 @@ public class FoodLayer extends WorldMapLayer {
     }
 
     public boolean isFoodTile(Vector2i tile) {
-        return !outOfBounds(tile) && get(tile) != FoodTile.EMPTY.$;
+        return !outOfBounds(tile) && content(tile) != FoodTile.EMPTY.$;
     }
 
     public boolean hasFoodAtTile(Vector2i tile) {

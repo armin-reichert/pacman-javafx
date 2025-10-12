@@ -33,11 +33,11 @@ public class Action_SetFoodTileCode extends EditorAction<Void> {
     public Void execute() {
         WorldMap worldMap = editor.currentWorldMap();
         if (!canPlaceFoodAtTile(worldMap, tile)) return null;
-        worldMap.foodLayer().set(tile, code);
+        worldMap.foodLayer().setContent(tile, code);
         if (editor.symmetricEditMode()) {
             Vector2i mirroredTile = worldMap.foodLayer().mirrorPosition(tile);
             if (canPlaceFoodAtTile(worldMap, mirroredTile)) {
-                worldMap.foodLayer().set(mirroredTile, code);
+                worldMap.foodLayer().setContent(mirroredTile, code);
             }
         }
         editor.setEdited(true);

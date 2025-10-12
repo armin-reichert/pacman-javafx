@@ -82,7 +82,7 @@ public class ObstacleBuilder {
         Set<Obstacle> obstacles = new HashSet<>();
 
         final Vector2i firstNonEmptyTile = terrainLayer.tiles()
-            .filter(tile -> terrainLayer.get(tile) != EMPTY.$)
+            .filter(tile -> terrainLayer.content(tile) != EMPTY.$)
             .findFirst()
             .orElse(null);
 
@@ -91,7 +91,7 @@ public class ObstacleBuilder {
         terrainLayer.tiles()
             .filter(not(this::isTileExplored))
             .filter(tile -> tile.x() == 0 || tile.x() == terrainLayer.numCols() - 1)
-            .filter(tile -> terrainLayer.get(tile) != EMPTY.$)
+            .filter(tile -> terrainLayer.content(tile) != EMPTY.$)
             .map(tile -> buildBorderObstacle(tile, tile.x() == 0, tilesWithErrors))
             .filter(Objects::nonNull)
             .forEach(obstacles::add);
@@ -99,8 +99,8 @@ public class ObstacleBuilder {
         terrainLayer.tiles()
             .filter(not(this::isTileExplored))
             .filter(tile ->
-                    terrainLayer.get(tile) == ARC_NW.$ ||
-                    terrainLayer.get(tile) == ANG_ARC_NW.$) // house top-left corner
+                    terrainLayer.content(tile) == ARC_NW.$ ||
+                    terrainLayer.content(tile) == ANG_ARC_NW.$) // house top-left corner
             .map(cornerNW -> {
                 Obstacle obstacle = buildObstacle(cornerNW, tilesWithErrors);
                 // Handle special case where left-upper corner of closed border is not at x == 0:
@@ -116,7 +116,7 @@ public class ObstacleBuilder {
 
     private Obstacle buildObstacle(Vector2i cornerNW, List<Vector2i> tilesWithErrors) {
         Vector2i startPoint = cornerNW.scaled(TS).plus(TS, HTS);
-        byte startTileContent = terrainLayer.get(cornerNW);
+        byte startTileContent = terrainLayer.content(cornerNW);
         Obstacle obstacle = new Obstacle(startPoint);
         obstacle.addSegment(SEG_ARC_NW_DOWN, true, startTileContent);
         cursor = new Cursor(cornerNW);
@@ -132,7 +132,7 @@ public class ObstacleBuilder {
 
     private Obstacle buildBorderObstacle(Vector2i startTile, boolean startsAtLeftBorder, List<Vector2i> tilesWithErrors) {
         Vector2i startPoint = startTile.scaled(TS).plus(startsAtLeftBorder ? 0 : TS, HTS);
-        byte startTileContent = terrainLayer.get(startTile);
+        byte startTileContent = terrainLayer.content(startTile);
         var obstacle = new Obstacle(startPoint);
         cursor = new Cursor(startTile);
         if (startTileContent == WALL_H.$) {
@@ -169,7 +169,7 @@ public class ObstacleBuilder {
     }
 
     private void errorAtCurrentTile(List<Vector2i> tilesWithErrors) {
-        Logger.debug("Did not expect content {} at tile {}", terrainLayer.get(cursor.currentTile), cursor.currentTile);
+        Logger.debug("Did not expect content {} at tile {}", terrainLayer.content(cursor.currentTile), cursor.currentTile);
         tilesWithErrors.add(cursor.currentTile);
     }
 
@@ -182,7 +182,7 @@ public class ObstacleBuilder {
                 break;
             }
             setExplored(cursor.currentTile);
-            byte tileContent = terrainLayer.get(cursor.currentTile);
+            byte tileContent = terrainLayer.content(cursor.currentTile);
             if (tileContent == WALL_V.$) {
                 if (cursor.points(Direction.DOWN)) {
                     obstacle.addSegment(Direction.DOWN.vector().scaled(TS), ccw, tileContent);

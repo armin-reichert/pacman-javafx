@@ -88,22 +88,22 @@ public class WorldMapLayer {
         return Vector2i.of(numCols() - 1 - tile.x(), tile.y());
     }
 
-    public byte get(int row, int col) {
+    public byte content(int row, int col) {
         assertInsideWorld(row, col);
         return tileContent[row][col];
     }
 
-    public byte get(Vector2i tile) {
-        return get(tile.y(), tile.x()); // Note order y=row, x=col
+    public byte content(Vector2i tile) {
+        return content(tile.y(), tile.x()); // Note order y=row, x=col
     }
 
-    public void set(int row, int col, byte code) {
+    public void setContent(int row, int col, byte code) {
         assertInsideWorld(row, col);
         tileContent[row][col] = code;
     }
 
-    public void set(Vector2i tile, byte code) {
-        set(tile.y(), tile.x(), code);
+    public void setContent(Vector2i tile, byte code) {
+        setContent(tile.y(), tile.x(), code);
     }
 
     public void setAll(byte code) {
@@ -130,6 +130,6 @@ public class WorldMapLayer {
      * @return stream of all tiles of this map with given content (row-by-row)
      */
     public Stream<Vector2i> tilesContaining(byte content) {
-        return tiles().filter(tile -> get(tile) == content);
+        return tiles().filter(tile -> content(tile) == content);
     }
 }

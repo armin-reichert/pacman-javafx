@@ -81,10 +81,10 @@ public class Action_FillMapFromTemplate extends EditorUIAction<Void> {
                     rdr.getPixels(col * TS, row * TS, TS, TS, pixelFormat, pixelsOfTile, 0, TS);
                     byte foodValue = matcher.matchFoodTile(pixelsOfTile);
                     if (foodValue == FoodTile.PELLET.$ || foodValue == FoodTile.ENERGIZER.$) {
-                        worldMap.foodLayer().set(worldMapTile, foodValue);
+                        worldMap.foodLayer().setContent(worldMapTile, foodValue);
                     } else {
                         byte terrainValue = matcher.matchTerrainTile(pixelsOfTile);
-                        worldMap.terrainLayer().set(worldMapTile, terrainValue);
+                        worldMap.terrainLayer().setContent(worldMapTile, terrainValue);
                     }
                 } catch (IndexOutOfBoundsException e) {
                     Logger.error("Could not get pixels for tile {}, maybe image has been cropped incorrectly?", worldMapTile);
@@ -97,11 +97,11 @@ public class Action_FillMapFromTemplate extends EditorUIAction<Void> {
 
         // Find house: requires that at least min and max tiles have been detected
         Vector2i houseMinTile = worldMap.terrainLayer().tiles()
-                .filter(tile -> worldMap.terrainLayer().get(tile) == TerrainTile.ANG_ARC_NW.$)
+                .filter(tile -> worldMap.terrainLayer().content(tile) == TerrainTile.ANG_ARC_NW.$)
                 .findFirst().orElse(null);
 
         Vector2i houseMaxTile = worldMap.terrainLayer().tiles()
-                .filter(tile -> worldMap.terrainLayer().get(tile) == TerrainTile.ANG_ARC_SE.$)
+                .filter(tile -> worldMap.terrainLayer().content(tile) == TerrainTile.ANG_ARC_SE.$)
                 .findFirst().orElse(null);
 
         if (houseMinTile != null && houseMaxTile != null

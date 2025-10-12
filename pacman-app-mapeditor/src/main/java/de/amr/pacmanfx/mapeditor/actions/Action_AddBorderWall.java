@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.mapeditor.actions;
 
-import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.lib.worldmap.TerrainTile;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
@@ -26,7 +25,7 @@ public class Action_AddBorderWall extends EditorAction<Void> {
     }
 
     private void setTerrain(int row, int col, TerrainTile terrainTile) {
-        worldMap.terrainLayer().set(row, col, terrainTile.$);
+        worldMap.terrainLayer().setContent(row, col, terrainTile.$);
     }
 
     @Override

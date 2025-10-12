@@ -22,7 +22,7 @@ public class Action_ClearTerrainTile extends EditorAction<Void> {
 
     @Override
     public Void execute() {
-        editor.currentWorldMap().terrainLayer().set(tile, TerrainTile.EMPTY.$);
+        editor.currentWorldMap().terrainLayer().setContent(tile, TerrainTile.EMPTY.$);
         editor.setTerrainMapChanged();
         editor.setEdited(true);
         return null;

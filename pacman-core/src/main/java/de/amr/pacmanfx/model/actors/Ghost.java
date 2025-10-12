@@ -165,7 +165,7 @@ public abstract class Ghost extends MovingActor {
         // TODO: this is game-specific and does not belong here
         if (specialTerrainTiles.contains(tile)
                 && state() == GhostState.HUNTING_PAC
-                && terrainLayer.get(tile) == TerrainTile.ONE_WAY_DOWN.$
+                && terrainLayer.content(tile) == TerrainTile.ONE_WAY_DOWN.$
                 && tile.equals(tile().plus(UP.vector()))
         ) {
             Logger.debug("Hunting {} cannot move up to special tile {}", name(), tile);

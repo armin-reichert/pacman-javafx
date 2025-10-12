@@ -57,7 +57,7 @@ public class Preview2D extends Canvas {
         terrainTileRenderer.setScatterTargetsDisplayed(false);
         terrainTileRenderer.setTunnelIconsDisplayed(false);
         terrainTileRenderer.setTerrainFilter((worldMap, tile) -> {
-            byte code = worldMap.terrainLayer().get(tile);
+            byte code = worldMap.terrainLayer().content(tile);
             return code == TerrainTile.ARC_SE.$
                 || code == TerrainTile.ARC_NE.$
                 || code == TerrainTile.ARC_SW.$
@@ -116,7 +116,7 @@ public class Preview2D extends Canvas {
                 DefaultWorldMapPropertyName.COLOR_FOOD, ArcadeSprites.MS_PACMAN_COLOR_FOOD);
             foodRenderer.setEnergizerColor(foodColor);
             foodRenderer.setPelletColor(foodColor);
-            worldMap.terrainLayer().tiles().forEach(tile -> foodRenderer.drawTile(tile, worldMap.foodLayer().get(tile)));
+            worldMap.terrainLayer().tiles().forEach(tile -> foodRenderer.drawTile(tile, worldMap.foodLayer().content(tile)));
         }
         if (actorsVisible.get()) {
             ACTOR_SPRITES.forEach((positionProperty, sprite) -> {

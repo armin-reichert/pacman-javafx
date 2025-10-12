@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.mapeditor.actions;
 
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.lib.worldmap.TerrainTile;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
@@ -37,7 +36,7 @@ public class Action_DeleteArcadeHouse extends EditorAction<Void> {
 
         for (int x = minTile.x(); x <= maxTile.x(); ++x) {
             for (int y = minTile.y(); y <= maxTile.y(); ++y) {
-                worldMap.terrainLayer().set(y, x, TerrainTile.EMPTY.$);
+                worldMap.terrainLayer().setContent(y, x, TerrainTile.EMPTY.$);
             }
         }
 

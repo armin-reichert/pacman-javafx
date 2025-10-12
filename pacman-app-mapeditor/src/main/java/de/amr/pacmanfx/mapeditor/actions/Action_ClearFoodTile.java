@@ -24,7 +24,7 @@ public class Action_ClearFoodTile extends EditorAction<Void> {
 
     @Override
     public Void execute() {
-        editor.currentWorldMap().foodLayer().set(tile, FoodTile.EMPTY.$);
+        editor.currentWorldMap().foodLayer().setContent(tile, FoodTile.EMPTY.$);
         editor.setFoodMapChanged();
         editor.setEdited(true);
         return null;

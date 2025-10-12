@@ -34,7 +34,7 @@ public class Action_ClearFoodAroundHouse extends EditorAction<Void> {
                 for (int col = minTile.x() - 1; col <= maxTile.x() + 1; ++col) {
                     for (int row = minTile.y() - 1; row <= maxTile.y() + 1; ++row) {
                         if (worldMap.foodLayer().outOfBounds(row, col)) continue;
-                        worldMap.foodLayer().set(row, col, TerrainTile.EMPTY.$);
+                        worldMap.foodLayer().setContent(row, col, TerrainTile.EMPTY.$);
                         editor.setFoodMapChanged();
                         editor.setEdited(true);
                     }

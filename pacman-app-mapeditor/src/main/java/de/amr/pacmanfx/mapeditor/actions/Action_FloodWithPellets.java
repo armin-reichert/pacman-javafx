@@ -6,7 +6,10 @@ package de.amr.pacmanfx.mapeditor.actions;
 
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.lib.worldmap.*;
+import de.amr.pacmanfx.lib.worldmap.FoodTile;
+import de.amr.pacmanfx.lib.worldmap.TerrainTile;
+import de.amr.pacmanfx.lib.worldmap.WorldMap;
+import de.amr.pacmanfx.lib.worldmap.WorldMapParser;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.model.DefaultWorldMapPropertyName;
 
@@ -71,13 +74,13 @@ public class Action_FloodWithPellets extends EditorAction<Void> {
 
     private boolean isAccessible(WorldMap worldMap, Vector2i tile) {
         if (worldMap.terrainLayer().outOfBounds(tile)) return false;
-        return worldMap.terrainLayer().get(tile) == TerrainTile.EMPTY.$;
+        return worldMap.terrainLayer().content(tile) == TerrainTile.EMPTY.$;
     }
 
     private boolean canPlacePelletAt(WorldMap worldMap, Vector2i tile) {
         if (!canPlaceFoodAtTile(worldMap, tile)) return false;
         // Avoid overwriting energizers
-        return worldMap.foodLayer().get(tile) != FoodTile.ENERGIZER.$;
+        return worldMap.foodLayer().content(tile) != FoodTile.ENERGIZER.$;
     }
 
     private Set<Vector2i> actorTiles(WorldMap worldMap) {

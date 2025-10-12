@@ -42,17 +42,17 @@ public class Action_SetTerrainTileCode extends EditorAction<Void> {
 
     @Override
     public Void execute() {
-        byte oldCode = worldMap.terrainLayer().get(tile);
+        byte oldCode = worldMap.terrainLayer().content(tile);
         if (code == oldCode && !editor.symmetricEditMode()) return null;
-        worldMap.terrainLayer().set(tile, code);
-        worldMap.foodLayer().set(tile, FoodTile.EMPTY.$);
+        worldMap.terrainLayer().setContent(tile, code);
+        worldMap.foodLayer().setContent(tile, FoodTile.EMPTY.$);
         if (editor.symmetricEditMode()) {
             Vector2i mirroredTile = worldMap.terrainLayer().mirrorPosition(tile);
             byte mirroredCode = TerrainTile.mirroredCode(code);
-            byte oldMirroredCode = worldMap.terrainLayer().get(mirroredTile);
+            byte oldMirroredCode = worldMap.terrainLayer().content(mirroredTile);
             if (mirroredCode != oldMirroredCode) {
-                worldMap.terrainLayer().set(mirroredTile, mirroredCode);
-                worldMap.foodLayer().set(mirroredTile, FoodTile.EMPTY.$);
+                worldMap.terrainLayer().setContent(mirroredTile, mirroredCode);
+                worldMap.foodLayer().setContent(mirroredTile, FoodTile.EMPTY.$);
             }
         }
         editor.setEdited(true);

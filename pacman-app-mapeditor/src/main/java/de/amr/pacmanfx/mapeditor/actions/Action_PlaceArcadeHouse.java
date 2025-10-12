@@ -53,7 +53,7 @@ public class Action_PlaceArcadeHouse extends EditorAction<Void> {
         // place house tile content
         for (int y = 0; y < houseSize.y(); ++y) {
             for (int x = 0; x < houseSize.x(); ++x) {
-                terrain.set(minTile.y() + y, minTile.x() + x, ArcadeHouse.CONTENT[y][x]);
+                terrain.setContent(minTile.y() + y, minTile.x() + x, ArcadeHouse.CONTENT[y][x]);
             }
         }
         editor.setTerrainMapChanged();
@@ -72,8 +72,8 @@ public class Action_PlaceArcadeHouse extends EditorAction<Void> {
         for (int row = minTile.y(); row <= maxTile.y(); ++row) {
             for (int col = minTile.x(); col <= maxTile.x(); ++col) {
                 // No symmetric editing!
-                worldMap.terrainLayer().set(row, col, TerrainTile.EMPTY.$);
-                worldMap.foodLayer().set(row, col, FoodTile.EMPTY.$);
+                worldMap.terrainLayer().setContent(row, col, TerrainTile.EMPTY.$);
+                worldMap.foodLayer().setContent(row, col, FoodTile.EMPTY.$);
             }
         }
     }

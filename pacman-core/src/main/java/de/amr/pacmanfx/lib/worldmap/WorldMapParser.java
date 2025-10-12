@@ -122,9 +122,9 @@ public interface WorldMapParser {
                 try {
                     byte value = Byte.decode(entry);
                     if (valueAllowed.test(value)) {
-                        tileMap.set(row, col, value);
+                        tileMap.setContent(row, col, value);
                     } else {
-                        tileMap.set(row, col, (byte) 0);
+                        tileMap.setContent(row, col, (byte) 0);
                         Logger.error("Invalid tile map value {} at row {}, col {}", value, row, col);
                     }
                 } catch (NumberFormatException x) {
