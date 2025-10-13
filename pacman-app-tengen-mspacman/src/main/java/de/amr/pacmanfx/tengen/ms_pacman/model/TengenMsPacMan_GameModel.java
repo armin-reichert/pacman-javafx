@@ -10,6 +10,7 @@ import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.Waypoint;
+import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.lib.worldmap.FoodLayer;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.*;
@@ -33,7 +34,6 @@ import static de.amr.pacmanfx.Validations.inClosedRange;
 import static de.amr.pacmanfx.lib.RandomNumberSupport.randomByte;
 import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
-import static de.amr.pacmanfx.lib.timer.TickTimer.secToTicks;
 import static de.amr.pacmanfx.model.DefaultWorldMapPropertyName.*;
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
 import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
@@ -528,19 +528,18 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     public void checkPacFindsFood(GameLevel gameLevel) {
-        final FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
+        FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
         final Pac pac = gameLevel.pac();
         final Vector2i tile = pac.tile();
         if (foodLayer.hasFoodAtTile(tile)) {
             pac.setStarvingTicks(0);
             foodLayer.registerFoodEatenAt(tile);
-            gateKeeper.registerFoodEaten(gameLevel);
             if (foodLayer.isEnergizerTile(tile)) {
-                thisStep.foundEnergizerAtTile = tile;
-                onEnergizerEaten();
+                onEnergizerEaten(gameLevel, tile);
             } else {
-                scoreManager.scorePoints(PELLET_VALUE);
+                onPelletEaten(gameLevel);
             }
+            gateKeeper.registerFoodEaten(gameLevel);
             if (isBonusReached(gameLevel)) {
                 activateNextBonus(gameLevel);
                 thisStep.bonusIndex = gameLevel.currentBonusIndex();
@@ -573,40 +572,26 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     @Override
     public void onEnergizerEaten(GameLevel gameLevel, Vector2i tile) {
         thisStep.foundEnergizerAtTile = tile;
-        scoreManager().scorePoints(ENERGIZER_VALUE);
-        gameLevel.pac().setRestingTicks(3);
+        scoreManager.scorePoints(ENERGIZER_VALUE);
+        gameLevel.pac().onFoodEaten(true);
+        gameLevel.ghosts().forEach(ghost -> {
+            ghost.onFoodCountChange(gameLevel);
+            if (ghost.inAnyOfStates(FRIGHTENED, HUNTING_PAC)) {
+                ghost.requestTurnBack();
+            }
+        });
         gameLevel.energizerVictims().clear();
-        gameLevel.ghosts(FRIGHTENED, HUNTING_PAC).forEach(Ghost::requestTurnBack);
+        // Pac gets power?
         double powerSeconds = pacPowerSeconds(gameLevel);
         if (powerSeconds > 0) {
             gameLevel.huntingTimer().stop();
             Logger.debug("Hunting stopped (Pac-Man got power)");
-            long ticks = secToTicks(powerSeconds);
+            long ticks = TickTimer.secToTicks(powerSeconds);
             gameLevel.pac().powerTimer().restartTicks(ticks);
             Logger.debug("Power timer restarted, {} ticks ({0.00} sec)", ticks, powerSeconds);
             gameLevel.ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
             thisStep.pacGotPower = true;
             eventManager().publishEvent(GameEventType.PAC_GETS_POWER);
-        }
-    }
-
-    private void onEnergizerEaten() {
-        scoreManager.scorePoints(ENERGIZER_VALUE);
-        Logger.info("Scored {} points for eating energizer", ENERGIZER_VALUE);
-        gameLevel().energizerVictims().clear();
-        double powerSeconds = pacPowerSeconds(gameLevel());
-        long powerTicks = secToTicks(powerSeconds);
-        if (powerTicks > 0) {
-            gameLevel().huntingTimer().stop();
-            Logger.info("Hunting Pac-Man stopped as he got power");
-            gameLevel().pac().powerTimer().restartTicks(powerTicks);
-            Logger.info("Power timer restarted, duration={} ticks ({0.00} sec)", powerTicks, powerSeconds);
-            gameLevel().ghosts(GhostState.HUNTING_PAC).forEach(ghost -> ghost.setState(GhostState.FRIGHTENED));
-            gameLevel().ghosts(GhostState.FRIGHTENED).forEach(Ghost::requestTurnBack);
-            thisStep.pacGotPower = true;
-            eventManager().publishEvent(GameEventType.PAC_GETS_POWER);
-        } else {
-            gameLevel().ghosts(GhostState.FRIGHTENED, GhostState.HUNTING_PAC).forEach(Ghost::requestTurnBack);
         }
     }
 
