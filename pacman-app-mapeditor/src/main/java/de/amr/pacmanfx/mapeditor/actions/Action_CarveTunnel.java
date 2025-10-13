@@ -8,7 +8,6 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.TerrainTile;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
-import de.amr.pacmanfx.model.GameLevel;
 
 import static java.util.Objects.requireNonNull;
 
@@ -48,8 +47,8 @@ public class Action_CarveTunnel extends EditorAction<Void> {
         if (col >= worldMap.numCols() / 2) {
             return false;
         }
-        int upperBorderY = GameLevel.EMPTY_ROWS_OVER_MAZE;
-        int lowerBorderY = worldMap.numRows() - 1 - GameLevel.EMPTY_ROWS_BELOW_MAZE;
+        int upperBorderY = worldMap.terrainLayer().emptyRowsOverMaze();
+        int lowerBorderY = worldMap.numRows() - 1 - worldMap.terrainLayer().emptyRowsBelowMaze();
         if (depth == 1) {
             return row > upperBorderY && row < lowerBorderY;
         }
@@ -59,9 +58,9 @@ public class Action_CarveTunnel extends EditorAction<Void> {
     }
 
     private void carveTunnelOfDepthOne() {
-        int col = tunnelExit.x(), row = tunnelExit.y();;
-        int upperBorderY = GameLevel.EMPTY_ROWS_OVER_MAZE;
-        int lowerBorderY = worldMap.numRows() - 1 - GameLevel.EMPTY_ROWS_BELOW_MAZE;
+        int col = tunnelExit.x(), row = tunnelExit.y();
+        int upperBorderY = worldMap.terrainLayer().emptyRowsOverMaze();
+        int lowerBorderY = worldMap.numRows() - 1 - worldMap.terrainLayer().emptyRowsBelowMaze();
         placeSymmetric(row - 1, col, row == upperBorderY + 1 ? TerrainTile.WALL_H.$ : TerrainTile.ARC_SE.$);
         placeSymmetric(row, col, TerrainTile.TUNNEL.$);
         placeSymmetric(row + 1, col, row == lowerBorderY - 1 ? TerrainTile.WALL_H.$ : TerrainTile.ARC_NE.$);

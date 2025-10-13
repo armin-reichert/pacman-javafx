@@ -6,14 +6,14 @@ package de.amr.pacmanfx.mapeditor;
 
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2i;
+import de.amr.pacmanfx.lib.worldmap.FoodLayer;
+import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.mapeditor.actions.*;
 import de.amr.pacmanfx.mapeditor.palette.PaletteID;
 import de.amr.pacmanfx.mapeditor.rendering.ActorSpriteRenderer;
 import de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites;
 import de.amr.pacmanfx.mapeditor.rendering.TerrainMapTileRenderer;
-import de.amr.pacmanfx.model.DefaultWorldMapPropertyName;
-import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.rendering.FoodMapRenderer;
@@ -40,6 +40,8 @@ import java.util.function.Predicate;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.mapeditor.EditorGlobals.ACTOR_SPRITES;
 import static de.amr.pacmanfx.mapeditor.EditorGlobals.translated;
+import static de.amr.pacmanfx.mapeditor.EditorUtil.getColorFromMapLayer;
+import static de.amr.pacmanfx.model.DefaultWorldMapPropertyName.COLOR_FOOD;
 import static java.util.Objects.requireNonNull;
 
 public class EditCanvas extends Canvas {
@@ -255,6 +257,9 @@ public class EditCanvas extends Canvas {
 
     public void draw(TerrainMapColorScheme colorScheme) {
         double width = getWidth(), height = getHeight();
+        final TerrainLayer terrain = worldMap().terrainLayer();
+        final double scaledTileSize = scaling() * TS;
+
         ctx.setImageSmoothing(false);
 
         ctx.setFill(colorScheme.floorColor());
@@ -270,8 +275,10 @@ public class EditCanvas extends Canvas {
 
         if (templateImageGray.get() != null) {
             ctx.drawImage(templateImageGray.get(),
-                0, GameLevel.EMPTY_ROWS_OVER_MAZE * scaling() * TS,
-                width, height - (GameLevel.EMPTY_ROWS_OVER_MAZE + GameLevel.EMPTY_ROWS_BELOW_MAZE) * scaling() * TS);
+                0,
+                terrain.emptyRowsOverMaze() * scaledTileSize,
+                width,
+                height - (terrain.emptyRowsOverMaze() + terrain.emptyRowsBelowMaze()) * scaledTileSize);
         }
 
         if (gridVisibleProperty().get()) {
@@ -283,8 +290,8 @@ public class EditCanvas extends Canvas {
         ctx.setStroke(Color.grayRgb(200, 0.75));
         ctx.setLineWidth(0.75);
         ctx.setLineDashes(5, 5);
-        ctx.strokeLine(0, GameLevel.EMPTY_ROWS_OVER_MAZE * scaling() * TS, width, GameLevel.EMPTY_ROWS_OVER_MAZE * scaling() * TS);
-        ctx.strokeLine(0, height - GameLevel.EMPTY_ROWS_BELOW_MAZE * scaling() * TS, width, height - GameLevel.EMPTY_ROWS_BELOW_MAZE * scaling() * TS);
+        ctx.strokeLine(0, terrain.emptyRowsOverMaze() * scaledTileSize, width, terrain.emptyRowsOverMaze() * scaledTileSize);
+        ctx.strokeLine(0, height - terrain.emptyRowsBelowMaze() * scaledTileSize, width, height - terrain.emptyRowsBelowMaze() * scaledTileSize);
         ctx.restore();
 
         // Terrain
@@ -319,16 +326,16 @@ public class EditCanvas extends Canvas {
 
         // Food
         if (foodVisible.get()) {
-            Color foodColor = EditorUtil.getColorFromMapLayer(worldMap().foodLayer(),
-                DefaultWorldMapPropertyName.COLOR_FOOD, ArcadeSprites.MS_PACMAN_COLOR_FOOD);
+            FoodLayer foodLayer = worldMap().foodLayer();
+            Color foodColor = getColorFromMapLayer(foodLayer, COLOR_FOOD, ArcadeSprites.MS_PACMAN_COLOR_FOOD);
             foodRenderer.setEnergizerColor(foodColor);
             foodRenderer.setPelletColor(foodColor);
-            worldMap().terrainLayer().tiles().forEach(tile -> foodRenderer.drawTile(tile, worldMap().foodLayer().content(tile)));
+            foodLayer.tiles().forEach(tile -> foodRenderer.drawTile(tile, foodLayer.content(tile)));
         }
 
         if (actorsVisible.get()) {
             ACTOR_SPRITES.forEach((positionProperty, sprite) -> {
-                Vector2i tile = worldMap().terrainLayer().getTileProperty(positionProperty);
+                Vector2i tile = terrain.getTileProperty(positionProperty);
                 if (tile != null) {
                     renderer.drawActorSprite(tile, sprite);
                 }

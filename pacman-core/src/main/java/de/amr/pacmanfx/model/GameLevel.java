@@ -23,10 +23,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameLevel {
 
-    //TODO should this be make configurable instead of hardcoding?
-    public static final int EMPTY_ROWS_OVER_MAZE  = 3;
-    public static final int EMPTY_ROWS_BELOW_MAZE = 2;
-
     private final Game game;
     private final int number; // 1=first level
     private final WorldMap worldMap;

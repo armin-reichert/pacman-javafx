@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.pacmanfx.lib.worldmap.FoodLayer;
+import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelMessage;
 import de.amr.pacmanfx.model.House;
@@ -48,21 +49,22 @@ public class ArcadePacMan_GameLevelRenderer extends BaseRenderer implements Game
     }
 
     protected void drawMaze(GameLevel gameLevel, RenderInfo info) {
-        int emptySpaceOverMaze = GameLevel.EMPTY_ROWS_OVER_MAZE * TS;
+        final TerrainLayer terrain = gameLevel.worldMap().terrainLayer();
+        int emptySpaceOverMazePixels = terrain.emptyRowsOverMaze() * TS;
         ctx().save();
         ctx().scale(scaling(), scaling());
         if (info.getBoolean(CommonRenderInfoKey.MAZE_BRIGHT)) {
             Image brightMazeImage = uiConfig.assets().image("maze.bright");
-            ctx().drawImage(brightMazeImage, 0, emptySpaceOverMaze);
+            ctx().drawImage(brightMazeImage, 0, emptySpaceOverMazePixels);
         }
         else if (info.getBoolean(CommonRenderInfoKey.MAZE_EMPTY)) {
-            drawSprite(spriteSheet().sprite(SpriteID.MAP_EMPTY), 0, emptySpaceOverMaze, false);
-            // over-paint door tiles
-            gameLevel.worldMap().terrainLayer().optHouse().map(House::leftDoorTile) .ifPresent(tile -> fillSquareAtTileCenter(tile, TS + 0.5));
-            gameLevel.worldMap().terrainLayer().optHouse().map(House::rightDoorTile).ifPresent(tile -> fillSquareAtTileCenter(tile, TS + 0.5));
+            drawSprite(spriteSheet().sprite(SpriteID.MAP_EMPTY), 0, emptySpaceOverMazePixels, false);
+            // Over-paint door tiles
+            terrain.optHouse().map(House::leftDoorTile) .ifPresent(tile -> fillSquareAtTileCenter(tile, TS + 0.5));
+            terrain.optHouse().map(House::rightDoorTile).ifPresent(tile -> fillSquareAtTileCenter(tile, TS + 0.5));
         }
         else {
-            drawSprite(spriteSheet().sprite(SpriteID.MAP_FULL), 0, emptySpaceOverMaze, false);
+            drawSprite(spriteSheet().sprite(SpriteID.MAP_FULL), 0, emptySpaceOverMazePixels, false);
             // Over-paint eaten food tiles
             FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
             foodLayer.tiles()

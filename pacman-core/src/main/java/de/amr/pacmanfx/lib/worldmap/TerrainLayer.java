@@ -20,7 +20,6 @@ import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.lib.worldmap.TerrainTile.TUNNEL;
 import static de.amr.pacmanfx.lib.worldmap.TerrainTile.isBlocked;
 import static de.amr.pacmanfx.model.DefaultWorldMapPropertyName.*;
-import static de.amr.pacmanfx.model.GameLevel.EMPTY_ROWS_BELOW_MAZE;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
@@ -52,6 +51,7 @@ public class TerrainLayer extends WorldMapLayer {
         } else {
             pacStartPosition = halfTileRightOf(pacTile);
         }
+
         ghostScatterTiles[RED_GHOST_SHADOW] = getTileProperty(POS_SCATTER_RED_GHOST,
                 Vector2i.of(0, numCols() - 3));
 
@@ -59,10 +59,10 @@ public class TerrainLayer extends WorldMapLayer {
                 Vector2i.of(0, 3));
 
         ghostScatterTiles[CYAN_GHOST_BASHFUL] = getTileProperty(POS_SCATTER_CYAN_GHOST,
-                Vector2i.of(numRows() - EMPTY_ROWS_BELOW_MAZE, numCols() - 1));
+                Vector2i.of(numRows() - emptyRowsBelowMaze(), numCols() - 1));
 
         ghostScatterTiles[ORANGE_GHOST_POKEY] = getTileProperty(POS_SCATTER_ORANGE_GHOST,
-                Vector2i.of(numRows() - EMPTY_ROWS_BELOW_MAZE, 0));
+                Vector2i.of(numRows() - emptyRowsBelowMaze(), 0));
     }
 
     public Vector2f pacStartPosition() {

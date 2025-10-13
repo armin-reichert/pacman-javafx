@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.worldmap.FoodLayer;
+import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelMessage;
 import de.amr.pacmanfx.model.MessageType;
@@ -47,19 +48,20 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements Ga
     }
 
     protected void drawMaze(GameLevel gameLevel, RenderInfo info) {
-        float emptySpaceOverMaze = TS(GameLevel.EMPTY_ROWS_OVER_MAZE);
+        final TerrainLayer terrain = gameLevel.worldMap().terrainLayer();
+        float emptySpaceOverMazePixels = TS(terrain.emptyRowsOverMaze());
         int colorMapIndex = gameLevel.worldMap().getConfigValue("colorMapIndex");
         ctx().save();
         ctx().scale(scaling(), scaling());
         if (info.getBoolean(CommonRenderInfoKey.MAZE_BRIGHT)) {
             Image mazeImage = uiConfig.assets().image("maze.bright.%d".formatted(colorMapIndex));
-            ctx.drawImage(mazeImage, 0, emptySpaceOverMaze);
+            ctx.drawImage(mazeImage, 0, emptySpaceOverMazePixels);
         } else if (info.getBoolean(CommonRenderInfoKey.MAZE_EMPTY)) {
             RectShort mazeSprite = spriteSheet().spriteSequence(SpriteID.EMPTY_MAZES)[colorMapIndex];
-            drawSprite(mazeSprite, 0, emptySpaceOverMaze, false);
+            drawSprite(mazeSprite, 0, emptySpaceOverMazePixels, false);
         } else {
             RectShort mazeSprite = spriteSheet().spriteSequence(SpriteID.FULL_MAZES)[colorMapIndex];
-            drawSprite(mazeSprite, 0, emptySpaceOverMaze, false);
+            drawSprite(mazeSprite, 0, emptySpaceOverMazePixels, false);
             // Over-paint the eaten pellets (pellets are part of the maze image)
             FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
             foodLayer.tiles()

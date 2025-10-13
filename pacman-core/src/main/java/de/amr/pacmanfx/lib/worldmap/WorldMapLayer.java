@@ -16,6 +16,9 @@ import static java.util.Objects.requireNonNull;
 
 public class WorldMapLayer {
 
+    private int emptyRowsOverMaze = 3;
+    private int emptyRowsBelowMaze = 2;
+
     private final Map<String, String> propertyMap = new HashMap<>();
     private final byte[][] tileContent;
 
@@ -24,6 +27,8 @@ public class WorldMapLayer {
     }
 
     public WorldMapLayer(WorldMapLayer other) {
+        emptyRowsOverMaze = other.emptyRowsOverMaze;
+        emptyRowsBelowMaze = other.emptyRowsBelowMaze;
         propertyMap.putAll(other.propertyMap);
         tileContent = new byte[other.numRows()][];
         for (int row = 0; row < other.numRows(); ++row) {
@@ -34,6 +39,22 @@ public class WorldMapLayer {
     public int numRows() { return tileContent.length; }
 
     public int numCols() { return tileContent[0].length; }
+
+    public void setEmptyRowsOverMaze(int numRows) {
+        emptyRowsOverMaze = numRows;
+    }
+
+    public int emptyRowsOverMaze() {
+        return emptyRowsOverMaze;
+    }
+
+    public void setEmptyRowsBelowMaze(int numRows) {
+        emptyRowsBelowMaze = numRows;
+    }
+
+    public int emptyRowsBelowMaze() {
+        return emptyRowsBelowMaze;
+    }
 
     public boolean outOfBounds(Vector2i tile) {
         return outOfBounds(tile.y(), tile.x());

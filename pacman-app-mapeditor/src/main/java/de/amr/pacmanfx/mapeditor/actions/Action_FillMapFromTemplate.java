@@ -13,7 +13,6 @@ import de.amr.pacmanfx.mapeditor.MessageType;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import de.amr.pacmanfx.mapeditor.TileMatcher;
 import de.amr.pacmanfx.model.DefaultWorldMapPropertyName;
-import de.amr.pacmanfx.model.GameLevel;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritablePixelFormat;
 import javafx.scene.paint.Color;
@@ -71,11 +70,13 @@ public class Action_FillMapFromTemplate extends EditorUIAction<Void> {
 
         LocalTime startTime = LocalTime.now();
 
-        int numMazeRows = worldMap.numRows() - (GameLevel.EMPTY_ROWS_OVER_MAZE + GameLevel.EMPTY_ROWS_BELOW_MAZE);
+        int emptyRowsTop = worldMap.terrainLayer().emptyRowsOverMaze();
+        int emptyRowsBottom = worldMap.terrainLayer().emptyRowsBelowMaze();
+        int numMazeRows = worldMap.numRows() - (emptyRowsTop + emptyRowsBottom);
         int numMazeCols = worldMap.numCols();
         for (int row = 0; row < numMazeRows; ++row) {
             for (int col = 0; col < numMazeCols; ++col) {
-                Vector2i worldMapTile = Vector2i.of(col, row + GameLevel.EMPTY_ROWS_OVER_MAZE);
+                Vector2i worldMapTile = Vector2i.of(col, row + emptyRowsTop);
                 try {
                     int[] pixelsOfTile = new int[TS*TS]; // pixels row-wise
                     rdr.getPixels(col * TS, row * TS, TS, TS, pixelFormat, pixelsOfTile, 0, TS);

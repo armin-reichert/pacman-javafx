@@ -7,12 +7,15 @@ package de.amr.pacmanfx.mapeditor.actions;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.mapeditor.MessageType;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
-import de.amr.pacmanfx.model.GameLevel;
 import javafx.scene.image.Image;
 
 import static de.amr.pacmanfx.Globals.TS;
 
 public class Action_SetEmptyMapFromTemplateImage extends EditorUIAction<Void> {
+
+    //TODO currently it is assumed that image has this format
+    private static final int EMPTY_ROWS_OVER_MAZE = 3;
+    private static final int EMPTY_ROWS_BELOW_MAZE = 2;
 
     private final Image image;
 
@@ -23,7 +26,7 @@ public class Action_SetEmptyMapFromTemplateImage extends EditorUIAction<Void> {
 
     @Override
     public Void execute() {
-        int numRows = GameLevel.EMPTY_ROWS_OVER_MAZE + GameLevel.EMPTY_ROWS_BELOW_MAZE + (int) (image.getHeight() / TS);
+        int numRows = EMPTY_ROWS_OVER_MAZE + EMPTY_ROWS_BELOW_MAZE + (int) (image.getHeight() / TS);
         int numCols = (int) (image.getWidth() / TS);
         WorldMap emptyMap = new WorldMap(numCols, numRows);
         editor.setCurrentWorldMap(emptyMap);

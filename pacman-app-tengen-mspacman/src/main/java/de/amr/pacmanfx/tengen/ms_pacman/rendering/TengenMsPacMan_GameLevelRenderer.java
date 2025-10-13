@@ -71,7 +71,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Ga
         Image mazeImage = info.get(CommonRenderInfoKey.MAZE_IMAGE, Image.class);
         RectShort mazeSprite = info.get(CommonRenderInfoKey.MAZE_SPRITE, RectShort.class);
         ctx.setImageSmoothing(imageSmoothing());
-        int x = 0, y = GameLevel.EMPTY_ROWS_OVER_MAZE * TS;
+        int x = 0, y = gameLevel.worldMap().terrainLayer().emptyRowsOverMaze() * TS;
         ctx.drawImage(mazeImage,
             mazeSprite.x(), mazeSprite.y(), mazeSprite.width(), mazeSprite.height(),
             scaled(x), scaled(y), scaled(mazeSprite.width()), scaled(mazeSprite.height())

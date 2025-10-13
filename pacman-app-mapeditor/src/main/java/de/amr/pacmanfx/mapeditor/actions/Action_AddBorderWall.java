@@ -7,7 +7,6 @@ package de.amr.pacmanfx.mapeditor.actions;
 import de.amr.pacmanfx.lib.worldmap.TerrainTile;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
-import de.amr.pacmanfx.model.GameLevel;
 
 import static java.util.Objects.requireNonNull;
 
@@ -30,8 +29,8 @@ public class Action_AddBorderWall extends EditorAction<Void> {
 
     @Override
     public Void execute() {
-        int firstRow = GameLevel.EMPTY_ROWS_BELOW_MAZE + 1;
-        int lastRow = worldMap.numRows() - 1 - GameLevel.EMPTY_ROWS_BELOW_MAZE;
+        int firstRow = worldMap.terrainLayer().emptyRowsOverMaze();
+        int lastRow = worldMap.numRows() - 1 - worldMap.terrainLayer().emptyRowsBelowMaze();
         int firstCol = 0;
         int lastCol = worldMap.numCols() - 1;
 

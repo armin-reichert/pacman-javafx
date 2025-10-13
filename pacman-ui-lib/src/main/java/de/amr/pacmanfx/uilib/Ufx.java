@@ -9,7 +9,6 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.nes.NES_Palette;
 import de.amr.pacmanfx.lib.worldmap.Obstacle;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
-import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.assets.UIPreferences;
 import javafx.animation.Animation;
@@ -393,7 +392,7 @@ public interface Ufx {
     static boolean isBorderObstacle(WorldMap worldMap, Obstacle obstacle) {
         Vector2i start = obstacle.startPoint();
         if (obstacle.isClosed()) {
-            return start.x() == TS || start.y() == GameLevel.EMPTY_ROWS_OVER_MAZE * TS + HTS;
+            return start.x() == TS || start.y() == worldMap.terrainLayer().emptyRowsOverMaze() * TS + HTS;
         } else {
             return start.x() == 0 || start.x() == worldMap.numCols() * TS;
         }

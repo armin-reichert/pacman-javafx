@@ -528,7 +528,7 @@ public class GameLevel3D extends Group implements Disposable {
     private boolean isWorldBorder(WorldMap worldMap, Obstacle obstacle) {
         Vector2i start = obstacle.startPoint();
         if (obstacle.isClosed()) {
-            return start.x() == TS || start.y() == GameLevel.EMPTY_ROWS_OVER_MAZE * TS + HTS;
+            return start.x() == TS || start.y() == worldMap.terrainLayer().emptyRowsOverMaze() * TS + HTS;
         } else {
             return start.x() == 0 || start.x() == worldMap.numCols() * TS;
         }
