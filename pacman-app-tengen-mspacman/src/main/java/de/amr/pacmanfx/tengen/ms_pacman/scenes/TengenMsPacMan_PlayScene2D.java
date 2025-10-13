@@ -102,16 +102,15 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
             if (context().optGameLevel().isPresent()) {
                 Pac pac = context().gameLevel().pac();
                 drawMovingActorInfo(ctx, scaling(), pac);
-                drawCameraInfo(pac);
+                drawCameraInfo();
                 ghostsByZ(context().gameLevel()).forEach(ghost -> drawMovingActorInfo(ctx, scaling(), ghost));
             }
             ctx.restore();
         }
 
-        private void drawCameraInfo(Pac pac) {
+        private void drawCameraInfo() {
             ctx.setFill(Color.WHITE);
-            ctx.fillText("Camera y=%.2f".formatted(dynamicCamera.getTranslateY()),
-                    scaled(11*TS), scaled(15*TS));
+            ctx.fillText("Camera y=%.2f".formatted(dynamicCamera.getTranslateY()), scaled(11*TS), scaled(15*TS));
         }
     }
 
@@ -237,16 +236,16 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         });
     }
 
-    class DynamicCamera extends ParallelCamera {
+    private class DynamicCamera extends ParallelCamera {
 
         private static final double MIN_CAMERA_MOVEMENT = 0.5;
         private static final float CAMERA_SPEED = 0.015f;
 
-        boolean followTarget;
-        int idleTicks;
-        double targetY;
-        double minY;
-        double maxY;
+        private boolean followTarget;
+        private int idleTicks;
+        private double targetY;
+        private double minY;
+        private double maxY;
 
         public DynamicCamera() {
             followTarget = false;
