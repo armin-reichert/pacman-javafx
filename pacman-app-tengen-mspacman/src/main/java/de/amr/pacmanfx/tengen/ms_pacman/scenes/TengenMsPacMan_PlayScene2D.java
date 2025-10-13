@@ -36,6 +36,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ObservableValue;
+import javafx.scene.ParallelCamera;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
@@ -54,6 +55,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.controller.GamePlayState.*;
+import static de.amr.pacmanfx.lib.UsefulFunctions.lerp;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Actions.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Properties.PROPERTY_PLAY_SCENE_DISPLAY_MODE;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
@@ -98,10 +100,18 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
             ctx.setFont(debugTextFont);
             ctx.fillText("%s %d".formatted(context().gameState(), context().gameState().timer().tickCount()), 0, scaled(3 * TS));
             if (context().optGameLevel().isPresent()) {
-                drawMovingActorInfo(ctx, scaling(), context().gameLevel().pac());
+                Pac pac = context().gameLevel().pac();
+                drawMovingActorInfo(ctx, scaling(), pac);
+                drawCameraInfo(pac);
                 ghostsByZ(context().gameLevel()).forEach(ghost -> drawMovingActorInfo(ctx, scaling(), ghost));
             }
             ctx.restore();
+        }
+
+        private void drawCameraInfo(Pac pac) {
+            ctx.setFill(Color.WHITE);
+            ctx.fillText("Camera y=%.2f".formatted(dynamicCamera.getTranslateY()),
+                    scaled(11*TS), scaled(15*TS));
         }
     }
 
@@ -219,45 +229,83 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
                     .ifPresent(MovingGameLevelMessage::update);
                 updateSound();
             }
-            updateCamera(gameLevel);
+            if (subScene.getCamera() == dynamicCamera) {
+                dynamicCamera.followTarget = context().gameState() == HUNTING;
+                dynamicCamera.update(gameLevel);
+            }
             updateHUD();
         });
     }
 
-    private void initDynamicCamera(GameLevel gameLevel) {
-        int numRows = gameLevel.worldMap().numRows();
-        dynamicCamera.minY = scaled(minTile(numRows)*TS);
-        dynamicCamera.maxY = scaled(maxTile(numRows)*TS);
-        dynamicCamera.moveTopOfMaze();
-        dynamicCamera.targetBottomOfMaze();
-        dynamicCamera.idleTicks = 90;
-    }
+    class DynamicCamera extends ParallelCamera {
 
-    // TODO: these values are the result of trial and error
+        private static final double MIN_CAMERA_MOVEMENT = 0.5;
+        private static final float CAMERA_SPEED = 0.015f;
 
-    private int minTile(int numRows) {
-        return switch (numRows) {
-            case 30 -> -4;
-            case 35,36 -> -6;
-            case 42 -> -9;
-            default -> throw new IllegalArgumentException("Illegal row count: " + numRows);
-        };
-    }
+        boolean followTarget;
+        int idleTicks;
+        double targetY;
+        double minY;
+        double maxY;
 
-    private int maxTile(int numRows) {
-        return switch (numRows) {
-            case 30 -> 2;
-            case 35,36 -> 6;
-            case 42 -> 9;
-            default -> throw new IllegalArgumentException("Illegal row count: " + numRows);
-        };
-    }
+        public DynamicCamera() {
+            followTarget = false;
+        }
 
-    private void updateCamera(GameLevel gameLevel) {
-        if (subScene.getCamera() == dynamicCamera) {
-            dynamicCamera.followTarget = context().gameState() == HUNTING;
-            double frac = gameLevel.pac().y() / (dynamicCamera.maxY - dynamicCamera.minY);
-            dynamicCamera.update(frac);
+        public void init() {
+            context().optGameLevel().ifPresent(this::updateRange);
+            moveTopOfMaze();
+            targetBottomOfMaze();
+            idleTicks = 90;
+        }
+
+        private void updateRange(GameLevel gameLevel) {
+            int numRows = gameLevel.worldMap().terrainLayer().numRows();
+            if (numRows <= 30) { // MINI
+                dynamicCamera.minY = -scaled(30);
+                dynamicCamera.maxY =  scaled(15);
+            }
+            else if (numRows >= 42) { // BIG
+                dynamicCamera.minY = -scaled(75);
+                dynamicCamera.maxY =  scaled(65);
+            }
+            else { // ARCADE
+                dynamicCamera.minY = -scaled(50);
+                dynamicCamera.maxY =  scaled(42);
+            }
+
+        }
+
+        public void update(GameLevel gameLevel) {
+            if (idleTicks > 0) {
+                --idleTicks;
+                return;
+            }
+            updateRange(gameLevel);
+            if (followTarget) {
+                int numRows = gameLevel.worldMap().terrainLayer().numRows();
+                double relY = gameLevel.pac().y() / TS(numRows);
+                targetY = lerp(minY, maxY, relY < 0.5 ? 0 : 1);
+            }
+            double oldY = getTranslateY();
+            double newY = lerp(oldY, targetY, CAMERA_SPEED);
+            if (Math.abs(oldY - newY) > MIN_CAMERA_MOVEMENT) {
+                setTranslateY(newY);
+            }
+        }
+
+        public void moveTopOfMaze() {
+            setTranslateY(minY);
+        }
+
+        public void targetTopOfMaze() {
+            followTarget = false;
+            targetY = minY;
+        }
+
+        public void targetBottomOfMaze() {
+            followTarget = false;
+            targetY = maxY;
         }
     }
 
@@ -348,7 +396,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         gameLevelRenderer = (TengenMsPacMan_GameLevelRenderer) ui.currentConfig().createGameLevelRenderer(canvas);
         gameLevelRenderer.scalingProperty().bind(scaling);
 
-        initDynamicCamera(gameLevel);
+        dynamicCamera.init();
+        dynamicCamera.update(gameLevel);
     }
 
     @Override
@@ -364,7 +413,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
 
     @Override
     public void onLevelStarted(GameEvent e) {
-        initDynamicCamera(context().gameLevel());
+        dynamicCamera.init();
     }
 
     @Override

@@ -212,6 +212,8 @@ public class BaseRenderer implements Renderer {
         int numCols = (int) (sizeX / TS), numRows = (int) (sizeY / TS);
         double width = scaled(numCols * TS), height = scaled(numRows * TS);
         ctx.save();
+        ctx.setStroke(Color.YELLOW);
+        ctx.strokeRect(0, 0, ctx.getCanvas().getWidth(), ctx.getCanvas().getHeight());
         ctx.setStroke(gridColor);
         for (int row = 0; row <= numRows; ++row) {
             double y = scaled(row * TS);
