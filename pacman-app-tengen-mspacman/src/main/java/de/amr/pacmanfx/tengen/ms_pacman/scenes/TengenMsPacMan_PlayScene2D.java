@@ -85,6 +85,82 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
     private LevelCompletedAnimation levelCompletedAnimation;
     private final BooleanProperty mazeHighlighted = new SimpleBooleanProperty(false);
 
+    private class DynamicCamera extends ParallelCamera {
+
+        private static final float MIN_CAMERA_MOVEMENT = 0.5f;
+        private static final float CAMERA_SPEED = 0.01f;
+
+        private boolean followPac;
+        private int idleTicks;
+        private double targetY;
+        private double minY;
+        private double maxY;
+
+        public DynamicCamera() {
+            followPac = false;
+        }
+
+        public void init() {
+            context().optGameLevel().ifPresent(this::updateRange);
+            lookAtTopOfMaze();
+            moveToBottomOfMaze();
+        }
+
+        public void setIdleTicks(int idleTicks) {
+            this.idleTicks = idleTicks;
+        }
+
+        // This is "alchemy", not science :-)
+        private void updateRange(GameLevel gameLevel) {
+            int numRows = gameLevel.worldMap().terrainLayer().numRows();
+            if (numRows <= 30) { // MINI
+                dynamicCamera.minY = -scaled(30);
+                dynamicCamera.maxY =  scaled(15);
+            }
+            else if (numRows >= 42) { // BIG
+                dynamicCamera.minY = -scaled(75);
+                dynamicCamera.maxY =  scaled(65);
+            }
+            else { // ARCADE
+                dynamicCamera.minY = -scaled(50);
+                dynamicCamera.maxY =  scaled(42);
+            }
+        }
+
+        public void update(GameLevel gameLevel) {
+            if (idleTicks > 0) {
+                --idleTicks;
+                return;
+            }
+            updateRange(gameLevel);
+            if (followPac) {
+                int numRows = gameLevel.worldMap().terrainLayer().numRows();
+                double relY = gameLevel.pac().y() / TS(numRows);
+                targetY = relY < 0.5 ? minY : maxY;
+            }
+            double oldCameraY = getTranslateY();
+            double newCameraY = lerp(oldCameraY, targetY, CAMERA_SPEED);
+            double delta = Math.abs(oldCameraY - newCameraY);
+            if (delta > MIN_CAMERA_MOVEMENT) {
+                setTranslateY(newCameraY);
+            }
+        }
+
+        public void lookAtTopOfMaze() {
+            setTranslateY(minY);
+        }
+
+        public void moveToTopOfMaze() {
+            followPac = false;
+            targetY = minY;
+        }
+
+        public void moveToBottomOfMaze() {
+            followPac = false;
+            targetY = maxY;
+        }
+    }
+
     private class TengenPlaySceneDebugInfoRenderer extends DefaultDebugInfoRenderer {
 
         public TengenPlaySceneDebugInfoRenderer(GameUI ui, Canvas canvas) {
@@ -236,79 +312,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         });
     }
 
-    private class DynamicCamera extends ParallelCamera {
-
-        private static final float MIN_CAMERA_MOVEMENT = 0.5f;
-        private static final float CAMERA_SPEED = 0.01f;
-
-        private boolean followPac;
-        private int idleTicks;
-        private double targetY;
-        private double minY;
-        private double maxY;
-
-        public DynamicCamera() {
-            followPac = false;
-        }
-
-        public void init() {
-            context().optGameLevel().ifPresent(this::updateRange);
-            lookAtTopOfMaze();
-            moveToBottomOfMaze();
-            idleTicks = 90;
-        }
-
-        // This is "alchemy", not science :-)
-        private void updateRange(GameLevel gameLevel) {
-            int numRows = gameLevel.worldMap().terrainLayer().numRows();
-            if (numRows <= 30) { // MINI
-                dynamicCamera.minY = -scaled(30);
-                dynamicCamera.maxY =  scaled(15);
-            }
-            else if (numRows >= 42) { // BIG
-                dynamicCamera.minY = -scaled(75);
-                dynamicCamera.maxY =  scaled(65);
-            }
-            else { // ARCADE
-                dynamicCamera.minY = -scaled(50);
-                dynamicCamera.maxY =  scaled(42);
-            }
-        }
-
-        public void update(GameLevel gameLevel) {
-            if (idleTicks > 0) {
-                --idleTicks;
-                return;
-            }
-            updateRange(gameLevel);
-            if (followPac) {
-                int numRows = gameLevel.worldMap().terrainLayer().numRows();
-                double relY = gameLevel.pac().y() / TS(numRows);
-                targetY = relY < 0.5 ? minY : maxY;
-            }
-            double oldCameraY = getTranslateY();
-            double newCameraY = lerp(oldCameraY, targetY, CAMERA_SPEED);
-            double delta = Math.abs(oldCameraY - newCameraY);
-            if (delta > MIN_CAMERA_MOVEMENT) {
-                setTranslateY(newCameraY);
-            }
-        }
-
-        public void lookAtTopOfMaze() {
-            setTranslateY(minY);
-        }
-
-        public void moveToTopOfMaze() {
-            followPac = false;
-            targetY = minY;
-        }
-
-        public void moveToBottomOfMaze() {
-            followPac = false;
-            targetY = maxY;
-        }
-    }
-
     // Context menu
 
     private ToggleGroup toggleGroup;
@@ -397,7 +400,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         gameLevelRenderer.scalingProperty().bind(scaling);
 
         dynamicCamera.init();
-        dynamicCamera.update(gameLevel);
+        dynamicCamera.setIdleTicks(90);
     }
 
     @Override
@@ -414,6 +417,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
     @Override
     public void onLevelStarted(GameEvent e) {
         dynamicCamera.init();
+        dynamicCamera.setIdleTicks(90);
     }
 
     @Override
