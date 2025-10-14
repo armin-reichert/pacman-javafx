@@ -566,7 +566,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     @Override
     public void onPelletEaten(GameLevel gameLevel) {
         scoreManager().scorePoints(PELLET_VALUE);
-        gameLevel.pac().setRestingTicks(1);
+        gameLevel.pac().setRestingTime(1);
     }
 
     @Override

@@ -34,7 +34,7 @@ public class Pac extends MovingActor {
     private BooleanProperty immune;
     private BooleanProperty usingAutopilot;
     private boolean dead;
-    private byte restingTicks;
+    private int restingTime;
     private long starvingTicks;
     private Steering autopilotSteering;
 
@@ -55,7 +55,7 @@ public class Pac extends MovingActor {
                 "immune=" + isImmune() +
                 ", autopilot=" + isUsingAutopilot() +
                 ", dead=" + dead +
-                ", restingTicks=" + restingTicks +
+                ", restingTime=" + restingTime +
                 ", starvingTicks=" + starvingTicks +
                 ", visible=" + isVisible() +
                 ", position=" + position() +
@@ -88,7 +88,7 @@ public class Pac extends MovingActor {
     public void reset() {
         super.reset();
         dead = false;
-        restingTicks = 0;
+        restingTime = 0;
         starvingTicks = 0;
         corneringSpeedUp = 1.5f; // no real cornering implementation but better than nothing
         selectAnimation(CommonAnimationID.ANIM_PAC_MUNCHING);
@@ -146,12 +146,12 @@ public class Pac extends MovingActor {
         if (gameContext.optGameLevel().isEmpty()) return;
         final GameLevel gameLevel = gameContext.gameLevel();
 
-        if (dead || restingTicks == INDEFINITELY) {
+        if (dead || restingTime == INDEFINITELY) {
             return;
         }
 
-        if (restingTicks > 0) {
-            restingTicks -= 1;
+        if (restingTime > 0) {
+            restingTime -= 1;
             return;
         }
 
@@ -173,9 +173,9 @@ public class Pac extends MovingActor {
 
     public void onFoodEaten(boolean energizer) {
         if (energizer) {
-            setRestingTicks(3);
+            setRestingTime(3);
         } else {
-            setRestingTicks(1);
+            setRestingTime(1);
         }
     }
 
@@ -184,7 +184,7 @@ public class Pac extends MovingActor {
         powerTimer.reset(0);
         Logger.info("Power timer stopped and reset to zero.");
         setSpeed(0);
-        setRestingTicks(INDEFINITELY);
+        setRestingTime(INDEFINITELY);
         optAnimationManager().ifPresent(animationManager -> {
             animationManager.stop();
             animationManager.select(CommonAnimationID.ANIM_PAC_MUNCHING);
@@ -204,13 +204,18 @@ public class Pac extends MovingActor {
         return !dead; // Not sure if the opposite of being dead is being alive ;-)
     }
 
-    public int restingTicks() { return restingTicks; }
+    /**
+     * @return number of ticks Pac is resting
+     */
+    public int restingTime() { return restingTime; }
 
-    public void setRestingTicks(int ticks) {
-        if (ticks != INDEFINITELY && (ticks < 0 || ticks > 127)) {
-            throw new IllegalArgumentException("Resting ticks must be INDEFINITE or 0..127, but is " + ticks);
-        }
-        restingTicks = (byte) ticks;
+    /**
+     * Sets the number of ticks Pac-Man is resting.
+     *
+     * @param ticks number of ticks
+     */
+    public void setRestingTime(int ticks) {
+        restingTime = ticks;
     }
 
     /**
@@ -227,7 +232,7 @@ public class Pac extends MovingActor {
      * or if he is resting for an indefinite time.
      */
     public boolean isParalyzed() {
-        return velocity().equals(Vector2f.ZERO) || !moveInfo.moved || restingTicks == INDEFINITELY;
+        return velocity().equals(Vector2f.ZERO) || !moveInfo.moved || restingTime == INDEFINITELY;
     }
 
     public void setAutopilotSteering(Steering steering) {
