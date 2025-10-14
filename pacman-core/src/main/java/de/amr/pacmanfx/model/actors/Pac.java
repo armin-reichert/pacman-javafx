@@ -143,26 +143,29 @@ public class Pac extends MovingActor {
 
     @Override
     public void tick(GameContext gameContext) {
-        if (gameContext == null || gameContext.optGameLevel().isEmpty()) return;
-        GameLevel gameLevel = gameContext.gameLevel();
+        if (gameContext.optGameLevel().isEmpty()) return;
+        final GameLevel gameLevel = gameContext.gameLevel();
 
         if (dead || restingTicks == INDEFINITELY) {
             return;
         }
+
         if (restingTicks > 0) {
             restingTicks -= 1;
             return;
         }
+
         if (isUsingAutopilot()) {
-            autopilotSteering.steer(this, gameContext.gameLevel());
+            autopilotSteering.steer(this, gameLevel);
         }
+
         setSpeed(powerTimer.isRunning()
-            ? gameContext.game().pacPowerSpeed(gameLevel)
-            : gameContext.game().pacNormalSpeed(gameLevel));
-        moveThroughThisCruelWorld(gameContext.gameLevel());
+            ? gameLevel.game().pacPowerSpeed(gameLevel)
+            : gameLevel.game().pacNormalSpeed(gameLevel));
+        moveThroughThisCruelWorld(gameLevel);
 
         if (moveInfo.moved) {
-            this.optAnimationManager().ifPresent(AnimationManager::play);
+            optAnimationManager().ifPresent(AnimationManager::play);
         } else {
             stopAnimation();
         }
@@ -176,7 +179,7 @@ public class Pac extends MovingActor {
         }
     }
 
-    public void onLevelCompleted(GameLevel gameLevel) {
+    public void onLevelCompleted() {
         powerTimer.stop();
         powerTimer.reset(0);
         Logger.info("Power timer stopped and reset to zero.");
@@ -189,7 +192,7 @@ public class Pac extends MovingActor {
         });
     }
 
-    public void onKilled(GameLevel gameLevel) {
+    public void onKilled() {
         powerTimer.stop();
         powerTimer.reset(0);
         setSpeed(0);
