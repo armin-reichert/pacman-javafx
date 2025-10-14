@@ -151,6 +151,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
             }
         }
         scaling.set(newScaling);
+        Logger.info("Tengen play scene 2D sub-scene size={.2f}, {.2f}, scaling={.2f}", subScene.getWidth(), subScene.getHeight(), scaling());
     }
 
     private void setActionsBindings(boolean demoLevel) {
@@ -238,7 +239,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
     private class DynamicCamera extends ParallelCamera {
 
         private static final float MIN_CAMERA_MOVEMENT = 0.5f;
-        private static final float CAMERA_SPEED = 0.02f;
+        private static final float CAMERA_SPEED = 0.01f;
 
         private boolean followPac;
         private int idleTicks;
@@ -257,6 +258,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
             idleTicks = 90;
         }
 
+        // This is "alchemy", not science :-)
         private void updateRange(GameLevel gameLevel) {
             int numRows = gameLevel.worldMap().terrainLayer().numRows();
             if (numRows <= 30) { // MINI
@@ -271,7 +273,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
                 dynamicCamera.minY = -scaled(50);
                 dynamicCamera.maxY =  scaled(42);
             }
-
         }
 
         public void update(GameLevel gameLevel) {

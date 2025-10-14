@@ -216,9 +216,7 @@ public class GameUI_Implementation implements GameUI {
             return shortTitle;
         }
         String sceneClassName = currentGameScene.getClass().getSimpleName();
-        return currentGameScene instanceof GameScene2D gameScene2D
-            ? shortTitle + " [%s]".formatted(sceneClassName) + " (%.2fx)".formatted(gameScene2D.scaling())
-            : shortTitle + " [%s]".formatted(sceneClassName);
+        return shortTitle + " [%s]".formatted(sceneClassName);
     }
 
     private void defineGlobalActionBindings() {
