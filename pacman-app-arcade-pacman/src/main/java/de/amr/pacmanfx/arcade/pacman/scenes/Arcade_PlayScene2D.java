@@ -180,7 +180,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
         }
 
         // TODO Still not sure how to do this right
-        if (pac.starvingTicks() >= 10 && !ui.soundManager().isPaused(SoundID.PAC_MAN_MUNCHING)) {
+        if (pac.starvingTime() >= 10 && !ui.soundManager().isPaused(SoundID.PAC_MAN_MUNCHING)) {
             ui.soundManager().pause(SoundID.PAC_MAN_MUNCHING);
         }
 

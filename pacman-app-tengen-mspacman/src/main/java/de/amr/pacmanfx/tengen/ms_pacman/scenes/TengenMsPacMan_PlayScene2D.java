@@ -530,7 +530,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         }
 
         // TODO: how exactly is the munching sound created in the original game?
-        if (pac.starvingTicks() > 10) {
+        if (pac.starvingTime() > 10) {
             ui.soundManager().pause(SoundID.PAC_MAN_MUNCHING);
         }
 

@@ -532,7 +532,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         final Pac pac = gameLevel.pac();
         final Vector2i tile = pac.tile();
         if (foodLayer.hasFoodAtTile(tile)) {
-            pac.setStarvingTicks(0);
+            pac.endStarving();
             foodLayer.registerFoodEatenAt(tile);
             if (foodLayer.isEnergizerTile(tile)) {
                 onEnergizerEaten(gameLevel, tile);
@@ -546,7 +546,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             }
             eventManager().publishEvent(GameEventType.PAC_FOUND_FOOD, tile);
         } else {
-            pac.setStarvingTicks(pac.starvingTicks() + 1);
+            pac.starve();
         }
     }
 

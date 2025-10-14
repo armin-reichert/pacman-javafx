@@ -209,8 +209,8 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         final Pac pac = gameLevel.pac();
         final Vector2i tile = pac.tile();
         if (foodLayer.hasFoodAtTile(tile)) {
-            pac.setStarvingTicks(0);
             foodLayer.registerFoodEatenAt(tile);
+            pac.endStarving();
             if (foodLayer.isEnergizerTile(tile)) {
                 onEnergizerEaten(gameLevel, tile);
             } else {
@@ -223,7 +223,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             }
             eventManager().publishEvent(GameEventType.PAC_FOUND_FOOD, tile);
         } else {
-            pac.setStarvingTicks(pac.starvingTicks() + 1);
+            pac.starve();
         }
     }
 

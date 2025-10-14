@@ -514,7 +514,7 @@ public class PlayScene3D implements GameScene {
             }
             if (!ui.soundManager().isPlaying(SoundID.PAC_MAN_MUNCHING)) {
                 ui.soundManager().loop(SoundID.PAC_MAN_MUNCHING);
-                Logger.info("Play munching sound, starving ticks={}", theGameContext().gameLevel().pac().starvingTicks());
+                Logger.info("Play munching sound, starving ticks={}", theGameContext().gameLevel().pac().starvingTime());
             }
         }
     }
@@ -621,7 +621,7 @@ public class PlayScene3D implements GameScene {
     //TODO this is still crap!
     protected void updatePacMunchingSound(Pac pac) {
         // TODO Still not sure how to do this right
-        if (pac.starvingTicks() >= 10 && !ui.soundManager().isPaused(SoundID.PAC_MAN_MUNCHING)) {
+        if (pac.starvingTime() >= 10 && !ui.soundManager().isPaused(SoundID.PAC_MAN_MUNCHING)) {
             ui.soundManager().pause(SoundID.PAC_MAN_MUNCHING);
         }
     }

@@ -35,7 +35,7 @@ public class Pac extends MovingActor {
     private BooleanProperty usingAutopilot;
     private boolean dead;
     private int restingTime;
-    private long starvingTicks;
+    private long starvingTime;
     private Steering autopilotSteering;
 
     /**
@@ -56,7 +56,7 @@ public class Pac extends MovingActor {
                 ", autopilot=" + isUsingAutopilot() +
                 ", dead=" + dead +
                 ", restingTime=" + restingTime +
-                ", starvingTicks=" + starvingTicks +
+                ", starvingTime=" + starvingTime +
                 ", visible=" + isVisible() +
                 ", position=" + position() +
                 ", velocity=" + velocity() +
@@ -89,7 +89,7 @@ public class Pac extends MovingActor {
         super.reset();
         dead = false;
         restingTime = 0;
-        starvingTicks = 0;
+        starvingTime = 0;
         corneringSpeedUp = 1.5f; // no real cornering implementation but better than nothing
         selectAnimation(CommonAnimationID.ANIM_PAC_MUNCHING);
     }
@@ -221,10 +221,14 @@ public class Pac extends MovingActor {
     /**
      *  @return number of ticks passed since a pellet or an energizer has been eaten.
      */
-    public long starvingTicks() { return starvingTicks; }
+    public long starvingTime() { return starvingTime; }
 
-    public void setStarvingTicks(long starvingTicks) {
-        this.starvingTicks = starvingTicks;
+    public void starve() {
+        ++starvingTime;
+    }
+
+    public void endStarving() {
+        starvingTime = 0;
     }
 
     /**
