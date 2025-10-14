@@ -177,6 +177,7 @@ public class Pac extends MovingActor {
         } else {
             setRestingTime(1);
         }
+        endStarving();
     }
 
     public void onLevelCompleted() {

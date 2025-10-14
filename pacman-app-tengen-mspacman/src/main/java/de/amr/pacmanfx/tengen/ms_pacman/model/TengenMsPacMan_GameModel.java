@@ -532,9 +532,9 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         final Pac pac = gameLevel.pac();
         final Vector2i tile = pac.tile();
         if (foodLayer.hasFoodAtTile(tile)) {
-            pac.endStarving();
+            boolean energizer = foodLayer.isEnergizerTile(tile);
             foodLayer.registerFoodEatenAt(tile);
-            if (foodLayer.isEnergizerTile(tile)) {
+            if (energizer) {
                 onEnergizerEaten(gameLevel, tile);
             } else {
                 onPelletEaten(gameLevel);
@@ -550,27 +550,12 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         }
     }
 
-    @Override
-    protected void checkPacFindsBonus(GameLevel gameLevel) {
-        gameLevel.bonus().filter(bonus -> bonus.state() == BonusState.EDIBLE).ifPresent(bonus -> {
-            if (gameLevel.pac().onSameTileAs(bonus)) {
-                bonus.setEaten(BONUS_EATEN_SECONDS);
-                scoreManager.scorePoints(bonus.points());
-                Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
-                thisStep.bonusEatenTile = bonus.tile();
-                eventManager().publishEvent(GameEventType.BONUS_EATEN);
-            }
-        });
-    }
-
-    @Override
-    public void onPelletEaten(GameLevel gameLevel) {
+    private void onPelletEaten(GameLevel gameLevel) {
         scoreManager().scorePoints(PELLET_VALUE);
-        gameLevel.pac().setRestingTime(1);
+        gameLevel.pac().onFoodEaten(false);
     }
 
-    @Override
-    public void onEnergizerEaten(GameLevel gameLevel, Vector2i tile) {
+    private void onEnergizerEaten(GameLevel gameLevel, Vector2i tile) {
         thisStep.foundEnergizerAtTile = tile;
         scoreManager.scorePoints(ENERGIZER_VALUE);
         gameLevel.pac().onFoodEaten(true);
@@ -593,6 +578,19 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             thisStep.pacGotPower = true;
             eventManager().publishEvent(GameEventType.PAC_GETS_POWER);
         }
+    }
+
+    @Override
+    protected void checkPacFindsBonus(GameLevel gameLevel) {
+        gameLevel.bonus().filter(bonus -> bonus.state() == BonusState.EDIBLE).ifPresent(bonus -> {
+            if (gameLevel.pac().onSameTileAs(bonus)) {
+                bonus.setEaten(BONUS_EATEN_SECONDS);
+                scoreManager.scorePoints(bonus.points());
+                Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
+                thisStep.bonusEatenTile = bonus.tile();
+                eventManager().publishEvent(GameEventType.BONUS_EATEN);
+            }
+        });
     }
 
     @Override
