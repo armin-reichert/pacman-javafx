@@ -52,16 +52,16 @@ public class Pac extends MovingActor {
     @Override
     public String toString() {
         return "Pac{" +
-                "immune=" + isImmune() +
-                ", autopilot=" + isUsingAutopilot() +
-                ", dead=" + dead +
-                ", restingTime=" + restingTime +
-                ", starvingTime=" + starvingTime +
-                ", visible=" + isVisible() +
-                ", position=" + position() +
-                ", velocity=" + velocity() +
-                ", acceleration=" + acceleration() +
-                '}';
+            "immune=" + isImmune() +
+            ", autopilot=" + isUsingAutopilot() +
+            ", dead=" + dead +
+            ", restingTime=" + restingTime +
+            ", starvingTime=" + starvingTime +
+            ", visible=" + isVisible() +
+            ", position=" + position() +
+            ", velocity=" + velocity() +
+            ", acceleration=" + acceleration() +
+            '}';
     }
 
     @Override
@@ -172,11 +172,7 @@ public class Pac extends MovingActor {
     }
 
     public void onFoodEaten(boolean energizer) {
-        if (energizer) {
-            setRestingTime(3);
-        } else {
-            setRestingTime(1);
-        }
+        setRestingTime(energizer ? 3 : 1);
         endStarving();
     }
 
