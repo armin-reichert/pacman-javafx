@@ -8,6 +8,7 @@ import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.controller.test.TestGameState;
 import de.amr.pacmanfx.event.GameEvent;
+import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.MessageType;
@@ -59,6 +60,7 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.lerp;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Actions.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Properties.PROPERTY_PLAY_SCENE_DISPLAY_MODE;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
+import static de.amr.pacmanfx.tengen.ms_pacman.scenes.SceneDisplayMode.SCROLLING;
 import static de.amr.pacmanfx.ui.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_CANVAS_BACKGROUND_COLOR;
 import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_MUTED;
@@ -73,10 +75,11 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
     private final DoubleProperty canvasHeightUnscaled = new SimpleDoubleProperty(NES_SIZE_PX.y());
 
     private final SubScene subScene;
-    private final DynamicCamera dynamicCamera = new DynamicCamera();
-    private final PerspectiveCamera fixedCamera  = new PerspectiveCamera(false);
     private final Canvas canvas = new Canvas();
     private final Rectangle clipRect = new Rectangle();
+
+    private final DynamicCamera dynamicCamera = new DynamicCamera();
+    private final PerspectiveCamera fixedCamera  = new PerspectiveCamera(false);
 
     private TengenMsPacMan_HUDRenderer hudRenderer;
     private TengenMsPacMan_GameLevelRenderer gameLevelRenderer;
@@ -88,7 +91,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
     private class DynamicCamera extends ParallelCamera {
 
         private static final float MIN_CAMERA_MOVEMENT = 0.5f;
-        private static final float CAMERA_SPEED = 0.01f;
+        private static final float CAMERA_SPEED = 0.02f;
 
         private boolean followPac;
         private int idleTicks;
@@ -134,9 +137,13 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
             }
             updateRange(gameLevel);
             if (followPac) {
+                Pac pac = gameLevel.pac();
                 int numRows = gameLevel.worldMap().terrainLayer().numRows();
-                double relY = gameLevel.pac().y() / TS(numRows);
-                tgtY = relY < 0.5 ? minY : maxY;
+                double relY = pac.y() / TS(numRows);
+                boolean targetTop = relY < 0.33 || relY < 0.5 && pac.moveDir() == Direction.UP;
+                boolean targetBot = relY > 0.66 || relY > 0.5 && pac.moveDir() == Direction.DOWN;
+                if (targetTop) tgtY = minY;
+                if (targetBot) tgtY = maxY;
             }
             double oldCameraY = getTranslateY();
             double newCameraY = lerp(oldCameraY, tgtY, CAMERA_SPEED);
@@ -200,7 +207,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         subScene = new SubScene(rootPane, 88, 88);
         subScene.fillProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
         subScene.cameraProperty().bind(PROPERTY_PLAY_SCENE_DISPLAY_MODE.map(mode ->
-            mode == SceneDisplayMode.SCROLLING ? dynamicCamera : fixedCamera));
+            mode == SCROLLING ? dynamicCamera : fixedCamera));
 
         canvas.widthProperty() .bind(scalingProperty().multiply(canvasWidthUnscaled));
         canvas.heightProperty().bind(scalingProperty().multiply(canvasHeightUnscaled));
@@ -212,22 +219,19 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         clipRect.widthProperty() .bind(canvas.widthProperty().subtract(scalingProperty().multiply(4 * TS)));
         clipRect.heightProperty().bind(canvas.heightProperty());
 
-        subScene.heightProperty().addListener((py, ov, nv) -> recomputeScaling());
-        subScene.cameraProperty().addListener((py, ov, nv) -> recomputeScaling());
+        subScene.heightProperty().addListener((py, ov, nv) -> updateScaling());
+        subScene.cameraProperty().addListener((py, ov, nv) -> updateScaling());
         //TODO why is this needed? Sub-scene seems not to get all resize events.
-        ui.stage().heightProperty().addListener((py, ov, nv) -> recomputeScaling());
+        ui.stage().heightProperty().addListener((py, ov, nv) -> updateScaling());
     }
 
-    private void recomputeScaling() {
-        double newScaling = subScene.getHeight() / NES_SIZE_PX.y();
-        if (subScene.getCamera() == fixedCamera) {
-            // scale such that the complete scene height fits into the sub-scene
-            if (context().optGameLevel().isPresent()) {
-                newScaling = subScene.getHeight() / canvasHeightUnscaled.get();
-            }
-        }
-        scaling.set(newScaling);
-        Logger.info("Tengen play scene 2D sub-scene size={.2f}, {.2f}, scaling={.2f}", subScene.getWidth(), subScene.getHeight(), scaling());
+    private void updateScaling() {
+        scaling.set(switch (PROPERTY_PLAY_SCENE_DISPLAY_MODE.get()) {
+            case SCALED_TO_FIT -> subScene.getHeight() / canvasHeightUnscaled.get();
+            case SCROLLING -> subScene.getHeight() / NES_SIZE_PX.y();
+        });
+        Logger.info("Tengen 2D play scene sub-scene: w={0.00} h={0.00} scaling={0.00}",
+            subScene.getWidth(), subScene.getHeight(), scaling());
     }
 
     private void setActionsBindings(boolean demoLevel) {
@@ -276,7 +280,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
     @Override
     public void doInit() {
         context().game().hud().scoreVisible(true).levelCounterVisible(true).livesCounterVisible(true);
-        recomputeScaling();
+        updateScaling();
         dynamicCamera.setTop();
     }
 
@@ -320,7 +324,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
 
     private void handlePlaySceneDisplayModeChange(
         ObservableValue<? extends SceneDisplayMode> property, SceneDisplayMode oldMode, SceneDisplayMode newMode) {
-        toggleGroup.selectToggle(newMode == SceneDisplayMode.SCROLLING ? miScrolling : miScaledToFit);
+        toggleGroup.selectToggle(newMode == SCROLLING ? miScrolling : miScaledToFit);
     }
 
     @Override
@@ -332,8 +336,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         miScaledToFit.setOnAction(e -> PROPERTY_PLAY_SCENE_DISPLAY_MODE.set(SceneDisplayMode.SCALED_TO_FIT));
 
         miScrolling = new RadioMenuItem(ui.assets().translated("scrolling"));
-        miScrolling.setSelected(displayMode == SceneDisplayMode.SCROLLING);
-        miScrolling.setOnAction(e -> PROPERTY_PLAY_SCENE_DISPLAY_MODE.set(SceneDisplayMode.SCROLLING));
+        miScrolling.setSelected(displayMode == SCROLLING);
+        miScrolling.setOnAction(e -> PROPERTY_PLAY_SCENE_DISPLAY_MODE.set(SCROLLING));
 
         toggleGroup = new ToggleGroup();
         miScaledToFit.setToggleGroup(toggleGroup);
