@@ -131,17 +131,17 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         }
 
         public void update(GameLevel gameLevel) {
+            updateRange(gameLevel);
             if (idleTicks > 0) {
                 --idleTicks;
                 return;
             }
-            updateRange(gameLevel);
             if (followPac) {
                 Pac pac = gameLevel.pac();
                 int numRows = gameLevel.worldMap().terrainLayer().numRows();
                 double relY = pac.y() / TS(numRows);
-                boolean targetTop = relY < 0.33 || relY < 0.5 && pac.moveDir() == Direction.UP;
-                boolean targetBot = relY > 0.66 || relY > 0.5 && pac.moveDir() == Direction.DOWN;
+                boolean targetTop = relY < 0.25 || relY < 0.6 && pac.moveDir() == Direction.UP;
+                boolean targetBot = relY > 0.75 || relY > 0.4 && pac.moveDir() == Direction.DOWN;
                 if (targetTop) tgtY = minY;
                 if (targetBot) tgtY = maxY;
             }
