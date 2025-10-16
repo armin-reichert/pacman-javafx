@@ -33,7 +33,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import static de.amr.pacmanfx.lib.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.ui.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.api.GameScene_Config.SCENE_ID_PLAY_SCENE_3D;
 import static de.amr.pacmanfx.ui.api.GameUI_Properties.*;
@@ -145,13 +144,9 @@ public class GameUI_Implementation implements GameUI {
         });
         mainScene.setOnScroll(this::handleScrollEvent);
         mainScene.rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
-            () -> {
-                if (isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D)) {
-                    Gradients.PredefinedGradient[] choices = Gradients.PredefinedGradient.values();
-                    return Background.fill(choices[randomInt(0, choices.length)].gradient());
-                }
-                return assets.background("background.scene");
-            },
+            () -> isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D)
+                ? Background.fill(Gradients.Samples.random())
+                : assets.background("background.scene"),
             mainScene.currentViewProperty(), mainScene.currentGameSceneProperty()
         ));
 

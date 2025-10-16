@@ -9,12 +9,14 @@ import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 
+import static de.amr.pacmanfx.lib.RandomNumberSupport.randomInt;
+
 /**
  * @see <a href="https://www.eggradients.com/">Eggradients</a>
  */
 public interface Gradients {
 
-    enum PredefinedGradient {
+    enum Samples {
         BLUE_BELL_DREAMS("#6495ed", "#7c9ec3", Axis.HORIZONTAL),
         CLOUD_TECH      ("#1e90ff", "#FFFFFF", Axis.HORIZONTAL),
         FINDING_NEMO    ("#0047ab", "#1ca9c9", Axis.HORIZONTAL),
@@ -29,8 +31,12 @@ public interface Gradients {
             return gradient;
         }
 
-        PredefinedGradient(String startColorCode, String endColorCode, Axis axis) {
+        Samples(String startColorCode, String endColorCode, Axis axis) {
             gradient = createGradient(startColorCode, endColorCode, axis);
+        }
+
+        public static LinearGradient random() {
+            return values()[randomInt(0, values().length)].gradient();
         }
     }
 
