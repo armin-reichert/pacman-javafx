@@ -122,7 +122,7 @@ public class Bonus extends MovingActor {
 
     private boolean jumpThroughMaze(GameLevel gameLevel) {
         steering.steer(this, gameLevel);
-        boolean reachedExit = steering.isComplete();
+        boolean reachedExit = steering.isComplete() || gameLevel.worldMap().terrainLayer().isTileInPortalSpace(tile());
         if (!reachedExit) {
             navigateTowardsTarget(gameLevel);
             moveThroughThisCruelWorld(gameLevel);

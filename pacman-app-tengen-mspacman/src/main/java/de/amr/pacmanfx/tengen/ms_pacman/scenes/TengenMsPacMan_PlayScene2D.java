@@ -106,7 +106,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         public void init() {
             context().optGameLevel().ifPresent(this::updateRange);
             setTop();
-            setTargetBottom();
         }
 
         public void setIdleTicks(int idleTicks) {
@@ -117,16 +116,16 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         private void updateRange(GameLevel gameLevel) {
             int numRows = gameLevel.worldMap().terrainLayer().numRows();
             if (numRows <= 30) { // MINI
-                dynamicCamera.minY = -scaled(30);
-                dynamicCamera.maxY =  scaled(15);
+                dynamicCamera.minY = -scaled(TS(3));
+                dynamicCamera.maxY =  scaled(TS(2));
             }
             else if (numRows >= 42) { // BIG
-                dynamicCamera.minY = -scaled(75);
-                dynamicCamera.maxY =  scaled(65);
+                dynamicCamera.minY = -scaled(TS(9));
+                dynamicCamera.maxY =  scaled(TS(8));
             }
             else { // ARCADE
-                dynamicCamera.minY = -scaled(50);
-                dynamicCamera.maxY =  scaled(42);
+                dynamicCamera.minY = -scaled(TS(6));
+                dynamicCamera.maxY =  scaled(TS(5));
             }
         }
 
@@ -134,6 +133,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
             updateRange(gameLevel);
             if (idleTicks > 0) {
                 --idleTicks;
+                if (idleTicks == 0) {
+                    setTargetBottom();
+                }
                 return;
             }
             if (followPac) {
@@ -415,6 +417,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
     @Override
     public void onLevelStarted(GameEvent e) {
         dynamicCamera.init();
+        dynamicCamera.setTargetTop();
         dynamicCamera.setIdleTicks(90);
     }
 
