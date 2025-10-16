@@ -170,8 +170,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
 
     private class TengenPlaySceneDebugInfoRenderer extends DefaultDebugInfoRenderer {
 
-        public TengenPlaySceneDebugInfoRenderer(GameUI ui, Canvas canvas) {
-            super(ui, canvas);
+        public TengenPlaySceneDebugInfoRenderer(Canvas canvas) {
+            super(TengenMsPacMan_PlayScene2D.this.ui, canvas);
         }
 
         @Override
@@ -269,7 +269,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         hudRenderer       = configureRenderer(uiConfig.createHUDRenderer(canvas));
         gameLevelRenderer = configureRenderer(uiConfig.createGameLevelRenderer(canvas));
         actorRenderer     = configureRenderer(uiConfig.createActorRenderer(canvas));
-        debugInfoRenderer = configureRenderer(new TengenPlaySceneDebugInfoRenderer(ui, canvas));
+        debugInfoRenderer = configureRenderer(new TengenPlaySceneDebugInfoRenderer(canvas));
     }
 
     @Override
