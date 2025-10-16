@@ -88,7 +88,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
         final GameUI_Config uiConfig = ui.currentConfig();
         spriteSheet = (TengenMsPacMan_SpriteSheet) uiConfig.spriteSheet();
 
-        var tengenActionBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().actionBindings();
+        var tengenActionBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().tengenActionBindings();
         actionBindings.assign(ACTION_ENTER_START_SCREEN, tengenActionBindings);
         actionBindings.assign(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, tengenActionBindings);
 

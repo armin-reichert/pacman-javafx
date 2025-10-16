@@ -93,7 +93,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     @Override
     protected void setActionBindings() {
-        var tengenActionBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().actionBindings();
+        var tengenActionBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().tengenActionBindings();
         // if demo level, allow going back to options screen
         if (context().optGameLevel().isPresent() && context().gameLevel().isDemoLevel()) {
             actionBindings.assign(ACTION_QUIT_DEMO_LEVEL, tengenActionBindings);
@@ -114,7 +114,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     @Override
     protected void setPlayerSteeringActionBindings() {
-        var tengenActionBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().actionBindings();
+        var tengenActionBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().tengenActionBindings();
         actionBindings.assign(ACTION_STEER_UP,    tengenActionBindings);
         actionBindings.assign(ACTION_STEER_DOWN,  tengenActionBindings);
         actionBindings.assign(ACTION_STEER_LEFT,  tengenActionBindings);

@@ -119,13 +119,11 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
     private final DefaultSoundManager soundManager = new DefaultSoundManager();
     private final Map<String, GameScene> scenesByID = new HashMap<>();
-    private final Set<ActionBinding> actionBindings;
-
     private final AssetStorage assets = new AssetStorage();
     private final TengenMsPacMan_SpriteSheet spriteSheet;
     private final ArcadeMapsSpriteSheet arcadeMapsSpriteSheet;
     private final NonArcadeMapsSpriteSheet nonArcadeMapsSpriteSheet;
-
+    private final Set<ActionBinding> tengenActionBindings;
     private final MapColoringService coloringService = new MapColoringService();
 
     public TengenMsPacMan_UIConfig(GameUI ui) {
@@ -138,7 +136,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
         nonArcadeMapsSpriteSheet = new NonArcadeMapsSpriteSheet(RES_TENGEN.loadImage(NON_ARCADE_MAZES_IMAGE_PATH));
 
         Joypad jp = ui.joypad();
-        actionBindings = Set.of(
+        tengenActionBindings = Set.of(
             new ActionBinding(ACTION_STEER_UP,            jp.key(JoypadButton.UP),    control(KeyCode.UP)),
             new ActionBinding(ACTION_STEER_DOWN,          jp.key(JoypadButton.DOWN),  control(KeyCode.DOWN)),
             new ActionBinding(ACTION_STEER_LEFT,          jp.key(JoypadButton.LEFT),  control(KeyCode.LEFT)),
@@ -152,8 +150,8 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
         );
     }
 
-    public Set<ActionBinding> actionBindings() {
-        return actionBindings;
+    public Set<ActionBinding> tengenActionBindings() {
+        return tengenActionBindings;
     }
 
     @Override
