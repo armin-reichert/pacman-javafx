@@ -198,20 +198,20 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         var rootPane = new StackPane(canvas);
         rootPane.backgroundProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR.map(Background::fill));
 
-        // Scene size gets bound to parent scene size when embedded in game view so initial size is 88 ("doesn't matter")
+        // Scene size gets bound to parent scene when embedded in game view, initial size doesn't matter
         subScene = new SubScene(rootPane, 88, 88);
         subScene.fillProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
-        subScene.cameraProperty().bind(PROPERTY_PLAY_SCENE_DISPLAY_MODE.map(mode ->
-            mode == SCROLLING ? dynamicCamera : fixedCamera));
+        subScene.cameraProperty().bind(PROPERTY_PLAY_SCENE_DISPLAY_MODE.map(mode -> mode == SCROLLING ? dynamicCamera : fixedCamera));
 
         canvas.widthProperty() .bind(scalingProperty().multiply(canvasWidthUnscaled));
         canvas.heightProperty().bind(scalingProperty().multiply(canvasHeightUnscaled));
 
-        // All maps are 28 tiles wide but the NES screen is 32 tiles wide. To accommodate, the maps are displayed
-        // horizontally centered and the unused tiles (2 on each side) are clipped.
-        clipRect.xProperty().bind(canvas.translateXProperty().add(scalingProperty().multiply(2 * TS)));
+        // All maps are 28 tiles wide but the NES screen is 32 tiles wide. To accommodate, the maps are centered
+        // horizontally and 2 tiles on each side are clipped.
+        final int indent = 2 * TS;
+        clipRect.xProperty().bind(canvas.translateXProperty().add(scalingProperty().multiply(indent)));
         clipRect.yProperty().bind(canvas.translateYProperty());
-        clipRect.widthProperty() .bind(canvas.widthProperty().subtract(scalingProperty().multiply(4 * TS)));
+        clipRect.widthProperty().bind(canvasWidthUnscaled.subtract(2*indent).multiply(scalingProperty()));
         clipRect.heightProperty().bind(canvas.heightProperty());
 
         subScene.heightProperty().addListener((py, ov, nv) -> updateScaling());
