@@ -168,32 +168,27 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         }
     }
 
-    private class TengenPlaySceneDebugInfoRenderer extends DefaultDebugInfoRenderer {
+    private class PlaySceneDebugInfoRenderer extends DefaultDebugInfoRenderer {
 
-        public TengenPlaySceneDebugInfoRenderer(Canvas canvas) {
+        public PlaySceneDebugInfoRenderer(Canvas canvas) {
             super(TengenMsPacMan_PlayScene2D.this.ui, canvas);
         }
 
         @Override
         public void drawDebugInfo() {
+            final GameState gameState = context().gameState();
             drawTileGrid(canvasWidthUnscaled.get(), canvasHeightUnscaled.get(), Color.LIGHTGRAY);
             ctx.save();
             ctx.translate(scaled(2 * TS), 0);
             ctx.setFill(debugTextFill);
             ctx.setFont(debugTextFont);
-            ctx.fillText("%s %d".formatted(context().gameState(), context().gameState().timer().tickCount()), 0, scaled(3 * TS));
-            if (context().optGameLevel().isPresent()) {
-                Pac pac = context().gameLevel().pac();
-                drawMovingActorInfo(ctx, scaling(), pac);
-                drawCameraInfo();
-                ghostsByZ(context().gameLevel()).forEach(ghost -> drawMovingActorInfo(ctx, scaling(), ghost));
-            }
-            ctx.restore();
-        }
-
-        private void drawCameraInfo() {
-            ctx.setFill(Color.WHITE);
+            ctx.fillText("%s %d".formatted(gameState, gameState.timer().tickCount()), 0, scaled(3 * TS));
+            context().optGameLevel().ifPresent(gameLevel -> {
+                drawMovingActorInfo(ctx, scaling(), gameLevel.pac());
+                ghostsByZ(gameLevel).forEach(ghost -> drawMovingActorInfo(ctx, scaling(), ghost));
+            });
             ctx.fillText("Camera y=%.2f".formatted(dynamicCamera.getTranslateY()), scaled(11*TS), scaled(15*TS));
+            ctx.restore();
         }
     }
 
@@ -269,7 +264,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         hudRenderer       = configureRenderer(uiConfig.createHUDRenderer(canvas));
         gameLevelRenderer = configureRenderer(uiConfig.createGameLevelRenderer(canvas));
         actorRenderer     = configureRenderer(uiConfig.createActorRenderer(canvas));
-        debugInfoRenderer = configureRenderer(new TengenPlaySceneDebugInfoRenderer(canvas));
+        debugInfoRenderer = configureRenderer(new PlaySceneDebugInfoRenderer(canvas));
     }
 
     @Override
