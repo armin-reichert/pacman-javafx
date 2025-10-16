@@ -214,10 +214,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         clipRect.widthProperty().bind(canvasWidthUnscaled.subtract(2*indent).multiply(scalingProperty()));
         clipRect.heightProperty().bind(canvas.heightProperty());
 
+        subScene.widthProperty().addListener((py, ov, nv) -> updateScaling());
         subScene.heightProperty().addListener((py, ov, nv) -> updateScaling());
         subScene.cameraProperty().addListener((py, ov, nv) -> updateScaling());
-        //TODO why is this needed? Sub-scene seems not to get all resize events.
-        ui.stage().heightProperty().addListener((py, ov, nv) -> updateScaling());
     }
 
     private void updateScaling() {
