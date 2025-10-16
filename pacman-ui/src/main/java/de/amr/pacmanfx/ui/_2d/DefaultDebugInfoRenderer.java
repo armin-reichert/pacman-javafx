@@ -14,7 +14,6 @@ import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 import de.amr.pacmanfx.uilib.rendering.DebugInfoRenderer;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -54,7 +53,7 @@ public class DefaultDebugInfoRenderer extends DebugInfoRenderer {
         }
     }
 
-    public void drawMovingActorInfo(GraphicsContext ctx, double scaling, MovingActor movingActor) {
+    public void drawMovingActorInfo(MovingActor movingActor) {
         if (!movingActor.isVisible()) {
             return;
         }
@@ -63,8 +62,8 @@ public class DefaultDebugInfoRenderer extends DebugInfoRenderer {
             String immune = pac.isImmune() ? "immune" : "";
             String text = "%s\n%s".formatted(autopilot, immune).trim();
             ctx.setFill(Color.WHITE);
-            ctx.setFont(Font.font("Monospaced", scaling * (6)));
-            ctx.fillText(text, scaling * (pac.x() - 4), scaling * (pac.y() + 16));
+            ctx.setFont(Font.font("Monospaced", scaled(6)));
+            ctx.fillText(text, scaled(pac.x() - 4), scaled(pac.y() + 16));
         }
         movingActor.optAnimationManager()
             .filter(SpriteAnimationManager.class::isInstance)
@@ -73,33 +72,33 @@ public class DefaultDebugInfoRenderer extends DebugInfoRenderer {
                 String selectedID = spriteAnimationMap.selectedID();
                 if (selectedID != null) {
                     ctx.setFill(Color.WHITE);
-                    ctx.setFont(Font.font("Monospaced", scaling * (6)));
-                    drawAnimationInfo(ctx, scaling, movingActor, spriteAnimationMap, selectedID);
+                    ctx.setFont(Font.font("Monospaced", scaled(6)));
+                    drawAnimationInfo(movingActor, spriteAnimationMap, selectedID);
                 }
                 if (movingActor.wishDir() != null) {
-                    drawDirectionIndicator(ctx, scaling, movingActor);
+                    drawDirectionIndicator(movingActor);
                 }
             });
     }
 
-    private void drawAnimationInfo(GraphicsContext ctx, double scaling, Actor actor, SpriteAnimationManager<?> spriteAnimationMap, String selectedID) {
+    private void drawAnimationInfo(Actor actor, SpriteAnimationManager<?> spriteAnimationMap, String selectedID) {
         ctx.save();
         String text = "[%s:%d]".formatted(selectedID, spriteAnimationMap.currentAnimation().frameIndex());
-        double x = scaling * (actor.x() - 4), y = scaling * (actor.y() - 4);
+        double x = scaled(actor.x() - 4), y = scaled(actor.y() - 4);
         ctx.setFill(Color.WHITE);
-        ctx.setFont(Font.font("Sans", scaling * (7)));
+        ctx.setFont(Font.font("Sans", scaled(7)));
         ctx.fillText(text, x, y);
         ctx.setStroke(Color.GRAY);
         ctx.strokeText(text, x, y);
         ctx.restore();
     }
 
-    private void drawDirectionIndicator(GraphicsContext ctx, double scaling, MovingActor movingActor) {
+    private void drawDirectionIndicator(MovingActor movingActor) {
         ctx.save();
         Vector2f center = movingActor.center();
-        Vector2f arrowHead = center.plus(movingActor.wishDir().vector().scaled(12f)).scaled(scaling);
-        Vector2f guyCenter = center.scaled(scaling);
-        double radius = scaling * 2, diameter = 2 * radius;
+        Vector2f arrowHead = center.plus(movingActor.wishDir().vector().scaled(12f)).scaled(scaling());
+        Vector2f guyCenter = center.scaled(scaling());
+        double radius = scaled(2), diameter = 2 * radius;
         ctx.setStroke(Color.WHITE);
         ctx.setLineWidth(0.5);
         ctx.strokeLine(guyCenter.x(), guyCenter.y(), arrowHead.x(), arrowHead.y());

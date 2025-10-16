@@ -72,6 +72,6 @@ public class Arcade_PlayScene2DDebugInfoRenderer extends DefaultDebugInfoRendere
         scene2D.actorsInZOrder().stream()
             .filter(MovingActor.class::isInstance)
             .map(MovingActor.class::cast)
-            .forEach(actor -> drawMovingActorInfo(ctx(), scaling(), actor));
+            .forEach(this::drawMovingActorInfo);
     }
 }
