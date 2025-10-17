@@ -4,6 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.lib.worldmap;
 
+import java.util.stream.Stream;
+
 public enum TerrainTile {
     EMPTY          (0x00),
     WALL_H         (0x01),
@@ -35,6 +37,10 @@ public enum TerrainTile {
     public final byte $;
 
     TerrainTile(int code) { $ = (byte) code; }
+
+    public static boolean isValidCode(byte code) {
+        return Stream.of(values()).anyMatch(terrainTile -> terrainTile.$ == code);
+    }
 
     /**
      * @param code terrain tile code

@@ -25,7 +25,7 @@ public class WorldMap {
     public static WorldMap loadFromURL(URL url) throws IOException {
         requireNonNull(url);
         try (var br = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8))) {
-            WorldMap worldMap = WorldMapParser.parse(br.lines(), TerrainLayer::isValidTerrainCode, FoodLayer::isValidFoodCode);
+            WorldMap worldMap = WorldMapParser.parse(br.lines(), TerrainTile::isValidCode, FoodTile::isValidCode);
             worldMap.url = URLDecoder.decode(url.toExternalForm(), StandardCharsets.UTF_8);
             return worldMap;
         }

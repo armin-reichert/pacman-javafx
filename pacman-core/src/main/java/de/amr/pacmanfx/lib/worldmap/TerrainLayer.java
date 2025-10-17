@@ -25,18 +25,13 @@ import static java.util.function.Predicate.not;
 
 public class TerrainLayer extends WorldMapLayer {
 
-    public static boolean isValidTerrainCode(byte code) {
-        return Stream.of(TerrainTile.values()).anyMatch(tile -> tile.$ == code);
-    }
-
     private static Vector2f halfTileRightOf(Vector2i tile) { return Vector2f.of(tile.x() * TS + HTS, tile.y() * TS); }
 
-    private Set<Obstacle> obstacles; // uninitialized!
-
+    private final Vector2i[] scatterTiles = new Vector2i[4];
     private Vector2f pacStartPosition;
     private HPortal[] hPortals;
     private House house;
-    private final Vector2i[] ghostScatterTiles = new Vector2i[4];
+    private Set<Obstacle> obstacles; // uninitialized!
 
     public TerrainLayer(int numRows, int numCols) {
         super(numRows, numCols);
@@ -47,22 +42,15 @@ public class TerrainLayer extends WorldMapLayer {
         hPortals = findHorizontalPortals();
         Vector2i pacTile = getTileProperty(POS_PAC);
         if (pacTile == null) {
+            //TODO use default position but where?
             Logger.error("No Pac position stored in map");
         } else {
             pacStartPosition = halfTileRightOf(pacTile);
         }
-
-        ghostScatterTiles[RED_GHOST_SHADOW] = getTileProperty(POS_SCATTER_RED_GHOST,
-                Vector2i.of(0, numCols() - 3));
-
-        ghostScatterTiles[PINK_GHOST_SPEEDY] = getTileProperty(POS_SCATTER_PINK_GHOST,
-                Vector2i.of(0, 3));
-
-        ghostScatterTiles[CYAN_GHOST_BASHFUL] = getTileProperty(POS_SCATTER_CYAN_GHOST,
-                Vector2i.of(numRows() - emptyRowsBelowMaze(), numCols() - 1));
-
-        ghostScatterTiles[ORANGE_GHOST_POKEY] = getTileProperty(POS_SCATTER_ORANGE_GHOST,
-                Vector2i.of(numRows() - emptyRowsBelowMaze(), 0));
+        scatterTiles[RED_GHOST_SHADOW]   = getTileProperty(POS_SCATTER_RED_GHOST,    Vector2i.of(0, numCols() - 3));
+        scatterTiles[PINK_GHOST_SPEEDY]  = getTileProperty(POS_SCATTER_PINK_GHOST,   Vector2i.of(0, 3));
+        scatterTiles[CYAN_GHOST_BASHFUL] = getTileProperty(POS_SCATTER_CYAN_GHOST,   Vector2i.of(numRows() - emptyRowsBelowMaze(), numCols() - 1));
+        scatterTiles[ORANGE_GHOST_POKEY] = getTileProperty(POS_SCATTER_ORANGE_GHOST, Vector2i.of(numRows() - emptyRowsBelowMaze(), 0));
     }
 
     public Vector2f pacStartPosition() {
@@ -70,7 +58,7 @@ public class TerrainLayer extends WorldMapLayer {
     }
 
     public Vector2i ghostScatterTile(byte personality) {
-        return ghostScatterTiles[requireValidGhostPersonality(personality)];
+        return scatterTiles[requireValidGhostPersonality(personality)];
     }
 
     public void setHouse(House house) {
@@ -187,7 +175,7 @@ public class TerrainLayer extends WorldMapLayer {
     }
 
     /**
-     * @return world size in pixels as (size-x, size-y)
+     * @return world size in pixels as (width, height)
      */
     public Vector2i sizeInPixel() {
         return new Vector2i(numCols() * TS, numRows() * TS);
