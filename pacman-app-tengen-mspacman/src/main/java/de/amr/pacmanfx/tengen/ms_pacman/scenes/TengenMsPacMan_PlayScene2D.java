@@ -572,9 +572,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
             gameLevelRenderer.ctx().translate(scaled(TS(2)), 0);
             canvas.setClip(clipRect);
 
-            TengenMsPacMan_GameModel game = context().game();
             var renderInfo = new RenderInfo();
-            renderInfo.put(TengenMsPacMan_UIConfig.PROPERTY_MAP_CATEGORY, game.mapCategory());
+            renderInfo.put(TengenMsPacMan_UIConfig.PROPERTY_MAP_CATEGORY,
+                gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.PROPERTY_MAP_CATEGORY));
             if (levelCompletedAnimation != null && mazeHighlighted.get()) {
                 renderInfo.put(CommonRenderInfoKey.MAZE_BRIGHT, true);
                 renderInfo.put(CommonRenderInfoKey.MAZE_FLASHING_INDEX, levelCompletedAnimation.flashingIndex());
