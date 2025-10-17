@@ -9,13 +9,7 @@ public class RenderInfo {
 
     private final Map<String, Object> map = new HashMap<>();
 
-    public RenderInfo() {
-    }
-
-    public RenderInfo(Map<String, Object> map) {
-        requireNonNull(map);
-        this.map.putAll(map);
-    }
+    public RenderInfo() {}
 
     public boolean getBoolean(String key) {
         return get(key, Boolean.class);
@@ -35,5 +29,10 @@ public class RenderInfo {
 
     public void put(String key, Object value) {
         map.put(key, value);
+    }
+
+    public void putAll(Map<String, Object> otherMap) {
+        requireNonNull(otherMap);
+        map.putAll(otherMap);
     }
 }
