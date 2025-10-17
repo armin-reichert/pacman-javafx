@@ -139,14 +139,22 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
                 return;
             }
             if (followPac) {
-                Pac pac = gameLevel.pac();
-                int numRows = gameLevel.worldMap().terrainLayer().numRows();
-                double relY = pac.y() / TS(numRows);
-                boolean targetTop = relY < 0.25 || relY < 0.6 && pac.moveDir() == Direction.UP;
-                boolean targetBot = relY > 0.75 || relY > 0.4 && pac.moveDir() == Direction.DOWN;
-                if (targetTop) tgtY = minY;
-                if (targetBot) tgtY = maxY;
+                followPac(gameLevel);
             }
+            updateCameraPosition();
+        }
+
+        private void followPac(GameLevel gameLevel) {
+            Pac pac = gameLevel.pac();
+            int numRows = gameLevel.worldMap().terrainLayer().numRows();
+            double relY = pac.y() / TS(numRows);
+            boolean targetTop = relY < 0.25 || relY < 0.6 && pac.moveDir() == Direction.UP;
+            boolean targetBot = relY > 0.75 || relY > 0.4 && pac.moveDir() == Direction.DOWN;
+            if (targetTop) tgtY = minY;
+            if (targetBot) tgtY = maxY;
+        }
+
+        private void updateCameraPosition() {
             double oldCameraY = getTranslateY();
             double newCameraY = lerp(oldCameraY, tgtY, CAMERA_SPEED);
             double delta = Math.abs(oldCameraY - newCameraY);
@@ -564,14 +572,16 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
             gameLevelRenderer.ctx().translate(scaled(TS(2)), 0);
             canvas.setClip(clipRect);
 
+            TengenMsPacMan_GameModel game = context().game();
             var renderInfo = new RenderInfo();
+            renderInfo.put(TengenMsPacMan_UIConfig.PROPERTY_MAP_CATEGORY, game.mapCategory());
             if (levelCompletedAnimation != null && mazeHighlighted.get()) {
                 renderInfo.put(CommonRenderInfoKey.MAZE_BRIGHT, true);
                 renderInfo.put(CommonRenderInfoKey.MAZE_FLASHING_INDEX, levelCompletedAnimation.flashingIndex());
             } else {
                 renderInfo.put(CommonRenderInfoKey.MAZE_BRIGHT, false);
             }
-            renderInfo.put("tick", ui.clock().tickCount());
+            renderInfo.put(CommonRenderInfoKey.TICK, ui.clock().tickCount());
             gameLevelRenderer.drawGameLevel(gameLevel, renderInfo);
 
             drawActors(gameLevel);
