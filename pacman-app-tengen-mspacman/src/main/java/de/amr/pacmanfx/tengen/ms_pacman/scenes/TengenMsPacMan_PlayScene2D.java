@@ -567,28 +567,28 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
             sceneRenderer.clearCanvas();
         }
         context().optGameLevel().ifPresent(gameLevel -> {
-            gameLevelRenderer.ctx().save();
-            // map width is 28 tiles but NES screen width is 32 tiles: move 2 tiles right and clip one tile on each side
-            gameLevelRenderer.ctx().translate(scaled(TS(2)), 0);
-            canvas.setClip(clipRect);
-
-            var renderInfo = new RenderInfo();
-            renderInfo.put(CommonRenderInfoKey.TICK, ui.clock().tickCount());
-            renderInfo.put(TengenMsPacMan_UIConfig.CONFIG_KEY_MAP_CATEGORY,
+            final var info = new RenderInfo();
+            // this is needed for animated maze from STRANGE map category
+            info.put(CommonRenderInfoKey.TICK, ui.clock().tickCount());
+            info.put(TengenMsPacMan_UIConfig.CONFIG_KEY_MAP_CATEGORY,
                 gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.CONFIG_KEY_MAP_CATEGORY));
             if (levelCompletedAnimation != null && mazeHighlighted.get()) {
-                renderInfo.put(CommonRenderInfoKey.MAZE_BRIGHT, true);
-                renderInfo.put(CommonRenderInfoKey.MAZE_FLASHING_INDEX, levelCompletedAnimation.flashingIndex());
+                info.put(CommonRenderInfoKey.MAZE_BRIGHT, true);
+                info.put(CommonRenderInfoKey.MAZE_FLASHING_INDEX, levelCompletedAnimation.flashingIndex());
             } else {
-                renderInfo.put(CommonRenderInfoKey.MAZE_BRIGHT, false);
+                info.put(CommonRenderInfoKey.MAZE_BRIGHT, false);
             }
-            gameLevelRenderer.drawGameLevel(gameLevel, renderInfo);
 
+            // map width is 28 tiles but NES screen width is 32 tiles: move 2 tiles right and clip one tile on each side
+            canvas.setClip(clipRect);
+
+            gameLevelRenderer.ctx().save();
+            gameLevelRenderer.ctx().translate(scaled(TS(2)), 0);
+            gameLevelRenderer.drawGameLevel(gameLevel, info);
             drawActors(gameLevel);
             drawHUD();
             if (debugInfoVisible.get() && debugInfoRenderer != null) {
-                // debug info also used normally clipped area
-                canvas.setClip(null);
+                canvas.setClip(null); // show everything e.g. portal traversal
                 gameLevelRenderer.ctx().translate(scaled(-TS(2)), 0);
                 debugInfoRenderer.drawDebugInfo();
             }
