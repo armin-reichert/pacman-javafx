@@ -49,10 +49,10 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Ga
     public void applyLevelSettings(GameLevel gameLevel, RenderInfo info) {
         WorldMap worldMap = gameLevel.worldMap();
         // store the maze sprite set with the correct colors for this level in the map configuration:
-        if (!worldMap.hasConfigValue(TengenMsPacMan_UIConfig.PROPERTY_MAZE_SPRITE_SET)) {
+        if (!worldMap.hasConfigValue(TengenMsPacMan_UIConfig.CONFIG_KEY_MAZE_SPRITE_SET)) {
             int numFlashes = gameLevel.game().numFlashes(gameLevel);
             MazeSpriteSet mazeSpriteSet = uiConfig.createMazeSpriteSet(worldMap, numFlashes);
-            worldMap.setConfigValue(TengenMsPacMan_UIConfig.PROPERTY_MAZE_SPRITE_SET, mazeSpriteSet);
+            worldMap.setConfigValue(TengenMsPacMan_UIConfig.CONFIG_KEY_MAZE_SPRITE_SET, mazeSpriteSet);
             Logger.info("Maze sprite set created: {}", mazeSpriteSet);
         }
     }
@@ -65,7 +65,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Ga
             uiConfig.configureHighlightedMazeRenderInfo(info, gameLevel, flashingIndex);
         } else {
             long tick = info.get(CommonRenderInfoKey.TICK, Long.class);
-            MapCategory mapCategory = info.get(PROPERTY_MAP_CATEGORY, MapCategory.class);
+            MapCategory mapCategory = info.get(CONFIG_KEY_MAP_CATEGORY, MapCategory.class);
             uiConfig.configureNormalMazeRenderInfo(info, mapCategory, gameLevel.worldMap(), tick);
         }
         Image mazeImage = info.get(CommonRenderInfoKey.MAZE_IMAGE, Image.class);
@@ -86,7 +86,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Ga
         requireNonNull(gameLevel);
         ctx.save();
         ctx.scale(scaling(), scaling());
-        MazeSpriteSet recoloredMaze =  gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.PROPERTY_MAZE_SPRITE_SET);
+        MazeSpriteSet recoloredMaze =  gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.CONFIG_KEY_MAZE_SPRITE_SET);
         Color pelletColor = Color.web(recoloredMaze.mazeImage().colorScheme().pelletColorRGB());
         drawPellets(gameLevel, pelletColor);
         drawEnergizers(gameLevel, pelletColor);
@@ -128,7 +128,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Ga
 
     private void drawMessage(GameLevel gameLevel) {
         gameLevel.optMessage().ifPresent(message -> {
-            NES_ColorScheme colorScheme = gameLevel.worldMap().getConfigValue(PROPERTY_NES_COLOR_SCHEME);
+            NES_ColorScheme colorScheme = gameLevel.worldMap().getConfigValue(CONFIG_KEY_NES_COLOR_SCHEME);
             String text = messageText(gameLevel, message.type());
             switch (message.type()) {
                 case GAME_OVER -> {

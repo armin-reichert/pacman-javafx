@@ -60,7 +60,7 @@ public class TengenMsPacMan_MapSelector implements MapSelector {
                 case STRANGE -> {
                     WorldMap worldMap = createConfiguredStrangeMap(levelNumber);
                     // Hack: Store mazeID in map properties to make renderer happy
-                    worldMap.setConfigValue(PROPERTY_MAZE_ID, NonArcadeMapsSpriteSheet.MazeID.values()[levelNumber - 1]);
+                    worldMap.setConfigValue(CONFIG_KEY_MAZE_ID, NonArcadeMapsSpriteSheet.MazeID.values()[levelNumber - 1]);
                     yield worldMap;
                 }
             };
@@ -71,16 +71,16 @@ public class TengenMsPacMan_MapSelector implements MapSelector {
 
     private WorldMap configuration(MapCategory category, int number, NES_ColorScheme colorScheme) {
         WorldMap worldMap = new WorldMap(mapRepository.get(category).get(number - 1));
-        worldMap.setConfigValue(PROPERTY_MAP_CATEGORY, category);
+        worldMap.setConfigValue(CONFIG_KEY_MAP_CATEGORY, category);
         worldMap.setConfigValue(PROPERTY_MAP_NUMBER, number);
-        worldMap.setConfigValue(PROPERTY_NES_COLOR_SCHEME, colorScheme);
-        worldMap.setConfigValue(PROPERTY_MULTIPLE_FLASH_COLORS, false);
+        worldMap.setConfigValue(CONFIG_KEY_NES_COLOR_SCHEME, colorScheme);
+        worldMap.setConfigValue(CONFIG_KEY_MULTIPLE_FLASH_COLORS, false);
         return worldMap;
     }
 
     private WorldMap randomConfiguration(MapCategory category, int number) {
         WorldMap worldMap = configuration(category, number, NES_ColorScheme.randomScheme());
-        worldMap.setConfigValue(PROPERTY_MULTIPLE_FLASH_COLORS, true);
+        worldMap.setConfigValue(CONFIG_KEY_MULTIPLE_FLASH_COLORS, true);
         return worldMap;
     }
 
