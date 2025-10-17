@@ -14,8 +14,8 @@ import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.*;
 import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.Renderer;
 import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
+import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -66,8 +66,9 @@ public class TengenMsPacMan_HUDRenderer extends BaseRenderer implements HUDRende
         }
 
         if (hud.isLevelCounterVisible()) {
-            float x = sceneSize.x() - TS(2), y = sceneSize.y() - TS;
-            drawLevelCounter(tengenGame, hud, x, y);
+            float left = 0, right = sceneSize.x() - TS(2);
+            float y = sceneSize.y() - TS;
+            drawLevelCounter(tengenGame, hud, left, right, y);
         }
 
         if (hud.gameOptionsVisible()) {
@@ -85,9 +86,9 @@ public class TengenMsPacMan_HUDRenderer extends BaseRenderer implements HUDRende
         fillText("%6d".formatted(scoreManager.highScore().points()), color, font, TS(13), TS(2));
     }
 
-    private void drawLivesCounter(TengenMsPacMan_GameModel game, TengenMsPacMan_HUD hudControlData, float x, float y) {
+    private void drawLivesCounter(Game game, TengenMsPacMan_HUD hud, float x, float y) {
         RectShort sprite = spriteSheet().sprite(SpriteID.LIVES_COUNTER_SYMBOL);
-        for (int i = 0; i < hudControlData.visibleLifeCount(); ++i) {
+        for (int i = 0; i < hud.visibleLifeCount(); ++i) {
             drawSprite(sprite, x + TS(i * 2), y, true);
         }
         if (game.lifeCount() > game.hud().maxLivesDisplayed()) {
@@ -96,23 +97,33 @@ public class TengenMsPacMan_HUDRenderer extends BaseRenderer implements HUDRende
         }
     }
 
-    private void drawLevelCounter(TengenMsPacMan_GameModel game, TengenMsPacMan_HUD hudData, float x, float y) {
+    private void drawLevelCounter(Game game, TengenMsPacMan_HUD hud, float left, float right, float y) {
         GameLevel gameLevel = game.optGameLevel().orElse(null);
         if (gameLevel == null) return;
 
-        if (hudData.levelNumberVisible()) {
-            drawLevelNumberBox(gameLevel.number(), 0, y); // left box
-            drawLevelNumberBox(gameLevel.number(), x, y); // right box
+        if (hud.levelNumberVisible()) {
+            drawLevelNumberBox(gameLevel.number(), left, y); // left box
+            drawLevelNumberBox(gameLevel.number(), right, y); // right box
         }
         RectShort[] symbolSprites = spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS);
-        x -= TS(2);
+        right -= TS(2);
         // symbols are drawn from right to left!
         for (byte symbol : game.levelCounter().symbols()) {
             if (0 <= symbol && symbol < symbolSprites.length) {
-                drawSprite(symbolSprites[symbol], x, y, true);
+                drawSprite(symbolSprites[symbol], right, y, true);
             }
-            x -= TS(2);
+            right -= TS(2);
         }
+    }
+
+    // this is also used by the 3D scene
+    public void drawLevelNumberBox(int number, double x, double y) {
+        drawSprite(spriteSheet().sprite(SpriteID.LEVEL_NUMBER_BOX), x, y, true);
+        int tens = number / 10, ones = number % 10;
+        if (tens > 0) {
+            drawSprite(spriteSheet().digitSprite(tens), x + 2, y + 2, true);
+        }
+        drawSprite(spriteSheet().digitSprite(ones), x + 10, y + 2, true);
     }
 
     public void drawGameOptions(MapCategory category, Difficulty difficulty, PacBooster booster, double centerX, double y) {
@@ -134,15 +145,5 @@ public class TengenMsPacMan_HUDRenderer extends BaseRenderer implements HUDRende
         }
         drawSpriteCentered(centerX, y, difficultySprite);
         drawSpriteCentered(centerX + TS(4.5), y, categorySprite);
-    }
-
-    // this is also used by the 3D scene
-    public void drawLevelNumberBox(int number, double x, double y) {
-        drawSprite(spriteSheet().sprite(SpriteID.LEVEL_NUMBER_BOX), x, y, true);
-        int tens = number / 10, ones = number % 10;
-        if (tens > 0) {
-            drawSprite(spriteSheet().digitSprite(tens), x + 2, y + 2, true);
-        }
-        drawSprite(spriteSheet().digitSprite(ones), x + 10, y + 2, true);
     }
 }
