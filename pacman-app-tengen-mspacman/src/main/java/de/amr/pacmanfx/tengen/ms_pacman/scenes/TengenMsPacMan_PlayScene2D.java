@@ -71,7 +71,7 @@ import static de.amr.pacmanfx.uilib.Ufx.createContextMenuTitle;
  */
 public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasProvider {
 
-    private final DoubleProperty canvasWidthUnscaled = new SimpleDoubleProperty(NES_SIZE_PX.x());
+    private static final double CANVAS_WIDTH_UNSCALED = NES_SIZE_PX.x();
     private final DoubleProperty canvasHeightUnscaled = new SimpleDoubleProperty(NES_SIZE_PX.y());
 
     private final SubScene subScene;
@@ -179,7 +179,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         @Override
         public void drawDebugInfo() {
             final GameState gameState = context().gameState();
-            drawTileGrid(canvasWidthUnscaled.get(), canvasHeightUnscaled.get(), Color.LIGHTGRAY);
+            drawTileGrid(CANVAS_WIDTH_UNSCALED, canvasHeightUnscaled.get(), Color.LIGHTGRAY);
             ctx.save();
             ctx.translate(scaled(2 * TS), 0);
             ctx.setFill(debugTextFill);
@@ -205,15 +205,15 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         subScene.fillProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
         subScene.cameraProperty().bind(PROPERTY_PLAY_SCENE_DISPLAY_MODE.map(mode -> mode == SCROLLING ? dynamicCamera : fixedCamera));
 
-        canvas.widthProperty() .bind(scalingProperty().multiply(canvasWidthUnscaled));
+        canvas.widthProperty() .bind(scalingProperty().multiply(CANVAS_WIDTH_UNSCALED));
         canvas.heightProperty().bind(scalingProperty().multiply(canvasHeightUnscaled));
 
         // All maps are 28 tiles wide but the NES screen is 32 tiles wide. To accommodate, the maps are centered
         // horizontally and 2 tiles on each side are clipped.
-        final int indent = 2 * TS;
-        clipRect.xProperty().bind(canvas.translateXProperty().add(scalingProperty().multiply(indent)));
+        final int margin = 2 * TS;
+        clipRect.xProperty().bind(canvas.translateXProperty().add(scalingProperty().multiply(margin)));
         clipRect.yProperty().bind(canvas.translateYProperty());
-        clipRect.widthProperty().bind(canvasWidthUnscaled.subtract(2*indent).multiply(scalingProperty()));
+        clipRect.widthProperty().bind(scalingProperty().multiply(CANVAS_WIDTH_UNSCALED - 2 * margin));
         clipRect.heightProperty().bind(canvas.heightProperty());
 
         subScene.widthProperty().addListener((py, ov, nv) -> updateScaling());
