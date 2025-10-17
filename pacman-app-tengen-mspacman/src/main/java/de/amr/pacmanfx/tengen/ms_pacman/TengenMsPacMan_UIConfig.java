@@ -472,7 +472,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     }
 
     public void configureNormalMazeRenderInfo(RenderInfo info, MapCategory mapCategory, WorldMap worldMap, long tick) {
-        int mapNumber = worldMap.getConfigValue(PROPERTY_MAP_NUMBER);
+        int mapNumber = worldMap.getConfigValue(CONFIG_KEY_MAP_NUMBER);
         MazeSpriteSet mazeSpriteSet = worldMap.getConfigValue(CONFIG_KEY_MAZE_SPRITE_SET);
         info.put(CommonRenderInfoKey.MAZE_IMAGE, mazeSpriteSet.mazeImage().spriteSheetImage());
         if (mapCategory == MapCategory.STRANGE && mapNumber == 15) {
@@ -503,7 +503,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
     public MazeSpriteSet createMazeSpriteSet(WorldMap worldMap, int flashCount) {
         final MapCategory mapCategory = worldMap.getConfigValue(CONFIG_KEY_MAP_CATEGORY);
-        final int mapNumber = worldMap.getConfigValue(PROPERTY_MAP_NUMBER);
+        final int mapNumber = worldMap.getConfigValue(CONFIG_KEY_MAP_NUMBER);
         final NES_ColorScheme requestedColorScheme = worldMap.getConfigValue(CONFIG_KEY_NES_COLOR_SCHEME);
         // for randomly colored maps (levels 28-31, non-ARCADE maps), multiple random flash colors appear
         final boolean randomFlashColors = worldMap.getConfigValue(CONFIG_KEY_MULTIPLE_FLASH_COLORS);

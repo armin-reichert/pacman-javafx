@@ -41,9 +41,9 @@ public class ArcadePacMan_MapSelector implements MapSelector {
             }
             try {
                 worldMapPrototype = WorldMap.loadFromURL(url);
-                worldMapPrototype.setConfigValue(PROPERTY_MAP_NUMBER, 1);
-                worldMapPrototype.setConfigValue(PROPERTY_COLOR_MAP_INDEX, 0);
-                worldMapPrototype.setConfigValue(PROPERTY_COLOR_MAP, MapSelector.extractColorMap(worldMapPrototype));
+                worldMapPrototype.setConfigValue(CONFIG_KEY_MAP_NUMBER, 1);
+                worldMapPrototype.setConfigValue(CONFIG_KEY_COLOR_MAP_INDEX, 0);
+                worldMapPrototype.setConfigValue(CONFIG_KEY_COLOR_MAP, MapSelector.extractColorMap(worldMapPrototype));
                 Logger.info("Pac-Man Arcade map loaded, URL='{}'", worldMapPrototype.url());
             } catch (IOException x) {
                 Logger.error("Could not load Pac-Man Arcade map, URL={}", url);

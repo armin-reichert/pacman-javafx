@@ -573,6 +573,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
             canvas.setClip(clipRect);
 
             var renderInfo = new RenderInfo();
+            renderInfo.put(CommonRenderInfoKey.TICK, ui.clock().tickCount());
             renderInfo.put(TengenMsPacMan_UIConfig.CONFIG_KEY_MAP_CATEGORY,
                 gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.CONFIG_KEY_MAP_CATEGORY));
             if (levelCompletedAnimation != null && mazeHighlighted.get()) {
@@ -581,7 +582,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
             } else {
                 renderInfo.put(CommonRenderInfoKey.MAZE_BRIGHT, false);
             }
-            renderInfo.put(CommonRenderInfoKey.TICK, ui.clock().tickCount());
             gameLevelRenderer.drawGameLevel(gameLevel, renderInfo);
 
             drawActors(gameLevel);

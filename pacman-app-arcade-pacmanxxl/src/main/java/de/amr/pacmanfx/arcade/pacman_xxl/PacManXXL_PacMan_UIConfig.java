@@ -183,7 +183,7 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config {
 
     @Override
     public WorldMapColorScheme colorScheme(WorldMap worldMap) {
-        Map<String, String> colorMap = worldMap.getConfigValue(PROPERTY_COLOR_MAP);
+        Map<String, String> colorMap = worldMap.getConfigValue(CONFIG_KEY_COLOR_MAP);
         return new WorldMapColorScheme(
             colorMap.get("fill"), colorMap.get("stroke"), colorMap.get("door"), colorMap.get("pellet"));
     }

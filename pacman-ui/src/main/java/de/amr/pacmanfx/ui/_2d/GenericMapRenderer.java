@@ -13,7 +13,7 @@ import javafx.scene.paint.Color;
 
 import java.util.Map;
 
-import static de.amr.pacmanfx.ui.api.GameUI_Config.PROPERTY_COLOR_MAP;
+import static de.amr.pacmanfx.ui.api.GameUI_Config.CONFIG_KEY_COLOR_MAP;
 import static java.util.function.Predicate.not;
 
 /**
@@ -74,7 +74,7 @@ public class GenericMapRenderer extends BaseRenderer {
             });
 
             // this is set by the map selector
-            Map<String, String> colorMap = gameLevel.worldMap().getConfigValue(PROPERTY_COLOR_MAP);
+            Map<String, String> colorMap = gameLevel.worldMap().getConfigValue(CONFIG_KEY_COLOR_MAP);
 
             foodRenderer.setPelletColor(Color.web(colorMap.get("pellet")));
             FoodLayer foodLayer = gameLevel.worldMap().foodLayer();

@@ -72,7 +72,7 @@ public class TengenMsPacMan_MapSelector implements MapSelector {
     private WorldMap configuration(MapCategory category, int number, NES_ColorScheme colorScheme) {
         WorldMap worldMap = new WorldMap(mapRepository.get(category).get(number - 1));
         worldMap.setConfigValue(CONFIG_KEY_MAP_CATEGORY, category);
-        worldMap.setConfigValue(PROPERTY_MAP_NUMBER, number);
+        worldMap.setConfigValue(CONFIG_KEY_MAP_NUMBER, number);
         worldMap.setConfigValue(CONFIG_KEY_NES_COLOR_SCHEME, colorScheme);
         worldMap.setConfigValue(CONFIG_KEY_MULTIPLE_FLASH_COLORS, false);
         return worldMap;

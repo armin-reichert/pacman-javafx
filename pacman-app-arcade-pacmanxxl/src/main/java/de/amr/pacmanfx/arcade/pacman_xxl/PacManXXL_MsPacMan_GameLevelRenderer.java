@@ -15,7 +15,7 @@ import javafx.scene.paint.Color;
 
 import java.util.Map;
 
-import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig.PROPERTY_COLOR_MAP;
+import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig.CONFIG_KEY_COLOR_MAP;
 
 public class PacManXXL_MsPacMan_GameLevelRenderer extends ArcadeMsPacMan_GameLevelRenderer {
 
@@ -30,7 +30,7 @@ public class PacManXXL_MsPacMan_GameLevelRenderer extends ArcadeMsPacMan_GameLev
 
     @Override
     public void applyLevelSettings(GameLevel gameLevel, RenderInfo info) {
-        Map<String, String> colorMap = gameLevel.worldMap().getConfigValue(PROPERTY_COLOR_MAP);
+        Map<String, String> colorMap = gameLevel.worldMap().getConfigValue(CONFIG_KEY_COLOR_MAP);
         var colorScheme = new TerrainMapColorScheme(
                 backgroundColor(),
                 Color.web(colorMap.get("fill")),
