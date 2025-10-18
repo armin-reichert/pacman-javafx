@@ -426,7 +426,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
     @Override
     public void onLevelStarted(GameEvent e) {
         dynamicCamera.init();
-        dynamicCamera.setTargetTop();
+        dynamicCamera.setTop();
+        dynamicCamera.setTargetBottom();
         dynamicCamera.setIdleTicks(90);
     }
 
@@ -492,6 +493,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
     @Override
     public void onGameContinued(GameEvent e) {
         context().optGameLevel().ifPresent(gameLevel -> context().game().showMessage(gameLevel, MessageType.READY));
+        dynamicCamera.init();
+        dynamicCamera.setTargetBottom();
+        dynamicCamera.setIdleTicks(90);
     }
 
     @Override
