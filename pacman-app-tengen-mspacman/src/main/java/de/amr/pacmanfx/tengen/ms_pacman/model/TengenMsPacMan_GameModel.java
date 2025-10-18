@@ -508,11 +508,11 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         HPortal entryPortal = portals.get(new Random().nextInt(portals.size()));
         HPortal exitPortal  = portals.get(new Random().nextInt(portals.size()));
         List<Waypoint> route = Stream.of(
-                leftToRight ? entryPortal.leftBorderEntryTile() : entryPortal.rightBorderEntryTile(),
-                houseEntry,
-                houseEntryOpposite,
-                houseEntry,
-                leftToRight ? exitPortal.rightBorderEntryTile().plus(1, 0) : exitPortal.leftBorderEntryTile().minus(1, 0)
+            leftToRight ? entryPortal.leftBorderEntryTile() : entryPortal.rightBorderEntryTile(),
+            houseEntry,
+            houseEntryOpposite,
+            houseEntry,
+            leftToRight ? exitPortal.rightBorderEntryTile().plus(1, 0) : exitPortal.leftBorderEntryTile().minus(1, 0)
         ).map(Waypoint::new).toList();
 
         gameLevel.selectNextBonus();
@@ -535,9 +535,10 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             boolean energizer = foodLayer.isEnergizerTile(tile);
             foodLayer.registerFoodEatenAt(tile);
             if (energizer) {
-                onEnergizerEaten(gameLevel, tile);
+                eatEnergizer(gameLevel, tile);
             } else {
-                onPelletEaten(gameLevel);
+                scoreManager().scorePoints(PELLET_VALUE);
+                gameLevel.pac().onFoodEaten(false);
             }
             gateKeeper.registerFoodEaten(gameLevel);
             if (isBonusReached(gameLevel)) {
@@ -550,12 +551,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         }
     }
 
-    private void onPelletEaten(GameLevel gameLevel) {
-        scoreManager().scorePoints(PELLET_VALUE);
-        gameLevel.pac().onFoodEaten(false);
-    }
-
-    private void onEnergizerEaten(GameLevel gameLevel, Vector2i tile) {
+    private void eatEnergizer(GameLevel gameLevel, Vector2i tile) {
         thisStep.foundEnergizerAtTile = tile;
         scoreManager.scorePoints(ENERGIZER_VALUE);
         gameLevel.pac().onFoodEaten(true);

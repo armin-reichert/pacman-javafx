@@ -15,7 +15,8 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.*;
 import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
-import de.amr.pacmanfx.uilib.rendering.Renderer;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -25,15 +26,18 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesColor;
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_HUDRenderer extends BaseRenderer implements HUDRenderer, Renderer {
+public class TengenMsPacMan_HUDRenderer extends BaseRenderer implements HUDRenderer {
 
     private final TengenMsPacMan_UIConfig uiConfig;
     private final GameClock clock;
+
+    private final ObjectProperty<Font> totalLivesFont = new SimpleObjectProperty<>(Font.font("Serif", FontWeight.BOLD, 8));
 
     public TengenMsPacMan_HUDRenderer(Canvas canvas, TengenMsPacMan_UIConfig uiConfig, GameClock clock) {
         super(canvas);
         this.uiConfig = requireNonNull(uiConfig);
         this.clock = requireNonNull(clock);
+        totalLivesFont.bind(scalingProperty().map(scaling -> Font.font("Serif", FontWeight.BOLD, scaling.doubleValue() * 8)));
     }
 
     @Override
@@ -42,43 +46,37 @@ public class TengenMsPacMan_HUDRenderer extends BaseRenderer implements HUDRende
     }
 
     @Override
-    public void drawHUD(Game game, HUD data, Vector2i sceneSize) {
+    public void drawHUD(Game game, HUD hud, Vector2i sceneSize) {
         requireNonNull(game);
-        requireNonNull(data);
+        requireNonNull(hud);
         requireNonNull(sceneSize);
 
-        GameLevel gameLevel = game.optGameLevel().orElse(null);
-        if (gameLevel == null) {
-            return; // should never happen
-        }
-
         TengenMsPacMan_GameModel tengenGame = (TengenMsPacMan_GameModel) game;
-        TengenMsPacMan_HUD hud = (TengenMsPacMan_HUD) data;
+        TengenMsPacMan_HUD tengenHUD = (TengenMsPacMan_HUD) hud;
 
-        if (!hud.isVisible()) return;
+        if (!tengenHUD.isVisible()) return;
 
-        if (hud.isScoreVisible()) {
+        if (tengenHUD.isScoreVisible()) {
             drawScores(tengenGame.scoreManager(), clock.tickCount(), nesColor(0x20), arcadeFontTS());
         }
 
-        if (hud.isLivesCounterVisible()) {
-            drawLivesCounter(tengenGame, hud, TS(2), sceneSize.y() - TS);
+        if (tengenHUD.isLivesCounterVisible()) {
+            drawLivesCounter(tengenGame, tengenHUD, TS(2), sceneSize.y() - TS);
         }
 
-        if (hud.isLevelCounterVisible()) {
+        if (tengenHUD.isLevelCounterVisible()) {
             float left = 0, right = sceneSize.x() - TS(2);
             float y = sceneSize.y() - TS;
-            drawLevelCounter(tengenGame, hud, left, right, y);
+            drawLevelCounter(tengenGame, tengenHUD, left, right, y);
         }
 
-        if (hud.gameOptionsVisible()) {
+        if (tengenHUD.gameOptionsVisible()) {
             drawGameOptions(tengenGame.mapCategory(), tengenGame.difficulty(), tengenGame.pacBooster(), 0.5 * sceneSize.x(), TS(2.5));
         }
     }
 
     private void drawScores(ScoreManager scoreManager, long tick, Color color, Font font) {
-        // show 1/2 second, hide 1/2 second
-        if (tick % 60 < 30) {
+        if (tick % 60 < 30) { // show for 0.5 seconds, hide for 0.5 seconds
             fillText("1UP", color, font, TS(4), TS(1));
         }
         fillText("HIGH SCORE", color, font, TS(11), TS(1));
@@ -92,8 +90,7 @@ public class TengenMsPacMan_HUDRenderer extends BaseRenderer implements HUDRende
             drawSprite(sprite, x + TS(i * 2), y, true);
         }
         if (game.lifeCount() > game.hud().maxLivesDisplayed()) {
-            Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
-            fillText("(%d)".formatted(game.lifeCount()), nesColor(0x28), font, x + TS(10), y + TS);
+            fillText("(%d)".formatted(game.lifeCount()), nesColor(0x28), totalLivesFont.get(), x + TS(10), y + TS);
         }
     }
 
