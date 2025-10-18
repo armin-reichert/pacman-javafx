@@ -156,15 +156,19 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         newGameLevel.setPac(pacMan);
 
         final Blinky blinky = ArcadePacMan_ActorFactory.createBlinky();
+        blinky.setHome(house);
         blinky.setStartPosition(halfTileRightOf(terrain.getTileProperty(POS_GHOST_1_RED)));
 
         final Pinky pinky = ArcadePacMan_ActorFactory.createPinky();
+        pinky.setHome(house);
         pinky.setStartPosition(halfTileRightOf(terrain.getTileProperty(POS_GHOST_2_PINK)));
 
         final Inky inky = ArcadePacMan_ActorFactory.createInky();
+        inky.setHome(house);
         inky.setStartPosition(halfTileRightOf(terrain.getTileProperty(POS_GHOST_3_CYAN)));
 
         final Clyde clyde = ArcadePacMan_ActorFactory.createClyde();
+        clyde.setHome(house);
         clyde.setStartPosition(halfTileRightOf(terrain.getTileProperty(POS_GHOST_4_ORANGE)));
 
         newGameLevel.setGhosts(blinky, pinky, inky, clyde);
