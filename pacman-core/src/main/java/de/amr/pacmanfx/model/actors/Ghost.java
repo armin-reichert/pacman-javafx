@@ -26,6 +26,7 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.Validations.differsAtMost;
 import static de.amr.pacmanfx.Validations.stateIsOneOf;
 import static de.amr.pacmanfx.lib.Direction.*;
+import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -425,11 +426,10 @@ public abstract class Ghost extends MovingActor {
      */
     private void updateStateEnteringHouse(GameLevel gameLevel) {
         requireNonNull(home);
-        float speed = gameLevel.game().ghostSpeedReturningToHouse(gameLevel, this);
-        Vector2f position = position();
 
-        //TODO get rid of personality() call
-        Vector2f revivalPosition = home.ghostRevivalTile(personality()).scaled(TS).plus(HTS, 0).toVector2f();
+        final float speed = gameLevel.game().ghostSpeedReturningToHouse(gameLevel, this);
+        final Vector2f position = position();
+        final Vector2f revivalPosition = halfTileRightOf(home.ghostRevivalTile(personality()));
         if (position.roughlyEquals(revivalPosition, 0.5f * speed, 0.5f * speed)) {
             setPosition(revivalPosition);
             setMoveDir(UP);
