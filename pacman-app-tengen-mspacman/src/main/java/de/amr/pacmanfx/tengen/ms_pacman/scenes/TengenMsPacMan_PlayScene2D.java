@@ -283,7 +283,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
 
     @Override
     public void doInit() {
-        context().game().hud().scoreVisible(true).levelCounterVisible(true).livesCounterVisible(true);
+        final TengenMsPacMan_GameModel game = context().game();
+        game.hud().scoreVisible(true).levelCounterVisible(true).livesCounterVisible(true);
+        game.hud().showGameOptions(!game.optionsAreInitial());
         updateScaling();
         dynamicCamera.setTop();
     }
@@ -594,13 +596,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
             }
             gameLevelRenderer.ctx().restore();
         });
-    }
-
-    @Override
-    public void drawHUD() {
-        TengenMsPacMan_GameModel game = context().game();
-        game.hud().showGameOptions(!game.optionsAreInitial());
-        hudRenderer.drawHUD(context().game(), game.hud(), sizeInPx());
     }
 
     @Override
