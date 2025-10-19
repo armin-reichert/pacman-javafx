@@ -12,7 +12,10 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.MessageType;
-import de.amr.pacmanfx.model.actors.*;
+import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.model.actors.GhostState;
+import de.amr.pacmanfx.model.actors.MovingActor;
+import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MovingGameLevelMessage;
@@ -20,6 +23,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_ActorRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameLevelRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_HUDRenderer;
+import de.amr.pacmanfx.ui.AbstractGameAction;
 import de.amr.pacmanfx.ui.ActionBinding;
 import de.amr.pacmanfx.ui._2d.CanvasProvider;
 import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
@@ -27,6 +31,7 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
+import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.rendering.CommonRenderInfoKey;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
@@ -41,6 +46,7 @@ import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -85,6 +91,34 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
 
     private LevelCompletedAnimation levelCompletedAnimation;
     private final BooleanProperty mazeHighlighted = new SimpleBooleanProperty(false);
+
+
+    // Testing
+    private final AbstractGameAction actionCameraFollowPlayer = new AbstractGameAction("ToggleFollowPlayer") {
+        @Override
+        public void execute(GameUI ui) {
+            dynamicCamera.setFocussedActor(context().gameLevel().pac());
+        }
+
+        @Override
+        public boolean isEnabled(GameUI ui) {
+            return context().optGameLevel().isPresent();
+        }
+    };
+
+    private final AbstractGameAction actionCameraTop = new AbstractGameAction("CameraTop") {
+        @Override
+        public void execute(GameUI ui) {
+            dynamicCamera.top();
+        }
+    };
+
+    private final AbstractGameAction actionCameraBottom = new AbstractGameAction("CameraBottom") {
+        @Override
+        public void execute(GameUI ui) {
+            dynamicCamera.bottom();
+        }
+    };
 
     private class DynamicCamera extends ParallelCamera {
 
@@ -134,18 +168,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
                 return;
             }
             if (focussedActor != null) {
-                focusActor(gameLevel);
+                focusActor();
+                updateCameraPosition();
             }
-            updateCameraPosition();
-        }
-
-        private void focusActor(GameLevel gameLevel) {
-            int numRows = gameLevel.worldMap().terrainLayer().numRows();
-            double relY = focussedActor.y() / TS(numRows);
-            boolean targetTop = relY < 0.25 || relY < 0.6 && focussedActor.moveDir() == Direction.UP;
-            boolean targetBot = relY > 0.75 || relY > 0.4 && focussedActor.moveDir() == Direction.DOWN;
-            if (targetTop) tgtY = minY;
-            if (targetBot) tgtY = maxY;
         }
 
         private void updateCameraPosition() {
@@ -157,8 +182,25 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
             }
         }
 
-        public void setTop() {
+        private void focusActor() {
+            context().optGameLevel().ifPresent(gameLevel -> {
+                int numRows = gameLevel.worldMap().terrainLayer().numRows();
+                double relY = focussedActor.y() / TS(numRows);
+                boolean targetTop = relY < 0.25 || relY < 0.6 && focussedActor.moveDir() == Direction.UP;
+                boolean targetBot = relY > 0.75 || relY > 0.4 && focussedActor.moveDir() == Direction.DOWN;
+                if (targetTop) tgtY = minY;
+                if (targetBot) tgtY = maxY;
+            });
+        }
+
+        public void top() {
+            setFocussedActor(null);
             setTranslateY(minY);
+        }
+
+        public void bottom() {
+            setFocussedActor(null);
+            setTranslateY(maxY);
         }
 
         public void setTargetTop() {
@@ -248,6 +290,16 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
             actionBindings.assign(ACTION_CHEAT_EAT_ALL_PELLETS,  ui.actionBindings());
             actionBindings.assign(ACTION_CHEAT_ENTER_NEXT_LEVEL, ui.actionBindings());
             actionBindings.assign(ACTION_CHEAT_KILL_GHOSTS,      ui.actionBindings());
+
+            Set<ActionBinding> testBindings = Set.of(
+                new ActionBinding(actionCameraBottom,       Keyboard.control(KeyCode.B)),
+                new ActionBinding(actionCameraTop,          Keyboard.control(KeyCode.T)),
+                new ActionBinding(actionCameraFollowPlayer, Keyboard.control(KeyCode.F))
+            );
+            actionBindings.assign(actionCameraBottom, testBindings);
+            actionBindings.assign(actionCameraTop, testBindings);
+            actionBindings.assign(actionCameraFollowPlayer, testBindings);
+
         }
         actionBindings.installBindings(ui.keyboard());
     }
@@ -279,7 +331,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         game.hud().scoreVisible(true).levelCounterVisible(true).livesCounterVisible(true);
         game.hud().showGameOptions(!game.optionsAreInitial());
         updateScaling();
-        dynamicCamera.setTop();
+        dynamicCamera.top();
     }
 
     @Override
@@ -399,7 +451,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         gameLevelRenderer = (TengenMsPacMan_GameLevelRenderer) ui.currentConfig().createGameLevelRenderer(canvas);
         gameLevelRenderer.scalingProperty().bind(scaling);
 
-        dynamicCamera.setTop();
+        dynamicCamera.top();
         dynamicCamera.setIdleTicks(90);
     }
 
@@ -416,7 +468,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
 
     @Override
     public void onLevelStarted(GameEvent e) {
-        dynamicCamera.setTop();
+        dynamicCamera.top();
         dynamicCamera.setFocussedActor(context().gameLevel().pac());
         dynamicCamera.setIdleTicks(90);
     }
@@ -483,7 +535,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
     @Override
     public void onGameContinued(GameEvent e) {
         context().optGameLevel().ifPresent(gameLevel -> context().game().showMessage(gameLevel, MessageType.READY));
-        dynamicCamera.setTop();
+        dynamicCamera.top();
         dynamicCamera.setIdleTicks(90);
     }
 
