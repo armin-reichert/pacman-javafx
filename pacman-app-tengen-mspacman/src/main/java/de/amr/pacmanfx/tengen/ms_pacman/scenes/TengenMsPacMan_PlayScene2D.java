@@ -92,9 +92,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
     private LevelCompletedAnimation levelCompletedAnimation;
     private final BooleanProperty mazeHighlighted = new SimpleBooleanProperty(false);
 
-
     // Testing
-    private final AbstractGameAction actionCameraFollowPlayer = new AbstractGameAction("ToggleFollowPlayer") {
+
+    private final AbstractGameAction actionCameraFollowPlayer = new AbstractGameAction("CameraFollowPlayer") {
         @Override
         public void execute(GameUI ui) {
             dynamicCamera.setFocussedActor(context().gameLevel().pac());
@@ -119,6 +119,12 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
             dynamicCamera.bottom();
         }
     };
+
+    private final Set<ActionBinding> testBindings = Set.of(
+        new ActionBinding(actionCameraBottom,       Keyboard.control(KeyCode.B)),
+        new ActionBinding(actionCameraTop,          Keyboard.control(KeyCode.T)),
+        new ActionBinding(actionCameraFollowPlayer, Keyboard.control(KeyCode.F))
+    );
 
     private class DynamicCamera extends ParallelCamera {
 
@@ -291,11 +297,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
             actionBindings.assign(ACTION_CHEAT_ENTER_NEXT_LEVEL, ui.actionBindings());
             actionBindings.assign(ACTION_CHEAT_KILL_GHOSTS,      ui.actionBindings());
 
-            Set<ActionBinding> testBindings = Set.of(
-                new ActionBinding(actionCameraBottom,       Keyboard.control(KeyCode.B)),
-                new ActionBinding(actionCameraTop,          Keyboard.control(KeyCode.T)),
-                new ActionBinding(actionCameraFollowPlayer, Keyboard.control(KeyCode.F))
-            );
             actionBindings.assign(actionCameraBottom, testBindings);
             actionBindings.assign(actionCameraTop, testBindings);
             actionBindings.assign(actionCameraFollowPlayer, testBindings);
