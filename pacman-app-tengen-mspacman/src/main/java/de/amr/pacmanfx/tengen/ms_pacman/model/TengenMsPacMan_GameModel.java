@@ -392,6 +392,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
         final Blinky blinky = new Blinky();
         final Vector2i blinkyStartTile = worldMap.terrainLayer().getTileProperty(POS_GHOST_1_RED);
+        blinky.setHome(house);
         blinky.setStartPosition(halfTileRightOf(blinkyStartTile));
 
         // Ghosts inside the house start at the *bottom* of the house
@@ -399,14 +400,17 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
         final Pinky pinky = new Pinky();
         final Vector2i pinkyStartTile = worldMap.terrainLayer().getTileProperty(POS_GHOST_2_PINK);
+        pinky.setHome(house);
         pinky.setStartPosition(halfTileRightOf(pinkyStartTile).plus(offsetY));
 
         final Inky inky = new Inky();
         final Vector2i inkyStartTile = worldMap.terrainLayer().getTileProperty(POS_GHOST_3_CYAN);
+        inky.setHome(house);
         inky.setStartPosition(halfTileRightOf(inkyStartTile).plus(offsetY));
 
         final Sue sue = new Sue();
         final Vector2i sueStartTile = worldMap.terrainLayer().getTileProperty(POS_GHOST_4_ORANGE);
+        sue.setHome(house);
         sue.setStartPosition(halfTileRightOf(sueStartTile).plus(offsetY));
 
         newGameLevel.setPac(msPacMan);

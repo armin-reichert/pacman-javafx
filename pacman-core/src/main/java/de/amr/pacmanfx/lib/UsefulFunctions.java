@@ -4,8 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.lib;
 
-import de.amr.pacmanfx.Globals;
-
+import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static java.util.Objects.requireNonNull;
 
@@ -33,12 +32,16 @@ public interface UsefulFunctions {
     /**
      * @param tileX tile x coordinate
      * @param tileY tile y coordinate
-     * @return position  (scaled by tile size) half tile right of tile origin
+     * @return position (scaled by tile size) half tile right of tile origin
      */
     static Vector2f halfTileRightOf(int tileX, int tileY) {
-        return Vector2f.of(TS * tileX + Globals.HTS, TS * tileY);
+        return Vector2f.of(TS * tileX + HTS, TS * tileY);
     }
 
+    /**
+     * @param tile some tile
+     * @return position (scaled by tile size) half tile right of tile origin
+     */
     static Vector2f halfTileRightOf(Vector2i tile) {
         return halfTileRightOf(tile.x(), tile.y());
     }
@@ -52,12 +55,12 @@ public interface UsefulFunctions {
     }
 
     /**
-     * @param value1 value1
-     * @param value2 value2
+     * @param from value1
+     * @param to value2
      * @param t      "time" between 0 and 1
-     * @return linear interpolation between {@code value1} and {@code value2} values
+     * @return linear interpolation between {@code from} and {@code to} values
      */
-    static double lerp(double value1, double value2, double t) {
-        return (1 - t) * value1 + t * value2;
+    static double lerp(double from, double to, double t) {
+        return (1 - t) * from + t * to;
     }
 }

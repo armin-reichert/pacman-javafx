@@ -26,6 +26,7 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.Validations.differsAtMost;
 import static de.amr.pacmanfx.Validations.stateIsOneOf;
 import static de.amr.pacmanfx.lib.Direction.*;
+import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -38,9 +39,18 @@ public abstract class Ghost extends MovingActor {
     private ObjectProperty<GhostState> state;
     private List<Vector2i> specialTerrainTiles = List.of();
     private Vector2f startPosition;
+    private House home;
 
     protected Ghost() {
         corneringSpeedUp = -1.25f;
+    }
+
+    public void setHome(House home) {
+        this.home = home;
+    }
+
+    public House home() {
+        return home;
     }
 
     /**
@@ -96,7 +106,9 @@ public abstract class Ghost extends MovingActor {
      * @param gameLevel the game level this ghost lives in
      */
     public void hunt(GameLevel gameLevel) {
-        Vector2i targetTile = gameLevel.huntingTimer().phase() == HuntingPhase.CHASING
+        requireNonNull(gameLevel);
+
+        final Vector2i targetTile = gameLevel.huntingTimer().phase() == HuntingPhase.CHASING
             ? chasingTargetTile(gameLevel)
             : gameLevel.worldMap().terrainLayer().ghostScatterTile(personality());
         setSpeed(gameLevel.game().ghostAttackSpeed(gameLevel, this));
@@ -124,7 +136,8 @@ public abstract class Ghost extends MovingActor {
      */
     public void roam(GameLevel gameLevel) {
         requireNonNull(gameLevel);
-        Vector2i currentTile = tile();
+
+        final Vector2i currentTile = tile();
         if (!gameLevel.worldMap().terrainLayer().isTileInPortalSpace(currentTile)
             && (isNewTileEntered() || !moveInfo.moved)) {
             Direction dir = computeRoamingDirection(gameLevel, currentTile);
@@ -147,7 +160,7 @@ public abstract class Ghost extends MovingActor {
     }
 
     private Direction pseudoRandomDirection() {
-        int rnd = RandomNumberSupport.randomInt(0, 1000);
+        final int rnd = RandomNumberSupport.randomInt(0, 1000);
         if (rnd < 163)             return UP;
         if (rnd < 163 + 252)       return RIGHT;
         if (rnd < 163 + 252 + 285) return DOWN;
@@ -156,7 +169,7 @@ public abstract class Ghost extends MovingActor {
 
     @Override
     public boolean canAccessTile(GameLevel gameLevel, Vector2i tile) {
-        TerrainLayer terrainLayer = gameLevel.worldMap().terrainLayer();
+        final TerrainLayer terrainLayer = gameLevel.worldMap().terrainLayer();
         // Portal tiles are the only tiles outside the world map that can be accessed
         if (terrainLayer.outOfBounds(tile)) {
             return terrainLayer.isTileInPortalSpace(tile);
@@ -171,7 +184,7 @@ public abstract class Ghost extends MovingActor {
             Logger.debug("Hunting {} cannot move up to special tile {}", name(), tile);
             return false;
         }
-        if (terrainLayer.optHouse().isPresent() && terrainLayer.optHouse().get().isDoorAt(tile)) {
+        if (home != null && home.isDoorAt(tile)) {
             return inAnyOfStates(GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE);
         }
         return !terrainLayer.isTileBlocked(tile);
@@ -234,18 +247,16 @@ public abstract class Ghost extends MovingActor {
      */
     @Override
     public void tick(GameContext gameContext) {
-        gameContext.optGameLevel().ifPresent(gameLevel ->
-            gameLevel.worldMap().terrainLayer().optHouse().ifPresent(house -> {
-                switch (state()) {
-                    case LOCKED         -> updateStateLocked(gameLevel, house);
-                    case LEAVING_HOUSE  -> updateStateLeavingHouse(gameLevel, house);
-                    case HUNTING_PAC    -> updateStateHuntingPac(gameLevel);
-                    case FRIGHTENED     -> updateStateFrightened(gameLevel);
-                    case EATEN          -> updateStateEaten();
-                    case RETURNING_HOME -> updateStateReturningToHouse(gameLevel);
-                    case ENTERING_HOUSE -> updateStateEnteringHouse(gameLevel, house);
-                }
-            }));
+        gameContext.optGameLevel().ifPresent(gameLevel -> {
+            switch (state()) {
+                case LOCKED         -> updateStateLocked(gameLevel);
+                case LEAVING_HOUSE  -> updateStateLeavingHouse(gameLevel);
+                case HUNTING_PAC    -> updateStateHuntingPac(gameLevel);
+                case FRIGHTENED     -> updateStateFrightened(gameLevel);
+                case EATEN          -> updateStateEaten();
+                case RETURNING_HOME -> updateStateReturningToHouse(gameLevel);
+                case ENTERING_HOUSE -> updateStateEnteringHouse(gameLevel);
+            }});
     }
 
     // --- LOCKED ---
@@ -254,14 +265,12 @@ public abstract class Ghost extends MovingActor {
      * In locked state, ghosts inside the house are bouncing up and down. They become blue when Pac-Man gets power
      * and start blinking when Pac-Man's power starts fading. After that, they return to their normal color.
      */
-    private void updateStateLocked(GameLevel gameLevel, House house) {
-        if (house.isVisitedBy(this)) {
-            float minY = (house.minTile().y() + 1) * TS + HTS;
-            float maxY = (house.maxTile().y() - 1) * TS - HTS;
-            float speed = gameLevel.game().ghostSpeedInsideHouse(gameLevel, this);
-            setSpeed(speed);
-            move();
-            float y = position().y();
+    private void updateStateLocked(GameLevel gameLevel) {
+        if (home.isVisitedBy(this)) {
+            final float minY = (home.minTile().y() + 1) * TS + HTS;
+            final float maxY = (home.maxTile().y() - 1) * TS - HTS;
+            final float speed = gameLevel.game().ghostSpeedInsideHouse(gameLevel, this);
+            final float y = position().y();
             if (y <= minY) {
                 setMoveDir(DOWN);
                 setWishDir(DOWN);
@@ -270,10 +279,12 @@ public abstract class Ghost extends MovingActor {
                 setWishDir(UP);
             }
             setY(Math.clamp(y, minY, maxY));
+            setSpeed(speed);
+            move();
         } else {
             setSpeed(0);
         }
-        if (gameLevel.pac().powerTimer().isRunning() && !gameLevel.energizerVictims().contains(this)) {
+        if (isInDanger(gameLevel)) {
             playFrightenedAnimation(gameLevel, gameLevel.pac());
         } else {
             selectAnimation(CommonAnimationID.ANIM_GHOST_NORMAL);
@@ -289,26 +300,22 @@ public abstract class Ghost extends MovingActor {
      * <p>
      * The ghost speed is slower than outside, but I do not know the exact value.
      */
-    private void updateStateLeavingHouse(GameLevel gameLevel, House house) {
-        Vector2f position = position();
-        Vector2f houseEntryPosition = house.entryPosition();
+    private void updateStateLeavingHouse(GameLevel gameLevel) {
+        final Vector2f position = position();
+        final Vector2f houseEntryPosition = home.entryPosition();
         if (position.y() <= houseEntryPosition.y()) {
-            // is outside house at entry
+            // outside at house entry
             setY(houseEntryPosition.y());
             setMoveDir(LEFT);
             setWishDir(LEFT);
-            newTileEntered = false; // don't change direction until new tile is entered
-            if (gameLevel.pac().powerTimer().isRunning() && !gameLevel.energizerVictims().contains(this)) {
-                setState(GhostState.FRIGHTENED);
-            } else {
-                setState(GhostState.HUNTING_PAC);
-            }
+            newTileEntered = false; // don't change direction until new tile is entered by moving
+            setState(isInDanger(gameLevel) ? GhostState.FRIGHTENED : GhostState.HUNTING_PAC);
         }
         else {
             // still inside house
-            float speed = gameLevel.game().ghostSpeedInsideHouse(gameLevel, this);
-            float centerX = position.x() + HTS;
-            float houseCenterX = house.center().x();
+            final float speed = gameLevel.game().ghostSpeedInsideHouse(gameLevel, this);
+            final float centerX = position.x() + HTS;
+            final float houseCenterX = home.center().x();
             if (differsAtMost(0.5f * speed, centerX, houseCenterX)) {
                 // align horizontally and raise
                 setX(houseCenterX - HTS);
@@ -321,12 +328,16 @@ public abstract class Ghost extends MovingActor {
             }
             setSpeed(speed);
             move();
-            if (gameLevel.pac().powerTimer().isRunning() && !gameLevel.energizerVictims().contains(this)) {
+            if (isInDanger(gameLevel)) {
                 playFrightenedAnimation(gameLevel, gameLevel.pac());
             } else {
                 selectAnimation(CommonAnimationID.ANIM_GHOST_NORMAL);
             }
         }
+    }
+
+    private boolean isInDanger(GameLevel gameLevel) {
+        return gameLevel.pac().powerTimer().isRunning() && !gameLevel.energizerVictims().contains(this);
     }
 
     // --- HUNTING_PAC ---
@@ -360,7 +371,7 @@ public abstract class Ghost extends MovingActor {
      * @see <a href="https://www.youtube.com/watch?v=eFP0_rkjwlY">YouTube: How Frightened Ghosts Decide Where to Go</a>
      */
     private void updateStateFrightened(GameLevel gameLevel) {
-        float speed = gameLevel.worldMap().terrainLayer().isTunnel(tile())
+        final float speed = gameLevel.worldMap().terrainLayer().isTunnel(tile())
             ? gameLevel.game().ghostTunnelSpeed(gameLevel, this)
             : gameLevel.game().ghostFrightenedSpeed(gameLevel, this);
         setSpeed(speed);
@@ -392,13 +403,8 @@ public abstract class Ghost extends MovingActor {
      * to the ghost house to be revived. Hallelujah!
      */
     private void updateStateReturningToHouse(GameLevel gameLevel) {
-        House house = gameLevel.worldMap().terrainLayer().optHouse().orElse(null);
-        if (house == null) {
-            Logger.error("No ghost house in level? WTF!");
-            return;
-        }
-        float speed = gameLevel.game().ghostSpeedReturningToHouse(gameLevel, this);
-        Vector2f houseEntry = house.entryPosition();
+        final float speed = gameLevel.game().ghostSpeedReturningToHouse(gameLevel, this);
+        final Vector2f houseEntry = home.entryPosition();
         if (position().roughlyEquals(houseEntry, speed, 0)) {
             setPosition(houseEntry);
             setMoveDir(DOWN);
@@ -406,7 +412,7 @@ public abstract class Ghost extends MovingActor {
             setState(GhostState.ENTERING_HOUSE);
         } else {
             setSpeed(speed);
-            setTargetTile(house.leftDoorTile());
+            setTargetTile(home.leftDoorTile());
             navigateTowardsTarget(gameLevel);
             moveThroughThisCruelWorld(gameLevel);
         }
@@ -418,12 +424,10 @@ public abstract class Ghost extends MovingActor {
      * When an eaten ghost has arrived at the ghost house door, he falls down to the center of the house,
      * then moves up again (if the house center is his revival position), or moves sidewards towards his revival position.
      */
-    private void updateStateEnteringHouse(GameLevel gameLevel, House house) {
-        float speed = gameLevel.game().ghostSpeedReturningToHouse(gameLevel, this);
-        Vector2f position = position();
-
-        //TODO get rid of personality() call
-        Vector2f revivalPosition = house.ghostRevivalTile(personality()).scaled(TS).plus(HTS, 0).toVector2f();
+    private void updateStateEnteringHouse(GameLevel gameLevel) {
+        final float speed = gameLevel.game().ghostSpeedReturningToHouse(gameLevel, this);
+        final Vector2f position = position();
+        final Vector2f revivalPosition = halfTileRightOf(home.ghostRevivalTile(personality()));
         if (position.roughlyEquals(revivalPosition, 0.5f * speed, 0.5f * speed)) {
             setPosition(revivalPosition);
             setMoveDir(UP);

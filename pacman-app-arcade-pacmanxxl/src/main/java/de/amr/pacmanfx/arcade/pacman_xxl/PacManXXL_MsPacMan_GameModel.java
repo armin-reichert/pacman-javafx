@@ -14,7 +14,10 @@ import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
-import de.amr.pacmanfx.model.*;
+import de.amr.pacmanfx.model.ArcadeHouse;
+import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.MapSelectionMode;
+import de.amr.pacmanfx.model.MapSelector;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -56,15 +59,19 @@ public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
         newGameLevel.setPac(msPacMan);
 
         final Blinky blinky = ArcadeMsPacMan_ActorFactory.createBlinky();
+        blinky.setHome(house);
         blinky.setStartPosition(halfTileRightOf(terrain.getTileProperty(POS_GHOST_1_RED)));
 
         final Pinky pinky = ArcadeMsPacMan_ActorFactory.createPinky();
+        pinky.setHome(house);
         pinky.setStartPosition(halfTileRightOf(terrain.getTileProperty(POS_GHOST_2_PINK)));
 
         final Inky inky = ArcadeMsPacMan_ActorFactory.createInky();
+        inky.setHome(house);
         inky.setStartPosition(halfTileRightOf(terrain.getTileProperty(POS_GHOST_3_CYAN)));
 
         final Sue sue = ArcadeMsPacMan_ActorFactory.createSue();
+        sue.setHome(house);
         sue.setStartPosition(halfTileRightOf(terrain.getTileProperty(POS_GHOST_4_ORANGE)));
 
         newGameLevel.setGhosts(blinky, pinky, inky, sue);
