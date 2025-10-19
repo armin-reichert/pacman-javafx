@@ -7,7 +7,10 @@ package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
-import de.amr.pacmanfx.model.actors.*;
+import de.amr.pacmanfx.model.actors.AnimationManager;
+import de.amr.pacmanfx.model.actors.CommonAnimationID;
+import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_HUD;
@@ -90,7 +93,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         hud.creditVisible(false).scoreVisible(false).levelCounterVisible(true).livesCounterVisible(false);
         hud.showGameOptions(false);
 
-        actionBindings.bind(ACTION_LET_GAME_STATE_EXPIRE, ui.joypad().key(JoypadButton.START));
+        actionBindingsManager.bind(ACTION_LET_GAME_STATE_EXPIRE, ui.joypad().key(JoypadButton.START));
 
         final GameUI_Config uiConfig = ui.currentConfig();
         final var spriteSheet = (TengenMsPacMan_SpriteSheet) uiConfig.spriteSheet();

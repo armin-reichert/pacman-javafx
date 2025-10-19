@@ -87,11 +87,11 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     public void doInit() {
         context().game().hud().creditVisible(true).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
 
-        actionBindings.assign(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
-        actionBindings.assign(ACTION_ARCADE_START_GAME, ui.actionBindings());
-        actionBindings.assign(ACTION_TEST_CUT_SCENES, ui.actionBindings());
-        actionBindings.assign(ACTION_TEST_LEVELS_SHORT, ui.actionBindings());
-        actionBindings.assign(ACTION_TEST_LEVELS_MEDIUM, ui.actionBindings());
+        actionBindingsManager.assign(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
+        actionBindingsManager.assign(ACTION_ARCADE_START_GAME, ui.actionBindings());
+        actionBindingsManager.assign(ACTION_TEST_CUT_SCENES, ui.actionBindings());
+        actionBindingsManager.assign(ACTION_TEST_LEVELS_SHORT, ui.actionBindings());
+        actionBindingsManager.assign(ACTION_TEST_LEVELS_MEDIUM, ui.actionBindings());
 
         marquee = new Marquee(60, 88, 132, 60, 96, 6, 16);
         marquee.setBulbOffColor(ARCADE_RED);

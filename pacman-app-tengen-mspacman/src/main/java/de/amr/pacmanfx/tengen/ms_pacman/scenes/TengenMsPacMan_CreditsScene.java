@@ -55,7 +55,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
         context().game().hud().creditVisible(false).scoreVisible(false).levelCounterVisible(false).livesCounterVisible(false);
 
         Set<ActionBinding> tengenActionBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().tengenActionBindings();
-        actionBindings.assign(ACTION_ENTER_START_SCREEN, tengenActionBindings);
+        actionBindingsManager.assign(ACTION_ENTER_START_SCREEN, tengenActionBindings);
     }
 
     @Override

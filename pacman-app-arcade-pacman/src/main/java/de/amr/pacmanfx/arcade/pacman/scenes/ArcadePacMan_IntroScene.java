@@ -16,7 +16,10 @@ import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
-import de.amr.pacmanfx.model.actors.*;
+import de.amr.pacmanfx.model.actors.CommonAnimationID;
+import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.model.actors.GhostState;
+import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
@@ -103,11 +106,11 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     public void doInit() {
         context().game().hud().creditVisible(true).scoreVisible(true).livesCounterVisible(false).levelCounterVisible(true);
 
-        actionBindings.assign(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
-        actionBindings.assign(ACTION_ARCADE_START_GAME, ui.actionBindings());
-        actionBindings.assign(ACTION_TEST_CUT_SCENES, ui.actionBindings());
-        actionBindings.assign(ACTION_TEST_LEVELS_SHORT, ui.actionBindings());
-        actionBindings.assign(ACTION_TEST_LEVELS_MEDIUM, ui.actionBindings());
+        actionBindingsManager.assign(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
+        actionBindingsManager.assign(ACTION_ARCADE_START_GAME, ui.actionBindings());
+        actionBindingsManager.assign(ACTION_TEST_CUT_SCENES, ui.actionBindings());
+        actionBindingsManager.assign(ACTION_TEST_LEVELS_SHORT, ui.actionBindings());
+        actionBindingsManager.assign(ACTION_TEST_LEVELS_MEDIUM, ui.actionBindings());
 
         blinking = new Pulse(10, Pulse.State.ON);
 
