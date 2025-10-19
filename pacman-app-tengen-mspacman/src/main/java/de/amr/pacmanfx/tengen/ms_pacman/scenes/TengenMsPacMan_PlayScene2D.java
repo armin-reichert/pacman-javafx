@@ -12,9 +12,7 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.MessageType;
-import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.GhostState;
-import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MovingGameLevelMessage;
@@ -93,7 +91,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         private static final float MIN_CAMERA_MOVEMENT = 0.5f;
         private static final float CAMERA_SPEED = 0.02f;
 
-        private boolean followPac;
+        private MovingActor focussedActor;
         private int idleTicks;
         private double tgtY;
         private double minY;
@@ -103,6 +101,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
 
         public void setIdleTicks(int idleTicks) {
             this.idleTicks = idleTicks;
+        }
+
+        public void setFocussedActor(MovingActor actor) {
+            this.focussedActor = actor;
         }
 
         // This is "alchemy", not science :-)
@@ -131,18 +133,17 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
                 }
                 return;
             }
-            if (followPac) {
-                followPac(gameLevel);
+            if (focussedActor != null) {
+                focusActor(gameLevel);
             }
             updateCameraPosition();
         }
 
-        private void followPac(GameLevel gameLevel) {
-            Pac pac = gameLevel.pac();
+        private void focusActor(GameLevel gameLevel) {
             int numRows = gameLevel.worldMap().terrainLayer().numRows();
-            double relY = pac.y() / TS(numRows);
-            boolean targetTop = relY < 0.25 || relY < 0.6 && pac.moveDir() == Direction.UP;
-            boolean targetBot = relY > 0.75 || relY > 0.4 && pac.moveDir() == Direction.DOWN;
+            double relY = focussedActor.y() / TS(numRows);
+            boolean targetTop = relY < 0.25 || relY < 0.6 && focussedActor.moveDir() == Direction.UP;
+            boolean targetBot = relY > 0.75 || relY > 0.4 && focussedActor.moveDir() == Direction.DOWN;
             if (targetTop) tgtY = minY;
             if (targetBot) tgtY = maxY;
         }
@@ -156,21 +157,15 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
             }
         }
 
-        public void setFollowPac(boolean followPac) {
-            this.followPac = followPac;
-        }
-
         public void setTop() {
             setTranslateY(minY);
         }
 
         public void setTargetTop() {
-            followPac = false;
             tgtY = minY;
         }
 
         public void setTargetBottom() {
-            followPac = false;
             tgtY = maxY;
         }
     }
@@ -312,7 +307,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
                 updateSound();
             }
             if (subScene.getCamera() == dynamicCamera) {
-                dynamicCamera.followPac = context().gameState() == HUNTING;
                 dynamicCamera.update(gameLevel);
             }
             updateHUD();
@@ -423,7 +417,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
     @Override
     public void onLevelStarted(GameEvent e) {
         dynamicCamera.setTop();
-        dynamicCamera.setFollowPac(true);
+        dynamicCamera.setFocussedActor(context().gameLevel().pac());
         dynamicCamera.setIdleTicks(90);
     }
 
@@ -490,7 +484,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
     public void onGameContinued(GameEvent e) {
         context().optGameLevel().ifPresent(gameLevel -> context().game().showMessage(gameLevel, MessageType.READY));
         dynamicCamera.setTop();
-        dynamicCamera.setFollowPac(true);
         dynamicCamera.setIdleTicks(90);
     }
 
