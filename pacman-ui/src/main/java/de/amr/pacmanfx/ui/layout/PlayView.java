@@ -114,25 +114,25 @@ public class PlayView extends StackPane implements GameUI_View {
         parentScene.widthProperty() .addListener((py, ov, w) -> canvasWithFrame.resizeTo(w.doubleValue(), parentScene.getHeight()));
         parentScene.heightProperty().addListener((py, ov, h) -> canvasWithFrame.resizeTo(parentScene.getWidth(), h.doubleValue()));
 
-        actionBindings.assign(ACTION_BOOT_SHOW_PLAY_VIEW, ui.actionBindings());
-        actionBindings.assign(ACTION_ENTER_FULLSCREEN, ui.actionBindings());
-        actionBindings.assign(ACTION_QUIT_GAME_SCENE, ui.actionBindings());
-        actionBindings.assign(ACTION_SHOW_HELP, ui.actionBindings());
-        actionBindings.assign(ACTION_SIMULATION_SLOWER, ui.actionBindings());
-        actionBindings.assign(ACTION_SIMULATION_SLOWEST, ui.actionBindings());
-        actionBindings.assign(ACTION_SIMULATION_FASTER, ui.actionBindings());
-        actionBindings.assign(ACTION_SIMULATION_FASTEST, ui.actionBindings());
-        actionBindings.assign(ACTION_SIMULATION_RESET, ui.actionBindings());
-        actionBindings.assign(ACTION_SIMULATION_ONE_STEP, ui.actionBindings());
-        actionBindings.assign(ACTION_SIMULATION_TEN_STEPS, ui.actionBindings());
-        actionBindings.assign(ACTION_TOGGLE_AUTOPILOT, ui.actionBindings());
-        actionBindings.assign(ACTION_TOGGLE_DEBUG_INFO, ui.actionBindings());
-        actionBindings.assign(ACTION_TOGGLE_MUTED, ui.actionBindings());
-        actionBindings.assign(ACTION_TOGGLE_PAUSED, ui.actionBindings());
-        actionBindings.assign(ACTION_TOGGLE_DASHBOARD, ui.actionBindings());
-        actionBindings.assign(ACTION_TOGGLE_IMMUNITY, ui.actionBindings());
-        actionBindings.assign(ACTION_TOGGLE_MINI_VIEW_VISIBILITY, ui.actionBindings());
-        actionBindings.assign(ACTION_TOGGLE_PLAY_SCENE_2D_3D, ui.actionBindings());
+        actionBindings.register(ACTION_BOOT_SHOW_PLAY_VIEW, ui.actionBindings());
+        actionBindings.register(ACTION_ENTER_FULLSCREEN, ui.actionBindings());
+        actionBindings.register(ACTION_QUIT_GAME_SCENE, ui.actionBindings());
+        actionBindings.register(ACTION_SHOW_HELP, ui.actionBindings());
+        actionBindings.register(ACTION_SIMULATION_SLOWER, ui.actionBindings());
+        actionBindings.register(ACTION_SIMULATION_SLOWEST, ui.actionBindings());
+        actionBindings.register(ACTION_SIMULATION_FASTER, ui.actionBindings());
+        actionBindings.register(ACTION_SIMULATION_FASTEST, ui.actionBindings());
+        actionBindings.register(ACTION_SIMULATION_RESET, ui.actionBindings());
+        actionBindings.register(ACTION_SIMULATION_ONE_STEP, ui.actionBindings());
+        actionBindings.register(ACTION_SIMULATION_TEN_STEPS, ui.actionBindings());
+        actionBindings.register(ACTION_TOGGLE_AUTOPILOT, ui.actionBindings());
+        actionBindings.register(ACTION_TOGGLE_DEBUG_INFO, ui.actionBindings());
+        actionBindings.register(ACTION_TOGGLE_MUTED, ui.actionBindings());
+        actionBindings.register(ACTION_TOGGLE_PAUSED, ui.actionBindings());
+        actionBindings.register(ACTION_TOGGLE_DASHBOARD, ui.actionBindings());
+        actionBindings.register(ACTION_TOGGLE_IMMUNITY, ui.actionBindings());
+        actionBindings.register(ACTION_TOGGLE_MINI_VIEW_VISIBILITY, ui.actionBindings());
+        actionBindings.register(ACTION_TOGGLE_PLAY_SCENE_2D_3D, ui.actionBindings());
     }
 
     private void handleContextMenuRequest(ContextMenuEvent contextMenuEvent) {

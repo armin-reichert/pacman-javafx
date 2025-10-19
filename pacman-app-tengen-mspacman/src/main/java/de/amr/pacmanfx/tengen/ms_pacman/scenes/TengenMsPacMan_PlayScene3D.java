@@ -96,18 +96,18 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         var tengenActionBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().tengenActionBindings();
         // if demo level, allow going back to options screen
         if (context().optGameLevel().isPresent() && context().gameLevel().isDemoLevel()) {
-            actionBindings.assign(ACTION_QUIT_DEMO_LEVEL, tengenActionBindings);
+            actionBindings.register(ACTION_QUIT_DEMO_LEVEL, tengenActionBindings);
         } else {
             setPlayerSteeringActionBindings();
-            actionBindings.assign(ACTION_CHEAT_ADD_LIVES, ui.actionBindings());
-            actionBindings.assign(ACTION_CHEAT_EAT_ALL_PELLETS, ui.actionBindings());
-            actionBindings.assign(ACTION_CHEAT_ENTER_NEXT_LEVEL, ui.actionBindings());
-            actionBindings.assign(ACTION_CHEAT_KILL_GHOSTS, ui.actionBindings());
-            actionBindings.assign(ACTION_TOGGLE_PAC_BOOSTER, tengenActionBindings);
+            actionBindings.register(ACTION_CHEAT_ADD_LIVES, ui.actionBindings());
+            actionBindings.register(ACTION_CHEAT_EAT_ALL_PELLETS, ui.actionBindings());
+            actionBindings.register(ACTION_CHEAT_ENTER_NEXT_LEVEL, ui.actionBindings());
+            actionBindings.register(ACTION_CHEAT_KILL_GHOSTS, ui.actionBindings());
+            actionBindings.register(ACTION_TOGGLE_PAC_BOOSTER, tengenActionBindings);
         }
-        actionBindings.assign(ACTION_PERSPECTIVE_PREVIOUS, ui.actionBindings());
-        actionBindings.assign(ACTION_PERSPECTIVE_NEXT, ui.actionBindings());
-        actionBindings.assign(ACTION_TOGGLE_DRAW_MODE, ui.actionBindings());
+        actionBindings.register(ACTION_PERSPECTIVE_PREVIOUS, ui.actionBindings());
+        actionBindings.register(ACTION_PERSPECTIVE_NEXT, ui.actionBindings());
+        actionBindings.register(ACTION_TOGGLE_DRAW_MODE, ui.actionBindings());
 
         actionBindings.installBindings(ui.keyboard());
     }
@@ -115,10 +115,10 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     @Override
     protected void setPlayerSteeringActionBindings() {
         var tengenActionBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().tengenActionBindings();
-        actionBindings.assign(ACTION_STEER_UP,    tengenActionBindings);
-        actionBindings.assign(ACTION_STEER_DOWN,  tengenActionBindings);
-        actionBindings.assign(ACTION_STEER_LEFT,  tengenActionBindings);
-        actionBindings.assign(ACTION_STEER_RIGHT, tengenActionBindings);
+        actionBindings.register(ACTION_STEER_UP,    tengenActionBindings);
+        actionBindings.register(ACTION_STEER_DOWN,  tengenActionBindings);
+        actionBindings.register(ACTION_STEER_LEFT,  tengenActionBindings);
+        actionBindings.register(ACTION_STEER_RIGHT, tengenActionBindings);
     }
 
     @Override

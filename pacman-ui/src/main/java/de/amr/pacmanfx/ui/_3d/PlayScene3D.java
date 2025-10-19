@@ -265,18 +265,18 @@ public class PlayScene3D implements GameScene {
 
     protected void setActionBindings() {
         actionBindings.uninstallBindings(ui.keyboard());
-        actionBindings.assign(ACTION_PERSPECTIVE_PREVIOUS, ui.actionBindings());
-        actionBindings.assign(ACTION_PERSPECTIVE_NEXT, ui.actionBindings());
-        actionBindings.assign(ACTION_TOGGLE_DRAW_MODE, ui.actionBindings());
+        actionBindings.register(ACTION_PERSPECTIVE_PREVIOUS, ui.actionBindings());
+        actionBindings.register(ACTION_PERSPECTIVE_NEXT, ui.actionBindings());
+        actionBindings.register(ACTION_TOGGLE_DRAW_MODE, ui.actionBindings());
         if (context().optGameLevel().isPresent()) {
             if (context().gameLevel().isDemoLevel()) {
-                actionBindings.assign(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
+                actionBindings.register(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
             } else {
                 setPlayerSteeringActionBindings();
-                actionBindings.assign(ACTION_CHEAT_EAT_ALL_PELLETS, ui.actionBindings());
-                actionBindings.assign(ACTION_CHEAT_ADD_LIVES, ui.actionBindings());
-                actionBindings.assign(ACTION_CHEAT_ENTER_NEXT_LEVEL, ui.actionBindings());
-                actionBindings.assign(ACTION_CHEAT_KILL_GHOSTS, ui.actionBindings());
+                actionBindings.register(ACTION_CHEAT_EAT_ALL_PELLETS, ui.actionBindings());
+                actionBindings.register(ACTION_CHEAT_ADD_LIVES, ui.actionBindings());
+                actionBindings.register(ACTION_CHEAT_ENTER_NEXT_LEVEL, ui.actionBindings());
+                actionBindings.register(ACTION_CHEAT_KILL_GHOSTS, ui.actionBindings());
             }
         }
         actionBindings.installBindings(ui.keyboard());
@@ -286,10 +286,10 @@ public class PlayScene3D implements GameScene {
      * Overridden by "Tengen Ms. Pac-Man" subclass to bind to keys representing the Joypad buttons.
      */
     protected void setPlayerSteeringActionBindings() {
-        actionBindings.assign(ACTION_STEER_UP, ui.actionBindings());
-        actionBindings.assign(ACTION_STEER_DOWN, ui.actionBindings());
-        actionBindings.assign(ACTION_STEER_LEFT, ui.actionBindings());
-        actionBindings.assign(ACTION_STEER_RIGHT, ui.actionBindings());
+        actionBindings.register(ACTION_STEER_UP, ui.actionBindings());
+        actionBindings.register(ACTION_STEER_DOWN, ui.actionBindings());
+        actionBindings.register(ACTION_STEER_LEFT, ui.actionBindings());
+        actionBindings.register(ACTION_STEER_RIGHT, ui.actionBindings());
     }
 
     @Override

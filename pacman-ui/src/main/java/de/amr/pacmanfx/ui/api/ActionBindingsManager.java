@@ -35,5 +35,5 @@ public interface ActionBindingsManager {
      * @param gameAction a game action
      * @param actionBindings an action bindings list
      */
-    void assign(AbstractGameAction gameAction, Set<ActionBinding> actionBindings);
+    void register(AbstractGameAction gameAction, Set<ActionBinding> actionBindings);
 }

@@ -77,7 +77,7 @@ public class EditorView implements GameUI_View {
     }
 
     @Override
-    public ActionBindingsManager actionBindingsManager() { return DefaultActionBindingsManager.EMPTY_MAP; }
+    public ActionBindingsManager actionBindingsManager() { return DefaultActionBindingsManager.EMPTY_BINDINGS_MANAGER; }
 
     @Override
     public Region root() {

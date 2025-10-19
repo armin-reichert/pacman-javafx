@@ -281,25 +281,25 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
     private void setActionsBindings(boolean demoLevel) {
         Set<ActionBinding> tengenBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().tengenActionBindings();
         if (demoLevel) {
-            actionBindingsManager.assign(ACTION_QUIT_DEMO_LEVEL, tengenBindings);
+            actionBindingsManager.register(ACTION_QUIT_DEMO_LEVEL, tengenBindings);
         } else {
             // Pac-Man is steered with keys representing the "Joypad" buttons
-            actionBindingsManager.assign(ACTION_STEER_UP,    tengenBindings);
-            actionBindingsManager.assign(ACTION_STEER_DOWN,  tengenBindings);
-            actionBindingsManager.assign(ACTION_STEER_LEFT,  tengenBindings);
-            actionBindingsManager.assign(ACTION_STEER_RIGHT, tengenBindings);
+            actionBindingsManager.register(ACTION_STEER_UP,    tengenBindings);
+            actionBindingsManager.register(ACTION_STEER_DOWN,  tengenBindings);
+            actionBindingsManager.register(ACTION_STEER_LEFT,  tengenBindings);
+            actionBindingsManager.register(ACTION_STEER_RIGHT, tengenBindings);
 
-            actionBindingsManager.assign(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, tengenBindings);
-            actionBindingsManager.assign(ACTION_TOGGLE_PAC_BOOSTER, tengenBindings);
+            actionBindingsManager.register(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, tengenBindings);
+            actionBindingsManager.register(ACTION_TOGGLE_PAC_BOOSTER, tengenBindings);
 
-            actionBindingsManager.assign(ACTION_CHEAT_ADD_LIVES,        ui.actionBindings());
-            actionBindingsManager.assign(ACTION_CHEAT_EAT_ALL_PELLETS,  ui.actionBindings());
-            actionBindingsManager.assign(ACTION_CHEAT_ENTER_NEXT_LEVEL, ui.actionBindings());
-            actionBindingsManager.assign(ACTION_CHEAT_KILL_GHOSTS,      ui.actionBindings());
+            actionBindingsManager.register(ACTION_CHEAT_ADD_LIVES,        ui.actionBindings());
+            actionBindingsManager.register(ACTION_CHEAT_EAT_ALL_PELLETS,  ui.actionBindings());
+            actionBindingsManager.register(ACTION_CHEAT_ENTER_NEXT_LEVEL, ui.actionBindings());
+            actionBindingsManager.register(ACTION_CHEAT_KILL_GHOSTS,      ui.actionBindings());
 
-            actionBindingsManager.assign(actionCameraBottom, testBindings);
-            actionBindingsManager.assign(actionCameraTop, testBindings);
-            actionBindingsManager.assign(actionCameraFollowPlayer, testBindings);
+            actionBindingsManager.register(actionCameraBottom, testBindings);
+            actionBindingsManager.register(actionCameraTop, testBindings);
+            actionBindingsManager.register(actionCameraFollowPlayer, testBindings);
 
         }
         actionBindingsManager.installBindings(ui.keyboard());
