@@ -19,11 +19,11 @@ import static java.util.Objects.requireNonNull;
  */
 public class Clapperboard extends Actor {
 
-    private static final byte HIDDEN = -1, WIDE_OPEN = 0, OPEN = 1, CLOSED = 2;
+    public enum State { HIDDEN, WIDE_OPEN, OPEN, CLOSED }
 
     private final TengenMsPacMan_SpriteSheet spriteSheet;
     private int tick;
-    private byte state;
+    private State state;
     private boolean textVisible;
     private boolean running;
     private final byte number;
@@ -57,15 +57,19 @@ public class Clapperboard extends Actor {
     }
 
     public Optional<RectShort> sprite() {
-        if (state == HIDDEN) return Optional.empty();
         RectShort[] clapperboardSprites = spriteSheet.spriteSequence(SpriteID.CLAPPERBOARD);
-        return Optional.of(clapperboardSprites[state]);
+        return switch (state) {
+            case HIDDEN -> Optional.empty();
+            case WIDE_OPEN -> Optional.of(clapperboardSprites[0]);
+            case OPEN -> Optional.of(clapperboardSprites[1]);
+            case CLOSED -> Optional.of(clapperboardSprites[2]);
+        };
     }
 
     public void startAnimation() {
         tick = 0;
         textVisible = true;
-        state = CLOSED;
+        state = State.CLOSED;
         running = true;
     }
 
@@ -74,16 +78,16 @@ public class Clapperboard extends Actor {
 
         //TODO Verify exact tick values
         switch (tick) {
-            case 3 -> state = OPEN;
-            case 5 -> state = WIDE_OPEN;
+            case 3 -> state = State.OPEN;
+            case 5 -> state = State.WIDE_OPEN;
             case 65 -> {
-                state = CLOSED;
+                state = State.CLOSED;
                 textVisible = false;
             }
-            case 69 -> state = OPEN;
-            case 71 -> state = WIDE_OPEN;
+            case 69 -> state = State.OPEN;
+            case 71 -> state = State.WIDE_OPEN;
             case 129 -> {
-                state = HIDDEN;
+                state = State.HIDDEN;
                 running = false;
             }
             default -> {}
