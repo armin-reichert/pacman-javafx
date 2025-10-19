@@ -99,14 +99,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         private double minY;
         private double maxY;
 
-        public DynamicCamera() {
-            followPac = false;
-        }
-
-        public void init() {
-            context().optGameLevel().ifPresent(this::updateRange);
-            setTop();
-        }
+        public DynamicCamera() {}
 
         public void setIdleTicks(int idleTicks) {
             this.idleTicks = idleTicks;
@@ -161,6 +154,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
             if (delta > MIN_CAMERA_MOVEMENT) {
                 setTranslateY(newCameraY);
             }
+        }
+
+        public void setFollowPac(boolean followPac) {
+            this.followPac = followPac;
         }
 
         public void setTop() {
@@ -408,7 +405,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         gameLevelRenderer = (TengenMsPacMan_GameLevelRenderer) ui.currentConfig().createGameLevelRenderer(canvas);
         gameLevelRenderer.scalingProperty().bind(scaling);
 
-        dynamicCamera.init();
+        dynamicCamera.setTop();
         dynamicCamera.setIdleTicks(90);
     }
 
@@ -425,9 +422,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
 
     @Override
     public void onLevelStarted(GameEvent e) {
-        dynamicCamera.init();
         dynamicCamera.setTop();
-        dynamicCamera.setTargetBottom();
+        dynamicCamera.setFollowPac(true);
         dynamicCamera.setIdleTicks(90);
     }
 
@@ -493,8 +489,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
     @Override
     public void onGameContinued(GameEvent e) {
         context().optGameLevel().ifPresent(gameLevel -> context().game().showMessage(gameLevel, MessageType.READY));
-        dynamicCamera.init();
-        dynamicCamera.setTargetBottom();
+        dynamicCamera.setTop();
+        dynamicCamera.setFollowPac(true);
         dynamicCamera.setIdleTicks(90);
     }
 

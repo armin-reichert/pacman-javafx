@@ -13,13 +13,13 @@ import static de.amr.pacmanfx.tengen.ms_pacman.rendering.SpriteID.STORK;
 
 public class Stork extends Actor {
 
-    public static final String ANIM_FLYING = "flying";
+    public static final String ANIM_ID_FLYING = "flying";
 
     private boolean bagReleasedFromBeak;
 
     public Stork(TengenMsPacMan_SpriteSheet spriteSheet) {
         var spriteAnimationManager = new SpriteAnimationManager<>(spriteSheet);
-        spriteAnimationManager.setAnimation(ANIM_FLYING,
+        spriteAnimationManager.setAnimation(ANIM_ID_FLYING,
             SpriteAnimation.builder().fromSprites(spriteSheet.spriteSequence(STORK)).ticksPerFrame(8).endless());
         setAnimationManager(spriteAnimationManager);
     }

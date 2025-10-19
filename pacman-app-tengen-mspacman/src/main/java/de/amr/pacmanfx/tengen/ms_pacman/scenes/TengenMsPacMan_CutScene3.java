@@ -134,7 +134,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
                 stork.setPosition(RIGHT_BORDER, TS * 7);
                 stork.setVelocity(-0.8f, 0);
                 stork.setBagReleasedFromBeak(false);
-                stork.playAnimation(Stork.ANIM_FLYING);
+                stork.playAnimation(Stork.ANIM_ID_FLYING);
                 stork.show();
             }
             case 240 -> {
