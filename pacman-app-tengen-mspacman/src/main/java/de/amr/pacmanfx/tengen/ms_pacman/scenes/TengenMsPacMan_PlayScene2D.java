@@ -21,7 +21,6 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_ActorRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameLevelRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_HUDRenderer;
-import de.amr.pacmanfx.ui.AbstractGameAction;
 import de.amr.pacmanfx.ui.ActionBinding;
 import de.amr.pacmanfx.ui._2d.CanvasProvider;
 import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
@@ -29,7 +28,6 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
-import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.rendering.CommonRenderInfoKey;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
@@ -43,7 +41,6 @@ import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -87,40 +84,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
 
     private LevelCompletedAnimation levelCompletedAnimation;
     private final BooleanProperty mazeHighlighted = new SimpleBooleanProperty(false);
-
-    // Testing
-
-    private final AbstractGameAction actionCameraFollowPlayer = new AbstractGameAction("CameraFollowPlayer") {
-        @Override
-        public void execute(GameUI ui) {
-            dynamicCamera.setTrackingPac(true);
-        }
-
-        @Override
-        public boolean isEnabled(GameUI ui) {
-            return context().optGameLevel().isPresent();
-        }
-    };
-
-    private final AbstractGameAction actionCameraTop = new AbstractGameAction("CameraTop") {
-        @Override
-        public void execute(GameUI ui) {
-            dynamicCamera.setToTop();
-        }
-    };
-
-    private final AbstractGameAction actionCameraBottom = new AbstractGameAction("CameraBottom") {
-        @Override
-        public void execute(GameUI ui) {
-            dynamicCamera.setToBottom();
-        }
-    };
-
-    private final Set<ActionBinding> testBindings = Set.of(
-        new ActionBinding(actionCameraBottom,       Keyboard.control(KeyCode.B)),
-        new ActionBinding(actionCameraTop,          Keyboard.control(KeyCode.T)),
-        new ActionBinding(actionCameraFollowPlayer, Keyboard.control(KeyCode.F))
-    );
 
     private class PlaySceneDebugInfoRenderer extends DefaultDebugInfoRenderer {
 
@@ -200,11 +163,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
             actionBindingsManager.useBindings(ACTION_CHEAT_EAT_ALL_PELLETS,  ui.actionBindings());
             actionBindingsManager.useBindings(ACTION_CHEAT_ENTER_NEXT_LEVEL, ui.actionBindings());
             actionBindingsManager.useBindings(ACTION_CHEAT_KILL_GHOSTS,      ui.actionBindings());
-
-            actionBindingsManager.useBindings(actionCameraBottom, testBindings);
-            actionBindingsManager.useBindings(actionCameraTop, testBindings);
-            actionBindingsManager.useBindings(actionCameraFollowPlayer, testBindings);
-
         }
         actionBindingsManager.assignBindingsToKeyboard(ui.keyboard());
     }
