@@ -25,9 +25,7 @@ public interface ActionBindingsManager {
 
     void uninstallBindings(Keyboard keyboard);
 
-    void addBinding(ActionBinding actionBinding);
-
-    void bind(AbstractGameAction action, KeyCombination combination);
+    void setKeyCombination(AbstractGameAction action, KeyCombination combination);
 
     /**
      * Assigns the binding for the given action to this map.
@@ -35,5 +33,5 @@ public interface ActionBindingsManager {
      * @param gameAction a game action
      * @param actionBindings an action bindings list
      */
-    void register(AbstractGameAction gameAction, Set<ActionBinding> actionBindings);
+    void useBindings(AbstractGameAction gameAction, Set<ActionBinding> actionBindings);
 }

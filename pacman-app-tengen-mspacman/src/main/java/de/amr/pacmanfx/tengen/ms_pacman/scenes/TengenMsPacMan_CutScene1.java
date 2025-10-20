@@ -93,7 +93,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         hud.creditVisible(false).scoreVisible(false).levelCounterVisible(true).livesCounterVisible(false);
         hud.showGameOptions(false);
 
-        actionBindingsManager.bind(ACTION_LET_GAME_STATE_EXPIRE, ui.joypad().key(JoypadButton.START));
+        actionBindingsManager.setKeyCombination(ACTION_LET_GAME_STATE_EXPIRE, ui.joypad().key(JoypadButton.START));
 
         final GameUI_Config uiConfig = ui.currentConfig();
         final var spriteSheet = (TengenMsPacMan_SpriteSheet) uiConfig.spriteSheet();

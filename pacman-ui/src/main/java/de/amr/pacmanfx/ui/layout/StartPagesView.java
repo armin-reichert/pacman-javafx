@@ -109,10 +109,10 @@ public class StartPagesView implements GameUI_View {
             }
         };
 
-        actionBindings.bind(actionPrevSlide,            nude(KeyCode.LEFT));
-        actionBindings.bind(actionNextSlide,            nude(KeyCode.RIGHT));
-        actionBindings.bind(ACTION_BOOT_SHOW_PLAY_VIEW, nude(KeyCode.ENTER));
-        actionBindings.bind(ACTION_TOGGLE_PAUSED,       nude(KeyCode.P));
+        actionBindings.setKeyCombination(actionPrevSlide,            nude(KeyCode.LEFT));
+        actionBindings.setKeyCombination(actionNextSlide,            nude(KeyCode.RIGHT));
+        actionBindings.setKeyCombination(ACTION_BOOT_SHOW_PLAY_VIEW, nude(KeyCode.ENTER));
+        actionBindings.setKeyCombination(ACTION_TOGGLE_PAUSED,       nude(KeyCode.P));
     }
 
     @Override

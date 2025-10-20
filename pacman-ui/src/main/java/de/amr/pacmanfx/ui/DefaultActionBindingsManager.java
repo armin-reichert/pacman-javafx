@@ -32,13 +32,10 @@ public class DefaultActionBindingsManager implements ActionBindingsManager {
         public void uninstallBindings(Keyboard keyboard) {}
 
         @Override
-        public void addBinding(ActionBinding actionBinding) {}
+        public void useBindings(AbstractGameAction action, Set<ActionBinding> actionBindings) {}
 
         @Override
-        public void register(AbstractGameAction action, Set<ActionBinding> actionBindings) {}
-
-        @Override
-        public void bind(AbstractGameAction action, KeyCombination combination) {}
+        public void setKeyCombination(AbstractGameAction action, KeyCombination combination) {}
 
         @Override
         public Optional<AbstractGameAction> matchingAction(Keyboard keyboard) { return Optional.empty(); }
@@ -83,7 +80,7 @@ public class DefaultActionBindingsManager implements ActionBindingsManager {
     }
 
     @Override
-    public void bind(AbstractGameAction action, KeyCombination combination) {
+    public void setKeyCombination(AbstractGameAction action, KeyCombination combination) {
         requireNonNull(action);
         requireNonNull(combination);
         actionByCombination.put(combination, action);
@@ -96,17 +93,16 @@ public class DefaultActionBindingsManager implements ActionBindingsManager {
      * @param actionBindings an action bindings list
      */
     @Override
-    public void register(AbstractGameAction gameAction, Set<ActionBinding> actionBindings) {
+    public void useBindings(AbstractGameAction gameAction, Set<ActionBinding> actionBindings) {
         requireNonNull(gameAction);
         requireNonNull(actionBindings);
         actionBindings.stream()
             .filter(actionBinding -> actionBinding.gameAction() == gameAction)
             .findFirst()
-            .ifPresent(this::addBinding);
+            .ifPresent(this::useBinding);
     }
 
-    @Override
-    public void addBinding(ActionBinding actionBinding) {
+    private void useBinding(ActionBinding actionBinding) {
         for (KeyCombination combination : actionBinding.keyCombinations()) {
             actionByCombination.put(combination, actionBinding.gameAction());
         }
