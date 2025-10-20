@@ -461,6 +461,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
     public void onSwitch_3D_2D(GameScene scene3D) {
         // Switch might occur just during the few ticks when level is not yet available!
         context().optGameLevel().ifPresent(this::initForGameLevel);
+        dynamicCamera.followPac(true);
     }
 
     @Override
