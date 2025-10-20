@@ -8,7 +8,6 @@ import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.controller.test.TestGameState;
 import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.MessageType;
@@ -39,7 +38,6 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.ParallelCamera;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
@@ -59,7 +57,6 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.controller.GamePlayState.*;
-import static de.amr.pacmanfx.lib.UsefulFunctions.lerp;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Actions.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Properties.PROPERTY_PLAY_SCENE_DISPLAY_MODE;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
@@ -81,7 +78,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
     private final Canvas canvas = new Canvas();
     private final Rectangle clipRect = new Rectangle();
 
-    private final DynamicCamera dynamicCamera = new DynamicCamera();
+    private final PlayScene2DCamera dynamicCamera = new PlayScene2DCamera();
     private final PerspectiveCamera fixedCamera  = new PerspectiveCamera(false);
 
     private TengenMsPacMan_HUDRenderer hudRenderer;
@@ -124,124 +121,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         new ActionBinding(actionCameraTop,          Keyboard.control(KeyCode.T)),
         new ActionBinding(actionCameraFollowPlayer, Keyboard.control(KeyCode.F))
     );
-
-    private class DynamicCamera extends ParallelCamera {
-
-        private static final float MIN_CAMERA_MOVEMENT = 0.5f;
-        private static final float CAMERA_SPEED = 0.02f;
-
-        private static final int INTRO_DELAY_TICKS = 90;
-        private static final int INTRO_MOVE_TICKS = 60;
-
-        private boolean introRunning;
-        private int introTick;
-
-        private boolean followPac;
-        private double tgtY;
-        private double minY;
-        private double maxY;
-
-        /**
-         * Show top of maze, wait some time, then move to bottom, then focus Pac-Man.
-         */
-        public void startIntro() {
-            introTick = 0;
-            introRunning = true;
-        }
-
-        private void playIntro() {
-            switch (introTick) {
-                case 0 -> {
-                    moveTopImmediately();
-                    followPac = false;
-                }
-                case INTRO_DELAY_TICKS -> setTargetBottom();
-                case INTRO_DELAY_TICKS + INTRO_MOVE_TICKS -> {
-                    followPac = true;
-                    introRunning = false;
-                    return;
-                }
-            }
-            ++introTick;
-        }
-
-        public void stop() {
-            introRunning = false;
-            followPac = false;
-        }
-
-        public void followPac(boolean follow) {
-            followPac = follow;
-        }
-
-        public void moveTopImmediately() {
-            followPac(false);
-            setTranslateY(minY);
-        }
-
-        public void moveBottomImmediately() {
-            followPac(false);
-            setTranslateY(maxY);
-        }
-
-        public void setTargetTop() {
-            tgtY = minY;
-        }
-
-        public void setTargetBottom() {
-            tgtY = maxY;
-        }
-
-        public void update(GameLevel gameLevel) {
-            updateRange(gameLevel);
-            if (introRunning) {
-                playIntro();
-            }
-            else if (followPac) {
-                followPac(gameLevel);
-            }
-            else {
-                move();
-            }
-        }
-
-        // This is "alchemy", not science :-)
-        private void updateRange(GameLevel gameLevel) {
-            int numRows = gameLevel.worldMap().terrainLayer().numRows();
-            if (numRows <= 30) { // MINI
-                dynamicCamera.minY = -scaled(TS(3));
-                dynamicCamera.maxY =  scaled(TS(2));
-            }
-            else if (numRows >= 42) { // BIG
-                dynamicCamera.minY = -scaled(TS(9));
-                dynamicCamera.maxY =  scaled(TS(8));
-            }
-            else { // ARCADE
-                dynamicCamera.minY = -scaled(TS(6));
-                dynamicCamera.maxY =  scaled(TS(5));
-            }
-        }
-
-        private void move() {
-            double oldCameraY = getTranslateY();
-            double newCameraY = lerp(oldCameraY, tgtY, CAMERA_SPEED);
-            double delta = Math.abs(oldCameraY - newCameraY);
-            if (delta > MIN_CAMERA_MOVEMENT) {
-                setTranslateY(newCameraY);
-            }
-        }
-
-        private void followPac(GameLevel gameLevel) {
-            Pac pac = gameLevel.pac();
-            double relY = pac.y() / TS(gameLevel.worldMap().terrainLayer().numRows());
-            if (relY < 0.25 || relY < 0.6 && pac.moveDir() == Direction.UP) {
-                setTargetTop();
-            } else if (relY > 0.75 || relY > 0.4 && pac.moveDir() == Direction.DOWN) {
-                setTargetBottom();
-            }
-            move();
-        }
-    }
 
     private class PlaySceneDebugInfoRenderer extends DefaultDebugInfoRenderer {
 
@@ -357,6 +236,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         game.hud().scoreVisible(true).levelCounterVisible(true).livesCounterVisible(true);
         game.hud().showGameOptions(!game.optionsAreInitial());
         updateScaling();
+        dynamicCamera.scaling.bind(scaling);
         dynamicCamera.moveTopImmediately();
     }
 
