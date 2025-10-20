@@ -130,34 +130,77 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         private static final float MIN_CAMERA_MOVEMENT = 0.5f;
         private static final float CAMERA_SPEED = 0.02f;
 
+        private static final int INTRO_DELAY_TICKS = 90;
+        private static final int INTRO_MOVE_TICKS = 60;
+
+        private boolean introRunning;
+        private int introTick;
+
         private boolean followPac;
-        private int idleTicks;
         private double tgtY;
         private double minY;
         private double maxY;
 
-        public DynamicCamera() {}
+        /**
+         * Show top of maze, wait some time, then move to bottom, then focus Pac-Man.
+         */
+        public void startIntro() {
+            introTick = 0;
+            introRunning = true;
+        }
 
-        public void setIdleTicks(int idleTicks) {
-            this.idleTicks = idleTicks;
+        private void playIntro() {
+            switch (introTick) {
+                case 0 -> {
+                    moveTopImmediately();
+                    followPac = false;
+                }
+                case INTRO_DELAY_TICKS -> setTargetBottom();
+                case INTRO_DELAY_TICKS + INTRO_MOVE_TICKS -> {
+                    followPac = true;
+                    introRunning = false;
+                    return;
+                }
+            }
+            ++introTick;
+        }
+
+        public void stop() {
+            introRunning = false;
+            followPac = false;
         }
 
         public void followPac(boolean follow) {
             followPac = follow;
         }
 
+        public void moveTopImmediately() {
+            followPac(false);
+            setTranslateY(minY);
+        }
+
+        public void moveBottomImmediately() {
+            followPac(false);
+            setTranslateY(maxY);
+        }
+
+        public void setTargetTop() {
+            tgtY = minY;
+        }
+
+        public void setTargetBottom() {
+            tgtY = maxY;
+        }
+
         public void update(GameLevel gameLevel) {
             updateRange(gameLevel);
-            if (idleTicks > 0) {
-                --idleTicks;
-                if (idleTicks == 0) {
-                    setTargetBottom();
-                    followPac(true);
-                }
-                return;
+            if (introRunning) {
+                playIntro();
             }
-            if (followPac) {
-                focusPac(gameLevel);
+            else if (followPac) {
+                followPac(gameLevel);
+            }
+            else {
                 move();
             }
         }
@@ -188,7 +231,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
             }
         }
 
-        private void focusPac(GameLevel gameLevel) {
+        private void followPac(GameLevel gameLevel) {
             Pac pac = gameLevel.pac();
             double relY = pac.y() / TS(gameLevel.worldMap().terrainLayer().numRows());
             if (relY < 0.25 || relY < 0.6 && pac.moveDir() == Direction.UP) {
@@ -196,24 +239,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
             } else if (relY > 0.75 || relY > 0.4 && pac.moveDir() == Direction.DOWN) {
                 setTargetBottom();
             }
-        }
-
-        public void moveTopImmediately() {
-            followPac(false);
-            setTranslateY(minY);
-        }
-
-        public void moveBottomImmediately() {
-            followPac(false);
-            setTranslateY(maxY);
-        }
-
-        public void setTargetTop() {
-            tgtY = minY;
-        }
-
-        public void setTargetBottom() {
-            tgtY = maxY;
+            move();
         }
     }
 
@@ -466,8 +492,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
 
     @Override
     public void onLevelStarted(GameEvent e) {
-        dynamicCamera.moveTopImmediately();
-        dynamicCamera.setIdleTicks(90);
+        dynamicCamera.startIntro();
     }
 
     @Override
@@ -479,6 +504,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
             }
             case GAME_OVER -> {
                 ui.soundManager().stopAll();
+                dynamicCamera.followPac(false);
                 dynamicCamera.setTargetTop();
                 startGameOverMessageAnimation(context().gameLevel());
             }
@@ -532,6 +558,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
     @Override
     public void onGameContinued(GameEvent e) {
         context().optGameLevel().ifPresent(gameLevel -> context().game().showMessage(gameLevel, MessageType.READY));
+        dynamicCamera.startIntro();
     }
 
     @Override
@@ -541,12 +568,12 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
 
     @Override
     public void onPacDead(GameEvent e) {
-        dynamicCamera.setTargetTop();
         context().gameController().letCurrentGameStateExpire();
     }
 
     @Override
     public void onPacDying(GameEvent e) {
+        dynamicCamera.stop();
         ui.soundManager().play(SoundID.PAC_MAN_DEATH);
     }
 
