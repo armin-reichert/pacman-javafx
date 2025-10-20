@@ -16,7 +16,7 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.lerp;
 
 class PlayScene2DCamera extends ParallelCamera {
 
-    final DoubleProperty scaling = new SimpleDoubleProperty(1);
+    private final DoubleProperty scaling = new SimpleDoubleProperty(1);
 
     private static final float MIN_CAMERA_MOVEMENT = 0.5f;
     private static final float CAMERA_SPEED = 0.02f;
@@ -27,10 +27,14 @@ class PlayScene2DCamera extends ParallelCamera {
     private boolean introRunning;
     private int introTick;
 
-    private boolean followPac;
+    private boolean trackingPac;
     private double tgtY;
     private double minY;
     private double maxY;
+
+    public DoubleProperty scalingProperty() {
+        return scaling;
+    }
 
     /**
      * Show top of maze, wait some time, then move to bottom, then focus Pac-Man.
@@ -43,12 +47,12 @@ class PlayScene2DCamera extends ParallelCamera {
     private void playIntro() {
         switch (introTick) {
             case 0 -> {
-                moveTopImmediately();
-                followPac = false;
+                setToTop();
+                trackingPac = false;
             }
             case INTRO_DELAY_TICKS -> setTargetBottom();
             case INTRO_DELAY_TICKS + INTRO_MOVE_TICKS -> {
-                followPac = true;
+                trackingPac = true;
                 introRunning = false;
                 return;
             }
@@ -58,20 +62,20 @@ class PlayScene2DCamera extends ParallelCamera {
 
     public void stop() {
         introRunning = false;
-        followPac = false;
+        trackingPac = false;
     }
 
-    public void followPac(boolean follow) {
-        followPac = follow;
+    public void setTrackingPac(boolean follow) {
+        trackingPac = follow;
     }
 
-    public void moveTopImmediately() {
-        followPac(false);
+    public void setToTop() {
+        setTrackingPac(false);
         setTranslateY(minY);
     }
 
-    public void moveBottomImmediately() {
-        followPac(false);
+    public void setToBottom() {
+        setTrackingPac(false);
         setTranslateY(maxY);
     }
 
@@ -83,15 +87,26 @@ class PlayScene2DCamera extends ParallelCamera {
         tgtY = maxY;
     }
 
+    private void setTargetFollowingPac(GameLevel gameLevel) {
+        Pac pac = gameLevel.pac();
+        double relY = pac.y() / TS(gameLevel.worldMap().terrainLayer().numRows());
+        if (relY < 0.25 || relY < 0.6 && pac.moveDir() == Direction.UP) {
+            setTargetTop();
+        } else if (relY > 0.75 || relY > 0.4 && pac.moveDir() == Direction.DOWN) {
+            setTargetBottom();
+        }
+    }
+
     public void update(GameLevel gameLevel) {
         updateRange(gameLevel);
         if (introRunning) {
             playIntro();
-        } else if (followPac) {
-            followPac(gameLevel);
-        } else {
-            move();
+            return;
         }
+        if (trackingPac) {
+            setTargetFollowingPac(gameLevel);
+        }
+        move();
     }
 
     // This is "alchemy", not science :-)
@@ -116,16 +131,5 @@ class PlayScene2DCamera extends ParallelCamera {
         if (delta > MIN_CAMERA_MOVEMENT) {
             setTranslateY(newCameraY);
         }
-    }
-
-    private void followPac(GameLevel gameLevel) {
-        Pac pac = gameLevel.pac();
-        double relY = pac.y() / TS(gameLevel.worldMap().terrainLayer().numRows());
-        if (relY < 0.25 || relY < 0.6 && pac.moveDir() == Direction.UP) {
-            setTargetTop();
-        } else if (relY > 0.75 || relY > 0.4 && pac.moveDir() == Direction.DOWN) {
-            setTargetBottom();
-        }
-        move();
     }
 }

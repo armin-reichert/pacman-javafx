@@ -93,7 +93,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
     private final AbstractGameAction actionCameraFollowPlayer = new AbstractGameAction("CameraFollowPlayer") {
         @Override
         public void execute(GameUI ui) {
-            dynamicCamera.followPac(true);
+            dynamicCamera.setTrackingPac(true);
         }
 
         @Override
@@ -105,14 +105,14 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
     private final AbstractGameAction actionCameraTop = new AbstractGameAction("CameraTop") {
         @Override
         public void execute(GameUI ui) {
-            dynamicCamera.moveTopImmediately();
+            dynamicCamera.setToTop();
         }
     };
 
     private final AbstractGameAction actionCameraBottom = new AbstractGameAction("CameraBottom") {
         @Override
         public void execute(GameUI ui) {
-            dynamicCamera.moveBottomImmediately();
+            dynamicCamera.setToBottom();
         }
     };
 
@@ -236,8 +236,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         game.hud().scoreVisible(true).levelCounterVisible(true).livesCounterVisible(true);
         game.hud().showGameOptions(!game.optionsAreInitial());
         updateScaling();
-        dynamicCamera.scaling.bind(scaling);
-        dynamicCamera.moveTopImmediately();
+        dynamicCamera.scalingProperty().bind(scaling);
+        dynamicCamera.setToTop();
     }
 
     @Override
@@ -367,7 +367,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
     public void onSwitch_3D_2D(GameScene scene3D) {
         // Switch might occur just during the few ticks when level is not yet available!
         context().optGameLevel().ifPresent(this::initForGameLevel);
-        dynamicCamera.followPac(true);
+        dynamicCamera.setTrackingPac(true);
     }
 
     @Override
@@ -384,7 +384,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
             }
             case GAME_OVER -> {
                 ui.soundManager().stopAll();
-                dynamicCamera.followPac(false);
+                dynamicCamera.setTrackingPac(false);
                 dynamicCamera.setTargetTop();
                 startGameOverMessageAnimation(context().gameLevel());
             }
