@@ -20,7 +20,6 @@ import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
-import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.beans.binding.Bindings;
 import javafx.scene.Scene;
@@ -336,19 +335,7 @@ public class PlayView extends StackPane implements GameUI_View {
 
     // Dashboard access
 
-    public void configureDashboard(List<DashboardID> dashboardIDs) {
-        dashboard.configure(dashboardIDs);
-    }
-
-    public void initDashboard() {
-        dashboard.init(ui);
-    }
-
-    public void showDashboard(boolean show) {
-        dashboard.setVisible(show);
-    }
-
-    public void toggleDashboard() {
-        dashboard.toggleVisibility();
+    public Dashboard dashboard() {
+        return dashboard;
     }
 }

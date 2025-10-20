@@ -377,7 +377,7 @@ public interface CommonGameActions {
     AbstractGameAction ACTION_TOGGLE_DASHBOARD = new AbstractGameAction("TOGGLE_DASHBOARD") {
         @Override
         public void execute(GameUI ui) {
-            ui.playView().toggleDashboard();
+            ui.playView().dashboard().toggleVisibility();
         }
 
         @Override
