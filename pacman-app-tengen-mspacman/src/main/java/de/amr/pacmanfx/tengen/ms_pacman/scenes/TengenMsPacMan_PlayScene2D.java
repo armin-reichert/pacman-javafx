@@ -174,7 +174,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
                 return;
             }
             if (focussedActor != null) {
-                focusActor();
+                focusActor(gameLevel);
                 updateCameraPosition();
             }
         }
@@ -188,15 +188,13 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
             }
         }
 
-        private void focusActor() {
-            context().optGameLevel().ifPresent(gameLevel -> {
-                int numRows = gameLevel.worldMap().terrainLayer().numRows();
-                double relY = focussedActor.y() / TS(numRows);
-                boolean targetTop = relY < 0.25 || relY < 0.6 && focussedActor.moveDir() == Direction.UP;
-                boolean targetBot = relY > 0.75 || relY > 0.4 && focussedActor.moveDir() == Direction.DOWN;
-                if (targetTop) tgtY = minY;
-                if (targetBot) tgtY = maxY;
-            });
+        private void focusActor(GameLevel gameLevel) {
+            double relY = focussedActor.y() / TS(gameLevel.worldMap().terrainLayer().numRows());
+            if (relY < 0.25 || relY < 0.6 && focussedActor.moveDir() == Direction.UP) {
+                setTargetTop();
+            } else if (relY > 0.75 || relY > 0.4 && focussedActor.moveDir() == Direction.DOWN) {
+                setTargetBottom();
+            }
         }
 
         public void top() {
