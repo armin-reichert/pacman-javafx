@@ -109,7 +109,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         actionBindings.useBindings(ACTION_PERSPECTIVE_NEXT, ui.actionBindings());
         actionBindings.useBindings(ACTION_TOGGLE_DRAW_MODE, ui.actionBindings());
 
-        actionBindings.installBindings(ui.keyboard());
+        actionBindings.assignBindingsToKeyboard(ui.keyboard());
     }
 
     @Override

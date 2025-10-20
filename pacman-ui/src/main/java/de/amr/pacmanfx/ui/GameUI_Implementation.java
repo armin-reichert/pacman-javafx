@@ -218,7 +218,7 @@ public class GameUI_Implementation implements GameUI {
         globalActionBindings.useBindings(ACTION_ENTER_FULLSCREEN, DEFAULT_ACTION_BINDINGS);
         globalActionBindings.useBindings(ACTION_OPEN_EDITOR, DEFAULT_ACTION_BINDINGS);
         globalActionBindings.useBindings(ACTION_TOGGLE_MUTED, DEFAULT_ACTION_BINDINGS);
-        globalActionBindings.installBindings(keyboard);
+        globalActionBindings.assignBindingsToKeyboard(keyboard);
     }
 
     private void selectView(GameUI_View view) {
@@ -228,10 +228,10 @@ public class GameUI_Implementation implements GameUI {
             return;
         }
         if (oldView != null) {
-            oldView.actionBindingsManager().uninstallBindings(keyboard);
+            oldView.actionBindingsManager().removeBindingsFromKeyboard(keyboard);
             gameContext.eventManager().removeEventListener(oldView);
         }
-        view.actionBindingsManager().installBindings(keyboard);
+        view.actionBindingsManager().assignBindingsToKeyboard(keyboard);
         gameContext.eventManager().addEventListener(view);
         mainScene.currentViewProperty().set(view);
     }

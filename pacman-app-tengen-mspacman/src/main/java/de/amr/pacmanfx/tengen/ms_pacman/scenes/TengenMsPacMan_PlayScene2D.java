@@ -327,7 +327,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
             actionBindingsManager.useBindings(actionCameraFollowPlayer, testBindings);
 
         }
-        actionBindingsManager.installBindings(ui.keyboard());
+        actionBindingsManager.assignBindingsToKeyboard(ui.keyboard());
     }
 
     @Override

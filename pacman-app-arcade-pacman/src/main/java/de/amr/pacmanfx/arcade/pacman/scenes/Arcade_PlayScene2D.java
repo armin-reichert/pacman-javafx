@@ -107,7 +107,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
             actionBindingsManager.useBindings(ACTION_CHEAT_KILL_GHOSTS,      ui.actionBindings());
             ui.soundManager().setEnabled(true);
         }
-        actionBindingsManager.installBindings(ui.keyboard());
+        actionBindingsManager.assignBindingsToKeyboard(ui.keyboard());
 
         Logger.info("Scene {} initialized with game level", getClass().getSimpleName());
     }

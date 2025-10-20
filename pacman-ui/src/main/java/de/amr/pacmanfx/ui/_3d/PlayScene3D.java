@@ -264,7 +264,7 @@ public class PlayScene3D implements GameScene {
     }
 
     protected void setActionBindings() {
-        actionBindings.uninstallBindings(ui.keyboard());
+        actionBindings.removeBindingsFromKeyboard(ui.keyboard());
         actionBindings.useBindings(ACTION_PERSPECTIVE_PREVIOUS, ui.actionBindings());
         actionBindings.useBindings(ACTION_PERSPECTIVE_NEXT, ui.actionBindings());
         actionBindings.useBindings(ACTION_TOGGLE_DRAW_MODE, ui.actionBindings());
@@ -279,7 +279,7 @@ public class PlayScene3D implements GameScene {
                 actionBindings.useBindings(ACTION_CHEAT_KILL_GHOSTS, ui.actionBindings());
             }
         }
-        actionBindings.installBindings(ui.keyboard());
+        actionBindings.assignBindingsToKeyboard(ui.keyboard());
     }
 
     /**
@@ -298,7 +298,7 @@ public class PlayScene3D implements GameScene {
         perspectiveIDProperty().bind(PROPERTY_3D_PERSPECTIVE_ID);
         actionBindings.setKeyCombination(actionDroneUp, control(KeyCode.MINUS));
         actionBindings.setKeyCombination(actionDroneDown, control(KeyCode.PLUS));
-        actionBindings.installBindings(ui.keyboard());
+        actionBindings.assignBindingsToKeyboard(ui.keyboard());
     }
 
     @Override

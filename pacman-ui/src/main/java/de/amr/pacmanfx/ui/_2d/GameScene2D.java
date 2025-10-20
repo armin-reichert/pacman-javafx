@@ -61,7 +61,7 @@ public abstract class GameScene2D implements GameScene {
     @Override
     public final void init() {
         doInit();
-        actionBindingsManager.installBindings(ui.keyboard());
+        actionBindingsManager.assignBindingsToKeyboard(ui.keyboard());
     }
 
     @Override

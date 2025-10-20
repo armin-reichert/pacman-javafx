@@ -26,10 +26,10 @@ public class DefaultActionBindingsManager implements ActionBindingsManager {
         public boolean hasNoEntries() { return true; }
 
         @Override
-        public void installBindings(Keyboard keyboard) {}
+        public void assignBindingsToKeyboard(Keyboard keyboard) {}
 
         @Override
-        public void uninstallBindings(Keyboard keyboard) {}
+        public void removeBindingsFromKeyboard(Keyboard keyboard) {}
 
         @Override
         public void useBindings(AbstractGameAction action, Set<ActionBinding> actionBindings) {}
@@ -60,7 +60,7 @@ public class DefaultActionBindingsManager implements ActionBindingsManager {
     }
 
     @Override
-    public void installBindings(Keyboard keyboard) {
+    public void assignBindingsToKeyboard(Keyboard keyboard) {
         for (KeyCombination combination : actionByCombination.keySet()) {
             keyboard.setBinding(combination, this);
         }
@@ -72,7 +72,7 @@ public class DefaultActionBindingsManager implements ActionBindingsManager {
     }
 
     @Override
-    public void uninstallBindings(Keyboard keyboard) {
+    public void removeBindingsFromKeyboard(Keyboard keyboard) {
         for (KeyCombination combination : actionByCombination.keySet()) {
             keyboard.removeBinding(combination, this);
         }

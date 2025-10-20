@@ -21,9 +21,9 @@ public interface ActionBindingsManager {
 
     boolean hasNoEntries();
 
-    void installBindings(Keyboard keyboard);
+    void assignBindingsToKeyboard(Keyboard keyboard);
 
-    void uninstallBindings(Keyboard keyboard);
+    void removeBindingsFromKeyboard(Keyboard keyboard);
 
     void setKeyCombination(AbstractGameAction action, KeyCombination combination);
 
