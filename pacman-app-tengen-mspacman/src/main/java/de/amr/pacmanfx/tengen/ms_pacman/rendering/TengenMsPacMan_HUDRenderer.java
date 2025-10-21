@@ -61,17 +61,16 @@ public class TengenMsPacMan_HUDRenderer extends BaseRenderer implements HUDRende
         }
 
         if (tengenHUD.isLivesCounterVisible()) {
-            drawLivesCounter(tengenGame, tengenHUD, TS(2), sceneSize.y() - TS);
+            drawLivesCounter(tengenGame, tengenHUD, sceneSize.y() - TS);
         }
 
         if (tengenHUD.isLevelCounterVisible()) {
-            float left = 0, right = sceneSize.x() - TS(2);
             float y = sceneSize.y() - TS;
-            drawLevelCounter(tengenGame, tengenHUD, left, right, y);
+            drawLevelCounter(tengenGame, tengenHUD, y);
         }
 
         if (tengenHUD.gameOptionsVisible()) {
-            drawGameOptions(tengenGame.mapCategory(), tengenGame.difficulty(), tengenGame.pacBooster(), 0.5 * sceneSize.x(), TS(2.5));
+            drawGameOptions(tengenGame.mapCategory(), tengenGame.difficulty(), tengenGame.pacBooster(), TS(2.5));
         }
     }
 
@@ -84,20 +83,21 @@ public class TengenMsPacMan_HUDRenderer extends BaseRenderer implements HUDRende
         fillText("%6d".formatted(scoreManager.highScore().points()), color, font, TS(13), TS(2));
     }
 
-    private void drawLivesCounter(Game game, TengenMsPacMan_HUD hud, float x, float y) {
+    private void drawLivesCounter(Game game, TengenMsPacMan_HUD hud, float y) {
         RectShort sprite = spriteSheet().sprite(SpriteID.LIVES_COUNTER_SYMBOL);
         for (int i = 0; i < hud.visibleLifeCount(); ++i) {
-            drawSprite(sprite, x + TS(i * 2), y, true);
+            drawSprite(sprite, TS(4 + i * 2), y, true);
         }
         if (game.lifeCount() > game.hud().maxLivesDisplayed()) {
-            fillText("(%d)".formatted(game.lifeCount()), nesColor(0x28), totalLivesFont.get(), x + TS(10), y + TS);
+            fillText("(%d)".formatted(game.lifeCount()), nesColor(0x28), totalLivesFont.get(), TS(14), y + TS);
         }
     }
 
-    private void drawLevelCounter(Game game, TengenMsPacMan_HUD hud, float left, float right, float y) {
+    private void drawLevelCounter(Game game, TengenMsPacMan_HUD hud, float y) {
         GameLevel gameLevel = game.optGameLevel().orElse(null);
         if (gameLevel == null) return;
 
+        float left = TS(2), right = TS(28);
         if (hud.levelNumberVisible()) {
             drawLevelNumberBox(gameLevel.number(), left, y); // left box
             drawLevelNumberBox(gameLevel.number(), right, y); // right box
@@ -123,7 +123,7 @@ public class TengenMsPacMan_HUDRenderer extends BaseRenderer implements HUDRende
         drawSprite(spriteSheet().digitSprite(ones), x + 10, y + 2, true);
     }
 
-    public void drawGameOptions(MapCategory category, Difficulty difficulty, PacBooster booster, double centerX, double y) {
+    public void drawGameOptions(MapCategory category, Difficulty difficulty, PacBooster booster, double y) {
         RectShort categorySprite = switch (requireNonNull(category)) {
             case BIG     -> spriteSheet().sprite(SpriteID.INFO_CATEGORY_BIG);
             case MINI    -> spriteSheet().sprite(SpriteID.INFO_CATEGORY_MINI);
@@ -136,11 +136,11 @@ public class TengenMsPacMan_HUDRenderer extends BaseRenderer implements HUDRende
             case CRAZY  -> spriteSheet().sprite(SpriteID.INFO_DIFFICULTY_CRAZY);
             case NORMAL -> RectShort.ZERO;
         };
-        drawSpriteCentered(centerX, y, spriteSheet().sprite(SpriteID.INFO_FRAME));
+        drawSpriteCentered(TS(16), y, spriteSheet().sprite(SpriteID.INFO_FRAME));
         if (requireNonNull(booster) != PacBooster.OFF) {
-            drawSpriteCentered(centerX - TS(6), y, spriteSheet().sprite(SpriteID.INFO_BOOSTER));
+            drawSpriteCentered(TS(10.5), y, spriteSheet().sprite(SpriteID.INFO_BOOSTER));
         }
-        drawSpriteCentered(centerX, y, difficultySprite);
-        drawSpriteCentered(centerX + TS(4.5), y, categorySprite);
+        drawSpriteCentered(TS(16), y, difficultySprite);
+        drawSpriteCentered(TS(20.5), y, categorySprite);
     }
 }

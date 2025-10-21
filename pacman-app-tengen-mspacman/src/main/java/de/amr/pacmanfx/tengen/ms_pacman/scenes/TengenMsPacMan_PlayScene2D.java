@@ -495,13 +495,13 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
             gameLevelRenderer.ctx().translate(scaled(TS(2)), 0);
             gameLevelRenderer.drawGameLevel(gameLevel, info);
             drawActors(gameLevel);
-            drawHUD();
             if (debugInfoVisible.get() && debugInfoRenderer != null) {
                 canvas.setClip(null); // show everything e.g. portal traversal
                 gameLevelRenderer.ctx().translate(scaled(-TS(2)), 0);
                 debugInfoRenderer.drawDebugInfo();
             }
             gameLevelRenderer.ctx().restore();
+            drawHUD();
         });
     }
 
