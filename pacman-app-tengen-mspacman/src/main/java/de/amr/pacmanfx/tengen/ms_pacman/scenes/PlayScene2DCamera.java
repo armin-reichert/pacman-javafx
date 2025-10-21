@@ -16,10 +16,12 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.lerp;
 
 class PlayScene2DCamera extends ParallelCamera {
 
+    record Range(double min, double max) {}
+
     private final DoubleProperty scaling = new SimpleDoubleProperty(1);
 
     private static final float MIN_CAMERA_MOVEMENT = 0.5f;
-    private static final float CAMERA_SPEED = 0.02f;
+    private static final float CAMERA_SPEED = 0.025f;
 
     private static final int INTRO_DELAY_TICKS = 60;
     private static final int INTRO_MOVE_TICKS = 30;
@@ -29,8 +31,7 @@ class PlayScene2DCamera extends ParallelCamera {
 
     private boolean trackingPac;
     private double tgtY;
-    private double minY;
-    private double maxY;
+    private Range range = new Range(Double.MIN_VALUE, Double.MAX_VALUE);
 
     public DoubleProperty scalingProperty() {
         return scaling;
@@ -71,34 +72,33 @@ class PlayScene2DCamera extends ParallelCamera {
 
     public void setToTop() {
         setTrackingPac(false);
-        setTranslateY(minY);
+        setTranslateY(range.min());
     }
 
     public void setToBottom() {
         setTrackingPac(false);
-        setTranslateY(maxY);
+        setTranslateY(range.max());
     }
 
     public void setTargetTop() {
-        tgtY = minY;
+        tgtY = range.min();
     }
 
     public void setTargetBottom() {
-        tgtY = maxY;
+        tgtY = range.max();
     }
 
     private void setTargetFollowingPac(GameLevel gameLevel) {
         Pac pac = gameLevel.pac();
         double relY = pac.y() / TS(gameLevel.worldMap().terrainLayer().numRows());
-        if (relY < 0.25 || relY < 0.6 && pac.moveDir() == Direction.UP) {
+        if (relY < 0.5 || relY < 0.6 && pac.moveDir() == Direction.UP) {
             setTargetTop();
-        } else if (relY > 0.75 || relY > 0.4 && pac.moveDir() == Direction.DOWN) {
+        } else if (relY > 0.5 || relY > 0.4 && pac.moveDir() == Direction.DOWN) {
             setTargetBottom();
         }
     }
 
     public void update(GameLevel gameLevel) {
-        updateRange(gameLevel);
         if (introRunning) {
             playIntro();
             return;
@@ -110,20 +110,17 @@ class PlayScene2DCamera extends ParallelCamera {
     }
 
     // This is "alchemy", not science :-)
-    private void updateRange(GameLevel gameLevel) {
+    public void setGameLevel(GameLevel gameLevel) {
         int numRows = gameLevel.worldMap().terrainLayer().numRows();
         if (numRows <= 30) {
             // MINI
-            minY = scaledTiles(-3);
-            maxY = scaledTiles(2);
+            range = new Range(scaledTiles(-3), scaledTiles(2));
         } else if (numRows >= 42) {
             // BIG
-            minY = scaledTiles(-9);
-            maxY = scaledTiles(8);
+            range = new Range(scaledTiles(-9), scaledTiles(8));
         } else {
             // ARCADE and a single STRANGE maze
-            minY = scaledTiles(-6);
-            maxY = scaledTiles(5);
+            range = new Range(scaledTiles(-6), scaledTiles(5));
         }
     }
 

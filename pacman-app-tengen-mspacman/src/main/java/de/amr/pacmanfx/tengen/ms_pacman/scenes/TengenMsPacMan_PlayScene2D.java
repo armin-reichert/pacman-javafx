@@ -314,6 +314,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         //TODO check if this is needed, if not, remove
         gameLevelRenderer = (TengenMsPacMan_GameLevelRenderer) ui.currentConfig().createGameLevelRenderer(canvas);
         gameLevelRenderer.scalingProperty().bind(scaling);
+
+        dynamicCamera.setGameLevel(gameLevel);
     }
 
     @Override
