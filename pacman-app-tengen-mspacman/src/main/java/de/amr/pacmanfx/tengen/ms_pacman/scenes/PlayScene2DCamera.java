@@ -112,16 +112,23 @@ class PlayScene2DCamera extends ParallelCamera {
     // This is "alchemy", not science :-)
     private void updateRange(GameLevel gameLevel) {
         int numRows = gameLevel.worldMap().terrainLayer().numRows();
-        if (numRows <= 30) { // MINI
-            minY = -scaling.get() * TS(3);
-            maxY = scaling.get() * TS(2);
-        } else if (numRows >= 42) { // BIG
-            minY = -scaling.get() * TS(9);
-            maxY = scaling.get() * TS(8);
-        } else { // ARCADE
-            minY = -scaling.get() * TS(6);
-            maxY = scaling.get() * TS(5);
+        if (numRows <= 30) {
+            // MINI
+            minY = scaledTiles(-3);
+            maxY = scaledTiles(2);
+        } else if (numRows >= 42) {
+            // BIG
+            minY = scaledTiles(-9);
+            maxY = scaledTiles(8);
+        } else {
+            // ARCADE and a single STRANGE maze
+            minY = scaledTiles(-6);
+            maxY = scaledTiles(5);
         }
+    }
+
+    private double scaledTiles(int n) {
+        return scaling.get() * TS(n);
     }
 
     private void move() {
