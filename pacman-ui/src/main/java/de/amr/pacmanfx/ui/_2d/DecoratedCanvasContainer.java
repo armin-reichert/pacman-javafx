@@ -18,32 +18,32 @@ import javafx.scene.shape.Rectangle;
 import org.tinylog.Logger;
 
 /**
- * TODO: This thing needs to get simplified.
+ * TODO: This thing needs to get simplified. Too many magic numbers.
  */
 public class DecoratedCanvasContainer extends BorderPane {
 
-    static final Vector2f SCALING_WHEN_BORDER_VISIBLE = new Vector2f(0.85f, 0.93f);
+    private static final Vector2f DOWN_SCALING = new Vector2f(0.85f, 0.93f);
 
     private final ObjectProperty<Color> borderColor = new SimpleObjectProperty<>(Color.LIGHTBLUE);
 
     private final DoubleProperty scaling = new SimpleDoubleProperty(1.0) {
         @Override
         protected void invalidated() {
-            doLayout(scaling(), true);
+            recomputeLayout();
         }
     };
 
     private final DoubleProperty unscaledCanvasWidth = new SimpleDoubleProperty(500) {
         @Override
         protected void invalidated() {
-            doLayout(scaling(), true);
+            recomputeLayout();
         }
     };
 
     private final DoubleProperty unscaledCanvasHeight = new SimpleDoubleProperty(400) {
         @Override
         protected void invalidated() {
-            doLayout(scaling(), true);
+            recomputeLayout();
         }
     };
 
@@ -59,14 +59,17 @@ public class DecoratedCanvasContainer extends BorderPane {
         clipProperty().bind(Bindings.createObjectBinding(() -> {
             Dimension2D size = computeSize();
             var clipRect = new Rectangle(size.getWidth(), size.getHeight());
-            double arcSize = 26 * scaling(); // TODO avoid magic numbers
+            // TODO avoid magic numbers
+            double arcSize = 26 * scaling();
             clipRect.setArcWidth(arcSize);
             clipRect.setArcHeight(arcSize);
             return clipRect;
         }, scaling, unscaledCanvasWidth, unscaledCanvasHeight));
 
         borderProperty().bind(Bindings.createObjectBinding(() -> {
-            double borderWidth = Math.max(5, Math.ceil(computeSize().getHeight() / 55)); // TODO avoid magic numbers
+            Dimension2D size = computeSize();
+            // TODO avoid magic numbers
+            double borderWidth = Math.max(5, Math.ceil(size.getHeight() / 55));
             return new Border(
                 new BorderStroke(
                     borderColor(),
@@ -75,7 +78,11 @@ public class DecoratedCanvasContainer extends BorderPane {
                     new BorderWidths(borderWidth)
                 )
             );
-        }, scaling, unscaledCanvasWidth, unscaledCanvasHeight));
+        }, borderColor, scaling, unscaledCanvasWidth, unscaledCanvasHeight));
+    }
+
+    private void recomputeLayout() {
+        doLayout(scaling(), true);
     }
 
     private void doLayout(double newScaling, boolean forced) {
@@ -83,7 +90,7 @@ public class DecoratedCanvasContainer extends BorderPane {
             Logger.warn("Cannot scale to {}, minimum scaling is {}", newScaling, minScaling);
             return;
         }
-        if (!forced && Math.abs(scaling() - newScaling) < 1e-2) { // avoid irrelevant scaling
+        if (!forced && Math.abs(scaling() - newScaling) < 1e-2) { // ignore tiny scaling changes
             Logger.debug("No scaling needed, difference too small");
             return;
         }
@@ -109,8 +116,8 @@ public class DecoratedCanvasContainer extends BorderPane {
     }
 
     public void resizeTo(double width, double height) {
-        final double downScaledWidth = SCALING_WHEN_BORDER_VISIBLE.x() * width;
-        final double downScaledHeight = SCALING_WHEN_BORDER_VISIBLE.y() * height;
+        final double downScaledWidth = DOWN_SCALING.x() * width;
+        final double downScaledHeight = DOWN_SCALING.y() * height;
         double scaling = downScaledHeight / unscaledCanvasHeight();
         if (scaling * unscaledCanvasWidth() > downScaledWidth) {
             scaling = downScaledWidth / unscaledCanvasWidth();
