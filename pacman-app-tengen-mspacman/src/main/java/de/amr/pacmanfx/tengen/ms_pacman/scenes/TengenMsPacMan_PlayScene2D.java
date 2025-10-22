@@ -71,6 +71,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
     private static final double CANVAS_WIDTH_UNSCALED = NES_SIZE_PX.x();
     private final DoubleProperty canvasHeightUnscaled = new SimpleDoubleProperty(NES_SIZE_PX.y());
 
+    private static final float CONTENT_INDENT = TS(2);
+
     private final SubScene subScene;
     private final Canvas canvas = new Canvas();
     private final Rectangle clipRect = new Rectangle();
@@ -96,7 +98,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
             final GameState gameState = context().gameState();
             drawTileGrid(CANVAS_WIDTH_UNSCALED, canvasHeightUnscaled.get(), Color.LIGHTGRAY);
             ctx.save();
-            ctx.translate(scaled(2 * TS), 0);
+            ctx.translate(scaled(CONTENT_INDENT), 0);
             ctx.setFill(debugTextFill);
             ctx.setFont(debugTextFont);
             ctx.fillText("%s %d".formatted(gameState, gameState.timer().tickCount()), 0, scaled(3 * TS));
@@ -112,6 +114,16 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
     public TengenMsPacMan_PlayScene2D(GameUI ui) {
         super(ui);
 
+        canvas.widthProperty() .bind(scalingProperty().multiply(CANVAS_WIDTH_UNSCALED));
+        canvas.heightProperty().bind(scalingProperty().multiply(canvasHeightUnscaled));
+
+        // All maps are 28 tiles wide but the NES screen is 32 tiles wide. To accommodate, the maps are centered
+        // horizontally and 2 tiles on each side are clipped.
+        clipRect.xProperty().bind(canvas.translateXProperty().add(scalingProperty().multiply(CONTENT_INDENT)));
+        clipRect.yProperty().bind(canvas.translateYProperty());
+        clipRect.widthProperty().bind(scalingProperty().multiply(CANVAS_WIDTH_UNSCALED - 2 * CONTENT_INDENT));
+        clipRect.heightProperty().bind(canvas.heightProperty());
+
         var rootPane = new StackPane(canvas);
         rootPane.backgroundProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR.map(Background::fill));
 
@@ -120,18 +132,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         subScene.fillProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
         subScene.cameraProperty().bind(PROPERTY_PLAY_SCENE_DISPLAY_MODE.map(mode -> mode == SCROLLING ? dynamicCamera : fixedCamera));
 
-        canvas.widthProperty() .bind(scalingProperty().multiply(CANVAS_WIDTH_UNSCALED));
-        canvas.heightProperty().bind(scalingProperty().multiply(canvasHeightUnscaled));
-
-        // All maps are 28 tiles wide but the NES screen is 32 tiles wide. To accommodate, the maps are centered
-        // horizontally and 2 tiles on each side are clipped.
-        final int margin = 2 * TS;
-        clipRect.xProperty().bind(canvas.translateXProperty().add(scalingProperty().multiply(margin)));
-        clipRect.yProperty().bind(canvas.translateYProperty());
-        clipRect.widthProperty().bind(scalingProperty().multiply(CANVAS_WIDTH_UNSCALED - 2 * margin));
-        clipRect.heightProperty().bind(canvas.heightProperty());
-
-        subScene.widthProperty().addListener((py, ov, nv) -> updateScaling());
         subScene.heightProperty().addListener((py, ov, nv) -> updateScaling());
         subScene.cameraProperty().addListener((py, ov, nv) -> updateScaling());
     }
@@ -210,7 +210,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
     public void update() {
         context().optGameLevel().ifPresent(gameLevel -> {
             int numRows = gameLevel.worldMap().numRows();
-            canvasHeightUnscaled.set(TS(numRows + 2)); // 2 additional rows for level counter
+            canvasHeightUnscaled.set(TS(numRows + 2)); // 2 additional rows for level counter below maze
             if (gameLevel.isDemoLevel()) {
                 ui.soundManager().setEnabled(false);
             } else {
@@ -476,6 +476,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
             sceneRenderer.clearCanvas();
         }
         context().optGameLevel().ifPresent(gameLevel -> {
+
             final var info = new RenderInfo();
             // this is needed for animated maze from STRANGE map category
             info.put(CommonRenderInfoKey.TICK, ui.clock().tickCount());
@@ -488,20 +489,21 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
                 info.put(CommonRenderInfoKey.MAZE_BRIGHT, false);
             }
 
-            // map width is 28 tiles but NES screen width is 32 tiles: move 2 tiles right and clip one tile on each side
             canvas.setClip(clipRect);
 
             gameLevelRenderer.ctx().save();
-            gameLevelRenderer.ctx().translate(scaled(TS(2)), 0);
+            gameLevelRenderer.ctx().translate(scaled(CONTENT_INDENT), 0);
             gameLevelRenderer.drawGameLevel(gameLevel, info);
             drawActors(gameLevel);
+            gameLevelRenderer.ctx().restore();
+
+            drawHUD();
+
             if (debugInfoVisible.get() && debugInfoRenderer != null) {
-                canvas.setClip(null); // show everything e.g. portal traversal
-                gameLevelRenderer.ctx().translate(scaled(-TS(2)), 0);
+                canvas.setClip(null); // show everything
                 debugInfoRenderer.drawDebugInfo();
             }
-            gameLevelRenderer.ctx().restore();
-            drawHUD();
+
         });
     }
 
