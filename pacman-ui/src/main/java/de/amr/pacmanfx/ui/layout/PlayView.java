@@ -265,34 +265,35 @@ public class PlayView extends StackPane implements GameUI_View {
 
     private void embedGameScene(Scene parentScene, GameScene gameScene) {
         if (gameScene instanceof SubSceneProvider subSceneProvider) {
+            // 1. Play scene with integrated sub-scene: 3D scene or scrolling 2D scene as in Tengen Ms. Pac-Man:
             SubScene subScene = subSceneProvider.subScene();
+            // Let sub-scene take full size o parent scene
             subScene.widthProperty().bind(parentScene.widthProperty());
             subScene.heightProperty().bind(parentScene.heightProperty());
-            //TODO this ugly code handles the Tengen PlayScene2D case where the canvas is provided by the game scene itself
+
+            getChildren().set(0, subScene);
+
+            //TODO reconsider this
             if (gameScene instanceof CanvasProvider canvasProvider && gameScene instanceof GameScene2D gameScene2D) {
                 gameScene2D.createRenderers(canvasProvider.canvas());
             }
-            getChildren().set(0, subScene);
         }
         else if (gameScene instanceof GameScene2D gameScene2D) {
-            embedGameScene2DWithoutSubScene(gameScene2D);
+            // 2D scene with canvas
             getChildren().set(0, canvasLayer);
+
+            gameScene2D.createRenderers(canvasWithFrame.canvas());
+
+            Vector2i gameSceneSizePx = gameScene2D.sizeInPx();
+            gameScene2D.scalingProperty().bind(canvasWithFrame.scalingProperty().map(
+                scaling -> Math.min(scaling.doubleValue(), ui.preferences().getFloat("scene2d.max_scaling"))));
+            canvasWithFrame.setUnscaledCanvasSize(gameSceneSizePx.x(), gameSceneSizePx.y());
+            canvasWithFrame.resizeTo(parentScene.getWidth(), parentScene.getHeight());
+            canvasWithFrame.backgroundProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR.map(Ufx::colorBackground));
         }
         else {
             Logger.error("Cannot embed play scene of class {}", gameScene.getClass().getName());
         }
-    }
-
-    // 2D game scenes without sub-scene/camera (Arcade play scene, cut scenes) are drawn into the canvas provided by this play view
-    private void embedGameScene2DWithoutSubScene(GameScene2D gameScene2D) {
-        gameScene2D.createRenderers(canvasWithFrame.canvas());
-        gameScene2D.scalingProperty().bind(canvasWithFrame.scalingProperty().map(
-            scaling -> Math.min(scaling.doubleValue(), ui.preferences().getFloat("scene2d.max_scaling"))));
-
-        Vector2i gameSceneSizePx = gameScene2D.sizeInPx();
-        canvasWithFrame.setUnscaledCanvasSize(gameSceneSizePx.x(), gameSceneSizePx.y());
-        canvasWithFrame.resizeTo(parentScene.getWidth(), parentScene.getHeight());
-        canvasWithFrame.backgroundProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR.map(Ufx::colorBackground));
     }
 
     private void configureCanvasWithFrame() {

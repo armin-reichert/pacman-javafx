@@ -34,6 +34,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.PerspectiveCamera;
+import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
