@@ -249,9 +249,6 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     }
 
     @Override
-    public boolean hasGameCanvasRoundedBorder() { return false; }
-
-    @Override
     public SoundManager soundManager() {
         return soundManager;
     }

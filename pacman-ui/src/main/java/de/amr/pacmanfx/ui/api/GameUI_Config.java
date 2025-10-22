@@ -57,8 +57,6 @@ public interface GameUI_Config extends GameScene_Config, Disposable {
 
     Node createLivesCounterShape3D();
 
-    default boolean hasGameCanvasRoundedBorder() { return true; }
-
     Image killedGhostPointsImage(Ghost ghost, int killedIndex);
 
     SoundManager soundManager();

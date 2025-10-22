@@ -69,7 +69,7 @@ public class PlayView extends StackPane implements GameUI_View {
     private final GameUI ui;
     private final MainScene parentScene;
     private final Dashboard dashboard;
-    private final CanvasWithFrame canvasWithFrame = new CanvasWithFrame();
+    private final DecoratedCanvasContainer decoratedCanvasContainer = new DecoratedCanvasContainer();
     private final MiniGameView miniView;
     private final ContextMenu contextMenu = new ContextMenu();
 
@@ -107,8 +107,8 @@ public class PlayView extends StackPane implements GameUI_View {
             if (gameScene != null) embedGameScene(parentScene, gameScene);
         });
 
-        parentScene.widthProperty() .addListener((py, ov, w) -> canvasWithFrame.resizeTo(w.doubleValue(), parentScene.getHeight()));
-        parentScene.heightProperty().addListener((py, ov, h) -> canvasWithFrame.resizeTo(parentScene.getWidth(), h.doubleValue()));
+        parentScene.widthProperty() .addListener((py, ov, w) -> decoratedCanvasContainer.resizeTo(w.doubleValue(), parentScene.getHeight()));
+        parentScene.heightProperty().addListener((py, ov, h) -> decoratedCanvasContainer.resizeTo(parentScene.getWidth(), h.doubleValue()));
 
         actionBindings.useBindings(ACTION_BOOT_SHOW_PLAY_VIEW, ui.actionBindings());
         actionBindings.useBindings(ACTION_ENTER_FULLSCREEN, ui.actionBindings());
@@ -155,7 +155,7 @@ public class PlayView extends StackPane implements GameUI_View {
     }
 
     public void showHelp(GameUI ui) {
-        helpLayer.showHelp(ui, canvasWithFrame.scaling());
+        helpLayer.showHelp(ui, decoratedCanvasContainer.scaling());
     }
 
     public void draw() {
@@ -225,8 +225,8 @@ public class PlayView extends StackPane implements GameUI_View {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    public CanvasWithFrame canvasFrame() {
-        return canvasWithFrame;
+    public DecoratedCanvasContainer canvasFrame() {
+        return decoratedCanvasContainer;
     }
 
     public void updateGameScene(boolean reloadCurrent) {
@@ -282,14 +282,14 @@ public class PlayView extends StackPane implements GameUI_View {
             // 2D scene with canvas
             getChildren().set(0, canvasLayer);
 
-            gameScene2D.createRenderers(canvasWithFrame.canvas());
+            gameScene2D.createRenderers(decoratedCanvasContainer.canvas());
 
             Vector2i gameSceneSizePx = gameScene2D.sizeInPx();
-            gameScene2D.scalingProperty().bind(canvasWithFrame.scalingProperty().map(
+            gameScene2D.scalingProperty().bind(decoratedCanvasContainer.scalingProperty().map(
                 scaling -> Math.min(scaling.doubleValue(), ui.preferences().getFloat("scene2d.max_scaling"))));
-            canvasWithFrame.setUnscaledCanvasSize(gameSceneSizePx.x(), gameSceneSizePx.y());
-            canvasWithFrame.resizeTo(parentScene.getWidth(), parentScene.getHeight());
-            canvasWithFrame.backgroundProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR.map(Ufx::colorBackground));
+            decoratedCanvasContainer.setUnscaledCanvasSize(gameSceneSizePx.x(), gameSceneSizePx.y());
+            decoratedCanvasContainer.resizeTo(parentScene.getWidth(), parentScene.getHeight());
+            decoratedCanvasContainer.backgroundProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR.map(Ufx::colorBackground));
         }
         else {
             Logger.error("Cannot embed play scene of class {}", gameScene.getClass().getName());
@@ -297,15 +297,15 @@ public class PlayView extends StackPane implements GameUI_View {
     }
 
     private void configureCanvasWithFrame() {
-        canvasWithFrame.setMinScaling(0.5);
+        decoratedCanvasContainer.setMinScaling(0.5);
         // 28*TS x 36*TS = Arcade map size in pixels
-        canvasWithFrame.setUnscaledCanvasSize(28 * TS, 36 * TS);
-        canvasWithFrame.setBorderColor(Color.rgb(222, 222, 255));
+        decoratedCanvasContainer.setUnscaledCanvasSize(28 * TS, 36 * TS);
+        decoratedCanvasContainer.setBorderColor(Color.rgb(222, 222, 255));
     }
 
     private void configurePropertyBindings() {
         PROPERTY_CANVAS_FONT_SMOOTHING.addListener((py, ov, smooth)
-            -> canvasWithFrame.canvas().getGraphicsContext2D().setFontSmoothingType(smooth ? FontSmoothingType.LCD : FontSmoothingType.GRAY));
+            -> decoratedCanvasContainer.canvas().getGraphicsContext2D().setFontSmoothingType(smooth ? FontSmoothingType.LCD : FontSmoothingType.GRAY));
 
         PROPERTY_DEBUG_INFO_VISIBLE.addListener((py, ov, debug)
             -> {
@@ -315,7 +315,7 @@ public class PlayView extends StackPane implements GameUI_View {
     }
 
     private void createLayout() {
-        canvasLayer.setCenter(canvasWithFrame);
+        canvasLayer.setCenter(decoratedCanvasContainer);
 
         dashboardAndMiniViewLayer.setLeft(dashboard);
         dashboardAndMiniViewLayer.setRight(miniView);
@@ -325,7 +325,7 @@ public class PlayView extends StackPane implements GameUI_View {
         ));
 
         //TODO reconsider help functionality
-        helpLayer = new HelpLayer(canvasWithFrame);
+        helpLayer = new HelpLayer(decoratedCanvasContainer);
         helpLayer.setMouseTransparent(true);
 
         getChildren().addAll(canvasLayer, dashboardAndMiniViewLayer, helpLayer);

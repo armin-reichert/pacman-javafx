@@ -398,8 +398,6 @@ public class GameUI_Implementation implements GameUI {
             Logger.error("Could not find app icon for current game variant {}", gameVariant);
         }
 
-        playView().canvasFrame().setRoundedBorder(newConfig.hasGameCanvasRoundedBorder());
-
         // this triggers a game event and the event handlers:
         gameContext.gameController().selectGameVariant(gameVariant);
     }
