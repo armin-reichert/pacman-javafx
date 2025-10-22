@@ -21,6 +21,7 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.AbstractGameAction;
 import de.amr.pacmanfx.ui.DefaultActionBindingsManager;
+import de.amr.pacmanfx.ui._2d.SubSceneProvider;
 import de.amr.pacmanfx.ui.api.ActionBindingsManager;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
@@ -64,7 +65,7 @@ import static java.util.Objects.requireNonNull;
  * <p>Provides different camera perspectives that can be stepped through using key combinations
  * <code>Alt+LEFT</code> and <code>Alt+RIGHT</code>.
  */
-public class PlayScene3D implements GameScene {
+public class PlayScene3D implements GameScene, SubSceneProvider {
 
     private static final Color SUB_SCENE_FILL_DARK = Color.BLACK;
     private static final Color SUB_SCENE_FILL_BRIGHT = Color.TRANSPARENT;
@@ -331,8 +332,8 @@ public class PlayScene3D implements GameScene {
     }
 
     @Override
-    public Optional<SubScene> optSubScene() {
-        return Optional.of(subScene);
+    public SubScene subScene() {
+        return subScene;
     }
 
     @Override

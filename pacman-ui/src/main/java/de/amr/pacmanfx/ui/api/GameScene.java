@@ -6,21 +6,17 @@ package de.amr.pacmanfx.ui.api;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEventListener;
-import javafx.scene.SubScene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.ScrollEvent;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Common interface of all game scenes (2D and 3D).
  */
 public interface GameScene extends GameEventListener {
-
-    default Optional<SubScene> optSubScene() { return Optional.empty(); }
 
     GameContext context();
 

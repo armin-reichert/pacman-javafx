@@ -7,6 +7,7 @@ package de.amr.pacmanfx.ui.dashboard;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui._2d.SubSceneProvider;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
@@ -110,7 +111,9 @@ public class InfoBox3DSettings extends InfoBox {
     }
 
     private Optional<SubScene> optSubScene() {
-        return ui.currentGameScene().flatMap(GameScene::optSubScene);
+        GameScene gameScene = ui.currentGameScene().orElse(null);
+        return gameScene instanceof SubSceneProvider subSceneProvider
+            ? Optional.of(subSceneProvider.subScene()) : Optional.empty();
     }
 
     private String subSceneSizeInfo() {

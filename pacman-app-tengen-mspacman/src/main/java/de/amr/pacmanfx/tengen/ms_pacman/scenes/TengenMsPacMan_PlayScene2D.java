@@ -22,10 +22,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_ActorRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameLevelRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_HUDRenderer;
 import de.amr.pacmanfx.ui.ActionBinding;
-import de.amr.pacmanfx.ui._2d.CanvasProvider;
-import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
-import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
+import de.amr.pacmanfx.ui._2d.*;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
@@ -48,7 +45,6 @@ import javafx.scene.shape.Rectangle;
 import org.tinylog.Logger;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -66,7 +62,7 @@ import static de.amr.pacmanfx.uilib.Ufx.createContextMenuTitle;
 /**
  * Tengen Ms. Pac-Man play scene, uses vertical scrolling by default to accommodate to NES screen size.
  */
-public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasProvider {
+public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasProvider, SubSceneProvider {
 
     private static final double CANVAS_WIDTH_UNSCALED = NES_SIZE_PX.x();
     private final DoubleProperty canvasHeightUnscaled = new SimpleDoubleProperty(NES_SIZE_PX.y());
@@ -289,8 +285,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
     }
 
     @Override
-    public Optional<SubScene> optSubScene() {
-        return Optional.of(subScene);
+    public SubScene subScene() {
+        return subScene;
     }
 
     @Override

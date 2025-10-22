@@ -10,10 +10,7 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.AbstractGameAction;
 import de.amr.pacmanfx.ui.DefaultActionBindingsManager;
-import de.amr.pacmanfx.ui._2d.CanvasProvider;
-import de.amr.pacmanfx.ui._2d.CanvasWithFrame;
-import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._2d.HelpLayer;
+import de.amr.pacmanfx.ui._2d.*;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.ui.api.ActionBindingsManager;
 import de.amr.pacmanfx.ui.api.GameScene;
@@ -267,8 +264,8 @@ public class PlayView extends StackPane implements GameUI_View {
     }
 
     private void embedGameScene(Scene parentScene, GameScene gameScene) {
-        if (gameScene.optSubScene().isPresent()) {
-            SubScene subScene = gameScene.optSubScene().get();
+        if (gameScene instanceof SubSceneProvider subSceneProvider) {
+            SubScene subScene = subSceneProvider.subScene();
             subScene.widthProperty().bind(parentScene.widthProperty());
             subScene.heightProperty().bind(parentScene.heightProperty());
             //TODO this ugly code handles the Tengen PlayScene2D case where the canvas is provided by the game scene itself
