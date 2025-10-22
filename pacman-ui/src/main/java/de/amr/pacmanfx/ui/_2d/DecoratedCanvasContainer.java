@@ -6,7 +6,10 @@ package de.amr.pacmanfx.ui._2d;
 
 import de.amr.pacmanfx.lib.Vector2f;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.*;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Dimension2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.*;
@@ -22,11 +25,6 @@ public class DecoratedCanvasContainer extends BorderPane {
     static final Vector2f SCALING_WHEN_BORDER_VISIBLE = new Vector2f(0.85f, 0.93f);
 
     private final ObjectProperty<Color> borderColor = new SimpleObjectProperty<>(Color.LIGHTBLUE);
-
-    private final BooleanProperty borderVisible = new SimpleBooleanProperty(true) {
-        @Override
-        protected void invalidated() { doLayout(scaling(), true); }
-    };
 
     private final DoubleProperty scaling = new SimpleDoubleProperty(1.0) {
         @Override
@@ -68,9 +66,6 @@ public class DecoratedCanvasContainer extends BorderPane {
         }, scaling, unscaledCanvasWidth, unscaledCanvasHeight));
 
         borderProperty().bind(Bindings.createObjectBinding(() -> {
-            if (!isBorderVisible()) {
-                return null;
-            }
             double borderWidth = Math.max(5, Math.ceil(computeSize().getHeight() / 55)); // TODO avoid magic numbers
             return new Border(
                 new BorderStroke(
@@ -80,7 +75,7 @@ public class DecoratedCanvasContainer extends BorderPane {
                     new BorderWidths(borderWidth)
                 )
             );
-        }, borderVisible, scaling, unscaledCanvasWidth, unscaledCanvasHeight));
+        }, scaling, unscaledCanvasWidth, unscaledCanvasHeight));
     }
 
     private void doLayout(double newScaling, boolean forced) {
@@ -114,11 +109,8 @@ public class DecoratedCanvasContainer extends BorderPane {
     }
 
     public void resizeTo(double width, double height) {
-        double downScaledWidth = width, downScaledHeight = height;
-        if (isBorderVisible()) {
-            downScaledWidth = SCALING_WHEN_BORDER_VISIBLE.x() * width;
-            downScaledHeight = SCALING_WHEN_BORDER_VISIBLE.y() * height;
-        }
+        final double downScaledWidth = SCALING_WHEN_BORDER_VISIBLE.x() * width;
+        final double downScaledHeight = SCALING_WHEN_BORDER_VISIBLE.y() * height;
         double scaling = downScaledHeight / unscaledCanvasHeight();
         if (scaling * unscaledCanvasWidth() > downScaledWidth) {
             scaling = downScaledWidth / unscaledCanvasWidth();
@@ -164,13 +156,5 @@ public class DecoratedCanvasContainer extends BorderPane {
 
     public void setBorderColor(Color color) {
         borderColor.set(color);
-    }
-
-    public boolean isBorderVisible() {
-        return borderVisible.get();
-    }
-
-    public void setBorderVisible(boolean visible) {
-        borderVisible.set(visible);
     }
 }
