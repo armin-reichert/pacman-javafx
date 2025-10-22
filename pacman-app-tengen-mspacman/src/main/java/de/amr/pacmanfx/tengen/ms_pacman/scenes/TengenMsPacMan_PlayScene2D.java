@@ -34,7 +34,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.PerspectiveCamera;
-import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
@@ -128,13 +127,24 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         subScene = new SubScene(rootPane, 88, 88);
         subScene.fillProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
         subScene.cameraProperty().bind(PROPERTY_PLAY_SCENE_DISPLAY_MODE.map(mode -> mode == SCROLLING ? dynamicCamera : fixedCamera));
-
-        subScene.heightProperty().addListener((py, ov, nv) -> updateScaling());
         subScene.cameraProperty().addListener((py, ov, nv) -> updateScaling());
+        subScene.heightProperty().addListener((py, ov, nv) -> updateScaling());
+    }
+
+    private void initForGameLevel(GameLevel gameLevel) {
+        context().game().hud().levelCounterVisible(true).livesCounterVisible(true); // is also visible in demo level!
+        setActionsBindings(gameLevel.isDemoLevel());
+
+        //TODO check if this is needed, if not, remove
+        gameLevelRenderer = (TengenMsPacMan_GameLevelRenderer) ui.currentConfig().createGameLevelRenderer(canvas);
+        gameLevelRenderer.scalingProperty().bind(scaling);
+
+        dynamicCamera.setGameLevel(gameLevel);
     }
 
     private void updateScaling() {
-        scaling.set(switch (PROPERTY_PLAY_SCENE_DISPLAY_MODE.get()) {
+        SceneDisplayMode displayMode = PROPERTY_PLAY_SCENE_DISPLAY_MODE.get();
+        scaling.set(switch (displayMode) {
             case SCALED_TO_FIT -> subScene.getHeight() / canvasHeightUnscaled.get();
             case SCROLLING -> subScene.getHeight() / NES_SIZE_PX.y();
         });
@@ -304,17 +314,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         }
     }
 
-    private void initForGameLevel(GameLevel gameLevel) {
-        context().game().hud().levelCounterVisible(true).livesCounterVisible(true); // is also visible in demo level!
-        setActionsBindings(gameLevel.isDemoLevel());
-
-        //TODO check if this is needed, if not, remove
-        gameLevelRenderer = (TengenMsPacMan_GameLevelRenderer) ui.currentConfig().createGameLevelRenderer(canvas);
-        gameLevelRenderer.scalingProperty().bind(scaling);
-
-        dynamicCamera.setGameLevel(gameLevel);
-    }
-
     @Override
     public void onLevelCreated(GameEvent e) {
         initForGameLevel(ui.gameContext().gameLevel());
@@ -473,35 +472,38 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
             sceneRenderer.clearCanvas();
         }
         context().optGameLevel().ifPresent(gameLevel -> {
-
-            final var info = new RenderInfo();
-            // this is needed for animated maze from STRANGE map category
-            info.put(CommonRenderInfoKey.TICK, ui.clock().tickCount());
-            info.put(TengenMsPacMan_UIConfig.CONFIG_KEY_MAP_CATEGORY,
-                gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.CONFIG_KEY_MAP_CATEGORY));
-            if (levelCompletedAnimation != null && mazeHighlighted.get()) {
-                info.put(CommonRenderInfoKey.MAZE_BRIGHT, true);
-                info.put(CommonRenderInfoKey.MAZE_FLASHING_INDEX, levelCompletedAnimation.flashingIndex());
-            } else {
-                info.put(CommonRenderInfoKey.MAZE_BRIGHT, false);
-            }
-
-            canvas.setClip(clipRect);
-
-            gameLevelRenderer.ctx().save();
-            gameLevelRenderer.ctx().translate(scaled(CONTENT_INDENT), 0);
-            gameLevelRenderer.drawGameLevel(gameLevel, info);
-            drawActors(gameLevel);
-            gameLevelRenderer.ctx().restore();
-
+            drawGameLevel(gameLevel);
             drawHUD();
-
-            if (debugInfoVisible.get() && debugInfoRenderer != null) {
-                canvas.setClip(null); // show everything
-                debugInfoRenderer.drawDebugInfo();
-            }
-
+            drawDebugInfo();
         });
+    }
+
+    private void drawGameLevel(GameLevel gameLevel) {
+        final var info = new RenderInfo();
+        // this is needed for animated maze from STRANGE map category
+        info.put(CommonRenderInfoKey.TICK, ui.clock().tickCount());
+        info.put(TengenMsPacMan_UIConfig.CONFIG_KEY_MAP_CATEGORY,
+            gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.CONFIG_KEY_MAP_CATEGORY));
+        if (levelCompletedAnimation != null && mazeHighlighted.get()) {
+            info.put(CommonRenderInfoKey.MAZE_BRIGHT, true);
+            info.put(CommonRenderInfoKey.MAZE_FLASHING_INDEX, levelCompletedAnimation.flashingIndex());
+        } else {
+            info.put(CommonRenderInfoKey.MAZE_BRIGHT, false);
+        }
+        gameLevelRenderer.ctx().save();
+        canvas.setClip(clipRect);
+        gameLevelRenderer.ctx().translate(scaled(CONTENT_INDENT), 0);
+        gameLevelRenderer.drawGameLevel(gameLevel, info);
+        drawActors(gameLevel);
+        canvas.setClip(null);
+        gameLevelRenderer.ctx().restore();
+    }
+
+    private void drawDebugInfo() {
+        if (debugInfoVisible.get() && debugInfoRenderer != null) {
+            canvas.setClip(null); // show everything
+            debugInfoRenderer.drawDebugInfo();
+        }
     }
 
     @Override
