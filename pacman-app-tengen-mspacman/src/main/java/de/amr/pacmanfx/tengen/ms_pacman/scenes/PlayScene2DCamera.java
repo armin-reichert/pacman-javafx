@@ -10,6 +10,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.ParallelCamera;
+import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.lerp;
@@ -20,15 +21,15 @@ class PlayScene2DCamera extends ParallelCamera {
 
     private final DoubleProperty scaling = new SimpleDoubleProperty(1);
 
-    private static final float MIN_CAMERA_MOVEMENT = 0.5f;
-    private static final float CAMERA_SPEED = 0.02f;
+    private static final int INTRO_WAIT_TICKS = 60;
+    private static final int INTRO_MOVE_TICKS = 120;
 
-    private static final int INTRO_DELAY_TICKS = 60;
-    private static final int INTRO_MOVE_TICKS = 45;
+    private static final float INTRO_SPEED = 0.015f;
+    private static final float TRACKING_SPEED = 0.02f;
 
     private boolean introRunning;
     private int introTick;
-
+    private float speed;
     private boolean trackingPac;
     private double tgtY;
     private Range range = new Range(Double.MIN_VALUE, Double.MAX_VALUE);
@@ -37,28 +38,45 @@ class PlayScene2DCamera extends ParallelCamera {
         return scaling;
     }
 
+    public void update(GameLevel gameLevel) {
+        if (introRunning) {
+            updateIntro();
+            return;
+        }
+        if (trackingPac) {
+            setTargetFollowingPac(gameLevel);
+            speed = TRACKING_SPEED;
+            move();
+        }
+    }
+
     /**
      * Show top of maze, wait some time, then move to bottom, then focus Pac-Man.
      */
-    public void startIntro() {
+    public void playIntro() {
         introTick = 0;
         introRunning = true;
+        trackingPac = false;
+        speed = 0;
+        setToTop();
+        setTargetTop();
     }
 
-    private void playIntro() {
-        switch (introTick) {
-            case 0 -> {
-                setToTop();
-                trackingPac = false;
-            }
-            case INTRO_DELAY_TICKS -> setTargetBottom();
-            case INTRO_DELAY_TICKS + INTRO_MOVE_TICKS -> {
-                trackingPac = true;
-                introRunning = false;
-                return;
-            }
-        }
+    private void updateIntro() {
         ++introTick;
+        if (introTick == INTRO_WAIT_TICKS) {
+            setTargetBottom();
+            speed = INTRO_SPEED;
+        }
+        else if (introTick == INTRO_WAIT_TICKS + INTRO_MOVE_TICKS) {
+            trackingPac = true;
+            introRunning = false;
+            Logger.debug("Intro ended");
+            return;
+        }
+        move();
+
+        Logger.debug("Intro tick={} y={} maxY={}", introTick, getTranslateY(), range.max());
     }
 
     public void stop() {
@@ -98,17 +116,6 @@ class PlayScene2DCamera extends ParallelCamera {
         }
     }
 
-    public void update(GameLevel gameLevel) {
-        if (introRunning) {
-            playIntro();
-            return;
-        }
-        if (trackingPac) {
-            setTargetFollowingPac(gameLevel);
-        }
-        move();
-    }
-
     // This is "alchemy", not science :-)
     public void setGameLevel(GameLevel gameLevel) {
         int numRows = gameLevel.worldMap().terrainLayer().numRows();
@@ -129,11 +136,8 @@ class PlayScene2DCamera extends ParallelCamera {
     }
 
     private void move() {
-        double oldCameraY = getTranslateY();
-        double newCameraY = lerp(oldCameraY, tgtY, CAMERA_SPEED);
-        double delta = Math.abs(oldCameraY - newCameraY);
-        if (delta > MIN_CAMERA_MOVEMENT) {
-            setTranslateY(newCameraY);
-        }
+        double oldY = getTranslateY();
+        double newY = lerp(oldY, tgtY, speed);
+        setTranslateY(newY);
     }
 }
