@@ -492,13 +492,12 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         } else {
             gameLevelRenderInfo.put(CommonRenderInfoKey.MAZE_BRIGHT, false);
         }
-        canvas.setClip(clipRect);
         gameLevelRenderer.ctx().save();
+        canvas.setClip(clipRect);
         gameLevelRenderer.ctx().translate(scaled(CONTENT_INDENT), 0);
         gameLevelRenderer.drawGameLevel(gameLevel, gameLevelRenderInfo);
         drawActors(gameLevel);
         gameLevelRenderer.ctx().restore();
-        canvas.setClip(null);
     }
 
     private void drawDebugInfo() {
