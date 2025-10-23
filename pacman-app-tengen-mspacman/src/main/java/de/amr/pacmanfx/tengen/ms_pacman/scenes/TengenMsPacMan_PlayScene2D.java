@@ -78,6 +78,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
 
     private TengenMsPacMan_HUDRenderer hudRenderer;
     private TengenMsPacMan_GameLevelRenderer gameLevelRenderer;
+    private final RenderInfo gameLevelRenderInfo = new RenderInfo();
     private TengenMsPacMan_ActorRenderer actorRenderer;
 
     private LevelCompletedAnimation levelCompletedAnimation;
@@ -129,6 +130,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         subScene.cameraProperty().bind(PROPERTY_PLAY_SCENE_DISPLAY_MODE.map(mode -> mode == SCROLLING ? dynamicCamera : fixedCamera));
         subScene.cameraProperty().addListener((py, ov, nv) -> updateScaling());
         subScene.heightProperty().addListener((py, ov, nv) -> updateScaling());
+
+        dynamicCamera.scalingProperty().bind(scaling);
     }
 
     private void initForGameLevel(GameLevel gameLevel) {
@@ -201,7 +204,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         game.hud().scoreVisible(true).levelCounterVisible(true).livesCounterVisible(true);
         game.hud().showGameOptions(!game.optionsAreInitial());
         updateScaling();
-        dynamicCamera.scalingProperty().bind(scaling);
         dynamicCamera.setToTop();
     }
 
@@ -479,24 +481,24 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
     }
 
     private void drawGameLevel(GameLevel gameLevel) {
-        final var info = new RenderInfo();
-        // this is needed for animated maze from STRANGE map category
-        info.put(CommonRenderInfoKey.TICK, ui.clock().tickCount());
-        info.put(TengenMsPacMan_UIConfig.CONFIG_KEY_MAP_CATEGORY,
+        gameLevelRenderInfo.clear();
+        // this is needed for maze animation drawing:
+        gameLevelRenderInfo.put(CommonRenderInfoKey.TICK, ui.clock().tickCount());
+        gameLevelRenderInfo.put(TengenMsPacMan_UIConfig.CONFIG_KEY_MAP_CATEGORY,
             gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.CONFIG_KEY_MAP_CATEGORY));
         if (levelCompletedAnimation != null && mazeHighlighted.get()) {
-            info.put(CommonRenderInfoKey.MAZE_BRIGHT, true);
-            info.put(CommonRenderInfoKey.MAZE_FLASHING_INDEX, levelCompletedAnimation.flashingIndex());
+            gameLevelRenderInfo.put(CommonRenderInfoKey.MAZE_BRIGHT, true);
+            gameLevelRenderInfo.put(CommonRenderInfoKey.MAZE_FLASHING_INDEX, levelCompletedAnimation.flashingIndex());
         } else {
-            info.put(CommonRenderInfoKey.MAZE_BRIGHT, false);
+            gameLevelRenderInfo.put(CommonRenderInfoKey.MAZE_BRIGHT, false);
         }
-        gameLevelRenderer.ctx().save();
         canvas.setClip(clipRect);
+        gameLevelRenderer.ctx().save();
         gameLevelRenderer.ctx().translate(scaled(CONTENT_INDENT), 0);
-        gameLevelRenderer.drawGameLevel(gameLevel, info);
+        gameLevelRenderer.drawGameLevel(gameLevel, gameLevelRenderInfo);
         drawActors(gameLevel);
-        canvas.setClip(null);
         gameLevelRenderer.ctx().restore();
+        canvas.setClip(null);
     }
 
     private void drawDebugInfo() {

@@ -27,6 +27,10 @@ public class RenderInfo {
                 .formatted(key, valueClass.getSimpleName()));
     }
 
+    public void clear() {
+        map.clear();
+    }
+
     public void put(String key, Object value) {
         map.put(key, value);
     }
