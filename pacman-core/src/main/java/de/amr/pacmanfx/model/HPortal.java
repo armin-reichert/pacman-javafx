@@ -45,15 +45,15 @@ public record HPortal(Vector2i leftBorderEntryTile, Vector2i rightBorderEntryTil
         final Vector2i rightWrappingTile = rightBorderEntryTile().plus(depth, 0);
         switch (actor.moveDir()) {
             case LEFT -> {
-                if (actorTile.equals(leftWrappingTile) && offset.x() <= 0) {
-                    actor.placeAtTile(rightWrappingTile.x(), rightWrappingTile.y(), 0, 0);
+                if (actorTile.equals(leftWrappingTile) && offset.x() == 0) {
+                    actor.placeAtTile(rightWrappingTile.x(), rightWrappingTile.y(), -1, 0);
                     Logger.info("{} teleported from {} to {}", actor.name(), actorTile, rightWrappingTile);
                     return true;
                 }
             }
             case RIGHT -> {
-                if (actorTile.equals(rightWrappingTile) && offset.x() >= 0) {
-                    actor.placeAtTile(leftWrappingTile.x(), leftWrappingTile.y(), 0, 0);
+                if (actorTile.equals(rightWrappingTile) && offset.x() == 0) {
+                    actor.placeAtTile(leftWrappingTile.x(), leftWrappingTile.y(), 1, 0);
                     Logger.info("{} teleported from {} to {}", actor.name(), actorTile, leftWrappingTile);
                     return true;
                 }
