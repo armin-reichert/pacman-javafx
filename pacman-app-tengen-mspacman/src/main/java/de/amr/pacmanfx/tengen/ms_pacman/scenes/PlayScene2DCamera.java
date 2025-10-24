@@ -126,13 +126,13 @@ class PlayScene2DCamera extends ParallelCamera {
         int numRows = gameLevel.worldMap().terrainLayer().numRows();
         if (numRows <= 30) {
             // MINI
-            range = new Range(scaledTiles(-3), scaledTiles(2));
+            range = new Range(scaledTiles(-3), scaledTiles(1));
         } else if (numRows >= 42) {
             // BIG
-            range = new Range(scaledTiles(-9), scaledTiles(8));
+            range = new Range(scaledTiles(-9), scaledTiles(7));
         } else {
             // ARCADE and a single STRANGE maze
-            range = new Range(scaledTiles(-6), scaledTiles(5));
+            range = new Range(scaledTiles(-6), scaledTiles(4));
         }
     }
 
