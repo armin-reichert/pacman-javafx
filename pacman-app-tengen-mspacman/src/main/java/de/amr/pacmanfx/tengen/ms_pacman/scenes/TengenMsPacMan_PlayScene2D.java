@@ -132,6 +132,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         subScene.heightProperty().addListener((py, ov, nv) -> updateScaling());
 
         dynamicCamera.scalingProperty().bind(scaling);
+        dynamicCamera.scalingProperty().addListener((py, ov, nv) -> {
+            context().optGameLevel().ifPresent(dynamicCamera::updateRange);
+        });
     }
 
     private void initForGameLevel(GameLevel gameLevel) {
@@ -142,7 +145,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         gameLevelRenderer = (TengenMsPacMan_GameLevelRenderer) ui.currentConfig().createGameLevelRenderer(canvas);
         gameLevelRenderer.scalingProperty().bind(scaling);
 
-        dynamicCamera.setGameLevel(gameLevel);
+        dynamicCamera.updateRange(gameLevel);
     }
 
     private void updateScaling() {

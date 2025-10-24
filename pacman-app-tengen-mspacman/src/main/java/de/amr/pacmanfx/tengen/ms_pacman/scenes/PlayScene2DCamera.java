@@ -122,7 +122,7 @@ class PlayScene2DCamera extends ParallelCamera {
     }
 
     // This is "alchemy", not science :-)
-    public void setGameLevel(GameLevel gameLevel) {
+    public void updateRange(GameLevel gameLevel) {
         int numRows = gameLevel.worldMap().terrainLayer().numRows();
         if (numRows <= 30) {
             // MINI
