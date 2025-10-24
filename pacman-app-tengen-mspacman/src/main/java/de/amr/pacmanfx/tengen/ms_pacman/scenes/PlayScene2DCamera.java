@@ -31,7 +31,7 @@ class PlayScene2DCamera extends ParallelCamera {
     private int introTick;
     private float speed;
     private boolean trackingPac;
-    private double tgtY;
+    private double targetY;
     private Range range = new Range(Double.MIN_VALUE, Double.MAX_VALUE);
 
     public DoubleProperty scalingProperty() {
@@ -104,11 +104,15 @@ class PlayScene2DCamera extends ParallelCamera {
     }
 
     public void setTargetTop() {
-        tgtY = range.min();
+        targetY = range.min();
     }
 
     public void setTargetBottom() {
-        tgtY = range.max();
+        targetY = range.max();
+    }
+
+    private void move() {
+        setTranslateY(lerp(getTranslateY(), targetY, speed));
     }
 
     private void setTargetFollowingPac(GameLevel gameLevel) {
@@ -123,26 +127,17 @@ class PlayScene2DCamera extends ParallelCamera {
 
     // This is "alchemy", not science :-)
     public void updateRange(GameLevel gameLevel) {
-        int numRows = gameLevel.worldMap().terrainLayer().numRows();
-        if (numRows <= 30) {
-            // MINI
+        final int numRows = gameLevel.worldMap().terrainLayer().numRows();
+        if (numRows <= 30) {  // MINI maps: 30
             range = new Range(scaledTiles(-3), scaledTiles(1));
-        } else if (numRows >= 42) {
-            // BIG
-            range = new Range(scaledTiles(-9), scaledTiles(7));
-        } else {
-            // ARCADE and a single STRANGE maze
+        } else if (numRows <= 36) { // ARCADE maps: 36, a single STRANGE map: 35
             range = new Range(scaledTiles(-6), scaledTiles(4));
+        } else { // BIG maps: 42
+            range = new Range(scaledTiles(-9), scaledTiles(7));
         }
     }
 
     private double scaledTiles(int n) {
         return scaling.get() * TS(n);
-    }
-
-    private void move() {
-        double oldY = getTranslateY();
-        double newY = lerp(oldY, tgtY, speed);
-        setTranslateY(newY);
     }
 }
