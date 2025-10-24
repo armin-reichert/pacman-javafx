@@ -24,8 +24,8 @@ class PlayScene2DCamera extends ParallelCamera {
     private static final int INTRO_WAIT_TICKS = 60;
     private static final int INTRO_MOVE_TICKS = 120;
 
-    private static final float INTRO_SPEED = 0.015f;
-    private static final float TRACKING_SPEED = 0.02f;
+    private static final float INTRO_SPEED    = 0.015f;
+    private static final float TRACKING_SPEED = 0.015f;
 
     private boolean introRunning;
     private int introTick;
