@@ -117,15 +117,9 @@ class PlayScene2DCamera extends ParallelCamera {
 
     public void setToY(double y) {
         switch (state) {
-            case INTRO -> {
-                Logger.error("Cannot set camera to y-position {} while intro is running", y);
-            }
-            case TRACKING -> {
-                Logger.error("Cannot set camera to y-position {} while tracking", y);
-            }
-            case MANUAL -> {
-                setTranslateY(y);
-            }
+            case INTRO -> Logger.error("Cannot set camera to y-position {} while intro is running", y);
+            case TRACKING -> Logger.error("Cannot set camera to y-position {} while tracking", y);
+            case MANUAL -> setTranslateY(y);
         }
     }
 
