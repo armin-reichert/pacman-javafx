@@ -24,10 +24,10 @@ class PlayScene2DCamera extends ParallelCamera {
     private final DoubleProperty scaling = new SimpleDoubleProperty(1);
 
     //TODO determine exakt values in NES emulator
-    private static final int INTRO_DELAY_TICKS = 60;
-    private static final int INTRO_DURATION_TICKS = 120;
+    private static final int INTRO_MOVEMENT_START_TICK = 60;
+    private static final int INTRO_MOVEMENT_DURATION_TICKS = 120;
 
-    private static final float INTRO_SPEED    = 0.015f;
+    private static final float INTRO_MOVEMENT_SPEED = 0.015f;
     private static final float TRACKING_SPEED = 0.015f;
 
     private Range range;
@@ -51,36 +51,34 @@ class PlayScene2DCamera extends ParallelCamera {
     public void update(GameLevel gameLevel) {
         switch (state) {
             case INTRO -> updateIntro();
-            case TRACKING -> {
-                updateTracking(gameLevel);
-            }
+            case TRACKING -> updateTracking(gameLevel);
         }
     }
 
     /**
-     * Show top of maze, wait some time, then move to bottom, then focus Pac-Man.
+     * Intro: Show top of maze, wait some time, move to bottom of maze, finally start tracking Pac-Man.
      */
     public void startIntro() {
         if (state == State.INTRO) {
             Logger.warn("Camera intro sequence is already running");
             return;
         }
-        introTick = 0;
         setToTop();
+        introTick = 0;
         state = State.INTRO;
         Logger.info("Camera intro sequence started");
     }
 
     private void updateIntro() {
         ++introTick;
-        if (introTick < INTRO_DELAY_TICKS) {
+        if (introTick < INTRO_MOVEMENT_START_TICK) {
             return;
         }
-        if (introTick == INTRO_DELAY_TICKS) {
+        if (introTick == INTRO_MOVEMENT_START_TICK) {
             setTargetBottom();
-            speed = INTRO_SPEED;
+            speed = INTRO_MOVEMENT_SPEED;
         }
-        else if (introTick == INTRO_DELAY_TICKS + INTRO_DURATION_TICKS) {
+        else if (introTick == INTRO_MOVEMENT_START_TICK + INTRO_MOVEMENT_DURATION_TICKS) {
             startTracking();
             return;
         }
@@ -120,7 +118,7 @@ class PlayScene2DCamera extends ParallelCamera {
     public void setToY(double y) {
         switch (state) {
             case INTRO -> {
-                Logger.error("Cannot set camera to y-position {] while intro is running", y);
+                Logger.error("Cannot set camera to y-position {} while intro is running", y);
             }
             case TRACKING -> {
                 state = State.MANUAL;
