@@ -132,9 +132,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         subScene.heightProperty().addListener((py, ov, nv) -> updateScaling());
 
         dynamicCamera.scalingProperty().bind(scaling);
-        dynamicCamera.scalingProperty().addListener((py, ov, nv) -> {
-            context().optGameLevel().ifPresent(dynamicCamera::updateRange);
-        });
+        dynamicCamera.scalingProperty().addListener((py, ov, nv) -> context().optGameLevel().ifPresent(dynamicCamera::updateRange));
     }
 
     private void initForGameLevel(GameLevel gameLevel) {
@@ -328,12 +326,12 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
     public void onSwitch_3D_2D(GameScene scene3D) {
         // Switch might occur just during the few ticks when level is not yet available!
         context().optGameLevel().ifPresent(this::initForGameLevel);
-        dynamicCamera.setTrackingPac(true);
+        dynamicCamera.startTracking();
     }
 
     @Override
     public void onLevelStarted(GameEvent e) {
-        dynamicCamera.playIntro();
+        dynamicCamera.startIntro();
     }
 
     @Override
@@ -345,8 +343,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
             }
             case GAME_OVER -> {
                 ui.soundManager().stopAll();
-                dynamicCamera.setTrackingPac(false);
-                dynamicCamera.setTargetTop();
+                dynamicCamera.endTracking();
+                dynamicCamera.setToTop();
                 startGameOverMessageAnimation(context().gameLevel());
             }
             default -> {}
@@ -399,7 +397,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
     @Override
     public void onGameContinued(GameEvent e) {
         context().optGameLevel().ifPresent(gameLevel -> context().game().showMessage(gameLevel, MessageType.READY));
-        dynamicCamera.playIntro();
+        dynamicCamera.startIntro();
     }
 
     @Override
@@ -414,7 +412,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
 
     @Override
     public void onPacDying(GameEvent e) {
-        dynamicCamera.stop();
+        dynamicCamera.endTracking();
         ui.soundManager().play(SoundID.PAC_MAN_DEATH);
     }
 

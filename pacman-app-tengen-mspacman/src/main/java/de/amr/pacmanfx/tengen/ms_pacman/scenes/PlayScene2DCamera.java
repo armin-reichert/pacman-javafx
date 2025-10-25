@@ -19,88 +19,117 @@ class PlayScene2DCamera extends ParallelCamera {
 
     record Range(double min, double max) {}
 
+    enum State { INTRO, TRACKING, MANUAL }
+
     private final DoubleProperty scaling = new SimpleDoubleProperty(1);
 
-    private static final int INTRO_WAIT_TICKS = 60;
-    private static final int INTRO_MOVE_TICKS = 120;
+    //TODO determine exakt values in NES emulator
+    private static final int INTRO_DELAY_TICKS = 60;
+    private static final int INTRO_DURATION_TICKS = 120;
 
     private static final float INTRO_SPEED    = 0.015f;
     private static final float TRACKING_SPEED = 0.015f;
 
-    private boolean introRunning;
+    private Range range;
+    private State state;
     private int introTick;
     private float speed;
-    private boolean trackingPac;
     private double targetY;
-    private Range range = new Range(Double.MIN_VALUE, Double.MAX_VALUE);
+
+    public PlayScene2DCamera() {
+        range = new Range(Double.MIN_VALUE, Double.MAX_VALUE);
+        state = State.MANUAL;
+        introTick = 0;
+        speed = 0;
+        targetY = 0;
+    }
 
     public DoubleProperty scalingProperty() {
         return scaling;
     }
 
     public void update(GameLevel gameLevel) {
-        if (introRunning) {
-            updateIntro();
-            return;
-        }
-        if (trackingPac) {
-            setTargetFollowingPac(gameLevel);
-            speed = TRACKING_SPEED;
-            move();
+        switch (state) {
+            case INTRO -> updateIntro();
+            case TRACKING -> {
+                updateTracking(gameLevel);
+            }
         }
     }
 
     /**
      * Show top of maze, wait some time, then move to bottom, then focus Pac-Man.
      */
-    public void playIntro() {
-        if (introRunning) {
+    public void startIntro() {
+        if (state == State.INTRO) {
             Logger.warn("Camera intro sequence is already running");
             return;
         }
         introTick = 0;
-        introRunning = true;
-        trackingPac = false;
-        speed = 0;
         setToTop();
-        setTargetTop();
+        state = State.INTRO;
         Logger.info("Camera intro sequence started");
     }
 
     private void updateIntro() {
         ++introTick;
-        if (introTick == INTRO_WAIT_TICKS) {
+        if (introTick < INTRO_DELAY_TICKS) {
+            return;
+        }
+        if (introTick == INTRO_DELAY_TICKS) {
             setTargetBottom();
             speed = INTRO_SPEED;
         }
-        else if (introTick == INTRO_WAIT_TICKS + INTRO_MOVE_TICKS) {
-            trackingPac = true;
-            introRunning = false;
-            Logger.debug("Intro ended");
+        else if (introTick == INTRO_DELAY_TICKS + INTRO_DURATION_TICKS) {
+            startTracking();
             return;
         }
         move();
-
         Logger.debug("Intro tick={} y={} maxY={}", introTick, getTranslateY(), range.max());
     }
 
-    public void stop() {
-        introRunning = false;
-        trackingPac = false;
+    public void startTracking() {
+        speed = TRACKING_SPEED;
+        state = State.TRACKING;
     }
 
-    public void setTrackingPac(boolean follow) {
-        trackingPac = follow;
+    private void updateTracking(GameLevel gameLevel) {
+        Pac pac = gameLevel.pac();
+        double relY = pac.y() / TS(gameLevel.worldMap().terrainLayer().numRows());
+        if (relY < 0.5 || relY < 0.6 && pac.moveDir() == Direction.UP) {
+            setTargetTop();
+        } else if (relY > 0.5 || relY > 0.4 && pac.moveDir() == Direction.DOWN) {
+            setTargetBottom();
+        }
+        move();
+    }
+
+    public void endTracking() {
+        speed = 0;
+        state = State.MANUAL;
     }
 
     public void setToTop() {
-        setTrackingPac(false);
-        setTranslateY(range.min());
+        setToY(range.min());
     }
 
     public void setToBottom() {
-        setTrackingPac(false);
-        setTranslateY(range.max());
+        setToY(range.max());
+    }
+
+    public void setToY(double y) {
+        switch (state) {
+            case INTRO -> {
+                Logger.error("Cannot set camera to y-position {] while intro is running", y);
+            }
+            case TRACKING -> {
+                state = State.MANUAL;
+                setTranslateY(y);
+            }
+            case MANUAL -> {
+                setTranslateY(y);
+            }
+        }
     }
 
     public void setTargetTop() {
@@ -113,16 +142,6 @@ class PlayScene2DCamera extends ParallelCamera {
 
     private void move() {
         setTranslateY(lerp(getTranslateY(), targetY, speed));
-    }
-
-    private void setTargetFollowingPac(GameLevel gameLevel) {
-        Pac pac = gameLevel.pac();
-        double relY = pac.y() / TS(gameLevel.worldMap().terrainLayer().numRows());
-        if (relY < 0.5 || relY < 0.6 && pac.moveDir() == Direction.UP) {
-            setTargetTop();
-        } else if (relY > 0.5 || relY > 0.4 && pac.moveDir() == Direction.DOWN) {
-            setTargetBottom();
-        }
     }
 
     // This is "alchemy", not science :-)
