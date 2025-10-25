@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
 import de.amr.pacmanfx.lib.nes.NES_Palette;
-import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.model.ScoreManager;
@@ -19,7 +18,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
-import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
@@ -42,53 +40,43 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     @Override
     protected GameLevel3D createGameLevel3D() {
-        GameLevel3D gameLevel3D = super.createGameLevel3D();
-        TengenMsPacMan_GameModel game = ui.gameContext().game();
+        final GameLevel3D gameLevel3D = super.createGameLevel3D();
+        final TengenMsPacMan_GameModel game = context().game();
+        final GameLevel gameLevel = game.gameLevel();
         if (!game.optionsAreInitial()) {
-            ImageView infoView = createGameInfoView(gameLevel3D, game);
-            if (infoView != null) {
-                gameLevel3D.getChildren().add(infoView);
-            }
+            final ImageView infoView = createGameInfoView(gameLevel);
+            infoView.setTranslateX(0);
+            infoView.setTranslateY((gameLevel.worldMap().numRows() - 2) * TS);
+            infoView.setTranslateZ(-gameLevel3D.floor3D().getDepth());
+            gameLevel3D.getChildren().add(infoView);
         }
         return gameLevel3D;
     }
 
     // shows info about category, difficulty, booster etc
-    private ImageView createGameInfoView(GameLevel3D gameLevel3D, TengenMsPacMan_GameModel game) {
-        GameLevel gameLevel = game.optGameLevel().orElse(null);
-        if (gameLevel == null) {
-            Logger.error("Cannot create game info view, game level is null");
-            return null;
-        }
-
-        WorldMap worldMap = gameLevel.worldMap();
-        int width = worldMap.numCols() * TS;
-        int height = 2 * TS;
-
+    private ImageView createGameInfoView(GameLevel gameLevel) {
+        final int width = gameLevel.worldMap().numCols() * TS;
+        final int height = 2 * TS;
+        final ImageView imageView = new ImageView();
         // Listen to changes of the floor color property and recreate image on change
-        ImageView imageView = new ImageView();
         imageView.imageProperty().bind(PROPERTY_3D_FLOOR_COLOR.map(color ->
-            createInfoViewImage(context().game(), gameLevel, width, height, color)));
+            createInfoViewImage(context().game(), gameLevel.number(), width, color)));
         imageView.setFitWidth(width);
         imageView.setFitHeight(height);
-        imageView.setTranslateX(0);
-        imageView.setTranslateY((worldMap.numRows() - 2) * TS);
-        imageView.setTranslateZ(-gameLevel3D.floor3D().getDepth());
-
         return imageView;
     }
 
-    private Image createInfoViewImage(TengenMsPacMan_GameModel game, GameLevel gameLevel, double width, double height, Color backgroundColor) {
+    private Image createInfoViewImage(TengenMsPacMan_GameModel game, int levelNumber, double width, Color backgroundColor) {
         final double scaling = 6;
 
-        final var canvas = new Canvas(scaling * width, scaling * height);
+        final var canvas = new Canvas(scaling * width, scaling * 2 * TS);
         canvas.getGraphicsContext2D().setImageSmoothing(false); // important for crisp image!
 
         final var hudRenderer = (TengenMsPacMan_HUDRenderer) ui.currentConfig().createHUDRenderer(canvas);
         hudRenderer.scalingProperty().set(scaling);
         hudRenderer.fillCanvas(backgroundColor);
-        hudRenderer.drawLevelNumberBox(gameLevel.number(), 0, 0);
-        hudRenderer.drawLevelNumberBox(gameLevel.number(), width - 2 * TS, 0);
+        hudRenderer.drawLevelNumberBox(levelNumber, 0, 0);
+        hudRenderer.drawLevelNumberBox(levelNumber, width - 2 * TS, 0);
         hudRenderer.drawGameOptions(game.mapCategory(), game.difficulty(), game.pacBooster(), TS + HTS);
 
         return canvas.snapshot(null, null);
