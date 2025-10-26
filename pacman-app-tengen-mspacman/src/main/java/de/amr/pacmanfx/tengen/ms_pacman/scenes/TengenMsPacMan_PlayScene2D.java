@@ -69,13 +69,14 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
 
     private static final float CONTENT_INDENT = TS(2);
 
+    private final StackPane rootPane = new StackPane();
     private final SubScene subScene;
-    private final Canvas canvas = new Canvas();
     private final Rectangle clipRect = new Rectangle();
 
     private final PlayScene2DCamera dynamicCamera = new PlayScene2DCamera();
     private final PerspectiveCamera fixedCamera  = new PerspectiveCamera(false);
 
+    private Canvas canvas;
     private TengenMsPacMan_HUDRenderer hudRenderer;
     private TengenMsPacMan_GameLevelRenderer gameLevelRenderer;
     private final RenderInfo gameLevelRenderInfo = new RenderInfo();
@@ -111,17 +112,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
     public TengenMsPacMan_PlayScene2D(GameUI ui) {
         super(ui);
 
-        canvas.widthProperty() .bind(scalingProperty().multiply(CANVAS_WIDTH_UNSCALED));
-        canvas.heightProperty().bind(scalingProperty().multiply(canvasHeightUnscaled));
-
-        // All maps are 28 tiles wide but the NES screen is 32 tiles wide. To accommodate, the maps are centered
-        // horizontally and 2 tiles on each side are clipped.
-        clipRect.xProperty().bind(canvas.translateXProperty().add(scalingProperty().multiply(CONTENT_INDENT)));
-        clipRect.yProperty().bind(canvas.translateYProperty());
-        clipRect.widthProperty().bind(scalingProperty().multiply(CANVAS_WIDTH_UNSCALED - 2 * CONTENT_INDENT));
-        clipRect.heightProperty().bind(canvas.heightProperty());
-
-        var rootPane = new StackPane(canvas);
         rootPane.backgroundProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR.map(Background::fill));
 
         // Scene size gets bound to parent scene when embedded in game view, initial size doesn't matter
@@ -136,14 +126,35 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
             .ifPresent(gameLevel -> dynamicCamera.updateRange(gameLevel.worldMap().terrainLayer().numRows())));
     }
 
-    private void initForGameLevel(GameLevel gameLevel) {
-        context().game().hud().levelCounterVisible(true).livesCounterVisible(true); // is also visible in demo level!
-        setActionsBindings(gameLevel.isDemoLevel());
+    @Override
+    public void setCanvas(Canvas canvas) {
+        this.canvas = canvas;
+
+        canvas.widthProperty() .bind(scalingProperty().multiply(CANVAS_WIDTH_UNSCALED));
+        canvas.heightProperty().bind(scalingProperty().multiply(canvasHeightUnscaled));
+
+        // All maps are 28 tiles wide but the NES screen is 32 tiles wide. To accommodate, the maps are centered
+        // horizontally and 2 tiles on each side are clipped.
+        clipRect.xProperty().bind(canvas.translateXProperty().add(scalingProperty().multiply(CONTENT_INDENT)));
+        clipRect.yProperty().bind(canvas.translateYProperty());
+        clipRect.widthProperty().bind(scalingProperty().multiply(CANVAS_WIDTH_UNSCALED - 2 * CONTENT_INDENT));
+        clipRect.heightProperty().bind(canvas.heightProperty());
 
         //TODO check if this is needed, if not, remove
         gameLevelRenderer = (TengenMsPacMan_GameLevelRenderer) ui.currentConfig().createGameLevelRenderer(canvas);
         gameLevelRenderer.scalingProperty().bind(scaling);
 
+        rootPane.getChildren().setAll(canvas);
+    }
+
+    @Override
+    public Canvas canvas() {
+        return canvas;
+    }
+
+    private void initForGameLevel(GameLevel gameLevel) {
+        context().game().hud().levelCounterVisible(true).livesCounterVisible(true); // is also visible in demo level!
+        setActionsBindings(gameLevel.isDemoLevel());
         int mapHeightTiles = gameLevel.worldMap().numRows();
         dynamicCamera.updateRange(mapHeightTiles);
     }
@@ -178,11 +189,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
             actionBindingsManager.useBindings(ACTION_CHEAT_KILL_GHOSTS,      ui.actionBindings());
         }
         actionBindingsManager.assignBindingsToKeyboard(ui.keyboard());
-    }
-
-    @Override
-    public Canvas canvas() {
-        return canvas;
     }
 
     @Override
@@ -475,6 +481,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
 
     @Override
     public void draw() {
+        if (canvas == null) {
+            return;
+        }
         if (sceneRenderer != null) {
             sceneRenderer.clearCanvas();
         }

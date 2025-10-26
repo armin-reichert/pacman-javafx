@@ -17,10 +17,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import org.tinylog.Logger;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * TODO: This thing needs to get simplified. Too many magic numbers.
  */
-public class DecoratedCanvasContainer extends BorderPane {
+public class CanvasContainer extends BorderPane {
 
     private static final Vector2f DOWN_SCALING = new Vector2f(0.85f, 0.93f);
 
@@ -47,10 +49,12 @@ public class DecoratedCanvasContainer extends BorderPane {
         }
     };
 
-    private final Canvas canvas = new Canvas();
+    private final Canvas canvas;
     private double minScaling = 1.0;
 
-    public DecoratedCanvasContainer() {
+    public CanvasContainer(Canvas canvas) {
+        this.canvas = requireNonNull(canvas);
+
         setCenter(canvas);
 
         canvas.widthProperty() .bind(scaling.multiply(unscaledCanvasWidth));
