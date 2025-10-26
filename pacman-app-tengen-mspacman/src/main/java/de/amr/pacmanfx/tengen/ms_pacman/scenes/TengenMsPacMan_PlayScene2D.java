@@ -74,7 +74,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
 
     private final StackPane rootPane = new StackPane();
     private final SubScene subScene;
-    private final Rectangle clipRect = new Rectangle();
 
     private final PlayScene2DCamera dynamicCamera = new PlayScene2DCamera();
     private final PerspectiveCamera fixedCamera  = new PerspectiveCamera(false);
@@ -86,6 +85,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
 
     private LevelCompletedAnimation levelCompletedAnimation;
     private final BooleanProperty mazeHighlighted = new SimpleBooleanProperty(false);
+
+    private Rectangle clipRect;
 
     private class PlaySceneDebugInfoRenderer extends DefaultDebugInfoRenderer {
 
@@ -135,6 +136,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
         canvas.widthProperty() .bind(scalingProperty().multiply(CANVAS_WIDTH_UNSCALED));
         canvas.heightProperty().bind(scalingProperty().multiply(canvasHeightUnscaled));
 
+        clipRect = new Rectangle();
         // All maps are 28 tiles wide but the NES screen is 32 tiles wide. To accommodate, the maps are centered
         // horizontally and 2 tiles on each side are clipped.
         clipRect.xProperty().bind(canvas.translateXProperty().add(scalingProperty().multiply(CONTENT_INDENT)));
