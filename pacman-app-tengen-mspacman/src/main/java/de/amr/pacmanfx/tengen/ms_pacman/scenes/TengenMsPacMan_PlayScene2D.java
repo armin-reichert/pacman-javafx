@@ -132,7 +132,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         subScene.heightProperty().addListener((py, ov, nv) -> updateScaling());
 
         dynamicCamera.scalingProperty().bind(scaling);
-        dynamicCamera.scalingProperty().addListener((py, ov, nv) -> context().optGameLevel().ifPresent(dynamicCamera::updateRange));
+        dynamicCamera.scalingProperty().addListener((py, ov, nv) -> context().optGameLevel()
+            .ifPresent(gameLevel -> dynamicCamera.updateRange(gameLevel.worldMap().terrainLayer().numRows())));
     }
 
     private void initForGameLevel(GameLevel gameLevel) {
@@ -143,7 +144,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         gameLevelRenderer = (TengenMsPacMan_GameLevelRenderer) ui.currentConfig().createGameLevelRenderer(canvas);
         gameLevelRenderer.scalingProperty().bind(scaling);
 
-        dynamicCamera.updateRange(gameLevel);
+        int mapHeightTiles = gameLevel.worldMap().numRows();
+        dynamicCamera.updateRange(mapHeightTiles);
     }
 
     private void updateScaling() {
@@ -206,7 +208,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         game.hud().showGameOptions(!game.optionsAreInitial());
         updateScaling();
         dynamicCamera.enterManualMode();
-        dynamicCamera.setToTop();
+        dynamicCamera.setToTopPosition();
     }
 
     @Override
@@ -235,7 +237,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
                 updateSound();
             }
             if (subScene.getCamera() == dynamicCamera) {
-                dynamicCamera.update(gameLevel);
+                dynamicCamera.update(TS(gameLevel.worldMap().numRows()), gameLevel.pac());
             }
             updateHUD();
         });
@@ -346,7 +348,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
             case GAME_OVER -> {
                 ui.soundManager().stopAll();
                 dynamicCamera.enterManualMode();
-                dynamicCamera.setToTop();
+                dynamicCamera.setToTopPosition();
                 startGameOverMessageAnimation(context().gameLevel());
             }
             default -> {}

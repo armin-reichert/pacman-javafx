@@ -5,8 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.actors.MovingActor;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.ParallelCamera;
@@ -17,52 +16,49 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.lerp;
 
 class PlayScene2DCamera extends ParallelCamera {
 
-    private record Range(double min, double max) {}
+    private record RangeY(double topPosition, double bottomPosition) {}
 
     private enum State { INTRO, TRACKING, MANUAL }
 
+    //TODO determine exakt values in NES emulator
+    private static final int INTRO_TILT_START_TICK = 60;
+    private static final int INTRO_TILT_DURATION_TICKS = 120;
+
     private final DoubleProperty scaling = new SimpleDoubleProperty(1);
 
-    //TODO determine exakt values in NES emulator
-    private static final int INTRO_MOVEMENT_START_TICK = 60;
-    private static final int INTRO_MOVEMENT_DURATION_TICKS = 120;
-
-    private Range range;
+    private RangeY rangeY;
     private State state;
     private int introTick;
     private double targetY;
 
     public PlayScene2DCamera() {
-        range = new Range(Double.MIN_VALUE, Double.MAX_VALUE);
+        rangeY = new RangeY(Double.MIN_VALUE, Double.MAX_VALUE);
         state = State.MANUAL;
-        introTick = 0;
-        targetY = 0;
     }
 
     // This is "alchemy", not science :-)
-    public void updateRange(GameLevel gameLevel) {
-        final int numRows = gameLevel.worldMap().terrainLayer().numRows();
-        final int span = numRows - 26;
-        final int min = switch (numRows) {
-            case 30 -> -3; // MINI
-            case 35, 36 -> -6; // STRANGE, ARCADE
-            case 42 -> -9; // BIG
+    public void updateRange(int mapHeightTiles) {
+        final int spannedTiles = mapHeightTiles - 26;
+        final int topPosition = switch (mapHeightTiles) {
+            case 30 -> -3;     // all MINI maps
+            case 35, 36 -> -6; // one STRANGE, all ARCADE maps
+            case 42 -> -9;     // all BIG maps
             default -> {
-                Logger.warn("Unexpected number of rows: {}", numRows);
+                Logger.warn("Unexpected map height (tiles): {}", mapHeightTiles);
                 yield 0;
             }
         };
-        range = new Range(scaling.get() * TS(min), scaling.get() * TS(min + span));
+        rangeY = new RangeY(scaling.get() * TS(topPosition), scaling.get() * TS(topPosition + spannedTiles));
     }
 
     public DoubleProperty scalingProperty() {
         return scaling;
     }
 
-    public void update(GameLevel gameLevel) {
+    public void update(double mapHeightPixels, MovingActor movingActor) {
         switch (state) {
             case INTRO -> updateIntroMode();
-            case TRACKING -> updateTrackingMode(gameLevel);
+            case TRACKING -> updateTrackingMode(mapHeightPixels, movingActor);
         }
     }
 
@@ -75,7 +71,7 @@ class PlayScene2DCamera extends ParallelCamera {
             return;
         }
         enterManualMode();
-        setToTop();
+        setToTopPosition();
         state = State.INTRO;
         introTick = 0;
         Logger.info("Camera intro sequence started");
@@ -83,30 +79,29 @@ class PlayScene2DCamera extends ParallelCamera {
 
     private void updateIntroMode() {
         ++introTick;
-        if (introTick < INTRO_MOVEMENT_START_TICK) {
+        if (introTick < INTRO_TILT_START_TICK) {
             return;
         }
-        if (introTick == INTRO_MOVEMENT_START_TICK) {
+        if (introTick == INTRO_TILT_START_TICK) {
             setTargetToBottom();
         }
-        else if (introTick == INTRO_MOVEMENT_START_TICK + INTRO_MOVEMENT_DURATION_TICKS) {
+        else if (introTick == INTRO_TILT_START_TICK + INTRO_TILT_DURATION_TICKS) {
             enterTrackingMode();
             return;
         }
         move();
-        Logger.debug("Intro tick={} y={} maxY={}", introTick, getTranslateY(), range.max());
+        Logger.debug("Intro tick={} y={} maxY={}", introTick, getTranslateY(), rangeY.bottomPosition());
     }
 
     public void enterTrackingMode() {
         state = State.TRACKING;
     }
 
-    private void updateTrackingMode(GameLevel gameLevel) {
-        Pac pac = gameLevel.pac();
-        double relY = pac.y() / TS(gameLevel.worldMap().terrainLayer().numRows());
-        if (relY < 0.5 || relY < 0.6 && pac.moveDir() == Direction.UP) {
+    private void updateTrackingMode(double mapHeightPixels, MovingActor movingActor) {
+        double relY = movingActor.y() / mapHeightPixels;
+        if (relY < 0.5 || relY < 0.6 && movingActor.moveDir() == Direction.UP) {
             setTargetToTop();
-        } else if (relY > 0.5 || relY > 0.4 && pac.moveDir() == Direction.DOWN) {
+        } else if (relY > 0.5 || relY > 0.4 && movingActor.moveDir() == Direction.DOWN) {
             setTargetToBottom();
         }
         move();
@@ -116,24 +111,16 @@ class PlayScene2DCamera extends ParallelCamera {
         state = State.MANUAL;
     }
 
-    public void setToTop() {
-        setToY(range.min());
-    }
-
-    public void setToY(double y) {
-        switch (state) {
-            case INTRO -> Logger.error("Cannot set camera to y-position {} while intro is running", y);
-            case TRACKING -> Logger.error("Cannot set camera to y-position {} while tracking", y);
-            case MANUAL -> setTranslateY(y);
-        }
+    public void setToTopPosition() {
+        setTranslateY(rangeY.topPosition());
     }
 
     public void setTargetToTop() {
-        targetY = range.min();
+        targetY = rangeY.topPosition();
     }
 
     public void setTargetToBottom() {
-        targetY = range.max();
+        targetY = rangeY.bottomPosition();
     }
 
     private void move() {
