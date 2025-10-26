@@ -205,6 +205,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         game.hud().scoreVisible(true).levelCounterVisible(true).livesCounterVisible(true);
         game.hud().showGameOptions(!game.optionsAreInitial());
         updateScaling();
+        dynamicCamera.endTracking();
         dynamicCamera.setToTop();
     }
 
@@ -214,6 +215,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
             levelCompletedAnimation.dispose();
             levelCompletedAnimation = null;
         }
+        dynamicCamera.endTracking();
     }
 
     @Override

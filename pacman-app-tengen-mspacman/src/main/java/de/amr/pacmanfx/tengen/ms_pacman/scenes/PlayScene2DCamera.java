@@ -138,13 +138,16 @@ class PlayScene2DCamera extends ParallelCamera {
     // This is "alchemy", not science :-)
     public void updateRange(GameLevel gameLevel) {
         final int numRows = gameLevel.worldMap().terrainLayer().numRows();
+        final int span = numRows - 26;
+        int min;
         if (numRows <= 30) {  // MINI maps: 30
-            range = new Range(scaledTiles(-3), scaledTiles(1));
+            min = -3;
         } else if (numRows <= 36) { // ARCADE maps: 36, a single STRANGE map: 35
-            range = new Range(scaledTiles(-6), scaledTiles(4));
+            min = -6;
         } else { // BIG maps: 42
-            range = new Range(scaledTiles(-9), scaledTiles(7));
+            min = -9;
         }
+        range = new Range(scaledTiles(min), scaledTiles(min + span));
     }
 
     private double scaledTiles(int n) {
