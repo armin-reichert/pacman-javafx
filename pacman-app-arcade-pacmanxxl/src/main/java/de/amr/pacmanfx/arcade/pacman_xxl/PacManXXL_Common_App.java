@@ -47,7 +47,10 @@ public class PacManXXL_Common_App extends Application {
             .startPage(PacManXXL_Common_StartPage.class, PACMAN_XXL.name())
             .build();
 
-        ui.directoryWatchdog().addEventListener(watchEvents -> xxlMapSelector.loadCustomMapPrototypes());
+        ui.directoryWatchdog().addEventListener(watchEvents -> {
+            xxlMapSelector.customMapPrototypes().clear();
+            xxlMapSelector.loadCustomMapPrototypes();
+        });
         ui.showUI();
     }
 

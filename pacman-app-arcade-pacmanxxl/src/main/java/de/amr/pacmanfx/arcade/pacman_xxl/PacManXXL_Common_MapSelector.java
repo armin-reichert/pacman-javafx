@@ -64,7 +64,10 @@ public class PacManXXL_Common_MapSelector implements MapSelector {
         } else {
             Logger.info("{} custom map(s) found", mapFiles.length);
         }
-        customMapPrototypes.clear();
+        if (!customMapPrototypes.isEmpty()) {
+            Logger.info("Custom maps have already been loaded");
+            return;
+        }
         for (File file : mapFiles) {
             try {
                 WorldMap worldMap = WorldMap.loadFromFile(file);
