@@ -48,7 +48,9 @@ class PlayScene2DCamera extends ParallelCamera {
                 yield 0;
             }
         };
-        rangeY = new RangeY(scaling.get() * TS(topPosition), scaling.get() * TS(topPosition + spannedTiles));
+        double top = Math.floor(scaling.get() * TS(topPosition));
+        double bottom = Math.ceil(scaling.get() * TS(topPosition + spannedTiles));
+        rangeY = new RangeY(top, bottom);
     }
 
     public DoubleProperty scalingProperty() {
@@ -124,6 +126,7 @@ class PlayScene2DCamera extends ParallelCamera {
     }
 
     private void move() {
-        setTranslateY(lerp(getTranslateY(), targetY, 0.015));
+        double y = lerp(getTranslateY(), targetY, 0.016);
+        setTranslateY(y);
     }
 }
