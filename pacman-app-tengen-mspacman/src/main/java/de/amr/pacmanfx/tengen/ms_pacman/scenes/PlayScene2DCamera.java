@@ -17,9 +17,9 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.lerp;
 
 class PlayScene2DCamera extends ParallelCamera {
 
-    record Range(double min, double max) {}
+    private record Range(double min, double max) {}
 
-    enum State { INTRO, TRACKING, MANUAL }
+    private enum State { INTRO, TRACKING, MANUAL }
 
     private final DoubleProperty scaling = new SimpleDoubleProperty(1);
 
@@ -52,7 +52,7 @@ class PlayScene2DCamera extends ParallelCamera {
                 yield 0;
             }
         };
-        range = new Range(scaledTiles(min), scaledTiles(min + span));
+        range = new Range(scaling.get() * TS(min), scaling.get() * TS(min + span));
     }
 
     public DoubleProperty scalingProperty() {
@@ -120,10 +120,6 @@ class PlayScene2DCamera extends ParallelCamera {
         setToY(range.min());
     }
 
-    public void setToBottom() {
-        setToY(range.max());
-    }
-
     public void setToY(double y) {
         switch (state) {
             case INTRO -> Logger.error("Cannot set camera to y-position {} while intro is running", y);
@@ -142,9 +138,5 @@ class PlayScene2DCamera extends ParallelCamera {
 
     private void move() {
         setTranslateY(lerp(getTranslateY(), targetY, 0.015));
-    }
-
-    private double scaledTiles(int n) {
-        return scaling.get() * TS(n);
     }
 }
