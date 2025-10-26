@@ -31,21 +31,21 @@ public class CanvasDecorationPane extends StackPane {
     private final DoubleProperty scaling = new SimpleDoubleProperty(1.0) {
         @Override
         protected void invalidated() {
-            recomputeLayout();
+            doLayout(scaling(), true);
         }
     };
 
     private final DoubleProperty unscaledCanvasWidth = new SimpleDoubleProperty(500) {
         @Override
         protected void invalidated() {
-            recomputeLayout();
+            doLayout(scaling(), true);
         }
     };
 
     private final DoubleProperty unscaledCanvasHeight = new SimpleDoubleProperty(400) {
         @Override
         protected void invalidated() {
-            recomputeLayout();
+            doLayout(scaling(), true);
         }
     };
 
@@ -83,10 +83,6 @@ public class CanvasDecorationPane extends StackPane {
         getChildren().setAll(canvas);
         canvas.widthProperty() .bind(scaling.multiply(unscaledCanvasWidth));
         canvas.heightProperty().bind(scaling.multiply(unscaledCanvasHeight));
-    }
-
-    private void recomputeLayout() {
-        doLayout(scaling(), true);
     }
 
     private void doLayout(double newScaling, boolean forced) {
