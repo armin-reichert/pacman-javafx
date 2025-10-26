@@ -258,6 +258,11 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config {
     }
 
     @Override
+    public boolean showWithDecoration(GameScene gameScene) {
+        return true;
+    }
+
+    @Override
     public GameScene selectGameScene(GameContext gameContext) {
         String sceneID = switch (gameContext.gameState()) {
             case GamePlayState.BOOT -> SCENE_ID_BOOT_SCENE_2D;

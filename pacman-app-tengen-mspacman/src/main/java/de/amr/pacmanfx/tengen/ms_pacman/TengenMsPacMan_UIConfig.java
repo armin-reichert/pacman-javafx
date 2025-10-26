@@ -384,6 +384,11 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     }
 
     @Override
+    public boolean showWithDecoration(GameScene gameScene) {
+        return false;
+    }
+
+    @Override
     public GameScene selectGameScene(GameContext gameContext) {
         String sceneID = switch (gameContext.gameState()) {
             case BOOT -> SCENE_ID_BOOT_SCENE_2D;

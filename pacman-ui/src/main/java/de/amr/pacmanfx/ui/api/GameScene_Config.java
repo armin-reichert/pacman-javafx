@@ -28,4 +28,6 @@ public interface GameScene_Config {
     boolean gameSceneHasID(GameScene gameScene, String sceneID);
 
     GameScene selectGameScene(GameContext gameContext);
+
+    boolean showWithDecoration(GameScene gameScene);
 }

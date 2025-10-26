@@ -19,8 +19,6 @@ import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
@@ -67,8 +65,6 @@ public class PlayView extends StackPane implements GameUI_View {
             case null, default -> 0; // may happen, it's ok
         };
     }
-
-    private final BooleanProperty canvasDecorated = new SimpleBooleanProperty(false);
 
     private final ActionBindingsManager actionBindings = new DefaultActionBindingsManager();
     private final GameUI ui;
@@ -160,10 +156,6 @@ public class PlayView extends StackPane implements GameUI_View {
         contextMenu.show(this, contextMenuEvent.getScreenX(), contextMenuEvent.getScreenY());
     }
 
-    public BooleanProperty canvasDecoratedProperty() {
-        return canvasDecorated;
-    }
-
     public void showHelp(GameUI ui) {
         helpLayer.showHelp(ui, canvasContainer.scaling());
     }
@@ -235,10 +227,6 @@ public class PlayView extends StackPane implements GameUI_View {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    public CanvasContainer canvasContainer() {
-        return canvasContainer;
-    }
-
     public void updateGameScene(boolean reloadCurrent) {
         final GameScene nextGameScene = ui.currentConfig().selectGameScene(ui.gameContext());
         if (nextGameScene == null) {
@@ -294,7 +282,7 @@ public class PlayView extends StackPane implements GameUI_View {
             gameScene2D.createRenderers(canvas);
             Vector2i gameSceneSizePx = gameScene2D.sizeInPx();
             double aspect = (double) gameSceneSizePx.x() / gameSceneSizePx.y();
-            if (canvasDecorated.get()) {
+            if (ui.currentConfig().showWithDecoration(gameScene)) {
                 gameScene2D.scalingProperty().bind(canvasContainer.scalingProperty().map(
                         scaling -> Math.min(scaling.doubleValue(), ui.preferences().getFloat("scene2d.max_scaling"))));
                 canvasContainer.setUnscaledCanvasSize(gameSceneSizePx.x(), gameSceneSizePx.y());
