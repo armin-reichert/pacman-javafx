@@ -27,9 +27,6 @@ class PlayScene2DCamera extends ParallelCamera {
     private static final int INTRO_MOVEMENT_START_TICK = 60;
     private static final int INTRO_MOVEMENT_DURATION_TICKS = 120;
 
-    private static final float INTRO_MOVEMENT_SPEED = 0.015f;
-    private static final float TRACKING_SPEED = 0.015f;
-
     private Range range;
     private State state;
     private int introTick;
@@ -95,7 +92,7 @@ class PlayScene2DCamera extends ParallelCamera {
             enterTrackingMode();
             return;
         }
-        move(INTRO_MOVEMENT_SPEED);
+        move();
         Logger.debug("Intro tick={} y={} maxY={}", introTick, getTranslateY(), range.max());
     }
 
@@ -111,7 +108,7 @@ class PlayScene2DCamera extends ParallelCamera {
         } else if (relY > 0.5 || relY > 0.4 && pac.moveDir() == Direction.DOWN) {
             setTargetToBottom();
         }
-        move(TRACKING_SPEED);
+        move();
     }
 
     public void enterManualMode() {
@@ -142,8 +139,8 @@ class PlayScene2DCamera extends ParallelCamera {
         targetY = range.max();
     }
 
-    private void move(double speed) {
-        setTranslateY(lerp(getTranslateY(), targetY, speed));
+    private void move() {
+        setTranslateY(lerp(getTranslateY(), targetY, 0.015));
     }
 
     private double scaledTiles(int n) {
