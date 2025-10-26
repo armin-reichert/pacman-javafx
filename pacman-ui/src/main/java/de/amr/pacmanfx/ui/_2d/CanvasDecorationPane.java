@@ -22,7 +22,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * TODO: This thing needs to get simplified. Too many magic numbers.
  */
-public class CanvasDecoration extends BorderPane {
+public class CanvasDecorationPane extends StackPane {
 
     private static final Vector2f DOWN_SCALING = new Vector2f(0.85f, 0.93f);
 
@@ -52,7 +52,7 @@ public class CanvasDecoration extends BorderPane {
     private Canvas canvas;
     private double minScaling = 1.0;
 
-    public CanvasDecoration() {
+    public CanvasDecorationPane() {
         clipProperty().bind(Bindings.createObjectBinding(() -> {
             Dimension2D size = computeSize();
             var clipRect = new Rectangle(size.getWidth(), size.getHeight());
@@ -80,7 +80,7 @@ public class CanvasDecoration extends BorderPane {
 
     public void setCanvas(Canvas canvas) {
         this.canvas = requireNonNull(canvas);
-        setCenter(canvas);
+        getChildren().setAll(canvas);
         canvas.widthProperty() .bind(scaling.multiply(unscaledCanvasWidth));
         canvas.heightProperty().bind(scaling.multiply(unscaledCanvasHeight));
     }
