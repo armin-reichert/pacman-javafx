@@ -33,15 +33,28 @@ class PlayScene2DCamera extends ParallelCamera {
     private Range range;
     private State state;
     private int introTick;
-    private float speed;
     private double targetY;
 
     public PlayScene2DCamera() {
         range = new Range(Double.MIN_VALUE, Double.MAX_VALUE);
         state = State.MANUAL;
         introTick = 0;
-        speed = 0;
         targetY = 0;
+    }
+
+    // This is "alchemy", not science :-)
+    public void updateRange(GameLevel gameLevel) {
+        final int numRows = gameLevel.worldMap().terrainLayer().numRows();
+        final int span = numRows - 26;
+        int min;
+        if (numRows <= 30) {  // MINI maps: 30
+            min = -3;
+        } else if (numRows <= 36) { // ARCADE maps: 36, a single STRANGE map: 35
+            min = -6;
+        } else { // BIG maps: 42
+            min = -9;
+        }
+        range = new Range(scaledTiles(min), scaledTiles(min + span));
     }
 
     public DoubleProperty scalingProperty() {
@@ -50,61 +63,58 @@ class PlayScene2DCamera extends ParallelCamera {
 
     public void update(GameLevel gameLevel) {
         switch (state) {
-            case INTRO -> updateIntro();
-            case TRACKING -> updateTracking(gameLevel);
+            case INTRO -> updateIntroMode();
+            case TRACKING -> updateTrackingMode(gameLevel);
         }
     }
 
     /**
      * Intro: Show top of maze, wait some time, move to bottom of maze, finally start tracking Pac-Man.
      */
-    public void startIntro() {
+    public void enterIntroMode() {
         if (state == State.INTRO) {
             Logger.warn("Camera intro sequence is already running");
             return;
         }
-        endTracking();
+        enterManualMode();
         setToTop();
-        introTick = 0;
         state = State.INTRO;
+        introTick = 0;
         Logger.info("Camera intro sequence started");
     }
 
-    private void updateIntro() {
+    private void updateIntroMode() {
         ++introTick;
         if (introTick < INTRO_MOVEMENT_START_TICK) {
             return;
         }
         if (introTick == INTRO_MOVEMENT_START_TICK) {
-            setTargetBottom();
-            speed = INTRO_MOVEMENT_SPEED;
+            setTargetToBottom();
         }
         else if (introTick == INTRO_MOVEMENT_START_TICK + INTRO_MOVEMENT_DURATION_TICKS) {
-            startTracking();
+            enterTrackingMode();
             return;
         }
-        move();
+        move(INTRO_MOVEMENT_SPEED);
         Logger.debug("Intro tick={} y={} maxY={}", introTick, getTranslateY(), range.max());
     }
 
-    public void startTracking() {
-        speed = TRACKING_SPEED;
+    public void enterTrackingMode() {
         state = State.TRACKING;
     }
 
-    private void updateTracking(GameLevel gameLevel) {
+    private void updateTrackingMode(GameLevel gameLevel) {
         Pac pac = gameLevel.pac();
         double relY = pac.y() / TS(gameLevel.worldMap().terrainLayer().numRows());
         if (relY < 0.5 || relY < 0.6 && pac.moveDir() == Direction.UP) {
-            setTargetTop();
+            setTargetToTop();
         } else if (relY > 0.5 || relY > 0.4 && pac.moveDir() == Direction.DOWN) {
-            setTargetBottom();
+            setTargetToBottom();
         }
-        move();
+        move(TRACKING_SPEED);
     }
 
-    public void endTracking() {
-        speed = 0;
+    public void enterManualMode() {
         state = State.MANUAL;
     }
 
@@ -124,31 +134,16 @@ class PlayScene2DCamera extends ParallelCamera {
         }
     }
 
-    public void setTargetTop() {
+    public void setTargetToTop() {
         targetY = range.min();
     }
 
-    public void setTargetBottom() {
+    public void setTargetToBottom() {
         targetY = range.max();
     }
 
-    private void move() {
+    private void move(double speed) {
         setTranslateY(lerp(getTranslateY(), targetY, speed));
-    }
-
-    // This is "alchemy", not science :-)
-    public void updateRange(GameLevel gameLevel) {
-        final int numRows = gameLevel.worldMap().terrainLayer().numRows();
-        final int span = numRows - 26;
-        int min;
-        if (numRows <= 30) {  // MINI maps: 30
-            min = -3;
-        } else if (numRows <= 36) { // ARCADE maps: 36, a single STRANGE map: 35
-            min = -6;
-        } else { // BIG maps: 42
-            min = -9;
-        }
-        range = new Range(scaledTiles(min), scaledTiles(min + span));
     }
 
     private double scaledTiles(int n) {
