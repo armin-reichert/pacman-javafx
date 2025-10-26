@@ -63,6 +63,7 @@ class PlayScene2DCamera extends ParallelCamera {
             Logger.warn("Camera intro sequence is already running");
             return;
         }
+        endTracking();
         setToTop();
         introTick = 0;
         state = State.INTRO;
