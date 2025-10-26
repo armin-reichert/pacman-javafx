@@ -43,7 +43,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
     }
     
     @Override
-    public void createRenderers(Canvas canvas) {
+    protected void createRenderers(Canvas canvas) {
         super.createRenderers(canvas);
 
         GameUI_Config uiConfig = ui.currentConfig();

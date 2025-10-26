@@ -10,7 +10,10 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.AbstractGameAction;
 import de.amr.pacmanfx.ui.DefaultActionBindingsManager;
-import de.amr.pacmanfx.ui._2d.*;
+import de.amr.pacmanfx.ui._2d.CanvasDecoration;
+import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui._2d.HelpLayer;
+import de.amr.pacmanfx.ui._2d.SubSceneProvider;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.ui.api.ActionBindingsManager;
 import de.amr.pacmanfx.ui.api.GameScene;
@@ -70,14 +73,21 @@ public class PlayView extends StackPane implements GameUI_View {
     private final GameUI ui;
     private final MainScene parentScene;
     private final Dashboard dashboard;
-    private final Canvas canvas = new Canvas();
-    private final CanvasContainer canvasContainer = new CanvasContainer(canvas);
+    private final CanvasDecoration canvasDecoration = new CanvasDecoration();
     private final MiniGameView miniView;
     private final ContextMenu contextMenu = new ContextMenu();
 
     private final BorderPane canvasLayer = new BorderPane();
     private final BorderPane dashboardAndMiniViewLayer = new BorderPane();
     private HelpLayer helpLayer; // help
+
+    private Canvas canvas;
+
+    private void createCanvas() {
+        canvas = new Canvas();
+        canvasDecoration.setCanvas(canvas);
+        Logger.info("A new, fresh canvas has been created just for you!");
+    }
 
     public PlayView(GameUI ui, MainScene parentScene) {
         this.ui = requireNonNull(ui);
@@ -109,8 +119,8 @@ public class PlayView extends StackPane implements GameUI_View {
             if (gameScene != null) embedGameScene(parentScene, gameScene);
         });
 
-        parentScene.widthProperty() .addListener((py, ov, w) -> canvasContainer.resizeTo(w.doubleValue(), parentScene.getHeight()));
-        parentScene.heightProperty().addListener((py, ov, h) -> canvasContainer.resizeTo(parentScene.getWidth(), h.doubleValue()));
+        parentScene.widthProperty() .addListener((py, ov, w) -> canvasDecoration.resizeTo(w.doubleValue(), parentScene.getHeight()));
+        parentScene.heightProperty().addListener((py, ov, h) -> canvasDecoration.resizeTo(parentScene.getWidth(), h.doubleValue()));
 
         actionBindings.useBindings(ACTION_BOOT_SHOW_PLAY_VIEW, ui.actionBindings());
         actionBindings.useBindings(ACTION_ENTER_FULLSCREEN, ui.actionBindings());
@@ -157,7 +167,7 @@ public class PlayView extends StackPane implements GameUI_View {
     }
 
     public void showHelp(GameUI ui) {
-        helpLayer.showHelp(ui, canvasContainer.scaling());
+        helpLayer.showHelp(ui, canvasDecoration.scaling());
     }
 
     public void draw() {
@@ -263,34 +273,34 @@ public class PlayView extends StackPane implements GameUI_View {
 
     private void embedGameScene(Scene parentScene, GameScene gameScene) {
         if (gameScene instanceof SubSceneProvider subSceneProvider) {
-            // 1. Play scene with integrated sub-scene: 3D scene or scrolling 2D scene as in Tengen Ms. Pac-Man:
+            // 1. Play scene with integrated sub-scene: 3D scene or 2D scene with camera as in Tengen Ms. Pac-Man:
             SubScene subScene = subSceneProvider.subScene();
             // Let sub-scene take full size o parent scene
             subScene.widthProperty().bind(parentScene.widthProperty());
             subScene.heightProperty().bind(parentScene.heightProperty());
-
-            //TODO reconsider this
-            if (gameScene instanceof CanvasProvider canvasProvider) {
-                canvasProvider.setCanvas(canvas);
-                if (gameScene instanceof GameScene2D gameScene2D) {
-                    gameScene2D.createRenderers(canvas);
-                }
+            // Is it a 2D scene with canvas inside sub-scene with camera?
+            if (gameScene instanceof GameScene2D gameScene2D) {
+                createCanvas();
+                gameScene2D.setCanvas(canvas);
             }
             getChildren().set(0, subScene);
         }
         else if (gameScene instanceof GameScene2D gameScene2D) {
-            gameScene2D.createRenderers(canvas);
+            createCanvas();
+            gameScene2D.setCanvas(canvas);
             Vector2i gameSceneSizePx = gameScene2D.sizeInPx();
             double aspect = (double) gameSceneSizePx.x() / gameSceneSizePx.y();
             if (ui.currentConfig().showWithDecoration(gameScene)) {
-                gameScene2D.scalingProperty().bind(canvasContainer.scalingProperty().map(
+                // Decorated game scene scaled-down to give space for the decoration
+                gameScene2D.scalingProperty().bind(canvasDecoration.scalingProperty().map(
                         scaling -> Math.min(scaling.doubleValue(), ui.preferences().getFloat("scene2d.max_scaling"))));
-                canvasContainer.setUnscaledCanvasSize(gameSceneSizePx.x(), gameSceneSizePx.y());
-                canvasContainer.resizeTo(parentScene.getWidth(), parentScene.getHeight());
-                canvasContainer.backgroundProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR.map(Ufx::colorBackground));
-                canvasLayer.setCenter(canvasContainer);
+                canvasDecoration.setUnscaledCanvasSize(gameSceneSizePx.x(), gameSceneSizePx.y());
+                canvasDecoration.resizeTo(parentScene.getWidth(), parentScene.getHeight());
+                canvasDecoration.backgroundProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR.map(Ufx::colorBackground));
+                canvasLayer.setCenter(canvasDecoration);
             }
             else {
+                // Undecorated game scene taking complete height
                 canvas.heightProperty().bind(parentScene.heightProperty());
                 canvas.widthProperty().bind(parentScene.heightProperty().map(h -> h.doubleValue() * aspect));
                 gameScene2D.scalingProperty().bind(parentScene.heightProperty().divide(gameSceneSizePx.y()));
@@ -304,15 +314,15 @@ public class PlayView extends StackPane implements GameUI_View {
     }
 
     private void configureCanvasContainer() {
-        canvasContainer.setMinScaling(0.5);
+        canvasDecoration.setMinScaling(0.5);
         // 28*TS x 36*TS = Arcade map size in pixels
-        canvasContainer.setUnscaledCanvasSize(28 * TS, 36 * TS);
-        canvasContainer.setBorderColor(Color.rgb(222, 222, 255));
+        canvasDecoration.setUnscaledCanvasSize(28 * TS, 36 * TS);
+        canvasDecoration.setBorderColor(Color.rgb(222, 222, 255));
     }
 
     private void configurePropertyBindings() {
         PROPERTY_CANVAS_FONT_SMOOTHING.addListener((py, ov, smooth)
-            -> canvasContainer.canvas().getGraphicsContext2D().setFontSmoothingType(smooth ? FontSmoothingType.LCD : FontSmoothingType.GRAY));
+            -> canvasDecoration.canvas().getGraphicsContext2D().setFontSmoothingType(smooth ? FontSmoothingType.LCD : FontSmoothingType.GRAY));
 
         PROPERTY_DEBUG_INFO_VISIBLE.addListener((py, ov, debug)
             -> {
@@ -322,7 +332,7 @@ public class PlayView extends StackPane implements GameUI_View {
     }
 
     private void createLayout() {
-        canvasLayer.setCenter(canvasContainer);
+        canvasLayer.setCenter(canvasDecoration);
 
         dashboardAndMiniViewLayer.setLeft(dashboard);
         dashboardAndMiniViewLayer.setRight(miniView);
@@ -332,7 +342,7 @@ public class PlayView extends StackPane implements GameUI_View {
         ));
 
         //TODO reconsider help functionality
-        helpLayer = new HelpLayer(canvasContainer);
+        helpLayer = new HelpLayer(canvasDecoration);
         helpLayer.setMouseTransparent(true);
 
         getChildren().addAll(canvasLayer, dashboardAndMiniViewLayer, helpLayer);

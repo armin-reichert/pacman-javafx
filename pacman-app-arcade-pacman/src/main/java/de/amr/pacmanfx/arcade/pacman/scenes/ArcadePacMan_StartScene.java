@@ -29,7 +29,7 @@ public class ArcadePacMan_StartScene extends GameScene2D {
     }
 
     @Override
-    public void createRenderers(Canvas canvas) {
+    protected void createRenderers(Canvas canvas) {
         super.createRenderers(canvas);
         hudRenderer = configureRenderer(new ArcadePacMan_HUDRenderer(canvas, ui.currentConfig()));
     }

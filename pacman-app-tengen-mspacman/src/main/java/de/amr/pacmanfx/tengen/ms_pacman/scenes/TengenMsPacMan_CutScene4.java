@@ -60,7 +60,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     }
 
     @Override
-    public void createRenderers(Canvas canvas) {
+    protected void createRenderers(Canvas canvas) {
         super.createRenderers(canvas);
 
         final GameUI_Config uiConfig = ui.currentConfig();

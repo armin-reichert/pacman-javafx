@@ -23,7 +23,6 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import org.tinylog.Logger;
 
@@ -45,6 +44,7 @@ public abstract class GameScene2D implements GameScene {
     protected final AnimationRegistry animationRegistry;
     protected final List<Actor> actorsInZOrder = new ArrayList<>();
 
+    protected Canvas canvas;
     protected BaseRenderer sceneRenderer;
     protected DebugInfoRenderer debugInfoRenderer;
 
@@ -87,7 +87,16 @@ public abstract class GameScene2D implements GameScene {
 
     protected abstract HUDRenderer hudRenderer();
 
-    public void createRenderers(Canvas canvas) {
+    public void setCanvas(Canvas canvas) {
+        this.canvas = canvas;
+        createRenderers(canvas);
+    }
+
+    public Canvas canvas() {
+        return canvas;
+    }
+
+    protected void createRenderers(Canvas canvas) {
         requireNonNull(canvas);
         sceneRenderer     = configureRenderer(new BaseRenderer(canvas));
         debugInfoRenderer = configureRenderer(new DefaultDebugInfoRenderer(ui, canvas));

@@ -22,7 +22,10 @@ import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_ActorRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameLevelRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_HUDRenderer;
 import de.amr.pacmanfx.ui.ActionBinding;
-import de.amr.pacmanfx.ui._2d.*;
+import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
+import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
+import de.amr.pacmanfx.ui._2d.SubSceneProvider;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
@@ -62,7 +65,7 @@ import static de.amr.pacmanfx.uilib.Ufx.createContextMenuTitle;
 /**
  * Tengen Ms. Pac-Man play scene, uses vertical scrolling by default to accommodate to NES screen size.
  */
-public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasProvider, SubSceneProvider {
+public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneProvider {
 
     private static final double CANVAS_WIDTH_UNSCALED = NES_SIZE_PX.x();
     private final DoubleProperty canvasHeightUnscaled = new SimpleDoubleProperty(NES_SIZE_PX.y());
@@ -76,7 +79,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
     private final PlayScene2DCamera dynamicCamera = new PlayScene2DCamera();
     private final PerspectiveCamera fixedCamera  = new PerspectiveCamera(false);
 
-    private Canvas canvas;
     private TengenMsPacMan_HUDRenderer hudRenderer;
     private TengenMsPacMan_GameLevelRenderer gameLevelRenderer;
     private final RenderInfo gameLevelRenderInfo = new RenderInfo();
@@ -128,7 +130,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
 
     @Override
     public void setCanvas(Canvas canvas) {
-        this.canvas = canvas;
+        super.setCanvas(canvas);
 
         canvas.widthProperty() .bind(scalingProperty().multiply(CANVAS_WIDTH_UNSCALED));
         canvas.heightProperty().bind(scalingProperty().multiply(canvasHeightUnscaled));
@@ -140,16 +142,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
         clipRect.widthProperty().bind(scalingProperty().multiply(CANVAS_WIDTH_UNSCALED - 2 * CONTENT_INDENT));
         clipRect.heightProperty().bind(canvas.heightProperty());
 
-        //TODO check if this is needed, if not, remove
-        gameLevelRenderer = (TengenMsPacMan_GameLevelRenderer) ui.currentConfig().createGameLevelRenderer(canvas);
-        gameLevelRenderer.scalingProperty().bind(scaling);
-
         rootPane.getChildren().setAll(canvas);
-    }
-
-    @Override
-    public Canvas canvas() {
-        return canvas;
     }
 
     private void initForGameLevel(GameLevel gameLevel) {
@@ -192,7 +185,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CanvasPro
     }
 
     @Override
-    public void createRenderers(Canvas canvas) {
+    protected void createRenderers(Canvas canvas) {
         super.createRenderers(canvas);
 
         TengenMsPacMan_UIConfig uiConfig = ui.currentConfig();

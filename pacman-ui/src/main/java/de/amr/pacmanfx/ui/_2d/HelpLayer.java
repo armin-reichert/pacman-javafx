@@ -16,15 +16,15 @@ public class HelpLayer extends Pane {
 
     private final FadingPane helpPopUp = new FadingPane();
 
-    public HelpLayer(CanvasContainer canvasContainer) {
+    public HelpLayer(CanvasDecoration canvasDecoration) {
         getChildren().addAll(helpPopUp);
 
-        minHeightProperty().bind(canvasContainer.minHeightProperty());
-        maxHeightProperty().bind(canvasContainer.maxHeightProperty());
-        prefHeightProperty().bind(canvasContainer.prefHeightProperty());
-        minWidthProperty().bind(canvasContainer.minWidthProperty());
-        maxWidthProperty().bind(canvasContainer.maxWidthProperty());
-        prefWidthProperty().bind(canvasContainer.prefWidthProperty());
+        minHeightProperty().bind(canvasDecoration.minHeightProperty());
+        maxHeightProperty().bind(canvasDecoration.maxHeightProperty());
+        prefHeightProperty().bind(canvasDecoration.prefHeightProperty());
+        minWidthProperty().bind(canvasDecoration.minWidthProperty());
+        maxWidthProperty().bind(canvasDecoration.maxWidthProperty());
+        prefWidthProperty().bind(canvasDecoration.prefWidthProperty());
     }
 
     public void showHelp(GameUI ui, double scaling) {
