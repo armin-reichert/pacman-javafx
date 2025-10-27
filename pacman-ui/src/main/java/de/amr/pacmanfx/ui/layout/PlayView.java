@@ -39,7 +39,7 @@ import org.tinylog.Logger;
 
 import java.util.List;
 
-import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.ui.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.api.GameScene_Config.SCENE_ID_PLAY_SCENE_3D;
 import static de.amr.pacmanfx.ui.api.GameUI_Config.SCENE_ID_PLAY_SCENE_2D;
@@ -81,11 +81,8 @@ public class PlayView extends StackPane implements GameUI_View {
     private final BorderPane dashboardAndMiniViewLayer = new BorderPane();
     private HelpLayer helpLayer; // help
 
-    private Canvas canvas;
-
     private void createCanvas() {
-        canvas = new Canvas();
-        canvasDecorationPane.setCanvas(canvas);
+        canvasDecorationPane.setCanvas(new Canvas());
         Logger.info("A new, fresh canvas has been created just for you!");
     }
 
@@ -102,7 +99,10 @@ public class PlayView extends StackPane implements GameUI_View {
             PROPERTY_MINI_VIEW_ON, parentScene.currentGameSceneProperty()
         ));
 
-        configureCanvasContainer();
+        canvasDecorationPane.setMinScaling(0.5);
+        canvasDecorationPane.setUnscaledCanvasSize(ARCADE_MAP_SIZE_IN_PIXELS.x(), ARCADE_MAP_SIZE_IN_PIXELS.y());
+        canvasDecorationPane.setBorderColor(Color.rgb(222, 222, 255));
+
         createLayout();
         configurePropertyBindings();
 
@@ -281,13 +281,13 @@ public class PlayView extends StackPane implements GameUI_View {
             // Is it a 2D scene with canvas inside sub-scene with camera?
             if (gameScene instanceof GameScene2D gameScene2D) {
                 createCanvas();
-                gameScene2D.setCanvas(canvas);
+                gameScene2D.setCanvas(canvasDecorationPane.canvas());
             }
             getChildren().set(0, subScene);
         }
         else if (gameScene instanceof GameScene2D gameScene2D) {
             createCanvas();
-            gameScene2D.setCanvas(canvas);
+            gameScene2D.setCanvas(canvasDecorationPane.canvas());
             Vector2i gameSceneSizePx = gameScene2D.sizeInPx();
             double aspect = (double) gameSceneSizePx.x() / gameSceneSizePx.y();
             if (ui.currentConfig().showWithDecoration(gameScene)) {
@@ -301,23 +301,16 @@ public class PlayView extends StackPane implements GameUI_View {
             }
             else {
                 // Undecorated game scene taking complete height
-                canvas.heightProperty().bind(parentScene.heightProperty());
-                canvas.widthProperty().bind(parentScene.heightProperty().map(h -> h.doubleValue() * aspect));
+                canvasDecorationPane.canvas().heightProperty().bind(parentScene.heightProperty());
+                canvasDecorationPane.canvas().widthProperty().bind(parentScene.heightProperty().map(h -> h.doubleValue() * aspect));
                 gameScene2D.scalingProperty().bind(parentScene.heightProperty().divide(gameSceneSizePx.y()));
-                canvasLayer.setCenter(canvas);
+                canvasLayer.setCenter(canvasDecorationPane.canvas());
             }
             getChildren().set(0, canvasLayer);
         }
         else {
             Logger.error("Cannot embed play scene of class {}", gameScene.getClass().getName());
         }
-    }
-
-    private void configureCanvasContainer() {
-        canvasDecorationPane.setMinScaling(0.5);
-        // 28*TS x 36*TS = Arcade map size in pixels
-        canvasDecorationPane.setUnscaledCanvasSize(28 * TS, 36 * TS);
-        canvasDecorationPane.setBorderColor(Color.rgb(222, 222, 255));
     }
 
     private void configurePropertyBindings() {
