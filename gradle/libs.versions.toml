@@ -4,7 +4,7 @@
 [versions]
 iconli  = "12.3.1"
 java    = "21"
-javafx  = "21.0.8"
+javafx  = "21.0.9"
 junit5  = "5.10.3"
 tinylog = "2.7.0"
 
