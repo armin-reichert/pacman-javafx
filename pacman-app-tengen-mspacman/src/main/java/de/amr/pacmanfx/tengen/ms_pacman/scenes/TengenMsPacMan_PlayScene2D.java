@@ -105,7 +105,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
             ctx.fillText("%s %d".formatted(gameState, gameState.timer().tickCount()), 0, scaled(3 * TS));
             context().optGameLevel().ifPresent(gameLevel -> {
                 drawMovingActorInfo(gameLevel.pac());
-                ghostsByZ(gameLevel).forEach(this::drawMovingActorInfo);
+                ghostsInZOrder(gameLevel).forEach(this::drawMovingActorInfo);
             });
             ctx.fillText("Camera y=%.2f".formatted(dynamicCamera.getTranslateY()), scaled(11*TS), scaled(15*TS));
             ctx.restore();
@@ -190,7 +190,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
     protected void createRenderers(Canvas canvas) {
         super.createRenderers(canvas);
 
-        TengenMsPacMan_UIConfig uiConfig = ui.currentConfig();
+        final TengenMsPacMan_UIConfig uiConfig = ui.currentConfig();
         hudRenderer       = configureRenderer(uiConfig.createHUDRenderer(canvas));
         gameLevelRenderer = configureRenderer(uiConfig.createGameLevelRenderer(canvas));
         actorRenderer     = configureRenderer(uiConfig.createActorRenderer(canvas));
@@ -240,7 +240,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
             if (subScene.getCamera() == dynamicCamera) {
                 dynamicCamera.update(TS(gameLevel.worldMap().numRows()), gameLevel.pac());
             }
-            updateHUD();
+            updateHUD(gameLevel);
         });
     }
 
@@ -475,6 +475,11 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
     // drawing
 
     @Override
+    public void drawSceneContent() {
+        // Overridden draw() method does the job
+    }
+
+    @Override
     public void draw() {
         if (canvas == null) {
             return;
@@ -516,30 +521,20 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
         }
     }
 
-    @Override
-    public void drawSceneContent() {
-        // draw() is overridden and does the job
-    }
-
     private void drawActors(GameLevel gameLevel) {
         actorsInZOrder.clear();
         gameLevel.bonus().ifPresent(actorsInZOrder::add);
         actorsInZOrder.add(gameLevel.pac());
-        ghostsByZ(gameLevel).forEach(actorsInZOrder::add);
+        ghostsInZOrder(gameLevel).forEach(actorsInZOrder::add);
         actorsInZOrder.forEach(actor -> actorRenderer.drawActor(actor));
     }
 
-    //TODO the ghost state should also be taken into account
-    private Stream<Ghost> ghostsByZ(GameLevel gameLevel) {
+    private Stream<Ghost> ghostsInZOrder(GameLevel gameLevel) {
         return Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW).map(gameLevel::ghost);
     }
 
-    private void updateHUD() {
-        TengenMsPacMan_GameModel game = context().game();
-        GameLevel gameLevel = game.optGameLevel().orElse(null);
-
-        if (gameLevel == null) return;
-
+    private void updateHUD(GameLevel gameLevel) {
+        final TengenMsPacMan_GameModel game = context().game();
         int numLives = game.lifeCount() - 1;
         // As long as Pac-Man is still invisible on start, he is shown as an additional entry in the lives counter
         if (context().gameState() == GamePlayState.STARTING_GAME_OR_LEVEL && !gameLevel.pac().isVisible()) {
@@ -547,7 +542,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
         }
         numLives = Math.min(numLives, game.hud().maxLivesDisplayed());
         game.hud().setVisibleLifeCount(numLives);
-
         game.hud().showLevelNumber(game.mapCategory() != MapCategory.ARCADE);
     }
 }

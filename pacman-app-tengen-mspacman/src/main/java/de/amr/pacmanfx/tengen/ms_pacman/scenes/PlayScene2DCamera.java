@@ -88,6 +88,7 @@ class PlayScene2DCamera extends ParallelCamera {
             setTargetToBottom();
         }
         else if (introTick == INTRO_TILT_START_TICK + INTRO_TILT_DURATION_TICKS) {
+            Logger.info("Camera intro sequence ended");
             enterTrackingMode();
             return;
         }
