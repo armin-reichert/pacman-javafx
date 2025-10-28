@@ -16,7 +16,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
@@ -38,7 +37,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Carousel containing the start pages for the different game variants (XXL game variants share common start page).
  */
-public class StartPagesView implements GameUI_View {
+public class StartPagesView extends Carousel implements GameUI_View {
 
     public static FancyButton createStartButton(GlobalAssets assets, Pos alignment) {
         var button = new FancyButton(
@@ -50,37 +49,13 @@ public class StartPagesView implements GameUI_View {
         return button;
     }
 
-    private static class StartPagesCarousel extends Carousel {
-        @Override
-        protected Node createCarouselButton(Direction dir) {
-            int size = 48;
-            FontIcon icon = switch (dir) {
-                case LEFT -> FontIcon.of(FontAwesomeSolid.CHEVRON_CIRCLE_LEFT, size, Color.gray(0.69));
-                case RIGHT -> FontIcon.of(FontAwesomeSolid.CHEVRON_CIRCLE_RIGHT, size, Color.gray(0.69));
-                default -> throw new IllegalArgumentException("Illegal carousel button direction: %s".formatted(dir));
-            };
-            icon.setOpacity(0.2);
-            icon.setOnMouseEntered(e -> icon.setOpacity(0.8));
-            icon.setOnMouseExited(e -> icon.setOpacity(0.2));
-            var box = new BorderPane(icon);
-            box.setMaxHeight(size);
-            box.setMaxWidth(size);
-            box.setPadding(new Insets(5));
-            StackPane.setAlignment(box, dir == Direction.LEFT ? Pos.CENTER_LEFT : Pos.CENTER_RIGHT);
-            return box;
-        }
-    }
-
-    private final GameUI ui;
     private final List<StartPage> startPageList = new ArrayList<>();
     private final ActionBindingsManager actionBindings;
-    private final Carousel carousel;
 
     public StartPagesView(GameUI ui) {
-        this.ui = requireNonNull(ui);
+        requireNonNull(ui);
         this.actionBindings = new DefaultActionBindingsManager();
-        carousel = new StartPagesCarousel();
-        carousel.selectedIndexProperty().addListener((py,ov,nv) -> {
+        selectedIndexProperty().addListener((py,ov,nv) -> {
             Logger.info("Carousel selection changed from {} to {}", ov, nv);
             int oldIndex = ov.intValue(), newIndex = nv.intValue();
             if (oldIndex != -1) {
@@ -97,14 +72,14 @@ public class StartPagesView implements GameUI_View {
         AbstractGameAction actionPrevSlide = new AbstractGameAction("SHOW_PREV_SLIDE") {
             @Override
             public void execute(GameUI ui) {
-                carousel.showPreviousSlide();
+                showPreviousSlide();
             }
         };
 
         AbstractGameAction actionNextSlide = new AbstractGameAction("SHOW_NEXT_SLIDE") {
             @Override
             public void execute(GameUI ui) {
-                carousel.showNextSlide();
+                showNextSlide();
             }
         };
 
@@ -115,12 +90,31 @@ public class StartPagesView implements GameUI_View {
     }
 
     @Override
+    protected Node createCarouselButton(Direction dir) {
+        int size = 48;
+        FontIcon icon = switch (dir) {
+            case LEFT -> FontIcon.of(FontAwesomeSolid.CHEVRON_CIRCLE_LEFT, size, Color.gray(0.69));
+            case RIGHT -> FontIcon.of(FontAwesomeSolid.CHEVRON_CIRCLE_RIGHT, size, Color.gray(0.69));
+            default -> throw new IllegalArgumentException("Illegal carousel button direction: %s".formatted(dir));
+        };
+        icon.setOpacity(0.2);
+        icon.setOnMouseEntered(e -> icon.setOpacity(0.8));
+        icon.setOnMouseExited(e -> icon.setOpacity(0.2));
+        var box = new BorderPane(icon);
+        box.setMaxHeight(size);
+        box.setMaxWidth(size);
+        box.setPadding(new Insets(5));
+        StackPane.setAlignment(box, dir == Direction.LEFT ? Pos.CENTER_LEFT : Pos.CENTER_RIGHT);
+        return box;
+    }
+
+    @Override
     public ActionBindingsManager actionBindingsManager() {
         return actionBindings;
     }
 
     @Override
-    public Region root() { return carousel; }
+    public Region root() { return this; }
 
     @Override
     public Optional<Supplier<String>> titleSupplier() {
@@ -134,27 +128,19 @@ public class StartPagesView implements GameUI_View {
     }
 
     public Optional<StartPage> currentStartPage() {
-        int selectedIndex = carousel.selectedIndex();
+        int selectedIndex = selectedIndex();
         return selectedIndex >= 0 ? Optional.of(startPageList.get(selectedIndex)) : Optional.empty();
     }
 
     public void addStartPage(StartPage startPage) {
         requireNonNull(startPage);
         startPageList.add(startPage);
-        carousel.addSlide(startPage.layoutRoot());
-        carousel.setNavigationVisible(carousel.numSlides() >= 2);
+        addSlide(startPage.layoutRoot());
+        setNavigationVisible(numSlides() >= 2);
         Logger.info("Start page {} added", startPage.getClass().getSimpleName());
     }
 
-    public boolean containsPage(StartPage page) {
-        return startPageList.contains(page);
-    }
-
     public void selectStartPage(int index) {
-        carousel.setSelectedIndex(index);
-    }
-
-    public void setBackground(Background background) {
-        carousel.setBackground(background);
+        setSelectedIndex(index);
     }
 }
