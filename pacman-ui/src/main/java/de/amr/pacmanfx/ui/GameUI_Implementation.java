@@ -20,6 +20,7 @@ import de.amr.pacmanfx.uilib.assets.UIPreferences;
 import de.amr.pacmanfx.uilib.rendering.Gradients;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.StringBinding;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.ScrollEvent;
@@ -106,6 +107,8 @@ public class GameUI_Implementation implements GameUI {
     private PlayView playView;
     private EditorView editorView;
 
+    private final StringBinding titleBinding;
+
     public GameUI_Implementation(Map<String, Class<?>> configClassesByGameVariant, GameContext gameContext, Stage stage, double mainSceneWidth, double mainSceneHeight) {
         this.configClassesByGameVariant = requireNonNull(configClassesByGameVariant, "UI configuration map is null");
         this.gameContext = requireNonNull(gameContext, "Game context is null");
@@ -127,6 +130,18 @@ public class GameUI_Implementation implements GameUI {
         PROPERTY_3D_WALL_OPACITY.set(prefs.getFloat("3d.obstacle.opacity"));
 
         mainScene = new MainScene(this, mainSceneWidth, mainSceneHeight);
+
+        titleBinding = createStringBinding(this::computeStageTitle,
+            // depends on:
+            mainScene.currentViewProperty(),
+            mainScene.currentGameSceneProperty(),
+            mainScene.heightProperty(),
+            gameContext.gameController().gameVariantProperty(),
+            PROPERTY_DEBUG_INFO_VISIBLE,
+            PROPERTY_3D_ENABLED,
+            clock().pausedProperty()
+        );
+
         configureMainScene();
         configureStage(stage);
         defineGlobalActionBindings();
@@ -175,20 +190,7 @@ public class GameUI_Implementation implements GameUI {
         stage.setScene(mainScene);
         stage.setMinWidth(MIN_STAGE_WIDTH);
         stage.setMinHeight(MIN_STAGE_HEIGHT);
-        bindStageTitle(stage);
-    }
-
-    // This is also called when quitting the editor to undo the editor title binding
-    private void bindStageTitle(Stage stage) {
-        stage.titleProperty().bind(createStringBinding(
-            this::computeStageTitle,
-            mainScene.currentViewProperty(),
-            mainScene.currentGameSceneProperty(),
-            PROPERTY_DEBUG_INFO_VISIBLE,
-            PROPERTY_3D_ENABLED,
-            clock().pausedProperty(),
-            mainScene.heightProperty()
-        ));
+        stage.titleProperty().bind(titleBinding);
     }
 
     // Asset key: "app.title" or "app.title.paused"
@@ -273,7 +275,7 @@ public class GameUI_Implementation implements GameUI {
         if (editorView == null) {
             editorView = new EditorView(stage, assets);
             editorView.setQuitEditorAction(editor -> {
-                bindStageTitle(stage);
+                stage.titleProperty().bind(titleBinding);
                 showStartView();
             });
             editorView.editor().init(gameContext.customMapDir());
@@ -418,6 +420,11 @@ public class GameUI_Implementation implements GameUI {
         Logger.info("Application is terminated now. There is no way back!");
         clock.stop();
         customDirectoryWatchdog.dispose();
+    }
+
+    @Override
+    public void updateTitle() {
+        titleBinding.invalidate();
     }
 
     // GameUI_ViewAccess interface

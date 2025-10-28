@@ -94,4 +94,5 @@ public interface GameUI extends GameUI_Lifecycle, GameUI_ConfigManager, GameUI_V
         showFlashMessage(DEFAULT_FLASH_MESSAGE_DURATION, message, args);
     }
 
+    void updateTitle();
 }

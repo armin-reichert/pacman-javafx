@@ -182,6 +182,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
             }
             chaseAnimation.setGameConfig(ui.config(gameVariant));
             state.gameVariant = gameVariant;
+            ui.updateTitle();
             logState();
         }
 

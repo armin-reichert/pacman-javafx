@@ -11,4 +11,5 @@ public interface StartPage {
     Region layoutRoot();
     default void onEnter(GameUI ui) {}
     default void onExit(GameUI ui) {}
+    String title();
 }

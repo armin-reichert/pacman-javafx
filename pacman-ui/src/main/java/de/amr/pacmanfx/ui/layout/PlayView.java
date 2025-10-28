@@ -180,7 +180,7 @@ public class PlayView extends StackPane implements GameUI_View {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    // PacManGames_View interface implementation
+    // GameUI_View interface implementation
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override

@@ -14,19 +14,9 @@ import java.util.function.Supplier;
 
 public interface GameUI_View extends GameEventListener {
     /**
-     * @return the root node of this view in the scene graph
-     */
-    Node root();
-
-    /**
      * @return the action bindings manager for this view
      */
     ActionBindingsManager actionBindingsManager();
-
-    /**
-     * @return a title expression for this view. If empty, the default main scene title is used.
-     */
-    default Optional<Supplier<String>> titleSupplier() { return Optional.empty(); }
 
     /**
      * Looks up a matching game action for the current key input. If found the action is executed (if enabled).
@@ -35,5 +25,17 @@ public interface GameUI_View extends GameEventListener {
      */
     default void handleKeyboardInput(GameUI ui) {
         actionBindingsManager().matchingAction(ui.keyboard()).ifPresent(gameAction -> gameAction.executeIfEnabled(ui));
+    }
+
+    /**
+     * @return the root node of this view in the scene graph
+     */
+    Node root();
+
+    /**
+     * @return a title expression for this view. If empty, the default main scene title is used.
+     */
+    default Optional<Supplier<String>> titleSupplier() {
+        return Optional.empty();
     }
 }

@@ -40,8 +40,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class StartPagesView implements GameUI_View {
 
-    private static final Supplier<String> TITLE_SUPPLIER = () -> "JavaFX Pac-Man Games";
-
     public static FancyButton createStartButton(GlobalAssets assets, Pos alignment) {
         var button = new FancyButton(
                 assets.translated("play_button"),
@@ -73,12 +71,13 @@ public class StartPagesView implements GameUI_View {
         }
     }
 
+    private final GameUI ui;
     private final List<StartPage> startPageList = new ArrayList<>();
     private final ActionBindingsManager actionBindings;
     private final Carousel carousel;
 
     public StartPagesView(GameUI ui) {
-        requireNonNull(ui);
+        this.ui = requireNonNull(ui);
         this.actionBindings = new DefaultActionBindingsManager();
         carousel = new StartPagesCarousel();
         carousel.selectedIndexProperty().addListener((py,ov,nv) -> {
@@ -125,7 +124,13 @@ public class StartPagesView implements GameUI_View {
 
     @Override
     public Optional<Supplier<String>> titleSupplier() {
-        return Optional.of(TITLE_SUPPLIER);
+        return Optional.of(this::supplyTitle);
+    }
+
+    private String supplyTitle() {
+        String pattern = "JavaFX Pac-Man Games: %s";
+        String nameOfTheGame = currentStartPage().map(StartPage::title).orElse("Unknown game");
+        return pattern.formatted(nameOfTheGame);
     }
 
     public Optional<StartPage> currentStartPage() {

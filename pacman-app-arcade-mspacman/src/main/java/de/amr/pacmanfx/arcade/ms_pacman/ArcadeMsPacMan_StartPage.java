@@ -47,4 +47,9 @@ public class ArcadeMsPacMan_StartPage extends StackPane implements StartPage {
     public Region layoutRoot() {
         return this;
     }
+
+    @Override
+    public String title() {
+        return "Arcade Ms. Pac-Man";
+    }
 }

@@ -47,4 +47,9 @@ public class TengenMsPacMan_StartPage extends StackPane implements StartPage {
     public Region layoutRoot() {
         return this;
     }
+
+    @Override
+    public String title() {
+        return "Ms. Pac-Man (Tengen)";
+    }
 }
