@@ -407,7 +407,7 @@ public class GameUI_Implementation implements GameUI {
     @Override
     public void showUI() {
         playView().dashboard().init(this);
-        startPagesView().selectStartPage(0);
+        startPagesView().setSelectedIndex(0);
         showStartView();
         stage.centerOnScreen();
         stage.show();

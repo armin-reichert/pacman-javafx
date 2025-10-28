@@ -41,10 +41,10 @@ public class StartPagesView extends Carousel implements GameUI_View {
 
     public static FancyButton createStartButton(GlobalAssets assets, Pos alignment) {
         var button = new FancyButton(
-                assets.translated("play_button"),
-                assets.arcadeFont(30),
-                Color.rgb(0, 155, 252, 0.7),
-                Color.WHITE);
+            assets.translated("play_button"),
+            assets.arcadeFont(30),
+            Color.rgb(0, 155, 252, 0.7),
+            Color.WHITE);
         StackPane.setAlignment(button, alignment);
         return button;
     }
@@ -54,7 +54,7 @@ public class StartPagesView extends Carousel implements GameUI_View {
 
     public StartPagesView(GameUI ui) {
         requireNonNull(ui);
-        this.actionBindings = new DefaultActionBindingsManager();
+        actionBindings = new DefaultActionBindingsManager();
         selectedIndexProperty().addListener((py,ov,nv) -> {
             Logger.info("Carousel selection changed from {} to {}", ov, nv);
             int oldIndex = ov.intValue(), newIndex = nv.intValue();
@@ -69,14 +69,14 @@ public class StartPagesView extends Carousel implements GameUI_View {
         });
         setBackground(ui.assets().background("background.scene"));
 
-        AbstractGameAction actionPrevSlide = new AbstractGameAction("SHOW_PREV_SLIDE") {
+        final var actionPrevSlide = new AbstractGameAction("SHOW_PREV_SLIDE") {
             @Override
             public void execute(GameUI ui) {
                 showPreviousSlide();
             }
         };
 
-        AbstractGameAction actionNextSlide = new AbstractGameAction("SHOW_NEXT_SLIDE") {
+        final var actionNextSlide = new AbstractGameAction("SHOW_NEXT_SLIDE") {
             @Override
             public void execute(GameUI ui) {
                 showNextSlide();
@@ -91,21 +91,23 @@ public class StartPagesView extends Carousel implements GameUI_View {
 
     @Override
     protected Node createCarouselButton(Direction dir) {
-        int size = 48;
-        FontIcon icon = switch (dir) {
-            case LEFT -> FontIcon.of(FontAwesomeSolid.CHEVRON_CIRCLE_LEFT, size, Color.gray(0.69));
-            case RIGHT -> FontIcon.of(FontAwesomeSolid.CHEVRON_CIRCLE_RIGHT, size, Color.gray(0.69));
+        final int iconSize = 48;
+        final Color iconColor = Color.gray(0.69);
+        final FontIcon icon = switch (dir) {
+            case LEFT  -> FontIcon.of(FontAwesomeSolid.CHEVRON_CIRCLE_LEFT, iconSize, iconColor);
+            case RIGHT -> FontIcon.of(FontAwesomeSolid.CHEVRON_CIRCLE_RIGHT, iconSize, iconColor);
             default -> throw new IllegalArgumentException("Illegal carousel button direction: %s".formatted(dir));
         };
         icon.setOpacity(0.2);
         icon.setOnMouseEntered(e -> icon.setOpacity(0.8));
         icon.setOnMouseExited(e -> icon.setOpacity(0.2));
-        var box = new BorderPane(icon);
-        box.setMaxHeight(size);
-        box.setMaxWidth(size);
-        box.setPadding(new Insets(5));
-        StackPane.setAlignment(box, dir == Direction.LEFT ? Pos.CENTER_LEFT : Pos.CENTER_RIGHT);
-        return box;
+
+        final var buttonPane = new BorderPane(icon);
+        buttonPane.setMaxHeight(iconSize);
+        buttonPane.setMaxWidth(iconSize);
+        buttonPane.setPadding(new Insets(5));
+        StackPane.setAlignment(buttonPane, dir == Direction.LEFT ? Pos.CENTER_LEFT : Pos.CENTER_RIGHT);
+        return buttonPane;
     }
 
     @Override
@@ -122,13 +124,13 @@ public class StartPagesView extends Carousel implements GameUI_View {
     }
 
     private String supplyTitle() {
-        String pattern = "JavaFX Pac-Man Games: %s";
-        String nameOfTheGame = currentStartPage().map(StartPage::title).orElse("Unknown game");
+        final String pattern = "JavaFX Pac-Man Games: %s";
+        final String nameOfTheGame = currentStartPage().map(StartPage::title).orElse("Unknown game");
         return pattern.formatted(nameOfTheGame);
     }
 
     public Optional<StartPage> currentStartPage() {
-        int selectedIndex = selectedIndex();
+        final int selectedIndex = selectedIndex();
         return selectedIndex >= 0 ? Optional.of(startPageList.get(selectedIndex)) : Optional.empty();
     }
 
@@ -137,10 +139,6 @@ public class StartPagesView extends Carousel implements GameUI_View {
         startPageList.add(startPage);
         addSlide(startPage.layoutRoot());
         setNavigationVisible(numSlides() >= 2);
-        Logger.info("Start page {} added", startPage.getClass().getSimpleName());
-    }
-
-    public void selectStartPage(int index) {
-        setSelectedIndex(index);
+        Logger.info("Start page '{}' added", startPage.getClass().getSimpleName());
     }
 }
