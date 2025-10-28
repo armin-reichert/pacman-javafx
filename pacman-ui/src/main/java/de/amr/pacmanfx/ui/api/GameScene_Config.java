@@ -5,6 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.api;
 
 import de.amr.pacmanfx.GameContext;
+import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui._3d.PlayScene3D;
 
 import java.util.stream.Stream;
 
@@ -20,6 +22,24 @@ public interface GameScene_Config {
     static String sceneID_CutScene(int number) {
         return "CutScene_%d_2D".formatted(number);
     }
+
+    /**
+     * @param sceneBefore scene displayed before switching
+     * @param sceneAfter scene displayed after switching
+     * @return <code>23</code> if 2D -> 3D switch, <code>32</code> if 3D -> 2D switch</code>,
+     *  <code>0</code> if scene before switch is not yet available
+     */
+    static byte identifySceneSwitchType(GameScene sceneBefore, GameScene sceneAfter) {
+        if (sceneBefore == null && sceneAfter == null) {
+            throw new IllegalStateException("WTF is going on here, switch between NULL scenes?");
+        }
+        return switch (sceneBefore) {
+            case GameScene2D ignored when sceneAfter instanceof PlayScene3D -> 23;
+            case PlayScene3D ignored when sceneAfter instanceof GameScene2D -> 32;
+            case null, default -> 0; // may happen, it's ok
+        };
+    }
+
 
     void createGameScenes();
 

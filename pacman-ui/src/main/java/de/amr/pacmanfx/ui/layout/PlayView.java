@@ -14,7 +14,6 @@ import de.amr.pacmanfx.ui._2d.CanvasDecorationPane;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.HelpLayer;
 import de.amr.pacmanfx.ui._2d.SubSceneProvider;
-import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.ui.api.ActionBindingsManager;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
@@ -42,6 +41,7 @@ import java.util.List;
 import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.ui.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.api.GameScene_Config.SCENE_ID_PLAY_SCENE_3D;
+import static de.amr.pacmanfx.ui.api.GameScene_Config.identifySceneSwitchType;
 import static de.amr.pacmanfx.ui.api.GameUI_Config.SCENE_ID_PLAY_SCENE_2D;
 import static de.amr.pacmanfx.ui.api.GameUI_Properties.*;
 import static de.amr.pacmanfx.uilib.Ufx.*;
@@ -51,23 +51,6 @@ import static java.util.Objects.requireNonNull;
  * This view shows the game play and the overlays like dashboard and picture-in-picture view of the running play scene.
  */
 public class PlayView extends StackPane implements GameUI_View {
-
-    /**
-     * @param sceneBefore scene displayed before switching
-     * @param sceneAfter scene displayed after switching
-     * @return <code>23</code> if 2D -> 3D switch, <code>32</code> if 3D -> 2D switch</code>,
-     *  <code>0</code> if scene before switch is not yet available
-     */
-    private static byte identifySceneSwitchType(GameScene sceneBefore, GameScene sceneAfter) {
-        if (sceneBefore == null && sceneAfter == null) {
-            throw new IllegalStateException("WTF is going on here, switch between NULL scenes?");
-        }
-        return switch (sceneBefore) {
-            case GameScene2D ignored when sceneAfter instanceof PlayScene3D -> 23;
-            case PlayScene3D ignored when sceneAfter instanceof GameScene2D -> 32;
-            case null, default -> 0; // may happen, it's ok
-        };
-    }
 
     private final ActionBindingsManager actionBindings = new DefaultActionBindingsManager();
     private final GameUI ui;
