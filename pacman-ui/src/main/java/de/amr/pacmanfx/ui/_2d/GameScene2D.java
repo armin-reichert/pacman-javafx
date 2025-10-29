@@ -13,7 +13,6 @@ import de.amr.pacmanfx.ui.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.api.ActionBindingsManager;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
-import de.amr.pacmanfx.ui.api.GameUI_Properties;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.DebugInfoRenderer;
@@ -29,12 +28,15 @@ import org.tinylog.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
+import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_CANVAS_BACKGROUND_COLOR;
 import static java.util.Objects.requireNonNull;
 
 /**
  * Base class of all 2D scenes.
  */
 public abstract class GameScene2D implements GameScene {
+
+    public static final Vector2i DEFAULT_SIZE_PX = Globals.ARCADE_MAP_SIZE_IN_PIXELS;
 
     protected final BooleanProperty debugInfoVisible = new SimpleBooleanProperty(false);
     protected final DoubleProperty scaling = new SimpleDoubleProperty(1.0f);
@@ -88,7 +90,7 @@ public abstract class GameScene2D implements GameScene {
     protected abstract HUDRenderer hudRenderer();
 
     public void setCanvas(Canvas canvas) {
-        this.canvas = canvas;
+        this.canvas = requireNonNull(canvas);
         createRenderers(canvas);
     }
 
@@ -97,13 +99,12 @@ public abstract class GameScene2D implements GameScene {
     }
 
     protected void createRenderers(Canvas canvas) {
-        requireNonNull(canvas);
         sceneRenderer     = configureRenderer(new BaseRenderer(canvas));
         debugInfoRenderer = configureRenderer(new DefaultDebugInfoRenderer(ui, canvas));
     }
 
     protected final <T extends Renderer> T configureRenderer(T renderer) {
-        renderer.backgroundColorProperty().bind(GameUI_Properties.PROPERTY_CANVAS_BACKGROUND_COLOR);
+        renderer.backgroundColorProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
         renderer.scalingProperty().bind(scaling);
         return renderer;
     }
@@ -145,10 +146,10 @@ public abstract class GameScene2D implements GameScene {
     }
 
     /**
-     * @return (unscaled) scene size in pixels e.g. 224x288
+     * @return (unscaled) scene size in pixels e.g. 224x288 for Arcade scenes
      */
     public Vector2i sizeInPx() {
-        return Globals.ARCADE_MAP_SIZE_IN_PIXELS;
+        return DEFAULT_SIZE_PX;
     }
 
     public List<Actor> actorsInZOrder() {
@@ -156,13 +157,16 @@ public abstract class GameScene2D implements GameScene {
     }
 
     /**
-     * Default implementation: scales the renderer to the current scene scaling,
+     * Draws this scene into the canvas.
+     * <p>
+     * Default implementation scales the renderer to the current scene scaling,
      * clears the canvas and draws the scores (if on), scene content and debug information (if on).
+     * </p>
      */
     public void draw() {
         sceneRenderer.clearCanvas();
         drawSceneContent();
-        if (debugInfoVisible() && debugInfoRenderer != null) {
+        if (debugInfoVisible()) {
             debugInfoRenderer.drawDebugInfo();
         }
         drawHUD();
