@@ -19,7 +19,7 @@ import de.amr.pacmanfx.model.ScoreManager;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui.AbstractGameAction;
+import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui._2d.SubSceneProvider;
 import de.amr.pacmanfx.ui.api.ActionBindingsManager;
@@ -78,7 +78,7 @@ public class PlayScene3D implements GameScene, SubSceneProvider {
         return perspectiveID.get() == null ? Optional.empty() : Optional.of(perspectivesByID.get(perspectiveID.get()));
     }
 
-    private final AbstractGameAction actionDroneUp = new AbstractGameAction("DroneUp") {
+    private final GameAction actionDroneUp = new GameAction("DroneUp") {
         @Override
         public void execute(GameUI ui) {
             currentPerspective().ifPresent(perspective -> {
@@ -93,7 +93,7 @@ public class PlayScene3D implements GameScene, SubSceneProvider {
         }
     };
 
-    private final AbstractGameAction actionDroneDown = new AbstractGameAction("DroneDown") {
+    private final GameAction actionDroneDown = new GameAction("DroneDown") {
         @Override
         public void execute(GameUI ui) {
             currentPerspective().ifPresent(perspective -> {

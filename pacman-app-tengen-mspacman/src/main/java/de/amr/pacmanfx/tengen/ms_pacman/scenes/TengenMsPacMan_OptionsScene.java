@@ -16,7 +16,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SceneRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
-import de.amr.pacmanfx.ui.AbstractGameAction;
+import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
@@ -74,7 +74,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         }
     };
 
-    private final AbstractGameAction actionSelectNextJoypadBinding = new AbstractGameAction("SELECT_NEXT_JOYPAD_BINDING") {
+    private final GameAction actionSelectNextJoypadBinding = new GameAction("SELECT_NEXT_JOYPAD_BINDING") {
         @Override
         public void execute(GameUI ui) {
             ui.joypad().selectNextBinding(actionBindingsManager);

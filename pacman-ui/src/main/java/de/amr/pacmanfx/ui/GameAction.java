@@ -11,11 +11,11 @@ import org.tinylog.Logger;
 /**
  * Common base class for game actions.
  */
-public abstract class AbstractGameAction {
+public abstract class GameAction {
 
     private final String name;
 
-    protected AbstractGameAction(String name) {
+    protected GameAction(String name) {
         this.name = Validations.requireValidIdentifier(name);
     }
 

@@ -18,7 +18,7 @@ public class DefaultActionBindingsManager implements ActionBindingsManager {
     public static class EmptyBindingsManager implements ActionBindingsManager {
 
         @Override
-        public Map<KeyCombination, AbstractGameAction> actionByKeyCombination() {
+        public Map<KeyCombination, GameAction> actionByKeyCombination() {
             return Map.of();
         }
 
@@ -32,25 +32,25 @@ public class DefaultActionBindingsManager implements ActionBindingsManager {
         public void removeBindingsFromKeyboard(Keyboard keyboard) {}
 
         @Override
-        public void useBindings(AbstractGameAction action, Set<ActionBinding> actionBindings) {}
+        public void useBindings(GameAction action, Set<ActionBinding> actionBindings) {}
 
         @Override
-        public void setKeyCombination(AbstractGameAction action, KeyCombination combination) {}
+        public void setKeyCombination(GameAction action, KeyCombination combination) {}
 
         @Override
-        public Optional<AbstractGameAction> matchingAction(Keyboard keyboard) { return Optional.empty(); }
+        public Optional<GameAction> matchingAction(Keyboard keyboard) { return Optional.empty(); }
     }
 
     public static final ActionBindingsManager EMPTY_BINDINGS_MANAGER = new EmptyBindingsManager();
 
-    private final Map<KeyCombination, AbstractGameAction> actionByCombination;
+    private final Map<KeyCombination, GameAction> actionByCombination;
 
     public DefaultActionBindingsManager() {
         this.actionByCombination = new HashMap<>();
     }
 
     @Override
-    public Map<KeyCombination, AbstractGameAction> actionByKeyCombination() {
+    public Map<KeyCombination, GameAction> actionByKeyCombination() {
         return actionByCombination;
     }
 
@@ -80,7 +80,7 @@ public class DefaultActionBindingsManager implements ActionBindingsManager {
     }
 
     @Override
-    public void setKeyCombination(AbstractGameAction action, KeyCombination combination) {
+    public void setKeyCombination(GameAction action, KeyCombination combination) {
         requireNonNull(action);
         requireNonNull(combination);
         actionByCombination.put(combination, action);
@@ -93,7 +93,7 @@ public class DefaultActionBindingsManager implements ActionBindingsManager {
      * @param actionBindings an action bindings list
      */
     @Override
-    public void useBindings(AbstractGameAction gameAction, Set<ActionBinding> actionBindings) {
+    public void useBindings(GameAction gameAction, Set<ActionBinding> actionBindings) {
         requireNonNull(gameAction);
         requireNonNull(actionBindings);
         actionBindings.stream()
@@ -109,7 +109,7 @@ public class DefaultActionBindingsManager implements ActionBindingsManager {
     }
 
     @Override
-    public Optional<AbstractGameAction> matchingAction(Keyboard keyboard) {
+    public Optional<GameAction> matchingAction(Keyboard keyboard) {
         return actionByCombination.keySet().stream()
             .filter(keyboard::isMatching)
             .map(actionByCombination::get)

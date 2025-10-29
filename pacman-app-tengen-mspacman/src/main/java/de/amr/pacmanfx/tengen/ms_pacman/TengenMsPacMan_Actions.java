@@ -8,7 +8,7 @@ import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.tengen.ms_pacman.model.PacBooster;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.SceneDisplayMode;
-import de.amr.pacmanfx.ui.AbstractGameAction;
+import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.api.GameUI;
 
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Properties.PROPERTY_JOYPAD_BINDINGS_DISPLAYED;
@@ -18,14 +18,14 @@ import static de.amr.pacmanfx.uilib.Ufx.toggle;
 
 public interface TengenMsPacMan_Actions {
 
-    AbstractGameAction ACTION_ENTER_START_SCREEN = new AbstractGameAction("ENTER_START_SCREEN") {
+    GameAction ACTION_ENTER_START_SCREEN = new GameAction("ENTER_START_SCREEN") {
         @Override
         public void execute(GameUI ui) {
             ui.gameContext().gameController().changeGameState(GamePlayState.SETTING_OPTIONS_FOR_START);
         }
     };
 
-    AbstractGameAction ACTION_QUIT_DEMO_LEVEL = new AbstractGameAction("QUIT_DEMO_LEVEL") {
+    GameAction ACTION_QUIT_DEMO_LEVEL = new GameAction("QUIT_DEMO_LEVEL") {
         @Override
         public void execute(GameUI ui) {
             ui.gameContext().gameController().changeGameState(GamePlayState.SETTING_OPTIONS_FOR_START);
@@ -37,7 +37,7 @@ public interface TengenMsPacMan_Actions {
         }
     };
 
-    AbstractGameAction ACTION_START_PLAYING = new AbstractGameAction("START_PLAYING") {
+    GameAction ACTION_START_PLAYING = new GameAction("START_PLAYING") {
         @Override
         public void execute(GameUI ui) {
             ui.soundManager().stopAll();
@@ -46,7 +46,7 @@ public interface TengenMsPacMan_Actions {
         }
     };
 
-    AbstractGameAction ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE = new AbstractGameAction("TOGGLE_PLAY_SCENE_DISPLAY_MODE") {
+    GameAction ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE = new GameAction("TOGGLE_PLAY_SCENE_DISPLAY_MODE") {
         @Override
         public void execute(GameUI ui) {
             SceneDisplayMode mode = PROPERTY_PLAY_SCENE_DISPLAY_MODE.get();
@@ -61,14 +61,14 @@ public interface TengenMsPacMan_Actions {
         }
     };
 
-    AbstractGameAction ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY = new AbstractGameAction("TOGGLE_JOYPAD_BINDINGS_DISPLAYED") {
+    GameAction ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY = new GameAction("TOGGLE_JOYPAD_BINDINGS_DISPLAYED") {
         @Override
         public void execute(GameUI ui) {
             toggle(PROPERTY_JOYPAD_BINDINGS_DISPLAYED);
         }
     };
 
-    AbstractGameAction ACTION_TOGGLE_PAC_BOOSTER = new AbstractGameAction("TOGGLE_PAC_BOOSTER") {
+    GameAction ACTION_TOGGLE_PAC_BOOSTER = new GameAction("TOGGLE_PAC_BOOSTER") {
         @Override
         public void execute(GameUI ui) {
             ui.gameContext().optGameLevel().ifPresent(gameLevel -> {

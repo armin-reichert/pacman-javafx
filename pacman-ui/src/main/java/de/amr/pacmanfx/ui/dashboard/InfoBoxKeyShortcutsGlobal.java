@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.dashboard;
 
-import de.amr.pacmanfx.ui.AbstractGameAction;
+import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.api.ActionBindingsManager;
 import de.amr.pacmanfx.ui.api.GameUI;
 import javafx.scene.input.KeyCombination;
@@ -32,7 +32,7 @@ public class InfoBoxKeyShortcutsGlobal extends InfoBox {
                     .sorted(Comparator.comparing(e -> e.getKey().getDisplayText()))
                     .forEach(entry -> {
                 KeyCombination keyCombination = entry.getKey();
-                AbstractGameAction action = entry.getValue();
+                GameAction action = entry.getValue();
                 String localizedActionText = ui.assets().translated(action.name());
                 addRow(keyCombination.getDisplayText(), createLabel(localizedActionText, action.isEnabled(ui)));
             });

@@ -150,7 +150,7 @@ public class GameUI_Implementation implements GameUI {
     private void configureMainScene() {
         // Check if a global action is defined for the key press, otherwise let the current view handle it.
         mainScene.setOnKeyPressed(e -> {
-            AbstractGameAction matchingAction = globalActionBindings.matchingAction(keyboard).orElse(null);
+            GameAction matchingAction = globalActionBindings.matchingAction(keyboard).orElse(null);
             if (matchingAction != null) {
                 matchingAction.executeIfEnabled(this);
             } else {

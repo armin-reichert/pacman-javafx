@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.ui.AbstractGameAction;
+import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.api.ActionBindingsManager;
@@ -69,14 +69,14 @@ public class StartPagesView extends Carousel implements GameUI_View {
         });
         setBackground(ui.assets().background("background.scene"));
 
-        final var actionPrevSlide = new AbstractGameAction("SHOW_PREV_SLIDE") {
+        final var actionPrevSlide = new GameAction("SHOW_PREV_SLIDE") {
             @Override
             public void execute(GameUI ui) {
                 showPreviousSlide();
             }
         };
 
-        final var actionNextSlide = new AbstractGameAction("SHOW_NEXT_SLIDE") {
+        final var actionNextSlide = new GameAction("SHOW_NEXT_SLIDE") {
             @Override
             public void execute(GameUI ui) {
                 showNextSlide();

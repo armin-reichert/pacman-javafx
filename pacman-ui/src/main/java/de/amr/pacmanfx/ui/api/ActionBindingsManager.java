@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.api;
 
-import de.amr.pacmanfx.ui.AbstractGameAction;
+import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.ActionBinding;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import javafx.scene.input.KeyCombination;
@@ -15,9 +15,9 @@ import java.util.Set;
 
 public interface ActionBindingsManager {
 
-    Map<KeyCombination, AbstractGameAction> actionByKeyCombination();
+    Map<KeyCombination, GameAction> actionByKeyCombination();
 
-    Optional<AbstractGameAction> matchingAction(Keyboard keyboard);
+    Optional<GameAction> matchingAction(Keyboard keyboard);
 
     boolean hasNoEntries();
 
@@ -25,7 +25,7 @@ public interface ActionBindingsManager {
 
     void removeBindingsFromKeyboard(Keyboard keyboard);
 
-    void setKeyCombination(AbstractGameAction action, KeyCombination combination);
+    void setKeyCombination(GameAction action, KeyCombination combination);
 
     /**
      * Assigns the binding for the given action to this map.
@@ -33,5 +33,5 @@ public interface ActionBindingsManager {
      * @param gameAction a game action
      * @param actionBindings an action bindings list
      */
-    void useBindings(AbstractGameAction gameAction, Set<ActionBinding> actionBindings);
+    void useBindings(GameAction gameAction, Set<ActionBinding> actionBindings);
 }
