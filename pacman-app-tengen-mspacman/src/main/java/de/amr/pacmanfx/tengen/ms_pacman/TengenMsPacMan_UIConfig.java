@@ -59,8 +59,8 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Actions.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.rendering.NonArcadeMapsSpriteSheet.MazeID.MAZE32_ANIMATED;
 import static de.amr.pacmanfx.ui.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.api.GameScene_Config.sceneID_CutScene;
-import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_3D_ENABLED;
-import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_CANVAS_BACKGROUND_COLOR;
+import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_3D_ENABLED;
+import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR;
 import static de.amr.pacmanfx.ui.input.Keyboard.*;
 import static java.util.Objects.requireNonNull;
 

@@ -28,7 +28,7 @@ import org.tinylog.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_CANVAS_BACKGROUND_COLOR;
+import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR;
 import static java.util.Objects.requireNonNull;
 
 /**

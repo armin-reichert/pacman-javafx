@@ -6,7 +6,6 @@ package de.amr.pacmanfx.ui.api;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEventListener;
-import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.ContextMenuEvent;

@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_3D_ENABLED;
+import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_3D_ENABLED;
 import static de.amr.pacmanfx.ui.input.Keyboard.nude;
 import static de.amr.pacmanfx.uilib.widgets.OptionMenuStyle.DEFAULT_OPTION_MENU_STYLE;
 import static java.util.Objects.requireNonNull;

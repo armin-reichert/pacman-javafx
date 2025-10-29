@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.mapeditor.actions;
 
-import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 
 import static java.util.Objects.requireNonNull;

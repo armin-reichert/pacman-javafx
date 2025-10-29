@@ -36,7 +36,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.ui.CommonGameActions.*;
-import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_MUTED;
+import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_MUTED;
 import static de.amr.pacmanfx.uilib.Ufx.createContextMenuTitle;
 
 /**

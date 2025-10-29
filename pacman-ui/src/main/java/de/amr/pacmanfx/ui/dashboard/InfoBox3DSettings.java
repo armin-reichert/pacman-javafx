@@ -22,7 +22,7 @@ import java.util.Optional;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.CommonGameActions.ACTION_TOGGLE_DRAW_MODE;
 import static de.amr.pacmanfx.ui.CommonGameActions.ACTION_TOGGLE_PLAY_SCENE_2D_3D;
-import static de.amr.pacmanfx.ui.api.GameUI_Properties.*;
+import static de.amr.pacmanfx.ui.api.GameUI.*;
 
 /**
  * Infobox with 3D related settings.

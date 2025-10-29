@@ -47,7 +47,7 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
 import static de.amr.pacmanfx.ui.api.GameScene_Config.sceneID_CutScene;
-import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_3D_ENABLED;
+import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_3D_ENABLED;
 import static java.util.Objects.requireNonNull;
 
 public class PacManXXL_PacMan_UIConfig implements GameUI_Config {

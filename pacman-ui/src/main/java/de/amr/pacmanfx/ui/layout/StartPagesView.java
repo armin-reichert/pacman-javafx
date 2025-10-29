@@ -5,8 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.DefaultActionBindingsManager;
+import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.api.ActionBindingsManager;
 import de.amr.pacmanfx.ui.api.GameUI;

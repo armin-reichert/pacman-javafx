@@ -14,7 +14,7 @@ import javafx.scene.image.ImageView;
 
 import java.util.List;
 
-import static de.amr.pacmanfx.ui.api.GameUI_Properties.*;
+import static de.amr.pacmanfx.ui.api.GameUI.*;
 
 /**
  * General settings and simulation control.

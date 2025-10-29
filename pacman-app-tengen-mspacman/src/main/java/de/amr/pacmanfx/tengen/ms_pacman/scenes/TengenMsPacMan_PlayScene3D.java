@@ -24,7 +24,7 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Actions.ACTION_QUIT_DEMO_LEVEL;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Actions.ACTION_TOGGLE_PAC_BOOSTER;
 import static de.amr.pacmanfx.ui.CommonGameActions.*;
-import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_3D_FLOOR_COLOR;
+import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_3D_FLOOR_COLOR;
 
 /**
  * The 3D play scene of Tengen Ms. Pac-Man.

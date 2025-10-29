@@ -30,7 +30,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.ui.api.GameUI_Properties.*;
+import static de.amr.pacmanfx.ui.api.GameUI.*;
 import static java.util.Objects.requireNonNull;
 
 public class MiniGameView extends VBox {

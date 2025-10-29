@@ -58,8 +58,8 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Properties.PROPERT
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
 import static de.amr.pacmanfx.tengen.ms_pacman.scenes.SceneDisplayMode.SCROLLING;
 import static de.amr.pacmanfx.ui.CommonGameActions.*;
-import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_CANVAS_BACKGROUND_COLOR;
-import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_MUTED;
+import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR;
+import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_MUTED;
 import static de.amr.pacmanfx.uilib.Ufx.createContextMenuTitle;
 
 /**
