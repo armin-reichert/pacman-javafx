@@ -11,6 +11,10 @@ import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.Keyboard;
+import de.amr.pacmanfx.ui.layout.EditorView;
+import de.amr.pacmanfx.ui.layout.GameUI_View;
+import de.amr.pacmanfx.ui.layout.PlayView;
+import de.amr.pacmanfx.ui.layout.StartPagesView;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.assets.UIPreferences;
@@ -20,9 +24,10 @@ import javafx.scene.shape.DrawMode;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.util.Optional;
 import java.util.Set;
 
-public interface GameUI extends GameUI_Lifecycle, GameUI_ConfigManager, GameUI_ViewAccess, GameUI_SceneAccess {
+public interface GameUI extends GameUI_Lifecycle {
 
     ObjectProperty<Color>         PROPERTY_CANVAS_BACKGROUND_COLOR = new SimpleObjectProperty<>(Color.BLACK);
     BooleanProperty               PROPERTY_CANVAS_FONT_SMOOTHING = new SimpleBooleanProperty(false);
@@ -116,4 +121,43 @@ public interface GameUI extends GameUI_Lifecycle, GameUI_ConfigManager, GameUI_V
     }
 
     void updateTitle();
+
+    // Scene access
+
+    Optional<GameScene> currentGameScene();
+
+    boolean isCurrentGameSceneID(String id);
+
+    void updateGameScene(boolean forceReloading);
+
+    // View access
+
+    GameUI_View currentView();
+
+    Optional<EditorView> optEditorView();
+
+    PlayView playView();
+
+    StartPagesView startPagesView();
+
+    void showEditorView();
+
+    void showPlayView();
+
+    void showStartView();
+
+    // Config
+
+    /**
+     * @param gameVariant name of game variant
+     * @return UI configuration for given game variant
+     */
+    GameUI_Config config(String gameVariant);
+
+    /**
+     * @return UI configuration for the current game
+     * @param <T> type of UI configuration
+     */
+    <T extends GameUI_Config> T currentConfig();
+
 }
