@@ -136,9 +136,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
         canvas.widthProperty() .bind(scalingProperty().multiply(CANVAS_WIDTH_UNSCALED));
         canvas.heightProperty().bind(scalingProperty().multiply(canvasHeightUnscaled));
 
-        clipRect = new Rectangle();
         // All maps are 28 tiles wide but the NES screen is 32 tiles wide. To accommodate, the maps are centered
         // horizontally and 2 tiles on each side are clipped.
+        clipRect = new Rectangle();
         clipRect.xProperty().bind(canvas.translateXProperty().add(scalingProperty().multiply(CONTENT_INDENT)));
         clipRect.yProperty().bind(canvas.translateYProperty());
         clipRect.widthProperty().bind(scalingProperty().multiply(CANVAS_WIDTH_UNSCALED - 2 * CONTENT_INDENT));
@@ -150,8 +150,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
     private void initForGameLevel(GameLevel gameLevel) {
         context().game().hud().levelCounterVisible(true).livesCounterVisible(true); // is also visible in demo level!
         setActionsBindings(gameLevel.isDemoLevel());
-        int mapHeightTiles = gameLevel.worldMap().numRows();
-        dynamicCamera.updateRange(mapHeightTiles);
+        dynamicCamera.updateRange(gameLevel.worldMap().numRows());
     }
 
     private void updateScaling() {
@@ -280,10 +279,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
         });
 
         var miAutopilot = new CheckMenuItem(ui.assets().translated("autopilot"));
-        miAutopilot.selectedProperty().bindBidirectional(theGameContext().gameController().propertyUsingAutopilot());
+        miAutopilot.selectedProperty().bindBidirectional(context().gameController().propertyUsingAutopilot());
 
         var miImmunity = new CheckMenuItem(ui.assets().translated("immunity"));
-        miImmunity.selectedProperty().bindBidirectional(theGameContext().gameController().propertyImmunity());
+        miImmunity.selectedProperty().bindBidirectional(context().gameController().propertyImmunity());
 
         var miMuted = new CheckMenuItem(ui.assets().translated("muted"));
         miMuted.selectedProperty().bindBidirectional(PROPERTY_MUTED);
