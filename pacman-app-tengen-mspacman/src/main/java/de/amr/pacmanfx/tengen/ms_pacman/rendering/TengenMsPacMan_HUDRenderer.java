@@ -70,7 +70,7 @@ public class TengenMsPacMan_HUDRenderer extends BaseRenderer implements HUDRende
         }
 
         if (tengenHUD.gameOptionsVisible()) {
-            drawGameOptions(tengenGame.mapCategory(), tengenGame.difficulty(), tengenGame.pacBooster(), TS(2.5));
+            drawGameOptions(tengenGame.mapCategory(), tengenGame.difficulty(), tengenGame.pacBooster(), TS(16), TS(2.5));
         }
     }
 
@@ -123,7 +123,7 @@ public class TengenMsPacMan_HUDRenderer extends BaseRenderer implements HUDRende
         drawSprite(spriteSheet().digitSprite(ones), x + 10, y + 2, true);
     }
 
-    public void drawGameOptions(MapCategory category, Difficulty difficulty, PacBooster booster, double y) {
+    public void drawGameOptions(MapCategory category, Difficulty difficulty, PacBooster booster, double centerX, double y) {
         RectShort categorySprite = switch (requireNonNull(category)) {
             case BIG     -> spriteSheet().sprite(SpriteID.INFO_CATEGORY_BIG);
             case MINI    -> spriteSheet().sprite(SpriteID.INFO_CATEGORY_MINI);
@@ -136,11 +136,11 @@ public class TengenMsPacMan_HUDRenderer extends BaseRenderer implements HUDRende
             case CRAZY  -> spriteSheet().sprite(SpriteID.INFO_DIFFICULTY_CRAZY);
             case NORMAL -> RectShort.ZERO;
         };
-        drawSpriteCentered(TS(16), y, spriteSheet().sprite(SpriteID.INFO_FRAME));
+        drawSpriteCentered(centerX, y, spriteSheet().sprite(SpriteID.INFO_FRAME));
         if (requireNonNull(booster) != PacBooster.OFF) {
-            drawSpriteCentered(TS(10.5), y, spriteSheet().sprite(SpriteID.INFO_BOOSTER));
+            drawSpriteCentered(centerX - TS(5.5), y, spriteSheet().sprite(SpriteID.INFO_BOOSTER));
         }
-        drawSpriteCentered(TS(16), y, difficultySprite);
-        drawSpriteCentered(TS(20.5), y, categorySprite);
+        drawSpriteCentered(centerX, y, difficultySprite);
+        drawSpriteCentered(centerX + TS(4.5), y, categorySprite);
     }
 }

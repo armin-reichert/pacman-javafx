@@ -67,26 +67,25 @@ import static de.amr.pacmanfx.uilib.Ufx.createContextMenuTitle;
  */
 public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneProvider {
 
-    private static final double CANVAS_WIDTH_UNSCALED = NES_SIZE_PX.x();
-    private final DoubleProperty canvasHeightUnscaled = new SimpleDoubleProperty(NES_SIZE_PX.y());
-
     private static final float CONTENT_INDENT = TS(2);
+    private static final double CANVAS_WIDTH_UNSCALED = NES_SIZE_PX.x();
 
-    private final StackPane rootPane = new StackPane();
+    private final DoubleProperty canvasHeightUnscaled = new SimpleDoubleProperty(NES_SIZE_PX.y());
+    private final BooleanProperty mazeHighlighted = new SimpleBooleanProperty(false);
+
+    private final StackPane rootPane;
     private final SubScene subScene;
 
-    private final PlayScene2DCamera dynamicCamera = new PlayScene2DCamera();
-    private final PerspectiveCamera fixedCamera  = new PerspectiveCamera(false);
+    private final PlayScene2DCamera dynamicCamera;
+    private final PerspectiveCamera fixedCamera;
 
     private TengenMsPacMan_HUDRenderer hudRenderer;
     private TengenMsPacMan_GameLevelRenderer gameLevelRenderer;
     private final RenderInfo gameLevelRenderInfo = new RenderInfo();
     private TengenMsPacMan_ActorRenderer actorRenderer;
 
-    private LevelCompletedAnimation levelCompletedAnimation;
-    private final BooleanProperty mazeHighlighted = new SimpleBooleanProperty(false);
-
     private Rectangle clipRect;
+    private LevelCompletedAnimation levelCompletedAnimation;
 
     private class PlaySceneDebugInfoRenderer extends DefaultDebugInfoRenderer {
 
@@ -115,6 +114,14 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
     public TengenMsPacMan_PlayScene2D(GameUI ui) {
         super(ui);
 
+        fixedCamera = new PerspectiveCamera(false);
+
+        dynamicCamera = new PlayScene2DCamera();
+        dynamicCamera.scalingProperty().bind(scaling);
+        scaling.addListener((py, ov, nv) -> context().optGameLevel().ifPresent(gameLevel ->
+            dynamicCamera.updateRange(gameLevel.worldMap().terrainLayer().numRows())));
+
+        rootPane = new StackPane();
         rootPane.backgroundProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR.map(Background::fill));
 
         // Scene size gets bound to parent scene when embedded in game view, initial size doesn't matter
@@ -123,10 +130,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
         subScene.cameraProperty().bind(PROPERTY_PLAY_SCENE_DISPLAY_MODE.map(mode -> mode == SCROLLING ? dynamicCamera : fixedCamera));
         subScene.cameraProperty().addListener((py, ov, nv) -> updateScaling());
         subScene.heightProperty().addListener((py, ov, nv) -> updateScaling());
-
-        dynamicCamera.scalingProperty().bind(scaling);
-        dynamicCamera.scalingProperty().addListener((py, ov, nv) -> context().optGameLevel()
-            .ifPresent(gameLevel -> dynamicCamera.updateRange(gameLevel.worldMap().terrainLayer().numRows())));
     }
 
     @Override

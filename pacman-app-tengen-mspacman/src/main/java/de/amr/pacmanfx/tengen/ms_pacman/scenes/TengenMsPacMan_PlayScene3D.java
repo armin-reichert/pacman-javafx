@@ -77,7 +77,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         hudRenderer.fillCanvas(backgroundColor);
         hudRenderer.drawLevelNumberBox(levelNumber, 0, 0);
         hudRenderer.drawLevelNumberBox(levelNumber, width - 2 * TS, 0);
-        hudRenderer.drawGameOptions(game.mapCategory(), game.difficulty(), game.pacBooster(), TS + HTS);
+        hudRenderer.drawGameOptions(game.mapCategory(), game.difficulty(), game.pacBooster(), TS(14), TS + HTS);
 
         return canvas.snapshot(null, null);
     }
