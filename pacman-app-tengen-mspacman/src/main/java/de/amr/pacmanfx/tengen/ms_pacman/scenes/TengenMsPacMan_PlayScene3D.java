@@ -44,24 +44,27 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     @Override
     protected GameLevel3D createGameLevel3D() {
         final GameLevel3D gameLevel3D = super.createGameLevel3D();
-
         final TengenMsPacMan_GameModel game = context().game();
         if (!game.optionsAreInitial()) {
-            final ImageView infoView = new ImageView();
-            final double width = TS(game.gameLevel().worldMap().numCols());
-            final double height = TS(2);
-            infoView.setFitWidth(width);
-            infoView.setFitHeight(height);
-            infoView.imageProperty().bind(PROPERTY_3D_FLOOR_COLOR.map(floorColor -> createInfoViewImage(
-                game.mapCategory(), game.difficulty(), game.pacBooster(), game.gameLevel().number(), width, height, floorColor)));
-            final Box floor3D = gameLevel3D.floor3D();
-            // display at lower end of floor
-            infoView.setTranslateY(floor3D.getHeight() - infoView.getFitHeight());
-            // display just over floor surface
-            infoView.setTranslateZ(-floor3D.getDepth());
-            gameLevel3D.getChildren().add(infoView);
+            addGameInfoView(game, gameLevel3D);
         }
         return gameLevel3D;
+    }
+
+    private void addGameInfoView(TengenMsPacMan_GameModel game, GameLevel3D gameLevel3D) {
+        final ImageView infoView = new ImageView();
+        final double width = TS(game.gameLevel().worldMap().numCols());
+        final double height = TS(2);
+        infoView.setFitWidth(width);
+        infoView.setFitHeight(height);
+        infoView.imageProperty().bind(PROPERTY_3D_FLOOR_COLOR.map(floorColor -> createInfoViewImage(
+            game.mapCategory(), game.difficulty(), game.pacBooster(), game.gameLevel().number(), width, height, floorColor)));
+        final Box floor3D = gameLevel3D.floor3D();
+        // display at lower end of floor
+        infoView.setTranslateY(floor3D.getHeight() - infoView.getFitHeight());
+        // display just over floor surface
+        infoView.setTranslateZ(-floor3D.getDepth());
+        gameLevel3D.getChildren().add(infoView);
     }
 
     private Image createInfoViewImage(MapCategory mapCategory, Difficulty difficulty, PacBooster pacBooster, int levelNumber, double width, double height, Color backgroundColor) {
