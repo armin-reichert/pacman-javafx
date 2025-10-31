@@ -49,8 +49,9 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         if (!game.optionsAreInitial()) {
             final ImageView infoView = createGameInfoView(game);
             final Box floor3D = gameLevel3D.floor3D();
-            infoView.setTranslateX(floor3D.getTranslateX());
+            // display at lower end of floor
             infoView.setTranslateY(floor3D.getHeight() - infoView.getFitHeight());
+            // display just over floor surface
             infoView.setTranslateZ(-floor3D.getDepth());
             gameLevel3D.getChildren().add(infoView);
         }
