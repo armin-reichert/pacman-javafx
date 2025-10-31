@@ -47,7 +47,13 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
         final TengenMsPacMan_GameModel game = context().game();
         if (!game.optionsAreInitial()) {
-            final ImageView infoView = createGameInfoView(game);
+            final ImageView infoView = new ImageView();
+            final double width = TS(game.gameLevel().worldMap().numCols());
+            final double height = TS(2);
+            infoView.setFitWidth(width);
+            infoView.setFitHeight(height);
+            infoView.imageProperty().bind(PROPERTY_3D_FLOOR_COLOR.map(floorColor -> createInfoViewImage(
+                game.mapCategory(), game.difficulty(), game.pacBooster(), game.gameLevel().number(), width, height, floorColor)));
             final Box floor3D = gameLevel3D.floor3D();
             // display at lower end of floor
             infoView.setTranslateY(floor3D.getHeight() - infoView.getFitHeight());
@@ -58,21 +64,9 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         return gameLevel3D;
     }
 
-    // shows info about category, difficulty, booster etc
-    private ImageView createGameInfoView(TengenMsPacMan_GameModel game) {
-        final float width = TS(game.gameLevel().worldMap().numCols());
-        final float height = TS(2);
-        final ImageView imageView = new ImageView();
-        imageView.setFitWidth(width);
-        imageView.setFitHeight(height);
-        imageView.imageProperty().bind(PROPERTY_3D_FLOOR_COLOR.map(floorColor -> createInfoViewImage(
-            game.mapCategory(), game.difficulty(), game.pacBooster(), game.gameLevel().number(), width, floorColor)));
-        return imageView;
-    }
-
-    private Image createInfoViewImage(MapCategory mapCategory, Difficulty difficulty, PacBooster pacBooster, int levelNumber, double width, Color backgroundColor) {
+    private Image createInfoViewImage(MapCategory mapCategory, Difficulty difficulty, PacBooster pacBooster, int levelNumber, double width, double height, Color backgroundColor) {
         final double scaling = 6;
-        final var canvas = new Canvas(scaling * width, scaling * 2 * TS);
+        final var canvas = new Canvas(scaling * width, scaling * height);
         canvas.getGraphicsContext2D().setImageSmoothing(false); // important for crisp image!
 
         final var hudRenderer = (TengenMsPacMan_HUDRenderer) ui.currentConfig().createHUDRenderer(canvas);
@@ -80,11 +74,10 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         hudRenderer.fillCanvas(backgroundColor);
         hudRenderer.drawLevelNumberBox(levelNumber, 0, 0);
         hudRenderer.drawLevelNumberBox(levelNumber, width - 2 * TS, 0);
-        hudRenderer.drawGameOptions(mapCategory, difficulty, pacBooster, TS(14), TS + HTS);
+        hudRenderer.drawGameOptions(mapCategory, difficulty, pacBooster, TS(14), TS(1.5f));
 
         return canvas.snapshot(null, null);
     }
-
 
     @Override
     protected void setActionBindings() {
