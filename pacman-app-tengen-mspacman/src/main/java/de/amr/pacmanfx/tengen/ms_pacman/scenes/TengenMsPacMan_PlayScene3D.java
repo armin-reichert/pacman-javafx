@@ -5,10 +5,12 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
 import de.amr.pacmanfx.lib.nes.NES_Palette;
-import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.model.ScoreManager;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
+import de.amr.pacmanfx.tengen.ms_pacman.model.Difficulty;
+import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
+import de.amr.pacmanfx.tengen.ms_pacman.model.PacBooster;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_HUDRenderer;
 import de.amr.pacmanfx.ui._3d.GameLevel3D;
@@ -18,6 +20,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Box;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
@@ -41,34 +44,33 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     @Override
     protected GameLevel3D createGameLevel3D() {
         final GameLevel3D gameLevel3D = super.createGameLevel3D();
+
         final TengenMsPacMan_GameModel game = context().game();
-        final GameLevel gameLevel = game.gameLevel();
         if (!game.optionsAreInitial()) {
-            final ImageView infoView = createGameInfoView(gameLevel);
-            infoView.setTranslateX(0);
-            infoView.setTranslateY((gameLevel.worldMap().numRows() - 2) * TS);
-            infoView.setTranslateZ(-gameLevel3D.floor3D().getDepth());
+            final ImageView infoView = createGameInfoView(game);
+            final Box floor3D = gameLevel3D.floor3D();
+            infoView.setTranslateX(floor3D.getTranslateX());
+            infoView.setTranslateY(floor3D.getHeight() - TS(2));
+            infoView.setTranslateZ(-floor3D.getDepth());
             gameLevel3D.getChildren().add(infoView);
         }
         return gameLevel3D;
     }
 
     // shows info about category, difficulty, booster etc
-    private ImageView createGameInfoView(GameLevel gameLevel) {
-        final int width = gameLevel.worldMap().numCols() * TS;
-        final int height = 2 * TS;
+    private ImageView createGameInfoView(TengenMsPacMan_GameModel game) {
+        final float width = TS(game.gameLevel().worldMap().numCols());
+        final float height = TS(2);
         final ImageView imageView = new ImageView();
-        // Listen to changes of the floor color property and recreate image on change
-        imageView.imageProperty().bind(PROPERTY_3D_FLOOR_COLOR.map(color ->
-            createInfoViewImage(context().game(), gameLevel.number(), width, color)));
         imageView.setFitWidth(width);
         imageView.setFitHeight(height);
+        imageView.imageProperty().bind(PROPERTY_3D_FLOOR_COLOR.map(floorColor -> createInfoViewImage(
+            game.mapCategory(), game.difficulty(), game.pacBooster(), game.gameLevel().number(), width, floorColor)));
         return imageView;
     }
 
-    private Image createInfoViewImage(TengenMsPacMan_GameModel game, int levelNumber, double width, Color backgroundColor) {
+    private Image createInfoViewImage(MapCategory mapCategory, Difficulty difficulty, PacBooster pacBooster, int levelNumber, double width, Color backgroundColor) {
         final double scaling = 6;
-
         final var canvas = new Canvas(scaling * width, scaling * 2 * TS);
         canvas.getGraphicsContext2D().setImageSmoothing(false); // important for crisp image!
 
@@ -77,7 +79,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         hudRenderer.fillCanvas(backgroundColor);
         hudRenderer.drawLevelNumberBox(levelNumber, 0, 0);
         hudRenderer.drawLevelNumberBox(levelNumber, width - 2 * TS, 0);
-        hudRenderer.drawGameOptions(game.mapCategory(), game.difficulty(), game.pacBooster(), TS(14), TS + HTS);
+        hudRenderer.drawGameOptions(mapCategory, difficulty, pacBooster, TS(14), TS + HTS);
 
         return canvas.snapshot(null, null);
     }
