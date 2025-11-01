@@ -14,6 +14,7 @@ import javafx.geometry.Dimension2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import org.tinylog.Logger;
 
@@ -31,6 +32,11 @@ public class CanvasDecorationPane extends StackPane {
         r.setArcHeight(arcDiameter);
         r.setArcWidth(arcDiameter);
         return r;
+    }
+
+    private static Border createRoundedBorder(Paint strokeColor, double width, double cornerRadius) {
+        var stroke = new BorderStroke(strokeColor, BorderStrokeStyle.SOLID, new CornerRadii(cornerRadius), new BorderWidths(width));
+        return new Border(stroke);
     }
 
     private final ObjectProperty<Color> borderColor = new SimpleObjectProperty<>(Color.LIGHTBLUE);
@@ -67,16 +73,8 @@ public class CanvasDecorationPane extends StackPane {
 
         borderProperty().bind(Bindings.createObjectBinding(() -> {
             Dimension2D size = computeSize();
-            // TODO avoid magic numbers
             double borderWidth = Math.max(5, Math.ceil(size.getHeight() / 55));
-            return new Border(
-                new BorderStroke(
-                    borderColor(),
-                    BorderStrokeStyle.SOLID,
-                    new CornerRadii(Math.ceil(10 * scaling())),
-                    new BorderWidths(borderWidth)
-                )
-            );
+            return createRoundedBorder(borderColor(), borderWidth, Math.ceil(10 * scaling()));
         }, borderColor, scaling, unscaledCanvasWidth, unscaledCanvasHeight));
     }
 
