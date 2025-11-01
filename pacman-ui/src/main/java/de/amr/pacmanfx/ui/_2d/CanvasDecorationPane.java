@@ -65,14 +65,17 @@ public class CanvasDecorationPane extends StackPane {
     private double minScaling = 1.0;
 
     public CanvasDecorationPane() {
-        clipProperty().bind(Bindings.createObjectBinding(() -> {
-            return createRoundedRect(computeScaledWidth(), computeScaledHeight(), 26 * scaling.get());
-        }, scaling, unscaledCanvasWidth, unscaledCanvasHeight));
+        clipProperty().bind(Bindings.createObjectBinding(() -> createRoundedRect(
+            computeScaledWidth(), computeScaledHeight(), 26 * scaling.get()),
+            scaling, unscaledCanvasWidth, unscaledCanvasHeight)
+        );
 
         borderProperty().bind(Bindings.createObjectBinding(() -> {
-            double borderWidth = Math.max(5, Math.ceil(computeScaledHeight() / 55.0));
-            return createRoundedBorder(borderColor(), borderWidth, Math.ceil(10 * scaling.get()));
-        }, borderColor, scaling, unscaledCanvasWidth, unscaledCanvasHeight));
+                double borderWidth = Math.max(5, Math.ceil(computeScaledHeight() / 55.0));
+                double cornerRadius = Math.ceil(10 * scaling.get());
+                return createRoundedBorder(borderColor(), borderWidth, cornerRadius);
+            }, borderColor, scaling, unscaledCanvasWidth, unscaledCanvasHeight)
+        );
     }
 
     public void setCanvas(Canvas canvas) {

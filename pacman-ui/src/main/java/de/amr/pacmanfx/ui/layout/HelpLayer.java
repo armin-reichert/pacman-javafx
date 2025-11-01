@@ -2,8 +2,9 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.ui._2d;
+package de.amr.pacmanfx.ui.layout;
 
+import de.amr.pacmanfx.ui._2d.CanvasDecorationPane;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.uilib.widgets.FadingPane;
 import javafx.scene.layout.Pane;
