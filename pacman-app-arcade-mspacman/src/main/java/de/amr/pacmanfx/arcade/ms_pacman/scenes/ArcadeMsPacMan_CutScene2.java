@@ -78,7 +78,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
         clapperboard.setFont(sceneRenderer.arcadeFontTS());
         clapperboard.startAnimation();
 
-        setSceneState(STATE_CLAPPERBOARD, 120);
+        setSceneState(SceneState.CLAPPERBOARD, 120);
     }
 
     @Override
@@ -88,8 +88,8 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
     @Override
     public void update() {
         switch (sceneState) {
-            case STATE_CLAPPERBOARD -> updateStateClapperboard();
-            case STATE_CHASING -> updateStateChasing();
+            case SceneState.CLAPPERBOARD -> updateStateClapperboard();
+            case SceneState.CHASING -> updateStateChasing();
             default -> throw new IllegalStateException("Illegal scene state: " + sceneState);
         }
         sceneTimer.doTick();
@@ -104,13 +104,12 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
 
     // Scene controller state machine
 
-    private static final byte STATE_CLAPPERBOARD = 0;
-    private static final byte STATE_CHASING = 1;
+    private enum SceneState { CLAPPERBOARD, CHASING }
 
-    private byte sceneState;
+    private SceneState sceneState;
     private final TickTimer sceneTimer = new TickTimer("MsPacMan_CutScene2");
 
-    private void setSceneState(byte state, long ticks) {
+    private void setSceneState(SceneState state, long ticks) {
         sceneState = state;
         sceneTimer.reset(ticks);
         sceneTimer.start();
@@ -131,7 +130,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
         msPacMan.setMoveDir(Direction.RIGHT);
         msPacMan.playAnimation(CommonAnimationID.ANIM_PAC_MUNCHING);
 
-        setSceneState(STATE_CHASING, TickTimer.INDEFINITE);
+        setSceneState(SceneState.CHASING, TickTimer.INDEFINITE);
     }
 
     private void updateStateChasing() {

@@ -58,7 +58,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         super.createRenderers(canvas);
 
         final GameUI_Config uiConfig = ui.currentConfig();
-        hudRenderer   = configureRenderer((ArcadeMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas));
+        hudRenderer = configureRenderer((ArcadeMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas));
         actorRenderer = configureRenderer((ArcadeMsPacMan_ActorRenderer) uiConfig.createActorRenderer(canvas));
     }
 
@@ -90,7 +90,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         clapperboard.setFont(sceneRenderer.arcadeFontTS());
         clapperboard.startAnimation();
 
-        setSceneState(STATE_CLAPPERBOARD, TickTimer.INDEFINITE);
+        setSceneState(SceneState.CLAPPERBOARD, TickTimer.INDEFINITE);
     }
 
     @Override
@@ -100,9 +100,9 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
     @Override
     public void update() {
         switch (sceneState) {
-            case STATE_CLAPPERBOARD -> updateStateClapperboard();
-            case STATE_DELIVER_JUNIOR -> updateStateDeliverJunior();
-            case STATE_STORK_LEAVES_SCENE -> updateStateStorkLeavesScene();
+            case SceneState.CLAPPERBOARD -> updateStateClapperboard();
+            case SceneState.DELIVER_JUNIOR -> updateStateDeliverJunior();
+            case SceneState.STORK_LEAVES_SCENE -> updateStateStorkLeavesScene();
             default -> throw new IllegalStateException("Illegal scene state: " + sceneState);
         }
         sceneTimer.doTick();
@@ -117,14 +117,12 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
 
     // Scene controller state machine
 
-    private static final byte STATE_CLAPPERBOARD = 0;
-    private static final byte STATE_DELIVER_JUNIOR = 1;
-    private static final byte STATE_STORK_LEAVES_SCENE = 2;
+    private enum SceneState { CLAPPERBOARD, DELIVER_JUNIOR, STORK_LEAVES_SCENE }
 
-    private byte sceneState;
+    private SceneState sceneState;
     private final TickTimer sceneTimer = new TickTimer("MsPacMan_CutScene3");
 
-    private void setSceneState(byte state, long ticks) {
+    private void setSceneState(SceneState state, long ticks) {
         sceneState = state;
         sceneTimer.reset(ticks);
         sceneTimer.start();
@@ -162,7 +160,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         bag.setOpen(false);
         numBagBounces = 0;
 
-        setSceneState(STATE_DELIVER_JUNIOR, TickTimer.INDEFINITE);
+        setSceneState(SceneState.DELIVER_JUNIOR, TickTimer.INDEFINITE);
     }
 
     private void updateStateDeliverJunior() {
@@ -184,7 +182,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
             } else {
                 bag.setOpen(true);
                 bag.setVelocity(Vector2f.ZERO);
-                setSceneState(STATE_STORK_LEAVES_SCENE, 3 * Globals.NUM_TICKS_PER_SEC);
+                setSceneState(SceneState.STORK_LEAVES_SCENE, 3 * Globals.NUM_TICKS_PER_SEC);
             }
         }
     }

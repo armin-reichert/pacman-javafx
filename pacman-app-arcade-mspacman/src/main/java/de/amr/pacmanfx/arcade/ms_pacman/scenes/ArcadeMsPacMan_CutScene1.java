@@ -99,7 +99,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         clapperboard.setFont(actorRenderer.arcadeFontTS());
         clapperboard.startAnimation();
 
-        setState(STATE_CLAPPERBOARD, 120);
+        setState(SceneState.CLAPPERBOARD, 120);
     }
 
     @Override
@@ -109,10 +109,10 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     @Override
     public void update() {
         switch (sceneState) {
-            case STATE_CLAPPERBOARD -> updateStateClapperboard();
-            case STATE_CHASED_BY_GHOSTS -> updateStateChasedByGhosts();
-            case STATE_COMING_TOGETHER -> updateStateComingTogether();
-            case STATE_IN_HEAVEN -> updateStateInHeaven();
+            case CLAPPERBOARD -> updateStateClapperboard();
+            case CHASED_BY_GHOSTS -> updateStateChasedByGhosts();
+            case COMING_TOGETHER -> updateStateComingTogether();
+            case IN_HEAVEN -> updateStateInHeaven();
             default -> throw new IllegalStateException("Illegal scene state: " + sceneState);
         }
         sceneTimer.doTick();
@@ -127,15 +127,12 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
 
     // Scene controller state machine
 
-    private static final byte STATE_CLAPPERBOARD = 0;
-    private static final byte STATE_CHASED_BY_GHOSTS = 1;
-    private static final byte STATE_COMING_TOGETHER = 2;
-    private static final byte STATE_IN_HEAVEN = 3;
+    private enum SceneState {CLAPPERBOARD, CHASED_BY_GHOSTS, COMING_TOGETHER, IN_HEAVEN}
 
-    private byte sceneState;
+    private SceneState sceneState;
     private final TickTimer sceneTimer = new TickTimer("MsPacMan_CutScene1");
 
-    private void setState(byte state, long ticks) {
+    private void setState(SceneState state, long ticks) {
         sceneState = state;
         sceneTimer.reset(ticks);
         sceneTimer.start();
@@ -177,7 +174,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         pinky.playAnimation(CommonAnimationID.ANIM_GHOST_NORMAL);
         pinky.show();
 
-        setState(STATE_CHASED_BY_GHOSTS, TickTimer.INDEFINITE);
+        setState(SceneState.CHASED_BY_GHOSTS, TickTimer.INDEFINITE);
     }
 
     private void updateStateChasedByGhosts() {
@@ -207,7 +204,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         inky.setMoveDir(Direction.LEFT);
         inky.setWishDir(Direction.LEFT);
 
-        setState(STATE_COMING_TOGETHER, TickTimer.INDEFINITE);
+        setState(SceneState.COMING_TOGETHER, TickTimer.INDEFINITE);
     }
 
     private void updateStateComingTogether() {
@@ -278,7 +275,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         heart.setPosition((pacMan.x() + msPacMan.x()) * 0.5f, pacMan.y() - TS * 2);
         heart.show();
 
-        setState(STATE_IN_HEAVEN, 3 * NUM_TICKS_PER_SEC);
+        setState(SceneState.IN_HEAVEN, 3 * NUM_TICKS_PER_SEC);
     }
 
     private void updateStateInHeaven() {
