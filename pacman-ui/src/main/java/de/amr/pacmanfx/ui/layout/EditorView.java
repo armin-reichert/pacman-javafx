@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.layout;
 import de.amr.pacmanfx.mapeditor.SaveConfirmationDialog;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.mapeditor.actions.Action_SaveMapFileInteractively;
-import de.amr.pacmanfx.ui.DefaultActionBindingsManager;
+import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.api.ActionBindingsManager;
 import javafx.scene.control.ButtonType;

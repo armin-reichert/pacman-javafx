@@ -5,8 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.ui.DefaultActionBindingsManager;
-import de.amr.pacmanfx.ui.GameAction;
+import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
+import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.api.ActionBindingsManager;
 import de.amr.pacmanfx.ui.api.GameUI;
@@ -29,8 +29,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static de.amr.pacmanfx.ui.CommonGameActions.ACTION_BOOT_SHOW_PLAY_VIEW;
-import static de.amr.pacmanfx.ui.CommonGameActions.ACTION_TOGGLE_PAUSED;
+import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_BOOT_SHOW_PLAY_VIEW;
+import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_TOGGLE_PAUSED;
 import static de.amr.pacmanfx.ui.input.Keyboard.nude;
 import static java.util.Objects.requireNonNull;
 

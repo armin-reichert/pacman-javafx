@@ -13,8 +13,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.ui.CommonGameActions.ACTION_ARCADE_INSERT_COIN;
-import static de.amr.pacmanfx.ui.CommonGameActions.ACTION_ARCADE_START_GAME;
+import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_ARCADE_INSERT_COIN;
+import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_ARCADE_START_GAME;
 import static de.amr.pacmanfx.ui.api.ArcadePalette.*;
 
 /**

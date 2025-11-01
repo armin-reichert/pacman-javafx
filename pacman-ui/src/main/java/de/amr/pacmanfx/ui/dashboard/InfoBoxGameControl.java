@@ -8,7 +8,7 @@ import de.amr.pacmanfx.controller.CoinMechanism;
 import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.controller.test.CutScenesTestState;
-import de.amr.pacmanfx.ui.CommonGameActions;
+import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.api.GameUI;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;

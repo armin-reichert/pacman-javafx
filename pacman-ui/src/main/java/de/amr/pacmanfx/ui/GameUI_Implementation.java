@@ -10,6 +10,9 @@ import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui.action.ActionBinding;
+import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
+import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.api.*;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.Keyboard;
@@ -34,7 +37,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import static de.amr.pacmanfx.ui.CommonGameActions.*;
+import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.api.GameScene_Config.SCENE_ID_PLAY_SCENE_3D;
 import static de.amr.pacmanfx.ui.input.Keyboard.*;
 import static java.util.Objects.requireNonNull;
