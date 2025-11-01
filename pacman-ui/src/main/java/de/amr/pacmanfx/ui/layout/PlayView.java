@@ -150,7 +150,7 @@ public class PlayView extends StackPane implements GameUI_View {
     }
 
     public void showHelp(GameUI ui) {
-        helpLayer.showHelp(ui, canvasDecorationPane.scaling());
+        helpLayer.showHelp(ui, canvasDecorationPane.scalingProperty().get());
     }
 
     public void draw() {
