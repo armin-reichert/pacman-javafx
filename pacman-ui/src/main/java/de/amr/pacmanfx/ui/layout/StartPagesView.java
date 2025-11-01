@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.layout;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.action.GameAction;
-import de.amr.pacmanfx.ui.GlobalAssets;
+import de.amr.pacmanfx.ui.GameAssets;
 import de.amr.pacmanfx.ui.api.ActionBindingsManager;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.uilib.widgets.Carousel;
@@ -39,7 +39,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class StartPagesView extends Carousel implements GameUI_View {
 
-    public static FancyButton createStartButton(GlobalAssets assets, Pos alignment) {
+    public static FancyButton createStartButton(GameAssets assets, Pos alignment) {
         var button = new FancyButton(
             assets.translated("play_button"),
             assets.arcadeFont(30),

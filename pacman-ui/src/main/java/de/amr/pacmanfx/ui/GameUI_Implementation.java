@@ -90,7 +90,7 @@ public class GameUI_Implementation implements GameUI {
         new ActionBinding(ACTION_TOGGLE_DRAW_MODE,            alt(KeyCode.W))
     );
 
-    private final GlobalAssets assets;
+    private final GameAssets assets;
     private final DirectoryWatchdog customDirectoryWatchdog;
     private final GameClock clock;
     private final GameContext gameContext;
@@ -126,7 +126,7 @@ public class GameUI_Implementation implements GameUI {
         clock.setPausableAction(this::doSimulationStepAndUpdateGameScene);
         clock.setPermanentAction(this::drawCurrentView);
 
-        assets = new GlobalAssets();
+        assets = new GameAssets();
         prefs = new GameUI_Preferences();
         PROPERTY_3D_WALL_HEIGHT.set(prefs.getFloat("3d.obstacle.base_height"));
         PROPERTY_3D_WALL_OPACITY.set(prefs.getFloat("3d.obstacle.opacity"));
@@ -293,7 +293,7 @@ public class GameUI_Implementation implements GameUI {
     }
 
     @Override
-    public GlobalAssets assets() {
+    public GameAssets assets() {
         return assets;
     }
 
