@@ -26,6 +26,13 @@ public class CanvasDecorationPane extends StackPane {
 
     private static final Vector2f DOWN_SCALING = new Vector2f(0.85f, 0.93f);
 
+    private static Rectangle createRoundedRect(double width, double height, double arcDiameter) {
+        var r = new Rectangle(width, height);
+        r.setArcHeight(arcDiameter);
+        r.setArcWidth(arcDiameter);
+        return r;
+    }
+
     private final ObjectProperty<Color> borderColor = new SimpleObjectProperty<>(Color.LIGHTBLUE);
 
     private final DoubleProperty scaling = new SimpleDoubleProperty(1.0) {
@@ -55,12 +62,7 @@ public class CanvasDecorationPane extends StackPane {
     public CanvasDecorationPane() {
         clipProperty().bind(Bindings.createObjectBinding(() -> {
             Dimension2D size = computeSize();
-            var clipRect = new Rectangle(size.getWidth(), size.getHeight());
-            // TODO avoid magic numbers
-            double arcSize = 26 * scaling();
-            clipRect.setArcWidth(arcSize);
-            clipRect.setArcHeight(arcSize);
-            return clipRect;
+            return createRoundedRect(size.getWidth(), size.getHeight(), 26 * scaling());
         }, scaling, unscaledCanvasWidth, unscaledCanvasHeight));
 
         borderProperty().bind(Bindings.createObjectBinding(() -> {
