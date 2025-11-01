@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tengen.ms_pacman;
 
 import de.amr.pacmanfx.model.DefaultGameVariants;
 import de.amr.pacmanfx.ui.api.GameUI;
-import de.amr.pacmanfx.ui.layout.StartPage;
+import de.amr.pacmanfx.ui.api.StartPage;
 import de.amr.pacmanfx.ui.layout.StartPagesView;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.widgets.Flyer;

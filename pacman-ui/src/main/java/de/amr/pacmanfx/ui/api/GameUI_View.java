@@ -2,11 +2,9 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.ui.layout;
+package de.amr.pacmanfx.ui.api;
 
 import de.amr.pacmanfx.event.GameEventListener;
-import de.amr.pacmanfx.ui.api.ActionBindingsManager;
-import de.amr.pacmanfx.ui.api.GameUI;
 import javafx.scene.Node;
 
 import java.util.Optional;

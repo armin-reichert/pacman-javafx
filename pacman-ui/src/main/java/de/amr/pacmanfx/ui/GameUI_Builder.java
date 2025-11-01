@@ -12,7 +12,7 @@ import de.amr.pacmanfx.model.MapSelector;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
-import de.amr.pacmanfx.ui.layout.StartPage;
+import de.amr.pacmanfx.ui.api.StartPage;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 

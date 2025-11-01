@@ -10,6 +10,8 @@ import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.GameAssets;
 import de.amr.pacmanfx.ui.api.ActionBindingsManager;
 import de.amr.pacmanfx.ui.api.GameUI;
+import de.amr.pacmanfx.ui.api.GameUI_View;
+import de.amr.pacmanfx.ui.api.StartPage;
 import de.amr.pacmanfx.uilib.widgets.Carousel;
 import de.amr.pacmanfx.uilib.widgets.FancyButton;
 import javafx.geometry.Insets;

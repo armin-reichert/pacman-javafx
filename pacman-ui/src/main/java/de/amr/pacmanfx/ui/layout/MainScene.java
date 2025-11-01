@@ -7,6 +7,7 @@ package de.amr.pacmanfx.ui.layout;
 import de.amr.pacmanfx.ui.api.ArcadePalette;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
+import de.amr.pacmanfx.ui.api.GameUI_View;
 import de.amr.pacmanfx.uilib.widgets.FlashMessageView;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;

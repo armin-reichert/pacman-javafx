@@ -10,6 +10,7 @@ import de.amr.pacmanfx.mapeditor.actions.Action_SaveMapFileInteractively;
 import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.GameAssets;
 import de.amr.pacmanfx.ui.api.ActionBindingsManager;
+import de.amr.pacmanfx.ui.api.GameUI_View;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
