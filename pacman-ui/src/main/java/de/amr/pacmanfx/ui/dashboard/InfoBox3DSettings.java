@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.dashboard;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._2d.SubSceneProvider;
+import de.amr.pacmanfx.ui.api.SubSceneProvider;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;

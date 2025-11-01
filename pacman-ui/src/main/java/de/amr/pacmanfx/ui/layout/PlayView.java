@@ -13,7 +13,7 @@ import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui._2d.CanvasDecorationPane;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.HelpLayer;
-import de.amr.pacmanfx.ui._2d.SubSceneProvider;
+import de.amr.pacmanfx.ui.api.SubSceneProvider;
 import de.amr.pacmanfx.ui.api.ActionBindingsManager;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;

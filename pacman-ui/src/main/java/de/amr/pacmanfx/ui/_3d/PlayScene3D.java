@@ -21,7 +21,7 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.GameAction;
-import de.amr.pacmanfx.ui._2d.SubSceneProvider;
+import de.amr.pacmanfx.ui.api.SubSceneProvider;
 import de.amr.pacmanfx.ui.api.ActionBindingsManager;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;

@@ -25,7 +25,7 @@ import de.amr.pacmanfx.ui.ActionBinding;
 import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
-import de.amr.pacmanfx.ui._2d.SubSceneProvider;
+import de.amr.pacmanfx.ui.api.SubSceneProvider;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
