@@ -26,7 +26,7 @@ import java.util.List;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.ui.CommonGameActions.*;
-import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
+import static de.amr.pacmanfx.ui.api.ArcadePalette.*;
 
 /**
  * Intro scene of the Ms. Pac-Man game.

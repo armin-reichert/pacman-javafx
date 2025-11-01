@@ -15,7 +15,7 @@ import javafx.scene.text.Font;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.CommonGameActions.ACTION_ARCADE_INSERT_COIN;
 import static de.amr.pacmanfx.ui.CommonGameActions.ACTION_ARCADE_START_GAME;
-import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
+import static de.amr.pacmanfx.ui.api.ArcadePalette.*;
 
 /**
  * Scene shown after credit has been added and where game can be started.

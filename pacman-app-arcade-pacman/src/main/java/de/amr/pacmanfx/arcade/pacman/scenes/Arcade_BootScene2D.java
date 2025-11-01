@@ -20,7 +20,7 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.RandomNumberSupport.randomFloat;
 import static de.amr.pacmanfx.lib.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.lib.UsefulFunctions.lerp;
-import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_WHITE;
+import static de.amr.pacmanfx.ui.api.ArcadePalette.ARCADE_WHITE;
 
 /**
  * The boot screen is showing some strange screen patterns and eventually  a grid.

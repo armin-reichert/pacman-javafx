@@ -13,7 +13,7 @@ import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 
-import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_WHITE;
+import static de.amr.pacmanfx.ui.api.ArcadePalette.ARCADE_WHITE;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements ActorRenderer {
