@@ -111,11 +111,11 @@ public class CanvasDecorationPane extends StackPane {
     public void resizeTo(double width, double height) {
         final double downScaledWidth = DOWN_SCALING.x() * width;
         final double downScaledHeight = DOWN_SCALING.y() * height;
-        double scaling = downScaledHeight / unscaledCanvasHeight.get();
-        if (scaling * unscaledCanvasWidth.get() > downScaledWidth) {
-            scaling = downScaledWidth / unscaledCanvasWidth.get();
+        double newScaling = downScaledHeight / unscaledCanvasHeight.get();
+        if (newScaling * unscaledCanvasWidth.get() > downScaledWidth) {
+            newScaling = downScaledWidth / unscaledCanvasWidth.get();
         }
-        doLayout(scaling, false);
+        doLayout(newScaling, false);
         Logger.debug("Game canvas container resized to width={} height={}", getWidth(), getHeight());
     }
 
