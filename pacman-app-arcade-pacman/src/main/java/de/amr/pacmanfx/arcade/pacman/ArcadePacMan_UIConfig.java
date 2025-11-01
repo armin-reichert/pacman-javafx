@@ -19,6 +19,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.ui.api.GameScene;
+import de.amr.pacmanfx.ui.api.GameScene_Config;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.DefaultSoundManager;
@@ -49,7 +50,7 @@ import static de.amr.pacmanfx.ui.api.GameScene_Config.sceneID_CutScene;
 import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_3D_ENABLED;
 import static java.util.Objects.requireNonNull;
 
-public class ArcadePacMan_UIConfig implements GameUI_Config {
+public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
 
     public static final WorldMapColorScheme MAP_COLOR_SCHEME = new WorldMapColorScheme(
         "#000000", "#2121ff", "#ffb7ff", "#febdb4"
@@ -257,6 +258,11 @@ public class ArcadePacMan_UIConfig implements GameUI_Config {
     }
 
     // Game scene config
+
+    @Override
+    public GameScene_Config sceneConfig() {
+        return this;
+    }
 
     @Override
     public Stream<GameScene> gameScenes() {

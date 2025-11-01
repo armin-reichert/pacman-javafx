@@ -13,7 +13,7 @@ import de.amr.pacmanfx.ui.api.GameUI;
 
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Properties.PROPERTY_JOYPAD_BINDINGS_DISPLAYED;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Properties.PROPERTY_PLAY_SCENE_DISPLAY_MODE;
-import static de.amr.pacmanfx.ui.api.GameUI_Config.SCENE_ID_PLAY_SCENE_2D;
+import static de.amr.pacmanfx.ui.api.GameScene_Config.SCENE_ID_PLAY_SCENE_2D;
 import static de.amr.pacmanfx.uilib.Ufx.toggle;
 
 public interface TengenMsPacMan_Actions {

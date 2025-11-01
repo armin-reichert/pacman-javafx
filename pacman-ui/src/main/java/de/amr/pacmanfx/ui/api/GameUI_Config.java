@@ -23,7 +23,7 @@ import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 
-public interface GameUI_Config extends GameScene_Config, Disposable {
+public interface GameUI_Config extends Disposable {
 
     String CONFIG_KEY_COLOR_MAP = "colorMap";
     String CONFIG_KEY_COLOR_MAP_INDEX = "colorMapIndex";
@@ -60,4 +60,6 @@ public interface GameUI_Config extends GameScene_Config, Disposable {
     Image killedGhostPointsImage(Ghost ghost, int killedIndex);
 
     SoundManager soundManager();
+
+    GameScene_Config sceneConfig();
 }

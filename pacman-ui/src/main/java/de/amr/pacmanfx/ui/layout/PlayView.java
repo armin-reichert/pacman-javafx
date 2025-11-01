@@ -43,7 +43,7 @@ import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.api.GameScene_Config.SCENE_ID_PLAY_SCENE_3D;
 import static de.amr.pacmanfx.ui.api.GameScene_Config.identifySceneSwitchType;
 import static de.amr.pacmanfx.ui.api.GameUI.*;
-import static de.amr.pacmanfx.ui.api.GameUI_Config.SCENE_ID_PLAY_SCENE_2D;
+import static de.amr.pacmanfx.ui.api.GameScene_Config.SCENE_ID_PLAY_SCENE_2D;
 import static de.amr.pacmanfx.uilib.Ufx.*;
 import static java.util.Objects.requireNonNull;
 
@@ -221,7 +221,7 @@ public class PlayView extends StackPane implements GameUI_View {
     // -----------------------------------------------------------------------------------------------------------------
 
     public void updateGameScene(boolean reloadCurrent) {
-        final GameScene nextGameScene = ui.currentConfig().selectGameScene(ui.gameContext());
+        final GameScene nextGameScene = ui.currentConfig().sceneConfig().selectGameScene(ui.gameContext());
         if (nextGameScene == null) {
             String errorMessage = " Katastrophe! Could not determine game scene!";
             ui.showFlashMessage(Duration.seconds(30), errorMessage);
@@ -273,7 +273,7 @@ public class PlayView extends StackPane implements GameUI_View {
             gameScene2D.setCanvas(canvasDecorationPane.canvas());
             Vector2i gameSceneSizePx = gameScene2D.sizeInPx();
             double aspect = (double) gameSceneSizePx.x() / gameSceneSizePx.y();
-            if (ui.currentConfig().showWithDecoration(gameScene)) {
+            if (ui.currentConfig().sceneConfig().showWithDecoration(gameScene)) {
                 // Decorated game scene scaled-down to give space for the decoration
                 gameScene2D.scalingProperty().bind(canvasDecorationPane.scalingProperty().map(
                         scaling -> Math.min(scaling.doubleValue(), ui.preferences().getFloat("scene2d.max_scaling"))));

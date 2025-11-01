@@ -24,9 +24,10 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.actors.Pinky;
 import de.amr.pacmanfx.tengen.ms_pacman.model.actors.Sue;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.*;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.*;
-import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
+import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.api.GameScene;
+import de.amr.pacmanfx.ui.api.GameScene_Config;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.input.Joypad;
@@ -64,7 +65,7 @@ import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR;
 import static de.amr.pacmanfx.ui.input.Keyboard.*;
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_UIConfig implements GameUI_Config {
+public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config {
 
     public static final String SPRITE_SHEET_PATH           = "graphics/spritesheet.png";
     public static final String ARCADE_MAZES_IMAGE_PATH     = "graphics/arcade_mazes.png";
@@ -368,6 +369,11 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     }
 
     // Game scenes
+
+    @Override
+    public GameScene_Config sceneConfig() {
+        return this;
+    }
 
     @Override
     public void createGameScenes() {

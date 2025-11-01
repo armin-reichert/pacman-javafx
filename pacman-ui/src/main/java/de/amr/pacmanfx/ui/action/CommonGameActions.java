@@ -32,9 +32,9 @@ import static de.amr.pacmanfx.Validations.stateIsOneOf;
 import static de.amr.pacmanfx.controller.GamePlayState.INTRO;
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
 import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
+import static de.amr.pacmanfx.ui.api.GameScene_Config.SCENE_ID_PLAY_SCENE_2D;
+import static de.amr.pacmanfx.ui.api.GameScene_Config.SCENE_ID_PLAY_SCENE_3D;
 import static de.amr.pacmanfx.ui.api.GameUI.*;
-import static de.amr.pacmanfx.ui.api.GameUI_Config.SCENE_ID_PLAY_SCENE_2D;
-import static de.amr.pacmanfx.ui.api.GameUI_Config.SCENE_ID_PLAY_SCENE_3D;
 import static de.amr.pacmanfx.uilib.Ufx.toggle;
 
 /**

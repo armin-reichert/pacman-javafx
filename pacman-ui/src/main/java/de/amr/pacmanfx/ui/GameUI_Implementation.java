@@ -497,7 +497,7 @@ public class GameUI_Implementation implements GameUI {
     @Override
     public boolean isCurrentGameSceneID(String id) {
         GameScene currentGameScene = mainScene.currentGameScene().orElse(null);
-        return currentGameScene != null && currentConfig().gameSceneHasID(currentGameScene, id);
+        return currentGameScene != null && currentConfig().sceneConfig().gameSceneHasID(currentGameScene, id);
     }
 
     @Override
@@ -514,8 +514,8 @@ public class GameUI_Implementation implements GameUI {
             Class<?> configClass = configClassesByGameVariant.get(gameVariant);
             try {
                 config = (GameUI_Config) configClass.getDeclaredConstructor(GameUI.class).newInstance(this);
-                config.createGameScenes();
-                config.gameScenes().forEach(scene -> {
+                config.sceneConfig().createGameScenes();
+                config.sceneConfig().gameScenes().forEach(scene -> {
                     if (scene instanceof GameScene2D gameScene2D) {
                         gameScene2D.debugInfoVisibleProperty().bind(PROPERTY_DEBUG_INFO_VISIBLE);
                     }
