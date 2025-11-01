@@ -16,8 +16,8 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SceneRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
-import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
 import javafx.beans.property.IntegerProperty;
@@ -262,59 +262,66 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         }
 
         sceneRenderer.drawHorizontalBar(nesColor(0x20), nesColor(0x21), sizeInPx().x(), TS, 20);
-        sceneRenderer.drawHorizontalBar(nesColor(0x20), nesColor(0x21), sizeInPx().x(), TS, 212);
         sceneRenderer.fillText("MS PAC-MAN OPTIONS", NES_YELLOW, COL_LABEL + 3 * TS, 48);
 
+        int y = 72;
         // Players (not implemented)
-        drawMarkerIfSelected(OPTION_PLAYERS, 72, sceneRenderer.arcadeFontTS());
-        sceneRenderer.fillText("TYPE", NES_YELLOW, COL_LABEL, 72);
-        sceneRenderer.fillText(":", NES_YELLOW, COL_LABEL + 4 * TS + 4, 72);
+        drawMarkerIfSelected(OPTION_PLAYERS, y, sceneRenderer.arcadeFontTS());
+        sceneRenderer.fillText("TYPE", NES_YELLOW, COL_LABEL, y);
+        sceneRenderer.fillText(":", NES_YELLOW, COL_LABEL + 4 * TS + 4, y);
         // grey out
-        sceneRenderer.fillText("1 PLAYER", nesColor(0x10), COL_LABEL + 6 * TS  , 72);
+        sceneRenderer.fillText("1 PLAYER", nesColor(0x10), COL_LABEL + 6 * TS, y);
 
+        y = 96;
         // Pac-Booster
-        drawMarkerIfSelected(OPTION_PAC_BOOSTER, 96, sceneRenderer.arcadeFontTS());
-        sceneRenderer.fillText("PAC BOOSTER", NES_YELLOW, COL_LABEL, 96);
-        sceneRenderer.fillText(":", NES_YELLOW, COL_COLON, 96);
+        drawMarkerIfSelected(OPTION_PAC_BOOSTER, y, sceneRenderer.arcadeFontTS());
+        sceneRenderer.fillText("PAC BOOSTER", NES_YELLOW, COL_LABEL, y);
+        sceneRenderer.fillText(":", NES_YELLOW, COL_COLON, y);
         String pacBoosterText = switch (theGame().pacBooster()) {
             case OFF -> "OFF";
             case ALWAYS_ON -> "ALWAYS ON";
             case USE_A_OR_B -> "USE A OR B";
         };
-        sceneRenderer.fillText(pacBoosterText, NES_WHITE, COL_VALUE, 96);
+        sceneRenderer.fillText(pacBoosterText, NES_WHITE, COL_VALUE, y);
 
+        y = 120;
         // Game difficulty
-        drawMarkerIfSelected(OPTION_DIFFICULTY, 120, sceneRenderer.arcadeFontTS());
-        sceneRenderer.fillText("GAME DIFFICULTY", NES_YELLOW, COL_LABEL, 120);
-        sceneRenderer.fillText(":", NES_YELLOW, COL_COLON, 120);
-        sceneRenderer.fillText(theGame().difficulty().name(), NES_WHITE, COL_VALUE, 120);
+        drawMarkerIfSelected(OPTION_DIFFICULTY, y, sceneRenderer.arcadeFontTS());
+        sceneRenderer.fillText("GAME DIFFICULTY", NES_YELLOW, COL_LABEL, y);
+        sceneRenderer.fillText(":", NES_YELLOW, COL_COLON, y);
+        sceneRenderer.fillText(theGame().difficulty().name(), NES_WHITE, COL_VALUE, y);
 
+        y = 144;
         // Maze (type) selection
-        drawMarkerIfSelected(OPTION_MAZE_SELECTION, 144, sceneRenderer.arcadeFontTS());
-        sceneRenderer.fillText("MAZE SELECTION", NES_YELLOW, COL_LABEL, 144);
-        sceneRenderer.fillText(":", NES_YELLOW, COL_COLON, 144);
-        sceneRenderer.fillText(theGame().mapCategory().name(), NES_WHITE, COL_VALUE, 144);
+        drawMarkerIfSelected(OPTION_MAZE_SELECTION, y, sceneRenderer.arcadeFontTS());
+        sceneRenderer.fillText("MAZE SELECTION", NES_YELLOW, COL_LABEL, y);
+        sceneRenderer.fillText(":", NES_YELLOW, COL_COLON, y);
+        sceneRenderer.fillText(theGame().mapCategory().name(), NES_WHITE, COL_VALUE, y);
 
+        y = 168;
         // Starting level number
-        drawMarkerIfSelected(OPTION_STARTING_LEVEL, 168, sceneRenderer.arcadeFontTS());
-        sceneRenderer.fillText("STARTING LEVEL", NES_YELLOW, COL_LABEL, 168);
-        sceneRenderer.fillText(":", NES_YELLOW, COL_COLON, 168);
-        sceneRenderer.fillText(String.valueOf(theGame().startLevelNumber()), NES_WHITE, COL_VALUE, 168);
-        if (theGame().numContinues() < 4) {
+        drawMarkerIfSelected(OPTION_STARTING_LEVEL, y, sceneRenderer.arcadeFontTS());
+        sceneRenderer.fillText("STARTING LEVEL", NES_YELLOW, COL_LABEL, y);
+        sceneRenderer.fillText(":", NES_YELLOW, COL_COLON, y);
+        sceneRenderer.fillText(String.valueOf(theGame().startLevelNumber()), NES_WHITE, COL_VALUE, y);
+        final int numContinues = theGame().numContinues();
+        if (numContinues < 4) {
             var spriteSheet = (TengenMsPacMan_SpriteSheet) ui.currentConfig().spriteSheet();
-            RectShort continuesSprite = spriteSheet.sprite(switch (theGame().numContinues()) {
+            RectShort continuesSprite = spriteSheet.sprite(switch (numContinues) {
                 case 0 -> SpriteID.CONTINUES_0;
                 case 1 -> SpriteID.CONTINUES_1;
                 case 2 -> SpriteID.CONTINUES_2;
                 case 3 -> SpriteID.CONTINUES_3;
-                default -> throw new IllegalArgumentException("Illegal number of continues: " + theGame().numContinues());
+                default -> throw new IllegalArgumentException("Illegal number of continues: " + numContinues);
             });
-            sceneRenderer.drawSprite(continuesSprite, COL_VALUE + 3 * TS, 160, true);
+            sceneRenderer.drawSprite(continuesSprite, COL_VALUE + 3 * TS, y - 8, true);
         }
 
-        sceneRenderer.fillText("MOVE ARROW WITH JOYPAD", NES_YELLOW, 4 * TS,  192);
+        sceneRenderer.fillText("MOVE ARROW WITH JOYPAD",      NES_YELLOW, 4 * TS,  192);
         sceneRenderer.fillText("CHOOSE OPTIONS WITH A AND B", NES_YELLOW, 2 * TS,  200);
-        sceneRenderer.fillText("PRESS START TO START GAME", NES_YELLOW, 3 * TS,  208);
+        sceneRenderer.fillText("PRESS START TO START GAME",   NES_YELLOW, 3 * TS,  208);
+
+        sceneRenderer.drawHorizontalBar(nesColor(0x20), nesColor(0x21), sizeInPx().x(), TS, 212);
     }
 
     private void drawMarkerIfSelected(int optionIndex, double y, Font font) {
