@@ -668,14 +668,17 @@ public class GameLevel3D extends Group implements Disposable {
         if (house3D != null) {
             house3D.update(gameLevel);
         }
-        int lifeCount = gameLevel.game().lifeCount() - 1;
-        // when the game starts and Pac-Man is not yet visible, show one more
-        boolean oneMore = ui.gameContext().gameState() == GamePlayState.STARTING_GAME_OR_LEVEL && !gameLevel.pac().isVisible();
-        if (oneMore) lifeCount += 1;
-        livesCounter3D.livesCountProperty().set(lifeCount);
+        updateLivesCounter3D();
+    }
 
-        boolean visible = gameLevel.game().canStartNewGame();
+    private void updateLivesCounter3D() {
         if (livesCounter3D != null) {
+            int lifeCount = gameLevel.game().lifeCount() - 1;
+            // when the game starts and Pac-Man is not yet visible, show one more
+            boolean oneMore = ui.gameContext().gameState() == GamePlayState.STARTING_GAME_OR_LEVEL && !gameLevel.pac().isVisible();
+            if (oneMore) lifeCount += 1;
+            livesCounter3D.livesCountProperty().set(lifeCount);
+            boolean visible = gameLevel.game().canStartNewGame();
             livesCounter3D.setVisible(visible);
         }
     }
