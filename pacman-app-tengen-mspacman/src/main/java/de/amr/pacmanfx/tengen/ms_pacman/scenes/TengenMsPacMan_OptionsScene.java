@@ -320,13 +320,13 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         }
 
         y += TS(3);
-        sceneRenderer.fillText("MOVE ARROW WITH JOYPAD",      NES_YELLOW, 4 * TS,  y);
+        sceneRenderer.fillText("MOVE ARROW WITH JOYPAD",      NES_YELLOW, TS(4), y);
 
         y += TS(1);
-        sceneRenderer.fillText("CHOOSE OPTIONS WITH A AND B", NES_YELLOW, 2 * TS,  y);
+        sceneRenderer.fillText("CHOOSE OPTIONS WITH A AND B", NES_YELLOW, TS(2), y);
 
         y += TS(1);
-        sceneRenderer.fillText("PRESS START TO START GAME",   NES_YELLOW, 3 * TS,  y);
+        sceneRenderer.fillText("PRESS START TO START GAME",   NES_YELLOW, TS(3), y);
 
         sceneRenderer.drawHorizontalBar(nesColor(0x20), nesColor(0x21), sizeInPx().x(), TS, 212);
     }
