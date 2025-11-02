@@ -24,6 +24,7 @@ import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.EnergizerExplosionAndRecycling;
 import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
+import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.*;
 import de.amr.pacmanfx.uilib.widgets.MessageView;
@@ -74,6 +75,9 @@ public class GameLevel3D extends Group implements Disposable {
     private final GameUI ui;
     private final GameLevel gameLevel;
     private final WorldMapColorScheme colorScheme;
+
+    private final RandomTextPicker<String> pickerGameOverMessages;
+    private final RandomTextPicker<String> pickerLevelCompleteMessages;
 
     private final AnimationRegistry animationRegistry = new AnimationRegistry();
     private RegisteredAnimation wallColorFlashingAnimation;
@@ -159,7 +163,7 @@ public class GameLevel3D extends Group implements Disposable {
 
         private void sometimesLevelCompleteMessage(int levelNumber) {
             if (randomInt(0, 100) < MESSAGE_FREQUENCY) {
-                String message = ui.assets().translatedLevelCompleteMessage(levelNumber);
+                String message = translatedLevelCompleteMessage(levelNumber);
                 ui.showFlashMessage(Duration.seconds(3), message);
             }
         }
@@ -322,6 +326,9 @@ public class GameLevel3D extends Group implements Disposable {
 
         ghosts3D.forEach(ghost3D -> ghost3D.init(gameLevel));
         house3D.startSwirlAnimations();
+
+        pickerGameOverMessages = RandomTextPicker.fromBundle(ui.assets().textResources(), "game.over");
+        pickerLevelCompleteMessages = RandomTextPicker.fromBundle(ui.assets().textResources(), "level.complete");
     }
 
     private void createMaterials() {
@@ -775,7 +782,7 @@ public class GameLevel3D extends Group implements Disposable {
         ui.soundManager().play(SoundID.GAME_OVER);
         boolean inOneOf4Cases = randomInt(0, 1000) < 250;
         if (!gameLevel.isDemoLevel() && inOneOf4Cases) {
-            ui.showFlashMessage(Duration.seconds(2.5), ui.assets().translatedGameOverMessage());
+            ui.showFlashMessage(Duration.seconds(2.5), translatedGameOverMessage());
         }
     }
 
@@ -842,6 +849,16 @@ public class GameLevel3D extends Group implements Disposable {
             .filter(Shape3D.class::isInstance)
             .map(Shape3D.class::cast)
             .forEach(shape3D -> shape3D.setDrawMode(drawMode));
+    }
+
+    public String translatedGameOverMessage() {
+        return pickerGameOverMessages.nextText();
+    }
+
+    public String translatedLevelCompleteMessage(int levelNumber) {
+        return pickerLevelCompleteMessages.hasEntries()
+            ? pickerLevelCompleteMessages.nextText() + "\n\n" + ui.assets().translated("level_complete", levelNumber)
+            : "";
     }
 
     // still work in progress...

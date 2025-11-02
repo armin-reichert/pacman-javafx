@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
-import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import javafx.scene.text.Font;
@@ -20,15 +19,11 @@ public class GameAssets extends AssetStorage {
     private static final ResourceManager GLOBAL_RESOURCES = () -> GameUI_Implementation.class;
 
     private final Model3DRepository model3DRepository;
-    private final RandomTextPicker<String> pickerGameOverMessages;
-    private final RandomTextPicker<String> pickerLevelCompleteMessages;
 
     public GameAssets() {
         model3DRepository = new Model3DRepository();
 
         setTextResources(GLOBAL_RESOURCES.getModuleBundle("de.amr.pacmanfx.ui.localized_texts"));
-        pickerGameOverMessages = RandomTextPicker.fromBundle(textResources(), "game.over");
-        pickerLevelCompleteMessages = RandomTextPicker.fromBundle(textResources(), "level.complete");
 
         set("background.scene",        createImageBackground(GLOBAL_RESOURCES.loadImage("graphics/pacman_wallpaper.png")));
 
@@ -48,14 +43,4 @@ public class GameAssets extends AssetStorage {
     public Model3DRepository theModel3DRepository() { return model3DRepository; }
 
     public Font arcadeFont(double size) { return font("font.arcade", size); }
-
-    public String translatedGameOverMessage() {
-        return pickerGameOverMessages.nextText();
-    }
-
-    public String translatedLevelCompleteMessage(int levelNumber) {
-        return pickerLevelCompleteMessages.hasEntries()
-            ? pickerLevelCompleteMessages.nextText() + "\n\n" + translated("level_complete", levelNumber)
-            : "";
-    }
 }
