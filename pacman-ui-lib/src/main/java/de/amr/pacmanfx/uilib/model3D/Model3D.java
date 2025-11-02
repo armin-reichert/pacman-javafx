@@ -15,6 +15,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +37,7 @@ public class Model3D implements Disposable {
         objData = ObjFileImporter.importObjFile(url, StandardCharsets.UTF_8);
         Duration duration = Duration.between(start, Instant.now());
         Logger.info("OBJ file imported ({} millis). URL: '{}'", duration.toMillis(), url);
-        for (TriangleMesh mesh : objData.meshMap().values()) {
+        for (TriangleMesh mesh : objData.triangleMeshMap.values()) {
             try {
                 ObjFileImporter.validateTriangleMesh(mesh);
             } catch (AssertionError error) {
@@ -47,22 +48,24 @@ public class Model3D implements Disposable {
 
     @Override
     public void dispose() {
-        objData.meshMap().clear();
-        objData.materialLibsList().clear();
+        objData.triangleMeshMap.clear();
+        objData.materialMapsList.clear();
         objData = null;
     }
 
     /**
-     * @return map from mesh names to triangle meshes contained in OBJ file
+     * @return (unmodifiable) map from mesh names to triangle meshes contained in OBJ file
      */
     public Map<String, TriangleMesh> meshesByName() {
-        return objData.meshMap();
+        return Collections.unmodifiableMap(objData.triangleMeshMap);
     }
 
     /**
-     * @return list of material maps defined in OBJ file
+     * @return (unmodifiable) list of material maps defined in OBJ file
      */
-    public List<Map<String, Material>> materialLibs() { return objData.materialLibsList(); }
+    public List<Map<String, Material>> materialLibs() {
+        return Collections.unmodifiableList(objData.materialMapsList);
+    }
 
     /**
      * @param name mesh name as specified in OBJ file
@@ -71,8 +74,8 @@ public class Model3D implements Disposable {
      */
     public TriangleMesh mesh(String name) {
         requireNonNull(name);
-        if (objData.meshMap().containsKey(name)) {
-            return objData.meshMap().get(name);
+        if (objData.triangleMeshMap.containsKey(name)) {
+            return objData.triangleMeshMap.get(name);
         }
         throw new Model3DException("No mesh with name %s found", name);
     }

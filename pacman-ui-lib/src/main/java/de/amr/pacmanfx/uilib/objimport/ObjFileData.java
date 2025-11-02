@@ -10,13 +10,17 @@ import javafx.scene.paint.Material;
 import javafx.scene.shape.TriangleMesh;
 
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ObjFileData {
 
-    URL url;
-    Map<String, TriangleMesh> triangleMeshMap = new HashMap<>();
-    List<Map<String, Material>> materialMapsList = new ArrayList<>();
+    public URL url;
+    public Map<String, TriangleMesh> triangleMeshMap = new HashMap<>();
+    public List<Map<String, Material>> materialMapsList = new ArrayList<>();
+
     ObservableFloatArray vertexArray = FXCollections.observableFloatArray();
     ObservableFloatArray uvArray = FXCollections.observableFloatArray();
     ArrayList<Integer> facesList = new ArrayList<>();
@@ -34,31 +38,5 @@ public class ObjFileData {
 
     int normalIndex(int n) {
         return (n < 0) ? n + normalsArray.size() / 3 : n - 1;
-    }
-
-    /**
-     * @return map of parsed triangle meshes with mesh name from OBJ file as key
-     */
-    public Map<String, TriangleMesh> meshMap() {
-        return Collections.unmodifiableMap(triangleMeshMap);
-    }
-
-    /**
-     * @return set of mesh names used in OBJ file
-     */
-    public Set<String> getMeshNames() {
-        return triangleMeshMap.keySet();
-    }
-
-    /**
-     * @param name mesh name
-     * @return triangle mesh with given name or {@code null}
-     */
-    public TriangleMesh getTriangleMesh(String name) {
-        return triangleMeshMap.get(name);
-    }
-
-    public List<Map<String, Material>> materialLibsList() {
-        return materialMapsList;
     }
 }
