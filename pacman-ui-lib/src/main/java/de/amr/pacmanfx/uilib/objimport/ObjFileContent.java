@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.objimport;
 
+import de.amr.pacmanfx.lib.Disposable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableFloatArray;
 import javafx.scene.paint.Material;
@@ -15,9 +16,9 @@ import java.util.*;
 /**
  * Parsed content from an OBJ file.
  */
-public class ObjFileData {
+public class ObjFileContent implements Disposable {
 
-    public ObjFileData(URL url) {
+    public ObjFileContent(URL url) {
         this.url = Objects.requireNonNull(url);
     }
 
@@ -42,5 +43,17 @@ public class ObjFileData {
 
     final int normalIndex(int n) {
         return (n < 0) ? n + normalsArray.size() / 3 : n - 1;
+    }
+
+    @Override
+    public void dispose() {
+        triangleMeshMap.clear();
+        materialMapsList.clear();
+        vertexArray.clear();
+        uvArray.clear();
+        facesList.clear();
+        smoothingGroupList.clear();
+        normalsArray.clear();
+        faceNormalsList.clear();
     }
 }

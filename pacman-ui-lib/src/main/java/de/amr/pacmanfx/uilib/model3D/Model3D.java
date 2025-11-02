@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.uilib.model3D;
 
 import de.amr.pacmanfx.lib.Disposable;
-import de.amr.pacmanfx.uilib.objimport.ObjFileData;
+import de.amr.pacmanfx.uilib.objimport.ObjFileContent;
 import de.amr.pacmanfx.uilib.objimport.ObjFileImporter;
 import javafx.scene.paint.Material;
 import javafx.scene.shape.TriangleMesh;
@@ -22,22 +22,28 @@ import java.util.Map;
 import static java.util.Objects.requireNonNull;
 
 /**
- * A 3D-model imported from a Wavefront .obj file.
+ * API for accessing 3D model data imported from a Wavefront .obj file.
  */
 public class Model3D implements Disposable {
 
-    private ObjFileData objData;
+    private final ObjFileContent objFileContent;
 
     /**
      * @param url URL addressing an OBJ file (Wavefront .obj file format)
      */
     public Model3D(URL url) {
         requireNonNull(url);
+
         Instant start = Instant.now();
-        objData = ObjFileImporter.importObjFile(url, StandardCharsets.UTF_8);
+        objFileContent = ObjFileImporter.importObjFile(url, StandardCharsets.UTF_8);
         Duration duration = Duration.between(start, Instant.now());
+        if (objFileContent == null) {
+            Logger.error("Importing OBJ file with URL '{}' failed!");
+            throw new RuntimeException("OBJ import failed!");
+        }
         Logger.info("OBJ file imported ({} millis). URL: '{}'", duration.toMillis(), url);
-        for (TriangleMesh mesh : objData.triangleMeshMap.values()) {
+
+        for (TriangleMesh mesh : objFileContent.triangleMeshMap.values()) {
             try {
                 ObjFileImporter.validateTriangleMesh(mesh);
             } catch (AssertionError error) {
@@ -48,23 +54,21 @@ public class Model3D implements Disposable {
 
     @Override
     public void dispose() {
-        objData.triangleMeshMap.clear();
-        objData.materialMapsList.clear();
-        objData = null;
+        objFileContent.dispose();
     }
 
     /**
      * @return (unmodifiable) map from mesh names to triangle meshes contained in OBJ file
      */
     public Map<String, TriangleMesh> meshesByName() {
-        return Collections.unmodifiableMap(objData.triangleMeshMap);
+        return Collections.unmodifiableMap(objFileContent.triangleMeshMap);
     }
 
     /**
      * @return (unmodifiable) list of material maps defined in OBJ file
      */
     public List<Map<String, Material>> materialLibs() {
-        return Collections.unmodifiableList(objData.materialMapsList);
+        return Collections.unmodifiableList(objFileContent.materialMapsList);
     }
 
     /**
@@ -74,8 +78,8 @@ public class Model3D implements Disposable {
      */
     public TriangleMesh mesh(String name) {
         requireNonNull(name);
-        if (objData.triangleMeshMap.containsKey(name)) {
-            return objData.triangleMeshMap.get(name);
+        if (objFileContent.triangleMeshMap.containsKey(name)) {
+            return objFileContent.triangleMeshMap.get(name);
         }
         throw new Model3DException("No mesh with name %s found", name);
     }

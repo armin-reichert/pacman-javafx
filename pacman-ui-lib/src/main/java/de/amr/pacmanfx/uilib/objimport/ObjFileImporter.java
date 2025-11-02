@@ -109,19 +109,20 @@ public class ObjFileImporter {
         }
     }
 
-    public static ObjFileData importObjFile(URL url, Charset charset) {
+    public static ObjFileContent importObjFile(URL url, Charset charset) {
         requireNonNull(url);
         requireNonNull(charset);
-        ObjFileImporter importer = new ObjFileImporter(url);
         try (InputStream is = url.openStream()) {
             var reader = new BufferedReader(new InputStreamReader(is, charset));
+            ObjFileImporter importer = new ObjFileImporter(url);
             importer.parse(reader);
+            return importer.data;
         }
         catch (IOException x) {
             Logger.error(x);
             Logger.error("Importing OBJ file '{}' failed!", url);
+            return null;
         }
-        return importer.data;
     }
 
     private int facesStart = 0;
@@ -131,10 +132,10 @@ public class ObjFileImporter {
     private String meshName = "default";
     private int currentSmoothingGroup = 0;
 
-    private final ObjFileData data;
+    private final ObjFileContent data;
 
     private ObjFileImporter(URL url) {
-        data = new ObjFileData(url);
+        data = new ObjFileContent(url);
     }
 
     private void parse(BufferedReader reader) throws IOException {
