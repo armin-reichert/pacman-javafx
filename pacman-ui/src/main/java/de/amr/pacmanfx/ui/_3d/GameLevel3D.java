@@ -657,12 +657,12 @@ public class GameLevel3D extends Group implements Disposable {
     /**
      * Called on each clock tick (frame).
      */
-    public void tick() {
+    public void update() {
         pac3D.update(gameLevel);
         mutableGhosts3D.forEach(ghost3D -> ghost3D.update(gameLevel));
         bonus3D().ifPresent(bonus3D -> bonus3D.update(gameLevel));
         if (house3D != null) {
-            house3D.tick(gameLevel);
+            house3D.update(gameLevel);
         }
         int livesCounterSize = gameLevel.game().lifeCount() - 1;
         // when the game starts and Pac-Man is not yet visible, show one more

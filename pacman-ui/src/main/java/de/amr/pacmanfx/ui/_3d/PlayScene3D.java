@@ -324,7 +324,7 @@ public class PlayScene3D implements GameScene, SubSceneProvider {
             Logger.info("Tick #{}: 3D game level not yet created", ui.clock().tickCount());
             return;
         }
-        gameLevel3D.tick();
+        gameLevel3D.update();
         updateCamera();
         updateHUD();
         ui.soundManager().setEnabled(!gameLevel.isDemoLevel());

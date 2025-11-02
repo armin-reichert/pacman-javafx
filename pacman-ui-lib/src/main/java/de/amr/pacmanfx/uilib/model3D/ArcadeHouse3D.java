@@ -229,7 +229,7 @@ public class ArcadeHouse3D extends Group implements Disposable {
         this.doorSensitivity = value;
     }
 
-    public void tick(GameLevel gameLevel) {
+    public void update(GameLevel gameLevel) {
         boolean accessRequested = gameLevel
             .ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
             .anyMatch(Ghost::isVisible);
