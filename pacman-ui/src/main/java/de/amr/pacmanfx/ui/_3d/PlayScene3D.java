@@ -21,10 +21,10 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.action.GameAction;
-import de.amr.pacmanfx.ui.api.SubSceneProvider;
 import de.amr.pacmanfx.ui.api.ActionBindingsManager;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
+import de.amr.pacmanfx.ui.api.SubSceneProvider;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.model3D.Bonus3D;
 import de.amr.pacmanfx.uilib.model3D.Energizer3D;
@@ -65,7 +65,7 @@ import static java.util.Objects.requireNonNull;
  * <p>Provides different camera perspectives that can be stepped through using key combinations
  * <code>Alt+LEFT</code> and <code>Alt+RIGHT</code>.
  */
-public class PlayScene3D implements GameScene, SubSceneProvider {
+public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
 
     private static final Color SUB_SCENE_FILL_DARK = Color.BLACK;
     private static final Color SUB_SCENE_FILL_BRIGHT = Color.TRANSPARENT;
@@ -121,6 +121,20 @@ public class PlayScene3D implements GameScene, SubSceneProvider {
         actionBindings = new DefaultActionBindingsManager();
         camera = new PerspectiveCamera(true);
 
+        createPerspectives();
+        createScores3D();
+        var coordinateSystem = new CoordinateSystem();
+        coordinateSystem.visibleProperty().bind(PROPERTY_3D_AXES_VISIBLE);
+
+        getChildren().setAll(gameLevel3DParent, scores3D, coordinateSystem);
+
+        // initial size is irrelevant (size gets bound to parent scene size eventually)
+        subScene = new SubScene(this, 88, 88, true, SceneAntialiasing.BALANCED);
+        subScene.setCamera(camera);
+        subScene.setFill(SUB_SCENE_FILL_DARK);
+    }
+
+    private void createPerspectives() {
         perspectivesByID.put(PerspectiveID.DRONE, new DronePerspective());
         perspectivesByID.put(PerspectiveID.TOTAL, new TotalPerspective());
         perspectivesByID.put(PerspectiveID.TRACK_PLAYER, new TrackingPlayerPerspective());
@@ -139,13 +153,16 @@ public class PlayScene3D implements GameScene, SubSceneProvider {
                 Logger.error("New perspective ID is NULL!");
             }
         });
+    }
 
+    private void createScores3D() {
         scores3D = new Scores3D(
             ui.assets().translated("score.score"),
             ui.assets().translated("score.high_score"),
             ui.assets().arcadeFont(TS)
         );
-        // The score is always displayed in full view, regardless which perspective is used
+
+        // The scores are always displayed in full view, regardless which perspective is used
         scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
         scores3D.rotateProperty().bind(camera.rotateProperty());
 
@@ -153,18 +170,6 @@ public class PlayScene3D implements GameScene, SubSceneProvider {
         scores3D.translateYProperty().bind(gameLevel3DParent.translateYProperty().subtract(4.5 * TS));
         scores3D.translateZProperty().bind(gameLevel3DParent.translateZProperty().subtract(4.5 * TS));
         scores3D.setVisible(false);
-
-        // Just for debugging and posing
-        var coordinateSystem = new CoordinateSystem();
-        coordinateSystem.visibleProperty().bind(PROPERTY_3D_AXES_VISIBLE);
-
-        var root = new Group();
-        // initial size is irrelevant because size gets bound to parent scene size later
-        subScene = new SubScene(root, 88, 88, true, SceneAntialiasing.BALANCED);
-        subScene.setCamera(camera);
-        subScene.setFill(SUB_SCENE_FILL_DARK);
-
-        root.getChildren().setAll(gameLevel3DParent, scores3D, coordinateSystem);
     }
 
     public ObjectProperty<PerspectiveID> perspectiveIDProperty() {
@@ -582,8 +587,7 @@ public class PlayScene3D implements GameScene, SubSceneProvider {
         PerspectiveID id = perspectiveID.get();
         if (id != null && perspectivesByID.containsKey(id)) {
             perspectivesByID.get(id).update(camera, context());
-        }
-        else {
+        } else {
             Logger.error("No perspective with ID '{}' exists", id);
         }
     }
