@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.model3D;
 
+import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Mesh;
@@ -15,7 +16,7 @@ import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
-public class Model3DRepository {
+public class Model3DRepository implements Disposable {
 
     public enum ModelID {
         PAC_MAN("/de/amr/pacmanfx/uilib/model3D/pacman.obj"),
@@ -33,8 +34,6 @@ public class Model3DRepository {
         private final String objFile;
     }
 
-    private final Map<ModelID, Model3D> models = new EnumMap<>(ModelID.class);
-
     private static final String MESH_ID_PAC_MAN_EYES   = "PacMan.Eyes";
     private static final String MESH_ID_PAC_MAN_HEAD   = "PacMan.Head";
     private static final String MESH_ID_PAC_MAN_PALATE = "PacMan.Palate";
@@ -44,6 +43,10 @@ public class Model3DRepository {
     private static final String MESH_ID_GHOST_PUPILS   = "Sphere.010_Sphere.039_grey_wall";
 
     private static final String MESH_ID_PELLET         = "Pellet";
+
+    private final Map<ModelID, Model3D> models = new EnumMap<>(ModelID.class);
+
+    public Model3DRepository() {}
 
     /**
      * @param id one of {@link ModelID#PAC_MAN}, {@link ModelID#GHOST}, {@link ModelID#PELLET}.
@@ -103,5 +106,10 @@ public class Model3DRepository {
 
     public GhostBody createGhostBody(double size, Color dressColor, double rotateY) {
         return new GhostBody(this, size, dressColor, rotateY);
+    }
+
+    @Override
+    public void dispose() {
+        models.values().forEach(Model3D::dispose);
     }
 }
