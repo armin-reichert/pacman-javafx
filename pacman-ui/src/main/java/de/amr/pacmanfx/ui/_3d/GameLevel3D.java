@@ -29,7 +29,9 @@ import de.amr.pacmanfx.uilib.model3D.*;
 import de.amr.pacmanfx.uilib.widgets.MessageView;
 import javafx.animation.*;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.*;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point3D;
@@ -66,7 +68,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameLevel3D extends Group implements Disposable {
 
-    private final IntegerProperty livesCountProperty     = new SimpleIntegerProperty(0);
     private final DoubleProperty  wallBaseHeightProperty = new SimpleDoubleProperty(Wall3D.DEFAULT_BASE_HEIGHT);
     private final DoubleProperty  wallOpacityProperty    = new SimpleDoubleProperty(1);
 
@@ -411,7 +412,6 @@ public class GameLevel3D extends Group implements Disposable {
         livesCounter3D = new LivesCounter3D(animationRegistry, livesCounterShapes);
         livesCounter3D.setTranslateX(2 * TS);
         livesCounter3D.setTranslateY(2 * TS);
-        livesCounter3D.livesCountProperty().bind(livesCountProperty);
         livesCounter3D.pillarColorProperty().set(pillarColor);
         livesCounter3D.plateColorProperty().set(plateColor);
     }
@@ -664,11 +664,11 @@ public class GameLevel3D extends Group implements Disposable {
         if (house3D != null) {
             house3D.update(gameLevel);
         }
-        int livesCounterSize = gameLevel.game().lifeCount() - 1;
+        int lifeCount = gameLevel.game().lifeCount() - 1;
         // when the game starts and Pac-Man is not yet visible, show one more
         boolean oneMore = ui.gameContext().gameState() == GamePlayState.STARTING_GAME_OR_LEVEL && !gameLevel.pac().isVisible();
-        if (oneMore) livesCounterSize += 1;
-        livesCountProperty.set(livesCounterSize);
+        if (oneMore) lifeCount += 1;
+        livesCounter3D.livesCountProperty().set(lifeCount);
 
         boolean visible = gameLevel.game().canStartNewGame();
         if (livesCounter3D != null) {
@@ -890,7 +890,6 @@ public class GameLevel3D extends Group implements Disposable {
         house3D.wallBaseHeightProperty().unbind();
         house3D.light().lightOnProperty().unbind();
 
-        livesCountProperty.unbind();
         wallBaseHeightProperty.unbind();
         wallOpacityProperty.unbind();
 
