@@ -101,7 +101,7 @@ public class GameLevel3D extends Group implements Disposable {
     protected LevelCounter3D levelCounter3D;
     protected LivesCounter3D livesCounter3D;
     protected PacBase3D pac3D;
-    protected List<MutableGhost3D> mutableGhosts3D;
+    protected List<MutableGhost3D> ghosts3D;
     protected Bonus3D bonus3D;
     protected Set<Shape3D> pellets3D;
     protected Set<Energizer3D> energizers3D;
@@ -241,7 +241,7 @@ public class GameLevel3D extends Group implements Disposable {
                             break;
                         }
                     }
-                    MutableGhost3D currentGhost3D = mutableGhosts3D.get(currentlyLightedGhost);
+                    MutableGhost3D currentGhost3D = ghosts3D.get(currentlyLightedGhost);
                     ghostLight.setColor(currentGhost3D.colorSet().normal().dress());
                     ghostLight.translateXProperty().bind(currentGhost3D.translateXProperty());
                     ghostLight.translateYProperty().bind(currentGhost3D.translateYProperty());
@@ -291,7 +291,7 @@ public class GameLevel3D extends Group implements Disposable {
         createLevelCounter3D();
         createLivesCounter3D();
         createPac3D();
-        mutableGhosts3D = gameLevel.ghosts().map(this::createMutatingGhost3D).toList();
+        ghosts3D = gameLevel.ghosts().map(this::createMutatingGhost3D).toList();
         createMaze3D();
         createPellets3D();
         createEnergizers3D();
@@ -307,7 +307,7 @@ public class GameLevel3D extends Group implements Disposable {
         getChildren().add(levelCounter3D);
         getChildren().add(livesCounter3D);
         getChildren().addAll(pac3D, pac3D.light());
-        getChildren().addAll(mutableGhosts3D);
+        getChildren().addAll(ghosts3D);
         getChildren().addAll(house3D.swirls());
         getChildren().add(particleGroupsContainer);
         getChildren().addAll(energizers3D.stream().map(Energizer3D::shape).toList());
@@ -319,7 +319,7 @@ public class GameLevel3D extends Group implements Disposable {
         getChildren().add(ambientLight);
         getChildren().add(ghostLight);
 
-        mutableGhosts3D.forEach(ghost3D -> ghost3D.init(gameLevel));
+        ghosts3D.forEach(ghost3D -> ghost3D.init(gameLevel));
         house3D.startSwirlAnimations();
     }
 
@@ -583,10 +583,10 @@ public class GameLevel3D extends Group implements Disposable {
 
         FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
         Material[] ghostParticleMaterials = {
-            mutableGhosts3D.get(RED_GHOST_SHADOW).ghost3D().normalMaterialSet().dress(),
-            mutableGhosts3D.get(PINK_GHOST_SPEEDY).ghost3D().normalMaterialSet().dress(),
-            mutableGhosts3D.get(CYAN_GHOST_BASHFUL).ghost3D().normalMaterialSet().dress(),
-            mutableGhosts3D.get(ORANGE_GHOST_POKEY).ghost3D().normalMaterialSet().dress(),
+            ghosts3D.get(RED_GHOST_SHADOW).ghost3D().normalMaterialSet().dress(),
+            ghosts3D.get(PINK_GHOST_SPEEDY).ghost3D().normalMaterialSet().dress(),
+            ghosts3D.get(CYAN_GHOST_BASHFUL).ghost3D().normalMaterialSet().dress(),
+            ghosts3D.get(ORANGE_GHOST_POKEY).ghost3D().normalMaterialSet().dress(),
         };
         energizers3D = foodLayer.tiles().filter(foodLayer::hasFoodAtTile)
             .filter(foodLayer::isEnergizerTile)
@@ -636,7 +636,7 @@ public class GameLevel3D extends Group implements Disposable {
 
     public PacBase3D pac3D() { return pac3D; }
 
-    public List<MutableGhost3D> ghosts3D() { return Collections.unmodifiableList(mutableGhosts3D); }
+    public List<MutableGhost3D> ghosts3D() { return Collections.unmodifiableList(ghosts3D); }
 
     public Optional<Bonus3D> bonus3D() { return Optional.ofNullable(bonus3D); }
 
@@ -659,7 +659,7 @@ public class GameLevel3D extends Group implements Disposable {
      */
     public void update() {
         pac3D.update(gameLevel);
-        mutableGhosts3D.forEach(ghost3D -> ghost3D.update(gameLevel));
+        ghosts3D.forEach(ghost3D -> ghost3D.update(gameLevel));
         bonus3D().ifPresent(bonus3D -> bonus3D.update(gameLevel));
         if (house3D != null) {
             house3D.update(gameLevel);
@@ -685,7 +685,7 @@ public class GameLevel3D extends Group implements Disposable {
 
     public void onHuntingStart() {
         pac3D.init(gameLevel);
-        mutableGhosts3D.forEach(ghost3D -> ghost3D.init(gameLevel));
+        ghosts3D.forEach(ghost3D -> ghost3D.init(gameLevel));
         energizers3D().forEach(Energizer3D::startPumping);
         house3D.startSwirlAnimations();
         ghostLightAnimation.playFromStart();
@@ -697,7 +697,7 @@ public class GameLevel3D extends Group implements Disposable {
         ghostLightAnimation.stop();
         // do one last update before dying animation starts
         pac3D.update(gameLevel);
-        mutableGhosts3D.forEach(MutableGhost3D::stopAllAnimations);
+        ghosts3D.forEach(MutableGhost3D::stopAllAnimations);
         bonus3D().ifPresent(Bonus3D::expire);
         var animation = new SequentialTransition(
                 pauseSec(2),
@@ -715,7 +715,7 @@ public class GameLevel3D extends Group implements Disposable {
             byte personality = killedGhost.personality();
             int killedIndex = gameLevel.energizerVictims().indexOf(killedGhost);
             Image pointsImage = ui.currentConfig().killedGhostPointsImage(killedGhost, killedIndex);
-            mutableGhosts3D.get(personality).setNumberImage(pointsImage);
+            ghosts3D.get(personality).setNumberImage(pointsImage);
         });
     }
 
@@ -820,7 +820,7 @@ public class GameLevel3D extends Group implements Disposable {
             setDrawModeUnder(maze3D, node -> node instanceof Shape3D && pellets3D.contains(node), newDrawMode);
             setDrawModeUnder(pac3D, includeAll, newDrawMode);
             setDrawModeUnder(livesCounter3D, includeAll, newDrawMode);
-            mutableGhosts3D.forEach(ghost3D -> setDrawModeUnder(ghost3D, includeAll, newDrawMode));
+            ghosts3D.forEach(ghost3D -> setDrawModeUnder(ghost3D, includeAll, newDrawMode));
         }
         catch (Exception x) {
             Logger.error(x);
@@ -961,9 +961,9 @@ public class GameLevel3D extends Group implements Disposable {
             pac3D = null;
             Logger.info("Disposed Pac 3D");
         }
-        if (mutableGhosts3D != null) {
-            disposeAll(mutableGhosts3D);
-            mutableGhosts3D = null;
+        if (ghosts3D != null) {
+            disposeAll(ghosts3D);
+            ghosts3D = null;
             Logger.info("Disposed 3D ghosts");
         }
         if (bonus3D != null) {
