@@ -437,7 +437,7 @@ public class PlayScene3D implements GameScene, SubSceneProvider {
             if (gameLevel.pac().powerTimer().isRunning()) {
                 ui.soundManager().loop(SoundID.PAC_MAN_POWER);
             }
-            gameLevel3D.livesCounter3D.startTracking(gameLevel3D.pac3D);
+            gameLevel3D.livesCounter3D().startTracking(gameLevel3D.pac3D());
         }
         gameLevel3D.updateLevelCounter3D();
         updateHUD();
@@ -575,8 +575,7 @@ public class PlayScene3D implements GameScene, SubSceneProvider {
         gameLevel3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context().gameLevel()));
         Logger.info("Initialized actors of game level 3D");
 
-
-        gameLevel3D.livesCounter3D.startTracking(gameLevel3D.pac3D);
+        gameLevel3D.livesCounter3D().startTracking(gameLevel3D.pac3D());
     }
 
     protected void updateCamera() {

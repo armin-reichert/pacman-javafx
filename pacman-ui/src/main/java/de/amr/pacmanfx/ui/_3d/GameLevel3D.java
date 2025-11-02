@@ -68,12 +68,12 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameLevel3D extends Group implements Disposable {
 
-    private final DoubleProperty  wallBaseHeightProperty = new SimpleDoubleProperty(Wall3D.DEFAULT_BASE_HEIGHT);
-    private final DoubleProperty  wallOpacityProperty    = new SimpleDoubleProperty(1);
+    private final DoubleProperty wallBaseHeightProperty = new SimpleDoubleProperty(Wall3D.DEFAULT_BASE_HEIGHT);
+    private final DoubleProperty wallOpacityProperty    = new SimpleDoubleProperty(1);
 
-    protected final GameUI ui;
-    protected final GameLevel gameLevel;
-    protected final WorldMapColorScheme colorScheme;
+    private final GameUI ui;
+    private final GameLevel gameLevel;
+    private final WorldMapColorScheme colorScheme;
 
     private final AnimationRegistry animationRegistry = new AnimationRegistry();
     private RegisteredAnimation wallColorFlashingAnimation;
@@ -93,21 +93,21 @@ public class GameLevel3D extends Group implements Disposable {
     private PhongMaterial pelletMaterial;
     private PhongMaterial particleMaterial;
 
-    protected AmbientLight ambientLight;
-    protected PointLight ghostLight;
+    private AmbientLight ambientLight;
+    private PointLight ghostLight;
 
-    protected Group maze3D;
-    protected Box floor3D;
-    protected ArcadeHouse3D house3D;
-    protected LevelCounter3D levelCounter3D;
-    protected LivesCounter3D livesCounter3D;
-    protected PacBase3D pac3D;
-    protected List<MutableGhost3D> ghosts3D;
-    protected Bonus3D bonus3D;
-    protected Set<Shape3D> pellets3D;
-    protected Set<Energizer3D> energizers3D;
-    protected Group particleGroupsContainer = new Group();
-    protected MessageView messageView;
+    private Group maze3D;
+    private Box floor3D;
+    private ArcadeHouse3D house3D;
+    private LevelCounter3D levelCounter3D;
+    private LivesCounter3D livesCounter3D;
+    private PacBase3D pac3D;
+    private List<MutableGhost3D> ghosts3D;
+    private Bonus3D bonus3D;
+    private Set<Shape3D> pellets3D;
+    private Set<Energizer3D> energizers3D;
+    private Group particleGroupsContainer = new Group();
+    private MessageView messageView;
 
     private int wall3DCount;
 
@@ -628,6 +628,10 @@ public class GameLevel3D extends Group implements Disposable {
 
         energizer3D.setEatenAnimation(explosion);
         return energizer3D;
+    }
+
+    public LivesCounter3D livesCounter3D() {
+        return livesCounter3D;
     }
 
     public Box floor3D() {
