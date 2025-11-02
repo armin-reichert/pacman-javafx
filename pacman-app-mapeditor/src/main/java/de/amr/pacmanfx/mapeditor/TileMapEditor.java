@@ -7,7 +7,7 @@ package de.amr.pacmanfx.mapeditor;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.lib.worldmap.WorldMapChecker;
 import de.amr.pacmanfx.mapeditor.actions.Action_CreateEmptyMap;
-import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
+import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.beans.property.*;
@@ -50,7 +50,7 @@ public class TileMapEditor {
         }
     };
 
-    public TileMapEditor(Stage stage, Model3DRepository model3DRepository) {
+    public TileMapEditor(Stage stage, PacManModel3DRepository model3DRepository) {
         requireNonNull(stage);
         requireNonNull(model3DRepository);
         ui = new TileMapEditorUI(stage, this, model3DRepository);

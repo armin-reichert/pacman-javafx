@@ -16,22 +16,22 @@ import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
-public class Model3DRepository implements Disposable {
+public class PacManModel3DRepository implements Disposable {
 
     public enum ModelID {
         PAC_MAN("/de/amr/pacmanfx/uilib/model3D/pacman.obj"),
         GHOST("/de/amr/pacmanfx/uilib/model3D/ghost.obj"),
         PELLET("/de/amr/pacmanfx/uilib/model3D/pellet.obj");
 
-        ModelID(String objFile) {
-            this.objFile = objFile;
+        ModelID(String objFilePath) {
+            this.objFilePath = objFilePath;
         }
 
         public String objFile() {
-            return objFile;
+            return objFilePath;
         }
 
-        private final String objFile;
+        private final String objFilePath;
     }
 
     private static final String MESH_ID_PAC_MAN_EYES   = "PacMan.Eyes";
@@ -46,7 +46,7 @@ public class Model3DRepository implements Disposable {
 
     private final Map<ModelID, Model3D> models = new EnumMap<>(ModelID.class);
 
-    public Model3DRepository() {}
+    public PacManModel3DRepository() {}
 
     /**
      * @param id one of {@link ModelID#PAC_MAN}, {@link ModelID#GHOST}, {@link ModelID#PELLET}.
@@ -61,7 +61,7 @@ public class Model3DRepository implements Disposable {
     }
 
     private Model3D loadModel(String path) {
-        ResourceManager rm = () -> Model3DRepository.class;
+        ResourceManager rm = () -> PacManModel3DRepository.class;
         URL url = rm.url(path);
         try {
             if (url != null) {

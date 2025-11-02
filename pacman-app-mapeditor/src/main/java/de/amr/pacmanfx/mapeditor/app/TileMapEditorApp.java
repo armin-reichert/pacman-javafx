@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.mapeditor.app;
 
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
-import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
+import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
@@ -26,7 +26,7 @@ public class TileMapEditorApp extends Application  {
     @Override
     public void start(Stage stage) {
         try {
-            var editor = new TileMapEditor(stage, new Model3DRepository());
+            var editor = new TileMapEditor(stage, new PacManModel3DRepository());
 
             var miQuit = new MenuItem(translated("quit"));
             miQuit.setOnAction(e -> editor.ui().afterCheckForUnsavedChanges(stage::close));

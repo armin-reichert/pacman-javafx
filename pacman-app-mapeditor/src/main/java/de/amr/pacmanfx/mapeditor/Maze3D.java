@@ -12,7 +12,7 @@ import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.DefaultWorldMapPropertyName;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.model3D.GhostBody;
-import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
+import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
 import de.amr.pacmanfx.uilib.model3D.TerrainRenderer3D;
 import de.amr.pacmanfx.uilib.model3D.Wall3D;
 import javafx.beans.property.BooleanProperty;
@@ -103,7 +103,7 @@ public class Maze3D extends Group {
     private final Node pacmanShape3D;
     private final GhostBody[] ghostShapes;
 
-    public Maze3D(Model3DRepository model3DRepository) {
+    public Maze3D(PacManModel3DRepository model3DRepository) {
         requireNonNull(model3DRepository);
 
         camera = new PerspectiveCamera(true);

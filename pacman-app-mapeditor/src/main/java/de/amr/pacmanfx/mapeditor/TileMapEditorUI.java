@@ -12,7 +12,7 @@ import de.amr.pacmanfx.mapeditor.palette.Palette;
 import de.amr.pacmanfx.mapeditor.palette.PaletteID;
 import de.amr.pacmanfx.mapeditor.properties.MapLayerPropertiesEditor;
 import de.amr.pacmanfx.model.DefaultWorldMapPropertyName;
-import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
+import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapColorScheme;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -312,7 +312,7 @@ public class TileMapEditorUI {
 
     // end of property section
 
-    public TileMapEditorUI(Stage stage, TileMapEditor editor, Model3DRepository model3DRepository) {
+    public TileMapEditorUI(Stage stage, TileMapEditor editor, PacManModel3DRepository model3DRepository) {
         this.stage = requireNonNull(stage);
         this.editor = editor;
 
@@ -498,7 +498,7 @@ public class TileMapEditorUI {
         spPreview2D.vvalueProperty().bindBidirectional(spEditCanvas.vvalueProperty());
     }
 
-    private void createPreview3D(Model3DRepository model3DRepository) {
+    private void createPreview3D(PacManModel3DRepository model3DRepository) {
         preview3D = new Preview3D(this, model3DRepository, 500, 500);
         preview3D.foodVisibleProperty().bind(foodVisibleProperty());
         preview3D.terrainVisibleProperty().bind(terrainVisibleProperty());
@@ -634,7 +634,7 @@ public class TileMapEditorUI {
         return text;
     }
 
-    private void createPreviewArea(Model3DRepository model3DRepository) {
+    private void createPreviewArea(PacManModel3DRepository model3DRepository) {
         createPreview2D();
         createPreview3D(model3DRepository);
         createSourceView();

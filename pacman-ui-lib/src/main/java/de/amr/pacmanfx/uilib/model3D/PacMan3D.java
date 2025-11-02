@@ -19,7 +19,7 @@ import static de.amr.pacmanfx.uilib.Ufx.pauseSec;
 public class PacMan3D extends PacBase3D {
 
     public PacMan3D(
-        Model3DRepository model3DRepository,
+        PacManModel3DRepository model3DRepository,
         AnimationRegistry animationRegistry,
         GameLevel gameLevel,
         Pac pac,

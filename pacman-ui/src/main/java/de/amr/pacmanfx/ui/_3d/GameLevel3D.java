@@ -287,7 +287,7 @@ public class GameLevel3D extends Group implements Disposable {
 
         colorScheme = createWorldMapColorScheme();
 
-        Model3DRepository model3DRepository = ui.assets().theModel3DRepository();
+        PacManModel3DRepository model3DRepository = ui.assets().theModel3DRepository();
         createMaterials();
         ghostDressMeshViews  = createGhostComponentMeshViews(model3DRepository.ghostDressMesh());
         ghostPupilsMeshViews = createGhostComponentMeshViews(model3DRepository.ghostPupilsMesh());

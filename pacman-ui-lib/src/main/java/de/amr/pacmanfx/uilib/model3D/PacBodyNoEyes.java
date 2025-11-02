@@ -24,7 +24,7 @@ public class PacBodyNoEyes extends Group implements Disposable {
     private PhongMaterial headMaterial;
     private PhongMaterial palateMaterial;
 
-    public PacBodyNoEyes(Model3DRepository model3DRepository, double size, Color headColor, Color palateColor) {
+    public PacBodyNoEyes(PacManModel3DRepository model3DRepository, double size, Color headColor, Color palateColor) {
         headMaterial = defaultPhongMaterial(headColor);
         headMeshView = new MeshView(model3DRepository.pacHeadMesh());
         headMeshView.setMaterial(headMaterial);

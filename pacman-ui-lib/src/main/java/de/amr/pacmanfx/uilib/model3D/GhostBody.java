@@ -24,7 +24,7 @@ public class GhostBody extends Group implements Disposable {
     private MeshView pupilsMeshView;
     private MeshView eyeballsMeshView;
 
-    public GhostBody(Model3DRepository model3DRepository, double size, Color dressColor, double rotateY) {
+    public GhostBody(PacManModel3DRepository model3DRepository, double size, Color dressColor, double rotateY) {
         dressMaterial = defaultPhongMaterial(dressColor);
         dressMeshView = new MeshView(model3DRepository.ghostDressMesh());
         dressMeshView.setMaterial(dressMaterial);

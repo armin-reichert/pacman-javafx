@@ -19,7 +19,7 @@ public class MsPacMan3D extends PacBase3D {
     private MsPacManFemaleParts femaleBodyParts;
 
     public MsPacMan3D(
-        Model3DRepository model3DRepository,
+        PacManModel3DRepository model3DRepository,
         AnimationRegistry animationRegistry,
         Pac msPacMan,
         double size,

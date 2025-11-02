@@ -27,7 +27,7 @@ public class PacBody extends Group implements Disposable {
     private MeshView eyesMeshView;
     private MeshView palateMeshView;
 
-    public PacBody(Model3DRepository model3DRepository, double size, Color headColor, Color eyesColor, Color palateColor) {
+    public PacBody(PacManModel3DRepository model3DRepository, double size, Color headColor, Color eyesColor, Color palateColor) {
         headMaterial = defaultPhongMaterial(headColor);
         headMeshView = new MeshView(model3DRepository.pacHeadMesh());
         headMeshView.setMaterial(headMaterial);

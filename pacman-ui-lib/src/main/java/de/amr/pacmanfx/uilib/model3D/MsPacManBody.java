@@ -9,10 +9,10 @@ public class MsPacManBody extends Group implements Disposable {
     private PacBody body;
     private MsPacManFemaleParts femaleParts;
 
-    public MsPacManBody(Model3DRepository model3DRepository,
-        double size,
-        Color headColor, Color eyesColor, Color palateColor,
-        Color hairBowColor, Color hairBowPearlsColor, Color boobsColor)
+    public MsPacManBody(PacManModel3DRepository model3DRepository,
+                        double size,
+                        Color headColor, Color eyesColor, Color palateColor,
+                        Color hairBowColor, Color hairBowPearlsColor, Color boobsColor)
     {
         body = model3DRepository.createPacBody(size, headColor, eyesColor, palateColor);
         femaleParts = model3DRepository.createFemaleBodyParts(size, hairBowColor, hairBowPearlsColor, boobsColor);

@@ -1,6 +1,6 @@
 package experiments;
 
-import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
+import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
 import javafx.application.Application;
 import javafx.scene.*;
 import javafx.scene.control.Menu;
@@ -23,7 +23,7 @@ public class ModelViewer extends Application {
     static final String DIR = REPOSITORY_DIR
         + "pacman-ui-lib/src/main/resources/de/amr/pacmanfx/uilib/model3D";
 
-    private final Model3DRepository model3DRepository = new Model3DRepository();
+    private final PacManModel3DRepository model3DRepository = new PacManModel3DRepository();
     private Stage stage;
     private SubScene previewArea;
     private final BorderPane layoutPane = new BorderPane();
