@@ -36,7 +36,7 @@ public class ObjModelLoaderTest {
         var sb = new StringBuilder();
         sb.append("3D model loaded from URL ").append(url).append("\n");
         sb.append("\tMeshes:\n");
-        for (var entry : model.meshesByName().entrySet()) {
+        for (var entry : model.meshMap().entrySet()) {
             sb.append("\t\t'%s': %s%n".formatted(entry.getKey(), entry.getValue()));
         }
         sb.append("\tMaterials:\n");

@@ -60,8 +60,21 @@ public class Model3D implements Disposable {
     /**
      * @return (unmodifiable) map from mesh names to triangle meshes contained in OBJ file
      */
-    public Map<String, TriangleMesh> meshesByName() {
+    public Map<String, TriangleMesh> meshMap() {
         return Collections.unmodifiableMap(objFileContent.triangleMeshMap);
+    }
+
+    /**
+     * @param meshName mesh name as specified in OBJ file
+     * @return triangle mesh with given name
+     * @throws Model3DException if mesh with this name does not exist
+     */
+    public TriangleMesh mesh(String meshName) {
+        requireNonNull(meshName);
+        if (objFileContent.triangleMeshMap.containsKey(meshName)) {
+            return objFileContent.triangleMeshMap.get(meshName);
+        }
+        throw new Model3DException("No mesh with name '%s' found", meshName);
     }
 
     /**
@@ -69,18 +82,5 @@ public class Model3D implements Disposable {
      */
     public List<Map<String, Material>> materialLibs() {
         return Collections.unmodifiableList(objFileContent.materialMapsList);
-    }
-
-    /**
-     * @param name mesh name as specified in OBJ file
-     * @return triangle mesh with given name
-     * @throws Model3DException if mesh with this name does not exist
-     */
-    public TriangleMesh mesh(String name) {
-        requireNonNull(name);
-        if (objFileContent.triangleMeshMap.containsKey(name)) {
-            return objFileContent.triangleMeshMap.get(name);
-        }
-        throw new Model3DException("No mesh with name %s found", name);
     }
 }
