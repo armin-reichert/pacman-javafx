@@ -51,48 +51,55 @@ public class LivesCounter3D extends Group implements Disposable {
         }
     }
 
+    private class Stand extends Group {
+        Cylinder pillar;
+        Cylinder podium;
+
+        public Stand() {
+            pillar = new Cylinder(1, 0.1);
+            pillar.materialProperty().bind(pillarMaterial);
+            pillar.translateZProperty().bind(pillar.heightProperty().multiply(-0.5));
+            pillar.setRotationAxis(Rotate.X_AXIS);
+            pillar.setRotate(90);
+
+            podium = new Cylinder();
+            podium.radiusProperty().bind(plateRadius);
+            podium.heightProperty().bind(plateThickness);
+            podium.materialProperty().bind(plateMaterial);
+            podium.translateZProperty().bind(pillar.heightProperty().add(plateThickness).negate());
+            podium.setRotationAxis(Rotate.X_AXIS);
+            podium.setRotate(90);
+
+            getChildren().setAll(pillar, podium);
+        }
+    }
+
     public LivesCounter3D(AnimationRegistry animationRegistry, Node[] pacShapeArray) {
         requireNonNull(animationRegistry);
         pillarMaterial.bind(pillarColor.map(Ufx::defaultPhongMaterial));
         plateMaterial.bind((plateColor.map(Ufx::defaultPhongMaterial)));
 
         var standsGroup = new Group();
+        getChildren().addAll(standsGroup);
         for (int i = 0; i < pacShapeArray.length; ++i) {
-            final Node pacShape = pacShapeArray[i];
             final int x = i * 2 * TS;
-            final double shapeRadius = 0.5 * pacShape.getBoundsInParent().getHeight(); // take scale transform into account!
 
+            var stand = new Stand();
+            stand.pillar.heightProperty().bind(pillarHeight.add(i % 2 == 0 ? 0 : 4));
+            stand.setTranslateX(x);
+            standsGroup.getChildren().add(stand);
+
+            final Node pacShape = pacShapeArray[i];
+            final double shapeRadius = 0.5 * pacShape.getBoundsInParent().getHeight(); // take scale transform into account!
             pacShape.setUserData(i);
             pacShape.setTranslateX(x);
             pacShape.setTranslateY(0);
             pacShape.visibleProperty().bind(livesCount.map(count -> count.intValue() > (int) pacShape.getUserData()));
-
-            var pillar = new Cylinder(1, 0.1);
-            pillar.heightProperty().bind(pillarHeight.add(i % 2 == 0 ? 0 : 4));
-            pillar.materialProperty().bind(pillarMaterial);
-            pillar.setTranslateX(x);
-            pillar.translateZProperty().bind(pillar.heightProperty().multiply(-0.5));
-            pillar.setRotationAxis(Rotate.X_AXIS);
-            pillar.setRotate(90);
-
-            var podium = new Cylinder();
-            podium.radiusProperty().bind(plateRadius);
-            podium.heightProperty().bind(plateThickness);
-            podium.materialProperty().bind(plateMaterial);
-            podium.setTranslateX(x);
-            podium.translateZProperty().bind(pillar.heightProperty().add(plateThickness).negate());
-            podium.setRotationAxis(Rotate.X_AXIS);
-            podium.setRotate(90);
-
-            Group stand = new Group(pillar, podium);
-            standsGroup.getChildren().add(stand);
-
             // let Pac shape sit on top of plate
-            pacShape.translateZProperty().bind(pillar.heightProperty().add(plateThickness).add(shapeRadius).negate());
+            pacShape.translateZProperty().bind(stand.pillar.heightProperty().add(plateThickness).add(shapeRadius).negate());
 
             getChildren().add(pacShape);
         }
-        getChildren().addAll(standsGroup /*, light*/);
 
         trackers = new ArrayList<>();
         for (Node pacShape : pacShapeArray) {
