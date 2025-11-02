@@ -134,8 +134,7 @@ public class ObjFileImporter {
     private final ObjFileData data;
 
     private ObjFileImporter(URL url) {
-        data = new ObjFileData();
-        data.url = url;
+        data = new ObjFileData(url);
     }
 
     private void parse(BufferedReader reader) throws IOException {

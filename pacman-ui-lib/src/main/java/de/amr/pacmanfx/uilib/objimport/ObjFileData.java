@@ -10,33 +10,37 @@ import javafx.scene.paint.Material;
 import javafx.scene.shape.TriangleMesh;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+/**
+ * Parsed content from an OBJ file.
+ */
 public class ObjFileData {
 
-    public URL url;
-    public Map<String, TriangleMesh> triangleMeshMap = new HashMap<>();
-    public List<Map<String, Material>> materialMapsList = new ArrayList<>();
+    public ObjFileData(URL url) {
+        this.url = Objects.requireNonNull(url);
+    }
 
-    ObservableFloatArray vertexArray = FXCollections.observableFloatArray();
-    ObservableFloatArray uvArray = FXCollections.observableFloatArray();
-    ArrayList<Integer> facesList = new ArrayList<>();
-    ArrayList<Integer> smoothingGroupList = new ArrayList<>();
-    ObservableFloatArray normalsArray = FXCollections.observableFloatArray();
-    ArrayList<Integer> faceNormalsList = new ArrayList<>();
+    public final URL url;
+    public final Map<String, TriangleMesh> triangleMeshMap = new HashMap<>();
+    public final List<Map<String, Material>> materialMapsList = new ArrayList<>();
 
-    int vertexIndex(int v) {
+    final ObservableFloatArray vertexArray = FXCollections.observableFloatArray();
+    final ObservableFloatArray uvArray = FXCollections.observableFloatArray();
+    final ArrayList<Integer> facesList = new ArrayList<>();
+    final ArrayList<Integer> smoothingGroupList = new ArrayList<>();
+    final ObservableFloatArray normalsArray = FXCollections.observableFloatArray();
+    final ArrayList<Integer> faceNormalsList = new ArrayList<>();
+
+    final int vertexIndex(int v) {
         return (v < 0) ? v + vertexArray.size() / 3 : v - 1;
     }
 
-    int uvIndex(int uv) {
+    final int uvIndex(int uv) {
         return (uv < 0) ? uv + uvArray.size() / 2 : uv - 1;
     }
 
-    int normalIndex(int n) {
+    final int normalIndex(int n) {
         return (n < 0) ? n + normalsArray.size() / 3 : n - 1;
     }
 }
