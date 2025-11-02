@@ -262,9 +262,11 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         }
 
         sceneRenderer.drawHorizontalBar(nesColor(0x20), nesColor(0x21), sizeInPx().x(), TS, 20);
+
+        float y = 48;
         sceneRenderer.fillText("MS PAC-MAN OPTIONS", NES_YELLOW, COL_LABEL + 3 * TS, 48);
 
-        int y = 72;
+        y += TS(3);
         // Players (not implemented)
         drawMarkerIfSelected(OPTION_PLAYERS, y, sceneRenderer.arcadeFontTS());
         sceneRenderer.fillText("TYPE", NES_YELLOW, COL_LABEL, y);
@@ -272,7 +274,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         // grey out
         sceneRenderer.fillText("1 PLAYER", nesColor(0x10), COL_LABEL + 6 * TS, y);
 
-        y = 96;
+        y += TS(3);
         // Pac-Booster
         drawMarkerIfSelected(OPTION_PAC_BOOSTER, y, sceneRenderer.arcadeFontTS());
         sceneRenderer.fillText("PAC BOOSTER", NES_YELLOW, COL_LABEL, y);
@@ -284,21 +286,21 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         };
         sceneRenderer.fillText(pacBoosterText, NES_WHITE, COL_VALUE, y);
 
-        y = 120;
+        y += TS(3);
         // Game difficulty
         drawMarkerIfSelected(OPTION_DIFFICULTY, y, sceneRenderer.arcadeFontTS());
         sceneRenderer.fillText("GAME DIFFICULTY", NES_YELLOW, COL_LABEL, y);
         sceneRenderer.fillText(":", NES_YELLOW, COL_COLON, y);
         sceneRenderer.fillText(theGame().difficulty().name(), NES_WHITE, COL_VALUE, y);
 
-        y = 144;
+        y += TS(3);
         // Maze (type) selection
         drawMarkerIfSelected(OPTION_MAZE_SELECTION, y, sceneRenderer.arcadeFontTS());
         sceneRenderer.fillText("MAZE SELECTION", NES_YELLOW, COL_LABEL, y);
         sceneRenderer.fillText(":", NES_YELLOW, COL_COLON, y);
         sceneRenderer.fillText(theGame().mapCategory().name(), NES_WHITE, COL_VALUE, y);
 
-        y = 168;
+        y += TS(3);
         // Starting level number
         drawMarkerIfSelected(OPTION_STARTING_LEVEL, y, sceneRenderer.arcadeFontTS());
         sceneRenderer.fillText("STARTING LEVEL", NES_YELLOW, COL_LABEL, y);
@@ -317,9 +319,14 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
             sceneRenderer.drawSprite(continuesSprite, COL_VALUE + 3 * TS, y - 8, true);
         }
 
-        sceneRenderer.fillText("MOVE ARROW WITH JOYPAD",      NES_YELLOW, 4 * TS,  192);
-        sceneRenderer.fillText("CHOOSE OPTIONS WITH A AND B", NES_YELLOW, 2 * TS,  200);
-        sceneRenderer.fillText("PRESS START TO START GAME",   NES_YELLOW, 3 * TS,  208);
+        y += TS(3);
+        sceneRenderer.fillText("MOVE ARROW WITH JOYPAD",      NES_YELLOW, 4 * TS,  y);
+
+        y += TS(1);
+        sceneRenderer.fillText("CHOOSE OPTIONS WITH A AND B", NES_YELLOW, 2 * TS,  y);
+
+        y += TS(1);
+        sceneRenderer.fillText("PRESS START TO START GAME",   NES_YELLOW, 3 * TS,  y);
 
         sceneRenderer.drawHorizontalBar(nesColor(0x20), nesColor(0x21), sizeInPx().x(), TS, 212);
     }
