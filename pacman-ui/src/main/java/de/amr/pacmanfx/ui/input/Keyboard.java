@@ -12,7 +12,6 @@ import javafx.scene.input.KeyEvent;
 import org.tinylog.Logger;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static javafx.scene.input.KeyCombination.*;
 
@@ -33,13 +32,6 @@ public final class Keyboard {
         return new KeyCodeCombination(code, SHIFT_DOWN);
     }
     public static KeyCombination alt_shift(KeyCode code) { return new KeyCodeCombination(code, SHIFT_DOWN, ALT_DOWN); }
-
-    public static String format(KeyCombination... combinations) {
-        return Arrays.stream(combinations)
-            .map(KeyCombination::toString)
-            .map(s -> "[" + s + "]")
-            .collect(Collectors.joining(", "));
-    }
 
     private final Set<KeyCode> pressedKeys = new HashSet<>();
     private final Map<KeyCombination, ActionBindingsManager> actionBindings = new HashMap<>();
