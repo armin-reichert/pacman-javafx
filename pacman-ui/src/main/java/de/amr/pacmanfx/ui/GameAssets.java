@@ -6,7 +6,6 @@ package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
-import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
 import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.uilib.Ufx.createImageBackground;
@@ -18,11 +17,7 @@ public class GameAssets extends AssetStorage {
 
     private static final ResourceManager GLOBAL_RESOURCES = () -> GameUI_Implementation.class;
 
-    private final PacManModel3DRepository model3DRepository;
-
     public GameAssets() {
-        model3DRepository = new PacManModel3DRepository();
-
         setTextResources(GLOBAL_RESOURCES.getModuleBundle("de.amr.pacmanfx.ui.localized_texts"));
 
         set("background.scene",        createImageBackground(GLOBAL_RESOURCES.loadImage("graphics/pacman_wallpaper.png")));
@@ -39,8 +34,6 @@ public class GameAssets extends AssetStorage {
         set("voice.immunity.off",      GLOBAL_RESOURCES.url("sound/voice/immunity-off.mp3"));
         set("voice.immunity.on",       GLOBAL_RESOURCES.url("sound/voice/immunity-on.mp3"));
     }
-
-    public PacManModel3DRepository theModel3DRepository() { return model3DRepository; }
 
     public Font arcadeFont(double size) { return font("font.arcade", size); }
 }

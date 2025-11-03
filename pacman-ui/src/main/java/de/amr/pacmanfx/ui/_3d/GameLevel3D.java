@@ -287,11 +287,10 @@ public class GameLevel3D extends Group implements Disposable {
 
         colorScheme = createWorldMapColorScheme();
 
-        PacManModel3DRepository model3DRepository = ui.assets().theModel3DRepository();
         createMaterials();
-        ghostDressMeshViews  = createGhostComponentMeshViews(model3DRepository.ghostDressMesh());
-        ghostPupilsMeshViews = createGhostComponentMeshViews(model3DRepository.ghostPupilsMesh());
-        ghostEyesMeshViews   = createGhostComponentMeshViews(model3DRepository.ghostEyeballsMesh());
+        ghostDressMeshViews  = createGhostComponentMeshViews(PacManModel3DRepository.theRepository().ghostDressMesh());
+        ghostPupilsMeshViews = createGhostComponentMeshViews(PacManModel3DRepository.theRepository().ghostPupilsMesh());
+        ghostEyesMeshViews   = createGhostComponentMeshViews(PacManModel3DRepository.theRepository().ghostEyeballsMesh());
 
         createLevelCounter3D();
         createLivesCounter3D();
@@ -543,7 +542,7 @@ public class GameLevel3D extends Group implements Disposable {
 
     private void createPellets3D() {
         float radius = ui.preferences().getFloat("3d.pellet.radius");
-        Mesh mesh = ui.assets().theModel3DRepository().pelletMesh();
+        Mesh mesh = PacManModel3DRepository.theRepository().pelletMesh();
         var prototype = new MeshView(mesh);
         Bounds bounds = prototype.getBoundsInLocal();
         double maxExtent = Math.max(Math.max(bounds.getWidth(), bounds.getHeight()), bounds.getDepth());

@@ -40,6 +40,7 @@ import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.MsPacMan3D;
 import de.amr.pacmanfx.uilib.model3D.MsPacManBody;
+import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
 import de.amr.pacmanfx.uilib.rendering.CommonRenderInfoKey;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
 import javafx.scene.canvas.Canvas;
@@ -339,7 +340,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     @Override
     public MsPacManBody createLivesCounterShape3D() {
-        return ui.assets().theModel3DRepository().createMsPacManBody(
+        return PacManModel3DRepository.theRepository().createMsPacManBody(
             ui.preferences().getFloat("3d.lives_counter.shape_size"),
             assets.color("pac.color.head"),
             assets.color("pac.color.eyes"),
@@ -353,7 +354,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     @Override
     public MsPacMan3D createPac3D(AnimationRegistry animationRegistry, GameLevel gameLevel, Pac pac) {
         var pac3D = new MsPacMan3D(
-            ui.assets().theModel3DRepository(),
+            PacManModel3DRepository.theRepository(),
             animationRegistry,
             pac,
             ui.preferences().getFloat("3d.pac.size"),

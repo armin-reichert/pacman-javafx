@@ -32,6 +32,7 @@ import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.PacBody;
 import de.amr.pacmanfx.uilib.model3D.PacMan3D;
+import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
 import javafx.scene.canvas.Canvas;
@@ -235,7 +236,7 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
 
     @Override
     public PacBody createLivesCounterShape3D() {
-        return ui.assets().theModel3DRepository().createPacBody(
+        return PacManModel3DRepository.theRepository().createPacBody(
             ui.preferences().getFloat("3d.lives_counter.shape_size"),
             assets.color("pac.color.head"),
             assets.color("pac.color.eyes"),
@@ -245,7 +246,7 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
 
     @Override
     public PacMan3D createPac3D(AnimationRegistry animationRegistry, GameLevel gameLevel, Pac pac) {
-        var pac3D = new PacMan3D(ui.assets().theModel3DRepository(),
+        var pac3D = new PacMan3D(PacManModel3DRepository.theRepository(),
             animationRegistry,
             gameLevel,
             pac,

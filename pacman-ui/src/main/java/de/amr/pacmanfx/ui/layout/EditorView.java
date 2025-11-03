@@ -11,6 +11,7 @@ import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.GameAssets;
 import de.amr.pacmanfx.ui.api.ActionBindingsManager;
 import de.amr.pacmanfx.ui.api.GameUI_View;
+import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
@@ -31,7 +32,7 @@ public class EditorView implements GameUI_View {
     private Consumer<TileMapEditor> quitEditorAction = editor -> {};
 
     public EditorView(Stage stage, GameAssets assets) {
-        editor = new TileMapEditor(stage, assets.theModel3DRepository());
+        editor = new TileMapEditor(stage, PacManModel3DRepository.theRepository());
         MenuItem miQuitEditor = createQuitEditorMenuItem(assets);
         editor.ui().menuBar().menuFile().getItems().addAll(new SeparatorMenuItem(), miQuitEditor);
         editor.ui().layoutPane().setBackground(colorBackground(Color.web("#dddddd"))); // JavaFX default grey

@@ -24,11 +24,20 @@ public class PacManModel3DRepository implements Disposable {
 
     private static final String MESH_ID_PELLET         = "Pellet";
 
+    private static PacManModel3DRepository it;
+
+    public static PacManModel3DRepository theRepository() {
+        if (it == null) {
+            it = new PacManModel3DRepository();
+        }
+        return it;
+    }
+
     private final Model3D model3D_PacMan;
     private final Model3D model3D_Ghost;
     private final Model3D model3D_Pellet;
 
-    public PacManModel3DRepository() {
+    private PacManModel3DRepository() {
         model3D_PacMan = loadModel("/de/amr/pacmanfx/uilib/model3D/pacman.obj");
         model3D_Ghost  = loadModel("/de/amr/pacmanfx/uilib/model3D/ghost.obj");
         model3D_Pellet = loadModel("/de/amr/pacmanfx/uilib/model3D/pellet.obj");
