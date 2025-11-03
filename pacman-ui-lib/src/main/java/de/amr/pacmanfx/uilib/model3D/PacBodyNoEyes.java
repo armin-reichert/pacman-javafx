@@ -8,6 +8,7 @@ import de.amr.pacmanfx.lib.Disposable;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Mesh;
 import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
@@ -24,13 +25,13 @@ public class PacBodyNoEyes extends Group implements Disposable {
     private PhongMaterial headMaterial;
     private PhongMaterial palateMaterial;
 
-    public PacBodyNoEyes(PacManModel3DRepository model3DRepository, double size, Color headColor, Color palateColor) {
+    public PacBodyNoEyes(double size, Mesh headMesh, Color headColor, Mesh palateMesh, Color palateColor) {
         headMaterial = defaultPhongMaterial(headColor);
-        headMeshView = new MeshView(model3DRepository.pacHeadMesh());
+        headMeshView = new MeshView(headMesh);
         headMeshView.setMaterial(headMaterial);
 
         palateMaterial = defaultPhongMaterial(palateColor);
-        palateMeshView = new MeshView(model3DRepository.pacPalateMesh());
+        palateMeshView = new MeshView(palateMesh);
         palateMeshView.setMaterial(palateMaterial);
 
         var bounds = headMeshView.getBoundsInLocal();

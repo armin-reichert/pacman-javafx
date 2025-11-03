@@ -8,6 +8,7 @@ import de.amr.pacmanfx.lib.Disposable;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Mesh;
 import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
@@ -27,17 +28,22 @@ public class PacBody extends Group implements Disposable {
     private MeshView eyesMeshView;
     private MeshView palateMeshView;
 
-    public PacBody(PacManModel3DRepository model3DRepository, double size, Color headColor, Color eyesColor, Color palateColor) {
+    public PacBody(
+        double size,
+        Mesh headMesh, Color headColor,
+        Mesh eyesMesh, Color eyesColor,
+        Mesh palateMesh, Color palateColor)
+    {
         headMaterial = defaultPhongMaterial(headColor);
-        headMeshView = new MeshView(model3DRepository.pacHeadMesh());
+        headMeshView = new MeshView(headMesh);
         headMeshView.setMaterial(headMaterial);
 
         eyesMaterial = defaultPhongMaterial(eyesColor);
-        eyesMeshView = new MeshView(model3DRepository.pacEyesMesh());
+        eyesMeshView = new MeshView(eyesMesh);
         eyesMeshView.setMaterial(eyesMaterial);
 
         palateMaterial = defaultPhongMaterial(palateColor);
-        palateMeshView = new MeshView(model3DRepository.pacPalateMesh());
+        palateMeshView = new MeshView(palateMesh);
         palateMeshView.setMaterial(palateMaterial);
 
         getChildren().addAll(headMeshView, eyesMeshView, palateMeshView);

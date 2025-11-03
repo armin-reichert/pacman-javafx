@@ -60,21 +60,20 @@ public class PacManModel3DRepository implements Disposable {
     public Mesh pelletMesh()        { return model3D_Pellet.mesh(MESH_ID_PELLET); }
 
     public PacBody createPacBody(double size, Color headColor, Color eyesColor, Color palateColor) {
-        return new PacBody(this, size, headColor, eyesColor, palateColor);
+        return new PacBody(size, pacHeadMesh(), headColor, pacEyesMesh(), eyesColor, pacPalateMesh(), palateColor);
     }
 
     public PacBodyNoEyes createBlindPacBody(double size, Color headColor, Color palateColor) {
-        return new PacBodyNoEyes(this, size, headColor, palateColor);
+        return new PacBodyNoEyes(size, pacHeadMesh(), headColor, pacPalateMesh(), palateColor);
     }
 
     public MsPacManFemaleParts createFemaleBodyParts(double pacSize, Color hairBowColor, Color hairBowPearlsColor, Color boobsColor) {
         return new MsPacManFemaleParts(pacSize, hairBowColor, hairBowPearlsColor, boobsColor);
     }
 
-    public MsPacManBody createMsPacManBody(
-            double size,
-            Color headColor, Color eyesColor, Color palateColor,
-            Color hairBowColor, Color hairBowPearlsColor, Color boobsColor)
+    public MsPacManBody createMsPacManBody(double size,
+        Color headColor, Color eyesColor, Color palateColor,
+        Color hairBowColor, Color hairBowPearlsColor, Color boobsColor)
     {
         var body = createPacBody(size, headColor, eyesColor, palateColor);
         var femaleParts = createFemaleBodyParts(size, hairBowColor, hairBowPearlsColor, boobsColor);
@@ -82,8 +81,7 @@ public class PacManModel3DRepository implements Disposable {
     }
 
     public GhostBody createGhostBody(double size, Color dressColor, double rotateY) {
-        return new GhostBody(ghostDressMesh(), ghostPupilsMesh(), ghostEyeballsMesh(),
-            size, dressColor, rotateY);
+        return new GhostBody(ghostDressMesh(), ghostPupilsMesh(), ghostEyeballsMesh(), size, dressColor, rotateY);
     }
 
     @Override
