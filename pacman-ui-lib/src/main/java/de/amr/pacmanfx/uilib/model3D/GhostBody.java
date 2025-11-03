@@ -9,6 +9,7 @@ import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Mesh;
 import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
@@ -24,20 +25,23 @@ public class GhostBody extends Group implements Disposable {
     private MeshView pupilsMeshView;
     private MeshView eyeballsMeshView;
 
-    public GhostBody(PacManModel3DRepository model3DRepository, double size, Color dressColor, double rotateY) {
+    public GhostBody(
+        Mesh dressMesh, Mesh pupilsMesh, Mesh eyeballsMesh,
+        double size, Color dressColor, double rotateY)
+    {
         dressMaterial = defaultPhongMaterial(dressColor);
-        dressMeshView = new MeshView(model3DRepository.ghostDressMesh());
+        dressMeshView = new MeshView(dressMesh);
         dressMeshView.setMaterial(dressMaterial);
         Bounds dressBounds = dressMeshView.getBoundsInLocal();
         var centeredOverOrigin = new Translate(-dressBounds.getCenterX(), -dressBounds.getCenterY(), -dressBounds.getCenterZ());
         dressMeshView.getTransforms().add(centeredOverOrigin);
 
         pupilsMaterial = defaultPhongMaterial(Color.BLUE);
-        pupilsMeshView = new MeshView(model3DRepository.ghostPupilsMesh());
+        pupilsMeshView = new MeshView(pupilsMesh);
         pupilsMeshView.setMaterial(pupilsMaterial);
 
         eyeballsMaterial = defaultPhongMaterial(Color.WHITE);
-        eyeballsMeshView = new MeshView(model3DRepository.ghostEyeballsMesh());
+        eyeballsMeshView = new MeshView(eyeballsMesh);
         eyeballsMeshView.setMaterial(eyeballsMaterial);
 
         var dressGroup = new Group(dressMeshView);
