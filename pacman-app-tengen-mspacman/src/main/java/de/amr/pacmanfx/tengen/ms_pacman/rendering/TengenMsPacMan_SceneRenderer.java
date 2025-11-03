@@ -5,7 +5,6 @@ import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.input.JoypadKeyBinding;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -13,7 +12,7 @@ import javafx.scene.text.Font;
 import static de.amr.pacmanfx.Globals.TS;
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_SceneRenderer extends BaseRenderer implements Renderer {
+public class TengenMsPacMan_SceneRenderer extends BaseRenderer {
 
     private final GameUI_Config uiConfig;
 

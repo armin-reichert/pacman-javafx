@@ -24,7 +24,7 @@ public record TengenMsPacMan_SpriteSheet(Image sourceImage) implements SpriteShe
     private static final SpriteMap<SpriteID> SPRITE_MAP = new SpriteMap<>(SpriteID.class);
 
     static {
-        SPRITE_MAP.add(LARGE_MS_PAC_MAN_TEXT,            rect(15, 191, 152, 40));
+        SPRITE_MAP.add(LARGE_MS_PAC_MAN_TEXT, rect(15, 191, 152, 40));
         SPRITE_MAP.add(INFO_FRAME,            rect(175, 125, 126, 7));
         SPRITE_MAP.add(INFO_BOOSTER,          rect(190, 134, 7, 5));
         SPRITE_MAP.add(INFO_CATEGORY_BIG,     rect(261, 141, 26, 7));
