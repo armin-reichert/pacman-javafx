@@ -74,8 +74,11 @@ public class PacManModel3DRepository implements Disposable {
     public MsPacManBody createMsPacManBody(
             double size,
             Color headColor, Color eyesColor, Color palateColor,
-            Color hairBowColor, Color hairBowPearlsColor, Color boobsColor) {
-        return new MsPacManBody(this, size, headColor, eyesColor, palateColor, hairBowColor, hairBowPearlsColor, boobsColor);
+            Color hairBowColor, Color hairBowPearlsColor, Color boobsColor)
+    {
+        var body = createPacBody(size, headColor, eyesColor, palateColor);
+        var femaleParts = createFemaleBodyParts(size, hairBowColor, hairBowPearlsColor, boobsColor);
+        return new MsPacManBody(body, femaleParts);
     }
 
     public GhostBody createGhostBody(double size, Color dressColor, double rotateY) {
