@@ -4,6 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.lib;
 
+import de.amr.pacmanfx.lib.math.Vector2i;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;

@@ -1,7 +1,7 @@
 package experiments;
 
-import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.lib.Vector2i;
+import de.amr.pacmanfx.lib.math.Vector2f;
+import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.Obstacle;
 import de.amr.pacmanfx.lib.worldmap.ObstacleSegment;
 import de.amr.pacmanfx.lib.worldmap.TerrainTile;

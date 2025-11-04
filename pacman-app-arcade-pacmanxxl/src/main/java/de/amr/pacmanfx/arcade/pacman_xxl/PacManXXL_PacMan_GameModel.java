@@ -10,7 +10,7 @@ import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_HuntingTimer;
 import de.amr.pacmanfx.arcade.pacman.Arcade_LevelData;
 import de.amr.pacmanfx.arcade.pacman.actors.*;
 import de.amr.pacmanfx.event.GameEventType;
-import de.amr.pacmanfx.lib.Vector2i;
+import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
 import de.amr.pacmanfx.lib.worldmap.TerrainTile;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
@@ -25,7 +25,7 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.util.List;
 
-import static de.amr.pacmanfx.lib.RandomNumberSupport.randomInt;
+import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
 import static de.amr.pacmanfx.model.DefaultWorldMapPropertyName.*;
 

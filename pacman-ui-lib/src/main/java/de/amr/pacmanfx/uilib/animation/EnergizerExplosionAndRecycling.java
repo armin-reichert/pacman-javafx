@@ -5,8 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.uilib.animation;
 
 import de.amr.pacmanfx.lib.Disposable;
-import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.lib.Vector3f;
+import de.amr.pacmanfx.lib.math.Vector2f;
+import de.amr.pacmanfx.lib.math.Vector3f;
 import de.amr.pacmanfx.uilib.model3D.ArcadeHouse3D;
 import javafx.animation.Animation;
 import javafx.animation.Transition;
@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.lib.RandomNumberSupport.*;
+import static de.amr.pacmanfx.lib.math.RandomNumberSupport.*;
 import static java.util.Objects.requireNonNull;
 
 /**

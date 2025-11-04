@@ -24,7 +24,7 @@ SOFTWARE.
 
 package de.amr.pacmanfx.uilib.animation;
 
-import de.amr.pacmanfx.lib.Vector2f;
+import de.amr.pacmanfx.lib.math.Vector2f;
 import javafx.animation.Interpolator;
 import javafx.animation.Transition;
 import javafx.scene.Group;

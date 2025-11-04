@@ -31,7 +31,7 @@
  */
 package de.amr.pacmanfx.uilib.objimport;
 
-import de.amr.pacmanfx.lib.Vector3f;
+import de.amr.pacmanfx.lib.math.Vector3f;
 import javafx.scene.shape.TriangleMesh;
 
 import java.util.*;

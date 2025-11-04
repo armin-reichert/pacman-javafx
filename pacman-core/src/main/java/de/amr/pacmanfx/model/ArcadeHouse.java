@@ -6,8 +6,8 @@ package de.amr.pacmanfx.model;
 
 import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.lib.Vector2i;
+import de.amr.pacmanfx.lib.math.Vector2f;
+import de.amr.pacmanfx.lib.math.Vector2i;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.worldmap.TerrainTile.*;

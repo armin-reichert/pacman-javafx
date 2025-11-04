@@ -6,8 +6,8 @@ package de.amr.pacmanfx.model.actors;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.lib.Vector2i;
+import de.amr.pacmanfx.lib.math.Vector2f;
+import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
 import de.amr.pacmanfx.model.GameLevel;
 import javafx.beans.property.ObjectProperty;

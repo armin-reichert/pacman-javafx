@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.CONFIG_KEY_COLOR_MAP;
-import static de.amr.pacmanfx.lib.RandomNumberSupport.randomInt;
+import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomInt;
 import static java.util.Objects.requireNonNull;
 
 public class PacManXXL_Common_MapSelector implements MapSelector {

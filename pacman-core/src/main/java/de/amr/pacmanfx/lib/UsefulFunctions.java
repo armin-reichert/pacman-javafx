@@ -4,6 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.lib;
 
+import de.amr.pacmanfx.lib.math.Vector2f;
+import de.amr.pacmanfx.lib.math.Vector2i;
+
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static java.util.Objects.requireNonNull;

@@ -1,7 +1,7 @@
 package de.amr.pacmanfx.lib.worldmap;
 
 import de.amr.pacmanfx.lib.StopWatch;
-import de.amr.pacmanfx.lib.Vector2i;
+import de.amr.pacmanfx.lib.math.Vector2i;
 import org.tinylog.Logger;
 
 import java.time.Duration;

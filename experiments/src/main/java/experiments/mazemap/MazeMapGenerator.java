@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package experiments.mazemap;
 
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.lib.Vector2i;
+import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.graph.GridGraph;
 import de.amr.pacmanfx.lib.graph.GridGraphImpl;
 import de.amr.pacmanfx.lib.worldmap.FoodTile;

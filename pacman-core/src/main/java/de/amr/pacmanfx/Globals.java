@@ -10,7 +10,7 @@ import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.controller.test.CutScenesTestState;
 import de.amr.pacmanfx.controller.test.LevelMediumTestState;
 import de.amr.pacmanfx.controller.test.LevelShortTestState;
-import de.amr.pacmanfx.lib.Vector2i;
+import de.amr.pacmanfx.lib.math.Vector2i;
 
 import java.util.ArrayList;
 import java.util.List;

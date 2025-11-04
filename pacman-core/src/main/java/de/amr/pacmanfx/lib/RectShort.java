@@ -4,6 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.lib;
 
+import de.amr.pacmanfx.lib.math.Vector2f;
+
 /**
  * A rectangular area with short integer precision.
  *

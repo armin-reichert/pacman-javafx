@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.actors;
 
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameModel;
 import de.amr.pacmanfx.arcade.pacman.Arcade_LevelData;
-import de.amr.pacmanfx.lib.Vector2i;
+import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HuntingPhase;
 import de.amr.pacmanfx.model.actors.Ghost;

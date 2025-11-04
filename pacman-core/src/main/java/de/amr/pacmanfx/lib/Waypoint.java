@@ -4,6 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.lib;
 
+import de.amr.pacmanfx.lib.math.Vector2i;
+
 public record Waypoint(short x, short y) {
 
     public Waypoint(int x, int y) {

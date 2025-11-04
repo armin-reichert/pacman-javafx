@@ -20,4 +20,5 @@ module de.amr.pacmanfx.core {
     exports de.amr.pacmanfx.steering;
     exports de.amr.pacmanfx;
     exports de.amr.pacmanfx.controller.test;
+    exports de.amr.pacmanfx.lib.math;
 }

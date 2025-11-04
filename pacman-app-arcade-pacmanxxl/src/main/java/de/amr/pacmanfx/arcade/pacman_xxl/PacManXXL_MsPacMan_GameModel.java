@@ -11,7 +11,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.actors.*;
 import de.amr.pacmanfx.arcade.pacman.Arcade_LevelData;
 import de.amr.pacmanfx.arcade.pacman.actors.Inky;
 import de.amr.pacmanfx.event.GameEventType;
-import de.amr.pacmanfx.lib.Vector2i;
+import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.ArcadeHouse;

@@ -15,7 +15,7 @@ import de.amr.pacmanfx.arcade.pacman.actors.Inky;
 import de.amr.pacmanfx.arcade.pacman.actors.Pinky;
 import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.event.GameEventType;
-import de.amr.pacmanfx.lib.Vector2i;
+import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.Waypoint;
 import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
@@ -30,7 +30,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.ORANGE_GHOST_POKEY;
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
-import static de.amr.pacmanfx.lib.RandomNumberSupport.*;
+import static de.amr.pacmanfx.lib.math.RandomNumberSupport.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
 import static de.amr.pacmanfx.model.DefaultWorldMapPropertyName.*;

@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.event;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.lib.Vector2i;
+import de.amr.pacmanfx.lib.math.Vector2i;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
