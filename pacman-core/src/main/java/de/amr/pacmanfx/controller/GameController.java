@@ -66,9 +66,8 @@ public class GameController implements GameContext {
             throw new IllegalStateException("User directories could not be created");
         }
         gameEventManager = new GameEventManager(this);
-        gameStateMachine = new StateMachine<>(states) {
-            @Override public GameContext context() { return GameController.this; }
-        };
+
+        gameStateMachine = new StateMachine<>(states, this);
         gameStateMachine.addStateChangeListener((oldState, newState) ->
             gameEventManager.publishEvent(new GameStateChangeEvent(game(), oldState, newState)));
 

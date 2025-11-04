@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * A finite-state machine.
  * <p>
@@ -26,31 +28,51 @@ import java.util.List;
  * @param <C> "Context". Type of the data provided to the state lifecycle methods {@link FsmState#onEnter},
  *            {@link FsmState#onUpdate} and {@link FsmState#onExit}
  */
-public abstract class StateMachine<S extends FsmState<C>, C> {
+public class StateMachine<S extends FsmState<C>, C> {
 
     protected final List<FsmStateChangeListener<S>> stateChangeListeners = new ArrayList<>(5);
+
     protected final List<S> states;
     protected S currentState;
     protected S prevState;
+
+    protected C context;
     protected String name = getClass().getSimpleName();
 
-    protected StateMachine(List<S> states) {
-        this.states = states;
+    public StateMachine(List<S> states) {
+        this.states = requireNonNull(states);
+        if (states.isEmpty()) {
+            throw new IllegalArgumentException("There must be at least one state in a FSM");
+        }
+    }
+
+    public StateMachine(List<S> states, C context) {
+        this.states = requireNonNull(states);
+        if (states.isEmpty()) {
+            throw new IllegalArgumentException("There must be at least one state in a FSM");
+        }
+        this.context = requireNonNull(context);
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    @Override
-    public String toString() {
-        return String.format("FSM[name=%s, state=%s, prev=%s]", name, currentState, prevState);
+    public void setContext(C context) {
+        this.context = requireNonNull(context);
     }
 
     /**
      * @return the context passed to the state lifecycle methods
      */
-    public abstract C context();
+    public C context() {
+        return context;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("FSM[name=%s, state=%s, prev=%s]", name, currentState, prevState);
+    }
 
     /**
      * @return the current state

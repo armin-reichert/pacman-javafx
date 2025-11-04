@@ -53,9 +53,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     private static final float GHOST_FRIGHTENED_SPEED = 0.6f;
     private static final int LEFT_TILE_X = 4;
 
-    private final StateMachine<SceneState, ArcadePacMan_IntroScene> sceneController = new StateMachine<>(List.of(SceneState.values())) {
-        @Override public ArcadePacMan_IntroScene context() { return ArcadePacMan_IntroScene.this; }
-    };
+    private final StateMachine<SceneState, ArcadePacMan_IntroScene> sceneController;
 
     private ArcadePacMan_SpriteSheet spriteSheet;
 
@@ -75,6 +73,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     public ArcadePacMan_IntroScene(GameUI ui) {
         super(ui);
+        sceneController = new StateMachine<>(List.of(SceneState.values()), this);
     }
 
     @Override
