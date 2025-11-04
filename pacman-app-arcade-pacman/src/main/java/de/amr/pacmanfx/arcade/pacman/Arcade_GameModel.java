@@ -174,6 +174,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         setGameLevel(null);
         scoreManager.loadHighScore();
         scoreManager.score().reset();
+        scoreManager.highScore().setEnabled(true);
         gateKeeper.reset();
     }
 
@@ -293,7 +294,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             levelCounter().update(gameLevel.number(), gameLevel.bonusSymbol(0));
             showMessage(gameLevel, MessageType.READY);
             scoreManager.score().setEnabled(true);
-            scoreManager.highScore().setEnabled(true);
+            //scoreManager.highScore().setEnabled(true);
             Logger.info("Level {} started", gameLevel.number());
         }
         // Note: This event is very important because it triggers the creation of the actor animations!

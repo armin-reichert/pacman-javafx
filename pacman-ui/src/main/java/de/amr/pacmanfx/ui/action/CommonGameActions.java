@@ -14,6 +14,7 @@ import de.amr.pacmanfx.controller.test.LevelShortTestState;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
@@ -116,23 +117,18 @@ public interface CommonGameActions {
         }
     };
 
-    GameAction ACTION_ENTER_FULLSCREEN = new GameAction("ENTER_FULLSCREEN") {
-        @Override
-        public void execute(GameUI ui) {
-            ui.stage().setFullScreen(true);
+    private static void disableHighScore(GameUI ui) {
+        Score highScore = ui.gameContext().game().scoreManager().highScore();
+        if (highScore.isEnabled()) {
+            highScore.setEnabled(false);
+            ui.showFlashMessage(Duration.seconds(3), "You dirty cheater! High score DISABLED!"); //TODO localize
         }
-    };
-
-    GameAction ACTION_LET_GAME_STATE_EXPIRE = new GameAction("LET_GAME_STATE_EXPIRE") {
-        @Override
-        public void execute(GameUI ui) {
-            ui.gameContext().gameController().letCurrentGameStateExpire();
-        }
-    };
+    }
 
     GameAction ACTION_CHEAT_ADD_LIVES = new GameAction("CHEAT_ADD_LIVES") {
         @Override
         public void execute(GameUI ui) {
+            disableHighScore(ui);
             ui.gameContext().game().addLives(3);
             ui.showFlashMessage(ui.assets().translated("cheat_add_lives", ui.gameContext().game().lifeCount()));
         }
@@ -144,6 +140,7 @@ public interface CommonGameActions {
     GameAction ACTION_CHEAT_EAT_ALL_PELLETS = new GameAction("CHEAT_EAT_ALL_PELLETS") {
         @Override
         public void execute(GameUI ui) {
+            disableHighScore(ui);
             ui.gameContext().gameLevel().worldMap().foodLayer().eatPellets();
             ui.soundManager().pause(SoundID.PAC_MAN_MUNCHING);
             ui.gameContext().eventManager().publishEvent(GameEventType.PAC_FOUND_FOOD);
@@ -160,6 +157,7 @@ public interface CommonGameActions {
     GameAction ACTION_CHEAT_KILL_GHOSTS = new GameAction("CHEAT_KILL_GHOSTS") {
         @Override
         public void execute(GameUI ui) {
+            disableHighScore(ui);
             GameLevel gameLevel = ui.gameContext().gameLevel();
             List<Ghost> vulnerableGhosts = gameLevel.ghosts(FRIGHTENED, HUNTING_PAC).toList();
             if (!vulnerableGhosts.isEmpty()) {
@@ -178,6 +176,7 @@ public interface CommonGameActions {
     GameAction ACTION_CHEAT_ENTER_NEXT_LEVEL = new GameAction("CHEAT_ENTER_NEXT_LEVEL") {
         @Override
         public void execute(GameUI ui) {
+            disableHighScore(ui);
             ui.gameContext().gameController().changeGameState(GamePlayState.LEVEL_COMPLETE);
         }
 
@@ -187,6 +186,20 @@ public interface CommonGameActions {
                     && ui.gameContext().gameState() == GamePlayState.HUNTING
                     && ui.gameContext().optGameLevel().isPresent()
                     && ui.gameContext().gameLevel().number() < ui.gameContext().game().lastLevelNumber();
+        }
+    };
+
+    GameAction ACTION_ENTER_FULLSCREEN = new GameAction("ENTER_FULLSCREEN") {
+        @Override
+        public void execute(GameUI ui) {
+            ui.stage().setFullScreen(true);
+        }
+    };
+
+    GameAction ACTION_LET_GAME_STATE_EXPIRE = new GameAction("LET_GAME_STATE_EXPIRE") {
+        @Override
+        public void execute(GameUI ui) {
+            ui.gameContext().gameController().letCurrentGameStateExpire();
         }
     };
 
