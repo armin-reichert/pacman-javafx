@@ -73,7 +73,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     public ArcadePacMan_IntroScene(GameUI ui) {
         super(ui);
-        sceneController = new StateMachine<>(List.of(SceneState.values()), this);
+        sceneController = new StateMachine<>(SceneState.values(), this);
     }
 
     @Override

@@ -39,16 +39,13 @@ public class StateMachine<S extends FsmState<C>, C> {
     protected C context;
     protected String name = getClass().getSimpleName();
 
-    public StateMachine(List<S> states) {
-        this.states = requireNonNull(states);
-        if (states.isEmpty()) {
-            throw new IllegalArgumentException("There must be at least one state in a FSM");
-        }
+    public StateMachine(S[] states, C context) {
+        this(List.of(states), context);
     }
 
     public StateMachine(List<S> states, C context) {
         this.states = requireNonNull(states);
-        if (states.isEmpty()) {
+        if (this.states.isEmpty()) {
             throw new IllegalArgumentException("There must be at least one state in a FSM");
         }
         this.context = requireNonNull(context);
