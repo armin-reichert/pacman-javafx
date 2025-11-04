@@ -191,6 +191,11 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
     }
 
     @Override
+    public GameUI ui() {
+        return ui;
+    }
+
+    @Override
     public GameContext context() {
         return ui.gameContext();
     }

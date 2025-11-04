@@ -18,6 +18,8 @@ import java.util.List;
  */
 public interface GameScene extends GameEventListener {
 
+    GameUI ui();
+
     GameContext context();
 
     ActionBindingsManager actionBindings();
