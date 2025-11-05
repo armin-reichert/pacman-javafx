@@ -15,6 +15,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_HUDRenderer;
 import de.amr.pacmanfx.ui._3d.GameLevel3D;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
+import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.api.GameUI;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -85,10 +86,10 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
             actionBindings.useBindings(ACTION_QUIT_DEMO_LEVEL, tengenActionBindings);
         } else {
             setPlayerSteeringActionBindings();
-            actionBindings.useBindings(ACTION_CHEAT_ADD_LIVES, ui.actionBindings());
-            actionBindings.useBindings(ACTION_CHEAT_EAT_ALL_PELLETS, ui.actionBindings());
-            actionBindings.useBindings(ACTION_CHEAT_ENTER_NEXT_LEVEL, ui.actionBindings());
-            actionBindings.useBindings(ACTION_CHEAT_KILL_GHOSTS, ui.actionBindings());
+            actionBindings.useBindings(CheatActions.ACTION_ADD_LIVES, ui.actionBindings());
+            actionBindings.useBindings(CheatActions.ACTION_EAT_ALL_PELLETS, ui.actionBindings());
+            actionBindings.useBindings(CheatActions.ACTION_ENTER_NEXT_LEVEL, ui.actionBindings());
+            actionBindings.useBindings(CheatActions.ACTION_KILL_GHOSTS, ui.actionBindings());
             actionBindings.useBindings(ACTION_TOGGLE_PAC_BOOSTER, tengenActionBindings);
         }
         actionBindings.useBindings(ACTION_PERSPECTIVE_PREVIOUS, ui.actionBindings());

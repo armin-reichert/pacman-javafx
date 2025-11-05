@@ -19,6 +19,7 @@ import de.amr.pacmanfx.model.ScoreManager;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.api.ActionBindingsManager;
@@ -284,10 +285,10 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
                 actionBindings.useBindings(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
             } else {
                 setPlayerSteeringActionBindings();
-                actionBindings.useBindings(ACTION_CHEAT_EAT_ALL_PELLETS, ui.actionBindings());
-                actionBindings.useBindings(ACTION_CHEAT_ADD_LIVES, ui.actionBindings());
-                actionBindings.useBindings(ACTION_CHEAT_ENTER_NEXT_LEVEL, ui.actionBindings());
-                actionBindings.useBindings(ACTION_CHEAT_KILL_GHOSTS, ui.actionBindings());
+                actionBindings.useBindings(CheatActions.ACTION_EAT_ALL_PELLETS, ui.actionBindings());
+                actionBindings.useBindings(CheatActions.ACTION_ADD_LIVES, ui.actionBindings());
+                actionBindings.useBindings(CheatActions.ACTION_ENTER_NEXT_LEVEL, ui.actionBindings());
+                actionBindings.useBindings(CheatActions.ACTION_KILL_GHOSTS, ui.actionBindings());
             }
         }
         actionBindings.assignBindingsToKeyboard(ui.keyboard());

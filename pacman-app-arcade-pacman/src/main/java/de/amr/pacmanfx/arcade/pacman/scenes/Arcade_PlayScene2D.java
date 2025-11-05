@@ -18,6 +18,7 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
+import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
@@ -101,10 +102,10 @@ public class Arcade_PlayScene2D extends GameScene2D {
             actionBindingsManager.useBindings(ACTION_STEER_DOWN,             ui.actionBindings());
             actionBindingsManager.useBindings(ACTION_STEER_LEFT,             ui.actionBindings());
             actionBindingsManager.useBindings(ACTION_STEER_RIGHT,            ui.actionBindings());
-            actionBindingsManager.useBindings(ACTION_CHEAT_ADD_LIVES,        ui.actionBindings());
-            actionBindingsManager.useBindings(ACTION_CHEAT_EAT_ALL_PELLETS,  ui.actionBindings());
-            actionBindingsManager.useBindings(ACTION_CHEAT_ENTER_NEXT_LEVEL, ui.actionBindings());
-            actionBindingsManager.useBindings(ACTION_CHEAT_KILL_GHOSTS,      ui.actionBindings());
+            actionBindingsManager.useBindings(CheatActions.ACTION_ADD_LIVES,        ui.actionBindings());
+            actionBindingsManager.useBindings(CheatActions.ACTION_EAT_ALL_PELLETS,  ui.actionBindings());
+            actionBindingsManager.useBindings(CheatActions.ACTION_ENTER_NEXT_LEVEL, ui.actionBindings());
+            actionBindingsManager.useBindings(CheatActions.ACTION_KILL_GHOSTS,      ui.actionBindings());
             ui.soundManager().setEnabled(true);
         }
         actionBindingsManager.assignBindingsToKeyboard(ui.keyboard());

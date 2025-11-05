@@ -25,6 +25,7 @@ import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.action.ActionBinding;
+import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.SubSceneProvider;
@@ -180,10 +181,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
             actionBindingsManager.useBindings(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, tengenBindings);
             actionBindingsManager.useBindings(ACTION_TOGGLE_PAC_BOOSTER, tengenBindings);
 
-            actionBindingsManager.useBindings(ACTION_CHEAT_ADD_LIVES,        ui.actionBindings());
-            actionBindingsManager.useBindings(ACTION_CHEAT_EAT_ALL_PELLETS,  ui.actionBindings());
-            actionBindingsManager.useBindings(ACTION_CHEAT_ENTER_NEXT_LEVEL, ui.actionBindings());
-            actionBindingsManager.useBindings(ACTION_CHEAT_KILL_GHOSTS,      ui.actionBindings());
+            actionBindingsManager.useBindings(CheatActions.ACTION_ADD_LIVES,        ui.actionBindings());
+            actionBindingsManager.useBindings(CheatActions.ACTION_EAT_ALL_PELLETS,  ui.actionBindings());
+            actionBindingsManager.useBindings(CheatActions.ACTION_ENTER_NEXT_LEVEL, ui.actionBindings());
+            actionBindingsManager.useBindings(CheatActions.ACTION_KILL_GHOSTS,      ui.actionBindings());
         }
         actionBindingsManager.assignBindingsToKeyboard(ui.keyboard());
     }

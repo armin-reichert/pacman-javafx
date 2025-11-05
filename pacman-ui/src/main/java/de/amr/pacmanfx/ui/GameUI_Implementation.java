@@ -11,6 +11,7 @@ import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.action.ActionBinding;
+import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.api.*;
@@ -37,6 +38,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_AUTOPILOT;
+import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_IMMUNITY;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.api.GameScene_Config.SCENE_ID_PLAY_SCENE_3D;
 import static de.amr.pacmanfx.ui.input.Keyboard.*;
@@ -52,13 +55,15 @@ public class GameUI_Implementation implements GameUI {
     private static final int MIN_STAGE_HEIGHT = 360;
 
     private static final Set<ActionBinding> DEFAULT_ACTION_BINDINGS = Set.of(
+        // Cheats
+        new ActionBinding(CheatActions.ACTION_EAT_ALL_PELLETS,  alt(KeyCode.E)),
+        new ActionBinding(CheatActions.ACTION_ADD_LIVES,        alt(KeyCode.L)),
+        new ActionBinding(CheatActions.ACTION_ENTER_NEXT_LEVEL, alt(KeyCode.N)),
+        new ActionBinding(CheatActions.ACTION_KILL_GHOSTS,      alt(KeyCode.X)),
+
         new ActionBinding(ACTION_ARCADE_INSERT_COIN,          nude(KeyCode.DIGIT5), nude(KeyCode.NUMPAD5)),
         new ActionBinding(ACTION_ARCADE_START_GAME,           nude(KeyCode.DIGIT1), nude(KeyCode.NUMPAD1)),
         new ActionBinding(ACTION_BOOT_SHOW_PLAY_VIEW,         nude(KeyCode.F3)),
-        new ActionBinding(ACTION_CHEAT_EAT_ALL_PELLETS,       alt(KeyCode.E)),
-        new ActionBinding(ACTION_CHEAT_ADD_LIVES,             alt(KeyCode.L)),
-        new ActionBinding(ACTION_CHEAT_ENTER_NEXT_LEVEL,      alt(KeyCode.N)),
-        new ActionBinding(ACTION_CHEAT_KILL_GHOSTS,           alt(KeyCode.X)),
         new ActionBinding(ACTION_ENTER_FULLSCREEN,            nude(KeyCode.F11)),
         new ActionBinding(ACTION_OPEN_EDITOR,                 alt_shift(KeyCode.E)),
         new ActionBinding(ACTION_PERSPECTIVE_PREVIOUS,        alt(KeyCode.LEFT)),
