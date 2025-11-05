@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.action;
 
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.controller.CoinMechanism;
+import de.amr.pacmanfx.controller.GameController;
 import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.controller.test.CutScenesTestState;
@@ -372,9 +373,12 @@ public interface CommonGameActions {
     GameAction ACTION_TOGGLE_AUTOPILOT = new GameAction("TOGGLE_AUTOPILOT") {
         @Override
         public void execute(GameUI ui) {
-            ui.gameContext().gameController().cheatUsedProperty().set(true);
-            toggle(ui.gameContext().gameController().usingAutopilotProperty());
-            boolean autoPilotOn = ui.gameContext().gameController().usingAutopilotProperty().get();
+            final GameController gameController = ui.gameContext().gameController();
+            if (gameController.game().isPlaying()) {
+                gameController.cheatUsedProperty().set(true);
+            }
+            toggle(gameController.usingAutopilotProperty());
+            boolean autoPilotOn = gameController.usingAutopilotProperty().get();
             ui.showFlashMessage(ui.assets().translated(autoPilotOn ? "autopilot_on" : "autopilot_off"));
             ui.soundManager().playVoice(autoPilotOn ? SoundID.VOICE_AUTOPILOT_ON : SoundID.VOICE_AUTOPILOT_OFF, 0);
         }
@@ -419,7 +423,9 @@ public interface CommonGameActions {
     GameAction ACTION_TOGGLE_IMMUNITY = new GameAction("TOGGLE_IMMUNITY") {
         @Override
         public void execute(GameUI ui) {
-            ui.gameContext().gameController().cheatUsedProperty().set(true);
+            if (ui.gameContext().game().isPlaying()) {
+                ui.gameContext().gameController().cheatUsedProperty().set(true);
+            }
             toggle(ui.gameContext().gameController().immunityProperty());
             boolean immunityOn = ui.gameContext().gameController().immunityProperty().get();
             ui.showFlashMessage(ui.assets().translated(immunityOn ? "player_immunity_on" : "player_immunity_off"));

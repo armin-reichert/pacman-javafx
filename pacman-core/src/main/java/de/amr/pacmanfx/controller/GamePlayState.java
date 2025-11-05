@@ -87,7 +87,9 @@ public enum GamePlayState implements GameState {
         private void startNewGame(GameContext context) {
             if (timer.tickCount() == 1) {
                 context.game().startNewGame();
-                context.gameController().cheatUsedProperty().set(false);
+                final GameController gameController = context.gameController();
+                boolean cheatActive = gameController.immunityProperty().get()  || gameController.usingAutopilotProperty().get();
+                context.gameController().cheatUsedProperty().set(cheatActive);
             }
             else if (timer.tickCount() == 2) {
                 context.game().startLevel(context.gameLevel());
