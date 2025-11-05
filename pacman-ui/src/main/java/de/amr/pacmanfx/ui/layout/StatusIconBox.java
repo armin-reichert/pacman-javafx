@@ -13,6 +13,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.util.Duration;
 import org.kordamp.ikonli.Ikon;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -55,6 +56,7 @@ public class StatusIconBox extends HBox implements Disposable {
         icon.visibleProperty().addListener(this::handleIconVisibilityChange);
         Tooltip tooltip = new Tooltip(tooltipText);
         tooltip.setFont(TOOLTIP_FONT);
+        tooltip.setShowDelay(Duration.millis(250));
         Tooltip.install(icon, tooltip);
         return icon;
     }
