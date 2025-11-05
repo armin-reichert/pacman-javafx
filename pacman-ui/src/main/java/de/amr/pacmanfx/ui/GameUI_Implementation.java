@@ -333,6 +333,11 @@ public class GameUI_Implementation implements GameUI {
     }
 
     @Override
+    public MainScene mainScene() {
+        return mainScene;
+    }
+
+    @Override
     public UIPreferences preferences() {
         return prefs;
     }

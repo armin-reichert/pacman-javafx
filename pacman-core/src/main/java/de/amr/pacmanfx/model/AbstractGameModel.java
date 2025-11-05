@@ -35,6 +35,8 @@ public abstract class AbstractGameModel implements Game {
 
     protected final BooleanProperty playing = new SimpleBooleanProperty(false);
 
+    protected final BooleanProperty cheatUsed = new SimpleBooleanProperty(false);
+
     protected final SimulationStepEvents thisStep = new SimulationStepEvents();
 
     protected final GameContext gameContext;
@@ -43,6 +45,19 @@ public abstract class AbstractGameModel implements Game {
     protected AbstractGameModel(GameContext gameContext) {
         this.gameContext = requireNonNull(gameContext);
         this.scoreManager = new ScoreManager(this);
+        cheatUsed.addListener((py, ov, cheated) -> {
+            if (cheated) {
+                Score highScore = scoreManager.highScore();
+                if (highScore.isEnabled()) {
+                    highScore.setEnabled(false);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void prepareForNewGame() {
+        cheatUsed.set(false);
     }
 
     protected abstract void checkPacFindsFood(GameLevel gameLevel);
@@ -82,6 +97,21 @@ public abstract class AbstractGameModel implements Game {
     @Override
     public ScoreManager scoreManager() {
         return scoreManager;
+    }
+
+    @Override
+    public BooleanProperty cheatUsedProperty() {
+        return cheatUsed;
+    }
+
+    @Override
+    public boolean cheatUsed() {
+        return cheatUsed.get();
+    }
+
+    @Override
+    public void setCheatUsed(boolean b) {
+        cheatUsed.set(b);
     }
 
     @Override

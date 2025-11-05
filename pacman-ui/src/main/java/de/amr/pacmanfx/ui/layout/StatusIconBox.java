@@ -9,8 +9,10 @@ import de.amr.pacmanfx.ui.api.ArcadePalette;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+import org.kordamp.ikonli.Ikon;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 
@@ -27,21 +29,16 @@ public class StatusIconBox extends HBox implements Disposable {
     private final FontIcon icon3D;
     private final FontIcon iconAutopilot;
     private final FontIcon iconImmune;
+    private final FontIcon iconCheated;
 
     public StatusIconBox() {
-        iconMuted = FontIcon.of(FontAwesomeSolid.DEAF, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
-        iconMuted.visibleProperty().addListener(this::handleIconVisibilityChange);
+        iconMuted     = createIcon(FontAwesomeSolid.DEAF, "Muted");
+        icon3D        = createIcon(FontAwesomeSolid.CUBES, "3D Mode");
+        iconAutopilot = createIcon(FontAwesomeSolid.TAXI, "Autopilot");
+        iconImmune    = createIcon(FontAwesomeSolid.USER_SECRET, "Immunity");
+        iconCheated   = createIcon(FontAwesomeSolid.FLAG, "Cheater");
 
-        icon3D = FontIcon.of(FontAwesomeSolid.CUBES, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
-        icon3D.visibleProperty().addListener(this::handleIconVisibilityChange);
-
-        iconAutopilot = FontIcon.of(FontAwesomeSolid.TAXI, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
-        iconAutopilot.visibleProperty().addListener(this::handleIconVisibilityChange);
-
-        iconImmune = FontIcon.of(FontAwesomeSolid.USER_SECRET, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
-        iconImmune.visibleProperty().addListener(this::handleIconVisibilityChange);
-
-        getChildren().addAll(iconMuted, icon3D, iconAutopilot, iconImmune);
+        getChildren().setAll(iconMuted, icon3D, iconAutopilot, iconImmune, iconCheated);
 
         setMaxHeight(STATUS_ICON_SIZE);
         setMaxWidth(STATUS_ICON_SIZE * 4);
@@ -49,8 +46,21 @@ public class StatusIconBox extends HBox implements Disposable {
         setSpacing(STATUS_ICON_SPACING);
     }
 
+    private FontIcon createIcon(Ikon iconType, String tooltipText) {
+        FontIcon icon = FontIcon.of(iconType, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
+        icon.setVisible(false);
+        icon.visibleProperty().addListener(this::handleIconVisibilityChange);
+        Tooltip tooltip = new Tooltip(tooltipText);
+        Tooltip.install(icon, tooltip);
+        return icon;
+    }
+
     public FontIcon iconAutopilot() {
         return iconAutopilot;
+    }
+
+    public FontIcon iconCheated() {
+        return iconCheated;
     }
 
     public FontIcon iconImmune() {
@@ -78,12 +88,15 @@ public class StatusIconBox extends HBox implements Disposable {
         iconAutopilot.visibleProperty().unbind();
         iconAutopilot.visibleProperty().removeListener(this::handleIconVisibilityChange);
 
+        iconCheated.visibleProperty().unbind();
+        iconCheated.visibleProperty().removeListener(this::handleIconVisibilityChange);
+
         iconImmune.visibleProperty().unbind();
         iconImmune.visibleProperty().removeListener(this::handleIconVisibilityChange);
     }
 
     private void handleIconVisibilityChange(ObservableValue<? extends Boolean> property, boolean oldVisible, boolean newVisible) {
         // keep box compact, show visible items only
-        getChildren().setAll(Stream.of(iconMuted, icon3D, iconAutopilot, iconImmune).filter(Node::isVisible).toList());
+        getChildren().setAll(Stream.of(iconMuted, icon3D, iconAutopilot, iconImmune, iconCheated).filter(Node::isVisible).toList());
     }
 }

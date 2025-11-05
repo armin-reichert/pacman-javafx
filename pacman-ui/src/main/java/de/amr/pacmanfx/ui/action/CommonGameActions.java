@@ -14,7 +14,6 @@ import de.amr.pacmanfx.controller.test.LevelShortTestState;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
@@ -117,18 +116,14 @@ public interface CommonGameActions {
         }
     };
 
-    private static void disableHighScore(GameUI ui) {
-        Score highScore = ui.gameContext().game().scoreManager().highScore();
-        if (highScore.isEnabled()) {
-            highScore.setEnabled(false);
-            ui.showFlashMessage(Duration.seconds(3), "You dirty cheater! High score DISABLED!"); //TODO localize
-        }
+    private static void youDirtyLittleCheater(GameUI ui) {
+        ui.gameContext().game().setCheatUsed(true);
     }
 
     GameAction ACTION_CHEAT_ADD_LIVES = new GameAction("CHEAT_ADD_LIVES") {
         @Override
         public void execute(GameUI ui) {
-            disableHighScore(ui);
+            youDirtyLittleCheater(ui);
             ui.gameContext().game().addLives(3);
             ui.showFlashMessage(ui.assets().translated("cheat_add_lives", ui.gameContext().game().lifeCount()));
         }
@@ -140,7 +135,7 @@ public interface CommonGameActions {
     GameAction ACTION_CHEAT_EAT_ALL_PELLETS = new GameAction("CHEAT_EAT_ALL_PELLETS") {
         @Override
         public void execute(GameUI ui) {
-            disableHighScore(ui);
+            youDirtyLittleCheater(ui);
             ui.gameContext().gameLevel().worldMap().foodLayer().eatPellets();
             ui.soundManager().pause(SoundID.PAC_MAN_MUNCHING);
             ui.gameContext().eventManager().publishEvent(GameEventType.PAC_FOUND_FOOD);
@@ -157,7 +152,7 @@ public interface CommonGameActions {
     GameAction ACTION_CHEAT_KILL_GHOSTS = new GameAction("CHEAT_KILL_GHOSTS") {
         @Override
         public void execute(GameUI ui) {
-            disableHighScore(ui);
+            youDirtyLittleCheater(ui);
             GameLevel gameLevel = ui.gameContext().gameLevel();
             List<Ghost> vulnerableGhosts = gameLevel.ghosts(FRIGHTENED, HUNTING_PAC).toList();
             if (!vulnerableGhosts.isEmpty()) {
@@ -176,7 +171,7 @@ public interface CommonGameActions {
     GameAction ACTION_CHEAT_ENTER_NEXT_LEVEL = new GameAction("CHEAT_ENTER_NEXT_LEVEL") {
         @Override
         public void execute(GameUI ui) {
-            disableHighScore(ui);
+            youDirtyLittleCheater(ui);
             ui.gameContext().gameController().changeGameState(GamePlayState.LEVEL_COMPLETE);
         }
 
@@ -380,6 +375,7 @@ public interface CommonGameActions {
     GameAction ACTION_TOGGLE_AUTOPILOT = new GameAction("TOGGLE_AUTOPILOT") {
         @Override
         public void execute(GameUI ui) {
+            youDirtyLittleCheater(ui);
             toggle(ui.gameContext().gameController().propertyUsingAutopilot());
             boolean autoPilotOn = ui.gameContext().gameController().propertyUsingAutopilot().get();
             ui.showFlashMessage(ui.assets().translated(autoPilotOn ? "autopilot_on" : "autopilot_off"));
@@ -426,6 +422,7 @@ public interface CommonGameActions {
     GameAction ACTION_TOGGLE_IMMUNITY = new GameAction("TOGGLE_IMMUNITY") {
         @Override
         public void execute(GameUI ui) {
+            youDirtyLittleCheater(ui);
             toggle(ui.gameContext().gameController().propertyImmunity());
             boolean immunityOn = ui.gameContext().gameController().propertyImmunity().get();
             ui.showFlashMessage(ui.assets().translated(immunityOn ? "player_immunity_on" : "player_immunity_off"));

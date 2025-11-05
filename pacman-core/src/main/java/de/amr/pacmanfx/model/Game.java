@@ -6,6 +6,7 @@ package de.amr.pacmanfx.model;
 
 import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.model.actors.ActorSpeedControl;
+import javafx.beans.property.BooleanProperty;
 
 import java.util.Optional;
 
@@ -32,4 +33,8 @@ public interface Game extends GameLifecycle, GameEvents, ActorSpeedControl {
 
     int                   numFlashes(GameLevel gameLevel);
     void                  showMessage(GameLevel gameLevel, MessageType type);
+
+    BooleanProperty       cheatUsedProperty();
+    boolean               cheatUsed();
+    void                  setCheatUsed(boolean b);
 }

@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.controller.GamePlayState;
+import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
@@ -188,10 +189,17 @@ public class PlayView extends StackPane implements GameUI_View {
         switch (gameEvent.type()) {
             case LEVEL_CREATED -> onLevelCreated();
             case GAME_STATE_CHANGED -> {
-                if (ui.gameContext().gameState() == GamePlayState.LEVEL_COMPLETE) {
-                    miniView.slideOut();
+                final GameState gameState = ui.gameContext().gameState();
+                switch (gameState) {
+                    case GamePlayState.LEVEL_COMPLETE -> miniView.slideOut();
+                    case GamePlayState.GAME_OVER -> {
+                        ui.mainScene().statusIconBox().iconCheated().visibleProperty().unbind();
+                        ui.mainScene().statusIconBox().iconCheated().setVisible(false);
+                    }
+                    default -> {}
                 }
             }
+            case GAME_STARTED -> ui.mainScene().statusIconBox().iconCheated().visibleProperty().bind(gameEvent.game().cheatUsedProperty());
         }
         ui.currentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(gameEvent));
         updateGameScene(false);

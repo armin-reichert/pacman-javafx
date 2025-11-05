@@ -169,6 +169,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     @Override
     public void prepareForNewGame() {
+        super.prepareForNewGame();
         setPlaying(false);
         setLifeCount(initialLifeCount());
         setGameLevel(null);
