@@ -169,7 +169,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     @Override
     public void prepareForNewGame() {
-        super.prepareForNewGame();
         setPlaying(false);
         setLifeCount(initialLifeCount());
         setGameLevel(null);
@@ -253,8 +252,8 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     @Override
     public void buildNormalLevel(int levelNumber) {
         final GameLevel normalLevel = createLevel(levelNumber, false);
-        normalLevel.pac().immuneProperty().bind(gameContext.gameController().propertyImmunity());
-        normalLevel.pac().usingAutopilotProperty().bind(gameContext.gameController().propertyUsingAutopilot());
+        normalLevel.pac().immuneProperty().bind(gameContext.gameController().immunityProperty());
+        normalLevel.pac().usingAutopilotProperty().bind(gameContext.gameController().usingAutopilotProperty());
         levelCounter().setEnabled(true);
         scoreManager.score().setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);

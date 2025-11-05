@@ -50,8 +50,8 @@ public class InfoBoxGameControl extends InfoBox {
         choiceBoxInitialLives    = addChoiceBox("Initial Lives", new Integer[] {3, 5});
         buttonGroupLevelActions  = addButtonList("Game Level", List.of("Start", "Quit", "Next"));
         buttonGroupCutScenesTest = addButtonList("Cut Scenes Test", List.of("Start", "Quit"));
-        cbAutopilot              = addCheckBox("Autopilot", ui.gameContext().gameController().propertyUsingAutopilot());
-        cbImmunity               = addCheckBox("Pac-Man Immune", ui.gameContext().gameController().propertyImmunity());
+        cbAutopilot              = addCheckBox("Autopilot", ui.gameContext().gameController().usingAutopilotProperty());
+        cbImmunity               = addCheckBox("Pac-Man Immune", ui.gameContext().gameController().immunityProperty());
 
         setAction(buttonGroupCutScenesTest[CUT_SCENES_TEST_START], CommonGameActions.ACTION_TEST_CUT_SCENES);
         setAction(buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT], CommonGameActions.ACTION_RESTART_INTRO);

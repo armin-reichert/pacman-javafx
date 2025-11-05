@@ -87,6 +87,7 @@ public enum GamePlayState implements GameState {
         private void startNewGame(GameContext context) {
             if (timer.tickCount() == 1) {
                 context.game().startNewGame();
+                context.gameController().cheatUsedProperty().set(false);
             }
             else if (timer.tickCount() == 2) {
                 context.game().startLevel(context.gameLevel());
@@ -145,7 +146,7 @@ public enum GamePlayState implements GameState {
         @Override
         public void onEnter(GameContext context) {
             //TODO reconsider this
-            delay = context.gameController().isSelected("MS_PACMAN_TENGEN") ? Globals.NUM_TICKS_PER_SEC : 0;
+            delay = context.gameController().isCurrentGameVariant("MS_PACMAN_TENGEN") ? Globals.NUM_TICKS_PER_SEC : 0;
         }
 
         @Override
@@ -198,7 +199,7 @@ public enum GamePlayState implements GameState {
             }
 
             //TODO this is crap. Maybe Tengen Ms. Pac-Man needs its own state machine?
-            if (context.gameController().isSelected(DefaultGameVariants.MS_PACMAN_TENGEN.name())
+            if (context.gameController().isCurrentGameVariant(DefaultGameVariants.MS_PACMAN_TENGEN.name())
                 && context.gameLevel().isDemoLevel()) {
                 context.gameController().changeGameState(SHOWING_CREDITS);
                 return;
@@ -327,7 +328,7 @@ public enum GamePlayState implements GameState {
         public void onUpdate(GameContext context) {
             if (timer.hasExpired()) {
                 //TODO find unified solution
-                if (context.gameController().isSelected(DefaultGameVariants.MS_PACMAN_TENGEN.name())) {
+                if (context.gameController().isCurrentGameVariant(DefaultGameVariants.MS_PACMAN_TENGEN.name())) {
                     if (context.gameLevel().isDemoLevel()) {
                         context.gameController().changeGameState(SHOWING_CREDITS);
                     } else {
@@ -348,6 +349,7 @@ public enum GamePlayState implements GameState {
         @Override
         public void onExit(GameContext context) {
             context.optGameLevel().ifPresent(GameLevel::clearMessage);
+            context.gameController().cheatUsedProperty().set(false);
         }
     },
 

@@ -180,8 +180,9 @@ public class GameUI_Implementation implements GameUI {
 
         statusIcons.iconMuted()    .visibleProperty().bind(PROPERTY_MUTED);
         statusIcons.icon3D()       .visibleProperty().bind(PROPERTY_3D_ENABLED);
-        statusIcons.iconAutopilot().visibleProperty().bind(gameContext().gameController().propertyUsingAutopilot());
-        statusIcons.iconImmune()   .visibleProperty().bind(gameContext().gameController().propertyImmunity());
+        statusIcons.iconAutopilot().visibleProperty().bind(gameContext().gameController().usingAutopilotProperty());
+        statusIcons.iconCheated()  .visibleProperty().bind(gameContext().gameController().cheatUsedProperty());
+        statusIcons.iconImmune()   .visibleProperty().bind(gameContext().gameController().immunityProperty());
     }
 
     private void handleScrollEvent(ScrollEvent scrollEvent) {
@@ -384,7 +385,7 @@ public class GameUI_Implementation implements GameUI {
             return;
         }
 
-        String previousVariant = gameContext.gameController().selectedGameVariant();
+        String previousVariant = gameContext.gameController().gameVariant();
         if (gameVariant.equals(previousVariant)) {
             return;
         }
@@ -408,7 +409,7 @@ public class GameUI_Implementation implements GameUI {
         }
 
         // this triggers a game event and the event handlers:
-        gameContext.gameController().selectGameVariant(gameVariant);
+        gameContext.gameController().setGameVariant(gameVariant);
     }
 
     @Override
@@ -539,6 +540,6 @@ public class GameUI_Implementation implements GameUI {
     @Override
     @SuppressWarnings("unchecked")
     public <T extends GameUI_Config> T currentConfig() {
-        return (T) config(gameContext.gameController().selectedGameVariant());
+        return (T) config(gameContext.gameController().gameVariant());
     }
 }

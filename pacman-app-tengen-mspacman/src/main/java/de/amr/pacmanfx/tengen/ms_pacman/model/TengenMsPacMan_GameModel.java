@@ -7,9 +7,9 @@ package de.amr.pacmanfx.tengen.ms_pacman.model;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.event.GameEventType;
+import de.amr.pacmanfx.lib.Waypoint;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
-import de.amr.pacmanfx.lib.Waypoint;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.lib.worldmap.FoodLayer;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
@@ -31,9 +31,9 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.inClosedRange;
-import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomByte;
 import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
+import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomByte;
 import static de.amr.pacmanfx.model.DefaultWorldMapPropertyName.*;
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
 import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
@@ -142,8 +142,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         gateKeeper = new GateKeeper(this); //TODO implement original logic from Tengen game
         autopilot = new RuleBasedPacSteering(gameContext);
         demoLevelSteering = new RuleBasedPacSteering(gameContext);
-        pacImmunity.bind(gameContext.gameController().propertyImmunity());
-        pacUsingAutopilot.bind(gameContext.gameController().propertyUsingAutopilot());
+        pacImmunity.bind(gameContext.gameController().immunityProperty());
+        pacUsingAutopilot.bind(gameContext.gameController().usingAutopilotProperty());
     }
 
     @Override
@@ -179,7 +179,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     public void prepareForNewGame() {
-        super.prepareForNewGame();
         setLifeCount(initialLifeCount());
         setGameLevel(null);
         levelCounter().clear();

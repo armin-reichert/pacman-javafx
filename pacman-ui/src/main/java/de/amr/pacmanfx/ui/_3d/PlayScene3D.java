@@ -222,10 +222,10 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
         miToggleMiniView.selectedProperty().bindBidirectional(PROPERTY_MINI_VIEW_ON);
 
         var miAutopilot = new CheckMenuItem(ui.assets().translated("autopilot"));
-        miAutopilot.selectedProperty().bindBidirectional(theGameContext().gameController().propertyUsingAutopilot());
+        miAutopilot.selectedProperty().bindBidirectional(theGameContext().gameController().usingAutopilotProperty());
 
         var miImmunity = new CheckMenuItem(ui.assets().translated("immunity"));
-        miImmunity.selectedProperty().bindBidirectional(theGameContext().gameController().propertyImmunity());
+        miImmunity.selectedProperty().bindBidirectional(theGameContext().gameController().immunityProperty());
 
         var miMuted = new CheckMenuItem(ui.assets().translated("muted"));
         miMuted.selectedProperty().bindBidirectional(PROPERTY_MUTED);

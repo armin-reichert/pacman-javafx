@@ -66,13 +66,13 @@ public class HelpInfo {
         pane.setBackground(Ufx.roundedBackground(backgroundColor, 10));
 
         // add default entries:
-        if (ui.gameContext().gameController().propertyUsingAutopilot().get()) {
+        if (ui.gameContext().gameController().usingAutopilotProperty().get()) {
             var autoPilotEntry = text(ui.assets().translated("help.autopilot_on"), Color.ORANGE);
             autoPilotEntry.setFont(font);
             GridPane.setColumnSpan(autoPilotEntry, 2);
             grid.add(autoPilotEntry, 0, grid.getRowCount());
         }
-        if (ui.gameContext().gameController().propertyImmunity().get()) {
+        if (ui.gameContext().gameController().immunityProperty().get()) {
             var immunityEntry = text(ui.assets().translated("help.immunity_on"), Color.ORANGE);
             immunityEntry.setFont(font);
             GridPane.setColumnSpan(immunityEntry, 2);

@@ -38,7 +38,7 @@ public class CutScenesTestState implements TestGameState {
     public void onUpdate(GameContext context) {
         if (context.game() instanceof AbstractGameModel gameModel) {
             if (timer.hasExpired()) {
-                int lastCutSceneNumber = context.gameController().isSelected("MS_PACMAN_TENGEN") ? 4 : 3;
+                int lastCutSceneNumber = context.gameController().isCurrentGameVariant("MS_PACMAN_TENGEN") ? 4 : 3;
                 if (testedCutSceneNumber < lastCutSceneNumber) {
                     testedCutSceneNumber += 1;
                     timer.restartIndefinitely();

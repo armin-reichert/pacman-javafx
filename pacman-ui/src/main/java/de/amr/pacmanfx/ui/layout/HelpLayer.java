@@ -29,7 +29,7 @@ public class HelpLayer extends Pane {
     }
 
     public void showHelp(GameUI ui, double scaling) {
-        Color bgColor = ui.gameContext().gameController().isSelected("MS_PACMAN") ? Color.RED : Color.BLUE;
+        Color bgColor = ui.gameContext().gameController().isCurrentGameVariant("MS_PACMAN") ? Color.RED : Color.BLUE;
         var font = ui.assets().font("font.monospaced", Math.max(6, 14 * scaling));
         var helpPane = HelpInfo.build(ui).createPane(ui, colorWithOpacity(bgColor, 0.8), font);
         helpPopUp.setTranslateX(10 * scaling);

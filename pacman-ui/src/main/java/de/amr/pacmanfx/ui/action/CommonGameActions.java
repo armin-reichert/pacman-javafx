@@ -101,7 +101,7 @@ public interface CommonGameActions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            return  Set.of("PACMAN", "MS_PACMAN", "PACMAN_XXL", "MS_PACMAN_XXL").contains(ui.gameContext().gameController().selectedGameVariant())
+            return  Set.of("PACMAN", "MS_PACMAN", "PACMAN_XXL", "MS_PACMAN_XXL").contains(ui.gameContext().gameController().gameVariant())
                 && !ui.gameContext().coinMechanism().isEmpty()
                 && (ui.gameContext().gameState() == GamePlayState.INTRO || ui.gameContext().gameState() == GamePlayState.SETTING_OPTIONS_FOR_START)
                 && ui.gameContext().game().canStartNewGame();
@@ -116,14 +116,10 @@ public interface CommonGameActions {
         }
     };
 
-    private static void youDirtyLittleCheater(GameUI ui) {
-        ui.gameContext().game().setCheatUsed(true);
-    }
-
     GameAction ACTION_CHEAT_ADD_LIVES = new GameAction("CHEAT_ADD_LIVES") {
         @Override
         public void execute(GameUI ui) {
-            youDirtyLittleCheater(ui);
+            ui.gameContext().gameController().cheatUsedProperty().set(true);
             ui.gameContext().game().addLives(3);
             ui.showFlashMessage(ui.assets().translated("cheat_add_lives", ui.gameContext().game().lifeCount()));
         }
@@ -135,7 +131,7 @@ public interface CommonGameActions {
     GameAction ACTION_CHEAT_EAT_ALL_PELLETS = new GameAction("CHEAT_EAT_ALL_PELLETS") {
         @Override
         public void execute(GameUI ui) {
-            youDirtyLittleCheater(ui);
+            ui.gameContext().gameController().cheatUsedProperty().set(true);
             ui.gameContext().gameLevel().worldMap().foodLayer().eatPellets();
             ui.soundManager().pause(SoundID.PAC_MAN_MUNCHING);
             ui.gameContext().eventManager().publishEvent(GameEventType.PAC_FOUND_FOOD);
@@ -152,7 +148,7 @@ public interface CommonGameActions {
     GameAction ACTION_CHEAT_KILL_GHOSTS = new GameAction("CHEAT_KILL_GHOSTS") {
         @Override
         public void execute(GameUI ui) {
-            youDirtyLittleCheater(ui);
+            ui.gameContext().gameController().cheatUsedProperty().set(true);
             GameLevel gameLevel = ui.gameContext().gameLevel();
             List<Ghost> vulnerableGhosts = gameLevel.ghosts(FRIGHTENED, HUNTING_PAC).toList();
             if (!vulnerableGhosts.isEmpty()) {
@@ -171,7 +167,7 @@ public interface CommonGameActions {
     GameAction ACTION_CHEAT_ENTER_NEXT_LEVEL = new GameAction("CHEAT_ENTER_NEXT_LEVEL") {
         @Override
         public void execute(GameUI ui) {
-            youDirtyLittleCheater(ui);
+            ui.gameContext().gameController().cheatUsedProperty().set(true);
             ui.gameContext().gameController().changeGameState(GamePlayState.LEVEL_COMPLETE);
         }
 
@@ -234,6 +230,7 @@ public interface CommonGameActions {
         @Override
         public void execute(GameUI ui) {
             ui.quitCurrentGameScene();
+            ui.gameContext().gameController().cheatUsedProperty().set(false);
         }
     };
 
@@ -259,10 +256,10 @@ public interface CommonGameActions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            return (ui.gameContext().gameController().isSelected("PACMAN")
-                || ui.gameContext().gameController().isSelected("PACMAN_XXL")
-                || ui.gameContext().gameController().isSelected("MS_PACMAN")
-                || ui.gameContext().gameController().isSelected("MS_PACMAN_XXL"))
+            return (ui.gameContext().gameController().isCurrentGameVariant("PACMAN")
+                || ui.gameContext().gameController().isCurrentGameVariant("PACMAN_XXL")
+                || ui.gameContext().gameController().isCurrentGameVariant("MS_PACMAN")
+                || ui.gameContext().gameController().isCurrentGameVariant("MS_PACMAN_XXL"))
                 && ui.currentView() == ui.playView()
                 && ui.currentGameScene().isPresent()
                 && ui.currentGameScene().get() instanceof GameScene2D;
@@ -375,9 +372,9 @@ public interface CommonGameActions {
     GameAction ACTION_TOGGLE_AUTOPILOT = new GameAction("TOGGLE_AUTOPILOT") {
         @Override
         public void execute(GameUI ui) {
-            youDirtyLittleCheater(ui);
-            toggle(ui.gameContext().gameController().propertyUsingAutopilot());
-            boolean autoPilotOn = ui.gameContext().gameController().propertyUsingAutopilot().get();
+            ui.gameContext().gameController().cheatUsedProperty().set(true);
+            toggle(ui.gameContext().gameController().usingAutopilotProperty());
+            boolean autoPilotOn = ui.gameContext().gameController().usingAutopilotProperty().get();
             ui.showFlashMessage(ui.assets().translated(autoPilotOn ? "autopilot_on" : "autopilot_off"));
             ui.soundManager().playVoice(autoPilotOn ? SoundID.VOICE_AUTOPILOT_ON : SoundID.VOICE_AUTOPILOT_OFF, 0);
         }
@@ -422,9 +419,9 @@ public interface CommonGameActions {
     GameAction ACTION_TOGGLE_IMMUNITY = new GameAction("TOGGLE_IMMUNITY") {
         @Override
         public void execute(GameUI ui) {
-            youDirtyLittleCheater(ui);
-            toggle(ui.gameContext().gameController().propertyImmunity());
-            boolean immunityOn = ui.gameContext().gameController().propertyImmunity().get();
+            ui.gameContext().gameController().cheatUsedProperty().set(true);
+            toggle(ui.gameContext().gameController().immunityProperty());
+            boolean immunityOn = ui.gameContext().gameController().immunityProperty().get();
             ui.showFlashMessage(ui.assets().translated(immunityOn ? "player_immunity_on" : "player_immunity_off"));
             ui.soundManager().playVoice(immunityOn ? SoundID.VOICE_IMMUNITY_ON : SoundID.VOICE_IMMUNITY_OFF, 0);
         }
@@ -454,7 +451,7 @@ public interface CommonGameActions {
             if (ui.clock().isPaused()) {
                 ui.soundManager().stopAll();
             }
-            Logger.info("Game ({}) {}", ui.gameContext().gameController().selectedGameVariant(), ui.clock().isPaused() ? "paused" : "resumed");
+            Logger.info("Game ({}) {}", ui.gameContext().gameController().gameVariant(), ui.clock().isPaused() ? "paused" : "resumed");
         }
     };
 

@@ -190,16 +190,10 @@ public class PlayView extends StackPane implements GameUI_View {
             case LEVEL_CREATED -> onLevelCreated();
             case GAME_STATE_CHANGED -> {
                 final GameState gameState = ui.gameContext().gameState();
-                switch (gameState) {
-                    case GamePlayState.LEVEL_COMPLETE -> miniView.slideOut();
-                    case GamePlayState.GAME_OVER -> {
-                        ui.mainScene().statusIconBox().iconCheated().visibleProperty().unbind();
-                        ui.mainScene().statusIconBox().iconCheated().setVisible(false);
-                    }
-                    default -> {}
+                if (gameState.equals(GamePlayState.LEVEL_COMPLETE)) {
+                    miniView.slideOut();
                 }
             }
-            case GAME_STARTED -> ui.mainScene().statusIconBox().iconCheated().visibleProperty().bind(gameEvent.game().cheatUsedProperty());
         }
         ui.currentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(gameEvent));
         updateGameScene(false);

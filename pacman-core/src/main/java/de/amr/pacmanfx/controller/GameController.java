@@ -11,6 +11,7 @@ import de.amr.pacmanfx.event.GameStateChangeEvent;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.Score;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -47,18 +48,16 @@ public class GameController implements GameContext {
     private final File homeDir = new File(System.getProperty("user.home"), ".pacmanfx");
     private final File customMapDir = new File(homeDir, "maps");
 
+    private final StateMachine<GameState, GameContext> gameStateMachine;
     private final GameEventManager gameEventManager;
     private boolean eventsEnabled;
-
     private final CoinMechanism coinMechanism = new CoinMechanism();
-
     private final Map<String, Game> knownGames = new HashMap<>();
-    private final StringProperty gameVariantProperty = new SimpleStringProperty();
 
-    private final StateMachine<GameState, GameContext> gameStateMachine;
-
-    private final BooleanProperty propertyImmunity = new SimpleBooleanProperty(false);
-    private final BooleanProperty propertyUsingAutopilot = new SimpleBooleanProperty(false);
+    private final BooleanProperty cheatUsed = new SimpleBooleanProperty(false);
+    private final BooleanProperty immunity = new SimpleBooleanProperty(false);
+    private final BooleanProperty usingAutopilot = new SimpleBooleanProperty(false);
+    private final StringProperty gameVariant = new SimpleStringProperty();
 
     public GameController(List<GameState> states) {
         boolean success = initUserDirectories();
@@ -71,13 +70,23 @@ public class GameController implements GameContext {
         gameStateMachine.addStateChangeListener((oldState, newState) ->
             gameEventManager.publishEvent(new GameStateChangeEvent(game(), oldState, newState)));
 
-        gameVariantProperty.addListener((py, ov, newGameVariant) -> {
+        gameVariant.addListener((py, ov, newGameVariant) -> {
             if (eventsEnabled) {
                 Game newGame = game(newGameVariant);
                 newGame.init();
                 gameEventManager.publishEvent(GameEventType.GAME_VARIANT_CHANGED);
             }
         });
+
+        cheatUsed.addListener((py, ov, cheated) -> {
+            if (cheated) {
+                Score highScore = game().scoreManager().highScore();
+                if (highScore.isEnabled()) {
+                    highScore.setEnabled(false);
+                }
+            }
+        });
+
     }
 
     public GameState stateByName(String name) {
@@ -139,26 +148,30 @@ public class GameController implements GameContext {
     }
 
     public StringProperty gameVariantProperty() {
-        return gameVariantProperty;
+        return gameVariant;
     }
 
-    public String selectedGameVariant() { return gameVariantProperty.get(); }
+    public String gameVariant() { return gameVariant.get(); }
 
-    public void selectGameVariant(String gameVariant) {
-        requireNonNull(gameVariant);
-        gameVariantProperty.set(gameVariant);
+    public void setGameVariant(String gameVariantName) {
+        requireNonNull(gameVariantName);
+        this.gameVariant.set(gameVariantName);
     }
 
-    public boolean isSelected(String gameVariant) {
-        return requireNonNull(gameVariant).equals(gameVariantProperty.get());
+    public boolean isCurrentGameVariant(String gameVariantName) {
+        return requireNonNull(gameVariantName).equals(gameVariant());
     }
 
-    public BooleanProperty propertyImmunity() {
-        return propertyImmunity;
+    public BooleanProperty cheatUsedProperty() {
+        return cheatUsed;
     }
 
-    public BooleanProperty propertyUsingAutopilot() {
-        return propertyUsingAutopilot;
+    public BooleanProperty immunityProperty() {
+        return immunity;
+    }
+
+    public BooleanProperty usingAutopilotProperty() {
+        return usingAutopilot;
     }
 
     // GameContext implementation
@@ -182,7 +195,7 @@ public class GameController implements GameContext {
      * @return The game (model) registered for the currently selected game variant.
      */
     public <G extends Game> G game() {
-        return game(gameVariantProperty.get());
+        return game(gameVariant.get());
     }
 
     @Override

@@ -12,6 +12,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import org.kordamp.ikonli.Ikon;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -24,6 +25,8 @@ public class StatusIconBox extends HBox implements Disposable {
     private static final int STATUS_ICON_PADDING = 10;
     private static final int STATUS_ICON_SIZE    = 24;
     private static final int STATUS_ICON_SPACING = 5;
+
+    private static final Font TOOLTIP_FONT = Font.font("Sans", 16);
 
     private final FontIcon iconMuted;
     private final FontIcon icon3D;
@@ -51,6 +54,7 @@ public class StatusIconBox extends HBox implements Disposable {
         icon.setVisible(false);
         icon.visibleProperty().addListener(this::handleIconVisibilityChange);
         Tooltip tooltip = new Tooltip(tooltipText);
+        tooltip.setFont(TOOLTIP_FONT);
         Tooltip.install(icon, tooltip);
         return icon;
     }
