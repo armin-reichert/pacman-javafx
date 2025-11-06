@@ -45,7 +45,7 @@ public class StatusIconBox extends HBox implements Disposable {
         getChildren().setAll(iconMuted, icon3D, iconAutopilot, iconImmune, iconCheated);
 
         setMaxHeight(STATUS_ICON_SIZE);
-        setMaxWidth(STATUS_ICON_SIZE * 4);
+        setMaxWidth(STATUS_ICON_SIZE * 5);
         setPadding(new Insets(STATUS_ICON_PADDING));
         setSpacing(STATUS_ICON_SPACING);
     }
