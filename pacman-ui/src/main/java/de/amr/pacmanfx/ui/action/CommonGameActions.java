@@ -7,7 +7,6 @@ package de.amr.pacmanfx.ui.action;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.controller.GameState;
-import de.amr.pacmanfx.controller.test.CutScenesTestState;
 import de.amr.pacmanfx.controller.test.LevelMediumTestState;
 import de.amr.pacmanfx.controller.test.LevelShortTestState;
 import de.amr.pacmanfx.lib.Direction;
