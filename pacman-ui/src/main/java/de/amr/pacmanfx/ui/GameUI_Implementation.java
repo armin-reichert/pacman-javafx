@@ -14,26 +14,36 @@ import de.amr.pacmanfx.ui.action.*;
 import de.amr.pacmanfx.ui.api.*;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.Keyboard;
-import de.amr.pacmanfx.ui.layout.*;
+import de.amr.pacmanfx.ui.layout.EditorView;
+import de.amr.pacmanfx.ui.layout.PlayView;
+import de.amr.pacmanfx.ui.layout.StartPagesView;
+import de.amr.pacmanfx.ui.layout.StatusIconBox;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.assets.UIPreferences;
 import de.amr.pacmanfx.uilib.rendering.Gradients;
+import de.amr.pacmanfx.uilib.widgets.FlashMessageView;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
+import org.kordamp.ikonli.javafx.FontIcon;
 import org.tinylog.Logger;
 
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -52,6 +62,7 @@ import static javafx.beans.binding.Bindings.createStringBinding;
  */
 public class GameUI_Implementation implements GameUI {
 
+    private static final String CONTEXT_MENU_CSS_PATH = "/de/amr/pacmanfx/ui/css/menu-style.css";
     private static final int MIN_STAGE_WIDTH  = 280;
     private static final int MIN_STAGE_HEIGHT = 360;
 
@@ -108,17 +119,20 @@ public class GameUI_Implementation implements GameUI {
     private final ActionBindingsManager globalActionBindings = new DefaultActionBindingsManager();
     private final Map<String, Class<?>> configClassesByGameVariant;
     private final Map<String, GameUI_Config> configByGameVariant = new HashMap<>();
-    private final MainLayout mainLayout;
 
     private final ObjectProperty<GameUI_View> currentView = new SimpleObjectProperty<>() {
         @Override
         protected void invalidated() {
             GameUI_View newView = get();
             if (newView != null) {
-                mainLayout.embedView(newView);
+                embedView(newView);
             }
         }
     };
+
+    private Scene scene;
+    private StackPane layoutPane;
+    private FlashMessageView flashMessageView;
 
     // These are lazily created
     private StartPagesView startPagesView;
@@ -154,15 +168,23 @@ public class GameUI_Implementation implements GameUI {
         PROPERTY_3D_WALL_HEIGHT.set(prefs.getFloat("3d.obstacle.base_height"));
         PROPERTY_3D_WALL_OPACITY.set(prefs.getFloat("3d.obstacle.opacity"));
 
-        mainLayout = new MainLayout(mainSceneWidth, mainSceneHeight);
-        configureMainScene();
-        configureStatusIconBox();
+        createSceneLayout(mainSceneWidth, mainSceneHeight);
+
         configureStage(stage);
         defineGlobalActionBindings();
+
     }
 
-    private void configureMainScene() {
-        final Scene scene = mainLayout.fxScene();
+    private void createSceneLayout(double width, double height) {
+        layoutPane = new StackPane();
+
+        scene = new Scene(layoutPane, width, height);
+        final URL url = getClass().getResource(CONTEXT_MENU_CSS_PATH);
+        if (url != null) {
+            scene.getStylesheets().add(url.toExternalForm());
+        } else {
+            Logger.error("Could not access menu style CSS file at '{}'", CONTEXT_MENU_CSS_PATH);
+        }
 
         // Keyboard events are first handled by the global keyboard object
         scene.addEventFilter(KeyEvent.KEY_PRESSED,  keyboard::onKeyPressed);
@@ -179,31 +201,48 @@ public class GameUI_Implementation implements GameUI {
         });
         scene.setOnScroll(this::handleScrollEvent);
 
-        mainLayout.rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
-            () -> isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D)
-                ? Background.fill(Gradients.Samples.random())
-                : assets.background("background.scene"),
-            currentViewProperty(), playView().currentGameSceneProperty()
-        ));
+        flashMessageView = new FlashMessageView();
 
+        // Large "paused" icon which appears at center of scene
+        var pausedIcon = FontIcon.of(FontAwesomeSolid.PAUSE, 80, ArcadePalette.ARCADE_WHITE);
         // Show paused icon only in play view
-        mainLayout.pausedIcon().visibleProperty().bind(Bindings.createBooleanBinding(
-            () -> currentView() == playView() && clock.isPaused(),
-            currentViewProperty(), clock.pausedProperty())
+        pausedIcon.visibleProperty().bind(Bindings.createBooleanBinding(
+                () -> currentView() == playView() && clock.isPaused(),
+                currentViewProperty(), clock.pausedProperty())
         );
+
+        // Status icon box appears at bottom-left corner of all views except editor view
+        var statusIconBox = new StatusIconBox();
+
+        // hide icon box if editor view is active, avoid creation of editor view in binding expression!
+        statusIconBox.visibleProperty().bind(currentViewProperty()
+                .map(currentView -> optEditorView().isEmpty() || currentView != optEditorView().get()));
+
+        statusIconBox.iconMuted()    .visibleProperty().bind(PROPERTY_MUTED);
+        statusIconBox.icon3D()       .visibleProperty().bind(PROPERTY_3D_ENABLED);
+        statusIconBox.iconAutopilot().visibleProperty().bind(gameContext().gameController().usingAutopilotProperty());
+        statusIconBox.iconCheated()  .visibleProperty().bind(gameContext().gameController().cheatUsedProperty());
+        statusIconBox.iconImmune()   .visibleProperty().bind(gameContext().gameController().immunityProperty());
+
+        StackPane.setAlignment(pausedIcon, Pos.CENTER);
+        StackPane.setAlignment(statusIconBox, Pos.BOTTOM_LEFT);
+
+        var viewPlaceholder = new Region();
+        layoutPane.getChildren().setAll(viewPlaceholder, pausedIcon, statusIconBox, flashMessageView);
+
+        //TODO check why this crashes when done before scene layout creation
+        layoutPane.backgroundProperty().bind(Bindings.createObjectBinding(
+                () -> isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D)
+                        ? Background.fill(Gradients.Samples.random())
+                        : assets.background("background.scene"),
+                currentViewProperty(), playView().currentGameSceneProperty()
+        ));
     }
 
-    private void configureStatusIconBox() {
-        // hide icon box if editor view is active, avoid creation of editor view in binding expression!
-        StatusIconBox statusIcons = mainLayout.statusIconBox();
-        statusIcons.visibleProperty().bind(currentViewProperty()
-            .map(currentView -> optEditorView().isEmpty() || currentView != optEditorView().get()));
-
-        statusIcons.iconMuted()    .visibleProperty().bind(PROPERTY_MUTED);
-        statusIcons.icon3D()       .visibleProperty().bind(PROPERTY_3D_ENABLED);
-        statusIcons.iconAutopilot().visibleProperty().bind(gameContext().gameController().usingAutopilotProperty());
-        statusIcons.iconCheated()  .visibleProperty().bind(gameContext().gameController().cheatUsedProperty());
-        statusIcons.iconImmune()   .visibleProperty().bind(gameContext().gameController().immunityProperty());
+    private void embedView(GameUI_View view) {
+        requireNonNull(view);
+        layoutPane.getChildren().set(0, view.root());
+        view.root().requestFocus();
     }
 
     private void handleScrollEvent(ScrollEvent scrollEvent) {
@@ -211,7 +250,7 @@ public class GameUI_Implementation implements GameUI {
     }
 
     private void configureStage(Stage stage) {
-        stage.setScene(mainLayout.fxScene());
+        stage.setScene(scene);
         stage.setMinWidth(MIN_STAGE_WIDTH);
         stage.setMinHeight(MIN_STAGE_HEIGHT);
         stage.titleProperty().bind(titleBinding);
@@ -289,7 +328,7 @@ public class GameUI_Implementation implements GameUI {
             if (currentView() == playView()) {
                 playView().draw();
             }
-            mainLayout.flashMessageLayer().update();
+            flashMessageView.update();
         } catch (Throwable x) {
             ka_tas_tro_phe(x);
         }
@@ -359,8 +398,8 @@ public class GameUI_Implementation implements GameUI {
     }
 
     @Override
-    public MainLayout mainScene() {
-        return mainLayout;
+    public StackPane layoutPane() {
+        return layoutPane;
     }
 
     @Override
@@ -370,7 +409,7 @@ public class GameUI_Implementation implements GameUI {
 
     @Override
     public void showFlashMessage(Duration duration, String message, Object... args) {
-        mainLayout.flashMessageLayer().showMessage(String.format(message, args), duration.toSeconds());
+        flashMessageView.showMessage(String.format(message, args), duration.toSeconds());
     }
 
     // GameUI_Lifecycle interface
@@ -475,13 +514,13 @@ public class GameUI_Implementation implements GameUI {
     @Override
     public PlayView playView() {
         if (playView == null) {
-            playView = new PlayView(mainLayout.fxScene());
+            playView = new PlayView(scene);
             playView.setUI(this);
             titleBinding = createStringBinding(this::computeStageTitle,
                 // depends on:
                 currentViewProperty(),
                 playView.currentGameSceneProperty(),
-                mainLayout.fxScene().heightProperty(),
+                scene.heightProperty(),
                 gameContext.gameController().gameVariantProperty(),
                 PROPERTY_DEBUG_INFO_VISIBLE,
                 PROPERTY_3D_ENABLED,
