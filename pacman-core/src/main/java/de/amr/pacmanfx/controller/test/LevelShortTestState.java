@@ -39,48 +39,40 @@ public class LevelShortTestState implements TestGameState {
         context.game().buildNormalLevel(1);
         context.game().startLevel(context.gameLevel());
         context.gameLevel().showPacAndGhosts();
-        GameLevelMessage message = new GameLevelMessage(MessageType.TEST);
-        message.setPosition(context.gameLevel().worldMap().terrainLayer().messageCenterPosition());
-        context.gameLevel().setMessage(message);
     }
 
     @Override
     public void onUpdate(GameContext context) {
+        final float START = 1.0f;
         final GameLevel gameLevel = context.gameLevel();
-        if (timer.tickCount() > 2 * Globals.NUM_TICKS_PER_SEC) {
-            gameLevel.blinking().tick();
-            gameLevel.ghosts().forEach(ghost -> ghost.tick(context));
-            gameLevel.bonus().ifPresent(bonus -> bonus.tick(context));
-        }
-        if (timer.atSecond(1.0)) {
+        if (timer.atSecond(START)) {
             context.game().continueGame(gameLevel);
+            GameLevelMessage message = new GameLevelMessage(MessageType.TEST);
+            message.setPosition(context.gameLevel().worldMap().terrainLayer().messageCenterPosition());
+            context.gameLevel().setMessage(message);
         }
-        else if (timer.atSecond(2)) {
-            gameLevel.blinking().setStartState(Pulse.State.ON);
-            gameLevel.blinking().restart();
-        }
-        else if (timer.atSecond(2.5)) {
+        else if (timer.atSecond(START + 1)) {
             gameLevel.clearMessage();
-            context.game().activateNextBonus(gameLevel);
-            gameLevel.bonus().ifPresent(bonus -> bonus.setEaten(2));
         }
-        else if (timer.atSecond(4.5)) {
+        else if (timer.atSecond(START + 3)) {
+            context.game().activateNextBonus(gameLevel);
+        }
+        else if (timer.atSecond(START + 4)) {
             gameLevel.bonus().ifPresent(bonus -> bonus.setEaten(2));
             context.eventManager().publishEvent(GameEventType.BONUS_EATEN);
         }
-        else if (timer.atSecond(6.5)) {
-            gameLevel.bonus().ifPresent(Bonus::setInactive); // needed?
+        else if (timer.atSecond(START + 5)) {
             context.game().activateNextBonus(gameLevel);
         }
-        else if (timer.atSecond(8.5)) {
+        else if (timer.atSecond(START + 6)) {
             gameLevel.bonus().ifPresent(bonus -> bonus.setEaten(2));
             context.eventManager().publishEvent(GameEventType.BONUS_EATEN);
         }
-        else if (timer.atSecond(10.0)) {
+        else if (timer.atSecond(START + 7)) {
             gameLevel.hidePacAndGhosts();
             context.game().onLevelCompleted(gameLevel);
         }
-        else if (timer.atSecond(11.0)) {
+        else if (timer.atSecond(START + 10)) {
             if (gameLevel.number() == lastTestedLevelNumber) {
                 context.coinMechanism().setNumCoins(0);
                 context.game().resetEverything();
