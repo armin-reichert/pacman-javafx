@@ -70,7 +70,7 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements Ga
                 .forEach(tile -> fillSquareAtTileCenter(tile, 4));
             // Over-paint eaten and dark-phase energizers
             foodLayer.energizerTiles().stream()
-                .filter(tile -> !info.getBoolean(CommonRenderInfoKey.MAZE_BLINKING) || foodLayer.hasEatenFoodAtTile(tile))
+                .filter(tile -> !info.getBoolean(CommonRenderInfoKey.ENERGIZER_BLINKING) || foodLayer.hasEatenFoodAtTile(tile))
                 .forEach(tile -> fillSquareAtTileCenter(tile, 10));
         }
         ctx().restore();

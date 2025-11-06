@@ -234,7 +234,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
         final GameLevel gameLevel = context().gameLevel();
         RenderInfo info = new RenderInfo();
         info.put(CommonRenderInfoKey.MAZE_BRIGHT, isMazeHighlighted());
-        info.put(CommonRenderInfoKey.MAZE_BLINKING, gameLevel.blinking().state() == Pulse.State.ON);
+        info.put(CommonRenderInfoKey.ENERGIZER_BLINKING, gameLevel.blinking().state() == Pulse.State.ON);
         info.put(CommonRenderInfoKey.MAZE_EMPTY, context().gameLevel().worldMap().foodLayer().uneatenFoodCount() == 0);
         gameLevelRenderer.applyLevelSettings(gameLevel, info);
         gameLevelRenderer.drawGameLevel(gameLevel, info);

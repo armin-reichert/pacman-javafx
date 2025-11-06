@@ -134,7 +134,7 @@ public class MiniGameView extends VBox {
             var info = new RenderInfo();
             info.putAll(Map.of(
                 CommonRenderInfoKey.MAZE_BRIGHT, false,
-                CommonRenderInfoKey.MAZE_BLINKING, gameLevel.blinking().state() == Pulse.State.ON,
+                CommonRenderInfoKey.ENERGIZER_BLINKING, gameLevel.blinking().state() == Pulse.State.ON,
                 CommonRenderInfoKey.MAZE_EMPTY, gameLevel.worldMap().foodLayer().uneatenFoodCount() == 0,
                 CommonRenderInfoKey.TICK, ui.clock().tickCount()
             ));

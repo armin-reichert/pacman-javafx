@@ -59,7 +59,7 @@ public class GenericMapRenderer extends BaseRenderer {
     public void drawMaze(GameLevel gameLevel, RenderInfo info) {
         WorldMap worldMap = gameLevel.worldMap();
         if (info.getBoolean(CommonRenderInfoKey.MAZE_BRIGHT)) {
-            terrainRenderer.setColorScheme(info.getBoolean(CommonRenderInfoKey.MAZE_BLINKING) ? blinkingOnColors : blinkingOffColors);
+            terrainRenderer.setColorScheme(info.getBoolean(CommonRenderInfoKey.ENERGIZER_BLINKING) ? blinkingOnColors : blinkingOffColors);
             terrainRenderer.draw(worldMap);
         }
         else {
@@ -83,7 +83,7 @@ public class GenericMapRenderer extends BaseRenderer {
                 .filter(not(foodLayer::isEnergizerTile))
                 .forEach(foodRenderer::drawPellet);
 
-            if (info.getBoolean(CommonRenderInfoKey.MAZE_BLINKING)) {
+            if (info.getBoolean(CommonRenderInfoKey.ENERGIZER_BLINKING)) {
                 foodRenderer.setEnergizerColor(Color.web(colorMap.get("pellet")));
                 foodLayer.energizerTiles().stream()
                     .filter(foodLayer::hasFoodAtTile)

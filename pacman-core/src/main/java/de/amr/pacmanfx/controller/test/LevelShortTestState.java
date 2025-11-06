@@ -5,15 +5,13 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.controller.test;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.event.GameEventType;
-import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelMessage;
 import de.amr.pacmanfx.model.MessageType;
-import de.amr.pacmanfx.model.actors.Bonus;
 
 public class LevelShortTestState implements TestGameState {
 
@@ -44,25 +42,27 @@ public class LevelShortTestState implements TestGameState {
     @Override
     public void onUpdate(GameContext context) {
         final float START = 1.0f;
+        final Game game = context.game();
         final GameLevel gameLevel = context.gameLevel();
         if (timer.atSecond(START)) {
-            context.game().continueGame(gameLevel);
+            game.continueGame(gameLevel);
             GameLevelMessage message = new GameLevelMessage(MessageType.TEST);
-            message.setPosition(context.gameLevel().worldMap().terrainLayer().messageCenterPosition());
-            context.gameLevel().setMessage(message);
+            message.setPosition(gameLevel.worldMap().terrainLayer().messageCenterPosition());
+            gameLevel.setMessage(message);
+            gameLevel.blinking().restart();
         }
         else if (timer.atSecond(START + 1)) {
             gameLevel.clearMessage();
         }
         else if (timer.atSecond(START + 3)) {
-            context.game().activateNextBonus(gameLevel);
+            game.activateNextBonus(gameLevel);
         }
         else if (timer.atSecond(START + 4)) {
             gameLevel.bonus().ifPresent(bonus -> bonus.setEaten(2));
             context.eventManager().publishEvent(GameEventType.BONUS_EATEN);
         }
         else if (timer.atSecond(START + 5)) {
-            context.game().activateNextBonus(gameLevel);
+            game.activateNextBonus(gameLevel);
         }
         else if (timer.atSecond(START + 6)) {
             gameLevel.bonus().ifPresent(bonus -> bonus.setEaten(2));
@@ -70,7 +70,8 @@ public class LevelShortTestState implements TestGameState {
         }
         else if (timer.atSecond(START + 7)) {
             gameLevel.hidePacAndGhosts();
-            context.game().onLevelCompleted(gameLevel);
+            gameLevel.blinking().stop();
+            game.onLevelCompleted(gameLevel);
         }
         else if (timer.atSecond(START + 10)) {
             if (gameLevel.number() == lastTestedLevelNumber) {
@@ -79,10 +80,10 @@ public class LevelShortTestState implements TestGameState {
                 context.gameController().restart(GamePlayState.BOOT);
             } else {
                 timer.restartIndefinitely();
-                context.game().startNextLevel();
+                game.startNextLevel();
                 GameLevelMessage message = new GameLevelMessage(MessageType.TEST);
-                message.setPosition(context.gameLevel().worldMap().terrainLayer().messageCenterPosition());
-                context.gameLevel().setMessage(message);
+                message.setPosition(gameLevel.worldMap().terrainLayer().messageCenterPosition());
+                gameLevel.setMessage(message);
             }
         }
     }
