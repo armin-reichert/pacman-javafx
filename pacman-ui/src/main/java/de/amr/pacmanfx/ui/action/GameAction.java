@@ -21,12 +21,14 @@ public abstract class GameAction {
 
     public abstract void execute(GameUI ui);
 
-    public final void executeIfEnabled(GameUI ui) {
+    public final boolean executeIfEnabled(GameUI ui) {
         if (isEnabled(ui)) {
             execute(ui);
             Logger.trace("Action '{}' executed", name);
+            return true;
         } else {
             Logger.warn("Action '{}' not executed (disabled)", name);
+            return false;
         }
     }
 

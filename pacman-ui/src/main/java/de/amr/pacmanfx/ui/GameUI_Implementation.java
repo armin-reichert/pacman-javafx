@@ -192,7 +192,10 @@ public final class GameUI_Implementation implements GameUI {
 
         // If a global action is bound to the key press, execute it; otherwise let the current view handle it.
         scene.setOnKeyPressed(e -> actionBindings.matchingAction(keyboard).ifPresentOrElse(
-            action -> action.executeIfEnabled(this),
+            action -> {
+                boolean executed = action.executeIfEnabled(this);
+                if (executed) e.consume();
+            },
             () -> currentView().handleKeyboardInput(this)
         ));
         scene.setOnScroll(this::handleScrollEvent);
