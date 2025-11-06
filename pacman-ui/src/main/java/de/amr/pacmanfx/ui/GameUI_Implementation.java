@@ -169,7 +169,10 @@ public final class GameUI_Implementation implements GameUI {
 
         createSceneLayout(mainSceneWidth, mainSceneHeight);
 
-        configureStage(stage);
+        stage.setScene(scene);
+        stage.setMinWidth(MIN_STAGE_WIDTH);
+        stage.setMinHeight(MIN_STAGE_HEIGHT);
+        stage.titleProperty().bind(titleBinding);
 
         actionBindings.bindAction(ACTION_ENTER_FULLSCREEN, DEFAULT_ACTION_BINDINGS);
         actionBindings.bindAction(ACTION_OPEN_EDITOR, DEFAULT_ACTION_BINDINGS);
@@ -240,13 +243,6 @@ public final class GameUI_Implementation implements GameUI {
 
     private void handleScrollEvent(ScrollEvent scrollEvent) {
         currentGameScene().ifPresent(gameScene -> gameScene.handleScrollEvent(scrollEvent));
-    }
-
-    private void configureStage(Stage stage) {
-        stage.setScene(scene);
-        stage.setMinWidth(MIN_STAGE_WIDTH);
-        stage.setMinHeight(MIN_STAGE_HEIGHT);
-        stage.titleProperty().bind(titleBinding);
     }
 
     // Asset key: "app.title" or "app.title.paused"
