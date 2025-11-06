@@ -19,6 +19,7 @@ import de.amr.pacmanfx.model.ScoreManager;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.ui.action.ArcadeActions;
 import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.action.GameAction;
@@ -282,7 +283,7 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
         actionBindings.useBindings(ACTION_TOGGLE_DRAW_MODE, ui.actionBindings());
         if (context().optGameLevel().isPresent()) {
             if (context().gameLevel().isDemoLevel()) {
-                actionBindings.useBindings(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
+                actionBindings.useBindings(ArcadeActions.ACTION_INSERT_COIN, ui.actionBindings());
             } else {
                 setPlayerSteeringActionBindings();
                 actionBindings.useBindings(CheatActions.ACTION_EAT_ALL_PELLETS, ui.actionBindings());

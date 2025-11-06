@@ -8,6 +8,7 @@ import de.amr.pacmanfx.controller.CoinMechanism;
 import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.controller.test.CutScenesTestState;
+import de.amr.pacmanfx.ui.action.ArcadeActions;
 import de.amr.pacmanfx.ui.api.GameUI;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -56,7 +57,7 @@ public class InfoBoxGameControl extends InfoBox {
 
         setAction(buttonGroupCutScenesTest[CUT_SCENES_TEST_START], ACTION_TEST_CUT_SCENES);
         setAction(buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT], ACTION_RESTART_INTRO);
-        setAction(buttonGroupLevelActions[GAME_LEVEL_START], ACTION_ARCADE_START_GAME); //TODO Tengen?
+        setAction(buttonGroupLevelActions[GAME_LEVEL_START], ArcadeActions.ACTION_START_GAME); //TODO Tengen?
         setAction(buttonGroupLevelActions[GAME_LEVEL_QUIT], ACTION_RESTART_INTRO);
         setAction(buttonGroupLevelActions[GAME_LEVEL_NEXT], ACTION_ENTER_NEXT_LEVEL);
         setAction(choiceBoxInitialLives, () -> ui.gameContext().game().setInitialLifeCount(choiceBoxInitialLives.getValue()));

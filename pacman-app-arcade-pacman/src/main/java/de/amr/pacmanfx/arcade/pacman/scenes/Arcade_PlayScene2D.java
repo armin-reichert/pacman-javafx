@@ -18,6 +18,7 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
+import de.amr.pacmanfx.ui.action.ArcadeActions;
 import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
@@ -94,7 +95,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     private void acceptGameLevel(GameLevel gameLevel) {
         if (gameLevel.isDemoLevel()) {
             context().game().hud().creditVisible(false).levelCounterVisible(true).livesCounterVisible(false);
-            actionBindingsManager.useBindings(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
+            actionBindingsManager.useBindings(ArcadeActions.ACTION_INSERT_COIN, ui.actionBindings());
             ui.soundManager().setEnabled(false);
         } else {
             context().game().hud().creditVisible(false).levelCounterVisible(true).livesCounterVisible(true);

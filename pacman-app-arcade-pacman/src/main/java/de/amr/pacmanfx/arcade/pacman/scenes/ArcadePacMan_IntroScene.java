@@ -22,6 +22,7 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui.action.ArcadeActions;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
@@ -105,8 +106,8 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     public void doInit() {
         context().game().hud().creditVisible(true).scoreVisible(true).livesCounterVisible(false).levelCounterVisible(true);
 
-        actionBindingsManager.useBindings(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
-        actionBindingsManager.useBindings(ACTION_ARCADE_START_GAME, ui.actionBindings());
+        actionBindingsManager.useBindings(ArcadeActions.ACTION_INSERT_COIN, ui.actionBindings());
+        actionBindingsManager.useBindings(ArcadeActions.ACTION_START_GAME, ui.actionBindings());
         actionBindingsManager.useBindings(ACTION_TEST_CUT_SCENES, ui.actionBindings());
         actionBindingsManager.useBindings(ACTION_TEST_LEVELS_SHORT, ui.actionBindings());
         actionBindingsManager.useBindings(ACTION_TEST_LEVELS_MEDIUM, ui.actionBindings());

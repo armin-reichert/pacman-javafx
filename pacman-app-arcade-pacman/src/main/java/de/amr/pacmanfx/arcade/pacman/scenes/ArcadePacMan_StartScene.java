@@ -7,14 +7,13 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_HUDRenderer;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui.action.ArcadeActions;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_ARCADE_INSERT_COIN;
-import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_ARCADE_START_GAME;
 import static de.amr.pacmanfx.ui.api.ArcadePalette.*;
 
 /**
@@ -42,8 +41,8 @@ public class ArcadePacMan_StartScene extends GameScene2D {
     @Override
     public void doInit() {
         context().game().hud().creditVisible(true).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
-        actionBindingsManager.useBindings(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
-        actionBindingsManager.useBindings(ACTION_ARCADE_START_GAME, ui.actionBindings());
+        actionBindingsManager.useBindings(ArcadeActions.ACTION_INSERT_COIN, ui.actionBindings());
+        actionBindingsManager.useBindings(ArcadeActions.ACTION_START_GAME, ui.actionBindings());
     }
 
     @Override

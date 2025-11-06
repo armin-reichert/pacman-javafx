@@ -11,6 +11,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui.action.ArcadeActions;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
@@ -18,8 +19,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_ARCADE_INSERT_COIN;
-import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_ARCADE_START_GAME;
 import static de.amr.pacmanfx.ui.api.ArcadePalette.ARCADE_ORANGE;
 
 public class ArcadeMsPacMan_StartScene extends GameScene2D {
@@ -55,8 +54,8 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
 
         livesCounterSprite = spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
 
-        actionBindingsManager.useBindings(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
-        actionBindingsManager.useBindings(ACTION_ARCADE_START_GAME, ui.actionBindings());
+        actionBindingsManager.useBindings(ArcadeActions.ACTION_INSERT_COIN, ui.actionBindings());
+        actionBindingsManager.useBindings(ArcadeActions.ACTION_START_GAME, ui.actionBindings());
     }
 
     @Override

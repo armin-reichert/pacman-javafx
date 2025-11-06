@@ -5,15 +5,12 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.action;
 
 import de.amr.pacmanfx.Globals;
-import de.amr.pacmanfx.controller.CoinMechanism;
 import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.controller.test.CutScenesTestState;
 import de.amr.pacmanfx.controller.test.LevelMediumTestState;
 import de.amr.pacmanfx.controller.test.LevelShortTestState;
-import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.model.PredefinedGameVariant;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import de.amr.pacmanfx.ui.api.GameScene;
@@ -21,8 +18,6 @@ import de.amr.pacmanfx.ui.api.GameUI;
 import javafx.scene.shape.DrawMode;
 import javafx.util.Duration;
 import org.tinylog.Logger;
-
-import java.util.Set;
 
 import static de.amr.pacmanfx.Globals.NUM_TICKS_PER_SEC;
 import static de.amr.pacmanfx.Validations.stateIsOneOf;
@@ -43,54 +38,6 @@ public final class CommonGameActions {
     public static final int SIMULATION_SPEED_DELTA = 2;
     public static final int SIMULATION_SPEED_MIN   = 5;
     public static final int SIMULATION_SPEED_MAX   = 300;
-
-    /**
-     * Adds credit (simulates insertion of a coin) and switches the game state accordingly.
-     */
-    public static final GameAction ACTION_ARCADE_INSERT_COIN = new GameAction("INSERT_COIN") {
-        @Override
-        public void execute(GameUI ui) {
-            if (ui.gameContext().coinMechanism().numCoins() < CoinMechanism.MAX_COINS) {
-                ui.soundManager().setEnabled(true);
-                ui.gameContext().coinMechanism().insertCoin();
-                ui.gameContext().eventManager().publishEvent(GameEventType.CREDIT_ADDED);
-            }
-            ui.gameContext().gameController().changeGameState(GamePlayState.SETTING_OPTIONS_FOR_START);
-        }
-
-        @Override
-        public boolean isEnabled(GameUI ui) {
-            if (ui.gameContext().game().isPlaying()) {
-                return false;
-            }
-            return ui.gameContext().gameState() == GamePlayState.SETTING_OPTIONS_FOR_START
-                || ui.gameContext().gameState() == INTRO
-                || ui.gameContext().optGameLevel().isPresent() && ui.gameContext().optGameLevel().get().isDemoLevel()
-                || ui.gameContext().coinMechanism().isEmpty();
-        }
-    };
-
-    public static final GameAction ACTION_ARCADE_START_GAME = new GameAction("START_GAME") {
-        @Override
-        public void execute(GameUI ui) {
-            ui.soundManager().stopVoice();
-            ui.gameContext().gameController().changeGameState(GamePlayState.STARTING_GAME_OR_LEVEL);
-        }
-
-        @Override
-        public boolean isEnabled(GameUI ui) {
-            Set<String> arcadeGames = Set.of(
-                PredefinedGameVariant.PACMAN.name(),
-                PredefinedGameVariant.MS_PACMAN.name(),
-                PredefinedGameVariant.PACMAN_XXL.name(),
-                PredefinedGameVariant.MS_PACMAN_XXL.name()
-            );
-            return arcadeGames.contains(ui.gameContext().gameController().gameVariant())
-                && !ui.gameContext().coinMechanism().isEmpty()
-                && (ui.gameContext().gameState() == GamePlayState.INTRO || ui.gameContext().gameState() == GamePlayState.SETTING_OPTIONS_FOR_START)
-                && ui.gameContext().game().canStartNewGame();
-        }
-    };
 
     public static final GameAction ACTION_BOOT_SHOW_PLAY_VIEW = new GameAction("BOOT_SHOW_PLAY_VIEW") {
         @Override
