@@ -23,9 +23,9 @@ import java.util.stream.Stream;
 public class StatusIconBox extends HBox implements Disposable {
 
     private static final Color STATUS_ICON_COLOR = ArcadePalette.ARCADE_WHITE;
-    private static final int STATUS_ICON_PADDING = 10;
-    private static final int STATUS_ICON_SIZE    = 24;
-    private static final int STATUS_ICON_SPACING = 5;
+    private static final int ICON_SIZE = 24;
+    private static final int ICON_SPACING = 5;
+    private static final int PADDING = 10;
 
     private static final Font TOOLTIP_FONT = Font.font("Sans", 16);
 
@@ -42,23 +42,14 @@ public class StatusIconBox extends HBox implements Disposable {
         iconImmune    = createIcon(FontAwesomeSolid.USER_SECRET, "Immunity");
         iconCheated   = createIcon(FontAwesomeSolid.FLAG, "Cheater");
 
-        getChildren().setAll(iconMuted, icon3D, iconAutopilot, iconImmune, iconCheated);
+        getChildren().setAll(iconsInOrder().toList());
 
-        setMaxHeight(STATUS_ICON_SIZE);
-        setMaxWidth(STATUS_ICON_SIZE * 5);
-        setPadding(new Insets(STATUS_ICON_PADDING));
-        setSpacing(STATUS_ICON_SPACING);
-    }
+        long count = iconsInOrder().count();
+        setMaxHeight(ICON_SIZE + 2 * PADDING);
+        setMaxWidth((ICON_SIZE + ICON_SPACING) * count - ICON_SPACING + 2 * PADDING);
 
-    private FontIcon createIcon(Ikon iconType, String tooltipText) {
-        FontIcon icon = FontIcon.of(iconType, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
-        icon.setVisible(false);
-        icon.visibleProperty().addListener(this::handleIconVisibilityChange);
-        Tooltip tooltip = new Tooltip(tooltipText);
-        tooltip.setFont(TOOLTIP_FONT);
-        tooltip.setShowDelay(Duration.millis(250));
-        Tooltip.install(icon, tooltip);
-        return icon;
+        setPadding(new Insets(PADDING));
+        setSpacing(ICON_SPACING);
     }
 
     public FontIcon iconAutopilot() {
@@ -84,25 +75,29 @@ public class StatusIconBox extends HBox implements Disposable {
     @Override
     public void dispose() {
         visibleProperty().unbind();
-
-        iconMuted.visibleProperty().unbind();
-        iconMuted.visibleProperty().removeListener(this::handleIconVisibilityChange);
-
-        icon3D.visibleProperty().unbind();
-        icon3D.visibleProperty().removeListener(this::handleIconVisibilityChange);
-
-        iconAutopilot.visibleProperty().unbind();
-        iconAutopilot.visibleProperty().removeListener(this::handleIconVisibilityChange);
-
-        iconCheated.visibleProperty().unbind();
-        iconCheated.visibleProperty().removeListener(this::handleIconVisibilityChange);
-
-        iconImmune.visibleProperty().unbind();
-        iconImmune.visibleProperty().removeListener(this::handleIconVisibilityChange);
+        iconsInOrder().forEach(icon -> {
+            icon.visibleProperty().unbind();
+            icon.visibleProperty().removeListener(this::handleVisibilityChange);
+        });
     }
 
-    private void handleIconVisibilityChange(ObservableValue<? extends Boolean> property, boolean oldVisible, boolean newVisible) {
+    private FontIcon createIcon(Ikon iconType, String tooltipText) {
+        FontIcon icon = FontIcon.of(iconType, ICON_SIZE, STATUS_ICON_COLOR);
+        icon.setVisible(false);
+        icon.visibleProperty().addListener(this::handleVisibilityChange);
+        Tooltip tooltip = new Tooltip(tooltipText);
+        tooltip.setFont(TOOLTIP_FONT);
+        tooltip.setShowDelay(Duration.millis(250));
+        Tooltip.install(icon, tooltip);
+        return icon;
+    }
+
+    private void handleVisibilityChange(ObservableValue<? extends Boolean> property, boolean wasVisible, boolean isVisible) {
         // keep box compact, show visible items only
-        getChildren().setAll(Stream.of(iconMuted, icon3D, iconAutopilot, iconImmune, iconCheated).filter(Node::isVisible).toList());
+        getChildren().setAll(iconsInOrder().filter(Node::isVisible).toList());
+    }
+
+    private Stream<FontIcon> iconsInOrder() {
+        return Stream.of(iconMuted, icon3D, iconAutopilot, iconImmune, iconCheated);
     }
 }
