@@ -18,9 +18,9 @@ import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
 import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
 import static de.amr.pacmanfx.uilib.Ufx.toggle;
 
-public interface CheatActions {
+public final class CheatActions {
 
-    GameAction ACTION_ADD_LIVES = new GameAction("CHEAT_ADD_LIVES") {
+    public static final GameAction ACTION_ADD_LIVES = new GameAction("CHEAT_ADD_LIVES") {
         @Override
         public void execute(GameUI ui) {
             ui.gameContext().gameController().cheatUsedProperty().set(true);
@@ -32,7 +32,7 @@ public interface CheatActions {
         public boolean isEnabled(GameUI ui) { return ui.gameContext().optGameLevel().isPresent(); }
     };
 
-    GameAction ACTION_EAT_ALL_PELLETS = new GameAction("CHEAT_EAT_ALL_PELLETS") {
+    public static final GameAction ACTION_EAT_ALL_PELLETS = new GameAction("CHEAT_EAT_ALL_PELLETS") {
         @Override
         public void execute(GameUI ui) {
             ui.gameContext().gameController().cheatUsedProperty().set(true);
@@ -49,7 +49,7 @@ public interface CheatActions {
         }
     };
 
-    GameAction ACTION_KILL_GHOSTS = new GameAction("CHEAT_KILL_GHOSTS") {
+    public static final GameAction ACTION_KILL_GHOSTS = new GameAction("CHEAT_KILL_GHOSTS") {
         @Override
         public void execute(GameUI ui) {
             ui.gameContext().gameController().cheatUsedProperty().set(true);
@@ -68,7 +68,7 @@ public interface CheatActions {
         }
     };
 
-    GameAction ACTION_ENTER_NEXT_LEVEL = new GameAction("CHEAT_ENTER_NEXT_LEVEL") {
+    public static final GameAction ACTION_ENTER_NEXT_LEVEL = new GameAction("CHEAT_ENTER_NEXT_LEVEL") {
         @Override
         public void execute(GameUI ui) {
             ui.gameContext().gameController().cheatUsedProperty().set(true);
@@ -84,7 +84,7 @@ public interface CheatActions {
         }
     };
 
-    GameAction ACTION_TOGGLE_AUTOPILOT = new GameAction("TOGGLE_AUTOPILOT") {
+    public static final GameAction ACTION_TOGGLE_AUTOPILOT = new GameAction("TOGGLE_AUTOPILOT") {
         @Override
         public void execute(GameUI ui) {
             final GameController gameController = ui.gameContext().gameController();
@@ -98,7 +98,7 @@ public interface CheatActions {
         }
     };
 
-    GameAction ACTION_TOGGLE_IMMUNITY = new GameAction("TOGGLE_IMMUNITY") {
+    public static final GameAction ACTION_TOGGLE_IMMUNITY = new GameAction("TOGGLE_IMMUNITY") {
         @Override
         public void execute(GameUI ui) {
             if (ui.gameContext().game().isPlaying()) {
@@ -110,6 +110,4 @@ public interface CheatActions {
             ui.soundManager().playVoice(immunityOn ? SoundID.VOICE_IMMUNITY_ON : SoundID.VOICE_IMMUNITY_OFF, 0);
         }
     };
-
-
 }

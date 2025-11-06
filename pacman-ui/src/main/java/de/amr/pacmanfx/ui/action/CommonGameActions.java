@@ -38,16 +38,16 @@ import static de.amr.pacmanfx.uilib.Ufx.toggle;
  * For each action there must exist an entry in the {@code localized_texts} resource bundle
  * of the form {@code key=localized_action_name} where {@code key=action.name()} !
  */
-public interface CommonGameActions {
+public final class CommonGameActions {
 
-    int SIMULATION_SPEED_DELTA = 2;
-    int SIMULATION_SPEED_MIN   = 5;
-    int SIMULATION_SPEED_MAX   = 300;
+    public static final int SIMULATION_SPEED_DELTA = 2;
+    public static final int SIMULATION_SPEED_MIN   = 5;
+    public static final int SIMULATION_SPEED_MAX   = 300;
 
     /**
      * Adds credit (simulates insertion of a coin) and switches the game state accordingly.
      */
-    GameAction ACTION_ARCADE_INSERT_COIN = new GameAction("INSERT_COIN") {
+    public static final GameAction ACTION_ARCADE_INSERT_COIN = new GameAction("INSERT_COIN") {
         @Override
         public void execute(GameUI ui) {
             if (ui.gameContext().coinMechanism().numCoins() < CoinMechanism.MAX_COINS) {
@@ -70,7 +70,7 @@ public interface CommonGameActions {
         }
     };
 
-    GameAction ACTION_ARCADE_START_GAME = new GameAction("START_GAME") {
+    public static final GameAction ACTION_ARCADE_START_GAME = new GameAction("START_GAME") {
         @Override
         public void execute(GameUI ui) {
             ui.soundManager().stopVoice();
@@ -92,7 +92,7 @@ public interface CommonGameActions {
         }
     };
 
-    GameAction ACTION_BOOT_SHOW_PLAY_VIEW = new GameAction("BOOT_SHOW_PLAY_VIEW") {
+    public static final GameAction ACTION_BOOT_SHOW_PLAY_VIEW = new GameAction("BOOT_SHOW_PLAY_VIEW") {
         @Override
         public void execute(GameUI ui) {
             ui.showPlayView();
@@ -100,21 +100,21 @@ public interface CommonGameActions {
         }
     };
 
-    GameAction ACTION_ENTER_FULLSCREEN = new GameAction("ENTER_FULLSCREEN") {
+    public static final GameAction ACTION_ENTER_FULLSCREEN = new GameAction("ENTER_FULLSCREEN") {
         @Override
         public void execute(GameUI ui) {
             ui.stage().setFullScreen(true);
         }
     };
 
-    GameAction ACTION_LET_GAME_STATE_EXPIRE = new GameAction("LET_GAME_STATE_EXPIRE") {
+    public static final GameAction ACTION_LET_GAME_STATE_EXPIRE = new GameAction("LET_GAME_STATE_EXPIRE") {
         @Override
         public void execute(GameUI ui) {
             ui.gameContext().gameController().letCurrentGameStateExpire();
         }
     };
 
-    GameAction ACTION_OPEN_EDITOR = new GameAction("OPEN_EDITOR") {
+    public static final GameAction ACTION_OPEN_EDITOR = new GameAction("OPEN_EDITOR") {
         @Override
         public void execute(GameUI ui) {
             ui.showEditorView();
@@ -126,7 +126,7 @@ public interface CommonGameActions {
         }
     };
 
-    GameAction ACTION_PERSPECTIVE_NEXT = new GameAction("PERSPECTIVE_NEXT") {
+    public static final GameAction ACTION_PERSPECTIVE_NEXT = new GameAction("PERSPECTIVE_NEXT") {
         @Override
         public void execute(GameUI ui) {
             PerspectiveID id = PROPERTY_3D_PERSPECTIVE_ID.get().next();
@@ -136,7 +136,7 @@ public interface CommonGameActions {
         }
     };
 
-    GameAction ACTION_PERSPECTIVE_PREVIOUS = new GameAction("PERSPECTIVE_PREVIOUS") {
+    public static final GameAction ACTION_PERSPECTIVE_PREVIOUS = new GameAction("PERSPECTIVE_PREVIOUS") {
         @Override
         public void execute(GameUI ui) {
             PerspectiveID id = PROPERTY_3D_PERSPECTIVE_ID.get().prev();
@@ -146,7 +146,7 @@ public interface CommonGameActions {
         }
     };
 
-    GameAction ACTION_QUIT_GAME_SCENE = new GameAction("QUIT_GAME_SCENE") {
+    public static final GameAction ACTION_QUIT_GAME_SCENE = new GameAction("QUIT_GAME_SCENE") {
         @Override
         public void execute(GameUI ui) {
             ui.quitCurrentGameScene();
@@ -154,7 +154,7 @@ public interface CommonGameActions {
         }
     };
 
-    GameAction ACTION_RESTART_INTRO = new GameAction("RESTART_INTRO") {
+    public static final GameAction ACTION_RESTART_INTRO = new GameAction("RESTART_INTRO") {
         @Override
         public void execute(GameUI ui) {
             ui.soundManager().stopAll();
@@ -168,7 +168,7 @@ public interface CommonGameActions {
         }
     };
 
-    GameAction ACTION_SHOW_HELP = new GameAction("SHOW_HELP") {
+    public static final GameAction ACTION_SHOW_HELP = new GameAction("SHOW_HELP") {
         @Override
         public void execute(GameUI ui) {
             ui.playView().showHelp(ui);
@@ -186,7 +186,7 @@ public interface CommonGameActions {
         }
     };
 
-    GameAction ACTION_SIMULATION_FASTER = new GameAction("SIMULATION_FASTER") {
+    public static final GameAction ACTION_SIMULATION_FASTER = new GameAction("SIMULATION_FASTER") {
         @Override
         public void execute(GameUI ui) {
             double newRate = ui.clock().targetFrameRate() + SIMULATION_SPEED_DELTA;
@@ -197,7 +197,7 @@ public interface CommonGameActions {
         }
     };
 
-    GameAction ACTION_SIMULATION_FASTEST = new GameAction("SIMULATION_FASTEST") {
+    public static final GameAction ACTION_SIMULATION_FASTEST = new GameAction("SIMULATION_FASTEST") {
         @Override
         public void execute(GameUI ui) {
             ui.clock().setTargetFrameRate(SIMULATION_SPEED_MAX);
@@ -205,7 +205,7 @@ public interface CommonGameActions {
         }
     };
 
-    GameAction ACTION_SIMULATION_SLOWER = new GameAction("SIMULATION_SLOWER") {
+    public static final GameAction ACTION_SIMULATION_SLOWER = new GameAction("SIMULATION_SLOWER") {
         @Override
         public void execute(GameUI ui) {
             double newRate = ui.clock().targetFrameRate() - SIMULATION_SPEED_DELTA;
@@ -215,7 +215,7 @@ public interface CommonGameActions {
             ui.showFlashMessage(Duration.seconds(0.75), prefix + newRate + "Hz");
         }
     };
-    GameAction ACTION_SIMULATION_SLOWEST = new GameAction("SIMULATION_SLOWEST") {
+    public static final GameAction ACTION_SIMULATION_SLOWEST = new GameAction("SIMULATION_SLOWEST") {
         @Override
         public void execute(GameUI ui) {
             ui.clock().setTargetFrameRate(SIMULATION_SPEED_MIN);
@@ -223,7 +223,7 @@ public interface CommonGameActions {
         }
     };
 
-    GameAction ACTION_SIMULATION_ONE_STEP = new GameAction("SIMULATION_ONE_STEP") {
+    public static final GameAction ACTION_SIMULATION_ONE_STEP = new GameAction("SIMULATION_ONE_STEP") {
         @Override
         public void execute(GameUI ui) {
             boolean success = ui.clock().makeOneStep(true);
@@ -236,7 +236,7 @@ public interface CommonGameActions {
         public boolean isEnabled(GameUI ui) { return ui.clock().isPaused(); }
     };
 
-    GameAction ACTION_SIMULATION_TEN_STEPS = new GameAction("SIMULATION_TEN_STEPS") {
+    public static final GameAction ACTION_SIMULATION_TEN_STEPS = new GameAction("SIMULATION_TEN_STEPS") {
         @Override
         public void execute(GameUI ui) {
             boolean success = ui.clock().makeSteps(10, true);
@@ -249,7 +249,7 @@ public interface CommonGameActions {
         public boolean isEnabled(GameUI ui) { return ui.clock().isPaused(); }
      };
 
-    GameAction ACTION_SIMULATION_RESET = new GameAction("SIMULATION_RESET") {
+    public static final GameAction ACTION_SIMULATION_RESET = new GameAction("SIMULATION_RESET") {
         @Override
         public void execute(GameUI ui) {
             ui.clock().setTargetFrameRate(NUM_TICKS_PER_SEC);
@@ -257,12 +257,12 @@ public interface CommonGameActions {
         }
     };
 
-    GameAction ACTION_STEER_UP = new SteeringAction(Direction.UP);
-    GameAction ACTION_STEER_DOWN = new SteeringAction(Direction.DOWN);
-    GameAction ACTION_STEER_LEFT = new SteeringAction(Direction.LEFT);
-    GameAction ACTION_STEER_RIGHT = new SteeringAction(Direction.RIGHT);
+    public static final GameAction ACTION_STEER_UP = new SteeringAction(Direction.UP);
+    public static final GameAction ACTION_STEER_DOWN = new SteeringAction(Direction.DOWN);
+    public static final GameAction ACTION_STEER_LEFT = new SteeringAction(Direction.LEFT);
+    public static final GameAction ACTION_STEER_RIGHT = new SteeringAction(Direction.RIGHT);
 
-    GameAction ACTION_TEST_CUT_SCENES = new GameAction("TEST_CUT_SCENES") {
+    public static final GameAction ACTION_TEST_CUT_SCENES = new GameAction("TEST_CUT_SCENES") {
         @Override
         public void execute(GameUI ui) {
             GameState testState = ui.gameContext().gameController().stateByName(CutScenesTestState.class.getSimpleName());
@@ -271,7 +271,7 @@ public interface CommonGameActions {
         }
     };
 
-    GameAction ACTION_TEST_LEVELS_SHORT = new GameAction("TEST_LEVELS_SHORT") {
+    public static final GameAction ACTION_TEST_LEVELS_SHORT = new GameAction("TEST_LEVELS_SHORT") {
         @Override
         public void execute(GameUI ui) {
             GameState testState = ui.gameContext().gameController().stateByName(LevelShortTestState.class.getSimpleName());
@@ -280,7 +280,7 @@ public interface CommonGameActions {
         }
     };
 
-    GameAction ACTION_TEST_LEVELS_MEDIUM = new GameAction("TEST_LEVELS_MEDIUM") {
+    public static final GameAction ACTION_TEST_LEVELS_MEDIUM = new GameAction("TEST_LEVELS_MEDIUM") {
         @Override
         public void execute(GameUI ui) {
             GameState testState = ui.gameContext().gameController().stateByName(LevelMediumTestState.class.getSimpleName());
@@ -289,7 +289,7 @@ public interface CommonGameActions {
         }
     };
 
-    GameAction ACTION_TOGGLE_DASHBOARD = new GameAction("TOGGLE_DASHBOARD") {
+    public static final GameAction ACTION_TOGGLE_DASHBOARD = new GameAction("TOGGLE_DASHBOARD") {
         @Override
         public void execute(GameUI ui) {
             ui.playView().dashboard().toggleVisibility();
@@ -306,14 +306,14 @@ public interface CommonGameActions {
         }
     };
 
-    GameAction ACTION_TOGGLE_DEBUG_INFO = new GameAction("TOGGLE_DEBUG_INFO") {
+    public static final GameAction ACTION_TOGGLE_DEBUG_INFO = new GameAction("TOGGLE_DEBUG_INFO") {
         @Override
         public void execute(GameUI ui) {
             toggle(PROPERTY_DEBUG_INFO_VISIBLE);
         }
     };
 
-    GameAction ACTION_TOGGLE_DRAW_MODE = new GameAction("TOGGLE_DRAW_MODE") {
+    public static final GameAction ACTION_TOGGLE_DRAW_MODE = new GameAction("TOGGLE_DRAW_MODE") {
         @Override
         public void execute(GameUI ui) {
             PROPERTY_3D_DRAW_MODE.set(PROPERTY_3D_DRAW_MODE.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
@@ -325,7 +325,7 @@ public interface CommonGameActions {
         }
     };
 
-    GameAction ACTION_TOGGLE_MINI_VIEW_VISIBILITY = new GameAction("TOGGLE_MINI_VIEW_VISIBILITY") {
+    public static final GameAction ACTION_TOGGLE_MINI_VIEW_VISIBILITY = new GameAction("TOGGLE_MINI_VIEW_VISIBILITY") {
         @Override
         public void execute(GameUI ui) {
             toggle(PROPERTY_MINI_VIEW_ON);
@@ -335,14 +335,14 @@ public interface CommonGameActions {
         }
     };
 
-    GameAction ACTION_TOGGLE_MUTED = new GameAction("TOGGLE_MUTED") {
+    public static final GameAction ACTION_TOGGLE_MUTED = new GameAction("TOGGLE_MUTED") {
         @Override
         public void execute(GameUI ui) {
             PROPERTY_MUTED.set(!PROPERTY_MUTED.get());
         }
     };
 
-    GameAction ACTION_TOGGLE_PAUSED = new GameAction("TOGGLE_PAUSED") {
+    public static final GameAction ACTION_TOGGLE_PAUSED = new GameAction("TOGGLE_PAUSED") {
         @Override
         public void execute(GameUI ui) {
             toggle(ui.clock().pausedProperty());
@@ -353,7 +353,7 @@ public interface CommonGameActions {
         }
     };
 
-    GameAction ACTION_TOGGLE_PLAY_SCENE_2D_3D = new GameAction("TOGGLE_PLAY_SCENE_2D_3D") {
+    public static final GameAction ACTION_TOGGLE_PLAY_SCENE_2D_3D = new GameAction("TOGGLE_PLAY_SCENE_2D_3D") {
         @Override
         public void execute(GameUI ui) {
             ui.currentGameScene().ifPresent(gameScene -> {
