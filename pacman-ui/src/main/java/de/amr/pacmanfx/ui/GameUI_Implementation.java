@@ -115,7 +115,7 @@ public final class GameUI_Implementation implements GameUI {
     private final Stage stage;
     private final UIPreferences prefs;
 
-    private final ActionBindingsManager globalActionBindings = new DefaultActionBindingsManager();
+    private final ActionBindingsManager actionBindings = new DefaultActionBindingsManager();
     private final Map<String, Class<?>> configClassesByGameVariant;
     private final Map<String, GameUI_Config> configByGameVariant = new HashMap<>();
 
@@ -171,10 +171,10 @@ public final class GameUI_Implementation implements GameUI {
 
         configureStage(stage);
 
-        globalActionBindings.bindAction(ACTION_ENTER_FULLSCREEN, DEFAULT_ACTION_BINDINGS);
-        globalActionBindings.bindAction(ACTION_OPEN_EDITOR, DEFAULT_ACTION_BINDINGS);
-        globalActionBindings.bindAction(ACTION_TOGGLE_MUTED, DEFAULT_ACTION_BINDINGS);
-        globalActionBindings.assignBindingsToKeyboard(keyboard);
+        actionBindings.bindAction(ACTION_ENTER_FULLSCREEN, DEFAULT_ACTION_BINDINGS);
+        actionBindings.bindAction(ACTION_OPEN_EDITOR, DEFAULT_ACTION_BINDINGS);
+        actionBindings.bindAction(ACTION_TOGGLE_MUTED, DEFAULT_ACTION_BINDINGS);
+        actionBindings.assignBindingsToKeyboard(keyboard);
     }
 
     private void createSceneLayout(double width, double height) {
@@ -188,7 +188,7 @@ public final class GameUI_Implementation implements GameUI {
         scene.addEventFilter(KeyEvent.KEY_RELEASED, keyboard::onKeyReleased);
 
         // If a global action is bound to the key press, execute it; otherwise let the current view handle it.
-        scene.setOnKeyPressed(e -> globalActionBindings.matchingAction(keyboard).ifPresentOrElse(
+        scene.setOnKeyPressed(e -> actionBindings.matchingAction(keyboard).ifPresentOrElse(
             action -> action.executeIfEnabled(this),
             () -> currentView().handleKeyboardInput(this)
         ));
