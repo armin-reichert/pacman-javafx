@@ -24,8 +24,10 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Background;
 import javafx.stage.Stage;
@@ -125,8 +127,14 @@ public class GameUI_Implementation implements GameUI {
 
     private StringBinding titleBinding;
 
-    public GameUI_Implementation(Map<String, Class<?>> configClassesByGameVariant, GameContext gameContext, Stage stage, double mainSceneWidth, double mainSceneHeight) {
-        this.configClassesByGameVariant = requireNonNull(configClassesByGameVariant, "UI configuration map is null");
+    public GameUI_Implementation(
+        Map<String, Class<?>> configClassesByVariantName,
+        GameContext gameContext,
+        Stage stage,
+        double mainSceneWidth,
+        double mainSceneHeight)
+    {
+        this.configClassesByGameVariant = requireNonNull(configClassesByVariantName, "UI configuration map is null");
         this.gameContext = requireNonNull(gameContext, "Game context is null");
         this.stage = requireNonNull(stage, "Stage is null");
         Validations.requireNonNegative(mainSceneWidth, "Main scene width must be a positive number");
@@ -136,6 +144,7 @@ public class GameUI_Implementation implements GameUI {
         joypad = new Joypad(keyboard);
 
         customDirectoryWatchdog = new DirectoryWatchdog(gameContext.customMapDir());
+
         clock = new GameClock();
         clock.setPausableAction(this::doSimulationStepAndUpdateGameScene);
         clock.setPermanentAction(this::drawCurrentView);
@@ -145,20 +154,22 @@ public class GameUI_Implementation implements GameUI {
         PROPERTY_3D_WALL_HEIGHT.set(prefs.getFloat("3d.obstacle.base_height"));
         PROPERTY_3D_WALL_OPACITY.set(prefs.getFloat("3d.obstacle.opacity"));
 
-        mainScene = new MainScene(this, mainSceneWidth, mainSceneHeight);
+        mainScene = new MainScene(mainSceneWidth, mainSceneHeight);
         configureMainScene();
-
+        configureStatusIconBox();
         configureStage(stage);
         defineGlobalActionBindings();
     }
 
-    public ObjectProperty<GameUI_View> currentViewProperty() {
-        return currentView;
-    }
-
     private void configureMainScene() {
-        // Check if a global action is defined for the key press, otherwise let the current view handle it.
-        mainScene.scene().setOnKeyPressed(e -> {
+        final Scene scene = mainScene.fxScene();
+
+        // Keyboard events are first handled by the global keyboard object
+        scene.addEventFilter(KeyEvent.KEY_PRESSED,  keyboard::onKeyPressed);
+        scene.addEventFilter(KeyEvent.KEY_RELEASED, keyboard::onKeyReleased);
+
+        // If a global action is defined for the key press, execute it; otherwise let the current view handle it.
+        scene.setOnKeyPressed(e -> {
             GameAction matchingAction = globalActionBindings.matchingAction(keyboard).orElse(null);
             if (matchingAction != null) {
                 matchingAction.executeIfEnabled(this);
@@ -166,7 +177,8 @@ public class GameUI_Implementation implements GameUI {
                 currentView().handleKeyboardInput(this);
             }
         });
-        mainScene.scene().setOnScroll(this::handleScrollEvent);
+        scene.setOnScroll(this::handleScrollEvent);
+
         mainScene.rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
             () -> isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D)
                 ? Background.fill(Gradients.Samples.random())
@@ -179,7 +191,9 @@ public class GameUI_Implementation implements GameUI {
             () -> currentView() == playView() && clock.isPaused(),
             currentViewProperty(), clock.pausedProperty())
         );
+    }
 
+    private void configureStatusIconBox() {
         // hide icon box if editor view is active, avoid creation of editor view in binding expression!
         StatusIconBox statusIcons = mainScene.statusIconBox();
         statusIcons.visibleProperty().bind(currentViewProperty()
@@ -197,7 +211,7 @@ public class GameUI_Implementation implements GameUI {
     }
 
     private void configureStage(Stage stage) {
-        stage.setScene(mainScene.scene());
+        stage.setScene(mainScene.fxScene());
         stage.setMinWidth(MIN_STAGE_WIDTH);
         stage.setMinHeight(MIN_STAGE_HEIGHT);
         stage.titleProperty().bind(titleBinding);
@@ -291,6 +305,10 @@ public class GameUI_Implementation implements GameUI {
             editorView.editor().init(gameContext.customMapDir());
         }
         return editorView;
+    }
+
+    public ObjectProperty<GameUI_View> currentViewProperty() {
+        return currentView;
     }
 
     // GameUI interface
@@ -457,13 +475,13 @@ public class GameUI_Implementation implements GameUI {
     @Override
     public PlayView playView() {
         if (playView == null) {
-            playView = new PlayView(mainScene.scene());
+            playView = new PlayView(mainScene.fxScene());
             playView.setUI(this);
             titleBinding = createStringBinding(this::computeStageTitle,
                 // depends on:
                 currentViewProperty(),
                 playView.currentGameSceneProperty(),
-                mainScene.scene().heightProperty(),
+                mainScene.fxScene().heightProperty(),
                 gameContext.gameController().gameVariantProperty(),
                 PROPERTY_DEBUG_INFO_VISIBLE,
                 PROPERTY_3D_ENABLED,
