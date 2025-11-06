@@ -54,7 +54,6 @@ public class PlayView extends StackPane implements GameUI_View {
     private final ObjectProperty<GameScene> currentGameScene = new SimpleObjectProperty<>();
 
     private final ActionBindingsManager actionBindings = new DefaultActionBindingsManager();
-    private final GameUI ui;
     private final MainScene parentScene;
     private final Dashboard dashboard;
     private final CanvasDecorationPane canvasDecorationPane = new CanvasDecorationPane();
@@ -65,19 +64,20 @@ public class PlayView extends StackPane implements GameUI_View {
     private final BorderPane dashboardAndMiniViewLayer = new BorderPane();
     private HelpLayer helpLayer; // help
 
+    private GameUI ui;
+
     private void createCanvas() {
         canvasDecorationPane.setCanvas(new Canvas());
         Logger.info("A new, fresh canvas has been created just for you!");
     }
 
-    public PlayView(GameUI ui, MainScene parentScene) {
-        this.ui = requireNonNull(ui);
+    public PlayView(MainScene parentScene) {
         this.parentScene = requireNonNull(parentScene);
 
-        dashboard = new Dashboard(ui);
+        dashboard = new Dashboard();
         dashboard.setVisible(false);
 
-        miniView = new MiniGameView(ui);
+        miniView = new MiniGameView();
         miniView.visibleProperty().bind(Bindings.createObjectBinding(
             () -> PROPERTY_MINI_VIEW_ON.get() && ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D),
             PROPERTY_MINI_VIEW_ON, currentGameScene
@@ -105,6 +105,13 @@ public class PlayView extends StackPane implements GameUI_View {
 
         parentScene.widthProperty() .addListener((py, ov, w) -> canvasDecorationPane.resizeTo(w.doubleValue(), parentScene.getHeight()));
         parentScene.heightProperty().addListener((py, ov, h) -> canvasDecorationPane.resizeTo(parentScene.getWidth(), h.doubleValue()));
+
+    }
+
+    public void setUI(GameUI ui) {
+        this.ui = requireNonNull(ui);
+        dashboard.setUI(ui);
+        miniView.setUI(ui);
 
         actionBindings.useBindings(ACTION_BOOT_SHOW_PLAY_VIEW, ui.actionBindings());
         actionBindings.useBindings(ACTION_ENTER_FULLSCREEN, ui.actionBindings());

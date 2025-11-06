@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import static java.util.Objects.requireNonNull;
+
 public class Dashboard extends VBox {
 
     public static final int INFOBOX_MIN_LABEL_WIDTH = 110;
@@ -24,16 +26,19 @@ public class Dashboard extends VBox {
     public static final Color INFO_BOX_TEXT_COLOR = Color.WHITE;
     public static final Font INFO_BOX_FONT = Font.font("Sans", 11.5);
 
-    private final GameUI ui;
+    private GameUI ui;
     private final Map<DashboardID, InfoBox> infoBoxMap = new LinkedHashMap<>();
 
-    public Dashboard(GameUI ui) {
-        this.ui = ui;
+    public Dashboard() {
         visibleProperty().addListener((py, ov, visible) -> {
             if (visible) {
                 updateLayout();
             }
         });
+    }
+
+    public void setUI(GameUI ui) {
+        this.ui = requireNonNull(ui);
     }
 
     public void init(GameUI ui) {

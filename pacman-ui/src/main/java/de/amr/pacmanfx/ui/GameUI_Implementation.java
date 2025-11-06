@@ -441,7 +441,8 @@ public class GameUI_Implementation implements GameUI {
     @Override
     public PlayView playView() {
         if (playView == null) {
-            playView = new PlayView(this, mainScene);
+            playView = new PlayView(mainScene);
+            playView.setUI(this);
             titleBinding = createStringBinding(this::computeStageTitle,
                 // depends on:
                 playView.currentGameSceneProperty(),

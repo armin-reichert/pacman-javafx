@@ -44,9 +44,10 @@ public class MiniGameView extends VBox {
     private final HBox layout;
     private final Canvas canvas;
 
-    private final GameUI ui;
-
     private final BaseRenderer canvasRenderer;
+
+    private GameUI ui;
+
     private GameLevelRenderer gameLevelRenderer;
     private ActorRenderer actorRenderer;
 
@@ -55,9 +56,7 @@ public class MiniGameView extends VBox {
     private final TranslateTransition slideInAnimation;
     private final TranslateTransition slideOutAnimation;
 
-    public MiniGameView(GameUI ui) {
-        this.ui = requireNonNull(ui);
-
+    public MiniGameView() {
         canvas = new Canvas();
         canvas.heightProperty().bind(PROPERTY_MINI_VIEW_HEIGHT);
         canvas.widthProperty().bind(Bindings.createDoubleBinding(
@@ -96,6 +95,10 @@ public class MiniGameView extends VBox {
         slideOutAnimation.setByY(10);
         slideOutAnimation.setDelay(Duration.seconds(2));
         slideOutAnimation.setInterpolator(Interpolator.EASE_IN);
+    }
+
+    public void setUI(GameUI ui) {
+        this.ui = requireNonNull(ui);
     }
 
     public void onGameLevelCreated(GameLevel gameLevel) {
