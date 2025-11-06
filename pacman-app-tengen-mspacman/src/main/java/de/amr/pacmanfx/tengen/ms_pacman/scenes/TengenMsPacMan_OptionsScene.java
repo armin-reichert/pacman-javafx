@@ -18,6 +18,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SceneRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.action.GameAction;
+import de.amr.pacmanfx.ui.action.TestActions;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
 import javafx.beans.property.IntegerProperty;
@@ -33,7 +34,6 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Actions.ACTION_TOG
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Properties.PROPERTY_JOYPAD_BINDINGS_DISPLAYED;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesColor;
-import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.alt;
 
 /**
@@ -109,9 +109,9 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         actionBindingsManager.setKeyCombination(actionSelectNextJoypadBinding, alt(KeyCode.J)); //TODO
         actionBindingsManager.useBindings(ACTION_START_PLAYING, tengenActionBindings);
         actionBindingsManager.useBindings(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, tengenActionBindings);
-        actionBindingsManager.useBindings(ACTION_TEST_CUT_SCENES, ui.actionBindings());
-        actionBindingsManager.useBindings(ACTION_TEST_LEVELS_SHORT, ui.actionBindings());
-        actionBindingsManager.useBindings(ACTION_TEST_LEVELS_MEDIUM, ui.actionBindings());
+        actionBindingsManager.useBindings(TestActions.ACTION_CUT_SCENES_TEST, ui.actionBindings());
+        actionBindingsManager.useBindings(TestActions.ACTION_SHORT_LEVEL_TEST, ui.actionBindings());
+        actionBindingsManager.useBindings(TestActions.ACTION_MEDIUM_LEVEL_TEST, ui.actionBindings());
         ui.joypad().setBindings(actionBindingsManager);
 
         selectedOption.set(OPTION_PAC_BOOSTER);

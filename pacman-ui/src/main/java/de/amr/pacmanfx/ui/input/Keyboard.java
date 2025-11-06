@@ -21,7 +21,7 @@ import static javafx.scene.input.KeyCombination.*;
 public final class Keyboard {
 
     // Provide an API for the most common cases
-    public static KeyCombination nude(KeyCode code) { return new KeyCodeCombination(code); }
+    public static KeyCombination bare(KeyCode code) { return new KeyCodeCombination(code); }
     public static KeyCombination alt(KeyCode code) {
         return new KeyCodeCombination(code, ALT_DOWN);
     }

@@ -148,7 +148,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
             new ActionBinding(ACTION_START_PLAYING,       jp.key(JoypadButton.START)),
             new ActionBinding(ACTION_TOGGLE_PAC_BOOSTER,  jp.key(JoypadButton.A), jp.key(JoypadButton.B)),
             new ActionBinding(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, alt(KeyCode.C)),
-            new ActionBinding(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, nude(KeyCode.SPACE))
+            new ActionBinding(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, bare(KeyCode.SPACE))
         );
     }
 

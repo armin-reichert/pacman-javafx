@@ -209,33 +209,6 @@ public final class CommonGameActions {
     public static final GameAction ACTION_STEER_LEFT = new SteeringAction(Direction.LEFT);
     public static final GameAction ACTION_STEER_RIGHT = new SteeringAction(Direction.RIGHT);
 
-    public static final GameAction ACTION_TEST_CUT_SCENES = new GameAction("TEST_CUT_SCENES") {
-        @Override
-        public void execute(GameUI ui) {
-            GameState testState = ui.gameContext().gameController().stateByName(CutScenesTestState.class.getSimpleName());
-            ui.gameContext().gameController().changeGameState(testState);
-            ui.showFlashMessage("Cut scenes test"); //TODO localize
-        }
-    };
-
-    public static final GameAction ACTION_TEST_LEVELS_SHORT = new GameAction("TEST_LEVELS_SHORT") {
-        @Override
-        public void execute(GameUI ui) {
-            GameState testState = ui.gameContext().gameController().stateByName(LevelShortTestState.class.getSimpleName());
-            ui.gameContext().gameController().restart(testState);
-            ui.showFlashMessage(Duration.seconds(3), "Level TEST MODE");
-        }
-    };
-
-    public static final GameAction ACTION_TEST_LEVELS_MEDIUM = new GameAction("TEST_LEVELS_MEDIUM") {
-        @Override
-        public void execute(GameUI ui) {
-            GameState testState = ui.gameContext().gameController().stateByName(LevelMediumTestState.class.getSimpleName());
-            ui.gameContext().gameController().restart(testState);
-            ui.showFlashMessage(Duration.seconds(3), "Level TEST MODE");
-        }
-    };
-
     public static final GameAction ACTION_TOGGLE_DASHBOARD = new GameAction("TOGGLE_DASHBOARD") {
         @Override
         public void execute(GameUI ui) {

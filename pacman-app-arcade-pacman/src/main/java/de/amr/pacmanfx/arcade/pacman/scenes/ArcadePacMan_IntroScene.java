@@ -23,6 +23,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.action.ArcadeActions;
+import de.amr.pacmanfx.ui.action.TestActions;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
@@ -36,7 +37,6 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.pacman.rendering.SpriteID.GALLERY_GHOSTS;
 import static de.amr.pacmanfx.model.actors.GhostState.EATEN;
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
-import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.api.ArcadePalette.*;
 
 /**
@@ -108,9 +108,9 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
         actionBindingsManager.useBindings(ArcadeActions.ACTION_INSERT_COIN, ui.actionBindings());
         actionBindingsManager.useBindings(ArcadeActions.ACTION_START_GAME, ui.actionBindings());
-        actionBindingsManager.useBindings(ACTION_TEST_CUT_SCENES, ui.actionBindings());
-        actionBindingsManager.useBindings(ACTION_TEST_LEVELS_SHORT, ui.actionBindings());
-        actionBindingsManager.useBindings(ACTION_TEST_LEVELS_MEDIUM, ui.actionBindings());
+        actionBindingsManager.useBindings(TestActions.ACTION_CUT_SCENES_TEST, ui.actionBindings());
+        actionBindingsManager.useBindings(TestActions.ACTION_SHORT_LEVEL_TEST, ui.actionBindings());
+        actionBindingsManager.useBindings(TestActions.ACTION_MEDIUM_LEVEL_TEST, ui.actionBindings());
 
         blinking = new Pulse(10, Pulse.State.ON);
 

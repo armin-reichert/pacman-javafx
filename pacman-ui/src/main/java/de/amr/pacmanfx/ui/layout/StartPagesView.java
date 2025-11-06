@@ -33,7 +33,7 @@ import java.util.function.Supplier;
 
 import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_BOOT_SHOW_PLAY_VIEW;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_TOGGLE_PAUSED;
-import static de.amr.pacmanfx.ui.input.Keyboard.nude;
+import static de.amr.pacmanfx.ui.input.Keyboard.bare;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -85,10 +85,10 @@ public class StartPagesView extends Carousel implements GameUI_View {
             }
         };
 
-        actionBindings.setKeyCombination(actionPrevSlide,            nude(KeyCode.LEFT));
-        actionBindings.setKeyCombination(actionNextSlide,            nude(KeyCode.RIGHT));
-        actionBindings.setKeyCombination(ACTION_BOOT_SHOW_PLAY_VIEW, nude(KeyCode.ENTER));
-        actionBindings.setKeyCombination(ACTION_TOGGLE_PAUSED,       nude(KeyCode.P));
+        actionBindings.setKeyCombination(actionPrevSlide,            bare(KeyCode.LEFT));
+        actionBindings.setKeyCombination(actionNextSlide,            bare(KeyCode.RIGHT));
+        actionBindings.setKeyCombination(ACTION_BOOT_SHOW_PLAY_VIEW, bare(KeyCode.ENTER));
+        actionBindings.setKeyCombination(ACTION_TOGGLE_PAUSED,       bare(KeyCode.P));
     }
 
     @Override

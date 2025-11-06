@@ -16,6 +16,7 @@ import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.action.ArcadeActions;
+import de.amr.pacmanfx.ui.action.TestActions;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
@@ -26,7 +27,6 @@ import javafx.scene.paint.Color;
 import java.util.List;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.api.ArcadePalette.*;
 
 /**
@@ -85,9 +85,9 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
         actionBindingsManager.useBindings(ArcadeActions.ACTION_INSERT_COIN, ui.actionBindings());
         actionBindingsManager.useBindings(ArcadeActions.ACTION_START_GAME, ui.actionBindings());
-        actionBindingsManager.useBindings(ACTION_TEST_CUT_SCENES, ui.actionBindings());
-        actionBindingsManager.useBindings(ACTION_TEST_LEVELS_SHORT, ui.actionBindings());
-        actionBindingsManager.useBindings(ACTION_TEST_LEVELS_MEDIUM, ui.actionBindings());
+        actionBindingsManager.useBindings(TestActions.ACTION_CUT_SCENES_TEST, ui.actionBindings());
+        actionBindingsManager.useBindings(TestActions.ACTION_SHORT_LEVEL_TEST, ui.actionBindings());
+        actionBindingsManager.useBindings(TestActions.ACTION_MEDIUM_LEVEL_TEST, ui.actionBindings());
 
         marquee = new Marquee(60, 88, 132, 60, 96, 6, 16);
         marquee.setBulbOffColor(ARCADE_RED);

@@ -32,7 +32,7 @@ import java.util.stream.IntStream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_3D_ENABLED;
-import static de.amr.pacmanfx.ui.input.Keyboard.nude;
+import static de.amr.pacmanfx.ui.input.Keyboard.bare;
 import static de.amr.pacmanfx.uilib.widgets.OptionMenuStyle.DEFAULT_OPTION_MENU_STYLE;
 import static java.util.Objects.requireNonNull;
 
@@ -318,9 +318,9 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
 
     @Override
     protected void handleKeyPress(KeyEvent e) {
-        if (nude(KeyCode.E).match(e)) {
+        if (bare(KeyCode.E).match(e)) {
             ui.showEditorView();
-        } else if (nude(KeyCode.ENTER).match(e)) {
+        } else if (bare(KeyCode.ENTER).match(e)) {
             startGame();
         } else {
             super.handleKeyPress(e);
