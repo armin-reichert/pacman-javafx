@@ -54,8 +54,8 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
 
         livesCounterSprite = spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
 
-        actionBindingsManager.useBindings(ArcadeActions.ACTION_INSERT_COIN, ui.actionBindings());
-        actionBindingsManager.useBindings(ArcadeActions.ACTION_START_GAME, ui.actionBindings());
+        actionBindingsManager.bindAction(ArcadeActions.ACTION_INSERT_COIN, ui.actionBindings());
+        actionBindingsManager.bindAction(ArcadeActions.ACTION_START_GAME, ui.actionBindings());
     }
 
     @Override

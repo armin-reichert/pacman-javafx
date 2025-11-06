@@ -95,18 +95,18 @@ public class Arcade_PlayScene2D extends GameScene2D {
     private void acceptGameLevel(GameLevel gameLevel) {
         if (gameLevel.isDemoLevel()) {
             context().game().hud().creditVisible(false).levelCounterVisible(true).livesCounterVisible(false);
-            actionBindingsManager.useBindings(ArcadeActions.ACTION_INSERT_COIN, ui.actionBindings());
+            actionBindingsManager.bindAction(ArcadeActions.ACTION_INSERT_COIN, ui.actionBindings());
             ui.soundManager().setEnabled(false);
         } else {
             context().game().hud().creditVisible(false).levelCounterVisible(true).livesCounterVisible(true);
-            actionBindingsManager.useBindings(ACTION_STEER_UP,               ui.actionBindings());
-            actionBindingsManager.useBindings(ACTION_STEER_DOWN,             ui.actionBindings());
-            actionBindingsManager.useBindings(ACTION_STEER_LEFT,             ui.actionBindings());
-            actionBindingsManager.useBindings(ACTION_STEER_RIGHT,            ui.actionBindings());
-            actionBindingsManager.useBindings(CheatActions.ACTION_ADD_LIVES,        ui.actionBindings());
-            actionBindingsManager.useBindings(CheatActions.ACTION_EAT_ALL_PELLETS,  ui.actionBindings());
-            actionBindingsManager.useBindings(CheatActions.ACTION_ENTER_NEXT_LEVEL, ui.actionBindings());
-            actionBindingsManager.useBindings(CheatActions.ACTION_KILL_GHOSTS,      ui.actionBindings());
+            actionBindingsManager.bindAction(ACTION_STEER_UP,               ui.actionBindings());
+            actionBindingsManager.bindAction(ACTION_STEER_DOWN,             ui.actionBindings());
+            actionBindingsManager.bindAction(ACTION_STEER_LEFT,             ui.actionBindings());
+            actionBindingsManager.bindAction(ACTION_STEER_RIGHT,            ui.actionBindings());
+            actionBindingsManager.bindAction(CheatActions.ACTION_ADD_LIVES,        ui.actionBindings());
+            actionBindingsManager.bindAction(CheatActions.ACTION_EAT_ALL_PELLETS,  ui.actionBindings());
+            actionBindingsManager.bindAction(CheatActions.ACTION_ENTER_NEXT_LEVEL, ui.actionBindings());
+            actionBindingsManager.bindAction(CheatActions.ACTION_KILL_GHOSTS,      ui.actionBindings());
             ui.soundManager().setEnabled(true);
         }
         actionBindingsManager.assignBindingsToKeyboard(ui.keyboard());

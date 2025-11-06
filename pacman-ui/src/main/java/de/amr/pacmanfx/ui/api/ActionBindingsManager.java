@@ -33,5 +33,5 @@ public interface ActionBindingsManager {
      * @param gameAction a game action
      * @param actionBindings an action bindings list
      */
-    void useBindings(GameAction gameAction, Set<ActionBinding> actionBindings);
+    void bindAction(GameAction gameAction, Set<ActionBinding> actionBindings);
 }

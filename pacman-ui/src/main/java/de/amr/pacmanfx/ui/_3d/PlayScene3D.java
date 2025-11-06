@@ -278,18 +278,18 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
 
     protected void setActionBindings() {
         actionBindings.removeBindingsFromKeyboard(ui.keyboard());
-        actionBindings.useBindings(ACTION_PERSPECTIVE_PREVIOUS, ui.actionBindings());
-        actionBindings.useBindings(ACTION_PERSPECTIVE_NEXT, ui.actionBindings());
-        actionBindings.useBindings(ACTION_TOGGLE_DRAW_MODE, ui.actionBindings());
+        actionBindings.bindAction(ACTION_PERSPECTIVE_PREVIOUS, ui.actionBindings());
+        actionBindings.bindAction(ACTION_PERSPECTIVE_NEXT, ui.actionBindings());
+        actionBindings.bindAction(ACTION_TOGGLE_DRAW_MODE, ui.actionBindings());
         if (context().optGameLevel().isPresent()) {
             if (context().gameLevel().isDemoLevel()) {
-                actionBindings.useBindings(ArcadeActions.ACTION_INSERT_COIN, ui.actionBindings());
+                actionBindings.bindAction(ArcadeActions.ACTION_INSERT_COIN, ui.actionBindings());
             } else {
                 setPlayerSteeringActionBindings();
-                actionBindings.useBindings(CheatActions.ACTION_EAT_ALL_PELLETS, ui.actionBindings());
-                actionBindings.useBindings(CheatActions.ACTION_ADD_LIVES, ui.actionBindings());
-                actionBindings.useBindings(CheatActions.ACTION_ENTER_NEXT_LEVEL, ui.actionBindings());
-                actionBindings.useBindings(CheatActions.ACTION_KILL_GHOSTS, ui.actionBindings());
+                actionBindings.bindAction(CheatActions.ACTION_EAT_ALL_PELLETS, ui.actionBindings());
+                actionBindings.bindAction(CheatActions.ACTION_ADD_LIVES, ui.actionBindings());
+                actionBindings.bindAction(CheatActions.ACTION_ENTER_NEXT_LEVEL, ui.actionBindings());
+                actionBindings.bindAction(CheatActions.ACTION_KILL_GHOSTS, ui.actionBindings());
             }
         }
         actionBindings.assignBindingsToKeyboard(ui.keyboard());
@@ -299,10 +299,10 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
      * Overridden by "Tengen Ms. Pac-Man" subclass to bind to keys representing the Joypad buttons.
      */
     protected void setPlayerSteeringActionBindings() {
-        actionBindings.useBindings(ACTION_STEER_UP, ui.actionBindings());
-        actionBindings.useBindings(ACTION_STEER_DOWN, ui.actionBindings());
-        actionBindings.useBindings(ACTION_STEER_LEFT, ui.actionBindings());
-        actionBindings.useBindings(ACTION_STEER_RIGHT, ui.actionBindings());
+        actionBindings.bindAction(ACTION_STEER_UP, ui.actionBindings());
+        actionBindings.bindAction(ACTION_STEER_DOWN, ui.actionBindings());
+        actionBindings.bindAction(ACTION_STEER_LEFT, ui.actionBindings());
+        actionBindings.bindAction(ACTION_STEER_RIGHT, ui.actionBindings());
     }
 
     @Override

@@ -7,8 +7,8 @@ package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SceneRenderer;
-import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
@@ -55,7 +55,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
         context().game().hud().creditVisible(false).scoreVisible(false).levelCounterVisible(false).livesCounterVisible(false);
 
         Set<ActionBinding> tengenActionBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().tengenActionBindings();
-        actionBindingsManager.useBindings(ACTION_ENTER_START_SCREEN, tengenActionBindings);
+        actionBindingsManager.bindAction(ACTION_ENTER_START_SCREEN, tengenActionBindings);
     }
 
     @Override

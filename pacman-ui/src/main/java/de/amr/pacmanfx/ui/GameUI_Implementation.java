@@ -170,8 +170,11 @@ public final class GameUI_Implementation implements GameUI {
         createSceneLayout(mainSceneWidth, mainSceneHeight);
 
         configureStage(stage);
-        defineGlobalActionBindings();
 
+        globalActionBindings.bindAction(ACTION_ENTER_FULLSCREEN, DEFAULT_ACTION_BINDINGS);
+        globalActionBindings.bindAction(ACTION_OPEN_EDITOR, DEFAULT_ACTION_BINDINGS);
+        globalActionBindings.bindAction(ACTION_TOGGLE_MUTED, DEFAULT_ACTION_BINDINGS);
+        globalActionBindings.assignBindingsToKeyboard(keyboard);
     }
 
     private void createSceneLayout(double width, double height) {
@@ -184,15 +187,11 @@ public final class GameUI_Implementation implements GameUI {
         scene.addEventFilter(KeyEvent.KEY_PRESSED,  keyboard::onKeyPressed);
         scene.addEventFilter(KeyEvent.KEY_RELEASED, keyboard::onKeyReleased);
 
-        // If a global action is defined for the key press, execute it; otherwise let the current view handle it.
-        scene.setOnKeyPressed(e -> {
-            GameAction matchingAction = globalActionBindings.matchingAction(keyboard).orElse(null);
-            if (matchingAction != null) {
-                matchingAction.executeIfEnabled(this);
-            } else {
-                currentView().handleKeyboardInput(this);
-            }
-        });
+        // If a global action is bound to the key press, execute it; otherwise let the current view handle it.
+        scene.setOnKeyPressed(e -> globalActionBindings.matchingAction(keyboard).ifPresentOrElse(
+            action -> action.executeIfEnabled(this),
+            () -> currentView().handleKeyboardInput(this)
+        ));
         scene.setOnScroll(this::handleScrollEvent);
 
         flashMessageView = new FlashMessageView();
@@ -271,13 +270,6 @@ public final class GameUI_Implementation implements GameUI {
         }
         String sceneClassName = currentGameScene.getClass().getSimpleName();
         return shortTitle + " [%s]".formatted(sceneClassName);
-    }
-
-    private void defineGlobalActionBindings() {
-        globalActionBindings.useBindings(ACTION_ENTER_FULLSCREEN, DEFAULT_ACTION_BINDINGS);
-        globalActionBindings.useBindings(ACTION_OPEN_EDITOR, DEFAULT_ACTION_BINDINGS);
-        globalActionBindings.useBindings(ACTION_TOGGLE_MUTED, DEFAULT_ACTION_BINDINGS);
-        globalActionBindings.assignBindingsToKeyboard(keyboard);
     }
 
     private void selectView(GameUI_View view) {

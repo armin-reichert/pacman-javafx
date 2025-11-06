@@ -106,11 +106,11 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     public void doInit() {
         context().game().hud().creditVisible(true).scoreVisible(true).livesCounterVisible(false).levelCounterVisible(true);
 
-        actionBindingsManager.useBindings(ArcadeActions.ACTION_INSERT_COIN, ui.actionBindings());
-        actionBindingsManager.useBindings(ArcadeActions.ACTION_START_GAME, ui.actionBindings());
-        actionBindingsManager.useBindings(TestActions.ACTION_CUT_SCENES_TEST, ui.actionBindings());
-        actionBindingsManager.useBindings(TestActions.ACTION_SHORT_LEVEL_TEST, ui.actionBindings());
-        actionBindingsManager.useBindings(TestActions.ACTION_MEDIUM_LEVEL_TEST, ui.actionBindings());
+        actionBindingsManager.bindAction(ArcadeActions.ACTION_INSERT_COIN, ui.actionBindings());
+        actionBindingsManager.bindAction(ArcadeActions.ACTION_START_GAME, ui.actionBindings());
+        actionBindingsManager.bindAction(TestActions.ACTION_CUT_SCENES_TEST, ui.actionBindings());
+        actionBindingsManager.bindAction(TestActions.ACTION_SHORT_LEVEL_TEST, ui.actionBindings());
+        actionBindingsManager.bindAction(TestActions.ACTION_MEDIUM_LEVEL_TEST, ui.actionBindings());
 
         blinking = new Pulse(10, Pulse.State.ON);
 
