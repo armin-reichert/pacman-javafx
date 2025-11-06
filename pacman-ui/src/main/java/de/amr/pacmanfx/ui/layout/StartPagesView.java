@@ -5,9 +5,9 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.lib.Direction;
+import de.amr.pacmanfx.ui.GameAssets;
 import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.action.GameAction;
-import de.amr.pacmanfx.ui.GameAssets;
 import de.amr.pacmanfx.ui.api.ActionBindingsManager;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_View;
@@ -52,11 +52,10 @@ public class StartPagesView extends Carousel implements GameUI_View {
     }
 
     private final List<StartPage> startPageList = new ArrayList<>();
-    private final ActionBindingsManager actionBindings;
+    private final ActionBindingsManager actionBindings = new DefaultActionBindingsManager();
 
-    public StartPagesView(GameUI ui) {
+    public void setUI(GameUI ui) {
         requireNonNull(ui);
-        actionBindings = new DefaultActionBindingsManager();
         selectedIndexProperty().addListener((py,ov,nv) -> {
             Logger.info("Carousel selection changed from {} to {}", ov, nv);
             int oldIndex = ov.intValue(), newIndex = nv.intValue();
@@ -70,21 +69,22 @@ public class StartPagesView extends Carousel implements GameUI_View {
             }
         });
         setBackground(ui.assets().background("background.scene"));
+        createActions();
+    }
 
+    private void createActions() {
         final var actionPrevSlide = new GameAction("SHOW_PREV_SLIDE") {
             @Override
             public void execute(GameUI ui) {
                 showPreviousSlide();
             }
         };
-
         final var actionNextSlide = new GameAction("SHOW_NEXT_SLIDE") {
             @Override
             public void execute(GameUI ui) {
                 showNextSlide();
             }
         };
-
         actionBindings.setKeyCombination(actionPrevSlide,            bare(KeyCode.LEFT));
         actionBindings.setKeyCombination(actionNextSlide,            bare(KeyCode.RIGHT));
         actionBindings.setKeyCombination(ACTION_BOOT_SHOW_PLAY_VIEW, bare(KeyCode.ENTER));

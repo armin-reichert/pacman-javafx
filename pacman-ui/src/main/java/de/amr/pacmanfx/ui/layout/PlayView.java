@@ -17,6 +17,8 @@ import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.widgets.CanvasDecorationPane;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
@@ -33,6 +35,7 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.util.List;
+import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_AUTOPILOT;
@@ -47,6 +50,8 @@ import static java.util.Objects.requireNonNull;
  * This view shows the game play and the overlays like dashboard and picture-in-picture view of the running play scene.
  */
 public class PlayView extends StackPane implements GameUI_View {
+
+    private final ObjectProperty<GameScene> currentGameScene = new SimpleObjectProperty<>();
 
     private final ActionBindingsManager actionBindings = new DefaultActionBindingsManager();
     private final GameUI ui;
@@ -75,7 +80,7 @@ public class PlayView extends StackPane implements GameUI_View {
         miniView = new MiniGameView(ui);
         miniView.visibleProperty().bind(Bindings.createObjectBinding(
             () -> PROPERTY_MINI_VIEW_ON.get() && ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D),
-            PROPERTY_MINI_VIEW_ON, parentScene.currentGameSceneProperty()
+            PROPERTY_MINI_VIEW_ON, currentGameScene
         ));
 
         canvasDecorationPane.setMinScaling(0.5);
@@ -93,7 +98,7 @@ public class PlayView extends StackPane implements GameUI_View {
             }
         });
 
-        parentScene.currentGameSceneProperty().addListener((py, ov, gameScene) -> {
+        currentGameScene.addListener((py, ov, gameScene) -> {
             contextMenu.hide();
             if (gameScene != null) embedGameScene(parentScene, gameScene);
         });
@@ -120,6 +125,14 @@ public class PlayView extends StackPane implements GameUI_View {
         actionBindings.useBindings(ACTION_TOGGLE_IMMUNITY, ui.actionBindings());
         actionBindings.useBindings(ACTION_TOGGLE_MINI_VIEW_VISIBILITY, ui.actionBindings());
         actionBindings.useBindings(ACTION_TOGGLE_PLAY_SCENE_2D_3D, ui.actionBindings());
+    }
+
+    public ObjectProperty<GameScene> currentGameSceneProperty() {
+        return currentGameScene;
+    }
+
+    public Optional<GameScene> currentGameScene() {
+        return Optional.ofNullable(currentGameScene.get());
     }
 
     private void handleContextMenuRequest(ContextMenuEvent contextMenuEvent) {
@@ -247,7 +260,7 @@ public class PlayView extends StackPane implements GameUI_View {
         }
 
         if (changing) {
-            parentScene.currentGameSceneProperty().set(nextGameScene);
+            currentGameSceneProperty().set(nextGameScene);
         }
     }
 

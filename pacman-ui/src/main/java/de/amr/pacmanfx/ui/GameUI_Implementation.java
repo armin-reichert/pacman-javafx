@@ -111,7 +111,7 @@ public class GameUI_Implementation implements GameUI {
     private PlayView playView;
     private EditorView editorView;
 
-    private final StringBinding titleBinding;
+    private StringBinding titleBinding;
 
     public GameUI_Implementation(Map<String, Class<?>> configClassesByGameVariant, GameContext gameContext, Stage stage, double mainSceneWidth, double mainSceneHeight) {
         this.configClassesByGameVariant = requireNonNull(configClassesByGameVariant, "UI configuration map is null");
@@ -134,19 +134,8 @@ public class GameUI_Implementation implements GameUI {
         PROPERTY_3D_WALL_OPACITY.set(prefs.getFloat("3d.obstacle.opacity"));
 
         mainScene = new MainScene(this, mainSceneWidth, mainSceneHeight);
-
-        titleBinding = createStringBinding(this::computeStageTitle,
-            // depends on:
-            mainScene.currentViewProperty(),
-            mainScene.currentGameSceneProperty(),
-            mainScene.heightProperty(),
-            gameContext.gameController().gameVariantProperty(),
-            PROPERTY_DEBUG_INFO_VISIBLE,
-            PROPERTY_3D_ENABLED,
-            clock().pausedProperty()
-        );
-
         configureMainScene();
+
         configureStage(stage);
         defineGlobalActionBindings();
     }
@@ -166,7 +155,7 @@ public class GameUI_Implementation implements GameUI {
             () -> isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D)
                 ? Background.fill(Gradients.Samples.random())
                 : assets.background("background.scene"),
-            mainScene.currentViewProperty(), mainScene.currentGameSceneProperty()
+            mainScene.currentViewProperty(), playView().currentGameSceneProperty()
         ));
 
         // Show paused icon only in play view
@@ -453,6 +442,16 @@ public class GameUI_Implementation implements GameUI {
     public PlayView playView() {
         if (playView == null) {
             playView = new PlayView(this, mainScene);
+            titleBinding = createStringBinding(this::computeStageTitle,
+                // depends on:
+                playView.currentGameSceneProperty(),
+                mainScene.currentViewProperty(),
+                mainScene.heightProperty(),
+                gameContext.gameController().gameVariantProperty(),
+                PROPERTY_DEBUG_INFO_VISIBLE,
+                PROPERTY_3D_ENABLED,
+                clock().pausedProperty()
+            );
         }
         return playView;
     }
@@ -460,7 +459,8 @@ public class GameUI_Implementation implements GameUI {
     @Override
     public StartPagesView startPagesView() {
         if (startPagesView == null) {
-            startPagesView = new StartPagesView(this);
+            startPagesView = new StartPagesView();
+            startPagesView.setUI(this);
         }
         return startPagesView;
     }
@@ -499,12 +499,12 @@ public class GameUI_Implementation implements GameUI {
 
     @Override
     public Optional<GameScene> currentGameScene() {
-        return mainScene.currentGameScene();
+        return playView.currentGameScene();
     }
 
     @Override
     public boolean isCurrentGameSceneID(String id) {
-        GameScene currentGameScene = mainScene.currentGameScene().orElse(null);
+        GameScene currentGameScene = playView.currentGameScene().orElse(null);
         return currentGameScene != null && currentConfig().sceneConfig().gameSceneHasID(currentGameScene, id);
     }
 

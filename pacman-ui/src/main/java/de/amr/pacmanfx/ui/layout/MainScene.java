@@ -40,8 +40,6 @@ public class MainScene extends Scene {
         }
     };
 
-    private final ObjectProperty<GameScene> currentGameScene = new SimpleObjectProperty<>();
-
     private final FlashMessageView flashMessageLayer;
     private final FontIcon pausedIcon;
     private final StatusIconBox statusIconBox;
@@ -97,13 +95,5 @@ public class MainScene extends Scene {
 
     public GameUI_View currentView() {
         return currentView.get();
-    }
-
-    public ObjectProperty<GameScene> currentGameSceneProperty() {
-        return currentGameScene;
-    }
-
-    public Optional<GameScene> currentGameScene() {
-        return Optional.ofNullable(currentGameScene.get());
     }
 }
