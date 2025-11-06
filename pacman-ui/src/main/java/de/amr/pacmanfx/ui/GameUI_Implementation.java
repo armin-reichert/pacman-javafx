@@ -43,7 +43,6 @@ import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.tinylog.Logger;
 
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -60,7 +59,7 @@ import static javafx.beans.binding.Bindings.createStringBinding;
 /**
  * User interface for the Pac-Man game suite. Shows a carousel with a start page for each game variant.
  */
-public class GameUI_Implementation implements GameUI {
+public final class GameUI_Implementation implements GameUI {
 
     private static final String CONTEXT_MENU_CSS_PATH = "/de/amr/pacmanfx/ui/css/menu-style.css";
     private static final int MIN_STAGE_WIDTH  = 280;
@@ -179,12 +178,7 @@ public class GameUI_Implementation implements GameUI {
         layoutPane = new StackPane();
 
         scene = new Scene(layoutPane, width, height);
-        final URL url = getClass().getResource(CONTEXT_MENU_CSS_PATH);
-        if (url != null) {
-            scene.getStylesheets().add(url.toExternalForm());
-        } else {
-            Logger.error("Could not access menu style CSS file at '{}'", CONTEXT_MENU_CSS_PATH);
-        }
+        scene.getStylesheets().add(CONTEXT_MENU_CSS_PATH);
 
         // Keyboard events are first handled by the global keyboard object
         scene.addEventFilter(KeyEvent.KEY_PRESSED,  keyboard::onKeyPressed);
