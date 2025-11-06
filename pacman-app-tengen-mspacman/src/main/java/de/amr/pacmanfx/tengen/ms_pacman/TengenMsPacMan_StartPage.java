@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman;
 
-import de.amr.pacmanfx.model.DefaultGameVariants;
+import de.amr.pacmanfx.model.PredefinedGameVariant;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.StartPage;
 import de.amr.pacmanfx.ui.layout.StartPagesView;
@@ -40,7 +40,7 @@ public class TengenMsPacMan_StartPage extends StackPane implements StartPage {
 
     @Override
     public void onEnter(GameUI ui) {
-        ui.selectGameVariant(DefaultGameVariants.MS_PACMAN_TENGEN.name());
+        ui.selectGameVariant(PredefinedGameVariant.MS_PACMAN_TENGEN.name());
     }
 
     @Override

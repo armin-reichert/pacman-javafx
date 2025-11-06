@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
-import de.amr.pacmanfx.model.DefaultGameVariants;
+import de.amr.pacmanfx.model.PredefinedGameVariant;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.StartPage;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
@@ -72,10 +72,10 @@ public class PacManXXL_Common_StartPage implements StartPage {
     @Override
     public String title() {
         String gameVariant = menu.state().gameVariant;
-        if (DefaultGameVariants.PACMAN_XXL.name().equals(gameVariant)) {
+        if (PredefinedGameVariant.PACMAN_XXL.name().equals(gameVariant)) {
             return "Pac-Man XXL"; //TODO localize
         }
-        if (DefaultGameVariants.MS_PACMAN_XXL.name().equals(gameVariant)) {
+        if (PredefinedGameVariant.MS_PACMAN_XXL.name().equals(gameVariant)) {
             return "Ms. Pac-Man XXL"; //TODO localize
         }
         return "Unknown game variant";

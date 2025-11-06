@@ -8,7 +8,7 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.timer.TickTimer;
-import de.amr.pacmanfx.model.DefaultGameVariants;
+import de.amr.pacmanfx.model.PredefinedGameVariant;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.MessageType;
@@ -201,7 +201,7 @@ public enum GamePlayState implements GameState {
             }
 
             //TODO this is crap. Maybe Tengen Ms. Pac-Man needs its own state machine?
-            if (context.gameController().isCurrentGameVariant(DefaultGameVariants.MS_PACMAN_TENGEN.name())
+            if (context.gameController().isCurrentGameVariant(PredefinedGameVariant.MS_PACMAN_TENGEN.name())
                 && context.gameLevel().isDemoLevel()) {
                 context.gameController().changeGameState(SHOWING_CREDITS);
                 return;
@@ -330,7 +330,7 @@ public enum GamePlayState implements GameState {
         public void onUpdate(GameContext context) {
             if (timer.hasExpired()) {
                 //TODO find unified solution
-                if (context.gameController().isCurrentGameVariant(DefaultGameVariants.MS_PACMAN_TENGEN.name())) {
+                if (context.gameController().isCurrentGameVariant(PredefinedGameVariant.MS_PACMAN_TENGEN.name())) {
                     if (context.gameLevel().isDemoLevel()) {
                         context.gameController().changeGameState(SHOWING_CREDITS);
                     } else {

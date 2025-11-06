@@ -13,6 +13,7 @@ import de.amr.pacmanfx.controller.test.LevelMediumTestState;
 import de.amr.pacmanfx.controller.test.LevelShortTestState;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Direction;
+import de.amr.pacmanfx.model.PredefinedGameVariant;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import de.amr.pacmanfx.ui.api.GameScene;
@@ -95,7 +96,13 @@ public interface CommonGameActions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            return  Set.of("PACMAN", "MS_PACMAN", "PACMAN_XXL", "MS_PACMAN_XXL").contains(ui.gameContext().gameController().gameVariant())
+            Set<String> arcadeGames = Set.of(
+                PredefinedGameVariant.PACMAN.name(),
+                PredefinedGameVariant.MS_PACMAN.name(),
+                PredefinedGameVariant.PACMAN_XXL.name(),
+                PredefinedGameVariant.MS_PACMAN_XXL.name()
+            );
+            return arcadeGames.contains(ui.gameContext().gameController().gameVariant())
                 && !ui.gameContext().coinMechanism().isEmpty()
                 && (ui.gameContext().gameState() == GamePlayState.INTRO || ui.gameContext().gameState() == GamePlayState.SETTING_OPTIONS_FOR_START)
                 && ui.gameContext().game().canStartNewGame();

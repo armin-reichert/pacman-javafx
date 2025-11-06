@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.pacman.actors.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.model.DefaultGameVariants;
+import de.amr.pacmanfx.model.PredefinedGameVariant;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.MapSelectionMode;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
@@ -172,11 +172,11 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         @Override
         protected void onValueChanged(int index) {
             String gameVariant = selectedValue();
-            if (DefaultGameVariants.PACMAN_XXL.name().equals(gameVariant)) {
+            if (PredefinedGameVariant.PACMAN_XXL.name().equals(gameVariant)) {
                 Logger.info("Loading assets for game variant {}", gameVariant);
                 ui.config(gameVariant).loadAssets();
             }
-            else if (DefaultGameVariants.MS_PACMAN_XXL.name().equals(gameVariant)) {
+            else if (PredefinedGameVariant.MS_PACMAN_XXL.name().equals(gameVariant)) {
                 Logger.info("Loading assets for game variant {}", gameVariant);
                 ui.config(gameVariant).loadAssets();
             }

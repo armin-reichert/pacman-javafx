@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman;
 
-import de.amr.pacmanfx.model.DefaultGameVariants;
+import de.amr.pacmanfx.model.PredefinedGameVariant;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 
 public class ArcadeMsPacMan_App extends Application {
 
-    private static final String GAME_VARIANT = DefaultGameVariants.MS_PACMAN.name();
+    private static final String GAME_VARIANT = PredefinedGameVariant.MS_PACMAN.name();
 
     private GameUI ui;
 
