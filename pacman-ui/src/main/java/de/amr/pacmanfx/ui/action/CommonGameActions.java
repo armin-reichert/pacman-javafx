@@ -41,25 +41,8 @@ import static de.amr.pacmanfx.uilib.Ufx.toggle;
 public interface CommonGameActions {
 
     int SIMULATION_SPEED_DELTA = 2;
-    int SIMULATION_SPEED_MIN   = 10;
-    int SIMULATION_SPEED_MAX   = 240;
-
-    class SteeringAction extends GameAction {
-        private final Direction dir;
-
-        SteeringAction(Direction dir) {
-            super("STEER_PAC_" + dir);
-            this.dir = dir;
-        }
-
-        @Override
-        public void execute(GameUI ui) { ui.gameContext().gameLevel().pac().setWishDir(dir); }
-
-        @Override
-        public boolean isEnabled(GameUI ui) {
-            return ui.gameContext().optGameLevel().isPresent() && !ui.gameContext().gameLevel().pac().isUsingAutopilot();
-        }
-    }
+    int SIMULATION_SPEED_MIN   = 5;
+    int SIMULATION_SPEED_MAX   = 300;
 
     /**
      * Adds credit (simulates insertion of a coin) and switches the game state accordingly.
@@ -264,7 +247,7 @@ public interface CommonGameActions {
 
         @Override
         public boolean isEnabled(GameUI ui) { return ui.clock().isPaused(); }
-    };
+     };
 
     GameAction ACTION_SIMULATION_RESET = new GameAction("SIMULATION_RESET") {
         @Override
