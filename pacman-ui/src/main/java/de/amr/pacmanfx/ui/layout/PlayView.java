@@ -54,7 +54,7 @@ public class PlayView extends StackPane implements GameUI_View {
     private final ObjectProperty<GameScene> currentGameScene = new SimpleObjectProperty<>();
 
     private final ActionBindingsManager actionBindings = new DefaultActionBindingsManager();
-    private final MainScene parentScene;
+    private final Scene parentScene;
     private final Dashboard dashboard;
     private final CanvasDecorationPane canvasDecorationPane = new CanvasDecorationPane();
     private final MiniGameView miniView;
@@ -71,7 +71,7 @@ public class PlayView extends StackPane implements GameUI_View {
         Logger.info("A new, fresh canvas has been created just for you!");
     }
 
-    public PlayView(MainScene parentScene) {
+    public PlayView(Scene parentScene) {
         this.parentScene = requireNonNull(parentScene);
 
         dashboard = new Dashboard();

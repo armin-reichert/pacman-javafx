@@ -22,6 +22,8 @@ import de.amr.pacmanfx.uilib.rendering.Gradients;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.ScrollEvent;
@@ -106,6 +108,16 @@ public class GameUI_Implementation implements GameUI {
     private final Map<String, GameUI_Config> configByGameVariant = new HashMap<>();
     private final MainScene mainScene;
 
+    private final ObjectProperty<GameUI_View> currentView = new SimpleObjectProperty<>() {
+        @Override
+        protected void invalidated() {
+            GameUI_View newView = get();
+            if (newView != null) {
+                mainScene.embedView(newView);
+            }
+        }
+    };
+
     // These are lazily created
     private StartPagesView startPagesView;
     private PlayView playView;
@@ -140,9 +152,13 @@ public class GameUI_Implementation implements GameUI {
         defineGlobalActionBindings();
     }
 
+    public ObjectProperty<GameUI_View> currentViewProperty() {
+        return currentView;
+    }
+
     private void configureMainScene() {
         // Check if a global action is defined for the key press, otherwise let the current view handle it.
-        mainScene.setOnKeyPressed(e -> {
+        mainScene.scene().setOnKeyPressed(e -> {
             GameAction matchingAction = globalActionBindings.matchingAction(keyboard).orElse(null);
             if (matchingAction != null) {
                 matchingAction.executeIfEnabled(this);
@@ -150,23 +166,23 @@ public class GameUI_Implementation implements GameUI {
                 currentView().handleKeyboardInput(this);
             }
         });
-        mainScene.setOnScroll(this::handleScrollEvent);
+        mainScene.scene().setOnScroll(this::handleScrollEvent);
         mainScene.rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
             () -> isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D)
                 ? Background.fill(Gradients.Samples.random())
                 : assets.background("background.scene"),
-            mainScene.currentViewProperty(), playView().currentGameSceneProperty()
+            currentViewProperty(), playView().currentGameSceneProperty()
         ));
 
         // Show paused icon only in play view
         mainScene.pausedIcon().visibleProperty().bind(Bindings.createBooleanBinding(
             () -> currentView() == playView() && clock.isPaused(),
-            mainScene.currentViewProperty(), clock.pausedProperty())
+            currentViewProperty(), clock.pausedProperty())
         );
 
         // hide icon box if editor view is active, avoid creation of editor view in binding expression!
         StatusIconBox statusIcons = mainScene.statusIconBox();
-        statusIcons.visibleProperty().bind(mainScene.currentViewProperty()
+        statusIcons.visibleProperty().bind(currentViewProperty()
             .map(currentView -> optEditorView().isEmpty() || currentView != optEditorView().get()));
 
         statusIcons.iconMuted()    .visibleProperty().bind(PROPERTY_MUTED);
@@ -181,7 +197,7 @@ public class GameUI_Implementation implements GameUI {
     }
 
     private void configureStage(Stage stage) {
-        stage.setScene(mainScene);
+        stage.setScene(mainScene.scene());
         stage.setMinWidth(MIN_STAGE_WIDTH);
         stage.setMinHeight(MIN_STAGE_HEIGHT);
         stage.titleProperty().bind(titleBinding);
@@ -189,7 +205,7 @@ public class GameUI_Implementation implements GameUI {
 
     // Asset key: "app.title" or "app.title.paused"
     private String computeStageTitle() {
-        var currentView = mainScene.currentViewProperty().get();
+        var currentView = currentViewProperty().get();
         if (currentView == null) {
             return "No View?";
         }
@@ -219,7 +235,7 @@ public class GameUI_Implementation implements GameUI {
 
     private void selectView(GameUI_View view) {
         requireNonNull(view);
-        final GameUI_View oldView = mainScene.currentView();
+        final GameUI_View oldView = currentView();
         if (oldView == view) {
             return;
         }
@@ -229,7 +245,7 @@ public class GameUI_Implementation implements GameUI {
         }
         view.actionBindingsManager().assignBindingsToKeyboard(keyboard);
         gameContext.eventManager().addEventListener(view);
-        mainScene.currentViewProperty().set(view);
+        currentViewProperty().set(view);
     }
 
     /**
@@ -430,7 +446,7 @@ public class GameUI_Implementation implements GameUI {
 
     @Override
     public GameUI_View currentView() {
-        return mainScene.currentView();
+        return currentView.get();
     }
 
     @Override
@@ -441,13 +457,13 @@ public class GameUI_Implementation implements GameUI {
     @Override
     public PlayView playView() {
         if (playView == null) {
-            playView = new PlayView(mainScene);
+            playView = new PlayView(mainScene.scene());
             playView.setUI(this);
             titleBinding = createStringBinding(this::computeStageTitle,
                 // depends on:
+                currentViewProperty(),
                 playView.currentGameSceneProperty(),
-                mainScene.currentViewProperty(),
-                mainScene.heightProperty(),
+                mainScene.scene().heightProperty(),
                 gameContext.gameController().gameVariantProperty(),
                 PROPERTY_DEBUG_INFO_VISIBLE,
                 PROPERTY_3D_ENABLED,
