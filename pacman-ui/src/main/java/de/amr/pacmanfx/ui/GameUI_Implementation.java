@@ -108,14 +108,14 @@ public class GameUI_Implementation implements GameUI {
     private final ActionBindingsManager globalActionBindings = new DefaultActionBindingsManager();
     private final Map<String, Class<?>> configClassesByGameVariant;
     private final Map<String, GameUI_Config> configByGameVariant = new HashMap<>();
-    private final MainScene mainScene;
+    private final MainLayout mainLayout;
 
     private final ObjectProperty<GameUI_View> currentView = new SimpleObjectProperty<>() {
         @Override
         protected void invalidated() {
             GameUI_View newView = get();
             if (newView != null) {
-                mainScene.embedView(newView);
+                mainLayout.embedView(newView);
             }
         }
     };
@@ -154,7 +154,7 @@ public class GameUI_Implementation implements GameUI {
         PROPERTY_3D_WALL_HEIGHT.set(prefs.getFloat("3d.obstacle.base_height"));
         PROPERTY_3D_WALL_OPACITY.set(prefs.getFloat("3d.obstacle.opacity"));
 
-        mainScene = new MainScene(mainSceneWidth, mainSceneHeight);
+        mainLayout = new MainLayout(mainSceneWidth, mainSceneHeight);
         configureMainScene();
         configureStatusIconBox();
         configureStage(stage);
@@ -162,7 +162,7 @@ public class GameUI_Implementation implements GameUI {
     }
 
     private void configureMainScene() {
-        final Scene scene = mainScene.fxScene();
+        final Scene scene = mainLayout.fxScene();
 
         // Keyboard events are first handled by the global keyboard object
         scene.addEventFilter(KeyEvent.KEY_PRESSED,  keyboard::onKeyPressed);
@@ -179,7 +179,7 @@ public class GameUI_Implementation implements GameUI {
         });
         scene.setOnScroll(this::handleScrollEvent);
 
-        mainScene.rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
+        mainLayout.rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
             () -> isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D)
                 ? Background.fill(Gradients.Samples.random())
                 : assets.background("background.scene"),
@@ -187,7 +187,7 @@ public class GameUI_Implementation implements GameUI {
         ));
 
         // Show paused icon only in play view
-        mainScene.pausedIcon().visibleProperty().bind(Bindings.createBooleanBinding(
+        mainLayout.pausedIcon().visibleProperty().bind(Bindings.createBooleanBinding(
             () -> currentView() == playView() && clock.isPaused(),
             currentViewProperty(), clock.pausedProperty())
         );
@@ -195,7 +195,7 @@ public class GameUI_Implementation implements GameUI {
 
     private void configureStatusIconBox() {
         // hide icon box if editor view is active, avoid creation of editor view in binding expression!
-        StatusIconBox statusIcons = mainScene.statusIconBox();
+        StatusIconBox statusIcons = mainLayout.statusIconBox();
         statusIcons.visibleProperty().bind(currentViewProperty()
             .map(currentView -> optEditorView().isEmpty() || currentView != optEditorView().get()));
 
@@ -211,7 +211,7 @@ public class GameUI_Implementation implements GameUI {
     }
 
     private void configureStage(Stage stage) {
-        stage.setScene(mainScene.fxScene());
+        stage.setScene(mainLayout.fxScene());
         stage.setMinWidth(MIN_STAGE_WIDTH);
         stage.setMinHeight(MIN_STAGE_HEIGHT);
         stage.titleProperty().bind(titleBinding);
@@ -289,7 +289,7 @@ public class GameUI_Implementation implements GameUI {
             if (currentView() == playView()) {
                 playView().draw();
             }
-            mainScene.flashMessageLayer().update();
+            mainLayout.flashMessageLayer().update();
         } catch (Throwable x) {
             ka_tas_tro_phe(x);
         }
@@ -359,8 +359,8 @@ public class GameUI_Implementation implements GameUI {
     }
 
     @Override
-    public MainScene mainScene() {
-        return mainScene;
+    public MainLayout mainScene() {
+        return mainLayout;
     }
 
     @Override
@@ -370,7 +370,7 @@ public class GameUI_Implementation implements GameUI {
 
     @Override
     public void showFlashMessage(Duration duration, String message, Object... args) {
-        mainScene.flashMessageLayer().showMessage(String.format(message, args), duration.toSeconds());
+        mainLayout.flashMessageLayer().showMessage(String.format(message, args), duration.toSeconds());
     }
 
     // GameUI_Lifecycle interface
@@ -475,13 +475,13 @@ public class GameUI_Implementation implements GameUI {
     @Override
     public PlayView playView() {
         if (playView == null) {
-            playView = new PlayView(mainScene.fxScene());
+            playView = new PlayView(mainLayout.fxScene());
             playView.setUI(this);
             titleBinding = createStringBinding(this::computeStageTitle,
                 // depends on:
                 currentViewProperty(),
                 playView.currentGameSceneProperty(),
-                mainScene.fxScene().heightProperty(),
+                mainLayout.fxScene().heightProperty(),
                 gameContext.gameController().gameVariantProperty(),
                 PROPERTY_DEBUG_INFO_VISIBLE,
                 PROPERTY_3D_ENABLED,

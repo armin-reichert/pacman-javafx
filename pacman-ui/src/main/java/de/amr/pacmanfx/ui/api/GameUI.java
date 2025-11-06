@@ -12,7 +12,7 @@ import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.layout.EditorView;
-import de.amr.pacmanfx.ui.layout.MainScene;
+import de.amr.pacmanfx.ui.layout.MainLayout;
 import de.amr.pacmanfx.ui.layout.PlayView;
 import de.amr.pacmanfx.ui.layout.StartPagesView;
 import de.amr.pacmanfx.ui.sound.SoundManager;
@@ -94,7 +94,7 @@ public interface GameUI extends GameUI_Lifecycle {
     /**
      * @return the main scene of the UI
      */
-    MainScene mainScene();
+    MainLayout mainScene();
 
     /**
      * @return the UI preferences (stored permanently in platform-specific way)

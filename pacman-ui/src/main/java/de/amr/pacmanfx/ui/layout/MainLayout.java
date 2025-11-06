@@ -19,7 +19,7 @@ import java.net.URL;
 
 import static java.util.Objects.requireNonNull;
 
-public class MainScene {
+public class MainLayout {
 
     private static final String CONTEXT_MENU_CSS_PATH = "/de/amr/pacmanfx/ui/css/menu-style.css";
 
@@ -29,7 +29,7 @@ public class MainScene {
     private final FontIcon pausedIcon;
     private final StatusIconBox statusIconBox;
 
-    public MainScene(double width, double height) {
+    public MainLayout(double width, double height) {
         rootPane = new StackPane();
         scene = new Scene(rootPane, width, height);
         final URL url = getClass().getResource(CONTEXT_MENU_CSS_PATH);
