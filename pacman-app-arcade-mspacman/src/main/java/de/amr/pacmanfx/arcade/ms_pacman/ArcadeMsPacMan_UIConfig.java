@@ -152,7 +152,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         soundManager.registerAudioClip(SoundID.LEVEL_CHANGED,         ARCADE_MS_PAC_MAN_RESOURCES.url("sound/sweep.mp3"));
         soundManager.registerMediaPlayer(SoundID.LEVEL_COMPLETE,      ARCADE_MS_PAC_MAN_RESOURCES.url("sound/level-complete.mp3"));
         soundManager.registerMediaPlayer(SoundID.PAC_MAN_DEATH,       ARCADE_MS_PAC_MAN_RESOURCES.url("sound/Died.mp3"));
-        soundManager.registerMediaPlayer(SoundID.PAC_MAN_MUNCHING,    ARCADE_MS_PAC_MAN_RESOURCES.url("sound/munch.wav"));
+        soundManager.registerAudioClip(SoundID.PAC_MAN_MUNCHING,      ARCADE_MS_PAC_MAN_RESOURCES.url("sound/munch.wav"));
         soundManager.registerMediaPlayer(SoundID.PAC_MAN_POWER,       ARCADE_MS_PAC_MAN_RESOURCES.url("sound/ScaredGhost.mp3"));
         soundManager.registerMediaPlayer(SoundID.SIREN_1,             ARCADE_MS_PAC_MAN_RESOURCES.url("sound/GhostNoise1.wav"));
         soundManager.registerMediaPlayer(SoundID.SIREN_2,             ARCADE_MS_PAC_MAN_RESOURCES.url("sound/GhostNoise1.wav"));// TODO

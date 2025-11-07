@@ -35,6 +35,10 @@ public interface GameUI_Config extends Disposable {
 
     SpriteSheet<?> spriteSheet();
 
+    default boolean munchingSoundPlayed(int eatenFoodCount) {
+        return true;
+    }
+
     Image bonusSymbolImage(byte symbol);
 
     Image bonusValueImage(byte symbol);

@@ -292,7 +292,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     @Override
     public void onPacFoundFood(GameEvent e) {
         int eatenFoodCount = context().gameLevel().worldMap().foodLayer().eatenFoodCount();
-        if (eatenFoodCount % 2 == 0) {
+        if (ui.currentConfig().munchingSoundPlayed(eatenFoodCount)) {
             ui.soundManager().play(SoundID.PAC_MAN_MUNCHING);
         }
     }

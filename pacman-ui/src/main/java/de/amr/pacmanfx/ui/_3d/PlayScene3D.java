@@ -526,7 +526,7 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
                     .ifPresent(this::eatPellet3D);
             }
             int eatenFoodCount = context().gameLevel().worldMap().foodLayer().eatenFoodCount();
-            if (eatenFoodCount % 2 == 0) {
+            if (ui.currentConfig().munchingSoundPlayed(eatenFoodCount)) {
                 ui.soundManager().play(SoundID.PAC_MAN_MUNCHING);
             }
         }

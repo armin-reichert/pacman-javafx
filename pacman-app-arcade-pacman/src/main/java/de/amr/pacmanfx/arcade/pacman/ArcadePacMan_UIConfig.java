@@ -223,6 +223,11 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
     }
 
     @Override
+    public boolean munchingSoundPlayed(int eatenFoodCount) {
+        return eatenFoodCount % 2 == 0;
+    }
+
+    @Override
     public Image bonusSymbolImage(byte symbol) {
         RectShort[] sprites = spriteSheet.spriteSequence(SpriteID.BONUS_SYMBOLS);
         return spriteSheet.image(sprites[symbol]);
