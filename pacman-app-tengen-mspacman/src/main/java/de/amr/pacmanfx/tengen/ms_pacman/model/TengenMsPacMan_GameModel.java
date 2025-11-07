@@ -136,7 +136,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     public TengenMsPacMan_GameModel(GameContext gameContext, File highScoreFile) {
         super(gameContext);
-        setCollisionStrategy(CollisionStrategy.OVERLAPPING_CIRCLE);
+        setCollisionStrategy(CollisionStrategy.CENTER_DISTANCE);
         scoreManager.setHighScoreFile(requireNonNull(highScoreFile));
         mapSelector = new TengenMsPacMan_MapSelector();
         levelCounter = new TengenMsPacMan_LevelCounter();

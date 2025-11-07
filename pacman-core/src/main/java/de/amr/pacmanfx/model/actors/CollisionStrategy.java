@@ -4,4 +4,4 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model.actors;
 
-public enum CollisionStrategy {SAME_TILE, OVERLAPPING_CIRCLE}
+public enum CollisionStrategy {SAME_TILE, CENTER_DISTANCE}

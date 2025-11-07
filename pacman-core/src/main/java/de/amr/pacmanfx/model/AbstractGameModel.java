@@ -81,7 +81,7 @@ public abstract class AbstractGameModel implements Game {
         requireNonNull(other, "Actor to check for collision must not be null");
         return switch (collisionStrategy()) {
             case SAME_TILE -> either.tile().equals(other.tile());
-            case OVERLAPPING_CIRCLE -> {
+            case CENTER_DISTANCE -> {
                 float dist = either.center().minus(other.center()).length();
                 if (dist < COLLISION_CIRCLE_RADIUS) {
                     Logger.info("Collision detected (dist={}): {} collides with {}", dist, either, other);

@@ -216,10 +216,10 @@ public final class CommonGameActions {
         public void execute(GameUI ui) {
             final Game game = ui.gameContext().game();
             CollisionStrategy collisionStrategy = game.collisionStrategy();
-            if (collisionStrategy == CollisionStrategy.OVERLAPPING_CIRCLE) {
+            if (collisionStrategy == CollisionStrategy.CENTER_DISTANCE) {
                 game.setCollisionStrategy(CollisionStrategy.SAME_TILE);
             } else {
-                game.setCollisionStrategy(CollisionStrategy.OVERLAPPING_CIRCLE);
+                game.setCollisionStrategy(CollisionStrategy.CENTER_DISTANCE);
             }
             ui.showFlashMessage("Collision strategy is %s".formatted(game.collisionStrategy()));
         }
