@@ -525,9 +525,9 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
                     .findFirst()
                     .ifPresent(this::eatPellet3D);
             }
-            if (!ui.soundManager().isPlaying(SoundID.PAC_MAN_MUNCHING)) {
-                ui.soundManager().loop(SoundID.PAC_MAN_MUNCHING);
-                Logger.info("Play munching sound, starving ticks={}", theGameContext().gameLevel().pac().starvingTime());
+            int eatenFoodCount = context().gameLevel().worldMap().foodLayer().eatenFoodCount();
+            if (eatenFoodCount % 2 == 0) {
+                ui.soundManager().play(SoundID.PAC_MAN_MUNCHING);
             }
         }
     }
@@ -619,21 +619,14 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
             // siren numbers are 1..4, hunting phase index = 0..7
             int huntingPhase = context().gameLevel().huntingTimer().phaseIndex();
             int sirenNumber = 1 + huntingPhase / 2;
+            float volume = 0.025f;
             switch (sirenNumber) {
-                case 1 -> ui.soundManager().playSiren(SoundID.SIREN_1, 1.0);
-                case 2 -> ui.soundManager().playSiren(SoundID.SIREN_2, 1.0);
-                case 3 -> ui.soundManager().playSiren(SoundID.SIREN_3, 1.0);
-                case 4 -> ui.soundManager().playSiren(SoundID.SIREN_4, 1.0);
+                case 1 -> ui.soundManager().playSiren(SoundID.SIREN_1, volume);
+                case 2 -> ui.soundManager().playSiren(SoundID.SIREN_2, volume);
+                case 3 -> ui.soundManager().playSiren(SoundID.SIREN_3, volume);
+                case 4 -> ui.soundManager().playSiren(SoundID.SIREN_4, volume);
                 default -> throw new IllegalArgumentException("Illegal siren number " + sirenNumber);
             }
-        }
-    }
-
-    //TODO this is still crap!
-    protected void updatePacMunchingSound(Pac pac) {
-        // TODO Still not sure how to do this right
-        if (pac.starvingTime() >= 10 && !ui.soundManager().isPaused(SoundID.PAC_MAN_MUNCHING)) {
-            ui.soundManager().pause(SoundID.PAC_MAN_MUNCHING);
         }
     }
 
@@ -651,7 +644,6 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
         if (!ui.soundManager().isEnabled()) return;
         if (gameState == HUNTING) {
             updateSiren(gameLevel.pac());
-            updatePacMunchingSound(gameLevel.pac());
             updateGhostSounds(gameLevel.pac(), gameLevel.ghosts());
         }
     }

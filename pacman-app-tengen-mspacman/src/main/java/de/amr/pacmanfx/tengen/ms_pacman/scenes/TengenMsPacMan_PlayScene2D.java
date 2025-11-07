@@ -427,7 +427,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
 
     @Override
     public void onPacFoundFood(GameEvent e) {
-        ui.soundManager().loop(SoundID.PAC_MAN_MUNCHING);
+        ui.soundManager().play(SoundID.PAC_MAN_MUNCHING);
     }
 
     @Override
@@ -457,11 +457,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
                 case 4 -> ui.soundManager().playSiren(SoundID.SIREN_4, 1.0);
                 default -> throw new IllegalArgumentException("Illegal siren number " + sirenNumber);
             }
-        }
-
-        // TODO: how exactly is the munching sound created in the original game?
-        if (pac.starvingTime() > 10) {
-            ui.soundManager().pause(SoundID.PAC_MAN_MUNCHING);
         }
 
         //TODO check in simulator when exactly this sound is played

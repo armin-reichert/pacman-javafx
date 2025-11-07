@@ -165,37 +165,6 @@ public class Arcade_PlayScene2D extends GameScene2D {
         game.hud().setNumCoins(context().coinMechanism().numCoins());
     }
 
-    private void updateSound() {
-        if (!ui.soundManager().isEnabled()) return;
-        Pac pac = context().gameLevel().pac();
-        boolean pacChased = context().gameState() == PacManGamesState.HUNTING && !pac.powerTimer().isRunning();
-        if (pacChased) {
-            // siren numbers are 1..4, hunting phase index = 0..7
-            int huntingPhase = context().gameLevel().huntingTimer().phaseIndex();
-            int sirenNumber = 1 + huntingPhase / 2;
-            switch (sirenNumber) {
-                case 1 -> ui.soundManager().playSiren(SoundID.SIREN_1, 1.0);
-                case 2 -> ui.soundManager().playSiren(SoundID.SIREN_2, 1.0);
-                case 3 -> ui.soundManager().playSiren(SoundID.SIREN_3, 1.0);
-                case 4 -> ui.soundManager().playSiren(SoundID.SIREN_4, 1.0);
-                default -> throw new IllegalArgumentException("Illegal siren number " + sirenNumber);
-            }
-        }
-
-        // TODO Still not sure how to do this right
-        if (pac.starvingTime() >= 10 && !ui.soundManager().isPaused(SoundID.PAC_MAN_MUNCHING)) {
-            ui.soundManager().pause(SoundID.PAC_MAN_MUNCHING);
-        }
-
-        boolean isGhostReturningHome = context().gameLevel().pac().isAlive()
-            && context().gameLevel().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).findAny().isPresent();
-        if (isGhostReturningHome) {
-            ui.soundManager().loop(SoundID.GHOST_RETURNS);
-        } else {
-            ui.soundManager().stop(SoundID.GHOST_RETURNS);
-        }
-    }
-
     @Override
     public Vector2i sizeInPx() {
         // Note: scene is also used in Pac-Man XXL game variant where world can have any size
@@ -322,7 +291,10 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onPacFoundFood(GameEvent e) {
-        ui.soundManager().loop(SoundID.PAC_MAN_MUNCHING);
+        int eatenFoodCount = context().gameLevel().worldMap().foodLayer().eatenFoodCount();
+        if (eatenFoodCount % 2 == 0) {
+            ui.soundManager().play(SoundID.PAC_MAN_MUNCHING);
+        }
     }
 
     @Override
@@ -334,5 +306,33 @@ public class Arcade_PlayScene2D extends GameScene2D {
     @Override
     public void onPacLostPower(GameEvent e) {
         ui.soundManager().pause(SoundID.PAC_MAN_POWER);
+    }
+
+    private void updateSound() {
+        if (!ui.soundManager().isEnabled()) return;
+
+        Pac pac = context().gameLevel().pac();
+        boolean pacChased = context().gameState() == PacManGamesState.HUNTING && !pac.powerTimer().isRunning();
+        if (pacChased) {
+            // siren numbers are 1..4, hunting phase index = 0..7
+            int huntingPhase = context().gameLevel().huntingTimer().phaseIndex();
+            int sirenNumber = 1 + huntingPhase / 2;
+            float volume = 0.025f;
+            switch (sirenNumber) {
+                case 1 -> ui.soundManager().playSiren(SoundID.SIREN_1, volume);
+                case 2 -> ui.soundManager().playSiren(SoundID.SIREN_2, volume);
+                case 3 -> ui.soundManager().playSiren(SoundID.SIREN_3, volume);
+                case 4 -> ui.soundManager().playSiren(SoundID.SIREN_4, volume);
+                default -> throw new IllegalArgumentException("Illegal siren number " + sirenNumber);
+            }
+        }
+
+        boolean isGhostReturningHome = context().gameLevel().pac().isAlive()
+            && context().gameLevel().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).findAny().isPresent();
+        if (isGhostReturningHome) {
+            ui.soundManager().loop(SoundID.GHOST_RETURNS);
+        } else {
+            ui.soundManager().stop(SoundID.GHOST_RETURNS);
+        }
     }
 }
