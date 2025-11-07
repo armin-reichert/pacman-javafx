@@ -5,12 +5,12 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.controller.test;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.controller.GamePlayState;
+import de.amr.pacmanfx.controller.PacManGamesState;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.AbstractGameModel;
 
-public class CutScenesTestState implements TestGameState {
+public class CutScenesTestState implements PacManGamesTestState {
 
     private final TickTimer timer = new TickTimer("Timer_" + name());
 
@@ -45,7 +45,7 @@ public class CutScenesTestState implements TestGameState {
                     //TODO find another solution and get rid of this event type
                     context.eventManager().publishEvent(GameEventType.UNSPECIFIED_CHANGE);
                 } else {
-                    context.gameController().changeGameState(GamePlayState.INTRO);
+                    context.gameController().changeGameState(PacManGamesState.INTRO);
                 }
             }
         }

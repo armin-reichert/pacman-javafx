@@ -5,9 +5,9 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.controller.GameState;
-import de.amr.pacmanfx.controller.test.TestGameState;
+import de.amr.pacmanfx.controller.test.PacManGamesTestState;
 import de.amr.pacmanfx.event.GameEvent;
+import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.FoodLayer;
@@ -54,7 +54,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.stateIsOneOf;
-import static de.amr.pacmanfx.controller.GamePlayState.*;
+import static de.amr.pacmanfx.controller.PacManGamesState.*;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.api.GameUI.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.control;
@@ -349,9 +349,9 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
     }
 
     @Override
-    public void onEnterGameState(GameState state) {
+    public void onEnterGameState(FsmState<GameContext> state) {
         requireNonNull(state);
-        if (state instanceof TestGameState) {
+        if (state instanceof PacManGamesTestState) {
             replaceGameLevel3D();
             showLevelTestMessage(context().gameLevel());
             PROPERTY_3D_PERSPECTIVE_ID.set(PerspectiveID.TOTAL);
@@ -388,9 +388,9 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
             return;
         }
         final GameLevel gameLevel = context().gameLevel();
-        final GameState state = context().gameState();
+        final FsmState<GameContext> state = context().gameState();
 
-        if (state instanceof TestGameState) {
+        if (state instanceof PacManGamesTestState) {
             replaceGameLevel3D(); //TODO check when to destroy previous level
             gameLevel3D.energizers3D().forEach(Energizer3D::startPumping);
             showLevelTestMessage(gameLevel);
@@ -502,8 +502,8 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
 
     @Override
     public void onGameStarted(GameEvent e) {
-        GameState state = context().gameState();
-        boolean silent = context().gameLevel().isDemoLevel() || state instanceof TestGameState;
+        FsmState<GameContext> state = context().gameState();
+        boolean silent = context().gameLevel().isDemoLevel() || state instanceof PacManGamesTestState;
         if (!silent) {
             ui.soundManager().play(SoundID.GAME_READY);
         }
@@ -647,7 +647,7 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
         }
     }
 
-    protected void updateSound(GameLevel gameLevel, GameState gameState) {
+    protected void updateSound(GameLevel gameLevel, FsmState<GameContext> gameState) {
         if (!ui.soundManager().isEnabled()) return;
         if (gameState == HUNTING) {
             updateSiren(gameLevel.pac());

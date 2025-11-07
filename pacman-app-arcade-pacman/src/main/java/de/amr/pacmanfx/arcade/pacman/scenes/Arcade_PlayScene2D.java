@@ -4,11 +4,12 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_PlayScene2DDebugInfoRenderer;
-import de.amr.pacmanfx.controller.GamePlayState;
-import de.amr.pacmanfx.controller.GameState;
-import de.amr.pacmanfx.controller.test.TestGameState;
+import de.amr.pacmanfx.controller.PacManGamesState;
+import de.amr.pacmanfx.controller.test.PacManGamesTestState;
 import de.amr.pacmanfx.event.GameEvent;
+import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.model.Game;
@@ -134,8 +135,8 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onGameStarted(GameEvent e) {
-        GameState state = context().gameState();
-        boolean silent = context().gameLevel().isDemoLevel() || state instanceof TestGameState;
+        FsmState<GameContext> state = context().gameState();
+        boolean silent = context().gameLevel().isDemoLevel() || state instanceof PacManGamesTestState;
         if (!silent) {
             ui.soundManager().play(SoundID.GAME_READY);
         }
@@ -155,7 +156,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     private void updateHUD() {
         Game game = context().game();
         // While Pac-Man is still invisible on level start, one entry more is shown in the lives counter
-        boolean oneMore = context().gameState() == GamePlayState.STARTING_GAME_OR_LEVEL && !context().gameLevel().pac().isVisible();
+        boolean oneMore = context().gameState() == PacManGamesState.STARTING_GAME_OR_LEVEL && !context().gameLevel().pac().isVisible();
         int numLivesDisplayed = game.lifeCount() - 1;
         if (oneMore) numLivesDisplayed += 1;
         game.hud().setVisibleLifeCount(Math.min(numLivesDisplayed, game.hud().maxLivesDisplayed()));
@@ -167,7 +168,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     private void updateSound() {
         if (!ui.soundManager().isEnabled()) return;
         Pac pac = context().gameLevel().pac();
-        boolean pacChased = context().gameState() == GamePlayState.HUNTING && !pac.powerTimer().isRunning();
+        boolean pacChased = context().gameState() == PacManGamesState.HUNTING && !pac.powerTimer().isRunning();
         if (pacChased) {
             // siren numbers are 1..4, hunting phase index = 0..7
             int huntingPhase = context().gameLevel().huntingTimer().phaseIndex();
@@ -258,13 +259,13 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void onEnterGameState(GameState state) {
-        if (state == GamePlayState.LEVEL_COMPLETE) {
+    public void onEnterGameState(FsmState<GameContext> state) {
+        if (state == PacManGamesState.LEVEL_COMPLETE) {
             ui.soundManager().stopAll();
             createLevelCompletedAnimation();
             levelCompletedAnimation.playFromStart();
         }
-        else if (state == GamePlayState.GAME_OVER) {
+        else if (state == PacManGamesState.GAME_OVER) {
             ui.soundManager().stopAll();
             ui.soundManager().play(SoundID.GAME_OVER);
         }

@@ -7,17 +7,20 @@ package de.amr.pacmanfx.controller;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.event.GameEventType;
+import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.timer.TickTimer;
-import de.amr.pacmanfx.model.PredefinedGameVariant;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.MessageType;
+import de.amr.pacmanfx.model.PredefinedGameVariant;
 import de.amr.pacmanfx.model.actors.*;
 
 /**
- * States of the Pac-Man game play state machine. Game controller FSM also contains some additional test states.
+ * States of the common state machine for all Pac-Man games.
+ *
+ * <p>TODO: Is this a good idea or should we allow different FSM per game variant?</p>
  */
-public enum GamePlayState implements GameState {
+public enum PacManGamesState implements FsmState<GameContext> {
 
     // "Das muss das Boot abkönnen!"
     BOOT {
@@ -99,7 +102,7 @@ public enum GamePlayState implements GameState {
             }
             else if (timer.tickCount() == TICK_NEW_GAME_START_HUNTING) {
                 context.game().setPlaying(true);
-                context.gameController().changeGameState(GamePlayState.HUNTING);
+                context.gameController().changeGameState(PacManGamesState.HUNTING);
             }
         }
 
@@ -107,7 +110,7 @@ public enum GamePlayState implements GameState {
             if (timer.tickCount() == 1) {
                 context.game().continueGame(context.gameLevel());
             } else if (timer.tickCount() == TICK_RESUME_HUNTING) {
-                context.gameController().changeGameState(GamePlayState.HUNTING);
+                context.gameController().changeGameState(PacManGamesState.HUNTING);
             }
         }
 
@@ -124,7 +127,7 @@ public enum GamePlayState implements GameState {
                 context.gameLevel().showPacAndGhosts();
             }
             else if (timer.tickCount() == TICK_DEMO_LEVEL_START_HUNTING) {
-                context.gameController().changeGameState(GamePlayState.HUNTING);
+                context.gameController().changeGameState(PacManGamesState.HUNTING);
             }
         }
 
@@ -369,10 +372,10 @@ public enum GamePlayState implements GameState {
         }
     };
 
+    final TickTimer timer = new TickTimer("Timer-" + name());
+
     @Override
     public TickTimer timer() {
         return timer;
     }
-
-    final TickTimer timer = new TickTimer("Timer_" + name());
 }

@@ -15,13 +15,16 @@ import de.amr.pacmanfx.lib.timer.TickTimer;
  */
 public interface FsmState<C> {
 
+    default String name() {
+        return "FsmState-" + getClass().getSimpleName();
+    }
+
     /**
      * The hook method that gets executed when the state is entered.
      *
      * @param context the "context" (data type provided to the state)
      */
-    default void onEnter(C context) {
-    }
+    default void onEnter(C context) {}
 
     /**
      * The hook method that gets executed when the state is updated.
@@ -35,8 +38,7 @@ public interface FsmState<C> {
      *
      * @param context the "context" (data type provided to the state)
      */
-    default void onExit(C context) {
-    }
+    default void onExit(C context) {}
 
     /**
      * @return the timer of this state

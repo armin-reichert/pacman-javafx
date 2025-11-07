@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
-import de.amr.pacmanfx.controller.GamePlayState;
+import de.amr.pacmanfx.controller.PacManGamesState;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
@@ -96,7 +96,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
             case 204 -> gray(true);
             case 214 -> gray(false);
             case 220 -> {
-                context().gameController().changeGameState(GamePlayState.INTRO);
+                context().gameController().changeGameState(PacManGamesState.INTRO);
                 return;
             }
         }

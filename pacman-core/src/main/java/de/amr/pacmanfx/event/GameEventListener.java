@@ -4,7 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.event;
 
-import de.amr.pacmanfx.controller.GameState;
+import de.amr.pacmanfx.GameContext;
+import de.amr.pacmanfx.lib.fsm.FsmState;
 
 public interface GameEventListener {
 
@@ -42,8 +43,8 @@ public interface GameEventListener {
         }
     }
 
-    default void onEnterGameState(GameState state) {}
-    default void onExitGameState(GameState state) {}
+    default void onEnterGameState(FsmState<GameContext> state) {}
+    default void onExitGameState(FsmState<GameContext> state) {}
 
     default void onCreditAdded(GameEvent e) {}
     default void onSpecialScoreReached(GameEvent e) {}

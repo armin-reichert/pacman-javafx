@@ -6,8 +6,8 @@ package de.amr.pacmanfx;
 
 import de.amr.pacmanfx.controller.CoinMechanism;
 import de.amr.pacmanfx.controller.GameController;
-import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEventManager;
+import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 
@@ -41,7 +41,7 @@ public interface GameContext {
     <T extends Game> T game();
 
     /**
-     * @return the controller (in MVC sense) used by all game variants. Implemented as a FSM.
+     * @return the controller (in MVC sense) used by all game variants. Implemented as an FSM.
      */
     GameController gameController();
 
@@ -63,5 +63,5 @@ public interface GameContext {
     /**
      * @return the current game state (the state of the game controller FSM).
      */
-    GameState gameState();
+    FsmState<GameContext> gameState();
 }

@@ -5,11 +5,11 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx;
 
 import de.amr.pacmanfx.controller.GameController;
-import de.amr.pacmanfx.controller.GamePlayState;
-import de.amr.pacmanfx.controller.GameState;
+import de.amr.pacmanfx.controller.PacManGamesState;
 import de.amr.pacmanfx.controller.test.CutScenesTestState;
 import de.amr.pacmanfx.controller.test.LevelMediumTestState;
 import de.amr.pacmanfx.controller.test.LevelShortTestState;
+import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.math.Vector2i;
 
 import java.util.ArrayList;
@@ -86,7 +86,7 @@ public interface Globals {
      */
     static GameContext theGameContext() {
         if (GameController.THE_GAME_CONTROLLER == null) {
-            List<GameState> states = new ArrayList<>(List.of(GamePlayState.values()));
+            List<FsmState<GameContext>> states = new ArrayList<>(List.of(PacManGamesState.values()));
             states.add(new LevelShortTestState());
             states.add(new LevelMediumTestState());
             states.add(new CutScenesTestState());

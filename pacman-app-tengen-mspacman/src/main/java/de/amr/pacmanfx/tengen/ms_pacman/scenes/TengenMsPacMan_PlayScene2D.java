@@ -4,10 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
-import de.amr.pacmanfx.controller.GamePlayState;
-import de.amr.pacmanfx.controller.GameState;
-import de.amr.pacmanfx.controller.test.TestGameState;
+import de.amr.pacmanfx.GameContext;
+import de.amr.pacmanfx.controller.PacManGamesState;
+import de.amr.pacmanfx.controller.test.PacManGamesTestState;
 import de.amr.pacmanfx.event.GameEvent;
+import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.MessageType;
@@ -53,7 +54,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.controller.GamePlayState.*;
+import static de.amr.pacmanfx.controller.PacManGamesState.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Actions.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Properties.PROPERTY_PLAY_SCENE_DISPLAY_MODE;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
@@ -96,7 +97,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
 
         @Override
         public void drawDebugInfo() {
-            final GameState gameState = context().gameState();
+            final FsmState<GameContext> gameState = context().gameState();
             drawTileGrid(CANVAS_WIDTH_UNSCALED, canvasHeightUnscaled.get(), Color.LIGHTGRAY);
             ctx.save();
             ctx.translate(scaled(CONTENT_INDENT), 0);
@@ -318,8 +319,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
 
     @Override
     public void onGameStarted(GameEvent e) {
-        GameState state = context().gameState();
-        boolean shutUp = context().gameLevel().isDemoLevel() || state instanceof TestGameState;
+        FsmState<GameContext> state = context().gameState();
+        boolean shutUp = context().gameLevel().isDemoLevel() || state instanceof PacManGamesTestState;
         if (!shutUp) {
             ui.soundManager().play(SoundID.GAME_READY);
         }
@@ -343,7 +344,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
     }
 
     @Override
-    public void onEnterGameState(GameState state) {
+    public void onEnterGameState(FsmState<GameContext> state) {
         switch (state) {
             case LEVEL_COMPLETE -> {
                 ui.soundManager().stopAll();
@@ -468,7 +469,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
             .ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
             .findAny();
         if (ghostReturningToHouse.isPresent()
-            && (context().gameState() == HUNTING || context().gameState() == GamePlayState.GHOST_DYING)) {
+            && (context().gameState() == HUNTING || context().gameState() == PacManGamesState.GHOST_DYING)) {
             ui.soundManager().loop(SoundID.GHOST_RETURNS);
         } else {
             ui.soundManager().stop(SoundID.GHOST_RETURNS);
@@ -540,7 +541,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
         final TengenMsPacMan_GameModel game = context().game();
         int numLives = game.lifeCount() - 1;
         // As long as Pac-Man is still invisible on start, he is shown as an additional entry in the lives counter
-        if (context().gameState() == GamePlayState.STARTING_GAME_OR_LEVEL && !gameLevel.pac().isVisible()) {
+        if (context().gameState() == PacManGamesState.STARTING_GAME_OR_LEVEL && !gameLevel.pac().isVisible()) {
             numLives += 1;
         }
         numLives = Math.min(numLives, game.hud().maxLivesDisplayed());

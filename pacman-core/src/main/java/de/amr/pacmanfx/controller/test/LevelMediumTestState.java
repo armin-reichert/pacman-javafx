@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.controller.test;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.controller.GamePlayState;
+import de.amr.pacmanfx.controller.PacManGamesState;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.Game;
@@ -14,7 +14,7 @@ import de.amr.pacmanfx.model.GameLevelMessage;
 import de.amr.pacmanfx.model.MessageType;
 import de.amr.pacmanfx.model.actors.AnimationManager;
 
-public class LevelMediumTestState implements TestGameState {
+public class LevelMediumTestState implements PacManGamesTestState {
     static final int TEST_DURATION_SEC = 10;
 
     private final TickTimer timer = new TickTimer("Timer_" + name());
@@ -65,7 +65,7 @@ public class LevelMediumTestState implements TestGameState {
         if (timer().hasExpired()) {
             if (gameLevel.number() == lastTestedLevelNumber) {
                 context.eventManager().publishEvent(GameEventType.STOP_ALL_SOUNDS);
-                context.gameController().changeGameState(GamePlayState.INTRO);
+                context.gameController().changeGameState(PacManGamesState.INTRO);
             } else {
                 timer().restartSeconds(TEST_DURATION_SEC);
                 game.startNextLevel();
@@ -73,11 +73,11 @@ public class LevelMediumTestState implements TestGameState {
             }
         }
         else if (game.isLevelCompleted(gameLevel)) {
-            context.gameController().changeGameState(GamePlayState.INTRO);
+            context.gameController().changeGameState(PacManGamesState.INTRO);
         } else if (game.hasPacManBeenKilled()) {
             timer.expire();
         } else if (game.haveGhostsBeenKilled()) {
-            context.gameController().changeGameState(GamePlayState.GHOST_DYING);
+            context.gameController().changeGameState(PacManGamesState.GHOST_DYING);
         }
     }
 

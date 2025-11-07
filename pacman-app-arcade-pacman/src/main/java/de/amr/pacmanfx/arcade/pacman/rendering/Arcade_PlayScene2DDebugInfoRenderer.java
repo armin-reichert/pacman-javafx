@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
-import de.amr.pacmanfx.controller.GamePlayState;
+import de.amr.pacmanfx.controller.PacManGamesState;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
 import de.amr.pacmanfx.model.HuntingTimer;
@@ -60,7 +60,7 @@ public class Arcade_PlayScene2DDebugInfoRenderer extends DefaultDebugInfoRendere
 
             String gameStateText = gameContext.gameState().name() + " (Tick %d)".formatted(gameContext.gameState().timer().tickCount());
             String huntingPhaseText = "";
-            if (gameContext.gameState() == GamePlayState.HUNTING) {
+            if (gameContext.gameState() == PacManGamesState.HUNTING) {
                 HuntingTimer huntingTimer = gameContext.gameLevel().huntingTimer();
                 huntingPhaseText = " %s (Tick %d)".formatted(huntingTimer.phase(), huntingTimer.tickCount());
             }

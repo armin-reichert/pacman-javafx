@@ -4,10 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._3d;
 
-import de.amr.pacmanfx.controller.GamePlayState;
-import de.amr.pacmanfx.controller.GameState;
+import de.amr.pacmanfx.GameContext;
+import de.amr.pacmanfx.controller.PacManGamesState;
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.StopWatch;
+import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.FoodLayer;
@@ -681,7 +682,7 @@ public class GameLevel3D extends Group implements Disposable {
         if (livesCounter3D != null) {
             int lifeCount = gameLevel.game().lifeCount() - 1;
             // when the game starts and Pac-Man is not yet visible, show one more
-            boolean oneMore = ui.gameContext().gameState() == GamePlayState.STARTING_GAME_OR_LEVEL && !gameLevel.pac().isVisible();
+            boolean oneMore = ui.gameContext().gameState() == PacManGamesState.STARTING_GAME_OR_LEVEL && !gameLevel.pac().isVisible();
             if (oneMore) lifeCount += 1;
             livesCounter3D.livesCountProperty().set(lifeCount);
             boolean visible = gameLevel.game().canStartNewGame();
@@ -704,7 +705,7 @@ public class GameLevel3D extends Group implements Disposable {
         ghostLightAnimation.playFromStart();
     }
 
-    public void onPacManDying(GameState state) {
+    public void onPacManDying(FsmState<GameContext> state) {
         state.timer().resetIndefiniteTime(); // expires when level animation ends
         ui.soundManager().stopAll();
         ghostLightAnimation.stop();
@@ -732,7 +733,7 @@ public class GameLevel3D extends Group implements Disposable {
         });
     }
 
-    public void onLevelComplete(GameState state, ObjectProperty<PerspectiveID> perspectiveIDProperty) {
+    public void onLevelComplete(FsmState<GameContext> state, ObjectProperty<PerspectiveID> perspectiveIDProperty) {
         state.timer().resetIndefiniteTime(); // expires when animation ends
         ui.soundManager().stopAll();
         animationRegistry.stopAllAnimations();
@@ -771,7 +772,7 @@ public class GameLevel3D extends Group implements Disposable {
         animation.play();
     }
 
-    public void onGameOver(GameState state) {
+    public void onGameOver(FsmState<GameContext> state) {
         state.timer().restartSeconds(3);
         ghostLightAnimation.stop();
         energizers3D().forEach(Energizer3D::hide);

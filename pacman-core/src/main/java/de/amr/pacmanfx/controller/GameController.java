@@ -8,6 +8,7 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.event.GameStateChangeEvent;
+import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
@@ -29,7 +30,7 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * Controller (in the sense of MVC) for all game variants.
- * <br>Contains a finite-state machine ({@link StateMachine}) with states defined in {@link GameState}.
+ * <br>Contains a finite-state machine ({@link StateMachine}) with states defined in {@link PacManGamesState}.
  * Each game variant is represented by an instance of a game model ({@link Game}).
  * Scene selection is not controlled by this class but left to the specific user interface implementations.
  *
@@ -48,7 +49,7 @@ public class GameController implements GameContext {
     private final File homeDir = new File(System.getProperty("user.home"), ".pacmanfx");
     private final File customMapDir = new File(homeDir, "maps");
 
-    private final StateMachine<GameState, GameContext> gameStateMachine;
+    private final StateMachine<FsmState<GameContext>, GameContext> gameStateMachine;
     private final GameEventManager gameEventManager;
     private boolean eventsEnabled;
     private final CoinMechanism coinMechanism = new CoinMechanism();
@@ -59,7 +60,7 @@ public class GameController implements GameContext {
     private final BooleanProperty usingAutopilot = new SimpleBooleanProperty(false);
     private final StringProperty gameVariant = new SimpleStringProperty();
 
-    public GameController(List<GameState> states) {
+    public GameController(List<FsmState<GameContext>> states) {
         boolean success = initUserDirectories();
         if (!success) {
             throw new IllegalStateException("User directories could not be created");
@@ -67,6 +68,7 @@ public class GameController implements GameContext {
         gameEventManager = new GameEventManager(this);
 
         gameStateMachine = new StateMachine<>(states, this);
+        gameStateMachine.setName("Game Controller State Machine");
         gameStateMachine.addStateChangeListener((oldState, newState) ->
             gameEventManager.publishEvent(new GameStateChangeEvent(game(), oldState, newState)));
 
@@ -89,7 +91,7 @@ public class GameController implements GameContext {
 
     }
 
-    public GameState stateByName(String name) {
+    public FsmState<GameContext> stateByName(String name) {
         return gameStateMachine.states().stream()
             .filter(state -> state.name().equals(name))
             .findFirst().orElseThrow();
@@ -99,7 +101,7 @@ public class GameController implements GameContext {
         eventsEnabled = enabled;
     }
 
-    public void changeGameState(GameState state) {
+    public void changeGameState(FsmState<GameContext> state) {
         requireNonNull(state);
         gameStateMachine.changeState(state);
     }
@@ -116,7 +118,7 @@ public class GameController implements GameContext {
         gameStateMachine.resumePreviousState();
     }
 
-    public void restart(GameState state) {
+    public void restart(FsmState<GameContext> state) {
         gameStateMachine.restart(state);
     }
 
@@ -219,7 +221,7 @@ public class GameController implements GameContext {
     }
 
     @Override
-    public GameState gameState() {
+    public FsmState<GameContext> gameState() {
         return gameStateMachine.state();
     }
 

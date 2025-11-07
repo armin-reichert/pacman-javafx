@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
-import de.amr.pacmanfx.controller.GamePlayState;
+import de.amr.pacmanfx.controller.PacManGamesState;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
@@ -170,7 +170,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
                 msPacMan.hide();
             }
             case 904, 968, 1032, 1096, 1160, 1224, 1288, 1352 -> spawnJunior(tick);
-            case 1512 -> context().gameController().changeGameState(GamePlayState.SETTING_OPTIONS_FOR_START);
+            case 1512 -> context().gameController().changeGameState(PacManGamesState.SETTING_OPTIONS_FOR_START);
         }
     }
 

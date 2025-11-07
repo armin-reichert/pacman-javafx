@@ -4,12 +4,13 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.action;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
-import de.amr.pacmanfx.controller.GamePlayState;
-import de.amr.pacmanfx.controller.GameState;
+import de.amr.pacmanfx.controller.PacManGamesState;
 import de.amr.pacmanfx.controller.test.LevelMediumTestState;
 import de.amr.pacmanfx.controller.test.LevelShortTestState;
 import de.amr.pacmanfx.lib.Direction;
+import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import de.amr.pacmanfx.ui.api.GameScene;
@@ -20,7 +21,7 @@ import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.NUM_TICKS_PER_SEC;
 import static de.amr.pacmanfx.Validations.stateIsOneOf;
-import static de.amr.pacmanfx.controller.GamePlayState.INTRO;
+import static de.amr.pacmanfx.controller.PacManGamesState.INTRO;
 import static de.amr.pacmanfx.ui.api.GameScene_Config.SCENE_ID_PLAY_SCENE_2D;
 import static de.amr.pacmanfx.ui.api.GameScene_Config.SCENE_ID_PLAY_SCENE_3D;
 import static de.amr.pacmanfx.ui.api.GameUI.*;
@@ -289,12 +290,12 @@ public final class CommonGameActions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            GameState state = ui.gameContext().gameState();
+            FsmState<GameContext> state = ui.gameContext().gameState();
             if (state.name().equals(LevelShortTestState.class.getSimpleName())
                 || state.name().equals(LevelMediumTestState.class.getSimpleName())) {
                 return true;
             }
-            return stateIsOneOf(state, GamePlayState.BOOT, GamePlayState.INTRO, GamePlayState.SETTING_OPTIONS_FOR_START, GamePlayState.HUNTING);
+            return stateIsOneOf(state, PacManGamesState.BOOT, PacManGamesState.INTRO, PacManGamesState.SETTING_OPTIONS_FOR_START, PacManGamesState.HUNTING);
         }
     };
 }

@@ -8,7 +8,7 @@ import de.amr.pacmanfx.arcade.pacman.actors.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_ActorRenderer;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_HUDRenderer;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
-import de.amr.pacmanfx.controller.GamePlayState;
+import de.amr.pacmanfx.controller.PacManGamesState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.RectShort;
@@ -394,10 +394,10 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 if (sceneTimer.atSecond(0.75)) {
                     scene.ghosts.get(ORANGE_GHOST_POKEY).hide();
                     if (!scene.context().game().canStartNewGame()) {
-                        scene.context().gameController().changeGameState(GamePlayState.STARTING_GAME_OR_LEVEL);
+                        scene.context().gameController().changeGameState(PacManGamesState.STARTING_GAME_OR_LEVEL);
                     }
                 } else if (sceneTimer.atSecond(5)) {
-                    scene.context().gameController().changeGameState(GamePlayState.SETTING_OPTIONS_FOR_START);
+                    scene.context().gameController().changeGameState(PacManGamesState.SETTING_OPTIONS_FOR_START);
                 }
             }
         };

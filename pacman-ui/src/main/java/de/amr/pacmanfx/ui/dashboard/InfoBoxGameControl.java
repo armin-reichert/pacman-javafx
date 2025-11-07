@@ -4,10 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.dashboard;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.controller.CoinMechanism;
-import de.amr.pacmanfx.controller.GamePlayState;
-import de.amr.pacmanfx.controller.GameState;
+import de.amr.pacmanfx.controller.PacManGamesState;
 import de.amr.pacmanfx.controller.test.CutScenesTestState;
+import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.ui.action.ArcadeActions;
 import de.amr.pacmanfx.ui.action.TestActions;
 import de.amr.pacmanfx.ui.api.GameUI;
@@ -71,16 +72,16 @@ public class InfoBoxGameControl extends InfoBox {
         //TODO use binding
         choiceBoxInitialLives.setValue(ui.gameContext().game().initialLifeCount());
 
-        GameState state = ui.gameContext().gameState();
+        FsmState<GameContext> state = ui.gameContext().gameState();
 
-        spinnerCredit.setDisable(!(stateIsOneOf(state, GamePlayState.INTRO, GamePlayState.SETTING_OPTIONS_FOR_START)));
-        choiceBoxInitialLives.setDisable(state != GamePlayState.INTRO);
+        spinnerCredit.setDisable(!(stateIsOneOf(state, PacManGamesState.INTRO, PacManGamesState.SETTING_OPTIONS_FOR_START)));
+        choiceBoxInitialLives.setDisable(state != PacManGamesState.INTRO);
 
         buttonGroupLevelActions[GAME_LEVEL_START].setDisable(isBooting() || !canStartLevel());
         buttonGroupLevelActions[GAME_LEVEL_QUIT].setDisable(isBooting() || ui.gameContext().optGameLevel().isEmpty());
         buttonGroupLevelActions[GAME_LEVEL_NEXT].setDisable(isBooting() || !canEnterNextLevel());
 
-        buttonGroupCutScenesTest[CUT_SCENES_TEST_START].setDisable(isBooting() || state != GamePlayState.INTRO);
+        buttonGroupCutScenesTest[CUT_SCENES_TEST_START].setDisable(isBooting() || state != PacManGamesState.INTRO);
         buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT].setDisable(isBooting() || !(state instanceof CutScenesTestState));
 
         cbAutopilot.setDisable(isBooting());
@@ -88,14 +89,14 @@ public class InfoBoxGameControl extends InfoBox {
     }
 
     private boolean isBooting() {
-        return ui.gameContext().gameState() == GamePlayState.BOOT;
+        return ui.gameContext().gameState() == PacManGamesState.BOOT;
     }
 
     private boolean canStartLevel() {
-        return ui.gameContext().game().canStartNewGame() && stateIsOneOf(ui.gameContext().gameState(), GamePlayState.INTRO, GamePlayState.SETTING_OPTIONS_FOR_START);
+        return ui.gameContext().game().canStartNewGame() && stateIsOneOf(ui.gameContext().gameState(), PacManGamesState.INTRO, PacManGamesState.SETTING_OPTIONS_FOR_START);
     }
 
     private boolean canEnterNextLevel() {
-        return ui.gameContext().game().isPlaying() && stateIsOneOf(ui.gameContext().gameState(), GamePlayState.HUNTING);
+        return ui.gameContext().game().isPlaying() && stateIsOneOf(ui.gameContext().gameState(), PacManGamesState.HUNTING);
     }
 }

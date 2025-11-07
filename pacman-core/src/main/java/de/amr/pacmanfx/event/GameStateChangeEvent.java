@@ -4,13 +4,14 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.event;
 
-import de.amr.pacmanfx.controller.GameState;
+import de.amr.pacmanfx.GameContext;
+import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.model.Game;
 
 public class GameStateChangeEvent extends GameEvent {
 
-    private final GameState oldState;
-    private final GameState newState;
+    private final FsmState<GameContext> oldState;
+    private final FsmState<GameContext> newState;
 
     @Override
     public String toString() {
@@ -19,17 +20,17 @@ public class GameStateChangeEvent extends GameEvent {
         );
     }
 
-    public GameStateChangeEvent(Game game, GameState oldState, GameState newState) {
+    public GameStateChangeEvent(Game game, FsmState<GameContext> oldState, FsmState<GameContext> newState) {
         super(game, GameEventType.GAME_STATE_CHANGED);
         this.oldState = oldState;
         this.newState = newState;
     }
 
-    public GameState oldState() {
+    public FsmState<GameContext> oldState() {
         return oldState;
     }
 
-    public GameState newState() {
+    public FsmState<GameContext> newState() {
         return newState;
     }
 }
