@@ -619,7 +619,7 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
             // siren numbers are 1..4, hunting phase index = 0..7
             int huntingPhase = context().gameLevel().huntingTimer().phaseIndex();
             int sirenNumber = 1 + huntingPhase / 2;
-            float volume = 0.025f;
+            float volume = 0.33f;
             switch (sirenNumber) {
                 case 1 -> ui.soundManager().playSiren(SoundID.SIREN_1, volume);
                 case 2 -> ui.soundManager().playSiren(SoundID.SIREN_2, volume);

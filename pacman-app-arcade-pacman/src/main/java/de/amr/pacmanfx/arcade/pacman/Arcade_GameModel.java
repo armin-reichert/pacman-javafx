@@ -72,6 +72,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     protected Arcade_GameModel(GameContext gameContext) {
         super(gameContext);
+        setCollisionStrategy(CollisionStrategy.SAME_TILE);
     }
 
     public abstract Arcade_LevelData levelData(GameLevel gameLevel);
@@ -229,7 +230,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     @Override
     protected void checkPacFindsBonus(GameLevel gameLevel) {
         gameLevel.bonus().filter(bonus -> bonus.state() == BonusState.EDIBLE).ifPresent(bonus -> {
-            if (gameLevel.pac().onSameTileAs(bonus)) {
+            if (actorsCollide(gameLevel.pac(), bonus)) {
                 bonus.setEaten(BONUS_EATEN_SECONDS);
                 scoreManager.scorePoints(bonus.points());
                 Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);

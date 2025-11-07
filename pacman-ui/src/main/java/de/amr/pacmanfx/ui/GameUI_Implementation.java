@@ -96,6 +96,7 @@ public final class GameUI_Implementation implements GameUI {
         new ActionBinding(TestActions.ACTION_SHORT_LEVEL_TEST,  alt(KeyCode.T)),
         new ActionBinding(TestActions.ACTION_MEDIUM_LEVEL_TEST, alt_shift(KeyCode.T)),
         new ActionBinding(ACTION_TOGGLE_AUTOPILOT,              alt(KeyCode.A)),
+        new ActionBinding(ACTION_TOGGLE_COLLISION_STRATEGY,     alt(KeyCode.S)),
         new ActionBinding(ACTION_TOGGLE_DEBUG_INFO,             alt(KeyCode.D)),
         new ActionBinding(ACTION_TOGGLE_MUTED,                  alt(KeyCode.M)),
         new ActionBinding(ACTION_TOGGLE_PAUSED,                 bare(KeyCode.P), bare(KeyCode.F5)),

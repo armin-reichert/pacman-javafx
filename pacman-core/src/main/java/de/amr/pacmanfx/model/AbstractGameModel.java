@@ -9,10 +9,7 @@ import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
-import de.amr.pacmanfx.model.actors.AnimationManager;
-import de.amr.pacmanfx.model.actors.Bonus;
-import de.amr.pacmanfx.model.actors.GhostState;
-import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.actors.*;
 import javafx.beans.property.*;
 import org.tinylog.Logger;
 
@@ -24,6 +21,12 @@ import static java.util.Objects.requireNonNull;
  * Common base class of all Pac-Man game models.
  */
 public abstract class AbstractGameModel implements Game {
+
+    private static final CollisionStrategy DEFAULT_COLLISION_STRATEGY = CollisionStrategy.SAME_TILE;
+
+    private static final float COLLISION_CIRCLE_RADIUS = 2;
+
+    protected ObjectProperty<CollisionStrategy> collisionStrategy;
 
     protected final BooleanProperty cutScenesEnabled = new SimpleBooleanProperty(true);
 
@@ -52,6 +55,42 @@ public abstract class AbstractGameModel implements Game {
     protected abstract boolean isPacSafeInDemoLevel(GameLevel demoLevel);
 
     protected abstract void resetPacManAndGhostAnimations(GameLevel gameLevel);
+
+    public final ObjectProperty<CollisionStrategy> collisionStrategyProperty() {
+        if (collisionStrategy == null) {
+            collisionStrategy = new SimpleObjectProperty<>(DEFAULT_COLLISION_STRATEGY);
+        }
+        return collisionStrategy;
+    }
+
+    public CollisionStrategy collisionStrategy() {
+        return collisionStrategy != null ? collisionStrategy.get() : DEFAULT_COLLISION_STRATEGY;
+    }
+
+    public void setCollisionStrategy(CollisionStrategy collisionStrategy) {
+        collisionStrategyProperty().set(collisionStrategy);
+    }
+
+    /**
+     * @param either some actor
+     * @param other some actor
+     * @return <code>true</code> if both entities collide according to the current collision strategy
+     */
+    public boolean actorsCollide(Actor either, Actor other) {
+        requireNonNull(either, "Actor to check for collision must not be null");
+        requireNonNull(other, "Actor to check for collision must not be null");
+        return switch (collisionStrategy()) {
+            case SAME_TILE -> either.tile().equals(other.tile());
+            case OVERLAPPING_CIRCLE -> {
+                float dist = either.center().minus(other.center()).length();
+                if (dist < COLLISION_CIRCLE_RADIUS) {
+                    Logger.info("Collision detected (dist={}): {} collides with {}", dist, either, other);
+                    yield true;
+                }
+                yield false;
+            }
+        };
+    }
 
     public void setLifeCount(int n) {
         if (n >= 0) {
@@ -161,7 +200,7 @@ public abstract class AbstractGameModel implements Game {
         thisStep.ghostsCollidingWithPac.clear();
         gameLevel.ghosts()
             .filter(ghost -> !terrain.isTileInPortalSpace(ghost.tile()))
-            .filter(ghost -> ghost.onSameTileAs(gameLevel.pac()))
+            .filter(ghost -> actorsCollide(ghost, gameLevel.pac()))
             .forEach(thisStep.ghostsCollidingWithPac::add);
 
         if (!thisStep.ghostsCollidingWithPac.isEmpty()) {

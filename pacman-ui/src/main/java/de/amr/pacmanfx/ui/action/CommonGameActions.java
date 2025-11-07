@@ -11,6 +11,8 @@ import de.amr.pacmanfx.controller.test.LevelMediumTestState;
 import de.amr.pacmanfx.controller.test.LevelShortTestState;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.fsm.FsmState;
+import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import de.amr.pacmanfx.ui.api.GameScene;
@@ -208,6 +210,20 @@ public final class CommonGameActions {
     public static final GameAction ACTION_STEER_DOWN = new SteeringAction(Direction.DOWN);
     public static final GameAction ACTION_STEER_LEFT = new SteeringAction(Direction.LEFT);
     public static final GameAction ACTION_STEER_RIGHT = new SteeringAction(Direction.RIGHT);
+
+    public static final GameAction ACTION_TOGGLE_COLLISION_STRATEGY = new GameAction("TOGGLE_COLLISION_STRATEGY") {
+        @Override
+        public void execute(GameUI ui) {
+            final Game game = ui.gameContext().game();
+            CollisionStrategy collisionStrategy = game.collisionStrategy();
+            if (collisionStrategy == CollisionStrategy.OVERLAPPING_CIRCLE) {
+                game.setCollisionStrategy(CollisionStrategy.SAME_TILE);
+            } else {
+                game.setCollisionStrategy(CollisionStrategy.OVERLAPPING_CIRCLE);
+            }
+            ui.showFlashMessage("Collision strategy is %s".formatted(game.collisionStrategy()));
+        }
+    };
 
     public static final GameAction ACTION_TOGGLE_DASHBOARD = new GameAction("TOGGLE_DASHBOARD") {
         @Override

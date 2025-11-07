@@ -5,11 +5,14 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.model;
 
 import de.amr.pacmanfx.event.GameEventManager;
+import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.ActorSpeedControl;
+import de.amr.pacmanfx.model.actors.CollisionStrategy;
 
 import java.util.Optional;
 
 public interface Game extends GameLifecycle, GameEvents, ActorSpeedControl {
+
     GameEventManager      eventManager();
     ScoreManager          scoreManager();
     SimulationStepEvents  simulationStepResults();
@@ -26,6 +29,10 @@ public interface Game extends GameLifecycle, GameEvents, ActorSpeedControl {
     void                  setInitialLifeCount(int numLives);
     int                   lifeCount();
     void                  addLives(int numLives);
+
+    CollisionStrategy     collisionStrategy();
+    void                  setCollisionStrategy(CollisionStrategy collisionStrategy);
+    boolean               actorsCollide(Actor either, Actor other);
 
     double                pacPowerFadingSeconds(GameLevel gameLevel);
     double                pacPowerSeconds(GameLevel level);

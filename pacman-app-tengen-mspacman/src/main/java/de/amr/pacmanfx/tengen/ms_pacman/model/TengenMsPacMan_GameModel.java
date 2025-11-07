@@ -136,6 +136,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     public TengenMsPacMan_GameModel(GameContext gameContext, File highScoreFile) {
         super(gameContext);
+        setCollisionStrategy(CollisionStrategy.OVERLAPPING_CIRCLE);
         scoreManager.setHighScoreFile(requireNonNull(highScoreFile));
         mapSelector = new TengenMsPacMan_MapSelector();
         levelCounter = new TengenMsPacMan_LevelCounter();
@@ -584,7 +585,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     @Override
     protected void checkPacFindsBonus(GameLevel gameLevel) {
         gameLevel.bonus().filter(bonus -> bonus.state() == BonusState.EDIBLE).ifPresent(bonus -> {
-            if (gameLevel.pac().onSameTileAs(bonus)) {
+            if (actorsCollide(gameLevel.pac(), bonus)) {
                 bonus.setEaten(BONUS_EATEN_SECONDS);
                 scoreManager.scorePoints(bonus.points());
                 Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);

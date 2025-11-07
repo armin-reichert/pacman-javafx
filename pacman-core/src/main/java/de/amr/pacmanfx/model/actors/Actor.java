@@ -186,15 +186,6 @@ public class Actor implements AnimationSupport {
         return position().minus(tile().scaled((float)TS));
     }
 
-    /**
-     * @param other some actor
-     * @return <code>true</code> if both entities have the same tile coordinate
-     */
-    public boolean onSameTileAs(Actor other) {
-        requireNonNull(other, "Actor to check for same tile must not be null");
-        return tile().equals(other.tile());
-    }
-
     protected AnimationManager animationManager() {
         return animationManager;
     }

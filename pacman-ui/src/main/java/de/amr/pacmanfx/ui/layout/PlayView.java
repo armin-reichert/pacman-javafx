@@ -129,6 +129,7 @@ public class PlayView extends StackPane implements GameUI_View {
         actionBindings.bindAction(ACTION_TOGGLE_DEBUG_INFO, ui.actionBindings());
         actionBindings.bindAction(ACTION_TOGGLE_MUTED, ui.actionBindings());
         actionBindings.bindAction(ACTION_TOGGLE_PAUSED, ui.actionBindings());
+        actionBindings.bindAction(ACTION_TOGGLE_COLLISION_STRATEGY, ui.actionBindings());
         actionBindings.bindAction(ACTION_TOGGLE_DASHBOARD, ui.actionBindings());
         actionBindings.bindAction(ACTION_TOGGLE_IMMUNITY, ui.actionBindings());
         actionBindings.bindAction(ACTION_TOGGLE_MINI_VIEW_VISIBILITY, ui.actionBindings());
