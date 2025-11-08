@@ -44,10 +44,10 @@ public class Joypad {
         BINDING1, BINDING2
     };
 
-    private final Keyboard keyboard;
+    private Keyboard keyboard;
     private int selectedIndex;
 
-    public Joypad(Keyboard keyboard) {
+    public void setSimulatingKeyboard(Keyboard keyboard) {
         this.keyboard = requireNonNull(keyboard);
     }
 

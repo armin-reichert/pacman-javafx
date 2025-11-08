@@ -6,7 +6,6 @@ package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
-import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.controller.PacManGamesState;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
@@ -48,6 +47,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import static de.amr.pacmanfx.Validations.requireNonNegative;
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_AUTOPILOT;
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_IMMUNITY;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
@@ -61,7 +61,6 @@ import static javafx.beans.binding.Bindings.createStringBinding;
  */
 public final class GameUI_Implementation implements GameUI {
 
-    private static final String CONTEXT_MENU_CSS_PATH = "/de/amr/pacmanfx/ui/css/menu-style.css";
     private static final int MIN_STAGE_WIDTH  = 280;
     private static final int MIN_STAGE_HEIGHT = 360;
 
@@ -151,11 +150,12 @@ public final class GameUI_Implementation implements GameUI {
         this.configClassesByGameVariant = requireNonNull(configClassesByVariantName, "UI configuration map is null");
         this.gameContext = requireNonNull(gameContext, "Game context is null");
         this.stage = requireNonNull(stage, "Stage is null");
-        Validations.requireNonNegative(mainSceneWidth, "Main scene width must be a positive number");
-        Validations.requireNonNegative(mainSceneHeight, "Main scene height must be a positive number");
+        requireNonNegative(mainSceneWidth, "Main scene width must be a positive number");
+        requireNonNegative(mainSceneHeight, "Main scene height must be a positive number");
 
         keyboard = new Keyboard();
-        joypad = new Joypad(keyboard);
+        joypad = new Joypad();
+        joypad.setSimulatingKeyboard(keyboard);
 
         customDirectoryWatchdog = new DirectoryWatchdog(gameContext.customMapDir());
 
@@ -185,7 +185,7 @@ public final class GameUI_Implementation implements GameUI {
         layoutPane = new StackPane();
 
         scene = new Scene(layoutPane, width, height);
-        scene.getStylesheets().add(CONTEXT_MENU_CSS_PATH);
+        scene.getStylesheets().add(GameAssets.CONTEXT_MENU_CSS_PATH);
 
         // Keyboard events are first handled by the global keyboard object
         scene.addEventFilter(KeyEvent.KEY_PRESSED,  keyboard::onKeyPressed);
