@@ -129,9 +129,12 @@ public final class GameUI_Implementation implements GameUI {
 
     private final FlashMessageView flashMessageView = new FlashMessageView();
 
-    private StartPagesView startPagesView;
+    private final StartPagesView startPagesView;
     private final PlayView playView;
     private EditorView editorView;
+
+    private FontIcon pausedIcon;
+    private StatusIconBox statusIconBox;
 
     private final StringBinding titleBinding;
 
@@ -167,6 +170,9 @@ public final class GameUI_Implementation implements GameUI {
 
         playView = new PlayView(scene);
         playView.setUI(this);
+
+        startPagesView = new StartPagesView();
+        startPagesView.setUI(this);
 
         currentView.addListener((py, ov, newView) -> {
             if (newView != null) {
@@ -224,17 +230,27 @@ public final class GameUI_Implementation implements GameUI {
         ));
         scene.setOnScroll(e -> currentGameScene().ifPresent(gameScene -> gameScene.handleScrollEvent(e)));
 
-        // Large "paused" icon which appears at center of scene
-        var pausedIcon = FontIcon.of(FontAwesomeSolid.PAUSE, PAUSE_ICON_SIZE, ArcadePalette.ARCADE_WHITE);
+        createPausedIcon();
+        createStatusIconBox();
+
+        // First child is placeholder for view (start pages view, play view, ...)
+        layoutPane.getChildren().setAll(new Region(), pausedIcon, statusIconBox, flashMessageView);
+    }
+
+    // Large "paused" icon which appears at center of scene
+    private void createPausedIcon() {
+        pausedIcon = FontIcon.of(FontAwesomeSolid.PAUSE, PAUSE_ICON_SIZE, ArcadePalette.ARCADE_WHITE);
         // Show paused icon only in play view
         pausedIcon.visibleProperty().bind(Bindings.createBooleanBinding(
-            () -> currentView() == playView && clock.isPaused(),
-            currentViewProperty(), clock.pausedProperty())
+                () -> currentView() == playView && clock.isPaused(),
+                currentViewProperty(), clock.pausedProperty())
         );
         StackPane.setAlignment(pausedIcon, Pos.CENTER);
+    }
 
-        // Status icon box appears at bottom-left corner of all views except editor view
-        var statusIconBox = new StatusIconBox();
+    // Status icon box appears at bottom-left corner of all views except editor view
+    private void createStatusIconBox() {
+        statusIconBox = new StatusIconBox();
         // hide icon box if editor view is active, avoid creation of editor view in binding expression!
         statusIconBox.visibleProperty().bind(currentViewProperty().map(currentView -> optEditorView().isEmpty() || currentView != optEditorView().get()));
         statusIconBox.iconMuted()    .visibleProperty().bind(PROPERTY_MUTED);
@@ -243,9 +259,6 @@ public final class GameUI_Implementation implements GameUI {
         statusIconBox.iconCheated()  .visibleProperty().bind(gameContext().gameController().cheatUsedProperty());
         statusIconBox.iconImmune()   .visibleProperty().bind(gameContext().gameController().immunityProperty());
         StackPane.setAlignment(statusIconBox, Pos.BOTTOM_LEFT);
-
-        // First child is placeholder for view (start pages view, play view, ...)
-        layoutPane.getChildren().setAll(new Region(), pausedIcon, statusIconBox, flashMessageView);
     }
 
     private void embedView(GameUI_View view) {
@@ -476,8 +489,8 @@ public final class GameUI_Implementation implements GameUI {
         showStartView();
         stage.centerOnScreen();
         stage.show();
-        Platform.runLater(customDirWatchdog::startWatching);
         gameContext.gameController().setEventsEnabled(true);
+        Platform.runLater(customDirWatchdog::startWatching);
     }
 
     @Override
@@ -511,10 +524,6 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public StartPagesView startPagesView() {
-        if (startPagesView == null) {
-            startPagesView = new StartPagesView();
-            startPagesView.setUI(this);
-        }
         return startPagesView;
     }
 
