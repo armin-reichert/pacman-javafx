@@ -107,7 +107,7 @@ public final class GameUI_Implementation implements GameUI {
     );
 
     private final GameAssets assets;
-    private final DirectoryWatchdog customDirectoryWatchdog;
+    private final DirectoryWatchdog customDirWatchdog;
     private final GameClock clock;
     private final GameContext gameContext;
     private final Joypad joypad;
@@ -130,7 +130,8 @@ public final class GameUI_Implementation implements GameUI {
     };
 
     private Scene scene;
-    private StackPane layoutPane;
+    private final StackPane layoutPane = new StackPane();
+
     private FlashMessageView flashMessageView;
 
     // These are lazily created
@@ -144,31 +145,31 @@ public final class GameUI_Implementation implements GameUI {
         Map<String, Class<?>> configClassesByVariantName,
         GameContext gameContext,
         Stage stage,
-        double mainSceneWidth,
-        double mainSceneHeight)
+        double sceneWidth,
+        double sceneHeight)
     {
         this.configClassesByGameVariant = requireNonNull(configClassesByVariantName, "UI configuration map is null");
         this.gameContext = requireNonNull(gameContext, "Game context is null");
         this.stage = requireNonNull(stage, "Stage is null");
-        requireNonNegative(mainSceneWidth, "Main scene width must be a positive number");
-        requireNonNegative(mainSceneHeight, "Main scene height must be a positive number");
-
-        keyboard = new Keyboard();
-        joypad = new Joypad();
-        joypad.setSimulatingKeyboard(keyboard);
-
-        customDirectoryWatchdog = new DirectoryWatchdog(gameContext.customMapDir());
-
-        clock = new GameClock();
-        clock.setPausableAction(this::doSimulationStepAndUpdateGameScene);
-        clock.setPermanentAction(this::drawCurrentView);
+        requireNonNegative(sceneWidth, "Main scene width must be a positive number");
+        requireNonNegative(sceneHeight, "Main scene height must be a positive number");
 
         assets = new GameAssets();
         prefs = new GameUI_Preferences();
         PROPERTY_3D_WALL_HEIGHT.set(prefs.getFloat("3d.obstacle.base_height"));
         PROPERTY_3D_WALL_OPACITY.set(prefs.getFloat("3d.obstacle.opacity"));
 
-        createSceneLayout(mainSceneWidth, mainSceneHeight);
+        keyboard = new Keyboard();
+        joypad = new Joypad();
+        joypad.setSimulatingKeyboard(keyboard);
+
+        customDirWatchdog = new DirectoryWatchdog(gameContext.customMapDir());
+
+        clock = new GameClock();
+        clock.setPausableAction(this::doSimulationStepAndUpdateGameScene);
+        clock.setPermanentAction(this::drawCurrentView);
+
+        createScene(sceneWidth, sceneHeight);
 
         stage.setScene(scene);
         stage.setMinWidth(MIN_STAGE_WIDTH);
@@ -181,9 +182,7 @@ public final class GameUI_Implementation implements GameUI {
         actionBindings.assignBindingsToKeyboard(keyboard);
     }
 
-    private void createSceneLayout(double width, double height) {
-        layoutPane = new StackPane();
-
+    private void createScene(double width, double height) {
         scene = new Scene(layoutPane, width, height);
         scene.getStylesheets().add(GameAssets.CONTEXT_MENU_CSS_PATH);
 
@@ -350,7 +349,7 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public DirectoryWatchdog directoryWatchdog() {
-        return customDirectoryWatchdog;
+        return customDirWatchdog;
     }
 
     @Override
@@ -469,7 +468,7 @@ public final class GameUI_Implementation implements GameUI {
         showStartView();
         stage.centerOnScreen();
         stage.show();
-        Platform.runLater(customDirectoryWatchdog::startWatching);
+        Platform.runLater(customDirWatchdog::startWatching);
         gameContext.gameController().setEventsEnabled(true);
     }
 
@@ -477,7 +476,7 @@ public final class GameUI_Implementation implements GameUI {
     public void terminate() {
         Logger.info("Application is terminated now. There is no way back!");
         clock.stop();
-        customDirectoryWatchdog.dispose();
+        customDirWatchdog.dispose();
     }
 
     @Override
