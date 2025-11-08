@@ -11,6 +11,7 @@ import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
+import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
 
@@ -38,8 +39,8 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements ActorRen
         }
         else {
             actor.optAnimationManager()
-                    .map(animations -> animations.currentSprite(actor))
-                    .ifPresent(sprite -> drawSpriteCentered(actor.center(), sprite));
+                .map(animations -> animations.currentSprite(actor))
+                .ifPresent(sprite -> drawSpriteCentered(actor.center(), sprite));
         }
     }
 
@@ -47,16 +48,22 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements ActorRen
         switch (bonus.state()) {
             case EDIBLE -> {
                 RectShort[] sprites = spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS);
-                int index = bonus.symbol();
+                // symbol code is index in sprite array
+                byte index = bonus.symbol();
                 if (0 <= index && index < sprites.length) {
                     drawSpriteCentered(bonus.center(), sprites[bonus.symbol()]);
+                } else {
+                    Logger.error("Cannot render bonus with symbol code {}", index);
                 }
             }
             case EATEN -> {
                 RectShort[] sprites = spriteSheet().spriteSequence(SpriteID.BONUS_VALUES);
-                int index = bonus.symbol();
+                // symbol code is index in sprite array
+                byte index = bonus.symbol();
                 if (0 <= index && index < sprites.length) {
                     drawSpriteCentered(bonus.center(), sprites[index]);
+                } else {
+                    Logger.error("Cannot render bonus with symbol code {}", index);
                 }
             }
             case INACTIVE -> {}

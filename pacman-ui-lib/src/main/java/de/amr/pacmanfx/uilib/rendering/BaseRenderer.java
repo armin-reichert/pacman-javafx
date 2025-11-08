@@ -44,14 +44,13 @@ public class BaseRenderer implements Renderer {
 
     public BaseRenderer(Canvas canvas) {
         ctx = requireNonNull(canvas).getGraphicsContext2D();
-        ctx.setImageSmoothing(imageSmoothing);
         arcadeFontTS.bind(scaling.map(s -> Font.font(ARCADE_FONT_TS.getFamily(), scaled(TS))));
-        arcadeFont6.bind(scaling.map(s -> Font.font(ARCADE_FONT_TS.getFamily(), scaled(6))));
+        arcadeFont6 .bind(scaling.map(s -> Font.font(ARCADE_FONT_TS.getFamily(), scaled(6))));
     }
 
     public BaseRenderer(Canvas canvas, SpriteSheet<?> spriteSheet) {
         this(canvas);
-        this.spriteSheet = spriteSheet;
+        this.spriteSheet = requireNonNull(spriteSheet);
     }
 
     @Override

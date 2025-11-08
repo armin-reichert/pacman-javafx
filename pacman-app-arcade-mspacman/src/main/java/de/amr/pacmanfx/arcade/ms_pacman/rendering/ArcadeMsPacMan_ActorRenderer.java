@@ -12,6 +12,7 @@ import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
+import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.ui.api.ArcadePalette.ARCADE_WHITE;
 import static java.util.Objects.requireNonNull;
@@ -66,19 +67,25 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements ActorR
         switch (bonus.state()) {
             case EDIBLE -> {
                 RectShort[] sprites = spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS);
-                int index = bonus.symbol();
+                byte index = bonus.symbol();
+                // symbol code is index in sprite array
                 if (0 <= index && index < sprites.length) {
                     ctx().save();
                     ctx().translate(0, bonus.verticalElongation());
                     drawSpriteCentered(bonus.center(), sprites[index]);
                     ctx().restore();
+                } else {
+                    Logger.error("Cannot render bonus with symbol code {}", index);
                 }
             }
             case EATEN -> {
                 RectShort[] sprites = spriteSheet().spriteSequence(SpriteID.BONUS_VALUES);
-                int index = bonus.symbol();
+                byte index = bonus.symbol();
+                // symbol code is index in sprite array
                 if (0 <= index && index < sprites.length) {
                     drawSpriteCentered(bonus.center(), sprites[index]);
+                } else {
+                    Logger.error("Cannot render bonus with symbol code {}", index);
                 }
             }
             case INACTIVE -> {}
