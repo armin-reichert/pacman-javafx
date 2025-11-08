@@ -23,9 +23,8 @@ import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameScene_Config;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
-import de.amr.pacmanfx.ui.sound.DefaultSoundManager;
-import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
+import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
@@ -60,7 +59,7 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config, GameScene_Confi
 
     private final GameUI ui;
     private final AssetStorage assets = new AssetStorage();
-    private final DefaultSoundManager soundManager = new DefaultSoundManager();
+    private final SoundManager soundManager = new SoundManager();
     private final Map<String, GameScene> scenesByID = new HashMap<>();
     private final ArcadePacMan_SpriteSheet spriteSheet;
 
