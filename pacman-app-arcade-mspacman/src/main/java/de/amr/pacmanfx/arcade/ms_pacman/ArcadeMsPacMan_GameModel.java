@@ -15,12 +15,13 @@ import de.amr.pacmanfx.arcade.pacman.actors.Inky;
 import de.amr.pacmanfx.arcade.pacman.actors.Pinky;
 import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.event.GameEventType;
-import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.Waypoint;
+import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.Bonus;
+import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
 
@@ -30,9 +31,9 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.ORANGE_GHOST_POKEY;
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
-import static de.amr.pacmanfx.lib.math.RandomNumberSupport.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
+import static de.amr.pacmanfx.lib.math.RandomNumberSupport.*;
 import static de.amr.pacmanfx.model.DefaultWorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;
 
@@ -167,6 +168,25 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         levelCounter().setEnabled(levelNumber < 8);
 
         return newGameLevel;
+    }
+
+    /**
+     * In Ms. Pac-Man, ghosts slow down in tunnel only in first two levels!
+     */
+    @Override
+    public float ghostAttackSpeed(GameLevel gameLevel, Ghost ghost) {
+        if (gameLevel.number() <= 2 && gameLevel.worldMap().terrainLayer().isTunnel(ghost.tile())) {
+            return ghostTunnelSpeed(gameLevel, ghost);
+        }
+        if (ghost instanceof Blinky blinky) {
+            if (blinky.cruiseElroyValue() == 1) {
+                return levelData(gameLevel).elroy1SpeedPct() * BASE_SPEED_1_PERCENT;
+            }
+            if (blinky.cruiseElroyValue() == 2) {
+                return levelData(gameLevel).elroy2SpeedPct() * BASE_SPEED_1_PERCENT;
+            }
+        }
+        return levelData(gameLevel).ghostSpeedPct() * BASE_SPEED_1_PERCENT;
     }
 
     @Override
