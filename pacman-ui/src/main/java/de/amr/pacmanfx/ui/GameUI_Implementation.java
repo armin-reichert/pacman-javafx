@@ -122,15 +122,7 @@ public final class GameUI_Implementation implements GameUI {
     private final Map<String, Class<?>> configClassesByGameVariant;
     private final Map<String, GameUI_Config> configByGameVariant = new HashMap<>();
 
-    private final ObjectProperty<GameUI_View> currentView = new SimpleObjectProperty<>() {
-        @Override
-        protected void invalidated() {
-            GameUI_View newView = get();
-            if (newView != null) {
-                embedView(newView);
-            }
-        }
-    };
+    private final ObjectProperty<GameUI_View> currentView = new SimpleObjectProperty<>();
 
     private Scene scene;
     private final StackPane layoutPane = new StackPane();
@@ -175,6 +167,13 @@ public final class GameUI_Implementation implements GameUI {
 
         playView = new PlayView(scene);
         playView.setUI(this);
+
+        currentView.addListener((py, ov, newView) -> {
+            if (newView != null) {
+                embedView(newView);
+                Logger.info("Embedded view: {}", newView);
+            }
+        });
 
         titleBinding = createStringBinding(this::computeStageTitle,
             // depends on:
@@ -319,7 +318,7 @@ public final class GameUI_Implementation implements GameUI {
 
     private void drawCurrentView() {
         try {
-            if (currentView() == playView()) {
+            if (currentView() == playView) {
                 playView.draw();
             }
             flashMessageView.update();
