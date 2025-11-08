@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.sound;
 
+import de.amr.pacmanfx.lib.Disposable;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -19,7 +20,7 @@ import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
-public class SoundManager {
+public class SoundManager implements Disposable {
 
     private final BooleanProperty enabledProperty = new SimpleBooleanProperty(true);
     private final BooleanProperty mutedProperty = new SimpleBooleanProperty(false);
@@ -31,6 +32,7 @@ public class SoundManager {
 
     public SoundManager() {}
 
+    @Override
     public void dispose() {
         stopAll();
         enabledProperty.unbind();
@@ -52,17 +54,17 @@ public class SoundManager {
         throw new IllegalArgumentException("Sound entry with key '%s' is not a media player".formatted(key));
     }
 
-    private void setSoundMapValue(Object key, Object value) {
-        requireNonNull(key);
-        requireNonNull(value);
+    private void register(Object key, Object value) {
         Object prevValue = soundMap.put(key, value);
         if (prevValue != null) {
-            Logger.warn("Replaced sound map entry with key '{}', old value was {}", key, value);
+            Logger.warn("Replaced sound  with key '{}', old value was {}", key, value);
         }
     }
 
     public void registerAudioClip(Object key, URL url) {
-        setSoundMapValue(key, url);
+        requireNonNull(key);
+        requireNonNull(url);
+        register(key, url);
     }
 
     public void registerMediaPlayer(Object key, URL url) {
@@ -71,16 +73,16 @@ public class SoundManager {
         var mediaPlayer = new MediaPlayer(new Media(url.toExternalForm()));
         mediaPlayer.setVolume(1.0);
         mediaPlayer.muteProperty().bind(Bindings.createBooleanBinding(
-                () -> mutedProperty().get() || !enabledProperty().get(),
-                mutedProperty(), enabledProperty()
+            () -> mutedProperty().get() || !enabledProperty().get(),
+            mutedProperty(), enabledProperty()
         ));
-        Logger.info("Media player created from URL '{}'", url);
-        setSoundMapValue(key, mediaPlayer);
+        Logger.info("Media player registered with key '{}', URL='{}'", key, url);
+        register(key, mediaPlayer);
     }
 
     public void registerVoice(SoundID id, URL url) {
         registerMediaPlayer(id, url);
-        // voice is also played when enabled (game-specific) is false!
+        // voice is also played when sound manager is disabled!
         mediaPlayer(id).muteProperty().bind(mutedProperty);
     }
 
