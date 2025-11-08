@@ -296,7 +296,7 @@ public final class CommonGameActions {
                 toggle(PROPERTY_3D_ENABLED);
                 if (ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_2D) || ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D)) {
                     ui.updateGameScene(true);
-                    ui.gameContext().gameController().updateGameState(); //TODO needed?
+                    ui.gameContext().gameController().stateMachine().update(); //TODO needed?
                 }
                 if (!ui.gameContext().game().isPlaying()) {
                     ui.showFlashMessage(ui.assets().translated(PROPERTY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));

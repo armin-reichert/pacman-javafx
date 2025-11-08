@@ -30,8 +30,7 @@ public class SimulationStepEvents {
     public final List<Ghost> killedGhosts = new ArrayList<>();
     public final List<Ghost> ghostsCollidingWithPac = new ArrayList<>();
 
-    public void reset(long tick) {
-        this.tick = tick;
+    public void reset() {
         foundEnergizerAtTile = null;
         bonusIndex = -1;
         bonusEatenTile = null;
@@ -45,6 +44,10 @@ public class SimulationStepEvents {
         ghostReleaseInfo = null;
         killedGhosts.clear();
         ghostsCollidingWithPac.clear();
+    }
+
+    public void setTick(long tick) {
+        this.tick = tick;
     }
 
     public List<String> createReport() {

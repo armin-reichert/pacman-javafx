@@ -8,6 +8,7 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.controller.PacManGamesState;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
+import de.amr.pacmanfx.model.SimulationStepEvents;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.action.*;
 import de.amr.pacmanfx.ui.api.*;
@@ -288,9 +289,11 @@ public final class GameUI_Implementation implements GameUI {
 
     private void doSimulationStepAndUpdateGameScene() {
         try {
-            gameContext.game().simulationStepResults().reset(clock.tickCount());
-            gameContext.gameController().updateGameState();
-            gameContext.game().simulationStepResults().printLog();
+            final SimulationStepEvents events = gameContext.game().simulationStepResults();
+            events.reset();
+            events.setTick(clock.tickCount());
+            gameContext.gameController().stateMachine().update();
+            events.printLog();
             currentGameScene().ifPresent(GameScene::update);
         } catch (Throwable x) {
             ka_tas_tro_phe(x);

@@ -49,11 +49,12 @@ public class GameController implements GameContext {
     private final File homeDir = new File(System.getProperty("user.home"), ".pacmanfx");
     private final File customMapDir = new File(homeDir, "maps");
 
-    private final StateMachine<FsmState<GameContext>, GameContext> gameStateMachine;
-    private final GameEventManager gameEventManager;
-    private boolean eventsEnabled;
+    private final StateMachine<FsmState<GameContext>, GameContext> stateMachine;
+    private final GameEventManager eventManager;
     private final CoinMechanism coinMechanism = new CoinMechanism();
     private final Map<String, Game> knownGames = new HashMap<>();
+
+    private boolean eventsEnabled;
 
     private final BooleanProperty cheatUsed = new SimpleBooleanProperty(false);
     private final BooleanProperty immunity = new SimpleBooleanProperty(false);
@@ -65,18 +66,18 @@ public class GameController implements GameContext {
         if (!success) {
             throw new IllegalStateException("User directories could not be created");
         }
-        gameEventManager = new GameEventManager(this);
+        eventManager = new GameEventManager(this);
 
-        gameStateMachine = new StateMachine<>(states, this);
-        gameStateMachine.setName("Game Controller State Machine");
-        gameStateMachine.addStateChangeListener((oldState, newState) ->
-            gameEventManager.publishEvent(new GameStateChangeEvent(game(), oldState, newState)));
+        stateMachine = new StateMachine<>(states, this);
+        stateMachine.setName("Game Controller State Machine");
+        stateMachine.addStateChangeListener((oldState, newState) ->
+            eventManager.publishEvent(new GameStateChangeEvent(game(), oldState, newState)));
 
         gameVariant.addListener((py, ov, newGameVariant) -> {
             if (eventsEnabled) {
                 Game newGame = game(newGameVariant);
                 newGame.init();
-                gameEventManager.publishEvent(GameEventType.GAME_VARIANT_CHANGED);
+                eventManager.publishEvent(GameEventType.GAME_VARIANT_CHANGED);
             }
         });
 
@@ -91,8 +92,12 @@ public class GameController implements GameContext {
 
     }
 
+    public StateMachine<FsmState<GameContext>, GameContext> stateMachine() {
+        return stateMachine;
+    }
+
     public FsmState<GameContext> stateByName(String name) {
-        return gameStateMachine.states().stream()
+        return stateMachine.states().stream()
             .filter(state -> state.name().equals(name))
             .findFirst().orElseThrow();
     }
@@ -103,23 +108,19 @@ public class GameController implements GameContext {
 
     public void changeGameState(FsmState<GameContext> state) {
         requireNonNull(state);
-        gameStateMachine.changeState(state);
+        stateMachine.changeState(state);
     }
 
     public void letCurrentGameStateExpire() {
-        gameStateMachine.letCurrentStateExpire();
-    }
-
-    public void updateGameState() {
-        gameStateMachine.update();
+        stateMachine.letCurrentStateExpire();
     }
 
     public void resumePreviousGameState() {
-        gameStateMachine.resumePreviousState();
+        stateMachine.resumePreviousState();
     }
 
     public void restart(FsmState<GameContext> state) {
-        gameStateMachine.restart(state);
+        stateMachine.restart(state);
     }
 
     @SuppressWarnings("unchecked")
@@ -207,7 +208,7 @@ public class GameController implements GameContext {
 
     @Override
     public GameEventManager eventManager() {
-        return gameEventManager;
+        return eventManager;
     }
 
     @Override
@@ -222,7 +223,7 @@ public class GameController implements GameContext {
 
     @Override
     public FsmState<GameContext> gameState() {
-        return gameStateMachine.state();
+        return stateMachine.state();
     }
 
 
