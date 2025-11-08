@@ -63,6 +63,8 @@ public final class GameUI_Implementation implements GameUI {
     private static final int MIN_STAGE_WIDTH  = 280;
     private static final int MIN_STAGE_HEIGHT = 360;
 
+    private static final int PAUSE_ICON_SIZE = 80;
+
     private static final Set<ActionBinding> DEFAULT_ACTION_BINDINGS = Set.of(
         new ActionBinding(CheatActions.ACTION_EAT_ALL_PELLETS,  alt(KeyCode.E)),
         new ActionBinding(CheatActions.ACTION_ADD_LIVES,        alt(KeyCode.L)),
@@ -190,8 +192,8 @@ public final class GameUI_Implementation implements GameUI {
         scene.addEventFilter(KeyEvent.KEY_RELEASED, keyboard::onKeyReleased);
 
         // If a global action is bound to the key press, execute it; otherwise let the current view handle it.
-        scene.setOnKeyPressed(e -> actionBindings.matchingAction(keyboard).ifPresentOrElse(
-            action -> {
+        scene.setOnKeyPressed(e -> actionBindings.matchingAction(keyboard).ifPresentOrElse(action ->
+            {
                 boolean executed = action.executeIfEnabled(this);
                 if (executed) e.consume();
             },
@@ -200,37 +202,32 @@ public final class GameUI_Implementation implements GameUI {
         scene.setOnScroll(e -> currentGameScene().ifPresent(gameScene -> gameScene.handleScrollEvent(e)));
 
         // Large "paused" icon which appears at center of scene
-        var pausedIcon = FontIcon.of(FontAwesomeSolid.PAUSE, 80, ArcadePalette.ARCADE_WHITE);
+        var pausedIcon = FontIcon.of(FontAwesomeSolid.PAUSE, PAUSE_ICON_SIZE, ArcadePalette.ARCADE_WHITE);
         // Show paused icon only in play view
         pausedIcon.visibleProperty().bind(Bindings.createBooleanBinding(
-                () -> currentView() == playView() && clock.isPaused(),
-                currentViewProperty(), clock.pausedProperty())
+            () -> currentView() == playView() && clock.isPaused(),
+            currentViewProperty(), clock.pausedProperty())
         );
+        StackPane.setAlignment(pausedIcon, Pos.CENTER);
 
         // Status icon box appears at bottom-left corner of all views except editor view
         var statusIconBox = new StatusIconBox();
-
         // hide icon box if editor view is active, avoid creation of editor view in binding expression!
-        statusIconBox.visibleProperty().bind(currentViewProperty()
-                .map(currentView -> optEditorView().isEmpty() || currentView != optEditorView().get()));
-
+        statusIconBox.visibleProperty().bind(currentViewProperty().map(currentView -> optEditorView().isEmpty() || currentView != optEditorView().get()));
         statusIconBox.iconMuted()    .visibleProperty().bind(PROPERTY_MUTED);
         statusIconBox.icon3D()       .visibleProperty().bind(PROPERTY_3D_ENABLED);
         statusIconBox.iconAutopilot().visibleProperty().bind(gameContext().gameController().usingAutopilotProperty());
         statusIconBox.iconCheated()  .visibleProperty().bind(gameContext().gameController().cheatUsedProperty());
         statusIconBox.iconImmune()   .visibleProperty().bind(gameContext().gameController().immunityProperty());
-
-        StackPane.setAlignment(pausedIcon, Pos.CENTER);
         StackPane.setAlignment(statusIconBox, Pos.BOTTOM_LEFT);
 
-        var viewPlaceholder = new Region();
-        layoutPane.getChildren().setAll(viewPlaceholder, pausedIcon, statusIconBox, flashMessageView);
-
+        // First child is placeholder for view (start pages view, play view, ...)
+        layoutPane.getChildren().setAll(new Region(), pausedIcon, statusIconBox, flashMessageView);
         layoutPane.backgroundProperty().bind(Bindings.createObjectBinding(
-                () -> isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D)
-                        ? Background.fill(Gradients.Samples.random())
-                        : assets.background("background.scene"),
-                currentViewProperty(), playView().currentGameSceneProperty()
+            () -> isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D)
+                    ? Background.fill(Gradients.Samples.random())
+                    : assets.background("background.scene"),
+            currentViewProperty(), playView().currentGameSceneProperty()
         ));
     }
 
