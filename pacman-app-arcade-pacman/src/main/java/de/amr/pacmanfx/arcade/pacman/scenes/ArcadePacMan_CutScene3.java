@@ -15,6 +15,7 @@ import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
+import de.amr.pacmanfx.ui.sound.SoundID;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
@@ -29,7 +30,6 @@ import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ANIM_BLINKY_PA
  */
 public class ArcadePacMan_CutScene3 extends GameScene2D {
 
-    private static final String MUSIC_ID = "audio.intermission";
     static final short ANIMATION_START = 120;
 
     private int frame;
@@ -96,7 +96,7 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
         }
         switch (frame) {
             case ANIMATION_START -> {
-                ui.soundManager().play(MUSIC_ID, 2);
+                ui.soundManager().play(SoundID.INTERMISSION_3, 2);
                 pac.placeAtTile(29, 20);
                 pac.setMoveDir(Direction.LEFT);
                 pac.setSpeed(1.25f);

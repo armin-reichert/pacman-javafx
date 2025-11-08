@@ -14,6 +14,7 @@ import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
+import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import javafx.scene.canvas.Canvas;
@@ -30,7 +31,6 @@ import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ANIM_BLINKY_NA
  */
 public class ArcadePacMan_CutScene2 extends GameScene2D {
 
-    private static final String MUSIC_ID = "audio.intermission";
     private static final short ANIMATION_START = 120;
 
     private static final byte NAIL = 0, STRETCHED_S = 1, STRETCHED_M = 2, STRETCHED_L = 3, RAPTURED = 4;
@@ -109,7 +109,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
             return;
         }
         switch (frame) {
-            case ANIMATION_START -> ui.soundManager().play(MUSIC_ID);
+            case ANIMATION_START -> ui.soundManager().play(SoundID.INTERMISSION_2);
             case ANIMATION_START + 1 -> nailDressRapture.setFrameIndex(NAIL);
             case ANIMATION_START + 25 -> {
                 pac.placeAtTile(28, 20);

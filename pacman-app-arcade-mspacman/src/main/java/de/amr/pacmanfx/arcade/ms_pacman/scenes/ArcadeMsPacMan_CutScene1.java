@@ -18,6 +18,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
+import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.animation.SingleSpriteActor;
 import javafx.scene.canvas.Canvas;
 
@@ -34,8 +35,6 @@ import static de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_PacAnima
  * the screen and a big pink heart appears above them. (Played after round 2)
  */
 public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
-
-    private static final String MUSIC_ID = "audio.intermission.1";
 
     private static final int UPPER_LANE_Y  = TS * 12;
     private static final int MIDDLE_LANE_Y = TS * 18;
@@ -141,7 +140,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     private void updateStateClapperboard() {
         clapperboard.tick();
         if (sceneTimer.atSecond(1)) {
-            ui.soundManager().play(MUSIC_ID);
+            ui.soundManager().play(SoundID.INTERMISSION_1);
         } else if (sceneTimer.hasExpired()) {
             enterStateChasedByGhosts();
         }

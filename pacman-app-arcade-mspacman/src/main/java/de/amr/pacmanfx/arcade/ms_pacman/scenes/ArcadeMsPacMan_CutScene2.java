@@ -14,6 +14,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
+import de.amr.pacmanfx.ui.sound.SoundID;
 import javafx.scene.canvas.Canvas;
 
 import java.util.stream.Stream;
@@ -28,8 +29,6 @@ import static de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_PacAnima
  * from left to right and right to left. (Played after round 5)
  */
 public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
-
-    private static final String MUSIC_ID = "audio.intermission.2";
 
     private static final int UPPER_LANE_Y  = TS * 12;
     private static final int MIDDLE_LANE_Y = TS * 18;
@@ -118,7 +117,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
     private void updateStateClapperboard() {
         clapperboard.tick();
         if (sceneTimer.hasExpired()) {
-            ui.soundManager().play(MUSIC_ID);
+            ui.soundManager().play(SoundID.INTERMISSION_2);
             enterStateChasing();
         }
     }

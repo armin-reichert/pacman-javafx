@@ -23,6 +23,7 @@ import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
+import de.amr.pacmanfx.ui.sound.SoundID;
 import javafx.scene.canvas.Canvas;
 import org.tinylog.Logger;
 
@@ -37,8 +38,6 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_TILES
 import static de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_PacAnimationManager.*;
 
 public class TengenMsPacMan_CutScene4 extends GameScene2D {
-
-    private static final String MUSIC_ID = "audio.intermission.4";
 
     private static final int LEFT_BORDER = TS;
     private static final int RIGHT_BORDER = TS * (NES_TILES.x() - 2);
@@ -98,12 +97,12 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         juniors = new ArrayList<>();
         juniorCreationTime = new ArrayList<>();
 
-        ui.soundManager().play(MUSIC_ID);
+        ui.soundManager().play(SoundID.INTERMISSION_4);
     }
 
     @Override
     protected void doEnd() {
-        ui.soundManager().stop(MUSIC_ID);
+        ui.soundManager().stop(SoundID.INTERMISSION_4);
     }
 
     @Override
@@ -186,7 +185,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         juniors.add(junior);
         juniorCreationTime.add(tick);
 
-        String id = "audio.intermission.4.junior." + randomInt(1, 3); // 1 or 2
+        String id = SoundID.INTERMISSION_1 + ".junior." + randomInt(1, 3); // 1 or 2
         ui.soundManager().loop(id);
 
         Logger.info("Junior spawned at tick {}", tick);

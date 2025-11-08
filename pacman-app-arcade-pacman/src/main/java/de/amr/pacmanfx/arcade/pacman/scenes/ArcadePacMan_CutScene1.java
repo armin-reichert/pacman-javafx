@@ -14,6 +14,7 @@ import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
+import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import javafx.scene.canvas.Canvas;
 
@@ -28,7 +29,6 @@ import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ANIM_BIG_PAC_M
  */
 public class ArcadePacMan_CutScene1 extends GameScene2D {
 
-    private static final String MUSIC_ID = "audio.intermission";
     private static final short ANIMATION_START = 120;
 
     private int frame;
@@ -89,7 +89,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
     public void update() {
         ++frame;
         if (frame == ANIMATION_START) {
-            ui.soundManager().play(MUSIC_ID, 2);
+            ui.soundManager().play(SoundID.INTERMISSION_1, 2);
 
             pac.placeAtTile(29, 20);
             pac.setMoveDir(Direction.LEFT);

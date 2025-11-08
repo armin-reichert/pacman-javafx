@@ -24,6 +24,7 @@ import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
+import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.animation.SingleSpriteActor;
 import javafx.scene.canvas.Canvas;
 
@@ -42,8 +43,6 @@ import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_LET_GAME_STATE_
  * the screen and a big pink heart appears above them.
  */
 public class TengenMsPacMan_CutScene1 extends GameScene2D {
-
-    private static final String MUSIC_ID = "audio.intermission.1";
 
     private static final int UPPER_LANE   = TS * 8;
     private static final int LOWER_LANE   = TS * 24;
@@ -132,12 +131,12 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
 
         collided = false;
 
-        ui.soundManager().play(MUSIC_ID);
+        ui.soundManager().play(SoundID.INTERMISSION_1);
     }
 
     @Override
     protected void doEnd() {
-        ui.soundManager().stop(MUSIC_ID);
+        ui.soundManager().stop(SoundID.INTERMISSION_1);
     }
 
     @Override

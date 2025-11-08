@@ -22,6 +22,7 @@ import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
+import de.amr.pacmanfx.ui.sound.SoundID;
 import javafx.scene.canvas.Canvas;
 
 import java.util.stream.Stream;
@@ -40,8 +41,6 @@ import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_LET_GAME_STATE_
  * (Played after rounds 9, 13, and 17)
  */
 public class TengenMsPacMan_CutScene3 extends GameScene2D {
-
-    private static final String MUSIC_ID = "audio.intermission.3";
 
     private static final int GROUND_Y = TS * 24;
     private static final int RIGHT_BORDER = TS * 30;
@@ -104,12 +103,12 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
 
         darkness = false;
 
-        ui.soundManager().play(MUSIC_ID);
+        ui.soundManager().play(SoundID.INTERMISSION_3);
     }
 
     @Override
     protected void doEnd() {
-        ui.soundManager().stop(MUSIC_ID);
+        ui.soundManager().stop(SoundID.INTERMISSION_3);
     }
 
     @Override

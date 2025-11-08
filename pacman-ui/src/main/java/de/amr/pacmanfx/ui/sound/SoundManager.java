@@ -76,7 +76,7 @@ public class SoundManager implements Disposable {
             () -> mutedProperty().get() || !enabledProperty().get(),
             mutedProperty(), enabledProperty()
         ));
-        Logger.info("Media player registered with key '{}', URL='{}'", key, url);
+        Logger.info("Media player registered: key='{}', URL='{}'", key, url);
         register(key, mediaPlayer);
     }
 
