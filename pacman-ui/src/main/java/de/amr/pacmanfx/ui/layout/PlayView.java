@@ -73,7 +73,7 @@ public class PlayView extends StackPane implements GameUI_View {
     }
 
     public PlayView(Scene parentScene) {
-        this.parentScene = requireNonNull(parentScene);
+        this.parentScene = requireNonNull(parentScene, "Parent scene must not be null");
 
         dashboard = new Dashboard();
         dashboard.setVisible(false);

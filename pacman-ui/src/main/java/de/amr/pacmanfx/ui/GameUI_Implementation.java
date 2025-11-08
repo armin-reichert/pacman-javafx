@@ -137,12 +137,11 @@ public final class GameUI_Implementation implements GameUI {
 
     private final FlashMessageView flashMessageView = new FlashMessageView();
 
-    // These are lazily created
     private StartPagesView startPagesView;
-    private PlayView playView;
+    private final PlayView playView;
     private EditorView editorView;
 
-    private StringBinding titleBinding;
+    private final StringBinding titleBinding;
 
     public GameUI_Implementation(
         Map<String, Class<?>> configClassesByVariantName,
@@ -173,6 +172,29 @@ public final class GameUI_Implementation implements GameUI {
         clock.setPermanentAction(this::drawCurrentView);
 
         createScene(sceneWidth, sceneHeight);
+
+        playView = new PlayView(scene);
+        playView.setUI(this);
+
+        titleBinding = createStringBinding(this::computeStageTitle,
+            // depends on:
+            currentViewProperty(),
+            playView.currentGameSceneProperty(),
+            scene.heightProperty(),
+            gameContext.gameController().gameVariantProperty(),
+            PROPERTY_DEBUG_INFO_VISIBLE,
+            PROPERTY_3D_ENABLED,
+            clock().pausedProperty()
+        );
+
+        layoutPane.backgroundProperty().bind(Bindings.createObjectBinding(
+            () -> isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D)
+                    ? Background.fill(Gradients.Samples.random())
+                    : assets.background("background.scene"),
+            // depends on:
+            currentViewProperty(),
+            playView.currentGameSceneProperty()
+        ));
 
         stage.setScene(scene);
         stage.setMinWidth(MIN_STAGE_WIDTH);
@@ -207,7 +229,7 @@ public final class GameUI_Implementation implements GameUI {
         var pausedIcon = FontIcon.of(FontAwesomeSolid.PAUSE, PAUSE_ICON_SIZE, ArcadePalette.ARCADE_WHITE);
         // Show paused icon only in play view
         pausedIcon.visibleProperty().bind(Bindings.createBooleanBinding(
-            () -> currentView() == playView() && clock.isPaused(),
+            () -> currentView() == playView && clock.isPaused(),
             currentViewProperty(), clock.pausedProperty())
         );
         StackPane.setAlignment(pausedIcon, Pos.CENTER);
@@ -225,12 +247,6 @@ public final class GameUI_Implementation implements GameUI {
 
         // First child is placeholder for view (start pages view, play view, ...)
         layoutPane.getChildren().setAll(new Region(), pausedIcon, statusIconBox, flashMessageView);
-        layoutPane.backgroundProperty().bind(Bindings.createObjectBinding(
-            () -> isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D)
-                    ? Background.fill(Gradients.Samples.random())
-                    : assets.background("background.scene"),
-            currentViewProperty(), playView().currentGameSceneProperty()
-        ));
     }
 
     private void embedView(GameUI_View view) {
@@ -304,7 +320,7 @@ public final class GameUI_Implementation implements GameUI {
     private void drawCurrentView() {
         try {
             if (currentView() == playView()) {
-                playView().draw();
+                playView.draw();
             }
             flashMessageView.update();
         } catch (Throwable x) {
@@ -456,7 +472,7 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public void showUI() {
-        playView().dashboard().init(this);
+        playView.dashboard().init(this);
         startPagesView().setSelectedIndex(0);
         showStartView();
         stage.centerOnScreen();
@@ -491,20 +507,6 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public PlayView playView() {
-        if (playView == null) {
-            playView = new PlayView(scene);
-            playView.setUI(this);
-            titleBinding = createStringBinding(this::computeStageTitle,
-                // depends on:
-                currentViewProperty(),
-                playView.currentGameSceneProperty(),
-                scene.heightProperty(),
-                gameContext.gameController().gameVariantProperty(),
-                PROPERTY_DEBUG_INFO_VISIBLE,
-                PROPERTY_3D_ENABLED,
-                clock().pausedProperty()
-            );
-        }
         return playView;
     }
 
@@ -562,7 +564,7 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public void updateGameScene(boolean forceReloading) {
-        playView().updateGameScene(forceReloading);
+        playView.updateGameScene(forceReloading);
     }
 
     // GameUI_ConfigManager interface
