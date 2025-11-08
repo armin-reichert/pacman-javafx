@@ -32,7 +32,6 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
@@ -132,7 +131,7 @@ public final class GameUI_Implementation implements GameUI {
     private Scene scene;
     private final StackPane layoutPane = new StackPane();
 
-    private FlashMessageView flashMessageView;
+    private final FlashMessageView flashMessageView = new FlashMessageView();
 
     // These are lazily created
     private StartPagesView startPagesView;
@@ -198,9 +197,7 @@ public final class GameUI_Implementation implements GameUI {
             },
             () -> currentView().handleKeyboardInput(this)
         ));
-        scene.setOnScroll(this::handleScrollEvent);
-
-        flashMessageView = new FlashMessageView();
+        scene.setOnScroll(e -> currentGameScene().ifPresent(gameScene -> gameScene.handleScrollEvent(e)));
 
         // Large "paused" icon which appears at center of scene
         var pausedIcon = FontIcon.of(FontAwesomeSolid.PAUSE, 80, ArcadePalette.ARCADE_WHITE);
@@ -229,7 +226,6 @@ public final class GameUI_Implementation implements GameUI {
         var viewPlaceholder = new Region();
         layoutPane.getChildren().setAll(viewPlaceholder, pausedIcon, statusIconBox, flashMessageView);
 
-        //TODO check why this crashes when done before scene layout creation
         layoutPane.backgroundProperty().bind(Bindings.createObjectBinding(
                 () -> isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D)
                         ? Background.fill(Gradients.Samples.random())
@@ -242,10 +238,6 @@ public final class GameUI_Implementation implements GameUI {
         requireNonNull(view);
         layoutPane.getChildren().set(0, view.root());
         view.root().requestFocus();
-    }
-
-    private void handleScrollEvent(ScrollEvent scrollEvent) {
-        currentGameScene().ifPresent(gameScene -> gameScene.handleScrollEvent(scrollEvent));
     }
 
     // Asset key: "app.title" or "app.title.paused"
