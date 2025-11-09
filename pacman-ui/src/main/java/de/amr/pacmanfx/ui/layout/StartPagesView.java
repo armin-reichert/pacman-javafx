@@ -22,6 +22,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.util.Duration;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.tinylog.Logger;
@@ -53,6 +54,10 @@ public class StartPagesView extends Carousel implements GameUI_View {
 
     private final List<StartPage> startPageList = new ArrayList<>();
     private final ActionBindingsManager actionBindings = new DefaultActionBindingsManager();
+
+    public StartPagesView() {
+        super(Duration.seconds(10));
+    }
 
     public void setUI(GameUI ui) {
         requireNonNull(ui);
@@ -86,6 +91,14 @@ public class StartPagesView extends Carousel implements GameUI_View {
                 showNextItem();
             }
         };
+        final var actionToggleAutoPlay = new GameAction("TOGGLE_AUTOPLAY") {
+            @Override
+            public void execute(GameUI ui) {
+                setAutoPlay(!autoPlay());
+                Logger.info("Autoplay is {}", autoPlay() ? "on" : "off");
+            }
+        };
+        actionBindings.setKeyCombination(actionToggleAutoPlay,       bare(KeyCode.SPACE));
         actionBindings.setKeyCombination(actionPrevSlide,            bare(KeyCode.LEFT));
         actionBindings.setKeyCombination(actionNextSlide,            bare(KeyCode.RIGHT));
         actionBindings.setKeyCombination(ACTION_BOOT_SHOW_PLAY_VIEW, bare(KeyCode.ENTER));
