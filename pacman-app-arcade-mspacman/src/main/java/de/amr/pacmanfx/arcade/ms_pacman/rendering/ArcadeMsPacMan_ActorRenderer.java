@@ -66,29 +66,21 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements ActorR
     private void drawBonus(Bonus bonus) {
         switch (bonus.state()) {
             case EDIBLE -> {
-                RectShort[] sprites = spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS);
-                byte index = bonus.symbol();
-                // symbol code is index in sprite array
-                if (0 <= index && index < sprites.length) {
-                    ctx.save();
-                    ctx.translate(0, bonus.verticalElongation());
-                    drawSpriteCentered(bonus.center(), sprites[index]);
-                    ctx.restore();
-                } else {
-                    Logger.error("Cannot render bonus with symbol code {}", index);
-                }
+                ctx.save();
+                ctx.translate(0, bonus.verticalElongation());
+                drawBonusSprite(bonus, spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS), bonus.symbol());
+                ctx.restore();
             }
-            case EATEN -> {
-                RectShort[] sprites = spriteSheet().spriteSequence(SpriteID.BONUS_VALUES);
-                byte index = bonus.symbol();
-                // symbol code is index in sprite array
-                if (0 <= index && index < sprites.length) {
-                    drawSpriteCentered(bonus.center(), sprites[index]);
-                } else {
-                    Logger.error("Cannot render bonus with symbol code {}", index);
-                }
-            }
+            case EATEN -> drawBonusSprite(bonus, spriteSheet().spriteSequence(SpriteID.BONUS_VALUES), bonus.symbol());
             case INACTIVE -> {}
+        }
+    }
+
+    private void drawBonusSprite(Bonus bonus, RectShort[] sprites, int index) {
+        if (0 <= index && index < sprites.length) {
+            drawSpriteCentered(bonus.center(), sprites[index]);
+        } else {
+            Logger.error("Cannot render bonus with symbol code {}", index);
         }
     }
 }

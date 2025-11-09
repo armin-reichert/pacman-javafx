@@ -46,27 +46,19 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements ActorRen
 
     private void drawBonus(Bonus bonus) {
         switch (bonus.state()) {
-            case EDIBLE -> {
-                RectShort[] sprites = spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS);
-                // symbol code is index in sprite array
-                byte index = bonus.symbol();
-                if (0 <= index && index < sprites.length) {
-                    drawSpriteCentered(bonus.center(), sprites[bonus.symbol()]);
-                } else {
-                    Logger.error("Cannot render bonus with symbol code {}", index);
-                }
-            }
-            case EATEN -> {
-                RectShort[] sprites = spriteSheet().spriteSequence(SpriteID.BONUS_VALUES);
-                // symbol code is index in sprite array
-                byte index = bonus.symbol();
-                if (0 <= index && index < sprites.length) {
-                    drawSpriteCentered(bonus.center(), sprites[index]);
-                } else {
-                    Logger.error("Cannot render bonus with symbol code {}", index);
-                }
-            }
+            case EDIBLE -> // symbol code is index in sprite array
+                drawBonusSprite(bonus, spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS), bonus.symbol());
+            case EATEN -> // symbol code is index in sprite array
+                drawBonusSprite(bonus, spriteSheet().spriteSequence(SpriteID.BONUS_VALUES), bonus.symbol());
             case INACTIVE -> {}
+        }
+    }
+
+    private void drawBonusSprite(Bonus bonus, RectShort[] sprites, int index) {
+        if (0 <= index && index < sprites.length) {
+            drawSpriteCentered(bonus.center(), sprites[index]);
+        } else {
+            Logger.error("Cannot render bonus with symbol code {}", index);
         }
     }
 }

@@ -57,18 +57,18 @@ public class LevelShortTestState implements PacManGamesTestState {
         else if (timer.atSecond(START + 3)) {
             game.activateNextBonus(gameLevel);
         }
-        else if (timer.atSecond(START + 4)) {
+        else if (timer.atSecond(START + 5)) {
             gameLevel.bonus().ifPresent(bonus -> bonus.setEaten(2));
             context.eventManager().publishEvent(GameEventType.BONUS_EATEN);
-        }
-        else if (timer.atSecond(START + 5)) {
-            game.activateNextBonus(gameLevel);
         }
         else if (timer.atSecond(START + 6)) {
+            game.activateNextBonus(gameLevel);
+        }
+        else if (timer.atSecond(START + 8)) {
             gameLevel.bonus().ifPresent(bonus -> bonus.setEaten(2));
             context.eventManager().publishEvent(GameEventType.BONUS_EATEN);
         }
-        else if (timer.atSecond(START + 7)) {
+        else if (timer.atSecond(START + 9)) {
             gameLevel.hidePacAndGhosts();
             gameLevel.blinking().stop();
             game.onLevelCompleted(gameLevel);
@@ -86,6 +86,7 @@ public class LevelShortTestState implements PacManGamesTestState {
                 gameLevel.setMessage(message);
             }
         }
+        gameLevel.bonus().ifPresent(bonus -> bonus.tick(context));
     }
 
     @Override
