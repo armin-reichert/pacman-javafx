@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.Clapperboard;
 import de.amr.pacmanfx.lib.RectShort;
+import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
@@ -65,20 +66,17 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements ActorR
 
     private void drawBonus(Bonus bonus) {
         switch (bonus.state()) {
-            case EDIBLE -> {
-                ctx.save();
-                ctx.translate(0, bonus.verticalElongation());
-                drawBonusSprite(bonus, spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS), bonus.symbol());
-                ctx.restore();
-            }
-            case EATEN -> drawBonusSprite(bonus, spriteSheet().spriteSequence(SpriteID.BONUS_VALUES), bonus.symbol());
+            case EDIBLE -> drawBonusSprite(bonus.center().plus(0, bonus.verticalElongation()),
+                spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS), bonus.symbol());
+            case EATEN -> drawBonusSprite(bonus.center(),
+                spriteSheet().spriteSequence(SpriteID.BONUS_VALUES), bonus.symbol());
             case INACTIVE -> {}
         }
     }
 
-    private void drawBonusSprite(Bonus bonus, RectShort[] sprites, int index) {
+    private void drawBonusSprite(Vector2f center, RectShort[] sprites, int index) {
         if (0 <= index && index < sprites.length) {
-            drawSpriteCentered(bonus.center(), sprites[index]);
+            drawSpriteCentered(center, sprites[index]);
         } else {
             Logger.error("Cannot render bonus with symbol code {}", index);
         }

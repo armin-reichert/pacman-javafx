@@ -73,26 +73,18 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements ActorR
     private void drawBonus(Bonus bonus) {
         switch (bonus.state()) {
             case INACTIVE -> {}
-            case EDIBLE -> {
-                RectShort[] sprites = uiConfig.spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS);
-                int index = bonus.symbol();
-                if (0 <= index && index < sprites.length) {
-                    ctx.save();
-                    ctx.translate(0, bonus.verticalElongation());
-                    drawSpriteCentered(bonus.center(), sprites[index]);
-                    ctx.restore();
-                }
-            }
-            case EATEN  -> {
-                RectShort[] sprites = uiConfig.spriteSheet().spriteSequence(SpriteID.BONUS_VALUES);
-                int index = bonus.symbol();
-                if (0 <= index && index < sprites.length) {
-                    ctx.save();
-                    ctx.translate(0, bonus.verticalElongation());
-                    drawSpriteCentered(bonus.center(), sprites[index]);
-                    ctx.restore();
-                }
-            }
+            case EDIBLE -> drawBonusSprite(bonus.center().plus(0, bonus.verticalElongation()),
+                spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS), bonus.symbol());
+            case EATEN  -> drawBonusSprite(bonus.center(),
+                spriteSheet().spriteSequence(SpriteID.BONUS_VALUES), bonus.symbol());
+        }
+    }
+
+    private void drawBonusSprite(Vector2f center, RectShort[] sprites, int index) {
+        if (0 <= index && index < sprites.length) {
+            drawSpriteCentered(center, sprites[index]);
+        } else {
+            Logger.error("Cannot render bonus with symbol code {}", index);
         }
     }
 

@@ -150,7 +150,7 @@ public class Bonus extends MovingActor {
             return 0;
         }
         //TODO check in emulator what's exactly going on
-        int pixels = moveDir().isVertical() ? 4 : 2;
+        int pixels = moveDir().isVertical() ? 2 : 1;
         return jumpingAnimation.state() == Pulse.State.ON ? -pixels : pixels;
     }
 
