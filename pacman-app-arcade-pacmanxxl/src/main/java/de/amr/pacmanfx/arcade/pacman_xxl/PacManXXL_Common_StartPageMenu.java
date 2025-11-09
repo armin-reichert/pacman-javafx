@@ -7,15 +7,16 @@ package de.amr.pacmanfx.arcade.pacman_xxl;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.pacman.actors.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.model.PredefinedGameVariant;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.MapSelectionMode;
+import de.amr.pacmanfx.model.PredefinedGameVariant;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.api.ArcadePalette;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
+import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.widgets.OptionMenu;
@@ -352,5 +353,6 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         mapSelector.setSelectionMode(state.mapOrder);
         mapSelector.loadAllMapPrototypes();
         ui.selectGameVariant(state.gameVariant);
+        ui.soundManager().playVoice(SoundID.VOICE_EXPLAIN, 0);
     }
 }

@@ -91,8 +91,8 @@ public class Carousel extends StackPane implements ResourceManager {
 
     protected Node createCarouselButton(Direction dir) {
         ImageView icon = new ImageView(switch (dir) {
-            case LEFT -> loadImage("graphics/arrow-left.png");
-            case RIGHT -> loadImage("graphics/arrow-right.png");
+            case LEFT -> loadImage("arrow-left.png");
+            case RIGHT -> loadImage("arrow-right.png");
             default -> throw new IllegalArgumentException("Illegal carousel button direction: %s".formatted(dir));
         });
         icon.setFitHeight(32);

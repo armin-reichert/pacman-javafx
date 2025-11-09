@@ -10,16 +10,15 @@ import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
-import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.lib.UsefulFunctions.lerp;
 import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomFloat;
 import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomInt;
-import static de.amr.pacmanfx.lib.UsefulFunctions.lerp;
 import static de.amr.pacmanfx.ui.api.ArcadePalette.ARCADE_WHITE;
 
 /**
@@ -59,9 +58,7 @@ public class Arcade_BootScene2D extends GameScene2D {
         // ignore left half of sprite sheet image containing maze images
         minPoint = Vector2f.of(width / 2, 0);
         maxPoint = Vector2f.of(width - RASTER_SIZE, height - RASTER_SIZE);
-
-        ui.soundManager().playVoice(SoundID.VOICE_EXPLAIN, 0);
-    }
+   }
 
     @Override
     protected void doEnd() {}

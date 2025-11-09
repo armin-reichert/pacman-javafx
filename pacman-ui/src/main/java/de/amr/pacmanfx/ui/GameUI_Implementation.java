@@ -440,7 +440,6 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public void restart() {
-        soundManager().stopAll();
         currentGameScene().ifPresent(GameScene::end);
         clock.stop();
         clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
