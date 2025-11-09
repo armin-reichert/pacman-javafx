@@ -42,12 +42,16 @@ import static java.util.Objects.requireNonNull;
  */
 public class StartPagesView extends Carousel implements GameUI_View {
 
-    public static FancyButton createStartButton(GameAssets assets, Pos alignment) {
+    public FancyButton createStartButton(GameAssets assets, Pos alignment, Runnable action) {
         var button = new FancyButton(
             assets.translated("play_button"),
             assets.arcadeFont(30),
             Color.rgb(0, 155, 252, 0.7),
             Color.WHITE);
+        button.setAction(() -> {
+            setAutoPlay(false);
+            action.run();
+        });
         StackPane.setAlignment(button, alignment);
         return button;
     }

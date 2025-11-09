@@ -83,16 +83,10 @@ public class Carousel extends StackPane {
         requireNonNull(itemChangeDuration);
 
         btnBack = createNavigationButton(Direction.LEFT);
-        btnBack.setOnMousePressed(e -> {
-            showPreviousItem();
-            setAutoPlay(false);
-        });
+        btnBack.setOnMousePressed(e -> showPreviousItem());
 
         btnForward = createNavigationButton(Direction.RIGHT);
-        btnForward.setOnMousePressed(e -> {
-            showNextItem();
-            setAutoPlay(false);
-        });
+        btnForward.setOnMousePressed(e -> showNextItem());
 
         autoPlayTimer = new Timeline(
             new KeyFrame(itemChangeDuration, e -> showNextItem())
@@ -127,7 +121,9 @@ public class Carousel extends StackPane {
 
     public int selectedIndex() { return selectedIndexPy.get(); }
 
-    public void setSelectedIndex(int index) { selectedIndexPy.set(index); }
+    public void setSelectedIndex(int index) {
+        selectedIndexPy.set(index);
+    }
 
     public int numItems() {
         return items.size();
