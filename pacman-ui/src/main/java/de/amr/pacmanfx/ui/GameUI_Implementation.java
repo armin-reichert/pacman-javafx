@@ -206,9 +206,9 @@ public final class GameUI_Implementation implements GameUI {
         stage.setMinHeight(MIN_STAGE_HEIGHT);
         stage.titleProperty().bind(titleBinding);
 
-        actionBindings.bindAction(ACTION_ENTER_FULLSCREEN, DEFAULT_ACTION_BINDINGS);
-        actionBindings.bindAction(ACTION_OPEN_EDITOR, DEFAULT_ACTION_BINDINGS);
-        actionBindings.bindAction(ACTION_TOGGLE_MUTED, DEFAULT_ACTION_BINDINGS);
+        actionBindings.bind(ACTION_ENTER_FULLSCREEN, DEFAULT_ACTION_BINDINGS);
+        actionBindings.bind(ACTION_OPEN_EDITOR, DEFAULT_ACTION_BINDINGS);
+        actionBindings.bind(ACTION_TOGGLE_MUTED, DEFAULT_ACTION_BINDINGS);
         actionBindings.assignBindingsToKeyboard(keyboard);
     }
 

@@ -32,7 +32,7 @@ public class DefaultActionBindingsManager implements ActionBindingsManager {
         public void removeBindingsFromKeyboard(Keyboard keyboard) {}
 
         @Override
-        public void bindAction(GameAction action, Set<ActionBinding> actionBindings) {}
+        public void bind(GameAction action, Set<ActionBinding> actionBindings) {}
 
         @Override
         public void setKeyCombination(GameAction action, KeyCombination combination) {}
@@ -93,7 +93,7 @@ public class DefaultActionBindingsManager implements ActionBindingsManager {
      * @param actionBindings an action bindings list
      */
     @Override
-    public void bindAction(GameAction gameAction, Set<ActionBinding> actionBindings) {
+    public void bind(GameAction gameAction, Set<ActionBinding> actionBindings) {
         requireNonNull(gameAction);
         requireNonNull(actionBindings);
         actionBindings.stream()

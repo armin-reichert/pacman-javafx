@@ -42,7 +42,7 @@ public abstract class GameScene2D implements GameScene {
     protected final DoubleProperty scaling = new SimpleDoubleProperty(1.0f);
 
     protected final GameUI ui;
-    protected final ActionBindingsManager actionBindingsManager;
+    protected final ActionBindingsManager actionBindings;
     protected final AnimationRegistry animationRegistry;
     protected final List<Actor> actorsInZOrder = new ArrayList<>();
 
@@ -52,7 +52,7 @@ public abstract class GameScene2D implements GameScene {
 
     protected GameScene2D(GameUI ui) {
         this.ui = requireNonNull(ui);
-        actionBindingsManager = new DefaultActionBindingsManager();
+        actionBindings = new DefaultActionBindingsManager();
         animationRegistry = new AnimationRegistry();
     }
 
@@ -69,7 +69,7 @@ public abstract class GameScene2D implements GameScene {
     @Override
     public final void init() {
         doInit();
-        actionBindingsManager.assignBindingsToKeyboard(ui.keyboard());
+        actionBindings.assignBindingsToKeyboard(ui.keyboard());
     }
 
     @Override
@@ -81,7 +81,7 @@ public abstract class GameScene2D implements GameScene {
 
     @Override
     public void handleKeyboardInput() {
-        actionBindingsManager.matchingAction(ui.keyboard()).ifPresent(gameAction -> gameAction.executeIfEnabled(ui));
+        actionBindings.matchingAction(ui.keyboard()).ifPresent(gameAction -> gameAction.executeIfEnabled(ui));
     }
 
     protected abstract void doInit();
@@ -115,7 +115,7 @@ public abstract class GameScene2D implements GameScene {
     }
 
     @Override
-    public ActionBindingsManager actionBindings() { return actionBindingsManager; }
+    public ActionBindingsManager actionBindings() { return actionBindings; }
 
     @Override
     public void onStopAllSounds(GameEvent event) { ui.soundManager().stopAll(); }

@@ -28,6 +28,7 @@ import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
@@ -105,17 +106,17 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     @Override
     public void doInit() {
+        final GameUI_Config uiConfig = ui.currentConfig();
+
         context().game().hud().creditVisible(true).scoreVisible(true).livesCounterVisible(false).levelCounterVisible(true);
 
-        actionBindingsManager.bindAction(ArcadeActions.ACTION_INSERT_COIN, ui.actionBindings());
-        actionBindingsManager.bindAction(ArcadeActions.ACTION_START_GAME, ui.actionBindings());
-        actionBindingsManager.bindAction(TestActions.ACTION_CUT_SCENES_TEST, ui.actionBindings());
-        actionBindingsManager.bindAction(TestActions.ACTION_SHORT_LEVEL_TEST, ui.actionBindings());
-        actionBindingsManager.bindAction(TestActions.ACTION_MEDIUM_LEVEL_TEST, ui.actionBindings());
+        actionBindings.bind(ArcadeActions.ACTION_INSERT_COIN, ui.actionBindings());
+        actionBindings.bind(ArcadeActions.ACTION_START_GAME, ui.actionBindings());
+        actionBindings.bind(TestActions.ACTION_CUT_SCENES_TEST, ui.actionBindings());
+        actionBindings.bind(TestActions.ACTION_SHORT_LEVEL_TEST, ui.actionBindings());
+        actionBindings.bind(TestActions.ACTION_MEDIUM_LEVEL_TEST, ui.actionBindings());
 
         blinking = new Pulse(10, Pulse.State.ON);
-
-        GameUI_Config uiConfig = ui.currentConfig();
 
         pacMan = ArcadePacMan_ActorFactory.createPacMan();
         pacMan.setAnimationManager(uiConfig.createPacAnimations());
@@ -157,26 +158,27 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        drawGallery();
+        final GraphicsContext ctx = sceneRenderer.ctx();
+        drawGallery(ctx);
         switch (sceneController.state()) {
             case STARTING, PRESENTING_GHOSTS -> {}
-            case SHOWING_PELLET_POINTS -> drawPoints();
+            case SHOWING_PELLET_POINTS -> drawPoints(ctx);
             case CHASING_PAC -> {
-                drawPoints();
-                drawBlinkingEnergizer(TS(LEFT_TILE_X), TS(20));
-                drawGuys(true);
+                drawPoints(ctx);
+                drawBlinkingEnergizer(ctx, TS(LEFT_TILE_X), TS(20));
+                drawGuys(ctx, true);
                 sceneRenderer.fillText(MIDWAY_MFG_CO, ARCADE_PINK, sceneRenderer.arcadeFontTS(), TS(4), TS(32));
             }
             case CHASING_GHOSTS, READY_TO_PLAY -> {
-                drawPoints();
-                drawGuys(false);
+                drawPoints(ctx);
+                drawGuys(ctx, false);
                 sceneRenderer.fillText(MIDWAY_MFG_CO, ARCADE_PINK, sceneRenderer.arcadeFontTS(), TS(4), TS(32));
             }
         }
     }
 
-    private void drawGallery() {
-        sceneRenderer.ctx().setFont(sceneRenderer.arcadeFontTS());
+    private void drawGallery(GraphicsContext ctx) {
+        ctx.setFont(sceneRenderer.arcadeFontTS());
         if (titleVisible) {
             sceneRenderer.fillText("CHARACTER / NICKNAME", ARCADE_WHITE, TS(LEFT_TILE_X + 3), TS(6));
         }
@@ -195,7 +197,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     }
 
     // TODO make shaking effect look exactly as in original game, find out what's exactly is going on here
-    private void drawGuys(boolean shaking) {
+    private void drawGuys(GraphicsContext ctx, boolean shaking) {
         long tick = sceneController.state().timer().tickCount();
         int shakingAmount = shaking ? (tick % 5 < 2 ? 0 : -1) : 0;
         if (shakingAmount == 0) {
@@ -203,37 +205,37 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         } else {
             actorRenderer.drawActor(ghosts.get(RED_GHOST_SHADOW));
             actorRenderer.drawActor(ghosts.get(ORANGE_GHOST_POKEY));
-            actorRenderer.ctx().save();
-            actorRenderer.ctx().translate(shakingAmount, 0);
+            ctx.save();
+            ctx.translate(shakingAmount, 0);
             actorRenderer.drawActor(ghosts.get(PINK_GHOST_SPEEDY));
             actorRenderer.drawActor(ghosts.get(CYAN_GHOST_BASHFUL));
-            actorRenderer.ctx().restore();
+            ctx.restore();
         }
         actorRenderer.drawActor(pacMan);
     }
 
-    private void drawPoints() {
-        sceneRenderer.ctx().setFill(ARCADE_ROSE);
+    private void drawPoints(GraphicsContext ctx) {
+        ctx.setFill(ARCADE_ROSE);
         // normal pellet
-        sceneRenderer.ctx().fillRect(scaled(TS(LEFT_TILE_X + 6) + 4), scaled(TS(24) + 4), scaled(2), scaled(2));
+        ctx.fillRect(scaled(TS(LEFT_TILE_X + 6) + 4), scaled(TS(24) + 4), scaled(2), scaled(2));
         sceneRenderer.fillText("10",  ARCADE_WHITE, sceneRenderer.arcadeFontTS(), TS(LEFT_TILE_X + 8), TS(25));
         sceneRenderer.fillText("PTS", ARCADE_WHITE, sceneRenderer.arcadeFont6(), TS(LEFT_TILE_X + 11), TS(25));
         // energizer
-        drawBlinkingEnergizer(TS(LEFT_TILE_X + 6), TS(26));
+        drawBlinkingEnergizer(ctx, TS(LEFT_TILE_X + 6), TS(26));
         sceneRenderer.fillText("50",  ARCADE_WHITE, sceneRenderer.arcadeFontTS(), TS(LEFT_TILE_X + 8), TS(27));
         sceneRenderer.fillText("PTS", ARCADE_WHITE, sceneRenderer.arcadeFont6(), TS(LEFT_TILE_X + 11), TS(27));
     }
 
-    private void drawBlinkingEnergizer(double x, double y) {
+    private void drawBlinkingEnergizer(GraphicsContext ctx, double x, double y) {
         if (blinking.state() == Pulse.State.ON) {
-            sceneRenderer.ctx().save();
-            sceneRenderer.ctx().scale(scaling(), scaling());
-            sceneRenderer.ctx().setFill(ARCADE_ROSE);
+            ctx.save();
+            ctx.scale(scaling(), scaling());
+            ctx.setFill(ARCADE_ROSE);
             // draw pixelated "circle"
-            sceneRenderer.ctx().fillRect(x + 2, y, 4, 8);
-            sceneRenderer.ctx().fillRect(x, y + 2, 8, 4);
-            sceneRenderer.ctx().fillRect(x + 1, y + 1, 6, 6);
-            sceneRenderer.ctx().restore();
+            ctx.fillRect(x + 2, y, 4, 8);
+            ctx.fillRect(x, y + 2, 8, 4);
+            ctx.fillRect(x + 1, y + 1, 6, 6);
+            ctx.restore();
         }
     }
 
@@ -242,9 +244,9 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         STARTING {
             @Override
             public void onUpdate(ArcadePacMan_IntroScene scene) {
-                if (sceneTimer.tickCount() == 3) {
+                if (timer.tickCount() == 3) {
                     scene.titleVisible = true;
-                } else if (sceneTimer.atSecond(1)) {
+                } else if (timer.atSecond(1)) {
                     scene.sceneController.changeState(PRESENTING_GHOSTS);
                 }
             }
@@ -253,18 +255,18 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         PRESENTING_GHOSTS {
             @Override
             public void onUpdate(ArcadePacMan_IntroScene scene) {
-                if (sceneTimer.tickCount() == 1) {
+                if (timer.tickCount() == 1) {
                     scene.ghostImageVisible[scene.ghostIndex] = true;
-                } else if (sceneTimer.atSecond(1.0)) {
+                } else if (timer.atSecond(1.0)) {
                     scene.ghostCharacterVisible[scene.ghostIndex] = true;
-                } else if (sceneTimer.atSecond(1.5)) {
+                } else if (timer.atSecond(1.5)) {
                     scene.ghostNicknameVisible[scene.ghostIndex] = true;
-                } else if (sceneTimer.atSecond(2.0)) {
+                } else if (timer.atSecond(2.0)) {
                     if (scene.ghostIndex < scene.ghosts.size() - 1) {
-                        sceneTimer.resetIndefiniteTime();
+                        timer.resetIndefiniteTime();
                     }
                     scene.ghostIndex += 1;
-                } else if (sceneTimer.atSecond(2.5)) {
+                } else if (timer.atSecond(2.5)) {
                     scene.sceneController.changeState(SHOWING_PELLET_POINTS);
                 }
             }
@@ -278,7 +280,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
             @Override
             public void onUpdate(ArcadePacMan_IntroScene scene) {
-                if (sceneTimer.atSecond(1)) {
+                if (timer.atSecond(1)) {
                     scene.sceneController.changeState(CHASING_PAC);
                 }
             }
@@ -288,7 +290,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
             @Override
             public void onEnter(ArcadePacMan_IntroScene scene) {
-                sceneTimer.restartIndefinitely();
+                timer.restartIndefinitely();
                 scene.pacMan.setPosition(TS * 36, TS * 20);
                 scene.pacMan.setMoveDir(Direction.LEFT);
                 scene.pacMan.setSpeed(CHASING_SPEED);
@@ -307,10 +309,10 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
             @Override
             public void onUpdate(ArcadePacMan_IntroScene scene) {
-                if (sceneTimer.atSecond(1)) {
+                if (timer.atSecond(1)) {
                     scene.blinking.start();
                 }
-                else if (sceneTimer.tickCount() == 232) {
+                else if (timer.tickCount() == 232) {
                     // Pac-Man reaches the energizer at the left and stops
                     scene.pacMan.setSpeed(0);
                     scene.pacMan.stopAnimation();
@@ -321,11 +323,11 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                         ghost.setWishDir(Direction.RIGHT);
                         ghost.setSpeed(GHOST_FRIGHTENED_SPEED);
                     });
-                } else if (sceneTimer.tickCount() == 236) {
+                } else if (timer.tickCount() == 236) {
                     // Pac-Man moves again a bit
                     scene.pacMan.playAnimation(CommonAnimationID.ANIM_PAC_MUNCHING);
                     scene.pacMan.setSpeed(CHASING_SPEED);
-                } else if (sceneTimer.tickCount() == 240) {
+                } else if (timer.tickCount() == 240) {
                     scene.sceneController.changeState(CHASING_GHOSTS);
                 }
                 scene.blinking.tick();
@@ -337,8 +339,8 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         CHASING_GHOSTS {
             @Override
             public void onEnter(ArcadePacMan_IntroScene scene) {
-                sceneTimer.restartIndefinitely();
-                scene.ghostKilledTime = sceneTimer.tickCount();
+                timer.restartIndefinitely();
+                scene.ghostKilledTime = timer.tickCount();
                 scene.pacMan.setMoveDir(Direction.RIGHT);
                 scene.pacMan.setSpeed(CHASING_SPEED);
                 scene.victims.clear();
@@ -358,7 +360,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                     .findFirst()
                     .ifPresent(victim -> {
                         scene.victims.add(victim);
-                        scene.ghostKilledTime = sceneTimer.tickCount();
+                        scene.ghostKilledTime = timer.tickCount();
                         scene.pacMan.hide();
                         scene.pacMan.setSpeed(0);
                         scene.ghosts.forEach(ghost -> {
@@ -370,7 +372,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                     });
 
                 // After 50 ticks, Pac-Man and the surviving ghosts get visible again and move on
-                if (sceneTimer.tickCount() == scene.ghostKilledTime + 50) {
+                if (timer.tickCount() == scene.ghostKilledTime + 50) {
                     scene.pacMan.show();
                     scene.pacMan.setSpeed(CHASING_SPEED);
                     scene.ghosts.forEach(ghost -> {
@@ -393,22 +395,22 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         READY_TO_PLAY {
             @Override
             public void onUpdate(ArcadePacMan_IntroScene scene) {
-                if (sceneTimer.atSecond(0.75)) {
+                if (timer.atSecond(0.75)) {
                     scene.ghosts.get(ORANGE_GHOST_POKEY).hide();
                     if (!scene.context().game().canStartNewGame()) {
                         scene.context().gameController().changeGameState(PacManGamesState.STARTING_GAME_OR_LEVEL);
                     }
-                } else if (sceneTimer.atSecond(5)) {
+                } else if (timer.atSecond(5)) {
                     scene.context().gameController().changeGameState(PacManGamesState.SETTING_OPTIONS_FOR_START);
                 }
             }
         };
 
-        final TickTimer sceneTimer = new TickTimer("Timer-" + name());
+        final TickTimer timer = new TickTimer("Timer-" + name());
 
         @Override
         public TickTimer timer() {
-            return sceneTimer;
+            return timer;
         }
     }
 }

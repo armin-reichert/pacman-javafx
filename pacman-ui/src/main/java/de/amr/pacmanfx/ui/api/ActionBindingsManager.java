@@ -27,11 +27,5 @@ public interface ActionBindingsManager {
 
     void setKeyCombination(GameAction action, KeyCombination combination);
 
-    /**
-     * Assigns the binding for the given action to this map.
-     *
-     * @param gameAction a game action
-     * @param actionBindings an action bindings list
-     */
-    void bindAction(GameAction gameAction, Set<ActionBinding> actionBindings);
+    void bind(GameAction gameAction, Set<ActionBinding> actionBindings);
 }

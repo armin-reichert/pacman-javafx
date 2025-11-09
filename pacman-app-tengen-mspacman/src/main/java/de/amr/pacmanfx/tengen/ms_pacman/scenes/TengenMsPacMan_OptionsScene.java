@@ -77,7 +77,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     private final GameAction actionSelectNextJoypadBinding = new GameAction("SELECT_NEXT_JOYPAD_BINDING") {
         @Override
         public void execute(GameUI ui) {
-            ui.joypad().selectNextBinding(actionBindingsManager);
+            ui.joypad().selectNextBinding(actionBindings);
         }
     };
 
@@ -106,13 +106,13 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         context().game().hud().all(false);
 
         var tengenActionBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().tengenActionBindings();
-        actionBindingsManager.setKeyCombination(actionSelectNextJoypadBinding, alt(KeyCode.J)); //TODO
-        actionBindingsManager.bindAction(ACTION_START_PLAYING, tengenActionBindings);
-        actionBindingsManager.bindAction(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, tengenActionBindings);
-        actionBindingsManager.bindAction(TestActions.ACTION_CUT_SCENES_TEST, ui.actionBindings());
-        actionBindingsManager.bindAction(TestActions.ACTION_SHORT_LEVEL_TEST, ui.actionBindings());
-        actionBindingsManager.bindAction(TestActions.ACTION_MEDIUM_LEVEL_TEST, ui.actionBindings());
-        ui.joypad().setBindings(actionBindingsManager);
+        actionBindings.setKeyCombination(actionSelectNextJoypadBinding, alt(KeyCode.J)); //TODO
+        actionBindings.bind(ACTION_START_PLAYING, tengenActionBindings);
+        actionBindings.bind(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, tengenActionBindings);
+        actionBindings.bind(TestActions.ACTION_CUT_SCENES_TEST, ui.actionBindings());
+        actionBindings.bind(TestActions.ACTION_SHORT_LEVEL_TEST, ui.actionBindings());
+        actionBindings.bind(TestActions.ACTION_MEDIUM_LEVEL_TEST, ui.actionBindings());
+        ui.joypad().setBindings(actionBindings);
 
         selectedOption.set(OPTION_PAC_BOOSTER);
         theGame().setCanStartNewGame(true);
@@ -123,7 +123,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
     @Override
     protected void doEnd() {
-        ui.joypad().removeBindings(actionBindingsManager);
+        ui.joypad().removeBindings(actionBindings);
     }
 
     @Override
