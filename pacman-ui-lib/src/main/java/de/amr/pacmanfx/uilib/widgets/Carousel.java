@@ -11,6 +11,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 
@@ -18,32 +19,55 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class Carousel extends StackPane implements ResourceManager {
+public class Carousel extends StackPane {
+
+    private static final ResourceManager RESOURCES = () -> Carousel.class;
+
+    private static final Image ARROW_LEFT_IMAGE  = RESOURCES.loadImage("arrow-left.png");
+    private static final Image ARROW_RIGHT_IMAGE = RESOURCES.loadImage("arrow-right.png");
+
+    private static final int NAVIGATION_BUTTON_SIZE = 32;
 
     private final IntegerProperty selectedIndexPy = new SimpleIntegerProperty(-1) {
         @Override
         protected void invalidated() {
             getChildren().clear();
-            currentSlide().ifPresent(slide -> getChildren().add(slide));
+            currentItem().ifPresent(item -> getChildren().add(item));
             // Buttons must be added last to stackpane!
             getChildren().addAll(btnPrevSlideSelector, btnNextSlideSelector);
         }
     };
 
-    private final List<Node> slides = new ArrayList<>();
+    private final List<Node> items = new ArrayList<>();
     private final Node btnPrevSlideSelector;
     private final Node btnNextSlideSelector;
 
-    @Override
-    public Class<?> resourceRootClass() {
-        return Carousel.class;
+    protected Node createCarouselButton(Direction dir) {
+        final var icon = new ImageView(switch (dir) {
+            case LEFT -> ARROW_LEFT_IMAGE;
+            case RIGHT -> ARROW_RIGHT_IMAGE;
+            default -> throw new IllegalArgumentException("Illegal carousel button direction: %s".formatted(dir));
+        });
+        icon.setFitHeight(NAVIGATION_BUTTON_SIZE);
+        icon.setFitWidth(NAVIGATION_BUTTON_SIZE);
+
+        final var button = new Button();
+        button.setGraphic(icon);
+        button.setOpacity(0.1);
+        button.setOnMouseEntered(e -> button.setOpacity(0.4));
+        button.setOnMouseExited(e -> button.setOpacity(0.1));
+        // Without this, button gets input focus after being clicked with the mouse and the LEFT, RIGHT keys stop working!
+        button.setFocusTraversable(false);
+
+        StackPane.setAlignment(button, dir == Direction.LEFT ? Pos.CENTER_LEFT : Pos.CENTER_RIGHT);
+        return button;
     }
 
     public Carousel() {
         btnPrevSlideSelector = createCarouselButton(Direction.LEFT);
-        btnPrevSlideSelector.setOnMousePressed(e -> showPreviousSlide());
+        btnPrevSlideSelector.setOnMousePressed(e -> showPreviousItem());
         btnNextSlideSelector = createCarouselButton(Direction.RIGHT);
-        btnNextSlideSelector.setOnMousePressed(e -> showNextSlide());
+        btnNextSlideSelector.setOnMousePressed(e -> showNextItem());
     }
 
     public IntegerProperty selectedIndexProperty() {
@@ -54,21 +78,21 @@ public class Carousel extends StackPane implements ResourceManager {
 
     public void setSelectedIndex(int index) { selectedIndexPy.set(index); }
 
-    public int numSlides() {
-        return slides.size();
+    public int numItems() {
+        return items.size();
     }
 
-    public void addSlide(Node slide) {
-        slides.add(slide);
+    public void addItem(Node item) {
+        items.add(item);
     }
 
-    public Node slide(int index) {
-        return slides.get(index);
+    public Node itemAt(int index) {
+        return items.get(index);
     }
 
-    public Optional<Node> currentSlide() {
+    public Optional<Node> currentItem() {
         return selectedIndex() != -1
-            ? Optional.of(slides.get(selectedIndex()))
+            ? Optional.of(items.get(selectedIndex()))
             : Optional.empty();
     }
 
@@ -77,34 +101,15 @@ public class Carousel extends StackPane implements ResourceManager {
         btnNextSlideSelector.setVisible(visible);
     }
 
-    public void showPreviousSlide() {
-        if (slides.isEmpty()) return;
-        int newIndex = selectedIndex() > 0 ? selectedIndex() - 1: slides.size() - 1;
+    public void showPreviousItem() {
+        if (items.isEmpty()) return;
+        int newIndex = selectedIndex() > 0 ? selectedIndex() - 1: items.size() - 1;
         selectedIndexPy.set(newIndex);
     }
 
-    public void showNextSlide() {
-        if (slides.isEmpty()) return;
-        int newIndex = selectedIndexPy.get() < slides.size() - 1 ? selectedIndexPy.get() + 1 : 0;
+    public void showNextItem() {
+        if (items.isEmpty()) return;
+        int newIndex = selectedIndexPy.get() < items.size() - 1 ? selectedIndexPy.get() + 1 : 0;
         selectedIndexPy.set(newIndex);
-    }
-
-    protected Node createCarouselButton(Direction dir) {
-        ImageView icon = new ImageView(switch (dir) {
-            case LEFT -> loadImage("arrow-left.png");
-            case RIGHT -> loadImage("arrow-right.png");
-            default -> throw new IllegalArgumentException("Illegal carousel button direction: %s".formatted(dir));
-        });
-        icon.setFitHeight(32);
-        icon.setFitWidth(32);
-        var button = new Button();
-        // Without this, button gets input focus after being clicked with the mouse and the LEFT, RIGHT keys stop working!
-        button.setFocusTraversable(false);
-        button.setGraphic(icon);
-        button.setOpacity(0.1);
-        button.setOnMouseEntered(e -> button.setOpacity(0.4));
-        button.setOnMouseExited(e -> button.setOpacity(0.1));
-        StackPane.setAlignment(button, dir == Direction.LEFT ? Pos.CENTER_LEFT : Pos.CENTER_RIGHT);
-        return button;
     }
 }

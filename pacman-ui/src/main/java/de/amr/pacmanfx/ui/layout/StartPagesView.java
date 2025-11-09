@@ -76,13 +76,13 @@ public class StartPagesView extends Carousel implements GameUI_View {
         final var actionPrevSlide = new GameAction("SHOW_PREV_SLIDE") {
             @Override
             public void execute(GameUI ui) {
-                showPreviousSlide();
+                showPreviousItem();
             }
         };
         final var actionNextSlide = new GameAction("SHOW_NEXT_SLIDE") {
             @Override
             public void execute(GameUI ui) {
-                showNextSlide();
+                showNextItem();
             }
         };
         actionBindings.setKeyCombination(actionPrevSlide,            bare(KeyCode.LEFT));
@@ -139,8 +139,8 @@ public class StartPagesView extends Carousel implements GameUI_View {
     public void addStartPage(StartPage startPage) {
         requireNonNull(startPage);
         startPageList.add(startPage);
-        addSlide(startPage.layoutRoot());
-        setNavigationVisible(numSlides() >= 2);
+        addItem(startPage.layoutRoot());
+        setNavigationVisible(numItems() >= 2);
         Logger.info("Start page '{}' added", startPage.getClass().getSimpleName());
     }
 }
