@@ -27,7 +27,7 @@ When using the map editor to create your own maps, you don't have to specify any
 In each [release](https://github.com/armin-reichert/pacman-javafx/releases) you find attached 3 installers. 
 
 - On Windows, a MSI installer is created. 
-- The Linux (.deb) installer has only been tested inside a VM. On a fresh installation of Zorin 18 in VMWare Workstation 17 Player, the game runs out-of-the box. (See [linux-issues.md](doc/linux-issues.md) for different issues I had with an Ubuntu system). Note that the program is installed in folder `/opt/pac-man-fx-3d/bin`. Probably there is some better way, bit I don't have much motivation to find that out. 
+- The Linux (.deb) installer has only been tested inside a VM. On a fresh installation of Zorin 18 in VMWare Workstation 17 Player, the game runs out-of-the box. (See [linux-issues.md](doc/linux-issues.md) for issues I had with an older Ubuntu system). Note that the program is installed in folder `/opt/pac-man-fx-3d/bin`. Probably there is some better way, but honestly I don't have much motivation to find that out. 
 - The Mac-OS (.dmg) version has not been tested at all, any help is appreciated.
 
 ## How to build
