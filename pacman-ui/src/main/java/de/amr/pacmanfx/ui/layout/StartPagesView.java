@@ -70,6 +70,7 @@ public class StartPagesView extends Carousel implements GameUI_View {
         });
         setBackground(ui.assets().background("background.scene"));
         createActions();
+        setAutoPlay(true);
     }
 
     private void createActions() {

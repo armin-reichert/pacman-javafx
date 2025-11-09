@@ -6,7 +6,12 @@ package de.amr.pacmanfx.uilib.widgets;
 
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -14,10 +19,14 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
+import javafx.util.Duration;
+import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static java.util.Objects.requireNonNull;
 
 public class Carousel extends StackPane {
 
@@ -38,9 +47,12 @@ public class Carousel extends StackPane {
         }
     };
 
+    private final BooleanProperty autoPlay = new SimpleBooleanProperty(false);
     private final List<Node> items = new ArrayList<>();
     private final Node btnBack;
     private final Node btnForward;
+
+    private final Timeline autoPlayTimer;
 
     protected Node createNavigationButton(Direction dir) {
         final var icon = new ImageView(switch (dir) {
@@ -64,10 +76,49 @@ public class Carousel extends StackPane {
     }
 
     public Carousel() {
+        this(Duration.seconds(5));
+    }
+
+    public Carousel(Duration itemChangeDuration) {
+        requireNonNull(itemChangeDuration);
+
         btnBack = createNavigationButton(Direction.LEFT);
-        btnBack.setOnMousePressed(e -> showPreviousItem());
+        btnBack.setOnMousePressed(e -> {
+            showPreviousItem();
+            setAutoPlay(false);
+        });
+
         btnForward = createNavigationButton(Direction.RIGHT);
-        btnForward.setOnMousePressed(e -> showNextItem());
+        btnForward.setOnMousePressed(e -> {
+            showNextItem();
+            setAutoPlay(false);
+        });
+
+        autoPlayTimer = new Timeline(
+            new KeyFrame(itemChangeDuration, e -> showNextItem())
+        );
+        autoPlayTimer.setCycleCount(Animation.INDEFINITE);
+
+        autoPlay.addListener((py, ov, auto) -> {
+            if (auto) {
+                autoPlayTimer.play();
+            } else {
+                autoPlayTimer.stop();
+            }
+        });
+    }
+
+    public BooleanProperty autoPlayProperty() {
+        return autoPlay;
+    }
+
+    public void setAutoPlay(boolean autoplay) {
+        this.autoPlay.set(autoplay);
+        Logger.info("Carousel autoplay {}", autoplay ? " started" : "stopped");
+    }
+
+    public boolean autoPlay() {
+        return autoPlay.get();
     }
 
     public IntegerProperty selectedIndexProperty() {
