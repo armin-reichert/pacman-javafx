@@ -140,7 +140,7 @@ public class StartPagesView extends Carousel implements GameUI_View {
         requireNonNull(startPage);
         startPageList.add(startPage);
         addItem(startPage.layoutRoot());
-        setNavigationVisible(numItems() >= 2);
+        setNavigationButtonsVisible(numItems() >= 2);
         Logger.info("Start page '{}' added", startPage.getClass().getSimpleName());
     }
 }

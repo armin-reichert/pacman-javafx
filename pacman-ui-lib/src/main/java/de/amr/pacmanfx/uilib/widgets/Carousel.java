@@ -34,13 +34,13 @@ public class Carousel extends StackPane {
             getChildren().clear();
             currentItem().ifPresent(item -> getChildren().add(item));
             // Buttons must be added last to stackpane!
-            getChildren().addAll(btnPrevSlideSelector, btnNextSlideSelector);
+            getChildren().addAll(btnBack, btnForward);
         }
     };
 
     private final List<Node> items = new ArrayList<>();
-    private final Node btnPrevSlideSelector;
-    private final Node btnNextSlideSelector;
+    private final Node btnBack;
+    private final Node btnForward;
 
     protected Node createNavigationButton(Direction dir) {
         final var icon = new ImageView(switch (dir) {
@@ -64,10 +64,10 @@ public class Carousel extends StackPane {
     }
 
     public Carousel() {
-        btnPrevSlideSelector = createNavigationButton(Direction.LEFT);
-        btnPrevSlideSelector.setOnMousePressed(e -> showPreviousItem());
-        btnNextSlideSelector = createNavigationButton(Direction.RIGHT);
-        btnNextSlideSelector.setOnMousePressed(e -> showNextItem());
+        btnBack = createNavigationButton(Direction.LEFT);
+        btnBack.setOnMousePressed(e -> showPreviousItem());
+        btnForward = createNavigationButton(Direction.RIGHT);
+        btnForward.setOnMousePressed(e -> showNextItem());
     }
 
     public IntegerProperty selectedIndexProperty() {
@@ -96,20 +96,20 @@ public class Carousel extends StackPane {
             : Optional.empty();
     }
 
-    public void setNavigationVisible(boolean visible) {
-        btnPrevSlideSelector.setVisible(visible);
-        btnNextSlideSelector.setVisible(visible);
+    public void setNavigationButtonsVisible(boolean visible) {
+        btnBack.setVisible(visible);
+        btnForward.setVisible(visible);
     }
 
     public void showPreviousItem() {
         if (items.isEmpty()) return;
-        int newIndex = selectedIndex() > 0 ? selectedIndex() - 1: items.size() - 1;
-        selectedIndexPy.set(newIndex);
+        int prev = selectedIndex() > 0 ? selectedIndex() - 1: numItems() - 1;
+        setSelectedIndex(prev);
     }
 
     public void showNextItem() {
         if (items.isEmpty()) return;
-        int newIndex = selectedIndexPy.get() < items.size() - 1 ? selectedIndexPy.get() + 1 : 0;
-        selectedIndexPy.set(newIndex);
+        int next = selectedIndex() < numItems() - 1 ? selectedIndex() + 1 : 0;
+        setSelectedIndex(next);
     }
 }
