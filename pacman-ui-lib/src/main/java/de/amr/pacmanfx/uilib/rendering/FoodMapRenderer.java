@@ -46,23 +46,23 @@ public class FoodMapRenderer extends BaseRenderer implements TileRenderer {
 
     public void drawPellet(Vector2i tile) {
         double offset = 0.5 * (TS - PELLET_SIZE);
-        ctx().save();
-        ctx().scale(scaling(), scaling());
-        ctx().setFill(pelletColor.get());
-        ctx().fillRect(tile.x() * TS + offset, tile.y() * TS + offset, PELLET_SIZE, PELLET_SIZE);
-        ctx().restore();
+        ctx.save();
+        ctx.scale(scaling(), scaling());
+        ctx.setFill(pelletColor.get());
+        ctx.fillRect(tile.x() * TS + offset, tile.y() * TS + offset, PELLET_SIZE, PELLET_SIZE);
+        ctx.restore();
     }
 
     public void drawEnergizer(Vector2i tile) {
         double offset = 0.5 * HTS;
         double x = tile.x() * TS, y = tile.y() * TS;
-        ctx().save();
-        ctx().scale(scaling(), scaling());
-        ctx().setFill(energizerColor.get());
+        ctx.save();
+        ctx.scale(scaling(), scaling());
+        ctx.setFill(energizerColor.get());
         // draw pixelated "circle"
-        ctx().fillRect(x + offset, y, HTS, ENERGIZER_SIZE);
-        ctx().fillRect(x, y + offset, ENERGIZER_SIZE, HTS);
-        ctx().fillRect(x + 1, y + 1, ENERGIZER_SIZE - 2, ENERGIZER_SIZE - 2);
-        ctx().restore();
+        ctx.fillRect(x + offset, y, HTS, ENERGIZER_SIZE);
+        ctx.fillRect(x, y + offset, ENERGIZER_SIZE, HTS);
+        ctx.fillRect(x + 1, y + 1, ENERGIZER_SIZE - 2, ENERGIZER_SIZE - 2);
+        ctx.restore();
     }
 }

@@ -35,16 +35,16 @@ public class DefaultDebugInfoRenderer extends DebugInfoRenderer {
     }
 
     public void drawDebugInfo() {
-        ctx().setFill(debugTextFill);
-        ctx().setStroke(debugTextStroke);
-        ctx().setFont(debugTextFont);
+        ctx.setFill(debugTextFill);
+        ctx.setStroke(debugTextStroke);
+        ctx.setFont(debugTextFont);
         TickTimer stateTimer = ui.gameContext().gameState().timer();
         String stateText = "Game State: '%s' (Tick %d of %s)".formatted(
             ui.gameContext().gameState().name(),
             stateTimer.tickCount(),
             stateTimer.durationTicks() == TickTimer.INDEFINITE ? "∞" : String.valueOf(stateTimer.tickCount())
         );
-        ctx().fillText(stateText, 0, scaled(3 * TS));
+        ctx.fillText(stateText, 0, scaled(3 * TS));
 
         if (ui.currentGameScene().isPresent() && ui.currentGameScene().get() instanceof GameScene2D gameScene2D) {
             Vector2i size = gameScene2D.sizeInPx();

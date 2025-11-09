@@ -56,10 +56,10 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements ActorR
             double numberX = scaled(clapperboard.x() + sprite.width() - 25);
             double textX = scaled(clapperboard.x() + sprite.width());
             double y = scaled(clapperboard.y() + 18);
-            ctx().setFont(clapperboard.font());
-            ctx().setFill(ARCADE_WHITE);
-            ctx().fillText(clapperboard.number(), numberX, y);
-            ctx().fillText(clapperboard.text(), textX, y);
+            ctx.setFont(clapperboard.font());
+            ctx.setFill(ARCADE_WHITE);
+            ctx.fillText(clapperboard.number(), numberX, y);
+            ctx.fillText(clapperboard.text(), textX, y);
         }
     }
 
@@ -70,10 +70,10 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements ActorR
                 byte index = bonus.symbol();
                 // symbol code is index in sprite array
                 if (0 <= index && index < sprites.length) {
-                    ctx().save();
-                    ctx().translate(0, bonus.verticalElongation());
+                    ctx.save();
+                    ctx.translate(0, bonus.verticalElongation());
                     drawSpriteCentered(bonus.center(), sprites[index]);
-                    ctx().restore();
+                    ctx.restore();
                 } else {
                     Logger.error("Cannot render bonus with symbol code {}", index);
                 }

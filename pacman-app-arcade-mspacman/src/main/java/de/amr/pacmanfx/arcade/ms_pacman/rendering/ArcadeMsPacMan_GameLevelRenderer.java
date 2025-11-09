@@ -51,8 +51,8 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements Ga
         final TerrainLayer terrain = gameLevel.worldMap().terrainLayer();
         float emptySpaceOverMazePixels = TS(terrain.emptyRowsOverMaze());
         int colorMapIndex = gameLevel.worldMap().getConfigValue("colorMapIndex");
-        ctx().save();
-        ctx().scale(scaling(), scaling());
+        ctx.save();
+        ctx.scale(scaling(), scaling());
         if (info.getBoolean(CommonRenderInfoKey.MAZE_BRIGHT)) {
             Image mazeImage = uiConfig.assets().image("maze.bright.%d".formatted(colorMapIndex));
             ctx.drawImage(mazeImage, 0, emptySpaceOverMazePixels);
@@ -73,7 +73,7 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements Ga
                 .filter(tile -> !info.getBoolean(CommonRenderInfoKey.ENERGIZER_BLINKING) || foodLayer.hasEatenFoodAtTile(tile))
                 .forEach(tile -> fillSquareAtTileCenter(tile, 10));
         }
-        ctx().restore();
+        ctx.restore();
     }
 
     protected void drawGameLevelMessage(GameLevel gameLevel, GameLevelMessage message) {

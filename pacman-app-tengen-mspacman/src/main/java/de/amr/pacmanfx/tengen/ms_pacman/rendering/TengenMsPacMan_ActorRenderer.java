@@ -52,16 +52,16 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements ActorR
     // There are only left-pointing Ms. Pac-Man sprites in the sprite sheet, so we rotate and mirror in the renderer
     private void drawMovingActorSprite(MovingActor actor, Direction dir, RectShort sprite) {
         Vector2f center = actor.center().scaled(scaling());
-        ctx().save();
-        ctx().translate(center.x(), center.y());
+        ctx.save();
+        ctx.translate(center.x(), center.y());
         switch (dir) {
             case LEFT  -> {}
-            case UP    -> ctx().rotate(90);
-            case RIGHT -> ctx().scale(-1, 1);
-            case DOWN  -> { ctx().scale(-1, 1); ctx().rotate(-90); }
+            case UP    -> ctx.rotate(90);
+            case RIGHT -> ctx.scale(-1, 1);
+            case DOWN  -> { ctx.scale(-1, 1); ctx.rotate(-90); }
         }
         drawSpriteCentered(0, 0, sprite);
-        ctx().restore();
+        ctx.restore();
     }
 
     private void drawCurrentSprite(Actor actor) {
@@ -77,20 +77,20 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements ActorR
                 RectShort[] sprites = uiConfig.spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS);
                 int index = bonus.symbol();
                 if (0 <= index && index < sprites.length) {
-                    ctx().save();
-                    ctx().translate(0, bonus.verticalElongation());
+                    ctx.save();
+                    ctx.translate(0, bonus.verticalElongation());
                     drawSpriteCentered(bonus.center(), sprites[index]);
-                    ctx().restore();
+                    ctx.restore();
                 }
             }
             case EATEN  -> {
                 RectShort[] sprites = uiConfig.spriteSheet().spriteSequence(SpriteID.BONUS_VALUES);
                 int index = bonus.symbol();
                 if (0 <= index && index < sprites.length) {
-                    ctx().save();
-                    ctx().translate(0, bonus.verticalElongation());
+                    ctx.save();
+                    ctx.translate(0, bonus.verticalElongation());
                     drawSpriteCentered(bonus.center(), sprites[index]);
-                    ctx().restore();
+                    ctx.restore();
                 }
             }
         }
@@ -133,18 +133,18 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements ActorR
             double numberX = clapperboard.x() + 8, numberY = clapperboard.y() + 18; // baseline
             drawSpriteCentered(clapperboard.center(), sprite);
             // over-paint number from sprite sheet
-            ctx().save();
-            ctx().scale(scaling(), scaling());
-            ctx().setFill(backgroundColor());
-            ctx().fillRect(numberX - 1, numberY - 8, 12, 8);
-            ctx().restore();
+            ctx.save();
+            ctx.scale(scaling(), scaling());
+            ctx.setFill(backgroundColor());
+            ctx.fillRect(numberX - 1, numberY - 8, 12, 8);
+            ctx.restore();
 
-            ctx().setFont(clapperboard.font());
-            ctx().setFill(nesColor(0x20));
-            ctx().fillText(String.valueOf(clapperboard.number()), scaled(numberX), scaled(numberY));
+            ctx.setFont(clapperboard.font());
+            ctx.setFill(nesColor(0x20));
+            ctx.fillText(String.valueOf(clapperboard.number()), scaled(numberX), scaled(numberY));
             if (clapperboard.isTextVisible()) {
                 double textX = clapperboard.x() + sprite.width(), textY = clapperboard.y() + 2;
-                ctx().fillText(clapperboard.text(), scaled(textX), scaled(textY));
+                ctx.fillText(clapperboard.text(), scaled(textX), scaled(textY));
             }
         });
     }
@@ -153,8 +153,8 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements ActorR
         drawCurrentSprite(stork);
         if (stork.isBagReleasedFromBeak()) {
             // Sprite sheet has no stork without bag under its beak so we over-paint the bag
-            ctx().setFill(backgroundColor());
-            ctx().fillRect(scaled(stork.x() - 13), scaled(stork.y() + 3), scaled(8), scaled(10));
+            ctx.setFill(backgroundColor());
+            ctx.fillRect(scaled(stork.x() - 13), scaled(stork.y() + 3), scaled(8), scaled(10));
         }
     }
 }
