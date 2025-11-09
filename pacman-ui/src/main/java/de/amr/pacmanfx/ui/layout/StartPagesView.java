@@ -92,7 +92,7 @@ public class StartPagesView extends Carousel implements GameUI_View {
     }
 
     @Override
-    protected Node createCarouselButton(Direction dir) {
+    protected Node createNavigationButton(Direction dir) {
         final int iconSize = 48;
         final Color iconColor = Color.gray(0.69);
         final FontIcon icon = switch (dir) {

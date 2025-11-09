@@ -42,7 +42,7 @@ public class Carousel extends StackPane {
     private final Node btnPrevSlideSelector;
     private final Node btnNextSlideSelector;
 
-    protected Node createCarouselButton(Direction dir) {
+    protected Node createNavigationButton(Direction dir) {
         final var icon = new ImageView(switch (dir) {
             case LEFT -> ARROW_LEFT_IMAGE;
             case RIGHT -> ARROW_RIGHT_IMAGE;
@@ -64,9 +64,9 @@ public class Carousel extends StackPane {
     }
 
     public Carousel() {
-        btnPrevSlideSelector = createCarouselButton(Direction.LEFT);
+        btnPrevSlideSelector = createNavigationButton(Direction.LEFT);
         btnPrevSlideSelector.setOnMousePressed(e -> showPreviousItem());
-        btnNextSlideSelector = createCarouselButton(Direction.RIGHT);
+        btnNextSlideSelector = createNavigationButton(Direction.RIGHT);
         btnNextSlideSelector.setOnMousePressed(e -> showNextItem());
     }
 
