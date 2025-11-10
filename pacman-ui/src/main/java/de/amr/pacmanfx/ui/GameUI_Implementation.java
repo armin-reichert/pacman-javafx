@@ -297,12 +297,14 @@ public final class GameUI_Implementation implements GameUI {
             return;
         }
         if (oldView != null) {
+            oldView.onExit();
             oldView.actionBindingsManager().removeBindingsFromKeyboard(keyboard);
             gameContext.eventManager().removeEventListener(oldView);
         }
         view.actionBindingsManager().assignBindingsToKeyboard(keyboard);
         gameContext.eventManager().addEventListener(view);
         currentViewProperty().set(view);
+        view.onEnter();
     }
 
     /**

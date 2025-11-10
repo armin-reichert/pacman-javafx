@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.api;
 
 import de.amr.pacmanfx.event.GameEventListener;
 import javafx.scene.Node;
+import org.tinylog.Logger;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -35,5 +36,13 @@ public interface GameUI_View extends GameEventListener {
      */
     default Optional<Supplier<String>> titleSupplier() {
         return Optional.empty();
+    }
+
+    default void onEnter() {
+        Logger.info("Enter view {}", this);
+    }
+
+    default void onExit() {
+        Logger.info("Exit view {}", this);
     }
 }

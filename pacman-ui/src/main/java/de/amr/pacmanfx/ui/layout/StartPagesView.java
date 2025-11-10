@@ -48,10 +48,7 @@ public class StartPagesView extends Carousel implements GameUI_View {
             assets.arcadeFont(30),
             Color.rgb(0, 155, 252, 0.7),
             Color.WHITE);
-        button.setAction(() -> {
-            setAutoPlay(false);
-            action.run();
-        });
+        button.setAction(action);
         StackPane.setAlignment(button, alignment);
         return button;
     }
@@ -79,7 +76,8 @@ public class StartPagesView extends Carousel implements GameUI_View {
         });
         setBackground(ui.assets().background("background.scene"));
         createActions();
-        setAutoPlay(true);
+
+        start();
     }
 
     private void createActions() {
@@ -95,14 +93,18 @@ public class StartPagesView extends Carousel implements GameUI_View {
                 showNextItem();
             }
         };
-        final var actionToggleAutoPlay = new GameAction("TOGGLE_AUTOPLAY") {
+        final var actionToggleAutoPlay = new GameAction("TOGGLE_PLAY") {
             @Override
             public void execute(GameUI ui) {
-                setAutoPlay(!autoPlay());
-                Logger.info("Autoplay is {}", autoPlay() ? "on" : "off");
+                if (isPlaying()) {
+                    stop();
+                } else {
+                    start();
+                }
+                Logger.info("Carousel is {}", isPlaying() ? "playing" : "stopped");
             }
         };
-        actionBindings.setKeyCombination(actionToggleAutoPlay,       bare(KeyCode.SPACE));
+        actionBindings.setKeyCombination(actionToggleAutoPlay,       bare(KeyCode.C));
         actionBindings.setKeyCombination(actionPrevSlide,            bare(KeyCode.LEFT));
         actionBindings.setKeyCombination(actionNextSlide,            bare(KeyCode.RIGHT));
         actionBindings.setKeyCombination(ACTION_BOOT_SHOW_PLAY_VIEW, bare(KeyCode.ENTER));

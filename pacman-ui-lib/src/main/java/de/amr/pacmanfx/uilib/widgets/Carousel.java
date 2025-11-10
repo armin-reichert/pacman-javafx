@@ -9,9 +9,7 @@ import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -20,7 +18,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
-import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,12 +44,11 @@ public class Carousel extends StackPane {
         }
     };
 
-    private final BooleanProperty autoPlay = new SimpleBooleanProperty(false);
     private final List<Node> items = new ArrayList<>();
     private final Node btnBack;
     private final Node btnForward;
 
-    private final Timeline autoPlayTimer;
+    private final Timeline timer;
 
     protected Node createNavigationButton(Direction dir) {
         final var icon = new ImageView(switch (dir) {
@@ -88,31 +84,20 @@ public class Carousel extends StackPane {
         btnForward = createNavigationButton(Direction.RIGHT);
         btnForward.setOnMousePressed(e -> showNextItem());
 
-        autoPlayTimer = new Timeline(
-            new KeyFrame(itemChangeDuration, e -> showNextItem())
-        );
-        autoPlayTimer.setCycleCount(Animation.INDEFINITE);
-
-        autoPlay.addListener((py, ov, auto) -> {
-            if (auto) {
-                autoPlayTimer.play();
-            } else {
-                autoPlayTimer.stop();
-            }
-        });
+        timer = new Timeline(new KeyFrame(itemChangeDuration, e -> showNextItem()));
+        timer.setCycleCount(Animation.INDEFINITE);
     }
 
-    public BooleanProperty autoPlayProperty() {
-        return autoPlay;
+    public void start() {
+        timer.play();
     }
 
-    public void setAutoPlay(boolean autoplay) {
-        this.autoPlay.set(autoplay);
-        Logger.info("Carousel autoplay {}", autoplay ? " started" : "stopped");
+    public void stop() {
+        timer.stop();
     }
 
-    public boolean autoPlay() {
-        return autoPlay.get();
+    public boolean isPlaying() {
+        return timer.getStatus() == Animation.Status.RUNNING;
     }
 
     public IntegerProperty selectedIndexProperty() {
