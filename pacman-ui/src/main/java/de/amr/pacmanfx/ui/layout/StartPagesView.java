@@ -55,6 +55,18 @@ public class StartPagesView extends Carousel implements GameUI_View {
         return button;
     }
 
+    final GameAction actionToggleAutoPlay = new GameAction("TOGGLE_PLAY") {
+        @Override
+        public void execute(GameUI ui) {
+            if (isPlaying()) {
+                pause();
+            } else {
+                start();
+            }
+            Logger.info("Carousel is {}", isPlaying() ? "playing" : "stopped");
+        }
+    };
+
     private final List<StartPage> startPageList = new ArrayList<>();
     private final ActionBindingsManager actionBindings = new DefaultActionBindingsManager();
 
@@ -71,7 +83,7 @@ public class StartPagesView extends Carousel implements GameUI_View {
     @Override
     public void onExit() {
         GameUI_View.super.onExit();
-        stop();
+        pause();
     }
 
     public void setUI(GameUI ui) {
@@ -90,6 +102,10 @@ public class StartPagesView extends Carousel implements GameUI_View {
         });
         setBackground(ui.assets().background("background.scene"));
         createActions();
+        setOnMouseClicked(e -> {
+            Logger.info("Mouse click {}", e);
+            actionToggleAutoPlay.executeIfEnabled(ui);
+        });
     }
 
     private void createActions() {
@@ -103,17 +119,6 @@ public class StartPagesView extends Carousel implements GameUI_View {
             @Override
             public void execute(GameUI ui) {
                 showNextItem();
-            }
-        };
-        final var actionToggleAutoPlay = new GameAction("TOGGLE_PLAY") {
-            @Override
-            public void execute(GameUI ui) {
-                if (isPlaying()) {
-                    stop();
-                } else {
-                    start();
-                }
-                Logger.info("Carousel is {}", isPlaying() ? "playing" : "stopped");
             }
         };
         actionBindings.setKeyCombination(actionToggleAutoPlay,       bare(KeyCode.C));

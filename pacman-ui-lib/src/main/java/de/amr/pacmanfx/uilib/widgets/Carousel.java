@@ -8,12 +8,14 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
@@ -37,10 +39,7 @@ public class Carousel extends StackPane {
     private final IntegerProperty selectedIndexPy = new SimpleIntegerProperty(-1) {
         @Override
         protected void invalidated() {
-            getChildren().clear();
-            currentItem().ifPresent(item -> getChildren().add(item));
-            // Buttons must be added last to stackpane!
-            getChildren().addAll(btnBack, btnForward);
+            arrangeChildren();
         }
     };
 
@@ -49,6 +48,18 @@ public class Carousel extends StackPane {
     private final Node btnForward;
 
     private final Timeline timer;
+    private final ProgressBar progressBar;
+
+    private void arrangeChildren() {
+        getChildren().clear();
+        currentItem().ifPresent(item -> getChildren().add(item));
+        // Buttons must be added last to stack pane!
+        getChildren().addAll(progressBar, btnBack, btnForward);
+
+        StackPane.setAlignment(btnBack, Pos.CENTER_LEFT);
+        StackPane.setAlignment(btnForward, Pos.CENTER_RIGHT);
+        StackPane.setAlignment(progressBar, Pos.BOTTOM_CENTER);
+    }
 
     protected Node createNavigationButton(Direction dir) {
         final var icon = new ImageView(switch (dir) {
@@ -67,7 +78,6 @@ public class Carousel extends StackPane {
         // Without this, button gets input focus after being clicked with the mouse and the LEFT, RIGHT keys stop working!
         button.setFocusTraversable(false);
 
-        StackPane.setAlignment(button, dir == Direction.LEFT ? Pos.CENTER_LEFT : Pos.CENTER_RIGHT);
         return button;
     }
 
@@ -84,16 +94,27 @@ public class Carousel extends StackPane {
         btnForward = createNavigationButton(Direction.RIGHT);
         btnForward.setOnMousePressed(e -> showNextItem());
 
-        timer = new Timeline(new KeyFrame(itemChangeDuration, e -> showNextItem()));
+        progressBar = new ProgressBar(0);
+        progressBar.setPrefHeight(10);
+        progressBar.setPrefWidth(400);
+
+        timer = new Timeline(
+            new KeyFrame(Duration.ZERO,
+                new KeyValue(progressBar.progressProperty(), 0)),
+            new KeyFrame(itemChangeDuration,
+                e -> showNextItem(),
+                new KeyValue(progressBar.progressProperty(), 1)));
         timer.setCycleCount(Animation.INDEFINITE);
+
+        arrangeChildren();
     }
 
     public void start() {
         timer.play();
     }
 
-    public void stop() {
-        timer.stop();
+    public void pause() {
+        timer.pause();
     }
 
     public boolean isPlaying() {
