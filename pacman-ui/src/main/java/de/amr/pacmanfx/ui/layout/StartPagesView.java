@@ -42,6 +42,8 @@ import static java.util.Objects.requireNonNull;
  */
 public class StartPagesView extends Carousel implements GameUI_View {
 
+    public static final int PAGE_CHANGE_SECONDS = 15;
+
     public FancyButton createStartButton(GameAssets assets, Pos alignment, Runnable action) {
         var button = new FancyButton(
             assets.translated("play_button"),
@@ -57,7 +59,7 @@ public class StartPagesView extends Carousel implements GameUI_View {
     private final ActionBindingsManager actionBindings = new DefaultActionBindingsManager();
 
     public StartPagesView() {
-        super(Duration.seconds(10));
+        super(Duration.seconds(PAGE_CHANGE_SECONDS));
     }
 
     public void setUI(GameUI ui) {
