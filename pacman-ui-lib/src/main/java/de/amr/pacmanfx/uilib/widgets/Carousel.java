@@ -20,6 +20,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
+import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -117,17 +118,20 @@ public class Carousel extends StackPane {
         progressBar.visibleProperty().bind(timer.statusProperty().map(status -> status.equals(Animation.Status.RUNNING)));
     }
 
-    public void resetTimer() {
+    public void restartTimer() {
+        //TODO Can recreation of timeline be avoided?
         createTimer(itemChangeDuration);
-        timer.play();
+        startTimer();
     }
 
     public void startTimer() {
         timer.play();
+        Logger.info("Carousel timer started");
     }
 
     public void pauseTimer() {
         timer.pause();
+        Logger.info("Carousel timer paused");
     }
 
     public boolean isPlaying() {
@@ -171,13 +175,13 @@ public class Carousel extends StackPane {
         if (items.isEmpty()) return;
         int prev = selectedIndex() > 0 ? selectedIndex() - 1: numItems() - 1;
         setSelectedIndex(prev);
-        resetTimer();
+        restartTimer();
     }
 
     public void showNextItem() {
         if (items.isEmpty()) return;
         int next = selectedIndex() < numItems() - 1 ? selectedIndex() + 1 : 0;
         setSelectedIndex(next);
-        resetTimer();
+        restartTimer();
     }
 }

@@ -78,7 +78,7 @@ public class StartPagesCarousel extends Carousel implements GameUI_View {
     @Override
     public void onEnter() {
         GameUI_View.super.onEnter();
-        startTimer();
+        restartTimer();
     }
 
     @Override
