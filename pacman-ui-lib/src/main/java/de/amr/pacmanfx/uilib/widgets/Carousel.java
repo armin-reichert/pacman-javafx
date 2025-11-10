@@ -48,9 +48,8 @@ public class Carousel extends StackPane {
     private final Node btnBack;
     private final Node btnForward;
 
-    private final Duration itemChangeDuration;
     private final ProgressBar progressBar;
-    private Timeline timer;
+    private final Timeline timer;
 
     private void arrangeChildren() {
         getChildren().clear();
@@ -88,7 +87,7 @@ public class Carousel extends StackPane {
     }
 
     public Carousel(Duration itemChangeDuration) {
-        this.itemChangeDuration = requireNonNull(itemChangeDuration);
+        requireNonNull(itemChangeDuration);
 
         btnBack = createNavigationButton(Direction.LEFT);
         btnBack.setOnMousePressed(e -> showPreviousItem());
