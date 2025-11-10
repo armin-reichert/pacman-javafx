@@ -47,8 +47,9 @@ public class Carousel extends StackPane {
     private final Node btnBack;
     private final Node btnForward;
 
-    private final Timeline timer;
+    private final Duration itemChangeDuration;
     private final ProgressBar progressBar;
+    private Timeline timer;
 
     private void arrangeChildren() {
         getChildren().clear();
@@ -86,7 +87,7 @@ public class Carousel extends StackPane {
     }
 
     public Carousel(Duration itemChangeDuration) {
-        requireNonNull(itemChangeDuration);
+        this.itemChangeDuration = requireNonNull(itemChangeDuration);
 
         btnBack = createNavigationButton(Direction.LEFT);
         btnBack.setOnMousePressed(e -> showPreviousItem());
@@ -98,22 +99,34 @@ public class Carousel extends StackPane {
         progressBar.setPrefHeight(10);
         progressBar.setPrefWidth(400);
 
-        timer = new Timeline(
-            new KeyFrame(Duration.ZERO,
-                new KeyValue(progressBar.progressProperty(), 0)),
-            new KeyFrame(itemChangeDuration,
-                e -> showNextItem(),
-                new KeyValue(progressBar.progressProperty(), 1)));
-        timer.setCycleCount(Animation.INDEFINITE);
-
+        createTimer(itemChangeDuration);
         arrangeChildren();
     }
 
-    public void start() {
+    private void createTimer(Duration duration) {
+        if (timer != null) {
+            timer.stop();
+        }
+        timer = new Timeline(
+            new KeyFrame(Duration.ZERO,
+                new KeyValue(progressBar.progressProperty(), 0)),
+            new KeyFrame(duration,
+                e -> showNextItem(),
+                new KeyValue(progressBar.progressProperty(), 1)));
+        timer.setCycleCount(Animation.INDEFINITE);
+        progressBar.visibleProperty().bind(timer.statusProperty().map(status -> status.equals(Animation.Status.RUNNING)));
+    }
+
+    public void resetTimer() {
+        createTimer(itemChangeDuration);
         timer.play();
     }
 
-    public void pause() {
+    public void startTimer() {
+        timer.play();
+    }
+
+    public void pauseTimer() {
         timer.pause();
     }
 
@@ -158,11 +171,13 @@ public class Carousel extends StackPane {
         if (items.isEmpty()) return;
         int prev = selectedIndex() > 0 ? selectedIndex() - 1: numItems() - 1;
         setSelectedIndex(prev);
+        resetTimer();
     }
 
     public void showNextItem() {
         if (items.isEmpty()) return;
         int next = selectedIndex() < numItems() - 1 ? selectedIndex() + 1 : 0;
         setSelectedIndex(next);
+        resetTimer();
     }
 }

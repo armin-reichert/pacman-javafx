@@ -59,9 +59,9 @@ public class StartPagesView extends Carousel implements GameUI_View {
         @Override
         public void execute(GameUI ui) {
             if (isPlaying()) {
-                pause();
+                pauseTimer();
             } else {
-                start();
+                startTimer();
             }
             Logger.info("Carousel is {}", isPlaying() ? "playing" : "stopped");
         }
@@ -77,13 +77,13 @@ public class StartPagesView extends Carousel implements GameUI_View {
     @Override
     public void onEnter() {
         GameUI_View.super.onEnter();
-        start();
+        startTimer();
     }
 
     @Override
     public void onExit() {
         GameUI_View.super.onExit();
-        pause();
+        pauseTimer();
     }
 
     public void setUI(GameUI ui) {
