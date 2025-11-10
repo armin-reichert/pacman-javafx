@@ -42,20 +42,13 @@ import static java.util.Objects.requireNonNull;
  */
 public class StartPagesView extends Carousel implements GameUI_View {
 
-    public static final int PAGE_CHANGE_SECONDS = 15;
+    public static final int PAGE_CHANGE_SECONDS = 20;
 
-    public FancyButton createStartButton(GameAssets assets, Pos alignment, Runnable action) {
-        var button = new FancyButton(
-            assets.translated("play_button"),
-            assets.arcadeFont(30),
-            Color.rgb(0, 155, 252, 0.7),
-            Color.WHITE);
-        button.setAction(action);
-        StackPane.setAlignment(button, alignment);
-        return button;
+    public static Node createDefaultStartButton(GameUI ui, Runnable action) {
+        return new FancyStartButton(ui.assets(), action);
     }
 
-    final GameAction actionToggleAutoPlay = new GameAction("TOGGLE_PLAY") {
+    private final GameAction actionToggleAutoPlay = new GameAction("TOGGLE_PLAY") {
         @Override
         public void execute(GameUI ui) {
             if (isPlaying()) {

@@ -7,10 +7,11 @@ package de.amr.pacmanfx.arcade.pacman;
 import de.amr.pacmanfx.model.PredefinedGameVariant;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.StartPage;
+import de.amr.pacmanfx.ui.layout.StartPagesView;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.widgets.Flyer;
-import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
@@ -32,7 +33,7 @@ public class ArcadePacMan_StartPage extends StackPane implements StartPage {
         });
         flyer.selectPage(0);
 
-        var startButton = ui.startPagesView().createStartButton(ui.assets(), Pos.BOTTOM_CENTER, () -> {
+        Node startButton = StartPagesView.createDefaultStartButton(ui, () -> {
             ui.soundManager().playVoice(SoundID.VOICE_EXPLAIN, 0);
             ACTION_BOOT_SHOW_PLAY_VIEW.executeIfEnabled(ui);
         });
