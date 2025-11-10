@@ -37,7 +37,7 @@ public class Carousel extends StackPane {
 
     private static final int NAVIGATION_BUTTON_SIZE = 32;
 
-    private final IntegerProperty selectedIndexPy = new SimpleIntegerProperty(-1) {
+    private final IntegerProperty selectedIndex = new SimpleIntegerProperty(-1) {
         @Override
         protected void invalidated() {
             arrangeChildren();
@@ -77,7 +77,7 @@ public class Carousel extends StackPane {
         button.setOpacity(0.1);
         button.setOnMouseEntered(e -> button.setOpacity(0.4));
         button.setOnMouseExited(e -> button.setOpacity(0.1));
-        // Without this, button gets input focus after being clicked with the mouse and the LEFT, RIGHT keys stop working!
+        // Without this, button gets input focus after being clicked with the mouse and the navigation keys stop working!
         button.setFocusTraversable(false);
 
         return button;
@@ -100,27 +100,22 @@ public class Carousel extends StackPane {
         progressBar.setPrefHeight(10);
         progressBar.setPrefWidth(400);
 
-        createTimer(itemChangeDuration);
+        timer = new Timeline(
+                new KeyFrame(Duration.ZERO,
+                        new KeyValue(progressBar.progressProperty(), 0)),
+                new KeyFrame(itemChangeDuration,
+                        e -> showNextItem(),
+                        new KeyValue(progressBar.progressProperty(), 1)));
+        timer.setCycleCount(Animation.INDEFINITE);
+        progressBar.visibleProperty().bind(
+                timer.statusProperty().map(status -> status.equals(Animation.Status.RUNNING)));
+
         arrangeChildren();
     }
 
-    private void createTimer(Duration duration) {
-        if (timer != null) {
-            timer.stop();
-        }
-        timer = new Timeline(
-            new KeyFrame(Duration.ZERO,
-                new KeyValue(progressBar.progressProperty(), 0)),
-            new KeyFrame(duration,
-                e -> showNextItem(),
-                new KeyValue(progressBar.progressProperty(), 1)));
-        timer.setCycleCount(Animation.INDEFINITE);
-        progressBar.visibleProperty().bind(timer.statusProperty().map(status -> status.equals(Animation.Status.RUNNING)));
-    }
-
     public void restartTimer() {
-        //TODO Can recreation of timeline be avoided?
-        createTimer(itemChangeDuration);
+        timer.stop();
+        timer.jumpTo(Duration.ZERO);
         startTimer();
     }
 
@@ -139,13 +134,16 @@ public class Carousel extends StackPane {
     }
 
     public IntegerProperty selectedIndexProperty() {
-        return selectedIndexPy;
+        return selectedIndex;
     }
 
-    public int selectedIndex() { return selectedIndexPy.get(); }
+    public int selectedIndex() { return selectedIndex.get(); }
 
     public void setSelectedIndex(int index) {
-        selectedIndexPy.set(index);
+        if (index < -1 || index >= numItems()) {
+            throw new IndexOutOfBoundsException("Invalid carousel index: " + index);
+        }
+        selectedIndex.set(index);
     }
 
     public int numItems() {
@@ -153,7 +151,11 @@ public class Carousel extends StackPane {
     }
 
     public void addItem(Node item) {
+        requireNonNull(item);
         items.add(item);
+        if (selectedIndex() == -1 && !items.isEmpty()) {
+            setSelectedIndex(0);
+        }
     }
 
     public Node itemAt(int index) {
