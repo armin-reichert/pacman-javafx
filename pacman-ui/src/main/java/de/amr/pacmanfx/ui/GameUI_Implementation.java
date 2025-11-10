@@ -16,7 +16,7 @@ import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.layout.EditorView;
 import de.amr.pacmanfx.ui.layout.PlayView;
-import de.amr.pacmanfx.ui.layout.StartPagesView;
+import de.amr.pacmanfx.ui.layout.StartPagesCarousel;
 import de.amr.pacmanfx.ui.layout.StatusIconBox;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.GameClock;
@@ -129,7 +129,7 @@ public final class GameUI_Implementation implements GameUI {
 
     private final FlashMessageView flashMessageView = new FlashMessageView();
 
-    private final StartPagesView startPagesView;
+    private final StartPagesCarousel startPagesView;
     private final PlayView playView;
     private EditorView editorView;
 
@@ -171,7 +171,7 @@ public final class GameUI_Implementation implements GameUI {
         playView = new PlayView(scene);
         playView.setUI(this);
 
-        startPagesView = new StartPagesView();
+        startPagesView = new StartPagesCarousel();
         startPagesView.setUI(this);
 
         currentView.addListener((py, ov, newView) -> {
@@ -524,7 +524,7 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     @Override
-    public StartPagesView startPagesView() {
+    public StartPagesCarousel startPagesView() {
         return startPagesView;
     }
 

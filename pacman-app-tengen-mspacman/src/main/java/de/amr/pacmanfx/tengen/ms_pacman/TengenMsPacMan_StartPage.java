@@ -7,7 +7,7 @@ package de.amr.pacmanfx.tengen.ms_pacman;
 import de.amr.pacmanfx.model.PredefinedGameVariant;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.StartPage;
-import de.amr.pacmanfx.ui.layout.StartPagesView;
+import de.amr.pacmanfx.ui.layout.StartPagesCarousel;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.widgets.Flyer;
 import javafx.scene.Node;
@@ -40,7 +40,7 @@ public class TengenMsPacMan_StartPage extends StackPane implements StartPage {
         });
         flyer.selectPage(0);
 
-        Node startButton = StartPagesView.createDefaultStartButton(ui, () -> ACTION_BOOT_SHOW_PLAY_VIEW.executeIfEnabled(ui));
+        Node startButton = StartPagesCarousel.createDefaultStartButton(ui, () -> ACTION_BOOT_SHOW_PLAY_VIEW.executeIfEnabled(ui));
         startButton.setTranslateY(-50);
         getChildren().addAll(flyer, startButton);
     }

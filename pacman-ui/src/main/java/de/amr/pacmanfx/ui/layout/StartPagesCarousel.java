@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.lib.Direction;
+import de.amr.pacmanfx.ui.GameAssets;
 import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.api.ActionBindingsManager;
@@ -12,6 +13,7 @@ import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_View;
 import de.amr.pacmanfx.ui.api.StartPage;
 import de.amr.pacmanfx.uilib.widgets.Carousel;
+import de.amr.pacmanfx.uilib.widgets.FancyButton;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -38,12 +40,20 @@ import static java.util.Objects.requireNonNull;
 /**
  * Carousel containing the start pages for the different game variants (XXL game variants share common start page).
  */
-public class StartPagesView extends Carousel implements GameUI_View {
+public class StartPagesCarousel extends Carousel implements GameUI_View {
 
     public static final int PAGE_CHANGE_SECONDS = 20;
 
     public static Node createDefaultStartButton(GameUI ui, Runnable action) {
-        return new FancyStartButton(ui.assets(), action);
+        final GameAssets assets = ui.assets();
+        var button = new FancyButton(
+            assets.translated("play_button"),
+            assets.arcadeFont(30),
+            Color.rgb(0, 155, 252, 0.7),
+            Color.WHITE);
+        button.setAction(action);
+        StackPane.setAlignment(button, Pos.BOTTOM_CENTER);
+        return button;
     }
 
     private final GameAction actionToggleAutoPlay = new GameAction("TOGGLE_PLAY") {
@@ -61,7 +71,7 @@ public class StartPagesView extends Carousel implements GameUI_View {
     private final List<StartPage> startPageList = new ArrayList<>();
     private final ActionBindingsManager actionBindings = new DefaultActionBindingsManager();
 
-    public StartPagesView() {
+    public StartPagesCarousel() {
         super(Duration.seconds(PAGE_CHANGE_SECONDS));
     }
 

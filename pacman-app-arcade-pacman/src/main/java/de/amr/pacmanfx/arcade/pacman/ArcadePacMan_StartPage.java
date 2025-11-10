@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade.pacman;
 import de.amr.pacmanfx.model.PredefinedGameVariant;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.StartPage;
-import de.amr.pacmanfx.ui.layout.StartPagesView;
+import de.amr.pacmanfx.ui.layout.StartPagesCarousel;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.widgets.Flyer;
@@ -41,7 +41,7 @@ public class ArcadePacMan_StartPage extends StackPane implements StartPage {
         });
         flyer.selectPage(0);
 
-        Node startButton = StartPagesView.createDefaultStartButton(ui, () -> {
+        Node startButton = StartPagesCarousel.createDefaultStartButton(ui, () -> {
             ui.soundManager().playVoice(SoundID.VOICE_EXPLAIN, 0);
             ACTION_BOOT_SHOW_PLAY_VIEW.executeIfEnabled(ui);
         });
