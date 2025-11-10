@@ -62,6 +62,18 @@ public class StartPagesView extends Carousel implements GameUI_View {
         super(Duration.seconds(PAGE_CHANGE_SECONDS));
     }
 
+    @Override
+    public void onEnter() {
+        GameUI_View.super.onEnter();
+        start();
+    }
+
+    @Override
+    public void onExit() {
+        GameUI_View.super.onExit();
+        stop();
+    }
+
     public void setUI(GameUI ui) {
         requireNonNull(ui);
         selectedIndexProperty().addListener((py,ov,nv) -> {
@@ -78,8 +90,6 @@ public class StartPagesView extends Carousel implements GameUI_View {
         });
         setBackground(ui.assets().background("background.scene"));
         createActions();
-
-        start();
     }
 
     private void createActions() {
