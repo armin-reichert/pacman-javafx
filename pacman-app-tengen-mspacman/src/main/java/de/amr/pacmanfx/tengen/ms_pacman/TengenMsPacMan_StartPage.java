@@ -12,6 +12,7 @@ import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.widgets.Flyer;
 import javafx.scene.Node;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 
@@ -28,6 +29,13 @@ public class TengenMsPacMan_StartPage extends StackPane implements StartPage {
             switch (e.getCode()) {
                 case DOWN -> flyer.nextFlyerPage();
                 case UP -> flyer.prevFlyerPage();
+            }
+        });
+        addEventHandler(ScrollEvent.SCROLL, e-> {
+            if (e.getDeltaY() < 0) {
+                flyer.nextFlyerPage();
+            } else if (e.getDeltaY() > 0) {
+                flyer.prevFlyerPage();
             }
         });
         flyer.selectPage(0);

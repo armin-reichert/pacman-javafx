@@ -228,6 +228,8 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
      * </tr>
      * </table>
      * </p>
+     *
+     * See also <a href="https://umlautllama.com/projects/pacdocs/mspac/mspac.asm">Ms. Pac-Man disasssembly</a>
      */
     protected byte computeBonusSymbol(int levelNumber) {
         if (levelNumber <= 7) return (byte) (levelNumber - 1);
