@@ -214,7 +214,7 @@ public final class GameUI_Implementation implements GameUI {
 
     private void createScene(double width, double height) {
         scene = new Scene(layoutPane, width, height);
-        scene.getStylesheets().add(GameAssets.CONTEXT_MENU_CSS_PATH);
+        scene.getStylesheets().add(GameAssets.STYLE_SHEET_PATH);
 
         // Keyboard events are first handled by the global keyboard object
         scene.addEventFilter(KeyEvent.KEY_PRESSED,  keyboard::onKeyPressed);

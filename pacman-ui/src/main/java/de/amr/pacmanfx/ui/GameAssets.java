@@ -15,7 +15,7 @@ import static de.amr.pacmanfx.uilib.Ufx.createImageBackground;
  */
 public class GameAssets extends AssetStorage {
 
-    public static final String CONTEXT_MENU_CSS_PATH = "/de/amr/pacmanfx/ui/css/menu-style.css";
+    public static final String STYLE_SHEET_PATH = "/de/amr/pacmanfx/ui/css/style.css";
 
     private static final ResourceManager GLOBAL_RESOURCES = () -> GameUI_Implementation.class;
 
