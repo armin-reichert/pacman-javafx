@@ -133,7 +133,6 @@ public final class GameUI_Implementation implements GameUI {
     private final PlayView playView;
     private EditorView editorView;
 
-    private FontIcon pausedIcon;
     private StatusIconBox statusIconBox;
 
     private final StringBinding titleBinding;
@@ -230,22 +229,24 @@ public final class GameUI_Implementation implements GameUI {
         ));
         scene.setOnScroll(e -> currentGameScene().ifPresent(gameScene -> gameScene.handleScrollEvent(e)));
 
-        createPausedIcon();
         createStatusIconBox();
+
+        // Large "paused" icon which appears at center of scene
+        FontIcon pausedIcon = createPausedIcon();
+        StackPane.setAlignment(pausedIcon, Pos.CENTER);
 
         // First child is placeholder for view (start pages view, play view, ...)
         layoutPane.getChildren().setAll(new Region(), pausedIcon, statusIconBox, flashMessageView);
     }
 
-    // Large "paused" icon which appears at center of scene
-    private void createPausedIcon() {
-        pausedIcon = FontIcon.of(FontAwesomeSolid.PAUSE, PAUSE_ICON_SIZE, ArcadePalette.ARCADE_WHITE);
+    private FontIcon createPausedIcon() {
+        var pausedIcon = FontIcon.of(FontAwesomeSolid.PAUSE, PAUSE_ICON_SIZE, ArcadePalette.ARCADE_WHITE);
         // Show paused icon only in play view
         pausedIcon.visibleProperty().bind(Bindings.createBooleanBinding(
-                () -> currentView() == playView && clock.isPaused(),
-                currentViewProperty(), clock.pausedProperty())
+            () -> currentView() == playView && clock.isPaused(),
+            currentViewProperty(), clock.pausedProperty())
         );
-        StackPane.setAlignment(pausedIcon, Pos.CENTER);
+        return pausedIcon;
     }
 
     // Status icon box appears at bottom-left corner of all views except editor view
