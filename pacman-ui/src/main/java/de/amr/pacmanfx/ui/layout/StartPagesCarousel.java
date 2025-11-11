@@ -18,9 +18,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
@@ -57,6 +55,26 @@ public class StartPagesCarousel extends Carousel implements GameUI_View {
         return button;
     }
 
+    private static Node createDefaultNavigationButton(Direction dir) {
+        final int iconSize = 48;
+        final Color iconColor = Color.gray(0.69);
+        final FontIcon icon = switch (dir) {
+            case LEFT  -> FontIcon.of(FontAwesomeSolid.CHEVRON_CIRCLE_LEFT, iconSize, iconColor);
+            case RIGHT -> FontIcon.of(FontAwesomeSolid.CHEVRON_CIRCLE_RIGHT, iconSize, iconColor);
+            default -> throw new IllegalArgumentException("Illegal navigation direction: %s".formatted(dir));
+        };
+        icon.setOpacity(0.2);
+        icon.setOnMouseEntered(e -> icon.setOpacity(0.8));
+        icon.setOnMouseExited(e -> icon.setOpacity(0.2));
+
+        final var button = new HBox(icon);
+        button.setMaxHeight(iconSize);
+        button.setMaxWidth(iconSize);
+        button.setPadding(new Insets(5));
+        StackPane.setAlignment(button, dir == Direction.LEFT ? Pos.CENTER_LEFT : Pos.CENTER_RIGHT);
+        return button;
+    }
+
     private final GameAction actionToggleAutoPlay = new GameAction("TOGGLE_PLAY") {
         @Override
         public void execute(GameUI ui) {
@@ -65,11 +83,11 @@ public class StartPagesCarousel extends Carousel implements GameUI_View {
             } else {
                 startTimer();
             }
-            Logger.info("Carousel is {}", isPlaying() ? "playing" : "stopped");
+            Logger.info("Start pages carousel is {}", isPlaying() ? "playing" : "stopped");
         }
     };
 
-    private final List<StartPage> startPageList = new ArrayList<>();
+    private final List<StartPage> startPages = new ArrayList<>();
     private final ActionBindingsManager actionBindings = new DefaultActionBindingsManager();
 
     public StartPagesCarousel() {
@@ -94,61 +112,41 @@ public class StartPagesCarousel extends Carousel implements GameUI_View {
             Logger.info("Carousel selection changed from {} to {}", ov, nv);
             int oldIndex = ov.intValue(), newIndex = nv.intValue();
             if (oldIndex != -1) {
-                startPageList.get(oldIndex).onExit(ui);
+                startPages.get(oldIndex).onExit(ui);
             }
             if (newIndex != -1) {
-                StartPage startPage = startPageList.get(newIndex);
+                StartPage startPage = startPages.get(newIndex);
                 startPage.onEnter(ui);
                 startPage.layoutRoot().requestFocus();
             }
         });
         setBackground(ui.assets().background("background.scene"));
-        createActions();
-        setOnMouseClicked(e -> {
-            Logger.info("Mouse click {}", e);
-            actionToggleAutoPlay.executeIfEnabled(ui);
-        });
-    }
+        setOnMouseClicked(e -> actionToggleAutoPlay.executeIfEnabled(ui));
 
-    private void createActions() {
-        final var actionPrevSlide = new GameAction("SHOW_PREV_SLIDE") {
+        final var actionShowPrevPage = new GameAction("SHOW_PREV_PAGE") {
             @Override
             public void execute(GameUI ui) {
                 showPreviousItem();
             }
         };
-        final var actionNextSlide = new GameAction("SHOW_NEXT_SLIDE") {
+
+        final var actionShowNextPage = new GameAction("SHOW_NEXT_PAGE") {
             @Override
             public void execute(GameUI ui) {
                 showNextItem();
             }
         };
+
+        actionBindings.setKeyCombination(actionShowPrevPage,         bare(KeyCode.LEFT));
+        actionBindings.setKeyCombination(actionShowNextPage,         bare(KeyCode.RIGHT));
         actionBindings.setKeyCombination(actionToggleAutoPlay,       bare(KeyCode.C));
-        actionBindings.setKeyCombination(actionPrevSlide,            bare(KeyCode.LEFT));
-        actionBindings.setKeyCombination(actionNextSlide,            bare(KeyCode.RIGHT));
         actionBindings.setKeyCombination(ACTION_BOOT_SHOW_PLAY_VIEW, bare(KeyCode.ENTER));
         actionBindings.setKeyCombination(ACTION_TOGGLE_PAUSED,       bare(KeyCode.P));
     }
 
     @Override
     protected Node createNavigationButton(Direction dir) {
-        final int iconSize = 48;
-        final Color iconColor = Color.gray(0.69);
-        final FontIcon icon = switch (dir) {
-            case LEFT  -> FontIcon.of(FontAwesomeSolid.CHEVRON_CIRCLE_LEFT, iconSize, iconColor);
-            case RIGHT -> FontIcon.of(FontAwesomeSolid.CHEVRON_CIRCLE_RIGHT, iconSize, iconColor);
-            default -> throw new IllegalArgumentException("Illegal carousel button direction: %s".formatted(dir));
-        };
-        icon.setOpacity(0.2);
-        icon.setOnMouseEntered(e -> icon.setOpacity(0.8));
-        icon.setOnMouseExited(e -> icon.setOpacity(0.2));
-
-        final var buttonPane = new BorderPane(icon);
-        buttonPane.setMaxHeight(iconSize);
-        buttonPane.setMaxWidth(iconSize);
-        buttonPane.setPadding(new Insets(5));
-        StackPane.setAlignment(buttonPane, dir == Direction.LEFT ? Pos.CENTER_LEFT : Pos.CENTER_RIGHT);
-        return buttonPane;
+        return createDefaultNavigationButton(dir);
     }
 
     @Override
@@ -172,12 +170,12 @@ public class StartPagesCarousel extends Carousel implements GameUI_View {
 
     public Optional<StartPage> currentStartPage() {
         final int selectedIndex = selectedIndex();
-        return selectedIndex >= 0 ? Optional.of(startPageList.get(selectedIndex)) : Optional.empty();
+        return selectedIndex >= 0 ? Optional.of(startPages.get(selectedIndex)) : Optional.empty();
     }
 
     public void addStartPage(StartPage startPage) {
         requireNonNull(startPage);
-        startPageList.add(startPage);
+        startPages.add(startPage);
         addItem(startPage.layoutRoot());
         setNavigationButtonsVisible(numItems() >= 2);
         Logger.info("Start page '{}' added", startPage.getClass().getSimpleName());
