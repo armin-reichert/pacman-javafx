@@ -21,10 +21,12 @@ import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_StartPage extends StackPane implements StartPage {
 
+    private final Flyer flyer;
+
     public TengenMsPacMan_StartPage(GameUI ui) {
         requireNonNull(ui);
         ResourceManager rm = () -> TengenMsPacMan_StartPage.class;
-        var flyer = new Flyer(rm.loadImage("graphics/f1.png"), rm.loadImage("graphics/f2.png"));
+        flyer = new Flyer(rm.loadImage("graphics/f1.png"), rm.loadImage("graphics/f2.png"));
         addEventHandler(KeyEvent.KEY_PRESSED, e -> {
             switch (e.getCode()) {
                 case DOWN -> flyer.nextFlyerPage();
@@ -38,7 +40,6 @@ public class TengenMsPacMan_StartPage extends StackPane implements StartPage {
                 flyer.prevFlyerPage();
             }
         });
-        flyer.selectPage(0);
 
         Node startButton = StartPagesCarousel.createDefaultStartButton(ui, () -> ACTION_BOOT_SHOW_PLAY_VIEW.executeIfEnabled(ui));
         startButton.setTranslateY(-50);
@@ -48,6 +49,7 @@ public class TengenMsPacMan_StartPage extends StackPane implements StartPage {
     @Override
     public void onEnter(GameUI ui) {
         ui.selectGameVariant(PredefinedGameVariant.MS_PACMAN_TENGEN.name());
+        flyer.selectPage(0);
     }
 
     @Override

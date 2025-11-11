@@ -22,11 +22,12 @@ import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_StartPage extends StackPane implements StartPage {
 
+    private final Flyer flyer;
+
     public ArcadeMsPacMan_StartPage(GameUI ui) {
         requireNonNull(ui);
         ResourceManager rm = () -> ArcadeMsPacMan_StartPage.class;
-        var flyer = new Flyer(rm.loadImage("graphics/f1.jpg"), rm.loadImage("graphics/f2.jpg"));
-        flyer.selectPage(0);
+        flyer = new Flyer(rm.loadImage("graphics/f1.jpg"), rm.loadImage("graphics/f2.jpg"));
         addEventHandler(KeyEvent.KEY_PRESSED, e -> {
             switch (e.getCode()) {
                 case DOWN -> flyer.nextFlyerPage();
@@ -52,6 +53,7 @@ public class ArcadeMsPacMan_StartPage extends StackPane implements StartPage {
     @Override
     public void onEnter(GameUI ui) {
         ui.selectGameVariant(PredefinedGameVariant.MS_PACMAN.name());
+        flyer.selectPage(0);
     }
 
     @Override
