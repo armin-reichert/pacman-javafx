@@ -42,6 +42,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class StartPagesCarousel extends Carousel implements GameUI_View {
 
+    public static final Color START_BUTTON_COLOR = Color.rgb(0, 155, 252, 0.7);
     public static final int PAGE_CHANGE_SECONDS = 20;
 
     public static Node createDefaultStartButton(GameUI ui, Runnable action) {
@@ -49,7 +50,7 @@ public class StartPagesCarousel extends Carousel implements GameUI_View {
         var button = new FancyButton(
             assets.translated("play_button"),
             assets.arcadeFont(30),
-            Color.rgb(0, 155, 252, 0.7),
+            START_BUTTON_COLOR,
             Color.WHITE);
         button.setAction(action);
         StackPane.setAlignment(button, Pos.BOTTOM_CENTER);

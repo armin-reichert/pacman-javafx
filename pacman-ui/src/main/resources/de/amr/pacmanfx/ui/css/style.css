@@ -6,3 +6,18 @@
     -fx-background-color: transparent;
     -fx-text-fill: black; /* or your desired text color */
 }
+
+/* Start page progress bar */
+
+.progress-bar {
+    -fx-background-color: transparent;
+}
+
+.progress-bar .track {
+    -fx-background-color: transparent;
+}
+
+.progress-bar .bar {
+    -fx-background-color: rgba(0, 155, 252, 0.7); /* same color as START button */
+}
+
