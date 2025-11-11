@@ -67,7 +67,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     public ArcadeMsPacMan_UIConfig(GameUI ui) {
         this.ui = requireNonNull(ui);
         spriteSheet = new ArcadeMsPacMan_SpriteSheet(ARCADE_MS_PAC_MAN_RESOURCES.loadImage("graphics/mspacman_spritesheet.png"));
-        assets.setTextResources(ResourceBundle.getBundle("de.amr.pacmanfx.arcade.ms_pacman.localized_texts"));
+        assets.setLocalizedTexts(ResourceBundle.getBundle("de.amr.pacmanfx.arcade.ms_pacman.localized_texts"));
     }
 
     // Creates the maze image used in the flash animation at the end of each level

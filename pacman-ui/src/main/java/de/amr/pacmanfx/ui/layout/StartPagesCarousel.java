@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.ui.GameAssets;
+import de.amr.pacmanfx.ui.GlobalGameAssets;
 import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.api.ActionBindingsManager;
@@ -44,7 +44,7 @@ public class StartPagesCarousel extends Carousel implements GameUI_View {
     public static final int PAGE_CHANGE_SECONDS = 20;
 
     public static Node createDefaultStartButton(GameUI ui, Runnable action) {
-        final GameAssets assets = ui.assets();
+        final GlobalGameAssets assets = ui.assets();
         var button = new FancyButton(
             assets.translated("play_button"),
             assets.arcadeFont(30),

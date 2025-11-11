@@ -109,7 +109,7 @@ public final class GameUI_Implementation implements GameUI {
         new ActionBinding(ACTION_TOGGLE_DRAW_MODE,                 alt(KeyCode.W))
     );
 
-    private final GameAssets assets;
+    private final GlobalGameAssets assets;
     private final GameClock clock;
     private final GameContext gameContext;
     private final Joypad joypad;
@@ -151,7 +151,7 @@ public final class GameUI_Implementation implements GameUI {
         requireNonNegative(sceneWidth, "Main scene width must be a positive number");
         requireNonNegative(sceneHeight, "Main scene height must be a positive number");
 
-        assets = new GameAssets();
+        assets = new GlobalGameAssets();
         prefs = new GameUI_Preferences();
         PROPERTY_3D_WALL_HEIGHT.set(prefs.getFloat("3d.obstacle.base_height"));
         PROPERTY_3D_WALL_OPACITY.set(prefs.getFloat("3d.obstacle.opacity"));
@@ -214,7 +214,7 @@ public final class GameUI_Implementation implements GameUI {
 
     private void createScene(double width, double height) {
         scene = new Scene(layoutPane, width, height);
-        scene.getStylesheets().add(GameAssets.STYLE_SHEET_PATH);
+        scene.getStylesheets().add(GlobalGameAssets.STYLE_SHEET_PATH);
 
         // Keyboard events are first handled by the global keyboard object
         scene.addEventFilter(KeyEvent.KEY_PRESSED,  keyboard::onKeyPressed);
@@ -366,7 +366,7 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     @Override
-    public GameAssets assets() {
+    public GlobalGameAssets assets() {
         return assets;
     }
 

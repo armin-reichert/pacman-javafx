@@ -13,14 +13,14 @@ import static de.amr.pacmanfx.uilib.Ufx.createImageBackground;
 /**
  * Global assets used in the Pac-Man games UI.
  */
-public class GameAssets extends AssetStorage {
+public class GlobalGameAssets extends AssetStorage {
 
     public static final String STYLE_SHEET_PATH = "/de/amr/pacmanfx/ui/css/style.css";
 
     private static final ResourceManager GLOBAL_RESOURCES = () -> GameUI_Implementation.class;
 
-    public GameAssets() {
-        setTextResources(GLOBAL_RESOURCES.getModuleBundle("de.amr.pacmanfx.ui.localized_texts"));
+    public GlobalGameAssets() {
+        setLocalizedTexts(GLOBAL_RESOURCES.getModuleBundle("de.amr.pacmanfx.ui.localized_texts"));
 
         set("background.scene",        createImageBackground(GLOBAL_RESOURCES.loadImage("graphics/pacman_wallpaper.png")));
 

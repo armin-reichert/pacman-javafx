@@ -23,14 +23,14 @@ import static java.util.Objects.requireNonNull;
 public class AssetStorage {
 
     private final Map<String, Object> assetMap = new HashMap<>();
-    private ResourceBundle textResources;
+    private ResourceBundle localizedTexts;
 
-    public void setTextResources(ResourceBundle bundle) {
-        this.textResources = bundle;
+    public void setLocalizedTexts(ResourceBundle bundle) {
+        this.localizedTexts = bundle;
     }
 
-    public ResourceBundle textResources() {
-        return textResources;
+    public ResourceBundle localizedTexts() {
+        return localizedTexts;
     }
 
     public void set(String key, Object value) {
@@ -51,12 +51,12 @@ public class AssetStorage {
     public String translated(String keyOrPattern, Object... args) {
         requireNonNull(keyOrPattern);
         requireNonNull(args);
-        if (textResources == null) {
+        if (localizedTexts == null) {
             Logger.error("No localized text resources available");
             return "???";
         }
-        if (textResources.containsKey(keyOrPattern)) {
-            return MessageFormat.format(textResources.getString(keyOrPattern), args);
+        if (localizedTexts.containsKey(keyOrPattern)) {
+            return MessageFormat.format(localizedTexts.getString(keyOrPattern), args);
         }
         Logger.error("Missing localized text for key {}", keyOrPattern);
         return "[" + keyOrPattern + "]";
@@ -94,5 +94,4 @@ public class AssetStorage {
     public Font font(String key, double size) { return Font.font(font(key).getFamily(), size); }
 
     public Image image(String key) { return asset(key, Image.class); }
-
 }

@@ -130,7 +130,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     public TengenMsPacMan_UIConfig(GameUI ui) {
         this.ui = requireNonNull(ui);
 
-        assets.setTextResources(TEXT_BUNDLE);
+        assets.setLocalizedTexts(TEXT_BUNDLE);
 
         spriteSheet              = new TengenMsPacMan_SpriteSheet(RES_TENGEN.loadImage(SPRITE_SHEET_PATH));
         arcadeMapsSpriteSheet    = new ArcadeMapsSpriteSheet(RES_TENGEN.loadImage(ARCADE_MAZES_IMAGE_PATH));

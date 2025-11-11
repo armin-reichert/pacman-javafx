@@ -327,8 +327,8 @@ public class GameLevel3D extends Group implements Disposable {
         ghosts3D.forEach(ghost3D -> ghost3D.init(gameLevel));
         house3D.startSwirlAnimations();
 
-        pickerGameOverMessages = RandomTextPicker.fromBundle(ui.assets().textResources(), "game.over");
-        pickerLevelCompleteMessages = RandomTextPicker.fromBundle(ui.assets().textResources(), "level.complete");
+        pickerGameOverMessages = RandomTextPicker.fromBundle(ui.assets().localizedTexts(), "game.over");
+        pickerLevelCompleteMessages = RandomTextPicker.fromBundle(ui.assets().localizedTexts(), "level.complete");
     }
 
     private void createMaterials() {
