@@ -44,10 +44,9 @@ public class MiniGameView extends VBox {
     private final HBox layout;
     private final Canvas canvas;
 
-    private final BaseRenderer canvasRenderer;
-
     private GameUI ui;
 
+    private final BaseRenderer canvasRenderer;
     private GameLevelRenderer gameLevelRenderer;
     private ActorRenderer actorRenderer;
 
@@ -130,7 +129,7 @@ public class MiniGameView extends VBox {
         if (!isVisible() || gameLevelRenderer == null) {
             return;
         }
-        actorRenderer.clearCanvas();
+        canvasRenderer.clearCanvas();
 
         GameLevel gameLevel = ui.gameContext().gameLevel();
         if (gameLevel != null) {

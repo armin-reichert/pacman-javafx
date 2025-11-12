@@ -6,12 +6,10 @@ package de.amr.pacmanfx.uilib.rendering;
 
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.math.Vector2f;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 
 public interface Renderer {
 
@@ -30,14 +28,6 @@ public interface Renderer {
     void setBackgroundColor(Color color);
 
     Color backgroundColor();
-
-    void fillCanvas(Paint paint);
-
-    default void clearCanvas() {
-        fillCanvas(backgroundColor());
-    }
-
-    SpriteSheet<?> spriteSheet();
 
     boolean imageSmoothing();
 

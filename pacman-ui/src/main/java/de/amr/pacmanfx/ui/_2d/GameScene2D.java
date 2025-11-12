@@ -88,7 +88,7 @@ public abstract class GameScene2D implements GameScene {
 
     protected abstract void doEnd();
 
-    public Renderer sceneRenderer() {
+    public BaseRenderer sceneRenderer() {
         return sceneRenderer;
     }
 

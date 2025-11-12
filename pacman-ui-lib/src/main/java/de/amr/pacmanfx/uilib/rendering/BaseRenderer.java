@@ -53,16 +53,29 @@ public class BaseRenderer implements Renderer {
         this.spriteSheet = requireNonNull(spriteSheet);
     }
 
-    @Override
-    public GraphicsContext ctx() {
-        return ctx;
+    public void clearCanvas() {
+        fillCanvas(backgroundColor());
     }
 
-    @Override
     public void fillCanvas(Paint paint) {
         requireNonNull(paint);
         ctx.setFill(paint);
         ctx.fillRect(0, 0, ctx.getCanvas().getWidth(), ctx.getCanvas().getHeight());
+    }
+
+    public SpriteSheet<?> spriteSheet() {
+        return spriteSheet;
+    }
+
+    public void setSpriteSheet(SpriteSheet<?> spriteSheet) {
+        this.spriteSheet = spriteSheet;
+    }
+
+    // Renderer interface
+
+    @Override
+    public GraphicsContext ctx() {
+        return ctx;
     }
 
     @Override
@@ -95,7 +108,6 @@ public class BaseRenderer implements Renderer {
     public Color backgroundColor() {
         return backgroundColor.get();
     }
-
 
     @Override
     public void setImageSmoothing(boolean imageSmoothing) {
@@ -175,15 +187,6 @@ public class BaseRenderer implements Renderer {
         ctx.setTextAlign(TextAlignment.CENTER);
         fillText(text, color, font, x, y);
         ctx.restore();
-    }
-
-    public void setSpriteSheet(SpriteSheet<?> spriteSheet) {
-        this.spriteSheet = spriteSheet;
-    }
-
-    @Override
-    public SpriteSheet<?> spriteSheet() {
-        return spriteSheet;
     }
 
     @Override

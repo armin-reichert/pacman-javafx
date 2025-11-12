@@ -98,8 +98,8 @@ public class Arcade_BootScene2D extends GameScene2D {
     }
 
     private void drawRandomHexDigits() {
-        int numRows = (int) (ARCADE_MAP_SIZE_IN_PIXELS.y() / TS);
-        int numCols = (int) (ARCADE_MAP_SIZE_IN_PIXELS.x() / TS);
+        int numRows = ARCADE_MAP_SIZE_IN_PIXELS.y() / TS;
+        int numCols = ARCADE_MAP_SIZE_IN_PIXELS.x() / TS;
         sceneRenderer.ctx().setFill(ARCADE_WHITE);
         sceneRenderer.ctx().setFont(sceneRenderer.arcadeFont8());
         for (int row = 0; row < numRows; ++row) {
@@ -112,8 +112,8 @@ public class Arcade_BootScene2D extends GameScene2D {
     }
 
     private void drawRandomSpriteFragments() {
-        int numRows = (int) (ARCADE_MAP_SIZE_IN_PIXELS.y() / RASTER_SIZE);
-        int numCols = (int) (ARCADE_MAP_SIZE_IN_PIXELS.x() / RASTER_SIZE);
+        int numRows = ARCADE_MAP_SIZE_IN_PIXELS.y() / RASTER_SIZE;
+        int numCols = ARCADE_MAP_SIZE_IN_PIXELS.x() / RASTER_SIZE;
         for (int row = 0; row < numRows; ++row) {
             if (randomInt(0, 100) < 20) continue;
             RectShort fragment1 = randomSpriteFragment(), fragment2 = randomSpriteFragment();
@@ -134,8 +134,8 @@ public class Arcade_BootScene2D extends GameScene2D {
     private void drawGridLines() {
         double gridWidth = scaled(ARCADE_MAP_SIZE_IN_PIXELS.x());
         double gridHeight = scaled(ARCADE_MAP_SIZE_IN_PIXELS.y());
-        int numRows = (int) (ARCADE_MAP_SIZE_IN_PIXELS.y() / RASTER_SIZE);
-        int numCols = (int) (ARCADE_MAP_SIZE_IN_PIXELS.x() / RASTER_SIZE);
+        int numRows = ARCADE_MAP_SIZE_IN_PIXELS.y() / RASTER_SIZE;
+        int numCols = ARCADE_MAP_SIZE_IN_PIXELS.x() / RASTER_SIZE;
         double thin = scaled(2), thick = scaled(4);
         sceneRenderer.ctx().setStroke(ARCADE_WHITE);
         for (int row = 0; row <= numRows; ++row) {
