@@ -26,11 +26,11 @@ import static java.util.Objects.requireNonNull;
 
 public class BaseRenderer implements Renderer {
 
-    public static final Font ARCADE_FONT_TS;
+    public static final Font DEFAULT_ARCADE_FONT;
 
     static {
         ResourceManager rm = () -> BaseRenderer.class;
-        ARCADE_FONT_TS = rm.loadFont("/de/amr/pacmanfx/uilib/fonts/emulogic.ttf", TS);
+        DEFAULT_ARCADE_FONT = rm.loadFont("/de/amr/pacmanfx/uilib/fonts/emulogic.ttf", 8);
     }
 
     private final ObjectProperty<Color> backgroundColor = new SimpleObjectProperty<>(Color.BLACK);
@@ -44,8 +44,8 @@ public class BaseRenderer implements Renderer {
 
     public BaseRenderer(Canvas canvas) {
         ctx = requireNonNull(canvas).getGraphicsContext2D();
-        arcadeFont8.bind(scaling.map(s -> Font.font(ARCADE_FONT_TS.getFamily(), scaled(TS))));
-        arcadeFont6 .bind(scaling.map(s -> Font.font(ARCADE_FONT_TS.getFamily(), scaled(6))));
+        arcadeFont8.bind(scaling.map(s -> Font.font(DEFAULT_ARCADE_FONT.getFamily(), scaled(8))));
+        arcadeFont6 .bind(scaling.map(s -> Font.font(DEFAULT_ARCADE_FONT.getFamily(), scaled(6))));
     }
 
     public BaseRenderer(Canvas canvas, SpriteSheet<?> spriteSheet) {

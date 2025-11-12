@@ -31,6 +31,7 @@ import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.SubSceneProvider;
 import de.amr.pacmanfx.ui.sound.SoundID;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.CommonRenderInfoKey;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
 import javafx.beans.property.BooleanProperty;
@@ -47,6 +48,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
 import java.util.List;
@@ -377,7 +379,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
             .filter(MovingGameLevelMessage.class::isInstance)
             .map(MovingGameLevelMessage.class::cast)
             .ifPresent(movingGameLevelMessage -> {
-                double width = gameLevelRenderer.messageTextWidth(gameLevel, MessageType.GAME_OVER);
+                Font font = Font.font(BaseRenderer.DEFAULT_ARCADE_FONT.getFamily(), TS);
+                double width = gameLevelRenderer.messageTextWidth(gameLevel, MessageType.GAME_OVER, font);
                 movingGameLevelMessage.start(sizeInPx().x(), width);
             });
     }

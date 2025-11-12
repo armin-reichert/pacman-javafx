@@ -155,11 +155,11 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Ga
         };
     }
 
-    public double messageTextWidth(GameLevel gameLevel, MessageType messageType) {
+    public double messageTextWidth(GameLevel gameLevel, MessageType messageType, Font font) {
         String messageText = messageText(gameLevel, messageType);
         Text dummy = new Text(messageText);
         // unscaled font!
-        dummy.setFont(Font.font(ARCADE_FONT_TS.getFamily(), TS));
+        dummy.setFont(font);
         return dummy.getLayoutBounds().getWidth();
     }
 
