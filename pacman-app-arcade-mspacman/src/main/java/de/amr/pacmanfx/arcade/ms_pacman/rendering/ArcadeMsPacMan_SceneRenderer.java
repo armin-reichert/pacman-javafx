@@ -79,7 +79,7 @@ public class ArcadeMsPacMan_SceneRenderer extends BaseRenderer {
     public void drawMidwayCopyright(double x, double y) {
         Image logo = uiConfig.assets().image("logo.midway");
         ctx.drawImage(logo, scaled(x), scaled(y + 2), scaled(TS(4) - 2), scaled(TS(4)));
-        ctx.setFont(arcadeFontTS());
+        ctx.setFont(arcadeFont8());
         ctx.setFill(ARCADE_RED);
         ctx.fillText("©", scaled(x + TS(5)), scaled(y + TS(2)) + 2);
         ctx.fillText("MIDWAY MFG CO", scaled(x + TS(7)), scaled(y + TS(2)));

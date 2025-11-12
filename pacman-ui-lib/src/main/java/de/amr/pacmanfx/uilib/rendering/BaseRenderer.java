@@ -35,7 +35,7 @@ public class BaseRenderer implements Renderer {
 
     private final ObjectProperty<Color> backgroundColor = new SimpleObjectProperty<>(Color.BLACK);
     private final DoubleProperty scaling = new SimpleDoubleProperty(1.0);
-    private final ObjectProperty<Font> arcadeFontTS = new SimpleObjectProperty<>();
+    private final ObjectProperty<Font> arcadeFont8 = new SimpleObjectProperty<>();
     private final ObjectProperty<Font> arcadeFont6 = new SimpleObjectProperty<>();
 
     protected final GraphicsContext ctx;
@@ -44,7 +44,7 @@ public class BaseRenderer implements Renderer {
 
     public BaseRenderer(Canvas canvas) {
         ctx = requireNonNull(canvas).getGraphicsContext2D();
-        arcadeFontTS.bind(scaling.map(s -> Font.font(ARCADE_FONT_TS.getFamily(), scaled(TS))));
+        arcadeFont8.bind(scaling.map(s -> Font.font(ARCADE_FONT_TS.getFamily(), scaled(TS))));
         arcadeFont6 .bind(scaling.map(s -> Font.font(ARCADE_FONT_TS.getFamily(), scaled(6))));
     }
 
@@ -110,8 +110,8 @@ public class BaseRenderer implements Renderer {
     /**
      * @return Arcade font at size "one tile" (8px) scaled with the current renderer scaling.
      */
-    public Font arcadeFontTS() {
-        return arcadeFontTS.get();
+    public Font arcadeFont8() {
+        return arcadeFont8.get();
     }
 
     /**

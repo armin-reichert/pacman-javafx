@@ -256,7 +256,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
             return;
         }
 
-        sceneRenderer.ctx().setFont(sceneRenderer.arcadeFontTS());
+        sceneRenderer.ctx().setFont(sceneRenderer.arcadeFont8());
         if (PROPERTY_JOYPAD_BINDINGS_DISPLAYED.get()) {
             sceneRenderer.drawJoypadKeyBinding(ui.joypad().currentKeyBinding());
         }
@@ -268,7 +268,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
         y += TS(3);
         // Players (not implemented)
-        drawMarkerIfSelected(OPTION_PLAYERS, y, sceneRenderer.arcadeFontTS());
+        drawMarkerIfSelected(OPTION_PLAYERS, y, sceneRenderer.arcadeFont8());
         sceneRenderer.fillText("TYPE", NES_YELLOW, COL_LABEL, y);
         sceneRenderer.fillText(":", NES_YELLOW, COL_LABEL + 4 * TS + 4, y);
         // grey out
@@ -276,7 +276,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
         y += TS(3);
         // Pac-Booster
-        drawMarkerIfSelected(OPTION_PAC_BOOSTER, y, sceneRenderer.arcadeFontTS());
+        drawMarkerIfSelected(OPTION_PAC_BOOSTER, y, sceneRenderer.arcadeFont8());
         sceneRenderer.fillText("PAC BOOSTER", NES_YELLOW, COL_LABEL, y);
         sceneRenderer.fillText(":", NES_YELLOW, COL_COLON, y);
         String pacBoosterText = switch (theGame().pacBooster()) {
@@ -288,21 +288,21 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
         y += TS(3);
         // Game difficulty
-        drawMarkerIfSelected(OPTION_DIFFICULTY, y, sceneRenderer.arcadeFontTS());
+        drawMarkerIfSelected(OPTION_DIFFICULTY, y, sceneRenderer.arcadeFont8());
         sceneRenderer.fillText("GAME DIFFICULTY", NES_YELLOW, COL_LABEL, y);
         sceneRenderer.fillText(":", NES_YELLOW, COL_COLON, y);
         sceneRenderer.fillText(theGame().difficulty().name(), NES_WHITE, COL_VALUE, y);
 
         y += TS(3);
         // Maze (type) selection
-        drawMarkerIfSelected(OPTION_MAZE_SELECTION, y, sceneRenderer.arcadeFontTS());
+        drawMarkerIfSelected(OPTION_MAZE_SELECTION, y, sceneRenderer.arcadeFont8());
         sceneRenderer.fillText("MAZE SELECTION", NES_YELLOW, COL_LABEL, y);
         sceneRenderer.fillText(":", NES_YELLOW, COL_COLON, y);
         sceneRenderer.fillText(theGame().mapCategory().name(), NES_WHITE, COL_VALUE, y);
 
         y += TS(3);
         // Starting level number
-        drawMarkerIfSelected(OPTION_STARTING_LEVEL, y, sceneRenderer.arcadeFontTS());
+        drawMarkerIfSelected(OPTION_STARTING_LEVEL, y, sceneRenderer.arcadeFont8());
         sceneRenderer.fillText("STARTING LEVEL", NES_YELLOW, COL_LABEL, y);
         sceneRenderer.fillText(":", NES_YELLOW, COL_COLON, y);
         sceneRenderer.fillText(String.valueOf(theGame().startLevelNumber()), NES_WHITE, COL_VALUE, y);

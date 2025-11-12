@@ -84,7 +84,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
         clapperboard = new Clapperboard(spriteSheet, 4, "THE END");
         clapperboard.setPosition(TS(3), TS(10));
-        clapperboard.setFont(actorRenderer.arcadeFontTS());
+        clapperboard.setFont(actorRenderer.arcadeFont8());
         clapperboard.setVisible(true);
         clapperboard.startAnimation();
 

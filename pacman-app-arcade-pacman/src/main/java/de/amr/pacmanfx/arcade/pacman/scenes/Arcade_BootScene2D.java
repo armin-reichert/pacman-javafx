@@ -101,7 +101,7 @@ public class Arcade_BootScene2D extends GameScene2D {
         int numRows = (int) (ARCADE_MAP_SIZE_IN_PIXELS.y() / TS);
         int numCols = (int) (ARCADE_MAP_SIZE_IN_PIXELS.x() / TS);
         sceneRenderer.ctx().setFill(ARCADE_WHITE);
-        sceneRenderer.ctx().setFont(sceneRenderer.arcadeFontTS());
+        sceneRenderer.ctx().setFont(sceneRenderer.arcadeFont8());
         for (int row = 0; row < numRows; ++row) {
             double y = scaled(TS(row + 1));
             for (int col = 0; col < numCols; ++col) {

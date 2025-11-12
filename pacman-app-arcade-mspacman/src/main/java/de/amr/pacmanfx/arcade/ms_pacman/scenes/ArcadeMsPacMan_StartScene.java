@@ -75,7 +75,7 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
     @Override
     public void drawSceneContent() {
         Font font6 = sceneRenderer.arcadeFont6();
-        Font font8 = sceneRenderer.arcadeFontTS();
+        Font font8 = sceneRenderer.arcadeFont8();
         sceneRenderer.fillText("PUSH START BUTTON", ARCADE_ORANGE, font8, TS(6), TS(16));
         sceneRenderer.fillText("1 PLAYER ONLY", ARCADE_ORANGE, font8, TS(8), TS(18));
         sceneRenderer.fillText("ADDITIONAL    AT 10000", ARCADE_ORANGE, font8,TS(2), TS(25));

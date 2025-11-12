@@ -167,18 +167,18 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 drawPoints(ctx);
                 drawBlinkingEnergizer(ctx, TS(LEFT_TILE_X), TS(20));
                 drawGuys(ctx, true);
-                sceneRenderer.fillText(MIDWAY_MFG_CO, ARCADE_PINK, sceneRenderer.arcadeFontTS(), TS(4), TS(32));
+                sceneRenderer.fillText(MIDWAY_MFG_CO, ARCADE_PINK, sceneRenderer.arcadeFont8(), TS(4), TS(32));
             }
             case CHASING_GHOSTS, READY_TO_PLAY -> {
                 drawPoints(ctx);
                 drawGuys(ctx, false);
-                sceneRenderer.fillText(MIDWAY_MFG_CO, ARCADE_PINK, sceneRenderer.arcadeFontTS(), TS(4), TS(32));
+                sceneRenderer.fillText(MIDWAY_MFG_CO, ARCADE_PINK, sceneRenderer.arcadeFont8(), TS(4), TS(32));
             }
         }
     }
 
     private void drawGallery(GraphicsContext ctx) {
-        ctx.setFont(sceneRenderer.arcadeFontTS());
+        ctx.setFont(sceneRenderer.arcadeFont8());
         if (titleVisible) {
             sceneRenderer.fillText("CHARACTER / NICKNAME", ARCADE_WHITE, TS(LEFT_TILE_X + 3), TS(6));
         }
@@ -218,11 +218,11 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         ctx.setFill(ARCADE_ROSE);
         // normal pellet
         ctx.fillRect(scaled(TS(LEFT_TILE_X + 6) + 4), scaled(TS(24) + 4), scaled(2), scaled(2));
-        sceneRenderer.fillText("10",  ARCADE_WHITE, sceneRenderer.arcadeFontTS(), TS(LEFT_TILE_X + 8), TS(25));
+        sceneRenderer.fillText("10",  ARCADE_WHITE, sceneRenderer.arcadeFont8(), TS(LEFT_TILE_X + 8), TS(25));
         sceneRenderer.fillText("PTS", ARCADE_WHITE, sceneRenderer.arcadeFont6(), TS(LEFT_TILE_X + 11), TS(25));
         // energizer
         drawBlinkingEnergizer(ctx, TS(LEFT_TILE_X + 6), TS(26));
-        sceneRenderer.fillText("50",  ARCADE_WHITE, sceneRenderer.arcadeFontTS(), TS(LEFT_TILE_X + 8), TS(27));
+        sceneRenderer.fillText("50",  ARCADE_WHITE, sceneRenderer.arcadeFont8(), TS(LEFT_TILE_X + 8), TS(27));
         sceneRenderer.fillText("PTS", ARCADE_WHITE, sceneRenderer.arcadeFont6(), TS(LEFT_TILE_X + 11), TS(27));
     }
 

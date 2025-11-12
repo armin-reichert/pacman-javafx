@@ -130,7 +130,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     public void drawSceneContent() {
         var msPacManSceneRenderer = (ArcadeMsPacMan_SceneRenderer) sceneRenderer;
 
-        sceneRenderer.ctx().setFont(sceneRenderer.arcadeFontTS());
+        sceneRenderer.ctx().setFont(sceneRenderer.arcadeFont8());
         sceneRenderer.fillText(TITLE, ARCADE_ORANGE, TITLE_X, TITLE_Y);
         msPacManSceneRenderer.drawMarquee(marquee);
 

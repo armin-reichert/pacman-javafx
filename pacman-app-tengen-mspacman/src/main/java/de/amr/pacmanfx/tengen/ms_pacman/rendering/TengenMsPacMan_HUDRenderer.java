@@ -57,7 +57,7 @@ public class TengenMsPacMan_HUDRenderer extends BaseRenderer implements HUDRende
         if (!tengenHUD.isVisible()) return;
 
         if (tengenHUD.isScoreVisible()) {
-            drawScores(tengenGame.scoreManager(), clock.tickCount(), nesColor(0x20), arcadeFontTS());
+            drawScores(tengenGame.scoreManager(), clock.tickCount(), nesColor(0x20), arcadeFont8());
         }
 
         if (tengenHUD.isLivesCounterVisible()) {

@@ -138,11 +138,11 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Ga
                     Color color = gameLevel.isDemoLevel()
                         ? Color.web(colorScheme.strokeColorRGB())
                         : uiConfig.assets().color("color.game_over_message");
-                    fillTextCentered(text, color, arcadeFontTS(), message.x(), message.y());
+                    fillTextCentered(text, color, arcadeFont8(), message.x(), message.y());
                 }
-                case READY -> fillTextCentered(text, uiConfig.assets().color("color.ready_message"), arcadeFontTS(),
+                case READY -> fillTextCentered(text, uiConfig.assets().color("color.ready_message"), arcadeFont8(),
                     message.x(), message.y());
-                case TEST -> fillTextCentered(text, nesColor(0x28), arcadeFontTS(), message.x(), message.y());
+                case TEST -> fillTextCentered(text, nesColor(0x28), arcadeFont8(), message.x(), message.y());
             }
         });
     }

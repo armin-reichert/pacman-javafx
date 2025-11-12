@@ -114,7 +114,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
         if (gray) {
             actorRenderer.fillCanvas(nesColor(0x10));
         } else {
-            actorRenderer.fillText(TENGEN_PRESENTS, shadeOfBlue, actorRenderer.arcadeFontTS(), movingText.x(), movingText.y());
+            actorRenderer.fillText(TENGEN_PRESENTS, shadeOfBlue, actorRenderer.arcadeFont8(), movingText.x(), movingText.y());
             actorRenderer.drawActor(ghost);
         }
     }

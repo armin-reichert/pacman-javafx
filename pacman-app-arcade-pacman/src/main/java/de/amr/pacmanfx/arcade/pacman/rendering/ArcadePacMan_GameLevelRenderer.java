@@ -83,11 +83,11 @@ public class ArcadePacMan_GameLevelRenderer extends BaseRenderer implements Game
         double x = message.x(), y = message.y();
         switch (message.type()) {
             case MessageType.GAME_OVER
-                -> fillTextCentered("GAME  OVER", ARCADE_RED, arcadeFontTS(), x, y);
+                -> fillTextCentered("GAME  OVER", ARCADE_RED, arcadeFont8(), x, y);
             case MessageType.READY
-                -> fillTextCentered("READY!", ARCADE_YELLOW, arcadeFontTS(), x, y);
+                -> fillTextCentered("READY!", ARCADE_YELLOW, arcadeFont8(), x, y);
             case MessageType.TEST
-                -> fillTextCentered("TEST    L%02d".formatted(gameLevel.number()), ARCADE_WHITE, arcadeFontTS(), x, y);
+                -> fillTextCentered("TEST    L%02d".formatted(gameLevel.number()), ARCADE_WHITE, arcadeFont8(), x, y);
         }
     }
 }

@@ -43,8 +43,8 @@ public class ArcadeMsPacMan_HUDRenderer extends BaseRenderer implements HUDRende
 
         if (hud.isScoreVisible()) {
             ScoreManager scoreManager = game.scoreManager();
-            drawScore(scoreManager.score(), "SCORE", arcadeFontTS(), TS(1), TS(1));
-            drawScore(scoreManager.highScore(), "HIGH SCORE", arcadeFontTS(), TS(14), TS(1));
+            drawScore(scoreManager.score(), "SCORE", arcadeFont8(), TS(1), TS(1));
+            drawScore(scoreManager.highScore(), "HIGH SCORE", arcadeFont8(), TS(14), TS(1));
         }
 
         if (hud.isLevelCounterVisible()) {
@@ -71,7 +71,7 @@ public class ArcadeMsPacMan_HUDRenderer extends BaseRenderer implements HUDRende
         }
 
         if (hud.isCreditVisible()) {
-            fillText("CREDIT %2d".formatted(hud.numCoins()), ARCADE_WHITE, arcadeFontTS(), TS(2), sceneSize.y());
+            fillText("CREDIT %2d".formatted(hud.numCoins()), ARCADE_WHITE, arcadeFont8(), TS(2), sceneSize.y());
         }
     }
 

@@ -74,7 +74,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
 
         clapperboard = new Clapperboard("2", "THE CHASE");
         clapperboard.setPosition(TS(3), TS(10));
-        clapperboard.setFont(sceneRenderer.arcadeFontTS());
+        clapperboard.setFont(sceneRenderer.arcadeFont8());
         clapperboard.startAnimation();
 
         setSceneState(SceneState.CLAPPERBOARD, 120);
