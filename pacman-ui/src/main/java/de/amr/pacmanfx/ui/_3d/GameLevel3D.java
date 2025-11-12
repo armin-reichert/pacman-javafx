@@ -24,7 +24,7 @@ import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.EnergizerExplosionAndRecycling;
 import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
-import de.amr.pacmanfx.uilib.assets.AssetStorage;
+import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.*;
@@ -360,7 +360,7 @@ public class GameLevel3D extends Group implements Disposable {
     }
 
     private GhostColorSet createGhostColorSet(byte personality) {
-        AssetStorage assets = ui.currentConfig().assets();
+        AssetMap assets = ui.currentConfig().assets();
         return new GhostColorSet(
             new GhostComponentColors(
                 assets.color("ghost.%d.color.normal.dress".formatted(personality)),

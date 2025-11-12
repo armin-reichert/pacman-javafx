@@ -26,7 +26,7 @@ import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.assets.AssetStorage;
+import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.PacBody;
@@ -71,7 +71,7 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
     );
 
     private final GameUI ui;
-    private final AssetStorage assets = new AssetStorage();
+    private final AssetMap assets = new AssetMap();
     private final SoundManager soundManager = new SoundManager();
     private final Map<String, GameScene> scenesByID = new HashMap<>();
     private final ArcadePacMan_SpriteSheet spriteSheet;
@@ -83,7 +83,7 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
     }
 
     @Override
-    public AssetStorage assets() {
+    public AssetMap assets() {
         return assets;
     }
 

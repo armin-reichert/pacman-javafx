@@ -9,7 +9,6 @@ import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.nes.NES_Palette;
 import de.amr.pacmanfx.lib.worldmap.Obstacle;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
-import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.assets.UIPreferences;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
@@ -372,16 +371,16 @@ public interface Ufx {
 
         return dist2 <= radius * radius;
     }
+
     /**
-     * @param titleKey resource bundle key of title text
      * @param prefs the UI preference manager
-     * @param assets the UI asset storage
+     * @param itemText (localized) item text
      * @return CustomMenuItem representing a context menu title item
      */
-    static MenuItem createContextMenuTitle(String titleKey, UIPreferences prefs, AssetStorage assets) {
+    static MenuItem createContextMenuTitle(UIPreferences prefs, String itemText) {
         Font font = prefs.getFont("context_menu.title.font");
         Color fillColor = prefs.getColor("context_menu.title.fill");
-        var text = new Text(assets.translated(titleKey));
+        var text = new Text(itemText);
         text.setFont(font);
         text.setFill(fillColor);
         text.getStyleClass().add("custom-menu-title");

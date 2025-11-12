@@ -120,7 +120,7 @@ public class StartPagesCarousel extends Carousel implements GameUI_View {
                 startPage.layoutRoot().requestFocus();
             }
         });
-        setBackground(ui.assets().background("background.scene"));
+        setBackground(ui.assets().background_PacManWallpaper);
         setOnMouseClicked(e -> actionToggleAutoPlay.executeIfEnabled(ui));
 
         final var actionShowPrevPage = new GameAction("SHOW_PREV_PAGE") {

@@ -298,7 +298,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
         return List.of(
             miScaledToFit,
             miScrolling,
-            createContextMenuTitle("pacman", ui.preferences(), ui.assets()),
+            createContextMenuTitle(ui.preferences(), ui.assets().translated("pacman")),
             miAutopilot,
             miImmunity,
             new SeparatorMenuItem(),

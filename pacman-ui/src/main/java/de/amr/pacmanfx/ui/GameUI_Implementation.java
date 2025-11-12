@@ -194,7 +194,7 @@ public final class GameUI_Implementation implements GameUI {
         layoutPane.backgroundProperty().bind(Bindings.createObjectBinding(
             () -> isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D)
                     ? Background.fill(Gradients.Samples.random())
-                    : assets.background("background.scene"),
+                    : assets.background_PacManWallpaper,
             // depends on:
             currentViewProperty(),
             playView.currentGameSceneProperty()

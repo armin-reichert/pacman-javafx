@@ -10,7 +10,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
-import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -18,48 +17,35 @@ import java.util.ResourceBundle;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Data structure for storing all kinds of game assets.
+ * Data structure and API for game assets.
  */
-public class AssetStorage {
+public class AssetMap implements LocalizedTextAccessor {
 
-    private final Map<String, Object> assetMap = new HashMap<>();
+    private final Map<String, Object> assetsByID = new HashMap<>();
     private ResourceBundle localizedTexts;
+
+    @Override
+    public ResourceBundle localizedTexts() {
+        return localizedTexts;
+    }
 
     public void setLocalizedTexts(ResourceBundle bundle) {
         this.localizedTexts = bundle;
     }
 
-    public ResourceBundle localizedTexts() {
-        return localizedTexts;
-    }
-
     public void set(String key, Object value) {
         requireNonNull(key);
         requireNonNull(value);
-        assetMap.put(key, value);
+        assetsByID.put(key, value);
     }
 
     public void removeAll() {
-        assetMap.clear();
+        assetsByID.clear();
     }
 
     public void remove(String key) {
         requireNonNull(key);
-        assetMap.remove(key);
-    }
-
-    public String translated(String keyOrPattern, Object... args) {
-        requireNonNull(keyOrPattern);
-        requireNonNull(args);
-        if (localizedTexts == null) {
-            Logger.error("No localized text resources available");
-            return "???";
-        }
-        if (localizedTexts.containsKey(keyOrPattern)) {
-            return MessageFormat.format(localizedTexts.getString(keyOrPattern), args);
-        }
-        Logger.error("Missing localized text for key {}", keyOrPattern);
-        return "[" + keyOrPattern + "]";
+        assetsByID.remove(key);
     }
 
     /**
@@ -73,7 +59,7 @@ public class AssetStorage {
      * @throws ClassCastException if specified type does not match asset value type
      */
     public <T> T asset(String key, Class<T> assetClass) {
-        Object value = assetMap.get(key);
+        Object value = assetsByID.get(key);
         if (value == null) {
             Logger.error("No asset value for key '{}' exists", key);
             return null;

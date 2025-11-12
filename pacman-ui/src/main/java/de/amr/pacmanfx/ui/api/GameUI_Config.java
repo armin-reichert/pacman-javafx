@@ -12,7 +12,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.assets.AssetStorage;
+import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.PacBase3D;
@@ -29,7 +29,10 @@ public interface GameUI_Config extends Disposable {
     String CONFIG_KEY_COLOR_MAP_INDEX = "colorMapIndex";
     String CONFIG_KEY_MAP_NUMBER = "mapNumber";
 
-    AssetStorage assets();
+    /**
+     * @return the game variant specific assets
+     */
+    AssetMap assets();
 
     void loadAssets();
 

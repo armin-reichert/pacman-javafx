@@ -26,6 +26,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
 import java.util.List;
@@ -267,7 +268,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         state.mapOrder = MapSelectionMode.CUSTOM_MAPS_FIRST;
 
         var style = new OptionMenuStyle(
-            ui.assets().font("font.pacfontgood", 32),
+            Font.font(ui.assets().font_PacFontGood.getFamily(), 32),
             ui.assets().arcadeFont(8),
             Ufx.colorWithOpacity(DEFAULT_OPTION_MENU_STYLE.backgroundFill(), 0.5),
             DEFAULT_OPTION_MENU_STYLE.borderStroke(),

@@ -1,0 +1,31 @@
+/*
+Copyright (c) 2021-2025 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
+package de.amr.pacmanfx.uilib.assets;
+
+import org.tinylog.Logger;
+
+import java.text.MessageFormat;
+import java.util.ResourceBundle;
+
+import static java.util.Objects.requireNonNull;
+
+public interface LocalizedTextAccessor {
+
+    ResourceBundle localizedTexts();
+
+    default String translated(String keyOrPattern, Object... args) {
+        requireNonNull(keyOrPattern);
+        requireNonNull(args);
+        if (localizedTexts() == null) {
+            Logger.error("No localized text resources available");
+            return "???";
+        }
+        if (localizedTexts().containsKey(keyOrPattern)) {
+            return MessageFormat.format(localizedTexts().getString(keyOrPattern), args);
+        }
+        Logger.error("Missing localized text for key {}", keyOrPattern);
+        return "[" + keyOrPattern + "]";
+    }
+}

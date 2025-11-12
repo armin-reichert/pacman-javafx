@@ -236,12 +236,12 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
         miQuit.setOnAction(e -> ACTION_QUIT_GAME_SCENE.executeIfEnabled(ui));
 
         var items = new ArrayList<MenuItem>();
-        items.add(createContextMenuTitle("scene_display", ui.preferences(), ui.assets()));
+        items.add(createContextMenuTitle(ui.preferences(), ui.assets().translated("scene_display")));
         items.add(miUse2DScene);
         items.add(miToggleMiniView);
-        items.add(createContextMenuTitle("select_perspective", ui.preferences(), ui.assets()));
+        items.add(createContextMenuTitle(ui.preferences(), ui.assets().translated("select_perspective")));
         items.addAll(createPerspectiveRadioItems(menu));
-        items.add(createContextMenuTitle("pacman", ui.preferences(), ui.assets()));
+        items.add(createContextMenuTitle(ui.preferences(), ui.assets().translated("pacman")));
         items.add(miAutopilot);
         items.add(miImmunity);
         items.add(new SeparatorMenuItem());

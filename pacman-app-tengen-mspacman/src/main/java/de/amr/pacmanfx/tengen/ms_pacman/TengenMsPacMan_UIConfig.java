@@ -34,7 +34,7 @@ import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.assets.AssetStorage;
+import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.MsPacMan3D;
@@ -120,7 +120,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     private final SoundManager soundManager = new SoundManager();
     private final Map<String, GameScene> scenesByID = new HashMap<>();
-    private final AssetStorage assets = new AssetStorage();
+    private final AssetMap assets = new AssetMap();
     private final TengenMsPacMan_SpriteSheet spriteSheet;
     private final ArcadeMapsSpriteSheet arcadeMapsSpriteSheet;
     private final NonArcadeMapsSpriteSheet nonArcadeMapsSpriteSheet;
@@ -156,7 +156,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     }
 
     @Override
-    public AssetStorage assets() {
+    public AssetMap assets() {
         return assets;
     }
 
