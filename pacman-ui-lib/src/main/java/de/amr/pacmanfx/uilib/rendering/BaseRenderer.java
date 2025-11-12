@@ -189,7 +189,14 @@ public class BaseRenderer implements Renderer {
         ctx.restore();
     }
 
-    @Override
+    /**
+     * Draws a sprite (region inside sprite sheet) unscaled at the given position.
+     *
+     * @param sprite      the sprite to draw
+     * @param x           x-coordinate of left-upper corner
+     * @param y           y-coordinate of left-upper corner
+     * @param scaled      tells is the destination rectangle's position and size is scaled using the current scaling value
+     */
     public void drawSprite(RectShort sprite, double x, double y, boolean scaled) {
         requireNonNull(sprite);
         double s = scaled ? scaling() : 1;
@@ -199,12 +206,23 @@ public class BaseRenderer implements Renderer {
             s * x, s * y, s * sprite.width(), s * sprite.height());
     }
 
-    @Override
+    /**
+     * Draws the sprite centered over the given position. The target position is scaled using the current scaling value.
+     *
+     * @param center position over which sprite gets drawn
+     * @param sprite the actor sprite
+     */
     public void drawSpriteCentered(Vector2f center, RectShort sprite) {
         drawSpriteCentered(center.x(), center.y(), sprite);
     }
 
-    @Override
+    /**
+     * Draws the sprite centered over the given position. The target position is scaled using the current scaling value.
+     *
+     * @param centerX x-position over which sprite gets drawn
+     * @param centerY y-position over which sprite gets drawn
+     * @param sprite the actor sprite
+     */
     public void drawSpriteCentered(double centerX, double centerY, RectShort sprite) {
         drawSprite(sprite, centerX - 0.5 * sprite.width(), centerY - 0.5 * sprite.height(), true);
     }
