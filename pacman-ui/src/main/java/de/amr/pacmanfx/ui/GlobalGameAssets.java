@@ -8,14 +8,11 @@ import de.amr.pacmanfx.uilib.assets.LocalizedTextAccessor;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.scene.layout.Background;
 import javafx.scene.text.Font;
-import org.tinylog.Logger;
 
 import java.net.URL;
-import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
 import static de.amr.pacmanfx.uilib.Ufx.createImageBackground;
-import static java.util.Objects.requireNonNull;
 
 /**
  * Global assets used in the Pac-Man games UI.
