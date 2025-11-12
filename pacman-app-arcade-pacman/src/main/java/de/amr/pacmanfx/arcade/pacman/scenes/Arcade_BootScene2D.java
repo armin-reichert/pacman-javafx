@@ -13,6 +13,7 @@ import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 
 import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.Globals.TS;
@@ -93,7 +94,7 @@ public class Arcade_BootScene2D extends GameScene2D {
             drawRandomSpriteFragments();
         } else if (timer.atSecond(3.5)) {
             sceneRenderer.clearCanvas();
-            drawGridLines();
+            draw16by16Grid(sceneRenderer().ctx());
         }
     }
 
@@ -131,22 +132,22 @@ public class Arcade_BootScene2D extends GameScene2D {
                 RASTER_SIZE, RASTER_SIZE);
     }
 
-    private void drawGridLines() {
+    private void draw16by16Grid(GraphicsContext ctx) {
         double gridWidth = scaled(ARCADE_MAP_SIZE_IN_PIXELS.x());
         double gridHeight = scaled(ARCADE_MAP_SIZE_IN_PIXELS.y());
         int numRows = ARCADE_MAP_SIZE_IN_PIXELS.y() / RASTER_SIZE;
         int numCols = ARCADE_MAP_SIZE_IN_PIXELS.x() / RASTER_SIZE;
         double thin = scaled(2), thick = scaled(4);
-        sceneRenderer.ctx().setStroke(ARCADE_WHITE);
+        ctx.setStroke(ARCADE_WHITE);
         for (int row = 0; row <= numRows; ++row) {
-            sceneRenderer.ctx().setLineWidth(row == 0 || row == numRows ? thick : thin);
+            ctx.setLineWidth(row == 0 || row == numRows ? thick : thin);
             double y = scaled(row * RASTER_SIZE);
-            sceneRenderer.ctx().strokeLine(0, y, gridWidth, y);
+            ctx.strokeLine(0, y, gridWidth, y);
         }
         for (int col = 0; col <= numCols; ++col) {
-            sceneRenderer.ctx().setLineWidth(col == 0 || col == numCols ? thick : thin);
+            ctx.setLineWidth(col == 0 || col == numCols ? thick : thin);
             double x = scaled(col * RASTER_SIZE);
-            sceneRenderer.ctx().strokeLine(x, 0, x, gridHeight);
+            ctx.strokeLine(x, 0, x, gridHeight);
         }
     }
 }
