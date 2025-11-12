@@ -20,6 +20,7 @@ import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.util.Duration;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -47,7 +48,7 @@ public class StartPagesCarousel extends Carousel implements GameUI_View {
         final GlobalGameAssets assets = ui.assets();
         var button = new FancyButton(
             assets.translated("play_button"),
-            assets.arcadeFont(30),
+            Font.font(assets.font_Arcade_8.getFamily(), 30),
             START_BUTTON_COLOR,
             Color.WHITE);
         button.setAction(action);

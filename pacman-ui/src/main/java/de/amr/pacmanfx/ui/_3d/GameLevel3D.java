@@ -795,7 +795,7 @@ public class GameLevel3D extends Group implements Disposable {
             .backgroundColor(Color.BLACK)
             .borderColor(Color.WHITE)
             .displaySeconds(displaySeconds)
-            .font(ui.assets().arcadeFont(6))
+            .font(ui.assets().font_Arcade_6)
             .text(messageText)
             .textColor(Color.YELLOW)
             .build(animationRegistry);

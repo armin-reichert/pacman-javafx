@@ -27,7 +27,8 @@ public class GlobalGameAssets implements LocalizedTextAccessor {
 
     public final Background background_PacManWallpaper;
 
-    public final Font font_Arcade;
+    public final Font font_Arcade_8;
+    public final Font font_Arcade_6;
     public final Font font_Handwriting;
     public final Font font_Monospaced;
     public final Font font_PacFont;
@@ -44,7 +45,8 @@ public class GlobalGameAssets implements LocalizedTextAccessor {
 
         background_PacManWallpaper = createImageBackground(GLOBAL_RESOURCES.loadImage("graphics/pacman_wallpaper.png"));
 
-        font_Arcade = GLOBAL_RESOURCES.loadFont("fonts/emulogic.ttf", 8);
+        font_Arcade_6 = GLOBAL_RESOURCES.loadFont("fonts/emulogic.ttf", 6);
+        font_Arcade_8 = GLOBAL_RESOURCES.loadFont("fonts/emulogic.ttf", 8);
         font_Handwriting = GLOBAL_RESOURCES.loadFont("fonts/Molle-Italic.ttf", 9);
         font_Monospaced = GLOBAL_RESOURCES.loadFont("fonts/Inconsolata_Condensed-Bold.ttf", 12);
         font_PacFont = GLOBAL_RESOURCES.loadFont("fonts/Pacfont.ttf", 8);
@@ -61,6 +63,4 @@ public class GlobalGameAssets implements LocalizedTextAccessor {
     public ResourceBundle localizedTexts() {
         return localizedTexts;
     }
-
-    public Font arcadeFont(double size) { return Font.font(font_Arcade.getFamily(), size); }
 }

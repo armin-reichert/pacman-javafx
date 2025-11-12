@@ -161,7 +161,7 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
         scores3D = new Scores3D(
             ui.assets().translated("score.score"),
             ui.assets().translated("score.high_score"),
-            ui.assets().arcadeFont(TS)
+            ui.assets().font_Arcade_8
         );
 
         // The scores are always displayed in full view, regardless which perspective is used
