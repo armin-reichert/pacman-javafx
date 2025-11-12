@@ -15,34 +15,6 @@ import static java.util.Objects.requireNonNull;
 
 public class DefaultActionBindingsManager implements ActionBindingsManager {
 
-    public static class EmptyBindingsManager implements ActionBindingsManager {
-
-        @Override
-        public Map<KeyCombination, GameAction> actionByKeyCombination() {
-            return Map.of();
-        }
-
-        @Override
-        public boolean hasNoEntries() { return true; }
-
-        @Override
-        public void assignBindingsToKeyboard(Keyboard keyboard) {}
-
-        @Override
-        public void removeBindingsFromKeyboard(Keyboard keyboard) {}
-
-        @Override
-        public void bind(GameAction action, Set<ActionBinding> actionBindings) {}
-
-        @Override
-        public void setKeyCombination(GameAction action, KeyCombination combination) {}
-
-        @Override
-        public Optional<GameAction> matchingAction(Keyboard keyboard) { return Optional.empty(); }
-    }
-
-    public static final ActionBindingsManager EMPTY_BINDINGS_MANAGER = new EmptyBindingsManager();
-
     private final Map<KeyCombination, GameAction> actionByCombination;
 
     public DefaultActionBindingsManager() {

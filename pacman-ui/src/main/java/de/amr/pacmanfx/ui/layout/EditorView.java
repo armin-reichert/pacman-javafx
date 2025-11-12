@@ -7,7 +7,6 @@ package de.amr.pacmanfx.ui.layout;
 import de.amr.pacmanfx.mapeditor.SaveConfirmationDialog;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.mapeditor.actions.Action_SaveMapFileInteractively;
-import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.GlobalGameAssets;
 import de.amr.pacmanfx.ui.api.ActionBindingsManager;
 import de.amr.pacmanfx.ui.api.GameUI_View;
@@ -79,7 +78,7 @@ public class EditorView implements GameUI_View {
     }
 
     @Override
-    public ActionBindingsManager actionBindingsManager() { return DefaultActionBindingsManager.EMPTY_BINDINGS_MANAGER; }
+    public ActionBindingsManager actionBindingsManager() { return ActionBindingsManager.EMPTY; }
 
     @Override
     public Region root() {
