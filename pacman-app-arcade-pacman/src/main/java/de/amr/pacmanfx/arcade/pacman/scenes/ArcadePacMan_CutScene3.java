@@ -48,8 +48,8 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
         super.createRenderers(canvas);
 
         GameUI_Config uiConfig = ui.currentConfig();
-        hudRenderer       = configureRenderer(new ArcadePacMan_HUDRenderer(canvas, uiConfig));
-        actorRenderer     = configureRenderer(new ArcadePacMan_ActorRenderer(canvas, uiConfig));
+        hudRenderer       = (ArcadePacMan_HUDRenderer) configureRenderer(uiConfig.createHUDRenderer(canvas));
+        actorRenderer     = (ArcadePacMan_ActorRenderer) configureRenderer(uiConfig.createActorRenderer(canvas));
         debugInfoRenderer = configureRenderer(new DefaultDebugInfoRenderer(ui, canvas) {
             @Override
             public void drawDebugInfo() {
