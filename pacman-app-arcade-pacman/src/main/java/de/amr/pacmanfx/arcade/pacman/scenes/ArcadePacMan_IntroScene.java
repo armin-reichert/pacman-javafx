@@ -85,7 +85,6 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         GameUI_Config uiConfig = ui.currentConfig();
 
         spriteSheet = (ArcadePacMan_SpriteSheet) uiConfig.spriteSheet();
-        sceneRenderer.setSpriteSheet(spriteSheet);
         sceneRenderer.setImageSmoothing(true);
 
         hudRenderer       = configureRenderer((ArcadePacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas));

@@ -9,10 +9,8 @@ import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
-import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 
 import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_PIXELS;
@@ -34,15 +32,6 @@ public class Arcade_BootScene2D extends GameScene2D {
 
     public Arcade_BootScene2D(GameUI ui) {
         super(ui);
-    }
-
-    @Override
-    protected void createRenderers(Canvas canvas) {
-        super.createRenderers(canvas);
-
-        final GameUI_Config uiConfig = ui.currentConfig();
-        // This can be different sprite-sheet types!
-        sceneRenderer.setSpriteSheet(uiConfig.spriteSheet());
     }
 
     @Override

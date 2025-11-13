@@ -16,7 +16,10 @@ import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
@@ -55,7 +58,6 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         super.createRenderers(canvas);
 
         GameUI_Config uiConfig = ui.currentConfig();
-        sceneRenderer.setSpriteSheet(uiConfig.spriteSheet());
 
         hudRenderer       = configureRenderer(new ArcadePacMan_HUDRenderer(canvas, uiConfig));
         actorRenderer     = configureRenderer(uiConfig.createActorRenderer(canvas));

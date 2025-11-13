@@ -13,7 +13,7 @@ import de.amr.pacmanfx.model.ScoreManager;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.*;
 import de.amr.pacmanfx.uilib.GameClock;
-import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
 import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -26,23 +26,21 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesColor;
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_HUDRenderer extends BaseRenderer implements HUDRenderer {
+public class TengenMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HUDRenderer {
 
-    private final TengenMsPacMan_UIConfig uiConfig;
     private final GameClock clock;
 
     private final ObjectProperty<Font> totalLivesFont = new SimpleObjectProperty<>(Font.font("Serif", FontWeight.BOLD, 8));
 
     public TengenMsPacMan_HUDRenderer(Canvas canvas, TengenMsPacMan_UIConfig uiConfig, GameClock clock) {
-        super(canvas);
-        this.uiConfig = requireNonNull(uiConfig);
+        super(canvas, uiConfig.spriteSheet());
         this.clock = requireNonNull(clock);
         totalLivesFont.bind(scalingProperty().map(scaling -> Font.font("Serif", FontWeight.BOLD, scaling.doubleValue() * 8)));
     }
 
     @Override
     public TengenMsPacMan_SpriteSheet spriteSheet() {
-        return uiConfig.spriteSheet();
+        return (TengenMsPacMan_SpriteSheet) super.spriteSheet();
     }
 
     @Override

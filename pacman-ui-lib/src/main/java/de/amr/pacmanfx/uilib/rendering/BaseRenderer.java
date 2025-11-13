@@ -4,11 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.rendering;
 
-import de.amr.pacmanfx.lib.RectShort;
-import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -40,17 +37,11 @@ public class BaseRenderer implements Renderer {
 
     protected final GraphicsContext ctx;
     protected boolean imageSmoothing;
-    protected SpriteSheet<?> spriteSheet;
 
     public BaseRenderer(Canvas canvas) {
         ctx = requireNonNull(canvas).getGraphicsContext2D();
         arcadeFont8.bind(scaling.map(s -> Font.font(DEFAULT_ARCADE_FONT.getFamily(), scaled(8))));
         arcadeFont6 .bind(scaling.map(s -> Font.font(DEFAULT_ARCADE_FONT.getFamily(), scaled(6))));
-    }
-
-    public BaseRenderer(Canvas canvas, SpriteSheet<?> spriteSheet) {
-        this(canvas);
-        this.spriteSheet = requireNonNull(spriteSheet);
     }
 
     public void clearCanvas() {
@@ -61,14 +52,6 @@ public class BaseRenderer implements Renderer {
         requireNonNull(paint);
         ctx.setFill(paint);
         ctx.fillRect(0, 0, ctx.getCanvas().getWidth(), ctx.getCanvas().getHeight());
-    }
-
-    public SpriteSheet<?> spriteSheet() {
-        return spriteSheet;
-    }
-
-    public void setSpriteSheet(SpriteSheet<?> spriteSheet) {
-        this.spriteSheet = spriteSheet;
     }
 
     // Renderer interface
@@ -187,44 +170,6 @@ public class BaseRenderer implements Renderer {
         ctx.setTextAlign(TextAlignment.CENTER);
         fillText(text, color, font, x, y);
         ctx.restore();
-    }
-
-    /**
-     * Draws a sprite (region inside sprite sheet) unscaled at the given position.
-     *
-     * @param sprite      the sprite to draw
-     * @param x           x-coordinate of left-upper corner
-     * @param y           y-coordinate of left-upper corner
-     * @param scaled      tells is the destination rectangle's position and size is scaled using the current scaling value
-     */
-    public void drawSprite(RectShort sprite, double x, double y, boolean scaled) {
-        requireNonNull(sprite);
-        double s = scaled ? scaling() : 1;
-        ctx.setImageSmoothing(imageSmoothing);
-        ctx.drawImage(spriteSheet().sourceImage(),
-            sprite.x(), sprite.y(), sprite.width(), sprite.height(),
-            s * x, s * y, s * sprite.width(), s * sprite.height());
-    }
-
-    /**
-     * Draws the sprite centered over the given position. The target position is scaled using the current scaling value.
-     *
-     * @param center position over which sprite gets drawn
-     * @param sprite the actor sprite
-     */
-    public void drawSpriteCentered(Vector2f center, RectShort sprite) {
-        drawSpriteCentered(center.x(), center.y(), sprite);
-    }
-
-    /**
-     * Draws the sprite centered over the given position. The target position is scaled using the current scaling value.
-     *
-     * @param centerX x-position over which sprite gets drawn
-     * @param centerY y-position over which sprite gets drawn
-     * @param sprite the actor sprite
-     */
-    public void drawSpriteCentered(double centerX, double centerY, RectShort sprite) {
-        drawSprite(sprite, centerX - 0.5 * sprite.width(), centerY - 0.5 * sprite.height(), true);
     }
 
     public void drawTileGrid(double sizeX, double sizeY, Color gridColor) {

@@ -11,10 +11,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelMessage;
 import de.amr.pacmanfx.model.MessageType;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
-import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.CommonRenderInfoKey;
-import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
-import de.amr.pacmanfx.uilib.rendering.RenderInfo;
+import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 
@@ -23,14 +20,13 @@ import static de.amr.pacmanfx.ui.api.ArcadePalette.*;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
-public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements GameLevelRenderer {
+public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements GameLevelRenderer, SpriteRenderer {
 
     protected GameUI_Config uiConfig;
 
     public ArcadeMsPacMan_GameLevelRenderer(Canvas canvas, GameUI_Config uiConfig) {
         super(canvas);
         this.uiConfig = requireNonNull(uiConfig);
-        setSpriteSheet(uiConfig.spriteSheet());
     }
 
     @Override

@@ -3,8 +3,7 @@ package de.amr.pacmanfx.tengen.ms_pacman.rendering;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.input.JoypadKeyBinding;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
-import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -12,18 +11,10 @@ import javafx.scene.text.Font;
 import static de.amr.pacmanfx.Globals.TS;
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_SceneRenderer extends BaseRenderer {
-
-    private final GameUI_Config uiConfig;
+public class TengenMsPacMan_SceneRenderer extends BaseSpriteRenderer {
 
     public TengenMsPacMan_SceneRenderer(Canvas canvas, GameUI_Config uiConfig) {
-        super(canvas);
-        this.uiConfig = uiConfig;
-    }
-
-    @Override
-    public SpriteSheet<?> spriteSheet() {
-        return uiConfig.spriteSheet();
+        super(canvas, uiConfig.spriteSheet());
     }
 
     /**

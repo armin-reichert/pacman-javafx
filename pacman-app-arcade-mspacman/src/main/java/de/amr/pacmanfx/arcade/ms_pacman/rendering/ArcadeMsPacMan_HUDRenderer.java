@@ -13,6 +13,7 @@ import de.amr.pacmanfx.model.ScoreManager;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
+import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -23,12 +24,12 @@ import static de.amr.pacmanfx.ui.api.ArcadePalette.ARCADE_WHITE;
 import static de.amr.pacmanfx.ui.api.ArcadePalette.ARCADE_YELLOW;
 import static java.util.Objects.requireNonNull;
 
-public class ArcadeMsPacMan_HUDRenderer extends BaseRenderer implements HUDRenderer {
+public class ArcadeMsPacMan_HUDRenderer extends BaseRenderer implements HUDRenderer, SpriteRenderer {
 
     protected final GameUI_Config uiConfig;
 
     public ArcadeMsPacMan_HUDRenderer(Canvas canvas, GameUI_Config uiConfig) {
-        super(canvas, uiConfig.spriteSheet());
+        super(canvas);
         this.uiConfig = requireNonNull(uiConfig);
     }
 

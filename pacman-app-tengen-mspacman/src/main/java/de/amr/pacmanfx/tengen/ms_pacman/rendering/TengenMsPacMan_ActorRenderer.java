@@ -14,25 +14,22 @@ import de.amr.pacmanfx.tengen.ms_pacman.scenes.Stork;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
-import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesColor;
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements ActorRenderer {
-
-    private final TengenMsPacMan_UIConfig uiConfig;
+public class TengenMsPacMan_ActorRenderer extends BaseSpriteRenderer implements ActorRenderer {
 
     public TengenMsPacMan_ActorRenderer(Canvas canvas, TengenMsPacMan_UIConfig uiConfig) {
-        super(canvas);
-        this.uiConfig = uiConfig;
+        super(canvas, uiConfig.spriteSheet());
     }
 
     @Override
     public TengenMsPacMan_SpriteSheet spriteSheet() {
-        return uiConfig.spriteSheet();
+        return (TengenMsPacMan_SpriteSheet) super.spriteSheet();
     }
 
     @Override

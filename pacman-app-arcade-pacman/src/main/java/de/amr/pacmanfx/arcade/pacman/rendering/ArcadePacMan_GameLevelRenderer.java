@@ -23,14 +23,13 @@ import static java.util.function.Predicate.not;
 /**
  * Renderer for classic Arcade Pac-Man and Pac-Man XXL game variants.
  */
-public class ArcadePacMan_GameLevelRenderer extends BaseRenderer implements GameLevelRenderer, Renderer {
+public class ArcadePacMan_GameLevelRenderer extends BaseRenderer implements GameLevelRenderer, SpriteRenderer {
 
     protected final GameUI_Config uiConfig;
 
     public ArcadePacMan_GameLevelRenderer(Canvas canvas, GameUI_Config uiConfig) {
         super(canvas);
         this.uiConfig = requireNonNull(uiConfig);
-        setSpriteSheet(uiConfig.spriteSheet());
     }
 
     @Override
