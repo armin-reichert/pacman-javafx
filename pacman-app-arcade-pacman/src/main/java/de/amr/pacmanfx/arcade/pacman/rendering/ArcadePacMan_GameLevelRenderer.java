@@ -10,7 +10,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelMessage;
 import de.amr.pacmanfx.model.House;
 import de.amr.pacmanfx.model.MessageType;
-import de.amr.pacmanfx.ui.api.GameUI_Config;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
 import de.amr.pacmanfx.uilib.rendering.CommonRenderInfoKey;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
@@ -27,11 +27,11 @@ import static java.util.function.Predicate.not;
  */
 public class ArcadePacMan_GameLevelRenderer extends BaseSpriteRenderer implements GameLevelRenderer {
 
-    private final GameUI_Config uiConfig;
+    private final Image brightMazeImage;
 
-    public ArcadePacMan_GameLevelRenderer(Canvas canvas, GameUI_Config uiConfig) {
-        super(canvas, uiConfig.spriteSheet());
-        this.uiConfig = uiConfig;
+    public ArcadePacMan_GameLevelRenderer(Canvas canvas, SpriteSheet<?> spriteSheet, Image brightMazeImage) {
+        super(canvas, spriteSheet);
+        this.brightMazeImage = brightMazeImage; // may be null e.g. in Pac-Man XXL where mazes are rendered without images
     }
 
     @Override
@@ -55,7 +55,6 @@ public class ArcadePacMan_GameLevelRenderer extends BaseSpriteRenderer implement
         ctx.save();
         ctx.scale(scaling(), scaling());
         if (info.getBoolean(CommonRenderInfoKey.MAZE_BRIGHT)) {
-            Image brightMazeImage = uiConfig.assets().image("maze.bright");
             ctx.drawImage(brightMazeImage, 0, emptySpaceOverMazePixels);
         }
         else if (info.getBoolean(CommonRenderInfoKey.MAZE_EMPTY)) {
