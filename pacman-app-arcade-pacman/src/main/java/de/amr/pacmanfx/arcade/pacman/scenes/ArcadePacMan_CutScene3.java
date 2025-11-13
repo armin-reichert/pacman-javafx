@@ -5,8 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.arcade.pacman.actors.ArcadePacMan_ActorFactory;
-import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_ActorRenderer;
-import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_HUDRenderer;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -16,6 +14,8 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
+import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
+import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
@@ -36,8 +36,8 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
     private Pac pac;
     private Ghost blinky;
 
-    private ArcadePacMan_HUDRenderer hudRenderer;
-    private ArcadePacMan_ActorRenderer actorRenderer;
+    private HUDRenderer hudRenderer;
+    private ActorRenderer actorRenderer;
 
     public ArcadePacMan_CutScene3(GameUI ui) {
         super(ui);
@@ -48,8 +48,8 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
         super.createRenderers(canvas);
 
         GameUI_Config uiConfig = ui.currentConfig();
-        hudRenderer       = (ArcadePacMan_HUDRenderer) configureRenderer(uiConfig.createHUDRenderer(canvas));
-        actorRenderer     = (ArcadePacMan_ActorRenderer) configureRenderer(uiConfig.createActorRenderer(canvas));
+        hudRenderer       = configureRenderer(uiConfig.createHUDRenderer(canvas));
+        actorRenderer     = configureRenderer(uiConfig.createActorRenderer(canvas));
         debugInfoRenderer = configureRenderer(new DefaultDebugInfoRenderer(ui, canvas) {
             @Override
             public void drawDebugInfo() {
@@ -62,7 +62,7 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
     }
 
     @Override
-    public ArcadePacMan_HUDRenderer hudRenderer() {
+    public HUDRenderer hudRenderer() {
         return hudRenderer;
     }
 
