@@ -11,30 +11,32 @@ import de.amr.pacmanfx.model.GameLevelMessage;
 import de.amr.pacmanfx.model.House;
 import de.amr.pacmanfx.model.MessageType;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
-import de.amr.pacmanfx.uilib.rendering.*;
+import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
+import de.amr.pacmanfx.uilib.rendering.CommonRenderInfoKey;
+import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
+import de.amr.pacmanfx.uilib.rendering.RenderInfo;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.api.ArcadePalette.*;
-import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
 /**
  * Renderer for classic Arcade Pac-Man and Pac-Man XXL game variants.
  */
-public class ArcadePacMan_GameLevelRenderer extends BaseRenderer implements GameLevelRenderer, SpriteRenderer {
+public class ArcadePacMan_GameLevelRenderer extends BaseSpriteRenderer implements GameLevelRenderer {
 
-    protected final GameUI_Config uiConfig;
+    private final GameUI_Config uiConfig;
 
     public ArcadePacMan_GameLevelRenderer(Canvas canvas, GameUI_Config uiConfig) {
-        super(canvas);
-        this.uiConfig = requireNonNull(uiConfig);
+        super(canvas, uiConfig.spriteSheet());
+        this.uiConfig = uiConfig;
     }
 
     @Override
     public ArcadePacMan_SpriteSheet spriteSheet() {
-        return (ArcadePacMan_SpriteSheet) uiConfig.spriteSheet();
+        return (ArcadePacMan_SpriteSheet) super.spriteSheet();
     }
 
     @Override
