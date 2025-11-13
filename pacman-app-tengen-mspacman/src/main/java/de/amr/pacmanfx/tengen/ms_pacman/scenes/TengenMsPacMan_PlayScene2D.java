@@ -22,7 +22,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_ActorRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameLevelRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_HUDRenderer;
-import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
+import de.amr.pacmanfx.ui._2d.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.action.ActionBinding;
@@ -91,7 +91,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
     private Rectangle clipRect;
     private LevelCompletedAnimation levelCompletedAnimation;
 
-    private class PlaySceneDebugInfoRenderer extends DefaultDebugInfoRenderer {
+    private class PlaySceneDebugInfoRenderer extends BaseDebugInfoRenderer {
 
         public PlaySceneDebugInfoRenderer(Canvas canvas) {
             super(TengenMsPacMan_PlayScene2D.this.ui, canvas);

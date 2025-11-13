@@ -12,21 +12,21 @@ import de.amr.pacmanfx.model.actors.MovingActor;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
-import de.amr.pacmanfx.uilib.rendering.DebugInfoRenderer;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.Globals.TS;
 
-public class DefaultDebugInfoRenderer extends DebugInfoRenderer {
+public class BaseDebugInfoRenderer extends BaseRenderer {
 
     protected final GameUI ui;
     protected Color debugTextFill;
     protected Color debugTextStroke;
     protected Font debugTextFont;
 
-    public DefaultDebugInfoRenderer(GameUI ui, Canvas canvas) {
+    public BaseDebugInfoRenderer(GameUI ui, Canvas canvas) {
         super(canvas);
         this.ui = ui;
         debugTextFill   = ui.preferences().getColor("debug_text.fill");

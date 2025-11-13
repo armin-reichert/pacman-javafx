@@ -20,7 +20,7 @@ import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
+import de.amr.pacmanfx.ui._2d.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.action.ArcadeActions;
 import de.amr.pacmanfx.ui.action.TestActions;
@@ -89,7 +89,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
         hudRenderer       = configureRenderer((ArcadePacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas));
         actorRenderer     = configureRenderer((ArcadePacMan_ActorRenderer) uiConfig.createActorRenderer(canvas));
-        debugInfoRenderer = configureRenderer(new DefaultDebugInfoRenderer(ui, canvas) {
+        debugInfoRenderer = configureRenderer(new BaseDebugInfoRenderer(ui, canvas) {
             @Override
             public void drawDebugInfo() {
                 super.drawDebugInfo();

@@ -9,7 +9,7 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
+import de.amr.pacmanfx.ui._2d.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
@@ -49,7 +49,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
         GameUI_Config uiConfig = ui.currentConfig();
         hudRenderer       = configureRenderer(uiConfig.createHUDRenderer(canvas));
         actorRenderer     = configureRenderer(uiConfig.createActorRenderer(canvas));
-        debugInfoRenderer = configureRenderer(new DefaultDebugInfoRenderer(ui, canvas) {
+        debugInfoRenderer = configureRenderer(new BaseDebugInfoRenderer(ui, canvas) {
             @Override
             public void drawDebugInfo() {
                 super.drawDebugInfo();

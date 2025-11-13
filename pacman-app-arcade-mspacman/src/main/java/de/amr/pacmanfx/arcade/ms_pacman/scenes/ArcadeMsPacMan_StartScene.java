@@ -9,7 +9,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SceneRenderer;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
+import de.amr.pacmanfx.ui._2d.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.action.ArcadeActions;
 import de.amr.pacmanfx.ui.api.GameUI;
@@ -34,7 +34,7 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
         final GameUI_Config uiConfig = ui.currentConfig();
         sceneRenderer     = configureRenderer(new ArcadeMsPacMan_SceneRenderer(canvas, uiConfig));
         hudRenderer       = configureRenderer((ArcadeMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas));
-        debugInfoRenderer = configureRenderer(new DefaultDebugInfoRenderer(ui, canvas));
+        debugInfoRenderer = configureRenderer(new BaseDebugInfoRenderer(ui, canvas));
     }
 
     @Override

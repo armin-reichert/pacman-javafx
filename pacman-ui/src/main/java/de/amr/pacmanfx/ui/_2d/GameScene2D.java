@@ -14,7 +14,9 @@ import de.amr.pacmanfx.ui.api.ActionBindingsManager;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.rendering.*;
+import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
+import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
+import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -45,7 +47,7 @@ public abstract class GameScene2D implements GameScene {
 
     protected Canvas canvas;
     protected BaseSpriteRenderer sceneRenderer;
-    protected DebugInfoRenderer debugInfoRenderer;
+    protected BaseDebugInfoRenderer debugInfoRenderer;
 
     protected GameScene2D(GameUI ui) {
         this.ui = requireNonNull(ui);
@@ -102,7 +104,7 @@ public abstract class GameScene2D implements GameScene {
 
     protected void createRenderers(Canvas canvas) {
         sceneRenderer     = configureRenderer(new BaseSpriteRenderer(canvas, ui.currentConfig().spriteSheet()));
-        debugInfoRenderer = configureRenderer(new DefaultDebugInfoRenderer(ui, canvas));
+        debugInfoRenderer = configureRenderer(new BaseDebugInfoRenderer(ui, canvas));
     }
 
     protected final <T extends Renderer> T configureRenderer(T renderer) {

@@ -11,7 +11,7 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
 import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.actors.MovingActor;
-import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
+import de.amr.pacmanfx.ui._2d.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.api.GameUI;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -20,7 +20,7 @@ import java.util.List;
 
 import static de.amr.pacmanfx.Globals.*;
 
-public class Arcade_PlayScene2DDebugInfoRenderer extends DefaultDebugInfoRenderer {
+public class Arcade_PlayScene2DDebugInfoRenderer extends BaseDebugInfoRenderer {
 
     private static final List<Direction> CLOCK_ORDER = List.of(Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT);
 
