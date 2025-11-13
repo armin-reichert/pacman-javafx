@@ -10,9 +10,9 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HUD;
 import de.amr.pacmanfx.model.ScoreManager;
-import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.*;
 import de.amr.pacmanfx.uilib.GameClock;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
 import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
 import javafx.beans.property.ObjectProperty;
@@ -32,8 +32,8 @@ public class TengenMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HU
 
     private final ObjectProperty<Font> totalLivesFont = new SimpleObjectProperty<>(Font.font("Serif", FontWeight.BOLD, 8));
 
-    public TengenMsPacMan_HUDRenderer(Canvas canvas, TengenMsPacMan_UIConfig uiConfig, GameClock clock) {
-        super(canvas, uiConfig.spriteSheet());
+    public TengenMsPacMan_HUDRenderer(Canvas canvas, SpriteSheet<?> spriteSheet, GameClock clock) {
+        super(canvas, spriteSheet);
         this.clock = requireNonNull(clock);
         totalLivesFont.bind(scalingProperty().map(scaling -> Font.font("Serif", FontWeight.BOLD, scaling.doubleValue() * 8)));
     }
