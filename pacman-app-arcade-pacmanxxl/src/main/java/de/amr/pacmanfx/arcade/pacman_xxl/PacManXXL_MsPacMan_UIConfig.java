@@ -170,7 +170,7 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config, GameScene_Con
 
     @Override
     public PacManXXL_MsPacMan_GameLevelRenderer createGameLevelRenderer(Canvas canvas) {
-        return new PacManXXL_MsPacMan_GameLevelRenderer(canvas, this);
+        return new PacManXXL_MsPacMan_GameLevelRenderer(canvas, spriteSheet);
     }
 
     @Override

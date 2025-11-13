@@ -10,7 +10,8 @@ import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelMessage;
 import de.amr.pacmanfx.model.MessageType;
-import de.amr.pacmanfx.ui.api.GameUI_Config;
+import de.amr.pacmanfx.uilib.assets.AssetMap;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
 import de.amr.pacmanfx.uilib.rendering.CommonRenderInfoKey;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
@@ -20,16 +21,15 @@ import javafx.scene.image.Image;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.api.ArcadePalette.*;
-import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
 public class ArcadeMsPacMan_GameLevelRenderer extends BaseSpriteRenderer implements GameLevelRenderer {
 
-    protected GameUI_Config uiConfig;
+    protected final AssetMap assets;
 
-    public ArcadeMsPacMan_GameLevelRenderer(Canvas canvas, GameUI_Config uiConfig) {
-        super(canvas, uiConfig.spriteSheet());
-        this.uiConfig = requireNonNull(uiConfig);
+    public ArcadeMsPacMan_GameLevelRenderer(Canvas canvas, SpriteSheet<?> spriteSheet, AssetMap assets) {
+        super(canvas, spriteSheet);
+        this.assets = assets; // may be NULL e.g. in Ms. Pac-Man XXL where maze is drawn without images
     }
 
     @Override
@@ -37,7 +37,7 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseSpriteRenderer impleme
 
     @Override
     public ArcadeMsPacMan_SpriteSheet spriteSheet() {
-        return (ArcadeMsPacMan_SpriteSheet) uiConfig.spriteSheet();
+        return (ArcadeMsPacMan_SpriteSheet) super.spriteSheet();
     }
 
     @Override
@@ -53,7 +53,7 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseSpriteRenderer impleme
         ctx.save();
         ctx.scale(scaling(), scaling());
         if (info.getBoolean(CommonRenderInfoKey.MAZE_BRIGHT)) {
-            Image mazeImage = uiConfig.assets().image("maze.bright.%d".formatted(colorMapIndex));
+            Image mazeImage = assets.image("maze.bright.%d".formatted(colorMapIndex));
             ctx.drawImage(mazeImage, 0, emptySpaceOverMazePixels);
         } else if (info.getBoolean(CommonRenderInfoKey.MAZE_EMPTY)) {
             RectShort mazeSprite = spriteSheet().spriteSequence(SpriteID.EMPTY_MAZES)[colorMapIndex];

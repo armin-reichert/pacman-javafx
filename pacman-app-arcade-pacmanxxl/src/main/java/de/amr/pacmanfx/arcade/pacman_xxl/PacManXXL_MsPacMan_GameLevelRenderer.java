@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_GameLevelRenderer;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui._2d.GenericMapRenderer;
-import de.amr.pacmanfx.ui.api.GameUI_Config;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapColorScheme;
 import javafx.scene.canvas.Canvas;
@@ -21,8 +21,8 @@ public class PacManXXL_MsPacMan_GameLevelRenderer extends ArcadeMsPacMan_GameLev
 
     private final GenericMapRenderer mazeRenderer;
 
-    public PacManXXL_MsPacMan_GameLevelRenderer(Canvas canvas, GameUI_Config uiConfig) {
-        super(canvas, uiConfig);
+    public PacManXXL_MsPacMan_GameLevelRenderer(Canvas canvas, SpriteSheet<?> spriteSheet) {
+        super(canvas, spriteSheet, null);
         mazeRenderer = new GenericMapRenderer(canvas);
         mazeRenderer.scalingProperty().bind(scalingProperty());
         mazeRenderer.backgroundColorProperty().bind(backgroundColorProperty());
