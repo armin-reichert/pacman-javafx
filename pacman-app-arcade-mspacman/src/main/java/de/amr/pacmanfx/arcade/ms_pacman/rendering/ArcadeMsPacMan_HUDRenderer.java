@@ -11,9 +11,8 @@ import de.amr.pacmanfx.model.HUD;
 import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.model.ScoreManager;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
-import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
 import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
-import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -22,20 +21,16 @@ import javafx.scene.text.FontWeight;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.api.ArcadePalette.ARCADE_WHITE;
 import static de.amr.pacmanfx.ui.api.ArcadePalette.ARCADE_YELLOW;
-import static java.util.Objects.requireNonNull;
 
-public class ArcadeMsPacMan_HUDRenderer extends BaseRenderer implements HUDRenderer, SpriteRenderer {
-
-    protected final GameUI_Config uiConfig;
+public class ArcadeMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HUDRenderer {
 
     public ArcadeMsPacMan_HUDRenderer(Canvas canvas, GameUI_Config uiConfig) {
-        super(canvas);
-        this.uiConfig = requireNonNull(uiConfig);
+        super(canvas, uiConfig.spriteSheet());
     }
 
     @Override
     public ArcadeMsPacMan_SpriteSheet spriteSheet() {
-        return (ArcadeMsPacMan_SpriteSheet) uiConfig.spriteSheet();
+        return (ArcadeMsPacMan_SpriteSheet) super.spriteSheet();
     }
 
     @Override
