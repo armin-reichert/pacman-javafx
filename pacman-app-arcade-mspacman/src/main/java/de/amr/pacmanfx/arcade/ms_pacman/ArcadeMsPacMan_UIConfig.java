@@ -195,7 +195,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     @Override
     public ActorRenderer createActorRenderer(Canvas canvas) {
-        var actorRenderer = new ArcadeMsPacMan_ActorRenderer(canvas, this);
+        var actorRenderer = new ArcadeMsPacMan_ActorRenderer(canvas, spriteSheet);
         actorRenderer.setImageSmoothing(true);
         return actorRenderer;
     }

@@ -277,7 +277,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     @Override
     public TengenMsPacMan_ActorRenderer createActorRenderer(Canvas canvas) {
-        return new TengenMsPacMan_ActorRenderer(canvas, this);
+        return new TengenMsPacMan_ActorRenderer(canvas, spriteSheet);
     }
 
     @Override

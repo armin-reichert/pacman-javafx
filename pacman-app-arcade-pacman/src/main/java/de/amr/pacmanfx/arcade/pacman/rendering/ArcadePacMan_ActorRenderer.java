@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
-import de.amr.pacmanfx.ui.api.GameUI_Config;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
 import javafx.scene.canvas.Canvas;
@@ -17,8 +17,8 @@ import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_ActorRenderer extends BaseSpriteRenderer implements ActorRenderer {
 
-    public ArcadePacMan_ActorRenderer(Canvas canvas, GameUI_Config uiConfig) {
-        super(canvas, uiConfig.spriteSheet());
+    public ArcadePacMan_ActorRenderer(Canvas canvas, SpriteSheet<?> spriteSheet) {
+        super(canvas, spriteSheet);
     }
 
     @Override

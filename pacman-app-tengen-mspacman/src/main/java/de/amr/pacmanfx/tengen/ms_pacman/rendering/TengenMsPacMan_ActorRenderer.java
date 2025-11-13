@@ -8,11 +8,11 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.model.actors.*;
-import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.Clapperboard;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.Stork;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
 import javafx.scene.canvas.Canvas;
@@ -23,8 +23,8 @@ import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_ActorRenderer extends BaseSpriteRenderer implements ActorRenderer {
 
-    public TengenMsPacMan_ActorRenderer(Canvas canvas, TengenMsPacMan_UIConfig uiConfig) {
-        super(canvas, uiConfig.spriteSheet());
+    public TengenMsPacMan_ActorRenderer(Canvas canvas, SpriteSheet<?> spriteSheet) {
+        super(canvas, spriteSheet);
     }
 
     @Override

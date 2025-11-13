@@ -14,7 +14,7 @@ public class BaseSpriteRenderer extends BaseRenderer implements SpriteRenderer {
     private final SpriteSheet<?> spriteSheet;
 
     public BaseSpriteRenderer(Canvas canvas, SpriteSheet<?> spriteSheet) {
-        super(canvas);
+        super(requireNonNull(canvas));
         this.spriteSheet = requireNonNull(spriteSheet);
     }
 
