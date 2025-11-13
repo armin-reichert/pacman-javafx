@@ -173,20 +173,21 @@ public class BaseRenderer implements Renderer {
     }
 
     public void drawTileGrid(double sizeX, double sizeY, Color gridColor) {
+        final double scaledTileSize = scaled(TS);
         double thin = 0.2, medium = 0.4, thick = 0.8;
         int numCols = (int) (sizeX / TS), numRows = (int) (sizeY / TS);
-        double width = scaled(numCols * TS), height = scaled(numRows * TS);
+        double width = numCols * scaledTileSize, height = numRows * scaledTileSize;
         ctx.save();
         ctx.setStroke(Color.YELLOW);
         ctx.strokeRect(0, 0, ctx.getCanvas().getWidth(), ctx.getCanvas().getHeight());
         ctx.setStroke(gridColor);
         for (int row = 0; row <= numRows; ++row) {
-            double y = scaled(row * TS);
+            double y = row * scaledTileSize;
             ctx.setLineWidth(row % 10 == 0 ? thick : row % 5 == 0 ? medium : thin);
             ctx.strokeLine(0, y, width, y);
         }
         for (int col = 0; col <= numCols; ++col) {
-            double x = scaled(col * TS);
+            double x = col * scaledTileSize;
             ctx.setLineWidth(col % 10 == 0 ? thick : col % 5 == 0? medium : thin);
             ctx.strokeLine(x, 0, x, height);
         }
