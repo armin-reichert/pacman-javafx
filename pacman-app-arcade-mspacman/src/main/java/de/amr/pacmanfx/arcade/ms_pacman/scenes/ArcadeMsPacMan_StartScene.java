@@ -82,7 +82,7 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
         sceneRenderer.drawSprite(livesCounterSprite, TS(13), TS(23) + 1, true);
         sceneRenderer.fillText("PTS", ARCADE_ORANGE, font6, TS(25), TS(25));
         if (sceneRenderer instanceof ArcadeMsPacMan_SceneRenderer msPacManSceneRenderer) {
-            msPacManSceneRenderer.drawMidwayCopyright(TS * 6, TS * 28);
+            msPacManSceneRenderer.drawMidwayCopyright(ui.currentConfig().assets().image("logo.midway"), TS * 6, TS * 28);
         }
     }
 }

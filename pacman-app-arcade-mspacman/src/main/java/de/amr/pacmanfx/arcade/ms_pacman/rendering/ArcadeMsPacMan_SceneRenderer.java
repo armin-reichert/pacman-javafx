@@ -15,11 +15,8 @@ import static de.amr.pacmanfx.ui.api.ArcadePalette.ARCADE_RED;
 
 public class ArcadeMsPacMan_SceneRenderer extends BaseSpriteRenderer {
 
-    private final GameUI_Config uiConfig;
-
     public ArcadeMsPacMan_SceneRenderer(Canvas canvas, GameUI_Config uiConfig) {
         super(canvas, uiConfig.spriteSheet());
-        this.uiConfig = uiConfig;
     }
 
     /**
@@ -70,8 +67,7 @@ public class ArcadeMsPacMan_SceneRenderer extends BaseSpriteRenderer {
         ctx.fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
     }
 
-    public void drawMidwayCopyright(double x, double y) {
-        Image logo = uiConfig.assets().image("logo.midway");
+    public void drawMidwayCopyright(Image logo, double x, double y) {
         ctx.drawImage(logo, scaled(x), scaled(y + 2), scaled(TS(4) - 2), scaled(TS(4)));
         ctx.setFont(arcadeFont8());
         ctx.setFill(ARCADE_RED);

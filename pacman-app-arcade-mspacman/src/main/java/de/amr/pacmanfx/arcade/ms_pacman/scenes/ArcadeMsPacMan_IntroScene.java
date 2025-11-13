@@ -153,7 +153,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                 sceneRenderer.fillText("MS PAC-MAN", ARCADE_YELLOW, TITLE_X, TOP_Y + TS(6));
             }
         }
-        msPacManSceneRenderer.drawMidwayCopyright(TS(6), TS(28));
+        msPacManSceneRenderer.drawMidwayCopyright(ui.currentConfig().assets().image("logo.midway"), TS(6), TS(28));
     }
 
     // Scene controller FSM
