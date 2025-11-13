@@ -11,26 +11,22 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
-import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
+import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.ui.api.ArcadePalette.ARCADE_WHITE;
 import static java.util.Objects.requireNonNull;
 
-public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements ActorRenderer, SpriteRenderer {
-
-    protected final GameUI_Config uiConfig;
+public class ArcadeMsPacMan_ActorRenderer extends BaseSpriteRenderer implements ActorRenderer {
 
     public ArcadeMsPacMan_ActorRenderer(Canvas canvas, GameUI_Config uiConfig) {
-        super(canvas);
-        this.uiConfig = requireNonNull(uiConfig);
+        super(canvas, uiConfig.spriteSheet());
     }
 
     @Override
     public ArcadeMsPacMan_SpriteSheet spriteSheet() {
-        return (ArcadeMsPacMan_SpriteSheet) uiConfig.spriteSheet();
+        return (ArcadeMsPacMan_SpriteSheet) super.spriteSheet();
     }
 
     @Override
