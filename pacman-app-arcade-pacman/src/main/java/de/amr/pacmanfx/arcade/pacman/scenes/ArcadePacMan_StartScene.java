@@ -4,12 +4,12 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
-import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_HUDRenderer;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.action.ArcadeActions;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
+import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.text.Font;
 
@@ -21,7 +21,7 @@ import static de.amr.pacmanfx.ui.api.ArcadePalette.*;
  */
 public class ArcadePacMan_StartScene extends GameScene2D {
 
-    private ArcadePacMan_HUDRenderer hudRenderer;
+    private HUDRenderer hudRenderer;
 
     public ArcadePacMan_StartScene(GameUI ui) {
         super(ui);
@@ -30,11 +30,11 @@ public class ArcadePacMan_StartScene extends GameScene2D {
     @Override
     protected void createRenderers(Canvas canvas) {
         super.createRenderers(canvas);
-        hudRenderer = configureRenderer(new ArcadePacMan_HUDRenderer(canvas, ui.currentConfig()));
+        hudRenderer = configureRenderer(ui.currentConfig().createHUDRenderer(canvas));
     }
 
     @Override
-    public ArcadePacMan_HUDRenderer hudRenderer() {
+    public HUDRenderer hudRenderer() {
         return hudRenderer;
     }
 
