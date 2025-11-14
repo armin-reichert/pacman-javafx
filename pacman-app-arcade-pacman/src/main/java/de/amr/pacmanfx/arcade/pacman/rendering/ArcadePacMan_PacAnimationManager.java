@@ -7,11 +7,9 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.RectShort;
-import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.uilib.animation.SingleSpriteWithoutAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 

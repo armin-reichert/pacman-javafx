@@ -10,16 +10,16 @@ import de.amr.pacmanfx.model.actors.AnimationManager;
 
 import static java.util.Objects.requireNonNull;
 
-public class SingleSpriteWithoutAnimation implements AnimationManager {
+public record SingleSpriteNoAnimation(RectShort sprite) implements AnimationManager {
 
-    private final RectShort sprite;
-
-    public SingleSpriteWithoutAnimation(RectShort sprite) {
+    public SingleSpriteNoAnimation(RectShort sprite) {
         this.sprite = requireNonNull(sprite);
     }
 
     @Override
-    public RectShort currentSprite(Actor actor) { return sprite; }
+    public RectShort currentSprite(Actor actor) {
+        return sprite;
+    }
 
     @Override
     public Object animation(String id) {
@@ -32,7 +32,8 @@ public class SingleSpriteWithoutAnimation implements AnimationManager {
     }
 
     @Override
-    public void selectFrame(String id, int frameIndex) {}
+    public void selectFrame(String id, int frameIndex) {
+    }
 
     @Override
     public int frameIndex() {
@@ -40,11 +41,14 @@ public class SingleSpriteWithoutAnimation implements AnimationManager {
     }
 
     @Override
-    public void play() {}
+    public void play() {
+    }
 
     @Override
-    public void stop() {}
+    public void stop() {
+    }
 
     @Override
-    public void reset() {}
+    public void reset() {
+    }
 }

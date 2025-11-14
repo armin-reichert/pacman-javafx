@@ -7,10 +7,7 @@ package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
-import de.amr.pacmanfx.model.actors.AnimationManager;
-import de.amr.pacmanfx.model.actors.CommonAnimationID;
-import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_HUD;
@@ -25,7 +22,7 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
-import de.amr.pacmanfx.uilib.animation.SingleSpriteActor;
+import de.amr.pacmanfx.uilib.animation.SingleSpriteNoAnimation;
 import javafx.scene.canvas.Canvas;
 
 import java.util.stream.Stream;
@@ -58,7 +55,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
     private TengenMsPacMan_ActorRenderer actorSpriteRenderer;
 
     private Clapperboard clapperboard;
-    private SingleSpriteActor heart;
+    private Actor heart;
 
     private Pac pacMan;
     private Pac msPacMan;
@@ -127,7 +124,8 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         pinky.setPosition(RIGHT_BORDER, LOWER_LANE);
         pinky.setSpeed(0);
 
-        heart = new SingleSpriteActor(spriteSheet.sprite(SpriteID.HEART));
+        heart = new Actor();
+        heart.setAnimationManager(new SingleSpriteNoAnimation(spriteSheet.sprite(SpriteID.HEART)));
 
         collided = false;
 

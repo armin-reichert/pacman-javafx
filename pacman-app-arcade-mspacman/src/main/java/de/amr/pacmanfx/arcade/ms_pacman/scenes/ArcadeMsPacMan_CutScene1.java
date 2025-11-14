@@ -12,6 +12,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.timer.TickTimer;
+import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -19,7 +20,7 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
-import de.amr.pacmanfx.uilib.animation.SingleSpriteActor;
+import de.amr.pacmanfx.uilib.animation.SingleSpriteNoAnimation;
 import javafx.scene.canvas.Canvas;
 
 import java.util.stream.Stream;
@@ -53,7 +54,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     private ArcadeMsPacMan_HUDRenderer hudRenderer;
     private ArcadeMsPacMan_ActorRenderer actorRenderer;
 
-    private SingleSpriteActor heart;
+    private Actor heart;
     private Clapperboard clapperboard;
 
     public ArcadeMsPacMan_CutScene1(GameUI ui) {
@@ -91,7 +92,8 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
 
         pinky = uiConfig.createAnimatedGhost(PINK_GHOST_SPEEDY);
 
-        heart = new SingleSpriteActor(spriteSheet.sprite(SpriteID.HEART));
+        heart = new Actor();
+        heart.setAnimationManager(new SingleSpriteNoAnimation(spriteSheet.sprite(SpriteID.HEART)));
 
         clapperboard = new Clapperboard("1", "THEY MEET");
         clapperboard.setPosition(TS(3), TS(10));
