@@ -73,6 +73,7 @@ public record ArcadePacMan_SpriteSheet(Image sourceImage) implements SpriteSheet
 
         // -- Pac-Man sprites
 
+        SPRITE_MAP.add(SpriteID.PACMAN_FULL,           pacFullSprite());
         SPRITE_MAP.add(SpriteID.PACMAN_MUNCHING_RIGHT, makePacManMunchingSpriteSeq(0));
         SPRITE_MAP.add(SpriteID.PACMAN_MUNCHING_LEFT,  makePacManMunchingSpriteSeq(1));
         SPRITE_MAP.add(SpriteID.PACMAN_MUNCHING_UP,    makePacManMunchingSpriteSeq(2));
@@ -134,8 +135,14 @@ public record ArcadePacMan_SpriteSheet(Image sourceImage) implements SpriteSheet
         SPRITE_MAP.checkCompleteness();
     }
 
+    private static RectShort pacFullSprite() {
+        int margin = 1;
+        int size = 14; // SQUARE_SIZE - 2 * margin
+        return clipSpriteRect(2 * SQUARE_SIZE + margin, margin, size, size);
+    }
+
     private static RectShort[] makePacManMunchingSpriteSeq(int dir) {
-        int margin = 1; // margin
+        int margin = 1;
         int size = 14; // SQUARE_SIZE - 2 * margin
         // Note: the close mouth sprite is only available at row 0
         RectShort closed = clipSpriteRect(2 * SQUARE_SIZE + margin, margin, size, size);
