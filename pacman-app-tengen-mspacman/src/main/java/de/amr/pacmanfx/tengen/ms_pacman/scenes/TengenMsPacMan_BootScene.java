@@ -28,7 +28,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
 
     public static final String TENGEN_PRESENTS = "TENGEN PRESENTS";
 
-    private static final float GHOST_Y = TS(21.5);
+    private static final float GHOST_Y = TS(21.5f);
 
     private boolean gray;
     private Actor movingText;

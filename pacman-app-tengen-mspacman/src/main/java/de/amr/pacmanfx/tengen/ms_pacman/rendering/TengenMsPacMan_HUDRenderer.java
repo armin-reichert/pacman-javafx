@@ -68,7 +68,7 @@ public class TengenMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HU
         }
 
         if (tengenHUD.gameOptionsVisible()) {
-            drawGameOptions(tengenGame.mapCategory(), tengenGame.difficulty(), tengenGame.pacBooster(), TS(16), TS(2.5));
+            drawGameOptions(tengenGame.mapCategory(), tengenGame.difficulty(), tengenGame.pacBooster(), TS(16), TS(2.5f));
         }
     }
 
@@ -136,9 +136,9 @@ public class TengenMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HU
         };
         drawSpriteCentered(centerX, y, spriteSheet().sprite(SpriteID.INFO_FRAME));
         if (requireNonNull(booster) != PacBooster.OFF) {
-            drawSpriteCentered(centerX - TS(5.5), y, spriteSheet().sprite(SpriteID.INFO_BOOSTER));
+            drawSpriteCentered(centerX - TS(5.5f), y, spriteSheet().sprite(SpriteID.INFO_BOOSTER));
         }
         drawSpriteCentered(centerX, y, difficultySprite);
-        drawSpriteCentered(centerX + TS(4.5), y, categorySprite);
+        drawSpriteCentered(centerX + TS(4.5f), y, categorySprite);
     }
 }
