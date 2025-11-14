@@ -10,6 +10,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 import java.util.Map;
 
@@ -32,28 +33,30 @@ public class GenericMapRenderer extends BaseRenderer {
         super(canvas);
 
         terrainRenderer = new TerrainMapVectorRenderer(canvas);
-        terrainRenderer.backgroundColorProperty().bind(backgroundColorProperty());
+        terrainRenderer.backgroundProperty().bind(backgroundProperty());
         terrainRenderer.scalingProperty().bind(scalingProperty());
 
         foodRenderer = new FoodMapRenderer(canvas);
-        foodRenderer.backgroundColorProperty().bind(backgroundColorProperty());
+        foodRenderer.backgroundProperty().bind(backgroundProperty());
         foodRenderer.scalingProperty().bind(scalingProperty());
 
         houseRenderer = new ArcadeHouseRenderer(canvas);
         houseRenderer.scalingProperty().bind(scalingProperty());
 
-        backgroundColorProperty().addListener((py, ov, newColor) -> updateColors(newColor));
-        updateColors(backgroundColor());
+        backgroundProperty().addListener((py, ov, newColor) -> updateColors(newColor));
+        updateColors(background());
     }
 
-    private void updateColors(Color backgroundColor) {
-        blinkingOnColors = new TerrainMapColorScheme(backgroundColor, backgroundColor, Color.WHITE, backgroundColor);
-        blinkingOffColors = new TerrainMapColorScheme(backgroundColor, Color.WHITE, backgroundColor, backgroundColor);
-        TerrainMapColorScheme oldColorScheme = terrainRenderer.colorScheme();
-        TerrainMapColorScheme newColorScheme = new TerrainMapColorScheme(
-            backgroundColor, oldColorScheme.wallFillColor(), oldColorScheme.wallStrokeColor(), oldColorScheme.doorColor()
-        );
-        terrainRenderer.setColorScheme(newColorScheme);
+    private void updateColors(Paint background) {
+        if (background instanceof Color backgroundColor) {
+            blinkingOnColors = new TerrainMapColorScheme(backgroundColor, backgroundColor, Color.WHITE, backgroundColor);
+            blinkingOffColors = new TerrainMapColorScheme(backgroundColor, Color.WHITE, backgroundColor, backgroundColor);
+            TerrainMapColorScheme oldColorScheme = terrainRenderer.colorScheme();
+            TerrainMapColorScheme newColorScheme = new TerrainMapColorScheme(
+                backgroundColor, oldColorScheme.wallFillColor(), oldColorScheme.wallStrokeColor(), oldColorScheme.doorColor()
+            );
+            terrainRenderer.setColorScheme(newColorScheme);
+        }
     }
 
     public void drawMaze(GameLevel gameLevel, RenderInfo info) {

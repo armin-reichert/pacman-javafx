@@ -88,7 +88,7 @@ public class EditorPaletteTabPane extends TabPane {
         palette.setSelectedToolIndex(0); // "No Tile"
 
         var terrainRenderer = new TerrainMapTileRenderer(palette);
-        terrainRenderer.backgroundColorProperty().bind(prototype.backgroundColorProperty());
+        terrainRenderer.backgroundProperty().bind(prototype.backgroundProperty());
         terrainRenderer.colorSchemeProperty().bind(prototype.colorSchemeProperty());
         palette.setRenderer(terrainRenderer);
 
@@ -112,7 +112,7 @@ public class EditorPaletteTabPane extends TabPane {
         palette.setSelectedToolIndex(0); // "No actor"
 
         var actorRenderer = new TerrainMapTileRenderer(palette);
-        actorRenderer.backgroundColorProperty().bind(prototype.backgroundColorProperty());
+        actorRenderer.backgroundProperty().bind(prototype.backgroundProperty());
         actorRenderer.colorSchemeProperty().bind(prototype.colorSchemeProperty());
         palette.setRenderer(actorRenderer);
 
@@ -129,7 +129,7 @@ public class EditorPaletteTabPane extends TabPane {
         palette.setSelectedToolIndex(0); // "No Food"
 
         var foodRenderer = new FoodMapRenderer(palette);
-        foodRenderer.backgroundColorProperty().bind(prototype.backgroundColorProperty());
+        foodRenderer.backgroundProperty().bind(prototype.backgroundProperty());
         foodRenderer.energizerColorProperty().bind(prototype.energizerColorProperty());
         foodRenderer.pelletColorProperty().bind(prototype.pelletColorProperty());
         palette.setRenderer(foodRenderer);

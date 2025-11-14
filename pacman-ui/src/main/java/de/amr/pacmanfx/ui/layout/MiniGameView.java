@@ -107,11 +107,11 @@ public class MiniGameView extends VBox {
 
         gameLevelRenderer = ui.currentConfig().createGameLevelRenderer(canvas);
         gameLevelRenderer.scalingProperty().bind(scaling);
-        gameLevelRenderer.backgroundColorProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
+        gameLevelRenderer.backgroundProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
 
         actorRenderer = ui.currentConfig().createActorRenderer(canvas);
         actorRenderer.scalingProperty().bind(scaling);
-        actorRenderer.backgroundColorProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
+        actorRenderer.backgroundProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
     }
 
     public void slideIn() {

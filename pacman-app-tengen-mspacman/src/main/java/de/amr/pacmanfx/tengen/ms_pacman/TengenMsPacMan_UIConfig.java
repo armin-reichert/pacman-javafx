@@ -25,6 +25,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.actors.Sue;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.*;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.*;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
+import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameScene_Config;
@@ -266,7 +267,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     @Override
     public TengenMsPacMan_GameLevelRenderer createGameLevelRenderer(Canvas canvas) {
         var renderer = new TengenMsPacMan_GameLevelRenderer(canvas, this);
-        renderer.backgroundColorProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
+        renderer.backgroundProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
         return renderer;
     }
 
@@ -387,6 +388,12 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         scenesByID.put(sceneID_CutScene(2),       new TengenMsPacMan_CutScene2(ui));
         scenesByID.put(sceneID_CutScene(3),       new TengenMsPacMan_CutScene3(ui));
         scenesByID.put(sceneID_CutScene(4),       new TengenMsPacMan_CutScene4(ui));
+
+        for (GameScene gameScene : scenesByID.values()) {
+            if (gameScene instanceof GameScene2D gameScene2D) {
+                gameScene2D.backgroundProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
+            }
+        }
     }
 
     @Override

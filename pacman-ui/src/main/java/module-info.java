@@ -17,6 +17,7 @@ open module de.amr.pacmanfx.ui {
     requires de.amr.pacmanfx.core;
     requires de.amr.pacmanfx.uilib;
     requires de.amr.pacmanfx.mapeditor;
+    requires java.desktop;
 
     exports de.amr.pacmanfx.ui.dashboard;
     exports de.amr.pacmanfx.ui.input;

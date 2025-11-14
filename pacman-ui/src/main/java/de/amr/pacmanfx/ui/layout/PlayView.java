@@ -298,7 +298,7 @@ public class PlayView extends StackPane implements GameUI_View {
                         scaling -> Math.min(scaling.doubleValue(), ui.preferences().getFloat("scene2d.max_scaling"))));
                 canvasDecorationPane.setUnscaledCanvasSize(gameSceneSizePx.x(), gameSceneSizePx.y());
                 canvasDecorationPane.resizeTo(parentScene.getWidth(), parentScene.getHeight());
-                canvasDecorationPane.backgroundProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR.map(Ufx::colorBackground));
+                canvasDecorationPane.backgroundProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR.map(Ufx::paintBackground));
                 canvasLayer.setCenter(canvasDecorationPane);
             }
             else {
@@ -321,7 +321,7 @@ public class PlayView extends StackPane implements GameUI_View {
 
         PROPERTY_DEBUG_INFO_VISIBLE.addListener((py, ov, debug)
             -> {
-               canvasLayer.setBackground(debug ? colorBackground(Color.TEAL) : null);
+               canvasLayer.setBackground(debug ? paintBackground(Color.TEAL) : null);
                canvasLayer.setBorder(debug ? border(Color.LIGHTGREEN, 1) : null);
             });
     }

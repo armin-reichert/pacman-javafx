@@ -98,7 +98,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseSpriteRenderer impleme
         foodLayer.tiles()
             .filter(foodLayer::isFoodTile)
             .filter(not(foodLayer::isEnergizerTile)).forEach(tile -> {
-                ctx.setFill(backgroundColor());
+                ctx.setFill(background());
                 fillSquareAtTileCenter(tile, 4);
                 if (!foodLayer.hasEatenFoodAtTile(tile)) {
                     // draw pellet using the right color
@@ -113,7 +113,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseSpriteRenderer impleme
         double offset = 0.5 * HTS;
         FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
         foodLayer.tiles().filter(foodLayer::isEnergizerTile).forEach(tile -> {
-            ctx.setFill(backgroundColor());
+            ctx.setFill(background());
             fillSquareAtTileCenter(tile, TS + 2);
             if (!foodLayer.hasEatenFoodAtTile(tile) && gameLevel.blinking().state() == Pulse.State.ON) {
                 ctx.setFill(pelletColor);
@@ -178,7 +178,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseSpriteRenderer impleme
             s * 2 - margin
         );
 
-        ctx.setFill(backgroundColor());
+        ctx.setFill(background());
         ctx.fillRect(inHouseArea.getMinX(), inHouseArea.getMinY(), inHouseArea.getWidth(), inHouseArea.getHeight());
 
         // Now the actor sprites outside the house. Be careful not to over-paint nearby obstacle edges!

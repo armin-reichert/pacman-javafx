@@ -25,6 +25,7 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -99,14 +100,14 @@ public interface Ufx {
         return Color.color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
     }
 
-    static Background colorBackground(Color color) {
-        requireNonNull(color);
-        return new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY));
+    static Background paintBackground(Paint paint) {
+        requireNonNull(paint);
+        return new Background(new BackgroundFill(paint, CornerRadii.EMPTY, Insets.EMPTY));
     }
 
-    static Background roundedBackground(Color color, int radius) {
-        requireNonNull(color);
-        return new Background(new BackgroundFill(color, new CornerRadii(radius), Insets.EMPTY));
+    static Background roundedBackground(Paint paint, int radius) {
+        requireNonNull(paint);
+        return new Background(new BackgroundFill(paint, new CornerRadii(radius), Insets.EMPTY));
     }
 
     /**
@@ -152,14 +153,17 @@ public interface Ufx {
     }
 
     /**
-     * @param color color
+     * @param paint color
      * @return material with Phong shading (diffuse=color, specular=color.brighter)
      */
-    static PhongMaterial defaultPhongMaterial(Color color) {
-        requireNonNull(color);
-        var material = new PhongMaterial(color);
-        material.setSpecularColor(color.brighter());
-        return material;
+    static PhongMaterial defaultPhongMaterial(Paint paint) {
+        requireNonNull(paint);
+        if (paint instanceof Color color) {
+            var material = new PhongMaterial(color);
+            material.setSpecularColor(color.brighter());
+            return material;
+        }
+        throw new IllegalArgumentException("Phong material needs color, no general paint");
     }
 
     /**

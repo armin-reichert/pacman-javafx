@@ -23,7 +23,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import static de.amr.pacmanfx.uilib.Ufx.colorBackground;
+import static de.amr.pacmanfx.uilib.Ufx.paintBackground;
 
 public class EditorView implements GameUI_View {
 
@@ -34,7 +34,7 @@ public class EditorView implements GameUI_View {
         editor = new TileMapEditor(stage, PacManModel3DRepository.theRepository());
         MenuItem miQuitEditor = createQuitEditorMenuItem(assets);
         editor.ui().menuBar().menuFile().getItems().addAll(new SeparatorMenuItem(), miQuitEditor);
-        editor.ui().layoutPane().setBackground(colorBackground(Color.web("#dddddd"))); // JavaFX default grey
+        editor.ui().layoutPane().setBackground(paintBackground(Color.web("#dddddd"))); // JavaFX default grey
     }
 
     private MenuItem createQuitEditorMenuItem(GlobalGameAssets assets) {

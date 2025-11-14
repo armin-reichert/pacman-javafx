@@ -17,17 +17,15 @@ import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
 import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -39,6 +37,7 @@ public abstract class GameScene2D implements GameScene {
 
     protected final BooleanProperty debugInfoVisible = new SimpleBooleanProperty(false);
     protected final DoubleProperty scaling = new SimpleDoubleProperty(1.0f);
+    protected final ObjectProperty<Paint> background = new SimpleObjectProperty<>(Color.BLACK);
 
     protected final GameUI ui;
     protected final ActionBindingsManager actionBindings;
@@ -108,7 +107,7 @@ public abstract class GameScene2D implements GameScene {
     }
 
     protected final <T extends Renderer> T configureRenderer(T renderer) {
-        renderer.backgroundColorProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
+        renderer.backgroundProperty().bind(background);
         renderer.scalingProperty().bind(scaling);
         return renderer;
     }
@@ -123,6 +122,18 @@ public abstract class GameScene2D implements GameScene {
     public void onUnspecifiedChange(GameEvent event) {
         // TODO: remove (this is only used by game state GameState.TESTING_CUT_SCENES)
         ui.updateGameScene(true);
+    }
+
+    public ObjectProperty<Paint> backgroundProperty() {
+        return background;
+    }
+
+    public Paint background() {
+        return background.get();
+    }
+
+    public void setBackground(Paint paint) {
+        background.set(paint);
     }
 
     public DoubleProperty scalingProperty() {

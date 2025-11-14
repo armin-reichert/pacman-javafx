@@ -124,7 +124,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseSpriteRenderer implements 
             // over-paint number from sprite sheet
             ctx.save();
             ctx.scale(scaling(), scaling());
-            ctx.setFill(backgroundColor());
+            ctx.setFill(background());
             ctx.fillRect(numberX - 1, numberY - 8, 12, 8);
             ctx.restore();
 
@@ -142,7 +142,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseSpriteRenderer implements 
         drawCurrentSprite(stork);
         if (stork.isBagReleasedFromBeak()) {
             // Sprite sheet has no stork without bag under its beak so we over-paint the bag
-            ctx.setFill(backgroundColor());
+            ctx.setFill(background());
             ctx.fillRect(scaled(stork.x() - 13), scaled(stork.y() + 3), scaled(8), scaled(10));
         }
     }

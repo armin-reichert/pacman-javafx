@@ -17,6 +17,7 @@ import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
+import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameScene_Config;
@@ -48,6 +49,7 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.ui.api.ArcadePalette.*;
 import static de.amr.pacmanfx.ui.api.GameScene_Config.sceneID_CutScene;
 import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_3D_ENABLED;
+import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
@@ -286,6 +288,12 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
         scenesByID.put(sceneID_CutScene(1),     new ArcadePacMan_CutScene1(ui));
         scenesByID.put(sceneID_CutScene(2),     new ArcadePacMan_CutScene2(ui));
         scenesByID.put(sceneID_CutScene(3),     new ArcadePacMan_CutScene3(ui));
+
+        for (GameScene gameScene : scenesByID.values()) {
+            if (gameScene instanceof GameScene2D gameScene2D) {
+                gameScene2D.backgroundProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
+            }
+        }
     }
 
     @Override
