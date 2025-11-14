@@ -198,25 +198,35 @@ public class Actor {
 
     public void selectAnimation(String animationID) {
         requireNonNull(animationID);
-        optAnimationManager().ifPresent(am -> am.select(animationID));
+        if (animationManager != null) {
+            animationManager.select(animationID);
+        }
     }
 
     public void selectAnimationAt(String animationID, int frameIndex) {
         requireNonNull(animationID);
-        optAnimationManager().ifPresent(am -> am.selectFrame(animationID, frameIndex));
+        if (animationManager != null) {
+            animationManager.selectFrame(animationID, frameIndex);
+        }
     }
 
     public void playAnimation(String animationID) {
         requireNonNull(animationID);
-        optAnimationManager().ifPresent(am -> am.play(animationID));
+        if (animationManager != null) {
+            animationManager.play(animationID);
+        }
     }
 
     public void playAnimation() {
-        optAnimationManager().ifPresent(AnimationManager::play);
+        if (animationManager != null) {
+            animationManager.play();
+        }
     }
 
     public void stopAnimation() {
-        optAnimationManager().ifPresent(AnimationManager::stop);
+        if (animationManager != null) {
+            animationManager.stop();
+        }
     }
 
 }
