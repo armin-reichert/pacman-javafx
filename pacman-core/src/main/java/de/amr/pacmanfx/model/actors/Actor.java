@@ -24,7 +24,7 @@ import static java.util.Objects.requireNonNull;
  * Each actor has a position, velocity, acceleration and visibility property.
  * </p>
  */
-public class Actor implements AnimationSupport {
+public class Actor {
 
     public static final Vector2f DEFAULT_ACCELERATION = Vector2f.ZERO;
     public static final Vector2f DEFAULT_POSITION = Vector2f.ZERO;
@@ -35,8 +35,6 @@ public class Actor implements AnimationSupport {
     private BooleanProperty visible;
     private ObjectProperty<Vector2f> velocity;
     private ObjectProperty<Vector2f> acceleration;
-
-    protected AnimationManager animationManager;
 
     /**
      * Resets all properties of this actor thingy to their default state. Note: actor is invisible by default!
@@ -186,9 +184,9 @@ public class Actor implements AnimationSupport {
         return position().minus(tile().scaled((float)TS));
     }
 
-    protected AnimationManager animationManager() {
-        return animationManager;
-    }
+    // Animation support
+
+    protected AnimationManager animationManager;
 
     public Optional<AnimationManager> optAnimationManager() {
         return Optional.ofNullable(animationManager);
@@ -197,4 +195,28 @@ public class Actor implements AnimationSupport {
     public void setAnimationManager(AnimationManager animationManager) {
         this.animationManager = requireNonNull(animationManager);
     }
+
+    public void selectAnimation(String animationID) {
+        requireNonNull(animationID);
+        optAnimationManager().ifPresent(am -> am.select(animationID));
+    }
+
+    public void selectAnimationAt(String animationID, int frameIndex) {
+        requireNonNull(animationID);
+        optAnimationManager().ifPresent(am -> am.selectFrame(animationID, frameIndex));
+    }
+
+    public void playAnimation(String animationID) {
+        requireNonNull(animationID);
+        optAnimationManager().ifPresent(am -> am.play(animationID));
+    }
+
+    public void playAnimation() {
+        optAnimationManager().ifPresent(AnimationManager::play);
+    }
+
+    public void stopAnimation() {
+        optAnimationManager().ifPresent(AnimationManager::stop);
+    }
+
 }

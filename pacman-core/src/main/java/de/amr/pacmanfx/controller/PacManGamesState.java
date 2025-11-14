@@ -244,7 +244,7 @@ public enum PacManGamesState implements FsmState<GameContext> {
         public void onEnter(GameContext context) {
             timer.restartSeconds(1);
             context.gameLevel().pac().hide();
-            context.gameLevel().ghosts().forEach(AnimationSupport::stopAnimation);
+            context.gameLevel().ghosts().forEach(Ghost::stopAnimation);
             context.eventManager().publishEvent(GameEventType.GHOST_EATEN);
         }
 
