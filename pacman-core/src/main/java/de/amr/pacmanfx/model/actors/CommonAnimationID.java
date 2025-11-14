@@ -4,13 +4,13 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model.actors;
 
-public interface CommonAnimationID {
-    String ANIM_PAC_MUNCHING     = "pac_munching";
-    String ANIM_PAC_DYING        = "pac_dying";
-    String ANIM_PAC_FULL         = "pac_full";
-    String ANIM_GHOST_NORMAL     = "ghost_normal";
-    String ANIM_GHOST_FRIGHTENED = "ghost_frightened";
-    String ANIM_GHOST_EYES       = "ghost_eyes";
-    String ANIM_GHOST_FLASHING   = "ghost_flashing";
-    String ANIM_GHOST_NUMBER     = "ghost_number";
+public enum CommonAnimationID {
+    ANIM_PAC_MUNCHING,
+    ANIM_PAC_DYING,
+    ANIM_PAC_FULL,
+    ANIM_GHOST_NORMAL,
+    ANIM_GHOST_FRIGHTENED,
+    ANIM_GHOST_EYES,
+    ANIM_GHOST_FLASHING,
+    ANIM_GHOST_NUMBER;
 }

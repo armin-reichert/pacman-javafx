@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
+import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.actors.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
@@ -20,8 +21,6 @@ import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ANIM_BLINKY_NAKED;
-import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ANIM_BLINKY_PATCHED;
 
 /**
  * Third cut scene in Arcade Pac-Man game:<br>
@@ -107,13 +106,13 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
                 blinky.setWishDir(Direction.LEFT);
                 blinky.setSpeed(1.25f);
                 blinky.show();
-                blinky.playAnimation(ANIM_BLINKY_PATCHED);
+                blinky.playAnimation(ArcadePacMan_UIConfig.AnimationID.ANIM_BLINKY_PATCHED);
             }
             case ANIMATION_START + 400 -> {
                 blinky.placeAtTile(-1, 20);
                 blinky.setMoveDir(Direction.RIGHT);
                 blinky.setWishDir(Direction.RIGHT);
-                blinky.playAnimation(ANIM_BLINKY_NAKED);
+                blinky.playAnimation(ArcadePacMan_UIConfig.AnimationID.ANIM_BLINKY_NAKED);
             }
             case ANIMATION_START + 700 -> context().gameController().letCurrentGameStateExpire();
             default -> {}

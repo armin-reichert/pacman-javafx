@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
+import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.actors.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
@@ -21,8 +22,6 @@ import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ANIM_BLINKY_DAMAGED;
-import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ANIM_BLINKY_NAIL_DRESS_RAPTURE;
 
 /**
  * Second cut scene in Arcade Pac-Man game:<br>
@@ -88,8 +87,8 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
         blinky.optAnimationManager().ifPresent(animations -> {
             blinkyNormal     = (SpriteAnimation) animations.animation(CommonAnimationID.ANIM_GHOST_NORMAL);
-            nailDressRapture = (SpriteAnimation) animations.animation(ANIM_BLINKY_NAIL_DRESS_RAPTURE);
-            blinkyDamaged    = (SpriteAnimation) animations.animation(ANIM_BLINKY_DAMAGED);
+            nailDressRapture = (SpriteAnimation) animations.animation(ArcadePacMan_UIConfig.AnimationID.ANIM_BLINKY_NAIL_DRESS_RAPTURE);
+            blinkyDamaged    = (SpriteAnimation) animations.animation(ArcadePacMan_UIConfig.AnimationID.ANIM_BLINKY_DAMAGED);
         });
         actorsInZOrder.add(pac);
         actorsInZOrder.add(blinky);
@@ -139,7 +138,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
             case ANIMATION_START + 360 -> {
                 nailDressRapture.setFrameIndex(RAPTURED);
                 blinky.setX(blinky.x() - 4);
-                blinky.selectAnimation(ANIM_BLINKY_DAMAGED);
+                blinky.selectAnimation(ArcadePacMan_UIConfig.AnimationID.ANIM_BLINKY_DAMAGED);
             }
             case ANIMATION_START + 420 -> blinkyDamaged.nextFrame(); // Eyes right-down
             case ANIMATION_START + 508 -> {

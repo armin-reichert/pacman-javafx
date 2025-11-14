@@ -68,6 +68,17 @@ import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config {
 
+    public enum AnimationID {
+        ANIM_MS_PAC_MAN_BOOSTER,
+        ANIM_MS_PAC_MAN_WAVING_HAND,
+        ANIM_MS_PAC_MAN_TURNING_AWAY,
+        ANIM_PAC_MAN_MUNCHING,
+        ANIM_PAC_MAN_BOOSTER,
+        ANIM_PAC_MAN_WAVING_HAND,
+        ANIM_PAC_MAN_TURNING_AWAY,
+        ANIM_JUNIOR;
+    }
+
     public static final String SPRITE_SHEET_PATH           = "graphics/spritesheet.png";
     public static final String ARCADE_MAZES_IMAGE_PATH     = "graphics/arcade_mazes.png";
     public static final String NON_ARCADE_MAZES_IMAGE_PATH = "graphics/non_arcade_mazes.png";

@@ -17,6 +17,7 @@ import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import de.amr.pacmanfx.steering.Steering;
+import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.actors.*;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -37,7 +38,6 @@ import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomByte;
 import static de.amr.pacmanfx.model.DefaultWorldMapPropertyName.*;
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
 import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
-import static de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_PacAnimationManager.ANIM_MS_PAC_MAN_BOOSTER;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -356,7 +356,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     @Override
     public void resetPacManAndGhostAnimations(GameLevel gameLevel) {
         gameLevel.pac().optAnimationManager().ifPresent(am -> {
-            am.select(boosterActive ? ANIM_MS_PAC_MAN_BOOSTER : CommonAnimationID.ANIM_PAC_MUNCHING);
+            am.select(boosterActive ? TengenMsPacMan_UIConfig.AnimationID.ANIM_MS_PAC_MAN_BOOSTER : CommonAnimationID.ANIM_PAC_MUNCHING);
             am.reset();
         });
         gameLevel.ghosts().forEach(ghost -> ghost.optAnimationManager().ifPresent(am -> {
@@ -367,7 +367,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     public void activatePacBooster(Pac pac, boolean active) {
         boosterActive = active;
-        pac.selectAnimation(boosterActive ? ANIM_MS_PAC_MAN_BOOSTER : CommonAnimationID.ANIM_PAC_MUNCHING);
+        pac.selectAnimation(boosterActive ? TengenMsPacMan_UIConfig.AnimationID.ANIM_MS_PAC_MAN_BOOSTER : CommonAnimationID.ANIM_PAC_MUNCHING);
     }
 
     @Override

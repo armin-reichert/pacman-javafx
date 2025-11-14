@@ -18,8 +18,8 @@ import static java.util.Objects.requireNonNull;
 public class SpriteAnimationManager<SID extends Enum<SID>> implements AnimationManager {
 
     protected final SpriteSheet<SID> spriteSheet;
-    protected final Map<String, SpriteAnimation> animationsByID = new HashMap<>();
-    protected String selectedID;
+    protected final Map<Object, SpriteAnimation> animationsByID = new HashMap<>();
+    protected Object selectedID;
 
     public SpriteAnimationManager(SpriteSheet<SID> spriteSheet) {
         this.spriteSheet = requireNonNull(spriteSheet);
@@ -30,11 +30,11 @@ public class SpriteAnimationManager<SID extends Enum<SID>> implements AnimationM
     // TODO: this is somewhat crude but currently the way to keep the sprites up-to-date with actor direction etc.
     protected void updateActorSprites(Actor actor) {}
 
-    public String selectedAnimationID() { return selectedID; }
+    public Object selectedAnimationID() { return selectedID; }
 
-    public boolean isCurrentAnimationID(String id) {
-        requireNonNull(id);
-        return id.equals(selectedID);
+    public boolean isCurrentAnimationID(Object animationID) {
+        requireNonNull(animationID);
+        return animationID.equals(selectedID);
     }
 
     @Override
@@ -48,22 +48,22 @@ public class SpriteAnimationManager<SID extends Enum<SID>> implements AnimationM
     }
 
     @Override
-    public SpriteAnimation animation(String id) {
-        if (!animationsByID.containsKey(id)) {
-            SpriteAnimation spriteAnimation = createAnimation(id);
-            animationsByID.put(id, spriteAnimation);
+    public SpriteAnimation animation(Object animationID) {
+        if (!animationsByID.containsKey(animationID)) {
+            SpriteAnimation spriteAnimation = createAnimation(animationID);
+            animationsByID.put(animationID, spriteAnimation);
         }
-        return animationsByID.get(id);
+        return animationsByID.get(animationID);
     }
 
-    protected SpriteAnimation createAnimation(String id) {
-        throw new UnsupportedOperationException("No idea how to create animation with ID " + id);
+    protected SpriteAnimation createAnimation(Object animationID) {
+        throw new UnsupportedOperationException("No idea how to create animation with ID " + animationID);
     }
 
-    public void setAnimation(String id, SpriteAnimation animation) {
-        requireNonNull(id);
+    public void setAnimation(Object animationID, SpriteAnimation animation) {
+        requireNonNull(animationID);
         requireNonNull(animation);
-        animationsByID.put(id, animation);
+        animationsByID.put(animationID, animation);
     }
 
     public SpriteAnimation currentAnimation() {
@@ -71,18 +71,18 @@ public class SpriteAnimationManager<SID extends Enum<SID>> implements AnimationM
     }
 
     @Override
-    public String selectedID() {
+    public Object selectedID() {
         return selectedID;
     }
 
     @Override
-    public void selectFrame(String id, int frameIndex) {
-        if (!id.equals(selectedID)) {
-            selectedID = id;
+    public void selectFrame(Object animationID, int frameIndex) {
+        if (!animationID.equals(selectedID)) {
+            selectedID = animationID;
             if (currentAnimation() != null) {
                 currentAnimation().setFrameIndex(0);
             } else {
-                Logger.warn("No animation with ID {} exists", id);
+                Logger.warn("No animation with ID {} exists", animationID);
             }
         }
     }

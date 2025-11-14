@@ -26,7 +26,7 @@ public class ArcadeMsPacMan_GhostAnimationManager extends SpriteAnimationManager
     }
 
     @Override
-    protected SpriteAnimation createAnimation(String id) {
+    protected SpriteAnimation createAnimation(Object id) {
         return switch (id) {
             case CommonAnimationID.ANIM_GHOST_NORMAL -> SpriteAnimation.builder()
                 .fromSprites(ghostNormalSprites(Direction.LEFT))
@@ -34,12 +34,12 @@ public class ArcadeMsPacMan_GhostAnimationManager extends SpriteAnimationManager
                 .endless();
 
             case CommonAnimationID.ANIM_GHOST_FRIGHTENED -> SpriteAnimation.builder()
-                .fromSprites(spriteSheet().spriteSequence(SpriteID.GHOST_FRIGHTENED))
+                .fromSprites(spriteSheet().spriteSequence(GHOST_FRIGHTENED))
                 .ticksPerFrame(8)
                 .endless();
 
             case CommonAnimationID.ANIM_GHOST_FLASHING -> SpriteAnimation.builder()
-                .fromSprites(spriteSheet().spriteSequence(SpriteID.GHOST_FLASHING))
+                .fromSprites(spriteSheet().spriteSequence(GHOST_FLASHING))
                 .ticksPerFrame(7)
                 .endless();
 
@@ -48,7 +48,7 @@ public class ArcadeMsPacMan_GhostAnimationManager extends SpriteAnimationManager
                 .once();
 
             case CommonAnimationID.ANIM_GHOST_NUMBER -> SpriteAnimation.builder()
-                .fromSprites(spriteSheet().spriteSequence(SpriteID.GHOST_NUMBERS))
+                .fromSprites(spriteSheet().spriteSequence(GHOST_NUMBERS))
                 .once();
 
             default -> throw new IllegalArgumentException("Illegal animation ID: " + id);
@@ -61,9 +61,9 @@ public class ArcadeMsPacMan_GhostAnimationManager extends SpriteAnimationManager
     }
 
     @Override
-    public void selectFrame(String id, int frameIndex) {
-        super.selectFrame(id, frameIndex);
-        if (CommonAnimationID.ANIM_GHOST_NUMBER.equals(id)) {
+    public void selectFrame(Object animationID, int frameIndex) {
+        super.selectFrame(animationID, frameIndex);
+        if (CommonAnimationID.ANIM_GHOST_NUMBER.equals(animationID)) {
             animation(CommonAnimationID.ANIM_GHOST_NUMBER).setFrameIndex(frameIndex);
         }
     }
@@ -74,6 +74,7 @@ public class ArcadeMsPacMan_GhostAnimationManager extends SpriteAnimationManager
             switch (selectedID) {
                 case CommonAnimationID.ANIM_GHOST_NORMAL -> currentAnimation().setSprites(ghostNormalSprites(ghost.wishDir()));
                 case CommonAnimationID.ANIM_GHOST_EYES   -> currentAnimation().setSprites(ghostEyesSprites(ghost.wishDir()));
+                default -> {}
             }
         }
     }
@@ -111,10 +112,10 @@ public class ArcadeMsPacMan_GhostAnimationManager extends SpriteAnimationManager
     private RectShort[] ghostEyesSprites(Direction dir) {
         return new RectShort[] {
             switch (dir) {
-                case RIGHT -> spriteSheet.sprite(SpriteID.GHOST_EYES_RIGHT);
-                case LEFT  -> spriteSheet.sprite(SpriteID.GHOST_EYES_LEFT);
-                case UP    -> spriteSheet.sprite(SpriteID.GHOST_EYES_UP);
-                case DOWN  -> spriteSheet.sprite(SpriteID.GHOST_EYES_DOWN);
+                case RIGHT -> spriteSheet.sprite(GHOST_EYES_RIGHT);
+                case LEFT  -> spriteSheet.sprite(GHOST_EYES_LEFT);
+                case UP    -> spriteSheet.sprite(GHOST_EYES_UP);
+                case DOWN  -> spriteSheet.sprite(GHOST_EYES_DOWN);
             }
         };
     }

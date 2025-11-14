@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
+import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.actors.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
@@ -20,7 +21,6 @@ import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ANIM_BIG_PAC_MAN;
 
 /**
  * First cut scene in Arcade Pac-Man game:<br>
@@ -114,7 +114,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
         else if (frame == ANIMATION_START + 400) {
             pac.placeAtTile(-3, 18, 0, 6.5f);
             pac.setMoveDir(Direction.RIGHT);
-            pac.playAnimation(ANIM_BIG_PAC_MAN);
+            pac.playAnimation(ArcadePacMan_UIConfig.AnimationID.ANIM_BIG_PAC_MAN);
         }
         else if (frame == ANIMATION_START + 632) {
             context().gameController().letCurrentGameStateExpire();

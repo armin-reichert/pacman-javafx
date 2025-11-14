@@ -10,7 +10,7 @@ public interface AnimationManager {
 
     AnimationManager EMPTY = new AnimationManager() {
         @Override
-        public Object animation(String id) {
+        public Object animation(Object id) {
             return null;
         }
 
@@ -20,7 +20,7 @@ public interface AnimationManager {
         }
 
         @Override
-        public void selectFrame(String id, int frameIndex) {
+        public void selectFrame(Object id, int frameIndex) {
         }
 
         @Override
@@ -46,11 +46,11 @@ public interface AnimationManager {
         }
     };
 
-    Object animation(String id);
-    String selectedID();
-    void selectFrame(String id, int frameIndex);
-    default void select(String id) { selectFrame(id, 0); }
-    default void play(String id) { select(id); play(); }
+    Object animation(Object id);
+    Object selectedID();
+    void selectFrame(Object id, int frameIndex);
+    default void select(Object id) { selectFrame(id, 0); }
+    default void play(Object id) { select(id); play(); }
     void play();
     void stop();
     void reset();

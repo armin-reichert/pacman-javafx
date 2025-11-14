@@ -57,6 +57,8 @@ import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config {
 
+    public enum AnimationID {PAC_MAN_MUNCHING}
+
     private static final ResourceManager GLOBAL_RESOURCES = () -> GameUI_Implementation.class;
     private static final ResourceManager ARCADE_MS_PAC_MAN_RESOURCES = () -> ArcadeMsPacMan_UIConfig.class;
 

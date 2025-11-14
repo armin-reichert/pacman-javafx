@@ -26,8 +26,8 @@ public class ArcadePacMan_GhostAnimationManager extends SpriteAnimationManager<S
     }
 
     @Override
-    public SpriteAnimation createAnimation(String id) {
-        return switch (id) {
+    public SpriteAnimation createAnimation(Object animationID) {
+        return switch (animationID) {
             case CommonAnimationID.ANIM_GHOST_NORMAL -> SpriteAnimation.builder()
                 .fromSprites(ghostNormalSprites(Direction.LEFT))
                 .ticksPerFrame(8)
@@ -51,25 +51,25 @@ public class ArcadePacMan_GhostAnimationManager extends SpriteAnimationManager<S
                 .fromSprites(spriteSheet().spriteSequence(SpriteID.GHOST_NUMBERS))
                 .once();
 
-            case ArcadePacMan_UIConfig.ANIM_BLINKY_DAMAGED -> SpriteAnimation.builder()
+            case ArcadePacMan_UIConfig.AnimationID.ANIM_BLINKY_DAMAGED -> SpriteAnimation.builder()
                 .fromSprites(spriteSheet().spriteSequence(SpriteID.RED_GHOST_DAMAGED))
                 .once();
 
-            case ArcadePacMan_UIConfig.ANIM_BLINKY_NAIL_DRESS_RAPTURE -> SpriteAnimation.builder()
+            case ArcadePacMan_UIConfig.AnimationID.ANIM_BLINKY_NAIL_DRESS_RAPTURE -> SpriteAnimation.builder()
                 .fromSprites(spriteSheet().spriteSequence(SpriteID.RED_GHOST_STRETCHED))
                 .once();
 
-            case ArcadePacMan_UIConfig.ANIM_BLINKY_PATCHED -> SpriteAnimation.builder()
+            case ArcadePacMan_UIConfig.AnimationID.ANIM_BLINKY_PATCHED -> SpriteAnimation.builder()
                 .fromSprites(spriteSheet().spriteSequence(SpriteID.RED_GHOST_PATCHED))
                 .ticksPerFrame(4)
                 .endless();
 
-            case ArcadePacMan_UIConfig.ANIM_BLINKY_NAKED -> SpriteAnimation.builder()
+            case ArcadePacMan_UIConfig.AnimationID.ANIM_BLINKY_NAKED -> SpriteAnimation.builder()
                 .fromSprites(spriteSheet().spriteSequence(SpriteID.RED_GHOST_NAKED))
                 .ticksPerFrame(4)
                 .endless();
 
-            default -> throw new IllegalArgumentException("Illegal animation ID: " + id);
+            default -> throw new IllegalArgumentException("Illegal animation ID: " + animationID);
         };
     }
 
@@ -79,9 +79,9 @@ public class ArcadePacMan_GhostAnimationManager extends SpriteAnimationManager<S
     }
 
     @Override
-    public void selectFrame(String id, int frameIndex) {
-        super.selectFrame(id, frameIndex);
-        if (CommonAnimationID.ANIM_GHOST_NUMBER.equals(id)) {
+    public void selectFrame(Object animationID, int frameIndex) {
+        super.selectFrame(animationID, frameIndex);
+        if (CommonAnimationID.ANIM_GHOST_NUMBER.equals(animationID)) {
             animation(CommonAnimationID.ANIM_GHOST_NUMBER).setFrameIndex(frameIndex);
         }
     }

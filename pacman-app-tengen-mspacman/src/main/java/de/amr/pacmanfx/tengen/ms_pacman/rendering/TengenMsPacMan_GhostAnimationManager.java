@@ -29,14 +29,14 @@ public class TengenMsPacMan_GhostAnimationManager extends SpriteAnimationManager
     }
 
     @Override
-    protected SpriteAnimation createAnimation(String id) {
-        return switch (id) {
+    protected SpriteAnimation createAnimation(Object animationID) {
+        return switch (animationID) {
             case CommonAnimationID.ANIM_GHOST_NORMAL      -> SpriteAnimation.builder().fromSprites(ghostNormalSprites(Direction.LEFT)).ticksPerFrame(NORMAL_TICKS).endless();
             case CommonAnimationID.ANIM_GHOST_FRIGHTENED  -> SpriteAnimation.builder().fromSprites(spriteSheet().spriteSequence(SpriteID.GHOST_FRIGHTENED)).ticksPerFrame(FRIGHTENED_TICKS).endless();
             case CommonAnimationID.ANIM_GHOST_FLASHING    -> SpriteAnimation.builder().fromSprites(spriteSheet().spriteSequence(SpriteID.GHOST_FLASHING)).ticksPerFrame(FLASH_TICKS).endless();
             case CommonAnimationID.ANIM_GHOST_EYES        -> SpriteAnimation.builder().fromSprites(ghostEyesSprites(Direction.LEFT)).once();
             case CommonAnimationID.ANIM_GHOST_NUMBER      -> SpriteAnimation.builder().fromSprites(spriteSheet().spriteSequence(SpriteID.GHOST_NUMBERS)).once();
-            default -> throw new IllegalArgumentException("Illegal animation ID " + id);
+            default -> throw new IllegalArgumentException("Illegal animation ID " + animationID);
         };
     }
 
@@ -46,9 +46,9 @@ public class TengenMsPacMan_GhostAnimationManager extends SpriteAnimationManager
     }
 
     @Override
-    public void selectFrame(String id, int frameIndex) {
-        super.selectFrame(id, frameIndex);
-        if (CommonAnimationID.ANIM_GHOST_NUMBER.equals(id)) {
+    public void selectFrame(Object animationID, int frameIndex) {
+        super.selectFrame(animationID, frameIndex);
+        if (CommonAnimationID.ANIM_GHOST_NUMBER.equals(animationID)) {
             animation(CommonAnimationID.ANIM_GHOST_NUMBER).setFrameIndex(frameIndex);
         }
     }

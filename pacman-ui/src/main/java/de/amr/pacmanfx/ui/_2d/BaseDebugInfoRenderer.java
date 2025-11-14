@@ -69,7 +69,7 @@ public class BaseDebugInfoRenderer extends BaseRenderer {
             .filter(SpriteAnimationManager.class::isInstance)
             .map(SpriteAnimationManager.class::cast)
             .ifPresent(spriteAnimationMap -> {
-                String selectedID = spriteAnimationMap.selectedID();
+                Object selectedID = spriteAnimationMap.selectedID();
                 if (selectedID != null) {
                     ctx.setFill(Color.WHITE);
                     ctx.setFont(Font.font("Monospaced", scaled(6)));
@@ -81,7 +81,7 @@ public class BaseDebugInfoRenderer extends BaseRenderer {
             });
     }
 
-    private void drawAnimationInfo(Actor actor, SpriteAnimationManager<?> spriteAnimationMap, String selectedID) {
+    private void drawAnimationInfo(Actor actor, SpriteAnimationManager<?> spriteAnimationMap, Object selectedID) {
         ctx.save();
         String text = "[%s:%d]".formatted(selectedID, spriteAnimationMap.currentAnimation().frameIndex());
         double x = scaled(actor.x() - 4), y = scaled(actor.y() - 4);

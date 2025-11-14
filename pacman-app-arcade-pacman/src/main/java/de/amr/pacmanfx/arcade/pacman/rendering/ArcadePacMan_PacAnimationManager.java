@@ -20,7 +20,7 @@ public class ArcadePacMan_PacAnimationManager extends SpriteAnimationManager<Spr
     }
 
     @Override
-    protected SpriteAnimation createAnimation(String id) {
+    protected SpriteAnimation createAnimation(Object id) {
         return switch (id) {
             case CommonAnimationID.ANIM_PAC_FULL -> SpriteAnimation.builder()
                 .ofSprite(spriteSheet.sprite(SpriteID.PACMAN_FULL)).once();
@@ -34,7 +34,7 @@ public class ArcadePacMan_PacAnimationManager extends SpriteAnimationManager<Spr
                 .ticksPerFrame(8)
                 .once();
 
-            case ArcadePacMan_UIConfig.ANIM_BIG_PAC_MAN -> SpriteAnimation.builder()
+            case ArcadePacMan_UIConfig.AnimationID.ANIM_BIG_PAC_MAN -> SpriteAnimation.builder()
                 .fromSprites(spriteSheet.spriteSequence(SpriteID.PACMAN_BIG))
                 .ticksPerFrame(3)
                 .endless();

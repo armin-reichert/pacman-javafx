@@ -52,6 +52,7 @@ public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements SpriteShe
                 rect(228, 4*248, 224, 248),
                 rect(228, 5*248, 224, 248)
         );
+        SPRITE_MAP.add(MS_PACMAN_FULL,           fullMsPacMan());
         SPRITE_MAP.add(MS_PACMAN_MUNCHING_RIGHT, makeMsPacManMunchingSpriteSeq(0));
         SPRITE_MAP.add(MS_PACMAN_MUNCHING_LEFT,  makeMsPacManMunchingSpriteSeq(1));
         SPRITE_MAP.add(MS_PACMAN_MUNCHING_UP,    makeMsPacManMunchingSpriteSeq(2));
@@ -100,6 +101,9 @@ public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements SpriteShe
         SPRITE_MAP.checkCompleteness();
     }
 
+    private static RectShort fullMsPacMan() {
+        return tile(2, 1);
+    }
     private static RectShort[] makeMsPacManMunchingSpriteSeq(int dir) {
         RectShort wide = tile(0, dir), open = tile(1, dir), closed = tile(2, dir);
         return new RectShort[] {open, open, wide, wide, open, open, open, closed, closed};

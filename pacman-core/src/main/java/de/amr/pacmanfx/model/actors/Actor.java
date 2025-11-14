@@ -196,17 +196,17 @@ public class Actor {
         this.animationManager = animationManager != null ? animationManager : AnimationManager.EMPTY;
     }
 
-    public void selectAnimation(String animationID) {
+    public void selectAnimation(Object animationID) {
         requireNonNull(animationID);
         animationManager.select(animationID);
     }
 
-    public void selectAnimationAt(String animationID, int frameIndex) {
+    public void selectAnimationAt(Object animationID, int frameIndex) {
         requireNonNull(animationID);
         animationManager.selectFrame(animationID, frameIndex);
     }
 
-    public void playAnimation(String animationID) {
+    public void playAnimation(Object animationID) {
         requireNonNull(animationID);
         animationManager.play(animationID);
     }

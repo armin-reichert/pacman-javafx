@@ -102,7 +102,7 @@ public class InfoBoxActorInfo extends InfoBox {
         if (ghost.optAnimationManager().isPresent()
                 && ghost.optAnimationManager().get() instanceof SpriteAnimationManager<?> spriteAnimations
                 && spriteAnimations.selectedID() != null) {
-            return spriteAnimations.selectedID();
+            return String.valueOf(spriteAnimations.selectedID());
         }
         return NO_INFO;
     }

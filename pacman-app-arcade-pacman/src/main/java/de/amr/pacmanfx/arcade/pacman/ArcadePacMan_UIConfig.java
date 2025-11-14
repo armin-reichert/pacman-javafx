@@ -61,11 +61,13 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
     private static final ResourceManager GLOBAL_RESOURCES = () -> GameUI_Implementation.class;
     private static final ResourceManager ARCADE_PAC_MAN_RESOURCES = () -> ArcadePacMan_UIConfig.class;
 
-    public static final String ANIM_BIG_PAC_MAN               = "big_pac_man";
-    public static final String ANIM_BLINKY_DAMAGED            = "blinky_damaged";
-    public static final String ANIM_BLINKY_PATCHED            = "blinky_patched";
-    public static final String ANIM_BLINKY_NAIL_DRESS_RAPTURE = "blinky_nail_dress_rapture";
-    public static final String ANIM_BLINKY_NAKED              = "blinky_naked";
+    public enum AnimationID {
+        ANIM_BIG_PAC_MAN,
+        ANIM_BLINKY_DAMAGED,
+        ANIM_BLINKY_PATCHED,
+        ANIM_BLINKY_NAIL_DRESS_RAPTURE,
+        ANIM_BLINKY_NAKED;
+    }
 
     private static final Map<Color, Color> BRIGHT_MAZE_COLOR_CHANGES = Map.of(
         MAP_COLOR_SCHEME.stroke(), ARCADE_WHITE,   // wall color change

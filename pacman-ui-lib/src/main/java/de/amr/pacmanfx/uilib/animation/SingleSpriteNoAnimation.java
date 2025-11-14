@@ -22,7 +22,7 @@ public record SingleSpriteNoAnimation(RectShort sprite) implements AnimationMana
     }
 
     @Override
-    public Object animation(String id) {
+    public Object animation(Object animationID) {
         return null;
     }
 
@@ -32,7 +32,7 @@ public record SingleSpriteNoAnimation(RectShort sprite) implements AnimationMana
     }
 
     @Override
-    public void selectFrame(String id, int frameIndex) {
+    public void selectFrame(Object animationID, int frameIndex) {
     }
 
     @Override

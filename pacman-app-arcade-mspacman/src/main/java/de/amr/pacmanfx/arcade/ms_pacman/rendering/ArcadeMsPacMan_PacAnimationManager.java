@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
+import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.model.actors.Actor;
@@ -14,15 +15,17 @@ import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 
 public class ArcadeMsPacMan_PacAnimationManager extends SpriteAnimationManager<SpriteID> {
 
-    public static final String PAC_MAN_MUNCHING = "pac_man_munching";
-
     public ArcadeMsPacMan_PacAnimationManager(ArcadeMsPacMan_SpriteSheet spriteSheet) {
         super(spriteSheet);
     }
 
     @Override
-    protected SpriteAnimation createAnimation(String id) {
-        return switch (id) {
+    protected SpriteAnimation createAnimation(Object animationID) {
+        return switch (animationID) {
+            case CommonAnimationID.ANIM_PAC_FULL -> SpriteAnimation.builder()
+                    .ofSprite(spriteSheet.sprite(SpriteID.MS_PACMAN_FULL))
+                    .once();
+
             case CommonAnimationID.ANIM_PAC_MUNCHING -> SpriteAnimation.builder()
                 .fromSprites(msPacManMunchingSprites(Direction.LEFT))
                 .endless();
@@ -32,12 +35,12 @@ public class ArcadeMsPacMan_PacAnimationManager extends SpriteAnimationManager<S
                 .ticksPerFrame(8)
                 .once();
 
-            case PAC_MAN_MUNCHING -> SpriteAnimation.builder()
+            case ArcadeMsPacMan_UIConfig.AnimationID.PAC_MAN_MUNCHING -> SpriteAnimation.builder()
                 .fromSprites(mrPacManMunchingSprites(Direction.LEFT))
                 .ticksPerFrame(2)
                 .endless();
 
-            default -> throw new IllegalArgumentException("Illegal animation ID: " + id);
+            default -> throw new IllegalArgumentException("Illegal animation ID: " + animationID);
         };
     }
 
@@ -51,7 +54,8 @@ public class ArcadeMsPacMan_PacAnimationManager extends SpriteAnimationManager<S
         if (actor instanceof Pac pac) {
             switch (selectedID) {
                 case CommonAnimationID.ANIM_PAC_MUNCHING -> currentAnimation().setSprites(msPacManMunchingSprites(pac.moveDir()));
-                case PAC_MAN_MUNCHING -> currentAnimation().setSprites(mrPacManMunchingSprites(pac.moveDir()));
+                case ArcadeMsPacMan_UIConfig.AnimationID.PAC_MAN_MUNCHING -> currentAnimation().setSprites(mrPacManMunchingSprites(pac.moveDir()));
+                default -> {}
             }
         }
     }
