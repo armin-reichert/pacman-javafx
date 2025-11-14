@@ -35,6 +35,11 @@ public class SingleSpriteWithoutAnimation implements AnimationManager {
     public void selectFrame(String id, int frameIndex) {}
 
     @Override
+    public int frameIndex() {
+        return 0;
+    }
+
+    @Override
     public void play() {}
 
     @Override

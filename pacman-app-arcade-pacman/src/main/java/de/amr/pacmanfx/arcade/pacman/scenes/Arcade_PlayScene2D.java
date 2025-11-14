@@ -268,11 +268,6 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void onSpecialScoreReached(GameEvent e) {
-        ui.soundManager().play(SoundID.EXTRA_LIFE);
-    }
-
-    @Override
     public void onGhostEaten(GameEvent e) {
         ui.soundManager().play(SoundID.GHOST_EATEN);
     }
@@ -306,6 +301,11 @@ public class Arcade_PlayScene2D extends GameScene2D {
     @Override
     public void onPacLostPower(GameEvent e) {
         ui.soundManager().pause(SoundID.PAC_MAN_POWER);
+    }
+
+    @Override
+    public void onSpecialScoreReached(GameEvent e) {
+        ui.soundManager().play(SoundID.EXTRA_LIFE);
     }
 
     private void updateSound() {

@@ -88,6 +88,11 @@ public class SpriteAnimationManager<SID extends Enum<SID>> implements AnimationM
     }
 
     @Override
+    public int frameIndex() {
+        return currentAnimation() != null ? currentAnimation().frameIndex() : -1;
+    }
+
+    @Override
     public void play() {
         if (currentAnimation() != null) {
             currentAnimation().play();

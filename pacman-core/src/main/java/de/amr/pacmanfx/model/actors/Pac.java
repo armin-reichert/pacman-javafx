@@ -183,9 +183,9 @@ public class Pac extends MovingActor {
         setSpeed(0);
         setRestingTime(INDEFINITELY);
         optAnimationManager().ifPresent(animationManager -> {
-            animationManager.stop();
-            animationManager.select(CommonAnimationID.ANIM_PAC_MUNCHING);
             animationManager.reset();
+            animationManager.select(CommonAnimationID.ANIM_PAC_MUNCHING);
+            Logger.info("Pac animation: {} frame {}", animationManager.selectedID(), animationManager.frameIndex());
         });
     }
 

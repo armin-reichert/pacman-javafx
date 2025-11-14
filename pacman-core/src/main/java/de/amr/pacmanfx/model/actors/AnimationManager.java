@@ -16,4 +16,5 @@ public interface AnimationManager {
     void stop();
     void reset();
     RectShort currentSprite(Actor actor);
+    int frameIndex();
 }
