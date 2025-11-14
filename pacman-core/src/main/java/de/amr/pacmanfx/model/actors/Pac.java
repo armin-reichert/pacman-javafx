@@ -177,23 +177,21 @@ public class Pac extends MovingActor {
     }
 
     public void onLevelCompleted() {
+        stopAnimation();
         powerTimer.stop();
         powerTimer.reset(0);
         Logger.info("Power timer stopped and reset to zero.");
         setSpeed(0);
         setRestingTime(INDEFINITELY);
-        optAnimationManager().ifPresent(animationManager -> {
-            animationManager.reset();
-            animationManager.select(CommonAnimationID.ANIM_PAC_FULL);
-            Logger.info("Pac animation: {} frame {}", animationManager.selectedID(), animationManager.frameIndex());
-        });
+        selectAnimation(CommonAnimationID.ANIM_PAC_FULL);
     }
 
     public void onKilled() {
+        stopAnimation();
         powerTimer.stop();
         powerTimer.reset(0);
+        Logger.info("Power timer stopped and reset to zero.");
         setSpeed(0);
-        stopAnimation();
         dead = true;
     }
 

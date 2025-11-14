@@ -233,6 +233,7 @@ public abstract class AbstractGameModel implements Game {
         gameLevel.worldMap().foodLayer().eatAll();
         gameLevel.blinking().setStartState(Pulse.State.OFF);
         gameLevel.blinking().reset();
+        gameLevel.ghosts().forEach(Ghost::stopAnimation);
         gameLevel.pac().onLevelCompleted();
         gameLevel.bonus().ifPresent(Bonus::setInactive);
     }
