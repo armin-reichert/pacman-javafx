@@ -19,7 +19,7 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Base class for all game actors like Pac-Man. ghosts and bonus entities.
+ * Base class for all game actors like Pac-Man, the ghosts and the bonus entities.
  * <p>
  * Each actor has a position, velocity, acceleration and visibility property.
  * </p>
@@ -161,12 +161,8 @@ public class Actor {
      * Moves this actor by its current velocity and increases its velocity by its current acceleration.
      */
     public void move() {
-        if (velocity != null) {
-            setPosition(position().plus(velocity()));
-        }
-        if (acceleration != null) {
-            setVelocity(velocity().plus(acceleration()));
-        }
+        setPosition(position().plus(velocity()));
+        setVelocity(velocity().plus(acceleration()));
     }
 
     /**

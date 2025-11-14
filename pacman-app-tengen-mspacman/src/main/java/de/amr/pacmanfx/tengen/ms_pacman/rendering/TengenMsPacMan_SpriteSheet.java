@@ -56,6 +56,7 @@ public record TengenMsPacMan_SpriteSheet(Image sourceImage) implements SpriteShe
         SPRITE_MAP.add(DIGIT_8,               rect(185 + 5 *  8, 184, 4, 5));
         SPRITE_MAP.add(DIGIT_9,               rect(185 + 5 *  9, 184, 4, 5));
         SPRITE_MAP.add(DIGIT_0,               rect(185 + 5 * 10, 184, 4, 5));
+        SPRITE_MAP.add(MS_PAC_FULL,           rect(32, 15, 15, 15));
         SPRITE_MAP.add(MS_PAC_MUNCHING,
             rect(51, 15, 15, 15), // open
             rect(66, 15, 15, 15), // wide open

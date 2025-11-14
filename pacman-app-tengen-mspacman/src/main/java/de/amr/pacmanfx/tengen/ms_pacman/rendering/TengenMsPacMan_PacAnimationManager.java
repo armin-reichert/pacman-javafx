@@ -23,8 +23,9 @@ public class TengenMsPacMan_PacAnimationManager extends SpriteAnimationManager<S
     @Override
     protected SpriteAnimation createAnimation(Object animationID) {
         return switch (animationID) {
-            case CommonAnimationID.ANIM_PAC_DYING         -> SpriteAnimation.builder().fromSprites(pacDyingSprites()).ticksPerFrame(8).once();
-            case CommonAnimationID.ANIM_PAC_MUNCHING      -> SpriteAnimation.builder().fromSprites(spriteSheet.spriteSequence(SpriteID.MS_PAC_MUNCHING)).endless();
+            case CommonAnimationID.ANIM_PAC_FULL     -> SpriteAnimation.builder().ofSprite(spriteSheet.sprite(SpriteID.MS_PAC_FULL)).once();
+            case CommonAnimationID.ANIM_PAC_DYING    -> SpriteAnimation.builder().fromSprites(pacDyingSprites()).ticksPerFrame(8).once();
+            case CommonAnimationID.ANIM_PAC_MUNCHING -> SpriteAnimation.builder().fromSprites(spriteSheet.spriteSequence(SpriteID.MS_PAC_MUNCHING)).endless();
             case TengenMsPacMan_UIConfig.AnimationID.ANIM_MS_PAC_MAN_BOOSTER      -> SpriteAnimation.builder().fromSprites(spriteSheet.spriteSequence(SpriteID.MS_PAC_MUNCHING_BOOSTER)).endless();
             case TengenMsPacMan_UIConfig.AnimationID.ANIM_MS_PAC_MAN_WAVING_HAND  -> SpriteAnimation.builder().fromSprites(spriteSheet.spriteSequence(SpriteID.MS_PAC_WAVING_HAND)).ticksPerFrame(8).endless();
             case TengenMsPacMan_UIConfig.AnimationID.ANIM_MS_PAC_MAN_TURNING_AWAY -> SpriteAnimation.builder().fromSprites(spriteSheet.spriteSequence(SpriteID.MS_PAC_TURNING_AWAY)).ticksPerFrame(15).once();
