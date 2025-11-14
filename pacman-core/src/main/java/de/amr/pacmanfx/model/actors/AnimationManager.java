@@ -7,6 +7,45 @@ package de.amr.pacmanfx.model.actors;
 import de.amr.pacmanfx.lib.RectShort;
 
 public interface AnimationManager {
+
+    AnimationManager EMPTY = new AnimationManager() {
+        @Override
+        public Object animation(String id) {
+            return null;
+        }
+
+        @Override
+        public String selectedID() {
+            return "";
+        }
+
+        @Override
+        public void selectFrame(String id, int frameIndex) {
+        }
+
+        @Override
+        public void play() {
+        }
+
+        @Override
+        public void stop() {
+        }
+
+        @Override
+        public void reset() {
+        }
+
+        @Override
+        public RectShort currentSprite(Actor actor) {
+            return null;
+        }
+
+        @Override
+        public int frameIndex() {
+            return -1;
+        }
+    };
+
     Object animation(String id);
     String selectedID();
     void selectFrame(String id, int frameIndex);

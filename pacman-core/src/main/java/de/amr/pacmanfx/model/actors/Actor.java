@@ -186,47 +186,36 @@ public class Actor {
 
     // Animation support
 
-    protected AnimationManager animationManager;
+    protected AnimationManager animationManager = AnimationManager.EMPTY;
 
     public Optional<AnimationManager> optAnimationManager() {
         return Optional.ofNullable(animationManager);
     }
 
     public void setAnimationManager(AnimationManager animationManager) {
-        this.animationManager = requireNonNull(animationManager);
+        this.animationManager = animationManager != null ? animationManager : AnimationManager.EMPTY;
     }
 
     public void selectAnimation(String animationID) {
         requireNonNull(animationID);
-        if (animationManager != null) {
-            animationManager.select(animationID);
-        }
+        animationManager.select(animationID);
     }
 
     public void selectAnimationAt(String animationID, int frameIndex) {
         requireNonNull(animationID);
-        if (animationManager != null) {
-            animationManager.selectFrame(animationID, frameIndex);
-        }
+        animationManager.selectFrame(animationID, frameIndex);
     }
 
     public void playAnimation(String animationID) {
         requireNonNull(animationID);
-        if (animationManager != null) {
-            animationManager.play(animationID);
-        }
+        animationManager.play(animationID);
     }
 
     public void playAnimation() {
-        if (animationManager != null) {
-            animationManager.play();
-        }
+        animationManager.play();
     }
 
     public void stopAnimation() {
-        if (animationManager != null) {
-            animationManager.stop();
-        }
+        animationManager.stop();
     }
-
 }
