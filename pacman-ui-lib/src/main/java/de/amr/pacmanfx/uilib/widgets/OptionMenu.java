@@ -5,9 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.uilib.widgets;
 
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -20,7 +17,6 @@ import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.media.AudioClip;
 import javafx.scene.text.TextAlignment;
-import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,16 +27,14 @@ import static java.util.Objects.requireNonNull;
 
 public class OptionMenu {
 
-    private static final int REFRESH_RATE = 60;
-
     private final int numTilesX;
     private final int numTilesY;
     private final int textCol;
     private final int valueCol;
 
     private final List<OptionMenuEntry<?>> entries = new ArrayList<>();
-    private final BooleanProperty soundEnabledPy = new SimpleBooleanProperty(true);
-    protected final FloatProperty scalingPy = new SimpleFloatProperty(2);
+    private final BooleanProperty soundEnabled = new SimpleBooleanProperty(true);
+    private final FloatProperty scaling = new SimpleFloatProperty(2);
 
     private int selectedEntryIndex = 0;
     private String title = "";
@@ -51,7 +45,6 @@ public class OptionMenu {
     protected final BaseRenderer canvasRenderer = new BaseRenderer(canvas);
 
     protected OptionMenuStyle style = OptionMenuStyle.DEFAULT_OPTION_MENU_STYLE;
-    private final Timeline animation;
 
     public OptionMenu(int numTilesX, int numTilesY, int textCol, int valueCol) {
         this.numTilesX = numTilesX;
@@ -61,50 +54,33 @@ public class OptionMenu {
 
         setTitle("OPTIONS");
 
-        canvas.widthProperty().bind(scalingPy.multiply(numTilesX*TS));
-        canvas.heightProperty().bind(scalingPy.multiply(numTilesY*TS));
+        canvas.widthProperty().bind(scaling.multiply(numTilesX*TS));
+        canvas.heightProperty().bind(scaling.multiply(numTilesY*TS));
 
         root.setCenter(canvas);
         root.setBorder(Border.stroke(style.borderStroke()));
         root.maxWidthProperty().bind(canvas.widthProperty());
         root.maxHeightProperty().bind(canvas.heightProperty());
         root.addEventHandler(KeyEvent.KEY_PRESSED, this::handleKeyPress);
-
-        animation = new Timeline(REFRESH_RATE,
-            new KeyFrame(Duration.seconds(1.0 / REFRESH_RATE), e -> {
-                updateAnimation();
-                draw();
-            }));
-        animation.setCycleCount(Animation.INDEFINITE);
     }
-
-    protected void updateAnimation() {}
 
     public Canvas canvas() {
         return canvas;
     }
 
     protected void playSound(AudioClip clip) {
-        if (soundEnabledPy.get()) {
+        if (soundEnabled.get()) {
             clip.play();
         }
     }
 
-    public BooleanProperty soundEnabledProperty() { return soundEnabledPy; }
+    public BooleanProperty soundEnabledProperty() { return soundEnabled; }
 
-    public void startAnimation() {
-        animation.play();
-    }
-
-    public void stopAnimation() {
-        animation.stop();
-    }
-
-    public void draw() {
+    public final void draw() {
         canvasRenderer.fillCanvas(style.backgroundFill());
 
         g.save();
-        g.scale(scalingPy.get(), scalingPy.get());
+        g.scale(scaling.get(), scaling.get());
 
         g.setFont(style.titleFont());
         g.setFill(style.titleTextFill());
@@ -135,7 +111,7 @@ public class OptionMenu {
     protected void drawCentered(String text, double y) {
         g.save();
         g.setTextAlign(TextAlignment.CENTER);
-        g.fillText(text, (canvas.getWidth() * 0.5) / scalingPy.get(), y);
+        g.fillText(text, (canvas.getWidth() * 0.5) / scaling.get(), y);
         g.restore();
     }
 
@@ -171,7 +147,11 @@ public class OptionMenu {
         return numTilesY;
     }
 
-    public FloatProperty scalingProperty() { return scalingPy; }
+    public FloatProperty scalingProperty() { return scaling; }
+
+    public float scaling() {
+        return scalingProperty().get();
+    }
 
     public void addEntry(OptionMenuEntry<?> entry) { entries.add(requireNonNull(entry)); }
 

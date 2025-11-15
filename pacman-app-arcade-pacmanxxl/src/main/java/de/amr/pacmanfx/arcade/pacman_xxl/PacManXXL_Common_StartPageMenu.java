@@ -21,9 +21,13 @@ import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.widgets.OptionMenu;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuEntry;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuStyle;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.util.List;
@@ -139,15 +143,9 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         }
 
         public void draw() {
-            if (!running) return;
-
-            float scaling = scalingProperty().get();
-            if (scaling == 0) return;
-
-            actorRenderer.setScaling(scaling);
-
+            actorRenderer.setScaling(scaling());
             g.save();
-            g.translate(0, TS(23.5f) * scaling);
+            g.translate(0, TS(23.5f) * scaling());
             g.setImageSmoothing(false);
             ghosts.forEach(actorRenderer::drawActor);
             actorRenderer.drawActor(pac);
@@ -243,6 +241,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
     private final GameUI ui;
     private final MenuState state = new MenuState();
     private final ChaseAnimation chaseAnimation = new ChaseAnimation();
+    private final Timeline animationTimer;
 
     public PacManXXL_Common_StartPageMenu(GameUI ui) {
         super(42, 36, 6, 20);
@@ -273,6 +272,23 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         addEntry(entryPlay3D);
         addEntry(entryCutScenesEnabled);
         addEntry(entryMapOrder);
+
+        final int freq = 60;
+        animationTimer = new Timeline(freq,
+            new KeyFrame(Duration.seconds(1.0 / freq), e -> {
+                draw();
+                chaseAnimation.update();
+                chaseAnimation.draw();
+            }));
+        animationTimer.setCycleCount(Animation.INDEFINITE);
+    }
+
+    public void startAnimation() {
+        animationTimer.play();
+    }
+
+    public void stopAnimation() {
+        animationTimer.stop();
     }
 
     @Override
@@ -345,17 +361,6 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
             case ENTER -> startGame();
             default -> super.handleKeyPress(e);
         }
-    }
-
-    @Override
-    protected void updateAnimation() {
-        chaseAnimation.update();
-    }
-
-    @Override
-    public void draw() {
-        super.draw();
-        chaseAnimation.draw();
     }
 
     public MenuState state() { return state; }

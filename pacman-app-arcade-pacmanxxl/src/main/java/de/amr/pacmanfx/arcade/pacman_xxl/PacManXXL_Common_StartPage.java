@@ -43,6 +43,7 @@ public class PacManXXL_Common_StartPage implements StartPage {
             if (root.isFocused()) {
                 Logger.info("Focus now on {}, passing to {}", root, menu);
                 menu.canvas().requestFocus();
+                menu.draw();
                 if (menu.canvas().isFocused()) {
                     Logger.info("Focus now on {}", menu.canvas());
                 }
