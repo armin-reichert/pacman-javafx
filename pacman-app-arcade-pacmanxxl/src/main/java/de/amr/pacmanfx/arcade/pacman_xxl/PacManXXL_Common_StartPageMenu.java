@@ -49,38 +49,35 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         private Pac pac;
         private List<Ghost> ghosts;
         private ActorRenderer actorRenderer;
-        private boolean chasingGhosts;
+        private boolean ghostsChased;
         private boolean running;
 
-        public ChaseAnimation() {
-        }
+        public void init(GameUI_Config uiConfig) {
+            requireNonNull(uiConfig);
 
-        public void setGameConfig(GameUI_Config uiConfig) {
-            createActors(uiConfig);
-            actorRenderer = uiConfig.createActorRenderer(canvas);
-            reset();
-            start();
-        }
-
-        private void createActors(GameUI_Config uiConfig) {
             pac = ArcadePacMan_ActorFactory.createPacMan();
             pac.setAnimationManager(uiConfig.createPacAnimations());
-            pac.playAnimation(CommonAnimationID.ANIM_PAC_MUNCHING);
+
             ghosts = List.of(
                 uiConfig.createAnimatedGhost(RED_GHOST_SHADOW),
                 uiConfig.createAnimatedGhost(PINK_GHOST_SPEEDY),
                 uiConfig.createAnimatedGhost(CYAN_GHOST_BASHFUL),
                 uiConfig.createAnimatedGhost(ORANGE_GHOST_POKEY)
             );
-            ghosts.forEach(Ghost::playAnimation);
+
+            actorRenderer = uiConfig.createActorRenderer(canvas);
+            reset();
+            start();
         }
 
         public void start() {
             running = true;
+            pac.playAnimation(CommonAnimationID.ANIM_PAC_MUNCHING);
+            ghosts.forEach(ghost -> ghost.playAnimation(CommonAnimationID.ANIM_GHOST_NORMAL));
         }
 
         public void reset() {
-            chasingGhosts = false;
+            ghostsChased = false;
             if (pac != null) {
                 pac.setX(42 * TS);
                 pac.setMoveDir(Direction.LEFT);
@@ -102,8 +99,8 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         public void update() {
             if (!running) return;
 
-            if (ghosts.get(3).x() < -4 * TS && !chasingGhosts) {
-                chasingGhosts = true;
+            if (ghosts.getLast().x() < -4 * TS && !ghostsChased) {
+                ghostsChased = true;
                 pac.setMoveDir(pac.moveDir().opposite());
                 pac.setWishDir(pac.moveDir().opposite());
                 pac.setX(-36 * TS);
@@ -116,8 +113,8 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
                     ghost.playAnimation(CommonAnimationID.ANIM_GHOST_FRIGHTENED);
                 }
             }
-            else if (pac.x() > 56 * TS && chasingGhosts) {
-                chasingGhosts = false;
+            else if (pac.x() > 56 * TS && ghostsChased) {
+                ghostsChased = false;
                 pac.setMoveDir(Direction.LEFT);
                 pac.setWishDir(Direction.LEFT);
                 pac.setX(42 * TS);
@@ -130,7 +127,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
                     ghost.playAnimation(CommonAnimationID.ANIM_GHOST_NORMAL);
                 }
             }
-            else if (chasingGhosts) {
+            else if (ghostsChased) {
                 IntStream.range(0, 4).forEach(i -> {
                     if (Math.abs(pac.x() - ghosts.get(i).x()) < 1) {
                         ghosts.get(i).selectAnimationAt(CommonAnimationID.ANIM_GHOST_NUMBER, i);
@@ -179,7 +176,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
                 Logger.info("Loading assets for game variant {}", gameVariant);
                 ui.config(gameVariant).loadAssets();
             }
-            chaseAnimation.setGameConfig(ui.config(gameVariant));
+            chaseAnimation.init(ui.config(gameVariant));
             state.gameVariant = gameVariant;
             ui.updateTitle();
             logState();
@@ -342,7 +339,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         entryMapOrder.selectValue(state.mapOrder);
         entryMapOrder.setEnabled(customMapsExist);
 
-        chaseAnimation.setGameConfig(ui.config(state.gameVariant));
+        chaseAnimation.init(ui.config(state.gameVariant));
         chaseAnimation.reset();
     }
 
