@@ -316,15 +316,27 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
 
         y += TS(2);
         g.setFill(colorNormal);
-        g.fillText("PRESS SPACE TO CHANGE VALUE", TS(7), y);
+        g.fillText("PRESS", TS(7), y);
+        g.setFill(colorHigh);
+        g.fillText("SPACE", TS(13), y);
+        g.setFill(colorNormal);
+        g.fillText("TO CHANGE VALUE", TS(19), y);
 
         y += TS(2);
         g.setFill(colorNormal);
-        g.fillText("PRESS E TO OPEN EDITOR", TS(10), y);
+        g.fillText("PRESS", TS(10), y);
+        g.setFill(colorHigh);
+        g.fillText("E", TS(16), y);
+        g.setFill(colorNormal);
+        g.fillText("TO OPEN EDITOR", TS(18), y);
 
         y += TS(2);
         g.setFill(colorNormal);
-        g.fillText("PRESS ENTER TO START", TS(11), y);
+        g.fillText("PRESS", TS(11), y);
+        g.setFill(colorHigh);
+        g.fillText("ENTER", TS(17), y);
+        g.setFill(colorNormal);
+        g.fillText("TO START", TS(23), y);
     }
 
     public void syncMenuState() {
