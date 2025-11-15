@@ -21,7 +21,6 @@ import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.widgets.OptionMenu;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuEntry;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuStyle;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -32,7 +31,6 @@ import java.util.stream.IntStream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_3D_ENABLED;
-import static de.amr.pacmanfx.ui.input.Keyboard.bare;
 import static de.amr.pacmanfx.uilib.widgets.OptionMenuStyle.DEFAULT_OPTION_MENU_STYLE;
 import static java.util.Objects.requireNonNull;
 
@@ -347,12 +345,10 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
 
     @Override
     protected void handleKeyPress(KeyEvent e) {
-        if (bare(KeyCode.E).match(e)) {
-            ui.showEditorView();
-        } else if (bare(KeyCode.ENTER).match(e)) {
-            startGame(currentGame());
-        } else {
-            super.handleKeyPress(e);
+        switch (e.getCode()) {
+            case E -> ui.showEditorView();
+            case ENTER -> startGame(currentGame());
+            default -> super.handleKeyPress(e);
         }
     }
 
