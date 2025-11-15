@@ -284,12 +284,14 @@ public class PlayView extends StackPane implements GameUI_View {
             if (gameScene instanceof GameScene2D gameScene2D) {
                 createCanvas();
                 gameScene2D.setCanvas(canvasDecorationPane.canvas());
+                gameScene2D.backgroundProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
             }
             getChildren().set(0, subScene);
         }
         else if (gameScene instanceof GameScene2D gameScene2D) {
             createCanvas();
             gameScene2D.setCanvas(canvasDecorationPane.canvas());
+            gameScene2D.backgroundProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
             Vector2i gameSceneSizePx = gameScene2D.sizeInPx();
             double aspect = (double) gameSceneSizePx.x() / gameSceneSizePx.y();
             if (ui.currentConfig().sceneConfig().showWithDecoration(gameScene)) {

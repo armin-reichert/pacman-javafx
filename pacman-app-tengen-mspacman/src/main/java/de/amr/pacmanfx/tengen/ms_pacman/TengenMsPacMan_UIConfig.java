@@ -25,7 +25,6 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.actors.Sue;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.*;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.*;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
-import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameScene_Config;
@@ -76,7 +75,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         ANIM_PAC_MAN_BOOSTER,
         ANIM_PAC_MAN_WAVING_HAND,
         ANIM_PAC_MAN_TURNING_AWAY,
-        ANIM_JUNIOR;
+        ANIM_JUNIOR
     }
 
     public static final String SPRITE_SHEET_PATH           = "graphics/spritesheet.png";
@@ -399,12 +398,6 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         scenesByID.put(sceneID_CutScene(2),       new TengenMsPacMan_CutScene2(ui));
         scenesByID.put(sceneID_CutScene(3),       new TengenMsPacMan_CutScene3(ui));
         scenesByID.put(sceneID_CutScene(4),       new TengenMsPacMan_CutScene4(ui));
-
-        for (GameScene gameScene : scenesByID.values()) {
-            if (gameScene instanceof GameScene2D gameScene2D) {
-                gameScene2D.backgroundProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
-            }
-        }
     }
 
     @Override
