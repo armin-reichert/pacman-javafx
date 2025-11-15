@@ -77,23 +77,20 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         }
 
         public void reset() {
+            pac.setX(42 * TS);
+            pac.setMoveDir(Direction.LEFT);
+            pac.setWishDir(Direction.LEFT);
+            pac.setSpeed(1.0f);
+            pac.setVisible(true);
+
+            for (Ghost ghost : ghosts) {
+                ghost.setX(46 * TS + ghost.personality() * 18);
+                ghost.setMoveDir(Direction.LEFT);
+                ghost.setWishDir(Direction.LEFT);
+                ghost.setSpeed(1.05f);
+                ghost.setVisible(true);
+            }
             ghostsChased = false;
-            if (pac != null) {
-                pac.setX(42 * TS);
-                pac.setMoveDir(Direction.LEFT);
-                pac.setWishDir(Direction.LEFT);
-                pac.setSpeed(1.0f);
-                pac.setVisible(true);
-            }
-            if (ghosts != null) {
-                for (Ghost ghost : ghosts) {
-                    ghost.setX(46 * TS + ghost.personality() * 18);
-                    ghost.setMoveDir(Direction.LEFT);
-                    ghost.setWishDir(Direction.LEFT);
-                    ghost.setSpeed(1.05f);
-                    ghost.setVisible(true);
-                }
-            }
         }
 
         public void update() {
@@ -281,7 +278,6 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         addEntry(entryCutScenesEnabled);
         addEntry(entryMapOrder);
         chaseAnimation = new ChaseAnimation();
-        chaseAnimation.reset();
     }
 
     protected void drawUsageInfo() {
