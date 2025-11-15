@@ -401,7 +401,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     }
 
     @Override
-    public boolean showWithDecoration(GameScene gameScene) {
+    public boolean canvasDecorated(GameScene gameScene) {
         return false;
     }
 

@@ -282,7 +282,7 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config, GameScene_Con
     }
 
     @Override
-    public boolean showWithDecoration(GameScene gameScene) {
+    public boolean canvasDecorated(GameScene gameScene) {
         return true;
     }
 

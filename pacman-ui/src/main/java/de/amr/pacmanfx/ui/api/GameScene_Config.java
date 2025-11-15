@@ -49,5 +49,5 @@ public interface GameScene_Config {
 
     GameScene selectGameScene(GameContext gameContext);
 
-    boolean showWithDecoration(GameScene gameScene);
+    boolean canvasDecorated(GameScene gameScene);
 }
