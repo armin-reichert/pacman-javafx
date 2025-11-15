@@ -297,6 +297,15 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         chaseAnimation.reset();
     }
 
+    protected void drawUsageInfo() {
+        g.setFill(style.hintTextFill());
+        g.setFont(style.textFont());
+        drawCentered("SELECT OPTIONS WITH UP AND DOWN", TS(numTilesY() - 8));
+        drawCentered("PRESS SPACE TO CHANGE VALUE", TS(numTilesY() - 6));
+        drawCentered("PRESS E TO OPEN EDITOR", TS(numTilesY() - 4));
+        drawCentered("PRESS ENTER TO START", TS(numTilesY() - 2));
+    }
+
     public void syncMenuState() {
         final Game game = gameContext.gameController().game(state.gameVariant);
         final var mapSelector = (PacManXXL_Common_MapSelector) game.mapSelector();

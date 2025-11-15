@@ -52,7 +52,7 @@ public class OptionMenu {
     protected final GraphicsContext g = canvas.getGraphicsContext2D();
     protected final BaseRenderer canvasRenderer = new BaseRenderer(canvas);
 
-    private OptionMenuStyle style = OptionMenuStyle.DEFAULT_OPTION_MENU_STYLE;
+    protected OptionMenuStyle style = OptionMenuStyle.DEFAULT_OPTION_MENU_STYLE;
     private final Timeline animation;
 
     public OptionMenu(int numTilesX, int numTilesY, int textCol, int valueCol) {
@@ -131,15 +131,12 @@ public class OptionMenu {
             g.fillText(entry.selectedValueText(), valueCol * TS, y);
         }
 
-        int ty = numTilesY - 2 * commandTexts.length;
-        for (String commandText : commandTexts) {
-            g.setFill(style.hintTextFill());
-            g.setFont(style.textFont());
-            drawCentered(commandText, ty * TS);
-            ty += 2;
-        }
+        drawUsageInfo();
+
         g.restore();
     }
+
+    protected void drawUsageInfo() {}
 
     protected void drawCentered(String text, double y) {
         g.save();
