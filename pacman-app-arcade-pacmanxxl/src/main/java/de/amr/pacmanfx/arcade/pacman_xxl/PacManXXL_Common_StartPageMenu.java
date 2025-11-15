@@ -144,7 +144,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
 
         public void draw() {
             actorRenderer.setScaling(scaling());
-            actorRenderer.setImageSmoothing(false);
+            actorRenderer.setImageSmoothing(true);
             g.save();
             g.translate(0, TS(23.5f) * scaling());
             ghosts.forEach(actorRenderer::drawActor);

@@ -34,8 +34,13 @@ public class PacManXXL_Common_StartPage implements StartPage {
         flyer.selectPage(0);
 
         menu = new PacManXXL_Common_StartPageMenu(ui);
-        // scale menu to take 90% of start page height
-        menu.scalingProperty().bind(root.heightProperty().multiply(0.9).divide(menu.numTilesY() * TS));
+        menu.scalingProperty().bind(ui.stage().heightProperty()
+            .map(height -> {
+                double h = height.doubleValue();
+                h *= 0.8; // take 80% of stage height
+                h /= TS(menu.numTilesY()); // scale according to menu height
+                return Math.round(h * 100.0) / 100.0; // round to 2 decimal digits
+            }));
 
         root.setBackground(Background.fill(Color.BLACK));
         root.getChildren().addAll(flyer, menu.root());
