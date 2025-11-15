@@ -22,8 +22,6 @@ import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.widgets.OptionMenu;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuEntry;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuStyle;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Font;
@@ -47,22 +45,19 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         MapSelectionMode mapOrder;
     }
 
-    private static class ChaseAnimation {
-
-        private final GraphicsContext ctx;
+    private class ChaseAnimation {
         private Pac pac;
         private List<Ghost> ghosts;
         private ActorRenderer actorRenderer;
         private boolean chasingGhosts;
         private boolean running;
 
-        ChaseAnimation(Canvas canvas) {
-            ctx = canvas.getGraphicsContext2D();
+        public ChaseAnimation() {
         }
 
-        void setGameConfig(GameUI_Config uiConfig) {
+        public void setGameConfig(GameUI_Config uiConfig) {
             createActors(uiConfig);
-            actorRenderer = uiConfig.createActorRenderer(ctx.getCanvas());
+            actorRenderer = uiConfig.createActorRenderer(canvas);
             reset();
             start();
         }
@@ -80,11 +75,11 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
             ghosts.forEach(Ghost::playAnimation);
         }
 
-        void start() {
+        public void start() {
             running = true;
         }
 
-        void reset() {
+        public void reset() {
             chasingGhosts = false;
             if (pac != null) {
                 pac.setX(42 * TS);
@@ -104,7 +99,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
             }
         }
 
-        void update() {
+        public void update() {
             if (!running) return;
 
             if (ghosts.get(3).x() < -4 * TS && !chasingGhosts) {
@@ -151,19 +146,21 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
             }
         }
 
-        void draw(float scaling) {
+        public void draw() {
             if (!running) return;
+
+            float scaling = scalingProperty().get();
             if (scaling == 0) return;
 
-            ctx.save();
-            ctx.translate(0, 23.5 * TS * scaling);
-            ctx.setImageSmoothing(false);
             actorRenderer.setScaling(scaling);
+
+            g.save();
+            g.translate(0, TS(23.5f) * scaling);
+            g.setImageSmoothing(false);
             ghosts.forEach(actorRenderer::drawActor);
             actorRenderer.drawActor(pac);
-            ctx.restore();
+            g.restore();
         }
-
     }
 
     // Entries
@@ -286,7 +283,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         addEntry(entryPlay3D);
         addEntry(entryCutScenesEnabled);
         addEntry(entryMapOrder);
-        chaseAnimation = new ChaseAnimation(canvas);
+        chaseAnimation = new ChaseAnimation();
         chaseAnimation.reset();
     }
 
@@ -368,7 +365,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
     @Override
     public void draw() {
         super.draw();
-        chaseAnimation.draw(scalingPy.floatValue());
+        chaseAnimation.draw();
     }
 
     public MenuState state() { return state; }
