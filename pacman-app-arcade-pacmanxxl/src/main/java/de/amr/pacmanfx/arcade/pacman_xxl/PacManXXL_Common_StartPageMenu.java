@@ -298,12 +298,17 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
     }
 
     protected void drawUsageInfo() {
+        double x, y;
         g.setFill(style.hintTextFill());
         g.setFont(style.textFont());
-        drawCentered("SELECT OPTIONS WITH UP AND DOWN", TS(numTilesY() - 8));
-        drawCentered("PRESS SPACE TO CHANGE VALUE", TS(numTilesY() - 6));
-        drawCentered("PRESS E TO OPEN EDITOR", TS(numTilesY() - 4));
-        drawCentered("PRESS ENTER TO START", TS(numTilesY() - 2));
+        x = TS(6); y = TS(numTilesY() - 8);
+        g.fillText("SELECT OPTIONS WITH UP AND DOWN", x, y);
+        x = TS(7); y = TS(numTilesY() - 6);
+        g.fillText("PRESS SPACE TO CHANGE VALUE", x, y);
+        x = TS(10); y = TS(numTilesY() - 4);
+        g.fillText("PRESS E TO OPEN EDITOR", x, y);
+        x = TS(11); y = TS(numTilesY() - 2);
+        g.fillText("PRESS ENTER TO START", x, y);
     }
 
     public void syncMenuState() {
