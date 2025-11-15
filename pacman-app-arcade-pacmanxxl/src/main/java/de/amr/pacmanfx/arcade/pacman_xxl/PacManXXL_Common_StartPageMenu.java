@@ -26,6 +26,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
@@ -298,17 +299,32 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
     }
 
     protected void drawUsageInfo() {
-        double x, y;
-        g.setFill(style.hintTextFill());
+        Color colorNormal = style.hintTextFill();
+        Color colorHigh = Color.WHITE;
         g.setFont(style.textFont());
-        x = TS(6); y = TS(numTilesY() - 8);
-        g.fillText("SELECT OPTIONS WITH UP AND DOWN", x, y);
-        x = TS(7); y = TS(numTilesY() - 6);
-        g.fillText("PRESS SPACE TO CHANGE VALUE", x, y);
-        x = TS(10); y = TS(numTilesY() - 4);
-        g.fillText("PRESS E TO OPEN EDITOR", x, y);
-        x = TS(11); y = TS(numTilesY() - 2);
-        g.fillText("PRESS ENTER TO START", x, y);
+
+        double y = TS(numTilesY() - 8);
+
+        g.setFill(colorNormal);
+        g.fillText("SELECT OPTIONS WITH", TS(6), y);
+        g.setFill(colorHigh);
+        g.fillText("UP", TS(26), y);
+        g.setFill(colorNormal);
+        g.fillText("AND", TS(29), y);
+        g.setFill(colorHigh);
+        g.fillText("DOWN", TS(33), y);
+
+        y += TS(2);
+        g.setFill(colorNormal);
+        g.fillText("PRESS SPACE TO CHANGE VALUE", TS(7), y);
+
+        y += TS(2);
+        g.setFill(colorNormal);
+        g.fillText("PRESS E TO OPEN EDITOR", TS(10), y);
+
+        y += TS(2);
+        g.setFill(colorNormal);
+        g.fillText("PRESS ENTER TO START", TS(11), y);
     }
 
     public void syncMenuState() {
