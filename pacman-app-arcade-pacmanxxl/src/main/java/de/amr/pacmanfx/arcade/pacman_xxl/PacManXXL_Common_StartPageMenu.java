@@ -324,7 +324,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
     }
 
     public void syncMenuState() {
-        final Game game = ui.gameContext().gameController().game(state.gameVariant);
+        final Game game = currentGame();
         final var mapSelector = (PacManXXL_Common_MapSelector) game.mapSelector();
         mapSelector.loadAllMapPrototypes();
         final boolean customMapsExist = !mapSelector.customMapPrototypes().isEmpty();
@@ -332,7 +332,6 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         state.play3D = PROPERTY_3D_ENABLED.get();
         state.cutScenesEnabled = game.cutScenesEnabled();
         state.mapOrder = mapSelector.selectionMode();
-        logState();
 
         entryGameVariant.selectValue(state.gameVariant);
         entryPlay3D.selectValue(state.play3D);
@@ -342,6 +341,8 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
 
         chaseAnimation.init(ui.config(state.gameVariant));
         chaseAnimation.reset();
+
+        logState();
     }
 
     @Override
