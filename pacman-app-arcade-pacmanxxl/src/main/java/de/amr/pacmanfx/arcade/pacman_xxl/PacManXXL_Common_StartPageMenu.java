@@ -26,7 +26,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
@@ -287,55 +286,45 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         addEntry(entryPlay3D);
         addEntry(entryCutScenesEnabled);
         addEntry(entryMapOrder);
-        setCommandTexts(
-            "SELECT OPTIONS WITH UP AND DOWN",
-            "PRESS SPACE TO CHANGE VALUE",
-            "PRESS E TO OPEN EDITOR",
-            "PRESS ENTER TO START"
-        );
-
         chaseAnimation = new ChaseAnimation(canvas);
         chaseAnimation.reset();
     }
 
     protected void drawUsageInfo() {
-        Color colorNormal = style.hintTextFill();
-        Color colorHigh = Color.WHITE;
+        double y = TS(numTilesY() - 8);
         g.setFont(style.textFont());
 
-        double y = TS(numTilesY() - 8);
-
-        g.setFill(colorNormal);
+        g.setFill(style.hintTextFill());
         g.fillText("SELECT OPTIONS WITH", TS(6), y);
-        g.setFill(colorHigh);
+        g.setFill(style.entryValueFill());
         g.fillText("UP", TS(26), y);
-        g.setFill(colorNormal);
+        g.setFill(style.hintTextFill());
         g.fillText("AND", TS(29), y);
-        g.setFill(colorHigh);
+        g.setFill(style.entryValueFill());
         g.fillText("DOWN", TS(33), y);
 
         y += TS(2);
-        g.setFill(colorNormal);
-        g.fillText("PRESS", TS(7), y);
-        g.setFill(colorHigh);
-        g.fillText("SPACE", TS(13), y);
-        g.setFill(colorNormal);
-        g.fillText("TO CHANGE VALUE", TS(19), y);
+        g.setFill(style.hintTextFill());
+        g.fillText("PRESS", TS(8), y);
+        g.setFill(style.entryValueFill());
+        g.fillText("SPACE", TS(14), y);
+        g.setFill(style.hintTextFill());
+        g.fillText("TO CHANGE VALUE", TS(20), y);
 
         y += TS(2);
-        g.setFill(colorNormal);
+        g.setFill(style.hintTextFill());
         g.fillText("PRESS", TS(10), y);
-        g.setFill(colorHigh);
+        g.setFill(style.entryValueFill());
         g.fillText("E", TS(16), y);
-        g.setFill(colorNormal);
+        g.setFill(style.hintTextFill());
         g.fillText("TO OPEN EDITOR", TS(18), y);
 
         y += TS(2);
-        g.setFill(colorNormal);
+        g.setFill(style.hintTextFill());
         g.fillText("PRESS", TS(11), y);
-        g.setFill(colorHigh);
+        g.setFill(style.entryValueFill());
         g.fillText("ENTER", TS(17), y);
-        g.setFill(colorNormal);
+        g.setFill(style.hintTextFill());
         g.fillText("TO START", TS(23), y);
     }
 

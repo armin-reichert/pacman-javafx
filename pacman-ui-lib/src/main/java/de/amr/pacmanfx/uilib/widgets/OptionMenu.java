@@ -23,7 +23,6 @@ import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static de.amr.pacmanfx.Globals.HTS;
@@ -45,7 +44,6 @@ public class OptionMenu {
 
     private int selectedEntryIndex = 0;
     private String title = "";
-    private String[] commandTexts = new String[0];
 
     private final BorderPane root = new BorderPane();
     protected final Canvas canvas = new Canvas();
@@ -62,10 +60,6 @@ public class OptionMenu {
         this.valueCol = valueCol;
 
         setTitle("OPTIONS");
-        setCommandTexts(
-            "SELECT OPTIONS WITH UP AND DOWN",
-            "PRESS SPACE TO CHANGE VALUE"
-        );
 
         canvas.widthProperty().bind(scalingPy.multiply(numTilesX*TS));
         canvas.heightProperty().bind(scalingPy.multiply(numTilesY*TS));
@@ -185,9 +179,5 @@ public class OptionMenu {
 
     public void setStyle(OptionMenuStyle style) {
         this.style = requireNonNull(style);
-    }
-
-    public void setCommandTexts(String... lines) {
-        commandTexts = Arrays.copyOf(lines, lines.length);
     }
 }
