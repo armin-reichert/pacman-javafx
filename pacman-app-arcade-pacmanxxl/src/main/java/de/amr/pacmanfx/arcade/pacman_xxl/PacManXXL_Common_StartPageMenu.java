@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.pacman.actors.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.model.Game;
@@ -24,6 +23,7 @@ import de.amr.pacmanfx.uilib.widgets.OptionMenuEntry;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuStyle;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
@@ -243,7 +243,6 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
     };
 
     private final GameUI ui;
-    private final GameContext gameContext;
     private final MenuState state = new MenuState();
     private final ChaseAnimation chaseAnimation;
 
@@ -251,7 +250,6 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         super(42, 36, 6, 20);
 
         this.ui = requireNonNull(ui);
-        this.gameContext = requireNonNull(ui.gameContext());
 
         state.gameVariant = "PACMAN_XXL";
         state.play3D = false;
@@ -280,46 +278,53 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         chaseAnimation = new ChaseAnimation();
     }
 
+    private Game currentGame() {
+        return ui.gameContext().gameController().game(state.gameVariant);
+    }
+
+    @Override
     protected void drawUsageInfo() {
-        double y = TS(numTilesY() - 8);
+        final Color normal = style.hintTextFill(), bright = style.entryValueFill();
+
         g.setFont(style.textFont());
 
-        g.setFill(style.hintTextFill());
+        double y = TS(numTilesY() - 8);
+        g.setFill(normal);
         g.fillText("SELECT OPTIONS WITH", TS(6), y);
-        g.setFill(style.entryValueFill());
+        g.setFill(bright);
         g.fillText("UP", TS(26), y);
-        g.setFill(style.hintTextFill());
+        g.setFill(normal);
         g.fillText("AND", TS(29), y);
-        g.setFill(style.entryValueFill());
+        g.setFill(bright);
         g.fillText("DOWN", TS(33), y);
 
         y += TS(2);
-        g.setFill(style.hintTextFill());
+        g.setFill(normal);
         g.fillText("PRESS", TS(8), y);
-        g.setFill(style.entryValueFill());
+        g.setFill(bright);
         g.fillText("SPACE", TS(14), y);
-        g.setFill(style.hintTextFill());
+        g.setFill(normal);
         g.fillText("TO CHANGE VALUE", TS(20), y);
 
         y += TS(2);
-        g.setFill(style.hintTextFill());
+        g.setFill(normal);
         g.fillText("PRESS", TS(10), y);
-        g.setFill(style.entryValueFill());
+        g.setFill(bright);
         g.fillText("E", TS(16), y);
-        g.setFill(style.hintTextFill());
+        g.setFill(normal);
         g.fillText("TO OPEN EDITOR", TS(18), y);
 
         y += TS(2);
-        g.setFill(style.hintTextFill());
+        g.setFill(normal);
         g.fillText("PRESS", TS(11), y);
-        g.setFill(style.entryValueFill());
+        g.setFill(bright);
         g.fillText("ENTER", TS(17), y);
-        g.setFill(style.hintTextFill());
+        g.setFill(normal);
         g.fillText("TO START", TS(23), y);
     }
 
     public void syncMenuState() {
-        final Game game = gameContext.gameController().game(state.gameVariant);
+        final Game game = ui.gameContext().gameController().game(state.gameVariant);
         final var mapSelector = (PacManXXL_Common_MapSelector) game.mapSelector();
         mapSelector.loadAllMapPrototypes();
         final boolean customMapsExist = !mapSelector.customMapPrototypes().isEmpty();
@@ -344,7 +349,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         if (bare(KeyCode.E).match(e)) {
             ui.showEditorView();
         } else if (bare(KeyCode.ENTER).match(e)) {
-            startGame();
+            startGame(currentGame());
         } else {
             super.handleKeyPress(e);
         }
@@ -368,8 +373,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
             state.gameVariant, state.play3D, state.cutScenesEnabled, state.mapOrder);
     }
 
-    private void startGame() {
-        Game game = gameContext.gameController().game(state.gameVariant);
+    private void startGame(Game game) {
         game.setCutScenesEnabled(state.cutScenesEnabled);
         var mapSelector = (PacManXXL_Common_MapSelector) game.mapSelector();
         mapSelector.setSelectionMode(state.mapOrder);
