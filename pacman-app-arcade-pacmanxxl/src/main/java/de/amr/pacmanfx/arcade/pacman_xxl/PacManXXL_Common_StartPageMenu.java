@@ -242,7 +242,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
 
     private final GameUI ui;
     private final MenuState state = new MenuState();
-    private final ChaseAnimation chaseAnimation;
+    private final ChaseAnimation chaseAnimation = new ChaseAnimation();
 
     public PacManXXL_Common_StartPageMenu(GameUI ui) {
         super(42, 36, 6, 20);
@@ -273,11 +273,6 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         addEntry(entryPlay3D);
         addEntry(entryCutScenesEnabled);
         addEntry(entryMapOrder);
-        chaseAnimation = new ChaseAnimation();
-    }
-
-    private Game currentGame() {
-        return ui.gameContext().gameController().game(state.gameVariant);
     }
 
     @Override
@@ -347,7 +342,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
     protected void handleKeyPress(KeyEvent e) {
         switch (e.getCode()) {
             case E -> ui.showEditorView();
-            case ENTER -> startGame(currentGame());
+            case ENTER -> startGame();
             default -> super.handleKeyPress(e);
         }
     }
@@ -370,11 +365,16 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
             state.gameVariant, state.play3D, state.cutScenesEnabled, state.mapOrder);
     }
 
-    private void startGame(Game game) {
-        game.setCutScenesEnabled(state.cutScenesEnabled);
-        var mapSelector = (PacManXXL_Common_MapSelector) game.mapSelector();
+    private Game currentGame() {
+        return ui.gameContext().gameController().game(state.gameVariant);
+    }
+
+    private void startGame() {
+        final Game game = currentGame();
+        final var mapSelector = (PacManXXL_Common_MapSelector) game.mapSelector();
         mapSelector.setSelectionMode(state.mapOrder);
         mapSelector.loadAllMapPrototypes();
+        game.setCutScenesEnabled(state.cutScenesEnabled);
         ui.selectGameVariant(state.gameVariant);
         ui.soundManager().playVoice(SoundID.VOICE_EXPLAIN, 0);
     }
