@@ -18,7 +18,9 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
@@ -122,7 +124,6 @@ public class StartPagesCarousel extends Carousel implements GameUI_View {
             }
         });
         setBackground(ui.assets().background_PacManWallpaper);
-        setOnMouseClicked(e -> actionToggleAutoPlay.executeIfEnabled(ui));
 
         final var actionShowPrevPage = new GameAction("SHOW_PREV_PAGE") {
             @Override
