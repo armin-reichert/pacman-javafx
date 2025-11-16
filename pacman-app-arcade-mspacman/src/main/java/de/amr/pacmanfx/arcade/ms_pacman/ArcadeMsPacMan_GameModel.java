@@ -57,7 +57,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
     protected final MapSelector mapSelector;
     protected final ArcadeMsPacMan_LevelCounter levelCounter;
-    protected final HUD hud = new BaseHUD();
+    protected final BaseHUD hud = new BaseHUD();
 
     /**
      * Called via reflection by builder.
@@ -67,6 +67,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
      */
     public ArcadeMsPacMan_GameModel(GameContext gameContext, File highScoreFile) {
         this(gameContext, new ArcadeMsPacMan_MapSelector(), highScoreFile);
+        hud.numCoinsProperty().bind(gameContext.coinMechanism().numCoinsProperty());
     }
 
     /**
@@ -76,6 +77,8 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     public ArcadeMsPacMan_GameModel(GameContext gameContext, MapSelector mapSelector, File highScoreFile) {
         super(gameContext);
         this.mapSelector = requireNonNull(mapSelector);
+
+        hud.numCoinsProperty().bind(gameContext.coinMechanism().numCoinsProperty());
 
         scoreManager.setHighScoreFile(requireNonNull(highScoreFile));
         scoreManager.setExtraLifeScores(EXTRA_LIFE_SCORE);

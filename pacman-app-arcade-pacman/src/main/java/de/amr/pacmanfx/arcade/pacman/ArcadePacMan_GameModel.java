@@ -88,6 +88,8 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         requireNonNull(mapSelector);
         requireNonNull(highScoreFile);
 
+        hud.numCoinsProperty().bind(gameContext.coinMechanism().numCoinsProperty());
+
         this.mapSelector = mapSelector;
 
         levelCounter = new ArcadePacMan_LevelCounter();
