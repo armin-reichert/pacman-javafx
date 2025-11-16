@@ -59,8 +59,8 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
+import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.ui.api.GameUI.*;
 import static de.amr.pacmanfx.uilib.Ufx.*;
 import static java.util.Objects.requireNonNull;
@@ -196,10 +196,11 @@ public class GameLevel3D extends Group implements Disposable {
         }
     }
 
+    //TODO This animation sometimes does not stop. Why?
     private class WallColorFlashingAnimation extends RegisteredAnimation {
 
         public WallColorFlashingAnimation(AnimationRegistry animationRegistry) {
-            super(animationRegistry, "MazeWallColorFlashing");
+            super(animationRegistry, "WallColorFlashing");
         }
 
         @Override
@@ -210,6 +211,7 @@ public class GameLevel3D extends Group implements Disposable {
                     setCycleCount(Animation.INDEFINITE);
                     setCycleDuration(Duration.seconds(0.25));
                 }
+
                 @Override
                 protected void interpolate(double t) {
                     Color color = colorScheme.fill().interpolate(colorScheme.stroke(), t);
@@ -222,38 +224,58 @@ public class GameLevel3D extends Group implements Disposable {
         @Override
         public void stop() {
             super.stop();
-            // reset wall colors when stopped
+            // reset wall colors
             wallTopMaterial.setDiffuseColor(colorScheme.fill());
             wallTopMaterial.setSpecularColor(colorScheme.fill().brighter());
         }
     }
 
+    /**
+     * A light animation that switches from ghost to ghost (JavaFX can only display a limited amount of lights per scene).
+     */
     private class GhostLightAnimation extends RegisteredAnimation {
 
-        private byte currentlyLightedGhost;
+        private byte currentGhostID;
 
         public GhostLightAnimation(AnimationRegistry animationRegistry) {
-            super(animationRegistry, "GhostLighting");
-            currentlyLightedGhost = RED_GHOST_SHADOW;
+            super(animationRegistry, "GhostLight");
+            currentGhostID = RED_GHOST_SHADOW;
+        }
+
+        private static byte nextGhostID(byte id) {
+            return (byte) ((id + 1) % 4);
+        }
+
+        private void assignLightToGhost(byte ghostID) {
+            MutableGhost3D ghost3D = ghosts3D.get(ghostID);
+            ghostLight.setColor(ghost3D.colorSet().normal().dress());
+            ghostLight.translateXProperty().bind(ghost3D.translateXProperty());
+            ghostLight.translateYProperty().bind(ghost3D.translateYProperty());
+            ghostLight.setTranslateZ(-25);
+            ghostLight.setLightOn(true);
+            currentGhostID = ghostID;
+            Logger.info("Ghost light passed to ghost {}", currentGhostID);
+        }
+
+        private void turnOffLight() {
+            ghostLight.setLightOn(false);
         }
 
         @Override
         protected Animation createAnimationFX() {
-            var timeline = new Timeline(
-                new KeyFrame(Duration.millis(3000), e -> {
-                    for (int i = 1; i <= 3; ++i) {
-                        currentlyLightedGhost = (byte) ((currentlyLightedGhost + 1) % 4);
-                        if (gameLevel.ghost(currentlyLightedGhost).state() == GhostState.HUNTING_PAC) {
-                            break;
-                        }
+            var timeline = new Timeline(new KeyFrame(Duration.millis(3000), e -> {
+                Logger.info("Try to pass light from ghost {} to next", currentGhostID);
+                // find the next hunting ghost, if exists, pass light to him
+                byte candidate = nextGhostID(currentGhostID);
+                while (candidate != currentGhostID) {
+                    if (gameLevel.ghost(candidate).state() == GhostState.HUNTING_PAC) {
+                        assignLightToGhost(candidate);
+                        return;
                     }
-                    MutableGhost3D currentGhost3D = ghosts3D.get(currentlyLightedGhost);
-                    ghostLight.setColor(currentGhost3D.colorSet().normal().dress());
-                    ghostLight.translateXProperty().bind(currentGhost3D.translateXProperty());
-                    ghostLight.translateYProperty().bind(currentGhost3D.translateYProperty());
-                    ghostLight.setTranslateZ(-25);
-                })
-            );
+                    candidate = nextGhostID(candidate);
+                }
+                turnOffLight();
+            }));
             timeline.setCycleCount(Animation.INDEFINITE);
             return timeline;
         }
@@ -261,7 +283,7 @@ public class GameLevel3D extends Group implements Disposable {
         @Override
         public void playFromStart() {
             ghostLight.setLightOn(true);
-            currentlyLightedGhost = RED_GHOST_SHADOW;
+            assignLightToGhost(RED_GHOST_SHADOW);
             super.playFromStart();
         }
 
@@ -440,8 +462,7 @@ public class GameLevel3D extends Group implements Disposable {
         ghostLight = new PointLight(Color.WHITE);
         ghostLight.setLightOn(true);
         ghostLight.setMaxRange(30);
-        ghostLight.lightOnProperty().addListener((obs, wasOn, isOn)
-                -> Logger.info("Ghost light is {}", isOn ? "on" : "off"));
+        ghostLight.lightOnProperty().addListener((obs, wasOn, on) -> Logger.info("Ghost light {}", on ? "ON" : "OFF"));
     }
 
     private void createMaze3D() {
@@ -714,10 +735,10 @@ public class GameLevel3D extends Group implements Disposable {
         ghosts3D.forEach(MutableGhost3D::stopAllAnimations);
         bonus3D().ifPresent(Bonus3D::expire);
         var animation = new SequentialTransition(
-                pauseSec(2),
-                doNow(() -> ui.soundManager().play(SoundID.PAC_MAN_DEATH)),
-                pac3D.dyingAnimation().getOrCreateAnimationFX(),
-                pauseSec(1)
+            pauseSec(2),
+            doNow(() -> ui.soundManager().play(SoundID.PAC_MAN_DEATH)),
+            pac3D.dyingAnimation().getOrCreateAnimationFX(),
+            pauseSec(1)
         );
         // Note: adding this inside the animation as last action does not work!
         animation.setOnFinished(e -> ui.gameContext().gameController().letCurrentGameStateExpire());

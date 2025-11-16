@@ -22,6 +22,9 @@ public abstract class RegisteredAnimation implements Disposable {
     private final AnimationRegistry registry;
     protected Animation animationFX;
 
+    /**
+     * @return the JavaFX animation wrapped by this container
+     */
     protected abstract Animation createAnimationFX();
 
     protected RegisteredAnimation(AnimationRegistry registry, String label) {
