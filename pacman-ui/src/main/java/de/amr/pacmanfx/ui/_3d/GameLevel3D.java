@@ -246,7 +246,7 @@ public class GameLevel3D extends Group implements Disposable {
             return (byte) ((id + 1) % 4);
         }
 
-        private void assignLightToGhost(byte ghostID) {
+        private void illuminateGhost(byte ghostID) {
             MutableGhost3D ghost3D = ghosts3D.get(ghostID);
             ghostLight.setColor(ghost3D.colorSet().normal().dress());
             ghostLight.translateXProperty().bind(ghost3D.translateXProperty());
@@ -257,10 +257,6 @@ public class GameLevel3D extends Group implements Disposable {
             Logger.info("Ghost light passed to ghost {}", currentGhostID);
         }
 
-        private void turnOffLight() {
-            ghostLight.setLightOn(false);
-        }
-
         @Override
         protected Animation createAnimationFX() {
             var timeline = new Timeline(new KeyFrame(Duration.millis(3000), e -> {
@@ -269,12 +265,12 @@ public class GameLevel3D extends Group implements Disposable {
                 byte candidate = nextGhostID(currentGhostID);
                 while (candidate != currentGhostID) {
                     if (gameLevel.ghost(candidate).state() == GhostState.HUNTING_PAC) {
-                        assignLightToGhost(candidate);
+                        illuminateGhost(candidate);
                         return;
                     }
                     candidate = nextGhostID(candidate);
                 }
-                turnOffLight();
+                ghostLight.setLightOn(false);
             }));
             timeline.setCycleCount(Animation.INDEFINITE);
             return timeline;
@@ -282,8 +278,7 @@ public class GameLevel3D extends Group implements Disposable {
 
         @Override
         public void playFromStart() {
-            ghostLight.setLightOn(true);
-            assignLightToGhost(RED_GHOST_SHADOW);
+            illuminateGhost(RED_GHOST_SHADOW);
             super.playFromStart();
         }
 
@@ -460,7 +455,6 @@ public class GameLevel3D extends Group implements Disposable {
 
     private void createGhostLight() {
         ghostLight = new PointLight(Color.WHITE);
-        ghostLight.setLightOn(true);
         ghostLight.setMaxRange(30);
         ghostLight.lightOnProperty().addListener((obs, wasOn, on) -> Logger.info("Ghost light {}", on ? "ON" : "OFF"));
     }
