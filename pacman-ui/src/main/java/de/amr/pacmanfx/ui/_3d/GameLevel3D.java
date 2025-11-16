@@ -729,10 +729,10 @@ public class GameLevel3D extends Group implements Disposable {
         ghosts3D.forEach(MutableGhost3D::stopAllAnimations);
         bonus3D().ifPresent(Bonus3D::expire);
         var animation = new SequentialTransition(
-            pauseSec(2),
+            pauseSec(1.5),
             doNow(() -> ui.soundManager().play(SoundID.PAC_MAN_DEATH)),
             pac3D.dyingAnimation().getOrCreateAnimationFX(),
-            pauseSec(1)
+            pauseSec(0.5)
         );
         // Note: adding this inside the animation as last action does not work!
         animation.setOnFinished(e -> ui.gameContext().gameController().letCurrentGameStateExpire());
