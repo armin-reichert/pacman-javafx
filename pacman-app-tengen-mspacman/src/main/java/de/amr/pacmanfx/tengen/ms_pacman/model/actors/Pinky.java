@@ -14,17 +14,13 @@ import static de.amr.pacmanfx.Globals.PINK_GHOST_SPEEDY;
 public class Pinky extends Ghost {
 
     public Pinky() {
+        super(PINK_GHOST_SPEEDY);
         reset();
     }
 
     @Override
     public String name() {
         return "Pinky";
-    }
-
-    @Override
-    public byte personality() {
-        return PINK_GHOST_SPEEDY;
     }
 
     @Override

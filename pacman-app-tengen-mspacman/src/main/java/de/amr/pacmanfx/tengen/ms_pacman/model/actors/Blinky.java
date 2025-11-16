@@ -14,17 +14,13 @@ import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
 public class Blinky extends Ghost {
 
     public Blinky() {
+        super(RED_GHOST_SHADOW);
         reset();
     }
 
     @Override
     public String name() {
         return "Blinky";
-    }
-
-    @Override
-    public byte personality() {
-        return RED_GHOST_SHADOW;
     }
 
     @Override

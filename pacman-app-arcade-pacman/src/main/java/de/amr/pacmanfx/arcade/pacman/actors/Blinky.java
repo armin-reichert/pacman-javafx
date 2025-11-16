@@ -20,6 +20,7 @@ public class Blinky extends Ghost {
     private byte cruiseElroyValue;
 
     protected Blinky() {
+        super(RED_GHOST_SHADOW);
         reset();
         cruiseElroyActive = false;
         cruiseElroyValue = 0;
@@ -63,11 +64,6 @@ public class Blinky extends Ghost {
     @Override
     public String name() {
         return "Blinky";
-    }
-
-    @Override
-    public byte personality() {
-        return RED_GHOST_SHADOW;
     }
 
     @Override

@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.model.actors;
 
 import de.amr.pacmanfx.GameContext;
+import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.math.RandomNumberSupport;
 import de.amr.pacmanfx.lib.math.Vector2f;
@@ -36,12 +37,14 @@ public abstract class Ghost extends MovingActor {
 
     public static final GhostState DEFAULT_STATE = GhostState.LOCKED;
 
+    private final byte personality;
     private ObjectProperty<GhostState> state;
     private List<Vector2i> specialTerrainTiles = List.of();
     private Vector2f startPosition;
     private House home;
 
-    protected Ghost() {
+    protected Ghost(byte personality) {
+        this.personality = Validations.requireValidGhostPersonality(personality);
         corneringSpeedUp = -1.25f;
     }
 
@@ -58,7 +61,9 @@ public abstract class Ghost extends MovingActor {
      * {@link de.amr.pacmanfx.Globals#PINK_GHOST_SPEEDY}, {@link de.amr.pacmanfx.Globals#CYAN_GHOST_BASHFUL} and
      * {@link de.amr.pacmanfx.Globals#ORANGE_GHOST_POKEY}.
      */
-    public abstract byte personality();
+    public final byte personality() {
+        return personality;
+    }
 
     public void onFoodCountChange(GameLevel gameLevel) {}
 
