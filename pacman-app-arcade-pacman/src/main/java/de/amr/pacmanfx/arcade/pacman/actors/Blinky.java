@@ -20,7 +20,7 @@ public class Blinky extends Ghost {
     private byte cruiseElroyValue;
 
     protected Blinky() {
-        super(RED_GHOST_SHADOW);
+        super(RED_GHOST_SHADOW, "Blinky");
         reset();
         cruiseElroyActive = false;
         cruiseElroyValue = 0;
@@ -59,11 +59,6 @@ public class Blinky extends Ghost {
     public void onPacKilled(GameLevel gameLevel) {
         super.onPacKilled(gameLevel);
         setCruiseElroyActive(false);
-    }
-
-    @Override
-    public String name() {
-        return "Blinky";
     }
 
     @Override

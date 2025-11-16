@@ -13,13 +13,8 @@ import static de.amr.pacmanfx.Globals.PINK_GHOST_SPEEDY;
 public class Pinky extends Ghost {
 
     protected Pinky() {
-        super(PINK_GHOST_SPEEDY);
+        super(PINK_GHOST_SPEEDY, "Pinky");
         reset();
-    }
-
-    @Override
-    public String name() {
-        return "Pinky";
     }
 
     @Override

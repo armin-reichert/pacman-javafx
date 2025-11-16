@@ -43,7 +43,8 @@ public abstract class Ghost extends MovingActor {
     private Vector2f startPosition;
     private House home;
 
-    protected Ghost(byte personality) {
+    protected Ghost(byte personality, String name) {
+        super(name);
         this.personality = Validations.requireValidGhostPersonality(personality);
         corneringSpeedUp = -1.25f;
     }

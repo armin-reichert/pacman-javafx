@@ -39,6 +39,8 @@ public abstract class MovingActor extends Actor {
 
     protected final MoveInfo moveInfo = new MoveInfo();
 
+    private final String name;
+
     protected ObjectProperty<Direction> moveDir;
     protected ObjectProperty<Direction> wishDir;
     protected ObjectProperty<Vector2i> targetTile;
@@ -51,6 +53,10 @@ public abstract class MovingActor extends Actor {
     //TODO this is just a primitive way to provide cornering speed differences
     protected float corneringSpeedUp;
 
+    protected MovingActor(String name) {
+        this.name = requireNonNull(name);
+    }
+
     /**
      * Called on every tick of the game clock.
      *
@@ -61,7 +67,9 @@ public abstract class MovingActor extends Actor {
     /**
      * @return readable name, used in UI and logging
      */
-    public abstract String name();
+    public final String name() {
+        return name;
+    }
 
     /**
      * @param gameLevel the game level we are in (not null)

@@ -8,10 +8,7 @@ import de.amr.pacmanfx.arcade.pacman.actors.Clyde;
 
 public class Sue extends Clyde {
 
-    Sue() {}
-
-    @Override
-    public String name() {
-        return "Sue";
+    Sue() {
+        super("Sue");
     }
 }

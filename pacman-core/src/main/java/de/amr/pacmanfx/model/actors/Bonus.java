@@ -7,8 +7,8 @@ package de.amr.pacmanfx.model.actors;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.Waypoint;
+import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
@@ -41,6 +41,7 @@ public class Bonus extends MovingActor {
     private RouteBasedSteering steering;
 
     public Bonus(byte symbol, int points) {
+        super("Bonus-symbol:%d-points:%d".formatted(symbol, points));
         this.symbol = symbol;
         this.points = points;
         reset();
@@ -158,11 +159,6 @@ public class Bonus extends MovingActor {
     public String toString() {
         return "Bonus{symbol=%s, points=%d, ticksRemaining=%d, state=%s, animation=%s}"
             .formatted(symbol, points, timer.remainingTicks(), state, jumpingAnimation);
-    }
-
-    @Override
-    public String name() {
-        return "%sBonus_symbol=%s_points=%s".formatted((jumpingAnimation != null ? "Jumping" : "Static"), symbol, points);
     }
 
     @Override

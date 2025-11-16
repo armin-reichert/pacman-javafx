@@ -30,7 +30,6 @@ public class Pac extends MovingActor {
 
     private final TickTimer powerTimer = new TickTimer("PacPowerTimer");
 
-    private final String name;
     private BooleanProperty immune;
     private BooleanProperty usingAutopilot;
     private boolean dead;
@@ -42,11 +41,7 @@ public class Pac extends MovingActor {
      * @param name a readable name. Any honest Pac-Man and Pac-Woman should have a name! Period.
      */
     public Pac(String name) {
-        this.name = requireNonNull(name);
-    }
-
-    public String name() {
-        return name;
+        super(name);
     }
 
     @Override

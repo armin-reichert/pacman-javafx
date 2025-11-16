@@ -14,13 +14,8 @@ import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
 public class Blinky extends Ghost {
 
     public Blinky() {
-        super(RED_GHOST_SHADOW);
+        super(RED_GHOST_SHADOW, "Blinky");
         reset();
-    }
-
-    @Override
-    public String name() {
-        return "Blinky";
     }
 
     @Override

@@ -13,13 +13,8 @@ import static de.amr.pacmanfx.Globals.ORANGE_GHOST_POKEY;
 public class Sue extends Ghost {
 
     public Sue() {
-        super(ORANGE_GHOST_POKEY);
+        super(ORANGE_GHOST_POKEY, "Sue");
         reset();
-    }
-
-    @Override
-    public String name() {
-        return "Sue";
     }
 
     @Override

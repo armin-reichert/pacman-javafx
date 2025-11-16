@@ -13,13 +13,13 @@ import static de.amr.pacmanfx.Globals.ORANGE_GHOST_POKEY;
 public class Clyde extends Ghost {
 
     protected Clyde() {
-        super(ORANGE_GHOST_POKEY);
+        super(ORANGE_GHOST_POKEY, "Clyde");
         reset();
     }
 
-    @Override
-    public String name() {
-        return "Clyde";
+    protected Clyde(String name) {
+        super(ORANGE_GHOST_POKEY, name);
+        reset();
     }
 
     @Override
