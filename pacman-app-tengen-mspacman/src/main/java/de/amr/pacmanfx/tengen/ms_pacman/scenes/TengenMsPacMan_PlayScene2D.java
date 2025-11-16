@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.controller.PacManGamesState;
-import de.amr.pacmanfx.controller.test.PacManGamesTestState;
+import de.amr.pacmanfx.controller.test.TestState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.math.Vector2i;
@@ -322,7 +322,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
     @Override
     public void onGameStarted(GameEvent e) {
         FsmState<GameContext> state = context().gameState();
-        boolean shutUp = context().gameLevel().isDemoLevel() || state instanceof PacManGamesTestState;
+        boolean shutUp = context().gameLevel().isDemoLevel() || state instanceof TestState;
         if (!shutUp) {
             ui.soundManager().play(SoundID.GAME_READY);
         }

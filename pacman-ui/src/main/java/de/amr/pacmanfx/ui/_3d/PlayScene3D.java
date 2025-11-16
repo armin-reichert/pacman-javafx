@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.controller.test.PacManGamesTestState;
+import de.amr.pacmanfx.controller.test.TestState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.math.Vector2f;
@@ -350,8 +350,7 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
 
     @Override
     public void onEnterGameState(FsmState<GameContext> state) {
-        requireNonNull(state);
-        if (state instanceof PacManGamesTestState) {
+        if (state instanceof TestState) {
             replaceGameLevel3D();
             showLevelTestMessage(context().gameLevel());
             PROPERTY_3D_PERSPECTIVE_ID.set(PerspectiveID.TOTAL);
@@ -390,7 +389,7 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
         final GameLevel gameLevel = context().gameLevel();
         final FsmState<GameContext> state = context().gameState();
 
-        if (state instanceof PacManGamesTestState) {
+        if (state instanceof TestState) {
             replaceGameLevel3D(); //TODO check when to destroy previous level
             gameLevel3D.energizers3D().forEach(Energizer3D::startPumping);
             showLevelTestMessage(gameLevel);
@@ -503,7 +502,7 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
     @Override
     public void onGameStarted(GameEvent e) {
         FsmState<GameContext> state = context().gameState();
-        boolean silent = context().gameLevel().isDemoLevel() || state instanceof PacManGamesTestState;
+        boolean silent = context().gameLevel().isDemoLevel() || state instanceof TestState;
         if (!silent) {
             ui.soundManager().play(SoundID.GAME_READY);
         }

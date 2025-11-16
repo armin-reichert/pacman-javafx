@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_PlayScene2DDebugInfoRenderer;
 import de.amr.pacmanfx.controller.PacManGamesState;
-import de.amr.pacmanfx.controller.test.PacManGamesTestState;
+import de.amr.pacmanfx.controller.test.TestState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.math.Vector2i;
@@ -136,7 +136,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     @Override
     public void onGameStarted(GameEvent e) {
         FsmState<GameContext> state = context().gameState();
-        boolean silent = context().gameLevel().isDemoLevel() || state instanceof PacManGamesTestState;
+        boolean silent = context().gameLevel().isDemoLevel() || state instanceof TestState;
         if (!silent) {
             ui.soundManager().play(SoundID.GAME_READY);
         }

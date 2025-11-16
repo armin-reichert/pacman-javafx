@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.controller.test;
 
-import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.lib.fsm.FsmState;
-
-public interface PacManGamesTestState extends FsmState<GameContext> {
+/**
+ * Marker interface for test game states.
+ */
+public interface TestState {
 }

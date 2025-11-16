@@ -7,10 +7,11 @@ package de.amr.pacmanfx.controller.test;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.controller.PacManGamesState;
 import de.amr.pacmanfx.event.GameEventType;
+import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.AbstractGameModel;
 
-public class CutScenesTestState implements PacManGamesTestState {
+public class CutScenesTestState implements FsmState<GameContext>, TestState {
 
     private final TickTimer timer = new TickTimer("Timer_" + name());
 

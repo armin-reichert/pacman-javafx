@@ -7,13 +7,14 @@ package de.amr.pacmanfx.controller.test;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.controller.PacManGamesState;
 import de.amr.pacmanfx.event.GameEventType;
+import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelMessage;
 import de.amr.pacmanfx.model.MessageType;
 
-public class LevelShortTestState implements PacManGamesTestState {
+public class LevelShortTestState implements FsmState<GameContext>, TestState {
 
     private final TickTimer timer = new TickTimer("Timer_" + name());
     private int lastTestedLevelNumber;
