@@ -44,6 +44,7 @@ public final class CommonGameActions {
     public static final GameAction ACTION_BOOT_SHOW_PLAY_VIEW = new GameAction("BOOT_SHOW_PLAY_VIEW") {
         @Override
         public void execute(GameUI ui) {
+            ui.gameContext().coinMechanism().setNumCoins(0);
             ui.showPlayView();
             ui.restart();
         }
