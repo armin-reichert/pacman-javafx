@@ -356,6 +356,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
 
     @Override
     protected void handleKeyPress(KeyEvent e) {
+        ui.startPagesView().pauseTimer();
         switch (e.getCode()) {
             case E -> ui.showEditorView();
             case ENTER -> startGame();
