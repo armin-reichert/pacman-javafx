@@ -162,7 +162,6 @@ public class Arcade_PlayScene2D extends GameScene2D {
         game.hud().setVisibleLifeCount(Math.min(numLivesDisplayed, game.hud().maxLivesDisplayed()));
         //TODO this is wrong in level test state
         game.hud().showCredit(context().coinMechanism().isEmpty());
-        game.hud().setNumCoins(context().coinMechanism().numCoins());
     }
 
     @Override

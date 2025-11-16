@@ -8,8 +8,8 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.pacman.actors.*;
 import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.event.GameEventType;
-import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.Waypoint;
+import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
 import de.amr.pacmanfx.lib.worldmap.TerrainTile;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
@@ -24,9 +24,9 @@ import java.util.List;
 
 import static de.amr.pacmanfx.Globals.ORANGE_GHOST_POKEY;
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
-import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomFloat;
 import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
 import static de.amr.pacmanfx.lib.Waypoint.wp;
+import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomFloat;
 import static de.amr.pacmanfx.model.DefaultWorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;
 
@@ -71,10 +71,11 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
 
     protected final MapSelector mapSelector;
     protected final ArcadePacMan_LevelCounter levelCounter;
-    protected final HUD hud = new BaseHUD();
+    protected final BaseHUD hud = new BaseHUD();
 
     public ArcadePacMan_GameModel(GameContext gameContext, File highScoreFile) {
         this(gameContext, new ArcadePacMan_MapSelector(), highScoreFile);
+        hud.numCoinsProperty().bind(gameContext.coinMechanism().numCoinsProperty());
     }
 
     /**

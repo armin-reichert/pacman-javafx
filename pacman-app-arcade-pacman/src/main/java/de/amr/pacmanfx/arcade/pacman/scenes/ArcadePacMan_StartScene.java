@@ -40,7 +40,6 @@ public class ArcadePacMan_StartScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        ui.gameContext().game().hud().setNumCoins(ui.gameContext().coinMechanism().numCoins());
         context().game().hud().creditVisible(true).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
         actionBindings.bind(ArcadeActions.ACTION_INSERT_COIN, ui.actionBindings());
         actionBindings.bind(ArcadeActions.ACTION_START_GAME, ui.actionBindings());
@@ -51,8 +50,6 @@ public class ArcadePacMan_StartScene extends GameScene2D {
 
     @Override
     public void update() {
-        //TODO use binding
-        ui.gameContext().game().hud().setNumCoins(ui.gameContext().coinMechanism().numCoins());
     }
 
     @Override
