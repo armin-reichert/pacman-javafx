@@ -119,13 +119,17 @@ public class Carousel extends StackPane {
     }
 
     public void startTimer() {
-        timer.play();
-        Logger.info("Carousel timer started");
+        if (timer.getStatus() != Animation.Status.RUNNING) {
+            timer.play();
+            Logger.info("Carousel timer started");
+        }
     }
 
     public void pauseTimer() {
-        timer.pause();
-        Logger.info("Carousel timer paused");
+        if (timer.getStatus() == Animation.Status.RUNNING) {
+            timer.pause();
+            Logger.info("Carousel timer paused");
+        }
     }
 
     public boolean isPlaying() {
