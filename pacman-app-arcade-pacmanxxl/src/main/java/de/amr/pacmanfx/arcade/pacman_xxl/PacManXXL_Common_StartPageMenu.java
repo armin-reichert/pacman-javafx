@@ -178,8 +178,8 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         @Override
         public String selectedValueText() {
             return switch (state.gameVariant) {
-                case "PACMAN_XXL" -> "PAC-MAN";
-                case "MS_PACMAN_XXL" -> "MS.PAC-MAN";
+                case "PACMAN_XXL" -> "PAC-MAN XXL";
+                case "MS_PACMAN_XXL" -> "MS.PAC-MAN XXL";
                 default -> "";
             };
         }
@@ -205,6 +205,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         @Override
         protected void onValueChanged(int index) {
             state.cutScenesEnabled = selectedValue();
+            selectedGame().setCutScenesEnabled(state.cutScenesEnabled);
             logState();
         }
 
