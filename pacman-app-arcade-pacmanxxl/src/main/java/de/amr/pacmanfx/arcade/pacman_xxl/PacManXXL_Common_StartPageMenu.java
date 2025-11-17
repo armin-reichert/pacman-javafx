@@ -24,6 +24,7 @@ import de.amr.pacmanfx.uilib.widgets.OptionMenuStyle;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -67,7 +68,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
                 uiConfig.createAnimatedGhost(ORANGE_GHOST_POKEY)
             );
 
-            actorRenderer = uiConfig.createActorRenderer(canvas);
+            actorRenderer = uiConfig.createActorRenderer(renderer.ctx().getCanvas());
             reset();
             start();
         }
@@ -145,11 +146,11 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         public void draw() {
             actorRenderer.setScaling(scaling());
             actorRenderer.setImageSmoothing(true);
-            g.save();
-            g.translate(0, TS(23.5f) * scaling());
+            actorRenderer.ctx().save();
+            actorRenderer.ctx().translate(0, TS(23.5f) * scaling());
             ghosts.forEach(actorRenderer::drawActor);
             actorRenderer.drawActor(pac);
-            g.restore();
+            actorRenderer.ctx().restore();
         }
     }
 
@@ -294,43 +295,44 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
 
     @Override
     protected void drawUsageInfo() {
+        final GraphicsContext ctx = renderer.ctx();
         final Color normal = style.hintTextFill(), bright = style.entryValueFill();
 
-        g.setFont(style.textFont());
+        ctx.setFont(style.textFont());
 
         double y = TS(numTilesY() - 8);
-        g.setFill(normal);
-        g.fillText("SELECT OPTIONS WITH", TS(6), y);
-        g.setFill(bright);
-        g.fillText("UP", TS(26), y);
-        g.setFill(normal);
-        g.fillText("AND", TS(29), y);
-        g.setFill(bright);
-        g.fillText("DOWN", TS(33), y);
+        ctx.setFill(normal);
+        ctx.fillText("SELECT OPTIONS WITH", TS(6), y);
+        ctx.setFill(bright);
+        ctx.fillText("UP", TS(26), y);
+        ctx.setFill(normal);
+        ctx.fillText("AND", TS(29), y);
+        ctx.setFill(bright);
+        ctx.fillText("DOWN", TS(33), y);
 
         y += TS(2);
-        g.setFill(normal);
-        g.fillText("PRESS", TS(8), y);
-        g.setFill(bright);
-        g.fillText("SPACE", TS(14), y);
-        g.setFill(normal);
-        g.fillText("TO CHANGE VALUE", TS(20), y);
+        ctx.setFill(normal);
+        ctx.fillText("PRESS", TS(8), y);
+        ctx.setFill(bright);
+        ctx.fillText("SPACE", TS(14), y);
+        ctx.setFill(normal);
+        ctx.fillText("TO CHANGE VALUE", TS(20), y);
 
         y += TS(2);
-        g.setFill(normal);
-        g.fillText("PRESS", TS(10), y);
-        g.setFill(bright);
-        g.fillText("E", TS(16), y);
-        g.setFill(normal);
-        g.fillText("TO OPEN EDITOR", TS(18), y);
+        ctx.setFill(normal);
+        ctx.fillText("PRESS", TS(10), y);
+        ctx.setFill(bright);
+        ctx.fillText("E", TS(16), y);
+        ctx.setFill(normal);
+        ctx.fillText("TO OPEN EDITOR", TS(18), y);
 
         y += TS(2);
-        g.setFill(normal);
-        g.fillText("PRESS", TS(11), y);
-        g.setFill(bright);
-        g.fillText("ENTER", TS(17), y);
-        g.setFill(normal);
-        g.fillText("TO START", TS(23), y);
+        ctx.setFill(normal);
+        ctx.fillText("PRESS", TS(11), y);
+        ctx.setFill(bright);
+        ctx.fillText("ENTER", TS(17), y);
+        ctx.setFill(normal);
+        ctx.fillText("TO START", TS(23), y);
     }
 
     public void syncMenuState() {

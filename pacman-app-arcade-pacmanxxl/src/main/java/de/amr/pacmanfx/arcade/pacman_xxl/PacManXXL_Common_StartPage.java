@@ -47,11 +47,8 @@ public class PacManXXL_Common_StartPage implements StartPage {
         root.focusedProperty().addListener((py,ov,nv) -> {
             if (root.isFocused()) {
                 Logger.info("Focus now on {}, passing to {}", root, menu);
-                menu.canvas().requestFocus();
+                menu.requestFocus();
                 menu.draw();
-                if (menu.canvas().isFocused()) {
-                    Logger.info("Focus now on {}", menu.canvas());
-                }
                 onEnter(ui);
             }
         });

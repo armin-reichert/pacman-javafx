@@ -17,6 +17,7 @@ import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.media.AudioClip;
 import javafx.scene.text.TextAlignment;
+import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,9 +41,7 @@ public class OptionMenu {
     private String title = "";
 
     private final BorderPane root = new BorderPane();
-    protected final Canvas canvas = new Canvas();
-    protected final GraphicsContext g = canvas.getGraphicsContext2D();
-    protected final BaseRenderer canvasRenderer = new BaseRenderer(canvas);
+    protected final BaseRenderer renderer;
 
     protected OptionMenuStyle style = OptionMenuStyle.DEFAULT_OPTION_MENU_STYLE;
 
@@ -54,8 +53,11 @@ public class OptionMenu {
 
         setTitle("OPTIONS");
 
+        var canvas = new Canvas();
         canvas.widthProperty().bind(scaling.multiply(numTilesX*TS));
         canvas.heightProperty().bind(scaling.multiply(numTilesY*TS));
+
+        renderer = new BaseRenderer(canvas);
 
         root.setCenter(canvas);
         root.setBorder(Border.stroke(style.borderStroke()));
@@ -64,8 +66,16 @@ public class OptionMenu {
         root.addEventHandler(KeyEvent.KEY_PRESSED, this::handleKeyPress);
     }
 
-    public Canvas canvas() {
-        return canvas;
+    public BaseRenderer renderer() {
+        return renderer;
+    }
+
+    public void requestFocus() {
+        final Canvas canvas = renderer.ctx().getCanvas();
+        if (!canvas.isFocused()) {
+            canvas.requestFocus();
+            Logger.info("Focus now on {}", canvas);
+        }
     }
 
     protected void playSound(AudioClip clip) {
@@ -77,42 +87,44 @@ public class OptionMenu {
     public BooleanProperty soundEnabledProperty() { return soundEnabled; }
 
     public final void draw() {
-        canvasRenderer.fillCanvas(style.backgroundFill());
+        final GraphicsContext ctx = renderer.ctx();
+        renderer.fillCanvas(style.backgroundFill());
 
-        g.save();
-        g.scale(scaling.get(), scaling.get());
+        ctx.save();
+        ctx.scale(scaling.get(), scaling.get());
 
-        g.setFont(style.titleFont());
-        g.setFill(style.titleTextFill());
+        ctx.setFont(style.titleFont());
+        ctx.setFill(style.titleTextFill());
         drawCentered(title, 6 * TS);
 
-        g.setFont(style.textFont());
+        ctx.setFont(style.textFont());
         for (int i = 0; i < entries.size(); ++i) {
             int y = (12 + 3 * i) * TS;
             OptionMenuEntry<?> entry = entries.get(i);
             if (i == selectedEntryIndex) {
-                g.setFill(style.entryTextFill());
-                g.fillText("-", (textCol - 2) * TS, y);
-                g.fillText(">", (textCol - 2) * TS + HTS, y);
+                ctx.setFill(style.entryTextFill());
+                ctx.fillText("-", (textCol - 2) * TS, y);
+                ctx.fillText(">", (textCol - 2) * TS + HTS, y);
             }
-            g.setFill(style.entryTextFill());
-            g.fillText(entry.text, textCol * TS, y);
-            g.setFill(entry.enabled ? style.entryValueFill() : style.entryValueDisabledFill());
-            g.fillText(entry.selectedValueText(), valueCol * TS, y);
+            ctx.setFill(style.entryTextFill());
+            ctx.fillText(entry.text, textCol * TS, y);
+            ctx.setFill(entry.enabled ? style.entryValueFill() : style.entryValueDisabledFill());
+            ctx.fillText(entry.selectedValueText(), valueCol * TS, y);
         }
 
         drawUsageInfo();
 
-        g.restore();
+        ctx.restore();
     }
 
     protected void drawUsageInfo() {}
 
     protected void drawCentered(String text, double y) {
-        g.save();
-        g.setTextAlign(TextAlignment.CENTER);
-        g.fillText(text, (canvas.getWidth() * 0.5) / scaling.get(), y);
-        g.restore();
+        final GraphicsContext ctx = renderer.ctx();
+        ctx.save();
+        ctx.setTextAlign(TextAlignment.CENTER);
+        ctx.fillText(text, (renderer.ctx().getCanvas().getWidth() * 0.5) / scaling.get(), y);
+        ctx.restore();
     }
 
     protected void handleKeyPress(KeyEvent e) {
