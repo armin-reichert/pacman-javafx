@@ -121,11 +121,13 @@ public class OptionMenu {
                 playSound(style.entrySelectedSound());
                 selectedEntryIndex++;
                 if (selectedEntryIndex == entries.size()) selectedEntryIndex = 0;
+                e.consume();
             }
             case UP -> {
                 playSound(style.entrySelectedSound());
                 selectedEntryIndex--;
                 if (selectedEntryIndex == -1) selectedEntryIndex = entries.size() - 1;
+                e.consume();
             }
             case SPACE -> {
                 playSound(style.valueSelectedSound());
@@ -133,6 +135,7 @@ public class OptionMenu {
                 entry.selectedValueIndex++;
                 if (entry.selectedValueIndex == entry.valueList.size()) entry.selectedValueIndex = 0;
                 entry.onValueChanged(entry.selectedValueIndex);
+                e.consume();
             }
         }
     }

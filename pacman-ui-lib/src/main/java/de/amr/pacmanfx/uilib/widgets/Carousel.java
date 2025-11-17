@@ -18,6 +18,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -110,6 +111,13 @@ public class Carousel extends StackPane {
                 timer.statusProperty().map(status -> status.equals(Animation.Status.RUNNING)));
 
         arrangeChildren();
+
+        setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.SPACE) {
+                Logger.debug(e);
+                toggleTimer();
+            }
+        });
     }
 
     public void restartTimer() {
@@ -129,6 +137,15 @@ public class Carousel extends StackPane {
         if (timer.getStatus() == Animation.Status.RUNNING) {
             timer.pause();
             Logger.info("Carousel timer paused");
+        }
+    }
+
+    public void toggleTimer() {
+        if (timer.getStatus() == Animation.Status.RUNNING) {
+            pauseTimer();
+        }
+        else {
+            startTimer();
         }
     }
 
