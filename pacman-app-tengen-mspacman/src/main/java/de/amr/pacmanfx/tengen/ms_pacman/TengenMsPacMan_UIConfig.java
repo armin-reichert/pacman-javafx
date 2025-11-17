@@ -225,7 +225,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         soundManager.registerMediaPlayer(SoundID.BONUS_ACTIVE,            RES_TENGEN.url("sound/fruitbounce.wav"));
         soundManager.registerAudioClip(SoundID.BONUS_EATEN,               RES_TENGEN.url("sound/ms-fruit.wav"));
         soundManager.registerAudioClip(SoundID.EXTRA_LIFE,                RES_TENGEN.url("sound/ms-extralife.wav"));
-        soundManager.registerMediaPlayer(SoundID.GAME_OVER,               RES_TENGEN.url("sound/common/game-over.mp3"));
+        soundManager.registerAudioClip(SoundID.GAME_OVER,                 RES_TENGEN.url("sound/common/game-over.mp3"));
         soundManager.registerMediaPlayer(SoundID.GAME_READY,              RES_TENGEN.url("sound/ms-start.wav"));
         soundManager.registerAudioClip(SoundID.GHOST_EATEN,               RES_TENGEN.url("sound/ms-ghosteat.wav"));
         soundManager.registerMediaPlayer(SoundID.GHOST_RETURNS,           RES_TENGEN.url("sound/ms-eyes.wav"));

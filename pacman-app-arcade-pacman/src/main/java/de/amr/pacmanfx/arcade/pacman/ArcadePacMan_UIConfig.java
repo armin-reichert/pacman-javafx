@@ -142,7 +142,7 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
         soundManager.registerAudioClip(SoundID.BONUS_EATEN,        ARCADE_PAC_MAN_RESOURCES.url("sound/eat_fruit.mp3"));
         soundManager.registerAudioClip(SoundID.COIN_INSERTED,      ARCADE_PAC_MAN_RESOURCES.url("sound/credit.wav"));
         soundManager.registerAudioClip(SoundID.EXTRA_LIFE,         ARCADE_PAC_MAN_RESOURCES.url("sound/extend.mp3"));
-        soundManager.registerMediaPlayer(SoundID.GAME_OVER,        ARCADE_PAC_MAN_RESOURCES.url("sound/common/game-over.mp3"));
+        soundManager.registerAudioClip(SoundID.GAME_OVER,          ARCADE_PAC_MAN_RESOURCES.url("sound/common/game-over.mp3"));
         soundManager.registerMediaPlayer(SoundID.GAME_READY,       ARCADE_PAC_MAN_RESOURCES.url("sound/game_start.mp3"));
         soundManager.registerAudioClip(SoundID.GHOST_EATEN,        ARCADE_PAC_MAN_RESOURCES.url("sound/eat_ghost.mp3"));
         soundManager.registerMediaPlayer(SoundID.GHOST_RETURNS,    ARCADE_PAC_MAN_RESOURCES.url("sound/retreating.mp3"));
