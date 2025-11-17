@@ -332,6 +332,19 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 scene.blinking.tick();
                 scene.pacMan.move();
                 scene.ghosts.forEach(Ghost::move);
+
+                // wobbling
+                float delta = 0.5f;
+                final Ghost pinky = scene.ghosts.get(PINK_GHOST_SPEEDY);
+                final Ghost inky = scene.ghosts.get(CYAN_GHOST_BASHFUL);
+                int frame = (int) (timer.tickCount() % 6);
+                if (frame == 2) {
+                    pinky.setX(pinky.x() + delta);
+                    inky.setX(inky.x() - delta);
+                } else if (frame == 5) {
+                    pinky.setX(pinky.x() - delta);
+                    inky.setX(inky.x() + delta);
+                }
             }
         },
 
