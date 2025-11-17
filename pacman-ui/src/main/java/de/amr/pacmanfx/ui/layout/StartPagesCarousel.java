@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.ui.GlobalGameAssets;
 import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.api.ActionBindingsManager;
@@ -43,38 +42,17 @@ import static java.util.Objects.requireNonNull;
  */
 public class StartPagesCarousel extends Carousel implements GameUI_View {
 
-    public static final Color START_BUTTON_COLOR = Color.rgb(0, 155, 252, 0.7);
+    public static final Color START_BUTTON_BGCOLOR = Color.rgb(0, 155, 252, 0.7);
+    public static final Color START_BUTTON_FILLCOLOR = Color.rgb(255, 255, 255);
     public static final int PAGE_CHANGE_SECONDS = 20;
 
     public static Node createDefaultStartButton(GameUI ui, Runnable action) {
-        final GlobalGameAssets assets = ui.assets();
         var button = new FancyButton(
-            assets.translated("play_button"),
-            Font.font(assets.font_Arcade_8.getFamily(), 30),
-            START_BUTTON_COLOR,
-            Color.WHITE);
+            ui.assets().translated("play_button"),
+            Font.font(ui.assets().font_Arcade_8.getFamily(), 30),
+            START_BUTTON_BGCOLOR, START_BUTTON_FILLCOLOR);
         button.setAction(action);
         StackPane.setAlignment(button, Pos.BOTTOM_CENTER);
-        return button;
-    }
-
-    private static Node createDefaultNavigationButton(Direction dir) {
-        final int iconSize = 48;
-        final Color iconColor = Color.gray(0.69);
-        final FontIcon icon = switch (dir) {
-            case LEFT  -> FontIcon.of(FontAwesomeSolid.CHEVRON_CIRCLE_LEFT, iconSize, iconColor);
-            case RIGHT -> FontIcon.of(FontAwesomeSolid.CHEVRON_CIRCLE_RIGHT, iconSize, iconColor);
-            default -> throw new IllegalArgumentException("Illegal navigation direction: %s".formatted(dir));
-        };
-        icon.setOpacity(0.2);
-        icon.setOnMouseEntered(e -> icon.setOpacity(0.8));
-        icon.setOnMouseExited(e -> icon.setOpacity(0.2));
-
-        final var button = new HBox(icon);
-        button.setMaxHeight(iconSize);
-        button.setMaxWidth(iconSize);
-        button.setPadding(new Insets(5));
-        StackPane.setAlignment(button, dir == Direction.LEFT ? Pos.CENTER_LEFT : Pos.CENTER_RIGHT);
         return button;
     }
 
@@ -90,7 +68,7 @@ public class StartPagesCarousel extends Carousel implements GameUI_View {
         }
     };
 
-    private final List<StartPage> startPages = new ArrayList<>();
+    private final List<StartPage> pages = new ArrayList<>();
     private final ActionBindingsManager actionBindings = new DefaultActionBindingsManager();
 
     public StartPagesCarousel() {
@@ -115,10 +93,10 @@ public class StartPagesCarousel extends Carousel implements GameUI_View {
             Logger.info("Carousel selection changed from {} to {}", ov, nv);
             int oldIndex = ov.intValue(), newIndex = nv.intValue();
             if (oldIndex != -1) {
-                startPages.get(oldIndex).onExit(ui);
+                pages.get(oldIndex).onExit(ui);
             }
             if (newIndex != -1) {
-                StartPage startPage = startPages.get(newIndex);
+                StartPage startPage = pages.get(newIndex);
                 startPage.onEnter(ui);
                 startPage.layoutRoot().requestFocus();
             }
@@ -148,7 +126,23 @@ public class StartPagesCarousel extends Carousel implements GameUI_View {
 
     @Override
     protected Node createNavigationButton(Direction dir) {
-        return createDefaultNavigationButton(dir);
+        final int iconSize = 48;
+        final Color iconColor = Color.gray(0.69);
+        final FontIcon icon = switch (dir) {
+            case LEFT  -> FontIcon.of(FontAwesomeSolid.CHEVRON_CIRCLE_LEFT, iconSize, iconColor);
+            case RIGHT -> FontIcon.of(FontAwesomeSolid.CHEVRON_CIRCLE_RIGHT, iconSize, iconColor);
+            default -> throw new IllegalArgumentException("Illegal navigation direction: %s".formatted(dir));
+        };
+        icon.setOpacity(0.2);
+        icon.setOnMouseEntered(e -> icon.setOpacity(0.8));
+        icon.setOnMouseExited(e -> icon.setOpacity(0.2));
+
+        final var button = new HBox(icon);
+        button.setMaxHeight(iconSize);
+        button.setMaxWidth(iconSize);
+        button.setPadding(new Insets(5));
+        StackPane.setAlignment(button, dir == Direction.LEFT ? Pos.CENTER_LEFT : Pos.CENTER_RIGHT);
+        return button;
     }
 
     @Override
@@ -172,12 +166,12 @@ public class StartPagesCarousel extends Carousel implements GameUI_View {
 
     public Optional<StartPage> currentStartPage() {
         final int selectedIndex = selectedIndex();
-        return selectedIndex >= 0 ? Optional.of(startPages.get(selectedIndex)) : Optional.empty();
+        return selectedIndex >= 0 ? Optional.of(pages.get(selectedIndex)) : Optional.empty();
     }
 
     public void addStartPage(StartPage startPage) {
         requireNonNull(startPage);
-        startPages.add(startPage);
+        pages.add(startPage);
         addItem(startPage.layoutRoot());
         setNavigationButtonsVisible(numItems() >= 2);
         Logger.info("Start page '{}' added", startPage.getClass().getSimpleName());
