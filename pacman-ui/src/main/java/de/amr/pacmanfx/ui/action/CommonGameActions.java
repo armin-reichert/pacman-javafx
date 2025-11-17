@@ -222,7 +222,11 @@ public final class CommonGameActions {
             } else {
                 game.setCollisionStrategy(CollisionStrategy.CENTER_DISTANCE);
             }
-            ui.showFlashMessage("Collision strategy is %s".formatted(game.collisionStrategy()));
+            if (game.collisionStrategy() == CollisionStrategy.SAME_TILE) {
+                ui.showFlashMessage("Using original Arcade collision strategy"); //TODO localize
+            } else {
+                ui.showFlashMessage("Using improved collision strategy"); //TODO localize
+            }
         }
     };
 
