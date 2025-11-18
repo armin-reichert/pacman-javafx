@@ -38,7 +38,7 @@ public interface ActionBindingsManager {
         public void bind(GameAction action, Set<ActionBinding> actionBindings) {}
 
         @Override
-        public void setKeyCombination(GameAction action, KeyCombination combination) {}
+        public void addKeyCombination(GameAction action, KeyCombination combination) {}
 
         @Override
         public Optional<GameAction> matchingAction(Keyboard keyboard) { return Optional.empty(); }
@@ -59,7 +59,7 @@ public interface ActionBindingsManager {
 
     void removeBindingsFromKeyboard(Keyboard keyboard);
 
-    void setKeyCombination(GameAction action, KeyCombination combination);
+    void addKeyCombination(GameAction action, KeyCombination combination);
 
     void bind(GameAction gameAction, Set<ActionBinding> actionBindings);
 }

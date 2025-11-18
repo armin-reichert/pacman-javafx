@@ -309,8 +309,8 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
     public void init() {
         context().game().hud().showScore(true);
         perspectiveIDProperty().bind(PROPERTY_3D_PERSPECTIVE_ID);
-        actionBindings.setKeyCombination(actionDroneUp, control(KeyCode.MINUS));
-        actionBindings.setKeyCombination(actionDroneDown, control(KeyCode.PLUS));
+        actionBindings.addKeyCombination(actionDroneUp, control(KeyCode.MINUS));
+        actionBindings.addKeyCombination(actionDroneDown, control(KeyCode.PLUS));
         actionBindings.assignBindingsToKeyboard(ui.keyboard());
     }
 
