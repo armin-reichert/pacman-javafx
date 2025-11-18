@@ -31,14 +31,17 @@ import static de.amr.pacmanfx.Globals.theGameContext;
  */
 public class PacManGames3dApp extends Application {
 
+    private static final float ASPECT_RATIO = 1.6f; // 16:10 aspect ratio
+    private static final float USED_HEIGHT = 0.8f;  // 80% of available height
+
     private GameUI ui;
 
     @Override
     public void start(Stage primaryStage) {
         try {
             // Use 80% of available screen height, aspect 16:10
-            final int height = (int) Math.round(0.8 * Screen.getPrimary().getBounds().getHeight());
-            final int width  = (int) Math.round(1.6 * height);
+            final int height = (int) Math.round(USED_HEIGHT * Screen.getPrimary().getBounds().getHeight());
+            final int width  = Math.round(ASPECT_RATIO * height);
 
             //TODO create this by reflection inside builder too?
             final var mapSelectorXXL = new PacManXXL_Common_MapSelector(theGameContext().customMapDir());
@@ -99,12 +102,14 @@ public class PacManGames3dApp extends Application {
                 .build();
 
             ui.directoryWatchdog().addEventListener(watchEvents -> {
-                mapSelectorXXL.customMapPrototypes().clear();
-                mapSelectorXXL.loadCustomMapPrototypes();
+                if (!watchEvents.isEmpty()) {
+                    mapSelectorXXL.customMapPrototypes().clear();
+                    mapSelectorXXL.loadCustomMapPrototypes();
+                }
             });
             ui.showUI();
         }
-        catch (Exception x) {
+        catch (RuntimeException x) {
             Logger.error(x);
             Logger.error("An error occurred on starting the game.");
             Platform.exit();
@@ -113,6 +118,8 @@ public class PacManGames3dApp extends Application {
 
     @Override
     public void stop() {
-        ui.terminate();
+        if (ui != null) {
+            ui.terminate();
+        }
     }
 }
