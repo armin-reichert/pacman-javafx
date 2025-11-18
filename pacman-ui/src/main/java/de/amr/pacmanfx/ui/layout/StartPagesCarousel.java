@@ -56,15 +56,17 @@ public class StartPagesCarousel extends Carousel implements GameUI_View {
         return button;
     }
 
-    private final GameAction actionToggleAutoPlay = new GameAction("TOGGLE_PLAY") {
+    private final GameAction actionShowPrevPage = new GameAction("SHOW_PREV_PAGE") {
         @Override
         public void execute(GameUI ui) {
-            if (isPlaying()) {
-                pauseTimer();
-            } else {
-                startTimer();
-            }
-            Logger.info("Start pages carousel is {}", isPlaying() ? "playing" : "stopped");
+            showPreviousItem();
+        }
+    };
+
+    private final GameAction actionShowNextPage = new GameAction("SHOW_NEXT_PAGE") {
+        @Override
+        public void execute(GameUI ui) {
+            showNextItem();
         }
     };
 
@@ -73,6 +75,11 @@ public class StartPagesCarousel extends Carousel implements GameUI_View {
 
     public StartPagesCarousel() {
         super(Duration.seconds(PAGE_CHANGE_SECONDS));
+
+        actionBindings.setKeyCombination(actionShowPrevPage,         bare(KeyCode.LEFT));
+        actionBindings.setKeyCombination(actionShowNextPage,         bare(KeyCode.RIGHT));
+        actionBindings.setKeyCombination(ACTION_BOOT_SHOW_PLAY_VIEW, bare(KeyCode.ENTER));
+        actionBindings.setKeyCombination(ACTION_TOGGLE_PAUSED,       bare(KeyCode.P));
     }
 
     @Override
@@ -102,26 +109,6 @@ public class StartPagesCarousel extends Carousel implements GameUI_View {
             }
         });
         setBackground(ui.assets().background_PacManWallpaper);
-
-        final var actionShowPrevPage = new GameAction("SHOW_PREV_PAGE") {
-            @Override
-            public void execute(GameUI ui) {
-                showPreviousItem();
-            }
-        };
-
-        final var actionShowNextPage = new GameAction("SHOW_NEXT_PAGE") {
-            @Override
-            public void execute(GameUI ui) {
-                showNextItem();
-            }
-        };
-
-        actionBindings.setKeyCombination(actionShowPrevPage,         bare(KeyCode.LEFT));
-        actionBindings.setKeyCombination(actionShowNextPage,         bare(KeyCode.RIGHT));
-        actionBindings.setKeyCombination(actionToggleAutoPlay,       bare(KeyCode.C));
-        actionBindings.setKeyCombination(ACTION_BOOT_SHOW_PLAY_VIEW, bare(KeyCode.ENTER));
-        actionBindings.setKeyCombination(ACTION_TOGGLE_PAUSED,       bare(KeyCode.P));
     }
 
     @Override

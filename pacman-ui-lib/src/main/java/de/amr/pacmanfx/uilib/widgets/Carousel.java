@@ -149,7 +149,7 @@ public class Carousel extends StackPane {
         }
     }
 
-    public boolean isPlaying() {
+    public boolean isTimerRunning() {
         return timer.getStatus() == Animation.Status.RUNNING;
     }
 
