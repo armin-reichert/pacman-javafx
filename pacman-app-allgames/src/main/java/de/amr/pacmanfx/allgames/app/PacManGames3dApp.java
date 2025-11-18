@@ -11,7 +11,7 @@ import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_StartPage;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman_xxl.*;
-import de.amr.pacmanfx.model.PredefinedGameVariant;
+import de.amr.pacmanfx.model.StandardGameVariant;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
@@ -44,21 +44,21 @@ public class PacManGames3dApp extends Application {
             var mapSelectorXXL = new PacManXXL_Common_MapSelector(theGameContext().customMapDir());
 
             ui = GameUI_Builder.createUI(primaryStage, width, height)
-                .game(PredefinedGameVariant.PACMAN.name(),
+                .game(StandardGameVariant.PACMAN.name(),
                     ArcadePacMan_GameModel.class, ArcadePacMan_UIConfig.class)
-                .game(PredefinedGameVariant.MS_PACMAN.name(),
+                .game(StandardGameVariant.MS_PACMAN.name(),
                     ArcadeMsPacMan_GameModel.class, ArcadeMsPacMan_UIConfig.class)
-                .game(PredefinedGameVariant.MS_PACMAN_TENGEN.name(),
+                .game(StandardGameVariant.MS_PACMAN_TENGEN.name(),
                     TengenMsPacMan_GameModel.class, TengenMsPacMan_UIConfig.class)
-                .game(PredefinedGameVariant.PACMAN_XXL.name(),
+                .game(StandardGameVariant.PACMAN_XXL.name(),
                     PacManXXL_PacMan_GameModel.class, mapSelectorXXL, PacManXXL_PacMan_UIConfig.class)
-                .game(PredefinedGameVariant.MS_PACMAN_XXL.name(),
+                .game(StandardGameVariant.MS_PACMAN_XXL.name(),
                     PacManXXL_MsPacMan_GameModel.class, mapSelectorXXL, PacManXXL_MsPacMan_UIConfig.class)
                 // start pages are added to carousel in this order:
-                .startPage(ArcadePacMan_StartPage.class, PredefinedGameVariant.PACMAN.name())
-                .startPage(ArcadeMsPacMan_StartPage.class, PredefinedGameVariant.MS_PACMAN.name())
-                .startPage(TengenMsPacMan_StartPage.class, PredefinedGameVariant.MS_PACMAN_TENGEN.name())
-                .startPage(PacManXXL_Common_StartPage.class, PredefinedGameVariant.PACMAN_XXL.name(), PredefinedGameVariant.MS_PACMAN_XXL.name())
+                .startPage(ArcadePacMan_StartPage.class, StandardGameVariant.PACMAN.name())
+                .startPage(ArcadeMsPacMan_StartPage.class, StandardGameVariant.MS_PACMAN.name())
+                .startPage(TengenMsPacMan_StartPage.class, StandardGameVariant.MS_PACMAN_TENGEN.name())
+                .startPage(PacManXXL_Common_StartPage.class, StandardGameVariant.PACMAN_XXL.name(), StandardGameVariant.MS_PACMAN_XXL.name())
                 .dashboard(
                     DashboardID.GENERAL, DashboardID.GAME_CONTROL,
                     DashboardID.SETTINGS_3D,

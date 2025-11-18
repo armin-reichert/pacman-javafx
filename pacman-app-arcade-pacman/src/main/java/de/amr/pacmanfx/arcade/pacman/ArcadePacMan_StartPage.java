@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman;
 
-import de.amr.pacmanfx.model.PredefinedGameVariant;
+import de.amr.pacmanfx.model.StandardGameVariant;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.StartPage;
 import de.amr.pacmanfx.ui.layout.StartPagesCarousel;
@@ -52,7 +52,7 @@ public class ArcadePacMan_StartPage extends StackPane implements StartPage {
 
     @Override
     public void onEnter(GameUI ui) {
-        ui.selectGameVariant(PredefinedGameVariant.PACMAN.name());
+        ui.selectGameVariant(StandardGameVariant.PACMAN.name());
         flyer.selectPage(0);
     }
 

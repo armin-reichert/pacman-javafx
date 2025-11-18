@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.action;
 import de.amr.pacmanfx.controller.CoinMechanism;
 import de.amr.pacmanfx.controller.PacManGamesState;
 import de.amr.pacmanfx.event.GameEventType;
-import de.amr.pacmanfx.model.PredefinedGameVariant;
+import de.amr.pacmanfx.model.StandardGameVariant;
 import de.amr.pacmanfx.ui.api.GameUI;
 
 import java.util.Set;
@@ -51,10 +51,10 @@ public final class ArcadeActions {
         @Override
         public boolean isEnabled(GameUI ui) {
             Set<String> arcadeGames = Set.of(
-                PredefinedGameVariant.PACMAN.name(),
-                PredefinedGameVariant.MS_PACMAN.name(),
-                PredefinedGameVariant.PACMAN_XXL.name(),
-                PredefinedGameVariant.MS_PACMAN_XXL.name()
+                StandardGameVariant.PACMAN.name(),
+                StandardGameVariant.MS_PACMAN.name(),
+                StandardGameVariant.PACMAN_XXL.name(),
+                StandardGameVariant.MS_PACMAN_XXL.name()
             );
             return arcadeGames.contains(ui.gameContext().gameController().gameVariant())
                 && !ui.gameContext().coinMechanism().isEmpty()
