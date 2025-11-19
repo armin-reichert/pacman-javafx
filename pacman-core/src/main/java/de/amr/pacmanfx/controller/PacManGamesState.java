@@ -27,6 +27,9 @@ public enum PacManGamesState implements FsmState<GameContext> {
         @Override
         public void onEnter(GameContext context) {
             timer.restartIndefinitely();
+            context.gameController().cheatUsedProperty().set(false);
+            context.gameController().immunityProperty().set(false);
+            context.gameController().usingAutopilotProperty().set(false);
             context.game().resetEverything();
         }
 
