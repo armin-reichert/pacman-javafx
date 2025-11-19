@@ -54,7 +54,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseSpriteRenderer impleme
             int numFlashes = gameLevel.game().numFlashes(gameLevel);
             MazeSpriteSet mazeSpriteSet = uiConfig.createMazeSpriteSet(worldMap, numFlashes);
             worldMap.setConfigValue(TengenMsPacMan_UIConfig.CONFIG_KEY_MAZE_SPRITE_SET, mazeSpriteSet);
-            Logger.info("Maze sprite set created: {}", mazeSpriteSet);
+            Logger.debug("Maze sprite set created: {}", mazeSpriteSet);
         }
     }
 
