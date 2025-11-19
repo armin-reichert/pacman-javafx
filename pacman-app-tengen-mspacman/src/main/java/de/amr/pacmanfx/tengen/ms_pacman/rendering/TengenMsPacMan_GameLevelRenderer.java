@@ -163,18 +163,18 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseSpriteRenderer impleme
         return dummy.getLayoutBounds().getWidth();
     }
 
-    public void drawDoor(GameLevel gameLevel) {
-        House house = gameLevel.worldMap().terrainLayer().optHouse().orElse(null);
+    public void drawDoor(WorldMap worldMap) {
+        final House house = worldMap.terrainLayer().optHouse().orElse(null);
         if (house == null) {
             return;
         }
-        MazeSpriteSet recoloredMaze = gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.CONFIG_KEY_MAZE_SPRITE_SET);
-        Color doorColor = Color.web(recoloredMaze.mazeImage().colorScheme().strokeColorRGB());
+        final MazeSpriteSet recoloredMaze = worldMap.getConfigValue(TengenMsPacMan_UIConfig.CONFIG_KEY_MAZE_SPRITE_SET);
+        final Color doorColor = Color.web(recoloredMaze.mazeImage().colorScheme().strokeColorRGB());
+        final double scaledTileSize = scaled(TS);
+        final double xMin = house.leftDoorTile().x() * scaledTileSize;
+        final double yMin = house.leftDoorTile().y() * scaledTileSize + scaled(5); // 5 pixels down
         ctx.setFill(doorColor);
-        double s = scaled(TS);
-        double xMin = house.leftDoorTile().x() * s;
-        double yMin = house.leftDoorTile().y() * s + scaled(5); // 5 pixels down
-        ctx.fillRect(xMin, yMin, scaled(16), scaled(2));
+        ctx.fillRect(xMin, yMin, 2 * scaledTileSize, scaled(2));
     }
 
     private void overPaintActorSprites(GameLevel gameLevel) {
