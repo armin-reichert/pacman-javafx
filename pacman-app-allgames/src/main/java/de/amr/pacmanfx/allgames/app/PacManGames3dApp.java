@@ -39,7 +39,6 @@ public class PacManGames3dApp extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-            // Use 80% of available screen height, aspect 16:10
             final int height = (int) Math.round(USED_HEIGHT * Screen.getPrimary().getBounds().getHeight());
             final int width  = Math.round(ASPECT_RATIO * height);
 
