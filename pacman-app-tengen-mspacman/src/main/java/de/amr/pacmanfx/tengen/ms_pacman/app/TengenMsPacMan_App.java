@@ -21,13 +21,15 @@ public class TengenMsPacMan_App extends Application {
 
     private static final String GAME_VARIANT_NAME = MS_PACMAN_TENGEN.name();
 
+    private static final float ASPECT_RATIO = NES_ASPECT; // 32:30 aspect ratio
+    private static final float USED_HEIGHT = 0.8f;  // 80% of available height
+
     private GameUI ui;
 
     @Override
     public void start(Stage primaryStage) {
-        // UI size: 80% of available screen height, aspect NES screen aspect 32:30
-        final double height = 0.8 * Screen.getPrimary().getBounds().getHeight();
-        final double width  = NES_ASPECT * height;
+        final int height = (int) Math.round(USED_HEIGHT * Screen.getPrimary().getBounds().getHeight());
+        final int width  = Math.round(ASPECT_RATIO * height);
         ui = GameUI_Builder.createUI(primaryStage, width, height)
             .game(
                 GAME_VARIANT_NAME,
@@ -42,11 +44,14 @@ public class TengenMsPacMan_App extends Application {
                 DashboardID.KEYBOARD_SHORTCUTS_GLOBAL, DashboardID.KEYBOARD_SHORTCUTS_LOCAL,
                 DashboardID.ABOUT)
             .build();
+
         ui.showUI();
     }
 
     @Override
     public void stop() {
-        ui.terminate();
+        if (ui != null) {
+            ui.terminate();
+        }
     }
 }
