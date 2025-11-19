@@ -79,8 +79,13 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseSpriteRenderer impleme
         );
         overPaintActorSprites(gameLevel);
         drawFood(gameLevel);
-        drawMessage(gameLevel);
-        drawMessage(gameLevel);
+        gameLevel.optMessage().ifPresent(message -> {
+            switch (message.type()) {
+                case GAME_OVER -> drawGameOverMessage(gameLevel, message);
+                case READY -> drawReadyMessage(message);
+                case TEST -> drawTestMessage(gameLevel, message);
+            }
+        });
     }
 
     private void drawFood(GameLevel gameLevel) {
@@ -123,16 +128,6 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseSpriteRenderer impleme
                 ctx.fillRect(cx + offset, cy, HTS, size);
                 ctx.fillRect(cx, cy + offset, size, HTS);
                 ctx.fillRect(cx + 1, cy + 1, size - 2, size - 2);
-            }
-        });
-    }
-
-    private void drawMessage(GameLevel gameLevel) {
-        gameLevel.optMessage().ifPresent(message -> {
-            switch (message.type()) {
-                case GAME_OVER -> drawGameOverMessage(gameLevel, message);
-                case READY -> drawReadyMessage(message);
-                case TEST -> drawTestMessage(gameLevel, message);
             }
         });
     }
