@@ -12,6 +12,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HuntingPhase;
 import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.actors.ActorSpeedControl;
+import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
@@ -77,6 +78,7 @@ public class InfoBoxGameInfo extends InfoBox {
         addDynamicLabeledValue("",                ifGameLevelPresent(gameLevel -> fmtHuntingTicksRunning(gameLevel.huntingTimer())));
         addDynamicLabeledValue("",                ifGameLevelPresent(gameLevel -> fmtHuntingTicksRemaining(gameLevel.huntingTimer())));
 
+        addDynamicLabeledValue("Collision mode",  ifGameLevelPresent(this::fmtCollisionMode));
         addDynamicLabeledValue("Pac-Man speed",   ifGameLevelPresent(this::fmtPacNormalSpeed));
         addDynamicLabeledValue("- empowered",     ifGameLevelPresent(this::fmtPacSpeedPowered));
         addDynamicLabeledValue("Power Duration",  ifGameLevelPresent(this::fmtPacPowerTime));
@@ -97,6 +99,14 @@ public class InfoBoxGameInfo extends InfoBox {
             return "Tick %s of ∞".formatted(t.tickCount());
         }
         return "Tick %d of %d. Remaining: %d".formatted(t.tickCount(), t.durationTicks(), t.remainingTicks());
+    }
+
+    private String fmtCollisionMode(GameLevel gameLevel) {
+        CollisionStrategy collisionStrategy = gameLevel.game().collisionStrategy();
+        return switch (collisionStrategy) {
+            case SAME_TILE -> "Same Tile";
+            case CENTER_DISTANCE -> "Distance-based";
+        };
     }
 
     private String fmtHuntingPhase() {
