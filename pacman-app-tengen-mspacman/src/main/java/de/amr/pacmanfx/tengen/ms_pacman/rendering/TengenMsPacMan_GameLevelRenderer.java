@@ -10,6 +10,7 @@ import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.worldmap.FoodLayer;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
+import de.amr.pacmanfx.model.DefaultWorldMapPropertyName;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelMessage;
 import de.amr.pacmanfx.model.House;
@@ -135,8 +136,8 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseSpriteRenderer impleme
     private void drawGameOverMessage(GameLevel gameLevel, GameLevelMessage message) {
         final NES_ColorScheme colorScheme = gameLevel.worldMap().getConfigValue(CONFIG_KEY_NES_COLOR_SCHEME);
         Color color = gameLevel.isDemoLevel()
-                ? Color.web(colorScheme.strokeColorRGB())
-                : uiConfig.assets().color("color.game_over_message");
+            ? Color.web(colorScheme.strokeColorRGB())
+            : uiConfig.assets().color("color.game_over_message");
         fillTextCentered("GAME OVER", color, arcadeFont8(), message.x(), message.y());
     }
 
@@ -182,10 +183,12 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseSpriteRenderer impleme
         ctx.fillRect(inHouseArea.getMinX(), inHouseArea.getMinY(), inHouseArea.getWidth(), inHouseArea.getHeight());
 
         // Now the actor sprites outside the house. Be careful not to over-paint nearby obstacle edges!
-        Vector2i pacTile = gameLevel.worldMap().terrainLayer().getTileProperty("pos_pac", Vector2i.of(14, 26));
+        final Vector2i pacTile = gameLevel.worldMap().terrainLayer()
+            .getTileProperty(DefaultWorldMapPropertyName.POS_PAC, Vector2i.of(14, 26));
         overPaintActorSprite(pacTile, margin);
 
-        Vector2i redGhostTile = gameLevel.worldMap().terrainLayer().getTileProperty("pos_ghost_1_red", Vector2i.of(13, 14));
+        final Vector2i redGhostTile = gameLevel.worldMap().terrainLayer()
+            .getTileProperty(DefaultWorldMapPropertyName.POS_GHOST_1_RED, Vector2i.of(13, 14));
         overPaintActorSprite(redGhostTile, margin);
     }
 
