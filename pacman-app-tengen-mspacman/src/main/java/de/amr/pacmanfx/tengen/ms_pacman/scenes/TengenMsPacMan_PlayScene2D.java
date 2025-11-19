@@ -31,6 +31,7 @@ import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.SubSceneProvider;
 import de.amr.pacmanfx.ui.sound.SoundID;
+import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.CommonRenderInfoKey;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
@@ -380,8 +381,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
             .map(MovingGameLevelMessage.class::cast)
             .ifPresent(movingGameLevelMessage -> {
                 Font font = Font.font(BaseRenderer.DEFAULT_ARCADE_FONT.getFamily(), TS);
-                double width = gameLevelRenderer.messageTextWidth(gameLevel, MessageType.GAME_OVER, font);
-                movingGameLevelMessage.start(sizeInPx().x(), width);
+                movingGameLevelMessage.start(sizeInPx().x(), Ufx.textWidth("GAME OVER", font));
             });
     }
 

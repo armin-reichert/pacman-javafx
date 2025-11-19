@@ -11,8 +11,8 @@ import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.worldmap.FoodLayer;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.GameLevelMessage;
 import de.amr.pacmanfx.model.House;
-import de.amr.pacmanfx.model.MessageType;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
@@ -23,8 +23,6 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.HTS;
@@ -131,36 +129,28 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseSpriteRenderer impleme
 
     private void drawMessage(GameLevel gameLevel) {
         gameLevel.optMessage().ifPresent(message -> {
-            NES_ColorScheme colorScheme = gameLevel.worldMap().getConfigValue(CONFIG_KEY_NES_COLOR_SCHEME);
-            String text = messageText(gameLevel, message.type());
             switch (message.type()) {
-                case GAME_OVER -> {
-                    Color color = gameLevel.isDemoLevel()
-                        ? Color.web(colorScheme.strokeColorRGB())
-                        : uiConfig.assets().color("color.game_over_message");
-                    fillTextCentered(text, color, arcadeFont8(), message.x(), message.y());
-                }
-                case READY -> fillTextCentered(text, uiConfig.assets().color("color.ready_message"), arcadeFont8(),
-                    message.x(), message.y());
-                case TEST -> fillTextCentered(text, nesColor(0x28), arcadeFont8(), message.x(), message.y());
+                case GAME_OVER -> drawGameOverMessage(gameLevel, message);
+                case READY -> drawReadyMessage(message);
+                case TEST -> drawTestMessage(gameLevel, message);
             }
         });
     }
 
-    private String messageText(GameLevel gameLevel, MessageType messageType) {
-        return switch (messageType) {
-            case GAME_OVER -> "GAME OVER";
-            case READY -> "READY!";
-            case TEST -> "TEST    L%02d".formatted(gameLevel.number());
-        };
+    private void drawGameOverMessage(GameLevel gameLevel, GameLevelMessage message) {
+        final NES_ColorScheme colorScheme = gameLevel.worldMap().getConfigValue(CONFIG_KEY_NES_COLOR_SCHEME);
+        Color color = gameLevel.isDemoLevel()
+                ? Color.web(colorScheme.strokeColorRGB())
+                : uiConfig.assets().color("color.game_over_message");
+        fillTextCentered("GAME OVER", color, arcadeFont8(), message.x(), message.y());
     }
 
-    public double messageTextWidth(GameLevel gameLevel, MessageType messageType, Font font) {
-        String messageText = messageText(gameLevel, messageType);
-        Text dummy = new Text(messageText);
-        // unscaled font!
-        dummy.setFont(font);
-        return dummy.getLayoutBounds().getWidth();
+    private void drawReadyMessage(GameLevelMessage message) {
+        fillTextCentered("READY!", uiConfig.assets().color("color.ready_message"), arcadeFont8(), message.x(), message.y());
+    }
+
+    private void drawTestMessage(GameLevel gameLevel, GameLevelMessage message) {
+        fillTextCentered("TEST    L%02d".formatted(gameLevel.number()), nesColor(0x28), arcadeFont8(), message.x(), message.y());
     }
 
     public void drawDoor(WorldMap worldMap) {

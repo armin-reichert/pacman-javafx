@@ -152,6 +152,12 @@ public interface Ufx {
         return Font.font(font.getFamily(), scaling * font.getSize());
     }
 
+    static double textWidth(String s, Font font) {
+        final Text dummy = new Text(s);
+        dummy.setFont(font);
+        return dummy.getLayoutBounds().getWidth();
+    }
+
     /**
      * @param paint color
      * @return material with Phong shading (diffuse=color, specular=color.brighter)
