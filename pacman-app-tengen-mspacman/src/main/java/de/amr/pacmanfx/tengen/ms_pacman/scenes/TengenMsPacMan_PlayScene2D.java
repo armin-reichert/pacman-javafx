@@ -513,6 +513,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
         gameLevelRenderer.ctx().translate(scaled(CONTENT_INDENT), 0);
         gameLevelRenderer.drawGameLevel(gameLevel, gameLevelRenderInfo);
         drawActors(gameLevel);
+        gameLevelRenderer.drawDoor(gameLevel); // ghost appear under door when accessing house!
         gameLevelRenderer.ctx().restore();
     }
 

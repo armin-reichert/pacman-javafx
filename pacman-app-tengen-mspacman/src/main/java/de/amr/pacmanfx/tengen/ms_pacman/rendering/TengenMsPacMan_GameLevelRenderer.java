@@ -15,7 +15,10 @@ import de.amr.pacmanfx.model.House;
 import de.amr.pacmanfx.model.MessageType;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
-import de.amr.pacmanfx.uilib.rendering.*;
+import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
+import de.amr.pacmanfx.uilib.rendering.CommonRenderInfoKey;
+import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
+import de.amr.pacmanfx.uilib.rendering.RenderInfo;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -160,8 +163,23 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseSpriteRenderer impleme
         return dummy.getLayoutBounds().getWidth();
     }
 
-    private void overPaintActorSprites(GameLevel level) {
-        House house = level.worldMap().terrainLayer().optHouse().orElse(null);
+    public void drawDoor(GameLevel gameLevel) {
+        House house = gameLevel.worldMap().terrainLayer().optHouse().orElse(null);
+        if (house == null) {
+            Logger.error("No house exists in game level!");
+            return;
+        }
+        MazeSpriteSet recoloredMaze =  gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.CONFIG_KEY_MAZE_SPRITE_SET);
+        Color doorColor = Color.web(recoloredMaze.mazeImage().colorScheme().strokeColorRGB());
+        ctx.setFill(doorColor);
+        double s = scaled(TS);
+        double xMin = house.leftDoorTile().x() * s;
+        double yMin = house.leftDoorTile().y() * s + scaled(5); // 5 pixels down
+        ctx.fillRect(xMin, yMin, scaled(16), scaled(2));
+    }
+
+    private void overPaintActorSprites(GameLevel gameLevel) {
+        House house = gameLevel.worldMap().terrainLayer().optHouse().orElse(null);
         if (house == null) {
             Logger.error("No house exists in game level!");
             return;
@@ -182,10 +200,10 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseSpriteRenderer impleme
         ctx.fillRect(inHouseArea.getMinX(), inHouseArea.getMinY(), inHouseArea.getWidth(), inHouseArea.getHeight());
 
         // Now the actor sprites outside the house. Be careful not to over-paint nearby obstacle edges!
-        Vector2i pacTile = level.worldMap().terrainLayer().getTileProperty("pos_pac", Vector2i.of(14, 26));
+        Vector2i pacTile = gameLevel.worldMap().terrainLayer().getTileProperty("pos_pac", Vector2i.of(14, 26));
         overPaintActorSprite(pacTile, margin);
 
-        Vector2i redGhostTile = level.worldMap().terrainLayer().getTileProperty("pos_ghost_1_red", Vector2i.of(13, 14));
+        Vector2i redGhostTile = gameLevel.worldMap().terrainLayer().getTileProperty("pos_ghost_1_red", Vector2i.of(13, 14));
         overPaintActorSprite(redGhostTile, margin);
     }
 
