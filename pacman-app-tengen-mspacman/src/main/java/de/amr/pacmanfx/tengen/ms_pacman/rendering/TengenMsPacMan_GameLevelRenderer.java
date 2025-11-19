@@ -178,20 +178,19 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseSpriteRenderer impleme
     }
 
     private void overPaintActorSprites(GameLevel gameLevel) {
-        House house = gameLevel.worldMap().terrainLayer().optHouse().orElse(null);
+        final House house = gameLevel.worldMap().terrainLayer().optHouse().orElse(null);
         if (house == null) {
             return;
         }
 
-        double margin = scaled(1), halfMargin = 0.5f * margin;
-        double s = scaled(TS);
-
         // Over-paint area at house bottom where the ghost sprites are shown in map
-        var inHouseArea = new Rectangle2D(
-            halfMargin + s * (house.minTile().x() + 1),
-            halfMargin + s * (house.minTile().y() + 2),
-            s * (house.sizeInTiles().x() - 2) - margin,
-            s * 2 - margin
+        final double margin = scaling();
+        final double scaledTileSize = scaled(TS);
+        final var inHouseArea = new Rectangle2D(
+            0.5 * margin + scaledTileSize * (house.minTile().x() + 1),
+            0.5 * margin + scaledTileSize * (house.minTile().y() + 2),
+            scaledTileSize * (house.sizeInTiles().x() - 2) - margin,
+            scaledTileSize * 2 - margin
         );
 
         ctx.setFill(background());
