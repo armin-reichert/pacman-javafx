@@ -166,10 +166,9 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseSpriteRenderer impleme
     public void drawDoor(GameLevel gameLevel) {
         House house = gameLevel.worldMap().terrainLayer().optHouse().orElse(null);
         if (house == null) {
-            Logger.error("No house exists in game level!");
             return;
         }
-        MazeSpriteSet recoloredMaze =  gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.CONFIG_KEY_MAZE_SPRITE_SET);
+        MazeSpriteSet recoloredMaze = gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.CONFIG_KEY_MAZE_SPRITE_SET);
         Color doorColor = Color.web(recoloredMaze.mazeImage().colorScheme().strokeColorRGB());
         ctx.setFill(doorColor);
         double s = scaled(TS);
@@ -181,7 +180,6 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseSpriteRenderer impleme
     private void overPaintActorSprites(GameLevel gameLevel) {
         House house = gameLevel.worldMap().terrainLayer().optHouse().orElse(null);
         if (house == null) {
-            Logger.error("No house exists in game level!");
             return;
         }
 
