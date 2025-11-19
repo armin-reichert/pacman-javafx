@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade.pacman.app;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_StartPage;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
-import de.amr.pacmanfx.model.PredefinedGameVariant;
+import de.amr.pacmanfx.model.StandardGameVariant;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
@@ -17,7 +17,7 @@ import javafx.stage.Stage;
 
 public class ArcadePacMan_App extends Application {
 
-    private static final String GAME_VARIANT_NAME = PredefinedGameVariant.PACMAN.name();
+    private static final String GAME_VARIANT_NAME = StandardGameVariant.PACMAN.name();
 
     private GameUI ui;
 
