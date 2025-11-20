@@ -24,7 +24,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @author Armin Reichert
  *
- * @param <S> "State". Enumeration type providing the states of this FSM.
+ * @param <S> "State". Type (can be an enum) providing the states of this FSM.
  * @param <C> "Context". Type of the data provided to the state lifecycle methods {@link FsmState#onEnter},
  *            {@link FsmState#onUpdate} and {@link FsmState#onExit}
  */
@@ -45,14 +45,14 @@ public class StateMachine<S extends FsmState<C>, C> {
 
     public StateMachine(List<S> states, C context) {
         this.states = requireNonNull(states);
-        if (this.states.isEmpty()) {
+        if (states.isEmpty()) {
             throw new IllegalArgumentException("There must be at least one state in a FSM");
         }
         this.context = requireNonNull(context);
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = requireNonNull(name);
     }
 
     public void setContext(C context) {
@@ -68,7 +68,7 @@ public class StateMachine<S extends FsmState<C>, C> {
 
     @Override
     public String toString() {
-        return String.format("FSM[name=%s, state=%s, prev=%s]", name, currentState, prevState);
+        return String.format("StateMachine[name=%s, state=%s, prevState=%s]", name, currentState, prevState);
     }
 
     /**
@@ -78,6 +78,9 @@ public class StateMachine<S extends FsmState<C>, C> {
         return currentState;
     }
 
+    /**
+     * @return (Unmodifiable) list of the state objects
+     */
     public List<S> states() {
         return Collections.unmodifiableList(states);
     }
@@ -90,12 +93,18 @@ public class StateMachine<S extends FsmState<C>, C> {
     }
 
     /**
-     * Adds a state change listener.
+     * Adds a state change listener (if not yet added).
      *
      * @param listener a state change listener
      */
     public void addStateChangeListener(FsmStateChangeListener<S> listener) {
-        stateChangeListeners.add(listener);
+        requireNonNull(listener);
+        if (!stateChangeListeners.contains(listener)) {
+            stateChangeListeners.add(listener);
+        }
+        else {
+            Logger.warn("Attempt to add state change listener twice: {}", listener);
+        }
     }
 
     /**
@@ -104,6 +113,7 @@ public class StateMachine<S extends FsmState<C>, C> {
      * @param listener a state change listener
      */
     public void removeStateChangeListener(FsmStateChangeListener<S> listener) {
+        requireNonNull(listener);
         stateChangeListeners.remove(listener);
     }
 
@@ -123,6 +133,7 @@ public class StateMachine<S extends FsmState<C>, C> {
      * @param state the state to enter
      */
     public void restart(S state) {
+        requireNonNull(state);
         resetTimers();
         currentState = null;
         changeState(state);
@@ -145,8 +156,9 @@ public class StateMachine<S extends FsmState<C>, C> {
      * @param newState the new state
      */
     public void changeState(S newState) {
+        requireNonNull(newState);
         if (newState == currentState) {
-            Logger.info("Already in state {}", newState);
+            Logger.info("State machine is already in state {}", currentState);
             return;
         }
         C context = context();
