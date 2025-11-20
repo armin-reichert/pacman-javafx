@@ -490,15 +490,19 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
             sceneRenderer.clearCanvas();
         }
         context().optGameLevel().ifPresent(gameLevel -> {
+            canvas.setClip(clipRect);
             drawGameLevel(gameLevel);
             drawHUD();
-            drawDebugInfo();
+            if (debugInfoVisible.get() && debugInfoRenderer != null) {
+                canvas.setClip(null); // also show normally clipped region (to see how Pac-Man travels through portals)
+                debugInfoRenderer.drawDebugInfo();
+            }
         });
     }
 
     private void drawGameLevel(GameLevel gameLevel) {
         gameLevelRenderInfo.clear();
-        // this is needed for maze animation drawing:
+        // this is needed for drawing animated maze with different images:
         gameLevelRenderInfo.put(CommonRenderInfoKey.TICK, ui.clock().tickCount());
         gameLevelRenderInfo.put(TengenMsPacMan_UIConfig.CONFIG_KEY_MAP_CATEGORY,
             gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.CONFIG_KEY_MAP_CATEGORY));
@@ -509,27 +513,17 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
             gameLevelRenderInfo.put(CommonRenderInfoKey.MAZE_BRIGHT, false);
         }
         gameLevelRenderer.ctx().save();
-        canvas.setClip(clipRect);
         gameLevelRenderer.ctx().translate(scaled(CONTENT_INDENT), 0);
         gameLevelRenderer.drawGameLevel(gameLevel, gameLevelRenderInfo);
-        drawActors(gameLevel);
-        gameLevelRenderer.drawDoor(gameLevel.worldMap()); // ghost appear under door when accessing house!
-        gameLevelRenderer.ctx().restore();
-    }
 
-    private void drawDebugInfo() {
-        if (debugInfoVisible.get() && debugInfoRenderer != null) {
-            canvas.setClip(null); // show everything
-            debugInfoRenderer.drawDebugInfo();
-        }
-    }
-
-    private void drawActors(GameLevel gameLevel) {
         actorsInZOrder.clear();
         gameLevel.bonus().ifPresent(actorsInZOrder::add);
         actorsInZOrder.add(gameLevel.pac());
         ghostsInZOrder(gameLevel).forEach(actorsInZOrder::add);
         actorsInZOrder.forEach(actor -> actorRenderer.drawActor(actor));
+
+        gameLevelRenderer.drawDoor(gameLevel.worldMap()); // ghosts appear under door when accessing house!
+        gameLevelRenderer.ctx().restore();
     }
 
     private Stream<Ghost> ghostsInZOrder(GameLevel gameLevel) {
