@@ -5,36 +5,20 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.controller;
 
 import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import org.tinylog.Logger;
 
-public class CoinMechanism {
+public interface CoinMechanism {
 
-    public static byte MAX_COINS = 99;
+    byte MAX_COINS = 99;
 
-    private final IntegerProperty numCoins = new SimpleIntegerProperty(0);
+    IntegerProperty numCoinsProperty();
 
-    public IntegerProperty numCoinsProperty() { return numCoins; }
+    int numCoins();
 
-    public int numCoins() { return numCoins.get(); }
+    boolean isEmpty();
 
-    public boolean isEmpty() { return numCoins() == 0; }
+    void setNumCoins(int n);
 
-    public void setNumCoins(int n) {
-        if (n >= 0 && n <= MAX_COINS) {
-            numCoins.set(n);
-        } else {
-            Logger.error("Cannot set number of coins to {}", n);
-        }
-    }
+    void insertCoin();
 
-    public void insertCoin() {
-        setNumCoins(numCoins() + 1);
-    }
-
-    public void consumeCoin() {
-        if (numCoins() > 0) {
-            setNumCoins(numCoins() - 1);
-        }
-    }
+    void consumeCoin();
 }

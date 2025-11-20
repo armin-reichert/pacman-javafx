@@ -13,10 +13,7 @@ import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Score;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -40,7 +37,7 @@ import static java.util.Objects.requireNonNull;
  * behavior</a>
  * @see <a href="http://superpacman.com/mspacman/">Ms. Pac-Man</a>
  */
-public class GameController implements GameContext {
+public class GameController implements GameContext, CoinMechanism {
 
     public static GameController THE_GAME_CONTROLLER;
 
@@ -51,7 +48,6 @@ public class GameController implements GameContext {
 
     private final StateMachine<FsmState<GameContext>, GameContext> stateMachine;
     private final GameEventManager eventManager;
-    private final CoinMechanism coinMechanism = new CoinMechanism();
     private final Map<String, Game> knownGames = new HashMap<>();
 
     private boolean eventsEnabled;
@@ -181,7 +177,7 @@ public class GameController implements GameContext {
 
     @Override
     public CoinMechanism coinMechanism() {
-        return coinMechanism;
+        return this;
     }
 
     @Override
@@ -224,6 +220,35 @@ public class GameController implements GameContext {
     @Override
     public FsmState<GameContext> gameState() {
         return stateMachine.state();
+    }
+
+
+    // Coin Mechanism implementation
+
+    private final IntegerProperty numCoins = new SimpleIntegerProperty(0);
+
+    public IntegerProperty numCoinsProperty() { return numCoins; }
+
+    public int numCoins() { return numCoins.get(); }
+
+    public boolean isEmpty() { return numCoins() == 0; }
+
+    public void setNumCoins(int n) {
+        if (n >= 0 && n <= CoinMechanism.MAX_COINS) {
+            numCoins.set(n);
+        } else {
+            Logger.error("Cannot set number of coins to {}", n);
+        }
+    }
+
+    public void insertCoin() {
+        setNumCoins(numCoins() + 1);
+    }
+
+    public void consumeCoin() {
+        if (numCoins() > 0) {
+            setNumCoins(numCoins() - 1);
+        }
     }
 
 
