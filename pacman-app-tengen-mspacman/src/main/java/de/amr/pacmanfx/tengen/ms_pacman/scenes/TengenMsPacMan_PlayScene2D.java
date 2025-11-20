@@ -109,7 +109,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
             ctx.fillText("%s %d".formatted(gameState, gameState.timer().tickCount()), 0, scaled(3 * TS));
             context().optGameLevel().ifPresent(gameLevel -> {
                 drawMovingActorInfo(gameLevel.pac());
-                ghostsInZOrder(gameLevel).forEach(this::drawMovingActorInfo);
+                gameLevel.ghosts().forEach(this::drawMovingActorInfo);
             });
             ctx.fillText("Camera y=%.2f".formatted(dynamicCamera.getTranslateY()), scaled(11*TS), scaled(15*TS));
             ctx.restore();

@@ -16,6 +16,7 @@ import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 import static de.amr.pacmanfx.Globals.TS;
 
@@ -57,12 +58,13 @@ public class BaseDebugInfoRenderer extends BaseRenderer {
         if (!movingActor.isVisible()) {
             return;
         }
+        final Font mono = Font.font("Monospaced", FontWeight.BOLD, scaled(5));
+        ctx.setFill(Color.FORESTGREEN);
         if (movingActor instanceof Pac pac) {
             String autopilot = pac.isUsingAutopilot() ? "autopilot" : "";
             String immune = pac.isImmune() ? "immune" : "";
             String text = "%s\n%s".formatted(autopilot, immune).trim();
-            ctx.setFill(Color.WHITE);
-            ctx.setFont(Font.font("Monospaced", scaled(6)));
+            ctx.setFont(mono);
             ctx.fillText(text, scaled(pac.x() - 4), scaled(pac.y() + 16));
         }
         movingActor.optAnimationManager()
@@ -71,8 +73,7 @@ public class BaseDebugInfoRenderer extends BaseRenderer {
             .ifPresent(spriteAnimationMap -> {
                 Object selectedID = spriteAnimationMap.selectedID();
                 if (selectedID != null) {
-                    ctx.setFill(Color.WHITE);
-                    ctx.setFont(Font.font("Monospaced", scaled(6)));
+                    ctx.setFont(mono);
                     drawAnimationInfo(movingActor, spriteAnimationMap, selectedID);
                 }
                 if (movingActor.wishDir() != null) {
@@ -85,11 +86,7 @@ public class BaseDebugInfoRenderer extends BaseRenderer {
         ctx.save();
         String text = "[%s:%d]".formatted(selectedID, spriteAnimationMap.currentAnimation().frameIndex());
         double x = scaled(actor.x() - 4), y = scaled(actor.y() - 4);
-        ctx.setFill(Color.WHITE);
-        ctx.setFont(Font.font("Sans", scaled(7)));
         ctx.fillText(text, x, y);
-        ctx.setStroke(Color.GRAY);
-        ctx.strokeText(text, x, y);
         ctx.restore();
     }
 
