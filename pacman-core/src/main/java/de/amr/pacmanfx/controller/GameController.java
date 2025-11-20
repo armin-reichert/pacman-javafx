@@ -5,11 +5,10 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.controller;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.event.GameEventManager;
-import de.amr.pacmanfx.event.GameEventType;
-import de.amr.pacmanfx.event.GameStateChangeEvent;
+import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
+import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Score;
@@ -17,10 +16,7 @@ import javafx.beans.property.*;
 import org.tinylog.Logger;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import static java.util.Objects.requireNonNull;
@@ -37,7 +33,7 @@ import static java.util.Objects.requireNonNull;
  * behavior</a>
  * @see <a href="http://superpacman.com/mspacman/">Ms. Pac-Man</a>
  */
-public class GameController implements GameContext, CoinMechanism {
+public class GameController implements GameContext, GameEventManager, CoinMechanism {
 
     public static GameController THE_GAME_CONTROLLER;
 
@@ -47,7 +43,6 @@ public class GameController implements GameContext, CoinMechanism {
     private final File customMapDir = new File(homeDir, "maps");
 
     private final StateMachine<FsmState<GameContext>, GameContext> stateMachine;
-    private final GameEventManager eventManager;
     private final Map<String, Game> knownGames = new HashMap<>();
 
     private boolean eventsEnabled;
@@ -62,18 +57,16 @@ public class GameController implements GameContext, CoinMechanism {
         if (!success) {
             throw new IllegalStateException("User directories could not be created");
         }
-        eventManager = new GameEventManager(this);
 
         stateMachine = new StateMachine<>(states, this);
         stateMachine.setName("Game Controller State Machine");
-        stateMachine.addStateChangeListener((oldState, newState) ->
-            eventManager.publishEvent(new GameStateChangeEvent(game(), oldState, newState)));
+        stateMachine.addStateChangeListener((oldState, newState) -> publishEvent(new GameStateChangeEvent(game(), oldState, newState)));
 
         gameVariant.addListener((py, ov, newGameVariant) -> {
             if (eventsEnabled) {
                 Game newGame = game(newGameVariant);
                 newGame.init();
-                eventManager.publishEvent(GameEventType.GAME_VARIANT_CHANGED);
+                publishEvent(GameEventType.GAME_VARIANT_CHANGED);
             }
         });
 
@@ -204,7 +197,7 @@ public class GameController implements GameContext, CoinMechanism {
 
     @Override
     public GameEventManager eventManager() {
-        return eventManager;
+        return this;
     }
 
     @Override
@@ -223,16 +216,20 @@ public class GameController implements GameContext, CoinMechanism {
     }
 
 
-    // Coin Mechanism implementation
+    // CoinMechanism implementation
 
     private final IntegerProperty numCoins = new SimpleIntegerProperty(0);
 
+    @Override
     public IntegerProperty numCoinsProperty() { return numCoins; }
 
+    @Override
     public int numCoins() { return numCoins.get(); }
 
+    @Override
     public boolean isEmpty() { return numCoins() == 0; }
 
+    @Override
     public void setNumCoins(int n) {
         if (n >= 0 && n <= CoinMechanism.MAX_COINS) {
             numCoins.set(n);
@@ -241,16 +238,62 @@ public class GameController implements GameContext, CoinMechanism {
         }
     }
 
+    @Override
     public void insertCoin() {
         setNumCoins(numCoins() + 1);
     }
 
+    @Override
     public void consumeCoin() {
         if (numCoins() > 0) {
             setNumCoins(numCoins() - 1);
         }
     }
 
+    // GameEventManager implementation
+
+    private final List<GameEventListener> eventListeners = new ArrayList<>();
+
+    @Override
+    public void addEventListener(GameEventListener listener) {
+        requireNonNull(listener);
+        if (!eventListeners.contains(listener)) {
+            eventListeners.add(listener);
+            Logger.info("{}: Game event listener registered: {}", getClass().getSimpleName(), listener);
+        }
+    }
+
+    @Override
+    public void removeEventListener(GameEventListener listener) {
+        requireNonNull(listener);
+        boolean removed = eventListeners.remove(listener);
+        if (removed) {
+            Logger.info("{}: Game event listener removed: {}", getClass().getSimpleName(), listener);
+        } else {
+            Logger.warn("{}: Game event listener not removed, as not registered: {}", getClass().getSimpleName(), listener);
+        }
+    }
+
+    @Override
+    public void publishEvent(GameEvent event) {
+        requireNonNull(event);
+        eventListeners.forEach(subscriber -> subscriber.onGameEvent(event));
+        Logger.trace("Published game event: {}", event);
+    }
+
+    @Override
+    public void publishEvent(GameEventType type) {
+        requireNonNull(type);
+        publishEvent(new GameEvent(game(), type));
+    }
+
+    @Override
+    public void publishEvent(GameEventType type, Vector2i tile) {
+        requireNonNull(type);
+        publishEvent(new GameEvent(game(), type, tile));
+    }
+
+    // other stuff
 
     private boolean initUserDirectories() {
         String homeDirDesc = "Pac-Man JavaFX home directory";
