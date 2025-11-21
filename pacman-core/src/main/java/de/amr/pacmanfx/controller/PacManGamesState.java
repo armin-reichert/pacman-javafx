@@ -18,7 +18,10 @@ import de.amr.pacmanfx.model.actors.*;
 /**
  * States of the common state machine for all Pac-Man games.
  *
- * <p>TODO: Is this a good idea or should we allow different FSM per game variant?</p>
+ * <ul>
+ *     <li>TODO: Is this a good idea or should we allow different FSM per game variant?</li>
+ *     <li>TODO: AI says this state machine and its game states should move to the game model</li>
+ * </ul>
  */
 public enum PacManGamesState implements FsmState<GameContext> {
 
