@@ -92,10 +92,10 @@ public enum PacManGamesState implements FsmState<GameContext> {
 
         private void startNewGame(GameContext context) {
             if (timer.tickCount() == 1) {
-                context.game().startNewGame();
                 final GameController gameController = context.gameController();
-                boolean cheatActive = gameController.immunityProperty().get()  || gameController.usingAutopilotProperty().get();
-                context.gameController().cheatUsedProperty().set(cheatActive);
+                boolean cheating = gameController.immunityProperty().get() || gameController.usingAutopilotProperty().get();
+                context.gameController().cheatUsedProperty().set(cheating);
+                context.game().startNewGame();
             }
             else if (timer.tickCount() == 2) {
                 context.game().startLevel(context.gameLevel());
@@ -159,27 +159,35 @@ public enum PacManGamesState implements FsmState<GameContext> {
 
         @Override
         public void onUpdate(GameContext context) {
+            final GameController gameController = context.gameController();
+            final Game game = context.game();
+            final GameLevel gameLevel = context.gameLevel();
+
             if (timer.tickCount() < delay) {
                 return;
             }
-            final Game game = context.game();
-            final GameLevel gameLevel = context.gameLevel();
+
             if (timer.tickCount() == delay) {
                 gameLevel.optMessage().filter(message -> message.type() == MessageType.READY).ifPresent(message -> {
                     gameLevel.clearMessage(); // leave TEST message alone
                 });
                 game.startHunting(gameLevel);
             }
+
             gameLevel.pac().tick(context);
             gameLevel.ghosts().forEach(ghost -> ghost.tick(context));
             gameLevel.bonus().ifPresent(bonus -> bonus.tick(context));
             game.updateHunting(gameLevel);
+
+            // What next?
             if (game.isLevelCompleted(gameLevel)) {
-                context.gameController().changeGameState(LEVEL_COMPLETE);
-            } else if (game.hasPacManBeenKilled()) {
-                context.gameController().changeGameState(PACMAN_DYING);
-            } else if (game.haveGhostsBeenKilled()) {
-                context.gameController().changeGameState(GHOST_DYING);
+                gameController.changeGameState(LEVEL_COMPLETE);
+            }
+            else if (game.hasPacManBeenKilled()) {
+                gameController.changeGameState(PACMAN_DYING);
+            }
+            else if (game.hasGhostBeenKilled()) {
+                gameController.changeGameState(GHOST_DYING);
             }
         }
 

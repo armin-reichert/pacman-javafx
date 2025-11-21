@@ -155,7 +155,7 @@ public abstract class AbstractGameModel implements Game {
     }
 
     @Override
-    public boolean haveGhostsBeenKilled() {
+    public boolean hasGhostBeenKilled() {
         return !thisStep.killedGhosts.isEmpty();
     }
 
@@ -212,7 +212,7 @@ public abstract class AbstractGameModel implements Game {
             thisStep.ghostsCollidingWithPac.stream()
                 .filter(ghost -> ghost.state() == GhostState.FRIGHTENED)
                 .forEach(thisStep.killedGhosts::add);
-            if (haveGhostsBeenKilled()) {
+            if (hasGhostBeenKilled()) {
                 thisStep.killedGhosts.forEach(ghost -> onGhostKilled(gameLevel, ghost));
                 return;
             }
