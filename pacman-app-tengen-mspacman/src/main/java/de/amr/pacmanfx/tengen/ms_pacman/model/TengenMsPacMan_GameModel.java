@@ -19,8 +19,6 @@ import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import de.amr.pacmanfx.steering.Steering;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.actors.*;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -116,9 +114,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         0x00, 0x18, 0x20                                // levels 17, 18, then 19+
     };
 
-    private final BooleanProperty pacImmunity = new SimpleBooleanProperty();
-    private final BooleanProperty pacUsingAutopilot = new SimpleBooleanProperty();
-
     private final TengenMsPacMan_HUD hud = new TengenMsPacMan_HUD();
     private final TengenMsPacMan_MapSelector mapSelector;
     private final TengenMsPacMan_LevelCounter levelCounter;
@@ -143,8 +138,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         gateKeeper = new GateKeeper(this); //TODO implement original logic from Tengen game
         autopilot = new RuleBasedPacSteering(gameContext);
         demoLevelSteering = new RuleBasedPacSteering(gameContext);
-        pacImmunity.bind(gameContext.gameController().immunityProperty());
-        pacUsingAutopilot.bind(gameContext.gameController().usingAutopilotProperty());
     }
 
     @Override
@@ -430,8 +423,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     @Override
     public void buildNormalLevel(int levelNumber) {
         final GameLevel normalLevel = createLevel(levelNumber, false);
-        normalLevel.pac().immuneProperty().bind(pacImmunity);
-        normalLevel.pac().usingAutopilotProperty().bind(pacUsingAutopilot);
+        normalLevel.pac().immuneProperty().bind(gameContext.gameController().immunityProperty());
+        normalLevel.pac().usingAutopilotProperty().bind(gameContext.gameController().usingAutopilotProperty());
         scoreManager.score().setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
         normalLevel.worldMap().terrainLayer().optHouse().ifPresent(gateKeeper::setHouse); //TODO what if no house exists?
