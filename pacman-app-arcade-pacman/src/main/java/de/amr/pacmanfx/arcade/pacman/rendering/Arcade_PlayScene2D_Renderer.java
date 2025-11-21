@@ -1,0 +1,71 @@
+/*
+Copyright (c) 2021-2025 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
+package de.amr.pacmanfx.arcade.pacman.rendering;
+
+import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
+import de.amr.pacmanfx.lib.timer.Pulse;
+import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui._2d.GameScene2DRenderer;
+import de.amr.pacmanfx.ui.api.GameUI_Config;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
+import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
+import de.amr.pacmanfx.uilib.rendering.CommonRenderInfoKey;
+import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
+import de.amr.pacmanfx.uilib.rendering.RenderInfo;
+import javafx.scene.canvas.Canvas;
+
+import java.util.stream.Stream;
+
+import static de.amr.pacmanfx.Globals.*;
+
+public class Arcade_PlayScene2D_Renderer extends GameScene2DRenderer {
+
+    private final GameLevelRenderer gameLevelRenderer;
+    private final ActorRenderer actorRenderer;
+
+    public Arcade_PlayScene2D_Renderer(GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
+        super(scene, canvas, spriteSheet);
+        GameUI_Config uiConfig = scene.ui().currentConfig();
+        gameLevelRenderer = configureRendererForGameScene(uiConfig.createGameLevelRenderer(canvas), scene);
+        actorRenderer     = configureRendererForGameScene(uiConfig.createActorRenderer(canvas), scene);
+    }
+
+    public void draw() {
+        Arcade_PlayScene2D playScene = (Arcade_PlayScene2D) scene();
+
+        if (playScene.context().optGameLevel().isEmpty()) {
+            return; // Scene is drawn already 2 ticks before level has been created
+        }
+
+        final GameLevel gameLevel = playScene.context().gameLevel();
+        RenderInfo info = new RenderInfo();
+        info.put(CommonRenderInfoKey.MAZE_BRIGHT, isMazeHighlighted(playScene));
+        info.put(CommonRenderInfoKey.ENERGIZER_BLINKING, gameLevel.blinking().state() == Pulse.State.ON);
+        info.put(CommonRenderInfoKey.MAZE_EMPTY, playScene.context().gameLevel().worldMap().foodLayer().uneatenFoodCount() == 0);
+        gameLevelRenderer.applyLevelSettings(gameLevel, info);
+        gameLevelRenderer.drawGameLevel(gameLevel, info);
+
+        updateActorDrawingOrder(gameLevel);
+        playScene.actorsInZOrder().forEach(actorRenderer::drawActor);
+    }
+
+    private boolean isMazeHighlighted(Arcade_PlayScene2D playScene) {
+        return playScene.levelCompletedAnimation() != null
+            && playScene.levelCompletedAnimation().isRunning()
+            && playScene.levelCompletedAnimation().highlightedProperty().get();
+    }
+
+    private void updateActorDrawingOrder(GameLevel gameLevel) {
+        // Actor drawing order: (Bonus) < Pac-Man < Ghosts in order.
+        // TODO: also take ghost state into account!
+        scene().actorsInZOrder().clear();
+        gameLevel.bonus().ifPresent(scene().actorsInZOrder()::add);
+        scene().actorsInZOrder().add(gameLevel.pac());
+        Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW)
+            .map(gameLevel::ghost)
+            .forEach(scene().actorsInZOrder()::add);
+    }
+}

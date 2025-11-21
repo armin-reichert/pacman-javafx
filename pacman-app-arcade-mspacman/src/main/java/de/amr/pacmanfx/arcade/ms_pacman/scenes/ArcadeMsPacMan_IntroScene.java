@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.pacmanfx.arcade.ms_pacman.actors.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_HUDRenderer;
-import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SceneRenderer;
+import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_IntroScene_Renderer;
 import de.amr.pacmanfx.controller.PacManGamesState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Direction;
@@ -20,13 +20,13 @@ import de.amr.pacmanfx.ui.action.TestActions;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
-import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
 import java.util.List;
 
 import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.ui._2d.GameScene2DRenderer.configureRendererForGameScene;
 import static de.amr.pacmanfx.ui.api.ArcadePalette.*;
 
 /**
@@ -36,27 +36,27 @@ import static de.amr.pacmanfx.ui.api.ArcadePalette.*;
  */
 public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
-    private static final int TITLE_X          = TS * 10;
-    private static final int TITLE_Y          = TS * 8;
-    private static final int TOP_Y            = TS * 11;
-    private static final int STOP_X_GHOST     = TS * 6 - 4;
-    private static final int STOP_X_MS_PACMAN = TS * 15 + 2;
+    public static final int TITLE_X          = TS * 10;
+    public static final int TITLE_Y          = TS * 8;
+    public static final int TOP_Y            = TS * 11;
+    public static final int STOP_X_GHOST     = TS * 6 - 4;
+    public static final int STOP_X_MS_PACMAN = TS * 15 + 2;
 
     private static final float ACTOR_SPEED = 1.11f;
 
-    private static final String TITLE = "\"MS PAC-MAN\"";
-    private static final String[] GHOST_NAMES = { "BLINKY", "PINKY", "INKY", "SUE" };
-    private static final Color[] GHOST_COLORS = { ARCADE_RED, ARCADE_PINK, ARCADE_CYAN, ARCADE_ORANGE };
+    public static final String TITLE = "\"MS PAC-MAN\"";
+    public static final String[] GHOST_NAMES = { "BLINKY", "PINKY", "INKY", "SUE" };
+    public static final Color[] GHOST_COLORS = { ARCADE_RED, ARCADE_PINK, ARCADE_CYAN, ARCADE_ORANGE };
 
-    private final StateMachine<SceneState, ArcadeMsPacMan_IntroScene> sceneController;
+    public final StateMachine<SceneState, ArcadeMsPacMan_IntroScene> sceneController;
 
     private ArcadeMsPacMan_HUDRenderer hudRenderer;
-    private ActorRenderer actorRenderer;
+    private ArcadeMsPacMan_IntroScene_Renderer sceneRenderer;
 
-    private Marquee marquee;
-    private Pac msPacMan;
-    private List<Ghost> ghosts;
-    private byte presentedGhostCharacter;
+    public Marquee marquee;
+    public Pac msPacMan;
+    public List<Ghost> ghosts;
+    public byte presentedGhostCharacter;
     private int numTicksBeforeRising;
 
     public ArcadeMsPacMan_IntroScene(GameUI ui) {
@@ -69,9 +69,12 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         super.createRenderers(canvas);
 
         final GameUI_Config uiConfig = ui.currentConfig();
-        hudRenderer   = configureRenderer((ArcadeMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas));
-        sceneRenderer = configureRenderer(new ArcadeMsPacMan_SceneRenderer(canvas, ui.currentConfig()));
-        actorRenderer = configureRenderer(uiConfig.createActorRenderer(canvas));
+
+        hudRenderer = configureRendererForGameScene(
+            (ArcadeMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas), this);
+
+        sceneRenderer = configureRendererForGameScene(
+            new ArcadeMsPacMan_IntroScene_Renderer(this, canvas, ui.currentConfig().spriteSheet()), this);
     }
 
     @Override
@@ -128,37 +131,12 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        var msPacManSceneRenderer = (ArcadeMsPacMan_SceneRenderer) sceneRenderer;
-
-        sceneRenderer.ctx().setFont(sceneRenderer.arcadeFont8());
-        sceneRenderer.fillText(TITLE, ARCADE_ORANGE, TITLE_X, TITLE_Y);
-        msPacManSceneRenderer.drawMarquee(marquee);
-
-        ghosts.forEach(actorRenderer::drawActor);
-        actorRenderer.drawActor(msPacMan);
-
-        switch (sceneController.state()) {
-            case GHOSTS_MARCHING_IN -> {
-                String ghostName = GHOST_NAMES[presentedGhostCharacter];
-                Color ghostColor = GHOST_COLORS[presentedGhostCharacter];
-                if (presentedGhostCharacter == RED_GHOST_SHADOW) {
-                    sceneRenderer.fillText("WITH", ARCADE_WHITE, TITLE_X, TOP_Y + TS(3));
-                }
-                double x = TITLE_X + (ghostName.length() < 4 ? TS(4) : TS(3));
-                double y = TOP_Y + TS(6);
-                sceneRenderer.fillText(ghostName, ghostColor, x, y);
-            }
-            case MS_PACMAN_MARCHING_IN, READY_TO_PLAY -> {
-                sceneRenderer.fillText("STARRING", ARCADE_WHITE, TITLE_X, TOP_Y + TS(3));
-                sceneRenderer.fillText("MS PAC-MAN", ARCADE_YELLOW, TITLE_X, TOP_Y + TS(6));
-            }
-        }
-        msPacManSceneRenderer.drawMidwayCopyright(ui.currentConfig().assets().image("logo.midway"), TS(6), TS(28));
+        sceneRenderer.draw();
     }
 
     // Scene controller FSM
 
-    private enum SceneState implements FsmState<ArcadeMsPacMan_IntroScene> {
+    public enum SceneState implements FsmState<ArcadeMsPacMan_IntroScene> {
 
         STARTING {
             @Override

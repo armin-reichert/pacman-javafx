@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
 import de.amr.pacmanfx.arcade.ms_pacman.actors.ArcadeMsPacMan_ActorFactory;
-import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_ActorRenderer;
+import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_CutScene3_Renderer;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_HUDRenderer;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.lib.Direction;
@@ -16,12 +16,11 @@ import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui._2d.GameScene2DRenderer;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import javafx.scene.canvas.Canvas;
-
-import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.TS;
 
@@ -37,16 +36,16 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
 
     private static final int LANE_Y = TS * 24;
 
-    private Pac pacMan;
-    private Pac msPacMan;
-    private Stork stork;
-    private Bag bag;
+    public Pac pacMan;
+    public Pac msPacMan;
+    public Stork stork;
+    public Bag bag;
     private int numBagBounces;
 
-    private Clapperboard clapperboard;
+    public Clapperboard clapperboard;
 
     private ArcadeMsPacMan_HUDRenderer hudRenderer;
-    private ArcadeMsPacMan_ActorRenderer actorRenderer;
+    private ArcadeMsPacMan_CutScene3_Renderer sceneRenderer;
 
     public ArcadeMsPacMan_CutScene3(GameUI ui) {
         super(ui);
@@ -55,10 +54,13 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
     @Override
     protected void createRenderers(Canvas canvas) {
         super.createRenderers(canvas);
-
         final GameUI_Config uiConfig = ui.currentConfig();
-        hudRenderer = configureRenderer((ArcadeMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas));
-        actorRenderer = configureRenderer((ArcadeMsPacMan_ActorRenderer) uiConfig.createActorRenderer(canvas));
+
+        hudRenderer = GameScene2DRenderer.configureRendererForGameScene(
+            (ArcadeMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas), this);
+
+        sceneRenderer = GameScene2DRenderer.configureRendererForGameScene(
+            new ArcadeMsPacMan_CutScene3_Renderer(this, canvas, uiConfig.spriteSheet()), this);
     }
 
     @Override
@@ -86,7 +88,6 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
 
         clapperboard = new Clapperboard("3", "JUNIOR");
         clapperboard.setPosition(TS(3), TS(10));
-        clapperboard.setFont(sceneRenderer.arcadeFont8());
         clapperboard.startAnimation();
 
         setSceneState(SceneState.CLAPPERBOARD, TickTimer.INDEFINITE);
@@ -109,9 +110,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        if (actorRenderer != null) {
-            Stream.of(clapperboard, msPacMan, pacMan, stork, bag).forEach(actorRenderer::drawActor);
-        }
+        sceneRenderer.draw();
     }
 
     // Scene controller state machine

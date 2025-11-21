@@ -6,12 +6,12 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_PlayScene2DDebugInfoRenderer;
+import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_PlayScene2D_Renderer;
 import de.amr.pacmanfx.controller.PacManGamesState;
 import de.amr.pacmanfx.controller.test.TestState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.math.Vector2i;
-import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.MessageType;
@@ -25,7 +25,7 @@ import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
-import de.amr.pacmanfx.uilib.rendering.*;
+import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ContextMenu;
@@ -35,9 +35,9 @@ import javafx.scene.input.ContextMenuEvent;
 import org.tinylog.Logger;
 
 import java.util.List;
-import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_PIXELS;
+import static de.amr.pacmanfx.ui._2d.GameScene2DRenderer.configureRendererForGameScene;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_MUTED;
 import static de.amr.pacmanfx.uilib.Ufx.createContextMenuTitle;
@@ -50,9 +50,8 @@ import static de.amr.pacmanfx.uilib.Ufx.createContextMenuTitle;
  */
 public class Arcade_PlayScene2D extends GameScene2D {
 
+    private Arcade_PlayScene2D_Renderer sceneRenderer;
     private HUDRenderer hudRenderer;
-    private GameLevelRenderer gameLevelRenderer;
-    private ActorRenderer actorRenderer;
 
     private LevelCompletedAnimation levelCompletedAnimation;
 
@@ -60,20 +59,26 @@ public class Arcade_PlayScene2D extends GameScene2D {
         super(ui);
     }
 
+    public LevelCompletedAnimation levelCompletedAnimation() {
+        return levelCompletedAnimation;
+    }
+
     @Override
     protected void createRenderers(Canvas canvas) {
-        super.createRenderers(canvas);
-
         GameUI_Config uiConfig = ui.currentConfig();
-        hudRenderer       = configureRenderer(uiConfig.createHUDRenderer(canvas));
-        gameLevelRenderer = configureRenderer(uiConfig.createGameLevelRenderer(canvas));
-        actorRenderer     = configureRenderer(uiConfig.createActorRenderer(canvas));
-        debugInfoRenderer = configureRenderer(new Arcade_PlayScene2DDebugInfoRenderer(ui, this, canvas));
+        hudRenderer       = configureRendererForGameScene(uiConfig.createHUDRenderer(canvas), this);
+        debugInfoRenderer = configureRendererForGameScene(new Arcade_PlayScene2DDebugInfoRenderer(ui, this, canvas), this);
+        sceneRenderer     = configureRendererForGameScene(new Arcade_PlayScene2D_Renderer(this, canvas, uiConfig.spriteSheet()), this);
     }
 
     @Override
     public HUDRenderer hudRenderer() {
         return hudRenderer;
+    }
+
+    @Override
+    public void drawSceneContent() {
+        sceneRenderer.draw();
     }
 
     @Override
@@ -192,38 +197,6 @@ public class Arcade_PlayScene2D extends GameScene2D {
             new SeparatorMenuItem(),
             miMuted,
             miQuit);
-    }
-
-    @Override
-    public void drawSceneContent() {
-        if (context().optGameLevel().isEmpty()) {
-            return; // Scene is drawn already 2 ticks before level has been created
-        }
-
-        final GameLevel gameLevel = context().gameLevel();
-        RenderInfo info = new RenderInfo();
-        info.put(CommonRenderInfoKey.MAZE_BRIGHT, isMazeHighlighted());
-        info.put(CommonRenderInfoKey.ENERGIZER_BLINKING, gameLevel.blinking().state() == Pulse.State.ON);
-        info.put(CommonRenderInfoKey.MAZE_EMPTY, context().gameLevel().worldMap().foodLayer().uneatenFoodCount() == 0);
-        gameLevelRenderer.applyLevelSettings(gameLevel, info);
-        gameLevelRenderer.drawGameLevel(gameLevel, info);
-
-        updateActorDrawingOrder(gameLevel);
-        actorsInZOrder.forEach(actor -> actorRenderer.drawActor(actor));
-    }
-
-    private boolean isMazeHighlighted() {
-        return levelCompletedAnimation != null
-            && levelCompletedAnimation.isRunning() && levelCompletedAnimation.highlightedProperty().get();
-    }
-
-    private void updateActorDrawingOrder(GameLevel gameLevel) {
-        // Actor drawing order: (Bonus) < Pac-Man < Ghosts in order. TODO: also take ghost state into account!
-        actorsInZOrder.clear();
-        gameLevel.bonus().ifPresent(actorsInZOrder::add);
-        actorsInZOrder.add(gameLevel.pac());
-        Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW).map(gameLevel::ghost)
-            .forEach(actorsInZOrder::add);
     }
 
     @Override

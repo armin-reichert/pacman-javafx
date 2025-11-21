@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
 import de.amr.pacmanfx.arcade.ms_pacman.actors.ArcadeMsPacMan_ActorFactory;
-import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_ActorRenderer;
+import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_CutScene2_Renderer;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_HUDRenderer;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.timer.TickTimer;
@@ -18,9 +18,8 @@ import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import javafx.scene.canvas.Canvas;
 
-import java.util.stream.Stream;
-
 import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.ui._2d.GameScene2DRenderer.configureRendererForGameScene;
 
 /**
  * Intermission scene 2: "The chase".
@@ -34,13 +33,13 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
     private static final int MIDDLE_LANE_Y = TS * 18;
     private static final int LOWER_LANE_Y  = TS * 24;
 
-    private Pac pacMan;
-    private Pac msPacMan;
+    public Pac pacMan;
+    public Pac msPacMan;
 
-    private Clapperboard clapperboard;
+    public Clapperboard clapperboard;
 
     private ArcadeMsPacMan_HUDRenderer hudRenderer;
-    private ArcadeMsPacMan_ActorRenderer actorRenderer;
+    private ArcadeMsPacMan_CutScene2_Renderer sceneRenderer;
 
     public ArcadeMsPacMan_CutScene2(GameUI ui) {
         super(ui);
@@ -51,8 +50,12 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
         super.createRenderers(canvas);
 
         final GameUI_Config uiConfig = ui.currentConfig();
-        hudRenderer   = configureRenderer((ArcadeMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas));
-        actorRenderer = configureRenderer((ArcadeMsPacMan_ActorRenderer) uiConfig.createActorRenderer(canvas));
+
+        hudRenderer = configureRendererForGameScene(
+            (ArcadeMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas), this);
+
+        sceneRenderer = configureRendererForGameScene(
+                new ArcadeMsPacMan_CutScene2_Renderer(this, canvas, uiConfig.spriteSheet()), this);
     }
 
     @Override
@@ -74,7 +77,6 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
 
         clapperboard = new Clapperboard("2", "THE CHASE");
         clapperboard.setPosition(TS(3), TS(10));
-        clapperboard.setFont(sceneRenderer.arcadeFont8());
         clapperboard.startAnimation();
 
         setSceneState(SceneState.CLAPPERBOARD, 120);
@@ -96,9 +98,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        if (actorRenderer != null) {
-            Stream.of(clapperboard, msPacMan, pacMan).forEach(actor -> actorRenderer.drawActor(actor));
-        }
+        sceneRenderer.draw();
     }
 
     // Scene controller state machine

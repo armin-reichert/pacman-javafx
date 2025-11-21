@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.actors.ArcadePacMan_ActorFactory;
+import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_CutScene2_Renderer;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -16,12 +17,12 @@ import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
-import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
 import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.ui._2d.GameScene2DRenderer.configureRendererForGameScene;
 
 /**
  * Second cut scene in Arcade Pac-Man game:<br>
@@ -40,10 +41,10 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
     private SpriteAnimation blinkyNormal;
     private SpriteAnimation blinkyDamaged;
-    private SpriteAnimation nailDressRapture;
+    private SpriteAnimation nailDressRaptureAnimation;
 
+    private ArcadePacMan_CutScene2_Renderer sceneRenderer;
     private HUDRenderer hudRenderer;
-    private ActorRenderer actorRenderer;
 
     public ArcadePacMan_CutScene2(GameUI ui) {
         super(ui);
@@ -51,25 +52,33 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
     @Override
     protected void createRenderers(Canvas canvas) {
-        super.createRenderers(canvas);
-
         GameUI_Config uiConfig = ui.currentConfig();
 
-        hudRenderer       = configureRenderer(uiConfig.createHUDRenderer(canvas));
-        actorRenderer     = configureRenderer(uiConfig.createActorRenderer(canvas));
-        debugInfoRenderer = configureRenderer(new BaseDebugInfoRenderer(ui, canvas) {
+        debugInfoRenderer = configureRendererForGameScene(new BaseDebugInfoRenderer(ui, canvas) {
             @Override
             public void drawDebugInfo() {
                 super.drawDebugInfo();
                 String text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
                 fillText(text, debugTextFill, debugTextFont, TS(1), TS(5));
             }
-        });
+        }, this);
+        hudRenderer = configureRendererForGameScene(uiConfig.createHUDRenderer(canvas), this);
+        sceneRenderer = configureRendererForGameScene(new ArcadePacMan_CutScene2_Renderer(this, canvas, ui.currentConfig().spriteSheet()), this);
     }
 
     @Override
     public HUDRenderer hudRenderer() {
         return hudRenderer;
+    }
+
+
+    @Override
+    public void drawSceneContent() {
+        sceneRenderer.draw();
+    }
+
+    public SpriteAnimation nailDressRaptureAnimation() {
+        return nailDressRaptureAnimation;
     }
 
     @Override
@@ -87,7 +96,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
         blinky.optAnimationManager().ifPresent(animations -> {
             blinkyNormal     = (SpriteAnimation) animations.animation(CommonAnimationID.ANIM_GHOST_NORMAL);
-            nailDressRapture = (SpriteAnimation) animations.animation(ArcadePacMan_UIConfig.AnimationID.ANIM_BLINKY_NAIL_DRESS_RAPTURE);
+            nailDressRaptureAnimation = (SpriteAnimation) animations.animation(ArcadePacMan_UIConfig.AnimationID.ANIM_BLINKY_NAIL_DRESS_RAPTURE);
             blinkyDamaged    = (SpriteAnimation) animations.animation(ArcadePacMan_UIConfig.AnimationID.ANIM_BLINKY_DAMAGED);
         });
         actorsInZOrder.add(pac);
@@ -108,7 +117,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         }
         switch (frame) {
             case ANIMATION_START -> ui.soundManager().play(SoundID.INTERMISSION_2);
-            case ANIMATION_START + 1 -> nailDressRapture.setFrameIndex(NAIL);
+            case ANIMATION_START + 1 -> nailDressRaptureAnimation.setFrameIndex(NAIL);
             case ANIMATION_START + 25 -> {
                 pac.placeAtTile(28, 20);
                 pac.setMoveDir(Direction.LEFT);
@@ -128,15 +137,15 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
                 blinky.setSpeed(0.09f);
                 blinkyNormal.setFrameTicks(32);
             }
-            case ANIMATION_START + 198 -> nailDressRapture.setFrameIndex(STRETCHED_S);
-            case ANIMATION_START + 230 -> nailDressRapture.setFrameIndex(STRETCHED_M);
-            case ANIMATION_START + 262 -> nailDressRapture.setFrameIndex(STRETCHED_L);
+            case ANIMATION_START + 198 -> nailDressRaptureAnimation.setFrameIndex(STRETCHED_S);
+            case ANIMATION_START + 230 -> nailDressRaptureAnimation.setFrameIndex(STRETCHED_M);
+            case ANIMATION_START + 262 -> nailDressRaptureAnimation.setFrameIndex(STRETCHED_L);
             case ANIMATION_START + 296 -> {
                 blinky.setSpeed(0);
                 blinky.stopAnimation();
             }
             case ANIMATION_START + 360 -> {
-                nailDressRapture.setFrameIndex(RAPTURED);
+                nailDressRaptureAnimation.setFrameIndex(RAPTURED);
                 blinky.setX(blinky.x() - 4);
                 blinky.selectAnimation(ArcadePacMan_UIConfig.AnimationID.ANIM_BLINKY_DAMAGED);
             }
@@ -149,11 +158,5 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         }
         pac.move();
         blinky.move();
-    }
-
-    @Override
-    public void drawSceneContent() {
-        sceneRenderer.drawSprite(nailDressRapture.currentSprite(), TS(14), TS(19) + 3, true);
-        actorsInZOrder.forEach(actor -> actorRenderer.drawActor(actor));
     }
 }

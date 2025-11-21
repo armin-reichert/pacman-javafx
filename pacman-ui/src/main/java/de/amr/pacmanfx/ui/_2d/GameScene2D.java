@@ -14,9 +14,7 @@ import de.amr.pacmanfx.ui.api.ActionBindingsManager;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
 import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
-import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -45,7 +43,6 @@ public abstract class GameScene2D implements GameScene {
     protected final List<Actor> actorsInZOrder = new ArrayList<>();
 
     protected Canvas canvas;
-    protected BaseSpriteRenderer sceneRenderer;
     protected BaseDebugInfoRenderer debugInfoRenderer;
 
     protected GameScene2D(GameUI ui) {
@@ -86,10 +83,6 @@ public abstract class GameScene2D implements GameScene {
 
     protected abstract void doEnd();
 
-    public BaseSpriteRenderer sceneRenderer() {
-        return sceneRenderer;
-    }
-
     protected abstract HUDRenderer hudRenderer();
 
     public void setCanvas(Canvas canvas) {
@@ -102,14 +95,7 @@ public abstract class GameScene2D implements GameScene {
     }
 
     protected void createRenderers(Canvas canvas) {
-        sceneRenderer     = configureRenderer(new BaseSpriteRenderer(canvas, ui.currentConfig().spriteSheet()));
-        debugInfoRenderer = configureRenderer(new BaseDebugInfoRenderer(ui, canvas));
-    }
-
-    protected final <T extends Renderer> T configureRenderer(T renderer) {
-        renderer.backgroundProperty().bind(background);
-        renderer.scalingProperty().bind(scaling);
-        return renderer;
+        debugInfoRenderer = GameScene2DRenderer.configureRendererForGameScene(new BaseDebugInfoRenderer(ui, canvas), this);
     }
 
     @Override
@@ -179,7 +165,8 @@ public abstract class GameScene2D implements GameScene {
      * </p>
      */
     public void draw() {
-        sceneRenderer.clearCanvas();
+        canvas.getGraphicsContext2D().setFill(background());
+        canvas.getGraphicsContext2D().fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         drawSceneContent();
         if (debugInfoVisible()) {
             debugInfoRenderer.drawDebugInfo();

@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SceneRenderer;
+import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_CreditsScene_Renderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.api.GameUI;
@@ -16,22 +16,20 @@ import javafx.scene.canvas.Canvas;
 
 import java.util.Set;
 
-import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Actions.ACTION_ENTER_START_SCREEN;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesColor;
+import static de.amr.pacmanfx.ui._2d.GameScene2DRenderer.configureRendererForGameScene;
 
 /**
  * Gives credit to the people that helped in making the game, original and remake authors.
  */
 public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
-    private static final float DISPLAY_SECONDS = 16;
+    public static final float DISPLAY_SECONDS = 16;
 
-    private int y;
-    private float fadeProgress = 0;
+    public float fadeProgress = 0;
 
-    private TengenMsPacMan_SceneRenderer scenesRenderer;
+    private TengenMsPacMan_CreditsScene_Renderer sceneRenderer;
 
     public TengenMsPacMan_CreditsScene(GameUI ui) {
         super(ui);
@@ -42,7 +40,8 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
         super.createRenderers(canvas);
 
         final GameUI_Config uiConfig = ui.currentConfig();
-        scenesRenderer = configureRenderer(new TengenMsPacMan_SceneRenderer(canvas, uiConfig));
+        sceneRenderer = configureRendererForGameScene(
+            new TengenMsPacMan_CreditsScene_Renderer(this, canvas, uiConfig.spriteSheet()), this);
     }
 
     @Override
@@ -77,46 +76,6 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        scenesRenderer.drawHorizontalBar(nesColor(0x20), nesColor(0x13), sizeInPx().x(), TS, 20);
-        scenesRenderer.drawHorizontalBar(nesColor(0x20), nesColor(0x13), sizeInPx().x(), TS, 212);
-        scenesRenderer.ctx().setFont(scenesRenderer.arcadeFont8());
-        y = 7 * TS; // important: reset on every draw!
-        if (context().gameState().timer().betweenSeconds(0, 0.5 * DISPLAY_SECONDS)) {
-            drawOriginalCreditsText();
-        } else {
-            scenesRenderer.ctx().setGlobalAlpha(fadeProgress);
-            drawRemakeCreditsText();
-            scenesRenderer.ctx().setGlobalAlpha(1);
-        }
-    }
-
-    private void drawOriginalCreditsText() {
-        print(4, "CREDITS FOR MS PAC-MAN",    0x20,  3);
-        print(2, "GAME PROGRAMMER:",          0x23,  4);
-        print(3, "FRANZ LANZINGER",           0x23, 10);
-        print(2, "SPECIAL THANKS:",           0x23,  4);
-        print(1, "JEFF YONAN",                0x23, 10);
-        print(4, "DAVE O'RIVA",               0x23, 10);
-        print(1, "MS PAC-MAN TM NAMCO LTD",   0x19,  5);
-        print(1, "©1990 TENGEN INC",          0x19,  7);
-        print(0, "ALL RIGHTS RESERVED",       0x19,  6);
-    }
-
-    private void drawRemakeCreditsText() {
-        print(4, "CREDITS FOR JAVAFX REMAKE", 0x20,  3);
-        print(2, "GAME PROGRAMMER:",          0x23,  4);
-        print(3, "ARMIN REICHERT",            0x23, 10);
-        print(2, "SPECIAL THANKS:",           0x23,  4);
-        print(1, "@RUSSIANMANSMWC",           0x23, 10);
-        print(1, "@FLICKY1211",               0x23, 10);
-        print(3, "ANDYANA JONSEPH",           0x23, 10);
-        print(1, "GITHUB.COM/ARMIN-REICHERT", 0x19,  3);
-        print(1, "©2024 MIT LICENSE",         0x19,  6);
-        print(0, "ALL RIGHTS GRANTED",        0x19,  5);
-    }
-
-    private void print(int numTiles, String text, int colorIndex, int tilesX) {
-        scenesRenderer.fillText(text, nesColor(colorIndex), TS(tilesX), y);
-        y += numTiles * TS;
+        sceneRenderer.draw();
     }
 }

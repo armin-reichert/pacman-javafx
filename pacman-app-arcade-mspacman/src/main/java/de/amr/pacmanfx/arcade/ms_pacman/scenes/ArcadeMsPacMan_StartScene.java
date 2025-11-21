@@ -5,9 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_HUDRenderer;
-import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SceneRenderer;
-import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
-import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
+import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_StartScene_Renderer;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.ui._2d.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
@@ -16,14 +14,13 @@ import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.text.Font;
 
-import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.ui.api.ArcadePalette.ARCADE_ORANGE;
+import static de.amr.pacmanfx.ui._2d.GameScene2DRenderer.configureRendererForGameScene;
 
 public class ArcadeMsPacMan_StartScene extends GameScene2D {
 
     private ArcadeMsPacMan_HUDRenderer hudRenderer;
+    private ArcadeMsPacMan_StartScene_Renderer sceneRenderer;
 
     public ArcadeMsPacMan_StartScene(GameUI ui) {
         super(ui);
@@ -32,9 +29,13 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
     @Override
     protected void createRenderers(Canvas canvas) {
         final GameUI_Config uiConfig = ui.currentConfig();
-        sceneRenderer     = configureRenderer(new ArcadeMsPacMan_SceneRenderer(canvas, uiConfig));
-        hudRenderer       = configureRenderer((ArcadeMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas));
-        debugInfoRenderer = configureRenderer(new BaseDebugInfoRenderer(ui, canvas));
+
+        sceneRenderer = configureRendererForGameScene(
+            new ArcadeMsPacMan_StartScene_Renderer(this, canvas, uiConfig.spriteSheet()), this);
+
+        hudRenderer = configureRendererForGameScene((ArcadeMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas), this);
+
+        debugInfoRenderer = configureRendererForGameScene(new BaseDebugInfoRenderer(ui, canvas), this);
     }
 
     @Override
@@ -53,8 +54,7 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
     protected void doEnd() {}
 
     @Override
-    public void update() {
-    }
+    public void update() {}
 
     @Override
     public void onCreditAdded(GameEvent e) {
@@ -63,16 +63,6 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        final Font font6 = sceneRenderer.arcadeFont6();
-        final Font font8 = sceneRenderer.arcadeFont8();
-        final ArcadeMsPacMan_SpriteSheet spriteSheet = (ArcadeMsPacMan_SpriteSheet) sceneRenderer.spriteSheet();
-        sceneRenderer.fillText("PUSH START BUTTON", ARCADE_ORANGE, font8, TS(6), TS(16));
-        sceneRenderer.fillText("1 PLAYER ONLY", ARCADE_ORANGE, font8, TS(8), TS(18));
-        sceneRenderer.fillText("ADDITIONAL    AT 10000", ARCADE_ORANGE, font8,TS(2), TS(25));
-        sceneRenderer.drawSprite(spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL), TS(13), TS(23) + 1, true);
-        sceneRenderer.fillText("PTS", ARCADE_ORANGE, font6, TS(25), TS(25));
-        if (sceneRenderer instanceof ArcadeMsPacMan_SceneRenderer msPacManSceneRenderer) {
-            msPacManSceneRenderer.drawMidwayCopyright(ui.currentConfig().assets().image("logo.midway"), TS * 6, TS * 28);
-        }
+        sceneRenderer.draw();
     }
 }

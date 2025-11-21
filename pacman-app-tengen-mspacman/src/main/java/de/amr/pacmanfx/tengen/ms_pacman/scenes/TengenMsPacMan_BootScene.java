@@ -10,7 +10,7 @@ import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_ActorRenderer;
+import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_BootScene_Renderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
@@ -19,22 +19,23 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.shadeOfBlue;
 
 /**
  * Shows moving and color changing "TENGEN PRESENTS" text and ghost running through scene.
  */
 public class TengenMsPacMan_BootScene extends GameScene2D {
 
-    public static final String TENGEN_PRESENTS = "TENGEN PRESENTS";
 
     private static final float GHOST_Y = TS(21.5f);
 
-    private boolean gray;
-    private Actor movingText;
-    private Ghost ghost;
-    private TengenMsPacMan_ActorRenderer actorRenderer;
-    private Color shadeOfBlue;
+    public boolean gray;
+    public Actor movingText;
+    public Ghost ghost;
+    public Color shadeOfBlue;
+
+    private TengenMsPacMan_BootScene_Renderer sceneRenderer;
 
     public TengenMsPacMan_BootScene(GameUI ui) {
         super(ui);
@@ -43,9 +44,8 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     @Override
     protected void createRenderers(Canvas canvas) {
         super.createRenderers(canvas);
-
         final GameUI_Config uiConfig = ui.currentConfig();
-        actorRenderer = configureRenderer((TengenMsPacMan_ActorRenderer) uiConfig.createActorRenderer(canvas));
+        sceneRenderer = new TengenMsPacMan_BootScene_Renderer(this, canvas, uiConfig.spriteSheet());
     }
 
     @Override
@@ -111,12 +111,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        if (gray) {
-            actorRenderer.fillCanvas(nesColor(0x10));
-        } else {
-            actorRenderer.fillText(TENGEN_PRESENTS, shadeOfBlue, actorRenderer.arcadeFont8(), movingText.x(), movingText.y());
-            actorRenderer.drawActor(ghost);
-        }
+        sceneRenderer.draw();
     }
 
     private void gray(boolean b)  { gray = b; }

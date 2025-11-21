@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
 import de.amr.pacmanfx.arcade.ms_pacman.actors.ArcadeMsPacMan_ActorFactory;
-import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_ActorRenderer;
+import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_CutScene1_Renderer;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_HUDRenderer;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
@@ -24,9 +24,8 @@ import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.animation.SingleSpriteNoAnimation;
 import javafx.scene.canvas.Canvas;
 
-import java.util.stream.Stream;
-
 import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.ui._2d.GameScene2DRenderer.configureRendererForGameScene;
 
 /**
  * Intermission scene 1: "They meet".
@@ -46,16 +45,15 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     private static final float SPEED_GHOST_AFTER_COLLISION = 0.3f;
     private static final float SPEED_GHOST_CHASING = 1.25f;
 
-    private Pac pacMan;
-    private Pac msPacMan;
-    private Ghost inky;
-    private Ghost pinky;
+    public Pac pacMan;
+    public Pac msPacMan;
+    public Ghost inky;
+    public Ghost pinky;
+    public Actor heart;
+    public Clapperboard clapperboard;
 
     private ArcadeMsPacMan_HUDRenderer hudRenderer;
-    private ArcadeMsPacMan_ActorRenderer actorRenderer;
-
-    private Actor heart;
-    private Clapperboard clapperboard;
+    private ArcadeMsPacMan_CutScene1_Renderer sceneRenderer;
 
     public ArcadeMsPacMan_CutScene1(GameUI ui) {
         super(ui);
@@ -66,8 +64,12 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         super.createRenderers(canvas);
 
         final GameUI_Config uiConfig = ui.currentConfig();
-        hudRenderer   = configureRenderer((ArcadeMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas));
-        actorRenderer = configureRenderer((ArcadeMsPacMan_ActorRenderer) uiConfig.createActorRenderer(canvas));
+
+        hudRenderer = configureRendererForGameScene(
+            ((ArcadeMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas)), this);
+
+        sceneRenderer = configureRendererForGameScene(
+            new ArcadeMsPacMan_CutScene1_Renderer(this, canvas, uiConfig.spriteSheet()), this);
     }
 
     @Override
@@ -97,7 +99,6 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
 
         clapperboard = new Clapperboard("1", "THEY MEET");
         clapperboard.setPosition(TS(3), TS(10));
-        clapperboard.setFont(actorRenderer.arcadeFont8());
         clapperboard.startAnimation();
 
         setState(SceneState.CLAPPERBOARD, 120);
@@ -121,9 +122,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        if (actorRenderer != null) {
-            Stream.of(clapperboard, msPacMan, pacMan, inky, pinky, heart).forEach(actorRenderer::drawActor);
-        }
+        sceneRenderer.draw();
     }
 
     // Scene controller state machine

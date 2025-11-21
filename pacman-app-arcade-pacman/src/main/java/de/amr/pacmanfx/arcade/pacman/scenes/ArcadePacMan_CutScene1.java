@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.actors.ArcadePacMan_ActorFactory;
+import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_CutScene1_Renderer;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -15,12 +16,12 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
-import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
 import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.ui._2d.GameScene2DRenderer.configureRendererForGameScene;
 
 /**
  * First cut scene in Arcade Pac-Man game:<br>
@@ -35,8 +36,8 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
     private Pac pac;
     private Ghost blinky;
 
+    private ArcadePacMan_CutScene1_Renderer sceneRenderer;
     private HUDRenderer hudRenderer;
-    private ActorRenderer actorRenderer;
 
     public ArcadePacMan_CutScene1(GameUI ui) {
         super(ui);
@@ -44,19 +45,22 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
     
     @Override
     protected void createRenderers(Canvas canvas) {
-        super.createRenderers(canvas);
-
         GameUI_Config uiConfig = ui.currentConfig();
-        hudRenderer       = configureRenderer(uiConfig.createHUDRenderer(canvas));
-        actorRenderer     = configureRenderer(uiConfig.createActorRenderer(canvas));
-        debugInfoRenderer = configureRenderer(new BaseDebugInfoRenderer(ui, canvas) {
+        debugInfoRenderer = configureRendererForGameScene(new BaseDebugInfoRenderer(ui, canvas) {
             @Override
             public void drawDebugInfo() {
                 super.drawDebugInfo();
                 String text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
                 fillText(text, debugTextFill, debugTextFont, TS(1), TS(5));
             }
-        });
+        }, this);
+        hudRenderer = configureRendererForGameScene(uiConfig.createHUDRenderer(canvas), this);
+        sceneRenderer = configureRendererForGameScene(new ArcadePacMan_CutScene1_Renderer(this, canvas, uiConfig.spriteSheet()), this);
+    }
+
+    @Override
+    public void drawSceneContent() {
+        sceneRenderer.draw();
     }
 
     @Override
@@ -123,10 +127,5 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
             pac.move();
             blinky.move();
         }
-    }
-
-    @Override
-    public void drawSceneContent() {
-        actorsInZOrder.forEach(actor -> actorRenderer.drawActor(actor));
     }
 }
