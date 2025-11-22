@@ -11,7 +11,7 @@ import javafx.scene.canvas.Canvas;
 
 public class GameScene2DRenderer extends BaseSpriteRenderer {
 
-    public static final <T extends Renderer> T configureRendererForGameScene(T renderer, GameScene2D scene) {
+    public static <T extends Renderer> T configureRendererForGameScene(T renderer, GameScene2D scene) {
         renderer.backgroundProperty().bind(scene.backgroundProperty());
         renderer.scalingProperty().bind(scene.scalingProperty());
         return renderer;
@@ -25,7 +25,8 @@ public class GameScene2DRenderer extends BaseSpriteRenderer {
         configureRendererForGameScene(this, scene);
     }
 
-    public GameScene2D scene() {
-        return scene;
+    @SuppressWarnings("unchecked")
+    public <S extends GameScene2D> S scene() {
+        return (S) scene;
     }
 }

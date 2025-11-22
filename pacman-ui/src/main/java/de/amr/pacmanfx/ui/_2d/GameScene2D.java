@@ -40,6 +40,7 @@ public abstract class GameScene2D implements GameScene {
     protected final GameUI ui;
     protected final ActionBindingsManager actionBindings;
     protected final AnimationRegistry animationRegistry;
+
     protected final List<Actor> actorsInZOrder = new ArrayList<>();
 
     protected Canvas canvas;

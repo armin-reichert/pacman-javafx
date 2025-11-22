@@ -12,16 +12,14 @@ import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.MessageType;
-import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MovingGameLevelMessage;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_ActorRenderer;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameLevelRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_HUDRenderer;
+import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_PlayScene2D_Renderer;
 import de.amr.pacmanfx.ui._2d.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
@@ -33,8 +31,6 @@ import de.amr.pacmanfx.ui.api.SubSceneProvider;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.CommonRenderInfoKey;
-import de.amr.pacmanfx.uilib.rendering.RenderInfo;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -54,14 +50,14 @@ import org.tinylog.Logger;
 
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.controller.PacManGamesState.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Actions.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Properties.PROPERTY_PLAY_SCENE_DISPLAY_MODE;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
 import static de.amr.pacmanfx.tengen.ms_pacman.scenes.SceneDisplayMode.SCROLLING;
+import static de.amr.pacmanfx.ui._2d.GameScene2DRenderer.configureRendererForGameScene;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR;
 import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_MUTED;
@@ -72,11 +68,11 @@ import static de.amr.pacmanfx.uilib.Ufx.createContextMenuTitle;
  */
 public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneProvider {
 
-    private static final float CONTENT_INDENT = TS(2);
+    public static final float CONTENT_INDENT = TS(2);
     private static final double CANVAS_WIDTH_UNSCALED = NES_SIZE_PX.x();
 
     private final DoubleProperty canvasHeightUnscaled = new SimpleDoubleProperty(NES_SIZE_PX.y());
-    private final BooleanProperty mazeHighlighted = new SimpleBooleanProperty(false);
+    public final BooleanProperty mazeHighlighted = new SimpleBooleanProperty(false);
 
     private final StackPane rootPane;
     private final SubScene subScene;
@@ -84,15 +80,13 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
     private final PlayScene2DCamera dynamicCamera;
     private final PerspectiveCamera fixedCamera;
 
+    private TengenMsPacMan_PlayScene2D_Renderer sceneRenderer;
     private TengenMsPacMan_HUDRenderer hudRenderer;
-    private TengenMsPacMan_GameLevelRenderer gameLevelRenderer;
-    private final RenderInfo gameLevelRenderInfo = new RenderInfo();
-    private TengenMsPacMan_ActorRenderer actorRenderer;
 
     private Rectangle clipRect;
-    private LevelCompletedAnimation levelCompletedAnimation;
+    public LevelCompletedAnimation levelCompletedAnimation;
 
-    private class PlaySceneDebugInfoRenderer extends BaseDebugInfoRenderer {
+    public class PlaySceneDebugInfoRenderer extends BaseDebugInfoRenderer {
 
         public PlaySceneDebugInfoRenderer(Canvas canvas) {
             super(TengenMsPacMan_PlayScene2D.this.ui, canvas);
@@ -195,13 +189,16 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
 
     @Override
     protected void createRenderers(Canvas canvas) {
-        super.createRenderers(canvas);
-
         final TengenMsPacMan_UIConfig uiConfig = ui.currentConfig();
-        hudRenderer       = configureRenderer(uiConfig.createHUDRenderer(canvas));
-        gameLevelRenderer = configureRenderer(uiConfig.createGameLevelRenderer(canvas));
-        actorRenderer     = configureRenderer(uiConfig.createActorRenderer(canvas));
-        debugInfoRenderer = configureRenderer(new PlaySceneDebugInfoRenderer(canvas));
+
+        hudRenderer = configureRendererForGameScene(
+            uiConfig.createHUDRenderer(canvas), this);
+
+        debugInfoRenderer = configureRendererForGameScene(
+            new PlaySceneDebugInfoRenderer(canvas), this);
+
+        sceneRenderer = configureRendererForGameScene(
+            new TengenMsPacMan_PlayScene2D_Renderer(this, canvas, uiConfig.spriteSheet()), this);
     }
 
     @Override
@@ -483,51 +480,15 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
 
     @Override
     public void draw() {
-        if (canvas == null) {
-            return;
-        }
-        if (sceneRenderer != null) {
-            sceneRenderer.clearCanvas();
-        }
         context().optGameLevel().ifPresent(gameLevel -> {
             canvas.setClip(clipRect);
-            drawGameLevel(gameLevel);
+            sceneRenderer.draw();
             drawHUD();
             if (debugInfoVisible.get() && debugInfoRenderer != null) {
                 canvas.setClip(null); // also show normally clipped region (to see how Pac-Man travels through portals)
                 debugInfoRenderer.drawDebugInfo();
             }
         });
-    }
-
-    private void drawGameLevel(GameLevel gameLevel) {
-        gameLevelRenderInfo.clear();
-        // this is needed for drawing animated maze with different images:
-        gameLevelRenderInfo.put(CommonRenderInfoKey.TICK, ui.clock().tickCount());
-        gameLevelRenderInfo.put(TengenMsPacMan_UIConfig.CONFIG_KEY_MAP_CATEGORY,
-            gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.CONFIG_KEY_MAP_CATEGORY));
-        if (levelCompletedAnimation != null && mazeHighlighted.get()) {
-            gameLevelRenderInfo.put(CommonRenderInfoKey.MAZE_BRIGHT, true);
-            gameLevelRenderInfo.put(CommonRenderInfoKey.MAZE_FLASHING_INDEX, levelCompletedAnimation.flashingIndex());
-        } else {
-            gameLevelRenderInfo.put(CommonRenderInfoKey.MAZE_BRIGHT, false);
-        }
-        gameLevelRenderer.ctx().save();
-        gameLevelRenderer.ctx().translate(scaled(CONTENT_INDENT), 0);
-        gameLevelRenderer.drawGameLevel(gameLevel, gameLevelRenderInfo);
-
-        actorsInZOrder.clear();
-        gameLevel.bonus().ifPresent(actorsInZOrder::add);
-        actorsInZOrder.add(gameLevel.pac());
-        ghostsInZOrder(gameLevel).forEach(actorsInZOrder::add);
-        actorsInZOrder.forEach(actor -> actorRenderer.drawActor(actor));
-
-        gameLevelRenderer.drawDoor(gameLevel.worldMap()); // ghosts appear under door when accessing house!
-        gameLevelRenderer.ctx().restore();
-    }
-
-    private Stream<Ghost> ghostsInZOrder(GameLevel gameLevel) {
-        return Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW).map(gameLevel::ghost);
     }
 
     private void updateHUD(GameLevel gameLevel) {
