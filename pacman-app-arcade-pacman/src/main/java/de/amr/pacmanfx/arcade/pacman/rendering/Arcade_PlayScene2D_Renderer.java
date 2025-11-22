@@ -29,8 +29,15 @@ public class Arcade_PlayScene2D_Renderer extends GameScene2DRenderer {
     public Arcade_PlayScene2D_Renderer(GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(scene, canvas, spriteSheet);
         GameUI_Config uiConfig = scene.ui().currentConfig();
-        gameLevelRenderer = configureRendererForGameScene(uiConfig.createGameLevelRenderer(canvas), scene);
-        actorRenderer     = configureRendererForGameScene(uiConfig.createActorRenderer(canvas), scene);
+
+        gameLevelRenderer = configureRendererForGameScene(
+            uiConfig.createGameLevelRenderer(canvas), scene);
+
+        actorRenderer = configureRendererForGameScene(
+            uiConfig.createActorRenderer(canvas), scene);
+
+        debugInfoRenderer = configureRendererForGameScene(
+            new Arcade_PlayScene2DDebugInfoRenderer(scene, canvas, uiConfig.spriteSheet()), scene);
     }
 
     public void draw() {
@@ -50,6 +57,10 @@ public class Arcade_PlayScene2D_Renderer extends GameScene2DRenderer {
 
         updateActorDrawingOrder(gameLevel);
         actorsInZOrder.forEach(actorRenderer::drawActor);
+
+        if (playScene.debugInfoVisible()) {
+            debugInfoRenderer.draw();
+        }
     }
 
     private boolean isMazeHighlighted(Arcade_PlayScene2D playScene) {

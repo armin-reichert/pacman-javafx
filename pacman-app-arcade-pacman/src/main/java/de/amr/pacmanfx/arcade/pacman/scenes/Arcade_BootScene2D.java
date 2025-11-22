@@ -38,7 +38,8 @@ public class Arcade_BootScene2D extends GameScene2D {
     @Override
     protected void createRenderers(Canvas canvas) {
         final SpriteSheet<?> spriteSheet = ui.currentConfig().spriteSheet();
-        sceneRenderer = configureRendererForGameScene(new Arcade_BootScene2D_Renderer(this, canvas, spriteSheet), this);
+        sceneRenderer = configureRendererForGameScene(
+            new Arcade_BootScene2D_Renderer(this, canvas, spriteSheet), this);
     }
 
     @Override
@@ -54,9 +55,6 @@ public class Arcade_BootScene2D extends GameScene2D {
     @Override
     public void draw() {
         sceneRenderer.draw();
-        if (debugInfoVisible()) {
-            debugInfoRenderer.drawDebugInfo();
-        }
     }
 
     @Override

@@ -24,12 +24,13 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends GameScene2DRenderer {
         super(scene, canvas, spriteSheet);
         final GameUI_Config uiConfig = scene.ui().currentConfig();
         actorRenderer = configureRendererForGameScene(uiConfig.createActorRenderer(canvas), scene);
+        createDefaultDebugInfoRenderer(canvas, uiConfig.spriteSheet());
     }
 
     public void draw() {
-        final ArcadeMsPacMan_IntroScene introScene = (ArcadeMsPacMan_IntroScene) scene();
+        final ArcadeMsPacMan_IntroScene introScene = scene();
 
-        ctx().setFont(arcadeFont8());
+        ctx.setFont(arcadeFont8());
         fillText(TITLE, ARCADE_ORANGE, TITLE_X, TITLE_Y);
         drawMarquee(introScene.marquee);
 
@@ -53,6 +54,10 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends GameScene2DRenderer {
             }
         }
         drawMidwayCopyright(introScene.ui().currentConfig().assets().image("logo.midway"), TS(6), TS(28));
+
+        if (scene().debugInfoVisible()) {
+            debugInfoRenderer.draw();
+        }
     }
 
     /**

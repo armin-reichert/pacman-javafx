@@ -14,7 +14,7 @@ import org.tinylog.Logger;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.lerp;
 
-class PlayScene2DCamera extends ParallelCamera {
+public class PlayScene2DCamera extends ParallelCamera {
 
     private record RangeY(double topPosition, double bottomPosition) {}
 

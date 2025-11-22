@@ -30,9 +30,9 @@ import static de.amr.pacmanfx.ui._2d.GameScene2DRenderer.configureRendererForGam
  */
 public class ArcadePacMan_CutScene1 extends GameScene2D {
 
-    private static final short ANIMATION_START = 120;
+    public static final short ANIMATION_START = 120;
 
-    private int frame;
+    public int frame;
     public Pac pac;
     public Ghost blinky;
 
@@ -46,15 +46,6 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
     @Override
     protected void createRenderers(Canvas canvas) {
         GameUI_Config uiConfig = ui.currentConfig();
-
-        debugInfoRenderer = configureRendererForGameScene(new BaseDebugInfoRenderer(this, canvas, uiConfig.spriteSheet()) {
-            @Override
-            public void drawDebugInfo() {
-                super.drawDebugInfo();
-                String text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
-                fillText(text, debugTextFill, debugTextFont, TS(1), TS(5));
-            }
-        }, this);
 
         hudRenderer = configureRendererForGameScene(
             uiConfig.createHUDRenderer(canvas), this);

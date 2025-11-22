@@ -1,25 +1,60 @@
 package de.amr.pacmanfx.tengen.ms_pacman.rendering;
 
+import de.amr.pacmanfx.GameContext;
+import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.TengenMsPacMan_PlayScene2D;
+import de.amr.pacmanfx.ui._2d.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.CommonRenderInfoKey;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.tengen.ms_pacman.scenes.TengenMsPacMan_PlayScene2D.CANVAS_WIDTH_UNSCALED;
 import static de.amr.pacmanfx.tengen.ms_pacman.scenes.TengenMsPacMan_PlayScene2D.CONTENT_INDENT;
 
 public class TengenMsPacMan_PlayScene2D_Renderer extends TengenMsPacMan_CommonSceneRenderer {
 
+    private static class PlaySceneDebugInfoRenderer extends BaseDebugInfoRenderer {
+
+        public PlaySceneDebugInfoRenderer(TengenMsPacMan_PlayScene2D playScene, Canvas canvas, SpriteSheet<?> spriteSheet) {
+            super(playScene, canvas, spriteSheet);
+        }
+
+        @Override
+        public void draw() {
+            final TengenMsPacMan_PlayScene2D playScene = scene();
+            final FsmState<GameContext> gameState = playScene.context().gameState();
+
+            drawTileGrid(CANVAS_WIDTH_UNSCALED, playScene.canvasHeightUnscaled.get(), Color.LIGHTGRAY);
+
+            ctx.save();
+            ctx.translate(scaled(CONTENT_INDENT), 0);
+            ctx.setFill(debugTextFill);
+            ctx.setFont(debugTextFont);
+            ctx.fillText("%s %d".formatted(gameState, gameState.timer().tickCount()), 0, scaled(3 * TS));
+            playScene.context().optGameLevel().ifPresent(gameLevel -> {
+                drawMovingActorInfo(gameLevel.pac());
+                gameLevel.ghosts().forEach(this::drawMovingActorInfo);
+            });
+            ctx.fillText("Camera y=%.2f".formatted(playScene.dynamicCamera.getTranslateY()), scaled(11*TS), scaled(15*TS));
+            ctx.restore();
+        }
+    }
+
     private final RenderInfo gameLevelRenderInfo = new RenderInfo();
     private final TengenMsPacMan_GameLevelRenderer gameLevelRenderer;
     private final TengenMsPacMan_ActorRenderer actorRenderer;
+
+    private final Rectangle clipRect;
 
     public TengenMsPacMan_PlayScene2D_Renderer(GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(scene, canvas, spriteSheet);
@@ -31,11 +66,29 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends TengenMsPacMan_CommonSc
 
         actorRenderer = configureRendererForGameScene(
             uiConfig.createActorRenderer(canvas), scene);
+
+        debugInfoRenderer = configureRendererForGameScene(
+            new PlaySceneDebugInfoRenderer(scene(), canvas, uiConfig.spriteSheet()), scene());
+
+        // All maps are 28 tiles wide but the NES screen is 32 tiles wide. To accommodate, the maps are centered
+        // horizontally and 2 tiles on each side are clipped.
+        clipRect = new Rectangle();
+        clipRect.xProperty().bind(canvas.translateXProperty().add(scalingProperty().multiply(CONTENT_INDENT)));
+        clipRect.yProperty().bind(canvas.translateYProperty());
+        clipRect.widthProperty().bind(scalingProperty().multiply(CANVAS_WIDTH_UNSCALED - 2 * CONTENT_INDENT));
+        clipRect.heightProperty().bind(canvas.heightProperty());
     }
 
     public void draw() {
         clearCanvas();
-        drawGameLevel(scene().context().gameLevel());
+        scene.context().optGameLevel().ifPresent(gameLevel -> {
+            ctx.getCanvas().setClip(clipRect);
+            drawGameLevel(gameLevel);
+            if (scene.debugInfoVisible()) {
+                ctx.getCanvas().setClip(null); // also show normally clipped region (to see how Pac-Man travels through portals)
+                debugInfoRenderer.draw();
+            }
+        });
     }
 
     private void drawGameLevel(GameLevel gameLevel) {

@@ -77,7 +77,6 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
     @Override
     protected void createRenderers(Canvas canvas) {
-        super.createRenderers(canvas);
         sceneRenderer = GameScene2DRenderer.configureRendererForGameScene(
             new TengenMsPacMan_OptionsScene_Renderer(this, canvas, ui.currentConfig().spriteSheet()), this);
     }

@@ -32,7 +32,7 @@ public class BaseDebugInfoRenderer extends GameScene2DRenderer {
         debugTextFont   = scene.ui().preferences().getFont("debug_text.font");
     }
 
-    public void drawDebugInfo() {
+    public void draw() {
         ctx.setFill(debugTextFill);
         ctx.setStroke(debugTextStroke);
         ctx.setFont(debugTextFont);

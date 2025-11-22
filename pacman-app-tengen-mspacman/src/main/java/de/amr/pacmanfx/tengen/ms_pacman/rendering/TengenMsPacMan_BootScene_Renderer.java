@@ -13,7 +13,7 @@ public class TengenMsPacMan_BootScene_Renderer extends GameScene2DRenderer {
 
     public static final String TENGEN_PRESENTS = "TENGEN PRESENTS";
 
-    private TengenMsPacMan_ActorRenderer actorRenderer;
+    private final TengenMsPacMan_ActorRenderer actorRenderer;
 
     public TengenMsPacMan_BootScene_Renderer(GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(scene, canvas, spriteSheet);
@@ -22,16 +22,21 @@ public class TengenMsPacMan_BootScene_Renderer extends GameScene2DRenderer {
 
         actorRenderer = GameScene2DRenderer.configureRendererForGameScene(
             (TengenMsPacMan_ActorRenderer) uiConfig.createActorRenderer(canvas), scene);
+
+        createDefaultDebugInfoRenderer(canvas, uiConfig.spriteSheet());
     }
 
     public void draw() {
-        final TengenMsPacMan_BootScene bootScene = (TengenMsPacMan_BootScene) scene();
+        final TengenMsPacMan_BootScene bootScene = scene();
         if (bootScene.gray) {
             actorRenderer.fillCanvas(nesColor(0x10));
         } else {
             actorRenderer.fillText(TENGEN_PRESENTS, bootScene.shadeOfBlue, actorRenderer.arcadeFont8(),
                 bootScene.movingText.x(), bootScene.movingText.y());
             actorRenderer.drawActor(bootScene.ghost);
+        }
+        if (scene().debugInfoVisible()) {
+            debugInfoRenderer.draw();
         }
     }
 }

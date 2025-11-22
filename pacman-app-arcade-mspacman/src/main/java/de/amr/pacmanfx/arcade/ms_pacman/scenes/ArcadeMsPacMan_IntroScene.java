@@ -66,8 +66,6 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     protected void createRenderers(Canvas canvas) {
-        super.createRenderers(canvas);
-
         final GameUI_Config uiConfig = ui.currentConfig();
 
         hudRenderer = configureRendererForGameScene(

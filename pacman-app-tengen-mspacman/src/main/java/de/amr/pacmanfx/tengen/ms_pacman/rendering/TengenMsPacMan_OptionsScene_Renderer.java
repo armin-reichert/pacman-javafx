@@ -107,6 +107,10 @@ public class TengenMsPacMan_OptionsScene_Renderer extends TengenMsPacMan_CommonS
         fillText("PRESS START TO START GAME",   NES_YELLOW, TS(3), y);
 
         drawHorizontalBar(nesColor(0x20), nesColor(0x21), optionsScene.sizeInPx().x(), TS, 212);
+
+        if (optionsScene.debugInfoVisible()) {
+            debugInfoRenderer.draw();
+        }
     }
 
     private void drawMarkerIfSelected(TengenMsPacMan_OptionsScene optionsScene, int optionIndex, double y, Font font) {

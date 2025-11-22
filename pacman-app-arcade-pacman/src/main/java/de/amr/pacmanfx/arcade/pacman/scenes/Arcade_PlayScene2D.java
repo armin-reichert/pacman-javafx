@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_PlayScene2DDebugInfoRenderer;
 import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_PlayScene2D_Renderer;
 import de.amr.pacmanfx.controller.PacManGamesState;
 import de.amr.pacmanfx.controller.test.TestState;
@@ -69,9 +68,6 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
         hudRenderer = configureRendererForGameScene(
             uiConfig.createHUDRenderer(canvas), this);
-
-        debugInfoRenderer = configureRendererForGameScene(
-            new Arcade_PlayScene2DDebugInfoRenderer(this, canvas, uiConfig.spriteSheet()), this);
 
         sceneRenderer = configureRendererForGameScene(
             new Arcade_PlayScene2D_Renderer(this, canvas, uiConfig.spriteSheet()), this);

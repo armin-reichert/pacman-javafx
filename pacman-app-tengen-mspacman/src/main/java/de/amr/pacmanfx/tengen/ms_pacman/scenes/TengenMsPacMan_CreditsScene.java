@@ -37,9 +37,8 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
     @Override
     protected void createRenderers(Canvas canvas) {
-        super.createRenderers(canvas);
-
         final GameUI_Config uiConfig = ui.currentConfig();
+
         sceneRenderer = configureRendererForGameScene(
             new TengenMsPacMan_CreditsScene_Renderer(this, canvas, uiConfig.spriteSheet()), this);
     }

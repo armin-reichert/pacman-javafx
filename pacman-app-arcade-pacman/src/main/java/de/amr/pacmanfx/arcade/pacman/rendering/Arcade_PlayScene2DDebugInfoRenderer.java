@@ -12,6 +12,7 @@ import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
 import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.actors.MovingActor;
 import de.amr.pacmanfx.ui._2d.BaseDebugInfoRenderer;
+import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -24,17 +25,16 @@ public class Arcade_PlayScene2DDebugInfoRenderer extends BaseDebugInfoRenderer {
 
     private static final List<Direction> CLOCK_ORDER = List.of(Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT);
 
-    private final Arcade_PlayScene2D scene2D;
-
-    public Arcade_PlayScene2DDebugInfoRenderer(Arcade_PlayScene2D scene2D, Canvas canvas, SpriteSheet<?> spriteSheet) {
+    public Arcade_PlayScene2DDebugInfoRenderer(GameScene2D scene2D, Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(scene2D, canvas, spriteSheet);
-        this.scene2D = scene2D;
     }
 
     @Override
-    public void drawDebugInfo() {
-        GameContext gameContext = scene2D.context();
-        drawTileGrid(scene2D.sizeInPx().x(), scene2D.sizeInPx().y(), Color.LIGHTGRAY);
+    public void draw() {
+        final Arcade_PlayScene2D playScene = scene();
+        final GameContext gameContext = playScene.context();
+
+        drawTileGrid(playScene.sizeInPx().x(), playScene.sizeInPx().y(), Color.LIGHTGRAY);
         if (gameContext.optGameLevel().isPresent()) {
             // assuming all ghosts have the same set of special terrain tiles
             gameContext.gameLevel().ghost(RED_GHOST_SHADOW).specialTerrainTiles().forEach(tile -> {

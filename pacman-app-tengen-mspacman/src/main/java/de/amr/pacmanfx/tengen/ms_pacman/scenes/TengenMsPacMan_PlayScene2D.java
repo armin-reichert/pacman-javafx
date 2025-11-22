@@ -20,7 +20,6 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.MovingGameLevelMessage;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_HUDRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_PlayScene2D_Renderer;
-import de.amr.pacmanfx.ui._2d.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.action.ActionBinding;
@@ -30,7 +29,6 @@ import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.SubSceneProvider;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.Ufx;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -44,7 +42,6 @@ import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
@@ -70,46 +67,21 @@ import static de.amr.pacmanfx.uilib.Ufx.createContextMenuTitle;
 public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneProvider {
 
     public static final float CONTENT_INDENT = TS(2);
-    private static final double CANVAS_WIDTH_UNSCALED = NES_SIZE_PX.x();
+    public static final double CANVAS_WIDTH_UNSCALED = NES_SIZE_PX.x();
 
-    private final DoubleProperty canvasHeightUnscaled = new SimpleDoubleProperty(NES_SIZE_PX.y());
+    public final DoubleProperty canvasHeightUnscaled = new SimpleDoubleProperty(NES_SIZE_PX.y());
     public final BooleanProperty mazeHighlighted = new SimpleBooleanProperty(false);
 
     private final StackPane rootPane;
     private final SubScene subScene;
 
-    private final PlayScene2DCamera dynamicCamera;
+    public final PlayScene2DCamera dynamicCamera;
     private final PerspectiveCamera fixedCamera;
 
     private TengenMsPacMan_PlayScene2D_Renderer sceneRenderer;
     private TengenMsPacMan_HUDRenderer hudRenderer;
 
-    private Rectangle clipRect;
     public LevelCompletedAnimation levelCompletedAnimation;
-
-    public class PlaySceneDebugInfoRenderer extends BaseDebugInfoRenderer {
-
-        public PlaySceneDebugInfoRenderer(Canvas canvas, SpriteSheet<?> spriteSheet) {
-            super(TengenMsPacMan_PlayScene2D.this, canvas, spriteSheet);
-        }
-
-        @Override
-        public void drawDebugInfo() {
-            final FsmState<GameContext> gameState = context().gameState();
-            drawTileGrid(CANVAS_WIDTH_UNSCALED, canvasHeightUnscaled.get(), Color.LIGHTGRAY);
-            ctx.save();
-            ctx.translate(scaled(CONTENT_INDENT), 0);
-            ctx.setFill(debugTextFill);
-            ctx.setFont(debugTextFont);
-            ctx.fillText("%s %d".formatted(gameState, gameState.timer().tickCount()), 0, scaled(3 * TS));
-            context().optGameLevel().ifPresent(gameLevel -> {
-                drawMovingActorInfo(gameLevel.pac());
-                gameLevel.ghosts().forEach(this::drawMovingActorInfo);
-            });
-            ctx.fillText("Camera y=%.2f".formatted(dynamicCamera.getTranslateY()), scaled(11*TS), scaled(15*TS));
-            ctx.restore();
-        }
-    }
 
     public TengenMsPacMan_PlayScene2D(GameUI ui) {
         super(ui);
@@ -138,14 +110,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
 
         canvas.widthProperty() .bind(scalingProperty().multiply(CANVAS_WIDTH_UNSCALED));
         canvas.heightProperty().bind(scalingProperty().multiply(canvasHeightUnscaled));
-
-        // All maps are 28 tiles wide but the NES screen is 32 tiles wide. To accommodate, the maps are centered
-        // horizontally and 2 tiles on each side are clipped.
-        clipRect = new Rectangle();
-        clipRect.xProperty().bind(canvas.translateXProperty().add(scalingProperty().multiply(CONTENT_INDENT)));
-        clipRect.yProperty().bind(canvas.translateYProperty());
-        clipRect.widthProperty().bind(scalingProperty().multiply(CANVAS_WIDTH_UNSCALED - 2 * CONTENT_INDENT));
-        clipRect.heightProperty().bind(canvas.heightProperty());
 
         rootPane.getChildren().setAll(canvas);
     }
@@ -194,9 +158,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
 
         hudRenderer = configureRendererForGameScene(
             uiConfig.createHUDRenderer(canvas), this);
-
-        debugInfoRenderer = configureRendererForGameScene(
-            new PlaySceneDebugInfoRenderer(canvas, uiConfig.spriteSheet()), this);
 
         sceneRenderer = configureRendererForGameScene(
             new TengenMsPacMan_PlayScene2D_Renderer(this, canvas, uiConfig.spriteSheet()), this);
@@ -476,20 +437,13 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
 
     @Override
     public void drawSceneContent() {
-        // Overridden draw() method does the job
+        sceneRenderer.draw();
     }
 
     @Override
     public void draw() {
-        context().optGameLevel().ifPresent(gameLevel -> {
-            canvas.setClip(clipRect);
-            sceneRenderer.draw();
-            drawHUD();
-            if (debugInfoVisible.get() && debugInfoRenderer != null) {
-                canvas.setClip(null); // also show normally clipped region (to see how Pac-Man travels through portals)
-                debugInfoRenderer.drawDebugInfo();
-            }
-        });
+        drawHUD();
+        drawSceneContent();
     }
 
     private void updateHUD(GameLevel gameLevel) {

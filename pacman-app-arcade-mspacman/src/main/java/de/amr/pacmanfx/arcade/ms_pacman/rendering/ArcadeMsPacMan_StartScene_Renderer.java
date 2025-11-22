@@ -15,6 +15,7 @@ public class ArcadeMsPacMan_StartScene_Renderer extends GameScene2DRenderer {
     
     public ArcadeMsPacMan_StartScene_Renderer(GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(scene, canvas, spriteSheet);
+        createDefaultDebugInfoRenderer(canvas, scene.ui().currentConfig().spriteSheet());
     }
     
     public void draw() {
@@ -30,6 +31,10 @@ public class ArcadeMsPacMan_StartScene_Renderer extends GameScene2DRenderer {
         Image logo = scene().ui().currentConfig().assets().image("logo.midway");
         if (logo != null) {
             drawMidwayCopyright(logo, TS * 6, TS * 28);
+        }
+
+        if (scene().debugInfoVisible()) {
+            debugInfoRenderer.draw();
         }
     }
 

@@ -18,11 +18,15 @@ public class ArcadeMsPacMan_CutScene2_Renderer extends GameScene2DRenderer {
         final GameUI_Config uiConfig = scene.ui().currentConfig();
         actorRenderer = configureRendererForGameScene(
             (ArcadeMsPacMan_ActorRenderer) uiConfig.createActorRenderer(canvas), scene);
+        createDefaultDebugInfoRenderer(canvas, uiConfig.spriteSheet());
     }
 
     public void draw() {
         ArcadeMsPacMan_CutScene2 cutScene = (ArcadeMsPacMan_CutScene2) scene();
         cutScene.clapperboard.setFont(arcadeFont8());
         Stream.of(cutScene.clapperboard, cutScene.msPacMan, cutScene.pacMan).forEach(actorRenderer::drawActor);
+        if (cutScene.debugInfoVisible()) {
+            debugInfoRenderer.draw();
+        }
     }
 }

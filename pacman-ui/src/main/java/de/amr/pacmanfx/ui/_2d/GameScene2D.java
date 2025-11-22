@@ -20,7 +20,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.ui._2d.GameScene2DRenderer.configureRendererForGameScene;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -39,7 +38,6 @@ public abstract class GameScene2D implements GameScene {
     protected final AnimationRegistry animationRegistry;
 
     protected Canvas canvas;
-    protected BaseDebugInfoRenderer debugInfoRenderer;
 
     protected GameScene2D(GameUI ui) {
         this.ui = requireNonNull(ui);
@@ -90,10 +88,7 @@ public abstract class GameScene2D implements GameScene {
         return canvas;
     }
 
-    protected void createRenderers(Canvas canvas) {
-        debugInfoRenderer = configureRendererForGameScene(
-            new BaseDebugInfoRenderer(this, canvas, ui.currentConfig().spriteSheet()), this);
-    }
+    protected abstract void createRenderers(Canvas canvas);
 
     @Override
     public ActionBindingsManager actionBindings() { return actionBindings; }
@@ -161,9 +156,6 @@ public abstract class GameScene2D implements GameScene {
         canvas.getGraphicsContext2D().setFill(background());
         canvas.getGraphicsContext2D().fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         drawSceneContent();
-        if (debugInfoVisible()) {
-            debugInfoRenderer.drawDebugInfo();
-        }
         drawHUD();
     }
 

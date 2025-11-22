@@ -19,7 +19,6 @@ import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui._2d.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.action.ArcadeActions;
 import de.amr.pacmanfx.ui.action.TestActions;
@@ -77,14 +76,6 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     @Override
     protected void createRenderers(Canvas canvas) {
         GameUI_Config uiConfig = ui.currentConfig();
-
-        debugInfoRenderer = configureRendererForGameScene(new BaseDebugInfoRenderer(this, canvas, uiConfig.spriteSheet()) {
-            @Override
-            public void drawDebugInfo() {
-                super.drawDebugInfo();
-                ctx.fillText("Scene timer %d".formatted(sceneController.state().timer().tickCount()), 0, scaled(5 * TS));
-            }
-        }, this);
 
         hudRenderer = configureRendererForGameScene(
             (ArcadePacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas), this);

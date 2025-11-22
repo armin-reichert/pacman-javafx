@@ -11,7 +11,6 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui._2d.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
@@ -21,7 +20,6 @@ import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
-import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui._2d.GameScene2DRenderer.configureRendererForGameScene;
 
 /**
@@ -31,11 +29,11 @@ import static de.amr.pacmanfx.ui._2d.GameScene2DRenderer.configureRendererForGam
  */
 public class ArcadePacMan_CutScene2 extends GameScene2D {
 
-    private static final short ANIMATION_START = 120;
+    public static final short ANIMATION_START = 120;
 
     private static final byte NAIL = 0, STRETCHED_S = 1, STRETCHED_M = 2, STRETCHED_L = 3, RAPTURED = 4;
 
-    private int frame;
+    public int frame;
     public Pac pac;
     public Ghost blinky;
 
@@ -53,15 +51,6 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     @Override
     protected void createRenderers(Canvas canvas) {
         GameUI_Config uiConfig = ui.currentConfig();
-
-        debugInfoRenderer = configureRendererForGameScene(new BaseDebugInfoRenderer(this, canvas, uiConfig.spriteSheet()) {
-            @Override
-            public void drawDebugInfo() {
-                super.drawDebugInfo();
-                String text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
-                fillText(text, debugTextFill, debugTextFont, TS(1), TS(5));
-            }
-        }, this);
         hudRenderer = configureRendererForGameScene(uiConfig.createHUDRenderer(canvas), this);
         sceneRenderer = configureRendererForGameScene(new ArcadePacMan_CutScene2_Renderer(this, canvas, ui.currentConfig().spriteSheet()), this);
     }

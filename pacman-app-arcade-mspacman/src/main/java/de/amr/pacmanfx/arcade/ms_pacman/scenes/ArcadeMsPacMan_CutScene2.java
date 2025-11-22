@@ -47,15 +47,13 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
 
     @Override
     protected void createRenderers(Canvas canvas) {
-        super.createRenderers(canvas);
-
         final GameUI_Config uiConfig = ui.currentConfig();
 
         hudRenderer = configureRendererForGameScene(
             (ArcadeMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas), this);
 
         sceneRenderer = configureRendererForGameScene(
-                new ArcadeMsPacMan_CutScene2_Renderer(this, canvas, uiConfig.spriteSheet()), this);
+            new ArcadeMsPacMan_CutScene2_Renderer(this, canvas, uiConfig.spriteSheet()), this);
     }
 
     @Override
@@ -88,12 +86,12 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
 
     @Override
     public void update() {
-        switch (sceneState) {
+        switch (state) {
             case SceneState.CLAPPERBOARD -> updateStateClapperboard();
             case SceneState.CHASING -> updateStateChasing();
-            default -> throw new IllegalStateException("Illegal scene state: " + sceneState);
+            default -> throw new IllegalStateException("Illegal scene state: " + state);
         }
-        sceneTimer.doTick();
+        timer.doTick();
     }
 
     @Override
@@ -105,18 +103,18 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
 
     private enum SceneState { CLAPPERBOARD, CHASING }
 
-    private SceneState sceneState;
-    private final TickTimer sceneTimer = new TickTimer("MsPacMan_CutScene2");
+    private SceneState state;
+    private final TickTimer timer = new TickTimer("MsPacMan_CutScene2");
 
     private void setSceneState(SceneState state, long ticks) {
-        sceneState = state;
-        sceneTimer.reset(ticks);
-        sceneTimer.start();
+        this.state = state;
+        timer.reset(ticks);
+        timer.start();
     }
 
     private void updateStateClapperboard() {
         clapperboard.tick();
-        if (sceneTimer.hasExpired()) {
+        if (timer.hasExpired()) {
             ui.soundManager().play(SoundID.INTERMISSION_2);
             enterStateChasing();
         }
@@ -133,7 +131,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
     }
 
     private void updateStateChasing() {
-        if (sceneTimer.atSecond(4.5)) {
+        if (timer.atSecond(4.5)) {
             pacMan.setPosition(TS * (-2), UPPER_LANE_Y);
             pacMan.setMoveDir(Direction.RIGHT);
             pacMan.setSpeed(2.0f);
@@ -144,7 +142,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
             msPacMan.setSpeed(2.0f);
             msPacMan.show();
         }
-        else if (sceneTimer.atSecond(9)) {
+        else if (timer.atSecond(9)) {
             pacMan.setPosition(TS * 36, LOWER_LANE_Y);
             pacMan.setMoveDir(Direction.LEFT);
             pacMan.setSpeed(2.0f);
@@ -153,7 +151,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
             msPacMan.setMoveDir(Direction.LEFT);
             msPacMan.setSpeed(2.0f);
         }
-        else if (sceneTimer.atSecond(13.5)) {
+        else if (timer.atSecond(13.5)) {
             pacMan.setPosition(TS * (-2), MIDDLE_LANE_Y);
             pacMan.setMoveDir(Direction.RIGHT);
             pacMan.setSpeed(2.0f);
@@ -162,7 +160,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
             msPacMan.setMoveDir(Direction.RIGHT);
             msPacMan.setSpeed(2.0f);
         }
-        else if (sceneTimer.atSecond(17.5)) {
+        else if (timer.atSecond(17.5)) {
             pacMan.setPosition(TS * 42, UPPER_LANE_Y);
             pacMan.setMoveDir(Direction.LEFT);
             pacMan.setSpeed(4.0f);
@@ -171,7 +169,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
             msPacMan.setMoveDir(Direction.LEFT);
             msPacMan.setSpeed(4.0f);
         }
-        else if (sceneTimer.atSecond(18.5)) {
+        else if (timer.atSecond(18.5)) {
             pacMan.setPosition(TS * (-2), LOWER_LANE_Y);
             pacMan.setMoveDir(Direction.RIGHT);
             pacMan.setSpeed(4.0f);
@@ -180,7 +178,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
             msPacMan.setMoveDir(Direction.RIGHT);
             msPacMan.setSpeed(4.0f);
         }
-        else if (sceneTimer.atSecond(23)) {
+        else if (timer.atSecond(23)) {
             context().gameController().letCurrentGameStateExpire();
         }
         else {

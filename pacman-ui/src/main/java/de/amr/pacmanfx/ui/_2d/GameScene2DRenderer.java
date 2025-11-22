@@ -23,11 +23,11 @@ public class GameScene2DRenderer extends BaseSpriteRenderer {
 
     protected final GameScene2D scene;
     protected final List<Actor> actorsInZOrder = new ArrayList<>();
+    protected BaseDebugInfoRenderer debugInfoRenderer;
 
     public GameScene2DRenderer(GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(canvas, spriteSheet);
         this.scene = scene;
-        configureRendererForGameScene(this, scene);
     }
 
     @SuppressWarnings("unchecked")
@@ -35,7 +35,7 @@ public class GameScene2DRenderer extends BaseSpriteRenderer {
         return (S) scene;
     }
 
-    public List<Actor> actorsInZOrder() {
-        return actorsInZOrder;
+    protected void createDefaultDebugInfoRenderer(Canvas canvas, SpriteSheet<?> spriteSheet) {
+        debugInfoRenderer = configureRendererForGameScene(new BaseDebugInfoRenderer(scene, canvas, spriteSheet), scene);
     }
 }

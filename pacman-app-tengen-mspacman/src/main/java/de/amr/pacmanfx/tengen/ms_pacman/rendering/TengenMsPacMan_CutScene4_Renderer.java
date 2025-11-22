@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 
 public class TengenMsPacMan_CutScene4_Renderer extends GameScene2DRenderer {
 
-    private TengenMsPacMan_ActorRenderer actorRenderer;
+    private final TengenMsPacMan_ActorRenderer actorRenderer;
 
     public TengenMsPacMan_CutScene4_Renderer(GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(scene, canvas, spriteSheet);
@@ -19,12 +19,17 @@ public class TengenMsPacMan_CutScene4_Renderer extends GameScene2DRenderer {
         final GameUI_Config uiConfig = scene.ui().currentConfig();
         actorRenderer = GameScene2DRenderer.configureRendererForGameScene(
             (TengenMsPacMan_ActorRenderer) uiConfig.createActorRenderer(canvas), scene);
+        createDefaultDebugInfoRenderer(canvas, uiConfig.spriteSheet());
     }
 
     public void draw() {
-        final TengenMsPacMan_CutScene4 cutScene = (TengenMsPacMan_CutScene4) scene();
+        final TengenMsPacMan_CutScene4 cutScene = scene();
         cutScene.clapperboard.setFont(actorRenderer.arcadeFont8());
         Stream.of(cutScene.clapperboard, cutScene.msPacMan, cutScene.pacMan).forEach(actorRenderer::drawActor);
-        cutScene.juniors.forEach(actor -> actorRenderer.drawActor(actor));
+        cutScene.juniors.forEach(actorRenderer::drawActor);
+
+        if (scene().debugInfoVisible()) {
+            debugInfoRenderer.draw();
+        }
     }
 }

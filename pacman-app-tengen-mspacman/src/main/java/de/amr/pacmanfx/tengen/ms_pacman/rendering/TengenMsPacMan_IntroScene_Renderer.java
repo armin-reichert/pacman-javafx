@@ -1,17 +1,14 @@
 package de.amr.pacmanfx.tengen.ms_pacman.rendering;
 
-import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.TengenMsPacMan_IntroScene;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2DRenderer;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
-import de.amr.pacmanfx.ui.input.JoypadKeyBinding;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Properties.PROPERTY_JOYPAD_BINDINGS_DISPLAYED;
@@ -19,9 +16,8 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesColor;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.shadeOfBlue;
 import static de.amr.pacmanfx.tengen.ms_pacman.scenes.TengenMsPacMan_IntroScene.MARQUEE_X;
 import static de.amr.pacmanfx.tengen.ms_pacman.scenes.TengenMsPacMan_IntroScene.MARQUEE_Y;
-import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_IntroScene_Renderer extends GameScene2DRenderer {
+public class TengenMsPacMan_IntroScene_Renderer extends TengenMsPacMan_CommonSceneRenderer {
 
     private final ActorRenderer actorRenderer;
 
@@ -34,7 +30,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends GameScene2DRenderer {
     }
     
     public void draw() {
-        final TengenMsPacMan_IntroScene introScene = (TengenMsPacMan_IntroScene) scene();
+        final TengenMsPacMan_IntroScene introScene = scene();
         final long tick = introScene.sceneController.state().timer().tickCount();
 
         ctx.setFont(arcadeFont8());
@@ -64,14 +60,14 @@ public class TengenMsPacMan_IntroScene_Renderer extends GameScene2DRenderer {
                 Ghost currentGhost = introScene.ghosts.get(introScene.ghostIndex);
                 Color ghostColor = introScene.ghostColors[currentGhost.personality()];
                 fillText(currentGhost.name().toUpperCase(), ghostColor, MARQUEE_X + 44, MARQUEE_Y + 41);
-                introScene.ghosts.forEach(ghost -> actorRenderer.drawActor(ghost));
+                introScene.ghosts.forEach(actorRenderer::drawActor);
             }
             case MS_PACMAN_MARCHING_IN -> {
                 introScene.marquee.draw(ctx());
                 fillText("\"MS PAC-MAN\"", nesColor(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
                 fillText("STARRING", nesColor(0x20), MARQUEE_X + 12, MARQUEE_Y + 22);
                 fillText("MS PAC-MAN", nesColor(0x28), MARQUEE_X + 28, MARQUEE_Y + 38);
-                introScene.ghosts.forEach(ghost -> actorRenderer.drawActor(ghost));
+                introScene.ghosts.forEach(actorRenderer::drawActor);
                 actorRenderer.drawActor(introScene.msPacMan);
             }
         }
@@ -79,25 +75,9 @@ public class TengenMsPacMan_IntroScene_Renderer extends GameScene2DRenderer {
         if (PROPERTY_JOYPAD_BINDINGS_DISPLAYED.get()) {
             drawJoypadKeyBinding(scene().ui().joypad().currentKeyBinding());
         }
-    }
 
-    private void drawJoypadKeyBinding(JoypadKeyBinding binding) {
-        ctx.save();
-        requireNonNull(binding);
-        ctx.setFont(Font.font(scaled(6)));
-        ctx.setStroke(Color.WHITE);
-        ctx.strokeText(" [SELECT]=%s   [START]=%s   [BUTTON B]=%s   [BUTTON A]=%s".formatted(
-                binding.key(JoypadButton.SELECT),
-                binding.key(JoypadButton.START),
-                binding.key(JoypadButton.B),
-                binding.key(JoypadButton.A)
-        ), 0, scaled(TS));
-        ctx.strokeText(" [UP]=%s   [DOWN]=%s   [LEFT]=%s   [RIGHT]=%s".formatted(
-                binding.key(JoypadButton.UP),
-                binding.key(JoypadButton.DOWN),
-                binding.key(JoypadButton.LEFT),
-                binding.key(JoypadButton.RIGHT)
-        ), 0, scaled(2*TS));
-        ctx.restore();
+        if (introScene.debugInfoVisible()) {
+            debugInfoRenderer.draw();
+        }
     }
 }

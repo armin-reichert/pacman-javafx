@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_IntroScene;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.timer.Pulse;
+import de.amr.pacmanfx.ui._2d.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2DRenderer;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
@@ -25,13 +26,23 @@ public class ArcadePacMan_IntroScene_Renderer extends GameScene2DRenderer {
         super(scene, canvas, spriteSheet);
 
         final GameUI_Config uiConfig = scene.ui().currentConfig();
+
         actorRenderer = configureRendererForGameScene((ArcadePacMan_ActorRenderer) uiConfig.createActorRenderer(canvas), scene);
+
+        debugInfoRenderer = configureRendererForGameScene(new BaseDebugInfoRenderer(scene, canvas, uiConfig.spriteSheet()) {
+            @Override
+            public void draw() {
+                ArcadePacMan_IntroScene introScene = scene();
+                super.draw();
+                ctx.fillText("Scene timer %d".formatted(introScene.sceneController.state().timer().tickCount()), 0, scaled(5 * TS));
+            }
+        }, scene);
 
         setImageSmoothing(true);
     }
 
     public void draw() {
-        ArcadePacMan_IntroScene introScene = (ArcadePacMan_IntroScene) scene();
+        final ArcadePacMan_IntroScene introScene = scene();
 
         drawGallery(introScene);
         switch (introScene.sceneController.state()) {
@@ -48,6 +59,10 @@ public class ArcadePacMan_IntroScene_Renderer extends GameScene2DRenderer {
                 drawGuys(introScene, false);
                 fillText(MIDWAY_MFG_CO, ARCADE_PINK, arcadeFont8(), TS(4), TS(32));
             }
+        }
+
+        if (introScene.debugInfoVisible()) {
+            debugInfoRenderer.draw();
         }
     }
 

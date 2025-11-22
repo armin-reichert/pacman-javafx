@@ -28,6 +28,7 @@ public class Arcade_BootScene2D_Renderer extends GameScene2DRenderer {
 
     public Arcade_BootScene2D_Renderer(GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(scene, canvas, spriteSheet);
+        createDefaultDebugInfoRenderer(canvas, scene.ui().currentConfig().spriteSheet());
 
         final double width = spriteSheet.sourceImage().getWidth();
         final double height = spriteSheet.sourceImage().getHeight();
@@ -55,6 +56,10 @@ public class Arcade_BootScene2D_Renderer extends GameScene2DRenderer {
         else if (timer.atSecond(3.5)) {
             clearCanvas();
             draw16by16Grid();
+        }
+
+        if (scene.debugInfoVisible()) {
+            debugInfoRenderer.draw();
         }
     }
 

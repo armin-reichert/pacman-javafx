@@ -20,7 +20,6 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.actors.PacMan;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_CutScene4_Renderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_HUDRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
-import de.amr.pacmanfx.ui._2d.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
@@ -59,18 +58,13 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
     @Override
     protected void createRenderers(Canvas canvas) {
-        super.createRenderers(canvas);
-
         final GameUI_Config uiConfig = ui.currentConfig();
 
         hudRenderer = configureRendererForGameScene(
             (TengenMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas), this);
 
-        debugInfoRenderer = configureRendererForGameScene(
-            new BaseDebugInfoRenderer(this, canvas, uiConfig.spriteSheet()), this);
-
         sceneRenderer = configureRendererForGameScene(
-                new TengenMsPacMan_CutScene4_Renderer(this, canvas, uiConfig.spriteSheet()), this);
+            new TengenMsPacMan_CutScene4_Renderer(this, canvas, uiConfig.spriteSheet()), this);
     }
 
     @Override
