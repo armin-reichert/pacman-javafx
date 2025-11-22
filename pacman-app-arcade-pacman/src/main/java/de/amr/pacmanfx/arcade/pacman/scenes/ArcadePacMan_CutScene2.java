@@ -36,8 +36,8 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     private static final byte NAIL = 0, STRETCHED_S = 1, STRETCHED_M = 2, STRETCHED_L = 3, RAPTURED = 4;
 
     private int frame;
-    private Pac pac;
-    private Ghost blinky;
+    public Pac pac;
+    public Ghost blinky;
 
     private SpriteAnimation blinkyNormal;
     private SpriteAnimation blinkyDamaged;
@@ -54,7 +54,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     protected void createRenderers(Canvas canvas) {
         GameUI_Config uiConfig = ui.currentConfig();
 
-        debugInfoRenderer = configureRendererForGameScene(new BaseDebugInfoRenderer(ui, canvas) {
+        debugInfoRenderer = configureRendererForGameScene(new BaseDebugInfoRenderer(this, canvas, uiConfig.spriteSheet()) {
             @Override
             public void drawDebugInfo() {
                 super.drawDebugInfo();
@@ -99,15 +99,12 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
             nailDressRaptureAnimation = (SpriteAnimation) animations.animation(ArcadePacMan_UIConfig.AnimationID.ANIM_BLINKY_NAIL_DRESS_RAPTURE);
             blinkyDamaged    = (SpriteAnimation) animations.animation(ArcadePacMan_UIConfig.AnimationID.ANIM_BLINKY_DAMAGED);
         });
-        actorsInZOrder.add(pac);
-        actorsInZOrder.add(blinky);
 
         frame = -1;
     }
 
     @Override
-    protected void doEnd() {
-    }
+    protected void doEnd() {}
 
     @Override
     public void update() {

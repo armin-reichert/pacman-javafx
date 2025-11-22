@@ -10,9 +10,8 @@ import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.MovingActor;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
-import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -20,37 +19,34 @@ import javafx.scene.text.FontWeight;
 
 import static de.amr.pacmanfx.Globals.TS;
 
-public class BaseDebugInfoRenderer extends BaseRenderer {
+public class BaseDebugInfoRenderer extends GameScene2DRenderer {
 
-    protected final GameUI ui;
     protected Color debugTextFill;
     protected Color debugTextStroke;
     protected Font debugTextFont;
 
-    public BaseDebugInfoRenderer(GameUI ui, Canvas canvas) {
-        super(canvas);
-        this.ui = ui;
-        debugTextFill   = ui.preferences().getColor("debug_text.fill");
-        debugTextStroke = ui.preferences().getColor("debug_text.stroke");
-        debugTextFont   = ui.preferences().getFont("debug_text.font");
+    public BaseDebugInfoRenderer(GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
+        super(scene, canvas, spriteSheet);
+        debugTextFill   = scene.ui().preferences().getColor("debug_text.fill");
+        debugTextStroke = scene.ui().preferences().getColor("debug_text.stroke");
+        debugTextFont   = scene.ui().preferences().getFont("debug_text.font");
     }
 
     public void drawDebugInfo() {
         ctx.setFill(debugTextFill);
         ctx.setStroke(debugTextStroke);
         ctx.setFont(debugTextFont);
-        TickTimer stateTimer = ui.gameContext().gameState().timer();
+        TickTimer stateTimer = scene.ui().gameContext().gameState().timer();
         String stateText = "Game State: '%s' (Tick %d of %s)".formatted(
-            ui.gameContext().gameState().name(),
+            scene.ui().gameContext().gameState().name(),
             stateTimer.tickCount(),
             stateTimer.durationTicks() == TickTimer.INDEFINITE ? "∞" : String.valueOf(stateTimer.tickCount())
         );
         ctx.fillText(stateText, 0, scaled(3 * TS));
 
-        if (ui.currentGameScene().isPresent() && ui.currentGameScene().get() instanceof GameScene2D gameScene2D) {
+        if (scene.ui().currentGameScene().isPresent() && scene.ui().currentGameScene().get() instanceof GameScene2D gameScene2D) {
             Vector2i size = gameScene2D.sizeInPx();
             drawTileGrid(size.x(), size.y(), Color.LIGHTGRAY);
-
         }
     }
 

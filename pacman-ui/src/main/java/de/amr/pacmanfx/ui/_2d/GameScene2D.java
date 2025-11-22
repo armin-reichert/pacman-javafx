@@ -8,7 +8,6 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.math.Vector2i;
-import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.api.ActionBindingsManager;
 import de.amr.pacmanfx.ui.api.GameScene;
@@ -21,9 +20,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import org.tinylog.Logger;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import static de.amr.pacmanfx.ui._2d.GameScene2DRenderer.configureRendererForGameScene;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -40,8 +37,6 @@ public abstract class GameScene2D implements GameScene {
     protected final GameUI ui;
     protected final ActionBindingsManager actionBindings;
     protected final AnimationRegistry animationRegistry;
-
-    protected final List<Actor> actorsInZOrder = new ArrayList<>();
 
     protected Canvas canvas;
     protected BaseDebugInfoRenderer debugInfoRenderer;
@@ -96,7 +91,8 @@ public abstract class GameScene2D implements GameScene {
     }
 
     protected void createRenderers(Canvas canvas) {
-        debugInfoRenderer = GameScene2DRenderer.configureRendererForGameScene(new BaseDebugInfoRenderer(ui, canvas), this);
+        debugInfoRenderer = configureRendererForGameScene(
+            new BaseDebugInfoRenderer(this, canvas, ui.currentConfig().spriteSheet()), this);
     }
 
     @Override
@@ -152,10 +148,6 @@ public abstract class GameScene2D implements GameScene {
      */
     public Vector2i sizeInPx() {
         return DEFAULT_SIZE_PX;
-    }
-
-    public List<Actor> actorsInZOrder() {
-        return actorsInZOrder;
     }
 
     /**

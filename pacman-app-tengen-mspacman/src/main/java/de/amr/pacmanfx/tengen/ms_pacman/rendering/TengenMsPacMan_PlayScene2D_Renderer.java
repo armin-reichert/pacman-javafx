@@ -53,18 +53,18 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends TengenMsPacMan_CommonSc
         } else {
             gameLevelRenderInfo.put(CommonRenderInfoKey.MAZE_BRIGHT, false);
         }
-        gameLevelRenderer.ctx().save();
-        gameLevelRenderer.ctx().translate(scaled(CONTENT_INDENT), 0);
+        ctx.save();
+        ctx.translate(scaled(CONTENT_INDENT), 0);
         gameLevelRenderer.drawGameLevel(gameLevel, gameLevelRenderInfo);
 
-        playScene.actorsInZOrder().clear();
-        gameLevel.bonus().ifPresent(playScene.actorsInZOrder()::add);
-        playScene.actorsInZOrder().add(gameLevel.pac());
-        ghostsInZOrder(gameLevel).forEach(playScene.actorsInZOrder()::add);
-        playScene.actorsInZOrder().forEach(actorRenderer::drawActor);
+        actorsInZOrder.clear();
+        gameLevel.bonus().ifPresent(actorsInZOrder::add);
+        actorsInZOrder.add(gameLevel.pac());
+        ghostsInZOrder(gameLevel).forEach(actorsInZOrder::add);
+        actorsInZOrder.forEach(actorRenderer::drawActor);
 
         gameLevelRenderer.drawDoor(gameLevel.worldMap()); // ghosts appear under door when accessing house!
-        gameLevelRenderer.ctx().restore();
+        ctx.restore();
     }
 
     private Stream<Ghost> ghostsInZOrder(GameLevel gameLevel) {

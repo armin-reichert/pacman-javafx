@@ -30,6 +30,7 @@ import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.SubSceneProvider;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.Ufx;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -88,8 +89,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
 
     public class PlaySceneDebugInfoRenderer extends BaseDebugInfoRenderer {
 
-        public PlaySceneDebugInfoRenderer(Canvas canvas) {
-            super(TengenMsPacMan_PlayScene2D.this.ui, canvas);
+        public PlaySceneDebugInfoRenderer(Canvas canvas, SpriteSheet<?> spriteSheet) {
+            super(TengenMsPacMan_PlayScene2D.this, canvas, spriteSheet);
         }
 
         @Override
@@ -195,7 +196,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
             uiConfig.createHUDRenderer(canvas), this);
 
         debugInfoRenderer = configureRendererForGameScene(
-            new PlaySceneDebugInfoRenderer(canvas), this);
+            new PlaySceneDebugInfoRenderer(canvas, uiConfig.spriteSheet()), this);
 
         sceneRenderer = configureRendererForGameScene(
             new TengenMsPacMan_PlayScene2D_Renderer(this, canvas, uiConfig.spriteSheet()), this);

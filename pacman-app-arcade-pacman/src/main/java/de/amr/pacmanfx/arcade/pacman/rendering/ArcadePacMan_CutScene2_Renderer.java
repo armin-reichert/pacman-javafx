@@ -11,21 +11,21 @@ import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_CutScene2_Renderer extends GameScene2DRenderer {
 
-    private final ArcadePacMan_CutScene2 scene;
     private final ActorRenderer actorRenderer;
 
     public ArcadePacMan_CutScene2_Renderer(ArcadePacMan_CutScene2 scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(scene, canvas, spriteSheet);
-        this.scene = requireNonNull(scene);
-        actorRenderer = configureRendererForGameScene(scene.ui().currentConfig().createActorRenderer(canvas), scene);
+        actorRenderer = configureRendererForGameScene(
+            scene.ui().currentConfig().createActorRenderer(canvas), scene);
     }
 
     public void draw() {
-        drawSprite(scene.nailDressRaptureAnimation().currentSprite(), TS(14), TS(19) + 3, true);
-        scene.actorsInZOrder().forEach(actorRenderer::drawActor);
+        ArcadePacMan_CutScene2 cutScene = scene();
+        drawSprite(cutScene.nailDressRaptureAnimation().currentSprite(), TS(14), TS(19) + 3, true);
+        actorRenderer.drawActor(cutScene.pac);
+        actorRenderer.drawActor(cutScene.blinky);
     }
 }

@@ -33,8 +33,8 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
     static final short ANIMATION_START = 120;
 
     private int frame;
-    private Pac pac;
-    private Ghost blinky;
+    public Pac pac;
+    public Ghost blinky;
 
     private ArcadePacMan_CutScene3_Renderer sceneRenderer;
     private HUDRenderer hudRenderer;
@@ -46,7 +46,8 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
     @Override
     protected void createRenderers(Canvas canvas) {
         GameUI_Config uiConfig = ui.currentConfig();
-        debugInfoRenderer = configureRendererForGameScene(new BaseDebugInfoRenderer(ui, canvas) {
+
+        debugInfoRenderer = configureRendererForGameScene(new BaseDebugInfoRenderer(this, canvas, uiConfig.spriteSheet()) {
             @Override
             public void drawDebugInfo() {
                 super.drawDebugInfo();
@@ -55,8 +56,12 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
                 fillText(text, debugTextFill, debugTextFont, TS(1), TS(5));
             }
         }, this);
-        hudRenderer = configureRendererForGameScene(uiConfig.createHUDRenderer(canvas), this);
-        sceneRenderer = configureRendererForGameScene(new ArcadePacMan_CutScene3_Renderer(this, canvas, uiConfig.spriteSheet()), this);
+
+        hudRenderer = configureRendererForGameScene(
+            uiConfig.createHUDRenderer(canvas), this);
+
+        sceneRenderer = configureRendererForGameScene(
+            new ArcadePacMan_CutScene3_Renderer(this, canvas, uiConfig.spriteSheet()), this);
     }
 
     @Override
@@ -79,9 +84,6 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
         pac.setAnimationManager(uiConfig.createPacAnimations());
 
         blinky = uiConfig.createAnimatedGhost(RED_GHOST_SHADOW);
-
-        actorsInZOrder.add(pac);
-        actorsInZOrder.add(blinky);
 
         frame = -1;
     }

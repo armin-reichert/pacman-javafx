@@ -12,7 +12,7 @@ import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
 import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.actors.MovingActor;
 import de.amr.pacmanfx.ui._2d.BaseDebugInfoRenderer;
-import de.amr.pacmanfx.ui.api.GameUI;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
@@ -26,8 +26,8 @@ public class Arcade_PlayScene2DDebugInfoRenderer extends BaseDebugInfoRenderer {
 
     private final Arcade_PlayScene2D scene2D;
 
-    public Arcade_PlayScene2DDebugInfoRenderer(GameUI ui, Arcade_PlayScene2D scene2D, Canvas canvas) {
-        super(ui, canvas);
+    public Arcade_PlayScene2DDebugInfoRenderer(Arcade_PlayScene2D scene2D, Canvas canvas, SpriteSheet<?> spriteSheet) {
+        super(scene2D, canvas, spriteSheet);
         this.scene2D = scene2D;
     }
 
@@ -69,7 +69,7 @@ public class Arcade_PlayScene2DDebugInfoRenderer extends BaseDebugInfoRenderer {
             ctx.setFont(debugTextFont);
             ctx.fillText("%s%s".formatted(gameStateText, huntingPhaseText), 0, TS(8));
         }
-        scene2D.actorsInZOrder().stream()
+        actorsInZOrder.stream()
             .filter(MovingActor.class::isInstance)
             .map(MovingActor.class::cast)
             .forEach(this::drawMovingActorInfo);

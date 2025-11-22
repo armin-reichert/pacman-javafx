@@ -78,7 +78,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     protected void createRenderers(Canvas canvas) {
         GameUI_Config uiConfig = ui.currentConfig();
 
-        debugInfoRenderer = configureRendererForGameScene(new BaseDebugInfoRenderer(ui, canvas) {
+        debugInfoRenderer = configureRendererForGameScene(new BaseDebugInfoRenderer(this, canvas, uiConfig.spriteSheet()) {
             @Override
             public void drawDebugInfo() {
                 super.drawDebugInfo();
@@ -86,7 +86,8 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
             }
         }, this);
 
-        hudRenderer = configureRendererForGameScene((ArcadePacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas), this);
+        hudRenderer = configureRendererForGameScene(
+            (ArcadePacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas), this);
 
         sceneRenderer = configureRendererForGameScene(
             new ArcadePacMan_IntroScene_Renderer(this, canvas, (ArcadePacMan_SpriteSheet) uiConfig.spriteSheet()), this);

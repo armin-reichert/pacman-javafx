@@ -34,7 +34,7 @@ public class Arcade_PlayScene2D_Renderer extends GameScene2DRenderer {
     }
 
     public void draw() {
-        Arcade_PlayScene2D playScene = (Arcade_PlayScene2D) scene();
+        Arcade_PlayScene2D playScene = scene();
 
         if (playScene.context().optGameLevel().isEmpty()) {
             return; // Scene is drawn already 2 ticks before level has been created
@@ -49,7 +49,7 @@ public class Arcade_PlayScene2D_Renderer extends GameScene2DRenderer {
         gameLevelRenderer.drawGameLevel(gameLevel, info);
 
         updateActorDrawingOrder(gameLevel);
-        playScene.actorsInZOrder().forEach(actorRenderer::drawActor);
+        actorsInZOrder.forEach(actorRenderer::drawActor);
     }
 
     private boolean isMazeHighlighted(Arcade_PlayScene2D playScene) {
@@ -61,11 +61,11 @@ public class Arcade_PlayScene2D_Renderer extends GameScene2DRenderer {
     private void updateActorDrawingOrder(GameLevel gameLevel) {
         // Actor drawing order: (Bonus) < Pac-Man < Ghosts in order.
         // TODO: also take ghost state into account!
-        scene().actorsInZOrder().clear();
-        gameLevel.bonus().ifPresent(scene().actorsInZOrder()::add);
-        scene().actorsInZOrder().add(gameLevel.pac());
+        actorsInZOrder.clear();
+        gameLevel.bonus().ifPresent(actorsInZOrder::add);
+        actorsInZOrder.add(gameLevel.pac());
         Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW)
             .map(gameLevel::ghost)
-            .forEach(scene().actorsInZOrder()::add);
+            .forEach(actorsInZOrder::add);
     }
 }

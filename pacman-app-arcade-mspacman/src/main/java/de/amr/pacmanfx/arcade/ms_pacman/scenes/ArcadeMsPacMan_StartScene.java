@@ -33,9 +33,11 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
         sceneRenderer = configureRendererForGameScene(
             new ArcadeMsPacMan_StartScene_Renderer(this, canvas, uiConfig.spriteSheet()), this);
 
-        hudRenderer = configureRendererForGameScene((ArcadeMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas), this);
+        hudRenderer = configureRendererForGameScene(
+            (ArcadeMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas), this);
 
-        debugInfoRenderer = configureRendererForGameScene(new BaseDebugInfoRenderer(ui, canvas), this);
+        debugInfoRenderer = configureRendererForGameScene(
+            new BaseDebugInfoRenderer(this, canvas, uiConfig.spriteSheet()), this);
     }
 
     @Override
