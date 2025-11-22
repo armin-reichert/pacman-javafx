@@ -19,7 +19,6 @@ import de.amr.pacmanfx.ui.sound.SoundID;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.ui._2d.GameScene2D_Renderer.configureRendererForGameScene;
 
 /**
  * Intermission scene 2: "The chase".
@@ -33,10 +32,10 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
     private static final int MIDDLE_LANE_Y = TS * 18;
     private static final int LOWER_LANE_Y  = TS * 24;
 
-    public Pac pacMan;
-    public Pac msPacMan;
+    private Pac pacMan;
+    private Pac msPacMan;
 
-    public Clapperboard clapperboard;
+    private Clapperboard clapperboard;
 
     private ArcadeMsPacMan_HUDRenderer hudRenderer;
     private ArcadeMsPacMan_CutScene2_Renderer sceneRenderer;
@@ -64,6 +63,18 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
     @Override
     public ArcadeMsPacMan_CutScene2_Renderer sceneRenderer() {
         return sceneRenderer;
+    }
+
+    public Pac pacMan() {
+        return pacMan;
+    }
+
+    public Pac msPacMan() {
+        return msPacMan;
+    }
+
+    public Clapperboard clapperboard() {
+        return clapperboard;
     }
 
     @Override

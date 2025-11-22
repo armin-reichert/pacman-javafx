@@ -18,6 +18,10 @@ import static de.amr.pacmanfx.ui.api.ArcadePalette.*;
 
 public class ArcadeMsPacMan_IntroScene_Renderer extends GameScene2D_Renderer {
 
+    private static final String TITLE = "\"MS PAC-MAN\"";
+    private static final String[] GHOST_NAMES = { "BLINKY", "PINKY", "INKY", "SUE" };
+    private static final Color[] GHOST_COLORS = { ARCADE_RED, ARCADE_PINK, ARCADE_CYAN, ARCADE_ORANGE };
+
     private final ActorRenderer actorRenderer;
 
     public ArcadeMsPacMan_IntroScene_Renderer(GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
@@ -37,16 +41,16 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends GameScene2D_Renderer {
 
         ctx.setFont(arcadeFont8());
         fillText(TITLE, ARCADE_ORANGE, TITLE_X, TITLE_Y);
-        drawMarquee(introScene.marquee);
+        drawMarquee(introScene.marquee());
 
-        introScene.ghosts.forEach(actorRenderer::drawActor);
-        actorRenderer.drawActor(introScene.msPacMan);
+        introScene.ghosts().forEach(actorRenderer::drawActor);
+        actorRenderer.drawActor(introScene.msPacMan());
 
         switch (introScene.sceneController.state()) {
             case GHOSTS_MARCHING_IN -> {
-                String ghostName = GHOST_NAMES[introScene.presentedGhostCharacter];
-                Color ghostColor = GHOST_COLORS[introScene.presentedGhostCharacter];
-                if (introScene.presentedGhostCharacter == RED_GHOST_SHADOW) {
+                String ghostName = GHOST_NAMES[introScene.presentedGhostCharacter()];
+                Color ghostColor = GHOST_COLORS[introScene.presentedGhostCharacter()];
+                if (introScene.presentedGhostCharacter() == RED_GHOST_SHADOW) {
                     fillText("WITH", ARCADE_WHITE, TITLE_X, TOP_Y + TS(3));
                 }
                 double x = TITLE_X + (ghostName.length() < 4 ? TS(4) : TS(3));
@@ -72,7 +76,7 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends GameScene2D_Renderer {
      * probably a bug in the original Arcade game.
      * </p>
      */
-    public void drawMarquee(Marquee marquee) {
+    private void drawMarquee(Marquee marquee) {
         long tick = marquee.timer().tickCount();
         ctx.setFill(marquee.bulbOffColor());
         for (int bulbIndex = 0; bulbIndex < marquee.totalBulbCount(); ++bulbIndex) {
@@ -113,7 +117,7 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends GameScene2D_Renderer {
         ctx.fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
     }
 
-    public void drawMidwayCopyright(Image logo, double x, double y) {
+    private void drawMidwayCopyright(Image logo, double x, double y) {
         ctx.drawImage(logo, scaled(x), scaled(y + 2), scaled(TS(4) - 2), scaled(TS(4)));
         ctx.setFont(arcadeFont8());
         ctx.setFill(ARCADE_RED);

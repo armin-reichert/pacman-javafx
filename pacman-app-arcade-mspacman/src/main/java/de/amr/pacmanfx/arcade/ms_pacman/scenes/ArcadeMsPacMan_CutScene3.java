@@ -35,13 +35,13 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
 
     private static final int LANE_Y = TS * 24;
 
-    public Pac pacMan;
-    public Pac msPacMan;
-    public Stork stork;
-    public Bag bag;
+    private Pac pacMan;
+    private Pac msPacMan;
+    private Stork stork;
+    private Bag bag;
     private int numBagBounces;
 
-    public Clapperboard clapperboard;
+    private Clapperboard clapperboard;
 
     private ArcadeMsPacMan_HUDRenderer hudRenderer;
     private ArcadeMsPacMan_CutScene3_Renderer sceneRenderer;
@@ -69,6 +69,26 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
     @Override
     public ArcadeMsPacMan_CutScene3_Renderer sceneRenderer() {
         return sceneRenderer;
+    }
+
+    public Pac pacMan() {
+        return pacMan;
+    }
+
+    public Pac msPacMan() {
+        return msPacMan;
+    }
+
+    public Stork stork() {
+        return stork;
+    }
+
+    public Bag bag() {
+        return bag;
+    }
+
+    public Clapperboard clapperboard() {
+        return clapperboard;
     }
 
     @Override

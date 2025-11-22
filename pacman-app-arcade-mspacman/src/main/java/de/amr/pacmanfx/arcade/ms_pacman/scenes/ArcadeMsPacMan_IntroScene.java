@@ -21,12 +21,13 @@ import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.paint.Color;
 
+import java.util.Collections;
 import java.util.List;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.ui.api.ArcadePalette.*;
+import static de.amr.pacmanfx.ui.api.ArcadePalette.ARCADE_RED;
+import static de.amr.pacmanfx.ui.api.ArcadePalette.ARCADE_WHITE;
 
 /**
  * Intro scene of the Ms. Pac-Man game.
@@ -43,19 +44,15 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     private static final float ACTOR_SPEED = 1.11f;
 
-    public static final String TITLE = "\"MS PAC-MAN\"";
-    public static final String[] GHOST_NAMES = { "BLINKY", "PINKY", "INKY", "SUE" };
-    public static final Color[] GHOST_COLORS = { ARCADE_RED, ARCADE_PINK, ARCADE_CYAN, ARCADE_ORANGE };
-
     public final StateMachine<SceneState, ArcadeMsPacMan_IntroScene> sceneController;
 
     private ArcadeMsPacMan_HUDRenderer hudRenderer;
     private ArcadeMsPacMan_IntroScene_Renderer sceneRenderer;
 
-    public Marquee marquee;
-    public Pac msPacMan;
-    public List<Ghost> ghosts;
-    public byte presentedGhostCharacter;
+    private Marquee marquee;
+    private Pac msPacMan;
+    private List<Ghost> ghosts;
+    private byte presentedGhostCharacter;
     private int numTicksBeforeRising;
 
     public ArcadeMsPacMan_IntroScene(GameUI ui) {
@@ -82,6 +79,22 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     @Override
     public ArcadeMsPacMan_IntroScene_Renderer sceneRenderer() {
         return sceneRenderer;
+    }
+
+    public Marquee marquee() {
+        return marquee;
+    }
+
+    public Pac msPacMan() {
+        return msPacMan;
+    }
+
+    public List<Ghost> ghosts() {
+        return Collections.unmodifiableList(ghosts);
+    }
+
+    public byte presentedGhostCharacter() {
+        return presentedGhostCharacter;
     }
 
     @Override

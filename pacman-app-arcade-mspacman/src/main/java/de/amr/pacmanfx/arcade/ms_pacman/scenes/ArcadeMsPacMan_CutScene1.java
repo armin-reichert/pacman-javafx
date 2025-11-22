@@ -25,7 +25,6 @@ import de.amr.pacmanfx.uilib.animation.SingleSpriteNoAnimation;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.ui._2d.GameScene2D_Renderer.configureRendererForGameScene;
 
 /**
  * Intermission scene 1: "They meet".
@@ -45,18 +44,42 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     private static final float SPEED_GHOST_AFTER_COLLISION = 0.3f;
     private static final float SPEED_GHOST_CHASING = 1.25f;
 
-    public Pac pacMan;
-    public Pac msPacMan;
-    public Ghost inky;
-    public Ghost pinky;
-    public Actor heart;
-    public Clapperboard clapperboard;
+    private Pac pacMan;
+    private Pac msPacMan;
+    private Ghost inky;
+    private Ghost pinky;
+    private Actor heart;
+    private Clapperboard clapperboard;
 
     private ArcadeMsPacMan_HUDRenderer hudRenderer;
     private ArcadeMsPacMan_CutScene1_Renderer sceneRenderer;
 
     public ArcadeMsPacMan_CutScene1(GameUI ui) {
         super(ui);
+    }
+
+    public Pac pacMan() {
+        return pacMan;
+    }
+
+    public Pac msPacMan() {
+        return msPacMan;
+    }
+
+    public Ghost inky() {
+        return inky;
+    }
+
+    public Ghost pinky() {
+        return pinky;
+    }
+
+    public Actor heart() {
+        return heart;
+    }
+
+    public Clapperboard clapperboard() {
+        return clapperboard;
     }
 
     @Override
