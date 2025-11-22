@@ -246,7 +246,8 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
     public Vector2i sizeInPx() { return NES_SIZE_PX; }
 
     @Override
-    protected void drawHUD() {
+    public void draw() {
+        sceneRenderer.draw();
         if (hudRenderer != null) {
             var game = context().<TengenMsPacMan_GameModel>game();
             if (game.mapCategory() != MapCategory.ARCADE) {

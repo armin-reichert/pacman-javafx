@@ -56,9 +56,4 @@ public class Arcade_BootScene2D extends GameScene2D {
             context().gameController().letCurrentGameStateExpire();
         }
     }
-
-    @Override
-    public void draw() {
-        sceneRenderer.draw();
-    }
 }

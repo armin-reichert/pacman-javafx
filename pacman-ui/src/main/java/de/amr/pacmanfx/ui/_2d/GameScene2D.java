@@ -143,26 +143,17 @@ public abstract class GameScene2D implements GameScene {
         return DEFAULT_SIZE_PX;
     }
 
-    /**
-     * Draws this scene into the canvas.
-     * <p>
-     * Default implementation scales the renderer to the current scene scaling,
-     * clears the canvas and draws the scores (if on), scene content and debug information (if on).
-     * </p>
-     */
-    public void draw() {
-        sceneRenderer().draw();
-        drawHUD();
-    }
-
-    protected void drawHUD() {
-        if (hudRenderer() != null) {
-            hudRenderer().drawHUD(context().game(), context().game().hud(), sizeInPx());
-        }
-    }
-
     protected abstract GameScene2D_Renderer sceneRenderer();
 
     protected abstract HUDRenderer hudRenderer();
 
+    /**
+     * Draws this scene into the canvas.
+     */
+    public void draw() {
+        sceneRenderer().draw();
+        if (hudRenderer() != null) {
+            hudRenderer().drawHUD(context().game(), context().game().hud(), sizeInPx());
+        }
+    }
 }
