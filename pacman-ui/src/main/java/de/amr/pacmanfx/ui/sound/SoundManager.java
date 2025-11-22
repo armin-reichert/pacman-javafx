@@ -226,12 +226,12 @@ public class SoundManager implements Disposable {
             stopSiren();
         }
         currentSirenID = sirenID;
-        MediaPlayer siren = (MediaPlayer) soundMap.get(sirenID);
-        if (siren.getStatus() != MediaPlayer.Status.PLAYING) {
-            siren.setVolume(volume);
-            siren.setCycleCount(MediaPlayer.INDEFINITE);
-            Logger.trace("Play siren with ID '{}' (indefinite times) at volume {}", sirenID, siren.getVolume());
-            siren.play();
+        MediaPlayer sirenPlayer = (MediaPlayer) soundMap.get(sirenID);
+        if (sirenPlayer.getStatus() != MediaPlayer.Status.PLAYING) {
+            sirenPlayer.setVolume(volume);
+            sirenPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+            Logger.trace("Play siren with ID '{}' (indefinite times) at volume {}", sirenID, sirenPlayer.getVolume());
+            sirenPlayer.play();
         }
     }
 

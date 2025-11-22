@@ -150,19 +150,16 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void update() {
-        if (context().optGameLevel().isPresent()) {
-            updateHUD();
-            updateSound();
-        } else {
-            // update() is called already 2 ticks before the game level gets created!
-            Logger.info("Tick {}: Game level not yet created", ui.clock().tickCount());
-        }
+        context().optGameLevel().ifPresent(gameLevel -> {
+            updateHUD(gameLevel);
+            updateSound(gameLevel);
+        });
     }
 
-    private void updateHUD() {
-        Game game = context().game();
+    private void updateHUD(GameLevel gameLevel) {
+        final Game game = context().game();
         // While Pac-Man is still invisible on level start, one entry more is shown in the lives counter
-        boolean oneMore = context().gameState() == PacManGamesState.STARTING_GAME_OR_LEVEL && !context().gameLevel().pac().isVisible();
+        boolean oneMore = context().gameState() == PacManGamesState.STARTING_GAME_OR_LEVEL && !gameLevel.pac().isVisible();
         int numLivesDisplayed = game.lifeCount() - 1;
         if (oneMore) numLivesDisplayed += 1;
         game.hud().setVisibleLifeCount(Math.min(numLivesDisplayed, game.hud().maxLivesDisplayed()));
@@ -281,31 +278,41 @@ public class Arcade_PlayScene2D extends GameScene2D {
         ui.soundManager().play(SoundID.EXTRA_LIFE);
     }
 
-    private void updateSound() {
+    private void updateSound(GameLevel gameLevel) {
         if (!ui.soundManager().isEnabled()) return;
 
-        Pac pac = context().gameLevel().pac();
-        boolean pacChased = context().gameState() == PacManGamesState.HUNTING && !pac.powerTimer().isRunning();
+        final Pac pac = gameLevel.pac();
+        final boolean pacChased = context().gameState() == PacManGamesState.HUNTING && !pac.powerTimer().isRunning();
         if (pacChased) {
-            // siren numbers are 1..4, hunting phase index = 0..7
-            int huntingPhase = context().gameLevel().huntingTimer().phaseIndex();
-            int sirenNumber = 1 + huntingPhase / 2;
-            float volume = 0.33f;
-            switch (sirenNumber) {
-                case 1 -> ui.soundManager().playSiren(SoundID.SIREN_1, volume);
-                case 2 -> ui.soundManager().playSiren(SoundID.SIREN_2, volume);
-                case 3 -> ui.soundManager().playSiren(SoundID.SIREN_3, volume);
-                case 4 -> ui.soundManager().playSiren(SoundID.SIREN_4, volume);
-                default -> throw new IllegalArgumentException("Illegal siren number " + sirenNumber);
-            }
+            selectAndPlaySiren();
         }
 
-        boolean isGhostReturningHome = context().gameLevel().pac().isAlive()
-            && context().gameLevel().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).findAny().isPresent();
-        if (isGhostReturningHome) {
+        final boolean ghostReturningHome = pac.isAlive()
+            && gameLevel.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).findAny().isPresent();
+        if (ghostReturningHome) {
             ui.soundManager().loop(SoundID.GHOST_RETURNS);
         } else {
             ui.soundManager().stop(SoundID.GHOST_RETURNS);
         }
+    }
+
+    //TODO move this logic into game model as it depends on the currently played game variant
+    private int selectSirenNumber(int huntingPhase) {
+        // siren numbers are 1..4, hunting phase index = 0..7
+        return 1 + huntingPhase / 2;
+    }
+
+    //TODO fix volume in audio file
+    private void selectAndPlaySiren() {
+        final float volume = 0.33f;
+        final int sirenNumber = selectSirenNumber(context().gameLevel().huntingTimer().phaseIndex());
+        final SoundID sirenID = switch (sirenNumber) {
+            case 1 -> SoundID.SIREN_1;
+            case 2 -> SoundID.SIREN_2;
+            case 3 -> SoundID.SIREN_3;
+            case 4 -> SoundID.SIREN_4;
+            default -> throw new IllegalArgumentException("Illegal siren number " + sirenNumber);
+        };
+        ui.soundManager().playSiren(sirenID, volume);
     }
 }
