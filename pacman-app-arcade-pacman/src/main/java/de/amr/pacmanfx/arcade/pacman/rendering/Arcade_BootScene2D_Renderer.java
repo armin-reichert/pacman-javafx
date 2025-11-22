@@ -4,10 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
+import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_BootScene2D;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.timer.TickTimer;
-import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.canvas.Canvas;
@@ -26,9 +26,9 @@ public class Arcade_BootScene2D_Renderer extends GameScene2D_Renderer {
     private final Vector2f minPoint;
     private final Vector2f maxPoint;
 
-    public Arcade_BootScene2D_Renderer(GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
+    public Arcade_BootScene2D_Renderer(Arcade_BootScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(scene, canvas, spriteSheet);
-        createDefaultDebugInfoRenderer(canvas, scene.ui().currentConfig().spriteSheet());
+        createDefaultDebugInfoRenderer(canvas, spriteSheet);
 
         final double width = spriteSheet.sourceImage().getWidth();
         final double height = spriteSheet.sourceImage().getHeight();
