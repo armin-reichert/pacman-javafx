@@ -26,7 +26,6 @@ import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,22 +33,14 @@ import java.util.List;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.model.actors.GhostState.EATEN;
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
-import static de.amr.pacmanfx.ui.api.ArcadePalette.*;
 
 /**
  * The ghosts are presented one by one, Pac-Man is chased by the ghosts, turns the cards and hunts the ghosts himself.
  */
 public class ArcadePacMan_IntroScene extends GameScene2D {
 
-    public static final String MIDWAY_MFG_CO = "© 1980 MIDWAY MFG.CO.";
-
-    public static final String[] GHOST_NICKNAMES  = { "\"BLINKY\"", "\"PINKY\"", "\"INKY\"", "\"CLYDE\"" };
-    public static final String[] GHOST_CHARACTERS = { "SHADOW", "SPEEDY", "BASHFUL", "POKEY" };
-    public static final Color[]  GHOST_COLORS     = { ARCADE_RED, ARCADE_PINK, ARCADE_CYAN, ARCADE_ORANGE };
-
-    public static final float CHASING_SPEED = 1.1f;
-    public static final float GHOST_FRIGHTENED_SPEED = 0.6f;
-    public static final int LEFT_TILE_X = 4;
+    private static final float CHASING_SPEED = 1.1f;
+    private static final float GHOST_FRIGHTENED_SPEED = 0.6f;
 
     public final StateMachine<SceneState, ArcadePacMan_IntroScene> sceneController;
 

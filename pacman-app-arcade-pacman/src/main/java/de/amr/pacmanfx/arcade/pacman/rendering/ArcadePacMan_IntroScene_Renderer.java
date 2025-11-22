@@ -12,13 +12,20 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.pacman.rendering.SpriteID.GALLERY_GHOSTS;
-import static de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_IntroScene.*;
 import static de.amr.pacmanfx.ui.api.ArcadePalette.*;
 
 public class ArcadePacMan_IntroScene_Renderer extends GameScene2D_Renderer {
+
+    private static final String MIDWAY_MFG_CO = "© 1980 MIDWAY MFG.CO.";
+    private static final String[] GHOST_NICKNAMES  = { "\"BLINKY\"", "\"PINKY\"", "\"INKY\"", "\"CLYDE\"" };
+    private static final String[] GHOST_CHARACTERS = { "SHADOW", "SPEEDY", "BASHFUL", "POKEY" };
+    private static final Color[]  GHOST_COLORS     = { ARCADE_RED, ARCADE_PINK, ARCADE_CYAN, ARCADE_ORANGE };
+
+    private static final int LEFT_TILE_X = 4;
 
     private final ArcadePacMan_Actor_Renderer actorRenderer;
     private final RectShort energizerSprite;
@@ -125,5 +132,4 @@ public class ArcadePacMan_IntroScene_Renderer extends GameScene2D_Renderer {
             drawSpriteCentered(x + 4, y + 4, energizerSprite);
         }
     }
-
 }
