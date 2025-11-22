@@ -24,7 +24,7 @@ public class ArcadePacMan_CutScene3_Renderer extends GameScene2DRenderer {
         final GameUI_Config uiConfig = scene.ui().currentConfig();
 
         actorRenderer = configureRendererForGameScene(
-            scene.ui().currentConfig().createActorRenderer(canvas), scene);
+            uiConfig.createActorRenderer(canvas), scene);
 
         debugInfoRenderer = configureRendererForGameScene(new BaseDebugInfoRenderer(scene, canvas, uiConfig.spriteSheet()) {
             @Override
@@ -42,7 +42,7 @@ public class ArcadePacMan_CutScene3_Renderer extends GameScene2DRenderer {
     public void draw() {
         clearCanvas();
 
-        ArcadePacMan_CutScene3 cutScene = scene();
+        final ArcadePacMan_CutScene3 cutScene = scene();
         actorRenderer.drawActor(cutScene.pac);
         actorRenderer.drawActor(cutScene.blinky);
         if (cutScene.debugInfoVisible()) {
