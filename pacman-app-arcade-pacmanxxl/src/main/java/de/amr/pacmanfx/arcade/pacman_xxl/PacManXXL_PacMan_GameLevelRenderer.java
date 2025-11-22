@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
-import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_GameLevelRenderer;
+import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_GameLevel_Renderer;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui._2d.GenericMapRenderer;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
@@ -20,7 +20,7 @@ import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.CONFIG_KEY_COL
 /**
  * Renderer for "Pac-Man XXL" game variant. Uses the vector graphics map renderer that can render any custom map.
  */
-public class PacManXXL_PacMan_GameLevelRenderer extends ArcadePacMan_GameLevelRenderer {
+public class PacManXXL_PacMan_GameLevelRenderer extends ArcadePacMan_GameLevel_Renderer {
 
     private final GenericMapRenderer mazeRenderer;
 

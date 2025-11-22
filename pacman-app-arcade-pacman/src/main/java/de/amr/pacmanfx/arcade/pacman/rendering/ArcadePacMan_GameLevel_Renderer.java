@@ -25,11 +25,11 @@ import static java.util.function.Predicate.not;
 /**
  * Renderer for classic Arcade Pac-Man and Pac-Man XXL game variants.
  */
-public class ArcadePacMan_GameLevelRenderer extends BaseSpriteRenderer implements GameLevelRenderer {
+public class ArcadePacMan_GameLevel_Renderer extends BaseSpriteRenderer implements GameLevelRenderer {
 
     private final Image brightMazeImage;
 
-    public ArcadePacMan_GameLevelRenderer(Canvas canvas, SpriteSheet<?> spriteSheet, Image brightMazeImage) {
+    public ArcadePacMan_GameLevel_Renderer(Canvas canvas, SpriteSheet<?> spriteSheet, Image brightMazeImage) {
         super(canvas, spriteSheet);
         this.brightMazeImage = brightMazeImage; // may be null e.g. in Pac-Man XXL where mazes are rendered without images
     }

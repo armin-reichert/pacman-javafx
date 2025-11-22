@@ -15,9 +15,9 @@ import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
 
-public class ArcadePacMan_ActorRenderer extends BaseSpriteRenderer implements ActorRenderer {
+public class ArcadePacMan_Actor_Renderer extends BaseSpriteRenderer implements ActorRenderer {
 
-    public ArcadePacMan_ActorRenderer(Canvas canvas, SpriteSheet<?> spriteSheet) {
+    public ArcadePacMan_Actor_Renderer(Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(canvas, spriteSheet);
     }
 

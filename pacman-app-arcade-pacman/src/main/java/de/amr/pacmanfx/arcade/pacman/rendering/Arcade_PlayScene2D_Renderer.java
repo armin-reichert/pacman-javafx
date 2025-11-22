@@ -37,7 +37,7 @@ public class Arcade_PlayScene2D_Renderer extends GameScene2DRenderer {
             uiConfig.createActorRenderer(canvas), scene);
 
         debugInfoRenderer = configureRendererForGameScene(
-            new Arcade_PlayScene2DDebugInfoRenderer(scene, canvas, uiConfig.spriteSheet()), scene);
+            new Arcade_PlayScene2D_DebugInfo_Renderer(scene, canvas, uiConfig.spriteSheet()), scene);
     }
 
     public void draw() {

@@ -22,9 +22,9 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.api.ArcadePalette.ARCADE_WHITE;
 import static de.amr.pacmanfx.ui.api.ArcadePalette.ARCADE_YELLOW;
 
-public class ArcadePacMan_HUDRenderer extends BaseSpriteRenderer implements HUDRenderer {
+public class ArcadePacMan_HUD_Renderer extends BaseSpriteRenderer implements HUDRenderer {
 
-    public ArcadePacMan_HUDRenderer(Canvas canvas, SpriteSheet<?> spriteSheet) {
+    public ArcadePacMan_HUD_Renderer(Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(canvas, spriteSheet);
     }
 

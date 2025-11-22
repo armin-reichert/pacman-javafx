@@ -21,11 +21,11 @@ import java.util.List;
 
 import static de.amr.pacmanfx.Globals.*;
 
-public class Arcade_PlayScene2DDebugInfoRenderer extends BaseDebugInfoRenderer {
+public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer {
 
     private static final List<Direction> CLOCK_ORDER = List.of(Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT);
 
-    public Arcade_PlayScene2DDebugInfoRenderer(GameScene2D scene2D, Canvas canvas, SpriteSheet<?> spriteSheet) {
+    public Arcade_PlayScene2D_DebugInfo_Renderer(GameScene2D scene2D, Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(scene2D, canvas, spriteSheet);
     }
 

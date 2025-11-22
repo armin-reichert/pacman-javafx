@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.arcade.pacman.actors.ArcadePacMan_ActorFactory;
-import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_HUDRenderer;
+import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_HUD_Renderer;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_IntroScene_Renderer;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.controller.PacManGamesState;
@@ -55,7 +55,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     public final StateMachine<SceneState, ArcadePacMan_IntroScene> sceneController;
 
     private ArcadePacMan_IntroScene_Renderer sceneRenderer;
-    private ArcadePacMan_HUDRenderer hudRenderer;
+    private ArcadePacMan_HUD_Renderer hudRenderer;
 
     public Pulse blinking;
     public Pac pacMan;
@@ -78,14 +78,14 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         GameUI_Config uiConfig = ui.currentConfig();
 
         hudRenderer = configureRendererForGameScene(
-            (ArcadePacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas), this);
+            (ArcadePacMan_HUD_Renderer) uiConfig.createHUDRenderer(canvas), this);
 
         sceneRenderer = configureRendererForGameScene(
             new ArcadePacMan_IntroScene_Renderer(this, canvas, (ArcadePacMan_SpriteSheet) uiConfig.spriteSheet()), this);
     }
 
     @Override
-    public ArcadePacMan_HUDRenderer hudRenderer() {
+    public ArcadePacMan_HUD_Renderer hudRenderer() {
         return hudRenderer;
     }
 

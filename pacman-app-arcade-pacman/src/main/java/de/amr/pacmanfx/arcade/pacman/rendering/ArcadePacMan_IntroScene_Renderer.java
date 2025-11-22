@@ -20,14 +20,14 @@ import static de.amr.pacmanfx.ui.api.ArcadePalette.*;
 
 public class ArcadePacMan_IntroScene_Renderer extends GameScene2DRenderer {
 
-    private final ArcadePacMan_ActorRenderer actorRenderer;
+    private final ArcadePacMan_Actor_Renderer actorRenderer;
 
     public ArcadePacMan_IntroScene_Renderer(GameScene2D scene, Canvas canvas, ArcadePacMan_SpriteSheet spriteSheet) {
         super(scene, canvas, spriteSheet);
 
         final GameUI_Config uiConfig = scene.ui().currentConfig();
 
-        actorRenderer = configureRendererForGameScene((ArcadePacMan_ActorRenderer) uiConfig.createActorRenderer(canvas), scene);
+        actorRenderer = configureRendererForGameScene((ArcadePacMan_Actor_Renderer) uiConfig.createActorRenderer(canvas), scene);
 
         debugInfoRenderer = configureRendererForGameScene(new BaseDebugInfoRenderer(scene, canvas, uiConfig.spriteSheet()) {
             @Override

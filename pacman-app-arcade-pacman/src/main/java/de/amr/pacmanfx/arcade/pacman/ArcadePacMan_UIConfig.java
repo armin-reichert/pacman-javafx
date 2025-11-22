@@ -177,20 +177,20 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
     }
 
     @Override
-    public ArcadePacMan_GameLevelRenderer createGameLevelRenderer(Canvas canvas) {
-        return new ArcadePacMan_GameLevelRenderer(canvas, spriteSheet, assets.image("maze.bright"));
+    public ArcadePacMan_GameLevel_Renderer createGameLevelRenderer(Canvas canvas) {
+        return new ArcadePacMan_GameLevel_Renderer(canvas, spriteSheet, assets.image("maze.bright"));
     }
 
     @Override
     public HUDRenderer createHUDRenderer(Canvas canvas) {
-        var hudRenderer = new ArcadePacMan_HUDRenderer(canvas, spriteSheet);
+        var hudRenderer = new ArcadePacMan_HUD_Renderer(canvas, spriteSheet);
         hudRenderer.setImageSmoothing(true);
         return hudRenderer;
     }
 
     @Override
     public ActorRenderer createActorRenderer(Canvas canvas) {
-        var actorRenderer = new ArcadePacMan_ActorRenderer(canvas, spriteSheet);
+        var actorRenderer = new ArcadePacMan_Actor_Renderer(canvas, spriteSheet);
         actorRenderer.setImageSmoothing(true);
         return actorRenderer;
     }
