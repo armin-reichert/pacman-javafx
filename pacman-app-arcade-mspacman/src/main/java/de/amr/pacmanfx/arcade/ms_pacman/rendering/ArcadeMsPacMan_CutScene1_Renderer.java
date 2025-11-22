@@ -26,10 +26,12 @@ public class ArcadeMsPacMan_CutScene1_Renderer extends GameScene2D_Renderer {
 
     public void draw() {
         clearCanvas();
-        ArcadeMsPacMan_CutScene1 cutScene = (ArcadeMsPacMan_CutScene1) scene();
+
+        final ArcadeMsPacMan_CutScene1 cutScene = scene();
         cutScene.clapperboard.setFont(arcadeFont8());
         Stream.of(cutScene.clapperboard, cutScene.msPacMan, cutScene.pacMan, cutScene.inky, cutScene.pinky, cutScene.heart)
                 .forEach(actorRenderer::drawActor);
+
         if (cutScene.debugInfoVisible()) {
             debugInfoRenderer.draw();
         }

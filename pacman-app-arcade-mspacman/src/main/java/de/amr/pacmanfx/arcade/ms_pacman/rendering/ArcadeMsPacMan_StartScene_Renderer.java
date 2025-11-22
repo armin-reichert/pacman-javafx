@@ -35,7 +35,7 @@ public class ArcadeMsPacMan_StartScene_Renderer extends GameScene2D_Renderer {
             drawMidwayCopyright(logo, TS * 6, TS * 28);
         }
 
-        if (scene().debugInfoVisible()) {
+        if (scene.debugInfoVisible()) {
             debugInfoRenderer.draw();
         }
     }

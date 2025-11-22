@@ -15,7 +15,7 @@ public interface SpriteRenderer extends Renderer {
     SpriteSheet<?> spriteSheet();
 
     /**
-     * Draws a sprite (region inside sprite sheet) unscaled at the given position.
+     * Draws a sprite (region inside sprite sheet) at the given position.
      *
      * @param sprite      the sprite to draw
      * @param x           x-coordinate of left-upper corner

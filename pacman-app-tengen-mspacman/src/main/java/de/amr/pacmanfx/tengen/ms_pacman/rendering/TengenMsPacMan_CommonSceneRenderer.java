@@ -16,7 +16,7 @@ public abstract class TengenMsPacMan_CommonSceneRenderer extends GameScene2D_Ren
 
     public TengenMsPacMan_CommonSceneRenderer(GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(scene, canvas, spriteSheet);
-        createDefaultDebugInfoRenderer(canvas, scene.ui().currentConfig().spriteSheet());
+        createDefaultDebugInfoRenderer(canvas, spriteSheet);
     }
 
     /**

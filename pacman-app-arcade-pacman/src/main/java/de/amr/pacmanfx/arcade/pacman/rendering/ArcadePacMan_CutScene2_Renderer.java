@@ -46,6 +46,7 @@ public class ArcadePacMan_CutScene2_Renderer extends GameScene2D_Renderer {
         drawSprite(cutScene.nailDressRaptureAnimation().currentSprite(), TS(14), TS(19) + 3, true);
         actorRenderer.drawActor(cutScene.pac);
         actorRenderer.drawActor(cutScene.blinky);
+
         if (cutScene.debugInfoVisible()) {
             debugInfoRenderer.draw();
         }

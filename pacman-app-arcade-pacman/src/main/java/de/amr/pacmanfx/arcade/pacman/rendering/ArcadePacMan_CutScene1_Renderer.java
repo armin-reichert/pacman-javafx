@@ -45,6 +45,7 @@ public class ArcadePacMan_CutScene1_Renderer extends GameScene2D_Renderer {
         final ArcadePacMan_CutScene1 cutScene = scene();
         actorRenderer.drawActor(cutScene.blinky);
         actorRenderer.drawActor(cutScene.pac);
+
         if (cutScene.debugInfoVisible()) {
             debugInfoRenderer.draw();
         }

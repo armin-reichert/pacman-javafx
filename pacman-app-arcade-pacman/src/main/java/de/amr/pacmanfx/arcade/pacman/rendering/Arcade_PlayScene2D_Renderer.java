@@ -44,7 +44,7 @@ public class Arcade_PlayScene2D_Renderer extends GameScene2D_Renderer {
     public void draw() {
         clearCanvas();
 
-        Arcade_PlayScene2D playScene = scene();
+        final Arcade_PlayScene2D playScene = scene();
 
         if (playScene.context().optGameLevel().isEmpty()) {
             return; // Scene is drawn already 2 ticks before level has been created

@@ -37,7 +37,8 @@ public class TengenMsPacMan_BootScene_Renderer extends GameScene2D_Renderer {
                 bootScene.movingText.x(), bootScene.movingText.y());
             actorRenderer.drawActor(bootScene.ghost);
         }
-        if (scene().debugInfoVisible()) {
+
+        if (scene.debugInfoVisible()) {
             debugInfoRenderer.draw();
         }
     }

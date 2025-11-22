@@ -51,6 +51,9 @@ public record ArcadePacMan_SpriteSheet(Image sourceImage) implements SpriteSheet
             rect(504, 133, 16, 7)   // 1600
         );
 
+        // Energizer
+        SPRITE_MAP.add(SpriteID.ENERGIZER, rect(8, 24, 8, 8));
+
         // -- 8 bonus symbols ("fruits")
         SPRITE_MAP.add(SpriteID.BONUS_SYMBOLS,
             IntStream.range(0, 8)

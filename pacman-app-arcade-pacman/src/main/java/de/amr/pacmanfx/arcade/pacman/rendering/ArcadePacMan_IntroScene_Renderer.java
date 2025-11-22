@@ -21,6 +21,7 @@ import static de.amr.pacmanfx.ui.api.ArcadePalette.*;
 public class ArcadePacMan_IntroScene_Renderer extends GameScene2D_Renderer {
 
     private final ArcadePacMan_Actor_Renderer actorRenderer;
+    private final RectShort energizerSprite;
 
     public ArcadePacMan_IntroScene_Renderer(GameScene2D scene, Canvas canvas, ArcadePacMan_SpriteSheet spriteSheet) {
         super(scene, canvas, spriteSheet);
@@ -38,6 +39,7 @@ public class ArcadePacMan_IntroScene_Renderer extends GameScene2D_Renderer {
             }
         }, scene);
 
+        energizerSprite = spriteSheet.sprite(SpriteID.ENERGIZER);
         setImageSmoothing(true);
     }
 
@@ -120,14 +122,7 @@ public class ArcadePacMan_IntroScene_Renderer extends GameScene2D_Renderer {
 
     private void drawBlinkingEnergizer(ArcadePacMan_IntroScene introScene, double x, double y) {
         if (introScene.blinking.state() == Pulse.State.ON) {
-            ctx.save();
-            ctx.scale(scaling(), scaling());
-            ctx.setFill(ARCADE_ROSE);
-            // draw pixelated "circle"
-            ctx.fillRect(x + 2, y, 4, 8);
-            ctx.fillRect(x, y + 2, 8, 4);
-            ctx.fillRect(x + 1, y + 1, 6, 6);
-            ctx.restore();
+            drawSpriteCentered(x + 4, y + 4, energizerSprite);
         }
     }
 

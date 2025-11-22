@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 public enum SpriteID {
     MAP_FULL,
     MAP_EMPTY,
+    ENERGIZER,
     PACMAN_FULL,
     PACMAN_MUNCHING_RIGHT,
     PACMAN_MUNCHING_LEFT,
