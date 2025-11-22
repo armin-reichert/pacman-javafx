@@ -28,6 +28,7 @@ import de.amr.pacmanfx.ui.sound.SoundID;
 import javafx.scene.canvas.Canvas;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -47,14 +48,14 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     private ArcadePacMan_IntroScene_Renderer sceneRenderer;
     private ArcadePacMan_HUD_Renderer hudRenderer;
 
-    public Pulse blinking;
-    public Pac pacMan;
-    public List<Ghost> ghosts;
-    public boolean[] ghostImageVisible;
-    public boolean[] ghostNicknameVisible;
-    public boolean[] ghostCharacterVisible;
+    private Pulse blinking;
+    private Pac pacMan;
+    private List<Ghost> ghosts;
+    private boolean[] ghostImageVisible;
+    private boolean[] ghostNicknameVisible;
+    private boolean[] ghostCharacterVisible;
     private List<Ghost> victims;
-    public boolean titleVisible;
+    private boolean titleVisible;
     private int ghostIndex;
     private long ghostKilledTime;
 
@@ -82,6 +83,34 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     @Override
     public ArcadePacMan_IntroScene_Renderer sceneRenderer() {
         return sceneRenderer;
+    }
+
+    public boolean titleVisible() {
+        return titleVisible;
+    }
+
+    public boolean ghostImageVisible(byte personality) {
+        return ghostImageVisible[personality];
+    }
+
+    public boolean ghostCharacterVisible(byte personality) {
+        return ghostCharacterVisible[personality];
+    }
+
+    public boolean ghostNicknameVisible(byte personality) {
+        return ghostNicknameVisible[personality];
+    }
+
+    public List<Ghost> ghosts() {
+        return Collections.unmodifiableList(ghosts);
+    }
+
+    public Pac pacMan() {
+        return pacMan;
+    }
+
+    public Pulse blinking() {
+        return blinking;
     }
 
     @Override
