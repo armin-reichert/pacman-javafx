@@ -16,6 +16,7 @@ public class ArcadePacMan_StartScene_Renderer extends GameScene2D_Renderer {
 
     public ArcadePacMan_StartScene_Renderer(GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(scene, canvas, spriteSheet);
+        createDefaultDebugInfoRenderer(canvas, spriteSheet);
     }
 
     public void draw() {
@@ -26,5 +27,9 @@ public class ArcadePacMan_StartScene_Renderer extends GameScene2D_Renderer {
         fillText("BONUS PAC-MAN FOR 10000", ARCADE_ROSE,   arcadeFont8(), TS(1),  TS(25));
         fillText("PTS",                     ARCADE_ROSE,   arcadeFont6(), TS(25), TS(25));
         fillText("© 1980 MIDWAY MFG.CO.",   ARCADE_PINK,   arcadeFont8(), TS(4),  TS(29));
+
+        if (scene.debugInfoVisible()) {
+            debugInfoRenderer.draw();
+        }
     }
 }
