@@ -30,6 +30,8 @@ public class TengenMsPacMan_IntroScene_Renderer extends TengenMsPacMan_CommonSce
     }
     
     public void draw() {
+        clearCanvas();
+
         final TengenMsPacMan_IntroScene introScene = scene();
         final long tick = introScene.sceneController.state().timer().tickCount();
 

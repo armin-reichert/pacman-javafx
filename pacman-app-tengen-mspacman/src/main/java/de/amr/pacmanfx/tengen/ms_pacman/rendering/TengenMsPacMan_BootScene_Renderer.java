@@ -27,6 +27,8 @@ public class TengenMsPacMan_BootScene_Renderer extends GameScene2DRenderer {
     }
 
     public void draw() {
+        clearCanvas();
+
         final TengenMsPacMan_BootScene bootScene = scene();
         if (bootScene.gray) {
             actorRenderer.fillCanvas(nesColor(0x10));

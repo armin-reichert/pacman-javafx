@@ -27,7 +27,6 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.shadeOfBl
  */
 public class TengenMsPacMan_BootScene extends GameScene2D {
 
-
     private static final float GHOST_Y = TS(21.5f);
 
     public boolean gray;
@@ -50,6 +49,11 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     @Override
     protected HUDRenderer hudRenderer() {
         return null;
+    }
+
+    @Override
+    public TengenMsPacMan_BootScene_Renderer sceneRenderer() {
+        return sceneRenderer;
     }
 
     @Override
@@ -106,11 +110,6 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     @Override
     public Vector2i sizeInPx() {
         return NES_SIZE_PX;
-    }
-
-    @Override
-    public void drawSceneContent() {
-        sceneRenderer.draw();
     }
 
     private void gray(boolean b)  { gray = b; }

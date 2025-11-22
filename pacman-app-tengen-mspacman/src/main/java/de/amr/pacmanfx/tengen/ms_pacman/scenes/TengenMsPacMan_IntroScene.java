@@ -17,7 +17,6 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.actors.MsPacMan;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_IntroScene_Renderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._2d.GameScene2DRenderer;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
@@ -78,6 +77,11 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
     }
 
     @Override
+    public TengenMsPacMan_IntroScene_Renderer sceneRenderer() {
+        return sceneRenderer;
+    }
+
+    @Override
     public void doInit() {
         final GameUI_Config uiConfig = ui.currentConfig();
         spriteSheet = (TengenMsPacMan_SpriteSheet) uiConfig.spriteSheet();
@@ -112,11 +116,6 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public Vector2i sizeInPx() { return NES_SIZE_PX; }
-
-    @Override
-    public void drawSceneContent() {
-        sceneRenderer.draw();
-    }
 
     public enum SceneState implements FsmState<TengenMsPacMan_IntroScene> {
 

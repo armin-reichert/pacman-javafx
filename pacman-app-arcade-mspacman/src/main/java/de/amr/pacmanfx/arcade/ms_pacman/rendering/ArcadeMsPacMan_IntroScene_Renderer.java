@@ -28,6 +28,8 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends GameScene2DRenderer {
     }
 
     public void draw() {
+        clearCanvas();
+
         final ArcadeMsPacMan_IntroScene introScene = scene();
 
         ctx.setFont(arcadeFont8());

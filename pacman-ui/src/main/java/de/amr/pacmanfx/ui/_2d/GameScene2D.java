@@ -77,8 +77,6 @@ public abstract class GameScene2D implements GameScene {
 
     protected abstract void doEnd();
 
-    protected abstract HUDRenderer hudRenderer();
-
     public void setCanvas(Canvas canvas) {
         this.canvas = requireNonNull(canvas);
         createRenderers(canvas);
@@ -153,9 +151,7 @@ public abstract class GameScene2D implements GameScene {
      * </p>
      */
     public void draw() {
-        canvas.getGraphicsContext2D().setFill(background());
-        canvas.getGraphicsContext2D().fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawSceneContent();
+        sceneRenderer().draw();
         drawHUD();
     }
 
@@ -165,8 +161,8 @@ public abstract class GameScene2D implements GameScene {
         }
     }
 
-    /**
-     * Draws the scene content using the already scaled game renderer.
-     */
-    public abstract void drawSceneContent();
+    protected abstract GameScene2DRenderer sceneRenderer();
+
+    protected abstract HUDRenderer hudRenderer();
+
 }

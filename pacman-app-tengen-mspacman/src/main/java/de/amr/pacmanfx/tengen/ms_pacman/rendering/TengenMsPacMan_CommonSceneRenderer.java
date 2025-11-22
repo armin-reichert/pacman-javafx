@@ -12,7 +12,7 @@ import javafx.scene.text.Font;
 import static de.amr.pacmanfx.Globals.TS;
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_CommonSceneRenderer extends GameScene2DRenderer {
+public abstract class TengenMsPacMan_CommonSceneRenderer extends GameScene2DRenderer {
 
     public TengenMsPacMan_CommonSceneRenderer(GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(scene, canvas, spriteSheet);

@@ -49,6 +49,11 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
     }
 
     @Override
+    public TengenMsPacMan_CreditsScene_Renderer sceneRenderer() {
+        return sceneRenderer;
+    }
+
+    @Override
     protected void doInit() {
         context().game().hud().creditVisible(false).scoreVisible(false).levelCounterVisible(false).livesCounterVisible(false);
 
@@ -72,9 +77,4 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
     @Override
     public Vector2i sizeInPx() { return NES_SIZE_PX; }
-
-    @Override
-    public void drawSceneContent() {
-        sceneRenderer.draw();
-    }
 }

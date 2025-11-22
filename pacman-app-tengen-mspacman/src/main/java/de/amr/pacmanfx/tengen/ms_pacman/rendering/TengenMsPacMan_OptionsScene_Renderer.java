@@ -30,8 +30,12 @@ public class TengenMsPacMan_OptionsScene_Renderer extends TengenMsPacMan_CommonS
     }
     
     public void draw() {
+        clearCanvas();
+
         final TengenMsPacMan_OptionsScene optionsScene = scene();
         final TengenMsPacMan_GameModel game = optionsScene.context().game();
+
+        if (optionsScene.initialDelay > 0) return;
 
         ctx.setFont(arcadeFont8());
         if (PROPERTY_JOYPAD_BINDINGS_DISPLAYED.get()) {

@@ -11,7 +11,6 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui._2d.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
@@ -20,7 +19,6 @@ import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
-import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui._2d.GameScene2DRenderer.configureRendererForGameScene;
 
 /**
@@ -55,8 +53,8 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
     }
 
     @Override
-    public void drawSceneContent() {
-        sceneRenderer.draw();
+    public ArcadePacMan_CutScene1_Renderer sceneRenderer() {
+        return sceneRenderer;
     }
 
     @Override

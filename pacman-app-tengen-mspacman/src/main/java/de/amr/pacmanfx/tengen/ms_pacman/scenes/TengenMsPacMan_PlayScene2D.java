@@ -42,7 +42,6 @@ import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
@@ -166,6 +165,11 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
     @Override
     public TengenMsPacMan_HUDRenderer hudRenderer() {
         return hudRenderer;
+    }
+
+    @Override
+    public TengenMsPacMan_PlayScene2D_Renderer sceneRenderer() {
+        return sceneRenderer;
     }
 
     @Override
@@ -431,19 +435,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
         } else {
             ui.soundManager().stop(SoundID.GHOST_RETURNS);
         }
-    }
-
-    // drawing
-
-    @Override
-    public void drawSceneContent() {
-        sceneRenderer.draw();
-    }
-
-    @Override
-    public void draw() {
-        drawHUD();
-        drawSceneContent();
     }
 
     private void updateHUD(GameLevel gameLevel) {

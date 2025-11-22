@@ -12,7 +12,7 @@ import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.BLUE_BAG;
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.JUNIOR_PAC;
 
-class Bag extends Actor {
+public class Bag extends Actor {
     private boolean open;
 
     public Bag(ArcadeMsPacMan_SpriteSheet spriteSheet) {

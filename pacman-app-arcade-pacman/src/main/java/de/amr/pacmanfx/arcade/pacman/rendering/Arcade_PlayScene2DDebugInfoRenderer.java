@@ -31,6 +31,8 @@ public class Arcade_PlayScene2DDebugInfoRenderer extends BaseDebugInfoRenderer {
 
     @Override
     public void draw() {
+        clearCanvas();
+
         final Arcade_PlayScene2D playScene = scene();
         final GameContext gameContext = playScene.context();
 

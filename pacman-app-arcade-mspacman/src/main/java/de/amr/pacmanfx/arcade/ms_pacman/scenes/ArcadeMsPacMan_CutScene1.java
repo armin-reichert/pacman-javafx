@@ -76,6 +76,11 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     }
 
     @Override
+    public ArcadeMsPacMan_CutScene1_Renderer sceneRenderer() {
+        return sceneRenderer;
+    }
+
+    @Override
     public void doInit() {
         final GameUI_Config uiConfig = ui.currentConfig();
         final var spriteSheet = (ArcadeMsPacMan_SpriteSheet) uiConfig.spriteSheet();
@@ -116,11 +121,6 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
             default -> throw new IllegalStateException("Illegal scene state: " + sceneState);
         }
         sceneTimer.doTick();
-    }
-
-    @Override
-    public void drawSceneContent() {
-        sceneRenderer.draw();
     }
 
     // Scene controller state machine

@@ -19,6 +19,8 @@ public class ArcadePacMan_StartScene_Renderer extends GameScene2DRenderer {
     }
 
     public void draw() {
+        clearCanvas();
+
         fillText("PUSH START BUTTON",       ARCADE_ORANGE, arcadeFont8(), TS(6),  TS(17));
         fillText("1 PLAYER ONLY",           ARCADE_CYAN,   arcadeFont8(), TS(8),  TS(21));
         fillText("BONUS PAC-MAN FOR 10000", ARCADE_ROSE,   arcadeFont8(), TS(1),  TS(25));

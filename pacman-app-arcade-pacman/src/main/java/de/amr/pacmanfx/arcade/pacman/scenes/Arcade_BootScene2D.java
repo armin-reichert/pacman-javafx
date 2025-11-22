@@ -31,6 +31,11 @@ public class Arcade_BootScene2D extends GameScene2D {
     }
 
     @Override
+    public Arcade_BootScene2D_Renderer sceneRenderer() {
+        return sceneRenderer;
+    }
+
+    @Override
     public void doInit() {
         context().game().hud().all(false);
    }
@@ -56,7 +61,4 @@ public class Arcade_BootScene2D extends GameScene2D {
     public void draw() {
         sceneRenderer.draw();
     }
-
-    @Override
-    public void drawSceneContent() {}
 }

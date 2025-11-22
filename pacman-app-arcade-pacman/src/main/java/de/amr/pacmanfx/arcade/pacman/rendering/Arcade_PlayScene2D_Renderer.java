@@ -41,6 +41,8 @@ public class Arcade_PlayScene2D_Renderer extends GameScene2DRenderer {
     }
 
     public void draw() {
+        clearCanvas();
+
         Arcade_PlayScene2D playScene = scene();
 
         if (playScene.context().optGameLevel().isEmpty()) {

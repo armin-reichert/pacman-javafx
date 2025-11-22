@@ -7,7 +7,6 @@ package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_HUDRenderer;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_StartScene_Renderer;
 import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.ui._2d.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.action.ArcadeActions;
 import de.amr.pacmanfx.ui.api.GameUI;
@@ -43,6 +42,11 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
     }
 
     @Override
+    public ArcadeMsPacMan_StartScene_Renderer sceneRenderer() {
+        return sceneRenderer;
+    }
+
+    @Override
     public void doInit() {
         context().game().hud().creditVisible(true).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
         actionBindings.bind(ArcadeActions.ACTION_INSERT_COIN, ui.actionBindings());
@@ -58,10 +62,5 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
     @Override
     public void onCreditAdded(GameEvent e) {
         ui.soundManager().play(SoundID.COIN_INSERTED);
-    }
-
-    @Override
-    public void drawSceneContent() {
-        sceneRenderer.draw();
     }
 }

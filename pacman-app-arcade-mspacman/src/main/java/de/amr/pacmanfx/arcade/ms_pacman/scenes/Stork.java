@@ -10,7 +10,7 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 
-class Stork extends Actor {
+public class Stork extends Actor {
 
     public static final String ANIM_FLYING = "flying";
 

@@ -40,6 +40,8 @@ public class ArcadePacMan_CutScene2_Renderer extends GameScene2DRenderer {
     }
 
     public void draw() {
+        clearCanvas();
+
         ArcadePacMan_CutScene2 cutScene = scene();
         drawSprite(cutScene.nailDressRaptureAnimation().currentSprite(), TS(14), TS(19) + 3, true);
         actorRenderer.drawActor(cutScene.pac);

@@ -19,6 +19,8 @@ public class ArcadeMsPacMan_StartScene_Renderer extends GameScene2DRenderer {
     }
     
     public void draw() {
+        clearCanvas();
+
         final Font font6 = arcadeFont6();
         final Font font8 = arcadeFont8();
         final ArcadeMsPacMan_SpriteSheet spriteSheet = (ArcadeMsPacMan_SpriteSheet) spriteSheet();

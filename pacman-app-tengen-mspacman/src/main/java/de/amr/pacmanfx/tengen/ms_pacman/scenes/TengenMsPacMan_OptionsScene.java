@@ -69,7 +69,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     private TengenMsPacMan_OptionsScene_Renderer sceneRenderer;
 
     private int idleTicks;
-    private int initialDelay;
+    public int initialDelay;
 
     public TengenMsPacMan_OptionsScene(GameUI ui) {
         super(ui);
@@ -87,10 +87,8 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     }
 
     @Override
-    public void drawSceneContent() {
-        if (initialDelay == 0) {
-            sceneRenderer.draw();
-        }
+    public TengenMsPacMan_OptionsScene_Renderer sceneRenderer() {
+        return sceneRenderer;
     }
 
     @Override

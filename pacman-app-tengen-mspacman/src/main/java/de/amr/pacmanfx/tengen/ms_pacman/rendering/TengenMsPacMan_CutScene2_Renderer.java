@@ -23,6 +23,8 @@ public class TengenMsPacMan_CutScene2_Renderer extends GameScene2DRenderer {
     }
 
     public void draw() {
+        clearCanvas();
+
         final TengenMsPacMan_CutScene2 cutScene = scene();
         cutScene.clapperboard.setFont(actorRenderer.arcadeFont8());
         Stream.of(cutScene.clapperboard, cutScene.msPacMan, cutScene.pacMan)

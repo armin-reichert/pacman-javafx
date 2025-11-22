@@ -60,10 +60,9 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         return hudRenderer;
     }
 
-
     @Override
-    public void drawSceneContent() {
-        sceneRenderer.draw();
+    public ArcadePacMan_CutScene2_Renderer sceneRenderer() {
+        return sceneRenderer;
     }
 
     public SpriteAnimation nailDressRaptureAnimation() {

@@ -68,6 +68,11 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
     }
 
     @Override
+    public ArcadeMsPacMan_CutScene3_Renderer sceneRenderer() {
+        return sceneRenderer;
+    }
+
+    @Override
     public void doInit() {
         context().game().hud().scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
 
@@ -105,11 +110,6 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
             default -> throw new IllegalStateException("Illegal scene state: " + sceneState);
         }
         sceneTimer.doTick();
-    }
-
-    @Override
-    public void drawSceneContent() {
-        sceneRenderer.draw();
     }
 
     // Scene controller state machine

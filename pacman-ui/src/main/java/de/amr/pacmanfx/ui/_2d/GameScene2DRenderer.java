@@ -13,7 +13,7 @@ import javafx.scene.canvas.Canvas;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameScene2DRenderer extends BaseSpriteRenderer {
+public abstract class GameScene2DRenderer extends BaseSpriteRenderer {
 
     public static <T extends Renderer> T configureRendererForGameScene(T renderer, GameScene2D scene) {
         renderer.backgroundProperty().bind(scene.backgroundProperty());
@@ -29,6 +29,8 @@ public class GameScene2DRenderer extends BaseSpriteRenderer {
         super(canvas, spriteSheet);
         this.scene = scene;
     }
+
+    public abstract void draw();
 
     @SuppressWarnings("unchecked")
     public <S extends GameScene2D> S scene() {

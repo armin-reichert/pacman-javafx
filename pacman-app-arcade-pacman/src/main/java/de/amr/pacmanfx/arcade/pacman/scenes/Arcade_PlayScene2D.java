@@ -79,8 +79,8 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void drawSceneContent() {
-        sceneRenderer.draw();
+    public Arcade_PlayScene2D_Renderer sceneRenderer() {
+        return sceneRenderer;
     }
 
     @Override

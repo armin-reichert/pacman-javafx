@@ -58,8 +58,8 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
     }
 
     @Override
-    public void drawSceneContent() {
-        sceneRenderer.draw();
+    public ArcadePacMan_CutScene3_Renderer sceneRenderer() {
+        return sceneRenderer;
     }
 
     @Override

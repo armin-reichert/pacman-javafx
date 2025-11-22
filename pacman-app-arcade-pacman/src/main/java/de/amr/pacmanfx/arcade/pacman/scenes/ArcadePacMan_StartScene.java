@@ -41,8 +41,8 @@ public class ArcadePacMan_StartScene extends GameScene2D {
     }
 
     @Override
-    public void drawSceneContent() {
-        sceneRenderer.draw();
+    public ArcadePacMan_StartScene_Renderer sceneRenderer() {
+        return sceneRenderer;
     }
 
     @Override

@@ -42,6 +42,8 @@ public class ArcadePacMan_IntroScene_Renderer extends GameScene2DRenderer {
     }
 
     public void draw() {
+        clearCanvas();
+
         final ArcadePacMan_IntroScene introScene = scene();
 
         drawGallery(introScene);

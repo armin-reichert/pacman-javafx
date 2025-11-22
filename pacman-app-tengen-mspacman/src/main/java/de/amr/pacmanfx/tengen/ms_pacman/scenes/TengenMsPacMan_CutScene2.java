@@ -72,6 +72,11 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
     }
 
     @Override
+    public TengenMsPacMan_CutScene2_Renderer sceneRenderer() {
+        return sceneRenderer;
+    }
+
+    @Override
     public void doInit() {
         TengenMsPacMan_HUD hud = (TengenMsPacMan_HUD) context().game().hud();
         hud.creditVisible(false).scoreVisible(false).levelCounterVisible(true).livesCounterVisible(false);
@@ -180,10 +185,5 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
                 hudRenderer.drawHUD(context().game(), game.hud(), sizeInPx().minus(0, 2 * TS));
             }
         }
-    }
-
-    @Override
-    public void drawSceneContent() {
-        sceneRenderer.draw();
     }
 }

@@ -81,6 +81,11 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     }
 
     @Override
+    public ArcadeMsPacMan_IntroScene_Renderer sceneRenderer() {
+        return sceneRenderer;
+    }
+
+    @Override
     public void doInit() {
         context().game().hud().creditVisible(true).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
 
@@ -125,11 +130,6 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     @Override
     public void onCreditAdded(GameEvent e) {
         ui.soundManager().play(SoundID.COIN_INSERTED);
-    }
-
-    @Override
-    public void drawSceneContent() {
-        sceneRenderer.draw();
     }
 
     // Scene controller FSM

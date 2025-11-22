@@ -18,6 +18,8 @@ public class TengenMsPacMan_CreditsScene_Renderer extends TengenMsPacMan_CommonS
     }
     
     public void draw() {
+        clearCanvas();
+
         final TengenMsPacMan_CreditsScene creditsScene = scene();
 
         drawHorizontalBar(nesColor(0x20), nesColor(0x13), creditsScene.sizeInPx().x(), TS, 20);

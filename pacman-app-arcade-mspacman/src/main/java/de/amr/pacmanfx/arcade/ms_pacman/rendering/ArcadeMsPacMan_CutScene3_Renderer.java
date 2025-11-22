@@ -24,6 +24,7 @@ public class ArcadeMsPacMan_CutScene3_Renderer extends GameScene2DRenderer {
     }
 
     public void draw() {
+        clearCanvas();
         ArcadeMsPacMan_CutScene3 cutScene = scene();
         cutScene.clapperboard.setFont(arcadeFont8());
         Stream.of(cutScene.clapperboard, cutScene.msPacMan, cutScene.pacMan, cutScene.stork, cutScene.bag)
