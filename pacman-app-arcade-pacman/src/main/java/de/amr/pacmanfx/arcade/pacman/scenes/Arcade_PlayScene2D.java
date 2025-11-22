@@ -36,7 +36,6 @@ import org.tinylog.Logger;
 import java.util.List;
 
 import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.pacmanfx.ui._2d.GameScene2D_Renderer.configureRendererForGameScene;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_MUTED;
 import static de.amr.pacmanfx.uilib.Ufx.createContextMenuTitle;
@@ -64,13 +63,13 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     protected void createRenderers(Canvas canvas) {
-        GameUI_Config uiConfig = ui.currentConfig();
+        final GameUI_Config uiConfig = ui.currentConfig();
 
-        hudRenderer = configureRendererForGameScene(
-            uiConfig.createHUDRenderer(canvas), this);
+        hudRenderer = configureRenderer(
+            uiConfig.createHUDRenderer(canvas));
 
-        sceneRenderer = configureRendererForGameScene(
-            new Arcade_PlayScene2D_Renderer(this, canvas, uiConfig.spriteSheet()), this);
+        sceneRenderer = configureRenderer(
+            new Arcade_PlayScene2D_Renderer(this, canvas, uiConfig.spriteSheet()));
     }
 
     @Override

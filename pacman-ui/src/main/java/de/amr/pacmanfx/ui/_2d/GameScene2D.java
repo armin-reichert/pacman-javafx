@@ -14,6 +14,7 @@ import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
+import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -146,6 +147,10 @@ public abstract class GameScene2D implements GameScene {
     protected abstract GameScene2D_Renderer sceneRenderer();
 
     protected abstract HUDRenderer hudRenderer();
+
+    protected <T extends Renderer> T configureRenderer(T renderer) {
+        return GameScene2D_Renderer.configureRendererForGameScene(renderer, this);
+    }
 
     /**
      * Draws this scene into the canvas.

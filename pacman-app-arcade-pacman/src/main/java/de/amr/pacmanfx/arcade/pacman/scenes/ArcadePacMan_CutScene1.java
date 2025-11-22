@@ -19,7 +19,6 @@ import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
-import static de.amr.pacmanfx.ui._2d.GameScene2D_Renderer.configureRendererForGameScene;
 
 /**
  * First cut scene in Arcade Pac-Man game:<br>
@@ -43,13 +42,13 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
     
     @Override
     protected void createRenderers(Canvas canvas) {
-        GameUI_Config uiConfig = ui.currentConfig();
+        final GameUI_Config uiConfig = ui.currentConfig();
 
-        hudRenderer = configureRendererForGameScene(
-            uiConfig.createHUDRenderer(canvas), this);
+        hudRenderer = configureRenderer(
+            uiConfig.createHUDRenderer(canvas));
 
-        sceneRenderer = configureRendererForGameScene(
-            new ArcadePacMan_CutScene1_Renderer(this, canvas, uiConfig.spriteSheet()), this);
+        sceneRenderer = configureRenderer(
+            new ArcadePacMan_CutScene1_Renderer(this, canvas, uiConfig.spriteSheet()));
     }
 
     @Override

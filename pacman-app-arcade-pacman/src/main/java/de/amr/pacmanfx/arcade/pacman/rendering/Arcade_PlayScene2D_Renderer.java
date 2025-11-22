@@ -28,7 +28,8 @@ public class Arcade_PlayScene2D_Renderer extends GameScene2D_Renderer {
 
     public Arcade_PlayScene2D_Renderer(GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(scene, canvas, spriteSheet);
-        GameUI_Config uiConfig = scene.ui().currentConfig();
+
+        final GameUI_Config uiConfig = scene.ui().currentConfig();
 
         gameLevelRenderer = configureRendererForGameScene(
             uiConfig.createGameLevelRenderer(canvas), scene);

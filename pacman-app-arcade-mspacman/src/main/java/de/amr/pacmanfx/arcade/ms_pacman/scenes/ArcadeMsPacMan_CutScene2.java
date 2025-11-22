@@ -49,11 +49,11 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
     protected void createRenderers(Canvas canvas) {
         final GameUI_Config uiConfig = ui.currentConfig();
 
-        hudRenderer = configureRendererForGameScene(
-            (ArcadeMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas), this);
+        hudRenderer = configureRenderer(
+            (ArcadeMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas));
 
-        sceneRenderer = configureRendererForGameScene(
-            new ArcadeMsPacMan_CutScene2_Renderer(this, canvas, uiConfig.spriteSheet()), this);
+        sceneRenderer = configureRenderer(
+            new ArcadeMsPacMan_CutScene2_Renderer(this, canvas, uiConfig.spriteSheet()));
     }
 
     @Override

@@ -26,7 +26,6 @@ import javafx.scene.paint.Color;
 import java.util.List;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.ui._2d.GameScene2D_Renderer.configureRendererForGameScene;
 import static de.amr.pacmanfx.ui.api.ArcadePalette.*;
 
 /**
@@ -68,11 +67,11 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     protected void createRenderers(Canvas canvas) {
         final GameUI_Config uiConfig = ui.currentConfig();
 
-        hudRenderer = configureRendererForGameScene(
-            (ArcadeMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas), this);
+        hudRenderer = configureRenderer(
+            (ArcadeMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas));
 
-        sceneRenderer = configureRendererForGameScene(
-            new ArcadeMsPacMan_IntroScene_Renderer(this, canvas, ui.currentConfig().spriteSheet()), this);
+        sceneRenderer = configureRenderer(
+            new ArcadeMsPacMan_IntroScene_Renderer(this, canvas, ui.currentConfig().spriteSheet()));
     }
 
     @Override

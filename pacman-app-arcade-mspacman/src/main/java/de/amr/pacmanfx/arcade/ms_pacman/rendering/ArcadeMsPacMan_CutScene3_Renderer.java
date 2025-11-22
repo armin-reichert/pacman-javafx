@@ -15,9 +15,12 @@ public class ArcadeMsPacMan_CutScene3_Renderer extends GameScene2D_Renderer {
 
     public ArcadeMsPacMan_CutScene3_Renderer(GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(scene, canvas, spriteSheet);
+
         final GameUI_Config uiConfig = scene.ui().currentConfig();
+
         actorRenderer = configureRendererForGameScene(
             (ArcadeMsPacMan_ActorRenderer) uiConfig.createActorRenderer(canvas), scene);
+
         createDefaultDebugInfoRenderer(canvas, uiConfig.spriteSheet());
     }
 

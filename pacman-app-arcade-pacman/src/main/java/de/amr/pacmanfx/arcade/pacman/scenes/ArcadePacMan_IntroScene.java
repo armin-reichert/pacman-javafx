@@ -34,7 +34,6 @@ import java.util.List;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.model.actors.GhostState.EATEN;
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
-import static de.amr.pacmanfx.ui._2d.GameScene2D_Renderer.configureRendererForGameScene;
 import static de.amr.pacmanfx.ui.api.ArcadePalette.*;
 
 /**
@@ -75,13 +74,13 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     @Override
     protected void createRenderers(Canvas canvas) {
-        GameUI_Config uiConfig = ui.currentConfig();
+        final GameUI_Config uiConfig = ui.currentConfig();
 
-        hudRenderer = configureRendererForGameScene(
-            (ArcadePacMan_HUD_Renderer) uiConfig.createHUDRenderer(canvas), this);
+        hudRenderer = configureRenderer(
+            (ArcadePacMan_HUD_Renderer) uiConfig.createHUDRenderer(canvas));
 
-        sceneRenderer = configureRendererForGameScene(
-            new ArcadePacMan_IntroScene_Renderer(this, canvas, (ArcadePacMan_SpriteSheet) uiConfig.spriteSheet()), this);
+        sceneRenderer = configureRenderer(
+            new ArcadePacMan_IntroScene_Renderer(this, canvas, (ArcadePacMan_SpriteSheet) uiConfig.spriteSheet()));
     }
 
     @Override
