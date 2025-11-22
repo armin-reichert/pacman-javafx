@@ -42,7 +42,7 @@ public class ArcadePacMan_IntroScene_Renderer extends GameScene2D_Renderer {
             public void draw() {
                 ArcadePacMan_IntroScene introScene = scene();
                 super.draw();
-                ctx.fillText("Scene timer %d".formatted(introScene.sceneController.state().timer().tickCount()), 0, scaled(5 * TS));
+                ctx.fillText("Scene timer %d".formatted(introScene.state().timer().tickCount()), 0, scaled(5 * TS));
             }
         }, scene);
 
@@ -56,7 +56,7 @@ public class ArcadePacMan_IntroScene_Renderer extends GameScene2D_Renderer {
         final ArcadePacMan_IntroScene introScene = scene();
 
         drawGallery(introScene);
-        switch (introScene.sceneController.state()) {
+        switch (introScene.state()) {
             case STARTING, PRESENTING_GHOSTS -> {}
             case SHOWING_PELLET_POINTS -> drawPoints(introScene);
             case CHASING_PAC -> {
@@ -99,7 +99,7 @@ public class ArcadePacMan_IntroScene_Renderer extends GameScene2D_Renderer {
 
     // TODO make shaking effect look exactly as in original game, find out what's exactly is going on here
     private void drawGuys(ArcadePacMan_IntroScene introScene, boolean shaking) {
-        long tick = introScene.sceneController.state().timer().tickCount();
+        long tick = introScene.state().timer().tickCount();
         int shakingAmount = shaking ? (tick % 5 < 2 ? 0 : -1) : 0;
         if (shakingAmount == 0) {
             introScene.ghosts.forEach(actorRenderer::drawActor);
