@@ -96,7 +96,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
         marquee = new Marquee();
         marquee.setPosition(MARQUEE_X, MARQUEE_Y);
-        marquee.scalingProperty().bind(scaling);
+        marquee.scalingProperty().bind(scalingProperty());
 
         presentsText = new Actor();
         presentsText.setPosition(9 * TS, MARQUEE_Y - TS);

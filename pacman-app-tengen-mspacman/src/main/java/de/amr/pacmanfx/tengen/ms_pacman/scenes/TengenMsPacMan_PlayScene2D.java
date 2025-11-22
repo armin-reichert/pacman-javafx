@@ -88,8 +88,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
         fixedCamera = new PerspectiveCamera(false);
 
         dynamicCamera = new PlayScene2DCamera();
-        dynamicCamera.scalingProperty().bind(scaling);
-        scaling.addListener((py, ov, nv) -> context().optGameLevel().ifPresent(gameLevel ->
+        dynamicCamera.scalingProperty().bind(scalingProperty());
+        scalingProperty().addListener((py, ov, nv) -> context().optGameLevel().ifPresent(gameLevel ->
             dynamicCamera.updateRange(gameLevel.worldMap().terrainLayer().numRows())));
 
         rootPane = new StackPane();
@@ -121,7 +121,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
 
     private void updateScaling() {
         SceneDisplayMode displayMode = PROPERTY_PLAY_SCENE_DISPLAY_MODE.get();
-        scaling.set(switch (displayMode) {
+        scalingProperty().set(switch (displayMode) {
             case SCALED_TO_FIT -> subScene.getHeight() / canvasHeightUnscaled.get();
             case SCROLLING -> subScene.getHeight() / NES_SIZE_PX.y();
         });

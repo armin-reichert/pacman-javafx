@@ -30,9 +30,9 @@ public abstract class GameScene2D implements GameScene {
 
     public static final Vector2i DEFAULT_SIZE_PX = Globals.ARCADE_MAP_SIZE_IN_PIXELS;
 
-    protected final BooleanProperty debugInfoVisible = new SimpleBooleanProperty(false);
-    protected final DoubleProperty scaling = new SimpleDoubleProperty(1.0f);
-    protected final ObjectProperty<Paint> background = new SimpleObjectProperty<>(Color.BLACK);
+    private final BooleanProperty debugInfoVisible = new SimpleBooleanProperty(false);
+    private final DoubleProperty scaling = new SimpleDoubleProperty(1.0f);
+    private final ObjectProperty<Paint> background = new SimpleObjectProperty<>(Color.BLACK);
 
     protected final GameUI ui;
     protected final ActionBindingsManager actionBindings;
