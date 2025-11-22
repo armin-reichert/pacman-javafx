@@ -29,9 +29,9 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
 
     public static final short ANIMATION_START = 120;
 
-    public int frame;
-    public Pac pac;
-    public Ghost blinky;
+    private int frame;
+    private Pac pac;
+    private Ghost blinky;
 
     private ArcadePacMan_CutScene1_Renderer sceneRenderer;
     private HUDRenderer hudRenderer;
@@ -59,6 +59,18 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
     @Override
     public HUDRenderer hudRenderer() {
         return hudRenderer;
+    }
+
+    public Pac pac() {
+        return pac;
+    }
+
+    public Ghost blinky() {
+        return blinky;
+    }
+
+    public int frame() {
+        return frame;
     }
 
     @Override

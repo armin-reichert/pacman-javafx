@@ -31,9 +31,9 @@ public class ArcadePacMan_CutScene1_Renderer extends GameScene2D_Renderer {
             public void draw() {
                 ArcadePacMan_CutScene1 cutScene = scene();
                 super.draw();
-                String text = cutScene.frame < ArcadePacMan_CutScene1.ANIMATION_START
-                    ? String.format("Wait %d", ArcadePacMan_CutScene1.ANIMATION_START - cutScene.frame)
-                    : String.format("Frame %d", cutScene.frame);
+                String text = cutScene.frame() < ArcadePacMan_CutScene1.ANIMATION_START
+                    ? String.format("Wait %d", ArcadePacMan_CutScene1.ANIMATION_START - cutScene.frame())
+                    : String.format("Frame %d", cutScene.frame());
                 fillText(text, debugTextFill, debugTextFont, TS(1), TS(5));
             }
         }, scene);
@@ -43,8 +43,8 @@ public class ArcadePacMan_CutScene1_Renderer extends GameScene2D_Renderer {
         clearCanvas();
 
         final ArcadePacMan_CutScene1 cutScene = scene();
-        actorRenderer.drawActor(cutScene.blinky);
-        actorRenderer.drawActor(cutScene.pac);
+        actorRenderer.drawActor(cutScene.blinky());
+        actorRenderer.drawActor(cutScene.pac());
 
         if (cutScene.debugInfoVisible()) {
             debugInfoRenderer.draw();

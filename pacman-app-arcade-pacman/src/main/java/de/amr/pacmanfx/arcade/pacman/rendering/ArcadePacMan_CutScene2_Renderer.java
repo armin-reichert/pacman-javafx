@@ -31,9 +31,9 @@ public class ArcadePacMan_CutScene2_Renderer extends GameScene2D_Renderer {
             public void draw() {
                 ArcadePacMan_CutScene2 cutScene = scene();
                 super.draw();
-                String text = cutScene.frame < ArcadePacMan_CutScene2.ANIMATION_START
-                    ? String.format("Wait %d", ArcadePacMan_CutScene2.ANIMATION_START - cutScene.frame)
-                    : String.format("Frame %d", cutScene.frame);
+                String text = cutScene.frame() < ArcadePacMan_CutScene2.ANIMATION_START
+                    ? String.format("Wait %d", ArcadePacMan_CutScene2.ANIMATION_START - cutScene.frame())
+                    : String.format("Frame %d", cutScene.frame());
                 fillText(text, debugTextFill, debugTextFont, TS(1), TS(5));
             }
         }, scene);
@@ -44,8 +44,8 @@ public class ArcadePacMan_CutScene2_Renderer extends GameScene2D_Renderer {
 
         final ArcadePacMan_CutScene2 cutScene = scene();
         drawSprite(cutScene.nailDressRaptureAnimation().currentSprite(), TS(14), TS(19) + 3, true);
-        actorRenderer.drawActor(cutScene.pac);
-        actorRenderer.drawActor(cutScene.blinky);
+        actorRenderer.drawActor(cutScene.pac());
+        actorRenderer.drawActor(cutScene.blinky());
 
         if (cutScene.debugInfoVisible()) {
             debugInfoRenderer.draw();

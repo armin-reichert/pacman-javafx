@@ -32,9 +32,9 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
     private static final byte NAIL = 0, STRETCHED_S = 1, STRETCHED_M = 2, STRETCHED_L = 3, RAPTURED = 4;
 
-    public int frame;
-    public Pac pac;
-    public Ghost blinky;
+    private int frame;
+    private Pac pac;
+    private Ghost blinky;
 
     private SpriteAnimation blinkyNormal;
     private SpriteAnimation blinkyDamaged;
@@ -70,6 +70,18 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
     public SpriteAnimation nailDressRaptureAnimation() {
         return nailDressRaptureAnimation;
+    }
+
+    public Pac pac() {
+        return pac;
+    }
+
+    public Ghost blinky() {
+        return blinky;
+    }
+
+    public int frame() {
+        return frame;
     }
 
     @Override
