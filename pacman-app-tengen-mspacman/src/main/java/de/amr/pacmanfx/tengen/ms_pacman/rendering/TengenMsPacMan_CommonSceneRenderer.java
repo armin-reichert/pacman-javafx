@@ -2,7 +2,7 @@ package de.amr.pacmanfx.tengen.ms_pacman.rendering;
 
 import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._2d.GameScene2DRenderer;
+import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.input.JoypadKeyBinding;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.canvas.Canvas;
@@ -12,7 +12,7 @@ import javafx.scene.text.Font;
 import static de.amr.pacmanfx.Globals.TS;
 import static java.util.Objects.requireNonNull;
 
-public abstract class TengenMsPacMan_CommonSceneRenderer extends GameScene2DRenderer {
+public abstract class TengenMsPacMan_CommonSceneRenderer extends GameScene2D_Renderer {
 
     public TengenMsPacMan_CommonSceneRenderer(GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(scene, canvas, spriteSheet);

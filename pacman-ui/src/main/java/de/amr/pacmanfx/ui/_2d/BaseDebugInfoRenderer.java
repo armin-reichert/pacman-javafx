@@ -19,7 +19,7 @@ import javafx.scene.text.FontWeight;
 
 import static de.amr.pacmanfx.Globals.TS;
 
-public class BaseDebugInfoRenderer extends GameScene2DRenderer {
+public class BaseDebugInfoRenderer extends GameScene2D_Renderer {
 
     protected Color debugTextFill;
     protected Color debugTextStroke;

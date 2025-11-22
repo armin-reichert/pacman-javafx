@@ -16,7 +16,7 @@ import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._2d.GameScene2DRenderer;
+import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
@@ -55,10 +55,10 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
     protected void createRenderers(Canvas canvas) {
         final GameUI_Config uiConfig = ui.currentConfig();
 
-        hudRenderer = GameScene2DRenderer.configureRendererForGameScene(
+        hudRenderer = GameScene2D_Renderer.configureRendererForGameScene(
             (ArcadeMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas), this);
 
-        sceneRenderer = GameScene2DRenderer.configureRendererForGameScene(
+        sceneRenderer = GameScene2D_Renderer.configureRendererForGameScene(
             new ArcadeMsPacMan_CutScene3_Renderer(this, canvas, uiConfig.spriteSheet()), this);
     }
 

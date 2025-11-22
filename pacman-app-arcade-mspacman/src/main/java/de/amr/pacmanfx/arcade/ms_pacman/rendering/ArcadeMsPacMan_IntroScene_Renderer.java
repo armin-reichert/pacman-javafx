@@ -3,7 +3,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.ArcadeMsPacMan_IntroScene;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.Marquee;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._2d.GameScene2DRenderer;
+import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
@@ -16,7 +16,7 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.arcade.ms_pacman.scenes.ArcadeMsPacMan_IntroScene.*;
 import static de.amr.pacmanfx.ui.api.ArcadePalette.*;
 
-public class ArcadeMsPacMan_IntroScene_Renderer extends GameScene2DRenderer {
+public class ArcadeMsPacMan_IntroScene_Renderer extends GameScene2D_Renderer {
 
     private final ActorRenderer actorRenderer;
 

@@ -3,7 +3,7 @@ package de.amr.pacmanfx.tengen.ms_pacman.rendering;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.TengenMsPacMan_IntroScene;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._2d.GameScene2DRenderer;
+import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
@@ -25,7 +25,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends TengenMsPacMan_CommonSce
         super(scene, canvas, spriteSheet);
         final GameUI_Config uiConfig = scene.ui().currentConfig();
 
-        actorRenderer = GameScene2DRenderer.configureRendererForGameScene(
+        actorRenderer = GameScene2D_Renderer.configureRendererForGameScene(
             uiConfig.createActorRenderer(canvas), scene);
     }
     

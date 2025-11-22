@@ -19,7 +19,7 @@ import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
-import static de.amr.pacmanfx.ui._2d.GameScene2DRenderer.configureRendererForGameScene;
+import static de.amr.pacmanfx.ui._2d.GameScene2D_Renderer.configureRendererForGameScene;
 
 /**
  * Third cut scene in Arcade Pac-Man game:<br>

@@ -25,7 +25,7 @@ import de.amr.pacmanfx.uilib.animation.SingleSpriteNoAnimation;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.ui._2d.GameScene2DRenderer.configureRendererForGameScene;
+import static de.amr.pacmanfx.ui._2d.GameScene2D_Renderer.configureRendererForGameScene;
 
 /**
  * Intermission scene 1: "They meet".

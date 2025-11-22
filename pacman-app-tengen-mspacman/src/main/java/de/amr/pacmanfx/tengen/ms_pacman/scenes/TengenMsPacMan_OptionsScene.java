@@ -14,7 +14,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.PacBooster;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_OptionsScene_Renderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._2d.GameScene2DRenderer;
+import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.action.TestActions;
 import de.amr.pacmanfx.ui.api.GameUI;
@@ -77,7 +77,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
     @Override
     protected void createRenderers(Canvas canvas) {
-        sceneRenderer = GameScene2DRenderer.configureRendererForGameScene(
+        sceneRenderer = GameScene2D_Renderer.configureRendererForGameScene(
             new TengenMsPacMan_OptionsScene_Renderer(this, canvas, ui.currentConfig().spriteSheet()), this);
     }
 

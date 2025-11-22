@@ -34,7 +34,7 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_TILES;
-import static de.amr.pacmanfx.ui._2d.GameScene2DRenderer.configureRendererForGameScene;
+import static de.amr.pacmanfx.ui._2d.GameScene2D_Renderer.configureRendererForGameScene;
 
 public class TengenMsPacMan_CutScene4 extends GameScene2D {
 

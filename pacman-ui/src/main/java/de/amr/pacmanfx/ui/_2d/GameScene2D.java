@@ -161,7 +161,7 @@ public abstract class GameScene2D implements GameScene {
         }
     }
 
-    protected abstract GameScene2DRenderer sceneRenderer();
+    protected abstract GameScene2D_Renderer sceneRenderer();
 
     protected abstract HUDRenderer hudRenderer();
 

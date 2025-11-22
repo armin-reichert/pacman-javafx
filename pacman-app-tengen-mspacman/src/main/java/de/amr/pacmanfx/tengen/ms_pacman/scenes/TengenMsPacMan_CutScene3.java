@@ -20,7 +20,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_CutScene3_Rende
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_HUDRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._2d.GameScene2DRenderer;
+import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
@@ -62,10 +62,10 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
     protected void createRenderers(Canvas canvas) {
         final GameUI_Config uiConfig = ui.currentConfig();
 
-        hudRenderer = GameScene2DRenderer.configureRendererForGameScene(
+        hudRenderer = GameScene2D_Renderer.configureRendererForGameScene(
             (TengenMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas), this);
 
-        sceneRenderer = GameScene2DRenderer.configureRendererForGameScene(
+        sceneRenderer = GameScene2D_Renderer.configureRendererForGameScene(
             new TengenMsPacMan_CutScene3_Renderer(this, canvas, uiConfig.spriteSheet()), this);
     }
 

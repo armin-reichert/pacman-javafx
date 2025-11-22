@@ -1,7 +1,7 @@
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._2d.GameScene2DRenderer;
+import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -11,7 +11,7 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.api.ArcadePalette.ARCADE_ORANGE;
 import static de.amr.pacmanfx.ui.api.ArcadePalette.ARCADE_RED;
 
-public class ArcadeMsPacMan_StartScene_Renderer extends GameScene2DRenderer {
+public class ArcadeMsPacMan_StartScene_Renderer extends GameScene2D_Renderer {
     
     public ArcadeMsPacMan_StartScene_Renderer(GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(scene, canvas, spriteSheet);

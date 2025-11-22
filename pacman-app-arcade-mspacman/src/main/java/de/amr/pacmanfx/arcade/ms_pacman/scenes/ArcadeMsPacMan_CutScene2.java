@@ -19,7 +19,7 @@ import de.amr.pacmanfx.ui.sound.SoundID;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.ui._2d.GameScene2DRenderer.configureRendererForGameScene;
+import static de.amr.pacmanfx.ui._2d.GameScene2D_Renderer.configureRendererForGameScene;
 
 /**
  * Intermission scene 2: "The chase".

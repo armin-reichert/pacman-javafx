@@ -9,7 +9,7 @@ import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.ui._2d.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._2d.GameScene2DRenderer;
+import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import javafx.scene.canvas.Canvas;
 
@@ -18,7 +18,7 @@ import static de.amr.pacmanfx.arcade.pacman.rendering.SpriteID.GALLERY_GHOSTS;
 import static de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_IntroScene.*;
 import static de.amr.pacmanfx.ui.api.ArcadePalette.*;
 
-public class ArcadePacMan_IntroScene_Renderer extends GameScene2DRenderer {
+public class ArcadePacMan_IntroScene_Renderer extends GameScene2D_Renderer {
 
     private final ArcadePacMan_Actor_Renderer actorRenderer;
 

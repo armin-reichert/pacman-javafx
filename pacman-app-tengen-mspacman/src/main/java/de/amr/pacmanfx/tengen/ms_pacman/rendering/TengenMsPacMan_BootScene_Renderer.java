@@ -2,14 +2,14 @@ package de.amr.pacmanfx.tengen.ms_pacman.rendering;
 
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.TengenMsPacMan_BootScene;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._2d.GameScene2DRenderer;
+import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesColor;
 
-public class TengenMsPacMan_BootScene_Renderer extends GameScene2DRenderer {
+public class TengenMsPacMan_BootScene_Renderer extends GameScene2D_Renderer {
 
     public static final String TENGEN_PRESENTS = "TENGEN PRESENTS";
 
@@ -20,7 +20,7 @@ public class TengenMsPacMan_BootScene_Renderer extends GameScene2DRenderer {
 
         final GameUI_Config uiConfig = scene.ui().currentConfig();
 
-        actorRenderer = GameScene2DRenderer.configureRendererForGameScene(
+        actorRenderer = GameScene2D_Renderer.configureRendererForGameScene(
             (TengenMsPacMan_ActorRenderer) uiConfig.createActorRenderer(canvas), scene);
 
         createDefaultDebugInfoRenderer(canvas, uiConfig.spriteSheet());

@@ -8,7 +8,7 @@ import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._2d.GameScene2DRenderer;
+import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.canvas.Canvas;
 
@@ -19,7 +19,7 @@ import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomFloat;
 import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.ui.api.ArcadePalette.ARCADE_WHITE;
 
-public class Arcade_BootScene2D_Renderer extends GameScene2DRenderer {
+public class Arcade_BootScene2D_Renderer extends GameScene2D_Renderer {
 
     public static final int RASTER_SIZE = 16;
 
