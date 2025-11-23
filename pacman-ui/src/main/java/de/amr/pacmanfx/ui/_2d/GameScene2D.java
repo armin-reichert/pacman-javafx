@@ -28,9 +28,9 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class GameScene2D implements GameScene {
 
+    private final ObjectProperty<Paint> background = new SimpleObjectProperty<>(Color.BLACK);
     private final BooleanProperty debugInfoVisible = new SimpleBooleanProperty(false);
     private final DoubleProperty scaling = new SimpleDoubleProperty(1.0f);
-    private final ObjectProperty<Paint> background = new SimpleObjectProperty<>(Color.BLACK);
 
     protected final GameUI ui;
     protected final ActionBindingsManager actionBindings;
@@ -43,6 +43,23 @@ public abstract class GameScene2D implements GameScene {
         actionBindings = new DefaultActionBindingsManager();
         animationRegistry = new AnimationRegistry();
     }
+
+    /**
+     * Hook method called when scene is initialized.
+     */
+    protected abstract void doInit();
+
+    /**
+     * Hook method called when scene ends.
+     */
+    protected abstract void doEnd();
+
+    /**
+     * Called when canvas has been assigned. Creates the renderers for this scene.
+     *
+     * @param canvas Canvas in which this scene will be rendered.
+     */
+    protected abstract void createRenderers(Canvas canvas);
 
     @Override
     public GameUI ui() {
@@ -58,23 +75,20 @@ public abstract class GameScene2D implements GameScene {
     public final void init() {
         doInit();
         actionBindings.assignBindingsToKeyboard(ui.keyboard());
+        Logger.info("2D scene {} initialized", getClass().getSimpleName());
     }
 
     @Override
     public final void end() {
         doEnd();
         ui.soundManager().stopAll();
-        Logger.info("{} ends", getClass().getSimpleName());
+        Logger.info("2D scene {} ends", getClass().getSimpleName());
     }
 
     @Override
     public void handleKeyboardInput() {
         actionBindings.matchingAction(ui.keyboard()).ifPresent(gameAction -> gameAction.executeIfEnabled(ui));
     }
-
-    protected abstract void doInit();
-
-    protected abstract void doEnd();
 
     public void setCanvas(Canvas canvas) {
         this.canvas = requireNonNull(canvas);
@@ -84,8 +98,6 @@ public abstract class GameScene2D implements GameScene {
     public Canvas canvas() {
         return canvas;
     }
-
-    protected abstract void createRenderers(Canvas canvas);
 
     @Override
     public ActionBindingsManager actionBindings() { return actionBindings; }
@@ -121,10 +133,6 @@ public abstract class GameScene2D implements GameScene {
 
     public double scaling() { return
         scaling.get();
-    }
-
-    public double scaled(double value) {
-        return value * scaling();
     }
 
     public BooleanProperty debugInfoVisibleProperty() {
