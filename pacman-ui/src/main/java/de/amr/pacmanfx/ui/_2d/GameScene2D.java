@@ -28,8 +28,6 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class GameScene2D implements GameScene {
 
-    public static final Vector2i DEFAULT_SIZE_PX = Globals.ARCADE_MAP_SIZE_IN_PIXELS;
-
     private final BooleanProperty debugInfoVisible = new SimpleBooleanProperty(false);
     private final DoubleProperty scaling = new SimpleDoubleProperty(1.0f);
     private final ObjectProperty<Paint> background = new SimpleObjectProperty<>(Color.BLACK);
@@ -141,7 +139,7 @@ public abstract class GameScene2D implements GameScene {
      * @return (unscaled) scene size in pixels e.g. 224x288 for Arcade scenes
      */
     public Vector2i sizeInPx() {
-        return DEFAULT_SIZE_PX;
+        return Globals.ARCADE_MAP_SIZE_IN_PIXELS;
     }
 
     protected abstract GameScene2D_Renderer sceneRenderer();
