@@ -122,7 +122,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
             pac.playAnimation(ArcadePacMan_UIConfig.AnimationID.ANIM_BIG_PAC_MAN);
         }
         else if (frame == ANIMATION_START + 632) {
-            context().game().stateMachine().letCurrentGameStateExpire();
+            context().game().stateMachine().letCurrentStateExpire();
         }
         if (frame >= ANIMATION_START) {
             pac.move();

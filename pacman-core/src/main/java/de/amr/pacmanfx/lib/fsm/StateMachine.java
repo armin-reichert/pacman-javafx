@@ -32,23 +32,22 @@ public class StateMachine<S extends FsmState<C>, C> {
 
     protected final List<FsmStateChangeListener<S>> stateChangeListeners = new ArrayList<>(5);
 
-    protected final List<S> states;
+    protected List<S> states;
     protected S currentState;
     protected S prevState;
 
     protected C context;
     protected String name = getClass().getSimpleName();
 
-    public StateMachine(S[] states, C context) {
-        this(List.of(states), context);
+    public StateMachine(C context) {
+        this.context = requireNonNull(context);
     }
 
-    public StateMachine(List<S> states, C context) {
+    public void setStates(List<S> states) {
         this.states = requireNonNull(states);
         if (states.isEmpty()) {
             throw new IllegalArgumentException("There must be at least one state in a FSM");
         }
-        this.context = requireNonNull(context);
     }
 
     public void setName(String name) {

@@ -60,7 +60,8 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     public TengenMsPacMan_IntroScene(GameUI ui) {
         super(ui);
-        sceneController = new StateMachine<>(SceneState.values(), this);
+        sceneController = new StateMachine<>(this);
+        sceneController.setStates(List.of(SceneState.values()));
     }
 
     @Override

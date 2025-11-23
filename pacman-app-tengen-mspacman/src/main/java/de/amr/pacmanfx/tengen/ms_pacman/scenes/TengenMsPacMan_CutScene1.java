@@ -262,7 +262,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
                 msPacMan.hide();
                 heart.hide();
             }
-            case 775 -> context().game().stateMachine().letCurrentGameStateExpire();
+            case 775 -> context().game().stateMachine().letCurrentStateExpire();
         }
     }
 

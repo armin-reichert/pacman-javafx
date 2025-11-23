@@ -266,7 +266,7 @@ public enum GamePlayState implements FsmState<GameContext> {
         @Override
         public void onUpdate(GameContext context) {
             if (timer.hasExpired()) {
-                context.game().stateMachine().resumePreviousGameState();
+                context.game().stateMachine().resumePreviousState();
             } else {
                 context.gameLevel().ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
                     .forEach(ghost -> ghost.tick(context));

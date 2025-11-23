@@ -19,52 +19,32 @@ import java.util.List;
 
 import static java.util.Objects.requireNonNull;
 
-public class GamePlayStateMachine implements GameEventManager {
+public class GamePlayStateMachine extends StateMachine<FsmState<GameContext>, GameContext> implements GameEventManager {
 
     private final Game game;
-    private final StateMachine<FsmState<GameContext>, GameContext> stateMachine;
 
     public GamePlayStateMachine(GameContext gameContext, Game game) {
+        super(gameContext);
+
         this.game = requireNonNull(game);
         List<FsmState<GameContext>> states = new ArrayList<>(List.of(GamePlayState.values()));
         states.add(new LevelShortTestState());
         states.add(new LevelMediumTestState());
         states.add(new CutScenesTestState());
-        stateMachine = new StateMachine<>(states, gameContext);
-        stateMachine.setName("Game Controller State Machine");
-        stateMachine.addStateChangeListener(
-            (oldState, newState) -> publishEvent(new GameStateChangeEvent(game, oldState, newState)));
-    }
-
-    public void update() {
-        stateMachine.update();
-    }
-
-    public void letCurrentGameStateExpire() {
-        stateMachine.letCurrentStateExpire();
-    }
-
-    public void resumePreviousGameState() {
-        stateMachine.resumePreviousState();
-    }
-
-    public void restart(FsmState<GameContext> state) {
-        stateMachine.restart(state);
+        setStates(states);
+        setName("Game Controller State Machine");
+        addStateChangeListener((oldState, newState) -> publishEvent(new GameStateChangeEvent(game, oldState, newState)));
     }
 
     public void changeGameState(FsmState<GameContext> state) {
         requireNonNull(state);
-        stateMachine.changeState(state);
+        changeState(state);
     }
 
     public FsmState<GameContext> stateByName(String name) {
-        return stateMachine.states().stream()
+        return states().stream()
             .filter(state -> state.name().equals(name))
             .findFirst().orElseThrow();
-    }
-
-    public FsmState<GameContext> state() {
-        return stateMachine.state();
     }
 
     // GameEventManager implementation
