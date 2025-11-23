@@ -80,10 +80,10 @@ public class GameUI_Builder {
     }
 
     public GameUI_Builder game(
-            String variant,
-            Class<? extends Game> gameModelClass,
-            MapSelector mapSelector,
-            Class<? extends GameUI_Config> uiConfigClass)
+        String variant,
+        Class<? extends Game> gameModelClass,
+        MapSelector mapSelector,
+        Class<? extends GameUI_Config> uiConfigClass)
     {
         validateGameVariantKey(variant);
         if (gameModelClass == null) {
@@ -176,24 +176,34 @@ public class GameUI_Builder {
         final CoinMechanism coinMechanism = gameContext.coinMechanism();
         AbstractGameModel game = null;
         try {
-            game = (AbstractGameModel) (mapSelector != null
-                ? modelClass.getDeclaredConstructor(CoinMechanism.class, MapSelector.class, File.class).newInstance(coinMechanism, mapSelector, highScoreFile)
-                : modelClass.getDeclaredConstructor(CoinMechanism.class, File.class).newInstance(coinMechanism, highScoreFile));
+            if (mapSelector != null) {
+                game = (AbstractGameModel) modelClass
+                    .getDeclaredConstructor(CoinMechanism.class, MapSelector.class, File.class)
+                    .newInstance(coinMechanism, mapSelector, highScoreFile);
+            }
+            else {
+                game = (AbstractGameModel) modelClass
+                    .getDeclaredConstructor(CoinMechanism.class, File.class)
+                    .newInstance(coinMechanism, highScoreFile);
+            }
         } catch (Exception x) {
-            Logger.error("Could not create game model from class %s".formatted(modelClass.getSimpleName()), x);
+            Logger.info("1st try: Could not create game model, class=%s".formatted(modelClass.getSimpleName()), x);
         }
         if (game == null) {
             try {
-                game = (AbstractGameModel) modelClass.getDeclaredConstructor(File.class).newInstance(highScoreFile);
+                game = (AbstractGameModel) modelClass
+                    .getDeclaredConstructor(File.class)
+                    .newInstance(highScoreFile);
             } catch (Exception x) {
-                Logger.error("Could not create game model from class %s".formatted(modelClass.getSimpleName()), x);
+                Logger.info("2nd try: Could not create game model, class=%s".formatted(modelClass.getSimpleName()), x);
             }
         }
         if (game != null) {
             game.setStateMachine(new GamePlayStateMachine(gameContext, game));
+            Logger.info("Success: Game model created, class={}", modelClass.getSimpleName());
             return game;
         }
-        throw new RuntimeException("Could not create game model");
+        throw new RuntimeException("Giving up: Could not create game model");
     }
 
     private void validateConfiguration() {

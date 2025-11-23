@@ -61,7 +61,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     /**
      * Called via reflection by builder.
      *
-     * @param coinMechanism
+     * @param coinMechanism the coin mechanism
      * @param highScoreFile the high score file
      */
     public ArcadeMsPacMan_GameModel(CoinMechanism coinMechanism, File highScoreFile) {
