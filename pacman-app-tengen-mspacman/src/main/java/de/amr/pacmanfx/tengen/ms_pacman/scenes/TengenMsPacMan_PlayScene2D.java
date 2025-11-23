@@ -47,7 +47,8 @@ import java.util.List;
 import java.util.Set;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.controller.PacManGamesState.*;
+import static de.amr.pacmanfx.controller.PacManGamesState.GAME_OVER;
+import static de.amr.pacmanfx.controller.PacManGamesState.LEVEL_COMPLETE;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Actions.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Properties.PROPERTY_PLAY_SCENE_DISPLAY_MODE;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
@@ -147,7 +148,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
         if (demoLevel) {
             actionBindings.bind(ACTION_QUIT_DEMO_LEVEL, tengenBindings);
         } else {
-            // Pac-Man is steered with keys representing the "Joypad" buttons
+            // Pac-Man is steered using the keys simulating the "Joypad" buttons
             actionBindings.bind(ACTION_STEER_UP,    tengenBindings);
             actionBindings.bind(ACTION_STEER_DOWN,  tengenBindings);
             actionBindings.bind(ACTION_STEER_LEFT,  tengenBindings);
@@ -168,8 +169,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
     protected void createRenderers(Canvas canvas) {
         final TengenMsPacMan_UIConfig uiConfig = ui.currentConfig();
 
-        hudRenderer = configureRendererForGameScene(
-            uiConfig.createHUDRenderer(canvas), this);
+        hudRenderer = configureRendererForGameScene(uiConfig.createHUDRenderer(canvas), this);
 
         sceneRenderer = configureRendererForGameScene(
             new TengenMsPacMan_PlayScene2D_Renderer(this, canvas, uiConfig.spriteSheet()), this);
@@ -218,7 +218,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
                     .filter(MovingGameLevelMessage.class::isInstance)
                     .map(MovingGameLevelMessage.class::cast)
                     .ifPresent(MovingGameLevelMessage::update);
-                updateSound();
+                updateSound(gameLevel);
             }
             if (subScene.getCamera() == dynamicCamera) {
                 dynamicCamera.update(TS(gameLevel.worldMap().numRows()), gameLevel.pac());
@@ -398,34 +398,42 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
         ui.soundManager().stop(SoundID.PAC_MAN_POWER);
     }
 
-    private void updateSound() {
-        final Pac pac = context().gameLevel().pac();
+    private void updateSound(GameLevel gameLevel) {
+        if (!ui.soundManager().isEnabled()) return;
 
-        //TODO check in simulator when exactly which siren plays
-        boolean pacChased = context().gameState() == HUNTING && !pac.powerTimer().isRunning();
+        final Pac pac = gameLevel.pac();
+        final boolean pacChased = context().gameState() == PacManGamesState.HUNTING && !pac.powerTimer().isRunning();
         if (pacChased) {
-            // siren numbers are 1..4, hunting phase index = 0..7
-            int huntingPhase = context().gameLevel().huntingTimer().phaseIndex();
-            int sirenNumber = 1 + huntingPhase / 2;
-            switch (sirenNumber) {
-                case 1 -> ui.soundManager().playSiren(SoundID.SIREN_1, 1.0);
-                case 2 -> ui.soundManager().playSiren(SoundID.SIREN_2, 1.0);
-                case 3 -> ui.soundManager().playSiren(SoundID.SIREN_3, 1.0);
-                case 4 -> ui.soundManager().playSiren(SoundID.SIREN_4, 1.0);
-                default -> throw new IllegalArgumentException("Illegal siren number " + sirenNumber);
-            }
+            selectAndPlaySiren();
         }
 
-        //TODO check in simulator when exactly this sound is played
-        var ghostReturningToHouse = context().gameLevel()
-            .ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
-            .findAny();
-        if (ghostReturningToHouse.isPresent()
-            && (context().gameState() == HUNTING || context().gameState() == PacManGamesState.GHOST_DYING)) {
+        final boolean ghostReturningHome = pac.isAlive()
+            && gameLevel.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).findAny().isPresent();
+        if (ghostReturningHome) {
             ui.soundManager().loop(SoundID.GHOST_RETURNS);
         } else {
             ui.soundManager().stop(SoundID.GHOST_RETURNS);
         }
+    }
+
+    //TODO move this logic into game model as it depends on the currently played game variant
+    private int selectSirenNumber(int huntingPhase) {
+        // siren numbers are 1..4, hunting phase index = 0..7
+        return 1 + huntingPhase / 2;
+    }
+
+    //TODO fix volume in audio file
+    private void selectAndPlaySiren() {
+        final float volume = 0.33f;
+        final int sirenNumber = selectSirenNumber(context().gameLevel().huntingTimer().phaseIndex());
+        final SoundID sirenID = switch (sirenNumber) {
+            case 1 -> SoundID.SIREN_1;
+            case 2 -> SoundID.SIREN_2;
+            case 3 -> SoundID.SIREN_3;
+            case 4 -> SoundID.SIREN_4;
+            default -> throw new IllegalArgumentException("Illegal siren number " + sirenNumber);
+        };
+        ui.soundManager().playSiren(sirenID, volume);
     }
 
     private void updateHUD(GameLevel gameLevel) {
