@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2021-2025 Armin Reichert (MIT License)
+Copyright (c) 2021-2026 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.dashboard;
@@ -21,7 +21,7 @@ import java.util.List;
 
 import static de.amr.pacmanfx.Validations.stateIsOneOf;
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_ENTER_NEXT_LEVEL;
-import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
+import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_RESTART_INTRO;
 
 /**
  * Game related settings.

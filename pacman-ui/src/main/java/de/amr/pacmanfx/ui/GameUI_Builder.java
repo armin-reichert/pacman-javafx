@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2021-2025 Armin Reichert (MIT License)
+Copyright (c) 2021-2026 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui;
@@ -11,8 +11,8 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.MapSelector;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
-import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.api.StartPage;
+import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 

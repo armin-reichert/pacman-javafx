@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2021-2025 Armin Reichert (MIT License)
+Copyright (c) 2021-2026 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.dashboard;
@@ -7,10 +7,10 @@ package de.amr.pacmanfx.ui.dashboard;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui.api.SubSceneProvider;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
+import de.amr.pacmanfx.ui.api.SubSceneProvider;
 import javafx.scene.SubScene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;

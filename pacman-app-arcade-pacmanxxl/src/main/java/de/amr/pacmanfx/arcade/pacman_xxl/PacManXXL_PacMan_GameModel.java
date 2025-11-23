@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2021-2025 Armin Reichert (MIT License)
+Copyright (c) 2021-2026 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman_xxl;
@@ -25,8 +25,8 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.util.List;
 
-import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
+import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.model.DefaultWorldMapPropertyName.*;
 
 /**
