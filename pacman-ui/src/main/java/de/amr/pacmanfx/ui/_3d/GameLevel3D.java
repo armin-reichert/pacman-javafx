@@ -421,7 +421,7 @@ public class GameLevel3D extends Group implements Disposable {
     }
 
     private void createPac3D(double size) {
-        pac3D = ui.currentConfig().createPac3D(animationRegistry, gameLevel, gameLevel.pac(), size);
+        pac3D = ui.currentConfig().createPac3D(animationRegistry, gameLevel.pac(), size);
         pac3D.init(gameLevel);
     }
 

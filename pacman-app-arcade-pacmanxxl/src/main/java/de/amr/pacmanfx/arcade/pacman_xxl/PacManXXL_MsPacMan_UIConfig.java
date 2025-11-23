@@ -15,7 +15,6 @@ import de.amr.pacmanfx.controller.PacManGamesState;
 import de.amr.pacmanfx.controller.test.CutScenesTestState;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
-import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -242,7 +241,7 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config, GameScene_Con
     }
 
     @Override
-    public MsPacMan3D createPac3D(AnimationRegistry animationRegistry, GameLevel gameLevel, Pac pac, double size) {
+    public MsPacMan3D createPac3D(AnimationRegistry animationRegistry, Pac pac, double size) {
         var pac3D = new MsPacMan3D(
             PacManModel3DRepository.theRepository(),
             animationRegistry,

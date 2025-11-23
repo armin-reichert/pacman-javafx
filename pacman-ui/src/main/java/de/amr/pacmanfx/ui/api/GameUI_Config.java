@@ -6,7 +6,6 @@ package de.amr.pacmanfx.ui.api;
 
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
-import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.AnimationManager;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -126,11 +125,10 @@ public interface GameUI_Config extends Disposable {
 
     /**
      * @param animationRegistry the registry where animations are stored
-     * @param gameLevel TODO: check if this can be removed
      * @param pac Pac-Man or Ms Pac-Man actor
      * @return 3D representation for Pac-Man or Ms. Pac-Man in this game variant
      */
-    PacBase3D createPac3D(AnimationRegistry animationRegistry, GameLevel gameLevel, Pac pac, double size);
+    PacBase3D createPac3D(AnimationRegistry animationRegistry, Pac pac, double size);
 
     /**
      * @return 3D representation of a lives counter
