@@ -57,6 +57,7 @@ import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR;
 import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_MUTED;
 import static de.amr.pacmanfx.uilib.Ufx.createContextMenuTitle;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Tengen Ms. Pac-Man play scene, uses vertical scrolling by default to accommodate to NES screen size.
@@ -118,12 +119,11 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
 
     @Override
     public void setCanvas(Canvas canvas) {
-        super.setCanvas(canvas);
-
+        this.canvas = requireNonNull(canvas);
         canvas.widthProperty() .bind(scalingProperty().multiply(CANVAS_WIDTH_UNSCALED));
         canvas.heightProperty().bind(scalingProperty().multiply(canvasHeightUnscaled));
-
         rootPane.getChildren().setAll(canvas);
+        createRenderers(canvas);
     }
 
     private void initForGameLevel(GameLevel gameLevel) {
