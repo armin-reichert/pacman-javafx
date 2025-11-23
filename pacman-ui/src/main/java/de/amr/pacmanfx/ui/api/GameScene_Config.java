@@ -41,7 +41,7 @@ public interface GameScene_Config {
     }
 
 
-    void createGameScenes();
+    void createGameScenes(GameUI ui);
 
     Stream<GameScene> gameScenes();
 

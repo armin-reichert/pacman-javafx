@@ -268,7 +268,7 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config, GameScene_Con
     }
 
     @Override
-    public void createGameScenes() {
+    public void createGameScenes(GameUI ui) {
         scenesByID.put(SCENE_ID_BOOT_SCENE_2D,  new Arcade_BootScene2D(ui));
         scenesByID.put(SCENE_ID_INTRO_SCENE_2D, new ArcadeMsPacMan_IntroScene(ui));
         scenesByID.put(SCENE_ID_START_SCENE_2D, new ArcadeMsPacMan_StartScene(ui));

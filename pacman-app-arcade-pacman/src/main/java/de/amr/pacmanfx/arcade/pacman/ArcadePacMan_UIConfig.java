@@ -64,7 +64,7 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
         ANIM_BLINKY_DAMAGED,
         ANIM_BLINKY_PATCHED,
         ANIM_BLINKY_NAIL_DRESS_RAPTURE,
-        ANIM_BLINKY_NAKED;
+        ANIM_BLINKY_NAKED
     }
 
     private static final Map<Color, Color> BRIGHT_MAZE_COLOR_CHANGES = Map.of(
@@ -275,7 +275,7 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
     }
 
     @Override
-    public void createGameScenes() {
+    public void createGameScenes(GameUI ui) {
         scenesByID.put(SCENE_ID_BOOT_SCENE_2D,  new Arcade_BootScene2D(ui));
         scenesByID.put(SCENE_ID_INTRO_SCENE_2D, new ArcadePacMan_IntroScene(ui));
         scenesByID.put(SCENE_ID_START_SCENE_2D, new ArcadePacMan_StartScene(ui));
