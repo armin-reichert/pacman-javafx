@@ -65,8 +65,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     protected void createRenderers(Canvas canvas) {
         final GameUI_Config uiConfig = ui.currentConfig();
 
-        hudRenderer = configureRenderer(
-            uiConfig.createHUDRenderer(canvas));
+        hudRenderer = configureRenderer(uiConfig.createHUDRenderer(canvas));
 
         sceneRenderer = configureRenderer(
             new Arcade_PlayScene2D_Renderer(this, canvas, uiConfig.spriteSheet()));

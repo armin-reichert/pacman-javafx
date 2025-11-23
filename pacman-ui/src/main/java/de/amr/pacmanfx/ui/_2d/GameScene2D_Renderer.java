@@ -4,14 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._2d;
 
-import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.scene.canvas.Canvas;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public abstract class GameScene2D_Renderer extends BaseSpriteRenderer {
 
@@ -22,7 +18,6 @@ public abstract class GameScene2D_Renderer extends BaseSpriteRenderer {
     }
 
     protected final GameScene2D scene;
-    protected final List<Actor> actorsInZOrder = new ArrayList<>();
     protected BaseDebugInfoRenderer debugInfoRenderer;
 
     public GameScene2D_Renderer(GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {

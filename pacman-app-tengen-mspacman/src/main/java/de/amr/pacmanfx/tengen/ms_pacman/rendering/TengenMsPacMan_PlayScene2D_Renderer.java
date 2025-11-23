@@ -3,6 +3,7 @@ package de.amr.pacmanfx.tengen.ms_pacman.rendering;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.TengenMsPacMan_PlayScene2D;
@@ -15,6 +16,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -53,6 +56,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends TengenMsPacMan_CommonSc
     private final RenderInfo gameLevelRenderInfo = new RenderInfo();
     private final TengenMsPacMan_GameLevelRenderer gameLevelRenderer;
     private final TengenMsPacMan_ActorRenderer actorRenderer;
+    private final List<Actor> actorsInZOrder = new ArrayList<>();
 
     private final Rectangle clipRect;
 

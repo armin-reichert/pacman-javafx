@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
@@ -16,6 +17,8 @@ import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
 import javafx.scene.canvas.Canvas;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -24,6 +27,7 @@ public class Arcade_PlayScene2D_Renderer extends GameScene2D_Renderer {
 
     private final GameLevelRenderer gameLevelRenderer;
     private final ActorRenderer actorRenderer;
+    private final List<Actor> actorsInZOrder = new ArrayList<>();
 
     public Arcade_PlayScene2D_Renderer(Arcade_PlayScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(scene, canvas, spriteSheet);

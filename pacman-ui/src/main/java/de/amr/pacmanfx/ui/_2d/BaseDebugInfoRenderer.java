@@ -15,7 +15,6 @@ import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 
 import static de.amr.pacmanfx.Globals.TS;
 
@@ -33,34 +32,31 @@ public class BaseDebugInfoRenderer extends GameScene2D_Renderer {
     }
 
     public void draw() {
-        ctx.setFill(debugTextFill);
-        ctx.setStroke(debugTextStroke);
-        ctx.setFont(debugTextFont);
-        TickTimer stateTimer = scene.ui().gameContext().gameState().timer();
-        String stateText = "Game State: '%s' (Tick %d of %s)".formatted(
+        final TickTimer stateTimer = scene.ui().gameContext().gameState().timer();
+        final String stateText = "Game State: '%s' (Tick %d of %s)".formatted(
             scene.ui().gameContext().gameState().name(),
             stateTimer.tickCount(),
             stateTimer.durationTicks() == TickTimer.INDEFINITE ? "∞" : String.valueOf(stateTimer.tickCount())
         );
+        ctx.setFill(debugTextFill);
+        ctx.setStroke(debugTextStroke);
+        ctx.setFont(debugTextFont);
         ctx.fillText(stateText, 0, scaled(3 * TS));
 
-        if (scene.ui().currentGameScene().isPresent() && scene.ui().currentGameScene().get() instanceof GameScene2D gameScene2D) {
-            Vector2i size = gameScene2D.sizeInPx();
-            drawTileGrid(size.x(), size.y(), Color.LIGHTGRAY);
-        }
+        final Vector2i size = scene.sizeInPx();
+        drawTileGrid(size.x(), size.y(), Color.LIGHTGRAY);
     }
 
     public void drawMovingActorInfo(MovingActor movingActor) {
         if (!movingActor.isVisible()) {
             return;
         }
-        final Font mono = Font.font("Monospaced", FontWeight.BOLD, scaled(5));
         ctx.setFill(Color.FORESTGREEN);
         if (movingActor instanceof Pac pac) {
             String autopilot = pac.isUsingAutopilot() ? "autopilot" : "";
             String immune = pac.isImmune() ? "immune" : "";
             String text = "%s\n%s".formatted(autopilot, immune).trim();
-            ctx.setFont(mono);
+            ctx.setFont(debugTextFont);
             ctx.fillText(text, scaled(pac.x() - 4), scaled(pac.y() + 16));
         }
         movingActor.optAnimationManager()
@@ -69,7 +65,7 @@ public class BaseDebugInfoRenderer extends GameScene2D_Renderer {
             .ifPresent(spriteAnimationMap -> {
                 Object selectedID = spriteAnimationMap.selectedID();
                 if (selectedID != null) {
-                    ctx.setFont(mono);
+                    ctx.setFont(debugTextFont);
                     drawAnimationInfo(movingActor, spriteAnimationMap, selectedID);
                 }
                 if (movingActor.wishDir() != null) {
@@ -82,6 +78,7 @@ public class BaseDebugInfoRenderer extends GameScene2D_Renderer {
         ctx.save();
         String text = "[%s:%d]".formatted(selectedID, spriteAnimationMap.currentAnimation().frameIndex());
         double x = scaled(actor.x() - 4), y = scaled(actor.y() - 4);
+        ctx.setFill(debugTextFill);
         ctx.fillText(text, x, y);
         ctx.restore();
     }
