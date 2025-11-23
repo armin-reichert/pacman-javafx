@@ -17,18 +17,26 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.shadeOfBl
 import static de.amr.pacmanfx.tengen.ms_pacman.scenes.TengenMsPacMan_IntroScene.MARQUEE_X;
 import static de.amr.pacmanfx.tengen.ms_pacman.scenes.TengenMsPacMan_IntroScene.MARQUEE_Y;
 
-public class TengenMsPacMan_IntroScene_Renderer extends TengenMsPacMan_CommonSceneRenderer {
+public class TengenMsPacMan_IntroScene_Renderer extends GameScene2D_Renderer implements TengenMsPacMan_CommonSceneRenderingFunctions {
 
     private final ActorRenderer actorRenderer;
 
     public TengenMsPacMan_IntroScene_Renderer(GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
-        super(scene, canvas, spriteSheet);
+        super(canvas, spriteSheet);
+
         final GameUI_Config uiConfig = scene.ui().currentConfig();
 
         actorRenderer = GameScene2D_Renderer.configureRendererForGameScene(
             uiConfig.createActorRenderer(canvas), scene);
+
+        createDefaultDebugInfoRenderer(scene, canvas, spriteSheet);
     }
-    
+
+    @Override
+    public GameScene2D_Renderer renderer() {
+        return this;
+    }
+
     public void draw(GameScene2D scene) {
         clearCanvas();
 

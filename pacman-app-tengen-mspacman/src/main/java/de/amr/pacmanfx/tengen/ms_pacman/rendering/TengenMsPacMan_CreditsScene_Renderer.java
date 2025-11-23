@@ -2,6 +2,7 @@ package de.amr.pacmanfx.tengen.ms_pacman.rendering;
 
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.TengenMsPacMan_CreditsScene;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.canvas.Canvas;
 
@@ -9,14 +10,20 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesColor;
 import static de.amr.pacmanfx.tengen.ms_pacman.scenes.TengenMsPacMan_CreditsScene.DISPLAY_SECONDS;
 
-public class TengenMsPacMan_CreditsScene_Renderer extends TengenMsPacMan_CommonSceneRenderer {
+public class TengenMsPacMan_CreditsScene_Renderer extends GameScene2D_Renderer implements TengenMsPacMan_CommonSceneRenderingFunctions {
 
     private int y;
 
     public TengenMsPacMan_CreditsScene_Renderer(GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
-        super(scene, canvas, spriteSheet);
+        super(canvas, spriteSheet);
+        createDefaultDebugInfoRenderer(scene, canvas, spriteSheet);
     }
-    
+
+    @Override
+    public GameScene2D_Renderer renderer() {
+        return this;
+    }
+
     @Override
     public void draw(GameScene2D scene) {
         clearCanvas();

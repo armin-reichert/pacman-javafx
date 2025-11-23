@@ -4,6 +4,7 @@ import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.TengenMsPacMan_OptionsScene;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.canvas.Canvas;
@@ -15,7 +16,7 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Properties.PROPERT
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesColor;
 import static de.amr.pacmanfx.tengen.ms_pacman.scenes.TengenMsPacMan_OptionsScene.*;
 
-public class TengenMsPacMan_OptionsScene_Renderer extends TengenMsPacMan_CommonSceneRenderer {
+public class TengenMsPacMan_OptionsScene_Renderer extends GameScene2D_Renderer implements TengenMsPacMan_CommonSceneRenderingFunctions {
 
     private static final int COL_ARROW = 2 * TS;
     private static final int COL_LABEL = 4 * TS;
@@ -26,11 +27,15 @@ public class TengenMsPacMan_OptionsScene_Renderer extends TengenMsPacMan_CommonS
     private static final Color NES_WHITE = nesColor(0x20);
 
     public TengenMsPacMan_OptionsScene_Renderer(GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
-        super(scene, canvas, spriteSheet);
-
+        super(canvas, spriteSheet);
         createDefaultDebugInfoRenderer(scene, canvas, spriteSheet);
     }
-    
+
+    @Override
+    public GameScene2D_Renderer renderer() {
+        return this;
+    }
+
     public void draw(GameScene2D scene) {
         clearCanvas();
 

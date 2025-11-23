@@ -9,6 +9,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.TengenMsPacMan_PlayScene2D;
 import de.amr.pacmanfx.ui._2d.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.CommonRenderInfoKey;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
@@ -23,7 +24,7 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.scenes.TengenMsPacMan_PlayScene2D.CANVAS_WIDTH_UNSCALED;
 
-public class TengenMsPacMan_PlayScene2D_Renderer extends TengenMsPacMan_CommonSceneRenderer {
+public class TengenMsPacMan_PlayScene2D_Renderer extends GameScene2D_Renderer implements TengenMsPacMan_CommonSceneRenderingFunctions {
 
     private static final float CONTENT_INDENT = TS(2);
 
@@ -62,7 +63,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends TengenMsPacMan_CommonSc
     private final Rectangle clipRect;
 
     public TengenMsPacMan_PlayScene2D_Renderer(TengenMsPacMan_PlayScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
-        super(scene, canvas, spriteSheet);
+        super(canvas, spriteSheet);
 
         final TengenMsPacMan_UIConfig uiConfig = scene.ui().currentConfig();
 
@@ -84,6 +85,12 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends TengenMsPacMan_CommonSc
         clipRect.heightProperty().bind(canvas.heightProperty());
     }
 
+    @Override
+    public GameScene2D_Renderer renderer() {
+        return this;
+    }
+
+    @Override
     public void draw(GameScene2D scene) {
         clearCanvas();
 
