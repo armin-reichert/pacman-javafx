@@ -26,7 +26,7 @@ public class TengenMsPacMan_StartPage extends StackPane implements StartPage {
     public TengenMsPacMan_StartPage(GameUI ui) {
         requireNonNull(ui);
         ResourceManager rm = () -> TengenMsPacMan_StartPage.class;
-        flyer = new Flyer(rm.loadImage("graphics/f1.png"), rm.loadImage("graphics/f2.png"));
+        flyer = new Flyer(rm.loadImage("graphics/flyer-page-1.png"), rm.loadImage("graphics/flyer-page-2.png"));
         addEventHandler(KeyEvent.KEY_PRESSED, e -> {
             switch (e.getCode()) {
                 case DOWN -> flyer.nextFlyerPage();

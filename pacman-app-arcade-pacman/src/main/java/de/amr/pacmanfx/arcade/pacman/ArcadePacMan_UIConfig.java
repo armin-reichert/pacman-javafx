@@ -98,10 +98,6 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
     public void loadAssets() {
         assets.set("app_icon",         ARCADE_PAC_MAN_RESOURCES.loadImage("graphics/icons/pacman.png"));
 
-        assets.set("startpage.image1", ARCADE_PAC_MAN_RESOURCES.loadImage("graphics/f1.jpg"));
-        assets.set("startpage.image2", ARCADE_PAC_MAN_RESOURCES.loadImage("graphics/f2.jpg"));
-        assets.set("startpage.image3", ARCADE_PAC_MAN_RESOURCES.loadImage("graphics/f3.jpg"));
-
         assets.set("color.game_over_message", ARCADE_RED);
 
         assets.set("maze.bright", Ufx.recolorImage(spriteSheet.image(SpriteID.MAP_EMPTY), BRIGHT_MAZE_COLOR_CHANGES));

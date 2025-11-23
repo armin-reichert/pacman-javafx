@@ -174,8 +174,8 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     @Override
     public void loadAssets() {
         assets.set("app_icon",                         RES_TENGEN.loadImage("graphics/icons/mspacman.png"));
-        assets.set("startpage.image1",                 RES_TENGEN.loadImage("graphics/f1.png"));
-        assets.set("startpage.image2",                 RES_TENGEN.loadImage("graphics/f2.png"));
+        assets.set("startpage.image1",                 RES_TENGEN.loadImage("graphics/flyer-page-1.png"));
+        assets.set("startpage.image2",                 RES_TENGEN.loadImage("graphics/flyer-page-2.png"));
 
         assets.set("color.game_over_message",          nesColor(0x11));
         assets.set("color.ready_message",              nesColor(0x28));

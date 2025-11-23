@@ -26,14 +26,19 @@ public class ArcadeMsPacMan_StartPage extends StackPane implements StartPage {
 
     public ArcadeMsPacMan_StartPage(GameUI ui) {
         requireNonNull(ui);
-        ResourceManager rm = () -> ArcadeMsPacMan_StartPage.class;
-        flyer = new Flyer(rm.loadImage("graphics/f1.jpg"), rm.loadImage("graphics/f2.jpg"));
+
+        final ResourceManager rm = () -> ArcadeMsPacMan_StartPage.class;
+        flyer = new Flyer(
+            rm.loadImage("graphics/flyer-page-1.jpg"),
+            rm.loadImage("graphics/flyer-page-2.jpg"));
+
         addEventHandler(KeyEvent.KEY_PRESSED, e -> {
             switch (e.getCode()) {
                 case DOWN -> flyer.nextFlyerPage();
                 case UP -> flyer.prevFlyerPage();
             }
         });
+
         addEventHandler(ScrollEvent.SCROLL, e-> {
             if (e.getDeltaY() < 0) {
                 flyer.nextFlyerPage();
@@ -47,6 +52,7 @@ public class ArcadeMsPacMan_StartPage extends StackPane implements StartPage {
             ACTION_BOOT_SHOW_PLAY_VIEW.executeIfEnabled(ui);
         });
         startButton.setTranslateY(-50);
+
         getChildren().addAll(flyer, startButton);
     }
 

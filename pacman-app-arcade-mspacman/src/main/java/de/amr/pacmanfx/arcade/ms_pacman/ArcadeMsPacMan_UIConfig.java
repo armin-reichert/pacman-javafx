@@ -94,9 +94,6 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
         assets.set("logo.midway",             ARCADE_MS_PAC_MAN_RESOURCES.loadImage("graphics/midway_logo.png"));
 
-        assets.set("startpage.image1",        ARCADE_MS_PAC_MAN_RESOURCES.loadImage("graphics/f1.jpg"));
-        assets.set("startpage.image2",        ARCADE_MS_PAC_MAN_RESOURCES.loadImage("graphics/f2.jpg"));
-
         for (int i = 0; i < ArcadeMsPacMan_MapSelector.WORLD_MAP_COLOR_SCHEMES.size(); ++i) {
             assets.set("maze.bright.%d".formatted(i), createBrightMazeImage(i));
         }
