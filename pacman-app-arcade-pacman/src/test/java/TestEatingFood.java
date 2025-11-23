@@ -1,7 +1,5 @@
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.actors.Blinky;
-import de.amr.pacmanfx.controller.CoinMechanism;
-import de.amr.pacmanfx.controller.GameController;
 import de.amr.pacmanfx.lib.worldmap.FoodLayer;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GamePlayStateMachine;
@@ -22,12 +20,10 @@ public class TestEatingFood {
 
     @BeforeAll
     static void setup() {
-        GameController gameController = theGameContext().gameController();
-        CoinMechanism coinMechanism = theGameContext().coinMechanism();
-        ArcadePacMan_GameModel game = new ArcadePacMan_GameModel(coinMechanism, new File(""));
+        ArcadePacMan_GameModel game = new ArcadePacMan_GameModel(theGameContext().coinMechanism(), new File(""));
         game.setStateMachine(new GamePlayStateMachine(theGameContext(), game));
-        gameController.registerGame(StandardGameVariant.PACMAN.name(), game);
-        gameController.setGameVariant(StandardGameVariant.PACMAN.name());
+        theGameContext().gameController().registerGame(StandardGameVariant.PACMAN.name(), game);
+        theGameContext().gameController().setGameVariant(StandardGameVariant.PACMAN.name());
     }
 
     @BeforeEach
