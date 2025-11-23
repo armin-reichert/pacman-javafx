@@ -39,7 +39,7 @@ public enum PacManGamesState implements FsmState<GameContext> {
         @Override
         public void onUpdate(GameContext context) {
             if (timer.hasExpired()) {
-                context.gameController().changeGameState(INTRO);
+                context.playStateMachine().changeGameState(INTRO);
             }
         }
     },
@@ -53,7 +53,7 @@ public enum PacManGamesState implements FsmState<GameContext> {
         @Override
         public void onUpdate(GameContext context) {
             if (timer.hasExpired()) {
-                context.gameController().changeGameState(STARTING_GAME_OR_LEVEL);
+                context.playStateMachine().changeGameState(STARTING_GAME_OR_LEVEL);
             }
         }
     },
@@ -77,7 +77,7 @@ public enum PacManGamesState implements FsmState<GameContext> {
         @Override
         public void onUpdate(GameContext context) {
             if (timer.hasExpired()) {
-                context.gameController().changeGameState(INTRO);
+                context.playStateMachine().changeGameState(INTRO);
             }
         }
     },
@@ -108,7 +108,7 @@ public enum PacManGamesState implements FsmState<GameContext> {
             }
             else if (timer.tickCount() == TICK_NEW_GAME_START_HUNTING) {
                 context.game().setPlaying(true);
-                context.gameController().changeGameState(PacManGamesState.HUNTING);
+                context.playStateMachine().changeGameState(PacManGamesState.HUNTING);
             }
         }
 
@@ -116,7 +116,7 @@ public enum PacManGamesState implements FsmState<GameContext> {
             if (timer.tickCount() == 1) {
                 context.game().continueGame(context.gameLevel());
             } else if (timer.tickCount() == TICK_RESUME_HUNTING) {
-                context.gameController().changeGameState(PacManGamesState.HUNTING);
+                context.playStateMachine().changeGameState(PacManGamesState.HUNTING);
             }
         }
 
@@ -133,7 +133,7 @@ public enum PacManGamesState implements FsmState<GameContext> {
                 context.gameLevel().showPacAndGhosts();
             }
             else if (timer.tickCount() == TICK_DEMO_LEVEL_START_HUNTING) {
-                context.gameController().changeGameState(PacManGamesState.HUNTING);
+                context.playStateMachine().changeGameState(PacManGamesState.HUNTING);
             }
         }
 
@@ -162,7 +162,6 @@ public enum PacManGamesState implements FsmState<GameContext> {
 
         @Override
         public void onUpdate(GameContext context) {
-            final GameController gameController = context.gameController();
             final Game game = context.game();
             final GameLevel gameLevel = context.gameLevel();
 
@@ -184,13 +183,13 @@ public enum PacManGamesState implements FsmState<GameContext> {
 
             // What next?
             if (game.isLevelCompleted(gameLevel)) {
-                gameController.changeGameState(LEVEL_COMPLETE);
+                context.playStateMachine().changeGameState(LEVEL_COMPLETE);
             }
             else if (game.hasPacManBeenKilled()) {
-                gameController.changeGameState(PACMAN_DYING);
+                context.playStateMachine().changeGameState(PACMAN_DYING);
             }
             else if (game.hasGhostBeenKilled()) {
-                gameController.changeGameState(GHOST_DYING);
+                context.playStateMachine().changeGameState(GHOST_DYING);
             }
         }
 
@@ -220,19 +219,19 @@ public enum PacManGamesState implements FsmState<GameContext> {
             //TODO this is crap. Maybe Tengen Ms. Pac-Man needs its own state machine?
             if (context.gameController().isCurrentGameVariant(StandardGameVariant.MS_PACMAN_TENGEN.name())
                 && context.gameLevel().isDemoLevel()) {
-                context.gameController().changeGameState(SHOWING_CREDITS);
+                context.playStateMachine().changeGameState(SHOWING_CREDITS);
                 return;
             }
 
             if (timer.hasExpired()) {
                 if (context.gameLevel().isDemoLevel()) {
                     // just in case: if demo level was completed, go back to intro scene
-                    context.gameController().changeGameState(INTRO);
+                    context.playStateMachine().changeGameState(INTRO);
                 } else if (context.game().cutScenesEnabled()
                     && context.game().optCutSceneNumber(context.gameLevel().number()).isPresent()) {
-                    context.gameController().changeGameState(INTERMISSION);
+                    context.playStateMachine().changeGameState(INTERMISSION);
                 } else {
-                    context.gameController().changeGameState(LEVEL_TRANSITION);
+                    context.playStateMachine().changeGameState(LEVEL_TRANSITION);
                 }
             }
         }
@@ -248,7 +247,7 @@ public enum PacManGamesState implements FsmState<GameContext> {
         @Override
         public void onUpdate(GameContext context) {
             if (timer.hasExpired()) {
-                context.gameController().changeGameState(STARTING_GAME_OR_LEVEL);
+                context.playStateMachine().changeGameState(STARTING_GAME_OR_LEVEL);
             }
         }
     },
@@ -265,7 +264,7 @@ public enum PacManGamesState implements FsmState<GameContext> {
         @Override
         public void onUpdate(GameContext context) {
             if (timer.hasExpired()) {
-                context.gameController().resumePreviousGameState();
+                context.playStateMachine().resumePreviousGameState();
             } else {
                 context.gameLevel().ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
                     .forEach(ghost -> ghost.tick(context));
@@ -299,10 +298,10 @@ public enum PacManGamesState implements FsmState<GameContext> {
         public void onUpdate(GameContext context) {
             if (timer.hasExpired()) {
                 if (context.gameLevel().isDemoLevel()) {
-                    context.gameController().changeGameState(GAME_OVER);
+                    context.playStateMachine().changeGameState(GAME_OVER);
                 } else {
                     context.game().addLives(-1);
-                    context.gameController().changeGameState(context.game().lifeCount() == 0
+                    context.playStateMachine().changeGameState(context.game().lifeCount() == 0
                         ? GAME_OVER : STARTING_GAME_OR_LEVEL);
                 }
             }
@@ -349,17 +348,17 @@ public enum PacManGamesState implements FsmState<GameContext> {
                 //TODO find unified solution
                 if (context.gameController().isCurrentGameVariant(StandardGameVariant.MS_PACMAN_TENGEN.name())) {
                     if (context.gameLevel().isDemoLevel()) {
-                        context.gameController().changeGameState(SHOWING_CREDITS);
+                        context.playStateMachine().changeGameState(SHOWING_CREDITS);
                     } else {
                         boolean canContinue = context.game().canContinueOnGameOver();
-                        context.gameController().changeGameState(canContinue ? SETTING_OPTIONS_FOR_START : INTRO);
+                        context.playStateMachine().changeGameState(canContinue ? SETTING_OPTIONS_FOR_START : INTRO);
                     }
                 } else {
                     context.game().prepareForNewGame();
                     if (context.game().canStartNewGame()) {
-                        context.gameController().changeGameState(SETTING_OPTIONS_FOR_START);
+                        context.playStateMachine().changeGameState(SETTING_OPTIONS_FOR_START);
                     } else {
-                        context.gameController().changeGameState(INTRO);
+                        context.playStateMachine().changeGameState(INTRO);
                     }
                 }
             }
@@ -381,7 +380,7 @@ public enum PacManGamesState implements FsmState<GameContext> {
         @Override
         public void onUpdate(GameContext context) {
             if (timer.hasExpired()) {
-                context.gameController().changeGameState(context.game().isPlaying() ? LEVEL_TRANSITION : INTRO);
+                context.playStateMachine().changeGameState(context.game().isPlaying() ? LEVEL_TRANSITION : INTRO);
             }
         }
     };

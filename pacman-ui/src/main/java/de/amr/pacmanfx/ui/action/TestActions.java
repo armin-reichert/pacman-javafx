@@ -16,8 +16,8 @@ public class TestActions {
     public static final GameAction ACTION_CUT_SCENES_TEST = new GameAction("TEST_CUT_SCENES") {
         @Override
         public void execute(GameUI ui) {
-            FsmState<GameContext> testState = ui.gameContext().gameController().stateByName(CutScenesTestState.class.getSimpleName());
-            ui.gameContext().gameController().changeGameState(testState);
+            FsmState<GameContext> testState = ui.gameContext().playStateMachine().stateByName(CutScenesTestState.class.getSimpleName());
+            ui.gameContext().playStateMachine().changeGameState(testState);
             ui.showFlashMessage("Cut scenes test"); //TODO localize
         }
     };
@@ -25,8 +25,8 @@ public class TestActions {
     public static final GameAction ACTION_SHORT_LEVEL_TEST = new GameAction("TEST_LEVELS_SHORT") {
         @Override
         public void execute(GameUI ui) {
-            FsmState<GameContext> testState = ui.gameContext().gameController().stateByName(LevelShortTestState.class.getSimpleName());
-            ui.gameContext().gameController().restart(testState);
+            FsmState<GameContext> testState = ui.gameContext().playStateMachine().stateByName(LevelShortTestState.class.getSimpleName());
+            ui.gameContext().playStateMachine().restart(testState);
             ui.showFlashMessage(Duration.seconds(3), "Level TEST MODE");
         }
     };
@@ -34,8 +34,8 @@ public class TestActions {
     public static final GameAction ACTION_MEDIUM_LEVEL_TEST = new GameAction("TEST_LEVELS_MEDIUM") {
         @Override
         public void execute(GameUI ui) {
-            FsmState<GameContext> testState = ui.gameContext().gameController().stateByName(LevelMediumTestState.class.getSimpleName());
-            ui.gameContext().gameController().restart(testState);
+            FsmState<GameContext> testState = ui.gameContext().playStateMachine().stateByName(LevelMediumTestState.class.getSimpleName());
+            ui.gameContext().playStateMachine().restart(testState);
             ui.showFlashMessage(Duration.seconds(3), "Level TEST MODE");
         }
     };

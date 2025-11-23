@@ -78,7 +78,7 @@ public class LevelShortTestState implements FsmState<GameContext>, TestState {
             if (gameLevel.number() == lastTestedLevelNumber) {
                 context.coinMechanism().setNumCoins(0);
                 context.game().resetEverything();
-                context.gameController().restart(PacManGamesState.BOOT);
+                context.playStateMachine().restart(PacManGamesState.BOOT);
             } else {
                 timer.restartIndefinitely();
                 game.startNextLevel();

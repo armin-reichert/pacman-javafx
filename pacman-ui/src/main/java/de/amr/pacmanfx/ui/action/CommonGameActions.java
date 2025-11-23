@@ -60,7 +60,7 @@ public final class CommonGameActions {
     public static final GameAction ACTION_LET_GAME_STATE_EXPIRE = new GameAction("LET_GAME_STATE_EXPIRE") {
         @Override
         public void execute(GameUI ui) {
-            ui.gameContext().gameController().letCurrentGameStateExpire();
+            ui.gameContext().playStateMachine().letCurrentGameStateExpire();
         }
     };
 
@@ -114,7 +114,7 @@ public final class CommonGameActions {
                 ui.gameContext().gameState().onExit(ui.gameContext()); //TODO exit other states too?
             }
             ui.clock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
-            ui.gameContext().gameController().restart(INTRO);
+            ui.gameContext().playStateMachine().restart(INTRO);
         }
     };
 
@@ -301,7 +301,7 @@ public final class CommonGameActions {
                 toggle(PROPERTY_3D_ENABLED);
                 if (ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_2D) || ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D)) {
                     ui.updateGameScene(true);
-                    ui.gameContext().gameController().stateMachine().update(); //TODO needed?
+                    ui.gameContext().playStateMachine().update(); //TODO needed?
                 }
                 if (!ui.gameContext().game().isPlaying()) {
                     ui.showFlashMessage(ui.assets().translated(PROPERTY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));

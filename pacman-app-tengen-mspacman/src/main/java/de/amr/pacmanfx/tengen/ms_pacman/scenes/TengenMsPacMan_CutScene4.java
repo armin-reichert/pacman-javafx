@@ -190,7 +190,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
                 msPacMan.hide();
             }
             case 904, 968, 1032, 1096, 1160, 1224, 1288, 1352 -> spawnJunior(tick);
-            case 1512 -> context().gameController().changeGameState(PacManGamesState.SETTING_OPTIONS_FOR_START);
+            case 1512 -> context().playStateMachine().changeGameState(PacManGamesState.SETTING_OPTIONS_FOR_START);
         }
     }
 

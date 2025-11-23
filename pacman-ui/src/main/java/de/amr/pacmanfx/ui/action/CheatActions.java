@@ -58,7 +58,7 @@ public final class CheatActions {
             if (!vulnerableGhosts.isEmpty()) {
                 gameLevel.energizerVictims().clear(); // resets value of next killed ghost to 200
                 vulnerableGhosts.forEach(ghost -> gameLevel.game().onGhostKilled(gameLevel, ghost));
-                ui.gameContext().gameController().changeGameState(PacManGamesState.GHOST_DYING);
+                ui.gameContext().playStateMachine().changeGameState(PacManGamesState.GHOST_DYING);
             }
         }
 
@@ -72,7 +72,7 @@ public final class CheatActions {
         @Override
         public void execute(GameUI ui) {
             ui.gameContext().gameController().cheatUsedProperty().set(true);
-            ui.gameContext().gameController().changeGameState(PacManGamesState.LEVEL_COMPLETE);
+            ui.gameContext().playStateMachine().changeGameState(PacManGamesState.LEVEL_COMPLETE);
         }
 
         @Override

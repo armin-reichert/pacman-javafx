@@ -5,10 +5,9 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.controller;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.event.*;
+import de.amr.pacmanfx.event.GameEventManager;
+import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.fsm.FsmState;
-import de.amr.pacmanfx.lib.fsm.StateMachine;
-import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Score;
@@ -16,14 +15,15 @@ import javafx.beans.property.*;
 import org.tinylog.Logger;
 
 import java.io.File;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 import static java.util.Objects.requireNonNull;
 
 /**
  * Controller (in the sense of MVC) for all game variants.
- * <br>Contains a finite-state machine ({@link StateMachine}) with states defined in {@link PacManGamesState}.
  * Each game variant is represented by an instance of a game model ({@link Game}).
  * Scene selection is not controlled by this class but left to the specific user interface implementations.
  *
@@ -33,7 +33,7 @@ import static java.util.Objects.requireNonNull;
  * behavior</a>
  * @see <a href="http://superpacman.com/mspacman/">Ms. Pac-Man</a>
  */
-public class GameController implements GameContext, GameEventManager, CoinMechanism {
+public class GameController implements GameContext, CoinMechanism {
 
     public static GameController THE_GAME_CONTROLLER;
 
@@ -42,7 +42,6 @@ public class GameController implements GameContext, GameEventManager, CoinMechan
     private final File homeDir = new File(System.getProperty("user.home"), ".pacmanfx");
     private final File customMapDir = new File(homeDir, "maps");
 
-    private final StateMachine<FsmState<GameContext>, GameContext> stateMachine;
     private final Map<String, Game> knownGames = new HashMap<>();
 
     private boolean eventsEnabled;
@@ -52,21 +51,21 @@ public class GameController implements GameContext, GameEventManager, CoinMechan
     private final BooleanProperty usingAutopilot = new SimpleBooleanProperty(false);
     private final StringProperty gameVariant = new SimpleStringProperty();
 
-    public GameController(List<FsmState<GameContext>> states) {
+    private final GamePlayStateMachine playStateMachine;
+
+    public GameController() {
         boolean success = initUserDirectories();
         if (!success) {
             throw new IllegalStateException("User directories could not be created");
         }
 
-        stateMachine = new StateMachine<>(states, this);
-        stateMachine.setName("Game Controller State Machine");
-        stateMachine.addStateChangeListener((oldState, newState) -> publishEvent(new GameStateChangeEvent(game(), oldState, newState)));
+        playStateMachine = new GamePlayStateMachine(this);
 
         gameVariant.addListener((py, ov, newGameVariant) -> {
             if (eventsEnabled) {
                 Game newGame = game(newGameVariant);
                 newGame.init();
-                publishEvent(GameEventType.GAME_VARIANT_CHANGED);
+                playStateMachine.publishEvent(GameEventType.GAME_VARIANT_CHANGED);
             }
         });
 
@@ -81,35 +80,8 @@ public class GameController implements GameContext, GameEventManager, CoinMechan
 
     }
 
-    public StateMachine<FsmState<GameContext>, GameContext> stateMachine() {
-        return stateMachine;
-    }
-
-    public FsmState<GameContext> stateByName(String name) {
-        return stateMachine.states().stream()
-            .filter(state -> state.name().equals(name))
-            .findFirst().orElseThrow();
-    }
-
     public void setEventsEnabled(boolean enabled) {
         eventsEnabled = enabled;
-    }
-
-    public void changeGameState(FsmState<GameContext> state) {
-        requireNonNull(state);
-        stateMachine.changeState(state);
-    }
-
-    public void letCurrentGameStateExpire() {
-        stateMachine.letCurrentStateExpire();
-    }
-
-    public void resumePreviousGameState() {
-        stateMachine.resumePreviousState();
-    }
-
-    public void restart(FsmState<GameContext> state) {
-        stateMachine.restart(state);
     }
 
     @SuppressWarnings("unchecked")
@@ -196,8 +168,13 @@ public class GameController implements GameContext, GameEventManager, CoinMechan
     }
 
     @Override
+    public GamePlayStateMachine playStateMachine() {
+        return playStateMachine;
+    }
+
+    @Override
     public GameEventManager eventManager() {
-        return this;
+        return playStateMachine;
     }
 
     @Override
@@ -212,7 +189,7 @@ public class GameController implements GameContext, GameEventManager, CoinMechan
 
     @Override
     public FsmState<GameContext> gameState() {
-        return stateMachine.state();
+        return playStateMachine.state();
     }
 
 
@@ -248,49 +225,6 @@ public class GameController implements GameContext, GameEventManager, CoinMechan
         if (numCoins() > 0) {
             setNumCoins(numCoins() - 1);
         }
-    }
-
-    // GameEventManager implementation
-
-    private final List<GameEventListener> eventListeners = new ArrayList<>();
-
-    @Override
-    public void addEventListener(GameEventListener listener) {
-        requireNonNull(listener);
-        if (!eventListeners.contains(listener)) {
-            eventListeners.add(listener);
-            Logger.info("{}: Game event listener registered: {}", getClass().getSimpleName(), listener);
-        }
-    }
-
-    @Override
-    public void removeEventListener(GameEventListener listener) {
-        requireNonNull(listener);
-        boolean removed = eventListeners.remove(listener);
-        if (removed) {
-            Logger.info("{}: Game event listener removed: {}", getClass().getSimpleName(), listener);
-        } else {
-            Logger.warn("{}: Game event listener not removed, as not registered: {}", getClass().getSimpleName(), listener);
-        }
-    }
-
-    @Override
-    public void publishEvent(GameEvent event) {
-        requireNonNull(event);
-        eventListeners.forEach(subscriber -> subscriber.onGameEvent(event));
-        Logger.trace("Published game event: {}", event);
-    }
-
-    @Override
-    public void publishEvent(GameEventType type) {
-        requireNonNull(type);
-        publishEvent(new GameEvent(game(), type));
-    }
-
-    @Override
-    public void publishEvent(GameEventType type, Vector2i tile) {
-        requireNonNull(type);
-        publishEvent(new GameEvent(game(), type, tile));
     }
 
     // other stuff

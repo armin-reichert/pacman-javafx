@@ -26,7 +26,7 @@ public final class ArcadeActions {
                 ui.gameContext().coinMechanism().insertCoin();
                 ui.gameContext().eventManager().publishEvent(GameEventType.CREDIT_ADDED);
             }
-            ui.gameContext().gameController().changeGameState(PacManGamesState.SETTING_OPTIONS_FOR_START);
+            ui.gameContext().playStateMachine().changeGameState(PacManGamesState.SETTING_OPTIONS_FOR_START);
         }
 
         @Override
@@ -45,7 +45,7 @@ public final class ArcadeActions {
         @Override
         public void execute(GameUI ui) {
             ui.soundManager().stopVoice();
-            ui.gameContext().gameController().changeGameState(PacManGamesState.STARTING_GAME_OR_LEVEL);
+            ui.gameContext().playStateMachine().changeGameState(PacManGamesState.STARTING_GAME_OR_LEVEL);
         }
 
         @Override
