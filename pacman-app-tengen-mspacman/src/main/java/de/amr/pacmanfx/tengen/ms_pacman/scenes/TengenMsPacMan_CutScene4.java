@@ -234,7 +234,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
     @Override
     public void draw() {
-        sceneRenderer.draw();
+        sceneRenderer.draw(this);
         if (hudRenderer != null) {
             // draw HUD only for non-Arcade map mode
             var game = context().<TengenMsPacMan_GameModel>game();

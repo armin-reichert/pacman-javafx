@@ -27,12 +27,14 @@ public class TengenMsPacMan_OptionsScene_Renderer extends TengenMsPacMan_CommonS
 
     public TengenMsPacMan_OptionsScene_Renderer(GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(scene, canvas, spriteSheet);
+
+        createDefaultDebugInfoRenderer(scene, canvas, spriteSheet);
     }
     
-    public void draw() {
+    public void draw(GameScene2D scene) {
         clearCanvas();
 
-        final TengenMsPacMan_OptionsScene optionsScene = scene();
+        final TengenMsPacMan_OptionsScene optionsScene = (TengenMsPacMan_OptionsScene) scene;
         final TengenMsPacMan_GameModel game = optionsScene.context().game();
 
         if (optionsScene.initialDelay > 0) return;
@@ -112,8 +114,8 @@ public class TengenMsPacMan_OptionsScene_Renderer extends TengenMsPacMan_CommonS
 
         drawHorizontalBar(nesColor(0x20), nesColor(0x21), optionsScene.sizeInPx().x(), TS, 212);
 
-        if (optionsScene.debugInfoVisible()) {
-            debugInfoRenderer.draw();
+        if (scene.debugInfoVisible()) {
+            debugInfoRenderer.draw(scene);
         }
     }
 

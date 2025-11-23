@@ -29,10 +29,10 @@ public class TengenMsPacMan_IntroScene_Renderer extends TengenMsPacMan_CommonSce
             uiConfig.createActorRenderer(canvas), scene);
     }
     
-    public void draw() {
+    public void draw(GameScene2D scene) {
         clearCanvas();
 
-        final TengenMsPacMan_IntroScene introScene = scene();
+        final TengenMsPacMan_IntroScene introScene = (TengenMsPacMan_IntroScene) scene;
         final long tick = introScene.sceneController.state().timer().tickCount();
 
         ctx.setFont(arcadeFont8());
@@ -75,11 +75,11 @@ public class TengenMsPacMan_IntroScene_Renderer extends TengenMsPacMan_CommonSce
         }
 
         if (PROPERTY_JOYPAD_BINDINGS_DISPLAYED.get()) {
-            drawJoypadKeyBinding(scene().ui().joypad().currentKeyBinding());
+            drawJoypadKeyBinding(scene.ui().joypad().currentKeyBinding());
         }
 
-        if (introScene.debugInfoVisible()) {
-            debugInfoRenderer.draw();
+        if (scene.debugInfoVisible()) {
+            debugInfoRenderer.draw(scene);
         }
     }
 }

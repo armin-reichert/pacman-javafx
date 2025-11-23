@@ -8,6 +8,7 @@ import de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_IntroScene;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.ui._2d.BaseDebugInfoRenderer;
+import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import javafx.scene.canvas.Canvas;
@@ -30,17 +31,17 @@ public class ArcadePacMan_IntroScene_Renderer extends GameScene2D_Renderer {
     private final RectShort energizerSprite;
 
     public ArcadePacMan_IntroScene_Renderer(ArcadePacMan_IntroScene scene, Canvas canvas, ArcadePacMan_SpriteSheet spriteSheet) {
-        super(scene, canvas, spriteSheet);
+        super(canvas, spriteSheet);
 
         final GameUI_Config uiConfig = scene.ui().currentConfig();
 
         actorRenderer = configureRendererForGameScene((ArcadePacMan_Actor_Renderer) uiConfig.createActorRenderer(canvas), scene);
 
-        debugInfoRenderer = configureRendererForGameScene(new BaseDebugInfoRenderer(scene, canvas, uiConfig.spriteSheet()) {
+        debugInfoRenderer = configureRendererForGameScene(new BaseDebugInfoRenderer(scene.ui(), canvas, uiConfig.spriteSheet()) {
             @Override
-            public void draw() {
-                ArcadePacMan_IntroScene introScene = scene();
-                super.draw();
+            public void draw(GameScene2D scene) {
+                ArcadePacMan_IntroScene introScene = (ArcadePacMan_IntroScene) scene;
+                super.draw(scene);
                 ctx.fillText("Scene timer %d".formatted(introScene.state().timer().tickCount()), 0, scaled(5 * TS));
             }
         }, scene);
@@ -49,10 +50,10 @@ public class ArcadePacMan_IntroScene_Renderer extends GameScene2D_Renderer {
         setImageSmoothing(true);
     }
 
-    public void draw() {
+    public void draw(GameScene2D scene) {
         clearCanvas();
 
-        final ArcadePacMan_IntroScene introScene = scene();
+        final ArcadePacMan_IntroScene introScene = (ArcadePacMan_IntroScene) scene;
 
         drawGallery(introScene);
         switch (introScene.state()) {
@@ -72,7 +73,7 @@ public class ArcadePacMan_IntroScene_Renderer extends GameScene2D_Renderer {
         }
 
         if (introScene.debugInfoVisible()) {
-            debugInfoRenderer.draw();
+            debugInfoRenderer.draw(scene);
         }
     }
 

@@ -177,7 +177,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
 
     @Override
     public void draw() {
-        sceneRenderer.draw();
+        sceneRenderer.draw(this);
         if (hudRenderer != null) {
             var game = context().<TengenMsPacMan_GameModel>game();
             if (game.mapCategory() != MapCategory.ARCADE) {

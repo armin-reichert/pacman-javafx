@@ -29,12 +29,12 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends TengenMsPacMan_CommonSc
     private static class PlaySceneDebugInfoRenderer extends BaseDebugInfoRenderer {
 
         public PlaySceneDebugInfoRenderer(TengenMsPacMan_PlayScene2D playScene, Canvas canvas, SpriteSheet<?> spriteSheet) {
-            super(playScene, canvas, spriteSheet);
+            super(playScene.ui(), canvas, spriteSheet);
         }
 
         @Override
-        public void draw() {
-            final TengenMsPacMan_PlayScene2D playScene = scene();
+        public void draw(GameScene2D scene) {
+            final TengenMsPacMan_PlayScene2D playScene = (TengenMsPacMan_PlayScene2D) scene;
             final FsmState<GameContext> gameState = playScene.context().gameState();
 
             drawTileGrid(CANVAS_WIDTH_UNSCALED, playScene.canvasHeightUnscaled.get(), Color.LIGHTGRAY);
@@ -60,7 +60,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends TengenMsPacMan_CommonSc
 
     private final Rectangle clipRect;
 
-    public TengenMsPacMan_PlayScene2D_Renderer(GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
+    public TengenMsPacMan_PlayScene2D_Renderer(TengenMsPacMan_PlayScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(scene, canvas, spriteSheet);
 
         final TengenMsPacMan_UIConfig uiConfig = scene.ui().currentConfig();
@@ -72,7 +72,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends TengenMsPacMan_CommonSc
             uiConfig.createActorRenderer(canvas), scene);
 
         debugInfoRenderer = configureRendererForGameScene(
-            new PlaySceneDebugInfoRenderer(scene(), canvas, uiConfig.spriteSheet()), scene());
+            new PlaySceneDebugInfoRenderer(scene, canvas, uiConfig.spriteSheet()), scene);
 
         // All maps are 28 tiles wide but the NES screen is 32 tiles wide. To accommodate, the maps are centered
         // horizontally and 2 tiles on each side are clipped.
@@ -83,20 +83,21 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends TengenMsPacMan_CommonSc
         clipRect.heightProperty().bind(canvas.heightProperty());
     }
 
-    public void draw() {
+    public void draw(GameScene2D scene) {
         clearCanvas();
+
         scene.context().optGameLevel().ifPresent(gameLevel -> {
             ctx.getCanvas().setClip(clipRect);
-            drawGameLevel(gameLevel);
+            drawGameLevel(scene, gameLevel);
             if (scene.debugInfoVisible()) {
                 ctx.getCanvas().setClip(null); // also show normally clipped region (to see how Pac-Man travels through portals)
-                debugInfoRenderer.draw();
+                debugInfoRenderer.draw(scene);
             }
         });
     }
 
-    private void drawGameLevel(GameLevel gameLevel) {
-        final TengenMsPacMan_PlayScene2D playScene = scene();
+    private void drawGameLevel(GameScene2D scene, GameLevel gameLevel) {
+        final TengenMsPacMan_PlayScene2D playScene = (TengenMsPacMan_PlayScene2D) scene;
         final long tick = playScene.ui().clock().tickCount();
 
         gameLevelRenderInfo.clear();

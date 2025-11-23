@@ -10,6 +10,7 @@ import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.MovingActor;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.canvas.Canvas;
@@ -24,14 +25,15 @@ public class BaseDebugInfoRenderer extends GameScene2D_Renderer {
     protected Color debugTextStroke;
     protected Font debugTextFont;
 
-    public BaseDebugInfoRenderer(GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
-        super(scene, canvas, spriteSheet);
-        debugTextFill   = scene.ui().preferences().getColor("debug_text.fill");
-        debugTextStroke = scene.ui().preferences().getColor("debug_text.stroke");
-        debugTextFont   = scene.ui().preferences().getFont("debug_text.font");
+    public BaseDebugInfoRenderer(GameUI ui, Canvas canvas, SpriteSheet<?> spriteSheet) {
+        super(canvas, spriteSheet);
+        debugTextFill   = ui.preferences().getColor("debug_text.fill");
+        debugTextStroke = ui.preferences().getColor("debug_text.stroke");
+        debugTextFont   = ui.preferences().getFont("debug_text.font");
     }
 
-    public void draw() {
+    @Override
+    public void draw(GameScene2D scene) {
         final TickTimer stateTimer = scene.ui().gameContext().gameState().timer();
         final String stateText = "Game State: '%s' (Tick %d of %s)".formatted(
             scene.ui().gameContext().gameState().name(),

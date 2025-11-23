@@ -17,10 +17,11 @@ public class TengenMsPacMan_CreditsScene_Renderer extends TengenMsPacMan_CommonS
         super(scene, canvas, spriteSheet);
     }
     
-    public void draw() {
+    @Override
+    public void draw(GameScene2D scene) {
         clearCanvas();
 
-        final TengenMsPacMan_CreditsScene creditsScene = scene();
+        final TengenMsPacMan_CreditsScene creditsScene = (TengenMsPacMan_CreditsScene) scene;
 
         drawHorizontalBar(nesColor(0x20), nesColor(0x13), creditsScene.sizeInPx().x(), TS, 20);
         drawHorizontalBar(nesColor(0x20), nesColor(0x13), creditsScene.sizeInPx().x(), TS, 212);
@@ -34,8 +35,8 @@ public class TengenMsPacMan_CreditsScene_Renderer extends TengenMsPacMan_CommonS
             ctx.setGlobalAlpha(1);
         }
 
-        if (scene().debugInfoVisible()) {
-            debugInfoRenderer.draw();
+        if (scene.debugInfoVisible()) {
+            debugInfoRenderer.draw(scene);
         }
     }
 

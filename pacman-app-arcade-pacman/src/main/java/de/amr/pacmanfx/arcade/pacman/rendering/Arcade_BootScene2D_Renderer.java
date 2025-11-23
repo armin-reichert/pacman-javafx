@@ -8,6 +8,7 @@ import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_BootScene2D;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.timer.TickTimer;
+import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.canvas.Canvas;
@@ -27,8 +28,8 @@ public class Arcade_BootScene2D_Renderer extends GameScene2D_Renderer {
     private final Vector2f maxPoint;
 
     public Arcade_BootScene2D_Renderer(Arcade_BootScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
-        super(scene, canvas, spriteSheet);
-        createDefaultDebugInfoRenderer(canvas, spriteSheet);
+        super(canvas, spriteSheet);
+        createDefaultDebugInfoRenderer(scene, canvas, spriteSheet);
 
         final double width = spriteSheet.sourceImage().getWidth();
         final double height = spriteSheet.sourceImage().getHeight();
@@ -37,8 +38,8 @@ public class Arcade_BootScene2D_Renderer extends GameScene2D_Renderer {
         maxPoint = Vector2f.of(width - RASTER_SIZE, height - RASTER_SIZE);
     }
 
-    public void draw() {
-        TickTimer timer = scene().context().gameState().timer();
+    public void draw(GameScene2D scene) {
+        TickTimer timer = scene.context().gameState().timer();
         if (timer.tickCount() == 1) {
             clearCanvas();
         }
@@ -59,7 +60,7 @@ public class Arcade_BootScene2D_Renderer extends GameScene2D_Renderer {
         }
 
         if (scene.debugInfoVisible()) {
-            debugInfoRenderer.draw();
+            debugInfoRenderer.draw(scene);
         }
     }
 

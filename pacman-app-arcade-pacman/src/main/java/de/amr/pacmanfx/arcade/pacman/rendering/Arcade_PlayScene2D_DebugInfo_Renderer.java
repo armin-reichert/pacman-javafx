@@ -32,13 +32,13 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
 
     private final List<Actor> actorsInZOrder = new ArrayList<>();
 
-    public Arcade_PlayScene2D_DebugInfo_Renderer(GameScene2D scene2D, Canvas canvas, SpriteSheet<?> spriteSheet) {
-        super(scene2D, canvas, spriteSheet);
+    public Arcade_PlayScene2D_DebugInfo_Renderer(GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
+        super(scene.ui(), canvas, spriteSheet);
     }
 
     @Override
-    public void draw() {
-        final Arcade_PlayScene2D playScene = scene();
+    public void draw(GameScene2D scene) {
+        final Arcade_PlayScene2D playScene = (Arcade_PlayScene2D) scene;
         final GameContext gameContext = playScene.context();
         final FsmState<GameContext> gameState = gameContext.gameState();
 

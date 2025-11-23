@@ -17,22 +17,15 @@ public abstract class GameScene2D_Renderer extends BaseSpriteRenderer {
         return renderer;
     }
 
-    protected final GameScene2D scene;
     protected BaseDebugInfoRenderer debugInfoRenderer;
 
-    public GameScene2D_Renderer(GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
+    public GameScene2D_Renderer(Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(canvas, spriteSheet);
-        this.scene = scene;
     }
 
-    public abstract void draw();
+    public abstract void draw(GameScene2D scene);
 
-    @SuppressWarnings("unchecked")
-    public <S extends GameScene2D> S scene() {
-        return (S) scene;
-    }
-
-    protected void createDefaultDebugInfoRenderer(Canvas canvas, SpriteSheet<?> spriteSheet) {
-        debugInfoRenderer = configureRendererForGameScene(new BaseDebugInfoRenderer(scene, canvas, spriteSheet), scene);
+    protected void createDefaultDebugInfoRenderer(GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
+        debugInfoRenderer = configureRendererForGameScene(new BaseDebugInfoRenderer(scene.ui(), canvas, spriteSheet), scene);
     }
 }

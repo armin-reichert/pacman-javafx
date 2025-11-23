@@ -156,7 +156,7 @@ public abstract class GameScene2D implements GameScene {
      * Draws this scene into the canvas.
      */
     public void draw() {
-        sceneRenderer().draw();
+        sceneRenderer().draw(this);
         if (hudRenderer() != null) {
             hudRenderer().drawHUD(context().game(), context().game().hud(), sizeInPx());
         }

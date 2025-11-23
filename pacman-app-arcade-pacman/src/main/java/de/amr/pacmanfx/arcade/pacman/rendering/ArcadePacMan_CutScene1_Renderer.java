@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_CutScene1;
 import de.amr.pacmanfx.ui._2d.BaseDebugInfoRenderer;
+import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
@@ -19,18 +20,18 @@ public class ArcadePacMan_CutScene1_Renderer extends GameScene2D_Renderer {
     private final ActorRenderer actorRenderer;
 
     public ArcadePacMan_CutScene1_Renderer(ArcadePacMan_CutScene1 scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
-        super(scene, canvas, spriteSheet);
+        super(canvas, spriteSheet);
 
         final GameUI_Config uiConfig = scene.ui().currentConfig();
 
         actorRenderer = configureRendererForGameScene(
             uiConfig.createActorRenderer(canvas), scene);
 
-        debugInfoRenderer = configureRendererForGameScene(new BaseDebugInfoRenderer(scene, canvas, uiConfig.spriteSheet()) {
+        debugInfoRenderer = configureRendererForGameScene(new BaseDebugInfoRenderer(scene.ui(), canvas, uiConfig.spriteSheet()) {
             @Override
-            public void draw() {
-                ArcadePacMan_CutScene1 cutScene = scene();
-                super.draw();
+            public void draw(GameScene2D scene) {
+                ArcadePacMan_CutScene1 cutScene = (ArcadePacMan_CutScene1) scene;
+                super.draw(scene);
                 String text = cutScene.frame() < ArcadePacMan_CutScene1.ANIMATION_START
                     ? String.format("Wait %d", ArcadePacMan_CutScene1.ANIMATION_START - cutScene.frame())
                     : String.format("Frame %d", cutScene.frame());
@@ -39,15 +40,16 @@ public class ArcadePacMan_CutScene1_Renderer extends GameScene2D_Renderer {
         }, scene);
     }
 
-    public void draw() {
+    @Override
+    public void draw(GameScene2D scene) {
         clearCanvas();
 
-        final ArcadePacMan_CutScene1 cutScene = scene();
+        final ArcadePacMan_CutScene1 cutScene = (ArcadePacMan_CutScene1) scene;
         actorRenderer.drawActor(cutScene.blinky());
         actorRenderer.drawActor(cutScene.pac());
 
         if (cutScene.debugInfoVisible()) {
-            debugInfoRenderer.draw();
+            debugInfoRenderer.draw(scene);
         }
     }
 }

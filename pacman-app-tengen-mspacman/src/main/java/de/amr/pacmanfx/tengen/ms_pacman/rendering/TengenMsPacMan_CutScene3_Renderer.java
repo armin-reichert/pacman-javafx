@@ -14,17 +14,21 @@ public class TengenMsPacMan_CutScene3_Renderer extends GameScene2D_Renderer {
     private final TengenMsPacMan_ActorRenderer actorRenderer;
 
     public TengenMsPacMan_CutScene3_Renderer(GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
-        super(scene, canvas, spriteSheet);
+        super(canvas, spriteSheet);
+
         final GameUI_Config uiConfig = scene.ui().currentConfig();
+
         actorRenderer = GameScene2D_Renderer.configureRendererForGameScene(
             (TengenMsPacMan_ActorRenderer) uiConfig.createActorRenderer(canvas), scene);
-        createDefaultDebugInfoRenderer(canvas, uiConfig.spriteSheet());
+
+        createDefaultDebugInfoRenderer(scene, canvas, uiConfig.spriteSheet());
     }
 
-    public void draw() {
+    @Override
+    public void draw(GameScene2D scene) {
         clearCanvas();
 
-        final TengenMsPacMan_CutScene3 cutScene = scene();
+        final TengenMsPacMan_CutScene3 cutScene = (TengenMsPacMan_CutScene3) scene;
         cutScene.clapperboard.setFont(actorRenderer.arcadeFont8());
         if (!cutScene.darkness) {
             Stream.of(cutScene.clapperboard, cutScene.stork, cutScene.flyingBag, cutScene.msPacMan, cutScene.pacMan)
@@ -32,7 +36,7 @@ public class TengenMsPacMan_CutScene3_Renderer extends GameScene2D_Renderer {
         }
 
         if (scene.debugInfoVisible()) {
-            debugInfoRenderer.draw();
+            debugInfoRenderer.draw(scene);
         }
     }
 }

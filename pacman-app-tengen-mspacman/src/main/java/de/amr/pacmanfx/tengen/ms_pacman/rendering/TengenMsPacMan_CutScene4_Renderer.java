@@ -14,24 +14,26 @@ public class TengenMsPacMan_CutScene4_Renderer extends GameScene2D_Renderer {
     private final TengenMsPacMan_ActorRenderer actorRenderer;
 
     public TengenMsPacMan_CutScene4_Renderer(GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
-        super(scene, canvas, spriteSheet);
+        super(canvas, spriteSheet);
 
         final GameUI_Config uiConfig = scene.ui().currentConfig();
+
         actorRenderer = GameScene2D_Renderer.configureRendererForGameScene(
             (TengenMsPacMan_ActorRenderer) uiConfig.createActorRenderer(canvas), scene);
-        createDefaultDebugInfoRenderer(canvas, uiConfig.spriteSheet());
+
+        createDefaultDebugInfoRenderer(scene, canvas, uiConfig.spriteSheet());
     }
 
-    public void draw() {
+    public void draw(GameScene2D scene) {
         clearCanvas();
 
-        final TengenMsPacMan_CutScene4 cutScene = scene();
+        final TengenMsPacMan_CutScene4 cutScene = (TengenMsPacMan_CutScene4) scene;
         cutScene.clapperboard.setFont(actorRenderer.arcadeFont8());
         Stream.of(cutScene.clapperboard, cutScene.msPacMan, cutScene.pacMan).forEach(actorRenderer::drawActor);
         cutScene.juniors.forEach(actorRenderer::drawActor);
 
-        if (scene().debugInfoVisible()) {
-            debugInfoRenderer.draw();
+        if (scene.debugInfoVisible()) {
+            debugInfoRenderer.draw(scene);
         }
     }
 }

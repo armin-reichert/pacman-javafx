@@ -8,6 +8,7 @@ import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Actor;
+import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
@@ -30,24 +31,23 @@ public class Arcade_PlayScene2D_Renderer extends GameScene2D_Renderer {
     private final List<Actor> actorsInZOrder = new ArrayList<>();
 
     public Arcade_PlayScene2D_Renderer(Arcade_PlayScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
-        super(scene, canvas, spriteSheet);
+        super(canvas, spriteSheet);
 
         final GameUI_Config uiConfig = scene.ui().currentConfig();
 
-        gameLevelRenderer = configureRendererForGameScene(
-            uiConfig.createGameLevelRenderer(canvas), scene);
+        gameLevelRenderer = configureRendererForGameScene(uiConfig.createGameLevelRenderer(canvas), scene);
 
-        actorRenderer = configureRendererForGameScene(
-            uiConfig.createActorRenderer(canvas), scene);
+        actorRenderer = configureRendererForGameScene(uiConfig.createActorRenderer(canvas), scene);
 
         debugInfoRenderer = configureRendererForGameScene(
             new Arcade_PlayScene2D_DebugInfo_Renderer(scene, canvas, uiConfig.spriteSheet()), scene);
     }
 
-    public void draw() {
+    @Override
+    public void draw(GameScene2D scene) {
         clearCanvas();
 
-        final Arcade_PlayScene2D playScene = scene();
+        final Arcade_PlayScene2D playScene = (Arcade_PlayScene2D) scene;
 
         if (playScene.context().optGameLevel().isEmpty()) {
             return; // Scene is drawn already 2 ticks before level has been created
@@ -65,7 +65,7 @@ public class Arcade_PlayScene2D_Renderer extends GameScene2D_Renderer {
         actorsInZOrder.forEach(actorRenderer::drawActor);
 
         if (playScene.debugInfoVisible()) {
-            debugInfoRenderer.draw();
+            debugInfoRenderer.draw(scene);
         }
     }
 

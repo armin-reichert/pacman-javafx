@@ -14,11 +14,12 @@ import static de.amr.pacmanfx.ui.api.ArcadePalette.ARCADE_RED;
 public class ArcadeMsPacMan_StartScene_Renderer extends GameScene2D_Renderer {
     
     public ArcadeMsPacMan_StartScene_Renderer(GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
-        super(scene, canvas, spriteSheet);
-        createDefaultDebugInfoRenderer(canvas, scene.ui().currentConfig().spriteSheet());
+        super(canvas, spriteSheet);
+        createDefaultDebugInfoRenderer(scene, canvas, spriteSheet);
     }
     
-    public void draw() {
+    @Override
+    public void draw(GameScene2D scene) {
         clearCanvas();
 
         final Font font6 = arcadeFont6();
@@ -30,13 +31,13 @@ public class ArcadeMsPacMan_StartScene_Renderer extends GameScene2D_Renderer {
         drawSprite(spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL), TS(13), TS(23) + 1, true);
         fillText("PTS", ARCADE_ORANGE, font6, TS(25), TS(25));
 
-        Image logo = scene().ui().currentConfig().assets().image("logo.midway");
+        Image logo = scene.ui().currentConfig().assets().image("logo.midway");
         if (logo != null) {
             drawMidwayCopyright(logo, TS * 6, TS * 28);
         }
 
         if (scene.debugInfoVisible()) {
-            debugInfoRenderer.draw();
+            debugInfoRenderer.draw(scene);
         }
     }
 

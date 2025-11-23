@@ -15,8 +15,8 @@ import static java.util.Objects.requireNonNull;
 public abstract class TengenMsPacMan_CommonSceneRenderer extends GameScene2D_Renderer {
 
     public TengenMsPacMan_CommonSceneRenderer(GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
-        super(scene, canvas, spriteSheet);
-        createDefaultDebugInfoRenderer(canvas, spriteSheet);
+        super(canvas, spriteSheet);
+        createDefaultDebugInfoRenderer(scene, canvas, spriteSheet);
     }
 
     /**
