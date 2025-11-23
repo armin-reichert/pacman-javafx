@@ -282,8 +282,8 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     }
 
     @Override
-    public TengenMsPacMan_HUDRenderer createHUDRenderer(Canvas canvas) {
-        return new TengenMsPacMan_HUDRenderer(canvas, spriteSheet, ui.clock());
+    public TengenMsPacMan_HUD_Renderer createHUDRenderer(Canvas canvas) {
+        return new TengenMsPacMan_HUD_Renderer(canvas, spriteSheet, ui.clock());
     }
 
     @Override

@@ -18,7 +18,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MovingGameLevelMessage;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_HUDRenderer;
+import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_HUD_Renderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_PlayScene2D_Renderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
@@ -74,7 +74,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
     private final PerspectiveCamera fixedCamera;
 
     private TengenMsPacMan_PlayScene2D_Renderer sceneRenderer;
-    private TengenMsPacMan_HUDRenderer hudRenderer;
+    private TengenMsPacMan_HUD_Renderer hudRenderer;
 
     private LevelCompletedAnimation levelCompletedAnimation;
 
@@ -85,8 +85,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
 
         dynamicCamera = new PlayScene2DCamera();
         dynamicCamera.scalingProperty().bind(scalingProperty());
-        scalingProperty().addListener((py, ov, nv) -> context().optGameLevel().ifPresent(gameLevel ->
-            dynamicCamera.updateRange(gameLevel.worldMap().terrainLayer().numRows())));
 
         rootPane = new StackPane();
         rootPane.backgroundProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR.map(Background::fill));
@@ -97,6 +95,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
         subScene.cameraProperty().bind(PROPERTY_PLAY_SCENE_DISPLAY_MODE.map(mode -> mode == SCROLLING ? dynamicCamera : fixedCamera));
         subScene.cameraProperty().addListener((py, ov, nv) -> updateScaling());
         subScene.heightProperty().addListener((py, ov, nv) -> updateScaling());
+
+        scalingProperty().addListener((py, ov, nv) -> context().optGameLevel().ifPresent(gameLevel ->
+            dynamicCamera.updateRange(gameLevel.worldMap())));
     }
 
     public LevelCompletedAnimation levelCompletedAnimation() {
@@ -128,7 +129,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
     private void initForGameLevel(GameLevel gameLevel) {
         context().game().hud().levelCounterVisible(true).livesCounterVisible(true); // is also visible in demo level!
         setActionsBindings(gameLevel.isDemoLevel());
-        dynamicCamera.updateRange(gameLevel.worldMap().numRows());
+        dynamicCamera.updateRange(gameLevel.worldMap());
     }
 
     private void updateScaling() {
@@ -175,7 +176,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
     }
 
     @Override
-    public TengenMsPacMan_HUDRenderer hudRenderer() {
+    public TengenMsPacMan_HUD_Renderer hudRenderer() {
         return hudRenderer;
     }
 
@@ -338,24 +339,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
         }
     }
 
-    private void startLevelCompleteAnimation(GameLevel gameLevel) {
-        levelCompletedAnimation = new LevelCompletedAnimation(animationRegistry);
-        levelCompletedAnimation.setGameLevel(gameLevel);
-        levelCompletedAnimation.setSingleFlashMillis(333);
-        levelCompletedAnimation.getOrCreateAnimationFX().setOnFinished(e -> context().gameController().letCurrentGameStateExpire());
-        levelCompletedAnimation.playFromStart();
-    }
-
-    private void startGameOverMessageAnimation(GameLevel gameLevel) {
-        gameLevel.optMessage()
-            .filter(MovingGameLevelMessage.class::isInstance)
-            .map(MovingGameLevelMessage.class::cast)
-            .ifPresent(movingGameLevelMessage -> {
-                Font font = Font.font(BaseRenderer.DEFAULT_ARCADE_FONT.getFamily(), TS);
-                movingGameLevelMessage.start(sizeInPx().x(), Ufx.textWidth("GAME OVER", font));
-            });
-    }
-
     @Override
     public void onBonusActivated(GameEvent e) {
         ui.soundManager().loop(SoundID.BONUS_ACTIVE);
@@ -455,5 +438,23 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
         numLives = Math.min(numLives, game.hud().maxLivesDisplayed());
         game.hud().setVisibleLifeCount(numLives);
         game.hud().showLevelNumber(game.mapCategory() != MapCategory.ARCADE);
+    }
+
+    private void startLevelCompleteAnimation(GameLevel gameLevel) {
+        levelCompletedAnimation = new LevelCompletedAnimation(animationRegistry);
+        levelCompletedAnimation.setGameLevel(gameLevel);
+        levelCompletedAnimation.setSingleFlashMillis(333);
+        levelCompletedAnimation.getOrCreateAnimationFX().setOnFinished(e -> context().gameController().letCurrentGameStateExpire());
+        levelCompletedAnimation.playFromStart();
+    }
+
+    private void startGameOverMessageAnimation(GameLevel gameLevel) {
+        gameLevel.optMessage()
+            .filter(MovingGameLevelMessage.class::isInstance)
+            .map(MovingGameLevelMessage.class::cast)
+            .ifPresent(movingGameLevelMessage -> {
+                Font font = Font.font(BaseRenderer.DEFAULT_ARCADE_FONT.getFamily(), TS);
+                movingGameLevelMessage.start(sizeInPx().x(), Ufx.textWidth("GAME OVER", font));
+            });
     }
 }

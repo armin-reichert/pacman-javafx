@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
 import de.amr.pacmanfx.lib.Direction;
+import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.actors.MovingActor;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -37,7 +38,8 @@ public class PlayScene2DCamera extends ParallelCamera {
     }
 
     // This is "alchemy", not science :-)
-    public void updateRange(int mapHeightTiles) {
+    public void updateRange(WorldMap worldMap) {
+        final int mapHeightTiles = worldMap.terrainLayer().numRows();
         final int spannedTiles = mapHeightTiles - 26;
         final int topPosition = switch (mapHeightTiles) {
             case 30 -> -3;     // all MINI maps

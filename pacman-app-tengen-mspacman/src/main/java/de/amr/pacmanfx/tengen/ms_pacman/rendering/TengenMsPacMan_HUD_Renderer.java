@@ -26,13 +26,13 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesColor;
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HUDRenderer {
+public class TengenMsPacMan_HUD_Renderer extends BaseSpriteRenderer implements HUDRenderer {
 
     private final GameClock clock;
 
     private final ObjectProperty<Font> totalLivesFont = new SimpleObjectProperty<>(Font.font("Serif", FontWeight.BOLD, 8));
 
-    public TengenMsPacMan_HUDRenderer(Canvas canvas, SpriteSheet<?> spriteSheet, GameClock clock) {
+    public TengenMsPacMan_HUD_Renderer(Canvas canvas, SpriteSheet<?> spriteSheet, GameClock clock) {
         super(canvas, spriteSheet);
         this.clock = requireNonNull(clock);
         totalLivesFont.bind(scalingProperty().map(scaling -> Font.font("Serif", FontWeight.BOLD, scaling.doubleValue() * 8)));

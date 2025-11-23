@@ -12,7 +12,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.Difficulty;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.tengen.ms_pacman.model.PacBooster;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_HUDRenderer;
+import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_HUD_Renderer;
 import de.amr.pacmanfx.ui._3d.GameLevel3D;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.ui.action.CheatActions;
@@ -68,7 +68,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         final var canvas = new Canvas(scaling * width, scaling * height);
         canvas.getGraphicsContext2D().setImageSmoothing(false); // important for crisp image!
 
-        final var hudRenderer = (TengenMsPacMan_HUDRenderer) ui.currentConfig().createHUDRenderer(canvas);
+        final var hudRenderer = (TengenMsPacMan_HUD_Renderer) ui.currentConfig().createHUDRenderer(canvas);
         hudRenderer.scalingProperty().set(scaling);
         hudRenderer.fillCanvas(backgroundColor);
         hudRenderer.drawLevelNumberBox(levelNumber, 0, 0);
