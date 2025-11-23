@@ -227,7 +227,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     }
 
     @Override
-    public Image killedGhostPointsImage(Ghost ghost, int killedIndex) {
+    public Image killedGhostPointsImage(int killedIndex) {
         RectShort[] numberSprites = spriteSheet.spriteSequence(SpriteID.GHOST_NUMBERS);
         return spriteSheet.image(numberSprites[killedIndex]);
     }
