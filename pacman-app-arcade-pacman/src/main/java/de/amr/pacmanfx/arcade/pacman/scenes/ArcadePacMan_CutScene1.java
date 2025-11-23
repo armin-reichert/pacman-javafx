@@ -77,7 +77,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
     public void doInit() {
         GameUI_Config uiConfig = ui.currentConfig();
 
-        context().game().hud().creditVisible(false).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
+        context().currentGame().hud().creditVisible(false).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
 
         pac = ArcadePacMan_ActorFactory.createPacMan();
         pac.setAnimationManager(uiConfig.createPacAnimations());
@@ -122,7 +122,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
             pac.playAnimation(ArcadePacMan_UIConfig.AnimationID.ANIM_BIG_PAC_MAN);
         }
         else if (frame == ANIMATION_START + 632) {
-            context().game().stateMachine().letCurrentStateExpire();
+            context().currentGame().stateMachine().letCurrentStateExpire();
         }
         if (frame >= ANIMATION_START) {
             pac.move();

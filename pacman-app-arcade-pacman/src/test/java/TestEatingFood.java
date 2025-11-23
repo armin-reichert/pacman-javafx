@@ -28,12 +28,12 @@ public class TestEatingFood {
 
     @BeforeEach
     public void createGameLevel() {
-        theGameContext().game().buildNormalLevel(1);
+        theGameContext().currentGame().buildNormalLevel(1);
     }
 
     private GameLevel gameLevel() { return theGameContext().gameLevel(); }
 
-    private ArcadePacMan_GameModel pacManGame() { return theGameContext().game(); }
+    private ArcadePacMan_GameModel pacManGame() { return theGameContext().currentGame(); }
 
     private void eatNextPellet(GameLevel gameLevel) {
         FoodLayer foodLayer = gameLevel.worldMap().foodLayer();

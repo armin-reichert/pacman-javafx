@@ -28,18 +28,18 @@ public class LevelShortTestState implements FsmState<GameContext>, TestState {
     @Override
     public void onEnter(GameContext context) {
         context.coinMechanism().setNumCoins(1);
-        lastTestedLevelNumber = context.game().lastLevelNumber() == Integer.MAX_VALUE ? 25 : context.game().lastLevelNumber();
+        lastTestedLevelNumber = context.currentGame().lastLevelNumber() == Integer.MAX_VALUE ? 25 : context.currentGame().lastLevelNumber();
         timer.restartIndefinitely();
-        context.game().prepareForNewGame();
-        context.game().buildNormalLevel(1);
-        context.game().startLevel(context.gameLevel());
+        context.currentGame().prepareForNewGame();
+        context.currentGame().buildNormalLevel(1);
+        context.currentGame().startLevel(context.gameLevel());
         context.gameLevel().showPacAndGhosts();
     }
 
     @Override
     public void onUpdate(GameContext context) {
         final float START = 1.0f;
-        final Game game = context.game();
+        final Game game = context.currentGame();
         final GameLevel gameLevel = context.gameLevel();
         if (timer.atSecond(START)) {
             game.continueGame(gameLevel);
@@ -73,8 +73,8 @@ public class LevelShortTestState implements FsmState<GameContext>, TestState {
         else if (timer.atSecond(START + 10)) {
             if (gameLevel.number() == lastTestedLevelNumber) {
                 context.coinMechanism().setNumCoins(0);
-                context.game().resetEverything();
-                context.game().stateMachine().restart(GamePlayState.BOOT);
+                context.currentGame().resetEverything();
+                context.currentGame().stateMachine().restart(GamePlayState.BOOT);
             } else {
                 timer.restartIndefinitely();
                 game.startNextLevel();
@@ -89,7 +89,7 @@ public class LevelShortTestState implements FsmState<GameContext>, TestState {
     @Override
     public void onExit(GameContext context) {
         context.coinMechanism().setNumCoins(0);
-        context.game().resetEverything();
-        context.game().levelCounter().clear();
+        context.currentGame().resetEverything();
+        context.currentGame().levelCounter().clear();
     }
 }

@@ -67,7 +67,7 @@ public class GameBox implements GameContext, CoinMechanism {
 
         cheatUsed.addListener((py, ov, cheated) -> {
             if (cheated) {
-                Score highScore = game().scoreManager().highScore();
+                Score highScore = currentGame().scoreManager().highScore();
                 if (highScore.isEnabled()) {
                     highScore.setEnabled(false);
                 }
@@ -153,7 +153,7 @@ public class GameBox implements GameContext, CoinMechanism {
     /**
      * @return The game (model) registered for the currently selected game variant.
      */
-    public <G extends Game> G game() {
+    public <G extends Game> G currentGame() {
         return game(gameVariant.get());
     }
 
@@ -164,22 +164,22 @@ public class GameBox implements GameContext, CoinMechanism {
 
     @Override
     public GameEventManager eventManager() {
-        return game().stateMachine();
+        return currentGame().stateMachine();
     }
 
     @Override
     public Optional<GameLevel> optGameLevel() {
-        return game().optGameLevel();
+        return currentGame().optGameLevel();
     }
 
     @Override
     public GameLevel gameLevel() {
-        return game().optGameLevel().orElse(null);
+        return currentGame().optGameLevel().orElse(null);
     }
 
     @Override
     public FsmState<GameContext> gameState() {
-        return game().stateMachine().state();
+        return currentGame().stateMachine().state();
     }
 
     // CoinMechanism implementation

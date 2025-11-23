@@ -35,7 +35,7 @@ public class Arcade_BootScene2D extends GameScene2D {
 
     @Override
     public void doInit() {
-        context().game().hud().all(false);
+        context().currentGame().hud().all(false);
    }
 
     @Override
@@ -50,7 +50,7 @@ public class Arcade_BootScene2D extends GameScene2D {
     @Override
     public void update() {
         if (context().gameState().timer().atSecond(4)) {
-            context().game().stateMachine().letCurrentStateExpire();
+            context().currentGame().stateMachine().letCurrentStateExpire();
         }
     }
 }

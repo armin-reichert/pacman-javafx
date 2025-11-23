@@ -60,7 +60,7 @@ public final class CommonGameActions {
     public static final GameAction ACTION_LET_GAME_STATE_EXPIRE = new GameAction("LET_GAME_STATE_EXPIRE") {
         @Override
         public void execute(GameUI ui) {
-            ui.context().game().stateMachine().letCurrentStateExpire();
+            ui.context().currentGame().stateMachine().letCurrentStateExpire();
         }
     };
 
@@ -114,7 +114,7 @@ public final class CommonGameActions {
                 ui.context().gameState().onExit(ui.context()); //TODO exit other states too?
             }
             ui.clock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
-            ui.context().game().stateMachine().restart(INTRO);
+            ui.context().currentGame().stateMachine().restart(INTRO);
         }
     };
 
@@ -215,7 +215,7 @@ public final class CommonGameActions {
     public static final GameAction ACTION_TOGGLE_COLLISION_STRATEGY = new GameAction("TOGGLE_COLLISION_STRATEGY") {
         @Override
         public void execute(GameUI ui) {
-            final Game game = ui.context().game();
+            final Game game = ui.context().currentGame();
             CollisionStrategy collisionStrategy = game.collisionStrategy();
             if (collisionStrategy == CollisionStrategy.CENTER_DISTANCE) {
                 game.setCollisionStrategy(CollisionStrategy.SAME_TILE);
@@ -301,9 +301,9 @@ public final class CommonGameActions {
                 toggle(PROPERTY_3D_ENABLED);
                 if (ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_2D) || ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D)) {
                     ui.updateGameScene(true);
-                    ui.context().game().stateMachine().update(); //TODO needed?
+                    ui.context().currentGame().stateMachine().update(); //TODO needed?
                 }
-                if (!ui.context().game().isPlaying()) {
+                if (!ui.context().currentGame().isPlaying()) {
                     ui.showFlashMessage(ui.assets().translated(PROPERTY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
                 }
             });

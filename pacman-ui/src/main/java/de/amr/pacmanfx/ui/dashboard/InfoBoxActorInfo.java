@@ -28,7 +28,7 @@ public class InfoBoxActorInfo extends InfoBox {
 
     public void init(GameUI ui) {
         addDynamicLabeledValue("Pac Name", supplyPacInfo(Pac::name));
-        addDynamicLabeledValue("Lives",    ifGameLevelPresent(gameLevel -> "%d".formatted(ui.context().game().lifeCount())));
+        addDynamicLabeledValue("Lives",    ifGameLevelPresent(gameLevel -> "%d".formatted(ui.context().currentGame().lifeCount())));
         addDynamicLabeledValue("Movement", supplyPacInfo(this::actorMovementInfo));
         addDynamicLabeledValue("Tile",     supplyPacInfo(this::actorLocationInfo));
         addDynamicLabeledValue("Power",    ifGameLevelPresent(gameLevel -> {

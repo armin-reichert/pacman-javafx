@@ -24,8 +24,8 @@ public final class CheatActions {
         @Override
         public void execute(GameUI ui) {
             ui.context().gameBox().cheatUsedProperty().set(true);
-            ui.context().game().addLives(3);
-            ui.showFlashMessage(ui.assets().translated("cheat_add_lives", ui.context().game().lifeCount()));
+            ui.context().currentGame().addLives(3);
+            ui.showFlashMessage(ui.assets().translated("cheat_add_lives", ui.context().currentGame().lifeCount()));
         }
 
         @Override
@@ -58,7 +58,7 @@ public final class CheatActions {
             if (!vulnerableGhosts.isEmpty()) {
                 gameLevel.energizerVictims().clear(); // resets value of next killed ghost to 200
                 vulnerableGhosts.forEach(ghost -> gameLevel.game().onGhostKilled(gameLevel, ghost));
-                ui.context().game().stateMachine().changeGameState(GamePlayState.GHOST_DYING);
+                ui.context().currentGame().stateMachine().changeGameState(GamePlayState.GHOST_DYING);
             }
         }
 
@@ -72,15 +72,15 @@ public final class CheatActions {
         @Override
         public void execute(GameUI ui) {
             ui.context().gameBox().cheatUsedProperty().set(true);
-            ui.context().game().stateMachine().changeGameState(GamePlayState.LEVEL_COMPLETE);
+            ui.context().currentGame().stateMachine().changeGameState(GamePlayState.LEVEL_COMPLETE);
         }
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            return ui.context().game().isPlaying()
+            return ui.context().currentGame().isPlaying()
                     && ui.context().gameState() == GamePlayState.HUNTING
                     && ui.context().optGameLevel().isPresent()
-                    && ui.context().gameLevel().number() < ui.context().game().lastLevelNumber();
+                    && ui.context().gameLevel().number() < ui.context().currentGame().lastLevelNumber();
         }
     };
 
@@ -88,7 +88,7 @@ public final class CheatActions {
         @Override
         public void execute(GameUI ui) {
             final GameBox gameBox = ui.context().gameBox();
-            if (gameBox.game().isPlaying()) {
+            if (gameBox.currentGame().isPlaying()) {
                 gameBox.cheatUsedProperty().set(true);
             }
             toggle(gameBox.usingAutopilotProperty());
@@ -101,7 +101,7 @@ public final class CheatActions {
     public static final GameAction ACTION_TOGGLE_IMMUNITY = new GameAction("TOGGLE_IMMUNITY") {
         @Override
         public void execute(GameUI ui) {
-            if (ui.context().game().isPlaying()) {
+            if (ui.context().currentGame().isPlaying()) {
                 ui.context().gameBox().cheatUsedProperty().set(true);
             }
             toggle(ui.context().gameBox().immunityProperty());

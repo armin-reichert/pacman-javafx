@@ -79,7 +79,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
 
     @Override
     public void doInit() {
-        context().game().hud().scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
+        context().currentGame().hud().scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
 
         final GameUI_Config uiConfig = ui.currentConfig();
 
@@ -190,7 +190,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
             msPacMan.setSpeed(4.0f);
         }
         else if (timer.atSecond(23)) {
-            context().game().stateMachine().letCurrentStateExpire();
+            context().currentGame().stateMachine().letCurrentStateExpire();
         }
         else {
             pacMan.move();

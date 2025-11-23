@@ -307,7 +307,7 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
 
     @Override
     public void init() {
-        context().game().hud().showScore(true);
+        context().currentGame().hud().showScore(true);
         perspectiveIDProperty().bind(PROPERTY_3D_PERSPECTIVE_ID);
         actionBindings.addKeyCombination(actionDroneUp, control(KeyCode.MINUS));
         actionBindings.addKeyCombination(actionDroneDown, control(KeyCode.PLUS));
@@ -534,7 +534,7 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
     @Override
     public void onPacGetsPower(GameEvent event) {
         ui.soundManager().stopSiren();
-        if (!context().game().isLevelCompleted(context().gameLevel())) {
+        if (!context().currentGame().isLevelCompleted(context().gameLevel())) {
             gameLevel3D.pac3D().setMovementPowerMode(true);
             ui.soundManager().loop(SoundID.PAC_MAN_POWER);
             gameLevel3D.playWallColorFlashing();
@@ -599,7 +599,7 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
     }
 
     protected void updateHUD() {
-        ScoreManager scoreManager = context().game().scoreManager();
+        ScoreManager scoreManager = context().currentGame().scoreManager();
         final Score score = scoreManager.score(), highScore = scoreManager.highScore();
         if (score.isEnabled()) {
             scores3D.showScore(score.points(), score.levelNumber());

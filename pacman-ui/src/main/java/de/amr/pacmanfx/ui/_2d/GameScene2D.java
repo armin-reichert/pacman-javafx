@@ -169,7 +169,7 @@ public abstract class GameScene2D implements GameScene {
             throw new IllegalStateException("No scene renderer exists for 2D game scene '%s'".formatted(this));
         }
         if (hudRenderer() != null) {
-            hudRenderer().drawHUD(context().game(), context().game().hud(), sizeInPx());
+            hudRenderer().drawHUD(context().currentGame(), context().currentGame().hud(), sizeInPx());
         }
     }
 }

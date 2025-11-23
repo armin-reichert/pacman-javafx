@@ -93,7 +93,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
 
     @Override
     public void doInit() {
-        context().game().hud().scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
+        context().currentGame().hud().scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
 
         final GameUI_Config uiConfig = ui.currentConfig();
         final var spriteSheet = (ArcadeMsPacMan_SpriteSheet) uiConfig.spriteSheet();
@@ -206,7 +206,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
     private void updateStateStorkLeavesScene() {
         stork.move();
         if (sceneTimer.hasExpired()) {
-            context().game().stateMachine().letCurrentStateExpire();
+            context().currentGame().stateMachine().letCurrentStateExpire();
         }
     }
 }

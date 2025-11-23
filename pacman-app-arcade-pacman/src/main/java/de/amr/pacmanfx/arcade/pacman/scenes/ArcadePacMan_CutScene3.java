@@ -75,7 +75,7 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
 
     @Override
     public void doInit() {
-        context().game().hud().creditVisible(false).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
+        context().currentGame().hud().creditVisible(false).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
 
         GameUI_Config uiConfig = ui.currentConfig();
 
@@ -119,7 +119,7 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
                 blinky.setWishDir(Direction.RIGHT);
                 blinky.playAnimation(ArcadePacMan_UIConfig.AnimationID.ANIM_BLINKY_NAKED);
             }
-            case ANIMATION_START + 700 -> context().game().stateMachine().letCurrentStateExpire();
+            case ANIMATION_START + 700 -> context().currentGame().stateMachine().letCurrentStateExpire();
             default -> {}
         }
     }

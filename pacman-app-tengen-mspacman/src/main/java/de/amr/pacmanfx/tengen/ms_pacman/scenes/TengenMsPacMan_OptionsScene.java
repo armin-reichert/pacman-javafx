@@ -93,7 +93,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        context().game().hud().all(false);
+        context().currentGame().hud().all(false);
 
         var tengenActionBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().tengenActionBindings();
         actionBindings.addKeyCombination(actionSelectNextJoypadBinding, alt(KeyCode.J)); //TODO
@@ -125,14 +125,14 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         if (idleTicks < IDLE_TIMEOUT) {
             idleTicks += 1;
         } else {
-            context().game().stateMachine().changeGameState(GamePlayState.INTRO);
+            context().currentGame().stateMachine().changeGameState(GamePlayState.INTRO);
         }
     }
 
     @Override
     public Vector2i sizeInPx() { return NES_SIZE_PX; }
 
-    private TengenMsPacMan_GameModel theGame() { return context().game(); }
+    private TengenMsPacMan_GameModel theGame() { return context().currentGame(); }
     
     private void optionValueChanged() {
         ui.soundManager().play("audio.option.value_changed");

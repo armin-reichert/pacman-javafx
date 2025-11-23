@@ -97,7 +97,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
     @Override
     protected void doInit() {
-        TengenMsPacMan_HUD hud = (TengenMsPacMan_HUD) context().game().hud();
+        TengenMsPacMan_HUD hud = (TengenMsPacMan_HUD) context().currentGame().hud();
         hud.all(false);
         hud.showGameOptions(false);
 
@@ -190,7 +190,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
                 msPacMan.hide();
             }
             case 904, 968, 1032, 1096, 1160, 1224, 1288, 1352 -> spawnJunior(tick);
-            case 1512 -> context().game().stateMachine().changeGameState(GamePlayState.SETTING_OPTIONS_FOR_START);
+            case 1512 -> context().currentGame().stateMachine().changeGameState(GamePlayState.SETTING_OPTIONS_FOR_START);
         }
     }
 
@@ -255,9 +255,9 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         sceneRenderer.draw(this);
         if (hudRenderer != null) {
             // draw HUD only for non-Arcade map mode
-            var game = context().<TengenMsPacMan_GameModel>game();
+            var game = context().<TengenMsPacMan_GameModel>currentGame();
             if (game.mapCategory() != MapCategory.ARCADE) {
-                hudRenderer.drawHUD(context().game(), game.hud(), sizeInPx().minus(0, 2 * TS));
+                hudRenderer.drawHUD(context().currentGame(), game.hud(), sizeInPx().minus(0, 2 * TS));
             }
         }
     }

@@ -83,7 +83,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     protected void doInit() {
-        context().game().hud().creditVisible(false).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(true);
+        context().currentGame().hud().creditVisible(false).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(true);
     }
 
     @Override
@@ -100,11 +100,11 @@ public class Arcade_PlayScene2D extends GameScene2D {
      */
     private void acceptGameLevel(GameLevel gameLevel) {
         if (gameLevel.isDemoLevel()) {
-            context().game().hud().creditVisible(false).levelCounterVisible(true).livesCounterVisible(false);
+            context().currentGame().hud().creditVisible(false).levelCounterVisible(true).livesCounterVisible(false);
             actionBindings.bind(ArcadeActions.ACTION_INSERT_COIN, ui.actionBindings());
             ui.soundManager().setEnabled(false);
         } else {
-            context().game().hud().creditVisible(false).levelCounterVisible(true).livesCounterVisible(true);
+            context().currentGame().hud().creditVisible(false).levelCounterVisible(true).livesCounterVisible(true);
             actionBindings.bind(ACTION_STEER_UP,               ui.actionBindings());
             actionBindings.bind(ACTION_STEER_DOWN,             ui.actionBindings());
             actionBindings.bind(ACTION_STEER_LEFT,             ui.actionBindings());
@@ -135,7 +135,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onGameContinued(GameEvent e) {
-        context().game().showMessage(context().gameLevel(), MessageType.READY);
+        context().currentGame().showMessage(context().gameLevel(), MessageType.READY);
     }
 
     @Override
@@ -156,7 +156,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     private void updateHUD(GameLevel gameLevel) {
-        final Game game = context().game();
+        final Game game = context().currentGame();
         // While Pac-Man is still invisible on level start, one entry more is shown in the lives counter
         boolean oneMore = context().gameState() == GamePlayState.STARTING_GAME_OR_LEVEL && !gameLevel.pac().isVisible();
         int numLivesDisplayed = game.lifeCount() - 1;
@@ -210,7 +210,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     private void playLevelCompletedAnimation() {
         levelCompletedAnimation = new LevelCompletedAnimation(animationRegistry, context().gameLevel());
-        levelCompletedAnimation.getOrCreateAnimationFX().setOnFinished(e -> context().game().stateMachine().letCurrentStateExpire());
+        levelCompletedAnimation.getOrCreateAnimationFX().setOnFinished(e -> context().currentGame().stateMachine().letCurrentStateExpire());
         levelCompletedAnimation.playFromStart();
     }
 
@@ -243,7 +243,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     @Override
     public void onPacDead(GameEvent e) {
         // triggers exit from state PACMAN_DYING after dying animation has finished
-        context().game().stateMachine().letCurrentStateExpire();
+        context().currentGame().stateMachine().letCurrentStateExpire();
     }
 
     @Override

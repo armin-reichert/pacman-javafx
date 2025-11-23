@@ -37,23 +37,23 @@ public class LevelMediumTestState implements FsmState<GameContext>, TestState {
         GameLevelMessage message = new GameLevelMessage(MessageType.TEST);
         message.setPosition(gameLevel.worldMap().terrainLayer().messageCenterPosition());
         gameLevel.setMessage(message);
-        context.game().hud().creditVisible(false);
+        context.currentGame().hud().creditVisible(false);
         context.eventManager().publishEvent(GameEventType.STOP_ALL_SOUNDS);
     }
 
     @Override
     public void onEnter(GameContext context) {
-        lastTestedLevelNumber = context.game().lastLevelNumber() == Integer.MAX_VALUE ? 25 : context.game().lastLevelNumber();
+        lastTestedLevelNumber = context.currentGame().lastLevelNumber() == Integer.MAX_VALUE ? 25 : context.currentGame().lastLevelNumber();
         timer.restartSeconds(TEST_DURATION_SEC);
-        context.game().prepareForNewGame();
-        context.game().buildNormalLevel(1);
-        context.game().startLevel(context.gameLevel());
+        context.currentGame().prepareForNewGame();
+        context.currentGame().buildNormalLevel(1);
+        context.currentGame().startLevel(context.gameLevel());
         configureLevelForTest(context);
     }
 
     @Override
     public void onUpdate(GameContext context) {
-        final Game game = context.game();
+        final Game game = context.currentGame();
         final GameLevel gameLevel = context.gameLevel();
         gameLevel.pac().tick(context);
         gameLevel.ghosts().forEach(ghost -> ghost.tick(context));
@@ -80,6 +80,6 @@ public class LevelMediumTestState implements FsmState<GameContext>, TestState {
 
     @Override
     public void onExit(GameContext context) {
-        context.game().levelCounter().clear();
+        context.currentGame().levelCounter().clear();
     }
 }

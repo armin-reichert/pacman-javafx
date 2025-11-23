@@ -26,12 +26,12 @@ public final class ArcadeActions {
                 ui.context().coinMechanism().insertCoin();
                 ui.context().eventManager().publishEvent(GameEventType.CREDIT_ADDED);
             }
-            ui.context().game().stateMachine().changeGameState(GamePlayState.SETTING_OPTIONS_FOR_START);
+            ui.context().currentGame().stateMachine().changeGameState(GamePlayState.SETTING_OPTIONS_FOR_START);
         }
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            if (ui.context().game().isPlaying()) {
+            if (ui.context().currentGame().isPlaying()) {
                 return false;
             }
             return ui.context().gameState() == GamePlayState.SETTING_OPTIONS_FOR_START
@@ -45,7 +45,7 @@ public final class ArcadeActions {
         @Override
         public void execute(GameUI ui) {
             ui.soundManager().stopVoice();
-            ui.context().game().stateMachine().changeGameState(GamePlayState.STARTING_GAME_OR_LEVEL);
+            ui.context().currentGame().stateMachine().changeGameState(GamePlayState.STARTING_GAME_OR_LEVEL);
         }
 
         @Override
@@ -59,7 +59,7 @@ public final class ArcadeActions {
             return arcadeGames.contains(ui.context().gameBox().gameVariant())
                 && !ui.context().coinMechanism().isEmpty()
                 && (ui.context().gameState() == GamePlayState.INTRO || ui.context().gameState() == GamePlayState.SETTING_OPTIONS_FOR_START)
-                && ui.context().game().canStartNewGame();
+                && ui.context().currentGame().canStartNewGame();
         }
     };
 

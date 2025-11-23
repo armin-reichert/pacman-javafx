@@ -118,7 +118,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     public void doInit() {
         final GameUI_Config uiConfig = ui.currentConfig();
 
-        context().game().hud().creditVisible(true).scoreVisible(true).livesCounterVisible(false).levelCounterVisible(true);
+        context().currentGame().hud().creditVisible(true).scoreVisible(true).livesCounterVisible(false).levelCounterVisible(true);
 
         actionBindings.bind(ArcadeActions.ACTION_INSERT_COIN, ui.actionBindings());
         actionBindings.bind(ArcadeActions.ACTION_START_GAME, ui.actionBindings());
@@ -300,7 +300,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
                 scene.ghosts.stream()
                     .filter(ghost -> ghost.state() == FRIGHTENED)
-                    .filter(ghost -> theGameContext().game().actorsCollide(ghost, scene.pacMan))
+                    .filter(ghost -> theGameContext().currentGame().actorsCollide(ghost, scene.pacMan))
                     .findFirst()
                     .ifPresent(victim -> {
                         scene.victims.add(victim);
@@ -341,11 +341,11 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
             public void onUpdate(ArcadePacMan_IntroScene scene) {
                 if (timer.atSecond(0.75)) {
                     scene.ghosts.get(ORANGE_GHOST_POKEY).hide();
-                    if (!scene.context().game().canStartNewGame()) {
-                        scene.context().game().stateMachine().changeGameState(GamePlayState.STARTING_GAME_OR_LEVEL);
+                    if (!scene.context().currentGame().canStartNewGame()) {
+                        scene.context().currentGame().stateMachine().changeGameState(GamePlayState.STARTING_GAME_OR_LEVEL);
                     }
                 } else if (timer.atSecond(5)) {
-                    scene.context().game().stateMachine().changeGameState(GamePlayState.SETTING_OPTIONS_FOR_START);
+                    scene.context().currentGame().stateMachine().changeGameState(GamePlayState.SETTING_OPTIONS_FOR_START);
                 }
             }
         };

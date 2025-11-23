@@ -30,14 +30,14 @@ public class CutScenesTestState implements FsmState<GameContext>, TestState {
     @Override
     public void onEnter(GameContext context) {
         timer.restartIndefinitely();
-        if (context.game() instanceof AbstractGameModel gameModel) {
+        if (context.currentGame() instanceof AbstractGameModel gameModel) {
             testedCutSceneNumber = 1;
         }
     }
 
     @Override
     public void onUpdate(GameContext context) {
-        if (context.game() instanceof AbstractGameModel gameModel) {
+        if (context.currentGame() instanceof AbstractGameModel gameModel) {
             if (timer.hasExpired()) {
                 int lastCutSceneNumber = context.gameBox().isCurrentGameVariant("MS_PACMAN_TENGEN") ? 4 : 3;
                 if (testedCutSceneNumber < lastCutSceneNumber) {
@@ -46,7 +46,7 @@ public class CutScenesTestState implements FsmState<GameContext>, TestState {
                     //TODO find another solution and get rid of this event type
                     context.eventManager().publishEvent(GameEventType.UNSPECIFIED_CHANGE);
                 } else {
-                    context.game().stateMachine().changeGameState(GamePlayState.INTRO);
+                    context.currentGame().stateMachine().changeGameState(GamePlayState.INTRO);
                 }
             }
         }

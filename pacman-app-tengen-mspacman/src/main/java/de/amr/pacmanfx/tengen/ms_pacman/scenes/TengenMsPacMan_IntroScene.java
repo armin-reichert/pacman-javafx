@@ -253,12 +253,12 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 }
                 if (timer.atSecond(8)) {
                     // start demo level or show options
-                    TengenMsPacMan_GameModel game = scene.context().game();
+                    TengenMsPacMan_GameModel game = scene.context().currentGame();
                     if (game.optionsAreInitial()) {
                         game.setCanStartNewGame(false); // TODO check this
-                        scene.context().game().stateMachine().restart(GamePlayState.STARTING_GAME_OR_LEVEL);
+                        scene.context().currentGame().stateMachine().restart(GamePlayState.STARTING_GAME_OR_LEVEL);
                     } else {
-                        scene.context().game().stateMachine().changeGameState(GamePlayState.SETTING_OPTIONS_FOR_START);
+                        scene.context().currentGame().stateMachine().changeGameState(GamePlayState.SETTING_OPTIONS_FOR_START);
                     }
                 }
             }

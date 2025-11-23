@@ -62,7 +62,7 @@ public class InfoBoxGameControl extends InfoBox {
         setAction(buttonGroupLevelActions[GAME_LEVEL_START], ArcadeActions.ACTION_START_GAME); //TODO Tengen?
         setAction(buttonGroupLevelActions[GAME_LEVEL_QUIT], ACTION_RESTART_INTRO);
         setAction(buttonGroupLevelActions[GAME_LEVEL_NEXT], ACTION_ENTER_NEXT_LEVEL);
-        setAction(choiceBoxInitialLives, () -> ui.context().game().setInitialLifeCount(choiceBoxInitialLives.getValue()));
+        setAction(choiceBoxInitialLives, () -> ui.context().currentGame().setInitialLifeCount(choiceBoxInitialLives.getValue()));
     }
 
     @Override
@@ -70,7 +70,7 @@ public class InfoBoxGameControl extends InfoBox {
         super.update();
 
         //TODO use binding
-        choiceBoxInitialLives.setValue(ui.context().game().initialLifeCount());
+        choiceBoxInitialLives.setValue(ui.context().currentGame().initialLifeCount());
 
         FsmState<GameContext> state = ui.context().gameState();
 
@@ -93,10 +93,10 @@ public class InfoBoxGameControl extends InfoBox {
     }
 
     private boolean canStartLevel() {
-        return ui.context().game().canStartNewGame() && stateIsOneOf(ui.context().gameState(), GamePlayState.INTRO, GamePlayState.SETTING_OPTIONS_FOR_START);
+        return ui.context().currentGame().canStartNewGame() && stateIsOneOf(ui.context().gameState(), GamePlayState.INTRO, GamePlayState.SETTING_OPTIONS_FOR_START);
     }
 
     private boolean canEnterNextLevel() {
-        return ui.context().game().isPlaying() && stateIsOneOf(ui.context().gameState(), GamePlayState.HUNTING);
+        return ui.context().currentGame().isPlaying() && stateIsOneOf(ui.context().gameState(), GamePlayState.HUNTING);
     }
 }

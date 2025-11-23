@@ -38,7 +38,7 @@ public interface GameContext {
      * @return the model (in MVC sense) of the currently selected game variant.
      * @param <T> specific game model type
      */
-    <T extends Game> T game();
+    <T extends Game> T currentGame();
 
     /**
      * @return the game box containing all game variants.

@@ -132,7 +132,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
     }
 
     private void initForGameLevel(GameLevel gameLevel) {
-        context().game().hud().levelCounterVisible(true).livesCounterVisible(true); // is also visible in demo level!
+        context().currentGame().hud().levelCounterVisible(true).livesCounterVisible(true); // is also visible in demo level!
         setActionsBindings(gameLevel.isDemoLevel());
         dynamicCamera.updateRange(gameLevel.worldMap());
     }
@@ -191,7 +191,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
 
     @Override
     public void doInit() {
-        final TengenMsPacMan_GameModel game = context().game();
+        final TengenMsPacMan_GameModel game = context().currentGame();
         game.hud().scoreVisible(true).levelCounterVisible(true).livesCounterVisible(true);
         game.hud().showGameOptions(!game.optionsAreInitial());
         updateScaling();
@@ -366,7 +366,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
 
     @Override
     public void onGameContinued(GameEvent e) {
-        context().optGameLevel().ifPresent(gameLevel -> context().game().showMessage(gameLevel, MessageType.READY));
+        context().optGameLevel().ifPresent(gameLevel -> context().currentGame().showMessage(gameLevel, MessageType.READY));
         dynamicCamera.enterIntroMode();
     }
 
@@ -377,7 +377,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
 
     @Override
     public void onPacDead(GameEvent e) {
-        context().game().stateMachine().letCurrentStateExpire();
+        context().currentGame().stateMachine().letCurrentStateExpire();
     }
 
     @Override
@@ -441,7 +441,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
     }
 
     private void updateHUD(GameLevel gameLevel) {
-        final TengenMsPacMan_GameModel game = context().game();
+        final TengenMsPacMan_GameModel game = context().currentGame();
         int numLives = game.lifeCount() - 1;
         // As long as Pac-Man is still invisible on start, he is shown as an additional entry in the lives counter
         if (context().gameState() == GamePlayState.STARTING_GAME_OR_LEVEL && !gameLevel.pac().isVisible()) {
@@ -456,7 +456,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
         levelCompletedAnimation = new LevelCompletedAnimation(animationRegistry, gameLevel);
         levelCompletedAnimation.setSingleFlashMillis(333);
         // When animation ends, let state "LEVEL_COMPLETE" expire
-        levelCompletedAnimation.getOrCreateAnimationFX().setOnFinished(e -> context().game().stateMachine().letCurrentStateExpire());
+        levelCompletedAnimation.getOrCreateAnimationFX().setOnFinished(e -> context().currentGame().stateMachine().letCurrentStateExpire());
         levelCompletedAnimation.playFromStart();
     }
 

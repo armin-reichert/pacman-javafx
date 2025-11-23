@@ -139,7 +139,7 @@ public class InfoBoxGameInfo extends InfoBox {
         );
     }
 
-    private ActorSpeedControl actorSpeedControl() { return ui.context().game(); }
+    private ActorSpeedControl actorSpeedControl() { return ui.context().currentGame(); }
 
     private String fmtGhostAttackSpeed(GameLevel level) {
         // use Pinky because Blinky could be in Elroy mode

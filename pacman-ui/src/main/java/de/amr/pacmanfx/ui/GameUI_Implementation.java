@@ -321,10 +321,10 @@ public final class GameUI_Implementation implements GameUI {
 
     private void doSimulationStepAndUpdateGameScene() {
         try {
-            final SimulationStepEvents events = gameContext.game().simulationStepResults();
+            final SimulationStepEvents events = gameContext.currentGame().simulationStepResults();
             events.reset();
             events.setTick(clock.tickCount());
-            gameContext.game().stateMachine().update();
+            gameContext.currentGame().stateMachine().update();
             events.printLog();
             currentGameScene().ifPresent(GameScene::update);
         } catch (Throwable x) {
@@ -429,7 +429,7 @@ public final class GameUI_Implementation implements GameUI {
         currentGameScene().ifPresent(gameScene -> {
             gameScene.end();
             boolean shouldConsumeCoin = gameContext.gameState() == GamePlayState.STARTING_GAME_OR_LEVEL
-                    || gameContext.game().isPlaying();
+                    || gameContext.currentGame().isPlaying();
             if (shouldConsumeCoin && !gameContext.coinMechanism().isEmpty()) {
                 gameContext.coinMechanism().consumeCoin();
             }
@@ -437,7 +437,7 @@ public final class GameUI_Implementation implements GameUI {
         });
         clock.stop();
         clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
-        gameContext.game().stateMachine().restart(GamePlayState.BOOT);
+        gameContext.currentGame().stateMachine().restart(GamePlayState.BOOT);
         showStartView();
     }
 
@@ -446,7 +446,7 @@ public final class GameUI_Implementation implements GameUI {
         currentGameScene().ifPresent(GameScene::end);
         clock.stop();
         clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
-        gameContext.game().stateMachine().restart(GamePlayState.BOOT);
+        gameContext.currentGame().stateMachine().restart(GamePlayState.BOOT);
         Platform.runLater(clock::start);
     }
 
@@ -531,7 +531,7 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public void showEditorView() {
-        if (!gameContext.game().isPlaying() || clock.isPaused()) {
+        if (!gameContext.currentGame().isPlaying() || clock.isPaused()) {
             currentGameScene().ifPresent(GameScene::end);
             soundManager().stopAll();
             clock.stop();

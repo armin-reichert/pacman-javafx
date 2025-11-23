@@ -91,7 +91,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
 
     @Override
     public void doInit() {
-        TengenMsPacMan_HUD hud = (TengenMsPacMan_HUD) context().game().hud();
+        TengenMsPacMan_HUD hud = (TengenMsPacMan_HUD) context().currentGame().hud();
         hud.creditVisible(false).scoreVisible(false).levelCounterVisible(true).livesCounterVisible(false);
         hud.showGameOptions(false);
 
@@ -183,7 +183,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
                 pacMan.setMoveDir(Direction.RIGHT);
                 pacMan.setSpeed(4.0f);
             }
-            case 1380 -> context().game().stateMachine().letCurrentStateExpire();
+            case 1380 -> context().currentGame().stateMachine().letCurrentStateExpire();
         }
     }
 
@@ -194,9 +194,9 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
     public void draw() {
         sceneRenderer.draw(this);
         if (hudRenderer != null) {
-            var game = context().<TengenMsPacMan_GameModel>game();
+            var game = context().<TengenMsPacMan_GameModel>currentGame();
             if (game.mapCategory() != MapCategory.ARCADE) {
-                hudRenderer.drawHUD(context().game(), game.hud(), sizeInPx().minus(0, 2 * TS));
+                hudRenderer.drawHUD(context().currentGame(), game.hud(), sizeInPx().minus(0, 2 * TS));
             }
         }
     }

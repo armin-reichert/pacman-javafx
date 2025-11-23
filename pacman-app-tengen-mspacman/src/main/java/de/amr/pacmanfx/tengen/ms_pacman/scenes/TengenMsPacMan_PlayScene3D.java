@@ -45,7 +45,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     protected GameLevel3D createGameLevel3D() {
         // Note: member variable "gameLevel3D" is only set later in replaceGameLevel3D()
         final GameLevel3D gameLevel3D = super.createGameLevel3D();
-        final TengenMsPacMan_GameModel game = context().game();
+        final TengenMsPacMan_GameModel game = context().currentGame();
         if (!game.optionsAreInitial()) {
             final ImageView infoView = new ImageView();
             final double width = TS(game.gameLevel().worldMap().numCols());
@@ -110,7 +110,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     @Override
     protected void updateHUD() {
-        ScoreManager scoreManager = context().game().scoreManager();
+        ScoreManager scoreManager = context().currentGame().scoreManager();
         final Score score = scoreManager.score(), highScore = scoreManager.highScore();
         if (score.isEnabled()) {
             scores3D.showScore(score.points(), score.levelNumber());
