@@ -65,22 +65,21 @@ import static de.amr.pacmanfx.uilib.Ufx.createContextMenuTitle;
  */
 public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneProvider {
 
-    public static final float CONTENT_INDENT = TS(2);
     public static final double CANVAS_WIDTH_UNSCALED = NES_SIZE_PX.x();
 
-    public final DoubleProperty canvasHeightUnscaled = new SimpleDoubleProperty(NES_SIZE_PX.y());
-    public final BooleanProperty mazeHighlighted = new SimpleBooleanProperty(false);
+    private final DoubleProperty canvasHeightUnscaled = new SimpleDoubleProperty(NES_SIZE_PX.y());
+    private final BooleanProperty mazeHighlighted = new SimpleBooleanProperty(false);
 
     private final StackPane rootPane;
     private final SubScene subScene;
 
-    public final PlayScene2DCamera dynamicCamera;
+    private final PlayScene2DCamera dynamicCamera;
     private final PerspectiveCamera fixedCamera;
 
     private TengenMsPacMan_PlayScene2D_Renderer sceneRenderer;
     private TengenMsPacMan_HUDRenderer hudRenderer;
 
-    public LevelCompletedAnimation levelCompletedAnimation;
+    private LevelCompletedAnimation levelCompletedAnimation;
 
     public TengenMsPacMan_PlayScene2D(GameUI ui) {
         super(ui);
@@ -101,6 +100,22 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
         subScene.cameraProperty().bind(PROPERTY_PLAY_SCENE_DISPLAY_MODE.map(mode -> mode == SCROLLING ? dynamicCamera : fixedCamera));
         subScene.cameraProperty().addListener((py, ov, nv) -> updateScaling());
         subScene.heightProperty().addListener((py, ov, nv) -> updateScaling());
+    }
+
+    public LevelCompletedAnimation levelCompletedAnimation() {
+        return levelCompletedAnimation;
+    }
+
+    public boolean isMazeHighlighted() {
+        return mazeHighlighted.get();
+    }
+
+    public double canvasHeightUnscaled() {
+        return canvasHeightUnscaled.get();
+    }
+
+    public PlayScene2DCamera dynamicCamera() {
+        return dynamicCamera;
     }
 
     @Override

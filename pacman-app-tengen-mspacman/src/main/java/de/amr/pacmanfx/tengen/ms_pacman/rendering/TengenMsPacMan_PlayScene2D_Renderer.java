@@ -22,9 +22,10 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.scenes.TengenMsPacMan_PlayScene2D.CANVAS_WIDTH_UNSCALED;
-import static de.amr.pacmanfx.tengen.ms_pacman.scenes.TengenMsPacMan_PlayScene2D.CONTENT_INDENT;
 
 public class TengenMsPacMan_PlayScene2D_Renderer extends TengenMsPacMan_CommonSceneRenderer {
+
+    private static final float CONTENT_INDENT = TS(2);
 
     private static class PlaySceneDebugInfoRenderer extends BaseDebugInfoRenderer {
 
@@ -37,7 +38,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends TengenMsPacMan_CommonSc
             final TengenMsPacMan_PlayScene2D playScene = (TengenMsPacMan_PlayScene2D) scene;
             final FsmState<GameContext> gameState = playScene.context().gameState();
 
-            drawTileGrid(CANVAS_WIDTH_UNSCALED, playScene.canvasHeightUnscaled.get(), Color.LIGHTGRAY);
+            drawTileGrid(CANVAS_WIDTH_UNSCALED, playScene.canvasHeightUnscaled(), Color.LIGHTGRAY);
 
             ctx.save();
             ctx.translate(scaled(CONTENT_INDENT), 0);
@@ -48,7 +49,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends TengenMsPacMan_CommonSc
                 drawMovingActorInfo(gameLevel.pac());
                 gameLevel.ghosts().forEach(this::drawMovingActorInfo);
             });
-            ctx.fillText("Camera y=%.2f".formatted(playScene.dynamicCamera.getTranslateY()), scaled(11*TS), scaled(15*TS));
+            ctx.fillText("Camera y=%.2f".formatted(playScene.dynamicCamera().getTranslateY()), scaled(11*TS), scaled(15*TS));
             ctx.restore();
         }
     }
@@ -105,9 +106,9 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends TengenMsPacMan_CommonSc
         gameLevelRenderInfo.put(CommonRenderInfoKey.TICK, tick);
         gameLevelRenderInfo.put(TengenMsPacMan_UIConfig.CONFIG_KEY_MAP_CATEGORY,
             gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.CONFIG_KEY_MAP_CATEGORY));
-        if (playScene.levelCompletedAnimation != null && playScene.mazeHighlighted.get()) {
+        if (playScene.levelCompletedAnimation() != null && playScene.isMazeHighlighted()) {
             gameLevelRenderInfo.put(CommonRenderInfoKey.MAZE_BRIGHT, true);
-            gameLevelRenderInfo.put(CommonRenderInfoKey.MAZE_FLASHING_INDEX, playScene.levelCompletedAnimation.flashingIndex());
+            gameLevelRenderInfo.put(CommonRenderInfoKey.MAZE_FLASHING_INDEX, playScene.levelCompletedAnimation().flashingIndex());
         } else {
             gameLevelRenderInfo.put(CommonRenderInfoKey.MAZE_BRIGHT, false);
         }
