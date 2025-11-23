@@ -178,7 +178,7 @@ public class GameBox implements GameContext, CoinMechanism {
     }
 
     @Override
-    public FsmState<GameContext> gameState() {
+    public FsmState<GameContext> currentGameState() {
         return currentGame().stateMachine().state();
     }
 

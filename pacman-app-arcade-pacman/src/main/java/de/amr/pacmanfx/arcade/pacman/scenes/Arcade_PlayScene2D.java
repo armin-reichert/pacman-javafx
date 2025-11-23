@@ -140,7 +140,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onGameStarted(GameEvent e) {
-        FsmState<GameContext> state = context().gameState();
+        FsmState<GameContext> state = context().currentGameState();
         boolean silent = context().gameLevel().isDemoLevel() || state instanceof TestState;
         if (!silent) {
             ui.soundManager().play(SoundID.GAME_READY);
@@ -158,7 +158,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     private void updateHUD(GameLevel gameLevel) {
         final Game game = context().currentGame();
         // While Pac-Man is still invisible on level start, one entry more is shown in the lives counter
-        boolean oneMore = context().gameState() == GamePlayState.STARTING_GAME_OR_LEVEL && !gameLevel.pac().isVisible();
+        boolean oneMore = context().currentGameState() == GamePlayState.STARTING_GAME_OR_LEVEL && !gameLevel.pac().isVisible();
         int numLivesDisplayed = game.lifeCount() - 1;
         if (oneMore) numLivesDisplayed += 1;
         game.hud().setVisibleLifeCount(Math.min(numLivesDisplayed, game.hud().maxLivesDisplayed()));
@@ -280,7 +280,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
         if (!ui.soundManager().isEnabled()) return;
 
         final Pac pac = gameLevel.pac();
-        final boolean pacChased = context().gameState() == GamePlayState.HUNTING && !pac.powerTimer().isRunning();
+        final boolean pacChased = context().currentGameState() == GamePlayState.HUNTING && !pac.powerTimer().isRunning();
         if (pacChased) {
             selectAndPlaySiren();
         }

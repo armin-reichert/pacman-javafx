@@ -39,7 +39,7 @@ public class Arcade_BootScene2D_Renderer extends GameScene2D_Renderer {
     }
 
     public void draw(GameScene2D scene) {
-        TickTimer timer = scene.context().gameState().timer();
+        TickTimer timer = scene.context().currentGameState().timer();
         if (timer.tickCount() == 1) {
             clearCanvas();
         }

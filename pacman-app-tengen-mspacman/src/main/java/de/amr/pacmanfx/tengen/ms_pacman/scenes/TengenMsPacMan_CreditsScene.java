@@ -66,11 +66,11 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
     @Override
     public void update() {
-        if (context().gameState().timer().atSecond(DISPLAY_SECONDS)) {
+        if (context().currentGameState().timer().atSecond(DISPLAY_SECONDS)) {
             context().currentGame().stateMachine().letCurrentStateExpire();
             return;
         }
-        if (context().gameState().timer().betweenSeconds(0.5 * DISPLAY_SECONDS, DISPLAY_SECONDS)) {
+        if (context().currentGameState().timer().betweenSeconds(0.5 * DISPLAY_SECONDS, DISPLAY_SECONDS)) {
             fadeProgress = Math.min(fadeProgress + 0.005f, 1f); // Clamp to 1.0
         }
     }

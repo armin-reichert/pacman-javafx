@@ -340,7 +340,7 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
         updateCamera();
         updateHUD();
         ui.soundManager().setEnabled(!gameLevel.isDemoLevel());
-        updateSound(gameLevel, context().gameState());
+        updateSound(gameLevel, context().currentGameState());
     }
 
     @Override
@@ -387,7 +387,7 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
             return;
         }
         final GameLevel gameLevel = context().gameLevel();
-        final FsmState<GameContext> state = context().gameState();
+        final FsmState<GameContext> state = context().currentGameState();
 
         if (state instanceof TestState) {
             replaceGameLevel3D(); //TODO check when to destroy previous level
@@ -408,7 +408,7 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
                         setPlayerSteeringActionBindings();
                     }
                 }
-                default -> Logger.error("Unexpected game state '{}' on level start", context().gameState());
+                default -> Logger.error("Unexpected game state '{}' on level start", context().currentGameState());
             }
         }
 
@@ -438,13 +438,13 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
         gameLevel3D.energizers3D().forEach(energizer3D ->
                 energizer3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(energizer3D.tile())));
 
-        if (stateIsOneOf(context().gameState(), HUNTING, GHOST_DYING)) { //TODO check this
+        if (stateIsOneOf(context().currentGameState(), HUNTING, GHOST_DYING)) { //TODO check this
             gameLevel3D.energizers3D().stream()
                 .filter(energizer3D -> energizer3D.shape().isVisible())
                 .forEach(Energizer3D::startPumping);
         }
 
-        if (context().gameState() == HUNTING) {
+        if (context().currentGameState() == HUNTING) {
             if (gameLevel.pac().powerTimer().isRunning()) {
                 ui.soundManager().loop(SoundID.PAC_MAN_POWER);
             }
@@ -501,7 +501,7 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
 
     @Override
     public void onGameStarted(GameEvent e) {
-        FsmState<GameContext> state = context().gameState();
+        FsmState<GameContext> state = context().currentGameState();
         boolean silent = context().gameLevel().isDemoLevel() || state instanceof TestState;
         if (!silent) {
             ui.soundManager().play(SoundID.GAME_READY);

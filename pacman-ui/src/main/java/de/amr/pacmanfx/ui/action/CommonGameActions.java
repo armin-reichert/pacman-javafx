@@ -109,9 +109,9 @@ public final class CommonGameActions {
         public void execute(GameUI ui) {
             ui.soundManager().stopAll();
             ui.currentGameScene().ifPresent(GameScene::end);
-            boolean isLevelShortTest = ui.context().gameState() instanceof LevelShortTestState;
+            boolean isLevelShortTest = ui.context().currentGameState() instanceof LevelShortTestState;
             if (isLevelShortTest) {
-                ui.context().gameState().onExit(ui.context()); //TODO exit other states too?
+                ui.context().currentGameState().onExit(ui.context()); //TODO exit other states too?
             }
             ui.clock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
             ui.context().currentGame().stateMachine().restart(INTRO);
@@ -311,7 +311,7 @@ public final class CommonGameActions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            FsmState<GameContext> state = ui.context().gameState();
+            FsmState<GameContext> state = ui.context().currentGameState();
             if (state.name().equals(LevelShortTestState.class.getSimpleName())
                 || state.name().equals(LevelMediumTestState.class.getSimpleName())) {
                 return true;

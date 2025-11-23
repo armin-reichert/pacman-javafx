@@ -34,8 +34,8 @@ public final class ArcadeActions {
             if (ui.context().currentGame().isPlaying()) {
                 return false;
             }
-            return ui.context().gameState() == GamePlayState.SETTING_OPTIONS_FOR_START
-                || ui.context().gameState() == INTRO
+            return ui.context().currentGameState() == GamePlayState.SETTING_OPTIONS_FOR_START
+                || ui.context().currentGameState() == INTRO
                 || ui.context().optGameLevel().isPresent() && ui.context().optGameLevel().get().isDemoLevel()
                 || ui.context().coinMechanism().isEmpty();
         }
@@ -58,7 +58,7 @@ public final class ArcadeActions {
             );
             return arcadeGames.contains(ui.context().gameBox().gameVariant())
                 && !ui.context().coinMechanism().isEmpty()
-                && (ui.context().gameState() == GamePlayState.INTRO || ui.context().gameState() == GamePlayState.SETTING_OPTIONS_FOR_START)
+                && (ui.context().currentGameState() == GamePlayState.INTRO || ui.context().currentGameState() == GamePlayState.SETTING_OPTIONS_FOR_START)
                 && ui.context().currentGame().canStartNewGame();
         }
     };

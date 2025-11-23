@@ -291,7 +291,7 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
 
     @Override
     public GameScene selectGameScene(GameContext gameContext) {
-        String sceneID = switch (gameContext.gameState()) {
+        String sceneID = switch (gameContext.currentGameState()) {
             case GamePlayState.BOOT -> SCENE_ID_BOOT_SCENE_2D;
             case GamePlayState.SETTING_OPTIONS_FOR_START -> SCENE_ID_START_SCENE_2D;
             case GamePlayState.INTRO -> SCENE_ID_INTRO_SCENE_2D;

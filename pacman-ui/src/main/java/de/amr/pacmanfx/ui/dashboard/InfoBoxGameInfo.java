@@ -38,7 +38,7 @@ public class InfoBoxGameInfo extends InfoBox {
 
     @Override
     public void init(GameUI ui) {
-        addDynamicLabeledValue("Game State", () -> "%s".formatted(ui.context().gameState().name()));
+        addDynamicLabeledValue("Game State", () -> "%s".formatted(ui.context().currentGameState().name()));
         addDynamicLabeledValue("State Timer", this::stateTimerInfo);
         addDynamicLabeledValue("Game Scene", ifGameScenePresent(gameScene -> gameScene.getClass().getSimpleName()));
 
@@ -90,7 +90,7 @@ public class InfoBoxGameInfo extends InfoBox {
     }
 
     private String stateTimerInfo() {
-        TickTimer t = ui.context().gameState().timer();
+        TickTimer t = ui.context().currentGameState().timer();
         boolean indefinite = t.durationTicks() == TickTimer.INDEFINITE;
         if (t.isStopped()) {
             return "Stopped at tick %s of %s".formatted(t.tickCount(), indefinite ? "∞" : t.durationTicks());

@@ -63,5 +63,5 @@ public interface GameContext {
     /**
      * @return the current game state (the state of the game controller FSM).
      */
-    FsmState<GameContext> gameState();
+    FsmState<GameContext> currentGameState();
 }

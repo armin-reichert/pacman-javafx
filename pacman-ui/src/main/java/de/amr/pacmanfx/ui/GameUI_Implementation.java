@@ -428,7 +428,7 @@ public final class GameUI_Implementation implements GameUI {
         soundManager().stopAll();
         currentGameScene().ifPresent(gameScene -> {
             gameScene.end();
-            boolean shouldConsumeCoin = gameContext.gameState() == GamePlayState.STARTING_GAME_OR_LEVEL
+            boolean shouldConsumeCoin = gameContext.currentGameState() == GamePlayState.STARTING_GAME_OR_LEVEL
                     || gameContext.currentGame().isPlaying();
             if (shouldConsumeCoin && !gameContext.coinMechanism().isEmpty()) {
                 gameContext.coinMechanism().consumeCoin();
