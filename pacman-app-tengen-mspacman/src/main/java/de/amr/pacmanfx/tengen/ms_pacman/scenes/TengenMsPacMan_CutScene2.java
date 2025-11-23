@@ -46,9 +46,9 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
     private TengenMsPacMan_HUDRenderer hudRenderer;
     private TengenMsPacMan_CutScene2_Renderer sceneRenderer;
 
-    public Clapperboard clapperboard;
-    public Pac pacMan;
-    public Pac msPacMan;
+    private Clapperboard clapperboard;
+    private Pac pacMan;
+    private Pac msPacMan;
 
     public TengenMsPacMan_CutScene2(GameUI ui) {
         super(ui);
@@ -71,10 +71,23 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
         return hudRenderer;
     }
 
+    public Clapperboard clapperboard() {
+        return clapperboard;
+    }
+
+    public Pac pacMan() {
+        return pacMan;
+    }
+
+    public Pac msPacMan() {
+        return msPacMan;
+    }
+
     @Override
     public TengenMsPacMan_CutScene2_Renderer sceneRenderer() {
         return sceneRenderer;
     }
+
 
     @Override
     public void doInit() {

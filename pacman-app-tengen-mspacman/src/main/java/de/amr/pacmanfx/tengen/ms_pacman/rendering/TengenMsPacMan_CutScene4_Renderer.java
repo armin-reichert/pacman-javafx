@@ -7,8 +7,6 @@ import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.canvas.Canvas;
 
-import java.util.stream.Stream;
-
 public class TengenMsPacMan_CutScene4_Renderer extends GameScene2D_Renderer {
 
     private final TengenMsPacMan_ActorRenderer actorRenderer;
@@ -28,9 +26,11 @@ public class TengenMsPacMan_CutScene4_Renderer extends GameScene2D_Renderer {
         clearCanvas();
 
         final TengenMsPacMan_CutScene4 cutScene = (TengenMsPacMan_CutScene4) scene;
-        cutScene.clapperboard.setFont(actorRenderer.arcadeFont8());
-        Stream.of(cutScene.clapperboard, cutScene.msPacMan, cutScene.pacMan).forEach(actorRenderer::drawActor);
-        cutScene.juniors.forEach(actorRenderer::drawActor);
+        cutScene.clapperboard().setFont(arcadeFont8());
+        actorRenderer.drawActor(cutScene.clapperboard());
+        actorRenderer.drawActor(cutScene.msPacMan());
+        actorRenderer.drawActor(cutScene.pacMan());
+        cutScene.juniors().forEach(actorRenderer::drawActor);
 
         if (scene.debugInfoVisible()) {
             debugInfoRenderer.draw(scene);

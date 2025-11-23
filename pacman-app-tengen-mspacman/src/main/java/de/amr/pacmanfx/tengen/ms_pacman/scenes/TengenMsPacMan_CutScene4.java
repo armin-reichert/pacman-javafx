@@ -28,6 +28,7 @@ import javafx.scene.canvas.Canvas;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static de.amr.pacmanfx.Globals.TS;
@@ -46,11 +47,11 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     private TengenMsPacMan_HUDRenderer hudRenderer;
     private TengenMsPacMan_CutScene4_Renderer sceneRenderer;
 
-    public Pac pacMan;
-    public Pac msPacMan;
-    public List<Pac> juniors;
+    private Pac pacMan;
+    private Pac msPacMan;
+    private List<Pac> juniors;
     private List<Integer> juniorCreationTime;
-    public Clapperboard clapperboard;
+    private Clapperboard clapperboard;
 
     public TengenMsPacMan_CutScene4(GameUI ui) {
         super(ui);
@@ -67,6 +68,22 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
             new TengenMsPacMan_CutScene4_Renderer(this, canvas, uiConfig.spriteSheet()), this);
     }
 
+    public Pac pacMan() {
+        return pacMan;
+    }
+
+    public Pac msPacMan() {
+        return msPacMan;
+    }
+
+    public List<Pac> juniors() {
+        return Collections.unmodifiableList(juniors);
+    }
+
+    public Clapperboard clapperboard() {
+        return clapperboard;
+    }
+
     @Override
     public TengenMsPacMan_HUDRenderer hudRenderer() {
         return hudRenderer;
@@ -76,6 +93,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     public TengenMsPacMan_CutScene4_Renderer sceneRenderer() {
         return sceneRenderer;
     }
+
 
     @Override
     protected void doInit() {

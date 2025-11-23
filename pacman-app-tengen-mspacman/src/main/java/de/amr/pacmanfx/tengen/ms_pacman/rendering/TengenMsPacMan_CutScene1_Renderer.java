@@ -7,18 +7,16 @@ import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.canvas.Canvas;
 
-import java.util.stream.Stream;
-
 public class TengenMsPacMan_CutScene1_Renderer extends GameScene2D_Renderer {
 
-    private final TengenMsPacMan_ActorRenderer actorSpriteRenderer;
+    private final TengenMsPacMan_ActorRenderer actorRenderer;
 
     public TengenMsPacMan_CutScene1_Renderer(GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(canvas, spriteSheet);
 
         final GameUI_Config uiConfig = scene.ui().currentConfig();
 
-        actorSpriteRenderer = configureRendererForGameScene(
+        actorRenderer = configureRendererForGameScene(
             (TengenMsPacMan_ActorRenderer) uiConfig.createActorRenderer(canvas), scene);
 
         createDefaultDebugInfoRenderer(scene, canvas, uiConfig.spriteSheet());
@@ -28,9 +26,13 @@ public class TengenMsPacMan_CutScene1_Renderer extends GameScene2D_Renderer {
         clearCanvas();
 
         TengenMsPacMan_CutScene1 cutScene = (TengenMsPacMan_CutScene1) scene;
-        cutScene.clapperboard.setFont(actorSpriteRenderer.arcadeFont8());
-        Stream.of(cutScene.clapperboard, cutScene.msPacMan, cutScene.pacMan, cutScene.inky, cutScene.pinky, cutScene.heart)
-            .forEach(actorSpriteRenderer::drawActor);
+        cutScene.clapperboard().setFont(arcadeFont8());
+        actorRenderer.drawActor(cutScene.clapperboard());
+        actorRenderer.drawActor(cutScene.msPacMan());
+        actorRenderer.drawActor(cutScene.pacMan());
+        actorRenderer.drawActor(cutScene.inky());
+        actorRenderer.drawActor(cutScene.pinky());
+        actorRenderer.drawActor(cutScene.heart());
 
         if (scene.debugInfoVisible()) {
             debugInfoRenderer.draw(scene);

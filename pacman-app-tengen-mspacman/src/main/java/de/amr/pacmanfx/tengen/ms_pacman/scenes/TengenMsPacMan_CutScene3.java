@@ -46,13 +46,13 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
     private TengenMsPacMan_HUDRenderer hudRenderer;
     private TengenMsPacMan_CutScene3_Renderer sceneRenderer;
 
-    public Clapperboard clapperboard;
-    public Pac pacMan;
-    public Pac msPacMan;
-    public Stork stork;
-    public Bag flyingBag;
+    private Clapperboard clapperboard;
+    private Pac pacMan;
+    private Pac msPacMan;
+    private Stork stork;
+    private Bag flyingBag;
 
-    public boolean darkness;
+    private boolean darkness;
 
     public TengenMsPacMan_CutScene3(GameUI ui) {
         super(ui);
@@ -77,6 +77,30 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
     @Override
     public TengenMsPacMan_CutScene3_Renderer sceneRenderer() {
         return sceneRenderer;
+    }
+
+    public Clapperboard clapperboard() {
+        return clapperboard;
+    }
+
+    public Pac pacMan() {
+        return pacMan;
+    }
+
+    public Pac msPacMan() {
+        return msPacMan;
+    }
+
+    public Stork stork() {
+        return stork;
+    }
+
+    public Bag flyingBag() {
+        return flyingBag;
+    }
+
+    public boolean darkness() {
+        return darkness;
     }
 
     @Override
