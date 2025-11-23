@@ -24,7 +24,7 @@ import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
-import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
+import de.amr.pacmanfx.uilib.rendering.HUD_Renderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ContextMenu;
@@ -49,7 +49,7 @@ import static de.amr.pacmanfx.uilib.Ufx.createContextMenuTitle;
 public class Arcade_PlayScene2D extends GameScene2D {
 
     private Arcade_PlayScene2D_Renderer sceneRenderer;
-    private HUDRenderer hudRenderer;
+    private HUD_Renderer hudRenderer;
 
     private LevelCompletedAnimation levelCompletedAnimation;
 
@@ -72,7 +72,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public HUDRenderer hudRenderer() {
+    public HUD_Renderer hudRenderer() {
         return hudRenderer;
     }
 
@@ -200,8 +200,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     public void onEnterGameState(FsmState<GameContext> state) {
         if (state == PacManGamesState.LEVEL_COMPLETE) {
             ui.soundManager().stopAll();
-            createLevelCompletedAnimation();
-            levelCompletedAnimation.playFromStart();
+            playLevelCompletedAnimation();
         }
         else if (state == PacManGamesState.GAME_OVER) {
             ui.soundManager().stopAll();
@@ -209,10 +208,10 @@ public class Arcade_PlayScene2D extends GameScene2D {
         }
     }
 
-    private void createLevelCompletedAnimation() {
-        levelCompletedAnimation = new LevelCompletedAnimation(animationRegistry);
-        levelCompletedAnimation.setGameLevel(context().gameLevel());
+    private void playLevelCompletedAnimation() {
+        levelCompletedAnimation = new LevelCompletedAnimation(animationRegistry, context().gameLevel());
         levelCompletedAnimation.getOrCreateAnimationFX().setOnFinished(e -> context().gameController().letCurrentGameStateExpire());
+        levelCompletedAnimation.playFromStart();
     }
 
     @Override

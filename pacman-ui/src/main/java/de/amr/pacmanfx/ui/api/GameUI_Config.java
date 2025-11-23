@@ -18,7 +18,7 @@ import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.PacBase3D;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
-import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
+import de.amr.pacmanfx.uilib.rendering.HUD_Renderer;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -50,7 +50,7 @@ public interface GameUI_Config extends Disposable {
 
     GameLevelRenderer createGameLevelRenderer(Canvas canvas);
 
-    HUDRenderer createHUDRenderer(Canvas canvas);
+    HUD_Renderer createHUDRenderer(Canvas canvas);
 
     ActorRenderer createActorRenderer(Canvas canvas);
 

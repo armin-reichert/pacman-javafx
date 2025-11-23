@@ -8,7 +8,7 @@ import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.HUD;
 
-public interface HUDRenderer extends Renderer {
+public interface HUD_Renderer extends Renderer {
 
     /**
      * Draws the Head-Up Display (score, live counter, level counter, coins inserted)

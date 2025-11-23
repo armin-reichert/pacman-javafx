@@ -33,13 +33,14 @@ import static java.util.Objects.requireNonNull;
  */
 public class LevelCompletedAnimation extends RegisteredAnimation {
 
-    private GameLevel gameLevel;
+    private final GameLevel gameLevel;
     private int singleFlashMillis;
     private int flashingIndex;
     private final BooleanProperty highlighted = new SimpleBooleanProperty(false);
 
-    public LevelCompletedAnimation(AnimationRegistry animationRegistry) {
+    public LevelCompletedAnimation(AnimationRegistry animationRegistry, GameLevel gameLevel) {
         super(animationRegistry, "Level_Completed");
+        this.gameLevel = requireNonNull(gameLevel);
         singleFlashMillis = 333;
     }
 
@@ -71,10 +72,6 @@ public class LevelCompletedAnimation extends RegisteredAnimation {
     public void playFromStart() {
         flashingIndex = 0;
         super.playFromStart();
-    }
-
-    public void setGameLevel(GameLevel gameLevel) {
-        this.gameLevel = gameLevel;
     }
 
     public void setSingleFlashMillis(int singleFlashMillis) {

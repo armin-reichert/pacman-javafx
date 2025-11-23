@@ -12,7 +12,7 @@ import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.model.ScoreManager;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
-import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
+import de.amr.pacmanfx.uilib.rendering.HUD_Renderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -22,7 +22,10 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.api.ArcadePalette.ARCADE_WHITE;
 import static de.amr.pacmanfx.ui.api.ArcadePalette.ARCADE_YELLOW;
 
-public class ArcadePacMan_HUD_Renderer extends BaseSpriteRenderer implements HUDRenderer {
+public class ArcadePacMan_HUD_Renderer extends BaseSpriteRenderer implements HUD_Renderer {
+
+    public static final String SCORE_TEXT = "SCORE";
+    public static final String HIGH_SCORE_TEXT = "HIGH SCORE";
 
     public ArcadePacMan_HUD_Renderer(Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(canvas, spriteSheet);
@@ -37,18 +40,14 @@ public class ArcadePacMan_HUD_Renderer extends BaseSpriteRenderer implements HUD
         return spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS);
     }
 
-    protected RectShort livesCounterSymbol() {
-        return spriteSheet().sprite(SpriteID.LIVES_COUNTER_SYMBOL);
-    }
-
     @Override
     public void drawHUD(Game game, HUD hud, Vector2i sceneSize) {
         if (!hud.isVisible()) return;
 
         if (hud.isScoreVisible()) {
             ScoreManager scoreManager = game.scoreManager();
-            drawScore(scoreManager.score(), "SCORE", arcadeFont8(), TS(1), TS(1));
-            drawScore(scoreManager.highScore(), "HIGH SCORE", arcadeFont8(), TS(14), TS(1));
+            drawScore(scoreManager.score(), SCORE_TEXT, arcadeFont8(), TS(1), TS(1));
+            drawScore(scoreManager.highScore(), HIGH_SCORE_TEXT, arcadeFont8(), TS(14), TS(1));
         }
 
         if (hud.isLevelCounterVisible()) {
@@ -61,7 +60,7 @@ public class ArcadePacMan_HUD_Renderer extends BaseSpriteRenderer implements HUD
         }
 
         if (hud.isLivesCounterVisible()) {
-            RectShort sprite = livesCounterSymbol();
+            RectShort sprite = spriteSheet().sprite(SpriteID.LIVES_COUNTER_SYMBOL);
             float x = TS(2), y = sceneSize.y() - TS(2);
             for (int i = 0; i < hud.visibleLifeCount(); ++i) {
                 drawSprite(sprite, x + i * TS(2), y, true);

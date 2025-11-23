@@ -13,7 +13,7 @@ import de.amr.pacmanfx.ui.api.ActionBindingsManager;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
+import de.amr.pacmanfx.uilib.rendering.HUD_Renderer;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
@@ -152,7 +152,7 @@ public abstract class GameScene2D implements GameScene {
 
     protected abstract GameScene2D_Renderer sceneRenderer();
 
-    protected abstract HUDRenderer hudRenderer();
+    protected abstract HUD_Renderer hudRenderer();
 
     protected <T extends Renderer> T configureRenderer(T renderer) {
         return GameScene2D_Renderer.configureRendererForGameScene(renderer, this);

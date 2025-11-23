@@ -12,7 +12,7 @@ import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.model.ScoreManager;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
-import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
+import de.amr.pacmanfx.uilib.rendering.HUD_Renderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -22,7 +22,7 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.api.ArcadePalette.ARCADE_WHITE;
 import static de.amr.pacmanfx.ui.api.ArcadePalette.ARCADE_YELLOW;
 
-public class ArcadeMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HUDRenderer {
+public class ArcadeMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HUD_Renderer {
 
     public ArcadeMsPacMan_HUDRenderer(Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(canvas, spriteSheet);

@@ -15,7 +15,7 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
-import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
+import de.amr.pacmanfx.uilib.rendering.HUD_Renderer;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
@@ -34,7 +34,7 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
     private Ghost blinky;
 
     private ArcadePacMan_CutScene3_Renderer sceneRenderer;
-    private HUDRenderer hudRenderer;
+    private HUD_Renderer hudRenderer;
 
     public ArcadePacMan_CutScene3(GameUI ui) {
         super(ui);
@@ -52,7 +52,7 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
     }
 
     @Override
-    public HUDRenderer hudRenderer() {
+    public HUD_Renderer hudRenderer() {
         return hudRenderer;
     }
 

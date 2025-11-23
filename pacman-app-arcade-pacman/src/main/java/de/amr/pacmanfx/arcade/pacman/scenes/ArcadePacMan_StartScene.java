@@ -10,7 +10,7 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.action.ArcadeActions;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
-import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
+import de.amr.pacmanfx.uilib.rendering.HUD_Renderer;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.ui._2d.GameScene2D_Renderer.configureRendererForGameScene;
@@ -21,7 +21,7 @@ import static de.amr.pacmanfx.ui._2d.GameScene2D_Renderer.configureRendererForGa
 public class ArcadePacMan_StartScene extends GameScene2D {
 
     private ArcadePacMan_StartScene_Renderer sceneRenderer;
-    private HUDRenderer hudRenderer;
+    private HUD_Renderer hudRenderer;
 
     public ArcadePacMan_StartScene(GameUI ui) {
         super(ui);
@@ -37,7 +37,7 @@ public class ArcadePacMan_StartScene extends GameScene2D {
     }
 
     @Override
-    public HUDRenderer hudRenderer() {
+    public HUD_Renderer hudRenderer() {
         return hudRenderer;
     }
 
