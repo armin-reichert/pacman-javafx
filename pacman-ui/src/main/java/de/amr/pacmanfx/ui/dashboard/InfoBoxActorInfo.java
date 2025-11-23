@@ -28,7 +28,7 @@ public class InfoBoxActorInfo extends InfoBox {
 
     public void init(GameUI ui) {
         addDynamicLabeledValue("Pac Name", supplyPacInfo(Pac::name));
-        addDynamicLabeledValue("Lives",    ifGameLevelPresent(gameLevel -> "%d".formatted(ui.gameContext().game().lifeCount())));
+        addDynamicLabeledValue("Lives",    ifGameLevelPresent(gameLevel -> "%d".formatted(ui.context().game().lifeCount())));
         addDynamicLabeledValue("Movement", supplyPacInfo(this::actorMovementInfo));
         addDynamicLabeledValue("Tile",     supplyPacInfo(this::actorLocationInfo));
         addDynamicLabeledValue("Power",    ifGameLevelPresent(gameLevel -> {
@@ -110,7 +110,7 @@ public class InfoBoxActorInfo extends InfoBox {
     private String ghostState(Ghost ghost) {
         var stateText = ghost.state() != null ? ghost.state().name() : "undefined";
         if (ghost.state() == GhostState.HUNTING_PAC) {
-            stateText = ui.gameContext().gameLevel().huntingTimer().phase().name();
+            stateText = ui.context().gameLevel().huntingTimer().phase().name();
         }
         return stateText;
     }

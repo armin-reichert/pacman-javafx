@@ -267,10 +267,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
         });
 
         var miAutopilot = new CheckMenuItem(ui.assets().translated("autopilot"));
-        miAutopilot.selectedProperty().bindBidirectional(context().gameController().usingAutopilotProperty());
+        miAutopilot.selectedProperty().bindBidirectional(context().gameBox().usingAutopilotProperty());
 
         var miImmunity = new CheckMenuItem(ui.assets().translated("immunity"));
-        miImmunity.selectedProperty().bindBidirectional(context().gameController().immunityProperty());
+        miImmunity.selectedProperty().bindBidirectional(context().gameBox().immunityProperty());
 
         var miMuted = new CheckMenuItem(ui.assets().translated("muted"));
         miMuted.selectedProperty().bindBidirectional(PROPERTY_MUTED);
@@ -311,7 +311,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
 
     @Override
     public void onLevelCreated(GameEvent e) {
-        initForGameLevel(ui.gameContext().gameLevel());
+        initForGameLevel(ui.context().gameLevel());
     }
 
     @Override

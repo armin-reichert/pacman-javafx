@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx;
 
 import de.amr.pacmanfx.controller.CoinMechanism;
-import de.amr.pacmanfx.controller.GameController;
+import de.amr.pacmanfx.controller.GameBox;
 import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.model.Game;
@@ -41,9 +41,9 @@ public interface GameContext {
     <T extends Game> T game();
 
     /**
-     * @return the controller (in MVC sense) used by all game variants. Implemented as an FSM.
+     * @return the game box containing all game variants.
      */
-    GameController gameController();
+    GameBox gameBox();
 
     /**
      * @return the event manager that is used to publish/subscribe to game events created by the model layer.

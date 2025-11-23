@@ -375,7 +375,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
     }
 
     private Game selectedGame() {
-        return ui.gameContext().gameController().game(state.gameVariant);
+        return ui.context().gameBox().game(state.gameVariant);
     }
 
     private void startGame() {

@@ -50,19 +50,19 @@ public class InfoBoxGameControl extends InfoBox {
 
     @Override
     public void init(GameUI ui) {
-        spinnerCredit            = addIntSpinner("Credit", 0, CoinMechanism.MAX_COINS, ui.gameContext().coinMechanism().numCoinsProperty());
+        spinnerCredit            = addIntSpinner("Credit", 0, CoinMechanism.MAX_COINS, ui.context().coinMechanism().numCoinsProperty());
         choiceBoxInitialLives    = addChoiceBox("Initial Lives", new Integer[] {3, 5});
         buttonGroupLevelActions  = addButtonList("Game Level", List.of("Start", "Quit", "Next"));
         buttonGroupCutScenesTest = addButtonList("Cut Scenes Test", List.of("Start", "Quit"));
-        cbAutopilot              = addCheckBox("Autopilot", ui.gameContext().gameController().usingAutopilotProperty());
-        cbImmunity               = addCheckBox("Pac-Man Immune", ui.gameContext().gameController().immunityProperty());
+        cbAutopilot              = addCheckBox("Autopilot", ui.context().gameBox().usingAutopilotProperty());
+        cbImmunity               = addCheckBox("Pac-Man Immune", ui.context().gameBox().immunityProperty());
 
         setAction(buttonGroupCutScenesTest[CUT_SCENES_TEST_START], TestActions.ACTION_CUT_SCENES_TEST);
         setAction(buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT], ACTION_RESTART_INTRO);
         setAction(buttonGroupLevelActions[GAME_LEVEL_START], ArcadeActions.ACTION_START_GAME); //TODO Tengen?
         setAction(buttonGroupLevelActions[GAME_LEVEL_QUIT], ACTION_RESTART_INTRO);
         setAction(buttonGroupLevelActions[GAME_LEVEL_NEXT], ACTION_ENTER_NEXT_LEVEL);
-        setAction(choiceBoxInitialLives, () -> ui.gameContext().game().setInitialLifeCount(choiceBoxInitialLives.getValue()));
+        setAction(choiceBoxInitialLives, () -> ui.context().game().setInitialLifeCount(choiceBoxInitialLives.getValue()));
     }
 
     @Override
@@ -70,15 +70,15 @@ public class InfoBoxGameControl extends InfoBox {
         super.update();
 
         //TODO use binding
-        choiceBoxInitialLives.setValue(ui.gameContext().game().initialLifeCount());
+        choiceBoxInitialLives.setValue(ui.context().game().initialLifeCount());
 
-        FsmState<GameContext> state = ui.gameContext().gameState();
+        FsmState<GameContext> state = ui.context().gameState();
 
         spinnerCredit.setDisable(!(stateIsOneOf(state, GamePlayState.INTRO, GamePlayState.SETTING_OPTIONS_FOR_START)));
         choiceBoxInitialLives.setDisable(state != GamePlayState.INTRO);
 
         buttonGroupLevelActions[GAME_LEVEL_START].setDisable(isBooting() || !canStartLevel());
-        buttonGroupLevelActions[GAME_LEVEL_QUIT].setDisable(isBooting() || ui.gameContext().optGameLevel().isEmpty());
+        buttonGroupLevelActions[GAME_LEVEL_QUIT].setDisable(isBooting() || ui.context().optGameLevel().isEmpty());
         buttonGroupLevelActions[GAME_LEVEL_NEXT].setDisable(isBooting() || !canEnterNextLevel());
 
         buttonGroupCutScenesTest[CUT_SCENES_TEST_START].setDisable(isBooting() || state != GamePlayState.INTRO);
@@ -89,14 +89,14 @@ public class InfoBoxGameControl extends InfoBox {
     }
 
     private boolean isBooting() {
-        return ui.gameContext().gameState() == GamePlayState.BOOT;
+        return ui.context().gameState() == GamePlayState.BOOT;
     }
 
     private boolean canStartLevel() {
-        return ui.gameContext().game().canStartNewGame() && stateIsOneOf(ui.gameContext().gameState(), GamePlayState.INTRO, GamePlayState.SETTING_OPTIONS_FOR_START);
+        return ui.context().game().canStartNewGame() && stateIsOneOf(ui.context().gameState(), GamePlayState.INTRO, GamePlayState.SETTING_OPTIONS_FOR_START);
     }
 
     private boolean canEnterNextLevel() {
-        return ui.gameContext().game().isPlaying() && stateIsOneOf(ui.gameContext().gameState(), GamePlayState.HUNTING);
+        return ui.context().game().isPlaying() && stateIsOneOf(ui.context().gameState(), GamePlayState.HUNTING);
     }
 }

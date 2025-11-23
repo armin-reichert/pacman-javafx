@@ -294,7 +294,7 @@ public class GameLevel3D extends Group implements Disposable {
      */
     public GameLevel3D(GameUI ui) {
         this.ui = requireNonNull(ui);
-        this.gameLevel = requireNonNull(ui.gameContext().gameLevel());
+        this.gameLevel = requireNonNull(ui.context().gameLevel());
 
         wallOpacityProperty.bind(PROPERTY_3D_WALL_OPACITY);
 
@@ -697,7 +697,7 @@ public class GameLevel3D extends Group implements Disposable {
         if (livesCounter3D != null) {
             int lifeCount = gameLevel.game().lifeCount() - 1;
             // when the game starts and Pac-Man is not yet visible, show one more
-            boolean oneMore = ui.gameContext().gameState() == GamePlayState.STARTING_GAME_OR_LEVEL && !gameLevel.pac().isVisible();
+            boolean oneMore = ui.context().gameState() == GamePlayState.STARTING_GAME_OR_LEVEL && !gameLevel.pac().isVisible();
             if (oneMore) lifeCount += 1;
             livesCounter3D.livesCountProperty().set(lifeCount);
             boolean visible = gameLevel.game().canStartNewGame();
@@ -735,7 +735,7 @@ public class GameLevel3D extends Group implements Disposable {
             pauseSec(0.5)
         );
         // Note: adding this inside the animation as last action does not work!
-        animation.setOnFinished(e -> ui.gameContext().game().stateMachine().letCurrentStateExpire());
+        animation.setOnFinished(e -> ui.context().game().stateMachine().letCurrentStateExpire());
         animation.play();
     }
 
@@ -782,7 +782,7 @@ public class GameLevel3D extends Group implements Disposable {
         animation.setOnFinished(e -> {
             wallBaseHeightProperty.bind(PROPERTY_3D_WALL_HEIGHT);
             perspectiveIDProperty.bind(PROPERTY_3D_PERSPECTIVE_ID);
-            ui.gameContext().game().stateMachine().letCurrentStateExpire();
+            ui.context().game().stateMachine().letCurrentStateExpire();
         });
         animation.play();
     }

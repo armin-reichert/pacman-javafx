@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.controller.CoinMechanism;
-import de.amr.pacmanfx.controller.GameController;
+import de.amr.pacmanfx.controller.GameBox;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GamePlayStateMachine;
@@ -136,7 +136,7 @@ public class GameUI_Builder {
         configByGameVariant.forEach((gameVariant, config) -> {
             File highScoreFile = highScoreFile(gameContext.homeDir(), gameVariant);
             Game gameModel = createGameModel(config.gameModelClass, config.mapSelector, gameContext, highScoreFile);
-            gameContext.gameController().registerGame(gameVariant, gameModel);
+            gameContext.gameBox().registerGame(gameVariant, gameModel);
         });
 
         for (StartPageConfiguration config : startPageConfigs) {
@@ -225,8 +225,8 @@ public class GameUI_Builder {
         if (key.isBlank()) {
             error("Game variant key must not be a blank string");
         }
-        if (!GameController.GAME_VARIANT_PATTERN.matcher(key).matches()) {
-            error("Game variant key '%s' does not match pattern '%s'".formatted(key, GameController.GAME_VARIANT_PATTERN));
+        if (!GameBox.GAME_VARIANT_PATTERN.matcher(key).matches()) {
+            error("Game variant key '%s' does not match pattern '%s'".formatted(key, GameBox.GAME_VARIANT_PATTERN));
         }
     }
 

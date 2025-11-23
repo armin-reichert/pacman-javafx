@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx;
 
-import de.amr.pacmanfx.controller.GameController;
+import de.amr.pacmanfx.controller.GameBox;
 import de.amr.pacmanfx.lib.math.Vector2i;
 
 public interface Globals {
@@ -77,9 +77,9 @@ public interface Globals {
      * @return the global object which provides access to different other global objects
      */
     static GameContext theGameContext() {
-        if (GameController.THE_GAME_CONTROLLER == null) {
-            GameController.THE_GAME_CONTROLLER = new GameController();
+        if (GameBox.THE_GAME_BOX == null) {
+            GameBox.THE_GAME_BOX = new GameBox();
         }
-        return GameController.THE_GAME_CONTROLLER;
+        return GameBox.THE_GAME_BOX;
     }
 }

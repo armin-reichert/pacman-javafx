@@ -185,7 +185,7 @@ public final class GameUI_Implementation implements GameUI {
             currentViewProperty(),
             playView.currentGameSceneProperty(),
             scene.heightProperty(),
-            gameContext.gameController().gameVariantProperty(),
+            gameContext.gameBox().gameVariantProperty(),
             PROPERTY_DEBUG_INFO_VISIBLE,
             PROPERTY_3D_ENABLED,
             clock().pausedProperty()
@@ -256,9 +256,9 @@ public final class GameUI_Implementation implements GameUI {
         statusIconBox.visibleProperty().bind(currentViewProperty().map(currentView -> optEditorView().isEmpty() || currentView != optEditorView().get()));
         statusIconBox.iconMuted()    .visibleProperty().bind(PROPERTY_MUTED);
         statusIconBox.icon3D()       .visibleProperty().bind(PROPERTY_3D_ENABLED);
-        statusIconBox.iconAutopilot().visibleProperty().bind(gameContext().gameController().usingAutopilotProperty());
-        statusIconBox.iconCheated()  .visibleProperty().bind(gameContext().gameController().cheatUsedProperty());
-        statusIconBox.iconImmune()   .visibleProperty().bind(gameContext().gameController().immunityProperty());
+        statusIconBox.iconAutopilot().visibleProperty().bind(context().gameBox().usingAutopilotProperty());
+        statusIconBox.iconCheated()  .visibleProperty().bind(context().gameBox().cheatUsedProperty());
+        statusIconBox.iconImmune()   .visibleProperty().bind(context().gameBox().immunityProperty());
         StackPane.setAlignment(statusIconBox, Pos.BOTTOM_LEFT);
     }
 
@@ -382,7 +382,7 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     @Override
-    public GameContext gameContext() {
+    public GameContext context() {
         return gameContext;
     }
 
@@ -457,7 +457,7 @@ public final class GameUI_Implementation implements GameUI {
             return;
         }
 
-        String previousVariant = gameContext.gameController().gameVariant();
+        String previousVariant = gameContext.gameBox().gameVariant();
         if (gameVariant.equals(previousVariant)) {
             return;
         }
@@ -481,7 +481,7 @@ public final class GameUI_Implementation implements GameUI {
         }
 
         // this triggers a game event and the event handlers:
-        gameContext.gameController().setGameVariant(gameVariant);
+        gameContext.gameBox().setGameVariant(gameVariant);
     }
 
     @Override
@@ -491,7 +491,7 @@ public final class GameUI_Implementation implements GameUI {
         showStartView();
         stage.centerOnScreen();
         stage.show();
-        gameContext.gameController().setEventsEnabled(true);
+        gameContext.gameBox().setEventsEnabled(true);
         Platform.runLater(customDirWatchdog::startWatching);
     }
 
@@ -606,6 +606,6 @@ public final class GameUI_Implementation implements GameUI {
     @Override
     @SuppressWarnings("unchecked")
     public <T extends GameUI_Config> T currentConfig() {
-        return (T) config(gameContext.gameController().gameVariant());
+        return (T) config(gameContext.gameBox().gameVariant());
     }
 }

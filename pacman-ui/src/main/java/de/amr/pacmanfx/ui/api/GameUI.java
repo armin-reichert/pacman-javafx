@@ -69,7 +69,7 @@ public interface GameUI extends GameUI_Lifecycle {
     /**
      * @return Context giving access to important entities like game controller, game state etc.
      */
-    GameContext gameContext();
+    GameContext context();
 
     /**
      * @return key emulation of NES joypad

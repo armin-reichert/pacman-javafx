@@ -139,8 +139,8 @@ public class InfoBox3DSettings extends InfoBox {
             Vector2f scaledSize = size.scaled(gameScene2D.scaling());
             return "%dx%d (scaled: %.0fx%.0f)".formatted(size.x(), size.y(), scaledSize.x(), scaledSize.y());
         }
-        if (ui.gameContext().optGameLevel().isPresent()) {
-            var worldMap = ui.gameContext().gameLevel().worldMap();
+        if (ui.context().optGameLevel().isPresent()) {
+            var worldMap = ui.context().gameLevel().worldMap();
             return "%dx%d (map size px)".formatted(worldMap.numCols() * TS, worldMap.numRows() * TS);
         }
         return NO_INFO;

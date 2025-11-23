@@ -199,7 +199,7 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
 
     @Override
     public GameContext context() {
-        return ui.gameContext();
+        return ui.context();
     }
 
     @Override
@@ -224,10 +224,10 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
         miToggleMiniView.selectedProperty().bindBidirectional(PROPERTY_MINI_VIEW_ON);
 
         var miAutopilot = new CheckMenuItem(ui.assets().translated("autopilot"));
-        miAutopilot.selectedProperty().bindBidirectional(theGameContext().gameController().usingAutopilotProperty());
+        miAutopilot.selectedProperty().bindBidirectional(context().gameBox().usingAutopilotProperty());
 
         var miImmunity = new CheckMenuItem(ui.assets().translated("immunity"));
-        miImmunity.selectedProperty().bindBidirectional(theGameContext().gameController().immunityProperty());
+        miImmunity.selectedProperty().bindBidirectional(context().gameBox().immunityProperty());
 
         var miMuted = new CheckMenuItem(ui.assets().translated("muted"));
         miMuted.selectedProperty().bindBidirectional(PROPERTY_MUTED);

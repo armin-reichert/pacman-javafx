@@ -75,9 +75,9 @@ public class InfoBoxCustomMaps extends InfoBox {
 
     private void updateCustomMapList() {
         customMaps.clear();
-        File[] mapFiles = ui.gameContext().customMapDir().listFiles((dir, name) -> name.endsWith(".world"));
+        File[] mapFiles = ui.context().customMapDir().listFiles((dir, name) -> name.endsWith(".world"));
         if (mapFiles == null) {
-            Logger.error("An error occurred accessing custom map directory {}", ui.gameContext().customMapDir());
+            Logger.error("An error occurred accessing custom map directory {}", ui.context().customMapDir());
             return;
         }
         if (mapFiles.length == 0) {

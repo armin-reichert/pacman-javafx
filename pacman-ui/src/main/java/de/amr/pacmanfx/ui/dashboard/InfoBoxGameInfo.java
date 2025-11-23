@@ -38,7 +38,7 @@ public class InfoBoxGameInfo extends InfoBox {
 
     @Override
     public void init(GameUI ui) {
-        addDynamicLabeledValue("Game State", () -> "%s".formatted(ui.gameContext().gameState().name()));
+        addDynamicLabeledValue("Game State", () -> "%s".formatted(ui.context().gameState().name()));
         addDynamicLabeledValue("State Timer", this::stateTimerInfo);
         addDynamicLabeledValue("Game Scene", ifGameScenePresent(gameScene -> gameScene.getClass().getSimpleName()));
 
@@ -90,7 +90,7 @@ public class InfoBoxGameInfo extends InfoBox {
     }
 
     private String stateTimerInfo() {
-        TickTimer t = ui.gameContext().gameState().timer();
+        TickTimer t = ui.context().gameState().timer();
         boolean indefinite = t.durationTicks() == TickTimer.INDEFINITE;
         if (t.isStopped()) {
             return "Stopped at tick %s of %s".formatted(t.tickCount(), indefinite ? "∞" : t.durationTicks());
@@ -110,8 +110,8 @@ public class InfoBoxGameInfo extends InfoBox {
     }
 
     private String fmtHuntingPhase() {
-        if (ui.gameContext().gameLevel() != null) {
-            HuntingTimer huntingTimer = ui.gameContext().gameLevel().huntingTimer();
+        if (ui.context().gameLevel() != null) {
+            HuntingTimer huntingTimer = ui.context().gameLevel().huntingTimer();
             return "%s #%d%s".formatted(
                 huntingTimer.phase().name(),
                 huntingTimer.phase() == HuntingPhase.CHASING
@@ -139,7 +139,7 @@ public class InfoBoxGameInfo extends InfoBox {
         );
     }
 
-    private ActorSpeedControl actorSpeedControl() { return ui.gameContext().game(); }
+    private ActorSpeedControl actorSpeedControl() { return ui.context().game(); }
 
     private String fmtGhostAttackSpeed(GameLevel level) {
         // use Pinky because Blinky could be in Elroy mode

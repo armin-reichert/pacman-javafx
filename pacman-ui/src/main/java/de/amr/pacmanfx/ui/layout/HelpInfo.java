@@ -26,11 +26,11 @@ public class HelpInfo {
 
     public static HelpInfo build(GameUI ui) {
         HelpInfo help = new HelpInfo(ui);
-        switch (ui.gameContext().gameState()) {
-            case INTRO -> help.addInfoForIntroScene(ui.gameContext());
-            case SETTING_OPTIONS_FOR_START -> help.addInfoForCreditScene(ui.gameContext());
+        switch (ui.context().gameState()) {
+            case INTRO -> help.addInfoForIntroScene(ui.context());
+            case SETTING_OPTIONS_FOR_START -> help.addInfoForCreditScene(ui.context());
             case STARTING_GAME_OR_LEVEL, HUNTING, PACMAN_DYING, GHOST_DYING -> {
-                if (ui.gameContext().optGameLevel().isPresent() && ui.gameContext().gameLevel().isDemoLevel()) {
+                if (ui.context().optGameLevel().isPresent() && ui.context().gameLevel().isDemoLevel()) {
                     help.addInfoForDemoLevelPlayScene();
                 } else {
                     help.addInfoForPlayScene();
@@ -66,13 +66,13 @@ public class HelpInfo {
         pane.setBackground(Ufx.roundedBackground(backgroundColor, 10));
 
         // add default entries:
-        if (ui.gameContext().gameController().usingAutopilotProperty().get()) {
+        if (ui.context().gameBox().usingAutopilotProperty().get()) {
             var autoPilotEntry = text(ui.assets().translated("help.autopilot_on"), Color.ORANGE);
             autoPilotEntry.setFont(font);
             GridPane.setColumnSpan(autoPilotEntry, 2);
             grid.add(autoPilotEntry, 0, grid.getRowCount());
         }
-        if (ui.gameContext().gameController().immunityProperty().get()) {
+        if (ui.context().gameBox().immunityProperty().get()) {
             var immunityEntry = text(ui.assets().translated("help.immunity_on"), Color.ORANGE);
             immunityEntry.setFont(font);
             GridPane.setColumnSpan(immunityEntry, 2);

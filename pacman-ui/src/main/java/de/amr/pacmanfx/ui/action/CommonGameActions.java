@@ -44,7 +44,7 @@ public final class CommonGameActions {
     public static final GameAction ACTION_BOOT_SHOW_PLAY_VIEW = new GameAction("BOOT_SHOW_PLAY_VIEW") {
         @Override
         public void execute(GameUI ui) {
-            ui.gameContext().coinMechanism().setNumCoins(0);
+            ui.context().coinMechanism().setNumCoins(0);
             ui.showPlayView();
             ui.restart();
         }
@@ -60,7 +60,7 @@ public final class CommonGameActions {
     public static final GameAction ACTION_LET_GAME_STATE_EXPIRE = new GameAction("LET_GAME_STATE_EXPIRE") {
         @Override
         public void execute(GameUI ui) {
-            ui.gameContext().game().stateMachine().letCurrentStateExpire();
+            ui.context().game().stateMachine().letCurrentStateExpire();
         }
     };
 
@@ -100,7 +100,7 @@ public final class CommonGameActions {
         @Override
         public void execute(GameUI ui) {
             ui.quitCurrentGameScene();
-            ui.gameContext().gameController().cheatUsedProperty().set(false);
+            ui.context().gameBox().cheatUsedProperty().set(false);
         }
     };
 
@@ -109,12 +109,12 @@ public final class CommonGameActions {
         public void execute(GameUI ui) {
             ui.soundManager().stopAll();
             ui.currentGameScene().ifPresent(GameScene::end);
-            boolean isLevelShortTest = ui.gameContext().gameState() instanceof LevelShortTestState;
+            boolean isLevelShortTest = ui.context().gameState() instanceof LevelShortTestState;
             if (isLevelShortTest) {
-                ui.gameContext().gameState().onExit(ui.gameContext()); //TODO exit other states too?
+                ui.context().gameState().onExit(ui.context()); //TODO exit other states too?
             }
             ui.clock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
-            ui.gameContext().game().stateMachine().restart(INTRO);
+            ui.context().game().stateMachine().restart(INTRO);
         }
     };
 
@@ -126,10 +126,10 @@ public final class CommonGameActions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            return (ui.gameContext().gameController().isCurrentGameVariant("PACMAN")
-                || ui.gameContext().gameController().isCurrentGameVariant("PACMAN_XXL")
-                || ui.gameContext().gameController().isCurrentGameVariant("MS_PACMAN")
-                || ui.gameContext().gameController().isCurrentGameVariant("MS_PACMAN_XXL"))
+            return (ui.context().gameBox().isCurrentGameVariant("PACMAN")
+                || ui.context().gameBox().isCurrentGameVariant("PACMAN_XXL")
+                || ui.context().gameBox().isCurrentGameVariant("MS_PACMAN")
+                || ui.context().gameBox().isCurrentGameVariant("MS_PACMAN_XXL"))
                 && ui.currentView() == ui.playView()
                 && ui.currentGameScene().isPresent()
                 && ui.currentGameScene().get() instanceof GameScene2D;
@@ -215,7 +215,7 @@ public final class CommonGameActions {
     public static final GameAction ACTION_TOGGLE_COLLISION_STRATEGY = new GameAction("TOGGLE_COLLISION_STRATEGY") {
         @Override
         public void execute(GameUI ui) {
-            final Game game = ui.gameContext().game();
+            final Game game = ui.context().game();
             CollisionStrategy collisionStrategy = game.collisionStrategy();
             if (collisionStrategy == CollisionStrategy.CENTER_DISTANCE) {
                 game.setCollisionStrategy(CollisionStrategy.SAME_TILE);
@@ -290,7 +290,7 @@ public final class CommonGameActions {
             if (ui.clock().isPaused()) {
                 ui.soundManager().stopAll();
             }
-            Logger.info("Game ({}) {}", ui.gameContext().gameController().gameVariant(), ui.clock().isPaused() ? "paused" : "resumed");
+            Logger.info("Game ({}) {}", ui.context().gameBox().gameVariant(), ui.clock().isPaused() ? "paused" : "resumed");
         }
     };
 
@@ -301,9 +301,9 @@ public final class CommonGameActions {
                 toggle(PROPERTY_3D_ENABLED);
                 if (ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_2D) || ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D)) {
                     ui.updateGameScene(true);
-                    ui.gameContext().game().stateMachine().update(); //TODO needed?
+                    ui.context().game().stateMachine().update(); //TODO needed?
                 }
-                if (!ui.gameContext().game().isPlaying()) {
+                if (!ui.context().game().isPlaying()) {
                     ui.showFlashMessage(ui.assets().translated(PROPERTY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
                 }
             });
@@ -311,7 +311,7 @@ public final class CommonGameActions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            FsmState<GameContext> state = ui.gameContext().gameState();
+            FsmState<GameContext> state = ui.context().gameState();
             if (state.name().equals(LevelShortTestState.class.getSimpleName())
                 || state.name().equals(LevelMediumTestState.class.getSimpleName())) {
                 return true;

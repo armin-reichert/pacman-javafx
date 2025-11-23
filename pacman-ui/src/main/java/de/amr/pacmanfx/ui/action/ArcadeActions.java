@@ -21,23 +21,23 @@ public final class ArcadeActions {
     public static final GameAction ACTION_INSERT_COIN = new GameAction("INSERT_COIN") {
         @Override
         public void execute(GameUI ui) {
-            if (ui.gameContext().coinMechanism().numCoins() < CoinMechanism.MAX_COINS) {
+            if (ui.context().coinMechanism().numCoins() < CoinMechanism.MAX_COINS) {
                 ui.soundManager().setEnabled(true);
-                ui.gameContext().coinMechanism().insertCoin();
-                ui.gameContext().eventManager().publishEvent(GameEventType.CREDIT_ADDED);
+                ui.context().coinMechanism().insertCoin();
+                ui.context().eventManager().publishEvent(GameEventType.CREDIT_ADDED);
             }
-            ui.gameContext().game().stateMachine().changeGameState(GamePlayState.SETTING_OPTIONS_FOR_START);
+            ui.context().game().stateMachine().changeGameState(GamePlayState.SETTING_OPTIONS_FOR_START);
         }
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            if (ui.gameContext().game().isPlaying()) {
+            if (ui.context().game().isPlaying()) {
                 return false;
             }
-            return ui.gameContext().gameState() == GamePlayState.SETTING_OPTIONS_FOR_START
-                || ui.gameContext().gameState() == INTRO
-                || ui.gameContext().optGameLevel().isPresent() && ui.gameContext().optGameLevel().get().isDemoLevel()
-                || ui.gameContext().coinMechanism().isEmpty();
+            return ui.context().gameState() == GamePlayState.SETTING_OPTIONS_FOR_START
+                || ui.context().gameState() == INTRO
+                || ui.context().optGameLevel().isPresent() && ui.context().optGameLevel().get().isDemoLevel()
+                || ui.context().coinMechanism().isEmpty();
         }
     };
 
@@ -45,7 +45,7 @@ public final class ArcadeActions {
         @Override
         public void execute(GameUI ui) {
             ui.soundManager().stopVoice();
-            ui.gameContext().game().stateMachine().changeGameState(GamePlayState.STARTING_GAME_OR_LEVEL);
+            ui.context().game().stateMachine().changeGameState(GamePlayState.STARTING_GAME_OR_LEVEL);
         }
 
         @Override
@@ -56,10 +56,10 @@ public final class ArcadeActions {
                 StandardGameVariant.PACMAN_XXL.name(),
                 StandardGameVariant.MS_PACMAN_XXL.name()
             );
-            return arcadeGames.contains(ui.gameContext().gameController().gameVariant())
-                && !ui.gameContext().coinMechanism().isEmpty()
-                && (ui.gameContext().gameState() == GamePlayState.INTRO || ui.gameContext().gameState() == GamePlayState.SETTING_OPTIONS_FOR_START)
-                && ui.gameContext().game().canStartNewGame();
+            return arcadeGames.contains(ui.context().gameBox().gameVariant())
+                && !ui.context().coinMechanism().isEmpty()
+                && (ui.context().gameState() == GamePlayState.INTRO || ui.context().gameState() == GamePlayState.SETTING_OPTIONS_FOR_START)
+                && ui.context().game().canStartNewGame();
         }
     };
 

@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Controller for all game variants.
+ * Container  for all game variants.
  * Each game variant is represented by an instance of a game model ({@link Game}).
  * Scene selection is not controlled by this class but left to the specific user interface implementations.
  *
@@ -33,9 +33,9 @@ import static java.util.Objects.requireNonNull;
  * behavior</a>
  * @see <a href="http://superpacman.com/mspacman/">Ms. Pac-Man</a>
  */
-public class GameController implements GameContext, CoinMechanism {
+public class GameBox implements GameContext, CoinMechanism {
 
-    public static GameController THE_GAME_CONTROLLER;
+    public static GameBox THE_GAME_BOX;
 
     public static final Pattern GAME_VARIANT_PATTERN = Pattern.compile("[a-zA-Z][a-zA-Z_0-9]*");
 
@@ -51,7 +51,7 @@ public class GameController implements GameContext, CoinMechanism {
     private final BooleanProperty usingAutopilot = new SimpleBooleanProperty(false);
     private final StringProperty gameVariant = new SimpleStringProperty();
 
-    public GameController() {
+    public GameBox() {
         boolean success = initUserDirectories();
         if (!success) {
             throw new IllegalStateException("User directories could not be created");
@@ -158,7 +158,7 @@ public class GameController implements GameContext, CoinMechanism {
     }
 
     @Override
-    public GameController gameController() {
+    public GameBox gameBox() {
         return this;
     }
 

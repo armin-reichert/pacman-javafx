@@ -16,8 +16,8 @@ public class TestActions {
     public static final GameAction ACTION_CUT_SCENES_TEST = new GameAction("TEST_CUT_SCENES") {
         @Override
         public void execute(GameUI ui) {
-            FsmState<GameContext> testState = ui.gameContext().game().stateMachine().stateByName(CutScenesTestState.class.getSimpleName());
-            ui.gameContext().game().stateMachine().changeGameState(testState);
+            FsmState<GameContext> testState = ui.context().game().stateMachine().stateByName(CutScenesTestState.class.getSimpleName());
+            ui.context().game().stateMachine().changeGameState(testState);
             ui.showFlashMessage("Cut scenes test"); //TODO localize
         }
     };
@@ -25,8 +25,8 @@ public class TestActions {
     public static final GameAction ACTION_SHORT_LEVEL_TEST = new GameAction("TEST_LEVELS_SHORT") {
         @Override
         public void execute(GameUI ui) {
-            FsmState<GameContext> testState = ui.gameContext().game().stateMachine().stateByName(LevelShortTestState.class.getSimpleName());
-            ui.gameContext().game().stateMachine().restart(testState);
+            FsmState<GameContext> testState = ui.context().game().stateMachine().stateByName(LevelShortTestState.class.getSimpleName());
+            ui.context().game().stateMachine().restart(testState);
             ui.showFlashMessage(Duration.seconds(3), "Level TEST MODE");
         }
     };
@@ -34,8 +34,8 @@ public class TestActions {
     public static final GameAction ACTION_MEDIUM_LEVEL_TEST = new GameAction("TEST_LEVELS_MEDIUM") {
         @Override
         public void execute(GameUI ui) {
-            FsmState<GameContext> testState = ui.gameContext().game().stateMachine().stateByName(LevelMediumTestState.class.getSimpleName());
-            ui.gameContext().game().stateMachine().restart(testState);
+            FsmState<GameContext> testState = ui.context().game().stateMachine().stateByName(LevelMediumTestState.class.getSimpleName());
+            ui.context().game().stateMachine().restart(testState);
             ui.showFlashMessage(Duration.seconds(3), "Level TEST MODE");
         }
     };
