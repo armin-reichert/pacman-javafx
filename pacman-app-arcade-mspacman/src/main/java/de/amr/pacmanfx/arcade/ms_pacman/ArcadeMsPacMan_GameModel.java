@@ -74,7 +74,8 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
      * @param mapSelector map selector e.g. selector that selects custom maps before standard maps
      */
     public ArcadeMsPacMan_GameModel(GameContext gameContext, MapSelector mapSelector, File highScoreFile) {
-        super(gameContext);
+        super(gameContext.coinMechanism());
+
         this.mapSelector = requireNonNull(mapSelector);
 
         hud.numCoinsProperty().bind(gameContext.coinMechanism().numCoinsProperty());

@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.pacman.actors.Blinky;
+import de.amr.pacmanfx.controller.CoinMechanism;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.timer.TickTimer;
@@ -66,12 +66,14 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     private static final float BONUS_EATEN_SECONDS = 2;
 
+    protected final CoinMechanism coinMechanism;
+
     protected GateKeeper gateKeeper;
     protected Steering autopilot;
     protected Steering demoLevelSteering;
 
-    protected Arcade_GameModel(GameContext gameContext) {
-        super(gameContext);
+    protected Arcade_GameModel(CoinMechanism coinMechanism) {
+        this.coinMechanism = requireNonNull(coinMechanism);
         setCollisionStrategy(CollisionStrategy.SAME_TILE);
     }
 
@@ -145,8 +147,8 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     @Override
     public void onGameEnding(GameLevel gameLevel) {
         setPlaying(false);
-        if (!gameContext.coinMechanism().isEmpty()) {
-            gameContext.coinMechanism().consumeCoin();
+        if (!coinMechanism.isEmpty()) {
+            coinMechanism.consumeCoin();
         }
         scoreManager.updateHighScore();
         showMessage(gameLevel, MessageType.GAME_OVER);
@@ -187,7 +189,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public boolean canStartNewGame() { return !gameContext.coinMechanism().isEmpty(); }
+    public boolean canStartNewGame() { return !coinMechanism.isEmpty(); }
 
     @Override
     public boolean canContinueOnGameOver() { return false; }
@@ -252,8 +254,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     @Override
     public void buildNormalLevel(int levelNumber) {
         final GameLevel normalLevel = createLevel(levelNumber, false);
-        normalLevel.pac().immuneProperty().bind(gameContext.gameController().immunityProperty());
-        normalLevel.pac().usingAutopilotProperty().bind(gameContext.gameController().usingAutopilotProperty());
         levelCounter().setEnabled(true);
         scoreManager.score().setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);

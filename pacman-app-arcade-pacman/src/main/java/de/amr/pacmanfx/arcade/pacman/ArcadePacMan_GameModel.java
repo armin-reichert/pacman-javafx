@@ -83,7 +83,8 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
      * @param highScoreFile file where high score is stored
      */
     public ArcadePacMan_GameModel(GameContext gameContext, MapSelector mapSelector, File highScoreFile) {
-        super(gameContext);
+        super(gameContext.coinMechanism());
+
         requireNonNull(mapSelector);
         requireNonNull(highScoreFile);
 

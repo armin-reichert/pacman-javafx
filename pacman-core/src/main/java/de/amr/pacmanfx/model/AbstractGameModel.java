@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
@@ -40,15 +39,9 @@ public abstract class AbstractGameModel implements Game {
 
     protected final SimulationStepEvents thisStep = new SimulationStepEvents();
 
-    protected final GameContext gameContext;
-    protected final ScoreManager scoreManager;
+    protected final ScoreManager scoreManager = new ScoreManager(this);
 
     protected GamePlayStateMachine stateMachine;
-
-    protected AbstractGameModel(GameContext gameContext) {
-        this.gameContext = requireNonNull(gameContext);
-        this.scoreManager = new ScoreManager(this);
-    }
 
     protected abstract void checkPacFindsFood(GameLevel gameLevel);
 

@@ -92,13 +92,18 @@ public enum GamePlayState implements FsmState<GameContext> {
 
         private void startNewGame(GameContext context) {
             if (timer.tickCount() == 1) {
-                final GameController gameController = context.gameController();
-                boolean cheating = gameController.immunityProperty().get() || gameController.usingAutopilotProperty().get();
-                context.gameController().cheatUsedProperty().set(cheating);
                 context.game().startNewGame();
             }
             else if (timer.tickCount() == 2) {
-                context.game().startLevel(context.gameLevel());
+                final GameController gameController = context.gameController();
+                final GameLevel gameLevel = context.gameLevel();
+                if (!gameLevel.isDemoLevel()) {
+                    gameLevel.pac().immuneProperty().bind(gameController.immunityProperty());
+                    gameLevel.pac().usingAutopilotProperty().bind(gameController.usingAutopilotProperty());
+                    boolean cheating = gameController.immunityProperty().get() || gameController.usingAutopilotProperty().get();
+                    gameController.cheatUsedProperty().set(cheating);
+                }
+                context.game().startLevel(gameLevel);
             }
             else if (timer.tickCount() == TICK_NEW_GAME_SHOW_GUYS) {
                 context.gameLevel().showPacAndGhosts();

@@ -133,7 +133,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     private int numContinues;
 
     public TengenMsPacMan_GameModel(GameContext gameContext, File highScoreFile) {
-        super(gameContext);
         setCollisionStrategy(CollisionStrategy.CENTER_DISTANCE);
         scoreManager.setHighScoreFile(requireNonNull(highScoreFile));
         mapSelector = new TengenMsPacMan_MapSelector();
@@ -421,8 +420,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     @Override
     public void buildNormalLevel(int levelNumber) {
         final GameLevel normalLevel = createLevel(levelNumber, false);
-        normalLevel.pac().immuneProperty().bind(gameContext.gameController().immunityProperty());
-        normalLevel.pac().usingAutopilotProperty().bind(gameContext.gameController().usingAutopilotProperty());
         scoreManager.score().setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
         normalLevel.worldMap().terrainLayer().optHouse().ifPresent(gateKeeper::setHouse); //TODO what if no house exists?
