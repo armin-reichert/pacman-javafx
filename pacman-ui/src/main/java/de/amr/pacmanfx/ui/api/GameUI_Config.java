@@ -130,7 +130,7 @@ public interface GameUI_Config extends Disposable {
      * @param pac Pac-Man or Ms Pac-Man actor
      * @return 3D representation for Pac-Man or Ms. Pac-Man in this game variant
      */
-    PacBase3D createPac3D(AnimationRegistry animationRegistry, GameLevel gameLevel, Pac pac);
+    PacBase3D createPac3D(AnimationRegistry animationRegistry, GameLevel gameLevel, Pac pac, double size);
 
     /**
      * @return 3D representation of a lives counter

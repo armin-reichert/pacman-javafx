@@ -249,12 +249,12 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
     }
 
     @Override
-    public PacMan3D createPac3D(AnimationRegistry animationRegistry, GameLevel gameLevel, Pac pac) {
+    public PacMan3D createPac3D(AnimationRegistry animationRegistry, GameLevel gameLevel, Pac pac, double size) {
         var pac3D = new PacMan3D(PacManModel3DRepository.theRepository(),
             animationRegistry,
             gameLevel,
             pac,
-            ui.preferences().getFloat("3d.pac.size"),
+            size,
             assets.color("pac.color.head"),
             assets.color("pac.color.eyes"),
             assets.color("pac.color.palate"));

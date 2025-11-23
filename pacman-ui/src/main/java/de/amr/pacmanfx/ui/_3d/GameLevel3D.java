@@ -312,7 +312,7 @@ public class GameLevel3D extends Group implements Disposable {
 
         createLevelCounter3D();
         createLivesCounter3D();
-        createPac3D();
+        createPac3D(ui.preferences().getFloat("3d.pac.size"));
         ghosts3D = gameLevel.ghosts().map(this::createMutatingGhost3D).toList();
         createMaze3D();
         createPellets3D();
@@ -420,8 +420,8 @@ public class GameLevel3D extends Group implements Disposable {
         return center.x() < HTS || center.x() > gameLevel.worldMap().numCols() * TS - HTS;
     }
 
-    private void createPac3D() {
-        pac3D = ui.currentConfig().createPac3D(animationRegistry, gameLevel, gameLevel.pac());
+    private void createPac3D(double size) {
+        pac3D = ui.currentConfig().createPac3D(animationRegistry, gameLevel, gameLevel.pac(), size);
         pac3D.init(gameLevel);
     }
 

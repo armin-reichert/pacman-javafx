@@ -362,12 +362,12 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     }
 
     @Override
-    public MsPacMan3D createPac3D(AnimationRegistry animationRegistry, GameLevel gameLevel, Pac pac) {
+    public MsPacMan3D createPac3D(AnimationRegistry animationRegistry, GameLevel gameLevel, Pac pac, double size) {
         var pac3D = new MsPacMan3D(
             PacManModel3DRepository.theRepository(),
             animationRegistry,
             pac,
-            ui.preferences().getFloat("3d.pac.size"),
+            size,
             assets.color("pac.color.head"),
             assets.color("pac.color.eyes"),
             assets.color("pac.color.palate"),
