@@ -30,19 +30,19 @@ public class MovingGameLevelMessage extends GameLevelMessage {
         setPosition(startPosition);
     }
 
-    public void start(float rightEdge, double messageTextWidth) {
-        this.width = (float) messageTextWidth;
-        this.wrapX = rightEdge + 0.5f * width;
+    public void startMovement(float rightEdge, double messageTextWidth) {
+        width = (float) messageTextWidth;
+        wrapX = rightEdge + 0.5f * width;
         setVelocity(1, 0);
         playing = true;
     }
 
-    public void stop() {
+    public void stopMovement() {
         setVelocity(Vector2f.ZERO);
         playing = false;
     }
 
-    public void update() {
+    public void updateMovement() {
         if (!playing) return;
 
         if (delayTicks > 0) {
@@ -53,7 +53,7 @@ public class MovingGameLevelMessage extends GameLevelMessage {
         if (wrapped) {
             if (x() >= startPosition.x()) {
                 setPosition(startPosition);
-                stop();
+                stopMovement();
             }
         } else if (x() > wrapX) {
             setX(-0.5 * width);

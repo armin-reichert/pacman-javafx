@@ -11,6 +11,7 @@ import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.GameLevelMessage;
 import de.amr.pacmanfx.model.MessageType;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -52,6 +53,7 @@ import static de.amr.pacmanfx.controller.PacManGamesState.LEVEL_COMPLETE;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Actions.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Properties.PROPERTY_PLAY_SCENE_DISPLAY_MODE;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
+import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel.GAME_OVER_MESSAGE_TEXT;
 import static de.amr.pacmanfx.tengen.ms_pacman.scenes.SceneDisplayMode.SCROLLING;
 import static de.amr.pacmanfx.ui._2d.GameScene2D_Renderer.configureRendererForGameScene;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
@@ -66,6 +68,8 @@ import static java.util.Objects.requireNonNull;
 public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneProvider {
 
     public static final double CANVAS_WIDTH_UNSCALED = NES_SIZE_PX.x();
+
+    private static final Font GAME_OVER_MESSAGE_FONT = Font.font(BaseRenderer.DEFAULT_ARCADE_FONT.getFamily(), TS);
 
     private final DoubleProperty canvasHeightUnscaled = new SimpleDoubleProperty(NES_SIZE_PX.y());
 
@@ -217,7 +221,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
                 gameLevel.optMessage()
                     .filter(MovingGameLevelMessage.class::isInstance)
                     .map(MovingGameLevelMessage.class::cast)
-                    .ifPresent(MovingGameLevelMessage::update);
+                    .ifPresent(MovingGameLevelMessage::updateMovement);
                 updateSound(gameLevel);
             }
             if (subScene.getCamera() == dynamicCamera) {
@@ -333,7 +337,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
                 ui.soundManager().stopAll();
                 dynamicCamera.enterManualMode();
                 dynamicCamera.setToTopPosition();
-                startGameOverMessageAnimation(context().gameLevel());
+                context().gameLevel().optMessage().ifPresent(this::startGameOverMessageAnimation);
             }
             default -> {}
         }
@@ -456,13 +460,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
         levelCompletedAnimation.playFromStart();
     }
 
-    private void startGameOverMessageAnimation(GameLevel gameLevel) {
-        gameLevel.optMessage()
-            .filter(MovingGameLevelMessage.class::isInstance)
-            .map(MovingGameLevelMessage.class::cast)
-            .ifPresent(movingGameLevelMessage -> {
-                Font font = Font.font(BaseRenderer.DEFAULT_ARCADE_FONT.getFamily(), TS);
-                movingGameLevelMessage.start(sizeInPx().x(), Ufx.textWidth("GAME OVER", font));
-            });
+    private void startGameOverMessageAnimation(GameLevelMessage gameOverMessage) {
+        if (gameOverMessage instanceof MovingGameLevelMessage movingMessage) {
+            double messageWidth = Ufx.textWidth(GAME_OVER_MESSAGE_TEXT, GAME_OVER_MESSAGE_FONT);
+            movingMessage.startMovement(sizeInPx().x(), messageWidth);
+        }
     }
 }

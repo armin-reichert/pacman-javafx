@@ -29,6 +29,7 @@ import org.tinylog.Logger;
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
+import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel.*;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
@@ -138,15 +139,16 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseSpriteRenderer impleme
         Color color = gameLevel.isDemoLevel()
             ? Color.web(colorScheme.strokeColorRGB())
             : uiConfig.assets().color("color.game_over_message");
-        fillTextCentered("GAME OVER", color, arcadeFont8(), message.x(), message.y());
+        fillTextCentered(GAME_OVER_MESSAGE_TEXT, color, arcadeFont8(), message.x(), message.y());
     }
 
     private void drawReadyMessage(GameLevelMessage message) {
-        fillTextCentered("READY!", uiConfig.assets().color("color.ready_message"), arcadeFont8(), message.x(), message.y());
+        fillTextCentered(READY_MESSAGE_TEXT, uiConfig.assets().color("color.ready_message"), arcadeFont8(), message.x(), message.y());
     }
 
     private void drawTestMessage(GameLevel gameLevel, GameLevelMessage message) {
-        fillTextCentered("TEST    L%02d".formatted(gameLevel.number()), nesColor(0x28), arcadeFont8(), message.x(), message.y());
+        fillTextCentered(LEVEL_TEST_MESSAGE_TEXT_PATTERN.formatted(
+            gameLevel.number()), nesColor(0x28), arcadeFont8(), message.x(), message.y());
     }
 
     public void drawDoor(WorldMap worldMap) {
