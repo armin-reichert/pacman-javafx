@@ -5,11 +5,11 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.controller.test;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.controller.PacManGamesState;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.AbstractGameModel;
+import de.amr.pacmanfx.model.GamePlayState;
 
 public class CutScenesTestState implements FsmState<GameContext>, TestState {
 
@@ -46,7 +46,7 @@ public class CutScenesTestState implements FsmState<GameContext>, TestState {
                     //TODO find another solution and get rid of this event type
                     context.eventManager().publishEvent(GameEventType.UNSPECIFIED_CHANGE);
                 } else {
-                    context.playStateMachine().changeGameState(PacManGamesState.INTRO);
+                    context.playStateMachine().changeGameState(GamePlayState.INTRO);
                 }
             }
         }

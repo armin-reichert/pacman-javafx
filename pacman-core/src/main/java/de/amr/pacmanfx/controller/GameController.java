@@ -10,6 +10,7 @@ import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.GamePlayStateMachine;
 import de.amr.pacmanfx.model.Score;
 import javafx.beans.property.*;
 import org.tinylog.Logger;

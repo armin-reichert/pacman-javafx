@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model;
 
-import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.ActorSpeedControl;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
@@ -13,7 +12,7 @@ import java.util.Optional;
 
 public interface Game extends GameLifecycle, GameEvents, ActorSpeedControl {
 
-    GameEventManager      eventManager();
+    GamePlayStateMachine  playStateMachine();
     ScoreManager          scoreManager();
     SimulationStepEvents  simulationStepResults();
     MapSelector           mapSelector();

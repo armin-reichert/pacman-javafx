@@ -40,7 +40,7 @@ public class ScoreManager {
                 game.simulationStepResults().extraLifeScore = extraLifeScore;
                 game.addLives(1);
                 GameEvent event = new GameEvent(game, GameEventType.SPECIAL_SCORE_REACHED);
-                game.eventManager().publishEvent(event);
+                game.playStateMachine().publishEvent(event);
                 break;
             }
         }

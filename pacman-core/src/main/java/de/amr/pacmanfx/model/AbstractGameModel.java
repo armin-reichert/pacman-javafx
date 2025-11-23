@@ -146,7 +146,7 @@ public abstract class AbstractGameModel implements Game {
         resetPacManAndGhostAnimations(gameLevel);
         gameLevel.getReadyToPlay();
         gameLevel.showPacAndGhosts();
-        eventManager().publishEvent(GameEventType.GAME_CONTINUED);
+        playStateMachine().publishEvent(GameEventType.GAME_CONTINUED);
     }
 
     @Override
@@ -191,7 +191,7 @@ public abstract class AbstractGameModel implements Game {
         gameLevel.blinking().setStartState(Pulse.State.ON);
         gameLevel.blinking().restart();
         gameLevel.huntingTimer().startFirstPhase();
-        eventManager().publishEvent(GameEventType.HUNTING_PHASE_STARTED);
+        playStateMachine().publishEvent(GameEventType.HUNTING_PHASE_STARTED);
     }
 
     protected void makeHuntingStep(GameLevel gameLevel) {
@@ -255,7 +255,7 @@ public abstract class AbstractGameModel implements Game {
         if (pac.isPowerFadingStarting(gameLevel)) {
             thisStep.pacStartsLosingPower = true;
             Logger.info("{} starts losing power", pac.name());
-            eventManager().publishEvent(GameEventType.PAC_STARTS_LOSING_POWER);
+            playStateMachine().publishEvent(GameEventType.PAC_STARTS_LOSING_POWER);
         } else if (powerTimer.hasExpired()) {
             thisStep.pacLostPower = true;
             Logger.info("{} lost power", pac.name());
@@ -266,7 +266,7 @@ public abstract class AbstractGameModel implements Game {
             gameLevel.huntingTimer().start();
             Logger.info("Hunting timer restarted because {} lost power", pac.name());
             gameLevel.ghosts(GhostState.FRIGHTENED).forEach(ghost -> ghost.setState(GhostState.HUNTING_PAC));
-            eventManager().publishEvent(GameEventType.PAC_LOST_POWER);
+            playStateMachine().publishEvent(GameEventType.PAC_LOST_POWER);
         }
     }
 }

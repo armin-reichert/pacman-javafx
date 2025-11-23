@@ -5,14 +5,14 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.action;
 
 import de.amr.pacmanfx.controller.CoinMechanism;
-import de.amr.pacmanfx.controller.PacManGamesState;
 import de.amr.pacmanfx.event.GameEventType;
+import de.amr.pacmanfx.model.GamePlayState;
 import de.amr.pacmanfx.model.StandardGameVariant;
 import de.amr.pacmanfx.ui.api.GameUI;
 
 import java.util.Set;
 
-import static de.amr.pacmanfx.controller.PacManGamesState.INTRO;
+import static de.amr.pacmanfx.model.GamePlayState.INTRO;
 
 public final class ArcadeActions {
     /**
@@ -26,7 +26,7 @@ public final class ArcadeActions {
                 ui.gameContext().coinMechanism().insertCoin();
                 ui.gameContext().eventManager().publishEvent(GameEventType.CREDIT_ADDED);
             }
-            ui.gameContext().playStateMachine().changeGameState(PacManGamesState.SETTING_OPTIONS_FOR_START);
+            ui.gameContext().playStateMachine().changeGameState(GamePlayState.SETTING_OPTIONS_FOR_START);
         }
 
         @Override
@@ -34,7 +34,7 @@ public final class ArcadeActions {
             if (ui.gameContext().game().isPlaying()) {
                 return false;
             }
-            return ui.gameContext().gameState() == PacManGamesState.SETTING_OPTIONS_FOR_START
+            return ui.gameContext().gameState() == GamePlayState.SETTING_OPTIONS_FOR_START
                 || ui.gameContext().gameState() == INTRO
                 || ui.gameContext().optGameLevel().isPresent() && ui.gameContext().optGameLevel().get().isDemoLevel()
                 || ui.gameContext().coinMechanism().isEmpty();
@@ -45,7 +45,7 @@ public final class ArcadeActions {
         @Override
         public void execute(GameUI ui) {
             ui.soundManager().stopVoice();
-            ui.gameContext().playStateMachine().changeGameState(PacManGamesState.STARTING_GAME_OR_LEVEL);
+            ui.gameContext().playStateMachine().changeGameState(GamePlayState.STARTING_GAME_OR_LEVEL);
         }
 
         @Override
@@ -58,7 +58,7 @@ public final class ArcadeActions {
             );
             return arcadeGames.contains(ui.gameContext().gameController().gameVariant())
                 && !ui.gameContext().coinMechanism().isEmpty()
-                && (ui.gameContext().gameState() == PacManGamesState.INTRO || ui.gameContext().gameState() == PacManGamesState.SETTING_OPTIONS_FOR_START)
+                && (ui.gameContext().gameState() == GamePlayState.INTRO || ui.gameContext().gameState() == GamePlayState.SETTING_OPTIONS_FOR_START)
                 && ui.gameContext().game().canStartNewGame();
         }
     };

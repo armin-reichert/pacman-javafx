@@ -13,7 +13,6 @@ import de.amr.pacmanfx.arcade.pacman.Arcade_LevelData;
 import de.amr.pacmanfx.arcade.pacman.actors.Blinky;
 import de.amr.pacmanfx.arcade.pacman.actors.Inky;
 import de.amr.pacmanfx.arcade.pacman.actors.Pinky;
-import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Waypoint;
 import de.amr.pacmanfx.lib.math.Vector2i;
@@ -100,6 +99,11 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         mapSelector.loadAllMapPrototypes();
     }
 
+    @Override
+    public GamePlayStateMachine playStateMachine() {
+        return gameContext.playStateMachine();
+    }
+
     protected Arcade_LevelData levelData(int levelNumber) {
         int row = Math.min(levelNumber - 1, LEVEL_DATA.length - 1);
         return LEVEL_DATA[row];
@@ -118,11 +122,6 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     @Override
     public ArcadeMsPacMan_LevelCounter levelCounter() {
         return levelCounter;
-    }
-
-    @Override
-    public GameEventManager eventManager() {
-        return gameContext.eventManager();
     }
 
     @Override
@@ -285,7 +284,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         }
 
         gameLevel.setBonus(bonus);
-        eventManager().publishEvent(GameEventType.BONUS_ACTIVATED, bonus.tile());
+        playStateMachine().publishEvent(GameEventType.BONUS_ACTIVATED, bonus.tile());
     }
 
     private void computeBonusRoute(Bonus bonus, TerrainLayer terrain, House house) {

@@ -6,7 +6,6 @@ package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.pacman.actors.*;
-import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Waypoint;
 import de.amr.pacmanfx.lib.math.Vector2i;
@@ -113,6 +112,11 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         mapSelector.loadAllMapPrototypes();
     }
 
+    @Override
+    public GamePlayStateMachine playStateMachine() {
+        return gameContext.playStateMachine();
+    }
+
     protected Arcade_LevelData levelData(int levelNumber) {
         int row = Math.min(levelNumber - 1, LEVEL_DATA.length - 1);
         return LEVEL_DATA[row];
@@ -126,11 +130,6 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     @Override
     public MapSelector mapSelector() {
         return mapSelector;
-    }
-
-    @Override
-    public GameEventManager eventManager() {
-        return gameContext.eventManager();
     }
 
     @Override
@@ -213,6 +212,6 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         bonus.setPosition(halfTileRightOf(bonusTile));
         bonus.setEdible(randomFloat(9, 10));
         gameLevel.setBonus(bonus);
-        eventManager().publishEvent(GameEventType.BONUS_ACTIVATED, bonus.tile());
+        playStateMachine().publishEvent(GameEventType.BONUS_ACTIVATED, bonus.tile());
     }
 }

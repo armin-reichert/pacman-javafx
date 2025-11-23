@@ -2,7 +2,7 @@
 Copyright (c) 2021-2026 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.controller;
+package de.amr.pacmanfx.model;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.controller.test.CutScenesTestState;
@@ -26,7 +26,7 @@ public class GamePlayStateMachine implements GameEventManager {
 
     public GamePlayStateMachine(GameContext gameContext) {
         this.gameContext = requireNonNull(gameContext);
-        List<FsmState<GameContext>> states = new ArrayList<>(List.of(PacManGamesState.values()));
+        List<FsmState<GameContext>> states = new ArrayList<>(List.of(GamePlayState.values()));
         states.add(new LevelShortTestState());
         states.add(new LevelMediumTestState());
         states.add(new CutScenesTestState());

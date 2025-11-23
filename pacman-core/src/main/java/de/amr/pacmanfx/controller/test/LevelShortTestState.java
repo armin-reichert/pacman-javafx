@@ -5,14 +5,10 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.controller.test;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.controller.PacManGamesState;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.timer.TickTimer;
-import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.GameLevelMessage;
-import de.amr.pacmanfx.model.MessageType;
+import de.amr.pacmanfx.model.*;
 
 public class LevelShortTestState implements FsmState<GameContext>, TestState {
 
@@ -78,7 +74,7 @@ public class LevelShortTestState implements FsmState<GameContext>, TestState {
             if (gameLevel.number() == lastTestedLevelNumber) {
                 context.coinMechanism().setNumCoins(0);
                 context.game().resetEverything();
-                context.playStateMachine().restart(PacManGamesState.BOOT);
+                context.playStateMachine().restart(GamePlayState.BOOT);
             } else {
                 timer.restartIndefinitely();
                 game.startNextLevel();

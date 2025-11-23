@@ -6,11 +6,11 @@ package de.amr.pacmanfx;
 
 import de.amr.pacmanfx.controller.CoinMechanism;
 import de.amr.pacmanfx.controller.GameController;
-import de.amr.pacmanfx.controller.GamePlayStateMachine;
 import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.GamePlayStateMachine;
 
 import java.io.File;
 import java.util.Optional;

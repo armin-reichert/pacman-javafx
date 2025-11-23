@@ -5,14 +5,10 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.controller.test;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.controller.PacManGamesState;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.timer.TickTimer;
-import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.GameLevelMessage;
-import de.amr.pacmanfx.model.MessageType;
+import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.AnimationManager;
 
 public class LevelMediumTestState implements FsmState<GameContext>, TestState {
@@ -66,7 +62,7 @@ public class LevelMediumTestState implements FsmState<GameContext>, TestState {
         if (timer().hasExpired()) {
             if (gameLevel.number() == lastTestedLevelNumber) {
                 context.eventManager().publishEvent(GameEventType.STOP_ALL_SOUNDS);
-                context.playStateMachine().changeGameState(PacManGamesState.INTRO);
+                context.playStateMachine().changeGameState(GamePlayState.INTRO);
             } else {
                 timer().restartSeconds(TEST_DURATION_SEC);
                 game.startNextLevel();
@@ -74,11 +70,11 @@ public class LevelMediumTestState implements FsmState<GameContext>, TestState {
             }
         }
         else if (game.isLevelCompleted(gameLevel)) {
-            context.playStateMachine().changeGameState(PacManGamesState.INTRO);
+            context.playStateMachine().changeGameState(GamePlayState.INTRO);
         } else if (game.hasPacManBeenKilled()) {
             timer.expire();
         } else if (game.hasGhostBeenKilled()) {
-            context.playStateMachine().changeGameState(PacManGamesState.GHOST_DYING);
+            context.playStateMachine().changeGameState(GamePlayState.GHOST_DYING);
         }
     }
 

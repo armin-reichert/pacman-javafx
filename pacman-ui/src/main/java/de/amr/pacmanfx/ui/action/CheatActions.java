@@ -5,9 +5,9 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.action;
 
 import de.amr.pacmanfx.controller.GameController;
-import de.amr.pacmanfx.controller.PacManGamesState;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.GamePlayState;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
@@ -45,7 +45,7 @@ public final class CheatActions {
         public boolean isEnabled(GameUI ui) {
             return ui.gameContext().optGameLevel().isPresent()
                     && !ui.gameContext().gameLevel().isDemoLevel()
-                    && ui.gameContext().gameState() == PacManGamesState.HUNTING;
+                    && ui.gameContext().gameState() == GamePlayState.HUNTING;
         }
     };
 
@@ -58,13 +58,13 @@ public final class CheatActions {
             if (!vulnerableGhosts.isEmpty()) {
                 gameLevel.energizerVictims().clear(); // resets value of next killed ghost to 200
                 vulnerableGhosts.forEach(ghost -> gameLevel.game().onGhostKilled(gameLevel, ghost));
-                ui.gameContext().playStateMachine().changeGameState(PacManGamesState.GHOST_DYING);
+                ui.gameContext().playStateMachine().changeGameState(GamePlayState.GHOST_DYING);
             }
         }
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            return ui.gameContext().gameState() == PacManGamesState.HUNTING && ui.gameContext().optGameLevel().isPresent() && !ui.gameContext().gameLevel().isDemoLevel();
+            return ui.gameContext().gameState() == GamePlayState.HUNTING && ui.gameContext().optGameLevel().isPresent() && !ui.gameContext().gameLevel().isDemoLevel();
         }
     };
 
@@ -72,13 +72,13 @@ public final class CheatActions {
         @Override
         public void execute(GameUI ui) {
             ui.gameContext().gameController().cheatUsedProperty().set(true);
-            ui.gameContext().playStateMachine().changeGameState(PacManGamesState.LEVEL_COMPLETE);
+            ui.gameContext().playStateMachine().changeGameState(GamePlayState.LEVEL_COMPLETE);
         }
 
         @Override
         public boolean isEnabled(GameUI ui) {
             return ui.gameContext().game().isPlaying()
-                    && ui.gameContext().gameState() == PacManGamesState.HUNTING
+                    && ui.gameContext().gameState() == GamePlayState.HUNTING
                     && ui.gameContext().optGameLevel().isPresent()
                     && ui.gameContext().gameLevel().number() < ui.gameContext().game().lastLevelNumber();
         }

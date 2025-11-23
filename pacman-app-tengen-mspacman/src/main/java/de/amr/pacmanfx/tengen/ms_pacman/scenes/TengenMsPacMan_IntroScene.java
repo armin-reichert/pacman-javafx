@@ -4,12 +4,12 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
-import de.amr.pacmanfx.controller.PacManGamesState;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.timer.TickTimer;
+import de.amr.pacmanfx.model.GamePlayState;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
@@ -255,9 +255,9 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                     TengenMsPacMan_GameModel game = scene.context().game();
                     if (game.optionsAreInitial()) {
                         game.setCanStartNewGame(false); // TODO check this
-                        scene.context().playStateMachine().restart(PacManGamesState.STARTING_GAME_OR_LEVEL);
+                        scene.context().playStateMachine().restart(GamePlayState.STARTING_GAME_OR_LEVEL);
                     } else {
-                        scene.context().playStateMachine().changeGameState(PacManGamesState.SETTING_OPTIONS_FOR_START);
+                        scene.context().playStateMachine().changeGameState(GamePlayState.SETTING_OPTIONS_FOR_START);
                     }
                 }
             }

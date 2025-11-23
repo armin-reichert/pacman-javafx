@@ -2,17 +2,14 @@
 Copyright (c) 2021-2026 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.controller;
+package de.amr.pacmanfx.model;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
+import de.amr.pacmanfx.controller.GameController;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.timer.TickTimer;
-import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.MessageType;
-import de.amr.pacmanfx.model.StandardGameVariant;
 import de.amr.pacmanfx.model.actors.*;
 
 /**
@@ -23,7 +20,7 @@ import de.amr.pacmanfx.model.actors.*;
  *     <li>TODO: AI says this state machine and its game states should move to the game model</li>
  * </ul>
  */
-public enum PacManGamesState implements FsmState<GameContext> {
+public enum GamePlayState implements FsmState<GameContext> {
 
     // "Das muss das Boot abkönnen!"
     BOOT {
@@ -108,7 +105,7 @@ public enum PacManGamesState implements FsmState<GameContext> {
             }
             else if (timer.tickCount() == TICK_NEW_GAME_START_HUNTING) {
                 context.game().setPlaying(true);
-                context.playStateMachine().changeGameState(PacManGamesState.HUNTING);
+                context.playStateMachine().changeGameState(GamePlayState.HUNTING);
             }
         }
 
@@ -116,7 +113,7 @@ public enum PacManGamesState implements FsmState<GameContext> {
             if (timer.tickCount() == 1) {
                 context.game().continueGame(context.gameLevel());
             } else if (timer.tickCount() == TICK_RESUME_HUNTING) {
-                context.playStateMachine().changeGameState(PacManGamesState.HUNTING);
+                context.playStateMachine().changeGameState(GamePlayState.HUNTING);
             }
         }
 
@@ -133,7 +130,7 @@ public enum PacManGamesState implements FsmState<GameContext> {
                 context.gameLevel().showPacAndGhosts();
             }
             else if (timer.tickCount() == TICK_DEMO_LEVEL_START_HUNTING) {
-                context.playStateMachine().changeGameState(PacManGamesState.HUNTING);
+                context.playStateMachine().changeGameState(GamePlayState.HUNTING);
             }
         }
 
