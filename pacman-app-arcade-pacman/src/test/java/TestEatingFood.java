@@ -1,7 +1,11 @@
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.actors.Blinky;
+import de.amr.pacmanfx.controller.CoinMechanism;
+import de.amr.pacmanfx.controller.GameController;
 import de.amr.pacmanfx.lib.worldmap.FoodLayer;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.GamePlayStateMachine;
+import de.amr.pacmanfx.model.StandardGameVariant;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,8 +22,12 @@ public class TestEatingFood {
 
     @BeforeAll
     static void setup() {
-        theGameContext().gameController().registerGame("PACMAN", new ArcadePacMan_GameModel(theGameContext(), new File("")));
-        theGameContext().gameController().setGameVariant("PACMAN");
+        GameController gameController = theGameContext().gameController();
+        CoinMechanism coinMechanism = theGameContext().coinMechanism();
+        ArcadePacMan_GameModel game = new ArcadePacMan_GameModel(coinMechanism, new File(""));
+        game.setStateMachine(new GamePlayStateMachine(theGameContext(), game));
+        gameController.registerGame(StandardGameVariant.PACMAN.name(), game);
+        gameController.setGameVariant(StandardGameVariant.PACMAN.name());
     }
 
     @BeforeEach
@@ -115,8 +123,8 @@ public class TestEatingFood {
     public void testResting() {
         GameLevel gameLevel = gameLevel();
         eatNextPellet(gameLevel);
-        assertEquals(1, gameLevel.pac().restingTicks());
+        assertEquals(1, gameLevel.pac().restingTime());
         eatNextEnergizer(gameLevel);
-        assertEquals(3, gameLevel.pac().restingTicks());
+        assertEquals(3, gameLevel.pac().restingTime());
     }
 }

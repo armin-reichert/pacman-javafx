@@ -79,13 +79,13 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     public abstract Arcade_LevelData levelData(GameLevel gameLevel);
 
-    protected void onPelletEaten(GameLevel gameLevel) {
+    public void onPelletEaten(GameLevel gameLevel) {
         scoreManager.scorePoints(PELLET_VALUE);
         gameLevel.pac().onFoodEaten(false);
         gameLevel.ghosts().forEach(ghost -> ghost.onFoodCountChange(gameLevel));
     }
 
-    protected void onEnergizerEaten(GameLevel gameLevel, Vector2i tile) {
+    public void onEnergizerEaten(GameLevel gameLevel, Vector2i tile) {
         thisStep.foundEnergizerAtTile = tile;
         scoreManager.scorePoints(ENERGIZER_VALUE);
         gameLevel.pac().onFoodEaten(true);
