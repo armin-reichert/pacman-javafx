@@ -24,7 +24,7 @@ public abstract class AbstractGameModel implements Game {
 
     private static final CollisionStrategy DEFAULT_COLLISION_STRATEGY = CollisionStrategy.SAME_TILE;
 
-    private static final float COLLISION_CIRCLE_RADIUS = 2;
+    private static final float COLLISION_SENSITIVITY_PIXELS = 2;
 
     protected ObjectProperty<CollisionStrategy> collisionStrategy;
 
@@ -82,8 +82,8 @@ public abstract class AbstractGameModel implements Game {
         return switch (collisionStrategy()) {
             case SAME_TILE -> either.tile().equals(other.tile());
             case CENTER_DISTANCE -> {
-                float dist = either.center().minus(other.center()).length();
-                if (dist < COLLISION_CIRCLE_RADIUS) {
+                float dist = either.center().euclideanDist(other.center());
+                if (dist < COLLISION_SENSITIVITY_PIXELS) {
                     Logger.info("Collision detected (dist={}): {} collides with {}", dist, either, other);
                     yield true;
                 }
@@ -196,7 +196,7 @@ public abstract class AbstractGameModel implements Game {
 
     protected void makeHuntingStep(GameLevel gameLevel) {
         final TerrainLayer terrain = gameLevel.worldMap().terrainLayer();
-        // Ghosts colliding with Pac? Collision is tile-based!
+        // Ghosts colliding with Pac?
         thisStep.ghostsCollidingWithPac.clear();
         gameLevel.ghosts()
             .filter(ghost -> !terrain.isTileInPortalSpace(ghost.tile()))
