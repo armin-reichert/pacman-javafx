@@ -43,6 +43,8 @@ public abstract class AbstractGameModel implements Game {
     protected final GameContext gameContext;
     protected final ScoreManager scoreManager;
 
+    protected GamePlayStateMachine stateMachine;
+
     protected AbstractGameModel(GameContext gameContext) {
         this.gameContext = requireNonNull(gameContext);
         this.scoreManager = new ScoreManager(this);
@@ -69,6 +71,15 @@ public abstract class AbstractGameModel implements Game {
 
     public void setCollisionStrategy(CollisionStrategy collisionStrategy) {
         collisionStrategyProperty().set(collisionStrategy);
+    }
+
+    @Override
+    public final GamePlayStateMachine stateMachine() {
+        return stateMachine;
+    }
+
+    public void setStateMachine(GamePlayStateMachine stateMachine) {
+        this.stateMachine = stateMachine;
     }
 
     /**
@@ -146,7 +157,7 @@ public abstract class AbstractGameModel implements Game {
         resetPacManAndGhostAnimations(gameLevel);
         gameLevel.getReadyToPlay();
         gameLevel.showPacAndGhosts();
-        playStateMachine().publishEvent(GameEventType.GAME_CONTINUED);
+        stateMachine().publishEvent(GameEventType.GAME_CONTINUED);
     }
 
     @Override
@@ -191,7 +202,7 @@ public abstract class AbstractGameModel implements Game {
         gameLevel.blinking().setStartState(Pulse.State.ON);
         gameLevel.blinking().restart();
         gameLevel.huntingTimer().startFirstPhase();
-        playStateMachine().publishEvent(GameEventType.HUNTING_PHASE_STARTED);
+        stateMachine().publishEvent(GameEventType.HUNTING_PHASE_STARTED);
     }
 
     protected void makeHuntingStep(GameLevel gameLevel) {
@@ -255,7 +266,7 @@ public abstract class AbstractGameModel implements Game {
         if (pac.isPowerFadingStarting(gameLevel)) {
             thisStep.pacStartsLosingPower = true;
             Logger.info("{} starts losing power", pac.name());
-            playStateMachine().publishEvent(GameEventType.PAC_STARTS_LOSING_POWER);
+            stateMachine().publishEvent(GameEventType.PAC_STARTS_LOSING_POWER);
         } else if (powerTimer.hasExpired()) {
             thisStep.pacLostPower = true;
             Logger.info("{} lost power", pac.name());
@@ -266,7 +277,7 @@ public abstract class AbstractGameModel implements Game {
             gameLevel.huntingTimer().start();
             Logger.info("Hunting timer restarted because {} lost power", pac.name());
             gameLevel.ghosts(GhostState.FRIGHTENED).forEach(ghost -> ghost.setState(GhostState.HUNTING_PAC));
-            playStateMachine().publishEvent(GameEventType.PAC_LOST_POWER);
+            stateMachine().publishEvent(GameEventType.PAC_LOST_POWER);
         }
     }
 }

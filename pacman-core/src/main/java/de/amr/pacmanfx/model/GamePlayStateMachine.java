@@ -21,11 +21,11 @@ import static java.util.Objects.requireNonNull;
 
 public class GamePlayStateMachine implements GameEventManager {
 
+    private final Game game;
     private final StateMachine<FsmState<GameContext>, GameContext> stateMachine;
-    private final GameContext gameContext;
 
-    public GamePlayStateMachine(GameContext gameContext) {
-        this.gameContext = requireNonNull(gameContext);
+    public GamePlayStateMachine(GameContext gameContext, Game game) {
+        this.game = requireNonNull(game);
         List<FsmState<GameContext>> states = new ArrayList<>(List.of(GamePlayState.values()));
         states.add(new LevelShortTestState());
         states.add(new LevelMediumTestState());
@@ -33,7 +33,7 @@ public class GamePlayStateMachine implements GameEventManager {
         stateMachine = new StateMachine<>(states, gameContext);
         stateMachine.setName("Game Controller State Machine");
         stateMachine.addStateChangeListener(
-            (oldState, newState) -> publishEvent(new GameStateChangeEvent(gameContext.game(), oldState, newState)));
+            (oldState, newState) -> publishEvent(new GameStateChangeEvent(game, oldState, newState)));
     }
 
     public void update() {
@@ -59,8 +59,8 @@ public class GamePlayStateMachine implements GameEventManager {
 
     public FsmState<GameContext> stateByName(String name) {
         return stateMachine.states().stream()
-                .filter(state -> state.name().equals(name))
-                .findFirst().orElseThrow();
+            .filter(state -> state.name().equals(name))
+            .findFirst().orElseThrow();
     }
 
     public FsmState<GameContext> state() {
@@ -101,12 +101,12 @@ public class GamePlayStateMachine implements GameEventManager {
     @Override
     public void publishEvent(GameEventType type) {
         requireNonNull(type);
-        publishEvent(new GameEvent(gameContext.game(), type));
+        publishEvent(new GameEvent(game, type));
     }
 
     @Override
     public void publishEvent(GameEventType type, Vector2i tile) {
         requireNonNull(type);
-        publishEvent(new GameEvent(gameContext.game(), type, tile));
+        publishEvent(new GameEvent(game, type, tile));
     }
 }

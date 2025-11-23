@@ -7,7 +7,9 @@ package de.amr.pacmanfx.ui;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.controller.GameController;
+import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GamePlayStateMachine;
 import de.amr.pacmanfx.model.MapSelector;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
@@ -171,9 +173,11 @@ public class GameUI_Builder {
 
     private Game createGameModel(Class<?> modelClass, MapSelector mapSelector, GameContext gameContext, File highScoreFile) {
         try {
-            return (Game) (mapSelector != null
+            AbstractGameModel game = (AbstractGameModel) (mapSelector != null
                 ? modelClass.getDeclaredConstructor(GameContext.class, MapSelector.class, File.class).newInstance(gameContext, mapSelector, highScoreFile)
                 : modelClass.getDeclaredConstructor(GameContext.class, File.class).newInstance(gameContext, highScoreFile));
+            game.setStateMachine(new GamePlayStateMachine(gameContext, game));
+            return game;
         } catch (Exception x) {
             error("Could not create game model from class %s".formatted(modelClass.getSimpleName()), x);
             throw new RuntimeException(x);

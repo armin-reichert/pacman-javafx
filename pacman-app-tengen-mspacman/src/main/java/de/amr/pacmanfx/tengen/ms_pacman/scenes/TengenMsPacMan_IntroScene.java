@@ -255,9 +255,9 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                     TengenMsPacMan_GameModel game = scene.context().game();
                     if (game.optionsAreInitial()) {
                         game.setCanStartNewGame(false); // TODO check this
-                        scene.context().playStateMachine().restart(GamePlayState.STARTING_GAME_OR_LEVEL);
+                        scene.context().game().stateMachine().restart(GamePlayState.STARTING_GAME_OR_LEVEL);
                     } else {
-                        scene.context().playStateMachine().changeGameState(GamePlayState.SETTING_OPTIONS_FOR_START);
+                        scene.context().game().stateMachine().changeGameState(GamePlayState.SETTING_OPTIONS_FOR_START);
                     }
                 }
             }

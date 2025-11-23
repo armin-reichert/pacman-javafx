@@ -10,7 +10,6 @@ import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.GamePlayStateMachine;
 
 import java.io.File;
 import java.util.Optional;
@@ -45,8 +44,6 @@ public interface GameContext {
      * @return the controller (in MVC sense) used by all game variants. Implemented as an FSM.
      */
     GameController gameController();
-
-    GamePlayStateMachine playStateMachine();
 
     /**
      * @return the event manager that is used to publish/subscribe to game events created by the model layer.

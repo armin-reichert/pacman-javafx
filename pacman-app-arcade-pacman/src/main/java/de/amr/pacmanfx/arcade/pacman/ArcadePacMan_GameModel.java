@@ -112,11 +112,6 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         mapSelector.loadAllMapPrototypes();
     }
 
-    @Override
-    public GamePlayStateMachine playStateMachine() {
-        return gameContext.playStateMachine();
-    }
-
     protected Arcade_LevelData levelData(int levelNumber) {
         int row = Math.min(levelNumber - 1, LEVEL_DATA.length - 1);
         return LEVEL_DATA[row];
@@ -212,6 +207,6 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         bonus.setPosition(halfTileRightOf(bonusTile));
         bonus.setEdible(randomFloat(9, 10));
         gameLevel.setBonus(bonus);
-        playStateMachine().publishEvent(GameEventType.BONUS_ACTIVATED, bonus.tile());
+        stateMachine().publishEvent(GameEventType.BONUS_ACTIVATED, bonus.tile());
     }
 }

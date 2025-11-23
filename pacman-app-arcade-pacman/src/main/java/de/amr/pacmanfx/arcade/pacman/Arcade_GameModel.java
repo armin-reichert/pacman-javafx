@@ -104,7 +104,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             Logger.debug("Power timer restarted, {} ticks ({0.00} sec)", ticks, powerSeconds);
             gameLevel.ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
             thisStep.pacGotPower = true;
-            playStateMachine().publishEvent(GameEventType.PAC_GETS_POWER);
+            stateMachine().publishEvent(GameEventType.PAC_GETS_POWER);
         }
     }
 
@@ -183,7 +183,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         prepareForNewGame();
         levelCounter().clear();
         buildNormalLevel(1);
-        playStateMachine().publishEvent(GameEventType.GAME_STARTED);
+        stateMachine().publishEvent(GameEventType.GAME_STARTED);
     }
 
     @Override
@@ -220,7 +220,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
                 activateNextBonus(gameLevel);
                 thisStep.bonusIndex = gameLevel.currentBonusIndex();
             }
-            playStateMachine().publishEvent(GameEventType.PAC_FOUND_FOOD, tile);
+            stateMachine().publishEvent(GameEventType.PAC_FOUND_FOOD, tile);
         } else {
             pac.starve();
         }
@@ -234,7 +234,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
                 scoreManager.scorePoints(bonus.points());
                 Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
                 thisStep.bonusEatenTile = bonus.tile();
-                playStateMachine().publishEvent(GameEventType.BONUS_EATEN);
+                stateMachine().publishEvent(GameEventType.BONUS_EATEN);
             }
         });
     }
@@ -260,7 +260,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         //TODO handle case when no house exists
         normalLevel.worldMap().terrainLayer().optHouse().ifPresent(house -> gateKeeper.setHouse(house));
         setGameLevel(normalLevel);
-        playStateMachine().publishEvent(GameEventType.LEVEL_CREATED);
+        stateMachine().publishEvent(GameEventType.LEVEL_CREATED);
     }
 
     @Override
@@ -277,7 +277,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         //TODO handle case when no house exists
         demoLevel.worldMap().terrainLayer().optHouse().ifPresent(house -> gateKeeper.setHouse(house));
         setGameLevel(demoLevel);
-        playStateMachine().publishEvent(GameEventType.LEVEL_CREATED);
+        stateMachine().publishEvent(GameEventType.LEVEL_CREATED);
     }
 
     @Override
@@ -298,7 +298,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             Logger.info("Level {} started", gameLevel.number());
         }
         // Note: This event is very important because it triggers the creation of the actor animations!
-        playStateMachine().publishEvent(GameEventType.LEVEL_STARTED);
+        stateMachine().publishEvent(GameEventType.LEVEL_STARTED);
     }
 
     @Override

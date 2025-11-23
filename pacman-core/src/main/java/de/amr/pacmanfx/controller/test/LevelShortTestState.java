@@ -74,7 +74,7 @@ public class LevelShortTestState implements FsmState<GameContext>, TestState {
             if (gameLevel.number() == lastTestedLevelNumber) {
                 context.coinMechanism().setNumCoins(0);
                 context.game().resetEverything();
-                context.playStateMachine().restart(GamePlayState.BOOT);
+                context.game().stateMachine().restart(GamePlayState.BOOT);
             } else {
                 timer.restartIndefinitely();
                 game.startNextLevel();

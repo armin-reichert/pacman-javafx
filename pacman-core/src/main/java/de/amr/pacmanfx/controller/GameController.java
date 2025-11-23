@@ -10,7 +10,6 @@ import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.GamePlayStateMachine;
 import de.amr.pacmanfx.model.Score;
 import javafx.beans.property.*;
 import org.tinylog.Logger;
@@ -24,7 +23,7 @@ import java.util.regex.Pattern;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Controller (in the sense of MVC) for all game variants.
+ * Controller for all game variants.
  * Each game variant is represented by an instance of a game model ({@link Game}).
  * Scene selection is not controlled by this class but left to the specific user interface implementations.
  *
@@ -52,21 +51,17 @@ public class GameController implements GameContext, CoinMechanism {
     private final BooleanProperty usingAutopilot = new SimpleBooleanProperty(false);
     private final StringProperty gameVariant = new SimpleStringProperty();
 
-    private final GamePlayStateMachine playStateMachine;
-
     public GameController() {
         boolean success = initUserDirectories();
         if (!success) {
             throw new IllegalStateException("User directories could not be created");
         }
 
-        playStateMachine = new GamePlayStateMachine(this);
-
         gameVariant.addListener((py, ov, newGameVariant) -> {
             if (eventsEnabled) {
                 Game newGame = game(newGameVariant);
                 newGame.init();
-                playStateMachine.publishEvent(GameEventType.GAME_VARIANT_CHANGED);
+                newGame.stateMachine().publishEvent(GameEventType.GAME_VARIANT_CHANGED);
             }
         });
 
@@ -78,7 +73,6 @@ public class GameController implements GameContext, CoinMechanism {
                 }
             }
         });
-
     }
 
     public void setEventsEnabled(boolean enabled) {
@@ -169,13 +163,8 @@ public class GameController implements GameContext, CoinMechanism {
     }
 
     @Override
-    public GamePlayStateMachine playStateMachine() {
-        return playStateMachine;
-    }
-
-    @Override
     public GameEventManager eventManager() {
-        return playStateMachine;
+        return game().stateMachine();
     }
 
     @Override
@@ -190,9 +179,8 @@ public class GameController implements GameContext, CoinMechanism {
 
     @Override
     public FsmState<GameContext> gameState() {
-        return playStateMachine.state();
+        return game().stateMachine().state();
     }
-
 
     // CoinMechanism implementation
 

@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public interface Game extends GameLifecycle, GameEvents, ActorSpeedControl {
 
-    GamePlayStateMachine  playStateMachine();
+    GamePlayStateMachine  stateMachine();
     ScoreManager          scoreManager();
     SimulationStepEvents  simulationStepResults();
     MapSelector           mapSelector();

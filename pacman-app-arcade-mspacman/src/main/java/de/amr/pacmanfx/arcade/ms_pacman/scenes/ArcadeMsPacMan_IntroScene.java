@@ -243,9 +243,9 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
                 scene.marquee.timer().doTick();
                 if (sceneTimer.atSecond(2.0) && !scene.context().game().canStartNewGame()) {
-                    scene.context().playStateMachine().changeGameState(GamePlayState.STARTING_GAME_OR_LEVEL); // demo level
+                    scene.context().game().stateMachine().changeGameState(GamePlayState.STARTING_GAME_OR_LEVEL); // demo level
                 } else if (sceneTimer.atSecond(5)) {
-                    scene.context().playStateMachine().changeGameState(GamePlayState.SETTING_OPTIONS_FOR_START);
+                    scene.context().game().stateMachine().changeGameState(GamePlayState.SETTING_OPTIONS_FOR_START);
                 }
             }
         };
