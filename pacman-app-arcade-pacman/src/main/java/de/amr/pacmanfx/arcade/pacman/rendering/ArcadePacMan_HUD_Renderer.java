@@ -26,6 +26,9 @@ public class ArcadePacMan_HUD_Renderer extends BaseSpriteRenderer implements HUD
 
     public static final String SCORE_TEXT = "SCORE";
     public static final String HIGH_SCORE_TEXT = "HIGH SCORE";
+    public static final String CREDIT_TEXT_PATTERN = "CREDIT %2d";
+
+    private static final Color SCORE_TEXT_COLOR = ARCADE_WHITE;
 
     public ArcadePacMan_HUD_Renderer(Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(canvas, spriteSheet);
@@ -34,10 +37,6 @@ public class ArcadePacMan_HUD_Renderer extends BaseSpriteRenderer implements HUD
     @Override
     public ArcadePacMan_SpriteSheet spriteSheet() {
         return (ArcadePacMan_SpriteSheet) super.spriteSheet();
-    }
-
-    protected RectShort[] bonusSymbols() {
-        return spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS);
     }
 
     @Override
@@ -51,21 +50,21 @@ public class ArcadePacMan_HUD_Renderer extends BaseSpriteRenderer implements HUD
         }
 
         if (hud.isLevelCounterVisible()) {
-            RectShort[] bonusSymbols = bonusSymbols();
+            final RectShort[] bonusSymbolSprites = spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS);
             float x = sceneSize.x() - TS(4), y = sceneSize.y() - TS(2) + 2;
             for (byte symbol : game.levelCounter().symbols()) {
-                drawSprite(bonusSymbols[symbol], x, y, true);
+                drawSprite(bonusSymbolSprites[symbol], x, y, true);
                 x -= TS(2); // symbols are drawn from right to left
             }
         }
 
         if (hud.isLivesCounterVisible()) {
-            RectShort sprite = spriteSheet().sprite(SpriteID.LIVES_COUNTER_SYMBOL);
-            float x = TS(2), y = sceneSize.y() - TS(2);
+            final RectShort livesCounterSprite = spriteSheet().sprite(SpriteID.LIVES_COUNTER_SYMBOL);
+            final float x = TS(2), y = sceneSize.y() - TS(2);
             for (int i = 0; i < hud.visibleLifeCount(); ++i) {
-                drawSprite(sprite, x + i * TS(2), y, true);
+                drawSprite(livesCounterSprite, x + i * TS(2), y, true);
             }
-            int lifeCount = game.lifeCount();
+            final int lifeCount = game.lifeCount();
             if (lifeCount > hud.maxLivesDisplayed()) {
                 // show text indicating that more lives are available than symbols displayed (cheating may cause this)
                 Font hintFont = Font.font("Serif", FontWeight.BOLD, scaled(8));
@@ -74,16 +73,15 @@ public class ArcadePacMan_HUD_Renderer extends BaseSpriteRenderer implements HUD
         }
 
         if (hud.isCreditVisible()) {
-            fillText("CREDIT %2d".formatted(hud.numCoins()), ARCADE_WHITE, arcadeFont8(), TS(2), sceneSize.y());
+            fillText(CREDIT_TEXT_PATTERN.formatted(hud.numCoins()), ARCADE_WHITE, arcadeFont8(), TS(2), sceneSize.y());
         }
     }
 
     private void drawScore(Score score, String title, Font font, double x, double y) {
-        Color color = ARCADE_WHITE;
-        fillText(title, color, font, x, y);
-        fillText("%7s".formatted("%02d".formatted(score.points())), color, font, x, y + TS + 1);
+        fillText(title, SCORE_TEXT_COLOR, font, x, y);
+        fillText("%7s".formatted("%02d".formatted(score.points())), SCORE_TEXT_COLOR, font, x, y + TS + 1);
         if (score.points() != 0) {
-            fillText("L" + score.levelNumber(), color, font, x + TS(8), y + TS + 1);
+            fillText("L" + score.levelNumber(), SCORE_TEXT_COLOR, font, x + TS(8), y + TS + 1);
         }
     }
 }
