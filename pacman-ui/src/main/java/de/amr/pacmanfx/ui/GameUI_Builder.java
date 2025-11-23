@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
+import de.amr.pacmanfx.controller.CoinMechanism;
 import de.amr.pacmanfx.controller.GameController;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.Game;
@@ -172,16 +173,27 @@ public class GameUI_Builder {
     }
 
     private Game createGameModel(Class<?> modelClass, MapSelector mapSelector, GameContext gameContext, File highScoreFile) {
+        final CoinMechanism coinMechanism = gameContext.coinMechanism();
+        AbstractGameModel game = null;
         try {
-            AbstractGameModel game = (AbstractGameModel) (mapSelector != null
-                ? modelClass.getDeclaredConstructor(GameContext.class, MapSelector.class, File.class).newInstance(gameContext, mapSelector, highScoreFile)
-                : modelClass.getDeclaredConstructor(GameContext.class, File.class).newInstance(gameContext, highScoreFile));
+            game = (AbstractGameModel) (mapSelector != null
+                ? modelClass.getDeclaredConstructor(CoinMechanism.class, MapSelector.class, File.class).newInstance(coinMechanism, mapSelector, highScoreFile)
+                : modelClass.getDeclaredConstructor(CoinMechanism.class, File.class).newInstance(coinMechanism, highScoreFile));
+        } catch (Exception x) {
+            Logger.error("Could not create game model from class %s".formatted(modelClass.getSimpleName()), x);
+        }
+        if (game == null) {
+            try {
+                game = (AbstractGameModel) modelClass.getDeclaredConstructor(File.class).newInstance(highScoreFile);
+            } catch (Exception x) {
+                Logger.error("Could not create game model from class %s".formatted(modelClass.getSimpleName()), x);
+            }
+        }
+        if (game != null) {
             game.setStateMachine(new GamePlayStateMachine(gameContext, game));
             return game;
-        } catch (Exception x) {
-            error("Could not create game model from class %s".formatted(modelClass.getSimpleName()), x);
-            throw new RuntimeException(x);
         }
+        throw new RuntimeException("Could not create game model");
     }
 
     private void validateConfiguration() {

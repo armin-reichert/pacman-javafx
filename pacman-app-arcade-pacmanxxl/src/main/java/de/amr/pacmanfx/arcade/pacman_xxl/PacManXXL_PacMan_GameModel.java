@@ -4,11 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_HuntingTimer;
 import de.amr.pacmanfx.arcade.pacman.Arcade_LevelData;
 import de.amr.pacmanfx.arcade.pacman.actors.*;
+import de.amr.pacmanfx.controller.CoinMechanism;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
@@ -39,10 +39,10 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
     private static final int[] DEMO_LEVEL_NUMBERS = { 1, 3, 6, 10, 14, 18 };
 
     // Warning: Constructor signature is used via reflection by GameUI_Builder, do not change!
-    public PacManXXL_PacMan_GameModel(GameContext gameContext, MapSelector mapSelector, File highScoreFile) {
-        super(gameContext, mapSelector, highScoreFile);
+    public PacManXXL_PacMan_GameModel(CoinMechanism coinMechanism, MapSelector mapSelector, File highScoreFile) {
+        super(coinMechanism, mapSelector, highScoreFile);
         // Demo level map could be a custom map, so use generic auto-steering that also can cope with dead-ends:
-        demoLevelSteering = new RuleBasedPacSteering(gameContext);
+        demoLevelSteering = new RuleBasedPacSteering();
     }
 
     @Override

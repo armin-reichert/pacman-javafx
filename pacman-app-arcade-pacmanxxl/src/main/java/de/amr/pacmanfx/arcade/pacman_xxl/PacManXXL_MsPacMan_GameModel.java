@@ -4,12 +4,12 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_HuntingTimer;
 import de.amr.pacmanfx.arcade.ms_pacman.actors.*;
 import de.amr.pacmanfx.arcade.pacman.Arcade_LevelData;
 import de.amr.pacmanfx.arcade.pacman.actors.Inky;
+import de.amr.pacmanfx.controller.CoinMechanism;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
@@ -29,8 +29,8 @@ import static de.amr.pacmanfx.model.DefaultWorldMapPropertyName.*;
 public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
 
     // Warning: Constructor signature is used via reflection by GameUI_Builder, do not change!
-    public PacManXXL_MsPacMan_GameModel(GameContext gameContext, MapSelector mapSelector, File highScoreFile) {
-        super(gameContext, mapSelector, highScoreFile);
+    public PacManXXL_MsPacMan_GameModel(CoinMechanism coinMechanism, MapSelector mapSelector, File highScoreFile) {
+        super(coinMechanism, mapSelector, highScoreFile);
     }
 
     @Override

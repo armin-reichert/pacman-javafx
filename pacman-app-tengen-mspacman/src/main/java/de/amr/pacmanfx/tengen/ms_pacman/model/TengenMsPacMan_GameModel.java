@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman.model;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Waypoint;
 import de.amr.pacmanfx.lib.math.Vector2f;
@@ -132,14 +131,14 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     private boolean canStartNewGame;
     private int numContinues;
 
-    public TengenMsPacMan_GameModel(GameContext gameContext, File highScoreFile) {
+    public TengenMsPacMan_GameModel(File highScoreFile) {
         setCollisionStrategy(CollisionStrategy.CENTER_DISTANCE);
         scoreManager.setHighScoreFile(requireNonNull(highScoreFile));
         mapSelector = new TengenMsPacMan_MapSelector();
         levelCounter = new TengenMsPacMan_LevelCounter();
         gateKeeper = new GateKeeper(this); //TODO implement original logic from Tengen game
-        autopilot = new RuleBasedPacSteering(gameContext);
-        demoLevelSteering = new RuleBasedPacSteering(gameContext);
+        autopilot = new RuleBasedPacSteering();
+        demoLevelSteering = new RuleBasedPacSteering();
     }
 
     @Override

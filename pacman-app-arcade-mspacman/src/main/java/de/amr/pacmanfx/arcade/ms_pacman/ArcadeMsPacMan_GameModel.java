@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.ms_pacman.actors.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.ms_pacman.actors.MsPacMan;
 import de.amr.pacmanfx.arcade.ms_pacman.actors.Sue;
@@ -13,6 +12,7 @@ import de.amr.pacmanfx.arcade.pacman.Arcade_LevelData;
 import de.amr.pacmanfx.arcade.pacman.actors.Blinky;
 import de.amr.pacmanfx.arcade.pacman.actors.Inky;
 import de.amr.pacmanfx.arcade.pacman.actors.Pinky;
+import de.amr.pacmanfx.controller.CoinMechanism;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Waypoint;
 import de.amr.pacmanfx.lib.math.Vector2i;
@@ -61,24 +61,20 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     /**
      * Called via reflection by builder.
      *
-     * @param gameContext the game context
+     * @param coinMechanism
      * @param highScoreFile the high score file
      */
-    public ArcadeMsPacMan_GameModel(GameContext gameContext, File highScoreFile) {
-        this(gameContext, new ArcadeMsPacMan_MapSelector(), highScoreFile);
-        hud.numCoinsProperty().bind(gameContext.coinMechanism().numCoinsProperty());
+    public ArcadeMsPacMan_GameModel(CoinMechanism coinMechanism, File highScoreFile) {
+        this(coinMechanism, new ArcadeMsPacMan_MapSelector(), highScoreFile);
+        hud.numCoinsProperty().bind(coinMechanism.numCoinsProperty());
     }
 
-    /**
-     * @param gameContext the game context
-     * @param mapSelector map selector e.g. selector that selects custom maps before standard maps
-     */
-    public ArcadeMsPacMan_GameModel(GameContext gameContext, MapSelector mapSelector, File highScoreFile) {
-        super(gameContext.coinMechanism());
+    public ArcadeMsPacMan_GameModel(CoinMechanism coinMechanism, MapSelector mapSelector, File highScoreFile) {
+        super(coinMechanism);
 
         this.mapSelector = requireNonNull(mapSelector);
 
-        hud.numCoinsProperty().bind(gameContext.coinMechanism().numCoinsProperty());
+        hud.numCoinsProperty().bind(coinMechanism.numCoinsProperty());
 
         scoreManager.setHighScoreFile(requireNonNull(highScoreFile));
         scoreManager.setExtraLifeScores(EXTRA_LIFE_SCORE);
@@ -95,8 +91,8 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
             }
         });
 
-        demoLevelSteering = new RuleBasedPacSteering(gameContext);
-        autopilot = new RuleBasedPacSteering(gameContext);
+        demoLevelSteering = new RuleBasedPacSteering();
+        autopilot = new RuleBasedPacSteering();
         mapSelector.loadAllMapPrototypes();
     }
 

@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.pacman.actors.*;
+import de.amr.pacmanfx.controller.CoinMechanism;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Waypoint;
 import de.amr.pacmanfx.lib.math.Vector2i;
@@ -72,23 +72,23 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     protected final ArcadePacMan_LevelCounter levelCounter;
     protected final BaseHUD hud = new BaseHUD();
 
-    public ArcadePacMan_GameModel(GameContext gameContext, File highScoreFile) {
-        this(gameContext, new ArcadePacMan_MapSelector(), highScoreFile);
-        hud.numCoinsProperty().bind(gameContext.coinMechanism().numCoinsProperty());
+    public ArcadePacMan_GameModel(CoinMechanism coinMechanism, File highScoreFile) {
+        this(coinMechanism, new ArcadePacMan_MapSelector(), highScoreFile);
+        hud.numCoinsProperty().bind(coinMechanism.numCoinsProperty());
     }
 
     /**
-     * @param gameContext the game context
+     * @param coinMechanism the coin mechanism
      * @param mapSelector e.g. selector that selects custom maps before standard maps
      * @param highScoreFile file where high score is stored
      */
-    public ArcadePacMan_GameModel(GameContext gameContext, MapSelector mapSelector, File highScoreFile) {
-        super(gameContext.coinMechanism());
+    public ArcadePacMan_GameModel(CoinMechanism coinMechanism, MapSelector mapSelector, File highScoreFile) {
+        super(coinMechanism);
 
         requireNonNull(mapSelector);
         requireNonNull(highScoreFile);
 
-        hud.numCoinsProperty().bind(gameContext.coinMechanism().numCoinsProperty());
+        hud.numCoinsProperty().bind(coinMechanism.numCoinsProperty());
 
         this.mapSelector = mapSelector;
 
@@ -108,7 +108,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         });
 
         demoLevelSteering = new RouteBasedSteering(PAC_MAN_DEMO_LEVEL_ROUTE);
-        autopilot = new RuleBasedPacSteering(gameContext);
+        autopilot = new RuleBasedPacSteering();
 
         mapSelector.loadAllMapPrototypes();
     }
