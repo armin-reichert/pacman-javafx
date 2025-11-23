@@ -30,9 +30,7 @@ import de.amr.pacmanfx.ui.api.SubSceneProvider;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.PerspectiveCamera;
@@ -68,7 +66,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
     public static final double CANVAS_WIDTH_UNSCALED = NES_SIZE_PX.x();
 
     private final DoubleProperty canvasHeightUnscaled = new SimpleDoubleProperty(NES_SIZE_PX.y());
-    private final BooleanProperty mazeHighlighted = new SimpleBooleanProperty(false);
 
     private final StackPane rootPane;
     private final SubScene subScene;
@@ -107,7 +104,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
     }
 
     public boolean isMazeHighlighted() {
-        return mazeHighlighted.get();
+        return levelCompletedAnimation != null && levelCompletedAnimation.highlightedProperty().get();
     }
 
     public double canvasHeightUnscaled() {
@@ -345,11 +342,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
         levelCompletedAnimation = new LevelCompletedAnimation(animationRegistry);
         levelCompletedAnimation.setGameLevel(gameLevel);
         levelCompletedAnimation.setSingleFlashMillis(333);
-        levelCompletedAnimation.getOrCreateAnimationFX().setOnFinished(e -> {
-            mazeHighlighted.unbind();
-            context().gameController().letCurrentGameStateExpire();
-        });
-        mazeHighlighted.bind(levelCompletedAnimation.highlightedProperty());
+        levelCompletedAnimation.getOrCreateAnimationFX().setOnFinished(e -> context().gameController().letCurrentGameStateExpire());
         levelCompletedAnimation.playFromStart();
     }
 
