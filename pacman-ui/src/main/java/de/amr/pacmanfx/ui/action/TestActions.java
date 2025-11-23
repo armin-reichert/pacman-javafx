@@ -17,7 +17,7 @@ public class TestActions {
         @Override
         public void execute(GameUI ui) {
             FsmState<GameContext> testState = ui.context().currentGame().stateMachine().stateByName(CutScenesTestState.class.getSimpleName());
-            ui.context().currentGame().stateMachine().changeGameState(testState);
+            ui.context().currentGame().stateMachine().changeState(testState);
             ui.showFlashMessage("Cut scenes test"); //TODO localize
         }
     };

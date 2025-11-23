@@ -36,11 +36,6 @@ public class GamePlayStateMachine extends StateMachine<FsmState<GameContext>, Ga
         addStateChangeListener((oldState, newState) -> publishEvent(new GameStateChangeEvent(game, oldState, newState)));
     }
 
-    public void changeGameState(FsmState<GameContext> state) {
-        requireNonNull(state);
-        changeState(state);
-    }
-
     public FsmState<GameContext> stateByName(String name) {
         return states().stream()
             .filter(state -> state.name().equals(name))

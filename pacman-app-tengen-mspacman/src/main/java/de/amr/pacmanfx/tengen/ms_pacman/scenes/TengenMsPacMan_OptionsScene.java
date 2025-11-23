@@ -125,7 +125,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         if (idleTicks < IDLE_TIMEOUT) {
             idleTicks += 1;
         } else {
-            context().currentGame().stateMachine().changeGameState(GamePlayState.INTRO);
+            context().currentGame().stateMachine().changeState(GamePlayState.INTRO);
         }
     }
 
