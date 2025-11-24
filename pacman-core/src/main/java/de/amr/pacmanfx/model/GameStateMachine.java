@@ -9,9 +9,6 @@ import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.math.Vector2i;
-import de.amr.pacmanfx.model.test.CutScenesTestState;
-import de.amr.pacmanfx.model.test.LevelMediumTestState;
-import de.amr.pacmanfx.model.test.LevelShortTestState;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
@@ -25,12 +22,6 @@ public class GameStateMachine extends StateMachine<FsmState<GameContext>, GameCo
 
     public GameStateMachine(Game game) {
         this.game = requireNonNull(game);
-        List<FsmState<GameContext>> states = new ArrayList<>(List.of(GameState.values()));
-        states.add(new LevelShortTestState());
-        states.add(new LevelMediumTestState());
-        states.add(new CutScenesTestState());
-        setStates(states);
-        setName("Game Controller State Machine");
         addStateChangeListener((oldState, newState) -> publishEvent(new GameStateChangeEvent(game, oldState, newState)));
     }
 

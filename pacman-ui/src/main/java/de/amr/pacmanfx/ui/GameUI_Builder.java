@@ -8,7 +8,6 @@ import de.amr.pacmanfx.controller.CoinMechanism;
 import de.amr.pacmanfx.controller.GameBox;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.GameStateMachine;
 import de.amr.pacmanfx.model.MapSelector;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
@@ -132,7 +131,7 @@ public class GameUI_Builder {
 
         configByGameVariant.forEach((gameVariant, config) -> {
             File highScoreFile = THE_GAME_BOX.highScoreFile(gameVariant);
-            Game gameModel = createGameModel(config.gameModelClass, config.mapSelector, highScoreFile);
+            AbstractGameModel gameModel = createGameModel(config.gameModelClass, config.mapSelector, highScoreFile);
             THE_GAME_BOX.registerGame(gameVariant, gameModel);
         });
 
@@ -165,7 +164,7 @@ public class GameUI_Builder {
         }
     }
 
-    private Game createGameModel(Class<?> modelClass, MapSelector mapSelector, File highScoreFile) {
+    private AbstractGameModel createGameModel(Class<?> modelClass, MapSelector mapSelector, File highScoreFile) {
         AbstractGameModel game = null;
         try {
             if (mapSelector != null) {
@@ -191,7 +190,6 @@ public class GameUI_Builder {
             }
         }
         if (game != null) {
-            game.setStateMachine(new GameStateMachine(game));
             Logger.info("Success: Game model created, class={}", modelClass.getSimpleName());
             return game;
         }

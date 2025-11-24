@@ -4,17 +4,24 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.pacman.actors.Blinky;
 import de.amr.pacmanfx.controller.CoinMechanism;
 import de.amr.pacmanfx.event.GameEventType;
+import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.lib.worldmap.FoodLayer;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.*;
+import de.amr.pacmanfx.model.test.CutScenesTestState;
+import de.amr.pacmanfx.model.test.LevelMediumTestState;
+import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.steering.Steering;
 import org.tinylog.Logger;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
@@ -75,6 +82,14 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     protected Arcade_GameModel(CoinMechanism coinMechanism) {
         this.coinMechanism = requireNonNull(coinMechanism);
         setCollisionStrategy(CollisionStrategy.SAME_TILE);
+
+        stateMachine = new GameStateMachine(this);
+        List<FsmState<GameContext>> states = new ArrayList<>(List.of(GameState.values()));
+        states.add(new LevelShortTestState());
+        states.add(new LevelMediumTestState());
+        states.add(new CutScenesTestState());
+        stateMachine.setStates(states);
+        stateMachine.setName("Arcade Game State Machine");
     }
 
     public abstract Arcade_LevelData levelData(GameLevel gameLevel);
