@@ -111,7 +111,6 @@ public class GameBox implements GameContext, CoinMechanism {
             Logger.warn("Game model ({}) is already registered for game variant {}", gameModel.getClass().getName(), variant);
         }
         knownGames.put(variant, gameModel);
-        gameModel.init();
     }
 
     public StringProperty gameVariantNameProperty() {
