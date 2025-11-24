@@ -10,10 +10,10 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameState;
+import de.amr.pacmanfx.model.StandardGameVariant;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.test.LevelMediumTestState;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
-import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
@@ -101,7 +101,7 @@ public final class CommonGameActions {
         @Override
         public void execute(GameUI ui) {
             ui.quitCurrentGameScene();
-            ui.context().gameBox().cheatUsedProperty().set(false);
+            THE_GAME_BOX.cheatUsedProperty().set(false);
         }
     };
 
@@ -127,13 +127,9 @@ public final class CommonGameActions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            return (ui.context().gameBox().isCurrentGameVariant("PACMAN")
-                || ui.context().gameBox().isCurrentGameVariant("PACMAN_XXL")
-                || ui.context().gameBox().isCurrentGameVariant("MS_PACMAN")
-                || ui.context().gameBox().isCurrentGameVariant("MS_PACMAN_XXL"))
-                && ui.currentView() == ui.playView()
-                && ui.currentGameScene().isPresent()
-                && ui.currentGameScene().get() instanceof GameScene2D;
+            boolean isArcadeGame = StandardGameVariant.isArcadeGameName(THE_GAME_BOX.gameVariantName());
+            boolean isPlayScene2D = ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_2D);
+            return isArcadeGame && isPlayScene2D;
         }
     };
 
@@ -291,7 +287,7 @@ public final class CommonGameActions {
             if (ui.clock().isPaused()) {
                 ui.soundManager().stopAll();
             }
-            Logger.info("Game ({}) {}", ui.context().gameBox().gameVariant(), ui.clock().isPaused() ? "paused" : "resumed");
+            Logger.info("Game ({}) {}", THE_GAME_BOX.gameVariantName(), ui.clock().isPaused() ? "paused" : "resumed");
         }
     };
 

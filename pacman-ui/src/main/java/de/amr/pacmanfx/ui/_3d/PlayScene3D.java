@@ -52,8 +52,7 @@ import org.tinylog.Logger;
 import java.util.*;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.Globals.HTS;
-import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.stateIsOneOf;
 import static de.amr.pacmanfx.model.GameState.*;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
@@ -225,10 +224,10 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
         miToggleMiniView.selectedProperty().bindBidirectional(PROPERTY_MINI_VIEW_ON);
 
         var miAutopilot = new CheckMenuItem(ui.assets().translated("autopilot"));
-        miAutopilot.selectedProperty().bindBidirectional(context().gameBox().usingAutopilotProperty());
+        miAutopilot.selectedProperty().bindBidirectional(THE_GAME_BOX.usingAutopilotProperty());
 
         var miImmunity = new CheckMenuItem(ui.assets().translated("immunity"));
-        miImmunity.selectedProperty().bindBidirectional(context().gameBox().immunityProperty());
+        miImmunity.selectedProperty().bindBidirectional(THE_GAME_BOX.immunityProperty());
 
         var miMuted = new CheckMenuItem(ui.assets().translated("muted"));
         miMuted.selectedProperty().bindBidirectional(PROPERTY_MUTED);

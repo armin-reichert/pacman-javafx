@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.math.Vector2i;
@@ -15,6 +14,7 @@ import de.amr.pacmanfx.model.GameState;
 import de.amr.pacmanfx.model.MessageType;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MovingGameLevelMessage;
@@ -47,6 +47,7 @@ import org.tinylog.Logger;
 import java.util.List;
 import java.util.Set;
 
+import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.model.GameState.GAME_OVER;
 import static de.amr.pacmanfx.model.GameState.LEVEL_COMPLETE;
@@ -267,10 +268,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
         });
 
         var miAutopilot = new CheckMenuItem(ui.assets().translated("autopilot"));
-        miAutopilot.selectedProperty().bindBidirectional(context().gameBox().usingAutopilotProperty());
+        miAutopilot.selectedProperty().bindBidirectional(THE_GAME_BOX.usingAutopilotProperty());
 
         var miImmunity = new CheckMenuItem(ui.assets().translated("immunity"));
-        miImmunity.selectedProperty().bindBidirectional(context().gameBox().immunityProperty());
+        miImmunity.selectedProperty().bindBidirectional(THE_GAME_BOX.immunityProperty());
 
         var miMuted = new CheckMenuItem(ui.assets().translated("muted"));
         miMuted.selectedProperty().bindBidirectional(PROPERTY_MUTED);

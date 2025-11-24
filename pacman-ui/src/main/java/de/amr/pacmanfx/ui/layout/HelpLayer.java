@@ -12,6 +12,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 
+import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
 import static de.amr.pacmanfx.uilib.Ufx.colorWithOpacity;
 
 public class HelpLayer extends Pane {
@@ -30,7 +31,7 @@ public class HelpLayer extends Pane {
     }
 
     public void showHelp(GameUI ui, double scaling) {
-        Color bgColor = ui.context().gameBox().isCurrentGameVariant("MS_PACMAN") ? Color.RED : Color.BLUE;
+        Color bgColor = THE_GAME_BOX.isCurrentGameVariant("MS_PACMAN") ? Color.RED : Color.BLUE;
         var font = Font.font(ui.assets().font_Monospaced.getFamily(), Math.max(6, 14 * scaling));
         var helpPane = HelpInfo.build(ui).createPane(ui, colorWithOpacity(bgColor, 0.8), font);
         helpPopUp.setTranslateX(10 * scaling);

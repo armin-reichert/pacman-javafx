@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.dashboard;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.controller.CoinMechanism;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.model.GameState;
@@ -20,6 +19,7 @@ import javafx.scene.control.Spinner;
 
 import java.util.List;
 
+import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
 import static de.amr.pacmanfx.Validations.stateIsOneOf;
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_ENTER_NEXT_LEVEL;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_RESTART_INTRO;
@@ -51,12 +51,12 @@ public class InfoBoxGameControl extends InfoBox {
 
     @Override
     public void init(GameUI ui) {
-        spinnerCredit            = addIntSpinner("Credit", 0, CoinMechanism.MAX_COINS, Globals.THE_GAME_BOX.numCoinsProperty());
+        spinnerCredit            = addIntSpinner("Credit", 0, CoinMechanism.MAX_COINS, THE_GAME_BOX.numCoinsProperty());
         choiceBoxInitialLives    = addChoiceBox("Initial Lives", new Integer[] {3, 5});
         buttonGroupLevelActions  = addButtonList("Game Level", List.of("Start", "Quit", "Next"));
         buttonGroupCutScenesTest = addButtonList("Cut Scenes Test", List.of("Start", "Quit"));
-        cbAutopilot              = addCheckBox("Autopilot", ui.context().gameBox().usingAutopilotProperty());
-        cbImmunity               = addCheckBox("Pac-Man Immune", ui.context().gameBox().immunityProperty());
+        cbAutopilot              = addCheckBox("Autopilot", THE_GAME_BOX.usingAutopilotProperty());
+        cbImmunity               = addCheckBox("Pac-Man Immune", THE_GAME_BOX.immunityProperty());
 
         setAction(buttonGroupCutScenesTest[CUT_SCENES_TEST_START], TestActions.ACTION_CUT_SCENES_TEST);
         setAction(buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT], ACTION_RESTART_INTRO);

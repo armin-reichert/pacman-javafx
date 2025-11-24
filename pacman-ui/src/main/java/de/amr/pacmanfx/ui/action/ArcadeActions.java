@@ -10,8 +10,6 @@ import de.amr.pacmanfx.model.GameState;
 import de.amr.pacmanfx.model.StandardGameVariant;
 import de.amr.pacmanfx.ui.api.GameUI;
 
-import java.util.Set;
-
 import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
 import static de.amr.pacmanfx.model.GameState.INTRO;
 
@@ -51,13 +49,8 @@ public final class ArcadeActions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            Set<String> arcadeGames = Set.of(
-                StandardGameVariant.PACMAN.name(),
-                StandardGameVariant.MS_PACMAN.name(),
-                StandardGameVariant.PACMAN_XXL.name(),
-                StandardGameVariant.MS_PACMAN_XXL.name()
-            );
-            return arcadeGames.contains(ui.context().gameBox().gameVariant())
+            boolean isArcadeGame = StandardGameVariant.isArcadeGameName(THE_GAME_BOX.gameVariantName());
+            return isArcadeGame
                 && !THE_GAME_BOX.containsNoCoin()
                 && (ui.context().currentGameState() == GameState.INTRO || ui.context().currentGameState() == GameState.SETTING_OPTIONS_FOR_START)
                 && ui.context().currentGame().canStartNewGame();

@@ -114,19 +114,19 @@ public class GameBox implements GameContext, CoinMechanism {
         gameModel.init();
     }
 
-    public StringProperty gameVariantProperty() {
+    public StringProperty gameVariantNameProperty() {
         return gameVariant;
     }
 
-    public String gameVariant() { return gameVariant.get(); }
+    public String gameVariantName() { return gameVariant.get(); }
 
-    public void setGameVariant(String gameVariantName) {
+    public void setGameVariantName(String gameVariantName) {
         requireNonNull(gameVariantName);
         this.gameVariant.set(gameVariantName);
     }
 
     public boolean isCurrentGameVariant(String gameVariantName) {
-        return requireNonNull(gameVariantName).equals(gameVariant());
+        return requireNonNull(gameVariantName).equals(gameVariantName());
     }
 
     public BooleanProperty cheatUsedProperty() {
@@ -143,16 +143,17 @@ public class GameBox implements GameContext, CoinMechanism {
 
     // GameContext implementation
 
+
+    @Override
+    public String currentGameVariantName() {
+        return gameVariantName();
+    }
+
     /**
      * @return The game (model) registered for the currently selected game variant.
      */
     public <G extends Game> G currentGame() {
         return game(gameVariant.get());
-    }
-
-    @Override
-    public GameBox gameBox() {
-        return this;
     }
 
     @Override

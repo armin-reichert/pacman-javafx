@@ -11,6 +11,8 @@ import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.GameState;
 
+import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
+
 public class CutScenesTestState implements FsmState<GameContext>, TestState {
 
     private final TickTimer timer = new TickTimer("Timer_" + name());
@@ -39,7 +41,7 @@ public class CutScenesTestState implements FsmState<GameContext>, TestState {
     public void onUpdate(GameContext context) {
         if (context.currentGame() instanceof AbstractGameModel) {
             if (timer.hasExpired()) {
-                int lastCutSceneNumber = context.gameBox().isCurrentGameVariant("MS_PACMAN_TENGEN") ? 4 : 3;
+                int lastCutSceneNumber = THE_GAME_BOX.isCurrentGameVariant("MS_PACMAN_TENGEN") ? 4 : 3;
                 if (testedCutSceneNumber < lastCutSceneNumber) {
                     testedCutSceneNumber += 1;
                     timer.restartIndefinitely();

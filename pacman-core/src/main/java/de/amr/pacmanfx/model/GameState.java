@@ -6,11 +6,12 @@ package de.amr.pacmanfx.model;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
-import de.amr.pacmanfx.controller.GameBox;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.*;
+
+import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
 
 /**
  * States of the common state machine for all Pac-Man games.
@@ -27,9 +28,9 @@ public enum GameState implements FsmState<GameContext> {
         @Override
         public void onEnter(GameContext context) {
             timer.restartIndefinitely();
-            context.gameBox().cheatUsedProperty().set(false);
-            context.gameBox().immunityProperty().set(false);
-            context.gameBox().usingAutopilotProperty().set(false);
+            THE_GAME_BOX.cheatUsedProperty().set(false);
+            THE_GAME_BOX.immunityProperty().set(false);
+            THE_GAME_BOX.usingAutopilotProperty().set(false);
             context.currentGame().resetEverything();
         }
 
@@ -95,13 +96,12 @@ public enum GameState implements FsmState<GameContext> {
                 context.currentGame().startNewGame();
             }
             else if (timer.tickCount() == 2) {
-                final GameBox gameBox = context.gameBox();
                 final GameLevel gameLevel = context.gameLevel();
                 if (!gameLevel.isDemoLevel()) {
-                    gameLevel.pac().immuneProperty().bind(gameBox.immunityProperty());
-                    gameLevel.pac().usingAutopilotProperty().bind(gameBox.usingAutopilotProperty());
-                    boolean cheating = gameBox.immunityProperty().get() || gameBox.usingAutopilotProperty().get();
-                    gameBox.cheatUsedProperty().set(cheating);
+                    gameLevel.pac().immuneProperty().bind(THE_GAME_BOX.immunityProperty());
+                    gameLevel.pac().usingAutopilotProperty().bind(THE_GAME_BOX.usingAutopilotProperty());
+                    boolean cheating = THE_GAME_BOX.immunityProperty().get() || THE_GAME_BOX.usingAutopilotProperty().get();
+                    THE_GAME_BOX.cheatUsedProperty().set(cheating);
                 }
                 context.currentGame().startLevel(gameLevel);
             }
@@ -159,7 +159,7 @@ public enum GameState implements FsmState<GameContext> {
         @Override
         public void onEnter(GameContext context) {
             //TODO reconsider this
-            delay = context.gameBox().isCurrentGameVariant("MS_PACMAN_TENGEN") ? Globals.NUM_TICKS_PER_SEC : 0;
+            delay = THE_GAME_BOX.isCurrentGameVariant("MS_PACMAN_TENGEN") ? Globals.NUM_TICKS_PER_SEC : 0;
         }
 
         @Override
@@ -221,7 +221,7 @@ public enum GameState implements FsmState<GameContext> {
             }
 
             //TODO this is crap. Maybe Tengen Ms. Pac-Man needs its own state machine?
-            if (context.gameBox().isCurrentGameVariant(StandardGameVariant.MS_PACMAN_TENGEN.name())
+            if (THE_GAME_BOX.isCurrentGameVariant(StandardGameVariant.MS_PACMAN_TENGEN.name())
                 && context.gameLevel().isDemoLevel()) {
                 game.stateMachine().changeState(context, SHOWING_CREDITS);
                 return;
@@ -353,7 +353,7 @@ public enum GameState implements FsmState<GameContext> {
 
             if (timer.hasExpired()) {
                 //TODO find unified solution
-                if (context.gameBox().isCurrentGameVariant(StandardGameVariant.MS_PACMAN_TENGEN.name())) {
+                if (THE_GAME_BOX.isCurrentGameVariant(StandardGameVariant.MS_PACMAN_TENGEN.name())) {
                     if (context.gameLevel().isDemoLevel()) {
                         game.stateMachine().changeState(context, SHOWING_CREDITS);
                     } else {
@@ -374,7 +374,7 @@ public enum GameState implements FsmState<GameContext> {
         @Override
         public void onExit(GameContext context) {
             context.optGameLevel().ifPresent(GameLevel::clearMessage);
-            context.gameBox().cheatUsedProperty().set(false);
+            THE_GAME_BOX.cheatUsedProperty().set(false);
         }
     },
 

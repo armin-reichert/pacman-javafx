@@ -187,7 +187,7 @@ public final class GameUI_Implementation implements GameUI {
             currentViewProperty(),
             playView.currentGameSceneProperty(),
             scene.heightProperty(),
-            gameContext.gameBox().gameVariantProperty(),
+            THE_GAME_BOX.gameVariantNameProperty(),
             PROPERTY_DEBUG_INFO_VISIBLE,
             PROPERTY_3D_ENABLED,
             clock().pausedProperty()
@@ -258,9 +258,9 @@ public final class GameUI_Implementation implements GameUI {
         statusIconBox.visibleProperty().bind(currentViewProperty().map(currentView -> optEditorView().isEmpty() || currentView != optEditorView().get()));
         statusIconBox.iconMuted()    .visibleProperty().bind(PROPERTY_MUTED);
         statusIconBox.icon3D()       .visibleProperty().bind(PROPERTY_3D_ENABLED);
-        statusIconBox.iconAutopilot().visibleProperty().bind(context().gameBox().usingAutopilotProperty());
-        statusIconBox.iconCheated()  .visibleProperty().bind(context().gameBox().cheatUsedProperty());
-        statusIconBox.iconImmune()   .visibleProperty().bind(context().gameBox().immunityProperty());
+        statusIconBox.iconAutopilot().visibleProperty().bind(THE_GAME_BOX.usingAutopilotProperty());
+        statusIconBox.iconCheated()  .visibleProperty().bind(THE_GAME_BOX.cheatUsedProperty());
+        statusIconBox.iconImmune()   .visibleProperty().bind(THE_GAME_BOX.immunityProperty());
         StackPane.setAlignment(statusIconBox, Pos.BOTTOM_LEFT);
     }
 
@@ -459,7 +459,7 @@ public final class GameUI_Implementation implements GameUI {
             return;
         }
 
-        String previousVariant = gameContext.gameBox().gameVariant();
+        String previousVariant = THE_GAME_BOX.gameVariantName();
         if (gameVariant.equals(previousVariant)) {
             return;
         }
@@ -483,7 +483,7 @@ public final class GameUI_Implementation implements GameUI {
         }
 
         // this triggers a game event and the event handlers:
-        gameContext.gameBox().setGameVariant(gameVariant);
+        THE_GAME_BOX.setGameVariantName(gameVariant);
     }
 
     @Override
@@ -498,7 +498,7 @@ public final class GameUI_Implementation implements GameUI {
         }
         stage.centerOnScreen();
         stage.show();
-        gameContext.gameBox().setEventsEnabled(true);
+        THE_GAME_BOX.setEventsEnabled(true);
         Platform.runLater(customDirWatchdog::startWatching);
     }
 
@@ -613,6 +613,6 @@ public final class GameUI_Implementation implements GameUI {
     @Override
     @SuppressWarnings("unchecked")
     public <T extends GameUI_Config> T currentConfig() {
-        return (T) config(gameContext.gameBox().gameVariant());
+        return (T) config(gameContext.currentGameVariantName());
     }
 }

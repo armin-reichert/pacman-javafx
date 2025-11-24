@@ -19,6 +19,7 @@ import javafx.scene.text.Text;
 import java.util.ArrayList;
 import java.util.List;
 
+import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
 import static de.amr.pacmanfx.model.GameState.*;
 import static java.util.Objects.requireNonNull;
 
@@ -66,13 +67,13 @@ public class HelpInfo {
         pane.setBackground(Ufx.roundedBackground(backgroundColor, 10));
 
         // add default entries:
-        if (ui.context().gameBox().usingAutopilotProperty().get()) {
+        if (THE_GAME_BOX.usingAutopilotProperty().get()) {
             var autoPilotEntry = text(ui.assets().translated("help.autopilot_on"), Color.ORANGE);
             autoPilotEntry.setFont(font);
             GridPane.setColumnSpan(autoPilotEntry, 2);
             grid.add(autoPilotEntry, 0, grid.getRowCount());
         }
-        if (ui.context().gameBox().immunityProperty().get()) {
+        if (THE_GAME_BOX.immunityProperty().get()) {
             var immunityEntry = text(ui.assets().translated("help.immunity_on"), Color.ORANGE);
             immunityEntry.setFont(font);
             GridPane.setColumnSpan(immunityEntry, 2);

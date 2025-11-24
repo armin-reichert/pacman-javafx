@@ -23,7 +23,7 @@ public class TestEatingFood {
         ArcadePacMan_GameModel game = new ArcadePacMan_GameModel(THE_GAME_BOX.coinMechanism(), new File(""));
         game.setStateMachine(new GameStateMachine(game));
         THE_GAME_BOX.registerGame(StandardGameVariant.PACMAN.name(), game);
-        THE_GAME_BOX.setGameVariant(StandardGameVariant.PACMAN.name());
+        THE_GAME_BOX.setGameVariantName(StandardGameVariant.PACMAN.name());
     }
 
     @BeforeEach
