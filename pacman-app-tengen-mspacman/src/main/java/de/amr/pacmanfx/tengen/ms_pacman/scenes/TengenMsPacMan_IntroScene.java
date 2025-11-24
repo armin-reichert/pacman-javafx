@@ -69,7 +69,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
         final GameUI_Config uiConfig = ui.currentConfig();
 
         sceneRenderer = configureRendererForGameScene(
-            new TengenMsPacMan_IntroScene_Renderer(this, canvas, uiConfig.spriteSheet()), this);
+            new TengenMsPacMan_IntroScene_Renderer(this, canvas, (TengenMsPacMan_SpriteSheet) uiConfig.spriteSheet()), this);
     }
 
     @Override

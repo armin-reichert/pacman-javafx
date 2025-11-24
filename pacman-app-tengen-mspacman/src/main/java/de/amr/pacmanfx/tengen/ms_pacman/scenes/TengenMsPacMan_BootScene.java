@@ -42,8 +42,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
 
     @Override
     protected void createRenderers(Canvas canvas) {
-        final GameUI_Config uiConfig = ui.currentConfig();
-        sceneRenderer = new TengenMsPacMan_BootScene_Renderer(this, canvas, uiConfig.spriteSheet());
+        sceneRenderer = new TengenMsPacMan_BootScene_Renderer(this, canvas);
     }
 
     @Override

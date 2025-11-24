@@ -10,9 +10,9 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.HUD;
 import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.model.ScoreManager;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
-import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.HUD_Renderer;
+import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -21,16 +21,20 @@ import javafx.scene.text.FontWeight;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.api.ArcadePalette.ARCADE_WHITE;
 import static de.amr.pacmanfx.ui.api.ArcadePalette.ARCADE_YELLOW;
+import static java.util.Objects.requireNonNull;
 
-public class ArcadeMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HUD_Renderer {
+public class ArcadeMsPacMan_HUDRenderer extends BaseRenderer implements SpriteRenderer, HUD_Renderer {
 
-    public ArcadeMsPacMan_HUDRenderer(Canvas canvas, SpriteSheet<?> spriteSheet) {
-        super(canvas, spriteSheet);
+    private final ArcadeMsPacMan_SpriteSheet spriteSheet;
+
+    public ArcadeMsPacMan_HUDRenderer(Canvas canvas, ArcadeMsPacMan_SpriteSheet spriteSheet) {
+        super(canvas);
+        this.spriteSheet = requireNonNull(spriteSheet);
     }
 
     @Override
     public ArcadeMsPacMan_SpriteSheet spriteSheet() {
-        return (ArcadeMsPacMan_SpriteSheet) super.spriteSheet();
+        return spriteSheet;
     }
 
     @Override
@@ -44,7 +48,7 @@ public class ArcadeMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HU
         }
 
         if (hud.isLevelCounterVisible()) {
-            RectShort[] bonusSymbols = spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS);
+            RectShort[] bonusSymbols = spriteSheet.spriteSequence(SpriteID.BONUS_SYMBOLS);
             float x = sceneSize.x() - TS(4), y = sceneSize.y() - TS(2) + 2;
             for (byte symbol : game.levelCounter().symbols()) {
                 drawSprite(bonusSymbols[symbol], x, y, true);
@@ -53,7 +57,7 @@ public class ArcadeMsPacMan_HUDRenderer extends BaseSpriteRenderer implements HU
         }
 
         if (hud.isLivesCounterVisible()) {
-            RectShort sprite = spriteSheet().sprite(SpriteID.LIVES_COUNTER_SYMBOL);
+            RectShort sprite = spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
             float x = TS(2), y = sceneSize.y() - TS(2);
             for (int i = 0; i < hud.visibleLifeCount(); ++i) {
                 drawSprite(sprite, x + i * TS(2), y, true);

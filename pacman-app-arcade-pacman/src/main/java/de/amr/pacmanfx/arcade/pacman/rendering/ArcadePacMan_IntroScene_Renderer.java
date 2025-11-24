@@ -11,14 +11,16 @@ import de.amr.pacmanfx.ui._2d.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
+import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.pacman.rendering.SpriteID.GALLERY_GHOSTS;
 import static de.amr.pacmanfx.ui.api.ArcadePalette.*;
+import static java.util.Objects.requireNonNull;
 
-public class ArcadePacMan_IntroScene_Renderer extends GameScene2D_Renderer {
+public class ArcadePacMan_IntroScene_Renderer extends GameScene2D_Renderer implements SpriteRenderer {
 
     private static final String MIDWAY_MFG_CO = "© 1980 MIDWAY MFG.CO.";
     private static final String[] GHOST_NICKNAMES  = { "\"BLINKY\"", "\"PINKY\"", "\"INKY\"", "\"CLYDE\"" };
@@ -27,17 +29,19 @@ public class ArcadePacMan_IntroScene_Renderer extends GameScene2D_Renderer {
 
     private static final int LEFT_TILE_X = 4;
 
+    private final ArcadePacMan_SpriteSheet spriteSheet;
     private final ArcadePacMan_Actor_Renderer actorRenderer;
     private final RectShort energizerSprite;
 
     public ArcadePacMan_IntroScene_Renderer(ArcadePacMan_IntroScene scene, Canvas canvas, ArcadePacMan_SpriteSheet spriteSheet) {
-        super(canvas, spriteSheet);
+        super(canvas);
+        this.spriteSheet = requireNonNull(spriteSheet);
 
         final GameUI_Config uiConfig = scene.ui().currentConfig();
 
         actorRenderer = configureRendererForGameScene((ArcadePacMan_Actor_Renderer) uiConfig.createActorRenderer(canvas), scene);
 
-        debugInfoRenderer = configureRendererForGameScene(new BaseDebugInfoRenderer(scene.ui(), canvas, uiConfig.spriteSheet()) {
+        debugInfoRenderer = configureRendererForGameScene(new BaseDebugInfoRenderer(scene.ui(), canvas) {
             @Override
             public void draw(GameScene2D scene) {
                 ArcadePacMan_IntroScene introScene = (ArcadePacMan_IntroScene) scene;
@@ -50,6 +54,12 @@ public class ArcadePacMan_IntroScene_Renderer extends GameScene2D_Renderer {
         setImageSmoothing(true);
     }
 
+    @Override
+    public ArcadePacMan_SpriteSheet spriteSheet() {
+        return spriteSheet;
+    }
+
+    @Override
     public void draw(GameScene2D scene) {
         clearCanvas();
 
@@ -78,14 +88,13 @@ public class ArcadePacMan_IntroScene_Renderer extends GameScene2D_Renderer {
     }
 
     private void drawGallery(ArcadePacMan_IntroScene introScene) {
-        ArcadePacMan_SpriteSheet ss = (ArcadePacMan_SpriteSheet) spriteSheet();
         ctx.setFont(arcadeFont8());
         if (introScene.titleVisible()) {
             fillText("CHARACTER / NICKNAME", ARCADE_WHITE, TS(LEFT_TILE_X + 3), TS(6));
         }
         for (byte p = RED_GHOST_SHADOW; p <= ORANGE_GHOST_POKEY; ++p) {
             if (introScene.ghostImageVisible(p)) {
-                RectShort sprite = ss.spriteSequence(GALLERY_GHOSTS)[p];
+                RectShort sprite = spriteSheet.spriteSequence(GALLERY_GHOSTS)[p];
                 drawSpriteCentered(TS(LEFT_TILE_X + 1), TS(7.5f + 3 * p), sprite);
             }
             if (introScene.ghostCharacterVisible(p)) {

@@ -9,8 +9,8 @@ import de.amr.pacmanfx.tengen.ms_pacman.scenes.TengenMsPacMan_IntroScene;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
+import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
@@ -20,20 +20,24 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesColor;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.shadeOfBlue;
 import static de.amr.pacmanfx.tengen.ms_pacman.scenes.TengenMsPacMan_IntroScene.MARQUEE_X;
 import static de.amr.pacmanfx.tengen.ms_pacman.scenes.TengenMsPacMan_IntroScene.MARQUEE_Y;
+import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_IntroScene_Renderer extends GameScene2D_Renderer implements TengenMsPacMan_CommonSceneRenderingFunctions {
+public class TengenMsPacMan_IntroScene_Renderer extends GameScene2D_Renderer
+    implements SpriteRenderer, TengenMsPacMan_CommonSceneRenderingFunctions {
 
+    private final TengenMsPacMan_SpriteSheet spriteSheet;
     private final ActorRenderer actorRenderer;
 
-    public TengenMsPacMan_IntroScene_Renderer(GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
-        super(canvas, spriteSheet);
+    public TengenMsPacMan_IntroScene_Renderer(GameScene2D scene, Canvas canvas, TengenMsPacMan_SpriteSheet spriteSheet) {
+        super(canvas);
+        this.spriteSheet = requireNonNull(spriteSheet);
 
         final GameUI_Config uiConfig = scene.ui().currentConfig();
 
         actorRenderer = GameScene2D_Renderer.configureRendererForGameScene(
             uiConfig.createActorRenderer(canvas), scene);
 
-        createDefaultDebugInfoRenderer(scene, canvas, spriteSheet);
+        createDefaultDebugInfoRenderer(scene, canvas);
     }
 
     @Override
@@ -41,6 +45,12 @@ public class TengenMsPacMan_IntroScene_Renderer extends GameScene2D_Renderer imp
         return this;
     }
 
+    @Override
+    public TengenMsPacMan_SpriteSheet spriteSheet() {
+        return spriteSheet;
+    }
+
+    @Override
     public void draw(GameScene2D scene) {
         clearCanvas();
 
@@ -54,7 +64,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends GameScene2D_Renderer imp
                 if (!introScene.dark) {
                     boolean showPressStart = tick % 60 < 30;
                     fillText("TENGEN PRESENTS", shadeOfBlue(tick), introScene.presentsText.x(), introScene.presentsText.y());
-                    drawSprite(introScene.spriteSheet.sprite(SpriteID.LARGE_MS_PAC_MAN_TEXT), 6 * TS, MARQUEE_Y, true);
+                    drawSprite(spriteSheet.sprite(SpriteID.LARGE_MS_PAC_MAN_TEXT), 6 * TS, MARQUEE_Y, true);
                     if (showPressStart) fillText("PRESS START", nesColor(0x20), 11 * TS, MARQUEE_Y + 9 * TS);
                     fillText("MS PAC-MAN TM NAMCO LTD", nesColor(0x25), 6 * TS, MARQUEE_Y + 15 * TS);
                     fillText("©1990 TENGEN INC",        nesColor(0x25), 8 * TS, MARQUEE_Y + 16 * TS);

@@ -5,18 +5,17 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.Marquee;
-import de.amr.pacmanfx.ui.api.GameUI_Config;
-import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.api.ArcadePalette.ARCADE_RED;
 
-public class ArcadeMsPacMan_SceneRenderer extends BaseSpriteRenderer {
+public class ArcadeMsPacMan_SceneRenderer extends BaseRenderer {
 
-    public ArcadeMsPacMan_SceneRenderer(Canvas canvas, GameUI_Config uiConfig) {
-        super(canvas, uiConfig.spriteSheet());
+    public ArcadeMsPacMan_SceneRenderer(Canvas canvas) {
+        super(canvas);
     }
 
     /**

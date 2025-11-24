@@ -2,7 +2,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
+import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.text.Font;
@@ -10,21 +10,29 @@ import javafx.scene.text.Font;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.api.ArcadePalette.ARCADE_ORANGE;
 import static de.amr.pacmanfx.ui.api.ArcadePalette.ARCADE_RED;
+import static java.util.Objects.requireNonNull;
 
-public class ArcadeMsPacMan_StartScene_Renderer extends GameScene2D_Renderer {
-    
-    public ArcadeMsPacMan_StartScene_Renderer(GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
-        super(canvas, spriteSheet);
-        createDefaultDebugInfoRenderer(scene, canvas, spriteSheet);
+public class ArcadeMsPacMan_StartScene_Renderer extends GameScene2D_Renderer implements SpriteRenderer {
+
+    private final ArcadeMsPacMan_SpriteSheet spriteSheet;
+
+    public ArcadeMsPacMan_StartScene_Renderer(GameScene2D scene, Canvas canvas, ArcadeMsPacMan_SpriteSheet spriteSheet) {
+        super(canvas);
+        this.spriteSheet = requireNonNull(spriteSheet);
+        createDefaultDebugInfoRenderer(scene, canvas);
     }
-    
+
+    @Override
+    public ArcadeMsPacMan_SpriteSheet spriteSheet() {
+        return spriteSheet;
+    }
+
     @Override
     public void draw(GameScene2D scene) {
         clearCanvas();
 
         final Font font6 = arcadeFont6();
         final Font font8 = arcadeFont8();
-        final ArcadeMsPacMan_SpriteSheet spriteSheet = (ArcadeMsPacMan_SpriteSheet) spriteSheet();
         fillText("PUSH START BUTTON", ARCADE_ORANGE, font8, TS(6), TS(16));
         fillText("1 PLAYER ONLY", ARCADE_ORANGE, font8, TS(8), TS(18));
         fillText("ADDITIONAL    AT 10000", ARCADE_ORANGE, font8,TS(2), TS(25));

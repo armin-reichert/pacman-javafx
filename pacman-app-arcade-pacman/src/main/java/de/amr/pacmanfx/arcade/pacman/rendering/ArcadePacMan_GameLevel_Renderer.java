@@ -10,33 +10,32 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelMessage;
 import de.amr.pacmanfx.model.House;
 import de.amr.pacmanfx.model.MessageType;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
-import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
-import de.amr.pacmanfx.uilib.rendering.CommonRenderInfoKey;
-import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
-import de.amr.pacmanfx.uilib.rendering.RenderInfo;
+import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.api.ArcadePalette.*;
+import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
 /**
  * Renderer for classic Arcade Pac-Man and Pac-Man XXL game variants.
  */
-public class ArcadePacMan_GameLevel_Renderer extends BaseSpriteRenderer implements GameLevelRenderer {
+public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements SpriteRenderer, GameLevelRenderer {
 
+    protected final ArcadePacMan_SpriteSheet spriteSheet;
     private final Image brightMazeImage;
 
-    public ArcadePacMan_GameLevel_Renderer(Canvas canvas, SpriteSheet<?> spriteSheet, Image brightMazeImage) {
-        super(canvas, spriteSheet);
+    public ArcadePacMan_GameLevel_Renderer(Canvas canvas, ArcadePacMan_SpriteSheet spriteSheet, Image brightMazeImage) {
+        super(canvas);
+        this.spriteSheet = requireNonNull(spriteSheet);
         this.brightMazeImage = brightMazeImage; // may be null e.g. in Pac-Man XXL where mazes are rendered without images
     }
 
     @Override
     public ArcadePacMan_SpriteSheet spriteSheet() {
-        return (ArcadePacMan_SpriteSheet) super.spriteSheet();
+        return spriteSheet;
     }
 
     @Override
@@ -58,13 +57,13 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseSpriteRenderer implemen
             ctx.drawImage(brightMazeImage, 0, emptySpaceOverMazePixels);
         }
         else if (info.getBoolean(CommonRenderInfoKey.MAZE_EMPTY)) {
-            drawSprite(spriteSheet().sprite(SpriteID.MAP_EMPTY), 0, emptySpaceOverMazePixels, false);
+            drawSprite(spriteSheet.sprite(SpriteID.MAP_EMPTY), 0, emptySpaceOverMazePixels, false);
             // Over-paint door tiles
             terrain.optHouse().map(House::leftDoorTile) .ifPresent(tile -> fillSquareAtTileCenter(tile, TS + 0.5));
             terrain.optHouse().map(House::rightDoorTile).ifPresent(tile -> fillSquareAtTileCenter(tile, TS + 0.5));
         }
         else {
-            drawSprite(spriteSheet().sprite(SpriteID.MAP_FULL), 0, emptySpaceOverMazePixels, false);
+            drawSprite(spriteSheet.sprite(SpriteID.MAP_FULL), 0, emptySpaceOverMazePixels, false);
             // Over-paint eaten food tiles
             FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
             foodLayer.tiles()

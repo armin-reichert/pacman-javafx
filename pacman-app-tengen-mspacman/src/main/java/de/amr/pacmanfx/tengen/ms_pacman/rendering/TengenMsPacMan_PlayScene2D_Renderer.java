@@ -14,9 +14,9 @@ import de.amr.pacmanfx.tengen.ms_pacman.scenes.TengenMsPacMan_PlayScene2D;
 import de.amr.pacmanfx.ui._2d.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.CommonRenderInfoKey;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
+import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -27,15 +27,17 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.scenes.TengenMsPacMan_PlayScene2D.CANVAS_WIDTH_UNSCALED;
+import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_PlayScene2D_Renderer extends GameScene2D_Renderer implements TengenMsPacMan_CommonSceneRenderingFunctions {
+public class TengenMsPacMan_PlayScene2D_Renderer extends GameScene2D_Renderer
+    implements SpriteRenderer, TengenMsPacMan_CommonSceneRenderingFunctions {
 
     private static final float CONTENT_INDENT = TS(2);
 
     private static class PlaySceneDebugInfoRenderer extends BaseDebugInfoRenderer {
 
-        public PlaySceneDebugInfoRenderer(TengenMsPacMan_PlayScene2D playScene, Canvas canvas, SpriteSheet<?> spriteSheet) {
-            super(playScene.ui(), canvas, spriteSheet);
+        public PlaySceneDebugInfoRenderer(TengenMsPacMan_PlayScene2D playScene, Canvas canvas) {
+            super(playScene.ui(), canvas);
         }
 
         @Override
@@ -59,6 +61,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends GameScene2D_Renderer im
         }
     }
 
+    private final TengenMsPacMan_SpriteSheet spriteSheet;
     private final RenderInfo gameLevelRenderInfo = new RenderInfo();
     private final TengenMsPacMan_GameLevelRenderer gameLevelRenderer;
     private final TengenMsPacMan_ActorRenderer actorRenderer;
@@ -66,8 +69,9 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends GameScene2D_Renderer im
 
     private final Rectangle clipRect;
 
-    public TengenMsPacMan_PlayScene2D_Renderer(TengenMsPacMan_PlayScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
-        super(canvas, spriteSheet);
+    public TengenMsPacMan_PlayScene2D_Renderer(TengenMsPacMan_PlayScene2D scene, Canvas canvas, TengenMsPacMan_SpriteSheet spriteSheet) {
+        super(canvas);
+        this.spriteSheet = requireNonNull(spriteSheet);
 
         final TengenMsPacMan_UIConfig uiConfig = scene.ui().currentConfig();
 
@@ -78,7 +82,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends GameScene2D_Renderer im
             uiConfig.createActorRenderer(canvas), scene);
 
         debugInfoRenderer = configureRendererForGameScene(
-            new PlaySceneDebugInfoRenderer(scene, canvas, uiConfig.spriteSheet()), scene);
+            new PlaySceneDebugInfoRenderer(scene, canvas), scene);
 
         // All maps are 28 tiles wide but the NES screen is 32 tiles wide. To accommodate, the maps are centered
         // horizontally and 2 tiles on each side are clipped.
@@ -87,6 +91,11 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends GameScene2D_Renderer im
         clipRect.yProperty().bind(canvas.translateYProperty());
         clipRect.widthProperty().bind(scalingProperty().multiply(CANVAS_WIDTH_UNSCALED - 2 * CONTENT_INDENT));
         clipRect.heightProperty().bind(canvas.heightProperty());
+    }
+
+    @Override
+    public TengenMsPacMan_SpriteSheet spriteSheet() {
+        return spriteSheet;
     }
 
     @Override

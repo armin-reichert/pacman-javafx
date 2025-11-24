@@ -4,12 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._2d;
 
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
-import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.scene.canvas.Canvas;
 
-public abstract class GameScene2D_Renderer extends BaseSpriteRenderer {
+public abstract class GameScene2D_Renderer extends BaseRenderer {
 
     public static <T extends Renderer> T configureRendererForGameScene(T renderer, GameScene2D scene) {
         renderer.backgroundProperty().bind(scene.backgroundProperty());
@@ -19,13 +18,13 @@ public abstract class GameScene2D_Renderer extends BaseSpriteRenderer {
 
     protected BaseDebugInfoRenderer debugInfoRenderer;
 
-    public GameScene2D_Renderer(Canvas canvas, SpriteSheet<?> spriteSheet) {
-        super(canvas, spriteSheet);
+    public GameScene2D_Renderer(Canvas canvas) {
+        super(canvas);
     }
 
     public abstract void draw(GameScene2D scene);
 
-    protected void createDefaultDebugInfoRenderer(GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
-        debugInfoRenderer = configureRendererForGameScene(new BaseDebugInfoRenderer(scene.ui(), canvas, spriteSheet), scene);
+    protected void createDefaultDebugInfoRenderer(GameScene2D scene, Canvas canvas) {
+        debugInfoRenderer = configureRendererForGameScene(new BaseDebugInfoRenderer(scene.ui(), canvas), scene);
     }
 }

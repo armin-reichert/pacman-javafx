@@ -98,7 +98,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
             this);
 
         sceneRenderer = configureRendererForGameScene(
-            new TengenMsPacMan_CutScene1_Renderer(this, canvas, uiConfig.spriteSheet()),
+            new TengenMsPacMan_CutScene1_Renderer(this, canvas),
             this);
     }
 

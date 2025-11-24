@@ -11,6 +11,7 @@ import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
+import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_PIXELS;
@@ -19,17 +20,21 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.lerp;
 import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomFloat;
 import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.ui.api.ArcadePalette.ARCADE_WHITE;
+import static java.util.Objects.requireNonNull;
 
-public class Arcade_BootScene2D_Renderer extends GameScene2D_Renderer {
+public class Arcade_BootScene2D_Renderer extends GameScene2D_Renderer implements SpriteRenderer {
 
     public static final int RASTER_SIZE = 16;
 
+    private final SpriteSheet<?> spriteSheet;
     private final Vector2f minPoint;
     private final Vector2f maxPoint;
 
     public Arcade_BootScene2D_Renderer(Arcade_BootScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
-        super(canvas, spriteSheet);
-        createDefaultDebugInfoRenderer(scene, canvas, spriteSheet);
+        super(canvas);
+        this.spriteSheet = requireNonNull(spriteSheet);
+
+        createDefaultDebugInfoRenderer(scene, canvas);
 
         final double width = spriteSheet.sourceImage().getWidth();
         final double height = spriteSheet.sourceImage().getHeight();
@@ -38,6 +43,12 @@ public class Arcade_BootScene2D_Renderer extends GameScene2D_Renderer {
         maxPoint = Vector2f.of(width - RASTER_SIZE, height - RASTER_SIZE);
     }
 
+    @Override
+    public SpriteSheet<?> spriteSheet() {
+        return spriteSheet;
+    }
+
+    @Override
     public void draw(GameScene2D scene) {
         TickTimer timer = scene.context().currentGameState().timer();
         if (timer.tickCount() == 1) {

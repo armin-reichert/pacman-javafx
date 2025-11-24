@@ -7,23 +7,26 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
-import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
 
-public class ArcadePacMan_Actor_Renderer extends BaseSpriteRenderer implements ActorRenderer {
+public class ArcadePacMan_Actor_Renderer extends BaseRenderer implements SpriteRenderer, ActorRenderer {
 
-    public ArcadePacMan_Actor_Renderer(Canvas canvas, SpriteSheet<?> spriteSheet) {
-        super(canvas, spriteSheet);
+    private final ArcadePacMan_SpriteSheet spriteSheet;
+
+    public ArcadePacMan_Actor_Renderer(Canvas canvas, ArcadePacMan_SpriteSheet spriteSheet) {
+        super(canvas);
+        this.spriteSheet = requireNonNull(spriteSheet);
     }
 
     @Override
     public ArcadePacMan_SpriteSheet spriteSheet() {
-        return (ArcadePacMan_SpriteSheet) super.spriteSheet();
+        return spriteSheet;
     }
 
     @Override
@@ -44,9 +47,9 @@ public class ArcadePacMan_Actor_Renderer extends BaseSpriteRenderer implements A
     private void drawBonus(Bonus bonus) {
         switch (bonus.state()) {
             case EDIBLE -> // symbol code is index in sprite array
-                drawBonusSprite(bonus, spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS), bonus.symbol());
+                drawBonusSprite(bonus, spriteSheet.spriteSequence(SpriteID.BONUS_SYMBOLS), bonus.symbol());
             case EATEN -> // symbol code is index in sprite array
-                drawBonusSprite(bonus, spriteSheet().spriteSequence(SpriteID.BONUS_VALUES), bonus.symbol());
+                drawBonusSprite(bonus, spriteSheet.spriteSequence(SpriteID.BONUS_VALUES), bonus.symbol());
             case INACTIVE -> {}
         }
     }

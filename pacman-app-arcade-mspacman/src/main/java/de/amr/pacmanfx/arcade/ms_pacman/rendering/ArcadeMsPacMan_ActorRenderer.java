@@ -9,24 +9,27 @@ import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
-import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.ui.api.ArcadePalette.ARCADE_WHITE;
 import static java.util.Objects.requireNonNull;
 
-public class ArcadeMsPacMan_ActorRenderer extends BaseSpriteRenderer implements ActorRenderer {
+public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements SpriteRenderer, ActorRenderer {
 
-    public ArcadeMsPacMan_ActorRenderer(Canvas canvas, SpriteSheet<?> spriteSheet) {
-        super(canvas, spriteSheet);
+    private final ArcadeMsPacMan_SpriteSheet spriteSheet;
+
+    public ArcadeMsPacMan_ActorRenderer(Canvas canvas, ArcadeMsPacMan_SpriteSheet spriteSheet) {
+        super(canvas);
+        this.spriteSheet = requireNonNull(spriteSheet);
     }
 
     @Override
     public ArcadeMsPacMan_SpriteSheet spriteSheet() {
-        return (ArcadeMsPacMan_SpriteSheet) super.spriteSheet();
+        return spriteSheet;
     }
 
     @Override
@@ -45,7 +48,7 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseSpriteRenderer implements 
     }
 
     private void drawClapperBoard(Clapperboard clapperboard) {
-        RectShort[] sprites = spriteSheet().spriteSequence(SpriteID.CLAPPERBOARD);
+        RectShort[] sprites = spriteSheet.spriteSequence(SpriteID.CLAPPERBOARD);
         int index = clapperboard.state();
         if (0 <= index && index < sprites.length) {
             RectShort sprite = sprites[index];
@@ -64,9 +67,9 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseSpriteRenderer implements 
     private void drawBonus(Bonus bonus) {
         switch (bonus.state()) {
             case EDIBLE -> drawBonusSprite(bonus.center().plus(0, bonus.verticalElongation()),
-                spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS), bonus.symbol());
+                spriteSheet.spriteSequence(SpriteID.BONUS_SYMBOLS), bonus.symbol());
             case EATEN -> drawBonusSprite(bonus.center(),
-                spriteSheet().spriteSequence(SpriteID.BONUS_VALUES), bonus.symbol());
+                spriteSheet.spriteSequence(SpriteID.BONUS_VALUES), bonus.symbol());
             case INACTIVE -> {}
         }
     }

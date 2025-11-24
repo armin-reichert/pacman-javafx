@@ -12,24 +12,27 @@ import de.amr.pacmanfx.tengen.ms_pacman.scenes.Clapperboard;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.Stork;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
-import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesColor;
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_ActorRenderer extends BaseSpriteRenderer implements ActorRenderer {
+public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements SpriteRenderer, ActorRenderer {
 
-    public TengenMsPacMan_ActorRenderer(Canvas canvas, SpriteSheet<?> spriteSheet) {
-        super(canvas, spriteSheet);
+    private final TengenMsPacMan_SpriteSheet spriteSheet;
+
+    public TengenMsPacMan_ActorRenderer(Canvas canvas, TengenMsPacMan_SpriteSheet spriteSheet) {
+        super(canvas);
+        this.spriteSheet = requireNonNull(spriteSheet);
     }
 
     @Override
     public TengenMsPacMan_SpriteSheet spriteSheet() {
-        return (TengenMsPacMan_SpriteSheet) super.spriteSheet();
+        return spriteSheet;
     }
 
     @Override
@@ -71,9 +74,9 @@ public class TengenMsPacMan_ActorRenderer extends BaseSpriteRenderer implements 
         switch (bonus.state()) {
             case INACTIVE -> {}
             case EDIBLE -> drawBonusSprite(bonus.center().plus(0, bonus.verticalElongation()),
-                spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS), bonus.symbol());
+                spriteSheet.spriteSequence(SpriteID.BONUS_SYMBOLS), bonus.symbol());
             case EATEN  -> drawBonusSprite(bonus.center(),
-                spriteSheet().spriteSequence(SpriteID.BONUS_VALUES), bonus.symbol());
+                spriteSheet.spriteSequence(SpriteID.BONUS_VALUES), bonus.symbol());
         }
     }
 

@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_HUDRenderer;
+import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_StartScene_Renderer;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
@@ -31,7 +32,7 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
             (ArcadeMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas));
 
         sceneRenderer = configureRenderer(
-            new ArcadeMsPacMan_StartScene_Renderer(this, canvas, uiConfig.spriteSheet()));
+            new ArcadeMsPacMan_StartScene_Renderer(this, canvas, (ArcadeMsPacMan_SpriteSheet) uiConfig.spriteSheet()));
     }
 
     @Override

@@ -12,10 +12,7 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
-import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
-import de.amr.pacmanfx.uilib.rendering.CommonRenderInfoKey;
-import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
-import de.amr.pacmanfx.uilib.rendering.RenderInfo;
+import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.scene.canvas.Canvas;
 
 import java.util.ArrayList;
@@ -23,15 +20,18 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
+import static java.util.Objects.requireNonNull;
 
-public class Arcade_PlayScene2D_Renderer extends GameScene2D_Renderer {
+public class Arcade_PlayScene2D_Renderer extends GameScene2D_Renderer implements SpriteRenderer {
 
+    private final SpriteSheet<?> spriteSheet;
     private final GameLevelRenderer gameLevelRenderer;
     private final ActorRenderer actorRenderer;
     private final List<Actor> actorsInZOrder = new ArrayList<>();
 
     public Arcade_PlayScene2D_Renderer(Arcade_PlayScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
-        super(canvas, spriteSheet);
+        super(canvas);
+        this.spriteSheet = requireNonNull(spriteSheet);
 
         final GameUI_Config uiConfig = scene.ui().currentConfig();
 
@@ -40,7 +40,12 @@ public class Arcade_PlayScene2D_Renderer extends GameScene2D_Renderer {
         actorRenderer = configureRendererForGameScene(uiConfig.createActorRenderer(canvas), scene);
 
         debugInfoRenderer = configureRendererForGameScene(
-            new Arcade_PlayScene2D_DebugInfo_Renderer(scene, canvas, uiConfig.spriteSheet()), scene);
+            new Arcade_PlayScene2D_DebugInfo_Renderer(scene, canvas), scene);
+    }
+
+    @Override
+    public SpriteSheet<?> spriteSheet() {
+        return spriteSheet;
     }
 
     @Override

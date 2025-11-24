@@ -58,7 +58,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
             (ArcadeMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas));
 
         sceneRenderer = configureRenderer(
-            new ArcadeMsPacMan_CutScene3_Renderer(this, canvas, uiConfig.spriteSheet()));
+            new ArcadeMsPacMan_CutScene3_Renderer(this, canvas));
     }
 
     @Override

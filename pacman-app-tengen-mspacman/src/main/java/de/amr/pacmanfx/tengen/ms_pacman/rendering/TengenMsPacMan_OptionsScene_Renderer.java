@@ -10,7 +10,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.scenes.TengenMsPacMan_OptionsScene;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.input.Joypad;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
+import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -19,8 +19,10 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Properties.PROPERTY_JOYPAD_BINDINGS_DISPLAYED;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesColor;
 import static de.amr.pacmanfx.tengen.ms_pacman.scenes.TengenMsPacMan_OptionsScene.*;
+import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_OptionsScene_Renderer extends GameScene2D_Renderer implements TengenMsPacMan_CommonSceneRenderingFunctions {
+public class TengenMsPacMan_OptionsScene_Renderer extends GameScene2D_Renderer
+    implements SpriteRenderer, TengenMsPacMan_CommonSceneRenderingFunctions {
 
     private static final int COL_ARROW = 2 * TS;
     private static final int COL_LABEL = 4 * TS;
@@ -30,9 +32,17 @@ public class TengenMsPacMan_OptionsScene_Renderer extends GameScene2D_Renderer i
     private static final Color NES_YELLOW = nesColor(0x28);
     private static final Color NES_WHITE = nesColor(0x20);
 
-    public TengenMsPacMan_OptionsScene_Renderer(GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
-        super(canvas, spriteSheet);
-        createDefaultDebugInfoRenderer(scene, canvas, spriteSheet);
+    private final TengenMsPacMan_SpriteSheet spriteSheet;
+
+    public TengenMsPacMan_OptionsScene_Renderer(GameScene2D scene, Canvas canvas, TengenMsPacMan_SpriteSheet spriteSheet) {
+        super(canvas);
+        this.spriteSheet = requireNonNull(spriteSheet);
+        createDefaultDebugInfoRenderer(scene, canvas);
+    }
+
+    @Override
+    public TengenMsPacMan_SpriteSheet spriteSheet() {
+        return spriteSheet;
     }
 
     @Override

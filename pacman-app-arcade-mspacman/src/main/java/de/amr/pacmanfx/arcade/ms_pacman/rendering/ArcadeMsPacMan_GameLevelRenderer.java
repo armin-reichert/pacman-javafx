@@ -11,34 +11,33 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelMessage;
 import de.amr.pacmanfx.model.MessageType;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
-import de.amr.pacmanfx.uilib.rendering.BaseSpriteRenderer;
-import de.amr.pacmanfx.uilib.rendering.CommonRenderInfoKey;
-import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
-import de.amr.pacmanfx.uilib.rendering.RenderInfo;
+import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.api.ArcadePalette.*;
+import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
-public class ArcadeMsPacMan_GameLevelRenderer extends BaseSpriteRenderer implements GameLevelRenderer {
+public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements SpriteRenderer, GameLevelRenderer {
 
     protected final AssetMap assets;
+    protected final ArcadeMsPacMan_SpriteSheet spriteSheet;
 
-    public ArcadeMsPacMan_GameLevelRenderer(Canvas canvas, SpriteSheet<?> spriteSheet, AssetMap assets) {
-        super(canvas, spriteSheet);
+    public ArcadeMsPacMan_GameLevelRenderer(Canvas canvas, ArcadeMsPacMan_SpriteSheet spriteSheet, AssetMap assets) {
+        super(canvas);
         this.assets = assets; // may be NULL e.g. in Ms. Pac-Man XXL where maze is drawn without images
+        this.spriteSheet = requireNonNull(spriteSheet);
+    }
+
+    @Override
+    public ArcadeMsPacMan_SpriteSheet spriteSheet() {
+        return spriteSheet;
     }
 
     @Override
     public void applyLevelSettings(GameLevel gameLevel, RenderInfo info) {}
-
-    @Override
-    public ArcadeMsPacMan_SpriteSheet spriteSheet() {
-        return (ArcadeMsPacMan_SpriteSheet) super.spriteSheet();
-    }
 
     @Override
     public void drawGameLevel(GameLevel gameLevel, RenderInfo info) {
@@ -56,10 +55,10 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseSpriteRenderer impleme
             Image mazeImage = assets.image("maze.bright.%d".formatted(colorMapIndex));
             ctx.drawImage(mazeImage, 0, emptySpaceOverMazePixels);
         } else if (info.getBoolean(CommonRenderInfoKey.MAZE_EMPTY)) {
-            RectShort mazeSprite = spriteSheet().spriteSequence(SpriteID.EMPTY_MAZES)[colorMapIndex];
+            RectShort mazeSprite = spriteSheet.spriteSequence(SpriteID.EMPTY_MAZES)[colorMapIndex];
             drawSprite(mazeSprite, 0, emptySpaceOverMazePixels, false);
         } else {
-            RectShort mazeSprite = spriteSheet().spriteSequence(SpriteID.FULL_MAZES)[colorMapIndex];
+            RectShort mazeSprite = spriteSheet.spriteSequence(SpriteID.FULL_MAZES)[colorMapIndex];
             drawSprite(mazeSprite, 0, emptySpaceOverMazePixels, false);
             // Over-paint the eaten pellets (pellets are part of the maze image)
             FoodLayer foodLayer = gameLevel.worldMap().foodLayer();

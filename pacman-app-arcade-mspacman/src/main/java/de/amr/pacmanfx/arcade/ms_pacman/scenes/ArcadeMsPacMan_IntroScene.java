@@ -69,7 +69,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
             (ArcadeMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas));
 
         sceneRenderer = configureRenderer(
-            new ArcadeMsPacMan_IntroScene_Renderer(this, canvas, ui.currentConfig().spriteSheet()));
+            new ArcadeMsPacMan_IntroScene_Renderer(this, canvas));
     }
 
     @Override
