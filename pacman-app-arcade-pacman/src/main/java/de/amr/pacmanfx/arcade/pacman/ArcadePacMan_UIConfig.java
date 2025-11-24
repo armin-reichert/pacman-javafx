@@ -8,7 +8,7 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.pacman.actors.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.rendering.*;
 import de.amr.pacmanfx.arcade.pacman.scenes.*;
-import de.amr.pacmanfx.controller.test.CutScenesTestState;
+import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.GamePlayState;

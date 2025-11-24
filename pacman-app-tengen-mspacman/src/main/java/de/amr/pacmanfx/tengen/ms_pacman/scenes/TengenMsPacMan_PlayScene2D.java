@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.controller.test.TestState;
+import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.math.Vector2i;

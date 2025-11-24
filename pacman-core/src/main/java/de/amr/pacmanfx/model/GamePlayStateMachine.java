@@ -5,9 +5,9 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.model;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.controller.test.CutScenesTestState;
-import de.amr.pacmanfx.controller.test.LevelMediumTestState;
-import de.amr.pacmanfx.controller.test.LevelShortTestState;
+import de.amr.pacmanfx.model.test.CutScenesTestState;
+import de.amr.pacmanfx.model.test.LevelMediumTestState;
+import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.fsm.StateMachine;

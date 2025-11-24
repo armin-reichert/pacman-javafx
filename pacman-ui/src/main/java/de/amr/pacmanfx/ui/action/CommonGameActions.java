@@ -6,8 +6,8 @@ package de.amr.pacmanfx.ui.action;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
-import de.amr.pacmanfx.controller.test.LevelMediumTestState;
-import de.amr.pacmanfx.controller.test.LevelShortTestState;
+import de.amr.pacmanfx.model.test.LevelMediumTestState;
+import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.model.Game;
