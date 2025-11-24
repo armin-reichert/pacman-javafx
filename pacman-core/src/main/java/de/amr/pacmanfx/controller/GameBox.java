@@ -56,7 +56,7 @@ public class GameBox implements GameContext, CoinMechanism {
     private final BooleanProperty cheatUsed = new SimpleBooleanProperty(false);
     private final BooleanProperty immunity = new SimpleBooleanProperty(false);
     private final BooleanProperty usingAutopilot = new SimpleBooleanProperty(false);
-    private final StringProperty gameVariant = new SimpleStringProperty();
+    private final StringProperty gameVariantName = new SimpleStringProperty();
 
     public GameBox() {
         boolean success = initUserDirectories();
@@ -64,7 +64,7 @@ public class GameBox implements GameContext, CoinMechanism {
             throw new IllegalStateException("User directories could not be created");
         }
 
-        gameVariant.addListener((py, ov, newGameVariant) -> {
+        gameVariantName.addListener((py, ov, newGameVariant) -> {
             if (eventsEnabled) {
                 Game newGame = game(newGameVariant);
                 newGame.init();
@@ -105,16 +105,15 @@ public class GameBox implements GameContext, CoinMechanism {
         }
     }
 
-
     public StringProperty gameVariantNameProperty() {
-        return gameVariant;
+        return gameVariantName;
     }
 
-    public String gameVariantName() { return gameVariant.get(); }
+    public String gameVariantName() { return gameVariantName.get(); }
 
     public void setGameVariantName(String gameVariantName) {
         requireNonNull(gameVariantName);
-        this.gameVariant.set(gameVariantName);
+        this.gameVariantName.set(gameVariantName);
     }
 
     public boolean isCurrentGameVariant(String gameVariantName) {
@@ -156,7 +155,7 @@ public class GameBox implements GameContext, CoinMechanism {
      * @return The game (model) registered for the currently selected game variant.
      */
     public <G extends Game> G currentGame() {
-        G game = game(gameVariant.get());
+        G game = game(gameVariantName.get());
         if (game != null) {
             return game;
         }
