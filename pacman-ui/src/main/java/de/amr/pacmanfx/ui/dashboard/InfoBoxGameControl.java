@@ -8,7 +8,7 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.controller.CoinMechanism;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.lib.fsm.FsmState;
-import de.amr.pacmanfx.model.GamePlayState;
+import de.amr.pacmanfx.model.GameState;
 import de.amr.pacmanfx.ui.action.ArcadeActions;
 import de.amr.pacmanfx.ui.action.TestActions;
 import de.amr.pacmanfx.ui.api.GameUI;
@@ -74,14 +74,14 @@ public class InfoBoxGameControl extends InfoBox {
 
         FsmState<GameContext> state = ui.context().currentGameState();
 
-        spinnerCredit.setDisable(!(stateIsOneOf(state, GamePlayState.INTRO, GamePlayState.SETTING_OPTIONS_FOR_START)));
-        choiceBoxInitialLives.setDisable(state != GamePlayState.INTRO);
+        spinnerCredit.setDisable(!(stateIsOneOf(state, GameState.INTRO, GameState.SETTING_OPTIONS_FOR_START)));
+        choiceBoxInitialLives.setDisable(state != GameState.INTRO);
 
         buttonGroupLevelActions[GAME_LEVEL_START].setDisable(isBooting() || !canStartLevel());
         buttonGroupLevelActions[GAME_LEVEL_QUIT].setDisable(isBooting() || ui.context().optGameLevel().isEmpty());
         buttonGroupLevelActions[GAME_LEVEL_NEXT].setDisable(isBooting() || !canEnterNextLevel());
 
-        buttonGroupCutScenesTest[CUT_SCENES_TEST_START].setDisable(isBooting() || state != GamePlayState.INTRO);
+        buttonGroupCutScenesTest[CUT_SCENES_TEST_START].setDisable(isBooting() || state != GameState.INTRO);
         buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT].setDisable(isBooting() || !(state instanceof CutScenesTestState));
 
         cbAutopilot.setDisable(isBooting());
@@ -89,14 +89,14 @@ public class InfoBoxGameControl extends InfoBox {
     }
 
     private boolean isBooting() {
-        return ui.context().currentGameState() == GamePlayState.BOOT;
+        return ui.context().currentGameState() == GameState.BOOT;
     }
 
     private boolean canStartLevel() {
-        return ui.context().currentGame().canStartNewGame() && stateIsOneOf(ui.context().currentGameState(), GamePlayState.INTRO, GamePlayState.SETTING_OPTIONS_FOR_START);
+        return ui.context().currentGame().canStartNewGame() && stateIsOneOf(ui.context().currentGameState(), GameState.INTRO, GameState.SETTING_OPTIONS_FOR_START);
     }
 
     private boolean canEnterNextLevel() {
-        return ui.context().currentGame().isPlaying() && stateIsOneOf(ui.context().currentGameState(), GamePlayState.HUNTING);
+        return ui.context().currentGame().isPlaying() && stateIsOneOf(ui.context().currentGameState(), GameState.HUNTING);
     }
 }

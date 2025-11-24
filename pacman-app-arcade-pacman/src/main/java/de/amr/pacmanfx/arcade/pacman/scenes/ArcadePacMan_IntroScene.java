@@ -14,7 +14,7 @@ import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
-import de.amr.pacmanfx.model.GamePlayState;
+import de.amr.pacmanfx.model.GameState;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
@@ -300,7 +300,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
                 scene.ghosts.stream()
                     .filter(ghost -> ghost.state() == FRIGHTENED)
-                    .filter(ghost -> theGameContext().currentGame().actorsCollide(ghost, scene.pacMan))
+                    .filter(ghost -> scene.context().currentGame().actorsCollide(ghost, scene.pacMan))
                     .findFirst()
                     .ifPresent(victim -> {
                         scene.victims.add(victim);
@@ -342,10 +342,10 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 if (timer.atSecond(0.75)) {
                     scene.ghosts.get(ORANGE_GHOST_POKEY).hide();
                     if (!scene.context().currentGame().canStartNewGame()) {
-                        scene.context().currentGame().stateMachine().changeState(GamePlayState.STARTING_GAME_OR_LEVEL);
+                        scene.context().currentGame().stateMachine().changeState(GameState.STARTING_GAME_OR_LEVEL);
                     }
                 } else if (timer.atSecond(5)) {
-                    scene.context().currentGame().stateMachine().changeState(GamePlayState.SETTING_OPTIONS_FOR_START);
+                    scene.context().currentGame().stateMachine().changeState(GameState.SETTING_OPTIONS_FOR_START);
                 }
             }
         };

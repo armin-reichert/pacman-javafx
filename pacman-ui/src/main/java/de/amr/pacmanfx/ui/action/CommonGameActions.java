@@ -11,7 +11,7 @@ import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.GamePlayState;
+import de.amr.pacmanfx.model.GameState;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
@@ -23,7 +23,7 @@ import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.NUM_TICKS_PER_SEC;
 import static de.amr.pacmanfx.Validations.stateIsOneOf;
-import static de.amr.pacmanfx.model.GamePlayState.INTRO;
+import static de.amr.pacmanfx.model.GameState.INTRO;
 import static de.amr.pacmanfx.ui.api.GameScene_Config.SCENE_ID_PLAY_SCENE_2D;
 import static de.amr.pacmanfx.ui.api.GameScene_Config.SCENE_ID_PLAY_SCENE_3D;
 import static de.amr.pacmanfx.ui.api.GameUI.*;
@@ -316,7 +316,7 @@ public final class CommonGameActions {
                 || state.name().equals(LevelMediumTestState.class.getSimpleName())) {
                 return true;
             }
-            return stateIsOneOf(state, GamePlayState.BOOT, GamePlayState.INTRO, GamePlayState.SETTING_OPTIONS_FOR_START, GamePlayState.HUNTING);
+            return stateIsOneOf(state, GameState.BOOT, GameState.INTRO, GameState.SETTING_OPTIONS_FOR_START, GameState.HUNTING);
         }
     };
 }

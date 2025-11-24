@@ -20,7 +20,7 @@ import de.amr.pacmanfx.model.actors.*;
  *     <li>TODO: AI says this state machine and its game states should move to the game model</li>
  * </ul>
  */
-public enum GamePlayState implements FsmState<GameContext> {
+public enum GameState implements FsmState<GameContext> {
 
     // "Das muss das Boot abkönnen!"
     BOOT {
@@ -110,7 +110,7 @@ public enum GamePlayState implements FsmState<GameContext> {
             }
             else if (timer.tickCount() == TICK_NEW_GAME_START_HUNTING) {
                 context.currentGame().setPlaying(true);
-                context.currentGame().stateMachine().changeState(GamePlayState.HUNTING);
+                context.currentGame().stateMachine().changeState(GameState.HUNTING);
             }
         }
 
@@ -118,7 +118,7 @@ public enum GamePlayState implements FsmState<GameContext> {
             if (timer.tickCount() == 1) {
                 context.currentGame().continueGame(context.gameLevel());
             } else if (timer.tickCount() == TICK_RESUME_HUNTING) {
-                context.currentGame().stateMachine().changeState(GamePlayState.HUNTING);
+                context.currentGame().stateMachine().changeState(GameState.HUNTING);
             }
         }
 
@@ -135,7 +135,7 @@ public enum GamePlayState implements FsmState<GameContext> {
                 context.gameLevel().showPacAndGhosts();
             }
             else if (timer.tickCount() == TICK_DEMO_LEVEL_START_HUNTING) {
-                context.currentGame().stateMachine().changeState(GamePlayState.HUNTING);
+                context.currentGame().stateMachine().changeState(GameState.HUNTING);
             }
         }
 

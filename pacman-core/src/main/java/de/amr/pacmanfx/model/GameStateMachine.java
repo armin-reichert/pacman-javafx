@@ -19,15 +19,15 @@ import java.util.List;
 
 import static java.util.Objects.requireNonNull;
 
-public class GamePlayStateMachine extends StateMachine<FsmState<GameContext>, GameContext> implements GameEventManager {
+public class GameStateMachine extends StateMachine<FsmState<GameContext>, GameContext> implements GameEventManager {
 
     private final Game game;
 
-    public GamePlayStateMachine(GameContext gameContext, Game game) {
+    public GameStateMachine(GameContext gameContext, Game game) {
         super(gameContext);
 
         this.game = requireNonNull(game);
-        List<FsmState<GameContext>> states = new ArrayList<>(List.of(GamePlayState.values()));
+        List<FsmState<GameContext>> states = new ArrayList<>(List.of(GameState.values()));
         states.add(new LevelShortTestState());
         states.add(new LevelMediumTestState());
         states.add(new CutScenesTestState());

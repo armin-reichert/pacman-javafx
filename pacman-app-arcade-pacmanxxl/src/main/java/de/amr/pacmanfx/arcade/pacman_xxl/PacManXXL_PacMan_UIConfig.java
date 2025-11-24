@@ -12,7 +12,7 @@ import de.amr.pacmanfx.arcade.pacman.scenes.*;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
-import de.amr.pacmanfx.model.GamePlayState;
+import de.amr.pacmanfx.model.GameState;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -271,10 +271,10 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config, GameScene_Confi
     @Override
     public GameScene selectGameScene(GameContext gameContext) {
         String sceneID = switch (gameContext.currentGameState()) {
-            case GamePlayState.BOOT -> SCENE_ID_BOOT_SCENE_2D;
-            case GamePlayState.SETTING_OPTIONS_FOR_START -> SCENE_ID_START_SCENE_2D;
-            case GamePlayState.INTRO -> SCENE_ID_INTRO_SCENE_2D;
-            case GamePlayState.INTERMISSION -> {
+            case GameState.BOOT -> SCENE_ID_BOOT_SCENE_2D;
+            case GameState.SETTING_OPTIONS_FOR_START -> SCENE_ID_START_SCENE_2D;
+            case GameState.INTRO -> SCENE_ID_INTRO_SCENE_2D;
+            case GameState.INTERMISSION -> {
                 if (gameContext.optGameLevel().isEmpty()) {
                     throw new IllegalStateException("Cannot determine cut scene, no game level available");
                 }

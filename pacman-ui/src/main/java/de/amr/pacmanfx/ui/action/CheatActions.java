@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.action;
 import de.amr.pacmanfx.controller.GameBox;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.GamePlayState;
+import de.amr.pacmanfx.model.GameState;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
@@ -45,7 +45,7 @@ public final class CheatActions {
         public boolean isEnabled(GameUI ui) {
             return ui.context().optGameLevel().isPresent()
                     && !ui.context().gameLevel().isDemoLevel()
-                    && ui.context().currentGameState() == GamePlayState.HUNTING;
+                    && ui.context().currentGameState() == GameState.HUNTING;
         }
     };
 
@@ -58,13 +58,13 @@ public final class CheatActions {
             if (!vulnerableGhosts.isEmpty()) {
                 gameLevel.energizerVictims().clear(); // resets value of next killed ghost to 200
                 vulnerableGhosts.forEach(ghost -> gameLevel.game().onGhostKilled(gameLevel, ghost));
-                ui.context().currentGame().stateMachine().changeState(GamePlayState.GHOST_DYING);
+                ui.context().currentGame().stateMachine().changeState(GameState.GHOST_DYING);
             }
         }
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            return ui.context().currentGameState() == GamePlayState.HUNTING && ui.context().optGameLevel().isPresent() && !ui.context().gameLevel().isDemoLevel();
+            return ui.context().currentGameState() == GameState.HUNTING && ui.context().optGameLevel().isPresent() && !ui.context().gameLevel().isDemoLevel();
         }
     };
 
@@ -72,13 +72,13 @@ public final class CheatActions {
         @Override
         public void execute(GameUI ui) {
             ui.context().gameBox().cheatUsedProperty().set(true);
-            ui.context().currentGame().stateMachine().changeState(GamePlayState.LEVEL_COMPLETE);
+            ui.context().currentGame().stateMachine().changeState(GameState.LEVEL_COMPLETE);
         }
 
         @Override
         public boolean isEnabled(GameUI ui) {
             return ui.context().currentGame().isPlaying()
-                    && ui.context().currentGameState() == GamePlayState.HUNTING
+                    && ui.context().currentGameState() == GameState.HUNTING
                     && ui.context().optGameLevel().isPresent()
                     && ui.context().gameLevel().number() < ui.context().currentGame().lastLevelNumber();
         }

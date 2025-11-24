@@ -9,7 +9,7 @@ import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.AbstractGameModel;
-import de.amr.pacmanfx.model.GamePlayState;
+import de.amr.pacmanfx.model.GameState;
 
 public class CutScenesTestState implements FsmState<GameContext>, TestState {
 
@@ -46,7 +46,7 @@ public class CutScenesTestState implements FsmState<GameContext>, TestState {
                     //TODO find another solution and get rid of this event type
                     context.eventManager().publishEvent(GameEventType.UNSPECIFIED_CHANGE);
                 } else {
-                    context.currentGame().stateMachine().changeState(GamePlayState.INTRO);
+                    context.currentGame().stateMachine().changeState(GameState.INTRO);
                 }
             }
         }

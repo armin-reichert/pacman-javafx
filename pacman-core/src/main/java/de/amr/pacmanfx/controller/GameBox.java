@@ -35,8 +35,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameBox implements GameContext, CoinMechanism {
 
-    public static GameBox THE_GAME_BOX;
-
     public static final Pattern GAME_VARIANT_PATTERN = Pattern.compile("[a-zA-Z][a-zA-Z_0-9]*");
 
     private final File homeDir = new File(System.getProperty("user.home"), ".pacmanfx");

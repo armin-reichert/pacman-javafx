@@ -14,7 +14,7 @@ import de.amr.pacmanfx.lib.worldmap.FoodLayer;
 import de.amr.pacmanfx.lib.worldmap.Obstacle;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.GamePlayState;
+import de.amr.pacmanfx.model.GameState;
 import de.amr.pacmanfx.model.House;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -697,7 +697,7 @@ public class GameLevel3D extends Group implements Disposable {
         if (livesCounter3D != null) {
             int lifeCount = gameLevel.game().lifeCount() - 1;
             // when the game starts and Pac-Man is not yet visible, show one more
-            boolean oneMore = ui.context().currentGameState() == GamePlayState.STARTING_GAME_OR_LEVEL && !gameLevel.pac().isVisible();
+            boolean oneMore = ui.context().currentGameState() == GameState.STARTING_GAME_OR_LEVEL && !gameLevel.pac().isVisible();
             if (oneMore) lifeCount += 1;
             livesCounter3D.livesCountProperty().set(lifeCount);
             boolean visible = gameLevel.game().canStartNewGame();

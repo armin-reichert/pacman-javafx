@@ -7,7 +7,11 @@ package de.amr.pacmanfx;
 import de.amr.pacmanfx.controller.GameBox;
 import de.amr.pacmanfx.lib.math.Vector2i;
 
-public interface Globals {
+public final class Globals {
+
+    private Globals() {}
+
+    public static final GameBox THE_GAME_BOX = new GameBox();
 
     /**
      * The red ghost's character is aptly described as that of a shadow and is best-known as “Blinky”.
@@ -15,7 +19,7 @@ public interface Globals {
      * Blinky seems to always be the first of the ghosts to track Pac-Man down in the maze.
      * He is by far the most aggressive of the four and will doggedly pursue Pac-Man once behind him.
       */
-    byte RED_GHOST_SHADOW = 0;
+    public static final byte RED_GHOST_SHADOW = 0;
 
     /**
      * Nicknamed “Pinky”, the pink ghost's character is described as one who is speedy.
@@ -24,7 +28,7 @@ public interface Globals {
      * as Inky and Clyde, however, which suggests speedy is a poor translation of the more appropriate machibuse.
      * Pinky and Blinky often seem to be working in concert to box Pac-Man in, leaving him with nowhere to run.
      */
-    byte PINK_GHOST_SPEEDY = 1;
+    public static final byte PINK_GHOST_SPEEDY = 1;
 
     /**
      * The light-blue ghost is nicknamed “Inky” and his character is described as one who is bashful.
@@ -35,7 +39,7 @@ public interface Globals {
      * Bashful is not a very good translation of kimagure, and misleads the player to assume Inky will shy away
      * from Pac-Man when he gets close which is not always the case.
      */
-    byte CYAN_GHOST_BASHFUL = 2;
+    public static final byte CYAN_GHOST_BASHFUL = 2;
 
     /**
      * The orange ghost is nicknamed “Clyde” and is characterized as one who is pokey.
@@ -46,40 +50,30 @@ public interface Globals {
      * of the maze. Although not nearly as dangerous as the other three ghosts, his behavior can seem unpredictable
      * at times and should still be considered a threat.
      */
-    byte ORANGE_GHOST_POKEY = 3;
+    public static final byte ORANGE_GHOST_POKEY = 3;
 
-    byte NUM_TICKS_PER_SEC = 60;
+    public static final byte NUM_TICKS_PER_SEC = 60;
 
     /** Tile size: 8px. */
-    byte TS = 8;
+    public static final byte TS = 8;
 
     /** Half tile size: 4px. */
-    byte HTS = 4;
+    public static final byte HTS = 4;
 
     /**
      * @param numTiles number of tiles
      * @return number of pixels corresponding to given number of tiles
      */
-    static float TS(float numTiles) { return numTiles * TS; }
+    public static float TS(float numTiles) { return numTiles * TS; }
 
     /**
      * Arcade maps have a size of 28 cols and 36 rows (including the empty rows over and under the maze).
      */
-    Vector2i ARCADE_MAP_SIZE_IN_TILES = new Vector2i(28, 36);
+    public static final Vector2i ARCADE_MAP_SIZE_IN_TILES = new Vector2i(28, 36);
 
     /**
      * Arcade maps have a size of 28x36 tiles (28 cols, 36 rows, including the empty rows over and under the maze).
      * The tile size is 8px which gives a map size of 224x288px.
      */
-    Vector2i ARCADE_MAP_SIZE_IN_PIXELS = new Vector2i(224, 288); // 28x36 tiles
-
-    /**
-     * @return the global object which provides access to different other global objects
-     */
-    static GameContext theGameContext() {
-        if (GameBox.THE_GAME_BOX == null) {
-            GameBox.THE_GAME_BOX = new GameBox();
-        }
-        return GameBox.THE_GAME_BOX;
-    }
+    public static final Vector2i ARCADE_MAP_SIZE_IN_PIXELS = new Vector2i(224, 288); // 28x36 tiles
 }

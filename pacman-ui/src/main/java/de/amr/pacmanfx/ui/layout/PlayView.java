@@ -9,7 +9,7 @@ import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.GamePlayState;
+import de.amr.pacmanfx.model.GameState;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.action.GameAction;
@@ -214,7 +214,7 @@ public class PlayView extends StackPane implements GameUI_View {
             case LEVEL_CREATED -> onLevelCreated();
             case GAME_STATE_CHANGED -> {
                 final FsmState<GameContext> gameState = ui.context().currentGameState();
-                if (gameState.equals(GamePlayState.LEVEL_COMPLETE)) {
+                if (gameState.equals(GameState.LEVEL_COMPLETE)) {
                     miniView.slideOut();
                 }
             }

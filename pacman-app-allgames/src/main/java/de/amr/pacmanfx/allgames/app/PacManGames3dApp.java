@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.allgames.app;
 
+import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
@@ -24,8 +25,6 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.Globals.theGameContext;
-
 /**
  * Application containing all game variants, the 3D play scenes, the map editor etc. ("all you can f*** ähm play").
  */
@@ -43,7 +42,7 @@ public class PacManGames3dApp extends Application {
             final int width  = Math.round(ASPECT_RATIO * height);
 
             //TODO create this by reflection inside builder too?
-            final var mapSelectorXXL = new PacManXXL_Common_MapSelector(theGameContext().customMapDir());
+            final var mapSelectorXXL = new PacManXXL_Common_MapSelector(Globals.THE_GAME_BOX.customMapDir());
 
             ui = GameUI_Builder.createUI(primaryStage, width, height)
                 .game(

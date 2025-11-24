@@ -12,7 +12,7 @@ import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.GamePlayState;
+import de.amr.pacmanfx.model.GameState;
 import de.amr.pacmanfx.model.MessageType;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -158,7 +158,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     private void updateHUD(GameLevel gameLevel) {
         final Game game = context().currentGame();
         // While Pac-Man is still invisible on level start, one entry more is shown in the lives counter
-        boolean oneMore = context().currentGameState() == GamePlayState.STARTING_GAME_OR_LEVEL && !gameLevel.pac().isVisible();
+        boolean oneMore = context().currentGameState() == GameState.STARTING_GAME_OR_LEVEL && !gameLevel.pac().isVisible();
         int numLivesDisplayed = game.lifeCount() - 1;
         if (oneMore) numLivesDisplayed += 1;
         game.hud().setVisibleLifeCount(Math.min(numLivesDisplayed, game.hud().maxLivesDisplayed()));
@@ -198,11 +198,11 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onEnterGameState(FsmState<GameContext> state) {
-        if (state == GamePlayState.LEVEL_COMPLETE) {
+        if (state == GameState.LEVEL_COMPLETE) {
             ui.soundManager().stopAll();
             playLevelCompletedAnimation();
         }
-        else if (state == GamePlayState.GAME_OVER) {
+        else if (state == GameState.GAME_OVER) {
             ui.soundManager().stopAll();
             ui.soundManager().play(SoundID.GAME_OVER);
         }
@@ -280,7 +280,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
         if (!ui.soundManager().isEnabled()) return;
 
         final Pac pac = gameLevel.pac();
-        final boolean pacChased = context().currentGameState() == GamePlayState.HUNTING && !pac.powerTimer().isRunning();
+        final boolean pacChased = context().currentGameState() == GameState.HUNTING && !pac.powerTimer().isRunning();
         if (pacChased) {
             selectAndPlaySiren();
         }

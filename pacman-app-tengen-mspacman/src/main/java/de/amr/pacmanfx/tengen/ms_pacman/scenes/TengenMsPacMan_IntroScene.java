@@ -9,7 +9,7 @@ import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.timer.TickTimer;
-import de.amr.pacmanfx.model.GamePlayState;
+import de.amr.pacmanfx.model.GameState;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
@@ -256,9 +256,9 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                     TengenMsPacMan_GameModel game = scene.context().currentGame();
                     if (game.optionsAreInitial()) {
                         game.setCanStartNewGame(false); // TODO check this
-                        scene.context().currentGame().stateMachine().restart(GamePlayState.STARTING_GAME_OR_LEVEL);
+                        scene.context().currentGame().stateMachine().restart(GameState.STARTING_GAME_OR_LEVEL);
                     } else {
-                        scene.context().currentGame().stateMachine().changeState(GamePlayState.SETTING_OPTIONS_FOR_START);
+                        scene.context().currentGame().stateMachine().changeState(GameState.SETTING_OPTIONS_FOR_START);
                     }
                 }
             }

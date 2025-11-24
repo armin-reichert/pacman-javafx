@@ -6,13 +6,13 @@ package de.amr.pacmanfx.ui.action;
 
 import de.amr.pacmanfx.controller.CoinMechanism;
 import de.amr.pacmanfx.event.GameEventType;
-import de.amr.pacmanfx.model.GamePlayState;
+import de.amr.pacmanfx.model.GameState;
 import de.amr.pacmanfx.model.StandardGameVariant;
 import de.amr.pacmanfx.ui.api.GameUI;
 
 import java.util.Set;
 
-import static de.amr.pacmanfx.model.GamePlayState.INTRO;
+import static de.amr.pacmanfx.model.GameState.INTRO;
 
 public final class ArcadeActions {
     /**
@@ -26,7 +26,7 @@ public final class ArcadeActions {
                 ui.context().coinMechanism().insertCoin();
                 ui.context().eventManager().publishEvent(GameEventType.CREDIT_ADDED);
             }
-            ui.context().currentGame().stateMachine().changeState(GamePlayState.SETTING_OPTIONS_FOR_START);
+            ui.context().currentGame().stateMachine().changeState(GameState.SETTING_OPTIONS_FOR_START);
         }
 
         @Override
@@ -34,7 +34,7 @@ public final class ArcadeActions {
             if (ui.context().currentGame().isPlaying()) {
                 return false;
             }
-            return ui.context().currentGameState() == GamePlayState.SETTING_OPTIONS_FOR_START
+            return ui.context().currentGameState() == GameState.SETTING_OPTIONS_FOR_START
                 || ui.context().currentGameState() == INTRO
                 || ui.context().optGameLevel().isPresent() && ui.context().optGameLevel().get().isDemoLevel()
                 || ui.context().coinMechanism().isEmpty();
@@ -45,7 +45,7 @@ public final class ArcadeActions {
         @Override
         public void execute(GameUI ui) {
             ui.soundManager().stopVoice();
-            ui.context().currentGame().stateMachine().changeState(GamePlayState.STARTING_GAME_OR_LEVEL);
+            ui.context().currentGame().stateMachine().changeState(GameState.STARTING_GAME_OR_LEVEL);
         }
 
         @Override
@@ -58,7 +58,7 @@ public final class ArcadeActions {
             );
             return arcadeGames.contains(ui.context().gameBox().gameVariant())
                 && !ui.context().coinMechanism().isEmpty()
-                && (ui.context().currentGameState() == GamePlayState.INTRO || ui.context().currentGameState() == GamePlayState.SETTING_OPTIONS_FOR_START)
+                && (ui.context().currentGameState() == GameState.INTRO || ui.context().currentGameState() == GameState.SETTING_OPTIONS_FOR_START)
                 && ui.context().currentGame().canStartNewGame();
         }
     };

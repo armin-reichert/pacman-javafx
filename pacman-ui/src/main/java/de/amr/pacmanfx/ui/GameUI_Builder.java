@@ -4,13 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui;
 
-import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.controller.CoinMechanism;
 import de.amr.pacmanfx.controller.GameBox;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.GamePlayStateMachine;
+import de.amr.pacmanfx.model.GameStateMachine;
 import de.amr.pacmanfx.model.MapSelector;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
@@ -22,6 +20,7 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.util.*;
 
+import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
 import static java.util.Objects.requireNonNull;
 
 public class GameUI_Builder {
@@ -126,17 +125,15 @@ public class GameUI_Builder {
     public GameUI build() {
         validateConfiguration();
 
-        final GameContext gameContext = Globals.theGameContext();
-
         //TODO this is crap
         Map<String, Class<?>> uiConfigMap = new HashMap<>();
         configByGameVariant.forEach((gameVariant, config) -> uiConfigMap.put(gameVariant, config.uiConfigClass));
-        var ui = new GameUI_Implementation(uiConfigMap, gameContext, stage, mainSceneWidth, mainSceneHeight);
+        var ui = new GameUI_Implementation(uiConfigMap, THE_GAME_BOX, stage, mainSceneWidth, mainSceneHeight);
 
         configByGameVariant.forEach((gameVariant, config) -> {
-            File highScoreFile = highScoreFile(gameContext.homeDir(), gameVariant);
-            Game gameModel = createGameModel(config.gameModelClass, config.mapSelector, gameContext, highScoreFile);
-            gameContext.gameBox().registerGame(gameVariant, gameModel);
+            File highScoreFile = highScoreFile(THE_GAME_BOX.homeDir(), gameVariant);
+            Game gameModel = createGameModel(config.gameModelClass, config.mapSelector, highScoreFile);
+            THE_GAME_BOX.registerGame(gameVariant, gameModel);
         });
 
         for (StartPageConfiguration config : startPageConfigs) {
@@ -172,8 +169,8 @@ public class GameUI_Builder {
         return new File(dir, "highscore-%s.xml".formatted(gameVariant).toLowerCase());
     }
 
-    private Game createGameModel(Class<?> modelClass, MapSelector mapSelector, GameContext gameContext, File highScoreFile) {
-        final CoinMechanism coinMechanism = gameContext.coinMechanism();
+    private Game createGameModel(Class<?> modelClass, MapSelector mapSelector, File highScoreFile) {
+        final CoinMechanism coinMechanism = THE_GAME_BOX.coinMechanism();
         AbstractGameModel game = null;
         try {
             if (mapSelector != null) {
@@ -199,7 +196,7 @@ public class GameUI_Builder {
             }
         }
         if (game != null) {
-            game.setStateMachine(new GamePlayStateMachine(gameContext, game));
+            game.setStateMachine(new GameStateMachine(THE_GAME_BOX, game));
             Logger.info("Success: Game model created, class={}", modelClass.getSimpleName());
             return game;
         }

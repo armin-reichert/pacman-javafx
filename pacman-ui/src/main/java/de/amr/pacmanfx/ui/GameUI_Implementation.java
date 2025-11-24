@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
-import de.amr.pacmanfx.model.GamePlayState;
+import de.amr.pacmanfx.model.GameState;
 import de.amr.pacmanfx.model.SimulationStepEvents;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.action.*;
@@ -428,7 +428,7 @@ public final class GameUI_Implementation implements GameUI {
         soundManager().stopAll();
         currentGameScene().ifPresent(gameScene -> {
             gameScene.end();
-            boolean shouldConsumeCoin = gameContext.currentGameState() == GamePlayState.STARTING_GAME_OR_LEVEL
+            boolean shouldConsumeCoin = gameContext.currentGameState() == GameState.STARTING_GAME_OR_LEVEL
                     || gameContext.currentGame().isPlaying();
             if (shouldConsumeCoin && !gameContext.coinMechanism().isEmpty()) {
                 gameContext.coinMechanism().consumeCoin();
@@ -437,7 +437,7 @@ public final class GameUI_Implementation implements GameUI {
         });
         clock.stop();
         clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
-        gameContext.currentGame().stateMachine().restart(GamePlayState.BOOT);
+        gameContext.currentGame().stateMachine().restart(GameState.BOOT);
         showStartView();
     }
 
@@ -446,7 +446,7 @@ public final class GameUI_Implementation implements GameUI {
         currentGameScene().ifPresent(GameScene::end);
         clock.stop();
         clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
-        gameContext.currentGame().stateMachine().restart(GamePlayState.BOOT);
+        gameContext.currentGame().stateMachine().restart(GameState.BOOT);
         Platform.runLater(clock::start);
     }
 

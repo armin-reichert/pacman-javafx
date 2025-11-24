@@ -41,7 +41,7 @@ public abstract class AbstractGameModel implements Game {
 
     protected final ScoreManager scoreManager = new ScoreManager(this);
 
-    protected GamePlayStateMachine stateMachine;
+    protected GameStateMachine stateMachine;
 
     protected abstract void checkPacFindsFood(GameLevel gameLevel);
 
@@ -67,11 +67,11 @@ public abstract class AbstractGameModel implements Game {
     }
 
     @Override
-    public final GamePlayStateMachine stateMachine() {
+    public final GameStateMachine stateMachine() {
         return stateMachine;
     }
 
-    public void setStateMachine(GamePlayStateMachine stateMachine) {
+    public void setStateMachine(GameStateMachine stateMachine) {
         this.stateMachine = stateMachine;
     }
 
