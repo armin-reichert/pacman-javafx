@@ -35,7 +35,11 @@ public interface GameContext {
     Optional<GameLevel> optGameLevel();
 
     /**
-     * @return the current game level if present or {@code null} if no game level currently exists.
+     * Convenience method to access the current game level.
+     * <p>Returns {@code null} if no level is active. Use {@link #optGameLevel()} if you
+     * need to handle the absence of a level safely.</p>
+     *
+     * @return the current {@link GameLevel}, or {@code null} if none exists
      */
     GameLevel gameLevel();
 

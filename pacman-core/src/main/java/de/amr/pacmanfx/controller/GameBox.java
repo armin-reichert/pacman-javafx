@@ -47,6 +47,7 @@ public class GameBox implements GameContext, CoinMechanism {
      * Directory where custom maps are stored (default: <code>&lt;home_dir&gt;/maps</code>).
      */
     public static final File CUSTOM_MAP_DIR = new File(HOME_DIR, "maps");
+    public static final String HIGHSCORE_FILE_PATTERN = "highscore-%s.xml";
 
     private final Map<String, Game> knownGames = new HashMap<>();
 
@@ -83,17 +84,6 @@ public class GameBox implements GameContext, CoinMechanism {
 
     public void setEventsEnabled(boolean enabled) {
         eventsEnabled = enabled;
-    }
-
-    @SuppressWarnings("unchecked")
-    public <T extends Game> T game(String variant) {
-        requireNonNull(variant);
-        if (knownGames.containsKey(variant)) {
-            return (T) knownGames.get(variant);
-        }
-        String errorMessage = "Game variant '%s' has not been registered!".formatted(variant);
-        Logger.error(errorMessage);
-        throw new IllegalArgumentException(errorMessage);
     }
 
     /**
@@ -140,6 +130,17 @@ public class GameBox implements GameContext, CoinMechanism {
         return usingAutopilot;
     }
 
+    @SuppressWarnings("unchecked")
+    public <T extends Game> T game(String variant) {
+        requireNonNull(variant);
+        if (knownGames.containsKey(variant)) {
+            return (T) knownGames.get(variant);
+        }
+        String errorMessage = "Game variant '%s' has not been registered!".formatted(variant);
+        Logger.error(errorMessage);
+        throw new IllegalArgumentException(errorMessage);
+    }
+
     // GameContext implementation
 
 
@@ -152,7 +153,11 @@ public class GameBox implements GameContext, CoinMechanism {
      * @return The game (model) registered for the currently selected game variant.
      */
     public <G extends Game> G currentGame() {
-        return game(gameVariant.get());
+        G game = game(gameVariant.get());
+        if (game != null) {
+            return game;
+        }
+        throw new IllegalStateException("No game is currently selected");
     }
 
     @Override
@@ -212,7 +217,7 @@ public class GameBox implements GameContext, CoinMechanism {
     // other stuff
 
     public File highScoreFile(String gameVariant) {
-        return new File(HOME_DIR, "highscore-%s.xml".formatted(gameVariant).toLowerCase());
+        return new File(HOME_DIR, HIGHSCORE_FILE_PATTERN.formatted(gameVariant).toLowerCase());
     }
 
     private boolean initUserDirectories() {
@@ -231,18 +236,15 @@ public class GameBox implements GameContext, CoinMechanism {
     }
 
     private boolean ensureDirExistsAndWritable(File dir, String description) {
-        if (!dir.exists()) {
-            Logger.info(description + " does not exist, create it...");
-            if (!dir.mkdirs()) {
-                Logger.error(description + " could not be created");
-                return false;
-            }
-            Logger.info(description + " has been created");
-            if (!dir.canWrite()) {
-                Logger.error(description + " is not writable");
-                return false;
-            }
+        if (!dir.exists() && !dir.mkdirs()) {
+            Logger.error("{} could not be created", description);
+            return false;
         }
+        if (!dir.canWrite()) {
+            Logger.error("{} is not writable: {}", description, dir);
+            return false;
+        }
+        Logger.info("{} exists and is writable: {}", description, dir);
         return true;
     }
 }
