@@ -131,7 +131,7 @@ public class GameUI_Builder {
         var ui = new GameUI_Implementation(uiConfigMap, THE_GAME_BOX, stage, mainSceneWidth, mainSceneHeight);
 
         configByGameVariant.forEach((gameVariant, config) -> {
-            File highScoreFile = highScoreFile(THE_GAME_BOX.homeDir(), gameVariant);
+            File highScoreFile = THE_GAME_BOX.highScoreFile(gameVariant);
             Game gameModel = createGameModel(config.gameModelClass, config.mapSelector, highScoreFile);
             THE_GAME_BOX.registerGame(gameVariant, gameModel);
         });
@@ -163,10 +163,6 @@ public class GameUI_Builder {
             error("Could not create start page from class '%s'".formatted(startPageClass.getSimpleName()), x);
             throw new IllegalStateException(x);
         }
-    }
-
-    private File highScoreFile(File dir, String gameVariant) {
-        return new File(dir, "highscore-%s.xml".formatted(gameVariant).toLowerCase());
     }
 
     private Game createGameModel(Class<?> modelClass, MapSelector mapSelector, File highScoreFile) {

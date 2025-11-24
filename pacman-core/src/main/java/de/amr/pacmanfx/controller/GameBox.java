@@ -83,7 +83,9 @@ public class GameBox implements GameContext, CoinMechanism {
         if (knownGames.containsKey(variant)) {
             return (T) knownGames.get(variant);
         }
-        throw new IllegalArgumentException("Game variant '%s' is not supported".formatted(variant));
+        String errorMessage = "Game variant '%s' has not been registered!".formatted(variant);
+        Logger.error(errorMessage);
+        throw new IllegalArgumentException(errorMessage);
     }
 
     /**
@@ -215,6 +217,10 @@ public class GameBox implements GameContext, CoinMechanism {
     }
 
     // other stuff
+
+    public File highScoreFile(String gameVariant) {
+        return new File(homeDir, "highscore-%s.xml".formatted(gameVariant).toLowerCase());
+    }
 
     private boolean initUserDirectories() {
         String homeDirDesc = "Pac-Man JavaFX home directory";
