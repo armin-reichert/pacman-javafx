@@ -11,7 +11,6 @@ import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HuntingPhase;
 import de.amr.pacmanfx.model.HuntingTimer;
-import de.amr.pacmanfx.model.actors.ActorSpeedControl;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.ui.api.GameUI;
@@ -139,36 +138,34 @@ public class InfoBoxGameInfo extends InfoBox {
         );
     }
 
-    private ActorSpeedControl actorSpeedControl() { return ui.context().currentGame(); }
-
     private String fmtGhostAttackSpeed(GameLevel level) {
         // use Pinky because Blinky could be in Elroy mode
         Ghost pinky = level.ghost(PINK_GHOST_SPEEDY);
         return (pinky != null)
-            ? "%.4f px/s".formatted(actorSpeedControl().ghostAttackSpeed(level, pinky) * NUM_TICKS_PER_SEC)
+            ? "%.4f px/s".formatted(level.game().ghostAttackSpeed(level, pinky) * NUM_TICKS_PER_SEC)
             : NO_INFO;
     }
 
     private String fmtGhostSpeedFrightened(GameLevel level) {
         Ghost blinky = level.ghost(RED_GHOST_SHADOW);
         return (blinky != null)
-            ? "%.4f px/s".formatted(actorSpeedControl().ghostFrightenedSpeed(level, blinky) * NUM_TICKS_PER_SEC)
+            ? "%.4f px/s".formatted(level.game().ghostFrightenedSpeed(level, blinky) * NUM_TICKS_PER_SEC)
             : NO_INFO;
     }
 
     private String fmtGhostSpeedTunnel(GameLevel level) {
         Ghost blinky = level.ghost(RED_GHOST_SHADOW);
         return (blinky != null)
-            ? "%.4f px/s".formatted(actorSpeedControl().ghostTunnelSpeed(level, blinky) * NUM_TICKS_PER_SEC)
+            ? "%.4f px/s".formatted(level.game().ghostTunnelSpeed(level, blinky) * NUM_TICKS_PER_SEC)
             : NO_INFO;
     }
 
     private String fmtPacNormalSpeed(GameLevel level) {
-        return "%.4f px/s".formatted(actorSpeedControl().pacNormalSpeed(level) * NUM_TICKS_PER_SEC);
+        return "%.4f px/s".formatted(level.game().pacNormalSpeed(level) * NUM_TICKS_PER_SEC);
     }
 
     private String fmtPacSpeedPowered(GameLevel level) {
-        return "%.4f px/s".formatted(actorSpeedControl().pacPowerSpeed(level) * NUM_TICKS_PER_SEC);
+        return "%.4f px/s".formatted(level.game().pacPowerSpeed(level) * NUM_TICKS_PER_SEC);
     }
 
     private String fmtPacPowerTime(GameLevel level) {
