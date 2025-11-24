@@ -92,16 +92,19 @@ public class GameBox implements GameContext, CoinMechanism {
      */
     public void registerGame(String variant, Game gameModel) {
         requireNonNull(variant);
-        if (!GAME_VARIANT_PATTERN.matcher(variant).matches()) {
-            throw new IllegalArgumentException("Game variant name '%s' does not match required syntax '%s'"
-                .formatted(variant, GAME_VARIANT_PATTERN));
-        }
         requireNonNull(gameModel);
-        if (knownGames.containsKey(variant)) {
-            Logger.warn("Game model ({}) is already registered for game variant {}", gameModel.getClass().getName(), variant);
+        if (!GAME_VARIANT_PATTERN.matcher(variant).matches()) {
+            throw new IllegalArgumentException(
+                    "Game variant name '%s' does not match required syntax '%s'"
+                            .formatted(variant, GAME_VARIANT_PATTERN));
         }
-        knownGames.put(variant, gameModel);
+        Game existing = knownGames.putIfAbsent(variant, gameModel);
+        if (existing != null) {
+            Logger.warn("Game model ({}) already registered for variant {}",
+                    existing.getClass().getName(), variant);
+        }
     }
+
 
     public StringProperty gameVariantNameProperty() {
         return gameVariant;
