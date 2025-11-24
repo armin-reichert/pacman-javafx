@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
+import de.amr.pacmanfx.controller.GameBox;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
 import de.amr.pacmanfx.model.GameState;
 import de.amr.pacmanfx.model.SimulationStepEvents;
@@ -159,7 +160,7 @@ public final class GameUI_Implementation implements GameUI {
         joypad = new Joypad();
         joypad.setSimulatingKeyboard(keyboard);
 
-        customDirWatchdog = new DirectoryWatchdog(gameContext.customMapDir());
+        customDirWatchdog = new DirectoryWatchdog(GameBox.CUSTOM_MAP_DIR);
 
         clock = new GameClock();
         clock.setPausableAction(this::doSimulationStepAndUpdateGameScene);
@@ -350,7 +351,7 @@ public final class GameUI_Implementation implements GameUI {
                 stage.titleProperty().bind(titleBinding);
                 showStartView();
             });
-            editorView.editor().init(gameContext.customMapDir());
+            editorView.editor().init(GameBox.CUSTOM_MAP_DIR);
         }
         return editorView;
     }

@@ -37,8 +37,16 @@ public class GameBox implements GameContext, CoinMechanism {
 
     public static final Pattern GAME_VARIANT_PATTERN = Pattern.compile("[a-zA-Z][a-zA-Z_0-9]*");
 
-    private final File homeDir = new File(System.getProperty("user.home"), ".pacmanfx");
-    private final File customMapDir = new File(homeDir, "maps");
+    /**
+     * Root directory under which user specific files are stored.
+     * <p>Default: <code>$HOME/.pacmanfx</code> (Unix) or <code>%USERPROFILE%\.pacmanfx</code> (MS Windows)</p>
+     */
+    public static final File HOME_DIR = new File(System.getProperty("user.home"), ".pacmanfx");
+
+    /**
+     * Directory where custom maps are stored (default: <code>&lt;home_dir&gt;/maps</code>).
+     */
+    public static final File CUSTOM_MAP_DIR = new File(HOME_DIR, "maps");
 
     private final Map<String, Game> knownGames = new HashMap<>();
 
@@ -140,16 +148,6 @@ public class GameBox implements GameContext, CoinMechanism {
         return this;
     }
 
-    @Override
-    public File homeDir() {
-        return homeDir;
-    }
-
-    @Override
-    public File customMapDir() {
-        return customMapDir;
-    }
-
     /**
      * @return The game (model) registered for the currently selected game variant.
      */
@@ -219,18 +217,18 @@ public class GameBox implements GameContext, CoinMechanism {
     // other stuff
 
     public File highScoreFile(String gameVariant) {
-        return new File(homeDir, "highscore-%s.xml".formatted(gameVariant).toLowerCase());
+        return new File(HOME_DIR, "highscore-%s.xml".formatted(gameVariant).toLowerCase());
     }
 
     private boolean initUserDirectories() {
         String homeDirDesc = "Pac-Man JavaFX home directory";
         String customMapDirDesc = "Pac-Man JavaFX custom map directory";
-        boolean success = ensureDirExistsAndWritable(homeDir, homeDirDesc);
+        boolean success = ensureDirExistsAndWritable(HOME_DIR, homeDirDesc);
         if (success) {
-            Logger.info("{} exists and is writable: {}", homeDirDesc, homeDir);
-            success = ensureDirExistsAndWritable(customMapDir, customMapDirDesc);
+            Logger.info("{} exists and is writable: {}", homeDirDesc, HOME_DIR);
+            success = ensureDirExistsAndWritable(CUSTOM_MAP_DIR, customMapDirDesc);
             if (success) {
-                Logger.info("{} exists and is writable: {}", customMapDirDesc, customMapDir);
+                Logger.info("{} exists and is writable: {}", customMapDirDesc, CUSTOM_MAP_DIR);
             }
             return true;
         }

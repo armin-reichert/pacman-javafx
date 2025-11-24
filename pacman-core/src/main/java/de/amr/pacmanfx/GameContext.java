@@ -11,23 +11,12 @@ import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 
-import java.io.File;
 import java.util.Optional;
 
 /**
  * Facade to give access to the main game components.
  */
 public interface GameContext {
-    /**
-     * Root directory under which user specific files are stored.
-     * <p>Default: <code>$HOME/.pacmanfx</code> (Unix) or <code>%USERPROFILE%\.pacmanfx</code> (MS Windows)</p>
-     */
-    File homeDir();
-
-    /**
-     * Directory where custom maps are stored (default: <code>&lt;home_dir&gt;/maps</code>).
-     */
-    File customMapDir();
 
     /**
      * @return the coin mechanism used in the Arcade games.

@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.dashboard;
 
+import de.amr.pacmanfx.controller.GameBox;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.ui.api.GameUI;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -75,9 +76,9 @@ public class InfoBoxCustomMaps extends InfoBox {
 
     private void updateCustomMapList() {
         customMaps.clear();
-        File[] mapFiles = ui.context().customMapDir().listFiles((dir, name) -> name.endsWith(".world"));
+        File[] mapFiles = GameBox.CUSTOM_MAP_DIR.listFiles((dir, name) -> name.endsWith(".world"));
         if (mapFiles == null) {
-            Logger.error("An error occurred accessing custom map directory {}", ui.context().customMapDir());
+            Logger.error("An error occurred accessing custom map directory {}", GameBox.CUSTOM_MAP_DIR);
             return;
         }
         if (mapFiles.length == 0) {

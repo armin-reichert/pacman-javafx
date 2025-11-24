@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.allgames.app;
 
-import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
@@ -12,6 +11,7 @@ import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_StartPage;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman_xxl.*;
+import de.amr.pacmanfx.controller.GameBox;
 import de.amr.pacmanfx.model.StandardGameVariant;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
@@ -42,7 +42,7 @@ public class PacManGames3dApp extends Application {
             final int width  = Math.round(ASPECT_RATIO * height);
 
             //TODO create this by reflection inside builder too?
-            final var mapSelectorXXL = new PacManXXL_Common_MapSelector(Globals.THE_GAME_BOX.customMapDir());
+            final var mapSelectorXXL = new PacManXXL_Common_MapSelector(GameBox.CUSTOM_MAP_DIR);
 
             ui = GameUI_Builder.create(primaryStage, width, height)
 

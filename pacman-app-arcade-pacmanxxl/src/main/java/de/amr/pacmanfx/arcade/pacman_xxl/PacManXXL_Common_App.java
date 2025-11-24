@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
+import de.amr.pacmanfx.controller.GameBox;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
@@ -11,7 +12,6 @@ import javafx.application.Application;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
 import static de.amr.pacmanfx.model.StandardGameVariant.MS_PACMAN_XXL;
 import static de.amr.pacmanfx.model.StandardGameVariant.PACMAN_XXL;
 
@@ -24,7 +24,7 @@ public class PacManXXL_Common_App extends Application {
         // UI size: 80% of available screen height, aspect 16:10
         final double height = 0.8 * Screen.getPrimary().getBounds().getHeight();
         final double width  = 1.6 * height;
-        var xxlMapSelector = new PacManXXL_Common_MapSelector(THE_GAME_BOX.customMapDir());
+        var xxlMapSelector = new PacManXXL_Common_MapSelector(GameBox.CUSTOM_MAP_DIR);
         ui = GameUI_Builder.create(primaryStage, width, height)
                 .game(
                     PACMAN_XXL.name(),
