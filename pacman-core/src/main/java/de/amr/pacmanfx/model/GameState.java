@@ -88,7 +88,7 @@ public enum GameState implements FsmState<GameContext> {
 
         @Override
         public void onEnter(GameContext context) {
-            context.eventManager().publishEvent(GameEventType.STOP_ALL_SOUNDS);
+            context.currentGame().publishEvent(GameEventType.STOP_ALL_SOUNDS);
         }
 
         private void startNewGame(GameContext context) {
@@ -125,7 +125,7 @@ public enum GameState implements FsmState<GameContext> {
         private void startDemoLevel(GameContext context) {
             if (timer.tickCount() == 1) {
                 context.currentGame().buildDemoLevel();
-                context.eventManager().publishEvent(GameEventType.LEVEL_CREATED);
+                context.currentGame().publishEvent(GameEventType.LEVEL_CREATED);
             }
             else if (timer.tickCount() == 2) {
                 context.currentGame().startLevel(context.gameLevel());
@@ -262,7 +262,7 @@ public enum GameState implements FsmState<GameContext> {
             timer.restartSeconds(1);
             context.gameLevel().pac().hide();
             context.gameLevel().ghosts().forEach(Ghost::stopAnimation);
-            context.eventManager().publishEvent(GameEventType.GHOST_EATEN);
+            context.currentGame().publishEvent(GameEventType.GHOST_EATEN);
         }
 
         @Override
@@ -295,7 +295,7 @@ public enum GameState implements FsmState<GameContext> {
         public void onEnter(GameContext context) {
             timer.restartIndefinitely();
             context.currentGame().onPacKilled(context.gameLevel());
-            context.eventManager().publishEvent(GameEventType.STOP_ALL_SOUNDS);
+            context.currentGame().publishEvent(GameEventType.STOP_ALL_SOUNDS);
         }
 
         @Override
@@ -320,13 +320,13 @@ public enum GameState implements FsmState<GameContext> {
             }
             else if (timer.tickCount() == TICK_START_PAC_ANIMATION) {
                 context.gameLevel().pac().optAnimationManager().ifPresent(AnimationManager::play);
-                context.eventManager().publishEvent(GameEventType.PAC_DYING, context.gameLevel().pac().tile());
+                context.currentGame().publishEvent(GameEventType.PAC_DYING, context.gameLevel().pac().tile());
             }
             else if (timer.tickCount() == TICK_HIDE_PAC) {
                 context.gameLevel().pac().hide();
             }
             else if (timer.tickCount() == TICK_PAC_DEAD) {
-                context.eventManager().publishEvent(GameEventType.PAC_DEAD);
+                context.currentGame().publishEvent(GameEventType.PAC_DEAD);
             }
             else {
                 context.gameLevel().blinking().tick();

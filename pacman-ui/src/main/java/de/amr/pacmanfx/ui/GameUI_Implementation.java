@@ -302,10 +302,10 @@ public final class GameUI_Implementation implements GameUI {
         if (oldView != null) {
             oldView.onExit();
             oldView.actionBindingsManager().removeBindingsFromKeyboard(keyboard);
-            gameContext.eventManager().removeEventListener(oldView);
+            gameContext.currentGame().removeEventListener(oldView);
         }
         view.actionBindingsManager().assignBindingsToKeyboard(keyboard);
-        gameContext.eventManager().addEventListener(view);
+        gameContext.currentGame().addEventListener(view);
         currentViewProperty().set(view);
         view.onEnter();
     }

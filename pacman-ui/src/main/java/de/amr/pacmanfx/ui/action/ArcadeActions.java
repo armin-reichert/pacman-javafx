@@ -23,7 +23,7 @@ public final class ArcadeActions {
             if (THE_GAME_BOX.numCoins() < CoinMechanism.MAX_COINS) {
                 ui.soundManager().setEnabled(true);
                 THE_GAME_BOX.insertCoin();
-                ui.context().eventManager().publishEvent(GameEventType.CREDIT_ADDED);
+                ui.context().currentGame().publishEvent(GameEventType.CREDIT_ADDED);
             }
             ui.context().currentGame().stateMachine().changeState(ui.context(), GameState.SETTING_OPTIONS_FOR_START);
         }

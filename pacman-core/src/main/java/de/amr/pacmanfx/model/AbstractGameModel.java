@@ -4,7 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model;
 
+import de.amr.pacmanfx.event.GameEvent;
+import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.event.GameEventType;
+import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
@@ -12,6 +15,8 @@ import de.amr.pacmanfx.model.actors.*;
 import javafx.beans.property.*;
 import org.tinylog.Logger;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
@@ -150,7 +155,7 @@ public abstract class AbstractGameModel implements Game {
         resetPacManAndGhostAnimations(gameLevel);
         gameLevel.getReadyToPlay();
         gameLevel.showPacAndGhosts();
-        stateMachine().publishEvent(GameEventType.GAME_CONTINUED);
+        publishEvent(GameEventType.GAME_CONTINUED);
     }
 
     @Override
@@ -195,7 +200,7 @@ public abstract class AbstractGameModel implements Game {
         gameLevel.blinking().setStartState(Pulse.State.ON);
         gameLevel.blinking().restart();
         gameLevel.huntingTimer().startFirstPhase();
-        stateMachine().publishEvent(GameEventType.HUNTING_PHASE_STARTED);
+        publishEvent(GameEventType.HUNTING_PHASE_STARTED);
     }
 
     protected void makeHuntingStep(GameLevel gameLevel) {
@@ -259,7 +264,7 @@ public abstract class AbstractGameModel implements Game {
         if (pac.isPowerFadingStarting(gameLevel)) {
             thisStep.pacStartsLosingPower = true;
             Logger.info("{} starts losing power", pac.name());
-            stateMachine().publishEvent(GameEventType.PAC_STARTS_LOSING_POWER);
+            publishEvent(GameEventType.PAC_STARTS_LOSING_POWER);
         } else if (powerTimer.hasExpired()) {
             thisStep.pacLostPower = true;
             Logger.info("{} lost power", pac.name());
@@ -270,7 +275,50 @@ public abstract class AbstractGameModel implements Game {
             gameLevel.huntingTimer().start();
             Logger.info("Hunting timer restarted because {} lost power", pac.name());
             gameLevel.ghosts(GhostState.FRIGHTENED).forEach(ghost -> ghost.setState(GhostState.HUNTING_PAC));
-            stateMachine().publishEvent(GameEventType.PAC_LOST_POWER);
+            publishEvent(GameEventType.PAC_LOST_POWER);
         }
+    }
+
+    // GameEventManager implementation
+
+    private final List<GameEventListener> eventListeners = new ArrayList<>();
+
+    @Override
+    public void addEventListener(GameEventListener listener) {
+        requireNonNull(listener);
+        if (!eventListeners.contains(listener)) {
+            eventListeners.add(listener);
+            Logger.info("{}: Game event listener registered: {}", getClass().getSimpleName(), listener);
+        }
+    }
+
+    @Override
+    public void removeEventListener(GameEventListener listener) {
+        requireNonNull(listener);
+        boolean removed = eventListeners.remove(listener);
+        if (removed) {
+            Logger.info("{}: Game event listener removed: {}", getClass().getSimpleName(), listener);
+        } else {
+            Logger.warn("{}: Game event listener not removed, as not registered: {}", getClass().getSimpleName(), listener);
+        }
+    }
+
+    @Override
+    public void publishEvent(GameEvent event) {
+        requireNonNull(event);
+        eventListeners.forEach(subscriber -> subscriber.onGameEvent(event));
+        Logger.trace("Published game event: {}", event);
+    }
+
+    @Override
+    public void publishEvent(GameEventType type) {
+        requireNonNull(type);
+        publishEvent(new GameEvent(this, type));
+    }
+
+    @Override
+    public void publishEvent(GameEventType type, Vector2i tile) {
+        requireNonNull(type);
+        publishEvent(new GameEvent(this, type, tile));
     }
 }

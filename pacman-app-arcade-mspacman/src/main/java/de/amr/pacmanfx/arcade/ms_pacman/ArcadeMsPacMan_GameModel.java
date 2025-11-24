@@ -276,7 +276,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         }
 
         gameLevel.setBonus(bonus);
-        stateMachine().publishEvent(GameEventType.BONUS_ACTIVATED, bonus.tile());
+        publishEvent(GameEventType.BONUS_ACTIVATED, bonus.tile());
     }
 
     private void computeBonusRoute(Bonus bonus, TerrainLayer terrain, House house) {

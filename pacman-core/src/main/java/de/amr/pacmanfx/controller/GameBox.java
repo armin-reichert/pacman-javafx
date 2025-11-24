@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.controller;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.model.Game;
@@ -68,7 +67,7 @@ public class GameBox implements GameContext, CoinMechanism {
             if (eventsEnabled) {
                 Game newGame = game(newGameVariant);
                 newGame.init();
-                newGame.stateMachine().publishEvent(GameEventType.GAME_VARIANT_CHANGED);
+                newGame.publishEvent(GameEventType.GAME_VARIANT_CHANGED);
             }
         });
 
@@ -160,11 +159,6 @@ public class GameBox implements GameContext, CoinMechanism {
             return game;
         }
         throw new IllegalStateException("No game is currently selected");
-    }
-
-    @Override
-    public GameEventManager eventManager() {
-        return currentGame().stateMachine();
     }
 
     @Override

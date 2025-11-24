@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx;
 
-import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
@@ -23,11 +22,6 @@ public interface GameContext {
      * @param <T> specific game model type
      */
     <T extends Game> T currentGame();
-
-    /**
-     * @return the event manager that is used to publish/subscribe to game events created by the model layer.
-     */
-    GameEventManager eventManager();
 
     /**
      * @return the current game level if present.

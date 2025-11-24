@@ -12,6 +12,7 @@ import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.steering.RouteBasedSteering;
 import org.tinylog.Logger;
@@ -99,6 +100,7 @@ public class Bonus extends MovingActor {
 
     @Override
     public void tick(GameContext gameContext) {
+        final Game game = gameContext.currentGame();
         timer.doTick();
         switch (state) {
             case EDIBLE -> {
@@ -108,13 +110,13 @@ public class Bonus extends MovingActor {
                 }
                 if (timer.hasExpired() || reachedExit) {
                     setInactive();
-                    gameContext.eventManager().publishEvent(GameEventType.BONUS_EXPIRED, tile());
+                    game.publishEvent(GameEventType.BONUS_EXPIRED, tile());
                 }
             }
             case EATEN -> {
                 if (timer.hasExpired()) {
                     setInactive();
-                    gameContext.eventManager().publishEvent(GameEventType.BONUS_EXPIRED, tile());
+                    game.publishEvent(GameEventType.BONUS_EXPIRED, tile());
                 }
             }
             case INACTIVE -> {}

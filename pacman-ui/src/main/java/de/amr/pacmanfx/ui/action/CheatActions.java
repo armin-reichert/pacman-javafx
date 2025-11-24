@@ -38,7 +38,7 @@ public final class CheatActions {
             THE_GAME_BOX.cheatUsedProperty().set(true);
             ui.context().gameLevel().worldMap().foodLayer().eatPellets();
             ui.soundManager().pause(SoundID.PAC_MAN_MUNCHING);
-            ui.context().eventManager().publishEvent(GameEventType.PAC_FOUND_FOOD);
+            ui.context().currentGame().publishEvent(GameEventType.PAC_FOUND_FOOD);
         }
 
         @Override

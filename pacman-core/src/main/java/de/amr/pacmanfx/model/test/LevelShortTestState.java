@@ -58,14 +58,14 @@ public class LevelShortTestState implements FsmState<GameContext>, TestState {
         }
         else if (timer.atSecond(START + 5)) {
             gameLevel.bonus().ifPresent(bonus -> bonus.setEaten(2));
-            context.eventManager().publishEvent(GameEventType.BONUS_EATEN);
+            game.publishEvent(GameEventType.BONUS_EATEN);
         }
         else if (timer.atSecond(START + 6)) {
             game.activateNextBonus(gameLevel);
         }
         else if (timer.atSecond(START + 8)) {
             gameLevel.bonus().ifPresent(bonus -> bonus.setEaten(2));
-            context.eventManager().publishEvent(GameEventType.BONUS_EATEN);
+            game.publishEvent(GameEventType.BONUS_EATEN);
         }
         else if (timer.atSecond(START + 9)) {
             gameLevel.hidePacAndGhosts();
