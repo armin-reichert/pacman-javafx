@@ -62,7 +62,7 @@ public class LevelMediumTestState implements FsmState<GameContext>, TestState {
         if (timer().hasExpired()) {
             if (gameLevel.number() == lastTestedLevelNumber) {
                 context.eventManager().publishEvent(GameEventType.STOP_ALL_SOUNDS);
-                game.stateMachine().changeState(GameState.INTRO);
+                game.stateMachine().changeState(context, GameState.INTRO);
             } else {
                 timer().restartSeconds(TEST_DURATION_SEC);
                 game.startNextLevel();
@@ -70,11 +70,11 @@ public class LevelMediumTestState implements FsmState<GameContext>, TestState {
             }
         }
         else if (game.isLevelCompleted(gameLevel)) {
-            game.stateMachine().changeState(GameState.INTRO);
+            game.stateMachine().changeState(context, GameState.INTRO);
         } else if (game.hasPacManBeenKilled()) {
             timer.expire();
         } else if (game.hasGhostBeenKilled()) {
-            game.stateMachine().changeState(GameState.GHOST_DYING);
+            game.stateMachine().changeState(context, GameState.GHOST_DYING);
         }
     }
 

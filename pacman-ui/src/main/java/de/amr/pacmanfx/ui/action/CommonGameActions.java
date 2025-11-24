@@ -114,7 +114,7 @@ public final class CommonGameActions {
                 ui.context().currentGameState().onExit(ui.context()); //TODO exit other states too?
             }
             ui.clock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
-            ui.context().currentGame().stateMachine().restart(INTRO);
+            ui.context().currentGame().stateMachine().restart(ui.context(), INTRO);
         }
     };
 
@@ -301,7 +301,7 @@ public final class CommonGameActions {
                 toggle(PROPERTY_3D_ENABLED);
                 if (ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_2D) || ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D)) {
                     ui.updateGameScene(true);
-                    ui.context().currentGame().stateMachine().update(); //TODO needed?
+                    ui.context().currentGame().stateMachine().update(ui.context()); //TODO needed?
                 }
                 if (!ui.context().currentGame().isPlaying()) {
                     ui.showFlashMessage(ui.assets().translated(PROPERTY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));

@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
-import static de.amr.pacmanfx.Globals.theGameContext;
+import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
 import static java.util.function.Predicate.not;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,20 +20,20 @@ public class TestEatingFood {
 
     @BeforeAll
     static void setup() {
-        ArcadePacMan_GameModel game = new ArcadePacMan_GameModel(theGameContext().coinMechanism(), new File(""));
-        game.setStateMachine(new GameStateMachine(theGameContext(), game));
-        theGameContext().gameBox().registerGame(StandardGameVariant.PACMAN.name(), game);
-        theGameContext().gameBox().setGameVariant(StandardGameVariant.PACMAN.name());
+        ArcadePacMan_GameModel game = new ArcadePacMan_GameModel(THE_GAME_BOX.coinMechanism(), new File(""));
+        game.setStateMachine(new GameStateMachine(game));
+        THE_GAME_BOX.registerGame(StandardGameVariant.PACMAN.name(), game);
+        THE_GAME_BOX.setGameVariant(StandardGameVariant.PACMAN.name());
     }
 
     @BeforeEach
     public void createGameLevel() {
-        theGameContext().currentGame().buildNormalLevel(1);
+        THE_GAME_BOX.currentGame().buildNormalLevel(1);
     }
 
-    private GameLevel gameLevel() { return theGameContext().gameLevel(); }
+    private GameLevel gameLevel() { return THE_GAME_BOX.gameLevel(); }
 
-    private ArcadePacMan_GameModel pacManGame() { return theGameContext().currentGame(); }
+    private ArcadePacMan_GameModel pacManGame() { return THE_GAME_BOX.currentGame(); }
 
     private void eatNextPellet(GameLevel gameLevel) {
         FoodLayer foodLayer = gameLevel.worldMap().foodLayer();

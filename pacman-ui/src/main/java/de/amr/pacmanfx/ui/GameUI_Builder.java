@@ -192,7 +192,7 @@ public class GameUI_Builder {
             }
         }
         if (game != null) {
-            game.setStateMachine(new GameStateMachine(THE_GAME_BOX, game));
+            game.setStateMachine(new GameStateMachine(game));
             Logger.info("Success: Game model created, class={}", modelClass.getSimpleName());
             return game;
         }

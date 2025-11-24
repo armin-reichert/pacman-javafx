@@ -5,13 +5,13 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.model;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.model.test.CutScenesTestState;
-import de.amr.pacmanfx.model.test.LevelMediumTestState;
-import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.math.Vector2i;
+import de.amr.pacmanfx.model.test.CutScenesTestState;
+import de.amr.pacmanfx.model.test.LevelMediumTestState;
+import de.amr.pacmanfx.model.test.LevelShortTestState;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
@@ -23,9 +23,7 @@ public class GameStateMachine extends StateMachine<FsmState<GameContext>, GameCo
 
     private final Game game;
 
-    public GameStateMachine(GameContext gameContext, Game game) {
-        super(gameContext);
-
+    public GameStateMachine(Game game) {
         this.game = requireNonNull(game);
         List<FsmState<GameContext>> states = new ArrayList<>(List.of(GameState.values()));
         states.add(new LevelShortTestState());

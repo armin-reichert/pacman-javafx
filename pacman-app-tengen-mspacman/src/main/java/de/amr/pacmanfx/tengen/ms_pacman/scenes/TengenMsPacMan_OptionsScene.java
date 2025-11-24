@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
+import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.model.GameState;
@@ -126,7 +127,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         if (idleTicks < IDLE_TIMEOUT) {
             idleTicks += 1;
         } else {
-            context().currentGame().stateMachine().changeState(GameState.INTRO);
+            context().currentGame().stateMachine().changeState(Globals.THE_GAME_BOX, GameState.INTRO);
         }
     }
 
