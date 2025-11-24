@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman.model;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.event.GameEventType;
+import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Waypoint;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.math.Vector2f;
@@ -309,7 +309,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             Logger.info("Level {} started", gameLevel.number());
         }
         // Note: This event is very important because it triggers the creation of the actor animations!
-        publishEvent(GameEventType.LEVEL_STARTED);
+        publishEvent(GameEvent.Type.LEVEL_STARTED);
     }
 
     @Override
@@ -349,7 +349,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         prepareForNewGame();
         //hud.levelCounter().setStartLevel(startLevelNumber);
         buildNormalLevel(startLevelNumber);
-        publishEvent(GameEventType.GAME_STARTED);
+        publishEvent(GameEvent.Type.GAME_STARTED);
     }
 
     @Override
@@ -433,7 +433,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         gateKeeper.setLevelNumber(levelNumber);
         normalLevel.worldMap().terrainLayer().optHouse().ifPresent(gateKeeper::setHouse); //TODO what if no house exists?
         setGameLevel(normalLevel);
-        publishEvent(GameEventType.LEVEL_CREATED);
+        publishEvent(GameEvent.Type.LEVEL_CREATED);
     }
 
     @Override
@@ -448,7 +448,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         gateKeeper.setLevelNumber(1);
         demoLevel.worldMap().terrainLayer().optHouse().ifPresent(gateKeeper::setHouse); //TODO what if no house exists?
         setGameLevel(demoLevel);
-        publishEvent(GameEventType.LEVEL_CREATED);
+        publishEvent(GameEvent.Type.LEVEL_CREATED);
     }
 
     @Override
@@ -526,7 +526,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         Logger.debug("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
 
         gameLevel.setBonus(bonus);
-        publishEvent(GameEventType.BONUS_ACTIVATED, bonus.tile());
+        publishEvent(GameEvent.Type.BONUS_ACTIVATED, bonus.tile());
     }
 
     @Override
@@ -548,7 +548,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
                 activateNextBonus(gameLevel);
                 thisStep.bonusIndex = gameLevel.currentBonusIndex();
             }
-            publishEvent(GameEventType.PAC_FOUND_FOOD, tile);
+            publishEvent(GameEvent.Type.PAC_FOUND_FOOD, tile);
         } else {
             pac.starve();
         }
@@ -575,7 +575,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             Logger.debug("Power timer restarted, {} ticks ({0.00} sec)", ticks, powerSeconds);
             gameLevel.ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
             thisStep.pacGotPower = true;
-            publishEvent(GameEventType.PAC_GETS_POWER);
+            publishEvent(GameEvent.Type.PAC_GETS_POWER);
         }
     }
 
@@ -587,7 +587,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
                 scoreManager.scorePoints(bonus.points());
                 Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
                 thisStep.bonusEatenTile = bonus.tile();
-                publishEvent(GameEventType.BONUS_EATEN);
+                publishEvent(GameEvent.Type.BONUS_EATEN);
             }
         });
     }

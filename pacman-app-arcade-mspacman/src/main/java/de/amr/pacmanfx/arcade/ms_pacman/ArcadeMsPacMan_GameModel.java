@@ -13,7 +13,7 @@ import de.amr.pacmanfx.arcade.pacman.actors.Blinky;
 import de.amr.pacmanfx.arcade.pacman.actors.Inky;
 import de.amr.pacmanfx.arcade.pacman.actors.Pinky;
 import de.amr.pacmanfx.controller.CoinMechanism;
-import de.amr.pacmanfx.event.GameEventType;
+import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Waypoint;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
@@ -276,7 +276,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         }
 
         gameLevel.setBonus(bonus);
-        publishEvent(GameEventType.BONUS_ACTIVATED, bonus.tile());
+        publishEvent(GameEvent.Type.BONUS_ACTIVATED, bonus.tile());
     }
 
     private void computeBonusRoute(Bonus bonus, TerrainLayer terrain, House house) {

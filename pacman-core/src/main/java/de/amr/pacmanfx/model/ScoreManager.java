@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.model;
 
 import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.event.GameEventType;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -39,7 +38,7 @@ public class ScoreManager {
                 game.simulationStepResult().extraLifeWon = true;
                 game.simulationStepResult().extraLifeScore = extraLifeScore;
                 game.addLives(1);
-                GameEvent event = new GameEvent(game, GameEventType.SPECIAL_SCORE_REACHED);
+                GameEvent event = new GameEvent(game, GameEvent.Type.SPECIAL_SCORE_REACHED);
                 game.publishEvent(event);
                 break;
             }

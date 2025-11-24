@@ -6,7 +6,6 @@ package de.amr.pacmanfx.model;
 
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameEventListener;
-import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
@@ -87,6 +86,6 @@ public interface Game {
     void addEventListener(GameEventListener listener);
     void removeEventListener(GameEventListener listener);
     void publishEvent(GameEvent event);
-    void publishEvent(GameEventType type);
-    void publishEvent(GameEventType type, Vector2i tile);
+    void publishEvent(GameEvent.Type type);
+    void publishEvent(GameEvent.Type type, Vector2i tile);
 }

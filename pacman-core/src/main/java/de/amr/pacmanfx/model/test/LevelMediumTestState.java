@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.model.test;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.event.GameEventType;
+import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.*;
@@ -38,7 +38,7 @@ public class LevelMediumTestState implements FsmState<GameContext>, TestState {
         message.setPosition(gameLevel.worldMap().terrainLayer().messageCenterPosition());
         gameLevel.setMessage(message);
         context.currentGame().hud().creditVisible(false);
-        context.currentGame().publishEvent(GameEventType.STOP_ALL_SOUNDS);
+        context.currentGame().publishEvent(GameEvent.Type.STOP_ALL_SOUNDS);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class LevelMediumTestState implements FsmState<GameContext>, TestState {
         game.updateHunting(gameLevel);
         if (timer().hasExpired()) {
             if (gameLevel.number() == lastTestedLevelNumber) {
-                context.currentGame().publishEvent(GameEventType.STOP_ALL_SOUNDS);
+                context.currentGame().publishEvent(GameEvent.Type.STOP_ALL_SOUNDS);
                 game.stateMachine().changeState(context, GameState.INTRO);
             } else {
                 timer().restartSeconds(TEST_DURATION_SEC);

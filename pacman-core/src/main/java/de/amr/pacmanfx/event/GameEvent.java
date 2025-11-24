@@ -14,19 +14,47 @@ import java.time.LocalDateTime;
  */
 public class GameEvent {
 
+    public enum Type {
+        BONUS_ACTIVATED,
+        BONUS_EATEN,
+        BONUS_EXPIRED,
+        CREDIT_ADDED,
+        SPECIAL_SCORE_REACHED,
+        GAME_CONTINUED,
+        GAME_STARTED,
+        GAME_STATE_CHANGED,
+        GAME_VARIANT_CHANGED,
+        GHOST_EATEN,
+        GHOST_ENTERS_HOUSE,
+        GHOST_STARTS_RETURNING_HOME,
+        HUNTING_PHASE_STARTED,
+        INTERMISSION_STARTED,
+        LEVEL_CREATED,
+        LEVEL_STARTED,
+        PAC_DEAD,
+        PAC_DYING,
+        PAC_FOUND_FOOD,
+        PAC_GETS_POWER,
+        PAC_LOST_POWER,
+        PAC_STARTS_LOSING_POWER,
+        STOP_ALL_SOUNDS,
+
+        UNSPECIFIED_CHANGE
+    }
+
     protected final LocalDateTime creationTime;
-    protected final GameEventType type;
+    protected final Type type;
     protected final Game game;
     protected final Vector2i tile;
 
-    public GameEvent(Game game, GameEventType type, Vector2i tile) {
+    public GameEvent(Game game, Type type, Vector2i tile) {
         this.creationTime = LocalDateTime.now();
         this.game = game;
         this.type = type;
         this.tile = tile;
     }
 
-    public GameEvent(Game game, GameEventType type) {
+    public GameEvent(Game game, Type type) {
         this(game, type, null);
     }
 
@@ -43,7 +71,7 @@ public class GameEvent {
         return sb.toString();
     }
 
-    public GameEventType type() {
+    public Type type() {
         return type;
     }
 

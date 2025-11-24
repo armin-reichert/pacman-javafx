@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.pacmanfx.arcade.pacman.actors.*;
 import de.amr.pacmanfx.controller.CoinMechanism;
-import de.amr.pacmanfx.event.GameEventType;
+import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Waypoint;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
@@ -208,6 +208,6 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         bonus.setPosition(halfTileRightOf(bonusTile));
         bonus.setEdible(randomFloat(9, 10));
         gameLevel.setBonus(bonus);
-        publishEvent(GameEventType.BONUS_ACTIVATED, bonus.tile());
+        publishEvent(GameEvent.Type.BONUS_ACTIVATED, bonus.tile());
     }
 }

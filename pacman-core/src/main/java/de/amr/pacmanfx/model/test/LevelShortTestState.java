@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.model.test;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.event.GameEventType;
+import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.*;
@@ -58,14 +58,14 @@ public class LevelShortTestState implements FsmState<GameContext>, TestState {
         }
         else if (timer.atSecond(START + 5)) {
             gameLevel.bonus().ifPresent(bonus -> bonus.setEaten(2));
-            game.publishEvent(GameEventType.BONUS_EATEN);
+            game.publishEvent(GameEvent.Type.BONUS_EATEN);
         }
         else if (timer.atSecond(START + 6)) {
             game.activateNextBonus(gameLevel);
         }
         else if (timer.atSecond(START + 8)) {
             gameLevel.bonus().ifPresent(bonus -> bonus.setEaten(2));
-            game.publishEvent(GameEventType.BONUS_EATEN);
+            game.publishEvent(GameEvent.Type.BONUS_EATEN);
         }
         else if (timer.atSecond(START + 9)) {
             gameLevel.hidePacAndGhosts();

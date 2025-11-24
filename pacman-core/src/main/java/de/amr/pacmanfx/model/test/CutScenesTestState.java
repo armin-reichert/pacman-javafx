@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.model.test;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.event.GameEventType;
+import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.AbstractGameModel;
@@ -46,7 +46,7 @@ public class CutScenesTestState implements FsmState<GameContext>, TestState {
                     testedCutSceneNumber += 1;
                     timer.restartIndefinitely();
                     //TODO find another solution and get rid of this event type
-                    context.currentGame().publishEvent(GameEventType.UNSPECIFIED_CHANGE);
+                    context.currentGame().publishEvent(GameEvent.Type.UNSPECIFIED_CHANGE);
                 } else {
                     context.currentGame().stateMachine().changeState(context, GameState.INTRO);
                 }

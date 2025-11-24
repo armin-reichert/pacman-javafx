@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.action;
 
-import de.amr.pacmanfx.event.GameEventType;
+import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameState;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -38,7 +38,7 @@ public final class CheatActions {
             THE_GAME_BOX.cheatUsedProperty().set(true);
             ui.context().gameLevel().worldMap().foodLayer().eatPellets();
             ui.soundManager().pause(SoundID.PAC_MAN_MUNCHING);
-            ui.context().currentGame().publishEvent(GameEventType.PAC_FOUND_FOOD);
+            ui.context().currentGame().publishEvent(GameEvent.Type.PAC_FOUND_FOOD);
         }
 
         @Override

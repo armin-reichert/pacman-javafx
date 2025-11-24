@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.model.actors;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.event.GameEventType;
+import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Waypoint;
 import de.amr.pacmanfx.lib.math.Vector2i;
@@ -110,13 +110,13 @@ public class Bonus extends MovingActor {
                 }
                 if (timer.hasExpired() || reachedExit) {
                     setInactive();
-                    game.publishEvent(GameEventType.BONUS_EXPIRED, tile());
+                    game.publishEvent(GameEvent.Type.BONUS_EXPIRED, tile());
                 }
             }
             case EATEN -> {
                 if (timer.hasExpired()) {
                     setInactive();
-                    game.publishEvent(GameEventType.BONUS_EXPIRED, tile());
+                    game.publishEvent(GameEvent.Type.BONUS_EXPIRED, tile());
                 }
             }
             case INACTIVE -> {}

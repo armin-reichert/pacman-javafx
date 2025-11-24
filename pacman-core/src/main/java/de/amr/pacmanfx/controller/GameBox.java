@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.controller;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.event.GameEventType;
+import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
@@ -67,7 +67,7 @@ public class GameBox implements GameContext, CoinMechanism {
             if (eventsEnabled) {
                 Game newGame = game(newGameVariant);
                 newGame.init();
-                newGame.publishEvent(GameEventType.GAME_VARIANT_CHANGED);
+                newGame.publishEvent(GameEvent.Type.GAME_VARIANT_CHANGED);
             }
         });
 

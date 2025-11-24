@@ -9,7 +9,7 @@ import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_HuntingTimer;
 import de.amr.pacmanfx.arcade.pacman.Arcade_LevelData;
 import de.amr.pacmanfx.arcade.pacman.actors.*;
 import de.amr.pacmanfx.controller.CoinMechanism;
-import de.amr.pacmanfx.event.GameEventType;
+import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
 import de.amr.pacmanfx.lib.worldmap.TerrainTile;
@@ -121,7 +121,7 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
         gateKeeper.setLevelNumber(levelNumber);
         demoLevel.worldMap().terrainLayer().optHouse().ifPresent(house -> gateKeeper.setHouse(house));
         setGameLevel(demoLevel);
-        publishEvent(GameEventType.LEVEL_CREATED);
+        publishEvent(GameEvent.Type.LEVEL_CREATED);
     }
 
     @Override

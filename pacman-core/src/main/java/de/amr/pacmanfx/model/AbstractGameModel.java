@@ -6,7 +6,6 @@ package de.amr.pacmanfx.model;
 
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameEventListener;
-import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
@@ -155,7 +154,7 @@ public abstract class AbstractGameModel implements Game {
         resetPacManAndGhostAnimations(gameLevel);
         gameLevel.getReadyToPlay();
         gameLevel.showPacAndGhosts();
-        publishEvent(GameEventType.GAME_CONTINUED);
+        publishEvent(GameEvent.Type.GAME_CONTINUED);
     }
 
     @Override
@@ -200,7 +199,7 @@ public abstract class AbstractGameModel implements Game {
         gameLevel.blinking().setStartState(Pulse.State.ON);
         gameLevel.blinking().restart();
         gameLevel.huntingTimer().startFirstPhase();
-        publishEvent(GameEventType.HUNTING_PHASE_STARTED);
+        publishEvent(GameEvent.Type.HUNTING_PHASE_STARTED);
     }
 
     protected void makeHuntingStep(GameLevel gameLevel) {
@@ -264,7 +263,7 @@ public abstract class AbstractGameModel implements Game {
         if (pac.isPowerFadingStarting(gameLevel)) {
             thisStep.pacStartsLosingPower = true;
             Logger.info("{} starts losing power", pac.name());
-            publishEvent(GameEventType.PAC_STARTS_LOSING_POWER);
+            publishEvent(GameEvent.Type.PAC_STARTS_LOSING_POWER);
         } else if (powerTimer.hasExpired()) {
             thisStep.pacLostPower = true;
             Logger.info("{} lost power", pac.name());
@@ -275,7 +274,7 @@ public abstract class AbstractGameModel implements Game {
             gameLevel.huntingTimer().start();
             Logger.info("Hunting timer restarted because {} lost power", pac.name());
             gameLevel.ghosts(GhostState.FRIGHTENED).forEach(ghost -> ghost.setState(GhostState.HUNTING_PAC));
-            publishEvent(GameEventType.PAC_LOST_POWER);
+            publishEvent(GameEvent.Type.PAC_LOST_POWER);
         }
     }
 
@@ -311,13 +310,13 @@ public abstract class AbstractGameModel implements Game {
     }
 
     @Override
-    public void publishEvent(GameEventType type) {
+    public void publishEvent(GameEvent.Type type) {
         requireNonNull(type);
         publishEvent(new GameEvent(this, type));
     }
 
     @Override
-    public void publishEvent(GameEventType type, Vector2i tile) {
+    public void publishEvent(GameEvent.Type type, Vector2i tile) {
         requireNonNull(type);
         publishEvent(new GameEvent(this, type, tile));
     }

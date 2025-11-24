@@ -21,7 +21,7 @@ public class GameStateChangeEvent extends GameEvent {
     }
 
     public GameStateChangeEvent(Game game, FsmState<GameContext> oldState, FsmState<GameContext> newState) {
-        super(game, GameEventType.GAME_STATE_CHANGED);
+        super(game, Type.GAME_STATE_CHANGED);
         this.oldState = oldState;
         this.newState = newState;
     }
