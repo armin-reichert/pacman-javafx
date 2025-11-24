@@ -166,18 +166,17 @@ public class GameUI_Builder {
     }
 
     private Game createGameModel(Class<?> modelClass, MapSelector mapSelector, File highScoreFile) {
-        final CoinMechanism coinMechanism = THE_GAME_BOX.coinMechanism();
         AbstractGameModel game = null;
         try {
             if (mapSelector != null) {
                 game = (AbstractGameModel) modelClass
                     .getDeclaredConstructor(CoinMechanism.class, MapSelector.class, File.class)
-                    .newInstance(coinMechanism, mapSelector, highScoreFile);
+                    .newInstance(THE_GAME_BOX, mapSelector, highScoreFile);
             }
             else {
                 game = (AbstractGameModel) modelClass
                     .getDeclaredConstructor(CoinMechanism.class, File.class)
-                    .newInstance(coinMechanism, highScoreFile);
+                    .newInstance(THE_GAME_BOX, highScoreFile);
             }
         } catch (Exception x) {
             Logger.info("1st try: Could not create game model, class=%s".formatted(modelClass.getSimpleName()), x);

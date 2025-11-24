@@ -10,6 +10,8 @@ import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.*;
 
+import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
+
 public class LevelShortTestState implements FsmState<GameContext>, TestState {
 
     private final TickTimer timer = new TickTimer("Timer_" + name());
@@ -27,7 +29,7 @@ public class LevelShortTestState implements FsmState<GameContext>, TestState {
 
     @Override
     public void onEnter(GameContext context) {
-        context.coinMechanism().setNumCoins(1);
+        THE_GAME_BOX.setNumCoins(1);
         lastTestedLevelNumber = context.currentGame().lastLevelNumber() == Integer.MAX_VALUE ? 25 : context.currentGame().lastLevelNumber();
         timer.restartIndefinitely();
         context.currentGame().prepareForNewGame();
@@ -72,7 +74,7 @@ public class LevelShortTestState implements FsmState<GameContext>, TestState {
         }
         else if (timer.atSecond(START + 10)) {
             if (gameLevel.number() == lastTestedLevelNumber) {
-                context.coinMechanism().setNumCoins(0);
+                THE_GAME_BOX.setNumCoins(0);
                 context.currentGame().resetEverything();
                 context.currentGame().stateMachine().restart(context, GameState.BOOT);
             } else {
@@ -88,7 +90,7 @@ public class LevelShortTestState implements FsmState<GameContext>, TestState {
 
     @Override
     public void onExit(GameContext context) {
-        context.coinMechanism().setNumCoins(0);
+        THE_GAME_BOX.setNumCoins(0);
         context.currentGame().resetEverything();
         context.currentGame().levelCounter().clear();
     }

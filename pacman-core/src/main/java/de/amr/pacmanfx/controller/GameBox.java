@@ -143,11 +143,6 @@ public class GameBox implements GameContext, CoinMechanism {
 
     // GameContext implementation
 
-    @Override
-    public CoinMechanism coinMechanism() {
-        return this;
-    }
-
     /**
      * @return The game (model) registered for the currently selected game variant.
      */
@@ -191,7 +186,7 @@ public class GameBox implements GameContext, CoinMechanism {
     public int numCoins() { return numCoins.get(); }
 
     @Override
-    public boolean isEmpty() { return numCoins() == 0; }
+    public boolean containsNoCoin() { return numCoins() == 0; }
 
     @Override
     public void setNumCoins(int n) {

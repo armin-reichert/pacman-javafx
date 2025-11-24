@@ -48,6 +48,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
 import static de.amr.pacmanfx.Validations.requireNonNegative;
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_AUTOPILOT;
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_IMMUNITY;
@@ -431,8 +432,8 @@ public final class GameUI_Implementation implements GameUI {
             gameScene.end();
             boolean shouldConsumeCoin = gameContext.currentGameState() == GameState.STARTING_GAME_OR_LEVEL
                     || gameContext.currentGame().isPlaying();
-            if (shouldConsumeCoin && !gameContext.coinMechanism().isEmpty()) {
-                gameContext.coinMechanism().consumeCoin();
+            if (shouldConsumeCoin && !THE_GAME_BOX.containsNoCoin()) {
+                THE_GAME_BOX.consumeCoin();
             }
             Logger.info("Quit game scene ({}), returning to start view", gameScene.getClass().getSimpleName());
         });

@@ -5,10 +5,11 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.dashboard;
 
 import de.amr.pacmanfx.GameContext;
+import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.controller.CoinMechanism;
-import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.model.GameState;
+import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.ui.action.ArcadeActions;
 import de.amr.pacmanfx.ui.action.TestActions;
 import de.amr.pacmanfx.ui.api.GameUI;
@@ -50,7 +51,7 @@ public class InfoBoxGameControl extends InfoBox {
 
     @Override
     public void init(GameUI ui) {
-        spinnerCredit            = addIntSpinner("Credit", 0, CoinMechanism.MAX_COINS, ui.context().coinMechanism().numCoinsProperty());
+        spinnerCredit            = addIntSpinner("Credit", 0, CoinMechanism.MAX_COINS, Globals.THE_GAME_BOX.numCoinsProperty());
         choiceBoxInitialLives    = addChoiceBox("Initial Lives", new Integer[] {3, 5});
         buttonGroupLevelActions  = addButtonList("Game Level", List.of("Start", "Quit", "Next"));
         buttonGroupCutScenesTest = addButtonList("Cut Scenes Test", List.of("Start", "Quit"));

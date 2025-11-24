@@ -147,7 +147,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     @Override
     public void onGameEnding(GameLevel gameLevel) {
         setPlaying(false);
-        if (!coinMechanism.isEmpty()) {
+        if (!coinMechanism.containsNoCoin()) {
             coinMechanism.consumeCoin();
         }
         scoreManager.updateHighScore();
@@ -189,7 +189,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public boolean canStartNewGame() { return !coinMechanism.isEmpty(); }
+    public boolean canStartNewGame() { return !coinMechanism.containsNoCoin(); }
 
     @Override
     public boolean canContinueOnGameOver() { return false; }

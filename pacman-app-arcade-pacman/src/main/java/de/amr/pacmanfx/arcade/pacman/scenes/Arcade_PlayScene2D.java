@@ -6,7 +6,6 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_PlayScene2D_Renderer;
-import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.math.Vector2i;
@@ -16,6 +15,7 @@ import de.amr.pacmanfx.model.GameState;
 import de.amr.pacmanfx.model.MessageType;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.action.ArcadeActions;
@@ -36,6 +36,7 @@ import org.tinylog.Logger;
 import java.util.List;
 
 import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_PIXELS;
+import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_MUTED;
 import static de.amr.pacmanfx.uilib.Ufx.createContextMenuTitle;
@@ -163,7 +164,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
         if (oneMore) numLivesDisplayed += 1;
         game.hud().setVisibleLifeCount(Math.min(numLivesDisplayed, game.hud().maxLivesDisplayed()));
         //TODO this is wrong in level test state
-        game.hud().showCredit(context().coinMechanism().isEmpty());
+        game.hud().showCredit(THE_GAME_BOX.containsNoCoin());
     }
 
     @Override

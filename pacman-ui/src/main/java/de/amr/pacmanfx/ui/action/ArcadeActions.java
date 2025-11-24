@@ -12,6 +12,7 @@ import de.amr.pacmanfx.ui.api.GameUI;
 
 import java.util.Set;
 
+import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
 import static de.amr.pacmanfx.model.GameState.INTRO;
 
 public final class ArcadeActions {
@@ -21,9 +22,9 @@ public final class ArcadeActions {
     public static final GameAction ACTION_INSERT_COIN = new GameAction("INSERT_COIN") {
         @Override
         public void execute(GameUI ui) {
-            if (ui.context().coinMechanism().numCoins() < CoinMechanism.MAX_COINS) {
+            if (THE_GAME_BOX.numCoins() < CoinMechanism.MAX_COINS) {
                 ui.soundManager().setEnabled(true);
-                ui.context().coinMechanism().insertCoin();
+                THE_GAME_BOX.insertCoin();
                 ui.context().eventManager().publishEvent(GameEventType.CREDIT_ADDED);
             }
             ui.context().currentGame().stateMachine().changeState(ui.context(), GameState.SETTING_OPTIONS_FOR_START);
@@ -37,7 +38,7 @@ public final class ArcadeActions {
             return ui.context().currentGameState() == GameState.SETTING_OPTIONS_FOR_START
                 || ui.context().currentGameState() == INTRO
                 || ui.context().optGameLevel().isPresent() && ui.context().optGameLevel().get().isDemoLevel()
-                || ui.context().coinMechanism().isEmpty();
+                || THE_GAME_BOX.containsNoCoin();
         }
     };
 
@@ -57,7 +58,7 @@ public final class ArcadeActions {
                 StandardGameVariant.MS_PACMAN_XXL.name()
             );
             return arcadeGames.contains(ui.context().gameBox().gameVariant())
-                && !ui.context().coinMechanism().isEmpty()
+                && !THE_GAME_BOX.containsNoCoin()
                 && (ui.context().currentGameState() == GameState.INTRO || ui.context().currentGameState() == GameState.SETTING_OPTIONS_FOR_START)
                 && ui.context().currentGame().canStartNewGame();
         }

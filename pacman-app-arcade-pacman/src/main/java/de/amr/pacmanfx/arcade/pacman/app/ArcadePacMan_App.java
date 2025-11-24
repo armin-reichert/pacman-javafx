@@ -35,7 +35,7 @@ public class ArcadePacMan_App extends Application {
     private GameUI ui;
 
     private GameUI createUI_WithoutBuilder(Stage stage, double sceneWidth, double sceneHeight) {
-        var game = new ArcadePacMan_GameModel(THE_GAME_BOX.coinMechanism(), THE_GAME_BOX.highScoreFile(GAME_VARIANT_NAME));
+        var game = new ArcadePacMan_GameModel(THE_GAME_BOX, THE_GAME_BOX.highScoreFile(GAME_VARIANT_NAME));
         game.setStateMachine(new GameStateMachine(game));
         THE_GAME_BOX.registerGame(GAME_VARIANT_NAME, game);
 

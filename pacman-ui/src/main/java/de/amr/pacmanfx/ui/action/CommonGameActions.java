@@ -6,13 +6,13 @@ package de.amr.pacmanfx.ui.action;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
-import de.amr.pacmanfx.model.test.LevelMediumTestState;
-import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameState;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
+import de.amr.pacmanfx.model.test.LevelMediumTestState;
+import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import de.amr.pacmanfx.ui.api.GameScene;
@@ -22,6 +22,7 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.NUM_TICKS_PER_SEC;
+import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
 import static de.amr.pacmanfx.Validations.stateIsOneOf;
 import static de.amr.pacmanfx.model.GameState.INTRO;
 import static de.amr.pacmanfx.ui.api.GameScene_Config.SCENE_ID_PLAY_SCENE_2D;
@@ -44,7 +45,7 @@ public final class CommonGameActions {
     public static final GameAction ACTION_BOOT_SHOW_PLAY_VIEW = new GameAction("BOOT_SHOW_PLAY_VIEW") {
         @Override
         public void execute(GameUI ui) {
-            ui.context().coinMechanism().setNumCoins(0);
+            THE_GAME_BOX.setNumCoins(0);
             ui.showPlayView();
             ui.restart();
         }

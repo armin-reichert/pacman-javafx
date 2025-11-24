@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx;
 
-import de.amr.pacmanfx.controller.CoinMechanism;
 import de.amr.pacmanfx.controller.GameBox;
 import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.lib.fsm.FsmState;
@@ -17,11 +16,6 @@ import java.util.Optional;
  * Facade to give access to the main game components.
  */
 public interface GameContext {
-
-    /**
-     * @return the coin mechanism used in the Arcade games.
-     */
-    CoinMechanism coinMechanism();
 
     /**
      * @return the model (in MVC sense) of the currently selected game variant.
