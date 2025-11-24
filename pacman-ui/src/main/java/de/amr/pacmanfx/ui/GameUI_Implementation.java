@@ -487,8 +487,13 @@ public final class GameUI_Implementation implements GameUI {
     @Override
     public void showUI() {
         playView.dashboard().init(this);
-        startPagesView().setSelectedIndex(0);
-        showStartView();
+        if (startPagesView.numItems() > 0) {
+            startPagesView().setSelectedIndex(0);
+            showStartView();
+        }
+        else {
+            Logger.error("No start page has been set!");
+        }
         stage.centerOnScreen();
         stage.show();
         gameContext.gameBox().setEventsEnabled(true);
