@@ -44,7 +44,8 @@ public class PacManGames3dApp extends Application {
             //TODO create this by reflection inside builder too?
             final var mapSelectorXXL = new PacManXXL_Common_MapSelector(Globals.THE_GAME_BOX.customMapDir());
 
-            ui = GameUI_Builder.createUI(primaryStage, width, height)
+            ui = GameUI_Builder.create(primaryStage, width, height)
+
                 .game(
                     StandardGameVariant.PACMAN.name(),
                     ArcadePacMan_GameModel.class,

@@ -36,7 +36,7 @@ public class GameUI_Builder {
         List<String> gameVariants;
     }
 
-    public static GameUI_Builder createUI(Stage stage, double width, double height) {
+    public static GameUI_Builder create(Stage stage, double width, double height) {
         Logger.info("JavaFX runtime: {}", System.getProperty("javafx.runtime.version"));
         return new GameUI_Builder(stage, width, height);
     }

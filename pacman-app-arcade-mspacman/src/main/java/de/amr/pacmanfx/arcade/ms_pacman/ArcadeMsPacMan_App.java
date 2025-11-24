@@ -26,7 +26,7 @@ public class ArcadeMsPacMan_App extends Application {
         final int height = (int) Math.round(USED_HEIGHT * Screen.getPrimary().getBounds().getHeight());
         final int width  = Math.round(ASPECT_RATIO * height);
 
-        ui = GameUI_Builder.createUI(primaryStage, width, height)
+        ui = GameUI_Builder.create(primaryStage, width, height)
             .game(
                 GAME_VARIANT,
                 ArcadeMsPacMan_GameModel.class,

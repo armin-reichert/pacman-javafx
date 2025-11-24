@@ -25,7 +25,7 @@ public class PacManXXL_Common_App extends Application {
         final double height = 0.8 * Screen.getPrimary().getBounds().getHeight();
         final double width  = 1.6 * height;
         var xxlMapSelector = new PacManXXL_Common_MapSelector(THE_GAME_BOX.customMapDir());
-        ui = GameUI_Builder.createUI(primaryStage, width, height)
+        ui = GameUI_Builder.create(primaryStage, width, height)
                 .game(
                     PACMAN_XXL.name(),
                     PacManXXL_PacMan_GameModel.class,
