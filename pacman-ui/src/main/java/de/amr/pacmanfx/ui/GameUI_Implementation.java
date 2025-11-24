@@ -9,7 +9,7 @@ import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.controller.GameBox;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
 import de.amr.pacmanfx.model.GameState;
-import de.amr.pacmanfx.model.SimulationStepEvents;
+import de.amr.pacmanfx.model.SimulationStepResult;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.action.*;
 import de.amr.pacmanfx.ui.api.*;
@@ -323,7 +323,7 @@ public final class GameUI_Implementation implements GameUI {
 
     private void doSimulationStepAndUpdateGameScene() {
         try {
-            final SimulationStepEvents events = gameContext.currentGame().simulationStepResults();
+            final SimulationStepResult events = gameContext.currentGame().simulationStepResult();
             events.reset();
             events.setTick(clock.tickCount());
             gameContext.currentGame().stateMachine().update(gameContext);

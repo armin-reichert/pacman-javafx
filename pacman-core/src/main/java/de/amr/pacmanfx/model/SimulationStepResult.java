@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Stores what happened during the current simulation step.
  */
-public class SimulationStepEvents {
+public class SimulationStepResult {
     public long       tick;
     public Vector2i   foundEnergizerAtTile;
     public int        bonusIndex = -1;

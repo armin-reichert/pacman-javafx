@@ -18,7 +18,7 @@ public interface Game {
 
     GameStateMachine      stateMachine();
     ScoreManager          scoreManager();
-    SimulationStepEvents  simulationStepResults();
+    SimulationStepResult  simulationStepResult();
     MapSelector           mapSelector();
     Optional<GameLevel>   optGameLevel();
     LevelCounter          levelCounter();

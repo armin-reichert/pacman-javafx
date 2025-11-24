@@ -42,7 +42,7 @@ public abstract class AbstractGameModel implements Game {
 
     protected final BooleanProperty playing = new SimpleBooleanProperty(false);
 
-    protected final SimulationStepEvents thisStep = new SimulationStepEvents();
+    protected final SimulationStepResult thisStep = new SimulationStepResult();
 
     protected final ScoreManager scoreManager = new ScoreManager(this);
 
@@ -123,7 +123,7 @@ public abstract class AbstractGameModel implements Game {
     }
 
     @Override
-    public SimulationStepEvents simulationStepResults() {
+    public SimulationStepResult simulationStepResult() {
         return thisStep;
     }
 
