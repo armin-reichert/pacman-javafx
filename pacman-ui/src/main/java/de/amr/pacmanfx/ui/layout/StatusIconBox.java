@@ -36,11 +36,11 @@ public class StatusIconBox extends HBox implements Disposable {
     private final FontIcon iconCheated;
 
     public StatusIconBox() {
-        iconMuted     = createIcon(FontAwesomeSolid.DEAF, "Muted");
-        icon3D        = createIcon(FontAwesomeSolid.CUBES, "3D Mode");
-        iconAutopilot = createIcon(FontAwesomeSolid.TAXI, "Autopilot");
-        iconImmune    = createIcon(FontAwesomeSolid.USER_SECRET, "Immunity");
-        iconCheated   = createIcon(FontAwesomeSolid.FLAG, "Cheater");
+        iconMuted     = createIcon(FontAwesomeSolid.DEAF, STATUS_ICON_COLOR, "Muted");
+        icon3D        = createIcon(FontAwesomeSolid.CUBES, STATUS_ICON_COLOR, "3D Mode");
+        iconAutopilot = createIcon(FontAwesomeSolid.TAXI, STATUS_ICON_COLOR, "Autopilot");
+        iconImmune    = createIcon(FontAwesomeSolid.USER_SECRET, STATUS_ICON_COLOR, "Immunity");
+        iconCheated   = createIcon(FontAwesomeSolid.FLAG, Color.RED, "Cheater");
 
         getChildren().setAll(iconsInOrder().toList());
 
@@ -81,8 +81,8 @@ public class StatusIconBox extends HBox implements Disposable {
         });
     }
 
-    private FontIcon createIcon(Ikon iconType, String tooltipText) {
-        FontIcon icon = FontIcon.of(iconType, ICON_SIZE, STATUS_ICON_COLOR);
+    private FontIcon createIcon(Ikon iconType, Color color, String tooltipText) {
+        FontIcon icon = FontIcon.of(iconType, ICON_SIZE, color);
         icon.setVisible(false);
         icon.visibleProperty().addListener(this::handleVisibilityChange);
         Tooltip tooltip = new Tooltip(tooltipText);
