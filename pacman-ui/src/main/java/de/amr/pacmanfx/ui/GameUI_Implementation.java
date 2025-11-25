@@ -258,9 +258,9 @@ public final class GameUI_Implementation implements GameUI {
         statusIconBox.visibleProperty().bind(currentViewProperty().map(currentView -> optEditorView().isEmpty() || currentView != optEditorView().get()));
         statusIconBox.iconMuted()    .visibleProperty().bind(PROPERTY_MUTED);
         statusIconBox.icon3D()       .visibleProperty().bind(PROPERTY_3D_ENABLED);
-        statusIconBox.iconAutopilot().visibleProperty().bind(THE_GAME_BOX.usingAutopilotProperty());
-        statusIconBox.iconCheated()  .visibleProperty().bind(THE_GAME_BOX.cheatUsedProperty());
-        statusIconBox.iconImmune()   .visibleProperty().bind(THE_GAME_BOX.immunityProperty());
+        statusIconBox.iconAutopilot().visibleProperty().bind(context().usingAutopilotProperty());
+        statusIconBox.iconCheated()  .visibleProperty().bind(context().cheatUsedProperty());
+        statusIconBox.iconImmune()   .visibleProperty().bind(context().immunityProperty());
         StackPane.setAlignment(statusIconBox, Pos.BOTTOM_LEFT);
     }
 

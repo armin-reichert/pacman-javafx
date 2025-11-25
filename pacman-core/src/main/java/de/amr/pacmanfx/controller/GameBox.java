@@ -116,18 +116,6 @@ public class GameBox implements GameContext, CoinMechanism {
         return requireNonNull(gameVariantName).equals(gameVariantName());
     }
 
-    public BooleanProperty cheatUsedProperty() {
-        return cheatUsed;
-    }
-
-    public BooleanProperty immunityProperty() {
-        return immunity;
-    }
-
-    public BooleanProperty usingAutopilotProperty() {
-        return usingAutopilot;
-    }
-
     @SuppressWarnings("unchecked")
     public <T extends Game> T game(String variantName) {
         requireNonNull(variantName);
@@ -203,6 +191,22 @@ public class GameBox implements GameContext, CoinMechanism {
             setNumCoins(numCoins() - 1);
         }
     }
+
+    @Override
+    public BooleanProperty cheatUsedProperty() {
+        return cheatUsed;
+    }
+
+    @Override
+    public BooleanProperty immunityProperty() {
+        return immunity;
+    }
+
+    @Override
+    public BooleanProperty usingAutopilotProperty() {
+        return usingAutopilot;
+    }
+
 
     // other stuff
 

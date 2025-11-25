@@ -15,11 +15,8 @@ import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
 
 /**
  * States of the common state machine for all Pac-Man games.
- *
- * <ul>
- *     <li>TODO: Is this a good idea or should we allow different FSM per game variant?</li>
- *     <li>TODO: AI says this state machine and its game states should move to the game model</li>
- * </ul>
+ * <p>
+ * TODO: Is this a good idea or should we allow different FSM per game variant?
  */
 public enum GameState implements FsmState<GameContext> {
 
@@ -28,9 +25,9 @@ public enum GameState implements FsmState<GameContext> {
         @Override
         public void onEnter(GameContext context) {
             timer.restartIndefinitely();
-            THE_GAME_BOX.cheatUsedProperty().set(false);
-            THE_GAME_BOX.immunityProperty().set(false);
-            THE_GAME_BOX.usingAutopilotProperty().set(false);
+            context.cheatUsedProperty().set(false);
+            context.immunityProperty().set(false);
+            context.usingAutopilotProperty().set(false);
             context.currentGame().resetEverything();
         }
 
@@ -98,10 +95,10 @@ public enum GameState implements FsmState<GameContext> {
             else if (timer.tickCount() == 2) {
                 final GameLevel gameLevel = context.gameLevel();
                 if (!gameLevel.isDemoLevel()) {
-                    gameLevel.pac().immuneProperty().bind(THE_GAME_BOX.immunityProperty());
-                    gameLevel.pac().usingAutopilotProperty().bind(THE_GAME_BOX.usingAutopilotProperty());
-                    boolean cheating = THE_GAME_BOX.immunityProperty().get() || THE_GAME_BOX.usingAutopilotProperty().get();
-                    THE_GAME_BOX.cheatUsedProperty().set(cheating);
+                    gameLevel.pac().immuneProperty().bind(context.immunityProperty());
+                    gameLevel.pac().usingAutopilotProperty().bind(context.usingAutopilotProperty());
+                    boolean cheating = context.immunityProperty().get() || context.usingAutopilotProperty().get();
+                    context.cheatUsedProperty().set(cheating);
                 }
                 context.currentGame().startLevel(gameLevel);
             }
@@ -374,7 +371,7 @@ public enum GameState implements FsmState<GameContext> {
         @Override
         public void onExit(GameContext context) {
             context.optGameLevel().ifPresent(GameLevel::clearMessage);
-            THE_GAME_BOX.cheatUsedProperty().set(false);
+            context.cheatUsedProperty().set(false);
         }
     },
 

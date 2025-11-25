@@ -7,6 +7,7 @@ package de.amr.pacmanfx;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
+import javafx.beans.property.BooleanProperty;
 
 import java.util.Optional;
 
@@ -44,4 +45,10 @@ public interface GameContext {
      * @return the current {@link GameLevel}, or {@code null} if none exists
      */
     GameLevel gameLevel();
+
+    BooleanProperty cheatUsedProperty();
+
+    BooleanProperty immunityProperty();
+
+    BooleanProperty usingAutopilotProperty();
 }
