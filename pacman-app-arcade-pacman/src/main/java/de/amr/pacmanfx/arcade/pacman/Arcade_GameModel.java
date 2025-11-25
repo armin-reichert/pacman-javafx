@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
 import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
 import static java.util.Objects.requireNonNull;
@@ -89,6 +90,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         states.add(new LevelMediumTestState());
         states.add(new CutScenesTestState());
         stateMachine.setStates(states);
+        stateMachine.setContext(THE_GAME_BOX);
         stateMachine.setName("Arcade Game State Machine");
     }
 

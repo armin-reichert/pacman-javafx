@@ -32,11 +32,16 @@ public class StateMachine<S extends FsmState<C>, C> {
 
     protected final List<FsmStateChangeListener<S>> stateChangeListeners = new ArrayList<>(5);
 
+    protected C context;
+
     protected List<S> states;
     protected S currentState;
     protected S prevState;
 
     protected String name = getClass().getSimpleName();
+
+    public StateMachine() {
+    }
 
     public void setStates(List<S> states) {
         this.states = requireNonNull(states);
@@ -47,6 +52,14 @@ public class StateMachine<S extends FsmState<C>, C> {
 
     public void setName(String name) {
         this.name = requireNonNull(name);
+    }
+
+    public C context() {
+        return context;
+    }
+
+    public void setContext(C context) {
+        this.context = requireNonNull(context);
     }
 
     @Override
@@ -115,12 +128,11 @@ public class StateMachine<S extends FsmState<C>, C> {
      *
      * @param state the state to enter
      */
-    public void restart(C context, S state) {
-        requireNonNull(context);
+    public void restart(S state) {
         requireNonNull(state);
         resetTimers();
         currentState = null;
-        changeState(context, state);
+        changeState(state);
     }
 
     /**
@@ -139,7 +151,7 @@ public class StateMachine<S extends FsmState<C>, C> {
      *
      * @param newState the new state
      */
-    public void changeState(C context, S newState) {
+    public void changeState(S newState) {
         requireNonNull(newState);
         if (newState == currentState) {
             Logger.info("State machine is already in state {}", currentState);
@@ -161,12 +173,12 @@ public class StateMachine<S extends FsmState<C>, C> {
     /**
      * Returns to the previous state.
      */
-    public void resumePreviousState(C context) {
+    public void resumePreviousState() {
         if (prevState == null) {
             throw new IllegalStateException("State machine cannot resume previous state because there is none");
         }
         Logger.debug("Resume state {}, timer= {}", prevState, prevState.timer());
-        state().onExit(context);
+        currentState.onExit(context);
         currentState = prevState;
     }
 
@@ -175,7 +187,7 @@ public class StateMachine<S extends FsmState<C>, C> {
      * <p>
      * Runs the {@link FsmState#onUpdate} hook method (if defined) of the current state and advances the state timer.
      */
-    public void update(C context) {
+    public void update() {
         currentState.onUpdate(context);
         if (currentState.timer().state() == TickTimer.State.READY) {
             currentState.timer().start();

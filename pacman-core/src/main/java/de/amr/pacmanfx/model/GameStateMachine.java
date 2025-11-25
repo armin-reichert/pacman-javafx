@@ -9,9 +9,12 @@ import de.amr.pacmanfx.event.GameStateChangeEvent;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 
+import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
+
 public class GameStateMachine extends StateMachine<FsmState<GameContext>, GameContext> {
 
     public GameStateMachine(Game game) {
+        setContext(THE_GAME_BOX);
         addStateChangeListener((oldState, newState) -> game.publishEvent(new GameStateChangeEvent(game, oldState, newState)));
     }
 

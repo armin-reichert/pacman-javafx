@@ -31,7 +31,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
@@ -191,7 +190,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
                 msPacMan.hide();
             }
             case 904, 968, 1032, 1096, 1160, 1224, 1288, 1352 -> spawnJunior(tick);
-            case 1512 -> context().currentGame().stateMachine().changeState(THE_GAME_BOX, GameState.SETTING_OPTIONS_FOR_START);
+            case 1512 -> context().currentGame().stateMachine().changeState(GameState.SETTING_OPTIONS_FOR_START);
         }
     }
 

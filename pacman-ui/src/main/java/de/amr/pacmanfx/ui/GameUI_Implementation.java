@@ -326,7 +326,7 @@ public final class GameUI_Implementation implements GameUI {
             final SimulationStepResult events = gameContext.currentGame().simulationStepResult();
             events.reset();
             events.setTick(clock.tickCount());
-            gameContext.currentGame().stateMachine().update(gameContext);
+            gameContext.currentGame().stateMachine().update();
             events.printLog();
             currentGameScene().ifPresent(GameScene::update);
         } catch (Throwable x) {
@@ -439,7 +439,7 @@ public final class GameUI_Implementation implements GameUI {
         });
         clock.stop();
         clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
-        gameContext.currentGame().stateMachine().restart(gameContext, GameState.BOOT);
+        gameContext.currentGame().stateMachine().restart(GameState.BOOT);
         showStartView();
     }
 
@@ -448,7 +448,7 @@ public final class GameUI_Implementation implements GameUI {
         currentGameScene().ifPresent(GameScene::end);
         clock.stop();
         clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
-        gameContext.currentGame().stateMachine().restart(gameContext, GameState.BOOT);
+        gameContext.currentGame().stateMachine().restart(GameState.BOOT);
         Platform.runLater(clock::start);
     }
 

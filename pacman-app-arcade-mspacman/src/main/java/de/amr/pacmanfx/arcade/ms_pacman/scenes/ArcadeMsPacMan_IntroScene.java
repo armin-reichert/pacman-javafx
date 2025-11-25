@@ -58,6 +58,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     public ArcadeMsPacMan_IntroScene(GameUI ui) {
         super(ui);
         sceneController = new StateMachine<>();
+        sceneController.setContext(this);
         sceneController.setStates(List.of(SceneState.values()));
     }
 
@@ -128,7 +129,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         presentedGhostCharacter = RED_GHOST_SHADOW;
         numTicksBeforeRising = 0;
 
-        sceneController.restart(this, SceneState.STARTING);
+        sceneController.restart(SceneState.STARTING);
     }
 
     @Override
@@ -137,7 +138,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void update() {
-        sceneController.update(this);
+        sceneController.update();
     }
 
     @Override
@@ -174,7 +175,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
                 scene.marquee.timer().doTick();
                 if (sceneTimer.atSecond(1)) {
-                    scene.sceneController.changeState(scene, GHOSTS_MARCHING_IN);
+                    scene.sceneController.changeState(GHOSTS_MARCHING_IN);
                 }
             }
         },
@@ -186,7 +187,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                 boolean atEndPosition = letGhostWalkIn(scene);
                 if (atEndPosition) {
                     if (scene.presentedGhostCharacter == ORANGE_GHOST_POKEY) {
-                        scene.sceneController.changeState(scene, MS_PACMAN_MARCHING_IN);
+                        scene.sceneController.changeState(MS_PACMAN_MARCHING_IN);
                     } else {
                         ++scene.presentedGhostCharacter;
                     }
@@ -234,7 +235,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                 if (scene.msPacMan.x() <= STOP_X_MS_PACMAN) {
                     scene.msPacMan.setSpeed(0);
                     scene.msPacMan.optAnimationManager().ifPresent(AnimationManager::reset);
-                    scene.sceneController.changeState(scene, READY_TO_PLAY);
+                    scene.sceneController.changeState(READY_TO_PLAY);
                 }
             }
         },
@@ -244,9 +245,9 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
                 scene.marquee.timer().doTick();
                 if (sceneTimer.atSecond(2.0) && !scene.context().currentGame().canStartNewGame()) {
-                    scene.context().currentGame().stateMachine().changeState(THE_GAME_BOX, GameState.STARTING_GAME_OR_LEVEL); // demo level
+                    scene.context().currentGame().stateMachine().changeState(GameState.STARTING_GAME_OR_LEVEL); // demo level
                 } else if (sceneTimer.atSecond(5)) {
-                    scene.context().currentGame().stateMachine().changeState(THE_GAME_BOX, GameState.SETTING_OPTIONS_FOR_START);
+                    scene.context().currentGame().stateMachine().changeState(GameState.SETTING_OPTIONS_FOR_START);
                 }
             }
         };
