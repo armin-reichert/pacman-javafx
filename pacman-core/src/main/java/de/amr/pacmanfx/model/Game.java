@@ -30,6 +30,7 @@ public interface Game {
     SimulationStepResult  simulationStepResult();
     MapSelector           mapSelector();
     Optional<GameLevel>   optGameLevel();
+    GameLevel             gameLevel();
     LevelCounter          levelCounter();
     HUD                   hud();
 

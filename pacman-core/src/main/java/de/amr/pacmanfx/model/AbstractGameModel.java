@@ -8,7 +8,6 @@ import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.timer.Pulse;
-import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
 import de.amr.pacmanfx.model.actors.*;
 import javafx.beans.property.*;
@@ -29,7 +28,11 @@ public abstract class AbstractGameModel implements Game {
 
     private static final float COLLISION_SENSITIVITY_PIXELS = 2;
 
-    protected ObjectProperty<CollisionStrategy> collisionStrategy;
+    protected final ObjectProperty<CollisionStrategy> collisionStrategy = new SimpleObjectProperty<>(DEFAULT_COLLISION_STRATEGY);
+
+    public final ObjectProperty<CollisionStrategy> collisionStrategyProperty() {
+        return collisionStrategy;
+    }
 
     protected final BooleanProperty cutScenesEnabled = new SimpleBooleanProperty(true);
 
@@ -41,63 +44,14 @@ public abstract class AbstractGameModel implements Game {
 
     protected final BooleanProperty playing = new SimpleBooleanProperty(false);
 
-    protected final SimulationStepResult thisStep = new SimulationStepResult();
+    protected final SimulationStepResult simulationStepResult = new SimulationStepResult();
 
     protected final ScoreManager scoreManager = new ScoreManager(this);
 
     protected GameStateMachine stateMachine;
 
-    protected abstract void checkPacFindsFood(GameLevel gameLevel);
-
-    protected abstract void checkPacFindsBonus(GameLevel gameLevel);
-
-    protected abstract boolean isPacSafeInDemoLevel(GameLevel demoLevel);
-
-    protected abstract void resetPacManAndGhostAnimations(GameLevel gameLevel);
-
-    public final ObjectProperty<CollisionStrategy> collisionStrategyProperty() {
-        if (collisionStrategy == null) {
-            collisionStrategy = new SimpleObjectProperty<>(DEFAULT_COLLISION_STRATEGY);
-        }
-        return collisionStrategy;
-    }
-
-    public CollisionStrategy collisionStrategy() {
-        return collisionStrategy != null ? collisionStrategy.get() : DEFAULT_COLLISION_STRATEGY;
-    }
-
-    public void setCollisionStrategy(CollisionStrategy collisionStrategy) {
-        collisionStrategyProperty().set(collisionStrategy);
-    }
-
-    @Override
-    public final GameStateMachine stateMachine() {
-        return stateMachine;
-    }
-
     public void setStateMachine(GameStateMachine stateMachine) {
-        this.stateMachine = stateMachine;
-    }
-
-    /**
-     * @param either some actor
-     * @param other some actor
-     * @return <code>true</code> if both entities collide according to the current collision strategy
-     */
-    public boolean actorsCollide(Actor either, Actor other) {
-        requireNonNull(either, "Actor to check for collision must not be null");
-        requireNonNull(other, "Actor to check for collision must not be null");
-        return switch (collisionStrategy()) {
-            case SAME_TILE -> either.tile().equals(other.tile());
-            case CENTER_DISTANCE -> {
-                float dist = either.center().euclideanDist(other.center());
-                if (dist < COLLISION_SENSITIVITY_PIXELS) {
-                    Logger.info("Collision detected (dist={}): {} collides with {}", dist, either, other);
-                    yield true;
-                }
-                yield false;
-            }
-        };
+        this.stateMachine = requireNonNull(stateMachine);
     }
 
     public void setLifeCount(int n) {
@@ -112,6 +66,34 @@ public abstract class AbstractGameModel implements Game {
         this.gameLevel.set(gameLevel);
     }
 
+    // To be implemented by subclasses
+
+    protected abstract void checkPacFindsFood(GameLevel gameLevel);
+
+    protected abstract void checkPacFindsBonus(GameLevel gameLevel);
+
+    protected abstract boolean isPacSafeInDemoLevel(GameLevel demoLevel);
+
+    protected abstract void resetPacManAndGhostAnimations(GameLevel gameLevel);
+
+    // Game interface
+
+    @Override
+    public final GameStateMachine stateMachine() {
+        return stateMachine;
+    }
+
+    @Override
+    public ScoreManager scoreManager() {
+        return scoreManager;
+    }
+
+    @Override
+    public SimulationStepResult simulationStepResult() {
+        return simulationStepResult;
+    }
+
+    @Override
     public GameLevel gameLevel() {
         return gameLevel.get();
     }
@@ -122,16 +104,6 @@ public abstract class AbstractGameModel implements Game {
     }
 
     @Override
-    public SimulationStepResult simulationStepResult() {
-        return thisStep;
-    }
-
-    @Override
-    public ScoreManager scoreManager() {
-        return scoreManager;
-    }
-
-    @Override
     public int lifeCount() {
         return lifeCount.get();
     }
@@ -139,6 +111,17 @@ public abstract class AbstractGameModel implements Game {
     @Override
     public void addLives(int n) {
         setLifeCount(lifeCount() + n);
+    }
+
+    @Override
+    public CollisionStrategy collisionStrategy() {
+        return collisionStrategy.get();
+    }
+
+    @Override
+    public void setCollisionStrategy(CollisionStrategy strategy) {
+        requireNonNull(strategy);
+        collisionStrategyProperty().set(strategy);
     }
 
     @Override
@@ -159,12 +142,12 @@ public abstract class AbstractGameModel implements Game {
 
     @Override
     public boolean hasPacManBeenKilled() {
-        return thisStep.pacKiller != null;
+        return simulationStepResult.pacKiller != null;
     }
 
     @Override
     public boolean hasGhostBeenKilled() {
-        return !thisStep.killedGhosts.isEmpty();
+        return !simulationStepResult.killedGhosts.isEmpty();
     }
 
     @Override
@@ -202,38 +185,6 @@ public abstract class AbstractGameModel implements Game {
         publishGameEvent(GameEvent.Type.HUNTING_PHASE_STARTED);
     }
 
-    protected void makeHuntingStep(GameLevel gameLevel) {
-        final TerrainLayer terrain = gameLevel.worldMap().terrainLayer();
-        // Ghosts colliding with Pac?
-        thisStep.ghostsCollidingWithPac.clear();
-        gameLevel.ghosts()
-            .filter(ghost -> !terrain.isTileInPortalSpace(ghost.tile()))
-            .filter(ghost -> actorsCollide(ghost, gameLevel.pac()))
-            .forEach(thisStep.ghostsCollidingWithPac::add);
-
-        if (!thisStep.ghostsCollidingWithPac.isEmpty()) {
-            // Pac killed? Might stay alive when immune or in demo level safe time!
-            checkPacKilled(gameLevel);
-            if (hasPacManBeenKilled()) return;
-
-            // Ghost(s) killed?
-            thisStep.ghostsCollidingWithPac.stream()
-                .filter(ghost -> ghost.state() == GhostState.FRIGHTENED)
-                .forEach(thisStep.killedGhosts::add);
-            if (hasGhostBeenKilled()) {
-                thisStep.killedGhosts.forEach(ghost -> onGhostKilled(gameLevel, ghost));
-                return;
-            }
-        }
-
-        checkPacFindsFood(gameLevel);
-        checkPacFindsBonus(gameLevel);
-
-        updatePacPower(gameLevel);
-        gameLevel.blinking().tick();
-        gameLevel.huntingTimer().update();
-    }
-
     @Override
     public void onLevelCompleted(GameLevel gameLevel) {
         gameLevel.huntingTimer().stop();
@@ -244,38 +195,6 @@ public abstract class AbstractGameModel implements Game {
         gameLevel.ghosts().forEach(Ghost::stopAnimation);
         gameLevel.pac().onLevelCompleted();
         gameLevel.bonus().ifPresent(Bonus::setInactive);
-    }
-
-    protected void checkPacKilled(GameLevel gameLevel) {
-        boolean demoLevel = gameLevel.isDemoLevel();
-        if (demoLevel && isPacSafeInDemoLevel(gameLevel) || !demoLevel && gameLevel.pac().isImmune()) {
-            return;
-        }
-        thisStep.pacKiller = thisStep.ghostsCollidingWithPac.stream()
-            .filter(ghost -> ghost.state() == GhostState.HUNTING_PAC)
-            .findFirst().orElse(null);
-    }
-
-    protected void updatePacPower(GameLevel gameLevel) {
-        final Pac pac = gameLevel.pac();
-        final TickTimer powerTimer = pac.powerTimer();
-        powerTimer.doTick();
-        if (pac.isPowerFadingStarting(gameLevel)) {
-            thisStep.pacStartsLosingPower = true;
-            Logger.info("{} starts losing power", pac.name());
-            publishGameEvent(GameEvent.Type.PAC_STARTS_LOSING_POWER);
-        } else if (powerTimer.hasExpired()) {
-            thisStep.pacLostPower = true;
-            Logger.info("{} lost power", pac.name());
-            powerTimer.stop();
-            powerTimer.reset(0);
-            Logger.info("Power timer stopped and reset to zero");
-            gameLevel.energizerVictims().clear();
-            gameLevel.huntingTimer().start();
-            Logger.info("Hunting timer restarted because {} lost power", pac.name());
-            gameLevel.ghosts(GhostState.FRIGHTENED).forEach(ghost -> ghost.setState(GhostState.HUNTING_PAC));
-            publishGameEvent(GameEvent.Type.PAC_LOST_POWER);
-        }
     }
 
     // GameEventManager implementation
@@ -319,5 +238,117 @@ public abstract class AbstractGameModel implements Game {
     public void publishGameEvent(GameEvent.Type type, Vector2i tile) {
         requireNonNull(type);
         publishGameEvent(new GameEvent(this, type, tile));
+    }
+
+    // other stuff
+
+    /**
+     * @param either some actor
+     * @param other some actor
+     * @return <code>true</code> if both actors collide according to the current collision strategy
+     */
+    public boolean actorsCollide(Actor either, Actor other) {
+        requireNonNull(either, "Actor to check for collision must not be null");
+        requireNonNull(other, "Actor to check for collision must not be null");
+        return switch (collisionStrategy()) {
+            case SAME_TILE -> either.tile().equals(other.tile());
+            case CENTER_DISTANCE -> {
+                float dist = either.center().euclideanDist(other.center());
+                if (dist < COLLISION_SENSITIVITY_PIXELS) {
+                    Logger.info("Collision detected (dist={}): {} collides with {}", dist, either, other);
+                    yield true;
+                }
+                yield false;
+            }
+        };
+    }
+
+    /**
+     * The main logic step of the game. Checks if Pac-Man collides with a ghost or finds food or a bonus.
+     * Collision with a ghost either kills the ghost and earns points (in case Pac-Man has power) or kills Pac-Man and
+     * loses a life. When Pac-Man finds an energizer pellet he enters power mode and is able to kill ghosts. The duration
+     * of the power mode varies between levels.
+     *
+     * @param gameLevel the game level
+     */
+    protected void doHuntingStep(GameLevel gameLevel) {
+        final TerrainLayer terrain = gameLevel.worldMap().terrainLayer();
+
+        // Ghosts colliding with Pac? While teleportation takes place, collisions are disabled. (Not sure what the
+        // original Arcade game does). Collision behavior is controlled by the current collision strategy. The original
+        // Arcade games use tile-based collision which can lead to missed collisions by passing through.
+        simulationStepResult.ghostsCollidingWithPac.clear();
+        gameLevel.ghosts()
+            .filter(ghost -> !terrain.isTileInPortalSpace(ghost.tile()))
+            .filter(ghost -> actorsCollide(ghost, gameLevel.pac()))
+            .forEach(simulationStepResult.ghostsCollidingWithPac::add);
+
+        if (!simulationStepResult.ghostsCollidingWithPac.isEmpty()) {
+            // Pac killed? Might stay alive when immune or in demo level safe time!
+            checkPacKilled(gameLevel);
+            if (hasPacManBeenKilled()) return;
+
+            // Ghost(s) killed?
+            simulationStepResult.ghostsCollidingWithPac.stream()
+                .filter(ghost -> ghost.state() == GhostState.FRIGHTENED)
+                .forEach(simulationStepResult.killedGhosts::add);
+            if (hasGhostBeenKilled()) {
+                simulationStepResult.killedGhosts.forEach(ghost -> onGhostKilled(gameLevel, ghost));
+                return;
+            }
+        }
+
+        checkPacFindsFood(gameLevel);
+        checkPacFindsBonus(gameLevel);
+
+        updatePacPower(gameLevel);
+        gameLevel.blinking().tick();
+        gameLevel.huntingTimer().update();
+    }
+
+    /**
+     * Checks if Pac-Man gets killed by a collision with an attacking ghost.
+     * <p>In attract mode (demo level), there is a time interval at the beginning when Pac-Man is safe.
+     * This is to avoid having Pac-Man getting killed too early in demo mode.
+     * In contrast to the original Arcade games, the demo mode is not fixed but uses random ghost moves so it
+     * cannot be predicted how long the demo mode runs.
+     * <p>
+     * In normal mode, Pac-Man can be made immune against ghost attacks using a cheat command.
+     * In this case, Pac-Man is safe against ghost attacks too.
+     *
+     * @param gameLevel the game level
+     */
+    protected void checkPacKilled(GameLevel gameLevel) {
+        final boolean demoLevel = gameLevel.isDemoLevel();
+        if (demoLevel && isPacSafeInDemoLevel(gameLevel) || !demoLevel && gameLevel.pac().isImmune()) {
+            return;
+        }
+        simulationStepResult.pacKiller = simulationStepResult.ghostsCollidingWithPac.stream()
+            .filter(ghost -> ghost.state() == GhostState.HUNTING_PAC)
+            .findFirst()
+            .orElse(null);
+    }
+
+    /**
+     * Updates the power of Pac-Man. Power starts fading after some time. When this happens, the ghosts start flashing
+     * and when the power timer expires, they take their normal color again an continue chasing Pac-Man.
+     *
+     * @param gameLevel the game level
+     */
+    protected void updatePacPower(GameLevel gameLevel) {
+        final Pac pac = gameLevel.pac();
+        pac.powerTimer().doTick();
+        if (pac.isPowerFadingStarting(gameLevel)) {
+            simulationStepResult.pacStartsLosingPower = true;
+            publishGameEvent(GameEvent.Type.PAC_STARTS_LOSING_POWER);
+        } else if (pac.powerTimer().hasExpired()) {
+            simulationStepResult.pacLostPower = true;
+            pac.powerTimer().stop();
+            pac.powerTimer().reset(0);
+            gameLevel.energizerVictims().clear();
+            gameLevel.huntingTimer().start();
+            gameLevel.ghosts(GhostState.FRIGHTENED).forEach(ghost -> ghost.setState(GhostState.HUNTING_PAC));
+            publishGameEvent(GameEvent.Type.PAC_LOST_POWER);
+        }
     }
 }

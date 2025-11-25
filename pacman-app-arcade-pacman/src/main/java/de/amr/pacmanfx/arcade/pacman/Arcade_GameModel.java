@@ -103,7 +103,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     public void onEnergizerEaten(GameLevel gameLevel, Vector2i tile) {
-        thisStep.foundEnergizerAtTile = tile;
+        simulationStepResult.foundEnergizerAtTile = tile;
         scoreManager.scorePoints(ENERGIZER_VALUE);
         gameLevel.pac().onFoodEaten(true);
         gameLevel.ghosts().forEach(ghost -> {
@@ -122,7 +122,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             gameLevel.pac().powerTimer().restartTicks(ticks);
             Logger.debug("Power timer restarted, {} ticks ({0.00} sec)", ticks, powerSeconds);
             gameLevel.ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
-            thisStep.pacGotPower = true;
+            simulationStepResult.pacGotPower = true;
             publishGameEvent(GameEvent.Type.PAC_GETS_POWER);
         }
     }
@@ -131,7 +131,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     @Override
     public void updateHunting(GameLevel gameLevel) {
-        makeHuntingStep(gameLevel);
+        doHuntingStep(gameLevel);
         if (gateKeeper != null) {
             gateKeeper.unlockGhosts(gameLevel);
         }
@@ -237,7 +237,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             gateKeeper.registerFoodEaten(gameLevel);
             if (isBonusReached(gameLevel)) {
                 activateNextBonus(gameLevel);
-                thisStep.bonusIndex = gameLevel.currentBonusIndex();
+                simulationStepResult.bonusIndex = gameLevel.currentBonusIndex();
             }
             publishGameEvent(GameEvent.Type.PAC_FOUND_FOOD, tile);
         } else {
@@ -252,7 +252,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
                 bonus.setEaten(BONUS_EATEN_SECONDS);
                 scoreManager.scorePoints(bonus.points());
                 Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
-                thisStep.bonusEatenTile = bonus.tile();
+                simulationStepResult.bonusEatenTile = bonus.tile();
                 publishGameEvent(GameEvent.Type.BONUS_EATEN);
             }
         });
