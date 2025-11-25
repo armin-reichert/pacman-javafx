@@ -48,7 +48,7 @@ public interface Game {
     boolean               actorsCollide(Actor either, Actor other);
 
     double                pacPowerFadingSeconds(GameLevel gameLevel);
-    double                pacPowerSeconds(GameLevel level);
+    double                pacPowerSeconds(GameLevel gameLevel);
 
     int                   numFlashes(GameLevel gameLevel);
     void                  showMessage(GameLevel gameLevel, MessageType type);
@@ -77,21 +77,21 @@ public interface Game {
     boolean hasPacManBeenKilled();
     boolean hasGhostBeenKilled();
 
-    // Game level events
+    // Game event handling
     void onLevelCompleted(GameLevel gameLevel);
     void onPacKilled(GameLevel gameLevel);
     void onGhostKilled(GameLevel gameLevel, Ghost ghost);
     void onGameEnding(GameLevel gameLevel);
 
-    // Actor speed
+    // Actor speeds in pixels/tick
     float bonusSpeed(GameLevel gameLevel);
-    float ghostSpeedWhenAttacking(GameLevel level, Ghost ghost);
-    float ghostSpeedWhenFrightened(GameLevel level, Ghost ghost);
-    float ghostSpeedInsideHouse(GameLevel level, Ghost ghost);
-    float ghostSpeedInsideTunnel(GameLevel level, Ghost ghost);
-    float ghostSpeedReturningToHouse(GameLevel level, Ghost ghost);
-    float pacSpeed(GameLevel level);
-    float pacSpeedWhenHasPower(GameLevel level);
+    float ghostSpeedWhenAttacking(GameLevel gameLevel, Ghost ghost);
+    float ghostSpeedWhenFrightened(GameLevel gameLevel, Ghost ghost);
+    float ghostSpeedInsideHouse(GameLevel gameLevel, Ghost ghost);
+    float ghostSpeedInsideTunnel(GameLevel gameLevel, Ghost ghost);
+    float ghostSpeedReturningToHouse(GameLevel gameLevel, Ghost ghost);
+    float pacSpeed(GameLevel gameLevel);
+    float pacSpeedWhenHasPower(GameLevel gameLevel);
 
     // Game event manager
     void addGameEventListener(GameEventListener listener);

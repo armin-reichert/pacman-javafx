@@ -358,7 +358,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     /** Base speed is 75 px per second (=1.25 px/tick). */
     public static final float BASE_SPEED = 1.25f;
-    public static final float BASE_SPEED_1_PERCENT = 0.0125f;
+    public static final float BASE_SPEED_1_PERCENT = 0.01f * BASE_SPEED;
 
     @Override
     public float bonusSpeed(GameLevel gameLevel) {
