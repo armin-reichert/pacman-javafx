@@ -57,11 +57,14 @@ public class GameBox implements GameContext, CoinMechanism {
     private final BooleanProperty usingAutopilot = new SimpleBooleanProperty(false);
     private final StringProperty gameVariantName = new SimpleStringProperty();
 
-    public GameBox() {
+    static {
         boolean success = initUserDirectories();
         if (!success) {
             throw new IllegalStateException("User directories could not be created");
         }
+    }
+
+    public GameBox() {
 
         gameVariantName.addListener((py, ov, newGameVariant) -> {
             if (eventsEnabled) {
@@ -216,22 +219,17 @@ public class GameBox implements GameContext, CoinMechanism {
         return new File(HOME_DIR, HIGHSCORE_FILE_PATTERN.formatted(gameVariant).toLowerCase());
     }
 
-    private boolean initUserDirectories() {
-        String homeDirDesc = "Pac-Man JavaFX home directory";
-        String customMapDirDesc = "Pac-Man JavaFX custom map directory";
+    private static boolean initUserDirectories() {
+        String homeDirDesc = "Home directory";
+        String customMapDirDesc = "Custom map directory";
         boolean success = ensureDirExistsAndWritable(HOME_DIR, homeDirDesc);
         if (success) {
-            Logger.info("{} exists and is writable: {}", homeDirDesc, HOME_DIR);
-            success = ensureDirExistsAndWritable(CUSTOM_MAP_DIR, customMapDirDesc);
-            if (success) {
-                Logger.info("{} exists and is writable: {}", customMapDirDesc, CUSTOM_MAP_DIR);
-            }
-            return true;
+            return ensureDirExistsAndWritable(CUSTOM_MAP_DIR, customMapDirDesc);
         }
         return false;
     }
 
-    private boolean ensureDirExistsAndWritable(File dir, String description) {
+    private static boolean ensureDirExistsAndWritable(File dir, String description) {
         if (!dir.exists() && !dir.mkdirs()) {
             Logger.error("{} could not be created", description);
             return false;

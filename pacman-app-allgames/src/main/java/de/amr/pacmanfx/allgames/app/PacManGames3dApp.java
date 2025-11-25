@@ -90,12 +90,15 @@ public class PacManGames3dApp extends Application {
                     StandardGameVariant.PACMAN_XXL.name(), StandardGameVariant.MS_PACMAN_XXL.name())
 
                 .dashboard(
-                    DashboardID.GENERAL, DashboardID.GAME_CONTROL,
+                    DashboardID.GENERAL,
+                    DashboardID.GAME_CONTROL,
                     DashboardID.SETTINGS_3D,
                     DashboardID.ANIMATION_INFO,
-                    DashboardID.GAME_INFO, DashboardID.ACTOR_INFO,
+                    DashboardID.GAME_INFO,
+                    DashboardID.ACTOR_INFO,
                     DashboardID.CUSTOM_MAPS,
-                    DashboardID.KEYBOARD_SHORTCUTS_GLOBAL, DashboardID.KEYBOARD_SHORTCUTS_LOCAL,
+                    DashboardID.KEYBOARD_SHORTCUTS_GLOBAL,
+                    DashboardID.KEYBOARD_SHORTCUTS_LOCAL,
                     DashboardID.ABOUT)
 
                 .build();
