@@ -155,8 +155,8 @@ public class Pac extends MovingActor {
         }
 
         setSpeed(powerTimer.isRunning()
-            ? gameLevel.game().pacPowerSpeed(gameLevel)
-            : gameLevel.game().pacNormalSpeed(gameLevel));
+            ? gameLevel.game().pacSpeedWhenHasPower(gameLevel)
+            : gameLevel.game().pacSpeed(gameLevel));
         moveThroughThisCruelWorld(gameLevel);
 
         if (moveInfo.moved) {

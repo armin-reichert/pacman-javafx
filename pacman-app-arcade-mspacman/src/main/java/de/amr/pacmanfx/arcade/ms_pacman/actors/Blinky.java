@@ -21,7 +21,7 @@ public class Blinky extends de.amr.pacmanfx.arcade.pacman.actors.Blinky {
      */
     @Override
     public void hunt(GameLevel gameLevel) {
-        float speed = gameLevel.game().ghostAttackSpeed(gameLevel, this);
+        float speed = gameLevel.game().ghostSpeedWhenAttacking(gameLevel, this);
         setSpeed(speed);
         if (gameLevel.huntingTimer().phaseIndex() == 0) {
             // first scatter phase

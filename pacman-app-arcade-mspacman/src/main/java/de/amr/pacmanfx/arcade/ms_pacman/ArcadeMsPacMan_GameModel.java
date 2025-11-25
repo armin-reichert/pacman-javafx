@@ -168,9 +168,9 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
      * In Ms. Pac-Man, ghosts slow down in tunnel only in first two levels!
      */
     @Override
-    public float ghostAttackSpeed(GameLevel gameLevel, Ghost ghost) {
+    public float ghostSpeedWhenAttacking(GameLevel gameLevel, Ghost ghost) {
         if (gameLevel.number() <= 2 && gameLevel.worldMap().terrainLayer().isTunnel(ghost.tile())) {
-            return ghostTunnelSpeed(gameLevel, ghost);
+            return ghostSpeedInsideTunnel(gameLevel, ghost);
         }
         if (ghost instanceof Blinky blinky) {
             if (blinky.cruiseElroyValue() == 1) {

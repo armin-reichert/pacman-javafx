@@ -117,7 +117,7 @@ public abstract class Ghost extends MovingActor {
         final Vector2i targetTile = gameLevel.huntingTimer().phase() == HuntingPhase.CHASING
             ? chasingTargetTile(gameLevel)
             : gameLevel.worldMap().terrainLayer().ghostScatterTile(personality());
-        setSpeed(gameLevel.game().ghostAttackSpeed(gameLevel, this));
+        setSpeed(gameLevel.game().ghostSpeedWhenAttacking(gameLevel, this));
         tryMovingTowardsTargetTile(gameLevel, targetTile);
     }
 
@@ -378,8 +378,8 @@ public abstract class Ghost extends MovingActor {
      */
     private void updateStateFrightened(GameLevel gameLevel) {
         final float speed = gameLevel.worldMap().terrainLayer().isTunnel(tile())
-            ? gameLevel.game().ghostTunnelSpeed(gameLevel, this)
-            : gameLevel.game().ghostFrightenedSpeed(gameLevel, this);
+            ? gameLevel.game().ghostSpeedInsideTunnel(gameLevel, this)
+            : gameLevel.game().ghostSpeedWhenFrightened(gameLevel, this);
         setSpeed(speed);
         roam(gameLevel);
         playFrightenedAnimation(gameLevel, gameLevel.pac());

@@ -22,15 +22,10 @@ import java.util.regex.Pattern;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Container  for all game variants.
- * Each game variant is represented by an instance of a game model ({@link Game}).
+ * Container for all game variants.
+ * <p>
+ * Each game variant is represented by an instance of a game model (see {@link Game}).
  * Scene selection is not controlled by this class but left to the specific user interface implementations.
- *
- * @see <a href="https://github.com/armin-reichert">GitHub</a>
- * @see <a href="https://pacman.holenet.info">Jamey Pittman: The Pac-Man Dossier</a>
- * @see <a href="https://gameinternals.com/understanding-pac-man-ghost-behavior">Chad Birch: Understanding ghost
- * behavior</a>
- * @see <a href="http://superpacman.com/mspacman/">Ms. Pac-Man</a>
  */
 public class GameBox implements GameContext, CoinMechanism {
 

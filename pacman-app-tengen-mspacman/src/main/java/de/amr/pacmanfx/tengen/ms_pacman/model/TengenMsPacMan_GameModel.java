@@ -714,11 +714,11 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     @Override
     public float bonusSpeed(GameLevel gameLevel) {
         //TODO clarify exact speed
-        return 0.5f * pacNormalSpeed(gameLevel);
+        return 0.5f * pacSpeed(gameLevel);
     }
 
     @Override
-    public float pacNormalSpeed(GameLevel gameLevel) {
+    public float pacSpeed(GameLevel gameLevel) {
         if (gameLevel == null) {
             return 0;
         }
@@ -733,15 +733,15 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public float pacPowerSpeed(GameLevel gameLevel) {
+    public float pacSpeedWhenHasPower(GameLevel gameLevel) {
         //TODO correct?
-        return gameLevel.pac() != null ? 1.1f * pacNormalSpeed(gameLevel) : 0;
+        return gameLevel.pac() != null ? 1.1f * pacSpeed(gameLevel) : 0;
     }
 
     @Override
-    public float ghostAttackSpeed(GameLevel gameLevel, Ghost ghost) {
+    public float ghostSpeedWhenAttacking(GameLevel gameLevel, Ghost ghost) {
         if (gameLevel.worldMap().terrainLayer().isTunnel(ghost.tile())) {
-            return ghostTunnelSpeed(gameLevel, ghost);
+            return ghostSpeedInsideTunnel(gameLevel, ghost);
         }
         TengenMsPacMan_GameModel game = (TengenMsPacMan_GameModel) gameLevel.game();
         float speed = ghostBaseSpeedInLevel(gameLevel.number());
@@ -766,13 +766,13 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public float ghostFrightenedSpeed(GameLevel gameLevel, Ghost ghost) {
+    public float ghostSpeedWhenFrightened(GameLevel gameLevel, Ghost ghost) {
         //TODO correct?
-        return 0.5f * ghostAttackSpeed(gameLevel, ghost);
+        return 0.5f * ghostSpeedWhenAttacking(gameLevel, ghost);
     }
 
     @Override
-    public float ghostTunnelSpeed(GameLevel gameLevel, Ghost ghost) {
+    public float ghostSpeedInsideTunnel(GameLevel gameLevel, Ghost ghost) {
         //TODO correct?
         return 0.4f;
     }

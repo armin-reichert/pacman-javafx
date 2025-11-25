@@ -68,7 +68,7 @@ public class Blinky extends Ghost {
         Vector2i targetTile = chase
             ? chasingTargetTile(gameLevel)
             : gameLevel.worldMap().terrainLayer().ghostScatterTile(personality());
-        setSpeed(gameLevel.game().ghostAttackSpeed(gameLevel, this));
+        setSpeed(gameLevel.game().ghostSpeedWhenAttacking(gameLevel, this));
         tryMovingTowardsTargetTile(gameLevel, targetTile);
     }
 

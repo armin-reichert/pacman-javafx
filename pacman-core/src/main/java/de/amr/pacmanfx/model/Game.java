@@ -13,6 +13,16 @@ import de.amr.pacmanfx.model.actors.Ghost;
 
 import java.util.Optional;
 
+/**
+ * Common interface for all Pac-Man game models.
+ * <p>
+ * For more information:
+ *
+ * @see <a href="https://pacman.holenet.info">Jamey Pittman: The Pac-Man Dossier</a>
+ * @see <a href="https://gameinternals.com/understanding-pac-man-ghost-behavior">Chad Birch: Understanding ghost
+ * behavior</a>
+ * @see <a href="http://superpacman.com/mspacman/">Ms. Pac-Man details</a>
+ */
 public interface Game {
 
     GameStateMachine      stateMachine();
@@ -74,13 +84,13 @@ public interface Game {
 
     // Actor speed
     float bonusSpeed(GameLevel gameLevel);
-    float ghostAttackSpeed(GameLevel level, Ghost ghost);
-    float ghostFrightenedSpeed(GameLevel level, Ghost ghost);
+    float ghostSpeedWhenAttacking(GameLevel level, Ghost ghost);
+    float ghostSpeedWhenFrightened(GameLevel level, Ghost ghost);
     float ghostSpeedInsideHouse(GameLevel level, Ghost ghost);
+    float ghostSpeedInsideTunnel(GameLevel level, Ghost ghost);
     float ghostSpeedReturningToHouse(GameLevel level, Ghost ghost);
-    float ghostTunnelSpeed(GameLevel level, Ghost ghost);
-    float pacNormalSpeed(GameLevel level);
-    float pacPowerSpeed(GameLevel level);
+    float pacSpeed(GameLevel level);
+    float pacSpeedWhenHasPower(GameLevel level);
 
     // Game event manager
     void addEventListener(GameEventListener listener);
