@@ -96,7 +96,7 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
 
         // Each level has a single bonus symbol appearing twice during the level.
         // From level 13 on, the same symbol (7, "key") appears.
-        byte symbol = BONUS_SYMBOLS_BY_LEVEL_NUMBER[Math.min(levelNumber, 13)];
+        byte symbol = BONUS_SYMBOL_CODES_BY_LEVEL_NUMBER[Math.min(levelNumber, 13)];
         newGameLevel.setBonusSymbol(0, symbol);
         newGameLevel.setBonusSymbol(1, symbol);
 

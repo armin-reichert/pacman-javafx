@@ -46,8 +46,8 @@ import static java.util.Objects.requireNonNull;
  */
 public class ArcadePacMan_GameModel extends Arcade_GameModel {
 
-    // Note: level numbering starts with 1
-    protected static final byte[] BONUS_SYMBOLS_BY_LEVEL_NUMBER = { -1, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7 };
+    // Note: level numbering starts with 1, first entry is not used
+    protected static final byte[] BONUS_SYMBOL_CODES_BY_LEVEL_NUMBER = { -1, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7 };
 
     // bonus points = multiplier * 100
     protected static final byte[] BONUS_VALUE_MULTIPLIERS = { 1, 3, 5, 7, 10, 20, 30, 50 };
@@ -67,6 +67,9 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         wp(1,29), wp(3,29), wp(3,26), wp(1,26), wp(1,23),
         wp(6,23) /* eaten at 3,23 in original game */
     );
+
+    public static final int FIRST_BONUS_PELLETS_EATEN = 70;
+    public static final int SECOND_BONUS_PELLETS_EATEN = 170;
 
     protected final MapSelector mapSelector;
     protected final ArcadePacMan_LevelCounter levelCounter;
@@ -179,7 +182,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
 
         // Each level has a single bonus symbol appearing twice during the level.
         // From level 13 on, the same symbol (7, "key") appears.
-        byte symbol = BONUS_SYMBOLS_BY_LEVEL_NUMBER[Math.min(levelNumber, 13)];
+        byte symbol = BONUS_SYMBOL_CODES_BY_LEVEL_NUMBER[Math.min(levelNumber, 13)];
         newGameLevel.setBonusSymbol(0, symbol);
         newGameLevel.setBonusSymbol(1, symbol);
 
@@ -196,7 +199,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     @Override
     public boolean isBonusReached(GameLevel gameLevel) {
         int eatenFoodCount = gameLevel.worldMap().foodLayer().eatenFoodCount();
-        return eatenFoodCount == 70 || eatenFoodCount == 170;
+        return eatenFoodCount == FIRST_BONUS_PELLETS_EATEN || eatenFoodCount == SECOND_BONUS_PELLETS_EATEN;
     }
 
     @Override
