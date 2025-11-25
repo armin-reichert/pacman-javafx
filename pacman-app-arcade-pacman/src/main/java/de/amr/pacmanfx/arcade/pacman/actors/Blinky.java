@@ -48,9 +48,9 @@ public class Blinky extends Ghost {
         final Arcade_GameModel game = (Arcade_GameModel) gameLevel.game();
         final Arcade_LevelData data = game.levelData(gameLevel);
         int uneatenFoodCount = gameLevel.worldMap().foodLayer().uneatenFoodCount();
-        if (uneatenFoodCount == data.elroy1DotsLeft()) {
+        if (uneatenFoodCount == data.numDotsLeftElroy1()) {
             setCruiseElroyValue(1);
-        } else if (uneatenFoodCount == data.elroy2DotsLeft()) {
+        } else if (uneatenFoodCount == data.numDotsLeftElroy2()) {
             setCruiseElroyValue(2);
         }
     }

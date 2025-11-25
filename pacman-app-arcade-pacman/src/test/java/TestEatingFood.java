@@ -90,12 +90,12 @@ public class TestEatingFood {
         final GameLevel gameLevel = THE_GAME_BOX.gameLevel();
         final Blinky blinky = (Blinky) gameLevel.ghost(RED_GHOST_SHADOW);
         final FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
-        while (foodLayer.uneatenFoodCount() > game.levelData(gameLevel).elroy1DotsLeft()) {
+        while (foodLayer.uneatenFoodCount() > game.levelData(gameLevel).numDotsLeftElroy1()) {
             assertEquals(0, blinky.cruiseElroyValue());
             eatNextPellet(gameLevel);
         }
         assertEquals(1, blinky.cruiseElroyValue());
-        while (foodLayer.uneatenFoodCount() > game.levelData(gameLevel).elroy2DotsLeft()) {
+        while (foodLayer.uneatenFoodCount() > game.levelData(gameLevel).numDotsLeftElroy2()) {
             assertEquals(1, blinky.cruiseElroyValue());
             eatNextPellet(gameLevel);
         }

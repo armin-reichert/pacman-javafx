@@ -174,13 +174,13 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         }
         if (ghost instanceof Blinky blinky) {
             if (blinky.cruiseElroyValue() == 1) {
-                return levelData(gameLevel).elroy1SpeedPct() * BASE_SPEED_1_PERCENT;
+                return levelData(gameLevel).pctElroy1Speed() * BASE_SPEED_1_PERCENT;
             }
             if (blinky.cruiseElroyValue() == 2) {
-                return levelData(gameLevel).elroy2SpeedPct() * BASE_SPEED_1_PERCENT;
+                return levelData(gameLevel).pctElroy2Speed() * BASE_SPEED_1_PERCENT;
             }
         }
-        return levelData(gameLevel).ghostSpeedPct() * BASE_SPEED_1_PERCENT;
+        return levelData(gameLevel).pctGhostSpeed() * BASE_SPEED_1_PERCENT;
     }
 
     @Override
