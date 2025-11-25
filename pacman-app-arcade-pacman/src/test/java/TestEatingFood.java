@@ -31,8 +31,6 @@ public class TestEatingFood {
         THE_GAME_BOX.currentGame().buildNormalLevel(1);
     }
 
-    private GameLevel gameLevel() { return THE_GAME_BOX.gameLevel(); }
-
     private ArcadePacMan_GameModel pacManGame() { return THE_GAME_BOX.currentGame(); }
 
     private void eatNextPellet(GameLevel gameLevel) {
@@ -59,7 +57,7 @@ public class TestEatingFood {
     @Test
     @DisplayName("Test Food Counting")
     public void testFoodCounting() {
-        GameLevel gameLevel = gameLevel();
+        GameLevel gameLevel = THE_GAME_BOX.gameLevel();
         FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
         int eaten = foodLayer.eatenFoodCount(), uneaten = foodLayer.uneatenFoodCount();
         eatNextPellet(gameLevel);
@@ -76,7 +74,7 @@ public class TestEatingFood {
     @Test
     @DisplayName("Test Level Completion")
     public void testLevelCompletion() {
-        GameLevel gameLevel = gameLevel();
+        GameLevel gameLevel = THE_GAME_BOX.gameLevel();
         while (gameLevel.worldMap().foodLayer().uneatenFoodCount() > 0) {
             assertFalse(pacManGame().isLevelCompleted(gameLevel));
             eatNextPellet(gameLevel);
@@ -89,7 +87,7 @@ public class TestEatingFood {
     @DisplayName("Test Cruise Elroy Mode")
     public void testCruiseElroyMode() {
         final ArcadePacMan_GameModel game = pacManGame();
-        final GameLevel gameLevel = gameLevel();
+        final GameLevel gameLevel = THE_GAME_BOX.gameLevel();
         final Blinky blinky = (Blinky) gameLevel.ghost(RED_GHOST_SHADOW);
         final FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
         while (foodLayer.uneatenFoodCount() > game.levelData(gameLevel).elroy1DotsLeft()) {
@@ -117,7 +115,7 @@ public class TestEatingFood {
     @Test
     @DisplayName("Test Resting")
     public void testResting() {
-        GameLevel gameLevel = gameLevel();
+        GameLevel gameLevel = THE_GAME_BOX.gameLevel();
         eatNextPellet(gameLevel);
         assertEquals(1, gameLevel.pac().restingTime());
         eatNextEnergizer(gameLevel);
