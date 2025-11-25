@@ -17,30 +17,15 @@ public record Arcade_LevelData(
         byte secPacPower,             // Number of seconds Pac-Man gets power
         byte numFlashes)              // Number of maze flashes at end of this level
 {
-    public Arcade_LevelData(
-        int pctPacSpeed,
-        int pctGhostSpeed,
-        int pctGhostSpeedTunnel,
-        int numDotsLeftElroy1,
-        int pctElroy1Speed,
-        int numDotsLeftElroy2,
-        int pctElroy2Speed,
-        int pctPacSpeedPowered,
-        int pctGhostSpeedFrightened,
-        int secPacPower,
-        int numFlashes)
-    {
-        this(
-            (byte) pctPacSpeed,
-            (byte) pctGhostSpeed,
-            (byte) pctGhostSpeedTunnel,
-            (byte) numDotsLeftElroy1,
-            (byte) pctElroy1Speed,
-            (byte) numDotsLeftElroy2,
-            (byte) pctElroy2Speed,
-            (byte) pctPacSpeedPowered,
-            (byte) pctGhostSpeedFrightened,
-            (byte) secPacPower,
-            (byte) numFlashes);
+    public static Arcade_LevelData of(int... values) {
+        if (values == null || values.length == 0) {
+            throw new IllegalArgumentException("No level data values specified");
+        }
+        if (values.length != 11) {
+            throw new IllegalArgumentException("Illegal number of level values: %d (should be 11)".formatted(values.length));
+        }
+        return new Arcade_LevelData(
+            (byte) values[0], (byte) values[1], (byte) values[2], (byte) values[3], (byte) values[4], (byte) values[5],
+            (byte) values[6], (byte) values[7], (byte) values[8], (byte) values[9], (byte) values[10]);
     }
 }
