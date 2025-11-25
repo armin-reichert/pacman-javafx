@@ -36,7 +36,7 @@ public final class ArcadeActions {
             return ui.context().currentGameState() == GameState.SETTING_OPTIONS_FOR_START
                 || ui.context().currentGameState() == INTRO
                 || ui.context().optGameLevel().isPresent() && ui.context().optGameLevel().get().isDemoLevel()
-                || THE_GAME_BOX.containsNoCoin();
+                || THE_GAME_BOX.noCoin();
         }
     };
 
@@ -51,7 +51,7 @@ public final class ArcadeActions {
         public boolean isEnabled(GameUI ui) {
             boolean isArcadeGame = StandardGameVariant.isArcadeGameName(THE_GAME_BOX.gameVariantName());
             return isArcadeGame
-                && !THE_GAME_BOX.containsNoCoin()
+                && !THE_GAME_BOX.noCoin()
                 && (ui.context().currentGameState() == GameState.INTRO || ui.context().currentGameState() == GameState.SETTING_OPTIONS_FOR_START)
                 && ui.context().currentGame().canStartNewGame();
         }

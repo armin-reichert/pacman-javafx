@@ -14,7 +14,7 @@ public interface CoinMechanism {
 
     int numCoins();
 
-    boolean containsNoCoin();
+    boolean noCoin();
 
     void setNumCoins(int n);
 

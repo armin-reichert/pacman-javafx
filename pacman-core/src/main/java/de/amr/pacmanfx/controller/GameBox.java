@@ -136,33 +136,35 @@ public class GameBox implements GameContext, CoinMechanism {
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends Game> T game(String variant) {
-        requireNonNull(variant);
-        if (knownGames.containsKey(variant)) {
-            return (T) knownGames.get(variant);
+    public <T extends Game> T game(String variantName) {
+        requireNonNull(variantName);
+        if (knownGames.containsKey(variantName)) {
+            return (T) knownGames.get(variantName);
         }
-        String errorMessage = "Game variant '%s' has not been registered!".formatted(variant);
+        String errorMessage = "Game variant named '%s' has not been registered!".formatted(variantName);
         Logger.error(errorMessage);
         throw new IllegalArgumentException(errorMessage);
     }
 
     // GameContext implementation
 
-
     @Override
     public String currentGameVariantName() {
         return gameVariantName();
     }
 
-    /**
-     * @return The game (model) registered for the currently selected game variant.
-     */
+    @Override
     public <G extends Game> G currentGame() {
         G game = game(gameVariantName.get());
         if (game != null) {
             return game;
         }
         throw new IllegalStateException("No game is currently selected");
+    }
+
+    @Override
+    public FsmState<GameContext> currentGameState() {
+        return currentGame().stateMachine().state();
     }
 
     @Override
@@ -173,11 +175,6 @@ public class GameBox implements GameContext, CoinMechanism {
     @Override
     public GameLevel gameLevel() {
         return currentGame().optGameLevel().orElse(null);
-    }
-
-    @Override
-    public FsmState<GameContext> currentGameState() {
-        return currentGame().stateMachine().state();
     }
 
     // CoinMechanism implementation
@@ -191,7 +188,7 @@ public class GameBox implements GameContext, CoinMechanism {
     public int numCoins() { return numCoins.get(); }
 
     @Override
-    public boolean containsNoCoin() { return numCoins() == 0; }
+    public boolean noCoin() { return numCoins() == 0; }
 
     @Override
     public void setNumCoins(int n) {

@@ -15,6 +15,9 @@ import java.util.Optional;
  */
 public interface GameContext {
 
+    /**
+     * @return name (id) of the current game variant
+     */
     String currentGameVariantName();
 
     /**
@@ -22,6 +25,11 @@ public interface GameContext {
      * @param <T> specific game model type
      */
     <T extends Game> T currentGame();
+
+    /**
+     * @return the current game state (the state of the game controller FSM).
+     */
+    FsmState<GameContext> currentGameState();
 
     /**
      * @return the current game level if present.
@@ -36,9 +44,4 @@ public interface GameContext {
      * @return the current {@link GameLevel}, or {@code null} if none exists
      */
     GameLevel gameLevel();
-
-    /**
-     * @return the current game state (the state of the game controller FSM).
-     */
-    FsmState<GameContext> currentGameState();
 }
