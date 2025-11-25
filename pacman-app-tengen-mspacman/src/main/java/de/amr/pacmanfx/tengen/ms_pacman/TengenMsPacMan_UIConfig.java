@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
@@ -16,6 +15,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.model.actors.Blinky;
@@ -388,10 +388,10 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     @Override
     public void createGameScenes(GameUI ui) {
-        scenesByID.put(SCENE_ID_BOOT_SCENE_2D,    new TengenMsPacMan_BootScene(ui));
-        scenesByID.put(SCENE_ID_INTRO_SCENE_2D,   new TengenMsPacMan_IntroScene(ui));
-        scenesByID.put(SCENE_ID_START_SCENE_2D,   new TengenMsPacMan_OptionsScene(ui));
-        scenesByID.put(SCENE_ID_CREDITS_SCENE_2D, new TengenMsPacMan_CreditsScene(ui));
+        scenesByID.put(SCENE_ID_BOOT_SCENE,    new TengenMsPacMan_BootScene(ui));
+        scenesByID.put(SCENE_ID_INTRO_SCENE,   new TengenMsPacMan_IntroScene(ui));
+        scenesByID.put(SCENE_ID_START_SCENE,   new TengenMsPacMan_OptionsScene(ui));
+        scenesByID.put(SCENE_ID_HALL_OF_FAME, new TengenMsPacMan_CreditsScene(ui));
         scenesByID.put(SCENE_ID_PLAY_SCENE_2D,    new TengenMsPacMan_PlayScene2D(ui));
         scenesByID.put(SCENE_ID_PLAY_SCENE_3D,    new TengenMsPacMan_PlayScene3D(ui));
         scenesByID.put(sceneID_CutScene(1),       new TengenMsPacMan_CutScene1(ui));
@@ -408,10 +408,10 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     @Override
     public GameScene selectGameScene(GameContext gameContext) {
         String sceneID = switch (gameContext.currentGameState()) {
-            case BOOT -> SCENE_ID_BOOT_SCENE_2D;
-            case SETTING_OPTIONS_FOR_START -> SCENE_ID_START_SCENE_2D;
-            case SHOWING_CREDITS -> SCENE_ID_CREDITS_SCENE_2D;
-            case INTRO -> SCENE_ID_INTRO_SCENE_2D;
+            case BOOT -> SCENE_ID_BOOT_SCENE;
+            case SETTING_OPTIONS_FOR_START -> SCENE_ID_START_SCENE;
+            case SHOWING_HALL_OF_FAME -> SCENE_ID_HALL_OF_FAME;
+            case INTRO -> SCENE_ID_INTRO_SCENE;
             case INTERMISSION -> {
                 if (gameContext.optGameLevel().isEmpty()) {
                     throw new IllegalStateException("Cannot determine cut scene, no game level available");

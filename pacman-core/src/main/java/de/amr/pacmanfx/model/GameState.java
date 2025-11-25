@@ -16,7 +16,7 @@ import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
 /**
  * States of the common state machine for all Pac-Man games.
  * <p>
- * TODO: Is this a good idea or should we allow different FSM per game variant?
+ * TODO: Provide different FSM for Tengen Ms. Pac-Man than for Arcade Pac-Man & Ms. Pac-Man?
  */
 public enum GameState implements FsmState<GameContext> {
 
@@ -63,7 +63,7 @@ public enum GameState implements FsmState<GameContext> {
     /**
      * In Tengen Ms. Pac-Man, the credited people are shown.
      */
-    SHOWING_CREDITS {
+    SHOWING_HALL_OF_FAME {
         @Override
         public void onEnter(GameContext context) {
             timer.restartIndefinitely();
@@ -220,7 +220,7 @@ public enum GameState implements FsmState<GameContext> {
             //TODO this is crap. Maybe Tengen Ms. Pac-Man needs its own state machine?
             if (THE_GAME_BOX.isCurrentGameVariant(StandardGameVariant.MS_PACMAN_TENGEN.name())
                 && context.gameLevel().isDemoLevel()) {
-                game.stateMachine().changeState(SHOWING_CREDITS);
+                game.stateMachine().changeState(SHOWING_HALL_OF_FAME);
                 return;
             }
 
@@ -352,7 +352,7 @@ public enum GameState implements FsmState<GameContext> {
                 //TODO find unified solution
                 if (THE_GAME_BOX.isCurrentGameVariant(StandardGameVariant.MS_PACMAN_TENGEN.name())) {
                     if (context.gameLevel().isDemoLevel()) {
-                        game.stateMachine().changeState(SHOWING_CREDITS);
+                        game.stateMachine().changeState(SHOWING_HALL_OF_FAME);
                     } else {
                         boolean canContinue = game.canContinueOnGameOver();
                         game.stateMachine().changeState(canContinue ? SETTING_OPTIONS_FOR_START : INTRO);

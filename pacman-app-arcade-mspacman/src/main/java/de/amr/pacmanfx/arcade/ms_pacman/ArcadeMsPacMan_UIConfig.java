@@ -10,13 +10,13 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.*;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.*;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_BootScene2D;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
-import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.GameState;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.ui.api.GameScene;
@@ -279,9 +279,9 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     @Override
     public void createGameScenes(GameUI ui) {
-        scenesByID.put(SCENE_ID_BOOT_SCENE_2D,  new Arcade_BootScene2D(ui));
-        scenesByID.put(SCENE_ID_INTRO_SCENE_2D, new ArcadeMsPacMan_IntroScene(ui));
-        scenesByID.put(SCENE_ID_START_SCENE_2D, new ArcadeMsPacMan_StartScene(ui));
+        scenesByID.put(SCENE_ID_BOOT_SCENE,  new Arcade_BootScene2D(ui));
+        scenesByID.put(SCENE_ID_INTRO_SCENE, new ArcadeMsPacMan_IntroScene(ui));
+        scenesByID.put(SCENE_ID_START_SCENE, new ArcadeMsPacMan_StartScene(ui));
         scenesByID.put(SCENE_ID_PLAY_SCENE_2D,  new Arcade_PlayScene2D(ui));
         scenesByID.put(SCENE_ID_PLAY_SCENE_3D,  new PlayScene3D(ui));
         scenesByID.put(sceneID_CutScene(1),     new ArcadeMsPacMan_CutScene1(ui));
@@ -297,9 +297,9 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     @Override
     public GameScene selectGameScene(GameContext gameContext) {
         String sceneID = switch (gameContext.currentGameState()) {
-            case GameState.BOOT -> SCENE_ID_BOOT_SCENE_2D;
-            case GameState.SETTING_OPTIONS_FOR_START -> SCENE_ID_START_SCENE_2D;
-            case GameState.INTRO -> SCENE_ID_INTRO_SCENE_2D;
+            case GameState.BOOT -> SCENE_ID_BOOT_SCENE;
+            case GameState.SETTING_OPTIONS_FOR_START -> SCENE_ID_START_SCENE;
+            case GameState.INTRO -> SCENE_ID_INTRO_SCENE;
             case GameState.INTERMISSION -> {
                 if (gameContext.optGameLevel().isEmpty()) {
                     throw new IllegalStateException("Cannot determine cut scene, no game level available");

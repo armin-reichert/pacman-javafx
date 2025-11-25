@@ -12,10 +12,10 @@ import java.util.stream.Stream;
 
 public interface GameScene_Config {
 
-    String SCENE_ID_BOOT_SCENE_2D    = "BootScene2D";
-    String SCENE_ID_INTRO_SCENE_2D   = "IntroScene2D";
-    String SCENE_ID_START_SCENE_2D   = "StartScene2D";
-    String SCENE_ID_CREDITS_SCENE_2D = "CreditsScene2D";
+    String SCENE_ID_BOOT_SCENE       = "BootScene";
+    String SCENE_ID_INTRO_SCENE      = "IntroScene";
+    String SCENE_ID_START_SCENE      = "StartScene";
+    String SCENE_ID_HALL_OF_FAME     = "HallOfFame";
     String SCENE_ID_PLAY_SCENE_2D    = "PlayScene2D";
     String SCENE_ID_PLAY_SCENE_3D    = "PlayScene3D";
 
