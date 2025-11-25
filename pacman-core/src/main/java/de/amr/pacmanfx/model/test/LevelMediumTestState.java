@@ -38,7 +38,7 @@ public class LevelMediumTestState implements FsmState<GameContext>, TestState {
         message.setPosition(gameLevel.worldMap().terrainLayer().messageCenterPosition());
         gameLevel.setMessage(message);
         context.currentGame().hud().creditVisible(false);
-        context.currentGame().publishEvent(GameEvent.Type.STOP_ALL_SOUNDS);
+        context.currentGame().publishGameEvent(GameEvent.Type.STOP_ALL_SOUNDS);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class LevelMediumTestState implements FsmState<GameContext>, TestState {
         game.updateHunting(gameLevel);
         if (timer().hasExpired()) {
             if (gameLevel.number() == lastTestedLevelNumber) {
-                context.currentGame().publishEvent(GameEvent.Type.STOP_ALL_SOUNDS);
+                context.currentGame().publishGameEvent(GameEvent.Type.STOP_ALL_SOUNDS);
                 game.stateMachine().changeState(GameState.INTRO);
             } else {
                 timer().restartSeconds(TEST_DURATION_SEC);

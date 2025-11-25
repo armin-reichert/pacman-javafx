@@ -208,6 +208,6 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         bonus.setPosition(halfTileRightOf(bonusTile));
         bonus.setEdible(randomFloat(9, 10));
         gameLevel.setBonus(bonus);
-        publishEvent(GameEvent.Type.BONUS_ACTIVATED, bonus.tile());
+        publishGameEvent(GameEvent.Type.BONUS_ACTIVATED, bonus.tile());
     }
 }

@@ -110,13 +110,13 @@ public class Bonus extends MovingActor {
                 }
                 if (timer.hasExpired() || reachedExit) {
                     setInactive();
-                    game.publishEvent(GameEvent.Type.BONUS_EXPIRED, tile());
+                    game.publishGameEvent(GameEvent.Type.BONUS_EXPIRED, tile());
                 }
             }
             case EATEN -> {
                 if (timer.hasExpired()) {
                     setInactive();
-                    game.publishEvent(GameEvent.Type.BONUS_EXPIRED, tile());
+                    game.publishGameEvent(GameEvent.Type.BONUS_EXPIRED, tile());
                 }
             }
             case INACTIVE -> {}

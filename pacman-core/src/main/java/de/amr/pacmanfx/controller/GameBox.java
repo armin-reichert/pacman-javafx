@@ -66,7 +66,7 @@ public class GameBox implements GameContext, CoinMechanism {
             if (eventsEnabled) {
                 Game newGame = game(newGameVariant);
                 newGame.init();
-                newGame.publishEvent(GameEvent.Type.GAME_VARIANT_CHANGED);
+                newGame.publishGameEvent(GameEvent.Type.GAME_VARIANT_CHANGED);
             }
         });
 

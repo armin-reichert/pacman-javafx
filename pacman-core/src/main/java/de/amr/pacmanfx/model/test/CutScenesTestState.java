@@ -46,7 +46,7 @@ public class CutScenesTestState implements FsmState<GameContext>, TestState {
                     testedCutSceneNumber += 1;
                     timer.restartIndefinitely();
                     //TODO find another solution and get rid of this event type
-                    context.currentGame().publishEvent(GameEvent.Type.UNSPECIFIED_CHANGE);
+                    context.currentGame().publishGameEvent(GameEvent.Type.UNSPECIFIED_CHANGE);
                 } else {
                     context.currentGame().stateMachine().changeState(GameState.INTRO);
                 }

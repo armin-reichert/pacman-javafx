@@ -15,7 +15,7 @@ public class GameStateMachine extends StateMachine<FsmState<GameContext>, GameCo
 
     public GameStateMachine(Game game) {
         setContext(THE_GAME_BOX);
-        addStateChangeListener((oldState, newState) -> game.publishEvent(new GameStateChangeEvent(game, oldState, newState)));
+        addStateChangeListener((oldState, newState) -> game.publishGameEvent(new GameStateChangeEvent(game, oldState, newState)));
     }
 
     public FsmState<GameContext> stateByName(String name) {

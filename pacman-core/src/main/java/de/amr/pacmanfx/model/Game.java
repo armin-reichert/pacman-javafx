@@ -93,9 +93,9 @@ public interface Game {
     float pacSpeedWhenHasPower(GameLevel level);
 
     // Game event manager
-    void addEventListener(GameEventListener listener);
-    void removeEventListener(GameEventListener listener);
-    void publishEvent(GameEvent event);
-    void publishEvent(GameEvent.Type type);
-    void publishEvent(GameEvent.Type type, Vector2i tile);
+    void addGameEventListener(GameEventListener listener);
+    void removeGameEventListener(GameEventListener listener);
+    void publishGameEvent(GameEvent event);
+    void publishGameEvent(GameEvent.Type type);
+    void publishGameEvent(GameEvent.Type type, Vector2i tile);
 }
