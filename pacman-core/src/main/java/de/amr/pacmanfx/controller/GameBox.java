@@ -46,16 +46,8 @@ public class GameBox implements GameContext, CoinMechanism {
      * Directory where custom maps are stored (default: <code>&lt;home_dir&gt;/maps</code>).
      */
     public static final File CUSTOM_MAP_DIR = new File(HOME_DIR, "maps");
-    public static final String HIGHSCORE_FILE_PATTERN = "highscore-%s.xml";
 
-    private final Map<String, Game> knownGames = new HashMap<>();
-
-    private boolean eventsEnabled;
-
-    private final BooleanProperty cheatUsed = new SimpleBooleanProperty(false);
-    private final BooleanProperty immunity = new SimpleBooleanProperty(false);
-    private final BooleanProperty usingAutopilot = new SimpleBooleanProperty(false);
-    private final StringProperty gameVariantName = new SimpleStringProperty();
+    private static final String HIGHSCORE_FILE_PATTERN = "highscore-%s.xml";
 
     static {
         boolean success = initUserDirectories();
@@ -63,6 +55,15 @@ public class GameBox implements GameContext, CoinMechanism {
             throw new IllegalStateException("User directories could not be created");
         }
     }
+
+    private final Map<String, Game> knownGames = new HashMap<>();
+
+    private final BooleanProperty cheatUsed = new SimpleBooleanProperty(false);
+    private final BooleanProperty immunity = new SimpleBooleanProperty(false);
+    private final BooleanProperty usingAutopilot = new SimpleBooleanProperty(false);
+    private final StringProperty gameVariantName = new SimpleStringProperty();
+
+    private boolean eventsEnabled;
 
     public GameBox() {
 
