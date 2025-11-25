@@ -44,12 +44,7 @@ public class GameBox implements GameContext, CoinMechanism {
 
     private static final String HIGHSCORE_FILE_PATTERN = "highscore-%s.xml";
 
-    static {
-        boolean success = initUserDirectories();
-        if (!success) {
-            throw new IllegalStateException("User directories could not be created");
-        }
-    }
+    private static final boolean DIRECTORY_CHECK_OK = initUserDirectories();
 
     private final Map<String, Game> knownGames = new HashMap<>();
 
@@ -61,6 +56,9 @@ public class GameBox implements GameContext, CoinMechanism {
     private boolean eventsEnabled;
 
     public GameBox() {
+        if (!DIRECTORY_CHECK_OK) {
+            throw new IllegalStateException("User directories could not be created");
+        }
 
         gameVariantName.addListener((py, ov, newGameVariant) -> {
             if (eventsEnabled) {
