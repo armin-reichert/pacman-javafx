@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState;
+import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameStateMachine;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.fsm.FsmState;
@@ -70,7 +70,7 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
 
             String gameStateText = gameState.name() + " (Tick %d)".formatted(gameState.timer().tickCount());
             String huntingPhaseText = "";
-            if (gameState == Arcade_GameState.HUNTING) {
+            if (gameState == Arcade_GameStateMachine.GameState.HUNTING) {
                 HuntingTimer huntingTimer = gameLevel.huntingTimer();
                 huntingPhaseText = " %s (Tick %d)".formatted(huntingTimer.phase(), huntingTimer.tickCount());
             }
