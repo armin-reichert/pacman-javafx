@@ -136,13 +136,6 @@ public class StateMachine<S extends FsmState<C>, C> {
     }
 
     /**
-     * Lets the timer of the current game state expire.
-     */
-    public void letCurrentStateExpire() {
-        state().timer().expire();
-    }
-
-    /**
      * Changes the machine's current state to the new state. Tne exit hook method of the current state is executed before
      * entering the new state. The new state's entry hook method is executed and its timer is reset to
      * {@link TickTimer#INDEFINITE}. After the state change, an event is published.

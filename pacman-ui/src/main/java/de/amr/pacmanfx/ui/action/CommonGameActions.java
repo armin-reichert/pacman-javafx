@@ -61,7 +61,7 @@ public final class CommonGameActions {
     public static final GameAction ACTION_LET_GAME_STATE_EXPIRE = new GameAction("LET_GAME_STATE_EXPIRE") {
         @Override
         public void execute(GameUI ui) {
-            ui.context().currentGame().stateMachine().letCurrentStateExpire();
+            ui.context().currentGame().terminateCurrentGameState();
         }
     };
 

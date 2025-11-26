@@ -211,7 +211,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     private void playLevelCompletedAnimation() {
         levelCompletedAnimation = new LevelCompletedAnimation(animationRegistry, context().gameLevel());
-        levelCompletedAnimation.getOrCreateAnimationFX().setOnFinished(e -> context().currentGame().stateMachine().letCurrentStateExpire());
+        levelCompletedAnimation.getOrCreateAnimationFX().setOnFinished(e -> context().currentGame().terminateCurrentGameState());
         levelCompletedAnimation.playFromStart();
     }
 
@@ -244,7 +244,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     @Override
     public void onPacDead(GameEvent e) {
         // triggers exit from state PACMAN_DYING after dying animation has finished
-        context().currentGame().stateMachine().letCurrentStateExpire();
+        context().currentGame().terminateCurrentGameState();
     }
 
     @Override

@@ -378,7 +378,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
 
     @Override
     public void onPacDead(GameEvent e) {
-        context().currentGame().stateMachine().letCurrentStateExpire();
+        context().currentGame().terminateCurrentGameState();
     }
 
     @Override
@@ -457,7 +457,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
         levelCompletedAnimation = new LevelCompletedAnimation(animationRegistry, gameLevel);
         levelCompletedAnimation.setSingleFlashMillis(333);
         // When animation ends, let state "LEVEL_COMPLETE" expire
-        levelCompletedAnimation.getOrCreateAnimationFX().setOnFinished(e -> context().currentGame().stateMachine().letCurrentStateExpire());
+        levelCompletedAnimation.getOrCreateAnimationFX().setOnFinished(e -> context().currentGame().terminateCurrentGameState());
         levelCompletedAnimation.playFromStart();
     }
 

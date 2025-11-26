@@ -4,8 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameEventListener;
+import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
@@ -25,7 +27,16 @@ import java.util.Optional;
  */
 public interface Game {
 
-    GameStateMachine      stateMachine();
+    GameStateMachine stateMachine();
+
+    default void changeState(FsmState<GameContext> gameState) {
+        stateMachine().changeState(gameState);
+    }
+
+    default void terminateCurrentGameState() {
+        stateMachine().state().timer().expire();
+    }
+
     ScoreManager          scoreManager();
     SimulationStepResult  simulationStepResult();
     MapSelector           mapSelector();

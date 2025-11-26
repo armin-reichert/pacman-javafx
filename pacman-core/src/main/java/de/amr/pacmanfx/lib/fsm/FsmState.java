@@ -11,7 +11,6 @@ import de.amr.pacmanfx.lib.timer.TickTimer;
  *
  * @param <C> the (context) type that the hook methods {@link #onEnter(C)}, {@link #onUpdate(C)}, {@link #onExit(C)} get
  *            passed as parameter
- * @author Armin Reichert
  */
 public interface FsmState<C> {
 

@@ -50,7 +50,7 @@ public class Arcade_BootScene2D extends GameScene2D {
     @Override
     public void update() {
         if (context().currentGameState().timer().atSecond(4)) {
-            context().currentGame().stateMachine().letCurrentStateExpire();
+            context().currentGame().terminateCurrentGameState();
         }
     }
 }
