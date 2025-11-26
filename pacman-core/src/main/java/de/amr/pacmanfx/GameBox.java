@@ -8,7 +8,6 @@ import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Score;
 import javafx.beans.property.*;
 import org.tinylog.Logger;
@@ -16,7 +15,6 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.regex.Pattern;
 
 import static java.util.Objects.requireNonNull;
@@ -105,8 +103,6 @@ public class GameBox implements GameContext, CoinMechanism {
         return gameVariantName;
     }
 
-    public String gameVariantName() { return gameVariantName.get(); }
-
     public void setGameVariantName(String gameVariantName) {
         requireNonNull(gameVariantName);
         this.gameVariantName.set(gameVariantName);
@@ -130,9 +126,7 @@ public class GameBox implements GameContext, CoinMechanism {
     // GameContext implementation
 
     @Override
-    public String currentGameVariantName() {
-        return gameVariantName();
-    }
+    public String gameVariantName() { return gameVariantName.get(); }
 
     @Override
     public <G extends Game> G currentGame() {
@@ -146,16 +140,6 @@ public class GameBox implements GameContext, CoinMechanism {
     @Override
     public FsmState<GameContext> currentGameState() {
         return currentGame().stateMachine().state();
-    }
-
-    @Override
-    public Optional<GameLevel> optGameLevel() {
-        return currentGame().optGameLevel();
-    }
-
-    @Override
-    public GameLevel gameLevel() {
-        return currentGame().optGameLevel().orElse(null);
     }
 
     // CoinMechanism implementation

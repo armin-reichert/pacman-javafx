@@ -127,7 +127,7 @@ public final class CommonGameActions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            boolean isArcadeGame = StandardGameVariant.isArcadeGameName(ui.context().currentGameVariantName());
+            boolean isArcadeGame = StandardGameVariant.isArcadeGameName(ui.context().gameVariantName());
             boolean isPlayScene2D = ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_2D);
             return isArcadeGame && isPlayScene2D;
         }
@@ -287,7 +287,7 @@ public final class CommonGameActions {
             if (ui.clock().isPaused()) {
                 ui.soundManager().stopAll();
             }
-            Logger.info("Game ({}) {}", ui.context().currentGameVariantName(), ui.clock().isPaused() ? "paused" : "resumed");
+            Logger.info("Game ({}) {}", ui.context().gameVariantName(), ui.clock().isPaused() ? "paused" : "resumed");
         }
     };
 

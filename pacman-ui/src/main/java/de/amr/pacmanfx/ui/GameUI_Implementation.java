@@ -613,6 +613,6 @@ public final class GameUI_Implementation implements GameUI {
     @Override
     @SuppressWarnings("unchecked")
     public <T extends GameUI_Config> T currentConfig() {
-        return (T) config(gameContext.currentGameVariantName());
+        return (T) config(gameContext.gameVariantName());
     }
 }

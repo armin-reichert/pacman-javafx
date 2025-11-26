@@ -19,7 +19,7 @@ public interface GameContext {
     /**
      * @return name (id) of the current game variant
      */
-    String currentGameVariantName();
+    String gameVariantName();
 
     /**
      * @return the model (in MVC sense) of the currently selected game variant.
@@ -35,7 +35,9 @@ public interface GameContext {
     /**
      * @return the current game level if present.
      */
-    Optional<GameLevel> optGameLevel();
+    default Optional<GameLevel> optGameLevel() {
+        return currentGame().optGameLevel();
+    }
 
     /**
      * Convenience method to access the current game level.
@@ -44,7 +46,9 @@ public interface GameContext {
      *
      * @return the current {@link GameLevel}, or {@code null} if none exists
      */
-    GameLevel gameLevel();
+    default GameLevel gameLevel() {
+        return currentGame().optGameLevel().orElse(null);
+    }
 
     BooleanProperty cheatUsedProperty();
 
