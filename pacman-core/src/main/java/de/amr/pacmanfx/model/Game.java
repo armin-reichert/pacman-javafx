@@ -8,6 +8,7 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.lib.fsm.FsmState;
+import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
@@ -27,7 +28,13 @@ import java.util.Optional;
  */
 public interface Game {
 
-    GameStateMachine stateMachine();
+    StateMachine<FsmState<GameContext>, GameContext> stateMachine();
+
+    default FsmState<GameContext> gameState(String name) {
+        return stateMachine().states().stream()
+            .filter(state -> state.name().equals(name))
+            .findFirst().orElseThrow();
+    }
 
     default void changeState(FsmState<GameContext> gameState) {
         stateMachine().changeState(gameState);

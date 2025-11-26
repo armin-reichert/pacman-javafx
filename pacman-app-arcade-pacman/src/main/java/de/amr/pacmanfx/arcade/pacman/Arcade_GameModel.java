@@ -6,9 +6,9 @@ package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.pacman.actors.Blinky;
-import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.fsm.FsmState;
+import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.lib.worldmap.FoodLayer;
@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
 import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
 import static java.util.Objects.requireNonNull;
@@ -84,14 +83,15 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         this.coinMechanism = requireNonNull(coinMechanism);
         setCollisionStrategy(CollisionStrategy.SAME_TILE);
 
-        stateMachine = new GameStateMachine(this);
         List<FsmState<GameContext>> states = new ArrayList<>(List.of(GameState.values()));
         states.add(new LevelShortTestState());
         states.add(new LevelMediumTestState());
         states.add(new CutScenesTestState());
-        stateMachine.setStates(states);
-        stateMachine.setContext(THE_GAME_BOX);
-        stateMachine.setName("Arcade Game State Machine");
+
+        var sm = new StateMachine<FsmState<GameContext>, GameContext>();
+        sm.setName("Arcade Game State Machine");
+        sm.setStates(states);
+        setStateMachine(sm);
     }
 
     public abstract Arcade_LevelData levelData(GameLevel gameLevel);

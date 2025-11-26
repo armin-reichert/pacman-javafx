@@ -4,10 +4,12 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.app;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_StartPage;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
-import de.amr.pacmanfx.model.GameStateMachine;
+import de.amr.pacmanfx.lib.fsm.FsmState;
+import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.model.StandardGameVariant;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
@@ -36,7 +38,8 @@ public class ArcadePacMan_App extends Application {
 
     private GameUI createUI_WithoutBuilder(Stage stage, double sceneWidth, double sceneHeight) {
         var game = new ArcadePacMan_GameModel(THE_GAME_BOX, THE_GAME_BOX.highScoreFile(GAME_VARIANT_NAME));
-        game.setStateMachine(new GameStateMachine(game));
+        var fsm = new StateMachine<FsmState<GameContext>, GameContext>();
+        game.setStateMachine(fsm);
         THE_GAME_BOX.registerGame(GAME_VARIANT_NAME, game);
 
         Map<String, Class<?>> configClassMap = Map.of(

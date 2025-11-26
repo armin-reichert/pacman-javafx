@@ -4,8 +4,12 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameEventListener;
+import de.amr.pacmanfx.event.GameStateChangeEvent;
+import de.amr.pacmanfx.lib.fsm.FsmState;
+import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
@@ -17,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -48,10 +53,12 @@ public abstract class AbstractGameModel implements Game {
 
     protected final ScoreManager scoreManager = new ScoreManager(this);
 
-    protected GameStateMachine stateMachine;
+    protected StateMachine<FsmState<GameContext>, GameContext> stateMachine;
 
-    public void setStateMachine(GameStateMachine stateMachine) {
+    public void setStateMachine(StateMachine<FsmState<GameContext>, GameContext> stateMachine) {
         this.stateMachine = requireNonNull(stateMachine);
+        stateMachine.setContext(THE_GAME_BOX); //TODO avoid this dependency
+        stateMachine.addStateChangeListener((oldState, newState) -> publishGameEvent(new GameStateChangeEvent(this, oldState, newState)));
     }
 
     public void setLifeCount(int n) {
@@ -79,7 +86,7 @@ public abstract class AbstractGameModel implements Game {
     // Game interface
 
     @Override
-    public final GameStateMachine stateMachine() {
+    public final StateMachine<FsmState<GameContext>, GameContext> stateMachine() {
         return stateMachine;
     }
 

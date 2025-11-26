@@ -8,6 +8,7 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Waypoint;
 import de.amr.pacmanfx.lib.fsm.FsmState;
+import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.timer.TickTimer;
@@ -134,13 +135,15 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     private int numContinues;
 
     public TengenMsPacMan_GameModel(File highScoreFile) {
-        stateMachine = new GameStateMachine(this);
         List<FsmState<GameContext>> states = new ArrayList<>(List.of(GameState.values()));
         states.add(new LevelShortTestState());
         states.add(new LevelMediumTestState());
         states.add(new CutScenesTestState());
-        stateMachine.setStates(states);
-        stateMachine.setName("Tengen Ms Pac-Man Game State Machine");
+
+        var sm = new StateMachine<FsmState<GameContext>, GameContext>();
+        sm.setName("Tengen Ms Pac-Man Game State Machine");
+        sm.setStates(states);
+        setStateMachine(sm);
 
         setCollisionStrategy(CollisionStrategy.CENTER_DISTANCE);
         scoreManager.setHighScoreFile(requireNonNull(highScoreFile));
