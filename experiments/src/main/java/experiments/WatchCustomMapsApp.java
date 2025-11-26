@@ -1,5 +1,6 @@
 package experiments;
 
+import de.amr.pacmanfx.GameBox;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -18,7 +19,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.pacmanfx.Globals.theGameContext;
 import static java.nio.file.StandardWatchEventKinds.*;
 
 public class WatchCustomMapsApp extends Application {
@@ -28,7 +28,7 @@ public class WatchCustomMapsApp extends Application {
 
     @Override
     public void init() {
-        watchedDirectory = theGameContext().customMapDir();
+        watchedDirectory = GameBox.CUSTOM_MAP_DIR;
     }
 
     @Override
@@ -43,7 +43,7 @@ public class WatchCustomMapsApp extends Application {
         stage.setTitle("Watch " + watchedDirectory);
         stage.show();
 
-        DirectoryWatchdog dog = new DirectoryWatchdog(theGameContext().customMapDir());
+        DirectoryWatchdog dog = new DirectoryWatchdog(GameBox.CUSTOM_MAP_DIR);
         dog.addEventListener(this::showEventsInList);
         dog.startWatching();
     }

@@ -1,4 +1,4 @@
-package de.amr.pacmanfx.arcade.pacman.actors;
+package de.amr.pacmanfx.arcade.pacman.model.actors;
 
 public interface ArcadePacMan_ActorFactory {
 

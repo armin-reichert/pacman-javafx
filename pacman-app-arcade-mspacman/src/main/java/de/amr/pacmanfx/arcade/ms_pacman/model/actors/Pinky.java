@@ -2,7 +2,7 @@
 Copyright (c) 2021-2026 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.arcade.ms_pacman.actors;
+package de.amr.pacmanfx.arcade.ms_pacman.model.actors;
 
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
@@ -15,7 +15,7 @@ import de.amr.pacmanfx.model.HuntingPhase;
  *
  * @see <a href="http://www.donhodges.com/pacman_pinky_explanation.htm">Overflow bug explanation</a>.
  */
-public class Pinky extends de.amr.pacmanfx.arcade.pacman.actors.Pinky {
+public class Pinky extends de.amr.pacmanfx.arcade.pacman.model.actors.Pinky {
 
     Pinky() {}
 

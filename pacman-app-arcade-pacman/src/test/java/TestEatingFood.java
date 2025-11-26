@@ -1,5 +1,5 @@
-import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel;
-import de.amr.pacmanfx.arcade.pacman.actors.Blinky;
+import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
+import de.amr.pacmanfx.arcade.pacman.model.actors.Blinky;
 import de.amr.pacmanfx.lib.worldmap.FoodLayer;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameStateMachine;

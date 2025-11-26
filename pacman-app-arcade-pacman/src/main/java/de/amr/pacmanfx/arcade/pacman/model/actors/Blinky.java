@@ -2,10 +2,10 @@
 Copyright (c) 2021-2026 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.arcade.pacman.actors;
+package de.amr.pacmanfx.arcade.pacman.model.actors;
 
-import de.amr.pacmanfx.arcade.pacman.Arcade_GameModel;
-import de.amr.pacmanfx.arcade.pacman.Arcade_LevelData;
+import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameModel;
+import de.amr.pacmanfx.arcade.pacman.model.Arcade_LevelData;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HuntingPhase;

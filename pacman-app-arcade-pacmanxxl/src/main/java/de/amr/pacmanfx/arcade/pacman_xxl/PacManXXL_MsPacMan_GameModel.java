@@ -4,20 +4,16 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
-import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel;
-import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_HuntingTimer;
-import de.amr.pacmanfx.arcade.ms_pacman.actors.*;
-import de.amr.pacmanfx.arcade.pacman.Arcade_LevelData;
-import de.amr.pacmanfx.arcade.pacman.actors.Inky;
-import de.amr.pacmanfx.model.CoinMechanism;
+import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
+import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_HuntingTimer;
+import de.amr.pacmanfx.arcade.ms_pacman.model.actors.*;
+import de.amr.pacmanfx.arcade.pacman.model.Arcade_LevelData;
+import de.amr.pacmanfx.arcade.pacman.model.actors.Inky;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
-import de.amr.pacmanfx.model.ArcadeHouse;
-import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.MapSelectionMode;
-import de.amr.pacmanfx.model.MapSelector;
+import de.amr.pacmanfx.model.*;
 import org.tinylog.Logger;
 
 import java.io.File;

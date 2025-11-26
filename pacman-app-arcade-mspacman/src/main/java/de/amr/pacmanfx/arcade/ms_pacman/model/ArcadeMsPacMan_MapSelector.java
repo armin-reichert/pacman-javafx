@@ -2,7 +2,7 @@
 Copyright (c) 2021-2026 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.arcade.ms_pacman;
+package de.amr.pacmanfx.arcade.ms_pacman.model;
 
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.MapSelector;
@@ -44,7 +44,7 @@ public class ArcadeMsPacMan_MapSelector implements MapSelector {
     @Override
     public void loadAllMapPrototypes() {
         if (mapPrototypes.isEmpty()) {
-            mapPrototypes = MapSelector.loadMapsFromModule(getClass(), "maps/mspacman_%d.world", 4);
+            mapPrototypes = MapSelector.loadMapsFromModule(getClass(), "/de/amr/pacmanfx/arcade/ms_pacman/maps/mspacman_%d.world", 4);
         }
     }
 

@@ -1,7 +1,7 @@
-package de.amr.pacmanfx.arcade.ms_pacman.actors;
+package de.amr.pacmanfx.arcade.ms_pacman.model.actors;
 
-import de.amr.pacmanfx.arcade.pacman.actors.ArcadePacMan_ActorFactory;
-import de.amr.pacmanfx.arcade.pacman.actors.PacMan;
+import de.amr.pacmanfx.arcade.pacman.model.actors.ArcadePacMan_ActorFactory;
+import de.amr.pacmanfx.arcade.pacman.model.actors.PacMan;
 
 public interface ArcadeMsPacMan_ActorFactory {
 

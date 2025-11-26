@@ -2,7 +2,7 @@
 Copyright (c) 2021-2026 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.arcade.ms_pacman;
+package de.amr.pacmanfx.arcade.ms_pacman.model;
 
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.HuntingTimer;

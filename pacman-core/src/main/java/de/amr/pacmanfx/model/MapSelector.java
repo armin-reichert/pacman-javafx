@@ -48,7 +48,7 @@ public interface MapSelector {
             URL url = loaderClass.getResource(name);
             if (url == null) {
                 Logger.error("Map not found for resource name='{}'", name);
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("Illegal map pattern: " + name);
             }
             try {
                 WorldMap worldMap = WorldMap.loadFromURL(url);

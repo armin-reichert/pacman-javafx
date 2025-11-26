@@ -2,10 +2,10 @@
 Copyright (c) 2021-2026 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.arcade.pacman;
+package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.arcade.pacman.actors.Blinky;
+import de.amr.pacmanfx.arcade.pacman.model.actors.Blinky;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
@@ -83,7 +83,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         this.coinMechanism = requireNonNull(coinMechanism);
         setCollisionStrategy(CollisionStrategy.SAME_TILE);
 
-        List<FsmState<GameContext>> states = new ArrayList<>(List.of(ArcadePacManGameState.values()));
+        List<FsmState<GameContext>> states = new ArrayList<>(List.of(Arcade_GameState.values()));
         states.add(new LevelShortTestState());
         states.add(new LevelMediumTestState());
         states.add(new CutScenesTestState());

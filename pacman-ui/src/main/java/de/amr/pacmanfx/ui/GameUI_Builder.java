@@ -4,9 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui;
 
-import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.GameBox;
 import de.amr.pacmanfx.model.AbstractGameModel;
+import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.MapSelector;
 import de.amr.pacmanfx.ui.api.GameUI;
@@ -178,7 +178,8 @@ public class GameUI_Builder {
                     .newInstance(THE_GAME_BOX, highScoreFile);
             }
         } catch (Exception x) {
-            Logger.info("1st try: Could not create game model, class=%s".formatted(modelClass.getSimpleName()), x);
+            Logger.info("1st try: Could not create game model, class={}", modelClass.getSimpleName());
+            Logger.info(x);
         }
         if (game == null) {
             try {
@@ -186,7 +187,8 @@ public class GameUI_Builder {
                     .getDeclaredConstructor(File.class)
                     .newInstance(highScoreFile);
             } catch (Exception x) {
-                Logger.info("2nd try: Could not create game model, class=%s".formatted(modelClass.getSimpleName()), x);
+                Logger.info("2nd try: Could not create game model, class{}", modelClass.getSimpleName());
+                Logger.info(x);
             }
         }
         if (game != null) {

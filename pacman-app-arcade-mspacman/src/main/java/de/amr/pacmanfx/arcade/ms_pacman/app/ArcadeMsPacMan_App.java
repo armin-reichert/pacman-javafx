@@ -2,8 +2,11 @@
 Copyright (c) 2021-2026 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.arcade.ms_pacman;
+package de.amr.pacmanfx.arcade.ms_pacman.app;
 
+import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
+import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
+import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.model.StandardGameVariant;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.api.GameUI;
@@ -34,10 +37,13 @@ public class ArcadeMsPacMan_App extends Application {
             )
             .startPage(ArcadeMsPacMan_StartPage.class, GAME_VARIANT)
             .dashboard(
-                DashboardID.GENERAL, DashboardID.GAME_CONTROL,
+                DashboardID.GENERAL,
+                DashboardID.GAME_CONTROL,
                 DashboardID.SETTINGS_3D,
-                DashboardID.GAME_INFO, DashboardID.ACTOR_INFO,
-                DashboardID.KEYBOARD_SHORTCUTS_GLOBAL, DashboardID.KEYBOARD_SHORTCUTS_LOCAL,
+                DashboardID.GAME_INFO,
+                DashboardID.ACTOR_INFO,
+                DashboardID.KEYBOARD_SHORTCUTS_GLOBAL,
+                DashboardID.KEYBOARD_SHORTCUTS_LOCAL,
                 DashboardID.ABOUT)
             .build();
 

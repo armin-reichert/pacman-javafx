@@ -2,17 +2,16 @@
 Copyright (c) 2021-2026 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.arcade.ms_pacman;
+package de.amr.pacmanfx.arcade.ms_pacman.model;
 
-import de.amr.pacmanfx.arcade.ms_pacman.actors.ArcadeMsPacMan_ActorFactory;
-import de.amr.pacmanfx.arcade.ms_pacman.actors.MsPacMan;
-import de.amr.pacmanfx.arcade.ms_pacman.actors.Sue;
-import de.amr.pacmanfx.arcade.pacman.Arcade_GameModel;
-import de.amr.pacmanfx.arcade.pacman.Arcade_LevelData;
-import de.amr.pacmanfx.arcade.pacman.actors.Blinky;
-import de.amr.pacmanfx.arcade.pacman.actors.Inky;
-import de.amr.pacmanfx.arcade.pacman.actors.Pinky;
-import de.amr.pacmanfx.model.CoinMechanism;
+import de.amr.pacmanfx.arcade.ms_pacman.model.actors.ArcadeMsPacMan_ActorFactory;
+import de.amr.pacmanfx.arcade.ms_pacman.model.actors.MsPacMan;
+import de.amr.pacmanfx.arcade.ms_pacman.model.actors.Sue;
+import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameModel;
+import de.amr.pacmanfx.arcade.pacman.model.Arcade_LevelData;
+import de.amr.pacmanfx.arcade.pacman.model.actors.Blinky;
+import de.amr.pacmanfx.arcade.pacman.model.actors.Inky;
+import de.amr.pacmanfx.arcade.pacman.model.actors.Pinky;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Waypoint;
 import de.amr.pacmanfx.lib.math.Vector2i;

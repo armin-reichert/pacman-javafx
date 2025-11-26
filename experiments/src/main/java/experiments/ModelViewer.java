@@ -23,7 +23,7 @@ public class ModelViewer extends Application {
     static final String DIR = REPOSITORY_DIR
         + "pacman-ui-lib/src/main/resources/de/amr/pacmanfx/uilib/model3D";
 
-    private final PacManModel3DRepository model3DRepository = new PacManModel3DRepository();
+    private final PacManModel3DRepository model3DRepository = PacManModel3DRepository.theRepository();
     private Stage stage;
     private SubScene previewArea;
     private final BorderPane layoutPane = new BorderPane();

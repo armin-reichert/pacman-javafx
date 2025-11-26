@@ -5,7 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.arcade.pacman.actors.ArcadePacMan_ActorFactory;
+import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState;
+import de.amr.pacmanfx.arcade.pacman.model.actors.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.rendering.*;
 import de.amr.pacmanfx.arcade.pacman.scenes.*;
 import de.amr.pacmanfx.lib.RectShort;
@@ -291,10 +292,10 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
     @Override
     public GameScene selectGameScene(GameContext gameContext) {
         String sceneID = switch (gameContext.currentGameState()) {
-            case ArcadePacManGameState.BOOT -> SCENE_ID_BOOT_SCENE;
-            case ArcadePacManGameState.SETTING_OPTIONS_FOR_START -> SCENE_ID_START_SCENE;
-            case ArcadePacManGameState.INTRO -> SCENE_ID_INTRO_SCENE;
-            case ArcadePacManGameState.INTERMISSION -> {
+            case Arcade_GameState.BOOT -> SCENE_ID_BOOT_SCENE;
+            case Arcade_GameState.SETTING_OPTIONS_FOR_START -> SCENE_ID_START_SCENE;
+            case Arcade_GameState.INTRO -> SCENE_ID_INTRO_SCENE;
+            case Arcade_GameState.INTERMISSION -> {
                 if (gameContext.optGameLevel().isEmpty()) {
                     throw new IllegalStateException("Cannot determine cut scene, no game level available");
                 }

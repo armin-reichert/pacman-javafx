@@ -2,7 +2,7 @@
 Copyright (c) 2021-2026 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.arcade.pacman;
+package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
@@ -22,7 +22,7 @@ import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
  * <p>
  * TODO: Provide different FSM for Tengen Ms. Pac-Man than for Arcade Pac-Man & Ms. Pac-Man?
  */
-public enum ArcadePacManGameState implements FsmState<GameContext> {
+public enum Arcade_GameState implements FsmState<GameContext> {
 
     // "Das muss das Boot abkönnen!"
     BOOT {
@@ -111,7 +111,7 @@ public enum ArcadePacManGameState implements FsmState<GameContext> {
             }
             else if (timer.tickCount() == TICK_NEW_GAME_START_HUNTING) {
                 context.currentGame().setPlaying(true);
-                context.currentGame().changeState(ArcadePacManGameState.HUNTING);
+                context.currentGame().changeState(Arcade_GameState.HUNTING);
             }
         }
 
@@ -119,7 +119,7 @@ public enum ArcadePacManGameState implements FsmState<GameContext> {
             if (timer.tickCount() == 1) {
                 context.currentGame().continueGame(context.gameLevel());
             } else if (timer.tickCount() == TICK_RESUME_HUNTING) {
-                context.currentGame().changeState(ArcadePacManGameState.HUNTING);
+                context.currentGame().changeState(Arcade_GameState.HUNTING);
             }
         }
 
@@ -136,7 +136,7 @@ public enum ArcadePacManGameState implements FsmState<GameContext> {
                 context.gameLevel().showPacAndGhosts();
             }
             else if (timer.tickCount() == TICK_DEMO_LEVEL_START_HUNTING) {
-                context.currentGame().changeState(ArcadePacManGameState.HUNTING);
+                context.currentGame().changeState(Arcade_GameState.HUNTING);
             }
         }
 
