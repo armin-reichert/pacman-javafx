@@ -57,7 +57,7 @@ public final class CheatActions {
             if (!vulnerableGhosts.isEmpty()) {
                 gameLevel.energizerVictims().clear(); // resets value of next killed ghost to 200
                 vulnerableGhosts.forEach(ghost -> gameLevel.game().onGhostKilled(gameLevel, ghost));
-                ui.context().currentGame().stateMachine().changeState(GameState.GHOST_DYING);
+                ui.context().currentGame().changeState(GameState.GHOST_DYING);
             }
         }
 
@@ -71,7 +71,7 @@ public final class CheatActions {
         @Override
         public void execute(GameUI ui) {
             ui.context().cheatUsedProperty().set(true);
-            ui.context().currentGame().stateMachine().changeState(GameState.LEVEL_COMPLETE);
+            ui.context().currentGame().changeState(GameState.LEVEL_COMPLETE);
         }
 
         @Override

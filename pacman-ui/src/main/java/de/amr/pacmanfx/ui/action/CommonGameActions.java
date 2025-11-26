@@ -115,7 +115,7 @@ public final class CommonGameActions {
                 ui.context().currentGameState().onExit(ui.context()); //TODO exit other states too?
             }
             ui.clock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
-            ui.context().currentGame().stateMachine().restart(INTRO);
+            ui.context().currentGame().restart(INTRO);
         }
     };
 

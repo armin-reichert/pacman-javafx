@@ -98,7 +98,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
             case 204 -> gray(true);
             case 214 -> gray(false);
             case 220 -> {
-                context().currentGame().stateMachine().changeState(GameState.INTRO);
+                context().currentGame().changeState(GameState.INTRO);
                 return;
             }
         }

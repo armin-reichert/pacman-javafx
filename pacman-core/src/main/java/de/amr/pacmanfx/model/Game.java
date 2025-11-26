@@ -33,13 +33,19 @@ public interface Game {
         stateMachine().changeState(gameState);
     }
 
+    default void restart(FsmState<GameContext> gameState) {
+        stateMachine().restart(gameState);
+    }
+
     default void terminateCurrentGameState() {
         stateMachine().state().timer().expire();
     }
 
-    ScoreManager          scoreManager();
     SimulationStepResult  simulationStepResult();
+
+    ScoreManager          scoreManager();
     MapSelector           mapSelector();
+
     Optional<GameLevel>   optGameLevel();
     GameLevel             gameLevel();
     LevelCounter          levelCounter();

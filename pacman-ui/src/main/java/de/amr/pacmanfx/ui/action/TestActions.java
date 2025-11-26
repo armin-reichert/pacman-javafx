@@ -17,7 +17,7 @@ public class TestActions {
         @Override
         public void execute(GameUI ui) {
             FsmState<GameContext> testState = ui.context().currentGame().stateMachine().stateByName(CutScenesTestState.class.getSimpleName());
-            ui.context().currentGame().stateMachine().changeState(testState);
+            ui.context().currentGame().changeState(testState);
             ui.showFlashMessage("Cut scenes test"); //TODO localize
         }
     };
@@ -35,7 +35,7 @@ public class TestActions {
         @Override
         public void execute(GameUI ui) {
             FsmState<GameContext> testState = ui.context().currentGame().stateMachine().stateByName(LevelMediumTestState.class.getSimpleName());
-            ui.context().currentGame().stateMachine().restart(testState);
+            ui.context().currentGame().restart(testState);
             ui.showFlashMessage(Duration.seconds(3), "Level TEST MODE");
         }
     };

@@ -48,7 +48,7 @@ public class CutScenesTestState implements FsmState<GameContext>, TestState {
                     //TODO find another solution and get rid of this event type
                     context.currentGame().publishGameEvent(GameEvent.Type.UNSPECIFIED_CHANGE);
                 } else {
-                    context.currentGame().stateMachine().changeState(GameState.INTRO);
+                    context.currentGame().changeState(GameState.INTRO);
                 }
             }
         }

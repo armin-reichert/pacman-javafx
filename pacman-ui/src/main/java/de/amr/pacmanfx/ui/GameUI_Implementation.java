@@ -439,7 +439,7 @@ public final class GameUI_Implementation implements GameUI {
         });
         clock.stop();
         clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
-        gameContext.currentGame().stateMachine().restart(GameState.BOOT);
+        gameContext.currentGame().restart(GameState.BOOT);
         showStartView();
     }
 
@@ -448,7 +448,7 @@ public final class GameUI_Implementation implements GameUI {
         currentGameScene().ifPresent(GameScene::end);
         clock.stop();
         clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
-        gameContext.currentGame().stateMachine().restart(GameState.BOOT);
+        gameContext.currentGame().restart(GameState.BOOT);
         Platform.runLater(clock::start);
     }
 

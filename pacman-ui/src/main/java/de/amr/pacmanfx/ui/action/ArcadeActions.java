@@ -25,7 +25,7 @@ public final class ArcadeActions {
                 THE_GAME_BOX.insertCoin();
                 ui.context().currentGame().publishGameEvent(GameEvent.Type.CREDIT_ADDED);
             }
-            ui.context().currentGame().stateMachine().changeState(GameState.SETTING_OPTIONS_FOR_START);
+            ui.context().currentGame().changeState(GameState.SETTING_OPTIONS_FOR_START);
         }
 
         @Override
@@ -44,7 +44,7 @@ public final class ArcadeActions {
         @Override
         public void execute(GameUI ui) {
             ui.soundManager().stopVoice();
-            ui.context().currentGame().stateMachine().changeState(GameState.STARTING_GAME_OR_LEVEL);
+            ui.context().currentGame().changeState(GameState.STARTING_GAME_OR_LEVEL);
         }
 
         @Override
