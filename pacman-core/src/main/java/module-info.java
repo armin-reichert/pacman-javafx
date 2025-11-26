@@ -7,7 +7,6 @@ module de.amr.pacmanfx.core {
     requires javafx.base;
     requires java.desktop;
 
-    exports de.amr.pacmanfx.controller;
     exports de.amr.pacmanfx.event;
     exports de.amr.pacmanfx.model;
     exports de.amr.pacmanfx.model.actors;

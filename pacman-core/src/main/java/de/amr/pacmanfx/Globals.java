@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx;
 
-import de.amr.pacmanfx.controller.GameBox;
 import de.amr.pacmanfx.lib.math.Vector2i;
 
 public final class Globals {

@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.pacman.actors.Blinky;
-import de.amr.pacmanfx.controller.CoinMechanism;
+import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.math.Vector2i;

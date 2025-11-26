@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui;
 
-import de.amr.pacmanfx.controller.CoinMechanism;
-import de.amr.pacmanfx.controller.GameBox;
+import de.amr.pacmanfx.model.CoinMechanism;
+import de.amr.pacmanfx.GameBox;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.MapSelector;

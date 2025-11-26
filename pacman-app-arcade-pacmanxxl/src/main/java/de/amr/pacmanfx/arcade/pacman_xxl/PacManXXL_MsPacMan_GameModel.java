@@ -9,7 +9,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_HuntingTimer;
 import de.amr.pacmanfx.arcade.ms_pacman.actors.*;
 import de.amr.pacmanfx.arcade.pacman.Arcade_LevelData;
 import de.amr.pacmanfx.arcade.pacman.actors.Inky;
-import de.amr.pacmanfx.controller.CoinMechanism;
+import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.TerrainLayer;

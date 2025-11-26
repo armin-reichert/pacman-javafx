@@ -2,11 +2,11 @@
 Copyright (c) 2021-2026 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.controller;
+package de.amr.pacmanfx;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.fsm.FsmState;
+import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Score;

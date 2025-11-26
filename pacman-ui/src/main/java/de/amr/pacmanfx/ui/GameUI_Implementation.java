@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
-import de.amr.pacmanfx.controller.GameBox;
+import de.amr.pacmanfx.GameBox;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
 import de.amr.pacmanfx.model.GameState;
 import de.amr.pacmanfx.model.SimulationStepResult;

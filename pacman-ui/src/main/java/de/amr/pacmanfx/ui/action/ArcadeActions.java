@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.action;
 
-import de.amr.pacmanfx.controller.CoinMechanism;
+import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.model.GameState;
 import de.amr.pacmanfx.model.StandardGameVariant;
