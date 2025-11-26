@@ -9,11 +9,14 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_StartScene_Renderer;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui.action.ArcadeActions;
+import de.amr.pacmanfx.arcade.pacman.ArcadeActions;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.input.KeyCode;
+
+import static de.amr.pacmanfx.ui.input.Keyboard.bare;
 
 public class ArcadeMsPacMan_StartScene extends GameScene2D {
 
@@ -48,8 +51,10 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
     @Override
     public void doInit() {
         context().currentGame().hud().creditVisible(true).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
-        actionBindings.bind(ArcadeActions.ACTION_INSERT_COIN, ui.actionBindings());
-        actionBindings.bind(ArcadeActions.ACTION_START_GAME, ui.actionBindings());
+        actionBindings.addKeyCombination(ArcadeActions.ACTION_INSERT_COIN, bare(KeyCode.DIGIT5));
+        actionBindings.addKeyCombination(ArcadeActions.ACTION_INSERT_COIN, bare(KeyCode.NUMPAD5));
+        actionBindings.addKeyCombination(ArcadeActions.ACTION_START_GAME, bare(KeyCode.DIGIT1));
+        actionBindings.addKeyCombination(ArcadeActions.ACTION_START_GAME, bare(KeyCode.NUMPAD1));
     }
 
     @Override

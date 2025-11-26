@@ -9,7 +9,6 @@ import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.AbstractGameModel;
-import de.amr.pacmanfx.model.GameState;
 
 import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
 
@@ -48,7 +47,7 @@ public class CutScenesTestState implements FsmState<GameContext>, TestState {
                     //TODO find another solution and get rid of this event type
                     context.currentGame().publishGameEvent(GameEvent.Type.UNSPECIFIED_CHANGE);
                 } else {
-                    context.currentGame().changeState(GameState.INTRO);
+                    context.currentGame().changeState("INTRO");
                 }
             }
         }

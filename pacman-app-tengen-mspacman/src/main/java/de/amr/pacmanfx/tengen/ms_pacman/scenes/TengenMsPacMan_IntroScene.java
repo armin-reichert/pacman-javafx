@@ -9,10 +9,10 @@ import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.timer.TickTimer;
-import de.amr.pacmanfx.model.GameState;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
+import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengen.ms_pacman.model.actors.MsPacMan;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_IntroScene_Renderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
@@ -257,9 +257,9 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                     TengenMsPacMan_GameModel game = scene.context().currentGame();
                     if (game.optionsAreInitial()) {
                         game.setCanStartNewGame(false); // TODO check this
-                        scene.context().currentGame().restart(GameState.STARTING_GAME_OR_LEVEL);
+                        scene.context().currentGame().restart(TengenMsPacMan_GameState.STARTING_GAME_OR_LEVEL);
                     } else {
-                        scene.context().currentGame().changeState(GameState.SETTING_OPTIONS_FOR_START);
+                        scene.context().currentGame().changeState(TengenMsPacMan_GameState.SETTING_OPTIONS_FOR_START);
                     }
                 }
             }

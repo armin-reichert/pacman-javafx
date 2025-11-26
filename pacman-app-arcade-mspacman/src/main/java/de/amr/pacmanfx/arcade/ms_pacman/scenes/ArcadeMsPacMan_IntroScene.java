@@ -12,15 +12,16 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.timer.TickTimer;
-import de.amr.pacmanfx.model.GameState;
+import de.amr.pacmanfx.arcade.pacman.ArcadePacManGameState;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui.action.ArcadeActions;
+import de.amr.pacmanfx.arcade.pacman.ArcadeActions;
 import de.amr.pacmanfx.ui.action.TestActions;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.input.KeyCode;
 
 import java.util.Collections;
 import java.util.List;
@@ -28,6 +29,7 @@ import java.util.List;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.ui.api.ArcadePalette.ARCADE_RED;
 import static de.amr.pacmanfx.ui.api.ArcadePalette.ARCADE_WHITE;
+import static de.amr.pacmanfx.ui.input.Keyboard.bare;
 
 /**
  * Intro scene of the Ms. Pac-Man game.
@@ -103,8 +105,11 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     public void doInit() {
         context().currentGame().hud().creditVisible(true).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
 
-        actionBindings.bind(ArcadeActions.ACTION_INSERT_COIN, ui.actionBindings());
-        actionBindings.bind(ArcadeActions.ACTION_START_GAME, ui.actionBindings());
+        actionBindings.addKeyCombination(ArcadeActions.ACTION_INSERT_COIN, bare(KeyCode.DIGIT5));
+        actionBindings.addKeyCombination(ArcadeActions.ACTION_INSERT_COIN, bare(KeyCode.NUMPAD5));
+        actionBindings.addKeyCombination(ArcadeActions.ACTION_START_GAME, bare(KeyCode.DIGIT1));
+        actionBindings.addKeyCombination(ArcadeActions.ACTION_START_GAME, bare(KeyCode.NUMPAD1));
+
         actionBindings.bind(TestActions.ACTION_CUT_SCENES_TEST, ui.actionBindings());
         actionBindings.bind(TestActions.ACTION_SHORT_LEVEL_TEST, ui.actionBindings());
         actionBindings.bind(TestActions.ACTION_MEDIUM_LEVEL_TEST, ui.actionBindings());
@@ -245,9 +250,9 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
                 scene.marquee.timer().doTick();
                 if (sceneTimer.atSecond(2.0) && !scene.context().currentGame().canStartNewGame()) {
-                    scene.context().currentGame().changeState(GameState.STARTING_GAME_OR_LEVEL); // demo level
+                    scene.context().currentGame().changeState(ArcadePacManGameState.STARTING_GAME_OR_LEVEL); // demo level
                 } else if (sceneTimer.atSecond(5)) {
-                    scene.context().currentGame().changeState(GameState.SETTING_OPTIONS_FOR_START);
+                    scene.context().currentGame().changeState(ArcadePacManGameState.SETTING_OPTIONS_FOR_START);
                 }
             }
         };

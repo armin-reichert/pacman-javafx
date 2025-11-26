@@ -5,11 +5,9 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.dashboard;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.lib.fsm.FsmState;
-import de.amr.pacmanfx.model.GameState;
+import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
-import de.amr.pacmanfx.ui.action.ArcadeActions;
 import de.amr.pacmanfx.ui.action.TestActions;
 import de.amr.pacmanfx.ui.api.GameUI;
 import javafx.scene.control.Button;
@@ -18,9 +16,10 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Spinner;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
-import static de.amr.pacmanfx.Validations.stateIsOneOf;
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_ENTER_NEXT_LEVEL;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_RESTART_INTRO;
 
@@ -60,7 +59,7 @@ public class InfoBoxGameControl extends InfoBox {
 
         setAction(buttonGroupCutScenesTest[CUT_SCENES_TEST_START], TestActions.ACTION_CUT_SCENES_TEST);
         setAction(buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT], ACTION_RESTART_INTRO);
-        setAction(buttonGroupLevelActions[GAME_LEVEL_START], ArcadeActions.ACTION_START_GAME); //TODO Tengen?
+        //setAction(buttonGroupLevelActions[GAME_LEVEL_START], ArcadeActions.ACTION_START_GAME); //TODO Tengen?
         setAction(buttonGroupLevelActions[GAME_LEVEL_QUIT], ACTION_RESTART_INTRO);
         setAction(buttonGroupLevelActions[GAME_LEVEL_NEXT], ACTION_ENTER_NEXT_LEVEL);
         setAction(choiceBoxInitialLives, () -> ui.context().currentGame().setInitialLifeCount(choiceBoxInitialLives.getValue()));
@@ -75,14 +74,14 @@ public class InfoBoxGameControl extends InfoBox {
 
         FsmState<GameContext> state = ui.context().currentGameState();
 
-        spinnerCredit.setDisable(!(stateIsOneOf(state, GameState.INTRO, GameState.SETTING_OPTIONS_FOR_START)));
-        choiceBoxInitialLives.setDisable(state != GameState.INTRO);
+        spinnerCredit.setDisable(!Set.of("INTRO", "SETTING_OPTIONS_FOR_START").contains(state.name()));
+        choiceBoxInitialLives.setDisable(!state.name().equals("INTRO"));
 
         buttonGroupLevelActions[GAME_LEVEL_START].setDisable(isBooting() || !canStartLevel());
         buttonGroupLevelActions[GAME_LEVEL_QUIT].setDisable(isBooting() || ui.context().optGameLevel().isEmpty());
         buttonGroupLevelActions[GAME_LEVEL_NEXT].setDisable(isBooting() || !canEnterNextLevel());
 
-        buttonGroupCutScenesTest[CUT_SCENES_TEST_START].setDisable(isBooting() || state != GameState.INTRO);
+        buttonGroupCutScenesTest[CUT_SCENES_TEST_START].setDisable(isBooting() || !state.name().equals("INTRO"));
         buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT].setDisable(isBooting() || !(state instanceof CutScenesTestState));
 
         cbAutopilot.setDisable(isBooting());
@@ -90,14 +89,17 @@ public class InfoBoxGameControl extends InfoBox {
     }
 
     private boolean isBooting() {
-        return ui.context().currentGameState() == GameState.BOOT;
+        return ui.context().currentGameState().name().equals("BOOT");
     }
 
     private boolean canStartLevel() {
-        return ui.context().currentGame().canStartNewGame() && stateIsOneOf(ui.context().currentGameState(), GameState.INTRO, GameState.SETTING_OPTIONS_FOR_START);
+
+        return ui.context().currentGame().canStartNewGame()
+            && Set.of("INTRO", "SETTING_OPTIONS_FOR_START").contains(ui.context().currentGameState().name());
     }
 
     private boolean canEnterNextLevel() {
-        return ui.context().currentGame().isPlaying() && stateIsOneOf(ui.context().currentGameState(), GameState.HUNTING);
+        return ui.context().currentGame().isPlaying()
+         && Objects.equals("HUNTING", ui.context().currentGameState().name());
     }
 }

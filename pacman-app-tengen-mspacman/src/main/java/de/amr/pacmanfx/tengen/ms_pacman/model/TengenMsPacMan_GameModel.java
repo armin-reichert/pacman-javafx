@@ -135,7 +135,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     private int numContinues;
 
     public TengenMsPacMan_GameModel(File highScoreFile) {
-        List<FsmState<GameContext>> states = new ArrayList<>(List.of(GameState.values()));
+        List<FsmState<GameContext>> states = new ArrayList<>(List.of(TengenMsPacMan_GameState.values()));
         states.add(new LevelShortTestState());
         states.add(new LevelMediumTestState());
         states.add(new CutScenesTestState());

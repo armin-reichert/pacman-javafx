@@ -19,7 +19,6 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.test.TestState;
-import de.amr.pacmanfx.ui.action.ArcadeActions;
 import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.action.GameAction;
@@ -53,8 +52,6 @@ import java.util.*;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.Validations.stateIsOneOf;
-import static de.amr.pacmanfx.model.GameState.*;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.api.GameUI.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.control;
@@ -283,7 +280,8 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
         actionBindings.bind(ACTION_TOGGLE_DRAW_MODE, ui.actionBindings());
         if (context().optGameLevel().isPresent()) {
             if (context().gameLevel().isDemoLevel()) {
-                actionBindings.bind(ArcadeActions.ACTION_INSERT_COIN, ui.actionBindings());
+                //TODO This is game-specific and does not belong here!
+                //actionBindings.bind(ArcadeActions.ACTION_INSERT_COIN, ui.actionBindings());
             } else {
                 setPlayerSteeringActionBindings();
                 actionBindings.bind(CheatActions.ACTION_EAT_ALL_PELLETS, ui.actionBindings());
@@ -356,13 +354,13 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
             PROPERTY_3D_PERSPECTIVE_ID.set(PerspectiveID.TOTAL);
         }
         else {
-            switch (state) {
-                case HUNTING -> gameLevel3D.onHuntingStart();
-                case PACMAN_DYING -> gameLevel3D.onPacManDying(state);
-                case GHOST_DYING -> gameLevel3D.onGhostDying();
-                case LEVEL_COMPLETE -> gameLevel3D.onLevelComplete(state, perspectiveID);
-                case GAME_OVER -> gameLevel3D.onGameOver(state);
-                case STARTING_GAME_OR_LEVEL -> {
+            switch (state.name()) {
+                case "HUNTING" -> gameLevel3D.onHuntingStart();
+                case "PACMAN_DYING" -> gameLevel3D.onPacManDying(state);
+                case "GHOST_DYING" -> gameLevel3D.onGhostDying();
+                case "LEVEL_COMPLETE" -> gameLevel3D.onLevelComplete(state, perspectiveID);
+                case "GAME_OVER" -> gameLevel3D.onGameOver(state);
+                case "STARTING_GAME_OR_LEVEL" -> {
                     if (gameLevel3D != null) {
                         gameLevel3D.onStartingGame();
                     } else {
@@ -394,8 +392,8 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
             showLevelTestMessage(gameLevel);
         }
         else {
-            switch (state) {
-                case STARTING_GAME_OR_LEVEL, LEVEL_TRANSITION -> {
+            switch (state.name()) {
+                case "STARTING_GAME_OR_LEVEL", "LEVEL_TRANSITION" -> {
                     if (!gameLevel.isDemoLevel()) {
                         Optional<House> optionalHouse = gameLevel.worldMap().terrainLayer().optHouse();
                         if (optionalHouse.isEmpty()) {
@@ -437,13 +435,14 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
         gameLevel3D.energizers3D().forEach(energizer3D ->
                 energizer3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(energizer3D.tile())));
 
-        if (stateIsOneOf(context().currentGameState(), HUNTING, GHOST_DYING)) { //TODO check this
+        final String gameStateID = context().currentGameState().name();
+        if (gameStateID.equals("HUNTING") || gameStateID.equals("GHOST_DYING")) { //TODO check this
             gameLevel3D.energizers3D().stream()
                 .filter(energizer3D -> energizer3D.shape().isVisible())
                 .forEach(Energizer3D::startPumping);
         }
 
-        if (context().currentGameState() == HUNTING) {
+        if (gameStateID.equals("HUNTING")) {
             if (gameLevel.pac().powerTimer().isRunning()) {
                 ui.soundManager().loop(SoundID.PAC_MAN_POWER);
             }
@@ -640,7 +639,7 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
 
     protected void updateSound(GameLevel gameLevel, FsmState<GameContext> gameState) {
         if (!ui.soundManager().isEnabled()) return;
-        if (gameState == HUNTING) {
+        if (gameState.name().equals("HUNTING")) {
             updateSiren(gameLevel.pac());
             updateGhostSounds(gameLevel.pac(), gameLevel.ghosts());
         }

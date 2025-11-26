@@ -2,13 +2,17 @@
 Copyright (c) 2021-2026 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.model;
+package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.timer.TickTimer;
+import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.MessageType;
+import de.amr.pacmanfx.model.StandardGameVariant;
 import de.amr.pacmanfx.model.actors.*;
 
 import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
@@ -18,7 +22,7 @@ import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
  * <p>
  * TODO: Provide different FSM for Tengen Ms. Pac-Man than for Arcade Pac-Man & Ms. Pac-Man?
  */
-public enum GameState implements FsmState<GameContext> {
+public enum ArcadePacManGameState implements FsmState<GameContext> {
 
     // "Das muss das Boot abkönnen!"
     BOOT {
@@ -107,7 +111,7 @@ public enum GameState implements FsmState<GameContext> {
             }
             else if (timer.tickCount() == TICK_NEW_GAME_START_HUNTING) {
                 context.currentGame().setPlaying(true);
-                context.currentGame().changeState(GameState.HUNTING);
+                context.currentGame().changeState(ArcadePacManGameState.HUNTING);
             }
         }
 
@@ -115,7 +119,7 @@ public enum GameState implements FsmState<GameContext> {
             if (timer.tickCount() == 1) {
                 context.currentGame().continueGame(context.gameLevel());
             } else if (timer.tickCount() == TICK_RESUME_HUNTING) {
-                context.currentGame().changeState(GameState.HUNTING);
+                context.currentGame().changeState(ArcadePacManGameState.HUNTING);
             }
         }
 
@@ -132,7 +136,7 @@ public enum GameState implements FsmState<GameContext> {
                 context.gameLevel().showPacAndGhosts();
             }
             else if (timer.tickCount() == TICK_DEMO_LEVEL_START_HUNTING) {
-                context.currentGame().changeState(GameState.HUNTING);
+                context.currentGame().changeState(ArcadePacManGameState.HUNTING);
             }
         }
 

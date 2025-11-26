@@ -9,7 +9,6 @@ import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.GameState;
 import de.amr.pacmanfx.model.StandardGameVariant;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.test.LevelMediumTestState;
@@ -21,10 +20,10 @@ import javafx.scene.shape.DrawMode;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
+import java.util.Set;
+
 import static de.amr.pacmanfx.Globals.NUM_TICKS_PER_SEC;
 import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
-import static de.amr.pacmanfx.Validations.stateIsOneOf;
-import static de.amr.pacmanfx.model.GameState.INTRO;
 import static de.amr.pacmanfx.ui.api.GameScene_Config.SCENE_ID_PLAY_SCENE_2D;
 import static de.amr.pacmanfx.ui.api.GameScene_Config.SCENE_ID_PLAY_SCENE_3D;
 import static de.amr.pacmanfx.ui.api.GameUI.*;
@@ -115,7 +114,7 @@ public final class CommonGameActions {
                 ui.context().currentGameState().onExit(ui.context()); //TODO exit other states too?
             }
             ui.clock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
-            ui.context().currentGame().restart(INTRO);
+            ui.context().currentGame().restart("INTRO");
         }
     };
 
@@ -313,7 +312,7 @@ public final class CommonGameActions {
                 || state.name().equals(LevelMediumTestState.class.getSimpleName())) {
                 return true;
             }
-            return stateIsOneOf(state, GameState.BOOT, GameState.INTRO, GameState.SETTING_OPTIONS_FOR_START, GameState.HUNTING);
+            return Set.of("BOOT", "INTRO", "SETTING_OPTIONS_FOR_START", "HUNTING").contains(state.name());
         }
     };
 }

@@ -6,7 +6,6 @@ package de.amr.pacmanfx.ui.action;
 
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.GameState;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
@@ -44,7 +43,7 @@ public final class CheatActions {
         public boolean isEnabled(GameUI ui) {
             return ui.context().optGameLevel().isPresent()
                     && !ui.context().gameLevel().isDemoLevel()
-                    && ui.context().currentGameState() == GameState.HUNTING;
+                    && ui.context().currentGameState().name().equals("HUNTING");
         }
     };
 
@@ -57,13 +56,14 @@ public final class CheatActions {
             if (!vulnerableGhosts.isEmpty()) {
                 gameLevel.energizerVictims().clear(); // resets value of next killed ghost to 200
                 vulnerableGhosts.forEach(ghost -> gameLevel.game().onGhostKilled(gameLevel, ghost));
-                ui.context().currentGame().changeState(GameState.GHOST_DYING);
+                ui.context().currentGame().changeState("GHOST_DYING");
             }
         }
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            return ui.context().currentGameState() == GameState.HUNTING && ui.context().optGameLevel().isPresent() && !ui.context().gameLevel().isDemoLevel();
+            return ui.context().currentGameState().name().equals("HUNTING")
+                && ui.context().optGameLevel().isPresent() && !ui.context().gameLevel().isDemoLevel();
         }
     };
 
@@ -71,13 +71,13 @@ public final class CheatActions {
         @Override
         public void execute(GameUI ui) {
             ui.context().cheatUsedProperty().set(true);
-            ui.context().currentGame().changeState(GameState.LEVEL_COMPLETE);
+            ui.context().currentGame().changeState("LEVEL_COMPLETE");
         }
 
         @Override
         public boolean isEnabled(GameUI ui) {
             return ui.context().currentGame().isPlaying()
-                    && ui.context().currentGameState() == GameState.HUNTING
+                    && ui.context().currentGameState().name().equals("HUNTING")
                     && ui.context().optGameLevel().isPresent()
                     && ui.context().gameLevel().number() < ui.context().currentGame().lastLevelNumber();
         }

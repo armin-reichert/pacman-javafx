@@ -2,16 +2,16 @@
 Copyright (c) 2021-2026 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.ui.action;
+package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.model.GameState;
 import de.amr.pacmanfx.model.StandardGameVariant;
+import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.api.GameUI;
 
 import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
-import static de.amr.pacmanfx.model.GameState.INTRO;
+import static de.amr.pacmanfx.arcade.pacman.ArcadePacManGameState.INTRO;
 
 public final class ArcadeActions {
     /**
@@ -25,7 +25,7 @@ public final class ArcadeActions {
                 THE_GAME_BOX.insertCoin();
                 ui.context().currentGame().publishGameEvent(GameEvent.Type.CREDIT_ADDED);
             }
-            ui.context().currentGame().changeState(GameState.SETTING_OPTIONS_FOR_START);
+            ui.context().currentGame().changeState(ArcadePacManGameState.SETTING_OPTIONS_FOR_START);
         }
 
         @Override
@@ -33,7 +33,7 @@ public final class ArcadeActions {
             if (ui.context().currentGame().isPlaying()) {
                 return false;
             }
-            return ui.context().currentGameState() == GameState.SETTING_OPTIONS_FOR_START
+            return ui.context().currentGameState() == ArcadePacManGameState.SETTING_OPTIONS_FOR_START
                 || ui.context().currentGameState() == INTRO
                 || ui.context().optGameLevel().isPresent() && ui.context().optGameLevel().get().isDemoLevel()
                 || THE_GAME_BOX.noCoin();
@@ -44,7 +44,7 @@ public final class ArcadeActions {
         @Override
         public void execute(GameUI ui) {
             ui.soundManager().stopVoice();
-            ui.context().currentGame().changeState(GameState.STARTING_GAME_OR_LEVEL);
+            ui.context().currentGame().changeState(ArcadePacManGameState.STARTING_GAME_OR_LEVEL);
         }
 
         @Override
@@ -52,7 +52,7 @@ public final class ArcadeActions {
             boolean isArcadeGame = StandardGameVariant.isArcadeGameName(THE_GAME_BOX.gameVariantName());
             return isArcadeGame
                 && !THE_GAME_BOX.noCoin()
-                && (ui.context().currentGameState() == GameState.INTRO || ui.context().currentGameState() == GameState.SETTING_OPTIONS_FOR_START)
+                && (ui.context().currentGameState() == INTRO || ui.context().currentGameState() == ArcadePacManGameState.SETTING_OPTIONS_FOR_START)
                 && ui.context().currentGame().canStartNewGame();
         }
     };

@@ -20,17 +20,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
-import static de.amr.pacmanfx.model.GameState.*;
 import static java.util.Objects.requireNonNull;
 
 public class HelpInfo {
 
     public static HelpInfo build(GameUI ui) {
         HelpInfo help = new HelpInfo(ui);
-        switch (ui.context().currentGameState()) {
-            case INTRO -> help.addInfoForIntroScene(ui.context());
-            case SETTING_OPTIONS_FOR_START -> help.addInfoForCreditScene(ui.context());
-            case STARTING_GAME_OR_LEVEL, HUNTING, PACMAN_DYING, GHOST_DYING -> {
+        switch (ui.context().currentGameState().name()) {
+            case "INTRO" -> help.addInfoForIntroScene(ui.context());
+            case "SETTING_OPTIONS_FOR_START" -> help.addInfoForCreditScene(ui.context());
+            case "STARTING_GAME_OR_LEVEL", "HUNTING", "PACMAN_DYING", "GHOST_DYING" -> {
                 if (ui.context().optGameLevel().isPresent() && ui.context().gameLevel().isDemoLevel()) {
                     help.addInfoForDemoLevelPlayScene();
                 } else {

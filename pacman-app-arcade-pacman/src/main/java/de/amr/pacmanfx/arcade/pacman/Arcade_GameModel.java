@@ -83,7 +83,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         this.coinMechanism = requireNonNull(coinMechanism);
         setCollisionStrategy(CollisionStrategy.SAME_TILE);
 
-        List<FsmState<GameContext>> states = new ArrayList<>(List.of(GameState.values()));
+        List<FsmState<GameContext>> states = new ArrayList<>(List.of(ArcadePacManGameState.values()));
         states.add(new LevelShortTestState());
         states.add(new LevelMediumTestState());
         states.add(new CutScenesTestState());

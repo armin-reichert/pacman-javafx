@@ -8,7 +8,6 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.GameBox;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
-import de.amr.pacmanfx.model.GameState;
 import de.amr.pacmanfx.model.SimulationStepResult;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.action.*;
@@ -75,8 +74,8 @@ public final class GameUI_Implementation implements GameUI {
         new ActionBinding(CheatActions.ACTION_ENTER_NEXT_LEVEL,    alt(KeyCode.N)),
         new ActionBinding(CheatActions.ACTION_KILL_GHOSTS,         alt(KeyCode.X)),
 
-        new ActionBinding(ArcadeActions.ACTION_INSERT_COIN,        bare(KeyCode.DIGIT5), bare(KeyCode.NUMPAD5)),
-        new ActionBinding(ArcadeActions.ACTION_START_GAME,         bare(KeyCode.DIGIT1), bare(KeyCode.NUMPAD1)),
+//        new ActionBinding(ArcadeActions.ACTION_INSERT_COIN,        bare(KeyCode.DIGIT5), bare(KeyCode.NUMPAD5)),
+//        new ActionBinding(ArcadeActions.ACTION_START_GAME,         bare(KeyCode.DIGIT1), bare(KeyCode.NUMPAD1)),
 
         new ActionBinding(ACTION_BOOT_SHOW_PLAY_VIEW,              bare(KeyCode.F3)),
         new ActionBinding(ACTION_ENTER_FULLSCREEN,                 bare(KeyCode.F11)),
@@ -428,9 +427,11 @@ public final class GameUI_Implementation implements GameUI {
     @Override
     public void quitCurrentGameScene() {
         soundManager().stopAll();
+
+        //TODO this is game-specific and should not be handled here
         currentGameScene().ifPresent(gameScene -> {
             gameScene.end();
-            boolean shouldConsumeCoin = gameContext.currentGameState() == GameState.STARTING_GAME_OR_LEVEL
+            boolean shouldConsumeCoin = gameContext.currentGameState().name().equals("STARTING_GAME_OR_LEVEL")
                     || gameContext.currentGame().isPlaying();
             if (shouldConsumeCoin && !THE_GAME_BOX.noCoin()) {
                 THE_GAME_BOX.consumeCoin();
@@ -439,7 +440,7 @@ public final class GameUI_Implementation implements GameUI {
         });
         clock.stop();
         clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
-        gameContext.currentGame().restart(GameState.BOOT);
+        gameContext.currentGame().restart("BOOT");
         showStartView();
     }
 
@@ -448,7 +449,7 @@ public final class GameUI_Implementation implements GameUI {
         currentGameScene().ifPresent(GameScene::end);
         clock.stop();
         clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
-        gameContext.currentGame().restart(GameState.BOOT);
+        gameContext.currentGame().restart("BOOT");
         Platform.runLater(clock::start);
     }
 

@@ -46,6 +46,10 @@ public interface Game {
         stateMachine().restart(gameState);
     }
 
+    default void restart(String gameStateID) {
+        stateMachine().restart(stateMachine().state(gameStateID));
+    }
+
     default void terminateCurrentGameState() {
         stateMachine().state().timer().expire();
     }
