@@ -31,9 +31,7 @@ public interface Game {
     StateMachine<FsmState<GameContext>, GameContext> stateMachine();
 
     default FsmState<GameContext> gameState(String name) {
-        return stateMachine().states().stream()
-            .filter(state -> state.name().equals(name))
-            .findFirst().orElseThrow();
+        return stateMachine().state(name);
     }
 
     default void changeState(FsmState<GameContext> gameState) {

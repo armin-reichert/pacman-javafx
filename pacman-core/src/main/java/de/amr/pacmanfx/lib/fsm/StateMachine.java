@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.lib.fsm;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import org.tinylog.Logger;
 
@@ -79,6 +80,17 @@ public class StateMachine<S extends FsmState<C>, C> {
      */
     public List<S> states() {
         return Collections.unmodifiableList(states);
+    }
+
+    /**
+     * @param name state name (id)
+     * @return state with given name. If no such name exists, an exception is thrown
+     */
+    public S state(String name) {
+        requireNonNull(name);
+        return states().stream()
+            .filter(state -> state.name().equals(name))
+            .findFirst().orElseThrow(IllegalArgumentException::new);
     }
 
     /**
