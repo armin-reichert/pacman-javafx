@@ -147,6 +147,11 @@ public class GameBox implements GameContext, CoinMechanism {
     private final IntegerProperty numCoins = new SimpleIntegerProperty(0);
 
     @Override
+    public CoinMechanism coinMechanism() {
+        return this;
+    }
+
+    @Override
     public IntegerProperty numCoinsProperty() { return numCoins; }
 
     @Override

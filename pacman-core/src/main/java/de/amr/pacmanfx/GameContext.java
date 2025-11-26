@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx;
 
 import de.amr.pacmanfx.lib.fsm.FsmState;
+import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import javafx.beans.property.BooleanProperty;
@@ -49,6 +50,8 @@ public interface GameContext {
     default GameLevel gameLevel() {
         return currentGame().optGameLevel().orElse(null);
     }
+
+    CoinMechanism coinMechanism();
 
     BooleanProperty cheatUsedProperty();
 
