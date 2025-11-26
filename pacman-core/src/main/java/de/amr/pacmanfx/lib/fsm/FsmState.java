@@ -14,9 +14,7 @@ import de.amr.pacmanfx.lib.timer.TickTimer;
  */
 public interface FsmState<C> {
 
-    default String name() {
-        return "FsmState-" + getClass().getSimpleName();
-    }
+    String name();
 
     /**
      * The hook method that gets executed when the state is entered.

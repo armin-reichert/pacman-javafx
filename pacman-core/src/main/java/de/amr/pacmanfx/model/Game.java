@@ -38,6 +38,10 @@ public interface Game {
         stateMachine().changeState(gameState);
     }
 
+    default void changeState(String gameStateID) {
+        stateMachine().changeState(stateMachine().state(gameStateID));
+    }
+
     default void restart(FsmState<GameContext> gameState) {
         stateMachine().restart(gameState);
     }
