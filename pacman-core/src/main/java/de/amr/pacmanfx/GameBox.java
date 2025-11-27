@@ -107,10 +107,6 @@ public class GameBox implements GameContext, CoinMechanism {
         this.gameVariantName.set(gameVariantName);
     }
 
-    public boolean isCurrentGameVariant(String gameVariantName) {
-        return requireNonNull(gameVariantName).equals(gameVariantName());
-    }
-
     @SuppressWarnings("unchecked")
     public <T extends Game> T game(String variantName) {
         requireNonNull(variantName);
