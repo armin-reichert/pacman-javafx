@@ -130,30 +130,31 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void onGhostKilled(GameLevel gameLevel, Ghost ghost) {
-        int killedSoFar = gameLevel.energizerVictims().size();
+    public void onGhostKilled(Ghost ghost) {
+        final GameLevel level = level();
+        int killedSoFar = level.energizerVictims().size();
         int points = 100 * KILLED_GHOST_VALUE_FACTORS[killedSoFar];
-        gameLevel.energizerVictims().add(ghost);
+        level.energizerVictims().add(ghost);
         ghost.setState(GhostState.EATEN);
         ghost.selectAnimationAt(CommonAnimationID.ANIM_GHOST_NUMBER, killedSoFar);
         scoreManager.scorePoints(points);
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
-        gameLevel.registerGhostKilled();
-        if (gameLevel.numGhostsKilled() == 16) {
+        level.registerGhostKilled();
+        if (level.numGhostsKilled() == 16) {
             scoreManager.scorePoints(ALL_GHOSTS_IN_LEVEL_KILLED_POINTS);
-            Logger.info("Scored {} points for killing all ghosts in level {}", ALL_GHOSTS_IN_LEVEL_KILLED_POINTS, gameLevel.number());
+            Logger.info("Scored {} points for killing all ghosts in level {}", ALL_GHOSTS_IN_LEVEL_KILLED_POINTS, level.number());
         }
     }
 
     @Override
-    public void onGameEnding(GameLevel gameLevel) {
+    public void onGameEnding() {
         setPlaying(false);
         if (!coinMechanism.noCoin()) {
             coinMechanism.consumeCoin();
         }
         scoreManager.updateHighScore();
-        showMessage(gameLevel, MessageType.GAME_OVER);
-        Logger.info("Game ended with level number {}", gameLevel.number());
+        showMessage(level(), MessageType.GAME_OVER);
+        Logger.info("Game ended with level number {}", level().number());
     }
 
     // GameLifecycle interface

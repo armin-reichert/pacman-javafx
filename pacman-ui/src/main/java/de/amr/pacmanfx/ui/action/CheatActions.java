@@ -51,20 +51,22 @@ public final class CheatActions {
     public static final GameAction ACTION_KILL_GHOSTS = new GameAction("CHEAT_KILL_GHOSTS") {
         @Override
         public void execute(GameUI ui) {
+            final Game game = ui.context().currentGame();
             ui.context().cheatUsedProperty().set(true);
-            GameLevel gameLevel = ui.context().currentGame().level();
+            GameLevel gameLevel = game.level();
             List<Ghost> vulnerableGhosts = gameLevel.ghosts(FRIGHTENED, HUNTING_PAC).toList();
             if (!vulnerableGhosts.isEmpty()) {
                 gameLevel.energizerVictims().clear(); // resets value of next killed ghost to 200
-                vulnerableGhosts.forEach(ghost -> gameLevel.game().onGhostKilled(gameLevel, ghost));
-                ui.context().currentGame().changeState("GHOST_DYING");
+                vulnerableGhosts.forEach(game::onGhostKilled);
+                game.changeState("GHOST_DYING");
             }
         }
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            return ui.context().currentGame().state().name().equals("HUNTING")
-                && ui.context().currentGame().optGameLevel().isPresent() && !ui.context().currentGame().level().isDemoLevel();
+            final Game game = ui.context().currentGame();
+            return game.state().name().equals("HUNTING")
+                && game.optGameLevel().isPresent() && !game.level().isDemoLevel();
         }
     };
 

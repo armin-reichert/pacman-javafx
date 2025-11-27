@@ -355,8 +355,9 @@ public class TengenMsPacMan_GameStateMachine extends StateMachine<FsmState<GameC
 
             @Override
             public void onEnter(GameContext context) {
-                timer.restartTicks(context.currentGame().level().gameOverStateTicks());
-                context.currentGame().onGameEnding(context.currentGame().level());
+                final Game game = context.currentGame();
+                timer.restartTicks(game.level().gameOverStateTicks());
+                game.onGameEnding();
             }
 
             @Override

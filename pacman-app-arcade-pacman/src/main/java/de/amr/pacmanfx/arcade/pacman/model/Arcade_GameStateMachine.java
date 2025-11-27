@@ -332,7 +332,7 @@ public class Arcade_GameStateMachine extends StateMachine<FsmState<GameContext>,
             public void onEnter(GameContext context) {
                 final Game game = context.currentGame();
                 timer.restartTicks(game.level().gameOverStateTicks());
-                game.onGameEnding(game.level());
+                game.onGameEnding();
             }
 
             @Override

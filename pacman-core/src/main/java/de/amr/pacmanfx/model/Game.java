@@ -127,8 +127,8 @@ public interface Game {
     // Game event handling
     void onLevelCompleted();
     void onPacKilled();
-    void onGhostKilled(GameLevel gameLevel, Ghost ghost);
-    void onGameEnding(GameLevel gameLevel);
+    void onGhostKilled(Ghost ghost);
+    void onGameEnding();
 
     // Actor speeds in pixels/tick
     float bonusSpeed(GameLevel gameLevel);

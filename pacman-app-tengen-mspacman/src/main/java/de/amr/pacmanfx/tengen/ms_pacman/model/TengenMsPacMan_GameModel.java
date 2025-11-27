@@ -182,11 +182,10 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void onGameEnding(GameLevel gameLevel) {
+    public void onGameEnding() {
         setPlaying(false);
         scoreManager.updateHighScore();
-
-        showMessage(gameLevel, MessageType.GAME_OVER);
+        showMessage(level(), MessageType.GAME_OVER);
     }
 
     @Override
@@ -594,10 +593,11 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void onGhostKilled(GameLevel gameLevel, Ghost ghost) {
-        int killedSoFar = gameLevel.energizerVictims().size();
-        int points = 100 * KILLED_GHOST_VALUE_FACTORS[killedSoFar];
-        gameLevel.energizerVictims().add(ghost);
+    public void onGhostKilled(Ghost ghost) {
+        final List<Ghost> victims = level().energizerVictims();
+        final int killedSoFar = victims.size();
+        final int points = 100 * KILLED_GHOST_VALUE_FACTORS[killedSoFar];
+        victims.add(ghost);
         ghost.setState(GhostState.EATEN);
         ghost.selectAnimationAt(CommonAnimationID.ANIM_GHOST_NUMBER, killedSoFar);
         scoreManager.scorePoints(points);
