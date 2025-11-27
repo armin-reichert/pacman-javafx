@@ -196,8 +196,8 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     }
 
     @Override
-    public boolean isBonusReached(GameLevel gameLevel) {
-        int eatenFoodCount = gameLevel.worldMap().foodLayer().eatenFoodCount();
+    public boolean isBonusReached() {
+        int eatenFoodCount = level().worldMap().foodLayer().eatenFoodCount();
         return eatenFoodCount == FIRST_BONUS_PELLETS_EATEN || eatenFoodCount == SECOND_BONUS_PELLETS_EATEN;
     }
 

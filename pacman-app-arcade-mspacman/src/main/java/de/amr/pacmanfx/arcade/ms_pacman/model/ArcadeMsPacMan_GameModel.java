@@ -53,6 +53,9 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
     private static final int DEMO_LEVEL_MIN_DURATION_MILLIS = 20_000;
 
+    private static final int FIRST_BONUS_PELLETS_EATEN = 64;
+    private static final int SECOND_BONUS_PELLETS_EATEN = 176;
+
     protected final MapSelector mapSelector;
     protected final ArcadeMsPacMan_LevelCounter levelCounter;
     protected final BaseHUD hud = new BaseHUD();
@@ -193,9 +196,9 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     }
 
     @Override
-    public boolean isBonusReached(GameLevel gameLevel) {
-        int eatenFoodCount = gameLevel.worldMap().foodLayer().eatenFoodCount();
-        return eatenFoodCount == 64 || eatenFoodCount == 176;
+    public boolean isBonusReached() {
+        final int eatenFoodCount = level().worldMap().foodLayer().eatenFoodCount();
+        return eatenFoodCount == FIRST_BONUS_PELLETS_EATEN || eatenFoodCount == SECOND_BONUS_PELLETS_EATEN;
     }
 
     /**

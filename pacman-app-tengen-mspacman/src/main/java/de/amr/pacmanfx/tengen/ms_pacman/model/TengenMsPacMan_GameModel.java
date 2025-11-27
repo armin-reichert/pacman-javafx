@@ -87,6 +87,9 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     // Bonus value = factor * 100
     private static final byte[] BONUS_VALUE_FACTORS = new byte[14];
 
+    private static final int FIRST_BONUS_PELLETS_EATEN = 64;
+    private static final int SECOND_BONUS_PELLETS_EATEN = 176;
+
     static {
         BONUS_VALUE_FACTORS[BONUS_CHERRY]        = 1;
         BONUS_VALUE_FACTORS[BONUS_STRAWBERRY]    = 2;
@@ -462,9 +465,9 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public boolean isBonusReached(GameLevel gameLevel) {
-        int eatenFoodCount = gameLevel.worldMap().foodLayer().eatenFoodCount();
-        return eatenFoodCount == 64 || eatenFoodCount == 176;
+    public boolean isBonusReached() {
+        int eatenFoodCount = level().worldMap().foodLayer().eatenFoodCount();
+        return eatenFoodCount == FIRST_BONUS_PELLETS_EATEN || eatenFoodCount == SECOND_BONUS_PELLETS_EATEN;
     }
 
     private byte computeBonusSymbol(int levelNumber) {
@@ -536,7 +539,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
                 gameLevel.pac().onFoodEaten(false);
             }
             gateKeeper.registerFoodEaten(gameLevel);
-            if (isBonusReached(gameLevel)) {
+            if (isBonusReached()) {
                 activateNextBonus();
                 simulationStepResult.bonusIndex = gameLevel.currentBonusIndex();
             }
