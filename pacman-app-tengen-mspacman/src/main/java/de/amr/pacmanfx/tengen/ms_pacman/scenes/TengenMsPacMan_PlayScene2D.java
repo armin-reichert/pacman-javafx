@@ -301,7 +301,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
 
     @Override
     public void onGameStarted(GameEvent e) {
-        FsmState<GameContext> state = context().currentGameState();
+        FsmState<GameContext> state = context().currentGame().state();
         boolean shutUp = context().currentGame().level().isDemoLevel() || state instanceof TestState;
         if (!shutUp) {
             ui.soundManager().play(SoundID.GAME_READY);
@@ -405,7 +405,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
         if (!ui.soundManager().isEnabled()) return;
 
         final Pac pac = gameLevel.pac();
-        final boolean pacChased = context().currentGameState() == TengenMsPacMan_GameStateMachine.GameState.HUNTING && !pac.powerTimer().isRunning();
+        final boolean pacChased = context().currentGame().state() == TengenMsPacMan_GameStateMachine.GameState.HUNTING && !pac.powerTimer().isRunning();
         if (pacChased) {
             selectAndPlaySiren();
         }
@@ -443,7 +443,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
         final TengenMsPacMan_GameModel game = context().currentGame();
         int numLives = game.lifeCount() - 1;
         // As long as Pac-Man is still invisible on start, he is shown as an additional entry in the lives counter
-        if (context().currentGameState() == TengenMsPacMan_GameStateMachine.GameState.STARTING_GAME_OR_LEVEL && !gameLevel.pac().isVisible()) {
+        if (context().currentGame().state() == TengenMsPacMan_GameStateMachine.GameState.STARTING_GAME_OR_LEVEL && !gameLevel.pac().isVisible()) {
             numLives += 1;
         }
         numLives = Math.min(numLives, game.hud().maxLivesDisplayed());

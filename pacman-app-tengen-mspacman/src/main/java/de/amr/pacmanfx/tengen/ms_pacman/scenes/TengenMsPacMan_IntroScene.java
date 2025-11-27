@@ -176,7 +176,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
             @Override
             public void onUpdate(TengenMsPacMan_IntroScene scene) {
-                scene.marquee.update(scene.context().currentGameState().timer().tickCount());
+                scene.marquee.update(scene.context().currentGame().state().timer().tickCount());
                 if (timer.atSecond(1)) {
                     scene.sceneController.changeState(GHOSTS_MARCHING_IN);
                 }
@@ -192,7 +192,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
             @Override
             public void onUpdate(TengenMsPacMan_IntroScene scene) {
-                scene.marquee.update(scene.context().currentGameState().timer().tickCount());
+                scene.marquee.update(scene.context().currentGame().state().timer().tickCount());
                 boolean reachedEndPosition = letGhostMarchIn(scene);
                 if (reachedEndPosition) {
                     if (scene.ghostIndex == 3) {
@@ -245,7 +245,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
             @Override
             public void onUpdate(TengenMsPacMan_IntroScene scene) {
-                scene.marquee.update(scene.context().currentGameState().timer().tickCount());
+                scene.marquee.update(scene.context().currentGame().state().timer().tickCount());
                 Logger.debug("Tick {}: {} marching in", scene.ui.clock().tickCount(), scene.msPacMan.name());
                 scene.msPacMan.move();
                 if (scene.msPacMan.x() <= MS_PAC_MAN_STOP_X) {

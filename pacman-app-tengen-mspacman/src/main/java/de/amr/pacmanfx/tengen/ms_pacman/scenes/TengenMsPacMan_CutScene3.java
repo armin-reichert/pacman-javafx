@@ -140,7 +140,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
 
     @Override
     public void update() {
-        final int t = (int) context().currentGameState().timer().tickCount();
+        final int t = (int) context().currentGame().state().timer().tickCount();
         clapperboard.tick();
 
         switch (t) {

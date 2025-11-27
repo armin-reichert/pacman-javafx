@@ -11,7 +11,10 @@ import de.amr.pacmanfx.model.actors.AnimationManager;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
-import de.amr.pacmanfx.tengen.ms_pacman.model.*;
+import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
+import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
+import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameStateMachine;
+import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_HUD;
 import de.amr.pacmanfx.tengen.ms_pacman.model.actors.MsPacMan;
 import de.amr.pacmanfx.tengen.ms_pacman.model.actors.PacMan;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_CutScene4_Renderer;
@@ -125,7 +128,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
     @Override
     public void update() {
-        final int tick = (int) context().currentGameState().timer().tickCount();
+        final int tick = (int) context().currentGame().state().timer().tickCount();
 
         clapperboard.tick();
 

@@ -72,7 +72,7 @@ public class InfoBoxGameControl extends InfoBox {
         //TODO use binding
         choiceBoxInitialLives.setValue(ui.context().currentGame().initialLifeCount());
 
-        FsmState<GameContext> state = ui.context().currentGameState();
+        FsmState<GameContext> state = ui.context().currentGame().state();
 
         spinnerCredit.setDisable(!Set.of("INTRO", "SETTING_OPTIONS_FOR_START").contains(state.name()));
         choiceBoxInitialLives.setDisable(!state.name().equals("INTRO"));
@@ -89,17 +89,17 @@ public class InfoBoxGameControl extends InfoBox {
     }
 
     private boolean isBooting() {
-        return ui.context().currentGameState().name().equals("BOOT");
+        return ui.context().currentGame().state().name().equals("BOOT");
     }
 
     private boolean canStartLevel() {
 
         return ui.context().currentGame().canStartNewGame()
-            && Set.of("INTRO", "SETTING_OPTIONS_FOR_START").contains(ui.context().currentGameState().name());
+            && Set.of("INTRO", "SETTING_OPTIONS_FOR_START").contains(ui.context().currentGame().state().name());
     }
 
     private boolean canEnterNextLevel() {
         return ui.context().currentGame().isPlaying()
-         && Objects.equals("HUNTING", ui.context().currentGameState().name());
+         && Objects.equals("HUNTING", ui.context().currentGame().state().name());
     }
 }

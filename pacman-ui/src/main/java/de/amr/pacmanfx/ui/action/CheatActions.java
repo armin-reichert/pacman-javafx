@@ -44,7 +44,7 @@ public final class CheatActions {
         public boolean isEnabled(GameUI ui) {
             return ui.context().currentGame().optGameLevel().isPresent()
                     && !ui.context().currentGame().level().isDemoLevel()
-                    && ui.context().currentGameState().name().equals("HUNTING");
+                    && ui.context().currentGame().state().name().equals("HUNTING");
         }
     };
 
@@ -63,7 +63,7 @@ public final class CheatActions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            return ui.context().currentGameState().name().equals("HUNTING")
+            return ui.context().currentGame().state().name().equals("HUNTING")
                 && ui.context().currentGame().optGameLevel().isPresent() && !ui.context().currentGame().level().isDemoLevel();
         }
     };
@@ -79,7 +79,7 @@ public final class CheatActions {
         public boolean isEnabled(GameUI ui) {
             final Game game = ui.context().currentGame();
             return game.isPlaying()
-                    && ui.context().currentGameState().name().equals("HUNTING")
+                    && ui.context().currentGame().state().name().equals("HUNTING")
                     && game.optGameLevel().isPresent()
                     && game.level().number() < game.lastLevelNumber();
         }

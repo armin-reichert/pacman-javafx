@@ -33,9 +33,9 @@ public class BaseDebugInfoRenderer extends GameScene2D_Renderer {
 
     @Override
     public void draw(GameScene2D scene) {
-        final TickTimer stateTimer = scene.ui().context().currentGameState().timer();
+        final TickTimer stateTimer = scene.ui().context().currentGame().state().timer();
         final String stateText = "Game State: '%s' (Tick %d of %s)".formatted(
-            scene.ui().context().currentGameState().name(),
+            scene.ui().context().currentGame().state().name(),
             stateTimer.tickCount(),
             stateTimer.durationTicks() == TickTimer.INDEFINITE ? "∞" : String.valueOf(stateTimer.tickCount())
         );

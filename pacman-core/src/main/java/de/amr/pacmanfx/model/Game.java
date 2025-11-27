@@ -30,8 +30,12 @@ public interface Game {
 
     StateMachine<FsmState<GameContext>, GameContext> stateMachine();
 
-    default FsmState<GameContext> gameState(String name) {
+    default FsmState<GameContext> stateByName(String name) {
         return stateMachine().state(name);
+    }
+
+    default FsmState<GameContext> state() {
+        return stateMachine().state();
     }
 
     default void changeState(FsmState<GameContext> gameState) {

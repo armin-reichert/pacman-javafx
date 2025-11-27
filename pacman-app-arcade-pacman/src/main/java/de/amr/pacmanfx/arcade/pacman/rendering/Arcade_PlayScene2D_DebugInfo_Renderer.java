@@ -39,7 +39,7 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
     public void draw(GameScene2D scene) {
         final Arcade_PlayScene2D playScene = (Arcade_PlayScene2D) scene;
         final GameContext gameContext = playScene.context();
-        final FsmState<GameContext> gameState = gameContext.currentGameState();
+        final FsmState<GameContext> gameState = gameContext.currentGame().state();
 
         drawTileGrid(playScene.sizeInPx().x(), playScene.sizeInPx().y(), Color.LIGHTGRAY);
 

@@ -338,7 +338,7 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
         updateCamera();
         updateHUD();
         ui.soundManager().setEnabled(!gameLevel.isDemoLevel());
-        updateSound(gameLevel, context().currentGameState());
+        updateSound(gameLevel, context().currentGame().state());
     }
 
     @Override
@@ -384,7 +384,7 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
             return;
         }
         final GameLevel gameLevel = context().currentGame().level();
-        final FsmState<GameContext> state = context().currentGameState();
+        final FsmState<GameContext> state = context().currentGame().state();
 
         if (state instanceof TestState) {
             replaceGameLevel3D(); //TODO check when to destroy previous level
@@ -405,7 +405,7 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
                         setPlayerSteeringActionBindings();
                     }
                 }
-                default -> Logger.error("Unexpected game state '{}' on level start", context().currentGameState());
+                default -> Logger.error("Unexpected game state '{}' on level start", context().currentGame().state());
             }
         }
 
@@ -435,7 +435,7 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
         gameLevel3D.energizers3D().forEach(energizer3D ->
                 energizer3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(energizer3D.tile())));
 
-        final String gameStateID = context().currentGameState().name();
+        final String gameStateID = context().currentGame().state().name();
         if (gameStateID.equals("HUNTING") || gameStateID.equals("GHOST_DYING")) { //TODO check this
             gameLevel3D.energizers3D().stream()
                 .filter(energizer3D -> energizer3D.shape().isVisible())
@@ -499,7 +499,7 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
 
     @Override
     public void onGameStarted(GameEvent e) {
-        FsmState<GameContext> state = context().currentGameState();
+        FsmState<GameContext> state = context().currentGame().state();
         boolean silent = context().currentGame().level().isDemoLevel() || state instanceof TestState;
         if (!silent) {
             ui.soundManager().play(SoundID.GAME_READY);

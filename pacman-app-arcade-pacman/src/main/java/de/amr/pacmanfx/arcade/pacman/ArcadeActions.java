@@ -34,8 +34,8 @@ public final class ArcadeActions {
             if (game.isPlaying()) {
                 return false;
             }
-            return ui.context().currentGameState() == GameState.SETTING_OPTIONS_FOR_START
-                || ui.context().currentGameState() == GameState.INTRO
+            return ui.context().currentGame().state() == GameState.SETTING_OPTIONS_FOR_START
+                || ui.context().currentGame().state() == GameState.INTRO
                 || game.optGameLevel().isPresent() && game.level().isDemoLevel()
                 || ui.context().coinMechanism().noCoin();
         }
@@ -50,7 +50,7 @@ public final class ArcadeActions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            GameState gameState = (GameState) ui.context().currentGameState();
+            GameState gameState = (GameState) ui.context().currentGame().state();
             return ui.context().coinMechanism().numCoins() > 0
                 && (gameState == INTRO || gameState == GameState.SETTING_OPTIONS_FOR_START)
                 && ui.context().currentGame().canStartNewGame();

@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx;
 
-import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.Game;
 import javafx.beans.property.BooleanProperty;
@@ -24,13 +23,6 @@ public interface GameContext {
      * @param <T> specific game model type
      */
     <T extends Game> T currentGame();
-
-    /**
-     * @return the current game state (the state of the game controller FSM).
-     */
-    default FsmState<GameContext> currentGameState() {
-        return currentGame().stateMachine().state();
-    }
 
     CoinMechanism coinMechanism();
 

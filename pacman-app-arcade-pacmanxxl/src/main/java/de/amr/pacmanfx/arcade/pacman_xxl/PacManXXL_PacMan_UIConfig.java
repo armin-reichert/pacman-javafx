@@ -270,7 +270,7 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config, GameScene_Confi
 
     @Override
     public GameScene selectGameScene(GameContext gameContext) {
-        String sceneID = switch (gameContext.currentGameState()) {
+        String sceneID = switch (gameContext.currentGame().state()) {
             case Arcade_GameStateMachine.GameState.BOOT -> SCENE_ID_BOOT_SCENE;
             case Arcade_GameStateMachine.GameState.SETTING_OPTIONS_FOR_START -> SCENE_ID_START_SCENE;
             case Arcade_GameStateMachine.GameState.INTRO -> SCENE_ID_INTRO_SCENE;

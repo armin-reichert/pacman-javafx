@@ -297,7 +297,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     @Override
     public GameScene selectGameScene(GameContext gameContext) {
-        String sceneID = switch (gameContext.currentGameState()) {
+        String sceneID = switch (gameContext.currentGame().state()) {
             case BOOT -> SCENE_ID_BOOT_SCENE;
             case SETTING_OPTIONS_FOR_START -> SCENE_ID_START_SCENE;
             case INTRO -> SCENE_ID_INTRO_SCENE;

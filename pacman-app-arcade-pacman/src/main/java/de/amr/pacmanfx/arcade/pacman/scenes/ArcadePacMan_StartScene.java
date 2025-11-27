@@ -4,10 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
+import de.amr.pacmanfx.arcade.pacman.ArcadeActions;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_StartScene_Renderer;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.arcade.pacman.ArcadeActions;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.rendering.HUD_Renderer;

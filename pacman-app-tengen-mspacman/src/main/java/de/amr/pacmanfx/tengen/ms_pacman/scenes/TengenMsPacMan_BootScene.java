@@ -69,7 +69,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
 
     @Override
     public void update() {
-        int tick = (int) context().currentGameState().timer().tickCount();
+        int tick = (int) context().currentGame().state().timer().tickCount();
         shadeOfBlue = shadeOfBlue(tick);
         switch (tick) {
             case   1 -> gray(false);

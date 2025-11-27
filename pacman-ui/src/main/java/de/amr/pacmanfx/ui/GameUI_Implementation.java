@@ -4,13 +4,16 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui;
 
+import de.amr.pacmanfx.GameBox;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
-import de.amr.pacmanfx.GameBox;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
 import de.amr.pacmanfx.model.SimulationStepResult;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui.action.*;
+import de.amr.pacmanfx.ui.action.ActionBinding;
+import de.amr.pacmanfx.ui.action.CheatActions;
+import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
+import de.amr.pacmanfx.ui.action.TestActions;
 import de.amr.pacmanfx.ui.api.*;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.Keyboard;
@@ -431,7 +434,7 @@ public final class GameUI_Implementation implements GameUI {
         //TODO this is game-specific and should not be handled here
         currentGameScene().ifPresent(gameScene -> {
             gameScene.end();
-            boolean shouldConsumeCoin = gameContext.currentGameState().name().equals("STARTING_GAME_OR_LEVEL")
+            boolean shouldConsumeCoin = gameContext.currentGame().state().name().equals("STARTING_GAME_OR_LEVEL")
                     || gameContext.currentGame().isPlaying();
             if (shouldConsumeCoin && !THE_GAME_BOX.noCoin()) {
                 THE_GAME_BOX.consumeCoin();
