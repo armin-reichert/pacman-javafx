@@ -125,7 +125,7 @@ public interface Game {
     boolean hasGhostBeenKilled();
 
     // Game event handling
-    void onLevelCompleted(GameLevel gameLevel);
+    void onLevelCompleted();
     void onPacKilled(GameLevel gameLevel);
     void onGhostKilled(GameLevel gameLevel, Ghost ghost);
     void onGameEnding(GameLevel gameLevel);

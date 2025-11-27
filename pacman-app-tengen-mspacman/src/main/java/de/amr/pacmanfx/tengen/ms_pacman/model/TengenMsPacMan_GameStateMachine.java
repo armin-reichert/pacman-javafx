@@ -222,7 +222,7 @@ public class TengenMsPacMan_GameStateMachine extends StateMachine<FsmState<GameC
                 final Game game = context.currentGame();
 
                 if (timer.tickCount() == 1) {
-                    game.onLevelCompleted(game.level());
+                    game.onLevelCompleted();
                 }
 
                 if (game.level().isDemoLevel()) {

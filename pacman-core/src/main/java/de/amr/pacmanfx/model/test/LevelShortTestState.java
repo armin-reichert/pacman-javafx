@@ -70,7 +70,7 @@ public class LevelShortTestState implements FsmState<GameContext>, TestState {
         else if (timer.atSecond(START + 9)) {
             game.level().hidePacAndGhosts();
             game.level().blinking().stop();
-            game.onLevelCompleted(game.level());
+            game.onLevelCompleted();
         }
         else if (timer.atSecond(START + 10)) {
             if (game.level().number() == lastTestedLevelNumber) {

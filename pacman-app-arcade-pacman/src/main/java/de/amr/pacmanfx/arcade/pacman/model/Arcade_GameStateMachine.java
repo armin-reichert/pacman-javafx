@@ -203,7 +203,7 @@ public class Arcade_GameStateMachine extends StateMachine<FsmState<GameContext>,
                 final Game game = context.currentGame();
 
                 if (timer.tickCount() == 1) {
-                    game.onLevelCompleted(game.level());
+                    game.onLevelCompleted();
                 }
 
                 if (timer.hasExpired()) {
