@@ -135,16 +135,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     private int numContinues;
 
     public TengenMsPacMan_GameModel(File highScoreFile) {
-        List<FsmState<GameContext>> states = new ArrayList<>(List.of(TengenMsPacMan_GameState.values()));
-        states.add(new LevelShortTestState());
-        states.add(new LevelMediumTestState());
-        states.add(new CutScenesTestState());
-
-        var sm = new StateMachine<FsmState<GameContext>, GameContext>();
-        sm.setName("Tengen Ms Pac-Man Game State Machine");
-        sm.setStates(states);
-        setStateMachine(sm);
-
+        setStateMachine(new TengenMsPacMan_GameStateMachine());
         setCollisionStrategy(CollisionStrategy.CENTER_DISTANCE);
         scoreManager.setHighScoreFile(requireNonNull(highScoreFile));
         mapSelector = new TengenMsPacMan_MapSelector();
