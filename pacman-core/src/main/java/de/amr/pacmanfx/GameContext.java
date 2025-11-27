@@ -37,7 +37,10 @@ public interface GameContext {
     /**
      * @return the current game state (the state of the game controller FSM).
      */
-    FsmState<GameContext> currentGameState();
+    default FsmState<GameContext> currentGameState() {
+        return currentGame().stateMachine().state();
+    }
+
 
     CoinMechanism coinMechanism();
 

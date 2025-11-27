@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx;
 
 import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.Score;
@@ -135,11 +134,6 @@ public class GameBox implements GameContext, CoinMechanism {
             return game;
         }
         throw new IllegalStateException("No game is currently selected");
-    }
-
-    @Override
-    public FsmState<GameContext> currentGameState() {
-        return currentGame().stateMachine().state();
     }
 
     // CoinMechanism implementation
