@@ -280,8 +280,13 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
         actionBindings.bind(ACTION_TOGGLE_DRAW_MODE, ui.actionBindings());
         if (context().currentGame().optGameLevel().isPresent()) {
             if (context().currentGame().level().isDemoLevel()) {
-                //TODO This is game-specific and does not belong here!
-                //actionBindings.bind(ArcadeActions.ACTION_INSERT_COIN, ui.actionBindings());
+                //TODO We need a PlayScene3D subclass for the Arcade versions!
+                /*
+                actionBindings.addKeyCombination(ArcadeActions.ACTION_INSERT_COIN, bare(KeyCode.DIGIT5));
+                actionBindings.addKeyCombination(ArcadeActions.ACTION_INSERT_COIN, bare(KeyCode.NUMPAD5));
+                actionBindings.addKeyCombination(ArcadeActions.ACTION_START_GAME, bare(KeyCode.DIGIT1));
+                actionBindings.addKeyCombination(ArcadeActions.ACTION_START_GAME, bare(KeyCode.NUMPAD1));
+                 */
             } else {
                 setPlayerSteeringActionBindings();
                 actionBindings.bind(CheatActions.ACTION_EAT_ALL_PELLETS, ui.actionBindings());
@@ -297,9 +302,9 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
      * Overridden by "Tengen Ms. Pac-Man" subclass to bind to keys representing the Joypad buttons.
      */
     protected void setPlayerSteeringActionBindings() {
-        actionBindings.bind(ACTION_STEER_UP, ui.actionBindings());
-        actionBindings.bind(ACTION_STEER_DOWN, ui.actionBindings());
-        actionBindings.bind(ACTION_STEER_LEFT, ui.actionBindings());
+        actionBindings.bind(ACTION_STEER_UP,    ui.actionBindings());
+        actionBindings.bind(ACTION_STEER_DOWN,  ui.actionBindings());
+        actionBindings.bind(ACTION_STEER_LEFT,  ui.actionBindings());
         actionBindings.bind(ACTION_STEER_RIGHT, ui.actionBindings());
     }
 

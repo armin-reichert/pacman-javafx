@@ -20,6 +20,7 @@ import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.action.CheatActions;
+import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
@@ -31,14 +32,16 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.input.KeyCode;
 import org.tinylog.Logger;
 
 import java.util.List;
 
 import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
-import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
+import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_QUIT_GAME_SCENE;
 import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_MUTED;
+import static de.amr.pacmanfx.ui.input.Keyboard.bare;
 import static de.amr.pacmanfx.uilib.Ufx.createContextMenuTitle;
 
 /**
@@ -102,14 +105,17 @@ public class Arcade_PlayScene2D extends GameScene2D {
     private void acceptGameLevel(GameLevel gameLevel) {
         if (gameLevel.isDemoLevel()) {
             context().currentGame().hud().creditVisible(false).levelCounterVisible(true).livesCounterVisible(false);
-            actionBindings.bind(ArcadeActions.ACTION_INSERT_COIN, ui.actionBindings());
+            actionBindings.addKeyCombination(ArcadeActions.ACTION_INSERT_COIN, bare(KeyCode.DIGIT5));
+            actionBindings.addKeyCombination(ArcadeActions.ACTION_INSERT_COIN, bare(KeyCode.NUMPAD5));
+            actionBindings.addKeyCombination(ArcadeActions.ACTION_START_GAME,  bare(KeyCode.DIGIT1));
+            actionBindings.addKeyCombination(ArcadeActions.ACTION_START_GAME,  bare(KeyCode.NUMPAD1));
             ui.soundManager().setEnabled(false);
         } else {
             context().currentGame().hud().creditVisible(false).levelCounterVisible(true).livesCounterVisible(true);
-            actionBindings.bind(ACTION_STEER_UP,               ui.actionBindings());
-            actionBindings.bind(ACTION_STEER_DOWN,             ui.actionBindings());
-            actionBindings.bind(ACTION_STEER_LEFT,             ui.actionBindings());
-            actionBindings.bind(ACTION_STEER_RIGHT,            ui.actionBindings());
+            actionBindings.bind(CommonGameActions.ACTION_STEER_UP,    ui.actionBindings());
+            actionBindings.bind(CommonGameActions.ACTION_STEER_DOWN,  ui.actionBindings());
+            actionBindings.bind(CommonGameActions.ACTION_STEER_LEFT,  ui.actionBindings());
+            actionBindings.bind(CommonGameActions.ACTION_STEER_RIGHT, ui.actionBindings());
             actionBindings.bind(CheatActions.ACTION_ADD_LIVES,        ui.actionBindings());
             actionBindings.bind(CheatActions.ACTION_EAT_ALL_PELLETS,  ui.actionBindings());
             actionBindings.bind(CheatActions.ACTION_ENTER_NEXT_LEVEL, ui.actionBindings());
