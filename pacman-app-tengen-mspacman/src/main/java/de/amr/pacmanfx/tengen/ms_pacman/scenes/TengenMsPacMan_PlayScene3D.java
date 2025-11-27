@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
 import de.amr.pacmanfx.lib.nes.NES_Palette;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.model.ScoreManager;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
@@ -80,9 +81,10 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     @Override
     protected void setActionBindings() {
+        final Game game = context().currentGame();
         var tengenActionBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().tengenActionBindings();
         // if demo level, allow going back to options screen
-        if (context().currentGame().optGameLevel().isPresent() && context().currentGame().level().isDemoLevel()) {
+        if (game.optGameLevel().isPresent() && game.level().isDemoLevel()) {
             actionBindings.bind(ACTION_QUIT_DEMO_LEVEL, tengenActionBindings);
         } else {
             setPlayerSteeringActionBindings();
