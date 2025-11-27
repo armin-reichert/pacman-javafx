@@ -107,7 +107,7 @@ public class TengenMsPacMan_GameStateMachine extends StateMachine<FsmState<GameC
                         boolean cheating = context.immunityProperty().get() || context.usingAutopilotProperty().get();
                         context.cheatUsedProperty().set(cheating);
                     }
-                    game.startLevel(game.level());
+                    game.startLevel();
                 }
                 else if (timer.tickCount() == TICK_NEW_GAME_SHOW_GUYS) {
                     game.level().showPacAndGhosts();
@@ -133,7 +133,7 @@ public class TengenMsPacMan_GameStateMachine extends StateMachine<FsmState<GameC
                     game.publishGameEvent(GameEvent.Type.LEVEL_CREATED);
                 }
                 else if (timer.tickCount() == 2) {
-                    game.startLevel(game.level());
+                    game.startLevel();
                 }
                 else if (timer.tickCount() == 3) {
                     // Now, actor animations are available

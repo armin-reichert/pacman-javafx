@@ -113,7 +113,7 @@ public interface Game {
     void buildNormalLevel(int levelNumber);
     void buildDemoLevel();
     GameLevel createLevel(int levelNumber, boolean demoLevel);
-    void startLevel(GameLevel gameLevel);
+    void startLevel();
     boolean isLevelCompleted(GameLevel gameLevel);
     int lastLevelNumber();
     void startNextLevel();

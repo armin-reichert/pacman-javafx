@@ -96,7 +96,7 @@ public class Arcade_GameStateMachine extends StateMachine<FsmState<GameContext>,
                         boolean cheating = context.immunityProperty().get() || context.usingAutopilotProperty().get();
                         context.cheatUsedProperty().set(cheating);
                     }
-                    game.startLevel(game.level());
+                    game.startLevel();
                 }
                 else if (timer.tickCount() == TICK_NEW_GAME_SHOW_GUYS) {
                     game.level().showPacAndGhosts();
@@ -123,7 +123,7 @@ public class Arcade_GameStateMachine extends StateMachine<FsmState<GameContext>,
                     game.publishGameEvent(GameEvent.Type.LEVEL_CREATED);
                 }
                 else if (timer.tickCount() == 2) {
-                    game.startLevel(game.level());
+                    game.startLevel();
                 }
                 else if (timer.tickCount() == 3) {
                     // Now, actor animations are available

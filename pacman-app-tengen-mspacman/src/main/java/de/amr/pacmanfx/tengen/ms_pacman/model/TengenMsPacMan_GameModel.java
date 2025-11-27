@@ -280,24 +280,25 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void startLevel(GameLevel gameLevel) {
-        gameLevel.setStartTimeMillis(System.currentTimeMillis());
-        gameLevel.getReadyToPlay();
-        resetPacManAndGhostAnimations(gameLevel);
+    public void startLevel() {
+        final GameLevel level = level();
+        level.setStartTimeMillis(System.currentTimeMillis());
+        level.getReadyToPlay();
+        resetPacManAndGhostAnimations(level);
         if (pacBooster == PacBooster.ALWAYS_ON) {
-            activatePacBooster(gameLevel.pac(), true);
+            activatePacBooster(level.pac(), true);
         }
-        if (gameLevel.isDemoLevel()) {
-            showMessage(gameLevel, MessageType.GAME_OVER);
+        if (level.isDemoLevel()) {
+            showMessage(level, MessageType.GAME_OVER);
             scoreManager.score().setEnabled(true);
             scoreManager.highScore().setEnabled(false);
-            Logger.info("Demo level {} started", gameLevel.number());
+            Logger.info("Demo level {} started", level.number());
         } else {
-            showMessage(gameLevel, MessageType.READY);
-            levelCounter().update(gameLevel.number(), gameLevel.bonusSymbol(0));
+            showMessage(level, MessageType.READY);
+            levelCounter().update(level.number(), level.bonusSymbol(0));
             scoreManager.score().setEnabled(true);
             scoreManager.highScore().setEnabled(true);
-            Logger.info("Level {} started", gameLevel.number());
+            Logger.info("Level {} started", level.number());
         }
         // Note: This event is very important because it triggers the creation of the actor animations!
         publishGameEvent(GameEvent.Type.LEVEL_STARTED);
@@ -317,7 +318,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     public void startNextLevel() {
         if (level().number() < LAST_LEVEL_NUMBER) {
             buildNormalLevel(level().number() + 1);
-            startLevel(level());
+            startLevel();
             level().showPacAndGhosts();
         } else {
             Logger.warn("Last level ({}) reached, cannot start next level", LAST_LEVEL_NUMBER);

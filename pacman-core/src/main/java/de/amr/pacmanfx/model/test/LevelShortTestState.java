@@ -35,7 +35,7 @@ public class LevelShortTestState implements FsmState<GameContext>, TestState {
         timer.restartIndefinitely();
         game.prepareForNewGame();
         game.buildNormalLevel(1);
-        game.startLevel(game.level());
+        game.startLevel();
         game.level().showPacAndGhosts();
     }
 

@@ -46,24 +46,24 @@ public class LevelMediumTestState implements FsmState<GameContext>, TestState {
 
     @Override
     public void onEnter(GameContext context) {
-        lastTestedLevelNumber = context.currentGame().lastLevelNumber() == Integer.MAX_VALUE ? 25 : context.currentGame().lastLevelNumber();
+        final Game game = context.currentGame();
+        lastTestedLevelNumber = game.lastLevelNumber() == Integer.MAX_VALUE ? 25 : game.lastLevelNumber();
         timer.restartSeconds(TEST_DURATION_SEC);
-        context.currentGame().prepareForNewGame();
-        context.currentGame().buildNormalLevel(1);
-        context.currentGame().startLevel(context.currentGame().level());
+        game.prepareForNewGame();
+        game.buildNormalLevel(1);
+        game.startLevel();
         configureLevelForTest(context);
     }
 
     @Override
     public void onUpdate(GameContext context) {
         final Game game = context.currentGame();
-        final GameLevel gameLevel = context.currentGame().level();
-        gameLevel.pac().tick(context);
-        gameLevel.ghosts().forEach(ghost -> ghost.tick(context));
-        gameLevel.bonus().ifPresent(bonus -> bonus.tick(context));
-        game.updateHunting(gameLevel);
+        game.level().pac().tick(context);
+        game.level().ghosts().forEach(ghost -> ghost.tick(context));
+        game.level().bonus().ifPresent(bonus -> bonus.tick(context));
+        game.updateHunting(game.level());
         if (timer().hasExpired()) {
-            if (gameLevel.number() == lastTestedLevelNumber) {
+            if (game.level().number() == lastTestedLevelNumber) {
                 context.currentGame().publishGameEvent(GameEvent.Type.STOP_ALL_SOUNDS);
                 game.changeState("INTRO");
             } else {
@@ -72,7 +72,7 @@ public class LevelMediumTestState implements FsmState<GameContext>, TestState {
                 configureLevelForTest(context);
             }
         }
-        else if (game.isLevelCompleted(gameLevel)) {
+        else if (game.isLevelCompleted(game.level())) {
             game.changeState("INTRO");
         } else if (game.hasPacManBeenKilled()) {
             timer.expire();

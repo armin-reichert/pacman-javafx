@@ -281,7 +281,8 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void startLevel(GameLevel gameLevel) {
+    public void startLevel() {
+        final GameLevel gameLevel = level();
         gameLevel.setStartTimeMillis(System.currentTimeMillis());
         gameLevel.getReadyToPlay();
         resetPacManAndGhostAnimations(gameLevel);
@@ -304,7 +305,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     @Override
     public void startNextLevel() {
         buildNormalLevel(level().number() + 1);
-        startLevel(level());
+        startLevel();
     }
 
     @Override

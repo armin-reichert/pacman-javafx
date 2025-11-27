@@ -33,21 +33,17 @@ public abstract class AbstractGameModel implements Game {
 
     private static final float COLLISION_SENSITIVITY_PIXELS = 2;
 
-    protected final ObjectProperty<CollisionStrategy> collisionStrategy = new SimpleObjectProperty<>(DEFAULT_COLLISION_STRATEGY);
+    private final ObjectProperty<CollisionStrategy> collisionStrategy = new SimpleObjectProperty<>(DEFAULT_COLLISION_STRATEGY);
 
-    public final ObjectProperty<CollisionStrategy> collisionStrategyProperty() {
-        return collisionStrategy;
-    }
+    private final BooleanProperty cutScenesEnabled = new SimpleBooleanProperty(true);
 
-    protected final BooleanProperty cutScenesEnabled = new SimpleBooleanProperty(true);
+    private final ObjectProperty<GameLevel> gameLevel = new SimpleObjectProperty<>();
 
-    protected final ObjectProperty<GameLevel> gameLevel = new SimpleObjectProperty<>();
+    private final IntegerProperty initialLifeCount = new SimpleIntegerProperty(3);
 
-    protected final IntegerProperty initialLifeCount = new SimpleIntegerProperty(3);
+    private final IntegerProperty lifeCount = new SimpleIntegerProperty(0);
 
-    protected final IntegerProperty lifeCount = new SimpleIntegerProperty(0);
-
-    protected final BooleanProperty playing = new SimpleBooleanProperty(false);
+    private final BooleanProperty playing = new SimpleBooleanProperty(false);
 
     protected final SimulationStepResult simulationStepResult = new SimulationStepResult();
 
@@ -128,7 +124,7 @@ public abstract class AbstractGameModel implements Game {
     @Override
     public void setCollisionStrategy(CollisionStrategy strategy) {
         requireNonNull(strategy);
-        collisionStrategyProperty().set(strategy);
+        collisionStrategy.set(strategy);
     }
 
     @Override
