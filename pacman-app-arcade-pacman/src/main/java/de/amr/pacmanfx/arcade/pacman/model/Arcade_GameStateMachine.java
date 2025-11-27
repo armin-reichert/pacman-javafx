@@ -29,11 +29,6 @@ public class Arcade_GameStateMachine extends StateMachine<FsmState<GameContext>,
         setStates(states);
     }
 
-    /**
-     * States of the common state machine for all Pac-Man games.
-     * <p>
-     * TODO: Provide different FSM for Tengen Ms. Pac-Man than for Arcade Pac-Man & Ms. Pac-Man?
-     */
     public enum GameState implements FsmState<GameContext> {
 
         // "Das muss das Boot abkönnen!"
