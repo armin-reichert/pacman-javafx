@@ -81,21 +81,21 @@ public class Arcade_GameStateMachine extends StateMachine<FsmState<GameContext>,
             }
 
             private void startNewGame(GameContext context) {
+                final Game game = context.currentGame();
                 if (timer.tickCount() == 1) {
                     context.currentGame().startNewGame();
                 }
                 else if (timer.tickCount() == 2) {
-                    final GameLevel gameLevel = context.gameLevel();
-                    if (!gameLevel.isDemoLevel()) {
-                        gameLevel.pac().immuneProperty().bind(context.immunityProperty());
-                        gameLevel.pac().usingAutopilotProperty().bind(context.usingAutopilotProperty());
+                    if (!game.level().isDemoLevel()) {
+                        game.level().pac().immuneProperty().bind(context.immunityProperty());
+                        game.level().pac().usingAutopilotProperty().bind(context.usingAutopilotProperty());
                         boolean cheating = context.immunityProperty().get() || context.usingAutopilotProperty().get();
                         context.cheatUsedProperty().set(cheating);
                     }
-                    context.currentGame().startLevel(gameLevel);
+                    context.currentGame().startLevel(game.level());
                 }
                 else if (timer.tickCount() == TICK_NEW_GAME_SHOW_GUYS) {
-                    context.gameLevel().showPacAndGhosts();
+                    game.level().showPacAndGhosts();
                 }
                 else if (timer.tickCount() == TICK_NEW_GAME_START_HUNTING) {
                     context.currentGame().setPlaying(true);
@@ -104,24 +104,26 @@ public class Arcade_GameStateMachine extends StateMachine<FsmState<GameContext>,
             }
 
             private void continueGame(GameContext context) {
+                final Game game = context.currentGame();
                 if (timer.tickCount() == 1) {
-                    context.currentGame().continueGame(context.gameLevel());
+                    context.currentGame().continueGame(game.level());
                 } else if (timer.tickCount() == TICK_RESUME_HUNTING) {
                     context.currentGame().changeState(GameState.HUNTING);
                 }
             }
 
             private void startDemoLevel(GameContext context) {
+                final Game game = context.currentGame();
                 if (timer.tickCount() == 1) {
                     context.currentGame().buildDemoLevel();
                     context.currentGame().publishGameEvent(GameEvent.Type.LEVEL_CREATED);
                 }
                 else if (timer.tickCount() == 2) {
-                    context.currentGame().startLevel(context.gameLevel());
+                    context.currentGame().startLevel(game.level());
                 }
                 else if (timer.tickCount() == 3) {
                     // Now, actor animations are available
-                    context.gameLevel().showPacAndGhosts();
+                    game.level().showPacAndGhosts();
                 }
                 else if (timer.tickCount() == TICK_DEMO_LEVEL_START_HUNTING) {
                     context.currentGame().changeState(GameState.HUNTING);
@@ -145,25 +147,24 @@ public class Arcade_GameStateMachine extends StateMachine<FsmState<GameContext>,
         HUNTING {
             @Override
             public void onEnter(GameContext context) {
-                final GameLevel gameLevel = context.gameLevel();
-                gameLevel.optMessage().filter(message -> message.type() == MessageType.READY).ifPresent(message -> {
-                    gameLevel.clearMessage(); // leave TEST message alone
+                final Game game = context.currentGame();
+                game.level().optMessage().filter(message -> message.type() == MessageType.READY).ifPresent(message -> {
+                    game.level().clearMessage(); // leave TEST message alone
                 });
-                context.currentGame().startHunting(gameLevel);
+                context.currentGame().startHunting(game.level());
             }
 
             @Override
             public void onUpdate(GameContext context) {
                 final Game game = context.currentGame();
-                final GameLevel gameLevel = context.gameLevel();
 
-                gameLevel.pac().tick(context);
-                gameLevel.ghosts().forEach(ghost -> ghost.tick(context));
-                gameLevel.bonus().ifPresent(bonus -> bonus.tick(context));
-                game.updateHunting(gameLevel);
+                game.level().pac().tick(context);
+                game.level().ghosts().forEach(ghost -> ghost.tick(context));
+                game.level().bonus().ifPresent(bonus -> bonus.tick(context));
+                game.updateHunting(game.level());
 
                 // What next?
-                if (game.isLevelCompleted(gameLevel)) {
+                if (game.isLevelCompleted(game.level())) {
                     game.changeState(LEVEL_COMPLETE);
                 }
                 else if (game.hasPacManBeenKilled()) {
@@ -176,9 +177,10 @@ public class Arcade_GameStateMachine extends StateMachine<FsmState<GameContext>,
 
             @Override
             public void onExit(GameContext context) {
-                context.gameLevel().optMessage().ifPresent(message -> {
+                final Game game = context.currentGame();
+                game.level().optMessage().ifPresent(message -> {
                     if (message.type() == MessageType.READY) {
-                        context.gameLevel().clearMessage();
+                        game.level().clearMessage();
                     }
                 });
             }
@@ -196,15 +198,15 @@ public class Arcade_GameStateMachine extends StateMachine<FsmState<GameContext>,
                 final Game game = context.currentGame();
 
                 if (timer.tickCount() == 1) {
-                    game.onLevelCompleted(context.gameLevel());
+                    game.onLevelCompleted(game.level());
                 }
 
                 if (timer.hasExpired()) {
-                    if (context.gameLevel().isDemoLevel()) {
+                    if (game.level().isDemoLevel()) {
                         // just in case: if demo level was completed, go back to intro scene
                         game.changeState(INTRO);
                     } else if (game.cutScenesEnabled()
-                        && game.optCutSceneNumber(context.gameLevel().number()).isPresent()) {
+                        && game.optCutSceneNumber(game.level().number()).isPresent()) {
                         game.changeState(INTERMISSION);
                     } else {
                         game.changeState(LEVEL_TRANSITION);
@@ -231,28 +233,31 @@ public class Arcade_GameStateMachine extends StateMachine<FsmState<GameContext>,
         GHOST_DYING {
             @Override
             public void onEnter(GameContext context) {
+                final Game game = context.currentGame();
                 timer.restartSeconds(1);
-                context.gameLevel().pac().hide();
-                context.gameLevel().ghosts().forEach(Ghost::stopAnimation);
+                game.level().pac().hide();
+                game.level().ghosts().forEach(Ghost::stopAnimation);
                 context.currentGame().publishGameEvent(GameEvent.Type.GHOST_EATEN);
             }
 
             @Override
             public void onUpdate(GameContext context) {
+                final Game game = context.currentGame();
                 if (timer.hasExpired()) {
                     context.currentGame().stateMachine().resumePreviousState();
                 } else {
-                    context.gameLevel().ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
+                    game.level().ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
                         .forEach(ghost -> ghost.tick(context));
-                    context.gameLevel().blinking().tick();
+                    game.level().blinking().tick();
                 }
             }
 
             @Override
             public void onExit(GameContext context) {
-                context.gameLevel().pac().show();
-                context.gameLevel().ghosts(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_HOME));
-                context.gameLevel().ghosts()
+                final Game game = context.currentGame();
+                game.level().pac().show();
+                game.level().ghosts(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_HOME));
+                game.level().ghosts()
                     .forEach(ghost -> ghost.optAnimationManager().ifPresent(AnimationManager::play));
             }
         },
@@ -265,19 +270,19 @@ public class Arcade_GameStateMachine extends StateMachine<FsmState<GameContext>,
 
             @Override
             public void onEnter(GameContext context) {
+                final Game game = context.currentGame();
                 timer.restartIndefinitely();
-                context.currentGame().onPacKilled(context.gameLevel());
+                context.currentGame().onPacKilled(game.level());
                 context.currentGame().publishGameEvent(GameEvent.Type.STOP_ALL_SOUNDS);
             }
 
             @Override
             public void onUpdate(GameContext context) {
                 final Game game = context.currentGame();
-                final GameLevel gameLevel = context.gameLevel();
-                final Pac pac = gameLevel.pac();
+                final Pac pac = game.level().pac();
 
                 if (timer.hasExpired()) {
-                    if (gameLevel.isDemoLevel()) {
+                    if (game.level().isDemoLevel()) {
                         game.changeState(GAME_OVER);
                     } else {
                         game.addLives(-1);
@@ -285,7 +290,7 @@ public class Arcade_GameStateMachine extends StateMachine<FsmState<GameContext>,
                     }
                 }
                 else if (timer.tickCount() == TICK_HIDE_GHOSTS) {
-                    gameLevel.ghosts().forEach(Ghost::hide);
+                    game.level().ghosts().forEach(Ghost::hide);
                     //TODO this does not belong here
                     pac.optAnimationManager().ifPresent(am -> {
                         am.select(CommonAnimationID.ANIM_PAC_DYING);
@@ -303,22 +308,24 @@ public class Arcade_GameStateMachine extends StateMachine<FsmState<GameContext>,
                     context.currentGame().publishGameEvent(GameEvent.Type.PAC_DEAD);
                 }
                 else {
-                    gameLevel.blinking().tick();
+                    game.level().blinking().tick();
                     pac.tick(context);
                 }
             }
 
             @Override
             public void onExit(GameContext context) {
-                context.gameLevel().bonus().ifPresent(Bonus::setInactive);
+                final Game game = context.currentGame();
+                game.level().bonus().ifPresent(Bonus::setInactive);
             }
         },
 
         GAME_OVER {
             @Override
             public void onEnter(GameContext context) {
-                timer.restartTicks(context.gameLevel().gameOverStateTicks());
-                context.currentGame().onGameEnding(context.gameLevel());
+                final Game game = context.currentGame();
+                timer.restartTicks(game.level().gameOverStateTicks());
+                context.currentGame().onGameEnding(game.level());
             }
 
             @Override
