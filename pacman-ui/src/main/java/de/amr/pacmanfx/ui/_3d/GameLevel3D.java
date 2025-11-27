@@ -288,12 +288,9 @@ public class GameLevel3D extends Group implements Disposable {
         }
     }
 
-    /**
-     * @param ui the game UI
-     */
     public GameLevel3D(GameUI ui) {
         this.ui = requireNonNull(ui);
-        this.gameLevel = requireNonNull(ui.context().gameLevel());
+        this.gameLevel = requireNonNull(ui.context().currentGame().level());
 
         wallOpacityProperty.bind(PROPERTY_3D_WALL_OPACITY);
 

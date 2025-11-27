@@ -8,7 +8,7 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.math.Vector2i;
-import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.action.GameAction;
@@ -223,13 +223,13 @@ public class PlayView extends StackPane implements GameUI_View {
     }
 
     private void onLevelCreated() {
-        GameLevel gameLevel = ui.context().gameLevel();
-        GameUI_Config uiConfig = ui.currentConfig();
+        final Game game = ui.context().currentGame();
+        final GameUI_Config uiConfig = ui.currentConfig();
 
-        gameLevel.pac().setAnimationManager(uiConfig.createPacAnimations());
-        gameLevel.ghosts().forEach(ghost -> ghost.setAnimationManager(uiConfig.createGhostAnimations(ghost.personality())));
+        game.level().pac().setAnimationManager(uiConfig.createPacAnimations());
+        game.level().ghosts().forEach(ghost -> ghost.setAnimationManager(uiConfig.createGhostAnimations(ghost.personality())));
 
-        miniView.onGameLevelCreated(gameLevel);
+        miniView.onGameLevelCreated(game.level());
         miniView.slideIn();
 
         // size of game scene might have changed, so re-embed

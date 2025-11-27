@@ -7,10 +7,7 @@ package de.amr.pacmanfx;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.GameLevel;
 import javafx.beans.property.BooleanProperty;
-
-import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
@@ -41,24 +38,6 @@ public interface GameContext {
      * @return the current game state (the state of the game controller FSM).
      */
     FsmState<GameContext> currentGameState();
-
-    /**
-     * @return the current game level if present.
-     */
-    default Optional<GameLevel> optGameLevel() {
-        return currentGame().optLevel();
-    }
-
-    /**
-     * Convenience method to access the current game level.
-     * <p>Returns {@code null} if no level is active. Use {@link #optGameLevel()} if you
-     * need to handle the absence of a level safely.</p>
-     *
-     * @return the current {@link GameLevel}, or {@code null} if none exists
-     */
-    default GameLevel gameLevel() {
-        return currentGame().optLevel().orElse(null);
-    }
 
     CoinMechanism coinMechanism();
 

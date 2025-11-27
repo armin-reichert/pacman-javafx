@@ -52,7 +52,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends GameScene2D_Renderer
             ctx.setFill(debugTextFill);
             ctx.setFont(debugTextFont);
             ctx.fillText("%s %d".formatted(gameState, gameState.timer().tickCount()), 0, scaled(3 * TS));
-            playScene.context().optGameLevel().ifPresent(gameLevel -> {
+            playScene.context().currentGame().optGameLevel().ifPresent(gameLevel -> {
                 drawMovingActorInfo(gameLevel.pac());
                 gameLevel.ghosts().forEach(this::drawMovingActorInfo);
             });
@@ -107,7 +107,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends GameScene2D_Renderer
     public void draw(GameScene2D scene) {
         clearCanvas();
 
-        scene.context().optGameLevel().ifPresent(gameLevel -> {
+        scene.context().currentGame().optGameLevel().ifPresent(gameLevel -> {
             ctx.getCanvas().setClip(clipRect);
             drawGameLevel(scene, gameLevel);
             if (scene.debugInfoVisible()) {

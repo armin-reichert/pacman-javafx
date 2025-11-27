@@ -278,8 +278,8 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
         actionBindings.bind(ACTION_PERSPECTIVE_PREVIOUS, ui.actionBindings());
         actionBindings.bind(ACTION_PERSPECTIVE_NEXT, ui.actionBindings());
         actionBindings.bind(ACTION_TOGGLE_DRAW_MODE, ui.actionBindings());
-        if (context().optGameLevel().isPresent()) {
-            if (context().gameLevel().isDemoLevel()) {
+        if (context().currentGame().optGameLevel().isPresent()) {
+            if (context().currentGame().level().isDemoLevel()) {
                 //TODO This is game-specific and does not belong here!
                 //actionBindings.bind(ArcadeActions.ACTION_INSERT_COIN, ui.actionBindings());
             } else {
@@ -324,7 +324,7 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
 
     @Override
     public void update() {
-        GameLevel gameLevel = context().gameLevel();
+        final GameLevel gameLevel = context().currentGame().level();
         if (gameLevel == null) {
             // Scene is already updated 2 ticks before the game level gets created!
             Logger.info("Tick #{}: Game level not yet created, update ignored", ui.clock().tickCount());
@@ -350,7 +350,7 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
     public void onEnterGameState(FsmState<GameContext> state) {
         if (state instanceof TestState) {
             replaceGameLevel3D();
-            showLevelTestMessage(context().gameLevel());
+            showLevelTestMessage(context().currentGame().level());
             PROPERTY_3D_PERSPECTIVE_ID.set(PerspectiveID.TOTAL);
         }
         else {
@@ -379,11 +379,11 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
 
     @Override
     public void onLevelStarted(GameEvent event) {
-        if (context().optGameLevel().isEmpty()) {
+        if (context().currentGame().optGameLevel().isEmpty()) {
             Logger.error("No game level exists on level start! WTF?");
             return;
         }
-        final GameLevel gameLevel = context().gameLevel();
+        final GameLevel gameLevel = context().currentGame().level();
         final FsmState<GameContext> state = context().currentGameState();
 
         if (state instanceof TestState) {
@@ -416,10 +416,10 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
 
     @Override
     public void onSwitch_2D_3D(GameScene scene2D) {
-        if (context().optGameLevel().isEmpty()) {
+        if (context().currentGame().optGameLevel().isEmpty()) {
             return;
         }
-        final GameLevel gameLevel = context().gameLevel();
+        final GameLevel gameLevel = context().currentGame().level();
         if (gameLevel3D == null) {
             replaceGameLevel3D();
         }
@@ -456,7 +456,7 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
 
     @Override
     public void onBonusActivated(GameEvent event) {
-        context().gameLevel().bonus().ifPresent(bonus -> {
+        context().currentGame().level().bonus().ifPresent(bonus -> {
             gameLevel3D.updateBonus3D(bonus);
             ui.soundManager().loop(SoundID.BONUS_ACTIVE);
         });
@@ -464,7 +464,7 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
 
     @Override
     public void onBonusEaten(GameEvent event) {
-        context().gameLevel().bonus().ifPresent(bonus -> {
+        context().currentGame().level().bonus().ifPresent(bonus -> {
             gameLevel3D.bonus3D().ifPresent(Bonus3D::showEaten);
             ui.soundManager().stop(SoundID.BONUS_ACTIVE);
             ui.soundManager().play(SoundID.BONUS_EATEN);
@@ -473,7 +473,7 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
 
     @Override
     public void onBonusExpired(GameEvent event) {
-        context().gameLevel().bonus().ifPresent(bonus -> {
+        context().currentGame().level().bonus().ifPresent(bonus -> {
             gameLevel3D.bonus3D().ifPresent(Bonus3D::expire);
             ui.soundManager().stop(SoundID.BONUS_ACTIVE);
         });
@@ -487,7 +487,7 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
     @Override
     public void onGameContinued(GameEvent e) {
         if (gameLevel3D != null) {
-            Optional<House> optionalHouse = context().gameLevel().worldMap().terrainLayer().optHouse();
+            Optional<House> optionalHouse = context().currentGame().level().worldMap().terrainLayer().optHouse();
             if (optionalHouse.isEmpty()) {
                 Logger.error("No house found in this game level! WTF?");
             } else {
@@ -500,7 +500,7 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
     @Override
     public void onGameStarted(GameEvent e) {
         FsmState<GameContext> state = context().currentGameState();
-        boolean silent = context().gameLevel().isDemoLevel() || state instanceof TestState;
+        boolean silent = context().currentGame().level().isDemoLevel() || state instanceof TestState;
         if (!silent) {
             ui.soundManager().play(SoundID.GAME_READY);
         }
@@ -522,7 +522,7 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
                     .findFirst()
                     .ifPresent(this::eatPellet3D);
             }
-            int eatenFoodCount = context().gameLevel().worldMap().foodLayer().eatenFoodCount();
+            int eatenFoodCount = context().currentGame().level().worldMap().foodLayer().eatenFoodCount();
             if (ui.currentConfig().munchingSoundPlayed(eatenFoodCount)) {
                 ui.soundManager().play(SoundID.PAC_MAN_MUNCHING);
             }
@@ -532,7 +532,7 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
     @Override
     public void onPacGetsPower(GameEvent event) {
         ui.soundManager().stopSiren();
-        if (!context().currentGame().isLevelCompleted(context().gameLevel())) {
+        if (!context().currentGame().isLevelCompleted(context().currentGame().level())) {
             gameLevel3D.pac3D().setMovementPowerMode(true);
             ui.soundManager().loop(SoundID.PAC_MAN_POWER);
             gameLevel3D.playWallColorFlashing();
@@ -580,8 +580,8 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
 
         gameLevel3DParent.getChildren().setAll(gameLevel3D);
 
-        gameLevel3D.pac3D().init(context().gameLevel());
-        gameLevel3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context().gameLevel()));
+        gameLevel3D.pac3D().init(context().currentGame().level());
+        gameLevel3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context().currentGame().level()));
         Logger.info("Initialized actors of game level 3D");
 
         gameLevel3D.livesCounter3D().startTracking(gameLevel3D.pac3D());
@@ -614,7 +614,7 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
         boolean pacChased = !pac.powerTimer().isRunning();
         if (pacChased) {
             // siren numbers are 1..4, hunting phase index = 0..7
-            int huntingPhase = context().gameLevel().huntingTimer().phaseIndex();
+            int huntingPhase = context().currentGame().level().huntingTimer().phaseIndex();
             int sirenNumber = 1 + huntingPhase / 2;
             float volume = 0.33f;
             switch (sirenNumber) {

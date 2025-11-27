@@ -15,7 +15,10 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
-import de.amr.pacmanfx.tengen.ms_pacman.model.*;
+import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
+import de.amr.pacmanfx.tengen.ms_pacman.model.MovingGameLevelMessage;
+import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
+import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameStateMachine;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_HUD_Renderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_PlayScene2D_Renderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
@@ -98,7 +101,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
         subScene.cameraProperty().addListener((py, ov, nv) -> updateScaling());
         subScene.heightProperty().addListener((py, ov, nv) -> updateScaling());
 
-        scalingProperty().addListener((py, ov, nv) -> context().optGameLevel().ifPresent(gameLevel ->
+        scalingProperty().addListener((py, ov, nv) -> context().currentGame().optGameLevel().ifPresent(gameLevel ->
             dynamicCamera.updateRange(gameLevel.worldMap())));
     }
 
@@ -206,7 +209,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
 
     @Override
     public void update() {
-        context().optGameLevel().ifPresent(gameLevel -> {
+        context().currentGame().optGameLevel().ifPresent(gameLevel -> {
             int numRows = gameLevel.worldMap().numRows();
             canvasHeightUnscaled.set(TS(numRows + 2)); // 2 additional rows for level counter below maze
             if (gameLevel.isDemoLevel()) {
@@ -293,13 +296,13 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
 
     @Override
     public Vector2i sizeInPx() {
-        return context().optGameLevel().map(gameLevel -> gameLevel.worldMap().terrainLayer().sizeInPixel()).orElse(NES_SIZE_PX);
+        return context().currentGame().optGameLevel().map(gameLevel -> gameLevel.worldMap().terrainLayer().sizeInPixel()).orElse(NES_SIZE_PX);
     }
 
     @Override
     public void onGameStarted(GameEvent e) {
         FsmState<GameContext> state = context().currentGameState();
-        boolean shutUp = context().gameLevel().isDemoLevel() || state instanceof TestState;
+        boolean shutUp = context().currentGame().level().isDemoLevel() || state instanceof TestState;
         if (!shutUp) {
             ui.soundManager().play(SoundID.GAME_READY);
         }
@@ -307,13 +310,13 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
 
     @Override
     public void onLevelCreated(GameEvent e) {
-        initForGameLevel(ui.context().gameLevel());
+        initForGameLevel(ui.context().currentGame().level());
     }
 
     @Override
     public void onSwitch_3D_2D(GameScene scene3D) {
         // Switch might occur just during the few ticks when level is not yet available!
-        context().optGameLevel().ifPresent(this::initForGameLevel);
+        context().currentGame().optGameLevel().ifPresent(this::initForGameLevel);
         dynamicCamera.enterTrackingMode();
     }
 
@@ -327,13 +330,13 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
         switch (state) {
             case TengenMsPacMan_GameStateMachine.GameState.LEVEL_COMPLETE -> {
                 ui.soundManager().stopAll();
-                startLevelCompleteAnimation(context().gameLevel());
+                startLevelCompleteAnimation(context().currentGame().level());
             }
             case TengenMsPacMan_GameStateMachine.GameState.GAME_OVER -> {
                 ui.soundManager().stopAll();
                 dynamicCamera.enterManualMode();
                 dynamicCamera.setToTopPosition();
-                context().gameLevel().optMessage().ifPresent(this::startGameOverMessageAnimation);
+                context().currentGame().level().optMessage().ifPresent(this::startGameOverMessageAnimation);
             }
             default -> {}
         }
@@ -362,7 +365,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
 
     @Override
     public void onGameContinued(GameEvent e) {
-        context().optGameLevel().ifPresent(gameLevel -> context().currentGame().showMessage(gameLevel, MessageType.READY));
+        context().currentGame().optGameLevel().ifPresent(gameLevel -> context().currentGame().showMessage(gameLevel, MessageType.READY));
         dynamicCamera.enterIntroMode();
     }
 
@@ -425,7 +428,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
     //TODO fix volume in audio file
     private void selectAndPlaySiren() {
         final float volume = 0.33f;
-        final int sirenNumber = selectSirenNumber(context().gameLevel().huntingTimer().phaseIndex());
+        final int sirenNumber = selectSirenNumber(context().currentGame().level().huntingTimer().phaseIndex());
         final SoundID sirenID = switch (sirenNumber) {
             case 1 -> SoundID.SIREN_1;
             case 2 -> SoundID.SIREN_2;

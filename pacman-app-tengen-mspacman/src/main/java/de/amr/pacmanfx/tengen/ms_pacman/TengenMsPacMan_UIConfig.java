@@ -413,10 +413,10 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
             case SHOWING_HALL_OF_FAME -> SCENE_ID_HALL_OF_FAME;
             case INTRO -> SCENE_ID_INTRO_SCENE;
             case INTERMISSION -> {
-                if (gameContext.optGameLevel().isEmpty()) {
+                if (gameContext.currentGame().optGameLevel().isEmpty()) {
                     throw new IllegalStateException("Cannot determine cut scene, no game level available");
                 }
-                int levelNumber = gameContext.gameLevel().number();
+                int levelNumber = gameContext.currentGame().level().number();
                 Optional<Integer> optCutSceneNumber = gameContext.currentGame().optCutSceneNumber(levelNumber);
                 if (optCutSceneNumber.isEmpty()) {
                     throw new IllegalStateException("Cannot determine cut scene after level %d".formatted(levelNumber));

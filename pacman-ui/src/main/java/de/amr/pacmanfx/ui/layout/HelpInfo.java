@@ -30,7 +30,8 @@ public class HelpInfo {
             case "INTRO" -> help.addInfoForIntroScene(ui.context());
             case "SETTING_OPTIONS_FOR_START" -> help.addInfoForCreditScene(ui.context());
             case "STARTING_GAME_OR_LEVEL", "HUNTING", "PACMAN_DYING", "GHOST_DYING" -> {
-                if (ui.context().optGameLevel().isPresent() && ui.context().gameLevel().isDemoLevel()) {
+                if (ui.context().currentGame().optGameLevel().isPresent()
+                        && ui.context().currentGame().level().isDemoLevel()) {
                     help.addInfoForDemoLevelPlayScene();
                 } else {
                     help.addInfoForPlayScene();

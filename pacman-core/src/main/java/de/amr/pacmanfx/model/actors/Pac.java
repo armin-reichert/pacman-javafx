@@ -138,8 +138,8 @@ public class Pac extends MovingActor {
 
     @Override
     public void tick(GameContext gameContext) {
-        if (gameContext.optGameLevel().isEmpty()) return;
-        final GameLevel gameLevel = gameContext.gameLevel();
+        if (gameContext.currentGame().optGameLevel().isEmpty()) return;
+        final GameLevel gameLevel = gameContext.currentGame().level();
 
         if (dead || restingTime == INDEFINITELY) {
             return;

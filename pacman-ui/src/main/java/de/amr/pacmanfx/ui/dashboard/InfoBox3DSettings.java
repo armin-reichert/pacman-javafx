@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.dashboard;
 
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import de.amr.pacmanfx.ui.api.GameScene;
@@ -133,14 +134,15 @@ public class InfoBox3DSettings extends InfoBox {
     private String sceneSizeInfo() {
         if (ui.currentGameScene().isEmpty()) return NO_INFO;
 
-        GameScene gameScene = ui.currentGameScene().get();
+        final Game game = ui.context().currentGame();
+        final GameScene gameScene = ui.currentGameScene().get();
         if (gameScene instanceof GameScene2D gameScene2D) {
-            Vector2i size = gameScene2D.sizeInPx();
-            Vector2f scaledSize = size.scaled(gameScene2D.scaling());
+            final Vector2i size = gameScene2D.sizeInPx();
+            final Vector2f scaledSize = size.scaled(gameScene2D.scaling());
             return "%dx%d (scaled: %.0fx%.0f)".formatted(size.x(), size.y(), scaledSize.x(), scaledSize.y());
         }
-        if (ui.context().optGameLevel().isPresent()) {
-            var worldMap = ui.context().gameLevel().worldMap();
+        if (game.optGameLevel().isPresent()) {
+            final var worldMap = game.level().worldMap();
             return "%dx%d (map size px)".formatted(worldMap.numCols() * TS, worldMap.numRows() * TS);
         }
         return NO_INFO;

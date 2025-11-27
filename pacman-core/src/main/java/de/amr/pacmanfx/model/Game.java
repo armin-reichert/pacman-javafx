@@ -63,11 +63,11 @@ public interface Game {
     ScoreManager scoreManager();
     MapSelector mapSelector();
 
-    Optional<GameLevel> optLevel();
+    Optional<GameLevel> optGameLevel();
 
     /**
      * Convenience method to access the current game level.
-     * <p>Returns {@code null} if no level is active. Use {@link #optLevel()} if you
+     * <p>Returns {@code null} if no level is active. Use {@link #optGameLevel()} if you
      * need to handle the absence of a level safely.</p>
      *
      * @return the current {@link GameLevel}, or {@code null} if none exists

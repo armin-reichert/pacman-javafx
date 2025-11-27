@@ -8,7 +8,10 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.timer.TickTimer;
-import de.amr.pacmanfx.model.*;
+import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.GameLevelMessage;
+import de.amr.pacmanfx.model.MessageType;
 import de.amr.pacmanfx.model.actors.AnimationManager;
 
 public class LevelMediumTestState implements FsmState<GameContext>, TestState {
@@ -28,7 +31,7 @@ public class LevelMediumTestState implements FsmState<GameContext>, TestState {
     }
 
     private void configureLevelForTest(GameContext context) {
-        final GameLevel gameLevel = context.gameLevel();
+        final GameLevel gameLevel = context.currentGame().level();
         gameLevel.pac().usingAutopilotProperty().unbind();
         gameLevel.pac().setUsingAutopilot(true);
         gameLevel.pac().optAnimationManager().ifPresent(AnimationManager::play);
@@ -47,14 +50,14 @@ public class LevelMediumTestState implements FsmState<GameContext>, TestState {
         timer.restartSeconds(TEST_DURATION_SEC);
         context.currentGame().prepareForNewGame();
         context.currentGame().buildNormalLevel(1);
-        context.currentGame().startLevel(context.gameLevel());
+        context.currentGame().startLevel(context.currentGame().level());
         configureLevelForTest(context);
     }
 
     @Override
     public void onUpdate(GameContext context) {
         final Game game = context.currentGame();
-        final GameLevel gameLevel = context.gameLevel();
+        final GameLevel gameLevel = context.currentGame().level();
         gameLevel.pac().tick(context);
         gameLevel.ghosts().forEach(ghost -> ghost.tick(context));
         gameLevel.bonus().ifPresent(bonus -> bonus.tick(context));

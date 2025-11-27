@@ -253,7 +253,7 @@ public abstract class Ghost extends MovingActor {
      */
     @Override
     public void tick(GameContext gameContext) {
-        gameContext.optGameLevel().ifPresent(gameLevel -> {
+        gameContext.currentGame().optGameLevel().ifPresent(gameLevel -> {
             switch (state()) {
                 case LOCKED         -> updateStateLocked(gameLevel);
                 case LEAVING_HOUSE  -> updateStateLeavingHouse(gameLevel);

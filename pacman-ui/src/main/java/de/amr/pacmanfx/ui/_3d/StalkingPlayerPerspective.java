@@ -24,7 +24,7 @@ public class StalkingPlayerPerspective implements Perspective {
 
     @Override
     public void update(PerspectiveCamera camera, GameContext gameContext) {
-        gameContext.optGameLevel().ifPresent(gameLevel -> {
+        gameContext.currentGame().optGameLevel().ifPresent(gameLevel -> {
             double speedX = 0.04;
             double speedY = 0.04;
             double worldWidth = gameLevel.worldMap().numCols() * TS;

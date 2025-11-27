@@ -123,26 +123,26 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onLevelCreated(GameEvent e) {
-        acceptGameLevel(context().gameLevel());
+        acceptGameLevel(context().currentGame().level());
     }
 
     @Override
     public void onSwitch_3D_2D(GameScene scene3D) {
         Logger.info("{} entered from {}", this, scene3D);
-        if (context().optGameLevel().isPresent()) {
-            acceptGameLevel(context().gameLevel());
+        if (context().currentGame().optGameLevel().isPresent()) {
+            acceptGameLevel(context().currentGame().level());
         }
     }
 
     @Override
     public void onGameContinued(GameEvent e) {
-        context().currentGame().showMessage(context().gameLevel(), MessageType.READY);
+        context().currentGame().showMessage(context().currentGame().level(), MessageType.READY);
     }
 
     @Override
     public void onGameStarted(GameEvent e) {
         FsmState<GameContext> state = context().currentGameState();
-        boolean silent = context().gameLevel().isDemoLevel() || state instanceof TestState;
+        boolean silent = context().currentGame().level().isDemoLevel() || state instanceof TestState;
         if (!silent) {
             ui.soundManager().play(SoundID.GAME_READY);
         }
@@ -150,7 +150,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void update() {
-        context().optGameLevel().ifPresent(gameLevel -> {
+        context().currentGame().optGameLevel().ifPresent(gameLevel -> {
             updateHUD(gameLevel);
             updateSound(gameLevel);
         });
@@ -170,7 +170,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     @Override
     public Vector2i sizeInPx() {
         // Note: scene is also used in Pac-Man XXL game variant where world can have any size
-        return context().optGameLevel().map(gameLevel -> gameLevel.worldMap().terrainLayer().sizeInPixel())
+        return context().currentGame().optGameLevel().map(gameLevel -> gameLevel.worldMap().terrainLayer().sizeInPixel())
             .orElse(ARCADE_MAP_SIZE_IN_PIXELS);
     }
 
@@ -210,7 +210,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     private void playLevelCompletedAnimation() {
-        levelCompletedAnimation = new LevelCompletedAnimation(animationRegistry, context().gameLevel());
+        levelCompletedAnimation = new LevelCompletedAnimation(animationRegistry, context().currentGame().level());
         levelCompletedAnimation.getOrCreateAnimationFX().setOnFinished(e -> context().currentGame().terminateCurrentGameState());
         levelCompletedAnimation.playFromStart();
     }
@@ -255,7 +255,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onPacFoundFood(GameEvent e) {
-        int eatenFoodCount = context().gameLevel().worldMap().foodLayer().eatenFoodCount();
+        int eatenFoodCount = context().currentGame().level().worldMap().foodLayer().eatenFoodCount();
         if (ui.currentConfig().munchingSoundPlayed(eatenFoodCount)) {
             ui.soundManager().play(SoundID.PAC_MAN_MUNCHING);
         }
@@ -304,7 +304,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     //TODO fix volume in audio file
     private void selectAndPlaySiren() {
         final float volume = 0.33f;
-        final int sirenNumber = selectSirenNumber(context().gameLevel().huntingTimer().phaseIndex());
+        final int sirenNumber = selectSirenNumber(context().currentGame().level().huntingTimer().phaseIndex());
         final SoundID sirenID = switch (sirenNumber) {
             case 1 -> SoundID.SIREN_1;
             case 2 -> SoundID.SIREN_2;

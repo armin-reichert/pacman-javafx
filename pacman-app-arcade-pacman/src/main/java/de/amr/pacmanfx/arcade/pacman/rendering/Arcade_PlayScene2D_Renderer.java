@@ -6,10 +6,12 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
 import de.amr.pacmanfx.lib.timer.Pulse;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
+import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.*;
@@ -52,21 +54,22 @@ public class Arcade_PlayScene2D_Renderer extends GameScene2D_Renderer implements
     public void draw(GameScene2D scene) {
         clearCanvas();
 
-        final Arcade_PlayScene2D playScene = (Arcade_PlayScene2D) scene;
-
-        if (playScene.context().optGameLevel().isEmpty()) {
+        final Game game = scene.context().currentGame();
+        if (game.optGameLevel().isEmpty()) {
             return; // Scene is drawn already 2 ticks before level has been created
         }
 
-        final GameLevel gameLevel = playScene.context().gameLevel();
-        RenderInfo info = new RenderInfo();
-        info.put(CommonRenderInfoKey.MAZE_BRIGHT, isMazeHighlighted(playScene));
-        info.put(CommonRenderInfoKey.ENERGIZER_BLINKING, gameLevel.blinking().state() == Pulse.State.ON);
-        info.put(CommonRenderInfoKey.MAZE_EMPTY, playScene.context().gameLevel().worldMap().foodLayer().uneatenFoodCount() == 0);
-        gameLevelRenderer.applyLevelSettings(gameLevel, info);
-        gameLevelRenderer.drawGameLevel(gameLevel, info);
+        final Arcade_PlayScene2D playScene = (Arcade_PlayScene2D) scene;
 
-        updateActorDrawingOrder(gameLevel);
+        final RenderInfo info = new RenderInfo();
+        info.put(CommonRenderInfoKey.MAZE_BRIGHT, isMazeHighlighted(playScene));
+        info.put(CommonRenderInfoKey.ENERGIZER_BLINKING, game.level().blinking().state() == Pulse.State.ON);
+        info.put(CommonRenderInfoKey.MAZE_EMPTY, game.level().worldMap().foodLayer().uneatenFoodCount() == 0);
+
+        gameLevelRenderer.applyLevelSettings(game.level(), info);
+        gameLevelRenderer.drawGameLevel(game.level(), info);
+
+        updateActorDrawingOrder(game.level());
         actorsInZOrder.forEach(actorRenderer::drawActor);
 
         if (playScene.debugInfoVisible()) {
@@ -75,9 +78,10 @@ public class Arcade_PlayScene2D_Renderer extends GameScene2D_Renderer implements
     }
 
     private boolean isMazeHighlighted(Arcade_PlayScene2D playScene) {
-        return playScene.levelCompletedAnimation() != null
-            && playScene.levelCompletedAnimation().isRunning()
-            && playScene.levelCompletedAnimation().highlightedProperty().get();
+        final LevelCompletedAnimation animation = playScene.levelCompletedAnimation();
+        return animation != null
+            && animation.isRunning()
+            && animation.highlightedProperty().get();
     }
 
     private void updateActorDrawingOrder(GameLevel gameLevel) {

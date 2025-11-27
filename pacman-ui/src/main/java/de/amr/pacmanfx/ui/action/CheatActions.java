@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.action;
 
 import de.amr.pacmanfx.event.GameEvent;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.ui.api.GameUI;
@@ -27,22 +28,22 @@ public final class CheatActions {
         }
 
         @Override
-        public boolean isEnabled(GameUI ui) { return ui.context().optGameLevel().isPresent(); }
+        public boolean isEnabled(GameUI ui) { return ui.context().currentGame().optGameLevel().isPresent(); }
     };
 
     public static final GameAction ACTION_EAT_ALL_PELLETS = new GameAction("CHEAT_EAT_ALL_PELLETS") {
         @Override
         public void execute(GameUI ui) {
             ui.context().cheatUsedProperty().set(true);
-            ui.context().gameLevel().worldMap().foodLayer().eatPellets();
+            ui.context().currentGame().level().worldMap().foodLayer().eatPellets();
             ui.soundManager().pause(SoundID.PAC_MAN_MUNCHING);
             ui.context().currentGame().publishGameEvent(GameEvent.Type.PAC_FOUND_FOOD);
         }
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            return ui.context().optGameLevel().isPresent()
-                    && !ui.context().gameLevel().isDemoLevel()
+            return ui.context().currentGame().optGameLevel().isPresent()
+                    && !ui.context().currentGame().level().isDemoLevel()
                     && ui.context().currentGameState().name().equals("HUNTING");
         }
     };
@@ -51,7 +52,7 @@ public final class CheatActions {
         @Override
         public void execute(GameUI ui) {
             ui.context().cheatUsedProperty().set(true);
-            GameLevel gameLevel = ui.context().gameLevel();
+            GameLevel gameLevel = ui.context().currentGame().level();
             List<Ghost> vulnerableGhosts = gameLevel.ghosts(FRIGHTENED, HUNTING_PAC).toList();
             if (!vulnerableGhosts.isEmpty()) {
                 gameLevel.energizerVictims().clear(); // resets value of next killed ghost to 200
@@ -63,7 +64,7 @@ public final class CheatActions {
         @Override
         public boolean isEnabled(GameUI ui) {
             return ui.context().currentGameState().name().equals("HUNTING")
-                && ui.context().optGameLevel().isPresent() && !ui.context().gameLevel().isDemoLevel();
+                && ui.context().currentGame().optGameLevel().isPresent() && !ui.context().currentGame().level().isDemoLevel();
         }
     };
 
@@ -76,10 +77,11 @@ public final class CheatActions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            return ui.context().currentGame().isPlaying()
+            final Game game = ui.context().currentGame();
+            return game.isPlaying()
                     && ui.context().currentGameState().name().equals("HUNTING")
-                    && ui.context().optGameLevel().isPresent()
-                    && ui.context().gameLevel().number() < ui.context().currentGame().lastLevelNumber();
+                    && game.optGameLevel().isPresent()
+                    && game.level().number() < game.lastLevelNumber();
         }
     };
 

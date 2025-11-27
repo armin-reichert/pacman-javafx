@@ -344,7 +344,7 @@ public class Arcade_GameStateMachine extends StateMachine<FsmState<GameContext>,
 
             @Override
             public void onExit(GameContext context) {
-                context.optGameLevel().ifPresent(GameLevel::clearMessage);
+                context.currentGame().optGameLevel().ifPresent(GameLevel::clearMessage);
                 context.cheatUsedProperty().set(false);
             }
         },

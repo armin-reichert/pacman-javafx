@@ -109,8 +109,8 @@ public class InfoBoxGameInfo extends InfoBox {
     }
 
     private String fmtHuntingPhase() {
-        if (ui.context().gameLevel() != null) {
-            HuntingTimer huntingTimer = ui.context().gameLevel().huntingTimer();
+        if (ui.context().currentGame().level() != null) {
+            HuntingTimer huntingTimer = ui.context().currentGame().level().huntingTimer();
             return "%s #%d%s".formatted(
                 huntingTimer.phase().name(),
                 huntingTimer.phase() == HuntingPhase.CHASING

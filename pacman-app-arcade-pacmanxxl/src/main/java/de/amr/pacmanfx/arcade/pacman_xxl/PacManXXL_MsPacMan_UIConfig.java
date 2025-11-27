@@ -290,10 +290,10 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config, GameScene_Con
             case Arcade_GameStateMachine.GameState.SETTING_OPTIONS_FOR_START -> SCENE_ID_START_SCENE;
             case Arcade_GameStateMachine.GameState.INTRO -> SCENE_ID_INTRO_SCENE;
             case Arcade_GameStateMachine.GameState.INTERMISSION -> {
-                if (gameContext.optGameLevel().isEmpty()) {
+                if (gameContext.currentGame().optGameLevel().isEmpty()) {
                     throw new IllegalStateException("Cannot determine cut scene, no game level available");
                 }
-                int levelNumber = gameContext.gameLevel().number();
+                int levelNumber = gameContext.currentGame().level().number();
                 Optional<Integer> optCutSceneNumber = gameContext.currentGame().optCutSceneNumber(levelNumber);
                 if (optCutSceneNumber.isEmpty()) {
                     throw new IllegalStateException("Cannot determine cut scene after level %d".formatted(levelNumber));

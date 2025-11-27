@@ -106,7 +106,7 @@ public class Bonus extends MovingActor {
             case EDIBLE -> {
                 boolean reachedExit = false;
                 if (jumpingAnimation != null) {
-                     reachedExit = jumpThroughMaze(gameContext.gameLevel());
+                     reachedExit = jumpThroughMaze(gameContext.currentGame().level());
                 }
                 if (timer.hasExpired() || reachedExit) {
                     setInactive();

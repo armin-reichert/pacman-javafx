@@ -25,7 +25,7 @@ public class TrackingPlayerPerspective implements Perspective {
 
     @Override
     public void update(PerspectiveCamera camera, GameContext gameContext) {
-        gameContext.optGameLevel().ifPresent(gameLevel -> {
+        gameContext.currentGame().optGameLevel().ifPresent(gameLevel -> {
             double speedX = 0.03;
             double speedY = 0.06;
             double worldWidth = gameLevel.worldMap().numCols() * TS;

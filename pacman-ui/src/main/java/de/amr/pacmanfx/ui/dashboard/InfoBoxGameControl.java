@@ -78,7 +78,7 @@ public class InfoBoxGameControl extends InfoBox {
         choiceBoxInitialLives.setDisable(!state.name().equals("INTRO"));
 
         buttonGroupLevelActions[GAME_LEVEL_START].setDisable(isBooting() || !canStartLevel());
-        buttonGroupLevelActions[GAME_LEVEL_QUIT].setDisable(isBooting() || ui.context().optGameLevel().isEmpty());
+        buttonGroupLevelActions[GAME_LEVEL_QUIT].setDisable(isBooting() || ui.context().currentGame().optGameLevel().isEmpty());
         buttonGroupLevelActions[GAME_LEVEL_NEXT].setDisable(isBooting() || !canEnterNextLevel());
 
         buttonGroupCutScenesTest[CUT_SCENES_TEST_START].setDisable(isBooting() || !state.name().equals("INTRO"));

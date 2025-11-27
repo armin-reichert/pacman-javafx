@@ -23,7 +23,7 @@ public class TotalPerspective implements Perspective {
 
     @Override
     public void update(PerspectiveCamera camera, GameContext gameContext) {
-        gameContext.optGameLevel().ifPresent(gameLevel -> {
+        gameContext.currentGame().optGameLevel().ifPresent(gameLevel -> {
             int sizeX = gameLevel.worldMap().numCols() * TS;
             int sizeY = gameLevel.worldMap().numRows() * TS;
             camera.setTranslateX(sizeX * 0.5);

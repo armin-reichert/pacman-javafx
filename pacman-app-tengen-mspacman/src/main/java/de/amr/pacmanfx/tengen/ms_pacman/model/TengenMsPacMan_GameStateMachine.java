@@ -206,7 +206,7 @@ public class TengenMsPacMan_GameStateMachine extends StateMachine<FsmState<GameC
             @Override
             public void onExit(GameContext context) {
                 //TODO is this needed?
-                clearReadyMessage(context.gameLevel());
+                clearReadyMessage(context.currentGame().level());
             }
         },
 
@@ -266,8 +266,8 @@ public class TengenMsPacMan_GameStateMachine extends StateMachine<FsmState<GameC
             @Override
             public void onEnter(GameContext context) {
                 timer.restartSeconds(1);
-                context.gameLevel().pac().hide();
-                context.gameLevel().ghosts().forEach(Ghost::stopAnimation);
+                context.currentGame().level().pac().hide();
+                context.currentGame().level().ghosts().forEach(Ghost::stopAnimation);
                 context.currentGame().publishGameEvent(GameEvent.Type.GHOST_EATEN);
             }
 
@@ -276,17 +276,17 @@ public class TengenMsPacMan_GameStateMachine extends StateMachine<FsmState<GameC
                 if (timer.hasExpired()) {
                     context.currentGame().resumePreviousState();
                 } else {
-                    context.gameLevel().ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
+                    context.currentGame().level().ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
                         .forEach(ghost -> ghost.tick(context));
-                    context.gameLevel().blinking().tick();
+                    context.currentGame().level().blinking().tick();
                 }
             }
 
             @Override
             public void onExit(GameContext context) {
-                context.gameLevel().pac().show();
-                context.gameLevel().ghosts(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_HOME));
-                context.gameLevel().ghosts()
+                context.currentGame().level().pac().show();
+                context.currentGame().level().ghosts(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_HOME));
+                context.currentGame().level().ghosts()
                     .forEach(ghost -> ghost.optAnimationManager().ifPresent(AnimationManager::play));
             }
         },
@@ -300,7 +300,7 @@ public class TengenMsPacMan_GameStateMachine extends StateMachine<FsmState<GameC
             @Override
             public void onEnter(GameContext context) {
                 timer.restartIndefinitely();
-                context.currentGame().onPacKilled(context.gameLevel());
+                context.currentGame().onPacKilled(context.currentGame().level());
                 context.currentGame().publishGameEvent(GameEvent.Type.STOP_ALL_SOUNDS);
             }
 
@@ -346,7 +346,7 @@ public class TengenMsPacMan_GameStateMachine extends StateMachine<FsmState<GameC
             @Override
             public void onExit(GameContext context) {
                 //TODO clarify in MAME
-                context.gameLevel().bonus().ifPresent(Bonus::setInactive);
+                context.currentGame().level().bonus().ifPresent(Bonus::setInactive);
             }
         },
 
@@ -354,15 +354,15 @@ public class TengenMsPacMan_GameStateMachine extends StateMachine<FsmState<GameC
 
             @Override
             public void onEnter(GameContext context) {
-                timer.restartTicks(context.gameLevel().gameOverStateTicks());
-                context.currentGame().onGameEnding(context.gameLevel());
+                timer.restartTicks(context.currentGame().level().gameOverStateTicks());
+                context.currentGame().onGameEnding(context.currentGame().level());
             }
 
             @Override
             public void onUpdate(GameContext context) {
                 final Game game = context.currentGame();
                 if (timer.hasExpired()) {
-                    if (context.gameLevel().isDemoLevel()) {
+                    if (context.currentGame().level().isDemoLevel()) {
                         game.changeState(SHOWING_HALL_OF_FAME);
                     }
                     else {
@@ -373,7 +373,7 @@ public class TengenMsPacMan_GameStateMachine extends StateMachine<FsmState<GameC
 
             @Override
             public void onExit(GameContext context) {
-                context.optGameLevel().ifPresent(GameLevel::clearMessage);
+                context.currentGame().optGameLevel().ifPresent(GameLevel::clearMessage);
                 context.cheatUsedProperty().set(false);
             }
         },

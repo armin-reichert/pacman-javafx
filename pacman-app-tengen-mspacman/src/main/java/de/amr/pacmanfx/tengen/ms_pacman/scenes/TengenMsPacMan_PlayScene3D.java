@@ -82,7 +82,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     protected void setActionBindings() {
         var tengenActionBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().tengenActionBindings();
         // if demo level, allow going back to options screen
-        if (context().optGameLevel().isPresent() && context().gameLevel().isDemoLevel()) {
+        if (context().currentGame().optGameLevel().isPresent() && context().currentGame().level().isDemoLevel()) {
             actionBindings.bind(ACTION_QUIT_DEMO_LEVEL, tengenActionBindings);
         } else {
             setPlayerSteeringActionBindings();

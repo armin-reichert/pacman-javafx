@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade.pacman;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameStateMachine.GameState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.model.CoinMechanism;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.api.GameUI;
 
@@ -29,12 +30,13 @@ public final class ArcadeActions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            if (ui.context().currentGame().isPlaying()) {
+            final Game game = ui.context().currentGame();
+            if (game.isPlaying()) {
                 return false;
             }
             return ui.context().currentGameState() == GameState.SETTING_OPTIONS_FOR_START
-                || ui.context().currentGameState() == INTRO
-                || ui.context().optGameLevel().isPresent() && ui.context().gameLevel().isDemoLevel()
+                || ui.context().currentGameState() == GameState.INTRO
+                || game.optGameLevel().isPresent() && game.level().isDemoLevel()
                 || ui.context().coinMechanism().noCoin();
         }
     };

@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.timer.Pulse;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.uilib.rendering.*;
@@ -131,22 +132,22 @@ public class MiniGameView extends VBox {
         }
         canvasRenderer.clearCanvas();
 
-        GameLevel gameLevel = ui.context().gameLevel();
-        if (gameLevel != null) {
+        final Game game = ui.context().currentGame();
+        if (game.level() != null) {
             var info = new RenderInfo();
             info.putAll(Map.of(
                 CommonRenderInfoKey.MAZE_BRIGHT, false,
-                CommonRenderInfoKey.ENERGIZER_BLINKING, gameLevel.blinking().state() == Pulse.State.ON,
-                CommonRenderInfoKey.MAZE_EMPTY, gameLevel.worldMap().foodLayer().uneatenFoodCount() == 0,
+                CommonRenderInfoKey.ENERGIZER_BLINKING, game.level().blinking().state() == Pulse.State.ON,
+                CommonRenderInfoKey.MAZE_EMPTY, game.level().worldMap().foodLayer().uneatenFoodCount() == 0,
                 CommonRenderInfoKey.TICK, ui.clock().tickCount()
             ));
-            gameLevelRenderer.applyLevelSettings(gameLevel, info);
-            gameLevelRenderer.drawGameLevel(gameLevel, info);
+            gameLevelRenderer.applyLevelSettings(game.level(), info);
+            gameLevelRenderer.drawGameLevel(game.level(), info);
 
-            gameLevel.bonus().ifPresent(bonus -> actorRenderer.drawActor(bonus));
-            actorRenderer.drawActor(gameLevel.pac());
+            game.level().bonus().ifPresent(bonus -> actorRenderer.drawActor(bonus));
+            actorRenderer.drawActor(game.level().pac());
             Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW)
-                .map(gameLevel::ghost)
+                .map(game.level()::ghost)
                 .forEach(ghost -> actorRenderer.drawActor(ghost));
         }
 
