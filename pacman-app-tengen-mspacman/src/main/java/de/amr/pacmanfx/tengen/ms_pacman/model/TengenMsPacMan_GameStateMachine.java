@@ -299,9 +299,10 @@ public class TengenMsPacMan_GameStateMachine extends StateMachine<FsmState<GameC
 
             @Override
             public void onEnter(GameContext context) {
+                final Game game = context.currentGame();
                 timer.restartIndefinitely();
-                context.currentGame().onPacKilled(context.currentGame().level());
-                context.currentGame().publishGameEvent(GameEvent.Type.STOP_ALL_SOUNDS);
+                game.onPacKilled();
+                game.publishGameEvent(GameEvent.Type.STOP_ALL_SOUNDS);
             }
 
             @Override

@@ -121,11 +121,12 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void onPacKilled(GameLevel gameLevel) {
+    public void onPacKilled() {
+        final GameLevel level = level();
         gateKeeper.resetCounterAndSetEnabled(true);
-        gameLevel.huntingTimer().stop();
-        gameLevel.pac().onKilled();
-        gameLevel.ghosts().forEach(ghost -> ghost.onPacKilled(gameLevel));
+        level.huntingTimer().stop();
+        level.pac().onKilled();
+        level.ghosts().forEach(ghost -> ghost.onPacKilled(level));
     }
 
     @Override

@@ -126,7 +126,7 @@ public interface Game {
 
     // Game event handling
     void onLevelCompleted();
-    void onPacKilled(GameLevel gameLevel);
+    void onPacKilled();
     void onGhostKilled(GameLevel gameLevel, Ghost ghost);
     void onGameEnding(GameLevel gameLevel);
 

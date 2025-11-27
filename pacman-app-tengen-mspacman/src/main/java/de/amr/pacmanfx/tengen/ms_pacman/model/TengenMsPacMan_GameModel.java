@@ -585,11 +585,12 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void onPacKilled(GameLevel gameLevel) {
-        gameLevel.huntingTimer().stop();
+    public void onPacKilled() {
+        final GameLevel level = level();
+        level.huntingTimer().stop();
         gateKeeper.resetCounterAndSetEnabled(true);
-        gameLevel.pac().onKilled();
-        gameLevel.ghosts().forEach(ghost -> ghost.onPacKilled(gameLevel));
+        level.pac().onKilled();
+        level.ghosts().forEach(ghost -> ghost.onPacKilled(level));
     }
 
     @Override

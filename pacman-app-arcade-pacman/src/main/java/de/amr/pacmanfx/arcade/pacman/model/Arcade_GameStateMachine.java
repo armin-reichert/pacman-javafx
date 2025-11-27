@@ -279,7 +279,7 @@ public class Arcade_GameStateMachine extends StateMachine<FsmState<GameContext>,
             public void onEnter(GameContext context) {
                 final Game game = context.currentGame();
                 timer.restartIndefinitely();
-                game.onPacKilled(game.level());
+                game.onPacKilled();
                 game.publishGameEvent(GameEvent.Type.STOP_ALL_SOUNDS);
             }
 
