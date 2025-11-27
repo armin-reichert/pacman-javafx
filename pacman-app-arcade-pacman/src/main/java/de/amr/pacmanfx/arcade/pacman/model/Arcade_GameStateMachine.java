@@ -1,7 +1,10 @@
+/*
+Copyright (c) 2021-2026 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
@@ -9,7 +12,6 @@ import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.MessageType;
-import de.amr.pacmanfx.model.StandardGameVariant;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.model.test.LevelMediumTestState;
@@ -68,23 +70,6 @@ public class Arcade_GameStateMachine extends StateMachine<FsmState<GameContext>,
             @Override
             public void onUpdate(GameContext context) {
                 // wait for user interaction to leave state
-            }
-        },
-
-        /**
-         * In Tengen Ms. Pac-Man, the credited people are shown.
-         */
-        SHOWING_HALL_OF_FAME {
-            @Override
-            public void onEnter(GameContext context) {
-                timer.restartIndefinitely();
-            }
-
-            @Override
-            public void onUpdate(GameContext context) {
-                if (timer.hasExpired()) {
-                    context.currentGame().changeState(INTRO);
-                }
             }
         },
 
@@ -162,29 +147,19 @@ public class Arcade_GameStateMachine extends StateMachine<FsmState<GameContext>,
         },
 
         HUNTING {
-            int delay;
-
             @Override
             public void onEnter(GameContext context) {
-                //TODO reconsider this
-                delay = context.isCurrentGameVariant("MS_PACMAN_TENGEN") ? Globals.NUM_TICKS_PER_SEC : 0;
+                final GameLevel gameLevel = context.gameLevel();
+                gameLevel.optMessage().filter(message -> message.type() == MessageType.READY).ifPresent(message -> {
+                    gameLevel.clearMessage(); // leave TEST message alone
+                });
+                context.currentGame().startHunting(gameLevel);
             }
 
             @Override
             public void onUpdate(GameContext context) {
                 final Game game = context.currentGame();
                 final GameLevel gameLevel = context.gameLevel();
-
-                if (timer.tickCount() < delay) {
-                    return;
-                }
-
-                if (timer.tickCount() == delay) {
-                    gameLevel.optMessage().filter(message -> message.type() == MessageType.READY).ifPresent(message -> {
-                        gameLevel.clearMessage(); // leave TEST message alone
-                    });
-                    game.startHunting(gameLevel);
-                }
 
                 gameLevel.pac().tick(context);
                 gameLevel.ghosts().forEach(ghost -> ghost.tick(context));
@@ -226,13 +201,6 @@ public class Arcade_GameStateMachine extends StateMachine<FsmState<GameContext>,
 
                 if (timer.tickCount() == 1) {
                     game.onLevelCompleted(context.gameLevel());
-                }
-
-                //TODO this is crap. Maybe Tengen Ms. Pac-Man needs its own state machine?
-                if (context.isCurrentGameVariant(StandardGameVariant.MS_PACMAN_TENGEN.name())
-                    && context.gameLevel().isDemoLevel()) {
-                    game.changeState(SHOWING_HALL_OF_FAME);
-                    return;
                 }
 
                 if (timer.hasExpired()) {
@@ -309,9 +277,11 @@ public class Arcade_GameStateMachine extends StateMachine<FsmState<GameContext>,
             @Override
             public void onUpdate(GameContext context) {
                 final Game game = context.currentGame();
+                final GameLevel gameLevel = context.gameLevel();
+                final Pac pac = gameLevel.pac();
 
                 if (timer.hasExpired()) {
-                    if (context.gameLevel().isDemoLevel()) {
+                    if (gameLevel.isDemoLevel()) {
                         game.changeState(GAME_OVER);
                     } else {
                         game.addLives(-1);
@@ -319,26 +289,26 @@ public class Arcade_GameStateMachine extends StateMachine<FsmState<GameContext>,
                     }
                 }
                 else if (timer.tickCount() == TICK_HIDE_GHOSTS) {
-                    context.gameLevel().ghosts().forEach(Ghost::hide);
+                    gameLevel.ghosts().forEach(Ghost::hide);
                     //TODO this does not belong here
-                    context.gameLevel().pac().optAnimationManager().ifPresent(am -> {
+                    pac.optAnimationManager().ifPresent(am -> {
                         am.select(CommonAnimationID.ANIM_PAC_DYING);
                         am.reset();
                     });
                 }
                 else if (timer.tickCount() == TICK_START_PAC_ANIMATION) {
-                    context.gameLevel().pac().optAnimationManager().ifPresent(AnimationManager::play);
-                    context.currentGame().publishGameEvent(GameEvent.Type.PAC_DYING, context.gameLevel().pac().tile());
+                    pac.optAnimationManager().ifPresent(AnimationManager::play);
+                    context.currentGame().publishGameEvent(GameEvent.Type.PAC_DYING, pac.tile());
                 }
                 else if (timer.tickCount() == TICK_HIDE_PAC) {
-                    context.gameLevel().pac().hide();
+                    pac.hide();
                 }
                 else if (timer.tickCount() == TICK_PAC_DEAD) {
                     context.currentGame().publishGameEvent(GameEvent.Type.PAC_DEAD);
                 }
                 else {
-                    context.gameLevel().blinking().tick();
-                    context.gameLevel().pac().tick(context);
+                    gameLevel.blinking().tick();
+                    pac.tick(context);
                 }
             }
 
@@ -360,21 +330,11 @@ public class Arcade_GameStateMachine extends StateMachine<FsmState<GameContext>,
                 final Game game = context.currentGame();
 
                 if (timer.hasExpired()) {
-                    //TODO find unified solution
-                    if (context.isCurrentGameVariant(StandardGameVariant.MS_PACMAN_TENGEN.name())) {
-                        if (context.gameLevel().isDemoLevel()) {
-                            game.changeState(SHOWING_HALL_OF_FAME);
-                        } else {
-                            boolean canContinue = game.canContinueOnGameOver();
-                            game.changeState(canContinue ? SETTING_OPTIONS_FOR_START : INTRO);
-                        }
+                    game.prepareForNewGame();
+                    if (game.canStartNewGame()) {
+                        game.changeState(SETTING_OPTIONS_FOR_START);
                     } else {
-                        game.prepareForNewGame();
-                        if (game.canStartNewGame()) {
-                            game.changeState(SETTING_OPTIONS_FOR_START);
-                        } else {
-                            game.changeState(INTRO);
-                        }
+                        game.changeState(INTRO);
                     }
                 }
             }
