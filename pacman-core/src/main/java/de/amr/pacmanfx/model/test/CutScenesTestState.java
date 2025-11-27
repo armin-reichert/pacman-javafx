@@ -9,8 +9,7 @@ import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.AbstractGameModel;
-
-import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
+import de.amr.pacmanfx.model.StandardGameVariant;
 
 public class CutScenesTestState implements FsmState<GameContext>, TestState {
 
@@ -38,17 +37,16 @@ public class CutScenesTestState implements FsmState<GameContext>, TestState {
 
     @Override
     public void onUpdate(GameContext context) {
-        if (context.currentGame() instanceof AbstractGameModel) {
-            if (timer.hasExpired()) {
-                int lastCutSceneNumber = THE_GAME_BOX.isCurrentGameVariant("MS_PACMAN_TENGEN") ? 4 : 3;
-                if (testedCutSceneNumber < lastCutSceneNumber) {
-                    testedCutSceneNumber += 1;
-                    timer.restartIndefinitely();
-                    //TODO find another solution and get rid of this event type
-                    context.currentGame().publishGameEvent(GameEvent.Type.UNSPECIFIED_CHANGE);
-                } else {
-                    context.currentGame().changeState("INTRO");
-                }
+        if (timer.hasExpired()) {
+            boolean tengenMsPacMan = context.gameVariantName().equals(StandardGameVariant.MS_PACMAN_TENGEN.name());
+            int lastCutSceneNumber = tengenMsPacMan ? 4 : 3;
+            if (testedCutSceneNumber < lastCutSceneNumber) {
+                testedCutSceneNumber += 1;
+                timer.restartIndefinitely();
+                //TODO find another solution and get rid of this event type
+                context.currentGame().publishGameEvent(GameEvent.Type.UNSPECIFIED_CHANGE);
+            } else {
+                context.currentGame().changeState("INTRO");
             }
         }
     }
