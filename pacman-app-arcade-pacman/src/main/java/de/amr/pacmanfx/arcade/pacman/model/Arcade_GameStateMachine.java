@@ -156,7 +156,7 @@ public class Arcade_GameStateMachine extends StateMachine<FsmState<GameContext>,
                 game.level().optMessage().filter(message -> message.type() == MessageType.READY).ifPresent(message -> {
                     game.level().clearMessage(); // leave TEST message alone
                 });
-                game.startHunting(game.level());
+                game.startHunting();
             }
 
             @Override

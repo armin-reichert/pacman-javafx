@@ -180,12 +180,13 @@ public abstract class AbstractGameModel implements Game {
     }
 
     @Override
-    public void startHunting(GameLevel gameLevel) {
-        gameLevel.pac().optAnimationManager().ifPresent(AnimationManager::play);
-        gameLevel.ghosts().forEach(ghost -> ghost.optAnimationManager().ifPresent(AnimationManager::play));
-        gameLevel.blinking().setStartState(Pulse.State.ON);
-        gameLevel.blinking().restart();
-        gameLevel.huntingTimer().startFirstPhase();
+    public void startHunting() {
+        final GameLevel level = level();
+        level.pac().optAnimationManager().ifPresent(AnimationManager::play);
+        level.ghosts().forEach(ghost -> ghost.optAnimationManager().ifPresent(AnimationManager::play));
+        level.blinking().setStartState(Pulse.State.ON);
+        level.blinking().restart();
+        level.huntingTimer().startFirstPhase();
         publishGameEvent(GameEvent.Type.HUNTING_PHASE_STARTED);
     }
 

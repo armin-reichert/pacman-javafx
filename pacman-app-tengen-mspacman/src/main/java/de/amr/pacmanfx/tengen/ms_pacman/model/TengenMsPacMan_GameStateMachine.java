@@ -183,7 +183,7 @@ public class TengenMsPacMan_GameStateMachine extends StateMachine<FsmState<GameC
 
                 if (timer.tickCount() == delayTicks) {
                     clearReadyMessage(game.level());
-                    game.startHunting(game.level());
+                    game.startHunting();
                 }
 
                 game.level().pac().tick(context);

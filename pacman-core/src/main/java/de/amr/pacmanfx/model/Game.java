@@ -117,7 +117,7 @@ public interface Game {
     boolean isLevelCompleted();
     int lastLevelNumber();
     void startNextLevel();
-    void startHunting(GameLevel gameLevel);
+    void startHunting();
     void updateHunting(GameLevel gameLevel);
     void activateNextBonus(GameLevel gameLevel);
     boolean isBonusReached(GameLevel gameLevel);
