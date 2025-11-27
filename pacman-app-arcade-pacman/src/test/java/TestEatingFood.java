@@ -1,8 +1,8 @@
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
+import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameStateMachine;
 import de.amr.pacmanfx.arcade.pacman.model.actors.Blinky;
 import de.amr.pacmanfx.lib.worldmap.FoodLayer;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.GameStateMachine;
 import de.amr.pacmanfx.model.StandardGameVariant;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,7 +21,7 @@ public class TestEatingFood {
     @BeforeAll
     static void setup() {
         ArcadePacMan_GameModel game = new ArcadePacMan_GameModel(THE_GAME_BOX, new File(""));
-        game.setStateMachine(new GameStateMachine(game));
+        game.setStateMachine(new Arcade_GameStateMachine());
         THE_GAME_BOX.registerGame(StandardGameVariant.PACMAN.name(), game);
         THE_GAME_BOX.setGameVariantName(StandardGameVariant.PACMAN.name());
     }
@@ -57,7 +57,7 @@ public class TestEatingFood {
     @Test
     @DisplayName("Test Food Counting")
     public void testFoodCounting() {
-        GameLevel gameLevel = THE_GAME_BOX.gameLevel();
+        GameLevel gameLevel = THE_GAME_BOX.currentGame().level();
         FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
         int eaten = foodLayer.eatenFoodCount(), uneaten = foodLayer.uneatenFoodCount();
         eatNextPellet(gameLevel);
@@ -74,20 +74,20 @@ public class TestEatingFood {
     @Test
     @DisplayName("Test Level Completion")
     public void testLevelCompletion() {
-        GameLevel gameLevel = THE_GAME_BOX.gameLevel();
+        GameLevel gameLevel = THE_GAME_BOX.currentGame().level();
         while (gameLevel.worldMap().foodLayer().uneatenFoodCount() > 0) {
-            assertFalse(pacManGame().isLevelCompleted(gameLevel));
+            assertFalse(pacManGame().isLevelCompleted());
             eatNextPellet(gameLevel);
             eatNextEnergizer(gameLevel);
         }
-        assertTrue(pacManGame().isLevelCompleted(gameLevel));
+        assertTrue(pacManGame().isLevelCompleted());
     }
 
     @Test
     @DisplayName("Test Cruise Elroy Mode")
     public void testCruiseElroyMode() {
         final ArcadePacMan_GameModel game = pacManGame();
-        final GameLevel gameLevel = THE_GAME_BOX.gameLevel();
+        final GameLevel gameLevel = THE_GAME_BOX.currentGame().level();
         final Blinky blinky = (Blinky) gameLevel.ghost(RED_GHOST_SHADOW);
         final FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
         while (foodLayer.uneatenFoodCount() > game.levelData(gameLevel).numDotsLeftElroy1()) {
@@ -115,7 +115,7 @@ public class TestEatingFood {
     @Test
     @DisplayName("Test Resting")
     public void testResting() {
-        GameLevel gameLevel = THE_GAME_BOX.gameLevel();
+        GameLevel gameLevel = THE_GAME_BOX.currentGame().level();
         eatNextPellet(gameLevel);
         assertEquals(1, gameLevel.pac().restingTime());
         eatNextEnergizer(gameLevel);
