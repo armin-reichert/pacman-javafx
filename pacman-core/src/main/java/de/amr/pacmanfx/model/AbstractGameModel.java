@@ -136,10 +136,11 @@ public abstract class AbstractGameModel implements Game {
     }
 
     @Override
-    public void continueGame(GameLevel gameLevel) {
-        resetPacManAndGhostAnimations(gameLevel);
-        gameLevel.getReadyToPlay();
-        gameLevel.showPacAndGhosts();
+    public void continueGame() {
+        final GameLevel level = level();
+        resetPacManAndGhostAnimations(level);
+        level.getReadyToPlay();
+        level.showPacAndGhosts();
         publishGameEvent(GameEvent.Type.GAME_CONTINUED);
     }
 

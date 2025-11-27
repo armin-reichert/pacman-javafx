@@ -108,7 +108,7 @@ public interface Game {
     void startNewGame();
     boolean isPlaying();
     void setPlaying(boolean playing);
-    void continueGame(GameLevel gameLevel);
+    void continueGame();
     boolean canContinueOnGameOver();
     void buildNormalLevel(int levelNumber);
     void buildDemoLevel();

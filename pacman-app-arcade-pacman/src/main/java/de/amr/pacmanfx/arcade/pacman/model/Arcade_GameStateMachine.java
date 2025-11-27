@@ -110,7 +110,7 @@ public class Arcade_GameStateMachine extends StateMachine<FsmState<GameContext>,
             private void continueGame(GameContext context) {
                 final Game game = context.currentGame();
                 if (timer.tickCount() == 1) {
-                    game.continueGame(game.level());
+                    game.continueGame();
                 } else if (timer.tickCount() == TICK_RESUME_HUNTING) {
                     game.changeState(GameState.HUNTING);
                 }

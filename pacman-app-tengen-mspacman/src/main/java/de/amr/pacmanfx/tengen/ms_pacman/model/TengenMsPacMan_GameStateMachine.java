@@ -121,7 +121,7 @@ public class TengenMsPacMan_GameStateMachine extends StateMachine<FsmState<GameC
             private void continueGame(GameContext context) {
                 final Game game = context.currentGame();
                 if (timer.tickCount() == 1) {
-                    game.continueGame(game.level());
+                    game.continueGame();
                 } else if (timer.tickCount() == TICK_RESUME_HUNTING) {
                     game.changeState(HUNTING);
                 }
