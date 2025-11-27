@@ -9,8 +9,6 @@ import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.Game;
 import javafx.beans.property.BooleanProperty;
 
-import static java.util.Objects.requireNonNull;
-
 /**
  * Facade to give access to the main game components.
  */
@@ -21,13 +19,6 @@ public interface GameContext {
      */
     String gameVariantName();
 
-    /**
-     * @param variantName name of game variant
-     * @return {@code true} if the given name matched the name of the current game variant
-     */
-    default boolean isCurrentGameVariant(String variantName) {
-        return gameVariantName().equals(requireNonNull(variantName));
-    }
     /**
      * @return the model (in MVC sense) of the currently selected game variant.
      * @param <T> specific game model type
@@ -40,7 +31,6 @@ public interface GameContext {
     default FsmState<GameContext> currentGameState() {
         return currentGame().stateMachine().state();
     }
-
 
     CoinMechanism coinMechanism();
 
