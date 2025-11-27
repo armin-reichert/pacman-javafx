@@ -118,7 +118,7 @@ public interface Game {
     int lastLevelNumber();
     void startNextLevel();
     void startHunting();
-    void updateHunting(GameLevel gameLevel);
+    void updateHunting();
     void activateNextBonus(GameLevel gameLevel);
     boolean isBonusReached(GameLevel gameLevel);
     boolean hasPacManBeenKilled();

@@ -274,24 +274,23 @@ public abstract class AbstractGameModel implements Game {
      * Collision with a ghost either kills the ghost and earns points (in case Pac-Man has power) or kills Pac-Man and
      * loses a life. When Pac-Man finds an energizer pellet he enters power mode and is able to kill ghosts. The duration
      * of the power mode varies between levels.
-     *
-     * @param gameLevel the game level
      */
-    protected void doHuntingStep(GameLevel gameLevel) {
-        final TerrainLayer terrain = gameLevel.worldMap().terrainLayer();
+    protected void doHuntingStep() {
+        final GameLevel level = level();
+        final TerrainLayer terrain = level.worldMap().terrainLayer();
 
         // Ghosts colliding with Pac? While teleportation takes place, collisions are disabled. (Not sure what the
         // original Arcade game does). Collision behavior is controlled by the current collision strategy. The original
         // Arcade games use tile-based collision which can lead to missed collisions by passing through.
         simulationStepResult.ghostsCollidingWithPac.clear();
-        gameLevel.ghosts()
+        level.ghosts()
             .filter(ghost -> !terrain.isTileInPortalSpace(ghost.tile()))
-            .filter(ghost -> actorsCollide(ghost, gameLevel.pac()))
+            .filter(ghost -> actorsCollide(ghost, level.pac()))
             .forEach(simulationStepResult.ghostsCollidingWithPac::add);
 
         if (!simulationStepResult.ghostsCollidingWithPac.isEmpty()) {
             // Pac killed? Might stay alive when immune or in demo level safe time!
-            checkPacKilled(gameLevel);
+            checkPacKilled(level);
             if (hasPacManBeenKilled()) return;
 
             // Ghost(s) killed?
@@ -304,12 +303,12 @@ public abstract class AbstractGameModel implements Game {
             }
         }
 
-        checkPacFindsFood(gameLevel);
-        checkPacFindsBonus(gameLevel);
+        checkPacFindsFood(level);
+        checkPacFindsBonus(level);
 
-        updatePacPower(gameLevel);
-        gameLevel.blinking().tick();
-        gameLevel.huntingTimer().update();
+        updatePacPower(level);
+        level.blinking().tick();
+        level.huntingTimer().update();
     }
 
     /**

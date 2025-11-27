@@ -190,7 +190,7 @@ public class TengenMsPacMan_GameStateMachine extends StateMachine<FsmState<GameC
                 game.level().ghosts().forEach(ghost -> ghost.tick(context));
                 game.level().bonus().ifPresent(bonus -> bonus.tick(context));
 
-                game.updateHunting(game.level());
+                game.updateHunting();
 
                 if (game.isLevelCompleted()) {
                     game.changeState(LEVEL_COMPLETE);

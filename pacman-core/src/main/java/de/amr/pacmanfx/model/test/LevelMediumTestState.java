@@ -61,7 +61,7 @@ public class LevelMediumTestState implements FsmState<GameContext>, TestState {
         game.level().pac().tick(context);
         game.level().ghosts().forEach(ghost -> ghost.tick(context));
         game.level().bonus().ifPresent(bonus -> bonus.tick(context));
-        game.updateHunting(game.level());
+        game.updateHunting();
         if (timer().hasExpired()) {
             if (game.level().number() == lastTestedLevelNumber) {
                 context.currentGame().publishGameEvent(GameEvent.Type.STOP_ALL_SOUNDS);

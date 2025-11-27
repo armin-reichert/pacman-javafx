@@ -166,7 +166,7 @@ public class Arcade_GameStateMachine extends StateMachine<FsmState<GameContext>,
                 game.level().pac().tick(context);
                 game.level().ghosts().forEach(ghost -> ghost.tick(context));
                 game.level().bonus().ifPresent(bonus -> bonus.tick(context));
-                game.updateHunting(game.level());
+                game.updateHunting();
 
                 // What next?
                 if (game.isLevelCompleted()) {
