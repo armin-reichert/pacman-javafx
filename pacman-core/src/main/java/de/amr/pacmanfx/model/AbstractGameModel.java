@@ -174,8 +174,8 @@ public abstract class AbstractGameModel implements Game {
     }
 
     @Override
-    public boolean isLevelCompleted(GameLevel gameLevel) {
-        return gameLevel.worldMap().foodLayer().uneatenFoodCount() == 0;
+    public boolean isLevelCompleted() {
+        return level().worldMap().foodLayer().uneatenFoodCount() == 0;
     }
 
     @Override

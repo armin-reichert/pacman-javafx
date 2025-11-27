@@ -169,7 +169,7 @@ public class Arcade_GameStateMachine extends StateMachine<FsmState<GameContext>,
                 game.updateHunting(game.level());
 
                 // What next?
-                if (game.isLevelCompleted(game.level())) {
+                if (game.isLevelCompleted()) {
                     game.changeState(LEVEL_COMPLETE);
                 }
                 else if (game.hasPacManBeenKilled()) {

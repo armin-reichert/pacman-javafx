@@ -192,7 +192,7 @@ public class TengenMsPacMan_GameStateMachine extends StateMachine<FsmState<GameC
 
                 game.updateHunting(game.level());
 
-                if (game.isLevelCompleted(game.level())) {
+                if (game.isLevelCompleted()) {
                     game.changeState(LEVEL_COMPLETE);
                 }
                 else if (game.hasPacManBeenKilled()) {

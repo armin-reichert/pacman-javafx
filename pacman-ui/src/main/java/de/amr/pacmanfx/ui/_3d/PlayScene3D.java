@@ -532,7 +532,7 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
     @Override
     public void onPacGetsPower(GameEvent event) {
         ui.soundManager().stopSiren();
-        if (!context().currentGame().isLevelCompleted(context().currentGame().level())) {
+        if (!context().currentGame().isLevelCompleted()) {
             gameLevel3D.pac3D().setMovementPowerMode(true);
             ui.soundManager().loop(SoundID.PAC_MAN_POWER);
             gameLevel3D.playWallColorFlashing();

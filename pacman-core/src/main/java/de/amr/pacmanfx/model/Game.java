@@ -114,7 +114,7 @@ public interface Game {
     void buildDemoLevel();
     GameLevel createLevel(int levelNumber, boolean demoLevel);
     void startLevel();
-    boolean isLevelCompleted(GameLevel gameLevel);
+    boolean isLevelCompleted();
     int lastLevelNumber();
     void startNextLevel();
     void startHunting(GameLevel gameLevel);

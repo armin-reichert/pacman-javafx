@@ -72,7 +72,7 @@ public class LevelMediumTestState implements FsmState<GameContext>, TestState {
                 configureLevelForTest(context);
             }
         }
-        else if (game.isLevelCompleted(game.level())) {
+        else if (game.isLevelCompleted()) {
             game.changeState("INTRO");
         } else if (game.hasPacManBeenKilled()) {
             timer.expire();
