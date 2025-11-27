@@ -54,14 +54,14 @@ public class LevelShortTestState implements FsmState<GameContext>, TestState {
             game.level().clearMessage();
         }
         else if (timer.atSecond(START + 3)) {
-            game.activateNextBonus(game.level());
+            game.activateNextBonus();
         }
         else if (timer.atSecond(START + 5)) {
             game.level().bonus().ifPresent(bonus -> bonus.setEaten(2));
             game.publishGameEvent(GameEvent.Type.BONUS_EATEN);
         }
         else if (timer.atSecond(START + 6)) {
-            game.activateNextBonus(game.level());
+            game.activateNextBonus();
         }
         else if (timer.atSecond(START + 8)) {
             game.level().bonus().ifPresent(bonus -> bonus.setEaten(2));

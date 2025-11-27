@@ -248,10 +248,11 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
      *
      **/
     @Override
-    public void activateNextBonus(GameLevel gameLevel) {
-        final TerrainLayer terrain = gameLevel.worldMap().terrainLayer();
+    public void activateNextBonus() {
+        final GameLevel level = level();
+        final TerrainLayer terrain = level.worldMap().terrainLayer();
 
-        if (gameLevel.isBonusEdible()) {
+        if (level.isBonusEdible()) {
             Logger.info("Previous bonus is still active, skip this bonus");
             return;
         }
@@ -262,8 +263,8 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
             return;
         }
 
-        gameLevel.selectNextBonus();
-        byte symbol = gameLevel.bonusSymbol(gameLevel.currentBonusIndex());
+        level.selectNextBonus();
+        byte symbol = level.bonusSymbol(level.currentBonusIndex());
         var bonus = new Bonus(symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100);
         if (terrain.horizontalPortals().isEmpty()) {
             Vector2i bonusTile = terrain.getTileProperty(DefaultWorldMapPropertyName.POS_BONUS, new Vector2i(13, 20));
@@ -271,10 +272,10 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
             bonus.setEdible(randomFloat(9, 10));
         } else {
             computeBonusRoute(bonus, terrain, house);
-            bonus.setEdibleAndStartJumpingAtSpeed(gameLevel.game().bonusSpeed(gameLevel));
+            bonus.setEdibleAndStartJumpingAtSpeed(level.game().bonusSpeed(level));
         }
 
-        gameLevel.setBonus(bonus);
+        level.setBonus(bonus);
         publishGameEvent(GameEvent.Type.BONUS_ACTIVATED, bonus.tile());
     }
 

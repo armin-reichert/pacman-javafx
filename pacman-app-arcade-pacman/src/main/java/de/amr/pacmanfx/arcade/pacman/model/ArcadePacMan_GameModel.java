@@ -202,14 +202,15 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     }
 
     @Override
-    public void activateNextBonus(GameLevel gameLevel) {
-        gameLevel.selectNextBonus();
-        byte symbol = gameLevel.bonusSymbol(gameLevel.currentBonusIndex());
+    public void activateNextBonus() {
+        final GameLevel level = level();
+        level.selectNextBonus();
+        byte symbol = level.bonusSymbol(level.currentBonusIndex());
         var bonus = new Bonus(symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100);
-        Vector2i bonusTile = gameLevel.worldMap().terrainLayer().getTileProperty(DefaultWorldMapPropertyName.POS_BONUS, new Vector2i(13, 20));
+        Vector2i bonusTile = level.worldMap().terrainLayer().getTileProperty(DefaultWorldMapPropertyName.POS_BONUS, new Vector2i(13, 20));
         bonus.setPosition(halfTileRightOf(bonusTile));
         bonus.setEdible(randomFloat(9, 10));
-        gameLevel.setBonus(bonus);
+        level.setBonus(bonus);
         publishGameEvent(GameEvent.Type.BONUS_ACTIVATED, bonus.tile());
     }
 }

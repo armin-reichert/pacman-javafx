@@ -221,7 +221,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             }
             gateKeeper.registerFoodEaten(gameLevel);
             if (isBonusReached(gameLevel)) {
-                activateNextBonus(gameLevel);
+                activateNextBonus();
                 simulationStepResult.bonusIndex = gameLevel.currentBonusIndex();
             }
             publishGameEvent(GameEvent.Type.PAC_FOUND_FOOD, tile);
