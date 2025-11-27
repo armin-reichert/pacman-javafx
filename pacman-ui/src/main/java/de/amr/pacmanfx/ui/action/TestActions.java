@@ -4,8 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.action;
 
-import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.model.test.LevelMediumTestState;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
@@ -16,8 +14,7 @@ public class TestActions {
     public static final GameAction ACTION_CUT_SCENES_TEST = new GameAction("TEST_CUT_SCENES") {
         @Override
         public void execute(GameUI ui) {
-            FsmState<GameContext> testState = ui.context().currentGame().stateByName(CutScenesTestState.class.getSimpleName());
-            ui.context().currentGame().changeState(testState);
+            ui.context().currentGame().changeState(CutScenesTestState.class.getSimpleName());
             ui.showFlashMessage("Cut scenes test"); //TODO localize
         }
     };
@@ -25,8 +22,7 @@ public class TestActions {
     public static final GameAction ACTION_SHORT_LEVEL_TEST = new GameAction("TEST_LEVELS_SHORT") {
         @Override
         public void execute(GameUI ui) {
-            FsmState<GameContext> testState = ui.context().currentGame().stateByName(LevelShortTestState.class.getSimpleName());
-            ui.context().currentGame().stateMachine().restart(testState);
+            ui.context().currentGame().restart(LevelShortTestState.class.getSimpleName());
             ui.showFlashMessage(Duration.seconds(3), "Level TEST MODE");
         }
     };
@@ -34,8 +30,7 @@ public class TestActions {
     public static final GameAction ACTION_MEDIUM_LEVEL_TEST = new GameAction("TEST_LEVELS_MEDIUM") {
         @Override
         public void execute(GameUI ui) {
-            FsmState<GameContext> testState = ui.context().currentGame().stateByName(LevelMediumTestState.class.getSimpleName());
-            ui.context().currentGame().restart(testState);
+            ui.context().currentGame().restart(LevelMediumTestState.class.getSimpleName());
             ui.showFlashMessage(Duration.seconds(3), "Level TEST MODE");
         }
     };
