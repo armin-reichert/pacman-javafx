@@ -27,7 +27,7 @@ public class TengenMsPacMan_GameStateMachine extends StateMachine<FsmState<GameC
         states.add(new LevelShortTestState());
         states.add(new LevelMediumTestState());
         states.add(new CutScenesTestState());
-        setName("Tengen Ms Pac-Man Game State Machine");
+        setName("Tengen Ms. Pac-Man Game State Machine");
         setStates(states);
     }
 

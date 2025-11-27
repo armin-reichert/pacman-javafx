@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.lib.fsm;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import org.tinylog.Logger;
 
@@ -32,23 +31,21 @@ import static java.util.Objects.requireNonNull;
 public class StateMachine<S extends FsmState<C>, C> {
 
     protected final List<FsmStateChangeListener<S>> stateChangeListeners = new ArrayList<>(5);
-
     protected C context;
-
     protected List<S> states;
     protected S currentState;
     protected S prevState;
 
     protected String name = getClass().getSimpleName();
 
-    public StateMachine() {
-    }
+    public StateMachine() {}
 
     public void setStates(List<S> states) {
-        this.states = requireNonNull(states);
+        requireNonNull(states);
         if (states.isEmpty()) {
             throw new IllegalArgumentException("There must be at least one state in a FSM");
         }
+        this.states = new ArrayList<>(states);
     }
 
     public void setName(String name) {
