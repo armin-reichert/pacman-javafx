@@ -4,11 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman.model;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Waypoint;
-import de.amr.pacmanfx.lib.fsm.FsmState;
-import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.timer.TickTimer;
@@ -16,9 +13,6 @@ import de.amr.pacmanfx.lib.worldmap.FoodLayer;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.*;
-import de.amr.pacmanfx.model.test.CutScenesTestState;
-import de.amr.pacmanfx.model.test.LevelMediumTestState;
-import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import de.amr.pacmanfx.steering.Steering;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
@@ -318,10 +312,10 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     public void startNextLevel() {
-        if (gameLevel().number() < LAST_LEVEL_NUMBER) {
-            buildNormalLevel(gameLevel().number() + 1);
-            startLevel(gameLevel());
-            gameLevel().showPacAndGhosts();
+        if (level().number() < LAST_LEVEL_NUMBER) {
+            buildNormalLevel(level().number() + 1);
+            startLevel(level());
+            level().showPacAndGhosts();
         } else {
             Logger.warn("Last level ({}) reached, cannot start next level", LAST_LEVEL_NUMBER);
         }

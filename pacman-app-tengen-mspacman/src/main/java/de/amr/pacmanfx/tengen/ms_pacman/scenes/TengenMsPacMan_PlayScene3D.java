@@ -48,12 +48,12 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         final TengenMsPacMan_GameModel game = context().currentGame();
         if (!game.optionsAreInitial()) {
             final ImageView infoView = new ImageView();
-            final double width = TS(game.gameLevel().worldMap().numCols());
+            final double width = TS(game.level().worldMap().numCols());
             final double height = TS(2);
             infoView.setFitWidth(width);
             infoView.setFitHeight(height);
             infoView.imageProperty().bind(PROPERTY_3D_FLOOR_COLOR.map(floorColor -> createInfoViewImage(
-                game.mapCategory(), game.difficulty(), game.pacBooster(), game.gameLevel().number(), width, height, floorColor)));
+                game.mapCategory(), game.difficulty(), game.pacBooster(), game.level().number(), width, height, floorColor)));
             final Box floor3D = gameLevel3D.floor3D();
             // display at lower end of floor just over floor surface
             infoView.setTranslateY(floor3D.getHeight() - infoView.getFitHeight());

@@ -303,8 +303,8 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     @Override
     public void startNextLevel() {
-        buildNormalLevel(gameLevel().number() + 1);
-        startLevel(gameLevel());
+        buildNormalLevel(level().number() + 1);
+        startLevel(level());
     }
 
     @Override

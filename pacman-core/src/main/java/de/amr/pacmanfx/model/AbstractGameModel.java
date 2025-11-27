@@ -101,12 +101,12 @@ public abstract class AbstractGameModel implements Game {
     }
 
     @Override
-    public GameLevel gameLevel() {
+    public GameLevel level() {
         return gameLevel.get();
     }
 
     @Override
-    public Optional<GameLevel> optGameLevel() {
+    public Optional<GameLevel> optLevel() {
         return Optional.ofNullable(gameLevel.get());
     }
 

@@ -94,7 +94,7 @@ public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteR
     }
 
     private void drawLevelCounter(Game game, TengenMsPacMan_HUD hud, float y) {
-        GameLevel gameLevel = game.optGameLevel().orElse(null);
+        GameLevel gameLevel = game.optLevel().orElse(null);
         if (gameLevel == null) return;
 
         float left = TS(2), right = TS(28);

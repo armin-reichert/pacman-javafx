@@ -46,7 +46,7 @@ public interface GameContext {
      * @return the current game level if present.
      */
     default Optional<GameLevel> optGameLevel() {
-        return currentGame().optGameLevel();
+        return currentGame().optLevel();
     }
 
     /**
@@ -57,7 +57,7 @@ public interface GameContext {
      * @return the current {@link GameLevel}, or {@code null} if none exists
      */
     default GameLevel gameLevel() {
-        return currentGame().optGameLevel().orElse(null);
+        return currentGame().optLevel().orElse(null);
     }
 
     CoinMechanism coinMechanism();

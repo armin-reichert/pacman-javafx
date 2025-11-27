@@ -7,9 +7,7 @@ package de.amr.pacmanfx.lib.fsm;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import org.tinylog.Logger;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static java.util.Objects.requireNonNull;
 
@@ -32,7 +30,7 @@ public class StateMachine<S extends FsmState<C>, C> {
 
     protected final List<FsmStateChangeListener<S>> stateChangeListeners = new ArrayList<>(5);
     protected C context;
-    protected List<S> states;
+    protected Set<S> states = new HashSet<>();
     protected S currentState;
     protected S prevState;
 
@@ -40,12 +38,27 @@ public class StateMachine<S extends FsmState<C>, C> {
 
     public StateMachine() {}
 
-    public void setStates(List<S> states) {
+    public void addState(S state) {
+        requireNonNull(state);
+        if (states.contains(state)) {
+            Logger.warn("State '{}' is already contained in set of states of FSM '{}'", state.name(), name);
+        } else {
+            states.add(state);
+        }
+    }
+
+    public void addStates(Collection<S> states) {
         requireNonNull(states);
         if (states.isEmpty()) {
             throw new IllegalArgumentException("There must be at least one state in a FSM");
         }
-        this.states = new ArrayList<>(states);
+        for (S state : states) {
+            addState(state);
+        }
+    }
+
+    public void addStates(S[] states) {
+        addStates(List.of(states));
     }
 
     public void setName(String name) {
@@ -75,8 +88,8 @@ public class StateMachine<S extends FsmState<C>, C> {
     /**
      * @return (Unmodifiable) list of the state objects
      */
-    public List<S> states() {
-        return Collections.unmodifiableList(states);
+    public Set<S> states() {
+        return Collections.unmodifiableSet(states);
     }
 
     /**

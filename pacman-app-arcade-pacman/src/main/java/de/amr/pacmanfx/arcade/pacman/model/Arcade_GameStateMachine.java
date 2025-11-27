@@ -17,18 +17,14 @@ import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.model.test.LevelMediumTestState;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Arcade_GameStateMachine extends StateMachine<FsmState<GameContext>, GameContext> {
 
     public Arcade_GameStateMachine() {
-        List<FsmState<GameContext>> states = new ArrayList<>(List.of(GameState.values()));
-        states.add(new LevelShortTestState());
-        states.add(new LevelMediumTestState());
-        states.add(new CutScenesTestState());
-        setName("Arcade Game State Machine");
-        setStates(states);
+        setName("Arcade Pac-Man Games State Machine");
+        addStates(GameState.values());
+        addState(new LevelShortTestState());
+        addState(new LevelMediumTestState());
+        addState(new CutScenesTestState());
     }
 
     public enum GameState implements FsmState<GameContext> {

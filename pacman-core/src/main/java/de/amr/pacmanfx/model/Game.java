@@ -63,8 +63,8 @@ public interface Game {
     ScoreManager          scoreManager();
     MapSelector           mapSelector();
 
-    Optional<GameLevel>   optGameLevel();
-    GameLevel             gameLevel();
+    Optional<GameLevel>   optLevel();
+    GameLevel             level();
     LevelCounter          levelCounter();
     HUD                   hud();
 
