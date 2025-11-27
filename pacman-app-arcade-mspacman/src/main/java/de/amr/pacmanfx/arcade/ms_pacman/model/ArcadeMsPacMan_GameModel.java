@@ -13,7 +13,7 @@ import de.amr.pacmanfx.arcade.pacman.model.actors.Blinky;
 import de.amr.pacmanfx.arcade.pacman.model.actors.Inky;
 import de.amr.pacmanfx.arcade.pacman.model.actors.Pinky;
 import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.lib.Waypoint;
+import de.amr.pacmanfx.lib.Vec2Byte;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
@@ -314,7 +314,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
         Vector2i houseEntry = tileAt(house.entryPosition());
         Vector2i backyard = houseEntry.plus(0, house.sizeInTiles().y() + 1);
-        List<Waypoint> route = Stream.of(entryTile, houseEntry, backyard, houseEntry, exitTile).map(Waypoint::new).toList();
+        List<Vec2Byte> route = Stream.of(entryTile, houseEntry, backyard, houseEntry, exitTile).map(Vec2Byte::new).toList();
 
         bonus.initRoute(route, leftToRight);
         Logger.info("Moving bonus route: {} (crossing {})", route, leftToRight ? "left to right" : "right to left");

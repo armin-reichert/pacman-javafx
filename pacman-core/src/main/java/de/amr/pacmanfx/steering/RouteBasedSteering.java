@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.steering;
 
-import de.amr.pacmanfx.lib.Waypoint;
+import de.amr.pacmanfx.lib.Vec2Byte;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.MovingActor;
 import org.tinylog.Logger;
@@ -18,11 +18,11 @@ import static java.util.Objects.requireNonNull;
  */
 public class RouteBasedSteering implements Steering {
 
-    private final List<Waypoint> route;
+    private final List<Vec2Byte> route;
     private int targetIndex;
     private boolean complete;
 
-    public RouteBasedSteering(List<Waypoint> route) {
+    public RouteBasedSteering(List<Vec2Byte> route) {
         this.route = requireNonNull(route);
         init();
     }
@@ -43,10 +43,10 @@ public class RouteBasedSteering implements Steering {
         if (targetIndex == route.size()) {
             complete = true;
         } else if (movingActor.optTargetTile().isEmpty()) {
-            movingActor.setTargetTile(currentTarget().tile());
+            movingActor.setTargetTile(currentTarget().toVector2i());
             movingActor.navigateTowardsTarget(gameLevel);
             Logger.trace("New target tile for {}={}s", movingActor.name(), movingActor.targetTile());
-        } else if (movingActor.tile().equals(currentTarget().tile())) {
+        } else if (movingActor.tile().equals(currentTarget().toVector2i())) {
             nextTarget(gameLevel, movingActor);
             Logger.trace("New target tile for {}={}", movingActor.name(), movingActor.targetTile());
         }
@@ -55,12 +55,12 @@ public class RouteBasedSteering implements Steering {
     private void nextTarget(GameLevel gameLevel, MovingActor movingActor) {
         ++targetIndex;
         if (targetIndex < route.size()) {
-            movingActor.setTargetTile(currentTarget().tile());
+            movingActor.setTargetTile(currentTarget().toVector2i());
             movingActor.navigateTowardsTarget(gameLevel);
         }
     }
 
-    private Waypoint currentTarget() {
+    private Vec2Byte currentTarget() {
         return route.get(targetIndex);
     }
 }

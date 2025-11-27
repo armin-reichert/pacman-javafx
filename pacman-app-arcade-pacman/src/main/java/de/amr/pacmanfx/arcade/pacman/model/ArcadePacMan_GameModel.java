@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.pacmanfx.arcade.pacman.model.actors.*;
 import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.lib.Waypoint;
+import de.amr.pacmanfx.lib.Vec2Byte;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
 import de.amr.pacmanfx.lib.worldmap.TerrainTile;
@@ -23,7 +23,7 @@ import java.util.List;
 import static de.amr.pacmanfx.Globals.ORANGE_GHOST_POKEY;
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
 import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
-import static de.amr.pacmanfx.lib.Waypoint.wp;
+import static de.amr.pacmanfx.lib.Vec2Byte.vec2Byte;
 import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomFloat;
 import static de.amr.pacmanfx.model.DefaultWorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;
@@ -51,20 +51,20 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     // bonus points = multiplier * 100
     protected static final byte[] BONUS_VALUE_MULTIPLIERS = { 1, 3, 5, 7, 10, 20, 30, 50 };
 
-    private static final List<Waypoint> PAC_MAN_DEMO_LEVEL_ROUTE = List.of(
-        wp(9, 26), wp(9, 29), wp(12,29), wp(12, 32), wp(26,32),
-        wp(26,29), wp(24,29), wp(24,26), wp(26,26), wp(26,23),
-        wp(21,23), wp(18,23), wp(18,14), wp(9,14), wp(9,17),
-        wp(6,17), wp(6,4), wp(1,4), wp(1,8), wp(12,8),
-        wp(12,4), wp(6,4), wp(6,11), wp(1,11), wp(1,8),
-        wp(9,8), wp(9,11), wp(12,11), wp(12,14), wp(9,14),
-        wp(9,17), wp(0,17), /*warp tunnel*/ wp(21,17), wp(21,29),
-        wp(26,29), wp(26,32), wp(1,32), wp(1,29), wp(3,29),
-        wp(3,26), wp(1,26), wp(1,23), wp(12,23), wp(12,26),
-        wp(15,26), wp(15,23), wp(26,23), wp(26,26), wp(24,26),
-        wp(24,29), wp(26,29), wp(26,32), wp(1,32),
-        wp(1,29), wp(3,29), wp(3,26), wp(1,26), wp(1,23),
-        wp(6,23) /* eaten at 3,23 in original game */
+    private static final List<Vec2Byte> PAC_MAN_DEMO_LEVEL_ROUTE = List.of(
+        vec2Byte(9, 26), vec2Byte(9, 29), vec2Byte(12,29), vec2Byte(12, 32), vec2Byte(26,32),
+        vec2Byte(26,29), vec2Byte(24,29), vec2Byte(24,26), vec2Byte(26,26),  vec2Byte(26,23),
+        vec2Byte(21,23), vec2Byte(18,23), vec2Byte(18,14), vec2Byte(9,14),   vec2Byte(9,17),
+        vec2Byte(6,17),  vec2Byte(6,4),   vec2Byte(1,4),   vec2Byte(1,8),    vec2Byte(12,8),
+        vec2Byte(12,4),  vec2Byte(6,4),   vec2Byte(6,11),  vec2Byte(1,11),   vec2Byte(1,8),
+        vec2Byte(9,8),   vec2Byte(9,11),  vec2Byte(12,11), vec2Byte(12,14),  vec2Byte(9,14),
+        vec2Byte(9,17),  vec2Byte(0,17), /*warp tunnel*/   vec2Byte(21,17),  vec2Byte(21,29),
+        vec2Byte(26,29), vec2Byte(26,32), vec2Byte(1,32),  vec2Byte(1,29),   vec2Byte(3,29),
+        vec2Byte(3,26),  vec2Byte(1,26),  vec2Byte(1,23),  vec2Byte(12,23),  vec2Byte(12,26),
+        vec2Byte(15,26), vec2Byte(15,23), vec2Byte(26,23), vec2Byte(26,26),  vec2Byte(24,26),
+        vec2Byte(24,29), vec2Byte(26,29), vec2Byte(26,32), vec2Byte(1,32),
+        vec2Byte(1,29),  vec2Byte(3,29),  vec2Byte(3,26),  vec2Byte(1,26),   vec2Byte(1,23),
+        vec2Byte(6,23) /* eaten at 3,23 in original game */
     );
 
     public static final int FIRST_BONUS_PELLETS_EATEN = 70;

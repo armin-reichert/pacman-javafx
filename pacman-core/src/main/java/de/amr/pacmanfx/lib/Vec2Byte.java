@@ -6,19 +6,19 @@ package de.amr.pacmanfx.lib;
 
 import de.amr.pacmanfx.lib.math.Vector2i;
 
-public record Waypoint(short x, short y) {
+public record Vec2Byte(byte x, byte y) {
 
-    public Waypoint(int x, int y) {
-        this((short) x, (short) y);
+    public static Vec2Byte vec2Byte(int x, int y) { return new Vec2Byte(x, y); }
+
+    public Vec2Byte(int x, int y) {
+        this((byte) x, (byte) y);
     }
 
-    public static Waypoint wp(int x, int y) { return new Waypoint(x, y); }
-
-    public Waypoint(Vector2i tile) {
+    public Vec2Byte(Vector2i tile) {
         this((short) tile.x(), (short) tile.y());
     }
 
-    public Vector2i tile() {
+    public Vector2i toVector2i() {
         return new Vector2i(x, y);
     }
 }

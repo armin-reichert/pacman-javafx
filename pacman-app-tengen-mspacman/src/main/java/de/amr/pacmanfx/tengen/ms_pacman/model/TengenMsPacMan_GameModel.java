@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman.model;
 
 import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.lib.Waypoint;
+import de.amr.pacmanfx.lib.Vec2Byte;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.timer.TickTimer;
@@ -20,7 +20,10 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.actors.*;
 import org.tinylog.Logger;
 
 import java.io.File;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -498,13 +501,13 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         Vector2i houseEntryOpposite = houseEntry.plus(0, house.sizeInTiles().y() + 1);
         HPortal entryPortal = portals.get(new Random().nextInt(portals.size()));
         HPortal exitPortal  = portals.get(new Random().nextInt(portals.size()));
-        List<Waypoint> route = Stream.of(
+        List<Vec2Byte> route = Stream.of(
             leftToRight ? entryPortal.leftBorderEntryTile() : entryPortal.rightBorderEntryTile(),
             houseEntry,
             houseEntryOpposite,
             houseEntry,
             leftToRight ? exitPortal.rightBorderEntryTile().plus(1, 0) : exitPortal.leftBorderEntryTile().minus(1, 0)
-        ).map(Waypoint::new).toList();
+        ).map(Vec2Byte::new).toList();
 
         gameLevel.selectNextBonus();
         byte symbol = gameLevel.bonusSymbol(gameLevel.currentBonusIndex());
