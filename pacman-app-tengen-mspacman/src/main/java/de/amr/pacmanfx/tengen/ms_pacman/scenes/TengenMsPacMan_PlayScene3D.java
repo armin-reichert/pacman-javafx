@@ -47,7 +47,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         // Note: member variable "gameLevel3D" is only set later in replaceGameLevel3D()
         final GameLevel3D gameLevel3D = super.createGameLevel3D();
         final TengenMsPacMan_GameModel game = context().currentGame();
-        if (!game.optionsAreInitial()) {
+        if (!game.allOptionsHaveDefaultValue()) {
             final ImageView infoView = new ImageView();
             final double width = TS(game.level().worldMap().numCols());
             final double height = TS(2);

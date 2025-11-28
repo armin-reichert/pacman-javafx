@@ -89,6 +89,14 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     private static final int FIRST_BONUS_PELLETS_EATEN = 64;
     private static final int SECOND_BONUS_PELLETS_EATEN = 176;
+    public static final int ARCADE_MAP_GAME_OVER_TICKS = 420;
+    public static final int NON_ARCADE_MAP_GAME_OVER_TICKS = 600;
+
+    public static final PacBooster DEFAULT_PAC_BOOSTER = PacBooster.OFF;
+    public static final Difficulty DEFAULT_DIFFICULTY = Difficulty.NORMAL;
+    public static final MapCategory DEFAULT_MAP_CATEGORY = MapCategory.ARCADE;
+    public static final int DEFAULT_START_LEVEL = 1;
+    public static final int DEFAULT_NUM_CONTINUES = 4;
 
     static {
         BONUS_VALUE_FACTORS[BONUS_CHERRY]        = 1;
@@ -123,7 +131,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     private final TengenMsPacMan_MapSelector mapSelector;
     private final TengenMsPacMan_LevelCounter levelCounter;
     private final GateKeeper gateKeeper;
-    private final Steering autopilot;
+    private final Steering automaticSteering;
     private final Steering demoLevelSteering;
 
     private MapCategory mapCategory;
@@ -141,8 +149,16 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         mapSelector = new TengenMsPacMan_MapSelector();
         levelCounter = new TengenMsPacMan_LevelCounter();
         gateKeeper = new GateKeeper(this); //TODO implement original logic from Tengen game
-        autopilot = new RuleBasedPacSteering();
+        automaticSteering = new RuleBasedPacSteering();
         demoLevelSteering = new RuleBasedPacSteering();
+    }
+
+    public boolean allOptionsHaveDefaultValue() {
+        return pacBooster == DEFAULT_PAC_BOOSTER
+            && difficulty == DEFAULT_DIFFICULTY
+            && mapCategory == DEFAULT_MAP_CATEGORY
+            && startLevelNumber == DEFAULT_START_LEVEL
+            && numContinues == DEFAULT_NUM_CONTINUES;
     }
 
     @Override
@@ -164,11 +180,11 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     @Override
     public void resetEverything() {
         prepareForNewGame();
-        setPacBooster(PacBooster.OFF);
-        setDifficulty(Difficulty.NORMAL);
-        setMapCategory(MapCategory.ARCADE);
-        setStartLevelNumber(1);
-        numContinues = 4;
+        setPacBooster(DEFAULT_PAC_BOOSTER);
+        setDifficulty(DEFAULT_DIFFICULTY);
+        setMapCategory(DEFAULT_MAP_CATEGORY);
+        setStartLevelNumber(DEFAULT_START_LEVEL);
+        numContinues = DEFAULT_NUM_CONTINUES;
     }
 
     @Override
@@ -193,14 +209,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     public MapSelector mapSelector() { return mapSelector; }
-
-    public boolean optionsAreInitial() {
-        return pacBooster == PacBooster.OFF
-            && difficulty == Difficulty.NORMAL
-            && mapCategory == MapCategory.ARCADE
-            && startLevelNumber == 1
-            && numContinues == 4;
-    }
 
     public void setPacBooster(PacBooster mode) {
         pacBooster = mode;
@@ -376,13 +384,15 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         final ArcadeHouse house = new ArcadeHouse(HOUSE_MIN_TILE);
         worldMap.terrainLayer().setHouse(house);
 
-        final GameLevel newGameLevel = new GameLevel(this, levelNumber, worldMap, new TengenMsPacMan_HuntingTimer());
-        newGameLevel.setDemoLevel(demoLevel);
-        // For non-Arcade game levels, give some extra time for "game over" text animation
-        newGameLevel.setGameOverStateTicks(mapCategory == MapCategory.ARCADE ? 420 : 600);
+        final GameLevel level = new GameLevel(this, levelNumber, worldMap, new TengenMsPacMan_HuntingTimer());
+        level.setDemoLevel(demoLevel);
+
+        // For non-Arcade game levels, spend some extra time for the moving "game over" text animation
+        level.setGameOverStateTicks(mapCategory == MapCategory.ARCADE
+            ? ARCADE_MAP_GAME_OVER_TICKS : NON_ARCADE_MAP_GAME_OVER_TICKS);
 
         final MsPacMan msPacMan = new MsPacMan();
-        msPacMan.setAutomaticSteering(autopilot);
+        msPacMan.setAutomaticSteering(automaticSteering);
         activatePacBooster(msPacMan, pacBooster == PacBooster.ALWAYS_ON);
 
         final Blinky blinky = new Blinky();
@@ -390,7 +400,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         blinky.setHome(house);
         blinky.setStartPosition(halfTileRightOf(blinkyStartTile));
 
-        // Ghosts inside the house start at the *bottom* of the house
+        // Ghosts inside the house start at the *bottom* of the house!
         final Vector2f offsetY = Vector2f.of(0, HTS);
 
         final Pinky pinky = new Pinky();
@@ -408,16 +418,16 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         sue.setHome(house);
         sue.setStartPosition(halfTileRightOf(sueStartTile).plus(offsetY));
 
-        newGameLevel.setPac(msPacMan);
-        newGameLevel.setGhosts(blinky, pinky, inky, sue);
+        level.setPac(msPacMan);
+        level.setGhosts(blinky, pinky, inky, sue);
         //TODO not sure about this:
-        newGameLevel.setBonusSymbol(0, computeBonusSymbol(newGameLevel.number()));
-        newGameLevel.setBonusSymbol(1, computeBonusSymbol(newGameLevel.number()));
+        level.setBonusSymbol(0, computeBonusSymbol(level.number()));
+        level.setBonusSymbol(1, computeBonusSymbol(level.number()));
 
         levelCounter().setEnabled(levelNumber < 8);
 
-        setGameLevel(newGameLevel);
-        return newGameLevel;
+        setGameLevel(level);
+        return level;
     }
 
     @Override

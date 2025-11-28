@@ -192,7 +192,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
     public void doInit() {
         final TengenMsPacMan_GameModel game = context().currentGame();
         game.hud().scoreVisible(true).levelCounterVisible(true).livesCounterVisible(true);
-        game.hud().showGameOptions(!game.optionsAreInitial());
+        game.hud().showGameOptions(!game.allOptionsHaveDefaultValue());
         updateScaling();
         dynamicCamera.enterManualMode();
         dynamicCamera.setToTopPosition();
