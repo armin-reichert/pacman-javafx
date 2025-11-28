@@ -73,7 +73,7 @@ public class Bonus extends MovingActor {
         hide();
     }
 
-    public void setEdible(float seconds) {
+    public void setEdibleSeconds(float seconds) {
         state = BonusState.EDIBLE;
         timer.restartSeconds(seconds);
         show();
