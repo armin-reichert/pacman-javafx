@@ -203,7 +203,6 @@ public class TengenMsPacMan_GameStateMachine extends StateMachine<FsmState<GameC
             @Override
             public void onEnter(GameContext context) {
                 final Game game = context.currentGame();
-                game.publishGameEvent(GameEvent.Type.STOP_ALL_SOUNDS);
                 timer.restartIndefinitely(); // UI triggers timeout
             }
 

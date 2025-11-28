@@ -17,6 +17,8 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.lerp;
 
 public class PlayScene2DCamera extends ParallelCamera {
 
+    public static final double SPEED = 0.014;
+
     private record RangeY(double topPosition, double bottomPosition) {}
 
     private enum State { INTRO, TRACKING, MANUAL }
@@ -129,7 +131,7 @@ public class PlayScene2DCamera extends ParallelCamera {
     }
 
     private void move() {
-        double y = lerp(getTranslateY(), targetY, 0.016);
+        double y = lerp(getTranslateY(), targetY, SPEED);
         setTranslateY(y);
     }
 }

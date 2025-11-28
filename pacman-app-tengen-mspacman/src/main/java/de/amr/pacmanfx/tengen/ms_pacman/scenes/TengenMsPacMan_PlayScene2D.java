@@ -8,6 +8,7 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.math.Vector2i;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelMessage;
 import de.amr.pacmanfx.model.MessageType;
@@ -18,7 +19,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MovingGameLevelMessage;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameStateMachine;
+import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameStateMachine.GameState;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_HUD_Renderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_PlayScene2D_Renderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
@@ -328,11 +329,11 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
     @Override
     public void onEnterGameState(FsmState<GameContext> state) {
         switch (state) {
-            case TengenMsPacMan_GameStateMachine.GameState.LEVEL_COMPLETE -> {
+            case GameState.LEVEL_COMPLETE -> {
                 ui.soundManager().stopAll();
                 startLevelCompleteAnimation(context().currentGame().level());
             }
-            case TengenMsPacMan_GameStateMachine.GameState.GAME_OVER -> {
+            case GameState.GAME_OVER -> {
                 ui.soundManager().stopAll();
                 dynamicCamera.enterManualMode();
                 dynamicCamera.setToTopPosition();
@@ -406,18 +407,19 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
     private void updateSound(GameLevel gameLevel) {
         if (!ui.soundManager().isEnabled()) return;
 
-        final Pac pac = gameLevel.pac();
-        final boolean pacChased = context().currentGame().state() == TengenMsPacMan_GameStateMachine.GameState.HUNTING && !pac.powerTimer().isRunning();
-        if (pacChased) {
-            selectAndPlaySiren();
-        }
-
-        final boolean ghostReturningHome = pac.isAlive()
-            && gameLevel.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).findAny().isPresent();
-        if (ghostReturningHome) {
-            ui.soundManager().loop(SoundID.GHOST_RETURNS);
-        } else {
-            ui.soundManager().stop(SoundID.GHOST_RETURNS);
+        final Game game = gameLevel.game();
+        if (game.state() == GameState.HUNTING) {
+            final Pac pac = gameLevel.pac();
+            if (!pac.powerTimer().isRunning()) {
+                selectAndPlaySiren();
+            }
+            final boolean ghostReturningHome = pac.isAlive()
+                && gameLevel.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).findAny().isPresent();
+            if (ghostReturningHome) {
+                ui.soundManager().loop(SoundID.GHOST_RETURNS);
+            } else {
+                ui.soundManager().stop(SoundID.GHOST_RETURNS);
+            }
         }
     }
 
@@ -445,7 +447,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
         final TengenMsPacMan_GameModel game = context().currentGame();
         int numLives = game.lifeCount() - 1;
         // As long as Pac-Man is still invisible on start, he is shown as an additional entry in the lives counter
-        if (context().currentGame().state() == TengenMsPacMan_GameStateMachine.GameState.STARTING_GAME_OR_LEVEL && !gameLevel.pac().isVisible()) {
+        if (context().currentGame().state() == GameState.STARTING_GAME_OR_LEVEL && !gameLevel.pac().isVisible()) {
             numLives += 1;
         }
         numLives = Math.min(numLives, game.hud().maxLivesDisplayed());
