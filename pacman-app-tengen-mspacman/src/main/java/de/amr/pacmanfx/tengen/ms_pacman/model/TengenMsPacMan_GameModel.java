@@ -89,14 +89,14 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     private static final int FIRST_BONUS_PELLETS_EATEN = 64;
     private static final int SECOND_BONUS_PELLETS_EATEN = 176;
-    public static final int ARCADE_MAP_GAME_OVER_TICKS = 420;
-    public static final int NON_ARCADE_MAP_GAME_OVER_TICKS = 600;
+    private static final int ARCADE_MAP_GAME_OVER_TICKS = 420;
+    private static final int NON_ARCADE_MAP_GAME_OVER_TICKS = 600;
 
-    public static final PacBooster DEFAULT_PAC_BOOSTER = PacBooster.OFF;
-    public static final Difficulty DEFAULT_DIFFICULTY = Difficulty.NORMAL;
-    public static final MapCategory DEFAULT_MAP_CATEGORY = MapCategory.ARCADE;
-    public static final int DEFAULT_START_LEVEL = 1;
-    public static final int DEFAULT_NUM_CONTINUES = 4;
+    private static final PacBooster DEFAULT_PAC_BOOSTER = PacBooster.OFF;
+    private static final Difficulty DEFAULT_DIFFICULTY = Difficulty.NORMAL;
+    private static final MapCategory DEFAULT_MAP_CATEGORY = MapCategory.ARCADE;
+    private static final int DEFAULT_START_LEVEL = 1;
+    private static final int DEFAULT_NUM_CONTINUES = 4;
 
     static {
         BONUS_VALUE_FACTORS[BONUS_CHERRY]        = 1;
@@ -290,6 +290,35 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
+    public void showMessage(GameLevel gameLevel, MessageType type) {
+        Vector2f center = gameLevel.worldMap().terrainLayer().messageCenterPosition();
+        // Non-Arcade maps have a moving "Game Over" message
+        var message = type == MessageType.GAME_OVER && mapCategory != MapCategory.ARCADE
+            ? new MovingGameLevelMessage(type, center, GAME_OVER_MESSAGE_DELAY_SEC * NUM_TICKS_PER_SEC)
+            : new GameLevelMessage(type, center);
+        gameLevel.setMessage(message);
+    }
+
+    @Override
+    public double pacPowerSeconds(GameLevel gameLevel) {
+        int index = gameLevel.number() <= 19 ? gameLevel.number() - 1 : 18;
+        return POWER_PELLET_TIMES[index] / 16.0;
+    }
+
+    @Override
+    public double pacPowerFadingSeconds(GameLevel gameLevel) {
+        return gameLevel.game().numFlashes(gameLevel) * 0.5; // TODO check in emulator
+    }
+
+    @Override
+    public void startNewGame() {
+        prepareForNewGame();
+        //hud.levelCounter().setStartLevel(startLevelNumber);
+        buildNormalLevel(startLevelNumber);
+        publishGameEvent(GameEvent.Type.GAME_STARTED);
+    }
+
+    @Override
     public void startLevel() {
         final GameLevel level = level();
         level.setStartTimeMillis(System.currentTimeMillis());
@@ -315,16 +344,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void showMessage(GameLevel gameLevel, MessageType type) {
-        Vector2f center = gameLevel.worldMap().terrainLayer().messageCenterPosition();
-        // Non-Arcade maps have a moving "Game Over" message
-        var message = type == MessageType.GAME_OVER && mapCategory != MapCategory.ARCADE
-            ? new MovingGameLevelMessage(type, center, GAME_OVER_MESSAGE_DELAY_SEC * NUM_TICKS_PER_SEC)
-            : new GameLevelMessage(type, center);
-        gameLevel.setMessage(message);
-    }
-
-    @Override
     public void startNextLevel() {
         if (level().number() < LAST_LEVEL_NUMBER) {
             buildNormalLevel(level().number() + 1);
@@ -333,25 +352,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         } else {
             Logger.warn("Last level ({}) reached, cannot start next level", LAST_LEVEL_NUMBER);
         }
-    }
-
-    @Override
-    public double pacPowerSeconds(GameLevel gameLevel) {
-        int index = gameLevel.number() <= 19 ? gameLevel.number() - 1 : 18;
-        return POWER_PELLET_TIMES[index] / 16.0;
-    }
-
-    @Override
-    public double pacPowerFadingSeconds(GameLevel gameLevel) {
-        return gameLevel.game().numFlashes(gameLevel) * 0.5; // TODO check in emulator
-    }
-
-    @Override
-    public void startNewGame() {
-        prepareForNewGame();
-        //hud.levelCounter().setStartLevel(startLevelNumber);
-        buildNormalLevel(startLevelNumber);
-        publishGameEvent(GameEvent.Type.GAME_STARTED);
     }
 
     @Override

@@ -85,14 +85,25 @@ public class TengenMsPacMan_GameStateMachine extends StateMachine<FsmState<GameC
 
         STARTING_GAME_OR_LEVEL {
 
-            private static final short TICK_NEW_GAME_SHOW_GUYS = 120;
-            private static final short TICK_NEW_GAME_START_HUNTING = 240;
+            private static final short TICK_SHOW_READY = 10;
+            private static final short TICK_NEW_GAME_SHOW_GUYS = 70;
+            private static final short TICK_NEW_GAME_START_HUNTING = 250;
+
             private static final short TICK_DEMO_LEVEL_START_HUNTING = 120;
-            private static final short TICK_RESUME_HUNTING =  90;
+            private static final short TICK_RESUME_HUNTING = 240;
 
             @Override
-            public void onEnter(GameContext context) {
-                context.currentGame().publishGameEvent(GameEvent.Type.STOP_ALL_SOUNDS);
+            public void onUpdate(GameContext context) {
+                final Game game = context.currentGame();
+                if (game.isPlaying()) {
+                    continueGame(context);
+                }
+                else if (game.canStartNewGame()) {
+                    startNewGame(context);
+                }
+                else {
+                    startDemoLevel(game);
+                }
             }
 
             private void startNewGame(GameContext context) {
@@ -100,7 +111,7 @@ public class TengenMsPacMan_GameStateMachine extends StateMachine<FsmState<GameC
                 if (timer.tickCount() == 1) {
                     game.startNewGame();
                 }
-                else if (timer.tickCount() == 2) {
+                else if (timer.tickCount() == TICK_SHOW_READY) {
                     if (!game.level().isDemoLevel()) {
                         game.level().pac().immuneProperty().bind(context.immunityProperty());
                         game.level().pac().usingAutopilotProperty().bind(context.usingAutopilotProperty());
@@ -143,48 +154,19 @@ public class TengenMsPacMan_GameStateMachine extends StateMachine<FsmState<GameC
                     game.changeState(HUNTING);
                 }
             }
-
-            @Override
-            public void onUpdate(GameContext context) {
-                final Game game = context.currentGame();
-                if (game.isPlaying()) {
-                    continueGame(context);
-                }
-                else if (game.canStartNewGame()) {
-                    startNewGame(context);
-                }
-                else {
-                    startDemoLevel(game);
-                }
-            }
         },
 
         HUNTING {
-            private int delayTicks;
-
-            private void clearReadyMessage(GameLevel gameLevel) {
-                gameLevel.optMessage().filter(message -> message.type() == MessageType.READY).ifPresent(message -> {
-                    gameLevel.clearMessage(); // leave TEST message alone
-                });
-            }
-
             @Override
             public void onEnter(GameContext context) {
-                delayTicks = 60;
+                final Game game = context.currentGame();
+                clearReadyMessage(game.level());
+                game.startHunting();
             }
 
             @Override
             public void onUpdate(GameContext context) {
-                if (timer.tickCount() < delayTicks) {
-                    return;
-                }
-
                 final Game game = context.currentGame();
-
-                if (timer.tickCount() == delayTicks) {
-                    clearReadyMessage(game.level());
-                    game.startHunting();
-                }
 
                 game.level().pac().tick(context);
                 game.level().ghosts().forEach(ghost -> ghost.tick(context));
@@ -208,12 +190,20 @@ public class TengenMsPacMan_GameStateMachine extends StateMachine<FsmState<GameC
                 //TODO is this needed?
                 clearReadyMessage(context.currentGame().level());
             }
+
+            private void clearReadyMessage(GameLevel gameLevel) {
+                gameLevel.optMessage().filter(message -> message.type() == MessageType.READY).ifPresent(message -> {
+                    gameLevel.clearMessage(); // leave TEST message alone
+                });
+            }
         },
 
         LEVEL_COMPLETE {
 
             @Override
             public void onEnter(GameContext context) {
+                final Game game = context.currentGame();
+                game.publishGameEvent(GameEvent.Type.STOP_ALL_SOUNDS);
                 timer.restartIndefinitely(); // UI triggers timeout
             }
 
