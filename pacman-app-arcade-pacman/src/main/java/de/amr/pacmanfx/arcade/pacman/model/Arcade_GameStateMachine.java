@@ -368,8 +368,7 @@ public class Arcade_GameStateMachine extends StateMachine<FsmState<GameContext>,
             public void onUpdate(GameContext context) {
                 final Game game = context.currentGame();
                 if (timer.hasExpired()) {
-                    game.changeState(
-                        game.isPlaying() ? LEVEL_TRANSITION : INTRO);
+                    game.changeState(game.isPlaying() ? LEVEL_TRANSITION : INTRO);
                 }
             }
         };
