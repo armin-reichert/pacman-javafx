@@ -13,7 +13,6 @@ import de.amr.pacmanfx.lib.worldmap.TerrainTile;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.Bonus;
-import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.steering.RouteBasedSteering;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
@@ -70,6 +69,8 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
 
     public static final int FIRST_BONUS_PELLETS_EATEN = 70;
     public static final int SECOND_BONUS_PELLETS_EATEN = 170;
+
+    private static final int GAME_OVER_STATE_TICKS = 90;
 
     protected final MapSelector mapSelector;
     protected final ArcadePacMan_LevelCounter levelCounter;
@@ -151,7 +152,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
 
         final GameLevel level = new GameLevel(this, levelNumber, worldMap, new ArcadePacMan_HuntingTimer());
         level.setDemoLevel(demoLevel);
-        level.setGameOverStateTicks(Arcade_GameStateMachine.GAME_OVER_STATE_TICKS);
+        level.setGameOverStateTicks(GAME_OVER_STATE_TICKS);
 
         final PacMan pacMan = ArcadePacMan_ActorFactory.createPacMan();
         pacMan.setAutopilotSteering(autopilot);
@@ -159,19 +160,19 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
 
         final Blinky blinky = ArcadePacMan_ActorFactory.createBlinky();
         blinky.setHome(house);
-        setStartPosition(blinky, terrain.getTileProperty(POS_GHOST_1_RED));
+        setGhostStartPosition(blinky, terrain.getTileProperty(POS_GHOST_1_RED));
 
         final Pinky pinky = ArcadePacMan_ActorFactory.createPinky();
         pinky.setHome(house);
-        setStartPosition(pinky, terrain.getTileProperty(POS_GHOST_2_PINK));
+        setGhostStartPosition(pinky, terrain.getTileProperty(POS_GHOST_2_PINK));
 
         final Inky inky = ArcadePacMan_ActorFactory.createInky();
         inky.setHome(house);
-        setStartPosition(inky, terrain.getTileProperty(POS_GHOST_3_CYAN));
+        setGhostStartPosition(inky, terrain.getTileProperty(POS_GHOST_3_CYAN));
 
         final Clyde clyde = ArcadePacMan_ActorFactory.createClyde();
         clyde.setHome(house);
-        setStartPosition(clyde, terrain.getTileProperty(POS_GHOST_4_ORANGE));
+        setGhostStartPosition(clyde, terrain.getTileProperty(POS_GHOST_4_ORANGE));
 
         level.setGhosts(blinky, pinky, inky, clyde);
 
@@ -190,14 +191,6 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         levelCounter.setEnabled(true);
 
         return level;
-    }
-
-    private void setStartPosition(Ghost ghost, Vector2i tile) {
-        if (tile != null) {
-            ghost.setStartPosition(halfTileRightOf(tile));
-        } else {
-            Logger.error("{] home tile not found inside map", ghost.name());
-        }
     }
 
     @Override

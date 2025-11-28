@@ -16,6 +16,7 @@ import org.tinylog.Logger;
 
 import java.util.Optional;
 
+import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
 import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
 import static java.util.Objects.requireNonNull;
@@ -78,6 +79,14 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     public abstract Arcade_LevelData levelData(GameLevel gameLevel);
+
+    protected void setGhostStartPosition(Ghost ghost, Vector2i tile) {
+        if (tile != null) {
+            ghost.setStartPosition(halfTileRightOf(tile));
+        } else {
+            Logger.error("{] home tile not found inside map", ghost.name());
+        }
+    }
 
     public void onPelletEaten(GameLevel gameLevel) {
         scoreManager.scorePoints(PELLET_VALUE);

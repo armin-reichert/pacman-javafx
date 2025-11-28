@@ -19,8 +19,6 @@ import de.amr.pacmanfx.model.test.LevelShortTestState;
 
 public class Arcade_GameStateMachine extends StateMachine<FsmState<GameContext>, GameContext> {
 
-    public static final int GAME_OVER_STATE_TICKS = 90;
-
     public Arcade_GameStateMachine() {
         setName("Arcade Pac-Man Games State Machine");
         addStates(GameState.values());
