@@ -68,10 +68,11 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         vec2Byte(6,23) /* eaten at 3,23 in original game */
     );
 
-    public static final int FIRST_BONUS_PELLETS_EATEN = 70;
-    public static final int SECOND_BONUS_PELLETS_EATEN = 170;
+    protected static final int FIRST_BONUS_PELLETS_EATEN = 70;
+    protected static final int SECOND_BONUS_PELLETS_EATEN = 170;
 
     protected static final int GAME_OVER_STATE_TICKS = 90;
+    protected static final Vector2i DEFAULT_BONUS_TILE = new Vector2i(13, 20);
 
     protected final MapSelector mapSelector;
     protected final ArcadePacMan_LevelCounter levelCounter;
@@ -90,16 +91,12 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     public ArcadePacMan_GameModel(CoinMechanism coinMechanism, MapSelector mapSelector, File highScoreFile) {
         super(coinMechanism);
 
-        requireNonNull(mapSelector);
-        requireNonNull(highScoreFile);
-
-        hud.numCoinsProperty().bind(coinMechanism.numCoinsProperty());
-
-        this.mapSelector = mapSelector;
+        this.mapSelector = requireNonNull(mapSelector);
+        mapSelector.loadAllMapPrototypes();
 
         levelCounter = new ArcadePacMan_LevelCounter();
 
-        scoreManager.setHighScoreFile(highScoreFile);
+        scoreManager.setHighScoreFile(requireNonNull(highScoreFile));
         scoreManager.setExtraLifeScores(EXTRA_LIFE_SCORE);
 
         gateKeeper = new GateKeeper(this);
@@ -115,11 +112,11 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         demoLevelSteering = new RouteBasedSteering(PAC_MAN_DEMO_LEVEL_ROUTE);
         automaticSteering = new RuleBasedPacSteering();
 
-        mapSelector.loadAllMapPrototypes();
+        hud.numCoinsProperty().bind(coinMechanism.numCoinsProperty());
     }
 
     protected Arcade_LevelData levelData(int levelNumber) {
-        int row = Math.min(levelNumber - 1, LEVEL_DATA.length - 1);
+        final int row = Math.min(levelNumber - 1, LEVEL_DATA.length - 1);
         return LEVEL_DATA[row];
     }
 
@@ -201,7 +198,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
 
     @Override
     public boolean isBonusReached() {
-        int eatenFoodCount = level().worldMap().foodLayer().eatenFoodCount();
+        final int eatenFoodCount = level().worldMap().foodLayer().eatenFoodCount();
         return eatenFoodCount == FIRST_BONUS_PELLETS_EATEN || eatenFoodCount == SECOND_BONUS_PELLETS_EATEN;
     }
 
@@ -209,12 +206,13 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     public void activateNextBonus() {
         final GameLevel level = level();
         level.selectNextBonus();
-        byte symbol = level.bonusSymbol(level.currentBonusIndex());
-        var bonus = new Bonus(symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100);
-        Vector2i bonusTile = level.worldMap().terrainLayer().getTileProperty(DefaultWorldMapPropertyName.POS_BONUS, new Vector2i(13, 20));
+        final byte symbol = level.bonusSymbol(level.currentBonusIndex());
+        final var bonus = new Bonus(symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100);
+        final Vector2i bonusTile = level.worldMap().terrainLayer()
+            .getTileProperty(DefaultWorldMapPropertyName.POS_BONUS, DEFAULT_BONUS_TILE);
         bonus.setPosition(halfTileRightOf(bonusTile));
         bonus.setEdibleSeconds(randomFloat(9, 10));
         level.setBonus(bonus);
-        publishGameEvent(GameEvent.Type.BONUS_ACTIVATED, bonus.tile());
+        publishGameEvent(GameEvent.Type.BONUS_ACTIVATED, bonusTile);
     }
 }
