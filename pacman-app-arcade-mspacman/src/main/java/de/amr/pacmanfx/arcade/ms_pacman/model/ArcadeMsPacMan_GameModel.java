@@ -56,7 +56,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     private static final int FIRST_BONUS_PELLETS_EATEN = 64;
     private static final int SECOND_BONUS_PELLETS_EATEN = 176;
 
-    private static final int GAME_OVER_STATE_TICKS = 150;
+    protected static final int GAME_OVER_STATE_TICKS = 150;
 
     protected final MapSelector mapSelector;
     protected final ArcadeMsPacMan_LevelCounter levelCounter;
@@ -96,7 +96,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         });
 
         demoLevelSteering = new RuleBasedPacSteering();
-        autopilot = new RuleBasedPacSteering();
+        automaticSteering = new RuleBasedPacSteering();
         mapSelector.loadAllMapPrototypes();
     }
 
@@ -138,7 +138,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         level.setGameOverStateTicks(GAME_OVER_STATE_TICKS);
 
         final MsPacMan msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
-        msPacMan.setAutopilotSteering(autopilot);
+        msPacMan.setAutomaticSteering(automaticSteering);
         level.setPac(msPacMan);
 
         final Blinky blinky = ArcadeMsPacMan_ActorFactory.createBlinky();

@@ -35,7 +35,7 @@ public class Pac extends MovingActor {
     private boolean dead;
     private int restingTime;
     private long starvingTime;
-    private Steering autopilotSteering;
+    private Steering automaticSteering;
 
     /**
      * @param name a readable name. Any honest Pac-Man and Pac-Woman should have a name! Period.
@@ -151,7 +151,7 @@ public class Pac extends MovingActor {
         }
 
         if (isUsingAutopilot()) {
-            autopilotSteering.steer(this, gameLevel);
+            automaticSteering.steer(this, gameLevel);
         }
 
         setSpeed(powerTimer.isRunning()
@@ -229,7 +229,7 @@ public class Pac extends MovingActor {
         return velocity().equals(Vector2f.ZERO) || !moveInfo.moved || restingTime == INDEFINITELY;
     }
 
-    public void setAutopilotSteering(Steering steering) {
-        autopilotSteering = requireNonNull(steering);
+    public void setAutomaticSteering(Steering steering) {
+        automaticSteering = requireNonNull(steering);
     }
 }

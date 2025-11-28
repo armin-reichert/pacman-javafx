@@ -13,6 +13,7 @@ import de.amr.pacmanfx.lib.worldmap.TerrainTile;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.Bonus;
+import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.steering.RouteBasedSteering;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
@@ -70,7 +71,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     public static final int FIRST_BONUS_PELLETS_EATEN = 70;
     public static final int SECOND_BONUS_PELLETS_EATEN = 170;
 
-    private static final int GAME_OVER_STATE_TICKS = 90;
+    protected static final int GAME_OVER_STATE_TICKS = 90;
 
     protected final MapSelector mapSelector;
     protected final ArcadePacMan_LevelCounter levelCounter;
@@ -104,15 +105,15 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         gateKeeper = new GateKeeper(this);
         gateKeeper.setOnGhostReleased((gameLevel, prisoner) -> {
             Blinky blinky = (Blinky) gameLevel.ghost(RED_GHOST_SHADOW);
-            Clyde clyde = (Clyde) gameLevel.ghost(ORANGE_GHOST_POKEY);
+            Ghost clyde = gameLevel.ghost(ORANGE_GHOST_POKEY);
             if (prisoner == clyde && blinky.cruiseElroyValue() > 0 && !blinky.isCruiseElroyActive()) {
-                Logger.debug("Re-enable 'Cruise Elroy' mode because {} got released:", prisoner.name());
+                Logger.debug("Re-enable Blinky 'Cruise Elroy' mode because {} got released:", prisoner.name());
                 blinky.setCruiseElroyActive(true);
             }
         });
 
         demoLevelSteering = new RouteBasedSteering(PAC_MAN_DEMO_LEVEL_ROUTE);
-        autopilot = new RuleBasedPacSteering();
+        automaticSteering = new RuleBasedPacSteering();
 
         mapSelector.loadAllMapPrototypes();
     }
@@ -155,7 +156,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         level.setGameOverStateTicks(GAME_OVER_STATE_TICKS);
 
         final PacMan pacMan = ArcadePacMan_ActorFactory.createPacMan();
-        pacMan.setAutopilotSteering(autopilot);
+        pacMan.setAutomaticSteering(automaticSteering);
         level.setPac(pacMan);
 
         final Blinky blinky = ArcadePacMan_ActorFactory.createBlinky();

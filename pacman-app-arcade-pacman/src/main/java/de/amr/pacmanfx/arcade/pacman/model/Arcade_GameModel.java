@@ -69,7 +69,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     protected final CoinMechanism coinMechanism;
 
     protected GateKeeper gateKeeper;
-    protected Steering autopilot;
+    protected Steering automaticSteering;
     protected Steering demoLevelSteering;
 
     protected Arcade_GameModel(CoinMechanism coinMechanism) {
@@ -280,7 +280,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         final GameLevel demoLevel = createLevel(levelNumber, true);
         demoLevel.pac().setImmune(false);
         demoLevel.pac().setUsingAutopilot(true);
-        demoLevel.pac().setAutopilotSteering(demoLevelSteering);
+        demoLevel.pac().setAutomaticSteering(demoLevelSteering);
         demoLevelSteering.init();
         levelCounter().setEnabled(true);
         scoreManager.score().setLevelNumber(levelNumber);

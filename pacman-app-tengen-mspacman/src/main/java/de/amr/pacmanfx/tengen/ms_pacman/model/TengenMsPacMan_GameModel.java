@@ -382,7 +382,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         newGameLevel.setGameOverStateTicks(mapCategory == MapCategory.ARCADE ? 420 : 600);
 
         final MsPacMan msPacMan = new MsPacMan();
-        msPacMan.setAutopilotSteering(autopilot);
+        msPacMan.setAutomaticSteering(autopilot);
         activatePacBooster(msPacMan, pacBooster == PacBooster.ALWAYS_ON);
 
         final Blinky blinky = new Blinky();
@@ -436,7 +436,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         demoLevel.setGameOverStateTicks(120);
         demoLevel.pac().setImmune(false);
         demoLevel.pac().setUsingAutopilot(true);
-        demoLevel.pac().setAutopilotSteering(demoLevelSteering);
+        demoLevel.pac().setAutomaticSteering(demoLevelSteering);
         demoLevelSteering.init();
         scoreManager.score().setLevelNumber(1);
         gateKeeper.setLevelNumber(1);

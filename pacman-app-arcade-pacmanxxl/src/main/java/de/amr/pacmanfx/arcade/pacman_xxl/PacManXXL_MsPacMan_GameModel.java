@@ -19,7 +19,6 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.util.Random;
 
-import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
 import static de.amr.pacmanfx.model.DefaultWorldMapPropertyName.*;
 
 public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
@@ -46,40 +45,40 @@ public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
         final ArcadeHouse house = new ArcadeHouse(houseMinTile);
         terrain.setHouse(house);
 
-        final GameLevel newGameLevel = new GameLevel(this, levelNumber, worldMap, new ArcadeMsPacMan_HuntingTimer());
-        newGameLevel.setDemoLevel(demoLevel);
-        newGameLevel.setGameOverStateTicks(150);
+        final GameLevel level = new GameLevel(this, levelNumber, worldMap, new ArcadeMsPacMan_HuntingTimer());
+        level.setDemoLevel(demoLevel);
+        level.setGameOverStateTicks(GAME_OVER_STATE_TICKS);
 
         final MsPacMan msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
-        msPacMan.setAutopilotSteering(autopilot);
-        newGameLevel.setPac(msPacMan);
+        msPacMan.setAutomaticSteering(automaticSteering);
+        level.setPac(msPacMan);
 
         final Blinky blinky = ArcadeMsPacMan_ActorFactory.createBlinky();
         blinky.setHome(house);
-        blinky.setStartPosition(halfTileRightOf(terrain.getTileProperty(POS_GHOST_1_RED)));
+        setGhostStartPosition(blinky, terrain.getTileProperty(POS_GHOST_1_RED));
 
         final Pinky pinky = ArcadeMsPacMan_ActorFactory.createPinky();
         pinky.setHome(house);
-        pinky.setStartPosition(halfTileRightOf(terrain.getTileProperty(POS_GHOST_2_PINK)));
+        setGhostStartPosition(pinky, terrain.getTileProperty(POS_GHOST_2_PINK));
 
         final Inky inky = ArcadeMsPacMan_ActorFactory.createInky();
         inky.setHome(house);
-        inky.setStartPosition(halfTileRightOf(terrain.getTileProperty(POS_GHOST_3_CYAN)));
+        setGhostStartPosition(inky, terrain.getTileProperty(POS_GHOST_3_CYAN));
 
         final Sue sue = ArcadeMsPacMan_ActorFactory.createSue();
         sue.setHome(house);
-        sue.setStartPosition(halfTileRightOf(terrain.getTileProperty(POS_GHOST_4_ORANGE)));
+        setGhostStartPosition(sue, terrain.getTileProperty(POS_GHOST_4_ORANGE));
 
-        newGameLevel.setGhosts(blinky, pinky, inky, sue);
+        level.setGhosts(blinky, pinky, inky, sue);
 
-        newGameLevel.setBonusSymbol(0, computeBonusSymbol(levelNumber));
-        newGameLevel.setBonusSymbol(1, computeBonusSymbol(levelNumber));
+        level.setBonusSymbol(0, computeBonusSymbol(levelNumber));
+        level.setBonusSymbol(1, computeBonusSymbol(levelNumber));
 
         /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
          * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
-        levelCounter().setEnabled(levelNumber < 8);
+        levelCounter.setEnabled(levelNumber < 8);
 
-        return newGameLevel;
+        return level;
     }
 
     @Override
@@ -91,7 +90,7 @@ public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
         final GameLevel demoLevel = createLevel(levelNumber, true);
         demoLevel.pac().setImmune(false);
         demoLevel.pac().setUsingAutopilot(true);
-        demoLevel.pac().setAutopilotSteering(demoLevelSteering);
+        demoLevel.pac().setAutomaticSteering(demoLevelSteering);
         demoLevelSteering.init();
         levelCounter().setEnabled(false);
         scoreManager().score().setLevelNumber(levelNumber);

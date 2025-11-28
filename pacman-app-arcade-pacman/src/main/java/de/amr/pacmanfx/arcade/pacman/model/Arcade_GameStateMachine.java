@@ -60,6 +60,7 @@ public class Arcade_GameStateMachine extends StateMachine<FsmState<GameContext>,
             public void onUpdate(GameContext context) {
                 final Game game = context.currentGame();
                 if (timer.hasExpired()) {
+                    // start demo level (attract mode)
                     game.changeState(STARTING_GAME_OR_LEVEL);
                 }
             }
@@ -68,7 +69,7 @@ public class Arcade_GameStateMachine extends StateMachine<FsmState<GameContext>,
         SETTING_OPTIONS_FOR_START {
             @Override
             public void onUpdate(GameContext context) {
-                // wait for user interaction to leave state
+                // wait for user interaction to start playing
             }
         },
 
@@ -82,6 +83,20 @@ public class Arcade_GameStateMachine extends StateMachine<FsmState<GameContext>,
             public void onEnter(GameContext context) {
                 final Game game = context.currentGame();
                 game.publishGameEvent(GameEvent.Type.STOP_ALL_SOUNDS);
+            }
+
+            @Override
+            public void onUpdate(GameContext context) {
+                final Game game = context.currentGame();
+                if (game.isPlaying()) {
+                    continueGame(context);
+                }
+                else if (game.canStartNewGame()) {
+                    startNewGame(context);
+                }
+                else {
+                    startDemoLevel(context);
+                }
             }
 
             private void startNewGame(GameContext context) {
@@ -131,20 +146,6 @@ public class Arcade_GameStateMachine extends StateMachine<FsmState<GameContext>,
                 }
                 else if (timer.tickCount() == TICK_DEMO_LEVEL_START_HUNTING) {
                     game.changeState(GameState.HUNTING);
-                }
-            }
-
-            @Override
-            public void onUpdate(GameContext context) {
-                final Game game = context.currentGame();
-                if (game.isPlaying()) {
-                    continueGame(context);
-                }
-                else if (game.canStartNewGame()) {
-                    startNewGame(context);
-                }
-                else {
-                    startDemoLevel(context);
                 }
             }
         },
