@@ -166,7 +166,7 @@ public class Arcade_GameStateMachine extends StateMachine<FsmState<GameContext>,
 
                 game.level().pac().tick(context);
                 game.level().ghosts().forEach(ghost -> ghost.tick(context));
-                game.level().bonus().ifPresent(bonus -> bonus.tick(context));
+                game.level().optBonus().ifPresent(bonus -> bonus.tick(context));
                 game.updateHunting();
 
                 // What next?
@@ -324,7 +324,7 @@ public class Arcade_GameStateMachine extends StateMachine<FsmState<GameContext>,
             @Override
             public void onExit(GameContext context) {
                 final Game game = context.currentGame();
-                game.level().bonus().ifPresent(Bonus::setInactive);
+                game.level().optBonus().ifPresent(Bonus::setInactive);
             }
         },
 

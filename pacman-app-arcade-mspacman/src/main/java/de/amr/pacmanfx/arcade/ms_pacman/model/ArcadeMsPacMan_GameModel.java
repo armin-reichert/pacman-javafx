@@ -19,6 +19,7 @@ import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.Bonus;
+import de.amr.pacmanfx.model.actors.BonusState;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
@@ -258,7 +259,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         final GameLevel level = level();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
-        if (level.isBonusEdible()) {
+        if (level.optBonus().isPresent() && level.optBonus().get().state() == BonusState.EDIBLE) {
             Logger.info("Previous bonus is still active, skip this bonus");
             return;
         }

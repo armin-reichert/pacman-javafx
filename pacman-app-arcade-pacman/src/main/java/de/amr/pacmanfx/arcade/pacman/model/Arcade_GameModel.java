@@ -241,7 +241,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     @Override
     protected void checkPacFindsBonus(GameLevel gameLevel) {
-        gameLevel.bonus().filter(bonus -> bonus.state() == BonusState.EDIBLE).ifPresent(bonus -> {
+        gameLevel.optBonus().filter(bonus -> bonus.state() == BonusState.EDIBLE).ifPresent(bonus -> {
             if (actorsCollide(gameLevel.pac(), bonus)) {
                 bonus.setEaten(BONUS_EATEN_SECONDS);
                 scoreManager.scorePoints(bonus.points());

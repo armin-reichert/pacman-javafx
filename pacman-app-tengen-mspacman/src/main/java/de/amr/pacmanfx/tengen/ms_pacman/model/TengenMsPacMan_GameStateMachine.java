@@ -188,7 +188,7 @@ public class TengenMsPacMan_GameStateMachine extends StateMachine<FsmState<GameC
 
                 game.level().pac().tick(context);
                 game.level().ghosts().forEach(ghost -> ghost.tick(context));
-                game.level().bonus().ifPresent(bonus -> bonus.tick(context));
+                game.level().optBonus().ifPresent(bonus -> bonus.tick(context));
 
                 game.updateHunting();
 
@@ -347,7 +347,7 @@ public class TengenMsPacMan_GameStateMachine extends StateMachine<FsmState<GameC
             @Override
             public void onExit(GameContext context) {
                 //TODO clarify in MAME
-                context.currentGame().level().bonus().ifPresent(Bonus::setInactive);
+                context.currentGame().level().optBonus().ifPresent(Bonus::setInactive);
             }
         },
 

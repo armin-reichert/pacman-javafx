@@ -134,9 +134,8 @@ public class GameLevel {
     public void registerGhostKilled() { numGhostsKilled++; }
     public int numGhostsKilled() { return numGhostsKilled; }
 
-    public Optional<Bonus> bonus() { return Optional.ofNullable(bonus); }
+    public Optional<Bonus> optBonus() { return Optional.ofNullable(bonus); }
     public void setBonus(Bonus bonus) { this.bonus = bonus; }
-    public boolean isBonusEdible() { return bonus != null && bonus.state() == BonusState.EDIBLE; }
     public byte currentBonusIndex() { return currentBonusIndex; }
     public void selectNextBonus() { currentBonusIndex += 1; }
     public byte bonusSymbol(int i) { return bonusSymbols[i]; }

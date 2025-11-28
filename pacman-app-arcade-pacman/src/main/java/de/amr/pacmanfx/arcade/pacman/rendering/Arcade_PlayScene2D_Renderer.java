@@ -88,7 +88,7 @@ public class Arcade_PlayScene2D_Renderer extends GameScene2D_Renderer implements
         // Actor drawing order: (Bonus) < Pac-Man < Ghosts in order.
         // TODO: also take ghost state into account!
         actorsInZOrder.clear();
-        gameLevel.bonus().ifPresent(actorsInZOrder::add);
+        gameLevel.optBonus().ifPresent(actorsInZOrder::add);
         actorsInZOrder.add(gameLevel.pac());
         Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW)
             .map(gameLevel::ghost)

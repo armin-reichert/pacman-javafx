@@ -144,7 +144,7 @@ public class MiniGameView extends VBox {
             gameLevelRenderer.applyLevelSettings(game.level(), info);
             gameLevelRenderer.drawGameLevel(game.level(), info);
 
-            game.level().bonus().ifPresent(bonus -> actorRenderer.drawActor(bonus));
+            game.level().optBonus().ifPresent(bonus -> actorRenderer.drawActor(bonus));
             actorRenderer.drawActor(game.level().pac());
             Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW)
                 .map(game.level()::ghost)

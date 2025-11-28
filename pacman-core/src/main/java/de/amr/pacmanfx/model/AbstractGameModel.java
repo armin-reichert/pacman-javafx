@@ -200,7 +200,7 @@ public abstract class AbstractGameModel implements Game {
         level.blinking().reset();
         level.ghosts().forEach(Ghost::stopAnimation);
         level.pac().onLevelCompleted();
-        level.bonus().ifPresent(Bonus::setInactive);
+        level.optBonus().ifPresent(Bonus::setInactive);
     }
 
     // GameEventManager implementation

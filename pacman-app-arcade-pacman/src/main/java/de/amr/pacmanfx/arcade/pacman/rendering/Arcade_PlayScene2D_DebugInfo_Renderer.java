@@ -89,7 +89,7 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
 
     private void updateActorDrawingOrder(GameLevel gameLevel) {
         actorsInZOrder.clear();
-        gameLevel.bonus().ifPresent(actorsInZOrder::add);
+        gameLevel.optBonus().ifPresent(actorsInZOrder::add);
         actorsInZOrder.add(gameLevel.pac());
         Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW)
             .map(gameLevel::ghost)

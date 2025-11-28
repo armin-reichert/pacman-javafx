@@ -128,7 +128,7 @@ public class RuleBasedPacSteering implements Steering {
             pac.setTargetTile(prey.tile());
         } else if (isEdibleBonusNearPac(gameLevel, pac)) {
             Logger.trace("Active bonus detected, get it!");
-            gameLevel.bonus().ifPresent(bonus -> pac.setTargetTile(tileAt(bonus.position())));
+            gameLevel.optBonus().ifPresent(bonus -> pac.setTargetTile(tileAt(bonus.position())));
         } else {
             pac.setTargetTile(findTileFarthestFromGhosts(gameLevel, pac, findNearestFoodTiles(gameLevel)));
         }
@@ -139,8 +139,8 @@ public class RuleBasedPacSteering implements Steering {
     }
 
     private boolean isEdibleBonusNearPac(GameLevel gameLevel, Pac pac) {
-        if (gameLevel.bonus().isPresent()) {
-            var bonus = gameLevel.bonus().get();
+        if (gameLevel.optBonus().isPresent()) {
+            var bonus = gameLevel.optBonus().get();
             var tile = tileAt(bonus.position());
             return bonus.state() == BonusState.EDIBLE
                 && tile.manhattanDist(pac.tile()) <= CollectedData.MAX_BONUS_HARVEST_DIST;

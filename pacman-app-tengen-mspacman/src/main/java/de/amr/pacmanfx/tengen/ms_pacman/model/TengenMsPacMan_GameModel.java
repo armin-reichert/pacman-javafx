@@ -483,8 +483,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     public void activateNextBonus() {
         final GameLevel level = level();
         //TODO Find out how Tengen really implemented this
-        if (level.isBonusEdible()) {
-            Logger.info("Previous bonus is still active, skip");
+        if (level.optBonus().isPresent() && level.optBonus().get().state() == BonusState.EDIBLE) {
+            Logger.info("Previous bonus is still active, skip this bonus");
             return;
         }
 
@@ -576,7 +576,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     protected void checkPacFindsBonus(GameLevel gameLevel) {
-        gameLevel.bonus().filter(bonus -> bonus.state() == BonusState.EDIBLE).ifPresent(bonus -> {
+        gameLevel.optBonus().filter(bonus -> bonus.state() == BonusState.EDIBLE).ifPresent(bonus -> {
             if (actorsCollide(gameLevel.pac(), bonus)) {
                 bonus.setEaten(BONUS_EATEN_SECONDS);
                 scoreManager.scorePoints(bonus.points());
