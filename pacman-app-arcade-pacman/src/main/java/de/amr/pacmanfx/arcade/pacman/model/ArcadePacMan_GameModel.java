@@ -13,6 +13,7 @@ import de.amr.pacmanfx.lib.worldmap.TerrainTile;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.Bonus;
+import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.steering.RouteBasedSteering;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
@@ -142,52 +143,61 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
 
     @Override
     public GameLevel createLevel(int levelNumber, boolean demoLevel) {
-        final WorldMap worldMap = mapSelector.provideWorldMap(levelNumber);
+        final WorldMap worldMap = mapSelector.selectWorldMap(levelNumber);
         final TerrainLayer terrain = worldMap.terrainLayer();
+
         final ArcadeHouse house = new ArcadeHouse(ARCADE_MAP_HOUSE_MIN_TILE);
         terrain.setHouse(house);
 
-        final GameLevel newGameLevel = new GameLevel(this, levelNumber, worldMap, new ArcadePacMan_HuntingTimer());
-        newGameLevel.setDemoLevel(demoLevel);
-        newGameLevel.setGameOverStateTicks(90);
+        final GameLevel level = new GameLevel(this, levelNumber, worldMap, new ArcadePacMan_HuntingTimer());
+        level.setDemoLevel(demoLevel);
+        level.setGameOverStateTicks(Arcade_GameStateMachine.GAME_OVER_STATE_TICKS);
 
         final PacMan pacMan = ArcadePacMan_ActorFactory.createPacMan();
         pacMan.setAutopilotSteering(autopilot);
-        newGameLevel.setPac(pacMan);
+        level.setPac(pacMan);
 
         final Blinky blinky = ArcadePacMan_ActorFactory.createBlinky();
         blinky.setHome(house);
-        blinky.setStartPosition(halfTileRightOf(terrain.getTileProperty(POS_GHOST_1_RED)));
+        setStartPosition(blinky, terrain.getTileProperty(POS_GHOST_1_RED));
 
         final Pinky pinky = ArcadePacMan_ActorFactory.createPinky();
         pinky.setHome(house);
-        pinky.setStartPosition(halfTileRightOf(terrain.getTileProperty(POS_GHOST_2_PINK)));
+        setStartPosition(pinky, terrain.getTileProperty(POS_GHOST_2_PINK));
 
         final Inky inky = ArcadePacMan_ActorFactory.createInky();
         inky.setHome(house);
-        inky.setStartPosition(halfTileRightOf(terrain.getTileProperty(POS_GHOST_3_CYAN)));
+        setStartPosition(inky, terrain.getTileProperty(POS_GHOST_3_CYAN));
 
         final Clyde clyde = ArcadePacMan_ActorFactory.createClyde();
         clyde.setHome(house);
-        clyde.setStartPosition(halfTileRightOf(terrain.getTileProperty(POS_GHOST_4_ORANGE)));
+        setStartPosition(clyde, terrain.getTileProperty(POS_GHOST_4_ORANGE));
 
-        newGameLevel.setGhosts(blinky, pinky, inky, clyde);
+        level.setGhosts(blinky, pinky, inky, clyde);
 
         // Special tiles where attacking ghosts cannot move up
         final List<Vector2i> oneWayDownTiles = terrain.tiles()
             .filter(tile -> terrain.content(tile) == TerrainTile.ONE_WAY_DOWN.$)
             .toList();
-        newGameLevel.ghosts().forEach(ghost -> ghost.setSpecialTerrainTiles(oneWayDownTiles));
+        level.ghosts().forEach(ghost -> ghost.setSpecialTerrainTiles(oneWayDownTiles));
 
         // Each level has a single bonus symbol appearing twice during the level.
         // From level 13 on, the same symbol (7, "key") appears.
         byte symbol = BONUS_SYMBOL_CODES_BY_LEVEL_NUMBER[Math.min(levelNumber, 13)];
-        newGameLevel.setBonusSymbol(0, symbol);
-        newGameLevel.setBonusSymbol(1, symbol);
+        level.setBonusSymbol(0, symbol);
+        level.setBonusSymbol(1, symbol);
 
         levelCounter.setEnabled(true);
 
-        return newGameLevel;
+        return level;
+    }
+
+    private void setStartPosition(Ghost ghost, Vector2i tile) {
+        if (tile != null) {
+            ghost.setStartPosition(halfTileRightOf(tile));
+        } else {
+            Logger.error("{] home tile not found inside map", ghost.name());
+        }
     }
 
     @Override

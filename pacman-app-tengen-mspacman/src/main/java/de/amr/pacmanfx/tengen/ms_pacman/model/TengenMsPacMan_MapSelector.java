@@ -47,7 +47,7 @@ public class TengenMsPacMan_MapSelector implements MapSelector {
     public void loadCustomMapPrototypes() {}
 
     @Override
-    public WorldMap provideWorldMap(int levelNumber, Object... args) {
+    public WorldMap selectWorldMap(int levelNumber, Object... args) {
         if (args == null || args.length == 0) {
             throw new IllegalArgumentException("Insufficient information for computing map");
         }

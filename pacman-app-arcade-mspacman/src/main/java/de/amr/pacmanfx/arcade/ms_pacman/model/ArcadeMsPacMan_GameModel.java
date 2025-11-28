@@ -125,7 +125,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
     @Override
     public GameLevel createLevel(int levelNumber, boolean demoLevel) {
-        final WorldMap worldMap = mapSelector.provideWorldMap(levelNumber);
+        final WorldMap worldMap = mapSelector.selectWorldMap(levelNumber);
         final TerrainLayer terrain = worldMap.terrainLayer();
         final ArcadeHouse house = new ArcadeHouse(ARCADE_MAP_HOUSE_MIN_TILE);
         terrain.setHouse(house);

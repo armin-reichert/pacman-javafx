@@ -34,7 +34,7 @@ public class GameLevel {
     private Pac pac;
     private Ghost[] ghosts;
     private Bonus bonus;
-    private int currentBonusIndex; // -1=no bonus, 0=first, 1=second
+    private byte currentBonusIndex; // -1=no bonus, 0=first, 1=second
     private GameLevelMessage message;
 
     private boolean demoLevel;
@@ -137,7 +137,7 @@ public class GameLevel {
     public Optional<Bonus> bonus() { return Optional.ofNullable(bonus); }
     public void setBonus(Bonus bonus) { this.bonus = bonus; }
     public boolean isBonusEdible() { return bonus != null && bonus.state() == BonusState.EDIBLE; }
-    public int currentBonusIndex() { return currentBonusIndex; }
+    public byte currentBonusIndex() { return currentBonusIndex; }
     public void selectNextBonus() { currentBonusIndex += 1; }
     public byte bonusSymbol(int i) { return bonusSymbols[i]; }
     public void setBonusSymbol(int i, byte symbol) {

@@ -127,7 +127,7 @@ public class PacManXXL_Common_MapSelector implements MapSelector {
     }
 
     @Override
-    public WorldMap provideWorldMap(int levelNumber, Object... args) {
+    public WorldMap selectWorldMap(int levelNumber, Object... args) {
         WorldMap prototype = switch (selectionMode) {
             case NO_CUSTOM_MAPS -> {
                 // first pick built-in maps in order, then randomly
