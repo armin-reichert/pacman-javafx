@@ -89,7 +89,7 @@ public class Bonus extends MovingActor {
         show();
     }
 
-    public void setEaten(float seconds) {
+    public void setEatenSeconds(float seconds) {
         state = BonusState.EATEN;
         timer.restartSeconds(seconds);
         if (jumpingAnimation != null) {
