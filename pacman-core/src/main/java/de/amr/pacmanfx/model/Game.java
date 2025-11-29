@@ -19,7 +19,9 @@ import java.util.Optional;
 /**
  * Common interface for all Pac-Man game models.
  * <p>
- * For more information:
+ * Each game model has a finite state machine which controls the game state transitions and eventually the scene
+ * selection in the user interface. However, the game controller should not contain the details how the game works,
+ * this should be implemented in the model itself.
  *
  * @see <a href="https://pacman.holenet.info">Jamey Pittman: The Pac-Man Dossier</a>
  * @see <a href="https://gameinternals.com/understanding-pac-man-ghost-behavior">Chad Birch: Understanding ghost
@@ -62,13 +64,38 @@ public interface Game {
         gameControl().state().timer().expire();
     }
 
+    /**
+     * @return the "frame state", a collection of information on what happened in the current simulation step
+     */
     SimulationStepResult  simulationStepResult();
 
+    /**
+     * @return data to be displayed in the heads-up display (HUD)
+     */
     HUD hud();
+
+    /**
+     * @return the score manager (scores, high scores)
+     */
     ScoreManager scoreManager();
+
+    /**
+     * Controls the selection of world maps for the game levels.
+     *
+     * @return the map selector for this game variant
+     */
     MapSelector mapSelector();
 
     // Game levels
+
+    /**
+     * @return the level counter data e.g. the codes of level symbols displayed in the UI
+     */
+    LevelCounter levelCounter();
+
+    /**
+     * @return the (optional) current game level
+     */
     Optional<GameLevel> optGameLevel();
 
     /**
@@ -79,8 +106,6 @@ public interface Game {
      * @return the current {@link GameLevel}, or {@code null} if none exists
      */
     GameLevel level();
-
-    LevelCounter levelCounter();
 
     // Lifecycle
     void init();
