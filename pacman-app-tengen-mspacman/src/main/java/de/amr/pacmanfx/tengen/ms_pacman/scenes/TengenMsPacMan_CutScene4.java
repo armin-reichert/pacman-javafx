@@ -13,7 +13,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameStateMachine;
+import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameController;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_HUD;
 import de.amr.pacmanfx.tengen.ms_pacman.model.actors.MsPacMan;
 import de.amr.pacmanfx.tengen.ms_pacman.model.actors.PacMan;
@@ -190,7 +190,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
                 msPacMan.hide();
             }
             case 904, 968, 1032, 1096, 1160, 1224, 1288, 1352 -> spawnJunior(tick);
-            case 1512 -> context().currentGame().changeState(TengenMsPacMan_GameStateMachine.GameState.SETTING_OPTIONS_FOR_START);
+            case 1512 -> context().currentGame().changeState(TengenMsPacMan_GameController.GameState.SETTING_OPTIONS_FOR_START);
         }
     }
 

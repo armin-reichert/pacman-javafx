@@ -21,7 +21,7 @@ public class TestActions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            return ui.context().currentGame().stateMachine().optState(CutScenesTestState.class.getSimpleName()).isPresent();
+            return ui.context().currentGame().gameControl().optState(CutScenesTestState.class.getSimpleName()).isPresent();
         }
     };
 
@@ -34,7 +34,7 @@ public class TestActions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            return ui.context().currentGame().stateMachine().optState(LevelShortTestState.class.getSimpleName()).isPresent();
+            return ui.context().currentGame().gameControl().optState(LevelShortTestState.class.getSimpleName()).isPresent();
         }
     };
 
@@ -47,7 +47,7 @@ public class TestActions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            return ui.context().currentGame().stateMachine().optState(LevelMediumTestState.class.getSimpleName()).isPresent();
+            return ui.context().currentGame().gameControl().optState(LevelMediumTestState.class.getSimpleName()).isPresent();
         }
     };
 }

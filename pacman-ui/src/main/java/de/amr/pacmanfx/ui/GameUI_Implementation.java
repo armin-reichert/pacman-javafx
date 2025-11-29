@@ -328,7 +328,7 @@ public final class GameUI_Implementation implements GameUI {
             final SimulationStepResult events = gameContext.currentGame().simulationStepResult();
             events.reset();
             events.setTick(clock.tickCount());
-            gameContext.currentGame().stateMachine().update();
+            gameContext.currentGame().gameControl().update();
             events.printLog();
             currentGameScene().ifPresent(GameScene::update);
         } catch (Throwable x) {

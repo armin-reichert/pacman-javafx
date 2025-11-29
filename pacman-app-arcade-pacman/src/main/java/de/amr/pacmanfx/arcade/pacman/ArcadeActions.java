@@ -4,14 +4,14 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman;
 
-import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameStateMachine.GameState;
+import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController.GameState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.api.GameUI;
 
-import static de.amr.pacmanfx.arcade.pacman.model.Arcade_GameStateMachine.GameState.INTRO;
+import static de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController.GameState.INTRO;
 
 public final class ArcadeActions {
     /**

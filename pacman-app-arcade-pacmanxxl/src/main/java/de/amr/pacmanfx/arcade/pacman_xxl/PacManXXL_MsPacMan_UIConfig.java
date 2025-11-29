@@ -9,8 +9,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
 import de.amr.pacmanfx.arcade.ms_pacman.model.actors.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.*;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.*;
-import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameStateMachine;
-import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameStateMachine.GameState;
+import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController.GameState;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_BootScene2D;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
 import de.amr.pacmanfx.lib.RectShort;
@@ -44,7 +43,6 @@ import javafx.scene.paint.Color;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Stream;
 

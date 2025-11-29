@@ -73,7 +73,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     protected Arcade_GameModel(CoinMechanism coinMechanism) {
         this.coinMechanism = requireNonNull(coinMechanism);
         setCollisionStrategy(CollisionStrategy.SAME_TILE);
-        setStateMachine(new Arcade_GameStateMachine());
+        setGameControl(new Arcade_GameController());
     }
 
     public abstract Arcade_LevelData levelData(GameLevel gameLevel);

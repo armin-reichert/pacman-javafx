@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.arcade.pacman.ArcadeActions;
-import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameStateMachine;
+import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController;
 import de.amr.pacmanfx.arcade.pacman.model.actors.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_HUD_Renderer;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_IntroScene_Renderer;
@@ -345,10 +345,10 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 if (timer.atSecond(0.75)) {
                     scene.ghosts.get(ORANGE_GHOST_POKEY).hide();
                     if (!scene.context().currentGame().canStartNewGame()) {
-                        scene.context().currentGame().changeState(Arcade_GameStateMachine.GameState.STARTING_GAME_OR_LEVEL);
+                        scene.context().currentGame().changeState(Arcade_GameController.GameState.STARTING_GAME_OR_LEVEL);
                     }
                 } else if (timer.atSecond(5)) {
-                    scene.context().currentGame().changeState(Arcade_GameStateMachine.GameState.SETTING_OPTIONS_FOR_START);
+                    scene.context().currentGame().changeState(Arcade_GameController.GameState.SETTING_OPTIONS_FOR_START);
                 }
             }
         };

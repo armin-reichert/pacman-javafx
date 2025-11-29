@@ -28,39 +28,38 @@ import java.util.Optional;
  */
 public interface Game {
 
-    // State machine controlling game play
-    StateMachine<FsmState<GameContext>, GameContext> stateMachine();
+    StateMachine<FsmState<GameContext>, GameContext> gameControl();
 
     default FsmState<GameContext> state() {
-        return stateMachine().state();
+        return gameControl().state();
     }
 
     default void changeState(FsmState<GameContext> gameState) {
-        stateMachine().changeState(gameState);
+        gameControl().changeState(gameState);
     }
 
     default void changeState(String stateID) {
-        Optional<FsmState<GameContext>> optState = stateMachine().optState(stateID);
-        optState.ifPresentOrElse(state -> stateMachine().changeState(state),
+        Optional<FsmState<GameContext>> optState = gameControl().optState(stateID);
+        optState.ifPresentOrElse(state -> gameControl().changeState(state),
             () -> Logger.error("Cannot change state to '{}'. State not existing.", stateID));
     }
 
     default void restart(FsmState<GameContext> gameState) {
-        stateMachine().restart(gameState);
+        gameControl().restart(gameState);
     }
 
     default void resumePreviousState() {
-        stateMachine().resumePreviousState();
+        gameControl().resumePreviousState();
     }
 
     default void restart(String stateID) {
-        Optional<FsmState<GameContext>> optState = stateMachine().optState(stateID);
-        optState.ifPresentOrElse(state -> stateMachine().restart(state),
+        Optional<FsmState<GameContext>> optState = gameControl().optState(stateID);
+        optState.ifPresentOrElse(state -> gameControl().restart(state),
             () -> Logger.error("Cannot restart in state to '{}'. State not existing.", stateID));
     }
 
     default void terminateCurrentGameState() {
-        stateMachine().state().timer().expire();
+        gameControl().state().timer().expire();
     }
 
     SimulationStepResult  simulationStepResult();

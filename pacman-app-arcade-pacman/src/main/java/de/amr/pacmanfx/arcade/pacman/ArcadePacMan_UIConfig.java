@@ -11,7 +11,6 @@ import de.amr.pacmanfx.arcade.pacman.scenes.*;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -43,7 +42,7 @@ import java.util.ResourceBundle;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.arcade.pacman.model.Arcade_GameStateMachine.GameState.*;
+import static de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController.GameState.*;
 import static de.amr.pacmanfx.ui.api.ArcadePalette.*;
 import static de.amr.pacmanfx.ui.api.GameScene_Config.sceneID_CutScene;
 import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_3D_ENABLED;

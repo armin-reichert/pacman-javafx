@@ -14,9 +14,9 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.MessageType;
 import de.amr.pacmanfx.model.actors.*;
 
-public class Arcade_GameStateMachine extends StateMachine<FsmState<GameContext>, GameContext> {
+public class Arcade_GameController extends StateMachine<FsmState<GameContext>, GameContext> {
 
-    public Arcade_GameStateMachine() {
+    public Arcade_GameController() {
         setName("Arcade Pac-Man Games State Machine");
         addStates(GameState.values());
     }

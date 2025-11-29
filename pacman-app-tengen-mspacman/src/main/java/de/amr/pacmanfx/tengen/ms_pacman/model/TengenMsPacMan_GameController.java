@@ -14,9 +14,9 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.MessageType;
 import de.amr.pacmanfx.model.actors.*;
 
-public class TengenMsPacMan_GameStateMachine extends StateMachine<FsmState<GameContext>, GameContext> {
+public class TengenMsPacMan_GameController extends StateMachine<FsmState<GameContext>, GameContext> {
 
-    public TengenMsPacMan_GameStateMachine() {
+    public TengenMsPacMan_GameController() {
         setName("Tengen Ms. Pac-Man Game State Machine");
         addStates(GameState.values());
     }

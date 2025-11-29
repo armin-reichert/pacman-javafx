@@ -47,12 +47,12 @@ public abstract class AbstractGameModel implements Game {
 
     protected final ScoreManager scoreManager = new ScoreManager(this);
 
-    protected StateMachine<FsmState<GameContext>, GameContext> stateMachine;
+    protected StateMachine<FsmState<GameContext>, GameContext> gameControl;
 
-    public void setStateMachine(StateMachine<FsmState<GameContext>, GameContext> stateMachine) {
-        this.stateMachine = requireNonNull(stateMachine);
-        stateMachine.setContext(THE_GAME_BOX); //TODO avoid this dependency
-        stateMachine.addStateChangeListener((oldState, newState) -> publishGameEvent(new GameStateChangeEvent(this, oldState, newState)));
+    public void setGameControl(StateMachine<FsmState<GameContext>, GameContext> gameControl) {
+        this.gameControl = requireNonNull(gameControl);
+        gameControl.setContext(THE_GAME_BOX); //TODO avoid this dependency
+        gameControl.addStateChangeListener((oldState, newState) -> publishGameEvent(new GameStateChangeEvent(this, oldState, newState)));
     }
 
     public void setLifeCount(int n) {
@@ -80,8 +80,8 @@ public abstract class AbstractGameModel implements Game {
     // Game interface
 
     @Override
-    public final StateMachine<FsmState<GameContext>, GameContext> stateMachine() {
-        return stateMachine;
+    public final StateMachine<FsmState<GameContext>, GameContext> gameControl() {
+        return gameControl;
     }
 
     @Override
