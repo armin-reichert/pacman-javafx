@@ -47,7 +47,7 @@ public class LevelCompletedAnimation extends RegisteredAnimation {
     @Override
     protected Animation createAnimationFX() {
         requireNonNull(gameLevel);
-        int numFlashes = gameLevel.game().numFlashes(gameLevel);
+        int numFlashes = gameLevel.numFlashes();
         var flashingTimeline = new Timeline(
             new KeyFrame(Duration.millis(singleFlashMillis * 0.25), e -> highlighted.set(true)),
             new KeyFrame(Duration.millis(singleFlashMillis * 0.75), e -> highlighted.set(false)),

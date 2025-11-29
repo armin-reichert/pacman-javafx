@@ -325,11 +325,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public int numFlashes(GameLevel gameLevel) {
-        return levelData(gameLevel).numFlashes();
-    }
-
-    @Override
     public void showMessage(GameLevel gameLevel, MessageType type) {
         requireNonNull(type);
         GameLevelMessage message = new GameLevelMessage(type);

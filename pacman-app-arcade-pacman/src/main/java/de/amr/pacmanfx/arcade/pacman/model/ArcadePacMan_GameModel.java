@@ -148,7 +148,8 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         final ArcadeHouse house = new ArcadeHouse(ARCADE_MAP_HOUSE_MIN_TILE);
         terrain.setHouse(house);
 
-        final GameLevel level = new GameLevel(this, levelNumber, worldMap, new ArcadePacMan_HuntingTimer());
+        final int numFlashes = levelData(levelNumber).numFlashes();
+        final GameLevel level = new GameLevel(this, levelNumber, worldMap, new ArcadePacMan_HuntingTimer(), numFlashes);
         level.setDemoLevel(demoLevel);
         level.setGameOverStateTicks(GAME_OVER_STATE_TICKS);
 

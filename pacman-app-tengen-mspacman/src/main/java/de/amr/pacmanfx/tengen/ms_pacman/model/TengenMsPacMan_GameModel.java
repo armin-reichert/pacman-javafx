@@ -256,11 +256,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         return startLevelNumber;
     }
 
-    @Override
-    public int numFlashes(GameLevel gameLevel) {
-        return 3; //TODO check if this is correct
-    }
-
     public int numContinues() {
         return numContinues;
     }
@@ -307,7 +302,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     public double pacPowerFadingSeconds(GameLevel gameLevel) {
-        return gameLevel.game().numFlashes(gameLevel) * 0.5; // TODO check in emulator
+        return gameLevel.numFlashes() * 0.5; // TODO check in emulator
     }
 
     @Override
@@ -384,7 +379,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         final ArcadeHouse house = new ArcadeHouse(HOUSE_MIN_TILE);
         worldMap.terrainLayer().setHouse(house);
 
-        final GameLevel level = new GameLevel(this, levelNumber, worldMap, new TengenMsPacMan_HuntingTimer());
+        final GameLevel level = new GameLevel(this, levelNumber, worldMap, new TengenMsPacMan_HuntingTimer(), 3);
         level.setDemoLevel(demoLevel);
 
         // For non-Arcade game levels, spend some extra time for the moving "game over" text animation

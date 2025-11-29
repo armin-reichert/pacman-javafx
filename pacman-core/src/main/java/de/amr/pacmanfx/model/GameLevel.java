@@ -14,8 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
-import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
+import static de.amr.pacmanfx.Validations.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -30,6 +29,7 @@ public class GameLevel {
     private final Pulse blinking;
     private final List<Ghost> victims = new ArrayList<>();
     private final byte[] bonusSymbols = new byte[2];
+    private final int numFlashes;
 
     private Pac pac;
     private Ghost[] ghosts;
@@ -42,14 +42,19 @@ public class GameLevel {
     private int gameOverStateTicks;
     private long startTimeMillis;
 
-    public GameLevel(Game game, int number, WorldMap worldMap, HuntingTimer huntingTimer) {
+    public GameLevel(Game game, int number, WorldMap worldMap, HuntingTimer huntingTimer, int numFlashes) {
         this.game = requireNonNull(game);
         this.number = requireValidLevelNumber(number);
         this.worldMap = requireNonNull(worldMap);
         this.huntingTimer = requireNonNull(huntingTimer);
+        this.numFlashes = requireNonNegativeInt(numFlashes);
         huntingTimer.setGameLevel(this);
         blinking = new Pulse(10, Pulse.State.OFF);
         currentBonusIndex = -1;
+    }
+
+    public int numFlashes() {
+        return numFlashes;
     }
 
     public HuntingTimer huntingTimer() {

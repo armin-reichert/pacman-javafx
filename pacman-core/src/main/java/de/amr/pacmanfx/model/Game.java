@@ -95,11 +95,7 @@ public interface Game {
     void                  setCollisionStrategy(CollisionStrategy collisionStrategy);
     boolean               actorsCollide(Actor either, Actor other);
 
-    double                pacPowerFadingSeconds(GameLevel gameLevel);
-    double                pacPowerSeconds(GameLevel gameLevel);
-
-    int                   numFlashes(GameLevel gameLevel);
-    void                  showMessage(GameLevel gameLevel, MessageType type);
+    void showMessage(GameLevel gameLevel, MessageType type);
 
     // Lifecycle
     void init();
@@ -130,6 +126,10 @@ public interface Game {
     void onPacKilled();
     void onGhostKilled(Ghost ghost);
     void onGameEnding();
+
+    // Pac power
+    double pacPowerFadingSeconds(GameLevel gameLevel);
+    double pacPowerSeconds(GameLevel gameLevel);
 
     // Actor speeds in pixels/tick
     float bonusSpeed(GameLevel gameLevel);

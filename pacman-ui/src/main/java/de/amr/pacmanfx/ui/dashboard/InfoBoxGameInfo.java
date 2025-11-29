@@ -175,6 +175,6 @@ public class InfoBoxGameInfo extends InfoBox {
     }
 
     private String fmtNumFlashes(GameLevel level) {
-        return "%d".formatted(level.game().numFlashes(level));
+        return "%d".formatted(level.numFlashes());
     }
 }

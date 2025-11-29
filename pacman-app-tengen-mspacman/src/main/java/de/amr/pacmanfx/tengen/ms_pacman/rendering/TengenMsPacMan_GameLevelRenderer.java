@@ -52,7 +52,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         WorldMap worldMap = gameLevel.worldMap();
         // store the maze sprite set with the correct colors for this level in the map configuration:
         if (!worldMap.hasConfigValue(TengenMsPacMan_UIConfig.CONFIG_KEY_MAZE_SPRITE_SET)) {
-            int numFlashes = gameLevel.game().numFlashes(gameLevel);
+            int numFlashes = gameLevel.numFlashes();
             MazeSpriteSet mazeSpriteSet = uiConfig.createMazeSpriteSet(worldMap, numFlashes);
             worldMap.setConfigValue(TengenMsPacMan_UIConfig.CONFIG_KEY_MAZE_SPRITE_SET, mazeSpriteSet);
             Logger.debug("Maze sprite set created: {}", mazeSpriteSet);
