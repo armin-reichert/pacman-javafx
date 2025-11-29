@@ -16,10 +16,7 @@ import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
-import de.amr.pacmanfx.model.actors.CommonAnimationID;
-import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.GhostState;
-import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.action.TestActions;
 import de.amr.pacmanfx.ui.api.GameUI;
@@ -306,7 +303,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
                 scene.ghosts.stream()
                     .filter(ghost -> ghost.state() == FRIGHTENED)
-                    .filter(ghost -> scene.context().currentGame().actorsCollide(ghost, scene.pacMan))
+                    .filter(ghost -> CollisionStrategy.SAME_TILE.collide(ghost, scene.pacMan))
                     .findFirst()
                     .ifPresent(victim -> {
                         scene.victims.add(victim);

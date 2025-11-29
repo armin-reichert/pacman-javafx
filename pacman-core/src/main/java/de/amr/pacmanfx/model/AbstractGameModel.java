@@ -31,8 +31,6 @@ public abstract class AbstractGameModel implements Game {
 
     private static final CollisionStrategy DEFAULT_COLLISION_STRATEGY = CollisionStrategy.SAME_TILE;
 
-    private static final float COLLISION_SENSITIVITY_PIXELS = 2;
-
     private final ObjectProperty<CollisionStrategy> collisionStrategy = new SimpleObjectProperty<>(DEFAULT_COLLISION_STRATEGY);
 
     private final BooleanProperty cutScenesEnabled = new SimpleBooleanProperty(true);
@@ -249,27 +247,6 @@ public abstract class AbstractGameModel implements Game {
     // other stuff
 
     /**
-     * @param either some actor
-     * @param other some actor
-     * @return <code>true</code> if both actors collide according to the current collision strategy
-     */
-    public boolean actorsCollide(Actor either, Actor other) {
-        requireNonNull(either, "Actor to check for collision must not be null");
-        requireNonNull(other, "Actor to check for collision must not be null");
-        return switch (collisionStrategy()) {
-            case SAME_TILE -> either.tile().equals(other.tile());
-            case CENTER_DISTANCE -> {
-                float dist = either.center().euclideanDist(other.center());
-                if (dist < COLLISION_SENSITIVITY_PIXELS) {
-                    Logger.info("Collision detected (dist={}): {} collides with {}", dist, either, other);
-                    yield true;
-                }
-                yield false;
-            }
-        };
-    }
-
-    /**
      * The main logic step of the game. Checks if Pac-Man collides with a ghost or finds food or a bonus.
      * Collision with a ghost either kills the ghost and earns points (in case Pac-Man has power) or kills Pac-Man and
      * loses a life. When Pac-Man finds an energizer pellet he enters power mode and is able to kill ghosts. The duration
@@ -285,7 +262,7 @@ public abstract class AbstractGameModel implements Game {
         simulationStepResult.ghostsCollidingWithPac.clear();
         level.ghosts()
             .filter(ghost -> !terrain.isTileInPortalSpace(ghost.tile()))
-            .filter(ghost -> actorsCollide(ghost, level.pac()))
+            .filter(ghost -> collisionStrategy().collide(ghost, level.pac()))
             .forEach(simulationStepResult.ghostsCollidingWithPac::add);
 
         if (!simulationStepResult.ghostsCollidingWithPac.isEmpty()) {

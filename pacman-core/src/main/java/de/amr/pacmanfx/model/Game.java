@@ -10,7 +10,6 @@ import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.math.Vector2i;
-import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.actors.Ghost;
 import org.tinylog.Logger;
@@ -91,9 +90,6 @@ public interface Game {
     int                   lifeCount();
     void                  addLives(int numLives);
 
-    CollisionStrategy     collisionStrategy();
-    void                  setCollisionStrategy(CollisionStrategy collisionStrategy);
-    boolean               actorsCollide(Actor either, Actor other);
 
     void showMessage(GameLevel gameLevel, MessageType type);
 
@@ -126,6 +122,10 @@ public interface Game {
     void onPacKilled();
     void onGhostKilled(Ghost ghost);
     void onGameEnding();
+
+    // Actor collision algorithm
+    CollisionStrategy collisionStrategy();
+    void setCollisionStrategy(CollisionStrategy collisionStrategy);
 
     // Pac power
     double pacPowerFadingSeconds(GameLevel gameLevel);

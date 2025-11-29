@@ -582,7 +582,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     @Override
     protected void checkPacFindsBonus(GameLevel gameLevel) {
         gameLevel.optBonus().filter(bonus -> bonus.state() == BonusState.EDIBLE).ifPresent(bonus -> {
-            if (actorsCollide(gameLevel.pac(), bonus)) {
+            if (collisionStrategy().collide(gameLevel.pac(), bonus)) {
                 bonus.setEatenSeconds(BONUS_EATEN_SECONDS);
                 scoreManager.scorePoints(bonus.points());
                 Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
