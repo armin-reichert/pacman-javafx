@@ -60,6 +60,12 @@ public abstract class GameScene2D implements GameScene {
      */
     protected abstract void createRenderers(Canvas canvas);
 
+    public abstract GameScene2D_Renderer sceneRenderer();
+
+    public abstract HUD_Renderer hudRenderer();
+
+    // GameScene interface
+
     @Override
     public ActionBindingsManager actionBindings() { return actionBindings; }
 
@@ -92,6 +98,8 @@ public abstract class GameScene2D implements GameScene {
         this.canvas = requireNonNull(canvas);
         createRenderers(canvas);
     }
+
+    // other methods
 
     public Canvas canvas() {
         return canvas;
@@ -132,13 +140,9 @@ public abstract class GameScene2D implements GameScene {
     /**
      * @return (unscaled) scene size in pixels e.g. 224x288 for Arcade scenes
      */
-    public Vector2i sizeInPx() {
+    public Vector2i unscaledSize() {
         return Globals.ARCADE_MAP_SIZE_IN_PIXELS;
     }
-
-    public abstract GameScene2D_Renderer sceneRenderer();
-
-    public abstract HUD_Renderer hudRenderer();
 
     protected <T extends Renderer> T configureRenderer(T renderer) {
         return GameScene2D_Renderer.configureRendererForGameScene(renderer, this);

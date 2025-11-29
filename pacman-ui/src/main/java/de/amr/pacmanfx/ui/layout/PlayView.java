@@ -184,7 +184,7 @@ public class PlayView extends StackPane implements GameUI_View {
         gameScene2D.sceneRenderer().draw(gameScene2D);
         if (gameScene2D.hudRenderer() != null) {
             Game game = ui.context().currentGame();
-            gameScene2D.hudRenderer().drawHUD(game, game.hud(), gameScene2D.sizeInPx());
+            gameScene2D.hudRenderer().drawHUD(game, game.hud(), gameScene2D.unscaledSize());
         }
     }
 
@@ -300,7 +300,7 @@ public class PlayView extends StackPane implements GameUI_View {
             createCanvas();
             gameScene2D.setCanvas(canvasDecorationPane.canvas());
             gameScene2D.backgroundProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
-            Vector2i gameSceneSizePx = gameScene2D.sizeInPx();
+            Vector2i gameSceneSizePx = gameScene2D.unscaledSize();
             double aspect = (double) gameSceneSizePx.x() / gameSceneSizePx.y();
             if (ui.currentConfig().sceneConfig().canvasDecorated(gameScene)) {
                 // Decorated game scene scaled-down to give space for the decoration

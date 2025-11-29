@@ -41,7 +41,7 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
         final GameContext gameContext = playScene.context();
         final GameControl gameControl = gameContext.currentGame().control();
 
-        drawTileGrid(playScene.sizeInPx().x(), playScene.sizeInPx().y(), Color.LIGHTGRAY);
+        drawTileGrid(playScene.unscaledSize().x(), playScene.unscaledSize().y(), Color.LIGHTGRAY);
 
         if (gameContext.currentGame().optGameLevel().isPresent()) {
             final GameLevel gameLevel = gameContext.currentGame().level();

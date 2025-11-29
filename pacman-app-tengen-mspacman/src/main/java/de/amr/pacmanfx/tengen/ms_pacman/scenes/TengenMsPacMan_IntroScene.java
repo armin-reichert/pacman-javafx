@@ -117,7 +117,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
     }
 
     @Override
-    public Vector2i sizeInPx() { return NES_SIZE_PX; }
+    public Vector2i unscaledSize() { return NES_SIZE_PX; }
 
     public enum SceneState implements FsmState<TengenMsPacMan_IntroScene> {
 

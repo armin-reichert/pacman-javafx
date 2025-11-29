@@ -295,7 +295,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
     }
 
     @Override
-    public Vector2i sizeInPx() {
+    public Vector2i unscaledSize() {
         return context().currentGame().optGameLevel().map(gameLevel -> gameLevel.worldMap().terrainLayer().sizeInPixel()).orElse(NES_SIZE_PX);
     }
 
@@ -468,7 +468,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
     private void startGameOverMessageAnimation(GameLevelMessage message) {
         if (message instanceof MovingGameLevelMessage movingMessage) {
             double messageWidth = Ufx.textWidth(GAME_OVER_MESSAGE_TEXT, GAME_OVER_MESSAGE_FONT);
-            movingMessage.startMovement(sizeInPx().x(), messageWidth);
+            movingMessage.startMovement(unscaledSize().x(), messageWidth);
         }
     }
 }
