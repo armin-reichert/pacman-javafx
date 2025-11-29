@@ -108,19 +108,6 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
             this);
     }
 
-/*
-    @Override
-    public void draw() {
-        sceneRenderer.draw(this);
-        if (hudRenderer != null) {
-            var game = context().<TengenMsPacMan_GameModel>currentGame();
-            if (game.mapCategory() != MapCategory.ARCADE) {
-                hudRenderer.drawHUD(context().currentGame(), game.hud(), sizeInPx().minus(0, 2 * TS));
-            }
-        }
-    }
-*/
-
     @Override
     public TengenMsPacMan_HUD_Renderer hudRenderer() {
         return hudRenderer;
