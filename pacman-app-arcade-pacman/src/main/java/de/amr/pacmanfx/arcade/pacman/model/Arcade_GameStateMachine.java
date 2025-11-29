@@ -22,9 +22,6 @@ public class Arcade_GameStateMachine extends StateMachine<FsmState<GameContext>,
     public Arcade_GameStateMachine() {
         setName("Arcade Pac-Man Games State Machine");
         addStates(GameState.values());
-        addState(new LevelShortTestState());
-        addState(new LevelMediumTestState());
-        addState(new CutScenesTestState());
     }
 
     public enum GameState implements FsmState<GameContext> {

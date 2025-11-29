@@ -9,6 +9,9 @@ import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.MapSelector;
+import de.amr.pacmanfx.model.test.CutScenesTestState;
+import de.amr.pacmanfx.model.test.LevelMediumTestState;
+import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.api.StartPage;
@@ -131,8 +134,12 @@ public class GameUI_Builder {
 
         configByGameVariant.forEach((gameVariant, config) -> {
             File highScoreFile = THE_GAME_BOX.highScoreFile(gameVariant);
-            AbstractGameModel gameModel = createGameModel(config.gameModelClass, config.mapSelector, highScoreFile);
-            THE_GAME_BOX.registerGame(gameVariant, gameModel);
+            Game game = createGame(config.gameModelClass, config.mapSelector, highScoreFile);
+            //TODO make configurable
+            game.stateMachine().addState(new LevelShortTestState());
+            game.stateMachine().addState(new LevelMediumTestState());
+            game.stateMachine().addState(new CutScenesTestState());
+            THE_GAME_BOX.registerGame(gameVariant, game);
         });
 
         for (StartPageConfiguration config : startPageConfigs) {
@@ -164,7 +171,7 @@ public class GameUI_Builder {
         }
     }
 
-    private AbstractGameModel createGameModel(Class<?> modelClass, MapSelector mapSelector, File highScoreFile) {
+    private AbstractGameModel createGame(Class<?> modelClass, MapSelector mapSelector, File highScoreFile) {
         AbstractGameModel game = null;
         try {
             if (mapSelector != null) {

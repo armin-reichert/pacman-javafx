@@ -13,18 +13,12 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.MessageType;
 import de.amr.pacmanfx.model.actors.*;
-import de.amr.pacmanfx.model.test.CutScenesTestState;
-import de.amr.pacmanfx.model.test.LevelMediumTestState;
-import de.amr.pacmanfx.model.test.LevelShortTestState;
 
 public class TengenMsPacMan_GameStateMachine extends StateMachine<FsmState<GameContext>, GameContext> {
 
     public TengenMsPacMan_GameStateMachine() {
         setName("Tengen Ms. Pac-Man Game State Machine");
         addStates(GameState.values());
-        addState(new LevelShortTestState());
-        addState(new LevelMediumTestState());
-        addState(new CutScenesTestState());
     }
 
     public enum GameState implements FsmState<GameContext> {
