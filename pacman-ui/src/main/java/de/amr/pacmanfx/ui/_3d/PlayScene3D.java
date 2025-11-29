@@ -176,11 +176,6 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
     }
 
     @Override
-    public void handleKeyboardInput() {
-        actionBindings.matchingAction(ui.keyboard()).ifPresent(gameAction -> gameAction.executeIfEnabled(ui));
-    }
-
-    @Override
     public void handleScrollEvent(ScrollEvent e) {
         if (e.getDeltaY() < 0) {
             actionDroneUp.executeIfEnabled(ui);

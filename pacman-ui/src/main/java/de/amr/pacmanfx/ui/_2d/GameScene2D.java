@@ -62,9 +62,7 @@ public abstract class GameScene2D implements GameScene {
     protected abstract void createRenderers(Canvas canvas);
 
     @Override
-    public GameUI ui() {
-        return ui;
-    }
+    public ActionBindingsManager actionBindings() { return actionBindings; }
 
     @Override
     public GameContext context() {
@@ -86,8 +84,17 @@ public abstract class GameScene2D implements GameScene {
     }
 
     @Override
-    public void handleKeyboardInput() {
-        actionBindings.matchingAction(ui.keyboard()).ifPresent(gameAction -> gameAction.executeIfEnabled(ui));
+    public void onStopAllSounds(GameEvent event) { ui.soundManager().stopAll(); }
+
+    @Override
+    public void onUnspecifiedChange(GameEvent event) {
+        // TODO: remove (this is only used by game state GameState.TESTING_CUT_SCENES)
+        ui.updateGameScene(true);
+    }
+
+    @Override
+    public GameUI ui() {
+        return ui;
     }
 
     public void setCanvas(Canvas canvas) {
@@ -97,18 +104,6 @@ public abstract class GameScene2D implements GameScene {
 
     public Canvas canvas() {
         return canvas;
-    }
-
-    @Override
-    public ActionBindingsManager actionBindings() { return actionBindings; }
-
-    @Override
-    public void onStopAllSounds(GameEvent event) { ui.soundManager().stopAll(); }
-
-    @Override
-    public void onUnspecifiedChange(GameEvent event) {
-        // TODO: remove (this is only used by game state GameState.TESTING_CUT_SCENES)
-        ui.updateGameScene(true);
     }
 
     public ObjectProperty<Paint> backgroundProperty() {
