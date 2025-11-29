@@ -4,24 +4,17 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameEventListener;
-import de.amr.pacmanfx.lib.fsm.FsmState;
-import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.actors.Ghost;
-import org.tinylog.Logger;
 
 import java.util.Optional;
 
 /**
  * Common interface for all Pac-Man game models.
  * <p>
- * Each game model has a finite state machine which controls the game state transitions and eventually the scene
- * selection in the user interface. However, the game controller should not contain the details how the game works,
- * this should be implemented in the model itself.
  *
  * @see <a href="https://pacman.holenet.info">Jamey Pittman: The Pac-Man Dossier</a>
  * @see <a href="https://gameinternals.com/understanding-pac-man-ghost-behavior">Chad Birch: Understanding ghost
@@ -30,39 +23,10 @@ import java.util.Optional;
  */
 public interface Game {
 
-    StateMachine<FsmState<GameContext>, GameContext> gameControl();
-
-    default FsmState<GameContext> state() {
-        return gameControl().state();
-    }
-
-    default void changeState(FsmState<GameContext> gameState) {
-        gameControl().changeState(gameState);
-    }
-
-    default void changeState(String stateID) {
-        Optional<FsmState<GameContext>> optState = gameControl().optState(stateID);
-        optState.ifPresentOrElse(state -> gameControl().changeState(state),
-            () -> Logger.error("Cannot change state to '{}'. State not existing.", stateID));
-    }
-
-    default void restart(FsmState<GameContext> gameState) {
-        gameControl().restart(gameState);
-    }
-
-    default void resumePreviousState() {
-        gameControl().resumePreviousState();
-    }
-
-    default void restart(String stateID) {
-        Optional<FsmState<GameContext>> optState = gameControl().optState(stateID);
-        optState.ifPresentOrElse(state -> gameControl().restart(state),
-            () -> Logger.error("Cannot restart in state to '{}'. State not existing.", stateID));
-    }
-
-    default void terminateCurrentGameState() {
-        gameControl().state().timer().expire();
-    }
+    /**
+     * @return state machine controlling the game
+     */
+    GameControl control();
 
     /**
      * @return the "frame state", a collection of information on what happened in the current simulation step

@@ -8,6 +8,7 @@ import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.*;
+import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameController.GameState;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_OptionsScene_Renderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
@@ -122,7 +123,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         if (idleTicks < IDLE_TIMEOUT) {
             idleTicks += 1;
         } else {
-            context().currentGame().changeState(TengenMsPacMan_GameController.GameState.INTRO);
+            context().currentGame().control().changeState(GameState.INTRO);
         }
     }
 

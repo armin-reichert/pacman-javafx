@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_BootScene2D_Renderer;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
@@ -49,8 +50,9 @@ public class Arcade_BootScene2D extends GameScene2D {
 
     @Override
     public void update() {
-        if (context().currentGame().state().timer().atSecond(4)) {
-            context().currentGame().terminateCurrentGameState();
+        final Game game = context().currentGame();
+        if (game.control().state().timer().atSecond(4)) {
+            game.control().terminateCurrentGameState();
         }
     }
 }

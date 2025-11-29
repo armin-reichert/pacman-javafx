@@ -4,12 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.event.GameStateChangeEvent;
-import de.amr.pacmanfx.lib.fsm.FsmState;
-import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
@@ -47,12 +44,13 @@ public abstract class AbstractGameModel implements Game {
 
     protected final ScoreManager scoreManager = new ScoreManager(this);
 
-    protected StateMachine<FsmState<GameContext>, GameContext> gameControl;
+    protected GameControl gameControl;
 
-    public void setGameControl(StateMachine<FsmState<GameContext>, GameContext> gameControl) {
+    public void setGameControl(GameControl gameControl) {
         this.gameControl = requireNonNull(gameControl);
-        gameControl.setContext(THE_GAME_BOX); //TODO avoid this dependency
-        gameControl.addStateChangeListener((oldState, newState) -> publishGameEvent(new GameStateChangeEvent(this, oldState, newState)));
+        gameControl.stateMachine().setContext(THE_GAME_BOX); //TODO avoid this dependency
+        gameControl.stateMachine().addStateChangeListener(
+            (oldState, newState) -> publishGameEvent(new GameStateChangeEvent(this, oldState, newState)));
     }
 
     public void setLifeCount(int n) {
@@ -80,7 +78,7 @@ public abstract class AbstractGameModel implements Game {
     // Game interface
 
     @Override
-    public final StateMachine<FsmState<GameContext>, GameContext> gameControl() {
+    public final GameControl control() {
         return gameControl;
     }
 

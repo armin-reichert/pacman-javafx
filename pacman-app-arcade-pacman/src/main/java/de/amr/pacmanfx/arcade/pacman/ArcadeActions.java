@@ -20,12 +20,13 @@ public final class ArcadeActions {
     public static final GameAction ACTION_INSERT_COIN = new GameAction("INSERT_COIN") {
         @Override
         public void execute(GameUI ui) {
+            final Game game = ui.context().currentGame();
             if (ui.context().coinMechanism().numCoins() < CoinMechanism.MAX_COINS) {
                 ui.soundManager().setEnabled(true);
                 ui.context().coinMechanism().insertCoin();
-                ui.context().currentGame().publishGameEvent(GameEvent.Type.CREDIT_ADDED);
+                game.publishGameEvent(GameEvent.Type.CREDIT_ADDED);
             }
-            ui.context().currentGame().changeState(GameState.SETTING_OPTIONS_FOR_START);
+            game.control().changeState(GameState.SETTING_OPTIONS_FOR_START);
         }
 
         @Override
@@ -34,8 +35,8 @@ public final class ArcadeActions {
             if (game.isPlaying()) {
                 return false;
             }
-            return ui.context().currentGame().state() == GameState.SETTING_OPTIONS_FOR_START
-                || ui.context().currentGame().state() == GameState.INTRO
+            return game.control().state() == GameState.SETTING_OPTIONS_FOR_START
+                || game.control().state() == GameState.INTRO
                 || game.optGameLevel().isPresent() && game.level().isDemoLevel()
                 || ui.context().coinMechanism().noCoin();
         }
@@ -45,15 +46,15 @@ public final class ArcadeActions {
         @Override
         public void execute(GameUI ui) {
             ui.soundManager().stopVoice();
-            ui.context().currentGame().changeState(GameState.STARTING_GAME_OR_LEVEL);
+            ui.context().currentGame().control().changeState(GameState.STARTING_GAME_OR_LEVEL);
         }
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            GameState gameState = (GameState) ui.context().currentGame().state();
+            final Game game = ui.context().currentGame();
             return ui.context().coinMechanism().numCoins() > 0
-                && (gameState == INTRO || gameState == GameState.SETTING_OPTIONS_FOR_START)
-                && ui.context().currentGame().canStartNewGame();
+                && (game.control().state() == INTRO || game.control().state() == GameState.SETTING_OPTIONS_FOR_START)
+                && game.canStartNewGame();
         }
     };
 }

@@ -13,6 +13,7 @@ import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.FoodLayer;
 import de.amr.pacmanfx.lib.worldmap.Obstacle;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
+import de.amr.pacmanfx.model.GameControl;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.House;
 import de.amr.pacmanfx.model.actors.Bonus;
@@ -691,9 +692,10 @@ public class GameLevel3D extends Group implements Disposable {
 
     private void updateLivesCounter3D() {
         if (livesCounter3D != null) {
+            GameControl gameControl = ui.context().currentGame().control();
             int lifeCount = gameLevel.game().lifeCount() - 1;
             // when the game starts and Pac-Man is not yet visible, show one more
-            boolean oneMore = ui.context().currentGame().state().name().equals("STARTING_GAME_OR_LEVEL") && !gameLevel.pac().isVisible();
+            boolean oneMore = gameControl.state().name().equals("STARTING_GAME_OR_LEVEL") && !gameLevel.pac().isVisible();
             if (oneMore) lifeCount += 1;
             livesCounter3D.livesCountProperty().set(lifeCount);
             boolean visible = gameLevel.game().canStartNewGame();
@@ -731,7 +733,7 @@ public class GameLevel3D extends Group implements Disposable {
             pauseSec(0.5)
         );
         // Note: adding this inside the animation as last action does not work!
-        animation.setOnFinished(e -> ui.context().currentGame().terminateCurrentGameState());
+        animation.setOnFinished(e -> ui.context().currentGame().control().terminateCurrentGameState());
         animation.play();
     }
 
@@ -778,7 +780,7 @@ public class GameLevel3D extends Group implements Disposable {
         animation.setOnFinished(e -> {
             wallBaseHeightProperty.bind(PROPERTY_3D_WALL_HEIGHT);
             perspectiveIDProperty.bind(PROPERTY_3D_PERSPECTIVE_ID);
-            ui.context().currentGame().terminateCurrentGameState();
+            ui.context().currentGame().control().terminateCurrentGameState();
         });
         animation.play();
     }

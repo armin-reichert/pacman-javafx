@@ -11,8 +11,8 @@ import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
+import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameController.GameState;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameController;
 import de.amr.pacmanfx.tengen.ms_pacman.model.actors.MsPacMan;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_IntroScene_Renderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
@@ -176,7 +176,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
             @Override
             public void onUpdate(TengenMsPacMan_IntroScene scene) {
-                scene.marquee.update(scene.context().currentGame().state().timer().tickCount());
+                scene.marquee.update(scene.context().currentGame().control().state().timer().tickCount());
                 if (timer.atSecond(1)) {
                     scene.sceneController.changeState(GHOSTS_MARCHING_IN);
                 }
@@ -192,7 +192,8 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
             @Override
             public void onUpdate(TengenMsPacMan_IntroScene scene) {
-                scene.marquee.update(scene.context().currentGame().state().timer().tickCount());
+                long tick = scene.context().currentGame().control().state().timer().tickCount();
+                scene.marquee.update(tick);
                 boolean reachedEndPosition = letGhostMarchIn(scene);
                 if (reachedEndPosition) {
                     if (scene.ghostIndex == 3) {
@@ -245,7 +246,8 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
             @Override
             public void onUpdate(TengenMsPacMan_IntroScene scene) {
-                scene.marquee.update(scene.context().currentGame().state().timer().tickCount());
+                long tick = scene.context().currentGame().control().state().timer().tickCount();
+                scene.marquee.update(tick);
                 Logger.debug("Tick {}: {} marching in", scene.ui.clock().tickCount(), scene.msPacMan.name());
                 scene.msPacMan.move();
                 if (scene.msPacMan.x() <= MS_PAC_MAN_STOP_X) {
@@ -257,9 +259,9 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                     TengenMsPacMan_GameModel game = scene.context().currentGame();
                     if (game.allOptionsHaveDefaultValue()) {
                         game.setCanStartNewGame(false); // TODO check this
-                        scene.context().currentGame().restart(TengenMsPacMan_GameController.GameState.STARTING_GAME_OR_LEVEL);
+                        game.control().restart(GameState.STARTING_GAME_OR_LEVEL);
                     } else {
-                        scene.context().currentGame().changeState(TengenMsPacMan_GameController.GameState.SETTING_OPTIONS_FOR_START);
+                        game.control().changeState(GameState.SETTING_OPTIONS_FOR_START);
                     }
                 }
             }

@@ -6,6 +6,7 @@ package de.amr.pacmanfx.tengen.ms_pacman.rendering;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.fsm.FsmState;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -42,8 +43,9 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends GameScene2D_Renderer
 
         @Override
         public void draw(GameScene2D scene) {
+            final Game game = scene.context().currentGame();
             final TengenMsPacMan_PlayScene2D playScene = (TengenMsPacMan_PlayScene2D) scene;
-            final FsmState<GameContext> gameState = playScene.context().currentGame().state();
+            final FsmState<GameContext> gameState = game.control().state();
 
             drawTileGrid(CANVAS_WIDTH_UNSCALED, playScene.canvasHeightUnscaled(), Color.LIGHTGRAY);
 
@@ -52,7 +54,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends GameScene2D_Renderer
             ctx.setFill(debugTextFill);
             ctx.setFont(debugTextFont);
             ctx.fillText("%s %d".formatted(gameState, gameState.timer().tickCount()), 0, scaled(3 * TS));
-            playScene.context().currentGame().optGameLevel().ifPresent(gameLevel -> {
+            game.optGameLevel().ifPresent(gameLevel -> {
                 drawMovingActorInfo(gameLevel.pac());
                 gameLevel.ghosts().forEach(this::drawMovingActorInfo);
             });

@@ -328,7 +328,7 @@ public final class GameUI_Implementation implements GameUI {
             final SimulationStepResult events = gameContext.currentGame().simulationStepResult();
             events.reset();
             events.setTick(clock.tickCount());
-            gameContext.currentGame().gameControl().update();
+            gameContext.currentGame().control().update();
             events.printLog();
             currentGameScene().ifPresent(GameScene::update);
         } catch (Throwable x) {
@@ -434,8 +434,8 @@ public final class GameUI_Implementation implements GameUI {
         //TODO this is game-specific and should not be handled here
         currentGameScene().ifPresent(gameScene -> {
             gameScene.end();
-            boolean shouldConsumeCoin = gameContext.currentGame().state().name().equals("STARTING_GAME_OR_LEVEL")
-                    || gameContext.currentGame().isPlaying();
+            boolean shouldConsumeCoin = gameContext.currentGame().control().state().name().equals("STARTING_GAME_OR_LEVEL")
+                || gameContext.currentGame().isPlaying();
             if (shouldConsumeCoin && !THE_GAME_BOX.noCoin()) {
                 THE_GAME_BOX.consumeCoin();
             }
@@ -443,7 +443,7 @@ public final class GameUI_Implementation implements GameUI {
         });
         clock.stop();
         clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
-        gameContext.currentGame().restart("BOOT");
+        gameContext.currentGame().control().restart("BOOT");
         showStartView();
     }
 
@@ -452,7 +452,7 @@ public final class GameUI_Implementation implements GameUI {
         currentGameScene().ifPresent(GameScene::end);
         clock.stop();
         clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
-        gameContext.currentGame().restart("BOOT");
+        gameContext.currentGame().control().restart("BOOT");
         Platform.runLater(clock::start);
     }
 

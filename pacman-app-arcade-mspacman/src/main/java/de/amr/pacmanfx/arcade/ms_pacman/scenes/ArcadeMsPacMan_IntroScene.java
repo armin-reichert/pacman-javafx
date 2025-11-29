@@ -8,12 +8,13 @@ import de.amr.pacmanfx.arcade.ms_pacman.model.actors.ArcadeMsPacMan_ActorFactory
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_HUDRenderer;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_IntroScene_Renderer;
 import de.amr.pacmanfx.arcade.pacman.ArcadeActions;
-import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController;
+import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController.GameState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.timer.TickTimer;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.action.TestActions;
@@ -248,11 +249,12 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         READY_TO_PLAY {
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
+                final Game game = scene.context().currentGame();
                 scene.marquee.timer().doTick();
                 if (sceneTimer.atSecond(2.0) && !scene.context().currentGame().canStartNewGame()) {
-                    scene.context().currentGame().changeState(Arcade_GameController.GameState.STARTING_GAME_OR_LEVEL); // demo level
+                    game.control().changeState(GameState.STARTING_GAME_OR_LEVEL); // demo level
                 } else if (sceneTimer.atSecond(5)) {
-                    scene.context().currentGame().changeState(Arcade_GameController.GameState.SETTING_OPTIONS_FOR_START);
+                    game.control().changeState(GameState.SETTING_OPTIONS_FOR_START);
                 }
             }
         };

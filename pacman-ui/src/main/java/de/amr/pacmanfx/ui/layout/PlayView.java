@@ -4,9 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.layout;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
@@ -212,8 +210,8 @@ public class PlayView extends StackPane implements GameUI_View {
         switch (gameEvent.type()) {
             case LEVEL_CREATED -> onLevelCreated();
             case GAME_STATE_CHANGED -> {
-                final FsmState<GameContext> gameState = ui.context().currentGame().state();
-                if (gameState.name().equals("LEVEL_COMPLETE")) {
+                final String gameStateName = ui.context().currentGame().control().state().name();
+                if (gameStateName.equals("LEVEL_COMPLETE")) {
                     miniView.slideOut();
                 }
             }

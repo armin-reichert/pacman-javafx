@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
 import de.amr.pacmanfx.lib.math.Vector2i;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_CreditsScene_Renderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
@@ -63,11 +64,12 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
     @Override
     public void update() {
-        if (context().currentGame().state().timer().atSecond(DISPLAY_SECONDS)) {
-            context().currentGame().terminateCurrentGameState();
+        final Game game = context().currentGame();
+        if (game.control().state().timer().atSecond(DISPLAY_SECONDS)) {
+            game.control().terminateCurrentGameState();
             return;
         }
-        if (context().currentGame().state().timer().betweenSeconds(0.5 * DISPLAY_SECONDS, DISPLAY_SECONDS)) {
+        if (game.control().state().timer().betweenSeconds(0.5 * DISPLAY_SECONDS, DISPLAY_SECONDS)) {
             fadeProgress = Math.min(fadeProgress + 0.005f, 1f); // Clamp to 1.0
         }
     }

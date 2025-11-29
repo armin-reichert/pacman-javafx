@@ -136,9 +136,9 @@ public class GameUI_Builder {
             File highScoreFile = THE_GAME_BOX.highScoreFile(gameVariant);
             Game game = createGame(config.gameModelClass, config.mapSelector, highScoreFile);
             //TODO make configurable
-            game.gameControl().addState(new LevelShortTestState());
-            game.gameControl().addState(new LevelMediumTestState());
-            game.gameControl().addState(new CutScenesTestState());
+            game.control().stateMachine().addState(new LevelShortTestState());
+            game.control().stateMachine().addState(new LevelMediumTestState());
+            game.control().stateMachine().addState(new CutScenesTestState());
             THE_GAME_BOX.registerGame(gameVariant, game);
         });
 

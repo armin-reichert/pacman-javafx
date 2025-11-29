@@ -26,7 +26,7 @@ public class HelpInfo {
 
     public static HelpInfo build(GameUI ui) {
         HelpInfo help = new HelpInfo(ui);
-        switch (ui.context().currentGame().state().name()) {
+        switch (ui.context().currentGame().control().state().name()) {
             case "INTRO" -> help.addInfoForIntroScene(ui.context());
             case "SETTING_OPTIONS_FOR_START" -> help.addInfoForCreditScene(ui.context());
             case "STARTING_GAME_OR_LEVEL", "HUNTING", "PACMAN_DYING", "GHOST_DYING" -> {

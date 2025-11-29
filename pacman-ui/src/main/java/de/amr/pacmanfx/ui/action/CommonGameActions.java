@@ -4,10 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.action;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.StandardGameVariant;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
@@ -60,7 +58,7 @@ public final class CommonGameActions {
     public static final GameAction ACTION_LET_GAME_STATE_EXPIRE = new GameAction("LET_GAME_STATE_EXPIRE") {
         @Override
         public void execute(GameUI ui) {
-            ui.context().currentGame().terminateCurrentGameState();
+            ui.context().currentGame().control().terminateCurrentGameState();
         }
     };
 
@@ -107,14 +105,15 @@ public final class CommonGameActions {
     public static final GameAction ACTION_RESTART_INTRO = new GameAction("RESTART_INTRO") {
         @Override
         public void execute(GameUI ui) {
+            final Game game = ui.context().currentGame();
             ui.soundManager().stopAll();
             ui.currentGameScene().ifPresent(GameScene::end);
-            boolean isLevelShortTest = ui.context().currentGame().state() instanceof LevelShortTestState;
+            boolean isLevelShortTest = game.control().state() instanceof LevelShortTestState;
             if (isLevelShortTest) {
-                ui.context().currentGame().state().onExit(ui.context()); //TODO exit other states too?
+                game.control().state().onExit(ui.context()); //TODO exit other states too?
             }
             ui.clock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
-            ui.context().currentGame().restart("INTRO");
+            game.control().restart("INTRO");
         }
     };
 
@@ -294,10 +293,11 @@ public final class CommonGameActions {
         @Override
         public void execute(GameUI ui) {
             ui.currentGameScene().ifPresent(gameScene -> {
+                final Game game = ui.context().currentGame();
                 toggle(PROPERTY_3D_ENABLED);
                 if (ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_2D) || ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D)) {
                     ui.updateGameScene(true);
-                    ui.context().currentGame().gameControl().update(); //TODO needed?
+                    game.control().update(); //TODO needed?
                 }
                 if (!ui.context().currentGame().isPlaying()) {
                     ui.showFlashMessage(ui.assets().translated(PROPERTY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
@@ -307,12 +307,12 @@ public final class CommonGameActions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            FsmState<GameContext> state = ui.context().currentGame().state();
-            if (state.name().equals(LevelShortTestState.class.getSimpleName())
-                || state.name().equals(LevelMediumTestState.class.getSimpleName())) {
+            String stateName = ui.context().currentGame().control().state().name();
+            if (stateName.equals(LevelShortTestState.class.getSimpleName())
+                || stateName.equals(LevelMediumTestState.class.getSimpleName())) {
                 return true;
             }
-            return Set.of("BOOT", "INTRO", "SETTING_OPTIONS_FOR_START", "HUNTING").contains(state.name());
+            return Set.of("BOOT", "INTRO", "SETTING_OPTIONS_FOR_START", "HUNTING").contains(stateName);
         }
     };
 }

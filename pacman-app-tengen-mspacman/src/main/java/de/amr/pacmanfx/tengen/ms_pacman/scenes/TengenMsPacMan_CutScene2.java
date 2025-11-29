@@ -121,7 +121,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
 
     @Override
     public void update() {
-        final int t = (int) context().currentGame().state().timer().tickCount();
+        final int t = (int) context().currentGame().control().state().timer().tickCount();
 
         pacMan.move();
         msPacMan.move();
@@ -183,7 +183,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
                 pacMan.setMoveDir(Direction.RIGHT);
                 pacMan.setSpeed(4.0f);
             }
-            case 1380 -> context().currentGame().terminateCurrentGameState();
+            case 1380 -> context().currentGame().control().terminateCurrentGameState();
         }
     }
 

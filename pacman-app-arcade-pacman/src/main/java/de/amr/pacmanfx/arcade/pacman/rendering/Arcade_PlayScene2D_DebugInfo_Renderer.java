@@ -8,8 +8,8 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
+import de.amr.pacmanfx.model.GameControl;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.actors.Actor;
@@ -39,7 +39,7 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
     public void draw(GameScene2D scene) {
         final Arcade_PlayScene2D playScene = (Arcade_PlayScene2D) scene;
         final GameContext gameContext = playScene.context();
-        final FsmState<GameContext> gameState = gameContext.currentGame().state();
+        final GameControl gameControl = gameContext.currentGame().control();
 
         drawTileGrid(playScene.sizeInPx().x(), playScene.sizeInPx().y(), Color.LIGHTGRAY);
 
@@ -68,9 +68,9 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
                 }
             });
 
-            String gameStateText = gameState.name() + " (Tick %d)".formatted(gameState.timer().tickCount());
+            String gameStateText = gameControl.state().name() + " (Tick %d)".formatted(gameControl.state().timer().tickCount());
             String huntingPhaseText = "";
-            if (gameState == Arcade_GameController.GameState.HUNTING) {
+            if (gameControl.state() == Arcade_GameController.GameState.HUNTING) {
                 HuntingTimer huntingTimer = gameLevel.huntingTimer();
                 huntingPhaseText = " %s (Tick %d)".formatted(huntingTimer.phase(), huntingTimer.tickCount());
             }

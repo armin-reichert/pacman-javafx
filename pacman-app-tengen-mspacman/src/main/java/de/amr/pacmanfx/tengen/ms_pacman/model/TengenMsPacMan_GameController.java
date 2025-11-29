@@ -10,15 +10,21 @@ import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameControl;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.MessageType;
 import de.amr.pacmanfx.model.actors.*;
 
-public class TengenMsPacMan_GameController extends StateMachine<FsmState<GameContext>, GameContext> {
+public class TengenMsPacMan_GameController extends StateMachine<FsmState<GameContext>, GameContext> implements GameControl {
 
     public TengenMsPacMan_GameController() {
         setName("Tengen Ms. Pac-Man Game State Machine");
         addStates(GameState.values());
+    }
+
+    @Override
+    public StateMachine<FsmState<GameContext>, GameContext> stateMachine() {
+        return this;
     }
 
     public enum GameState implements FsmState<GameContext> {
@@ -37,7 +43,7 @@ public class TengenMsPacMan_GameController extends StateMachine<FsmState<GameCon
             @Override
             public void onUpdate(GameContext context) {
                 if (timer.hasExpired()) {
-                    context.currentGame().changeState(INTRO);
+                    context.currentGame().control().changeState(INTRO);
                 }
             }
         },
@@ -51,7 +57,7 @@ public class TengenMsPacMan_GameController extends StateMachine<FsmState<GameCon
             @Override
             public void onUpdate(GameContext context) {
                 if (timer.hasExpired()) {
-                    context.currentGame().changeState(STARTING_GAME_OR_LEVEL);
+                    context.currentGame().control().changeState(STARTING_GAME_OR_LEVEL);
                 }
             }
         },
@@ -72,7 +78,7 @@ public class TengenMsPacMan_GameController extends StateMachine<FsmState<GameCon
             @Override
             public void onUpdate(GameContext context) {
                 if (timer.hasExpired()) {
-                    context.currentGame().changeState(INTRO);
+                    context.currentGame().control().changeState(INTRO);
                 }
             }
         },
@@ -119,7 +125,7 @@ public class TengenMsPacMan_GameController extends StateMachine<FsmState<GameCon
                 }
                 else if (timer.tickCount() == TICK_NEW_GAME_START_HUNTING) {
                     game.setPlaying(true);
-                    game.changeState(HUNTING);
+                    game.control().changeState(HUNTING);
                 }
             }
 
@@ -128,7 +134,7 @@ public class TengenMsPacMan_GameController extends StateMachine<FsmState<GameCon
                 if (timer.tickCount() == 1) {
                     game.continueGame();
                 } else if (timer.tickCount() == TICK_RESUME_HUNTING) {
-                    game.changeState(HUNTING);
+                    game.control().changeState(HUNTING);
                 }
             }
 
@@ -145,7 +151,7 @@ public class TengenMsPacMan_GameController extends StateMachine<FsmState<GameCon
                     game.level().showPacAndGhosts();
                 }
                 else if (timer.tickCount() == TICK_DEMO_LEVEL_START_HUNTING) {
-                    game.changeState(HUNTING);
+                    game.control().changeState(HUNTING);
                 }
             }
         },
@@ -169,13 +175,13 @@ public class TengenMsPacMan_GameController extends StateMachine<FsmState<GameCon
                 game.updateHunting();
 
                 if (game.isLevelCompleted()) {
-                    game.changeState(LEVEL_COMPLETE);
+                    game.control().changeState(LEVEL_COMPLETE);
                 }
                 else if (game.hasPacManBeenKilled()) {
-                    game.changeState(PACMAN_DYING);
+                    game.control().changeState(PACMAN_DYING);
                 }
                 else if (game.hasGhostBeenKilled()) {
-                    game.changeState(GHOST_DYING);
+                    game.control().changeState(GHOST_DYING);
                 }
             }
 
@@ -208,20 +214,20 @@ public class TengenMsPacMan_GameController extends StateMachine<FsmState<GameCon
                 }
 
                 if (game.level().isDemoLevel()) {
-                    game.changeState(SHOWING_HALL_OF_FAME);
+                    game.control().changeState(SHOWING_HALL_OF_FAME);
                     return;
                 }
 
                 if (timer.hasExpired()) {
                     if (game.level().isDemoLevel()) {
                         // Just in case: if demo level is completed, go back to intro scene
-                        game.changeState(INTRO);
+                        game.control().changeState(INTRO);
                     }
                     else if (game.cutScenesEnabled() && game.level().cutSceneNumber() != 0) {
-                        game.changeState(INTERMISSION);
+                        game.control().changeState(INTERMISSION);
                     }
                     else {
-                        game.changeState(LEVEL_TRANSITION);
+                        game.control().changeState(LEVEL_TRANSITION);
                     }
                 }
             }
@@ -238,7 +244,7 @@ public class TengenMsPacMan_GameController extends StateMachine<FsmState<GameCon
             @Override
             public void onUpdate(GameContext context) {
                 if (timer.hasExpired()) {
-                    context.currentGame().changeState(STARTING_GAME_OR_LEVEL);
+                    context.currentGame().control().changeState(STARTING_GAME_OR_LEVEL);
                 }
             }
         },
@@ -247,20 +253,22 @@ public class TengenMsPacMan_GameController extends StateMachine<FsmState<GameCon
 
             @Override
             public void onEnter(GameContext context) {
+                final Game game = context.currentGame();
                 timer.restartSeconds(1);
-                context.currentGame().level().pac().hide();
-                context.currentGame().level().ghosts().forEach(Ghost::stopAnimation);
-                context.currentGame().publishGameEvent(GameEvent.Type.GHOST_EATEN);
+                game.level().pac().hide();
+                game.level().ghosts().forEach(Ghost::stopAnimation);
+                game.publishGameEvent(GameEvent.Type.GHOST_EATEN);
             }
 
             @Override
             public void onUpdate(GameContext context) {
+                final Game game = context.currentGame();
                 if (timer.hasExpired()) {
-                    context.currentGame().resumePreviousState();
+                    game.control().resumePreviousState();
                 } else {
-                    context.currentGame().level().ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
+                    game.level().ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
                         .forEach(ghost -> ghost.tick(context));
-                    context.currentGame().level().blinking().tick();
+                    game.level().blinking().tick();
                 }
             }
 
@@ -294,11 +302,11 @@ public class TengenMsPacMan_GameController extends StateMachine<FsmState<GameCon
 
                 if (timer.hasExpired()) {
                     if (game.level().isDemoLevel()) {
-                        game.changeState(GAME_OVER);
+                        game.control().changeState(GAME_OVER);
                     }
                     else {
                         game.addLives(-1);
-                        game.changeState(game.lifeCount() == 0 ? GAME_OVER : STARTING_GAME_OR_LEVEL);
+                        game.control().changeState(game.lifeCount() == 0 ? GAME_OVER : STARTING_GAME_OR_LEVEL);
                     }
                 }
                 else if (timer.tickCount() == TICK_HIDE_GHOSTS) {
@@ -347,10 +355,10 @@ public class TengenMsPacMan_GameController extends StateMachine<FsmState<GameCon
                 final Game game = context.currentGame();
                 if (timer.hasExpired()) {
                     if (context.currentGame().level().isDemoLevel()) {
-                        game.changeState(SHOWING_HALL_OF_FAME);
+                        game.control().changeState(SHOWING_HALL_OF_FAME);
                     }
                     else {
-                        game.changeState(game.canContinueOnGameOver() ? SETTING_OPTIONS_FOR_START : INTRO);
+                        game.control().changeState(game.canContinueOnGameOver() ? SETTING_OPTIONS_FOR_START : INTRO);
                     }
                 }
             }
@@ -373,7 +381,7 @@ public class TengenMsPacMan_GameController extends StateMachine<FsmState<GameCon
             public void onUpdate(GameContext context) {
                 final Game game = context.currentGame();
                 if (timer.hasExpired()) {
-                    game.changeState(game.isPlaying() ? LEVEL_TRANSITION : INTRO);
+                    game.control().changeState(game.isPlaying() ? LEVEL_TRANSITION : INTRO);
                 }
             }
         };

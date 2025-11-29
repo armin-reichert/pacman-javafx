@@ -4,9 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman;
 
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.tengen.ms_pacman.model.PacBooster;
+import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameController.GameState;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameController;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.SceneDisplayMode;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.api.GameUI;
@@ -21,14 +22,14 @@ public interface TengenMsPacMan_Actions {
     GameAction ACTION_ENTER_START_SCREEN = new GameAction("ENTER_START_SCREEN") {
         @Override
         public void execute(GameUI ui) {
-            ui.context().currentGame().changeState(TengenMsPacMan_GameController.GameState.SETTING_OPTIONS_FOR_START);
+            ui.context().currentGame().control().changeState(GameState.SETTING_OPTIONS_FOR_START);
         }
     };
 
     GameAction ACTION_QUIT_DEMO_LEVEL = new GameAction("QUIT_DEMO_LEVEL") {
         @Override
         public void execute(GameUI ui) {
-            ui.context().currentGame().changeState(TengenMsPacMan_GameController.GameState.SETTING_OPTIONS_FOR_START);
+            ui.context().currentGame().control().changeState(GameState.SETTING_OPTIONS_FOR_START);
         }
 
         @Override
@@ -40,9 +41,10 @@ public interface TengenMsPacMan_Actions {
     GameAction ACTION_START_PLAYING = new GameAction("START_PLAYING") {
         @Override
         public void execute(GameUI ui) {
+            final Game game = ui.context().currentGame();
             ui.soundManager().stopAll();
-            ui.context().currentGame().setPlaying(false);
-            ui.context().currentGame().changeState(TengenMsPacMan_GameController.GameState.STARTING_GAME_OR_LEVEL);
+            game.setPlaying(false);
+            game.control().changeState(GameState.STARTING_GAME_OR_LEVEL);
         }
     };
 

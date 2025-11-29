@@ -168,7 +168,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
 
     @Override
     public void update() {
-        final int t = (int) context().currentGame().state().timer().tickCount();
+        final int tick = (int) context().currentGame().control().state().timer().tickCount();
 
         clapperboard.tick();
 
@@ -186,7 +186,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
             }
         }
 
-        switch (t) {
+        switch (tick) {
             case 130 -> {
                 pacMan.setSpeed(SPEED_CHASING);
                 pacMan.playAnimation(TengenMsPacMan_UIConfig.AnimationID.ANIM_PAC_MAN_MUNCHING);
@@ -262,7 +262,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
                 msPacMan.hide();
                 heart.hide();
             }
-            case 775 -> context().currentGame().terminateCurrentGameState();
+            case 775 -> context().currentGame().control().terminateCurrentGameState();
         }
     }
 

@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.arcade.pacman.ArcadeActions;
-import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController;
+import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController.GameState;
 import de.amr.pacmanfx.arcade.pacman.model.actors.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_HUD_Renderer;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_IntroScene_Renderer;
@@ -16,6 +16,7 @@ import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.action.TestActions;
@@ -342,13 +343,14 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         READY_TO_PLAY {
             @Override
             public void onUpdate(ArcadePacMan_IntroScene scene) {
+                final Game game = scene.context().currentGame();
                 if (timer.atSecond(0.75)) {
                     scene.ghosts.get(ORANGE_GHOST_POKEY).hide();
-                    if (!scene.context().currentGame().canStartNewGame()) {
-                        scene.context().currentGame().changeState(Arcade_GameController.GameState.STARTING_GAME_OR_LEVEL);
+                    if (!game.canStartNewGame()) {
+                        game.control().changeState(GameState.STARTING_GAME_OR_LEVEL);
                     }
                 } else if (timer.atSecond(5)) {
-                    scene.context().currentGame().changeState(Arcade_GameController.GameState.SETTING_OPTIONS_FOR_START);
+                    game.control().changeState(GameState.SETTING_OPTIONS_FOR_START);
                 }
             }
         };

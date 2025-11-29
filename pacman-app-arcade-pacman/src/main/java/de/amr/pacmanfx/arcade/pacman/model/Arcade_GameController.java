@@ -10,15 +10,21 @@ import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameControl;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.MessageType;
 import de.amr.pacmanfx.model.actors.*;
 
-public class Arcade_GameController extends StateMachine<FsmState<GameContext>, GameContext> {
+public class Arcade_GameController extends StateMachine<FsmState<GameContext>, GameContext> implements GameControl {
 
     public Arcade_GameController() {
         setName("Arcade Pac-Man Games State Machine");
         addStates(GameState.values());
+    }
+
+    @Override
+    public StateMachine<FsmState<GameContext>, GameContext> stateMachine() {
+        return this;
     }
 
     public enum GameState implements FsmState<GameContext> {
@@ -39,7 +45,7 @@ public class Arcade_GameController extends StateMachine<FsmState<GameContext>, G
             public void onUpdate(GameContext context) {
                 final Game game = context.currentGame();
                 if (timer.hasExpired()) {
-                    game.changeState(INTRO);
+                    game.control().changeState(INTRO);
                 }
             }
         },
@@ -55,7 +61,7 @@ public class Arcade_GameController extends StateMachine<FsmState<GameContext>, G
                 final Game game = context.currentGame();
                 if (timer.hasExpired()) {
                     // start demo level (attract mode)
-                    game.changeState(STARTING_GAME_OR_LEVEL);
+                    game.control().changeState(STARTING_GAME_OR_LEVEL);
                 }
             }
         },
@@ -112,7 +118,7 @@ public class Arcade_GameController extends StateMachine<FsmState<GameContext>, G
                 }
                 else if (timer.tickCount() == TICK_NEW_GAME_START_HUNTING) {
                     game.setPlaying(true);
-                    game.changeState(GameState.HUNTING);
+                    game.control().changeState(GameState.HUNTING);
                 }
             }
 
@@ -121,7 +127,7 @@ public class Arcade_GameController extends StateMachine<FsmState<GameContext>, G
                 if (timer.tickCount() == 1) {
                     game.continueGame();
                 } else if (timer.tickCount() == TICK_RESUME_HUNTING) {
-                    game.changeState(GameState.HUNTING);
+                    game.control().changeState(GameState.HUNTING);
                 }
             }
 
@@ -139,7 +145,7 @@ public class Arcade_GameController extends StateMachine<FsmState<GameContext>, G
                     game.level().showPacAndGhosts();
                 }
                 else if (timer.tickCount() == TICK_DEMO_LEVEL_START_HUNTING) {
-                    game.changeState(GameState.HUNTING);
+                    game.control().changeState(GameState.HUNTING);
                 }
             }
         },
@@ -165,13 +171,13 @@ public class Arcade_GameController extends StateMachine<FsmState<GameContext>, G
 
                 // What next?
                 if (game.isLevelCompleted()) {
-                    game.changeState(LEVEL_COMPLETE);
+                    game.control().changeState(LEVEL_COMPLETE);
                 }
                 else if (game.hasPacManBeenKilled()) {
-                    game.changeState(PACMAN_DYING);
+                    game.control().changeState(PACMAN_DYING);
                 }
                 else if (game.hasGhostBeenKilled()) {
-                    game.changeState(GHOST_DYING);
+                    game.control().changeState(GHOST_DYING);
                 }
             }
 
@@ -204,11 +210,11 @@ public class Arcade_GameController extends StateMachine<FsmState<GameContext>, G
                 if (timer.hasExpired()) {
                     if (game.level().isDemoLevel()) {
                         // just in case: if demo level was completed, go back to intro scene
-                        game.changeState(INTRO);
+                        game.control().changeState(INTRO);
                     } else if (game.cutScenesEnabled() && game.level().cutSceneNumber() != 0) {
-                        game.changeState(INTERMISSION);
+                        game.control().changeState(INTERMISSION);
                     } else {
-                        game.changeState(LEVEL_TRANSITION);
+                        game.control().changeState(LEVEL_TRANSITION);
                     }
                 }
             }
@@ -226,7 +232,7 @@ public class Arcade_GameController extends StateMachine<FsmState<GameContext>, G
             public void onUpdate(GameContext context) {
                 final Game game = context.currentGame();
                 if (timer.hasExpired()) {
-                    game.changeState(STARTING_GAME_OR_LEVEL);
+                    game.control().changeState(STARTING_GAME_OR_LEVEL);
                 }
             }
         },
@@ -245,7 +251,7 @@ public class Arcade_GameController extends StateMachine<FsmState<GameContext>, G
             public void onUpdate(GameContext context) {
                 final Game game = context.currentGame();
                 if (timer.hasExpired()) {
-                    game.resumePreviousState();
+                    game.control().resumePreviousState();
                 } else {
                     game.level().ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
                         .forEach(ghost -> ghost.tick(context));
@@ -284,10 +290,10 @@ public class Arcade_GameController extends StateMachine<FsmState<GameContext>, G
 
                 if (timer.hasExpired()) {
                     if (game.level().isDemoLevel()) {
-                        game.changeState(GAME_OVER);
+                        game.control().changeState(GAME_OVER);
                     } else {
                         game.addLives(-1);
-                        game.changeState(game.lifeCount() == 0 ? GAME_OVER : STARTING_GAME_OR_LEVEL);
+                        game.control().changeState(game.lifeCount() == 0 ? GAME_OVER : STARTING_GAME_OR_LEVEL);
                     }
                 }
                 else if (timer.tickCount() == TICK_HIDE_GHOSTS) {
@@ -336,9 +342,9 @@ public class Arcade_GameController extends StateMachine<FsmState<GameContext>, G
                 if (timer.hasExpired()) {
                     game.prepareForNewGame();
                     if (game.canStartNewGame()) {
-                        game.changeState(SETTING_OPTIONS_FOR_START);
+                        game.control().changeState(SETTING_OPTIONS_FOR_START);
                     } else {
-                        game.changeState(INTRO);
+                        game.control().changeState(INTRO);
                     }
                 }
             }
@@ -361,7 +367,7 @@ public class Arcade_GameController extends StateMachine<FsmState<GameContext>, G
             public void onUpdate(GameContext context) {
                 final Game game = context.currentGame();
                 if (timer.hasExpired()) {
-                    game.changeState(game.isPlaying() ? LEVEL_TRANSITION : INTRO);
+                    game.control().changeState(game.isPlaying() ? LEVEL_TRANSITION : INTRO);
                 }
             }
         };

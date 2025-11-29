@@ -140,10 +140,10 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
 
     @Override
     public void update() {
-        final int t = (int) context().currentGame().state().timer().tickCount();
+        final int tick = (int) context().currentGame().control().state().timer().tickCount();
         clapperboard.tick();
 
-        switch (t) {
+        switch (tick) {
             case 130 -> {
                 pacMan.setMoveDir(Direction.RIGHT);
                 pacMan.setPosition(TS * 3, GROUND_Y - 4);
@@ -180,7 +180,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
                 flyingBag.setAcceleration(Vector2f.ZERO);
             }
             case 640 -> darkness = true;
-            case 660 -> context().currentGame().terminateCurrentGameState();
+            case 660 -> context().currentGame().control().terminateCurrentGameState();
         }
 
         stork.move();

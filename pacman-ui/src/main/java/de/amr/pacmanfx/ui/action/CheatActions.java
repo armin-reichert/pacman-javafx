@@ -42,9 +42,10 @@ public final class CheatActions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            return ui.context().currentGame().optGameLevel().isPresent()
-                    && !ui.context().currentGame().level().isDemoLevel()
-                    && ui.context().currentGame().state().name().equals("HUNTING");
+            final Game game = ui.context().currentGame();
+            return game.optGameLevel().isPresent()
+                    && !game.level().isDemoLevel()
+                    && game.control().state().name().equals("HUNTING");
         }
     };
 
@@ -58,14 +59,14 @@ public final class CheatActions {
             if (!vulnerableGhosts.isEmpty()) {
                 gameLevel.energizerVictims().clear(); // resets value of next killed ghost to 200
                 vulnerableGhosts.forEach(game::onGhostKilled);
-                game.changeState("GHOST_DYING");
+                game.control().changeState("GHOST_DYING");
             }
         }
 
         @Override
         public boolean isEnabled(GameUI ui) {
             final Game game = ui.context().currentGame();
-            return game.state().name().equals("HUNTING")
+            return game.control().state().name().equals("HUNTING")
                 && game.optGameLevel().isPresent() && !game.level().isDemoLevel();
         }
     };
@@ -73,15 +74,16 @@ public final class CheatActions {
     public static final GameAction ACTION_ENTER_NEXT_LEVEL = new GameAction("CHEAT_ENTER_NEXT_LEVEL") {
         @Override
         public void execute(GameUI ui) {
+            final Game game = ui.context().currentGame();
             ui.context().cheatUsedProperty().set(true);
-            ui.context().currentGame().changeState("LEVEL_COMPLETE");
+            game.control().changeState("LEVEL_COMPLETE");
         }
 
         @Override
         public boolean isEnabled(GameUI ui) {
             final Game game = ui.context().currentGame();
             return game.isPlaying()
-                    && ui.context().currentGame().state().name().equals("HUNTING")
+                    && game.control().state().name().equals("HUNTING")
                     && game.optGameLevel().isPresent()
                     && game.level().number() < game.lastLevelNumber();
         }

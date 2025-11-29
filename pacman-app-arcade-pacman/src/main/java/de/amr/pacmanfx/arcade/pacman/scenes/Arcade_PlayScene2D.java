@@ -38,7 +38,6 @@ import org.tinylog.Logger;
 import java.util.List;
 
 import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_QUIT_GAME_SCENE;
 import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_MUTED;
 import static de.amr.pacmanfx.ui.input.Keyboard.bare;
@@ -147,7 +146,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onGameStarted(GameEvent e) {
-        FsmState<GameContext> state = context().currentGame().state();
+        FsmState<GameContext> state = context().currentGame().control().state();
         boolean silent = context().currentGame().level().isDemoLevel() || state instanceof TestState;
         if (!silent) {
             ui.soundManager().play(SoundID.GAME_READY);
@@ -165,12 +164,13 @@ public class Arcade_PlayScene2D extends GameScene2D {
     private void updateHUD(GameLevel gameLevel) {
         final Game game = context().currentGame();
         // While Pac-Man is still invisible on level start, one entry more is shown in the lives counter
-        boolean oneMore = context().currentGame().state() == Arcade_GameController.GameState.STARTING_GAME_OR_LEVEL && !gameLevel.pac().isVisible();
+        boolean oneMore = game.control().state() == Arcade_GameController.GameState.STARTING_GAME_OR_LEVEL
+            && !gameLevel.pac().isVisible();
         int numLivesDisplayed = game.lifeCount() - 1;
         if (oneMore) numLivesDisplayed += 1;
         game.hud().setVisibleLifeCount(Math.min(numLivesDisplayed, game.hud().maxLivesDisplayed()));
         //TODO this is wrong in level test state
-        game.hud().showCredit(THE_GAME_BOX.noCoin());
+        game.hud().showCredit(context().coinMechanism().noCoin());
     }
 
     @Override
@@ -183,10 +183,10 @@ public class Arcade_PlayScene2D extends GameScene2D {
     @Override
     public List<MenuItem> supplyContextMenuItems(ContextMenuEvent contextMenuEvent, ContextMenu contextMenu) {
         var miAutopilot = new CheckMenuItem(ui.assets().translated("autopilot"));
-        miAutopilot.selectedProperty().bindBidirectional(THE_GAME_BOX.usingAutopilotProperty());
+        miAutopilot.selectedProperty().bindBidirectional(context().usingAutopilotProperty());
 
         var miImmunity = new CheckMenuItem(ui.assets().translated("immunity"));
-        miImmunity.selectedProperty().bindBidirectional(THE_GAME_BOX.immunityProperty());
+        miImmunity.selectedProperty().bindBidirectional(context().immunityProperty());
 
         var miMuted = new CheckMenuItem(ui.assets().translated("muted"));
         miMuted.selectedProperty().bindBidirectional(PROPERTY_MUTED);
@@ -217,7 +217,8 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     private void playLevelCompletedAnimation() {
         levelCompletedAnimation = new LevelCompletedAnimation(animationRegistry, context().currentGame().level());
-        levelCompletedAnimation.getOrCreateAnimationFX().setOnFinished(e -> context().currentGame().terminateCurrentGameState());
+        levelCompletedAnimation.getOrCreateAnimationFX().setOnFinished(
+            e -> context().currentGame().control().terminateCurrentGameState());
         levelCompletedAnimation.playFromStart();
     }
 
@@ -250,7 +251,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     @Override
     public void onPacDead(GameEvent e) {
         // triggers exit from state PACMAN_DYING after dying animation has finished
-        context().currentGame().terminateCurrentGameState();
+        context().currentGame().control().terminateCurrentGameState();
     }
 
     @Override
@@ -287,7 +288,9 @@ public class Arcade_PlayScene2D extends GameScene2D {
         if (!ui.soundManager().isEnabled()) return;
 
         final Pac pac = gameLevel.pac();
-        final boolean pacChased = context().currentGame().state() == Arcade_GameController.GameState.HUNTING && !pac.powerTimer().isRunning();
+        final boolean pacChased = context().currentGame().control().state() == Arcade_GameController.GameState.HUNTING
+            && !pac.powerTimer().isRunning();
+
         if (pacChased) {
             selectAndPlaySiren();
         }
