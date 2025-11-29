@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._2d;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.math.Vector2i;
@@ -65,11 +64,6 @@ public abstract class GameScene2D implements GameScene {
     public ActionBindingsManager actionBindings() { return actionBindings; }
 
     @Override
-    public GameContext context() {
-        return ui.context();
-    }
-
-    @Override
     public final void init() {
         doInit();
         actionBindings.assignBindingsToKeyboard(ui.keyboard());
@@ -82,9 +76,6 @@ public abstract class GameScene2D implements GameScene {
         ui.soundManager().stopAll();
         Logger.info("2D scene {} ends", getClass().getSimpleName());
     }
-
-    @Override
-    public void onStopAllSounds(GameEvent event) { ui.soundManager().stopAll(); }
 
     @Override
     public void onUnspecifiedChange(GameEvent event) {

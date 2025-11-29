@@ -190,11 +190,6 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
     }
 
     @Override
-    public GameContext context() {
-        return ui.context();
-    }
-
-    @Override
     public ActionBindingsManager actionBindings() {
         return actionBindings;
     }
@@ -518,11 +513,6 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
     @Override
     public void onSpecialScoreReached(GameEvent e) {
         ui.soundManager().play(SoundID.EXTRA_LIFE);
-    }
-
-    @Override
-    public void onStopAllSounds(GameEvent event) {
-        ui.soundManager().stopAll();
     }
 
     @Override
