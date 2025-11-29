@@ -42,7 +42,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
     }
 
     @Override
-    protected HUD_Renderer hudRenderer() {
+    public HUD_Renderer hudRenderer() {
         return null;
     }
 

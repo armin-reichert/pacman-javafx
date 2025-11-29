@@ -33,11 +33,17 @@ public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteR
 
     private final ObjectProperty<Font> totalLivesFont = new SimpleObjectProperty<>(Font.font("Serif", FontWeight.BOLD, 8));
 
+    private float offsetY = 0;
+
     public TengenMsPacMan_HUD_Renderer(Canvas canvas, TengenMsPacMan_SpriteSheet spriteSheet, GameClock clock) {
         super(canvas);
         this.clock = requireNonNull(clock);
         this.spriteSheet = requireNonNull(spriteSheet);
         totalLivesFont.bind(scalingProperty().map(scaling -> Font.font("Serif", FontWeight.BOLD, scaling.doubleValue() * 8)));
+    }
+
+    public void setOffsetY(float offsetY) {
+        this.offsetY = offsetY;
     }
 
     @Override
@@ -56,6 +62,9 @@ public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteR
 
         if (!tengenHUD.isVisible()) return;
 
+        ctx.save();
+        ctx.translate(0, scaled(offsetY));
+
         if (tengenHUD.isScoreVisible()) {
             drawScores(tengenGame.scoreManager(), clock.tickCount(), nesColor(0x20), arcadeFont8());
         }
@@ -72,6 +81,8 @@ public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteR
         if (tengenHUD.gameOptionsVisible()) {
             drawGameOptions(tengenGame.mapCategory(), tengenGame.difficulty(), tengenGame.pacBooster(), TS(16), TS(2.5f));
         }
+
+        ctx.restore();
     }
 
     private void drawScores(ScoreManager scoreManager, long tick, Color color, Font font) {

@@ -61,8 +61,15 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     protected void createRenderers(Canvas canvas) {
         final GameUI_Config uiConfig = ui.currentConfig();
 
-        hudRenderer = configureRendererForGameScene(
-            (TengenMsPacMan_HUD_Renderer) uiConfig.createHUDRenderer(canvas), this);
+        if (context().<TengenMsPacMan_GameModel>currentGame().mapCategory() == MapCategory.ARCADE) {
+            hudRenderer = null;
+        }
+        else {
+            hudRenderer = configureRendererForGameScene(
+                (TengenMsPacMan_HUD_Renderer) uiConfig.createHUDRenderer(canvas),
+                this);
+            hudRenderer.setOffsetY(-2*TS);
+        }
 
         sceneRenderer = configureRendererForGameScene(
             new TengenMsPacMan_CutScene4_Renderer(this, canvas), this);
@@ -249,16 +256,4 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
     @Override
     public Vector2i sizeInPx() { return NES_SIZE_PX; }
-
-    @Override
-    public void draw() {
-        sceneRenderer.draw(this);
-        if (hudRenderer != null) {
-            // draw HUD only for non-Arcade map mode
-            var game = context().<TengenMsPacMan_GameModel>currentGame();
-            if (game.mapCategory() != MapCategory.ARCADE) {
-                hudRenderer.drawHUD(context().currentGame(), game.hud(), sizeInPx().minus(0, 2 * TS));
-            }
-        }
-    }
 }

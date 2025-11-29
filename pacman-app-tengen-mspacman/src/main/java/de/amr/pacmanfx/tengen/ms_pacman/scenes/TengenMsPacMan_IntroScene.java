@@ -74,7 +74,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
     }
 
     @Override
-    protected HUD_Renderer hudRenderer() {
+    public HUD_Renderer hudRenderer() {
         return null;
     }
 

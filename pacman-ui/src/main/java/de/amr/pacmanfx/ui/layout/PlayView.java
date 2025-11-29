@@ -169,11 +169,22 @@ public class PlayView extends StackPane implements GameUI_View {
     }
 
     public void draw() {
-        ui.currentGameScene().filter(GameScene2D.class::isInstance).map(GameScene2D.class::cast).ifPresent(GameScene2D::draw);
+        ui.currentGameScene().filter(GameScene2D.class::isInstance).map(GameScene2D.class::cast).ifPresent(this::drawGameScene2D);
         miniView.draw();
         // Dashboard must also be updated if simulation is stopped
         if (dashboardAndMiniViewLayer.isVisible()) {
             dashboard.updateContent();
+        }
+    }
+
+    private void drawGameScene2D(GameScene2D gameScene2D) {
+        if (gameScene2D.sceneRenderer() == null) {
+            throw new IllegalStateException("No scene renderer exists for 2D game scene '%s'".formatted(this));
+        }
+        gameScene2D.sceneRenderer().draw(gameScene2D);
+        if (gameScene2D.hudRenderer() != null) {
+            Game game = ui.context().currentGame();
+            gameScene2D.hudRenderer().drawHUD(game, game.hud(), gameScene2D.sizeInPx());
         }
     }
 

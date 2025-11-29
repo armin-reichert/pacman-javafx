@@ -150,26 +150,11 @@ public abstract class GameScene2D implements GameScene {
         return Globals.ARCADE_MAP_SIZE_IN_PIXELS;
     }
 
-    protected abstract GameScene2D_Renderer sceneRenderer();
+    public abstract GameScene2D_Renderer sceneRenderer();
 
-    protected abstract HUD_Renderer hudRenderer();
+    public abstract HUD_Renderer hudRenderer();
 
     protected <T extends Renderer> T configureRenderer(T renderer) {
         return GameScene2D_Renderer.configureRendererForGameScene(renderer, this);
-    }
-
-    /**
-     * Draws this scene into the canvas.
-     */
-    public void draw() {
-        if (sceneRenderer() != null) {
-            sceneRenderer().draw(this);
-        }
-        else {
-            throw new IllegalStateException("No scene renderer exists for 2D game scene '%s'".formatted(this));
-        }
-        if (hudRenderer() != null) {
-            hudRenderer().drawHUD(context().currentGame(), context().currentGame().hud(), sizeInPx());
-        }
     }
 }
