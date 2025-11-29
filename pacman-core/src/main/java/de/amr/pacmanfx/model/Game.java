@@ -154,10 +154,6 @@ public interface Game {
     int lifeCount();
     void addLives(int numLives);
 
-    // Pac power
-//    double pacPowerFadingSeconds(GameLevel gameLevel);
-//    double pacPowerSeconds(GameLevel gameLevel);
-
     // Actor speeds in pixels/tick
     float bonusSpeed(GameLevel gameLevel);
     float ghostSpeedWhenAttacking(GameLevel gameLevel, Ghost ghost);
