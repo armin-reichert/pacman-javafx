@@ -94,13 +94,13 @@ public class StateMachine<S extends FsmState<C>, C> {
 
     /**
      * @param name state name (id)
-     * @return state with given name. If no such name exists, an exception is thrown
+     * @return (optional) state with given name.
      */
-    public S state(String name) {
+    public Optional<S> optState(String name) {
         requireNonNull(name);
         return states().stream()
-            .filter(state -> state.name().equals(name))
-            .findFirst().orElseThrow(IllegalArgumentException::new);
+            .filter(s -> s.name().equals(name))
+            .findFirst();
     }
 
     /**

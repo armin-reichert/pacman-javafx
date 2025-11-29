@@ -13,6 +13,7 @@ import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.actors.Ghost;
+import org.tinylog.Logger;
 
 import java.util.Optional;
 
@@ -38,8 +39,10 @@ public interface Game {
         stateMachine().changeState(gameState);
     }
 
-    default void changeState(String gameStateID) {
-        stateMachine().changeState(stateMachine().state(gameStateID));
+    default void changeState(String stateID) {
+        Optional<FsmState<GameContext>> optState = stateMachine().optState(stateID);
+        optState.ifPresentOrElse(state -> stateMachine().changeState(state),
+            () -> Logger.error("Cannot change state to '{}'. State not existing.", stateID));
     }
 
     default void restart(FsmState<GameContext> gameState) {
@@ -50,8 +53,10 @@ public interface Game {
         stateMachine().resumePreviousState();
     }
 
-    default void restart(String gameStateID) {
-        stateMachine().restart(stateMachine().state(gameStateID));
+    default void restart(String stateID) {
+        Optional<FsmState<GameContext>> optState = stateMachine().optState(stateID);
+        optState.ifPresentOrElse(state -> stateMachine().restart(state),
+            () -> Logger.error("Cannot restart in state to '{}'. State not existing.", stateID));
     }
 
     default void terminateCurrentGameState() {
