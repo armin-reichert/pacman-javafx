@@ -104,7 +104,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         });
         gameLevel.energizerVictims().clear();
         // Pac gets power?
-        double powerSeconds = pacPowerSeconds(gameLevel);
+        final float powerSeconds = gameLevel.pacPowerSeconds();
         if (powerSeconds > 0) {
             gameLevel.huntingTimer().stop();
             Logger.debug("Hunting stopped (Pac-Man got power)");
@@ -202,16 +202,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     @Override
     public boolean canContinueOnGameOver() { return false; }
-
-    @Override
-    public double pacPowerSeconds(GameLevel gameLevel) {
-        return levelData(gameLevel).secPacPower();
-    }
-
-    @Override
-    public double pacPowerFadingSeconds(GameLevel gameLevel) {
-        return levelData(gameLevel).numFlashes() * 0.5;
-    }
 
     @Override
     public void checkPacFindsFood(GameLevel gameLevel) {

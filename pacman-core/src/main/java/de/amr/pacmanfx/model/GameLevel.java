@@ -44,6 +44,8 @@ public class GameLevel {
     private int numGhostsKilled;
     private int gameOverStateTicks;
     private long startTimeMillis;
+    private float pacPowerSeconds;
+    private float pacPowerFadingSeconds;
 
     private byte cutSceneNumber;
 
@@ -71,6 +73,22 @@ public class GameLevel {
 
     public byte cutSceneNumber() {
         return cutSceneNumber;
+    }
+
+    public void setPacPowerFadingSeconds(float pacPowerFadingSeconds) {
+        this.pacPowerFadingSeconds = pacPowerFadingSeconds;
+    }
+
+    public float pacPowerFadingSeconds() {
+        return pacPowerFadingSeconds;
+    }
+
+    public void setPacPowerSeconds(float pacPowerSeconds) {
+        this.pacPowerSeconds = pacPowerSeconds;
+    }
+
+    public float pacPowerSeconds() {
+        return pacPowerSeconds;
     }
 
     public HuntingTimer huntingTimer() {

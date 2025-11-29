@@ -285,17 +285,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public double pacPowerSeconds(GameLevel gameLevel) {
-        int index = gameLevel.number() <= 19 ? gameLevel.number() - 1 : 18;
-        return POWER_PELLET_TIMES[index] / 16.0;
-    }
-
-    @Override
-    public double pacPowerFadingSeconds(GameLevel gameLevel) {
-        return gameLevel.numFlashes() * 0.5; // TODO check in emulator
-    }
-
-    @Override
     public void startNewGame() {
         prepareForNewGame();
         //hud.levelCounter().setStartLevel(startLevelNumber);
@@ -376,6 +365,11 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
         final GameLevel level = new GameLevel(this, levelNumber, worldMap, new TengenMsPacMan_HuntingTimer(), 3);
         level.setDemoLevel(demoLevel);
+
+        int index = levelNumber <= 19 ? levelNumber - 1 : 18;
+        float powerSeconds = POWER_PELLET_TIMES[index] / 16.0f;
+        level.setPacPowerSeconds(powerSeconds);
+        level.setPacPowerFadingSeconds(0.5f * 3);
 
         // For non-Arcade game levels, spend some extra time for the moving "game over" text animation
         level.setGameOverStateTicks(mapCategory == MapCategory.ARCADE
@@ -564,7 +558,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         });
         gameLevel.energizerVictims().clear();
         // Pac gets power?
-        double powerSeconds = pacPowerSeconds(gameLevel);
+        final float powerSeconds = gameLevel.pacPowerSeconds();
         if (powerSeconds > 0) {
             gameLevel.huntingTimer().stop();
             Logger.debug("Hunting stopped (Pac-Man got power)");

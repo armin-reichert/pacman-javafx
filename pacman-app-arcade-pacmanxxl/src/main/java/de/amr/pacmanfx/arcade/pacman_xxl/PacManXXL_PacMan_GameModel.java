@@ -45,6 +45,7 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
 
     @Override
     public GameLevel createLevel(int levelNumber, boolean demoLevel) {
+        final Arcade_LevelData levelData = levelData(levelNumber);
         final WorldMap worldMap = mapSelector.selectWorldMap(levelNumber);
         final TerrainLayer terrain = worldMap.terrainLayer();
 
@@ -57,10 +58,11 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
         final ArcadeHouse house = new ArcadeHouse(houseMinTile);
         terrain.setHouse(house);
 
-        final int numFlashes = levelData(levelNumber).numFlashes();
-        final GameLevel level = new GameLevel(this, levelNumber, worldMap, new ArcadePacMan_HuntingTimer(), numFlashes);
+        final GameLevel level = new GameLevel(this, levelNumber, worldMap, new ArcadePacMan_HuntingTimer(), levelData.numFlashes());
         level.setDemoLevel(demoLevel);
         level.setGameOverStateTicks(GAME_OVER_STATE_TICKS);
+        level.setPacPowerSeconds(levelData.secPacPower());
+        level.setPacPowerFadingSeconds(0.5f * levelData.numFlashes()); //TODO correct?
 
         final Pac pacMan = ArcadePacMan_ActorFactory.createPacMan();
         pacMan.setAutomaticSteering(automaticSteering);

@@ -126,12 +126,12 @@ public class Pac extends MovingActor {
     }
 
     public boolean isPowerFading(GameLevel gameLevel) {
-        long fadingTicks = secToTicks(gameLevel.game().pacPowerFadingSeconds(gameLevel));
+        long fadingTicks = secToTicks(gameLevel.pacPowerFadingSeconds());
         return powerTimer.isRunning() && powerTimer.remainingTicks() <= fadingTicks;
     }
 
     public boolean isPowerFadingStarting(GameLevel gameLevel) {
-        long fadingTicks = secToTicks(gameLevel.game().pacPowerFadingSeconds(gameLevel));
+        long fadingTicks = secToTicks(gameLevel.pacPowerFadingSeconds());
         return powerTimer.isRunning() && powerTimer.remainingTicks() == fadingTicks
             || powerTimer.durationTicks() < fadingTicks && powerTimer.tickCount() == 1;
     }

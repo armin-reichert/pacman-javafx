@@ -49,6 +49,8 @@ public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
         final GameLevel level = new GameLevel(this, levelNumber, worldMap, new ArcadeMsPacMan_HuntingTimer(), numFlashes);
         level.setDemoLevel(demoLevel);
         level.setGameOverStateTicks(GAME_OVER_STATE_TICKS);
+        level.setPacPowerSeconds(levelData(levelNumber).secPacPower());
+        level.setPacPowerFadingSeconds(0.5f * numFlashes); //TODO correct?
 
         final MsPacMan msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
         msPacMan.setAutomaticSteering(automaticSteering);

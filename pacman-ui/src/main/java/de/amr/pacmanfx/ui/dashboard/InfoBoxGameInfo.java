@@ -169,7 +169,7 @@ public class InfoBoxGameInfo extends InfoBox {
     }
 
     private String fmtPacPowerTime(GameLevel level) {
-        double powerSec = level.game().pacPowerSeconds(level);
+        double powerSec = level.pacPowerSeconds();
         long powerTicks = secToTicks(powerSec);
         return "%.2f sec (%d ticks)".formatted(powerTicks / (float) NUM_TICKS_PER_SEC, powerTicks);
     }
