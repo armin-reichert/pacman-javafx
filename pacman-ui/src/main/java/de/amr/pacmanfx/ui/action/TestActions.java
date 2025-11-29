@@ -11,11 +11,17 @@ import de.amr.pacmanfx.ui.api.GameUI;
 import javafx.util.Duration;
 
 public class TestActions {
+
     public static final GameAction ACTION_CUT_SCENES_TEST = new GameAction("TEST_CUT_SCENES") {
         @Override
         public void execute(GameUI ui) {
             ui.context().currentGame().changeState(CutScenesTestState.class.getSimpleName());
             ui.showFlashMessage("Cut scenes test"); //TODO localize
+        }
+
+        @Override
+        public boolean isEnabled(GameUI ui) {
+            return ui.context().currentGame().stateMachine().optState(CutScenesTestState.class.getSimpleName()).isPresent();
         }
     };
 
@@ -25,6 +31,11 @@ public class TestActions {
             ui.context().currentGame().restart(LevelShortTestState.class.getSimpleName());
             ui.showFlashMessage(Duration.seconds(3), "Level TEST MODE");
         }
+
+        @Override
+        public boolean isEnabled(GameUI ui) {
+            return ui.context().currentGame().stateMachine().optState(LevelShortTestState.class.getSimpleName()).isPresent();
+        }
     };
 
     public static final GameAction ACTION_MEDIUM_LEVEL_TEST = new GameAction("TEST_LEVELS_MEDIUM") {
@@ -32,6 +43,11 @@ public class TestActions {
         public void execute(GameUI ui) {
             ui.context().currentGame().restart(LevelMediumTestState.class.getSimpleName());
             ui.showFlashMessage(Duration.seconds(3), "Level TEST MODE");
+        }
+
+        @Override
+        public boolean isEnabled(GameUI ui) {
+            return ui.context().currentGame().stateMachine().optState(LevelMediumTestState.class.getSimpleName()).isPresent();
         }
     };
 }
