@@ -161,6 +161,16 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             && numContinues == DEFAULT_NUM_CONTINUES;
     }
 
+    public void showLevelMessage(MessageType type) {
+        requireNonNull(type);
+        final Vector2f center = level().worldMap().terrainLayer().messageCenterPosition();
+        // Non-Arcade maps have a moving "Game Over" message
+        final GameLevelMessage message = type == MessageType.GAME_OVER && mapCategory != MapCategory.ARCADE
+            ? new MovingGameLevelMessage(type, center, GAME_OVER_MESSAGE_DELAY_SEC * NUM_TICKS_PER_SEC)
+            : new GameLevelMessage(type, center);
+        level().setMessage(message);
+    }
+
     @Override
     public TengenMsPacMan_LevelCounter levelCounter() {
         return levelCounter;
@@ -204,7 +214,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     public void onGameEnding() {
         setPlaying(false);
         scoreManager.updateHighScore();
-        showMessage(level(), MessageType.GAME_OVER);
+        showLevelMessage(MessageType.GAME_OVER);
     }
 
     @Override
@@ -285,16 +295,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void showMessage(GameLevel gameLevel, MessageType type) {
-        Vector2f center = gameLevel.worldMap().terrainLayer().messageCenterPosition();
-        // Non-Arcade maps have a moving "Game Over" message
-        var message = type == MessageType.GAME_OVER && mapCategory != MapCategory.ARCADE
-            ? new MovingGameLevelMessage(type, center, GAME_OVER_MESSAGE_DELAY_SEC * NUM_TICKS_PER_SEC)
-            : new GameLevelMessage(type, center);
-        gameLevel.setMessage(message);
-    }
-
-    @Override
     public double pacPowerSeconds(GameLevel gameLevel) {
         int index = gameLevel.number() <= 19 ? gameLevel.number() - 1 : 18;
         return POWER_PELLET_TIMES[index] / 16.0;
@@ -323,12 +323,12 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             activatePacBooster(level.pac(), true);
         }
         if (level.isDemoLevel()) {
-            showMessage(level, MessageType.GAME_OVER);
+            showLevelMessage(MessageType.GAME_OVER);
             scoreManager.score().setEnabled(true);
             scoreManager.highScore().setEnabled(false);
             Logger.info("Demo level {} started", level.number());
         } else {
-            showMessage(level, MessageType.READY);
+            showLevelMessage(MessageType.READY);
             levelCounter().update(level.number(), level.bonusSymbol(0));
             scoreManager.score().setEnabled(true);
             scoreManager.highScore().setEnabled(true);

@@ -142,7 +142,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onGameContinued(GameEvent e) {
-        context().currentGame().showMessage(context().currentGame().level(), MessageType.READY);
+        context().currentGame().optGameLevel().ifPresent(gameLevel -> gameLevel.showMessage(MessageType.READY));
     }
 
     @Override

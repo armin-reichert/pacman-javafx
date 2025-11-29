@@ -90,9 +90,6 @@ public interface Game {
     int                   lifeCount();
     void                  addLives(int numLives);
 
-
-    void showMessage(GameLevel gameLevel, MessageType type);
-
     // Lifecycle
     void init();
     void resetEverything();

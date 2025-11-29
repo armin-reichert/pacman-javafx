@@ -104,6 +104,13 @@ public class GameLevel {
     public void setGameOverStateTicks(int ticks) { gameOverStateTicks = ticks; }
     public int gameOverStateTicks() { return gameOverStateTicks; }
 
+    public void showMessage(MessageType type) {
+        requireNonNull(type);
+        GameLevelMessage message = new GameLevelMessage(type);
+        message.setPosition(worldMap.terrainLayer().messageCenterPosition());
+        setMessage(message);
+    }
+
     public void setMessage(GameLevelMessage message) {
         this.message = message;
     }

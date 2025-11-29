@@ -162,7 +162,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             coinMechanism.consumeCoin();
         }
         scoreManager.updateHighScore();
-        showMessage(level(), MessageType.GAME_OVER);
+        level().showMessage(MessageType.GAME_OVER);
         Logger.info("Game ended with level number {}", level().number());
     }
 
@@ -298,13 +298,13 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         gameLevel.getReadyToPlay();
         resetPacManAndGhostAnimations(gameLevel);
         if (gameLevel.isDemoLevel()) {
-            showMessage(gameLevel, MessageType.GAME_OVER);
+            gameLevel.showMessage(MessageType.GAME_OVER);
             scoreManager.score().setEnabled(false);
             scoreManager.highScore().setEnabled(false);
             Logger.info("Demo level {} started", gameLevel.number());
         } else {
             levelCounter().update(gameLevel.number(), gameLevel.bonusSymbol(0));
-            showMessage(gameLevel, MessageType.READY);
+            gameLevel.showMessage(MessageType.READY);
             scoreManager.score().setEnabled(true);
             //scoreManager.highScore().setEnabled(true);
             Logger.info("Level {} started", gameLevel.number());
@@ -322,14 +322,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     @Override
     public int lastLevelNumber() {
         return Integer.MAX_VALUE;
-    }
-
-    @Override
-    public void showMessage(GameLevel gameLevel, MessageType type) {
-        requireNonNull(type);
-        GameLevelMessage message = new GameLevelMessage(type);
-        message.setPosition(gameLevel.worldMap().terrainLayer().messageCenterPosition());
-        gameLevel.setMessage(message);
     }
 
     @Override
