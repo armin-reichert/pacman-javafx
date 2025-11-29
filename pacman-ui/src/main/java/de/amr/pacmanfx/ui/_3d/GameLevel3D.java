@@ -761,7 +761,7 @@ public class GameLevel3D extends Group implements Disposable {
         if (messageView != null) {
             messageView.setVisible(false);
         }
-        boolean cutSceneFollows = gameLevel.game().optCutSceneNumber(gameLevel.number()).isPresent();
+        boolean cutSceneFollows = gameLevel.cutSceneNumber() != 0;
         RegisteredAnimation levelCompletedAnimation = cutSceneFollows
             ? levelCompletedShortAnimation
             : levelCompletedFullAnimation;

@@ -217,7 +217,7 @@ public class TengenMsPacMan_GameStateMachine extends StateMachine<FsmState<GameC
                         // Just in case: if demo level is completed, go back to intro scene
                         game.changeState(INTRO);
                     }
-                    else if (game.cutScenesEnabled() && game.optCutSceneNumber(game.level().number()).isPresent()) {
+                    else if (game.cutScenesEnabled() && game.level().cutSceneNumber() != 0) {
                         game.changeState(INTERMISSION);
                     }
                     else {

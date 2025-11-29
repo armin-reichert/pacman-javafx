@@ -7,7 +7,10 @@ package de.amr.pacmanfx.model;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
-import de.amr.pacmanfx.model.actors.*;
+import de.amr.pacmanfx.model.actors.Bonus;
+import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.model.actors.GhostState;
+import de.amr.pacmanfx.model.actors.Pac;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +45,8 @@ public class GameLevel {
     private int gameOverStateTicks;
     private long startTimeMillis;
 
+    private byte cutSceneNumber;
+
     public GameLevel(Game game, int number, WorldMap worldMap, HuntingTimer huntingTimer, int numFlashes) {
         this.game = requireNonNull(game);
         this.number = requireValidLevelNumber(number);
@@ -55,6 +60,17 @@ public class GameLevel {
 
     public int numFlashes() {
         return numFlashes;
+    }
+
+    /**
+     * @param cutSceneNumber number of cut scene played after this level (0=no cut scene)
+     */
+    public void setCutSceneNumber(int cutSceneNumber) {
+        this.cutSceneNumber = (byte) cutSceneNumber;
+    }
+
+    public byte cutSceneNumber() {
+        return cutSceneNumber;
     }
 
     public HuntingTimer huntingTimer() {

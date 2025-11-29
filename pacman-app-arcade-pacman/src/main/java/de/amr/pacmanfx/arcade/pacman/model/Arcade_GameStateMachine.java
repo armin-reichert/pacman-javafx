@@ -13,9 +13,6 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.MessageType;
 import de.amr.pacmanfx.model.actors.*;
-import de.amr.pacmanfx.model.test.CutScenesTestState;
-import de.amr.pacmanfx.model.test.LevelMediumTestState;
-import de.amr.pacmanfx.model.test.LevelShortTestState;
 
 public class Arcade_GameStateMachine extends StateMachine<FsmState<GameContext>, GameContext> {
 
@@ -208,8 +205,7 @@ public class Arcade_GameStateMachine extends StateMachine<FsmState<GameContext>,
                     if (game.level().isDemoLevel()) {
                         // just in case: if demo level was completed, go back to intro scene
                         game.changeState(INTRO);
-                    } else if (game.cutScenesEnabled()
-                        && game.optCutSceneNumber(game.level().number()).isPresent()) {
+                    } else if (game.cutScenesEnabled() && game.level().cutSceneNumber() != 0) {
                         game.changeState(INTERMISSION);
                     } else {
                         game.changeState(LEVEL_TRANSITION);

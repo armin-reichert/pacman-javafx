@@ -6,12 +6,13 @@ package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
-import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameStateMachine;
+import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameStateMachine.GameState;
 import de.amr.pacmanfx.arcade.pacman.model.actors.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.rendering.*;
 import de.amr.pacmanfx.arcade.pacman.scenes.*;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -40,7 +41,6 @@ import javafx.scene.paint.Color;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Stream;
 
@@ -269,21 +269,21 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config, GameScene_Confi
     }
 
     @Override
-    public GameScene selectGameScene(GameContext gameContext) {
-        String sceneID = switch (gameContext.currentGame().state()) {
-            case Arcade_GameStateMachine.GameState.BOOT -> SCENE_ID_BOOT_SCENE;
-            case Arcade_GameStateMachine.GameState.SETTING_OPTIONS_FOR_START -> SCENE_ID_START_SCENE;
-            case Arcade_GameStateMachine.GameState.INTRO -> SCENE_ID_INTRO_SCENE;
-            case Arcade_GameStateMachine.GameState.INTERMISSION -> {
-                if (gameContext.currentGame().optGameLevel().isEmpty()) {
+    public GameScene selectGameScene(GameContext context) {
+        final Game game = context.currentGame();
+        String sceneID = switch (game.state()) {
+            case GameState.BOOT -> SCENE_ID_BOOT_SCENE;
+            case GameState.SETTING_OPTIONS_FOR_START -> SCENE_ID_START_SCENE;
+            case GameState.INTRO -> SCENE_ID_INTRO_SCENE;
+            case GameState.INTERMISSION -> {
+                if (game.optGameLevel().isEmpty()) {
                     throw new IllegalStateException("Cannot determine cut scene, no game level available");
                 }
-                int levelNumber = gameContext.currentGame().level().number();
-                Optional<Integer> optCutSceneNumber = gameContext.currentGame().optCutSceneNumber(levelNumber);
-                if (optCutSceneNumber.isEmpty()) {
-                    throw new IllegalStateException("Cannot determine cut scene after level %d".formatted(levelNumber));
+                int cutSceneNumber = game.level().cutSceneNumber();
+                if (cutSceneNumber == 0) {
+                    throw new IllegalStateException("Cannot determine cut scene after level %d".formatted(game.level().number()));
                 }
-                yield sceneID_CutScene(optCutSceneNumber.get());
+                yield sceneID_CutScene(cutSceneNumber);
             }
             case CutScenesTestState testState -> sceneID_CutScene(testState.testedCutSceneNumber);
             default -> PROPERTY_3D_ENABLED.get() ? SCENE_ID_PLAY_SCENE_3D : SCENE_ID_PLAY_SCENE_2D;

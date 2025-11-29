@@ -21,8 +21,6 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Stream;
 
@@ -51,14 +49,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     public static final byte FIRST_LEVEL_NUMBER = 1;
     public static final byte LAST_LEVEL_NUMBER = 32;
-
-    private static final Map<Integer, Integer> CUT_SCENE_AFTER_LEVEL = Map.of(
-         2, 1, // after level #2, play cut scene #1
-         5, 2,
-         9, 3,
-        13, 3,
-        17, 3
-    );
 
     public static final int DEMO_LEVEL_MIN_DURATION_MILLIS = 20_000;
     public static final byte GAME_OVER_MESSAGE_DELAY_SEC = 2;
@@ -366,11 +356,16 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         pac.selectAnimation(boosterActive ? TengenMsPacMan_UIConfig.AnimationID.ANIM_MS_PAC_MAN_BOOSTER : CommonAnimationID.ANIM_PAC_MUNCHING);
     }
 
-    @Override
-    public Optional<Integer> optCutSceneNumber(int levelNumber) {
-        Integer sceneNumber = CUT_SCENE_AFTER_LEVEL.get(levelNumber);
-        if (levelNumber == LAST_LEVEL_NUMBER) sceneNumber = 4;
-        return Optional.ofNullable(sceneNumber);
+    private int cutSceneNumberAfterLevel(int levelNumber) {
+        if (levelNumber == LAST_LEVEL_NUMBER) {
+            return 4;
+        }
+        return switch (levelNumber) {
+            case 2 -> 1;
+            case 5 -> 2;
+            case 9, 13, 17 -> 3;
+            default -> 0;
+        };
     }
 
     @Override
@@ -427,26 +422,29 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     public void buildNormalLevel(int levelNumber) {
-        final GameLevel normalLevel = createLevel(levelNumber, false);
+        final GameLevel level = createLevel(levelNumber, false);
+        level.setCutSceneNumber(cutSceneNumberAfterLevel(levelNumber));
         scoreManager.score().setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
-        normalLevel.worldMap().terrainLayer().optHouse().ifPresent(gateKeeper::setHouse); //TODO what if no house exists?
-        setGameLevel(normalLevel);
+        level.worldMap().terrainLayer().optHouse().ifPresent(gateKeeper::setHouse); //TODO what if no house exists?
+
+        setGameLevel(level);
         publishGameEvent(GameEvent.Type.LEVEL_CREATED);
     }
 
     @Override
     public void buildDemoLevel() {
-        final GameLevel demoLevel = createLevel(1, true);
-        demoLevel.setGameOverStateTicks(120);
-        demoLevel.pac().setImmune(false);
-        demoLevel.pac().setUsingAutopilot(true);
-        demoLevel.pac().setAutomaticSteering(demoLevelSteering);
+        final GameLevel level = createLevel(1, true);
+        level.setCutSceneNumber(0);
+        level.setGameOverStateTicks(120);
+        level.pac().setImmune(false);
+        level.pac().setUsingAutopilot(true);
+        level.pac().setAutomaticSteering(demoLevelSteering);
         demoLevelSteering.init();
         scoreManager.score().setLevelNumber(1);
         gateKeeper.setLevelNumber(1);
-        demoLevel.worldMap().terrainLayer().optHouse().ifPresent(gateKeeper::setHouse); //TODO what if no house exists?
-        setGameLevel(demoLevel);
+        level.worldMap().terrainLayer().optHouse().ifPresent(gateKeeper::setHouse); //TODO what if no house exists?
+        setGameLevel(level);
         publishGameEvent(GameEvent.Type.LEVEL_CREATED);
     }
 

@@ -14,8 +14,6 @@ import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.steering.Steering;
 import org.tinylog.Logger;
 
-import java.util.Optional;
-
 import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
 import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
@@ -252,42 +250,43 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         });
     }
 
-    @Override
-    public Optional<Integer> optCutSceneNumber(int levelNumber) {
+    protected int cutSceneNumberAfter(int levelNumber) {
         return switch (levelNumber) {
-            case 2 -> Optional.of(1); // after level #2, play cut scene #1
-            case 5 -> Optional.of(2);
-            case 9, 13, 17 -> Optional.of(3);
-            default -> Optional.empty();
+            case 2 -> 1; // after level #2, play cut scene #1
+            case 5 -> 2;
+            case 9, 13, 17 -> 3;
+            default -> 0;
         };
     }
 
     @Override
     public void buildNormalLevel(int levelNumber) {
-        final GameLevel normalLevel = createLevel(levelNumber, false);
+        final GameLevel level = createLevel(levelNumber, false);
+        level.setCutSceneNumber(cutSceneNumberAfter(levelNumber));
         levelCounter().setEnabled(true);
         scoreManager.score().setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
-        //TODO handle case when no house exists
-        normalLevel.worldMap().terrainLayer().optHouse().ifPresent(house -> gateKeeper.setHouse(house));
-        setGameLevel(normalLevel);
+        level.worldMap().terrainLayer().optHouse().ifPresent(house -> gateKeeper.setHouse(house));
+
+        setGameLevel(level);
         publishGameEvent(GameEvent.Type.LEVEL_CREATED);
     }
 
     @Override
     public void buildDemoLevel() {
         int levelNumber = 1;
-        final GameLevel demoLevel = createLevel(levelNumber, true);
-        demoLevel.pac().setImmune(false);
-        demoLevel.pac().setUsingAutopilot(true);
-        demoLevel.pac().setAutomaticSteering(demoLevelSteering);
+        final GameLevel level = createLevel(levelNumber, true);
+        level.setCutSceneNumber(0);
+        level.pac().setImmune(false);
+        level.pac().setUsingAutopilot(true);
+        level.pac().setAutomaticSteering(demoLevelSteering);
         demoLevelSteering.init();
         levelCounter().setEnabled(true);
         scoreManager.score().setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
-        //TODO handle case when no house exists
-        demoLevel.worldMap().terrainLayer().optHouse().ifPresent(house -> gateKeeper.setHouse(house));
-        setGameLevel(demoLevel);
+        level.worldMap().terrainLayer().optHouse().ifPresent(house -> gateKeeper.setHouse(house));
+
+        setGameLevel(level);
         publishGameEvent(GameEvent.Type.LEVEL_CREATED);
     }
 

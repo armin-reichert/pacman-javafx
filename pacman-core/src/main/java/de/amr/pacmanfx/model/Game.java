@@ -28,6 +28,7 @@ import java.util.Optional;
  */
 public interface Game {
 
+    // State machine controlling game play
     StateMachine<FsmState<GameContext>, GameContext> stateMachine();
 
     default FsmState<GameContext> state() {
@@ -64,9 +65,11 @@ public interface Game {
 
     SimulationStepResult  simulationStepResult();
 
+    HUD hud();
     ScoreManager scoreManager();
     MapSelector mapSelector();
 
+    // Game levels
     Optional<GameLevel> optGameLevel();
 
     /**
@@ -78,17 +81,7 @@ public interface Game {
      */
     GameLevel level();
 
-    LevelCounter          levelCounter();
-    HUD                   hud();
-
-    boolean               cutScenesEnabled();
-    void                  setCutScenesEnabled(boolean enabled);
-    Optional<Integer>     optCutSceneNumber(int levelNumber);
-
-    int                   initialLifeCount();
-    void                  setInitialLifeCount(int numLives);
-    int                   lifeCount();
-    void                  addLives(int numLives);
+    LevelCounter levelCounter();
 
     // Lifecycle
     void init();
@@ -114,6 +107,13 @@ public interface Game {
     boolean hasPacManBeenKilled();
     boolean hasGhostBeenKilled();
 
+    // Game event manager
+    void addGameEventListener(GameEventListener listener);
+    void removeGameEventListener(GameEventListener listener);
+    void publishGameEvent(GameEvent event);
+    void publishGameEvent(GameEvent.Type type);
+    void publishGameEvent(GameEvent.Type type, Vector2i tile);
+
     // Game event handling
     void onLevelCompleted();
     void onPacKilled();
@@ -123,6 +123,12 @@ public interface Game {
     // Actor collision algorithm
     CollisionStrategy collisionStrategy();
     void setCollisionStrategy(CollisionStrategy collisionStrategy);
+
+    // Pac lives
+    int initialLifeCount();
+    void setInitialLifeCount(int numLives);
+    int lifeCount();
+    void addLives(int numLives);
 
     // Pac power
     double pacPowerFadingSeconds(GameLevel gameLevel);
@@ -138,10 +144,7 @@ public interface Game {
     float pacSpeed(GameLevel gameLevel);
     float pacSpeedWhenHasPower(GameLevel gameLevel);
 
-    // Game event manager
-    void addGameEventListener(GameEventListener listener);
-    void removeGameEventListener(GameEventListener listener);
-    void publishGameEvent(GameEvent event);
-    void publishGameEvent(GameEvent.Type type);
-    void publishGameEvent(GameEvent.Type type, Vector2i tile);
+    // Cut scenes
+    boolean cutScenesEnabled();
+    void setCutScenesEnabled(boolean enabled);
 }

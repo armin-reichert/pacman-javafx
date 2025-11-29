@@ -11,6 +11,7 @@ import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.lib.nes.NES_Palette;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -406,22 +407,22 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     }
 
     @Override
-    public GameScene selectGameScene(GameContext gameContext) {
-        String sceneID = switch (gameContext.currentGame().state()) {
+    public GameScene selectGameScene(GameContext context) {
+        final Game game = context.currentGame();
+        String sceneID = switch (game.state()) {
             case BOOT -> SCENE_ID_BOOT_SCENE;
             case SETTING_OPTIONS_FOR_START -> SCENE_ID_START_SCENE;
             case SHOWING_HALL_OF_FAME -> SCENE_ID_HALL_OF_FAME;
             case INTRO -> SCENE_ID_INTRO_SCENE;
             case INTERMISSION -> {
-                if (gameContext.currentGame().optGameLevel().isEmpty()) {
+                if (game.optGameLevel().isEmpty()) {
                     throw new IllegalStateException("Cannot determine cut scene, no game level available");
                 }
-                int levelNumber = gameContext.currentGame().level().number();
-                Optional<Integer> optCutSceneNumber = gameContext.currentGame().optCutSceneNumber(levelNumber);
-                if (optCutSceneNumber.isEmpty()) {
-                    throw new IllegalStateException("Cannot determine cut scene after level %d".formatted(levelNumber));
+                int cutSceneNumber = game.level().cutSceneNumber();
+                if (cutSceneNumber == 0) {
+                    throw new IllegalStateException("Cannot determine cut scene after level %d".formatted(game.level().number()));
                 }
-                yield sceneID_CutScene(optCutSceneNumber.get());
+                yield sceneID_CutScene(cutSceneNumber);
             }
             case CutScenesTestState testState -> sceneID_CutScene(testState.testedCutSceneNumber);
             default -> PROPERTY_3D_ENABLED.get() ? SCENE_ID_PLAY_SCENE_3D : SCENE_ID_PLAY_SCENE_2D;
