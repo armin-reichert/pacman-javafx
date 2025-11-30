@@ -41,7 +41,9 @@ public class ArcadeMsPacMan_HUDRenderer extends BaseRenderer implements SpriteRe
     }
 
     @Override
-    public void drawHUD(Game game, HUD hud, Vector2i sceneSize) {
+    public void drawHUD(Game game, Vector2i sceneSize) {
+        final HUD hud = game.hud();
+
         if (!hud.isVisible()) return;
 
         if (hud.isScoreVisible()) {
