@@ -19,7 +19,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
-import de.amr.pacmanfx.uilib.rendering.HUD_Renderer;
+import de.amr.pacmanfx.ui._2d.HUD_Renderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;

@@ -9,9 +9,9 @@ import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.HUD;
 import de.amr.pacmanfx.model.Score;
-import de.amr.pacmanfx.model.ScoreManager;
+import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui._2d.HUD_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.HUD_Renderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -41,20 +41,24 @@ public class ArcadeMsPacMan_HUDRenderer extends BaseRenderer implements SpriteRe
     }
 
     @Override
-    public void drawHUD(Game game, Vector2i sceneSize) {
+    public void drawHUD(Game game, GameScene2D scene) {
+        requireNonNull(game);
+        requireNonNull(scene);
+
         final HUD hud = game.hud();
+        final Vector2i sceneSize = scene.unscaledSize();
 
         if (!hud.isVisible()) return;
 
         if (hud.isScoreVisible()) {
-            ScoreManager scoreManager = game.scoreManager();
-            drawScore(scoreManager.score(), "SCORE", arcadeFont8(), TS(1), TS(1));
-            drawScore(scoreManager.highScore(), "HIGH SCORE", arcadeFont8(), TS(14), TS(1));
+            drawScore(game.scoreManager().score(), "SCORE", arcadeFont8(), TS(1), TS(1));
+            drawScore(game.scoreManager().highScore(), "HIGH SCORE", arcadeFont8(), TS(14), TS(1));
         }
 
         if (hud.isLevelCounterVisible()) {
-            RectShort[] bonusSymbols = spriteSheet.spriteSequence(SpriteID.BONUS_SYMBOLS);
-            float x = sceneSize.x() - TS(4), y = sceneSize.y() - TS(2) + 2;
+            final RectShort[] bonusSymbols = spriteSheet.spriteSequence(SpriteID.BONUS_SYMBOLS);
+            float x = sceneSize.x() - TS(4);
+            final float y = sceneSize.y() - TS(2) + 2;
             for (byte symbol : game.levelCounter().symbols()) {
                 drawSprite(bonusSymbols[symbol], x, y, true);
                 x -= TS(2); // symbols are drawn from right to left
@@ -62,13 +66,14 @@ public class ArcadeMsPacMan_HUDRenderer extends BaseRenderer implements SpriteRe
         }
 
         if (hud.isLivesCounterVisible()) {
-            RectShort sprite = spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
-            float x = TS(2), y = sceneSize.y() - TS(2);
+            final RectShort sprite = spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
+            final float x = TS(2);
+            final float y = sceneSize.y() - TS(2);
             for (int i = 0; i < hud.visibleLifeCount(); ++i) {
                 drawSprite(sprite, x + i * TS(2), y, true);
             }
-            int lifeCount = game.lifeCount();
-            if (lifeCount > game.hud().maxLivesDisplayed()) {
+            final int lifeCount = game.lifeCount();
+            if (lifeCount > hud.maxLivesDisplayed()) {
                 // show text indicating that more lives are available than symbols displayed (cheating may cause this)
                 Font hintFont = Font.font("Serif", FontWeight.BOLD, scaled(8));
                 fillText("%d".formatted(lifeCount), ARCADE_YELLOW, hintFont, x - 14, y + TS);

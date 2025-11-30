@@ -10,9 +10,10 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.ScoreManager;
 import de.amr.pacmanfx.tengen.ms_pacman.model.*;
+import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.HUD_Renderer;
+import de.amr.pacmanfx.ui._2d.HUD_Renderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -54,10 +55,11 @@ public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteR
     }
 
     @Override
-    public void drawHUD(Game game, Vector2i sceneSize) {
+    public void drawHUD(Game game, GameScene2D scene) {
         requireNonNull(game);
-        requireNonNull(sceneSize);
+        requireNonNull(scene);
 
+        final Vector2i sceneSize = scene.unscaledSize();
         final var tengenGame = (TengenMsPacMan_GameModel) game;
         final TengenMsPacMan_HUD hud = tengenGame.hud();
 
@@ -75,7 +77,7 @@ public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteR
         }
 
         if (hud.isLevelCounterVisible()) {
-            float y = sceneSize.y() - TS;
+            final float y = sceneSize.y() - TS;
             drawLevelCounter(tengenGame, hud, y);
         }
 

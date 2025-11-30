@@ -5,13 +5,15 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.pacmanfx.lib.RectShort;
+import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.HUD;
 import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.model.ScoreManager;
+import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.HUD_Renderer;
+import de.amr.pacmanfx.ui._2d.HUD_Renderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -45,8 +47,12 @@ public class ArcadePacMan_HUD_Renderer extends BaseRenderer implements SpriteRen
     }
 
     @Override
-    public void drawHUD(Game game, Vector2i sceneSize) {
+    public void drawHUD(Game game, GameScene2D scene) {
+        requireNonNull(game);
+        requireNonNull(scene);
+
         final HUD hud = game.hud();
+        final Vector2i sceneSize = scene.unscaledSize();
 
         if (!hud.isVisible()) return;
 
@@ -58,7 +64,8 @@ public class ArcadePacMan_HUD_Renderer extends BaseRenderer implements SpriteRen
 
         if (hud.isLevelCounterVisible()) {
             final RectShort[] bonusSymbolSprites = spriteSheet.spriteSequence(SpriteID.BONUS_SYMBOLS);
-            float x = sceneSize.x() - TS(4), y = sceneSize.y() - TS(2) + 2;
+            final float y = sceneSize.y() - TS(2) + 2;
+            float x = sceneSize.x() - TS(4);
             for (byte symbol : game.levelCounter().symbols()) {
                 drawSprite(bonusSymbolSprites[symbol], x, y, true);
                 x -= TS(2); // symbols are drawn from right to left
@@ -67,15 +74,16 @@ public class ArcadePacMan_HUD_Renderer extends BaseRenderer implements SpriteRen
 
         if (hud.isLivesCounterVisible()) {
             final RectShort livesCounterSprite = spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
-            final float x = TS(2), y = sceneSize.y() - TS(2);
+            final float x = TS(2);
+            final float y = sceneSize.y() - TS(2);
             for (int i = 0; i < hud.visibleLifeCount(); ++i) {
                 drawSprite(livesCounterSprite, x + i * TS(2), y, true);
             }
             final int lifeCount = game.lifeCount();
             if (lifeCount > hud.maxLivesDisplayed()) {
-                // show text indicating that more lives are available than symbols displayed (cheating may cause this)
-                Font hintFont = Font.font("Serif", FontWeight.BOLD, scaled(8));
-                fillText("%d".formatted(lifeCount), ARCADE_YELLOW, hintFont, x - 14, y + TS);
+                // Show text indicating that more lives are available than symbols displayed (cheating may cause this)
+                final Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
+                fillText("%d".formatted(lifeCount), ARCADE_YELLOW, font, x - 14, y + TS);
             }
         }
 
