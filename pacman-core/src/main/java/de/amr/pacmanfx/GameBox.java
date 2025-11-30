@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx;
 
-import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.Game;
 import javafx.beans.property.IntegerProperty;
@@ -53,11 +52,9 @@ public class GameBox implements GameContext, CoinMechanism {
         if (!DIRECTORY_CHECK_OK) {
             throw new IllegalStateException("User directories could not be created");
         }
-
         gameVariantName.addListener((py, ov, newGameVariant) -> {
             Game newGame = gameByVariantName(newGameVariant);
             newGame.init();
-            newGame.publishGameEvent(GameEvent.Type.GAME_VARIANT_CHANGED);
         });
     }
 

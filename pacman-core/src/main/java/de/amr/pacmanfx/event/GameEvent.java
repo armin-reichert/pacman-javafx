@@ -23,7 +23,6 @@ public class GameEvent {
         GAME_CONTINUED,
         GAME_STARTED,
         GAME_STATE_CHANGED,
-        GAME_VARIANT_CHANGED,
         GHOST_EATEN,
         GHOST_ENTERS_HOUSE,
         GHOST_STARTS_RETURNING_HOME,
