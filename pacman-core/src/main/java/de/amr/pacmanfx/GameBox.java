@@ -20,17 +20,17 @@ import java.util.regex.Pattern;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Container for all game variants.
- * <p>
- * Each game variant is represented by an instance of a game model (see {@link Game}).
- * Scene selection is not controlled by this class but left to the specific user interface implementations.
+ * Contains the games. Each game variant is represented by an instance of a game model (see {@link Game}).
  */
 public class GameBox implements GameContext, CoinMechanism {
 
-    public static final Pattern GAME_VARIANT_PATTERN = Pattern.compile("[a-zA-Z][a-zA-Z_0-9]*");
+    /**
+     * Game variant names must match this pattern (e.g. "MS_PACMAN_2024").
+     */
+    public static final Pattern GAME_VARIANT_NAME_PATTERN = Pattern.compile("[a-zA-Z][a-zA-Z_0-9]*");
 
     /**
-     * Root directory under which user specific files are stored.
+     * Directory under which the user specific files are stored.
      * <p>Default: <code>$HOME/.pacmanfx</code> (Unix) or <code>%USERPROFILE%\.pacmanfx</code> (MS Windows)</p>
      */
     public static final File HOME_DIR = new File(System.getProperty("user.home"), ".pacmanfx");
@@ -44,36 +44,33 @@ public class GameBox implements GameContext, CoinMechanism {
 
     private static final boolean DIRECTORY_CHECK_OK = initUserDirectories();
 
-    private final Map<String, Game> knownGames = new HashMap<>();
+    private final Map<String, Game> gamesByVariantName = new HashMap<>();
 
     private final StringProperty gameVariantName = new SimpleStringProperty();
 
     public GameBox() {
         if (!DIRECTORY_CHECK_OK) {
-            throw new IllegalStateException("User directories could not be created");
+            throw new IllegalStateException("User directory check failed");
         }
-        gameVariantName.addListener((py, ov, newGameVariant) -> {
-            Game newGame = gameByVariantName(newGameVariant);
-            newGame.init();
-        });
+        gameVariantName.addListener((py, ov, newGameVariant) -> gameByVariantName(newGameVariant).init());
     }
 
     /**
-     * @param variant game variant (e.g. "PACMAN", "MS_PACMAN", "MS_PACMAN_TENGEN", "PACMAN_XXL", "MS_PACMAN_XXL"
-     * @param gameModel the game model implementing the game variant
+     * @param variantName game variant name (e.g. "PACMAN", "MS_PACMAN", "MS_PACMAN_TENGEN", "PACMAN_XXL", "MS_PACMAN_XXL")
+     * @param game the game model implementing the game variant
      */
-    public void registerGame(String variant, Game gameModel) {
-        requireNonNull(variant);
-        requireNonNull(gameModel);
-        if (!GAME_VARIANT_PATTERN.matcher(variant).matches()) {
+    public void registerGame(String variantName, Game game) {
+        requireNonNull(variantName);
+        requireNonNull(game);
+        if (!GAME_VARIANT_NAME_PATTERN.matcher(variantName).matches()) {
             throw new IllegalArgumentException(
                     "Game variant name '%s' does not match required syntax '%s'"
-                            .formatted(variant, GAME_VARIANT_PATTERN));
+                            .formatted(variantName, GAME_VARIANT_NAME_PATTERN));
         }
-        Game existing = knownGames.putIfAbsent(variant, gameModel);
-        if (existing != null) {
-            Logger.warn("Game model ({}) already registered for variant {}",
-                    existing.getClass().getName(), variant);
+        final Game previousGameWithThisName = gamesByVariantName.putIfAbsent(variantName, game);
+        if (previousGameWithThisName != null) {
+            Logger.warn("Game ({}) was already registered for variant {}",
+                    previousGameWithThisName.getClass().getName(), variantName);
         }
     }
 
@@ -83,14 +80,14 @@ public class GameBox implements GameContext, CoinMechanism {
 
     public void setGameVariantName(String gameVariantName) {
         requireNonNull(gameVariantName);
-        this.gameVariantName.set(gameVariantName);
+        gameVariantNameProperty().set(gameVariantName);
     }
 
     @SuppressWarnings("unchecked")
     public <T extends Game> T gameByVariantName(String variantName) {
         requireNonNull(variantName);
-        if (knownGames.containsKey(variantName)) {
-            return (T) knownGames.get(variantName);
+        if (gamesByVariantName.containsKey(variantName)) {
+            return (T) gamesByVariantName.get(variantName);
         }
         String errorMessage = "Game variant named '%s' has not been registered!".formatted(variantName);
         Logger.error(errorMessage);

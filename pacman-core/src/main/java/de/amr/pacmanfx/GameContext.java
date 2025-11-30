@@ -6,7 +6,6 @@ package de.amr.pacmanfx;
 
 import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.Game;
-import javafx.beans.property.BooleanProperty;
 
 /**
  * Facade to give access to the main game components.
@@ -19,10 +18,14 @@ public interface GameContext {
     String gameVariantName();
 
     /**
-     * @return the model (in MVC sense) of the currently selected game variant.
-     * @param <T> specific game model type
+     * @return the game model of the currently selected game variant
+     * @param <T> expected game model type
+     * @throws ClassCastException if expected game model type does not match registered type
      */
     <T extends Game> T currentGame();
 
+    /**
+     * @return the coin mechanism of the game box
+     */
     CoinMechanism coinMechanism();
 }

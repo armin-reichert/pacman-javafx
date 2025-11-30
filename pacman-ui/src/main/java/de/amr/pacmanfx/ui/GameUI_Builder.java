@@ -224,8 +224,8 @@ public class GameUI_Builder {
         if (key.isBlank()) {
             error("Game variant key must not be a blank string");
         }
-        if (!GameBox.GAME_VARIANT_PATTERN.matcher(key).matches()) {
-            error("Game variant key '%s' does not match pattern '%s'".formatted(key, GameBox.GAME_VARIANT_PATTERN));
+        if (!GameBox.GAME_VARIANT_NAME_PATTERN.matcher(key).matches()) {
+            error("Game variant key '%s' does not match pattern '%s'".formatted(key, GameBox.GAME_VARIANT_NAME_PATTERN));
         }
     }
 
