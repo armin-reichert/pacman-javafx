@@ -48,7 +48,6 @@ import org.tinylog.Logger;
 import java.util.List;
 import java.util.Set;
 
-import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Actions.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Properties.PROPERTY_PLAY_SCENE_DISPLAY_MODE;
@@ -267,10 +266,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
         });
 
         var miAutopilot = new CheckMenuItem(ui.assets().translated("autopilot"));
-        miAutopilot.selectedProperty().bindBidirectional(THE_GAME_BOX.usingAutopilotProperty());
+        miAutopilot.selectedProperty().bindBidirectional(context().currentGame().usingAutopilotProperty());
 
         var miImmunity = new CheckMenuItem(ui.assets().translated("immunity"));
-        miImmunity.selectedProperty().bindBidirectional(THE_GAME_BOX.immunityProperty());
+        miImmunity.selectedProperty().bindBidirectional(context().currentGame().immunityProperty());
 
         var miMuted = new CheckMenuItem(ui.assets().translated("muted"));
         miMuted.selectedProperty().bindBidirectional(PROPERTY_MUTED);

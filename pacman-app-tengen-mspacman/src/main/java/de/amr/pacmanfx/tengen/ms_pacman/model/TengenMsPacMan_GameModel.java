@@ -179,6 +179,9 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     public void resetEverything() {
+        cheatUsedProperty().set(false);
+        immunityProperty().set(false);
+        usingAutopilotProperty().set(false);
         prepareForNewGame();
         setPacBooster(DEFAULT_PAC_BOOSTER);
         setDifficulty(DEFAULT_DIFFICULTY);

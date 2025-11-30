@@ -34,9 +34,6 @@ public class TengenMsPacMan_GameController extends StateMachine<FsmState<GameCon
             @Override
             public void onEnter(GameContext context) {
                 timer.restartIndefinitely();
-                context.cheatUsedProperty().set(false);
-                context.immunityProperty().set(false);
-                context.usingAutopilotProperty().set(false);
                 context.currentGame().resetEverything();
             }
 
@@ -113,10 +110,10 @@ public class TengenMsPacMan_GameController extends StateMachine<FsmState<GameCon
                 }
                 else if (timer.tickCount() == TICK_SHOW_READY) {
                     if (!game.level().isDemoLevel()) {
-                        game.level().pac().immuneProperty().bind(context.immunityProperty());
-                        game.level().pac().usingAutopilotProperty().bind(context.usingAutopilotProperty());
-                        boolean cheating = context.immunityProperty().get() || context.usingAutopilotProperty().get();
-                        context.cheatUsedProperty().set(cheating);
+                        game.level().pac().immuneProperty().bind(game.immunityProperty());
+                        game.level().pac().usingAutopilotProperty().bind(game.usingAutopilotProperty());
+                        boolean cheating = game.immunity() || game.usingAutopilot();
+                        game.cheatUsedProperty().set(cheating);
                     }
                     game.startLevel();
                 }
@@ -365,8 +362,9 @@ public class TengenMsPacMan_GameController extends StateMachine<FsmState<GameCon
 
             @Override
             public void onExit(GameContext context) {
-                context.currentGame().optGameLevel().ifPresent(GameLevel::clearMessage);
-                context.cheatUsedProperty().set(false);
+                final Game game = context.currentGame();
+                game.optGameLevel().ifPresent(GameLevel::clearMessage);
+                game.cheatUsedProperty().set(false);
             }
         },
 

@@ -97,8 +97,9 @@ public final class CommonGameActions {
     public static final GameAction ACTION_QUIT_GAME_SCENE = new GameAction("QUIT_GAME_SCENE") {
         @Override
         public void execute(GameUI ui) {
+            final Game game = ui.context().currentGame();
+            game.cheatUsedProperty().set(false);
             ui.quitCurrentGameScene();
-            ui.context().cheatUsedProperty().set(false);
         }
     };
 

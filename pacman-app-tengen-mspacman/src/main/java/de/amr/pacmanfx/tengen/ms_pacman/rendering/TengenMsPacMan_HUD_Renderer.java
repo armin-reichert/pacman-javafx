@@ -28,6 +28,9 @@ import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteRenderer, HUD_Renderer {
 
+    private static final Color SCORE_TEXT_COLOR = nesColor(0x20);
+    private static final Color SCORE_TEXT_COLOR_DISABLED = nesColor(0x16);
+
     private final GameClock clock;
     private final TengenMsPacMan_SpriteSheet spriteSheet;
 
@@ -57,7 +60,7 @@ public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteR
         if (!tengenHUD.isVisible()) return;
 
         if (tengenHUD.isScoreVisible()) {
-            drawScores(tengenGame.scoreManager(), clock.tickCount(), nesColor(0x20), arcadeFont8());
+            drawScores(tengenGame.scoreManager(), clock.tickCount(), arcadeFont8());
         }
 
         if (tengenHUD.isLivesCounterVisible()) {
@@ -74,12 +77,14 @@ public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteR
         }
     }
 
-    private void drawScores(ScoreManager scoreManager, long tick, Color color, Font font) {
+    private void drawScores(ScoreManager scoreManager, long tick, Font font) {
         if (tick % 60 < 30) { // show for 0.5 seconds, hide for 0.5 seconds
-            fillText("1UP", color, font, TS(4), TS(1));
+            fillText("1UP", SCORE_TEXT_COLOR, font, TS(4), TS(1));
         }
+        fillText("%6d".formatted(scoreManager.score().points()), SCORE_TEXT_COLOR, font, TS(2), TS(2));
+
+        final Color color = scoreManager.highScore().isEnabled() ? SCORE_TEXT_COLOR : SCORE_TEXT_COLOR_DISABLED;
         fillText("HIGH SCORE", color, font, TS(11), TS(1));
-        fillText("%6d".formatted(scoreManager.score().points()), color, font, TS(2), TS(2));
         fillText("%6d".formatted(scoreManager.highScore().points()), color, font, TS(13), TS(2));
     }
 

@@ -7,8 +7,10 @@ package de.amr.pacmanfx;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.Score;
-import javafx.beans.property.*;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -45,9 +47,6 @@ public class GameBox implements GameContext, CoinMechanism {
 
     private final Map<String, Game> knownGames = new HashMap<>();
 
-    private final BooleanProperty cheatUsed = new SimpleBooleanProperty(false);
-    private final BooleanProperty immunity = new SimpleBooleanProperty(false);
-    private final BooleanProperty usingAutopilot = new SimpleBooleanProperty(false);
     private final StringProperty gameVariantName = new SimpleStringProperty();
 
     private boolean eventsEnabled;
@@ -59,18 +58,9 @@ public class GameBox implements GameContext, CoinMechanism {
 
         gameVariantName.addListener((py, ov, newGameVariant) -> {
             if (eventsEnabled) {
-                Game newGame = game(newGameVariant);
+                Game newGame = gameByVariantName(newGameVariant);
                 newGame.init();
                 newGame.publishGameEvent(GameEvent.Type.GAME_VARIANT_CHANGED);
-            }
-        });
-
-        cheatUsed.addListener((py, ov, cheated) -> {
-            if (cheated) {
-                Score highScore = currentGame().scoreManager().highScore();
-                if (highScore.isEnabled()) {
-                    highScore.setEnabled(false);
-                }
             }
         });
     }
@@ -108,7 +98,7 @@ public class GameBox implements GameContext, CoinMechanism {
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends Game> T game(String variantName) {
+    public <T extends Game> T gameByVariantName(String variantName) {
         requireNonNull(variantName);
         if (knownGames.containsKey(variantName)) {
             return (T) knownGames.get(variantName);
@@ -125,7 +115,7 @@ public class GameBox implements GameContext, CoinMechanism {
 
     @Override
     public <G extends Game> G currentGame() {
-        G game = game(gameVariantName.get());
+        G game = gameByVariantName(gameVariantName.get());
         if (game != null) {
             return game;
         }
@@ -170,22 +160,6 @@ public class GameBox implements GameContext, CoinMechanism {
             setNumCoins(numCoins() - 1);
         }
     }
-
-    @Override
-    public BooleanProperty cheatUsedProperty() {
-        return cheatUsed;
-    }
-
-    @Override
-    public BooleanProperty immunityProperty() {
-        return immunity;
-    }
-
-    @Override
-    public BooleanProperty usingAutopilotProperty() {
-        return usingAutopilot;
-    }
-
 
     // other stuff
 

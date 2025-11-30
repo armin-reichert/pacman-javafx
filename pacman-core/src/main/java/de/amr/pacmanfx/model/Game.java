@@ -9,6 +9,7 @@ import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.actors.Ghost;
+import javafx.beans.property.BooleanProperty;
 
 import java.util.Optional;
 
@@ -131,4 +132,23 @@ public interface Game {
     // Cut scenes
     boolean cutScenesEnabled();
     void setCutScenesEnabled(boolean enabled);
+
+    // Cheating
+    BooleanProperty cheatUsedProperty();
+
+    default boolean cheatUsed() {
+        return cheatUsedProperty().get();
+    }
+
+    BooleanProperty immunityProperty();
+
+    default boolean immunity() {
+        return immunityProperty().get();
+    }
+
+    BooleanProperty usingAutopilotProperty();
+
+    default boolean usingAutopilot() {
+        return usingAutopilotProperty().get();
+    }
 }

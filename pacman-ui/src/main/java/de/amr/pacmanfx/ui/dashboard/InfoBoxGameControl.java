@@ -11,7 +11,6 @@ import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.ui.action.TestActions;
 import de.amr.pacmanfx.ui.api.GameUI;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Spinner;
 
@@ -41,8 +40,6 @@ public class InfoBoxGameControl extends InfoBox {
     private ChoiceBox<Integer> choiceBoxInitialLives;
     private Button[] buttonGroupLevelActions;
     private Button[] buttonGroupCutScenesTest;
-    private CheckBox cbAutopilot;
-    private CheckBox cbImmunity;
 
     public InfoBoxGameControl(GameUI ui) {
         super(ui);
@@ -54,8 +51,6 @@ public class InfoBoxGameControl extends InfoBox {
         choiceBoxInitialLives    = addChoiceBox("Initial Lives", new Integer[] {3, 5});
         buttonGroupLevelActions  = addButtonList("Game Level", List.of("Start", "Quit", "Next"));
         buttonGroupCutScenesTest = addButtonList("Cut Scenes Test", List.of("Start", "Quit"));
-        cbAutopilot              = addCheckBox("Autopilot", THE_GAME_BOX.usingAutopilotProperty());
-        cbImmunity               = addCheckBox("Pac-Man Immune", THE_GAME_BOX.immunityProperty());
 
         setAction(buttonGroupCutScenesTest[CUT_SCENES_TEST_START], TestActions.ACTION_CUT_SCENES_TEST);
         setAction(buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT], ACTION_RESTART_INTRO);
@@ -83,9 +78,6 @@ public class InfoBoxGameControl extends InfoBox {
 
         buttonGroupCutScenesTest[CUT_SCENES_TEST_START].setDisable(isBooting() || !state.name().equals("INTRO"));
         buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT].setDisable(isBooting() || !(state instanceof CutScenesTestState));
-
-        cbAutopilot.setDisable(isBooting());
-        cbImmunity.setDisable(isBooting());
     }
 
     private boolean isBooting() {

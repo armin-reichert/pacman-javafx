@@ -25,6 +25,9 @@ import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_HUDRenderer extends BaseRenderer implements SpriteRenderer, HUD_Renderer {
 
+    private static final Color SCORE_TEXT_COLOR = ARCADE_WHITE;
+    private static final Color SCORE_TEXT_COLOR_DISABLED = Color.RED;
+
     private final ArcadeMsPacMan_SpriteSheet spriteSheet;
 
     public ArcadeMsPacMan_HUDRenderer(Canvas canvas, ArcadeMsPacMan_SpriteSheet spriteSheet) {
@@ -76,7 +79,7 @@ public class ArcadeMsPacMan_HUDRenderer extends BaseRenderer implements SpriteRe
     }
 
     private void drawScore(Score score, String title, Font font, double x, double y) {
-        Color color = ARCADE_WHITE;
+        Color color = score.isEnabled() ? SCORE_TEXT_COLOR : SCORE_TEXT_COLOR_DISABLED;
         fillText(title, color, font, x, y);
         fillText("%7s".formatted("%02d".formatted(score.points())), color, font, x, y + TS + 1);
         if (score.points() != 0) {

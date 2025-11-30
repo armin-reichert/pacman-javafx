@@ -25,10 +25,4 @@ public interface GameContext {
     <T extends Game> T currentGame();
 
     CoinMechanism coinMechanism();
-
-    BooleanProperty cheatUsedProperty();
-
-    BooleanProperty immunityProperty();
-
-    BooleanProperty usingAutopilotProperty();
 }

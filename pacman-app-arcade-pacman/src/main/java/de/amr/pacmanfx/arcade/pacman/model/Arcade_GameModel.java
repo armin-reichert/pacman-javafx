@@ -176,6 +176,9 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         prepareForNewGame();
         levelCounter().clear();
         hud().all(false);
+        cheatUsedProperty().set(false);
+        immunityProperty().set(false);
+        usingAutopilotProperty().set(false);
     }
 
     @Override

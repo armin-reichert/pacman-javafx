@@ -30,6 +30,7 @@ public class ArcadePacMan_HUD_Renderer extends BaseRenderer implements SpriteRen
     public static final String CREDIT_TEXT_PATTERN = "CREDIT %2d";
 
     private static final Color SCORE_TEXT_COLOR = ARCADE_WHITE;
+    private static final Color SCORE_TEXT_COLOR_DISABLED = Color.RED;
 
     private final ArcadePacMan_SpriteSheet spriteSheet;
 
@@ -82,10 +83,11 @@ public class ArcadePacMan_HUD_Renderer extends BaseRenderer implements SpriteRen
     }
 
     private void drawScore(Score score, String title, Font font, double x, double y) {
-        fillText(title, SCORE_TEXT_COLOR, font, x, y);
-        fillText("%7s".formatted("%02d".formatted(score.points())), SCORE_TEXT_COLOR, font, x, y + TS + 1);
+        Color color = score.isEnabled() ? SCORE_TEXT_COLOR : SCORE_TEXT_COLOR_DISABLED;
+        fillText(title, color, font, x, y);
+        fillText("%7s".formatted("%02d".formatted(score.points())), color, font, x, y + TS + 1);
         if (score.points() != 0) {
-            fillText("L" + score.levelNumber(), SCORE_TEXT_COLOR, font, x + TS(8), y + TS + 1);
+            fillText("L" + score.levelNumber(), color, font, x + TS(8), y + TS + 1);
         }
     }
 }

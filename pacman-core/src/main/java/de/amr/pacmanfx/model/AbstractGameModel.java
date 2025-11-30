@@ -28,6 +28,12 @@ public abstract class AbstractGameModel implements Game {
 
     private static final CollisionStrategy DEFAULT_COLLISION_STRATEGY = CollisionStrategy.SAME_TILE;
 
+    private final BooleanProperty cheatUsed = new SimpleBooleanProperty(false);
+
+    private final BooleanProperty immunity = new SimpleBooleanProperty(false);
+
+    private final BooleanProperty usingAutopilot = new SimpleBooleanProperty(false);
+
     private final ObjectProperty<CollisionStrategy> collisionStrategy = new SimpleObjectProperty<>(DEFAULT_COLLISION_STRATEGY);
 
     private final BooleanProperty cutScenesEnabled = new SimpleBooleanProperty(true);
@@ -45,6 +51,17 @@ public abstract class AbstractGameModel implements Game {
     protected final ScoreManager scoreManager = new ScoreManager(this);
 
     protected GameControl gameControl;
+
+    protected AbstractGameModel() {
+        cheatUsedProperty().addListener((py, ov, cheated) -> {
+            if (cheated) {
+                Score highScore = scoreManager.highScore();
+                if (highScore.isEnabled()) {
+                    highScore.setEnabled(false);
+                }
+            }
+        });
+    }
 
     public void setGameControl(GameControl gameControl) {
         this.gameControl = requireNonNull(gameControl);
@@ -76,6 +93,22 @@ public abstract class AbstractGameModel implements Game {
     protected abstract void resetPacManAndGhostAnimations(GameLevel gameLevel);
 
     // Game interface
+
+    @Override
+    public BooleanProperty cheatUsedProperty() {
+        return cheatUsed;
+    }
+
+    @Override
+    public BooleanProperty immunityProperty() {
+        return immunity;
+    }
+
+    @Override
+    public BooleanProperty usingAutopilotProperty() {
+        return usingAutopilot;
+    }
+
 
     @Override
     public final GameControl control() {
