@@ -392,13 +392,13 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         scenesByID.put(SCENE_ID_BOOT_SCENE,    new TengenMsPacMan_BootScene(ui));
         scenesByID.put(SCENE_ID_INTRO_SCENE,   new TengenMsPacMan_IntroScene(ui));
         scenesByID.put(SCENE_ID_START_SCENE,   new TengenMsPacMan_OptionsScene(ui));
-        scenesByID.put(SCENE_ID_HALL_OF_FAME, new TengenMsPacMan_CreditsScene(ui));
-        scenesByID.put(SCENE_ID_PLAY_SCENE_2D,    new TengenMsPacMan_PlayScene2D(ui));
-        scenesByID.put(SCENE_ID_PLAY_SCENE_3D,    new TengenMsPacMan_PlayScene3D(ui));
-        scenesByID.put(sceneID_CutScene(1),       new TengenMsPacMan_CutScene1(ui));
-        scenesByID.put(sceneID_CutScene(2),       new TengenMsPacMan_CutScene2(ui));
-        scenesByID.put(sceneID_CutScene(3),       new TengenMsPacMan_CutScene3(ui));
-        scenesByID.put(sceneID_CutScene(4),       new TengenMsPacMan_CutScene4(ui));
+        scenesByID.put(SCENE_ID_HALL_OF_FAME,  new TengenMsPacMan_CreditsScene(ui));
+        scenesByID.put(SCENE_ID_PLAY_SCENE_2D, new TengenMsPacMan_PlayScene2D(ui));
+        scenesByID.put(SCENE_ID_PLAY_SCENE_3D, new TengenMsPacMan_PlayScene3D(ui));
+        scenesByID.put(sceneID_CutScene(1),    new TengenMsPacMan_CutScene1(ui));
+        scenesByID.put(sceneID_CutScene(2),    new TengenMsPacMan_CutScene2(ui));
+        scenesByID.put(sceneID_CutScene(3),    new TengenMsPacMan_CutScene3(ui));
+        scenesByID.put(sceneID_CutScene(4),    new TengenMsPacMan_CutScene4(ui));
     }
 
     @Override

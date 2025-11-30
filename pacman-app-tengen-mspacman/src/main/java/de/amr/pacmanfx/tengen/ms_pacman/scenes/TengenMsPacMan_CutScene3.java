@@ -28,6 +28,7 @@ import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
+import static de.amr.pacmanfx.ui._2d.GameScene2D_Renderer.configureRendererForGameScene;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_LET_GAME_STATE_EXPIRE;
 
 /**
@@ -62,8 +63,15 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
     protected void createRenderers(Canvas canvas) {
         final GameUI_Config uiConfig = ui.currentConfig();
 
-        hudRenderer = GameScene2D_Renderer.configureRendererForGameScene(
-            (TengenMsPacMan_HUD_Renderer) uiConfig.createHUDRenderer(canvas), this);
+        if (context().<TengenMsPacMan_GameModel>currentGame().mapCategory() == MapCategory.ARCADE) {
+            hudRenderer = null;
+        }
+        else {
+            hudRenderer = configureRendererForGameScene(
+                (TengenMsPacMan_HUD_Renderer) uiConfig.createHUDRenderer(canvas),
+                this);
+            hudRenderer.setOffsetY(-2*TS);
+        }
 
         sceneRenderer = GameScene2D_Renderer.configureRendererForGameScene(
             new TengenMsPacMan_CutScene3_Renderer(this, canvas), this);
@@ -197,16 +205,5 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
     }
 
     @Override
-    public Vector2i sizeInPx() { return NES_SIZE_PX; }
-
-    @Override
-    public void draw() {
-        sceneRenderer.draw(this);
-        if (hudRenderer != null) {
-            var game = context().<TengenMsPacMan_GameModel>currentGame();
-            if (game.mapCategory() != MapCategory.ARCADE) {
-                hudRenderer.drawHUD(context().currentGame(), game.hud(), sizeInPx().minus(0, 2 * TS));
-            }
-        }
-    }
+    public Vector2i unscaledSize() { return NES_SIZE_PX; }
 }

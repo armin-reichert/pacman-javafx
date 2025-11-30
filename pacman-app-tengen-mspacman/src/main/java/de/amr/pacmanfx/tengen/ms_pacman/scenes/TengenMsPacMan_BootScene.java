@@ -46,7 +46,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     }
 
     @Override
-    protected HUD_Renderer hudRenderer() {
+    public HUD_Renderer hudRenderer() {
         return null;
     }
 
@@ -58,7 +58,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     @Override
     public void doInit() {
         movingText = new Actor();
-        movingText.setPosition(TS(9), sizeInPx().y()); // lower border of screen
+        movingText.setPosition(TS(9), unscaledSize().y()); // lower border of screen
 
         final GameUI_Config uiConfig = ui.currentConfig();
         ghost = uiConfig.createAnimatedGhost(RED_GHOST_SHADOW);
@@ -84,7 +84,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
                 movingText.setVelocity(Vector2f.ZERO);
             }
             case 113 -> {
-                ghost.setPosition(sizeInPx().x() - TS, GHOST_Y);
+                ghost.setPosition(unscaledSize().x() - TS, GHOST_Y);
                 ghost.setMoveDir(Direction.LEFT);
                 ghost.setWishDir(Direction.LEFT);
                 ghost.setSpeed(TS);
@@ -107,7 +107,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     }
 
     @Override
-    public Vector2i sizeInPx() {
+    public Vector2i unscaledSize() {
         return NES_SIZE_PX;
     }
 

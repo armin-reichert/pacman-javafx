@@ -37,12 +37,11 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
     @Override
     protected void createRenderers(Canvas canvas) {
-        sceneRenderer = configureRendererForGameScene(
-            new TengenMsPacMan_CreditsScene_Renderer(this, canvas), this);
+        sceneRenderer = configureRendererForGameScene(new TengenMsPacMan_CreditsScene_Renderer(this, canvas), this);
     }
 
     @Override
-    protected HUD_Renderer hudRenderer() {
+    public HUD_Renderer hudRenderer() {
         return null;
     }
 
@@ -54,9 +53,9 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
     @Override
     protected void doInit() {
         context().currentGame().hud().creditVisible(false).scoreVisible(false).levelCounterVisible(false).livesCounterVisible(false);
-
         Set<ActionBinding> tengenActionBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().tengenActionBindings();
         actionBindings.bind(ACTION_ENTER_START_SCREEN, tengenActionBindings);
+        fadeProgress = 0;
     }
 
     @Override
@@ -75,5 +74,5 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
     }
 
     @Override
-    public Vector2i sizeInPx() { return NES_SIZE_PX; }
+    public Vector2i unscaledSize() { return NES_SIZE_PX; }
 }

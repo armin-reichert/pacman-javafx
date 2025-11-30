@@ -177,11 +177,6 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
     }
 
     @Override
-    public void handleKeyboardInput() {
-        actionBindings.matchingAction(ui.keyboard()).ifPresent(gameAction -> gameAction.executeIfEnabled(ui));
-    }
-
-    @Override
     public void handleScrollEvent(ScrollEvent e) {
         if (e.getDeltaY() < 0) {
             actionDroneUp.executeIfEnabled(ui);
@@ -193,11 +188,6 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
     @Override
     public GameUI ui() {
         return ui;
-    }
-
-    @Override
-    public GameContext context() {
-        return ui.context();
     }
 
     @Override
@@ -524,11 +514,6 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
     @Override
     public void onSpecialScoreReached(GameEvent e) {
         ui.soundManager().play(SoundID.EXTRA_LIFE);
-    }
-
-    @Override
-    public void onStopAllSounds(GameEvent event) {
-        ui.soundManager().stopAll();
     }
 
     @Override

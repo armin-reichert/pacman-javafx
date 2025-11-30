@@ -61,8 +61,15 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     protected void createRenderers(Canvas canvas) {
         final GameUI_Config uiConfig = ui.currentConfig();
 
-        hudRenderer = configureRendererForGameScene(
-            (TengenMsPacMan_HUD_Renderer) uiConfig.createHUDRenderer(canvas), this);
+        if (context().<TengenMsPacMan_GameModel>currentGame().mapCategory() == MapCategory.ARCADE) {
+            hudRenderer = null;
+        }
+        else {
+            hudRenderer = configureRendererForGameScene(
+                (TengenMsPacMan_HUD_Renderer) uiConfig.createHUDRenderer(canvas),
+                this);
+            hudRenderer.setOffsetY(-2*TS);
+        }
 
         sceneRenderer = configureRendererForGameScene(
             new TengenMsPacMan_CutScene4_Renderer(this, canvas), this);
@@ -197,7 +204,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     private void spawnJunior(int tick) {
         var junior = new PacMan();
         double randomX = 8 * TS + (8 * TS) * Math.random();
-        junior.setPosition((float) randomX, sizeInPx().y() - 4 * TS);
+        junior.setPosition((float) randomX, unscaledSize().y() - 4 * TS);
         junior.setMoveDir(Direction.UP);
         junior.setSpeed(2);
         junior.setAnimationManager(ui.currentConfig().createPacAnimations());
@@ -220,11 +227,11 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
             computeNewMoveDir(junior);
         }
         junior.move();
-        if (junior.x() > sizeInPx().x()) {
+        if (junior.x() > unscaledSize().x()) {
             junior.setX(0);
         }
         if (junior.x() < 0) {
-            junior.setX(sizeInPx().x());
+            junior.setX(unscaledSize().x());
         }
     }
 
@@ -232,33 +239,21 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         Direction oldMoveDir = junior.moveDir();
         List<Direction> possibleDirs = new ArrayList<>(List.of(Direction.values()));
         possibleDirs.remove(oldMoveDir.opposite());
-        List<Direction> dirsByMinCenterDist = possibleDirs.stream().sorted((d1, d2) -> bySmallestDistanceToToCenter(junior, d1, d2)).toList();
+        List<Direction> dirsByMinCenterDist = possibleDirs.stream().sorted(
+            (d1, d2) -> compareBySmallestDistToSceneCenter(junior, d1, d2)).toList();
         Direction bestDir = dirsByMinCenterDist.getFirst();
         Direction randomDir = possibleDirs.get(randomInt(0, possibleDirs.size()));
         boolean chooseBestDir = randomInt(0, 100) < 40;
         junior.setMoveDir(chooseBestDir ? bestDir : randomDir);
     }
 
-    private int bySmallestDistanceToToCenter(Pac junior, Direction dir1, Direction dir2) {
+    private int compareBySmallestDistToSceneCenter(Pac junior, Direction dir1, Direction dir2) {
         Vector2f pos1 = junior.tile().plus(dir1.vector()).scaled(TS).toVector2f();
         Vector2f pos2 = junior.tile().plus(dir2.vector()).scaled(TS).toVector2f();
-        Vector2f center = sizeInPx().scaled(0.5);
-        double dist1 = pos1.euclideanDist(center), dist2 = pos2.euclideanDist(center);
-        return Double.compare(dist1, dist2);
+        Vector2f center = unscaledSize().scaled(0.5);
+        return Double.compare(pos1.euclideanDist(center), pos2.euclideanDist(center));
     }
 
     @Override
-    public Vector2i sizeInPx() { return NES_SIZE_PX; }
-
-    @Override
-    public void draw() {
-        sceneRenderer.draw(this);
-        if (hudRenderer != null) {
-            // draw HUD only for non-Arcade map mode
-            var game = context().<TengenMsPacMan_GameModel>currentGame();
-            if (game.mapCategory() != MapCategory.ARCADE) {
-                hudRenderer.drawHUD(context().currentGame(), game.hud(), sizeInPx().minus(0, 2 * TS));
-            }
-        }
-    }
+    public Vector2i unscaledSize() { return NES_SIZE_PX; }
 }

@@ -83,6 +83,11 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
 
     private LevelCompletedAnimation levelCompletedAnimation;
 
+    // Context menu
+    private ToggleGroup toggleGroup;
+    private RadioMenuItem miScrolling;
+    private RadioMenuItem miScaledToFit;
+
     public TengenMsPacMan_PlayScene2D(GameUI ui) {
         super(ui);
 
@@ -230,12 +235,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
         });
     }
 
-    // Context menu
-
-    private ToggleGroup toggleGroup;
-    private RadioMenuItem miScrolling;
-    private RadioMenuItem miScaledToFit;
-
     private void handlePlaySceneDisplayModeChange(
         ObservableValue<? extends SceneDisplayMode> property, SceneDisplayMode oldMode, SceneDisplayMode newMode) {
         toggleGroup.selectToggle(newMode == SCROLLING ? miScrolling : miScaledToFit);
@@ -295,7 +294,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
     }
 
     @Override
-    public Vector2i sizeInPx() {
+    public Vector2i unscaledSize() {
         return context().currentGame().optGameLevel().map(gameLevel -> gameLevel.worldMap().terrainLayer().sizeInPixel()).orElse(NES_SIZE_PX);
     }
 
@@ -465,10 +464,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
         levelCompletedAnimation.playFromStart();
     }
 
-    private void startGameOverMessageAnimation(GameLevelMessage gameOverMessage) {
-        if (gameOverMessage instanceof MovingGameLevelMessage movingMessage) {
+    private void startGameOverMessageAnimation(GameLevelMessage message) {
+        if (message instanceof MovingGameLevelMessage movingMessage) {
             double messageWidth = Ufx.textWidth(GAME_OVER_MESSAGE_TEXT, GAME_OVER_MESSAGE_FONT);
-            movingMessage.startMovement(sizeInPx().x(), messageWidth);
+            movingMessage.startMovement(unscaledSize().x(), messageWidth);
         }
     }
 }

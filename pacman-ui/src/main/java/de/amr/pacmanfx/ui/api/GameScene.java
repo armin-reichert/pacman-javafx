@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.api;
 
 import de.amr.pacmanfx.GameContext;
+import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameEventListener;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -20,11 +21,16 @@ public interface GameScene extends GameEventListener {
 
     GameUI ui();
 
-    GameContext context();
+    default GameContext context() {
+        return ui().context();
+    }
 
     ActionBindingsManager actionBindings();
 
-    void handleKeyboardInput();
+    default void handleKeyboardInput() {
+        actionBindings().matchingAction(ui().keyboard()).ifPresent(
+            gameAction -> gameAction.executeIfEnabled(ui()));
+    }
 
     default void handleScrollEvent(ScrollEvent e) {}
 
@@ -42,6 +48,9 @@ public interface GameScene extends GameEventListener {
      * Called when the scene ends and gets replaced by another scene.
      */
     void end();
+
+    @Override
+    default void onStopAllSounds(GameEvent event) { ui().soundManager().stopAll(); }
 
     /**
      * Called when scene variants for 2D and 3D exist and variant changes between 2D and 3D.

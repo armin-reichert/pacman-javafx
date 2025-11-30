@@ -137,7 +137,7 @@ public class InfoBox3DSettings extends InfoBox {
         final Game game = ui.context().currentGame();
         final GameScene gameScene = ui.currentGameScene().get();
         if (gameScene instanceof GameScene2D gameScene2D) {
-            final Vector2i size = gameScene2D.sizeInPx();
+            final Vector2i size = gameScene2D.unscaledSize();
             final Vector2f scaledSize = size.scaled(gameScene2D.scaling());
             return "%dx%d (scaled: %.0fx%.0f)".formatted(size.x(), size.y(), scaledSize.x(), scaledSize.y());
         }

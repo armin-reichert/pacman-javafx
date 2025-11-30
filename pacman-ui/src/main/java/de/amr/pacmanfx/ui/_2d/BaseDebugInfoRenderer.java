@@ -46,7 +46,7 @@ public class BaseDebugInfoRenderer extends GameScene2D_Renderer {
         ctx.setFont(debugTextFont);
         ctx.fillText(stateText, 0, scaled(3 * TS));
 
-        final Vector2i size = scene.sizeInPx();
+        final Vector2i size = scene.unscaledSize();
         drawTileGrid(size.x(), size.y(), Color.LIGHTGRAY);
     }
 

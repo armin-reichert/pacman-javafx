@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._2d;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.math.Vector2i;
@@ -61,15 +60,14 @@ public abstract class GameScene2D implements GameScene {
      */
     protected abstract void createRenderers(Canvas canvas);
 
-    @Override
-    public GameUI ui() {
-        return ui;
-    }
+    public abstract GameScene2D_Renderer sceneRenderer();
+
+    public abstract HUD_Renderer hudRenderer();
+
+    // GameScene interface
 
     @Override
-    public GameContext context() {
-        return ui.context();
-    }
+    public ActionBindingsManager actionBindings() { return actionBindings; }
 
     @Override
     public final void init() {
@@ -86,8 +84,14 @@ public abstract class GameScene2D implements GameScene {
     }
 
     @Override
-    public void handleKeyboardInput() {
-        actionBindings.matchingAction(ui.keyboard()).ifPresent(gameAction -> gameAction.executeIfEnabled(ui));
+    public void onUnspecifiedChange(GameEvent event) {
+        // TODO: remove (this is only used by game state GameState.TESTING_CUT_SCENES)
+        ui.updateGameScene(true);
+    }
+
+    @Override
+    public GameUI ui() {
+        return ui;
     }
 
     public void setCanvas(Canvas canvas) {
@@ -95,20 +99,10 @@ public abstract class GameScene2D implements GameScene {
         createRenderers(canvas);
     }
 
+    // other methods
+
     public Canvas canvas() {
         return canvas;
-    }
-
-    @Override
-    public ActionBindingsManager actionBindings() { return actionBindings; }
-
-    @Override
-    public void onStopAllSounds(GameEvent event) { ui.soundManager().stopAll(); }
-
-    @Override
-    public void onUnspecifiedChange(GameEvent event) {
-        // TODO: remove (this is only used by game state GameState.TESTING_CUT_SCENES)
-        ui.updateGameScene(true);
     }
 
     public ObjectProperty<Paint> backgroundProperty() {
@@ -146,30 +140,11 @@ public abstract class GameScene2D implements GameScene {
     /**
      * @return (unscaled) scene size in pixels e.g. 224x288 for Arcade scenes
      */
-    public Vector2i sizeInPx() {
+    public Vector2i unscaledSize() {
         return Globals.ARCADE_MAP_SIZE_IN_PIXELS;
     }
 
-    protected abstract GameScene2D_Renderer sceneRenderer();
-
-    protected abstract HUD_Renderer hudRenderer();
-
     protected <T extends Renderer> T configureRenderer(T renderer) {
         return GameScene2D_Renderer.configureRendererForGameScene(renderer, this);
-    }
-
-    /**
-     * Draws this scene into the canvas.
-     */
-    public void draw() {
-        if (sceneRenderer() != null) {
-            sceneRenderer().draw(this);
-        }
-        else {
-            throw new IllegalStateException("No scene renderer exists for 2D game scene '%s'".formatted(this));
-        }
-        if (hudRenderer() != null) {
-            hudRenderer().drawHUD(context().currentGame(), context().currentGame().hud(), sizeInPx());
-        }
     }
 }
