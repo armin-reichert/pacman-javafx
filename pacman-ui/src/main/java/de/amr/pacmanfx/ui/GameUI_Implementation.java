@@ -8,6 +8,7 @@ import de.amr.pacmanfx.GameBox;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.SimulationStepResult;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.action.ActionBinding;
@@ -76,9 +77,6 @@ public final class GameUI_Implementation implements GameUI {
         new ActionBinding(CheatActions.ACTION_ADD_LIVES,           alt(KeyCode.L)),
         new ActionBinding(CheatActions.ACTION_ENTER_NEXT_LEVEL,    alt(KeyCode.N)),
         new ActionBinding(CheatActions.ACTION_KILL_GHOSTS,         alt(KeyCode.X)),
-
-//        new ActionBinding(ArcadeActions.ACTION_INSERT_COIN,        bare(KeyCode.DIGIT5), bare(KeyCode.NUMPAD5)),
-//        new ActionBinding(ArcadeActions.ACTION_START_GAME,         bare(KeyCode.DIGIT1), bare(KeyCode.NUMPAD1)),
 
         new ActionBinding(ACTION_BOOT_SHOW_PLAY_VIEW,              bare(KeyCode.F3)),
         new ActionBinding(ACTION_ENTER_FULLSCREEN,                 bare(KeyCode.F11)),
@@ -552,9 +550,10 @@ public final class GameUI_Implementation implements GameUI {
     @Override
     public void showPlayView() {
         selectView(playView());
-        statusIconBox.iconAutopilot().visibleProperty().bind(context().currentGame().usingAutopilotProperty());
-        statusIconBox.iconCheated()  .visibleProperty().bind(context().currentGame().cheatUsedProperty());
-        statusIconBox.iconImmune()   .visibleProperty().bind(context().currentGame().immunityProperty());
+        final Game game = context().currentGame();
+        statusIconBox.iconAutopilot().visibleProperty().bind(game.usingAutopilotProperty());
+        statusIconBox.iconCheated()  .visibleProperty().bind(game.cheatUsedProperty());
+        statusIconBox.iconImmune()   .visibleProperty().bind(game.immunityProperty());
     }
 
     @Override

@@ -27,7 +27,7 @@ import javafx.util.Duration;
 import java.util.Optional;
 import java.util.Set;
 
-public interface GameUI extends GameUI_Lifecycle {
+public interface GameUI {
 
     ObjectProperty<Color>         PROPERTY_CANVAS_BACKGROUND_COLOR = new SimpleObjectProperty<>(Color.BLACK);
     BooleanProperty               PROPERTY_CANVAS_FONT_SMOOTHING = new SimpleBooleanProperty(false);
@@ -164,5 +164,34 @@ public interface GameUI extends GameUI_Lifecycle {
      * @param <T> type of UI configuration
      */
     <T extends GameUI_Config> T currentConfig();
+
+    // Lifecycle
+
+    /**
+     * Leaves the current game scene (if any) and displays the start page for the current game.
+     */
+    void quitCurrentGameScene();
+
+    /**
+     * Resets the game clock to normal speed and shows the boot screen for the selected game.
+     */
+    void restart();
+
+    /**
+     * Shows the start page for the given game variant, loads its resources and initializes the game model.
+     *
+     * @param gameVariant game variant name ("PACMAN", "MS_PACMAN" etc.)
+     */
+    void selectGameVariant(String gameVariant);
+
+    /**
+     * Shows the UI and displays the start page view.
+     */
+    void showUI();
+
+    /**
+     * Terminates the game and stops the game clock. Called when the application is terminated by closing the stage.
+     */
+    void terminate();
 
 }
