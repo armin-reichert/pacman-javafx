@@ -6,11 +6,14 @@ package de.amr.pacmanfx;
 
 import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.Game;
+import javafx.beans.property.StringProperty;
 
 /**
  * Facade to give access to the main game components.
  */
 public interface GameContext {
+
+    StringProperty gameVariantNameProperty();
 
     /**
      * @return name (id) of the current game variant

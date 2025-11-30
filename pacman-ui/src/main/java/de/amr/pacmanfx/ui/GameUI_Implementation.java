@@ -51,7 +51,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
 import static de.amr.pacmanfx.Validations.requireNonNegative;
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_AUTOPILOT;
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_IMMUNITY;
@@ -187,7 +186,7 @@ public final class GameUI_Implementation implements GameUI {
             currentViewProperty(),
             playView.currentGameSceneProperty(),
             scene.heightProperty(),
-            THE_GAME_BOX.gameVariantNameProperty(),
+            context().gameVariantNameProperty(),
             PROPERTY_DEBUG_INFO_VISIBLE,
             PROPERTY_3D_ENABLED,
             clock().pausedProperty()
@@ -424,6 +423,9 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public void quitCurrentGameScene() {
+        clock.stop();
+        clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
+
         soundManager().stopAll();
 
         //TODO this is game-specific and should not be handled here
@@ -431,13 +433,12 @@ public final class GameUI_Implementation implements GameUI {
             gameScene.end();
             boolean shouldConsumeCoin = gameContext.currentGame().control().state().name().equals("STARTING_GAME_OR_LEVEL")
                 || gameContext.currentGame().isPlaying();
-            if (shouldConsumeCoin && !THE_GAME_BOX.noCoin()) {
-                THE_GAME_BOX.consumeCoin();
+            if (shouldConsumeCoin && !context().coinMechanism().noCoin()) {
+                context().coinMechanism().consumeCoin();
             }
             Logger.info("Quit game scene ({}), returning to start view", gameScene.getClass().getSimpleName());
         });
-        clock.stop();
-        clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
+
         gameContext.currentGame().control().restart("BOOT");
         showStartView();
     }
@@ -452,14 +453,14 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     @Override
-    public void selectGameVariant(String gameVariant) {
-        if (gameVariant == null) {
+    public void selectGameVariant(String gameVariantName) {
+        if (gameVariantName == null) {
             Logger.error("Cannot select game variant (NULL)");
             return;
         }
 
-        String previousVariant = THE_GAME_BOX.gameVariantName();
-        if (gameVariant.equals(previousVariant)) {
+        String previousVariant = context().gameVariantName();
+        if (gameVariantName.equals(previousVariant)) {
             return;
         }
 
@@ -469,8 +470,8 @@ public final class GameUI_Implementation implements GameUI {
             previousConfig.dispose();
         }
 
-        GameUI_Config newConfig = config(gameVariant);
-        Logger.info("Loading assets for game variant {}", gameVariant);
+        GameUI_Config newConfig = config(gameVariantName);
+        Logger.info("Loading assets for game variant {}", gameVariantName);
         newConfig.loadAssets();
         newConfig.soundManager().mutedProperty().bind(PROPERTY_MUTED);
 
@@ -478,11 +479,11 @@ public final class GameUI_Implementation implements GameUI {
         if (appIcon != null) {
             stage.getIcons().setAll(appIcon);
         } else {
-            Logger.error("Could not find app icon for current game variant {}", gameVariant);
+            Logger.error("Could not find app icon for current game variant {}", gameVariantName);
         }
 
         // this triggers a game event and the event handlers:
-        THE_GAME_BOX.setGameVariantName(gameVariant);
+        context().gameVariantNameProperty().set(gameVariantName);
     }
 
     @Override

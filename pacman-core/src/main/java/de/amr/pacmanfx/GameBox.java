@@ -74,13 +74,9 @@ public class GameBox implements GameContext, CoinMechanism {
         }
     }
 
+    @Override
     public StringProperty gameVariantNameProperty() {
         return gameVariantName;
-    }
-
-    public void setGameVariantName(String gameVariantName) {
-        requireNonNull(gameVariantName);
-        gameVariantNameProperty().set(gameVariantName);
     }
 
     @SuppressWarnings("unchecked")
