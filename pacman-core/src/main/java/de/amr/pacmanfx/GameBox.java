@@ -49,24 +49,16 @@ public class GameBox implements GameContext, CoinMechanism {
 
     private final StringProperty gameVariantName = new SimpleStringProperty();
 
-    private boolean eventsEnabled;
-
     public GameBox() {
         if (!DIRECTORY_CHECK_OK) {
             throw new IllegalStateException("User directories could not be created");
         }
 
         gameVariantName.addListener((py, ov, newGameVariant) -> {
-            if (eventsEnabled) {
-                Game newGame = gameByVariantName(newGameVariant);
-                newGame.init();
-                newGame.publishGameEvent(GameEvent.Type.GAME_VARIANT_CHANGED);
-            }
+            Game newGame = gameByVariantName(newGameVariant);
+            newGame.init();
+            newGame.publishGameEvent(GameEvent.Type.GAME_VARIANT_CHANGED);
         });
-    }
-
-    public void setEventsEnabled(boolean enabled) {
-        eventsEnabled = enabled;
     }
 
     /**

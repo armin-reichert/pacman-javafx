@@ -499,7 +499,6 @@ public final class GameUI_Implementation implements GameUI {
         }
         stage.centerOnScreen();
         stage.show();
-        THE_GAME_BOX.setEventsEnabled(true);
         Platform.runLater(customDirWatchdog::startWatching);
     }
 
