@@ -115,14 +115,10 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         hud.numCoinsProperty().bind(coinMechanism.numCoinsProperty());
     }
 
-    protected Arcade_LevelData levelData(int levelNumber) {
+    @Override
+    public Arcade_LevelData levelData(int levelNumber) {
         final int row = Math.min(levelNumber - 1, LEVEL_DATA.length - 1);
         return LEVEL_DATA[row];
-    }
-
-    @Override
-    public Arcade_LevelData levelData(GameLevel gameLevel) {
-        return levelData(gameLevel.number());
     }
 
     @Override

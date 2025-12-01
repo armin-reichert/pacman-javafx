@@ -122,12 +122,4 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
         setGameLevel(demoLevel);
         publishGameEvent(GameEvent.Type.LEVEL_CREATED);
     }
-
-    @Override
-    public Arcade_LevelData levelData(GameLevel gameLevel) {
-        if (gameLevel.isDemoLevel()) {
-            return levelData(1);
-        }
-        return super.levelData(gameLevel);
-    }
 }

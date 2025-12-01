@@ -101,14 +101,10 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         mapSelector.loadAllMapPrototypes();
     }
 
-    protected Arcade_LevelData levelData(int levelNumber) {
+    @Override
+    public Arcade_LevelData levelData(int levelNumber) {
         int row = Math.min(levelNumber - 1, LEVEL_DATA.length - 1);
         return LEVEL_DATA[row];
-    }
-
-    @Override
-    public Arcade_LevelData levelData(GameLevel gameLevel) {
-        return levelData(gameLevel.number());
     }
 
     @Override
@@ -183,13 +179,13 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         }
         if (ghost instanceof Blinky blinky) {
             if (blinky.cruiseElroyValue() == 1) {
-                return levelData(gameLevel).pctElroy1Speed() * BASE_SPEED_1_PERCENT;
+                return levelData(gameLevel.number()).pctElroy1Speed() * BASE_SPEED_1_PERCENT;
             }
             if (blinky.cruiseElroyValue() == 2) {
-                return levelData(gameLevel).pctElroy2Speed() * BASE_SPEED_1_PERCENT;
+                return levelData(gameLevel.number()).pctElroy2Speed() * BASE_SPEED_1_PERCENT;
             }
         }
-        return levelData(gameLevel).pctGhostSpeed() * BASE_SPEED_1_PERCENT;
+        return levelData(gameLevel.number()).pctGhostSpeed() * BASE_SPEED_1_PERCENT;
     }
 
     @Override

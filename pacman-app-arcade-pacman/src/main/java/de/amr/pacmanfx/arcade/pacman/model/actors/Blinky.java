@@ -46,7 +46,7 @@ public class Blinky extends Ghost {
 
         // "Cruise Elroy"
         final Arcade_GameModel game = (Arcade_GameModel) gameLevel.game();
-        final Arcade_LevelData data = game.levelData(gameLevel);
+        final Arcade_LevelData data = game.levelData(gameLevel.number());
         int uneatenFoodCount = gameLevel.worldMap().foodLayer().uneatenFoodCount();
         if (uneatenFoodCount == data.numDotsLeftElroy1()) {
             setCruiseElroyValue(1);

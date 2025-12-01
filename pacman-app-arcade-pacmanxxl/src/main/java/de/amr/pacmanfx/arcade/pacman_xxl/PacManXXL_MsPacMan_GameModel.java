@@ -7,7 +7,6 @@ package de.amr.pacmanfx.arcade.pacman_xxl;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_HuntingTimer;
 import de.amr.pacmanfx.arcade.ms_pacman.model.actors.*;
-import de.amr.pacmanfx.arcade.pacman.model.Arcade_LevelData;
 import de.amr.pacmanfx.arcade.pacman.model.actors.Inky;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.math.Vector2i;
@@ -102,13 +101,5 @@ public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
 
         setGameLevel(demoLevel);
         publishGameEvent(GameEvent.Type.LEVEL_CREATED);
-    }
-
-    @Override
-    public Arcade_LevelData levelData(GameLevel gameLevel) {
-        if (gameLevel.isDemoLevel()) {
-            return levelData(1);
-        }
-        return super.levelData(gameLevel);
     }
 }

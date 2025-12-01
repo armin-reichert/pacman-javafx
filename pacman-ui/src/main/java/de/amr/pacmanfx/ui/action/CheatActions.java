@@ -58,7 +58,7 @@ public final class CheatActions {
             final List<Ghost> vulnerableGhosts = gameLevel.ghosts(FRIGHTENED, HUNTING_PAC).toList();
             if (!vulnerableGhosts.isEmpty()) {
                 gameLevel.energizerVictims().clear(); // resets value of next killed ghost to 200
-                vulnerableGhosts.forEach(game::onGhostKilled);
+                vulnerableGhosts.forEach(game::onEatGhost);
                 game.control().changeState("EATING_GHOST");
             }
         }

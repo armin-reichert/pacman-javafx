@@ -300,7 +300,7 @@ public abstract class AbstractGameModel implements Game {
                 .filter(ghost -> ghost.state() == GhostState.FRIGHTENED)
                 .forEach(simulationStepResult.killedGhosts::add);
             if (hasGhostBeenKilled()) {
-                simulationStepResult.killedGhosts.forEach(this::onGhostKilled);
+                simulationStepResult.killedGhosts.forEach(this::onEatGhost);
                 return;
             }
         }
