@@ -118,6 +118,7 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
         levelCounter().setEnabled(false);
         gateKeeper.setLevelNumber(levelNumber);
         demoLevel.worldMap().terrainLayer().optHouse().ifPresent(house -> gateKeeper.setHouse(house));
+
         setGameLevel(demoLevel);
         publishGameEvent(GameEvent.Type.LEVEL_CREATED);
     }

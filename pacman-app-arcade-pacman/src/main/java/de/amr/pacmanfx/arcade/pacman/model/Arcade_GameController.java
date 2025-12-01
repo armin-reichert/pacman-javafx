@@ -129,7 +129,6 @@ public class Arcade_GameController extends StateMachine<FsmState<GameContext>, G
             private void startDemoLevel(Game game) {
                 if (timer.tickCount() == 1) {
                     game.buildDemoLevel();
-                    game.publishGameEvent(GameEvent.Type.LEVEL_CREATED);
                 }
                 else if (timer.tickCount() == 2) {
                     game.startLevel();

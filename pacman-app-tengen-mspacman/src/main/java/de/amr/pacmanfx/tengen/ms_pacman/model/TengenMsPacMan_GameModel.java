@@ -441,6 +441,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         scoreManager.score().setLevelNumber(1);
         gateKeeper.setLevelNumber(1);
         level.worldMap().terrainLayer().optHouse().ifPresent(gateKeeper::setHouse); //TODO what if no house exists?
+
         setGameLevel(level);
         publishGameEvent(GameEvent.Type.LEVEL_CREATED);
     }

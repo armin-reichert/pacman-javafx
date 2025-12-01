@@ -136,7 +136,6 @@ public class TengenMsPacMan_GameController extends StateMachine<FsmState<GameCon
             private void startDemoLevel(Game game) {
                 if (timer.tickCount() == 1) {
                     game.buildDemoLevel();
-                    game.publishGameEvent(GameEvent.Type.LEVEL_CREATED);
                 }
                 else if (timer.tickCount() == 2) {
                     game.startLevel();
