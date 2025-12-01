@@ -61,7 +61,7 @@ import static java.util.Objects.requireNonNull;
  * <p>Provides different camera perspectives that can be stepped through using key combinations
  * <code>Alt+LEFT</code> and <code>Alt+RIGHT</code>.
  */
-public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
+public abstract class PlayScene3D extends Group implements GameScene, SubSceneProvider {
 
     private static final Color SUB_SCENE_FILL_DARK = Color.BLACK;
     private static final Color SUB_SCENE_FILL_BRIGHT = Color.TRANSPARENT;
@@ -260,9 +260,9 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
         }
     }
 
-    protected void setActionBindings() {}
+    protected abstract void setActionBindings();
 
-    protected void setPlayerSteeringActionBindings() {}
+    protected abstract void setPlayerSteeringActionBindings();
 
     @Override
     public void init(Game game) {
