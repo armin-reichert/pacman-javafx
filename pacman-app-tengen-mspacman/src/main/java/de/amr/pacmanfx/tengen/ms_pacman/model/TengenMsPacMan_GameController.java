@@ -100,9 +100,6 @@ public class TengenMsPacMan_GameController extends StateMachine<FsmState<Game>, 
         },
 
         STARTING_GAME_OR_LEVEL {
-
-            private static final short TICK_DEMO_LEVEL_START_HUNTING = 120;
-
             @Override
             public void onUpdate(Game game) {
                 final long tick = timer.tickCount();
@@ -113,23 +110,7 @@ public class TengenMsPacMan_GameController extends StateMachine<FsmState<Game>, 
                     game.startNewGame(tick);
                 }
                 else {
-                    startDemoLevel(game);
-                }
-            }
-
-            private void startDemoLevel(Game game) {
-                if (timer.tickCount() == 1) {
-                    game.buildDemoLevel();
-                }
-                else if (timer.tickCount() == 2) {
-                    game.startLevel();
-                }
-                else if (timer.tickCount() == 3) {
-                    // Now, actor animations are available
-                    game.level().showPacAndGhosts();
-                }
-                else if (timer.tickCount() == TICK_DEMO_LEVEL_START_HUNTING) {
-                    game.control().changeState(HUNTING);
+                    game.startDemoLevel(tick);
                 }
             }
         },

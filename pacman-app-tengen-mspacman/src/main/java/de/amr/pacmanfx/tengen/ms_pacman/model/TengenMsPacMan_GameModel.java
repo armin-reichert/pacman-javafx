@@ -33,6 +33,7 @@ import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomByte;
 import static de.amr.pacmanfx.model.DefaultWorldMapPropertyName.*;
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
 import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
+import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameController.GameState.HUNTING;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -46,6 +47,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     private static final short TICK_NEW_GAME_SHOW_GUYS = 70;
     private static final short TICK_NEW_GAME_START_HUNTING = 250;
     private static final short TICK_RESUME_HUNTING = 240;
+    private static final short TICK_DEMO_LEVEL_START_HUNTING = 120;
 
     public static final String GAME_OVER_MESSAGE_TEXT = "GAME OVER";
     public static final String READY_MESSAGE_TEXT = "READY!";
@@ -314,7 +316,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         }
         else if (tick == TICK_NEW_GAME_START_HUNTING) {
             setPlaying(true);
-            control().changeState(GameState.HUNTING);
+            control().changeState(HUNTING);
         }
     }
 
@@ -327,7 +329,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             level.showPacAndGhosts();
             publishGameEvent(GameEvent.Type.GAME_CONTINUED);
         } else if (tick == TICK_RESUME_HUNTING) {
-            control().changeState(GameState.HUNTING);
+            control().changeState(HUNTING);
         }
     }
 
@@ -354,6 +356,23 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         }
         // Note: This event is very important because it triggers the creation of the actor animations!
         publishGameEvent(GameEvent.Type.LEVEL_STARTED);
+    }
+
+    @Override
+    public void startDemoLevel(long tick) {
+        if (tick == 1) {
+            buildDemoLevel();
+        }
+        else if (tick == 2) {
+            startLevel();
+        }
+        else if (tick == 3) {
+            // Now, actor animations are available
+            level().showPacAndGhosts();
+        }
+        else if (tick == TICK_DEMO_LEVEL_START_HUNTING) {
+            control().changeState(GameState.HUNTING);
+        }
     }
 
     @Override

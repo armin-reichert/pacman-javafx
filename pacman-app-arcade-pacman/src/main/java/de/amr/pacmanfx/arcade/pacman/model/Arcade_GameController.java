@@ -76,8 +76,6 @@ public class Arcade_GameController extends StateMachine<FsmState<Game>, Game> im
         },
 
         STARTING_GAME_OR_LEVEL {
-            static final short TICK_DEMO_LEVEL_START_HUNTING = 120;
-
             @Override
             public void onEnter(Game game) {
                 game.publishGameEvent(GameEvent.Type.STOP_ALL_SOUNDS);
@@ -93,23 +91,7 @@ public class Arcade_GameController extends StateMachine<FsmState<Game>, Game> im
                     game.startNewGame(tick);
                 }
                 else {
-                    startDemoLevel(game);
-                }
-            }
-
-            private void startDemoLevel(Game game) {
-                if (timer.tickCount() == 1) {
-                    game.buildDemoLevel();
-                }
-                else if (timer.tickCount() == 2) {
-                    game.startLevel();
-                }
-                else if (timer.tickCount() == 3) {
-                    // Now, actor animations are available
-                    game.level().showPacAndGhosts();
-                }
-                else if (timer.tickCount() == TICK_DEMO_LEVEL_START_HUNTING) {
-                    game.control().changeState(GameState.HUNTING);
+                    game.startDemoLevel(tick);
                 }
             }
         },

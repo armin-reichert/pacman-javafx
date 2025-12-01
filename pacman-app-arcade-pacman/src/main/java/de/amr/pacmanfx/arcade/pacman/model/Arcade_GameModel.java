@@ -30,6 +30,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     private static final short TICK_NEW_GAME_SHOW_GUYS = 120;
     private static final short TICK_NEW_GAME_START_HUNTING = 240;
     private static final short TICK_RESUME_HUNTING =  90;
+    private static final short TICK_DEMO_LEVEL_START_HUNTING = 120;
 
     // Level data as given in the "Pac-Man Dossier"
     protected static final Arcade_LevelData[] LEVEL_DATA = {
@@ -317,6 +318,23 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
         setGameLevel(level);
         publishGameEvent(GameEvent.Type.LEVEL_CREATED);
+    }
+
+    @Override
+    public void startDemoLevel(long tick) {
+        if (tick == 1) {
+            buildDemoLevel();
+        }
+        else if (tick == 2) {
+            startLevel();
+        }
+        else if (tick == 3) {
+            // Now, actor animations are available
+            level().showPacAndGhosts();
+        }
+        else if (tick == TICK_DEMO_LEVEL_START_HUNTING) {
+            control().changeState(GameState.HUNTING);
+        }
     }
 
     @Override
