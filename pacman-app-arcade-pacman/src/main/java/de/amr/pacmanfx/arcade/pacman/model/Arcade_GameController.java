@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.model;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
@@ -15,7 +14,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.MessageType;
 import de.amr.pacmanfx.model.actors.*;
 
-public class Arcade_GameController extends StateMachine<FsmState<GameContext>, GameContext> implements GameControl {
+public class Arcade_GameController extends StateMachine<FsmState<Game>, Game> implements GameControl {
 
     public Arcade_GameController() {
         setName("Arcade Pac-Man Games State Machine");
@@ -23,11 +22,11 @@ public class Arcade_GameController extends StateMachine<FsmState<GameContext>, G
     }
 
     @Override
-    public StateMachine<FsmState<GameContext>, GameContext> stateMachine() {
+    public StateMachine<FsmState<Game>, Game> stateMachine() {
         return this;
     }
 
-    public enum GameState implements FsmState<GameContext> {
+    public enum GameState implements FsmState<Game> {
 
         /**
          * Corresponds to the screen showing all these random symbols from the Arcade video memory.
@@ -35,15 +34,13 @@ public class Arcade_GameController extends StateMachine<FsmState<GameContext>, G
         BOOT {
             // "Das muss das Boot abkönnen!"
             @Override
-            public void onEnter(GameContext context) {
-                final Game game = context.currentGame();
+            public void onEnter(Game game) {
                 timer.restartIndefinitely();
                 game.resetEverything();
             }
 
             @Override
-            public void onUpdate(GameContext context) {
-                final Game game = context.currentGame();
+            public void onUpdate(Game game) {
                 if (timer.hasExpired()) { // timer is set to expired by UI
                     game.control().changeState(INTRO);
                 }
@@ -55,13 +52,12 @@ public class Arcade_GameController extends StateMachine<FsmState<GameContext>, G
          */
         INTRO {
             @Override
-            public void onEnter(GameContext context) {
+            public void onEnter(Game game) {
                 timer.restartIndefinitely();
             }
 
             @Override
-            public void onUpdate(GameContext context) {
-                final Game game = context.currentGame();
+            public void onUpdate(Game game) {
                 if (timer.hasExpired()) {
                     // start demo level (attract mode)
                     game.control().changeState(STARTING_GAME_OR_LEVEL);
@@ -74,7 +70,7 @@ public class Arcade_GameController extends StateMachine<FsmState<GameContext>, G
          */
         SETTING_OPTIONS_FOR_START {
             @Override
-            public void onUpdate(GameContext context) {
+            public void onUpdate(Game game) {
                 // wait for user interaction to start playing
             }
         },
@@ -86,14 +82,12 @@ public class Arcade_GameController extends StateMachine<FsmState<GameContext>, G
             static final short TICK_RESUME_HUNTING =  90;
 
             @Override
-            public void onEnter(GameContext context) {
-                final Game game = context.currentGame();
+            public void onEnter(Game game) {
                 game.publishGameEvent(GameEvent.Type.STOP_ALL_SOUNDS);
             }
 
             @Override
-            public void onUpdate(GameContext context) {
-                final Game game = context.currentGame();
+            public void onUpdate(Game game) {
                 if (game.isPlaying()) {
                     continueGame(game);
                 }
@@ -154,8 +148,7 @@ public class Arcade_GameController extends StateMachine<FsmState<GameContext>, G
 
         HUNTING {
             @Override
-            public void onEnter(GameContext context) {
-                final Game game = context.currentGame();
+            public void onEnter(Game game) {
                 game.level().optMessage().filter(message -> message.type() == MessageType.READY).ifPresent(message -> {
                     game.level().clearMessage(); // leave TEST message alone
                 });
@@ -163,8 +156,7 @@ public class Arcade_GameController extends StateMachine<FsmState<GameContext>, G
             }
 
             @Override
-            public void onUpdate(GameContext context) {
-                final Game game = context.currentGame();
+            public void onUpdate(Game game) {
                 game.updateHunting();
                 if (game.isLevelCompleted()) {
                     game.control().changeState(LEVEL_COMPLETE);
@@ -178,8 +170,7 @@ public class Arcade_GameController extends StateMachine<FsmState<GameContext>, G
             }
 
             @Override
-            public void onExit(GameContext context) {
-                final Game game = context.currentGame();
+            public void onExit(Game game) {
                 game.level().optMessage().ifPresent(message -> {
                     if (message.type() == MessageType.READY) {
                         game.level().clearMessage();
@@ -191,14 +182,12 @@ public class Arcade_GameController extends StateMachine<FsmState<GameContext>, G
         LEVEL_COMPLETE {
 
             @Override
-            public void onEnter(GameContext context) {
+            public void onEnter(Game game) {
                 timer.restartIndefinitely(); // UI triggers timeout
             }
 
             @Override
-            public void onUpdate(GameContext context) {
-                final Game game = context.currentGame();
-
+            public void onUpdate(Game game) {
                 if (timer.tickCount() == 1) {
                     game.onLevelCompleted();
                 }
@@ -218,15 +207,13 @@ public class Arcade_GameController extends StateMachine<FsmState<GameContext>, G
 
         LEVEL_TRANSITION {
             @Override
-            public void onEnter(GameContext context) {
-                final Game game = context.currentGame();
+            public void onEnter(Game game) {
                 timer.restartSeconds(2);
                 game.startNextLevel();
             }
 
             @Override
-            public void onUpdate(GameContext context) {
-                final Game game = context.currentGame();
+            public void onUpdate(Game game) {
                 if (timer.hasExpired()) {
                     game.control().changeState(STARTING_GAME_OR_LEVEL);
                 }
@@ -235,8 +222,7 @@ public class Arcade_GameController extends StateMachine<FsmState<GameContext>, G
 
         GHOST_DYING {
             @Override
-            public void onEnter(GameContext context) {
-                final Game game = context.currentGame();
+            public void onEnter(Game game) {
                 timer.restartSeconds(1);
                 game.level().pac().hide();
                 game.level().ghosts().forEach(Ghost::stopAnimation);
@@ -244,8 +230,7 @@ public class Arcade_GameController extends StateMachine<FsmState<GameContext>, G
             }
 
             @Override
-            public void onUpdate(GameContext context) {
-                final Game game = context.currentGame();
+            public void onUpdate(Game game) {
                 if (timer.hasExpired()) {
                     game.control().resumePreviousState();
                 } else {
@@ -256,8 +241,7 @@ public class Arcade_GameController extends StateMachine<FsmState<GameContext>, G
             }
 
             @Override
-            public void onExit(GameContext context) {
-                final Game game = context.currentGame();
+            public void onExit(Game game) {
                 game.level().pac().show();
                 game.level().ghosts(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_HOME));
                 game.level().ghosts()
@@ -272,16 +256,14 @@ public class Arcade_GameController extends StateMachine<FsmState<GameContext>, G
             static final int TICK_PAC_DEAD = 240;
 
             @Override
-            public void onEnter(GameContext context) {
-                final Game game = context.currentGame();
+            public void onEnter(Game game) {
                 timer.restartIndefinitely();
                 game.onPacKilled();
                 game.publishGameEvent(GameEvent.Type.STOP_ALL_SOUNDS);
             }
 
             @Override
-            public void onUpdate(GameContext context) {
-                final Game game = context.currentGame();
+            public void onUpdate(Game game) {
                 final Pac pac = game.level().pac();
 
                 if (timer.hasExpired()) {
@@ -317,24 +299,20 @@ public class Arcade_GameController extends StateMachine<FsmState<GameContext>, G
             }
 
             @Override
-            public void onExit(GameContext context) {
-                final Game game = context.currentGame();
+            public void onExit(Game game) {
                 game.level().optBonus().ifPresent(Bonus::setInactive);
             }
         },
 
         GAME_OVER {
             @Override
-            public void onEnter(GameContext context) {
-                final Game game = context.currentGame();
+            public void onEnter(Game game) {
                 timer.restartTicks(game.level().gameOverStateTicks());
                 game.onGameEnding();
             }
 
             @Override
-            public void onUpdate(GameContext context) {
-                final Game game = context.currentGame();
-
+            public void onUpdate(Game game) {
                 if (timer.hasExpired()) {
                     game.prepareForNewGame();
                     if (game.canStartNewGame()) {
@@ -346,8 +324,7 @@ public class Arcade_GameController extends StateMachine<FsmState<GameContext>, G
             }
 
             @Override
-            public void onExit(GameContext context) {
-                final Game game = context.currentGame();
+            public void onExit(Game game) {
                 game.optGameLevel().ifPresent(GameLevel::clearMessage);
                 game.cheatUsedProperty().set(false);
             }
@@ -355,13 +332,12 @@ public class Arcade_GameController extends StateMachine<FsmState<GameContext>, G
 
         INTERMISSION {
             @Override
-            public void onEnter(GameContext context) {
+            public void onEnter(Game game) {
                 timer.restartIndefinitely();
             }
 
             @Override
-            public void onUpdate(GameContext context) {
-                final Game game = context.currentGame();
+            public void onUpdate(Game game) {
                 if (timer.hasExpired()) {
                     game.control().changeState(game.isPlaying() ? LEVEL_TRANSITION : INTRO);
                 }

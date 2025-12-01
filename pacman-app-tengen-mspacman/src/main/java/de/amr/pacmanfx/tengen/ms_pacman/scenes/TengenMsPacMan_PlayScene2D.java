@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.math.Vector2i;
@@ -301,7 +300,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
     @Override
     public void onGameStarted(GameEvent e) {
         final Game game = context().currentGame();
-        FsmState<GameContext> state = game.control().state();
+        FsmState<Game> state = game.control().state();
         boolean shutUp = game.level().isDemoLevel() || state instanceof TestState;
         if (!shutUp) {
             ui.soundManager().play(SoundID.GAME_READY);
@@ -326,7 +325,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
     }
 
     @Override
-    public void onEnterGameState(FsmState<GameContext> state) {
+    public void onEnterGameState(FsmState<Game> state) {
         switch (state) {
             case GameState.LEVEL_COMPLETE -> {
                 ui.soundManager().stopAll();

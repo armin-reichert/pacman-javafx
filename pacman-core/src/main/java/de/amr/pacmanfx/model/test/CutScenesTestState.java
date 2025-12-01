@@ -4,14 +4,12 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model.test;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.timer.TickTimer;
-import de.amr.pacmanfx.model.AbstractGameModel;
-import de.amr.pacmanfx.model.StandardGameVariant;
+import de.amr.pacmanfx.model.Game;
 
-public class CutScenesTestState implements FsmState<GameContext>, TestState {
+public class CutScenesTestState implements FsmState<Game>, TestState {
 
     private final TickTimer timer = new TickTimer("Timer_" + name());
 
@@ -28,25 +26,22 @@ public class CutScenesTestState implements FsmState<GameContext>, TestState {
     }
 
     @Override
-    public void onEnter(GameContext context) {
+    public void onEnter(Game game) {
         timer.restartIndefinitely();
-        if (context.currentGame() instanceof AbstractGameModel) {
-            testedCutSceneNumber = 1;
-        }
+        testedCutSceneNumber = 1;
     }
 
     @Override
-    public void onUpdate(GameContext context) {
+    public void onUpdate(Game game) {
         if (timer.hasExpired()) {
-            boolean tengenMsPacMan = context.gameVariantName().equals(StandardGameVariant.MS_PACMAN_TENGEN.name());
-            int lastCutSceneNumber = tengenMsPacMan ? 4 : 3;
+            int lastCutSceneNumber = game.lastLevelNumber() == 32 ? 4 : 3; //TODO hack to detected Tengen, need API
             if (testedCutSceneNumber < lastCutSceneNumber) {
                 testedCutSceneNumber += 1;
                 timer.restartIndefinitely();
                 //TODO find another solution and get rid of this event type
-                context.currentGame().publishGameEvent(GameEvent.Type.UNSPECIFIED_CHANGE);
+                game.publishGameEvent(GameEvent.Type.UNSPECIFIED_CHANGE);
             } else {
-                context.currentGame().control().changeState("INTRO");
+                game.control().changeState("INTRO");
             }
         }
     }

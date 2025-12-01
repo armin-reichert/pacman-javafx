@@ -4,18 +4,21 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model.test;
 
-import de.amr.pacmanfx.GameContext;
+import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.timer.TickTimer;
+import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevelMessage;
 import de.amr.pacmanfx.model.MessageType;
 
-public class LevelShortTestState implements FsmState<GameContext>, TestState {
+public class LevelShortTestState implements FsmState<Game>, TestState {
 
     private final TickTimer timer = new TickTimer("Timer_" + name());
     private int lastTestedLevelNumber;
+
+    private static final CoinMechanism COIN_MECHANISM = Globals.THE_GAME_BOX;
 
     @Override
     public String name() {
@@ -28,9 +31,8 @@ public class LevelShortTestState implements FsmState<GameContext>, TestState {
     }
 
     @Override
-    public void onEnter(GameContext context) {
-        final Game game = context.currentGame();
-        context.coinMechanism().setNumCoins(1);
+    public void onEnter(Game game) {
+        COIN_MECHANISM.setNumCoins(1);
         lastTestedLevelNumber = game.lastLevelNumber() == Integer.MAX_VALUE ? 25 : game.lastLevelNumber();
         timer.restartIndefinitely();
         game.prepareForNewGame();
@@ -40,9 +42,8 @@ public class LevelShortTestState implements FsmState<GameContext>, TestState {
     }
 
     @Override
-    public void onUpdate(GameContext context) {
+    public void onUpdate(Game game) {
         final float START = 1.0f;
-        final Game game = context.currentGame();
         if (timer.atSecond(START)) {
             game.continueGame();
             GameLevelMessage message = new GameLevelMessage(MessageType.TEST);
@@ -74,7 +75,7 @@ public class LevelShortTestState implements FsmState<GameContext>, TestState {
         }
         else if (timer.atSecond(START + 10)) {
             if (game.level().number() == lastTestedLevelNumber) {
-                context.coinMechanism().setNumCoins(0);
+                COIN_MECHANISM.setNumCoins(0);
                 game.resetEverything();
                 game.control().restart("BOOT");
             } else {
@@ -89,9 +90,9 @@ public class LevelShortTestState implements FsmState<GameContext>, TestState {
     }
 
     @Override
-    public void onExit(GameContext context) {
-        context.coinMechanism().setNumCoins(0);
-        context.currentGame().resetEverything();
-        context.currentGame().levelCounter().clear();
+    public void onExit(Game game) {
+        COIN_MECHANISM.setNumCoins(0);
+        game.resetEverything();
+        game.levelCounter().clear();
     }
 }

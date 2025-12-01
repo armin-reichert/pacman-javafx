@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.pacman.ArcadeActions;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController;
 import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_PlayScene2D_Renderer;
@@ -18,6 +17,7 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui._2d.HUD_Renderer;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
@@ -25,7 +25,6 @@ import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
-import de.amr.pacmanfx.ui._2d.HUD_Renderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ContextMenu;
@@ -146,7 +145,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onGameStarted(GameEvent e) {
-        FsmState<GameContext> state = context().currentGame().control().state();
+        FsmState<Game> state = context().currentGame().control().state();
         boolean silent = context().currentGame().level().isDemoLevel() || state instanceof TestState;
         if (!silent) {
             ui.soundManager().play(SoundID.GAME_READY);
@@ -204,7 +203,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void onEnterGameState(FsmState<GameContext> state) {
+    public void onEnterGameState(FsmState<Game> state) {
         if (state == Arcade_GameController.GameState.LEVEL_COMPLETE) {
             ui.soundManager().stopAll();
             playLevelCompletedAnimation();

@@ -4,9 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.dashboard;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.model.CoinMechanism;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.ui.action.TestActions;
 import de.amr.pacmanfx.ui.api.GameUI;
@@ -67,7 +67,7 @@ public class InfoBoxGameControl extends InfoBox {
         //TODO use binding
         choiceBoxInitialLives.setValue(ui.context().currentGame().initialLifeCount());
 
-        FsmState<GameContext> state = ui.context().currentGame().control().state();
+        FsmState<Game> state = ui.context().currentGame().control().state();
 
         spinnerCredit.setDisable(!Set.of("INTRO", "SETTING_OPTIONS_FOR_START").contains(state.name()));
         choiceBoxInitialLives.setDisable(!state.name().equals("INTRO"));

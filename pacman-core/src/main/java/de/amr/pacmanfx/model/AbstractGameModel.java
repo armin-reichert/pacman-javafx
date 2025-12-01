@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -65,7 +64,7 @@ public abstract class AbstractGameModel implements Game {
 
     public void setGameControl(GameControl gameControl) {
         this.gameControl = requireNonNull(gameControl);
-        gameControl.stateMachine().setContext(THE_GAME_BOX); //TODO avoid this dependency
+        gameControl.stateMachine().setContext(this);
         gameControl.stateMachine().addStateChangeListener(
             (oldState, newState) -> publishGameEvent(new GameStateChangeEvent(this, oldState, newState)));
     }

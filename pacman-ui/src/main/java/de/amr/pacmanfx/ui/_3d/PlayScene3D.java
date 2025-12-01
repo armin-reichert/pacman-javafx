@@ -4,17 +4,13 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._3d;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.FoodLayer;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
-import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.House;
-import de.amr.pacmanfx.model.Score;
-import de.amr.pacmanfx.model.ScoreManager;
+import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -312,7 +308,7 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
     }
 
     @Override
-    public void onEnterGameState(FsmState<GameContext> state) {
+    public void onEnterGameState(FsmState<Game> state) {
         if (state instanceof TestState) {
             replaceGameLevel3D();
             showLevelTestMessage(context().currentGame().level());
@@ -349,7 +345,7 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
             return;
         }
         final GameLevel gameLevel = context().currentGame().level();
-        final FsmState<GameContext> state = context().currentGame().control().state();
+        final FsmState<Game> state = context().currentGame().control().state();
 
         if (state instanceof TestState) {
             replaceGameLevel3D(); //TODO check when to destroy previous level
@@ -464,7 +460,7 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
 
     @Override
     public void onGameStarted(GameEvent e) {
-        FsmState<GameContext> state = context().currentGame().control().state();
+        FsmState<Game> state = context().currentGame().control().state();
         boolean silent = context().currentGame().level().isDemoLevel() || state instanceof TestState;
         if (!silent) {
             ui.soundManager().play(SoundID.GAME_READY);
@@ -597,7 +593,7 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
         }
     }
 
-    protected void updateSound(GameLevel gameLevel, FsmState<GameContext> gameState) {
+    protected void updateSound(GameLevel gameLevel, FsmState<Game> gameState) {
         if (!ui.soundManager().isEnabled()) return;
         if (gameState.name().equals("HUNTING")) {
             updateSiren(gameLevel.pac());

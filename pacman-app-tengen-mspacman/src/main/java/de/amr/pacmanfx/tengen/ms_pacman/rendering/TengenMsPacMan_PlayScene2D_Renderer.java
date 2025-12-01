@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman.rendering;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
@@ -45,7 +44,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends GameScene2D_Renderer
         public void draw(GameScene2D scene) {
             final Game game = scene.context().currentGame();
             final TengenMsPacMan_PlayScene2D playScene = (TengenMsPacMan_PlayScene2D) scene;
-            final FsmState<GameContext> gameState = game.control().state();
+            final FsmState<Game> gameState = game.control().state();
 
             drawTileGrid(CANVAS_WIDTH_UNSCALED, playScene.canvasHeightUnscaled(), Color.LIGHTGRAY);
 

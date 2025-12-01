@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model.test;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.timer.TickTimer;
@@ -14,7 +13,7 @@ import de.amr.pacmanfx.model.GameLevelMessage;
 import de.amr.pacmanfx.model.MessageType;
 import de.amr.pacmanfx.model.actors.AnimationManager;
 
-public class LevelMediumTestState implements FsmState<GameContext>, TestState {
+public class LevelMediumTestState implements FsmState<Game>, TestState {
     static final int TEST_DURATION_SEC = 10;
 
     private final TickTimer timer = new TickTimer("Timer_" + name());
@@ -30,8 +29,8 @@ public class LevelMediumTestState implements FsmState<GameContext>, TestState {
         return timer;
     }
 
-    private void configureLevelForTest(GameContext context) {
-        final GameLevel gameLevel = context.currentGame().level();
+    private void configureLevelForTest(Game game) {
+        final GameLevel gameLevel = game.level();
         gameLevel.pac().usingAutopilotProperty().unbind();
         gameLevel.pac().setUsingAutopilot(true);
         gameLevel.pac().optAnimationManager().ifPresent(AnimationManager::play);
@@ -40,24 +39,22 @@ public class LevelMediumTestState implements FsmState<GameContext>, TestState {
         GameLevelMessage message = new GameLevelMessage(MessageType.TEST);
         message.setPosition(gameLevel.worldMap().terrainLayer().messageCenterPosition());
         gameLevel.setMessage(message);
-        context.currentGame().hud().creditVisible(false);
-        context.currentGame().publishGameEvent(GameEvent.Type.STOP_ALL_SOUNDS);
+        game.hud().creditVisible(false);
+        game.publishGameEvent(GameEvent.Type.STOP_ALL_SOUNDS);
     }
 
     @Override
-    public void onEnter(GameContext context) {
-        final Game game = context.currentGame();
+    public void onEnter(Game game) {
         lastTestedLevelNumber = game.lastLevelNumber() == Integer.MAX_VALUE ? 25 : game.lastLevelNumber();
         timer.restartSeconds(TEST_DURATION_SEC);
         game.prepareForNewGame();
         game.buildNormalLevel(1);
         game.startLevel();
-        configureLevelForTest(context);
+        configureLevelForTest(game);
     }
 
     @Override
-    public void onUpdate(GameContext context) {
-        final Game game = context.currentGame();
+    public void onUpdate(Game game) {
         game.level().pac().tick(game);
         game.level().ghosts().forEach(ghost -> ghost.tick(game));
         game.level().optBonus().ifPresent(bonus -> bonus.tick(game));
@@ -69,7 +66,7 @@ public class LevelMediumTestState implements FsmState<GameContext>, TestState {
             } else {
                 timer().restartSeconds(TEST_DURATION_SEC);
                 game.startNextLevel();
-                configureLevelForTest(context);
+                configureLevelForTest(game);
             }
         }
         else if (game.isLevelCompleted()) {
@@ -82,7 +79,7 @@ public class LevelMediumTestState implements FsmState<GameContext>, TestState {
     }
 
     @Override
-    public void onExit(GameContext context) {
-        context.currentGame().levelCounter().clear();
+    public void onExit(Game game) {
+        game.levelCounter().clear();
     }
 }

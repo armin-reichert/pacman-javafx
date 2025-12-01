@@ -111,7 +111,7 @@ public final class CommonGameActions {
             ui.currentGameScene().ifPresent(GameScene::end);
             boolean isLevelShortTest = game.control().state() instanceof LevelShortTestState;
             if (isLevelShortTest) {
-                game.control().state().onExit(ui.context()); //TODO exit other states too?
+                game.control().state().onExit(game); //TODO exit other states too?
             }
             ui.clock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
             game.control().restart("INTRO");
@@ -165,7 +165,7 @@ public final class CommonGameActions {
         @Override
         public void execute(GameUI ui) {
             ui.clock().setTargetFrameRate(SIMULATION_SPEED_MIN);
-            ui.showFlashMessage(Duration.seconds(0.75), "At minmimum speed: %d Hz", SIMULATION_SPEED_MIN);
+            ui.showFlashMessage(Duration.seconds(0.75), "At minimum speed: %d Hz", SIMULATION_SPEED_MIN);
         }
     };
 
