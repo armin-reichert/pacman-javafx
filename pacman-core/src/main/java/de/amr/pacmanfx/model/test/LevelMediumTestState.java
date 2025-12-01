@@ -58,13 +58,13 @@ public class LevelMediumTestState implements FsmState<GameContext>, TestState {
     @Override
     public void onUpdate(GameContext context) {
         final Game game = context.currentGame();
-        game.level().pac().tick(context);
-        game.level().ghosts().forEach(ghost -> ghost.tick(context));
-        game.level().optBonus().ifPresent(bonus -> bonus.tick(context));
+        game.level().pac().tick(game);
+        game.level().ghosts().forEach(ghost -> ghost.tick(game));
+        game.level().optBonus().ifPresent(bonus -> bonus.tick(game));
         game.updateHunting();
         if (timer().hasExpired()) {
             if (game.level().number() == lastTestedLevelNumber) {
-                context.currentGame().publishGameEvent(GameEvent.Type.STOP_ALL_SOUNDS);
+                game.publishGameEvent(GameEvent.Type.STOP_ALL_SOUNDS);
                 game.control().changeState("INTRO");
             } else {
                 timer().restartSeconds(TEST_DURATION_SEC);

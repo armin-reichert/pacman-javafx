@@ -181,13 +181,7 @@ public class TengenMsPacMan_GameController extends StateMachine<FsmState<GameCon
             @Override
             public void onUpdate(GameContext context) {
                 final Game game = context.currentGame();
-
-                game.level().pac().tick(context);
-                game.level().ghosts().forEach(ghost -> ghost.tick(context));
-                game.level().optBonus().ifPresent(bonus -> bonus.tick(context));
-
                 game.updateHunting();
-
                 if (game.isLevelCompleted()) {
                     game.control().changeState(LEVEL_COMPLETE);
                 }
@@ -281,7 +275,7 @@ public class TengenMsPacMan_GameController extends StateMachine<FsmState<GameCon
                     game.control().resumePreviousState();
                 } else {
                     game.level().ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
-                        .forEach(ghost -> ghost.tick(context));
+                        .forEach(ghost -> ghost.tick(game));
                     game.level().blinking().tick();
                 }
             }
@@ -344,7 +338,7 @@ public class TengenMsPacMan_GameController extends StateMachine<FsmState<GameCon
                 }
                 else {
                     game.level().blinking().tick();
-                    pac.tick(context);
+                    pac.tick(game);
                 }
             }
 

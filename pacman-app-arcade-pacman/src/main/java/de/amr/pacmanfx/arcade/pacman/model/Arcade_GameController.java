@@ -165,13 +165,7 @@ public class Arcade_GameController extends StateMachine<FsmState<GameContext>, G
             @Override
             public void onUpdate(GameContext context) {
                 final Game game = context.currentGame();
-
-                game.level().pac().tick(context);
-                game.level().ghosts().forEach(ghost -> ghost.tick(context));
-                game.level().optBonus().ifPresent(bonus -> bonus.tick(context));
                 game.updateHunting();
-
-                // What next?
                 if (game.isLevelCompleted()) {
                     game.control().changeState(LEVEL_COMPLETE);
                 }
@@ -256,7 +250,7 @@ public class Arcade_GameController extends StateMachine<FsmState<GameContext>, G
                     game.control().resumePreviousState();
                 } else {
                     game.level().ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
-                        .forEach(ghost -> ghost.tick(context));
+                        .forEach(ghost -> ghost.tick(game));
                     game.level().blinking().tick();
                 }
             }
@@ -318,7 +312,7 @@ public class Arcade_GameController extends StateMachine<FsmState<GameContext>, G
                 }
                 else {
                     game.level().blinking().tick();
-                    pac.tick(context);
+                    pac.tick(game);
                 }
             }
 

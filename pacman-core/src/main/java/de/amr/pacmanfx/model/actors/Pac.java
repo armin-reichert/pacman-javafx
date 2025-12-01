@@ -4,11 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model.actors;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.steering.Steering;
 import javafx.beans.property.BooleanProperty;
@@ -137,9 +137,9 @@ public class Pac extends MovingActor {
     }
 
     @Override
-    public void tick(GameContext gameContext) {
-        if (gameContext.currentGame().optGameLevel().isEmpty()) return;
-        final GameLevel gameLevel = gameContext.currentGame().level();
+    public void tick(Game game) {
+        if (game.optGameLevel().isEmpty()) return;
+        final GameLevel gameLevel = game.level();
 
         if (dead || restingTime == INDEFINITELY) {
             return;

@@ -287,6 +287,10 @@ public abstract class AbstractGameModel implements Game {
         final GameLevel level = level();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
+        level.pac().tick(this);
+        level.ghosts().forEach(ghost -> ghost.tick(this));
+        level.optBonus().ifPresent(bonus -> bonus.tick(this));
+
         // Ghosts colliding with Pac? While teleportation takes place, collisions are disabled. (Not sure what the
         // original Arcade game does). Collision behavior is controlled by the current collision strategy. The original
         // Arcade games use tile-based collision which can lead to missed collisions by passing through.

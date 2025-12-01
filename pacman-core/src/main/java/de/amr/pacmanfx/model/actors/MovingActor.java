@@ -4,11 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model.actors;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -60,9 +60,9 @@ public abstract class MovingActor extends Actor {
     /**
      * Called on every tick of the game clock.
      *
-     * @param gameContext the game context
+     * @param game the game
      */
-    public abstract void tick(GameContext gameContext);
+    public abstract void tick(Game game);
 
     /**
      * @return readable name, used in UI and logging

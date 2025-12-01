@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model.actors;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vec2Byte;
@@ -99,14 +98,13 @@ public class Bonus extends MovingActor {
     }
 
     @Override
-    public void tick(GameContext gameContext) {
-        final Game game = gameContext.currentGame();
+    public void tick(Game game) {
         timer.doTick();
         switch (state) {
             case EDIBLE -> {
                 boolean reachedExit = false;
                 if (jumpingAnimation != null) {
-                     reachedExit = jumpThroughMaze(gameContext.currentGame().level());
+                     reachedExit = jumpThroughMaze(game.level());
                 }
                 if (timer.hasExpired() || reachedExit) {
                     setInactive();

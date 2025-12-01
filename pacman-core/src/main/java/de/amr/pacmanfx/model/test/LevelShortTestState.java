@@ -85,7 +85,7 @@ public class LevelShortTestState implements FsmState<GameContext>, TestState {
                 game.level().setMessage(message);
             }
         }
-        game.level().optBonus().ifPresent(bonus -> bonus.tick(context));
+        game.level().optBonus().ifPresent(bonus -> bonus.tick(game));
     }
 
     @Override

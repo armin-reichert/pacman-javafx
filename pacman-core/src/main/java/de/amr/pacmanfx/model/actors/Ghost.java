@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model.actors;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.math.RandomNumberSupport;
@@ -12,6 +11,7 @@ import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
 import de.amr.pacmanfx.lib.worldmap.TerrainTile;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.House;
 import de.amr.pacmanfx.model.HuntingPhase;
@@ -252,8 +252,8 @@ public abstract class Ghost extends MovingActor {
      * Updates the state of this ghost in the current game context.
      */
     @Override
-    public void tick(GameContext gameContext) {
-        gameContext.currentGame().optGameLevel().ifPresent(gameLevel -> {
+    public void tick(Game game) {
+        game.optGameLevel().ifPresent(gameLevel -> {
             switch (state()) {
                 case LOCKED         -> updateStateLocked(gameLevel);
                 case LEAVING_HOUSE  -> updateStateLeavingHouse(gameLevel);
