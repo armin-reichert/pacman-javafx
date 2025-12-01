@@ -29,8 +29,11 @@ public class TengenMsPacMan_GameController extends StateMachine<FsmState<GameCon
 
     public enum GameState implements FsmState<GameContext> {
 
-        // "Das muss das Boot abkönnen!"
+        /**
+         * Corresponds to the screen showing the "TENGEN PRESENTS" text and the red ghost running over the screen.
+         */
         BOOT {
+            // "Das muss das Boot abkönnen!"
             @Override
             public void onEnter(GameContext context) {
                 timer.restartIndefinitely();
@@ -45,6 +48,15 @@ public class TengenMsPacMan_GameController extends StateMachine<FsmState<GameCon
             }
         },
 
+        /**
+         * Corresponds to the screen showing the "TENGEN PRESENTS MS. PAC-MAN" title,
+         * the "PRESS START" and copyright text.
+         * <p>
+         * If no key is pressed for some time, the UI shows to the Ms. Pac-Man intro scene with the
+         * ghost presentation. If still no key is pressed, the demo level is shown. After the demo
+         * level ends, the credits screens are shown and then again the "PRESS START" scene.
+         * </p>
+         */
         INTRO {
             @Override
             public void onEnter(GameContext context) {
@@ -59,6 +71,10 @@ public class TengenMsPacMan_GameController extends StateMachine<FsmState<GameCon
             }
         },
 
+        /**
+         * Corresponds to the "MS PAC-MAN OPTIONS" screen where difficulty, booster, map category
+         * and start level can be set.
+         */
         SETTING_OPTIONS_FOR_START {
             @Override
             public void onUpdate(GameContext context) {
@@ -66,6 +82,10 @@ public class TengenMsPacMan_GameController extends StateMachine<FsmState<GameCon
             }
         },
 
+        /**
+         * Corresponds to the screen showing the people that have contributed to the game. Here, a seconds
+         * screen with the contributors to the remake has been added.
+         */
         SHOWING_HALL_OF_FAME {
             @Override
             public void onEnter(GameContext context) {

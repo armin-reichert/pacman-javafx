@@ -9,12 +9,11 @@ import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameController.GameState;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_BootScene_Renderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui._2d.HUD_Renderer;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
-import de.amr.pacmanfx.ui._2d.HUD_Renderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
@@ -98,7 +97,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
             case 204 -> gray(true);
             case 214 -> gray(false);
             case 220 -> {
-                context().currentGame().control().changeState(GameState.INTRO);
+                context().currentGame().control().terminateCurrentGameState();
                 return;
             }
         }

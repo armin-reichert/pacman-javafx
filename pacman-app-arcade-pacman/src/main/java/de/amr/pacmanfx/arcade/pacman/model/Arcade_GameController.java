@@ -29,8 +29,11 @@ public class Arcade_GameController extends StateMachine<FsmState<GameContext>, G
 
     public enum GameState implements FsmState<GameContext> {
 
-        // "Das muss das Boot abkönnen!"
+        /**
+         * Corresponds to the screen showing all these random symbols from the Arcade video memory.
+         */
         BOOT {
+            // "Das muss das Boot abkönnen!"
             @Override
             public void onEnter(GameContext context) {
                 final Game game = context.currentGame();
@@ -41,12 +44,15 @@ public class Arcade_GameController extends StateMachine<FsmState<GameContext>, G
             @Override
             public void onUpdate(GameContext context) {
                 final Game game = context.currentGame();
-                if (timer.hasExpired()) {
+                if (timer.hasExpired()) { // timer is set to expired by UI
                     game.control().changeState(INTRO);
                 }
             }
         },
 
+        /**
+         * Corresponds to the intro screen with the Pac-Man and ghost animations.
+         */
         INTRO {
             @Override
             public void onEnter(GameContext context) {
@@ -63,6 +69,9 @@ public class Arcade_GameController extends StateMachine<FsmState<GameContext>, G
             }
         },
 
+        /**
+         * Corresponds to the start screen of the Arcade Pac-Man games.
+         */
         SETTING_OPTIONS_FOR_START {
             @Override
             public void onUpdate(GameContext context) {
