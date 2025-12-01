@@ -8,6 +8,7 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
@@ -112,8 +113,8 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
     }
 
     @Override
-    public void doInit() {
-        TengenMsPacMan_HUD hud = (TengenMsPacMan_HUD) context().currentGame().hud();
+    public void doInit(Game game) {
+        TengenMsPacMan_HUD hud = (TengenMsPacMan_HUD) game.hud();
         hud.creditVisible(false).scoreVisible(false).levelCounterVisible(true).livesCounterVisible(false);
         hud.showGameOptions(false);
 
@@ -142,13 +143,13 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
     }
 
     @Override
-    protected void doEnd() {
+    protected void doEnd(Game game) {
         ui.soundManager().stop(SoundID.INTERMISSION_3);
     }
 
     @Override
-    public void update() {
-        final int tick = (int) context().currentGame().control().state().timer().tickCount();
+    public void update(Game game) {
+        final int tick = (int) game.control().state().timer().tickCount();
         clapperboard.tick();
 
         switch (tick) {
@@ -188,7 +189,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
                 flyingBag.setAcceleration(Vector2f.ZERO);
             }
             case 640 -> darkness = true;
-            case 660 -> context().currentGame().control().terminateCurrentGameState();
+            case 660 -> game.control().terminateCurrentGameState();
         }
 
         stork.move();

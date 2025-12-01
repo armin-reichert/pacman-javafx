@@ -13,6 +13,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.timer.TickTimer;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -104,11 +105,11 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     }
 
     @Override
-    public void doInit() {
+    public void doInit(Game game) {
         final GameUI_Config uiConfig = ui.currentConfig();
         final var spriteSheet = (ArcadeMsPacMan_SpriteSheet) uiConfig.spriteSheet();
 
-        context().currentGame().hud().scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
+        game.hud().scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
 
         pacMan = ArcadeMsPacMan_ActorFactory.createPacMan();
         pacMan.setAnimationManager(uiConfig.createPacAnimations());
@@ -131,11 +132,11 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     }
 
     @Override
-    protected void doEnd() {
+    protected void doEnd(Game game) {
     }
 
     @Override
-    public void update() {
+    public void update(Game game) {
         switch (sceneState) {
             case CLAPPERBOARD -> updateStateClapperboard();
             case CHASED_BY_GHOSTS -> updateStateChasedByGhosts();

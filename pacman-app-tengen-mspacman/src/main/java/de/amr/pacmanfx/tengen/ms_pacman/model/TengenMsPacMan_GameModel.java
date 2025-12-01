@@ -212,7 +212,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void onGameEnding() {
+    public void onGameOver() {
         setPlaying(false);
         scoreManager.updateHighScore();
         showLevelMessage(MessageType.GAME_OVER);

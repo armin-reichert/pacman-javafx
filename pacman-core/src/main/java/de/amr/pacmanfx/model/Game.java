@@ -108,7 +108,7 @@ public interface Game {
     void onLevelCompleted();
     void onPacKilled();
     void onGhostKilled(Ghost ghost);
-    void onGameEnding();
+    void onGameOver();
 
     // Actor collision algorithm
     CollisionStrategy collisionStrategy();

@@ -9,14 +9,15 @@ import de.amr.pacmanfx.arcade.pacman.model.actors.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_CutScene3_Renderer;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.lib.Direction;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui._2d.HUD_Renderer;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
-import de.amr.pacmanfx.ui._2d.HUD_Renderer;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
@@ -75,25 +76,21 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
     }
 
     @Override
-    public void doInit() {
-        context().currentGame().hud().creditVisible(false).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
-
-        GameUI_Config uiConfig = ui.currentConfig();
-
+    public void doInit(Game game) {
+        game.hud().creditVisible(false).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
+        final GameUI_Config uiConfig = ui.currentConfig();
         pac = ArcadePacMan_ActorFactory.createPacMan();
         pac.setAnimationManager(uiConfig.createPacAnimations());
-
         blinky = uiConfig.createAnimatedGhost(RED_GHOST_SHADOW);
-
         frame = -1;
     }
 
     @Override
-    protected void doEnd() {
+    protected void doEnd(Game game) {
     }
 
     @Override
-    public void update() {
+    public void update(Game game) {
         ++frame;
         if (frame >= ANIMATION_START) {
             pac.move();
@@ -120,7 +117,7 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
                 blinky.setWishDir(Direction.RIGHT);
                 blinky.playAnimation(ArcadePacMan_UIConfig.AnimationID.ANIM_BLINKY_NAKED);
             }
-            case ANIMATION_START + 700 -> context().currentGame().control().terminateCurrentGameState();
+            case ANIMATION_START + 700 -> game.control().terminateCurrentGameState();
             default -> {}
         }
     }

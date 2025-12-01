@@ -130,7 +130,6 @@ public class Arcade_GameController extends StateMachine<FsmState<Game>, Game> im
         },
 
         LEVEL_COMPLETE {
-
             @Override
             public void onEnter(Game game) {
                 timer.restartIndefinitely(); // UI triggers timeout
@@ -141,8 +140,7 @@ public class Arcade_GameController extends StateMachine<FsmState<Game>, Game> im
                 if (timer.tickCount() == 1) {
                     game.onLevelCompleted();
                 }
-
-                if (timer.hasExpired()) {
+                else if (timer.hasExpired()) {
                     if (game.level().isDemoLevel()) {
                         // just in case: if demo level was completed, go back to intro scene
                         game.control().changeState(INTRO);
@@ -258,7 +256,7 @@ public class Arcade_GameController extends StateMachine<FsmState<Game>, Game> im
             @Override
             public void onEnter(Game game) {
                 timer.restartTicks(game.level().gameOverStateTicks());
-                game.onGameEnding();
+                game.onGameOver();
             }
 
             @Override

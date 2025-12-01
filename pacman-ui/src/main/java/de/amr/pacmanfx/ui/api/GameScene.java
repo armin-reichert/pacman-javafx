@@ -7,6 +7,7 @@ package de.amr.pacmanfx.ui.api;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameEventListener;
+import de.amr.pacmanfx.model.Game;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.ContextMenuEvent;
@@ -37,17 +38,17 @@ public interface GameScene extends GameEventListener {
     /**
      * Called when the scene becomes the current one.
      */
-    void init();
+    void init(Game game);
 
     /**
      * Called when the scene needs to be updated.
      */
-    void update();
+    void update(Game game);
 
     /**
      * Called when the scene ends and gets replaced by another scene.
      */
-    void end();
+    void end(Game game);
 
     @Override
     default void onStopAllSounds(GameEvent event) { ui().soundManager().stopAll(); }

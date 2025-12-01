@@ -7,6 +7,7 @@ package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.AnimationManager;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -103,8 +104,8 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
 
     @Override
-    protected void doInit() {
-        TengenMsPacMan_HUD hud = (TengenMsPacMan_HUD) context().currentGame().hud();
+    protected void doInit(Game game) {
+        TengenMsPacMan_HUD hud = (TengenMsPacMan_HUD) game.hud();
         hud.all(false);
         hud.showGameOptions(false);
 
@@ -129,13 +130,13 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     }
 
     @Override
-    protected void doEnd() {
+    protected void doEnd(Game game) {
         ui.soundManager().stop(SoundID.INTERMISSION_4);
     }
 
     @Override
-    public void update() {
-        final int tick = (int) context().currentGame().control().state().timer().tickCount();
+    public void update(Game game) {
+        final int tick = (int) game.control().state().timer().tickCount();
 
         clapperboard.tick();
 
@@ -197,7 +198,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
                 msPacMan.hide();
             }
             case 904, 968, 1032, 1096, 1160, 1224, 1288, 1352 -> spawnJunior(tick);
-            case 1512 -> context().currentGame().control().changeState(GameState.SETTING_OPTIONS_FOR_START);
+            case 1512 -> game.control().changeState(GameState.SETTING_OPTIONS_FOR_START);
         }
     }
 

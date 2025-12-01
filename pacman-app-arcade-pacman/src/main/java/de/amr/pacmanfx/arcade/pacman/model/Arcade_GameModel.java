@@ -160,7 +160,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void onGameEnding() {
+    public void onGameOver() {
         setPlaying(false);
         if (!coinMechanism.noCoin()) {
             coinMechanism.consumeCoin();

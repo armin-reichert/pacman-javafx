@@ -13,6 +13,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.timer.TickTimer;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
@@ -92,8 +93,8 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
     }
 
     @Override
-    public void doInit() {
-        context().currentGame().hud().scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
+    public void doInit(Game game) {
+        game.hud().scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
 
         final GameUI_Config uiConfig = ui.currentConfig();
         final var spriteSheet = (ArcadeMsPacMan_SpriteSheet) uiConfig.spriteSheet();
@@ -117,11 +118,11 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
     }
 
     @Override
-    protected void doEnd() {
+    protected void doEnd(Game game) {
     }
 
     @Override
-    public void update() {
+    public void update(Game game) {
         switch (sceneState) {
             case SceneState.CLAPPERBOARD -> updateStateClapperboard();
             case SceneState.DELIVER_JUNIOR -> updateStateDeliverJunior();

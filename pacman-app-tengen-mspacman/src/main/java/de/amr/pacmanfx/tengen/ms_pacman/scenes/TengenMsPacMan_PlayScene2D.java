@@ -193,17 +193,17 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
     }
 
     @Override
-    public void doInit() {
-        final TengenMsPacMan_GameModel game = context().currentGame();
+    public void doInit(Game game) {
+        TengenMsPacMan_GameModel tengenGame = (TengenMsPacMan_GameModel) game;
         game.hud().scoreVisible(true).levelCounterVisible(true).livesCounterVisible(true);
-        game.hud().showGameOptions(!game.allOptionsHaveDefaultValue());
+        tengenGame.hud().showGameOptions(!tengenGame.allOptionsHaveDefaultValue());
         updateScaling();
         dynamicCamera.enterManualMode();
         dynamicCamera.setToTopPosition();
     }
 
     @Override
-    protected void doEnd() {
+    protected void doEnd(Game game) {
         if (levelCompletedAnimation != null) {
             levelCompletedAnimation.dispose();
             levelCompletedAnimation = null;
@@ -212,8 +212,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
     }
 
     @Override
-    public void update() {
-        context().currentGame().optGameLevel().ifPresent(gameLevel -> {
+    public void update(Game game) {
+        game.optGameLevel().ifPresent(gameLevel -> {
             int numRows = gameLevel.worldMap().numRows();
             canvasHeightUnscaled.set(TS(numRows + 2)); // 2 additional rows for level counter below maze
             if (gameLevel.isDemoLevel()) {

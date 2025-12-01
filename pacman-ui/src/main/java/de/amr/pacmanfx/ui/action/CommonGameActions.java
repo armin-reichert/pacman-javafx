@@ -12,7 +12,6 @@ import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.test.LevelMediumTestState;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
-import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
 import javafx.scene.shape.DrawMode;
 import javafx.util.Duration;
@@ -108,7 +107,7 @@ public final class CommonGameActions {
         public void execute(GameUI ui) {
             final Game game = ui.context().currentGame();
             ui.soundManager().stopAll();
-            ui.currentGameScene().ifPresent(GameScene::end);
+            ui.currentGameScene().ifPresent(gameScene -> gameScene.end(game));
             boolean isLevelShortTest = game.control().state() instanceof LevelShortTestState;
             if (isLevelShortTest) {
                 game.control().state().onExit(game); //TODO exit other states too?

@@ -318,13 +318,14 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     private void doSimulationStepAndUpdateGameScene() {
+        final Game game = context().currentGame();
         try {
-            final SimulationStepResult events = gameContext.currentGame().simulationStepResult();
+            final SimulationStepResult events = game.simulationStepResult();
             events.reset();
             events.setTick(clock.tickCount());
-            gameContext.currentGame().control().update();
+            game.control().update();
             events.printLog();
-            currentGameScene().ifPresent(GameScene::update);
+            currentGameScene().ifPresent(gameScene -> gameScene.update(game));
         } catch (Throwable x) {
             ka_tas_tro_phe(x);
         }
@@ -423,6 +424,8 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public void quitCurrentGameScene() {
+        final Game game = context().currentGame();
+
         clock.stop();
         clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
 
@@ -430,25 +433,28 @@ public final class GameUI_Implementation implements GameUI {
 
         //TODO this is game-specific and should not be handled here
         currentGameScene().ifPresent(gameScene -> {
-            gameScene.end();
-            boolean shouldConsumeCoin = gameContext.currentGame().control().state().name().equals("STARTING_GAME_OR_LEVEL")
-                || gameContext.currentGame().isPlaying();
+            gameScene.end(game);
+            boolean shouldConsumeCoin = game.control().state().name().equals("STARTING_GAME_OR_LEVEL")
+                || game.isPlaying();
             if (shouldConsumeCoin && !context().coinMechanism().noCoin()) {
                 context().coinMechanism().consumeCoin();
             }
             Logger.info("Quit game scene ({}), returning to start view", gameScene.getClass().getSimpleName());
         });
 
-        gameContext.currentGame().control().restart("BOOT");
+        game.control().restart("BOOT");
         showStartView();
     }
 
     @Override
     public void restart() {
-        currentGameScene().ifPresent(GameScene::end);
+        final Game game = context().currentGame();
+
         clock.stop();
         clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
-        gameContext.currentGame().control().restart("BOOT");
+        currentGameScene().ifPresent(gameScene -> gameScene.end(game));
+
+        game.control().restart("BOOT");
         Platform.runLater(clock::start);
     }
 
@@ -538,7 +544,7 @@ public final class GameUI_Implementation implements GameUI {
     @Override
     public void showEditorView() {
         if (!gameContext.currentGame().isPlaying() || clock.isPaused()) {
-            currentGameScene().ifPresent(GameScene::end);
+            currentGameScene().ifPresent(gameScene -> gameScene.end(context().currentGame()));
             soundManager().stopAll();
             clock.stop();
             getOrCreateEditView().editor().start();

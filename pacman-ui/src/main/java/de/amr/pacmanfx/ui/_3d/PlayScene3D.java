@@ -265,8 +265,8 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
     protected void setPlayerSteeringActionBindings() {}
 
     @Override
-    public void init() {
-        context().currentGame().hud().showScore(true);
+    public void init(Game game) {
+        game.hud().showScore(true);
         perspectiveIDProperty().bind(PROPERTY_3D_PERSPECTIVE_ID);
         actionBindings.addKeyCombination(actionDroneUp, control(KeyCode.MINUS));
         actionBindings.addKeyCombination(actionDroneDown, control(KeyCode.PLUS));
@@ -274,7 +274,7 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
     }
 
     @Override
-    public void end() {
+    public void end(Game game) {
         ui.soundManager().stopAll();
         if (gameLevel3D != null) {
             gameLevel3D.dispose();
@@ -284,8 +284,8 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
     }
 
     @Override
-    public void update() {
-        final GameLevel gameLevel = context().currentGame().level();
+    public void update(Game game) {
+        final GameLevel gameLevel = game.level();
         if (gameLevel == null) {
             // Scene is already updated 2 ticks before the game level gets created!
             Logger.info("Tick #{}: Game level not yet created, update ignored", ui.clock().tickCount());
@@ -299,7 +299,7 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
         updateCamera();
         updateHUD();
         ui.soundManager().setEnabled(!gameLevel.isDemoLevel());
-        updateSound(gameLevel, context().currentGame().control().state());
+        updateSound(gameLevel, game.control().state());
     }
 
     @Override

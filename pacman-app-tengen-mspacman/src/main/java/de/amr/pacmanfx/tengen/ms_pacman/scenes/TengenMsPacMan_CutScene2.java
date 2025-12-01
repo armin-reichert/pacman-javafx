@@ -7,6 +7,7 @@ package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
@@ -97,8 +98,8 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
 
 
     @Override
-    public void doInit() {
-        TengenMsPacMan_HUD hud = (TengenMsPacMan_HUD) context().currentGame().hud();
+    public void doInit(Game game) {
+        TengenMsPacMan_HUD hud = (TengenMsPacMan_HUD) game.hud();
         hud.creditVisible(false).scoreVisible(false).levelCounterVisible(true).livesCounterVisible(false);
         hud.showGameOptions(false);
 
@@ -122,19 +123,19 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
     }
 
     @Override
-    protected void doEnd() {
+    protected void doEnd(Game game) {
         ui.soundManager().stop(SoundID.INTERMISSION_2);
     }
 
     @Override
-    public void update() {
-        final int t = (int) context().currentGame().control().state().timer().tickCount();
+    public void update(Game game) {
+        final int tick = (int) game.control().state().timer().tickCount();
 
         pacMan.move();
         msPacMan.move();
         clapperboard.tick();
 
-        switch (t) {
+        switch (tick) {
             case 270 -> {
                 msPacMan.setPosition(LEFT_BORDER, UPPER_LANE);
                 msPacMan.setMoveDir(Direction.RIGHT);
@@ -190,7 +191,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
                 pacMan.setMoveDir(Direction.RIGHT);
                 pacMan.setSpeed(4.0f);
             }
-            case 1380 -> context().currentGame().control().terminateCurrentGameState();
+            case 1380 -> game.control().terminateCurrentGameState();
         }
     }
 

@@ -9,14 +9,15 @@ import de.amr.pacmanfx.arcade.pacman.model.actors.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_CutScene1_Renderer;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.lib.Direction;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui._2d.HUD_Renderer;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
-import de.amr.pacmanfx.ui._2d.HUD_Renderer;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
@@ -74,24 +75,21 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
     }
 
     @Override
-    public void doInit() {
+    public void doInit(Game game) {
         GameUI_Config uiConfig = ui.currentConfig();
-
-        context().currentGame().hud().creditVisible(false).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
-
+        game.hud().creditVisible(false).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
         pac = ArcadePacMan_ActorFactory.createPacMan();
         pac.setAnimationManager(uiConfig.createPacAnimations());
-
         blinky = uiConfig.createAnimatedGhost(RED_GHOST_SHADOW);
-
         frame = -1;
     }
 
     @Override
-    protected void doEnd() {}
+    protected void doEnd(Game game) {
+    }
 
     @Override
-    public void update() {
+    public void update(Game game) {
         ++frame;
         if (frame == ANIMATION_START) {
             ui.soundManager().play(SoundID.INTERMISSION_1, 2);
@@ -122,7 +120,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
             pac.playAnimation(ArcadePacMan_UIConfig.AnimationID.ANIM_BIG_PAC_MAN);
         }
         else if (frame == ANIMATION_START + 632) {
-            context().currentGame().control().terminateCurrentGameState();
+            game.control().terminateCurrentGameState();
         }
         if (frame >= ANIMATION_START) {
             pac.move();

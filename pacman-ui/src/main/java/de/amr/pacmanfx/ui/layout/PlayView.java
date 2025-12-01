@@ -248,6 +248,7 @@ public class PlayView extends StackPane implements GameUI_View {
     // -----------------------------------------------------------------------------------------------------------------
 
     public void updateGameScene(boolean reloadCurrent) {
+        final Game game = ui.context().currentGame();
         final GameScene nextGameScene = ui.currentConfig().sceneConfig().selectGameScene(ui.context());
         if (nextGameScene == null) {
             String errorMessage = " Katastrophe! Could not determine game scene!";
@@ -260,11 +261,11 @@ public class PlayView extends StackPane implements GameUI_View {
             return;
         }
         if (currentGameScene != null) {
-            currentGameScene.end();
+            currentGameScene.end(game);
             Logger.info("Game scene ended: {}", currentGameScene.getClass().getSimpleName());
         }
         embedGameScene(parentScene, nextGameScene);
-        nextGameScene.init();
+        nextGameScene.init(game);
         Logger.info("Game scene initialized: {}", nextGameScene.getClass().getSimpleName());
 
         // Handle switching between 2D and 3D game variants
@@ -285,7 +286,7 @@ public class PlayView extends StackPane implements GameUI_View {
         if (gameScene instanceof SubSceneProvider subSceneProvider) {
             // 1. Play scene with integrated sub-scene: 3D scene or 2D scene with camera as in Tengen Ms. Pac-Man:
             SubScene subScene = subSceneProvider.subScene();
-            // Let sub-scene take full size o parent scene
+            // Let sub-scene take full size of parent scene
             subScene.widthProperty().bind(parentScene.widthProperty());
             subScene.heightProperty().bind(parentScene.heightProperty());
             // Is it a 2D scene with canvas inside sub-scene with camera?

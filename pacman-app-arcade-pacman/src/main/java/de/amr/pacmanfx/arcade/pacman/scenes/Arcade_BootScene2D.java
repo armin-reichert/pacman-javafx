@@ -7,9 +7,9 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_BootScene2D_Renderer;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui._2d.HUD_Renderer;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
-import de.amr.pacmanfx.ui._2d.HUD_Renderer;
 import javafx.scene.canvas.Canvas;
 
 /**
@@ -35,22 +35,21 @@ public class Arcade_BootScene2D extends GameScene2D {
     }
 
     @Override
-    public void doInit() {
-        context().currentGame().hud().all(false);
-   }
-
-    @Override
     protected void createRenderers(Canvas canvas) {
         final SpriteSheet<?> spriteSheet = ui.currentConfig().spriteSheet();
         sceneRenderer = configureRenderer(new Arcade_BootScene2D_Renderer(this, canvas, spriteSheet));
     }
 
     @Override
-    protected void doEnd() {}
+    public void doInit(Game game) {
+        game.hud().all(false);
+   }
 
     @Override
-    public void update() {
-        final Game game = context().currentGame();
+    protected void doEnd(Game game) {}
+
+    @Override
+    public void update(Game game) {
         if (game.control().state().timer().atSecond(4)) {
             game.control().terminateCurrentGameState();
         }

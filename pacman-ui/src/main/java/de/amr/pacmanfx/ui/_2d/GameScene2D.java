@@ -7,6 +7,7 @@ package de.amr.pacmanfx.ui._2d;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.math.Vector2i;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.api.ActionBindingsManager;
 import de.amr.pacmanfx.ui.api.GameScene;
@@ -45,12 +46,12 @@ public abstract class GameScene2D implements GameScene {
     /**
      * Hook method called when scene is initialized.
      */
-    protected abstract void doInit();
+    protected abstract void doInit(Game game);
 
     /**
      * Hook method called when scene ends.
      */
-    protected abstract void doEnd();
+    protected abstract void doEnd(Game game);
 
     /**
      * Called when canvas has been assigned. Creates the renderers for this scene.
@@ -69,15 +70,15 @@ public abstract class GameScene2D implements GameScene {
     public ActionBindingsManager actionBindings() { return actionBindings; }
 
     @Override
-    public final void init() {
-        doInit();
+    public final void init(Game game) {
+        doInit(game);
         actionBindings.assignBindingsToKeyboard(ui.keyboard());
         Logger.info("2D scene {} initialized", getClass().getSimpleName());
     }
 
     @Override
-    public final void end() {
-        doEnd();
+    public final void end(Game game) {
+        doEnd(game);
         ui.soundManager().stopAll();
         Logger.info("2D scene {} ends", getClass().getSimpleName());
     }

@@ -287,11 +287,10 @@ public class TengenMsPacMan_GameController extends StateMachine<FsmState<Game>, 
         },
 
         GAME_OVER {
-
             @Override
             public void onEnter(Game game) {
                 timer.restartTicks(game.level().gameOverStateTicks());
-                game.onGameEnding();
+                game.onGameOver();
             }
 
             @Override

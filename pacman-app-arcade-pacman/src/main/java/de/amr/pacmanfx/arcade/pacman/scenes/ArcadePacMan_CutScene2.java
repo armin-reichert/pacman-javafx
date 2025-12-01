@@ -9,15 +9,16 @@ import de.amr.pacmanfx.arcade.pacman.model.actors.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_CutScene2_Renderer;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.lib.Direction;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui._2d.HUD_Renderer;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
-import de.amr.pacmanfx.ui._2d.HUD_Renderer;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
@@ -86,8 +87,8 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     }
 
     @Override
-    public void doInit() {
-        context().currentGame().hud().creditVisible(false).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
+    public void doInit(Game game) {
+        game.hud().creditVisible(false).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
 
         GameUI_Config uiConfig = ui.currentConfig();
 
@@ -108,10 +109,10 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     }
 
     @Override
-    protected void doEnd() {}
+    protected void doEnd(Game game) {}
 
     @Override
-    public void update() {
+    public void update(Game game) {
         ++frame;
         if (frame < ANIMATION_START) {
             return;
@@ -153,7 +154,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
             case ANIMATION_START + 420 -> blinkyDamaged.nextFrame(); // Eyes right-down
             case ANIMATION_START + 508 -> {
                 blinky.setVisible(false);
-                context().currentGame().control().terminateCurrentGameState();
+                game.control().terminateCurrentGameState();
             }
             default -> {}
         }

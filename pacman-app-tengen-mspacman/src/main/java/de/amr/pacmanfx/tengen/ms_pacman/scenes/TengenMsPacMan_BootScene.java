@@ -7,6 +7,7 @@ package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_BootScene_Renderer;
@@ -55,20 +56,19 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     }
 
     @Override
-    public void doInit() {
+    public void doInit(Game game) {
         movingText = new Actor();
         movingText.setPosition(TS(9), unscaledSize().y()); // lower border of screen
-
         final GameUI_Config uiConfig = ui.currentConfig();
         ghost = uiConfig.createAnimatedGhost(RED_GHOST_SHADOW);
     }
 
     @Override
-    protected void doEnd() {}
+    protected void doEnd(Game game) {}
 
     @Override
-    public void update() {
-        int tick = (int) context().currentGame().control().state().timer().tickCount();
+    public void update(Game game) {
+        int tick = (int) game.control().state().timer().tickCount();
         shadeOfBlue = shadeOfBlue(tick);
         switch (tick) {
             case   1 -> gray(false);
@@ -97,7 +97,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
             case 204 -> gray(true);
             case 214 -> gray(false);
             case 220 -> {
-                context().currentGame().control().terminateCurrentGameState();
+                game.control().terminateCurrentGameState();
                 return;
             }
         }

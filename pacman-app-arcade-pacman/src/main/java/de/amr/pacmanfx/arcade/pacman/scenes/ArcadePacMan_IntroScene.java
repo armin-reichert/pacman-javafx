@@ -116,10 +116,10 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     }
 
     @Override
-    public void doInit() {
+    public void doInit(Game game) {
         final GameUI_Config uiConfig = ui.currentConfig();
 
-        context().currentGame().hud().creditVisible(true).scoreVisible(true).livesCounterVisible(false).levelCounterVisible(true);
+        game.hud().creditVisible(true).scoreVisible(true).livesCounterVisible(false).levelCounterVisible(true);
 
         actionBindings.addKeyCombination(ArcadeActions.ACTION_INSERT_COIN, bare(KeyCode.DIGIT5));
         actionBindings.addKeyCombination(ArcadeActions.ACTION_INSERT_COIN, bare(KeyCode.NUMPAD5));
@@ -156,12 +156,12 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     }
 
     @Override
-    protected void doEnd() {
+    protected void doEnd(Game game) {
         blinking.stop();
     }
 
     @Override
-    public void update() {
+    public void update(Game game) {
         sceneController.update();
     }
 

@@ -9,9 +9,9 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_CreditsScene_Renderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui._2d.HUD_Renderer;
 import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.api.GameUI;
-import de.amr.pacmanfx.ui._2d.HUD_Renderer;
 import javafx.scene.canvas.Canvas;
 
 import java.util.Set;
@@ -51,19 +51,18 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
     }
 
     @Override
-    protected void doInit() {
-        context().currentGame().hud().creditVisible(false).scoreVisible(false).levelCounterVisible(false).livesCounterVisible(false);
+    protected void doInit(Game game) {
+        game.hud().creditVisible(false).scoreVisible(false).levelCounterVisible(false).livesCounterVisible(false);
         Set<ActionBinding> tengenActionBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().tengenActionBindings();
         actionBindings.bind(ACTION_ENTER_START_SCREEN, tengenActionBindings);
         fadeProgress = 0;
     }
 
     @Override
-    protected void doEnd() {}
+    protected void doEnd(Game game) {}
 
     @Override
-    public void update() {
-        final Game game = context().currentGame();
+    public void update(Game game) {
         if (game.control().state().timer().atSecond(DISPLAY_SECONDS)) {
             game.control().terminateCurrentGameState();
             return;

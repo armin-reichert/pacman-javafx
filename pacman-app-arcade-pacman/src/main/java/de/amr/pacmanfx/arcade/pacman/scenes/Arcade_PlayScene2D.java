@@ -84,12 +84,12 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    protected void doInit() {
-        context().currentGame().hud().creditVisible(false).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(true);
+    protected void doInit(Game game) {
+        game.hud().creditVisible(false).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(true);
     }
 
     @Override
-    protected void doEnd() {
+    protected void doEnd(Game game) {
         if (levelCompletedAnimation != null) {
             levelCompletedAnimation.dispose();
             levelCompletedAnimation = null;
@@ -153,8 +153,8 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void update() {
-        context().currentGame().optGameLevel().ifPresent(gameLevel -> {
+    public void update(Game game) {
+        game.optGameLevel().ifPresent(gameLevel -> {
             updateHUD(gameLevel);
             updateSound(gameLevel);
         });
