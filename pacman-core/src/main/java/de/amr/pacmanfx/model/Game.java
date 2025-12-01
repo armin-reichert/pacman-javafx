@@ -77,7 +77,7 @@ public interface Game {
     void resetEverything();
     void prepareForNewGame();
     boolean canStartNewGame();
-    void startNewGame();
+    void startNewGame(long tick);
     boolean isPlaying();
     void setPlaying(boolean playing);
     void continueGame();

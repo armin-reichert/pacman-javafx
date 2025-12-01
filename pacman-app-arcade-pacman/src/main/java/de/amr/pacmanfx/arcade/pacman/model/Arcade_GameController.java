@@ -76,8 +76,6 @@ public class Arcade_GameController extends StateMachine<FsmState<Game>, Game> im
         },
 
         STARTING_GAME_OR_LEVEL {
-            static final short TICK_NEW_GAME_SHOW_GUYS = 120;
-            static final short TICK_NEW_GAME_START_HUNTING = 240;
             static final short TICK_DEMO_LEVEL_START_HUNTING = 120;
             static final short TICK_RESUME_HUNTING =  90;
 
@@ -88,36 +86,15 @@ public class Arcade_GameController extends StateMachine<FsmState<Game>, Game> im
 
             @Override
             public void onUpdate(Game game) {
+                long tick = timer.tickCount();
                 if (game.isPlaying()) {
                     continueGame(game);
                 }
                 else if (game.canStartNewGame()) {
-                    startNewGame(game);
+                    game.startNewGame(tick);
                 }
                 else {
                     startDemoLevel(game);
-                }
-            }
-
-            private void startNewGame(Game game) {
-                if (timer.tickCount() == 1) {
-                    game.startNewGame();
-                }
-                else if (timer.tickCount() == 2) {
-                    if (!game.level().isDemoLevel()) {
-                        game.level().pac().immuneProperty().bind(game.immunityProperty());
-                        game.level().pac().usingAutopilotProperty().bind(game.usingAutopilotProperty());
-                        boolean cheating = game.immunity() || game.usingAutopilot();
-                        game.cheatUsedProperty().set(cheating);
-                    }
-                    game.startLevel();
-                }
-                else if (timer.tickCount() == TICK_NEW_GAME_SHOW_GUYS) {
-                    game.level().showPacAndGhosts();
-                }
-                else if (timer.tickCount() == TICK_NEW_GAME_START_HUNTING) {
-                    game.setPlaying(true);
-                    game.control().changeState(GameState.HUNTING);
                 }
             }
 

@@ -26,6 +26,9 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class Arcade_GameModel extends AbstractGameModel {
 
+    private static final short TICK_NEW_GAME_SHOW_GUYS = 120;
+    private static final short TICK_NEW_GAME_START_HUNTING = 240;
+
     // Level data as given in the "Pac-Man Dossier"
     protected static final Arcade_LevelData[] LEVEL_DATA = {
         /* 1*/ Arcade_LevelData.of( 80, 75, 40,  20,  80, 10,  85,  90, 50, 6, 5),
@@ -193,11 +196,29 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void startNewGame() {
-        prepareForNewGame();
-        levelCounter().clear();
-        buildNormalLevel(1);
-        publishGameEvent(GameEvent.Type.GAME_STARTED);
+    public void startNewGame(long tick) {
+        if (tick == 1) {
+            prepareForNewGame();
+            levelCounter().clear();
+            buildNormalLevel(1);
+            publishGameEvent(GameEvent.Type.GAME_STARTED);
+        }
+        else if (tick == 2) {
+            if (!level().isDemoLevel()) {
+                level().pac().immuneProperty().bind(immunityProperty());
+                level().pac().usingAutopilotProperty().bind(usingAutopilotProperty());
+                boolean cheating = immunity() || usingAutopilot();
+                cheatUsedProperty().set(cheating);
+            }
+            startLevel();
+        }
+        else if (tick == TICK_NEW_GAME_SHOW_GUYS) {
+            level().showPacAndGhosts();
+        }
+        else if (tick == TICK_NEW_GAME_START_HUNTING) {
+            setPlaying(true);
+            control().changeState(Arcade_GameController.GameState.HUNTING);
+        }
     }
 
     @Override

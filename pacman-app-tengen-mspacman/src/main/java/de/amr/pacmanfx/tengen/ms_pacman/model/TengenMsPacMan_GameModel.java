@@ -41,6 +41,11 @@ import static java.util.Objects.requireNonNull;
  */
 public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
+    private static final short TICK_SHOW_READY = 10;
+    private static final short TICK_NEW_GAME_SHOW_GUYS = 70;
+    private static final short TICK_NEW_GAME_START_HUNTING = 250;
+
+
     public static final String GAME_OVER_MESSAGE_TEXT = "GAME OVER";
     public static final String READY_MESSAGE_TEXT = "READY!";
     public static final String LEVEL_TEST_MESSAGE_TEXT_PATTERN = "TEST    L%02d";
@@ -288,11 +293,28 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void startNewGame() {
-        prepareForNewGame();
-        //hud.levelCounter().setStartLevel(startLevelNumber);
-        buildNormalLevel(startLevelNumber);
-        publishGameEvent(GameEvent.Type.GAME_STARTED);
+    public void startNewGame(long tick) {
+        if (tick == 1) {
+            prepareForNewGame();
+            buildNormalLevel(startLevelNumber);
+            publishGameEvent(GameEvent.Type.GAME_STARTED);
+        }
+        else if (tick == TICK_SHOW_READY) {
+            if (!level().isDemoLevel()) {
+                level().pac().immuneProperty().bind(immunityProperty());
+                level().pac().usingAutopilotProperty().bind(usingAutopilotProperty());
+                boolean cheating = immunity() || usingAutopilot();
+                cheatUsedProperty().set(cheating);
+            }
+            startLevel();
+        }
+        else if (tick == TICK_NEW_GAME_SHOW_GUYS) {
+            level().showPacAndGhosts();
+        }
+        else if (tick == TICK_NEW_GAME_START_HUNTING) {
+            setPlaying(true);
+            control().changeState(TengenMsPacMan_GameController.GameState.HUNTING);
+        }
     }
 
     @Override
