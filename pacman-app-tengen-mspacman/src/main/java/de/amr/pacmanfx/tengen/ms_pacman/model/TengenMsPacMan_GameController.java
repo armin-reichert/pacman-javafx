@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman.model;
 
-import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.timer.TickTimer;
@@ -12,7 +11,6 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameControl;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.MessageType;
-import de.amr.pacmanfx.model.actors.*;
 
 public class TengenMsPacMan_GameController extends StateMachine<FsmState<Game>, Game> implements GameControl {
 
@@ -216,22 +214,13 @@ public class TengenMsPacMan_GameController extends StateMachine<FsmState<Game>, 
 
 
         PACMAN_DYING {
-            private static final int TICK_HIDE_GHOSTS = 60;
-            private static final int TICK_START_PAC_ANIMATION = 90;
-            private static final int TICK_HIDE_PAC = 190;
-            private static final int TICK_PAC_DEAD = 240;
-
             @Override
             public void onEnter(Game game) {
-                timer.restartIndefinitely();
-                game.onPacKilled();
-                game.publishGameEvent(GameEvent.Type.STOP_ALL_SOUNDS);
+                timer.restartIndefinitely(); // UI triggers time-out
             }
 
             @Override
             public void onUpdate(Game game) {
-                final Pac pac = game.level().pac();
-
                 if (timer.hasExpired()) {
                     if (game.level().isDemoLevel()) {
                         game.control().changeState(GAME_OVER);
@@ -240,36 +229,9 @@ public class TengenMsPacMan_GameController extends StateMachine<FsmState<Game>, 
                         game.addLives(-1);
                         game.control().changeState(game.lifeCount() == 0 ? GAME_OVER : STARTING_GAME_OR_LEVEL);
                     }
+                } else {
+                    game.updatePacManDying(timer.tickCount());
                 }
-                else if (timer.tickCount() == TICK_HIDE_GHOSTS) {
-                    game.level().ghosts().forEach(Ghost::hide);
-                    //TODO this does not belong here
-                    pac.optAnimationManager().ifPresent(animations -> {
-                        animations.select(CommonAnimationID.ANIM_PAC_DYING);
-                        animations.reset();
-                    });
-                }
-                else if (timer.tickCount() == TICK_START_PAC_ANIMATION) {
-                    //TODO this does not belong here
-                    pac.optAnimationManager().ifPresent(AnimationManager::play);
-                    game.publishGameEvent(GameEvent.Type.PAC_DYING, pac.tile());
-                }
-                else if (timer.tickCount() == TICK_HIDE_PAC) {
-                    pac.hide();
-                }
-                else if (timer.tickCount() == TICK_PAC_DEAD) {
-                    game.publishGameEvent(GameEvent.Type.PAC_DEAD);
-                }
-                else {
-                    game.level().blinking().tick();
-                    pac.tick(game);
-                }
-            }
-
-            @Override
-            public void onExit(Game game) {
-                //TODO clarify in MAME
-                game.level().optBonus().ifPresent(Bonus::setInactive);
             }
         },
 
