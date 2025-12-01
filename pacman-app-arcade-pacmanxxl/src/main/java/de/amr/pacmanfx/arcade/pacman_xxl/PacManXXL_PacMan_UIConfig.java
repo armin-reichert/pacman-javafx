@@ -18,7 +18,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
-import de.amr.pacmanfx.ui._3d.PlayScene3D;
+import de.amr.pacmanfx.ui._2d.HUD_Renderer;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameScene_Config;
 import de.amr.pacmanfx.ui.api.GameUI;
@@ -34,7 +34,6 @@ import de.amr.pacmanfx.uilib.model3D.PacBody;
 import de.amr.pacmanfx.uilib.model3D.PacMan3D;
 import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
-import de.amr.pacmanfx.ui._2d.HUD_Renderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -253,11 +252,11 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config, GameScene_Confi
 
     @Override
     public void createGameScenes(GameUI ui) {
-        scenesByID.put(SCENE_ID_BOOT_SCENE,  new Arcade_BootScene2D(ui));
-        scenesByID.put(SCENE_ID_INTRO_SCENE, new ArcadePacMan_IntroScene(ui));
-        scenesByID.put(SCENE_ID_START_SCENE, new ArcadePacMan_StartScene(ui));
+        scenesByID.put(SCENE_ID_BOOT_SCENE,     new Arcade_BootScene2D(ui));
+        scenesByID.put(SCENE_ID_INTRO_SCENE,    new ArcadePacMan_IntroScene(ui));
+        scenesByID.put(SCENE_ID_START_SCENE,    new ArcadePacMan_StartScene(ui));
         scenesByID.put(SCENE_ID_PLAY_SCENE_2D,  new Arcade_PlayScene2D(ui));
-        scenesByID.put(SCENE_ID_PLAY_SCENE_3D,  new PlayScene3D(ui));
+        scenesByID.put(SCENE_ID_PLAY_SCENE_3D,  new Arcade_PlayScene3D(ui));
         scenesByID.put(sceneID_CutScene(1),     new ArcadePacMan_CutScene1(ui));
         scenesByID.put(sceneID_CutScene(2),     new ArcadePacMan_CutScene2(ui));
         scenesByID.put(sceneID_CutScene(3),     new ArcadePacMan_CutScene3(ui));
