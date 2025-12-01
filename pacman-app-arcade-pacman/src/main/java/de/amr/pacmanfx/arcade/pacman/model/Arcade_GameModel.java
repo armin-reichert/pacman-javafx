@@ -27,10 +27,11 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class Arcade_GameModel extends AbstractGameModel {
 
-    private static final short TICK_NEW_GAME_SHOW_GUYS = 120;
-    private static final short TICK_NEW_GAME_START_HUNTING = 240;
-    private static final short TICK_RESUME_HUNTING =  90;
-    private static final short TICK_DEMO_LEVEL_START_HUNTING = 120;
+    public static final short TICK_NEW_GAME_SHOW_GUYS = 120;
+    public static final short TICK_NEW_GAME_START_HUNTING = 240;
+    public static final short TICK_RESUME_HUNTING =  90;
+    public static final short TICK_DEMO_LEVEL_START_HUNTING = 120;
+    public static final short TICK_GHOST_DYING_COMPLETE = 60;
 
     // Level data as given in the "Pac-Man Dossier"
     protected static final Arcade_LevelData[] LEVEL_DATA = {
@@ -156,6 +157,26 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         if (level.numGhostsKilled() == 16) {
             scoreManager.scorePoints(ALL_GHOSTS_IN_LEVEL_KILLED_POINTS);
             Logger.info("Scored {} points for killing all ghosts in level {}", ALL_GHOSTS_IN_LEVEL_KILLED_POINTS, level.number());
+        }
+    }
+
+    @Override
+    public void updateEatingGhost(long tick) {
+        final GameLevel level = level();
+        if (tick == 1) {
+            level.pac().hide();
+            level.ghosts().forEach(Ghost::stopAnimation);
+            publishGameEvent(GameEvent.Type.GHOST_EATEN);
+        }
+        else if (tick < TICK_GHOST_DYING_COMPLETE) {
+            level.ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
+                .forEach(ghost -> ghost.tick(this));
+            level.blinking().tick();
+        }
+        else if (tick == TICK_GHOST_DYING_COMPLETE) {
+            level.pac().show();
+            level.ghosts(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_HOME));
+            level.ghosts().forEach(ghost -> ghost.optAnimationManager().ifPresent(AnimationManager::play));
         }
     }
 

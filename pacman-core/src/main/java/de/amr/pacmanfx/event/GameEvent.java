@@ -37,7 +37,6 @@ public class GameEvent {
         PAC_LOST_POWER,
         PAC_STARTS_LOSING_POWER,
         STOP_ALL_SOUNDS,
-
         UNSPECIFIED_CHANGE
     }
 

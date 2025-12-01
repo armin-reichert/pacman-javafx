@@ -664,6 +664,11 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
     }
 
+    @Override
+    public void updateEatingGhost(long tick) {
+        //TODO
+    }
+
     // ActorSpeedControl interface
 
     public float speedUnitsToPixels(float units) {
