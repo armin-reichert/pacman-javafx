@@ -132,7 +132,7 @@ public class TengenMsPacMan_GameController extends StateMachine<FsmState<Game>, 
                     game.control().changeState(PACMAN_DYING);
                 }
                 else if (game.hasGhostBeenKilled()) {
-                    game.control().changeState(GHOST_DYING);
+                    game.control().changeState(EATING_GHOST);
                 }
             }
 
@@ -198,7 +198,7 @@ public class TengenMsPacMan_GameController extends StateMachine<FsmState<Game>, 
             }
         },
 
-        GHOST_DYING {
+        EATING_GHOST {
 
             @Override
             public void onEnter(Game game) {

@@ -318,7 +318,7 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
             switch (state.name()) {
                 case "HUNTING" -> gameLevel3D.onHuntingStart();
                 case "PACMAN_DYING" -> gameLevel3D.onPacManDying(state);
-                case "GHOST_DYING" -> gameLevel3D.onGhostDying();
+                case "EATING_GHOST" -> gameLevel3D.onGhostDying();
                 case "LEVEL_COMPLETE" -> gameLevel3D.onLevelComplete(state, perspectiveID);
                 case "GAME_OVER" -> gameLevel3D.onGameOver(state);
                 case "STARTING_GAME_OR_LEVEL" -> {
@@ -397,7 +397,7 @@ public class PlayScene3D extends Group implements GameScene, SubSceneProvider {
                 energizer3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(energizer3D.tile())));
 
         final String gameStateID = context().currentGame().control().state().name();
-        if (gameStateID.equals("HUNTING") || gameStateID.equals("GHOST_DYING")) { //TODO check this
+        if (gameStateID.equals("HUNTING") || gameStateID.equals("EATING_GHOST")) { //TODO check this
             gameLevel3D.energizers3D().stream()
                 .filter(energizer3D -> energizer3D.shape().isVisible())
                 .forEach(Energizer3D::startPumping);

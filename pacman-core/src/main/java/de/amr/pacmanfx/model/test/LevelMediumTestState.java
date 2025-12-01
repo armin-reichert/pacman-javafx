@@ -74,7 +74,7 @@ public class LevelMediumTestState implements FsmState<Game>, TestState {
         } else if (game.hasPacManBeenKilled()) {
             timer.expire();
         } else if (game.hasGhostBeenKilled()) {
-            game.control().changeState("GHOST_DYING");
+            game.control().changeState("EATING_GHOST");
         }
     }
 

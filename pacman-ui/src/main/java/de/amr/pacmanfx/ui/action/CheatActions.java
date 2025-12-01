@@ -59,7 +59,7 @@ public final class CheatActions {
             if (!vulnerableGhosts.isEmpty()) {
                 gameLevel.energizerVictims().clear(); // resets value of next killed ghost to 200
                 vulnerableGhosts.forEach(game::onGhostKilled);
-                game.control().changeState("GHOST_DYING");
+                game.control().changeState("EATING_GHOST");
             }
         }
 
