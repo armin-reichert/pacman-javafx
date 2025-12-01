@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.model;
 
+import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController.GameState;
 import de.amr.pacmanfx.arcade.pacman.model.actors.Blinky;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.math.Vector2i;
@@ -28,6 +29,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     private static final short TICK_NEW_GAME_SHOW_GUYS = 120;
     private static final short TICK_NEW_GAME_START_HUNTING = 240;
+    private static final short TICK_RESUME_HUNTING =  90;
 
     // Level data as given in the "Pac-Man Dossier"
     protected static final Arcade_LevelData[] LEVEL_DATA = {
@@ -217,7 +219,20 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         }
         else if (tick == TICK_NEW_GAME_START_HUNTING) {
             setPlaying(true);
-            control().changeState(Arcade_GameController.GameState.HUNTING);
+            control().changeState(GameState.HUNTING);
+        }
+    }
+
+    @Override
+    public void continuePlaying(long tick) {
+        if (tick == 1) {
+            final GameLevel level = level();
+            resetPacManAndGhostAnimations(level);
+            level.getReadyToPlay();
+            level.showPacAndGhosts();
+            publishGameEvent(GameEvent.Type.GAME_CONTINUED);
+        } else if (tick == TICK_RESUME_HUNTING) {
+            control().changeState(GameState.HUNTING);
         }
     }
 

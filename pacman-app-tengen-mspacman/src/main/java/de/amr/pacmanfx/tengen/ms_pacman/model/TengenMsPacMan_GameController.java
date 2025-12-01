@@ -102,27 +102,18 @@ public class TengenMsPacMan_GameController extends StateMachine<FsmState<Game>, 
         STARTING_GAME_OR_LEVEL {
 
             private static final short TICK_DEMO_LEVEL_START_HUNTING = 120;
-            private static final short TICK_RESUME_HUNTING = 240;
 
             @Override
             public void onUpdate(Game game) {
                 final long tick = timer.tickCount();
                 if (game.isPlaying()) {
-                    continueGame(game);
+                    game.continuePlaying(tick);
                 }
                 else if (game.canStartNewGame()) {
                     game.startNewGame(tick);
                 }
                 else {
                     startDemoLevel(game);
-                }
-            }
-
-            private void continueGame(Game game) {
-                if (timer.tickCount() == 1) {
-                    game.continueGame();
-                } else if (timer.tickCount() == TICK_RESUME_HUNTING) {
-                    game.control().changeState(HUNTING);
                 }
             }
 

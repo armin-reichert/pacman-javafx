@@ -45,7 +45,7 @@ public class LevelShortTestState implements FsmState<Game>, TestState {
     public void onUpdate(Game game) {
         final float START = 1.0f;
         if (timer.atSecond(START)) {
-            game.continueGame();
+            game.continuePlaying(1);
             GameLevelMessage message = new GameLevelMessage(MessageType.TEST);
             message.setPosition(game.level().worldMap().terrainLayer().messageCenterPosition());
             game.level().setMessage(message);

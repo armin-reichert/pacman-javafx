@@ -77,7 +77,6 @@ public class Arcade_GameController extends StateMachine<FsmState<Game>, Game> im
 
         STARTING_GAME_OR_LEVEL {
             static final short TICK_DEMO_LEVEL_START_HUNTING = 120;
-            static final short TICK_RESUME_HUNTING =  90;
 
             @Override
             public void onEnter(Game game) {
@@ -88,21 +87,13 @@ public class Arcade_GameController extends StateMachine<FsmState<Game>, Game> im
             public void onUpdate(Game game) {
                 long tick = timer.tickCount();
                 if (game.isPlaying()) {
-                    continueGame(game);
+                    game.continuePlaying(tick);
                 }
                 else if (game.canStartNewGame()) {
                     game.startNewGame(tick);
                 }
                 else {
                     startDemoLevel(game);
-                }
-            }
-
-            private void continueGame(Game game) {
-                if (timer.tickCount() == 1) {
-                    game.continueGame();
-                } else if (timer.tickCount() == TICK_RESUME_HUNTING) {
-                    game.control().changeState(GameState.HUNTING);
                 }
             }
 

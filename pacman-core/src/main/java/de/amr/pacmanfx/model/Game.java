@@ -80,7 +80,7 @@ public interface Game {
     void startNewGame(long tick);
     boolean isPlaying();
     void setPlaying(boolean playing);
-    void continueGame();
+    void continuePlaying(long tick);
     boolean canContinueOnGameOver();
     void buildNormalLevel(int levelNumber);
     void buildDemoLevel();

@@ -16,6 +16,7 @@ import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import de.amr.pacmanfx.steering.Steering;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
+import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameController.GameState;
 import de.amr.pacmanfx.tengen.ms_pacman.model.actors.*;
 import org.tinylog.Logger;
 
@@ -44,7 +45,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     private static final short TICK_SHOW_READY = 10;
     private static final short TICK_NEW_GAME_SHOW_GUYS = 70;
     private static final short TICK_NEW_GAME_START_HUNTING = 250;
-
+    private static final short TICK_RESUME_HUNTING = 240;
 
     public static final String GAME_OVER_MESSAGE_TEXT = "GAME OVER";
     public static final String READY_MESSAGE_TEXT = "READY!";
@@ -313,7 +314,20 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         }
         else if (tick == TICK_NEW_GAME_START_HUNTING) {
             setPlaying(true);
-            control().changeState(TengenMsPacMan_GameController.GameState.HUNTING);
+            control().changeState(GameState.HUNTING);
+        }
+    }
+
+    @Override
+    public void continuePlaying(long tick) {
+        if (tick == 1) {
+            final GameLevel level = level();
+            resetPacManAndGhostAnimations(level);
+            level.getReadyToPlay();
+            level.showPacAndGhosts();
+            publishGameEvent(GameEvent.Type.GAME_CONTINUED);
+        } else if (tick == TICK_RESUME_HUNTING) {
+            control().changeState(GameState.HUNTING);
         }
     }
 
