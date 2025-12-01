@@ -654,6 +654,11 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
+    public void updatePacManDying(long tick) {
+        //TODO
+    }
+
+    @Override
     public void onGhostKilled(Ghost ghost) {
         final List<Ghost> victims = level().energizerVictims();
         final int killedSoFar = victims.size();

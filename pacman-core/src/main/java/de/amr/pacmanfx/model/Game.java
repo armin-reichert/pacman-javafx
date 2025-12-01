@@ -107,6 +107,7 @@ public interface Game {
     // Game event handling
     void onLevelCompleted();
     void onPacKilled();
+    void updatePacManDying(long tick);
     void onGhostKilled(Ghost ghost);
     void updateEatingGhost(long tick);
     void onGameOver();

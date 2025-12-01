@@ -32,6 +32,11 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     public static final short TICK_RESUME_HUNTING =  90;
     public static final short TICK_DEMO_LEVEL_START_HUNTING = 120;
     public static final short TICK_EATING_GHOST_COMPLETE = 60;
+    private static final int TICK_PACMAN_DYING_HIDE_GHOSTS = 60;
+    private static final int TICK_PACMAN_DYING_START_ANIMATION = 90;
+    private static final int TICK_PACMAN_DYING_HIDE_PAC = 190;
+    private static final int TICK_PACMAN_DYING_PAC_DEAD = 240;
+
 
     // Level data as given in the "Pac-Man Dossier"
     protected static final Arcade_LevelData[] LEVEL_DATA = {
@@ -141,6 +146,42 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         level.huntingTimer().stop();
         level.pac().onKilled();
         level.ghosts().forEach(ghost -> ghost.onPacKilled(level));
+        publishGameEvent(GameEvent.Type.STOP_ALL_SOUNDS);
+    }
+
+    @Override
+    public void updatePacManDying(long tick) {
+        final GameLevel level = level();
+        final Pac pac = level.pac();
+        if (tick == 1) {
+            gateKeeper.resetCounterAndSetEnabled(true);
+            level.huntingTimer().stop();
+            level.pac().onKilled();
+            level.ghosts().forEach(ghost -> ghost.onPacKilled(level));
+            publishGameEvent(GameEvent.Type.STOP_ALL_SOUNDS);
+        }
+        else if (tick == TICK_PACMAN_DYING_HIDE_GHOSTS) {
+            level.ghosts().forEach(Ghost::hide);
+            pac.optAnimationManager().ifPresent(am -> {
+                am.select(CommonAnimationID.ANIM_PAC_DYING);
+                am.reset();
+            });
+        }
+        else if (tick == TICK_PACMAN_DYING_START_ANIMATION) {
+            pac.optAnimationManager().ifPresent(AnimationManager::play);
+            publishGameEvent(GameEvent.Type.PAC_DYING, pac.tile());
+        }
+        else if (tick == TICK_PACMAN_DYING_HIDE_PAC) {
+            pac.hide();
+            level.optBonus().ifPresent(Bonus::setInactive); //TODO check this
+        }
+        else if (tick == TICK_PACMAN_DYING_PAC_DEAD) {
+            publishGameEvent(GameEvent.Type.PAC_DEAD);
+        }
+        else {
+            level.blinking().tick();
+            pac.tick(this);
+        }
     }
 
     @Override
