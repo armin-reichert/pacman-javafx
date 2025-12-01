@@ -56,9 +56,15 @@ public class ArcadePacMan_HUD_Renderer extends BaseRenderer implements SpriteRen
         if (!hud.isVisible()) return;
 
         if (hud.isScoreVisible()) {
-            ScoreManager scoreManager = game.scoreManager();
-            drawScore(scoreManager.score(), SCORE_TEXT, arcadeFont8(), TS(1), TS(1));
-            drawScore(scoreManager.highScore(), HIGH_SCORE_TEXT, arcadeFont8(), TS(14), TS(1));
+            final ScoreManager scoreManager = game.scoreManager();
+            drawScore(scoreManager.score(), SCORE_TEXT, arcadeFont8(), SCORE_TEXT_COLOR, TS(1), TS(1));
+
+            final Score highScore = scoreManager.highScore();
+            Color color = SCORE_TEXT_COLOR;
+            if (game.optGameLevel().isPresent() && !game.level().isDemoLevel() && !highScore.isEnabled()) {
+                color = SCORE_TEXT_COLOR_DISABLED;
+            }
+            drawScore(highScore, HIGH_SCORE_TEXT, arcadeFont8(), color, TS(14), TS(1));
         }
 
         if (hud.isLevelCounterVisible()) {
@@ -91,8 +97,7 @@ public class ArcadePacMan_HUD_Renderer extends BaseRenderer implements SpriteRen
         }
     }
 
-    private void drawScore(Score score, String title, Font font, double x, double y) {
-        Color color = score.isEnabled() ? SCORE_TEXT_COLOR : SCORE_TEXT_COLOR_DISABLED;
+    private void drawScore(Score score, String title, Font font, Color color, double x, double y) {
         fillText(title, color, font, x, y);
         fillText("%7s".formatted("%02d".formatted(score.points())), color, font, x, y + TS + 1);
         if (score.points() != 0) {
