@@ -199,13 +199,9 @@ public class TengenMsPacMan_GameController extends StateMachine<FsmState<Game>, 
         },
 
         EATING_GHOST {
-
             @Override
             public void onEnter(Game game) {
-                timer.restartSeconds(1);
-                game.level().pac().hide();
-                game.level().ghosts().forEach(Ghost::stopAnimation);
-                game.publishGameEvent(GameEvent.Type.GHOST_EATEN);
+                timer.restartTicks(TengenMsPacMan_GameModel.TICK_EATING_GHOST_COMPLETE);
             }
 
             @Override
@@ -213,20 +209,11 @@ public class TengenMsPacMan_GameController extends StateMachine<FsmState<Game>, 
                 if (timer.hasExpired()) {
                     game.control().resumePreviousState();
                 } else {
-                    game.level().ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
-                        .forEach(ghost -> ghost.tick(game));
-                    game.level().blinking().tick();
+                    game.updateEatingGhost(timer.tickCount());
                 }
             }
-
-            @Override
-            public void onExit(Game game) {
-                game.level().pac().show();
-                game.level().ghosts(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_HOME));
-                game.level().ghosts()
-                    .forEach(ghost -> ghost.optAnimationManager().ifPresent(AnimationManager::play));
-            }
         },
+
 
         PACMAN_DYING {
             private static final int TICK_HIDE_GHOSTS = 60;

@@ -48,6 +48,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     private static final short TICK_NEW_GAME_START_HUNTING = 250;
     private static final short TICK_RESUME_HUNTING = 240;
     private static final short TICK_DEMO_LEVEL_START_HUNTING = 120;
+    public static final short TICK_EATING_GHOST_COMPLETE = 60;
 
     public static final String GAME_OVER_MESSAGE_TEXT = "GAME OVER";
     public static final String READY_MESSAGE_TEXT = "READY!";
@@ -666,7 +667,22 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     public void updateEatingGhost(long tick) {
-        //TODO
+        final GameLevel level = level();
+        if (tick == 1) {
+            level.pac().hide();
+            level.ghosts().forEach(Ghost::stopAnimation);
+            publishGameEvent(GameEvent.Type.GHOST_EATEN);
+        }
+        else if (tick < TICK_EATING_GHOST_COMPLETE) {
+            level.ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
+                    .forEach(ghost -> ghost.tick(this));
+            level.blinking().tick();
+        }
+        else if (tick == TICK_EATING_GHOST_COMPLETE) {
+            level.pac().show();
+            level.ghosts(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_HOME));
+            level.ghosts().forEach(ghost -> ghost.optAnimationManager().ifPresent(AnimationManager::play));
+        }
     }
 
     // ActorSpeedControl interface

@@ -171,7 +171,7 @@ public class Arcade_GameController extends StateMachine<FsmState<Game>, Game> im
         EATING_GHOST {
             @Override
             public void onEnter(Game game) {
-                timer.restartTicks(Arcade_GameModel.TICK_GHOST_DYING_COMPLETE);
+                timer.restartTicks(Arcade_GameModel.TICK_EATING_GHOST_COMPLETE);
             }
 
             @Override

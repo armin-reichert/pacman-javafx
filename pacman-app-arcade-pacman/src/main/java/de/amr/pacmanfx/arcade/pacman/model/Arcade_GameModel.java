@@ -31,7 +31,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     public static final short TICK_NEW_GAME_START_HUNTING = 240;
     public static final short TICK_RESUME_HUNTING =  90;
     public static final short TICK_DEMO_LEVEL_START_HUNTING = 120;
-    public static final short TICK_GHOST_DYING_COMPLETE = 60;
+    public static final short TICK_EATING_GHOST_COMPLETE = 60;
 
     // Level data as given in the "Pac-Man Dossier"
     protected static final Arcade_LevelData[] LEVEL_DATA = {
@@ -168,12 +168,12 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             level.ghosts().forEach(Ghost::stopAnimation);
             publishGameEvent(GameEvent.Type.GHOST_EATEN);
         }
-        else if (tick < TICK_GHOST_DYING_COMPLETE) {
+        else if (tick < TICK_EATING_GHOST_COMPLETE) {
             level.ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
                 .forEach(ghost -> ghost.tick(this));
             level.blinking().tick();
         }
-        else if (tick == TICK_GHOST_DYING_COMPLETE) {
+        else if (tick == TICK_EATING_GHOST_COMPLETE) {
             level.pac().show();
             level.ghosts(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_HOME));
             level.ghosts().forEach(ghost -> ghost.optAnimationManager().ifPresent(AnimationManager::play));
