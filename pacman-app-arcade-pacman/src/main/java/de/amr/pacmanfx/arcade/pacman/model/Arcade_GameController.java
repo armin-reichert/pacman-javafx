@@ -86,18 +86,17 @@ public class Arcade_GameController extends StateMachine<FsmState<GameContext>, G
             public void onUpdate(GameContext context) {
                 final Game game = context.currentGame();
                 if (game.isPlaying()) {
-                    continueGame(context);
+                    continueGame(game);
                 }
                 else if (game.canStartNewGame()) {
-                    startNewGame(context);
+                    startNewGame(game);
                 }
                 else {
-                    startDemoLevel(context);
+                    startDemoLevel(game);
                 }
             }
 
-            private void startNewGame(GameContext context) {
-                final Game game = context.currentGame();
+            private void startNewGame(Game game) {
                 if (timer.tickCount() == 1) {
                     game.startNewGame();
                 }
@@ -119,8 +118,7 @@ public class Arcade_GameController extends StateMachine<FsmState<GameContext>, G
                 }
             }
 
-            private void continueGame(GameContext context) {
-                final Game game = context.currentGame();
+            private void continueGame(Game game) {
                 if (timer.tickCount() == 1) {
                     game.continueGame();
                 } else if (timer.tickCount() == TICK_RESUME_HUNTING) {
@@ -128,8 +126,7 @@ public class Arcade_GameController extends StateMachine<FsmState<GameContext>, G
                 }
             }
 
-            private void startDemoLevel(GameContext context) {
-                final Game game = context.currentGame();
+            private void startDemoLevel(Game game) {
                 if (timer.tickCount() == 1) {
                     game.buildDemoLevel();
                     game.publishGameEvent(GameEvent.Type.LEVEL_CREATED);
