@@ -448,30 +448,33 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     @Override
     public float pacSpeed(GameLevel gameLevel) {
-        byte percentage = levelData(gameLevel.number()).pctPacSpeed();
+        final Arcade_LevelData data = levelData((gameLevel.number()));
+        byte percentage = data.pctPacSpeed();
         return percentage > 0 ? percentage * BASE_SPEED_1_PERCENT : BASE_SPEED;
     }
 
     @Override
     public float pacSpeedWhenHasPower(GameLevel gameLevel) {
-        byte percentage = levelData(gameLevel.number()).pctPacSpeedPowered();
+        final Arcade_LevelData data = levelData((gameLevel.number()));
+        byte percentage = data.pctPacSpeedPowered();
         return percentage > 0 ? percentage * BASE_SPEED_1_PERCENT : pacSpeed(gameLevel);
     }
 
     @Override
     public float ghostSpeedWhenAttacking(GameLevel gameLevel, Ghost ghost) {
+        final Arcade_LevelData data = levelData((gameLevel.number()));
         if (gameLevel.worldMap().terrainLayer().isTunnel(ghost.tile())) {
             return ghostSpeedInsideTunnel(gameLevel, ghost);
         }
         if (ghost instanceof Blinky blinky) {
             if (blinky.cruiseElroyValue() == 1) {
-                return levelData(gameLevel.number()).pctElroy1Speed() * BASE_SPEED_1_PERCENT;
+                return data.pctElroy1Speed() * BASE_SPEED_1_PERCENT;
             }
             if (blinky.cruiseElroyValue() == 2) {
-                return levelData(gameLevel.number()).pctElroy2Speed() * BASE_SPEED_1_PERCENT;
+                return data.pctElroy2Speed() * BASE_SPEED_1_PERCENT;
             }
         }
-        return levelData(gameLevel.number()).pctGhostSpeed() * BASE_SPEED_1_PERCENT;
+        return data.pctGhostSpeed() * BASE_SPEED_1_PERCENT;
     }
 
     @Override
@@ -486,12 +489,14 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     @Override
     public float ghostSpeedWhenFrightened(GameLevel gameLevel, Ghost ghost) {
-        float percentage = levelData(gameLevel.number()).pctGhostSpeedFrightened();
+        final Arcade_LevelData data = levelData((gameLevel.number()));
+        float percentage = data.pctGhostSpeedFrightened();
         return percentage > 0 ? percentage * BASE_SPEED_1_PERCENT : BASE_SPEED;
     }
 
     @Override
     public float ghostSpeedInsideTunnel(GameLevel gameLevel, Ghost ghost) {
-        return levelData(gameLevel.number()).pctGhostSpeedTunnel() * BASE_SPEED_1_PERCENT;
+        final Arcade_LevelData data = levelData((gameLevel.number()));
+        return data.pctGhostSpeedTunnel() * BASE_SPEED_1_PERCENT;
     }
 }
