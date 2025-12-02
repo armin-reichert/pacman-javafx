@@ -110,16 +110,17 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
         int levelNumber = DEMO_LEVEL_NUMBERS[randomIndex];
         scoreManager().score().setLevelNumber(levelNumber);
         mapSelector().setSelectionMode(MapSelectionMode.NO_CUSTOM_MAPS);
-        final GameLevel demoLevel = createLevel(levelNumber, true);
-        demoLevel.pac().setImmune(false);
-        demoLevel.pac().setUsingAutopilot(true);
-        demoLevel.pac().setAutomaticSteering(demoLevelSteering);
+
+        final GameLevel level = createLevel(levelNumber, true);
+        level.pac().setImmune(false);
+        level.pac().setUsingAutopilot(true);
+        level.pac().setAutomaticSteering(demoLevelSteering);
         demoLevelSteering.init();
         levelCounter().setEnabled(false);
         gateKeeper.setLevelNumber(levelNumber);
-        demoLevel.worldMap().terrainLayer().optHouse().ifPresent(house -> gateKeeper.setHouse(house));
+        level.worldMap().terrainLayer().optHouse().ifPresent(house -> gateKeeper.setHouse(house));
 
-        setGameLevel(demoLevel);
+        gameLevelProperty().set(level);
         publishGameEvent(GameEvent.Type.LEVEL_CREATED);
     }
 }

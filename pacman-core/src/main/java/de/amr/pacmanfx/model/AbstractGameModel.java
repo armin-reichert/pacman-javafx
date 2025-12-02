@@ -73,8 +73,8 @@ public abstract class AbstractGameModel implements Game {
         }
     }
 
-    public void setGameLevel(GameLevel gameLevel) {
-        this.gameLevel.set(gameLevel);
+    public ObjectProperty<GameLevel> gameLevelProperty() {
+        return gameLevel;
     }
 
     // To be implemented by subclasses

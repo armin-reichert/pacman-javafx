@@ -89,17 +89,17 @@ public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
         int[] levelNumbers = { 1, 3, 6, 10, 14, 18 };
         int levelNumber = levelNumbers[new Random().nextInt(levelNumbers.length)];
         mapSelector().setSelectionMode(MapSelectionMode.NO_CUSTOM_MAPS);
-        final GameLevel demoLevel = createLevel(levelNumber, true);
-        demoLevel.pac().setImmune(false);
-        demoLevel.pac().setUsingAutopilot(true);
-        demoLevel.pac().setAutomaticSteering(demoLevelSteering);
+        final GameLevel level = createLevel(levelNumber, true);
+        level.pac().setImmune(false);
+        level.pac().setUsingAutopilot(true);
+        level.pac().setAutomaticSteering(demoLevelSteering);
         demoLevelSteering.init();
         levelCounter().setEnabled(false);
         scoreManager().score().setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
-        demoLevel.worldMap().terrainLayer().optHouse().ifPresent(house -> gateKeeper.setHouse(house)); //TODO what if no house exists?
+        level.worldMap().terrainLayer().optHouse().ifPresent(house -> gateKeeper.setHouse(house)); //TODO what if no house exists?
 
-        setGameLevel(demoLevel);
+        gameLevelProperty().set(level);
         publishGameEvent(GameEvent.Type.LEVEL_CREATED);
     }
 }

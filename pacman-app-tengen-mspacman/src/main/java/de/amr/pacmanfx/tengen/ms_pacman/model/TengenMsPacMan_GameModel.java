@@ -208,7 +208,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     @Override
     public void prepareForNewGame() {
         setLifeCount(initialLifeCount());
-        setGameLevel(null);
         levelCounter().clear();
         setPlaying(false);
         boosterActive = false;
@@ -216,6 +215,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         scoreManager.score().reset();
         scoreManager.highScore().setEnabled(true);
         gateKeeper.reset();
+        gameLevelProperty().set(null);
     }
 
     @Override
@@ -463,7 +463,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
         levelCounter().setEnabled(levelNumber < 8);
 
-        setGameLevel(level);
         return level;
     }
 
@@ -475,7 +474,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         gateKeeper.setLevelNumber(levelNumber);
         level.worldMap().terrainLayer().optHouse().ifPresent(gateKeeper::setHouse); //TODO what if no house exists?
 
-        setGameLevel(level);
+        gameLevelProperty().set(level);
         publishGameEvent(GameEvent.Type.LEVEL_CREATED);
     }
 
@@ -492,7 +491,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         gateKeeper.setLevelNumber(1);
         level.worldMap().terrainLayer().optHouse().ifPresent(gateKeeper::setHouse); //TODO what if no house exists?
 
-        setGameLevel(level);
+        gameLevelProperty().set(level);
         publishGameEvent(GameEvent.Type.LEVEL_CREATED);
     }
 
