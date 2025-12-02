@@ -155,6 +155,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         gateKeeper = new GateKeeper(this); //TODO implement original logic from Tengen game
         automaticSteering = new RuleBasedPacSteering();
         demoLevelSteering = new RuleBasedPacSteering();
+        mapSelector.loadAllMapPrototypes();
     }
 
     public boolean allOptionsHaveDefaultValue() {
@@ -175,18 +176,14 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         return hud;
     }
 
-    public void init() {
-        mapSelector.loadAllMapPrototypes();
-        setInitialLifeCount(3);
-        resetEverything();
-    }
-
     @Override
-    public void resetEverything() {
+    public void boot() {
+        setInitialLifeCount(3);
         cheatUsedProperty().set(false);
         immunityProperty().set(false);
         usingAutopilotProperty().set(false);
         prepareForNewGame();
+        hud.all(false);
         setPacBooster(DEFAULT_PAC_BOOSTER);
         setDifficulty(DEFAULT_DIFFICULTY);
         setMapCategory(DEFAULT_MAP_CATEGORY);

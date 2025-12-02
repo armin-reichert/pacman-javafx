@@ -33,7 +33,7 @@ public class Arcade_GameController extends StateMachine<Game> implements GameCon
             @Override
             public void onEnter(Game game) {
                 timer.restartIndefinitely();
-                game.resetEverything();
+                game.boot();
             }
 
             @Override

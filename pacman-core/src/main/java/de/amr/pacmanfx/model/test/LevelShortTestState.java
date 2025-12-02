@@ -76,7 +76,7 @@ public class LevelShortTestState implements StateMachine.State<Game>, TestState 
         else if (timer.atSecond(START + 10)) {
             if (game.level().number() == lastTestedLevelNumber) {
                 COIN_MECHANISM.setNumCoins(0);
-                game.resetEverything();
+                game.boot();
                 game.control().restart("BOOT");
             } else {
                 timer.restartIndefinitely();
@@ -92,7 +92,7 @@ public class LevelShortTestState implements StateMachine.State<Game>, TestState 
     @Override
     public void onExit(Game game) {
         COIN_MECHANISM.setNumCoins(0);
-        game.resetEverything();
+        game.boot();
         game.levelCounter().clear();
     }
 }

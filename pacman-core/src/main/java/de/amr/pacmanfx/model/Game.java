@@ -74,8 +74,7 @@ public interface Game {
     GameLevel level();
 
     // Lifecycle
-    void init();
-    void resetEverything();
+    void boot();
     void prepareForNewGame();
     boolean canStartNewGame();
     void startNewGame(long tick);

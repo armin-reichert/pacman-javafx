@@ -32,7 +32,7 @@ public class TengenMsPacMan_GameController extends StateMachine<Game> implements
             @Override
             public void onEnter(Game game) {
                 timer.restartIndefinitely();
-                game.resetEverything();
+                game.boot();
             }
 
             @Override

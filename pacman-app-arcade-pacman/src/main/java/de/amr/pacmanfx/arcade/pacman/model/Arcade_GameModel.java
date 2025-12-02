@@ -227,18 +227,14 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     // GameLifecycle interface
 
     @Override
-    public void init() {
+    public void boot() {
         setInitialLifeCount(3);
-    }
-
-    @Override
-    public void resetEverything() {
-        prepareForNewGame();
-        levelCounter().clear();
-        hud().all(false);
         cheatUsedProperty().set(false);
         immunityProperty().set(false);
         usingAutopilotProperty().set(false);
+        prepareForNewGame();
+        levelCounter().clear();
+        hud().all(false);
     }
 
     @Override

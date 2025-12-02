@@ -52,7 +52,7 @@ public class GameBox implements GameContext, CoinMechanism {
         if (!DIRECTORY_CHECK_OK) {
             throw new IllegalStateException("User directory check failed");
         }
-        gameVariantName.addListener((py, ov, newGameVariant) -> gameByVariantName(newGameVariant).init());
+        //gameVariantName.addListener((py, ov, newGameVariant) -> gameByVariantName(newGameVariant).init());
     }
 
     /**
