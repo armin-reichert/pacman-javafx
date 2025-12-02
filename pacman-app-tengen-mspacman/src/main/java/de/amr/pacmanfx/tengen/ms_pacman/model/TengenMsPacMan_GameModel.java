@@ -147,7 +147,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     private int numContinues;
 
     public TengenMsPacMan_GameModel(File highScoreFile) {
-        setGameControl(new TengenMsPacMan_GameController());
+        super(new TengenMsPacMan_GameController());
         setCollisionStrategy(CollisionStrategy.CENTER_DISTANCE);
         scoreManager.setHighScoreFile(requireNonNull(highScoreFile));
         mapSelector = new TengenMsPacMan_MapSelector();

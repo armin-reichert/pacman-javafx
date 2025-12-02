@@ -49,9 +49,14 @@ public abstract class AbstractGameModel implements Game {
 
     protected final ScoreManager scoreManager = new ScoreManager(this);
 
-    protected GameControl gameControl;
+    protected final GameControl gameControl;
 
-    protected AbstractGameModel() {
+    protected AbstractGameModel(GameControl gameControl) {
+        this.gameControl = requireNonNull(gameControl);
+        gameControl.stateMachine().setContext(this);
+        gameControl.stateMachine().addStateChangeListener(
+            (oldState, newState) -> publishGameEvent(new GameStateChangeEvent(this, oldState, newState)));
+
         cheatUsedProperty().addListener((py, ov, cheated) -> {
             if (cheated) {
                 Score highScore = scoreManager.highScore();
@@ -60,13 +65,6 @@ public abstract class AbstractGameModel implements Game {
                 }
             }
         });
-    }
-
-    public void setGameControl(GameControl gameControl) {
-        this.gameControl = requireNonNull(gameControl);
-        gameControl.stateMachine().setContext(this);
-        gameControl.stateMachine().addStateChangeListener(
-            (oldState, newState) -> publishGameEvent(new GameStateChangeEvent(this, oldState, newState)));
     }
 
     public void setLifeCount(int n) {
