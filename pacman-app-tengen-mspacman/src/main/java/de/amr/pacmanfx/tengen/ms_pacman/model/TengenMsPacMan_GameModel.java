@@ -211,7 +211,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     public void onGameOver() {
         setPlaying(false);
         scoreManager.updateHighScore();
-        showLevelMessage(level(), MessageType.GAME_OVER);
+        showLevelMessage(MessageType.GAME_OVER);
     }
 
     @Override
@@ -339,12 +339,12 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             activatePacBooster(level.pac(), true);
         }
         if (level.isDemoLevel()) {
-            showLevelMessage(level, MessageType.GAME_OVER);
+            showLevelMessage(MessageType.GAME_OVER);
             scoreManager.score().setEnabled(true);
             scoreManager.highScore().setEnabled(false);
             Logger.info("Demo level {} started", level.number());
         } else {
-            showLevelMessage(level, MessageType.READY);
+            showLevelMessage(MessageType.READY);
             levelCounter().update(level.number(), level.bonusSymbol(0));
             scoreManager.score().setEnabled(true);
             scoreManager.highScore().setEnabled(true);
@@ -383,15 +383,21 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void showLevelMessage(GameLevel level, MessageType type) {
-        requireNonNull(level);
-        requireNonNull(type);
-        final Vector2f center = level.worldMap().terrainLayer().messageCenterPosition();
-        // Non-Arcade maps have a moving "Game Over" message
-        final GameLevelMessage message = type == MessageType.GAME_OVER && mapCategory != MapCategory.ARCADE
-            ? new MovingGameLevelMessage(type, center, GAME_OVER_MESSAGE_DELAY_SEC * NUM_TICKS_PER_SEC)
-            : new GameLevelMessage(type, center);
-        level.setMessage(message);
+    public void showLevelMessage(MessageType type) {
+        optGameLevel().ifPresent(level -> {
+            requireNonNull(type);
+            final Vector2f center = level.worldMap().terrainLayer().messageCenterPosition();
+            // Non-Arcade maps have a moving "Game Over" message
+            final GameLevelMessage message = type == MessageType.GAME_OVER && mapCategory != MapCategory.ARCADE
+                    ? new MovingGameLevelMessage(type, center, GAME_OVER_MESSAGE_DELAY_SEC * NUM_TICKS_PER_SEC)
+                    : new GameLevelMessage(type, center);
+            level.setMessage(message);
+        });
+    }
+
+    @Override
+    public void clearLevelMessage() {
+        optGameLevel().ifPresent(GameLevel::clearMessage);
     }
 
     public void activatePacBooster(Pac pac, boolean active) {

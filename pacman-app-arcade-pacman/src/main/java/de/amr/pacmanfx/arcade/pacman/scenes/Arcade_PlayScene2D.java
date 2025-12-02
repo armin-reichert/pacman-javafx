@@ -144,7 +144,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
         final Game game = context().currentGame();
         game.optGameLevel().ifPresent(level -> {
             resetAnimations(level);
-            game.showLevelMessage(level, MessageType.READY);
+            game.showLevelMessage(MessageType.READY);
         });
     }
 

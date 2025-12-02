@@ -101,6 +101,7 @@ public class Arcade_GameController extends StateMachine<FsmState<Game>, Game> im
                 game.level().optMessage().filter(message -> message.type() == MessageType.READY).ifPresent(message -> {
                     game.level().clearMessage(); // leave TEST message alone
                 });
+                game.clearLevelMessage();
                 game.startHunting();
             }
 
@@ -116,15 +117,6 @@ public class Arcade_GameController extends StateMachine<FsmState<Game>, Game> im
                 else if (game.hasGhostBeenKilled()) {
                     game.control().changeState(EATING_GHOST);
                 }
-            }
-
-            @Override
-            public void onExit(Game game) {
-                game.level().optMessage().ifPresent(message -> {
-                    if (message.type() == MessageType.READY) {
-                        game.level().clearMessage();
-                    }
-                });
             }
         },
 

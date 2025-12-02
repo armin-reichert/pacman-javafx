@@ -220,7 +220,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             coinMechanism.consumeCoin();
         }
         scoreManager.updateHighScore();
-        showLevelMessage(level(), MessageType.GAME_OVER);
+        showLevelMessage(MessageType.GAME_OVER);
         Logger.info("Game ended with level number {}", level().number());
     }
 
@@ -398,13 +398,13 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         level.getReadyToPlay();
         //resetPacManAndGhostAnimations(level);
         if (level.isDemoLevel()) {
-            showLevelMessage(level, MessageType.GAME_OVER);
+            showLevelMessage(MessageType.GAME_OVER);
             scoreManager.score().setEnabled(false);
             scoreManager.highScore().setEnabled(false);
             Logger.info("Demo level {} started", level.number());
         } else {
             levelCounter().update(level.number(), level.bonusSymbol(0));
-            showLevelMessage(level, MessageType.READY);
+            showLevelMessage(MessageType.READY);
             scoreManager.score().setEnabled(true);
             //scoreManager.highScore().setEnabled(true);
             Logger.info("Level {} started", level.number());
@@ -420,12 +420,18 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void showLevelMessage(GameLevel level, MessageType type) {
-        requireNonNull(level);
+    public void showLevelMessage(MessageType type) {
         requireNonNull(type);
-        final var message = new GameLevelMessage(type);
-        message.setPosition(level.worldMap().terrainLayer().messageCenterPosition());
-        level.setMessage(message);
+        optGameLevel().ifPresent(level -> {
+            final var message = new GameLevelMessage(type);
+            message.setPosition(level.worldMap().terrainLayer().messageCenterPosition());
+            level.setMessage(message);
+        });
+    }
+
+    @Override
+    public void clearLevelMessage() {
+        optGameLevel().ifPresent(GameLevel::clearMessage);
     }
 
     @Override
