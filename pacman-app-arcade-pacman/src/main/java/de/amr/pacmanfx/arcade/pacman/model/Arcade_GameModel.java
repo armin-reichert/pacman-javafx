@@ -280,7 +280,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     public void continuePlaying(long tick) {
         if (tick == 1) {
             final GameLevel level = level();
-            resetPacManAndGhostAnimations(level);
+            //resetPacManAndGhostAnimations(level);
             level.getReadyToPlay();
             level.showPacAndGhosts();
             publishGameEvent(GameEvent.Type.GAME_CONTINUED);
@@ -394,7 +394,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         final GameLevel level = level();
         level.setStartTimeMillis(System.currentTimeMillis());
         level.getReadyToPlay();
-        resetPacManAndGhostAnimations(level);
+        //resetPacManAndGhostAnimations(level);
         if (level.isDemoLevel()) {
             level.showMessage(MessageType.GAME_OVER);
             scoreManager.score().setEnabled(false);
@@ -420,18 +420,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     @Override
     public int lastLevelNumber() {
         return Integer.MAX_VALUE;
-    }
-
-    @Override
-    protected void resetPacManAndGhostAnimations(GameLevel gameLevel) {
-        gameLevel.pac().optAnimationManager().ifPresent(am -> {
-            am.select(CommonAnimationID.ANIM_PAC_MUNCHING);
-            am.reset();
-        });
-        gameLevel.ghosts().forEach(ghost -> ghost.optAnimationManager().ifPresent(am -> {
-            am.select(CommonAnimationID.ANIM_GHOST_NORMAL);
-            am.reset();
-        }));
     }
 
     // ActorSpeedControl interface

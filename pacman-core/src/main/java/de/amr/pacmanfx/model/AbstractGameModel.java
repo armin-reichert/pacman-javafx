@@ -85,8 +85,6 @@ public abstract class AbstractGameModel implements Game {
 
     protected abstract boolean isPacSafeInDemoLevel(GameLevel demoLevel);
 
-    protected abstract void resetPacManAndGhostAnimations(GameLevel gameLevel);
-
     // Game interface
 
     @Override

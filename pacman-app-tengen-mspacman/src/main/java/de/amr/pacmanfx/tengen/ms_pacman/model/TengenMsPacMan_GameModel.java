@@ -331,7 +331,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     public void continuePlaying(long tick) {
         if (tick == 1) {
             final GameLevel level = level();
-            resetPacManAndGhostAnimations(level);
+            //resetPacManAndGhostAnimations(level);
             level.getReadyToPlay();
             level.showPacAndGhosts();
             publishGameEvent(GameEvent.Type.GAME_CONTINUED);
@@ -345,7 +345,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         final GameLevel level = level();
         level.setStartTimeMillis(System.currentTimeMillis());
         level.getReadyToPlay();
-        resetPacManAndGhostAnimations(level);
+        //resetPacManAndGhostAnimations(level);
         if (pacBooster == PacBooster.ALWAYS_ON) {
             activatePacBooster(level.pac(), true);
         }
@@ -391,18 +391,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         } else {
             Logger.warn("Last level ({}) reached, cannot start next level", LAST_LEVEL_NUMBER);
         }
-    }
-
-    @Override
-    public void resetPacManAndGhostAnimations(GameLevel gameLevel) {
-        gameLevel.pac().optAnimationManager().ifPresent(am -> {
-            am.select(boosterActive ? TengenMsPacMan_UIConfig.AnimationID.ANIM_MS_PAC_MAN_BOOSTER : CommonAnimationID.ANIM_PAC_MUNCHING);
-            am.reset();
-        });
-        gameLevel.ghosts().forEach(ghost -> ghost.optAnimationManager().ifPresent(am -> {
-            am.select(CommonAnimationID.ANIM_GHOST_NORMAL);
-            am.reset();
-        }));
     }
 
     public void activatePacBooster(Pac pac, boolean active) {

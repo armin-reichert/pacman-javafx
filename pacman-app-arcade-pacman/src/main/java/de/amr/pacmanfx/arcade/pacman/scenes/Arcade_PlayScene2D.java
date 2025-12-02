@@ -13,6 +13,7 @@ import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.MessageType;
+import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.test.TestState;
@@ -100,8 +101,8 @@ public class Arcade_PlayScene2D extends GameScene2D {
       If the corresponding 3D scene is shown when the game level gets created, the onLevelCreated() method of this
       scene is not called, so we have to apply the game level to the scene again when switching from 3D to 2D.
      */
-    private void acceptGameLevel(GameLevel gameLevel) {
-        if (gameLevel.isDemoLevel()) {
+    private void acceptGameLevel(GameLevel level) {
+        if (level.isDemoLevel()) {
             context().currentGame().hud().creditVisible(false).levelCounterVisible(true).livesCounterVisible(false);
             actionBindings.addKeyCombination(ArcadeActions.ACTION_INSERT_COIN, bare(KeyCode.DIGIT5));
             actionBindings.addKeyCombination(ArcadeActions.ACTION_INSERT_COIN, bare(KeyCode.NUMPAD5));
@@ -140,7 +141,22 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onGameContinued(GameEvent e) {
-        context().currentGame().optGameLevel().ifPresent(gameLevel -> gameLevel.showMessage(MessageType.READY));
+        final Game game = context().currentGame();
+        game.optGameLevel().ifPresent(level -> {
+            resetAnimations(level);
+            level.showMessage(MessageType.READY);
+        });
+    }
+
+    private void resetAnimations(GameLevel level) {
+        level.pac().optAnimationManager().ifPresent(animationManager -> {
+            animationManager.select(CommonAnimationID.ANIM_PAC_MUNCHING);
+            animationManager.reset();
+        });
+        level.ghosts().forEach(ghost -> ghost.optAnimationManager().ifPresent(animationManager -> {
+            animationManager.select(CommonAnimationID.ANIM_GHOST_NORMAL);
+            animationManager.reset();
+        }));
     }
 
     @Override
@@ -154,17 +170,17 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void update(Game game) {
-        game.optGameLevel().ifPresent(gameLevel -> {
-            updateHUD(gameLevel);
-            updateSound(gameLevel);
+        game.optGameLevel().ifPresent(level -> {
+            updateHUD(level);
+            updateSound(level);
         });
     }
 
-    private void updateHUD(GameLevel gameLevel) {
+    private void updateHUD(GameLevel level) {
         final Game game = context().currentGame();
         // While Pac-Man is still invisible on level start, one entry more is shown in the lives counter
         boolean oneMore = game.control().state() == Arcade_GameController.GameState.STARTING_GAME_OR_LEVEL
-            && !gameLevel.pac().isVisible();
+            && !level.pac().isVisible();
         int numLivesDisplayed = game.lifeCount() - 1;
         if (oneMore) numLivesDisplayed += 1;
         game.hud().setVisibleLifeCount(Math.min(numLivesDisplayed, game.hud().maxLivesDisplayed()));
@@ -175,7 +191,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     @Override
     public Vector2i unscaledSize() {
         // Note: scene is also used in Pac-Man XXL game variant where world can have any size
-        return context().currentGame().optGameLevel().map(gameLevel -> gameLevel.worldMap().terrainLayer().sizeInPixel())
+        return context().currentGame().optGameLevel().map(level -> level.worldMap().terrainLayer().sizeInPixel())
             .orElse(ARCADE_MAP_SIZE_IN_PIXELS);
     }
 
@@ -283,10 +299,10 @@ public class Arcade_PlayScene2D extends GameScene2D {
         ui.soundManager().play(SoundID.EXTRA_LIFE);
     }
 
-    private void updateSound(GameLevel gameLevel) {
+    private void updateSound(GameLevel level) {
         if (!ui.soundManager().isEnabled()) return;
 
-        final Pac pac = gameLevel.pac();
+        final Pac pac = level.pac();
         final boolean pacChased = context().currentGame().control().state() == Arcade_GameController.GameState.HUNTING
             && !pac.powerTimer().isRunning();
 
@@ -295,7 +311,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
         }
 
         final boolean ghostReturningHome = pac.isAlive()
-            && gameLevel.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).findAny().isPresent();
+            && level.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).findAny().isPresent();
         if (ghostReturningHome) {
             ui.soundManager().loop(SoundID.GHOST_RETURNS);
         } else {
