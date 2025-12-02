@@ -365,7 +365,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
     @Override
     public void onGameContinued(GameEvent e) {
         TengenMsPacMan_GameModel game = context().currentGame();
-        game.showLevelMessage(MessageType.READY);
+        game.showLevelMessage(game.level(), MessageType.READY);
         dynamicCamera.enterIntroMode();
     }
 
