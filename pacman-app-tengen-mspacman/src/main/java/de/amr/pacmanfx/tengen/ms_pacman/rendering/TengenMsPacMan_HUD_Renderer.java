@@ -8,12 +8,13 @@ import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.model.ScoreManager;
 import de.amr.pacmanfx.tengen.ms_pacman.model.*;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui._2d.HUD_Renderer;
 import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.ui._2d.HUD_Renderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -69,7 +70,16 @@ public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteR
         ctx.translate(0, scaled(offsetY));
 
         if (hud.isScoreVisible()) {
-            drawScores(tengenGame.scoreManager(), clock.tickCount(), arcadeFont8());
+            final ScoreManager scoreManager = game.scoreManager();
+
+            drawScore(scoreManager.score(), clock.tickCount(), arcadeFont8());
+
+            final Score highScore = scoreManager.highScore();
+            Color color = SCORE_TEXT_COLOR;
+            if (!highScore.isEnabled() && !game.level().isDemoLevel()) {
+                color = SCORE_TEXT_COLOR_DISABLED;
+            }
+            drawHighScore(highScore, arcadeFont8(), color);
         }
 
         if (hud.isLivesCounterVisible()) {
@@ -88,15 +98,18 @@ public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteR
         ctx.restore();
     }
 
-    private void drawScores(ScoreManager scoreManager, long tick, Font font) {
-        if (tick % 60 < 30) { // show for 0.5 seconds, hide for 0.5 seconds
+    private void drawScore(Score score, long tick, Font font) {
+        // blink frequency=1Hz (30 ticks on, 30 ticks off)
+        final boolean on = tick % 60 < 30;
+        if (on) {
             fillText("1UP", SCORE_TEXT_COLOR, font, TS(4), TS(1));
         }
-        fillText("%6d".formatted(scoreManager.score().points()), SCORE_TEXT_COLOR, font, TS(2), TS(2));
+        fillText("%6d".formatted(score.points()), SCORE_TEXT_COLOR, font, TS(2), TS(2));
+    }
 
-        final Color color = scoreManager.highScore().isEnabled() ? SCORE_TEXT_COLOR : SCORE_TEXT_COLOR_DISABLED;
+    private void drawHighScore(Score score, Font font, Color color) {
         fillText("HIGH SCORE", color, font, TS(11), TS(1));
-        fillText("%6d".formatted(scoreManager.highScore().points()), color, font, TS(13), TS(2));
+        fillText("%6d".formatted(score.points()), color, font, TS(13), TS(2));
     }
 
     private void drawLivesCounter(Game game, TengenMsPacMan_HUD hud, float y) {
