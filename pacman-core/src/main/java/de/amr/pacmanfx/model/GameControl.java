@@ -17,7 +17,7 @@ import java.util.Optional;
 */
 public interface GameControl {
 
-    StateMachine<FsmState<Game>, Game> stateMachine();
+    StateMachine<Game> stateMachine();
 
     default Optional<FsmState<Game>> optState(String stateName) {
         return stateMachine().optState(stateName);

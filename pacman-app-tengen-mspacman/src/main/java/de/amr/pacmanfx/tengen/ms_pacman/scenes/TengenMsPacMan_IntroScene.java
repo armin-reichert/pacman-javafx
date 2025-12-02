@@ -43,7 +43,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
     public static final int MS_PAC_MAN_STOP_X = MARQUEE_X + 62;
     public static final float SPEED = 2.2f; //TODO check exact speed
 
-    public final StateMachine<SceneState, TengenMsPacMan_IntroScene> sceneController;
+    public final StateMachine<TengenMsPacMan_IntroScene> sceneController;
 
     public TengenMsPacMan_SpriteSheet spriteSheet;
 

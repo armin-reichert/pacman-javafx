@@ -11,7 +11,7 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameControl;
 import de.amr.pacmanfx.model.MessageType;
 
-public class TengenMsPacMan_GameController extends StateMachine<FsmState<Game>, Game> implements GameControl {
+public class TengenMsPacMan_GameController extends StateMachine<Game> implements GameControl {
 
     public TengenMsPacMan_GameController() {
         setName("Tengen Ms. Pac-Man Game State Machine");
@@ -19,7 +19,7 @@ public class TengenMsPacMan_GameController extends StateMachine<FsmState<Game>, 
     }
 
     @Override
-    public StateMachine<FsmState<Game>, Game> stateMachine() {
+    public StateMachine<Game> stateMachine() {
         return this;
     }
 

@@ -43,7 +43,7 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends GameScene2D_Renderer {
         actorRenderer.drawActor(introScene.msPacMan());
 
         switch (introScene.sceneController.state()) {
-            case GHOSTS_MARCHING_IN -> {
+            case SceneState.GHOSTS_MARCHING_IN -> {
                 String ghostName = GHOST_NAMES[introScene.presentedGhostCharacter()];
                 Color ghostColor = GHOST_COLORS[introScene.presentedGhostCharacter()];
                 if (introScene.presentedGhostCharacter() == RED_GHOST_SHADOW) {
@@ -53,10 +53,11 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends GameScene2D_Renderer {
                 double y = TOP_Y + TS(6);
                 fillText(ghostName, ghostColor, x, y);
             }
-            case MS_PACMAN_MARCHING_IN, READY_TO_PLAY -> {
+            case SceneState.MS_PACMAN_MARCHING_IN, SceneState.READY_TO_PLAY -> {
                 fillText("STARRING", ARCADE_WHITE, TITLE_X, TOP_Y + TS(3));
                 fillText("MS PAC-MAN", ARCADE_YELLOW, TITLE_X, TOP_Y + TS(6));
             }
+            default -> {}
         }
         drawMidwayCopyright(introScene.ui().currentConfig().assets().image("logo.midway"), TS(6), TS(28));
 

@@ -47,7 +47,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     private static final float ACTOR_SPEED = 1.11f;
 
-    public final StateMachine<SceneState, ArcadeMsPacMan_IntroScene> sceneController;
+    public final StateMachine<ArcadeMsPacMan_IntroScene> sceneController;
 
     private ArcadeMsPacMan_HUDRenderer hudRenderer;
     private ArcadeMsPacMan_IntroScene_Renderer sceneRenderer;

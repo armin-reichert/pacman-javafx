@@ -6,6 +6,7 @@ package de.amr.pacmanfx.tengen.ms_pacman.rendering;
 
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.TengenMsPacMan_IntroScene;
+import de.amr.pacmanfx.tengen.ms_pacman.scenes.TengenMsPacMan_IntroScene.SceneState;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
@@ -60,7 +61,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends GameScene2D_Renderer
         ctx.setFont(arcadeFont8());
         ctx.setImageSmoothing(false);
         switch (introScene.sceneController.state()) {
-            case WAITING_FOR_START -> {
+            case SceneState.WAITING_FOR_START -> {
                 if (!introScene.dark) {
                     boolean showPressStart = tick % 60 < 30;
                     fillText("TENGEN PRESENTS", shadeOfBlue(tick), introScene.presentsText.x(), introScene.presentsText.y());
@@ -71,11 +72,11 @@ public class TengenMsPacMan_IntroScene_Renderer extends GameScene2D_Renderer
                     fillText("ALL RIGHTS RESERVED",     nesColor(0x25), 7 * TS, MARQUEE_Y + 17 * TS);
                 }
             }
-            case SHOWING_MARQUEE -> {
+            case SceneState.SHOWING_MARQUEE -> {
                 introScene.marquee.draw(ctx());
                 fillText("\"MS PAC-MAN\"", nesColor(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
             }
-            case GHOSTS_MARCHING_IN -> {
+            case SceneState.GHOSTS_MARCHING_IN -> {
                 introScene.marquee.draw(ctx());
                 fillText("\"MS PAC-MAN\"", nesColor(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
                 if (introScene.ghostIndex == 0) {
@@ -86,7 +87,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends GameScene2D_Renderer
                 fillText(currentGhost.name().toUpperCase(), ghostColor, MARQUEE_X + 44, MARQUEE_Y + 41);
                 introScene.ghosts.forEach(actorRenderer::drawActor);
             }
-            case MS_PACMAN_MARCHING_IN -> {
+            case SceneState.MS_PACMAN_MARCHING_IN -> {
                 introScene.marquee.draw(ctx());
                 fillText("\"MS PAC-MAN\"", nesColor(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
                 fillText("STARRING", nesColor(0x20), MARQUEE_X + 12, MARQUEE_Y + 22);
@@ -94,6 +95,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends GameScene2D_Renderer
                 introScene.ghosts.forEach(actorRenderer::drawActor);
                 actorRenderer.drawActor(introScene.msPacMan);
             }
+            default -> {}
         }
 
         if (PROPERTY_JOYPAD_BINDINGS_DISPLAYED.get()) {
