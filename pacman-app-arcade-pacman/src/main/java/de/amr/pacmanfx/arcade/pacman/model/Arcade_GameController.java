@@ -10,7 +10,6 @@ import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameControl;
-import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.MessageType;
 
 public class Arcade_GameController extends StateMachine<FsmState<Game>, Game> implements GameControl {
@@ -99,7 +98,7 @@ public class Arcade_GameController extends StateMachine<FsmState<Game>, Game> im
             @Override
             public void onEnter(Game game) {
                 game.level().optMessage().filter(message -> message.type() == MessageType.READY).ifPresent(message -> {
-                    game.level().clearMessage(); // leave TEST message alone
+                    game.clearLevelMessage(); // leave TEST message alone
                 });
                 game.clearLevelMessage();
                 game.startHunting();
@@ -218,7 +217,7 @@ public class Arcade_GameController extends StateMachine<FsmState<Game>, Game> im
 
             @Override
             public void onExit(Game game) {
-                game.optGameLevel().ifPresent(GameLevel::clearMessage);
+                game.clearLevelMessage();
                 game.cheatUsedProperty().set(false);
             }
         },

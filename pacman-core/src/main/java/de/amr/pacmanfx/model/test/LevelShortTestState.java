@@ -52,7 +52,7 @@ public class LevelShortTestState implements FsmState<Game>, TestState {
             game.level().blinking().restart();
         }
         else if (timer.atSecond(START + 1)) {
-            game.level().clearMessage();
+            game.clearLevelMessage();
         }
         else if (timer.atSecond(START + 3)) {
             game.activateNextBonus();

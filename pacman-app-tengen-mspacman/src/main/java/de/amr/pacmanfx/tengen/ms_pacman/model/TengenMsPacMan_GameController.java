@@ -9,7 +9,6 @@ import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameControl;
-import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.MessageType;
 
 public class TengenMsPacMan_GameController extends StateMachine<FsmState<Game>, Game> implements GameControl {
@@ -116,7 +115,7 @@ public class TengenMsPacMan_GameController extends StateMachine<FsmState<Game>, 
         HUNTING {
             @Override
             public void onEnter(Game game) {
-                clearReadyMessage(game.level());
+                clearReadyMessage(game);
                 game.startHunting();
             }
 
@@ -137,12 +136,12 @@ public class TengenMsPacMan_GameController extends StateMachine<FsmState<Game>, 
             @Override
             public void onExit(Game game) {
                 //TODO is this needed?
-                clearReadyMessage(game.level());
+                clearReadyMessage(game);
             }
 
-            private void clearReadyMessage(GameLevel gameLevel) {
-                gameLevel.optMessage().filter(message -> message.type() == MessageType.READY).ifPresent(message -> {
-                    gameLevel.clearMessage(); // leave TEST message alone
+            private void clearReadyMessage(Game game) {
+                game.level().optMessage().filter(message -> message.type() == MessageType.READY).ifPresent(message -> {
+                    game.clearLevelMessage(); // leave TEST message alone
                 });
             }
         },
@@ -256,7 +255,7 @@ public class TengenMsPacMan_GameController extends StateMachine<FsmState<Game>, 
 
             @Override
             public void onExit(Game game) {
-                game.optGameLevel().ifPresent(GameLevel::clearMessage);
+                game.clearLevelMessage();
                 game.cheatUsedProperty().set(false);
             }
         },
