@@ -391,21 +391,21 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     @Override
     public void startLevel() {
-        final GameLevel gameLevel = level();
-        gameLevel.setStartTimeMillis(System.currentTimeMillis());
-        gameLevel.getReadyToPlay();
-        resetPacManAndGhostAnimations(gameLevel);
-        if (gameLevel.isDemoLevel()) {
-            gameLevel.showMessage(MessageType.GAME_OVER);
+        final GameLevel level = level();
+        level.setStartTimeMillis(System.currentTimeMillis());
+        level.getReadyToPlay();
+        resetPacManAndGhostAnimations(level);
+        if (level.isDemoLevel()) {
+            level.showMessage(MessageType.GAME_OVER);
             scoreManager.score().setEnabled(false);
             scoreManager.highScore().setEnabled(false);
-            Logger.info("Demo level {} started", gameLevel.number());
+            Logger.info("Demo level {} started", level.number());
         } else {
-            levelCounter().update(gameLevel.number(), gameLevel.bonusSymbol(0));
-            gameLevel.showMessage(MessageType.READY);
+            levelCounter().update(level.number(), level.bonusSymbol(0));
+            level.showMessage(MessageType.READY);
             scoreManager.score().setEnabled(true);
             //scoreManager.highScore().setEnabled(true);
-            Logger.info("Level {} started", gameLevel.number());
+            Logger.info("Level {} started", level.number());
         }
         // Note: This event is very important because it triggers the creation of the actor animations!
         publishGameEvent(GameEvent.Type.LEVEL_STARTED);

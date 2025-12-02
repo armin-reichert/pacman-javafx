@@ -58,11 +58,9 @@ public abstract class AbstractGameModel implements Game {
             (oldState, newState) -> publishGameEvent(new GameStateChangeEvent(this, oldState, newState)));
 
         cheatUsedProperty().addListener((py, ov, cheated) -> {
-            if (cheated) {
-                Score highScore = scoreManager.highScore();
-                if (highScore.isEnabled()) {
-                    highScore.setEnabled(false);
-                }
+            final Score highScore = scoreManager.highScore();
+            if (cheated && highScore.isEnabled()) {
+                highScore.setEnabled(false);
             }
         });
     }
