@@ -1,5 +1,4 @@
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
-import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController;
 import de.amr.pacmanfx.arcade.pacman.model.actors.Blinky;
 import de.amr.pacmanfx.lib.worldmap.FoodLayer;
 import de.amr.pacmanfx.model.GameLevel;
@@ -21,9 +20,8 @@ public class TestEatingFood {
     @BeforeAll
     static void setup() {
         ArcadePacMan_GameModel game = new ArcadePacMan_GameModel(THE_GAME_BOX, new File(""));
-        game.setGameControl(new Arcade_GameController());
         THE_GAME_BOX.registerGame(StandardGameVariant.PACMAN.name(), game);
-        THE_GAME_BOX.setGameVariantName(StandardGameVariant.PACMAN.name());
+        THE_GAME_BOX.gameVariantNameProperty().set(StandardGameVariant.PACMAN.name());
     }
 
     @BeforeEach
@@ -90,12 +88,12 @@ public class TestEatingFood {
         final GameLevel gameLevel = THE_GAME_BOX.currentGame().level();
         final Blinky blinky = (Blinky) gameLevel.ghost(RED_GHOST_SHADOW);
         final FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
-        while (foodLayer.uneatenFoodCount() > game.levelData(gameLevel).numDotsLeftElroy1()) {
+        while (foodLayer.uneatenFoodCount() > game.levelData(gameLevel.number()).numDotsLeftElroy1()) {
             assertEquals(0, blinky.cruiseElroyValue());
             eatNextPellet(gameLevel);
         }
         assertEquals(1, blinky.cruiseElroyValue());
-        while (foodLayer.uneatenFoodCount() > game.levelData(gameLevel).numDotsLeftElroy2()) {
+        while (foodLayer.uneatenFoodCount() > game.levelData(gameLevel.number()).numDotsLeftElroy2()) {
             assertEquals(1, blinky.cruiseElroyValue());
             eatNextPellet(gameLevel);
         }
