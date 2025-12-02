@@ -42,8 +42,6 @@ public interface TengenMsPacMan_Actions {
         @Override
         public void execute(GameUI ui) {
             final Game game = ui.context().currentGame();
-            ui.soundManager().stopAll();
-            game.setPlaying(false);
             game.control().changeState(GameState.STARTING_GAME_OR_LEVEL);
         }
     };
