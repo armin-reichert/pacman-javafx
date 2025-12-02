@@ -10,6 +10,7 @@ import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.actors.Ghost;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
 
 import java.util.Optional;
 
@@ -119,6 +120,8 @@ public interface Game {
     // Pac lives
     int initialLifeCount();
     void setInitialLifeCount(int numLives);
+
+    IntegerProperty lifeCountProperty();
     int lifeCount();
     void addLives(int numLives);
 

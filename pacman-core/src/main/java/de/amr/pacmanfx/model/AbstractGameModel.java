@@ -63,14 +63,12 @@ public abstract class AbstractGameModel implements Game {
                 highScore.setEnabled(false);
             }
         });
-    }
 
-    public void setLifeCount(int n) {
-        if (n >= 0) {
-            lifeCount.set(n);
-        } else {
-            Logger.error("Cannot set life count to negative number");
-        }
+        lifeCountProperty().addListener((py, ov, nv) -> {
+            if (nv.intValue() < 0) {
+                throw new IllegalArgumentException("Life count cannot be set to negative value " + nv.intValue());
+            }
+        });
     }
 
     public ObjectProperty<GameLevel> gameLevelProperty() {
@@ -129,13 +127,18 @@ public abstract class AbstractGameModel implements Game {
     }
 
     @Override
+    public IntegerProperty lifeCountProperty() {
+        return lifeCount;
+    }
+
+    @Override
     public int lifeCount() {
-        return lifeCount.get();
+        return lifeCountProperty().get();
     }
 
     @Override
     public void addLives(int n) {
-        setLifeCount(lifeCount() + n);
+        lifeCountProperty().set(lifeCount() + n);
     }
 
     @Override

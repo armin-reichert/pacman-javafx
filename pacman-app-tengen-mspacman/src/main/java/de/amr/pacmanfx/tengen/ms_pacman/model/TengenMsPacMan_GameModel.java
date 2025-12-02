@@ -196,7 +196,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     public void prepareForNewGame() {
-        setLifeCount(initialLifeCount());
+        lifeCountProperty().set(initialLifeCount());
         levelCounter().clear();
         setPlaying(false);
         boosterActive = false;

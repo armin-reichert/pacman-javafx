@@ -244,7 +244,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     @Override
     public void prepareForNewGame() {
         setPlaying(false);
-        setLifeCount(initialLifeCount());
+        lifeCountProperty().set(initialLifeCount());
         scoreManager.loadHighScore();
         scoreManager.score().reset();
         scoreManager.highScore().setEnabled(true);
