@@ -14,9 +14,9 @@ import de.amr.pacmanfx.model.actors.*;
 import javafx.beans.property.*;
 import org.tinylog.Logger;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 
@@ -218,7 +218,7 @@ public abstract class AbstractGameModel implements Game {
 
     // GameEventManager implementation
 
-    private final List<GameEventListener> eventListeners = new ArrayList<>();
+    private final Set<GameEventListener> eventListeners = new HashSet<>();
 
     @Override
     public void addGameEventListener(GameEventListener listener) {
