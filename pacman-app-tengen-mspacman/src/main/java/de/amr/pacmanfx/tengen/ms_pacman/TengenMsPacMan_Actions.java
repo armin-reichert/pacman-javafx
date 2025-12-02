@@ -22,19 +22,22 @@ public interface TengenMsPacMan_Actions {
     GameAction ACTION_ENTER_START_SCREEN = new GameAction("ENTER_START_SCREEN") {
         @Override
         public void execute(GameUI ui) {
-            ui.context().currentGame().control().changeState(GameState.SETTING_OPTIONS_FOR_START);
+            final Game game = ui.context().currentGame();
+            game.control().changeState(GameState.SETTING_OPTIONS_FOR_START);
         }
     };
 
     GameAction ACTION_QUIT_DEMO_LEVEL = new GameAction("QUIT_DEMO_LEVEL") {
         @Override
         public void execute(GameUI ui) {
-            ui.context().currentGame().control().changeState(GameState.SETTING_OPTIONS_FOR_START);
+            final Game game = ui.context().currentGame();
+            game.control().changeState(GameState.SETTING_OPTIONS_FOR_START);
         }
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            return ui.context().currentGame().optGameLevel().isPresent() && ui.context().currentGame().level().isDemoLevel();
+            final Game game = ui.context().currentGame();
+            return game.optGameLevel().isPresent() && game.level().isDemoLevel();
         }
     };
 
@@ -71,19 +74,20 @@ public interface TengenMsPacMan_Actions {
     GameAction ACTION_TOGGLE_PAC_BOOSTER = new GameAction("TOGGLE_PAC_BOOSTER") {
         @Override
         public void execute(GameUI ui) {
-            ui.context().currentGame().optGameLevel().ifPresent(gameLevel -> {
-                var game = ui.context().<TengenMsPacMan_GameModel>currentGame();
-                game.activatePacBooster(gameLevel.pac(), !game.isBoosterActive());
-                if (game.isBoosterActive()) {
-                    ui.showFlashMessage("Booster!");
+            final Game game = ui.context().currentGame();
+            game.optGameLevel().ifPresent(gameLevel -> {
+                final var tengenGame = (TengenMsPacMan_GameModel) game;
+                tengenGame.activatePacBooster(gameLevel.pac(), !tengenGame.isBoosterActive());
+                if (tengenGame.isBoosterActive()) {
+                    ui.showFlashMessage("Booster!"); //TODO localize
                 }
             });
         }
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            var gameModel = ui.context().<TengenMsPacMan_GameModel>currentGame();
-            return gameModel.pacBooster() == PacBooster.USE_A_OR_B && gameModel.optGameLevel().isPresent();
+            final var tengenGame = ui.context().<TengenMsPacMan_GameModel>currentGame();
+            return tengenGame.pacBooster() == PacBooster.USE_A_OR_B && tengenGame.optGameLevel().isPresent();
         }
     };
 }
