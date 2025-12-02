@@ -331,7 +331,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         final GameLevel level = level();
         level.setStartTimeMillis(System.currentTimeMillis());
         level.getReadyToPlay();
-        //resetPacManAndGhostAnimations(level);
         if (pacBooster == PacBooster.ALWAYS_ON) {
             activatePacBooster(level.pac(), true);
         }
@@ -344,7 +343,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             showLevelMessage(MessageType.READY);
             levelCounter().update(level.number(), level.bonusSymbol(0));
             scoreManager.score().setEnabled(true);
-            scoreManager.highScore().setEnabled(true);
             Logger.info("Level {} started", level.number());
         }
         // Note: This event is very important because it triggers the creation of the actor animations!
