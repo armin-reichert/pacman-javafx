@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.Game;
@@ -24,7 +23,7 @@ public class Arcade_GameController extends StateMachine<Game> implements GameCon
         return this;
     }
 
-    public enum GameState implements FsmState<Game> {
+    public enum GameState implements State<Game> {
 
         /**
          * Corresponds to the screen showing all these random symbols from the Arcade video memory.

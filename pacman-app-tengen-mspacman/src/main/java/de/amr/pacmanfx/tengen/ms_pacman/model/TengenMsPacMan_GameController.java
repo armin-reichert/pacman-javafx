@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman.model;
 
-import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.Game;
@@ -23,7 +22,7 @@ public class TengenMsPacMan_GameController extends StateMachine<Game> implements
         return this;
     }
 
-    public enum GameState implements FsmState<Game> {
+    public enum GameState implements State<Game> {
 
         /**
          * Corresponds to the screen showing the "TENGEN PRESENTS" text and the red ghost running over the screen.

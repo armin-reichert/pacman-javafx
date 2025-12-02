@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.event;
 
-import de.amr.pacmanfx.lib.fsm.FsmState;
+import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.model.Game;
 
 public interface GameEventListener {
@@ -42,8 +42,8 @@ public interface GameEventListener {
         }
     }
 
-    default void onEnterGameState(FsmState<Game> state) {}
-    default void onExitGameState(FsmState<Game> state) {}
+    default void onEnterGameState(StateMachine.State<Game> state) {}
+    default void onExitGameState(StateMachine.State<Game> state) {}
 
     default void onCreditAdded(GameEvent e) {}
     default void onSpecialScoreReached(GameEvent e) {}

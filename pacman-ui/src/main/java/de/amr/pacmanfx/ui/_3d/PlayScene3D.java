@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.lib.fsm.FsmState;
+import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.FoodLayer;
@@ -308,7 +308,7 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
     }
 
     @Override
-    public void onEnterGameState(FsmState<Game> state) {
+    public void onEnterGameState(StateMachine.State<Game> state) {
         if (state instanceof TestState) {
             replaceGameLevel3D();
             showLevelTestMessage(context().currentGame().level());
@@ -345,7 +345,7 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
             return;
         }
         final GameLevel gameLevel = context().currentGame().level();
-        final FsmState<Game> state = context().currentGame().control().state();
+        final StateMachine.State<Game> state = context().currentGame().control().state();
 
         if (state instanceof TestState) {
             replaceGameLevel3D(); //TODO check when to destroy previous level
@@ -460,7 +460,7 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
 
     @Override
     public void onGameStarted(GameEvent e) {
-        FsmState<Game> state = context().currentGame().control().state();
+        StateMachine.State<Game> state = context().currentGame().control().state();
         boolean silent = context().currentGame().level().isDemoLevel() || state instanceof TestState;
         if (!silent) {
             ui.soundManager().play(SoundID.GAME_READY);
@@ -593,7 +593,7 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
         }
     }
 
-    protected void updateSound(GameLevel gameLevel, FsmState<Game> gameState) {
+    protected void updateSound(GameLevel gameLevel, StateMachine.State<Game> gameState) {
         if (!ui.soundManager().isEnabled()) return;
         if (gameState.name().equals("HUNTING")) {
             updateSiren(gameLevel.pac());

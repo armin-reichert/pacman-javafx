@@ -6,14 +6,14 @@ package de.amr.pacmanfx.model.test;
 
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.lib.fsm.FsmState;
+import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevelMessage;
 import de.amr.pacmanfx.model.MessageType;
 
-public class LevelShortTestState implements FsmState<Game>, TestState {
+public class LevelShortTestState implements StateMachine.State<Game>, TestState {
 
     private final TickTimer timer = new TickTimer("Timer_" + name());
     private int lastTestedLevelNumber;

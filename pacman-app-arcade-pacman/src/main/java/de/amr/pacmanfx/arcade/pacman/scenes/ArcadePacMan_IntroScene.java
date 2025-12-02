@@ -12,7 +12,6 @@ import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_IntroScene_Renderer;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
@@ -174,7 +173,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         return (SceneState) sceneController.state();
     }
 
-    public enum SceneState implements FsmState<ArcadePacMan_IntroScene> {
+    public enum SceneState implements StateMachine.State<ArcadePacMan_IntroScene> {
 
         STARTING {
             @Override

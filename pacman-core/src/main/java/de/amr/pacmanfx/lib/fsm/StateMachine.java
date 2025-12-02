@@ -14,7 +14,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * A finite-state machine.
  * <p>
- * The states must be provided by an enumeration type that implements the {@link FsmState} interface. The data type
+ * The states must be provided by an enumeration type that implements the {@link State} interface. The data type
  * passed to the state lifecycle methods is specified by the second type parameter.
  * <p>
  * State transitions are defined dynamically via the {@link #changeState} method calls. Each state change triggers an
@@ -23,21 +23,58 @@ import static java.util.Objects.requireNonNull;
  * @author Armin Reichert
  *
  * @param <CONTEXT> Type of the data provided to the state lifecycle methods
- * {@link FsmState#onEnter}, {@link FsmState#onUpdate} and {@link FsmState#onExit}
+ * {@link State#onEnter}, {@link State#onUpdate} and {@link State#onExit}
  */
 public class StateMachine<CONTEXT> {
 
-    protected final List<FsmStateChangeListener<FsmState<CONTEXT>>> stateChangeListeners = new ArrayList<>(5);
+    /**
+     * Interface implemented by all states (enums) of a FSM. Each state has a timer.
+     *
+     * @param <C> the (context) type that the hook methods {@link #onEnter(C)}, {@link #onUpdate(C)}, {@link #onExit(C)} get
+     *            passed as parameter
+     */
+    public interface State<C> {
+
+        String name();
+
+        /**
+         * The hook method that gets executed when the state is entered.
+         *
+         * @param context the "context" (data type provided to the state)
+         */
+        default void onEnter(C context) {}
+
+        /**
+         * The hook method that gets executed when the state is updated.
+         *
+         * @param context the "context" (data type provided to the state)
+         */
+        void onUpdate(C context);
+
+        /**
+         * The hook method that gets executed when the state is exited.
+         *
+         * @param context the "context" (data type provided to the state)
+         */
+        default void onExit(C context) {}
+
+        /**
+         * @return the timer of this state
+         */
+        TickTimer timer();
+    }
+
+    protected final List<FsmStateChangeListener<State<CONTEXT>>> stateChangeListeners = new ArrayList<>(5);
     protected CONTEXT context;
-    protected Set<FsmState<CONTEXT>> states = new HashSet<>();
-    protected FsmState<CONTEXT> currentState;
-    protected FsmState<CONTEXT> prevState;
+    protected Set<State<CONTEXT>> states = new HashSet<>();
+    protected State<CONTEXT> currentState;
+    protected State<CONTEXT> prevState;
 
     protected String name = getClass().getSimpleName();
 
     public StateMachine() {}
 
-    public void addState(FsmState<CONTEXT> state) {
+    public void addState(State<CONTEXT> state) {
         requireNonNull(state);
         if (states.contains(state)) {
             Logger.warn("State '{}' is already contained in set of states of FSM '{}'", state.name(), name);
@@ -46,17 +83,17 @@ public class StateMachine<CONTEXT> {
         }
     }
 
-    public void addStates(Collection<FsmState<CONTEXT>> states) {
+    public void addStates(Collection<State<CONTEXT>> states) {
         requireNonNull(states);
         if (states.isEmpty()) {
             throw new IllegalArgumentException("There must be at least one state in a FSM");
         }
-        for (FsmState<CONTEXT> state : states) {
+        for (State<CONTEXT> state : states) {
             addState(state);
         }
     }
 
-    public void addStates(FsmState<CONTEXT>[] states) {
+    public void addStates(State<CONTEXT>[] states) {
         addStates(List.of(states));
     }
 
@@ -80,14 +117,14 @@ public class StateMachine<CONTEXT> {
     /**
      * @return the current state
      */
-    public FsmState<CONTEXT> state() {
+    public State<CONTEXT> state() {
         return currentState;
     }
 
     /**
      * @return (Unmodifiable) list of the state objects
      */
-    public Set<FsmState<CONTEXT>> states() {
+    public Set<State<CONTEXT>> states() {
         return Collections.unmodifiableSet(states);
     }
 
@@ -95,7 +132,7 @@ public class StateMachine<CONTEXT> {
      * @param name state name (id)
      * @return (optional) state with given name.
      */
-    public Optional<FsmState<CONTEXT>> optState(String name) {
+    public Optional<State<CONTEXT>> optState(String name) {
         requireNonNull(name);
         return states().stream()
             .filter(s -> s.name().equals(name))
@@ -105,7 +142,7 @@ public class StateMachine<CONTEXT> {
     /**
      * @return the previous state (can be null)
      */
-    public FsmState<CONTEXT> prevState() {
+    public State<CONTEXT> prevState() {
         return prevState;
     }
 
@@ -114,7 +151,7 @@ public class StateMachine<CONTEXT> {
      *
      * @param listener a state change listener
      */
-    public void addStateChangeListener(FsmStateChangeListener<FsmState<CONTEXT>> listener) {
+    public void addStateChangeListener(FsmStateChangeListener<State<CONTEXT>> listener) {
         requireNonNull(listener);
         if (!stateChangeListeners.contains(listener)) {
             stateChangeListeners.add(listener);
@@ -129,7 +166,7 @@ public class StateMachine<CONTEXT> {
      *
      * @param listener a state change listener
      */
-    public void removeStateChangeListener(FsmStateChangeListener<FsmState<CONTEXT>> listener) {
+    public void removeStateChangeListener(FsmStateChangeListener<State<CONTEXT>> listener) {
         requireNonNull(listener);
         stateChangeListeners.remove(listener);
     }
@@ -138,7 +175,7 @@ public class StateMachine<CONTEXT> {
      * Resets the timer of each state to {@link TickTimer#INDEFINITE}.
      */
     public void resetTimers() {
-        for (FsmState<CONTEXT> state : states) {
+        for (State<CONTEXT> state : states) {
             state.timer().resetIndefiniteTime();
         }
     }
@@ -149,7 +186,7 @@ public class StateMachine<CONTEXT> {
      *
      * @param state the state to enter
      */
-    public void restart(FsmState<CONTEXT> state) {
+    public void restart(State<CONTEXT> state) {
         requireNonNull(state);
         resetTimers();
         currentState = null;
@@ -165,7 +202,7 @@ public class StateMachine<CONTEXT> {
      *
      * @param newState the new state
      */
-    public void changeState(FsmState<CONTEXT> newState) {
+    public void changeState(State<CONTEXT> newState) {
         requireNonNull(newState);
         if (newState == currentState) {
             Logger.info("State machine is already in state {}", currentState);
@@ -199,7 +236,7 @@ public class StateMachine<CONTEXT> {
     /**
      * Updates this FSM's current state.
      * <p>
-     * Runs the {@link FsmState#onUpdate} hook method (if defined) of the current state and advances the state timer.
+     * Runs the {@link State#onUpdate} hook method (if defined) of the current state and advances the state timer.
      */
     public void update() {
         currentState.onUpdate(context);

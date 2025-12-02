@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model;
 
-import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import org.tinylog.Logger;
 
@@ -19,25 +18,25 @@ public interface GameControl {
 
     StateMachine<Game> stateMachine();
 
-    default Optional<FsmState<Game>> optState(String stateName) {
+    default Optional<StateMachine.State<Game>> optState(String stateName) {
         return stateMachine().optState(stateName);
     }
 
-    default FsmState<Game> state() {
+    default StateMachine.State<Game> state() {
         return stateMachine().state();
     }
 
-    default void changeState(FsmState<Game> gameState) {
+    default void changeState(StateMachine.State<Game> gameState) {
         stateMachine().changeState(gameState);
     }
 
     default void changeState(String stateID) {
-        Optional<FsmState<Game>> optState = stateMachine().optState(stateID);
+        Optional<StateMachine.State<Game>> optState = stateMachine().optState(stateID);
         optState.ifPresentOrElse(state -> stateMachine().changeState(state),
             () -> Logger.error("Cannot change state to '{}'. State not existing.", stateID));
     }
 
-    default void restart(FsmState<Game> gameState) {
+    default void restart(StateMachine.State<Game> gameState) {
         stateMachine().restart(gameState);
     }
 
@@ -46,7 +45,7 @@ public interface GameControl {
     }
 
     default void restart(String stateID) {
-        Optional<FsmState<Game>> optState = stateMachine().optState(stateID);
+        Optional<StateMachine.State<Game>> optState = stateMachine().optState(stateID);
         optState.ifPresentOrElse(state -> stateMachine().restart(state),
             () -> Logger.error("Cannot restart in state to '{}'. State not existing.", stateID));
     }

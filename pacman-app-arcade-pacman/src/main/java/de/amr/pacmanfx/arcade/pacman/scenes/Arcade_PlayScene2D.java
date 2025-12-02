@@ -8,7 +8,7 @@ import de.amr.pacmanfx.arcade.pacman.ArcadeActions;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController;
 import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_PlayScene2D_Renderer;
 import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.lib.fsm.FsmState;
+import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
@@ -161,7 +161,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onGameStarted(GameEvent e) {
-        FsmState<Game> state = context().currentGame().control().state();
+        StateMachine.State<Game> state = context().currentGame().control().state();
         boolean silent = context().currentGame().level().isDemoLevel() || state instanceof TestState;
         if (!silent) {
             ui.soundManager().play(SoundID.GAME_READY);
@@ -219,7 +219,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void onEnterGameState(FsmState<Game> state) {
+    public void onEnterGameState(StateMachine.State<Game> state) {
         if (state == Arcade_GameController.GameState.LEVEL_COMPLETE) {
             ui.soundManager().stopAll();
             playLevelCompletedAnimation();

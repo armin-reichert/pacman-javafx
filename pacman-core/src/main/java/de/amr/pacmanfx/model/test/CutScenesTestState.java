@@ -5,11 +5,11 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.model.test;
 
 import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.lib.fsm.FsmState;
+import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.Game;
 
-public class CutScenesTestState implements FsmState<Game>, TestState {
+public class CutScenesTestState implements StateMachine.State<Game>, TestState {
 
     private final TickTimer timer = new TickTimer("Timer_" + name());
 

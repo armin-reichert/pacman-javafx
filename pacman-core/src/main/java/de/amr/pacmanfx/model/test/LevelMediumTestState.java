@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.model.test;
 
 import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.lib.fsm.FsmState;
+import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
@@ -13,7 +13,7 @@ import de.amr.pacmanfx.model.GameLevelMessage;
 import de.amr.pacmanfx.model.MessageType;
 import de.amr.pacmanfx.model.actors.AnimationManager;
 
-public class LevelMediumTestState implements FsmState<Game>, TestState {
+public class LevelMediumTestState implements StateMachine.State<Game>, TestState {
     static final int TEST_DURATION_SEC = 10;
 
     private final TickTimer timer = new TickTimer("Timer_" + name());

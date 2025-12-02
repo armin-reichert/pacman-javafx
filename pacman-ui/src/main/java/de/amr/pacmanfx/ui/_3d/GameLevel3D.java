@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.StopWatch;
-import de.amr.pacmanfx.lib.fsm.FsmState;
+import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.FoodLayer;
@@ -718,7 +718,7 @@ public class GameLevel3D extends Group implements Disposable {
         ghostLightAnimation.playFromStart();
     }
 
-    public void onPacManDying(FsmState<Game> state) {
+    public void onPacManDying(StateMachine.State<Game> state) {
         state.timer().resetIndefiniteTime(); // expires when level animation ends
         ui.soundManager().stopAll();
         ghostLightAnimation.stop();
@@ -746,7 +746,7 @@ public class GameLevel3D extends Group implements Disposable {
         });
     }
 
-    public void onLevelComplete(FsmState<Game> state, ObjectProperty<PerspectiveID> perspectiveIDProperty) {
+    public void onLevelComplete(StateMachine.State<Game> state, ObjectProperty<PerspectiveID> perspectiveIDProperty) {
         state.timer().resetIndefiniteTime(); // expires when animation ends
         ui.soundManager().stopAll();
         animationRegistry.stopAllAnimations();
@@ -785,7 +785,7 @@ public class GameLevel3D extends Group implements Disposable {
         animation.play();
     }
 
-    public void onGameOver(FsmState<Game> state) {
+    public void onGameOver(StateMachine.State<Game> state) {
         state.timer().restartSeconds(3);
         ghostLightAnimation.stop();
         energizers3D().forEach(Energizer3D::hide);

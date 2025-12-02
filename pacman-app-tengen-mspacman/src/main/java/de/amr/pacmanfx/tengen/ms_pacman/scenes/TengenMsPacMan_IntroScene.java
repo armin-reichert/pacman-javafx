@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.timer.TickTimer;
@@ -120,7 +119,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
     @Override
     public Vector2i unscaledSize() { return NES_SIZE_PX; }
 
-    public enum SceneState implements FsmState<TengenMsPacMan_IntroScene> {
+    public enum SceneState implements StateMachine.State<TengenMsPacMan_IntroScene> {
 
         WAITING_FOR_START {
 

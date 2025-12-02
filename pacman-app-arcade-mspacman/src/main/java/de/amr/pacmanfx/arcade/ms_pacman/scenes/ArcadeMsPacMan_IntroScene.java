@@ -11,7 +11,6 @@ import de.amr.pacmanfx.arcade.pacman.ArcadeActions;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController.GameState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.Game;
@@ -154,7 +153,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     // Scene controller FSM
 
-    public enum SceneState implements FsmState<ArcadeMsPacMan_IntroScene> {
+    public enum SceneState implements StateMachine.State<ArcadeMsPacMan_IntroScene> {
 
         STARTING {
             @Override
