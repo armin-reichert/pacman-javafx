@@ -98,12 +98,14 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         }
     }
 
+    // public for access by tests
     public void onPelletEaten(GameLevel gameLevel) {
         scoreManager.scorePoints(PELLET_VALUE);
         gameLevel.pac().onFoodEaten(false);
         gameLevel.ghosts().forEach(ghost -> ghost.onFoodCountChange(gameLevel));
     }
 
+    // public for access by tests
     public void onEnergizerEaten(GameLevel gameLevel, Vector2i tile) {
         simulationStepResult.foundEnergizerAtTile = tile;
         scoreManager.scorePoints(ENERGIZER_VALUE);
@@ -218,7 +220,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             coinMechanism.consumeCoin();
         }
         scoreManager.updateHighScore();
-        level().showMessage(MessageType.GAME_OVER);
+        showLevelMessage(level(), MessageType.GAME_OVER);
         Logger.info("Game ended with level number {}", level().number());
     }
 
@@ -396,13 +398,13 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         level.getReadyToPlay();
         //resetPacManAndGhostAnimations(level);
         if (level.isDemoLevel()) {
-            level.showMessage(MessageType.GAME_OVER);
+            showLevelMessage(level, MessageType.GAME_OVER);
             scoreManager.score().setEnabled(false);
             scoreManager.highScore().setEnabled(false);
             Logger.info("Demo level {} started", level.number());
         } else {
             levelCounter().update(level.number(), level.bonusSymbol(0));
-            level.showMessage(MessageType.READY);
+            showLevelMessage(level, MessageType.READY);
             scoreManager.score().setEnabled(true);
             //scoreManager.highScore().setEnabled(true);
             Logger.info("Level {} started", level.number());
@@ -415,6 +417,15 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     public void startNextLevel() {
         buildNormalLevel(level().number() + 1);
         startLevel();
+    }
+
+    @Override
+    public void showLevelMessage(GameLevel level, MessageType type) {
+        requireNonNull(level);
+        requireNonNull(type);
+        final var message = new GameLevelMessage(type);
+        message.setPosition(level.worldMap().terrainLayer().messageCenterPosition());
+        level.setMessage(message);
     }
 
     @Override

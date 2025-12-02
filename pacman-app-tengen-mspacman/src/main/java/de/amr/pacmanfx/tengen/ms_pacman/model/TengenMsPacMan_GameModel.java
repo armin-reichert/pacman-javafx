@@ -165,17 +165,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             && numContinues == DEFAULT_NUM_CONTINUES;
     }
 
-    public void showLevelMessage(GameLevel level, MessageType type) {
-        requireNonNull(level);
-        requireNonNull(type);
-        final Vector2f center = level.worldMap().terrainLayer().messageCenterPosition();
-        // Non-Arcade maps have a moving "Game Over" message
-        final GameLevelMessage message = type == MessageType.GAME_OVER && mapCategory != MapCategory.ARCADE
-            ? new MovingGameLevelMessage(type, center, GAME_OVER_MESSAGE_DELAY_SEC * NUM_TICKS_PER_SEC)
-            : new GameLevelMessage(type, center);
-        level.setMessage(message);
-    }
-
     @Override
     public TengenMsPacMan_LevelCounter levelCounter() {
         return levelCounter;
@@ -391,6 +380,18 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         } else {
             Logger.warn("Last level ({}) reached, cannot start next level", LAST_LEVEL_NUMBER);
         }
+    }
+
+    @Override
+    public void showLevelMessage(GameLevel level, MessageType type) {
+        requireNonNull(level);
+        requireNonNull(type);
+        final Vector2f center = level.worldMap().terrainLayer().messageCenterPosition();
+        // Non-Arcade maps have a moving "Game Over" message
+        final GameLevelMessage message = type == MessageType.GAME_OVER && mapCategory != MapCategory.ARCADE
+            ? new MovingGameLevelMessage(type, center, GAME_OVER_MESSAGE_DELAY_SEC * NUM_TICKS_PER_SEC)
+            : new GameLevelMessage(type, center);
+        level.setMessage(message);
     }
 
     public void activatePacBooster(Pac pac, boolean active) {

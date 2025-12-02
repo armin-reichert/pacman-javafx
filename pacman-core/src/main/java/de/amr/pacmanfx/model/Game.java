@@ -87,6 +87,7 @@ public interface Game {
     GameLevel createLevel(int levelNumber, boolean demoLevel);
     void startLevel();
     void startDemoLevel(long tick);
+    void showLevelMessage(GameLevel level, MessageType type);
     boolean isLevelCompleted();
     int lastLevelNumber();
     void startNextLevel();
