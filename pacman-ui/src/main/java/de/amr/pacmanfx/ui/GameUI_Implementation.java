@@ -590,7 +590,7 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public void updateGameScene(boolean forceReloading) {
-        playView.updateGameScene(forceReloading);
+        playView.updateGameScene(context().currentGame(), forceReloading);
     }
 
     // GameUI_ConfigManager interface

@@ -218,21 +218,21 @@ public class PlayView extends StackPane implements GameUI_View {
 
     @Override
     public void onGameEvent(GameEvent gameEvent) {
+        final Game game = gameEvent.game();
         switch (gameEvent.type()) {
-            case LEVEL_CREATED -> onGameLevelCreated();
+            case LEVEL_CREATED -> onGameLevelCreated(game);
             case GAME_STATE_CHANGED -> {
-                final String gameStateName = ui.context().currentGame().control().state().name();
+                final String gameStateName = game.control().state().name();
                 if (gameStateName.equals("LEVEL_COMPLETE")) {
                     miniView.slideOut();
                 }
             }
         }
         ui.currentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(gameEvent));
-        updateGameScene(false);
+        updateGameScene(game, false);
     }
 
-    private void onGameLevelCreated() {
-        final Game game = ui.context().currentGame();
+    private void onGameLevelCreated(Game game) {
         final GameUI_Config uiConfig = ui.currentConfig();
 
         game.level().pac().setAnimationManager(uiConfig.createPacAnimations());
@@ -247,8 +247,7 @@ public class PlayView extends StackPane implements GameUI_View {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    public void updateGameScene(boolean reloadCurrent) {
-        final Game game = ui.context().currentGame();
+    public void updateGameScene(Game game, boolean reloadCurrent) {
         final GameScene nextGameScene = ui.currentConfig().sceneConfig().selectGameScene(ui.context());
         if (nextGameScene == null) {
             String errorMessage = " Katastrophe! Could not determine game scene!";
