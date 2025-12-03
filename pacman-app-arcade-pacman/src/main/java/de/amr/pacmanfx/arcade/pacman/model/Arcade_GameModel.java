@@ -140,10 +140,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         }
     }
 
-    public void onKilled() {
-    }
-
-
     @Override
     public void updatePacManDying(long tick) {
         final GameLevel level = level();
