@@ -251,7 +251,7 @@ public class PlayView extends StackPane implements GameUI_View {
     // -----------------------------------------------------------------------------------------------------------------
 
     public void updateGameScene(Game game, boolean reloadCurrent) {
-        final GameScene nextGameScene = ui.currentConfig().sceneConfig().selectGameScene(ui.context());
+        final GameScene nextGameScene = ui.currentConfig().sceneConfig().selectGameScene(game);
         if (nextGameScene == null) {
             String errorMessage = " Katastrophe! Could not determine game scene!";
             ui.showFlashMessage(Duration.seconds(30), errorMessage);

@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.api;
 
-import de.amr.pacmanfx.GameContext;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 
@@ -47,7 +47,7 @@ public interface GameScene_Config {
 
     boolean gameSceneHasID(GameScene gameScene, String sceneID);
 
-    GameScene selectGameScene(GameContext gameContext);
+    GameScene selectGameScene(Game game);
 
     boolean canvasDecorated(GameScene gameScene);
 }

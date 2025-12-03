@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController.GameState;
 import de.amr.pacmanfx.arcade.pacman.model.actors.ArcadePacMan_ActorFactory;
@@ -268,8 +267,7 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config, GameScene_Confi
     }
 
     @Override
-    public GameScene selectGameScene(GameContext context) {
-        final Game game = context.currentGame();
+    public GameScene selectGameScene(Game game) {
         String sceneID = switch (game.control().state()) {
             case GameState.BOOT -> SCENE_ID_BOOT_SCENE;
             case GameState.SETTING_OPTIONS_FOR_START -> SCENE_ID_START_SCENE;
