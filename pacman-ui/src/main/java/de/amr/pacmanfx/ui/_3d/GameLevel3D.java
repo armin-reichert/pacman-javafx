@@ -775,7 +775,7 @@ public class GameLevel3D extends Group implements Disposable {
                 wallBaseHeightProperty.unbind();
             }),
             levelCompletedAnimation.getOrCreateAnimationFX(),
-            pauseSec(1)
+            pauseSec(0.25)
         );
         animation.setOnFinished(e -> {
             wallBaseHeightProperty.bind(PROPERTY_3D_WALL_HEIGHT);
