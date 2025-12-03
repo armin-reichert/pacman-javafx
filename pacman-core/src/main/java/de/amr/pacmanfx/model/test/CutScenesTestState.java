@@ -8,6 +8,7 @@ import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameControl;
 
 public class CutScenesTestState implements StateMachine.State<Game>, TestState {
 
@@ -41,7 +42,7 @@ public class CutScenesTestState implements StateMachine.State<Game>, TestState {
                 //TODO find another solution and get rid of this event type
                 game.publishGameEvent(GameEvent.Type.UNSPECIFIED_CHANGE);
             } else {
-                game.control().changeState("INTRO");
+                game.control().changeState(GameControl.StateName.INTRO.name());
             }
         }
     }

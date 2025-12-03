@@ -8,6 +8,7 @@ import de.amr.pacmanfx.lib.timer.TickTimer;
 import org.tinylog.Logger;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 
@@ -36,6 +37,19 @@ public class StateMachine<CONTEXT> {
     public interface State<C> {
 
         String name();
+
+        default boolean matches(String... names) {
+            requireNonNull(names);
+            if (names.length == 0) return false;
+            return Stream.of(names).anyMatch(name -> name.equals(name()));
+        }
+
+        @SuppressWarnings("unchecked")
+        default <E extends Enum<E>> boolean matches(E... states) {
+            requireNonNull(states);
+            if (states.length == 0) return false;
+            return Stream.of(states).anyMatch(state -> state.name().equals(name()));
+        }
 
         /**
          * The hook method that gets executed when the state is entered.

@@ -14,6 +14,9 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman_xxl.*;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.StandardGameVariant;
+import de.amr.pacmanfx.model.test.CutScenesTestState;
+import de.amr.pacmanfx.model.test.LevelMediumTestState;
+import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
@@ -45,30 +48,41 @@ public class PacManGames3dApp extends Application {
     private PacManXXL_Common_MapSelector xxlCommonMapSelector;
     private GameUI ui;
 
+    private void addTestStates(Game game) {
+        game.control().stateMachine().addState(new LevelShortTestState());
+        game.control().stateMachine().addState(new LevelMediumTestState());
+        game.control().stateMachine().addState(new CutScenesTestState());
+
+    }
     private GameUI createUI_WithoutBuilder(Stage stage, double sceneWidth, double sceneHeight) {
         {
             String variantName = StandardGameVariant.PACMAN.name();
             Game game = new ArcadePacMan_GameModel(THE_GAME_BOX, THE_GAME_BOX.highScoreFile(variantName));
+            addTestStates(game);
             THE_GAME_BOX.registerGame(variantName, game);
         }
         {
             String variantName = StandardGameVariant.MS_PACMAN.name();
             Game game = new ArcadeMsPacMan_GameModel(THE_GAME_BOX, THE_GAME_BOX.highScoreFile(variantName));
+            addTestStates(game);
             THE_GAME_BOX.registerGame(variantName, game);
         }
         {
             String variantName = StandardGameVariant.MS_PACMAN_TENGEN.name();
             Game game = new TengenMsPacMan_GameModel(THE_GAME_BOX.highScoreFile(variantName));
+            addTestStates(game);
             THE_GAME_BOX.registerGame(variantName, game);
         }
         {
             String variantName = StandardGameVariant.PACMAN_XXL.name();
             Game game = new PacManXXL_PacMan_GameModel(THE_GAME_BOX, xxlCommonMapSelector, THE_GAME_BOX.highScoreFile(variantName));
+            addTestStates(game);
             THE_GAME_BOX.registerGame(variantName, game);
         }
         {
             String variantName = StandardGameVariant.MS_PACMAN_XXL.name();
             Game game = new PacManXXL_MsPacMan_GameModel(THE_GAME_BOX, xxlCommonMapSelector, THE_GAME_BOX.highScoreFile(variantName));
+            addTestStates(game);
             THE_GAME_BOX.registerGame(variantName, game);
         }
 

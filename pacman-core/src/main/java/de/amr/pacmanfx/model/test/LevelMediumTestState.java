@@ -7,10 +7,7 @@ package de.amr.pacmanfx.model.test;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.timer.TickTimer;
-import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.GameLevelMessage;
-import de.amr.pacmanfx.model.MessageType;
+import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.AnimationManager;
 
 public class LevelMediumTestState implements StateMachine.State<Game>, TestState {
@@ -63,7 +60,7 @@ public class LevelMediumTestState implements StateMachine.State<Game>, TestState
         if (timer().hasExpired()) {
             if (level.number() == lastTestedLevelNumber) {
                 game.publishGameEvent(GameEvent.Type.STOP_ALL_SOUNDS);
-                game.control().changeState("INTRO");
+                game.control().changeState(GameControl.StateName.INTRO.name());
             } else {
                 timer().restartSeconds(TEST_DURATION_SEC);
                 game.startNextLevel();
@@ -71,7 +68,7 @@ public class LevelMediumTestState implements StateMachine.State<Game>, TestState
             }
         }
         else if (game.isLevelCompleted()) {
-            game.control().changeState("INTRO");
+            game.control().changeState(GameControl.StateName.INTRO.name());
         } else if (game.hasPacManBeenKilled()) {
             timer.expire();
         } else if (game.hasGhostBeenKilled()) {

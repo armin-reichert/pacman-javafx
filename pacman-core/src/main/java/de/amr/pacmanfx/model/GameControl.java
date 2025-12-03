@@ -16,6 +16,11 @@ import java.util.Optional;
 */
 public interface GameControl {
 
+    enum StateName {
+        BOOT, INTRO, SETTING_OPTIONS_FOR_START, STARTING_GAME_OR_LEVEL, HUNTING, LEVEL_COMPLETE,
+        LEVEL_TRANSITION, EATING_GHOST, PACMAN_DYING, GAME_OVER, INTERMISSION
+    }
+
     StateMachine<Game> stateMachine();
 
     default Optional<StateMachine.State<Game>> optState(String stateName) {

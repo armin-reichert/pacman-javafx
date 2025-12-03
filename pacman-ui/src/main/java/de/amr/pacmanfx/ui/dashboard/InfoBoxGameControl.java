@@ -7,6 +7,7 @@ package de.amr.pacmanfx.ui.dashboard;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameControl.StateName;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.ui.action.TestActions;
 import de.amr.pacmanfx.ui.api.GameUI;
@@ -15,18 +16,11 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Spinner;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.Set;
 
 import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_ENTER_NEXT_LEVEL;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_RESTART_INTRO;
 
-/**
- * Game related settings.
- *
- * @author Armin Reichert
- */
 public class InfoBoxGameControl extends InfoBox {
 
     private static final int GAME_LEVEL_START = 0;
@@ -52,46 +46,49 @@ public class InfoBoxGameControl extends InfoBox {
         buttonGroupLevelActions  = addButtonList("Game Level", List.of("Start", "Quit", "Next"));
         buttonGroupCutScenesTest = addButtonList("Cut Scenes Test", List.of("Start", "Quit"));
 
-        setAction(buttonGroupCutScenesTest[CUT_SCENES_TEST_START], TestActions.ACTION_CUT_SCENES_TEST);
-        setAction(buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT], ACTION_RESTART_INTRO);
-        //setAction(buttonGroupLevelActions[GAME_LEVEL_START], ArcadeActions.ACTION_START_GAME); //TODO Tengen?
+        setAction(choiceBoxInitialLives, () -> ui.context().currentGame().setInitialLifeCount(choiceBoxInitialLives.getValue()));
+
+        //setAction(buttonGroupLevelActions[GAME_LEVEL_START], ArcadeActions.ACTION_START_GAME); //TODO FIXME!
         setAction(buttonGroupLevelActions[GAME_LEVEL_QUIT], ACTION_RESTART_INTRO);
         setAction(buttonGroupLevelActions[GAME_LEVEL_NEXT], ACTION_ENTER_NEXT_LEVEL);
-        setAction(choiceBoxInitialLives, () -> ui.context().currentGame().setInitialLifeCount(choiceBoxInitialLives.getValue()));
+
+        setAction(buttonGroupCutScenesTest[CUT_SCENES_TEST_START], TestActions.ACTION_CUT_SCENES_TEST);
+        setAction(buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT], ACTION_RESTART_INTRO);
     }
 
     @Override
     public void update() {
         super.update();
 
+        final Game game = ui.context().currentGame();
+        final StateMachine.State<?> state = game.control().state();
+
         //TODO use binding
-        choiceBoxInitialLives.setValue(ui.context().currentGame().initialLifeCount());
+        choiceBoxInitialLives.setValue(game.initialLifeCount());
 
-        StateMachine.State<Game> state = ui.context().currentGame().control().state();
+        boolean creditDisabled = !state.matches(StateName.INTRO, StateName.SETTING_OPTIONS_FOR_START);
+        spinnerCredit.setDisable(creditDisabled);
+        choiceBoxInitialLives.setDisable(!state.matches(StateName.INTRO));
 
-        spinnerCredit.setDisable(!Set.of("INTRO", "SETTING_OPTIONS_FOR_START").contains(state.name()));
-        choiceBoxInitialLives.setDisable(!state.name().equals("INTRO"));
+        boolean booting = isBooting(state);
+        buttonGroupLevelActions[GAME_LEVEL_START].setDisable(booting || !canStartLevel(state));
+        buttonGroupLevelActions[GAME_LEVEL_QUIT] .setDisable(booting || ui.context().currentGame().optGameLevel().isEmpty());
+        buttonGroupLevelActions[GAME_LEVEL_NEXT] .setDisable(booting || !canEnterNextLevel(state));
 
-        buttonGroupLevelActions[GAME_LEVEL_START].setDisable(isBooting() || !canStartLevel());
-        buttonGroupLevelActions[GAME_LEVEL_QUIT].setDisable(isBooting() || ui.context().currentGame().optGameLevel().isEmpty());
-        buttonGroupLevelActions[GAME_LEVEL_NEXT].setDisable(isBooting() || !canEnterNextLevel());
-
-        buttonGroupCutScenesTest[CUT_SCENES_TEST_START].setDisable(isBooting() || !state.name().equals("INTRO"));
-        buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT].setDisable(isBooting() || !(state instanceof CutScenesTestState));
+        buttonGroupCutScenesTest[CUT_SCENES_TEST_START].setDisable(booting || !state.matches(StateName.INTRO));
+        buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT] .setDisable(booting || !(state instanceof CutScenesTestState));
     }
 
-    private boolean isBooting() {
-        return ui.context().currentGame().control().state().name().equals("BOOT");
+    private boolean isBooting(StateMachine.State<?> state) {
+        return state.matches(StateName.BOOT);
     }
 
-    private boolean canStartLevel() {
-
+    private boolean canStartLevel(StateMachine.State<?> state) {
         return ui.context().currentGame().canStartNewGame()
-            && Set.of("INTRO", "SETTING_OPTIONS_FOR_START").contains(ui.context().currentGame().control().state().name());
+            && state.matches(StateName.INTRO, StateName.SETTING_OPTIONS_FOR_START);
     }
 
-    private boolean canEnterNextLevel() {
-        return ui.context().currentGame().isPlaying()
-         && Objects.equals("HUNTING", ui.context().currentGame().control().state().name());
+    private boolean canEnterNextLevel(StateMachine.State<?> state) {
+        return ui.context().currentGame().isPlaying() && state.matches(StateName.HUNTING);
     }
 }

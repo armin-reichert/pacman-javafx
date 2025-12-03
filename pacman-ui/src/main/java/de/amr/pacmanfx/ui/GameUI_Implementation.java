@@ -9,6 +9,7 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
 import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameControl;
 import de.amr.pacmanfx.model.SimulationStepResult;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.action.ActionBinding;
@@ -442,7 +443,7 @@ public final class GameUI_Implementation implements GameUI {
             Logger.info("Quit game scene ({}), returning to start view", gameScene.getClass().getSimpleName());
         });
 
-        game.control().restart("BOOT");
+        game.control().restart(GameControl.StateName.BOOT.name());
         showStartView();
     }
 
@@ -454,7 +455,7 @@ public final class GameUI_Implementation implements GameUI {
         clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
         currentGameScene().ifPresent(gameScene -> gameScene.end(game));
 
-        game.control().restart("BOOT");
+        game.control().restart(GameControl.StateName.BOOT.name());
         Platform.runLater(clock::start);
     }
 

@@ -6,19 +6,18 @@ package de.amr.pacmanfx.ui.action;
 
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.lib.Direction;
+import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameControl.StateName;
 import de.amr.pacmanfx.model.StandardGameVariant;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.test.LevelMediumTestState;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import de.amr.pacmanfx.ui.api.GameUI;
-import de.amr.pacmanfx.ui.sound.SoundID;
 import javafx.scene.shape.DrawMode;
 import javafx.util.Duration;
 import org.tinylog.Logger;
-
-import java.util.Set;
 
 import static de.amr.pacmanfx.Globals.NUM_TICKS_PER_SEC;
 import static de.amr.pacmanfx.ui.api.GameScene_Config.SCENE_ID_PLAY_SCENE_2D;
@@ -113,7 +112,7 @@ public final class CommonGameActions {
                 game.control().state().onExit(game); //TODO exit other states too?
             }
             ui.clock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
-            game.control().restart("INTRO");
+            game.control().restart(StateName.INTRO.name());
         }
     };
 
@@ -307,12 +306,11 @@ public final class CommonGameActions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            String stateName = ui.context().currentGame().control().state().name();
-            if (stateName.equals(LevelShortTestState.class.getSimpleName())
-                || stateName.equals(LevelMediumTestState.class.getSimpleName())) {
+            final StateMachine.State<?> state = ui.context().currentGame().control().state();
+            if (state.matches(LevelShortTestState.class.getSimpleName(), LevelMediumTestState.class.getSimpleName())) {
                 return true;
             }
-            return Set.of("BOOT", "INTRO", "SETTING_OPTIONS_FOR_START", "HUNTING").contains(stateName);
+            return state.matches(StateName.BOOT, StateName.INTRO, StateName.SETTING_OPTIONS_FOR_START, StateName.HUNTING);
         }
     };
 }

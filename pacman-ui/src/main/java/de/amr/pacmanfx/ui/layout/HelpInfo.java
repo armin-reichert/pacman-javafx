@@ -4,7 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.layout;
 
-import de.amr.pacmanfx.GameContext;
+import de.amr.pacmanfx.lib.fsm.StateMachine;
+import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameControl.StateName;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.geometry.Insets;
@@ -24,21 +26,28 @@ import static java.util.Objects.requireNonNull;
 public class HelpInfo {
 
     public static HelpInfo build(GameUI ui) {
-        HelpInfo help = new HelpInfo(ui);
-        switch (ui.context().currentGame().control().state().name()) {
-            case "INTRO" -> help.addInfoForIntroScene(ui.context());
-            case "SETTING_OPTIONS_FOR_START" -> help.addInfoForCreditScene(ui.context());
-            case "STARTING_GAME_OR_LEVEL", "HUNTING", "PACMAN_DYING", "EATING_GHOST" -> {
-                if (ui.context().currentGame().optGameLevel().isPresent()
-                        && ui.context().currentGame().level().isDemoLevel()) {
-                    help.addInfoForDemoLevelPlayScene();
-                } else {
-                    help.addInfoForPlayScene();
-                }
-            }
-            default -> help.addQuitEntry();
+        final Game game = ui.context().currentGame();
+        final boolean demoLevel = game.optGameLevel().isPresent() && game.level().isDemoLevel();
+        final StateMachine.State<?> state = game.control().state();
+
+        HelpInfo helpInfo = new HelpInfo(ui);
+        if (state.matches(StateName.INTRO)) {
+            helpInfo.addInfoForIntroScene(game);
         }
-        return help;
+        else if (state.matches(StateName.SETTING_OPTIONS_FOR_START)) {
+            helpInfo.addInfoForCreditScene(game);
+        }
+        else if (state.matches(StateName.STARTING_GAME_OR_LEVEL, StateName.HUNTING, StateName.PACMAN_DYING, StateName.EATING_GHOST)) {
+            if (demoLevel) {
+                helpInfo.addInfoForDemoLevelPlayScene();
+            } else {
+                helpInfo.addInfoForPlayScene();
+            }
+        }
+        else {
+            helpInfo.addQuitEntry();
+        }
+        return helpInfo;
     }
 
     private final GameUI ui;
@@ -106,16 +115,16 @@ public class HelpInfo {
         addRow("help.show_intro", "Q");
     }
 
-    private void addInfoForIntroScene(GameContext gameContext) {
-        if (gameContext.currentGame().canStartNewGame()) {
+    private void addInfoForIntroScene(Game game) {
+        if (game.canStartNewGame()) {
             addRow("help.start_game", "1");
         }
         addRow("help.add_credit", "5");
         addQuitEntry();
     }
 
-    private void addInfoForCreditScene(GameContext gameContext) {
-        if (gameContext.currentGame().canStartNewGame()) {
+    private void addInfoForCreditScene(Game game) {
+        if (game.canStartNewGame()) {
             addRow("help.start_game", "1");
         }
         addRow("help.add_credit", "5");
