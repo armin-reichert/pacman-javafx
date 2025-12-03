@@ -24,7 +24,7 @@ import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
 
 public class ArcadePacMan_App extends Application {
 
-    private static boolean USE_BUILDER = false;
+    static boolean USE_BUILDER = false;
 
     private static final String GAME_VARIANT_NAME = StandardGameVariant.PACMAN.name();
 
