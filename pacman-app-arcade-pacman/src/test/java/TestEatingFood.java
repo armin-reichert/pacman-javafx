@@ -119,8 +119,8 @@ public class TestEatingFood {
     @DisplayName("Test Resting")
     public void testResting() {
         eatNextPellet();
-        assertEquals(1, theGameLevel().pac().restingTime());
+        assertEquals(1, theGameLevel().pac().restingTicks());
         eatNextEnergizer();
-        assertEquals(3, theGameLevel().pac().restingTime());
+        assertEquals(3, theGameLevel().pac().restingTicks());
     }
 }

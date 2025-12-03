@@ -25,13 +25,9 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class AbstractGameModel implements Game {
 
-    private static final CollisionStrategy DEFAULT_COLLISION_STRATEGY = CollisionStrategy.SAME_TILE;
+    public static final CollisionStrategy DEFAULT_COLLISION_STRATEGY = CollisionStrategy.SAME_TILE;
 
     private final BooleanProperty cheatUsed = new SimpleBooleanProperty(false);
-
-    private final BooleanProperty immunity = new SimpleBooleanProperty(false);
-
-    private final BooleanProperty usingAutopilot = new SimpleBooleanProperty(false);
 
     private final ObjectProperty<CollisionStrategy> collisionStrategy = new SimpleObjectProperty<>(DEFAULT_COLLISION_STRATEGY);
 
@@ -39,17 +35,22 @@ public abstract class AbstractGameModel implements Game {
 
     private final ObjectProperty<GameLevel> gameLevel = new SimpleObjectProperty<>();
 
+    private final BooleanProperty immunity = new SimpleBooleanProperty(false);
+
     private final IntegerProperty initialLifeCount = new SimpleIntegerProperty(3);
 
     private final IntegerProperty lifeCount = new SimpleIntegerProperty(0);
 
     private final BooleanProperty playing = new SimpleBooleanProperty(false);
 
+    private final BooleanProperty usingAutopilot = new SimpleBooleanProperty(false);
+
+
+    protected final GameControl gameControl;
+
     protected final SimulationStepResult simulationStepResult = new SimulationStepResult();
 
     protected final ScoreManager scoreManager = new ScoreManager(this);
-
-    protected final GameControl gameControl;
 
     protected AbstractGameModel(GameControl gameControl) {
         this.gameControl = requireNonNull(gameControl);
@@ -99,7 +100,6 @@ public abstract class AbstractGameModel implements Game {
     public BooleanProperty usingAutopilotProperty() {
         return usingAutopilot;
     }
-
 
     @Override
     public final GameControl control() {
@@ -198,25 +198,43 @@ public abstract class AbstractGameModel implements Game {
     @Override
     public void startHunting() {
         final GameLevel level = level();
-        level.pac().optAnimationManager().ifPresent(AnimationManager::play);
-        level.ghosts().forEach(ghost -> ghost.optAnimationManager().ifPresent(AnimationManager::play));
+        level.huntingTimer().startFirstPhase();
+
+        //TODO move into UI layer?
         level.blinking().setStartState(Pulse.State.ON);
         level.blinking().restart();
-        level.huntingTimer().startFirstPhase();
+        level.pac().optAnimationManager().ifPresent(AnimationManager::play);
+        level.ghosts().forEach(ghost -> ghost.optAnimationManager().ifPresent(AnimationManager::play));
+
         publishGameEvent(GameEvent.Type.HUNTING_PHASE_STARTED);
     }
 
     @Override
     public void onLevelCompleted() {
         final GameLevel level = level();
+        final Pac pac = level.pac();
+
         level.huntingTimer().stop();
+        Logger.info("Hunting timer stopped.");
+
         // If level was ended by cheat, there might still be food remaining, so eat it:
         level.worldMap().foodLayer().eatAll();
+
+        pac.powerTimer().stop();
+        pac.powerTimer().reset(0);
+        Logger.info("Power timer stopped and reset to zero.");
+
+        pac.setSpeed(0);
+        pac.setRestingTicks(Pac.FOREVER);
+
+        level.optBonus().ifPresent(Bonus::setInactive);
+
+        //TODO move into UI layer?
+        pac.stopAnimation();
+        pac.selectAnimation(CommonAnimationID.ANIM_PAC_FULL);
         level.blinking().setStartState(Pulse.State.OFF);
         level.blinking().reset();
         level.ghosts().forEach(Ghost::stopAnimation);
-        level.pac().onLevelCompleted();
-        level.optBonus().ifPresent(Bonus::setInactive);
     }
 
     // GameEventManager implementation

@@ -26,15 +26,18 @@ public class Pac extends MovingActor {
     public static final boolean DEFAULT_USING_AUTOPILOT = false;
     public static final boolean DEFAULT_IMMUNITY = false;
 
-    private static final byte INDEFINITELY = -1;
+    public static final byte FOREVER = -1;
 
     private final TickTimer powerTimer = new TickTimer("PacPowerTimer");
 
-    private BooleanProperty immune;
-    private BooleanProperty usingAutopilot;
-    private boolean dead;
-    private int restingTime;
-    private long starvingTime;
+    private final BooleanProperty dead = new SimpleBooleanProperty(false);
+
+    private final BooleanProperty immune = new SimpleBooleanProperty(false);;
+
+    private final BooleanProperty usingAutopilot = new SimpleBooleanProperty(false);;
+
+    private int restingTicks;
+    private long starvingTicks;
     private Steering automaticSteering;
 
     /**
@@ -49,9 +52,9 @@ public class Pac extends MovingActor {
         return "Pac{" +
             "immune=" + isImmune() +
             ", autopilot=" + isUsingAutopilot() +
-            ", dead=" + dead +
-            ", restingTime=" + restingTime +
-            ", starvingTime=" + starvingTime +
+            ", dead=" + isDead() +
+            ", restingTime=" + restingTicks +
+            ", starvingTime=" + starvingTicks +
             ", visible=" + isVisible() +
             ", position=" + position() +
             ", velocity=" + velocity() +
@@ -68,7 +71,7 @@ public class Pac extends MovingActor {
     public boolean canAccessTile(GameLevel gameLevel, Vector2i tile) {
         requireNonNull(gameLevel);
         requireNonNull(tile);
-        TerrainLayer terrain = gameLevel.worldMap().terrainLayer();
+        final TerrainLayer terrain = gameLevel.worldMap().terrainLayer();
         // Portal tiles are the only tiles outside the world that can be accessed
         if (terrain.outOfBounds(tile)) {
             return terrain.isTileInPortalSpace(tile);
@@ -82,42 +85,50 @@ public class Pac extends MovingActor {
     @Override
     public void reset() {
         super.reset();
-        dead = false;
-        restingTime = 0;
-        starvingTime = 0;
+        setDead(false);
+        restingTicks = 0;
+        starvingTicks = 0;
         corneringSpeedUp = 1.5f; // no real cornering implementation but better than nothing
         selectAnimation(CommonAnimationID.ANIM_PAC_MUNCHING);
     }
 
+    public BooleanProperty deadProperty() {
+        return dead;
+    }
+
+    public boolean isDead() {
+        return dead.get();
+    }
+
+    public boolean isAlive() {
+        return !isDead(); // Not sure if the opposite of being dead is being alive ;-)
+    }
+
+    public void setDead(boolean dead) {
+        deadProperty().set(dead);
+    }
+
     public BooleanProperty immuneProperty() {
-        if (immune == null) {
-            immune = new SimpleBooleanProperty(DEFAULT_IMMUNITY);
-        }
         return immune;
     }
 
     public boolean isImmune() {
-        return immune != null ? immune.get() : DEFAULT_IMMUNITY;
+        return immune.get();
     }
 
     public void setImmune(boolean value) {
-        if (immune == null && value == DEFAULT_IMMUNITY) return;
         immuneProperty().set(value);
     }
 
     public BooleanProperty usingAutopilotProperty() {
-        if (usingAutopilot == null) {
-            usingAutopilot = new SimpleBooleanProperty(DEFAULT_USING_AUTOPILOT);
-        }
         return usingAutopilot;
     }
 
     public boolean isUsingAutopilot() {
-        return usingAutopilot != null ? usingAutopilot.get() : DEFAULT_USING_AUTOPILOT;
+        return usingAutopilot.get();
     }
 
     public void setUsingAutopilot(boolean value) {
-        if (usingAutopilot == null && value == DEFAULT_USING_AUTOPILOT) return;
         usingAutopilotProperty().set(value);
     }
 
@@ -141,12 +152,12 @@ public class Pac extends MovingActor {
         if (game.optGameLevel().isEmpty()) return;
         final GameLevel gameLevel = game.level();
 
-        if (dead || restingTime == INDEFINITELY) {
+        if (isDead() || restingTicks == FOREVER) {
             return;
         }
 
-        if (restingTime > 0) {
-            restingTime -= 1;
+        if (restingTicks > 0) {
+            restingTicks -= 1;
             return;
         }
 
@@ -154,9 +165,7 @@ public class Pac extends MovingActor {
             automaticSteering.steer(this, gameLevel);
         }
 
-        setSpeed(powerTimer.isRunning()
-            ? gameLevel.game().pacSpeedWhenHasPower(gameLevel)
-            : gameLevel.game().pacSpeed(gameLevel));
+        setSpeed(powerTimer.isRunning() ? game.pacSpeedWhenHasPower(gameLevel) : game.pacSpeed(gameLevel));
         moveThroughThisCruelWorld(gameLevel);
 
         if (moveInfo.moved) {
@@ -167,18 +176,8 @@ public class Pac extends MovingActor {
     }
 
     public void onFoodEaten(boolean energizer) {
-        setRestingTime(energizer ? 3 : 1);
+        setRestingTicks(energizer ? 3 : 1);
         endStarving();
-    }
-
-    public void onLevelCompleted() {
-        stopAnimation();
-        powerTimer.stop();
-        powerTimer.reset(0);
-        Logger.info("Power timer stopped and reset to zero.");
-        setSpeed(0);
-        setRestingTime(INDEFINITELY);
-        selectAnimation(CommonAnimationID.ANIM_PAC_FULL);
     }
 
     public void onKilled() {
@@ -187,38 +186,34 @@ public class Pac extends MovingActor {
         powerTimer.reset(0);
         Logger.info("Power timer stopped and reset to zero.");
         setSpeed(0);
-        dead = true;
-    }
-
-    public boolean isAlive() {
-        return !dead; // Not sure if the opposite of being dead is being alive ;-)
+        setDead(true);
     }
 
     /**
      * @return number of ticks Pac is resting
      */
-    public int restingTime() { return restingTime; }
+    public int restingTicks() { return restingTicks; }
 
     /**
      * Sets the number of ticks Pac-Man is resting.
      *
      * @param ticks number of ticks
      */
-    public void setRestingTime(int ticks) {
-        restingTime = ticks;
+    public void setRestingTicks(int ticks) {
+        restingTicks = ticks;
     }
 
     /**
      *  @return number of ticks passed since a pellet or an energizer has been eaten.
      */
-    public long starvingTime() { return starvingTime; }
+    public long starvingTicks() { return starvingTicks; }
 
     public void starve() {
-        ++starvingTime;
+        ++starvingTicks;
     }
 
     public void endStarving() {
-        starvingTime = 0;
+        starvingTicks = 0;
     }
 
     /**
@@ -226,7 +221,7 @@ public class Pac extends MovingActor {
      * or if he is resting for an indefinite time.
      */
     public boolean isParalyzed() {
-        return velocity().equals(Vector2f.ZERO) || !moveInfo.moved || restingTime == INDEFINITELY;
+        return velocity().equals(Vector2f.ZERO) || !moveInfo.moved || restingTicks == FOREVER;
     }
 
     public void setAutomaticSteering(Steering steering) {
