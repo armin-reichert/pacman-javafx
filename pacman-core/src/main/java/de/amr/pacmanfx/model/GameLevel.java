@@ -60,8 +60,20 @@ public class GameLevel {
         currentBonusIndex = -1;
     }
 
+    public int number() {
+        return number;
+    }
+
     public int numFlashes() {
         return numFlashes;
+    }
+
+    public Pulse blinking() {
+        return blinking;
+    }
+
+    public WorldMap worldMap() {
+        return worldMap;
     }
 
     /**
@@ -130,12 +142,15 @@ public class GameLevel {
     public List<Ghost> energizerVictims() { return victims; }
 
     public boolean isDemoLevel() { return demoLevel; }
+
     public void setDemoLevel(boolean demoLevel) { this.demoLevel = demoLevel; }
 
     public void setStartTimeMillis(long millis) { this.startTimeMillis = millis; }
+
     public long startTimeMillis() { return startTimeMillis; }
 
     public void setGameOverStateTicks(int ticks) { gameOverStateTicks = ticks; }
+
     public int gameOverStateTicks() { return gameOverStateTicks; }
 
     public void setMessage(GameLevelMessage message) {
@@ -173,11 +188,27 @@ public class GameLevel {
     public void incrementGhostKillCount() { ghostKillCount++; }
     public int ghostKillCount() { return ghostKillCount; }
 
-    public Optional<Bonus> optBonus() { return Optional.ofNullable(bonus); }
-    public void setBonus(Bonus bonus) { this.bonus = bonus; }
-    public byte currentBonusIndex() { return currentBonusIndex; }
-    public void selectNextBonus() { currentBonusIndex += 1; }
-    public byte bonusSymbol(int i) { return bonusSymbols[i]; }
+    // Bonus
+    public Optional<Bonus> optBonus() {
+        return Optional.ofNullable(bonus);
+    }
+
+    public void setBonus(Bonus bonus) {
+        this.bonus = bonus;
+    }
+
+    public byte currentBonusIndex() {
+        return currentBonusIndex;
+    }
+
+    public void selectNextBonus() {
+        currentBonusIndex += 1;
+    }
+
+    public byte bonusSymbol(int i) {
+        return bonusSymbols[i];
+    }
+
     public void setBonusSymbol(int i, byte symbol) {
         if (0 <= i && i < bonusSymbols.length) {
             bonusSymbols[i] = symbol;
@@ -185,10 +216,4 @@ public class GameLevel {
             throw new IllegalArgumentException("Cannot set bonus symbol at index " + i);
         }
     }
-
-    public Pulse blinking() {
-        return blinking;
-    }
-    public int number() { return number; }
-    public WorldMap worldMap() { return worldMap; }
 }
