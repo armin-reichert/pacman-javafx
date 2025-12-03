@@ -100,12 +100,12 @@ public class Arcade_GameController extends StateMachine<Game> implements GameCon
                     game.clearLevelMessage(); // leave TEST message alone
                 });
                 game.clearLevelMessage();
-                game.startHunting();
+                game.startHunting(game.level());
             }
 
             @Override
             public void onUpdate(Game game) {
-                game.updateHunting();
+                game.updateHunting(game.level());
                 if (game.isLevelCompleted()) {
                     game.control().changeState(LEVEL_COMPLETE);
                 }

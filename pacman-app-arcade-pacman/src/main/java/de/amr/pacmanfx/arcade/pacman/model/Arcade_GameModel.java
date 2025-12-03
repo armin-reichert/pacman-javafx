@@ -133,10 +133,10 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     // GameEvents interface
 
     @Override
-    public void updateHunting() {
-        doHuntingStep();
+    public void updateHunting(GameLevel level) {
+        doHuntingStep(level);
         if (gateKeeper != null) {
-            gateKeeper.unlockGhosts(level());
+            gateKeeper.unlockGhosts(level);
         }
     }
 

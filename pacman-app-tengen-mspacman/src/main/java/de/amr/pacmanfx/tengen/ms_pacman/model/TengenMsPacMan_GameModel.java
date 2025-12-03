@@ -511,8 +511,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void updateHunting() {
-        doHuntingStep();
+    public void updateHunting(GameLevel level) {
+        doHuntingStep(level);
         gateKeeper.unlockGhosts(level());
     }
 

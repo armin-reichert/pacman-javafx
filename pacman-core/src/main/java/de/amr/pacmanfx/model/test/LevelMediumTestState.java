@@ -55,12 +55,13 @@ public class LevelMediumTestState implements StateMachine.State<Game>, TestState
 
     @Override
     public void onUpdate(Game game) {
-        game.level().pac().tick(game);
-        game.level().ghosts().forEach(ghost -> ghost.tick(game));
-        game.level().optBonus().ifPresent(bonus -> bonus.tick(game));
-        game.updateHunting();
+        final GameLevel level = game.level();
+        level.pac().tick(game);
+        level.ghosts().forEach(ghost -> ghost.tick(game));
+        level.optBonus().ifPresent(bonus -> bonus.tick(game));
+        game.updateHunting(level);
         if (timer().hasExpired()) {
-            if (game.level().number() == lastTestedLevelNumber) {
+            if (level.number() == lastTestedLevelNumber) {
                 game.publishGameEvent(GameEvent.Type.STOP_ALL_SOUNDS);
                 game.control().changeState("INTRO");
             } else {

@@ -196,8 +196,7 @@ public abstract class AbstractGameModel implements Game {
     }
 
     @Override
-    public void startHunting() {
-        final GameLevel level = level();
+    public void startHunting(GameLevel level) {
         level.huntingTimer().startFirstPhase();
 
         //TODO move into UI layer?
@@ -288,8 +287,7 @@ public abstract class AbstractGameModel implements Game {
      * loses a life. When Pac-Man finds an energizer pellet he enters power mode and is able to kill ghosts. The duration
      * of the power mode varies between levels.
      */
-    protected void doHuntingStep() {
-        final GameLevel level = level();
+    protected void doHuntingStep(GameLevel level) {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
         level.pac().tick(this);

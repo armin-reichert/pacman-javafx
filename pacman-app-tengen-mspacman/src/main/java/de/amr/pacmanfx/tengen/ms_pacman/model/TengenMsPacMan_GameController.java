@@ -115,12 +115,12 @@ public class TengenMsPacMan_GameController extends StateMachine<Game> implements
             @Override
             public void onEnter(Game game) {
                 clearReadyMessage(game);
-                game.startHunting();
+                game.startHunting(game.level());
             }
 
             @Override
             public void onUpdate(Game game) {
-                game.updateHunting();
+                game.updateHunting(game.level());
                 if (game.isLevelCompleted()) {
                     game.control().changeState(LEVEL_COMPLETE);
                 }
