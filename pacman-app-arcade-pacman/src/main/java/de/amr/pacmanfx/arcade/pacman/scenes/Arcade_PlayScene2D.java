@@ -284,14 +284,14 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void onPacGetsPower(GameEvent e) {
+    public void onPacPowerStarts(GameEvent e) {
         ui.soundManager().pauseSiren();
         ui.soundManager().loop(SoundID.PAC_MAN_POWER);
     }
 
     @Override
-    public void onPacLostPower(GameEvent e) {
-        ui.soundManager().pause(SoundID.PAC_MAN_POWER);
+    public void onPacPowerEnds(GameEvent e) {
+        ui.soundManager().stop(SoundID.PAC_MAN_POWER);
     }
 
     @Override

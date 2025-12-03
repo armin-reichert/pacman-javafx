@@ -413,13 +413,13 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
     }
 
     @Override
-    public void onPacGetsPower(GameEvent e) {
+    public void onPacPowerStarts(GameEvent e) {
         ui.soundManager().pauseSiren();
         ui.soundManager().loop(SoundID.PAC_MAN_POWER);
     }
 
     @Override
-    public void onPacLostPower(GameEvent e) {
+    public void onPacPowerEnds(GameEvent e) {
         ui.soundManager().stop(SoundID.PAC_MAN_POWER);
     }
 

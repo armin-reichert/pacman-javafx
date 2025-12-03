@@ -103,6 +103,11 @@ public class SoundManager implements Disposable {
     }
 
     public void loop(Object id) {
+        Object value = soundMap.get(id);
+        if (value instanceof MediaPlayer mediaPlayer) {
+            mediaPlayer.stop();
+            mediaPlayer.seek(Duration.ZERO);
+        }
         play(id, MediaPlayer.INDEFINITE);
     }
 

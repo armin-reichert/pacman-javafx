@@ -20,6 +20,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
+import de.amr.pacmanfx.ui._2d.HUD_Renderer;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameScene_Config;
 import de.amr.pacmanfx.ui.api.GameUI;
@@ -35,7 +36,6 @@ import de.amr.pacmanfx.uilib.model3D.MsPacMan3D;
 import de.amr.pacmanfx.uilib.model3D.MsPacManBody;
 import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
-import de.amr.pacmanfx.ui._2d.HUD_Renderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -152,10 +152,10 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         soundManager.registerMediaPlayer(SoundID.PAC_MAN_DEATH,       ARCADE_MS_PAC_MAN_RESOURCES.url("sound/Died.mp3"));
         soundManager.registerAudioClip(SoundID.PAC_MAN_MUNCHING,      ARCADE_MS_PAC_MAN_RESOURCES.url("sound/munch.wav"));
         soundManager.registerMediaPlayer(SoundID.PAC_MAN_POWER,       ARCADE_MS_PAC_MAN_RESOURCES.url("sound/ScaredGhost.mp3"));
-        soundManager.registerMediaPlayer(SoundID.SIREN_1,             ARCADE_MS_PAC_MAN_RESOURCES.url("sound/GhostNoise1.wav"));
-        soundManager.registerMediaPlayer(SoundID.SIREN_2,             ARCADE_MS_PAC_MAN_RESOURCES.url("sound/GhostNoise1.wav"));// TODO
-        soundManager.registerMediaPlayer(SoundID.SIREN_3,             ARCADE_MS_PAC_MAN_RESOURCES.url("sound/GhostNoise1.wav"));// TODO
-        soundManager.registerMediaPlayer(SoundID.SIREN_4,             ARCADE_MS_PAC_MAN_RESOURCES.url("sound/GhostNoise1.wav"));// TODO
+        soundManager.registerMediaPlayer(SoundID.SIREN_1,             ARCADE_MS_PAC_MAN_RESOURCES.url("sound/GhostNoise1.mp3"));
+        soundManager.registerMediaPlayer(SoundID.SIREN_2,             ARCADE_MS_PAC_MAN_RESOURCES.url("sound/GhostNoise2.mp3"));
+        soundManager.registerMediaPlayer(SoundID.SIREN_3,             ARCADE_MS_PAC_MAN_RESOURCES.url("sound/GhostNoise3.mp3"));
+        soundManager.registerMediaPlayer(SoundID.SIREN_4,             ARCADE_MS_PAC_MAN_RESOURCES.url("sound/GhostNoise4.mp3"));
     }
 
     @Override

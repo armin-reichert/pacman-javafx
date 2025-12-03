@@ -31,8 +31,8 @@ public interface GameEventListener {
             case PAC_DEAD -> onPacDead(event);
             case PAC_DYING -> onPacDying(event);
             case PAC_FOUND_FOOD -> onPacFoundFood(event);
-            case PAC_GETS_POWER -> onPacGetsPower(event);
-            case PAC_LOST_POWER -> onPacLostPower(event);
+            case PAC_GETS_POWER -> onPacPowerStarts(event);
+            case PAC_LOST_POWER -> onPacPowerEnds(event);
             case PAC_STARTS_LOSING_POWER -> onPacStartsLosingPower(event);
             case INTERMISSION_STARTED -> onIntermissionStarted(event);
             case SPECIAL_SCORE_REACHED -> onSpecialScoreReached(event);
@@ -62,8 +62,8 @@ public interface GameEventListener {
     default void onPacDead(GameEvent e) {}
     default void onPacDying(GameEvent e) {}
     default void onPacFoundFood(GameEvent e) {}
-    default void onPacGetsPower(GameEvent e) {}
-    default void onPacLostPower(GameEvent e) {}
+    default void onPacPowerStarts(GameEvent e) {}
+    default void onPacPowerEnds(GameEvent e) {}
     default void onPacStartsLosingPower(GameEvent e) {}
     default void onStopAllSounds(GameEvent e) {}
     default void onUnspecifiedChange(GameEvent e) {}
