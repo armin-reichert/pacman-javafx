@@ -179,7 +179,11 @@ public class GameLevel {
     public void selectNextBonus() { currentBonusIndex += 1; }
     public byte bonusSymbol(int i) { return bonusSymbols[i]; }
     public void setBonusSymbol(int i, byte symbol) {
-        bonusSymbols[i] = symbol;
+        if (0 <= i && i < bonusSymbols.length) {
+            bonusSymbols[i] = symbol;
+        } else {
+            throw new IllegalArgumentException("Cannot set bonus symbol at index " + i);
+        }
     }
 
     public Pulse blinking() {

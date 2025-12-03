@@ -8,10 +8,7 @@ import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.timer.TickTimer;
-import de.amr.pacmanfx.model.CoinMechanism;
-import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.GameLevelMessage;
-import de.amr.pacmanfx.model.MessageType;
+import de.amr.pacmanfx.model.*;
 
 public class LevelShortTestState implements StateMachine.State<Game>, TestState {
 
@@ -85,8 +82,9 @@ public class LevelShortTestState implements StateMachine.State<Game>, TestState 
                 message.setPosition(game.level().worldMap().terrainLayer().messageCenterPosition());
                 game.level().setMessage(message);
             }
+        } else {
+            game.optGameLevel().flatMap(GameLevel::optBonus).ifPresent(bonus -> bonus.tick(game));
         }
-        game.level().optBonus().ifPresent(bonus -> bonus.tick(game));
     }
 
     @Override
