@@ -43,17 +43,17 @@ import static java.util.Objects.requireNonNull;
  */
 public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
-    private static final short TICK_SHOW_READY = 10;
-    private static final short TICK_NEW_GAME_SHOW_GUYS = 70;
-    private static final short TICK_NEW_GAME_START_HUNTING = 250;
-    private static final short TICK_RESUME_HUNTING = 240;
-    private static final short TICK_DEMO_LEVEL_START_HUNTING = 120;
-    public static final short TICK_EATING_GHOST_COMPLETE = 60;
+    static final short TICK_SHOW_READY = 10;
+    static final short TICK_NEW_GAME_SHOW_GUYS = 70;
+    static final short TICK_NEW_GAME_START_HUNTING = 250;
+    static final short TICK_RESUME_HUNTING = 240;
+    static final short TICK_DEMO_LEVEL_START_HUNTING = 120;
+    static final short TICK_EATING_GHOST_COMPLETE = 60;
 
-    private static final int TICK_PACMAN_DYING_HIDE_GHOSTS = 60;
-    private static final int TICK_PACMAN_DYING_START_PAC_ANIMATION = 90;
-    private static final int TICK_PACMAN_DYING_HIDE_PAC = 190;
-    private static final int TICK_PACMAN_DYING_PAC_DEAD = 240;
+    static final short TICK_PACMAN_DYING_HIDE_GHOSTS = 60;
+    static final short TICK_PACMAN_DYING_START_PAC_ANIMATION = 90;
+    static final short TICK_PACMAN_DYING_HIDE_PAC = 190;
+    static final short TICK_PACMAN_DYING_PAC_DEAD = 240;
 
     public static final String GAME_OVER_MESSAGE_TEXT = "GAME OVER";
     public static final String READY_MESSAGE_TEXT = "READY!";

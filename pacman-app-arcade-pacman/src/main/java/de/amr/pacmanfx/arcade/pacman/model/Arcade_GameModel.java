@@ -27,16 +27,15 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class Arcade_GameModel extends AbstractGameModel {
 
-    public static final short TICK_NEW_GAME_SHOW_GUYS = 120;
-    public static final short TICK_NEW_GAME_START_HUNTING = 240;
-    public static final short TICK_RESUME_HUNTING =  90;
-    public static final short TICK_DEMO_LEVEL_START_HUNTING = 120;
-    public static final short TICK_EATING_GHOST_COMPLETE = 60;
-    private static final int TICK_PACMAN_DYING_HIDE_GHOSTS = 60;
-    private static final int TICK_PACMAN_DYING_START_ANIMATION = 90;
-    private static final int TICK_PACMAN_DYING_HIDE_PAC = 190;
-    private static final int TICK_PACMAN_DYING_PAC_DEAD = 240;
-
+    static final short TICK_NEW_GAME_SHOW_GUYS = 120;
+    static final short TICK_NEW_GAME_START_HUNTING = 240;
+    static final short TICK_RESUME_HUNTING =  90;
+    static final short TICK_DEMO_LEVEL_START_HUNTING = 120;
+    static final short TICK_EATING_GHOST_COMPLETE = 60;
+    static final short TICK_PACMAN_DYING_HIDE_GHOSTS = 60;
+    static final short TICK_PACMAN_DYING_START_ANIMATION = 90;
+    static final short TICK_PACMAN_DYING_HIDE_PAC = 190;
+    static final short TICK_PACMAN_DYING_PAC_DEAD = 240;
 
     // Level data as given in the "Pac-Man Dossier"
     protected static final Arcade_LevelData[] LEVEL_DATA = {
