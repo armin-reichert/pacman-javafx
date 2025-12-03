@@ -7,6 +7,7 @@ package de.amr.pacmanfx.ui.layout;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.action.GameAction;
@@ -220,7 +221,7 @@ public class PlayView extends StackPane implements GameUI_View {
     public void onGameEvent(GameEvent gameEvent) {
         final Game game = gameEvent.game();
         switch (gameEvent.type()) {
-            case LEVEL_CREATED -> onGameLevelCreated(game);
+            case LEVEL_CREATED -> onGameLevelCreated(game.level());
             case GAME_STATE_CHANGED -> {
                 final String gameStateName = game.control().state().name();
                 if (gameStateName.equals("LEVEL_COMPLETE")) {
@@ -232,13 +233,13 @@ public class PlayView extends StackPane implements GameUI_View {
         updateGameScene(game, false);
     }
 
-    private void onGameLevelCreated(Game game) {
+    private void onGameLevelCreated(GameLevel level) {
         final GameUI_Config uiConfig = ui.currentConfig();
 
-        game.level().pac().setAnimationManager(uiConfig.createPacAnimations());
-        game.level().ghosts().forEach(ghost -> ghost.setAnimationManager(uiConfig.createGhostAnimations(ghost.personality())));
+        level.pac().setAnimationManager(uiConfig.createPacAnimations());
+        level.ghosts().forEach(ghost -> ghost.setAnimationManager(uiConfig.createGhostAnimations(ghost.personality())));
 
-        miniView.onGameLevelCreated(game.level());
+        miniView.onGameLevelCreated(level);
         miniView.slideIn();
 
         // size of game scene might have changed, so re-embed
