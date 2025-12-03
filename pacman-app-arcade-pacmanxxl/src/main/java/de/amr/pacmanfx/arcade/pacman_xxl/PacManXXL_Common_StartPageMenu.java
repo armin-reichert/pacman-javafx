@@ -15,7 +15,6 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.api.ArcadePalette;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
-import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.widgets.OptionMenu;
@@ -385,6 +384,5 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         mapSelector.loadAllMapPrototypes();
         game.setCutScenesEnabled(state.cutScenesEnabled);
         ui.selectGameVariant(state.gameVariant);
-        ui.soundManager().playVoice(SoundID.VOICE_EXPLAIN, 0);
     }
 }

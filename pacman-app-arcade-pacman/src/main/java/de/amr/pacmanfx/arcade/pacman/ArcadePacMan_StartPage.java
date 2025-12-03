@@ -48,10 +48,8 @@ public class ArcadePacMan_StartPage extends StackPane implements StartPage {
             }
         });
 
-        Node startButton = StartPagesCarousel.createDefaultStartButton(ui, () -> {
-            ui.soundManager().playVoice(SoundID.VOICE_EXPLAIN, 0);
-            ACTION_BOOT_SHOW_PLAY_VIEW.executeIfEnabled(ui);
-        });
+        Node startButton = StartPagesCarousel.createDefaultStartButton(ui,
+            () -> ACTION_BOOT_SHOW_PLAY_VIEW.executeIfEnabled(ui));
         startButton.setTranslateY(-50);
 
         getChildren().addAll(flyer, startButton);

@@ -134,6 +134,8 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         presentedGhostCharacter = RED_GHOST_SHADOW;
         numTicksBeforeRising = 0;
 
+        ui.soundManager().playVoice(SoundID.VOICE_EXPLAIN, 0);
+
         sceneController.restart(SceneState.STARTING);
     }
 
