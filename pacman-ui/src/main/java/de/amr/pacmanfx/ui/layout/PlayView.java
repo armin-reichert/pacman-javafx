@@ -219,7 +219,7 @@ public class PlayView extends StackPane implements GameUI_View {
     @Override
     public void onGameEvent(GameEvent gameEvent) {
         switch (gameEvent.type()) {
-            case LEVEL_CREATED -> onLevelCreated();
+            case LEVEL_CREATED -> onGameLevelCreated();
             case GAME_STATE_CHANGED -> {
                 final String gameStateName = ui.context().currentGame().control().state().name();
                 if (gameStateName.equals("LEVEL_COMPLETE")) {
@@ -231,7 +231,7 @@ public class PlayView extends StackPane implements GameUI_View {
         updateGameScene(false);
     }
 
-    private void onLevelCreated() {
+    private void onGameLevelCreated() {
         final Game game = ui.context().currentGame();
         final GameUI_Config uiConfig = ui.currentConfig();
 
