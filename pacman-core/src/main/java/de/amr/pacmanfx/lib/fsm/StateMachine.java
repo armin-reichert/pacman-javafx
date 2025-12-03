@@ -18,7 +18,7 @@ import static java.util.Objects.requireNonNull;
  * The states must be provided by an enumeration type that implements the {@link State} interface. The data type
  * passed to the state lifecycle methods is specified by the second type parameter.
  * <p>
- * State transitions are defined dynamically via the {@link #changeState} method calls. Each state change triggers an
+ * State transitions are defined dynamically via the {@link #enterState} method calls. Each state change triggers an
  * event.
  *
  * @author Armin Reichert
@@ -45,10 +45,10 @@ public class StateMachine<CONTEXT> {
         }
 
         @SuppressWarnings("unchecked")
-        default <E extends Enum<E>> boolean matches(E... states) {
-            requireNonNull(states);
-            if (states.length == 0) return false;
-            return Stream.of(states).anyMatch(state -> state.name().equals(name()));
+        default <E extends Enum<E>> boolean matches(E... alternatives) {
+            requireNonNull(alternatives);
+            if (alternatives.length == 0) return false;
+            return Stream.of(alternatives).anyMatch(state -> state.name().equals(name()));
         }
 
         /**
@@ -204,7 +204,7 @@ public class StateMachine<CONTEXT> {
         requireNonNull(state);
         resetTimers();
         currentState = null;
-        changeState(state);
+        enterState(state);
     }
 
     /**
@@ -216,7 +216,7 @@ public class StateMachine<CONTEXT> {
      *
      * @param newState the new state
      */
-    public void changeState(State<CONTEXT> newState) {
+    public void enterState(State<CONTEXT> newState) {
         requireNonNull(newState);
         if (newState == currentState) {
             Logger.info("State machine is already in state {}", currentState);

@@ -38,7 +38,7 @@ public class TengenMsPacMan_GameController extends StateMachine<Game> implements
             @Override
             public void onUpdate(Game game) {
                 if (timer.hasExpired()) {
-                    game.control().changeState(INTRO);
+                    game.control().enterState(INTRO);
                 }
             }
         },
@@ -61,7 +61,7 @@ public class TengenMsPacMan_GameController extends StateMachine<Game> implements
             @Override
             public void onUpdate(Game game) {
                 if (timer.hasExpired()) {
-                    game.control().changeState(STARTING_GAME_OR_LEVEL);
+                    game.control().enterState(STARTING_GAME_OR_LEVEL);
                 }
             }
         },
@@ -90,7 +90,7 @@ public class TengenMsPacMan_GameController extends StateMachine<Game> implements
             @Override
             public void onUpdate(Game game) {
                 if (timer.hasExpired()) {
-                    game.control().changeState(INTRO);
+                    game.control().enterState(INTRO);
                 }
             }
         },
@@ -122,13 +122,13 @@ public class TengenMsPacMan_GameController extends StateMachine<Game> implements
             public void onUpdate(Game game) {
                 game.updateHunting(game.level());
                 if (game.isLevelCompleted()) {
-                    game.control().changeState(LEVEL_COMPLETE);
+                    game.control().enterState(LEVEL_COMPLETE);
                 }
                 else if (game.hasPacManBeenKilled()) {
-                    game.control().changeState(PACMAN_DYING);
+                    game.control().enterState(PACMAN_DYING);
                 }
                 else if (game.hasGhostBeenKilled()) {
-                    game.control().changeState(EATING_GHOST);
+                    game.control().enterState(EATING_GHOST);
                 }
             }
 
@@ -159,20 +159,20 @@ public class TengenMsPacMan_GameController extends StateMachine<Game> implements
                 }
 
                 if (game.level().isDemoLevel()) {
-                    game.control().changeState(SHOWING_HALL_OF_FAME);
+                    game.control().enterState(SHOWING_HALL_OF_FAME);
                     return;
                 }
 
                 if (timer.hasExpired()) {
                     if (game.level().isDemoLevel()) {
                         // Just in case: if demo level is completed, go back to intro scene
-                        game.control().changeState(INTRO);
+                        game.control().enterState(INTRO);
                     }
                     else if (game.cutScenesEnabled() && game.level().cutSceneNumber() != 0) {
-                        game.control().changeState(INTERMISSION);
+                        game.control().enterState(INTERMISSION);
                     }
                     else {
-                        game.control().changeState(LEVEL_TRANSITION);
+                        game.control().enterState(LEVEL_TRANSITION);
                     }
                 }
             }
@@ -189,7 +189,7 @@ public class TengenMsPacMan_GameController extends StateMachine<Game> implements
             @Override
             public void onUpdate(Game game) {
                 if (timer.hasExpired()) {
-                    game.control().changeState(STARTING_GAME_OR_LEVEL);
+                    game.control().enterState(STARTING_GAME_OR_LEVEL);
                 }
             }
         },
@@ -221,11 +221,11 @@ public class TengenMsPacMan_GameController extends StateMachine<Game> implements
             public void onUpdate(Game game) {
                 if (timer.hasExpired()) {
                     if (game.level().isDemoLevel()) {
-                        game.control().changeState(GAME_OVER);
+                        game.control().enterState(GAME_OVER);
                     }
                     else {
                         game.addLives(-1);
-                        game.control().changeState(game.lifeCount() == 0 ? GAME_OVER : STARTING_GAME_OR_LEVEL);
+                        game.control().enterState(game.lifeCount() == 0 ? GAME_OVER : STARTING_GAME_OR_LEVEL);
                     }
                 } else {
                     game.updatePacManDying(timer.tickCount());
@@ -244,10 +244,10 @@ public class TengenMsPacMan_GameController extends StateMachine<Game> implements
             public void onUpdate(Game game) {
                 if (timer.hasExpired()) {
                     if (game.level().isDemoLevel()) {
-                        game.control().changeState(SHOWING_HALL_OF_FAME);
+                        game.control().enterState(SHOWING_HALL_OF_FAME);
                     }
                     else {
-                        game.control().changeState(game.canContinueOnGameOver() ? SETTING_OPTIONS_FOR_START : INTRO);
+                        game.control().enterState(game.canContinueOnGameOver() ? SETTING_OPTIONS_FOR_START : INTRO);
                     }
                 }
             }
@@ -269,7 +269,7 @@ public class TengenMsPacMan_GameController extends StateMachine<Game> implements
             @Override
             public void onUpdate(Game game) {
                 if (timer.hasExpired()) {
-                    game.control().changeState(game.isPlaying() ? LEVEL_TRANSITION : INTRO);
+                    game.control().enterState(game.isPlaying() ? LEVEL_TRANSITION : INTRO);
                 }
             }
         };

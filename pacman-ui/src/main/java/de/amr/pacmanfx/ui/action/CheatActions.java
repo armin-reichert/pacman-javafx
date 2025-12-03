@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.action;
 
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameControl;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.ui.api.GameUI;
@@ -45,7 +46,8 @@ public final class CheatActions {
         @Override
         public boolean isEnabled(GameUI ui) {
             final Game game = ui.context().currentGame();
-            return game.optGameLevel().isPresent() && !game.level().isDemoLevel() && game.control().state().name().equals("HUNTING");
+            return game.optGameLevel().isPresent() && !game.level().isDemoLevel()
+                    && game.control().state().matches(GameControl.StateName.HUNTING);
         }
     };
 
@@ -59,14 +61,14 @@ public final class CheatActions {
             if (!vulnerableGhosts.isEmpty()) {
                 gameLevel.energizerVictims().clear(); // resets value of next killed ghost to 200
                 vulnerableGhosts.forEach(game::onEatGhost);
-                game.control().changeState("EATING_GHOST");
+                game.control().enterStateNamed(GameControl.StateName.EATING_GHOST.name());
             }
         }
 
         @Override
         public boolean isEnabled(GameUI ui) {
             final Game game = ui.context().currentGame();
-            return game.control().state().name().equals("HUNTING")
+            return game.control().state().matches(GameControl.StateName.HUNTING)
                 && game.optGameLevel().isPresent() && !game.level().isDemoLevel();
         }
     };
@@ -76,14 +78,14 @@ public final class CheatActions {
         public void execute(GameUI ui) {
             final Game game = ui.context().currentGame();
             game.cheatUsedProperty().set(true);
-            game.control().changeState("LEVEL_COMPLETE");
+            game.control().enterStateNamed(GameControl.StateName.LEVEL_COMPLETE.name());
         }
 
         @Override
         public boolean isEnabled(GameUI ui) {
             final Game game = ui.context().currentGame();
             return game.isPlaying()
-                    && game.control().state().name().equals("HUNTING")
+                    && game.control().state().matches(GameControl.StateName.HUNTING)
                     && game.optGameLevel().isPresent()
                     && game.level().number() < game.lastLevelNumber();
         }

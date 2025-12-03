@@ -9,6 +9,8 @@ import org.tinylog.Logger;
 
 import java.util.Optional;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * Each game model has a finite state machine which controls the game state transitions and eventually the scene
  * selection in the user interface. However, the game controller should not contain the details how the game works,
@@ -16,6 +18,9 @@ import java.util.Optional;
 */
 public interface GameControl {
 
+    /**
+     * To avoid having to test against string constants in game-variant independent code, use these constants.
+     */
     enum StateName {
         BOOT, INTRO, SETTING_OPTIONS_FOR_START, STARTING_GAME_OR_LEVEL, HUNTING, LEVEL_COMPLETE,
         LEVEL_TRANSITION, EATING_GHOST, PACMAN_DYING, GAME_OVER, INTERMISSION
@@ -31,13 +36,14 @@ public interface GameControl {
         return stateMachine().state();
     }
 
-    default void changeState(StateMachine.State<Game> gameState) {
-        stateMachine().changeState(gameState);
+    default void enterState(StateMachine.State<Game> gameState) {
+        stateMachine().enterState(gameState);
     }
 
-    default void changeState(String stateID) {
+    default void enterStateNamed(String stateID) {
+        requireNonNull(stateID);
         Optional<StateMachine.State<Game>> optState = stateMachine().optState(stateID);
-        optState.ifPresentOrElse(state -> stateMachine().changeState(state),
+        optState.ifPresentOrElse(state -> stateMachine().enterState(state),
             () -> Logger.error("Cannot change state to '{}'. State not existing.", stateID));
     }
 

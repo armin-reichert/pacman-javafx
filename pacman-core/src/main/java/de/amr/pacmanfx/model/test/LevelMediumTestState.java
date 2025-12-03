@@ -60,7 +60,7 @@ public class LevelMediumTestState implements StateMachine.State<Game>, TestState
         if (timer().hasExpired()) {
             if (level.number() == lastTestedLevelNumber) {
                 game.publishGameEvent(GameEvent.Type.STOP_ALL_SOUNDS);
-                game.control().changeState(GameControl.StateName.INTRO.name());
+                game.control().enterStateNamed(GameControl.StateName.INTRO.name());
             } else {
                 timer().restartSeconds(TEST_DURATION_SEC);
                 game.startNextLevel();
@@ -68,11 +68,11 @@ public class LevelMediumTestState implements StateMachine.State<Game>, TestState
             }
         }
         else if (game.isLevelCompleted()) {
-            game.control().changeState(GameControl.StateName.INTRO.name());
+            game.control().enterStateNamed(GameControl.StateName.INTRO.name());
         } else if (game.hasPacManBeenKilled()) {
             timer.expire();
         } else if (game.hasGhostBeenKilled()) {
-            game.control().changeState("EATING_GHOST");
+            game.control().enterStateNamed(GameControl.StateName.EATING_GHOST.name());
         }
     }
 

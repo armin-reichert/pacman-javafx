@@ -15,7 +15,7 @@ public class TestActions {
     public static final GameAction ACTION_CUT_SCENES_TEST = new GameAction("TEST_CUT_SCENES") {
         @Override
         public void execute(GameUI ui) {
-            ui.context().currentGame().control().changeState(CutScenesTestState.class.getSimpleName());
+            ui.context().currentGame().control().enterStateNamed(CutScenesTestState.class.getSimpleName());
             ui.showFlashMessage("Cut scenes test"); //TODO localize
         }
 

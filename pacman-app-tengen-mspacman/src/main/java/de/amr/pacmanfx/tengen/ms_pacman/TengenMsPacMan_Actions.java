@@ -23,7 +23,7 @@ public interface TengenMsPacMan_Actions {
         @Override
         public void execute(GameUI ui) {
             final Game game = ui.context().currentGame();
-            game.control().changeState(GameState.SETTING_OPTIONS_FOR_START);
+            game.control().enterState(GameState.SETTING_OPTIONS_FOR_START);
         }
     };
 
@@ -31,7 +31,7 @@ public interface TengenMsPacMan_Actions {
         @Override
         public void execute(GameUI ui) {
             final Game game = ui.context().currentGame();
-            game.control().changeState(GameState.SETTING_OPTIONS_FOR_START);
+            game.control().enterState(GameState.SETTING_OPTIONS_FOR_START);
         }
 
         @Override
@@ -45,7 +45,7 @@ public interface TengenMsPacMan_Actions {
         @Override
         public void execute(GameUI ui) {
             final Game game = ui.context().currentGame();
-            game.control().changeState(GameState.STARTING_GAME_OR_LEVEL);
+            game.control().enterState(GameState.STARTING_GAME_OR_LEVEL);
         }
     };
 

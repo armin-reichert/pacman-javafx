@@ -11,6 +11,7 @@ import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.FoodLayer;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.*;
+import de.amr.pacmanfx.model.GameControl.StateName;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -315,20 +316,27 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
             PROPERTY_3D_PERSPECTIVE_ID.set(PerspectiveID.TOTAL);
         }
         else {
-            switch (state.name()) {
-                case "HUNTING" -> gameLevel3D.onHuntingStart();
-                case "PACMAN_DYING" -> gameLevel3D.onPacManDying(state);
-                case "EATING_GHOST" -> gameLevel3D.onGhostDying();
-                case "LEVEL_COMPLETE" -> gameLevel3D.onLevelComplete(state, perspectiveID);
-                case "GAME_OVER" -> gameLevel3D.onGameOver(state);
-                case "STARTING_GAME_OR_LEVEL" -> {
-                    if (gameLevel3D != null) {
-                        gameLevel3D.onStartingGame();
-                    } else {
-                        Logger.error("No 3D game level available"); //TODO can this happen?
-                    }
+            if (state.matches(StateName.HUNTING)) {
+                gameLevel3D.onHuntingStart();
+            }
+            else if (state.matches(StateName.PACMAN_DYING)) {
+                gameLevel3D.onPacManDying(state);
+            }
+            else if (state.matches(StateName.EATING_GHOST)) {
+                gameLevel3D.onEatingGhost();
+            }
+            else if (state.matches(StateName.LEVEL_COMPLETE)) {
+                gameLevel3D.onLevelComplete(state, perspectiveID);
+            }
+            else if (state.matches(StateName.GAME_OVER)) {
+                gameLevel3D.onGameOver(state);
+            }
+            else if (state.matches(StateName.STARTING_GAME_OR_LEVEL)) {
+                if (gameLevel3D != null) {
+                    gameLevel3D.onStartingGame();
+                } else {
+                    Logger.error("No 3D game level available"); //TODO can this happen?
                 }
-                default -> { /* do nothing */ }
             }
         }
     }
@@ -353,20 +361,20 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
             showLevelTestMessage(gameLevel);
         }
         else {
-            switch (state.name()) {
-                case "STARTING_GAME_OR_LEVEL", "LEVEL_TRANSITION" -> {
-                    if (!gameLevel.isDemoLevel()) {
-                        Optional<House> optionalHouse = gameLevel.worldMap().terrainLayer().optHouse();
-                        if (optionalHouse.isEmpty()) {
-                            Logger.error("No house found in this game level! WTF?");
-                        } else {
-                            Vector2f messageCenter = optionalHouse.get().centerPositionUnderHouse();
-                            gameLevel3D.showAnimatedMessage("READY!", 2.5f, messageCenter.x(), messageCenter.y());
-                        }
-                        setPlayerSteeringActionBindings();
+            if (state.matches(StateName.STARTING_GAME_OR_LEVEL, StateName.LEVEL_TRANSITION)) {
+                if (!gameLevel.isDemoLevel()) {
+                    Optional<House> optionalHouse = gameLevel.worldMap().terrainLayer().optHouse();
+                    if (optionalHouse.isEmpty()) {
+                        Logger.error("No house found in this game level! WTF?");
+                    } else {
+                        Vector2f messageCenter = optionalHouse.get().centerPositionUnderHouse();
+                        gameLevel3D.showAnimatedMessage("READY!", 2.5f, messageCenter.x(), messageCenter.y());
                     }
+                    setPlayerSteeringActionBindings();
                 }
-                default -> Logger.error("Unexpected game state '{}' on level start", context().currentGame().control().state());
+            }
+            else {
+                Logger.error("Unexpected game state '{}' on level start", context().currentGame().control().state());
             }
         }
 
@@ -396,14 +404,14 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
         gameLevel3D.energizers3D().forEach(energizer3D ->
                 energizer3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(energizer3D.tile())));
 
-        final String gameStateID = context().currentGame().control().state().name();
-        if (gameStateID.equals("HUNTING") || gameStateID.equals("EATING_GHOST")) { //TODO check this
+        final StateMachine.State<?> state = context().currentGame().control().state();
+        if (state.matches(StateName.HUNTING, StateName.EATING_GHOST)) { //TODO check this
             gameLevel3D.energizers3D().stream()
                 .filter(energizer3D -> energizer3D.shape().isVisible())
                 .forEach(Energizer3D::startPumping);
         }
 
-        if (gameStateID.equals("HUNTING")) {
+        if (state.matches(StateName.HUNTING)) {
             if (gameLevel.pac().powerTimer().isRunning()) {
                 ui.soundManager().loop(SoundID.PAC_MAN_POWER);
             }
@@ -593,9 +601,9 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
         }
     }
 
-    protected void updateSound(GameLevel gameLevel, StateMachine.State<Game> gameState) {
+    protected void updateSound(GameLevel gameLevel, StateMachine.State<Game> state) {
         if (!ui.soundManager().isEnabled()) return;
-        if (gameState.name().equals("HUNTING")) {
+        if (state.matches(StateName.HUNTING)) {
             updateSiren(gameLevel.pac());
             updateGhostSounds(gameLevel.pac(), gameLevel.ghosts());
         }

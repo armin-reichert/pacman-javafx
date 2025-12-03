@@ -183,7 +183,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 if (timer.tickCount() == 3) {
                     scene.titleVisible = true;
                 } else if (timer.atSecond(1)) {
-                    scene.sceneController.changeState(PRESENTING_GHOSTS);
+                    scene.sceneController.enterState(PRESENTING_GHOSTS);
                 }
             }
         },
@@ -203,7 +203,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                     }
                     scene.ghostIndex += 1;
                 } else if (timer.atSecond(2.5)) {
-                    scene.sceneController.changeState(SHOWING_PELLET_POINTS);
+                    scene.sceneController.enterState(SHOWING_PELLET_POINTS);
                 }
             }
         },
@@ -217,7 +217,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
             @Override
             public void onUpdate(ArcadePacMan_IntroScene scene) {
                 if (timer.atSecond(1)) {
-                    scene.sceneController.changeState(CHASING_PAC);
+                    scene.sceneController.enterState(CHASING_PAC);
                 }
             }
         },
@@ -264,7 +264,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                     scene.pacMan.playAnimation(CommonAnimationID.ANIM_PAC_MUNCHING);
                     scene.pacMan.setSpeed(CHASING_SPEED);
                 } else if (timer.tickCount() == 240) {
-                    scene.sceneController.changeState(CHASING_GHOSTS);
+                    scene.sceneController.enterState(CHASING_GHOSTS);
                 }
                 scene.blinking.tick();
                 scene.pacMan.move();
@@ -299,7 +299,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
             public void onUpdate(ArcadePacMan_IntroScene scene) {
                 if (scene.ghosts.stream().allMatch(ghost -> ghost.inAnyOfStates(EATEN))) {
                     scene.pacMan.hide();
-                    scene.sceneController.changeState(READY_TO_PLAY);
+                    scene.sceneController.enterState(READY_TO_PLAY);
                     return;
                 }
 
@@ -348,10 +348,10 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 if (timer.atSecond(0.75)) {
                     scene.ghosts.get(ORANGE_GHOST_POKEY).hide();
                     if (!game.canStartNewGame()) {
-                        game.control().changeState(GameState.STARTING_GAME_OR_LEVEL);
+                        game.control().enterState(GameState.STARTING_GAME_OR_LEVEL);
                     }
                 } else if (timer.atSecond(5)) {
-                    game.control().changeState(GameState.SETTING_OPTIONS_FOR_START);
+                    game.control().enterState(GameState.SETTING_OPTIONS_FOR_START);
                 }
             }
         };
