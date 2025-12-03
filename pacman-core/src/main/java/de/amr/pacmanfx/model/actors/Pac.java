@@ -13,7 +13,6 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.steering.Steering;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.lib.timer.TickTimer.secToTicks;
 import static java.util.Objects.requireNonNull;
@@ -23,18 +22,15 @@ import static java.util.Objects.requireNonNull;
  */
 public class Pac extends MovingActor {
 
-    public static final boolean DEFAULT_USING_AUTOPILOT = false;
-    public static final boolean DEFAULT_IMMUNITY = false;
-
     public static final byte FOREVER = -1;
 
-    private final TickTimer powerTimer = new TickTimer("PacPowerTimer");
+    private final TickTimer powerTimer = new TickTimer("Pac-PowerTimer");
 
     private final BooleanProperty dead = new SimpleBooleanProperty(false);
 
-    private final BooleanProperty immune = new SimpleBooleanProperty(false);;
+    private final BooleanProperty immune = new SimpleBooleanProperty(false);
 
-    private final BooleanProperty usingAutopilot = new SimpleBooleanProperty(false);;
+    private final BooleanProperty usingAutopilot = new SimpleBooleanProperty(false);
 
     private int restingTicks;
     private long starvingTicks;
@@ -60,6 +56,10 @@ public class Pac extends MovingActor {
             ", velocity=" + velocity() +
             ", acceleration=" + acceleration() +
             '}';
+    }
+
+    public void setAutomaticSteering(Steering steering) {
+        automaticSteering = requireNonNull(steering);
     }
 
     @Override
@@ -150,7 +150,6 @@ public class Pac extends MovingActor {
     @Override
     public void tick(Game game) {
         if (game.optGameLevel().isEmpty()) return;
-        final GameLevel gameLevel = game.level();
 
         if (isDead() || restingTicks == FOREVER) {
             return;
@@ -162,11 +161,11 @@ public class Pac extends MovingActor {
         }
 
         if (isUsingAutopilot()) {
-            automaticSteering.steer(this, gameLevel);
+            automaticSteering.steer(this, game.level());
         }
 
-        setSpeed(powerTimer.isRunning() ? game.pacSpeedWhenHasPower(gameLevel) : game.pacSpeed(gameLevel));
-        moveThroughThisCruelWorld(gameLevel);
+        setSpeed(powerTimer.isRunning() ? game.pacSpeedWhenHasPower(game.level()) : game.pacSpeed(game.level()));
+        moveThroughThisCruelWorld(game.level());
 
         if (moveInfo.moved) {
             optAnimationManager().ifPresent(AnimationManager::play);
@@ -175,18 +174,9 @@ public class Pac extends MovingActor {
         }
     }
 
-    public void onFoodEaten(boolean energizer) {
+    public void eat(boolean energizer) {
         setRestingTicks(energizer ? 3 : 1);
         endStarving();
-    }
-
-    public void onKilled() {
-        stopAnimation();
-        powerTimer.stop();
-        powerTimer.reset(0);
-        Logger.info("Power timer stopped and reset to zero.");
-        setSpeed(0);
-        setDead(true);
     }
 
     /**
@@ -222,9 +212,5 @@ public class Pac extends MovingActor {
      */
     public boolean isParalyzed() {
         return velocity().equals(Vector2f.ZERO) || !moveInfo.moved || restingTicks == FOREVER;
-    }
-
-    public void setAutomaticSteering(Steering steering) {
-        automaticSteering = requireNonNull(steering);
     }
 }

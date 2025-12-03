@@ -588,7 +588,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
                 eatEnergizer(gameLevel, tile);
             } else {
                 scoreManager().scorePoints(PELLET_VALUE);
-                gameLevel.pac().onFoodEaten(false);
+                gameLevel.pac().eat(false);
             }
             gateKeeper.registerFoodEaten(gameLevel);
             if (isBonusReached()) {
@@ -604,7 +604,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     private void eatEnergizer(GameLevel gameLevel, Vector2i tile) {
         simulationStepResult.foundEnergizerAtTile = tile;
         scoreManager.scorePoints(ENERGIZER_VALUE);
-        gameLevel.pac().onFoodEaten(true);
+        gameLevel.pac().eat(true);
         gameLevel.ghosts().forEach(ghost -> {
             ghost.onFoodCountChange(gameLevel);
             if (ghost.inAnyOfStates(FRIGHTENED, HUNTING_PAC)) {
@@ -646,7 +646,15 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         if (tick == 1) {
             level.huntingTimer().stop();
             gateKeeper.resetCounterAndSetEnabled(true);
-            level.pac().onKilled();
+
+            pac.powerTimer().stop();
+            pac.powerTimer().reset(0);
+            Logger.info("Power timer stopped and reset to zero.");
+
+            pac.setSpeed(0);
+            pac.setDead(true);
+            pac.stopAnimation();
+
             level.ghosts().forEach(ghost -> ghost.onPacKilled(level));
             publishGameEvent(GameEvent.Type.STOP_ALL_SOUNDS);
         }

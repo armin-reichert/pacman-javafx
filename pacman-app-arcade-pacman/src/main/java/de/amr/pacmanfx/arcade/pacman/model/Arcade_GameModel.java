@@ -100,7 +100,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     // public for access by tests
     public void onPelletEaten(GameLevel gameLevel) {
         scoreManager.scorePoints(PELLET_VALUE);
-        gameLevel.pac().onFoodEaten(false);
+        gameLevel.pac().eat(false);
         gameLevel.ghosts().forEach(ghost -> ghost.onFoodCountChange(gameLevel));
     }
 
@@ -108,7 +108,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     public void onEnergizerEaten(GameLevel gameLevel, Vector2i tile) {
         simulationStepResult.foundEnergizerAtTile = tile;
         scoreManager.scorePoints(ENERGIZER_VALUE);
-        gameLevel.pac().onFoodEaten(true);
+        gameLevel.pac().eat(true);
         gameLevel.ghosts().forEach(ghost -> {
             ghost.onFoodCountChange(gameLevel);
             if (ghost.inAnyOfStates(FRIGHTENED, HUNTING_PAC)) {
@@ -140,6 +140,10 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         }
     }
 
+    public void onKilled() {
+    }
+
+
     @Override
     public void updatePacManDying(long tick) {
         final GameLevel level = level();
@@ -147,7 +151,12 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         if (tick == 1) {
             gateKeeper.resetCounterAndSetEnabled(true);
             level.huntingTimer().stop();
-            level.pac().onKilled();
+            pac.stopAnimation();
+            pac.powerTimer().stop();
+            pac.powerTimer().reset(0);
+            Logger.info("Power timer stopped and reset to zero.");
+            pac.setSpeed(0);
+            pac.setDead(true);
             level.ghosts().forEach(ghost -> ghost.onPacKilled(level));
             publishGameEvent(GameEvent.Type.STOP_ALL_SOUNDS);
         }
