@@ -41,7 +41,7 @@ public class GameLevel {
     private GameLevelMessage message;
 
     private boolean demoLevel;
-    private int numGhostsKilled;
+    private int ghostKillCount;
     private int gameOverStateTicks;
     private long startTimeMillis;
     private float pacPowerSeconds;
@@ -170,8 +170,8 @@ public class GameLevel {
         return states.length == 0 ? Stream.of(ghosts) : Stream.of(ghosts).filter(ghost -> ghost.inAnyOfStates(states));
     }
 
-    public void registerGhostKilled() { numGhostsKilled++; }
-    public int numGhostsKilled() { return numGhostsKilled; }
+    public void incrementGhostKillCount() { ghostKillCount++; }
+    public int ghostKillCount() { return ghostKillCount; }
 
     public Optional<Bonus> optBonus() { return Optional.ofNullable(bonus); }
     public void setBonus(Bonus bonus) { this.bonus = bonus; }

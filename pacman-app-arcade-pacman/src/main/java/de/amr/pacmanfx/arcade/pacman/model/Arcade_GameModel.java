@@ -70,7 +70,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     public static final byte PELLET_VALUE = 10;
     public static final byte ENERGIZER_VALUE = 50;
-    public static final int ALL_GHOSTS_IN_LEVEL_KILLED_POINTS = 12_000;
+    public static final int ALL_16_GHOSTS_KILLED_POINTS = 12_000;
     public static final int EXTRA_LIFE_SCORE = 10_000;
     public static final byte[] KILLED_GHOST_VALUE_FACTORS = {2, 4, 8, 16}; // points = factor * 100
 
@@ -186,10 +186,10 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         ghost.selectAnimationAt(CommonAnimationID.ANIM_GHOST_NUMBER, killedSoFar);
         scoreManager.scorePoints(points);
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
-        level.registerGhostKilled();
-        if (level.numGhostsKilled() == 16) {
-            scoreManager.scorePoints(ALL_GHOSTS_IN_LEVEL_KILLED_POINTS);
-            Logger.info("Scored {} points for killing all ghosts in level {}", ALL_GHOSTS_IN_LEVEL_KILLED_POINTS, level.number());
+        level.incrementGhostKillCount();
+        if (level.ghostKillCount() == 16) {
+            scoreManager.scorePoints(ALL_16_GHOSTS_KILLED_POINTS);
+            Logger.info("Scored {} points for killing all ghosts in level {}", ALL_16_GHOSTS_KILLED_POINTS, level.number());
         }
     }
 
