@@ -249,7 +249,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
 
         this.ui = requireNonNull(ui);
 
-        state.gameVariant = "PACMAN_XXL";
+        state.gameVariant = StandardGameVariant.PACMAN_XXL.name();
         state.play3D = false;
         state.cutScenesEnabled = true;
         state.mapOrder = MapSelectionMode.CUSTOM_MAPS_FIRST;
