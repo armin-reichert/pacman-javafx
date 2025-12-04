@@ -561,7 +561,7 @@ public final class GameUI_Implementation implements GameUI {
         final Game game = context().currentGame();
         statusIconBox.iconAutopilot().visibleProperty().bind(game.usingAutopilotProperty());
         statusIconBox.iconCheated()  .visibleProperty().bind(game.cheatUsedProperty());
-        statusIconBox.iconImmune()   .visibleProperty().bind(game.immunityProperty());
+        statusIconBox.iconImmune()   .visibleProperty().bind(game.immuneProperty());
     }
 
     @Override

@@ -180,9 +180,9 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     public void boot() {
         setInitialLifeCount(3);
         cheatUsedProperty().set(false);
-        immunityProperty().set(false);
+        immuneProperty().set(false);
         usingAutopilotProperty().set(false);
-        prepareForNewGame();
+        prepareNewGame();
         hud.all(false);
         setPacBooster(DEFAULT_PAC_BOOSTER);
         setDifficulty(DEFAULT_DIFFICULTY);
@@ -192,7 +192,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void prepareForNewGame() {
+    public void prepareNewGame() {
         lifeCountProperty().set(initialLifeCount());
         levelCounter().clear();
         setPlaying(false);
@@ -291,15 +291,15 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     @Override
     public void startNewGame(long tick) {
         if (tick == 1) {
-            prepareForNewGame();
+            prepareNewGame();
             buildNormalLevel(startLevelNumber);
             publishGameEvent(GameEvent.Type.GAME_STARTED);
         }
         else if (tick == TICK_SHOW_READY) {
             if (!level().isDemoLevel()) {
-                level().pac().immuneProperty().bind(immunityProperty());
+                level().pac().immuneProperty().bind(immuneProperty());
                 level().pac().usingAutopilotProperty().bind(usingAutopilotProperty());
-                boolean cheating = immunity() || usingAutopilot();
+                boolean cheating = immune() || usingAutopilot();
                 cheatUsedProperty().set(cheating);
             }
             startLevel();

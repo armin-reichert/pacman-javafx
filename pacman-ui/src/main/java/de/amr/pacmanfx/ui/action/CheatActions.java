@@ -108,8 +108,8 @@ public final class CheatActions {
         public void execute(GameUI ui) {
             final Game game = ui.context().currentGame();
             game.cheatUsedProperty().set(true);
-            toggle(game.immunityProperty());
-            boolean immunityOn = game.immunityProperty().get();
+            toggle(game.immuneProperty());
+            boolean immunityOn = game.immuneProperty().get();
             ui.soundManager().playVoice(immunityOn ? SoundID.VOICE_IMMUNITY_ON : SoundID.VOICE_IMMUNITY_OFF, 0);
             ui.showFlashMessage(ui.assets().translated(immunityOn ? "player_immunity_on" : "player_immunity_off"));
         }

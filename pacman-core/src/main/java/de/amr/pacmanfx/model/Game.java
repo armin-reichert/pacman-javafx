@@ -75,7 +75,7 @@ public interface Game {
 
     // Lifecycle
     void boot();
-    void prepareForNewGame();
+    void prepareNewGame();
     boolean canStartNewGame();
     void startNewGame(long tick);
     boolean isPlaying();
@@ -146,10 +146,10 @@ public interface Game {
         return cheatUsedProperty().get();
     }
 
-    BooleanProperty immunityProperty();
+    BooleanProperty immuneProperty();
 
-    default boolean immunity() {
-        return immunityProperty().get();
+    default boolean immune() {
+        return immuneProperty().get();
     }
 
     BooleanProperty usingAutopilotProperty();

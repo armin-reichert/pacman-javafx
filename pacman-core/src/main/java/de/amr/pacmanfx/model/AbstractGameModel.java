@@ -35,7 +35,7 @@ public abstract class AbstractGameModel implements Game {
 
     private final ObjectProperty<GameLevel> gameLevel = new SimpleObjectProperty<>();
 
-    private final BooleanProperty immunity = new SimpleBooleanProperty(false);
+    private final BooleanProperty immune = new SimpleBooleanProperty(false);
 
     private final IntegerProperty initialLifeCount = new SimpleIntegerProperty(3);
 
@@ -92,8 +92,8 @@ public abstract class AbstractGameModel implements Game {
     }
 
     @Override
-    public BooleanProperty immunityProperty() {
-        return immunity;
+    public BooleanProperty immuneProperty() {
+        return immune;
     }
 
     @Override
@@ -372,9 +372,15 @@ public abstract class AbstractGameModel implements Game {
         }
     }
 
+    protected void clearCheatingProperties() {
+        immuneProperty().set(false);
+        usingAutopilotProperty().set(false);
+        cheatUsedProperty().set(false);
+    }
+
     protected void updateCheatingProperties(GameLevel level) {
-        level.pac().immuneProperty().bind(immunityProperty());
+        level.pac().immuneProperty().bind(immuneProperty());
         level.pac().usingAutopilotProperty().bind(usingAutopilotProperty());
-        cheatUsedProperty().set(immunity() || usingAutopilot());
+        cheatUsedProperty().set(immune() || usingAutopilot());
     }
 }

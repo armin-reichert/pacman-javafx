@@ -81,7 +81,7 @@ public class HelpInfo {
             GridPane.setColumnSpan(autoPilotEntry, 2);
             grid.add(autoPilotEntry, 0, grid.getRowCount());
         }
-        if (ui.context().currentGame().immunity()) {
+        if (ui.context().currentGame().immune()) {
             var immunityEntry = text(ui.assets().translated("help.immunity_on"), Color.ORANGE);
             immunityEntry.setFont(font);
             GridPane.setColumnSpan(immunityEntry, 2);

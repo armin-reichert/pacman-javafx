@@ -44,7 +44,7 @@ public class LevelMediumTestState implements StateMachine.State<Game>, TestState
     public void onEnter(Game game) {
         lastTestedLevelNumber = game.lastLevelNumber() == Integer.MAX_VALUE ? 25 : game.lastLevelNumber();
         timer.restartSeconds(TEST_DURATION_SEC);
-        game.prepareForNewGame();
+        game.prepareNewGame();
         game.buildNormalLevel(1);
         game.startLevel();
         configureLevelForTest(game);

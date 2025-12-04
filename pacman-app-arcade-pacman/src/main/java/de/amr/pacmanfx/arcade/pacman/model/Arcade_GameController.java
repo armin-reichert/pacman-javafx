@@ -205,7 +205,7 @@ public class Arcade_GameController extends StateMachine<Game> implements GameCon
             @Override
             public void onUpdate(Game game) {
                 if (timer.hasExpired()) {
-                    game.prepareForNewGame();
+                    game.prepareNewGame();
                     if (game.canStartNewGame()) {
                         game.control().enterState(SETTING_OPTIONS_FOR_START);
                     } else {

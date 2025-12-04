@@ -32,7 +32,7 @@ public class LevelShortTestState implements StateMachine.State<Game>, TestState 
         COIN_MECHANISM.setNumCoins(1);
         lastTestedLevelNumber = game.lastLevelNumber() == Integer.MAX_VALUE ? 25 : game.lastLevelNumber();
         timer.restartIndefinitely();
-        game.prepareForNewGame();
+        game.prepareNewGame();
         game.buildNormalLevel(1);
         game.startLevel();
         game.level().showPacAndGhosts();

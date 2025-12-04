@@ -56,8 +56,7 @@ public interface GameControl {
     }
 
     default void restart(String stateID) {
-        Optional<StateMachine.State<Game>> optState = stateMachine().optState(stateID);
-        optState.ifPresentOrElse(state -> stateMachine().restart(state),
+        stateMachine().optState(stateID).ifPresentOrElse(state -> stateMachine().restart(state),
             () -> Logger.error("Cannot restart in state to '{}'. State not existing.", stateID));
     }
 

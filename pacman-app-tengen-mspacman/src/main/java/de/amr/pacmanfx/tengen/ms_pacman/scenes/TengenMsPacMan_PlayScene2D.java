@@ -269,7 +269,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
         miAutopilot.selectedProperty().bindBidirectional(context().currentGame().usingAutopilotProperty());
 
         var miImmunity = new CheckMenuItem(ui.assets().translated("immunity"));
-        miImmunity.selectedProperty().bindBidirectional(context().currentGame().immunityProperty());
+        miImmunity.selectedProperty().bindBidirectional(context().currentGame().immuneProperty());
 
         var miMuted = new CheckMenuItem(ui.assets().translated("muted"));
         miMuted.selectedProperty().bindBidirectional(PROPERTY_MUTED);

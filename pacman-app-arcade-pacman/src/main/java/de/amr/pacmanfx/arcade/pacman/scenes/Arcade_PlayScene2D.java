@@ -201,7 +201,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
         miAutopilot.selectedProperty().bindBidirectional(context().currentGame().usingAutopilotProperty());
 
         var miImmunity = new CheckMenuItem(ui.assets().translated("immunity"));
-        miImmunity.selectedProperty().bindBidirectional(context().currentGame().immunityProperty());
+        miImmunity.selectedProperty().bindBidirectional(context().currentGame().immuneProperty());
 
         var miMuted = new CheckMenuItem(ui.assets().translated("muted"));
         miMuted.selectedProperty().bindBidirectional(PROPERTY_MUTED);

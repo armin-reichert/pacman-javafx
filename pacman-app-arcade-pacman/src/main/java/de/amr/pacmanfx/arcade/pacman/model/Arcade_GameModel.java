@@ -233,29 +233,27 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     @Override
     public void boot() {
         setInitialLifeCount(3);
-        cheatUsedProperty().set(false);
-        immunityProperty().set(false);
-        usingAutopilotProperty().set(false);
-        prepareForNewGame();
+        clearCheatingProperties();
+        prepareNewGame();
         levelCounter().clear();
         hud().all(false);
     }
 
     @Override
-    public void prepareForNewGame() {
-        setPlaying(false);
-        lifeCountProperty().set(initialLifeCount());
-        scoreManager.loadHighScore();
+    public void prepareNewGame() {
         scoreManager.score().reset();
+        scoreManager.loadHighScore();
         scoreManager.highScore().setEnabled(true);
         gateKeeper.reset();
         gameLevelProperty().set(null);
+        setPlaying(false);
+        lifeCountProperty().set(initialLifeCount());
     }
 
     @Override
     public void startNewGame(long tick) {
         if (tick == 1) {
-            prepareForNewGame();
+            prepareNewGame();
             levelCounter().clear();
             buildNormalLevel(1);
             publishGameEvent(GameEvent.Type.GAME_STARTED);
