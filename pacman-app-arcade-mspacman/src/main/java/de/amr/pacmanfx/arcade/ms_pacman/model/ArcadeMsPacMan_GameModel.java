@@ -170,7 +170,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         return level;
     }
 
-    private HuntingTimer createHuntingTimer() {
+    private AbstractHuntingTimer createHuntingTimer() {
         final var huntingTimer = new ArcadeMsPacMan_HuntingTimer();
         huntingTimer.phaseIndexProperty().addListener((py, ov, newPhaseIndex) -> {
             optGameLevel().ifPresent(level -> {

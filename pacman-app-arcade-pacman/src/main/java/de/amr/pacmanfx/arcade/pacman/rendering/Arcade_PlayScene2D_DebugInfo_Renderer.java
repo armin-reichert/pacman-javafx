@@ -11,7 +11,7 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
 import de.amr.pacmanfx.model.GameControl;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.HuntingTimer;
+import de.amr.pacmanfx.model.AbstractHuntingTimer;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.MovingActor;
 import de.amr.pacmanfx.ui._2d.BaseDebugInfoRenderer;
@@ -71,7 +71,7 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
             String gameStateText = gameControl.state().name() + " (Tick %d)".formatted(gameControl.state().timer().tickCount());
             String huntingPhaseText = "";
             if (gameControl.state() == Arcade_GameController.GameState.HUNTING) {
-                HuntingTimer huntingTimer = gameLevel.huntingTimer();
+                AbstractHuntingTimer huntingTimer = gameLevel.huntingTimer();
                 huntingPhaseText = " %s (Tick %d)".formatted(huntingTimer.phase(), huntingTimer.tickCount());
             }
             ctx.setFill(debugTextFill);

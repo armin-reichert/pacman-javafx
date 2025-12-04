@@ -468,7 +468,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         return level;
     }
 
-    private HuntingTimer createHuntingTimer() {
+    private AbstractHuntingTimer createHuntingTimer() {
         final var huntingTimer = new TengenMsPacMan_HuntingTimer();
         huntingTimer.phaseIndexProperty().addListener((py, ov, newPhaseIndex) -> {
             optGameLevel().ifPresent(level -> {

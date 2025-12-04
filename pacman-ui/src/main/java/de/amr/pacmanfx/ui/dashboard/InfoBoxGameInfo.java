@@ -10,7 +10,7 @@ import de.amr.pacmanfx.lib.worldmap.FoodLayer;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HuntingPhase;
-import de.amr.pacmanfx.model.HuntingTimer;
+import de.amr.pacmanfx.model.AbstractHuntingTimer;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.ui.api.GameUI;
@@ -110,7 +110,7 @@ public class InfoBoxGameInfo extends InfoBox {
 
     private String fmtHuntingPhase() {
         if (ui.context().currentGame().level() != null) {
-            HuntingTimer huntingTimer = ui.context().currentGame().level().huntingTimer();
+            AbstractHuntingTimer huntingTimer = ui.context().currentGame().level().huntingTimer();
             return "%s #%d%s".formatted(
                 huntingTimer.phase().name(),
                 huntingTimer.phase() == HuntingPhase.CHASING
@@ -121,11 +121,11 @@ public class InfoBoxGameInfo extends InfoBox {
         return NO_INFO;
     }
 
-    private String fmtHuntingTicksRunning(HuntingTimer huntingTimer) {
+    private String fmtHuntingTicksRunning(AbstractHuntingTimer huntingTimer) {
         return "Running:   %d".formatted(huntingTimer.tickCount());
     }
 
-    private String fmtHuntingTicksRemaining(HuntingTimer huntingTimer) {
+    private String fmtHuntingTicksRemaining(AbstractHuntingTimer huntingTimer) {
         return "Remaining: %s".formatted(ticksToString(huntingTimer.remainingTicks()));
     }
 

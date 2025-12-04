@@ -28,7 +28,7 @@ public class GameLevel {
     private final Game game;
     private final int number; // 1=first level
     private final WorldMap worldMap;
-    private final HuntingTimer huntingTimer;
+    private final AbstractHuntingTimer huntingTimer;
     private final Pulse blinking;
     private final List<Ghost> victims = new ArrayList<>();
     private final byte[] bonusSymbols = new byte[2];
@@ -49,7 +49,7 @@ public class GameLevel {
 
     private byte cutSceneNumber;
 
-    public GameLevel(Game game, int number, WorldMap worldMap, HuntingTimer huntingTimer, int numFlashes) {
+    public GameLevel(Game game, int number, WorldMap worldMap, AbstractHuntingTimer huntingTimer, int numFlashes) {
         this.game = requireNonNull(game);
         this.number = requireValidLevelNumber(number);
         this.worldMap = requireNonNull(worldMap);
@@ -103,7 +103,7 @@ public class GameLevel {
         return pacPowerSeconds;
     }
 
-    public HuntingTimer huntingTimer() {
+    public AbstractHuntingTimer huntingTimer() {
         return huntingTimer;
     }
 

@@ -20,13 +20,13 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.isOdd;
 /**
  * Controls the timing of the hunting phases (alternating scattering and chasing).
  */
-public abstract class HuntingTimer {
+public abstract class AbstractHuntingTimer {
 
     protected final TickTimer tickTimer;
     protected final int numPhases;
     private final IntegerProperty phaseIndex = new SimpleIntegerProperty();
 
-    protected HuntingTimer(String name, int numPhases) {
+    protected AbstractHuntingTimer(String name, int numPhases) {
         this.tickTimer = new TickTimer(name);
         this.numPhases = requireNonNegativeInt(numPhases);
     }

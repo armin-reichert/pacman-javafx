@@ -5,11 +5,9 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.pacmanfx.lib.timer.TickTimer;
-import de.amr.pacmanfx.model.HuntingTimer;
-import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.GhostState;
+import de.amr.pacmanfx.model.AbstractHuntingTimer;
 
-public class ArcadePacMan_HuntingTimer extends HuntingTimer {
+public class ArcadePacMan_HuntingTimer extends AbstractHuntingTimer {
 
     // Ticks of scatter and chasing phases, -1 = INFINITE
     static final int[] TICKS_LEVEL_1 = {420, 1200, 420, 1200, 300, 1200, 300, -1};

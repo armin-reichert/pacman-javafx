@@ -5,12 +5,12 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman.model;
 
 import de.amr.pacmanfx.lib.timer.TickTimer;
-import de.amr.pacmanfx.model.HuntingTimer;
+import de.amr.pacmanfx.model.AbstractHuntingTimer;
 
 /**
  * TODO: I have no info about the timing so far, use (inofficial) Arcade game values for now.
  */
-public class TengenMsPacMan_HuntingTimer extends HuntingTimer {
+public class TengenMsPacMan_HuntingTimer extends AbstractHuntingTimer {
 
     private static final int NUM_PHASES = 8;
 
