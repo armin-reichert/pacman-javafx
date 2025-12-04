@@ -418,7 +418,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         final ArcadeHouse house = new ArcadeHouse(HOUSE_MIN_TILE);
         worldMap.terrainLayer().setHouse(house);
 
-        final GameLevel level = new GameLevel(this, levelNumber, worldMap, new TengenMsPacMan_HuntingTimer(), 3);
+        final GameLevel level = new GameLevel(this, levelNumber, worldMap, createHuntingTimer(), 3);
         level.setDemoLevel(demoLevel);
 
         int index = levelNumber <= 19 ? levelNumber - 1 : 18;
@@ -466,6 +466,20 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         levelCounter().setEnabled(levelNumber < 8);
 
         return level;
+    }
+
+    private HuntingTimer createHuntingTimer() {
+        final var huntingTimer = new TengenMsPacMan_HuntingTimer();
+        huntingTimer.phaseIndexProperty().addListener((py, ov, newPhaseIndex) -> {
+            optGameLevel().ifPresent(level -> {
+                if (newPhaseIndex.intValue() > 0) {
+                    level.ghosts(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE)
+                        .forEach(Ghost::requestTurnBack);
+                }
+            });
+            huntingTimer.logPhaseChange();
+        });
+        return huntingTimer;
     }
 
     @Override

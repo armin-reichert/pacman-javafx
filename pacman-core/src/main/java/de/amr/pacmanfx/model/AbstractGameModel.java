@@ -197,7 +197,7 @@ public abstract class AbstractGameModel implements Game {
 
     @Override
     public void startHunting(GameLevel level) {
-        level.huntingTimer().startFirstPhase();
+        level.huntingTimer().startFirstPhase(level.number());
 
         //TODO move into UI layer?
         level.blinking().setStartState(Pulse.State.ON);
@@ -323,7 +323,7 @@ public abstract class AbstractGameModel implements Game {
 
         updatePacPower(level);
         level.blinking().tick();
-        level.huntingTimer().update();
+        level.huntingTimer().update(level.number());
     }
 
     /**

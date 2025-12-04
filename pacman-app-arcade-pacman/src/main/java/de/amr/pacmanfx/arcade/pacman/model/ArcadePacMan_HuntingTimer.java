@@ -18,13 +18,6 @@ public class ArcadePacMan_HuntingTimer extends HuntingTimer {
 
     public ArcadePacMan_HuntingTimer() {
         super("ArcadePacMan-HuntingTimer", 8);
-        phaseIndex.addListener((py, ov, newPhaseIndex) -> {
-            if (gameLevel != null && newPhaseIndex.intValue() > 0) {
-                gameLevel.ghosts(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE)
-                    .forEach(Ghost::requestTurnBack);
-            }
-            logPhaseChange();
-        });
     }
 
     @Override

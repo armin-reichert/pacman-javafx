@@ -23,16 +23,14 @@ import static java.util.Objects.requireNonNull;
 public abstract class HuntingTimer extends TickTimer {
 
     protected final int numPhases;
-    protected final IntegerProperty phaseIndex = new SimpleIntegerProperty();
-    protected GameLevel gameLevel;
+    private final IntegerProperty phaseIndex = new SimpleIntegerProperty();
 
     protected HuntingTimer(String name, int numPhases) {
         super(requireNonNull(name));
         this.numPhases = requireNonNegativeInt(numPhases);
     }
 
-    public void setGameLevel(GameLevel gameLevel) {
-        this.gameLevel = requireNonNull(gameLevel);
+    public void reset() {
         stop();
         reset(TickTimer.INDEFINITE);
         phaseIndex.set(0);
@@ -55,31 +53,23 @@ public abstract class HuntingTimer extends TickTimer {
     public HuntingPhase phase() { return
         isEven(phaseIndex()) ? HuntingPhase.SCATTERING : HuntingPhase.CHASING; }
 
-    public void update() {
-        if (gameLevel == null) {
-            Logger.error("Cannot update hunting timer, no game level assigned");
-            return;
-        }
+    public void update(int levelNumber) {
         if (hasExpired()) {
             Logger.info("Hunting phase {} ({}) ends, tick={}", phaseIndex(), phase(), tickCount());
             int nextPhaseIndex = requireValidPhaseIndex(phaseIndex() + 1);
-            startPhase(nextPhaseIndex);
+            startPhase(levelNumber, nextPhaseIndex);
         } else {
             doTick();
         }
     }
 
-    public void startFirstPhase() {
-        if (gameLevel == null) {
-            Logger.error("Cannot start hunting timer, no game level assigned");
-            return;
-        }
-        startPhase(0);
+    public void startFirstPhase(int levelNumber) {
+        startPhase(levelNumber, 0);
         logPhaseChange(); // no change event!
     }
 
-    protected void startPhase(int phaseIndex) {
-        long duration = huntingTicks(gameLevel.number(), phaseIndex);
+    protected void startPhase(int levelNumber, int phaseIndex) {
+        long duration = huntingTicks(levelNumber, phaseIndex);
         reset(duration);
         start();
         this.phaseIndex.set(phaseIndex);
@@ -92,7 +82,7 @@ public abstract class HuntingTimer extends TickTimer {
         return phaseIndex;
     }
 
-    protected void logPhaseChange() {
+    public void logPhaseChange() {
         Logger.info("Hunting phase {} ({}, {} ticks / {} seconds). {}",
             phaseIndex(), phase(), durationTicks(), (float) durationTicks() / Globals.NUM_TICKS_PER_SEC, this);
     }

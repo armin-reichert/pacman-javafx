@@ -55,9 +55,9 @@ public class GameLevel {
         this.worldMap = requireNonNull(worldMap);
         this.huntingTimer = requireNonNull(huntingTimer);
         this.numFlashes = requireNonNegativeInt(numFlashes);
-        huntingTimer.setGameLevel(this);
         blinking = new Pulse(10, Pulse.State.OFF);
         currentBonusIndex = -1;
+        huntingTimer.reset();
     }
 
     public int number() {

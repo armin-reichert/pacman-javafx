@@ -21,6 +21,7 @@ import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.BonusState;
 import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
 
@@ -131,7 +132,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         terrain.setHouse(house);
 
         final int numFlashes = levelData(levelNumber).numFlashes();
-        final GameLevel level = new GameLevel(this, levelNumber, worldMap, new ArcadeMsPacMan_HuntingTimer(), numFlashes);
+        final GameLevel level = new GameLevel(this, levelNumber, worldMap, createHuntingTimer(), numFlashes);
         level.setDemoLevel(demoLevel);
         level.setGameOverStateTicks(GAME_OVER_STATE_TICKS);
         level.setPacPowerSeconds(levelData(levelNumber).secPacPower());
@@ -167,6 +168,20 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         levelCounter.setEnabled(levelNumber < 8);
 
         return level;
+    }
+
+    private HuntingTimer createHuntingTimer() {
+        final var huntingTimer = new ArcadeMsPacMan_HuntingTimer();
+        huntingTimer.phaseIndexProperty().addListener((py, ov, newPhaseIndex) -> {
+            optGameLevel().ifPresent(level -> {
+                if (newPhaseIndex.intValue() > 0) {
+                    level.ghosts(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE)
+                        .forEach(Ghost::requestTurnBack);
+                }
+            });
+            huntingTimer.logPhaseChange();
+        });
+        return huntingTimer;
     }
 
     /**
