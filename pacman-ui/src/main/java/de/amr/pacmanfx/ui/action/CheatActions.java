@@ -24,7 +24,9 @@ public final class CheatActions {
         @Override
         public void execute(GameUI ui) {
             final Game game = ui.context().currentGame();
-            game.cheatUsedProperty().set(true);
+            if (game.optGameLevel().isPresent() && !game.level().isDemoLevel()) {
+                game.cheatUsedProperty().set(true);
+            }
             game.addLives(3);
             ui.showFlashMessage(ui.assets().translated("cheat_add_lives", ui.context().currentGame().lifeCount()));
         }
@@ -37,7 +39,9 @@ public final class CheatActions {
         @Override
         public void execute(GameUI ui) {
             final Game game = ui.context().currentGame();
-            game.cheatUsedProperty().set(true);
+            if (game.optGameLevel().isPresent() && !game.level().isDemoLevel()) {
+                game.cheatUsedProperty().set(true);
+            }
             game.level().worldMap().foodLayer().eatPellets();
             ui.soundManager().pause(SoundID.PAC_MAN_MUNCHING); //TODO check this
             game.publishGameEvent(GameEvent.Type.PAC_FOUND_FOOD);
@@ -56,7 +60,9 @@ public final class CheatActions {
         public void execute(GameUI ui) {
             final Game game = ui.context().currentGame();
             final GameLevel gameLevel = game.level();
-            game.cheatUsedProperty().set(true);
+            if (game.optGameLevel().isPresent() && !game.level().isDemoLevel()) {
+                game.cheatUsedProperty().set(true);
+            }
             final List<Ghost> vulnerableGhosts = gameLevel.ghosts(FRIGHTENED, HUNTING_PAC).toList();
             if (!vulnerableGhosts.isEmpty()) {
                 gameLevel.energizerVictims().clear(); // resets value of next killed ghost to 200
@@ -77,7 +83,9 @@ public final class CheatActions {
         @Override
         public void execute(GameUI ui) {
             final Game game = ui.context().currentGame();
-            game.cheatUsedProperty().set(true);
+            if (game.optGameLevel().isPresent() && !game.level().isDemoLevel()) {
+                game.cheatUsedProperty().set(true);
+            }
             game.control().enterStateNamed(GameControl.StateName.LEVEL_COMPLETE.name());
         }
 
@@ -95,7 +103,9 @@ public final class CheatActions {
         @Override
         public void execute(GameUI ui) {
             final Game game = ui.context().currentGame();
-            game.cheatUsedProperty().set(true);
+            if (game.optGameLevel().isPresent() && !game.level().isDemoLevel()) {
+                game.cheatUsedProperty().set(true);
+            }
             toggle(game.usingAutopilotProperty());
             boolean autoPilotOn = game.usingAutopilot();
             ui.soundManager().playVoice(autoPilotOn ? SoundID.VOICE_AUTOPILOT_ON : SoundID.VOICE_AUTOPILOT_OFF, 0);
@@ -107,7 +117,9 @@ public final class CheatActions {
         @Override
         public void execute(GameUI ui) {
             final Game game = ui.context().currentGame();
-            game.cheatUsedProperty().set(true);
+            if (game.optGameLevel().isPresent() && !game.level().isDemoLevel()) {
+                game.cheatUsedProperty().set(true);
+            }
             toggle(game.immuneProperty());
             boolean immunityOn = game.immuneProperty().get();
             ui.soundManager().playVoice(immunityOn ? SoundID.VOICE_IMMUNITY_ON : SoundID.VOICE_IMMUNITY_OFF, 0);
