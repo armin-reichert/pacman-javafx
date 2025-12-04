@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.sound;
 
 import de.amr.pacmanfx.lib.Disposable;
+import javafx.animation.PauseTransition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -201,17 +202,24 @@ public class SoundManager implements Disposable {
         Logger.debug("All sounds (media players, siren, voice) stopped");
     }
 
-    public void playVoice(SoundID id) {
+    public void playVoiceAfterSec(float delaySeconds, SoundID id) {
         requireNonNull(id);
         if (!id.isVoiceID()) {
             Logger.error("Sound ID '{}' is no voice ID", id);
         }
         Object value = soundMap.get(id);
         if (value instanceof MediaPlayer mediaPlayer) {
-            currentVoice = mediaPlayer;
-            currentVoice.seek(Duration.ZERO);
-            Logger.info("Play voice");
-            currentVoice.play();
+            currentVoice = new MediaPlayer(mediaPlayer.getMedia()); // copy to make delayed playing work
+            if (delaySeconds > 0) {
+                currentVoice.setOnReady(() -> {
+                    final var delay = new PauseTransition(Duration.seconds(delaySeconds));
+                    delay.setOnFinished(e -> currentVoice.play());
+                    delay.play();
+                });
+            }
+            else {
+                currentVoice.play();
+            }
         }
     }
 
