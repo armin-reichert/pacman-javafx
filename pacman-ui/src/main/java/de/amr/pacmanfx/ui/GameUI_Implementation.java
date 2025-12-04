@@ -139,7 +139,7 @@ public final class GameUI_Implementation implements GameUI {
             currentViewProperty(),
             playView.currentGameSceneProperty(),
             scene.heightProperty(),
-            context().gameVariantNameProperty(),
+            gameContext.gameVariantNameProperty(),
             PROPERTY_DEBUG_INFO_VISIBLE,
             PROPERTY_3D_ENABLED,
             clock().pausedProperty()
@@ -271,7 +271,7 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     private void doSimulationStepAndUpdateGameScene() {
-        final Game game = context().currentGame();
+        final Game game = gameContext.currentGame();
         try {
             final SimulationStepResult events = game.simulationStepResult();
             events.reset();
@@ -372,7 +372,7 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public void quitCurrentGameScene() {
-        final Game game = context().currentGame();
+        final Game game = gameContext.currentGame();
 
         clock.stop();
         clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
@@ -384,8 +384,8 @@ public final class GameUI_Implementation implements GameUI {
             gameScene.end(game);
             boolean shouldConsumeCoin = game.control().state().name().equals("STARTING_GAME_OR_LEVEL")
                 || game.isPlaying();
-            if (shouldConsumeCoin && !context().coinMechanism().noCoin()) {
-                context().coinMechanism().consumeCoin();
+            if (shouldConsumeCoin && !gameContext.coinMechanism().noCoin()) {
+                gameContext.coinMechanism().consumeCoin();
             }
             Logger.info("Quit game scene ({}), returning to start view", gameScene.getClass().getSimpleName());
         });
@@ -396,7 +396,7 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public void restart() {
-        final Game game = context().currentGame();
+        final Game game = gameContext.currentGame();
 
         clock.stop();
         clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
@@ -413,14 +413,14 @@ public final class GameUI_Implementation implements GameUI {
             return;
         }
 
-        String previousVariant = context().gameVariantName();
-        if (gameVariantName.equals(previousVariant)) {
+        String prevVariantName = gameContext.gameVariantName();
+        if (gameVariantName.equals(prevVariantName)) {
             return;
         }
 
-        if (previousVariant != null) {
-            GameUI_Config previousConfig = config(previousVariant);
-            Logger.info("Unloading assets for game variant {}", previousVariant);
+        if (prevVariantName != null) {
+            GameUI_Config previousConfig = config(prevVariantName);
+            Logger.info("Unloading assets for game variant {}", prevVariantName);
             previousConfig.dispose();
         }
 
@@ -437,7 +437,7 @@ public final class GameUI_Implementation implements GameUI {
         }
 
         // this triggers a game event and the event handlers:
-        context().gameVariantNameProperty().set(gameVariantName);
+        gameContext.gameVariantNameProperty().set(gameVariantName);
     }
 
     @Override
@@ -492,7 +492,7 @@ public final class GameUI_Implementation implements GameUI {
     @Override
     public void showEditorView() {
         if (!gameContext.currentGame().isPlaying() || clock.isPaused()) {
-            currentGameScene().ifPresent(gameScene -> gameScene.end(context().currentGame()));
+            currentGameScene().ifPresent(gameScene -> gameScene.end(gameContext.currentGame()));
             soundManager().stopAll();
             clock.stop();
             getOrCreateEditView().editor().start();
@@ -505,7 +505,7 @@ public final class GameUI_Implementation implements GameUI {
     @Override
     public void showPlayView() {
         selectView(playView());
-        final Game game = context().currentGame();
+        final Game game = gameContext.currentGame();
         statusIconBox.iconAutopilot().visibleProperty().bind(game.usingAutopilotProperty());
         statusIconBox.iconCheated()  .visibleProperty().bind(game.cheatUsedProperty());
         statusIconBox.iconImmune()   .visibleProperty().bind(game.immuneProperty());
@@ -538,7 +538,7 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public void updateGameScene(boolean forceReloading) {
-        playView.updateGameScene(context().currentGame(), forceReloading);
+        playView.updateGameScene(gameContext.currentGame(), forceReloading);
     }
 
     // GameUI_ConfigManager interface
