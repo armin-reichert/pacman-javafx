@@ -209,6 +209,7 @@ public class SoundManager implements Disposable {
         Object value = soundMap.get(id);
         if (value instanceof MediaPlayer mediaPlayer) {
             currentVoice = mediaPlayer;
+            currentVoice.seek(Duration.ZERO);
             currentVoice.setStartTime(Duration.seconds(delaySeconds));
             Logger.info("Play voice");
             currentVoice.play();
