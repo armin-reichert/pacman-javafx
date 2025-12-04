@@ -371,4 +371,10 @@ public abstract class AbstractGameModel implements Game {
             publishGameEvent(GameEvent.Type.PAC_LOST_POWER);
         }
     }
+
+    protected void updateCheatingProperties(GameLevel level) {
+        level.pac().immuneProperty().bind(immunityProperty());
+        level.pac().usingAutopilotProperty().bind(usingAutopilotProperty());
+        cheatUsedProperty().set(immunity() || usingAutopilot());
+    }
 }

@@ -343,6 +343,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             showLevelMessage(MessageType.READY);
             levelCounter().update(level.number(), level.bonusSymbol(0));
             scoreManager.score().setEnabled(true);
+            updateCheatingProperties(level);
             Logger.info("Level {} started", level.number());
         }
         // Note: This event is very important because it triggers the creation of the actor animations!

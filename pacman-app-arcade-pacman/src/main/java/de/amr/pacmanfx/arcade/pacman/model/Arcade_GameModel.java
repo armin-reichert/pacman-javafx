@@ -261,12 +261,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             publishGameEvent(GameEvent.Type.GAME_STARTED);
         }
         else if (tick == 2) {
-            if (!level().isDemoLevel()) {
-                level().pac().immuneProperty().bind(immunityProperty());
-                level().pac().usingAutopilotProperty().bind(usingAutopilotProperty());
-                boolean cheating = immunity() || usingAutopilot();
-                cheatUsedProperty().set(cheating);
-            }
             startLevel();
         }
         else if (tick == TICK_NEW_GAME_SHOW_GUYS) {
@@ -405,6 +399,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             showLevelMessage(MessageType.READY);
             levelCounter().update(level.number(), level.bonusSymbol(0));
             scoreManager.score().setEnabled(true);
+            updateCheatingProperties(level);
             Logger.info("Level {} started", level.number());
         }
         // Note: This event is very important because it triggers the creation of the actor animations!
