@@ -200,11 +200,6 @@ public class PlayView extends StackPane implements GameUI_View {
     }
 
     @Override
-    public StackPane root() {
-        return this;
-    }
-
-    @Override
     public void handleKeyboardInput(GameUI ui) {
         GameAction matchingAction = actionBindingsManager.matchingAction(ui.keyboard()).orElse(null);
         if (matchingAction != null) {
@@ -212,6 +207,20 @@ public class PlayView extends StackPane implements GameUI_View {
         } else {
             ui.currentGameScene().ifPresent(GameScene::handleKeyboardInput);
         }
+    }
+
+    @Override
+    public void onEnter() {
+        requestFocus();
+    }
+
+    @Override
+    public void onExit() {
+    }
+
+    @Override
+    public StackPane root() {
+        return this;
     }
 
     // -----------------------------------------------------------------------------------------------------------------

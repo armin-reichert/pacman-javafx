@@ -81,6 +81,15 @@ public class EditorView implements GameUI_View {
     public ActionBindingsManager actionBindingsManager() { return ActionBindingsManager.EMPTY; }
 
     @Override
+    public void onEnter() {
+        editor.ui().layoutPane().requestFocus();
+    }
+
+    @Override
+    public void onExit() {
+    }
+
+    @Override
     public Region root() {
         return editor.ui().layoutPane();
     }
