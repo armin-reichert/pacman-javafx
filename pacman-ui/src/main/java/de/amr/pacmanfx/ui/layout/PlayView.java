@@ -43,7 +43,6 @@ import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_AUTOPILOT;
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_IMMUNITY;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.api.GameScene_Config.*;
-import static de.amr.pacmanfx.ui.api.GameUI.*;
 import static de.amr.pacmanfx.uilib.Ufx.*;
 import static java.util.Objects.requireNonNull;
 
@@ -80,8 +79,8 @@ public class PlayView extends StackPane implements GameUI_View {
 
         miniView = new MiniGameView();
         miniView.visibleProperty().bind(Bindings.createObjectBinding(
-            () -> PROPERTY_MINI_VIEW_ON.get() && ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D),
-            PROPERTY_MINI_VIEW_ON, currentGameScene
+            () -> GameUI.PROPERTY_MINI_VIEW_ON.get() && ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D),
+                GameUI.PROPERTY_MINI_VIEW_ON, currentGameScene
         ));
 
         canvasDecorationPane.setMinScaling(0.5);
@@ -114,26 +113,26 @@ public class PlayView extends StackPane implements GameUI_View {
         dashboard.setUI(ui);
         miniView.setUI(ui);
 
-        actionBindingsManager.bind(ACTION_BOOT_SHOW_PLAY_VIEW, ACTION_BINDINGS);
-        actionBindingsManager.bind(ACTION_ENTER_FULLSCREEN, ACTION_BINDINGS);
-        actionBindingsManager.bind(ACTION_QUIT_GAME_SCENE, ACTION_BINDINGS);
-        actionBindingsManager.bind(ACTION_SHOW_HELP, ACTION_BINDINGS);
-        actionBindingsManager.bind(ACTION_SIMULATION_SLOWER, ACTION_BINDINGS);
-        actionBindingsManager.bind(ACTION_SIMULATION_SLOWEST, ACTION_BINDINGS);
-        actionBindingsManager.bind(ACTION_SIMULATION_FASTER, ACTION_BINDINGS);
-        actionBindingsManager.bind(ACTION_SIMULATION_FASTEST, ACTION_BINDINGS);
-        actionBindingsManager.bind(ACTION_SIMULATION_RESET, ACTION_BINDINGS);
-        actionBindingsManager.bind(ACTION_SIMULATION_ONE_STEP, ACTION_BINDINGS);
-        actionBindingsManager.bind(ACTION_SIMULATION_TEN_STEPS, ACTION_BINDINGS);
-        actionBindingsManager.bind(ACTION_TOGGLE_AUTOPILOT, ACTION_BINDINGS);
-        actionBindingsManager.bind(ACTION_TOGGLE_DEBUG_INFO, ACTION_BINDINGS);
-        actionBindingsManager.bind(ACTION_TOGGLE_MUTED, ACTION_BINDINGS);
-        actionBindingsManager.bind(ACTION_TOGGLE_PAUSED, ACTION_BINDINGS);
-        actionBindingsManager.bind(ACTION_TOGGLE_COLLISION_STRATEGY, ACTION_BINDINGS);
-        actionBindingsManager.bind(ACTION_TOGGLE_DASHBOARD, ACTION_BINDINGS);
-        actionBindingsManager.bind(ACTION_TOGGLE_IMMUNITY, ACTION_BINDINGS);
-        actionBindingsManager.bind(ACTION_TOGGLE_MINI_VIEW_VISIBILITY, ACTION_BINDINGS);
-        actionBindingsManager.bind(ACTION_TOGGLE_PLAY_SCENE_2D_3D, ACTION_BINDINGS);
+        actionBindingsManager.bind(ACTION_BOOT_SHOW_PLAY_VIEW, GameUI.ACTION_BINDINGS);
+        actionBindingsManager.bind(ACTION_ENTER_FULLSCREEN, GameUI.ACTION_BINDINGS);
+        actionBindingsManager.bind(ACTION_QUIT_GAME_SCENE, GameUI.ACTION_BINDINGS);
+        actionBindingsManager.bind(ACTION_SHOW_HELP, GameUI.ACTION_BINDINGS);
+        actionBindingsManager.bind(ACTION_SIMULATION_SLOWER, GameUI.ACTION_BINDINGS);
+        actionBindingsManager.bind(ACTION_SIMULATION_SLOWEST, GameUI.ACTION_BINDINGS);
+        actionBindingsManager.bind(ACTION_SIMULATION_FASTER, GameUI.ACTION_BINDINGS);
+        actionBindingsManager.bind(ACTION_SIMULATION_FASTEST, GameUI.ACTION_BINDINGS);
+        actionBindingsManager.bind(ACTION_SIMULATION_RESET, GameUI.ACTION_BINDINGS);
+        actionBindingsManager.bind(ACTION_SIMULATION_ONE_STEP, GameUI.ACTION_BINDINGS);
+        actionBindingsManager.bind(ACTION_SIMULATION_TEN_STEPS, GameUI.ACTION_BINDINGS);
+        actionBindingsManager.bind(ACTION_TOGGLE_AUTOPILOT, GameUI.ACTION_BINDINGS);
+        actionBindingsManager.bind(ACTION_TOGGLE_DEBUG_INFO, GameUI.ACTION_BINDINGS);
+        actionBindingsManager.bind(ACTION_TOGGLE_MUTED, GameUI.ACTION_BINDINGS);
+        actionBindingsManager.bind(ACTION_TOGGLE_PAUSED, GameUI.ACTION_BINDINGS);
+        actionBindingsManager.bind(ACTION_TOGGLE_COLLISION_STRATEGY, GameUI.ACTION_BINDINGS);
+        actionBindingsManager.bind(ACTION_TOGGLE_DASHBOARD, GameUI.ACTION_BINDINGS);
+        actionBindingsManager.bind(ACTION_TOGGLE_IMMUNITY, GameUI.ACTION_BINDINGS);
+        actionBindingsManager.bind(ACTION_TOGGLE_MINI_VIEW_VISIBILITY, GameUI.ACTION_BINDINGS);
+        actionBindingsManager.bind(ACTION_TOGGLE_PLAY_SCENE_2D_3D, GameUI.ACTION_BINDINGS);
     }
 
     public ObjectProperty<GameScene> currentGameSceneProperty() {
@@ -295,14 +294,14 @@ public class PlayView extends StackPane implements GameUI_View {
             if (gameScene instanceof GameScene2D gameScene2D) {
                 createCanvas();
                 gameScene2D.setCanvas(canvasDecorationPane.canvas());
-                gameScene2D.backgroundProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
+                gameScene2D.backgroundProperty().bind(GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR);
             }
             getChildren().set(0, subScene);
         }
         else if (gameScene instanceof GameScene2D gameScene2D) {
             createCanvas();
             gameScene2D.setCanvas(canvasDecorationPane.canvas());
-            gameScene2D.backgroundProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
+            gameScene2D.backgroundProperty().bind(GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR);
             Vector2i gameSceneSizePx = gameScene2D.unscaledSize();
             double aspect = (double) gameSceneSizePx.x() / gameSceneSizePx.y();
             if (ui.currentConfig().sceneConfig().canvasDecorated(gameScene)) {
@@ -311,7 +310,7 @@ public class PlayView extends StackPane implements GameUI_View {
                         scaling -> Math.min(scaling.doubleValue(), ui.preferences().getFloat("scene2d.max_scaling"))));
                 canvasDecorationPane.setUnscaledCanvasSize(gameSceneSizePx.x(), gameSceneSizePx.y());
                 canvasDecorationPane.resizeTo(parentScene.getWidth(), parentScene.getHeight());
-                canvasDecorationPane.backgroundProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR.map(Ufx::paintBackground));
+                canvasDecorationPane.backgroundProperty().bind(GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR.map(Ufx::paintBackground));
                 canvasLayer.setCenter(canvasDecorationPane);
             }
             else {
@@ -329,10 +328,10 @@ public class PlayView extends StackPane implements GameUI_View {
     }
 
     private void configurePropertyBindings() {
-        PROPERTY_CANVAS_FONT_SMOOTHING.addListener((py, ov, smooth)
+        GameUI.PROPERTY_CANVAS_FONT_SMOOTHING.addListener((py, ov, smooth)
             -> canvasDecorationPane.canvas().getGraphicsContext2D().setFontSmoothingType(smooth ? FontSmoothingType.LCD : FontSmoothingType.GRAY));
 
-        PROPERTY_DEBUG_INFO_VISIBLE.addListener((py, ov, debug)
+        GameUI.PROPERTY_DEBUG_INFO_VISIBLE.addListener((py, ov, debug)
             -> {
                canvasLayer.setBackground(debug ? paintBackground(Color.TEAL) : null);
                canvasLayer.setBorder(debug ? border(Color.LIGHTGREEN, 1) : null);
@@ -345,8 +344,8 @@ public class PlayView extends StackPane implements GameUI_View {
         dashboardAndMiniViewLayer.setLeft(dashboard);
         dashboardAndMiniViewLayer.setRight(miniView);
         dashboardAndMiniViewLayer.visibleProperty().bind(Bindings.createObjectBinding(
-            () -> dashboard.isVisible() || PROPERTY_MINI_VIEW_ON.get(),
-            dashboard.visibleProperty(), PROPERTY_MINI_VIEW_ON
+            () -> dashboard.isVisible() || GameUI.PROPERTY_MINI_VIEW_ON.get(),
+            dashboard.visibleProperty(), GameUI.PROPERTY_MINI_VIEW_ON
         ));
 
         //TODO reconsider help functionality
