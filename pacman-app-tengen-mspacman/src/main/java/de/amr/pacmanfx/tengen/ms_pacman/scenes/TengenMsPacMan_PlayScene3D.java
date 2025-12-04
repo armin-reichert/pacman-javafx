@@ -88,15 +88,15 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
             actionBindings.bind(ACTION_QUIT_DEMO_LEVEL, tengenActionBindings);
         } else {
             setPlayerSteeringActionBindings();
-            actionBindings.bind(CheatActions.ACTION_ADD_LIVES, ui.actionBindings());
-            actionBindings.bind(CheatActions.ACTION_EAT_ALL_PELLETS, ui.actionBindings());
-            actionBindings.bind(CheatActions.ACTION_ENTER_NEXT_LEVEL, ui.actionBindings());
-            actionBindings.bind(CheatActions.ACTION_KILL_GHOSTS, ui.actionBindings());
+            actionBindings.bind(CheatActions.ACTION_ADD_LIVES, GameUI.ACTION_BINDINGS);
+            actionBindings.bind(CheatActions.ACTION_EAT_ALL_PELLETS, GameUI.ACTION_BINDINGS);
+            actionBindings.bind(CheatActions.ACTION_ENTER_NEXT_LEVEL, GameUI.ACTION_BINDINGS);
+            actionBindings.bind(CheatActions.ACTION_KILL_GHOSTS, GameUI.ACTION_BINDINGS);
             actionBindings.bind(ACTION_TOGGLE_PAC_BOOSTER, tengenActionBindings);
         }
-        actionBindings.bind(ACTION_PERSPECTIVE_PREVIOUS, ui.actionBindings());
-        actionBindings.bind(ACTION_PERSPECTIVE_NEXT, ui.actionBindings());
-        actionBindings.bind(ACTION_TOGGLE_DRAW_MODE, ui.actionBindings());
+        actionBindings.bind(ACTION_PERSPECTIVE_PREVIOUS, GameUI.ACTION_BINDINGS);
+        actionBindings.bind(ACTION_PERSPECTIVE_NEXT, GameUI.ACTION_BINDINGS);
+        actionBindings.bind(ACTION_TOGGLE_DRAW_MODE, GameUI.ACTION_BINDINGS);
 
         actionBindings.assignBindingsToKeyboard(ui.keyboard());
     }

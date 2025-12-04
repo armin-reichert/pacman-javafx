@@ -12,10 +12,7 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameControl;
 import de.amr.pacmanfx.model.SimulationStepResult;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui.action.ActionBinding;
-import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
-import de.amr.pacmanfx.ui.action.TestActions;
 import de.amr.pacmanfx.ui.api.*;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.Keyboard;
@@ -36,7 +33,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Region;
@@ -50,14 +46,10 @@ import org.tinylog.Logger;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 import static de.amr.pacmanfx.Validations.requireNonNegative;
-import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_AUTOPILOT;
-import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_IMMUNITY;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.api.GameScene_Config.SCENE_ID_PLAY_SCENE_3D;
-import static de.amr.pacmanfx.ui.input.Keyboard.*;
 import static java.util.Objects.requireNonNull;
 import static javafx.beans.binding.Bindings.createStringBinding;
 
@@ -70,46 +62,6 @@ public final class GameUI_Implementation implements GameUI {
     private static final int MIN_STAGE_HEIGHT = 360;
 
     private static final int PAUSE_ICON_SIZE = 80;
-
-    private static final Set<ActionBinding> DEFAULT_ACTION_BINDINGS = Set.of(
-
-        new ActionBinding(CheatActions.ACTION_EAT_ALL_PELLETS,     alt(KeyCode.E)),
-        new ActionBinding(CheatActions.ACTION_ADD_LIVES,           alt(KeyCode.L)),
-        new ActionBinding(CheatActions.ACTION_ENTER_NEXT_LEVEL,    alt(KeyCode.N)),
-        new ActionBinding(CheatActions.ACTION_KILL_GHOSTS,         alt(KeyCode.X)),
-
-        new ActionBinding(ACTION_BOOT_SHOW_PLAY_VIEW,              bare(KeyCode.F3)),
-        new ActionBinding(ACTION_ENTER_FULLSCREEN,                 bare(KeyCode.F11)),
-        new ActionBinding(ACTION_OPEN_EDITOR,                      alt_shift(KeyCode.E)),
-        new ActionBinding(ACTION_PERSPECTIVE_PREVIOUS,             alt(KeyCode.LEFT)),
-        new ActionBinding(ACTION_PERSPECTIVE_NEXT,                 alt(KeyCode.RIGHT)),
-        new ActionBinding(ACTION_SHOW_HELP,                        bare(KeyCode.H)),
-        new ActionBinding(ACTION_STEER_UP,                         bare(KeyCode.UP), control(KeyCode.UP)),
-        new ActionBinding(ACTION_STEER_DOWN,                       bare(KeyCode.DOWN), control(KeyCode.DOWN)),
-        new ActionBinding(ACTION_STEER_LEFT,                       bare(KeyCode.LEFT), control(KeyCode.LEFT)),
-        new ActionBinding(ACTION_STEER_RIGHT,                      bare(KeyCode.RIGHT), control(KeyCode.RIGHT)),
-        new ActionBinding(ACTION_QUIT_GAME_SCENE,                  bare(KeyCode.Q)),
-        new ActionBinding(ACTION_SIMULATION_SLOWER,                alt(KeyCode.MINUS)),
-        new ActionBinding(ACTION_SIMULATION_SLOWEST,               alt_shift(KeyCode.MINUS)),
-        new ActionBinding(ACTION_SIMULATION_FASTER,                alt(KeyCode.PLUS)),
-        new ActionBinding(ACTION_SIMULATION_FASTEST,               alt_shift(KeyCode.PLUS)),
-        new ActionBinding(ACTION_SIMULATION_RESET,                 alt(KeyCode.DIGIT0)),
-        new ActionBinding(ACTION_SIMULATION_ONE_STEP,              shift(KeyCode.P), shift(KeyCode.F5)),
-        new ActionBinding(ACTION_SIMULATION_TEN_STEPS,             shift(KeyCode.SPACE)),
-        new ActionBinding(TestActions.ACTION_CUT_SCENES_TEST,      alt(KeyCode.C)),
-        new ActionBinding(TestActions.ACTION_SHORT_LEVEL_TEST,     alt(KeyCode.T)),
-        new ActionBinding(TestActions.ACTION_MEDIUM_LEVEL_TEST,    alt_shift(KeyCode.T)),
-        new ActionBinding(ACTION_TOGGLE_AUTOPILOT,                 alt(KeyCode.A)),
-        new ActionBinding(ACTION_TOGGLE_COLLISION_STRATEGY,        alt(KeyCode.S)),
-        new ActionBinding(ACTION_TOGGLE_DEBUG_INFO,                alt(KeyCode.D)),
-        new ActionBinding(ACTION_TOGGLE_MUTED,                     alt(KeyCode.M)),
-        new ActionBinding(ACTION_TOGGLE_PAUSED,                    bare(KeyCode.P), bare(KeyCode.F5)),
-        new ActionBinding(ACTION_TOGGLE_DASHBOARD,                 bare(KeyCode.F1), alt(KeyCode.B)),
-        new ActionBinding(ACTION_TOGGLE_IMMUNITY,                  alt(KeyCode.I)),
-        new ActionBinding(ACTION_TOGGLE_MINI_VIEW_VISIBILITY,      bare(KeyCode.F2)),
-        new ActionBinding(ACTION_TOGGLE_PLAY_SCENE_2D_3D,          alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3)),
-        new ActionBinding(ACTION_TOGGLE_DRAW_MODE,                 alt(KeyCode.W))
-    );
 
     private final GlobalGameAssets assets;
     private final GameClock clock;
@@ -207,9 +159,9 @@ public final class GameUI_Implementation implements GameUI {
         stage.setMinHeight(MIN_STAGE_HEIGHT);
         stage.titleProperty().bind(titleBinding);
 
-        actionBindings.bind(ACTION_ENTER_FULLSCREEN, DEFAULT_ACTION_BINDINGS);
-        actionBindings.bind(ACTION_OPEN_EDITOR, DEFAULT_ACTION_BINDINGS);
-        actionBindings.bind(ACTION_TOGGLE_MUTED, DEFAULT_ACTION_BINDINGS);
+        actionBindings.bind(ACTION_ENTER_FULLSCREEN, GameUI.ACTION_BINDINGS);
+        actionBindings.bind(ACTION_OPEN_EDITOR,      GameUI.ACTION_BINDINGS);
+        actionBindings.bind(ACTION_TOGGLE_MUTED,     GameUI.ACTION_BINDINGS);
         actionBindings.assignBindingsToKeyboard(keyboard);
     }
 
@@ -360,11 +312,6 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     // GameUI interface
-
-    @Override
-    public Set<ActionBinding> actionBindings() {
-        return DEFAULT_ACTION_BINDINGS;
-    }
 
     @Override
     public GlobalGameAssets assets() {

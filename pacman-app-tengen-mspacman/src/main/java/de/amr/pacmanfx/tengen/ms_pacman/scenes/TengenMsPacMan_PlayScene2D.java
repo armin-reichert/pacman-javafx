@@ -166,10 +166,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
             actionBindings.bind(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, tengenBindings);
             actionBindings.bind(ACTION_TOGGLE_PAC_BOOSTER, tengenBindings);
 
-            actionBindings.bind(CheatActions.ACTION_ADD_LIVES,        ui.actionBindings());
-            actionBindings.bind(CheatActions.ACTION_EAT_ALL_PELLETS,  ui.actionBindings());
-            actionBindings.bind(CheatActions.ACTION_ENTER_NEXT_LEVEL, ui.actionBindings());
-            actionBindings.bind(CheatActions.ACTION_KILL_GHOSTS,      ui.actionBindings());
+            actionBindings.bind(CheatActions.ACTION_ADD_LIVES,        GameUI.ACTION_BINDINGS);
+            actionBindings.bind(CheatActions.ACTION_EAT_ALL_PELLETS,  GameUI.ACTION_BINDINGS);
+            actionBindings.bind(CheatActions.ACTION_ENTER_NEXT_LEVEL, GameUI.ACTION_BINDINGS);
+            actionBindings.bind(CheatActions.ACTION_KILL_GHOSTS,      GameUI.ACTION_BINDINGS);
         }
         actionBindings.assignBindingsToKeyboard(ui.keyboard());
     }

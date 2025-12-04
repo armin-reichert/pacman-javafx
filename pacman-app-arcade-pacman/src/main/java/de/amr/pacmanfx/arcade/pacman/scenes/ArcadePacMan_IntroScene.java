@@ -125,9 +125,9 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         actionBindings.addKeyCombination(ArcadeActions.ACTION_START_GAME, bare(KeyCode.DIGIT1));
         actionBindings.addKeyCombination(ArcadeActions.ACTION_START_GAME, bare(KeyCode.NUMPAD1));
 
-        actionBindings.bind(TestActions.ACTION_CUT_SCENES_TEST, ui.actionBindings());
-        actionBindings.bind(TestActions.ACTION_SHORT_LEVEL_TEST, ui.actionBindings());
-        actionBindings.bind(TestActions.ACTION_MEDIUM_LEVEL_TEST, ui.actionBindings());
+        actionBindings.bind(TestActions.ACTION_CUT_SCENES_TEST, GameUI.ACTION_BINDINGS);
+        actionBindings.bind(TestActions.ACTION_SHORT_LEVEL_TEST, GameUI.ACTION_BINDINGS);
+        actionBindings.bind(TestActions.ACTION_MEDIUM_LEVEL_TEST, GameUI.ACTION_BINDINGS);
 
         blinking = new Pulse(10, Pulse.State.ON);
 

@@ -54,7 +54,7 @@ public class PlayView extends StackPane implements GameUI_View {
 
     private final ObjectProperty<GameScene> currentGameScene = new SimpleObjectProperty<>();
 
-    private final ActionBindingsManager actionBindings = new DefaultActionBindingsManager();
+    private final ActionBindingsManager actionBindingsManager = new DefaultActionBindingsManager();
     private final Scene parentScene;
     private final Dashboard dashboard;
     private final CanvasDecorationPane canvasDecorationPane = new CanvasDecorationPane();
@@ -114,26 +114,26 @@ public class PlayView extends StackPane implements GameUI_View {
         dashboard.setUI(ui);
         miniView.setUI(ui);
 
-        actionBindings.bind(ACTION_BOOT_SHOW_PLAY_VIEW, ui.actionBindings());
-        actionBindings.bind(ACTION_ENTER_FULLSCREEN, ui.actionBindings());
-        actionBindings.bind(ACTION_QUIT_GAME_SCENE, ui.actionBindings());
-        actionBindings.bind(ACTION_SHOW_HELP, ui.actionBindings());
-        actionBindings.bind(ACTION_SIMULATION_SLOWER, ui.actionBindings());
-        actionBindings.bind(ACTION_SIMULATION_SLOWEST, ui.actionBindings());
-        actionBindings.bind(ACTION_SIMULATION_FASTER, ui.actionBindings());
-        actionBindings.bind(ACTION_SIMULATION_FASTEST, ui.actionBindings());
-        actionBindings.bind(ACTION_SIMULATION_RESET, ui.actionBindings());
-        actionBindings.bind(ACTION_SIMULATION_ONE_STEP, ui.actionBindings());
-        actionBindings.bind(ACTION_SIMULATION_TEN_STEPS, ui.actionBindings());
-        actionBindings.bind(ACTION_TOGGLE_AUTOPILOT, ui.actionBindings());
-        actionBindings.bind(ACTION_TOGGLE_DEBUG_INFO, ui.actionBindings());
-        actionBindings.bind(ACTION_TOGGLE_MUTED, ui.actionBindings());
-        actionBindings.bind(ACTION_TOGGLE_PAUSED, ui.actionBindings());
-        actionBindings.bind(ACTION_TOGGLE_COLLISION_STRATEGY, ui.actionBindings());
-        actionBindings.bind(ACTION_TOGGLE_DASHBOARD, ui.actionBindings());
-        actionBindings.bind(ACTION_TOGGLE_IMMUNITY, ui.actionBindings());
-        actionBindings.bind(ACTION_TOGGLE_MINI_VIEW_VISIBILITY, ui.actionBindings());
-        actionBindings.bind(ACTION_TOGGLE_PLAY_SCENE_2D_3D, ui.actionBindings());
+        actionBindingsManager.bind(ACTION_BOOT_SHOW_PLAY_VIEW, ACTION_BINDINGS);
+        actionBindingsManager.bind(ACTION_ENTER_FULLSCREEN, ACTION_BINDINGS);
+        actionBindingsManager.bind(ACTION_QUIT_GAME_SCENE, ACTION_BINDINGS);
+        actionBindingsManager.bind(ACTION_SHOW_HELP, ACTION_BINDINGS);
+        actionBindingsManager.bind(ACTION_SIMULATION_SLOWER, ACTION_BINDINGS);
+        actionBindingsManager.bind(ACTION_SIMULATION_SLOWEST, ACTION_BINDINGS);
+        actionBindingsManager.bind(ACTION_SIMULATION_FASTER, ACTION_BINDINGS);
+        actionBindingsManager.bind(ACTION_SIMULATION_FASTEST, ACTION_BINDINGS);
+        actionBindingsManager.bind(ACTION_SIMULATION_RESET, ACTION_BINDINGS);
+        actionBindingsManager.bind(ACTION_SIMULATION_ONE_STEP, ACTION_BINDINGS);
+        actionBindingsManager.bind(ACTION_SIMULATION_TEN_STEPS, ACTION_BINDINGS);
+        actionBindingsManager.bind(ACTION_TOGGLE_AUTOPILOT, ACTION_BINDINGS);
+        actionBindingsManager.bind(ACTION_TOGGLE_DEBUG_INFO, ACTION_BINDINGS);
+        actionBindingsManager.bind(ACTION_TOGGLE_MUTED, ACTION_BINDINGS);
+        actionBindingsManager.bind(ACTION_TOGGLE_PAUSED, ACTION_BINDINGS);
+        actionBindingsManager.bind(ACTION_TOGGLE_COLLISION_STRATEGY, ACTION_BINDINGS);
+        actionBindingsManager.bind(ACTION_TOGGLE_DASHBOARD, ACTION_BINDINGS);
+        actionBindingsManager.bind(ACTION_TOGGLE_IMMUNITY, ACTION_BINDINGS);
+        actionBindingsManager.bind(ACTION_TOGGLE_MINI_VIEW_VISIBILITY, ACTION_BINDINGS);
+        actionBindingsManager.bind(ACTION_TOGGLE_PLAY_SCENE_2D_3D, ACTION_BINDINGS);
     }
 
     public ObjectProperty<GameScene> currentGameSceneProperty() {
@@ -197,7 +197,7 @@ public class PlayView extends StackPane implements GameUI_View {
 
     @Override
     public ActionBindingsManager actionBindingsManager() {
-        return actionBindings;
+        return actionBindingsManager;
     }
 
     @Override
@@ -207,7 +207,7 @@ public class PlayView extends StackPane implements GameUI_View {
 
     @Override
     public void handleKeyboardInput(GameUI ui) {
-        GameAction matchingAction = actionBindings.matchingAction(ui.keyboard()).orElse(null);
+        GameAction matchingAction = actionBindingsManager.matchingAction(ui.keyboard()).orElse(null);
         if (matchingAction != null) {
             matchingAction.executeIfEnabled(ui);
         } else {

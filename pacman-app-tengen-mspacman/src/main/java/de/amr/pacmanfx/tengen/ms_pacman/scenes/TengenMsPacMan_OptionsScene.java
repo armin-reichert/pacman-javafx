@@ -101,9 +101,9 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         actionBindings.addKeyCombination(actionSelectNextJoypadBinding, alt(KeyCode.J)); //TODO
         actionBindings.bind(ACTION_START_PLAYING, tengenActionBindings);
         actionBindings.bind(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, tengenActionBindings);
-        actionBindings.bind(TestActions.ACTION_CUT_SCENES_TEST, ui.actionBindings());
-        actionBindings.bind(TestActions.ACTION_SHORT_LEVEL_TEST, ui.actionBindings());
-        actionBindings.bind(TestActions.ACTION_MEDIUM_LEVEL_TEST, ui.actionBindings());
+        actionBindings.bind(TestActions.ACTION_CUT_SCENES_TEST, GameUI.ACTION_BINDINGS);
+        actionBindings.bind(TestActions.ACTION_SHORT_LEVEL_TEST, GameUI.ACTION_BINDINGS);
+        actionBindings.bind(TestActions.ACTION_MEDIUM_LEVEL_TEST, GameUI.ACTION_BINDINGS);
         ui.joypad().setBindings(actionBindings);
 
         selectedOption.set(OPTION_PAC_BOOSTER);

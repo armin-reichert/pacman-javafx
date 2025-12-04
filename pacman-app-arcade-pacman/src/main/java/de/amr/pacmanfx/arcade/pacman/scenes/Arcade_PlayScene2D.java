@@ -111,14 +111,14 @@ public class Arcade_PlayScene2D extends GameScene2D {
             ui.soundManager().setEnabled(false);
         } else {
             context().currentGame().hud().creditVisible(false).levelCounterVisible(true).livesCounterVisible(true);
-            actionBindings.bind(CommonGameActions.ACTION_STEER_UP,    ui.actionBindings());
-            actionBindings.bind(CommonGameActions.ACTION_STEER_DOWN,  ui.actionBindings());
-            actionBindings.bind(CommonGameActions.ACTION_STEER_LEFT,  ui.actionBindings());
-            actionBindings.bind(CommonGameActions.ACTION_STEER_RIGHT, ui.actionBindings());
-            actionBindings.bind(CheatActions.ACTION_ADD_LIVES,        ui.actionBindings());
-            actionBindings.bind(CheatActions.ACTION_EAT_ALL_PELLETS,  ui.actionBindings());
-            actionBindings.bind(CheatActions.ACTION_ENTER_NEXT_LEVEL, ui.actionBindings());
-            actionBindings.bind(CheatActions.ACTION_KILL_GHOSTS,      ui.actionBindings());
+            actionBindings.bind(CommonGameActions.ACTION_STEER_UP,    GameUI.ACTION_BINDINGS);
+            actionBindings.bind(CommonGameActions.ACTION_STEER_DOWN,  GameUI.ACTION_BINDINGS);
+            actionBindings.bind(CommonGameActions.ACTION_STEER_LEFT,  GameUI.ACTION_BINDINGS);
+            actionBindings.bind(CommonGameActions.ACTION_STEER_RIGHT, GameUI.ACTION_BINDINGS);
+            actionBindings.bind(CheatActions.ACTION_ADD_LIVES,        GameUI.ACTION_BINDINGS);
+            actionBindings.bind(CheatActions.ACTION_EAT_ALL_PELLETS,  GameUI.ACTION_BINDINGS);
+            actionBindings.bind(CheatActions.ACTION_ENTER_NEXT_LEVEL, GameUI.ACTION_BINDINGS);
+            actionBindings.bind(CheatActions.ACTION_KILL_GHOSTS,      GameUI.ACTION_BINDINGS);
             ui.soundManager().setEnabled(true);
         }
         actionBindings.assignBindingsToKeyboard(ui.keyboard());

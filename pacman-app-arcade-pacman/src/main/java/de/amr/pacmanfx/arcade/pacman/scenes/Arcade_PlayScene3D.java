@@ -23,9 +23,9 @@ public class Arcade_PlayScene3D extends PlayScene3D {
     protected void setActionBindings() {
         final Game game = context().currentGame();
         actionBindings.removeBindingsFromKeyboard(ui.keyboard());
-        actionBindings.bind(ACTION_PERSPECTIVE_PREVIOUS, ui.actionBindings());
-        actionBindings.bind(ACTION_PERSPECTIVE_NEXT, ui.actionBindings());
-        actionBindings.bind(ACTION_TOGGLE_DRAW_MODE, ui.actionBindings());
+        actionBindings.bind(ACTION_PERSPECTIVE_PREVIOUS, GameUI.ACTION_BINDINGS);
+        actionBindings.bind(ACTION_PERSPECTIVE_NEXT, GameUI.ACTION_BINDINGS);
+        actionBindings.bind(ACTION_TOGGLE_DRAW_MODE, GameUI.ACTION_BINDINGS);
         if (game.optGameLevel().isPresent()) {
             if (game.level().isDemoLevel()) {
                 actionBindings.addKeyCombination(ArcadeActions.ACTION_INSERT_COIN, bare(KeyCode.DIGIT5));
@@ -34,10 +34,10 @@ public class Arcade_PlayScene3D extends PlayScene3D {
                 actionBindings.addKeyCombination(ArcadeActions.ACTION_START_GAME,  bare(KeyCode.NUMPAD1));
             } else {
                 setPlayerSteeringActionBindings();
-                actionBindings.bind(CheatActions.ACTION_EAT_ALL_PELLETS, ui.actionBindings());
-                actionBindings.bind(CheatActions.ACTION_ADD_LIVES, ui.actionBindings());
-                actionBindings.bind(CheatActions.ACTION_ENTER_NEXT_LEVEL, ui.actionBindings());
-                actionBindings.bind(CheatActions.ACTION_KILL_GHOSTS, ui.actionBindings());
+                actionBindings.bind(CheatActions.ACTION_EAT_ALL_PELLETS, GameUI.ACTION_BINDINGS);
+                actionBindings.bind(CheatActions.ACTION_ADD_LIVES, GameUI.ACTION_BINDINGS);
+                actionBindings.bind(CheatActions.ACTION_ENTER_NEXT_LEVEL, GameUI.ACTION_BINDINGS);
+                actionBindings.bind(CheatActions.ACTION_KILL_GHOSTS, GameUI.ACTION_BINDINGS);
             }
         }
         actionBindings.assignBindingsToKeyboard(ui.keyboard());
@@ -47,9 +47,9 @@ public class Arcade_PlayScene3D extends PlayScene3D {
      * Overridden by "Tengen Ms. Pac-Man" subclass to bind to keys representing the Joypad buttons.
      */
     protected void setPlayerSteeringActionBindings() {
-        actionBindings.bind(ACTION_STEER_UP,    ui.actionBindings());
-        actionBindings.bind(ACTION_STEER_DOWN,  ui.actionBindings());
-        actionBindings.bind(ACTION_STEER_LEFT,  ui.actionBindings());
-        actionBindings.bind(ACTION_STEER_RIGHT, ui.actionBindings());
+        actionBindings.bind(ACTION_STEER_UP,    GameUI.ACTION_BINDINGS);
+        actionBindings.bind(ACTION_STEER_DOWN,  GameUI.ACTION_BINDINGS);
+        actionBindings.bind(ACTION_STEER_LEFT,  GameUI.ACTION_BINDINGS);
+        actionBindings.bind(ACTION_STEER_RIGHT, GameUI.ACTION_BINDINGS);
     }
 }

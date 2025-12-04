@@ -110,9 +110,9 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         actionBindings.addKeyCombination(ArcadeActions.ACTION_START_GAME, bare(KeyCode.DIGIT1));
         actionBindings.addKeyCombination(ArcadeActions.ACTION_START_GAME, bare(KeyCode.NUMPAD1));
 
-        actionBindings.bind(TestActions.ACTION_CUT_SCENES_TEST, ui.actionBindings());
-        actionBindings.bind(TestActions.ACTION_SHORT_LEVEL_TEST, ui.actionBindings());
-        actionBindings.bind(TestActions.ACTION_MEDIUM_LEVEL_TEST, ui.actionBindings());
+        actionBindings.bind(TestActions.ACTION_CUT_SCENES_TEST, GameUI.ACTION_BINDINGS);
+        actionBindings.bind(TestActions.ACTION_SHORT_LEVEL_TEST, GameUI.ACTION_BINDINGS);
+        actionBindings.bind(TestActions.ACTION_MEDIUM_LEVEL_TEST, GameUI.ACTION_BINDINGS);
 
         marquee = new Marquee(60, 88, 132, 60, 96, 6, 16);
         marquee.setBulbOffColor(ARCADE_RED);
