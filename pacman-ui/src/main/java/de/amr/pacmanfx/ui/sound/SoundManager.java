@@ -201,7 +201,7 @@ public class SoundManager implements Disposable {
         Logger.debug("All sounds (media players, siren, voice) stopped");
     }
 
-    public void playVoice(SoundID id, double delaySeconds) {
+    public void playVoice(SoundID id) {
         requireNonNull(id);
         if (!id.isVoiceID()) {
             Logger.error("Sound ID '{}' is no voice ID", id);
@@ -210,7 +210,6 @@ public class SoundManager implements Disposable {
         if (value instanceof MediaPlayer mediaPlayer) {
             currentVoice = mediaPlayer;
             currentVoice.seek(Duration.ZERO);
-            currentVoice.setStartTime(Duration.seconds(delaySeconds));
             Logger.info("Play voice");
             currentVoice.play();
         }

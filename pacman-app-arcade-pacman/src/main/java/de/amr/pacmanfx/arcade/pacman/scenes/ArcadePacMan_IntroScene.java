@@ -151,7 +151,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         ghostIndex = 0;
         ghostKilledTime = 0;
 
-        ui.soundManager().playVoice(SoundID.VOICE_EXPLAIN, 0);
+        ui.soundManager().playVoice(SoundID.VOICE_EXPLAIN);
 
         sceneController.restart(SceneState.STARTING);
     }
