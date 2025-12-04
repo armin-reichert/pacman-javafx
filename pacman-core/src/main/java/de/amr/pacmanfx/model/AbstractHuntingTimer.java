@@ -89,19 +89,19 @@ public abstract class AbstractHuntingTimer {
     public void startFirstPhase(int levelNumber) {
         requireValidLevelNumber(levelNumber);
         startPhase(levelNumber, 0);
-        logPhaseChange();
+        logPhase();
     }
 
-    public void logPhaseChange() {
+    public void logPhase() {
         Logger.info("Hunting phase {} ({}, {} ticks / {} seconds). {}",
-            phaseIndex(), phase(), tickTimer.durationTicks(),
-            (float) tickTimer.durationTicks() / Globals.NUM_TICKS_PER_SEC, this);
+            phaseIndex(), phase().name(),
+            tickTimer.durationTicks(), (float) tickTimer.durationTicks() / Globals.NUM_TICKS_PER_SEC,
+            this);
     }
 
     protected void startPhase(int levelNumber, int phaseIndex) {
         final long duration = huntingTicks(levelNumber, phaseIndex);
-        tickTimer.reset(duration);
-        tickTimer.start();
+        tickTimer.restartTicks(duration);
         phaseIndexProperty().set(phaseIndex);
     }
 

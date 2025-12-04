@@ -179,7 +179,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
                         .forEach(Ghost::requestTurnBack);
                 }
             });
-            huntingTimer.logPhaseChange();
+            huntingTimer.logPhase();
         });
         return huntingTimer;
     }
