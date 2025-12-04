@@ -15,28 +15,40 @@ import java.util.Optional;
 import static de.amr.pacmanfx.Validations.requireNonNegativeInt;
 import static de.amr.pacmanfx.lib.UsefulFunctions.isEven;
 import static de.amr.pacmanfx.lib.UsefulFunctions.isOdd;
-import static java.util.Objects.requireNonNull;
 
 /**
  * Controls the timing of the hunting phases (alternating scattering and chasing).
  */
-public abstract class HuntingTimer extends TickTimer {
+public abstract class HuntingTimer {
 
+    protected final TickTimer tickTimer;
     protected final int numPhases;
     private final IntegerProperty phaseIndex = new SimpleIntegerProperty();
 
     protected HuntingTimer(String name, int numPhases) {
-        super(requireNonNull(name));
+        this.tickTimer = new TickTimer(name);
         this.numPhases = requireNonNegativeInt(numPhases);
     }
 
+    public abstract long huntingTicks(int levelNumber, int phaseIndex);
+
+    public long tickCount() {
+        return tickTimer.tickCount();
+    }
+
     public void reset() {
-        stop();
-        reset(TickTimer.INDEFINITE);
+        tickTimer.stop();
+        tickTimer.reset(TickTimer.INDEFINITE);
         phaseIndex.set(0);
     }
 
-    public abstract long huntingTicks(int levelNumber, int phaseIndex);
+    public void start() {
+        tickTimer.start();
+    }
+
+    public void stop() {
+        tickTimer.stop();
+    }
 
     public IntegerProperty phaseIndexProperty() { return phaseIndex; }
 
@@ -54,12 +66,12 @@ public abstract class HuntingTimer extends TickTimer {
         isEven(phaseIndex()) ? HuntingPhase.SCATTERING : HuntingPhase.CHASING; }
 
     public void update(int levelNumber) {
-        if (hasExpired()) {
-            Logger.info("Hunting phase {} ({}) ends, tick={}", phaseIndex(), phase(), tickCount());
+        if (tickTimer.hasExpired()) {
+            Logger.info("Hunting phase {} ({}) ends, tick={}", phaseIndex(), phase(), tickTimer.tickCount());
             int nextPhaseIndex = requireValidPhaseIndex(phaseIndex() + 1);
             startPhase(levelNumber, nextPhaseIndex);
         } else {
-            doTick();
+            tickTimer.doTick();
         }
     }
 
@@ -68,11 +80,18 @@ public abstract class HuntingTimer extends TickTimer {
         logPhaseChange(); // no change event!
     }
 
+
+    public void logPhaseChange() {
+        Logger.info("Hunting phase {} ({}, {} ticks / {} seconds). {}",
+            phaseIndex(), phase(), tickTimer.durationTicks(),
+            (float) tickTimer.durationTicks() / Globals.NUM_TICKS_PER_SEC, this);
+    }
+
     protected void startPhase(int levelNumber, int phaseIndex) {
-        long duration = huntingTicks(levelNumber, phaseIndex);
-        reset(duration);
-        start();
-        this.phaseIndex.set(phaseIndex);
+        final long duration = huntingTicks(levelNumber, phaseIndex);
+        tickTimer.reset(duration);
+        tickTimer.start();
+        phaseIndexProperty().set(phaseIndex);
     }
 
     protected int requireValidPhaseIndex(int phaseIndex) {
@@ -82,8 +101,11 @@ public abstract class HuntingTimer extends TickTimer {
         return phaseIndex;
     }
 
-    public void logPhaseChange() {
-        Logger.info("Hunting phase {} ({}, {} ticks / {} seconds). {}",
-            phaseIndex(), phase(), durationTicks(), (float) durationTicks() / Globals.NUM_TICKS_PER_SEC, this);
+    public boolean isStopped() {
+        return tickTimer.isStopped();
+    }
+
+    public long remainingTicks() {
+        return tickTimer.remainingTicks();
     }
 }
