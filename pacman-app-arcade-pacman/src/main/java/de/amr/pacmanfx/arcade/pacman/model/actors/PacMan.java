@@ -11,5 +11,7 @@ public class PacMan extends Pac {
     PacMan() {
         super("Pac-Man");
         reset();
+        setRestingTicksAfterEnergizerEaten(3);
+        setRestingTicksAfterPelletEaten(1);
     }
 }

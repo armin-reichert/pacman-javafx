@@ -32,8 +32,12 @@ public class Pac extends MovingActor {
 
     private final BooleanProperty usingAutopilot = new SimpleBooleanProperty(false);
 
-    private int restingTicks;
+    private long restingTicks;
     private long starvingTicks;
+
+    private short restingTicksAfterEnergizerEaten = 3;
+    private short restingTicksAfterPelletEaten = 1;
+
     private Steering automaticSteering;
 
     /**
@@ -56,6 +60,14 @@ public class Pac extends MovingActor {
             ", velocity=" + velocity() +
             ", acceleration=" + acceleration() +
             '}';
+    }
+
+    public void setRestingTicksAfterEnergizerEaten(int ticks) {
+        restingTicksAfterEnergizerEaten = (short) ticks;
+    }
+
+    public void setRestingTicksAfterPelletEaten(int ticks) {
+        restingTicksAfterPelletEaten = (short) ticks;
     }
 
     public void setAutomaticSteering(Steering steering) {
@@ -175,14 +187,14 @@ public class Pac extends MovingActor {
     }
 
     public void eat(boolean energizer) {
-        setRestingTicks(energizer ? 3 : 1);
+        setRestingTicks(energizer ? restingTicksAfterEnergizerEaten : restingTicksAfterPelletEaten);
         endStarving();
     }
 
     /**
      * @return number of ticks Pac is resting
      */
-    public int restingTicks() { return restingTicks; }
+    public long restingTicks() { return restingTicks; }
 
     /**
      * Sets the number of ticks Pac-Man is resting.
