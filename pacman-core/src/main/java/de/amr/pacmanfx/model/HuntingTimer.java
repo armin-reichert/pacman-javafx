@@ -13,6 +13,7 @@ import org.tinylog.Logger;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.Validations.requireNonNegativeInt;
+import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
 import static de.amr.pacmanfx.lib.UsefulFunctions.isEven;
 import static de.amr.pacmanfx.lib.UsefulFunctions.isOdd;
 
@@ -50,6 +51,14 @@ public abstract class HuntingTimer {
         tickTimer.stop();
     }
 
+    public boolean isStopped() {
+        return tickTimer.isStopped();
+    }
+
+    public long remainingTicks() {
+        return tickTimer.remainingTicks();
+    }
+
     public IntegerProperty phaseIndexProperty() { return phaseIndex; }
 
     public int phaseIndex() { return phaseIndex.get(); }
@@ -63,9 +72,11 @@ public abstract class HuntingTimer {
     }
 
     public HuntingPhase phase() { return
-        isEven(phaseIndex()) ? HuntingPhase.SCATTERING : HuntingPhase.CHASING; }
+        isEven(phaseIndex()) ? HuntingPhase.SCATTERING : HuntingPhase.CHASING;
+    }
 
     public void update(int levelNumber) {
+        requireValidLevelNumber(levelNumber);
         if (tickTimer.hasExpired()) {
             Logger.info("Hunting phase {} ({}) ends, tick={}", phaseIndex(), phase(), tickTimer.tickCount());
             int nextPhaseIndex = requireValidPhaseIndex(phaseIndex() + 1);
@@ -76,10 +87,10 @@ public abstract class HuntingTimer {
     }
 
     public void startFirstPhase(int levelNumber) {
+        requireValidLevelNumber(levelNumber);
         startPhase(levelNumber, 0);
-        logPhaseChange(); // no change event!
+        logPhaseChange();
     }
-
 
     public void logPhaseChange() {
         Logger.info("Hunting phase {} ({}, {} ticks / {} seconds). {}",
@@ -99,13 +110,5 @@ public abstract class HuntingTimer {
             throw new IllegalArgumentException("Hunting phase index must be 0..%d, but is %d".formatted(numPhases, phaseIndex));
         }
         return phaseIndex;
-    }
-
-    public boolean isStopped() {
-        return tickTimer.isStopped();
-    }
-
-    public long remainingTicks() {
-        return tickTimer.remainingTicks();
     }
 }
