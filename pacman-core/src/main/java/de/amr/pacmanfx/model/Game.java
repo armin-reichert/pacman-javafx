@@ -40,8 +40,14 @@ public interface Game {
      */
     HUD hud();
 
+    /**
+     * @return the score of the currently played game
+     */
     Score score();
 
+    /**
+     * @return the high score of the current game variant
+     */
     Score highScore();
 
     /**
