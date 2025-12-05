@@ -66,8 +66,6 @@ public abstract class Ghost extends MovingActor {
         return personality;
     }
 
-    public void onFoodCountChange(GameLevel gameLevel) {}
-
     public void onPacKilled(GameLevel gameLevel) {}
 
     public void setSpecialTerrainTiles(List<Vector2i> tiles) {

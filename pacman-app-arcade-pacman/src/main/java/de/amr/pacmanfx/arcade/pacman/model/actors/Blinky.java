@@ -4,8 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.model.actors;
 
-import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameModel;
-import de.amr.pacmanfx.arcade.pacman.model.Arcade_LevelData;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HuntingPhase;
@@ -35,24 +33,9 @@ public class Blinky extends Ghost {
         Logger.info("Cruise Elroy is: {}, active: {}", cruiseElroyValue, cruiseElroyActive);
     }
 
-    private void setCruiseElroyValue(int value) {
+    public void setCruiseElroyValue(int value) {
         cruiseElroyValue = (byte) value;
         Logger.info("Cruise Elroy is: {}, active: {}", cruiseElroyValue, cruiseElroyActive);
-    }
-
-    @Override
-    public void onFoodCountChange(GameLevel gameLevel) {
-        super.onFoodCountChange(gameLevel);
-
-        // "Cruise Elroy"
-        final Arcade_GameModel game = (Arcade_GameModel) gameLevel.game();
-        final Arcade_LevelData data = game.levelData(gameLevel.number());
-        int uneatenFoodCount = gameLevel.worldMap().foodLayer().uneatenFoodCount();
-        if (uneatenFoodCount == data.numDotsLeftElroy1()) {
-            setCruiseElroyValue(1);
-        } else if (uneatenFoodCount == data.numDotsLeftElroy2()) {
-            setCruiseElroyValue(2);
-        }
     }
 
     @Override

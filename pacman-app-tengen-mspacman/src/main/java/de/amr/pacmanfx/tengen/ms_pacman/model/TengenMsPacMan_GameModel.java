@@ -621,7 +621,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         scorePoints(ENERGIZER_VALUE);
         level.pac().eatEnergizer();
         level.ghosts().forEach(ghost -> {
-            ghost.onFoodCountChange(level);
             if (ghost.inAnyOfStates(FRIGHTENED, HUNTING_PAC)) {
                 ghost.requestTurnBack();
             }

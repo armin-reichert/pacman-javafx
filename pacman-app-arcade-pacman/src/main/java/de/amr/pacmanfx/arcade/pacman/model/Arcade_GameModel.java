@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.model;
 
+import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController.GameState;
 import de.amr.pacmanfx.arcade.pacman.model.actors.Blinky;
 import de.amr.pacmanfx.event.GameEvent;
@@ -99,18 +100,21 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     // public for access by tests
     public void onPelletEaten(GameLevel level) {
+        requireNonNull(level);
         scorePoints(PELLET_VALUE);
         level.pac().eatPellet();
-        level.ghosts().forEach(ghost -> ghost.onFoodCountChange(level));
+        checkCruiseElroy(level, level.ghost(Globals.RED_GHOST_SHADOW));
     }
 
-    // public for access by tests
+    // public for access by test code
     public void onEnergizerEaten(GameLevel level, Vector2i tile) {
+        requireNonNull(level);
+        requireNonNull(tile);
         simulationStepResult.foundEnergizerAtTile = tile;
         scorePoints(ENERGIZER_VALUE);
         level.pac().eatEnergizer();
         level.ghosts().forEach(ghost -> {
-            ghost.onFoodCountChange(level);
+            checkCruiseElroy(level, level.ghost(Globals.RED_GHOST_SHADOW));
             if (ghost.inAnyOfStates(FRIGHTENED, HUNTING_PAC)) {
                 ghost.requestTurnBack();
             }
@@ -127,6 +131,21 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             level.ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
             simulationStepResult.pacGotPower = true;
             publishGameEvent(GameEvent.Type.PAC_GETS_POWER);
+        }
+    }
+
+    protected void checkCruiseElroy(GameLevel level, Ghost ghost) {
+        if (ghost instanceof Blinky blinky) {
+            final Arcade_LevelData data = levelData(level.number());
+            int uneatenFoodCount = level.worldMap().foodLayer().uneatenFoodCount();
+            if (uneatenFoodCount == data.numDotsLeftElroy1()) {
+                blinky.setCruiseElroyValue(1);
+            } else if (uneatenFoodCount == data.numDotsLeftElroy2()) {
+                blinky.setCruiseElroyValue(2);
+            }
+        }
+        else {
+            Logger.error("Cruise elroy mode is not available for {}", ghost.name());
         }
     }
 
