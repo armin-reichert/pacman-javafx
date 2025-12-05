@@ -38,7 +38,7 @@ public abstract class AbstractGameModel implements Game {
 
     private final BooleanProperty cutScenesEnabled = new SimpleBooleanProperty(true);
 
-    private final ObjectProperty<GameLevel> gameLevel = new SimpleObjectProperty<>();
+    private final ObjectProperty<GameLevel> level = new SimpleObjectProperty<>();
 
     private final BooleanProperty immune = new SimpleBooleanProperty(false);
 
@@ -76,15 +76,15 @@ public abstract class AbstractGameModel implements Game {
         score.pointsProperty().addListener((py, ov, nv) -> onScoreChanged(this, ov.intValue(), nv.intValue()));
     }
 
-    public ObjectProperty<GameLevel> gameLevelProperty() {
-        return gameLevel;
+    public ObjectProperty<GameLevel> levelProperty() {
+        return level;
     }
 
     // To be implemented by subclasses
 
-    protected abstract void checkPacFindsFood(GameLevel gameLevel);
+    protected abstract void checkPacFindsFood(GameLevel level);
 
-    protected abstract void checkPacFindsBonus(GameLevel gameLevel);
+    protected abstract void checkPacFindsBonus(GameLevel level);
 
     protected abstract boolean isPacSafeInDemoLevel(GameLevel demoLevel);
 
@@ -117,12 +117,12 @@ public abstract class AbstractGameModel implements Game {
 
     @Override
     public GameLevel level() {
-        return gameLevel.get();
+        return level.get();
     }
 
     @Override
     public Optional<GameLevel> optGameLevel() {
-        return Optional.ofNullable(gameLevel.get());
+        return Optional.ofNullable(level.get());
     }
 
     @Override
@@ -345,11 +345,11 @@ public abstract class AbstractGameModel implements Game {
      * In normal mode, Pac-Man can be made immune against ghost attacks using a cheat command.
      * In this case, Pac-Man is safe against ghost attacks too.
      *
-     * @param gameLevel the game level
+     * @param level the game level
      */
-    protected void checkPacKilled(GameLevel gameLevel) {
-        final boolean demoLevel = gameLevel.isDemoLevel();
-        if (demoLevel && isPacSafeInDemoLevel(gameLevel) || !demoLevel && gameLevel.pac().isImmune()) {
+    protected void checkPacKilled(GameLevel level) {
+        final boolean demoLevel = level.isDemoLevel();
+        if (demoLevel && isPacSafeInDemoLevel(level) || !demoLevel && level.pac().isImmune()) {
             return;
         }
         simulationStepResult.pacKiller = simulationStepResult.ghostsCollidingWithPac.stream()
@@ -360,23 +360,23 @@ public abstract class AbstractGameModel implements Game {
 
     /**
      * Updates the power of Pac-Man. Power starts fading after some time. When this happens, the ghosts start flashing
-     * and when the power timer expires, they take their normal color again an continue chasing Pac-Man.
+     * and when the power timer expires, they take their normal color again and continue chasing Pac-Man.
      *
-     * @param gameLevel the game level
+     * @param level the game level
      */
-    protected void updatePacPower(GameLevel gameLevel) {
-        final Pac pac = gameLevel.pac();
+    protected void updatePacPower(GameLevel level) {
+        final Pac pac = level.pac();
         pac.powerTimer().doTick();
-        if (pac.isPowerFadingStarting(gameLevel)) {
+        if (pac.isPowerFadingStarting(level)) {
             simulationStepResult.pacStartsLosingPower = true;
             publishGameEvent(GameEvent.Type.PAC_STARTS_LOSING_POWER);
         } else if (pac.powerTimer().hasExpired()) {
             simulationStepResult.pacLostPower = true;
             pac.powerTimer().stop();
             pac.powerTimer().reset(0);
-            gameLevel.energizerVictims().clear();
-            gameLevel.huntingTimer().start();
-            gameLevel.ghosts(GhostState.FRIGHTENED).forEach(ghost -> ghost.setState(GhostState.HUNTING_PAC));
+            level.energizerVictims().clear();
+            level.huntingTimer().start();
+            level.ghosts(GhostState.FRIGHTENED).forEach(ghost -> ghost.setState(GhostState.HUNTING_PAC));
             publishGameEvent(GameEvent.Type.PAC_LOST_POWER);
         }
     }

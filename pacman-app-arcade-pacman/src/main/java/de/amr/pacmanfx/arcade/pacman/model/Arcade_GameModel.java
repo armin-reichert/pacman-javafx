@@ -245,7 +245,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         loadHighScore();
         highScore().setEnabled(true);
         gateKeeper.reset();
-        gameLevelProperty().set(null);
+        levelProperty().set(null);
         setPlaying(false);
         lifeCountProperty().set(initialLifeCount());
     }
@@ -344,7 +344,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         gateKeeper.setLevelNumber(levelNumber);
         level.worldMap().terrainLayer().optHouse().ifPresent(house -> gateKeeper.setHouse(house));
 
-        gameLevelProperty().set(level);
+        levelProperty().set(level);
         publishGameEvent(GameEvent.Type.LEVEL_CREATED);
     }
 
@@ -362,7 +362,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         gateKeeper.setLevelNumber(levelNumber);
         level.worldMap().terrainLayer().optHouse().ifPresent(house -> gateKeeper.setHouse(house));
 
-        gameLevelProperty().set(level);
+        levelProperty().set(level);
         publishGameEvent(GameEvent.Type.LEVEL_CREATED);
     }
 
