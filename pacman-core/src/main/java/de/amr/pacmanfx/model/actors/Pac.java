@@ -186,8 +186,13 @@ public class Pac extends MovingActor {
         }
     }
 
-    public void eat(boolean energizer) {
-        setRestingTicks(energizer ? restingTicksAfterEnergizerEaten : restingTicksAfterPelletEaten);
+    public void eatPellet() {
+        setRestingTicks(restingTicksAfterPelletEaten);
+        endStarving();
+    }
+
+    public void eatEnergizer() {
+        setRestingTicks(restingTicksAfterEnergizerEaten);
         endStarving();
     }
 

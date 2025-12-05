@@ -603,7 +603,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
                 eatEnergizer(gameLevel, tile);
             } else {
                 scorePoints(PELLET_VALUE);
-                gameLevel.pac().eat(false);
+                gameLevel.pac().eatPellet();
             }
             gateKeeper.registerFoodEaten(gameLevel);
             if (isBonusReached()) {
@@ -619,7 +619,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     private void eatEnergizer(GameLevel gameLevel, Vector2i tile) {
         simulationStepResult.foundEnergizerAtTile = tile;
         scorePoints(ENERGIZER_VALUE);
-        gameLevel.pac().eat(true);
+        gameLevel.pac().eatEnergizer();
         gameLevel.ghosts().forEach(ghost -> {
             ghost.onFoodCountChange(gameLevel);
             if (ghost.inAnyOfStates(FRIGHTENED, HUNTING_PAC)) {

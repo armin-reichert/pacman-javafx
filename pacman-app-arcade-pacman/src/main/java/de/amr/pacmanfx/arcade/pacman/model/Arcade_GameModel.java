@@ -100,7 +100,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     // public for access by tests
     public void onPelletEaten(GameLevel level) {
         scorePoints(PELLET_VALUE);
-        level.pac().eat(false);
+        level.pac().eatPellet();
         level.ghosts().forEach(ghost -> ghost.onFoodCountChange(level));
     }
 
@@ -108,7 +108,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     public void onEnergizerEaten(GameLevel level, Vector2i tile) {
         simulationStepResult.foundEnergizerAtTile = tile;
         scorePoints(ENERGIZER_VALUE);
-        level.pac().eat(true);
+        level.pac().eatEnergizer();
         level.ghosts().forEach(ghost -> {
             ghost.onFoodCountChange(level);
             if (ghost.inAnyOfStates(FRIGHTENED, HUNTING_PAC)) {
