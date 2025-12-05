@@ -73,7 +73,20 @@ public abstract class AbstractGameModel implements Game {
             }
         });
 
-        score.pointsProperty().addListener((py, ov, nv) -> onScoreChanged(this, ov.intValue(), nv.intValue()));
+        score.pointsProperty().addListener((py, oldScore, newScore) -> {
+            // has extra life score line been crossed?
+            for (int scoreLine : extraLifeScores) {
+                if (oldScore.intValue() < scoreLine && newScore.intValue() >= scoreLine) {
+                    simulationStepResult.extraLifeWon = true;
+                    simulationStepResult.extraLifeScore = scoreLine;
+                    break;
+                }
+            }
+            if (simulationStepResult.extraLifeWon) {
+                addLives(1);
+                publishGameEvent(new GameEvent(this, GameEvent.Type.SPECIAL_SCORE_REACHED));
+            }
+        });
     }
 
     public ObjectProperty<GameLevel> levelProperty() {
@@ -402,20 +415,6 @@ public abstract class AbstractGameModel implements Game {
 
     protected void setHighScoreFile(File highScoreFile) {
         this.highScoreFile = requireNonNull(highScoreFile);
-    }
-
-    private void onScoreChanged(Game game, int oldScore, int newScore) {
-        for (int extraLifeScore : extraLifeScores) {
-            // has extra life score been crossed?
-            if (oldScore < extraLifeScore && newScore >= extraLifeScore) {
-                game.simulationStepResult().extraLifeWon = true;
-                game.simulationStepResult().extraLifeScore = extraLifeScore;
-                game.addLives(1);
-                GameEvent event = new GameEvent(game, GameEvent.Type.SPECIAL_SCORE_REACHED);
-                game.publishGameEvent(event);
-                break;
-            }
-        }
     }
 
     protected void setExtraLifeScores(Integer... scores) {
