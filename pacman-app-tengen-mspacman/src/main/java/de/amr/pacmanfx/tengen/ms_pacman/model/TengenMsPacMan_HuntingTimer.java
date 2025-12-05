@@ -22,7 +22,7 @@ public class TengenMsPacMan_HuntingTimer extends AbstractHuntingTimer {
     }
 
     @Override
-    public long huntingTicks(int levelNumber, int phaseIndex) {
+    public long phaseDuration(int levelNumber, int phaseIndex) {
         return levelNumber <= 4 ? TICKS_LEVEL_1_TO_4[phaseIndex] : TICKS_LEVEL_5_PLUS[phaseIndex];
     }
 }

@@ -23,7 +23,7 @@ public class ArcadeMsPacMan_HuntingTimer extends AbstractHuntingTimer {
     }
 
     @Override
-    public long huntingTicks(int levelNumber, int phaseIndex) {
+    public long phaseDuration(int levelNumber, int phaseIndex) {
         long ticks = levelNumber < 5 ? HUNTING_TICKS_LEVEL_1_TO_4[phaseIndex] : HUNTING_TICKS_LEVEL_5_PLUS[phaseIndex];
         return ticks != -1 ? ticks : TickTimer.INDEFINITE;
     }

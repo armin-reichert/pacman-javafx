@@ -26,36 +26,79 @@ public abstract class AbstractHuntingTimer {
     protected final int numPhases;
     private final IntegerProperty phaseIndex = new SimpleIntegerProperty();
 
+    /**
+     * @param name a readable name for this timer
+     * @param numPhases the total number of scatter and chasing phases (4+4 in Arcade Pac-Man games)
+     */
     protected AbstractHuntingTimer(String name, int numPhases) {
         this.tickTimer = new TickTimer(name);
         this.numPhases = requireNonNegativeInt(numPhases);
     }
 
-    public abstract long huntingTicks(int levelNumber, int phaseIndex);
+    /**
+     * @param levelNumber game level number
+     * @param phaseIndex index of hunting phase ({@code 0..numPhases - 1})
+     * @return Duration (number of ticks) of phase.
+     */
+    public abstract long phaseDuration(int levelNumber, int phaseIndex);
 
+    /**
+     * Advances the hunting timer and starts the timer for the next phase if the current phase is complete.
+     *
+     * @param levelNumber the game level number (starts with 1)
+     */
+    public void update(int levelNumber) {
+        requireValidLevelNumber(levelNumber);
+        if (tickTimer.hasExpired()) {
+            Logger.info("Hunting phase {} ({}) ends, tick={}", phaseIndex(), phase(), tickTimer.tickCount());
+            int nextPhaseIndex = requireValidPhaseIndex(phaseIndex() + 1);
+            startPhase(levelNumber, nextPhaseIndex);
+        } else {
+            tickTimer.doTick();
+        }
+    }
+
+    /**
+     * @return The current timer tick count
+     */
     public long tickCount() {
         return tickTimer.tickCount();
     }
 
+    /**
+     * Stops and resets the hunting timer and the phase index to zero.
+     */
     public void reset() {
         tickTimer.stop();
         tickTimer.reset(TickTimer.INDEFINITE);
         phaseIndex.set(0);
     }
 
+    /**
+     * Starts the hunting timer.
+     */
     public void start() {
         tickTimer.start();
     }
 
+    /**
+     * Stops the hunting timer.
+     */
     public void stop() {
         tickTimer.stop();
     }
 
+    /**
+     * @return {@code true} if the hunting timer is stopped
+     */
     public boolean isStopped() {
         return tickTimer.isStopped();
     }
 
-    public long remainingTicks() {
+    /**
+     * @return the number of ticks remaining for the current hunting phase
+     */
+    public long remainingTicksOfCurrentPhase() {
         return tickTimer.remainingTicks();
     }
 
@@ -75,17 +118,6 @@ public abstract class AbstractHuntingTimer {
         isEven(phaseIndex()) ? HuntingPhase.SCATTERING : HuntingPhase.CHASING;
     }
 
-    public void update(int levelNumber) {
-        requireValidLevelNumber(levelNumber);
-        if (tickTimer.hasExpired()) {
-            Logger.info("Hunting phase {} ({}) ends, tick={}", phaseIndex(), phase(), tickTimer.tickCount());
-            int nextPhaseIndex = requireValidPhaseIndex(phaseIndex() + 1);
-            startPhase(levelNumber, nextPhaseIndex);
-        } else {
-            tickTimer.doTick();
-        }
-    }
-
     public void startFirstPhase(int levelNumber) {
         requireValidLevelNumber(levelNumber);
         startPhase(levelNumber, 0);
@@ -100,7 +132,7 @@ public abstract class AbstractHuntingTimer {
     }
 
     protected void startPhase(int levelNumber, int phaseIndex) {
-        final long duration = huntingTicks(levelNumber, phaseIndex);
+        final long duration = phaseDuration(levelNumber, phaseIndex);
         tickTimer.restartTicks(duration);
         phaseIndexProperty().set(phaseIndex);
     }

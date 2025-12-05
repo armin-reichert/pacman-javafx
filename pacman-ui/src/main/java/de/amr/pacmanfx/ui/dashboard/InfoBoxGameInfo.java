@@ -126,7 +126,7 @@ public class InfoBoxGameInfo extends InfoBox {
     }
 
     private String fmtHuntingTicksRemaining(AbstractHuntingTimer huntingTimer) {
-        return "Remaining: %s".formatted(ticksToString(huntingTimer.remainingTicks()));
+        return "Remaining: %s".formatted(ticksToString(huntingTimer.remainingTicksOfCurrentPhase()));
     }
 
     private String fmtPelletCount(GameLevel level) {

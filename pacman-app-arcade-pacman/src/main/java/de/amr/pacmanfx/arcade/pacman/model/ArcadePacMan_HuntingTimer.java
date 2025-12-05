@@ -19,7 +19,7 @@ public class ArcadePacMan_HuntingTimer extends AbstractHuntingTimer {
     }
 
     @Override
-    public long huntingTicks(int levelNumber, int phaseIndex) {
+    public long phaseDuration(int levelNumber, int phaseIndex) {
         long ticks = switch (levelNumber) {
             case 1 -> TICKS_LEVEL_1[phaseIndex];
             case 2, 3, 4 -> TICKS_LEVEL_2_3_4[phaseIndex];
