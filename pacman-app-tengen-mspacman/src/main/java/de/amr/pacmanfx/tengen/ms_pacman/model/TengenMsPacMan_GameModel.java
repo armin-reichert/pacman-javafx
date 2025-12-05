@@ -592,23 +592,23 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void checkPacFindsFood(GameLevel gameLevel) {
-        FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
-        final Pac pac = gameLevel.pac();
+    public void checkPacFindsFood(GameLevel level) {
+        FoodLayer foodLayer = level.worldMap().foodLayer();
+        final Pac pac = level.pac();
         final Vector2i tile = pac.tile();
         if (foodLayer.hasFoodAtTile(tile)) {
             boolean energizer = foodLayer.isEnergizerTile(tile);
             foodLayer.registerFoodEatenAt(tile);
             if (energizer) {
-                eatEnergizer(gameLevel, tile);
+                eatEnergizer(level, tile);
             } else {
                 scorePoints(PELLET_VALUE);
-                gameLevel.pac().eatPellet();
+                level.pac().eatPellet();
             }
-            gateKeeper.registerFoodEaten(gameLevel);
+            gateKeeper.registerFoodEaten(level);
             if (isBonusReached()) {
                 activateNextBonus();
-                simulationStepResult.bonusIndex = gameLevel.currentBonusIndex();
+                simulationStepResult.bonusIndex = level.currentBonusIndex();
             }
             publishGameEvent(GameEvent.Type.PAC_FOUND_FOOD, tile);
         } else {
@@ -616,35 +616,35 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         }
     }
 
-    private void eatEnergizer(GameLevel gameLevel, Vector2i tile) {
+    private void eatEnergizer(GameLevel level, Vector2i tile) {
         simulationStepResult.foundEnergizerAtTile = tile;
         scorePoints(ENERGIZER_VALUE);
-        gameLevel.pac().eatEnergizer();
-        gameLevel.ghosts().forEach(ghost -> {
-            ghost.onFoodCountChange(gameLevel);
+        level.pac().eatEnergizer();
+        level.ghosts().forEach(ghost -> {
+            ghost.onFoodCountChange(level);
             if (ghost.inAnyOfStates(FRIGHTENED, HUNTING_PAC)) {
                 ghost.requestTurnBack();
             }
         });
-        gameLevel.energizerVictims().clear();
+        level.energizerVictims().clear();
         // Pac gets power?
-        final float powerSeconds = gameLevel.pacPowerSeconds();
+        final float powerSeconds = level.pacPowerSeconds();
         if (powerSeconds > 0) {
-            gameLevel.huntingTimer().stop();
+            level.huntingTimer().stop();
             Logger.debug("Hunting stopped (Pac-Man got power)");
             long ticks = TickTimer.secToTicks(powerSeconds);
-            gameLevel.pac().powerTimer().restartTicks(ticks);
+            level.pac().powerTimer().restartTicks(ticks);
             Logger.debug("Power timer restarted, {} ticks ({0.00} sec)", ticks, powerSeconds);
-            gameLevel.ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
+            level.ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
             simulationStepResult.pacGotPower = true;
             publishGameEvent(GameEvent.Type.PAC_GETS_POWER);
         }
     }
 
     @Override
-    protected void checkPacFindsBonus(GameLevel gameLevel) {
-        gameLevel.optBonus().filter(bonus -> bonus.state() == BonusState.EDIBLE).ifPresent(bonus -> {
-            if (collisionStrategy().collide(gameLevel.pac(), bonus)) {
+    protected void checkPacFindsBonus(GameLevel level) {
+        level.optBonus().filter(bonus -> bonus.state() == BonusState.EDIBLE).ifPresent(bonus -> {
+            if (collisionStrategy().collide(level.pac(), bonus)) {
                 bonus.setEatenSeconds(BONUS_EATEN_SECONDS);
                 scorePoints(bonus.points());
                 Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
@@ -777,11 +777,11 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
      * by 1 for every 8 dots eaten. (I should note it's in subunits. it if was times 2, that would've been crazy)
      * </p>
      */
-    public float ghostSpeedIncreaseByFoodRemaining(GameLevel gameLevel) {
+    public float ghostSpeedIncreaseByFoodRemaining(GameLevel level) {
         byte units = 0;
-        TengenMsPacMan_GameModel game = (TengenMsPacMan_GameModel) gameLevel.game();
-        if (game.difficulty() == Difficulty.NORMAL && gameLevel.number() >= 5) {
-            int dotsLeft = gameLevel.worldMap().foodLayer().uneatenFoodCount();
+        TengenMsPacMan_GameModel game = (TengenMsPacMan_GameModel) level.game();
+        if (game.difficulty() == Difficulty.NORMAL && level.number() >= 5) {
+            int dotsLeft = level.worldMap().foodLayer().uneatenFoodCount();
             if (dotsLeft <= 7) {
                 units = 5;
             } else if (dotsLeft <= 15) {
@@ -831,18 +831,18 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public float bonusSpeed(GameLevel gameLevel) {
+    public float bonusSpeed(GameLevel level) {
         //TODO clarify exact speed
-        return 0.5f * pacSpeed(gameLevel);
+        return 0.5f * pacSpeed(level);
     }
 
     @Override
-    public float pacSpeed(GameLevel gameLevel) {
-        if (gameLevel == null) {
+    public float pacSpeed(GameLevel level) {
+        if (level == null) {
             return 0;
         }
-        TengenMsPacMan_GameModel game = (TengenMsPacMan_GameModel) gameLevel.game();
-        float speed = pacBaseSpeedInLevel(gameLevel.number());
+        TengenMsPacMan_GameModel game = (TengenMsPacMan_GameModel) level.game();
+        float speed = pacBaseSpeedInLevel(level.number());
         speed += pacDifficultySpeedDelta(game.difficulty());
         if (game.pacBooster() == PacBooster.ALWAYS_ON
             || game.pacBooster() == PacBooster.USE_A_OR_B && game.isBoosterActive()) {
@@ -852,21 +852,21 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public float pacSpeedWhenHasPower(GameLevel gameLevel) {
+    public float pacSpeedWhenHasPower(GameLevel level) {
         //TODO correct?
-        return gameLevel.pac() != null ? 1.1f * pacSpeed(gameLevel) : 0;
+        return level.pac() != null ? 1.1f * pacSpeed(level) : 0;
     }
 
     @Override
-    public float ghostSpeedWhenAttacking(GameLevel gameLevel, Ghost ghost) {
-        if (gameLevel.worldMap().terrainLayer().isTunnel(ghost.tile())) {
-            return ghostSpeedInsideTunnel(gameLevel, ghost);
+    public float ghostSpeedWhenAttacking(GameLevel level, Ghost ghost) {
+        if (level.worldMap().terrainLayer().isTunnel(ghost.tile())) {
+            return ghostSpeedInsideTunnel(level, ghost);
         }
-        TengenMsPacMan_GameModel game = (TengenMsPacMan_GameModel) gameLevel.game();
-        float speed = ghostBaseSpeedInLevel(gameLevel.number());
+        TengenMsPacMan_GameModel game = (TengenMsPacMan_GameModel) level.game();
+        float speed = ghostBaseSpeedInLevel(level.number());
         speed += ghostDifficultySpeedDelta(game.difficulty());
         speed += ghostSpeedDelta(ghost.personality());
-        float foodDelta = ghostSpeedIncreaseByFoodRemaining(gameLevel);
+        float foodDelta = ghostSpeedIncreaseByFoodRemaining(level);
         if (foodDelta > 0) {
             speed += foodDelta;
             Logger.debug("Ghost speed increased by {} units to {0.00} px/tick for {}", foodDelta, speed, ghost.name());
@@ -875,23 +875,23 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public float ghostSpeedInsideHouse(GameLevel gameLevel, Ghost ghost) {
+    public float ghostSpeedInsideHouse(GameLevel level, Ghost ghost) {
         return 0.5f;
     }
 
     @Override
-    public float ghostSpeedReturningToHouse(GameLevel gameLevel, Ghost ghost) {
+    public float ghostSpeedReturningToHouse(GameLevel level, Ghost ghost) {
         return 2;
     }
 
     @Override
-    public float ghostSpeedWhenFrightened(GameLevel gameLevel, Ghost ghost) {
+    public float ghostSpeedWhenFrightened(GameLevel level, Ghost ghost) {
         //TODO correct?
-        return 0.5f * ghostSpeedWhenAttacking(gameLevel, ghost);
+        return 0.5f * ghostSpeedWhenAttacking(level, ghost);
     }
 
     @Override
-    public float ghostSpeedInsideTunnel(GameLevel gameLevel, Ghost ghost) {
+    public float ghostSpeedInsideTunnel(GameLevel level, Ghost ghost) {
         //TODO correct?
         return 0.4f;
     }
