@@ -201,6 +201,15 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
         var miAutopilot = new CheckMenuItem(ui.assets().translated("autopilot"));
         miAutopilot.selectedProperty().bindBidirectional(game.usingAutopilotProperty());
+        miAutopilot.setOnAction(e -> {
+            final boolean usingAutopilot = miAutopilot.isSelected();
+            if (usingAutopilot && game.optGameLevel().isPresent() && !game.level().isDemoLevel()) {
+                game.cheatUsedProperty().set(true);
+            };
+            ui.soundManager().playVoiceAfterSec(0, usingAutopilot ? SoundID.VOICE_AUTOPILOT_ON : SoundID.VOICE_AUTOPILOT_OFF);
+            ui.showFlashMessage(ui.assets().translated(usingAutopilot ? "autopilot_on" : "autopilot_off"));
+
+        });
 
         var miImmunity = new CheckMenuItem(ui.assets().translated("immunity"));
         miImmunity.selectedProperty().bindBidirectional(game.immuneProperty());

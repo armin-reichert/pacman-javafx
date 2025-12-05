@@ -107,9 +107,9 @@ public final class CheatActions {
                 game.cheatUsedProperty().set(true);
             }
             toggle(game.usingAutopilotProperty());
-            boolean autoPilotOn = game.usingAutopilot();
-            ui.soundManager().playVoiceAfterSec(0, autoPilotOn ? SoundID.VOICE_AUTOPILOT_ON : SoundID.VOICE_AUTOPILOT_OFF);
-            ui.showFlashMessage(ui.assets().translated(autoPilotOn ? "autopilot_on" : "autopilot_off"));
+            boolean usingAutopilot = game.usingAutopilot();
+            ui.soundManager().playVoiceAfterSec(0, usingAutopilot ? SoundID.VOICE_AUTOPILOT_ON : SoundID.VOICE_AUTOPILOT_OFF);
+            ui.showFlashMessage(ui.assets().translated(usingAutopilot ? "autopilot_on" : "autopilot_off"));
         }
     };
 

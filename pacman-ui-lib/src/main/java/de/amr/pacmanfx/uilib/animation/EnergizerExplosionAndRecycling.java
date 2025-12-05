@@ -227,8 +227,10 @@ public class EnergizerExplosionAndRecycling extends RegisteredAnimation {
             particle.setTranslateZ(particle.houseTargetPosition.getZ());
             particle.velocity = new Vector3f(0, 0, -SWIRL_RISING_SPEED);
             Platform.runLater(() -> {
-                particlesGroup.getChildren().remove(particle);
-                swirl.getChildren().add(particle);
+                if (particlesGroup != null) {
+                    particlesGroup.getChildren().remove(particle);
+                    swirl.getChildren().add(particle);
+                }
             });
         }
 
