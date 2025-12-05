@@ -9,7 +9,6 @@ import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Score;
-import de.amr.pacmanfx.model.ScoreManager;
 import de.amr.pacmanfx.tengen.ms_pacman.model.*;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.HUD_Renderer;
@@ -70,11 +69,9 @@ public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteR
         ctx.translate(0, scaled(offsetY));
 
         if (hud.isScoreVisible()) {
-            final ScoreManager scoreManager = game.scoreManager();
+            drawScore(game.score(), clock.tickCount(), arcadeFont8());
 
-            drawScore(scoreManager.score(), clock.tickCount(), arcadeFont8());
-
-            final Score highScore = scoreManager.highScore();
+            final Score highScore = game.highScore();
             Color color = SCORE_TEXT_COLOR;
             if (!highScore.isEnabled() && !game.level().isDemoLevel()) {
                 color = SCORE_TEXT_COLOR_DISABLED;

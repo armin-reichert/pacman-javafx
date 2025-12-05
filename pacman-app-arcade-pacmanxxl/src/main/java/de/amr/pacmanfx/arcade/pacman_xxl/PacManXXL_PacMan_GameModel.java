@@ -108,7 +108,7 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
         // Select random (standard) level with different map and map color scheme for each choice
         int randomIndex = randomInt(0, DEMO_LEVEL_NUMBERS.length);
         int levelNumber = DEMO_LEVEL_NUMBERS[randomIndex];
-        scoreManager().score().setLevelNumber(levelNumber);
+        score().setLevelNumber(levelNumber);
         mapSelector().setSelectionMode(MapSelectionMode.NO_CUSTOM_MAPS);
 
         final GameLevel level = createLevel(levelNumber, true);

@@ -95,7 +95,7 @@ public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
         level.pac().setAutomaticSteering(demoLevelSteering);
         demoLevelSteering.init();
         levelCounter().setEnabled(false);
-        scoreManager().score().setLevelNumber(levelNumber);
+        score().setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
         level.worldMap().terrainLayer().optHouse().ifPresent(house -> gateKeeper.setHouse(house)); //TODO what if no house exists?
 

@@ -82,8 +82,8 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
         hud.numCoinsProperty().bind(coinMechanism.numCoinsProperty());
 
-        scoreManager.setHighScoreFile(requireNonNull(highScoreFile));
-        scoreManager.setExtraLifeScores(EXTRA_LIFE_SCORE);
+        setHighScoreFile(requireNonNull(highScoreFile));
+        setExtraLifeScores(EXTRA_LIFE_SCORE);
 
         levelCounter = new ArcadeMsPacMan_LevelCounter();
 

@@ -40,10 +40,9 @@ public interface Game {
      */
     HUD hud();
 
-    /**
-     * @return the score manager (scores, high scores)
-     */
-    ScoreManager scoreManager();
+    Score score();
+
+    Score highScore();
 
     /**
      * Controls the selection of world maps for the game levels.

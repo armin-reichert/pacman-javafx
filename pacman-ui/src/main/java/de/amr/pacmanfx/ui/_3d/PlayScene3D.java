@@ -561,8 +561,8 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
     }
 
     protected void updateHUD() {
-        ScoreManager scoreManager = context().currentGame().scoreManager();
-        final Score score = scoreManager.score(), highScore = scoreManager.highScore();
+        final Game game = context().currentGame();
+        final Score score = game.score(), highScore = game.highScore();
         if (score.isEnabled()) {
             scores3D.showScore(score.points(), score.levelNumber());
         }

@@ -99,7 +99,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     // public for access by tests
     public void onPelletEaten(GameLevel level) {
-        scoreManager.scorePoints(PELLET_VALUE);
+        scorePoints(PELLET_VALUE);
         level.pac().eat(false);
         level.ghosts().forEach(ghost -> ghost.onFoodCountChange(level));
     }
@@ -107,7 +107,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     // public for access by tests
     public void onEnergizerEaten(GameLevel level, Vector2i tile) {
         simulationStepResult.foundEnergizerAtTile = tile;
-        scoreManager.scorePoints(ENERGIZER_VALUE);
+        scorePoints(ENERGIZER_VALUE);
         level.pac().eat(true);
         level.ghosts().forEach(ghost -> {
             ghost.onFoodCountChange(level);
@@ -188,11 +188,11 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         level.energizerVictims().add(ghost);
         ghost.setState(GhostState.EATEN);
         ghost.selectAnimationAt(CommonAnimationID.ANIM_GHOST_NUMBER, killedSoFar);
-        scoreManager.scorePoints(points);
+        scorePoints(points);
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
         level.incrementGhostKillCount();
         if (level.ghostKillCount() == 16) {
-            scoreManager.scorePoints(ALL_16_GHOSTS_KILLED_POINTS);
+            scorePoints(ALL_16_GHOSTS_KILLED_POINTS);
             Logger.info("Scored {} points for killing all ghosts in level {}", ALL_16_GHOSTS_KILLED_POINTS, level.number());
         }
     }
@@ -223,7 +223,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         if (!coinMechanism.isEmpty()) {
             coinMechanism.consumeCoin();
         }
-        scoreManager.updateHighScore();
+        updateHighScore();
         showLevelMessage(MessageType.GAME_OVER);
         Logger.info("Game ended with level number {}", level().number());
     }
@@ -241,9 +241,9 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     @Override
     public void prepareNewGame() {
-        scoreManager.score().reset();
-        scoreManager.loadHighScore();
-        scoreManager.highScore().setEnabled(true);
+        score().reset();
+        loadHighScore();
+        highScore().setEnabled(true);
         gateKeeper.reset();
         gameLevelProperty().set(null);
         setPlaying(false);
@@ -318,7 +318,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         level.optBonus().filter(bonus -> bonus.state() == BonusState.EDIBLE).ifPresent(bonus -> {
             if (collisionStrategy().collide(level.pac(), bonus)) {
                 bonus.setEatenSeconds(BONUS_EATEN_SECONDS);
-                scoreManager.scorePoints(bonus.points());
+                scorePoints(bonus.points());
                 Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
                 simulationStepResult.bonusEatenTile = bonus.tile();
                 publishGameEvent(GameEvent.Type.BONUS_EATEN);
@@ -340,7 +340,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         final GameLevel level = createLevel(levelNumber, false);
         level.setCutSceneNumber(cutSceneNumberAfter(levelNumber));
         levelCounter().setEnabled(true);
-        scoreManager.score().setLevelNumber(levelNumber);
+        score().setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
         level.worldMap().terrainLayer().optHouse().ifPresent(house -> gateKeeper.setHouse(house));
 
@@ -358,7 +358,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         level.pac().setAutomaticSteering(demoLevelSteering);
         demoLevelSteering.init();
         levelCounter().setEnabled(true);
-        scoreManager.score().setLevelNumber(levelNumber);
+        score().setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
         level.worldMap().terrainLayer().optHouse().ifPresent(house -> gateKeeper.setHouse(house));
 
@@ -390,13 +390,13 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         level.getReadyToPlay();
         if (level.isDemoLevel()) {
             showLevelMessage(MessageType.GAME_OVER);
-            scoreManager.score().setEnabled(false);
-            scoreManager.highScore().setEnabled(false);
+            score().setEnabled(false);
+            highScore().setEnabled(false);
             Logger.info("Demo level {} started", level.number());
         } else {
             showLevelMessage(MessageType.READY);
             levelCounter().update(level.number(), level.bonusSymbol(0));
-            scoreManager.score().setEnabled(true);
+            score().setEnabled(true);
             updateCheatingProperties(level);
             Logger.info("Level {} started", level.number());
         }

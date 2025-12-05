@@ -9,7 +9,6 @@ import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.HUD;
 import de.amr.pacmanfx.model.Score;
-import de.amr.pacmanfx.model.ScoreManager;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.HUD_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
@@ -55,10 +54,9 @@ public class ArcadeMsPacMan_HUDRenderer extends BaseRenderer implements SpriteRe
         if (!hud.isVisible()) return;
 
         if (hud.isScoreVisible()) {
-            final ScoreManager scoreManager = game.scoreManager();
-            drawScore(scoreManager.score(), SCORE_TEXT, arcadeFont8(), SCORE_TEXT_COLOR, TS(1), TS(1));
+            drawScore(game.score(), SCORE_TEXT, arcadeFont8(), SCORE_TEXT_COLOR, TS(1), TS(1));
 
-            final Score highScore = scoreManager.highScore();
+            final Score highScore = game.highScore();
             Color color = SCORE_TEXT_COLOR;
             if (game.optGameLevel().isPresent() && !game.level().isDemoLevel() && !highScore.isEnabled()) {
                 color = SCORE_TEXT_COLOR_DISABLED;

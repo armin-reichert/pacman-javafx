@@ -97,8 +97,8 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
 
         levelCounter = new ArcadePacMan_LevelCounter();
 
-        scoreManager.setHighScoreFile(requireNonNull(highScoreFile));
-        scoreManager.setExtraLifeScores(EXTRA_LIFE_SCORE);
+        setHighScoreFile(requireNonNull(highScoreFile));
+        setExtraLifeScores(EXTRA_LIFE_SCORE);
 
         gateKeeper = new GateKeeper(this);
         gateKeeper.setOnGhostReleased((gameLevel, prisoner) -> {

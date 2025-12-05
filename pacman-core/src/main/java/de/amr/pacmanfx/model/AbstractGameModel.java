@@ -14,6 +14,11 @@ import de.amr.pacmanfx.model.actors.*;
 import javafx.beans.property.*;
 import org.tinylog.Logger;
 
+import java.io.File;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -50,8 +55,6 @@ public abstract class AbstractGameModel implements Game {
 
     protected final SimulationStepResult simulationStepResult = new SimulationStepResult();
 
-    protected final ScoreManager scoreManager = new ScoreManager(this);
-
     protected AbstractGameModel(GameControl gameControl) {
         this.gameControl = requireNonNull(gameControl);
         gameControl.stateMachine().setContext(this);
@@ -59,7 +62,6 @@ public abstract class AbstractGameModel implements Game {
             (oldState, newState) -> publishGameEvent(new GameStateChangeEvent(this, oldState, newState)));
 
         cheatUsedProperty().addListener((py, ov, cheated) -> {
-            final Score highScore = scoreManager.highScore();
             if (cheated && highScore.isEnabled()) {
                 highScore.setEnabled(false);
             }
@@ -70,6 +72,8 @@ public abstract class AbstractGameModel implements Game {
                 throw new IllegalArgumentException("Life count cannot be set to negative value " + nv.intValue());
             }
         });
+
+        score.pointsProperty().addListener((py, ov, nv) -> onScoreChanged(this, ov.intValue(), nv.intValue()));
     }
 
     public ObjectProperty<GameLevel> gameLevelProperty() {
@@ -104,11 +108,6 @@ public abstract class AbstractGameModel implements Game {
     @Override
     public final GameControl control() {
         return gameControl;
-    }
-
-    @Override
-    public ScoreManager scoreManager() {
-        return scoreManager;
     }
 
     @Override
@@ -382,5 +381,96 @@ public abstract class AbstractGameModel implements Game {
         level.pac().immuneProperty().bind(immuneProperty());
         level.pac().usingAutopilotProperty().bind(usingAutopilotProperty());
         cheatUsedProperty().set(immune() || usingAutopilot());
+    }
+
+    // ScoreManager
+
+    private final Score score = new Score();
+    private final Score highScore = new Score();
+    private File highScoreFile;
+    private Set<Integer> extraLifeScores = Set.of();
+
+    public void setHighScoreFile(File highScoreFile) {
+        this.highScoreFile = requireNonNull(highScoreFile);
+    }
+
+    private void onScoreChanged(Game game, int oldScore, int newScore) {
+        for (int extraLifeScore : extraLifeScores) {
+            // has extra life score been crossed?
+            if (oldScore < extraLifeScore && newScore >= extraLifeScore) {
+                game.simulationStepResult().extraLifeWon = true;
+                game.simulationStepResult().extraLifeScore = extraLifeScore;
+                game.addLives(1);
+                GameEvent event = new GameEvent(game, GameEvent.Type.SPECIAL_SCORE_REACHED);
+                game.publishGameEvent(event);
+                break;
+            }
+        }
+    }
+
+    public void setExtraLifeScores(Integer... scores) {
+        extraLifeScores = Set.of(scores);
+    }
+
+    public void scorePoints(int points) {
+        if (!score.isEnabled()) {
+            return;
+        }
+        int oldScore = score.points(), newScore = oldScore + points;
+        if (highScore().isEnabled() && newScore > highScore.points()) {
+            highScore.setPoints(newScore);
+            highScore.setLevelNumber(score.levelNumber());
+            highScore.setDate(LocalDate.now());
+        }
+        score.setPoints(newScore);
+    }
+
+    public void loadHighScore() {
+        if (highScoreFile == null) {
+            Logger.error("High Score file could not be opened: game variant not set?");
+            return;
+        }
+        try {
+            highScore.read(highScoreFile);
+            Logger.info("High Score loaded from file '{}': points={}, level={}", highScoreFile, highScore.points(), highScore.levelNumber());
+        } catch (IOException x) {
+            Logger.error("High Score file could not be opened: '{}'", highScoreFile);
+        }
+    }
+
+    public void updateHighScore() {
+        if (highScoreFile == null) {
+            Logger.error("High Score file could not be opened: game variant not set?");
+            return;
+        }
+        var oldHighScore = Score.fromFile(highScoreFile);
+        if (highScore.points() > oldHighScore.points()) {
+            try {
+                highScore.save(highScoreFile, "High Score updated at %s".formatted(LocalTime.now()));
+            } catch (IOException x) {
+                Logger.error("High Score file could not be saved: '{}'", highScoreFile);
+            }
+        }
+    }
+
+    public void saveHighScore() {
+        if (highScoreFile == null) {
+            Logger.error("High Score file could not be opened: game variant not set?");
+            return;
+        }
+        try {
+            new Score().save(highScoreFile, "High Score, %s".formatted(LocalDateTime.now()));
+        } catch (IOException x) {
+            Logger.error("High Score could not be saved to file '{}'", highScoreFile);
+            Logger.error(x);
+        }
+    }
+
+    public Score score() {
+        return score;
+    }
+
+    public Score highScore() {
+        return highScore;
     }
 }
