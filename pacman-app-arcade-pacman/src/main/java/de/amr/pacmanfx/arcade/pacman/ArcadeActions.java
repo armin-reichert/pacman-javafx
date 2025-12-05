@@ -39,7 +39,7 @@ public final class ArcadeActions {
             return game.control().state() == GameState.SETTING_OPTIONS_FOR_START
                 || game.control().state() == GameState.INTRO
                 || game.optGameLevel().isPresent() && game.level().isDemoLevel()
-                || ui.context().coinMechanism().noCoin();
+                || ui.context().coinMechanism().isEmpty();
         }
     };
 

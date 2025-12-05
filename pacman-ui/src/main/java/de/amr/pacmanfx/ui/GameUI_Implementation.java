@@ -384,7 +384,7 @@ public final class GameUI_Implementation implements GameUI {
             gameScene.end(game);
             boolean shouldConsumeCoin = game.control().state().name().equals("STARTING_GAME_OR_LEVEL")
                 || game.isPlaying();
-            if (shouldConsumeCoin && !gameContext.coinMechanism().noCoin()) {
+            if (shouldConsumeCoin && !gameContext.coinMechanism().isEmpty()) {
                 gameContext.coinMechanism().consumeCoin();
             }
             Logger.info("Quit game scene ({}), returning to start view", gameScene.getClass().getSimpleName());

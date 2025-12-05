@@ -120,7 +120,7 @@ public class GameBox implements GameContext, CoinMechanism {
     public int numCoins() { return numCoins.get(); }
 
     @Override
-    public boolean noCoin() { return numCoins() == 0; }
+    public boolean isEmpty() { return numCoins() == 0; }
 
     @Override
     public void setNumCoins(int n) {

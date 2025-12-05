@@ -98,33 +98,33 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     // public for access by tests
-    public void onPelletEaten(GameLevel gameLevel) {
+    public void onPelletEaten(GameLevel level) {
         scoreManager.scorePoints(PELLET_VALUE);
-        gameLevel.pac().eat(false);
-        gameLevel.ghosts().forEach(ghost -> ghost.onFoodCountChange(gameLevel));
+        level.pac().eat(false);
+        level.ghosts().forEach(ghost -> ghost.onFoodCountChange(level));
     }
 
     // public for access by tests
-    public void onEnergizerEaten(GameLevel gameLevel, Vector2i tile) {
+    public void onEnergizerEaten(GameLevel level, Vector2i tile) {
         simulationStepResult.foundEnergizerAtTile = tile;
         scoreManager.scorePoints(ENERGIZER_VALUE);
-        gameLevel.pac().eat(true);
-        gameLevel.ghosts().forEach(ghost -> {
-            ghost.onFoodCountChange(gameLevel);
+        level.pac().eat(true);
+        level.ghosts().forEach(ghost -> {
+            ghost.onFoodCountChange(level);
             if (ghost.inAnyOfStates(FRIGHTENED, HUNTING_PAC)) {
                 ghost.requestTurnBack();
             }
         });
-        gameLevel.energizerVictims().clear();
+        level.energizerVictims().clear();
         // Pac gets power?
-        final float powerSeconds = gameLevel.pacPowerSeconds();
+        final float powerSeconds = level.pacPowerSeconds();
         if (powerSeconds > 0) {
-            gameLevel.huntingTimer().stop();
+            level.huntingTimer().stop();
             Logger.debug("Hunting stopped (Pac-Man got power)");
             long ticks = TickTimer.secToTicks(powerSeconds);
-            gameLevel.pac().powerTimer().restartTicks(ticks);
+            level.pac().powerTimer().restartTicks(ticks);
             Logger.debug("Power timer restarted, {} ticks ({0.00} sec)", ticks, powerSeconds);
-            gameLevel.ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
+            level.ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
             simulationStepResult.pacGotPower = true;
             publishGameEvent(GameEvent.Type.PAC_GETS_POWER);
         }
@@ -220,7 +220,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     @Override
     public void onGameOver() {
         setPlaying(false);
-        if (!coinMechanism.noCoin()) {
+        if (!coinMechanism.isEmpty()) {
             coinMechanism.consumeCoin();
         }
         scoreManager.updateHighScore();
@@ -284,28 +284,28 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public boolean canStartNewGame() { return !coinMechanism.noCoin(); }
+    public boolean canStartNewGame() { return !coinMechanism.isEmpty(); }
 
     @Override
     public boolean canContinueOnGameOver() { return false; }
 
     @Override
-    public void checkPacFindsFood(GameLevel gameLevel) {
-        FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
-        final Pac pac = gameLevel.pac();
+    public void checkPacFindsFood(GameLevel level) {
+        FoodLayer foodLayer = level.worldMap().foodLayer();
+        final Pac pac = level.pac();
         final Vector2i tile = pac.tile();
         if (foodLayer.hasFoodAtTile(tile)) {
             foodLayer.registerFoodEatenAt(tile);
             pac.endStarving();
             if (foodLayer.isEnergizerTile(tile)) {
-                onEnergizerEaten(gameLevel, tile);
+                onEnergizerEaten(level, tile);
             } else {
-                onPelletEaten(gameLevel);
+                onPelletEaten(level);
             }
-            gateKeeper.registerFoodEaten(gameLevel);
+            gateKeeper.registerFoodEaten(level);
             if (isBonusReached()) {
                 activateNextBonus();
-                simulationStepResult.bonusIndex = gameLevel.currentBonusIndex();
+                simulationStepResult.bonusIndex = level.currentBonusIndex();
             }
             publishGameEvent(GameEvent.Type.PAC_FOUND_FOOD, tile);
         } else {
@@ -314,9 +314,9 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     @Override
-    protected void checkPacFindsBonus(GameLevel gameLevel) {
-        gameLevel.optBonus().filter(bonus -> bonus.state() == BonusState.EDIBLE).ifPresent(bonus -> {
-            if (collisionStrategy().collide(gameLevel.pac(), bonus)) {
+    protected void checkPacFindsBonus(GameLevel level) {
+        level.optBonus().filter(bonus -> bonus.state() == BonusState.EDIBLE).ifPresent(bonus -> {
+            if (collisionStrategy().collide(level.pac(), bonus)) {
                 bonus.setEatenSeconds(BONUS_EATEN_SECONDS);
                 scoreManager.scorePoints(bonus.points());
                 Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
@@ -437,30 +437,30 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     public static final float BASE_SPEED_1_PERCENT = 0.01f * BASE_SPEED;
 
     @Override
-    public float bonusSpeed(GameLevel gameLevel) {
+    public float bonusSpeed(GameLevel level) {
         //TODO clarify exact speed
-        return 0.5f * pacSpeed(gameLevel);
+        return 0.5f * pacSpeed(level);
     }
 
     @Override
-    public float pacSpeed(GameLevel gameLevel) {
-        final Arcade_LevelData data = levelData((gameLevel.number()));
+    public float pacSpeed(GameLevel level) {
+        final Arcade_LevelData data = levelData((level.number()));
         byte percentage = data.pctPacSpeed();
         return percentage > 0 ? percentage * BASE_SPEED_1_PERCENT : BASE_SPEED;
     }
 
     @Override
-    public float pacSpeedWhenHasPower(GameLevel gameLevel) {
-        final Arcade_LevelData data = levelData((gameLevel.number()));
+    public float pacSpeedWhenHasPower(GameLevel level) {
+        final Arcade_LevelData data = levelData((level.number()));
         byte percentage = data.pctPacSpeedPowered();
-        return percentage > 0 ? percentage * BASE_SPEED_1_PERCENT : pacSpeed(gameLevel);
+        return percentage > 0 ? percentage * BASE_SPEED_1_PERCENT : pacSpeed(level);
     }
 
     @Override
-    public float ghostSpeedWhenAttacking(GameLevel gameLevel, Ghost ghost) {
-        final Arcade_LevelData data = levelData((gameLevel.number()));
-        if (gameLevel.worldMap().terrainLayer().isTunnel(ghost.tile())) {
-            return ghostSpeedInsideTunnel(gameLevel, ghost);
+    public float ghostSpeedWhenAttacking(GameLevel level, Ghost ghost) {
+        final Arcade_LevelData data = levelData((level.number()));
+        if (level.worldMap().terrainLayer().isTunnel(ghost.tile())) {
+            return ghostSpeedInsideTunnel(level, ghost);
         }
         if (ghost instanceof Blinky blinky) {
             if (blinky.cruiseElroyValue() == 1) {
@@ -474,25 +474,25 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public float ghostSpeedInsideHouse(GameLevel gameLevel, Ghost ghost) {
+    public float ghostSpeedInsideHouse(GameLevel level, Ghost ghost) {
         return 0.5f;
     }
 
     @Override
-    public float ghostSpeedReturningToHouse(GameLevel gameLevel, Ghost ghost) {
+    public float ghostSpeedReturningToHouse(GameLevel level, Ghost ghost) {
         return 2;
     }
 
     @Override
-    public float ghostSpeedWhenFrightened(GameLevel gameLevel, Ghost ghost) {
-        final Arcade_LevelData data = levelData((gameLevel.number()));
+    public float ghostSpeedWhenFrightened(GameLevel level, Ghost ghost) {
+        final Arcade_LevelData data = levelData((level.number()));
         float percentage = data.pctGhostSpeedFrightened();
         return percentage > 0 ? percentage * BASE_SPEED_1_PERCENT : BASE_SPEED;
     }
 
     @Override
-    public float ghostSpeedInsideTunnel(GameLevel gameLevel, Ghost ghost) {
-        final Arcade_LevelData data = levelData((gameLevel.number()));
+    public float ghostSpeedInsideTunnel(GameLevel level, Ghost ghost) {
+        final Arcade_LevelData data = levelData((level.number()));
         return data.pctGhostSpeedTunnel() * BASE_SPEED_1_PERCENT;
     }
 }
