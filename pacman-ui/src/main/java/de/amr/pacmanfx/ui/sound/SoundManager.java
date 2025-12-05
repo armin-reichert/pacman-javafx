@@ -22,6 +22,8 @@ import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
+//TODO: AI told me it would be better to cache Media instances instead of MediaPlayer instances. Should be refactored
+// accordingly.
 public class SoundManager implements Disposable {
 
     private final BooleanProperty enabledProperty = new SimpleBooleanProperty(true);
