@@ -444,21 +444,21 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     @Override
     public float pacSpeed(GameLevel level) {
-        final Arcade_LevelData data = levelData((level.number()));
+        final Arcade_LevelData data = levelData(level.number());
         byte percentage = data.pctPacSpeed();
         return percentage > 0 ? percentage * BASE_SPEED_1_PERCENT : BASE_SPEED;
     }
 
     @Override
     public float pacSpeedWhenHasPower(GameLevel level) {
-        final Arcade_LevelData data = levelData((level.number()));
+        final Arcade_LevelData data = levelData(level.number());
         byte percentage = data.pctPacSpeedPowered();
         return percentage > 0 ? percentage * BASE_SPEED_1_PERCENT : pacSpeed(level);
     }
 
     @Override
     public float ghostSpeedWhenAttacking(GameLevel level, Ghost ghost) {
-        final Arcade_LevelData data = levelData((level.number()));
+        final Arcade_LevelData data = levelData(level.number());
         if (level.worldMap().terrainLayer().isTunnel(ghost.tile())) {
             return ghostSpeedInsideTunnel(level, ghost);
         }
@@ -485,14 +485,14 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     @Override
     public float ghostSpeedWhenFrightened(GameLevel level, Ghost ghost) {
-        final Arcade_LevelData data = levelData((level.number()));
+        final Arcade_LevelData data = levelData(level.number());
         float percentage = data.pctGhostSpeedFrightened();
         return percentage > 0 ? percentage * BASE_SPEED_1_PERCENT : BASE_SPEED;
     }
 
     @Override
     public float ghostSpeedInsideTunnel(GameLevel level, Ghost ghost) {
-        final Arcade_LevelData data = levelData((level.number()));
+        final Arcade_LevelData data = levelData(level.number());
         return data.pctGhostSpeedTunnel() * BASE_SPEED_1_PERCENT;
     }
 }

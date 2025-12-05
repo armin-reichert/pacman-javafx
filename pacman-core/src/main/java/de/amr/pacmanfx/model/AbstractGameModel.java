@@ -131,6 +131,16 @@ public abstract class AbstractGameModel implements Game {
     }
 
     @Override
+    public Score score() {
+        return score;
+    }
+
+    @Override
+    public Score highScore() {
+        return highScore;
+    }
+
+    @Override
     public int lifeCount() {
         return lifeCountProperty().get();
     }
@@ -390,7 +400,7 @@ public abstract class AbstractGameModel implements Game {
     private File highScoreFile;
     private Set<Integer> extraLifeScores = Set.of();
 
-    public void setHighScoreFile(File highScoreFile) {
+    protected void setHighScoreFile(File highScoreFile) {
         this.highScoreFile = requireNonNull(highScoreFile);
     }
 
@@ -408,11 +418,11 @@ public abstract class AbstractGameModel implements Game {
         }
     }
 
-    public void setExtraLifeScores(Integer... scores) {
+    protected void setExtraLifeScores(Integer... scores) {
         extraLifeScores = Set.of(scores);
     }
 
-    public void scorePoints(int points) {
+    protected void scorePoints(int points) {
         if (!score.isEnabled()) {
             return;
         }
@@ -425,7 +435,7 @@ public abstract class AbstractGameModel implements Game {
         score.setPoints(newScore);
     }
 
-    public void loadHighScore() {
+    protected void loadHighScore() {
         if (highScoreFile == null) {
             Logger.error("High Score file could not be opened: game variant not set?");
             return;
@@ -438,7 +448,7 @@ public abstract class AbstractGameModel implements Game {
         }
     }
 
-    public void updateHighScore() {
+    protected void updateHighScore() {
         if (highScoreFile == null) {
             Logger.error("High Score file could not be opened: game variant not set?");
             return;
@@ -464,13 +474,5 @@ public abstract class AbstractGameModel implements Game {
             Logger.error("High Score could not be saved to file '{}'", highScoreFile);
             Logger.error(x);
         }
-    }
-
-    public Score score() {
-        return score;
-    }
-
-    public Score highScore() {
-        return highScore;
     }
 }
