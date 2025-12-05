@@ -10,8 +10,11 @@ import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.worldmap.FoodLayer;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
-import de.amr.pacmanfx.model.*;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameControl.StateName;
+import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.House;
+import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -202,6 +205,8 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
 
     @Override
     public List<MenuItem> supplyContextMenuItems(ContextMenuEvent menuEvent, ContextMenu menu) {
+        final Game game = context().currentGame();
+
         var miUse2DScene = new MenuItem(ui.assets().translated("use_2D_scene"));
         miUse2DScene.setOnAction(e -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.executeIfEnabled(ui));
 
@@ -209,10 +214,18 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
         miToggleMiniView.selectedProperty().bindBidirectional(PROPERTY_MINI_VIEW_ON);
 
         var miAutopilot = new CheckMenuItem(ui.assets().translated("autopilot"));
-        miAutopilot.selectedProperty().bindBidirectional(context().currentGame().usingAutopilotProperty());
+        miAutopilot.selectedProperty().bindBidirectional(game.usingAutopilotProperty());
 
         var miImmunity = new CheckMenuItem(ui.assets().translated("immunity"));
-        miImmunity.selectedProperty().bindBidirectional(context().currentGame().immuneProperty());
+        miImmunity.selectedProperty().bindBidirectional(game.immuneProperty());
+        miImmunity.setOnAction(e -> {
+            final boolean immune = miImmunity.isSelected();
+            if (immune && game.optGameLevel().isPresent() && !game.level().isDemoLevel()) {
+                game.cheatUsedProperty().set(true);
+            }
+            ui.soundManager().playVoiceAfterSec(0, immune ? SoundID.VOICE_IMMUNITY_ON : SoundID.VOICE_IMMUNITY_OFF);
+            ui.showFlashMessage(ui.assets().translated(immune ? "player_immunity_on" : "player_immunity_off"));
+        });
 
         var miMuted = new CheckMenuItem(ui.assets().translated("muted"));
         miMuted.selectedProperty().bindBidirectional(PROPERTY_MUTED);
