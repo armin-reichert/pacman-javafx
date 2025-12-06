@@ -223,8 +223,12 @@ public class SoundManager implements Disposable {
 
     public void stopAll() {
         soundMap.values().stream().filter(MediaPlayer.class::isInstance).map(MediaPlayer.class::cast).forEach(MediaPlayer::stop);
-        stopSiren();
-        stopVoice();
+        if (sirenPlayer != null) {
+            stopSiren();
+        }
+        if (voicePlayer != null) {
+            stopVoice();
+        }
         Logger.debug("All sounds (media players, siren, voice) stopped");
     }
 
