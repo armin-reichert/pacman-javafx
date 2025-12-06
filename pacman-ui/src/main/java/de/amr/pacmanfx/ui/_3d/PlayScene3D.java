@@ -77,7 +77,7 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
         return perspectiveID.get() == null ? Optional.empty() : Optional.of(perspectivesByID.get(perspectiveID.get()));
     }
 
-    protected final GameAction actionDroneUp = new GameAction("DroneUp") {
+    protected final GameAction actionDroneClimb = new GameAction("DroneClimb") {
         @Override
         public void execute(GameUI ui) {
             currentPerspective().ifPresent(perspective -> {
@@ -92,7 +92,7 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
         }
     };
 
-    protected final GameAction actionDroneDown = new GameAction("DroneDown") {
+    protected final GameAction actionDroneDescent = new GameAction("DroneDescent") {
         @Override
         public void execute(GameUI ui) {
             currentPerspective().ifPresent(perspective -> {
@@ -178,9 +178,9 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
     @Override
     public void handleScrollEvent(ScrollEvent e) {
         if (e.getDeltaY() < 0) {
-            actionDroneUp.executeIfEnabled(ui);
+            actionDroneClimb.executeIfEnabled(ui);
         } else {
-            actionDroneDown.executeIfEnabled(ui);
+            actionDroneDescent.executeIfEnabled(ui);
         }
     }
 

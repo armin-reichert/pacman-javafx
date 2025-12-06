@@ -95,8 +95,8 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
             actionBindings.useFirst(ACTION_TOGGLE_PAC_BOOSTER, TengenMsPacMan_UIConfig.ACTION_BINDINGS);
             actionBindings.useAll(GameUI.CHEAT_BINDINGS);
         }
-        actionBindings.useKeyCombination(actionDroneUp, control(KeyCode.MINUS));
-        actionBindings.useKeyCombination(actionDroneDown, control(KeyCode.PLUS));
+        actionBindings.useKeyCombination(actionDroneClimb, control(KeyCode.MINUS));
+        actionBindings.useKeyCombination(actionDroneDescent, control(KeyCode.PLUS));
         actionBindings.attach(GameUI.KEYBOARD);
     }
 
