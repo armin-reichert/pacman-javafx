@@ -40,7 +40,6 @@ import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape3D;
@@ -55,7 +54,6 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_QUIT_GAME_SCENE;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_TOGGLE_PLAY_SCENE_2D_3D;
 import static de.amr.pacmanfx.ui.api.GameUI.*;
-import static de.amr.pacmanfx.ui.input.Keyboard.control;
 import static de.amr.pacmanfx.uilib.Ufx.*;
 import static java.util.Objects.requireNonNull;
 
@@ -264,7 +262,7 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
         }
     }
 
-    protected abstract void setActionBindings();
+    protected abstract void setActionBindings(GameLevel gameLevel);
 
     @Override
     public void init(Game game) {
@@ -377,7 +375,7 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
         }
 
         gameLevel3D.updateLevelCounter3D();
-        setActionBindings();
+        setActionBindings(gameLevel);
         playSubSceneFadingInAnimation();
     }
 
@@ -417,7 +415,7 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
         }
         gameLevel3D.updateLevelCounter3D();
         updateHUD();
-        setActionBindings();
+        setActionBindings(gameLevel);
         playSubSceneFadingInAnimation();
     }
 

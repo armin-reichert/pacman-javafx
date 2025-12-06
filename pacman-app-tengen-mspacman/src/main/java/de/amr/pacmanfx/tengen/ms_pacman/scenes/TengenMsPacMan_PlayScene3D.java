@@ -6,6 +6,7 @@ package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
 import de.amr.pacmanfx.lib.nes.NES_Palette;
 import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.Difficulty;
@@ -80,20 +81,20 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     }
 
     @Override
-    protected void setActionBindings() {
-        final Game game = context().currentGame();
+    protected void setActionBindings(GameLevel level) {
+        actionBindings.release(GameUI.KEYBOARD);
         actionBindings.useAll(GameUI.PLAY_3D_BINDINGS);
         var tengenActionBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().tengenActionBindings();
-        // if demo level, allow going back to options screen
-        if (game.optGameLevel().isPresent() && game.level().isDemoLevel()) {
+        if (level.isDemoLevel()) {
+            // In demo level, allow going back to options screen
             actionBindings.useFirst(ACTION_QUIT_DEMO_LEVEL, tengenActionBindings);
         } else {
-            actionBindings.useAll(GameUI.CHEAT_BINDINGS);
             actionBindings.useFirst(ACTION_STEER_UP,    tengenActionBindings);
             actionBindings.useFirst(ACTION_STEER_DOWN,  tengenActionBindings);
             actionBindings.useFirst(ACTION_STEER_LEFT,  tengenActionBindings);
             actionBindings.useFirst(ACTION_STEER_RIGHT, tengenActionBindings);
             actionBindings.useFirst(ACTION_TOGGLE_PAC_BOOSTER, tengenActionBindings);
+            actionBindings.useAll(GameUI.CHEAT_BINDINGS);
         }
         actionBindings.addKeyCombination(actionDroneUp, control(KeyCode.MINUS));
         actionBindings.addKeyCombination(actionDroneDown, control(KeyCode.PLUS));
