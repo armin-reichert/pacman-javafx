@@ -135,31 +135,31 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
         assets.set("ghost.color.flashing.eyeballs",   ARCADE_ROSE);
         assets.set("ghost.color.flashing.pupils",     ARCADE_RED);
 
-        soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_OFF,    GLOBAL_RESOURCES.url("sound/voice/autopilot-off.mp3"));
-        soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_ON,     GLOBAL_RESOURCES.url("sound/voice/autopilot-on.mp3"));
-        soundManager.registerVoice(SoundID.VOICE_IMMUNITY_OFF,     GLOBAL_RESOURCES.url("sound/voice/immunity-off.mp3"));
-        soundManager.registerVoice(SoundID.VOICE_IMMUNITY_ON,      GLOBAL_RESOURCES.url("sound/voice/immunity-on.mp3"));
-        soundManager.registerVoice(SoundID.VOICE_EXPLAIN,          GLOBAL_RESOURCES.url("sound/voice/press-key.mp3"));
+        soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_OFF,     GLOBAL_RESOURCES.url("sound/voice/autopilot-off.mp3"));
+        soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_ON,      GLOBAL_RESOURCES.url("sound/voice/autopilot-on.mp3"));
+        soundManager.registerVoice(SoundID.VOICE_IMMUNITY_OFF,      GLOBAL_RESOURCES.url("sound/voice/immunity-off.mp3"));
+        soundManager.registerVoice(SoundID.VOICE_IMMUNITY_ON,       GLOBAL_RESOURCES.url("sound/voice/immunity-on.mp3"));
+        soundManager.registerVoice(SoundID.VOICE_EXPLAIN,           GLOBAL_RESOURCES.url("sound/voice/press-key.mp3"));
 
-        soundManager.registerAudioClip(SoundID.BONUS_EATEN,        ARCADE_PAC_MAN_RESOURCES.url("sound/eat_fruit.mp3"));
-        soundManager.registerAudioClip(SoundID.COIN_INSERTED,      ARCADE_PAC_MAN_RESOURCES.url("sound/credit.wav"));
-        soundManager.registerAudioClip(SoundID.EXTRA_LIFE,         ARCADE_PAC_MAN_RESOURCES.url("sound/extend.mp3"));
-        soundManager.registerAudioClip(SoundID.GAME_OVER,          ARCADE_PAC_MAN_RESOURCES.url("sound/common/game-over.mp3"));
-        soundManager.registerMediaPlayer(SoundID.GAME_READY,       ARCADE_PAC_MAN_RESOURCES.url("sound/game_start.mp3"));
-        soundManager.registerAudioClip(SoundID.GHOST_EATEN,        ARCADE_PAC_MAN_RESOURCES.url("sound/eat_ghost.mp3"));
-        soundManager.registerMediaPlayer(SoundID.GHOST_RETURNS,    ARCADE_PAC_MAN_RESOURCES.url("sound/retreating.mp3"));
-        soundManager.registerMediaPlayer(SoundID.INTERMISSION_1,   ARCADE_PAC_MAN_RESOURCES.url("sound/intermission.mp3"));
-        soundManager.registerMediaPlayer(SoundID.INTERMISSION_2,   ARCADE_PAC_MAN_RESOURCES.url("sound/intermission.mp3"));
-        soundManager.registerMediaPlayer(SoundID.INTERMISSION_3,   ARCADE_PAC_MAN_RESOURCES.url("sound/intermission.mp3"));
-        soundManager.registerAudioClip(SoundID.LEVEL_CHANGED,      ARCADE_PAC_MAN_RESOURCES.url("sound/common/sweep.mp3"));
-        soundManager.registerMediaPlayer(SoundID.LEVEL_COMPLETE,   ARCADE_PAC_MAN_RESOURCES.url("sound/common/level-complete.mp3"));
-        soundManager.registerMediaPlayer(SoundID.PAC_MAN_DEATH,    ARCADE_PAC_MAN_RESOURCES.url("sound/pacman_death.wav"));
-        soundManager.registerAudioClip(SoundID.PAC_MAN_MUNCHING,   ARCADE_PAC_MAN_RESOURCES.url("sound/munch.wav"));
-        soundManager.registerMediaPlayer(SoundID.PAC_MAN_POWER,    ARCADE_PAC_MAN_RESOURCES.url("sound/ghost-turn-to-blue.mp3"));
-        soundManager.registerMedia(SoundID.SIREN_1,                ARCADE_PAC_MAN_RESOURCES.url("sound/siren_1.mp3"));
-        soundManager.registerMedia(SoundID.SIREN_2,                ARCADE_PAC_MAN_RESOURCES.url("sound/siren_2.mp3"));
-        soundManager.registerMedia(SoundID.SIREN_3,                ARCADE_PAC_MAN_RESOURCES.url("sound/siren_3.mp3"));
-        soundManager.registerMedia(SoundID.SIREN_4,                ARCADE_PAC_MAN_RESOURCES.url("sound/siren_4.mp3"));
+        soundManager.registerAudioClipURL(SoundID.BONUS_EATEN,      ARCADE_PAC_MAN_RESOURCES.url("sound/eat_fruit.mp3"));
+        soundManager.registerAudioClipURL(SoundID.COIN_INSERTED,    ARCADE_PAC_MAN_RESOURCES.url("sound/credit.wav"));
+        soundManager.registerAudioClipURL(SoundID.EXTRA_LIFE,       ARCADE_PAC_MAN_RESOURCES.url("sound/extend.mp3"));
+        soundManager.registerAudioClipURL(SoundID.GAME_OVER,        ARCADE_PAC_MAN_RESOURCES.url("sound/common/game-over.mp3"));
+        soundManager.registerMediaPlayer(SoundID.GAME_READY,        ARCADE_PAC_MAN_RESOURCES.url("sound/game_start.mp3"));
+        soundManager.registerAudioClipURL(SoundID.GHOST_EATEN,      ARCADE_PAC_MAN_RESOURCES.url("sound/eat_ghost.mp3"));
+        soundManager.registerMediaPlayer(SoundID.GHOST_RETURNS,     ARCADE_PAC_MAN_RESOURCES.url("sound/retreating.mp3"));
+        soundManager.registerMediaPlayer(SoundID.INTERMISSION_1,    ARCADE_PAC_MAN_RESOURCES.url("sound/intermission.mp3"));
+        soundManager.registerMediaPlayer(SoundID.INTERMISSION_2,    ARCADE_PAC_MAN_RESOURCES.url("sound/intermission.mp3"));
+        soundManager.registerMediaPlayer(SoundID.INTERMISSION_3,    ARCADE_PAC_MAN_RESOURCES.url("sound/intermission.mp3"));
+        soundManager.registerAudioClipURL(SoundID.LEVEL_CHANGED,    ARCADE_PAC_MAN_RESOURCES.url("sound/common/sweep.mp3"));
+        soundManager.registerMediaPlayer(SoundID.LEVEL_COMPLETE,    ARCADE_PAC_MAN_RESOURCES.url("sound/common/level-complete.mp3"));
+        soundManager.registerMediaPlayer(SoundID.PAC_MAN_DEATH,     ARCADE_PAC_MAN_RESOURCES.url("sound/pacman_death.wav"));
+        soundManager.registerAudioClipURL(SoundID.PAC_MAN_MUNCHING, ARCADE_PAC_MAN_RESOURCES.url("sound/munch.wav"));
+        soundManager.registerMediaPlayer(SoundID.PAC_MAN_POWER,     ARCADE_PAC_MAN_RESOURCES.url("sound/ghost-turn-to-blue.mp3"));
+        soundManager.registerMedia(SoundID.SIREN_1,                 ARCADE_PAC_MAN_RESOURCES.url("sound/siren_1.mp3"));
+        soundManager.registerMedia(SoundID.SIREN_2,                 ARCADE_PAC_MAN_RESOURCES.url("sound/siren_2.mp3"));
+        soundManager.registerMedia(SoundID.SIREN_3,                 ARCADE_PAC_MAN_RESOURCES.url("sound/siren_3.mp3"));
+        soundManager.registerMedia(SoundID.SIREN_4,                 ARCADE_PAC_MAN_RESOURCES.url("sound/siren_4.mp3"));
     }
 
     @Override

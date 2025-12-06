@@ -205,8 +205,8 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         assets.set("ghost.color.flashing.eyeballs",    nesColor(0x20));
         assets.set("ghost.color.flashing.pupils",      nesColor(0x20));
 
-        soundManager.registerAudioClip("audio.option.selection_changed",  RES_TENGEN.url("sound/ms-select1.wav"));
-        soundManager.registerAudioClip("audio.option.value_changed",      RES_TENGEN.url("sound/ms-select2.wav"));
+        soundManager.registerAudioClipURL("audio.option.selection_changed",  RES_TENGEN.url("sound/ms-select1.wav"));
+        soundManager.registerAudioClipURL("audio.option.value_changed",      RES_TENGEN.url("sound/ms-select2.wav"));
 
         soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_OFF,           RES_GAME_UI.url("sound/voice/autopilot-off.mp3"));
         soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_ON,            RES_GAME_UI.url("sound/voice/autopilot-on.mp3"));
@@ -216,11 +216,11 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         soundManager.registerVoice(SoundID.VOICE_EXPLAIN,                 RES_GAME_UI.url("sound/voice/press-key.mp3"));
 
         soundManager.registerMediaPlayer(SoundID.BONUS_ACTIVE,            RES_TENGEN.url("sound/fruitbounce.wav"));
-        soundManager.registerAudioClip(SoundID.BONUS_EATEN,               RES_TENGEN.url("sound/ms-fruit.wav"));
-        soundManager.registerAudioClip(SoundID.EXTRA_LIFE,                RES_TENGEN.url("sound/ms-extralife.wav"));
-        soundManager.registerAudioClip(SoundID.GAME_OVER,                 RES_TENGEN.url("sound/common/game-over.mp3"));
+        soundManager.registerAudioClipURL(SoundID.BONUS_EATEN,               RES_TENGEN.url("sound/ms-fruit.wav"));
+        soundManager.registerAudioClipURL(SoundID.EXTRA_LIFE,                RES_TENGEN.url("sound/ms-extralife.wav"));
+        soundManager.registerAudioClipURL(SoundID.GAME_OVER,                 RES_TENGEN.url("sound/common/game-over.mp3"));
         soundManager.registerMediaPlayer(SoundID.GAME_READY,              RES_TENGEN.url("sound/ms-start.wav"));
-        soundManager.registerAudioClip(SoundID.GHOST_EATEN,               RES_TENGEN.url("sound/ms-ghosteat.wav"));
+        soundManager.registerAudioClipURL(SoundID.GHOST_EATEN,               RES_TENGEN.url("sound/ms-ghosteat.wav"));
         soundManager.registerMediaPlayer(SoundID.GHOST_RETURNS,           RES_TENGEN.url("sound/ms-eyes.wav"));
         soundManager.registerMediaPlayer(SoundID.INTERMISSION_1,          RES_TENGEN.url("sound/theymeet.wav"));
         soundManager.registerMediaPlayer(SoundID.INTERMISSION_2,          RES_TENGEN.url("sound/thechase.wav"));
@@ -228,10 +228,10 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         soundManager.registerMediaPlayer(SoundID.INTERMISSION_4,          RES_TENGEN.url("sound/theend.wav"));
         soundManager.registerMediaPlayer(SoundID.INTERMISSION_4 + ".junior.1", RES_TENGEN.url("sound/ms-theend1.wav"));
         soundManager.registerMediaPlayer(SoundID.INTERMISSION_4 + ".junior.2", RES_TENGEN.url("sound/ms-theend2.wav"));
-        soundManager.registerAudioClip(SoundID.LEVEL_CHANGED,             RES_TENGEN.url("sound/common/sweep.mp3"));
+        soundManager.registerAudioClipURL(SoundID.LEVEL_CHANGED,             RES_TENGEN.url("sound/common/sweep.mp3"));
         soundManager.registerMediaPlayer(SoundID.LEVEL_COMPLETE,          RES_TENGEN.url("sound/common/level-complete.mp3"));
         soundManager.registerMediaPlayer(SoundID.PAC_MAN_DEATH,           RES_TENGEN.url("sound/ms-death.wav"));
-        soundManager.registerAudioClip(SoundID.PAC_MAN_MUNCHING,          RES_TENGEN.url("sound/ms-dot.wav"));
+        soundManager.registerAudioClipURL(SoundID.PAC_MAN_MUNCHING,          RES_TENGEN.url("sound/ms-dot.wav"));
         soundManager.registerMediaPlayer(SoundID.PAC_MAN_POWER,           RES_TENGEN.url("sound/ms-power.wav"));
         soundManager.registerMedia(SoundID.SIREN_1,                       RES_TENGEN.url("sound/ms-siren1.wav"));
         soundManager.registerMedia(SoundID.SIREN_2,                       RES_TENGEN.url("sound/ms-siren2.wav"));// TODO

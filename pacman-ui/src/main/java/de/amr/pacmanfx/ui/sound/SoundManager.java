@@ -80,7 +80,7 @@ public class SoundManager implements Disposable {
         }
     }
 
-    public void registerAudioClip(Object key, URL url) {
+    public void registerAudioClipURL(Object key, URL url) {
         requireNonNull(key);
         requireNonNull(url);
         register(key, url);
