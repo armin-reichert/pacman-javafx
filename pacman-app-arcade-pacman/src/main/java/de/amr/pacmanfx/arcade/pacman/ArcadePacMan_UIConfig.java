@@ -156,10 +156,10 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
         soundManager.registerMediaPlayer(SoundID.PAC_MAN_DEATH,    ARCADE_PAC_MAN_RESOURCES.url("sound/pacman_death.wav"));
         soundManager.registerAudioClip(SoundID.PAC_MAN_MUNCHING,   ARCADE_PAC_MAN_RESOURCES.url("sound/munch.wav"));
         soundManager.registerMediaPlayer(SoundID.PAC_MAN_POWER,    ARCADE_PAC_MAN_RESOURCES.url("sound/ghost-turn-to-blue.mp3"));
-        soundManager.registerMediaPlayer(SoundID.SIREN_1,          ARCADE_PAC_MAN_RESOURCES.url("sound/siren_1.mp3"));
-        soundManager.registerMediaPlayer(SoundID.SIREN_2,          ARCADE_PAC_MAN_RESOURCES.url("sound/siren_2.mp3"));
-        soundManager.registerMediaPlayer(SoundID.SIREN_3,          ARCADE_PAC_MAN_RESOURCES.url("sound/siren_3.mp3"));
-        soundManager.registerMediaPlayer(SoundID.SIREN_4,          ARCADE_PAC_MAN_RESOURCES.url("sound/siren_4.mp3"));
+        soundManager.registerMedia(SoundID.SIREN_1,                ARCADE_PAC_MAN_RESOURCES.url("sound/siren_1.mp3"));
+        soundManager.registerMedia(SoundID.SIREN_2,                ARCADE_PAC_MAN_RESOURCES.url("sound/siren_2.mp3"));
+        soundManager.registerMedia(SoundID.SIREN_3,                ARCADE_PAC_MAN_RESOURCES.url("sound/siren_3.mp3"));
+        soundManager.registerMedia(SoundID.SIREN_4,                ARCADE_PAC_MAN_RESOURCES.url("sound/siren_4.mp3"));
     }
 
     @Override

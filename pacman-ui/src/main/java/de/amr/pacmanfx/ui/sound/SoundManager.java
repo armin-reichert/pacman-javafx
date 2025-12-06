@@ -33,8 +33,10 @@ public class SoundManager implements Disposable {
 
     private SoundID currentSirenID;
     private MediaPlayer currentVoice;
+    private MediaPlayer sirenPlayer;
 
-    public SoundManager() {}
+    public SoundManager() {
+    }
 
     @Override
     public void dispose() {
@@ -45,6 +47,18 @@ public class SoundManager implements Disposable {
         currentVoice = null;
         currentSirenID = null;
         Logger.info("Disposed default sound manager {}", this);
+    }
+
+    private Media getMedia(Object key) {
+
+        requireNonNull(key);
+        if (!soundMap.containsKey(key)) {
+            throw new IllegalArgumentException("Unknown media player key '%s'".formatted(key));
+        }
+        if (soundMap.get(key) instanceof Media media) {
+            return media;
+        }
+        throw new IllegalArgumentException("Sound entry with key '%s' is not a media object".formatted(key));
     }
 
     public MediaPlayer mediaPlayer(Object key) {
@@ -82,6 +96,14 @@ public class SoundManager implements Disposable {
         ));
         Logger.info("Media player registered: key='{}', URL='{}'", key, url);
         register(key, mediaPlayer);
+    }
+
+    public void registerMedia(Object key, URL url) {
+        requireNonNull(key);
+        requireNonNull(url);
+        var media = new Media(url.toExternalForm());
+        Logger.info("Media registered: key='{}', URL='{}'", key, url);
+        register(key, media);
     }
 
     public void registerVoice(SoundID id, URL url) {
@@ -239,37 +261,47 @@ public class SoundManager implements Disposable {
         }
     }
 
-    public void playSiren(SoundID sirenID, double volume) {
-        requireNonNull(sirenID);
-        if (!sirenID.isSirenID()) {
-            throw new IllegalArgumentException("Illegal siren ID '%s'".formatted(sirenID));
+    public void playSiren(SoundID key, double volume) {
+        requireNonNull(key);
+        if (!key.isSirenID()) {
+            throw new IllegalArgumentException("Illegal siren ID '%s'".formatted(key));
         }
-        if (currentSirenID != sirenID) {
+        if (key == currentSirenID) {
+            if (sirenPlayer == null) {
+                createSirenPlayer();
+            }
+        }
+        else {
             stopSiren();
+            currentSirenID = key;
+            createSirenPlayer();
         }
-        currentSirenID = sirenID;
-        MediaPlayer sirenPlayer = (MediaPlayer) soundMap.get(sirenID);
-        if (sirenPlayer.getStatus() != MediaPlayer.Status.PLAYING) {
-            sirenPlayer.setVolume(volume);
-            sirenPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-            Logger.trace("Play siren with ID '{}' (indefinite times) at volume {}", sirenID, sirenPlayer.getVolume());
-            sirenPlayer.play();
-        }
+        sirenPlayer.setVolume(volume);
+        sirenPlayer.play();
+        Logger.trace("Playing siren '{}' at volume {}", key, sirenPlayer.getVolume());
+    }
+
+    private void createSirenPlayer() {
+        sirenPlayer = new MediaPlayer(getMedia(currentSirenID));
+        sirenPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        sirenPlayer.muteProperty().bind(Bindings.createBooleanBinding(
+            () -> mutedProperty().get() || !enabledProperty().get(),
+            mutedProperty(), enabledProperty()
+        ));
+        sirenPlayer.setVolume(1);
     }
 
     public void pauseSiren() {
-        if (currentSirenID != null) {
-            MediaPlayer siren = (MediaPlayer) soundMap.get(currentSirenID);
+        if (sirenPlayer != null) {
             Logger.info("Paused siren with ID '{}'", currentSirenID);
-            siren.pause();
+            sirenPlayer.pause();
         }
     }
 
     public void stopSiren() {
-        if (currentSirenID != null) {
-            MediaPlayer siren = (MediaPlayer) soundMap.get(currentSirenID);
+        if (sirenPlayer != null) {
             Logger.trace("Stop siren with ID '{}'", currentSirenID);
-            siren.stop();
+            sirenPlayer.stop();
         }
     }
 }
