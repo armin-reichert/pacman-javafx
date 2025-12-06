@@ -50,7 +50,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
     @Override
     protected void doInit(Game game) {
         game.hud().creditVisible(false).scoreVisible(false).levelCounterVisible(false).livesCounterVisible(false);
-        actionBindings.useFirst(ACTION_ENTER_START_SCREEN,TengenMsPacMan_UIConfig.ACTION_BINDINGS);
+        actionBindings.useFirst(ACTION_ENTER_START_SCREEN, TengenMsPacMan_UIConfig.ACTION_BINDINGS);
         fadeProgress = 0;
     }
 

@@ -27,7 +27,6 @@ import javafx.scene.shape.Box;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Actions.ACTION_QUIT_DEMO_LEVEL;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Actions.ACTION_TOGGLE_PAC_BOOSTER;
-import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_3D_FLOOR_COLOR;
 import static de.amr.pacmanfx.ui.input.Keyboard.control;
 
@@ -88,10 +87,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
             // In demo level, allow going back to options screen
             actionBindings.useFirst(ACTION_QUIT_DEMO_LEVEL, TengenMsPacMan_UIConfig.ACTION_BINDINGS);
         } else {
-            actionBindings.useFirst(ACTION_STEER_UP,    TengenMsPacMan_UIConfig.ACTION_BINDINGS);
-            actionBindings.useFirst(ACTION_STEER_DOWN,  TengenMsPacMan_UIConfig.ACTION_BINDINGS);
-            actionBindings.useFirst(ACTION_STEER_LEFT,  TengenMsPacMan_UIConfig.ACTION_BINDINGS);
-            actionBindings.useFirst(ACTION_STEER_RIGHT, TengenMsPacMan_UIConfig.ACTION_BINDINGS);
+            actionBindings.useAll(TengenMsPacMan_UIConfig.STEERING_BINDINGS);
             actionBindings.useFirst(ACTION_TOGGLE_PAC_BOOSTER, TengenMsPacMan_UIConfig.ACTION_BINDINGS);
             actionBindings.useAll(GameUI.CHEAT_BINDINGS);
         }

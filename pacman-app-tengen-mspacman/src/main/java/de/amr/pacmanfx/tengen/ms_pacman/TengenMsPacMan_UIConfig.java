@@ -77,11 +77,14 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         ANIM_JUNIOR
     }
 
+    public static final Set<ActionBinding> STEERING_BINDINGS = Set.of(
+        new ActionBinding(ACTION_STEER_UP,    GameUI.JOYPAD.key(JoypadButton.UP),    control(KeyCode.UP)),
+        new ActionBinding(ACTION_STEER_DOWN,  GameUI.JOYPAD.key(JoypadButton.DOWN),  control(KeyCode.DOWN)),
+        new ActionBinding(ACTION_STEER_LEFT,  GameUI.JOYPAD.key(JoypadButton.LEFT),  control(KeyCode.LEFT)),
+        new ActionBinding(ACTION_STEER_RIGHT, GameUI.JOYPAD.key(JoypadButton.RIGHT), control(KeyCode.RIGHT))
+    );
+
     public static final Set<ActionBinding> ACTION_BINDINGS = Set.of(
-        new ActionBinding(ACTION_STEER_UP,            GameUI.JOYPAD.key(JoypadButton.UP),    control(KeyCode.UP)),
-        new ActionBinding(ACTION_STEER_DOWN,          GameUI.JOYPAD.key(JoypadButton.DOWN),  control(KeyCode.DOWN)),
-        new ActionBinding(ACTION_STEER_LEFT,          GameUI.JOYPAD.key(JoypadButton.LEFT),  control(KeyCode.LEFT)),
-        new ActionBinding(ACTION_STEER_RIGHT,         GameUI.JOYPAD.key(JoypadButton.RIGHT), control(KeyCode.RIGHT)),
         new ActionBinding(ACTION_QUIT_DEMO_LEVEL,     GameUI.JOYPAD.key(JoypadButton.START)),
         new ActionBinding(ACTION_ENTER_START_SCREEN,  GameUI.JOYPAD.key(JoypadButton.START)),
         new ActionBinding(ACTION_START_PLAYING,       GameUI.JOYPAD.key(JoypadButton.START)),
@@ -205,15 +208,13 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         assets.set("ghost.color.flashing.eyeballs",    nesColor(0x20));
         assets.set("ghost.color.flashing.pupils",      nesColor(0x20));
 
-        soundManager.registerAudioClipURL("audio.option.selection_changed",  RES_TENGEN.url("sound/ms-select1.wav"));
-        soundManager.registerAudioClipURL("audio.option.value_changed",      RES_TENGEN.url("sound/ms-select2.wav"));
+        soundManager.registerAudioClipURL("audio.option.selection_changed",    RES_TENGEN.url("sound/ms-select1.wav"));
+        soundManager.registerAudioClipURL("audio.option.value_changed",        RES_TENGEN.url("sound/ms-select2.wav"));
 
-        soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_OFF,           RES_GAME_UI.url("sound/voice/autopilot-off.mp3"));
-        soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_ON,            RES_GAME_UI.url("sound/voice/autopilot-on.mp3"));
-        soundManager.registerVoice(SoundID.VOICE_IMMUNITY_OFF,            RES_GAME_UI.url("sound/voice/immunity-off.mp3"));
-        soundManager.registerVoice(SoundID.VOICE_IMMUNITY_ON,             RES_GAME_UI.url("sound/voice/immunity-on.mp3"));
-        //TODO this is not used in Tengen Ms. Pac-Man, remove?
-        soundManager.registerVoice(SoundID.VOICE_EXPLAIN,                 RES_GAME_UI.url("sound/voice/press-key.mp3"));
+        soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_OFF,                RES_GAME_UI.url("sound/voice/autopilot-off.mp3"));
+        soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_ON,                 RES_GAME_UI.url("sound/voice/autopilot-on.mp3"));
+        soundManager.registerVoice(SoundID.VOICE_IMMUNITY_OFF,                 RES_GAME_UI.url("sound/voice/immunity-off.mp3"));
+        soundManager.registerVoice(SoundID.VOICE_IMMUNITY_ON,                  RES_GAME_UI.url("sound/voice/immunity-on.mp3"));
 
         soundManager.registerMediaPlayer(SoundID.BONUS_ACTIVE,                 RES_TENGEN.url("sound/fruitbounce.wav"));
         soundManager.registerAudioClipURL(SoundID.BONUS_EATEN,                 RES_TENGEN.url("sound/ms-fruit.wav"));
