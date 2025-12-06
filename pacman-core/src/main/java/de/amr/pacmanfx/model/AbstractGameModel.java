@@ -435,10 +435,6 @@ public abstract class AbstractGameModel implements Game {
     }
 
     protected void loadHighScore() {
-        if (highScoreFile == null) {
-            Logger.error("High Score file could not be opened: game variant not set?");
-            return;
-        }
         try {
             highScore.read(highScoreFile);
             Logger.info("High Score loaded from file '{}': points={}, level={}", highScoreFile, highScore.points(), highScore.levelNumber());
@@ -448,10 +444,6 @@ public abstract class AbstractGameModel implements Game {
     }
 
     protected void updateHighScore() {
-        if (highScoreFile == null) {
-            Logger.error("High Score file could not be opened: game variant not set?");
-            return;
-        }
         var oldHighScore = Score.fromFile(highScoreFile);
         if (highScore.points() > oldHighScore.points()) {
             try {
@@ -463,10 +455,6 @@ public abstract class AbstractGameModel implements Game {
     }
 
     public void saveHighScore() {
-        if (highScoreFile == null) {
-            Logger.error("High Score file could not be opened: game variant not set?");
-            return;
-        }
         try {
             new Score().save(highScoreFile, "High Score, %s".formatted(LocalDateTime.now()));
         } catch (IOException x) {

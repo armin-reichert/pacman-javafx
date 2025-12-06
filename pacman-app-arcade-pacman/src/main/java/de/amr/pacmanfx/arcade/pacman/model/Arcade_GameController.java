@@ -96,10 +96,10 @@ public class Arcade_GameController extends StateMachine<Game> implements GameCon
         HUNTING {
             @Override
             public void onEnter(Game game) {
+                // "GAME_OVER" (demo level) and  "TEST LEVEL XX" (level test) messages keep being shown
                 game.level().optMessage().filter(message -> message.type() == MessageType.READY).ifPresent(message -> {
-                    game.clearLevelMessage(); // leave TEST message alone
+                    game.clearLevelMessage();
                 });
-                game.clearLevelMessage();
                 game.startHunting(game.level());
             }
 
