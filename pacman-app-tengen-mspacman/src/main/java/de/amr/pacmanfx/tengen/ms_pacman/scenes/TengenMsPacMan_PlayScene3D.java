@@ -15,11 +15,11 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_HUD_Renderer;
 import de.amr.pacmanfx.ui._3d.GameLevel3D;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
-import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.api.GameUI;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Box;
 
@@ -28,6 +28,7 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Actions.ACTION_QUI
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Actions.ACTION_TOGGLE_PAC_BOOSTER;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_3D_FLOOR_COLOR;
+import static de.amr.pacmanfx.ui.input.Keyboard.control;
 
 /**
  * The 3D play scene of Tengen Ms. Pac-Man.
@@ -81,32 +82,22 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     @Override
     protected void setActionBindings() {
         final Game game = context().currentGame();
+        actionBindings.useAll(GameUI.PLAY_3D_BINDINGS);
         var tengenActionBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().tengenActionBindings();
         // if demo level, allow going back to options screen
         if (game.optGameLevel().isPresent() && game.level().isDemoLevel()) {
-            actionBindings.bind(ACTION_QUIT_DEMO_LEVEL, tengenActionBindings);
+            actionBindings.useFirst(ACTION_QUIT_DEMO_LEVEL, tengenActionBindings);
         } else {
-            setPlayerSteeringActionBindings();
-            actionBindings.bind(CheatActions.ACTION_ADD_LIVES, GameUI.ACTION_BINDINGS);
-            actionBindings.bind(CheatActions.ACTION_EAT_ALL_PELLETS, GameUI.ACTION_BINDINGS);
-            actionBindings.bind(CheatActions.ACTION_ENTER_NEXT_LEVEL, GameUI.ACTION_BINDINGS);
-            actionBindings.bind(CheatActions.ACTION_KILL_GHOSTS, GameUI.ACTION_BINDINGS);
-            actionBindings.bind(ACTION_TOGGLE_PAC_BOOSTER, tengenActionBindings);
+            actionBindings.useAll(GameUI.CHEAT_BINDINGS);
+            actionBindings.useFirst(ACTION_STEER_UP,    tengenActionBindings);
+            actionBindings.useFirst(ACTION_STEER_DOWN,  tengenActionBindings);
+            actionBindings.useFirst(ACTION_STEER_LEFT,  tengenActionBindings);
+            actionBindings.useFirst(ACTION_STEER_RIGHT, tengenActionBindings);
+            actionBindings.useFirst(ACTION_TOGGLE_PAC_BOOSTER, tengenActionBindings);
         }
-        actionBindings.bind(ACTION_PERSPECTIVE_PREVIOUS, GameUI.ACTION_BINDINGS);
-        actionBindings.bind(ACTION_PERSPECTIVE_NEXT, GameUI.ACTION_BINDINGS);
-        actionBindings.bind(ACTION_TOGGLE_DRAW_MODE, GameUI.ACTION_BINDINGS);
-
-        actionBindings.assignBindingsToKeyboard(ui.keyboard());
-    }
-
-    @Override
-    protected void setPlayerSteeringActionBindings() {
-        var tengenActionBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().tengenActionBindings();
-        actionBindings.bind(ACTION_STEER_UP,    tengenActionBindings);
-        actionBindings.bind(ACTION_STEER_DOWN,  tengenActionBindings);
-        actionBindings.bind(ACTION_STEER_LEFT,  tengenActionBindings);
-        actionBindings.bind(ACTION_STEER_RIGHT, tengenActionBindings);
+        actionBindings.addKeyCombination(actionDroneUp, control(KeyCode.MINUS));
+        actionBindings.addKeyCombination(actionDroneDown, control(KeyCode.PLUS));
+        actionBindings.attach(ui.keyboard());
     }
 
     @Override

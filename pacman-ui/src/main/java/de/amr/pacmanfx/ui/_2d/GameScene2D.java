@@ -72,7 +72,7 @@ public abstract class GameScene2D implements GameScene {
     @Override
     public final void init(Game game) {
         doInit(game);
-        actionBindings.assignBindingsToKeyboard(ui.keyboard());
+        actionBindings.attach(ui.keyboard());
         Logger.info("2D scene {} initialized", getClass().getSimpleName());
     }
 

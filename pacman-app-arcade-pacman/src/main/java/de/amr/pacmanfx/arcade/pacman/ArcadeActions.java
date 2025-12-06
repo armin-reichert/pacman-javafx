@@ -8,12 +8,18 @@ import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController.GameState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.api.GameUI;
+import javafx.scene.input.KeyCode;
+
+import java.util.Set;
 
 import static de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController.GameState.INTRO;
+import static de.amr.pacmanfx.ui.input.Keyboard.bare;
 
 public final class ArcadeActions {
+
     /**
      * Adds credit (simulates insertion of a coin) and switches the game state accordingly.
      */

@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
-import de.amr.pacmanfx.arcade.pacman.ArcadeActions;
+import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController.GameState;
 import de.amr.pacmanfx.arcade.pacman.model.actors.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_HUD_Renderer;
@@ -18,12 +18,10 @@ import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui.action.TestActions;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.input.KeyCode;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,7 +30,6 @@ import java.util.List;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.model.actors.GhostState.EATEN;
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
-import static de.amr.pacmanfx.ui.input.Keyboard.bare;
 
 /**
  * The ghosts are presented one by one, Pac-Man is chased by the ghosts, turns the cards and hunts the ghosts himself.
@@ -117,17 +114,9 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     @Override
     public void doInit(Game game) {
         final GameUI_Config uiConfig = ui.currentConfig();
-
         game.hud().creditVisible(true).scoreVisible(true).livesCounterVisible(false).levelCounterVisible(true);
-
-        actionBindings.addKeyCombination(ArcadeActions.ACTION_INSERT_COIN, bare(KeyCode.DIGIT5));
-        actionBindings.addKeyCombination(ArcadeActions.ACTION_INSERT_COIN, bare(KeyCode.NUMPAD5));
-        actionBindings.addKeyCombination(ArcadeActions.ACTION_START_GAME, bare(KeyCode.DIGIT1));
-        actionBindings.addKeyCombination(ArcadeActions.ACTION_START_GAME, bare(KeyCode.NUMPAD1));
-
-        actionBindings.bind(TestActions.ACTION_CUT_SCENES_TEST, GameUI.ACTION_BINDINGS);
-        actionBindings.bind(TestActions.ACTION_SHORT_LEVEL_TEST, GameUI.ACTION_BINDINGS);
-        actionBindings.bind(TestActions.ACTION_MEDIUM_LEVEL_TEST, GameUI.ACTION_BINDINGS);
+        actionBindings.useAll(ArcadePacMan_UIConfig.DEFAULT_BINDINGS);
+        actionBindings.useAll(GameUI.TEST_BINDINGS);
 
         blinking = new Pulse(10, Pulse.State.ON);
 

@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
-import de.amr.pacmanfx.arcade.pacman.ArcadeActions;
+import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController;
 import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_PlayScene2D_Renderer;
 import de.amr.pacmanfx.event.GameEvent;
@@ -20,8 +20,6 @@ import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.HUD_Renderer;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
-import de.amr.pacmanfx.ui.action.CheatActions;
-import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
@@ -32,7 +30,6 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.input.KeyCode;
 import org.tinylog.Logger;
 
 import java.util.List;
@@ -40,7 +37,6 @@ import java.util.List;
 import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_QUIT_GAME_SCENE;
 import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_MUTED;
-import static de.amr.pacmanfx.ui.input.Keyboard.bare;
 import static de.amr.pacmanfx.uilib.Ufx.createContextMenuTitle;
 
 /**
@@ -103,26 +99,17 @@ public class Arcade_PlayScene2D extends GameScene2D {
      */
     private void acceptGameLevel(GameLevel level) {
         if (level.isDemoLevel()) {
-            context().currentGame().hud().creditVisible(false).levelCounterVisible(true).livesCounterVisible(false);
-            actionBindings.addKeyCombination(ArcadeActions.ACTION_INSERT_COIN, bare(KeyCode.DIGIT5));
-            actionBindings.addKeyCombination(ArcadeActions.ACTION_INSERT_COIN, bare(KeyCode.NUMPAD5));
-            actionBindings.addKeyCombination(ArcadeActions.ACTION_START_GAME,  bare(KeyCode.DIGIT1));
-            actionBindings.addKeyCombination(ArcadeActions.ACTION_START_GAME,  bare(KeyCode.NUMPAD1));
+            level.game().hud().creditVisible(false).levelCounterVisible(true).livesCounterVisible(false);
+            actionBindings.useAll(ArcadePacMan_UIConfig.DEFAULT_BINDINGS);
+            actionBindings.attach(ui.keyboard());
             ui.soundManager().setEnabled(false);
         } else {
-            context().currentGame().hud().creditVisible(false).levelCounterVisible(true).livesCounterVisible(true);
-            actionBindings.bind(CommonGameActions.ACTION_STEER_UP,    GameUI.ACTION_BINDINGS);
-            actionBindings.bind(CommonGameActions.ACTION_STEER_DOWN,  GameUI.ACTION_BINDINGS);
-            actionBindings.bind(CommonGameActions.ACTION_STEER_LEFT,  GameUI.ACTION_BINDINGS);
-            actionBindings.bind(CommonGameActions.ACTION_STEER_RIGHT, GameUI.ACTION_BINDINGS);
-            actionBindings.bind(CheatActions.ACTION_ADD_LIVES,        GameUI.ACTION_BINDINGS);
-            actionBindings.bind(CheatActions.ACTION_EAT_ALL_PELLETS,  GameUI.ACTION_BINDINGS);
-            actionBindings.bind(CheatActions.ACTION_ENTER_NEXT_LEVEL, GameUI.ACTION_BINDINGS);
-            actionBindings.bind(CheatActions.ACTION_KILL_GHOSTS,      GameUI.ACTION_BINDINGS);
+            level.game().hud().creditVisible(false).levelCounterVisible(true).livesCounterVisible(true);
+            actionBindings.useAll(GameUI.STEERING_BINDINGS);
+            actionBindings.useAll(GameUI.CHEAT_BINDINGS);
+            actionBindings.attach(ui.keyboard());
             ui.soundManager().setEnabled(true);
         }
-        actionBindings.assignBindingsToKeyboard(ui.keyboard());
-
         Logger.info("Scene {} initialized with game level", getClass().getSimpleName());
     }
 

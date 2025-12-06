@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.arcade.pacman.ArcadeActions;
+import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_StartScene_Renderer;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.model.Game;
@@ -13,10 +14,8 @@ import de.amr.pacmanfx.ui._2d.HUD_Renderer;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.input.KeyCode;
 
 import static de.amr.pacmanfx.ui._2d.GameScene2D_Renderer.configureRendererForGameScene;
-import static de.amr.pacmanfx.ui.input.Keyboard.bare;
 
 /**
  * Scene shown after credit has been added and where game can be started.
@@ -52,10 +51,7 @@ public class ArcadePacMan_StartScene extends GameScene2D {
     @Override
     public void doInit(Game game) {
         game.hud().creditVisible(true).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
-        actionBindings.addKeyCombination(ArcadeActions.ACTION_INSERT_COIN, bare(KeyCode.DIGIT5));
-        actionBindings.addKeyCombination(ArcadeActions.ACTION_INSERT_COIN, bare(KeyCode.NUMPAD5));
-        actionBindings.addKeyCombination(ArcadeActions.ACTION_START_GAME, bare(KeyCode.DIGIT1));
-        actionBindings.addKeyCombination(ArcadeActions.ACTION_START_GAME, bare(KeyCode.NUMPAD1));
+        actionBindings.useAll(ArcadePacMan_UIConfig.DEFAULT_BINDINGS);
     }
 
     @Override

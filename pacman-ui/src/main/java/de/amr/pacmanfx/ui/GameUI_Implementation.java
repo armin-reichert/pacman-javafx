@@ -159,10 +159,10 @@ public final class GameUI_Implementation implements GameUI {
         stage.setMinHeight(MIN_STAGE_HEIGHT);
         stage.titleProperty().bind(titleBinding);
 
-        actionBindings.bind(ACTION_ENTER_FULLSCREEN, GameUI.ACTION_BINDINGS);
-        actionBindings.bind(ACTION_OPEN_EDITOR,      GameUI.ACTION_BINDINGS);
-        actionBindings.bind(ACTION_TOGGLE_MUTED,     GameUI.ACTION_BINDINGS);
-        actionBindings.assignBindingsToKeyboard(keyboard);
+        actionBindings.useFirst(ACTION_ENTER_FULLSCREEN, GameUI.ACTION_BINDINGS);
+        actionBindings.useFirst(ACTION_OPEN_EDITOR,      GameUI.ACTION_BINDINGS);
+        actionBindings.useFirst(ACTION_TOGGLE_MUTED,     GameUI.ACTION_BINDINGS);
+        actionBindings.attach(keyboard);
     }
 
     private void createScene(double width, double height) {
@@ -250,10 +250,10 @@ public final class GameUI_Implementation implements GameUI {
         }
         if (oldView != null) {
             oldView.onExit();
-            oldView.actionBindingsManager().removeBindingsFromKeyboard(keyboard);
+            oldView.actionBindingsManager().release(keyboard);
             gameContext.currentGame().removeGameEventListener(oldView);
         }
-        view.actionBindingsManager().assignBindingsToKeyboard(keyboard);
+        view.actionBindingsManager().attach(keyboard);
         gameContext.currentGame().addGameEventListener(view);
         currentViewProperty().set(view);
         view.onEnter();

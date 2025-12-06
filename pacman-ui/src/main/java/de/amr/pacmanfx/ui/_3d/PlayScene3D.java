@@ -78,7 +78,7 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
         return perspectiveID.get() == null ? Optional.empty() : Optional.of(perspectivesByID.get(perspectiveID.get()));
     }
 
-    private final GameAction actionDroneUp = new GameAction("DroneUp") {
+    protected final GameAction actionDroneUp = new GameAction("DroneUp") {
         @Override
         public void execute(GameUI ui) {
             currentPerspective().ifPresent(perspective -> {
@@ -93,7 +93,7 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
         }
     };
 
-    private final GameAction actionDroneDown = new GameAction("DroneDown") {
+    protected final GameAction actionDroneDown = new GameAction("DroneDown") {
         @Override
         public void execute(GameUI ui) {
             currentPerspective().ifPresent(perspective -> {
@@ -205,8 +205,6 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
 
     @Override
     public List<MenuItem> supplyContextMenuItems(ContextMenuEvent menuEvent, ContextMenu menu) {
-        final Game game = context().currentGame();
-
         var miUse2DScene = new MenuItem(ui.assets().translated("use_2D_scene"));
         miUse2DScene.setOnAction(e -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.executeIfEnabled(ui));
 
@@ -214,27 +212,10 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
         miToggleMiniView.selectedProperty().bindBidirectional(PROPERTY_MINI_VIEW_ON);
 
         var miAutopilot = new CheckMenuItem(ui.assets().translated("autopilot"));
-        miAutopilot.selectedProperty().bindBidirectional(game.usingAutopilotProperty());
-        miAutopilot.setOnAction(e -> {
-            final boolean usingAutopilot = miAutopilot.isSelected();
-            if (usingAutopilot && game.optGameLevel().isPresent() && !game.level().isDemoLevel()) {
-                game.cheatUsedProperty().set(true);
-            };
-            ui.soundManager().playVoiceAfterSec(0, usingAutopilot ? SoundID.VOICE_AUTOPILOT_ON : SoundID.VOICE_AUTOPILOT_OFF);
-            ui.showFlashMessage(ui.assets().translated(usingAutopilot ? "autopilot_on" : "autopilot_off"));
-
-        });
+        miAutopilot.selectedProperty().bindBidirectional(context().currentGame().usingAutopilotProperty());
 
         var miImmunity = new CheckMenuItem(ui.assets().translated("immunity"));
-        miImmunity.selectedProperty().bindBidirectional(game.immuneProperty());
-        miImmunity.setOnAction(e -> {
-            final boolean immune = miImmunity.isSelected();
-            if (immune && game.optGameLevel().isPresent() && !game.level().isDemoLevel()) {
-                game.cheatUsedProperty().set(true);
-            }
-            ui.soundManager().playVoiceAfterSec(0, immune ? SoundID.VOICE_IMMUNITY_ON : SoundID.VOICE_IMMUNITY_OFF);
-            ui.showFlashMessage(ui.assets().translated(immune ? "player_immunity_on" : "player_immunity_off"));
-        });
+        miImmunity.selectedProperty().bindBidirectional(context().currentGame().immuneProperty());
 
         var miMuted = new CheckMenuItem(ui.assets().translated("muted"));
         miMuted.selectedProperty().bindBidirectional(PROPERTY_MUTED);
@@ -285,15 +266,10 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
 
     protected abstract void setActionBindings();
 
-    protected abstract void setPlayerSteeringActionBindings();
-
     @Override
     public void init(Game game) {
         game.hud().showScore(true);
         perspectiveIDProperty().bind(PROPERTY_3D_PERSPECTIVE_ID);
-        actionBindings.addKeyCombination(actionDroneUp, control(KeyCode.MINUS));
-        actionBindings.addKeyCombination(actionDroneDown, control(KeyCode.PLUS));
-        actionBindings.assignBindingsToKeyboard(ui.keyboard());
     }
 
     @Override
@@ -392,7 +368,7 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
                         Vector2f messageCenter = optionalHouse.get().centerPositionUnderHouse();
                         gameLevel3D.showAnimatedMessage("READY!", 2.5f, messageCenter.x(), messageCenter.y());
                     }
-                    setPlayerSteeringActionBindings();
+                    //setPlayerSteeringActionBindings();
                 }
             }
             else {

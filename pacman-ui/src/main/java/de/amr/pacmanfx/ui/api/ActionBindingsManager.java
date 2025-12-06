@@ -29,16 +29,19 @@ public interface ActionBindingsManager {
         public boolean hasNoEntries() { return true; }
 
         @Override
-        public void assignBindingsToKeyboard(Keyboard keyboard) {}
+        public void attach(Keyboard keyboard) {}
 
         @Override
-        public void removeBindingsFromKeyboard(Keyboard keyboard) {}
+        public void release(Keyboard keyboard) {}
 
         @Override
-        public void bind(GameAction action, Set<ActionBinding> actionBindings) {}
+        public void useFirst(GameAction action, Set<ActionBinding> actionBindings) {}
 
         @Override
         public void addKeyCombination(GameAction action, KeyCombination combination) {}
+
+        @Override
+        public void useAll(Set<ActionBinding> actionBindings) {}
 
         @Override
         public Optional<GameAction> matchingAction(Keyboard keyboard) { return Optional.empty(); }
@@ -55,11 +58,13 @@ public interface ActionBindingsManager {
 
     boolean hasNoEntries();
 
-    void assignBindingsToKeyboard(Keyboard keyboard);
+    void attach(Keyboard keyboard);
 
-    void removeBindingsFromKeyboard(Keyboard keyboard);
+    void release(Keyboard keyboard);
 
     void addKeyCombination(GameAction action, KeyCombination combination);
 
-    void bind(GameAction gameAction, Set<ActionBinding> actionBindings);
+    void useFirst(GameAction gameAction, Set<ActionBinding> actionBindings);
+
+    void useAll(Set<ActionBinding> actionBindings);
 }
