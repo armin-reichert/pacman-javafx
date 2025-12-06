@@ -31,8 +31,9 @@ public class SoundManager implements Disposable {
 
     private final Map<Object, Object> soundMap = new HashMap<>();
 
+    private MediaPlayer voicePlayer;
+
     private SoundID currentSirenID;
-    private MediaPlayer currentVoice;
     private MediaPlayer sirenPlayer;
 
     public SoundManager() {
@@ -44,7 +45,7 @@ public class SoundManager implements Disposable {
         enabledProperty.unbind();
         mutedProperty.unbind();
         soundMap.clear();
-        currentVoice = null;
+        voicePlayer = null;
         currentSirenID = null;
         Logger.info("Disposed default sound manager {}", this);
     }
@@ -236,59 +237,57 @@ public class SoundManager implements Disposable {
         }
         Object value = soundMap.get(id);
         if (value instanceof MediaPlayer mediaPlayer) {
-            currentVoice = new MediaPlayer(mediaPlayer.getMedia()); // copy to make delayed playing work
+            voicePlayer = new MediaPlayer(mediaPlayer.getMedia()); // copy to make delayed playing work
             if (delaySeconds > 0) {
-                currentVoice.setOnReady(() -> {
+                voicePlayer.setOnReady(() -> {
                     voiceDelay.stop();
                     voiceDelay.setDuration(Duration.seconds(delaySeconds));
-                    voiceDelay.setOnFinished(e -> currentVoice.play());
+                    voiceDelay.setOnFinished(e -> voicePlayer.play());
                     voiceDelay.play();
                 });
             }
             else {
-                currentVoice.play();
+                voicePlayer.play();
             }
         }
     }
 
     public void stopVoice() {
-        if (currentVoice != null) {
+        if (voicePlayer != null) {
             Logger.trace("Stop voice");
             if (voiceDelay.getStatus() == Animation.Status.RUNNING) {
                 voiceDelay.stop();
             }
-            currentVoice.stop();
+            voicePlayer.stop();
         }
     }
 
-    public void playSiren(SoundID key, double volume) {
-        requireNonNull(key);
-        if (!key.isSirenID()) {
-            throw new IllegalArgumentException("Illegal siren ID '%s'".formatted(key));
+    public void playSiren(SoundID soundID, double volume) {
+        requireNonNull(soundID);
+        if (!soundID.isSirenID()) {
+            throw new IllegalArgumentException("Illegal siren ID '%s'".formatted(soundID));
         }
-        if (key == currentSirenID) {
-            if (sirenPlayer == null) {
-                createSirenPlayer();
+        if (soundID != currentSirenID) {
+            if (currentSirenID != null) {
+                stopSiren();
             }
-        }
-        else {
-            stopSiren();
-            currentSirenID = key;
-            createSirenPlayer();
+            createSirenPlayer(soundID);
+            currentSirenID = soundID;
         }
         sirenPlayer.setVolume(volume);
         sirenPlayer.play();
-        Logger.trace("Playing siren '{}' at volume {}", key, sirenPlayer.getVolume());
+        Logger.trace("Playing siren '{}' at volume {}", soundID, sirenPlayer.getVolume());
     }
 
-    private void createSirenPlayer() {
-        sirenPlayer = new MediaPlayer(getMedia(currentSirenID));
+    private void createSirenPlayer(SoundID sirenID) {
+        sirenPlayer = new MediaPlayer(getMedia(sirenID));
         sirenPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        sirenPlayer.setVolume(1);
         sirenPlayer.muteProperty().bind(Bindings.createBooleanBinding(
             () -> mutedProperty().get() || !enabledProperty().get(),
             mutedProperty(), enabledProperty()
         ));
-        sirenPlayer.setVolume(1);
+        Logger.info("Siren player created, siren ID='{}'", sirenID);
     }
 
     public void pauseSiren() {
@@ -296,6 +295,7 @@ public class SoundManager implements Disposable {
             Logger.info("Paused siren with ID '{}'", currentSirenID);
             sirenPlayer.pause();
         }
+        else Logger.error("Siren player not yet created");
     }
 
     public void stopSiren() {
@@ -303,5 +303,6 @@ public class SoundManager implements Disposable {
             Logger.trace("Stop siren with ID '{}'", currentSirenID);
             sirenPlayer.stop();
         }
+        else Logger.error("Siren player not yet created");
     }
 }
