@@ -215,28 +215,28 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         //TODO this is not used in Tengen Ms. Pac-Man, remove?
         soundManager.registerVoice(SoundID.VOICE_EXPLAIN,                 RES_GAME_UI.url("sound/voice/press-key.mp3"));
 
-        soundManager.registerMediaPlayer(SoundID.BONUS_ACTIVE,            RES_TENGEN.url("sound/fruitbounce.wav"));
-        soundManager.registerAudioClipURL(SoundID.BONUS_EATEN,               RES_TENGEN.url("sound/ms-fruit.wav"));
-        soundManager.registerAudioClipURL(SoundID.EXTRA_LIFE,                RES_TENGEN.url("sound/ms-extralife.wav"));
-        soundManager.registerAudioClipURL(SoundID.GAME_OVER,                 RES_TENGEN.url("sound/common/game-over.mp3"));
-        soundManager.registerMediaPlayer(SoundID.GAME_READY,              RES_TENGEN.url("sound/ms-start.wav"));
-        soundManager.registerAudioClipURL(SoundID.GHOST_EATEN,               RES_TENGEN.url("sound/ms-ghosteat.wav"));
-        soundManager.registerMediaPlayer(SoundID.GHOST_RETURNS,           RES_TENGEN.url("sound/ms-eyes.wav"));
-        soundManager.registerMediaPlayer(SoundID.INTERMISSION_1,          RES_TENGEN.url("sound/theymeet.wav"));
-        soundManager.registerMediaPlayer(SoundID.INTERMISSION_2,          RES_TENGEN.url("sound/thechase.wav"));
-        soundManager.registerMediaPlayer(SoundID.INTERMISSION_3,          RES_TENGEN.url("sound/junior.wav"));
-        soundManager.registerMediaPlayer(SoundID.INTERMISSION_4,          RES_TENGEN.url("sound/theend.wav"));
+        soundManager.registerMediaPlayer(SoundID.BONUS_ACTIVE,                 RES_TENGEN.url("sound/fruitbounce.wav"));
+        soundManager.registerAudioClipURL(SoundID.BONUS_EATEN,                 RES_TENGEN.url("sound/ms-fruit.wav"));
+        soundManager.registerAudioClipURL(SoundID.EXTRA_LIFE,                  RES_TENGEN.url("sound/ms-extralife.wav"));
+        soundManager.registerAudioClipURL(SoundID.GAME_OVER,                   RES_TENGEN.url("sound/common/game-over.mp3"));
+        soundManager.registerMediaPlayer(SoundID.GAME_READY,                   RES_TENGEN.url("sound/ms-start.wav"));
+        soundManager.registerAudioClipURL(SoundID.GHOST_EATEN,                 RES_TENGEN.url("sound/ms-ghosteat.wav"));
+        soundManager.registerMediaPlayer(SoundID.GHOST_RETURNS,                RES_TENGEN.url("sound/ms-eyes.wav"));
+        soundManager.registerMediaPlayer(SoundID.INTERMISSION_1,               RES_TENGEN.url("sound/theymeet.wav"));
+        soundManager.registerMediaPlayer(SoundID.INTERMISSION_2,               RES_TENGEN.url("sound/thechase.wav"));
+        soundManager.registerMediaPlayer(SoundID.INTERMISSION_3,               RES_TENGEN.url("sound/junior.wav"));
+        soundManager.registerMediaPlayer(SoundID.INTERMISSION_4,               RES_TENGEN.url("sound/theend.wav"));
         soundManager.registerMediaPlayer(SoundID.INTERMISSION_4 + ".junior.1", RES_TENGEN.url("sound/ms-theend1.wav"));
         soundManager.registerMediaPlayer(SoundID.INTERMISSION_4 + ".junior.2", RES_TENGEN.url("sound/ms-theend2.wav"));
-        soundManager.registerAudioClipURL(SoundID.LEVEL_CHANGED,             RES_TENGEN.url("sound/common/sweep.mp3"));
-        soundManager.registerMediaPlayer(SoundID.LEVEL_COMPLETE,          RES_TENGEN.url("sound/common/level-complete.mp3"));
-        soundManager.registerMediaPlayer(SoundID.PAC_MAN_DEATH,           RES_TENGEN.url("sound/ms-death.wav"));
-        soundManager.registerAudioClipURL(SoundID.PAC_MAN_MUNCHING,          RES_TENGEN.url("sound/ms-dot.wav"));
-        soundManager.registerMediaPlayer(SoundID.PAC_MAN_POWER,           RES_TENGEN.url("sound/ms-power.wav"));
-        soundManager.registerMedia(SoundID.SIREN_1,                       RES_TENGEN.url("sound/ms-siren1.wav"));
-        soundManager.registerMedia(SoundID.SIREN_2,                       RES_TENGEN.url("sound/ms-siren2.wav"));// TODO
-        soundManager.registerMedia(SoundID.SIREN_3,                       RES_TENGEN.url("sound/ms-siren2.wav"));// TODO
-        soundManager.registerMedia(SoundID.SIREN_4,                       RES_TENGEN.url("sound/ms-siren2.wav"));// TODO
+        soundManager.registerAudioClipURL(SoundID.LEVEL_CHANGED,               RES_TENGEN.url("sound/common/sweep.mp3"));
+        soundManager.registerMediaPlayer(SoundID.LEVEL_COMPLETE,               RES_TENGEN.url("sound/common/level-complete.mp3"));
+        soundManager.registerMediaPlayer(SoundID.PAC_MAN_DEATH,                RES_TENGEN.url("sound/ms-death.wav"));
+        soundManager.registerAudioClipURL(SoundID.PAC_MAN_MUNCHING,            RES_TENGEN.url("sound/ms-dot.wav"));
+        soundManager.registerMediaPlayer(SoundID.PAC_MAN_POWER,                RES_TENGEN.url("sound/ms-power.wav"));
+        soundManager.registerMedia(SoundID.SIREN_1,                            RES_TENGEN.url("sound/ms-siren1.wav"));
+        soundManager.registerMedia(SoundID.SIREN_2,                            RES_TENGEN.url("sound/ms-siren2.wav"));// TODO
+        soundManager.registerMedia(SoundID.SIREN_3,                            RES_TENGEN.url("sound/ms-siren2.wav"));// TODO
+        soundManager.registerMedia(SoundID.SIREN_4,                            RES_TENGEN.url("sound/ms-siren2.wav"));// TODO
 
         //TODO fix the sound file instead
         MediaPlayer bounceSound = soundManager.mediaPlayer(SoundID.BONUS_ACTIVE);
@@ -437,38 +437,38 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     private static NES_ColorScheme colorSchemeOfNonArcadeMap(NonArcadeMapsSpriteSheet.MazeID mazeID){
         return switch (mazeID) {
-            case MAZE1                  -> NES_ColorScheme._36_15_20_PINK_RED_WHITE;
-            case MAZE2                  -> NES_ColorScheme._21_20_28_BLUE_WHITE_YELLOW;
-            case MAZE3                  -> NES_ColorScheme._16_20_15_ORANGE_WHITE_RED;
-            case MAZE4                  -> NES_ColorScheme._01_38_20_BLUE_YELLOW_WHITE;
-            case MAZE5                  -> NES_ColorScheme._35_28_20_PINK_YELLOW_WHITE;
-            case MAZE6                  -> NES_ColorScheme._36_15_20_PINK_RED_WHITE;
-            case MAZE7                  -> NES_ColorScheme._17_20_20_BROWN_WHITE_WHITE;
-            case MAZE8                  -> NES_ColorScheme._13_20_28_VIOLET_WHITE_YELLOW;
-            case MAZE9                  -> NES_ColorScheme._0F_20_28_BLACK_WHITE_YELLOW;
-            case MAZE10_BIG             -> NES_ColorScheme._0F_01_20_BLACK_BLUE_WHITE;
-            case MAZE11                 -> NES_ColorScheme._14_25_20_VIOLET_ROSE_WHITE;
-            case MAZE12                 -> NES_ColorScheme._15_20_20_RED_WHITE_WHITE;
-            case MAZE13                 -> NES_ColorScheme._1B_20_20_GREEN_WHITE_WHITE;
-            case MAZE14_BIG             -> NES_ColorScheme._28_20_2A_YELLOW_WHITE_GREEN;
-            case MAZE15                 -> NES_ColorScheme._1A_20_28_GREEN_WHITE_YELLOW;
-            case MAZE16_MINI            -> NES_ColorScheme._18_20_20_KHAKI_WHITE_WHITE;
-            case MAZE17_BIG             -> NES_ColorScheme._25_20_20_ROSE_WHITE_WHITE;
-            case MAZE18                 -> NES_ColorScheme._12_20_28_BLUE_WHITE_YELLOW;
-            case MAZE19_BIG             -> NES_ColorScheme._07_20_20_BROWN_WHITE_WHITE;
-            case MAZE20_BIG             -> NES_ColorScheme._15_25_20_RED_ROSE_WHITE;
-            case MAZE21_BIG             -> NES_ColorScheme._0F_20_1C_BLACK_WHITE_GREEN;
-            case MAZE22_BIG             -> NES_ColorScheme._19_20_20_GREEN_WHITE_WHITE;
-            case MAZE23_BIG             -> NES_ColorScheme._0C_20_14_GREEN_WHITE_VIOLET;
-            case MAZE24                 -> NES_ColorScheme._23_20_2B_VIOLET_WHITE_GREEN;
-            case MAZE25_BIG             -> NES_ColorScheme._10_20_28_GRAY_WHITE_YELLOW;
-            case MAZE26_BIG             -> NES_ColorScheme._03_20_20_BLUE_WHITE_WHITE;
-            case MAZE27                 -> NES_ColorScheme._04_20_20_VIOLET_WHITE_WHITE;
-            case MAZE28_MINI            -> NES_ColorScheme._00_2A_24_GRAY_GREEN_PINK;
-            case MAZE29                 -> NES_ColorScheme._21_35_20_BLUE_PINK_WHITE;
-            case MAZE30_MINI            -> NES_ColorScheme._28_16_20_YELLOW_RED_WHITE;
-            case MAZE31                 -> NES_ColorScheme._12_16_20_BLUE_RED_WHITE;
-            case MAZE32_ANIMATED        -> NES_ColorScheme._15_25_20_RED_ROSE_WHITE;
+            case MAZE1           -> NES_ColorScheme._36_15_20_PINK_RED_WHITE;
+            case MAZE2           -> NES_ColorScheme._21_20_28_BLUE_WHITE_YELLOW;
+            case MAZE3           -> NES_ColorScheme._16_20_15_ORANGE_WHITE_RED;
+            case MAZE4           -> NES_ColorScheme._01_38_20_BLUE_YELLOW_WHITE;
+            case MAZE5           -> NES_ColorScheme._35_28_20_PINK_YELLOW_WHITE;
+            case MAZE6           -> NES_ColorScheme._36_15_20_PINK_RED_WHITE;
+            case MAZE7           -> NES_ColorScheme._17_20_20_BROWN_WHITE_WHITE;
+            case MAZE8           -> NES_ColorScheme._13_20_28_VIOLET_WHITE_YELLOW;
+            case MAZE9           -> NES_ColorScheme._0F_20_28_BLACK_WHITE_YELLOW;
+            case MAZE10_BIG      -> NES_ColorScheme._0F_01_20_BLACK_BLUE_WHITE;
+            case MAZE11          -> NES_ColorScheme._14_25_20_VIOLET_ROSE_WHITE;
+            case MAZE12          -> NES_ColorScheme._15_20_20_RED_WHITE_WHITE;
+            case MAZE13          -> NES_ColorScheme._1B_20_20_GREEN_WHITE_WHITE;
+            case MAZE14_BIG      -> NES_ColorScheme._28_20_2A_YELLOW_WHITE_GREEN;
+            case MAZE15          -> NES_ColorScheme._1A_20_28_GREEN_WHITE_YELLOW;
+            case MAZE16_MINI     -> NES_ColorScheme._18_20_20_KHAKI_WHITE_WHITE;
+            case MAZE17_BIG      -> NES_ColorScheme._25_20_20_ROSE_WHITE_WHITE;
+            case MAZE18          -> NES_ColorScheme._12_20_28_BLUE_WHITE_YELLOW;
+            case MAZE19_BIG      -> NES_ColorScheme._07_20_20_BROWN_WHITE_WHITE;
+            case MAZE20_BIG      -> NES_ColorScheme._15_25_20_RED_ROSE_WHITE;
+            case MAZE21_BIG      -> NES_ColorScheme._0F_20_1C_BLACK_WHITE_GREEN;
+            case MAZE22_BIG      -> NES_ColorScheme._19_20_20_GREEN_WHITE_WHITE;
+            case MAZE23_BIG      -> NES_ColorScheme._0C_20_14_GREEN_WHITE_VIOLET;
+            case MAZE24          -> NES_ColorScheme._23_20_2B_VIOLET_WHITE_GREEN;
+            case MAZE25_BIG      -> NES_ColorScheme._10_20_28_GRAY_WHITE_YELLOW;
+            case MAZE26_BIG      -> NES_ColorScheme._03_20_20_BLUE_WHITE_WHITE;
+            case MAZE27          -> NES_ColorScheme._04_20_20_VIOLET_WHITE_WHITE;
+            case MAZE28_MINI     -> NES_ColorScheme._00_2A_24_GRAY_GREEN_PINK;
+            case MAZE29          -> NES_ColorScheme._21_35_20_BLUE_PINK_WHITE;
+            case MAZE30_MINI     -> NES_ColorScheme._28_16_20_YELLOW_RED_WHITE;
+            case MAZE31          -> NES_ColorScheme._12_16_20_BLUE_RED_WHITE;
+            case MAZE32_ANIMATED -> NES_ColorScheme._15_25_20_RED_ROSE_WHITE;
 
             default -> throw new IllegalArgumentException("Illegal non-Arcade maze ID: " + mazeID);
         };

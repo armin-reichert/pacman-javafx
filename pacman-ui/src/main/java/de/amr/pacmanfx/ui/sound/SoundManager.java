@@ -51,7 +51,6 @@ public class SoundManager implements Disposable {
     }
 
     private Media getMedia(Object key) {
-
         requireNonNull(key);
         if (!soundMap.containsKey(key)) {
             throw new IllegalArgumentException("Unknown media player key '%s'".formatted(key));
