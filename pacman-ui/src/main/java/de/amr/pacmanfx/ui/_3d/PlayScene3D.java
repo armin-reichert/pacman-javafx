@@ -591,7 +591,9 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
         boolean returningHome = pac.isAlive() && ghosts.anyMatch(ghost ->
             ghost.state() == GhostState.RETURNING_HOME || ghost.state() == GhostState.ENTERING_HOUSE);
         if (returningHome) {
-            ui.soundManager().loop(SoundID.GHOST_RETURNS);
+            if (!ui.soundManager().isPlaying(SoundID.GHOST_RETURNS)) {
+                ui.soundManager().loop(SoundID.GHOST_RETURNS);
+            }
         } else {
             ui.soundManager().stop(SoundID.GHOST_RETURNS);
         }

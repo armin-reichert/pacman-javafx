@@ -319,7 +319,9 @@ public class Arcade_PlayScene2D extends GameScene2D {
         final boolean ghostReturningHome = pac.isAlive()
             && level.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).findAny().isPresent();
         if (ghostReturningHome) {
-            ui.soundManager().loop(SoundID.GHOST_RETURNS);
+            if (!ui.soundManager().isPlaying(SoundID.GHOST_RETURNS)) {
+                ui.soundManager().loop(SoundID.GHOST_RETURNS);
+            }
         } else {
             ui.soundManager().stop(SoundID.GHOST_RETURNS);
         }
