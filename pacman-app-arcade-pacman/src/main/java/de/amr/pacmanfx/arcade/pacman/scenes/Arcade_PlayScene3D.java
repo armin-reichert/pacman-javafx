@@ -20,7 +20,7 @@ public class Arcade_PlayScene3D extends PlayScene3D {
 
     protected void setActionBindings() {
         final Game game = context().currentGame();
-        actionBindings.release(ui.keyboard());
+        actionBindings.release(GameUI.KEYBOARD);
         actionBindings.useAll(GameUI.PLAY_3D_BINDINGS);
         if (game.optGameLevel().isPresent()) {
             if (game.level().isDemoLevel()) {
@@ -32,6 +32,6 @@ public class Arcade_PlayScene3D extends PlayScene3D {
         }
         actionBindings.addKeyCombination(actionDroneUp, control(KeyCode.MINUS));
         actionBindings.addKeyCombination(actionDroneDown, control(KeyCode.PLUS));
-        actionBindings.attach(ui.keyboard());
+        actionBindings.attach(GameUI.KEYBOARD);
     }
 }

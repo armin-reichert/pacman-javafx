@@ -29,7 +29,7 @@ public interface GameScene extends GameEventListener {
     ActionBindingsManager actionBindings();
 
     default void handleKeyboardInput() {
-        actionBindings().matchingAction(ui().keyboard()).ifPresent(
+        actionBindings().matchingAction(GameUI.KEYBOARD).ifPresent(
             gameAction -> gameAction.executeIfEnabled(ui()));
     }
 

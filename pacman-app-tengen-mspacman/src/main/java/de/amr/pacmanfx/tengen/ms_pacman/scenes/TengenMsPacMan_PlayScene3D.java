@@ -97,7 +97,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         }
         actionBindings.addKeyCombination(actionDroneUp, control(KeyCode.MINUS));
         actionBindings.addKeyCombination(actionDroneDown, control(KeyCode.PLUS));
-        actionBindings.attach(ui.keyboard());
+        actionBindings.attach(GameUI.KEYBOARD);
     }
 
     @Override

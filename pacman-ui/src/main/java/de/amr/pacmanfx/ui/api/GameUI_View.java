@@ -22,7 +22,7 @@ public interface GameUI_View extends GameEventListener {
      * @param ui the game UI
      */
     default void handleKeyboardInput(GameUI ui) {
-        actionBindingsManager().matchingAction(ui.keyboard()).ifPresent(gameAction -> gameAction.executeIfEnabled(ui));
+        actionBindingsManager().matchingAction(GameUI.KEYBOARD).ifPresent(gameAction -> gameAction.executeIfEnabled(ui));
     }
 
     /**

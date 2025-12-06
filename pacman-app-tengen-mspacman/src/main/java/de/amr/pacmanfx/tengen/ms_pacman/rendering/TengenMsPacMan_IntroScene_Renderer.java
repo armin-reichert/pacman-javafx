@@ -9,6 +9,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.scenes.TengenMsPacMan_IntroScene;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.TengenMsPacMan_IntroScene.SceneState;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
+import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
@@ -99,7 +100,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends GameScene2D_Renderer
         }
 
         if (PROPERTY_JOYPAD_BINDINGS_DISPLAYED.get()) {
-            drawJoypadKeyBinding(scene.ui().joypad().currentKeyBinding());
+            drawJoypadKeyBinding(GameUI.JOYPAD.currentKeyBinding());
         }
 
         if (scene.debugInfoVisible()) {

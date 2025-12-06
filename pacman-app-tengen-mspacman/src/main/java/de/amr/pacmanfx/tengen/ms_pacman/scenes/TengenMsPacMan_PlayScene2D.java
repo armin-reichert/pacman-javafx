@@ -159,7 +159,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
 
             actionBindings.useAll(GameUI.CHEAT_BINDINGS);
         }
-        actionBindings.attach(ui.keyboard());
+        actionBindings.attach(GameUI.KEYBOARD);
     }
 
 

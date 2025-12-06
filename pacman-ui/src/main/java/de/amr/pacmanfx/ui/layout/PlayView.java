@@ -201,7 +201,7 @@ public class PlayView extends StackPane implements GameUI_View {
 
     @Override
     public void handleKeyboardInput(GameUI ui) {
-        GameAction matchingAction = actionBindingsManager.matchingAction(ui.keyboard()).orElse(null);
+        GameAction matchingAction = actionBindingsManager.matchingAction(GameUI.KEYBOARD).orElse(null);
         if (matchingAction != null) {
             matchingAction.executeIfEnabled(ui);
         } else {

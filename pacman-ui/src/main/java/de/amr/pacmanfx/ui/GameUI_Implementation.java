@@ -14,8 +14,6 @@ import de.amr.pacmanfx.model.SimulationStepResult;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.api.*;
-import de.amr.pacmanfx.ui.input.Joypad;
-import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.layout.EditorView;
 import de.amr.pacmanfx.ui.layout.PlayView;
 import de.amr.pacmanfx.ui.layout.StartPagesCarousel;
@@ -66,8 +64,6 @@ public final class GameUI_Implementation implements GameUI {
     private final GlobalGameAssets assets;
     private final GameClock clock;
     private final GameContext gameContext;
-    private final Joypad joypad;
-    private final Keyboard keyboard;
     private final Stage stage;
     private final UIPreferences prefs;
     private final DirectoryWatchdog customDirWatchdog;
@@ -108,10 +104,6 @@ public final class GameUI_Implementation implements GameUI {
         prefs = new GameUI_Preferences();
         PROPERTY_3D_WALL_HEIGHT.set(prefs.getFloat("3d.obstacle.base_height"));
         PROPERTY_3D_WALL_OPACITY.set(prefs.getFloat("3d.obstacle.opacity"));
-
-        keyboard = new Keyboard();
-        joypad = new Joypad();
-        joypad.setSimulatingKeyboard(keyboard);
 
         customDirWatchdog = new DirectoryWatchdog(GameBox.CUSTOM_MAP_DIR);
 
@@ -162,7 +154,7 @@ public final class GameUI_Implementation implements GameUI {
         actionBindings.useFirst(ACTION_ENTER_FULLSCREEN, GameUI.COMMON_BINDINGS);
         actionBindings.useFirst(ACTION_OPEN_EDITOR,      GameUI.COMMON_BINDINGS);
         actionBindings.useFirst(ACTION_TOGGLE_MUTED,     GameUI.COMMON_BINDINGS);
-        actionBindings.attach(keyboard);
+        actionBindings.attach(KEYBOARD);
     }
 
     private void createScene(double width, double height) {
@@ -170,11 +162,11 @@ public final class GameUI_Implementation implements GameUI {
         scene.getStylesheets().add(GlobalGameAssets.STYLE_SHEET_PATH);
 
         // Keyboard events are first handled by the global keyboard object
-        scene.addEventFilter(KeyEvent.KEY_PRESSED,  keyboard::onKeyPressed);
-        scene.addEventFilter(KeyEvent.KEY_RELEASED, keyboard::onKeyReleased);
+        scene.addEventFilter(KeyEvent.KEY_PRESSED,  KEYBOARD::onKeyPressed);
+        scene.addEventFilter(KeyEvent.KEY_RELEASED, KEYBOARD::onKeyReleased);
 
         // If a global action is bound to the key press, execute it; otherwise let the current view handle it.
-        scene.setOnKeyPressed(e -> actionBindings.matchingAction(keyboard).ifPresentOrElse(action ->
+        scene.setOnKeyPressed(e -> actionBindings.matchingAction(KEYBOARD).ifPresentOrElse(action ->
             {
                 boolean executed = action.executeIfEnabled(this);
                 if (executed) e.consume();
@@ -250,10 +242,10 @@ public final class GameUI_Implementation implements GameUI {
         }
         if (oldView != null) {
             oldView.onExit();
-            oldView.actionBindingsManager().release(keyboard);
+            oldView.actionBindingsManager().release(KEYBOARD);
             gameContext.currentGame().removeGameEventListener(oldView);
         }
-        view.actionBindingsManager().attach(keyboard);
+        view.actionBindingsManager().attach(KEYBOARD);
         gameContext.currentGame().addGameEventListener(view);
         currentViewProperty().set(view);
         view.onEnter();
@@ -331,16 +323,6 @@ public final class GameUI_Implementation implements GameUI {
     @Override
     public GameContext context() {
         return gameContext;
-    }
-
-    @Override
-    public Joypad joypad() {
-        return joypad;
-    }
-
-    @Override
-    public Keyboard keyboard() {
-        return keyboard;
     }
 
     @Override

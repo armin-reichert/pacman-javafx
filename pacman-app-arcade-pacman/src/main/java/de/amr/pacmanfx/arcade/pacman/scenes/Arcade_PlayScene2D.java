@@ -101,13 +101,13 @@ public class Arcade_PlayScene2D extends GameScene2D {
         if (level.isDemoLevel()) {
             level.game().hud().creditVisible(false).levelCounterVisible(true).livesCounterVisible(false);
             actionBindings.useAll(ArcadePacMan_UIConfig.DEFAULT_BINDINGS);
-            actionBindings.attach(ui.keyboard());
+            actionBindings.attach(GameUI.KEYBOARD);
             ui.soundManager().setEnabled(false);
         } else {
             level.game().hud().creditVisible(false).levelCounterVisible(true).livesCounterVisible(true);
             actionBindings.useAll(GameUI.STEERING_BINDINGS);
             actionBindings.useAll(GameUI.CHEAT_BINDINGS);
-            actionBindings.attach(ui.keyboard());
+            actionBindings.attach(GameUI.KEYBOARD);
             ui.soundManager().setEnabled(true);
         }
         Logger.info("Scene {} initialized with game level", getClass().getSimpleName());

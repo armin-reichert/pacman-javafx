@@ -73,8 +73,6 @@ public class StartPagesCarousel extends Carousel implements GameUI_View {
     private final List<StartPage> pages = new ArrayList<>();
     private final ActionBindingsManager actionBindings = new DefaultActionBindingsManager();
 
-    private GameUI ui;
-
     public StartPagesCarousel() {
         super(Duration.seconds(PAGE_CHANGE_SECONDS));
     }
@@ -85,18 +83,17 @@ public class StartPagesCarousel extends Carousel implements GameUI_View {
         actionBindings.addKeyCombination(actionShowNextPage,         bare(KeyCode.RIGHT));
         actionBindings.addKeyCombination(ACTION_BOOT_SHOW_PLAY_VIEW, bare(KeyCode.ENTER));
         actionBindings.addKeyCombination(ACTION_TOGGLE_PAUSED,       bare(KeyCode.P));
-        actionBindings.attach(ui.keyboard());
+        actionBindings.attach(GameUI.KEYBOARD);
         restartTimer();
     }
 
     @Override
     public void onExit() {
         pauseTimer();
-        actionBindings.release(ui.keyboard());
+        actionBindings.release(GameUI.KEYBOARD);
     }
 
     public void setUI(GameUI ui) {
-        this.ui = requireNonNull(ui);
         selectedIndexProperty().addListener((py,ov,nv) -> {
             Logger.info("Carousel selection changed from {} to {}", ov, nv);
             int oldIndex = ov.intValue(), newIndex = nv.intValue();

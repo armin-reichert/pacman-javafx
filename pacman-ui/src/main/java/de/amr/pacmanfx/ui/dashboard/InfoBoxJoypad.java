@@ -23,7 +23,7 @@ public class InfoBoxJoypad extends InfoBox {
 
         setContentTextFont(Font.font("Monospace", 16));
 
-        var joypadKeyBinding = ui.joypad().currentKeyBinding();
+        final var joypadKeyBinding = GameUI.JOYPAD.currentKeyBinding();
         String indent = "  "; // Urgh
         addDynamicLabeledValue("[SELECT]   [START]", () -> "%s%s  %s".formatted(
             indent,

@@ -37,6 +37,9 @@ import static de.amr.pacmanfx.ui.input.Keyboard.*;
 
 public interface GameUI {
 
+    Keyboard KEYBOARD = new Keyboard();
+    Joypad JOYPAD     = new Joypad(KEYBOARD);
+
     Set<ActionBinding> CHEAT_BINDINGS = Set.of(
         new ActionBinding(CheatActions.ACTION_EAT_ALL_PELLETS,  alt(KeyCode.E)),
         new ActionBinding(CheatActions.ACTION_ADD_LIVES,        alt(KeyCode.L)),
@@ -123,16 +126,6 @@ public interface GameUI {
      * @return Context giving access to important entities like game controller, game state etc.
      */
     GameContext context();
-
-    /**
-     * @return key emulation of NES joypad
-     */
-    Joypad joypad();
-
-    /**
-     * @return global keyboard state
-     */
-    Keyboard keyboard();
 
     /**
      * @return sound manager for the current game
