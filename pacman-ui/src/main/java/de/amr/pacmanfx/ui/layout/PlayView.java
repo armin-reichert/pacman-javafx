@@ -113,26 +113,26 @@ public class PlayView extends StackPane implements GameUI_View {
         dashboard.setUI(ui);
         miniView.setUI(ui);
 
-        actionBindingsManager.useFirst(ACTION_BOOT_SHOW_PLAY_VIEW, GameUI.ACTION_BINDINGS);
-        actionBindingsManager.useFirst(ACTION_ENTER_FULLSCREEN, GameUI.ACTION_BINDINGS);
-        actionBindingsManager.useFirst(ACTION_QUIT_GAME_SCENE, GameUI.ACTION_BINDINGS);
-        actionBindingsManager.useFirst(ACTION_SHOW_HELP, GameUI.ACTION_BINDINGS);
-        actionBindingsManager.useFirst(ACTION_SIMULATION_SLOWER, GameUI.ACTION_BINDINGS);
-        actionBindingsManager.useFirst(ACTION_SIMULATION_SLOWEST, GameUI.ACTION_BINDINGS);
-        actionBindingsManager.useFirst(ACTION_SIMULATION_FASTER, GameUI.ACTION_BINDINGS);
-        actionBindingsManager.useFirst(ACTION_SIMULATION_FASTEST, GameUI.ACTION_BINDINGS);
-        actionBindingsManager.useFirst(ACTION_SIMULATION_RESET, GameUI.ACTION_BINDINGS);
-        actionBindingsManager.useFirst(ACTION_SIMULATION_ONE_STEP, GameUI.ACTION_BINDINGS);
-        actionBindingsManager.useFirst(ACTION_SIMULATION_TEN_STEPS, GameUI.ACTION_BINDINGS);
-        actionBindingsManager.useFirst(ACTION_TOGGLE_AUTOPILOT, GameUI.ACTION_BINDINGS);
-        actionBindingsManager.useFirst(ACTION_TOGGLE_DEBUG_INFO, GameUI.ACTION_BINDINGS);
-        actionBindingsManager.useFirst(ACTION_TOGGLE_MUTED, GameUI.ACTION_BINDINGS);
-        actionBindingsManager.useFirst(ACTION_TOGGLE_PAUSED, GameUI.ACTION_BINDINGS);
-        actionBindingsManager.useFirst(ACTION_TOGGLE_COLLISION_STRATEGY, GameUI.ACTION_BINDINGS);
-        actionBindingsManager.useFirst(ACTION_TOGGLE_DASHBOARD, GameUI.ACTION_BINDINGS);
-        actionBindingsManager.useFirst(ACTION_TOGGLE_IMMUNITY, GameUI.ACTION_BINDINGS);
-        actionBindingsManager.useFirst(ACTION_TOGGLE_MINI_VIEW_VISIBILITY, GameUI.ACTION_BINDINGS);
-        actionBindingsManager.useFirst(ACTION_TOGGLE_PLAY_SCENE_2D_3D, GameUI.ACTION_BINDINGS);
+        actionBindingsManager.useFirst(ACTION_BOOT_SHOW_PLAY_VIEW, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.useFirst(ACTION_ENTER_FULLSCREEN, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.useFirst(ACTION_QUIT_GAME_SCENE, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.useFirst(ACTION_SHOW_HELP, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.useFirst(ACTION_SIMULATION_SLOWER, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.useFirst(ACTION_SIMULATION_SLOWEST, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.useFirst(ACTION_SIMULATION_FASTER, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.useFirst(ACTION_SIMULATION_FASTEST, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.useFirst(ACTION_SIMULATION_RESET, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.useFirst(ACTION_SIMULATION_ONE_STEP, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.useFirst(ACTION_SIMULATION_TEN_STEPS, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.useFirst(ACTION_TOGGLE_AUTOPILOT, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.useFirst(ACTION_TOGGLE_DEBUG_INFO, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.useFirst(ACTION_TOGGLE_MUTED, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.useFirst(ACTION_TOGGLE_PAUSED, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.useFirst(ACTION_TOGGLE_COLLISION_STRATEGY, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.useFirst(ACTION_TOGGLE_DASHBOARD, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.useFirst(ACTION_TOGGLE_IMMUNITY, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.useFirst(ACTION_TOGGLE_MINI_VIEW_VISIBILITY, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.useFirst(ACTION_TOGGLE_PLAY_SCENE_2D_3D, GameUI.COMMON_BINDINGS);
     }
 
     public ObjectProperty<GameScene> currentGameSceneProperty() {

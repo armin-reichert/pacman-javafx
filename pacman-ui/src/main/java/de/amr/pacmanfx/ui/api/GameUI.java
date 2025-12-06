@@ -63,7 +63,7 @@ public interface GameUI {
         new ActionBinding(ACTION_TOGGLE_DRAW_MODE,                 alt(KeyCode.W))
     );
 
-    Set<ActionBinding> ACTION_BINDINGS = Set.of(
+    Set<ActionBinding> COMMON_BINDINGS = Set.of(
         new ActionBinding(ACTION_BOOT_SHOW_PLAY_VIEW,              bare(KeyCode.F3)),
         new ActionBinding(ACTION_ENTER_FULLSCREEN,                 bare(KeyCode.F11)),
         new ActionBinding(ACTION_OPEN_EDITOR,                      alt_shift(KeyCode.E)),

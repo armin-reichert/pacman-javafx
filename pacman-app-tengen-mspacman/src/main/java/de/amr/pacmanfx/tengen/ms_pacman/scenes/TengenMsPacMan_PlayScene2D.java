@@ -15,6 +15,7 @@ import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.test.TestState;
+import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.AnimationID;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
@@ -26,7 +27,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_PlayScene2D_Ren
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.action.ActionBinding;
-import de.amr.pacmanfx.ui.action.CheatActions;
+import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.SubSceneProvider;
@@ -50,13 +51,13 @@ import java.util.List;
 import java.util.Set;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Actions.*;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Actions.ACTION_QUIT_DEMO_LEVEL;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Properties.PROPERTY_PLAY_SCENE_DISPLAY_MODE;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
 import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel.GAME_OVER_MESSAGE_TEXT;
 import static de.amr.pacmanfx.tengen.ms_pacman.scenes.SceneDisplayMode.SCROLLING;
 import static de.amr.pacmanfx.ui._2d.GameScene2D_Renderer.configureRendererForGameScene;
-import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
+import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_QUIT_GAME_SCENE;
 import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR;
 import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_MUTED;
 import static de.amr.pacmanfx.uilib.Ufx.createContextMenuTitle;
@@ -137,10 +138,30 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
     }
 
     private void initForGameLevel(GameLevel level) {
-        context().currentGame().hud().levelCounterVisible(true).livesCounterVisible(true); // is also visible in demo level!
-        setActionsBindings(level.isDemoLevel());
+        level.game().hud().levelCounterVisible(true).livesCounterVisible(true);
+
         dynamicCamera.updateRange(level.worldMap());
+
+        // Action keyboard bindings
+        final Set<ActionBinding> tengenBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().tengenActionBindings();
+        if (level.isDemoLevel()) {
+            actionBindings.useFirst(TengenMsPacMan_Actions.ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, tengenBindings);
+            actionBindings.useFirst(ACTION_QUIT_DEMO_LEVEL, tengenBindings);
+        } else {
+            // Pac-Man is steered using keys simulating the NES "Joypad" buttons ("START", "SELECT", "B", "A" etc.)
+            actionBindings.useFirst(CommonGameActions.ACTION_STEER_UP,    tengenBindings);
+            actionBindings.useFirst(CommonGameActions.ACTION_STEER_DOWN,  tengenBindings);
+            actionBindings.useFirst(CommonGameActions.ACTION_STEER_LEFT,  tengenBindings);
+            actionBindings.useFirst(CommonGameActions.ACTION_STEER_RIGHT, tengenBindings);
+
+            actionBindings.useFirst(TengenMsPacMan_Actions.ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, tengenBindings);
+            actionBindings.useFirst(TengenMsPacMan_Actions.ACTION_TOGGLE_PAC_BOOSTER, tengenBindings);
+
+            actionBindings.useAll(GameUI.CHEAT_BINDINGS);
+        }
+        actionBindings.attach(ui.keyboard());
     }
+
 
     private void updateScaling() {
         SceneDisplayMode displayMode = PROPERTY_PLAY_SCENE_DISPLAY_MODE.get();
@@ -150,28 +171,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
         });
         Logger.info("Tengen 2D play scene sub-scene: w={0.00} h={0.00} scaling={0.00}",
             subScene.getWidth(), subScene.getHeight(), scaling());
-    }
-
-    private void setActionsBindings(boolean demoLevel) {
-        Set<ActionBinding> tengenBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().tengenActionBindings();
-        if (demoLevel) {
-            actionBindings.useFirst(ACTION_QUIT_DEMO_LEVEL, tengenBindings);
-        } else {
-            // Pac-Man is steered using the keys simulating the "Joypad" buttons
-            actionBindings.useFirst(ACTION_STEER_UP,    tengenBindings);
-            actionBindings.useFirst(ACTION_STEER_DOWN,  tengenBindings);
-            actionBindings.useFirst(ACTION_STEER_LEFT,  tengenBindings);
-            actionBindings.useFirst(ACTION_STEER_RIGHT, tengenBindings);
-
-            actionBindings.useFirst(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, tengenBindings);
-            actionBindings.useFirst(ACTION_TOGGLE_PAC_BOOSTER, tengenBindings);
-
-            actionBindings.useFirst(CheatActions.ACTION_ADD_LIVES,        GameUI.ACTION_BINDINGS);
-            actionBindings.useFirst(CheatActions.ACTION_EAT_ALL_PELLETS,  GameUI.ACTION_BINDINGS);
-            actionBindings.useFirst(CheatActions.ACTION_ENTER_NEXT_LEVEL, GameUI.ACTION_BINDINGS);
-            actionBindings.useFirst(CheatActions.ACTION_KILL_GHOSTS,      GameUI.ACTION_BINDINGS);
-        }
-        actionBindings.attach(ui.keyboard());
     }
 
     @Override
