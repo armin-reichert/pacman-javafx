@@ -4,8 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.event;
 
-import de.amr.pacmanfx.lib.fsm.StateMachine;
-import de.amr.pacmanfx.model.Game;
+import org.tinylog.Logger;
 
 public interface GameEventListener {
 
@@ -19,8 +18,7 @@ public interface GameEventListener {
             case GAME_STARTED -> onGameStarted(event);
             case GAME_STATE_CHANGED -> {
                 var stateChangeEvent = (GameStateChangeEvent) event;
-                onExitGameState(stateChangeEvent.oldState());
-                onEnterGameState(stateChangeEvent.newState());
+                onGameStateChange(stateChangeEvent);
             }
             case GHOST_EATEN -> onGhostEaten(event);
             case GHOST_ENTERS_HOUSE -> onGhostEntersHouse(event);
@@ -42,8 +40,10 @@ public interface GameEventListener {
         }
     }
 
-    default void onEnterGameState(StateMachine.State<Game> state) {}
-    default void onExitGameState(StateMachine.State<Game> state) {}
+    default void onGameStateChange(GameStateChangeEvent e) {
+        String newStateName = e.newState().name();
+        Logger.info("Enter new game state '{}'", newStateName);
+    }
 
     default void onCreditAdded(GameEvent e) {}
     default void onSpecialScoreReached(GameEvent e) {}

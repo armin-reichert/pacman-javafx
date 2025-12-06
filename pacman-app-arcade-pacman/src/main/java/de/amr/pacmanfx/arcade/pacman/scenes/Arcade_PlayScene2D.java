@@ -8,7 +8,8 @@ import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController;
 import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_PlayScene2D_Renderer;
 import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.lib.fsm.StateMachine;
+import de.amr.pacmanfx.event.GameStateChangeEvent;
+import de.amr.pacmanfx.lib.fsm.StateMachine.State;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
@@ -148,7 +149,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onGameStarted(GameEvent e) {
-        StateMachine.State<Game> state = context().currentGame().control().state();
+        State<Game> state = context().currentGame().control().state();
         boolean silent = context().currentGame().level().isDemoLevel() || state instanceof TestState;
         if (!silent) {
             ui.soundManager().play(SoundID.GAME_READY);
@@ -159,7 +160,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     public void update(Game game) {
         game.optGameLevel().ifPresent(level -> {
             updateHUD(level);
-            updateSound(level);
+            updateHuntingSound(level);
         });
     }
 
@@ -225,12 +226,12 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void onEnterGameState(StateMachine.State<Game> state) {
-        if (state == Arcade_GameController.GameState.LEVEL_COMPLETE) {
+    public void onGameStateChange(GameStateChangeEvent e) {
+        if (e.newState() == Arcade_GameController.GameState.LEVEL_COMPLETE) {
             ui.soundManager().stopAll();
             playLevelCompletedAnimation();
         }
-        else if (state == Arcade_GameController.GameState.GAME_OVER) {
+        else if (e.newState() == Arcade_GameController.GameState.GAME_OVER) {
             ui.soundManager().stopAll();
             ui.soundManager().play(SoundID.GAME_OVER);
         }
@@ -305,25 +306,25 @@ public class Arcade_PlayScene2D extends GameScene2D {
         ui.soundManager().play(SoundID.EXTRA_LIFE);
     }
 
-    private void updateSound(GameLevel level) {
-        if (!ui.soundManager().isEnabled()) return;
+    private void updateHuntingSound(GameLevel level) {
+        if (!ui.soundManager().isEnabled())
+            return;
 
-        final Pac pac = level.pac();
-        final boolean pacChased = context().currentGame().control().state() == Arcade_GameController.GameState.HUNTING
-            && !pac.powerTimer().isRunning();
-
-        if (pacChased) {
-            selectAndPlaySiren();
-        }
-
-        final boolean ghostReturningHome = pac.isAlive()
-            && level.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).findAny().isPresent();
-        if (ghostReturningHome) {
-            if (!ui.soundManager().isPlaying(SoundID.GHOST_RETURNS)) {
-                ui.soundManager().loop(SoundID.GHOST_RETURNS);
+        final State<Game> gameState = level.game().control().state();
+        if (gameState == Arcade_GameController.GameState.HUNTING) {
+            final Pac pac = level.pac();
+            if (!pac.powerTimer().isRunning()) {
+                selectAndPlaySiren();
             }
-        } else {
-            ui.soundManager().stop(SoundID.GHOST_RETURNS);
+            final boolean ghostReturns = pac.isAlive()
+                    && level.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).findAny().isPresent();
+            if (ghostReturns) {
+                if (!ui.soundManager().isPlaying(SoundID.GHOST_RETURNS)) {
+                    ui.soundManager().loop(SoundID.GHOST_RETURNS);
+                }
+            } else {
+                ui.soundManager().stop(SoundID.GHOST_RETURNS);
+            }
         }
     }
 

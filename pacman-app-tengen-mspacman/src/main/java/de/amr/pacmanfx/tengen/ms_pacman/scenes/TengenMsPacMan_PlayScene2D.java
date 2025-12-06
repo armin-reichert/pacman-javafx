@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
 import de.amr.pacmanfx.event.GameEvent;
+import de.amr.pacmanfx.event.GameStateChangeEvent;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
@@ -349,8 +350,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
     }
 
     @Override
-    public void onEnterGameState(StateMachine.State<Game> state) {
-        switch (state) {
+    public void onGameStateChange(GameStateChangeEvent e) {
+        switch (e.newState()) {
             case GameState.LEVEL_COMPLETE -> {
                 ui.soundManager().stopAll();
                 startLevelCompleteAnimation(context().currentGame().level());

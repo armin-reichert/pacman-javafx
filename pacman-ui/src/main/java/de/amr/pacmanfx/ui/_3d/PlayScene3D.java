@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.event.GameEvent;
+import de.amr.pacmanfx.event.GameStateChangeEvent;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
@@ -305,29 +306,29 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
     }
 
     @Override
-    public void onEnterGameState(StateMachine.State<Game> state) {
-        if (state instanceof TestState) {
+    public void onGameStateChange(GameStateChangeEvent e) {
+        if (e.newState() instanceof TestState) {
             replaceGameLevel3D();
             showLevelTestMessage(context().currentGame().level());
             PROPERTY_3D_PERSPECTIVE_ID.set(PerspectiveID.TOTAL);
         }
         else {
-            if (state.matches(StateName.HUNTING)) {
+            if (e.newState().matches(StateName.HUNTING)) {
                 gameLevel3D.onHuntingStart();
             }
-            else if (state.matches(StateName.PACMAN_DYING)) {
-                gameLevel3D.onPacManDying(state);
+            else if (e.newState().matches(StateName.PACMAN_DYING)) {
+                gameLevel3D.onPacManDying(e.newState());
             }
-            else if (state.matches(StateName.EATING_GHOST)) {
+            else if (e.newState().matches(StateName.EATING_GHOST)) {
                 gameLevel3D.onEatingGhost();
             }
-            else if (state.matches(StateName.LEVEL_COMPLETE)) {
-                gameLevel3D.onLevelComplete(state, perspectiveID);
+            else if (e.newState().matches(StateName.LEVEL_COMPLETE)) {
+                gameLevel3D.onLevelComplete(e.newState(), perspectiveID);
             }
-            else if (state.matches(StateName.GAME_OVER)) {
-                gameLevel3D.onGameOver(state);
+            else if (e.newState().matches(StateName.GAME_OVER)) {
+                gameLevel3D.onGameOver(e.newState());
             }
-            else if (state.matches(StateName.STARTING_GAME_OR_LEVEL)) {
+            else if (e.newState().matches(StateName.STARTING_GAME_OR_LEVEL)) {
                 if (gameLevel3D != null) {
                     gameLevel3D.onStartingGame();
                 } else {
