@@ -77,6 +77,19 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         ANIM_JUNIOR
     }
 
+    public static final Set<ActionBinding> ACTION_BINDINGS = Set.of(
+        new ActionBinding(ACTION_STEER_UP,            GameUI.JOYPAD.key(JoypadButton.UP),    control(KeyCode.UP)),
+        new ActionBinding(ACTION_STEER_DOWN,          GameUI.JOYPAD.key(JoypadButton.DOWN),  control(KeyCode.DOWN)),
+        new ActionBinding(ACTION_STEER_LEFT,          GameUI.JOYPAD.key(JoypadButton.LEFT),  control(KeyCode.LEFT)),
+        new ActionBinding(ACTION_STEER_RIGHT,         GameUI.JOYPAD.key(JoypadButton.RIGHT), control(KeyCode.RIGHT)),
+        new ActionBinding(ACTION_QUIT_DEMO_LEVEL,     GameUI.JOYPAD.key(JoypadButton.START)),
+        new ActionBinding(ACTION_ENTER_START_SCREEN,  GameUI.JOYPAD.key(JoypadButton.START)),
+        new ActionBinding(ACTION_START_PLAYING,       GameUI.JOYPAD.key(JoypadButton.START)),
+        new ActionBinding(ACTION_TOGGLE_PAC_BOOSTER,  GameUI.JOYPAD.key(JoypadButton.A), GameUI.JOYPAD.key(JoypadButton.B)),
+        new ActionBinding(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, alt(KeyCode.C)),
+        new ActionBinding(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, bare(KeyCode.SPACE))
+    );
+
     public static final String SPRITE_SHEET_PATH           = "graphics/spritesheet.png";
     public static final String ARCADE_MAZES_IMAGE_PATH     = "graphics/arcade_mazes.png";
     public static final String NON_ARCADE_MAZES_IMAGE_PATH = "graphics/non_arcade_mazes.png";
@@ -134,7 +147,6 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     private final TengenMsPacMan_SpriteSheet spriteSheet;
     private final ArcadeMapsSpriteSheet arcadeMapsSpriteSheet;
     private final NonArcadeMapsSpriteSheet nonArcadeMapsSpriteSheet;
-    private final Set<ActionBinding> tengenActionBindings;
     private final MapColoringService coloringService = new MapColoringService();
 
     public TengenMsPacMan_UIConfig(GameUI ui) {
@@ -145,23 +157,6 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         spriteSheet              = new TengenMsPacMan_SpriteSheet(RES_TENGEN.loadImage(SPRITE_SHEET_PATH));
         arcadeMapsSpriteSheet    = new ArcadeMapsSpriteSheet(RES_TENGEN.loadImage(ARCADE_MAZES_IMAGE_PATH));
         nonArcadeMapsSpriteSheet = new NonArcadeMapsSpriteSheet(RES_TENGEN.loadImage(NON_ARCADE_MAZES_IMAGE_PATH));
-
-        tengenActionBindings = Set.of(
-            new ActionBinding(ACTION_STEER_UP,            GameUI.JOYPAD.key(JoypadButton.UP),    control(KeyCode.UP)),
-            new ActionBinding(ACTION_STEER_DOWN,          GameUI.JOYPAD.key(JoypadButton.DOWN),  control(KeyCode.DOWN)),
-            new ActionBinding(ACTION_STEER_LEFT,          GameUI.JOYPAD.key(JoypadButton.LEFT),  control(KeyCode.LEFT)),
-            new ActionBinding(ACTION_STEER_RIGHT,         GameUI.JOYPAD.key(JoypadButton.RIGHT), control(KeyCode.RIGHT)),
-            new ActionBinding(ACTION_QUIT_DEMO_LEVEL,     GameUI.JOYPAD.key(JoypadButton.START)),
-            new ActionBinding(ACTION_ENTER_START_SCREEN,  GameUI.JOYPAD.key(JoypadButton.START)),
-            new ActionBinding(ACTION_START_PLAYING,       GameUI.JOYPAD.key(JoypadButton.START)),
-            new ActionBinding(ACTION_TOGGLE_PAC_BOOSTER,  GameUI.JOYPAD.key(JoypadButton.A), GameUI.JOYPAD.key(JoypadButton.B)),
-            new ActionBinding(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, alt(KeyCode.C)),
-            new ActionBinding(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, bare(KeyCode.SPACE))
-        );
-    }
-
-    public Set<ActionBinding> tengenActionBindings() {
-        return tengenActionBindings;
     }
 
     @Override

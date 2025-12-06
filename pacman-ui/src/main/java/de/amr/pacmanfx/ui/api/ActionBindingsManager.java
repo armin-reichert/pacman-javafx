@@ -38,7 +38,7 @@ public interface ActionBindingsManager {
         public void useFirst(GameAction action, Set<ActionBinding> actionBindings) {}
 
         @Override
-        public void addKeyCombination(GameAction action, KeyCombination combination) {}
+        public void useKeyCombination(GameAction action, KeyCombination combination) {}
 
         @Override
         public void useAll(Set<ActionBinding> actionBindings) {}
@@ -62,7 +62,7 @@ public interface ActionBindingsManager {
 
     void release(Keyboard keyboard);
 
-    void addKeyCombination(GameAction action, KeyCombination combination);
+    void useKeyCombination(GameAction action, KeyCombination combination);
 
     void useFirst(GameAction gameAction, Set<ActionBinding> actionBindings);
 

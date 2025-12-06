@@ -52,7 +52,7 @@ public class DefaultActionBindingsManager implements ActionBindingsManager {
     }
 
     @Override
-    public void addKeyCombination(GameAction action, KeyCombination combination) {
+    public void useKeyCombination(GameAction action, KeyCombination combination) {
         requireNonNull(action);
         requireNonNull(combination);
         actionByCombination.put(combination, action);

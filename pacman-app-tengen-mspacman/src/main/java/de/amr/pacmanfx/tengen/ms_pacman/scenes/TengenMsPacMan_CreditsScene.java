@@ -10,11 +10,8 @@ import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_CreditsScene_Renderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.HUD_Renderer;
-import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.api.GameUI;
 import javafx.scene.canvas.Canvas;
-
-import java.util.Set;
 
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Actions.ACTION_ENTER_START_SCREEN;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
@@ -53,8 +50,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
     @Override
     protected void doInit(Game game) {
         game.hud().creditVisible(false).scoreVisible(false).levelCounterVisible(false).livesCounterVisible(false);
-        Set<ActionBinding> tengenActionBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().tengenActionBindings();
-        actionBindings.useFirst(ACTION_ENTER_START_SCREEN, tengenActionBindings);
+        actionBindings.useFirst(ACTION_ENTER_START_SCREEN,TengenMsPacMan_UIConfig.ACTION_BINDINGS);
         fadeProgress = 0;
     }
 

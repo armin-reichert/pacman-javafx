@@ -79,10 +79,10 @@ public class StartPagesCarousel extends Carousel implements GameUI_View {
 
     @Override
     public void onEnter() {
-        actionBindings.addKeyCombination(actionShowPrevPage,         bare(KeyCode.LEFT));
-        actionBindings.addKeyCombination(actionShowNextPage,         bare(KeyCode.RIGHT));
-        actionBindings.addKeyCombination(ACTION_BOOT_SHOW_PLAY_VIEW, bare(KeyCode.ENTER));
-        actionBindings.addKeyCombination(ACTION_TOGGLE_PAUSED,       bare(KeyCode.P));
+        actionBindings.useKeyCombination(actionShowPrevPage,         bare(KeyCode.LEFT));
+        actionBindings.useKeyCombination(actionShowNextPage,         bare(KeyCode.RIGHT));
+        actionBindings.useKeyCombination(ACTION_BOOT_SHOW_PLAY_VIEW, bare(KeyCode.ENTER));
+        actionBindings.useKeyCombination(ACTION_TOGGLE_PAUSED,       bare(KeyCode.P));
         actionBindings.attach(GameUI.KEYBOARD);
         restartTimer();
     }

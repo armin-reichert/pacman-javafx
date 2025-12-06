@@ -88,9 +88,8 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
         final GameUI_Config uiConfig = ui.currentConfig();
         spriteSheet = (TengenMsPacMan_SpriteSheet) uiConfig.spriteSheet();
 
-        var tengenActionBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().tengenActionBindings();
-        actionBindings.useFirst(ACTION_ENTER_START_SCREEN, tengenActionBindings);
-        actionBindings.useFirst(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, tengenActionBindings);
+        actionBindings.useFirst(ACTION_ENTER_START_SCREEN,             TengenMsPacMan_UIConfig.ACTION_BINDINGS);
+        actionBindings.useFirst(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, TengenMsPacMan_UIConfig.ACTION_BINDINGS);
 
         ghostColors = Stream.of(RED_GHOST_SHADOW, PINK_GHOST_SPEEDY, CYAN_GHOST_BASHFUL, ORANGE_GHOST_POKEY)
                 .map(personality -> uiConfig.assets().color("ghost.%d.color.normal.dress".formatted(personality)))
