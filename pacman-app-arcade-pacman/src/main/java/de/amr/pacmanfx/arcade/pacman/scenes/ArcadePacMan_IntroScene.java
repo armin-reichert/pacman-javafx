@@ -114,9 +114,13 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     @Override
     public void doInit(Game game) {
         final GameUI_Config uiConfig = ui.currentConfig();
+
+        ui.soundManager().playVoiceAfterSec(1, SoundID.VOICE_EXPLAIN_GAME_START);
+
         game.hud().creditVisible(true).scoreVisible(true).livesCounterVisible(false).levelCounterVisible(true);
+
         actionBindings.useAll(ArcadePacMan_UIConfig.DEFAULT_BINDINGS);
-        actionBindings.useAll(GameUI.TEST_BINDINGS);
+        actionBindings.useAll(GameUI.SCENE_TESTS_BINDINGS);
 
         blinking = new Pulse(10, Pulse.State.ON);
 
@@ -139,8 +143,6 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         titleVisible = false;
         ghostIndex = 0;
         ghostKilledTime = 0;
-
-        ui.soundManager().playVoiceAfterSec(1, SoundID.VOICE_EXPLAIN);
 
         sceneController.restart(SceneState.STARTING);
     }

@@ -133,7 +133,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_ON,        GLOBAL_RESOURCES.url("sound/voice/autopilot-on.mp3"));
         soundManager.registerVoice(SoundID.VOICE_IMMUNITY_OFF,        GLOBAL_RESOURCES.url("sound/voice/immunity-off.mp3"));
         soundManager.registerVoice(SoundID.VOICE_IMMUNITY_ON,         GLOBAL_RESOURCES.url("sound/voice/immunity-on.mp3"));
-        soundManager.registerVoice(SoundID.VOICE_EXPLAIN,             GLOBAL_RESOURCES.url("sound/voice/press-key.mp3"));
+        soundManager.registerVoice(SoundID.VOICE_EXPLAIN_GAME_START,             GLOBAL_RESOURCES.url("sound/voice/press-key.mp3"));
 
         soundManager.registerMediaPlayer(SoundID.BONUS_ACTIVE,        ARCADE_MS_PAC_MAN_RESOURCES.url("sound/Fruit_Bounce.mp3"));
         soundManager.registerAudioClipURL(SoundID.BONUS_EATEN,           ARCADE_MS_PAC_MAN_RESOURCES.url("sound/Fruit.mp3"));

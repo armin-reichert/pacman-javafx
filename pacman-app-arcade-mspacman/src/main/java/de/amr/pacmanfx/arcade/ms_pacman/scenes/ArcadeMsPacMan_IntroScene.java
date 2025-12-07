@@ -100,10 +100,12 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void doInit(Game game) {
+        ui.soundManager().playVoiceAfterSec(1, SoundID.VOICE_EXPLAIN_GAME_START);
+
         game.hud().creditVisible(true).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
 
         actionBindings.useAll(ArcadePacMan_UIConfig.DEFAULT_BINDINGS);
-        actionBindings.useAll(GameUI.TEST_BINDINGS);
+        actionBindings.useAll(GameUI.SCENE_TESTS_BINDINGS);
 
         marquee = new Marquee(60, 88, 132, 60, 96, 6, 16);
         marquee.setBulbOffColor(ARCADE_RED);
@@ -124,8 +126,6 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
         presentedGhostCharacter = RED_GHOST_SHADOW;
         numTicksBeforeRising = 0;
-
-        ui.soundManager().playVoiceAfterSec(1, SoundID.VOICE_EXPLAIN);
 
         sceneController.restart(SceneState.STARTING);
     }

@@ -28,7 +28,7 @@ public enum SoundID {
     SIREN_4,
     VOICE_AUTOPILOT_ON,
     VOICE_AUTOPILOT_OFF,
-    VOICE_EXPLAIN,
+    VOICE_EXPLAIN_GAME_START,
     VOICE_IMMUNITY_ON,
     VOICE_IMMUNITY_OFF;
 
@@ -39,7 +39,7 @@ public enum SoundID {
     public boolean isVoiceID() {
         return this == VOICE_AUTOPILOT_ON
             || this == VOICE_AUTOPILOT_OFF
-            || this == VOICE_EXPLAIN
+            || this == VOICE_EXPLAIN_GAME_START
             || this == VOICE_IMMUNITY_ON
             || this == VOICE_IMMUNITY_OFF;
     }

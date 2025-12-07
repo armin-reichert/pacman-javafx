@@ -54,7 +54,7 @@ public interface GameUI {
         new ActionBinding(ACTION_STEER_RIGHT, bare(KeyCode.RIGHT), control(KeyCode.RIGHT))
     );
 
-    Set<ActionBinding> TEST_BINDINGS = Set.of(
+    Set<ActionBinding> SCENE_TESTS_BINDINGS = Set.of(
         new ActionBinding(TestActions.ACTION_CUT_SCENES_TEST,      alt(KeyCode.C)),
         new ActionBinding(TestActions.ACTION_SHORT_LEVEL_TEST,     alt(KeyCode.T)),
         new ActionBinding(TestActions.ACTION_MEDIUM_LEVEL_TEST,    alt_shift(KeyCode.T))
