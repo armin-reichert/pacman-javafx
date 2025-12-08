@@ -23,6 +23,7 @@ import java.util.stream.Stream;
 public class StatusIconBox extends HBox implements Disposable {
 
     private static final Color STATUS_ICON_COLOR = ArcadePalette.ARCADE_WHITE;
+
     private static final int ICON_SIZE = 24;
     private static final int ICON_SPACING = 5;
     private static final int PADDING = 10;
@@ -42,9 +43,9 @@ public class StatusIconBox extends HBox implements Disposable {
         iconImmune    = createIcon(FontAwesomeSolid.USER_SECRET, STATUS_ICON_COLOR, "Immunity");
         iconCheated   = createIcon(FontAwesomeSolid.FLAG, Color.RED, "Cheater");
 
-        getChildren().setAll(iconsInOrder().toList());
+        getChildren().setAll(icons().toList());
 
-        long count = iconsInOrder().count();
+        long count = icons().count();
         setMaxHeight(ICON_SIZE + 2 * PADDING);
         setMaxWidth((ICON_SIZE + ICON_SPACING) * count - ICON_SPACING + 2 * PADDING);
 
@@ -75,7 +76,7 @@ public class StatusIconBox extends HBox implements Disposable {
     @Override
     public void dispose() {
         visibleProperty().unbind();
-        iconsInOrder().forEach(icon -> {
+        icons().forEach(icon -> {
             icon.visibleProperty().unbind();
             icon.visibleProperty().removeListener(this::handleVisibilityChange);
         });
@@ -94,10 +95,10 @@ public class StatusIconBox extends HBox implements Disposable {
 
     private void handleVisibilityChange(ObservableValue<? extends Boolean> property, boolean wasVisible, boolean isVisible) {
         // keep box compact, show visible items only
-        getChildren().setAll(iconsInOrder().filter(Node::isVisible).toList());
+        getChildren().setAll(icons().filter(Node::isVisible).toList());
     }
 
-    private Stream<FontIcon> iconsInOrder() {
+    public Stream<FontIcon> icons() {
         return Stream.of(iconMuted, icon3D, iconAutopilot, iconImmune, iconCheated);
     }
 }
