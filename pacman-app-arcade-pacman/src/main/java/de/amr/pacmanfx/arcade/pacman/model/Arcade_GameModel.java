@@ -293,7 +293,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     public void continuePlaying(long tick) {
         if (tick == 1) {
             final GameLevel level = level();
-            //resetPacManAndGhostAnimations(level);
             level.getReadyToPlay();
             level.showPacAndGhosts();
             publishGameEvent(GameEvent.Type.GAME_CONTINUED);
@@ -416,6 +415,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             showLevelMessage(MessageType.READY);
             levelCounter().update(level.number(), level.bonusSymbol(0));
             score().setEnabled(true);
+            updateCheatingProperties(level);
             Logger.info("Level {} started", level.number());
         }
         // Note: This event is very important because it triggers the creation of the actor animations!

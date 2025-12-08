@@ -296,12 +296,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             publishGameEvent(GameEvent.Type.GAME_STARTED);
         }
         else if (tick == TICK_SHOW_READY) {
-            if (!level().isDemoLevel()) {
-                level().pac().immuneProperty().bind(immuneProperty());
-                level().pac().usingAutopilotProperty().bind(usingAutopilotProperty());
-                boolean cheating = immune() || usingAutopilot();
-                cheatUsedProperty().set(cheating);
-            }
             startLevel();
         }
         else if (tick == TICK_NEW_GAME_SHOW_GUYS) {
@@ -317,7 +311,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     public void continuePlaying(long tick) {
         if (tick == 1) {
             final GameLevel level = level();
-            //resetPacManAndGhostAnimations(level);
             level.getReadyToPlay();
             level.showPacAndGhosts();
             publishGameEvent(GameEvent.Type.GAME_CONTINUED);
