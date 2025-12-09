@@ -262,16 +262,15 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 scene.ghosts.forEach(Ghost::move);
 
                 // shaking effect
-                float offsetX = 0.5f;
-                final Ghost pinky = scene.ghosts.get(PINK_GHOST_SPEEDY);
-                final Ghost inky = scene.ghosts.get(CYAN_GHOST_BASHFUL);
-                long frame = timer.tickCount() % 6;
+                final long frame = timer.tickCount() % 6;
+                final Ghost pinkGhost = scene.ghosts.get(PINK_GHOST_SPEEDY);
+                final Ghost cyanGhost = scene.ghosts.get(CYAN_GHOST_BASHFUL);
                 if (frame == 2) {
-                    pinky.setX(pinky.x() + offsetX);
-                    inky.setX(inky.x() - offsetX);
+                    pinkGhost.setX(pinkGhost.x() + 0.5);
+                    cyanGhost.setX(cyanGhost.x() - 0.5);
                 } else if (frame == 5) {
-                    pinky.setX(pinky.x() - offsetX);
-                    inky.setX(inky.x() + offsetX);
+                    pinkGhost.setX(pinkGhost.x() - 0.5);
+                    cyanGhost.setX(cyanGhost.x() + 0.5);
                 }
             }
         },
