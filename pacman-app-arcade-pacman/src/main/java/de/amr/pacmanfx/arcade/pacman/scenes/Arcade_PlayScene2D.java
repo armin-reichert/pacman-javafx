@@ -187,7 +187,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     public List<MenuItem> supplyContextMenuItems(ContextMenuEvent contextMenuEvent, ContextMenu contextMenu) {
         final Game game = context().currentGame();
 
-        var miAutopilot = new CheckMenuItem(ui.assets().translated("autopilot"));
+        var miAutopilot = new CheckMenuItem(ui.globalAssets().translated("autopilot"));
         miAutopilot.selectedProperty().bindBidirectional(game.usingAutopilotProperty());
         miAutopilot.setOnAction(e -> {
             final boolean usingAutopilot = miAutopilot.isSelected();
@@ -195,11 +195,11 @@ public class Arcade_PlayScene2D extends GameScene2D {
                 game.cheatUsedProperty().set(true);
             };
             ui.soundManager().playVoiceAfterSec(0, usingAutopilot ? SoundID.VOICE_AUTOPILOT_ON : SoundID.VOICE_AUTOPILOT_OFF);
-            ui.showFlashMessage(ui.assets().translated(usingAutopilot ? "autopilot_on" : "autopilot_off"));
+            ui.showFlashMessage(ui.globalAssets().translated(usingAutopilot ? "autopilot_on" : "autopilot_off"));
 
         });
 
-        var miImmunity = new CheckMenuItem(ui.assets().translated("immunity"));
+        var miImmunity = new CheckMenuItem(ui.globalAssets().translated("immunity"));
         miImmunity.selectedProperty().bindBidirectional(game.immuneProperty());
         miImmunity.setOnAction(e -> {
             final boolean immune = miImmunity.isSelected();
@@ -207,17 +207,17 @@ public class Arcade_PlayScene2D extends GameScene2D {
                 game.cheatUsedProperty().set(true);
             }
             ui.soundManager().playVoiceAfterSec(0, immune ? SoundID.VOICE_IMMUNITY_ON : SoundID.VOICE_IMMUNITY_OFF);
-            ui.showFlashMessage(ui.assets().translated(immune ? "player_immunity_on" : "player_immunity_off"));
+            ui.showFlashMessage(ui.globalAssets().translated(immune ? "player_immunity_on" : "player_immunity_off"));
         });
 
-        var miMuted = new CheckMenuItem(ui.assets().translated("muted"));
+        var miMuted = new CheckMenuItem(ui.globalAssets().translated("muted"));
         miMuted.selectedProperty().bindBidirectional(PROPERTY_MUTED);
 
-        var miQuit = new MenuItem(ui.assets().translated("quit"));
+        var miQuit = new MenuItem(ui.globalAssets().translated("quit"));
         miQuit.setOnAction(e -> ACTION_QUIT_GAME_SCENE.executeIfEnabled(ui));
 
         return List.of(
-            createContextMenuTitle(ui.preferences(), ui.assets().translated("pacman")),
+            createContextMenuTitle(ui.preferences(), ui.globalAssets().translated("pacman")),
             miAutopilot,
             miImmunity,
             new SeparatorMenuItem(),

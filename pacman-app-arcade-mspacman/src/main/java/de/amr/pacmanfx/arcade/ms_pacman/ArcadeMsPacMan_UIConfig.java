@@ -129,11 +129,11 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         assets.set("ghost.color.flashing.eyeballs",   ARCADE_ROSE);
         assets.set("ghost.color.flashing.pupils",     ARCADE_RED);
 
-        soundManager.register(SoundID.VOICE_AUTOPILOT_OFF,          ui.assets().voice_Autopilot_Off);
-        soundManager.register(SoundID.VOICE_AUTOPILOT_ON,           ui.assets().voice_Autopilot_On);
-        soundManager.register(SoundID.VOICE_EXPLAIN_GAME_START,     ui.assets().voice_Explain);
-        soundManager.register(SoundID.VOICE_IMMUNITY_OFF,           ui.assets().voice_Immunity_Off);
-        soundManager.register(SoundID.VOICE_IMMUNITY_ON,            ui.assets().voice_Immunity_On);
+        soundManager.register(SoundID.VOICE_AUTOPILOT_OFF,          ui.globalAssets().voice_Autopilot_Off);
+        soundManager.register(SoundID.VOICE_AUTOPILOT_ON,           ui.globalAssets().voice_Autopilot_On);
+        soundManager.register(SoundID.VOICE_EXPLAIN_GAME_START,     ui.globalAssets().voice_Explain);
+        soundManager.register(SoundID.VOICE_IMMUNITY_OFF,           ui.globalAssets().voice_Immunity_Off);
+        soundManager.register(SoundID.VOICE_IMMUNITY_ON,            ui.globalAssets().voice_Immunity_On);
 
         soundManager.registerMediaPlayer(SoundID.BONUS_ACTIVE,      ARCADE_MS_PAC_MAN_RESOURCES.url("sound/Fruit_Bounce.mp3"));
         soundManager.registerAudioClipURL(SoundID.BONUS_EATEN,      ARCADE_MS_PAC_MAN_RESOURCES.url("sound/Fruit.mp3"));

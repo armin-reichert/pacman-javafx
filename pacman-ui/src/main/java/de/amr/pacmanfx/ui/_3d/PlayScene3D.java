@@ -156,9 +156,9 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
 
     private void createScores3D() {
         scores3D = new Scores3D(
-            ui.assets().translated("score.score"),
-            ui.assets().translated("score.high_score"),
-            ui.assets().font_Arcade_8
+            ui.globalAssets().translated("score.score"),
+            ui.globalAssets().translated("score.high_score"),
+            ui.globalAssets().font_Arcade_8
         );
 
         // The scores are always displayed in full view, regardless which perspective is used
@@ -204,31 +204,31 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
 
     @Override
     public List<MenuItem> supplyContextMenuItems(ContextMenuEvent menuEvent, ContextMenu menu) {
-        var miUse2DScene = new MenuItem(ui.assets().translated("use_2D_scene"));
+        var miUse2DScene = new MenuItem(ui.globalAssets().translated("use_2D_scene"));
         miUse2DScene.setOnAction(e -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.executeIfEnabled(ui));
 
-        var miToggleMiniView = new CheckMenuItem(ui.assets().translated("pip"));
+        var miToggleMiniView = new CheckMenuItem(ui.globalAssets().translated("pip"));
         miToggleMiniView.selectedProperty().bindBidirectional(PROPERTY_MINI_VIEW_ON);
 
-        var miAutopilot = new CheckMenuItem(ui.assets().translated("autopilot"));
+        var miAutopilot = new CheckMenuItem(ui.globalAssets().translated("autopilot"));
         miAutopilot.selectedProperty().bindBidirectional(context().currentGame().usingAutopilotProperty());
 
-        var miImmunity = new CheckMenuItem(ui.assets().translated("immunity"));
+        var miImmunity = new CheckMenuItem(ui.globalAssets().translated("immunity"));
         miImmunity.selectedProperty().bindBidirectional(context().currentGame().immuneProperty());
 
-        var miMuted = new CheckMenuItem(ui.assets().translated("muted"));
+        var miMuted = new CheckMenuItem(ui.globalAssets().translated("muted"));
         miMuted.selectedProperty().bindBidirectional(PROPERTY_MUTED);
 
-        var miQuit = new MenuItem(ui.assets().translated("quit"));
+        var miQuit = new MenuItem(ui.globalAssets().translated("quit"));
         miQuit.setOnAction(e -> ACTION_QUIT_GAME_SCENE.executeIfEnabled(ui));
 
         var items = new ArrayList<MenuItem>();
-        items.add(createContextMenuTitle(ui.preferences(), ui.assets().translated("scene_display")));
+        items.add(createContextMenuTitle(ui.preferences(), ui.globalAssets().translated("scene_display")));
         items.add(miUse2DScene);
         items.add(miToggleMiniView);
-        items.add(createContextMenuTitle(ui.preferences(), ui.assets().translated("select_perspective")));
+        items.add(createContextMenuTitle(ui.preferences(), ui.globalAssets().translated("select_perspective")));
         items.addAll(createPerspectiveRadioItems(menu));
-        items.add(createContextMenuTitle(ui.preferences(), ui.assets().translated("pacman")));
+        items.add(createContextMenuTitle(ui.preferences(), ui.globalAssets().translated("pacman")));
         items.add(miAutopilot);
         items.add(miImmunity);
         items.add(new SeparatorMenuItem());
@@ -241,7 +241,7 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
     private List<RadioMenuItem> createPerspectiveRadioItems(ContextMenu menu) {
         var items = new ArrayList<RadioMenuItem>();
         for (PerspectiveID id : PerspectiveID.values()) {
-            var item = new RadioMenuItem(ui.assets().translated("perspective_id_" + id.name()));
+            var item = new RadioMenuItem(ui.globalAssets().translated("perspective_id_" + id.name()));
             item.setUserData(id);
             item.setToggleGroup(perspectiveToggleGroup);
             if (id == PROPERTY_3D_PERSPECTIVE_ID.get())  {
@@ -565,7 +565,7 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
         }
         else { // disabled, show text "GAME OVER"
             Color color = ui.currentConfig().assets().color("color.game_over_message");
-            scores3D.showTextForScore(ui.assets().translated("score.game_over"), color);
+            scores3D.showTextForScore(ui.globalAssets().translated("score.game_over"), color);
         }
         // Always show high score
         scores3D.showHighScore(highScore.points(), highScore.levelNumber());

@@ -34,7 +34,7 @@ public class HelpLayer extends Pane {
         boolean msPacMan = ui.context().gameVariantName().equals(StandardGameVariant.MS_PACMAN.name())
             || ui.context().gameVariantName().equals(StandardGameVariant.MS_PACMAN_XXL.name());
         Color bgColor = msPacMan ? Color.RED : Color.BLUE;
-        var font = Font.font(ui.assets().font_Monospaced.getFamily(), Math.max(6, 14 * scaling));
+        var font = Font.font(ui.globalAssets().font_Monospaced.getFamily(), Math.max(6, 14 * scaling));
         var helpPane = HelpInfo.build(ui).createPane(ui, colorWithOpacity(bgColor, 0.8), font);
         helpPopUp.setTranslateX(10 * scaling);
         helpPopUp.setTranslateY(30 * scaling);

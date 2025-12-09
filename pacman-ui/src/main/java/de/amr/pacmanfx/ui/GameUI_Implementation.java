@@ -306,7 +306,7 @@ public final class GameUI_Implementation implements GameUI {
     // GameUI interface
 
     @Override
-    public GlobalGameAssets assets() {
+    public GlobalGameAssets globalAssets() {
         return assets;
     }
 

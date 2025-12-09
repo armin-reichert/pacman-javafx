@@ -50,8 +50,8 @@ public class StartPagesCarousel extends Carousel implements GameUI_View {
 
     public static Node createDefaultStartButton(GameUI ui, Runnable action) {
         var button = new FancyButton(
-            ui.assets().translated("play_button"),
-            Font.font(ui.assets().font_Arcade_8.getFamily(), 30),
+            ui.globalAssets().translated("play_button"),
+            Font.font(ui.globalAssets().font_Arcade_8.getFamily(), 30),
             START_BUTTON_BGCOLOR, START_BUTTON_FILLCOLOR);
         button.setAction(action);
         StackPane.setAlignment(button, Pos.BOTTOM_CENTER);
@@ -108,7 +108,7 @@ public class StartPagesCarousel extends Carousel implements GameUI_View {
                 startPage.layoutRoot().requestFocus();
             }
         });
-        setBackground(ui.assets().background_PacManWallpaper);
+        setBackground(ui.globalAssets().background_PacManWallpaper);
     }
 
     @Override

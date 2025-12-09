@@ -236,11 +236,11 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
     public List<MenuItem> supplyContextMenuItems(ContextMenuEvent menuEvent, ContextMenu menu) {
         SceneDisplayMode displayMode = PROPERTY_PLAY_SCENE_DISPLAY_MODE.get();
 
-        miScaledToFit = new RadioMenuItem(ui.assets().translated("scaled_to_fit"));
+        miScaledToFit = new RadioMenuItem(ui.globalAssets().translated("scaled_to_fit"));
         miScaledToFit.setSelected(displayMode == SceneDisplayMode.SCALED_TO_FIT);
         miScaledToFit.setOnAction(e -> PROPERTY_PLAY_SCENE_DISPLAY_MODE.set(SceneDisplayMode.SCALED_TO_FIT));
 
-        miScrolling = new RadioMenuItem(ui.assets().translated("scrolling"));
+        miScrolling = new RadioMenuItem(ui.globalAssets().translated("scrolling"));
         miScrolling.setSelected(displayMode == SCROLLING);
         miScrolling.setOnAction(e -> PROPERTY_PLAY_SCENE_DISPLAY_MODE.set(SCROLLING));
 
@@ -256,22 +256,22 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
             Logger.info("Removed listener from config propertyPlaySceneDisplayMode property");
         });
 
-        var miAutopilot = new CheckMenuItem(ui.assets().translated("autopilot"));
+        var miAutopilot = new CheckMenuItem(ui.globalAssets().translated("autopilot"));
         miAutopilot.selectedProperty().bindBidirectional(context().currentGame().usingAutopilotProperty());
 
-        var miImmunity = new CheckMenuItem(ui.assets().translated("immunity"));
+        var miImmunity = new CheckMenuItem(ui.globalAssets().translated("immunity"));
         miImmunity.selectedProperty().bindBidirectional(context().currentGame().immuneProperty());
 
-        var miMuted = new CheckMenuItem(ui.assets().translated("muted"));
+        var miMuted = new CheckMenuItem(ui.globalAssets().translated("muted"));
         miMuted.selectedProperty().bindBidirectional(PROPERTY_MUTED);
 
-        var miQuit = new MenuItem(ui.assets().translated("quit"));
+        var miQuit = new MenuItem(ui.globalAssets().translated("quit"));
         miQuit.setOnAction(e -> ACTION_QUIT_GAME_SCENE.executeIfEnabled(ui));
 
         return List.of(
             miScaledToFit,
             miScrolling,
-            createContextMenuTitle(ui.preferences(), ui.assets().translated("pacman")),
+            createContextMenuTitle(ui.preferences(), ui.globalAssets().translated("pacman")),
             miAutopilot,
             miImmunity,
             new SeparatorMenuItem(),

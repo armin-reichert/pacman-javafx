@@ -341,8 +341,8 @@ public class GameLevel3D extends Group implements Disposable {
         ghosts3D.forEach(ghost3D -> ghost3D.init(gameLevel));
         house3D.startSwirlAnimations();
 
-        pickerGameOverMessages = RandomTextPicker.fromBundle(ui.assets().localizedTexts(), "game.over");
-        pickerLevelCompleteMessages = RandomTextPicker.fromBundle(ui.assets().localizedTexts(), "level.complete");
+        pickerGameOverMessages = RandomTextPicker.fromBundle(ui.globalAssets().localizedTexts(), "game.over");
+        pickerLevelCompleteMessages = RandomTextPicker.fromBundle(ui.globalAssets().localizedTexts(), "level.complete");
     }
 
     private void createMaterials() {
@@ -808,7 +808,7 @@ public class GameLevel3D extends Group implements Disposable {
             .backgroundColor(Color.BLACK)
             .borderColor(Color.WHITE)
             .displaySeconds(displaySeconds)
-            .font(ui.assets().font_Arcade_6)
+            .font(ui.globalAssets().font_Arcade_6)
             .text(messageText)
             .textColor(Color.YELLOW)
             .build(animationRegistry);
@@ -870,7 +870,7 @@ public class GameLevel3D extends Group implements Disposable {
 
     public String translatedLevelCompleteMessage(int levelNumber) {
         return pickerLevelCompleteMessages.hasEntries()
-            ? pickerLevelCompleteMessages.nextText() + "\n\n" + ui.assets().translated("level_complete", levelNumber)
+            ? pickerLevelCompleteMessages.nextText() + "\n\n" + ui.globalAssets().translated("level_complete", levelNumber)
             : "";
     }
 

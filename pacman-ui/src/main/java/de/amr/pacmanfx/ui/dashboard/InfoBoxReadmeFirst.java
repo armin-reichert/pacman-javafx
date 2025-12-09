@@ -24,7 +24,7 @@ public class InfoBoxReadmeFirst extends InfoBox {
     @Override
     public void init(GameUI ui) {
         var readmeText = new Text();
-        readmeText.setText(ui.assets().translated("infobox.readme.content"));
+        readmeText.setText(ui.globalAssets().translated("infobox.readme.content"));
         readmeText.setFont(Font.font("Serif", 16));
         readmeText.setFill(Color.WHITE);
 
@@ -35,7 +35,7 @@ public class InfoBoxReadmeFirst extends InfoBox {
         buttonPane.setAlignment(Pos.CENTER);
         buttonPane.setPadding(new Insets(10, 0, 0, 0));
 
-        var btnGotIt = new Button(ui.assets().translated("infobox.readme.got_it"));
+        var btnGotIt = new Button(ui.globalAssets().translated("infobox.readme.got_it"));
         buttonPane.getChildren().add(btnGotIt);
         btnGotIt.setOnAction(e -> dashboard.removeInfoBox(DashboardID.README));
 

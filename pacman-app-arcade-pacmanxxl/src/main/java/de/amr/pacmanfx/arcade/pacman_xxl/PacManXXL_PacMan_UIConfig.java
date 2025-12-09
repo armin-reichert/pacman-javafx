@@ -106,11 +106,11 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config, GameScene_Confi
         assets.set("audio.option.selection_changed",  RES_PAC_MAN_XXL.loadAudioClip("sound/ms-select1.wav"));
         assets.set("audio.option.value_changed",      RES_PAC_MAN_XXL.loadAudioClip("sound/ms-select2.wav"));
 
-        soundManager.register(SoundID.VOICE_AUTOPILOT_OFF,          ui.assets().voice_Autopilot_Off);
-        soundManager.register(SoundID.VOICE_AUTOPILOT_ON,           ui.assets().voice_Autopilot_On);
-        soundManager.register(SoundID.VOICE_EXPLAIN_GAME_START,     ui.assets().voice_Explain);
-        soundManager.register(SoundID.VOICE_IMMUNITY_OFF,           ui.assets().voice_Immunity_Off);
-        soundManager.register(SoundID.VOICE_IMMUNITY_ON,            ui.assets().voice_Immunity_On);
+        soundManager.register(SoundID.VOICE_AUTOPILOT_OFF,          ui.globalAssets().voice_Autopilot_Off);
+        soundManager.register(SoundID.VOICE_AUTOPILOT_ON,           ui.globalAssets().voice_Autopilot_On);
+        soundManager.register(SoundID.VOICE_EXPLAIN_GAME_START,     ui.globalAssets().voice_Explain);
+        soundManager.register(SoundID.VOICE_IMMUNITY_OFF,           ui.globalAssets().voice_Immunity_Off);
+        soundManager.register(SoundID.VOICE_IMMUNITY_ON,            ui.globalAssets().voice_Immunity_On);
 
         soundManager.registerAudioClipURL(SoundID.BONUS_EATEN,      RES_ARCADE_PAC_MAN.url("sound/eat_fruit.mp3"));
         soundManager.registerAudioClipURL(SoundID.COIN_INSERTED,    RES_ARCADE_PAC_MAN.url("sound/credit.wav"));

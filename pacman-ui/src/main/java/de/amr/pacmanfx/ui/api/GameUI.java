@@ -110,7 +110,7 @@ public interface GameUI {
     /**
      * @return assets (fonts, sounds, colors, localized texts etc.) for the different games
      */
-    GlobalGameAssets assets();
+    GlobalGameAssets globalAssets();
 
     /**
      * @return watchdog process observing the directory where user-defined maps are stored
