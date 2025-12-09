@@ -225,13 +225,26 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 scene.pacMan.playAnimation(CommonAnimationID.ANIM_PAC_MUNCHING);
                 scene.ghosts.forEach(ghost -> {
                     ghost.setState(GhostState.HUNTING_PAC);
-                    ghost.setPosition(scene.pacMan.x() + 16 * (ghost.personality() + 1), scene.pacMan.y());
+                    setGhostPositions(scene);
                     ghost.setMoveDir(Direction.LEFT);
                     ghost.setWishDir(Direction.LEFT);
                     ghost.setSpeed(CHASING_SPEED);
                     ghost.show();
                     ghost.playAnimation(CommonAnimationID.ANIM_GHOST_NORMAL);
                 });
+            }
+
+            private void setGhostPositions(ArcadePacMan_IntroScene scene) {
+                for (byte p = RED_GHOST_SHADOW; p <= ORANGE_GHOST_POKEY; ++p) {
+                    scene.ghosts.get(p).setPosition(scene.pacMan.x() + 16 * (p + 1), scene.pacMan.y());
+                }
+                final int offsetX = timer.tickCount() % 5 < 2 ? 0 : -1; // I think this is what happens
+                if (offsetX != 0) {
+                    final Ghost pinky = scene.ghosts.get(PINK_GHOST_SPEEDY);
+                    pinky.setX(pinky.x() + offsetX);
+                    final Ghost inky = scene.ghosts.get(CYAN_GHOST_BASHFUL);
+                    inky.setX(inky.x() + offsetX);
+                }
             }
 
             @Override

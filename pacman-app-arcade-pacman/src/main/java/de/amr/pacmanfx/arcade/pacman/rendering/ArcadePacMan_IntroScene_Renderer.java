@@ -7,7 +7,6 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_IntroScene;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.timer.Pulse;
-import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.ui._2d.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
@@ -15,8 +14,6 @@ import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
-
-import java.util.List;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.pacman.rendering.SpriteID.GALLERY_GHOSTS;
@@ -84,7 +81,7 @@ public class ArcadePacMan_IntroScene_Renderer extends GameScene2D_Renderer imple
                 drawPoints(introScene);
                 drawBlinkingEnergizer(introScene, TS(LEFT_TILE_X), TS(20));
                 actorRenderer.drawActor(introScene.pacMan());
-                drawGhostsShaking(introScene);
+                drawGhosts(introScene);
                 fillText(MIDWAY_MFG_CO, ARCADE_PINK, arcadeFont8(), TS(4), TS(32));
             }
             case CHASING_GHOSTS, READY_TO_PLAY -> {
@@ -121,23 +118,6 @@ public class ArcadePacMan_IntroScene_Renderer extends GameScene2D_Renderer imple
             if (introScene.ghostNicknameVisible(p)) {
                 fillText(GHOST_NICKNAMES[p], GHOST_COLORS[p], TS(LEFT_TILE_X + 14), TS(8 + 3 * p));
             }
-        }
-    }
-
-    private void drawGhostsShaking(ArcadePacMan_IntroScene introScene) {
-        final long tick = introScene.state().timer().tickCount();
-        final int offsetX = tick % 5 < 2 ? 0 : -1; // I think this is what happens
-        if (offsetX == 0) {
-            drawGhosts(introScene);
-        } else {
-            final List<Ghost> ghosts = introScene.ghosts();
-            actorRenderer.drawActor(ghosts.get(RED_GHOST_SHADOW));
-            actorRenderer.drawActor(ghosts.get(ORANGE_GHOST_POKEY));
-            ctx.save();
-            ctx.translate(offsetX, 0);
-            actorRenderer.drawActor(ghosts.get(PINK_GHOST_SPEEDY));
-            actorRenderer.drawActor(ghosts.get(CYAN_GHOST_BASHFUL));
-            ctx.restore();
         }
     }
 
