@@ -61,52 +61,33 @@ public class ArcadePacMan_IntroScene_Renderer extends GameScene2D_Renderer imple
 
     @Override
     public void draw(GameScene2D scene) {
-        final ArcadePacMan_IntroScene introScene = (ArcadePacMan_IntroScene) scene;
-
+        final var intro = (ArcadePacMan_IntroScene) scene;
         clearCanvas();
-        switch (introScene.state()) {
-            case STARTING -> drawTitle(introScene);
-            case PRESENTING_GHOSTS -> {
-                drawTitle(introScene);
-                drawGhostGallery(introScene);
-            }
-            case SHOWING_PELLET_POINTS -> {
-                drawTitle(introScene);
-                drawGhostGallery(introScene);
-                drawPoints(introScene);
-            }
+        drawGhostGallery(intro);
+        switch (intro.state()) {
+            case SHOWING_POINTS -> drawPoints(intro);
             case CHASING_PAC -> {
-                drawTitle(introScene);
-                drawGhostGallery(introScene);
-                drawPoints(introScene);
-                drawBlinkingEnergizer(introScene, TS(LEFT_TILE_X), TS(20));
-                actorRenderer.drawActor(introScene.pacMan());
-                drawGhosts(introScene);
-                fillText(MIDWAY_MFG_CO, ARCADE_PINK, arcadeFont8(), TS(4), TS(32));
+                drawBlinkingEnergizer(intro, TS(LEFT_TILE_X), TS(20));
+                drawRumblingGuys(intro);
+                drawPoints(intro);
+                drawCopyright();
             }
             case CHASING_GHOSTS, READY_TO_PLAY -> {
-                drawTitle(introScene);
-                drawGhostGallery(introScene);
-                drawPoints(introScene);
-                actorRenderer.drawActor(introScene.pacMan());
-                drawGhosts(introScene);
-                fillText(MIDWAY_MFG_CO, ARCADE_PINK, arcadeFont8(), TS(4), TS(32));
+                drawRumblingGuys(intro);
+                drawPoints(intro);
+                drawCopyright();
             }
         }
-        if (introScene.debugInfoVisible()) {
+        if (intro.debugInfoVisible()) {
             debugInfoRenderer.draw(scene);
-        }
-    }
-
-    private void drawTitle(ArcadePacMan_IntroScene introScene) {
-        ctx.setFont(arcadeFont8());
-        if (introScene.titleVisible()) {
-            fillText("CHARACTER / NICKNAME", ARCADE_WHITE, TS(LEFT_TILE_X + 3), TS(6));
         }
     }
 
     private void drawGhostGallery(ArcadePacMan_IntroScene introScene) {
         ctx.setFont(arcadeFont8());
+        if (introScene.titleVisible()) {
+            fillText("CHARACTER / NICKNAME", ARCADE_WHITE, TS(LEFT_TILE_X + 3), TS(6));
+        }
         for (byte p = RED_GHOST_SHADOW; p <= ORANGE_GHOST_POKEY; ++p) {
             if (introScene.ghostImageVisible(p)) {
                 RectShort sprite = spriteSheet.spriteSequence(GALLERY_GHOSTS)[p];
@@ -121,8 +102,13 @@ public class ArcadePacMan_IntroScene_Renderer extends GameScene2D_Renderer imple
         }
     }
 
-    private void drawGhosts(ArcadePacMan_IntroScene introScene) {
+    private void drawRumblingGuys(ArcadePacMan_IntroScene introScene) {
         introScene.ghosts().forEach(actorRenderer::drawActor);
+        actorRenderer.drawActor(introScene.pacMan());
+    }
+
+    private void drawCopyright() {
+        fillText(MIDWAY_MFG_CO, ARCADE_PINK, arcadeFont8(), TS(4), TS(32));
     }
 
     private void drawPoints(ArcadePacMan_IntroScene introScene) {

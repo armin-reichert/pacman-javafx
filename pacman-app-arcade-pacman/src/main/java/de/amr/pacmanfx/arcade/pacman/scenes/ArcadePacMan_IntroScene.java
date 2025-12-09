@@ -192,12 +192,12 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                     }
                     scene.ghostIndex += 1;
                 } else if (timer.atSecond(2.5)) {
-                    scene.sceneController.enterState(SHOWING_PELLET_POINTS);
+                    scene.sceneController.enterState(SHOWING_POINTS);
                 }
             }
         },
 
-        SHOWING_PELLET_POINTS {
+        SHOWING_POINTS {
             @Override
             public void onEnter(ArcadePacMan_IntroScene scene) {
                 scene.blinking.stop();
