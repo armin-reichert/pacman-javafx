@@ -225,25 +225,13 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 scene.pacMan.playAnimation(CommonAnimationID.ANIM_PAC_MUNCHING);
                 scene.ghosts.forEach(ghost -> {
                     ghost.setState(GhostState.HUNTING_PAC);
-                    setGhostPositions(scene);
                     ghost.setMoveDir(Direction.LEFT);
                     ghost.setWishDir(Direction.LEFT);
                     ghost.setSpeed(CHASING_SPEED);
+                    ghost.setPosition(scene.pacMan.x() + 16 * (ghost.personality() + 1), scene.pacMan.y());
                     ghost.show();
                     ghost.playAnimation(CommonAnimationID.ANIM_GHOST_NORMAL);
                 });
-            }
-
-            private void setGhostPositions(ArcadePacMan_IntroScene scene) {
-                for (byte p = RED_GHOST_SHADOW; p <= ORANGE_GHOST_POKEY; ++p) {
-                    final Ghost ghost = scene.ghosts.get(p);
-                    ghost.setPosition(scene.pacMan.x() + 16 * (p + 1), scene.pacMan.y());
-                    if (p == PINK_GHOST_SPEEDY || p == CYAN_GHOST_BASHFUL) {
-                        // create jitter effect
-                        final int offsetX = timer.tickCount() % 5 < 2 ? 0 : -1;
-                        ghost.setX(ghost.x() + offsetX);
-                    }
-                }
             }
 
             @Override
@@ -273,7 +261,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 scene.pacMan.move();
                 scene.ghosts.forEach(Ghost::move);
 
-                // wobbling
+                // shaking effect
                 float delta = 0.5f;
                 final Ghost pinky = scene.ghosts.get(PINK_GHOST_SPEEDY);
                 final Ghost inky = scene.ghosts.get(CYAN_GHOST_BASHFUL);
