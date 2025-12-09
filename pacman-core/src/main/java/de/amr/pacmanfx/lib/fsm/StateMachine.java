@@ -88,6 +88,11 @@ public class StateMachine<CONTEXT> {
 
     public StateMachine() {}
 
+    public StateMachine(CONTEXT context, Collection<State<CONTEXT>> states) {
+        setContext(context);
+        addStates(states);
+    }
+
     public void addState(State<CONTEXT> state) {
         requireNonNull(state);
         if (states.contains(state)) {
