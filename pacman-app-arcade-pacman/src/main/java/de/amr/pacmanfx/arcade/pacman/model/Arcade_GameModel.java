@@ -90,14 +90,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     public abstract Arcade_LevelData levelData(int levelNumber);
 
-    protected void setGhostStartPosition(Ghost ghost, Vector2i tile) {
-        if (tile != null) {
-            ghost.setStartPosition(halfTileRightOf(tile));
-        } else {
-            Logger.error("{] home tile not found inside map", ghost.name());
-        }
-    }
-
     // public for access by tests
     public void onPelletEaten(GameLevel level) {
         requireNonNull(level);

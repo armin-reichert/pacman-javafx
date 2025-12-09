@@ -10,6 +10,7 @@ import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.lib.worldmap.FoodLayer;
+import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.*;
@@ -407,10 +408,22 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
+    protected void setGhostStartPosition(Ghost ghost, Vector2i tile) {
+        if (tile != null) {
+            // Ghosts inside house sit at bottom of house
+            ghost.setStartPosition(halfTileRightOf(tile).plus(0, HTS));
+        } else {
+            Logger.error("{} start tile not specified", ghost.name());
+        }
+    }
+
+    @Override
     public GameLevel createLevel(int levelNumber, boolean demoLevel) {
         final WorldMap worldMap = mapSelector.selectWorldMap(levelNumber, mapCategory);
+        final TerrainLayer terrain = worldMap.terrainLayer();
+
         final ArcadeHouse house = new ArcadeHouse(HOUSE_MIN_TILE);
-        worldMap.terrainLayer().setHouse(house);
+        terrain.setHouse(house);
 
         final GameLevel level = new GameLevel(this, levelNumber, worldMap, createHuntingTimer(), 3);
         level.setDemoLevel(demoLevel);
@@ -429,27 +442,26 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         activatePacBooster(msPacMan, pacBooster == PacBooster.ALWAYS_ON);
 
         final Blinky blinky = new Blinky();
-        final Vector2i blinkyStartTile = worldMap.terrainLayer().getTileProperty(POS_GHOST_1_RED);
         blinky.setHome(house);
-        blinky.setStartPosition(halfTileRightOf(blinkyStartTile));
-
-        // Ghosts inside the house start at the *bottom* of the house!
-        final Vector2f offsetY = Vector2f.of(0, HTS);
+        final Vector2i blinkyStartTile = terrain.getTileProperty(POS_GHOST_1_RED);
+        if (blinkyStartTile != null) {
+            blinky.setStartPosition(halfTileRightOf(blinkyStartTile));
+        } else {
+            Logger.error("No start position in map specified for {}", blinky.name());
+            blinky.setStartPosition(house.entryPosition());
+        }
 
         final Pinky pinky = new Pinky();
-        final Vector2i pinkyStartTile = worldMap.terrainLayer().getTileProperty(POS_GHOST_2_PINK);
         pinky.setHome(house);
-        pinky.setStartPosition(halfTileRightOf(pinkyStartTile).plus(offsetY));
+        setGhostStartPosition(pinky, terrain.getTileProperty(POS_GHOST_2_PINK));
 
         final Inky inky = new Inky();
-        final Vector2i inkyStartTile = worldMap.terrainLayer().getTileProperty(POS_GHOST_3_CYAN);
         inky.setHome(house);
-        inky.setStartPosition(halfTileRightOf(inkyStartTile).plus(offsetY));
+        setGhostStartPosition(inky, terrain.getTileProperty(POS_GHOST_3_CYAN));
 
         final Sue sue = new Sue();
-        final Vector2i sueStartTile = worldMap.terrainLayer().getTileProperty(POS_GHOST_4_ORANGE);
         sue.setHome(house);
-        sue.setStartPosition(halfTileRightOf(sueStartTile).plus(offsetY));
+        setGhostStartPosition(sue, terrain.getTileProperty(POS_GHOST_4_ORANGE));
 
         level.setPac(msPacMan);
         level.setGhosts(blinky, pinky, inky, sue);

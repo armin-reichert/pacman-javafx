@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -303,6 +304,14 @@ public abstract class AbstractGameModel implements Game {
     }
 
     // other stuff
+
+    protected void setGhostStartPosition(Ghost ghost, Vector2i tile) {
+        if (tile != null) {
+            ghost.setStartPosition(halfTileRightOf(tile));
+        } else {
+            Logger.error("{} start tile not specified", ghost.name());
+        }
+    }
 
     /**
      * The main logic step of the game. Checks if Pac-Man collides with a ghost or finds food or a bonus.
