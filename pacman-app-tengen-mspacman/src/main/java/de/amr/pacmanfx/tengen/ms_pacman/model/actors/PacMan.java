@@ -11,7 +11,5 @@ public class PacMan extends Pac {
     public PacMan() {
         super("Pac-Man");
         reset();
-        setEnergizerRestingTicks(0); //TODO correct?
-        setPelletRestingTicks(0); //TODO correct?
     }
 }

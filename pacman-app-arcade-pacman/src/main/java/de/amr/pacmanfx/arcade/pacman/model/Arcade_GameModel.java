@@ -16,7 +16,6 @@ import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.steering.Steering;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
 import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
 import static java.util.Objects.requireNonNull;
@@ -30,7 +29,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     static final short TICK_NEW_GAME_SHOW_GUYS = 120;
     static final short TICK_NEW_GAME_START_HUNTING = 240;
-    static final short TICK_RESUME_HUNTING =  90;
+    static final short TICK_RESUME_HUNTING = 90;
     static final short TICK_DEMO_LEVEL_START_HUNTING = 120;
     static final short TICK_EATING_GHOST_COMPLETE = 60;
     static final short TICK_PACMAN_DYING_HIDE_GHOSTS = 60;
@@ -74,6 +73,9 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     public static final int EXTRA_LIFE_SCORE = 10_000;
     public static final byte[] KILLED_GHOST_VALUE_FACTORS = {2, 4, 8, 16}; // points = factor * 100
 
+    public static final byte RESTING_TICKS_PELLET = 1;
+    public static final byte RESTING_TICKS_ENERGIZER = 3;
+
     private static final float BONUS_EATEN_SECONDS = 2;
 
     protected final CoinMechanism coinMechanism;
@@ -94,7 +96,8 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     public void onPelletEaten(GameLevel level) {
         requireNonNull(level);
         scorePoints(PELLET_VALUE);
-        level.pac().eatPellet();
+        level.pac().setRestingTicks(RESTING_TICKS_PELLET);
+        level.pac().endStarving();
         checkCruiseElroy(level, level.ghost(Globals.RED_GHOST_SHADOW));
     }
 
@@ -109,7 +112,9 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             return;
         }
 
-        level.pac().eatEnergizer();
+        level.pac().setRestingTicks(RESTING_TICKS_ENERGIZER);
+        level.pac().endStarving();
+
         level.ghosts().forEach(ghost -> {
             checkCruiseElroy(level, level.ghost(Globals.RED_GHOST_SHADOW));
             if (ghost.inAnyOfStates(FRIGHTENED, HUNTING_PAC)) {
@@ -142,7 +147,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             }
         }
         else {
-            Logger.error("Cruise elroy mode is not available for {}", ghost.name());
+            Logger.error("Cruise Elroy mode is not available for {}", ghost.name());
         }
     }
 

@@ -35,9 +35,6 @@ public class Pac extends MovingActor {
     private long restingTicks;
     private long starvingTicks;
 
-    private short energizerRestingTick = 3;
-    private short pelletRestingTicks = 1;
-
     private Steering automaticSteering;
 
     /**
@@ -60,14 +57,6 @@ public class Pac extends MovingActor {
             ", velocity=" + velocity() +
             ", acceleration=" + acceleration() +
             '}';
-    }
-
-    public void setEnergizerRestingTicks(int ticks) {
-        energizerRestingTick = (short) ticks;
-    }
-
-    public void setPelletRestingTicks(int ticks) {
-        pelletRestingTicks = (short) ticks;
     }
 
     public void setAutomaticSteering(Steering steering) {
@@ -184,16 +173,6 @@ public class Pac extends MovingActor {
         } else {
             stopAnimation();
         }
-    }
-
-    public void eatPellet() {
-        setRestingTicks(pelletRestingTicks);
-        endStarving();
-    }
-
-    public void eatEnergizer() {
-        setRestingTicks(energizerRestingTick);
-        endStarving();
     }
 
     /**

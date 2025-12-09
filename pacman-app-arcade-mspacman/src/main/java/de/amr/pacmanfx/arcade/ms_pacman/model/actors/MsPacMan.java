@@ -11,7 +11,5 @@ public class MsPacMan extends Pac {
     MsPacMan() {
         super("Ms. Pac-Man");
         reset();
-        setEnergizerRestingTicks(3);
-        setPelletRestingTicks(1);
     }
 }
