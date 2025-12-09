@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.api;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
-import de.amr.pacmanfx.ui.GlobalGameAssets;
+import de.amr.pacmanfx.ui.GameAssets;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.action.CheatActions;
@@ -108,9 +108,9 @@ public interface GameUI {
     DoubleProperty                PROPERTY_3D_WALL_OPACITY = new SimpleDoubleProperty(1.0);
 
     /**
-     * @return assets (fonts, sounds, colors, localized texts etc.) for the different games
+     * @return Global assets (fonts, sounds, colors, localized texts etc.) available to all games
      */
-    GlobalGameAssets globalAssets();
+    GameAssets globalAssets();
 
     /**
      * @return watchdog process observing the directory where user-defined maps are stored

@@ -61,7 +61,7 @@ public final class GameUI_Implementation implements GameUI {
 
     private static final int PAUSE_ICON_SIZE = 80;
 
-    private final GlobalGameAssets assets;
+    private final GameAssets assets;
     private final GameClock clock;
     private final GameContext gameContext;
     private final Stage stage;
@@ -100,7 +100,7 @@ public final class GameUI_Implementation implements GameUI {
         requireNonNegative(sceneWidth, "Main scene width must be a positive number");
         requireNonNegative(sceneHeight, "Main scene height must be a positive number");
 
-        assets = new GlobalGameAssets();
+        assets = new GameAssets();
         prefs = new GameUI_Preferences();
         PROPERTY_3D_WALL_HEIGHT.set(prefs.getFloat("3d.obstacle.base_height"));
         PROPERTY_3D_WALL_OPACITY.set(prefs.getFloat("3d.obstacle.opacity"));
@@ -159,7 +159,7 @@ public final class GameUI_Implementation implements GameUI {
 
     private void createScene(double width, double height) {
         scene = new Scene(layoutPane, width, height);
-        scene.getStylesheets().add(GlobalGameAssets.STYLE_SHEET_PATH);
+        scene.getStylesheets().add(GameAssets.STYLE_SHEET_PATH);
 
         // Keyboard events are first handled by the global keyboard object
         scene.addEventFilter(KeyEvent.KEY_PRESSED,  KEYBOARD::onKeyPressed);
@@ -306,7 +306,7 @@ public final class GameUI_Implementation implements GameUI {
     // GameUI interface
 
     @Override
-    public GlobalGameAssets globalAssets() {
+    public GameAssets globalAssets() {
         return assets;
     }
 
