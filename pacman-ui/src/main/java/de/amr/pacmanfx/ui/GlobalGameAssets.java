@@ -7,9 +7,9 @@ package de.amr.pacmanfx.ui;
 import de.amr.pacmanfx.uilib.assets.LocalizedTextAccessor;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.scene.layout.Background;
+import javafx.scene.media.Media;
 import javafx.scene.text.Font;
 
-import java.net.URL;
 import java.util.ResourceBundle;
 
 import static de.amr.pacmanfx.uilib.Ufx.createImageBackground;
@@ -34,11 +34,11 @@ public class GlobalGameAssets implements LocalizedTextAccessor {
     public final Font font_PacFont;
     public final Font font_PacFontGood;
 
-    public final URL voice_Autopilot_Off;
-    public final URL voice_Autopilot_On;
-    public final URL voice_Explain;
-    public final URL voice_Immunity_Off;
-    public final URL voice_Immunity_On;
+    public final Media voice_Autopilot_Off;
+    public final Media voice_Autopilot_On;
+    public final Media voice_Explain;
+    public final Media voice_Immunity_Off;
+    public final Media voice_Immunity_On;
 
     public GlobalGameAssets() {
         localizedTexts = GLOBAL_RESOURCES.getModuleBundle("de.amr.pacmanfx.ui.localized_texts");
@@ -52,11 +52,11 @@ public class GlobalGameAssets implements LocalizedTextAccessor {
         font_PacFont = GLOBAL_RESOURCES.loadFont("fonts/Pacfont.ttf", 8);
         font_PacFontGood = GLOBAL_RESOURCES.loadFont("fonts/PacfontGood.ttf", 8);
 
-        voice_Explain = GLOBAL_RESOURCES.url("sound/voice/press-key.mp3");
-        voice_Autopilot_Off = GLOBAL_RESOURCES.url("sound/voice/autopilot-off.mp3");
-        voice_Autopilot_On = GLOBAL_RESOURCES.url("sound/voice/autopilot-on.mp3");
-        voice_Immunity_Off = GLOBAL_RESOURCES.url("sound/voice/immunity-off.mp3");
-        voice_Immunity_On = GLOBAL_RESOURCES.url("sound/voice/immunity-on.mp3");
+        voice_Autopilot_Off = new Media(GLOBAL_RESOURCES.url("sound/voice/autopilot-off.mp3").toExternalForm());
+        voice_Autopilot_On  = new Media(GLOBAL_RESOURCES.url("sound/voice/autopilot-on.mp3").toExternalForm());
+        voice_Explain       = new Media(GLOBAL_RESOURCES.url("sound/voice/press-key.mp3").toExternalForm());
+        voice_Immunity_Off  = new Media(GLOBAL_RESOURCES.url("sound/voice/immunity-off.mp3").toExternalForm());
+        voice_Immunity_On   = new Media(GLOBAL_RESOURCES.url("sound/voice/immunity-on.mp3").toExternalForm());
     }
 
     @Override

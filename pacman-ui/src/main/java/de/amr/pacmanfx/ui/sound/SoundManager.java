@@ -19,61 +19,50 @@ import org.tinylog.Logger;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 
-//TODO: AI told me it would be better to cache Media instances instead of MediaPlayer instances. Should be refactored
-// accordingly.
 public class SoundManager implements Disposable {
 
     private final BooleanProperty enabledProperty = new SimpleBooleanProperty(true);
+
     private final BooleanProperty mutedProperty = new SimpleBooleanProperty(false);
 
-    private final Map<Object, Object> soundMap = new HashMap<>();
+    private final Map<Object, Object> map = new HashMap<>();
 
     private MediaPlayer voicePlayer;
+    private final PauseTransition voiceDelay = new PauseTransition();
 
     private SoundID currentSirenID;
     private MediaPlayer sirenPlayer;
 
-    public SoundManager() {
-    }
+    public SoundManager() {}
 
     @Override
     public void dispose() {
         stopAll();
         enabledProperty.unbind();
         mutedProperty.unbind();
-        soundMap.clear();
+        map.clear();
         voicePlayer = null;
         currentSirenID = null;
         Logger.info("Disposed default sound manager {}", this);
     }
 
-    private Media getMedia(Object key) {
-        requireNonNull(key);
-        if (!soundMap.containsKey(key)) {
-            throw new IllegalArgumentException("Unknown media player key '%s'".formatted(key));
-        }
-        if (soundMap.get(key) instanceof Media media) {
-            return media;
-        }
-        throw new IllegalArgumentException("Sound entry with key '%s' is not a media object".formatted(key));
-    }
-
     public MediaPlayer mediaPlayer(Object key) {
         requireNonNull(key);
-        if (!soundMap.containsKey(key)) {
+        if (!map.containsKey(key)) {
             throw new IllegalArgumentException("Unknown media player key '%s'".formatted(key));
         }
-        if (soundMap.get(key) instanceof MediaPlayer mediaPlayer) {
+        if (map.get(key) instanceof MediaPlayer mediaPlayer) {
             return mediaPlayer;
         }
         throw new IllegalArgumentException("Sound entry with key '%s' is not a media player".formatted(key));
     }
 
-    private void register(Object key, Object value) {
-        Object prevValue = soundMap.put(key, value);
+    public void register(Object key, Object value) {
+        Object prevValue = map.put(key, value);
         if (prevValue != null) {
             Logger.warn("Replaced sound  with key '{}', old value was {}", key, value);
         }
@@ -129,7 +118,7 @@ public class SoundManager implements Disposable {
     }
 
     public void loop(Object id) {
-        Object value = soundMap.get(id);
+        Object value = map.get(id);
         if (value instanceof MediaPlayer mediaPlayer) {
             mediaPlayer.stop();
             mediaPlayer.seek(Duration.ZERO);
@@ -151,11 +140,11 @@ public class SoundManager implements Disposable {
             Logger.trace("Sound with ID '{}' not played, sound is disabled", id);
             return;
         }
-        if (!soundMap.containsKey(id)) {
+        if (!map.containsKey(id)) {
             Logger.error("No media player and no clip URL registered with ID '{}'", id);
             return;
         }
-        Object value = soundMap.get(id);
+        Object value = map.get(id);
         if (value instanceof MediaPlayer mediaPlayer) {
             Logger.trace("Play media player ({} times) with ID '{}'",
                 repetitions == MediaPlayer.INDEFINITE ? "indefinite" : repetitions, id);
@@ -173,7 +162,7 @@ public class SoundManager implements Disposable {
 
     public boolean isPlaying(Object id) {
         requireNonNull(id);
-        Object value = soundMap.get(id);
+        Object value = map.get(id);
         if (value instanceof MediaPlayer mediaPlayer) {
             return mediaPlayer.getStatus() ==  MediaPlayer.Status.PLAYING;
         }
@@ -182,7 +171,7 @@ public class SoundManager implements Disposable {
 
     public void pause(Object id) {
         requireNonNull(id);
-        Object value = soundMap.get(id);
+        Object value = map.get(id);
         if (value instanceof MediaPlayer mediaPlayer) {
             mediaPlayer.pause();
         }
@@ -193,7 +182,7 @@ public class SoundManager implements Disposable {
 
     public boolean isPaused(Object id) {
         requireNonNull(id);
-        Object value = soundMap.get(id);
+        Object value = map.get(id);
         if (value instanceof MediaPlayer mediaPlayer) {
             return mediaPlayer.getStatus() == MediaPlayer.Status.PAUSED;
         }
@@ -202,7 +191,7 @@ public class SoundManager implements Disposable {
 
     public void stop(Object id)  {
         requireNonNull(id);
-        Object value = soundMap.get(id);
+        Object value = map.get(id);
         if (value instanceof MediaPlayer mediaPlayer) {
             mediaPlayer.stop();
         }
@@ -213,7 +202,7 @@ public class SoundManager implements Disposable {
 
     public boolean isStopped(Object id) {
         requireNonNull(id);
-        Object value = soundMap.get(id);
+        Object value = map.get(id);
         if (value instanceof MediaPlayer mediaPlayer) {
             return mediaPlayer.getStatus() ==  MediaPlayer.Status.STOPPED;
         }
@@ -221,7 +210,7 @@ public class SoundManager implements Disposable {
     }
 
     public void stopAll() {
-        soundMap.values().stream().filter(MediaPlayer.class::isInstance).map(MediaPlayer.class::cast).forEach(MediaPlayer::stop);
+        allOfType(MediaPlayer.class).forEach(MediaPlayer::stop);
         if (sirenPlayer != null) {
             stopSiren();
         }
@@ -231,27 +220,24 @@ public class SoundManager implements Disposable {
         Logger.debug("All sounds (media players, siren, voice) stopped");
     }
 
-    private final PauseTransition voiceDelay = new PauseTransition();
-
     public void playVoiceAfterSec(float delaySeconds, SoundID id) {
         requireNonNull(id);
         if (!id.isVoiceID()) {
             Logger.error("Sound ID '{}' is no voice ID", id);
+            return;
         }
-        Object value = soundMap.get(id);
-        if (value instanceof MediaPlayer mediaPlayer) {
-            voicePlayer = new MediaPlayer(mediaPlayer.getMedia()); // copy to make delayed playing work
-            if (delaySeconds > 0) {
-                voicePlayer.setOnReady(() -> {
-                    voiceDelay.stop();
-                    voiceDelay.setDuration(Duration.seconds(delaySeconds));
-                    voiceDelay.setOnFinished(e -> voicePlayer.play());
-                    voiceDelay.play();
-                });
-            }
-            else {
-                voicePlayer.play();
-            }
+        Media voiceMedia = valueOfType(id, Media.class);
+        voicePlayer = new MediaPlayer(voiceMedia);
+        if (delaySeconds > 0) {
+            voicePlayer.setOnReady(() -> {
+                voiceDelay.stop();
+                voiceDelay.setDuration(Duration.seconds(delaySeconds));
+                voiceDelay.setOnFinished(e -> voicePlayer.play());
+                voiceDelay.play();
+            });
+        }
+        else {
+            voicePlayer.play();
         }
     }
 
@@ -282,17 +268,6 @@ public class SoundManager implements Disposable {
         Logger.trace("Playing siren '{}' at volume {}", soundID, sirenPlayer.getVolume());
     }
 
-    private void createSirenPlayer(SoundID sirenID) {
-        sirenPlayer = new MediaPlayer(getMedia(sirenID));
-        sirenPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-        sirenPlayer.setVolume(1);
-        sirenPlayer.muteProperty().bind(Bindings.createBooleanBinding(
-            () -> mutedProperty().get() || !enabledProperty().get(),
-            mutedProperty(), enabledProperty()
-        ));
-        Logger.info("Siren player created, siren ID='{}'", sirenID);
-    }
-
     public void pauseSiren() {
         if (sirenPlayer != null) {
             Logger.info("Paused siren with ID '{}'", currentSirenID);
@@ -307,5 +282,35 @@ public class SoundManager implements Disposable {
             sirenPlayer.stop();
         }
         else Logger.error("Siren player not yet created");
+    }
+
+    // private stuff
+
+    private <C> Stream<C> allOfType(Class<C> cl_ass) {
+        return map.values().stream().filter(cl_ass::isInstance).map(cl_ass::cast);
+    }
+
+    @SuppressWarnings("unchecked")
+    private <C> C valueOfType(Object key, Class<C> cl_ass) {
+        requireNonNull(key);
+        Object value = map.get(key);
+        if (value == null) {
+            throw new IllegalArgumentException("Unknown media player key '%s'".formatted(key));
+        }
+        if (cl_ass.isInstance(value)) {
+            return (C) value;
+        }
+        throw new IllegalArgumentException("Sound entry with key '%s' is not a media object".formatted(key));
+    }
+
+    private void createSirenPlayer(SoundID sirenID) {
+        sirenPlayer = new MediaPlayer(valueOfType(sirenID, Media.class));
+        sirenPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        sirenPlayer.setVolume(1);
+        sirenPlayer.muteProperty().bind(Bindings.createBooleanBinding(
+                () -> mutedProperty().get() || !enabledProperty().get(),
+                mutedProperty(), enabledProperty()
+        ));
+        Logger.info("Siren player created, siren ID='{}'", sirenID);
     }
 }

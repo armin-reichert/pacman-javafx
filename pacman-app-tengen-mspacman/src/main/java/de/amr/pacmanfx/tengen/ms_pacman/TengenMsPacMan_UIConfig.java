@@ -211,10 +211,11 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         soundManager.registerAudioClipURL("audio.option.selection_changed",    RES_TENGEN.url("sound/ms-select1.wav"));
         soundManager.registerAudioClipURL("audio.option.value_changed",        RES_TENGEN.url("sound/ms-select2.wav"));
 
-        soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_OFF,                RES_GAME_UI.url("sound/voice/autopilot-off.mp3"));
-        soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_ON,                 RES_GAME_UI.url("sound/voice/autopilot-on.mp3"));
-        soundManager.registerVoice(SoundID.VOICE_IMMUNITY_OFF,                 RES_GAME_UI.url("sound/voice/immunity-off.mp3"));
-        soundManager.registerVoice(SoundID.VOICE_IMMUNITY_ON,                  RES_GAME_UI.url("sound/voice/immunity-on.mp3"));
+        soundManager.register(SoundID.VOICE_AUTOPILOT_OFF,          ui.assets().voice_Autopilot_Off);
+        soundManager.register(SoundID.VOICE_AUTOPILOT_ON,           ui.assets().voice_Autopilot_On);
+        soundManager.register(SoundID.VOICE_EXPLAIN_GAME_START,     ui.assets().voice_Explain);
+        soundManager.register(SoundID.VOICE_IMMUNITY_OFF,           ui.assets().voice_Immunity_Off);
+        soundManager.register(SoundID.VOICE_IMMUNITY_ON,            ui.assets().voice_Immunity_On);
 
         soundManager.registerMediaPlayer(SoundID.BONUS_ACTIVE,                 RES_TENGEN.url("sound/fruitbounce.wav"));
         soundManager.registerAudioClipURL(SoundID.BONUS_EATEN,                 RES_TENGEN.url("sound/ms-fruit.wav"));
