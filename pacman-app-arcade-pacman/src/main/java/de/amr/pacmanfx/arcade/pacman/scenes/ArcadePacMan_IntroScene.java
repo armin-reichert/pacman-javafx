@@ -236,14 +236,13 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
             private void setGhostPositions(ArcadePacMan_IntroScene scene) {
                 for (byte p = RED_GHOST_SHADOW; p <= ORANGE_GHOST_POKEY; ++p) {
-                    scene.ghosts.get(p).setPosition(scene.pacMan.x() + 16 * (p + 1), scene.pacMan.y());
-                }
-                final int offsetX = timer.tickCount() % 5 < 2 ? 0 : -1; // I think this is what happens
-                if (offsetX != 0) {
-                    final Ghost pinky = scene.ghosts.get(PINK_GHOST_SPEEDY);
-                    pinky.setX(pinky.x() + offsetX);
-                    final Ghost inky = scene.ghosts.get(CYAN_GHOST_BASHFUL);
-                    inky.setX(inky.x() + offsetX);
+                    final Ghost ghost = scene.ghosts.get(p);
+                    ghost.setPosition(scene.pacMan.x() + 16 * (p + 1), scene.pacMan.y());
+                    if (p == PINK_GHOST_SPEEDY || p == CYAN_GHOST_BASHFUL) {
+                        // create jitter effect
+                        final int offsetX = timer.tickCount() % 5 < 2 ? 0 : -1;
+                        ghost.setX(ghost.x() + offsetX);
+                    }
                 }
             }
 
