@@ -27,7 +27,9 @@ public class ArcadePacMan_IntroScene_Renderer extends GameScene2D_Renderer imple
     private static final String[] GHOST_CHARACTERS = { "SHADOW", "SPEEDY", "BASHFUL", "POKEY" };
     private static final Color[]  GHOST_COLORS     = { ARCADE_RED, ARCADE_PINK, ARCADE_CYAN, ARCADE_ORANGE };
 
-    private static final int LEFT_TILE_X = 4;
+    private static final byte LEFT_TILE_X = 4;
+    private static final short ENERGIZER_X = TS * LEFT_TILE_X;
+    private static final short ENERGIZER_Y = TS * 20;
 
     private final ArcadePacMan_SpriteSheet spriteSheet;
     private final ArcadePacMan_Actor_Renderer actorRenderer;
@@ -67,7 +69,7 @@ public class ArcadePacMan_IntroScene_Renderer extends GameScene2D_Renderer imple
         switch (intro.state()) {
             case SHOWING_POINTS -> drawPoints(intro);
             case CHASING_PAC -> {
-                drawBlinkingEnergizer(intro, TS(LEFT_TILE_X), TS(20));
+                drawBlinkingEnergizer(intro, ENERGIZER_X, ENERGIZER_Y);
                 drawRumblingGuys(intro);
                 drawPoints(intro);
                 drawCopyright();
@@ -88,16 +90,18 @@ public class ArcadePacMan_IntroScene_Renderer extends GameScene2D_Renderer imple
         if (introScene.titleVisible()) {
             fillText("CHARACTER / NICKNAME", ARCADE_WHITE, TS(LEFT_TILE_X + 3), TS(6));
         }
+        final int y = TS * 8;
         for (byte p = RED_GHOST_SHADOW; p <= ORANGE_GHOST_POKEY; ++p) {
+            int offsetY = 3 * p * TS;
             if (introScene.ghostImageVisible(p)) {
                 RectShort sprite = spriteSheet.spriteSequence(GALLERY_GHOSTS)[p];
-                drawSpriteCentered(TS(LEFT_TILE_X + 1), TS(7.5f + 3 * p), sprite);
+                drawSpriteCentered(TS * 5, y + offsetY - HTS, sprite);
             }
             if (introScene.ghostCharacterVisible(p)) {
-                fillText("-" + GHOST_CHARACTERS[p], GHOST_COLORS[p], TS(LEFT_TILE_X + 3), TS(8 + 3 * p));
+                fillText("-" + GHOST_CHARACTERS[p], GHOST_COLORS[p], TS * 7, y + offsetY);
             }
             if (introScene.ghostNicknameVisible(p)) {
-                fillText(GHOST_NICKNAMES[p], GHOST_COLORS[p], TS(LEFT_TILE_X + 14), TS(8 + 3 * p));
+                fillText(GHOST_NICKNAMES[p], GHOST_COLORS[p], TS * 18, y + offsetY);
             }
         }
     }
