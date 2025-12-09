@@ -11,7 +11,7 @@ public class MsPacMan extends Pac {
     public MsPacMan() {
         super("Ms. Pac-Man");
         reset();
-        setRestingTicksAfterEnergizerEaten(0); //TODO correct?
-        setRestingTicksAfterPelletEaten(0); //TODO correct?
+        setEnergizerRestingTicks(0); //TODO correct?
+        setPelletRestingTicks(0); //TODO correct?
     }
 }

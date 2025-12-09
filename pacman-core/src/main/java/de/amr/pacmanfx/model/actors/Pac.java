@@ -22,7 +22,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class Pac extends MovingActor {
 
-    public static final byte FOREVER = -1;
+    public static final byte REST_FOREVER = -1;
 
     private final TickTimer powerTimer = new TickTimer("Pac-PowerTimer");
 
@@ -35,8 +35,8 @@ public class Pac extends MovingActor {
     private long restingTicks;
     private long starvingTicks;
 
-    private short restingTicksAfterEnergizerEaten = 3;
-    private short restingTicksAfterPelletEaten = 1;
+    private short energizerRestingTick = 3;
+    private short pelletRestingTicks = 1;
 
     private Steering automaticSteering;
 
@@ -62,12 +62,12 @@ public class Pac extends MovingActor {
             '}';
     }
 
-    public void setRestingTicksAfterEnergizerEaten(int ticks) {
-        restingTicksAfterEnergizerEaten = (short) ticks;
+    public void setEnergizerRestingTicks(int ticks) {
+        energizerRestingTick = (short) ticks;
     }
 
-    public void setRestingTicksAfterPelletEaten(int ticks) {
-        restingTicksAfterPelletEaten = (short) ticks;
+    public void setPelletRestingTicks(int ticks) {
+        pelletRestingTicks = (short) ticks;
     }
 
     public void setAutomaticSteering(Steering steering) {
@@ -163,7 +163,7 @@ public class Pac extends MovingActor {
     public void tick(Game game) {
         if (game.optGameLevel().isEmpty()) return;
 
-        if (isDead() || restingTicks == FOREVER) {
+        if (isDead() || restingTicks == REST_FOREVER) {
             return;
         }
 
@@ -187,12 +187,12 @@ public class Pac extends MovingActor {
     }
 
     public void eatPellet() {
-        setRestingTicks(restingTicksAfterPelletEaten);
+        setRestingTicks(pelletRestingTicks);
         endStarving();
     }
 
     public void eatEnergizer() {
-        setRestingTicks(restingTicksAfterEnergizerEaten);
+        setRestingTicks(energizerRestingTick);
         endStarving();
     }
 
@@ -228,6 +228,6 @@ public class Pac extends MovingActor {
      * or if he is resting for an indefinite time.
      */
     public boolean isParalyzed() {
-        return velocity().equals(Vector2f.ZERO) || !moveInfo.moved || restingTicks == FOREVER;
+        return velocity().equals(Vector2f.ZERO) || !moveInfo.moved || restingTicks == REST_FOREVER;
     }
 }

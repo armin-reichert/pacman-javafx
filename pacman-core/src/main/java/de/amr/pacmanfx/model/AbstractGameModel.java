@@ -18,7 +18,6 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Optional;
@@ -247,12 +246,10 @@ public abstract class AbstractGameModel implements Game {
         pac.powerTimer().reset(0);
         Logger.info("Power timer stopped and reset to zero.");
 
-        pac.setSpeed(0);
-        pac.setRestingTicks(Pac.FOREVER);
-
         level.optBonus().ifPresent(Bonus::setInactive);
 
-        //TODO move into UI layer?
+        pac.setSpeed(0);
+        //TODO move animation-related stuff into UI layer?
         pac.stopAnimation();
         pac.selectAnimation(CommonAnimationID.ANIM_PAC_FULL);
         level.blinking().setStartState(Pulse.State.OFF);
