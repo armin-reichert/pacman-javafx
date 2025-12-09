@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -408,6 +409,8 @@ public abstract class AbstractGameModel implements Game {
 
     // ScoreManager
 
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
     private final Score score = new Score();
     private final Score highScore = new Score();
     private File highScoreFile;
@@ -447,7 +450,8 @@ public abstract class AbstractGameModel implements Game {
         var oldHighScore = Score.fromFile(highScoreFile);
         if (highScore.points() > oldHighScore.points()) {
             try {
-                highScore.save(highScoreFile, "High Score updated at %s".formatted(LocalTime.now()));
+                final String dateTime = FORMATTER.format(LocalDateTime.now());
+                highScore.save(highScoreFile, "High Score updated at %s".formatted(dateTime));
             } catch (IOException x) {
                 Logger.error("High Score file could not be saved: '{}'", highScoreFile);
             }

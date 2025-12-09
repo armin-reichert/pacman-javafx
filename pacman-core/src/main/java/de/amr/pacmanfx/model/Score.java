@@ -12,9 +12,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Properties;
 
-/**
- * @author Armin Reichert
- */
 public class Score {
 
     private final BooleanProperty enabledPy = new SimpleBooleanProperty(true);
