@@ -612,6 +612,9 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     private void eatEnergizer(GameLevel level, Vector2i tile) {
         simulationStepResult.foundEnergizerAtTile = tile;
         scorePoints(ENERGIZER_VALUE);
+        if (isLevelCompleted()) {
+            return;
+        }
         level.pac().eatEnergizer();
         level.ghosts().forEach(ghost -> {
             if (ghost.inAnyOfStates(FRIGHTENED, HUNTING_PAC)) {

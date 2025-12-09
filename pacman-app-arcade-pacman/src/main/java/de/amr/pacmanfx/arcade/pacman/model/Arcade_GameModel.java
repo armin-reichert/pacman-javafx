@@ -112,6 +112,11 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         requireNonNull(tile);
         simulationStepResult.foundEnergizerAtTile = tile;
         scorePoints(ENERGIZER_VALUE);
+
+        if (isLevelCompleted()) {
+            return;
+        }
+
         level.pac().eatEnergizer();
         level.ghosts().forEach(ghost -> {
             checkCruiseElroy(level, level.ghost(Globals.RED_GHOST_SHADOW));
