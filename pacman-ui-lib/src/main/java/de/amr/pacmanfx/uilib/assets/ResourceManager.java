@@ -7,6 +7,7 @@ package de.amr.pacmanfx.uilib.assets;
 import javafx.scene.Cursor;
 import javafx.scene.image.Image;
 import javafx.scene.media.AudioClip;
+import javafx.scene.media.Media;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
@@ -69,6 +70,10 @@ public interface ResourceManager {
      */
     default AudioClip loadAudioClip(String path) {
         return new AudioClip(url(path).toExternalForm());
+    }
+
+    default Media loadMedia(String path) {
+        return new Media(url(path).toExternalForm());
     }
 
     /**

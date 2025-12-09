@@ -44,7 +44,9 @@ public class StartPagesCarousel extends Carousel implements GameUI_View {
 
     public static final Color START_BUTTON_BGCOLOR = Color.rgb(0, 155, 252, 0.7);
     public static final Color START_BUTTON_FILLCOLOR = Color.rgb(255, 255, 255);
-    public static final int PAGE_CHANGE_SECONDS = 20;
+
+    //TODO start pages should define their preferred duration
+    public static final int PAGE_CHANGE_SECONDS = 50;
 
     public static Node createDefaultStartButton(GameUI ui, Runnable action) {
         var button = new FancyButton(

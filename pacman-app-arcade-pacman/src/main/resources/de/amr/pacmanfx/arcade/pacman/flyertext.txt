@@ -1,0 +1,6 @@
+The player, using a single handle control, guides the Pac-Man about the maze, scoring points by munching up the dots in his path.
+Four ghost monsters - Inky, Blinky, Pinky and Clyde - chase after the Pac-Man trying to capture and deflate him.
+The Pac-Man can counterattack by eating the big power capsule that enables him to overpower the monsters for additional score.
+After all the dots are gobbled up, the screen is cleared, and Pac-Man continues for another round.
+Each rack features a special fruit target in the maze, which if eaten, earns bonus points.
+Players start with three Pac-Men. An additional Pac-Man is awarded for 10000 points.

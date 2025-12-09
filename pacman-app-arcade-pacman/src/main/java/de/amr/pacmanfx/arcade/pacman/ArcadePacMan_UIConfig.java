@@ -102,7 +102,7 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
 
     @Override
     public void loadAssets() {
-        assets.set("app_icon",         ARCADE_PAC_MAN_RESOURCES.loadImage("graphics/icons/pacman.png"));
+        assets.set("app_icon", ARCADE_PAC_MAN_RESOURCES.loadImage("graphics/icons/pacman.png"));
 
         assets.set("color.game_over_message", ARCADE_RED);
 
@@ -140,6 +140,8 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
         soundManager.register(SoundID.VOICE_EXPLAIN_GAME_START,     ui.assets().voice_Explain);
         soundManager.register(SoundID.VOICE_IMMUNITY_OFF,           ui.assets().voice_Immunity_Off);
         soundManager.register(SoundID.VOICE_IMMUNITY_ON,            ui.assets().voice_Immunity_On);
+
+        soundManager.register(SoundID.VOICE_FLYER_TEXT,                   ARCADE_PAC_MAN_RESOURCES.loadMedia("sound/flyer-text.mp3"));
 
         soundManager.registerAudioClipURL(SoundID.BONUS_EATEN,      ARCADE_PAC_MAN_RESOURCES.url("sound/eat_fruit.mp3"));
         soundManager.registerAudioClipURL(SoundID.COIN_INSERTED,    ARCADE_PAC_MAN_RESOURCES.url("sound/credit.wav"));

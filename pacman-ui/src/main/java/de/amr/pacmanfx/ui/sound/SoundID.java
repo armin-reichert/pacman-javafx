@@ -29,6 +29,7 @@ public enum SoundID {
     VOICE_AUTOPILOT_ON,
     VOICE_AUTOPILOT_OFF,
     VOICE_EXPLAIN_GAME_START,
+    VOICE_FLYER_TEXT,
     VOICE_IMMUNITY_ON,
     VOICE_IMMUNITY_OFF;
 
@@ -40,6 +41,7 @@ public enum SoundID {
         return this == VOICE_AUTOPILOT_ON
             || this == VOICE_AUTOPILOT_OFF
             || this == VOICE_EXPLAIN_GAME_START
+            || this == VOICE_FLYER_TEXT
             || this == VOICE_IMMUNITY_ON
             || this == VOICE_IMMUNITY_OFF;
     }
