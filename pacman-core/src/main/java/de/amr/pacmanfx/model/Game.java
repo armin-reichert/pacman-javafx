@@ -131,14 +131,10 @@ public interface Game {
     void addLives(int numLives);
 
     // Actor speeds in pixels/tick
-    float bonusSpeed(GameLevel gameLevel);
-    float ghostSpeedWhenAttacking(GameLevel gameLevel, Ghost ghost);
-    float ghostSpeedWhenFrightened(GameLevel gameLevel, Ghost ghost);
-    float ghostSpeedInsideHouse(GameLevel gameLevel, Ghost ghost);
-    float ghostSpeedInsideTunnel(GameLevel gameLevel, Ghost ghost);
-    float ghostSpeedReturningToHouse(GameLevel gameLevel, Ghost ghost);
-    float pacSpeed(GameLevel gameLevel);
-    float pacSpeedWhenHasPower(GameLevel gameLevel);
+    float bonusSpeed(GameLevel level);
+    float ghostSpeed(GameLevel level, Ghost ghost);
+    float pacSpeed(GameLevel level);
+    float pacSpeedWhenHasPower(GameLevel level);
 
     // Cut scenes
     boolean cutScenesEnabled();

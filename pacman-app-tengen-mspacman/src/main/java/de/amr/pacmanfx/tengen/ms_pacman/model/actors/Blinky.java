@@ -21,7 +21,7 @@ public class Blinky extends Ghost {
     @Override
     public void hunt(GameLevel gameLevel) {
         //TODO Clarify hunting behavior of Blinky
-        float speed = gameLevel.game().ghostSpeedWhenAttacking(gameLevel, this);
+        float speed = gameLevel.game().ghostSpeed(gameLevel, this);
         setSpeed(speed);
         if (gameLevel.huntingTimer().phaseIndex() == 0) {
             roam(gameLevel);

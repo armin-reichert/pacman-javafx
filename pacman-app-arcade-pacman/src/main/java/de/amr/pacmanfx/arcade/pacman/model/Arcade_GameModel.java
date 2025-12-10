@@ -11,6 +11,7 @@ import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.lib.worldmap.FoodLayer;
+import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.steering.Steering;
@@ -477,42 +478,46 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public float ghostSpeedWhenAttacking(GameLevel level, Ghost ghost) {
-        final LevelData data = levelData(level.number());
-        if (level.worldMap().terrainLayer().isTunnel(ghost.tile())) {
-            return ghostSpeedInsideTunnel(level, ghost);
-        }
-        if (ghost instanceof Blinky blinky) {
-            if (blinky.cruiseElroyValue() == 1) {
-                return data.pctElroy1Speed() * BASE_SPEED_1_PERCENT;
-            }
-            if (blinky.cruiseElroyValue() == 2) {
-                return data.pctElroy2Speed() * BASE_SPEED_1_PERCENT;
-            }
-        }
-        return data.pctGhostSpeed() * BASE_SPEED_1_PERCENT;
+    public float ghostSpeed(GameLevel level, Ghost ghost) {
+        final int levelNumber = level.number();
+        final TerrainLayer terrain = level.worldMap().terrainLayer();
+        final Vector2i tile = ghost.tile();
+        final GhostState state = ghost.state();
+        final boolean insideHouse = terrain.house().isVisitedBy(ghost);
+        final boolean tunnelSlowdown = terrain.isTunnel(tile);
+        final int cruiseElroy = ghost instanceof Blinky blinky ? blinky.cruiseElroyValue() : 0;
+        return switch (state) {
+            case LOCKED -> insideHouse ? 0.5f : 0;
+            case LEAVING_HOUSE -> 0.5f;
+            case HUNTING_PAC -> tunnelSlowdown ? ghostSpeedInsideTunnel(levelNumber) : ghostSpeedWhenAttacking(level, ghost, cruiseElroy);
+            case FRIGHTENED -> tunnelSlowdown ? ghostSpeedInsideTunnel(levelNumber) : ghostSpeedWhenFrightened(level);
+            case EATEN -> 0;
+            case RETURNING_HOME, ENTERING_HOUSE -> 2;
+        };
     }
 
     @Override
-    public float ghostSpeedInsideHouse(GameLevel level, Ghost ghost) {
-        return 0.5f;
+    public float ghostSpeedWhenAttacking(GameLevel level, Ghost ghost, int cruiseElroy) {
+        final int levelNumber = level.number();
+        final LevelData data = levelData(levelNumber);
+        return switch (cruiseElroy) {
+            case 1 -> data.pctElroy1Speed() * BASE_SPEED_1_PERCENT;
+            case 2 -> data.pctElroy2Speed() * BASE_SPEED_1_PERCENT;
+            default -> data.pctGhostSpeed() * BASE_SPEED_1_PERCENT;
+        };
     }
 
     @Override
-    public float ghostSpeedReturningToHouse(GameLevel level, Ghost ghost) {
-        return 2;
-    }
-
-    @Override
-    public float ghostSpeedWhenFrightened(GameLevel level, Ghost ghost) {
-        final LevelData data = levelData(level.number());
+    public float ghostSpeedWhenFrightened(GameLevel level) {
+        final int levelNumber = level.number();
+        final LevelData data = levelData(levelNumber);
         float percentage = data.pctGhostSpeedFrightened();
         return percentage > 0 ? percentage * BASE_SPEED_1_PERCENT : BASE_SPEED;
     }
 
     @Override
-    public float ghostSpeedInsideTunnel(GameLevel level, Ghost ghost) {
-        final LevelData data = levelData(level.number());
+    public float ghostSpeedInsideTunnel(int levelNumber) {
+        final LevelData data = levelData(levelNumber);
         return data.pctGhostSpeedTunnel() * BASE_SPEED_1_PERCENT;
     }
 }

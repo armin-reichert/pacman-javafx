@@ -865,13 +865,28 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public float ghostSpeedWhenAttacking(GameLevel level, Ghost ghost) {
-        if (level.worldMap().terrainLayer().isTunnel(ghost.tile())) {
-            return ghostSpeedInsideTunnel(level, ghost);
-        }
-        TengenMsPacMan_GameModel game = (TengenMsPacMan_GameModel) level.game();
-        float speed = ghostBaseSpeedInLevel(level.number());
-        speed += ghostDifficultySpeedDelta(game.difficulty());
+    public float ghostSpeed(GameLevel level, Ghost ghost) {
+        final int levelNumber = level.number();
+        final TerrainLayer terrain = level.worldMap().terrainLayer();
+        final Vector2i tile = ghost.tile();
+        final GhostState state = ghost.state();
+        final boolean insideHouse = terrain.house().isVisitedBy(ghost);
+        final boolean tunnelSlowdown = terrain.isTunnel(tile);
+        return switch (state) {
+            case LOCKED -> insideHouse ? 0.5f : 0;
+            case LEAVING_HOUSE -> 0.5f;
+            case HUNTING_PAC -> tunnelSlowdown ? ghostSpeedInsideTunnel(levelNumber) : ghostSpeedWhenAttacking(level, ghost, 0);
+            case FRIGHTENED -> tunnelSlowdown ? ghostSpeedInsideTunnel(levelNumber) : ghostSpeedWhenFrightened(level);
+            case EATEN -> 0;
+            case RETURNING_HOME, ENTERING_HOUSE -> 2;
+        };
+    }
+
+    @Override
+    public float ghostSpeedWhenAttacking(GameLevel level, Ghost ghost, int unusedCruiseElroy) {
+        final int levelNumber = level.number();
+        float speed = ghostBaseSpeedInLevel(levelNumber);
+        speed += ghostDifficultySpeedDelta(difficulty());
         speed += ghostSpeedDelta(ghost.personality());
         float foodDelta = ghostSpeedIncreaseByFoodRemaining(level);
         if (foodDelta > 0) {
@@ -882,24 +897,17 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public float ghostSpeedInsideHouse(GameLevel level, Ghost ghost) {
-        return 0.5f;
+    public float ghostSpeedWhenFrightened(GameLevel level) {
+        final int levelNumber = level.number();
+        float speed = ghostBaseSpeedInLevel(levelNumber);
+        speed += ghostDifficultySpeedDelta(difficulty());
+        return 0.5f * speed; //TODO check with @RussianMan or disassembly
     }
 
     @Override
-    public float ghostSpeedReturningToHouse(GameLevel level, Ghost ghost) {
-        return 2;
-    }
-
-    @Override
-    public float ghostSpeedWhenFrightened(GameLevel level, Ghost ghost) {
-        //TODO correct?
-        return 0.5f * ghostSpeedWhenAttacking(level, ghost);
-    }
-
-    @Override
-    public float ghostSpeedInsideTunnel(GameLevel level, Ghost ghost) {
-        //TODO correct?
-        return 0.4f;
+    public float ghostSpeedInsideTunnel(int levelNumber) {
+        float speed = ghostBaseSpeedInLevel(levelNumber);
+        speed += ghostDifficultySpeedDelta(difficulty());
+        return 0.4f * speed; //TODO check with @RussianMan or disassembly
     }
 }

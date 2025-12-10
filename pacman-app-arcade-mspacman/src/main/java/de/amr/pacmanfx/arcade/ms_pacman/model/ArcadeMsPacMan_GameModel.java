@@ -184,23 +184,24 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         return huntingTimer;
     }
 
-    /**
-     * In Ms. Pac-Man, ghosts slow down in tunnel only in first two levels!
-     */
     @Override
-    public float ghostSpeedWhenAttacking(GameLevel gameLevel, Ghost ghost) {
-        if (gameLevel.number() <= 2 && gameLevel.worldMap().terrainLayer().isTunnel(ghost.tile())) {
-            return ghostSpeedInsideTunnel(gameLevel, ghost);
-        }
-        if (ghost instanceof Blinky blinky) {
-            if (blinky.cruiseElroyValue() == 1) {
-                return levelData(gameLevel.number()).pctElroy1Speed() * BASE_SPEED_1_PERCENT;
-            }
-            if (blinky.cruiseElroyValue() == 2) {
-                return levelData(gameLevel.number()).pctElroy2Speed() * BASE_SPEED_1_PERCENT;
-            }
-        }
-        return levelData(gameLevel.number()).pctGhostSpeed() * BASE_SPEED_1_PERCENT;
+    public float ghostSpeed(GameLevel level, Ghost ghost) {
+        final int levelNumber = level.number();
+        final TerrainLayer terrain = level.worldMap().terrainLayer();
+        final Vector2i tile = ghost.tile();
+        final GhostState state = ghost.state();
+        final boolean insideHouse = terrain.house().isVisitedBy(ghost);
+        // In levels 3..., ghosts do not slow down in tunnel anymore!
+        final boolean tunnelSlowdown = terrain.isTunnel(tile) && levelNumber <= 2;
+        final int cruiseElroy = ghost instanceof Blinky blinky ? blinky.cruiseElroyValue() : 0;
+        return switch (state) {
+            case LOCKED -> insideHouse ? 0.5f : 0;
+            case LEAVING_HOUSE -> 0.5f;
+            case HUNTING_PAC -> tunnelSlowdown ? ghostSpeedInsideTunnel(levelNumber) : ghostSpeedWhenAttacking(level, ghost, cruiseElroy);
+            case FRIGHTENED -> tunnelSlowdown ? ghostSpeedInsideTunnel(levelNumber) : ghostSpeedWhenFrightened(level);
+            case EATEN -> 0;
+            case RETURNING_HOME, ENTERING_HOUSE -> 2;
+        };
     }
 
     @Override

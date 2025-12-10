@@ -39,25 +39,25 @@ public class Blinky extends Ghost {
     }
 
     @Override
-    public void onPacKilled(GameLevel gameLevel) {
-        super.onPacKilled(gameLevel);
+    public void onPacKilled(GameLevel level) {
+        super.onPacKilled(level);
         setCruiseElroyActive(false);
     }
 
     @Override
-    public void hunt(GameLevel gameLevel) {
+    public void hunt(GameLevel level) {
         // Blinky overrides hunt method to take "Cruise Elroy" mode into account
-        boolean chase = gameLevel.huntingTimer().phase() == HuntingPhase.CHASING || isCruiseElroyActive();
+        boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING || isCruiseElroyActive();
         Vector2i targetTile = chase
-            ? chasingTargetTile(gameLevel)
-            : gameLevel.worldMap().terrainLayer().ghostScatterTile(personality());
-        setSpeed(gameLevel.game().ghostSpeedWhenAttacking(gameLevel, this));
-        tryMovingTowardsTargetTile(gameLevel, targetTile);
+            ? chasingTargetTile(level)
+            : level.worldMap().terrainLayer().ghostScatterTile(personality());
+        setSpeed(level.game().ghostSpeed(level, this));
+        tryMovingTowardsTargetTile(level, targetTile);
     }
 
     @Override
-    public Vector2i chasingTargetTile(GameLevel gameLevel) {
+    public Vector2i chasingTargetTile(GameLevel level) {
         // Blinky (red ghost) attacks Pac-Man directly
-        return gameLevel.pac().tile();
+        return level.pac().tile();
     }
 }

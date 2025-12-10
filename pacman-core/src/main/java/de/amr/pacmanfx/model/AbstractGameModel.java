@@ -102,6 +102,14 @@ public abstract class AbstractGameModel implements Game {
 
     protected abstract boolean isPacSafeInDemoLevel(GameLevel demoLevel);
 
+    // These methods are public such that info panel can call them
+
+    public abstract float ghostSpeedWhenAttacking(GameLevel level, Ghost ghost, int cruiseElroy);
+
+    public abstract float ghostSpeedWhenFrightened(GameLevel level);
+
+    public abstract float ghostSpeedInsideTunnel(int levelNumber);
+
     // Game interface
 
     @Override

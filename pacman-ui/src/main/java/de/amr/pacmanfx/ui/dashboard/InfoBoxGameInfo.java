@@ -8,11 +8,11 @@ import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.lib.worldmap.FoodLayer;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
+import de.amr.pacmanfx.model.AbstractGameModel;
+import de.amr.pacmanfx.model.AbstractHuntingTimer;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HuntingPhase;
-import de.amr.pacmanfx.model.AbstractHuntingTimer;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
-import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import javafx.scene.paint.Color;
@@ -139,25 +139,25 @@ public class InfoBoxGameInfo extends InfoBox {
     }
 
     private String fmtGhostAttackSpeed(GameLevel level) {
-        // use Pinky because Blinky could be in Elroy mode
-        Ghost pinky = level.ghost(PINK_GHOST_SPEEDY);
-        return (pinky != null)
-            ? "%.4f px/s".formatted(level.game().ghostSpeedWhenAttacking(level, pinky) * NUM_TICKS_PER_SEC)
-            : NO_INFO;
+        if (level.game() instanceof AbstractGameModel gameModel) {
+            // do not use Blinky because he has varying attack speed (Cruise Elroy mode)
+            return "%.4f px/s".formatted(gameModel.ghostSpeedWhenAttacking(level, level.ghost(CYAN_GHOST_BASHFUL), 0) * NUM_TICKS_PER_SEC);
+        }
+        return NO_INFO;
     }
 
     private String fmtGhostSpeedFrightened(GameLevel level) {
-        Ghost blinky = level.ghost(RED_GHOST_SHADOW);
-        return (blinky != null)
-            ? "%.4f px/s".formatted(level.game().ghostSpeedWhenFrightened(level, blinky) * NUM_TICKS_PER_SEC)
-            : NO_INFO;
+        if (level.game() instanceof AbstractGameModel gameModel) {
+            return "%.4f px/s".formatted(gameModel.ghostSpeedWhenFrightened(level) * NUM_TICKS_PER_SEC);
+        }
+        return NO_INFO;
     }
 
     private String fmtGhostSpeedTunnel(GameLevel level) {
-        Ghost blinky = level.ghost(RED_GHOST_SHADOW);
-        return (blinky != null)
-            ? "%.4f px/s".formatted(level.game().ghostSpeedInsideTunnel(level, blinky) * NUM_TICKS_PER_SEC)
-            : NO_INFO;
+        if (level.game() instanceof AbstractGameModel gameModel) {
+            return "%.4f px/s".formatted(gameModel.ghostSpeedInsideTunnel(level.number()) * NUM_TICKS_PER_SEC);
+        }
+        return NO_INFO;
     }
 
     private String fmtPacNormalSpeed(GameLevel level) {
