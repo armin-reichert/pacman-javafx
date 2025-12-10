@@ -188,17 +188,15 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     public float ghostSpeed(GameLevel level, Ghost ghost) {
         final int levelNumber = level.number();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
-        final Vector2i tile = ghost.tile();
-        final GhostState state = ghost.state();
         final boolean insideHouse = terrain.house().isVisitedBy(ghost);
         // In levels 3..., ghosts do not slow down in tunnel anymore!
-        final boolean tunnelSlowdown = terrain.isTunnel(tile) && levelNumber <= 2;
+        final boolean insideTunnel = terrain.isTunnel(ghost.tile()) && levelNumber <= 2;
         final int cruiseElroy = ghost instanceof Blinky blinky ? blinky.cruiseElroyValue() : 0;
-        return switch (state) {
+        return switch (ghost.state()) {
             case LOCKED -> insideHouse ? 0.5f : 0;
             case LEAVING_HOUSE -> 0.5f;
-            case HUNTING_PAC -> tunnelSlowdown ? ghostSpeedTunnel(levelNumber) : ghostSpeedAttacking(level, ghost, cruiseElroy);
-            case FRIGHTENED -> tunnelSlowdown ? ghostSpeedTunnel(levelNumber) : ghostSpeedWhenFrightened(level);
+            case HUNTING_PAC -> insideTunnel ? ghostSpeedTunnel(levelNumber) : ghostSpeedAttacking(level, ghost, cruiseElroy);
+            case FRIGHTENED -> insideTunnel ? ghostSpeedTunnel(levelNumber) : ghostSpeedWhenFrightened(level);
             case EATEN -> 0;
             case RETURNING_HOME, ENTERING_HOUSE -> 2;
         };
