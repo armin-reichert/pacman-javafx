@@ -8,7 +8,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.model.actors.ArcadeMsPacMan_ActorFactory
 import de.amr.pacmanfx.arcade.ms_pacman.model.actors.MsPacMan;
 import de.amr.pacmanfx.arcade.ms_pacman.model.actors.Sue;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameModel;
-import de.amr.pacmanfx.arcade.pacman.model.Arcade_LevelData;
+import de.amr.pacmanfx.arcade.pacman.model.LevelData;
 import de.amr.pacmanfx.arcade.pacman.model.actors.Blinky;
 import de.amr.pacmanfx.arcade.pacman.model.actors.Inky;
 import de.amr.pacmanfx.arcade.pacman.model.actors.Pinky;
@@ -103,7 +103,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     }
 
     @Override
-    public Arcade_LevelData levelData(int levelNumber) {
+    public LevelData levelData(int levelNumber) {
         int row = Math.min(levelNumber - 1, LEVEL_DATA.length - 1);
         return LEVEL_DATA[row];
     }

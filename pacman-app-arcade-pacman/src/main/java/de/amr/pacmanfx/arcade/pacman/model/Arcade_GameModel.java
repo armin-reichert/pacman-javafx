@@ -38,28 +38,28 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     static final short TICK_PACMAN_DYING_PAC_DEAD = 240;
 
     // Level data as given in the "Pac-Man Dossier"
-    protected static final Arcade_LevelData[] LEVEL_DATA = {
-        /* 1*/ Arcade_LevelData.of( 80, 75, 40,  20,  80, 10,  85,  90, 50, 6, 5),
-        /* 2*/ Arcade_LevelData.of( 90, 85, 45,  30,  90, 15,  95,  95, 55, 5, 5),
-        /* 3*/ Arcade_LevelData.of( 90, 85, 45,  40,  90, 20,  95,  95, 55, 4, 5),
-        /* 4*/ Arcade_LevelData.of( 90, 85, 45,  40,  90, 20,  95,  95, 55, 3, 5),
-        /* 5*/ Arcade_LevelData.of(100, 95, 50,  40, 100, 20, 105, 100, 60, 2, 5),
-        /* 6*/ Arcade_LevelData.of(100, 95, 50,  50, 100, 25, 105, 100, 60, 5, 5),
-        /* 7*/ Arcade_LevelData.of(100, 95, 50,  50, 100, 25, 105, 100, 60, 2, 5),
-        /* 8*/ Arcade_LevelData.of(100, 95, 50,  50, 100, 25, 105, 100, 60, 2, 5),
-        /* 9*/ Arcade_LevelData.of(100, 95, 50,  60, 100, 30, 105, 100, 60, 1, 3),
-        /*10*/ Arcade_LevelData.of(100, 95, 50,  60, 100, 30, 105, 100, 60, 5, 5),
-        /*11*/ Arcade_LevelData.of(100, 95, 50,  60, 100, 30, 105, 100, 60, 2, 5),
-        /*12*/ Arcade_LevelData.of(100, 95, 50,  80, 100, 40, 105, 100, 60, 1, 3),
-        /*13*/ Arcade_LevelData.of(100, 95, 50,  80, 100, 40, 105, 100, 60, 1, 3),
-        /*14*/ Arcade_LevelData.of(100, 95, 50,  80, 100, 40, 105, 100, 60, 3, 5),
-        /*15*/ Arcade_LevelData.of(100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3),
-        /*16*/ Arcade_LevelData.of(100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3),
-        /*17*/ Arcade_LevelData.of(100, 95, 50, 100, 100, 50, 105,   0,  0, 0, 0),
-        /*18*/ Arcade_LevelData.of(100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3),
-        /*19*/ Arcade_LevelData.of(100, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0),
-        /*20*/ Arcade_LevelData.of(100, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0),
-        /*21*/ Arcade_LevelData.of( 90, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0),
+    protected static final LevelData[] LEVEL_DATA = {
+        /* 1*/ LevelData.of( 80, 75, 40,  20,  80, 10,  85,  90, 50, 6, 5),
+        /* 2*/ LevelData.of( 90, 85, 45,  30,  90, 15,  95,  95, 55, 5, 5),
+        /* 3*/ LevelData.of( 90, 85, 45,  40,  90, 20,  95,  95, 55, 4, 5),
+        /* 4*/ LevelData.of( 90, 85, 45,  40,  90, 20,  95,  95, 55, 3, 5),
+        /* 5*/ LevelData.of(100, 95, 50,  40, 100, 20, 105, 100, 60, 2, 5),
+        /* 6*/ LevelData.of(100, 95, 50,  50, 100, 25, 105, 100, 60, 5, 5),
+        /* 7*/ LevelData.of(100, 95, 50,  50, 100, 25, 105, 100, 60, 2, 5),
+        /* 8*/ LevelData.of(100, 95, 50,  50, 100, 25, 105, 100, 60, 2, 5),
+        /* 9*/ LevelData.of(100, 95, 50,  60, 100, 30, 105, 100, 60, 1, 3),
+        /*10*/ LevelData.of(100, 95, 50,  60, 100, 30, 105, 100, 60, 5, 5),
+        /*11*/ LevelData.of(100, 95, 50,  60, 100, 30, 105, 100, 60, 2, 5),
+        /*12*/ LevelData.of(100, 95, 50,  80, 100, 40, 105, 100, 60, 1, 3),
+        /*13*/ LevelData.of(100, 95, 50,  80, 100, 40, 105, 100, 60, 1, 3),
+        /*14*/ LevelData.of(100, 95, 50,  80, 100, 40, 105, 100, 60, 3, 5),
+        /*15*/ LevelData.of(100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3),
+        /*16*/ LevelData.of(100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3),
+        /*17*/ LevelData.of(100, 95, 50, 100, 100, 50, 105,   0,  0, 0, 0),
+        /*18*/ LevelData.of(100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3),
+        /*19*/ LevelData.of(100, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0),
+        /*20*/ LevelData.of(100, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0),
+        /*21*/ LevelData.of( 90, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0),
     };
 
     /**
@@ -90,7 +90,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         setCollisionStrategy(CollisionStrategy.SAME_TILE);
     }
 
-    public abstract Arcade_LevelData levelData(int levelNumber);
+    public abstract LevelData levelData(int levelNumber);
 
     // public for access by tests
     public void onPelletEaten(GameLevel level) {
@@ -138,7 +138,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     protected void checkCruiseElroy(GameLevel level, Ghost ghost) {
         if (ghost instanceof Blinky blinky) {
-            final Arcade_LevelData data = levelData(level.number());
+            final LevelData data = levelData(level.number());
             int uneatenFoodCount = level.worldMap().foodLayer().uneatenFoodCount();
             if (uneatenFoodCount == data.numDotsLeftElroy1()) {
                 blinky.setCruiseElroyValue(1);
@@ -464,21 +464,21 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     @Override
     public float pacSpeed(GameLevel level) {
-        final Arcade_LevelData data = levelData(level.number());
+        final LevelData data = levelData(level.number());
         byte percentage = data.pctPacSpeed();
         return percentage > 0 ? percentage * BASE_SPEED_1_PERCENT : BASE_SPEED;
     }
 
     @Override
     public float pacSpeedWhenHasPower(GameLevel level) {
-        final Arcade_LevelData data = levelData(level.number());
+        final LevelData data = levelData(level.number());
         byte percentage = data.pctPacSpeedPowered();
         return percentage > 0 ? percentage * BASE_SPEED_1_PERCENT : pacSpeed(level);
     }
 
     @Override
     public float ghostSpeedWhenAttacking(GameLevel level, Ghost ghost) {
-        final Arcade_LevelData data = levelData(level.number());
+        final LevelData data = levelData(level.number());
         if (level.worldMap().terrainLayer().isTunnel(ghost.tile())) {
             return ghostSpeedInsideTunnel(level, ghost);
         }
@@ -505,14 +505,14 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     @Override
     public float ghostSpeedWhenFrightened(GameLevel level, Ghost ghost) {
-        final Arcade_LevelData data = levelData(level.number());
+        final LevelData data = levelData(level.number());
         float percentage = data.pctGhostSpeedFrightened();
         return percentage > 0 ? percentage * BASE_SPEED_1_PERCENT : BASE_SPEED;
     }
 
     @Override
     public float ghostSpeedInsideTunnel(GameLevel level, Ghost ghost) {
-        final Arcade_LevelData data = levelData(level.number());
+        final LevelData data = levelData(level.number());
         return data.pctGhostSpeedTunnel() * BASE_SPEED_1_PERCENT;
     }
 }

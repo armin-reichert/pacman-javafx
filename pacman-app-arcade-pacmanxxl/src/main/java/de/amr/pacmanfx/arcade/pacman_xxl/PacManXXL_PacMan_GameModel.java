@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_HuntingTimer;
-import de.amr.pacmanfx.arcade.pacman.model.Arcade_LevelData;
+import de.amr.pacmanfx.arcade.pacman.model.LevelData;
 import de.amr.pacmanfx.arcade.pacman.model.actors.*;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.math.Vector2i;
@@ -45,7 +45,7 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
 
     @Override
     public GameLevel createLevel(int levelNumber, boolean demoLevel) {
-        final Arcade_LevelData levelData = levelData(levelNumber);
+        final LevelData levelData = levelData(levelNumber);
         final WorldMap worldMap = mapSelector.selectWorldMap(levelNumber);
         final TerrainLayer terrain = worldMap.terrainLayer();
 

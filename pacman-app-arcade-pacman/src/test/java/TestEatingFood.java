@@ -1,5 +1,5 @@
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
-import de.amr.pacmanfx.arcade.pacman.model.Arcade_LevelData;
+import de.amr.pacmanfx.arcade.pacman.model.LevelData;
 import de.amr.pacmanfx.arcade.pacman.model.actors.Blinky;
 import de.amr.pacmanfx.lib.worldmap.FoodLayer;
 import de.amr.pacmanfx.model.GameLevel;
@@ -92,7 +92,7 @@ public class TestEatingFood {
     public void testCruiseElroyMode() {
         final Blinky blinky = (Blinky) theGameLevel().ghost(RED_GHOST_SHADOW);
         final FoodLayer foodLayer = theGameLevel().worldMap().foodLayer();
-        final Arcade_LevelData data = theGame().levelData(theGameLevel().number());
+        final LevelData data = theGame().levelData(theGameLevel().number());
         while (foodLayer.uneatenFoodCount() > data.numDotsLeftElroy1()) {
             assertEquals(0, blinky.cruiseElroyValue());
             eatNextPellet();
