@@ -151,10 +151,10 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         soundManager.registerMediaPlayer(SoundID.PAC_MAN_DEATH,     ARCADE_MS_PAC_MAN_RESOURCES.url("sound/Died.mp3"));
         soundManager.registerAudioClipURL(SoundID.PAC_MAN_MUNCHING, ARCADE_MS_PAC_MAN_RESOURCES.url("sound/munch.wav"));
         soundManager.registerMediaPlayer(SoundID.PAC_MAN_POWER,     ARCADE_MS_PAC_MAN_RESOURCES.url("sound/ScaredGhost.mp3"));
-        soundManager.registerMedia(SoundID.SIREN_1,                 ARCADE_MS_PAC_MAN_RESOURCES.url("sound/GhostNoise1.mp3"));
-        soundManager.registerMedia(SoundID.SIREN_2,                 ARCADE_MS_PAC_MAN_RESOURCES.url("sound/GhostNoise2.mp3"));
-        soundManager.registerMedia(SoundID.SIREN_3,                 ARCADE_MS_PAC_MAN_RESOURCES.url("sound/GhostNoise3.mp3"));
-        soundManager.registerMedia(SoundID.SIREN_4,                 ARCADE_MS_PAC_MAN_RESOURCES.url("sound/GhostNoise4.mp3"));
+        soundManager.registerMedia(SoundID.SIREN_1,                 ARCADE_MS_PAC_MAN_RESOURCES.url("sound/GhostNoise1.wav"));
+        soundManager.registerMedia(SoundID.SIREN_2,                 ARCADE_MS_PAC_MAN_RESOURCES.url("sound/GhostNoise2.wav"));
+        soundManager.registerMedia(SoundID.SIREN_3,                 ARCADE_MS_PAC_MAN_RESOURCES.url("sound/GhostNoise3.wav"));
+        soundManager.registerMedia(SoundID.SIREN_4,                 ARCADE_MS_PAC_MAN_RESOURCES.url("sound/GhostNoise4.wav"));
     }
 
     @Override

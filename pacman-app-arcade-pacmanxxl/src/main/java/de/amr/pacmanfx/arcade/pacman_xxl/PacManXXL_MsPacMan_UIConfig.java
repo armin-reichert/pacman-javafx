@@ -19,7 +19,6 @@ import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
-import de.amr.pacmanfx.ui.GameUI_Implementation;
 import de.amr.pacmanfx.ui._2d.HUD_Renderer;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameScene_Config;
@@ -54,9 +53,8 @@ import static java.util.Objects.requireNonNull;
 
 public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config, GameScene_Config {
 
-    private static final ResourceManager RES_GAME_UI           = () -> GameUI_Implementation.class;
-    private static final ResourceManager RES_ARCADE_MS_PAC_MAN = () -> ArcadeMsPacMan_UIConfig.class;
-    private static final ResourceManager RES_MS_PAC_MAN_XXL    = () -> PacManXXL_MsPacMan_UIConfig.class;
+    private static final ResourceManager ARCADE_MS_PACMAN_RESOURCES = () -> ArcadeMsPacMan_UIConfig.class;
+    private static final ResourceManager LOCAL_RESOURCES = () -> PacManXXL_MsPacMan_UIConfig.class;
 
     private final GameUI ui;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
@@ -66,7 +64,7 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config, GameScene_Con
 
     public PacManXXL_MsPacMan_UIConfig(GameUI ui) {
         this.ui = requireNonNull(ui);
-        spriteSheet = new ArcadeMsPacMan_SpriteSheet(RES_ARCADE_MS_PAC_MAN.loadImage("graphics/mspacman_spritesheet.png"));
+        spriteSheet = new ArcadeMsPacMan_SpriteSheet(ARCADE_MS_PACMAN_RESOURCES.loadImage("graphics/mspacman_spritesheet.png"));
         assets.setLocalizedTexts(ResourceBundle.getBundle("de.amr.pacmanfx.arcade.pacman_xxl.localized_texts_ms_pacman"));
     }
 
@@ -76,8 +74,8 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config, GameScene_Con
     }
 
     public void loadAssets() {
-        assets.set("app_icon", RES_ARCADE_MS_PAC_MAN.loadImage("graphics/icons/mspacman.png"));
-        assets.set("logo.midway", RES_ARCADE_MS_PAC_MAN.loadImage("graphics/midway_logo.png"));
+        assets.set("app_icon", ARCADE_MS_PACMAN_RESOURCES.loadImage("graphics/icons/mspacman.png"));
+        assets.set("logo.midway", ARCADE_MS_PACMAN_RESOURCES.loadImage("graphics/midway_logo.png"));
         assets.set("color.game_over_message", ARCADE_RED);
 
         assets.set("pac.color.head",           ARCADE_YELLOW);
@@ -110,8 +108,8 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config, GameScene_Con
         assets.set("ghost.color.flashing.eyeballs",   ARCADE_ROSE);
         assets.set("ghost.color.flashing.pupils",     ARCADE_RED);
 
-        assets.set("audio.option.selection_changed", RES_MS_PAC_MAN_XXL.loadAudioClip("sound/ms-select1.wav"));
-        assets.set("audio.option.value_changed",     RES_MS_PAC_MAN_XXL.loadAudioClip("sound/ms-select2.wav"));
+        assets.set("audio.option.selection_changed", LOCAL_RESOURCES.loadAudioClip("sound/ms-select1.wav"));
+        assets.set("audio.option.value_changed",     LOCAL_RESOURCES.loadAudioClip("sound/ms-select2.wav"));
 
         soundManager.register(SoundID.VOICE_AUTOPILOT_OFF,          ui.globalAssets().voice_Autopilot_Off);
         soundManager.register(SoundID.VOICE_AUTOPILOT_ON,           ui.globalAssets().voice_Autopilot_On);
@@ -119,26 +117,26 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config, GameScene_Con
         soundManager.register(SoundID.VOICE_IMMUNITY_OFF,           ui.globalAssets().voice_Immunity_Off);
         soundManager.register(SoundID.VOICE_IMMUNITY_ON,            ui.globalAssets().voice_Immunity_On);
 
-        soundManager.registerMediaPlayer(SoundID.BONUS_ACTIVE,      RES_ARCADE_MS_PAC_MAN.url("sound/Fruit_Bounce.mp3"));
-        soundManager.registerAudioClipURL(SoundID.BONUS_EATEN,      RES_ARCADE_MS_PAC_MAN.url("sound/Fruit.mp3"));
-        soundManager.registerAudioClipURL(SoundID.COIN_INSERTED,    RES_ARCADE_MS_PAC_MAN.url("sound/credit.wav"));
-        soundManager.registerAudioClipURL(SoundID.EXTRA_LIFE,       RES_ARCADE_MS_PAC_MAN.url("sound/ExtraLife.mp3"));
-        soundManager.registerMediaPlayer(SoundID.GAME_OVER,         RES_ARCADE_MS_PAC_MAN.url("sound/game-over.mp3"));
-        soundManager.registerMediaPlayer(SoundID.GAME_READY,        RES_ARCADE_MS_PAC_MAN.url("sound/Start.mp3"));
-        soundManager.registerAudioClipURL(SoundID.GHOST_EATEN,      RES_ARCADE_MS_PAC_MAN.url("sound/Ghost.mp3"));
-        soundManager.registerMediaPlayer(SoundID.GHOST_RETURNS,     RES_ARCADE_MS_PAC_MAN.url("sound/GhostEyes.mp3"));
-        soundManager.registerMediaPlayer(SoundID.INTERMISSION_1,    RES_ARCADE_MS_PAC_MAN.url("sound/Act_1_They_Meet.mp3"));
-        soundManager.registerMediaPlayer(SoundID.INTERMISSION_2,    RES_ARCADE_MS_PAC_MAN.url("sound/Act_2_The_Chase.mp3"));
-        soundManager.registerMediaPlayer(SoundID.INTERMISSION_3,    RES_ARCADE_MS_PAC_MAN.url("sound/Act_3_Junior.mp3"));
-        soundManager.registerAudioClipURL(SoundID.LEVEL_CHANGED,    RES_ARCADE_MS_PAC_MAN.url("sound/sweep.mp3"));
-        soundManager.registerMediaPlayer(SoundID.LEVEL_COMPLETE,    RES_ARCADE_MS_PAC_MAN.url("sound/level-complete.mp3"));
-        soundManager.registerMediaPlayer(SoundID.PAC_MAN_DEATH,     RES_ARCADE_MS_PAC_MAN.url("sound/Died.mp3"));
-        soundManager.registerAudioClipURL(SoundID.PAC_MAN_MUNCHING, RES_ARCADE_MS_PAC_MAN.url("sound/munch.wav"));
-        soundManager.registerMediaPlayer(SoundID.PAC_MAN_POWER,     RES_ARCADE_MS_PAC_MAN.url("sound/ScaredGhost.mp3"));
-        soundManager.registerMedia(SoundID.SIREN_1,                 RES_ARCADE_MS_PAC_MAN.url("sound/GhostNoise1.mp3"));
-        soundManager.registerMedia(SoundID.SIREN_2,                 RES_ARCADE_MS_PAC_MAN.url("sound/GhostNoise2.mp3"));
-        soundManager.registerMedia(SoundID.SIREN_3,                 RES_ARCADE_MS_PAC_MAN.url("sound/GhostNoise3.mp3"));
-        soundManager.registerMedia(SoundID.SIREN_4,                 RES_ARCADE_MS_PAC_MAN.url("sound/GhostNoise4.mp3"));
+        soundManager.registerMediaPlayer(SoundID.BONUS_ACTIVE,      ARCADE_MS_PACMAN_RESOURCES.url("sound/Fruit_Bounce.mp3"));
+        soundManager.registerAudioClipURL(SoundID.BONUS_EATEN,      ARCADE_MS_PACMAN_RESOURCES.url("sound/Fruit.mp3"));
+        soundManager.registerAudioClipURL(SoundID.COIN_INSERTED,    ARCADE_MS_PACMAN_RESOURCES.url("sound/credit.wav"));
+        soundManager.registerAudioClipURL(SoundID.EXTRA_LIFE,       ARCADE_MS_PACMAN_RESOURCES.url("sound/ExtraLife.mp3"));
+        soundManager.registerMediaPlayer(SoundID.GAME_OVER,         ARCADE_MS_PACMAN_RESOURCES.url("sound/game-over.mp3"));
+        soundManager.registerMediaPlayer(SoundID.GAME_READY,        ARCADE_MS_PACMAN_RESOURCES.url("sound/Start.mp3"));
+        soundManager.registerAudioClipURL(SoundID.GHOST_EATEN,      ARCADE_MS_PACMAN_RESOURCES.url("sound/Ghost.mp3"));
+        soundManager.registerMediaPlayer(SoundID.GHOST_RETURNS,     ARCADE_MS_PACMAN_RESOURCES.url("sound/GhostEyes.mp3"));
+        soundManager.registerMediaPlayer(SoundID.INTERMISSION_1,    ARCADE_MS_PACMAN_RESOURCES.url("sound/Act_1_They_Meet.mp3"));
+        soundManager.registerMediaPlayer(SoundID.INTERMISSION_2,    ARCADE_MS_PACMAN_RESOURCES.url("sound/Act_2_The_Chase.mp3"));
+        soundManager.registerMediaPlayer(SoundID.INTERMISSION_3,    ARCADE_MS_PACMAN_RESOURCES.url("sound/Act_3_Junior.mp3"));
+        soundManager.registerAudioClipURL(SoundID.LEVEL_CHANGED,    ARCADE_MS_PACMAN_RESOURCES.url("sound/sweep.mp3"));
+        soundManager.registerMediaPlayer(SoundID.LEVEL_COMPLETE,    ARCADE_MS_PACMAN_RESOURCES.url("sound/level-complete.mp3"));
+        soundManager.registerMediaPlayer(SoundID.PAC_MAN_DEATH,     ARCADE_MS_PACMAN_RESOURCES.url("sound/Died.mp3"));
+        soundManager.registerAudioClipURL(SoundID.PAC_MAN_MUNCHING, ARCADE_MS_PACMAN_RESOURCES.url("sound/munch.wav"));
+        soundManager.registerMediaPlayer(SoundID.PAC_MAN_POWER,     ARCADE_MS_PACMAN_RESOURCES.url("sound/ScaredGhost.mp3"));
+        soundManager.registerMedia(SoundID.SIREN_1,                 ARCADE_MS_PACMAN_RESOURCES.url("sound/GhostNoise1.wav"));
+        soundManager.registerMedia(SoundID.SIREN_2,                 ARCADE_MS_PACMAN_RESOURCES.url("sound/GhostNoise2.wav"));
+        soundManager.registerMedia(SoundID.SIREN_3,                 ARCADE_MS_PACMAN_RESOURCES.url("sound/GhostNoise3.wav"));
+        soundManager.registerMedia(SoundID.SIREN_4,                 ARCADE_MS_PACMAN_RESOURCES.url("sound/GhostNoise4.wav"));
     }
 
     @Override
