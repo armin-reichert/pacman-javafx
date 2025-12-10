@@ -197,8 +197,8 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         return switch (state) {
             case LOCKED -> insideHouse ? 0.5f : 0;
             case LEAVING_HOUSE -> 0.5f;
-            case HUNTING_PAC -> tunnelSlowdown ? ghostSpeedInsideTunnel(levelNumber) : ghostSpeedWhenAttacking(level, ghost, cruiseElroy);
-            case FRIGHTENED -> tunnelSlowdown ? ghostSpeedInsideTunnel(levelNumber) : ghostSpeedWhenFrightened(level);
+            case HUNTING_PAC -> tunnelSlowdown ? ghostSpeedTunnel(levelNumber) : ghostSpeedAttacking(level, ghost, cruiseElroy);
+            case FRIGHTENED -> tunnelSlowdown ? ghostSpeedTunnel(levelNumber) : ghostSpeedWhenFrightened(level);
             case EATEN -> 0;
             case RETURNING_HOME, ENTERING_HOUSE -> 2;
         };

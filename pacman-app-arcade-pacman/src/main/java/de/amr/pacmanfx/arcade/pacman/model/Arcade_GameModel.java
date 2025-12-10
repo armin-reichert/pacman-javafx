@@ -489,15 +489,15 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         return switch (state) {
             case LOCKED -> insideHouse ? 0.5f : 0;
             case LEAVING_HOUSE -> 0.5f;
-            case HUNTING_PAC -> tunnelSlowdown ? ghostSpeedInsideTunnel(levelNumber) : ghostSpeedWhenAttacking(level, ghost, cruiseElroy);
-            case FRIGHTENED -> tunnelSlowdown ? ghostSpeedInsideTunnel(levelNumber) : ghostSpeedWhenFrightened(level);
+            case HUNTING_PAC -> tunnelSlowdown ? ghostSpeedTunnel(levelNumber) : ghostSpeedAttacking(level, ghost, cruiseElroy);
+            case FRIGHTENED -> tunnelSlowdown ? ghostSpeedTunnel(levelNumber) : ghostSpeedWhenFrightened(level);
             case EATEN -> 0;
             case RETURNING_HOME, ENTERING_HOUSE -> 2;
         };
     }
 
     @Override
-    public float ghostSpeedWhenAttacking(GameLevel level, Ghost ghost, int cruiseElroy) {
+    public float ghostSpeedAttacking(GameLevel level, Ghost ghost, int cruiseElroy) {
         final int levelNumber = level.number();
         final LevelData data = levelData(levelNumber);
         return switch (cruiseElroy) {
@@ -516,7 +516,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public float ghostSpeedInsideTunnel(int levelNumber) {
+    public float ghostSpeedTunnel(int levelNumber) {
         final LevelData data = levelData(levelNumber);
         return data.pctGhostSpeedTunnel() * BASE_SPEED_1_PERCENT;
     }

@@ -19,7 +19,8 @@ import javafx.scene.paint.Color;
 
 import java.util.Map;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Globals.CYAN_GHOST_BASHFUL;
+import static de.amr.pacmanfx.Globals.NUM_TICKS_PER_SEC;
 import static de.amr.pacmanfx.lib.timer.TickTimer.secToTicks;
 import static de.amr.pacmanfx.lib.timer.TickTimer.ticksToString;
 import static de.amr.pacmanfx.ui.api.GameUI_Config.CONFIG_KEY_COLOR_MAP;
@@ -141,7 +142,7 @@ public class InfoBoxGameInfo extends InfoBox {
     private String fmtGhostAttackSpeed(GameLevel level) {
         if (level.game() instanceof AbstractGameModel gameModel) {
             // do not use Blinky because he has varying attack speed (Cruise Elroy mode)
-            return "%.4f px/s".formatted(gameModel.ghostSpeedWhenAttacking(level, level.ghost(CYAN_GHOST_BASHFUL), 0) * NUM_TICKS_PER_SEC);
+            return "%.4f px/s".formatted(gameModel.ghostSpeedAttacking(level, level.ghost(CYAN_GHOST_BASHFUL), 0) * NUM_TICKS_PER_SEC);
         }
         return NO_INFO;
     }
@@ -155,7 +156,7 @@ public class InfoBoxGameInfo extends InfoBox {
 
     private String fmtGhostSpeedTunnel(GameLevel level) {
         if (level.game() instanceof AbstractGameModel gameModel) {
-            return "%.4f px/s".formatted(gameModel.ghostSpeedInsideTunnel(level.number()) * NUM_TICKS_PER_SEC);
+            return "%.4f px/s".formatted(gameModel.ghostSpeedTunnel(level.number()) * NUM_TICKS_PER_SEC);
         }
         return NO_INFO;
     }
