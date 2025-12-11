@@ -40,7 +40,7 @@ public class InfoBoxCustomMaps extends InfoBox {
         
         TableView<WorldMap> mapsTableView = new TableView<>();
         mapsTableView.setItems(customMaps);
-        mapsTableView.setPrefWidth(300);
+        mapsTableView.setPrefWidth(Dashboard.INFOBOX_MIN_WIDTH - 20);
         mapsTableView.setPrefHeight(400);
 
         var tcMapURL = new TableColumn<WorldMap, String>("Map");

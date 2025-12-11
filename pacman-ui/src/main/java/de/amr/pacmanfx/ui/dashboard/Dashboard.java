@@ -19,12 +19,11 @@ import java.util.stream.Stream;
 import static java.util.Objects.requireNonNull;
 
 public class Dashboard extends VBox {
-
     public static final int INFOBOX_MIN_LABEL_WIDTH = 110;
-    public static final int INFOBOX_MIN_WIDTH = 180;
+    public static final int INFOBOX_MIN_WIDTH = 350;
     public static final Color INFO_BOX_CONTENT_BG_COLOR = Color.rgb(0, 0, 50, 1.0);
     public static final Color INFO_BOX_TEXT_COLOR = Color.WHITE;
-    public static final Font INFO_BOX_FONT = Font.font("Sans", 11.5);
+    public static final Font INFO_BOX_FONT = Font.font("Sans", 12);
 
     private GameUI ui;
     private final Map<DashboardID, InfoBox> infoBoxMap = new LinkedHashMap<>();
@@ -58,23 +57,20 @@ public class Dashboard extends VBox {
 
     public void addInfoBox(DashboardID id) {
         switch (id) {
-            case ABOUT                     -> addInfoBox(id, "infobox.about.title", new InfoBoxAbout(ui));
-            case ACTOR_INFO                -> addInfoBox(id, "infobox.actor_info.title", new InfoBoxActorInfo(ui), true);
-            case ANIMATION_INFO            -> addInfoBox(id, "infobox.animation_info.title", new InfoBoxGameLevelAnimations(ui), true);
-            case CUSTOM_MAPS               -> addInfoBox(id, "infobox.custom_maps.title", new InfoBoxCustomMaps(ui), true);
-            case GENERAL                   -> addInfoBox(id, "infobox.general.title", new InfoBoxGeneral(ui));
-            case GAME_CONTROL              -> addInfoBox(id, "infobox.game_control.title", new InfoBoxGameControl(ui));
-            case GAME_INFO                 -> addInfoBox(id, "infobox.game_info.title", new InfoBoxGameInfo(ui), true);
-            case JOYPAD                    -> addInfoBox(id, "infobox.joypad.title", new InfoBoxJoypad(ui));
-            case KEYBOARD_SHORTCUTS_GLOBAL -> addInfoBox(id, "infobox.keyboard_shortcuts_global.title", new InfoBoxKeyShortcutsGlobal(ui), true);
-            case KEYBOARD_SHORTCUTS_LOCAL  ->  addInfoBox(id, "infobox.keyboard_shortcuts_local.title", new InfoBoxKeyShortcutsLocal(ui));
-            case README -> {
-                InfoBox infoBox = new InfoBoxReadmeFirst(ui);
-                infoBox.setExpanded(true);
-                addInfoBox(id, "infobox.readme.title", infoBox);
-            }
-            case SETTINGS_3D -> addInfoBox(id, "infobox.3D_settings.title", new InfoBox3DSettings(ui));
+            case ABOUT          -> addInfoBox(id, "infobox.about.title", new InfoBoxAbout(ui));
+            case ACTOR_INFO     -> addInfoBox(id, "infobox.actor_info.title", new InfoBoxActorInfo(ui), true);
+            case ANIMATION_INFO -> addInfoBox(id, "infobox.animation_info.title", new InfoBoxGameLevelAnimations(ui), true);
+            case CUSTOM_MAPS    -> addInfoBox(id, "infobox.custom_maps.title", new InfoBoxCustomMaps(ui), true);
+            case GENERAL        -> addInfoBox(id, "infobox.general.title", new InfoBoxGeneral(ui));
+            case GAME_CONTROL   -> addInfoBox(id, "infobox.game_control.title", new InfoBoxGameControl(ui));
+            case GAME_INFO      -> addInfoBox(id, "infobox.game_info.title", new InfoBoxGameInfo(ui), true);
+            case JOYPAD         -> addInfoBox(id, "infobox.joypad.title", new InfoBoxJoypad(ui));
+            case KEYS_GLOBAL    -> addInfoBox(id, "infobox.keyboard_shortcuts_global.title", new InfoBoxKeyShortcutsGlobal(ui), true);
+            case KEYS_LOCAL     -> addInfoBox(id, "infobox.keyboard_shortcuts_local.title", new InfoBoxKeyShortcutsLocal(ui));
+            case README         -> addInfoBox(id, "infobox.readme.title", new InfoBoxReadmeFirst(ui));
+            case SETTINGS_3D    -> addInfoBox(id, "infobox.3D_settings.title", new InfoBox3DSettings(ui));
         }
+        infoBoxMap.get(DashboardID.README).setExpanded(true);
     }
 
     public void configure(List<DashboardID> dashboardIDS) {
@@ -106,6 +102,7 @@ public class Dashboard extends VBox {
         infoBoxMap.put(id, preconfiguredInfoBox(ui.globalAssets().translated(titleKey), infoBox));
         infoBox.setDashboard(this);
         infoBox.setDisplayedMaximized(maximized);
+        infoBox.setMinWidth(INFOBOX_MIN_WIDTH);
     }
 
     private void addInfoBox(DashboardID id, String titleKey, InfoBox infoBox) {

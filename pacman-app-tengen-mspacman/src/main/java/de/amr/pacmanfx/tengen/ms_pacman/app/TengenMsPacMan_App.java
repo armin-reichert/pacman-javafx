@@ -41,7 +41,7 @@ public class TengenMsPacMan_App extends Application {
                 DashboardID.GENERAL, DashboardID.GAME_CONTROL,
                 DashboardID.SETTINGS_3D,
                 DashboardID.GAME_INFO, DashboardID.ACTOR_INFO,
-                DashboardID.KEYBOARD_SHORTCUTS_GLOBAL, DashboardID.KEYBOARD_SHORTCUTS_LOCAL,
+                DashboardID.KEYS_GLOBAL, DashboardID.KEYS_LOCAL,
                 DashboardID.ABOUT)
             .build();
 

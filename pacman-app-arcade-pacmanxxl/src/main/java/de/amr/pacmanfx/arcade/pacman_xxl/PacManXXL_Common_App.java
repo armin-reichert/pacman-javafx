@@ -42,7 +42,7 @@ public class PacManXXL_Common_App extends Application {
                     DashboardID.README, DashboardID.GENERAL,
                     DashboardID.GAME_CONTROL, DashboardID.SETTINGS_3D,
                     DashboardID.GAME_INFO, DashboardID.ACTOR_INFO, DashboardID.CUSTOM_MAPS,
-                    DashboardID.KEYBOARD_SHORTCUTS_GLOBAL, DashboardID.KEYBOARD_SHORTCUTS_LOCAL,
+                    DashboardID.KEYS_GLOBAL, DashboardID.KEYS_LOCAL,
                     DashboardID.ABOUT)
             .startPage(PacManXXL_Common_StartPage.class, PACMAN_XXL.name())
             .build();

@@ -110,8 +110,8 @@ public class PacManGames3dApp extends Application {
             DashboardID.GAME_INFO,
             DashboardID.ACTOR_INFO,
             DashboardID.CUSTOM_MAPS,
-            DashboardID.KEYBOARD_SHORTCUTS_GLOBAL,
-            DashboardID.KEYBOARD_SHORTCUTS_LOCAL,
+            DashboardID.KEYS_GLOBAL,
+            DashboardID.KEYS_LOCAL,
             DashboardID.ABOUT)
         );
 
@@ -171,8 +171,8 @@ public class PacManGames3dApp extends Application {
                 DashboardID.GAME_INFO,
                 DashboardID.ACTOR_INFO,
                 DashboardID.CUSTOM_MAPS,
-                DashboardID.KEYBOARD_SHORTCUTS_GLOBAL,
-                DashboardID.KEYBOARD_SHORTCUTS_LOCAL,
+                DashboardID.KEYS_GLOBAL,
+                DashboardID.KEYS_LOCAL,
                 DashboardID.ABOUT)
 
             .build();

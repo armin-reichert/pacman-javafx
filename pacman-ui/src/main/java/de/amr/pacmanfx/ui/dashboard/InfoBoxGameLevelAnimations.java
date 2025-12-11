@@ -58,6 +58,7 @@ public class InfoBoxGameLevelAnimations extends InfoBox {
         tableView.setFocusTraversable(false);
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
         tableView.prefHeightProperty().bind(ui.stage().heightProperty().map(height -> height.doubleValue() * RELATIVE_TABLE_HEIGHT));
+        tableView.setPrefWidth(Dashboard.INFOBOX_MIN_WIDTH - 20);
 
         TableColumn<TableRow, String> labelColumn = new TableColumn<>("Animation Name");
         labelColumn.setCellValueFactory(data -> data.getValue().labelProperty());

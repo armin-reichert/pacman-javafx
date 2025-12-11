@@ -56,8 +56,12 @@ public abstract class InfoBox extends TitledPane {
 
     public InfoBox(GameUI ui) {
         this.ui = requireNonNull(ui);
+
         grid.setVgap(2);
         grid.setHgap(3);
+        grid.setMinWidth(Dashboard.INFOBOX_MIN_WIDTH);
+        grid.setPrefWidth(Dashboard.INFOBOX_MIN_WIDTH);
+
         setContent(grid);
         setExpanded(false);
         setFocusTraversable(false);
