@@ -1,0 +1,18 @@
+Ms. Pac-Man, a more challenging version of the well-known Pac-Man maze game.
+
+Ms. Pac-Man is sure to be the most popular girl in the game world. Pursued by the familiar Inky, Blinky, Pinky and
+the newest ghost, Sue, Ms. Pac-Man goes through 4 new and changing mazes that increase in difficulty
+and offer varying side exit locations. Each of the 4 mazes has an additional 2 side exits that give Ms. Pac-Man
+a total of 4 ways out of the maze.
+
+Dots score 10 points each with power dots serving 50 points each. Points double for each ghost Ms. Pac-Man munches.
+200 points for the first, 400 for the second and 800 and 1600 points consecutively for the third and fourth ghosts.
+
+When Ms. Pac-Man is caught herself, she dramatically swoons and falls.
+
+As in Pac-Man, bonus fruit symbols indicate how many times a player has cleared the screen of dots.
+Ms. Pac-Man boasts additional bonus fruit symbols that also float freely through the maze and have higher
+point values when gobbled.
+
+Along with a new sound package, players may witness the touching love story of Ms. Pac-Man's meeting Pac-Man himself,
+their courtship and marriage and even the delivery of Pac-Baby in the three act, between-maze cartoon series.
