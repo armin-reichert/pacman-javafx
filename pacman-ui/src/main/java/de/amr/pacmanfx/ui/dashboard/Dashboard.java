@@ -59,14 +59,14 @@ public class Dashboard extends VBox {
     public void addInfoBox(DashboardID id) {
         switch (id) {
             case ABOUT                     -> addInfoBox(id, "infobox.about.title", new InfoBoxAbout(ui));
-            case ACTOR_INFO                -> addInfoBox(id, "infobox.actor_info.title", new InfoBoxActorInfo(ui));
-            case ANIMATION_INFO            -> addInfoBox(id, "infobox.animation_info.title", new InfoBoxGameLevelAnimations(ui));
-            case CUSTOM_MAPS               -> addInfoBox(id, "infobox.custom_maps.title", new InfoBoxCustomMaps(ui));
+            case ACTOR_INFO                -> addInfoBox(id, "infobox.actor_info.title", new InfoBoxActorInfo(ui), true);
+            case ANIMATION_INFO            -> addInfoBox(id, "infobox.animation_info.title", new InfoBoxGameLevelAnimations(ui), true);
+            case CUSTOM_MAPS               -> addInfoBox(id, "infobox.custom_maps.title", new InfoBoxCustomMaps(ui), true);
             case GENERAL                   -> addInfoBox(id, "infobox.general.title", new InfoBoxGeneral(ui));
             case GAME_CONTROL              -> addInfoBox(id, "infobox.game_control.title", new InfoBoxGameControl(ui));
-            case GAME_INFO                 -> addInfoBox(id, "infobox.game_info.title", new InfoBoxGameInfo(ui));
+            case GAME_INFO                 -> addInfoBox(id, "infobox.game_info.title", new InfoBoxGameInfo(ui), true);
             case JOYPAD                    -> addInfoBox(id, "infobox.joypad.title", new InfoBoxJoypad(ui));
-            case KEYBOARD_SHORTCUTS_GLOBAL -> addInfoBox(id, "infobox.keyboard_shortcuts_global.title", new InfoBoxKeyShortcutsGlobal(ui));
+            case KEYBOARD_SHORTCUTS_GLOBAL -> addInfoBox(id, "infobox.keyboard_shortcuts_global.title", new InfoBoxKeyShortcutsGlobal(ui), true);
             case KEYBOARD_SHORTCUTS_LOCAL  ->  addInfoBox(id, "infobox.keyboard_shortcuts_local.title", new InfoBoxKeyShortcutsLocal(ui));
             case README -> {
                 InfoBox infoBox = new InfoBoxReadmeFirst(ui);
@@ -102,10 +102,14 @@ public class Dashboard extends VBox {
         }
     }
 
-    private void addInfoBox(DashboardID id, String titleKey, InfoBox infoBox) {
+    private void addInfoBox(DashboardID id, String titleKey, InfoBox infoBox, boolean maximized) {
         infoBoxMap.put(id, preconfiguredInfoBox(ui.globalAssets().translated(titleKey), infoBox));
         infoBox.setDashboard(this);
-        infoBox.setDisplayedMaximized(id == DashboardID.ANIMATION_INFO); //TODO just a test
+        infoBox.setDisplayedMaximized(maximized);
+    }
+
+    private void addInfoBox(DashboardID id, String titleKey, InfoBox infoBox) {
+        addInfoBox(id, titleKey, infoBox, false);
     }
 
     private InfoBox preconfiguredInfoBox(String title, InfoBox infoBox) {

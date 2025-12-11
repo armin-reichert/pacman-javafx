@@ -40,18 +40,19 @@ public class InfoBoxCustomMaps extends InfoBox {
         
         TableView<WorldMap> mapsTableView = new TableView<>();
         mapsTableView.setItems(customMaps);
-
         mapsTableView.setPrefWidth(300);
-        mapsTableView.setPrefHeight(200);
+        mapsTableView.setPrefHeight(400);
 
         var tcMapURL = new TableColumn<WorldMap, String>("Map");
         tcMapURL.setCellValueFactory(data -> new SimpleStringProperty(trimURL(data.getValue().url())));
 
         var tcMapRowCount = new TableColumn<WorldMap, Integer>("Rows");
         tcMapRowCount.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().numRows()).asObject());
+        tcMapRowCount.setStyle("-fx-alignment: CENTER-RIGHT;");
 
         var tcMapColCount = new TableColumn<WorldMap, Integer>("Cols");
         tcMapColCount.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().numCols()).asObject());
+        tcMapColCount.setStyle("-fx-alignment: CENTER-RIGHT;");
 
         mapsTableView.getColumns().add(tcMapURL);
         mapsTableView.getColumns().add(tcMapRowCount);
