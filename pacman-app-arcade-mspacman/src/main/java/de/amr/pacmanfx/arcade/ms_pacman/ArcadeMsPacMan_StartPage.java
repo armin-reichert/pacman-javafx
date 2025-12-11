@@ -77,6 +77,6 @@ public class ArcadeMsPacMan_StartPage extends StackPane implements StartPage {
 
     @Override
     public String title() {
-        return "Arcade Ms. Pac-Man";
+        return "Arcade Ms. Pac-Man"; //TODO localize
     }
 }
