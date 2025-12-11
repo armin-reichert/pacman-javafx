@@ -93,7 +93,7 @@ public class Dashboard extends VBox {
         getChildren().setAll(infoBoxes().toArray(InfoBox[]::new));
     }
 
-    public void showOnlyVisibleInfoBoxes(boolean onlyVisible) {
+    public void showVisibleInfoBoxesOnly(boolean onlyVisible) {
         getChildren().clear();
         if (onlyVisible) {
             infoBoxes().filter(Node::isVisible).forEach(getChildren()::add);
@@ -105,7 +105,7 @@ public class Dashboard extends VBox {
     private void addInfoBox(DashboardID id, String titleKey, InfoBox infoBox) {
         infoBoxMap.put(id, preconfiguredInfoBox(ui.globalAssets().translated(titleKey), infoBox));
         infoBox.setDashboard(this);
-        infoBox.setShowMaximized(id == DashboardID.ANIMATION_INFO); //TODO just a test
+        infoBox.setDisplayedMaximized(id == DashboardID.ANIMATION_INFO); //TODO just a test
     }
 
     private InfoBox preconfiguredInfoBox(String title, InfoBox infoBox) {

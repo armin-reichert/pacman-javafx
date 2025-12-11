@@ -52,7 +52,7 @@ public abstract class InfoBox extends TitledPane {
     protected Font textFont;
     protected Font labelFont;
     protected int rowIndex;
-    protected boolean showMaximized;
+    protected boolean displayedMaximized;
 
     public InfoBox(GameUI ui) {
         this.ui = requireNonNull(ui);
@@ -62,18 +62,17 @@ public abstract class InfoBox extends TitledPane {
         setExpanded(false);
         setFocusTraversable(false);
         setOpacity(0.9);
-        setShowMaximized(false);
+        setDisplayedMaximized(false);
 
         expandedProperty().addListener((py,ov,expanded) -> {
-            if (expanded && showMaximized) {
-                dashboard.infoBoxes()
-                        .filter(infoBox -> infoBox != this)
-                        .forEach(infoBox -> infoBox.setVisible(false));
-                dashboard.showOnlyVisibleInfoBoxes(true);
-            }
-            if (!expanded && showMaximized) {
-                dashboard.infoBoxes().forEach(infoBox -> infoBox.setVisible(true));
-                dashboard.showOnlyVisibleInfoBoxes(false);
+            if (displayedMaximized) {
+                if (expanded) {
+                    dashboard.infoBoxes().filter(infoBox -> infoBox != this).forEach(otherInfoBox -> otherInfoBox.setVisible(false));
+                    dashboard.showVisibleInfoBoxesOnly(true);
+                } else {
+                    dashboard.infoBoxes().forEach(infoBox -> infoBox.setVisible(true));
+                    dashboard.showVisibleInfoBoxesOnly(false);
+                }
             }
         });
     }
@@ -86,12 +85,12 @@ public abstract class InfoBox extends TitledPane {
         return dashboard;
     }
 
-    public void setShowMaximized(boolean showMaximized) {
-        this.showMaximized = showMaximized;
+    public void setDisplayedMaximized(boolean displayedMaximized) {
+        this.displayedMaximized = displayedMaximized;
     }
 
-    public boolean showMaximized() {
-        return showMaximized;
+    public boolean isDisplayedMaximized() {
+        return displayedMaximized;
     }
 
     public void init(GameUI ui) {}
