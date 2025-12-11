@@ -56,11 +56,11 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config, GameScene_Con
     private static final ResourceManager ARCADE_MS_PACMAN_RESOURCES = () -> ArcadeMsPacMan_UIConfig.class;
     private static final ResourceManager LOCAL_RESOURCES = () -> PacManXXL_MsPacMan_UIConfig.class;
 
-    private final GameUI ui;
-    private final Map<String, GameScene> scenesByID = new HashMap<>();
     private final AssetMap assets = new AssetMap();
+    private final Map<String, GameScene> scenesByID = new HashMap<>();
     private final SoundManager soundManager = new SoundManager();
     private final ArcadeMsPacMan_SpriteSheet spriteSheet;
+    private final GameUI ui;
 
     public PacManXXL_MsPacMan_UIConfig(GameUI ui) {
         this.ui = requireNonNull(ui);

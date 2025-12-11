@@ -24,7 +24,6 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.actors.Pinky;
 import de.amr.pacmanfx.tengen.ms_pacman.model.actors.Sue;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.*;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.*;
-import de.amr.pacmanfx.ui.GameUI_Implementation;
 import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameScene_Config;
@@ -65,6 +64,8 @@ import static de.amr.pacmanfx.ui.input.Keyboard.*;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config {
+
+    private static final ResourceManager LOCAL_RESOURCES = () -> TengenMsPacMan_UIConfig.class;
 
     public enum AnimationID {
         ANIM_MS_PAC_MAN_BOOSTER,
@@ -117,9 +118,6 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     /** 32/30 = 1.0666 */
     public static final float NES_ASPECT = 32f / 30f;
 
-    private static final ResourceManager RES_GAME_UI = () -> GameUI_Implementation.class;
-    private static final ResourceManager RES_TENGEN  = () -> TengenMsPacMan_UIConfig.class;
-
     private static final Color[] NES_COLORS = IntStream.range(0, 64)
         .mapToObj(NES_Palette::color).map(Color::web).toArray(Color[]::new);
 
@@ -142,12 +140,12 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         return BLUE_SHADES[(int) (tick % 64) / 16];
     }
 
+    private final AssetMap assets = new AssetMap();
+    private final Map<String, GameScene> scenesByID = new HashMap<>();
+    private final SoundManager soundManager = new SoundManager();
+    private final TengenMsPacMan_SpriteSheet spriteSheet;
     private final GameUI ui;
 
-    private final SoundManager soundManager = new SoundManager();
-    private final Map<String, GameScene> scenesByID = new HashMap<>();
-    private final AssetMap assets = new AssetMap();
-    private final TengenMsPacMan_SpriteSheet spriteSheet;
     private final ArcadeMapsSpriteSheet arcadeMapsSpriteSheet;
     private final NonArcadeMapsSpriteSheet nonArcadeMapsSpriteSheet;
     private final MapColoringService coloringService = new MapColoringService();
@@ -157,9 +155,9 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
         assets.setLocalizedTexts(TEXT_BUNDLE);
 
-        spriteSheet              = new TengenMsPacMan_SpriteSheet(RES_TENGEN.loadImage(SPRITE_SHEET_PATH));
-        arcadeMapsSpriteSheet    = new ArcadeMapsSpriteSheet(RES_TENGEN.loadImage(ARCADE_MAZES_IMAGE_PATH));
-        nonArcadeMapsSpriteSheet = new NonArcadeMapsSpriteSheet(RES_TENGEN.loadImage(NON_ARCADE_MAZES_IMAGE_PATH));
+        spriteSheet              = new TengenMsPacMan_SpriteSheet(LOCAL_RESOURCES.loadImage(SPRITE_SHEET_PATH));
+        arcadeMapsSpriteSheet    = new ArcadeMapsSpriteSheet(LOCAL_RESOURCES.loadImage(ARCADE_MAZES_IMAGE_PATH));
+        nonArcadeMapsSpriteSheet = new NonArcadeMapsSpriteSheet(LOCAL_RESOURCES.loadImage(NON_ARCADE_MAZES_IMAGE_PATH));
     }
 
     @Override
@@ -169,9 +167,9 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     @Override
     public void loadAssets() {
-        assets.set("app_icon",                         RES_TENGEN.loadImage("graphics/icons/mspacman.png"));
-        assets.set("startpage.image1",                 RES_TENGEN.loadImage("graphics/flyer-page-1.png"));
-        assets.set("startpage.image2",                 RES_TENGEN.loadImage("graphics/flyer-page-2.png"));
+        assets.set("app_icon",                         LOCAL_RESOURCES.loadImage("graphics/icons/mspacman.png"));
+        assets.set("startpage.image1",                 LOCAL_RESOURCES.loadImage("graphics/flyer-page-1.png"));
+        assets.set("startpage.image2",                 LOCAL_RESOURCES.loadImage("graphics/flyer-page-2.png"));
 
         assets.set("color.game_over_message",          nesColor(0x11));
         assets.set("color.ready_message",              nesColor(0x28));
@@ -208,8 +206,8 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         assets.set("ghost.color.flashing.eyeballs",    nesColor(0x20));
         assets.set("ghost.color.flashing.pupils",      nesColor(0x20));
 
-        soundManager.registerAudioClipURL("audio.option.selection_changed",    RES_TENGEN.url("sound/ms-select1.wav"));
-        soundManager.registerAudioClipURL("audio.option.value_changed",        RES_TENGEN.url("sound/ms-select2.wav"));
+        soundManager.registerAudioClipURL("audio.option.selection_changed",    LOCAL_RESOURCES.url("sound/ms-select1.wav"));
+        soundManager.registerAudioClipURL("audio.option.value_changed",        LOCAL_RESOURCES.url("sound/ms-select2.wav"));
 
         soundManager.register(SoundID.VOICE_AUTOPILOT_OFF,          ui.globalAssets().voice_Autopilot_Off);
         soundManager.register(SoundID.VOICE_AUTOPILOT_ON,           ui.globalAssets().voice_Autopilot_On);
@@ -217,28 +215,28 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         soundManager.register(SoundID.VOICE_IMMUNITY_OFF,           ui.globalAssets().voice_Immunity_Off);
         soundManager.register(SoundID.VOICE_IMMUNITY_ON,            ui.globalAssets().voice_Immunity_On);
 
-        soundManager.registerMediaPlayer(SoundID.BONUS_ACTIVE,                 RES_TENGEN.url("sound/fruitbounce.wav"));
-        soundManager.registerAudioClipURL(SoundID.BONUS_EATEN,                 RES_TENGEN.url("sound/ms-fruit.wav"));
-        soundManager.registerAudioClipURL(SoundID.EXTRA_LIFE,                  RES_TENGEN.url("sound/ms-extralife.wav"));
-        soundManager.registerAudioClipURL(SoundID.GAME_OVER,                   RES_TENGEN.url("sound/common/game-over.mp3"));
-        soundManager.registerMediaPlayer(SoundID.GAME_READY,                   RES_TENGEN.url("sound/ms-start.wav"));
-        soundManager.registerAudioClipURL(SoundID.GHOST_EATEN,                 RES_TENGEN.url("sound/ms-ghosteat.wav"));
-        soundManager.registerMediaPlayer(SoundID.GHOST_RETURNS,                RES_TENGEN.url("sound/ms-eyes.wav"));
-        soundManager.registerMediaPlayer(SoundID.INTERMISSION_1,               RES_TENGEN.url("sound/theymeet.wav"));
-        soundManager.registerMediaPlayer(SoundID.INTERMISSION_2,               RES_TENGEN.url("sound/thechase.wav"));
-        soundManager.registerMediaPlayer(SoundID.INTERMISSION_3,               RES_TENGEN.url("sound/junior.wav"));
-        soundManager.registerMediaPlayer(SoundID.INTERMISSION_4,               RES_TENGEN.url("sound/theend.wav"));
-        soundManager.registerMediaPlayer(SoundID.INTERMISSION_4 + ".junior.1", RES_TENGEN.url("sound/ms-theend1.wav"));
-        soundManager.registerMediaPlayer(SoundID.INTERMISSION_4 + ".junior.2", RES_TENGEN.url("sound/ms-theend2.wav"));
-        soundManager.registerAudioClipURL(SoundID.LEVEL_CHANGED,               RES_TENGEN.url("sound/common/sweep.mp3"));
-        soundManager.registerMediaPlayer(SoundID.LEVEL_COMPLETE,               RES_TENGEN.url("sound/common/level-complete.mp3"));
-        soundManager.registerMediaPlayer(SoundID.PAC_MAN_DEATH,                RES_TENGEN.url("sound/ms-death.wav"));
-        soundManager.registerAudioClipURL(SoundID.PAC_MAN_MUNCHING,            RES_TENGEN.url("sound/ms-dot.wav"));
-        soundManager.registerMediaPlayer(SoundID.PAC_MAN_POWER,                RES_TENGEN.url("sound/ms-power.wav"));
-        soundManager.registerMedia(SoundID.SIREN_1,                            RES_TENGEN.url("sound/ms-siren1.wav"));
-        soundManager.registerMedia(SoundID.SIREN_2,                            RES_TENGEN.url("sound/ms-siren2.wav"));// TODO
-        soundManager.registerMedia(SoundID.SIREN_3,                            RES_TENGEN.url("sound/ms-siren2.wav"));// TODO
-        soundManager.registerMedia(SoundID.SIREN_4,                            RES_TENGEN.url("sound/ms-siren2.wav"));// TODO
+        soundManager.registerMediaPlayer(SoundID.BONUS_ACTIVE,                 LOCAL_RESOURCES.url("sound/fruitbounce.wav"));
+        soundManager.registerAudioClipURL(SoundID.BONUS_EATEN,                 LOCAL_RESOURCES.url("sound/ms-fruit.wav"));
+        soundManager.registerAudioClipURL(SoundID.EXTRA_LIFE,                  LOCAL_RESOURCES.url("sound/ms-extralife.wav"));
+        soundManager.registerAudioClipURL(SoundID.GAME_OVER,                   LOCAL_RESOURCES.url("sound/common/game-over.mp3"));
+        soundManager.registerMediaPlayer(SoundID.GAME_READY,                   LOCAL_RESOURCES.url("sound/ms-start.wav"));
+        soundManager.registerAudioClipURL(SoundID.GHOST_EATEN,                 LOCAL_RESOURCES.url("sound/ms-ghosteat.wav"));
+        soundManager.registerMediaPlayer(SoundID.GHOST_RETURNS,                LOCAL_RESOURCES.url("sound/ms-eyes.wav"));
+        soundManager.registerMediaPlayer(SoundID.INTERMISSION_1,               LOCAL_RESOURCES.url("sound/theymeet.wav"));
+        soundManager.registerMediaPlayer(SoundID.INTERMISSION_2,               LOCAL_RESOURCES.url("sound/thechase.wav"));
+        soundManager.registerMediaPlayer(SoundID.INTERMISSION_3,               LOCAL_RESOURCES.url("sound/junior.wav"));
+        soundManager.registerMediaPlayer(SoundID.INTERMISSION_4,               LOCAL_RESOURCES.url("sound/theend.wav"));
+        soundManager.registerMediaPlayer(SoundID.INTERMISSION_4 + ".junior.1", LOCAL_RESOURCES.url("sound/ms-theend1.wav"));
+        soundManager.registerMediaPlayer(SoundID.INTERMISSION_4 + ".junior.2", LOCAL_RESOURCES.url("sound/ms-theend2.wav"));
+        soundManager.registerAudioClipURL(SoundID.LEVEL_CHANGED,               LOCAL_RESOURCES.url("sound/common/sweep.mp3"));
+        soundManager.registerMediaPlayer(SoundID.LEVEL_COMPLETE,               LOCAL_RESOURCES.url("sound/common/level-complete.mp3"));
+        soundManager.registerMediaPlayer(SoundID.PAC_MAN_DEATH,                LOCAL_RESOURCES.url("sound/ms-death.wav"));
+        soundManager.registerAudioClipURL(SoundID.PAC_MAN_MUNCHING,            LOCAL_RESOURCES.url("sound/ms-dot.wav"));
+        soundManager.registerMediaPlayer(SoundID.PAC_MAN_POWER,                LOCAL_RESOURCES.url("sound/ms-power.wav"));
+        soundManager.registerMedia(SoundID.SIREN_1,                            LOCAL_RESOURCES.url("sound/ms-siren1.wav"));
+        soundManager.registerMedia(SoundID.SIREN_2,                            LOCAL_RESOURCES.url("sound/ms-siren2.wav"));// TODO
+        soundManager.registerMedia(SoundID.SIREN_3,                            LOCAL_RESOURCES.url("sound/ms-siren2.wav"));// TODO
+        soundManager.registerMedia(SoundID.SIREN_4,                            LOCAL_RESOURCES.url("sound/ms-siren2.wav"));// TODO
 
         //TODO fix the sound file instead
         MediaPlayer bounceSound = soundManager.mediaPlayer(SoundID.BONUS_ACTIVE);

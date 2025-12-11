@@ -52,6 +52,8 @@ import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
 
+    private static final ResourceManager LOCAL_RESOURCES = () -> ArcadePacMan_UIConfig.class;
+
     public static final Set<ActionBinding> DEFAULT_BINDINGS = Set.of(
         new ActionBinding(ArcadeActions.ACTION_INSERT_COIN, bare(KeyCode.DIGIT5), bare(KeyCode.NUMPAD5)),
         new ActionBinding(ArcadeActions.ACTION_START_GAME,  bare(KeyCode.DIGIT1), bare(KeyCode.NUMPAD1))
@@ -60,8 +62,6 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
     public static final WorldMapColorScheme MAP_COLOR_SCHEME = new WorldMapColorScheme(
         "#000000", "#2121ff", "#ffb7ff", "#febdb4"
     );
-
-    private static final ResourceManager LOCAL_RESOURCES = () -> ArcadePacMan_UIConfig.class;
 
     public enum AnimationID {
         ANIM_BIG_PAC_MAN,
