@@ -28,10 +28,10 @@ public class InfoBoxActorInfo extends InfoBox {
 
     public void init(GameUI ui) {
         addDynamicLabeledValue("Pac Name", supplyPacInfo(Pac::name));
-        addDynamicLabeledValue("Lives",    ifGameLevelPresent(gameLevel -> "%d".formatted(ui.context().currentGame().lifeCount())));
+        addDynamicLabeledValue("Lives",    ifGameLevel(gameLevel -> "%d".formatted(ui.context().currentGame().lifeCount())));
         addDynamicLabeledValue("Movement", supplyPacInfo(this::actorMovementInfo));
         addDynamicLabeledValue("Tile",     supplyPacInfo(this::actorLocationInfo));
-        addDynamicLabeledValue("Power",    ifGameLevelPresent(gameLevel -> {
+        addDynamicLabeledValue("Power",    ifGameLevel(gameLevel -> {
             TickTimer powerTimer = gameLevel.pac().powerTimer();
             return powerTimer.isRunning()
                 ? "Remaining: %s".formatted(ticksToString(powerTimer.remainingTicks()))
@@ -68,7 +68,7 @@ public class InfoBoxActorInfo extends InfoBox {
     }
 
     private Supplier<String> supplyPacInfo(Function<Pac, String> detailInfoSupplier) {
-        return ifGameLevelPresent(gameLevel -> detailInfoSupplier.apply(gameLevel.pac()));
+        return ifGameLevel(gameLevel -> detailInfoSupplier.apply(gameLevel.pac()));
     }
 
     private void addGhostInfo(byte personality) {
@@ -86,7 +86,7 @@ public class InfoBoxActorInfo extends InfoBox {
     }
 
     private Supplier<String> supplyGhostInfo(Function<Ghost, String> detailInfoSupplier, byte personality) {
-        return ifGameLevelPresent(gameLevel -> {
+        return ifGameLevel(gameLevel -> {
             if (gameLevel.ghosts().findAny().isPresent()) {
                 return detailInfoSupplier.apply(gameLevel.ghost(personality));
             }

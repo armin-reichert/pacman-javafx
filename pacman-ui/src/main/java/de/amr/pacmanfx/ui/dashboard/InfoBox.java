@@ -124,7 +124,7 @@ public abstract class InfoBox extends TitledPane {
         return () -> ui.currentGameScene().map(fnInfo).orElse(NO_INFO);
     }
 
-    protected Supplier<String> ifGameLevelPresent(Function<GameLevel, String> fnInfo) {
+    protected Supplier<String> ifGameLevel(Function<GameLevel, String> fnInfo) {
         return () -> ui.context().currentGame().optGameLevel().map(fnInfo).orElse(NO_INFO);
     }
 

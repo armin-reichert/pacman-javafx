@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.dashboard;
 
+import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.lib.worldmap.FoodLayer;
@@ -22,14 +23,10 @@ import java.util.Map;
 import static de.amr.pacmanfx.Globals.CYAN_GHOST_BASHFUL;
 import static de.amr.pacmanfx.Globals.NUM_TICKS_PER_SEC;
 import static de.amr.pacmanfx.lib.timer.TickTimer.secToTicks;
-import static de.amr.pacmanfx.lib.timer.TickTimer.ticksToString;
 import static de.amr.pacmanfx.ui.api.GameUI_Config.CONFIG_KEY_COLOR_MAP;
 import static de.amr.pacmanfx.ui.api.GameUI_Config.CONFIG_KEY_COLOR_MAP_INDEX;
 import static de.amr.pacmanfx.uilib.Ufx.formatColorHex;
 
-/**
- * @author Armin Reichert
- */
 public class InfoBoxGameInfo extends InfoBox {
 
     public InfoBoxGameInfo(GameUI ui) {
@@ -42,13 +39,13 @@ public class InfoBoxGameInfo extends InfoBox {
         addDynamicLabeledValue("State Timer", this::stateTimerInfo);
         addDynamicLabeledValue("Game Scene", ifGameScenePresent(gameScene -> gameScene.getClass().getSimpleName()));
 
-        addDynamicLabeledValue("Level Number", ifGameLevelPresent(level ->
+        addDynamicLabeledValue("Level Number", ifGameLevel(level ->
             (level.isDemoLevel() ? "%d (Demo Level)" : "%d").formatted(level.number())));
-        addDynamicLabeledValue("World Map", ifGameLevelPresent(level -> {
+        addDynamicLabeledValue("World Map", ifGameLevel(level -> {
             String url = level.worldMap().url();
             return url == null ? NO_INFO : url.substring(url.lastIndexOf("/") + 1);
         }));
-        addDynamicLabeledValue("Fill/Stroke/Pellet", ifGameLevelPresent(level -> {
+        addDynamicLabeledValue("Fill/Stroke/Pellet", ifGameLevel(level -> {
             WorldMap worldMap = level.worldMap();
             //TODO create "plugin" mechanism for variant-specific info
             if (worldMap.hasConfigValue("nesColorScheme")) {
@@ -74,19 +71,19 @@ public class InfoBoxGameInfo extends InfoBox {
             }
         }));
 
-        addDynamicLabeledValue("Hunting Phase",   ifGameLevelPresent(gameLevel -> fmtHuntingPhase()));
-        addDynamicLabeledValue("",                ifGameLevelPresent(gameLevel -> fmtHuntingTicksRunning(gameLevel.huntingTimer())));
-        addDynamicLabeledValue("",                ifGameLevelPresent(gameLevel -> fmtHuntingTicksRemaining(gameLevel.huntingTimer())));
+        addDynamicLabeledValue("Hunting Phase",   ifGameLevel(level -> fmtHuntingPhase(level)));
+        addDynamicLabeledValue("-Running",        ifGameLevel(level -> fmtHuntingTicksRunning(level.huntingTimer())));
+        addDynamicLabeledValue("-Remaining",      ifGameLevel(level -> fmtHuntingTicksRemaining(level.huntingTimer())));
 
-        addDynamicLabeledValue("Collision mode",  ifGameLevelPresent(this::fmtCollisionMode));
-        addDynamicLabeledValue("Pac-Man speed",   ifGameLevelPresent(this::fmtPacNormalSpeed));
-        addDynamicLabeledValue("- empowered",     ifGameLevelPresent(this::fmtPacSpeedPowered));
-        addDynamicLabeledValue("Power Duration",  ifGameLevelPresent(this::fmtPacPowerTime));
-        addDynamicLabeledValue("Pellets",         ifGameLevelPresent(this::fmtPelletCount));
-        addDynamicLabeledValue("Ghost speed",     ifGameLevelPresent(this::fmtGhostAttackSpeed));
-        addDynamicLabeledValue("- frightened",    ifGameLevelPresent(this::fmtGhostSpeedFrightened));
-        addDynamicLabeledValue("- in tunnel",     ifGameLevelPresent(this::fmtGhostSpeedTunnel));
-        addDynamicLabeledValue("Maze flashings",  ifGameLevelPresent(this::fmtNumFlashes));
+        addDynamicLabeledValue("Collision mode",  ifGameLevel(this::fmtCollisionMode));
+        addDynamicLabeledValue("Pac-Man speed",   ifGameLevel(this::fmtPacNormalSpeed));
+        addDynamicLabeledValue("- empowered",     ifGameLevel(this::fmtPacSpeedPowered));
+        addDynamicLabeledValue("Power Duration",  ifGameLevel(this::fmtPacPowerTime));
+        addDynamicLabeledValue("Pellets",         ifGameLevel(this::fmtPelletCount));
+        addDynamicLabeledValue("Ghost speed",     ifGameLevel(this::fmtGhostAttackSpeed));
+        addDynamicLabeledValue("- frightened",    ifGameLevel(this::fmtGhostSpeedFrightened));
+        addDynamicLabeledValue("- in tunnel",     ifGameLevel(this::fmtGhostSpeedTunnel));
+        addDynamicLabeledValue("Maze flashings",  ifGameLevel(this::fmtNumFlashes));
     }
 
     private String stateTimerInfo() {
@@ -101,33 +98,39 @@ public class InfoBoxGameInfo extends InfoBox {
         return "Tick %d of %d. Remaining: %d".formatted(t.tickCount(), t.durationTicks(), t.remainingTicks());
     }
 
-    private String fmtCollisionMode(GameLevel gameLevel) {
-        CollisionStrategy collisionStrategy = gameLevel.game().collisionStrategy();
+    private String fmtCollisionMode(GameLevel level) {
+        CollisionStrategy collisionStrategy = level.game().collisionStrategy();
         return switch (collisionStrategy) {
             case SAME_TILE -> "Same Tile";
             case CENTER_DISTANCE -> "Distance-based";
         };
     }
 
-    private String fmtHuntingPhase() {
-        if (ui.context().currentGame().level() != null) {
-            AbstractHuntingTimer huntingTimer = ui.context().currentGame().level().huntingTimer();
-            return "%s #%d%s".formatted(
-                huntingTimer.phase().name(),
-                huntingTimer.phase() == HuntingPhase.CHASING
-                    ? huntingTimer.currentChasingPhaseIndex().orElse(42)
-                    : huntingTimer.currentScatterPhaseIndex().orElse(42),
-                huntingTimer.isStopped() ? " STOPPED" : "");
+    private String fmtHuntingPhase(GameLevel level) {
+        AbstractHuntingTimer timer = level.huntingTimer();
+        return "%s #%d%s (%s)".formatted(
+            timer.phase().name(),
+            timer.phase() == HuntingPhase.CHASING
+                ? timer.currentChasingPhaseIndex().orElse(42)
+                : timer.currentScatterPhaseIndex().orElse(42),
+            timer.isStopped() ? " STOPPED" : "",
+            formatDurationAsSeconds(timer.durationTicks())
+        );
+    }
+
+    private String formatDurationAsSeconds(long duration) {
+        if (duration == TickTimer.INDEFINITE) {
+            return "indefinite";
         }
-        return NO_INFO;
+        return "%.2f sec".formatted(duration / (float) NUM_TICKS_PER_SEC);
     }
 
-    private String fmtHuntingTicksRunning(AbstractHuntingTimer huntingTimer) {
-        return "Running:   %d".formatted(huntingTimer.tickCount());
+    private String fmtHuntingTicksRunning(AbstractHuntingTimer timer) {
+        return "%d".formatted(timer.tickCount());
     }
 
-    private String fmtHuntingTicksRemaining(AbstractHuntingTimer huntingTimer) {
-        return "Remaining: %s".formatted(ticksToString(huntingTimer.remainingTicksOfCurrentPhase()));
+    private String fmtHuntingTicksRemaining(AbstractHuntingTimer timer) {
+        return "%d".formatted(timer.remainingTicksOfCurrentPhase());
     }
 
     private String fmtPelletCount(GameLevel level) {
