@@ -239,7 +239,7 @@ public abstract class InfoBox extends TitledPane {
         var slider = new Slider(min, max, initialValue);
         slider.setShowTickMarks(tickMarks);
         slider.setShowTickLabels(tickLabels);
-        slider.setMinWidth(Dashboard.INFOBOX_MIN_WIDTH);
+        slider.setPrefWidth(0.5 * Dashboard.INFOBOX_MIN_WIDTH);
         slider.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             if (e.getClickCount() == 2) {
                 slider.setValue(initialValue);
