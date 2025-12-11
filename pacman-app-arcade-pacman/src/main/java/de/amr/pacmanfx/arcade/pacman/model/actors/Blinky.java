@@ -53,10 +53,12 @@ public class Blinky extends Ghost {
 
     /**
      * Blinky overrides method to take "Cruise Elroy" mode into account.
+     *
      * @param level the current game level
+     * @param speed speed in pixel/tick
      */
     @Override
-    public void hunt(GameLevel level) {
+    public void hunt(GameLevel level, float speed) {
         boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING || isCruiseElroyEnabled();
         Vector2i targetTile = chase
             ? chasingTargetTile(level)

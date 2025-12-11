@@ -21,10 +21,9 @@ public class Pinky extends Ghost {
     @Override
     public void onPacKilled(GameLevel gameLevel) {}
 
+    //TODO Clarify hunting behavior of Pinky
     @Override
-    public void hunt(GameLevel gameLevel) {
-        //TODO Clarify hunting behavior of Pinky
-        float speed = gameLevel.game().ghostSpeed(gameLevel, this);
+    public void hunt(GameLevel gameLevel, float speed) {
         setSpeed(speed);
         if (gameLevel.huntingTimer().phaseIndex() == 0) {
             roam(gameLevel);

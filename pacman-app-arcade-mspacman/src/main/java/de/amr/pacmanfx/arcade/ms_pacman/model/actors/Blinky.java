@@ -20,8 +20,7 @@ public class Blinky extends de.amr.pacmanfx.arcade.pacman.model.actors.Blinky {
      * @see <a href="http://www.donhodges.com/pacman_pinky_explanation.htm">Overflow bug explanation</a>.
      */
     @Override
-    public void hunt(GameLevel gameLevel) {
-        float speed = gameLevel.game().ghostSpeed(gameLevel, this);
+    public void hunt(GameLevel gameLevel, float speed) {
         setSpeed(speed);
         if (gameLevel.huntingTimer().phaseIndex() == 0) {
             // first scatter phase

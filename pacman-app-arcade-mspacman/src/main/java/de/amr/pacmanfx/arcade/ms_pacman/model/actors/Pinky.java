@@ -20,8 +20,7 @@ public class Pinky extends de.amr.pacmanfx.arcade.pacman.model.actors.Pinky {
     Pinky() {}
 
     @Override
-    public void hunt(GameLevel gameLevel) {
-        float speed = gameLevel.game().ghostSpeed(gameLevel, this);
+    public void hunt(GameLevel gameLevel, float speed) {
         setSpeed(speed);
         if (gameLevel.huntingTimer().phaseIndex() == 0) {
             // first scatter phase
