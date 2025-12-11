@@ -142,9 +142,9 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             final LevelData data = levelData(level.number());
             int uneatenFoodCount = level.worldMap().foodLayer().uneatenFoodCount();
             if (uneatenFoodCount == data.numDotsLeftElroy1()) {
-                blinky.setCruiseElroyValue(1);
+                blinky.setElroyMode(Blinky.ElroyMode._1);
             } else if (uneatenFoodCount == data.numDotsLeftElroy2()) {
-                blinky.setCruiseElroyValue(2);
+                blinky.setElroyMode(Blinky.ElroyMode._2);
             }
         }
         else {
@@ -483,11 +483,10 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final boolean insideHouse  = terrain.house().isVisitedBy(ghost);
         final boolean insideTunnel = terrain.isTunnel(ghost.tile());
-        final int cruiseElroy = ghost instanceof Blinky blinky ? blinky.cruiseElroyValue() : 0;
         return switch (ghost.state()) {
             case LOCKED -> insideHouse ? 0.5f : 0;
             case LEAVING_HOUSE -> 0.5f;
-            case HUNTING_PAC -> insideTunnel ? ghostSpeedTunnel(levelNumber) : ghostSpeedAttacking(level, ghost, cruiseElroy);
+            case HUNTING_PAC -> insideTunnel ? ghostSpeedTunnel(levelNumber) : ghostSpeedAttacking(level, ghost);
             case FRIGHTENED -> insideTunnel ? ghostSpeedTunnel(levelNumber) : ghostSpeedWhenFrightened(level);
             case EATEN -> 0;
             case RETURNING_HOME, ENTERING_HOUSE -> 2;
@@ -495,14 +494,18 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public float ghostSpeedAttacking(GameLevel level, Ghost ghost, int cruiseElroy) {
+    public float ghostSpeedAttacking(GameLevel level, Ghost ghost) {
         final int levelNumber = level.number();
         final LevelData data = levelData(levelNumber);
-        return switch (cruiseElroy) {
-            case 1 -> data.pctElroy1Speed() * BASE_SPEED_1_PERCENT;
-            case 2 -> data.pctElroy2Speed() * BASE_SPEED_1_PERCENT;
-            default -> data.pctGhostSpeed() * BASE_SPEED_1_PERCENT;
-        };
+        if (ghost instanceof Blinky blinky) {
+            return switch (blinky.elroyMode()) {
+                case NONE -> data.pctGhostSpeed() * BASE_SPEED_1_PERCENT;
+                case _1 -> data.pctElroy1Speed() * BASE_SPEED_1_PERCENT;
+                case _2 -> data.pctElroy2Speed() * BASE_SPEED_1_PERCENT;
+            };
+        } else {
+            return data.pctGhostSpeed() * BASE_SPEED_1_PERCENT;
+        }
     }
 
     @Override

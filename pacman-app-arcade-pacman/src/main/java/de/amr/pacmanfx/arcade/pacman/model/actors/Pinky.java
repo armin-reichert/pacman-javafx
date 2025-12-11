@@ -18,6 +18,9 @@ public class Pinky extends Ghost {
     }
 
     @Override
+    public void onPacKilled(GameLevel gameLevel) {}
+
+    @Override
     public Vector2i chasingTargetTile(GameLevel gameLevel) {
         // Pinky (pink ghost) ambushes Pac-Man
         return gameLevel.pac().tilesAheadWithOverflowBug(4);

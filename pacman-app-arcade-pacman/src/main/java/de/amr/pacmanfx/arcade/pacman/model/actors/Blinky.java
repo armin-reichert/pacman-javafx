@@ -11,43 +11,53 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
+import static java.util.Objects.requireNonNull;
 
 public class Blinky extends Ghost {
 
-    private boolean cruiseElroyActive;
-    private byte cruiseElroyValue;
+    public enum ElroyMode {NONE, _1, _2}
+
+    private boolean cruiseElroyEnabled;
+    private ElroyMode elroyMode;
 
     protected Blinky() {
         super(RED_GHOST_SHADOW, "Blinky");
         reset();
-        cruiseElroyActive = false;
-        cruiseElroyValue = 0;
+        cruiseElroyEnabled = false;
+        elroyMode = ElroyMode.NONE;
     }
 
-    public int cruiseElroyValue() { return cruiseElroyValue; }
+    public ElroyMode elroyMode() { return elroyMode; }
 
-    public boolean isCruiseElroyActive() { return cruiseElroyActive; }
+    public boolean isCruiseElroyEnabled() { return cruiseElroyEnabled; }
 
-    public void setCruiseElroyActive(boolean active) {
-        cruiseElroyActive = active;
-        Logger.info("Cruise Elroy is: {}, active: {}", cruiseElroyValue, cruiseElroyActive);
+    public void setCruiseElroyEnabled(boolean on) {
+        cruiseElroyEnabled = on;
+        Logger.info("Cruise Elroy speed increase is: {}, active: {}", elroyMode, cruiseElroyEnabled);
     }
 
-    public void setCruiseElroyValue(int value) {
-        cruiseElroyValue = (byte) value;
-        Logger.info("Cruise Elroy is: {}, active: {}", cruiseElroyValue, cruiseElroyActive);
+    public void setElroyMode(ElroyMode mode) {
+        elroyMode = requireNonNull(mode);
+        Logger.info("Cruise Elroy is: {}, active: {}", elroyMode, cruiseElroyEnabled);
     }
 
+    /**
+     * When Pac-Man is killed, Blinky disables his Cruise Elroy mode.
+     *
+     * @param level the game level where this happens
+     */
     @Override
     public void onPacKilled(GameLevel level) {
-        super.onPacKilled(level);
-        setCruiseElroyActive(false);
+        setCruiseElroyEnabled(false);
     }
 
+    /**
+     * Blinky overrides method to take "Cruise Elroy" mode into account.
+     * @param level the current game level
+     */
     @Override
     public void hunt(GameLevel level) {
-        // Blinky overrides hunt method to take "Cruise Elroy" mode into account
-        boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING || isCruiseElroyActive();
+        boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING || isCruiseElroyEnabled();
         Vector2i targetTile = chase
             ? chasingTargetTile(level)
             : level.worldMap().terrainLayer().ghostScatterTile(personality());
@@ -55,9 +65,12 @@ public class Blinky extends Ghost {
         tryMovingTowardsTargetTile(level, targetTile);
     }
 
+    /**
+     * Blinky (red ghost) attacks Pac-Man directly.
+     * @return Pac-Man's current tile position
+     */
     @Override
     public Vector2i chasingTargetTile(GameLevel level) {
-        // Blinky (red ghost) attacks Pac-Man directly
         return level.pac().tile();
     }
 }

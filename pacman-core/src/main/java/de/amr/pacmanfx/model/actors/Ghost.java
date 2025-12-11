@@ -49,6 +49,12 @@ public abstract class Ghost extends MovingActor {
         corneringSpeedUp = -1.25f;
     }
 
+    /**
+     * Notifies this ghost about Pac-Man's assassination so he can react accordingly (send condolence message etc.)
+     * @param gameLevel the game level where this happens
+     */
+    public abstract void onPacKilled(GameLevel gameLevel);
+
     public void setHome(House home) {
         this.home = home;
     }
@@ -65,8 +71,6 @@ public abstract class Ghost extends MovingActor {
     public final byte personality() {
         return personality;
     }
-
-    public void onPacKilled(GameLevel gameLevel) {}
 
     public void setSpecialTerrainTiles(List<Vector2i> tiles) {
         specialTerrainTiles = new ArrayList<>(tiles);

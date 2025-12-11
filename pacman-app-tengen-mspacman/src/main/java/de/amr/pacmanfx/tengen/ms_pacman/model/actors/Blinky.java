@@ -19,6 +19,9 @@ public class Blinky extends Ghost {
     }
 
     @Override
+    public void onPacKilled(GameLevel level) {}
+
+    @Override
     public void hunt(GameLevel gameLevel) {
         //TODO Clarify hunting behavior of Blinky
         float speed = gameLevel.game().ghostSpeed(gameLevel, this);

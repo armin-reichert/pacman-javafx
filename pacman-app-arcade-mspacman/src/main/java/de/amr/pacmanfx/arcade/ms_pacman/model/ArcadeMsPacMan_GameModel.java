@@ -89,10 +89,10 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
         gateKeeper = new GateKeeper(this);
         gateKeeper.setOnGhostReleased((gameLevel, prisoner) -> {
-            Blinky blinky = (Blinky) gameLevel.ghost(RED_GHOST_SHADOW);
-            Sue sue = (Sue) gameLevel.ghost(ORANGE_GHOST_POKEY);
-            if (prisoner == sue && blinky.cruiseElroyValue() > 0 && !blinky.isCruiseElroyActive()) {
-                blinky.setCruiseElroyActive(true);
+            final var blinky = (Blinky) gameLevel.ghost(RED_GHOST_SHADOW);
+            if (prisoner.personality() == ORANGE_GHOST_POKEY
+                && blinky.elroyMode() != Blinky.ElroyMode.NONE && !blinky.isCruiseElroyEnabled()) {
+                blinky.setCruiseElroyEnabled(true);
                 Logger.trace("'Cruise Elroy' mode enabled because {} exits house:", prisoner.name());
             }
         });
@@ -191,11 +191,10 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         final boolean insideHouse = terrain.house().isVisitedBy(ghost);
         // In levels 3..., ghosts do not slow down in tunnel anymore!
         final boolean insideTunnel = terrain.isTunnel(ghost.tile()) && levelNumber <= 2;
-        final int cruiseElroy = ghost instanceof Blinky blinky ? blinky.cruiseElroyValue() : 0;
         return switch (ghost.state()) {
             case LOCKED -> insideHouse ? 0.5f : 0;
             case LEAVING_HOUSE -> 0.5f;
-            case HUNTING_PAC -> insideTunnel ? ghostSpeedTunnel(levelNumber) : ghostSpeedAttacking(level, ghost, cruiseElroy);
+            case HUNTING_PAC -> insideTunnel ? ghostSpeedTunnel(levelNumber) : ghostSpeedAttacking(level, ghost);
             case FRIGHTENED -> insideTunnel ? ghostSpeedTunnel(levelNumber) : ghostSpeedWhenFrightened(level);
             case EATEN -> 0;
             case RETURNING_HOME, ENTERING_HOUSE -> 2;

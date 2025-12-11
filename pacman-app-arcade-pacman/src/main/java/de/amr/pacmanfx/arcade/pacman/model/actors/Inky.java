@@ -19,6 +19,9 @@ public class Inky extends Ghost {
     }
 
     @Override
+    public void onPacKilled(GameLevel gameLevel) {}
+
+    @Override
     public Vector2i chasingTargetTile(GameLevel gameLevel) {
         // Inky (cyan ghost) attacks from opposite side as Blinky
         return gameLevel.pac().tilesAheadWithOverflowBug(2).scaled(2).minus(gameLevel.ghost(RED_GHOST_SHADOW).tile());

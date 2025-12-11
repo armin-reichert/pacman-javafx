@@ -18,6 +18,9 @@ public class Sue extends Ghost {
     }
 
     @Override
+    public void onPacKilled(GameLevel gameLevel) {}
+
+    @Override
     public Vector2i chasingTargetTile(GameLevel gameLevel) {
         return tile().euclideanDist(gameLevel.pac().tile()) < 8
             ? gameLevel.worldMap().terrainLayer().ghostScatterTile(personality())

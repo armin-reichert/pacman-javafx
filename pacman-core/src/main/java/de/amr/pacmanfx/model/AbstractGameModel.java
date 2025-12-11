@@ -104,7 +104,7 @@ public abstract class AbstractGameModel implements Game {
 
     // These methods are public such that info panel can call them
 
-    public abstract float ghostSpeedAttacking(GameLevel level, Ghost ghost, int cruiseElroy);
+    public abstract float ghostSpeedAttacking(GameLevel level, Ghost ghost);
 
     public abstract float ghostSpeedWhenFrightened(GameLevel level);
 

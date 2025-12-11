@@ -23,6 +23,9 @@ public class Clyde extends Ghost {
     }
 
     @Override
+    public void onPacKilled(GameLevel gameLevel) {}
+
+    @Override
     public Vector2i chasingTargetTile(GameLevel gameLevel) {
         // Attacks directly or retreats towards scatter target if Pac is near
         return tile().euclideanDist(gameLevel.pac().tile()) < 8

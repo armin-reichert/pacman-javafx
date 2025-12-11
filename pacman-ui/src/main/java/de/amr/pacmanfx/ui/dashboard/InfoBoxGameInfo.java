@@ -142,7 +142,7 @@ public class InfoBoxGameInfo extends InfoBox {
     private String fmtGhostAttackSpeed(GameLevel level) {
         if (level.game() instanceof AbstractGameModel gameModel) {
             // do not use Blinky because he has varying attack speed (Cruise Elroy mode)
-            return "%.4f px/s".formatted(gameModel.ghostSpeedAttacking(level, level.ghost(CYAN_GHOST_BASHFUL), 0) * NUM_TICKS_PER_SEC);
+            return "%.4f px/s".formatted(gameModel.ghostSpeedAttacking(level, level.ghost(CYAN_GHOST_BASHFUL)) * NUM_TICKS_PER_SEC);
         }
         return NO_INFO;
     }

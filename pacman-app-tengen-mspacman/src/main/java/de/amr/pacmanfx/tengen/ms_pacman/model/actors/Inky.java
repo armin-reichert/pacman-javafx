@@ -19,6 +19,9 @@ public class Inky extends Ghost {
     }
 
     @Override
+    public void onPacKilled(GameLevel gameLevel) {}
+
+    @Override
     public Vector2i chasingTargetTile(GameLevel gameLevel) {
         Ghost blinky = gameLevel.ghost(RED_GHOST_SHADOW);
         return gameLevel.pac().tilesAhead(2).scaled(2).minus(blinky.tile());
