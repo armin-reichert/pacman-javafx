@@ -8,6 +8,7 @@ import de.amr.pacmanfx.model.StandardGameVariant;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.StartPage;
 import de.amr.pacmanfx.ui.layout.StartPagesCarousel;
+import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.widgets.Flyer;
 import javafx.scene.Node;
@@ -46,8 +47,10 @@ public class ArcadeMsPacMan_StartPage extends StackPane implements StartPage {
             }
         });
 
-        Node startButton = StartPagesCarousel.createDefaultStartButton(ui,
-            () -> ACTION_BOOT_SHOW_PLAY_VIEW.executeIfEnabled(ui));
+        Node startButton = StartPagesCarousel.createDefaultStartButton(ui, () -> {
+            ui.soundManager().stopVoice();
+            ACTION_BOOT_SHOW_PLAY_VIEW.executeIfEnabled(ui);
+        });
         startButton.setTranslateY(-50);
 
         getChildren().addAll(flyer, startButton);
@@ -57,6 +60,12 @@ public class ArcadeMsPacMan_StartPage extends StackPane implements StartPage {
     public void onEnter(GameUI ui) {
         ui.selectGameVariant(StandardGameVariant.MS_PACMAN.name());
         flyer.selectPage(0);
+        ui.soundManager().playVoiceAfterSec(1, SoundID.VOICE_FLYER_TEXT);
+    }
+
+    @Override
+    public void onExit(GameUI ui) {
+        ui.soundManager().stopVoice();
     }
 
     @Override
