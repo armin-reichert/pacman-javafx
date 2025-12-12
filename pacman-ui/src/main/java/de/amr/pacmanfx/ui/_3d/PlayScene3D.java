@@ -59,32 +59,30 @@ import static de.amr.pacmanfx.uilib.Ufx.*;
 import static java.util.Objects.requireNonNull;
 
 /**
- * 3D play scene.
+ * Common 3D play scene base class for all game variants.
  *
  * <p>Provides different camera perspectives that can be stepped through using key combinations
  * <code>Alt+LEFT</code> and <code>Alt+RIGHT</code>.
  */
 public abstract class PlayScene3D extends Group implements GameScene, SubSceneProvider {
 
+    // Colors for fade-in effect
     private static final Color SUB_SCENE_FILL_DARK = Color.BLACK;
     private static final Color SUB_SCENE_FILL_BRIGHT = Color.TRANSPARENT;
 
+    private static final float DISPLAY_SECONDS_READY_MESSAGE = 2.5f;
+
     private final Map<PerspectiveID, Perspective> perspectivesByID = new EnumMap<>(PerspectiveID.class);
 
-    private final ObjectProperty<PerspectiveID> perspectiveID = new SimpleObjectProperty<>();
-
-    private Optional<Perspective> currentPerspective() {
-        return perspectiveID.get() == null ? Optional.empty() : Optional.of(perspectivesByID.get(perspectiveID.get()));
-    }
+    private final ObjectProperty<PerspectiveID> perspectiveID = new SimpleObjectProperty<>(PerspectiveID.NEAR_PLAYER);
 
     protected final GameAction actionDroneClimb = new GameAction("DroneClimb") {
         @Override
         public void execute(GameUI ui) {
-            currentPerspective().ifPresent(perspective -> {
-                if (perspective instanceof DronePerspective dronePerspective) {
-                    dronePerspective.moveUp();
-                }
-            });
+            currentPerspective()
+                .filter(DronePerspective.class::isInstance)
+                .map(DronePerspective.class::cast)
+                .ifPresent(DronePerspective::moveUp);
         }
         @Override
         public boolean isEnabled(GameUI ui) {
@@ -95,11 +93,10 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
     protected final GameAction actionDroneDescent = new GameAction("DroneDescent") {
         @Override
         public void execute(GameUI ui) {
-            currentPerspective().ifPresent(perspective -> {
-                if (perspective instanceof DronePerspective dronePerspective) {
-                    dronePerspective.moveDown();
-                }
-            });
+            currentPerspective()
+                .filter(DronePerspective.class::isInstance)
+                .map(DronePerspective.class::cast)
+                .ifPresent(DronePerspective::moveDown);
         }
         @Override
         public boolean isEnabled(GameUI ui) {
@@ -112,8 +109,12 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
     protected final PerspectiveCamera camera;
     protected final ActionBindingsManager actionBindings;
     protected final Group gameLevel3DParent = new Group();
+
     protected GameLevel3D gameLevel3D;
     protected Scores3D scores3D;
+
+    // context menu radio button group
+    private final ToggleGroup perspectiveToggleGroup = new ToggleGroup();
 
     public PlayScene3D(GameUI ui) {
         this.ui = requireNonNull(ui);
@@ -133,57 +134,6 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
         subScene.setFill(SUB_SCENE_FILL_DARK);
     }
 
-    private void createPerspectives() {
-        perspectivesByID.put(PerspectiveID.DRONE, new DronePerspective());
-        perspectivesByID.put(PerspectiveID.TOTAL, new TotalPerspective());
-        perspectivesByID.put(PerspectiveID.TRACK_PLAYER, new TrackingPlayerPerspective());
-        perspectivesByID.put(PerspectiveID.NEAR_PLAYER, new StalkingPlayerPerspective());
-
-        perspectiveID.addListener((py, oldID, newID) -> {
-            if (oldID != null) {
-                Perspective oldPerspective = perspectivesByID.get(oldID);
-                oldPerspective.detach(camera);
-            }
-            if (newID != null) {
-                Perspective newPerspective = perspectivesByID.get(newID);
-                newPerspective.attach(camera);
-            }
-            else {
-                Logger.error("New perspective ID is NULL!");
-            }
-        });
-    }
-
-    private void createScores3D() {
-        scores3D = new Scores3D(
-            ui.globalAssets().translated("score.score"),
-            ui.globalAssets().translated("score.high_score"),
-            ui.globalAssets().font_Arcade_8
-        );
-
-        // The scores are always displayed in full view, regardless which perspective is used
-        scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
-        scores3D.rotateProperty().bind(camera.rotateProperty());
-
-        scores3D.translateXProperty().bind(gameLevel3DParent.translateXProperty().add(TS));
-        scores3D.translateYProperty().bind(gameLevel3DParent.translateYProperty().subtract(4.5 * TS));
-        scores3D.translateZProperty().bind(gameLevel3DParent.translateZProperty().subtract(4.5 * TS));
-        scores3D.setVisible(false);
-    }
-
-    public ObjectProperty<PerspectiveID> perspectiveIDProperty() {
-        return perspectiveID;
-    }
-
-    @Override
-    public void handleScrollEvent(ScrollEvent e) {
-        if (e.getDeltaY() < 0) {
-            actionDroneClimb.executeIfEnabled(ui);
-        } else {
-            actionDroneDescent.executeIfEnabled(ui);
-        }
-    }
-
     @Override
     public GameUI ui() {
         return ui;
@@ -198,31 +148,33 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
         return Optional.ofNullable(gameLevel3D);
     }
 
-    // Context menu
+    public ObjectProperty<PerspectiveID> perspectiveIDProperty() {
+        return perspectiveID;
+    }
 
-    private final ToggleGroup perspectiveToggleGroup = new ToggleGroup();
+    protected abstract void setActionBindings(GameLevel gameLevel);
 
     @Override
     public List<MenuItem> supplyContextMenuItems(ContextMenuEvent menuEvent, ContextMenu menu) {
-        var miUse2DScene = new MenuItem(ui.globalAssets().translated("use_2D_scene"));
+        final var miUse2DScene = new MenuItem(ui.globalAssets().translated("use_2D_scene"));
         miUse2DScene.setOnAction(e -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.executeIfEnabled(ui));
 
-        var miToggleMiniView = new CheckMenuItem(ui.globalAssets().translated("pip"));
+        final var miToggleMiniView = new CheckMenuItem(ui.globalAssets().translated("pip"));
         miToggleMiniView.selectedProperty().bindBidirectional(PROPERTY_MINI_VIEW_ON);
 
-        var miAutopilot = new CheckMenuItem(ui.globalAssets().translated("autopilot"));
+        final var miAutopilot = new CheckMenuItem(ui.globalAssets().translated("autopilot"));
         miAutopilot.selectedProperty().bindBidirectional(context().currentGame().usingAutopilotProperty());
 
-        var miImmunity = new CheckMenuItem(ui.globalAssets().translated("immunity"));
+        final var miImmunity = new CheckMenuItem(ui.globalAssets().translated("immunity"));
         miImmunity.selectedProperty().bindBidirectional(context().currentGame().immuneProperty());
 
-        var miMuted = new CheckMenuItem(ui.globalAssets().translated("muted"));
+        final var miMuted = new CheckMenuItem(ui.globalAssets().translated("muted"));
         miMuted.selectedProperty().bindBidirectional(PROPERTY_MUTED);
 
-        var miQuit = new MenuItem(ui.globalAssets().translated("quit"));
+        final var miQuit = new MenuItem(ui.globalAssets().translated("quit"));
         miQuit.setOnAction(e -> ACTION_QUIT_GAME_SCENE.executeIfEnabled(ui));
 
-        var items = new ArrayList<MenuItem>();
+        final var items = new ArrayList<MenuItem>();
         items.add(createContextMenuTitle(ui.preferences(), ui.globalAssets().translated("scene_display")));
         items.add(miUse2DScene);
         items.add(miToggleMiniView);
@@ -238,32 +190,14 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
         return items;
     }
 
-    private List<RadioMenuItem> createPerspectiveRadioItems(ContextMenu menu) {
-        var items = new ArrayList<RadioMenuItem>();
-        for (PerspectiveID id : PerspectiveID.values()) {
-            var item = new RadioMenuItem(ui.globalAssets().translated("perspective_id_" + id.name()));
-            item.setUserData(id);
-            item.setToggleGroup(perspectiveToggleGroup);
-            if (id == PROPERTY_3D_PERSPECTIVE_ID.get())  {
-                item.setSelected(true);
-            }
-            item.setOnAction(e -> PROPERTY_3D_PERSPECTIVE_ID.set(id));
-            items.add(item);
-        }
-        PROPERTY_3D_PERSPECTIVE_ID.addListener(this::handlePerspectiveIDChange);
-        menu.setOnHidden(e -> PROPERTY_3D_PERSPECTIVE_ID.removeListener(this::handlePerspectiveIDChange));
-        return items;
-    }
-
-    private void handlePerspectiveIDChange(ObservableValue<? extends PerspectiveID> property, PerspectiveID oldID, PerspectiveID newID) {
-        for (Toggle toggle : perspectiveToggleGroup.getToggles()) {
-            if (toggle.getUserData() == newID) {
-                perspectiveToggleGroup.selectToggle(toggle);
-            }
+    @Override
+    public void handleScrollEvent(ScrollEvent e) {
+        if (e.getDeltaY() < 0) {
+            actionDroneClimb.executeIfEnabled(ui);
+        } else if (e.getDeltaY() > 0) {
+            actionDroneDescent.executeIfEnabled(ui);
         }
     }
-
-    protected abstract void setActionBindings(GameLevel gameLevel);
 
     @Override
     public void init(Game game) {
@@ -279,6 +213,7 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
             gameLevel3D = null;
         }
         gameLevel3DParent.getChildren().clear();
+        perspectiveIDProperty().unbind();
     }
 
     @Override
@@ -293,10 +228,10 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
             Logger.info("Tick #{}: 3D game level not yet created", ui.clock().tickCount());
             return;
         }
+        ui.soundManager().setEnabled(!gameLevel.isDemoLevel());
         gameLevel3D.update();
         updateCamera();
         updateHUD();
-        ui.soundManager().setEnabled(!gameLevel.isDemoLevel());
         updateSound(gameLevel, game.control().state());
     }
 
@@ -306,96 +241,22 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
     }
 
     @Override
-    public void onGameStateChange(GameStateChangeEvent e) {
-        if (e.newState() instanceof TestState) {
-            replaceGameLevel3D();
-            showLevelTestMessage(context().currentGame().level());
-            PROPERTY_3D_PERSPECTIVE_ID.set(PerspectiveID.TOTAL);
-        }
-        else {
-            if (e.newState().matches(StateName.HUNTING)) {
-                gameLevel3D.onHuntingStart();
-            }
-            else if (e.newState().matches(StateName.PACMAN_DYING)) {
-                gameLevel3D.onPacManDying(e.newState());
-            }
-            else if (e.newState().matches(StateName.EATING_GHOST)) {
-                gameLevel3D.onEatingGhost();
-            }
-            else if (e.newState().matches(StateName.LEVEL_COMPLETE)) {
-                gameLevel3D.onLevelComplete(e.newState(), perspectiveID);
-            }
-            else if (e.newState().matches(StateName.GAME_OVER)) {
-                gameLevel3D.onGameOver(e.newState());
-            }
-            else if (e.newState().matches(StateName.STARTING_GAME_OR_LEVEL)) {
-                if (gameLevel3D != null) {
-                    gameLevel3D.onStartingGame();
-                } else {
-                    Logger.error("No 3D game level available"); //TODO can this happen?
-                }
-            }
-        }
-    }
-
-    @Override
-    public void onLevelCreated(GameEvent e) {
-        replaceGameLevel3D();
-    }
-
-    @Override
-    public void onLevelStarted(GameEvent event) {
-        if (context().currentGame().optGameLevel().isEmpty()) {
-            Logger.error("No game level exists on level start! WTF?");
-            return;
-        }
-        final GameLevel gameLevel = context().currentGame().level();
-        final StateMachine.State<Game> state = context().currentGame().control().state();
-
-        if (state instanceof TestState) {
-            replaceGameLevel3D(); //TODO check when to destroy previous level
-            gameLevel3D.energizers3D().forEach(Energizer3D::startPumping);
-            showLevelTestMessage(gameLevel);
-        }
-        else {
-            if (state.matches(StateName.STARTING_GAME_OR_LEVEL, StateName.LEVEL_TRANSITION)) {
-                if (!gameLevel.isDemoLevel()) {
-                    Optional<House> optionalHouse = gameLevel.worldMap().terrainLayer().optHouse();
-                    if (optionalHouse.isEmpty()) {
-                        Logger.error("No house found in this game level! WTF?");
-                    } else {
-                        Vector2f messageCenter = optionalHouse.get().centerPositionUnderHouse();
-                        gameLevel3D.showAnimatedMessage("READY!", 2.5f, messageCenter.x(), messageCenter.y());
-                    }
-                    //setPlayerSteeringActionBindings();
-                }
-            }
-            else {
-                Logger.error("Unexpected game state '{}' on level start", context().currentGame().control().state());
-            }
-        }
-
-        gameLevel3D.updateLevelCounter3D();
-        setActionBindings(gameLevel);
-        playSubSceneFadingInAnimation();
-    }
-
-    @Override
     public void onSwitch_2D_3D(GameScene scene2D) {
-        if (context().currentGame().optGameLevel().isEmpty()) {
+        final Game game = context().currentGame();
+        if (game.optGameLevel().isEmpty()) {
             return;
         }
-        final GameLevel gameLevel = context().currentGame().level();
+        final GameLevel level = game.level();
         if (gameLevel3D == null) {
-            replaceGameLevel3D();
+            replaceGameLevel3D(level);
         }
-        gameLevel.pac().show();
-        gameLevel.ghosts().forEach(Ghost::show);
+        level.pac().show();
+        level.ghosts().forEach(Ghost::show);
 
-        gameLevel3D.pac3D().init(gameLevel);
-        gameLevel3D.pac3D().update(gameLevel);
+        gameLevel3D.pac3D().init(level);
+        gameLevel3D.pac3D().update(level);
 
-        FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
+        final FoodLayer foodLayer = level.worldMap().foodLayer();
         gameLevel3D.pellets3D().forEach(pellet3D ->
             pellet3D.setVisible(!foodLayer.hasEatenFoodAtTile((Vector2i) pellet3D.getUserData())));
         gameLevel3D.energizers3D().forEach(energizer3D ->
@@ -409,16 +270,18 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
         }
 
         if (state.matches(StateName.HUNTING)) {
-            if (gameLevel.pac().powerTimer().isRunning()) {
+            if (level.pac().powerTimer().isRunning()) {
                 ui.soundManager().loop(SoundID.PAC_MAN_POWER);
             }
             gameLevel3D.livesCounter3D().startTracking(gameLevel3D.pac3D());
         }
         gameLevel3D.updateLevelCounter3D();
         updateHUD();
-        setActionBindings(gameLevel);
+        setActionBindings(level);
         playSubSceneFadingInAnimation();
     }
+
+    // Game event handlers
 
     @Override
     public void onBonusActivated(GameEvent event) {
@@ -438,7 +301,7 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
     }
 
     @Override
-    public void onBonusExpired(GameEvent event) {
+    public void onBonusExpires(GameEvent event) {
         context().currentGame().level().optBonus().ifPresent(bonus -> {
             gameLevel3D.bonus3D().ifPresent(Bonus3D::expire);
             ui.soundManager().stop(SoundID.ACTIVE);
@@ -446,34 +309,100 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
     }
 
     @Override
-    public void onGhostEaten(GameEvent e) {
-        ui.soundManager().play(SoundID.GHOST_EATEN);
-    }
-
-    @Override
-    public void onGameContinued(GameEvent e) {
-        if (gameLevel3D != null) {
-            Optional<House> optionalHouse = context().currentGame().level().worldMap().terrainLayer().optHouse();
-            if (optionalHouse.isEmpty()) {
-                Logger.error("No house found in this game level! WTF?");
-            } else {
-                Vector2f messageCenter = optionalHouse.get().centerPositionUnderHouse();
-                gameLevel3D.showAnimatedMessage("READY!", 2.5f, messageCenter.x(), messageCenter.y());
+    public void onGameStateChange(GameStateChangeEvent e) {
+        final Game game = e.game();
+        final StateMachine.State<Game> state = e.newState();
+        if (state instanceof TestState) {
+            game.optGameLevel().ifPresent(level -> {
+                replaceGameLevel3D(level);
+                showLevelTestMessage(level);
+                PROPERTY_3D_PERSPECTIVE_ID.set(PerspectiveID.TOTAL);
+            });
+        }
+        else {
+            if (state.matches(StateName.HUNTING)) {
+                gameLevel3D.onHuntingStart();
+            }
+            else if (state.matches(StateName.PACMAN_DYING)) {
+                gameLevel3D.onPacManDying(state);
+            }
+            else if (state.matches(StateName.EATING_GHOST)) {
+                gameLevel3D.onEatingGhost();
+            }
+            else if (state.matches(StateName.LEVEL_COMPLETE)) {
+                gameLevel3D.onLevelComplete(state, perspectiveID);
+            }
+            else if (state.matches(StateName.GAME_OVER)) {
+                gameLevel3D.onGameOver(state);
+            }
+            else if (state.matches(StateName.STARTING_GAME_OR_LEVEL)) {
+                if (gameLevel3D != null) {
+                    gameLevel3D.onStartingGame();
+                } else {
+                    Logger.error("No 3D game level available"); //TODO can this happen?
+                }
             }
         }
     }
 
     @Override
-    public void onGameStarted(GameEvent e) {
-        StateMachine.State<Game> state = context().currentGame().control().state();
-        boolean silent = context().currentGame().level().isDemoLevel() || state instanceof TestState;
+    public void onGameContinues(GameEvent e) {
+        final Game game = context().currentGame();
+        if (gameLevel3D != null) {
+            game.optGameLevel().ifPresent(this::showReadyMessage);
+        }
+    }
+
+    @Override
+    public void onGameStarts(GameEvent e) {
+        final Game game = context().currentGame();
+        final StateMachine.State<Game> state = game.control().state();
+        final boolean silent = game.level().isDemoLevel() || state instanceof TestState;
         if (!silent) {
             ui.soundManager().play(SoundID.GAME_READY);
         }
     }
 
     @Override
-    public void onPacFoundFood(GameEvent event) {
+    public void onGhostEaten(GameEvent e) {
+        ui.soundManager().play(SoundID.GHOST_EATEN);
+    }
+
+
+    @Override
+    public void onLevelCreated(GameEvent e) {
+        e.game().optGameLevel().ifPresent(this::replaceGameLevel3D);
+    }
+
+    @Override
+    public void onLevelStarts(GameEvent e) {
+        final Game game = e.game();
+        if (game.optGameLevel().isEmpty()) {
+            Logger.error("No game level exists on level start? WTF!");
+            return;
+        }
+        final GameLevel level = game.level();
+        final StateMachine.State<Game> state = game.control().state();
+
+        if (state instanceof TestState) {
+            replaceGameLevel3D(level); //TODO check when to destroy previous level
+            gameLevel3D.energizers3D().forEach(Energizer3D::startPumping);
+            showLevelTestMessage(level);
+        }
+        else {
+            if (!level.isDemoLevel() && state.matches(StateName.STARTING_GAME_OR_LEVEL, StateName.LEVEL_TRANSITION)) {
+                showReadyMessage(level);
+            }
+        }
+
+        gameLevel3D.updateLevelCounter3D();
+        setActionBindings(level);
+        playSubSceneFadingInAnimation();
+    }
+
+    @Override
+    public void onPacFindsFood(GameEvent event) {
+        final Game game = context().currentGame();
         if (event.tile() == null) {
             // When cheat "eat all pellets" has been used, no tile is present in the event.
             gameLevel3D.pellets3D().forEach(this::eatPellet3D);
@@ -488,7 +417,7 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
                     .findFirst()
                     .ifPresent(this::eatPellet3D);
             }
-            int eatenFoodCount = context().currentGame().level().worldMap().foodLayer().eatenFoodCount();
+            int eatenFoodCount = game.level().worldMap().foodLayer().eatenFoodCount();
             if (ui.currentConfig().munchingSoundPlayed(eatenFoodCount)) {
                 ui.soundManager().play(SoundID.PAC_MAN_MUNCHING);
             }
@@ -496,9 +425,10 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
     }
 
     @Override
-    public void onPacPowerStarts(GameEvent event) {
+    public void onPacPowerBegins(GameEvent event) {
+        final Game game = context().currentGame();
         ui.soundManager().stopSiren();
-        if (!context().currentGame().isLevelCompleted()) {
+        if (!game.isLevelCompleted()) {
             gameLevel3D.pac3D().setMovementPowerMode(true);
             ui.soundManager().loop(SoundID.PAC_MAN_POWER);
             gameLevel3D.playWallColorFlashing();
@@ -523,11 +453,80 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
         ui.updateGameScene(true);
     }
 
+    // protected
+
+    protected void createPerspectives() {
+        perspectivesByID.put(PerspectiveID.DRONE, new DronePerspective());
+        perspectivesByID.put(PerspectiveID.TOTAL, new TotalPerspective());
+        perspectivesByID.put(PerspectiveID.TRACK_PLAYER, new TrackingPlayerPerspective());
+        perspectivesByID.put(PerspectiveID.NEAR_PLAYER, new StalkingPlayerPerspective());
+
+        perspectiveID.addListener((py, oldID, newID) -> {
+            if (oldID != null) {
+                Perspective oldPerspective = perspectivesByID.get(oldID);
+                oldPerspective.detach(camera);
+            }
+            if (newID != null) {
+                Perspective newPerspective = perspectivesByID.get(newID);
+                newPerspective.attach(camera);
+            }
+            else {
+                Logger.error("New perspective ID is NULL!");
+            }
+        });
+    }
+
+    protected void createScores3D() {
+        scores3D = new Scores3D(
+            ui.globalAssets().translated("score.score"),
+            ui.globalAssets().translated("score.high_score"),
+            ui.globalAssets().font_Arcade_8
+        );
+
+        // The scores are always displayed in full view, regardless which perspective is used
+        scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
+        scores3D.rotateProperty().bind(camera.rotateProperty());
+
+        scores3D.translateXProperty().bind(gameLevel3DParent.translateXProperty().add(TS));
+        scores3D.translateYProperty().bind(gameLevel3DParent.translateYProperty().subtract(4.5 * TS));
+        scores3D.translateZProperty().bind(gameLevel3DParent.translateZProperty().subtract(4.5 * TS));
+        scores3D.setVisible(false);
+    }
+
+    protected Optional<Perspective> currentPerspective() {
+        return perspectiveID.get() == null ? Optional.empty() : Optional.of(perspectivesByID.get(perspectiveID.get()));
+    }
+
+    protected List<RadioMenuItem> createPerspectiveRadioItems(ContextMenu menu) {
+        var items = new ArrayList<RadioMenuItem>();
+        for (PerspectiveID id : PerspectiveID.values()) {
+            var item = new RadioMenuItem(ui.globalAssets().translated("perspective_id_" + id.name()));
+            item.setUserData(id);
+            item.setToggleGroup(perspectiveToggleGroup);
+            if (id == PROPERTY_3D_PERSPECTIVE_ID.get())  {
+                item.setSelected(true);
+            }
+            item.setOnAction(e -> PROPERTY_3D_PERSPECTIVE_ID.set(id));
+            items.add(item);
+        }
+        PROPERTY_3D_PERSPECTIVE_ID.addListener(this::handlePerspectiveIDChange);
+        menu.setOnHidden(e -> PROPERTY_3D_PERSPECTIVE_ID.removeListener(this::handlePerspectiveIDChange));
+        return items;
+    }
+
+    protected void handlePerspectiveIDChange(ObservableValue<? extends PerspectiveID> property, PerspectiveID oldID, PerspectiveID newID) {
+        for (Toggle toggle : perspectiveToggleGroup.getToggles()) {
+            if (toggle.getUserData() == newID) {
+                perspectiveToggleGroup.selectToggle(toggle);
+            }
+        }
+    }
+
     protected GameLevel3D createGameLevel3D() {
         return new GameLevel3D(ui);
     }
 
-    protected void replaceGameLevel3D() {
+    protected void replaceGameLevel3D(GameLevel level) {
         if (gameLevel3D != null) {
             Logger.info("Replacing existing game level 3D");
             gameLevel3D.getChildren().clear();
@@ -541,8 +540,8 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
 
         gameLevel3DParent.getChildren().setAll(gameLevel3D);
 
-        gameLevel3D.pac3D().init(context().currentGame().level());
-        gameLevel3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context().currentGame().level()));
+        gameLevel3D.pac3D().init(level);
+        gameLevel3D.ghosts3D().forEach(ghost3D -> ghost3D.init(level));
         Logger.info("Initialized actors of game level 3D");
 
         gameLevel3D.livesCounter3D().startTracking(gameLevel3D.pac3D());
@@ -572,10 +571,11 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
     }
 
     protected void updateSiren(Pac pac) {
+        final Game game = context().currentGame();
         boolean pacChased = !pac.powerTimer().isRunning();
         if (pacChased) {
             // siren numbers are 1..4, hunting phase index = 0..7
-            int huntingPhase = context().currentGame().level().huntingTimer().phaseIndex();
+            int huntingPhase = game.level().huntingTimer().phaseIndex();
             int sirenNumber = 1 + huntingPhase / 2;
             float volume = 0.33f;
             switch (sirenNumber) {
@@ -635,6 +635,16 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
         // remove after small delay for better visualization
         if (pellet3D.getParent() instanceof Group group) {
             pauseSec(0.05, () -> group.getChildren().remove(pellet3D)).play();
+        }
+    }
+
+    protected void showReadyMessage(GameLevel level) {
+        final Optional<House> optHouse = level.worldMap().terrainLayer().optHouse();
+        if (optHouse.isPresent()) {
+            final Vector2f messagePosition = optHouse.get().centerPositionUnderHouse();
+            gameLevel3D.showAnimatedMessage("READY!", DISPLAY_SECONDS_READY_MESSAGE, messagePosition.x(), messagePosition.y());
+        } else {
+            Logger.error("Cannot display level READY message: no house found in this game level! WTF?");
         }
     }
 }

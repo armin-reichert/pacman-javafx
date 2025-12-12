@@ -149,6 +149,12 @@ public class Arcade_PlayScene2D extends GameScene2D {
             miQuit);
     }
 
+    @Override
+    public void onSwitch_3D_2D(GameScene scene3D) {
+        context().currentGame().optGameLevel().ifPresent(this::acceptGameLevel);
+        Logger.info("2D scene {} entered from 3D scene {}", getClass().getSimpleName(), scene3D.getClass().getSimpleName());
+    }
+
     // Game event handlers
 
     @Override
@@ -164,7 +170,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void onBonusExpired(GameEvent e) {
+    public void onBonusExpires(GameEvent e) {
         ui.soundManager().stop(SoundID.ACTIVE);
     }
 
@@ -174,7 +180,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void onGameContinued(GameEvent e) {
+    public void onGameContinues(GameEvent e) {
         final Game game = context().currentGame();
         game.optGameLevel().ifPresent(level -> {
             resetAnimations(level);
@@ -183,7 +189,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void onGameStarted(GameEvent e) {
+    public void onGameStarts(GameEvent e) {
         final Game game = context().currentGame();
         final boolean silent = game.optGameLevel().isPresent() && game.level().isDemoLevel()
             || game.control().state() instanceof TestState;
@@ -227,7 +233,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void onPacFoundFood(GameEvent e) {
+    public void onPacFindsFood(GameEvent e) {
         context().currentGame().optGameLevel().ifPresent(level -> {
             final int eatenFoodCount = level.worldMap().foodLayer().eatenFoodCount();
             if (ui.currentConfig().munchingSoundPlayed(eatenFoodCount)) {
@@ -239,7 +245,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void onPacPowerStarts(GameEvent e) {
+    public void onPacPowerBegins(GameEvent e) {
         ui.soundManager().stopSiren();
         ui.soundManager().loop(SoundID.PAC_MAN_POWER);
     }
@@ -252,12 +258,6 @@ public class Arcade_PlayScene2D extends GameScene2D {
     @Override
     public void onSpecialScoreReached(GameEvent e) {
         ui.soundManager().play(SoundID.EXTRA_LIFE);
-    }
-
-    @Override
-    public void onSwitch_3D_2D(GameScene scene3D) {
-        context().currentGame().optGameLevel().ifPresent(this::acceptGameLevel);
-        Logger.info("2D scene {} entered from 3D scene {}", getClass().getSimpleName(), scene3D.getClass().getSimpleName());
     }
 
     // private

@@ -291,7 +291,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
     }
 
     @Override
-    public void onGameStarted(GameEvent e) {
+    public void onGameStarts(GameEvent e) {
         final Game game = context().currentGame();
         StateMachine.State<Game> state = game.control().state();
         boolean shutUp = game.level().isDemoLevel() || state instanceof TestState;
@@ -301,7 +301,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
     }
 
     @Override
-    public void onGameContinued(GameEvent e) {
+    public void onGameContinues(GameEvent e) {
         TengenMsPacMan_GameModel game = context().currentGame();
         game.optGameLevel().ifPresent(level -> {
             resetAnimations(level);
@@ -329,7 +329,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
     }
 
     @Override
-    public void onLevelStarted(GameEvent e) {
+    public void onLevelStarts(GameEvent e) {
         TengenMsPacMan_GameModel game = context().currentGame();
         dynamicCamera.enterIntroMode();
         game.optGameLevel().ifPresent(this::resetAnimations);
@@ -371,7 +371,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
     }
 
     @Override
-    public void onBonusExpired(GameEvent e) {
+    public void onBonusExpires(GameEvent e) {
         ui.soundManager().stop(SoundID.ACTIVE);
     }
 
@@ -397,14 +397,14 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
     }
 
     @Override
-    public void onPacFoundFood(GameEvent e) {
+    public void onPacFindsFood(GameEvent e) {
         if (!ui.soundManager().isPlaying(SoundID.PAC_MAN_MUNCHING)) {
             ui.soundManager().play(SoundID.PAC_MAN_MUNCHING);
         }
     }
 
     @Override
-    public void onPacPowerStarts(GameEvent e) {
+    public void onPacPowerBegins(GameEvent e) {
         ui.soundManager().pauseSiren();
         ui.soundManager().loop(SoundID.PAC_MAN_POWER);
     }
