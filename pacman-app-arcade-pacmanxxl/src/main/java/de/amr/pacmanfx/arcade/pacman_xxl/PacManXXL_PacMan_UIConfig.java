@@ -240,6 +240,11 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config, GameScene_Confi
         return pac3D;
     }
 
+    @Override
+    public byte munchingSoundDelay() {
+        return 9;
+    }
+
     // Game scenes
 
     @Override
