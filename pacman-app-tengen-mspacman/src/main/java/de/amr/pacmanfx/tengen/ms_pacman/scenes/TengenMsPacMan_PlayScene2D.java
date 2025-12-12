@@ -361,18 +361,18 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneP
 
     @Override
     public void onBonusActivated(GameEvent e) {
-        ui.soundManager().loop(SoundID.BONUS_ACTIVE);
+        ui.soundManager().loop(SoundID.ACTIVE);
     }
 
     @Override
     public void onBonusEaten(GameEvent e) {
-        ui.soundManager().stop(SoundID.BONUS_ACTIVE);
+        ui.soundManager().stop(SoundID.ACTIVE);
         ui.soundManager().play(SoundID.BONUS_EATEN);
     }
 
     @Override
     public void onBonusExpired(GameEvent e) {
-        ui.soundManager().stop(SoundID.BONUS_ACTIVE);
+        ui.soundManager().stop(SoundID.ACTIVE);
     }
 
     @Override

@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.sound;
 
 public enum SoundID {
-    BONUS_ACTIVE,
+    ACTIVE,
     BONUS_EATEN,
     COIN_INSERTED,
     EXTRA_LIFE,

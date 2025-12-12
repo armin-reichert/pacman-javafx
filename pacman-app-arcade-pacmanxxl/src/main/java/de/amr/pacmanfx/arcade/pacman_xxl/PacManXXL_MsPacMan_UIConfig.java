@@ -117,7 +117,7 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config, GameScene_Con
         soundManager.register(SoundID.VOICE_IMMUNITY_OFF,           ui.globalAssets().voice_Immunity_Off);
         soundManager.register(SoundID.VOICE_IMMUNITY_ON,            ui.globalAssets().voice_Immunity_On);
 
-        soundManager.registerMediaPlayer(SoundID.BONUS_ACTIVE,      ARCADE_MS_PACMAN_RESOURCES.url("sound/Fruit_Bounce.mp3"));
+        soundManager.registerMediaPlayer(SoundID.ACTIVE,      ARCADE_MS_PACMAN_RESOURCES.url("sound/Fruit_Bounce.mp3"));
         soundManager.registerAudioClipURL(SoundID.BONUS_EATEN,      ARCADE_MS_PACMAN_RESOURCES.url("sound/Fruit.mp3"));
         soundManager.registerAudioClipURL(SoundID.COIN_INSERTED,    ARCADE_MS_PACMAN_RESOURCES.url("sound/credit.wav"));
         soundManager.registerAudioClipURL(SoundID.EXTRA_LIFE,       ARCADE_MS_PACMAN_RESOURCES.url("sound/ExtraLife.mp3"));

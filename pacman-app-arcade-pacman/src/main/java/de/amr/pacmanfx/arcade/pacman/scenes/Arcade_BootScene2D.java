@@ -37,7 +37,7 @@ public class Arcade_BootScene2D extends GameScene2D {
     @Override
     protected void createRenderers(Canvas canvas) {
         final SpriteSheet<?> spriteSheet = ui.currentConfig().spriteSheet();
-        sceneRenderer = configureRenderer(new Arcade_BootScene2D_Renderer(this, canvas, spriteSheet));
+        sceneRenderer = adaptRenderer(new Arcade_BootScene2D_Renderer(this, canvas, spriteSheet));
     }
 
     @Override

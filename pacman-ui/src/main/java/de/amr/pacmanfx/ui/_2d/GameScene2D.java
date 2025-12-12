@@ -144,7 +144,7 @@ public abstract class GameScene2D implements GameScene {
         return Globals.ARCADE_MAP_SIZE_IN_PIXELS;
     }
 
-    protected <T extends Renderer> T configureRenderer(T renderer) {
+    protected <T extends Renderer> T adaptRenderer(T renderer) {
         return GameScene2D_Renderer.configureRendererForGameScene(renderer, this);
     }
 }

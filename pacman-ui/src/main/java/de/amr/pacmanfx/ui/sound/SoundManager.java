@@ -119,6 +119,9 @@ public class SoundManager implements Disposable {
 
     public void loop(Object id) {
         Object value = map.get(id);
+        if (value == null) {
+            return; // ignore missing sound
+        }
         if (value instanceof MediaPlayer mediaPlayer) {
             mediaPlayer.stop();
             mediaPlayer.seek(Duration.ZERO);

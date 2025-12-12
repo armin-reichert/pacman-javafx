@@ -424,7 +424,7 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
     public void onBonusActivated(GameEvent event) {
         context().currentGame().level().optBonus().ifPresent(bonus -> {
             gameLevel3D.updateBonus3D(bonus);
-            ui.soundManager().loop(SoundID.BONUS_ACTIVE);
+            ui.soundManager().loop(SoundID.ACTIVE);
         });
     }
 
@@ -432,7 +432,7 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
     public void onBonusEaten(GameEvent event) {
         context().currentGame().level().optBonus().ifPresent(bonus -> {
             gameLevel3D.bonus3D().ifPresent(Bonus3D::showEaten);
-            ui.soundManager().stop(SoundID.BONUS_ACTIVE);
+            ui.soundManager().stop(SoundID.ACTIVE);
             ui.soundManager().play(SoundID.BONUS_EATEN);
         });
     }
@@ -441,7 +441,7 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
     public void onBonusExpired(GameEvent event) {
         context().currentGame().level().optBonus().ifPresent(bonus -> {
             gameLevel3D.bonus3D().ifPresent(Bonus3D::expire);
-            ui.soundManager().stop(SoundID.BONUS_ACTIVE);
+            ui.soundManager().stop(SoundID.ACTIVE);
         });
     }
 
