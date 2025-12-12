@@ -400,14 +400,15 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
         playSubSceneFadingInAnimation();
     }
 
+    private long lastMunchingSoundPlayedTick;
+
     @Override
     public void onPacFindsFood(GameEvent event) {
-        final Game game = context().currentGame();
         if (event.tile() == null) {
             // When cheat "eat all pellets" has been used, no tile is present in the event.
             gameLevel3D.pellets3D().forEach(this::eatPellet3D);
         } else {
-            Energizer3D energizer3D = gameLevel3D.energizers3D().stream()
+            final Energizer3D energizer3D = gameLevel3D.energizers3D().stream()
                 .filter(e3D -> event.tile().equals(e3D.tile())).findFirst().orElse(null);
             if (energizer3D != null) {
                 energizer3D.onEaten();
@@ -417,9 +418,14 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
                     .findFirst()
                     .ifPresent(this::eatPellet3D);
             }
-            int eatenFoodCount = game.level().worldMap().foodLayer().eatenFoodCount();
-            if (ui.currentConfig().munchingSoundPlayed(eatenFoodCount)) {
+            // Play munching sound?
+            final long now = ui.clock().tickCount();
+            final long passed = now - lastMunchingSoundPlayedTick;
+            Logger.debug("Pac found food, tick={} passed since last time={}", now, passed);
+            byte minDelay = ui.currentConfig().munchingSoundDelay();
+            if (passed > minDelay  || minDelay == 0) {
                 ui.soundManager().play(SoundID.PAC_MAN_MUNCHING);
+                lastMunchingSoundPlayedTick = now;
             }
         }
     }

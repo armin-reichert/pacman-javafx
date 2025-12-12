@@ -60,14 +60,12 @@ public interface GameUI_Config extends Disposable {
     GameScene_Config sceneConfig();
 
     /**
-     * Crappy attempt to tell the play scene if the munching sound should be played at each eaten food or after eating
-     * two pellets
+     * Minimum number of ticks since the last pellet eaten time until the next munching sound is played.
      *
-     * @param eatenFoodCount the number of pellets already eaten when this method is called
      * @return if the munching sound should be played
      */
-    default boolean munchingSoundPlayed(int eatenFoodCount) {
-        return true;
+    default byte munchingSoundDelay() {
+        return 0;
     }
 
     /**

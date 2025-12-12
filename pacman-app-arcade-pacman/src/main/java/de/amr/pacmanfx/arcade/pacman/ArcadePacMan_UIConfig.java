@@ -228,8 +228,8 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
     }
 
     @Override
-    public boolean munchingSoundPlayed(int eatenFoodCount) {
-        return eatenFoodCount % 2 == 0;
+    public byte munchingSoundDelay() {
+        return 9;
     }
 
     @Override

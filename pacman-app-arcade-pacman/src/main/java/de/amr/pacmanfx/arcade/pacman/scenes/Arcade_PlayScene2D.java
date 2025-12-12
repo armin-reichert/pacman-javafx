@@ -232,16 +232,18 @@ public class Arcade_PlayScene2D extends GameScene2D {
         ui.soundManager().play(SoundID.PAC_MAN_DEATH);
     }
 
+    private long lastMunchingSoundPlayedTick;
+
     @Override
     public void onPacFindsFood(GameEvent e) {
-        context().currentGame().optGameLevel().ifPresent(level -> {
-            final int eatenFoodCount = level.worldMap().foodLayer().eatenFoodCount();
-            if (ui.currentConfig().munchingSoundPlayed(eatenFoodCount)) {
-                // TODO: in Pac-Man, the munching sound is played after 2 pellets have been eaten but what happens
-                //       for standalone pellets?
-                ui.soundManager().play(SoundID.PAC_MAN_MUNCHING);
-            }
-        });
+        final long now = ui.clock().tickCount();
+        final long passed = now - lastMunchingSoundPlayedTick;
+        Logger.debug("Pac found food, tick={} passed since last time={}", now, passed);
+        byte minDelay = ui.currentConfig().munchingSoundDelay();
+        if (passed > minDelay  || minDelay == 0) {
+            ui.soundManager().play(SoundID.PAC_MAN_MUNCHING);
+            lastMunchingSoundPlayedTick = now;
+        }
     }
 
     @Override
