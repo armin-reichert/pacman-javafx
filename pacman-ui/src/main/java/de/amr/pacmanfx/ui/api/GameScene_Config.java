@@ -8,6 +8,7 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public interface GameScene_Config {
@@ -47,7 +48,7 @@ public interface GameScene_Config {
 
     boolean gameSceneHasID(GameScene gameScene, String sceneID);
 
-    GameScene selectGameScene(Game game);
+    Optional<GameScene> selectGameScene(Game game);
 
     boolean canvasDecorated(GameScene gameScene);
 }

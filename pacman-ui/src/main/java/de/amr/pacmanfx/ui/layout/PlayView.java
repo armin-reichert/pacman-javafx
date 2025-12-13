@@ -250,44 +250,54 @@ public class PlayView extends StackPane implements GameUI_View {
                 }
             }
         }
-        ui.currentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(gameEvent));
+
+        //TODO Check this:
         updateGameScene(game, false);
+        ui.currentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(gameEvent));
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // Others
 
-    public void updateGameScene(Game game, boolean reloadCurrent) {
-        final GameScene nextGameScene = ui.currentConfig().sceneConfig().selectGameScene(game);
-        if (nextGameScene == null) {
-            String errorMessage = "Katastrophe! Could not determine game scene!";
-            ui.showFlashMessage(Duration.seconds(30), errorMessage);
-            return;
-        }
+    //TODO simplify
+
+    /**
+     *
+     * @param game the current game
+     * @param alwaysReloadGameScene if {@code true} the game scene is (re-)embedded even if it doesn't change
+     */
+    public void updateGameScene(Game game, boolean alwaysReloadGameScene) {
         final GameScene currentGameScene = ui.currentGameScene().orElse(null);
-        final boolean changing = nextGameScene != currentGameScene;
-        if (!changing && !reloadCurrent) {
+        final GameScene intendedGameScene = ui.currentConfig().sceneConfig().selectGameScene(game).orElse(null);
+
+        if (intendedGameScene == null) {
+            ui.showFlashMessage(Duration.seconds(30), "Katastrophe! Could not determine game scene!");
             return;
         }
+
+        final boolean gameSceneChange = intendedGameScene != currentGameScene;
+        if (!gameSceneChange && !alwaysReloadGameScene) {
+            return;
+        }
+
         if (currentGameScene != null) {
             currentGameScene.end(game);
             Logger.info("Game scene ended: {}", currentGameScene.getClass().getSimpleName());
         }
-        embedGameScene(parentScene, nextGameScene);
-        nextGameScene.init(game);
-        Logger.info("Game scene initialized: {}", nextGameScene.getClass().getSimpleName());
 
-        // Handle switching between 2D and 3D game variants
-        byte sceneSwitchType = identifySceneSwitchType(currentGameScene, nextGameScene);
+        embedGameScene(parentScene, intendedGameScene);
+        intendedGameScene.init(game);
+        Logger.info("Game scene initialized: {}", intendedGameScene.getClass().getSimpleName());
+
+        // Handle switching between 2D and 3D scene variant (play scene)
+        final byte sceneSwitchType = identifySceneSwitchType(currentGameScene, intendedGameScene);
         switch (sceneSwitchType) {
-            case 23 -> nextGameScene.onSwitch_2D_3D(currentGameScene);
-            case 32 -> nextGameScene.onSwitch_3D_2D(currentGameScene);
+            case 23 -> intendedGameScene.onSwitch_2D_3D(currentGameScene);
+            case 32 -> intendedGameScene.onSwitch_3D_2D(currentGameScene);
             case  0 -> {}
             default -> throw new IllegalArgumentException("Illegal scene switch type: " + sceneSwitchType);
         }
 
-        if (changing) {
-            currentGameSceneProperty().set(nextGameScene);
-        }
+        currentGameSceneProperty().set(intendedGameScene);
     }
 
     private void embedGameScene(Scene parentScene, GameScene gameScene) {

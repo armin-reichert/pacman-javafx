@@ -41,6 +41,7 @@ import javafx.scene.paint.Color;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Stream;
 
@@ -281,7 +282,7 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config, GameScene_Con
     }
 
     @Override
-    public GameScene selectGameScene(Game game) {
+    public Optional<GameScene> selectGameScene(Game game) {
         String sceneID = switch (game.control().state()) {
             case GameState.BOOT -> SCENE_ID_BOOT_SCENE;
             case GameState.SETTING_OPTIONS_FOR_START -> SCENE_ID_START_SCENE;
@@ -299,7 +300,7 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config, GameScene_Con
             case CutScenesTestState testState -> sceneID_CutScene(testState.testedCutSceneNumber);
             default -> PROPERTY_3D_ENABLED.get() ? SCENE_ID_PLAY_SCENE_3D : SCENE_ID_PLAY_SCENE_2D;
         };
-        return scenesByID.get(sceneID);
+        return Optional.ofNullable(scenesByID.get(sceneID));
     }
 
     @Override
