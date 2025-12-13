@@ -19,6 +19,8 @@ import de.amr.pacmanfx.uilib.widgets.CanvasDecorationPane;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
@@ -57,21 +59,15 @@ public class PlayView extends StackPane implements GameUI_View {
     private final Dashboard dashboard;
     private final CanvasDecorationPane canvasDecorationPane = new CanvasDecorationPane();
     private final MiniGameView miniView;
-    private final ContextMenu contextMenu = new ContextMenu();
-
     private final BorderPane canvasLayer = new BorderPane();
     private final BorderPane dashboardAndMiniViewLayer = new BorderPane();
-    private HelpLayer helpLayer; // help
+    private final ContextMenu contextMenu = new ContextMenu();
 
     private GameUI ui;
-
-    private void createCanvas() {
-        canvasDecorationPane.setCanvas(new Canvas());
-        Logger.info("A new, fresh canvas has been created just for you!");
-    }
+    private HelpLayer helpLayer;
 
     public PlayView(Scene parentScene) {
-        this.parentScene = requireNonNull(parentScene, "Parent scene must not be null");
+        this.parentScene = requireNonNull(parentScene);
 
         dashboard = new Dashboard();
         dashboard.setVisible(false);
@@ -79,12 +75,12 @@ public class PlayView extends StackPane implements GameUI_View {
         miniView = new MiniGameView();
         miniView.visibleProperty().bind(Bindings.createObjectBinding(
             () -> GameUI.PROPERTY_MINI_VIEW_ON.get() && ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D),
-                GameUI.PROPERTY_MINI_VIEW_ON, currentGameScene
+            GameUI.PROPERTY_MINI_VIEW_ON, currentGameScene
         ));
 
         canvasDecorationPane.setMinScaling(0.5);
         canvasDecorationPane.setUnscaledCanvasSize(ARCADE_MAP_SIZE_IN_PIXELS.x(), ARCADE_MAP_SIZE_IN_PIXELS.y());
-        canvasDecorationPane.setBorderColor(Color.rgb(222, 222, 255));
+        canvasDecorationPane.setBorderColor(ArcadePalette.ARCADE_WHITE);
 
         createLayout();
         configurePropertyBindings();
@@ -150,20 +146,26 @@ public class PlayView extends StackPane implements GameUI_View {
         contextMenu.getItems().clear();
         ui.currentGameScene().ifPresent(gameScene -> {
             if (ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_2D)) {
-                var miSwitchTo3D = new MenuItem(ui.globalAssets().translated("use_3D_scene"));
+                final var miSwitchTo3D = new MenuItem(ui.globalAssets().translated("use_3D_scene"));
                 miSwitchTo3D.setOnAction(e -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.executeIfEnabled(ui));
                 contextMenu.getItems().add(createContextMenuTitle(ui.preferences(), ui.globalAssets().translated("scene_display")));
                 contextMenu.getItems().add(miSwitchTo3D);
             }
-            List<MenuItem> gameSceneItems = gameScene.supplyContextMenuItems(contextMenuEvent, contextMenu);
+            final List<MenuItem> gameSceneItems = gameScene.supplyContextMenuItems(contextMenuEvent, contextMenu);
             contextMenu.getItems().addAll(gameSceneItems);
         });
-        // wrap all action handlers into menu closing actions
+
+        //TODO I don't think this is the recommended way to do that
+        // wrap all action handlers into menu closing action handler
         contextMenu.getItems().stream()
             .filter(item -> item.getOnAction() != null)
             .forEach(item -> {
-                var handler = item.getOnAction();
-                item.setOnAction(e -> { handler.handle(e); contextMenu.hide(); });
+                final EventHandler<ActionEvent> originalActionHandler = item.getOnAction();
+                final EventHandler<ActionEvent> wrapper = e -> {
+                    contextMenu.hide();
+                    originalActionHandler.handle(e);
+                };
+                item.setOnAction(wrapper);
             });
         contextMenu.requestFocus();
         contextMenu.show(this, contextMenuEvent.getScreenX(), contextMenuEvent.getScreenY());
@@ -370,5 +372,10 @@ public class PlayView extends StackPane implements GameUI_View {
         helpLayer.setMouseTransparent(true);
 
         getChildren().addAll(canvasLayer, dashboardAndMiniViewLayer, helpLayer);
+    }
+
+    private void createCanvas() {
+        canvasDecorationPane.setCanvas(new Canvas());
+        Logger.info("A new, fresh canvas has been created just for you!");
     }
 }

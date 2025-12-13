@@ -297,7 +297,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     @Override
     public Optional<GameScene> selectGameScene(Game game) {
-        String sceneID = switch (game.control().state()) {
+        final String sceneID = switch (game.control().state()) {
             case BOOT -> SCENE_ID_BOOT_SCENE;
             case SETTING_OPTIONS_FOR_START -> SCENE_ID_START_SCENE;
             case INTRO -> SCENE_ID_INTRO_SCENE;
@@ -305,7 +305,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
                 if (game.optGameLevel().isEmpty()) {
                     throw new IllegalStateException("Cannot determine cut scene, no game level available");
                 }
-                int cutSceneNumber = game.level().cutSceneNumber();
+                final int cutSceneNumber = game.level().cutSceneNumber();
                 if (cutSceneNumber == 0) {
                     throw new IllegalStateException("Cannot determine cut scene after level %d".formatted(game.level().number()));
                 }
