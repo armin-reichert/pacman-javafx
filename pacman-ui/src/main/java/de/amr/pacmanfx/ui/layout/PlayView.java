@@ -148,7 +148,7 @@ public class PlayView extends StackPane implements GameUI_View {
                 contextMenu.addLocalizedTitleItem("scene_display");
                 contextMenu.addLocalizedActionItem(ACTION_TOGGLE_PLAY_SCENE_2D_3D, "use_3D_scene");
             }
-            final List<MenuItem> gameSceneItems = gameScene.supplyContextMenuItems(contextMenuEvent, contextMenu);
+            final List<MenuItem> gameSceneItems = gameScene.supplyContextMenuItems(contextMenuEvent);
             contextMenu.addAll(gameSceneItems);
         });
         contextMenu.requestFocus();

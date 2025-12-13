@@ -234,7 +234,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public List<MenuItem> supplyContextMenuItems(ContextMenuEvent menuEvent, GameUI_ContextMenu menu) {
+    public List<MenuItem> supplyContextMenuItems(ContextMenuEvent menuEvent) {
         final Game game = context().currentGame();
         final var dummy = new GameUI_ContextMenu(ui);
 
@@ -251,14 +251,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         toggleGroup = new ToggleGroup();
         miScaledToFit.setToggleGroup(toggleGroup);
         miScrolling.setToggleGroup(toggleGroup);
-
-        PROPERTY_PLAY_SCENE_DISPLAY_MODE.addListener(this::handlePlaySceneDisplayModeChange);
-        Logger.info("Added listener to config propertyPlaySceneDisplayMode property");
-        //TODO might interfere with "onHidden" event handler set elsewhere on this menu
-        menu.setOnHidden(e -> {
-            PROPERTY_PLAY_SCENE_DISPLAY_MODE.removeListener(this::handlePlaySceneDisplayModeChange);
-            Logger.info("Removed listener from config propertyPlaySceneDisplayMode property");
-        });
 
         dummy.addLocalizedTitleItem("pacman");
         dummy.addLocalizedCheckBox(game.usingAutopilotProperty(), "autopilot");

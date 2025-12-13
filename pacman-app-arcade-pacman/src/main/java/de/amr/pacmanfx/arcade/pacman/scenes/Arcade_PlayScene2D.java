@@ -105,7 +105,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public List<MenuItem> supplyContextMenuItems(ContextMenuEvent menuEvent, GameUI_ContextMenu contextMenu) {
+    public List<MenuItem> supplyContextMenuItems(ContextMenuEvent menuEvent) {
         final Game game = context().currentGame();
         final var dummy = new GameUI_ContextMenu(ui);
 

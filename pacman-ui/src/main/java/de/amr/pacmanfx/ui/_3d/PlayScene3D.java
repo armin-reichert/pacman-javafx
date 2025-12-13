@@ -39,7 +39,10 @@ import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
-import javafx.scene.control.*;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.Toggle;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
@@ -47,14 +50,18 @@ import javafx.scene.shape.Shape3D;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import java.util.*;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_QUIT_GAME_SCENE;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_TOGGLE_PLAY_SCENE_2D_3D;
-import static de.amr.pacmanfx.ui.api.GameUI.*;
+import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_3D_AXES_VISIBLE;
+import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_3D_PERSPECTIVE_ID;
 import static de.amr.pacmanfx.uilib.Ufx.doNow;
 import static de.amr.pacmanfx.uilib.Ufx.pauseSec;
 import static java.util.Objects.requireNonNull;
@@ -156,7 +163,7 @@ public abstract class PlayScene3D extends Group implements GameScene {
     protected abstract void setActionBindings(GameLevel gameLevel);
 
     @Override
-    public List<MenuItem> supplyContextMenuItems(ContextMenuEvent menuEvent, GameUI_ContextMenu menu) {
+    public List<MenuItem> supplyContextMenuItems(ContextMenuEvent menuEvent) {
         final Game game = context().currentGame();
 
         final var dummy = new GameUI_ContextMenu(ui);
@@ -164,7 +171,7 @@ public abstract class PlayScene3D extends Group implements GameScene {
         dummy.addLocalizedActionItem(ACTION_TOGGLE_PLAY_SCENE_2D_3D, "use_2D_scene");
         dummy.addLocalizedCheckBox(GameUI.PROPERTY_MINI_VIEW_ON, "pip");
         dummy.addLocalizedTitleItem("select_perspective");
-        dummy.addAll(createPerspectiveRadioItems(menu));
+        addPerspectiveRadioItems(dummy);
         dummy.addLocalizedTitleItem("pacman");
         dummy.addLocalizedCheckBox(game.usingAutopilotProperty(), "autopilot");
         dummy.addLocalizedCheckBox(game.immuneProperty(), "immunity");
@@ -487,21 +494,18 @@ public abstract class PlayScene3D extends Group implements GameScene {
         return perspectiveID.get() == null ? Optional.empty() : Optional.of(perspectivesByID.get(perspectiveID.get()));
     }
 
-    protected List<MenuItem> createPerspectiveRadioItems(ContextMenu menu) {
-        var items = new ArrayList<MenuItem>();
+    protected void addPerspectiveRadioItems(GameUI_ContextMenu contextMenu) {
         for (PerspectiveID id : PerspectiveID.values()) {
-            var item = new RadioMenuItem(ui.globalAssets().translated("perspective_id_" + id.name()));
+            final RadioMenuItem item = contextMenu.addLocalizedRadioButton("perspective_id_" + id.name());
             item.setUserData(id);
             item.setToggleGroup(perspectiveToggleGroup);
             if (id == PROPERTY_3D_PERSPECTIVE_ID.get())  {
                 item.setSelected(true);
             }
             item.setOnAction(e -> PROPERTY_3D_PERSPECTIVE_ID.set(id));
-            items.add(item);
         }
         PROPERTY_3D_PERSPECTIVE_ID.addListener(this::handlePerspectiveIDChange);
-        menu.setOnHidden(e -> PROPERTY_3D_PERSPECTIVE_ID.removeListener(this::handlePerspectiveIDChange));
-        return items;
+        contextMenu.setOnHidden(e -> PROPERTY_3D_PERSPECTIVE_ID.removeListener(this::handlePerspectiveIDChange));
     }
 
     protected void handlePerspectiveIDChange(ObservableValue<? extends PerspectiveID> property, PerspectiveID oldID, PerspectiveID newID) {
