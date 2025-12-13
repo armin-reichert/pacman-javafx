@@ -280,10 +280,9 @@ public class Arcade_PlayScene2D extends GameScene2D {
         final Game game = context().currentGame();
         final HUD hud = game.hud();
         // While Pac-Man is still invisible on level start, one entry more is shown in the lives counter
-        // TODO: This is still not 100% correct
         final boolean oneExtra = game.control().state() == GameState.STARTING_GAME_OR_LEVEL && !level.pac().isVisible();
-        final int livesDisplayed = oneExtra ? game.lifeCount() : game.lifeCount() - 1;
-        hud.setVisibleLifeCount(Math.min(livesDisplayed, hud.maxLivesDisplayed()));
+        final int displayedLifeCount = oneExtra ? game.lifeCount() : game.lifeCount() - 1;
+        hud.setVisibleLifeCount(Math.clamp(displayedLifeCount, 0, hud.maxLivesDisplayed()));
         hud.showCredit(context().coinMechanism().isEmpty());
     }
 
