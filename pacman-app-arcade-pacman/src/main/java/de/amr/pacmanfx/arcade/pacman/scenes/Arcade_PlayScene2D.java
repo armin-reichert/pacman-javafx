@@ -30,7 +30,6 @@ import de.amr.pacmanfx.ui.sound.SoundID;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.MenuItem;
-import javafx.scene.input.ContextMenuEvent;
 import org.tinylog.Logger;
 
 import java.util.List;
@@ -124,7 +123,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public List<MenuItem> supplyContextMenuItems(Game game, ContextMenuEvent menuEvent) {
+    public List<MenuItem> supplyContextMenuItems(Game game) {
         final var dummy = new GameUI_ContextMenu(ui);
         dummy.addLocalizedTitleItem("pacman");
         dummy.addLocalizedCheckBox(game.usingAutopilotProperty(), "autopilot").setOnAction(e -> {

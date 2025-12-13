@@ -10,7 +10,6 @@ import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.model.Game;
 import javafx.scene.SubScene;
 import javafx.scene.control.MenuItem;
-import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.ScrollEvent;
 
 import java.util.List;
@@ -96,10 +95,9 @@ public interface GameScene extends GameEventListener {
 
     /**
      * @param game the current game
-     * @param menuEvent event associated with opening of context menu
      * @return menu items provided by this game scene which are merged into the final context menu
      */
-    default List<MenuItem> supplyContextMenuItems(Game game, ContextMenuEvent menuEvent) {
+    default List<MenuItem> supplyContextMenuItems(Game game) {
         return List.of();
     }
 }

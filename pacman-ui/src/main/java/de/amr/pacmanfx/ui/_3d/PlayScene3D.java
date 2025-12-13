@@ -43,7 +43,6 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape3D;
@@ -163,7 +162,7 @@ public abstract class PlayScene3D extends Group implements GameScene {
     protected abstract void setActionBindings(GameLevel gameLevel);
 
     @Override
-    public List<MenuItem> supplyContextMenuItems(Game game, ContextMenuEvent menuEvent) {
+    public List<MenuItem> supplyContextMenuItems(Game game) {
         final var dummy = new GameUI_ContextMenu(ui);
         dummy.addLocalizedTitleItem("scene_display");
         dummy.addLocalizedActionItem(ACTION_TOGGLE_PLAY_SCENE_2D_3D, "use_2D_scene");
