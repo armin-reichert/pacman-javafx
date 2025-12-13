@@ -34,7 +34,7 @@ import de.amr.pacmanfx.uilib.widgets.CoordinateSystem;
 import javafx.animation.*;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ObservableValue;
+import javafx.beans.value.ChangeListener;
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SceneAntialiasing;
@@ -175,7 +175,32 @@ public abstract class PlayScene3D extends Group implements GameScene {
         dummy.addSeparator();
         dummy.addLocalizedCheckBox(GameUI.PROPERTY_MUTED, "muted");
         dummy.addLocalizedActionItem(ACTION_QUIT_GAME_SCENE, "quit");
+
+        //TODO If using a weak listener wrapper, the radio buttons are not updated while the context menu is open
+        //     and the perspective is changed via keyboard shortcuts. Why? If using a strong reference the listener
+        //     should be removed later again, but where exactly?
+        ChangeListener<PerspectiveID> changeListener = (py, ov, newID) -> {
+            for (Toggle toggle : perspectiveToggleGroup.getToggles()) {
+                if (toggle.getUserData() == newID) {
+                    perspectiveToggleGroup.selectToggle(toggle);
+                }
+            }
+        };
+        PROPERTY_3D_PERSPECTIVE_ID.addListener(changeListener);
+
         return dummy.itemsCopy();
+    }
+
+    protected void addPerspectiveRadioItems(GameUI_ContextMenu contextMenu) {
+        for (PerspectiveID id : PerspectiveID.values()) {
+            final RadioMenuItem item = contextMenu.addLocalizedRadioButton("perspective_id_" + id.name());
+            item.setUserData(id);
+            item.setToggleGroup(perspectiveToggleGroup);
+            if (id == PROPERTY_3D_PERSPECTIVE_ID.get())  {
+                item.setSelected(true);
+            }
+            item.setOnAction(e -> PROPERTY_3D_PERSPECTIVE_ID.set(id));
+        }
     }
 
     @Override
@@ -489,28 +514,6 @@ public abstract class PlayScene3D extends Group implements GameScene {
 
     protected Optional<Perspective> currentPerspective() {
         return perspectiveID.get() == null ? Optional.empty() : Optional.of(perspectivesByID.get(perspectiveID.get()));
-    }
-
-    protected void addPerspectiveRadioItems(GameUI_ContextMenu contextMenu) {
-        for (PerspectiveID id : PerspectiveID.values()) {
-            final RadioMenuItem item = contextMenu.addLocalizedRadioButton("perspective_id_" + id.name());
-            item.setUserData(id);
-            item.setToggleGroup(perspectiveToggleGroup);
-            if (id == PROPERTY_3D_PERSPECTIVE_ID.get())  {
-                item.setSelected(true);
-            }
-            item.setOnAction(e -> PROPERTY_3D_PERSPECTIVE_ID.set(id));
-        }
-        PROPERTY_3D_PERSPECTIVE_ID.addListener(this::handlePerspectiveIDChange);
-        contextMenu.setOnHidden(e -> PROPERTY_3D_PERSPECTIVE_ID.removeListener(this::handlePerspectiveIDChange));
-    }
-
-    protected void handlePerspectiveIDChange(ObservableValue<? extends PerspectiveID> property, PerspectiveID oldID, PerspectiveID newID) {
-        for (Toggle toggle : perspectiveToggleGroup.getToggles()) {
-            if (toggle.getUserData() == newID) {
-                perspectiveToggleGroup.selectToggle(toggle);
-            }
-        }
     }
 
     protected GameLevel3D createGameLevel3D() {
