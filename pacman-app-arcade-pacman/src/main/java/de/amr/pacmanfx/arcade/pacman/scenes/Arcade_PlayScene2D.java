@@ -108,7 +108,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public List<MenuItem> supplyContextMenuItems(ContextMenuEvent contextMenuEvent, ContextMenu contextMenu) {
+    public List<MenuItem> supplyContextMenuItems(ContextMenuEvent menuEvent, ContextMenu contextMenu) {
         final Game game = context().currentGame();
 
         var miAutopilot = new CheckMenuItem(ui.globalAssets().translated("autopilot"));
