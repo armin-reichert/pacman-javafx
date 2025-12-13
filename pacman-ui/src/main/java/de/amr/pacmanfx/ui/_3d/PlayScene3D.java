@@ -25,7 +25,6 @@ import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.api.ActionBindingsManager;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
-import de.amr.pacmanfx.ui.api.SubSceneProvider;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.model3D.Bonus3D;
 import de.amr.pacmanfx.uilib.model3D.Energizer3D;
@@ -64,7 +63,7 @@ import static java.util.Objects.requireNonNull;
  * <p>Provides different camera perspectives that can be stepped through using key combinations
  * <code>Alt+LEFT</code> and <code>Alt+RIGHT</code>.
  */
-public abstract class PlayScene3D extends Group implements GameScene, SubSceneProvider {
+public abstract class PlayScene3D extends Group implements GameScene {
 
     // Colors for fade-in effect
     private static final Color SUB_SCENE_FILL_DARK = Color.BLACK;
@@ -236,8 +235,8 @@ public abstract class PlayScene3D extends Group implements GameScene, SubScenePr
     }
 
     @Override
-    public SubScene subScene() {
-        return subScene;
+    public Optional<SubScene> optSubScene() {
+        return Optional.of(subScene);
     }
 
     @Override

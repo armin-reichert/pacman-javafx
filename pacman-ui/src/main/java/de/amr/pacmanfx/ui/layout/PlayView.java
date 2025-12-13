@@ -293,9 +293,9 @@ public class PlayView extends StackPane implements GameUI_View {
     }
 
     private void embedGameScene(Scene parentScene, GameScene gameScene) {
-        if (gameScene instanceof SubSceneProvider subSceneProvider) {
+        if (gameScene.optSubScene().isPresent()) {
             // 1. Play scene with integrated sub-scene: 3D scene or 2D scene with camera as in Tengen Ms. Pac-Man:
-            SubScene subScene = subSceneProvider.subScene();
+            final SubScene subScene = gameScene.optSubScene().get();
             // Let sub-scene take full size of parent scene
             subScene.widthProperty().bind(parentScene.widthProperty());
             subScene.heightProperty().bind(parentScene.heightProperty());

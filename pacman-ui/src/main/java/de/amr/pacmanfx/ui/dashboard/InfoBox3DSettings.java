@@ -11,14 +11,11 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
-import de.amr.pacmanfx.ui.api.SubSceneProvider;
 import javafx.scene.SubScene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Slider;
 import javafx.scene.shape.DrawMode;
-
-import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_TOGGLE_DRAW_MODE;
@@ -111,24 +108,30 @@ public class InfoBox3DSettings extends InfoBox {
         cbWireframeMode.setSelected(PROPERTY_3D_DRAW_MODE.get() == DrawMode.LINE);
     }
 
-    private Optional<SubScene> optSubScene() {
-        GameScene gameScene = ui.currentGameScene().orElse(null);
-        return gameScene instanceof SubSceneProvider subSceneProvider
-            ? Optional.of(subSceneProvider.subScene()) : Optional.empty();
-    }
-
     private String subSceneSizeInfo() {
-        return optSubScene().map(ss -> "%.0fx%.0f".formatted(ss.getWidth(), ss.getHeight())).orElse(NO_INFO);
+        if (ui.currentGameScene().isPresent()) {
+            final GameScene gameScene = ui.currentGameScene().get();
+            if (gameScene.optSubScene().isPresent()) {
+                final SubScene subScene = gameScene.optSubScene().get();
+                return "%.0fx%.0f".formatted(subScene.getWidth(), subScene.getHeight());
+            }
+        }
+        return NO_INFO;
     }
 
     private String subSceneCameraInfo() {
-        return optSubScene()
-            .map(ss -> String.format("rot=%.0f x=%.0f y=%.0f z=%.0f",
-                ss.getCamera().getRotate(),
-                ss.getCamera().getTranslateX(),
-                ss.getCamera().getTranslateY(),
-                ss.getCamera().getTranslateZ()))
-            .orElse(NO_INFO);
+        if (ui.currentGameScene().isPresent()) {
+            final GameScene gameScene = ui.currentGameScene().get();
+            if (gameScene.optSubScene().isPresent()) {
+                final SubScene subScene = gameScene.optSubScene().get();
+                return "rot=%.0f x=%.0f y=%.0f z=%.0f".formatted(
+                    subScene.getCamera().getRotate(),
+                    subScene.getCamera().getTranslateX(),
+                    subScene.getCamera().getTranslateY(),
+                    subScene.getCamera().getTranslateZ());
+            }
+        }
+        return NO_INFO;
     }
 
     private String sceneSizeInfo() {
