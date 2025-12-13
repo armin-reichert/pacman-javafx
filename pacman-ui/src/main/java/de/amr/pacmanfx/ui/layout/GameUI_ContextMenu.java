@@ -42,7 +42,7 @@ public class GameUI_ContextMenu extends ContextMenu {
 
     public <M extends MenuItem> M add(M item) {
         if (item.getOnAction() != null) {
-            item.setOnAction(menuClosingHandler(item.getOnAction()));
+            item.setOnAction(wrapActionHandler(item.getOnAction()));
         }
         getItems().add(item);
         return item;
@@ -95,10 +95,10 @@ public class GameUI_ContextMenu extends ContextMenu {
         getItems().add(new SeparatorMenuItem());
     }
 
-    private EventHandler<ActionEvent> menuClosingHandler(EventHandler<ActionEvent> actionHandler) {
+    private EventHandler<ActionEvent> wrapActionHandler(EventHandler<ActionEvent> actionHandler) {
         return actionEvent -> {
-            hide();
             actionHandler.handle(actionEvent);
+            hide();
         };
     }
 }

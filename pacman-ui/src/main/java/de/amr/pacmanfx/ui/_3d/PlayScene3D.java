@@ -49,18 +49,13 @@ import javafx.scene.shape.Shape3D;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_QUIT_GAME_SCENE;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_TOGGLE_PLAY_SCENE_2D_3D;
-import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_3D_AXES_VISIBLE;
-import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_3D_PERSPECTIVE_ID;
 import static de.amr.pacmanfx.uilib.Ufx.doNow;
 import static de.amr.pacmanfx.uilib.Ufx.pauseSec;
 import static java.util.Objects.requireNonNull;
@@ -121,7 +116,7 @@ public abstract class PlayScene3D extends Group implements GameScene {
     protected Scores3D scores3D;
 
     // context menu radio button group
-    private final ToggleGroup perspectiveToggleGroup = new ToggleGroup();
+    private final ToggleGroup perspectivesGroup = new ToggleGroup();
 
     public PlayScene3D(GameUI ui) {
         this.ui = requireNonNull(ui);
@@ -131,7 +126,7 @@ public abstract class PlayScene3D extends Group implements GameScene {
         createPerspectives();
         createScores3D();
         var coordinateSystem = new CoordinateSystem();
-        coordinateSystem.visibleProperty().bind(PROPERTY_3D_AXES_VISIBLE);
+        coordinateSystem.visibleProperty().bind(GameUI.PROPERTY_3D_AXES_VISIBLE);
 
         getChildren().setAll(gameLevel3DParent, scores3D, coordinateSystem);
 
@@ -176,30 +171,27 @@ public abstract class PlayScene3D extends Group implements GameScene {
         dummy.addLocalizedCheckBox(GameUI.PROPERTY_MUTED, "muted");
         dummy.addLocalizedActionItem(ACTION_QUIT_GAME_SCENE, "quit");
 
-        //TODO If using a weak listener wrapper, the radio buttons are not updated while the context menu is open
-        //     and the perspective is changed via keyboard shortcuts. Why? If using a strong reference the listener
-        //     should be removed later again, but where exactly?
-        ChangeListener<PerspectiveID> changeListener = (py, ov, newID) -> {
-            for (Toggle toggle : perspectiveToggleGroup.getToggles()) {
-                if (toggle.getUserData() == newID) {
-                    perspectiveToggleGroup.selectToggle(toggle);
-                }
-            }
-        };
-        PROPERTY_3D_PERSPECTIVE_ID.addListener(changeListener);
-
         return dummy.itemsCopy();
     }
+
+    private final ChangeListener<PerspectiveID> perspectiveIDChangeListener = (py, ov, newID) -> {
+        for (Toggle toggle : perspectivesGroup.getToggles()) {
+            if (Objects.equals(toggle.getUserData(), newID)) {
+                perspectivesGroup.selectToggle(toggle);
+                break;
+            }
+        }
+    };
 
     protected void addPerspectiveRadioItems(GameUI_ContextMenu contextMenu) {
         for (PerspectiveID id : PerspectiveID.values()) {
             final RadioMenuItem item = contextMenu.addLocalizedRadioButton("perspective_id_" + id.name());
             item.setUserData(id);
-            item.setToggleGroup(perspectiveToggleGroup);
-            if (id == PROPERTY_3D_PERSPECTIVE_ID.get())  {
+            item.setToggleGroup(perspectivesGroup);
+            if (id == GameUI.PROPERTY_3D_PERSPECTIVE_ID.get())  {
                 item.setSelected(true);
             }
-            item.setOnAction(e -> PROPERTY_3D_PERSPECTIVE_ID.set(id));
+            item.setOnAction(e -> GameUI.PROPERTY_3D_PERSPECTIVE_ID.set(id));
         }
     }
 
@@ -215,7 +207,8 @@ public abstract class PlayScene3D extends Group implements GameScene {
     @Override
     public void init(Game game) {
         game.hud().showScore(true);
-        perspectiveIDProperty().bind(PROPERTY_3D_PERSPECTIVE_ID);
+        GameUI.PROPERTY_3D_PERSPECTIVE_ID.addListener(perspectiveIDChangeListener);
+        perspectiveIDProperty().bind(GameUI.PROPERTY_3D_PERSPECTIVE_ID);
     }
 
     @Override
@@ -226,6 +219,7 @@ public abstract class PlayScene3D extends Group implements GameScene {
             gameLevel3D = null;
         }
         gameLevel3DParent.getChildren().clear();
+        GameUI.PROPERTY_3D_PERSPECTIVE_ID.removeListener(perspectiveIDChangeListener);
         perspectiveIDProperty().unbind();
     }
 
@@ -329,7 +323,7 @@ public abstract class PlayScene3D extends Group implements GameScene {
             game.optGameLevel().ifPresent(level -> {
                 replaceGameLevel3D(level);
                 showLevelTestMessage(level);
-                PROPERTY_3D_PERSPECTIVE_ID.set(PerspectiveID.TOTAL);
+                GameUI.PROPERTY_3D_PERSPECTIVE_ID.set(PerspectiveID.TOTAL);
             });
         }
         else {
