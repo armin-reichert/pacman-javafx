@@ -61,7 +61,6 @@ import static de.amr.pacmanfx.tengen.ms_pacman.scenes.SceneDisplayMode.SCROLLING
 import static de.amr.pacmanfx.ui._2d.GameScene2D_Renderer.configureRendererForGameScene;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_QUIT_GAME_SCENE;
 import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR;
-import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_MUTED;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -237,6 +236,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public List<MenuItem> supplyContextMenuItems(ContextMenuEvent menuEvent, GameUI_ContextMenu menu) {
+        final Game game = context().currentGame();
         final var dummy = new GameUI_ContextMenu(ui);
 
         final SceneDisplayMode displayMode = PROPERTY_PLAY_SCENE_DISPLAY_MODE.get();
@@ -262,20 +262,11 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         });
 
         dummy.addLocalizedTitleItem("pacman");
-
-        final var miAutopilot = dummy.addLocalizedCheckBox("autopilot");
-        miAutopilot.selectedProperty().bindBidirectional(context().currentGame().usingAutopilotProperty());
-
-        final var miImmunity = dummy.addLocalizedCheckBox("immunity");
-        miImmunity.selectedProperty().bindBidirectional(context().currentGame().immuneProperty());
-
+        dummy.addLocalizedCheckBox(game.usingAutopilotProperty(), "autopilot");
+        dummy.addLocalizedCheckBox(game.immuneProperty(), "immunity");
         dummy.addSeparator();
-
-        final var miMuted = dummy.addLocalizedCheckBox("muted");
-        miMuted.selectedProperty().bindBidirectional(PROPERTY_MUTED);
-
-        final var miQuit = dummy.addLocalizedItem("quit");
-        miQuit.setOnAction(e -> ACTION_QUIT_GAME_SCENE.executeIfEnabled(ui));
+        dummy.addLocalizedCheckBox(GameUI.PROPERTY_MUTED, "muted");
+        dummy.addLocalizedActionItem(ACTION_QUIT_GAME_SCENE, "quit");
 
         return new ArrayList<>(dummy.getItems());
     }

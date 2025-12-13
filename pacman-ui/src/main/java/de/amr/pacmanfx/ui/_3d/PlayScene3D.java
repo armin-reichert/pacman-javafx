@@ -157,34 +157,20 @@ public abstract class PlayScene3D extends Group implements GameScene {
 
     @Override
     public List<MenuItem> supplyContextMenuItems(ContextMenuEvent menuEvent, GameUI_ContextMenu menu) {
+        final Game game = context().currentGame();
+
         final var dummy = new GameUI_ContextMenu(ui);
-
         dummy.addLocalizedTitleItem("scene_display");
-
-        final MenuItem miUse2DScene = dummy.addLocalizedItem("use_2D_scene");
-        miUse2DScene.setOnAction(e -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.executeIfEnabled(ui));
-
-        final var miToggleMiniView = dummy.addLocalizedCheckBox("pip");
-        miToggleMiniView.selectedProperty().bindBidirectional(PROPERTY_MINI_VIEW_ON);
-
+        dummy.addLocalizedActionItem(ACTION_TOGGLE_PLAY_SCENE_2D_3D, "use_2D_scene");
+        dummy.addLocalizedCheckBox(GameUI.PROPERTY_MINI_VIEW_ON, "pip");
         dummy.addLocalizedTitleItem("select_perspective");
         dummy.addAll(createPerspectiveRadioItems(menu));
-
         dummy.addLocalizedTitleItem("pacman");
-
-        final var miAutopilot = dummy.addLocalizedCheckBox("autopilot");
-        miAutopilot.selectedProperty().bindBidirectional(context().currentGame().usingAutopilotProperty());
-
-        final var miImmunity = dummy.addLocalizedCheckBox("immunity");
-        miImmunity.selectedProperty().bindBidirectional(context().currentGame().immuneProperty());
-
+        dummy.addLocalizedCheckBox(game.usingAutopilotProperty(), "autopilot");
+        dummy.addLocalizedCheckBox(game.immuneProperty(), "immunity");
         dummy.addSeparator();
-
-        final var miMuted = dummy.addLocalizedCheckBox("muted");
-        miMuted.selectedProperty().bindBidirectional(PROPERTY_MUTED);
-
-        final var miQuit = dummy.addLocalizedItem("quit");
-        miQuit.setOnAction(e -> ACTION_QUIT_GAME_SCENE.executeIfEnabled(ui));
+        dummy.addLocalizedCheckBox(GameUI.PROPERTY_MUTED, "muted");
+        dummy.addLocalizedActionItem(ACTION_QUIT_GAME_SCENE, "quit");
 
         return new ArrayList<>(dummy.getItems());
     }

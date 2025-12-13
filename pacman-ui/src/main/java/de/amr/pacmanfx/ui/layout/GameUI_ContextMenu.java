@@ -4,8 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.layout;
 
+import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.uilib.assets.UIPreferences;
+import javafx.beans.property.BooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.*;
@@ -54,16 +56,26 @@ public class GameUI_ContextMenu extends ContextMenu {
         return item;
     }
 
-    public MenuItem addLocalizedItem(String globalAssetsKey, Object... args) {
-        return add(new MenuItem(ui.globalAssets().translated(globalAssetsKey, args)));
+    public MenuItem addLocalizedActionItem(Runnable action, String globalAssetsKey, Object... args) {
+        var actionItem = new MenuItem(ui.globalAssets().translated(globalAssetsKey, args));
+        actionItem.setOnAction(e -> action.run());
+        return add(actionItem);
+    }
+
+    public MenuItem addLocalizedActionItem(GameAction action, String globalAssetsKey, Object... args) {
+        var actionItem = new MenuItem(ui.globalAssets().translated(globalAssetsKey, args));
+        actionItem.setOnAction(e -> action.executeIfEnabled(ui));
+        return add(actionItem);
     }
 
     public MenuItem addLocalizedTitleItem(String globalAssetsKey, Object... args) {
         return addTitleItem(ui.globalAssets().translated(globalAssetsKey, args));
     }
 
-    public CheckMenuItem addLocalizedCheckBox(String globalAssetsKey, Object... args) {
-        return add(new CheckMenuItem(ui.globalAssets().translated(globalAssetsKey, args)));
+    public CheckMenuItem addLocalizedCheckBox(BooleanProperty selectionProperty, String globalAssetsKey, Object... args) {
+        var checkMenuItem = new CheckMenuItem(ui.globalAssets().translated(globalAssetsKey, args));
+        checkMenuItem.selectedProperty().bindBidirectional(selectionProperty);
+        return add(checkMenuItem);
     }
 
     public RadioMenuItem addLocalizedRadioButton(String globalAssetsKey, Object... args) {

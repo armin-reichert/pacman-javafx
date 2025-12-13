@@ -112,8 +112,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
         dummy.addLocalizedTitleItem("pacman");
 
-        final var miAutopilot = dummy.addLocalizedCheckBox("autopilot");
-        miAutopilot.selectedProperty().bindBidirectional(game.usingAutopilotProperty());
+        final var miAutopilot = dummy.addLocalizedCheckBox(game.usingAutopilotProperty(), "autopilot");
         miAutopilot.setOnAction(e -> {
             final boolean usingAutopilot = miAutopilot.isSelected();
             if (usingAutopilot && game.optGameLevel().isPresent() && !game.level().isDemoLevel()) {
@@ -123,8 +122,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
             ui.showFlashMessage(ui.globalAssets().translated(usingAutopilot ? "autopilot_on" : "autopilot_off"));
         });
 
-        final var miImmunity = dummy.addLocalizedCheckBox("immunity");
-        miImmunity.selectedProperty().bindBidirectional(game.immuneProperty());
+        final var miImmunity = dummy.addLocalizedCheckBox(game.immuneProperty(), "immunity");
         miImmunity.setOnAction(e -> {
             final boolean immune = miImmunity.isSelected();
             if (immune && game.optGameLevel().isPresent() && !game.level().isDemoLevel()) {
@@ -135,12 +133,8 @@ public class Arcade_PlayScene2D extends GameScene2D {
         });
 
         dummy.addSeparator();
-
-        final var miMuted = dummy.addLocalizedCheckBox("muted");
-        miMuted.selectedProperty().bindBidirectional(PROPERTY_MUTED);
-
-        final var miQuit = dummy.addLocalizedItem("quit");
-        miQuit.setOnAction(e -> ACTION_QUIT_GAME_SCENE.executeIfEnabled(ui));
+        dummy.addLocalizedCheckBox(PROPERTY_MUTED, "muted");
+        dummy.addLocalizedActionItem(ACTION_QUIT_GAME_SCENE, "quit");
 
         return new ArrayList<>(dummy.getItems());
     }
