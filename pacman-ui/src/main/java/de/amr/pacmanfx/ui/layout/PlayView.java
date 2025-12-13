@@ -12,7 +12,6 @@ import de.amr.pacmanfx.model.GameControl;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
-import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.api.*;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.uilib.Ufx;
@@ -201,12 +200,10 @@ public class PlayView extends StackPane implements GameUI_View {
 
     @Override
     public void onKeyboardInput(GameUI ui) {
-        GameAction matchingAction = actionBindingsManager.matchingAction(GameUI.KEYBOARD).orElse(null);
-        if (matchingAction != null) {
-            matchingAction.executeIfEnabled(ui);
-        } else {
-            ui.currentGameScene().ifPresent(GameScene::onKeyboardInput);
-        }
+        actionBindingsManager.matchingAction(GameUI.KEYBOARD).ifPresentOrElse(
+            action -> action.execute(ui),
+            () -> ui.currentGameScene().ifPresent(GameScene::onKeyboardInput)
+        );
     }
 
     @Override
