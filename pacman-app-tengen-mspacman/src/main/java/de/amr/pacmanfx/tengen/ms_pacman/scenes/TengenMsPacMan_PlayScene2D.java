@@ -39,7 +39,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ToggleGroup;
@@ -238,13 +237,15 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public List<MenuItem> supplyContextMenuItems(ContextMenuEvent menuEvent, GameUI_ContextMenu menu) {
+        final var dummy = new GameUI_ContextMenu(ui);
+
         final SceneDisplayMode displayMode = PROPERTY_PLAY_SCENE_DISPLAY_MODE.get();
 
-        miScaledToFit = new RadioMenuItem(ui.globalAssets().translated("scaled_to_fit"));
+        miScaledToFit = dummy.addLocalizedRadioButton("scaled_to_fit");
         miScaledToFit.setSelected(displayMode == SceneDisplayMode.SCALED_TO_FIT);
         miScaledToFit.setOnAction(e -> PROPERTY_PLAY_SCENE_DISPLAY_MODE.set(SceneDisplayMode.SCALED_TO_FIT));
 
-        miScrolling = new RadioMenuItem(ui.globalAssets().translated("scrolling"));
+        miScrolling = dummy.addLocalizedRadioButton("scrolling");
         miScrolling.setSelected(displayMode == SCROLLING);
         miScrolling.setOnAction(e -> PROPERTY_PLAY_SCENE_DISPLAY_MODE.set(SCROLLING));
 
@@ -260,27 +261,21 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
             Logger.info("Removed listener from config propertyPlaySceneDisplayMode property");
         });
 
-        final var miAutopilot = new CheckMenuItem(ui.globalAssets().translated("autopilot"));
+        dummy.addLocalizedTitleItem("pacman");
+
+        final var miAutopilot = dummy.addLocalizedCheckBox("autopilot");
         miAutopilot.selectedProperty().bindBidirectional(context().currentGame().usingAutopilotProperty());
 
-        final var miImmunity = new CheckMenuItem(ui.globalAssets().translated("immunity"));
+        final var miImmunity = dummy.addLocalizedCheckBox("immunity");
         miImmunity.selectedProperty().bindBidirectional(context().currentGame().immuneProperty());
 
-        final var miMuted = new CheckMenuItem(ui.globalAssets().translated("muted"));
+        dummy.addSeparator();
+
+        final var miMuted = dummy.addLocalizedCheckBox("muted");
         miMuted.selectedProperty().bindBidirectional(PROPERTY_MUTED);
 
-        final var miQuit = new MenuItem(ui.globalAssets().translated("quit"));
+        final var miQuit = dummy.addLocalizedItem("quit");
         miQuit.setOnAction(e -> ACTION_QUIT_GAME_SCENE.executeIfEnabled(ui));
-
-        final var dummy = new GameUI_ContextMenu(ui);
-        dummy.add(miScaledToFit);
-        dummy.add(miScrolling);
-        dummy.addLocalizedTitleItem("pacman");
-        dummy.add(miAutopilot);
-        dummy.add(miImmunity);
-        dummy.addSeparator();
-        dummy.add(miMuted);
-        dummy.add(miQuit);
 
         return new ArrayList<>(dummy.getItems());
     }

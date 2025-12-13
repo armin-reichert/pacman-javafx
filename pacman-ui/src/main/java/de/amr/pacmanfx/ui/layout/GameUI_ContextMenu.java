@@ -1,3 +1,7 @@
+/*
+Copyright (c) 2021-2026 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.ui.api.GameUI;
@@ -58,8 +62,12 @@ public class GameUI_ContextMenu extends ContextMenu {
         return addTitleItem(ui.globalAssets().translated(globalAssetsKey, args));
     }
 
-    public CheckMenuItem addLocalizedCheckBoxItem(String globalAssetsKey, Object... args) {
+    public CheckMenuItem addLocalizedCheckBox(String globalAssetsKey, Object... args) {
         return add(new CheckMenuItem(ui.globalAssets().translated(globalAssetsKey, args)));
+    }
+
+    public RadioMenuItem addLocalizedRadioButton(String globalAssetsKey, Object... args) {
+        return add(new RadioMenuItem(ui.globalAssets().translated(globalAssetsKey, args)));
     }
 
     public void addSeparator() {
@@ -72,5 +80,4 @@ public class GameUI_ContextMenu extends ContextMenu {
             actionHandler.handle(actionEvent);
         };
     }
-
 }

@@ -164,7 +164,7 @@ public abstract class PlayScene3D extends Group implements GameScene {
         final MenuItem miUse2DScene = dummy.addLocalizedItem("use_2D_scene");
         miUse2DScene.setOnAction(e -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.executeIfEnabled(ui));
 
-        final var miToggleMiniView = dummy.addLocalizedCheckBoxItem("pip");
+        final var miToggleMiniView = dummy.addLocalizedCheckBox("pip");
         miToggleMiniView.selectedProperty().bindBidirectional(PROPERTY_MINI_VIEW_ON);
 
         dummy.addLocalizedTitleItem("select_perspective");
@@ -172,15 +172,15 @@ public abstract class PlayScene3D extends Group implements GameScene {
 
         dummy.addLocalizedTitleItem("pacman");
 
-        final var miAutopilot = dummy.addLocalizedCheckBoxItem("autopilot");
+        final var miAutopilot = dummy.addLocalizedCheckBox("autopilot");
         miAutopilot.selectedProperty().bindBidirectional(context().currentGame().usingAutopilotProperty());
 
-        final var miImmunity = dummy.addLocalizedCheckBoxItem("immunity");
+        final var miImmunity = dummy.addLocalizedCheckBox("immunity");
         miImmunity.selectedProperty().bindBidirectional(context().currentGame().immuneProperty());
 
         dummy.addSeparator();
 
-        final var miMuted = dummy.addLocalizedCheckBoxItem("muted");
+        final var miMuted = dummy.addLocalizedCheckBox("muted");
         miMuted.selectedProperty().bindBidirectional(PROPERTY_MUTED);
 
         final var miQuit = dummy.addLocalizedItem("quit");
