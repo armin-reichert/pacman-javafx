@@ -190,10 +190,10 @@ public abstract class PlayScene3D extends Group implements GameScene {
     }
 
     @Override
-    public void handleScrollEvent(ScrollEvent e) {
-        if (e.getDeltaY() < 0) {
+    public void onScroll(ScrollEvent scrollEvent) {
+        if (scrollEvent.getDeltaY() < 0) {
             actionDroneClimb.executeIfEnabled(ui);
-        } else if (e.getDeltaY() > 0) {
+        } else if (scrollEvent.getDeltaY() > 0) {
             actionDroneDescent.executeIfEnabled(ui);
         }
     }

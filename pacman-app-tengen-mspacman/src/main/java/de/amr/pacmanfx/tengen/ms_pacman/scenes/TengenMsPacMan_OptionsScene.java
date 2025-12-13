@@ -143,7 +143,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     }
 
     @Override
-    public void handleKeyboardInput() {
+    public void onKeyboardInput() {
         if (GameUI.JOYPAD.isButtonPressed(JoypadButton.DOWN)) {
             selectedOption.set(selectedOption() + 1 < NUM_OPTIONS ? selectedOption() + 1 : 0);
         }
@@ -168,7 +168,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
                 case OPTION_STARTING_LEVEL -> setPrevStartLevelValue();
             }
         }
-        else super.handleKeyboardInput();
+        else super.onKeyboardInput();
     }
 
     private void setPrevStartLevelValue() {

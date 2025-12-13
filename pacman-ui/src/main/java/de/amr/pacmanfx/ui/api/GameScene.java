@@ -34,12 +34,12 @@ public interface GameScene extends GameEventListener {
 
     ActionBindingsManager actionBindings();
 
-    default void handleKeyboardInput() {
+    default void onKeyboardInput() {
         actionBindings().matchingAction(GameUI.KEYBOARD).ifPresent(
             gameAction -> gameAction.executeIfEnabled(ui()));
     }
 
-    default void handleScrollEvent(ScrollEvent e) {}
+    default void onScroll(ScrollEvent scrollEvent) {}
 
     /**
      * Called when the scene becomes the current one.

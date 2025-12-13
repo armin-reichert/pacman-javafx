@@ -171,9 +171,9 @@ public final class GameUI_Implementation implements GameUI {
                 boolean executed = action.executeIfEnabled(this);
                 if (executed) e.consume();
             },
-            () -> currentView().handleKeyboardInput(this)
+            () -> currentView().onKeyboardInput(this)
         ));
-        scene.setOnScroll(e -> currentGameScene().ifPresent(gameScene -> gameScene.handleScrollEvent(e)));
+        scene.setOnScroll(e -> currentGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
 
         createStatusIconBox();
 
