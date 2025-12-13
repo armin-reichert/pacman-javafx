@@ -142,6 +142,10 @@ public class PlayView extends StackPane implements GameUI_View {
         return Optional.ofNullable(currentGameScene.get());
     }
 
+    public Dashboard dashboard() {
+        return dashboard;
+    }
+
     private void handleContextMenuRequest(ContextMenuEvent contextMenuEvent) {
         contextMenu.getItems().clear();
         ui.currentGameScene().ifPresent(gameScene -> {
@@ -220,18 +224,28 @@ public class PlayView extends StackPane implements GameUI_View {
         return this;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-    // GameEventListener interface implementation
-    // -----------------------------------------------------------------------------------------------------------------
+    // GameEventListener
 
     @Override
     public void onGameEvent(GameEvent gameEvent) {
         final Game game = gameEvent.game();
+        final StateMachine.State<Game> gameState = game.control().state();
         switch (gameEvent.type()) {
-            case LEVEL_CREATED -> onGameLevelCreated(game.level());
+            case LEVEL_CREATED -> {
+                final GameLevel level = game.level();
+                final GameUI_Config uiConfig = ui.currentConfig();
+
+                //TODO this should be done elsewhere
+                level.pac().setAnimationManager(uiConfig.createPacAnimations());
+                level.ghosts().forEach(ghost -> ghost.setAnimationManager(uiConfig.createGhostAnimations(ghost.personality())));
+
+                miniView.onLevelCreated(level);
+                miniView.slideIn();
+                // size of game scene might have changed, so re-embed
+                ui.currentGameScene().ifPresent(gameScene -> embedGameScene(parentScene, gameScene));
+            }
             case GAME_STATE_CHANGED -> {
-                final StateMachine.State<?> state = game.control().state();
-                if (state.matches(GameControl.StateName.LEVEL_COMPLETE)) {
+                if (gameState.matches(GameControl.StateName.LEVEL_COMPLETE)) {
                     miniView.slideOut();
                 }
             }
@@ -240,25 +254,12 @@ public class PlayView extends StackPane implements GameUI_View {
         updateGameScene(game, false);
     }
 
-    private void onGameLevelCreated(GameLevel level) {
-        final GameUI_Config uiConfig = ui.currentConfig();
-
-        level.pac().setAnimationManager(uiConfig.createPacAnimations());
-        level.ghosts().forEach(ghost -> ghost.setAnimationManager(uiConfig.createGhostAnimations(ghost.personality())));
-
-        miniView.onGameLevelCreated(level);
-        miniView.slideIn();
-
-        // size of game scene might have changed, so re-embed
-        ui.currentGameScene().ifPresent(gameScene -> embedGameScene(parentScene, gameScene));
-    }
-
     // -----------------------------------------------------------------------------------------------------------------
 
     public void updateGameScene(Game game, boolean reloadCurrent) {
         final GameScene nextGameScene = ui.currentConfig().sceneConfig().selectGameScene(game);
         if (nextGameScene == null) {
-            String errorMessage = " Katastrophe! Could not determine game scene!";
+            String errorMessage = "Katastrophe! Could not determine game scene!";
             ui.showFlashMessage(Duration.seconds(30), errorMessage);
             return;
         }
@@ -359,11 +360,5 @@ public class PlayView extends StackPane implements GameUI_View {
         helpLayer.setMouseTransparent(true);
 
         getChildren().addAll(canvasLayer, dashboardAndMiniViewLayer, helpLayer);
-    }
-
-    // Dashboard access
-
-    public Dashboard dashboard() {
-        return dashboard;
     }
 }
