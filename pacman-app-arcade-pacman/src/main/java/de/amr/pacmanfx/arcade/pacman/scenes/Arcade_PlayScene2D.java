@@ -25,21 +25,20 @@ import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
+import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.CheckMenuItem;
-import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.ContextMenuEvent;
 import org.tinylog.Logger;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_QUIT_GAME_SCENE;
 import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_MUTED;
-import static de.amr.pacmanfx.uilib.Ufx.createContextMenuTitle;
 
 /**
  * 2D play scene for Arcade game variants.
@@ -108,10 +107,10 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public List<MenuItem> supplyContextMenuItems(ContextMenuEvent menuEvent, ContextMenu contextMenu) {
+    public List<MenuItem> supplyContextMenuItems(ContextMenuEvent menuEvent, GameUI_ContextMenu contextMenu) {
         final Game game = context().currentGame();
 
-        var miAutopilot = new CheckMenuItem(ui.globalAssets().translated("autopilot"));
+        final var miAutopilot = new CheckMenuItem(ui.globalAssets().translated("autopilot"));
         miAutopilot.selectedProperty().bindBidirectional(game.usingAutopilotProperty());
         miAutopilot.setOnAction(e -> {
             final boolean usingAutopilot = miAutopilot.isSelected();
@@ -120,10 +119,9 @@ public class Arcade_PlayScene2D extends GameScene2D {
             }
             ui.soundManager().playVoiceAfterSec(0, usingAutopilot ? SoundID.VOICE_AUTOPILOT_ON : SoundID.VOICE_AUTOPILOT_OFF);
             ui.showFlashMessage(ui.globalAssets().translated(usingAutopilot ? "autopilot_on" : "autopilot_off"));
-
         });
 
-        var miImmunity = new CheckMenuItem(ui.globalAssets().translated("immunity"));
+        final var miImmunity = new CheckMenuItem(ui.globalAssets().translated("immunity"));
         miImmunity.selectedProperty().bindBidirectional(game.immuneProperty());
         miImmunity.setOnAction(e -> {
             final boolean immune = miImmunity.isSelected();
@@ -134,19 +132,21 @@ public class Arcade_PlayScene2D extends GameScene2D {
             ui.showFlashMessage(ui.globalAssets().translated(immune ? "player_immunity_on" : "player_immunity_off"));
         });
 
-        var miMuted = new CheckMenuItem(ui.globalAssets().translated("muted"));
+        final var miMuted = new CheckMenuItem(ui.globalAssets().translated("muted"));
         miMuted.selectedProperty().bindBidirectional(PROPERTY_MUTED);
 
-        var miQuit = new MenuItem(ui.globalAssets().translated("quit"));
+        final var miQuit = new MenuItem(ui.globalAssets().translated("quit"));
         miQuit.setOnAction(e -> ACTION_QUIT_GAME_SCENE.executeIfEnabled(ui));
 
-        return List.of(
-            createContextMenuTitle(ui.preferences(), ui.globalAssets().translated("pacman")),
-            miAutopilot,
-            miImmunity,
-            new SeparatorMenuItem(),
-            miMuted,
-            miQuit);
+        final var dummy = new GameUI_ContextMenu(ui);
+        dummy.addLocalizedTitleItem("pacman");
+        dummy.add(miAutopilot);
+        dummy.add(miImmunity);
+        dummy.addSeparator();
+        dummy.add(miMuted);
+        dummy.add(miQuit);
+
+        return new ArrayList<>(dummy.getItems());
     }
 
     @Override

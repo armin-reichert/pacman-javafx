@@ -29,6 +29,7 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
+import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
@@ -38,13 +39,17 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.*;
+import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,7 +63,6 @@ import static de.amr.pacmanfx.ui._2d.GameScene2D_Renderer.configureRendererForGa
 import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_QUIT_GAME_SCENE;
 import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR;
 import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_MUTED;
-import static de.amr.pacmanfx.uilib.Ufx.createContextMenuTitle;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -233,8 +237,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public List<MenuItem> supplyContextMenuItems(ContextMenuEvent menuEvent, ContextMenu menu) {
-        SceneDisplayMode displayMode = PROPERTY_PLAY_SCENE_DISPLAY_MODE.get();
+    public List<MenuItem> supplyContextMenuItems(ContextMenuEvent menuEvent, GameUI_ContextMenu menu) {
+        final SceneDisplayMode displayMode = PROPERTY_PLAY_SCENE_DISPLAY_MODE.get();
 
         miScaledToFit = new RadioMenuItem(ui.globalAssets().translated("scaled_to_fit"));
         miScaledToFit.setSelected(displayMode == SceneDisplayMode.SCALED_TO_FIT);
@@ -250,34 +254,35 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
         PROPERTY_PLAY_SCENE_DISPLAY_MODE.addListener(this::handlePlaySceneDisplayModeChange);
         Logger.info("Added listener to config propertyPlaySceneDisplayMode property");
-        //TODO might interfere with onHidden event handler set elsewhere on this menu
+        //TODO might interfere with "onHidden" event handler set elsewhere on this menu
         menu.setOnHidden(e -> {
             PROPERTY_PLAY_SCENE_DISPLAY_MODE.removeListener(this::handlePlaySceneDisplayModeChange);
             Logger.info("Removed listener from config propertyPlaySceneDisplayMode property");
         });
 
-        var miAutopilot = new CheckMenuItem(ui.globalAssets().translated("autopilot"));
+        final var miAutopilot = new CheckMenuItem(ui.globalAssets().translated("autopilot"));
         miAutopilot.selectedProperty().bindBidirectional(context().currentGame().usingAutopilotProperty());
 
-        var miImmunity = new CheckMenuItem(ui.globalAssets().translated("immunity"));
+        final var miImmunity = new CheckMenuItem(ui.globalAssets().translated("immunity"));
         miImmunity.selectedProperty().bindBidirectional(context().currentGame().immuneProperty());
 
-        var miMuted = new CheckMenuItem(ui.globalAssets().translated("muted"));
+        final var miMuted = new CheckMenuItem(ui.globalAssets().translated("muted"));
         miMuted.selectedProperty().bindBidirectional(PROPERTY_MUTED);
 
-        var miQuit = new MenuItem(ui.globalAssets().translated("quit"));
+        final var miQuit = new MenuItem(ui.globalAssets().translated("quit"));
         miQuit.setOnAction(e -> ACTION_QUIT_GAME_SCENE.executeIfEnabled(ui));
 
-        return List.of(
-            miScaledToFit,
-            miScrolling,
-            createContextMenuTitle(ui.preferences(), ui.globalAssets().translated("pacman")),
-            miAutopilot,
-            miImmunity,
-            new SeparatorMenuItem(),
-            miMuted,
-            miQuit
-        );
+        final var dummy = new GameUI_ContextMenu(ui);
+        dummy.add(miScaledToFit);
+        dummy.add(miScrolling);
+        dummy.addLocalizedTitleItem("pacman");
+        dummy.add(miAutopilot);
+        dummy.add(miImmunity);
+        dummy.addSeparator();
+        dummy.add(miMuted);
+        dummy.add(miQuit);
+
+        return new ArrayList<>(dummy.getItems());
     }
 
     @Override

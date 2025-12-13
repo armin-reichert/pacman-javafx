@@ -19,12 +19,9 @@ import de.amr.pacmanfx.uilib.widgets.CanvasDecorationPane;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseButton;
@@ -44,7 +41,8 @@ import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_AUTOPILOT;
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_IMMUNITY;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.api.GameScene_Config.*;
-import static de.amr.pacmanfx.uilib.Ufx.*;
+import static de.amr.pacmanfx.uilib.Ufx.border;
+import static de.amr.pacmanfx.uilib.Ufx.paintBackground;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -61,9 +59,9 @@ public class PlayView extends StackPane implements GameUI_View {
     private final MiniGameView miniView;
     private final BorderPane canvasLayer = new BorderPane();
     private final BorderPane dashboardAndMiniViewLayer = new BorderPane();
-    private final ContextMenu contextMenu = new ContextMenu();
 
     private GameUI ui;
+    private GameUI_ContextMenu contextMenu;
     private HelpLayer helpLayer;
 
     public PlayView(Scene parentScene) {
@@ -100,11 +98,12 @@ public class PlayView extends StackPane implements GameUI_View {
 
         parentScene.widthProperty() .addListener((py, ov, w) -> canvasDecorationPane.resizeTo(w.doubleValue(), parentScene.getHeight()));
         parentScene.heightProperty().addListener((py, ov, h) -> canvasDecorationPane.resizeTo(parentScene.getWidth(), h.doubleValue()));
-
     }
 
     public void setUI(GameUI ui) {
         this.ui = requireNonNull(ui);
+
+        contextMenu = new GameUI_ContextMenu(ui);
         dashboard.setUI(ui);
         miniView.setUI(ui);
 
@@ -143,29 +142,19 @@ public class PlayView extends StackPane implements GameUI_View {
     }
 
     private void handleContextMenuRequest(ContextMenuEvent contextMenuEvent) {
-        contextMenu.getItems().clear();
+        contextMenu.clear();
         ui.currentGameScene().ifPresent(gameScene -> {
             if (ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_2D)) {
                 final var miSwitchTo3D = new MenuItem(ui.globalAssets().translated("use_3D_scene"));
                 miSwitchTo3D.setOnAction(e -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.executeIfEnabled(ui));
-                contextMenu.getItems().add(createContextMenuTitle(ui.preferences(), ui.globalAssets().translated("scene_display")));
-                contextMenu.getItems().add(miSwitchTo3D);
+                contextMenu.addLocalizedTitleItem("scene_display");
+                contextMenu.add(miSwitchTo3D);
             }
             final List<MenuItem> gameSceneItems = gameScene.supplyContextMenuItems(contextMenuEvent, contextMenu);
-            contextMenu.getItems().addAll(gameSceneItems);
+            contextMenu.addAll(gameSceneItems);
         });
-        contextMenu.getItems().stream()
-            .filter(item -> item.getOnAction() != null)
-            .forEach(item -> item.setOnAction(menuClosingHandler(item.getOnAction())));
         contextMenu.requestFocus();
         contextMenu.show(this, contextMenuEvent.getScreenX(), contextMenuEvent.getScreenY());
-    }
-
-    private EventHandler<ActionEvent> menuClosingHandler(EventHandler<ActionEvent> actionHandler) {
-        return actionEvent -> {
-            contextMenu.hide();
-            actionHandler.handle(actionEvent);
-        };
     }
 
     public void showHelp(GameUI ui) {

@@ -382,21 +382,6 @@ public interface Ufx {
         return dist2 <= radius * radius;
     }
 
-    /**
-     * @param prefs the UI preference manager
-     * @param itemText (localized) item text
-     * @return CustomMenuItem representing a context menu title item
-     */
-    static MenuItem createContextMenuTitle(UIPreferences prefs, String itemText) {
-        Font font = prefs.getFont("context_menu.title.font");
-        Color fillColor = prefs.getColor("context_menu.title.fill");
-        var text = new Text(itemText);
-        text.setFont(font);
-        text.setFill(fillColor);
-        text.getStyleClass().add("custom-menu-title");
-        return new CustomMenuItem(text, false);
-    }
-
     //TODO check if this covers all cases
     static boolean isBorderObstacle(WorldMap worldMap, Obstacle obstacle) {
         Vector2i start = obstacle.startPoint();

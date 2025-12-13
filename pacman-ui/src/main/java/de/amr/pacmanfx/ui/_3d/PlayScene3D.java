@@ -25,6 +25,7 @@ import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.api.ActionBindingsManager;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
+import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.model3D.Bonus3D;
 import de.amr.pacmanfx.uilib.model3D.Energizer3D;
@@ -54,7 +55,8 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_QUIT_GAME_SCENE;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_TOGGLE_PLAY_SCENE_2D_3D;
 import static de.amr.pacmanfx.ui.api.GameUI.*;
-import static de.amr.pacmanfx.uilib.Ufx.*;
+import static de.amr.pacmanfx.uilib.Ufx.doNow;
+import static de.amr.pacmanfx.uilib.Ufx.pauseSec;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -154,39 +156,37 @@ public abstract class PlayScene3D extends Group implements GameScene {
     protected abstract void setActionBindings(GameLevel gameLevel);
 
     @Override
-    public List<MenuItem> supplyContextMenuItems(ContextMenuEvent menuEvent, ContextMenu menu) {
-        final var miUse2DScene = new MenuItem(ui.globalAssets().translated("use_2D_scene"));
+    public List<MenuItem> supplyContextMenuItems(ContextMenuEvent menuEvent, GameUI_ContextMenu menu) {
+        final var dummy = new GameUI_ContextMenu(ui);
+
+        dummy.addLocalizedTitleItem("scene_display");
+
+        final MenuItem miUse2DScene = dummy.addLocalizedItem("use_2D_scene");
         miUse2DScene.setOnAction(e -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.executeIfEnabled(ui));
 
-        final var miToggleMiniView = new CheckMenuItem(ui.globalAssets().translated("pip"));
+        final var miToggleMiniView = dummy.addLocalizedCheckBoxItem("pip");
         miToggleMiniView.selectedProperty().bindBidirectional(PROPERTY_MINI_VIEW_ON);
 
-        final var miAutopilot = new CheckMenuItem(ui.globalAssets().translated("autopilot"));
+        dummy.addLocalizedTitleItem("select_perspective");
+        dummy.addAll(createPerspectiveRadioItems(menu));
+
+        dummy.addLocalizedTitleItem("pacman");
+
+        final var miAutopilot = dummy.addLocalizedCheckBoxItem("autopilot");
         miAutopilot.selectedProperty().bindBidirectional(context().currentGame().usingAutopilotProperty());
 
-        final var miImmunity = new CheckMenuItem(ui.globalAssets().translated("immunity"));
+        final var miImmunity = dummy.addLocalizedCheckBoxItem("immunity");
         miImmunity.selectedProperty().bindBidirectional(context().currentGame().immuneProperty());
 
-        final var miMuted = new CheckMenuItem(ui.globalAssets().translated("muted"));
+        dummy.addSeparator();
+
+        final var miMuted = dummy.addLocalizedCheckBoxItem("muted");
         miMuted.selectedProperty().bindBidirectional(PROPERTY_MUTED);
 
-        final var miQuit = new MenuItem(ui.globalAssets().translated("quit"));
+        final var miQuit = dummy.addLocalizedItem("quit");
         miQuit.setOnAction(e -> ACTION_QUIT_GAME_SCENE.executeIfEnabled(ui));
 
-        final var items = new ArrayList<MenuItem>();
-        items.add(createContextMenuTitle(ui.preferences(), ui.globalAssets().translated("scene_display")));
-        items.add(miUse2DScene);
-        items.add(miToggleMiniView);
-        items.add(createContextMenuTitle(ui.preferences(), ui.globalAssets().translated("select_perspective")));
-        items.addAll(createPerspectiveRadioItems(menu));
-        items.add(createContextMenuTitle(ui.preferences(), ui.globalAssets().translated("pacman")));
-        items.add(miAutopilot);
-        items.add(miImmunity);
-        items.add(new SeparatorMenuItem());
-        items.add(miMuted);
-        items.add(miQuit);
-
-        return items;
+        return new ArrayList<>(dummy.getItems());
     }
 
     @Override
@@ -502,8 +502,8 @@ public abstract class PlayScene3D extends Group implements GameScene {
         return perspectiveID.get() == null ? Optional.empty() : Optional.of(perspectivesByID.get(perspectiveID.get()));
     }
 
-    protected List<RadioMenuItem> createPerspectiveRadioItems(ContextMenu menu) {
-        var items = new ArrayList<RadioMenuItem>();
+    protected List<MenuItem> createPerspectiveRadioItems(ContextMenu menu) {
+        var items = new ArrayList<MenuItem>();
         for (PerspectiveID id : PerspectiveID.values()) {
             var item = new RadioMenuItem(ui.globalAssets().translated("perspective_id_" + id.name()));
             item.setUserData(id);
