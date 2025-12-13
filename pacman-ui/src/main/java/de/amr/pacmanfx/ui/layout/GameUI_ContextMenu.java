@@ -15,16 +15,25 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import static java.util.Objects.requireNonNull;
 
+/**
+ * Provides convenience methods for building context menus and handles closing of the menu when any action is executed.
+ */
 public class GameUI_ContextMenu extends ContextMenu {
 
     private final GameUI ui;
 
     public GameUI_ContextMenu(GameUI ui) {
         this.ui = requireNonNull(ui);
+    }
+
+    public List<MenuItem> itemsCopy() {
+        return new ArrayList<>(getItems());
     }
 
     public void clear() {

@@ -171,8 +171,7 @@ public abstract class PlayScene3D extends Group implements GameScene {
         dummy.addSeparator();
         dummy.addLocalizedCheckBox(GameUI.PROPERTY_MUTED, "muted");
         dummy.addLocalizedActionItem(ACTION_QUIT_GAME_SCENE, "quit");
-
-        return new ArrayList<>(dummy.getItems());
+        return dummy.itemsCopy();
     }
 
     @Override

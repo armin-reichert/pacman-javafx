@@ -32,7 +32,6 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.input.ContextMenuEvent;
 import org.tinylog.Logger;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_PIXELS;
@@ -135,8 +134,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
         dummy.addSeparator();
         dummy.addLocalizedCheckBox(PROPERTY_MUTED, "muted");
         dummy.addLocalizedActionItem(ACTION_QUIT_GAME_SCENE, "quit");
-
-        return new ArrayList<>(dummy.getItems());
+        return dummy.itemsCopy();
     }
 
     @Override

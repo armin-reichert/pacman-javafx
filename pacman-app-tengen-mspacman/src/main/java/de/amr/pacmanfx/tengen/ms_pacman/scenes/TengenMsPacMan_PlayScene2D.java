@@ -48,7 +48,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -267,8 +266,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         dummy.addSeparator();
         dummy.addLocalizedCheckBox(GameUI.PROPERTY_MUTED, "muted");
         dummy.addLocalizedActionItem(ACTION_QUIT_GAME_SCENE, "quit");
-
-        return new ArrayList<>(dummy.getItems());
+        return dummy.itemsCopy();
     }
 
     @Override
