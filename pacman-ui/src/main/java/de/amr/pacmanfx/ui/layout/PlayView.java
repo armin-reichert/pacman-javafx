@@ -141,7 +141,7 @@ public class PlayView extends StackPane implements GameUI_View {
         return dashboard;
     }
 
-    private void handleContextMenuRequest(ContextMenuEvent contextMenuEvent) {
+    private void handleContextMenuRequest(ContextMenuEvent event) {
         contextMenu.clear();
         ui.currentGameScene().ifPresent(gameScene -> {
             if (ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_2D)) {
@@ -152,7 +152,7 @@ public class PlayView extends StackPane implements GameUI_View {
             contextMenu.addAll(gameSceneItems);
         });
         contextMenu.requestFocus();
-        contextMenu.show(this, contextMenuEvent.getScreenX(), contextMenuEvent.getScreenY());
+        contextMenu.show(this, event.getScreenX(), event.getScreenY());
     }
 
     public void showHelp(GameUI ui) {

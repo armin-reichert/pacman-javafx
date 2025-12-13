@@ -35,7 +35,6 @@ import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
@@ -82,11 +81,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     private TengenMsPacMan_HUD_Renderer hudRenderer;
 
     private LevelCompletedAnimation levelCompletedAnimation;
-
-    // Context menu
-    private ToggleGroup toggleGroup;
-    private RadioMenuItem miScrolling;
-    private RadioMenuItem miScaledToFit;
 
     public TengenMsPacMan_PlayScene2D(GameUI ui) {
         super(ui);
@@ -227,26 +221,21 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         });
     }
 
-    private void handlePlaySceneDisplayModeChange(
-        ObservableValue<? extends SceneDisplayMode> property, SceneDisplayMode oldMode, SceneDisplayMode newMode) {
-        toggleGroup.selectToggle(newMode == SCROLLING ? miScrolling : miScaledToFit);
-    }
-
     @Override
     public List<MenuItem> supplyContextMenuItems(Game game) {
         final var dummy = new GameUI_ContextMenu(ui);
 
         final SceneDisplayMode displayMode = PROPERTY_PLAY_SCENE_DISPLAY_MODE.get();
 
-        miScaledToFit = dummy.addLocalizedRadioButton("scaled_to_fit");
+        final RadioMenuItem miScaledToFit = dummy.addLocalizedRadioButton("scaled_to_fit");
         miScaledToFit.setSelected(displayMode == SceneDisplayMode.SCALED_TO_FIT);
         miScaledToFit.setOnAction(e -> PROPERTY_PLAY_SCENE_DISPLAY_MODE.set(SceneDisplayMode.SCALED_TO_FIT));
 
-        miScrolling = dummy.addLocalizedRadioButton("scrolling");
+        final RadioMenuItem miScrolling = dummy.addLocalizedRadioButton("scrolling");
         miScrolling.setSelected(displayMode == SCROLLING);
         miScrolling.setOnAction(e -> PROPERTY_PLAY_SCENE_DISPLAY_MODE.set(SCROLLING));
 
-        toggleGroup = new ToggleGroup();
+        final ToggleGroup toggleGroup = new ToggleGroup();
         miScaledToFit.setToggleGroup(toggleGroup);
         miScrolling.setToggleGroup(toggleGroup);
 
