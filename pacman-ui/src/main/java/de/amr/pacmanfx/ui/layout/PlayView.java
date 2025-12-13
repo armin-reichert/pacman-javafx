@@ -154,21 +154,18 @@ public class PlayView extends StackPane implements GameUI_View {
             final List<MenuItem> gameSceneItems = gameScene.supplyContextMenuItems(contextMenuEvent, contextMenu);
             contextMenu.getItems().addAll(gameSceneItems);
         });
-
-        //TODO I don't think this is the recommended way to do that
-        // wrap all action handlers into menu closing action handler
         contextMenu.getItems().stream()
             .filter(item -> item.getOnAction() != null)
-            .forEach(item -> {
-                final EventHandler<ActionEvent> originalActionHandler = item.getOnAction();
-                final EventHandler<ActionEvent> wrapper = e -> {
-                    contextMenu.hide();
-                    originalActionHandler.handle(e);
-                };
-                item.setOnAction(wrapper);
-            });
+            .forEach(item -> item.setOnAction(menuClosingHandler(item.getOnAction())));
         contextMenu.requestFocus();
         contextMenu.show(this, contextMenuEvent.getScreenX(), contextMenuEvent.getScreenY());
+    }
+
+    private EventHandler<ActionEvent> menuClosingHandler(EventHandler<ActionEvent> actionHandler) {
+        return actionEvent -> {
+            contextMenu.hide();
+            actionHandler.handle(actionEvent);
+        };
     }
 
     public void showHelp(GameUI ui) {
