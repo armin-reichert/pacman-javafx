@@ -95,10 +95,11 @@ public interface GameScene extends GameEventListener {
     default void onSwitch_3D_2D(GameScene scene3D) {}
 
     /**
+     * @param game the current game
      * @param menuEvent event associated with opening of context menu
      * @return menu items provided by this game scene which are merged into the final context menu
      */
-    default List<MenuItem> supplyContextMenuItems(ContextMenuEvent menuEvent) {
+    default List<MenuItem> supplyContextMenuItems(Game game, ContextMenuEvent menuEvent) {
         return List.of();
     }
 }

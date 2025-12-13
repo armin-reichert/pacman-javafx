@@ -28,6 +28,7 @@ import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.ContextMenuEvent;
 import org.tinylog.Logger;
@@ -104,33 +105,36 @@ public class Arcade_PlayScene2D extends GameScene2D {
             .orElse(ARCADE_MAP_SIZE_IN_PIXELS);
     }
 
-    @Override
-    public List<MenuItem> supplyContextMenuItems(ContextMenuEvent menuEvent) {
+    private void setAutopilot(boolean usingAutopilot) {
         final Game game = context().currentGame();
+        if (usingAutopilot && game.optGameLevel().isPresent() && !game.level().isDemoLevel()) {
+            game.cheatUsedProperty().set(true);
+        }
+        ui.soundManager().playVoiceAfterSec(0, usingAutopilot ? SoundID.VOICE_AUTOPILOT_ON : SoundID.VOICE_AUTOPILOT_OFF);
+        ui.showFlashMessage(ui.globalAssets().translated(usingAutopilot ? "autopilot_on" : "autopilot_off"));
+    }
+
+    private void setImmunity(boolean immune) {
+        final Game game = context().currentGame();
+        if (immune && game.optGameLevel().isPresent() && !game.level().isDemoLevel()) {
+            game.cheatUsedProperty().set(true);
+        }
+        ui.soundManager().playVoiceAfterSec(0, immune ? SoundID.VOICE_IMMUNITY_ON : SoundID.VOICE_IMMUNITY_OFF);
+        ui.showFlashMessage(ui.globalAssets().translated(immune ? "player_immunity_on" : "player_immunity_off"));
+    }
+
+    @Override
+    public List<MenuItem> supplyContextMenuItems(Game game, ContextMenuEvent menuEvent) {
         final var dummy = new GameUI_ContextMenu(ui);
-
         dummy.addLocalizedTitleItem("pacman");
-
-        final var miAutopilot = dummy.addLocalizedCheckBox(game.usingAutopilotProperty(), "autopilot");
-        miAutopilot.setOnAction(e -> {
-            final boolean usingAutopilot = miAutopilot.isSelected();
-            if (usingAutopilot && game.optGameLevel().isPresent() && !game.level().isDemoLevel()) {
-                game.cheatUsedProperty().set(true);
-            }
-            ui.soundManager().playVoiceAfterSec(0, usingAutopilot ? SoundID.VOICE_AUTOPILOT_ON : SoundID.VOICE_AUTOPILOT_OFF);
-            ui.showFlashMessage(ui.globalAssets().translated(usingAutopilot ? "autopilot_on" : "autopilot_off"));
+        dummy.addLocalizedCheckBox(game.usingAutopilotProperty(), "autopilot").setOnAction(e -> {
+            final CheckMenuItem checkBox = (CheckMenuItem) e.getSource();
+            setAutopilot(checkBox.isSelected());
         });
-
-        final var miImmunity = dummy.addLocalizedCheckBox(game.immuneProperty(), "immunity");
-        miImmunity.setOnAction(e -> {
-            final boolean immune = miImmunity.isSelected();
-            if (immune && game.optGameLevel().isPresent() && !game.level().isDemoLevel()) {
-                game.cheatUsedProperty().set(true);
-            }
-            ui.soundManager().playVoiceAfterSec(0, immune ? SoundID.VOICE_IMMUNITY_ON : SoundID.VOICE_IMMUNITY_OFF);
-            ui.showFlashMessage(ui.globalAssets().translated(immune ? "player_immunity_on" : "player_immunity_off"));
+        dummy.addLocalizedCheckBox(game.immuneProperty(), "immunity").setOnAction(e -> {
+            final CheckMenuItem checkBox = (CheckMenuItem) e.getSource();
+            setImmunity(checkBox.isSelected());
         });
-
         dummy.addSeparator();
         dummy.addLocalizedCheckBox(PROPERTY_MUTED, "muted");
         dummy.addLocalizedActionItem(ACTION_QUIT_GAME_SCENE, "quit");

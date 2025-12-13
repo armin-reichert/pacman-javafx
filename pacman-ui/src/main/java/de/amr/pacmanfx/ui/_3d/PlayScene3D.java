@@ -163,9 +163,7 @@ public abstract class PlayScene3D extends Group implements GameScene {
     protected abstract void setActionBindings(GameLevel gameLevel);
 
     @Override
-    public List<MenuItem> supplyContextMenuItems(ContextMenuEvent menuEvent) {
-        final Game game = context().currentGame();
-
+    public List<MenuItem> supplyContextMenuItems(Game game, ContextMenuEvent menuEvent) {
         final var dummy = new GameUI_ContextMenu(ui);
         dummy.addLocalizedTitleItem("scene_display");
         dummy.addLocalizedActionItem(ACTION_TOGGLE_PLAY_SCENE_2D_3D, "use_2D_scene");

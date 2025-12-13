@@ -234,8 +234,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public List<MenuItem> supplyContextMenuItems(ContextMenuEvent menuEvent) {
-        final Game game = context().currentGame();
+    public List<MenuItem> supplyContextMenuItems(Game game, ContextMenuEvent menuEvent) {
         final var dummy = new GameUI_ContextMenu(ui);
 
         final SceneDisplayMode displayMode = PROPERTY_PLAY_SCENE_DISPLAY_MODE.get();
