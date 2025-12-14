@@ -38,7 +38,7 @@ jlink {
         appVersion = "1.0"
         vendor = "Armin Reichert"
         installerOptions = []
-        installerType = osPkg
+        installerType = installerPkg
         if (osdetector.os == "windows") {
             icon = "pacman.ico"
             installerOptions += ["--win-dir-chooser", "--win-menu", "--win-menu-group", "Pac-Man FX", "--win-shortcut"]

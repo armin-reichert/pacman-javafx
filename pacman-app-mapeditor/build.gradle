@@ -28,7 +28,7 @@ jlink {
     }
     jpackage {
         vendor = "Armin Reichert"
-        installerType = osPkg
+        installerType = installerPkg
         if (osdetector.os == "windows") {
             icon = "mapeditor.ico"
             installerOptions = ["--win-dir-chooser", "--win-menu", "--win-menu-group", "Pac-Man FX", "--win-shortcut"]

@@ -27,6 +27,6 @@ jlink {
         name = "Tengen Ms. Pac-Man"
     }
     jpackage {
-        installerType = osPkg
+        installerType = installerPkg
     }
 }

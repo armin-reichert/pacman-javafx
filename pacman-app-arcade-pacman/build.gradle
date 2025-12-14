@@ -33,6 +33,6 @@ jlink {
         name = "Arcade Pac-Man"
     }
     jpackage {
-        installerType = osPkg
+        installerType = installerPkg
     }
 }

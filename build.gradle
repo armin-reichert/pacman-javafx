@@ -11,20 +11,24 @@ subprojects {
     // For plugins referenced via the version catalog it has to be done like this:
     pluginManager.apply(libs.plugins.javafx.get().getPluginId())
     pluginManager.apply(libs.plugins.osdetector.get().getPluginId())
+
     // 2. Declare repositories
     repositories {
         mavenCentral()
     }
+
     // 3. Configure Java toolchain
     java {
         toolchain {
             languageVersion = JavaLanguageVersion.of(libs.versions.java.get())
         }
     }
+
     // 4. Configure JavaFX
     javafx {
         version = libs.versions.javafx.get()
     }
+
     // 5. Configure tasks
     tasks.withType(JavaCompile).configureEach {
         options.encoding = "UTF-8"
@@ -33,12 +37,12 @@ subprojects {
 }
 
 // define installer package format by OS
-ext.osPkg = [linux: "deb", "osx": "dmg", windows: "msi"][osdetector.os]
+ext.installerPkg = [linux: "deb", "osx": "dmg", windows: "msi"][osdetector.os]
 
-logger.lifecycle("osdetector.os         = ${osdetector.os}")
-logger.lifecycle("osdetector.arch       = ${osdetector.arch}")
-logger.lifecycle("osdetector.classifier = ${osdetector.classifier}")
-logger.lifecycle("Installer packaging   = ${osPkg}")
-logger.lifecycle("Java version          = ${libs.versions.java.get()}")
-logger.lifecycle("JavaFX version        = ${libs.versions.javafx.get()}")
-logger.lifecycle("TinyLog version       = ${libs.versions.tinylog.get()}")
+logger.lifecycle("osdetector.os            = ${osdetector.os}")
+logger.lifecycle("osdetector.arch          = ${osdetector.arch}")
+logger.lifecycle("osdetector.classifier    = ${osdetector.classifier}")
+logger.lifecycle("Installer package format = ${installerPkg}")
+logger.lifecycle("Java version             = ${libs.versions.java.get()}")
+logger.lifecycle("JavaFX version           = ${libs.versions.javafx.get()}")
+logger.lifecycle("TinyLog version          = ${libs.versions.tinylog.get()}")
