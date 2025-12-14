@@ -8,11 +8,10 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
 import javafx.scene.SubScene;
-import javafx.scene.control.MenuItem;
 import javafx.scene.input.ScrollEvent;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -95,9 +94,9 @@ public interface GameScene extends GameEventListener {
 
     /**
      * @param game the current game
-     * @return menu items provided by this game scene which are merged into the final context menu
+     * @return context menu provided by this game scene which is merged into the view's context menu
      */
-    default List<MenuItem> supplyContextMenuItems(Game game) {
-        return List.of();
+    default GameUI_ContextMenu supplyContextMenu(Game game) {
+        return null;
     }
 }

@@ -22,7 +22,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.MenuItem;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -33,7 +32,6 @@ import javafx.scene.text.FontSmoothingType;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import java.util.List;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_PIXELS;
@@ -148,8 +146,8 @@ public class PlayView extends StackPane implements GameUI_View {
                 contextMenu.addLocalizedTitleItem("scene_display");
                 contextMenu.addLocalizedActionItem(ACTION_TOGGLE_PLAY_SCENE_2D_3D, "use_3D_scene");
             }
-            final List<MenuItem> gameSceneItems = gameScene.supplyContextMenuItems(ui.context().currentGame());
-            contextMenu.addAll(gameSceneItems);
+            final GameUI_ContextMenu sceneContextMenu = gameScene.supplyContextMenu(ui.context().currentGame());
+            contextMenu.addAll(sceneContextMenu.itemsCopy());
         });
         contextMenu.requestFocus();
         contextMenu.show(this, event.getScreenX(), event.getScreenY());

@@ -39,7 +39,6 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Background;
@@ -47,7 +46,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
-import java.util.List;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.TS;
@@ -223,16 +221,16 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public List<MenuItem> supplyContextMenuItems(Game game) {
-        final var dummy = new GameUI_ContextMenu(ui);
-
+    public GameUI_ContextMenu supplyContextMenu(Game game) {
         final SceneDisplayMode displayMode = PROPERTY_PLAY_SCENE_DISPLAY_MODE.get();
 
-        final RadioMenuItem miScaledToFit = dummy.addLocalizedRadioButton("scaled_to_fit");
+        final var menu = new GameUI_ContextMenu(ui);
+
+        final RadioMenuItem miScaledToFit = menu.addLocalizedRadioButton("scaled_to_fit");
         miScaledToFit.setSelected(displayMode == SceneDisplayMode.SCALED_TO_FIT);
         miScaledToFit.setOnAction(e -> PROPERTY_PLAY_SCENE_DISPLAY_MODE.set(SceneDisplayMode.SCALED_TO_FIT));
 
-        final RadioMenuItem miScrolling = dummy.addLocalizedRadioButton("scrolling");
+        final RadioMenuItem miScrolling = menu.addLocalizedRadioButton("scrolling");
         miScrolling.setSelected(displayMode == SCROLLING);
         miScrolling.setOnAction(e -> PROPERTY_PLAY_SCENE_DISPLAY_MODE.set(SCROLLING));
 
@@ -240,13 +238,13 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         miScaledToFit.setToggleGroup(toggleGroup);
         miScrolling.setToggleGroup(toggleGroup);
 
-        dummy.addLocalizedTitleItem("pacman");
-        dummy.addLocalizedCheckBox(game.usingAutopilotProperty(), "autopilot");
-        dummy.addLocalizedCheckBox(game.immuneProperty(), "immunity");
-        dummy.addSeparator();
-        dummy.addLocalizedCheckBox(GameUI.PROPERTY_MUTED, "muted");
-        dummy.addLocalizedActionItem(ACTION_QUIT_GAME_SCENE, "quit");
-        return dummy.itemsCopy();
+        menu.addLocalizedTitleItem("pacman");
+        menu.addLocalizedCheckBox(game.usingAutopilotProperty(), "autopilot");
+        menu.addLocalizedCheckBox(game.immuneProperty(), "immunity");
+        menu.addSeparator();
+        menu.addLocalizedCheckBox(GameUI.PROPERTY_MUTED, "muted");
+        menu.addLocalizedActionItem(ACTION_QUIT_GAME_SCENE, "quit");
+        return menu;
     }
 
     @Override

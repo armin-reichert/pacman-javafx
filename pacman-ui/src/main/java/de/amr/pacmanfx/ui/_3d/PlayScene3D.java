@@ -39,7 +39,6 @@ import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
@@ -49,7 +48,10 @@ import javafx.scene.shape.Shape3D;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import java.util.*;
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.HTS;
@@ -157,21 +159,20 @@ public abstract class PlayScene3D extends Group implements GameScene {
     protected abstract void setActionBindings(GameLevel gameLevel);
 
     @Override
-    public List<MenuItem> supplyContextMenuItems(Game game) {
-        final var dummy = new GameUI_ContextMenu(ui);
-        dummy.addLocalizedTitleItem("scene_display");
-        dummy.addLocalizedActionItem(ACTION_TOGGLE_PLAY_SCENE_2D_3D, "use_2D_scene");
-        dummy.addLocalizedCheckBox(GameUI.PROPERTY_MINI_VIEW_ON, "pip");
-        dummy.addLocalizedTitleItem("select_perspective");
-        addPerspectiveRadioItems(dummy);
-        dummy.addLocalizedTitleItem("pacman");
-        dummy.addLocalizedCheckBox(game.usingAutopilotProperty(), "autopilot");
-        dummy.addLocalizedCheckBox(game.immuneProperty(), "immunity");
-        dummy.addSeparator();
-        dummy.addLocalizedCheckBox(GameUI.PROPERTY_MUTED, "muted");
-        dummy.addLocalizedActionItem(ACTION_QUIT_GAME_SCENE, "quit");
-
-        return dummy.itemsCopy();
+    public GameUI_ContextMenu supplyContextMenu(Game game) {
+        final var menu = new GameUI_ContextMenu(ui);
+        menu.addLocalizedTitleItem("scene_display");
+        menu.addLocalizedActionItem(ACTION_TOGGLE_PLAY_SCENE_2D_3D, "use_2D_scene");
+        menu.addLocalizedCheckBox(GameUI.PROPERTY_MINI_VIEW_ON, "pip");
+        menu.addLocalizedTitleItem("select_perspective");
+        addPerspectiveRadioItems(menu);
+        menu.addLocalizedTitleItem("pacman");
+        menu.addLocalizedCheckBox(game.usingAutopilotProperty(), "autopilot");
+        menu.addLocalizedCheckBox(game.immuneProperty(), "immunity");
+        menu.addSeparator();
+        menu.addLocalizedCheckBox(GameUI.PROPERTY_MUTED, "muted");
+        menu.addLocalizedActionItem(ACTION_QUIT_GAME_SCENE, "quit");
+        return menu;
     }
 
     private final ChangeListener<PerspectiveID> perspectiveIDChangeListener = (py, ov, newID) -> {

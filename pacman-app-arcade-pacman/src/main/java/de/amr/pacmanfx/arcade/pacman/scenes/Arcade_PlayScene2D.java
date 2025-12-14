@@ -29,10 +29,7 @@ import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.CheckMenuItem;
-import javafx.scene.control.MenuItem;
 import org.tinylog.Logger;
-
-import java.util.List;
 
 import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_QUIT_GAME_SCENE;
@@ -123,21 +120,21 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public List<MenuItem> supplyContextMenuItems(Game game) {
-        final var dummy = new GameUI_ContextMenu(ui);
-        dummy.addLocalizedTitleItem("pacman");
-        dummy.addLocalizedCheckBox(game.usingAutopilotProperty(), "autopilot").setOnAction(e -> {
+    public GameUI_ContextMenu supplyContextMenu(Game game) {
+        final var menu = new GameUI_ContextMenu(ui);
+        menu.addLocalizedTitleItem("pacman");
+        menu.addLocalizedCheckBox(game.usingAutopilotProperty(), "autopilot").setOnAction(e -> {
             final CheckMenuItem checkBox = (CheckMenuItem) e.getSource();
             setAutopilot(checkBox.isSelected());
         });
-        dummy.addLocalizedCheckBox(game.immuneProperty(), "immunity").setOnAction(e -> {
+        menu.addLocalizedCheckBox(game.immuneProperty(), "immunity").setOnAction(e -> {
             final CheckMenuItem checkBox = (CheckMenuItem) e.getSource();
             setImmunity(checkBox.isSelected());
         });
-        dummy.addSeparator();
-        dummy.addLocalizedCheckBox(PROPERTY_MUTED, "muted");
-        dummy.addLocalizedActionItem(ACTION_QUIT_GAME_SCENE, "quit");
-        return dummy.itemsCopy();
+        menu.addSeparator();
+        menu.addLocalizedCheckBox(PROPERTY_MUTED, "muted");
+        menu.addLocalizedActionItem(ACTION_QUIT_GAME_SCENE, "quit");
+        return menu;
     }
 
     @Override
