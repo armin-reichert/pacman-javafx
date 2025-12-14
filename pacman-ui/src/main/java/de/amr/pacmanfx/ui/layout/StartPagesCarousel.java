@@ -9,10 +9,9 @@ import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.api.ActionBindingsManager;
 import de.amr.pacmanfx.ui.api.GameUI;
-import de.amr.pacmanfx.ui.api.GameUI_View;
 import de.amr.pacmanfx.ui.api.GameUI_StartPage;
+import de.amr.pacmanfx.ui.api.GameUI_View;
 import de.amr.pacmanfx.uilib.widgets.Carousel;
-import de.amr.pacmanfx.uilib.widgets.FancyButton;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -21,7 +20,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.util.Duration;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -42,21 +40,8 @@ import static java.util.Objects.requireNonNull;
  */
 public class StartPagesCarousel extends Carousel implements GameUI_View {
 
-    public static final Color START_BUTTON_BGCOLOR = Color.rgb(0, 155, 252, 0.7);
-    public static final Color START_BUTTON_FILLCOLOR = Color.rgb(255, 255, 255);
-
     //TODO start pages should define their preferred duration
     public static final int PAGE_CHANGE_SECONDS = 90;
-
-    public static Node createDefaultStartButton(GameUI ui, Runnable action) {
-        var button = new FancyButton(
-            ui.globalAssets().translated("play_button"),
-            Font.font(ui.globalAssets().font_Arcade_8.getFamily(), 30),
-            START_BUTTON_BGCOLOR, START_BUTTON_FILLCOLOR);
-        button.setAction(action);
-        StackPane.setAlignment(button, Pos.BOTTOM_CENTER);
-        return button;
-    }
 
     private final GameAction actionShowPrevPage = new GameAction("SHOW_PREV_PAGE") {
         @Override
