@@ -77,7 +77,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
     @Override
     public void doInit(Game game) {
-        game.hud().credit(false).score(true).levelCounter(true).livesCounter(false);
+        game.hud().credit(false).score(true).levelCounter(true).livesCounter(false).show();
 
         GameUI_Config uiConfig = ui.currentConfig();
 

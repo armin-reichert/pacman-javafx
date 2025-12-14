@@ -88,7 +88,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
     @Override
     public void doInit(Game game) {
-        game.hud().all(false);
+        game.hud().hide();
 
         actionBindings.useAll(GameUI.SCENE_TESTS_BINDINGS);
         actionBindings.useKeyCombination(actionSelectNextJoypadBinding, alt(KeyCode.J));

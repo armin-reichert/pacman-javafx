@@ -258,7 +258,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         clearCheatingProperties();
         prepareNewGame();
         levelCounter().clear();
-        hud().all(false);
+        hud().hide();
     }
 
     @Override

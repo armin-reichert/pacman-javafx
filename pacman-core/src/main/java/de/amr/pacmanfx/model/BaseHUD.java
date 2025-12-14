@@ -14,7 +14,12 @@ public abstract class BaseHUD implements HUD {
     private int     visibleLifeCount;
 
     @Override
-    public void show(boolean b) { visible = b; }
+    public void show() { visible = true; }
+
+    @Override
+    public void hide() {
+        visible = false;
+    }
 
     @Override
     public boolean isVisible() { return visible; }

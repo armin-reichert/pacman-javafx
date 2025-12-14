@@ -10,7 +10,8 @@ package de.amr.pacmanfx.model;
 public interface HUD {
 
     boolean isVisible();
-    void show(boolean visible);
+    void show();
+    void hide();
 
     boolean isLevelCounterVisible();
     void showLevelCounter(boolean visible);
@@ -31,10 +32,7 @@ public interface HUD {
 
     // Fluent API
     default HUD all(boolean visible) {
-        return credit(visible)
-            .score(visible)
-            .levelCounter(visible)
-            .livesCounter(visible);
+        return credit(visible).score(visible).levelCounter(visible).livesCounter(visible);
     }
 
     default HUD credit(boolean visible) {

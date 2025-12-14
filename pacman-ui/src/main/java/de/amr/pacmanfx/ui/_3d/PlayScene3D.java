@@ -207,7 +207,7 @@ public abstract class PlayScene3D extends Group implements GameScene {
 
     @Override
     public void init(Game game) {
-        game.hud().showScore(true);
+        game.hud().score(true).show();
         GameUI.PROPERTY_3D_PERSPECTIVE_ID.addListener(perspectiveIDChangeListener);
         perspectiveIDProperty().bind(GameUI.PROPERTY_3D_PERSPECTIVE_ID);
     }

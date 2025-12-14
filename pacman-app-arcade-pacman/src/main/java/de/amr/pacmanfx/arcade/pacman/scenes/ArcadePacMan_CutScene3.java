@@ -66,7 +66,7 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
 
     @Override
     public void doInit(Game game) {
-        game.hud().credit(false).score(true).levelCounter(true).livesCounter(false);
+        game.hud().credit(false).score(true).levelCounter(true).livesCounter(false).show();
         final GameUI_Config uiConfig = ui.currentConfig();
         pac = ArcadePacMan_ActorFactory.createPacMan();
         pac.setAnimationManager(uiConfig.createPacAnimations());

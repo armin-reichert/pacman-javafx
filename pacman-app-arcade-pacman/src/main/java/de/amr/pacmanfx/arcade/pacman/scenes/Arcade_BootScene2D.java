@@ -36,7 +36,7 @@ public class Arcade_BootScene2D extends GameScene2D {
 
     @Override
     public void doInit(Game game) {
-        game.hud().all(false);
+        game.hud().hide();
    }
 
     @Override

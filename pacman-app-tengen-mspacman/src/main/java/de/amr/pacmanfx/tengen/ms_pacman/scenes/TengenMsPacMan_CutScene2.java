@@ -76,7 +76,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
     @Override
     public void doInit(Game game) {
         TengenMsPacMan_HUD hud = (TengenMsPacMan_HUD) game.hud();
-        hud.credit(false).score(false).levelCounter(true).livesCounter(false);
+        hud.credit(false).score(false).levelCounter(true).livesCounter(false).show();
         hud.showGameOptions(false);
 
         actionBindings.useKeyCombination(ACTION_LET_GAME_STATE_EXPIRE, GameUI.JOYPAD.key(JoypadButton.START));

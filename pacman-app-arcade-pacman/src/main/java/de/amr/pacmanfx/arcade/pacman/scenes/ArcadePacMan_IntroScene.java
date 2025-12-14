@@ -104,7 +104,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
         ui.soundManager().playVoiceAfterSec(1, SoundID.VOICE_EXPLAIN_GAME_START);
 
-        game.hud().credit(true).score(true).livesCounter(false).levelCounter(true);
+        game.hud().credit(true).score(true).livesCounter(false).levelCounter(true).show();
 
         actionBindings.useAll(ArcadePacMan_UIConfig.DEFAULT_BINDINGS);
         actionBindings.useAll(GameUI.SCENE_TESTS_BINDINGS);
