@@ -537,8 +537,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public boolean isBonusReached() {
-        int eatenFoodCount = level().worldMap().foodLayer().eatenFoodCount();
+    public boolean isBonusReached(GameLevel level) {
+        int eatenFoodCount = level.worldMap().foodLayer().eatenFoodCount();
         return eatenFoodCount == FIRST_BONUS_PELLETS_EATEN || eatenFoodCount == SECOND_BONUS_PELLETS_EATEN;
     }
 
@@ -610,7 +610,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
                 level.pac().endStarving();
             }
             gateKeeper.registerFoodEaten(level);
-            if (isBonusReached()) {
+            if (isBonusReached(level)) {
                 activateNextBonus(level);
                 simulationStepResult.bonusIndex = level.currentBonusIndex();
             }

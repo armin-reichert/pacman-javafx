@@ -324,7 +324,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
                 onPelletEaten(level);
             }
             gateKeeper.registerFoodEaten(level);
-            if (isBonusReached()) {
+            if (isBonusReached(level)) {
                 activateNextBonus(level);
                 simulationStepResult.bonusIndex = level.currentBonusIndex();
             }

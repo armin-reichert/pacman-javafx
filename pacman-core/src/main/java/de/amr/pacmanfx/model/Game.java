@@ -100,7 +100,7 @@ public interface Game {
     void startHunting(GameLevel level);
     void updateHunting(GameLevel level);
     void activateNextBonus(GameLevel level);
-    boolean isBonusReached();
+    boolean isBonusReached(GameLevel level);
     boolean hasPacManBeenKilled();
     boolean hasGhostBeenKilled();
 
