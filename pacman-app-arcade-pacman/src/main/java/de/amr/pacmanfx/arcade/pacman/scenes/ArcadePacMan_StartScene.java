@@ -9,7 +9,6 @@ import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_StartScene_Renderer;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._2d.HUD_Renderer;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import javafx.scene.canvas.Canvas;
@@ -22,7 +21,6 @@ import static de.amr.pacmanfx.ui._2d.GameScene2D_Renderer.configureRendererForGa
 public class ArcadePacMan_StartScene extends GameScene2D {
 
     private ArcadePacMan_StartScene_Renderer sceneRenderer;
-    private HUD_Renderer hudRenderer;
 
     public ArcadePacMan_StartScene(GameUI ui) {
         super(ui);
@@ -30,16 +28,7 @@ public class ArcadePacMan_StartScene extends GameScene2D {
 
     @Override
     protected void createRenderers(Canvas canvas) {
-        sceneRenderer = configureRendererForGameScene(
-            new ArcadePacMan_StartScene_Renderer(this, canvas), this);
-
-        hudRenderer = configureRendererForGameScene(
-            ui.currentConfig().createHUDRenderer(canvas), this);
-    }
-
-    @Override
-    public HUD_Renderer hudRenderer() {
-        return hudRenderer;
+        sceneRenderer = configureRendererForGameScene(new ArcadePacMan_StartScene_Renderer(this, canvas), this);
     }
 
     @Override

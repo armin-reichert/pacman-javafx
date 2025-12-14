@@ -24,6 +24,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.actors.Pinky;
 import de.amr.pacmanfx.tengen.ms_pacman.model.actors.Sue;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.*;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.*;
+import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameScene_Config;
@@ -277,8 +278,23 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     }
 
     @Override
-    public TengenMsPacMan_HUD_Renderer createHUDRenderer(Canvas canvas) {
-        return new TengenMsPacMan_HUD_Renderer(canvas, spriteSheet, ui.clock());
+    public TengenMsPacMan_HUD_Renderer createHUDRenderer(Canvas canvas, GameScene2D gameScene2D) {
+        final TengenMsPacMan_GameModel game = ui.context().currentGame();
+        if (   ui.isCurrentGameSceneID(sceneID_CutScene(1))
+            || ui.isCurrentGameSceneID(sceneID_CutScene(2))
+            || ui.isCurrentGameSceneID(sceneID_CutScene(3))
+            || ui.isCurrentGameSceneID(sceneID_CutScene(4))) {
+            if (game.mapCategory() == MapCategory.ARCADE) {
+                return null;
+            }
+            final var renderer = new TengenMsPacMan_HUD_Renderer(canvas, spriteSheet, ui.clock());
+            renderer.setOffsetY(-2*TS);
+            return renderer;
+        } else if (ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_2D)) {
+            return new TengenMsPacMan_HUD_Renderer(canvas, spriteSheet, ui.clock());
+        } else {
+            return null;
+        }
     }
 
     @Override

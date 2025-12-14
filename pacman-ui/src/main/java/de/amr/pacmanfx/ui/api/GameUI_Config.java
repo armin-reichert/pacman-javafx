@@ -9,6 +9,7 @@ import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.actors.AnimationManager;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.HUD_Renderer;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -93,10 +94,11 @@ public interface GameUI_Config extends Disposable {
     GameLevelRenderer createGameLevelRenderer(Canvas canvas);
 
     /**
-     * @param canvas the canvas where the 2D scene gets rendered
+     * @param canvas canvas
+     * @param gameScene2D game scene
      * @return a new renderer for the heads-up display (HUD)
      */
-    HUD_Renderer createHUDRenderer(Canvas canvas);
+    HUD_Renderer createHUDRenderer(Canvas canvas, GameScene2D gameScene2D);
 
     /**
      * @param canvas the canvas where the 2D scene gets rendered

@@ -19,6 +19,7 @@ import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
+import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.HUD_Renderer;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameScene_Config;
@@ -169,7 +170,7 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config, GameScene_Con
     }
 
     @Override
-    public HUD_Renderer createHUDRenderer(Canvas canvas) {
+    public HUD_Renderer createHUDRenderer(Canvas canvas, GameScene2D gameScene2D) {
         var hudRenderer = new ArcadeMsPacMan_HUDRenderer(canvas, spriteSheet);
         hudRenderer.setImageSmoothing(true);
         return hudRenderer;

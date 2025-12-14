@@ -9,7 +9,6 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_CreditsScene_Renderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._2d.HUD_Renderer;
 import de.amr.pacmanfx.ui.api.GameUI;
 import javafx.scene.canvas.Canvas;
 
@@ -35,11 +34,6 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
     @Override
     protected void createRenderers(Canvas canvas) {
         sceneRenderer = configureRendererForGameScene(new TengenMsPacMan_CreditsScene_Renderer(this, canvas), this);
-    }
-
-    @Override
-    public HUD_Renderer hudRenderer() {
-        return null;
     }
 
     @Override

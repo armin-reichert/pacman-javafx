@@ -7,7 +7,6 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController.GameState;
 import de.amr.pacmanfx.arcade.pacman.model.actors.ArcadePacMan_ActorFactory;
-import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_HUD_Renderer;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_IntroScene_Renderer;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.event.GameEvent;
@@ -42,7 +41,6 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     private final StateMachine<ArcadePacMan_IntroScene> sceneController;
 
     private ArcadePacMan_IntroScene_Renderer sceneRenderer;
-    private ArcadePacMan_HUD_Renderer hudRenderer;
 
     private Pulse blinking;
     private Pac pacMan;
@@ -63,17 +61,8 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     @Override
     protected void createRenderers(Canvas canvas) {
         final GameUI_Config uiConfig = ui.currentConfig();
-
-        hudRenderer = adaptRenderer(
-            (ArcadePacMan_HUD_Renderer) uiConfig.createHUDRenderer(canvas));
-
         sceneRenderer = adaptRenderer(
             new ArcadePacMan_IntroScene_Renderer(this, canvas, (ArcadePacMan_SpriteSheet) uiConfig.spriteSheet()));
-    }
-
-    @Override
-    public ArcadePacMan_HUD_Renderer hudRenderer() {
-        return hudRenderer;
     }
 
     @Override

@@ -12,16 +12,12 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
-import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
-import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_HUD;
 import de.amr.pacmanfx.tengen.ms_pacman.model.actors.MsPacMan;
 import de.amr.pacmanfx.tengen.ms_pacman.model.actors.PacMan;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_CutScene3_Renderer;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_HUD_Renderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
@@ -29,7 +25,6 @@ import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
-import static de.amr.pacmanfx.ui._2d.GameScene2D_Renderer.configureRendererForGameScene;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_LET_GAME_STATE_EXPIRE;
 
 /**
@@ -45,7 +40,6 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
     private static final int GROUND_Y = TS * 24;
     private static final int RIGHT_BORDER = TS * 30;
 
-    private TengenMsPacMan_HUD_Renderer hudRenderer;
     private TengenMsPacMan_CutScene3_Renderer sceneRenderer;
 
     private Clapperboard clapperboard;
@@ -62,26 +56,9 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
 
     @Override
     protected void createRenderers(Canvas canvas) {
-        final GameUI_Config uiConfig = ui.currentConfig();
-
-        if (context().<TengenMsPacMan_GameModel>currentGame().mapCategory() == MapCategory.ARCADE) {
-            hudRenderer = null;
-        }
-        else {
-            hudRenderer = configureRendererForGameScene(
-                (TengenMsPacMan_HUD_Renderer) uiConfig.createHUDRenderer(canvas),
-                this);
-            hudRenderer.setOffsetY(-2*TS);
-        }
-
-        sceneRenderer = GameScene2D_Renderer.configureRendererForGameScene(
-            new TengenMsPacMan_CutScene3_Renderer(this, canvas), this);
+        sceneRenderer = adaptRenderer(new TengenMsPacMan_CutScene3_Renderer(this, canvas));
     }
 
-    @Override
-    public TengenMsPacMan_HUD_Renderer hudRenderer() {
-        return hudRenderer;
-    }
 
     @Override
     public TengenMsPacMan_CutScene3_Renderer sceneRenderer() {

@@ -24,7 +24,6 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.MovingGameLevelMessage;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameController.GameState;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_HUD;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_HUD_Renderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_PlayScene2D_Renderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
@@ -77,7 +76,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     private final PerspectiveCamera fixedCamera;
 
     private TengenMsPacMan_PlayScene2D_Renderer sceneRenderer;
-    private TengenMsPacMan_HUD_Renderer hudRenderer;
 
     private LevelCompletedAnimation levelCompletedAnimation;
 
@@ -161,16 +159,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     @Override
     protected void createRenderers(Canvas canvas) {
         final TengenMsPacMan_UIConfig uiConfig = ui.currentConfig();
-
-        hudRenderer = configureRendererForGameScene(uiConfig.createHUDRenderer(canvas), this);
-
         sceneRenderer = configureRendererForGameScene(
             new TengenMsPacMan_PlayScene2D_Renderer(this, canvas, uiConfig.spriteSheet()), this);
-    }
-
-    @Override
-    public TengenMsPacMan_HUD_Renderer hudRenderer() {
-        return hudRenderer;
     }
 
     @Override

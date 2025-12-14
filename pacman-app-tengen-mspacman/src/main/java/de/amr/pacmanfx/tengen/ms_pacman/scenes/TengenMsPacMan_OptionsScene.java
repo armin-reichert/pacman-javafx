@@ -17,7 +17,6 @@ import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_OptionsScene_Re
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
-import de.amr.pacmanfx.ui._2d.HUD_Renderer;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.api.GameUI;
 import javafx.beans.property.IntegerProperty;
@@ -80,11 +79,6 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     protected void createRenderers(Canvas canvas) {
         sceneRenderer = GameScene2D_Renderer.configureRendererForGameScene(
             new TengenMsPacMan_OptionsScene_Renderer(this, canvas, (TengenMsPacMan_SpriteSheet) ui.currentConfig().spriteSheet()), this);
-    }
-
-    @Override
-    public HUD_Renderer hudRenderer() {
-        return null;
     }
 
     @Override

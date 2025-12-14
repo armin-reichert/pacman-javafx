@@ -62,8 +62,6 @@ public abstract class GameScene2D implements GameScene {
 
     public abstract GameScene2D_Renderer sceneRenderer();
 
-    public abstract HUD_Renderer hudRenderer();
-
     // GameScene interface
 
     @Override
@@ -144,7 +142,7 @@ public abstract class GameScene2D implements GameScene {
         return Globals.ARCADE_MAP_SIZE_IN_PIXELS;
     }
 
-    protected <T extends Renderer> T adaptRenderer(T renderer) {
+    public  <T extends Renderer> T adaptRenderer(T renderer) {
         return GameScene2D_Renderer.configureRendererForGameScene(renderer, this);
     }
 }

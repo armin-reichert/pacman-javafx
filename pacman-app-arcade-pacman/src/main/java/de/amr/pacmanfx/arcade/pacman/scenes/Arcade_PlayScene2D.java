@@ -20,7 +20,6 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._2d.HUD_Renderer;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
@@ -45,7 +44,6 @@ import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_MUTED;
 public class Arcade_PlayScene2D extends GameScene2D {
 
     private Arcade_PlayScene2D_Renderer renderer;
-    private HUD_Renderer hudRenderer;
     private LevelCompletedAnimation levelCompletedAnimation;
 
     public Arcade_PlayScene2D(GameUI ui) {
@@ -59,13 +57,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     @Override
     protected void createRenderers(Canvas canvas) {
         final GameUI_Config uiConfig = ui.currentConfig();
-        hudRenderer = adaptRenderer(uiConfig.createHUDRenderer(canvas));
         renderer = adaptRenderer(new Arcade_PlayScene2D_Renderer(this, canvas, uiConfig.spriteSheet()));
-    }
-
-    @Override
-    public HUD_Renderer hudRenderer() {
-        return hudRenderer;
     }
 
     @Override

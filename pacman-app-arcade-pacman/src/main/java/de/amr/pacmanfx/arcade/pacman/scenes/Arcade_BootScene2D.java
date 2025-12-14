@@ -7,7 +7,6 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_BootScene2D_Renderer;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._2d.HUD_Renderer;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.canvas.Canvas;
@@ -22,11 +21,6 @@ public class Arcade_BootScene2D extends GameScene2D {
 
     public Arcade_BootScene2D(GameUI ui) {
         super(ui);
-    }
-
-    @Override
-    public HUD_Renderer hudRenderer() {
-        return null;
     }
 
     @Override

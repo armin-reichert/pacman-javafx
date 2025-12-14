@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
-import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_HUDRenderer;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_StartScene_Renderer;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
@@ -18,7 +17,6 @@ import javafx.scene.canvas.Canvas;
 
 public class ArcadeMsPacMan_StartScene extends GameScene2D {
 
-    private ArcadeMsPacMan_HUDRenderer hudRenderer;
     private ArcadeMsPacMan_StartScene_Renderer sceneRenderer;
 
     public ArcadeMsPacMan_StartScene(GameUI ui) {
@@ -28,17 +26,8 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
     @Override
     protected void createRenderers(Canvas canvas) {
         final GameUI_Config uiConfig = ui.currentConfig();
-
-        hudRenderer = adaptRenderer(
-            (ArcadeMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas));
-
         sceneRenderer = adaptRenderer(
             new ArcadeMsPacMan_StartScene_Renderer(this, canvas, (ArcadeMsPacMan_SpriteSheet) uiConfig.spriteSheet()));
-    }
-
-    @Override
-    public ArcadeMsPacMan_HUDRenderer hudRenderer() {
-        return hudRenderer;
     }
 
     @Override

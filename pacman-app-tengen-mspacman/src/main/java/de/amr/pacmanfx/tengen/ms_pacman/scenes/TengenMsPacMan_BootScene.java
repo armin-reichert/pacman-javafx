@@ -12,7 +12,6 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_BootScene_Renderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._2d.HUD_Renderer;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import javafx.scene.canvas.Canvas;
@@ -43,11 +42,6 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     @Override
     protected void createRenderers(Canvas canvas) {
         sceneRenderer = new TengenMsPacMan_BootScene_Renderer(this, canvas);
-    }
-
-    @Override
-    public HUD_Renderer hudRenderer() {
-        return null;
     }
 
     @Override

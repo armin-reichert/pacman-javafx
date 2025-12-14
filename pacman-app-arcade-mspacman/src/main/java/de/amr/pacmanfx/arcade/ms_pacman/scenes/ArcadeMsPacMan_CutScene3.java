@@ -8,7 +8,6 @@ import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
 import de.amr.pacmanfx.arcade.ms_pacman.model.actors.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_CutScene3_Renderer;
-import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_HUDRenderer;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.math.Vector2f;
@@ -44,7 +43,6 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
 
     private Clapperboard clapperboard;
 
-    private ArcadeMsPacMan_HUDRenderer hudRenderer;
     private ArcadeMsPacMan_CutScene3_Renderer sceneRenderer;
 
     public ArcadeMsPacMan_CutScene3(GameUI ui) {
@@ -54,17 +52,8 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
     @Override
     protected void createRenderers(Canvas canvas) {
         final GameUI_Config uiConfig = ui.currentConfig();
-
-        hudRenderer = adaptRenderer(
-            (ArcadeMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas));
-
         sceneRenderer = adaptRenderer(
             new ArcadeMsPacMan_CutScene3_Renderer(this, canvas));
-    }
-
-    @Override
-    public ArcadeMsPacMan_HUDRenderer hudRenderer() {
-        return hudRenderer;
     }
 
     @Override

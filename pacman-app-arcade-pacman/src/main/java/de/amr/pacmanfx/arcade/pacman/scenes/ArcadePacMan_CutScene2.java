@@ -14,7 +14,6 @@ import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._2d.HUD_Renderer;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
@@ -43,7 +42,6 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     private SpriteAnimation nailDressRaptureAnimation;
 
     private ArcadePacMan_CutScene2_Renderer sceneRenderer;
-    private HUD_Renderer hudRenderer;
 
     public ArcadePacMan_CutScene2(GameUI ui) {
         super(ui);
@@ -52,17 +50,8 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     @Override
     protected void createRenderers(Canvas canvas) {
         final GameUI_Config uiConfig = ui.currentConfig();
-
-        hudRenderer = adaptRenderer(
-            uiConfig.createHUDRenderer(canvas));
-
         sceneRenderer = adaptRenderer(
             new ArcadePacMan_CutScene2_Renderer(this, canvas, (ArcadePacMan_SpriteSheet) uiConfig.spriteSheet()));
-    }
-
-    @Override
-    public HUD_Renderer hudRenderer() {
-        return hudRenderer;
     }
 
     @Override
