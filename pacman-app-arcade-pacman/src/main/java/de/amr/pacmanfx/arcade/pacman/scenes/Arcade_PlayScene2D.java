@@ -101,8 +101,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
             .orElse(ARCADE_MAP_SIZE_IN_PIXELS);
     }
 
-    private void setAutopilot(boolean usingAutopilot) {
-        final Game game = context().currentGame();
+    private void setAutopilot(Game game, boolean usingAutopilot) {
         if (usingAutopilot && game.optGameLevel().isPresent() && !game.level().isDemoLevel()) {
             game.cheatUsedProperty().set(true);
         }
@@ -110,8 +109,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
         ui.showFlashMessage(ui.translated(usingAutopilot ? "autopilot_on" : "autopilot_off"));
     }
 
-    private void setImmunity(boolean immune) {
-        final Game game = context().currentGame();
+    private void setImmunity(Game game, boolean immune) {
         if (immune && game.optGameLevel().isPresent() && !game.level().isDemoLevel()) {
             game.cheatUsedProperty().set(true);
         }
@@ -125,11 +123,11 @@ public class Arcade_PlayScene2D extends GameScene2D {
         menu.addLocalizedTitleItem("pacman");
         menu.addLocalizedCheckBox(game.usingAutopilotProperty(), "autopilot").setOnAction(e -> {
             final CheckMenuItem checkBox = (CheckMenuItem) e.getSource();
-            setAutopilot(checkBox.isSelected());
+            setAutopilot(game, checkBox.isSelected());
         });
         menu.addLocalizedCheckBox(game.immuneProperty(), "immunity").setOnAction(e -> {
             final CheckMenuItem checkBox = (CheckMenuItem) e.getSource();
-            setImmunity(checkBox.isSelected());
+            setImmunity(game, checkBox.isSelected());
         });
         menu.addSeparator();
         menu.addLocalizedCheckBox(PROPERTY_MUTED, "muted");
@@ -188,9 +186,10 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onGameStateChange(GameStateChangeEvent e) {
+        final Game game = context().currentGame();
         if (e.newState() == GameState.LEVEL_COMPLETE) {
             ui.soundManager().stopAll();
-            playLevelCompletedAnimation(context().currentGame().level());
+            playLevelCompletedAnimation(game, game.level());
         }
         else if (e.newState() == GameState.GAME_OVER) {
             ui.soundManager().stopAll();
@@ -325,10 +324,9 @@ public class Arcade_PlayScene2D extends GameScene2D {
         ui.soundManager().playSiren(sirenID, volume);
     }
 
-    private void playLevelCompletedAnimation(GameLevel level) {
+    private void playLevelCompletedAnimation(Game game, GameLevel level) {
         levelCompletedAnimation = new LevelCompletedAnimation(animationRegistry, level);
-        levelCompletedAnimation.getOrCreateAnimationFX().setOnFinished(
-            e -> level.game().control().terminateCurrentGameState());
+        levelCompletedAnimation.getOrCreateAnimationFX().setOnFinished(e -> game.control().terminateCurrentGameState());
         levelCompletedAnimation.playFromStart();
     }
 
