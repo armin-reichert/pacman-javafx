@@ -52,14 +52,14 @@ public class LevelShortTestState implements StateMachine.State<Game>, TestState 
             game.clearLevelMessage();
         }
         else if (timer.atSecond(START + 3)) {
-            game.activateNextBonus();
+            game.activateNextBonus(game.level());
         }
         else if (timer.atSecond(START + 5)) {
             game.level().optBonus().ifPresent(bonus -> bonus.setEatenSeconds(2));
             game.publishGameEvent(GameEvent.Type.BONUS_EATEN);
         }
         else if (timer.atSecond(START + 6)) {
-            game.activateNextBonus();
+            game.activateNextBonus(game.level());
         }
         else if (timer.atSecond(START + 8)) {
             game.level().optBonus().ifPresent(bonus -> bonus.setEatenSeconds(2));

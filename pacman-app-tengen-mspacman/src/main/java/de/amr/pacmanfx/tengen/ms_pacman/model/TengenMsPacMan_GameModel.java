@@ -552,8 +552,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void activateNextBonus() {
-        final GameLevel level = level();
+    public void activateNextBonus(GameLevel level) {
         //TODO Find out how Tengen really implemented this
         if (level.optBonus().isPresent() && level.optBonus().get().state() == BonusState.EDIBLE) {
             Logger.info("Previous bonus is still active, skip this bonus");
@@ -612,7 +611,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             }
             gateKeeper.registerFoodEaten(level);
             if (isBonusReached()) {
-                activateNextBonus();
+                activateNextBonus(level);
                 simulationStepResult.bonusIndex = level.currentBonusIndex();
             }
             publishGameEvent(GameEvent.Type.PAC_FOUND_FOOD, tile);
