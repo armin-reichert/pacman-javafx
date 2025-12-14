@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.api;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
+import de.amr.pacmanfx.ui.GameUI_Implementation;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.action.CheatActions;
@@ -18,22 +19,28 @@ import de.amr.pacmanfx.ui.layout.StartPagesCarousel;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.assets.LocalizedTextAccessor;
+import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.UIPreferences;
 import javafx.beans.property.*;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.Media;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.util.Optional;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_AUTOPILOT;
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_IMMUNITY;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.*;
+import static de.amr.pacmanfx.uilib.Ufx.createImageBackground;
 
 public interface GameUI extends LocalizedTextAccessor {
 
@@ -106,6 +113,26 @@ public interface GameUI extends LocalizedTextAccessor {
     ObjectProperty<PerspectiveID> PROPERTY_3D_PERSPECTIVE_ID = new SimpleObjectProperty<>(PerspectiveID.TRACK_PLAYER);
     DoubleProperty                PROPERTY_3D_WALL_HEIGHT = new SimpleDoubleProperty();
     DoubleProperty                PROPERTY_3D_WALL_OPACITY = new SimpleDoubleProperty(1.0);
+
+    ResourceManager GLOBAL_RESOURCES = () -> GameUI_Implementation.class;
+
+    Media VOICE_IMMUNITY_ON = new Media(GLOBAL_RESOURCES.url("sound/voice/immunity-on.mp3").toExternalForm());
+    Media VOICE_IMMUNITY_OFF = new Media(GLOBAL_RESOURCES.url("sound/voice/immunity-off.mp3").toExternalForm());
+    Media VOICE_EXPLAIN = new Media(GLOBAL_RESOURCES.url("sound/voice/press-key.mp3").toExternalForm());
+    Media VOICE_AUTOPILOT_ON = new Media(GLOBAL_RESOURCES.url("sound/voice/autopilot-on.mp3").toExternalForm());
+    Media VOICE_AUTOPILOT_OFF = new Media(GLOBAL_RESOURCES.url("sound/voice/autopilot-off.mp3").toExternalForm());
+
+    Font FONT_PAC_FONT_GOOD = GLOBAL_RESOURCES.loadFont("fonts/PacfontGood.ttf", 8);
+    Font FONT_PAC_FONT = GLOBAL_RESOURCES.loadFont("fonts/Pacfont.ttf", 8);
+    Font FONT_MONOSPACED = GLOBAL_RESOURCES.loadFont("fonts/Inconsolata_Condensed-Bold.ttf", 12);
+    Font FONT_HANDWRITING = GLOBAL_RESOURCES.loadFont("fonts/Molle-Italic.ttf", 9);
+    Font FONT_ARCADE_8 = GLOBAL_RESOURCES.loadFont("fonts/emulogic.ttf", 8);
+    Font FONT_ARCADE_6 = GLOBAL_RESOURCES.loadFont("fonts/emulogic.ttf", 6);
+    Background BACKGROUND_PAC_MAN_WALLPAPER = createImageBackground(GLOBAL_RESOURCES.loadImage("graphics/pacman_wallpaper.png"));
+
+    ResourceBundle LOCALIZED_TEXTS = GLOBAL_RESOURCES.getModuleBundle("de.amr.pacmanfx.ui.localized_texts");
+
+    String STYLE_SHEET_PATH = "/de/amr/pacmanfx/ui/css/style.css";
 
     /**
      * @return watchdog process observing the directory where user-defined maps are stored

@@ -19,7 +19,6 @@ import de.amr.pacmanfx.model.House;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
-import de.amr.pacmanfx.ui.GameUI_Assets;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -809,7 +808,7 @@ public class GameLevel3D extends Group implements Disposable {
             .backgroundColor(Color.BLACK)
             .borderColor(Color.WHITE)
             .displaySeconds(displaySeconds)
-            .font(GameUI_Assets.FONT_ARCADE_6)
+            .font(FONT_ARCADE_6)
             .text(messageText)
             .textColor(Color.YELLOW)
             .build(animationRegistry);

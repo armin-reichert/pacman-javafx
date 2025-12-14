@@ -139,7 +139,7 @@ public final class GameUI_Implementation implements GameUI {
         layoutPane.backgroundProperty().bind(Bindings.createObjectBinding(
             () -> isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D)
                     ? Background.fill(Gradients.Samples.random())
-                    : GameUI_Assets.BACKGROUND_PAC_MAN_WALLPAPER,
+                    : GameUI.BACKGROUND_PAC_MAN_WALLPAPER,
             // depends on:
             currentViewProperty(),
             playView.currentGameSceneProperty()
@@ -158,7 +158,7 @@ public final class GameUI_Implementation implements GameUI {
 
     private void createScene(double width, double height) {
         scene = new Scene(layoutPane, width, height);
-        scene.getStylesheets().add(GameUI_Assets.STYLE_SHEET_PATH);
+        scene.getStylesheets().add(GameUI.STYLE_SHEET_PATH);
 
         // Keyboard events are first handled by the global keyboard object
         scene.addEventFilter(KeyEvent.KEY_PRESSED,  KEYBOARD::onKeyPressed);
@@ -306,7 +306,7 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public ResourceBundle localizedTexts() {
-        return GameUI_Assets.LOCALIZED_TEXTS;
+        return GameUI.LOCALIZED_TEXTS;
     }
 
     @Override

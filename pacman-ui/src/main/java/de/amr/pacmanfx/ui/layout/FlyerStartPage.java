@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.layout;
 
-import de.amr.pacmanfx.ui.GameUI_Assets;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_StartPage;
 import de.amr.pacmanfx.ui.sound.SoundID;
@@ -62,7 +61,7 @@ public abstract class FlyerStartPage extends StackPane implements GameUI_StartPa
     protected Node createDefaultStartButton(GameUI ui, Runnable action) {
         var button = new FancyButton(
             ui.translated("play_button"),
-            Font.font(GameUI_Assets.FONT_ARCADE_8.getFamily(), 30),
+            Font.font(GameUI.FONT_ARCADE_8.getFamily(), 30),
             DEFAULT_START_BUTTON_BGCOLOR, DEFAULT_START_BUTTON_FILLCOLOR);
         button.setAction(action);
         StackPane.setAlignment(button, Pos.BOTTOM_CENTER);

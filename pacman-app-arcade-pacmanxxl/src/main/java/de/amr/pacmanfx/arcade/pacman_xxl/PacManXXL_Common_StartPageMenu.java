@@ -12,7 +12,6 @@ import de.amr.pacmanfx.model.StandardGameVariant;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui.GameUI_Assets;
 import de.amr.pacmanfx.ui.api.ArcadePalette;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
@@ -256,8 +255,8 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         state.mapOrder = MapSelectionMode.CUSTOM_MAPS_FIRST;
 
         var style = new OptionMenuStyle(
-            Font.font(GameUI_Assets.FONT_PAC_FONT_GOOD.getFamily(), 32),
-            GameUI_Assets.FONT_ARCADE_8,
+            Font.font(GameUI.FONT_PAC_FONT_GOOD.getFamily(), 32),
+            GameUI.FONT_ARCADE_8,
             Ufx.colorWithOpacity(DEFAULT_OPTION_MENU_STYLE.backgroundFill(), 0.5),
             DEFAULT_OPTION_MENU_STYLE.borderStroke(),
             ArcadePalette.ARCADE_RED,

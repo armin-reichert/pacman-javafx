@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.model.StandardGameVariant;
-import de.amr.pacmanfx.ui.GameUI_Assets;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.uilib.widgets.CanvasDecorationPane;
 import de.amr.pacmanfx.uilib.widgets.FadingPane;
@@ -35,7 +34,7 @@ public class HelpLayer extends Pane {
         boolean msPacMan = ui.context().gameVariantName().equals(StandardGameVariant.MS_PACMAN.name())
             || ui.context().gameVariantName().equals(StandardGameVariant.MS_PACMAN_XXL.name());
         Color bgColor = msPacMan ? Color.RED : Color.BLUE;
-        var font = Font.font(GameUI_Assets.FONT_MONOSPACED.getFamily(), Math.max(6, 14 * scaling));
+        var font = Font.font(GameUI.FONT_MONOSPACED.getFamily(), Math.max(6, 14 * scaling));
         var helpPane = HelpInfo.build(ui).createPane(ui, colorWithOpacity(bgColor, 0.8), font);
         helpPopUp.setTranslateX(10 * scaling);
         helpPopUp.setTranslateY(30 * scaling);

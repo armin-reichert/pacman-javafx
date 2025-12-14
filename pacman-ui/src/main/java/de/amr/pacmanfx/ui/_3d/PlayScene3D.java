@@ -20,7 +20,6 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.test.TestState;
-import de.amr.pacmanfx.ui.GameUI_Assets;
 import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.api.ActionBindingsManager;
@@ -494,7 +493,7 @@ public abstract class PlayScene3D extends Group implements GameScene {
         scores3D = new Scores3D(
             ui.translated("score.score"),
             ui.translated("score.high_score"),
-            GameUI_Assets.FONT_ARCADE_8
+            GameUI.FONT_ARCADE_8
         );
 
         // The scores are always displayed in full view, regardless which perspective is used
