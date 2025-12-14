@@ -94,7 +94,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
 
     @Override
     public void doInit(Game game) {
-        game.hud().scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
+        game.hud().score(true).levelCounter(true).livesCounter(false);
 
         final GameUI_Config uiConfig = ui.currentConfig();
         final var spriteSheet = (ArcadeMsPacMan_SpriteSheet) uiConfig.spriteSheet();

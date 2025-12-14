@@ -77,11 +77,10 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
 
     protected final MapSelector mapSelector;
     protected final ArcadePacMan_LevelCounter levelCounter;
-    protected final BaseHUD hud = new BaseHUD();
+    protected final Arcade_HUD hud;
 
     public ArcadePacMan_GameModel(CoinMechanism coinMechanism, File highScoreFile) {
         this(coinMechanism, new ArcadePacMan_MapSelector(), highScoreFile);
-        hud.numCoinsProperty().bind(coinMechanism.numCoinsProperty());
     }
 
     /**
@@ -91,6 +90,8 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
      */
     public ArcadePacMan_GameModel(CoinMechanism coinMechanism, MapSelector mapSelector, File highScoreFile) {
         super(coinMechanism);
+
+        hud = new Arcade_HUD(coinMechanism);
 
         this.mapSelector = requireNonNull(mapSelector);
         mapSelector.loadAllMapPrototypes();
@@ -112,8 +113,6 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
 
         demoLevelSteering = new RouteBasedSteering(PAC_MAN_DEMO_LEVEL_ROUTE);
         automaticSteering = new RuleBasedPacSteering();
-
-        hud.numCoinsProperty().bind(coinMechanism.numCoinsProperty());
     }
 
     @Override

@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
-import de.amr.pacmanfx.arcade.pacman.ArcadeActions;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_StartScene_Renderer;
 import de.amr.pacmanfx.event.GameEvent;
@@ -50,7 +49,7 @@ public class ArcadePacMan_StartScene extends GameScene2D {
 
     @Override
     public void doInit(Game game) {
-        game.hud().creditVisible(true).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
+        game.hud().credit(true).score(true).levelCounter(true).livesCounter(false);
         actionBindings.useAll(ArcadePacMan_UIConfig.DEFAULT_BINDINGS);
     }
 

@@ -48,7 +48,7 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
 
     @Override
     public void doInit(Game game) {
-        game.hud().creditVisible(true).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
+        game.hud().credit(true).score(true).levelCounter(true).livesCounter(false);
         actionBindings.useAll(ArcadePacMan_UIConfig.DEFAULT_BINDINGS);
     }
 

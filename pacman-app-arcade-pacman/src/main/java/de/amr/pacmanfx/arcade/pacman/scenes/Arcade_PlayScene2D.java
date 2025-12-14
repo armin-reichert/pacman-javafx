@@ -75,7 +75,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     protected void doInit(Game game) {
-        game.hud().creditVisible(false).scoreVisible(true).levelCounterVisible(true).livesCounterVisible(true);
+        game.hud().credit(false).score(true).levelCounter(true).livesCounter(true);
     }
 
     @Override
@@ -258,12 +258,12 @@ public class Arcade_PlayScene2D extends GameScene2D {
     private void acceptGameLevel(GameLevel level) {
         final Game game = context().currentGame();
         if (level.isDemoLevel()) {
-            game.hud().creditVisible(false).levelCounterVisible(true).livesCounterVisible(false);
+            game.hud().credit(false).levelCounter(true).livesCounter(false);
             actionBindings.useAll(ArcadePacMan_UIConfig.DEFAULT_BINDINGS);
             actionBindings.attach(GameUI.KEYBOARD);
             ui.soundManager().setEnabled(false);
         } else {
-            game.hud().creditVisible(false).levelCounterVisible(true).livesCounterVisible(true);
+            game.hud().credit(false).levelCounter(true).livesCounter(true);
             actionBindings.useAll(GameUI.STEERING_BINDINGS);
             actionBindings.useAll(GameUI.CHEAT_BINDINGS);
             actionBindings.attach(GameUI.KEYBOARD);

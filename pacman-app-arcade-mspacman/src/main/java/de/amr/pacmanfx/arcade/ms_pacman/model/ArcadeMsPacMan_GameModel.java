@@ -8,6 +8,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.model.actors.ArcadeMsPacMan_ActorFactory
 import de.amr.pacmanfx.arcade.ms_pacman.model.actors.MsPacMan;
 import de.amr.pacmanfx.arcade.ms_pacman.model.actors.Sue;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameModel;
+import de.amr.pacmanfx.arcade.pacman.model.Arcade_HUD;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
 import de.amr.pacmanfx.arcade.pacman.model.actors.Blinky;
 import de.amr.pacmanfx.arcade.pacman.model.actors.Inky;
@@ -62,7 +63,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
     protected final MapSelector mapSelector;
     protected final ArcadeMsPacMan_LevelCounter levelCounter;
-    protected final BaseHUD hud = new BaseHUD();
+    protected final Arcade_HUD hud;
 
     /**
      * Called via reflection by builder.
@@ -72,15 +73,12 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
      */
     public ArcadeMsPacMan_GameModel(CoinMechanism coinMechanism, File highScoreFile) {
         this(coinMechanism, new ArcadeMsPacMan_MapSelector(), highScoreFile);
-        hud.numCoinsProperty().bind(coinMechanism.numCoinsProperty());
     }
 
     public ArcadeMsPacMan_GameModel(CoinMechanism coinMechanism, MapSelector mapSelector, File highScoreFile) {
         super(coinMechanism);
-
+        this.hud = new Arcade_HUD(coinMechanism);
         this.mapSelector = requireNonNull(mapSelector);
-
-        hud.numCoinsProperty().bind(coinMechanism.numCoinsProperty());
 
         setHighScoreFile(requireNonNull(highScoreFile));
         setExtraLifeScores(EXTRA_LIFE_SCORE);

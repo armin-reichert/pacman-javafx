@@ -29,33 +29,30 @@ public interface HUD {
     boolean isCreditVisible();
     void showCredit(boolean visible);
 
-    int numCoins();
-    void setNumCoins(int numCoins);
-
     // Fluent API
     default HUD all(boolean visible) {
-        return creditVisible(visible)
-            .scoreVisible(visible)
-            .levelCounterVisible(visible)
-            .livesCounterVisible(visible);
+        return credit(visible)
+            .score(visible)
+            .levelCounter(visible)
+            .livesCounter(visible);
     }
 
-    default HUD creditVisible(boolean visible) {
+    default HUD credit(boolean visible) {
         showCredit(visible);
         return this;
     }
 
-    default HUD levelCounterVisible(boolean visible) {
+    default HUD levelCounter(boolean visible) {
         showLevelCounter(visible);
         return this;
     }
 
-    default HUD livesCounterVisible(boolean visible) {
+    default HUD livesCounter(boolean visible) {
         showLivesCounter(visible);
         return this;
     }
 
-    default HUD scoreVisible(boolean visible) {
+    default HUD score(boolean visible) {
         showScore(visible);
         return this;
     }

@@ -4,10 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-
-public class BaseHUD implements HUD {
+public abstract class BaseHUD implements HUD {
 
     private boolean visible = true;
     private boolean creditVisible;
@@ -15,10 +12,6 @@ public class BaseHUD implements HUD {
     private boolean levelCounterVisible = true;
     private boolean scoreVisible = true;
     private int     visibleLifeCount;
-    private final IntegerProperty numCoins = new SimpleIntegerProperty(0);
-
-    public BaseHUD() {
-    }
 
     @Override
     public void show(boolean b) { visible = b; }
@@ -30,18 +23,6 @@ public class BaseHUD implements HUD {
     public boolean isCreditVisible() { return creditVisible; }
 
     public void showCredit(boolean b) { creditVisible = b; }
-
-    public IntegerProperty numCoinsProperty() {
-        return numCoins;
-    }
-
-    public void setNumCoins(int numCoins) {
-        this.numCoins.set(numCoins);
-    }
-
-    public int numCoins() {
-        return numCoins.get();
-    }
 
     @Override
     public boolean isLevelCounterVisible() {

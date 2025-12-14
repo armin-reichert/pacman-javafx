@@ -4,10 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
+import de.amr.pacmanfx.arcade.pacman.model.Arcade_HUD;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.HUD;
 import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.HUD_Renderer;
@@ -49,7 +49,7 @@ public class ArcadePacMan_HUD_Renderer extends BaseRenderer implements SpriteRen
         requireNonNull(game);
         requireNonNull(scene);
 
-        final HUD hud = game.hud();
+        final Arcade_HUD hud = (Arcade_HUD) game.hud();
         final Vector2i sceneSize = scene.unscaledSize();
 
         if (!hud.isVisible()) return;

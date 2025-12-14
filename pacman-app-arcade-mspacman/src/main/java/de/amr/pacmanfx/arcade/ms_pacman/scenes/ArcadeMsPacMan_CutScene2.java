@@ -80,7 +80,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
 
     @Override
     public void doInit(Game game) {
-        game.hud().scoreVisible(true).levelCounterVisible(true).livesCounterVisible(false);
+        game.hud().score(true).levelCounter(true).livesCounter(false);
 
         final GameUI_Config uiConfig = ui.currentConfig();
 
