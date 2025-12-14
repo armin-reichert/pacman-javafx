@@ -12,20 +12,25 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Properties;
 
+import static java.util.Objects.requireNonNull;
+
 public class Score {
 
-    private final BooleanProperty enabledPy = new SimpleBooleanProperty(true);
-    private final IntegerProperty pointsPy = new SimpleIntegerProperty();
-    private final IntegerProperty levelNumberPy = new SimpleIntegerProperty();
-    private final ObjectProperty<LocalDate> datePy = new SimpleObjectProperty<>();
+    public static final String GITHUB_PACMAN_JAVAFX = "https://github.com/armin-reichert/pacman-javafx";
 
-    public static Score fromFile(File scoreFile) {
-        var score = new Score();
-        try {
-            score.read(scoreFile);
-        } catch (IOException x) {
-            Logger.error("Score could not be read from file '{}'", score);
-        }
+    public static final String ATTR_DATE = "date";
+    public static final String ATTR_LEVEL = "level";
+    public static final String ATTR_POINTS = "points";
+    public static final String ATTR_URL = "url";
+
+    private final BooleanProperty enabled = new SimpleBooleanProperty();
+    private final IntegerProperty points = new SimpleIntegerProperty();
+    private final IntegerProperty levelNumber = new SimpleIntegerProperty();
+    private final ObjectProperty<LocalDate> date = new SimpleObjectProperty<>();
+
+    public static Score createFromFile(File scoreFile) {
+        final var score = new Score();
+        score.read(scoreFile);
         return score;
     }
 
@@ -34,18 +39,51 @@ public class Score {
     }
 
     public void reset() {
+        setEnabled(true);
         setPoints(0);
         setLevelNumber(1);
         setDate(LocalDate.now());
     }
 
-    public BooleanProperty enabledProperty() { return enabledPy; }
+    public void read(File file) {
+        requireNonNull(file);
+        final var properties = new Properties();
+        try (var inputStream = new BufferedInputStream(new FileInputStream(file))) {
+            properties.loadFromXML(inputStream);
+            setPoints(Integer.parseInt(properties.getProperty(ATTR_POINTS)));
+            setLevelNumber(Integer.parseInt(properties.getProperty(ATTR_LEVEL)));
+            setDate(LocalDate.parse(properties.getProperty(ATTR_DATE), DateTimeFormatter.ISO_LOCAL_DATE));
+        } catch (Exception x) {
+            Logger.error(x);
+            Logger.error("An error occurred reading score from file '{}'", file);
+        }
+    }
 
-    public boolean isEnabled() { return enabledPy.get(); }
+    public void save(File file, String description) throws IOException {
+        requireNonNull(file);
+        requireNonNull(description);
+        final boolean created = file.getParentFile().mkdirs();
+        if (created) {
+            Logger.info("Folder {} has been created", file.getParentFile());
+        }
+        final var properties = new Properties();
+        try (var outputStream = new BufferedOutputStream(new FileOutputStream(file))) {
+            properties.setProperty(ATTR_POINTS, String.valueOf(points()));
+            properties.setProperty(ATTR_LEVEL,  String.valueOf(levelNumber()));
+            properties.setProperty(ATTR_DATE,   date().format(DateTimeFormatter.ISO_LOCAL_DATE));
+            properties.setProperty(ATTR_URL,    GITHUB_PACMAN_JAVAFX);
+            properties.storeToXML(outputStream, description);
+            Logger.info("Saved '{}' to file '{}'. Points: {} Level: {}", description, file, points(), levelNumber());
+        }
+    }
 
-    public void setEnabled(boolean enabled) { enabledPy.set(enabled); }
+    public BooleanProperty enabledProperty() { return enabled; }
 
-    public IntegerProperty pointsProperty() { return pointsPy; }
+    public boolean isEnabled() { return enabledProperty().get(); }
+
+    public void setEnabled(boolean enabled) { enabledProperty().set(enabled); }
+
+    public IntegerProperty pointsProperty() { return points; }
 
     public void setPoints(int points) { pointsProperty().set(points);  }
 
@@ -53,7 +91,7 @@ public class Score {
         return pointsProperty().get();
     }
 
-    public IntegerProperty levelNumberProperty() { return levelNumberPy; }
+    public IntegerProperty levelNumberProperty() { return levelNumber; }
 
     public void setLevelNumber(int levelNumber) { levelNumberProperty().set(levelNumber); }
 
@@ -61,37 +99,11 @@ public class Score {
         return levelNumberProperty().get();
     }
 
-    public ObjectProperty<LocalDate> dateProperty() { return datePy; }
+    public ObjectProperty<LocalDate> dateProperty() { return date; }
 
     public void setDate(LocalDate date) { dateProperty().set(date); }
 
     public LocalDate date() {
         return dateProperty().get();
-    }
-
-    public void read(File file) throws IOException {
-        try (var in = new BufferedInputStream(new FileInputStream(file))) {
-            var p = new Properties();
-            p.loadFromXML(in);
-            setPoints(Integer.parseInt(p.getProperty("points")));
-            setLevelNumber(Integer.parseInt(p.getProperty("level")));
-            setDate(LocalDate.parse(p.getProperty("date"), DateTimeFormatter.ISO_LOCAL_DATE));
-        }
-    }
-
-    public void save(File file, String description) throws IOException {
-        boolean created = file.getParentFile().mkdirs();
-        if (created) {
-            Logger.info("Folder {} has been created", file.getParentFile());
-        }
-        try (var out = new BufferedOutputStream(new FileOutputStream(file))) {
-            var p = new Properties();
-            p.setProperty("points", String.valueOf(points()));
-            p.setProperty("level",  String.valueOf(levelNumber()));
-            p.setProperty("date",   date().format(DateTimeFormatter.ISO_LOCAL_DATE));
-            p.setProperty("url",    "https://github.com/armin-reichert/pacman-javafx");
-            p.storeToXML(out, description);
-            Logger.info("Saved '{}' to file '{}'. Points: {} Level: {}", description, file, points(), levelNumber());
-        }
     }
 }

@@ -452,16 +452,12 @@ public abstract class AbstractGameModel implements Game {
     }
 
     protected void loadHighScore() {
-        try {
-            highScore.read(highScoreFile);
-            Logger.info("High Score loaded from file '{}': points={}, level={}", highScoreFile, highScore.points(), highScore.levelNumber());
-        } catch (IOException x) {
-            Logger.error("High Score file could not be opened: '{}'", highScoreFile);
-        }
+        highScore.read(highScoreFile);
+        Logger.info("High Score loaded from file '{}': points={}, level={}", highScoreFile, highScore.points(), highScore.levelNumber());
     }
 
     protected void updateHighScore() {
-        var oldHighScore = Score.fromFile(highScoreFile);
+        var oldHighScore = Score.createFromFile(highScoreFile);
         if (highScore.points() > oldHighScore.points()) {
             try {
                 final String dateTime = FORMATTER.format(LocalDateTime.now());
