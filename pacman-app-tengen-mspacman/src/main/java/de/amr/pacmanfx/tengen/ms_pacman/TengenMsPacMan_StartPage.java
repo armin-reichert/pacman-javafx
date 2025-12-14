@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tengen.ms_pacman;
 
 import de.amr.pacmanfx.model.StandardGameVariant;
 import de.amr.pacmanfx.ui.api.GameUI;
-import de.amr.pacmanfx.ui.api.StartPage;
+import de.amr.pacmanfx.ui.api.GameUI_StartPage;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.widgets.Flyer;
@@ -20,7 +20,7 @@ import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_BOOT_SHOW_PLAY_
 import static de.amr.pacmanfx.ui.layout.StartPagesCarousel.createDefaultStartButton;
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_StartPage extends StackPane implements StartPage {
+public class TengenMsPacMan_StartPage extends StackPane implements GameUI_StartPage {
 
     private static final ResourceManager LOCAL_RESOURCES = () -> TengenMsPacMan_StartPage.class;
 

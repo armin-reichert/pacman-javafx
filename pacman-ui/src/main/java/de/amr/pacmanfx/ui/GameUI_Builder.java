@@ -14,7 +14,7 @@ import de.amr.pacmanfx.model.test.LevelMediumTestState;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
-import de.amr.pacmanfx.ui.api.StartPage;
+import de.amr.pacmanfx.ui.api.GameUI_StartPage;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
@@ -143,7 +143,7 @@ public class GameUI_Builder {
         });
 
         for (StartPageConfiguration config : startPageConfigs) {
-            StartPage startPage = createStartPage(ui, config.gameVariants.getFirst(), config.startPageClass);
+            GameUI_StartPage startPage = createStartPage(ui, config.gameVariants.getFirst(), config.startPageClass);
             ui.startPagesView().addStartPage(startPage);
         }
 
@@ -151,16 +151,16 @@ public class GameUI_Builder {
         return ui;
     }
 
-    private StartPage createStartPage(GameUI ui, String gameVariant, Class<?> startPageClass) {
+    private GameUI_StartPage createStartPage(GameUI ui, String gameVariant, Class<?> startPageClass) {
         // first try constructor(GameUI, String)
         try {
             var constructor = startPageClass.getDeclaredConstructor(GameUI.class, String.class);
-            return (StartPage) constructor.newInstance(ui, gameVariant);
+            return (GameUI_StartPage) constructor.newInstance(ui, gameVariant);
         } catch (NoSuchMethodException x) {
             // then try constructor(GameUI)
             try {
                 var constructor = startPageClass.getDeclaredConstructor(GameUI.class);
-                return (StartPage) constructor.newInstance(ui);
+                return (GameUI_StartPage) constructor.newInstance(ui);
             } catch (Exception xx) {
                 error("Could not create start page from class '%s'".formatted(startPageClass.getSimpleName()), xx);
                 throw new IllegalStateException(xx);

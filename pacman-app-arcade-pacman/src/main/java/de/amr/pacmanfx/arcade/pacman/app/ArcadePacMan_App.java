@@ -11,7 +11,7 @@ import de.amr.pacmanfx.model.StandardGameVariant;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
 import de.amr.pacmanfx.ui.api.GameUI;
-import de.amr.pacmanfx.ui.api.StartPage;
+import de.amr.pacmanfx.ui.api.GameUI_StartPage;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import javafx.application.Application;
 import javafx.stage.Screen;
@@ -42,7 +42,7 @@ public class ArcadePacMan_App extends Application {
         );
         GameUI ui = new GameUI_Implementation(configClassMap, THE_GAME_BOX, stage, sceneWidth, sceneHeight);
 
-        StartPage startPage = new ArcadePacMan_StartPage(ui);
+        GameUI_StartPage startPage = new ArcadePacMan_StartPage(ui);
         ui.startPagesView().addStartPage(startPage);
         ui.startPagesView().setSelectedIndex(0);
 

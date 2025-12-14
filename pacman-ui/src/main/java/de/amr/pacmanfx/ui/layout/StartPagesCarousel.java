@@ -10,7 +10,7 @@ import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.api.ActionBindingsManager;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_View;
-import de.amr.pacmanfx.ui.api.StartPage;
+import de.amr.pacmanfx.ui.api.GameUI_StartPage;
 import de.amr.pacmanfx.uilib.widgets.Carousel;
 import de.amr.pacmanfx.uilib.widgets.FancyButton;
 import javafx.geometry.Insets;
@@ -72,7 +72,7 @@ public class StartPagesCarousel extends Carousel implements GameUI_View {
         }
     };
 
-    private final List<StartPage> pages = new ArrayList<>();
+    private final List<GameUI_StartPage> pages = new ArrayList<>();
     private final ActionBindingsManager actionBindings = new DefaultActionBindingsManager();
 
     public StartPagesCarousel() {
@@ -103,7 +103,7 @@ public class StartPagesCarousel extends Carousel implements GameUI_View {
                 pages.get(oldIndex).onExit(ui);
             }
             if (newIndex != -1) {
-                StartPage startPage = pages.get(newIndex);
+                GameUI_StartPage startPage = pages.get(newIndex);
                 startPage.onEnter(ui);
                 startPage.layoutRoot().requestFocus();
             }
@@ -147,16 +147,16 @@ public class StartPagesCarousel extends Carousel implements GameUI_View {
 
     private String supplyTitle() {
         final String pattern = "JavaFX Pac-Man Games: %s";
-        final String nameOfTheGame = currentStartPage().map(StartPage::title).orElse("Unknown game");
+        final String nameOfTheGame = currentStartPage().map(GameUI_StartPage::title).orElse("Unknown game");
         return pattern.formatted(nameOfTheGame);
     }
 
-    public Optional<StartPage> currentStartPage() {
+    public Optional<GameUI_StartPage> currentStartPage() {
         final int selectedIndex = selectedIndex();
         return selectedIndex >= 0 ? Optional.of(pages.get(selectedIndex)) : Optional.empty();
     }
 
-    public void addStartPage(StartPage startPage) {
+    public void addStartPage(GameUI_StartPage startPage) {
         requireNonNull(startPage);
         pages.add(startPage);
         addItem(startPage.layoutRoot());

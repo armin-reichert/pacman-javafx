@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.pacmanfx.model.StandardGameVariant;
 import de.amr.pacmanfx.ui.api.GameUI;
-import de.amr.pacmanfx.ui.api.StartPage;
+import de.amr.pacmanfx.ui.api.GameUI_StartPage;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.widgets.Flyer;
 import javafx.scene.layout.Background;
@@ -20,7 +20,7 @@ import static de.amr.pacmanfx.Globals.TS;
 /**
  * Displays an option menu where the game variant to be played and other options can be set.
  */
-public class PacManXXL_Common_StartPage implements StartPage {
+public class PacManXXL_Common_StartPage implements GameUI_StartPage {
 
     private static final String BACKGROUND_IMAGE_PATH = "graphics/screenshot.png";
 
