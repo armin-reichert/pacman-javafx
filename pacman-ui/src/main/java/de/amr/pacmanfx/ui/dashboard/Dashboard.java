@@ -99,7 +99,7 @@ public class Dashboard extends VBox {
     }
 
     private void addInfoBox(DashboardID id, String titleKey, InfoBox infoBox, boolean maximized) {
-        infoBoxMap.put(id, preconfiguredInfoBox(ui.globalAssets().translated(titleKey), infoBox));
+        infoBoxMap.put(id, preconfiguredInfoBox(ui.translated(titleKey), infoBox));
         infoBox.setDashboard(this);
         infoBox.setDisplayedMaximized(maximized);
         infoBox.setMinWidth(INFOBOX_MIN_WIDTH);

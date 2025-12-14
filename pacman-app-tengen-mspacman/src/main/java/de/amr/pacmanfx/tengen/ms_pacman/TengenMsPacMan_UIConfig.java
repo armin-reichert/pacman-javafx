@@ -24,6 +24,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.actors.Pinky;
 import de.amr.pacmanfx.tengen.ms_pacman.model.actors.Sue;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.*;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.*;
+import de.amr.pacmanfx.ui.GameUI_Assets;
 import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameScene_Config;
@@ -209,11 +210,11 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         soundManager.registerAudioClipURL("audio.option.selection_changed",    LOCAL_RESOURCES.url("sound/ms-select1.wav"));
         soundManager.registerAudioClipURL("audio.option.value_changed",        LOCAL_RESOURCES.url("sound/ms-select2.wav"));
 
-        soundManager.register(SoundID.VOICE_AUTOPILOT_OFF,          ui.globalAssets().voice_Autopilot_Off);
-        soundManager.register(SoundID.VOICE_AUTOPILOT_ON,           ui.globalAssets().voice_Autopilot_On);
-        soundManager.register(SoundID.VOICE_EXPLAIN_GAME_START,     ui.globalAssets().voice_Explain);
-        soundManager.register(SoundID.VOICE_IMMUNITY_OFF,           ui.globalAssets().voice_Immunity_Off);
-        soundManager.register(SoundID.VOICE_IMMUNITY_ON,            ui.globalAssets().voice_Immunity_On);
+        soundManager.register(SoundID.VOICE_AUTOPILOT_OFF,          GameUI_Assets.VOICE_AUTOPILOT_OFF);
+        soundManager.register(SoundID.VOICE_AUTOPILOT_ON,           GameUI_Assets.VOICE_AUTOPILOT_ON);
+        soundManager.register(SoundID.VOICE_EXPLAIN_GAME_START,     GameUI_Assets.VOICE_EXPLAIN);
+        soundManager.register(SoundID.VOICE_IMMUNITY_OFF,           GameUI_Assets.VOICE_IMMUNITY_OFF);
+        soundManager.register(SoundID.VOICE_IMMUNITY_ON,            GameUI_Assets.VOICE_IMMUNITY_ON);
 
         soundManager.register(SoundID.VOICE_FLYER_TEXT,             LOCAL_RESOURCES.loadMedia("sound/flyer-text.mp3"));
 

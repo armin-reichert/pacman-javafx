@@ -7,8 +7,8 @@ package de.amr.pacmanfx.ui.layout;
 import de.amr.pacmanfx.mapeditor.SaveConfirmationDialog;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.mapeditor.actions.Action_SaveMapFileInteractively;
-import de.amr.pacmanfx.ui.GameUI_Assets;
 import de.amr.pacmanfx.ui.api.ActionBindingsManager;
+import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_View;
 import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
 import javafx.scene.control.ButtonType;
@@ -27,18 +27,20 @@ import static de.amr.pacmanfx.uilib.Ufx.paintBackground;
 
 public class EditorView implements GameUI_View {
 
+    private final GameUI ui;
     private final TileMapEditor editor;
     private Consumer<TileMapEditor> quitEditorAction = editor -> {};
 
-    public EditorView(Stage stage, GameUI_Assets assets) {
+    public EditorView(Stage stage, GameUI ui) {
+        this.ui = ui;
         editor = new TileMapEditor(stage, PacManModel3DRepository.theRepository());
-        MenuItem miQuitEditor = createQuitEditorMenuItem(assets);
+        MenuItem miQuitEditor = createQuitEditorMenuItem();
         editor.ui().menuBar().menuFile().getItems().addAll(new SeparatorMenuItem(), miQuitEditor);
         editor.ui().layoutPane().setBackground(paintBackground(Color.web("#dddddd"))); // JavaFX default grey
     }
 
-    private MenuItem createQuitEditorMenuItem(GameUI_Assets assets) {
-        var miQuitEditor = new MenuItem(assets.translated("back_to_game"));
+    private MenuItem createQuitEditorMenuItem() {
+        var miQuitEditor = new MenuItem(ui.translated("back_to_game"));
         miQuitEditor.setOnAction(e -> {
             if (!editor.isEdited()) {
                 editor.stop();

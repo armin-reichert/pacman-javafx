@@ -19,6 +19,7 @@ import de.amr.pacmanfx.model.House;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
+import de.amr.pacmanfx.ui.GameUI_Assets;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -341,8 +342,8 @@ public class GameLevel3D extends Group implements Disposable {
         ghosts3D.forEach(ghost3D -> ghost3D.init(gameLevel));
         house3D.startSwirlAnimations();
 
-        pickerGameOverMessages = RandomTextPicker.fromBundle(ui.globalAssets().localizedTexts(), "game.over");
-        pickerLevelCompleteMessages = RandomTextPicker.fromBundle(ui.globalAssets().localizedTexts(), "level.complete");
+        pickerGameOverMessages = RandomTextPicker.fromBundle(ui.localizedTexts(), "game.over");
+        pickerLevelCompleteMessages = RandomTextPicker.fromBundle(ui.localizedTexts(), "level.complete");
     }
 
     private void createMaterials() {
@@ -808,7 +809,7 @@ public class GameLevel3D extends Group implements Disposable {
             .backgroundColor(Color.BLACK)
             .borderColor(Color.WHITE)
             .displaySeconds(displaySeconds)
-            .font(ui.globalAssets().font_Arcade_6)
+            .font(GameUI_Assets.FONT_ARCADE_6)
             .text(messageText)
             .textColor(Color.YELLOW)
             .build(animationRegistry);
@@ -870,7 +871,7 @@ public class GameLevel3D extends Group implements Disposable {
 
     public String translatedLevelCompleteMessage(int levelNumber) {
         return pickerLevelCompleteMessages.hasEntries()
-            ? pickerLevelCompleteMessages.nextText() + "\n\n" + ui.globalAssets().translated("level_complete", levelNumber)
+            ? pickerLevelCompleteMessages.nextText() + "\n\n" + ui.translated("level_complete", levelNumber)
             : "";
     }
 

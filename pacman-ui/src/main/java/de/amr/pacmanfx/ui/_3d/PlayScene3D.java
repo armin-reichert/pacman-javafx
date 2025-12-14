@@ -20,6 +20,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.test.TestState;
+import de.amr.pacmanfx.ui.GameUI_Assets;
 import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.api.ActionBindingsManager;
@@ -491,9 +492,9 @@ public abstract class PlayScene3D extends Group implements GameScene {
 
     protected void createScores3D() {
         scores3D = new Scores3D(
-            ui.globalAssets().translated("score.score"),
-            ui.globalAssets().translated("score.high_score"),
-            ui.globalAssets().font_Arcade_8
+            ui.translated("score.score"),
+            ui.translated("score.high_score"),
+            GameUI_Assets.FONT_ARCADE_8
         );
 
         // The scores are always displayed in full view, regardless which perspective is used
@@ -552,7 +553,7 @@ public abstract class PlayScene3D extends Group implements GameScene {
         }
         else { // disabled, show text "GAME OVER"
             Color color = ui.currentConfig().assets().color("color.game_over_message");
-            scores3D.showTextForScore(ui.globalAssets().translated("score.game_over"), color);
+            scores3D.showTextForScore(ui.translated("score.game_over"), color);
         }
         // Always show high score
         scores3D.showHighScore(highScore.points(), highScore.levelNumber());

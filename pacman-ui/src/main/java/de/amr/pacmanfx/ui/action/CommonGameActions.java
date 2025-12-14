@@ -77,7 +77,7 @@ public final class CommonGameActions {
         public void execute(GameUI ui) {
             PerspectiveID id = PROPERTY_3D_PERSPECTIVE_ID.get().next();
             PROPERTY_3D_PERSPECTIVE_ID.set(id);
-            String msgKey = ui.globalAssets().translated("camera_perspective", ui.globalAssets().translated("perspective_id_" + id.name()));
+            String msgKey = ui.translated("camera_perspective", ui.translated("perspective_id_" + id.name()));
             ui.showFlashMessage(msgKey);
         }
     };
@@ -87,7 +87,7 @@ public final class CommonGameActions {
         public void execute(GameUI ui) {
             PerspectiveID id = PROPERTY_3D_PERSPECTIVE_ID.get().prev();
             PROPERTY_3D_PERSPECTIVE_ID.set(id);
-            String msgKey = ui.globalAssets().translated("camera_perspective", ui.globalAssets().translated("perspective_id_" + id.name()));
+            String msgKey = ui.translated("camera_perspective", ui.translated("perspective_id_" + id.name()));
             ui.showFlashMessage(msgKey);
         }
     };
@@ -265,7 +265,7 @@ public final class CommonGameActions {
         public void execute(GameUI ui) {
             toggle(PROPERTY_MINI_VIEW_ON);
             if (!ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D)) {
-                ui.showFlashMessage(ui.globalAssets().translated(PROPERTY_MINI_VIEW_ON.get() ? "pip_on" : "pip_off"));
+                ui.showFlashMessage(ui.translated(PROPERTY_MINI_VIEW_ON.get() ? "pip_on" : "pip_off"));
             }
         }
     };
@@ -299,7 +299,7 @@ public final class CommonGameActions {
                     game.control().update(); //TODO needed?
                 }
                 if (!ui.context().currentGame().isPlaying()) {
-                    ui.showFlashMessage(ui.globalAssets().translated(PROPERTY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
+                    ui.showFlashMessage(ui.translated(PROPERTY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
                 }
             });
         }

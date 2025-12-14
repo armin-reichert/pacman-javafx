@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.lib.Direction;
+import de.amr.pacmanfx.ui.GameUI_Assets;
 import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.api.ActionBindingsManager;
@@ -93,7 +94,7 @@ public class StartPagesCarousel extends Carousel implements GameUI_View {
                 startPage.layoutRoot().requestFocus();
             }
         });
-        setBackground(ui.globalAssets().background_PacManWallpaper);
+        setBackground(GameUI_Assets.BACKGROUND_PAC_MAN_WALLPAPER);
     }
 
     @Override

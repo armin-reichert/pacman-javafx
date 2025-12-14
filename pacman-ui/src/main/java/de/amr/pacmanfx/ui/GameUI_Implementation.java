@@ -44,6 +44,7 @@ import org.tinylog.Logger;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
 import static de.amr.pacmanfx.Validations.requireNonNegative;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
@@ -61,7 +62,6 @@ public final class GameUI_Implementation implements GameUI {
 
     private static final int PAUSE_ICON_SIZE = 80;
 
-    private final GameUI_Assets assets;
     private final GameClock clock;
     private final GameContext gameContext;
     private final Stage stage;
@@ -100,7 +100,6 @@ public final class GameUI_Implementation implements GameUI {
         requireNonNegative(sceneWidth, "Main scene width must be a positive number");
         requireNonNegative(sceneHeight, "Main scene height must be a positive number");
 
-        assets = new GameUI_Assets();
         prefs = new GameUI_Preferences();
         PROPERTY_3D_WALL_HEIGHT.set(prefs.getFloat("3d.obstacle.base_height"));
         PROPERTY_3D_WALL_OPACITY.set(prefs.getFloat("3d.obstacle.opacity"));
@@ -140,7 +139,7 @@ public final class GameUI_Implementation implements GameUI {
         layoutPane.backgroundProperty().bind(Bindings.createObjectBinding(
             () -> isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D)
                     ? Background.fill(Gradients.Samples.random())
-                    : assets.background_PacManWallpaper,
+                    : GameUI_Assets.BACKGROUND_PAC_MAN_WALLPAPER,
             // depends on:
             currentViewProperty(),
             playView.currentGameSceneProperty()
@@ -223,7 +222,7 @@ public final class GameUI_Implementation implements GameUI {
         boolean mode3D = PROPERTY_3D_ENABLED.get();
         boolean modeDebug = PROPERTY_DEBUG_INFO_VISIBLE.get();
         String assetKey       = clock().isPaused() ? "app.title.paused" : "app.title";
-        String translatedMode = assets.translated(mode3D ? "threeD" : "twoD");
+        String translatedMode = translated(mode3D ? "threeD" : "twoD");
         String shortTitle     = currentConfig().assets().translated(assetKey, translatedMode);
 
         var currentGameScene = currentGameScene().orElse(null);
@@ -289,7 +288,7 @@ public final class GameUI_Implementation implements GameUI {
 
     private EditorView getOrCreateEditView() {
         if (editorView == null) {
-            editorView = new EditorView(stage, assets);
+            editorView = new EditorView(stage, this);
             editorView.setQuitEditorAction(editor -> {
                 stage.titleProperty().bind(titleBinding);
                 showStartView();
@@ -306,8 +305,8 @@ public final class GameUI_Implementation implements GameUI {
     // GameUI interface
 
     @Override
-    public GameUI_Assets globalAssets() {
-        return assets;
+    public ResourceBundle localizedTexts() {
+        return GameUI_Assets.LOCALIZED_TEXTS;
     }
 
     @Override

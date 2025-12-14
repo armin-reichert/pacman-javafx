@@ -28,7 +28,7 @@ public final class CheatActions {
                 game.cheatUsedProperty().set(true);
             }
             game.addLives(3);
-            ui.showFlashMessage(ui.globalAssets().translated("cheat_add_lives", ui.context().currentGame().lifeCount()));
+            ui.showFlashMessage(ui.translated("cheat_add_lives", ui.context().currentGame().lifeCount()));
         }
 
         @Override
@@ -109,7 +109,7 @@ public final class CheatActions {
             toggle(game.usingAutopilotProperty());
             boolean usingAutopilot = game.usingAutopilot();
             ui.soundManager().playVoiceAfterSec(0, usingAutopilot ? SoundID.VOICE_AUTOPILOT_ON : SoundID.VOICE_AUTOPILOT_OFF);
-            ui.showFlashMessage(ui.globalAssets().translated(usingAutopilot ? "autopilot_on" : "autopilot_off"));
+            ui.showFlashMessage(ui.translated(usingAutopilot ? "autopilot_on" : "autopilot_off"));
         }
     };
 
@@ -123,7 +123,7 @@ public final class CheatActions {
             toggle(game.immuneProperty());
             boolean immunityOn = game.immuneProperty().get();
             ui.soundManager().playVoiceAfterSec(0, immunityOn ? SoundID.VOICE_IMMUNITY_ON : SoundID.VOICE_IMMUNITY_OFF);
-            ui.showFlashMessage(ui.globalAssets().translated(immunityOn ? "player_immunity_on" : "player_immunity_off"));
+            ui.showFlashMessage(ui.translated(immunityOn ? "player_immunity_on" : "player_immunity_off"));
         }
     };
 }

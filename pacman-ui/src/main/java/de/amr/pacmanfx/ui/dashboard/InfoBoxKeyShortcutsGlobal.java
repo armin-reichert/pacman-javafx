@@ -33,7 +33,7 @@ public class InfoBoxKeyShortcutsGlobal extends InfoBox {
                     .forEach(entry -> {
                 KeyCombination keyCombination = entry.getKey();
                 GameAction action = entry.getValue();
-                String localizedActionText = ui.globalAssets().translated(action.name());
+                String localizedActionText = ui.translated(action.name());
                 addRow(keyCombination.getDisplayText(), createLabel(localizedActionText, action.isEnabled(ui)));
             });
         }

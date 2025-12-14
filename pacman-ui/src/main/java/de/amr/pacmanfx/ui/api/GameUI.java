@@ -6,7 +6,6 @@ package de.amr.pacmanfx.ui.api;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
-import de.amr.pacmanfx.ui.GameUI_Assets;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.action.CheatActions;
@@ -18,6 +17,7 @@ import de.amr.pacmanfx.ui.layout.PlayView;
 import de.amr.pacmanfx.ui.layout.StartPagesCarousel;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.GameClock;
+import de.amr.pacmanfx.uilib.assets.LocalizedTextAccessor;
 import de.amr.pacmanfx.uilib.assets.UIPreferences;
 import javafx.beans.property.*;
 import javafx.scene.input.KeyCode;
@@ -35,7 +35,7 @@ import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_IMMUNITY;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.*;
 
-public interface GameUI {
+public interface GameUI extends LocalizedTextAccessor {
 
     Keyboard KEYBOARD = new Keyboard();
     Joypad JOYPAD     = new Joypad(KEYBOARD);
@@ -106,11 +106,6 @@ public interface GameUI {
     ObjectProperty<PerspectiveID> PROPERTY_3D_PERSPECTIVE_ID = new SimpleObjectProperty<>(PerspectiveID.TRACK_PLAYER);
     DoubleProperty                PROPERTY_3D_WALL_HEIGHT = new SimpleDoubleProperty();
     DoubleProperty                PROPERTY_3D_WALL_OPACITY = new SimpleDoubleProperty(1.0);
-
-    /**
-     * @return Global assets (fonts, sounds, colors, localized texts etc.) available to all games
-     */
-    GameUI_Assets globalAssets();
 
     /**
      * @return watchdog process observing the directory where user-defined maps are stored

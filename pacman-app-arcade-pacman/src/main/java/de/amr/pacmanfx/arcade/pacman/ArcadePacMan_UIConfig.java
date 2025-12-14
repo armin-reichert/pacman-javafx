@@ -14,6 +14,7 @@ import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
+import de.amr.pacmanfx.ui.GameUI_Assets;
 import de.amr.pacmanfx.ui._2d.HUD_Renderer;
 import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.api.GameScene;
@@ -130,11 +131,11 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
         assets.set("ghost.color.flashing.eyeballs",   ARCADE_ROSE);
         assets.set("ghost.color.flashing.pupils",     ARCADE_RED);
 
-        soundManager.register(SoundID.VOICE_AUTOPILOT_OFF,          ui.globalAssets().voice_Autopilot_Off);
-        soundManager.register(SoundID.VOICE_AUTOPILOT_ON,           ui.globalAssets().voice_Autopilot_On);
-        soundManager.register(SoundID.VOICE_EXPLAIN_GAME_START,     ui.globalAssets().voice_Explain);
-        soundManager.register(SoundID.VOICE_IMMUNITY_OFF,           ui.globalAssets().voice_Immunity_Off);
-        soundManager.register(SoundID.VOICE_IMMUNITY_ON,            ui.globalAssets().voice_Immunity_On);
+        soundManager.register(SoundID.VOICE_AUTOPILOT_OFF,          GameUI_Assets.VOICE_AUTOPILOT_OFF);
+        soundManager.register(SoundID.VOICE_AUTOPILOT_ON,           GameUI_Assets.VOICE_AUTOPILOT_ON);
+        soundManager.register(SoundID.VOICE_EXPLAIN_GAME_START,     GameUI_Assets.VOICE_EXPLAIN);
+        soundManager.register(SoundID.VOICE_IMMUNITY_OFF,           GameUI_Assets.VOICE_IMMUNITY_OFF);
+        soundManager.register(SoundID.VOICE_IMMUNITY_ON,            GameUI_Assets.VOICE_IMMUNITY_ON);
 
         soundManager.register(SoundID.VOICE_FLYER_TEXT,             LOCAL_RESOURCES.loadMedia("sound/flyer-text.mp3"));
 
