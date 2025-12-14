@@ -17,7 +17,7 @@ import static de.amr.pacmanfx.uilib.Ufx.createImageBackground;
 /**
  * Global assets used in the Pac-Man games UI.
  */
-public class GameAssets implements LocalizedTextAccessor {
+public class GameUI_Assets implements LocalizedTextAccessor {
 
     public static final String STYLE_SHEET_PATH = "/de/amr/pacmanfx/ui/css/style.css";
 
@@ -40,7 +40,7 @@ public class GameAssets implements LocalizedTextAccessor {
     public final Media voice_Immunity_Off;
     public final Media voice_Immunity_On;
 
-    public GameAssets() {
+    public GameUI_Assets() {
         localizedTexts = GLOBAL_RESOURCES.getModuleBundle("de.amr.pacmanfx.ui.localized_texts");
 
         background_PacManWallpaper = createImageBackground(GLOBAL_RESOURCES.loadImage("graphics/pacman_wallpaper.png"));
