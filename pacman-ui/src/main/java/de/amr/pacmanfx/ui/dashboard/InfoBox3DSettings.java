@@ -27,7 +27,7 @@ import static de.amr.pacmanfx.ui.api.GameUI.*;
  */
 public class InfoBox3DSettings extends InfoBox {
 
-    private static final int MINI_VIEW_MIN_HEIGHT = 200;
+    private static final int MINI_VIEW_MIN_HEIGHT = 280;
     private static final int MINI_VIEW_MAX_HEIGHT = 600;
 
     private CheckBox cbUsePlayScene3D;
