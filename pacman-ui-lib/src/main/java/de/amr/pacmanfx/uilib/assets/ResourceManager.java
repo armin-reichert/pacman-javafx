@@ -26,15 +26,13 @@ import static java.util.Objects.requireNonNull;
  * Example:
  * </p>
  * <pre>
- *   src/main/resources/my/package/images/my_image.png
+ *   src/main/resources/de/amr/images/photo-of-my-cat.png
  *  </pre>
- * Then the source can be loaded as follows:
- * <pre>
- *   ResourceManager rm = () -> my.package.SomeClass.class;
- *   Image source = rm.source("images/my_image.png"); *
- * </pre>
- *
- * @author Armin Reichert
+ * Then the image can be loaded as follows:
+ * <pre><code>
+ *   ResourceManager rm = () -> de.amr.AnyClassInThisPackage.class;
+ *   Image photo = rm.loadImage("images/photo-of-my-cat.png");
+ * </code></pre>
  */
 @FunctionalInterface
 public interface ResourceManager {
