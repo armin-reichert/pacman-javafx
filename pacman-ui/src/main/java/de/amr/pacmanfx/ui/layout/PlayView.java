@@ -79,6 +79,7 @@ public class PlayView extends StackPane implements GameUI_View {
             GameUI.PROPERTY_MINI_VIEW_ON, currentGameScene
         ));
 
+        canvasDecorationPane.setCanvas(new Canvas());
         canvasDecorationPane.setMinScaling(0.5);
         canvasDecorationPane.setUnscaledCanvasSize(ARCADE_MAP_SIZE_IN_PIXELS.x(), ARCADE_MAP_SIZE_IN_PIXELS.y());
         canvasDecorationPane.setBorderColor(ArcadePalette.ARCADE_WHITE);
@@ -238,31 +239,26 @@ public class PlayView extends StackPane implements GameUI_View {
 
     // Others
 
-    private void createCanvas(GameScene2D gameScene2D) {
-        final var canvas = new Canvas();
-        Logger.info("A new, fresh canvas has been created just for you!");
+    private void useDecoratedCanvas(GameScene2D gameScene2D) {
+        final Canvas canvas = new Canvas();
+
         canvasDecorationPane.setCanvas(canvas);
 
         gameScene2D.setCanvas(canvas);
         gameScene2D.backgroundProperty().bind(GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR);
 
         sceneRenderer = ui.currentConfig().createGameSceneRenderer(canvas, gameScene2D);
-
-        hudRenderer = ui.currentConfig().createHUDRenderer(canvas, gameScene2D);
-        if (hudRenderer != null) {
-            gameScene2D.adaptRenderer(hudRenderer);
-            Logger.info("A new HUD renderer has been created for game scene {}", gameScene2D.getClass().getSimpleName());
-        }
+        hudRenderer = ui.currentConfig().createHUDRenderer(canvas, gameScene2D); // may return null!
     }
 
     private void drawGameScene2D(GameScene2D gameScene2D) {
-        sceneRenderer.draw(gameScene2D);
+        if (sceneRenderer != null) {
+            sceneRenderer.draw(gameScene2D);
+        }
         if (hudRenderer != null) {
             hudRenderer.drawHUD(ui.context().currentGame(), gameScene2D);
         }
     }
-
-    //TODO simplify
 
     /**
      *
@@ -270,6 +266,7 @@ public class PlayView extends StackPane implements GameUI_View {
      * @param alwaysReloadGameScene if {@code true} the game scene is (re-)embedded even if it doesn't change
      */
     public void updateGameScene(Game game, boolean alwaysReloadGameScene) {
+        //TODO simplify
         final GameScene currentGameScene = ui.currentGameScene().orElse(null);
         final GameScene intendedGameScene = ui.currentConfig().sceneConfig().selectGameScene(game).orElse(null);
 
@@ -314,12 +311,12 @@ public class PlayView extends StackPane implements GameUI_View {
             subScene.heightProperty().bind(parentScene.heightProperty());
             // Is it a 2D scene with canvas inside sub-scene with camera?
             if (gameScene instanceof GameScene2D gameScene2D) {
-                createCanvas(gameScene2D);
+                useDecoratedCanvas(gameScene2D);
             }
             getChildren().set(0, subScene);
         }
         else if (gameScene instanceof GameScene2D gameScene2D) {
-            createCanvas(gameScene2D);
+            useDecoratedCanvas(gameScene2D);
             Vector2i gameSceneSizePx = gameScene2D.unscaledSize();
             double aspect = (double) gameSceneSizePx.x() / gameSceneSizePx.y();
             if (ui.currentConfig().sceneConfig().canvasDecorated(gameScene)) {
