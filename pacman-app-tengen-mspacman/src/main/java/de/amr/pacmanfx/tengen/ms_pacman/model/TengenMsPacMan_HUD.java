@@ -11,16 +11,18 @@ public class TengenMsPacMan_HUD extends BaseHUD {
     private boolean levelNumberVisible;
     private boolean gameOptionsVisible;
 
-    public void showGameOptions(boolean visible) {
+    public TengenMsPacMan_HUD gameOptions(boolean visible) {
         gameOptionsVisible = visible;
+        return this;
     }
 
     public boolean gameOptionsVisible() {
         return gameOptionsVisible;
     }
 
-    public void showLevelNumber(boolean visible) {
+    public TengenMsPacMan_HUD levelNumber(boolean visible) {
         levelNumberVisible = visible;
+        return this;
     }
 
     public boolean levelNumberVisible() {

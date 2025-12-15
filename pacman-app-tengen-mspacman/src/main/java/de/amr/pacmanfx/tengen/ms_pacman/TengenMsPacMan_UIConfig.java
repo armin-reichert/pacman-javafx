@@ -284,9 +284,6 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
             || ui.isCurrentGameSceneID(sceneID_CutScene(2))
             || ui.isCurrentGameSceneID(sceneID_CutScene(3))
             || ui.isCurrentGameSceneID(sceneID_CutScene(4))) {
-            if (game.mapCategory() == MapCategory.ARCADE) {
-                return null;
-            }
             final var renderer = new TengenMsPacMan_HUD_Renderer(canvas, spriteSheet, ui.clock());
             renderer.setOffsetY(-2*TS);
             return renderer;

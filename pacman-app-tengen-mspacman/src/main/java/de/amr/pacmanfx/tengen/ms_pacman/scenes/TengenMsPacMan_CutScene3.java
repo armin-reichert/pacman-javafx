@@ -12,6 +12,8 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
+import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
+import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_HUD;
 import de.amr.pacmanfx.tengen.ms_pacman.model.actors.MsPacMan;
 import de.amr.pacmanfx.tengen.ms_pacman.model.actors.PacMan;
@@ -91,14 +93,18 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
 
     @Override
     public void doInit(Game game) {
-        TengenMsPacMan_HUD hud = (TengenMsPacMan_HUD) game.hud();
-        hud.credit(false).score(false).levelCounter(true).livesCounter(false).show();
-        hud.showGameOptions(false);
-
-        actionBindings.useKeyCombination(ACTION_LET_GAME_STATE_EXPIRE, GameUI.JOYPAD.key(JoypadButton.START));
-
+        final var tengenGame = (TengenMsPacMan_GameModel) game;
         final GameUI_Config uiConfig = ui.currentConfig();
         final var spriteSheet = (TengenMsPacMan_SpriteSheet) uiConfig.spriteSheet();
+
+        final var hud = (TengenMsPacMan_HUD) game.hud();
+        if (tengenGame.mapCategory() == MapCategory.ARCADE) {
+            hud.hide();
+        } else {
+            hud.gameOptions(false).credit(false).score(false).levelCounter(true).livesCounter(false).show();
+        }
+
+        actionBindings.useKeyCombination(ACTION_LET_GAME_STATE_EXPIRE, GameUI.JOYPAD.key(JoypadButton.START));
 
         clapperboard = new Clapperboard(spriteSheet, 3, "JUNIOR");
         clapperboard.setPosition(3 * TS, 10 * TS);

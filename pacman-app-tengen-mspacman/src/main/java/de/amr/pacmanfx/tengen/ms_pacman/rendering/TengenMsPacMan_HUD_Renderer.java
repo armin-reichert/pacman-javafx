@@ -123,19 +123,20 @@ public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteR
         GameLevel gameLevel = game.optGameLevel().orElse(null);
         if (gameLevel == null) return;
 
-        float left = TS(2), right = TS(28);
-        if (hud.levelNumberVisible()) {
-            drawLevelNumberBox(gameLevel.number(), left, y); // left box
-            drawLevelNumberBox(gameLevel.number(), right, y); // right box
-        }
-        RectShort[] symbolSprites = spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS);
-        right -= TS(2);
+        final float left = TS(2);
+        final float right = TS(28);
+        final RectShort[] symbolSprites = spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS);
+        float x = right - TS(2);
         // symbols are drawn from right to left!
         for (byte symbol : game.levelCounter().symbols()) {
             if (0 <= symbol && symbol < symbolSprites.length) {
-                drawSprite(symbolSprites[symbol], right, y, true);
+                drawSprite(symbolSprites[symbol], x, y, true);
             }
-            right -= TS(2);
+            x -= TS(2);
+        }
+        if (hud.levelNumberVisible()) {
+            drawLevelNumberBox(gameLevel.number(), left, y); // left box
+            drawLevelNumberBox(gameLevel.number(), right, y); // right box
         }
     }
 

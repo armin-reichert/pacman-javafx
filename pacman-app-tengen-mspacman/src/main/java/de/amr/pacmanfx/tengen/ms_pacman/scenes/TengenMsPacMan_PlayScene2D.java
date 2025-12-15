@@ -172,7 +172,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     public void doInit(Game game) {
         TengenMsPacMan_GameModel tengenGame = (TengenMsPacMan_GameModel) game;
         game.hud().score(true).levelCounter(true).livesCounter(true).show();
-        tengenGame.hud().showGameOptions(!tengenGame.allOptionsHaveDefaultValue());
+        tengenGame.hud().gameOptions(!tengenGame.allOptionsHaveDefaultValue());
         updateScaling();
         dynamicCamera.enterManualMode();
         dynamicCamera.setToTopPosition();
@@ -419,7 +419,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         final boolean oneExtra = game.control().state() == GameState.STARTING_GAME_OR_LEVEL && !level.pac().isVisible();
         final int displayedLifeCount = oneExtra ? game.lifeCount() : game.lifeCount() - 1;
         hud.setVisibleLifeCount(Math.clamp(displayedLifeCount, 0, hud.maxLivesDisplayed()));
-        hud.showLevelNumber(game.mapCategory() != MapCategory.ARCADE);
+        hud.levelNumber(game.mapCategory() != MapCategory.ARCADE);
     }
 
     private void startLevelCompleteAnimation(GameLevel level) {
