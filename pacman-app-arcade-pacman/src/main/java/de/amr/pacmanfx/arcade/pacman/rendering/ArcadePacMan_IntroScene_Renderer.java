@@ -35,7 +35,7 @@ public class ArcadePacMan_IntroScene_Renderer extends GameScene2D_Renderer imple
     private final ArcadePacMan_Actor_Renderer actorRenderer;
     private final RectShort energizerSprite;
 
-    public ArcadePacMan_IntroScene_Renderer(ArcadePacMan_IntroScene scene, Canvas canvas, ArcadePacMan_SpriteSheet spriteSheet) {
+    public ArcadePacMan_IntroScene_Renderer(GameScene2D scene, Canvas canvas, ArcadePacMan_SpriteSheet spriteSheet) {
         super(canvas);
         this.spriteSheet = requireNonNull(spriteSheet);
 

@@ -21,7 +21,7 @@ public class ArcadePacMan_CutScene3_Renderer extends GameScene2D_Renderer implem
     private final ArcadePacMan_SpriteSheet spriteSheet;
     private final ActorRenderer actorRenderer;
 
-    public ArcadePacMan_CutScene3_Renderer(ArcadePacMan_CutScene3 scene, Canvas canvas, ArcadePacMan_SpriteSheet spriteSheet) {
+    public ArcadePacMan_CutScene3_Renderer(GameScene2D scene, Canvas canvas, ArcadePacMan_SpriteSheet spriteSheet) {
         super(canvas);
         this.spriteSheet = requireNonNull(spriteSheet);
 

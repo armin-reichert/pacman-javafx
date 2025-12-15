@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
-import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_BootScene2D;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.timer.TickTimer;
@@ -30,7 +29,7 @@ public class Arcade_BootScene2D_Renderer extends GameScene2D_Renderer implements
     private final Vector2f minPoint;
     private final Vector2f maxPoint;
 
-    public Arcade_BootScene2D_Renderer(Arcade_BootScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
+    public Arcade_BootScene2D_Renderer(GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(canvas);
         this.spriteSheet = requireNonNull(spriteSheet);
 

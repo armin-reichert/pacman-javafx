@@ -31,7 +31,7 @@ public class Arcade_PlayScene2D_Renderer extends GameScene2D_Renderer implements
     private final ActorRenderer actorRenderer;
     private final List<Actor> actorsInZOrder = new ArrayList<>();
 
-    public Arcade_PlayScene2D_Renderer(Arcade_PlayScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
+    public Arcade_PlayScene2D_Renderer(GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(canvas);
         this.spriteSheet = requireNonNull(spriteSheet);
 

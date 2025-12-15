@@ -4,20 +4,18 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
-import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
-import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_StartScene_Renderer;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.api.GameUI;
-import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import javafx.scene.canvas.Canvas;
 
 public class ArcadeMsPacMan_StartScene extends GameScene2D {
 
-    private ArcadeMsPacMan_StartScene_Renderer sceneRenderer;
+    private GameScene2D_Renderer sceneRenderer;
 
     public ArcadeMsPacMan_StartScene(GameUI ui) {
         super(ui);
@@ -25,13 +23,10 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
 
     @Override
     protected void createRenderers(Canvas canvas) {
-        final GameUI_Config uiConfig = ui.currentConfig();
-        sceneRenderer = adaptRenderer(
-            new ArcadeMsPacMan_StartScene_Renderer(this, canvas, (ArcadeMsPacMan_SpriteSheet) uiConfig.spriteSheet()));
-    }
+        sceneRenderer = ui.currentConfig().createGameSceneRenderer(canvas, this);    }
 
     @Override
-    public ArcadeMsPacMan_StartScene_Renderer sceneRenderer() {
+    public GameScene2D_Renderer sceneRenderer() {
         return sceneRenderer;
     }
 

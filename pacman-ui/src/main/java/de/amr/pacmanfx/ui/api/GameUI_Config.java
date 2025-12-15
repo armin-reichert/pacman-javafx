@@ -10,6 +10,7 @@ import de.amr.pacmanfx.model.actors.AnimationManager;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui._2d.HUD_Renderer;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -86,6 +87,12 @@ public interface GameUI_Config extends Disposable {
      * @return the color scheme to use for this maze
      */
     WorldMapColorScheme colorScheme(WorldMap worldMap);
+
+    /**
+     * @param canvas the canvas where the 2D scene gets rendered
+     * @return a new renderer for the game scene
+     */
+    GameScene2D_Renderer createGameSceneRenderer(Canvas canvas, GameScene2D gameScene2D);
 
     /**
      * @param canvas the canvas where the 2D scene gets rendered

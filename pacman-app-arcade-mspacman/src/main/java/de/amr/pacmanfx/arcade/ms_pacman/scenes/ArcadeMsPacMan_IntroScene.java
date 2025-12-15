@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.pacmanfx.arcade.ms_pacman.model.actors.ArcadeMsPacMan_ActorFactory;
-import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_IntroScene_Renderer;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController.GameState;
 import de.amr.pacmanfx.event.GameEvent;
@@ -15,6 +14,7 @@ import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
@@ -44,7 +44,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     public final StateMachine<ArcadeMsPacMan_IntroScene> sceneController;
 
-    private ArcadeMsPacMan_IntroScene_Renderer sceneRenderer;
+    private GameScene2D_Renderer sceneRenderer;
 
     private Marquee marquee;
     private Pac msPacMan;
@@ -59,13 +59,10 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     protected void createRenderers(Canvas canvas) {
-        final GameUI_Config uiConfig = ui.currentConfig();
-        sceneRenderer = adaptRenderer(
-            new ArcadeMsPacMan_IntroScene_Renderer(this, canvas));
-    }
+        sceneRenderer = ui.currentConfig().createGameSceneRenderer(canvas, this);    }
 
     @Override
-    public ArcadeMsPacMan_IntroScene_Renderer sceneRenderer() {
+    public GameScene2D_Renderer sceneRenderer() {
         return sceneRenderer;
     }
 

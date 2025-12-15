@@ -4,11 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
-import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_BootScene2D_Renderer;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.api.GameUI;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.canvas.Canvas;
 
 /**
@@ -17,22 +16,20 @@ import javafx.scene.canvas.Canvas;
  */
 public class Arcade_BootScene2D extends GameScene2D {
 
-    private Arcade_BootScene2D_Renderer sceneRenderer;
+    private GameScene2D_Renderer sceneRenderer;
 
     public Arcade_BootScene2D(GameUI ui) {
         super(ui);
     }
 
     @Override
-    public Arcade_BootScene2D_Renderer sceneRenderer() {
+    public GameScene2D_Renderer sceneRenderer() {
         return sceneRenderer;
     }
 
     @Override
     protected void createRenderers(Canvas canvas) {
-        final SpriteSheet<?> spriteSheet = ui.currentConfig().spriteSheet();
-        sceneRenderer = adaptRenderer(new Arcade_BootScene2D_Renderer(this, canvas, spriteSheet));
-    }
+        sceneRenderer = ui.currentConfig().createGameSceneRenderer(canvas, this);    }
 
     @Override
     public void doInit(Game game) {

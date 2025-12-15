@@ -7,7 +7,6 @@ package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
 import de.amr.pacmanfx.arcade.ms_pacman.model.actors.ArcadeMsPacMan_ActorFactory;
-import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_CutScene3_Renderer;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.math.Vector2f;
@@ -16,6 +15,7 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
@@ -43,7 +43,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
 
     private Clapperboard clapperboard;
 
-    private ArcadeMsPacMan_CutScene3_Renderer sceneRenderer;
+    private GameScene2D_Renderer sceneRenderer;
 
     public ArcadeMsPacMan_CutScene3(GameUI ui) {
         super(ui);
@@ -51,13 +51,10 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
 
     @Override
     protected void createRenderers(Canvas canvas) {
-        final GameUI_Config uiConfig = ui.currentConfig();
-        sceneRenderer = adaptRenderer(
-            new ArcadeMsPacMan_CutScene3_Renderer(this, canvas));
-    }
+        sceneRenderer = ui.currentConfig().createGameSceneRenderer(canvas, this);    }
 
     @Override
-    public ArcadeMsPacMan_CutScene3_Renderer sceneRenderer() {
+    public GameScene2D_Renderer sceneRenderer() {
         return sceneRenderer;
     }
 

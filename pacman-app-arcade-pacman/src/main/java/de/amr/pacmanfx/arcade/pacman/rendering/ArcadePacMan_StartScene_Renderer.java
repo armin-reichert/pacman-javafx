@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
-import de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_StartScene;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import javafx.scene.canvas.Canvas;
@@ -14,7 +13,7 @@ import static de.amr.pacmanfx.ui.api.ArcadePalette.*;
 
 public class ArcadePacMan_StartScene_Renderer extends GameScene2D_Renderer {
 
-    public ArcadePacMan_StartScene_Renderer(ArcadePacMan_StartScene scene, Canvas canvas) {
+    public ArcadePacMan_StartScene_Renderer(GameScene2D scene, Canvas canvas) {
         super(canvas);
         createDefaultDebugInfoRenderer(scene, canvas);
     }

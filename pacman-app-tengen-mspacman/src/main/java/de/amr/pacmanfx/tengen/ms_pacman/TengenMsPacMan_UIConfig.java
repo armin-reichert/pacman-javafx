@@ -25,6 +25,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.actors.Sue;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.*;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.*;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameScene_Config;
@@ -271,6 +272,22 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     }
 
     @Override
+    public GameScene2D_Renderer createGameSceneRenderer(Canvas canvas, GameScene2D gameScene2D) {
+        GameScene2D_Renderer renderer = switch (gameScene2D) {
+            case TengenMsPacMan_BootScene ignored -> new TengenMsPacMan_BootScene_Renderer(gameScene2D, canvas);
+            case TengenMsPacMan_IntroScene ignored -> new TengenMsPacMan_IntroScene_Renderer(gameScene2D, canvas, spriteSheet);
+            case TengenMsPacMan_OptionsScene ignored -> new TengenMsPacMan_OptionsScene_Renderer(gameScene2D, canvas, spriteSheet);
+            case TengenMsPacMan_PlayScene2D ignored -> new TengenMsPacMan_PlayScene2D_Renderer(gameScene2D, canvas, spriteSheet);
+            case TengenMsPacMan_CreditsScene ignored -> new TengenMsPacMan_CreditsScene_Renderer(gameScene2D, canvas);
+            case TengenMsPacMan_CutScene1 ignored -> new TengenMsPacMan_CutScene1_Renderer(gameScene2D, canvas);
+            case TengenMsPacMan_CutScene2 ignored -> new TengenMsPacMan_CutScene2_Renderer(gameScene2D, canvas);
+            case TengenMsPacMan_CutScene3 ignored -> new TengenMsPacMan_CutScene3_Renderer(gameScene2D, canvas);
+            default -> throw new IllegalStateException("Unexpected value: " + gameScene2D);
+        };
+        return gameScene2D.adaptRenderer(renderer);
+    }
+
+    @Override
     public TengenMsPacMan_GameLevelRenderer createGameLevelRenderer(Canvas canvas) {
         var renderer = new TengenMsPacMan_GameLevelRenderer(canvas, this);
         renderer.backgroundProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
@@ -279,7 +296,6 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     @Override
     public TengenMsPacMan_HUD_Renderer createHUDRenderer(Canvas canvas, GameScene2D gameScene2D) {
-        final TengenMsPacMan_GameModel game = ui.context().currentGame();
         if (   ui.isCurrentGameSceneID(sceneID_CutScene(1))
             || ui.isCurrentGameSceneID(sceneID_CutScene(2))
             || ui.isCurrentGameSceneID(sceneID_CutScene(3))

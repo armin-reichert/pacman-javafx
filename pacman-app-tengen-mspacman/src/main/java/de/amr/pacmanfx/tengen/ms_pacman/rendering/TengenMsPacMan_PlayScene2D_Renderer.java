@@ -36,7 +36,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends GameScene2D_Renderer
 
     private static class PlaySceneDebugInfoRenderer extends BaseDebugInfoRenderer {
 
-        public PlaySceneDebugInfoRenderer(TengenMsPacMan_PlayScene2D playScene, Canvas canvas) {
+        public PlaySceneDebugInfoRenderer(GameScene2D playScene, Canvas canvas) {
             super(playScene.ui(), canvas);
         }
 
@@ -70,7 +70,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends GameScene2D_Renderer
 
     private final Rectangle clipRect;
 
-    public TengenMsPacMan_PlayScene2D_Renderer(TengenMsPacMan_PlayScene2D scene, Canvas canvas, TengenMsPacMan_SpriteSheet spriteSheet) {
+    public TengenMsPacMan_PlayScene2D_Renderer(GameScene2D scene, Canvas canvas, TengenMsPacMan_SpriteSheet spriteSheet) {
         super(canvas);
         this.spriteSheet = requireNonNull(spriteSheet);
 

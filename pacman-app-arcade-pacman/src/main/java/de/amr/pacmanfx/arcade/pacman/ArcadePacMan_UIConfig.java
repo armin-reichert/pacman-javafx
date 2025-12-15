@@ -15,6 +15,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui._2d.HUD_Renderer;
 import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.api.GameScene;
@@ -174,6 +175,21 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
     @Override
     public WorldMapColorScheme colorScheme(WorldMap worldMap) {
         return MAP_COLOR_SCHEME;
+    }
+
+    @Override
+    public GameScene2D_Renderer createGameSceneRenderer(Canvas canvas, GameScene2D gameScene2D) {
+        GameScene2D_Renderer renderer = switch (gameScene2D) {
+            case Arcade_BootScene2D ignored -> new Arcade_BootScene2D_Renderer(gameScene2D, canvas, spriteSheet);
+            case ArcadePacMan_IntroScene ignored -> new ArcadePacMan_IntroScene_Renderer(gameScene2D, canvas, spriteSheet);
+            case ArcadePacMan_StartScene ignored -> new ArcadePacMan_StartScene_Renderer(gameScene2D, canvas);
+            case Arcade_PlayScene2D ignored -> new Arcade_PlayScene2D_Renderer(gameScene2D, canvas, spriteSheet);
+            case ArcadePacMan_CutScene1 ignored -> new ArcadePacMan_CutScene1_Renderer(gameScene2D, canvas, spriteSheet);
+            case ArcadePacMan_CutScene2 ignored -> new ArcadePacMan_CutScene2_Renderer(gameScene2D, canvas, spriteSheet);
+            case ArcadePacMan_CutScene3 ignored -> new ArcadePacMan_CutScene3_Renderer(gameScene2D, canvas, spriteSheet);
+            default -> throw new IllegalStateException("Unexpected value: " + gameScene2D);
+        };
+        return gameScene2D.adaptRenderer(renderer);
     }
 
     @Override
