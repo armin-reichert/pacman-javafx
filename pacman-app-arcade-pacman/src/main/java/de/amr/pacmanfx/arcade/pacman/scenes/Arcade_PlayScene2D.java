@@ -11,6 +11,8 @@ import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameStateChangeEvent;
 import de.amr.pacmanfx.lib.fsm.StateMachine.State;
 import de.amr.pacmanfx.lib.math.Vector2i;
+import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
+import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HUD;
@@ -21,6 +23,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
+import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
@@ -31,17 +34,14 @@ import javafx.scene.control.CheckMenuItem;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_QUIT_GAME_SCENE;
-import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_MUTED;
 
 /**
  * 2D play scene for Arcade game variants.
- *
- * <p>
- * TODO: Currently, scene instances are permanently stored in the UI configuration and no garbage collection occurs!
- * </p>
  */
 public class Arcade_PlayScene2D extends GameScene2D {
+
+    //TODO fix volume in audio file
+    public static final float SIREN_VOLUME = 0.33f;
 
     private Arcade_PlayScene2D_Renderer renderer;
     private LevelCompletedAnimation levelCompletedAnimation;
@@ -87,27 +87,15 @@ public class Arcade_PlayScene2D extends GameScene2D {
         });
     }
 
+    /**
+     * Note: Scene is also used in Pac-Man XXL game variant where world map can have non-Arcade size!
+     *
+     * @return Unscaled scene size in pixels (width, height)
+     */
     @Override
     public Vector2i unscaledSize() {
-        // Note: scene is also used in Pac-Man XXL game variant where world can have any size!
-        return context().currentGame().optGameLevel().map(level -> level.worldMap().terrainLayer().sizeInPixel())
-            .orElse(ARCADE_MAP_SIZE_IN_PIXELS);
-    }
-
-    private void setAutopilot(Game game, boolean usingAutopilot) {
-        if (usingAutopilot && game.optGameLevel().isPresent() && !game.level().isDemoLevel()) {
-            game.cheatUsedProperty().set(true);
-        }
-        ui.soundManager().playVoiceAfterSec(0, usingAutopilot ? SoundID.VOICE_AUTOPILOT_ON : SoundID.VOICE_AUTOPILOT_OFF);
-        ui.showFlashMessage(ui.translated(usingAutopilot ? "autopilot_on" : "autopilot_off"));
-    }
-
-    private void setImmunity(Game game, boolean immune) {
-        if (immune && game.optGameLevel().isPresent() && !game.level().isDemoLevel()) {
-            game.cheatUsedProperty().set(true);
-        }
-        ui.soundManager().playVoiceAfterSec(0, immune ? SoundID.VOICE_IMMUNITY_ON : SoundID.VOICE_IMMUNITY_OFF);
-        ui.showFlashMessage(ui.translated(immune ? "player_immunity_on" : "player_immunity_off"));
+        return context().currentGame().optGameLevel().map(GameLevel::worldMap).map(WorldMap::terrainLayer)
+            .map(TerrainLayer::sizeInPixel).orElse(ARCADE_MAP_SIZE_IN_PIXELS);
     }
 
     @Override
@@ -115,16 +103,16 @@ public class Arcade_PlayScene2D extends GameScene2D {
         final var menu = new GameUI_ContextMenu(ui);
         menu.addLocalizedTitleItem("pacman");
         menu.addLocalizedCheckBox(game.usingAutopilotProperty(), "autopilot").setOnAction(e -> {
-            final CheckMenuItem checkBox = (CheckMenuItem) e.getSource();
+            final var checkBox = (CheckMenuItem) e.getSource();
             setAutopilot(game, checkBox.isSelected());
         });
         menu.addLocalizedCheckBox(game.immuneProperty(), "immunity").setOnAction(e -> {
-            final CheckMenuItem checkBox = (CheckMenuItem) e.getSource();
+            final var checkBox = (CheckMenuItem) e.getSource();
             setImmunity(game, checkBox.isSelected());
         });
         menu.addSeparator();
-        menu.addLocalizedCheckBox(PROPERTY_MUTED, "muted");
-        menu.addLocalizedActionItem(ACTION_QUIT_GAME_SCENE, "quit");
+        menu.addLocalizedCheckBox(GameUI.PROPERTY_MUTED, "muted");
+        menu.addLocalizedActionItem(CommonGameActions.ACTION_QUIT_GAME_SCENE, "quit");
         return menu;
     }
 
@@ -216,9 +204,9 @@ public class Arcade_PlayScene2D extends GameScene2D {
     public void onPacFindsFood(GameEvent e) {
         final long now = ui.clock().tickCount();
         final long passed = now - lastMunchingSoundPlayedTick;
+        final byte minDelay = ui.currentConfig().munchingSoundDelay();
         Logger.debug("Pac found food, tick={} passed since last time={}", now, passed);
-        byte minDelay = ui.currentConfig().munchingSoundDelay();
-        if (passed > minDelay  || minDelay == 0) {
+        if (passed > minDelay || minDelay == 0) {
             ui.soundManager().play(SoundID.PAC_MAN_MUNCHING);
             lastMunchingSoundPlayedTick = now;
         }
@@ -242,6 +230,22 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     // private
 
+    private void setAutopilot(Game game, boolean usingAutopilot) {
+        if (usingAutopilot && game.optGameLevel().isPresent() && !game.level().isDemoLevel()) {
+            game.cheatUsedProperty().set(true);
+        }
+        ui.soundManager().playVoiceAfterSec(0, usingAutopilot ? SoundID.VOICE_AUTOPILOT_ON : SoundID.VOICE_AUTOPILOT_OFF);
+        ui.showFlashMessage(ui.translated(usingAutopilot ? "autopilot_on" : "autopilot_off"));
+    }
+
+    private void setImmunity(Game game, boolean immune) {
+        if (immune && game.optGameLevel().isPresent() && !game.level().isDemoLevel()) {
+            game.cheatUsedProperty().set(true);
+        }
+        ui.soundManager().playVoiceAfterSec(0, immune ? SoundID.VOICE_IMMUNITY_ON : SoundID.VOICE_IMMUNITY_OFF);
+        ui.showFlashMessage(ui.translated(immune ? "player_immunity_on" : "player_immunity_off"));
+    }
+
     /**
      * If the 3D play scene is shown when the game level gets created, the onLevelCreated() method of this
      *  scene is not called, so we have to accept the game level again when switching from the 3D scene to this one.
@@ -263,12 +267,12 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     private void updateHUD(GameLevel level) {
-        final Game game = context().currentGame();
+        final Game game = level.game();
         final HUD hud = game.hud();
         // While Pac-Man is still invisible on level start, one entry more is shown in the lives counter
         final boolean oneExtra = game.control().state() == GameState.STARTING_GAME_OR_LEVEL && !level.pac().isVisible();
-        final int displayedLifeCount = oneExtra ? game.lifeCount() : game.lifeCount() - 1;
-        hud.setVisibleLifeCount(Math.clamp(displayedLifeCount, 0, hud.maxLivesDisplayed()));
+        final int livesDisplayed = oneExtra ? game.lifeCount() : game.lifeCount() - 1;
+        hud.setVisibleLifeCount(Math.clamp(livesDisplayed, 0, hud.maxLivesDisplayed()));
         hud.showCredit(context().coinMechanism().isEmpty());
     }
 
@@ -282,9 +286,9 @@ public class Arcade_PlayScene2D extends GameScene2D {
             if (!pac.powerTimer().isRunning()) {
                 selectAndPlaySiren(level);
             }
-            final boolean ghostReturns = pac.isAlive()
-                    && level.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).findAny().isPresent();
-            if (ghostReturns) {
+            final boolean ghostReturningToHouse = pac.isAlive()
+                && level.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).findAny().isPresent();
+            if (ghostReturningToHouse) {
                 if (!ui.soundManager().isPlaying(SoundID.GHOST_RETURNS)) {
                     ui.soundManager().loop(SoundID.GHOST_RETURNS);
                 }
@@ -295,14 +299,12 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     // Siren numbers are 1, 2, 3, 4, hunting phase index = 0..7
-    //TODO move this logic into game model as it depends on the currently played game variant
+    //TODO move this logic into game model as it depends on the played game variant
     private int selectSirenNumber(int huntingPhase) {
         return 1 + huntingPhase / 2;
     }
 
     private void selectAndPlaySiren(GameLevel level) {
-        //TODO fix volume in audio file
-        final float volume = 0.33f;
         final int sirenNumber = selectSirenNumber(level.huntingTimer().phaseIndex());
         final SoundID sirenID = switch (sirenNumber) {
             case 1 -> SoundID.SIREN_1;
@@ -311,12 +313,12 @@ public class Arcade_PlayScene2D extends GameScene2D {
             case 4 -> SoundID.SIREN_4;
             default -> throw new IllegalArgumentException("Illegal siren number " + sirenNumber);
         };
-        ui.soundManager().playSiren(sirenID, volume);
+        ui.soundManager().playSiren(sirenID, SIREN_VOLUME);
     }
 
     private void playLevelCompletedAnimation(Game game, GameLevel level) {
         levelCompletedAnimation = new LevelCompletedAnimation(animationRegistry, level);
-        levelCompletedAnimation.getOrCreateAnimationFX().setOnFinished(e -> game.control().terminateCurrentGameState());
+        levelCompletedAnimation.getOrCreateAnimationFX().setOnFinished(_ -> game.control().terminateCurrentGameState());
         levelCompletedAnimation.playFromStart();
     }
 
