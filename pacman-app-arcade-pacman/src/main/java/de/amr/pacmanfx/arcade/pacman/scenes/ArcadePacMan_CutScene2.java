@@ -88,10 +88,10 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         blinky.setSpeed(0);
         blinky.hide();
 
-        blinky.optAnimationManager().ifPresent(animations -> {
-            blinkyNormal     = (SpriteAnimation) animations.animation(CommonAnimationID.ANIM_GHOST_NORMAL);
-            nailDressRaptureAnimation = (SpriteAnimation) animations.animation(ArcadePacMan_UIConfig.AnimationID.ANIM_BLINKY_NAIL_DRESS_RAPTURE);
-            blinkyDamaged    = (SpriteAnimation) animations.animation(ArcadePacMan_UIConfig.AnimationID.ANIM_BLINKY_DAMAGED);
+        blinky.optAnimationManager().ifPresent(animationManager -> {
+            blinkyNormal = (SpriteAnimation) animationManager.animation(CommonAnimationID.ANIM_GHOST_NORMAL);
+            nailDressRaptureAnimation = (SpriteAnimation) animationManager.animation(ArcadePacMan_UIConfig.AnimationID.ANIM_BLINKY_NAIL_DRESS_RAPTURE);
+            blinkyDamaged = (SpriteAnimation) animationManager.animation(ArcadePacMan_UIConfig.AnimationID.ANIM_BLINKY_DAMAGED);
         });
 
         frame = -1;
