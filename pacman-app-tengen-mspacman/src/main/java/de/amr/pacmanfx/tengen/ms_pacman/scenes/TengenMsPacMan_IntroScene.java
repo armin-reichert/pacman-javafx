@@ -16,10 +16,8 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.model.actors.MsPacMan;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
@@ -44,8 +42,6 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     public TengenMsPacMan_SpriteSheet spriteSheet;
 
-    private GameScene2D_Renderer sceneRenderer;
-
     public Color[] ghostColors;
 
     public Marquee marquee;
@@ -59,15 +55,6 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
     public TengenMsPacMan_IntroScene(GameUI ui) {
         super(ui);
         sceneController = new StateMachine<>(this, List.of(SceneState.values()));
-    }
-
-    @Override
-    protected void createRenderers(Canvas canvas) {
-        sceneRenderer = ui.currentConfig().createGameSceneRenderer(canvas, this);    }
-
-    @Override
-    public GameScene2D_Renderer sceneRenderer() {
-        return sceneRenderer;
     }
 
     @Override

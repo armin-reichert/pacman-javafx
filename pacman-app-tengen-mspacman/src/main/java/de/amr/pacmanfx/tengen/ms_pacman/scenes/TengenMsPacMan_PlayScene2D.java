@@ -25,7 +25,6 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameController.Game
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_HUD;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
@@ -74,8 +73,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     private final PlayScene2DCamera dynamicCamera;
     private final PerspectiveCamera fixedCamera;
 
-    private GameScene2D_Renderer sceneRenderer;
-
     private LevelCompletedAnimation levelCompletedAnimation;
 
     public TengenMsPacMan_PlayScene2D(GameUI ui) {
@@ -122,7 +119,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         canvas.widthProperty() .bind(scalingProperty().multiply(CANVAS_WIDTH_UNSCALED));
         canvas.heightProperty().bind(scalingProperty().multiply(canvasHeightUnscaled));
         rootPane.getChildren().setAll(canvas);
-        createRenderers(canvas);
     }
 
     private void initForGameLevel(GameLevel level) {
@@ -153,15 +149,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         });
         Logger.info("Tengen 2D play scene sub-scene: w={0.00} h={0.00} scaling={0.00}",
             subScene.getWidth(), subScene.getHeight(), scaling());
-    }
-
-    @Override
-    protected void createRenderers(Canvas canvas) {
-        sceneRenderer = ui.currentConfig().createGameSceneRenderer(canvas, this);    }
-
-    @Override
-    public GameScene2D_Renderer sceneRenderer() {
-        return sceneRenderer;
     }
 
     @Override

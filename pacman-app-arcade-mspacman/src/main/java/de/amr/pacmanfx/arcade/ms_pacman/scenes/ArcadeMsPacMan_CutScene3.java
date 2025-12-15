@@ -15,11 +15,9 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
-import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.Globals.TS;
 
@@ -43,20 +41,8 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
 
     private Clapperboard clapperboard;
 
-    private GameScene2D_Renderer sceneRenderer;
-
     public ArcadeMsPacMan_CutScene3(GameUI ui) {
         super(ui);
-    }
-
-    @Override
-    protected void createRenderers(Canvas canvas) {
-        sceneRenderer = ui.currentConfig().createGameSceneRenderer(canvas, this);
-    }
-
-    @Override
-    public GameScene2D_Renderer sceneRenderer() {
-        return sceneRenderer;
     }
 
     public Pac pacMan() {

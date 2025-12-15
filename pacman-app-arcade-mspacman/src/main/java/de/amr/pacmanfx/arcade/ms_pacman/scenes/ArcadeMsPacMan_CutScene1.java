@@ -17,12 +17,10 @@ import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.animation.SingleSpriteNoAnimation;
-import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.Globals.*;
 
@@ -51,8 +49,6 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     private Actor heart;
     private Clapperboard clapperboard;
 
-    private GameScene2D_Renderer sceneRenderer;
-
     public ArcadeMsPacMan_CutScene1(GameUI ui) {
         super(ui);
     }
@@ -79,16 +75,6 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
 
     public Clapperboard clapperboard() {
         return clapperboard;
-    }
-
-    @Override
-    protected void createRenderers(Canvas canvas) {
-        sceneRenderer = ui.currentConfig().createGameSceneRenderer(canvas, this);
-    }
-
-    @Override
-    public GameScene2D_Renderer sceneRenderer() {
-        return sceneRenderer;
     }
 
     @Override

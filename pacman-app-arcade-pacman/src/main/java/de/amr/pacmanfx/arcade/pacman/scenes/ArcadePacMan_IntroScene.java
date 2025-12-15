@@ -15,11 +15,9 @@ import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
-import javafx.scene.canvas.Canvas;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,8 +37,6 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     private final StateMachine<ArcadePacMan_IntroScene> sceneController;
 
-    private GameScene2D_Renderer sceneRenderer;
-
     private Pulse blinking;
     private Pac pacMan;
     private List<Ghost> ghosts;
@@ -55,15 +51,6 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     public ArcadePacMan_IntroScene(GameUI ui) {
         super(ui);
         sceneController = new StateMachine<>(this, List.of(SceneState.values()));
-    }
-
-    @Override
-    protected void createRenderers(Canvas canvas) {
-        sceneRenderer = ui.currentConfig().createGameSceneRenderer(canvas, this);    }
-
-    @Override
-    public GameScene2D_Renderer sceneRenderer() {
-        return sceneRenderer;
     }
 
     public boolean titleVisible() {

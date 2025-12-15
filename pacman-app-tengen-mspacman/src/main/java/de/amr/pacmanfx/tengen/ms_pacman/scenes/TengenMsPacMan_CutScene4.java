@@ -17,11 +17,9 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.actors.MsPacMan;
 import de.amr.pacmanfx.tengen.ms_pacman.model.actors.PacMan;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
-import javafx.scene.canvas.Canvas;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
@@ -40,8 +38,6 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
     private static final int LOWER_LANE = TS * 21; // TODO not sure
 
-    private GameScene2D_Renderer sceneRenderer;
-
     private Pac pacMan;
     private Pac msPacMan;
     private List<Pac> juniors;
@@ -51,10 +47,6 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     public TengenMsPacMan_CutScene4(GameUI ui) {
         super(ui);
     }
-
-    @Override
-    protected void createRenderers(Canvas canvas) {
-        sceneRenderer = ui.currentConfig().createGameSceneRenderer(canvas, this);    }
 
     public Pac pacMan() {
         return pacMan;
@@ -70,11 +62,6 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
     public Clapperboard clapperboard() {
         return clapperboard;
-    }
-
-    @Override
-    public GameScene2D_Renderer sceneRenderer() {
-        return sceneRenderer;
     }
 
     @Override

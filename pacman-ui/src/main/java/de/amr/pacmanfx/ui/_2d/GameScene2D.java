@@ -53,15 +53,6 @@ public abstract class GameScene2D implements GameScene {
      */
     protected abstract void doEnd(Game game);
 
-    /**
-     * Called when canvas has been assigned. Creates the renderers for this scene.
-     *
-     * @param canvas Canvas in which this scene will be rendered.
-     */
-    protected abstract void createRenderers(Canvas canvas);
-
-    public abstract GameScene2D_Renderer sceneRenderer();
-
     // GameScene interface
 
     @Override
@@ -94,7 +85,7 @@ public abstract class GameScene2D implements GameScene {
 
     public void setCanvas(Canvas canvas) {
         this.canvas = requireNonNull(canvas);
-        createRenderers(canvas);
+        //createRenderers(canvas);
     }
 
     // other methods

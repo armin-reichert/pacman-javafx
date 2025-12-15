@@ -173,13 +173,10 @@ public class PlayView extends StackPane implements GameUI_View {
     }
 
     private void drawGameScene2D(GameScene2D gameScene2D) {
-        final Game game = ui.context().currentGame();
-        if (gameScene2D.sceneRenderer() == null) {
-            throw new IllegalStateException("No scene renderer exists for 2D game scene '%s'".formatted(this));
-        }
-        gameScene2D.sceneRenderer().draw(gameScene2D);
+        final GameScene2D_Renderer sceneRenderer = ui.currentConfig().createGameSceneRenderer(gameScene2D.canvas(), gameScene2D);
+        sceneRenderer.draw(gameScene2D);
         if (hudRenderer != null) {
-            hudRenderer.drawHUD(game, gameScene2D);
+            hudRenderer.drawHUD(ui.context().currentGame(), gameScene2D);
         }
     }
 

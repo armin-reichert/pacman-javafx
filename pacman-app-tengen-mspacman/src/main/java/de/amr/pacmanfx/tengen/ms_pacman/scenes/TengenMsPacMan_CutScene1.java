@@ -18,12 +18,10 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.actors.PacMan;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.animation.SingleSpriteNoAnimation;
-import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
@@ -47,8 +45,6 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
     private static final float SPEED_CHASING = 2.0f;
     private static final float SPEED_RISING = 1.0f;
     private static final float SPEED_AFTER_COLLISION = 0.5f;
-
-    private GameScene2D_Renderer sceneRenderer;
 
     private Clapperboard clapperboard;
     private Actor heart;
@@ -85,15 +81,6 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
 
     public Ghost pinky() {
         return pinky;
-    }
-
-    @Override
-    protected void createRenderers(Canvas canvas) {
-        sceneRenderer = ui.currentConfig().createGameSceneRenderer(canvas, this);    }
-
-    @Override
-    public GameScene2D_Renderer sceneRenderer() {
-        return sceneRenderer;
     }
 
     @Override

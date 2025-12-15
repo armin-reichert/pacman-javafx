@@ -21,14 +21,12 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
 import de.amr.pacmanfx.ui.sound.SoundID;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.control.CheckMenuItem;
 import org.tinylog.Logger;
 
@@ -42,7 +40,6 @@ public class Arcade_PlayScene2D extends GameScene2D {
     //TODO fix volume in audio file
     public static final float SIREN_VOLUME = 0.33f;
 
-    private GameScene2D_Renderer sceneRenderer;
     private LevelCompletedAnimation levelCompletedAnimation;
     private long lastMunchingSoundPlayedTick;
 
@@ -52,15 +49,6 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     public LevelCompletedAnimation levelCompletedAnimation() {
         return levelCompletedAnimation;
-    }
-
-    @Override
-    protected void createRenderers(Canvas canvas) {
-        sceneRenderer = ui.currentConfig().createGameSceneRenderer(canvas, this);    }
-
-    @Override
-    public GameScene2D_Renderer sceneRenderer() {
-        return sceneRenderer;
     }
 
     @Override
