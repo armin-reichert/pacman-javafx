@@ -13,8 +13,6 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.tengen.ms_pacman.model.PacBooster;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameController.GameState;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_OptionsScene_Renderer;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.action.GameAction;
@@ -66,7 +64,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         }
     };
 
-    private TengenMsPacMan_OptionsScene_Renderer sceneRenderer;
+    private GameScene2D_Renderer sceneRenderer;
 
     private int idleTicks;
     public int initialDelay;
@@ -77,12 +75,10 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
     @Override
     protected void createRenderers(Canvas canvas) {
-        sceneRenderer = GameScene2D_Renderer.configureRendererForGameScene(
-            new TengenMsPacMan_OptionsScene_Renderer(this, canvas, (TengenMsPacMan_SpriteSheet) ui.currentConfig().spriteSheet()), this);
-    }
+        sceneRenderer = ui.currentConfig().createGameSceneRenderer(canvas, this);    }
 
     @Override
-    public TengenMsPacMan_OptionsScene_Renderer sceneRenderer() {
+    public GameScene2D_Renderer sceneRenderer() {
         return sceneRenderer;
     }
 

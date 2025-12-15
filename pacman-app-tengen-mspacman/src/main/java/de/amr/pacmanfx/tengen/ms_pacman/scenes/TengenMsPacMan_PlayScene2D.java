@@ -24,8 +24,8 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.MovingGameLevelMessage;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameController.GameState;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_HUD;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_PlayScene2D_Renderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
@@ -53,7 +53,6 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Properties.PROPERT
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
 import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel.GAME_OVER_MESSAGE_TEXT;
 import static de.amr.pacmanfx.tengen.ms_pacman.scenes.SceneDisplayMode.SCROLLING;
-import static de.amr.pacmanfx.ui._2d.GameScene2D_Renderer.configureRendererForGameScene;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_QUIT_GAME_SCENE;
 import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR;
 import static java.util.Objects.requireNonNull;
@@ -75,7 +74,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     private final PlayScene2DCamera dynamicCamera;
     private final PerspectiveCamera fixedCamera;
 
-    private TengenMsPacMan_PlayScene2D_Renderer sceneRenderer;
+    private GameScene2D_Renderer sceneRenderer;
 
     private LevelCompletedAnimation levelCompletedAnimation;
 
@@ -158,13 +157,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     protected void createRenderers(Canvas canvas) {
-        final TengenMsPacMan_UIConfig uiConfig = ui.currentConfig();
-        sceneRenderer = configureRendererForGameScene(
-            new TengenMsPacMan_PlayScene2D_Renderer(this, canvas, uiConfig.spriteSheet()), this);
-    }
+        sceneRenderer = ui.currentConfig().createGameSceneRenderer(canvas, this);    }
 
     @Override
-    public TengenMsPacMan_PlayScene2D_Renderer sceneRenderer() {
+    public GameScene2D_Renderer sceneRenderer() {
         return sceneRenderer;
     }
 

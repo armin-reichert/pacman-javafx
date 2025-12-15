@@ -14,9 +14,9 @@ import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameController.GameState;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.model.actors.MsPacMan;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_IntroScene_Renderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import javafx.scene.canvas.Canvas;
@@ -30,7 +30,6 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Actions.ACTION_ENTER_START_SCREEN;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Actions.ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
-import static de.amr.pacmanfx.ui._2d.GameScene2D_Renderer.configureRendererForGameScene;
 
 public class TengenMsPacMan_IntroScene extends GameScene2D {
 
@@ -45,7 +44,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     public TengenMsPacMan_SpriteSheet spriteSheet;
 
-    private TengenMsPacMan_IntroScene_Renderer sceneRenderer;
+    private GameScene2D_Renderer sceneRenderer;
 
     public Color[] ghostColors;
 
@@ -64,13 +63,10 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     protected void createRenderers(Canvas canvas) {
-        final GameUI_Config uiConfig = ui.currentConfig();
-        sceneRenderer = configureRendererForGameScene(
-            new TengenMsPacMan_IntroScene_Renderer(this, canvas, (TengenMsPacMan_SpriteSheet) uiConfig.spriteSheet()), this);
-    }
+        sceneRenderer = ui.currentConfig().createGameSceneRenderer(canvas, this);    }
 
     @Override
-    public TengenMsPacMan_IntroScene_Renderer sceneRenderer() {
+    public GameScene2D_Renderer sceneRenderer() {
         return sceneRenderer;
     }
 

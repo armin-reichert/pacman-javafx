@@ -5,22 +5,20 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
-import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_StartScene_Renderer;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import javafx.scene.canvas.Canvas;
-
-import static de.amr.pacmanfx.ui._2d.GameScene2D_Renderer.configureRendererForGameScene;
 
 /**
  * Scene shown after credit has been added and where game can be started.
  */
 public class ArcadePacMan_StartScene extends GameScene2D {
 
-    private ArcadePacMan_StartScene_Renderer sceneRenderer;
+    private GameScene2D_Renderer sceneRenderer;
 
     public ArcadePacMan_StartScene(GameUI ui) {
         super(ui);
@@ -28,11 +26,10 @@ public class ArcadePacMan_StartScene extends GameScene2D {
 
     @Override
     protected void createRenderers(Canvas canvas) {
-        sceneRenderer = configureRendererForGameScene(new ArcadePacMan_StartScene_Renderer(this, canvas), this);
-    }
+        sceneRenderer = ui.currentConfig().createGameSceneRenderer(canvas, this);    }
 
     @Override
-    public ArcadePacMan_StartScene_Renderer sceneRenderer() {
+    public GameScene2D_Renderer sceneRenderer() {
         return sceneRenderer;
     }
 

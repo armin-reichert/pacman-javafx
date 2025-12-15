@@ -6,14 +6,13 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.model.actors.ArcadePacMan_ActorFactory;
-import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_CutScene2_Renderer;
-import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
@@ -41,7 +40,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     private SpriteAnimation blinkyDamaged;
     private SpriteAnimation nailDressRaptureAnimation;
 
-    private ArcadePacMan_CutScene2_Renderer sceneRenderer;
+    private GameScene2D_Renderer sceneRenderer;
 
     public ArcadePacMan_CutScene2(GameUI ui) {
         super(ui);
@@ -49,13 +48,10 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
     @Override
     protected void createRenderers(Canvas canvas) {
-        final GameUI_Config uiConfig = ui.currentConfig();
-        sceneRenderer = adaptRenderer(
-            new ArcadePacMan_CutScene2_Renderer(this, canvas, (ArcadePacMan_SpriteSheet) uiConfig.spriteSheet()));
-    }
+        sceneRenderer = ui.currentConfig().createGameSceneRenderer(canvas, this);    }
 
     @Override
-    public ArcadePacMan_CutScene2_Renderer sceneRenderer() {
+    public GameScene2D_Renderer sceneRenderer() {
         return sceneRenderer;
     }
 

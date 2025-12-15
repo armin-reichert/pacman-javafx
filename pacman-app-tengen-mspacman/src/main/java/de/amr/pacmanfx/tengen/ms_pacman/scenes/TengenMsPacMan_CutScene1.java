@@ -16,9 +16,9 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_HUD;
 import de.amr.pacmanfx.tengen.ms_pacman.model.actors.MsPacMan;
 import de.amr.pacmanfx.tengen.ms_pacman.model.actors.PacMan;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.SpriteID;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_CutScene1_Renderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
@@ -48,7 +48,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
     private static final float SPEED_RISING = 1.0f;
     private static final float SPEED_AFTER_COLLISION = 0.5f;
 
-    private TengenMsPacMan_CutScene1_Renderer sceneRenderer;
+    private GameScene2D_Renderer sceneRenderer;
 
     private Clapperboard clapperboard;
     private Actor heart;
@@ -89,11 +89,10 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
 
     @Override
     protected void createRenderers(Canvas canvas) {
-        sceneRenderer = adaptRenderer(new TengenMsPacMan_CutScene1_Renderer(this, canvas));
-    }
+        sceneRenderer = ui.currentConfig().createGameSceneRenderer(canvas, this);    }
 
     @Override
-    public TengenMsPacMan_CutScene1_Renderer sceneRenderer() {
+    public GameScene2D_Renderer sceneRenderer() {
         return sceneRenderer;
     }
 

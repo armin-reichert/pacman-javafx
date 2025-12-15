@@ -7,8 +7,6 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController.GameState;
 import de.amr.pacmanfx.arcade.pacman.model.actors.ArcadePacMan_ActorFactory;
-import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_IntroScene_Renderer;
-import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
@@ -17,6 +15,7 @@ import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
@@ -40,7 +39,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     private final StateMachine<ArcadePacMan_IntroScene> sceneController;
 
-    private ArcadePacMan_IntroScene_Renderer sceneRenderer;
+    private GameScene2D_Renderer sceneRenderer;
 
     private Pulse blinking;
     private Pac pacMan;
@@ -60,13 +59,10 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     @Override
     protected void createRenderers(Canvas canvas) {
-        final GameUI_Config uiConfig = ui.currentConfig();
-        sceneRenderer = adaptRenderer(
-            new ArcadePacMan_IntroScene_Renderer(this, canvas, (ArcadePacMan_SpriteSheet) uiConfig.spriteSheet()));
-    }
+        sceneRenderer = ui.currentConfig().createGameSceneRenderer(canvas, this);    }
 
     @Override
-    public ArcadePacMan_IntroScene_Renderer sceneRenderer() {
+    public GameScene2D_Renderer sceneRenderer() {
         return sceneRenderer;
     }
 

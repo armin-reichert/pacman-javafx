@@ -7,14 +7,13 @@ package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_CreditsScene_Renderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.api.GameUI;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Actions.ACTION_ENTER_START_SCREEN;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
-import static de.amr.pacmanfx.ui._2d.GameScene2D_Renderer.configureRendererForGameScene;
 
 /**
  * Gives credit to the people that helped in making the game, original and remake authors.
@@ -25,7 +24,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
     public float fadeProgress = 0;
 
-    private TengenMsPacMan_CreditsScene_Renderer sceneRenderer;
+    private GameScene2D_Renderer sceneRenderer;
 
     public TengenMsPacMan_CreditsScene(GameUI ui) {
         super(ui);
@@ -33,11 +32,10 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
     @Override
     protected void createRenderers(Canvas canvas) {
-        sceneRenderer = configureRendererForGameScene(new TengenMsPacMan_CreditsScene_Renderer(this, canvas), this);
-    }
+        sceneRenderer = ui.currentConfig().createGameSceneRenderer(canvas, this);    }
 
     @Override
-    public TengenMsPacMan_CreditsScene_Renderer sceneRenderer() {
+    public GameScene2D_Renderer sceneRenderer() {
         return sceneRenderer;
     }
 

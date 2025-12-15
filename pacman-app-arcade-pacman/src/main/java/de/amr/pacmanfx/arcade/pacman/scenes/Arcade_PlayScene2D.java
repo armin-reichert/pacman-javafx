@@ -6,7 +6,6 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController.GameState;
-import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_PlayScene2D_Renderer;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameStateChangeEvent;
 import de.amr.pacmanfx.lib.fsm.StateMachine.State;
@@ -22,11 +21,11 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
-import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import javafx.scene.canvas.Canvas;
@@ -43,7 +42,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     //TODO fix volume in audio file
     public static final float SIREN_VOLUME = 0.33f;
 
-    private Arcade_PlayScene2D_Renderer renderer;
+    private GameScene2D_Renderer sceneRenderer;
     private LevelCompletedAnimation levelCompletedAnimation;
     private long lastMunchingSoundPlayedTick;
 
@@ -57,13 +56,11 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     protected void createRenderers(Canvas canvas) {
-        final GameUI_Config uiConfig = ui.currentConfig();
-        renderer = adaptRenderer(new Arcade_PlayScene2D_Renderer(this, canvas, uiConfig.spriteSheet()));
-    }
+        sceneRenderer = ui.currentConfig().createGameSceneRenderer(canvas, this);    }
 
     @Override
-    public Arcade_PlayScene2D_Renderer sceneRenderer() {
-        return renderer;
+    public GameScene2D_Renderer sceneRenderer() {
+        return sceneRenderer;
     }
 
     @Override
