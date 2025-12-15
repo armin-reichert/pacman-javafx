@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
+import de.amr.pacmanfx.arcade.pacman.model.Arcade_HUD;
 import de.amr.pacmanfx.arcade.pacman.model.actors.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.model.Game;
@@ -50,7 +51,8 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
     @Override
     public void doInit(Game game) {
         GameUI_Config uiConfig = ui.currentConfig();
-        game.hud().credit(false).score(true).levelCounter(true).livesCounter(false).show();
+        final Arcade_HUD arcadeHud = (Arcade_HUD) game.hud();
+        arcadeHud.credit(false).score(true).levelCounter(true).livesCounter(false).show();
         pac = ArcadePacMan_ActorFactory.createPacMan();
         pac.setAnimationManager(uiConfig.createPacAnimations());
         blinky = uiConfig.createAnimatedGhost(RED_GHOST_SHADOW);

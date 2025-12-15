@@ -8,6 +8,7 @@ import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.HUD;
 import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.tengen.ms_pacman.model.*;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
@@ -58,13 +59,13 @@ public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteR
     }
 
     @Override
-    public void drawHUD(Game game, GameScene2D scene) {
+    public void draw(HUD hud, Game game, GameScene2D scene) {
         requireNonNull(game);
         requireNonNull(scene);
 
         final Vector2i sceneSize = scene.unscaledSize();
         final var tengenGame = (TengenMsPacMan_GameModel) game;
-        final TengenMsPacMan_HUD hud = tengenGame.hud();
+        final TengenMsPacMan_HUD tengenHUD = tengenGame.hud();
 
         if (!hud.isVisible()) return;
 
@@ -83,14 +84,14 @@ public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteR
         }
 
         if (hud.isLivesCounterVisible()) {
-            drawLivesCounter(tengenGame, hud, sceneSize.y() - TS);
+            drawLivesCounter(tengenGame, tengenHUD, sceneSize.y() - TS);
         }
 
         if (hud.isLevelCounterVisible() && game.optGameLevel().isPresent()) {
-            drawLevelCounter(game.level(), hud, sceneSize.y() - TS);
+            drawLevelCounter(game.level(), tengenHUD, sceneSize.y() - TS);
         }
 
-        if (hud.gameOptionsVisible()) {
+        if (tengenHUD.gameOptionsVisible()) {
             drawGameOptions(tengenGame.mapCategory(), tengenGame.difficulty(), tengenGame.pacBooster(), TS(16), TS(2.5f));
         }
 

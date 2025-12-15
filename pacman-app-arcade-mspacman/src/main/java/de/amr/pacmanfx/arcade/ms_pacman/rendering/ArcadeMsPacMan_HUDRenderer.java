@@ -8,6 +8,7 @@ import de.amr.pacmanfx.arcade.pacman.model.Arcade_HUD;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.HUD;
 import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.HUD_Renderer;
@@ -44,11 +45,10 @@ public class ArcadeMsPacMan_HUDRenderer extends BaseRenderer implements SpriteRe
     }
 
     @Override
-    public void drawHUD(Game game, GameScene2D scene) {
+    public void draw(HUD hud, Game game, GameScene2D scene) {
         requireNonNull(game);
         requireNonNull(scene);
 
-        final Arcade_HUD hud = (Arcade_HUD) game.hud();
         final Vector2i sceneSize = scene.unscaledSize();
 
         if (!hud.isVisible()) return;
@@ -89,8 +89,10 @@ public class ArcadeMsPacMan_HUDRenderer extends BaseRenderer implements SpriteRe
             }
         }
 
-        if (hud.isCreditVisible()) {
-            fillText("CREDIT %2d".formatted(hud.numCoins()), ARCADE_WHITE, arcadeFont8(), TS(2), sceneSize.y());
+        if (hud instanceof Arcade_HUD arcadeHud) {
+            if (arcadeHud.isCreditVisible()) {
+                fillText("CREDIT %2d".formatted(arcadeHud.numCoins()), ARCADE_WHITE, arcadeFont8(), TS(2), sceneSize.y());
+            }
         }
     }
 

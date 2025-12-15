@@ -27,17 +27,9 @@ public interface HUD {
     boolean isScoreVisible();
     void showScore(boolean visible);
 
-    boolean isCreditVisible();
-    void showCredit(boolean visible);
-
     // Fluent API
     default HUD all(boolean visible) {
-        return credit(visible).score(visible).levelCounter(visible).livesCounter(visible);
-    }
-
-    default HUD credit(boolean visible) {
-        showCredit(visible);
-        return this;
+        return score(visible).levelCounter(visible).livesCounter(visible);
     }
 
     default HUD levelCounter(boolean visible) {

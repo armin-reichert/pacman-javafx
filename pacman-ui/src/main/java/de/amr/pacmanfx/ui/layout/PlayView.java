@@ -256,7 +256,8 @@ public class PlayView extends StackPane implements GameUI_View {
             sceneRenderer.draw(gameScene2D);
         }
         if (hudRenderer != null) {
-            hudRenderer.drawHUD(ui.context().currentGame(), gameScene2D);
+            final Game game = ui.context().currentGame();
+            hudRenderer.draw(game.hud(), game, gameScene2D);
         }
     }
 

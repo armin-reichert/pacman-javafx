@@ -36,7 +36,7 @@ public class LevelMediumTestState implements StateMachine.State<Game>, TestState
         GameLevelMessage message = new GameLevelMessage(MessageType.TEST);
         message.setPosition(gameLevel.worldMap().terrainLayer().messageCenterPosition());
         gameLevel.setMessage(message);
-        game.hud().credit(false).show();
+        game.hud().show();
         game.publishGameEvent(GameEvent.Type.STOP_ALL_SOUNDS);
     }
 

@@ -7,7 +7,6 @@ package de.amr.pacmanfx.model;
 public abstract class BaseHUD implements HUD {
 
     private boolean visible = true;
-    private boolean creditVisible;
     private boolean livesCounterVisible = true;
     private boolean levelCounterVisible = true;
     private boolean scoreVisible = true;
@@ -23,11 +22,6 @@ public abstract class BaseHUD implements HUD {
 
     @Override
     public boolean isVisible() { return visible; }
-
-    @Override
-    public boolean isCreditVisible() { return creditVisible; }
-
-    public void showCredit(boolean b) { creditVisible = b; }
 
     @Override
     public boolean isLevelCounterVisible() {

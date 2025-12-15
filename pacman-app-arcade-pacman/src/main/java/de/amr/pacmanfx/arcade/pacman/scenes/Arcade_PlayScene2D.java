@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController.GameState;
+import de.amr.pacmanfx.arcade.pacman.model.Arcade_HUD;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameStateChangeEvent;
 import de.amr.pacmanfx.lib.fsm.StateMachine.State;
@@ -14,7 +15,6 @@ import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.HUD;
 import de.amr.pacmanfx.model.MessageType;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.GhostState;
@@ -53,7 +53,8 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     protected void doInit(Game game) {
-        game.hud().credit(false).score(true).levelCounter(true).livesCounter(true).show();
+        Arcade_HUD arcadeHud = (Arcade_HUD) game.hud();
+        arcadeHud.credit(false).score(true).levelCounter(true).livesCounter(true).show();
     }
 
     @Override
@@ -240,7 +241,8 @@ public class Arcade_PlayScene2D extends GameScene2D {
         final Game game = level.game();
         final boolean demoLevel = level.isDemoLevel();
         ui.soundManager().setEnabled(!demoLevel);
-        game.hud().credit(false).levelCounter(true).livesCounter(!demoLevel).show();
+        final Arcade_HUD arcadeHud = (Arcade_HUD) game.hud();
+        arcadeHud.credit(false).levelCounter(true).livesCounter(!demoLevel).show();
         if (demoLevel) {
             actionBindings.useAll(ArcadePacMan_UIConfig.DEFAULT_BINDINGS); // insert coin + start game
         } else {
@@ -253,12 +255,12 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     private void updateHUD(GameLevel level) {
         final Game game = level.game();
-        final HUD hud = game.hud();
+        final Arcade_HUD hud = (Arcade_HUD) game.hud();
         // While Pac-Man is still invisible on level start, one entry more is shown in the lives counter
         final boolean oneExtra = game.control().state() == GameState.STARTING_GAME_OR_LEVEL && !level.pac().isVisible();
         final int livesDisplayed = oneExtra ? game.lifeCount() : game.lifeCount() - 1;
         hud.setVisibleLifeCount(Math.clamp(livesDisplayed, 0, hud.maxLivesDisplayed()));
-        hud.showCredit(context().coinMechanism().isEmpty());
+        hud.credit(context().coinMechanism().isEmpty());
     }
 
     private void updateHuntingSound(GameLevel level) {

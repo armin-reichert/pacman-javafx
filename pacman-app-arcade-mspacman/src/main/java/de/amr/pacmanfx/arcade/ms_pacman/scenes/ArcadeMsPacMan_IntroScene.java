@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 import de.amr.pacmanfx.arcade.ms_pacman.model.actors.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController.GameState;
+import de.amr.pacmanfx.arcade.pacman.model.Arcade_HUD;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
@@ -73,7 +74,8 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     public void doInit(Game game) {
         ui.soundManager().playVoiceAfterSec(1, SoundID.VOICE_EXPLAIN_GAME_START);
 
-        game.hud().credit(true).score(true).levelCounter(true).livesCounter(false).show();
+        final Arcade_HUD arcadeHud = (Arcade_HUD) game.hud();
+        arcadeHud.credit(true).score(true).levelCounter(true).livesCounter(false).show();
 
         actionBindings.useAll(ArcadePacMan_UIConfig.DEFAULT_BINDINGS);
         actionBindings.useAll(GameUI.SCENE_TESTS_BINDINGS);

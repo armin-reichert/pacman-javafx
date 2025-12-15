@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.pacmanfx.model.BaseHUD;
 import de.amr.pacmanfx.model.CoinMechanism;
+import de.amr.pacmanfx.model.HUD;
 import javafx.beans.property.IntegerProperty;
 
 import java.util.Objects;
@@ -24,5 +25,19 @@ public class Arcade_HUD extends BaseHUD {
 
     public int numCoins() {
         return coinMechanism.numCoins();
+    }
+
+    private boolean creditVisible;
+
+    public boolean isCreditVisible() { return creditVisible; }
+
+    public HUD credit(boolean visible) {
+        creditVisible = visible;
+        return this;
+    }
+
+    @Override
+    public HUD all(boolean visible) {
+        return credit(visible).score(visible).levelCounter(visible).livesCounter(visible);
     }
 }

@@ -70,7 +70,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
         if (tengenGame.mapCategory() == MapCategory.ARCADE) {
             hud.hide();
         } else {
-            hud.gameOptions(false).credit(false).score(false).levelCounter(true).livesCounter(false).show();
+            hud.gameOptions(false).score(false).levelCounter(true).livesCounter(false).show();
         }
 
         actionBindings.useKeyCombination(ACTION_LET_GAME_STATE_EXPIRE, GameUI.JOYPAD.key(JoypadButton.START));
