@@ -1,3 +1,5 @@
+package de.amr.pacmanfx.arcade.ms_pacman;
+
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;

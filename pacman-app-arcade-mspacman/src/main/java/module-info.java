@@ -7,7 +7,10 @@ See file LICENSE in repository root directory for details.
 open module de.amr.pacmanfx.arcade.ms_pacman {
     requires javafx.controls;
     requires javafx.graphics;
+    requires javafx.media;
+
     requires org.tinylog.api;
+
     requires de.amr.pacmanfx.core;
     requires de.amr.pacmanfx.uilib;
     requires de.amr.pacmanfx.ui;
