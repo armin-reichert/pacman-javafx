@@ -31,6 +31,9 @@ public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteR
     private static final Color SCORE_TEXT_COLOR = nesColor(0x20);
     private static final Color SCORE_TEXT_COLOR_DISABLED = nesColor(0x16);
 
+    public static final float LEVEL_COUNTER_POS_LEFT = TS(2);
+    public static final float LEVEL_COUNTER_POS_RIGHT = TS(28);
+
     private final GameClock clock;
     private final TengenMsPacMan_SpriteSheet spriteSheet;
 
@@ -83,9 +86,8 @@ public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteR
             drawLivesCounter(tengenGame, hud, sceneSize.y() - TS);
         }
 
-        if (hud.isLevelCounterVisible()) {
-            final float y = sceneSize.y() - TS;
-            drawLevelCounter(tengenGame, hud, y);
+        if (hud.isLevelCounterVisible() && game.optGameLevel().isPresent()) {
+            drawLevelCounter(game.level(), hud, sceneSize.y() - TS);
         }
 
         if (hud.gameOptionsVisible()) {
@@ -119,24 +121,19 @@ public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteR
         }
     }
 
-    private void drawLevelCounter(Game game, TengenMsPacMan_HUD hud, float y) {
-        GameLevel gameLevel = game.optGameLevel().orElse(null);
-        if (gameLevel == null) return;
-
-        final float left = TS(2);
-        final float right = TS(28);
+    private void drawLevelCounter(GameLevel level, TengenMsPacMan_HUD hud, float y) {
         final RectShort[] symbolSprites = spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS);
-        float x = right - TS(2);
+        float x = LEVEL_COUNTER_POS_RIGHT - TS(2);
         // symbols are drawn from right to left!
-        for (byte symbol : game.levelCounter().symbols()) {
+        for (byte symbol : level.game().levelCounter().symbols()) {
             if (0 <= symbol && symbol < symbolSprites.length) {
                 drawSprite(symbolSprites[symbol], x, y, true);
             }
             x -= TS(2);
         }
         if (hud.levelNumberVisible()) {
-            drawLevelNumberBox(gameLevel.number(), left, y); // left box
-            drawLevelNumberBox(gameLevel.number(), right, y); // right box
+            drawLevelNumberBox(level.number(), LEVEL_COUNTER_POS_LEFT, y); // left box
+            drawLevelNumberBox(level.number(), LEVEL_COUNTER_POS_RIGHT, y); // right box
         }
     }
 
