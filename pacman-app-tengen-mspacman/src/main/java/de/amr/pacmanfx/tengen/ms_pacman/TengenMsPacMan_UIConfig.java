@@ -299,15 +299,16 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         if (   ui.isCurrentGameSceneID(sceneID_CutScene(1))
             || ui.isCurrentGameSceneID(sceneID_CutScene(2))
             || ui.isCurrentGameSceneID(sceneID_CutScene(3))
-            || ui.isCurrentGameSceneID(sceneID_CutScene(4))) {
-            final var renderer = new TengenMsPacMan_HUD_Renderer(canvas, spriteSheet, ui.clock());
-            renderer.setOffsetY(-2*TS);
-            return renderer;
-        } else if (ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_2D)) {
-            return new TengenMsPacMan_HUD_Renderer(canvas, spriteSheet, ui.clock());
-        } else {
-            return null;
+            || ui.isCurrentGameSceneID(sceneID_CutScene(4)) )
+        {
+            final var hudRenderer = new TengenMsPacMan_HUD_Renderer(canvas, spriteSheet, ui.clock());
+            hudRenderer.setOffsetY(-2*TS); //TODO this is ugly
+            return gameScene2D.adaptRenderer(hudRenderer);
         }
+        if (ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_2D)) {
+            return gameScene2D.adaptRenderer(new TengenMsPacMan_HUD_Renderer(canvas, spriteSheet, ui.clock()));
+        }
+        return null;
     }
 
     @Override

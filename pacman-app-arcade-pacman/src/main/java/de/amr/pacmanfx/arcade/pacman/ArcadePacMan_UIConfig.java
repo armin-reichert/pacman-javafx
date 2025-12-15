@@ -201,6 +201,7 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
     public HUD_Renderer createHUDRenderer(Canvas canvas, GameScene2D gameScene2D) {
         var hudRenderer = new ArcadePacMan_HUD_Renderer(canvas, spriteSheet);
         hudRenderer.setImageSmoothing(true);
+        gameScene2D.adaptRenderer(hudRenderer);
         return hudRenderer;
     }
 

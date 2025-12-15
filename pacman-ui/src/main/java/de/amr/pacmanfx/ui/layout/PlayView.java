@@ -64,6 +64,7 @@ public class PlayView extends StackPane implements GameUI_View {
     private GameUI_ContextMenu contextMenu;
     private HelpLayer helpLayer;
 
+    private GameScene2D_Renderer sceneRenderer;
     private HUD_Renderer hudRenderer;
 
     public PlayView(Scene parentScene) {
@@ -172,14 +173,6 @@ public class PlayView extends StackPane implements GameUI_View {
         }
     }
 
-    private void drawGameScene2D(GameScene2D gameScene2D) {
-        final GameScene2D_Renderer sceneRenderer = ui.currentConfig().createGameSceneRenderer(gameScene2D.canvas(), gameScene2D);
-        sceneRenderer.draw(gameScene2D);
-        if (hudRenderer != null) {
-            hudRenderer.drawHUD(ui.context().currentGame(), gameScene2D);
-        }
-    }
-
     // -----------------------------------------------------------------------------------------------------------------
     // GameUI_View interface implementation
     // -----------------------------------------------------------------------------------------------------------------
@@ -245,6 +238,30 @@ public class PlayView extends StackPane implements GameUI_View {
 
     // Others
 
+    private void createCanvas(GameScene2D gameScene2D) {
+        final var canvas = new Canvas();
+        Logger.info("A new, fresh canvas has been created just for you!");
+        canvasDecorationPane.setCanvas(canvas);
+
+        gameScene2D.setCanvas(canvas);
+        gameScene2D.backgroundProperty().bind(GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR);
+
+        sceneRenderer = ui.currentConfig().createGameSceneRenderer(canvas, gameScene2D);
+
+        hudRenderer = ui.currentConfig().createHUDRenderer(canvas, gameScene2D);
+        if (hudRenderer != null) {
+            gameScene2D.adaptRenderer(hudRenderer);
+            Logger.info("A new HUD renderer has been created for game scene {}", gameScene2D.getClass().getSimpleName());
+        }
+    }
+
+    private void drawGameScene2D(GameScene2D gameScene2D) {
+        sceneRenderer.draw(gameScene2D);
+        if (hudRenderer != null) {
+            hudRenderer.drawHUD(ui.context().currentGame(), gameScene2D);
+        }
+    }
+
     //TODO simplify
 
     /**
@@ -297,18 +314,12 @@ public class PlayView extends StackPane implements GameUI_View {
             subScene.heightProperty().bind(parentScene.heightProperty());
             // Is it a 2D scene with canvas inside sub-scene with camera?
             if (gameScene instanceof GameScene2D gameScene2D) {
-                createCanvas();
-                gameScene2D.setCanvas(canvasDecorationPane.canvas());
-                createHUDRenderer(canvasDecorationPane.canvas(), gameScene2D);
-                gameScene2D.backgroundProperty().bind(GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR);
+                createCanvas(gameScene2D);
             }
             getChildren().set(0, subScene);
         }
         else if (gameScene instanceof GameScene2D gameScene2D) {
-            createCanvas();
-            gameScene2D.setCanvas(canvasDecorationPane.canvas());
-            createHUDRenderer(canvasDecorationPane.canvas(), gameScene2D);
-            gameScene2D.backgroundProperty().bind(GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR);
+            createCanvas(gameScene2D);
             Vector2i gameSceneSizePx = gameScene2D.unscaledSize();
             double aspect = (double) gameSceneSizePx.x() / gameSceneSizePx.y();
             if (ui.currentConfig().sceneConfig().canvasDecorated(gameScene)) {
@@ -325,21 +336,12 @@ public class PlayView extends StackPane implements GameUI_View {
                 canvasDecorationPane.canvas().heightProperty().bind(parentScene.heightProperty());
                 canvasDecorationPane.canvas().widthProperty().bind(parentScene.heightProperty().map(h -> h.doubleValue() * aspect));
                 gameScene2D.scalingProperty().bind(parentScene.heightProperty().divide(gameSceneSizePx.y()));
-                createHUDRenderer(canvasDecorationPane.canvas(), gameScene2D);
                 canvasLayer.setCenter(canvasDecorationPane.canvas());
             }
             getChildren().set(0, canvasLayer);
         }
         else {
             Logger.error("Cannot embed play scene of class {}", gameScene.getClass().getName());
-        }
-    }
-
-    private void createHUDRenderer(Canvas canvas, GameScene2D gameScene2D) {
-        hudRenderer = ui.currentConfig().createHUDRenderer(canvas, gameScene2D);
-        if (hudRenderer != null) {
-            GameScene2D_Renderer.configureRendererForGameScene(hudRenderer, gameScene2D);
-            Logger.info("A new HUD renderer has been created for game scene {}", gameScene2D.getClass().getSimpleName());
         }
     }
 
@@ -369,11 +371,5 @@ public class PlayView extends StackPane implements GameUI_View {
         helpLayer.setMouseTransparent(true);
 
         getChildren().addAll(canvasLayer, dashboardAndMiniViewLayer, helpLayer);
-    }
-
-    private void createCanvas() {
-        final var canvas = new Canvas();
-        canvasDecorationPane.setCanvas(canvas);
-        Logger.info("A new, fresh canvas has been created just for you!");
     }
 }
