@@ -45,6 +45,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     private Arcade_PlayScene2D_Renderer renderer;
     private LevelCompletedAnimation levelCompletedAnimation;
+    private long lastMunchingSoundPlayedTick;
 
     public Arcade_PlayScene2D(GameUI ui) {
         super(ui);
@@ -159,7 +160,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onGameContinues(GameEvent e) {
-        final Game game = context().currentGame();
+        final Game game = e.game();
         game.optGameLevel().ifPresent(level -> {
             resetAnimations(level);
             game.showLevelMessage(MessageType.READY);
@@ -168,7 +169,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onGameStarts(GameEvent e) {
-        final Game game = context().currentGame();
+        final Game game = e.game();
         final boolean silent = game.optGameLevel().isPresent() && game.level().isDemoLevel()
             || game.control().state() instanceof TestState;
         if (!silent) {
@@ -178,7 +179,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onGameStateChange(GameStateChangeEvent e) {
-        final Game game = context().currentGame();
+        final Game game = e.game();
         if (e.newState() == GameState.LEVEL_COMPLETE) {
             ui.soundManager().stopAll();
             playLevelCompletedAnimation(game, game.level());
@@ -196,13 +197,13 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onLevelCreated(GameEvent e) {
-        context().currentGame().optGameLevel().ifPresent(this::acceptGameLevel);
+        e.game().optGameLevel().ifPresent(this::acceptGameLevel);
     }
 
     @Override
     public void onPacDead(GameEvent e) {
         // Trigger end of game state PACMAN_DYING after dying animation has finished
-        context().currentGame().control().terminateCurrentGameState();
+        e.game().control().terminateCurrentGameState();
     }
 
     @Override
@@ -210,8 +211,6 @@ public class Arcade_PlayScene2D extends GameScene2D {
         ui.soundManager().stopSiren();
         ui.soundManager().play(SoundID.PAC_MAN_DEATH);
     }
-
-    private long lastMunchingSoundPlayedTick;
 
     @Override
     public void onPacFindsFood(GameEvent e) {
@@ -246,22 +245,21 @@ public class Arcade_PlayScene2D extends GameScene2D {
     /**
      * If the 3D play scene is shown when the game level gets created, the onLevelCreated() method of this
      *  scene is not called, so we have to accept the game level again when switching from the 3D scene to this one.
+     * @param level game level
      */
     private void acceptGameLevel(GameLevel level) {
-        final Game game = context().currentGame();
-        if (level.isDemoLevel()) {
-            game.hud().credit(false).levelCounter(true).livesCounter(false).show();
-            actionBindings.useAll(ArcadePacMan_UIConfig.DEFAULT_BINDINGS);
-            actionBindings.attach(GameUI.KEYBOARD);
-            ui.soundManager().setEnabled(false);
+        final Game game = level.game();
+        final boolean demoLevel = level.isDemoLevel();
+        ui.soundManager().setEnabled(!demoLevel);
+        game.hud().credit(false).levelCounter(true).livesCounter(!demoLevel).show();
+        if (demoLevel) {
+            actionBindings.useAll(ArcadePacMan_UIConfig.DEFAULT_BINDINGS); // insert coin + start game
         } else {
-            game.hud().credit(false).levelCounter(true).livesCounter(true).show();
             actionBindings.useAll(GameUI.STEERING_BINDINGS);
             actionBindings.useAll(GameUI.CHEAT_BINDINGS);
-            actionBindings.attach(GameUI.KEYBOARD);
-            ui.soundManager().setEnabled(true);
         }
-        Logger.info("Scene {} accepted game level", getClass().getSimpleName());
+        actionBindings.attach(GameUI.KEYBOARD);
+        Logger.info("Scene {} accepted game level #{}", getClass().getSimpleName(), level.number());
     }
 
     private void updateHUD(GameLevel level) {
