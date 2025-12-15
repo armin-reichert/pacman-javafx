@@ -22,7 +22,7 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
     public void doInit(Game game) {
         final Arcade_HUD arcadeHud = (Arcade_HUD) game.hud();
         arcadeHud.credit(true).score(true).levelCounter(true).livesCounter(false).show();
-        actionBindings.useAll(ArcadePacMan_UIConfig.DEFAULT_BINDINGS);
+        actionBindings.useAll(ArcadePacMan_UIConfig.DEFAULT_BINDINGS); // Insert coin + start game action
     }
 
     @Override

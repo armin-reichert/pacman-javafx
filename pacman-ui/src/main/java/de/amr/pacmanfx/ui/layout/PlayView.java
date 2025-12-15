@@ -95,15 +95,15 @@ public class PlayView extends StackPane implements GameUI_View {
             }
         });
 
-        currentGameScene.addListener((py, ov, gameScene) -> {
+        currentGameScene.addListener((_, _, gameScene) -> {
             contextMenu.hide();
             if (gameScene != null) {
                 embedGameScene(parentScene, gameScene);
             }
         });
 
-        parentScene.widthProperty() .addListener((py, ov, w) -> canvasDecorationPane.resizeTo(w.doubleValue(), parentScene.getHeight()));
-        parentScene.heightProperty().addListener((py, ov, h) -> canvasDecorationPane.resizeTo(parentScene.getWidth(), h.doubleValue()));
+        parentScene.widthProperty() .addListener((_, _, w) -> canvasDecorationPane.resizeTo(w.doubleValue(), parentScene.getHeight()));
+        parentScene.heightProperty().addListener((_, _, h) -> canvasDecorationPane.resizeTo(parentScene.getWidth(), h.doubleValue()));
     }
 
     public void setUI(GameUI ui) {
@@ -166,7 +166,15 @@ public class PlayView extends StackPane implements GameUI_View {
     }
 
     public void draw() {
-        ui.currentGameScene().filter(GameScene2D.class::isInstance).map(GameScene2D.class::cast).ifPresent(this::drawGameScene2D);
+        final Game game = ui.context().currentGame();
+        ui.currentGameScene().filter(GameScene2D.class::isInstance).map(GameScene2D.class::cast).ifPresent(gameScene2D -> {
+            if (sceneRenderer != null) {
+                sceneRenderer.draw(gameScene2D);
+            }
+            if (hudRenderer != null) {
+                hudRenderer.draw(game.hud(), game, gameScene2D);
+            }
+        });
         miniView.draw();
         // Dashboard must also be updated if simulation is stopped
         if (dashboardAndMiniViewLayer.isVisible()) {
@@ -249,16 +257,6 @@ public class PlayView extends StackPane implements GameUI_View {
 
         sceneRenderer = ui.currentConfig().createGameSceneRenderer(canvas, gameScene2D);
         hudRenderer = ui.currentConfig().createHUDRenderer(canvas, gameScene2D); // may return null!
-    }
-
-    private void drawGameScene2D(GameScene2D gameScene2D) {
-        if (sceneRenderer != null) {
-            sceneRenderer.draw(gameScene2D);
-        }
-        if (hudRenderer != null) {
-            final Game game = ui.context().currentGame();
-            hudRenderer.draw(game.hud(), game, gameScene2D);
-        }
     }
 
     /**
@@ -344,10 +342,10 @@ public class PlayView extends StackPane implements GameUI_View {
     }
 
     private void configurePropertyBindings() {
-        GameUI.PROPERTY_CANVAS_FONT_SMOOTHING.addListener((py, ov, smooth)
+        GameUI.PROPERTY_CANVAS_FONT_SMOOTHING.addListener((_, _, smooth)
             -> canvasDecorationPane.canvas().getGraphicsContext2D().setFontSmoothingType(smooth ? FontSmoothingType.LCD : FontSmoothingType.GRAY));
 
-        GameUI.PROPERTY_DEBUG_INFO_VISIBLE.addListener((py, ov, debug)
+        GameUI.PROPERTY_DEBUG_INFO_VISIBLE.addListener((_, _, debug)
             -> {
                canvasLayer.setBackground(debug ? paintBackground(Color.TEAL) : null);
                canvasLayer.setBorder(debug ? border(Color.LIGHTGREEN, 1) : null);
