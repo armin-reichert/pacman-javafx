@@ -24,7 +24,6 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
@@ -356,16 +355,6 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         logState();
     }
 
-    @Override
-    protected void handleKeyPress(KeyEvent e) {
-        ui.startPagesView().pauseTimer();
-        switch (e.getCode()) {
-            case E -> ui.showEditorView();
-            case ENTER -> startGame();
-            default -> super.handleKeyPress(e);
-        }
-    }
-
     public MenuState state() { return state; }
 
     private void logState() {
@@ -377,7 +366,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         return THE_GAME_BOX.gameByVariantName(state.gameVariant);
     }
 
-    private void startGame() {
+    public void startGame() {
         final Game game = selectedGame();
         final var mapSelector = (PacManXXL_Common_MapSelector) game.mapSelector();
         mapSelector.setSelectionMode(state.mapOrder);

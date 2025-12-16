@@ -9,6 +9,7 @@ import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_StartPage;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.widgets.Flyer;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
@@ -55,6 +56,24 @@ public class PacManXXL_Common_StartPage implements GameUI_StartPage {
                 menu.requestFocus();
                 menu.draw();
                 onEnter(ui);
+            } else {
+                onExit(ui);
+            }
+        });
+
+        root.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
+            Logger.info("Key '{}' pressed!", e.getCode());
+            ui.startPagesView().pauseTimer();
+            switch (e.getCode()) {
+                case E -> {
+                    voicePlayer.stop();
+                    ui.showEditorView();
+                }
+                case ENTER -> {
+                    voicePlayer.stop();
+                    menu.startGame();
+                }
+                case ESCAPE -> voicePlayer.stop();
             }
         });
     }
