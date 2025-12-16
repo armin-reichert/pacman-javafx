@@ -245,6 +245,18 @@ public class PlayView extends StackPane implements GameUI_View {
         });
         parentScene.widthProperty() .addListener((_, _, w) -> canvasDecorator.resizeTo(w.doubleValue(), parentScene.getHeight()));
         parentScene.heightProperty().addListener((_, _, h) -> canvasDecorator.resizeTo(parentScene.getWidth(), h.doubleValue()));
+    }
+
+
+    private void configurePropertyBindings() {
+        GameUI.PROPERTY_CANVAS_FONT_SMOOTHING.addListener((_, _, smooth) ->
+            canvasDecorator.canvas().getGraphicsContext2D().setFontSmoothingType(
+                smooth ? FontSmoothingType.LCD : FontSmoothingType.GRAY));
+
+        GameUI.PROPERTY_DEBUG_INFO_VISIBLE.addListener((_, _, debug) -> {
+            canvasLayer.setBackground(debug ? paintBackground(Color.TEAL) : null);
+            canvasLayer.setBorder(debug ? border(Color.LIGHTGREEN, 1) : null);
+        });
 
         widgetLayer.visibleProperty().bind(Bindings.createObjectBinding(
             () -> dashboard.isVisible() || GameUI.PROPERTY_MINI_VIEW_ON.get(),
@@ -354,16 +366,5 @@ public class PlayView extends StackPane implements GameUI_View {
         else {
             Logger.error("Cannot embed play scene of class {}", gameScene.getClass().getName());
         }
-    }
-
-    private void configurePropertyBindings() {
-        GameUI.PROPERTY_CANVAS_FONT_SMOOTHING.addListener((_, _, smooth)
-            -> canvasDecorator.canvas().getGraphicsContext2D().setFontSmoothingType(smooth ? FontSmoothingType.LCD : FontSmoothingType.GRAY));
-
-        GameUI.PROPERTY_DEBUG_INFO_VISIBLE.addListener((_, _, debug)
-            -> {
-               canvasLayer.setBackground(debug ? paintBackground(Color.TEAL) : null);
-               canvasLayer.setBorder(debug ? border(Color.LIGHTGREEN, 1) : null);
-            });
     }
 }
