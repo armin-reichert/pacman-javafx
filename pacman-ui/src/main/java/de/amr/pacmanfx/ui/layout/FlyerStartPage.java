@@ -27,13 +27,13 @@ public abstract class FlyerStartPage extends StackPane implements GameUI_StartPa
     public static final Color DEFAULT_START_BUTTON_FILLCOLOR = Color.rgb(255, 255, 255);
 
     protected final String gameVariant;
-    protected final String title;
     protected final Flyer flyer;
     protected final Node startButton;
 
-    protected FlyerStartPage(GameUI ui, String title, String gameVariant) {
+    protected String title;
+
+    protected FlyerStartPage(GameUI ui, String gameVariant) {
         requireNonNull(ui);
-        this.title = requireNonNull(title);
         this.gameVariant = requireNonNull(gameVariant);
 
         flyer = createFlyer();

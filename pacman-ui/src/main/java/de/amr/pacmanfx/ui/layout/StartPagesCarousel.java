@@ -25,6 +25,7 @@ import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.tinylog.Logger;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -60,6 +61,8 @@ public class StartPagesCarousel extends Carousel implements GameUI_View {
     private final List<GameUI_StartPage> pages = new ArrayList<>();
     private final ActionBindingsManager actionBindings = new DefaultActionBindingsManager();
 
+    private GameUI ui;
+
     public StartPagesCarousel() {
         super(Duration.seconds(PAGE_CHANGE_SECONDS));
     }
@@ -81,7 +84,8 @@ public class StartPagesCarousel extends Carousel implements GameUI_View {
     }
 
     public void setUI(GameUI ui) {
-        selectedIndexProperty().addListener((py,ov,nv) -> {
+        this.ui = requireNonNull(ui);
+        selectedIndexProperty().addListener((_, ov, nv) -> {
             Logger.info("Carousel selection changed from {} to {}", ov, nv);
             int oldIndex = ov.intValue(), newIndex = nv.intValue();
             if (oldIndex != -1) {
@@ -127,13 +131,7 @@ public class StartPagesCarousel extends Carousel implements GameUI_View {
 
     @Override
     public Optional<Supplier<String>> titleSupplier() {
-        return Optional.of(this::supplyTitle);
-    }
-
-    private String supplyTitle() {
-        final String pattern = "JavaFX Pac-Man Games: %s";
-        final String nameOfTheGame = currentStartPage().map(GameUI_StartPage::title).orElse("Unknown game");
-        return pattern.formatted(nameOfTheGame);
+        return Optional.of(this::composeTitle);
     }
 
     public Optional<GameUI_StartPage> currentStartPage() {
@@ -147,5 +145,10 @@ public class StartPagesCarousel extends Carousel implements GameUI_View {
         addItem(startPage.layoutRoot());
         setNavigationButtonsVisible(numItems() >= 2);
         Logger.info("Start page '{}' added", startPage.getClass().getSimpleName());
+    }
+
+    private String composeTitle() {
+        final String nameOfTheGame = currentStartPage().map(GameUI_StartPage::title).orElse("Unknown game");
+        return ui != null ? ui.translated("startpage.title.template", nameOfTheGame) : nameOfTheGame;
     }
 }

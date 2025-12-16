@@ -15,7 +15,8 @@ public class ArcadeMsPacMan_StartPage extends FlyerStartPage {
     private static final ResourceManager LOCAL_RESOURCES = () -> ArcadeMsPacMan_StartPage.class;
 
     public ArcadeMsPacMan_StartPage(GameUI ui) {
-        super(ui, "Ms. Pac-Man (Arcade)", StandardGameVariant.MS_PACMAN.name());
+        super(ui, StandardGameVariant.MS_PACMAN.name());
+        title = "Ms. Pac-Man (Arcade)";
     }
 
     @Override

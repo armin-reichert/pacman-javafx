@@ -15,7 +15,8 @@ public class TengenMsPacMan_StartPage extends FlyerStartPage {
     private static final ResourceManager LOCAL_RESOURCES = () -> TengenMsPacMan_StartPage.class;
 
     public TengenMsPacMan_StartPage(GameUI ui) {
-        super(ui, "Ms. Pac-Man (Tengen)", StandardGameVariant.MS_PACMAN_TENGEN.name());
+        super(ui, StandardGameVariant.MS_PACMAN_TENGEN.name());
+        title = "Ms. Pac-Man (Tengen)";
     }
 
     @Override
