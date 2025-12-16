@@ -12,6 +12,8 @@ import de.amr.pacmanfx.uilib.widgets.Flyer;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
@@ -22,14 +24,17 @@ import static de.amr.pacmanfx.Globals.TS;
  */
 public class PacManXXL_Common_StartPage implements GameUI_StartPage {
 
+    private static final ResourceManager LOCAL_RESOURCES = () -> PacManXXL_Common_StartPage.class;
+    private static final Media VOICE = LOCAL_RESOURCES.loadMedia("sound/game-description.mp3");
+
     private static final String BACKGROUND_IMAGE_PATH = "graphics/screenshot.png";
 
     private final StackPane root = new StackPane();
     private final PacManXXL_Common_StartPageMenu menu;
+    private final MediaPlayer voicePlayer = new MediaPlayer(VOICE);
 
     public PacManXXL_Common_StartPage(GameUI ui) {
-        ResourceManager rm = () -> PacManXXL_Common_StartPage.class;
-        Flyer flyer = new Flyer(rm.loadImage(BACKGROUND_IMAGE_PATH));
+        Flyer flyer = new Flyer(LOCAL_RESOURCES.loadImage(BACKGROUND_IMAGE_PATH));
         flyer.setPageLayout(0, Flyer.LayoutMode.FILL);
         flyer.selectPage(0);
 
@@ -44,7 +49,7 @@ public class PacManXXL_Common_StartPage implements GameUI_StartPage {
 
         root.setBackground(Background.fill(Color.BLACK));
         root.getChildren().addAll(flyer, menu.root());
-        root.focusedProperty().addListener((py,ov,nv) -> {
+        root.focusedProperty().addListener((_, _, _) -> {
             if (root.isFocused()) {
                 Logger.info("Focus now on {}, passing to {}", root, menu);
                 menu.requestFocus();
@@ -57,13 +62,17 @@ public class PacManXXL_Common_StartPage implements GameUI_StartPage {
     @Override
     public void onEnter(GameUI ui) {
         ui.selectGameVariant(menu.state().gameVariant);
+
         menu.soundEnabledProperty().bind(ui.soundManager().mutedProperty().not());
         menu.syncMenuState();
         menu.startAnimation();
+
+        voicePlayer.play();
     }
 
     @Override
     public void onExit(GameUI ui) {
+        voicePlayer.stop();
         menu.stopAnimation();
     }
 

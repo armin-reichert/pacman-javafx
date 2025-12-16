@@ -1,0 +1,13 @@
+Pac-Man XXL - Play classic Arcade Pac-Man and Ms. Pac-Man with custom-made mazes!
+
+Ever wanted to play the classic Pac-Man or Ms. Pac-Man games with your own mazes?
+Then this enhanced game finally makes it a reality!
+
+An integrated maze editor with powerful functionality makes you into a Pac-Man maze-creator.
+Your custom-made mazes can have arbitrary size and are immediately playable in 2D and even in 3D!
+No need to create any 3D shapes using tools like Blender and no need to import any 2D spritesheet graphics.
+Your maze designs just define the needed colors, and the 2D and 3D mazes are created by the game on-the fly.
+
+You can even import maze images from other Pac-Man game variants like Junior Pac-Man and let the editor create a playable map from these images.
+
+Try it out now! It is completely free!
