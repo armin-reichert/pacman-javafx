@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl;
 import de.amr.pacmanfx.model.StandardGameVariant;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_StartPage;
+import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.widgets.Flyer;
 import javafx.scene.input.KeyEvent;
@@ -86,7 +87,7 @@ public class PacManXXL_Common_StartPage implements GameUI_StartPage {
         menu.syncMenuState();
         menu.startAnimation();
 
-        voicePlayer.play();
+        Ufx.pauseSec(1, voicePlayer::play).play();
     }
 
     @Override
