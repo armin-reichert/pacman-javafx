@@ -45,7 +45,7 @@ public class ArcadeMsPacMan_StartScene_Renderer extends GameScene2D_Renderer imp
         }
 
         if (scene.debugInfoVisible()) {
-            debugInfoRenderer.draw(scene);
+            debugRenderer.draw(scene);
         }
     }
 

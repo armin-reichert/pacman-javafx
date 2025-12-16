@@ -186,20 +186,16 @@ public class PlayView extends StackPane implements GameUI_View {
                 }
             }
         }
-
-        //TODO Check if this is needed:
-        updateGameScene(game, false);
+        updateGameScene(ui.context().currentGame(), false);
 
         ui.currentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(gameEvent));
     }
 
     /**
-     *
      * @param game the current game
-     * @param alwaysReloadGameScene if {@code true} the game scene is (re-)embedded even if it doesn't change
+     * @param forcedReload if {@code true} the game scene is (re-)embedded even if it doesn't change
      */
-    public void updateGameScene(Game game, boolean alwaysReloadGameScene) {
-        //TODO simplify
+    public void updateGameScene(Game game, boolean forcedReload) {
         final GameScene currentGameScene = ui.currentGameScene().orElse(null);
         final GameScene intendedGameScene = ui.currentConfig().sceneConfig().selectGameScene(game).orElse(null);
 
@@ -208,8 +204,7 @@ public class PlayView extends StackPane implements GameUI_View {
             return;
         }
 
-        final boolean gameSceneChange = intendedGameScene != currentGameScene;
-        if (!gameSceneChange && !alwaysReloadGameScene) {
+        if (!forcedReload && intendedGameScene == currentGameScene) {
             return;
         }
 

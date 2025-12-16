@@ -31,7 +31,7 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
 
     private final List<Actor> actorsInZOrder = new ArrayList<>();
 
-    public Arcade_PlayScene2D_DebugInfo_Renderer(GameScene2D scene, Canvas canvas) {
+    public Arcade_PlayScene2D_DebugInfo_Renderer(Canvas canvas, GameScene2D scene) {
         super(scene.ui(), canvas);
     }
 

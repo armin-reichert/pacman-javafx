@@ -53,6 +53,12 @@ public class Arcade_PlayScene2D extends GameScene2D {
         return levelCompletedAnimation;
     }
 
+    public boolean isMazeHighlighted() {
+        return levelCompletedAnimation != null
+            && levelCompletedAnimation.isRunning()
+            && levelCompletedAnimation.highlightedProperty().get();
+    }
+
     @Override
     protected void doInit(Game game) {
         Arcade_HUD arcadeHud = (Arcade_HUD) game.hud();

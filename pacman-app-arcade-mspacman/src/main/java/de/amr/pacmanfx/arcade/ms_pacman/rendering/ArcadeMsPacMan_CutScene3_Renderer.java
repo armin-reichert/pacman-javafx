@@ -17,7 +17,7 @@ public class ArcadeMsPacMan_CutScene3_Renderer extends GameScene2D_Renderer {
 
         final GameUI_Config uiConfig = scene.ui().currentConfig();
 
-        actorRenderer = configureRendererForGameScene(
+        actorRenderer = adaptRenderer(
             (ArcadeMsPacMan_ActorRenderer) uiConfig.createActorRenderer(canvas), scene);
 
         createDefaultDebugInfoRenderer(scene, canvas);
@@ -33,7 +33,7 @@ public class ArcadeMsPacMan_CutScene3_Renderer extends GameScene2D_Renderer {
             .forEach(actorRenderer::drawActor);
 
         if (cutScene.debugInfoVisible()) {
-            debugInfoRenderer.draw(scene);
+            debugRenderer.draw(scene);
         }
     }
 }

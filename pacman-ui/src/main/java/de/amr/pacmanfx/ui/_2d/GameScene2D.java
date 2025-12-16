@@ -134,6 +134,6 @@ public abstract class GameScene2D implements GameScene {
     }
 
     public  <T extends Renderer> T adaptRenderer(T renderer) {
-        return GameScene2D_Renderer.configureRendererForGameScene(renderer, this);
+        return GameScene2D_Renderer.adaptRenderer(renderer, this);
     }
 }

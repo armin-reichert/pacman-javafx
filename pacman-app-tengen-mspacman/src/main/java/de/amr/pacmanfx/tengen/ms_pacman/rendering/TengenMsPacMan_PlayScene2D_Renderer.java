@@ -76,13 +76,13 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends GameScene2D_Renderer
 
         final TengenMsPacMan_UIConfig uiConfig = scene.ui().currentConfig();
 
-        gameLevelRenderer = configureRendererForGameScene(
+        gameLevelRenderer = adaptRenderer(
             uiConfig.createGameLevelRenderer(canvas), scene);
 
-        actorRenderer = configureRendererForGameScene(
+        actorRenderer = adaptRenderer(
             uiConfig.createActorRenderer(canvas), scene);
 
-        debugInfoRenderer = configureRendererForGameScene(
+        debugRenderer = adaptRenderer(
             new PlaySceneDebugInfoRenderer(scene, canvas), scene);
 
         // All maps are 28 tiles wide but the NES screen is 32 tiles wide. To accommodate, the maps are centered
@@ -113,7 +113,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends GameScene2D_Renderer
             drawGameLevel(scene, gameLevel);
             if (scene.debugInfoVisible()) {
                 ctx.getCanvas().setClip(null); // also show normally clipped region (to see how Pac-Man travels through portals)
-                debugInfoRenderer.draw(scene);
+                debugRenderer.draw(scene);
             }
         });
     }

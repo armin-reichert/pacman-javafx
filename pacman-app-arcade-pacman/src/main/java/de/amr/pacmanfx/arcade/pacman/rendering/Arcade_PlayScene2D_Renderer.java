@@ -11,7 +11,6 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
-import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.*;
@@ -27,22 +26,20 @@ import static java.util.Objects.requireNonNull;
 public class Arcade_PlayScene2D_Renderer extends GameScene2D_Renderer implements SpriteRenderer {
 
     private final SpriteSheet<?> spriteSheet;
-    private final GameLevelRenderer gameLevelRenderer;
+    private final GameLevelRenderer levelRenderer;
     private final ActorRenderer actorRenderer;
     private final List<Actor> actorsInZOrder = new ArrayList<>();
 
     public Arcade_PlayScene2D_Renderer(GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(canvas);
+
+        requireNonNull(scene);
         this.spriteSheet = requireNonNull(spriteSheet);
 
         final GameUI_Config uiConfig = scene.ui().currentConfig();
-
-        gameLevelRenderer = configureRendererForGameScene(uiConfig.createGameLevelRenderer(canvas), scene);
-
-        actorRenderer = configureRendererForGameScene(uiConfig.createActorRenderer(canvas), scene);
-
-        debugInfoRenderer = configureRendererForGameScene(
-            new Arcade_PlayScene2D_DebugInfo_Renderer(scene, canvas), scene);
+        levelRenderer = adaptRenderer(uiConfig.createGameLevelRenderer(canvas), scene);
+        actorRenderer = adaptRenderer(uiConfig.createActorRenderer(canvas), scene);
+        debugRenderer = adaptRenderer(new Arcade_PlayScene2D_DebugInfo_Renderer(canvas, scene), scene);
     }
 
     @Override
@@ -56,32 +53,25 @@ public class Arcade_PlayScene2D_Renderer extends GameScene2D_Renderer implements
 
         final Game game = scene.context().currentGame();
         if (game.optGameLevel().isEmpty()) {
-            return; // Scene is drawn already 2 ticks before level has been created
+            return; // Scene is drawn already 2 ticks before level has been created!
         }
-
+        final GameLevel level = game.level();
         final Arcade_PlayScene2D playScene = (Arcade_PlayScene2D) scene;
 
         final RenderInfo info = new RenderInfo();
-        info.put(CommonRenderInfoKey.MAZE_BRIGHT, isMazeHighlighted(playScene));
-        info.put(CommonRenderInfoKey.ENERGIZER_BLINKING, game.level().blinking().state() == Pulse.State.ON);
-        info.put(CommonRenderInfoKey.MAZE_EMPTY, game.level().worldMap().foodLayer().uneatenFoodCount() == 0);
+        info.put(CommonRenderInfoKey.MAZE_BRIGHT, playScene.isMazeHighlighted());
+        info.put(CommonRenderInfoKey.ENERGIZER_BLINKING, level.blinking().state() == Pulse.State.ON);
+        info.put(CommonRenderInfoKey.MAZE_EMPTY, level.worldMap().foodLayer().uneatenFoodCount() == 0);
 
-        gameLevelRenderer.applyLevelSettings(game.level(), info);
-        gameLevelRenderer.drawGameLevel(game.level(), info);
+        levelRenderer.applyLevelSettings(level, info);
+        levelRenderer.drawGameLevel(level, info);
 
-        updateActorDrawingOrder(game.level());
+        updateActorDrawingOrder(level);
         actorsInZOrder.forEach(actorRenderer::drawActor);
 
         if (playScene.debugInfoVisible()) {
-            debugInfoRenderer.draw(scene);
+            debugRenderer.draw(scene);
         }
-    }
-
-    private boolean isMazeHighlighted(Arcade_PlayScene2D playScene) {
-        final LevelCompletedAnimation animation = playScene.levelCompletedAnimation();
-        return animation != null
-            && animation.isRunning()
-            && animation.highlightedProperty().get();
     }
 
     private void updateActorDrawingOrder(GameLevel gameLevel) {

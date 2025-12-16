@@ -36,7 +36,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends GameScene2D_Renderer
 
         final GameUI_Config uiConfig = scene.ui().currentConfig();
 
-        actorRenderer = GameScene2D_Renderer.configureRendererForGameScene(
+        actorRenderer = GameScene2D_Renderer.adaptRenderer(
             uiConfig.createActorRenderer(canvas), scene);
 
         createDefaultDebugInfoRenderer(scene, canvas);
@@ -104,7 +104,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends GameScene2D_Renderer
         }
 
         if (scene.debugInfoVisible()) {
-            debugInfoRenderer.draw(scene);
+            debugRenderer.draw(scene);
         }
     }
 }

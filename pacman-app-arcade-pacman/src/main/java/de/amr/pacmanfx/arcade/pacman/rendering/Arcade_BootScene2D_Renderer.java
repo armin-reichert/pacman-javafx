@@ -70,7 +70,7 @@ public class Arcade_BootScene2D_Renderer extends GameScene2D_Renderer implements
         }
 
         if (scene.debugInfoVisible()) {
-            debugInfoRenderer.draw(scene);
+            debugRenderer.draw(scene);
         }
     }
 

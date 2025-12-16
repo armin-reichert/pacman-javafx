@@ -26,7 +26,7 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends GameScene2D_Renderer {
     public ArcadeMsPacMan_IntroScene_Renderer(GameScene2D scene, Canvas canvas) {
         super(canvas);
         final GameUI_Config uiConfig = scene.ui().currentConfig();
-        actorRenderer = configureRendererForGameScene(uiConfig.createActorRenderer(canvas), scene);
+        actorRenderer = adaptRenderer(uiConfig.createActorRenderer(canvas), scene);
         createDefaultDebugInfoRenderer(scene, canvas);
     }
 
@@ -62,7 +62,7 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends GameScene2D_Renderer {
         drawMidwayCopyright(introScene.ui().currentConfig().assets().image("logo.midway"), TS(6), TS(28));
 
         if (scene.debugInfoVisible()) {
-            debugInfoRenderer.draw(scene);
+            debugRenderer.draw(scene);
         }
     }
 

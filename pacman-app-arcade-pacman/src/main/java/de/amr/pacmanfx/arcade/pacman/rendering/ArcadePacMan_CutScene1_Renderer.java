@@ -27,10 +27,10 @@ public class ArcadePacMan_CutScene1_Renderer extends GameScene2D_Renderer implem
 
         final GameUI_Config uiConfig = scene.ui().currentConfig();
 
-        actorRenderer = configureRendererForGameScene(
+        actorRenderer = adaptRenderer(
             uiConfig.createActorRenderer(canvas), scene);
 
-        debugInfoRenderer = configureRendererForGameScene(new BaseDebugInfoRenderer(scene.ui(), canvas) {
+        debugRenderer = adaptRenderer(new BaseDebugInfoRenderer(scene.ui(), canvas) {
             @Override
             public void draw(GameScene2D scene) {
                 ArcadePacMan_CutScene1 cutScene = (ArcadePacMan_CutScene1) scene;
@@ -57,7 +57,7 @@ public class ArcadePacMan_CutScene1_Renderer extends GameScene2D_Renderer implem
         actorRenderer.drawActor(cutScene.pac());
 
         if (cutScene.debugInfoVisible()) {
-            debugInfoRenderer.draw(scene);
+            debugRenderer.draw(scene);
         }
     }
 }

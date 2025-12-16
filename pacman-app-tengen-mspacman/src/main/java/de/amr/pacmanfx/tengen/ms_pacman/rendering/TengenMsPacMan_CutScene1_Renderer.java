@@ -19,7 +19,7 @@ public class TengenMsPacMan_CutScene1_Renderer extends GameScene2D_Renderer {
 
         final GameUI_Config uiConfig = scene.ui().currentConfig();
 
-        actorRenderer = configureRendererForGameScene(
+        actorRenderer = adaptRenderer(
             (TengenMsPacMan_ActorRenderer) uiConfig.createActorRenderer(canvas), scene);
 
         createDefaultDebugInfoRenderer(scene, canvas);
@@ -38,7 +38,7 @@ public class TengenMsPacMan_CutScene1_Renderer extends GameScene2D_Renderer {
         actorRenderer.drawActor(cutScene.heart());
 
         if (scene.debugInfoVisible()) {
-            debugInfoRenderer.draw(scene);
+            debugRenderer.draw(scene);
         }
     }
 }

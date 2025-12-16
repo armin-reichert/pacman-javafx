@@ -39,8 +39,7 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements Spr
     }
 
     @Override
-    public void applyLevelSettings(GameLevel gameLevel, RenderInfo info) {
-    }
+    public void applyLevelSettings(GameLevel gameLevel, RenderInfo info) {}
 
     @Override
     public void drawGameLevel(GameLevel gameLevel, RenderInfo info) {

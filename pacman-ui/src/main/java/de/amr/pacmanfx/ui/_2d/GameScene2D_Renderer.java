@@ -10,13 +10,13 @@ import javafx.scene.canvas.Canvas;
 
 public abstract class GameScene2D_Renderer extends BaseRenderer {
 
-    public static <T extends Renderer> T configureRendererForGameScene(T renderer, GameScene2D scene) {
+    public static <T extends Renderer> T adaptRenderer(T renderer, GameScene2D scene) {
         renderer.backgroundProperty().bind(scene.backgroundProperty());
         renderer.scalingProperty().bind(scene.scalingProperty());
         return renderer;
     }
 
-    protected BaseDebugInfoRenderer debugInfoRenderer;
+    protected BaseDebugInfoRenderer debugRenderer;
 
     public GameScene2D_Renderer(Canvas canvas) {
         super(canvas);
@@ -25,6 +25,6 @@ public abstract class GameScene2D_Renderer extends BaseRenderer {
     public abstract void draw(GameScene2D scene);
 
     protected void createDefaultDebugInfoRenderer(GameScene2D scene, Canvas canvas) {
-        debugInfoRenderer = configureRendererForGameScene(new BaseDebugInfoRenderer(scene.ui(), canvas), scene);
+        debugRenderer = adaptRenderer(new BaseDebugInfoRenderer(scene.ui(), canvas), scene);
     }
 }

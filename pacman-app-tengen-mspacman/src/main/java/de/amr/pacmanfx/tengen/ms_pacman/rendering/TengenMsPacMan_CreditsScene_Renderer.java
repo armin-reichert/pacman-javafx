@@ -43,7 +43,7 @@ public class TengenMsPacMan_CreditsScene_Renderer extends GameScene2D_Renderer i
             ctx.setGlobalAlpha(1);
         }
         if (scene.debugInfoVisible()) {
-            debugInfoRenderer.draw(scene);
+            debugRenderer.draw(scene);
         }
     }
 

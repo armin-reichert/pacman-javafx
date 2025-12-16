@@ -41,9 +41,9 @@ public class ArcadePacMan_IntroScene_Renderer extends GameScene2D_Renderer imple
 
         final GameUI_Config uiConfig = scene.ui().currentConfig();
 
-        actorRenderer = configureRendererForGameScene((ArcadePacMan_Actor_Renderer) uiConfig.createActorRenderer(canvas), scene);
+        actorRenderer = adaptRenderer((ArcadePacMan_Actor_Renderer) uiConfig.createActorRenderer(canvas), scene);
 
-        debugInfoRenderer = configureRendererForGameScene(new BaseDebugInfoRenderer(scene.ui(), canvas) {
+        debugRenderer = adaptRenderer(new BaseDebugInfoRenderer(scene.ui(), canvas) {
             @Override
             public void draw(GameScene2D scene) {
                 ArcadePacMan_IntroScene introScene = (ArcadePacMan_IntroScene) scene;
@@ -81,7 +81,7 @@ public class ArcadePacMan_IntroScene_Renderer extends GameScene2D_Renderer imple
             }
         }
         if (intro.debugInfoVisible()) {
-            debugInfoRenderer.draw(scene);
+            debugRenderer.draw(scene);
         }
     }
 
