@@ -61,10 +61,10 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
             pac.setAnimationManager(uiConfig.createPacAnimations());
 
             ghosts = List.of(
-                uiConfig.createAnimatedGhost(RED_GHOST_SHADOW),
-                uiConfig.createAnimatedGhost(PINK_GHOST_SPEEDY),
-                uiConfig.createAnimatedGhost(CYAN_GHOST_BASHFUL),
-                uiConfig.createAnimatedGhost(ORANGE_GHOST_POKEY)
+                uiConfig.createGhostWithAnimations(RED_GHOST_SHADOW),
+                uiConfig.createGhostWithAnimations(PINK_GHOST_SPEEDY),
+                uiConfig.createGhostWithAnimations(CYAN_GHOST_BASHFUL),
+                uiConfig.createGhostWithAnimations(ORANGE_GHOST_POKEY)
             );
 
             actorRenderer = uiConfig.createActorRenderer(renderer.ctx().getCanvas());

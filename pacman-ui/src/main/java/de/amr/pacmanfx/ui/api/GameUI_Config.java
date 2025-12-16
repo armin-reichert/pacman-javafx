@@ -117,7 +117,7 @@ public interface GameUI_Config extends Disposable {
      * @param personality a ghost personality
      * @return a ghost instance with this personality's behavior
      */
-    Ghost createAnimatedGhost(byte personality);
+    Ghost createGhostWithAnimations(byte personality);
 
     /**
      * @param personality a ghost personality

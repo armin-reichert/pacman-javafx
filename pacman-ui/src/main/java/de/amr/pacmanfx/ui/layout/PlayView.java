@@ -52,87 +52,53 @@ public class PlayView extends StackPane implements GameUI_View {
 
     private final ObjectProperty<GameScene> currentGameScene = new SimpleObjectProperty<>();
 
+    private final GameUI ui;
     private final ActionBindingsManager actionBindingsManager = new DefaultActionBindingsManager();
     private final Scene parentScene;
-    private final Dashboard dashboard;
-    private final CanvasDecorationPane canvasDecorationPane = new CanvasDecorationPane();
-    private final MiniGameView miniView;
+    private final Dashboard dashboard = new Dashboard();
+    private final CanvasDecorationPane canvasDecorator = new CanvasDecorationPane();
+    private final MiniGameView miniView = new MiniGameView();
     private final BorderPane canvasLayer = new BorderPane();
-    private final BorderPane dashboardAndMiniViewLayer = new BorderPane();
-
-    private GameUI ui;
-    private GameUI_ContextMenu contextMenu;
-    private HelpLayer helpLayer;
+    private final BorderPane widgetLayer = new BorderPane();
+    private final HelpLayer helpLayer;
+    private final GameUI_ContextMenu contextMenu;
 
     private GameScene2D_Renderer sceneRenderer;
     private HUD_Renderer hudRenderer;
 
-    public PlayView(Scene parentScene) {
+    public PlayView(GameUI ui, Scene parentScene) {
+        this.ui = requireNonNull(ui);
         this.parentScene = requireNonNull(parentScene);
+        this.contextMenu = new GameUI_ContextMenu(ui);
+        this.helpLayer = new HelpLayer(canvasDecorator);
 
-        dashboard = new Dashboard();
+        dashboard.setUI(ui);
         dashboard.setVisible(false);
 
-        miniView = new MiniGameView();
+        miniView.setUI(ui);
         miniView.visibleProperty().bind(Bindings.createObjectBinding(
             () -> GameUI.PROPERTY_MINI_VIEW_ON.get() && ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D),
             GameUI.PROPERTY_MINI_VIEW_ON, currentGameScene
         ));
 
-        canvasDecorationPane.setCanvas(new Canvas());
-        canvasDecorationPane.setMinScaling(0.5);
-        canvasDecorationPane.setUnscaledCanvasSize(ARCADE_MAP_SIZE_IN_PIXELS.x(), ARCADE_MAP_SIZE_IN_PIXELS.y());
-        canvasDecorationPane.setBorderColor(ArcadePalette.ARCADE_WHITE);
+        canvasDecorator.setMinScaling(0.5);
+        canvasDecorator.setUnscaledCanvasSize(ARCADE_MAP_SIZE_IN_PIXELS.x(), ARCADE_MAP_SIZE_IN_PIXELS.y());
+        canvasDecorator.setBorderColor(ArcadePalette.ARCADE_WHITE);
 
-        createLayout();
+        widgetLayer.setLeft(dashboard);
+        widgetLayer.setRight(miniView);
+        widgetLayer.visibleProperty().bind(Bindings.createObjectBinding(
+            () -> dashboard.isVisible() || GameUI.PROPERTY_MINI_VIEW_ON.get(),
+            dashboard.visibleProperty(), GameUI.PROPERTY_MINI_VIEW_ON
+        ));
+
+        canvasLayer.setCenter(canvasDecorator);
+        getChildren().addAll(canvasLayer, widgetLayer, helpLayer);
+
+        configureActionBindings();
         configurePropertyBindings();
-
-        setOnContextMenuRequested(this::handleContextMenuRequest);
-        //TODO what is the recommended way to hide the context menu?
-        parentScene.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
-            if (e.getButton() != MouseButton.SECONDARY) {
-                contextMenu.hide();
-            }
-        });
-
-        currentGameScene.addListener((_, _, gameScene) -> {
-            contextMenu.hide();
-            if (gameScene != null) {
-                embedGameScene(parentScene, gameScene);
-            }
-        });
-
-        parentScene.widthProperty() .addListener((_, _, w) -> canvasDecorationPane.resizeTo(w.doubleValue(), parentScene.getHeight()));
-        parentScene.heightProperty().addListener((_, _, h) -> canvasDecorationPane.resizeTo(parentScene.getWidth(), h.doubleValue()));
-    }
-
-    public void setUI(GameUI ui) {
-        this.ui = requireNonNull(ui);
-
-        contextMenu = new GameUI_ContextMenu(ui);
-        dashboard.setUI(ui);
-        miniView.setUI(ui);
-
-        actionBindingsManager.useFirst(ACTION_BOOT_SHOW_PLAY_VIEW, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.useFirst(ACTION_ENTER_FULLSCREEN, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.useFirst(ACTION_QUIT_GAME_SCENE, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.useFirst(ACTION_SHOW_HELP, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.useFirst(ACTION_SIMULATION_SLOWER, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.useFirst(ACTION_SIMULATION_SLOWEST, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.useFirst(ACTION_SIMULATION_FASTER, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.useFirst(ACTION_SIMULATION_FASTEST, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.useFirst(ACTION_SIMULATION_RESET, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.useFirst(ACTION_SIMULATION_ONE_STEP, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.useFirst(ACTION_SIMULATION_TEN_STEPS, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.useFirst(ACTION_TOGGLE_AUTOPILOT, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.useFirst(ACTION_TOGGLE_DEBUG_INFO, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.useFirst(ACTION_TOGGLE_MUTED, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.useFirst(ACTION_TOGGLE_PAUSED, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.useFirst(ACTION_TOGGLE_COLLISION_STRATEGY, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.useFirst(ACTION_TOGGLE_DASHBOARD, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.useFirst(ACTION_TOGGLE_IMMUNITY, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.useFirst(ACTION_TOGGLE_MINI_VIEW_VISIBILITY, GameUI.COMMON_BINDINGS);
-        actionBindingsManager.useFirst(ACTION_TOGGLE_PLAY_SCENE_2D_3D, GameUI.COMMON_BINDINGS);
+        configureContextMenu();
+        addListeners();
     }
 
     public ObjectProperty<GameScene> currentGameSceneProperty() {
@@ -147,21 +113,9 @@ public class PlayView extends StackPane implements GameUI_View {
         return dashboard;
     }
 
-    private void handleContextMenuRequest(ContextMenuEvent event) {
-        contextMenu.clear();
-        ui.currentGameScene().ifPresent(gameScene -> {
-            if (ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_2D)) {
-                contextMenu.addLocalizedTitleItem("scene_display");
-                contextMenu.addLocalizedActionItem(ACTION_TOGGLE_PLAY_SCENE_2D_3D, "use_3D_scene");
-            }
-            gameScene.supplyContextMenu(ui.context().currentGame()).ifPresent(menu -> contextMenu.addAll(menu.itemsCopy()));
-        });
-        contextMenu.requestFocus();
-        contextMenu.show(this, event.getScreenX(), event.getScreenY());
-    }
-
     public void showHelp(GameUI ui) {
-        helpLayer.showHelp(ui, canvasDecorationPane.scalingProperty().get());
+        final double scaling = canvasDecorator.scalingProperty().get();
+        helpLayer.showHelpPopup(ui, scaling, ui.context().gameVariantName());
     }
 
     public void draw() {
@@ -176,7 +130,7 @@ public class PlayView extends StackPane implements GameUI_View {
         });
         miniView.draw();
         // Dashboard must also be updated if simulation is stopped
-        if (dashboardAndMiniViewLayer.isVisible()) {
+        if (widgetLayer.isVisible()) {
             dashboard.updateContent();
         }
     }
@@ -239,23 +193,10 @@ public class PlayView extends StackPane implements GameUI_View {
             }
         }
 
-        //TODO Check this:
+        //TODO Check if this is needed:
         updateGameScene(game, false);
+
         ui.currentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(gameEvent));
-    }
-
-    // Others
-
-    private void useDecoratedCanvas(GameScene2D gameScene2D) {
-        final Canvas canvas = new Canvas();
-
-        canvasDecorationPane.setCanvas(canvas);
-
-        gameScene2D.setCanvas(canvas);
-        gameScene2D.backgroundProperty().bind(GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR);
-
-        sceneRenderer = ui.currentConfig().createGameSceneRenderer(canvas, gameScene2D);
-        hudRenderer = ui.currentConfig().createHUDRenderer(canvas, gameScene2D); // may return null!
     }
 
     /**
@@ -299,6 +240,77 @@ public class PlayView extends StackPane implements GameUI_View {
         currentGameSceneProperty().set(intendedGameScene);
     }
 
+    // Others
+
+    private void addListeners() {
+        currentGameScene.addListener((_, _, gameScene) -> {
+            contextMenu.hide();
+            if (gameScene != null) {
+                embedGameScene(parentScene, gameScene);
+            }
+        });
+        parentScene.widthProperty() .addListener((_, _, w) -> canvasDecorator.resizeTo(w.doubleValue(), parentScene.getHeight()));
+        parentScene.heightProperty().addListener((_, _, h) -> canvasDecorator.resizeTo(parentScene.getWidth(), h.doubleValue()));
+    }
+
+    private void configureContextMenu() {
+        setOnContextMenuRequested(this::handleContextMenuRequest);
+        //TODO is there a better way to hide the context menu?
+        parentScene.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
+            if (e.getButton() != MouseButton.SECONDARY) {
+                contextMenu.hide();
+            }
+        });
+    }
+
+    private void configureActionBindings() {
+        actionBindingsManager.useFirst(ACTION_BOOT_SHOW_PLAY_VIEW, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.useFirst(ACTION_ENTER_FULLSCREEN, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.useFirst(ACTION_QUIT_GAME_SCENE, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.useFirst(ACTION_SHOW_HELP, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.useFirst(ACTION_SIMULATION_SLOWER, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.useFirst(ACTION_SIMULATION_SLOWEST, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.useFirst(ACTION_SIMULATION_FASTER, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.useFirst(ACTION_SIMULATION_FASTEST, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.useFirst(ACTION_SIMULATION_RESET, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.useFirst(ACTION_SIMULATION_ONE_STEP, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.useFirst(ACTION_SIMULATION_TEN_STEPS, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.useFirst(ACTION_TOGGLE_AUTOPILOT, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.useFirst(ACTION_TOGGLE_DEBUG_INFO, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.useFirst(ACTION_TOGGLE_MUTED, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.useFirst(ACTION_TOGGLE_PAUSED, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.useFirst(ACTION_TOGGLE_COLLISION_STRATEGY, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.useFirst(ACTION_TOGGLE_DASHBOARD, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.useFirst(ACTION_TOGGLE_IMMUNITY, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.useFirst(ACTION_TOGGLE_MINI_VIEW_VISIBILITY, GameUI.COMMON_BINDINGS);
+        actionBindingsManager.useFirst(ACTION_TOGGLE_PLAY_SCENE_2D_3D, GameUI.COMMON_BINDINGS);
+    }
+
+    private void handleContextMenuRequest(ContextMenuEvent event) {
+        contextMenu.clear();
+        ui.currentGameScene().ifPresent(gameScene -> {
+            if (ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_2D)) {
+                contextMenu.addLocalizedTitleItem("scene_display");
+                contextMenu.addLocalizedActionItem(ACTION_TOGGLE_PLAY_SCENE_2D_3D, "use_3D_scene");
+            }
+            gameScene.supplyContextMenu(ui.context().currentGame()).ifPresent(menu -> contextMenu.addAll(menu.itemsCopy()));
+        });
+        contextMenu.requestFocus();
+        contextMenu.show(this, event.getScreenX(), event.getScreenY());
+    }
+
+    private void useDecoratedCanvas(GameScene2D gameScene2D) {
+        final Canvas canvas = new Canvas();
+
+        canvasDecorator.setCanvas(canvas);
+
+        gameScene2D.setCanvas(canvas);
+        gameScene2D.backgroundProperty().bind(GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR);
+
+        sceneRenderer = ui.currentConfig().createGameSceneRenderer(canvas, gameScene2D);
+        hudRenderer = ui.currentConfig().createHUDRenderer(canvas, gameScene2D); // may return null!
+    }
+
     private void embedGameScene(Scene parentScene, GameScene gameScene) {
         hudRenderer = null;
         if (gameScene.optSubScene().isPresent()) {
@@ -319,19 +331,19 @@ public class PlayView extends StackPane implements GameUI_View {
             double aspect = (double) gameSceneSizePx.x() / gameSceneSizePx.y();
             if (ui.currentConfig().sceneConfig().canvasDecorated(gameScene)) {
                 // Decorated game scene scaled-down to give space for the decoration
-                gameScene2D.scalingProperty().bind(canvasDecorationPane.scalingProperty().map(
+                gameScene2D.scalingProperty().bind(canvasDecorator.scalingProperty().map(
                         scaling -> Math.min(scaling.doubleValue(), ui.preferences().getFloat("scene2d.max_scaling"))));
-                canvasDecorationPane.setUnscaledCanvasSize(gameSceneSizePx.x(), gameSceneSizePx.y());
-                canvasDecorationPane.resizeTo(parentScene.getWidth(), parentScene.getHeight());
-                canvasDecorationPane.backgroundProperty().bind(GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR.map(Ufx::paintBackground));
-                canvasLayer.setCenter(canvasDecorationPane);
+                canvasDecorator.setUnscaledCanvasSize(gameSceneSizePx.x(), gameSceneSizePx.y());
+                canvasDecorator.resizeTo(parentScene.getWidth(), parentScene.getHeight());
+                canvasDecorator.backgroundProperty().bind(GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR.map(Ufx::paintBackground));
+                canvasLayer.setCenter(canvasDecorator);
             }
             else {
                 // Undecorated game scene taking complete height
-                canvasDecorationPane.canvas().heightProperty().bind(parentScene.heightProperty());
-                canvasDecorationPane.canvas().widthProperty().bind(parentScene.heightProperty().map(h -> h.doubleValue() * aspect));
+                canvasDecorator.canvas().heightProperty().bind(parentScene.heightProperty());
+                canvasDecorator.canvas().widthProperty().bind(parentScene.heightProperty().map(h -> h.doubleValue() * aspect));
                 gameScene2D.scalingProperty().bind(parentScene.heightProperty().divide(gameSceneSizePx.y()));
-                canvasLayer.setCenter(canvasDecorationPane.canvas());
+                canvasLayer.setCenter(canvasDecorator.canvas());
             }
             getChildren().set(0, canvasLayer);
         }
@@ -342,29 +354,12 @@ public class PlayView extends StackPane implements GameUI_View {
 
     private void configurePropertyBindings() {
         GameUI.PROPERTY_CANVAS_FONT_SMOOTHING.addListener((_, _, smooth)
-            -> canvasDecorationPane.canvas().getGraphicsContext2D().setFontSmoothingType(smooth ? FontSmoothingType.LCD : FontSmoothingType.GRAY));
+            -> canvasDecorator.canvas().getGraphicsContext2D().setFontSmoothingType(smooth ? FontSmoothingType.LCD : FontSmoothingType.GRAY));
 
         GameUI.PROPERTY_DEBUG_INFO_VISIBLE.addListener((_, _, debug)
             -> {
                canvasLayer.setBackground(debug ? paintBackground(Color.TEAL) : null);
                canvasLayer.setBorder(debug ? border(Color.LIGHTGREEN, 1) : null);
             });
-    }
-
-    private void createLayout() {
-        canvasLayer.setCenter(canvasDecorationPane);
-
-        dashboardAndMiniViewLayer.setLeft(dashboard);
-        dashboardAndMiniViewLayer.setRight(miniView);
-        dashboardAndMiniViewLayer.visibleProperty().bind(Bindings.createObjectBinding(
-            () -> dashboard.isVisible() || GameUI.PROPERTY_MINI_VIEW_ON.get(),
-            dashboard.visibleProperty(), GameUI.PROPERTY_MINI_VIEW_ON
-        ));
-
-        //TODO reconsider help functionality
-        helpLayer = new HelpLayer(canvasDecorationPane);
-        helpLayer.setMouseTransparent(true);
-
-        getChildren().addAll(canvasLayer, dashboardAndMiniViewLayer, helpLayer);
     }
 }

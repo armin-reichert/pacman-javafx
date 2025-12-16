@@ -55,7 +55,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
         arcadeHud.credit(false).score(true).levelCounter(true).livesCounter(false).show();
         pac = ArcadePacMan_ActorFactory.createPacMan();
         pac.setAnimationManager(uiConfig.createPacAnimations());
-        blinky = uiConfig.createAnimatedGhost(RED_GHOST_SHADOW);
+        blinky = uiConfig.createGhostWithAnimations(RED_GHOST_SHADOW);
         frame = -1;
     }
 

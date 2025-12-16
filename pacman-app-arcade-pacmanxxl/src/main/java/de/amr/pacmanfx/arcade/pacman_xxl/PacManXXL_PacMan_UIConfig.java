@@ -211,7 +211,7 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config, GameScene_Confi
     }
 
     @Override
-    public Ghost createAnimatedGhost(byte personality) {
+    public Ghost createGhostWithAnimations(byte personality) {
         Ghost ghost = switch (personality) {
             case RED_GHOST_SHADOW   -> ArcadePacMan_ActorFactory.createBlinky();
             case PINK_GHOST_SPEEDY  -> ArcadePacMan_ActorFactory.createPinky();

@@ -203,7 +203,7 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config, GameScene_Con
     }
 
     @Override
-    public Ghost createAnimatedGhost(byte personality) {
+    public Ghost createGhostWithAnimations(byte personality) {
         requireValidGhostPersonality(personality);
         Ghost ghost = switch (personality) {
             case RED_GHOST_SHADOW   -> ArcadeMsPacMan_ActorFactory.createBlinky();

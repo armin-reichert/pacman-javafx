@@ -112,8 +112,7 @@ public final class GameUI_Implementation implements GameUI {
 
         createScene(sceneWidth, sceneHeight);
 
-        playView = new PlayView(scene);
-        playView.setUI(this);
+        playView = new PlayView(this, scene);
 
         startPagesView = new StartPagesCarousel();
         startPagesView.setUI(this);

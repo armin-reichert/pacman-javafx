@@ -5,10 +5,11 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.model.StandardGameVariant;
+import de.amr.pacmanfx.ui.api.ArcadePalette;
 import de.amr.pacmanfx.ui.api.GameUI;
-import de.amr.pacmanfx.uilib.widgets.CanvasDecorationPane;
 import de.amr.pacmanfx.uilib.widgets.FadingPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
@@ -17,28 +18,30 @@ import static de.amr.pacmanfx.uilib.Ufx.colorWithOpacity;
 
 public class HelpLayer extends Pane {
 
-    private final FadingPane helpPopUp = new FadingPane();
+    private final FadingPane popup = new FadingPane();
 
-    public HelpLayer(CanvasDecorationPane canvasDecorationPane) {
-        getChildren().addAll(helpPopUp);
+    public HelpLayer(Region master) {
+        setMouseTransparent(true);
+        getChildren().addAll(popup);
 
-        minHeightProperty().bind(canvasDecorationPane.minHeightProperty());
-        maxHeightProperty().bind(canvasDecorationPane.maxHeightProperty());
-        prefHeightProperty().bind(canvasDecorationPane.prefHeightProperty());
-        minWidthProperty().bind(canvasDecorationPane.minWidthProperty());
-        maxWidthProperty().bind(canvasDecorationPane.maxWidthProperty());
-        prefWidthProperty().bind(canvasDecorationPane.prefWidthProperty());
+        minWidthProperty().bind(master.minWidthProperty());
+        maxWidthProperty().bind(master.maxWidthProperty());
+        prefWidthProperty().bind(master.prefWidthProperty());
+
+        minHeightProperty().bind(master.minHeightProperty());
+        maxHeightProperty().bind(master.maxHeightProperty());
+        prefHeightProperty().bind(master.prefHeightProperty());
     }
 
-    public void showHelp(GameUI ui, double scaling) {
-        boolean msPacMan = ui.context().gameVariantName().equals(StandardGameVariant.MS_PACMAN.name())
-            || ui.context().gameVariantName().equals(StandardGameVariant.MS_PACMAN_XXL.name());
-        Color bgColor = msPacMan ? Color.RED : Color.BLUE;
-        var font = Font.font(GameUI.FONT_MONOSPACED.getFamily(), Math.max(6, 14 * scaling));
-        var helpPane = HelpInfo.build(ui).createPane(ui, colorWithOpacity(bgColor, 0.8), font);
-        helpPopUp.setTranslateX(10 * scaling);
-        helpPopUp.setTranslateY(30 * scaling);
-        helpPopUp.setContent(helpPane);
-        helpPopUp.show(Duration.seconds(1.5));
+    public void showHelpPopup(GameUI ui, double scaling, String variantName) {
+        final boolean msPacMan = variantName.equals(StandardGameVariant.MS_PACMAN.name())
+                || variantName.equals(StandardGameVariant.MS_PACMAN_XXL.name());
+        final Color bgColor = msPacMan ? ArcadePalette.ARCADE_RED : ArcadePalette.ARCADE_BLUE;
+        final var font = Font.font(GameUI.FONT_MONOSPACED.getFamily(), Math.max(6, 14 * scaling));
+        final var infoPane = HelpInfo.build(ui).createPane(ui, colorWithOpacity(bgColor, 0.8), font);
+        popup.setTranslateX(10 * scaling);
+        popup.setTranslateY(30 * scaling);
+        popup.setContent(infoPane);
+        popup.show(Duration.seconds(1.5));
     }
 }
