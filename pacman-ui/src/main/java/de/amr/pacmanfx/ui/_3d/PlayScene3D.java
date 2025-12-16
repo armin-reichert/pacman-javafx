@@ -159,7 +159,7 @@ public abstract class PlayScene3D extends Group implements GameScene {
     protected abstract void setActionBindings(GameLevel gameLevel);
 
     @Override
-    public GameUI_ContextMenu supplyContextMenu(Game game) {
+    public Optional<GameUI_ContextMenu> supplyContextMenu(Game game) {
         final var menu = new GameUI_ContextMenu(ui);
         menu.addLocalizedTitleItem("scene_display");
         menu.addLocalizedActionItem(ACTION_TOGGLE_PLAY_SCENE_2D_3D, "use_2D_scene");
@@ -172,7 +172,7 @@ public abstract class PlayScene3D extends Group implements GameScene {
         menu.addSeparator();
         menu.addLocalizedCheckBox(GameUI.PROPERTY_MUTED, "muted");
         menu.addLocalizedActionItem(ACTION_QUIT_GAME_SCENE, "quit");
-        return menu;
+        return Optional.of(menu);
     }
 
     private final ChangeListener<PerspectiveID> perspectiveIDChangeListener = (py, ov, newID) -> {

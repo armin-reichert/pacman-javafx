@@ -30,6 +30,8 @@ import de.amr.pacmanfx.ui.sound.SoundID;
 import javafx.scene.control.CheckMenuItem;
 import org.tinylog.Logger;
 
+import java.util.Optional;
+
 import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_PIXELS;
 
 /**
@@ -85,7 +87,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public GameUI_ContextMenu supplyContextMenu(Game game) {
+    public Optional<GameUI_ContextMenu> supplyContextMenu(Game game) {
         final var menu = new GameUI_ContextMenu(ui);
         menu.addLocalizedTitleItem("pacman");
         menu.addLocalizedCheckBox(game.usingAutopilotProperty(), "autopilot").setOnAction(e -> {
@@ -99,7 +101,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
         menu.addSeparator();
         menu.addLocalizedCheckBox(GameUI.PROPERTY_MUTED, "muted");
         menu.addLocalizedActionItem(CommonGameActions.ACTION_QUIT_GAME_SCENE, "quit");
-        return menu;
+        return Optional.of(menu);
     }
 
     @Override

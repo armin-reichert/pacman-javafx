@@ -96,7 +96,7 @@ public interface GameScene extends GameEventListener {
      * @param game the current game
      * @return context menu provided by this game scene which is merged into the view's context menu
      */
-    default GameUI_ContextMenu supplyContextMenu(Game game) {
-        return null;
+    default Optional<GameUI_ContextMenu> supplyContextMenu(Game game) {
+        return Optional.empty();
     }
 }
