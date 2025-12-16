@@ -73,32 +73,26 @@ public class PlayView extends StackPane implements GameUI_View {
         this.helpLayer = new HelpLayer(canvasDecorator);
 
         dashboard.setUI(ui);
-        dashboard.setVisible(false);
-
         miniView.setUI(ui);
-        miniView.visibleProperty().bind(Bindings.createObjectBinding(
-            () -> GameUI.PROPERTY_MINI_VIEW_ON.get() && ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D),
-            GameUI.PROPERTY_MINI_VIEW_ON, currentGameScene
-        ));
 
         canvasDecorator.setMinScaling(0.5);
         canvasDecorator.setUnscaledCanvasSize(ARCADE_MAP_SIZE_IN_PIXELS.x(), ARCADE_MAP_SIZE_IN_PIXELS.y());
         canvasDecorator.setBorderColor(ArcadePalette.ARCADE_WHITE);
 
-        widgetLayer.setLeft(dashboard);
-        widgetLayer.setRight(miniView);
-        widgetLayer.visibleProperty().bind(Bindings.createObjectBinding(
-            () -> dashboard.isVisible() || GameUI.PROPERTY_MINI_VIEW_ON.get(),
-            dashboard.visibleProperty(), GameUI.PROPERTY_MINI_VIEW_ON
-        ));
-
-        canvasLayer.setCenter(canvasDecorator);
-        getChildren().addAll(canvasLayer, widgetLayer, helpLayer);
-
+        composeLayout();
         configureActionBindings();
         configurePropertyBindings();
         configureContextMenu();
         addListeners();
+
+        dashboard.setVisible(false);
+    }
+
+    private void composeLayout() {
+        widgetLayer.setLeft(dashboard);
+        widgetLayer.setRight(miniView);
+        canvasLayer.setCenter(canvasDecorator);
+        getChildren().addAll(canvasLayer, widgetLayer, helpLayer);
     }
 
     public ObjectProperty<GameScene> currentGameSceneProperty() {
@@ -251,6 +245,16 @@ public class PlayView extends StackPane implements GameUI_View {
         });
         parentScene.widthProperty() .addListener((_, _, w) -> canvasDecorator.resizeTo(w.doubleValue(), parentScene.getHeight()));
         parentScene.heightProperty().addListener((_, _, h) -> canvasDecorator.resizeTo(parentScene.getWidth(), h.doubleValue()));
+
+        widgetLayer.visibleProperty().bind(Bindings.createObjectBinding(
+            () -> dashboard.isVisible() || GameUI.PROPERTY_MINI_VIEW_ON.get(),
+            dashboard.visibleProperty(), GameUI.PROPERTY_MINI_VIEW_ON
+        ));
+
+        miniView.visibleProperty().bind(Bindings.createObjectBinding(
+            () -> GameUI.PROPERTY_MINI_VIEW_ON.get() && ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D),
+            GameUI.PROPERTY_MINI_VIEW_ON, currentGameScene
+        ));
     }
 
     private void configureContextMenu() {
