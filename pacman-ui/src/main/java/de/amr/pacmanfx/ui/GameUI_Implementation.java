@@ -334,11 +334,6 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     @Override
-    public StackPane layoutPane() {
-        return layoutPane;
-    }
-
-    @Override
     public UIPreferences preferences() {
         return prefs;
     }
@@ -455,7 +450,7 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     @Override
-    public Optional<EditorView> optEditorView() {
+    public Optional<GameUI_View> optEditorView() {
         return Optional.ofNullable(editorView);
     }
 

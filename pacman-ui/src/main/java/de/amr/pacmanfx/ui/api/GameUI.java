@@ -24,7 +24,6 @@ import de.amr.pacmanfx.uilib.assets.UIPreferences;
 import javafx.beans.property.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
-import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
@@ -116,18 +115,19 @@ public interface GameUI extends LocalizedTextAccessor {
 
     ResourceManager GLOBAL_RESOURCES = () -> GameUI_Implementation.class;
 
-    Media VOICE_IMMUNITY_ON = new Media(GLOBAL_RESOURCES.url("sound/voice/immunity-on.mp3").toExternalForm());
-    Media VOICE_IMMUNITY_OFF = new Media(GLOBAL_RESOURCES.url("sound/voice/immunity-off.mp3").toExternalForm());
-    Media VOICE_EXPLAIN = new Media(GLOBAL_RESOURCES.url("sound/voice/press-key.mp3").toExternalForm());
-    Media VOICE_AUTOPILOT_ON = new Media(GLOBAL_RESOURCES.url("sound/voice/autopilot-on.mp3").toExternalForm());
+    Media VOICE_IMMUNITY_ON   = new Media(GLOBAL_RESOURCES.url("sound/voice/immunity-on.mp3").toExternalForm());
+    Media VOICE_IMMUNITY_OFF  = new Media(GLOBAL_RESOURCES.url("sound/voice/immunity-off.mp3").toExternalForm());
+    Media VOICE_EXPLAIN       = new Media(GLOBAL_RESOURCES.url("sound/voice/press-key.mp3").toExternalForm());
+    Media VOICE_AUTOPILOT_ON  = new Media(GLOBAL_RESOURCES.url("sound/voice/autopilot-on.mp3").toExternalForm());
     Media VOICE_AUTOPILOT_OFF = new Media(GLOBAL_RESOURCES.url("sound/voice/autopilot-off.mp3").toExternalForm());
 
     Font FONT_PAC_FONT_GOOD = GLOBAL_RESOURCES.loadFont("fonts/PacfontGood.ttf", 8);
-    Font FONT_PAC_FONT = GLOBAL_RESOURCES.loadFont("fonts/Pacfont.ttf", 8);
-    Font FONT_MONOSPACED = GLOBAL_RESOURCES.loadFont("fonts/Inconsolata_Condensed-Bold.ttf", 12);
-    Font FONT_HANDWRITING = GLOBAL_RESOURCES.loadFont("fonts/Molle-Italic.ttf", 9);
-    Font FONT_ARCADE_8 = GLOBAL_RESOURCES.loadFont("fonts/emulogic.ttf", 8);
-    Font FONT_ARCADE_6 = GLOBAL_RESOURCES.loadFont("fonts/emulogic.ttf", 6);
+    Font FONT_PAC_FONT      = GLOBAL_RESOURCES.loadFont("fonts/Pacfont.ttf", 8);
+    Font FONT_MONOSPACED    = GLOBAL_RESOURCES.loadFont("fonts/Inconsolata_Condensed-Bold.ttf", 12);
+    Font FONT_HANDWRITING   = GLOBAL_RESOURCES.loadFont("fonts/Molle-Italic.ttf", 9);
+    Font FONT_ARCADE_8      = GLOBAL_RESOURCES.loadFont("fonts/emulogic.ttf", 8);
+    Font FONT_ARCADE_6      = GLOBAL_RESOURCES.loadFont("fonts/emulogic.ttf", 6);
+
     Background BACKGROUND_PAC_MAN_WALLPAPER = createImageBackground(GLOBAL_RESOURCES.loadImage("graphics/pacman_wallpaper.png"));
 
     ResourceBundle LOCALIZED_TEXTS = GLOBAL_RESOURCES.getModuleBundle("de.amr.pacmanfx.ui.localized_texts");
@@ -145,7 +145,7 @@ public interface GameUI extends LocalizedTextAccessor {
     GameClock clock();
 
     /**
-     * @return Context giving access to important entities like game controller, game state etc.
+     * @return (non UI) context
      */
     GameContext context();
 
@@ -158,11 +158,6 @@ public interface GameUI extends LocalizedTextAccessor {
      * @return the primary stage provided by the JavaFX application
      */
     Stage stage();
-
-    /**
-     * @return the main scene of the UI
-     */
-    Pane layoutPane();
 
     /**
      * @return the UI preferences (stored permanently in platform-specific way)
@@ -178,7 +173,7 @@ public interface GameUI extends LocalizedTextAccessor {
      * Shows a message on the screen that slowly fades out.
      *
      * @param duration display duration before fading out
-     * @param message the message text
+     * @param message the message text, may include formatting symbols (see {@link String#format(String, Object...)})
      * @param args arguments merged into the message text using String.format()
      */
     void showFlashMessage(Duration duration, String message, Object... args);
@@ -187,7 +182,7 @@ public interface GameUI extends LocalizedTextAccessor {
      * Shows a message on the screen that slowly fades out and displays for a default duration.
      *
      * @param message the message text
-     * @param args arguments merged into the message text using String.format()
+     * @param args arguments merged into the message text using {@link String#format(String, Object...)}
      */
     default void showFlashMessage(String message, Object... args) {
         showFlashMessage(DEFAULT_FLASH_MESSAGE_DURATION, message, args);
@@ -207,7 +202,7 @@ public interface GameUI extends LocalizedTextAccessor {
 
     GameUI_View currentView();
 
-    Optional<EditorView> optEditorView();
+    Optional<GameUI_View> optEditorView();
 
     PlayView playView();
 

@@ -93,9 +93,6 @@ public class GameBox implements GameContext, CoinMechanism {
     // GameContext implementation
 
     @Override
-    public String gameVariantName() { return gameVariantName.get(); }
-
-    @Override
     public <G extends Game> G currentGame() {
         G game = gameByVariantName(gameVariantName.get());
         if (game != null) {
