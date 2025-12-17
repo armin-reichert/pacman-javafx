@@ -91,6 +91,6 @@ public class LevelShortTestState implements StateMachine.State<Game>, TestState 
     public void onExit(Game game) {
         COIN_MECHANISM.setNumCoins(0);
         game.boot();
-        game.levelCounter().clearLevelCounter();
+        game.clearLevelCounter();
     }
 }

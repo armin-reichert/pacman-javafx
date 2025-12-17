@@ -114,11 +114,6 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel implements LevelC
     }
 
     @Override
-    public LevelCounter levelCounter() {
-        return this;
-    }
-
-    @Override
     public HUD hud() {
         return hud;
     }

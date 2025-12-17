@@ -172,11 +172,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
     }
 
     @Override
-    public LevelCounter levelCounter() {
-        return this;
-    }
-
-    @Override
     public TengenMsPacMan_HUD hud() {
         return hud;
     }
@@ -199,7 +194,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
     @Override
     public void prepareNewGame() {
         lifeCountProperty().set(initialLifeCount());
-        levelCounter().clearLevelCounter();
+        clearLevelCounter();
         setPlaying(false);
         boosterActive = false;
         loadHighScore();
@@ -339,7 +334,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
             Logger.info("Demo level {} started", level.number());
         } else {
             showLevelMessage(MessageType.READY);
-            levelCounter().updateLevelCounter(level.number(), level.bonusSymbol(0));
+            updateLevelCounter(level.number(), level.bonusSymbol(0));
             score().setEnabled(true);
             updateCheatingProperties(level);
             Logger.info("Level {} started", level.number());
@@ -473,7 +468,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
         level.setBonusSymbol(0, computeBonusSymbol(level.number()));
         level.setBonusSymbol(1, computeBonusSymbol(level.number()));
 
-        levelCounter().setLevelCounterEnabled(levelNumber < 8);
+        setLevelCounterEnabled(levelNumber < 8);
 
         return level;
     }

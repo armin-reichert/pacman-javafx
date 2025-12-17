@@ -23,7 +23,7 @@ import java.util.Optional;
  * behavior</a>
  * @see <a href="http://superpacman.com/mspacman/">Ms. Pac-Man details</a>
  */
-public interface Game {
+public interface Game extends LevelCounter {
 
     /**
      * @return state machine controlling the game
@@ -58,11 +58,6 @@ public interface Game {
     MapSelector mapSelector();
 
     // Game levels
-
-    /**
-     * @return the level counter data e.g. the codes of level symbols displayed in the UI
-     */
-    LevelCounter levelCounter();
 
     /**
      * @return the (optional) current game level

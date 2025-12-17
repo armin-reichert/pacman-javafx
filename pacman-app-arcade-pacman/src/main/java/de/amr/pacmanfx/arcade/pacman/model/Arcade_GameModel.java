@@ -257,7 +257,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         setInitialLifeCount(3);
         clearCheatingProperties();
         prepareNewGame();
-        levelCounter().clearLevelCounter();
+        clearLevelCounter();
         hud().hide();
     }
 
@@ -276,7 +276,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     public void startNewGame(long tick) {
         if (tick == 1) {
             prepareNewGame();
-            levelCounter().clearLevelCounter();
+            clearLevelCounter();
             buildNormalLevel(1);
             publishGameEvent(GameEvent.Type.GAME_STARTED);
         }
@@ -360,7 +360,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     public void buildNormalLevel(int levelNumber) {
         final GameLevel level = createLevel(levelNumber, false);
         level.setCutSceneNumber(cutSceneNumberAfter(levelNumber));
-        levelCounter().setLevelCounterEnabled(true);
+        setLevelCounterEnabled(true);
         score().setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
         level.worldMap().terrainLayer().optHouse().ifPresent(house -> gateKeeper.setHouse(house));
@@ -378,7 +378,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         level.pac().setUsingAutopilot(true);
         level.pac().setAutomaticSteering(demoLevelSteering);
         demoLevelSteering.init();
-        levelCounter().setLevelCounterEnabled(true);
+        setLevelCounterEnabled(true);
         score().setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
         level.worldMap().terrainLayer().optHouse().ifPresent(house -> gateKeeper.setHouse(house));
@@ -416,7 +416,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             Logger.info("Demo level {} started", level.number());
         } else {
             showLevelMessage(MessageType.READY);
-            levelCounter().updateLevelCounter(level.number(), level.bonusSymbol(0));
+            updateLevelCounter(level.number(), level.bonusSymbol(0));
             score().setEnabled(true);
             updateCheatingProperties(level);
             Logger.info("Level {} started", level.number());

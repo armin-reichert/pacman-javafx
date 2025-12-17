@@ -129,11 +129,6 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel implements LevelCou
     }
 
     @Override
-    public LevelCounter levelCounter() {
-        return this;
-    }
-
-    @Override
     public HUD hud() {
         return hud;
     }

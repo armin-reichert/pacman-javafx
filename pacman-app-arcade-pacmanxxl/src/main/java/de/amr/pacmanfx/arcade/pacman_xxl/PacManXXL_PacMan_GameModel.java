@@ -116,7 +116,7 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
         level.pac().setUsingAutopilot(true);
         level.pac().setAutomaticSteering(demoLevelSteering);
         demoLevelSteering.init();
-        levelCounter().setLevelCounterEnabled(false);
+        setLevelCounterEnabled(false);
         gateKeeper.setLevelNumber(levelNumber);
         level.worldMap().terrainLayer().optHouse().ifPresent(house -> gateKeeper.setHouse(house));
 

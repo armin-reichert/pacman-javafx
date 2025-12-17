@@ -126,7 +126,7 @@ public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteR
         final RectShort[] symbolSprites = spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS);
         float x = LEVEL_COUNTER_POS_RIGHT - TS(2);
         // symbols are drawn from right to left!
-        for (byte symbol : level.game().levelCounter().levelCounterSymbols()) {
+        for (byte symbol : level.game().levelCounterSymbols()) {
             if (0 <= symbol && symbol < symbolSprites.length) {
                 drawSprite(symbolSprites[symbol], x, y, true);
             }
