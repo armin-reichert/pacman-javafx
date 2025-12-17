@@ -26,7 +26,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @see <a href="https://pacman.holenet.info/">The Pac-Man Dossier by Jamey Pittman</a>
  */
-public abstract class Arcade_GameModel extends AbstractGameModel implements LevelCounter {
+public abstract class Arcade_GameModel extends AbstractGameModel {
 
     static final short TICK_NEW_GAME_SHOW_GUYS = 120;
     static final short TICK_NEW_GAME_START_HUNTING = 240;

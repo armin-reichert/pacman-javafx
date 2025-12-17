@@ -53,7 +53,7 @@ import static java.util.Objects.requireNonNull;
  * </ul>
  * </p>
  */
-public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
+public class ArcadeMsPacMan_GameModel extends Arcade_GameModel implements LevelCounter {
 
     public static final int MAX_LEVEL_COUNTER_SYMBOLS = 7;
 
@@ -341,36 +341,36 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
     // LevelCounter
 
-    private final BooleanProperty enabled = new SimpleBooleanProperty(true);
-    private final List<Byte> symbols = new ArrayList<>();
+    private final BooleanProperty levelCounterEnabled = new SimpleBooleanProperty(true);
+    private final List<Byte> levelCounterSymbols = new ArrayList<>();
 
     @Override
     public void clearLevelCounter() {
-        symbols.clear();
+        levelCounterSymbols.clear();
     }
 
     @Override
     public void updateLevelCounter(int levelNumber, byte symbol) {
         if (levelNumber == 1) {
-            symbols.clear();
+            levelCounterSymbols.clear();
         }
         if (levelNumber < MAX_LEVEL_COUNTER_SYMBOLS && levelCounterEnabled()) {
-            symbols.add(symbol);
+            levelCounterSymbols.add(symbol);
         }
     }
 
     @Override
     public void setLevelCounterEnabled(boolean enabled) {
-        this.enabled.set(enabled);
+        this.levelCounterEnabled.set(enabled);
     }
 
     @Override
     public boolean levelCounterEnabled() {
-        return this.enabled.get();
+        return this.levelCounterEnabled.get();
     }
 
     @Override
     public List<Byte> levelCounterSymbols() {
-        return symbols;
+        return levelCounterSymbols;
     }
 }
