@@ -70,7 +70,7 @@ public class ArcadePacMan_HUD_Renderer extends BaseRenderer implements SpriteRen
             final RectShort[] bonusSymbolSprites = spriteSheet.spriteSequence(SpriteID.BONUS_SYMBOLS);
             final float y = sceneSize.y() - TS(2) + 2;
             float x = sceneSize.x() - TS(4);
-            for (byte symbol : game.levelCounter().symbols()) {
+            for (byte symbol : game.levelCounter().levelCounterSymbols()) {
                 drawSprite(bonusSymbolSprites[symbol], x, y, true);
                 x -= TS(2); // symbols are drawn from right to left
             }

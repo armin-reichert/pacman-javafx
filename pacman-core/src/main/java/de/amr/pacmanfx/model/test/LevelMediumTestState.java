@@ -78,6 +78,6 @@ public class LevelMediumTestState implements StateMachine.State<Game>, TestState
 
     @Override
     public void onExit(Game game) {
-        game.levelCounter().clear();
+        game.levelCounter().clearLevelCounter();
     }
 }

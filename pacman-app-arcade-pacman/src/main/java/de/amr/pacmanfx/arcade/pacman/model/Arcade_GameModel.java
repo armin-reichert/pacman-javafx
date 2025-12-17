@@ -26,7 +26,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @see <a href="https://pacman.holenet.info/">The Pac-Man Dossier by Jamey Pittman</a>
  */
-public abstract class Arcade_GameModel extends AbstractGameModel {
+public abstract class Arcade_GameModel extends AbstractGameModel implements LevelCounter {
 
     static final short TICK_NEW_GAME_SHOW_GUYS = 120;
     static final short TICK_NEW_GAME_START_HUNTING = 240;
@@ -257,7 +257,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         setInitialLifeCount(3);
         clearCheatingProperties();
         prepareNewGame();
-        levelCounter().clear();
+        levelCounter().clearLevelCounter();
         hud().hide();
     }
 
@@ -276,7 +276,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     public void startNewGame(long tick) {
         if (tick == 1) {
             prepareNewGame();
-            levelCounter().clear();
+            levelCounter().clearLevelCounter();
             buildNormalLevel(1);
             publishGameEvent(GameEvent.Type.GAME_STARTED);
         }
@@ -360,7 +360,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     public void buildNormalLevel(int levelNumber) {
         final GameLevel level = createLevel(levelNumber, false);
         level.setCutSceneNumber(cutSceneNumberAfter(levelNumber));
-        levelCounter().setEnabled(true);
+        levelCounter().setLevelCounterEnabled(true);
         score().setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
         level.worldMap().terrainLayer().optHouse().ifPresent(house -> gateKeeper.setHouse(house));
@@ -378,7 +378,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         level.pac().setUsingAutopilot(true);
         level.pac().setAutomaticSteering(demoLevelSteering);
         demoLevelSteering.init();
-        levelCounter().setEnabled(true);
+        levelCounter().setLevelCounterEnabled(true);
         score().setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
         level.worldMap().terrainLayer().optHouse().ifPresent(house -> gateKeeper.setHouse(house));
@@ -416,7 +416,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             Logger.info("Demo level {} started", level.number());
         } else {
             showLevelMessage(MessageType.READY);
-            levelCounter().update(level.number(), level.bonusSymbol(0));
+            levelCounter().updateLevelCounter(level.number(), level.bonusSymbol(0));
             score().setEnabled(true);
             updateCheatingProperties(level);
             Logger.info("Level {} started", level.number());

@@ -17,9 +17,12 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.steering.RouteBasedSteering;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import org.tinylog.Logger;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import static de.amr.pacmanfx.Globals.ORANGE_GHOST_POKEY;
@@ -46,6 +49,8 @@ import static java.util.Objects.requireNonNull;
  * @see <a href="https://pacman.holenet.info/">The Pac-Man Dossier by Jamey Pittman</a>
  */
 public class ArcadePacMan_GameModel extends Arcade_GameModel {
+
+    public static final int MAX_LEVEL_COUNTER_SYMBOLS = 7;
 
     // Note: level numbering starts with 1, first entry is not used
     protected static final byte[] BONUS_SYMBOL_CODES_BY_LEVEL_NUMBER = { -1, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7 };
@@ -76,7 +81,6 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     protected static final Vector2i DEFAULT_BONUS_TILE = new Vector2i(13, 20);
 
     protected final MapSelector mapSelector;
-    protected final ArcadePacMan_LevelCounter levelCounter;
     protected final Arcade_HUD hud;
 
     public ArcadePacMan_GameModel(CoinMechanism coinMechanism, File highScoreFile) {
@@ -95,8 +99,6 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
 
         this.mapSelector = requireNonNull(mapSelector);
         mapSelector.loadAllMapPrototypes();
-
-        levelCounter = new ArcadePacMan_LevelCounter();
 
         setHighScoreFile(requireNonNull(highScoreFile));
         setExtraLifeScores(EXTRA_LIFE_SCORE);
@@ -127,8 +129,8 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     }
 
     @Override
-    public ArcadePacMan_LevelCounter levelCounter() {
-        return levelCounter;
+    public LevelCounter levelCounter() {
+        return this;
     }
 
     @Override
@@ -185,14 +187,14 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         level.setBonusSymbol(0, symbol);
         level.setBonusSymbol(1, symbol);
 
-        levelCounter.setEnabled(true);
+        setLevelCounterEnabled(true);
 
         return level;
     }
 
     private AbstractHuntingTimer createHuntingTimer() {
         final var huntingTimer = new ArcadePacMan_HuntingTimer();
-        huntingTimer.phaseIndexProperty().addListener((py, ov, newPhaseIndex) -> {
+        huntingTimer.phaseIndexProperty().addListener((_, _, newPhaseIndex) -> {
             optGameLevel().ifPresent(level -> {
                 if (newPhaseIndex.intValue() > 0) {
                     level.ghosts(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE)
@@ -226,5 +228,42 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         bonus.setEdibleSeconds(randomFloat(9, 10));
         level.setBonus(bonus);
         publishGameEvent(GameEvent.Type.BONUS_ACTIVATED, bonusTile);
+    }
+
+    // LevelCounter
+    private final BooleanProperty enabled = new SimpleBooleanProperty(true);
+    private final List<Byte> symbols = new ArrayList<>();
+
+    @Override
+    public void clearLevelCounter() {
+        symbols.clear();
+    }
+
+    @Override
+    public void updateLevelCounter(int levelNumber, byte symbol) {
+        if (levelNumber == 1) {
+            symbols.clear();
+        }
+        if (levelCounterEnabled()) {
+            symbols.add(symbol);
+            if (symbols.size() > MAX_LEVEL_COUNTER_SYMBOLS) {
+                symbols.removeFirst();
+            }
+        }
+    }
+
+    @Override
+    public void setLevelCounterEnabled(boolean enabled) {
+        this.enabled.set(enabled);
+    }
+
+    @Override
+    public boolean levelCounterEnabled() {
+        return this.enabled.get();
+    }
+
+    @Override
+    public List<Byte> levelCounterSymbols() {
+        return symbols;
     }
 }

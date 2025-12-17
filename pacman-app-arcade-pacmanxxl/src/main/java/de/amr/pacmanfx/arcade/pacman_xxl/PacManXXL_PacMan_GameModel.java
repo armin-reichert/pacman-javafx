@@ -98,7 +98,7 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
         level.setBonusSymbol(0, symbol);
         level.setBonusSymbol(1, symbol);
 
-        levelCounter.setEnabled(true);
+        setLevelCounterEnabled(true);
 
         return level;
     }
@@ -116,7 +116,7 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
         level.pac().setUsingAutopilot(true);
         level.pac().setAutomaticSteering(demoLevelSteering);
         demoLevelSteering.init();
-        levelCounter().setEnabled(false);
+        levelCounter().setLevelCounterEnabled(false);
         gateKeeper.setLevelNumber(levelNumber);
         level.worldMap().terrainLayer().optHouse().ifPresent(house -> gateKeeper.setHouse(house));
 

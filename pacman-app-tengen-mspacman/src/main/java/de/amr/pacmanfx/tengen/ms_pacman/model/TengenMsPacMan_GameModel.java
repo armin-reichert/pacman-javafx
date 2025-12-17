@@ -19,9 +19,13 @@ import de.amr.pacmanfx.steering.Steering;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameController.GameState;
 import de.amr.pacmanfx.tengen.ms_pacman.model.actors.*;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import org.tinylog.Logger;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Stream;
@@ -42,7 +46,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @see <a href="https://github.com/RussianManSMWC/Ms.-Pac-Man-NES-Tengen-Disassembly">Ms.Pac-Man-NES-Tengen-Disassembly</a>
  */
-public class TengenMsPacMan_GameModel extends AbstractGameModel {
+public class TengenMsPacMan_GameModel extends AbstractGameModel implements LevelCounter {
 
     static final short TICK_SHOW_READY = 10;
     static final short TICK_NEW_GAME_SHOW_GUYS = 70;
@@ -67,6 +71,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     public static final int DEMO_LEVEL_MIN_DURATION_MILLIS = 20_000;
     public static final byte GAME_OVER_MESSAGE_DELAY_SEC = 2;
+
+    public static final byte LEVEL_COUNTER_MAX_SIZE = 7;
 
     public static final byte PELLET_VALUE = 10;
     public static final byte ENERGIZER_VALUE = 50;
@@ -134,7 +140,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     private final TengenMsPacMan_HUD hud = new TengenMsPacMan_HUD();
     private final TengenMsPacMan_MapSelector mapSelector;
-    private final TengenMsPacMan_LevelCounter levelCounter;
     private final GateKeeper gateKeeper;
     private final Steering automaticSteering;
     private final Steering demoLevelSteering;
@@ -152,7 +157,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         setCollisionStrategy(CollisionStrategy.CENTER_DISTANCE);
         setHighScoreFile(requireNonNull(highScoreFile));
         mapSelector = new TengenMsPacMan_MapSelector();
-        levelCounter = new TengenMsPacMan_LevelCounter();
         gateKeeper = new GateKeeper(this); //TODO implement original logic from Tengen game
         automaticSteering = new RuleBasedPacSteering();
         demoLevelSteering = new RuleBasedPacSteering();
@@ -168,8 +172,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public TengenMsPacMan_LevelCounter levelCounter() {
-        return levelCounter;
+    public LevelCounter levelCounter() {
+        return this;
     }
 
     @Override
@@ -195,7 +199,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     @Override
     public void prepareNewGame() {
         lifeCountProperty().set(initialLifeCount());
-        levelCounter().clear();
+        levelCounter().clearLevelCounter();
         setPlaying(false);
         boosterActive = false;
         loadHighScore();
@@ -335,7 +339,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             Logger.info("Demo level {} started", level.number());
         } else {
             showLevelMessage(MessageType.READY);
-            levelCounter().update(level.number(), level.bonusSymbol(0));
+            levelCounter().updateLevelCounter(level.number(), level.bonusSymbol(0));
             score().setEnabled(true);
             updateCheatingProperties(level);
             Logger.info("Level {} started", level.number());
@@ -469,14 +473,14 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         level.setBonusSymbol(0, computeBonusSymbol(level.number()));
         level.setBonusSymbol(1, computeBonusSymbol(level.number()));
 
-        levelCounter().setEnabled(levelNumber < 8);
+        levelCounter().setLevelCounterEnabled(levelNumber < 8);
 
         return level;
     }
 
     private AbstractHuntingTimer createHuntingTimer() {
         final var huntingTimer = new TengenMsPacMan_HuntingTimer();
-        huntingTimer.phaseIndexProperty().addListener((py, ov, newPhaseIndex) -> {
+        huntingTimer.phaseIndexProperty().addListener((_, _, newPhaseIndex) -> {
             optGameLevel().ifPresent(level -> {
                 if (newPhaseIndex.intValue() > 0) {
                     level.ghosts(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE)
@@ -780,7 +784,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
      * By the way, there's an additional quirk regarding ghosts' speed.
      * On normal difficulty ONLY and in levels 5 and above, the ghosts become slightly faster if there are few dots remain.
      * if there are 31 or fewer dots, the speed is increased. the base increase value is 2, which is further increased
-     * by 1 for every 8 dots eaten. (I should note it's in subunits. it if was times 2, that would've been crazy)
+     * by 1 for every 8 dots eaten. (I should note it is in subunits. it if was times 2, that would've been crazy)
      * </p>
      */
     public float ghostSpeedIncreaseByFoodRemaining(GameLevel level) {
@@ -909,4 +913,47 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         speed += ghostDifficultySpeedDelta(difficulty());
         return 0.4f * speed; //TODO check with @RussianMan or disassembly
     }
+
+    // LevelCounter
+
+    private final BooleanProperty levelCounterEnabled = new SimpleBooleanProperty(true);
+    private final List<Byte> levelCounterSymbols = new ArrayList<>();
+
+    public BooleanProperty levelCounterEnabledProperty() {
+        return levelCounterEnabled;
+    }
+
+    @Override
+    public List<Byte> levelCounterSymbols() {
+        return Collections.unmodifiableList(levelCounterSymbols);
+    }
+
+    @Override
+    public void clearLevelCounter() {
+        levelCounterSymbols.clear();
+    }
+
+    @Override
+    public void updateLevelCounter(int levelNumber, byte symbol) {
+        if (levelNumber == 1) {
+            clearLevelCounter();
+        }
+        if (levelCounterEnabled()) {
+            levelCounterSymbols.add(symbol);
+            if (levelCounterSymbols.size() > LEVEL_COUNTER_MAX_SIZE) {
+                levelCounterSymbols.removeFirst();
+            }
+        }
+    }
+
+    @Override
+    public void setLevelCounterEnabled(boolean enabled) {
+        levelCounterEnabledProperty().set(enabled);
+    }
+
+    @Override
+    public boolean levelCounterEnabled() {
+        return levelCounterEnabledProperty().get();
+    }
+
 }

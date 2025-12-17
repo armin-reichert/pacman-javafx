@@ -24,9 +24,12 @@ import de.amr.pacmanfx.model.actors.BonusState;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import org.tinylog.Logger;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -52,6 +55,8 @@ import static java.util.Objects.requireNonNull;
  */
 public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
+    public static final int MAX_LEVEL_COUNTER_SYMBOLS = 7;
+
     private static final byte[] BONUS_VALUE_MULTIPLIERS = {1, 2, 5, 7, 10, 20, 50}; // points = value * 100
 
     private static final int DEMO_LEVEL_MIN_DURATION_MILLIS = 20_000;
@@ -62,7 +67,6 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     protected static final int GAME_OVER_STATE_TICKS = 150;
 
     protected final MapSelector mapSelector;
-    protected final ArcadeMsPacMan_LevelCounter levelCounter;
     protected final Arcade_HUD hud;
 
     /**
@@ -82,8 +86,6 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
         setHighScoreFile(requireNonNull(highScoreFile));
         setExtraLifeScores(EXTRA_LIFE_SCORE);
-
-        levelCounter = new ArcadeMsPacMan_LevelCounter();
 
         gateKeeper = new GateKeeper(this);
         gateKeeper.setOnGhostReleased((gameLevel, prisoner) -> {
@@ -112,8 +114,8 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     }
 
     @Override
-    public ArcadeMsPacMan_LevelCounter levelCounter() {
-        return levelCounter;
+    public LevelCounter levelCounter() {
+        return this;
     }
 
     @Override
@@ -163,14 +165,14 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
         /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
          * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
-        levelCounter.setEnabled(levelNumber < 8);
+        setLevelCounterEnabled(levelNumber < 8);
 
         return level;
     }
 
     private AbstractHuntingTimer createHuntingTimer() {
         final var huntingTimer = new ArcadeMsPacMan_HuntingTimer();
-        huntingTimer.phaseIndexProperty().addListener((py, ov, newPhaseIndex) -> {
+        huntingTimer.phaseIndexProperty().addListener((_, _, newPhaseIndex) -> {
             optGameLevel().ifPresent(level -> {
                 if (newPhaseIndex.intValue() > 0) {
                     level.ghosts(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE)
@@ -239,7 +241,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
      * </table>
      * </p>
      *
-     * See also <a href="https://umlautllama.com/projects/pacdocs/mspac/mspac.asm">Ms. Pac-Man disasssembly</a>
+     * See also <a href="https://umlautllama.com/projects/pacdocs/mspac/mspac.asm">Ms. Pac-Man disassembly</a>
      */
     protected byte computeBonusSymbol(int levelNumber) {
         if (levelNumber <= 7) return (byte) (levelNumber - 1);
@@ -335,5 +337,40 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
         bonus.initRoute(route, leftToRight);
         Logger.info("Moving bonus route: {} (crossing {})", route, leftToRight ? "left to right" : "right to left");
+    }
+
+    // LevelCounter
+
+    private final BooleanProperty enabled = new SimpleBooleanProperty(true);
+    private final List<Byte> symbols = new ArrayList<>();
+
+    @Override
+    public void clearLevelCounter() {
+        symbols.clear();
+    }
+
+    @Override
+    public void updateLevelCounter(int levelNumber, byte symbol) {
+        if (levelNumber == 1) {
+            symbols.clear();
+        }
+        if (levelNumber < MAX_LEVEL_COUNTER_SYMBOLS && levelCounterEnabled()) {
+            symbols.add(symbol);
+        }
+    }
+
+    @Override
+    public void setLevelCounterEnabled(boolean enabled) {
+        this.enabled.set(enabled);
+    }
+
+    @Override
+    public boolean levelCounterEnabled() {
+        return this.enabled.get();
+    }
+
+    @Override
+    public List<Byte> levelCounterSymbols() {
+        return symbols;
     }
 }
