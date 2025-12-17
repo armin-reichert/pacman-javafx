@@ -42,6 +42,7 @@ import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import org.tinylog.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -146,6 +147,7 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config, GameScene_Con
 
     @Override
     public void dispose() {
+        Logger.info("Disposing {}", getClass().getSimpleName());
         assets.removeAll();
         soundManager.dispose();
     }

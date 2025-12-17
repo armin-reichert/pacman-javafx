@@ -389,9 +389,7 @@ public final class GameUI_Implementation implements GameUI {
         }
 
         if (prevVariantName != null) {
-            GameUI_Config previousConfig = config(prevVariantName);
-            Logger.info("Unloading assets for game variant {}", prevVariantName);
-            previousConfig.dispose();
+            config(prevVariantName).dispose();
         }
 
         GameUI_Config newConfig = config(gameVariantName);

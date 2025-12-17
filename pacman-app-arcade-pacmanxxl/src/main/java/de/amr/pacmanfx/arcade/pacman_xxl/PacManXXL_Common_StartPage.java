@@ -36,7 +36,7 @@ public class PacManXXL_Common_StartPage implements GameUI_StartPage {
     private final MediaPlayer voicePlayer = new MediaPlayer(VOICE);
 
     public PacManXXL_Common_StartPage(GameUI ui) {
-        Flyer flyer = new Flyer(LOCAL_RESOURCES.loadImage(BACKGROUND_IMAGE_PATH));
+        final var flyer = new Flyer(LOCAL_RESOURCES.loadImage(BACKGROUND_IMAGE_PATH));
         flyer.setPageLayout(0, Flyer.LayoutMode.FILL);
         flyer.selectPage(0);
 
@@ -112,5 +112,4 @@ public class PacManXXL_Common_StartPage implements GameUI_StartPage {
         }
         return "Unknown game variant";
     }
-
 }

@@ -37,6 +37,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
+import org.tinylog.Logger;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -51,6 +52,14 @@ import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
 
+    public enum AnimationID {
+        ANIM_BIG_PAC_MAN,
+        ANIM_BLINKY_DAMAGED,
+        ANIM_BLINKY_PATCHED,
+        ANIM_BLINKY_NAIL_DRESS_RAPTURE,
+        ANIM_BLINKY_NAKED
+    }
+
     private static final ResourceManager LOCAL_RESOURCES = () -> ArcadePacMan_UIConfig.class;
 
     public static final Set<ActionBinding> DEFAULT_BINDINGS = Set.of(
@@ -61,14 +70,6 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
     public static final WorldMapColorScheme MAP_COLOR_SCHEME = new WorldMapColorScheme(
         "#000000", "#2121ff", "#ffb7ff", "#febdb4"
     );
-
-    public enum AnimationID {
-        ANIM_BIG_PAC_MAN,
-        ANIM_BLINKY_DAMAGED,
-        ANIM_BLINKY_PATCHED,
-        ANIM_BLINKY_NAIL_DRESS_RAPTURE,
-        ANIM_BLINKY_NAKED
-    }
 
     private static final Map<Color, Color> BRIGHT_MAZE_COLOR_CHANGES = Map.of(
         MAP_COLOR_SCHEME.stroke(), ARCADE_WHITE,   // wall color change
@@ -138,7 +139,7 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
         soundManager.register(SoundID.VOICE_IMMUNITY_OFF,           GameUI.VOICE_IMMUNITY_OFF);
         soundManager.register(SoundID.VOICE_IMMUNITY_ON,            GameUI.VOICE_IMMUNITY_ON);
 
-        soundManager.register(SoundID.VOICE_FLYER_TEXT,             LOCAL_RESOURCES.loadMedia("sound/flyer-text.mp3"));
+        soundManager.registerMedia(SoundID.VOICE_FLYER_TEXT,        LOCAL_RESOURCES.url("sound/flyer-text.mp3"));
 
         soundManager.registerAudioClipURL(SoundID.BONUS_EATEN,      LOCAL_RESOURCES.url("sound/eat_fruit.mp3"));
         soundManager.registerAudioClipURL(SoundID.COIN_INSERTED,    LOCAL_RESOURCES.url("sound/credit.wav"));
@@ -163,6 +164,7 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
 
     @Override
     public void dispose() {
+        Logger.info("Disposing {}", getClass().getSimpleName());
         assets.removeAll();
         soundManager.dispose();
     }

@@ -217,7 +217,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         soundManager.register(SoundID.VOICE_IMMUNITY_OFF,           GameUI.VOICE_IMMUNITY_OFF);
         soundManager.register(SoundID.VOICE_IMMUNITY_ON,            GameUI.VOICE_IMMUNITY_ON);
 
-        soundManager.register(SoundID.VOICE_FLYER_TEXT,             LOCAL_RESOURCES.loadMedia("sound/flyer-text.mp3"));
+        soundManager.registerMedia(SoundID.VOICE_FLYER_TEXT,        LOCAL_RESOURCES.url("sound/flyer-text.mp3"));
 
         soundManager.registerMediaPlayer(SoundID.ACTIVE,            LOCAL_RESOURCES.url("sound/fruitbounce.wav"));
         soundManager.registerAudioClipURL(SoundID.BONUS_EATEN,      LOCAL_RESOURCES.url("sound/ms-fruit.wav"));
