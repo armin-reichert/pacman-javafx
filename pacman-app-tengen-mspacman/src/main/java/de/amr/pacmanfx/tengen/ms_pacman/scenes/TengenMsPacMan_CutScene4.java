@@ -85,12 +85,12 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         juniors = new ArrayList<>();
         juniorCreationTime = new ArrayList<>();
 
-        ui.soundManager().play(SoundID.INTERMISSION_4);
+        soundManager().play(SoundID.INTERMISSION_4);
     }
 
     @Override
     protected void doEnd(Game game) {
-        ui.soundManager().stop(SoundID.INTERMISSION_4);
+        soundManager().stop(SoundID.INTERMISSION_4);
     }
 
     @Override
@@ -174,7 +174,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         juniorCreationTime.add(tick);
 
         String id = SoundID.INTERMISSION_1 + ".junior." + randomInt(1, 3); // 1 or 2
-        ui.soundManager().loop(id);
+        soundManager().loop(id);
 
         Logger.info("Junior spawned at tick {}", tick);
     }

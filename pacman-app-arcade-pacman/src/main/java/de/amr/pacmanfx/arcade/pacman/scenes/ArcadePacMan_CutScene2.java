@@ -92,7 +92,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
             return;
         }
         switch (frame) {
-            case ANIMATION_START -> ui.soundManager().play(SoundID.INTERMISSION_2);
+            case ANIMATION_START -> soundManager().play(SoundID.INTERMISSION_2);
             case ANIMATION_START + 1 -> nailDressRaptureAnimation.setFrameIndex(NAIL);
             case ANIMATION_START + 25 -> {
                 pac.placeAtTile(28, 20);

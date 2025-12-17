@@ -70,7 +70,7 @@ public abstract class FlyerStartPage extends StackPane implements GameUI_StartPa
 
     protected Node createStartButton(GameUI ui) {
         Node button = createDefaultStartButton(ui, () -> {
-            ui.soundManager().stopVoice();
+            ui.currentConfig().soundManager().stopVoice();
             ACTION_BOOT_SHOW_PLAY_VIEW.executeIfEnabled(ui);
         });
         button.setTranslateY(-50);
@@ -81,12 +81,12 @@ public abstract class FlyerStartPage extends StackPane implements GameUI_StartPa
     public void onEnter(GameUI ui) {
         flyer.selectPage(0);
         ui.selectGameVariant(gameVariant);
-        ui.soundManager().playVoiceAfterSec(1, SoundID.VOICE_FLYER_TEXT);
+        ui.currentConfig().soundManager().playVoiceAfterSec(1, SoundID.VOICE_FLYER_TEXT);
     }
 
     @Override
     public void onExit(GameUI ui) {
-        ui.soundManager().stopVoice();
+        ui.currentConfig().soundManager().stopVoice();
     }
 
     @Override

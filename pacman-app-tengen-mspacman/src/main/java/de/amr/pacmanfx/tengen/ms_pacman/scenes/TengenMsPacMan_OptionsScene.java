@@ -50,7 +50,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     private final IntegerProperty selectedOption = new SimpleIntegerProperty() {
         @Override
         protected void invalidated() {
-            ui.soundManager().play("audio.option.selection_changed");
+            soundManager().play("audio.option.selection_changed");
             idleTicks = 0;
         }
     };
@@ -111,7 +111,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     private TengenMsPacMan_GameModel tengenGame() { return context().currentGame(); }
     
     private void optionValueChanged() {
-        ui.soundManager().play("audio.option.value_changed");
+        soundManager().play("audio.option.value_changed");
         idleTicks = 0;
     }
 

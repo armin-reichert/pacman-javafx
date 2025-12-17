@@ -23,8 +23,8 @@ public final class ArcadeActions {
         public void execute(GameUI ui) {
             final Game game = ui.context().currentGame();
             if (ui.context().coinMechanism().numCoins() < CoinMechanism.MAX_COINS) {
-                ui.soundManager().setEnabled(true);
-                ui.soundManager().stopVoice();
+                ui.currentConfig().soundManager().setEnabled(true);
+                ui.currentConfig().soundManager().stopVoice();
                 ui.context().coinMechanism().insertCoin();
                 game.publishGameEvent(GameEvent.Type.CREDIT_ADDED);
             }
@@ -47,7 +47,7 @@ public final class ArcadeActions {
     public static final GameAction ACTION_START_GAME = new GameAction("START_GAME") {
         @Override
         public void execute(GameUI ui) {
-            ui.soundManager().stopVoice();
+            ui.currentConfig().soundManager().stopVoice();
             ui.context().currentGame().control().enterState(GameState.STARTING_GAME_OR_LEVEL);
         }
 

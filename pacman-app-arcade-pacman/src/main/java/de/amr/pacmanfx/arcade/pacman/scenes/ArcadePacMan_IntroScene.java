@@ -86,7 +86,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     public void doInit(Game game) {
         final GameUI_Config uiConfig = ui.currentConfig();
 
-        ui.soundManager().playVoiceAfterSec(1, SoundID.VOICE_EXPLAIN_GAME_START);
+        soundManager().playVoiceAfterSec(1, SoundID.VOICE_EXPLAIN_GAME_START);
 
         Arcade_HUD arcadeHud = (Arcade_HUD) game.hud();
         arcadeHud.credit(true).score(true).livesCounter(false).levelCounter(true).show();
@@ -131,7 +131,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     @Override
     public void onCreditAdded(GameEvent e) {
-        ui.soundManager().play(SoundID.COIN_INSERTED);
+        soundManager().play(SoundID.COIN_INSERTED);
     }
 
     public SceneState state() {

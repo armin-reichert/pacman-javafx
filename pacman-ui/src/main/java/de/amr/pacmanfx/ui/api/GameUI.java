@@ -15,7 +15,6 @@ import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.layout.StartPagesCarousel;
-import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.assets.LocalizedTextAccessor;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
@@ -147,11 +146,6 @@ public interface GameUI extends LocalizedTextAccessor {
      * @return (non UI) context
      */
     GameContext context();
-
-    /**
-     * @return sound manager for the current game
-     */
-    SoundManager soundManager();
 
     /**
      * @return the primary stage provided by the JavaFX application

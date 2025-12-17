@@ -19,7 +19,6 @@ import de.amr.pacmanfx.ui.layout.EditorView;
 import de.amr.pacmanfx.ui.layout.PlayView;
 import de.amr.pacmanfx.ui.layout.StartPagesCarousel;
 import de.amr.pacmanfx.ui.layout.StatusIconBox;
-import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.assets.UIPreferences;
 import de.amr.pacmanfx.uilib.rendering.Gradients;
@@ -325,11 +324,6 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     @Override
-    public SoundManager soundManager() { return
-        currentConfig().soundManager();
-    }
-
-    @Override
     public Stage stage() {
         return stage;
     }
@@ -353,7 +347,7 @@ public final class GameUI_Implementation implements GameUI {
         clock.stop();
         clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
 
-        soundManager().stopAll();
+        currentConfig().soundManager().stopAll();
 
         //TODO this is game-specific and should not be handled here
         currentGameScene().ifPresent(gameScene -> {
@@ -474,7 +468,7 @@ public final class GameUI_Implementation implements GameUI {
     public void showEditorView() {
         if (!gameContext.currentGame().isPlaying() || clock.isPaused()) {
             currentGameScene().ifPresent(gameScene -> gameScene.end(gameContext.currentGame()));
-            soundManager().stopAll();
+            currentConfig().soundManager().stopAll();
             clock.stop();
             getOrCreateEditView().editor().start();
             selectView(editorView);
@@ -496,7 +490,7 @@ public final class GameUI_Implementation implements GameUI {
     public void showStartView() {
         clock.stop();
         clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
-        soundManager().stopAll();
+        currentConfig().soundManager().stopAll();
         selectView(startPagesView());
         startPagesView().currentStartPage().ifPresent(startPage -> Platform.runLater(() -> {
             startPage.onEnter(this); // sets game variant!

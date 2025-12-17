@@ -72,7 +72,7 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
         }
         switch (frame) {
             case ANIMATION_START -> {
-                ui.soundManager().play(SoundID.INTERMISSION_3, 2);
+                soundManager().play(SoundID.INTERMISSION_3, 2);
                 pac.placeAtTile(29, 20);
                 pac.setMoveDir(Direction.LEFT);
                 pac.setSpeed(1.25f);

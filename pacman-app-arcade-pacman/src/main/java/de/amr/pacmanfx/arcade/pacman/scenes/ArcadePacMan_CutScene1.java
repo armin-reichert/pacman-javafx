@@ -66,7 +66,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
     public void update(Game game) {
         ++frame;
         if (frame == ANIMATION_START) {
-            ui.soundManager().play(SoundID.INTERMISSION_1, 2);
+            soundManager().play(SoundID.INTERMISSION_1, 2);
 
             pac.placeAtTile(29, 20);
             pac.setMoveDir(Direction.LEFT);

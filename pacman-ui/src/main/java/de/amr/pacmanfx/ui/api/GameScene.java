@@ -9,6 +9,7 @@ import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
+import de.amr.pacmanfx.ui.sound.SoundManager;
 import javafx.scene.SubScene;
 import javafx.scene.input.ScrollEvent;
 
@@ -75,7 +76,7 @@ public interface GameScene extends GameEventListener {
 
     @Override
     default void onStopAllSounds(GameEvent event) {
-        ui().soundManager().stopAll();
+        soundManager().stopAll();
     }
 
     /**
@@ -92,6 +93,12 @@ public interface GameScene extends GameEventListener {
      */
     default void onSwitch_3D_2D(GameScene scene3D) {}
 
+    /**
+     * @return the sound manager for this scene
+     */
+    default SoundManager soundManager() {
+        return ui().currentConfig().soundManager();
+    }
     /**
      * @param game the current game
      * @return context menu provided by this game scene which is merged into the view's context menu

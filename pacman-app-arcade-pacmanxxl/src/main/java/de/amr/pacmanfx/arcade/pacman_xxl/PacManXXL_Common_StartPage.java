@@ -83,7 +83,7 @@ public class PacManXXL_Common_StartPage implements GameUI_StartPage {
     public void onEnter(GameUI ui) {
         ui.selectGameVariant(menu.state().gameVariant);
 
-        menu.soundEnabledProperty().bind(ui.soundManager().mutedProperty().not());
+        menu.soundEnabledProperty().bind(ui.currentConfig().soundManager().mutedProperty().not());
         menu.syncMenuState();
         menu.startAnimation();
 

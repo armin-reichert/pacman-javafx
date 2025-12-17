@@ -72,7 +72,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void doInit(Game game) {
-        ui.soundManager().playVoiceAfterSec(1, SoundID.VOICE_EXPLAIN_GAME_START);
+        soundManager().playVoiceAfterSec(1, SoundID.VOICE_EXPLAIN_GAME_START);
 
         final Arcade_HUD arcadeHud = (Arcade_HUD) game.hud();
         arcadeHud.credit(true).score(true).levelCounter(true).livesCounter(false).show();
@@ -114,7 +114,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void onCreditAdded(GameEvent e) {
-        ui.soundManager().play(SoundID.COIN_INSERTED);
+        soundManager().play(SoundID.COIN_INSERTED);
     }
 
     // Scene controller FSM

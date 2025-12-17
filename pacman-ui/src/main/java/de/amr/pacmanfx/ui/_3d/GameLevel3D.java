@@ -147,10 +147,10 @@ public class GameLevel3D extends Group implements Disposable {
                 pauseSec(0.5, () -> gameLevel.pac().hide()),
                 pauseSec(0.5),
                 levelSpinningAroundAxis(new Random().nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS),
-                pauseSec(0.5, () -> ui.soundManager().play(SoundID.LEVEL_COMPLETE)),
+                pauseSec(0.5, () -> ui.currentConfig().soundManager().play(SoundID.LEVEL_COMPLETE)),
                 pauseSec(0.5),
                 wallsAndHouseDisappearing(),
-                pauseSec(1.0, () -> ui.soundManager().play(SoundID.LEVEL_CHANGED))
+                pauseSec(1.0, () -> ui.currentConfig().soundManager().play(SoundID.LEVEL_CHANGED))
             );
         }
 
@@ -158,7 +158,7 @@ public class GameLevel3D extends Group implements Disposable {
             return new Timeline(
                 new KeyFrame(Duration.seconds(0.5), new KeyValue(house3D.wallBaseHeightProperty(), 0, Interpolator.EASE_IN)),
                 new KeyFrame(Duration.seconds(1.5), new KeyValue(wallBaseHeightProperty, 0, Interpolator.EASE_IN)),
-                new KeyFrame(Duration.seconds(2.5), e -> maze3D.setVisible(false))
+                new KeyFrame(Duration.seconds(2.5), _ -> maze3D.setVisible(false))
             );
         }
 
@@ -259,7 +259,7 @@ public class GameLevel3D extends Group implements Disposable {
 
         @Override
         protected Animation createAnimationFX() {
-            var timeline = new Timeline(new KeyFrame(Duration.millis(3000), e -> {
+            var timeline = new Timeline(new KeyFrame(Duration.millis(3000), _ -> {
                 Logger.info("Try to pass light from ghost {} to next", currentGhostID);
                 // find the next hunting ghost, if exists, pass light to him
                 byte candidate = nextGhostID(currentGhostID);
@@ -370,7 +370,7 @@ public class GameLevel3D extends Group implements Disposable {
     }
 
     private MeshView[] createGhostComponentMeshViews(Mesh componentMesh) {
-        return IntStream.range(0, 4).mapToObj(i -> new MeshView(componentMesh)).toArray(MeshView[]::new);
+        return IntStream.range(0, 4).mapToObj(_ -> new MeshView(componentMesh)).toArray(MeshView[]::new);
     }
 
     private GhostColorSet createGhostColorSet(byte personality) {
@@ -453,7 +453,7 @@ public class GameLevel3D extends Group implements Disposable {
     private void createGhostLight() {
         ghostLight = new PointLight(Color.WHITE);
         ghostLight.setMaxRange(30);
-        ghostLight.lightOnProperty().addListener((obs, wasOn, on) -> Logger.info("Ghost light {}", on ? "ON" : "OFF"));
+        ghostLight.lightOnProperty().addListener((_, _, on) -> Logger.info("Ghost light {}", on ? "ON" : "OFF"));
     }
 
     private void createMaze3D() {
@@ -720,7 +720,7 @@ public class GameLevel3D extends Group implements Disposable {
 
     public void onPacManDying(StateMachine.State<Game> state) {
         state.timer().resetIndefiniteTime(); // expires when level animation ends
-        ui.soundManager().stopAll();
+        ui.currentConfig().soundManager().stopAll();
         ghostLightAnimation.stop();
         // do one last update before dying animation starts
         pac3D.update(gameLevel);
@@ -728,12 +728,12 @@ public class GameLevel3D extends Group implements Disposable {
         bonus3D().ifPresent(Bonus3D::expire);
         var animation = new SequentialTransition(
             pauseSec(1.5),
-            doNow(() -> ui.soundManager().play(SoundID.PAC_MAN_DEATH)),
+            doNow(() -> ui.currentConfig().soundManager().play(SoundID.PAC_MAN_DEATH)),
             pac3D.dyingAnimation().getOrCreateAnimationFX(),
             pauseSec(0.5)
         );
         // Note: adding this inside the animation as last action does not work!
-        animation.setOnFinished(e -> ui.context().currentGame().control().terminateCurrentGameState());
+        animation.setOnFinished(_ -> ui.context().currentGame().control().terminateCurrentGameState());
         animation.play();
     }
 
@@ -748,7 +748,7 @@ public class GameLevel3D extends Group implements Disposable {
 
     public void onLevelComplete(StateMachine.State<Game> state, ObjectProperty<PerspectiveID> perspectiveIDProperty) {
         state.timer().resetIndefiniteTime(); // expires when animation ends
-        ui.soundManager().stopAll();
+        ui.currentConfig().soundManager().stopAll();
         animationRegistry.stopAllAnimations();
         energizers3D.forEach(Energizer3D::stopPumping); //TODO needed?
         // hide 3D food explicitly because level might have been completed using cheat!
@@ -777,7 +777,7 @@ public class GameLevel3D extends Group implements Disposable {
             levelCompletedAnimation.getOrCreateAnimationFX(),
             pauseSec(0.25)
         );
-        animation.setOnFinished(e -> {
+        animation.setOnFinished(_ -> {
             wallBaseHeightProperty.bind(PROPERTY_3D_WALL_HEIGHT);
             perspectiveIDProperty.bind(PROPERTY_3D_PERSPECTIVE_ID);
             ui.context().currentGame().control().terminateCurrentGameState();
@@ -791,8 +791,8 @@ public class GameLevel3D extends Group implements Disposable {
         energizers3D().forEach(Energizer3D::hide);
         house3D.stopSwirlAnimations();
         bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
-        ui.soundManager().stopAll();
-        ui.soundManager().play(SoundID.GAME_OVER);
+        ui.currentConfig().soundManager().stopAll();
+        ui.currentConfig().soundManager().play(SoundID.GAME_OVER);
         boolean inOneOf4Cases = randomInt(0, 1000) < 250;
         if (!gameLevel.isDemoLevel() && inOneOf4Cases) {
             ui.showFlashMessage(Duration.seconds(2.5), translatedGameOverMessage());
@@ -843,7 +843,7 @@ public class GameLevel3D extends Group implements Disposable {
 
     private void handleDrawModeChange(ObservableValue<? extends DrawMode> obs, DrawMode oldDrawMode, DrawMode newDrawMode) {
         try {
-            Predicate<Node> includeAll = excludedNode -> false;
+            Predicate<Node> includeAll = _ -> false;
             setDrawModeUnder(maze3D, node -> node instanceof Shape3D && pellets3D.contains(node), newDrawMode);
             setDrawModeUnder(pac3D, includeAll, newDrawMode);
             setDrawModeUnder(livesCounter3D, includeAll, newDrawMode);

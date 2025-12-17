@@ -106,7 +106,7 @@ public final class CommonGameActions {
         @Override
         public void execute(GameUI ui) {
             final Game game = ui.context().currentGame();
-            ui.soundManager().stopAll();
+            ui.currentConfig().soundManager().stopAll();
             ui.currentGameScene().ifPresent(gameScene -> gameScene.end(game));
             boolean isLevelShortTest = game.control().state() instanceof LevelShortTestState;
             if (isLevelShortTest) {
@@ -285,7 +285,7 @@ public final class CommonGameActions {
         public void execute(GameUI ui) {
             toggle(ui.clock().pausedProperty());
             if (ui.clock().isPaused()) {
-                ui.soundManager().stopAll();
+                ui.currentConfig().soundManager().stopAll();
             }
             Logger.info("Game ({}) {}", ui.context().gameVariantName(), ui.clock().isPaused() ? "paused" : "resumed");
         }

@@ -107,12 +107,12 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
 
         darkness = false;
 
-        ui.soundManager().play(SoundID.INTERMISSION_3);
+        soundManager().play(SoundID.INTERMISSION_3);
     }
 
     @Override
     protected void doEnd(Game game) {
-        ui.soundManager().stop(SoundID.INTERMISSION_3);
+        soundManager().stop(SoundID.INTERMISSION_3);
     }
 
     @Override

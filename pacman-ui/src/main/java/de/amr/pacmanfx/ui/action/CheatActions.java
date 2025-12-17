@@ -43,7 +43,7 @@ public final class CheatActions {
                 game.cheatUsedProperty().set(true);
             }
             game.level().worldMap().foodLayer().eatPellets();
-            ui.soundManager().pause(SoundID.PAC_MAN_MUNCHING); //TODO check this
+            ui.currentConfig().soundManager().pause(SoundID.PAC_MAN_MUNCHING); //TODO check this
             game.publishGameEvent(GameEvent.Type.PAC_FOUND_FOOD);
         }
 
@@ -108,7 +108,7 @@ public final class CheatActions {
             }
             toggle(game.usingAutopilotProperty());
             boolean usingAutopilot = game.usingAutopilot();
-            ui.soundManager().playVoiceAfterSec(0, usingAutopilot ? SoundID.VOICE_AUTOPILOT_ON : SoundID.VOICE_AUTOPILOT_OFF);
+            ui.currentConfig().soundManager().playVoiceAfterSec(0, usingAutopilot ? SoundID.VOICE_AUTOPILOT_ON : SoundID.VOICE_AUTOPILOT_OFF);
             ui.showFlashMessage(ui.translated(usingAutopilot ? "autopilot_on" : "autopilot_off"));
         }
     };
@@ -122,7 +122,7 @@ public final class CheatActions {
             }
             toggle(game.immuneProperty());
             boolean immunityOn = game.immuneProperty().get();
-            ui.soundManager().playVoiceAfterSec(0, immunityOn ? SoundID.VOICE_IMMUNITY_ON : SoundID.VOICE_IMMUNITY_OFF);
+            ui.currentConfig().soundManager().playVoiceAfterSec(0, immunityOn ? SoundID.VOICE_IMMUNITY_ON : SoundID.VOICE_IMMUNITY_OFF);
             ui.showFlashMessage(ui.translated(immunityOn ? "player_immunity_on" : "player_immunity_off"));
         }
     };

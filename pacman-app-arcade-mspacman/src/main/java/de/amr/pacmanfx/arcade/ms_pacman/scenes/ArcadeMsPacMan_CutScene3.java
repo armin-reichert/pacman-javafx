@@ -121,7 +121,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
     private void updateStateClapperboard() {
         clapperboard.tick();
         if (sceneTimer.atSecond(1)) {
-            ui.soundManager().play(SoundID.INTERMISSION_3);
+            soundManager().play(SoundID.INTERMISSION_3);
         } else if (sceneTimer.atSecond(3)) {
             enterStateDeliverJunior();
         }
