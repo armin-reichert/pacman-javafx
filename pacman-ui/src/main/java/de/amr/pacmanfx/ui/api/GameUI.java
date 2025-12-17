@@ -11,10 +11,9 @@ import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.TestActions;
+import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.Keyboard;
-import de.amr.pacmanfx.ui.layout.EditorView;
-import de.amr.pacmanfx.ui.layout.PlayView;
 import de.amr.pacmanfx.ui.layout.StartPagesCarousel;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.GameClock;
@@ -204,7 +203,7 @@ public interface GameUI extends LocalizedTextAccessor {
 
     Optional<GameUI_View> optEditorView();
 
-    PlayView playView();
+    GameUI_View playView();
 
     StartPagesCarousel startPagesView();
 
@@ -213,6 +212,8 @@ public interface GameUI extends LocalizedTextAccessor {
     void showPlayView();
 
     void showStartView();
+
+    Dashboard dashboard();
 
     // Config
 

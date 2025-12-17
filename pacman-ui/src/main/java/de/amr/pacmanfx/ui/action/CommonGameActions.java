@@ -15,6 +15,7 @@ import de.amr.pacmanfx.model.test.LevelMediumTestState;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import de.amr.pacmanfx.ui.api.GameUI;
+import de.amr.pacmanfx.ui.layout.PlayView;
 import javafx.scene.shape.DrawMode;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -119,7 +120,9 @@ public final class CommonGameActions {
     public static final GameAction ACTION_SHOW_HELP = new GameAction("SHOW_HELP") {
         @Override
         public void execute(GameUI ui) {
-            ui.playView().showHelp(ui);
+            if (ui.playView() instanceof PlayView playView) {
+                playView.showHelp(ui);
+            }
         }
 
         @Override
@@ -227,7 +230,7 @@ public final class CommonGameActions {
     public static final GameAction ACTION_TOGGLE_DASHBOARD = new GameAction("TOGGLE_DASHBOARD") {
         @Override
         public void execute(GameUI ui) {
-            ui.playView().dashboard().toggleVisibility();
+            ui.dashboard().toggleVisibility();
         }
 
         @Override
@@ -291,7 +294,7 @@ public final class CommonGameActions {
     public static final GameAction ACTION_TOGGLE_PLAY_SCENE_2D_3D = new GameAction("TOGGLE_PLAY_SCENE_2D_3D") {
         @Override
         public void execute(GameUI ui) {
-            ui.currentGameScene().ifPresent(gameScene -> {
+            ui.currentGameScene().ifPresent(_ -> {
                 final Game game = ui.context().currentGame();
                 toggle(PROPERTY_3D_ENABLED);
                 if (ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_2D) || ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D)) {

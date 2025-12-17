@@ -102,7 +102,7 @@ public class PacManGames3dApp extends Application {
 
         ui.startPagesView().setSelectedIndex(0);
 
-        ui.playView().dashboard().configure(List.of(
+        ui.dashboard().configure(List.of(
             DashboardID.GENERAL,
             DashboardID.GAME_CONTROL,
             DashboardID.ANIMATION_INFO,

@@ -14,6 +14,7 @@ import de.amr.pacmanfx.model.SimulationStepResult;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.api.*;
+import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.layout.EditorView;
 import de.amr.pacmanfx.ui.layout.PlayView;
 import de.amr.pacmanfx.ui.layout.StartPagesCarousel;
@@ -117,7 +118,7 @@ public final class GameUI_Implementation implements GameUI {
         startPagesView = new StartPagesCarousel();
         startPagesView.setUI(this);
 
-        currentView.addListener((py, ov, newView) -> {
+        currentView.addListener((_, _, newView) -> {
             if (newView != null) {
                 embedView(newView);
                 Logger.info("Embedded view: {}", newView);
@@ -288,7 +289,7 @@ public final class GameUI_Implementation implements GameUI {
     private EditorView getOrCreateEditView() {
         if (editorView == null) {
             editorView = new EditorView(stage, this);
-            editorView.setQuitEditorAction(editor -> {
+            editorView.setQuitEditorAction(_ -> {
                 stage.titleProperty().bind(titleBinding);
                 showStartView();
             });
@@ -462,6 +463,11 @@ public final class GameUI_Implementation implements GameUI {
     @Override
     public StartPagesCarousel startPagesView() {
         return startPagesView;
+    }
+
+    @Override
+    public Dashboard dashboard() {
+        return playView.dashboard();
     }
 
     @Override

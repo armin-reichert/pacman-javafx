@@ -46,7 +46,7 @@ public class ArcadePacMan_App extends Application {
         ui.startPagesView().addStartPage(startPage);
         ui.startPagesView().setSelectedIndex(0);
 
-        ui.playView().dashboard().configure(List.of(
+        ui.dashboard().configure(List.of(
             DashboardID.GENERAL,
             DashboardID.GAME_CONTROL,
             DashboardID.SETTINGS_3D,
