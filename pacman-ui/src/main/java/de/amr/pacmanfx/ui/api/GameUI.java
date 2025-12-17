@@ -218,10 +218,10 @@ public interface GameUI extends LocalizedTextAccessor {
     // Config
 
     /**
-     * @param gameVariant name of game variant
+     * @param gameVariantName name of game variant
      * @return UI configuration for given game variant
      */
-    GameUI_Config config(String gameVariant);
+    GameUI_Config config(String gameVariantName);
 
     /**
      * @return UI configuration for the current game
@@ -232,7 +232,7 @@ public interface GameUI extends LocalizedTextAccessor {
     // Lifecycle
 
     /**
-     * Leaves the current game scene (if any) and displays the start page for the current game.
+     * Quits the current game scene (if any) and displays the start page for the current game.
      */
     void quitCurrentGameScene();
 
@@ -244,18 +244,17 @@ public interface GameUI extends LocalizedTextAccessor {
     /**
      * Shows the start page for the given game variant, loads its resources and initializes the game model.
      *
-     * @param gameVariant game variant name ("PACMAN", "MS_PACMAN" etc.)
+     * @param gameVariantName game variant name ("PACMAN", "MS_PACMAN" etc.)
      */
-    void selectGameVariant(String gameVariant);
+    void selectGameVariant(String gameVariantName);
 
     /**
-     * Shows the UI and displays the start page view.
+     * Shows the UI and displays the start pages view.
      */
-    void showUI();
+    void show();
 
     /**
      * Terminates the game and stops the game clock. Called when the application is terminated by closing the stage.
      */
     void terminate();
-
 }

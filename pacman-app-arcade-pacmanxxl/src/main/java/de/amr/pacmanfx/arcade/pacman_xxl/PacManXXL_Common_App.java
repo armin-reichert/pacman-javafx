@@ -51,7 +51,7 @@ public class PacManXXL_Common_App extends Application {
             xxlMapSelector.customMapPrototypes().clear();
             xxlMapSelector.loadCustomMapPrototypes();
         });
-        ui.showUI();
+        ui.show();
     }
 
     @Override

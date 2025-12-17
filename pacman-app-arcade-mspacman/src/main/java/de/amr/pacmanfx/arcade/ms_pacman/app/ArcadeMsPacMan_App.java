@@ -47,7 +47,7 @@ public class ArcadeMsPacMan_App extends Application {
                 DashboardID.ABOUT)
             .build();
 
-        ui.showUI();
+        ui.show();
     }
 
     @Override

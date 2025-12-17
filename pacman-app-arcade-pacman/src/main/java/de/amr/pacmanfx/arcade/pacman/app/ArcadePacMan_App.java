@@ -87,7 +87,7 @@ public class ArcadePacMan_App extends Application {
         ui = USE_BUILDER
             ? createUI_WithBuilder(primaryStage, width, height)
             : createUI_WithoutBuilder(primaryStage, width, height);
-        ui.showUI();
+        ui.show();
     }
 
     @Override

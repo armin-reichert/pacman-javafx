@@ -196,7 +196,7 @@ public class PacManGames3dApp extends Application {
                     xxlCommonMapSelector.loadCustomMapPrototypes();
                 }
             });
-            ui.showUI();
+            ui.show();
         }
         catch (RuntimeException x) {
             Logger.error(x);

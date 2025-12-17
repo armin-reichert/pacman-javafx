@@ -417,7 +417,7 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     @Override
-    public void showUI() {
+    public void show() {
         playView.dashboard().init(this);
         if (startPagesView.numItems() > 0) {
             startPagesView().setSelectedIndex(0);
@@ -525,10 +525,10 @@ public final class GameUI_Implementation implements GameUI {
     // GameUI_ConfigManager interface
 
     @Override
-    public GameUI_Config config(String gameVariant) {
-        GameUI_Config config = configByGameVariant.get(gameVariant);
+    public GameUI_Config config(String gameVariantName) {
+        GameUI_Config config = configByGameVariant.get(gameVariantName);
         if (config == null) {
-            Class<?> configClass = configClassesByGameVariant.get(gameVariant);
+            Class<?> configClass = configClassesByGameVariant.get(gameVariantName);
             try {
                 config = (GameUI_Config) configClass.getDeclaredConstructor(GameUI.class).newInstance(this);
                 config.sceneConfig().createGameScenes(this);
@@ -537,11 +537,11 @@ public final class GameUI_Implementation implements GameUI {
                         gameScene2D.debugInfoVisibleProperty().bind(PROPERTY_DEBUG_INFO_VISIBLE);
                     }
                 });
-                configByGameVariant.put(gameVariant, config);
+                configByGameVariant.put(gameVariantName, config);
             }
             catch (Exception x) {
                 Logger.error("Could not create UI configuration for game variant {} and configuration class {}",
-                    gameVariant, configClass);
+                    gameVariantName, configClass);
                 throw new IllegalStateException(x);
             }
         }
