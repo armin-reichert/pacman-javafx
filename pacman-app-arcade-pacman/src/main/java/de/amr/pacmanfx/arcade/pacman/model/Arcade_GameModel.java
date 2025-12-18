@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.model;
 
-import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController.GameState;
 import de.amr.pacmanfx.arcade.pacman.model.actors.Blinky;
 import de.amr.pacmanfx.event.GameEvent;
@@ -14,6 +13,8 @@ import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.steering.Steering;
 import org.tinylog.Logger;
+
+import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
@@ -116,17 +117,17 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     protected void checkCruiseElroyActivation(GameLevel level) {
-        if (level.ghost(Globals.RED_GHOST_SHADOW) instanceof Blinky blinky) {
-            final LevelData data = levelData(level.number());
-            final int uneatenFoodCount = level.worldMap().foodLayer().uneatenFoodCount();
-            if (uneatenFoodCount == data.numDotsLeftElroy1()) {
-                blinky.setElroyMode(Blinky.ElroyMode._1);
-            } else if (uneatenFoodCount == data.numDotsLeftElroy2()) {
-                blinky.setElroyMode(Blinky.ElroyMode._2);
-            }
-        } else {
-            Logger.error("Cruise Elroy mode is not available for {}", level.ghost(Globals.RED_GHOST_SHADOW).name());
+        final LevelData data = levelData(level.number());
+        final int uneatenFoodCount = level.worldMap().foodLayer().uneatenFoodCount();
+        if (uneatenFoodCount == data.numDotsLeftElroy1()) {
+            optBlinky(level).ifPresent(blinky -> blinky.setElroyMode(Blinky.ElroyMode._1));
+        } else if (uneatenFoodCount == data.numDotsLeftElroy2()) {
+            optBlinky(level).ifPresent(blinky -> blinky.setElroyMode(Blinky.ElroyMode._2));
         }
+    }
+
+    private Optional<Blinky> optBlinky(GameLevel level) {
+        return level.ghosts().filter(Blinky.class::isInstance).map(Blinky.class::cast).findAny();
     }
 
     // GameEvents interface
