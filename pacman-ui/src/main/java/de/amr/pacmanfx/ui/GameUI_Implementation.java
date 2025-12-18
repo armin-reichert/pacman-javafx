@@ -107,7 +107,7 @@ public final class GameUI_Implementation implements GameUI {
         customDirWatchdog = new DirectoryWatchdog(GameBox.CUSTOM_MAP_DIR);
 
         clock = new GameClock();
-        clock.setPausableAction(this::doSimulationStepAndUpdateGameScene);
+        clock.setPausableAction(() -> simulateAndUpdateGameScene(gameContext.currentGame()));
         clock.setPermanentAction(this::drawCurrentView);
 
         createScene(sceneWidth, sceneHeight);
@@ -260,14 +260,12 @@ public final class GameUI_Implementation implements GameUI {
         showFlashMessage(Duration.seconds(10), "KA-TA-STROOO-PHE!\nSOMEONE CALL AN AMBULANCE!");
     }
 
-    private void doSimulationStepAndUpdateGameScene() {
-        final Game game = gameContext.currentGame();
+    private void simulateAndUpdateGameScene(Game game) {
+        final SimulationStep step = game.simulationStep();
+        step.init(clock.tickCount());
         try {
-            final SimulationStep events = game.simulationStep();
-            events.reset();
-            events.setTick(clock.tickCount());
             game.control().update();
-            events.printLog();
+            step.printLog();
             currentGameScene().ifPresent(gameScene -> gameScene.update(game));
         } catch (Throwable x) {
             ka_tas_tro_phe(x);

@@ -32,7 +32,8 @@ public class SimulationStep {
     public final List<Ghost> killedGhosts = new ArrayList<>();
     public List<Ghost> ghostsCollidingWithPac;
 
-    public void reset() {
+    public void init(long tick) {
+        this.tick = tick;
         foodTile = null;
         energizerFound = false;
         bonusIndex = -1;
@@ -47,10 +48,6 @@ public class SimulationStep {
         ghostReleaseInfo = null;
         killedGhosts.clear();
         ghostsCollidingWithPac = List.of();
-    }
-
-    public void setTick(long tick) {
-        this.tick = tick;
     }
 
     public List<String> createReport() {
