@@ -97,7 +97,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         scorePoints(PELLET_VALUE);
         gateKeeper.registerFoodEaten(level);
         level.pac().setRestingTicks(RESTING_TICKS_PELLET);
-        checkCruiseElroy(level, level.ghost(Globals.RED_GHOST_SHADOW));
+        checkCruiseElroyActivation(level, level.ghost(Globals.RED_GHOST_SHADOW));
     }
 
     @Override
@@ -108,14 +108,14 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         scorePoints(ENERGIZER_VALUE);
         gateKeeper.registerFoodEaten(level);
         level.pac().setRestingTicks(RESTING_TICKS_ENERGIZER);
-        checkCruiseElroy(level, level.ghost(Globals.RED_GHOST_SHADOW));
+        checkCruiseElroyActivation(level, level.ghost(Globals.RED_GHOST_SHADOW));
 
         if (!isLevelCompleted()) {
             onEnergizerEaten(level);
         }
     }
 
-    protected void checkCruiseElroy(GameLevel level, Ghost ghost) {
+    protected void checkCruiseElroyActivation(GameLevel level, Ghost ghost) {
         if (ghost instanceof Blinky blinky) {
             final LevelData data = levelData(level.number());
             int uneatenFoodCount = level.worldMap().foodLayer().uneatenFoodCount();
