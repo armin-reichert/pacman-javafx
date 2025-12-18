@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.model;
 
 import de.amr.pacmanfx.lib.math.Vector2i;
+import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import org.tinylog.Logger;
 
@@ -18,7 +19,7 @@ public class SimulationStepResult {
     public long       tick;
     public Vector2i   foundEnergizerAtTile;
     public int        bonusIndex = -1;
-    public Vector2i   bonusEatenTile;
+    public Bonus      edibleBonus;
     public boolean    pacGotPower;
     public boolean    pacStartsLosingPower;
     public boolean    pacLostPower;
@@ -33,7 +34,7 @@ public class SimulationStepResult {
     public void reset() {
         foundEnergizerAtTile = null;
         bonusIndex = -1;
-        bonusEatenTile = null;
+        edibleBonus = null;
         pacGotPower = false;
         pacStartsLosingPower = false;
         pacLostPower = false;
@@ -61,8 +62,8 @@ public class SimulationStepResult {
         if (bonusIndex != -1) {
             messages.add("Bonus score reached, index=" + bonusIndex);
         }
-        if (bonusEatenTile != null) {
-            messages.add("Bonus eaten at " + bonusEatenTile);
+        if (edibleBonus != null) {
+            messages.add("Bonus eaten: %s".formatted(edibleBonus));
         }
         if (pacGotPower) {
             messages.add("Pac gained power");

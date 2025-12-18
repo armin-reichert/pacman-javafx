@@ -62,19 +62,19 @@ public abstract class AbstractGameModel implements Game {
         gameControl.stateMachine().addStateChangeListener(
             (oldState, newState) -> publishGameEvent(new GameStateChangeEvent(this, oldState, newState)));
 
-        cheatUsedProperty().addListener((py, ov, cheated) -> {
+        cheatUsedProperty().addListener((_, _, cheated) -> {
             if (cheated && highScore.isEnabled()) {
                 highScore.setEnabled(false);
             }
         });
 
-        lifeCountProperty().addListener((py, ov, nv) -> {
+        lifeCountProperty().addListener((_, _, nv) -> {
             if (nv.intValue() < 0) {
                 throw new IllegalArgumentException("Life count cannot be set to negative value " + nv.intValue());
             }
         });
 
-        score.pointsProperty().addListener((py, oldScore, newScore) -> {
+        score.pointsProperty().addListener((_, oldScore, newScore) -> {
             // has extra life score line been crossed?
             for (int scoreLine : extraLifeScores) {
                 if (oldScore.intValue() < scoreLine && newScore.intValue() >= scoreLine) {
@@ -98,7 +98,7 @@ public abstract class AbstractGameModel implements Game {
 
     protected abstract void checkPacFindsFood(GameLevel level);
 
-    protected abstract void checkPacFindsBonus(GameLevel level);
+    protected abstract void eatBonus(GameLevel level, Bonus bonus);
 
     protected abstract boolean isPacSafeInDemoLevel(GameLevel demoLevel);
 
@@ -356,7 +356,15 @@ public abstract class AbstractGameModel implements Game {
         }
 
         checkPacFindsFood(level);
-        checkPacFindsBonus(level);
+
+        simulationStepResult.edibleBonus = level.optBonus()
+            .filter(bonus -> bonus.state() == BonusState.EDIBLE)
+            .filter(bonus -> collisionStrategy().collide(level.pac(), bonus))
+            .orElse(null);
+
+        if (simulationStepResult.edibleBonus != null) {
+            eatBonus(level, simulationStepResult.edibleBonus);
+        }
 
         updatePacPower(level);
         level.blinking().tick();

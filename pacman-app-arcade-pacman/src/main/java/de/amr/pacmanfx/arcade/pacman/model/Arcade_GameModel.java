@@ -335,16 +335,11 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     @Override
-    protected void checkPacFindsBonus(GameLevel level) {
-        level.optBonus().filter(bonus -> bonus.state() == BonusState.EDIBLE).ifPresent(bonus -> {
-            if (collisionStrategy().collide(level.pac(), bonus)) {
-                bonus.setEatenSeconds(BONUS_EATEN_SECONDS);
-                scorePoints(bonus.points());
-                Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
-                simulationStepResult.bonusEatenTile = bonus.tile();
-                publishGameEvent(GameEvent.Type.BONUS_EATEN);
-            }
-        });
+    protected void eatBonus(GameLevel level, Bonus bonus) {
+        scorePoints(bonus.points());
+        Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
+        bonus.setEatenSeconds(BONUS_EATEN_SECONDS);
+        publishGameEvent(GameEvent.Type.BONUS_EATEN);
     }
 
     protected int cutSceneNumberAfter(int levelNumber) {
