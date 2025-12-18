@@ -289,18 +289,18 @@ public class SoundManager implements Disposable {
 
     // private stuff
 
-    private <C> Stream<C> allOfType(Class<C> cl_ass) {
-        return map.values().stream().filter(cl_ass::isInstance).map(cl_ass::cast);
+    private <C> Stream<C> allOfType(Class<C> type) {
+        return map.values().stream().filter(type::isInstance).map(type::cast);
     }
 
     @SuppressWarnings("unchecked")
-    private <C> C valueOfType(Object key, Class<C> cl_ass) {
+    private <C> C valueOfType(Object key, Class<C> type) {
         requireNonNull(key);
         Object value = map.get(key);
         if (value == null) {
             throw new IllegalArgumentException("Unknown media player key '%s'".formatted(key));
         }
-        if (cl_ass.isInstance(value)) {
+        if (type.isInstance(value)) {
             return (C) value;
         }
         throw new IllegalArgumentException("Sound entry with key '%s' is not a media object".formatted(key));
