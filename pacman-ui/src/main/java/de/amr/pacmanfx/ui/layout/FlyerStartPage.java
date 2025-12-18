@@ -44,6 +44,7 @@ public abstract class FlyerStartPage extends StackPane implements GameUI_StartPa
             switch (e.getCode()) {
                 case DOWN -> flyer.nextFlyerPage();
                 case UP -> flyer.prevFlyerPage();
+                case ESCAPE -> ui.currentConfig().soundManager().stopVoice();
             }
         });
 
