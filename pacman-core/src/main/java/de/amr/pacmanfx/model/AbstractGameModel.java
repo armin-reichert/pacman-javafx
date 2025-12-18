@@ -370,7 +370,7 @@ public abstract class AbstractGameModel implements Game {
         final Pac pac = level.pac();
 
         // Compute and record collisions between actors and Pac-Man/food collisions
-        recordCollisions(level);
+        detectCollisions(level);
 
         if (!simStep.ghostsCollidingWithPac.isEmpty()) {
             // Is Pac getting killed after collision with ghost? He might stay alive if immune or in level's safe phase!
@@ -438,7 +438,7 @@ public abstract class AbstractGameModel implements Game {
         }
     }
 
-    private void recordCollisions(GameLevel level) {
+    private void detectCollisions(GameLevel level) {
         final TerrainLayer terrainLayer = level.worldMap().terrainLayer();
         final FoodLayer foodLayer = level.worldMap().foodLayer();
         final Pac pac = level.pac();
