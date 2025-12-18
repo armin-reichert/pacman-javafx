@@ -738,7 +738,7 @@ public class GameLevel3D extends Group implements Disposable {
     }
 
     public void onEatingGhost() {
-        gameLevel.game().simulationStepResult().killedGhosts.forEach(killedGhost -> {
+        gameLevel.game().simulationStep().killedGhosts.forEach(killedGhost -> {
             byte personality = killedGhost.personality();
             int killedIndex = gameLevel.energizerVictims().indexOf(killedGhost);
             Image pointsImage = ui.currentConfig().killedGhostPointsImage(killedIndex);

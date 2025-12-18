@@ -173,7 +173,7 @@ public abstract class AbstractGameModel implements Game {
     }
 
     @Override
-    public SimulationStep simulationStepResult() {
+    public SimulationStep simulationStep() {
         return simStep;
     }
 

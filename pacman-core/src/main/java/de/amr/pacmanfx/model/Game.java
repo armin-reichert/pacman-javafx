@@ -33,7 +33,7 @@ public interface Game extends LevelCounter {
     /**
      * @return the "frame state", a collection of information on what happened in the current simulation step
      */
-    SimulationStep simulationStepResult();
+    SimulationStep simulationStep();
 
     /**
      * @return data to be displayed in the heads-up display (HUD)

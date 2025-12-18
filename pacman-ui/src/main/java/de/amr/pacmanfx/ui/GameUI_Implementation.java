@@ -263,7 +263,7 @@ public final class GameUI_Implementation implements GameUI {
     private void doSimulationStepAndUpdateGameScene() {
         final Game game = gameContext.currentGame();
         try {
-            final SimulationStep events = game.simulationStepResult();
+            final SimulationStep events = game.simulationStep();
             events.reset();
             events.setTick(clock.tickCount());
             game.control().update();
