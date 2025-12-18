@@ -9,6 +9,7 @@ import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.event.GameStateChangeEvent;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.timer.Pulse;
+import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.lib.worldmap.FoodLayer;
 import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
 import de.amr.pacmanfx.model.actors.*;
@@ -25,6 +26,8 @@ import java.util.Optional;
 import java.util.Set;
 
 import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
+import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
+import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -97,7 +100,9 @@ public abstract class AbstractGameModel implements Game {
 
     // To be implemented by subclasses
 
-    protected abstract void eatFood(GameLevel level, Vector2i tile);
+    protected abstract void eatPellet(GameLevel level, Vector2i tile);
+
+    protected abstract void eatEnergizer(GameLevel level, Vector2i tile);
 
     protected abstract void eatBonus(GameLevel level, Bonus bonus);
 
@@ -352,7 +357,16 @@ public abstract class AbstractGameModel implements Game {
         if (simulationStepResult.foodTile != null) {
             level.worldMap().foodLayer().registerFoodEatenAt(simulationStepResult.foodTile);
             pac.endStarving();
-            eatFood(level, simulationStepResult.foodTile);
+            if (simulationStepResult.energizerFound) {
+                eatEnergizer(level, simulationStepResult.foodTile);
+            } else {
+                eatPellet(level, simulationStepResult.foodTile);
+            }
+            if (isBonusReached(level)) {
+                activateNextBonus(level);
+                simulationStepResult.bonusIndex = level.currentBonusIndex();
+            }
+            publishGameEvent(GameEvent.Type.PAC_FOUND_FOOD, simulationStepResult.foodTile);
         } else {
             pac.starve();
         }
@@ -364,6 +378,22 @@ public abstract class AbstractGameModel implements Game {
         updatePacPower(level);
         level.blinking().tick();
         level.huntingTimer().update(level.number());
+    }
+
+    protected void onEnergizerEaten(GameLevel level) {
+        level.ghosts(FRIGHTENED, HUNTING_PAC).forEach(MovingActor::requestTurnBack);
+        level.energizerVictims().clear();
+        final float powerSeconds = level.pacPowerSeconds();
+        if (powerSeconds > 0) {
+            level.huntingTimer().stop();
+            Logger.debug("Hunting stopped (Pac-Man got power)");
+            long ticks = TickTimer.secToTicks(powerSeconds);
+            level.pac().powerTimer().restartTicks(ticks);
+            Logger.debug("Power timer restarted, {} ticks ({0.00} sec)", ticks, powerSeconds);
+            level.ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
+            simulationStepResult.pacGotPower = true;
+            publishGameEvent(GameEvent.Type.PAC_GETS_POWER);
+        }
     }
 
     private void checkActorCollisions(GameLevel level) {

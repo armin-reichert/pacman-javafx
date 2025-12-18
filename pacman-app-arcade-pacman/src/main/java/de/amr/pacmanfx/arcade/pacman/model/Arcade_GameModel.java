@@ -10,7 +10,6 @@ import de.amr.pacmanfx.arcade.pacman.model.actors.Blinky;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.timer.TickTimer;
-import de.amr.pacmanfx.lib.worldmap.FoodLayer;
 import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.*;
@@ -93,44 +92,29 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     public abstract LevelData levelData(int levelNumber);
 
-    // public for access by tests
-    public void onPelletEaten(GameLevel level) {
+    @Override
+    public void eatPellet(GameLevel level, Vector2i tile) {
         requireNonNull(level);
+        requireNonNull(tile);
+
         scorePoints(PELLET_VALUE);
+        gateKeeper.registerFoodEaten(level);
         level.pac().setRestingTicks(RESTING_TICKS_PELLET);
         checkCruiseElroy(level, level.ghost(Globals.RED_GHOST_SHADOW));
     }
 
-    // public for access by test code
-    public void onEnergizerEaten(GameLevel level, Vector2i tile) {
+    @Override
+    public void eatEnergizer(GameLevel level, Vector2i tile) {
         requireNonNull(level);
         requireNonNull(tile);
+
         scorePoints(ENERGIZER_VALUE);
-
-        if (isLevelCompleted()) {
-            return;
-        }
-
+        gateKeeper.registerFoodEaten(level);
         level.pac().setRestingTicks(RESTING_TICKS_ENERGIZER);
+        checkCruiseElroy(level, level.ghost(Globals.RED_GHOST_SHADOW));
 
-        level.ghosts().forEach(ghost -> {
-            checkCruiseElroy(level, level.ghost(Globals.RED_GHOST_SHADOW));
-            if (ghost.inAnyOfStates(FRIGHTENED, HUNTING_PAC)) {
-                ghost.requestTurnBack();
-            }
-        });
-        level.energizerVictims().clear();
-        // Pac gets power?
-        final float powerSeconds = level.pacPowerSeconds();
-        if (powerSeconds > 0) {
-            level.huntingTimer().stop();
-            Logger.debug("Hunting stopped (Pac-Man got power)");
-            long ticks = TickTimer.secToTicks(powerSeconds);
-            level.pac().powerTimer().restartTicks(ticks);
-            Logger.debug("Power timer restarted, {} ticks ({0.00} sec)", ticks, powerSeconds);
-            level.ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
-            simulationStepResult.pacGotPower = true;
-            publishGameEvent(GameEvent.Type.PAC_GETS_POWER);
+        if (!isLevelCompleted()) {
+            onEnergizerEaten(level);
         }
     }
 
@@ -306,21 +290,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     @Override
     public boolean canContinueOnGameOver() { return false; }
-
-    @Override
-    public void eatFood(GameLevel level, Vector2i tile) {
-        if (simulationStepResult.energizerFound) {
-            onEnergizerEaten(level, tile);
-        } else {
-            onPelletEaten(level);
-        }
-        gateKeeper.registerFoodEaten(level);
-        if (isBonusReached(level)) {
-            activateNextBonus(level);
-            simulationStepResult.bonusIndex = level.currentBonusIndex();
-        }
-        publishGameEvent(GameEvent.Type.PAC_FOUND_FOOD, tile);
-    }
 
     @Override
     protected void eatBonus(GameLevel level, Bonus bonus) {
