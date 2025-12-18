@@ -17,7 +17,8 @@ import java.util.List;
  */
 public class SimulationStepResult {
     public long       tick;
-    public Vector2i   foundEnergizerAtTile;
+    public Vector2i   foodTile;
+    public boolean    energizerFound;
     public int        bonusIndex = -1;
     public Bonus      edibleBonus;
     public boolean    pacGotPower;
@@ -29,10 +30,11 @@ public class SimulationStepResult {
     public Ghost      releasedGhost;
     public String     ghostReleaseInfo;
     public final List<Ghost> killedGhosts = new ArrayList<>();
-    public final List<Ghost> ghostsCollidingWithPac = new ArrayList<>();
+    public List<Ghost> ghostsCollidingWithPac;
 
     public void reset() {
-        foundEnergizerAtTile = null;
+        foodTile = null;
+        energizerFound = false;
         bonusIndex = -1;
         edibleBonus = null;
         pacGotPower = false;
@@ -44,7 +46,7 @@ public class SimulationStepResult {
         releasedGhost = null;
         ghostReleaseInfo = null;
         killedGhosts.clear();
-        ghostsCollidingWithPac.clear();
+        ghostsCollidingWithPac = List.of();
     }
 
     public void setTick(long tick) {
@@ -56,8 +58,8 @@ public class SimulationStepResult {
         for (Ghost ghost : ghostsCollidingWithPac) {
             messages.add("%s collided with Pac at tile %s, state after collision: %s".formatted(ghost.name(), ghost.tile(), ghost.state()));
         }
-        if (foundEnergizerAtTile != null) {
-            messages.add("Energizer found at " + foundEnergizerAtTile);
+        if (energizerFound) {
+            messages.add("Energizer found at " + foodTile);
         }
         if (bonusIndex != -1) {
             messages.add("Bonus score reached, index=" + bonusIndex);

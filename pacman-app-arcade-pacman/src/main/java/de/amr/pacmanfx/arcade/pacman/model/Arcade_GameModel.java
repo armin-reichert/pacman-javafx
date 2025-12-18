@@ -98,7 +98,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         requireNonNull(level);
         scorePoints(PELLET_VALUE);
         level.pac().setRestingTicks(RESTING_TICKS_PELLET);
-        level.pac().endStarving();
         checkCruiseElroy(level, level.ghost(Globals.RED_GHOST_SHADOW));
     }
 
@@ -106,7 +105,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     public void onEnergizerEaten(GameLevel level, Vector2i tile) {
         requireNonNull(level);
         requireNonNull(tile);
-        simulationStepResult.foundEnergizerAtTile = tile;
         scorePoints(ENERGIZER_VALUE);
 
         if (isLevelCompleted()) {
@@ -114,7 +112,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         }
 
         level.pac().setRestingTicks(RESTING_TICKS_ENERGIZER);
-        level.pac().endStarving();
 
         level.ghosts().forEach(ghost -> {
             checkCruiseElroy(level, level.ghost(Globals.RED_GHOST_SHADOW));
@@ -311,27 +308,18 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     public boolean canContinueOnGameOver() { return false; }
 
     @Override
-    public void checkPacFindsFood(GameLevel level) {
-        FoodLayer foodLayer = level.worldMap().foodLayer();
-        final Pac pac = level.pac();
-        final Vector2i tile = pac.tile();
-        if (foodLayer.hasFoodAtTile(tile)) {
-            foodLayer.registerFoodEatenAt(tile);
-            pac.endStarving();
-            if (foodLayer.isEnergizerTile(tile)) {
-                onEnergizerEaten(level, tile);
-            } else {
-                onPelletEaten(level);
-            }
-            gateKeeper.registerFoodEaten(level);
-            if (isBonusReached(level)) {
-                activateNextBonus(level);
-                simulationStepResult.bonusIndex = level.currentBonusIndex();
-            }
-            publishGameEvent(GameEvent.Type.PAC_FOUND_FOOD, tile);
+    public void eatFood(GameLevel level, Vector2i tile) {
+        if (simulationStepResult.energizerFound) {
+            onEnergizerEaten(level, tile);
         } else {
-            pac.starve();
+            onPelletEaten(level);
         }
+        gateKeeper.registerFoodEaten(level);
+        if (isBonusReached(level)) {
+            activateNextBonus(level);
+            simulationStepResult.bonusIndex = level.currentBonusIndex();
+        }
+        publishGameEvent(GameEvent.Type.PAC_FOUND_FOOD, tile);
     }
 
     @Override

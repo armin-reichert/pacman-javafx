@@ -9,6 +9,7 @@ import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.event.GameStateChangeEvent;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.timer.Pulse;
+import de.amr.pacmanfx.lib.worldmap.FoodLayer;
 import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
 import de.amr.pacmanfx.model.actors.*;
 import javafx.beans.property.*;
@@ -96,7 +97,7 @@ public abstract class AbstractGameModel implements Game {
 
     // To be implemented by subclasses
 
-    protected abstract void checkPacFindsFood(GameLevel level);
+    protected abstract void eatFood(GameLevel level, Vector2i tile);
 
     protected abstract void eatBonus(GameLevel level, Bonus bonus);
 
@@ -325,20 +326,13 @@ public abstract class AbstractGameModel implements Game {
      * of the power mode varies between levels.
      */
     protected void doHuntingStep(GameLevel level) {
-        final TerrainLayer terrain = level.worldMap().terrainLayer();
+        final Pac pac = level.pac();
 
-        level.pac().tick(this);
+        pac.tick(this);
         level.ghosts().forEach(ghost -> ghost.tick(this));
         level.optBonus().ifPresent(bonus -> bonus.tick(this));
 
-        // Ghosts colliding with Pac? While teleportation takes place, collisions are disabled. (Not sure what the
-        // original Arcade game does). Collision behavior is controlled by the current collision strategy. The original
-        // Arcade games use tile-based collision which can lead to missed collisions by passing through.
-        simulationStepResult.ghostsCollidingWithPac.clear();
-        level.ghosts()
-            .filter(ghost -> !terrain.isTileInPortalSpace(ghost.tile()))
-            .filter(ghost -> collisionStrategy().collide(ghost, level.pac()))
-            .forEach(simulationStepResult.ghostsCollidingWithPac::add);
+        checkActorCollisions(level);
 
         if (!simulationStepResult.ghostsCollidingWithPac.isEmpty()) {
             // Pac killed? Might stay alive when immune or in demo level safe time!
@@ -355,12 +349,13 @@ public abstract class AbstractGameModel implements Game {
             }
         }
 
-        checkPacFindsFood(level);
-
-        simulationStepResult.edibleBonus = level.optBonus()
-            .filter(bonus -> bonus.state() == BonusState.EDIBLE)
-            .filter(bonus -> collisionStrategy().collide(level.pac(), bonus))
-            .orElse(null);
+        if (simulationStepResult.foodTile != null) {
+            level.worldMap().foodLayer().registerFoodEatenAt(simulationStepResult.foodTile);
+            pac.endStarving();
+            eatFood(level, simulationStepResult.foodTile);
+        } else {
+            pac.starve();
+        }
 
         if (simulationStepResult.edibleBonus != null) {
             eatBonus(level, simulationStepResult.edibleBonus);
@@ -369,6 +364,31 @@ public abstract class AbstractGameModel implements Game {
         updatePacPower(level);
         level.blinking().tick();
         level.huntingTimer().update(level.number());
+    }
+
+    private void checkActorCollisions(GameLevel level) {
+        final TerrainLayer terrainLayer = level.worldMap().terrainLayer();
+        final FoodLayer foodLayer = level.worldMap().foodLayer();
+        final Pac pac = level.pac();
+        final Vector2i pacTile = pac.tile();
+
+        // Ghosts colliding with Pac? While teleportation takes place, collisions are disabled. (Not sure what the
+        // original Arcade game does). Collision behavior is controlled by the current collision strategy. The original
+        // Arcade games use tile-based collision which can lead to missed collisions by passing through.
+        simulationStepResult.ghostsCollidingWithPac = level.ghosts()
+            .filter(ghost -> !terrainLayer.isTileInPortalSpace(ghost.tile()))
+            .filter(ghost -> collisionStrategy().collide(pac, ghost))
+            .toList();
+
+        simulationStepResult.edibleBonus = level.optBonus()
+            .filter(bonus -> bonus.state() == BonusState.EDIBLE)
+            .filter(bonus -> collisionStrategy().collide(pac, bonus))
+            .orElse(null);
+
+        if (foodLayer.hasFoodAtTile(pacTile)) {
+            simulationStepResult.foodTile = pacTile;
+            simulationStepResult.energizerFound = foodLayer.isEnergizerTile(pacTile);
+        }
     }
 
     /**

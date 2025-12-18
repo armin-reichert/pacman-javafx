@@ -595,37 +595,25 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
     }
 
     @Override
-    public void checkPacFindsFood(GameLevel level) {
-        FoodLayer foodLayer = level.worldMap().foodLayer();
-        final Pac pac = level.pac();
-        final Vector2i tile = pac.tile();
-        if (foodLayer.hasFoodAtTile(tile)) {
-            boolean energizer = foodLayer.isEnergizerTile(tile);
-            foodLayer.registerFoodEatenAt(tile);
-            if (energizer) {
-                eatEnergizer(level, tile);
-            } else {
-                scorePoints(PELLET_VALUE);
-                level.pac().endStarving();
-            }
-            gateKeeper.registerFoodEaten(level);
-            if (isBonusReached(level)) {
-                activateNextBonus(level);
-                simulationStepResult.bonusIndex = level.currentBonusIndex();
-            }
-            publishGameEvent(GameEvent.Type.PAC_FOUND_FOOD, tile);
+    public void eatFood(GameLevel level, Vector2i tile) {
+        if (simulationStepResult.energizerFound) {
+            eatEnergizer(level, tile);
         } else {
-            pac.starve();
+            scorePoints(PELLET_VALUE);
         }
+        gateKeeper.registerFoodEaten(level);
+        if (isBonusReached(level)) {
+            activateNextBonus(level);
+            simulationStepResult.bonusIndex = level.currentBonusIndex();
+        }
+        publishGameEvent(GameEvent.Type.PAC_FOUND_FOOD, tile);
     }
 
     private void eatEnergizer(GameLevel level, Vector2i tile) {
-        simulationStepResult.foundEnergizerAtTile = tile;
         scorePoints(ENERGIZER_VALUE);
         if (isLevelCompleted()) {
             return;
         }
-        level.pac().endStarving();
         level.ghosts().forEach(ghost -> {
             if (ghost.inAnyOfStates(FRIGHTENED, HUNTING_PAC)) {
                 ghost.requestTurnBack();
