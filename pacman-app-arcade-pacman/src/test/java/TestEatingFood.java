@@ -44,7 +44,7 @@ public class TestEatingFood {
             .filter(not(foodLayer::isEnergizerTile))
             .findFirst().ifPresent(tile -> {
                 foodLayer.registerFoodEatenAt(tile);
-                theGame().onPelletEaten(theGameLevel());
+                theGame().eatPellet(theGameLevel(), tile);
             });
     }
 
@@ -54,7 +54,7 @@ public class TestEatingFood {
             .filter(foodLayer::hasFoodAtTile)
             .findFirst().ifPresent(tile -> {
                 foodLayer.registerFoodEatenAt(tile);
-                theGame().onEnergizerEaten(theGameLevel(), tile);
+                theGame().onEnergizerEaten(theGameLevel());
             });
     }
 

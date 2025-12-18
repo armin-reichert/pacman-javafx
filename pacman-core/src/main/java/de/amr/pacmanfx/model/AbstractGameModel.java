@@ -329,6 +329,8 @@ public abstract class AbstractGameModel implements Game {
      * Collision with a ghost either kills the ghost and earns points (in case Pac-Man has power) or kills Pac-Man and
      * loses a life. When Pac-Man finds an energizer pellet he enters power mode and is able to kill ghosts. The duration
      * of the power mode varies between levels.
+     *
+     * @param level the game level
      */
     protected void doHuntingStep(GameLevel level) {
         final Pac pac = level.pac();
@@ -380,7 +382,7 @@ public abstract class AbstractGameModel implements Game {
         level.huntingTimer().update(level.number());
     }
 
-    protected void onEnergizerEaten(GameLevel level) {
+    public void onEnergizerEaten(GameLevel level) {
         level.ghosts(FRIGHTENED, HUNTING_PAC).forEach(MovingActor::requestTurnBack);
         level.energizerVictims().clear();
         final float powerSeconds = level.pacPowerSeconds();
