@@ -194,7 +194,7 @@ public class Pac extends MovingActor {
      */
     public long starvingTicks() { return starvingTicks; }
 
-    public void starve() {
+    public void continueStarving() {
         ++starvingTicks;
     }
 

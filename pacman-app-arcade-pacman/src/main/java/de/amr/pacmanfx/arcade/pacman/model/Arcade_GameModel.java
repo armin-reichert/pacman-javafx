@@ -97,7 +97,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         scorePoints(PELLET_VALUE);
         gateKeeper.registerFoodEaten(level);
         level.pac().setRestingTicks(RESTING_TICKS_PELLET);
-        checkCruiseElroyActivation(level, level.ghost(Globals.RED_GHOST_SHADOW));
+        checkCruiseElroyActivation(level);
     }
 
     @Override
@@ -108,25 +108,24 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         scorePoints(ENERGIZER_VALUE);
         gateKeeper.registerFoodEaten(level);
         level.pac().setRestingTicks(RESTING_TICKS_ENERGIZER);
-        checkCruiseElroyActivation(level, level.ghost(Globals.RED_GHOST_SHADOW));
+        checkCruiseElroyActivation(level);
 
         if (!isLevelCompleted()) {
             onEnergizerEaten(level);
         }
     }
 
-    protected void checkCruiseElroyActivation(GameLevel level, Ghost ghost) {
-        if (ghost instanceof Blinky blinky) {
+    protected void checkCruiseElroyActivation(GameLevel level) {
+        if (level.ghost(Globals.RED_GHOST_SHADOW) instanceof Blinky blinky) {
             final LevelData data = levelData(level.number());
-            int uneatenFoodCount = level.worldMap().foodLayer().uneatenFoodCount();
+            final int uneatenFoodCount = level.worldMap().foodLayer().uneatenFoodCount();
             if (uneatenFoodCount == data.numDotsLeftElroy1()) {
                 blinky.setElroyMode(Blinky.ElroyMode._1);
             } else if (uneatenFoodCount == data.numDotsLeftElroy2()) {
                 blinky.setElroyMode(Blinky.ElroyMode._2);
             }
-        }
-        else {
-            Logger.error("Cruise Elroy mode is not available for {}", ghost.name());
+        } else {
+            Logger.error("Cruise Elroy mode is not available for {}", level.ghost(Globals.RED_GHOST_SHADOW).name());
         }
     }
 

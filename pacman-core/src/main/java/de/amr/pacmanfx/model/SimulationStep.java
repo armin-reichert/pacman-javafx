@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Stores what happened during the current simulation step.
  */
-public class SimulationStepResult {
+public class SimulationStep {
     public long       tick;
     public Vector2i   foodTile;
     public boolean    energizerFound;
@@ -94,7 +94,7 @@ public class SimulationStepResult {
     public void printLog() {
         var report = createReport();
         if (!report.isEmpty()) {
-            Logger.info("Step #{} of simulation:", tick);
+            Logger.info("Step #{}:", tick);
             for (var msg : report) {
                 Logger.info("- " + msg);
             }

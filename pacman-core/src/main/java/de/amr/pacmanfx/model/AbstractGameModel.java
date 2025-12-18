@@ -31,7 +31,7 @@ import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Common base class of all Pac-Man game models.
+ * Base class for all Pac-Man game models. Any logic implemented here should be identical in all Pac-Man game variants.
  */
 public abstract class AbstractGameModel implements Game {
 
@@ -55,10 +55,9 @@ public abstract class AbstractGameModel implements Game {
 
     private final BooleanProperty usingAutopilot = new SimpleBooleanProperty(false);
 
-
     protected final GameControl gameControl;
 
-    protected final SimulationStepResult simStep = new SimulationStepResult();
+    protected final SimulationStep simStep = new SimulationStep();
 
     protected AbstractGameModel(GameControl gameControl) {
         this.gameControl = requireNonNull(gameControl);
@@ -100,20 +99,55 @@ public abstract class AbstractGameModel implements Game {
 
     // To be implemented by subclasses
 
+    /**
+     * Called when Pac finds a normal (non-energizer) pellet.
+
+     * @param level the game level
+     * @param tile the pellet tile
+     */
     protected abstract void eatPellet(GameLevel level, Vector2i tile);
 
+    /**
+     * Called when Pac finds an energizer pellet.
+
+     * @param level the game level
+     * @param tile the energizer tile
+     */
     protected abstract void eatEnergizer(GameLevel level, Vector2i tile);
 
+    /**
+     * Called when Pac collides with a bonus actor.
+
+     * @param level the game level
+     * @param bonus the bonus actor
+     */
     protected abstract void eatBonus(GameLevel level, Bonus bonus);
 
+    /**
+     * @param demoLevel the running demo level
+     * @return {@code true} if Pac can currently not be killed in this demo level
+     */
     protected abstract boolean isPacSafeInDemoLevel(GameLevel demoLevel);
 
-    // These methods are public such that info panel can call them
+    // These methods are public such that info panel can call them:
 
+    /**
+     * @param level the game level
+     * @param ghost a ghost
+     * @return the attack speed (pixel/frame) of this ghost
+     */
     public abstract float ghostSpeedAttacking(GameLevel level, Ghost ghost);
 
+    /**
+     * @param level the game level
+     * @return the speed (pixel/frame) of frightened ghosts
+     */
     public abstract float ghostSpeedWhenFrightened(GameLevel level);
 
+    /**
+     * @param levelNumber the game level number (1, 2, ...)
+     * @return the speed (pixel/frame) of a ghost inside a tunnel leading to some portal
+     */
     public abstract float ghostSpeedTunnel(int levelNumber);
 
     // Game interface
@@ -139,7 +173,7 @@ public abstract class AbstractGameModel implements Game {
     }
 
     @Override
-    public SimulationStepResult simulationStepResult() {
+    public SimulationStep simulationStepResult() {
         return simStep;
     }
 
@@ -325,7 +359,7 @@ public abstract class AbstractGameModel implements Game {
     }
 
     /**
-     * The main logic step of the game. Checks if Pac-Man collides with a ghost or finds food or a bonus.
+     * The main logic step of all Pac-Man games. Checks if Pac-Man collides with a ghost or finds food or a bonus.
      * Collision with a ghost either kills the ghost and earns points (in case Pac-Man has power) or kills Pac-Man and
      * loses a life. When Pac-Man finds an energizer pellet he enters power mode and is able to kill ghosts. The duration
      * of the power mode varies between levels.
@@ -335,26 +369,29 @@ public abstract class AbstractGameModel implements Game {
     protected void doHuntingStep(GameLevel level) {
         final Pac pac = level.pac();
 
-        collectActorCollisions(level);
+        // Compute and record collisions between actors and Pac-Man/food collisions
+        recordCollisions(level);
 
         if (!simStep.ghostsCollidingWithPac.isEmpty()) {
-            // Is Pac really killed? Pac might stay alive when immune or in demo level's safe phase!
+            // Is Pac getting killed after collision with ghost? He might stay alive if immune or in level's safe phase!
             checkPacKilled(level);
-            if (hasPacManBeenKilled()) return;
+            if (hasPacManBeenKilled()) {
+                return; // game state will change, so quit this hunting step now
+            }
 
             // Ghost(s) killed?
-            simStep.ghostsCollidingWithPac.stream()
-                .filter(ghost -> ghost.state() == GhostState.FRIGHTENED)
+            simStep.ghostsCollidingWithPac.stream().filter(ghost -> ghost.state() == GhostState.FRIGHTENED)
                 .forEach(simStep.killedGhosts::add);
             if (hasGhostBeenKilled()) {
                 // just in case more than one ghost is killed during the same simulation step
                 simStep.killedGhosts.forEach(this::onEatGhost);
-                return;
+                return; // game state will change, so quit this hunting step now
             }
         }
 
+        // Did Pac enter a tile containing a pellet or an energizer?
         if (simStep.foodTile == null) {
-            pac.starve();
+            pac.continueStarving();
         } else {
             level.worldMap().foodLayer().registerFoodEatenAt(simStep.foodTile);
             pac.endStarving();
@@ -401,7 +438,7 @@ public abstract class AbstractGameModel implements Game {
         }
     }
 
-    private void collectActorCollisions(GameLevel level) {
+    private void recordCollisions(GameLevel level) {
         final TerrainLayer terrainLayer = level.worldMap().terrainLayer();
         final FoodLayer foodLayer = level.worldMap().foodLayer();
         final Pac pac = level.pac();
