@@ -13,6 +13,16 @@ import de.amr.pacmanfx.model.MessageType;
 
 public class Arcade_GameController extends StateMachine<Game> implements GameControl {
 
+    public static final short TICK_NEW_GAME_SHOW_GUYS = 60;
+    public static final short TICK_NEW_GAME_START_HUNTING = 240;
+    public static final short TICK_RESUME_HUNTING = 120;
+    public static final short TICK_DEMO_LEVEL_START_HUNTING = 120;
+    public static final short TICK_EATING_GHOST_COMPLETE = 60;
+    public static final short TICK_PACMAN_DYING_HIDE_GHOSTS = 60;
+    public static final short TICK_PACMAN_DYING_START_ANIMATION = 90;
+    public static final short TICK_PACMAN_DYING_HIDE_PAC = 190;
+    public static final short TICK_PACMAN_DYING_PAC_DEAD = 210;
+
     public Arcade_GameController() {
         setName("Arcade Pac-Man Games State Machine");
         addStates(GameState.values());
@@ -160,7 +170,7 @@ public class Arcade_GameController extends StateMachine<Game> implements GameCon
         EATING_GHOST {
             @Override
             public void onEnter(Game game) {
-                timer.restartTicks(Arcade_GameModel.TICK_EATING_GHOST_COMPLETE);
+                timer.restartTicks(TICK_EATING_GHOST_COMPLETE);
             }
 
             @Override

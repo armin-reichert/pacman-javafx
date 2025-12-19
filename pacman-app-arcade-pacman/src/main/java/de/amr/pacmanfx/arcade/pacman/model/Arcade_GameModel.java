@@ -25,16 +25,6 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class Arcade_GameModel extends AbstractGameModel {
 
-    static final short TICK_NEW_GAME_SHOW_GUYS = 120;
-    static final short TICK_NEW_GAME_START_HUNTING = 240;
-    static final short TICK_RESUME_HUNTING = 90;
-    static final short TICK_DEMO_LEVEL_START_HUNTING = 120;
-    static final short TICK_EATING_GHOST_COMPLETE = 60;
-    static final short TICK_PACMAN_DYING_HIDE_GHOSTS = 60;
-    static final short TICK_PACMAN_DYING_START_ANIMATION = 90;
-    static final short TICK_PACMAN_DYING_HIDE_PAC = 190;
-    static final short TICK_PACMAN_DYING_PAC_DEAD = 240;
-
     // Level data as given in the "Pac-Man Dossier"
     protected static final LevelData[] LEVEL_DATA = {
         /* 1*/ LevelData.of( 80, 75, 40,  20,  80, 10,  85,  90, 50, 6, 5),
@@ -168,22 +158,22 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             level.ghosts().forEach(ghost -> ghost.onPacKilled(level));
             publishGameEvent(GameEvent.Type.STOP_ALL_SOUNDS);
         }
-        else if (tick == TICK_PACMAN_DYING_HIDE_GHOSTS) {
+        else if (tick == Arcade_GameController.TICK_PACMAN_DYING_HIDE_GHOSTS) {
             level.ghosts().forEach(Ghost::hide);
             pac.optAnimationManager().ifPresent(am -> {
                 am.select(CommonAnimationID.ANIM_PAC_DYING);
                 am.reset();
             });
         }
-        else if (tick == TICK_PACMAN_DYING_START_ANIMATION) {
+        else if (tick == Arcade_GameController.TICK_PACMAN_DYING_START_ANIMATION) {
             pac.optAnimationManager().ifPresent(AnimationManager::play);
             publishGameEvent(GameEvent.Type.PAC_DYING, pac.tile());
         }
-        else if (tick == TICK_PACMAN_DYING_HIDE_PAC) {
+        else if (tick == Arcade_GameController.TICK_PACMAN_DYING_HIDE_PAC) {
             pac.hide();
             level.optBonus().ifPresent(Bonus::setInactive); //TODO check this
         }
-        else if (tick == TICK_PACMAN_DYING_PAC_DEAD) {
+        else if (tick == Arcade_GameController.TICK_PACMAN_DYING_PAC_DEAD) {
             publishGameEvent(GameEvent.Type.PAC_DEAD);
         }
         else {
@@ -220,12 +210,12 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             level.ghosts().forEach(Ghost::stopAnimation);
             publishGameEvent(GameEvent.Type.GHOST_EATEN);
         }
-        else if (tick < TICK_EATING_GHOST_COMPLETE) {
+        else if (tick < Arcade_GameController.TICK_EATING_GHOST_COMPLETE) {
             level.ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
                 .forEach(ghost -> ghost.tick(this));
             level.blinking().tick();
         }
-        else if (tick == TICK_EATING_GHOST_COMPLETE) {
+        else if (tick == Arcade_GameController.TICK_EATING_GHOST_COMPLETE) {
             level.pac().show();
             level.ghosts(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_HOME));
             level.ghosts().forEach(ghost -> ghost.optAnimationManager().ifPresent(AnimationManager::play));
@@ -276,10 +266,10 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         else if (tick == 2) {
             startLevel();
         }
-        else if (tick == TICK_NEW_GAME_SHOW_GUYS) {
+        else if (tick == Arcade_GameController.TICK_NEW_GAME_SHOW_GUYS) {
             level().showPacAndGhosts();
         }
-        else if (tick == TICK_NEW_GAME_START_HUNTING) {
+        else if (tick == Arcade_GameController.TICK_NEW_GAME_START_HUNTING) {
             setPlaying(true);
             control().enterState(GameState.HUNTING);
         }
@@ -291,8 +281,11 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             final GameLevel level = level();
             level.getReadyToPlay();
             level.showPacAndGhosts();
+        }
+        else if (tick == 60) {
             publishGameEvent(GameEvent.Type.GAME_CONTINUED);
-        } else if (tick == TICK_RESUME_HUNTING) {
+        }
+        else if (tick == Arcade_GameController.TICK_RESUME_HUNTING) {
             control().enterState(GameState.HUNTING);
         }
     }
@@ -361,7 +354,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             // Now, actor animations are available
             level().showPacAndGhosts();
         }
-        else if (tick == TICK_DEMO_LEVEL_START_HUNTING) {
+        else if (tick == Arcade_GameController.TICK_DEMO_LEVEL_START_HUNTING) {
             control().enterState(GameState.HUNTING);
         }
     }
