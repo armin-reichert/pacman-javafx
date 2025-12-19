@@ -65,12 +65,8 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
      */
     public static final Vector2i ARCADE_MAP_HOUSE_MIN_TILE = Vector2i.of(10, 15);
 
-    public static final int ALL_16_GHOSTS_KILLED_POINTS = 12_000;
     public static final int EXTRA_LIFE_SCORE = 10_000;
     public static final byte[] KILLED_GHOST_VALUE_FACTORS = {2, 4, 8, 16}; // points = factor * 100
-
-    public static final byte RESTING_TICKS_PELLET = 1;
-    public static final byte RESTING_TICKS_ENERGIZER = 3;
 
     private static final float BONUS_EATEN_SECONDS = 2;
 
@@ -80,12 +76,20 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     protected Steering automaticSteering;
     protected Steering demoLevelSteering;
 
+    protected int restingTicksAfterPelletEaten;
+    protected int restingTicksAfterEnergizerEaten;
+    protected int allGhostsInLevelKilledPoints;
+
     protected Arcade_GameModel(CoinMechanism coinMechanism) {
         super(new Arcade_GameController());
         this.coinMechanism = requireNonNull(coinMechanism);
         setCollisionStrategy(CollisionStrategy.SAME_TILE);
+
         pelletPoints = 10;
         energizerPoints = 50;
+        allGhostsInLevelKilledPoints = 12_000;
+        restingTicksAfterPelletEaten = 1;
+        restingTicksAfterEnergizerEaten = 3;
     }
 
     public abstract LevelData levelData(int levelNumber);
@@ -97,7 +101,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
         scorePoints(pelletPoints);
         gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
-        level.pac().setRestingTicks(RESTING_TICKS_PELLET);
+        level.pac().setRestingTicks(restingTicksAfterPelletEaten);
         checkCruiseElroyActivation(level);
     }
 
@@ -108,7 +112,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
         scorePoints(energizerPoints);
         gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
-        level.pac().setRestingTicks(RESTING_TICKS_ENERGIZER);
+        level.pac().setRestingTicks(restingTicksAfterEnergizerEaten);
         checkCruiseElroyActivation(level);
 
         if (!isLevelCompleted()) {
@@ -192,8 +196,8 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
         level.incrementGhostKillCount();
         if (level.ghostKillCount() == 16) {
-            scorePoints(ALL_16_GHOSTS_KILLED_POINTS);
-            Logger.info("Scored {} points for killing all ghosts in level {}", ALL_16_GHOSTS_KILLED_POINTS, level.number());
+            scorePoints(allGhostsInLevelKilledPoints);
+            Logger.info("Scored {} points for killing all ghosts in level {}", allGhostsInLevelKilledPoints, level.number());
         }
     }
 
