@@ -61,9 +61,6 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel implements LevelC
 
     private static final int DEMO_LEVEL_MIN_DURATION_MILLIS = 20_000;
 
-    private static final int FIRST_BONUS_PELLETS_EATEN = 64;
-    private static final int SECOND_BONUS_PELLETS_EATEN = 176;
-
     protected static final int GAME_OVER_STATE_TICKS = 150;
 
     protected final MapSelector mapSelector;
@@ -84,6 +81,9 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel implements LevelC
         this.hud = new Arcade_HUD(coinMechanism);
         this.mapSelector = requireNonNull(mapSelector);
         this.highScoreFile = requireNonNull(highScoreFile);
+
+        bonus1PelletsEaten = 64;
+        bonus2PelletsEaten = 176;
 
         this.gateKeeper = new GateKeeper();
         this.gateKeeper.setOnGhostReleased((level, prisoner) -> {
@@ -208,7 +208,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel implements LevelC
     @Override
     public boolean isBonusReached(GameLevel level) {
         final int eatenFoodCount = level.worldMap().foodLayer().eatenFoodCount();
-        return eatenFoodCount == FIRST_BONUS_PELLETS_EATEN || eatenFoodCount == SECOND_BONUS_PELLETS_EATEN;
+        return eatenFoodCount == bonus1PelletsEaten || eatenFoodCount == bonus2PelletsEaten;
     }
 
     /**

@@ -68,6 +68,9 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     protected int restingTicksAfterEnergizerEaten;
     protected int allGhostsInLevelKilledPoints;
 
+    protected int bonus1PelletsEaten;
+    protected int bonus2PelletsEaten;
+
     protected Arcade_GameModel(CoinMechanism coinMechanism) {
         super(new Arcade_GameController());
         this.coinMechanism = requireNonNull(coinMechanism);

@@ -74,9 +74,6 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel implements LevelCou
         vec2Byte(6,23) /* eaten at 3,23 in original game */
     );
 
-    protected static final int FIRST_BONUS_PELLETS_EATEN = 70;
-    protected static final int SECOND_BONUS_PELLETS_EATEN = 170;
-
     protected static final int GAME_OVER_STATE_TICKS = 90;
     protected static final Vector2i DEFAULT_BONUS_TILE = new Vector2i(13, 20);
 
@@ -98,6 +95,9 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel implements LevelCou
         this.mapSelector = requireNonNull(mapSelector);
         this.highScoreFile = requireNonNull(highScoreFile);
         this.hud = new Arcade_HUD(coinMechanism);
+
+        bonus1PelletsEaten = 70;
+        bonus2PelletsEaten = 170;
 
         this.gateKeeper = new GateKeeper();
         this.gateKeeper.setOnGhostReleased((gameLevel, prisoner) -> {
@@ -206,8 +206,8 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel implements LevelCou
 
     @Override
     public boolean isBonusReached(GameLevel level) {
-        final int eatenFoodCount = level.worldMap().foodLayer().eatenFoodCount();
-        return eatenFoodCount == FIRST_BONUS_PELLETS_EATEN || eatenFoodCount == SECOND_BONUS_PELLETS_EATEN;
+        final int eaten = level.worldMap().foodLayer().eatenFoodCount();
+        return eaten == bonus1PelletsEaten || eaten == bonus2PelletsEaten;
     }
 
     @Override
