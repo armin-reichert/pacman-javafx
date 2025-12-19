@@ -55,9 +55,6 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel implements LevelCou
     // Note: level numbering starts with 1, first entry is not used
     protected static final byte[] BONUS_SYMBOL_CODES_BY_LEVEL_NUMBER = { -1, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7 };
 
-    // bonus points = multiplier * 100
-    protected static final byte[] BONUS_VALUE_MULTIPLIERS = { 1, 3, 5, 7, 10, 20, 30, 50 };
-
     private static final List<Vec2Byte> PAC_MAN_DEMO_LEVEL_ROUTE = List.of(
         vec2Byte(9, 26), vec2Byte(9, 29), vec2Byte(12,29), vec2Byte(12, 32), vec2Byte(26,32),
         vec2Byte(26,29), vec2Byte(24,29), vec2Byte(24,26), vec2Byte(26,26),  vec2Byte(26,23),
@@ -214,13 +211,27 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel implements LevelCou
     public void activateNextBonus(GameLevel level) {
         level.selectNextBonus();
         final byte symbol = level.bonusSymbol(level.currentBonusIndex());
-        final var bonus = new Bonus(symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100);
+        final var bonus = new Bonus(symbol, bonusValue(symbol));
         final Vector2i bonusTile = level.worldMap().terrainLayer()
             .getTileProperty(DefaultWorldMapPropertyName.POS_BONUS, DEFAULT_BONUS_TILE);
         bonus.setPosition(halfTileRightOf(bonusTile));
         bonus.setEdibleSeconds(randomFloat(9, 10));
         level.setBonus(bonus);
         publishGameEvent(GameEvent.Type.BONUS_ACTIVATED, bonusTile);
+    }
+
+    protected int bonusValue(byte symbolCode) {
+        return switch (symbolCode) {
+            case 0 -> 100;  // cherries
+            case 1 -> 300;  // strawberry
+            case 2 -> 500;  // peach
+            case 3 -> 700;  // apple
+            case 4 -> 1000; // grapes
+            case 5 -> 2000; // galaxian
+            case 6 -> 3000; // bell
+            case 7 -> 5000; // key
+            default -> throw new IllegalArgumentException("Invalid symbol code: " + symbolCode);
+        };
     }
 
     // LevelCounter
