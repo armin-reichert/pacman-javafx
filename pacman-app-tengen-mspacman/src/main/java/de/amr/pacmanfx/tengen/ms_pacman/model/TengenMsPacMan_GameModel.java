@@ -70,9 +70,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
 
     public static final byte LEVEL_COUNTER_MAX_SIZE = 7;
 
-    public static final byte PELLET_VALUE = 10;
-    public static final byte ENERGIZER_VALUE = 50;
-
     // Bonus symbols in Arcade, Mini and Big mazes
     public static final byte BONUS_CHERRY      = 0;
     public static final byte BONUS_STRAWBERRY  = 1;
@@ -157,6 +154,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
         automaticSteering = new RuleBasedPacSteering();
         demoLevelSteering = new RuleBasedPacSteering();
         mapSelector.loadAllMapPrototypes();
+        pelletPoints = 10;
+        energizerPoints = 50;
     }
 
     public boolean allOptionsHaveDefaultValue() {
@@ -593,7 +592,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
         requireNonNull(level);
         requireNonNull(tile);
 
-        scorePoints(PELLET_VALUE);
+        scorePoints(pelletPoints);
         gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
     }
 
@@ -602,7 +601,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
         requireNonNull(level);
         requireNonNull(tile);
 
-        scorePoints(ENERGIZER_VALUE);
+        scorePoints(energizerPoints);
         gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
 
         if (!isLevelCompleted()) {

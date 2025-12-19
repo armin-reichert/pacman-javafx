@@ -59,6 +59,9 @@ public abstract class AbstractGameModel implements Game {
 
     protected final SimulationStep simStep = new SimulationStep();
 
+    protected int pelletPoints;
+    protected int energizerPoints;
+
     protected AbstractGameModel(GameControl gameControl) {
         this.gameControl = requireNonNull(gameControl);
         gameControl.stateMachine().setContext(this);

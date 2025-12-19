@@ -65,8 +65,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
      */
     public static final Vector2i ARCADE_MAP_HOUSE_MIN_TILE = Vector2i.of(10, 15);
 
-    public static final byte PELLET_VALUE = 10;
-    public static final byte ENERGIZER_VALUE = 50;
     public static final int ALL_16_GHOSTS_KILLED_POINTS = 12_000;
     public static final int EXTRA_LIFE_SCORE = 10_000;
     public static final byte[] KILLED_GHOST_VALUE_FACTORS = {2, 4, 8, 16}; // points = factor * 100
@@ -86,6 +84,8 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         super(new Arcade_GameController());
         this.coinMechanism = requireNonNull(coinMechanism);
         setCollisionStrategy(CollisionStrategy.SAME_TILE);
+        pelletPoints = 10;
+        energizerPoints = 50;
     }
 
     public abstract LevelData levelData(int levelNumber);
@@ -95,7 +95,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         requireNonNull(level);
         requireNonNull(tile);
 
-        scorePoints(PELLET_VALUE);
+        scorePoints(pelletPoints);
         gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
         level.pac().setRestingTicks(RESTING_TICKS_PELLET);
         checkCruiseElroyActivation(level);
@@ -106,7 +106,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         requireNonNull(level);
         requireNonNull(tile);
 
-        scorePoints(ENERGIZER_VALUE);
+        scorePoints(energizerPoints);
         gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
         level.pac().setRestingTicks(RESTING_TICKS_ENERGIZER);
         checkCruiseElroyActivation(level);
