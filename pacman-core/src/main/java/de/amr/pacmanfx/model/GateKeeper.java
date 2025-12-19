@@ -112,21 +112,15 @@ public class GateKeeper {
     private static final byte NO_LIMIT = -1;
     private static final byte[] GLOBAL_LIMITS = new byte[] {NO_LIMIT, 7, 17, NO_LIMIT};
 
-    private final Game game;
-
     private BiConsumer<GameLevel, Ghost> onGhostReleased =
         (level, ghost) -> Logger.info("Game Level #{}: {} released", level.number(), ghost.name());
-    
-    private final byte[] ghostLimits = new byte[4];
+
     private int          pacStarvingLimit;
-    private final int[] ghostCounters = new int[4];
-    private int globalCounterValue;
+    private final byte[] ghostLimits = new byte[4];
+    private final int[]  ghostCounters = new int[4];
+    private int          globalCounterValue;
     private boolean      globalCounterEnabled;
 
-    public GateKeeper(Game game) {
-        this.game = requireNonNull(game);
-    }
-    
     public void setOnGhostReleased(BiConsumer<GameLevel, Ghost> handler) {
         this.onGhostReleased = handler;
     }
@@ -227,8 +221,8 @@ public class GateKeeper {
             .filter(ghost -> ghost.state() == GhostState.LOCKED)
             .findFirst()
             .ifPresent(prisoner -> checkReleaseOfGhost(level, prisoner).ifPresent(reason -> {
-                game.simulationStep().ghostReleasedFromJailhouse = prisoner;
-                game.simulationStep().ghostReleaseInfo = reason;
+                level.game().simulationStep().ghostReleasedFromJailhouse = prisoner;
+                level.game().simulationStep().ghostReleaseInfo = reason;
                 prisoner.setMoveDir(Direction.UP);
                 prisoner.setWishDir(Direction.UP);
                 prisoner.setState(GhostState.LEAVING_HOUSE);

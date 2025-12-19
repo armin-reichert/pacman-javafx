@@ -103,7 +103,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel implements LevelCou
         setHighScoreFile(requireNonNull(highScoreFile));
         setExtraLifeScores(EXTRA_LIFE_SCORE);
 
-        gateKeeper = new GateKeeper(this);
+        gateKeeper = new GateKeeper();
         gateKeeper.setOnGhostReleased((gameLevel, prisoner) -> {
             final var blinky = (Blinky) gameLevel.ghost(RED_GHOST_SHADOW);
             if (prisoner.personality() == ORANGE_GHOST_POKEY

@@ -153,7 +153,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
         setCollisionStrategy(CollisionStrategy.CENTER_DISTANCE);
         setHighScoreFile(requireNonNull(highScoreFile));
         mapSelector = new TengenMsPacMan_MapSelector();
-        gateKeeper = new GateKeeper(this); //TODO implement original logic from Tengen game
+        gateKeeper = new GateKeeper(); //TODO implement original logic from Tengen game
         automaticSteering = new RuleBasedPacSteering();
         demoLevelSteering = new RuleBasedPacSteering();
         mapSelector.loadAllMapPrototypes();
