@@ -117,10 +117,14 @@ public final class GameUI_Implementation implements GameUI {
         startPagesView = new StartPagesCarousel();
         startPagesView.setUI(this);
 
-        currentView.addListener((_, _, newView) -> {
+        currentView.addListener((_, oldView, newView) -> {
+            if (oldView != null) {
+                oldView.onExit();
+            }
             if (newView != null) {
                 embedView(newView);
                 Logger.info("Embedded view: {}", newView);
+                newView.onEnter();
             }
         });
 

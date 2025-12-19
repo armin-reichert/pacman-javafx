@@ -5,8 +5,10 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.sound;
 
 import de.amr.pacmanfx.lib.Disposable;
-import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
 import javafx.animation.PauseTransition;
+import javafx.animation.Timeline;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -245,12 +247,21 @@ public class SoundManager implements Disposable {
     }
 
     public void stopVoice() {
-        if (voicePlayer != null) {
-            Logger.trace("Stop voice");
-            if (voiceDelay.getStatus() == Animation.Status.RUNNING) {
-                voiceDelay.stop();
-            }
-            voicePlayer.stop();
+        if (voicePlayer == null) {
+            return;
+        }
+        if (voicePlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+            var fade = new Timeline(
+                new KeyFrame(Duration.seconds(0), new KeyValue(
+                    voicePlayer.volumeProperty(), voicePlayer.getVolume())),
+                new KeyFrame(Duration.seconds(2), new KeyValue(
+                    voicePlayer.volumeProperty(), 0))
+            );
+            fade.setOnFinished(_ -> {
+                voicePlayer.stop();
+                voicePlayer.setVolume(1);
+            });
+            fade.play();
         }
     }
 

@@ -25,7 +25,6 @@ import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.tinylog.Logger;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -81,6 +80,7 @@ public class StartPagesCarousel extends Carousel implements GameUI_View {
     public void onExit() {
         pauseTimer();
         actionBindings.release(GameUI.KEYBOARD);
+        currentStartPage().ifPresent(startPage -> startPage.onExit(ui));
     }
 
     public void setUI(GameUI ui) {
