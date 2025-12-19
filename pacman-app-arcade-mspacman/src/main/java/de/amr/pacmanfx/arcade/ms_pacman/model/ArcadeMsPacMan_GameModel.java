@@ -85,7 +85,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel implements LevelC
         this.mapSelector = requireNonNull(mapSelector);
 
         setHighScoreFile(requireNonNull(highScoreFile));
-        setExtraLifeScores(EXTRA_LIFE_SCORE);
+        setExtraLifeScores(10_000);
 
         gateKeeper = new GateKeeper();
         gateKeeper.setOnGhostReleased((level, prisoner) -> {
