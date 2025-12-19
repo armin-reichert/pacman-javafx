@@ -88,8 +88,8 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel implements LevelC
         setExtraLifeScores(EXTRA_LIFE_SCORE);
 
         gateKeeper = new GateKeeper();
-        gateKeeper.setOnGhostReleased((gameLevel, prisoner) -> {
-            final var blinky = (Blinky) gameLevel.ghost(RED_GHOST_SHADOW);
+        gateKeeper.setOnGhostReleased((level, prisoner) -> {
+            final var blinky = (Blinky) level.ghost(RED_GHOST_SHADOW);
             if (prisoner.personality() == ORANGE_GHOST_POKEY
                 && blinky.elroyMode() != Blinky.ElroyMode.NONE && !blinky.isCruiseElroyEnabled()) {
                 blinky.setCruiseElroyEnabled(true);
@@ -123,11 +123,11 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel implements LevelC
         final WorldMap worldMap = mapSelector.selectWorldMap(levelNumber);
         final TerrainLayer terrain = worldMap.terrainLayer();
 
-        final ArcadeHouse house = new ArcadeHouse(ARCADE_MAP_HOUSE_MIN_TILE);
+        final var house = new ArcadeHouse(ARCADE_MAP_HOUSE_MIN_TILE);
         terrain.setHouse(house);
 
         final int numFlashes = levelData(levelNumber).numFlashes();
-        final GameLevel level = new GameLevel(this, levelNumber, worldMap, createHuntingTimer(), numFlashes);
+        final var level = new GameLevel(this, levelNumber, worldMap, createHuntingTimer(), numFlashes);
         level.setDemoLevel(demoLevel);
         level.setGameOverStateTicks(GAME_OVER_STATE_TICKS);
         level.setPacPowerSeconds(levelData(levelNumber).secPacPower());
@@ -277,10 +277,10 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel implements LevelC
         }
 
         level.selectNextBonus();
-        byte symbol = level.bonusSymbol(level.currentBonusIndex());
-        var bonus = new Bonus(symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100);
+        final byte symbol = level.bonusSymbol(level.currentBonusIndex());
+        final var bonus = new Bonus(symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100);
         if (terrain.horizontalPortals().isEmpty()) {
-            Vector2i bonusTile = terrain.getTileProperty(DefaultWorldMapPropertyName.POS_BONUS, new Vector2i(13, 20));
+            final Vector2i bonusTile = terrain.getTileProperty(DefaultWorldMapPropertyName.POS_BONUS, new Vector2i(13, 20));
             bonus.setPosition(halfTileRightOf(bonusTile));
             bonus.setEdibleSeconds(randomFloat(9, 10));
         } else {
@@ -303,8 +303,8 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel implements LevelC
         Vector2i exitTile;
         boolean leftToRight;
         if (entryTile != null) { // Map defines bonus entry tile
-            int exitPortalIndex = randomInt(0, portals.size());
-            HPortal exitPortal = portals.get(exitPortalIndex);
+            final int exitPortalIndex = randomInt(0, portals.size());
+            final HPortal exitPortal = portals.get(exitPortalIndex);
             if (entryTile.x() == 0) { // enter maze at left border
                 exitTile = exitPortal.rightBorderEntryTile().plus(1, 0);
                 leftToRight = true;
@@ -314,8 +314,8 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel implements LevelC
             }
         }
         else { // choose random crossing direction and random entry and exit portals
-            HPortal entryPortal = portals.get(randomInt(0, portals.size()));
-            HPortal exitPortal = portals.get(randomInt(0, portals.size()));
+            final HPortal entryPortal = portals.get(randomInt(0, portals.size()));
+            final HPortal exitPortal = portals.get(randomInt(0, portals.size()));
             leftToRight = randomBoolean();
             if (leftToRight) {
                 entryTile = entryPortal.leftBorderEntryTile();
@@ -326,9 +326,9 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel implements LevelC
             }
         }
 
-        Vector2i houseEntry = tileAt(house.entryPosition());
-        Vector2i backyard = houseEntry.plus(0, house.sizeInTiles().y() + 1);
-        List<Vec2Byte> route = Stream.of(entryTile, houseEntry, backyard, houseEntry, exitTile).map(Vec2Byte::new).toList();
+        final Vector2i houseEntry = tileAt(house.entryPosition());
+        final Vector2i backyard = houseEntry.plus(0, house.sizeInTiles().y() + 1);
+        final List<Vec2Byte> route = Stream.of(entryTile, houseEntry, backyard, houseEntry, exitTile).map(Vec2Byte::new).toList();
 
         bonus.initRoute(route, leftToRight);
         Logger.info("Moving bonus route: {} (crossing {})", route, leftToRight ? "left to right" : "right to left");
@@ -356,12 +356,12 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel implements LevelC
 
     @Override
     public void setLevelCounterEnabled(boolean enabled) {
-        this.levelCounterEnabled.set(enabled);
+        levelCounterEnabled.set(enabled);
     }
 
     @Override
     public boolean levelCounterEnabled() {
-        return this.levelCounterEnabled.get();
+        return levelCounterEnabled.get();
     }
 
     @Override
