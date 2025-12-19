@@ -27,6 +27,8 @@ import static java.util.Objects.requireNonNull;
 
 public class SoundManager implements Disposable {
 
+    private static final float VOICE_FADE_OUT_SECONDS = 1.5f;
+
     private final BooleanProperty enabledProperty = new SimpleBooleanProperty(true);
 
     private final BooleanProperty mutedProperty = new SimpleBooleanProperty(false);
@@ -254,7 +256,7 @@ public class SoundManager implements Disposable {
             var fade = new Timeline(
                 new KeyFrame(Duration.seconds(0), new KeyValue(
                     voicePlayer.volumeProperty(), voicePlayer.getVolume())),
-                new KeyFrame(Duration.seconds(2), new KeyValue(
+                new KeyFrame(Duration.seconds(VOICE_FADE_OUT_SECONDS), new KeyValue(
                     voicePlayer.volumeProperty(), 0))
             );
             fade.setOnFinished(_ -> {
