@@ -87,7 +87,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         requireNonNull(level);
         requireNonNull(tile);
 
-        scorePoints(pelletPoints);
+        scorePoints(level, pelletPoints);
         gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
         level.pac().setRestingTicks(restingTicksAfterPelletEaten);
         checkCruiseElroyActivation(level);
@@ -98,7 +98,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         requireNonNull(level);
         requireNonNull(tile);
 
-        scorePoints(energizerPoints);
+        scorePoints(level, energizerPoints);
         gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
         level.pac().setRestingTicks(restingTicksAfterEnergizerEaten);
         checkCruiseElroyActivation(level);
@@ -183,11 +183,10 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void onEatGhost(Ghost ghost) {
-        final GameLevel level = level();
+    public void onEatGhost(GameLevel level, Ghost ghost) {
         final int alreadyKilled = level.energizerVictims().size();
         final int points = killedGhostValue(alreadyKilled);
-        scorePoints(points);
+        scorePoints(level, points);
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
 
         ghost.setState(GhostState.EATEN);
@@ -197,7 +196,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         level.energizerVictims().add(ghost);
         level.incrementGhostKillCount();
         if (level.ghostKillCount() == 16) {
-            scorePoints(allGhostsInLevelKilledPoints);
+            scorePoints(level, allGhostsInLevelKilledPoints);
             Logger.info("Scored {} points for killing all ghosts in level {}", allGhostsInLevelKilledPoints, level.number());
         }
     }
@@ -298,7 +297,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     @Override
     protected void eatBonus(GameLevel level, Bonus bonus) {
-        scorePoints(bonus.points());
+        scorePoints(level, bonus.points());
         Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
         bonus.setEatenSeconds(BONUS_EATEN_SECONDS);
         publishGameEvent(GameEvent.Type.BONUS_EATEN);

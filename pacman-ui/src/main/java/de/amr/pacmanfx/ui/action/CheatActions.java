@@ -7,7 +7,6 @@ package de.amr.pacmanfx.ui.action;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameControl;
-import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
@@ -59,16 +58,17 @@ public final class CheatActions {
         @Override
         public void execute(GameUI ui) {
             final Game game = ui.context().currentGame();
-            final GameLevel gameLevel = game.level();
-            if (game.optGameLevel().isPresent() && !game.level().isDemoLevel()) {
-                game.cheatUsedProperty().set(true);
-            }
-            final List<Ghost> vulnerableGhosts = gameLevel.ghosts(FRIGHTENED, HUNTING_PAC).toList();
-            if (!vulnerableGhosts.isEmpty()) {
-                gameLevel.energizerVictims().clear(); // resets value of next killed ghost to 200
-                vulnerableGhosts.forEach(game::onEatGhost);
-                game.control().enterStateNamed(GameControl.StateName.EATING_GHOST.name());
-            }
+            game.optGameLevel().ifPresent(level -> {
+                if (!game.level().isDemoLevel()) {
+                    game.cheatUsedProperty().set(true);
+                }
+                final List<Ghost> vulnerableGhosts = level.ghosts(FRIGHTENED, HUNTING_PAC).toList();
+                if (!vulnerableGhosts.isEmpty()) {
+                    level.energizerVictims().clear(); // resets value of next killed ghost to 200
+                    vulnerableGhosts.forEach(ghost -> game.onEatGhost(level, ghost));
+                    game.control().enterStateNamed(GameControl.StateName.EATING_GHOST.name());
+                }
+            });
         }
 
         @Override

@@ -387,7 +387,7 @@ public abstract class AbstractGameModel implements Game {
                 .forEach(simStep.killedGhosts::add);
             if (hasGhostBeenKilled()) {
                 // just in case more than one ghost is killed during the same simulation step
-                simStep.killedGhosts.forEach(this::onEatGhost);
+                simStep.killedGhosts.forEach(ghost -> onEatGhost(level, ghost));
                 return; // game state will change, so quit this hunting step now
             }
         }
@@ -426,6 +426,7 @@ public abstract class AbstractGameModel implements Game {
     }
 
     public void onEnergizerEaten(GameLevel level) {
+        requireNonNull(level);
         level.ghosts(FRIGHTENED, HUNTING_PAC).forEach(MovingActor::requestTurnBack);
         level.energizerVictims().clear();
         final float powerSeconds = level.pacPowerSeconds();
@@ -442,6 +443,8 @@ public abstract class AbstractGameModel implements Game {
     }
 
     private void detectCollisions(GameLevel level) {
+        requireNonNull(level);
+
         final TerrainLayer terrainLayer = level.worldMap().terrainLayer();
         final FoodLayer foodLayer = level.worldMap().foodLayer();
         final Pac pac = level.pac();
@@ -528,7 +531,7 @@ public abstract class AbstractGameModel implements Game {
 
     // ScoreManager
 
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final DateTimeFormatter SCORE_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     private final Score score = new Score();
     private final Score highScore = new Score();
@@ -543,14 +546,15 @@ public abstract class AbstractGameModel implements Game {
         extraLifeScores = Set.of(scores);
     }
 
-    protected void scorePoints(int points) {
+    protected void scorePoints(GameLevel level, int points) {
         if (!score.isEnabled()) {
             return;
         }
-        int oldScore = score.points(), newScore = oldScore + points;
-        if (highScore().isEnabled() && newScore > highScore.points()) {
+        final int oldScore = score.points();
+        final int newScore = oldScore + points;
+        if (highScore.isEnabled() && newScore > highScore.points()) {
             highScore.setPoints(newScore);
-            highScore.setLevelNumber(score.levelNumber());
+            highScore.setLevelNumber(level.number());
             highScore.setDate(LocalDate.now());
         }
         score.setPoints(newScore);
@@ -562,20 +566,16 @@ public abstract class AbstractGameModel implements Game {
     }
 
     protected void updateHighScore() {
-        var oldHighScore = Score.createFromFile(highScoreFile);
-        if (highScore.points() > oldHighScore.points()) {
-            try {
-                final String dateTime = FORMATTER.format(LocalDateTime.now());
-                highScore.save(highScoreFile, "High Score updated at %s".formatted(dateTime));
-            } catch (IOException x) {
-                Logger.error("High Score file could not be saved: '{}'", highScoreFile);
-            }
+        var savedHighScore = Score.readScoreFile(highScoreFile);
+        if (highScore.points() > savedHighScore.points()) {
+            saveHighScore();
         }
     }
 
     public void saveHighScore() {
         try {
-            new Score().save(highScoreFile, "High Score, %s".formatted(LocalDateTime.now()));
+            final String dateTime = SCORE_DATE_TIME_FORMATTER.format(LocalDateTime.now());
+            highScore.save(highScoreFile, "High Score updated at %s".formatted(dateTime));
         } catch (IOException x) {
             Logger.error("High Score could not be saved to file '{}'", highScoreFile);
             Logger.error(x);

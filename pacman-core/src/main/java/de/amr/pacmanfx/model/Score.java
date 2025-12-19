@@ -28,7 +28,7 @@ public class Score {
     private final IntegerProperty levelNumber = new SimpleIntegerProperty();
     private final ObjectProperty<LocalDate> date = new SimpleObjectProperty<>();
 
-    public static Score createFromFile(File scoreFile) {
+    public static Score readScoreFile(File scoreFile) {
         final var score = new Score();
         score.read(scoreFile);
         return score;

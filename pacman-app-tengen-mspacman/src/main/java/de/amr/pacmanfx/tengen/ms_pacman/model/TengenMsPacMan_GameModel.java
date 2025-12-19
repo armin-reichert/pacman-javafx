@@ -592,7 +592,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
         requireNonNull(level);
         requireNonNull(tile);
 
-        scorePoints(pelletPoints);
+        scorePoints(level, pelletPoints);
         gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
     }
 
@@ -601,7 +601,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
         requireNonNull(level);
         requireNonNull(tile);
 
-        scorePoints(energizerPoints);
+        scorePoints(level, energizerPoints);
         gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
 
         if (!isLevelCompleted()) {
@@ -611,7 +611,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
 
     @Override
     protected void eatBonus(GameLevel level, Bonus bonus) {
-        scorePoints(bonus.points());
+        scorePoints(level, bonus.points());
         Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
         bonus.setEatenSeconds(BONUS_EATEN_SECONDS);
         publishGameEvent(GameEvent.Type.BONUS_EATEN);
@@ -662,14 +662,14 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
     }
 
     @Override
-    public void onEatGhost(Ghost ghost) {
-        final List<Ghost> victims = level().energizerVictims();
+    public void onEatGhost(GameLevel level, Ghost ghost) {
+        final List<Ghost> victims = level.energizerVictims();
         final int killedSoFar = victims.size();
         final int points = 100 * KILLED_GHOST_VALUE_FACTORS[killedSoFar];
         victims.add(ghost);
         ghost.setState(GhostState.EATEN);
         ghost.selectAnimationAt(CommonAnimationID.ANIM_GHOST_NUMBER, killedSoFar);
-        scorePoints(points);
+        scorePoints(level, points);
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
     }
 
