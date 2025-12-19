@@ -297,7 +297,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel implements LevelC
             case 3 -> 700;  // pretzel
             case 4 -> 1000; // apple
             case 5 -> 2000; // pear
-            case 7 -> 5000; // banana
+            case 6 -> 5000; // banana
             default -> throw new IllegalArgumentException("Invalid symbol code: " + symbolCode);
         };
     }
