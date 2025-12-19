@@ -65,8 +65,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
      */
     public static final Vector2i ARCADE_MAP_HOUSE_MIN_TILE = Vector2i.of(10, 15);
 
-    public static final byte[] KILLED_GHOST_VALUE_FACTORS = {2, 4, 8, 16}; // points = factor * 100
-
     private static final float BONUS_EATEN_SECONDS = 2;
 
     protected final CoinMechanism coinMechanism;
@@ -82,13 +80,14 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     protected Arcade_GameModel(CoinMechanism coinMechanism) {
         super(new Arcade_GameController());
         this.coinMechanism = requireNonNull(coinMechanism);
-        setCollisionStrategy(CollisionStrategy.SAME_TILE);
 
         pelletPoints = 10;
         energizerPoints = 50;
         allGhostsInLevelKilledPoints = 12_000;
         restingTicksAfterPelletEaten = 1;
         restingTicksAfterEnergizerEaten = 3;
+        setExtraLifeScores(10_000);
+        setCollisionStrategy(CollisionStrategy.SAME_TILE);
     }
 
     public abstract LevelData levelData(int levelNumber);
@@ -117,6 +116,16 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         if (!isLevelCompleted()) {
             onEnergizerEaten(level);
         }
+    }
+
+    protected int killedGhostValue(int alreadyKilled) {
+        return switch (alreadyKilled) {
+            case 0 -> 200;
+            case 1 -> 400;
+            case 2 -> 800;
+            case 4 -> 1600;
+            default -> throw new IllegalArgumentException("Illegal number of already killed ghosts: " + alreadyKilled);
+        };
     }
 
     protected void checkCruiseElroyActivation(GameLevel level) {
@@ -186,13 +195,16 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     @Override
     public void onEatGhost(Ghost ghost) {
         final GameLevel level = level();
-        final int killedSoFar = level.energizerVictims().size();
-        final int points = 100 * KILLED_GHOST_VALUE_FACTORS[killedSoFar];
-        level.energizerVictims().add(ghost);
-        ghost.setState(GhostState.EATEN);
-        ghost.selectAnimationAt(CommonAnimationID.ANIM_GHOST_NUMBER, killedSoFar);
+        final int alreadyKilled = level.energizerVictims().size();
+        final int points = killedGhostValue(alreadyKilled);
         scorePoints(points);
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
+
+        ghost.setState(GhostState.EATEN);
+        // Animation index is 0-based, so use animation frame 0 to show points for first killed ghost...
+        ghost.selectAnimationAt(CommonAnimationID.ANIM_GHOST_NUMBER, alreadyKilled);
+
+        level.energizerVictims().add(ghost);
         level.incrementGhostKillCount();
         if (level.ghostKillCount() == 16) {
             scorePoints(allGhostsInLevelKilledPoints);
