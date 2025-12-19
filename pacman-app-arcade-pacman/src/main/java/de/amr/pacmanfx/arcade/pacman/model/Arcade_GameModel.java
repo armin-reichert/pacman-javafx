@@ -15,6 +15,7 @@ import de.amr.pacmanfx.steering.Steering;
 import org.tinylog.Logger;
 
 import java.util.Optional;
+import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 
@@ -76,7 +77,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         allGhostsInLevelKilledPoints = 12_000;
         restingTicksAfterPelletEaten = 1;
         restingTicksAfterEnergizerEaten = 3;
-        setExtraLifeScores(10_000);
+        extraLifeScores = Set.of(10_000);
         setCollisionStrategy(CollisionStrategy.SAME_TILE);
     }
 
@@ -113,7 +114,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             case 0 -> 200;
             case 1 -> 400;
             case 2 -> 800;
-            case 4 -> 1600;
+            case 3 -> 1600;
             default -> throw new IllegalArgumentException("Illegal number of already killed ghosts: " + alreadyKilled);
         };
     }

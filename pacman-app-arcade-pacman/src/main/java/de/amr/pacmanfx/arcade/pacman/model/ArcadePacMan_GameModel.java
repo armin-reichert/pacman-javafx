@@ -95,15 +95,12 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel implements LevelCou
     public ArcadePacMan_GameModel(CoinMechanism coinMechanism, MapSelector mapSelector, File highScoreFile) {
         super(coinMechanism);
 
-        hud = new Arcade_HUD(coinMechanism);
-
         this.mapSelector = requireNonNull(mapSelector);
-        mapSelector.loadAllMapPrototypes();
+        this.highScoreFile = requireNonNull(highScoreFile);
+        this.hud = new Arcade_HUD(coinMechanism);
 
-        setHighScoreFile(requireNonNull(highScoreFile));
-
-        gateKeeper = new GateKeeper();
-        gateKeeper.setOnGhostReleased((gameLevel, prisoner) -> {
+        this.gateKeeper = new GateKeeper();
+        this.gateKeeper.setOnGhostReleased((gameLevel, prisoner) -> {
             final var blinky = (Blinky) gameLevel.ghost(RED_GHOST_SHADOW);
             if (prisoner.personality() == ORANGE_GHOST_POKEY
                 && blinky.elroyMode() != Blinky.ElroyMode.NONE && !blinky.isCruiseElroyEnabled()) {
@@ -112,8 +109,10 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel implements LevelCou
             }
         });
 
-        demoLevelSteering = new RouteBasedSteering(PAC_MAN_DEMO_LEVEL_ROUTE);
-        automaticSteering = new RuleBasedPacSteering();
+        this.demoLevelSteering = new RouteBasedSteering(PAC_MAN_DEMO_LEVEL_ROUTE);
+        this.automaticSteering = new RuleBasedPacSteering();
+
+        mapSelector.loadAllMapPrototypes();
     }
 
     @Override

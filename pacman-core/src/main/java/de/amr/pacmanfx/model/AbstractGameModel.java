@@ -533,18 +533,10 @@ public abstract class AbstractGameModel implements Game {
 
     private static final DateTimeFormatter SCORE_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    private final Score score = new Score();
-    private final Score highScore = new Score();
-    private File highScoreFile;
-    private Set<Integer> extraLifeScores = Set.of();
-
-    protected void setHighScoreFile(File highScoreFile) {
-        this.highScoreFile = requireNonNull(highScoreFile);
-    }
-
-    protected void setExtraLifeScores(Integer... scores) {
-        extraLifeScores = Set.of(scores);
-    }
+    protected final Score score = new Score();
+    protected final Score highScore = new Score();
+    protected File highScoreFile;
+    protected Set<Integer> extraLifeScores = Set.of();
 
     protected void scorePoints(GameLevel level, int points) {
         if (!score.isEnabled()) {

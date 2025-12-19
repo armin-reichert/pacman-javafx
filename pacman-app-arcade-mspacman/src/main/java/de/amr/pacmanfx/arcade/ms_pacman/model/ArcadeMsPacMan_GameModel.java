@@ -83,11 +83,10 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel implements LevelC
         super(coinMechanism);
         this.hud = new Arcade_HUD(coinMechanism);
         this.mapSelector = requireNonNull(mapSelector);
+        this.highScoreFile = requireNonNull(highScoreFile);
 
-        setHighScoreFile(requireNonNull(highScoreFile));
-
-        gateKeeper = new GateKeeper();
-        gateKeeper.setOnGhostReleased((level, prisoner) -> {
+        this.gateKeeper = new GateKeeper();
+        this.gateKeeper.setOnGhostReleased((level, prisoner) -> {
             final var blinky = (Blinky) level.ghost(RED_GHOST_SHADOW);
             if (prisoner.personality() == ORANGE_GHOST_POKEY
                 && blinky.elroyMode() != Blinky.ElroyMode.NONE && !blinky.isCruiseElroyEnabled()) {
@@ -96,8 +95,9 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel implements LevelC
             }
         });
 
-        demoLevelSteering = new RuleBasedPacSteering();
-        automaticSteering = new RuleBasedPacSteering();
+        this.demoLevelSteering = new RuleBasedPacSteering();
+        this.automaticSteering = new RuleBasedPacSteering();
+
         mapSelector.loadAllMapPrototypes();
     }
 

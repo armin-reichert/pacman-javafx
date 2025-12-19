@@ -22,10 +22,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import org.tinylog.Logger;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -147,15 +144,15 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
 
     public TengenMsPacMan_GameModel(File highScoreFile) {
         super(new TengenMsPacMan_GameController());
+        this.highScoreFile = requireNonNull(highScoreFile);
+        this.mapSelector = new TengenMsPacMan_MapSelector();
+        this.gateKeeper = new GateKeeper(); //TODO implement original logic from Tengen game
+        this.automaticSteering = new RuleBasedPacSteering();
+        this.demoLevelSteering = new RuleBasedPacSteering();
+        this.pelletPoints = 10;
+        this.energizerPoints = 50;
         setCollisionStrategy(CollisionStrategy.CENTER_DISTANCE);
-        setHighScoreFile(requireNonNull(highScoreFile));
-        mapSelector = new TengenMsPacMan_MapSelector();
-        gateKeeper = new GateKeeper(); //TODO implement original logic from Tengen game
-        automaticSteering = new RuleBasedPacSteering();
-        demoLevelSteering = new RuleBasedPacSteering();
-        mapSelector.loadAllMapPrototypes();
-        pelletPoints = 10;
-        energizerPoints = 50;
+        this.mapSelector.loadAllMapPrototypes();
     }
 
     public boolean allOptionsHaveDefaultValue() {
@@ -226,9 +223,9 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
             a score normally unachievable without cheat codes, since all maze sets end after 32 stages.
             This was most likely done to simulate the Arcade game only giving one extra life per game.
             */
-            setExtraLifeScores(10_000, 970_000, 980_000, 990_000);
+            extraLifeScores = Set.of(10_000, 970_000, 980_000, 990_000);
         } else {
-            setExtraLifeScores(10_000, 50_000, 100_000, 300_000);
+            extraLifeScores = Set.of(10_000, 50_000, 100_000, 300_000);
         }
     }
 
