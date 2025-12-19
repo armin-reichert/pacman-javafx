@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.model;
 
-import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.Game;
@@ -83,11 +82,6 @@ public class Arcade_GameController extends StateMachine<Game> implements GameCon
 
         STARTING_GAME_OR_LEVEL {
             @Override
-            public void onEnter(Game game) {
-                game.publishGameEvent(GameEvent.Type.STOP_ALL_SOUNDS);
-            }
-
-            @Override
             public void onUpdate(Game game) {
                 long tick = timer.tickCount();
                 if (game.isPlaying()) {
@@ -105,10 +99,10 @@ public class Arcade_GameController extends StateMachine<Game> implements GameCon
         HUNTING {
             @Override
             public void onEnter(Game game) {
-                // "GAME_OVER" (demo level) and  "TEST LEVEL XX" (level test) messages keep being shown
-                game.level().optMessage().filter(message -> message.type() == MessageType.READY).ifPresent(_ -> {
-                    game.clearLevelMessage();
-                });
+                // "GAME_OVER" (demo level) and  "TEST LEVEL XX" messages are not cleared
+                game.level().optMessage()
+                    .filter(message -> message.type() == MessageType.READY)
+                    .ifPresent(_ -> game.clearLevelMessage());
                 game.startHunting(game.level());
             }
 
