@@ -489,7 +489,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
         level.setCutSceneNumber(cutSceneNumberAfterLevel(levelNumber));
         score().setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
-        level.worldMap().terrainLayer().optHouse().ifPresent(gateKeeper::setHouse); //TODO what if no house exists?
 
         levelProperty().set(level);
         publishGameEvent(GameEvent.Type.LEVEL_CREATED);
@@ -506,7 +505,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
         demoLevelSteering.init();
         score().setLevelNumber(1);
         gateKeeper.setLevelNumber(1);
-        level.worldMap().terrainLayer().optHouse().ifPresent(gateKeeper::setHouse); //TODO what if no house exists?
 
         levelProperty().set(level);
         publishGameEvent(GameEvent.Type.LEVEL_CREATED);
@@ -528,7 +526,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
     @Override
     public void updateHunting(GameLevel level) {
         doHuntingStep(level);
-        gateKeeper.unlockGhosts(level());
+        gateKeeper.unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());
     }
 
     @Override
@@ -596,7 +594,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
         requireNonNull(tile);
 
         scorePoints(PELLET_VALUE);
-        gateKeeper.registerFoodEaten(level);
+        gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
     }
 
     @Override
@@ -605,7 +603,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
         requireNonNull(tile);
 
         scorePoints(ENERGIZER_VALUE);
-        gateKeeper.registerFoodEaten(level);
+        gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
 
         if (!isLevelCompleted()) {
             onEnergizerEaten(level);

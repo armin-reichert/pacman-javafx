@@ -7,9 +7,11 @@ package de.amr.pacmanfx.model;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
+import de.amr.pacmanfx.model.actors.Pac;
 import org.tinylog.Logger;
 
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
@@ -25,27 +27,34 @@ import static java.util.Objects.requireNonNull;
  * </p>
  * <p>
  * Whenever a level is completed or a life is lost, the ghosts are returned to their starting positions in and around
- * the ghost house before play continues—Blinky is always located just above and outside, while the other three are
+ * the ghost house before play continues — Blinky is always located just above and outside, while the other three are
  * placed inside: Inky on the left, Pinky in the middle, and Clyde on the right.
+ * <br/>
  * The pink door on top is used by the ghosts to enter or exit the house. Once a ghost leaves, however, it cannot
- * reenter unless it is first captured by Pac-Man—then the disembodied eyes can return home to be revived.
+ * reenter unless it is first captured by Pac-Man — then the disembodied eyes can return home to be revived.
+ * <br/>
  * Since Blinky is already on the outside after a level is completed or a life is lost, the only time he can get
  * inside the ghost house is after Pac-Man captures him, and he immediately turns around to leave once revived.
  * That's about all there is to know about Blinky's behavior in terms of the ghost house, but determining when the
  * other three ghosts leave home is an involved process based on several variables and conditions.
- * The rest of this section will deal with them exclusively. Accordingly, any mention of "the ghosts" below refers t
- * o Pinky, Inky, and Clyde, but not Blinky.
+ * <br/>
+ * The rest of this section will deal with them exclusively. Accordingly, any mention of "the ghosts" below refers to
+ * Pinky, Inky, and Clyde, but not Blinky.
  * </p>
  * <p>
  * The first control used to evaluate when the ghosts leave home is a personal counter each ghost retains for
  * tracking the number of dots Pac-Man eats. Each ghost's "dot counter" is reset to zero when a level begins and can
  * only be active when inside the ghost house, but only one ghost's counter can be active at any given time regardless
- * of how many ghosts are inside. The order of preference for choosing which ghost's counter to activate is:
+ * of how many ghosts are inside.
+ * <br/>
+ * The order of preference for choosing which ghost's counter to activate is:
  * Pinky, then Inky, and then Clyde. For every dot Pac-Man eats, the preferred ghost in the house (if any) gets its
- * dot counter increased by one. Each ghost also has a "dot limit" associated with his counter, per level.
- * If the preferred ghost reaches or exceeds his dot limit, it immediately exits the house and its dot counter is
- * deactivated (but not reset). The most-preferred ghost still waiting inside the house (if any) activates its timer
- * at this point and begins counting dots.
+ * dot counter increased by one.
+ * <br/>
+ * Each ghost also has a "dot limit" associated with his counter, per level. If the preferred ghost reaches or exceeds
+ * his dot limit, it immediately exits the house and its dot counter is deactivated (but not reset).
+ * The most-preferred ghost still waiting inside the house (if any) activates its timer at this point and begins
+ * counting dots.
  * </p>
  * <p>
  * Pinky's dot limit is always set to zero, causing him to leave home immediately when every level begins.
@@ -98,135 +107,132 @@ import static java.util.Objects.requireNonNull;
  * so often to reset it.
  * </p>
  * </pre>
- *
- * @author Armin Reichert
  */
 public class GateKeeper {
     private static final byte NO_LIMIT = -1;
     private static final byte[] GLOBAL_LIMITS = new byte[] {NO_LIMIT, 7, 17, NO_LIMIT};
 
     private final Game game;
-    private House house;
-    private BiConsumer<GameLevel, Ghost> ghostReleasedAction =
-        (gameLevel, ghost) -> Logger.info("Game Level #{}: {} released", gameLevel.number(), ghost.name());
+
+    private BiConsumer<GameLevel, Ghost> onGhostReleased =
+        (level, ghost) -> Logger.info("Game Level #{}: {} released", level.number(), ghost.name());
     
-    private final byte[] limitsByGhost = new byte[4];
+    private final byte[] ghostLimits = new byte[4];
     private int          pacStarvingLimit;
-    private final int[]  countersByGhost = new int[4];
-    private int          globalCounter;
+    private final int[] ghostCounters = new int[4];
+    private int globalCounterValue;
     private boolean      globalCounterEnabled;
 
     public GateKeeper(Game game) {
         this.game = requireNonNull(game);
     }
     
-    public void setHouse(House house) {
-        this.house = house;
-    }
-
-    public void setOnGhostReleased(BiConsumer<GameLevel, Ghost> ghostReleasedAction) {
-        this.ghostReleasedAction = ghostReleasedAction;
+    public void setOnGhostReleased(BiConsumer<GameLevel, Ghost> handler) {
+        this.onGhostReleased = handler;
     }
 
     public void reset() {
-        Arrays.fill(limitsByGhost, (byte)0);
         pacStarvingLimit = 0;
-        Arrays.fill(countersByGhost, 0);
-        globalCounter = 0;
+        Arrays.fill(ghostLimits, (byte) 0);
+        Arrays.fill(ghostCounters, 0);
+        globalCounterValue = 0;
         globalCounterEnabled = false;
     }
 
     public void setLevelNumber(int levelNumber) {
-        Arrays.fill(limitsByGhost, (byte) 0);
-        if (levelNumber == 1) {
-            limitsByGhost[CYAN_GHOST_BASHFUL]   = 30;
-            limitsByGhost[ORANGE_GHOST_POKEY] = 60;
-        } else if (levelNumber == 2) {
-            limitsByGhost[ORANGE_GHOST_POKEY] = 50;
-        }
         pacStarvingLimit = levelNumber < 5 ? 240 : 180; // 4 sec : 3 sec
-        Arrays.fill(countersByGhost, 0);
-        globalCounter = 0;
+        Arrays.fill(ghostLimits, (byte) 0);
+        if (levelNumber == 1) {
+            ghostLimits[CYAN_GHOST_BASHFUL] = 30;
+            ghostLimits[ORANGE_GHOST_POKEY] = 60;
+        } else if (levelNumber == 2) {
+            ghostLimits[ORANGE_GHOST_POKEY] = 50;
+        }
+        Arrays.fill(ghostCounters, 0);
+        globalCounterValue = 0;
         globalCounterEnabled = false;
     }
 
     /**
-     * @param gameLevel the game level
+     * @param level the game level
      * @param prisoner the ghost to possibly get released
-     * @return description why ghost has been released or {@code null} if ghost is not released
+     * @return description why ghost has been released or {@link Optional#empty()} if ghost is not released
      */
-    public String checkReleaseOf(GameLevel gameLevel, Ghost prisoner) {
-        byte personality = prisoner.personality();
+    private Optional<String> checkReleaseOfGhost(GameLevel level, Ghost prisoner) {
+        final byte personality = prisoner.personality();
         if (personality == RED_GHOST_SHADOW) {
-            return "Red ghost gets released unconditionally";
+            return Optional.of("Red ghost gets released unconditionally");
         }
         // check individual dot counter first (if enabled)
-        if (!globalCounterEnabled && countersByGhost[personality] >= limitsByGhost[personality]) {
-            return String.format("%s's individual dot counter reached limit (%d)", prisoner.name(), limitsByGhost[personality]);
+        if (!globalCounterEnabled && ghostCounters[personality] >= ghostLimits[personality]) {
+            return Optional.of(String.format("%s's individual dot counter reached limit (%d)", prisoner.name(), ghostLimits[personality]));
         }
         // check global dot counter
-        if (globalCounterEnabled && GLOBAL_LIMITS[personality] != NO_LIMIT && globalCounter >= GLOBAL_LIMITS[personality]) {
-            return String.format("Global dot counter reached limit (%d)", GLOBAL_LIMITS[personality]);
+        if (globalCounterEnabled && GLOBAL_LIMITS[personality] != NO_LIMIT && globalCounterValue >= GLOBAL_LIMITS[personality]) {
+            return Optional.of(String.format("Global dot counter reached limit (%d)", GLOBAL_LIMITS[personality]));
         }
         // check Pac-Man starving ticks
-        if (gameLevel.pac().starvingTicks() >= pacStarvingLimit) {
-            gameLevel.pac().endStarving();
-            return String.format("%s reached starving limit (%d ticks)", gameLevel.pac().name(), pacStarvingLimit);
+        final Pac pac = level.pac();
+        if (pac.starvingTicks() >= pacStarvingLimit) {
+            pac.endStarving();
+            return Optional.of(String.format("%s reached starving limit (%d ticks)", pac.name(), pacStarvingLimit));
         }
-        return null;
+        return Optional.empty();
     }
 
     public void resetCounterAndSetEnabled(boolean enabled) {
-        globalCounter = 0;
+        globalCounterValue = 0;
         globalCounterEnabled = enabled;
-        Logger.info("Global dot counter set to 0 and {}", enabled ? "enabled" : "disabled");
+        Logger.info("Global dot counter set to {} and {}", globalCounterValue, enabled ? "enabled" : "disabled");
     }
 
-    public void registerFoodEaten(GameLevel gameLevel) {
+    public void registerFoodEaten(GameLevel level, House house) {
+        requireNonNull(level);
+        requireNonNull(house);
         if (globalCounterEnabled) {
-            if (gameLevel.ghost(ORANGE_GHOST_POKEY).inAnyOfStates(GhostState.LOCKED) && globalCounter == 32) {
-                Logger.info("{} inside house when global counter reached 32", gameLevel.ghost(ORANGE_GHOST_POKEY).name());
+            if (level.ghost(ORANGE_GHOST_POKEY).state() == GhostState.LOCKED && globalCounterValue == 32) {
+                Logger.info("{} inside house when global counter reached {}",
+                    level.ghost(ORANGE_GHOST_POKEY).name(), globalCounterValue);
                 resetCounterAndSetEnabled(false);
             } else {
-                globalCounter++;
-                Logger.trace("Global dot counter = {}", globalCounter);
+                globalCounterValue++;
+                Logger.trace("Global dot counter = {}", globalCounterValue);
             }
         } else {
-            requireNonNull(house);
-            gameLevel.ghosts(GhostState.LOCKED).filter(house::isVisitedBy).findFirst().ifPresent(ghost -> {
-                countersByGhost[ghost.personality()]++;
-                Logger.trace("{} dot counter = {}", ghost.name(), countersByGhost[ghost.personality()]);
+            level.ghosts(GhostState.LOCKED).filter(house::isVisitedBy).findFirst().ifPresent(ghost -> {
+                ghostCounters[ghost.personality()]++;
+                Logger.trace("{} dot counter = {}", ghost.name(), ghostCounters[ghost.personality()]);
             });
         }
     }
 
-    public void unlockGhosts(GameLevel gameLevel) {
-        requireNonNull(house);
-        Ghost blinky = gameLevel.ghost(RED_GHOST_SHADOW);
-        if (blinky.inAnyOfStates(GhostState.LOCKED)) {
+    public void unlockGhostIfPossible(GameLevel level, House house) {
+        requireNonNull(level);
+        final Ghost blinky = level.ghost(RED_GHOST_SHADOW);
+        if (blinky.state() == GhostState.LOCKED) {
             if (house.isVisitedBy(blinky)) {
+                // Leave house immediately again after being eaten
                 blinky.setMoveDir(Direction.UP);
                 blinky.setWishDir(Direction.UP);
                 blinky.setState(GhostState.LEAVING_HOUSE);
             } else {
+                // Start hunting towards west direction
                 blinky.setMoveDir(LEFT);
                 blinky.setWishDir(LEFT);
                 blinky.setState(GhostState.HUNTING_PAC);
             }
         }
         Stream.of(PINK_GHOST_SPEEDY, CYAN_GHOST_BASHFUL, ORANGE_GHOST_POKEY)
-            .map(gameLevel::ghost)
-            .filter(ghost -> ghost.inAnyOfStates(GhostState.LOCKED))
-            .findFirst().ifPresent(prisoner -> {
-                String reason = checkReleaseOf(gameLevel, prisoner);
-                if (reason != null) {
-                    game.simulationStep().releasedGhost = prisoner;
-                    game.simulationStep().ghostReleaseInfo = reason;
-                    prisoner.setMoveDir(Direction.UP);
-                    prisoner.setWishDir(Direction.UP);
-                    prisoner.setState(GhostState.LEAVING_HOUSE);
-                    ghostReleasedAction.accept(gameLevel, prisoner);
-                }
-        });
+            .map(level::ghost)
+            .filter(ghost -> ghost.state() == GhostState.LOCKED)
+            .findFirst()
+            .ifPresent(prisoner -> checkReleaseOfGhost(level, prisoner).ifPresent(reason -> {
+                game.simulationStep().ghostReleasedFromJailhouse = prisoner;
+                game.simulationStep().ghostReleaseInfo = reason;
+                prisoner.setMoveDir(Direction.UP);
+                prisoner.setWishDir(Direction.UP);
+                prisoner.setState(GhostState.LEAVING_HOUSE);
+                onGhostReleased.accept(level, prisoner);
+            }));
     }
 }

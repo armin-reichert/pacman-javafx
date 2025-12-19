@@ -27,7 +27,7 @@ public class SimulationStep {
     public Ghost      pacKiller;
     public boolean    extraLifeWon;
     public int        extraLifeScore;
-    public Ghost      releasedGhost;
+    public Ghost ghostReleasedFromJailhouse;
     public String     ghostReleaseInfo;
     public final List<Ghost> killedGhosts = new ArrayList<>();
     public List<Ghost> ghostsCollidingWithPac;
@@ -44,7 +44,7 @@ public class SimulationStep {
         pacKiller = null;
         extraLifeWon = false;
         extraLifeScore = 0;
-        releasedGhost = null;
+        ghostReleasedFromJailhouse = null;
         ghostReleaseInfo = null;
         killedGhosts.clear();
         ghostsCollidingWithPac = List.of();
@@ -79,8 +79,8 @@ public class SimulationStep {
         if (extraLifeWon) {
             messages.add("Extra life won for scoring %d points".formatted(extraLifeScore));
         }
-        if (releasedGhost != null) {
-            messages.add("%s unlocked: %s".formatted(releasedGhost.name(), ghostReleaseInfo));
+        if (ghostReleasedFromJailhouse != null) {
+            messages.add("%s unlocked: %s".formatted(ghostReleasedFromJailhouse.name(), ghostReleaseInfo));
         }
         for (Ghost ghost : killedGhosts) {
             messages.add("%s killed at %s".formatted(ghost.name(), ghost.tile()));

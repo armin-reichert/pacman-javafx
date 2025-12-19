@@ -96,7 +96,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         requireNonNull(tile);
 
         scorePoints(PELLET_VALUE);
-        gateKeeper.registerFoodEaten(level);
+        gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
         level.pac().setRestingTicks(RESTING_TICKS_PELLET);
         checkCruiseElroyActivation(level);
     }
@@ -107,7 +107,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         requireNonNull(tile);
 
         scorePoints(ENERGIZER_VALUE);
-        gateKeeper.registerFoodEaten(level);
+        gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
         level.pac().setRestingTicks(RESTING_TICKS_ENERGIZER);
         checkCruiseElroyActivation(level);
 
@@ -136,7 +136,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     public void updateHunting(GameLevel level) {
         doHuntingStep(level);
         if (gateKeeper != null) {
-            gateKeeper.unlockGhosts(level);
+            gateKeeper.unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());
         }
     }
 
@@ -312,7 +312,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         setLevelCounterEnabled(true);
         score().setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
-        level.worldMap().terrainLayer().optHouse().ifPresent(house -> gateKeeper.setHouse(house));
 
         levelProperty().set(level);
         publishGameEvent(GameEvent.Type.LEVEL_CREATED);
@@ -330,7 +329,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         setLevelCounterEnabled(true);
         score().setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
-        level.worldMap().terrainLayer().optHouse().ifPresent(house -> gateKeeper.setHouse(house));
 
         levelProperty().set(level);
         publishGameEvent(GameEvent.Type.LEVEL_CREATED);
