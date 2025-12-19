@@ -354,7 +354,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             // Now, actor animations are available
             level().showPacAndGhosts();
         }
-        else if (tick == Arcade_GameController.TICK_DEMO_LEVEL_START_HUNTING) {
+        else if (tick == Arcade_GameController.TICK_RESUME_HUNTING) {
             control().enterState(GameState.HUNTING);
         }
     }

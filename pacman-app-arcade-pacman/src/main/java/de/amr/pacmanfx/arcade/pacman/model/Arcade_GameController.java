@@ -16,7 +16,6 @@ public class Arcade_GameController extends StateMachine<Game> implements GameCon
     public static final short TICK_NEW_GAME_SHOW_GUYS = 60;
     public static final short TICK_NEW_GAME_START_HUNTING = 240;
     public static final short TICK_RESUME_HUNTING = 120;
-    public static final short TICK_DEMO_LEVEL_START_HUNTING = 120;
     public static final short TICK_EATING_GHOST_COMPLETE = 60;
     public static final short TICK_PACMAN_DYING_HIDE_GHOSTS = 60;
     public static final short TICK_PACMAN_DYING_START_ANIMATION = 90;
@@ -107,7 +106,7 @@ public class Arcade_GameController extends StateMachine<Game> implements GameCon
             @Override
             public void onEnter(Game game) {
                 // "GAME_OVER" (demo level) and  "TEST LEVEL XX" (level test) messages keep being shown
-                game.level().optMessage().filter(message -> message.type() == MessageType.READY).ifPresent(message -> {
+                game.level().optMessage().filter(message -> message.type() == MessageType.READY).ifPresent(_ -> {
                     game.clearLevelMessage();
                 });
                 game.startHunting(game.level());

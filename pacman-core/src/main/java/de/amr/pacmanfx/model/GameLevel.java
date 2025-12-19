@@ -7,10 +7,7 @@ package de.amr.pacmanfx.model;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.worldmap.WorldMap;
-import de.amr.pacmanfx.model.actors.Bonus;
-import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.GhostState;
-import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.actors.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -120,6 +117,7 @@ public class GameLevel {
             ghost.setMoveDir(dir);
             ghost.setWishDir(dir);
             ghost.setState(GhostState.LOCKED);
+            ghost.optAnimationManager().ifPresent(AnimationManager::stop);
         });
         blinking.setStartState(Pulse.State.ON); // Energizers are visible when ON
         blinking.reset();
