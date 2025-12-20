@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface LevelCounter {
     List<Byte> levelCounterSymbols();
-    boolean levelCounterEnabled();
+    boolean isLevelCounterEnabled();
     void setLevelCounterEnabled(boolean enabled);
     void clearLevelCounter();
     void updateLevelCounter(int levelNumber, byte symbol);

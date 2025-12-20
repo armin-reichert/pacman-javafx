@@ -23,6 +23,7 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static de.amr.pacmanfx.Globals.ORANGE_GHOST_POKEY;
@@ -248,7 +249,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel implements LevelCou
         if (levelNumber == 1) {
             levelCounterSymbols.clear();
         }
-        if (levelCounterEnabled()) {
+        if (isLevelCounterEnabled()) {
             levelCounterSymbols.add(symbol);
             if (levelCounterSymbols.size() > MAX_LEVEL_COUNTER_SYMBOLS) {
                 levelCounterSymbols.removeFirst();
@@ -258,16 +259,16 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel implements LevelCou
 
     @Override
     public void setLevelCounterEnabled(boolean enabled) {
-        this.levelCounterEnabled.set(enabled);
+        levelCounterEnabled.set(enabled);
     }
 
     @Override
-    public boolean levelCounterEnabled() {
-        return this.levelCounterEnabled.get();
+    public boolean isLevelCounterEnabled() {
+        return levelCounterEnabled.get();
     }
 
     @Override
     public List<Byte> levelCounterSymbols() {
-        return levelCounterSymbols;
+        return Collections.unmodifiableList(levelCounterSymbols);
     }
 }

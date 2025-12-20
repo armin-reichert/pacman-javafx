@@ -359,7 +359,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel implements LevelC
         if (levelNumber == 1) {
             levelCounterSymbols.clear();
         }
-        if (levelNumber < MAX_LEVEL_COUNTER_SYMBOLS && levelCounterEnabled()) {
+        if (levelNumber < MAX_LEVEL_COUNTER_SYMBOLS && isLevelCounterEnabled()) {
             levelCounterSymbols.add(symbol);
         }
     }
@@ -370,7 +370,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel implements LevelC
     }
 
     @Override
-    public boolean levelCounterEnabled() {
+    public boolean isLevelCounterEnabled() {
         return levelCounterEnabled.get();
     }
 

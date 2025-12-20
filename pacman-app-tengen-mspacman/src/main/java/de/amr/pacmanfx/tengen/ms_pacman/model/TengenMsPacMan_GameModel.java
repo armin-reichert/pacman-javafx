@@ -891,7 +891,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
         if (levelNumber == 1) {
             clearLevelCounter();
         }
-        if (levelCounterEnabled()) {
+        if (isLevelCounterEnabled()) {
             levelCounterSymbols.add(symbol);
             if (levelCounterSymbols.size() > LEVEL_COUNTER_MAX_SIZE) {
                 levelCounterSymbols.removeFirst();
@@ -905,7 +905,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
     }
 
     @Override
-    public boolean levelCounterEnabled() {
+    public boolean isLevelCounterEnabled() {
         return levelCounterEnabledProperty().get();
     }
 
