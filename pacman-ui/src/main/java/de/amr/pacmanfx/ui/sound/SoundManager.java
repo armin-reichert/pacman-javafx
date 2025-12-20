@@ -207,34 +207,21 @@ public class SoundManager implements Disposable {
         }
     }
 
-    public boolean isStopped(Object id) {
-        requireNonNull(id);
-        Object value = map.get(id);
-        if (value instanceof MediaPlayer mediaPlayer) {
-            return mediaPlayer.getStatus() ==  MediaPlayer.Status.STOPPED;
-        }
-        return false;
-    }
-
     public void stopAll() {
+        stopSiren();
+        stopVoice();
         allOfType(MediaPlayer.class).forEach(MediaPlayer::stop);
-        if (sirenPlayer != null) {
-            stopSiren();
-        }
-        if (voicePlayer != null) {
-            stopVoice();
-        }
         Logger.debug("All sounds (media players, siren, voice) stopped");
     }
 
-    public void playVoiceAfterSec(float delaySeconds, SoundID id) {
-        requireNonNull(id);
-        if (!id.isVoiceID()) {
-            Logger.error("Sound ID '{}' is no voice ID", id);
+    public void playVoiceAfterSec(float delaySeconds, SoundID soundID) {
+        requireNonNull(soundID);
+        if (!soundID.isVoiceID()) {
+            Logger.error("Sound ID '{}' is no voice ID", soundID);
             return;
         }
-        Media voiceMedia = valueOfType(id, Media.class);
-        voicePlayer = new MediaPlayer(voiceMedia);
+        final Media voice = valueOfType(soundID, Media.class);
+        voicePlayer = new MediaPlayer(voice);
         if (delaySeconds > 0) {
             voicePlayer.setOnReady(() -> {
                 voiceDelay.stop();
@@ -249,11 +236,12 @@ public class SoundManager implements Disposable {
     }
 
     public void stopVoice() {
+        voiceDelay.stop();
         if (voicePlayer == null) {
             return;
         }
         if (voicePlayer.getStatus() == MediaPlayer.Status.PLAYING) {
-            var fade = new Timeline(
+            final var fade = new Timeline(
                 new KeyFrame(Duration.seconds(0), new KeyValue(
                     voicePlayer.volumeProperty(), voicePlayer.getVolume())),
                 new KeyFrame(Duration.seconds(VOICE_FADE_OUT_SECONDS), new KeyValue(
@@ -286,18 +274,16 @@ public class SoundManager implements Disposable {
 
     public void pauseSiren() {
         if (sirenPlayer != null) {
-            Logger.info("Paused siren with ID '{}'", currentSirenID);
             sirenPlayer.pause();
         }
-        else Logger.error("Siren player not yet created");
+        else Logger.error("Cannot pause siren: player not yet created");
     }
 
     public void stopSiren() {
         if (sirenPlayer != null) {
-            Logger.trace("Stop siren with ID '{}'", currentSirenID);
             sirenPlayer.stop();
         }
-        else Logger.error("Siren player not yet created");
+        else Logger.error("Cannot stop siren: player not yet created");
     }
 
     // private stuff
@@ -324,8 +310,8 @@ public class SoundManager implements Disposable {
         sirenPlayer.setCycleCount(MediaPlayer.INDEFINITE);
         sirenPlayer.setVolume(1);
         sirenPlayer.muteProperty().bind(Bindings.createBooleanBinding(
-                () -> mutedProperty().get() || !enabledProperty().get(),
-                mutedProperty(), enabledProperty()
+            () -> mutedProperty().get() || !enabledProperty().get(),
+            mutedProperty(), enabledProperty()
         ));
         Logger.info("Siren player created, siren ID='{}'", sirenID);
     }
