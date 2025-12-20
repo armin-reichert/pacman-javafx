@@ -239,8 +239,10 @@ public class SoundManager implements Disposable {
                     voicePlayer.volumeProperty(), 0))
             );
             fade.setOnFinished(_ -> {
-                voicePlayer.stop();
-                voicePlayer.setVolume(1);
+                if (voicePlayer != null) {
+                    voicePlayer.stop();
+                    voicePlayer.setVolume(1);
+                }
             });
             fade.play();
         }
