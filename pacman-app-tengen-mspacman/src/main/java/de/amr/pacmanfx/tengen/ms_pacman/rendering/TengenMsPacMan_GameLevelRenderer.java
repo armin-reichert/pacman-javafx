@@ -185,11 +185,11 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
 
         // Now the actor sprites outside the house. Be careful not to over-paint nearby obstacle edges!
         final Vector2i pacTile = gameLevel.worldMap().terrainLayer()
-            .getTileProperty(DefaultWorldMapPropertyName.POS_PAC, Vector2i.of(14, 26));
+            .getTilePropertyOrDefault(DefaultWorldMapPropertyName.POS_PAC, Vector2i.of(14, 26));
         overPaintActorSprite(pacTile, margin);
 
         final Vector2i redGhostTile = gameLevel.worldMap().terrainLayer()
-            .getTileProperty(DefaultWorldMapPropertyName.POS_GHOST_1_RED, Vector2i.of(13, 14));
+            .getTilePropertyOrDefault(DefaultWorldMapPropertyName.POS_GHOST_1_RED, Vector2i.of(13, 14));
         overPaintActorSprite(redGhostTile, margin);
     }
 

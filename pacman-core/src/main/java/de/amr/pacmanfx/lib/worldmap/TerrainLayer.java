@@ -47,10 +47,10 @@ public class TerrainLayer extends WorldMapLayer {
         } else {
             pacStartPosition = halfTileRightOf(pacTile);
         }
-        scatterTiles[RED_GHOST_SHADOW]   = getTileProperty(POS_SCATTER_RED_GHOST,    Vector2i.of(0, numCols() - 3));
-        scatterTiles[PINK_GHOST_SPEEDY]  = getTileProperty(POS_SCATTER_PINK_GHOST,   Vector2i.of(0, 3));
-        scatterTiles[CYAN_GHOST_BASHFUL] = getTileProperty(POS_SCATTER_CYAN_GHOST,   Vector2i.of(numRows() - emptyRowsBelowMaze(), numCols() - 1));
-        scatterTiles[ORANGE_GHOST_POKEY] = getTileProperty(POS_SCATTER_ORANGE_GHOST, Vector2i.of(numRows() - emptyRowsBelowMaze(), 0));
+        scatterTiles[RED_GHOST_SHADOW]   = getTilePropertyOrDefault(POS_SCATTER_RED_GHOST,    Vector2i.of(0, numCols() - 3));
+        scatterTiles[PINK_GHOST_SPEEDY]  = getTilePropertyOrDefault(POS_SCATTER_PINK_GHOST,   Vector2i.of(0, 3));
+        scatterTiles[CYAN_GHOST_BASHFUL] = getTilePropertyOrDefault(POS_SCATTER_CYAN_GHOST,   Vector2i.of(numRows() - emptyRowsBelowMaze(), numCols() - 1));
+        scatterTiles[ORANGE_GHOST_POKEY] = getTilePropertyOrDefault(POS_SCATTER_ORANGE_GHOST, Vector2i.of(numRows() - emptyRowsBelowMaze(), 0));
     }
 
     public Vector2f pacStartPosition() {
@@ -186,7 +186,7 @@ public class TerrainLayer extends WorldMapLayer {
      * @param defaultTile tile returned if property map does not contain property name (can be null)
      * @return tile value of property in terrain layer or default value
      */
-    public Vector2i getTileProperty(String propertyName, Vector2i defaultTile) {
+    public Vector2i getTilePropertyOrDefault(String propertyName, Vector2i defaultTile) {
         requireNonNull(propertyName);
         String value = propertyMap().get(propertyName);
         return value != null
@@ -199,6 +199,6 @@ public class TerrainLayer extends WorldMapLayer {
      * @return tile value of property in terrain layer or <code>null</code>
      */
     public Vector2i getTileProperty(String propertyName) {
-        return getTileProperty(propertyName, null);
+        return getTilePropertyOrDefault(propertyName, null);
     }
 }

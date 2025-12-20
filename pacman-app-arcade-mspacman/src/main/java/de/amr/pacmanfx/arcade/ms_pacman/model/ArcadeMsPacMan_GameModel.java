@@ -277,7 +277,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel implements LevelC
         final byte symbol = level.bonusSymbol(level.currentBonusIndex());
         final var bonus = new Bonus(symbol, bonusValue(symbol));
         if (terrain.horizontalPortals().isEmpty()) {
-            final Vector2i bonusTile = terrain.getTileProperty(DefaultWorldMapPropertyName.POS_BONUS, new Vector2i(13, 20));
+            final Vector2i bonusTile = terrain.getTilePropertyOrDefault(DefaultWorldMapPropertyName.POS_BONUS, new Vector2i(13, 20));
             bonus.setPosition(halfTileRightOf(bonusTile));
             bonus.setEdibleSeconds(randomFloat(9, 10));
         } else {

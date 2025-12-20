@@ -133,11 +133,14 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel implements LevelCou
         final WorldMap worldMap = mapSelector.selectWorldMap(levelNumber);
         final TerrainLayer terrain = worldMap.terrainLayer();
 
-        final ArcadeHouse house = new ArcadeHouse(ARCADE_MAP_HOUSE_MIN_TILE);
+        final Vector2i houseMinTile = terrain.getTilePropertyOrDefault(POS_HOUSE_MIN_TILE, ARCADE_MAP_HOUSE_MIN_TILE);
+        final ArcadeHouse house = new ArcadeHouse(houseMinTile);
         terrain.setHouse(house);
 
+        final AbstractHuntingTimer huntingTimer = createHuntingTimer();
         final int numFlashes = levelData(levelNumber).numFlashes();
-        final GameLevel level = new GameLevel(this, levelNumber, worldMap, createHuntingTimer(), numFlashes);
+
+        final GameLevel level = new GameLevel(this, levelNumber, worldMap, huntingTimer, numFlashes);
         level.setDemoLevel(demoLevel);
         level.setGameOverStateTicks(GAME_OVER_STATE_TICKS);
         level.setPacPowerSeconds(levelData(levelNumber).secPacPower());
@@ -213,7 +216,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel implements LevelCou
         final byte symbol = level.bonusSymbol(level.currentBonusIndex());
         final var bonus = new Bonus(symbol, bonusValue(symbol));
         final Vector2i bonusTile = level.worldMap().terrainLayer()
-            .getTileProperty(DefaultWorldMapPropertyName.POS_BONUS, DEFAULT_BONUS_TILE);
+            .getTilePropertyOrDefault(DefaultWorldMapPropertyName.POS_BONUS, DEFAULT_BONUS_TILE);
         bonus.setPosition(halfTileRightOf(bonusTile));
         bonus.setEdibleSeconds(randomFloat(9, 10));
         level.setBonus(bonus);
