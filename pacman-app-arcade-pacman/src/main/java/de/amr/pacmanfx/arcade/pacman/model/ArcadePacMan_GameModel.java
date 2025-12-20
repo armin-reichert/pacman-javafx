@@ -40,10 +40,9 @@ import static java.util.Objects.requireNonNull;
  * <p>There are however some differences to the original.
  *     <ul>
  *         <li>Only single player mode supported</li>
- *         <li>Attract mode (demo level) not identical to Arcade version because ghosts move randomly</li>
- *         <li>Pac-Man steering more comfortable because next direction can be selected before intersection is reached</li>
- *         <li>Cornering behavior is different</li>
- *         <li>Accuracy only about 90% (estimated) so patterns can not be used</li>
+ *         <li>Attract mode (demo level) not identical to Arcade version because frightened ghosts move randomly</li>
+ *         <li>Pac-Man steering more suitable for keyboard because next direction can be selected before intersection is reached</li>
+ *         <li>Cornering not implemented as in original game, just some slowdown for ghosts going around corners</li>
  *     </ul>
  * </p>
  *
@@ -52,9 +51,6 @@ import static java.util.Objects.requireNonNull;
 public class ArcadePacMan_GameModel extends Arcade_GameModel implements LevelCounter {
 
     public static final int MAX_LEVEL_COUNTER_SYMBOLS = 7;
-
-    // Note: level numbering starts with 1, first entry is not used
-    protected static final byte[] BONUS_SYMBOL_CODES_BY_LEVEL_NUMBER = { -1, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7 };
 
     private static final List<Vec2Byte> PAC_MAN_DEMO_LEVEL_ROUTE = List.of(
         vec2Byte(9, 26), vec2Byte(9, 29), vec2Byte(12,29), vec2Byte(12, 32), vec2Byte(26,32),
@@ -130,20 +126,25 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel implements LevelCou
 
     @Override
     public GameLevel createLevel(int levelNumber, boolean demoLevel) {
+        final LevelData levelData = levelData(levelNumber);
+
         final WorldMap worldMap = mapSelector.selectWorldMap(levelNumber);
         final TerrainLayer terrain = worldMap.terrainLayer();
 
         final Vector2i houseMinTile = terrain.getTilePropertyOrDefault(POS_HOUSE_MIN_TILE, ARCADE_MAP_HOUSE_MIN_TILE);
+        // Just in case, property is not set in terrain layer:
+        terrain.propertyMap().put(POS_HOUSE_MIN_TILE,  String.valueOf(houseMinTile));
+
         final ArcadeHouse house = new ArcadeHouse(houseMinTile);
         terrain.setHouse(house);
 
         final AbstractHuntingTimer huntingTimer = createHuntingTimer();
-        final int numFlashes = levelData(levelNumber).numFlashes();
+        final int numFlashes = levelData.numFlashes();
 
         final GameLevel level = new GameLevel(this, levelNumber, worldMap, huntingTimer, numFlashes);
         level.setDemoLevel(demoLevel);
         level.setGameOverStateTicks(GAME_OVER_STATE_TICKS);
-        level.setPacPowerSeconds(levelData(levelNumber).secPacPower());
+        level.setPacPowerSeconds(levelData.secPacPower());
         level.setPacPowerFadingSeconds(0.5f * numFlashes); //TODO correct?
 
         final PacMan pacMan = ArcadePacMan_ActorFactory.createPacMan();
@@ -174,9 +175,9 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel implements LevelCou
             .toList();
         level.ghosts().forEach(ghost -> ghost.setSpecialTerrainTiles(oneWayDownTiles));
 
-        // Each level has a single bonus symbol appearing twice during the level.
-        // From level 13 on, the same symbol (7, "key") appears.
-        byte symbol = BONUS_SYMBOL_CODES_BY_LEVEL_NUMBER[Math.min(levelNumber, 13)];
+        // Each level has a single bonus symbol appearing twice during the level. From level 13 on, the same symbol
+        // (code=7, "key") appears. Klingt komisch? Is aber so!
+        final byte symbol = bonusSymbol(Math.min(levelNumber, 13));
         level.setBonusSymbol(0, symbol);
         level.setBonusSymbol(1, symbol);
 
@@ -185,7 +186,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel implements LevelCou
         return level;
     }
 
-    private AbstractHuntingTimer createHuntingTimer() {
+    protected AbstractHuntingTimer createHuntingTimer() {
         final var huntingTimer = new ArcadePacMan_HuntingTimer();
         huntingTimer.phaseIndexProperty().addListener((_, _, newPhaseIndex) -> {
             optGameLevel().ifPresent(level -> {
@@ -234,6 +235,20 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel implements LevelCou
             case 6 -> 3000; // bell
             case 7 -> 5000; // key
             default -> throw new IllegalArgumentException("Invalid symbol code: " + symbolCode);
+        };
+    }
+
+    protected byte bonusSymbol(int levelNumber) {
+        return switch (levelNumber) {
+            case 1 -> 0;      // cherries
+            case 2 -> 1;      // strawberry
+            case 3, 4 -> 2;   // peach
+            case 5, 6 -> 3;   // apple
+            case 7, 8 -> 4;   // grapes
+            case 9, 10 -> 5;  // galaxian
+            case 11, 12 -> 6; // bell
+            case 13 -> 7;     // key
+            default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         };
     }
 
