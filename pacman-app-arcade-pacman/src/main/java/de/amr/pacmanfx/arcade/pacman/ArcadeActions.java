@@ -13,6 +13,7 @@ import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 
 import static de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController.GameState.INTRO;
+import static de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController.GameState.SETTING_OPTIONS_FOR_START;
 
 public interface ArcadeActions {
 
@@ -24,14 +25,16 @@ public interface ArcadeActions {
         public void execute(GameUI ui) {
             final Game game = ui.context().currentGame();
             final CoinMechanism coinMechanism = ui.context().coinMechanism();
-            final SoundManager soundManager = ui.currentConfig().soundManager();
             if (coinMechanism.numCoins() < CoinMechanism.MAX_COINS) {
+                final SoundManager soundManager = ui.currentConfig().soundManager();
                 coinMechanism.insertCoin();
                 soundManager.setEnabled(true);
                 soundManager.stopVoice();
+                if (game.control().state() != SETTING_OPTIONS_FOR_START) {
+                    game.control().enterState(SETTING_OPTIONS_FOR_START);
+                }
                 game.publishGameEvent(GameEvent.Type.CREDIT_ADDED);
             }
-            game.control().enterState(GameState.SETTING_OPTIONS_FOR_START);
         }
 
         @Override
@@ -40,8 +43,8 @@ public interface ArcadeActions {
             if (game.isPlaying()) {
                 return false;
             }
-            return game.control().state() == GameState.SETTING_OPTIONS_FOR_START
-                || game.control().state() == GameState.INTRO
+            return game.control().state() == SETTING_OPTIONS_FOR_START
+                || game.control().state() == INTRO
                 || game.optGameLevel().isPresent() && game.level().isDemoLevel()
                 || ui.context().coinMechanism().isEmpty();
         }
@@ -58,7 +61,7 @@ public interface ArcadeActions {
         public boolean isEnabled(GameUI ui) {
             final Game game = ui.context().currentGame();
             return ui.context().coinMechanism().numCoins() > 0
-                && (game.control().state() == INTRO || game.control().state() == GameState.SETTING_OPTIONS_FOR_START)
+                && (game.control().state() == INTRO || game.control().state() == SETTING_OPTIONS_FOR_START)
                 && game.canStartNewGame();
         }
     };

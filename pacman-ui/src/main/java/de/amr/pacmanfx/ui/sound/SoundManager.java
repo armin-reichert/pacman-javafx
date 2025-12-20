@@ -187,15 +187,6 @@ public class SoundManager implements Disposable {
         }
     }
 
-    public boolean isPaused(Object id) {
-        requireNonNull(id);
-        Object value = map.get(id);
-        if (value instanceof MediaPlayer mediaPlayer) {
-            return mediaPlayer.getStatus() == MediaPlayer.Status.PAUSED;
-        }
-        return false;
-    }
-
     public void stop(Object id)  {
         requireNonNull(id);
         Object value = map.get(id);
@@ -276,14 +267,14 @@ public class SoundManager implements Disposable {
         if (sirenPlayer != null) {
             sirenPlayer.pause();
         }
-        else Logger.error("Cannot pause siren: player not yet created");
+        else Logger.info("Cannot pause siren: player not yet created");
     }
 
     public void stopSiren() {
         if (sirenPlayer != null) {
             sirenPlayer.stop();
         }
-        else Logger.error("Cannot stop siren: player not yet created");
+        else Logger.info("Cannot stop siren: player not yet created");
     }
 
     // private stuff
