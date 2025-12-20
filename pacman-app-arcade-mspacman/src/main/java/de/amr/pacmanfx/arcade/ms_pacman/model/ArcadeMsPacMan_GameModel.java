@@ -117,17 +117,25 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel implements LevelC
 
     @Override
     public GameLevel createLevel(int levelNumber, boolean demoLevel) {
+        final LevelData levelData = levelData(levelNumber);
+
         final WorldMap worldMap = mapSelector.selectWorldMap(levelNumber);
         final TerrainLayer terrain = worldMap.terrainLayer();
 
-        final var house = new ArcadeHouse(ARCADE_MAP_HOUSE_MIN_TILE);
+        final Vector2i houseMinTile = terrain.getTilePropertyOrDefault(POS_HOUSE_MIN_TILE, ARCADE_MAP_HOUSE_MIN_TILE);
+        // Just in case, property was not set in terrain layer
+        terrain.propertyMap().put(POS_HOUSE_MIN_TILE,  houseMinTile.toString());
+
+        final var house = new ArcadeHouse(houseMinTile);
         terrain.setHouse(house);
 
+        final AbstractHuntingTimer huntingTimer = createHuntingTimer();
         final int numFlashes = levelData(levelNumber).numFlashes();
-        final var level = new GameLevel(this, levelNumber, worldMap, createHuntingTimer(), numFlashes);
+
+        final var level = new GameLevel(this, levelNumber, worldMap, huntingTimer, numFlashes);
         level.setDemoLevel(demoLevel);
         level.setGameOverStateTicks(GAME_OVER_STATE_TICKS);
-        level.setPacPowerSeconds(levelData(levelNumber).secPacPower());
+        level.setPacPowerSeconds(levelData.secPacPower());
         level.setPacPowerFadingSeconds(0.5f * numFlashes); //TODO correct?
 
         final MsPacMan msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
