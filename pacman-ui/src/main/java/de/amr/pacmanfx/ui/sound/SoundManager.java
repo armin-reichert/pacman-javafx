@@ -217,7 +217,9 @@ public class SoundManager implements Disposable {
             voicePlayer.setOnReady(() -> {
                 voiceDelay.stop();
                 voiceDelay.setDuration(Duration.seconds(delaySeconds));
-                voiceDelay.setOnFinished(e -> voicePlayer.play());
+                voiceDelay.setOnFinished(_ -> {
+                    if (voicePlayer != null) voicePlayer.play();
+                });
                 voiceDelay.play();
             });
         }
