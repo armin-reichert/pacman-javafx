@@ -13,12 +13,12 @@ import de.amr.pacmanfx.ui.api.GameUI;
 
 import static de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController.GameState.INTRO;
 
-public final class ArcadeActions {
+public interface ArcadeActions {
 
     /**
      * Adds credit (simulates insertion of a coin) and switches the game state accordingly.
      */
-    public static final GameAction ACTION_INSERT_COIN = new GameAction("INSERT_COIN") {
+    GameAction ACTION_INSERT_COIN = new GameAction("INSERT_COIN") {
         @Override
         public void execute(GameUI ui) {
             final Game game = ui.context().currentGame();
@@ -44,7 +44,7 @@ public final class ArcadeActions {
         }
     };
 
-    public static final GameAction ACTION_START_GAME = new GameAction("START_GAME") {
+    GameAction ACTION_START_GAME = new GameAction("START_GAME") {
         @Override
         public void execute(GameUI ui) {
             ui.currentConfig().soundManager().stopVoice();
