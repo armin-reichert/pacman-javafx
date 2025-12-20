@@ -14,6 +14,7 @@ import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.steering.Steering;
 import org.tinylog.Logger;
 
+import java.io.File;
 import java.util.Optional;
 import java.util.Set;
 
@@ -71,8 +72,8 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     protected int bonus1PelletsEaten;
     protected int bonus2PelletsEaten;
 
-    protected Arcade_GameModel(CoinMechanism coinMechanism) {
-        super(new Arcade_GameController());
+    protected Arcade_GameModel(CoinMechanism coinMechanism, File highscoreFile) {
+        super(highscoreFile);
         this.coinMechanism = requireNonNull(coinMechanism);
 
         pelletPoints = 10;
@@ -82,6 +83,8 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         restingTicksAfterEnergizerEaten = 3;
         extraLifeScores = Set.of(10_000);
         setCollisionStrategy(CollisionStrategy.SAME_TILE);
+
+        setGameControl(new Arcade_GameController());
     }
 
     public abstract LevelData levelData(int levelNumber);

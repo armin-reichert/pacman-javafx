@@ -75,10 +75,10 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel implements LevelC
     }
 
     public ArcadeMsPacMan_GameModel(CoinMechanism coinMechanism, MapSelector mapSelector, File highScoreFile) {
-        super(coinMechanism);
+        super(coinMechanism, highScoreFile);
+
         this.hud = new Arcade_HUD(coinMechanism);
         this.mapSelector = requireNonNull(mapSelector);
-        this.highScoreFile = requireNonNull(highScoreFile);
 
         bonus1PelletsEaten = 64;
         bonus2PelletsEaten = 176;

@@ -87,10 +87,9 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel implements LevelCou
      * @param highScoreFile file where high score is stored
      */
     public ArcadePacMan_GameModel(CoinMechanism coinMechanism, MapSelector mapSelector, File highScoreFile) {
-        super(coinMechanism);
+        super(coinMechanism, highScoreFile);
 
         this.mapSelector = requireNonNull(mapSelector);
-        this.highScoreFile = requireNonNull(highScoreFile);
         this.hud = new Arcade_HUD(coinMechanism);
 
         bonus1PelletsEaten = 70;

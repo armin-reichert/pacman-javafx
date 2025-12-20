@@ -35,6 +35,8 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class AbstractGameModel implements Game {
 
+    private static final DateTimeFormatter SCORE_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
     public static final CollisionStrategy DEFAULT_COLLISION_STRATEGY = CollisionStrategy.SAME_TILE;
 
     private final BooleanProperty cheatUsed = new SimpleBooleanProperty(false);
@@ -43,11 +45,11 @@ public abstract class AbstractGameModel implements Game {
 
     private final BooleanProperty cutScenesEnabled = new SimpleBooleanProperty(true);
 
-    private final ObjectProperty<GameLevel> level = new SimpleObjectProperty<>();
-
     private final BooleanProperty immune = new SimpleBooleanProperty(false);
 
     private final IntegerProperty initialLifeCount = new SimpleIntegerProperty(3);
+
+    private final ObjectProperty<GameLevel> level = new SimpleObjectProperty<>();
 
     private final IntegerProperty lifeCount = new SimpleIntegerProperty(0);
 
@@ -55,31 +57,23 @@ public abstract class AbstractGameModel implements Game {
 
     private final BooleanProperty usingAutopilot = new SimpleBooleanProperty(false);
 
-    protected final GameControl gameControl;
+    protected GameControl gameControl;
 
     protected final SimulationStep simStep = new SimulationStep();
 
     protected int pelletPoints;
     protected int energizerPoints;
 
-    protected AbstractGameModel(GameControl gameControl) {
-        this.gameControl = requireNonNull(gameControl);
-        gameControl.stateMachine().setContext(this);
-        gameControl.stateMachine().addStateChangeListener(
-            (oldState, newState) -> publishGameEvent(new GameStateChangeEvent(this, oldState, newState)));
+    protected final Score score;
+    protected final Score highScore;
+    protected Set<Integer> extraLifeScores;
 
-        cheatUsedProperty().addListener((_, _, cheated) -> {
-            if (cheated && highScore.isEnabled()) {
-                highScore.setEnabled(false);
-            }
-        });
+    protected final File highScoreFile;
 
-        lifeCountProperty().addListener((_, _, nv) -> {
-            if (nv.intValue() < 0) {
-                throw new IllegalArgumentException("Life count cannot be set to negative value " + nv.intValue());
-            }
-        });
+    protected AbstractGameModel(File highScoreFile) {
+        this.highScoreFile = requireNonNull(highScoreFile);
 
+        score = new Score();
         score.pointsProperty().addListener((_, oldScore, newScore) -> {
             // has extra life score line been crossed?
             for (int scoreLine : extraLifeScores) {
@@ -94,6 +88,28 @@ public abstract class AbstractGameModel implements Game {
                 publishGameEvent(new GameEvent(this, GameEvent.Type.SPECIAL_SCORE_REACHED));
             }
         });
+
+        highScore = new Score();
+        extraLifeScores = Set.of();
+
+        cheatUsedProperty().addListener((_, _, cheated) -> {
+            if (cheated && highScore.isEnabled()) {
+                highScore.setEnabled(false);
+            }
+        });
+
+        lifeCountProperty().addListener((_, _, nv) -> {
+            if (nv.intValue() < 0) {
+                throw new IllegalArgumentException("Life count cannot be set to negative value " + nv.intValue());
+            }
+        });
+    }
+
+    public void setGameControl(GameControl gameControl) {
+        this.gameControl = requireNonNull(gameControl);
+        gameControl.stateMachine().setContext(this);
+        gameControl.stateMachine().addStateChangeListener(
+            (oldState, newState) -> publishGameEvent(new GameStateChangeEvent(this, oldState, newState)));
     }
 
     public ObjectProperty<GameLevel> levelProperty() {
@@ -530,13 +546,6 @@ public abstract class AbstractGameModel implements Game {
     }
 
     // ScoreManager
-
-    private static final DateTimeFormatter SCORE_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
-    protected final Score score = new Score();
-    protected final Score highScore = new Score();
-    protected File highScoreFile;
-    protected Set<Integer> extraLifeScores = Set.of();
 
     protected void scorePoints(GameLevel level, int points) {
         if (!score.isEnabled()) {
