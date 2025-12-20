@@ -7,57 +7,32 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_CutScene3;
 import de.amr.pacmanfx.ui._2d.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
-import de.amr.pacmanfx.ui.api.GameUI_Config;
-import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
-import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static java.util.Objects.requireNonNull;
 
-public class ArcadePacMan_CutScene3_Renderer extends GameScene2D_Renderer implements SpriteRenderer {
-
-    private final ArcadePacMan_SpriteSheet spriteSheet;
-    private final ActorRenderer actorRenderer;
+public class ArcadePacMan_CutScene3_Renderer extends ArcadePacMan_CutScene_Renderer {
 
     public ArcadePacMan_CutScene3_Renderer(GameScene2D scene, Canvas canvas, ArcadePacMan_SpriteSheet spriteSheet) {
-        super(canvas);
-        this.spriteSheet = requireNonNull(spriteSheet);
-
-        final GameUI_Config uiConfig = scene.ui().currentConfig();
-
-        actorRenderer = adaptRenderer(
-            uiConfig.createActorRenderer(canvas), scene);
-
+        super(scene, canvas, spriteSheet);
         debugRenderer = adaptRenderer(new BaseDebugInfoRenderer(scene.ui(), canvas) {
             @Override
             public void draw(GameScene2D scene) {
-                ArcadePacMan_CutScene3 cutScene = (ArcadePacMan_CutScene3) scene;
                 super.draw(scene);
-                String text = cutScene.frame() < ArcadePacMan_CutScene3.ANIMATION_START
-                    ? String.format("Wait %d", ArcadePacMan_CutScene3.ANIMATION_START - cutScene.frame())
-                    : String.format("Frame %d", cutScene.frame());
-                fillText(text, debugTextFill, debugTextFont, TS(1), TS(5));
+                if (scene instanceof ArcadePacMan_CutScene3 cutScene3) {
+                    String text = cutScene3.frame() < ArcadePacMan_CutScene3.ANIMATION_START
+                        ? String.format("Wait %d", ArcadePacMan_CutScene3.ANIMATION_START - cutScene3.frame())
+                        : String.format("Frame %d", cutScene3.frame());
+                    fillText(text, debugTextFill, debugTextFont, TS(1), TS(5));
+                }
             }
         }, scene);
     }
 
     @Override
-    public ArcadePacMan_SpriteSheet spriteSheet() {
-        return spriteSheet;
-    }
-
-    @Override
-    public void draw(GameScene2D scene) {
-        clearCanvas();
-
+    protected void drawSceneContent(GameScene2D scene) {
         final ArcadePacMan_CutScene3 cutScene = (ArcadePacMan_CutScene3) scene;
         actorRenderer.drawActor(cutScene.pac());
         actorRenderer.drawActor(cutScene.blinky());
-
-        if (cutScene.debugInfoVisible()) {
-            debugRenderer.draw(scene);
-        }
     }
 }
