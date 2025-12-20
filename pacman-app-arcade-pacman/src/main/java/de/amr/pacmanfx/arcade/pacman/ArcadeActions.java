@@ -10,6 +10,7 @@ import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.api.GameUI;
+import de.amr.pacmanfx.ui.sound.SoundManager;
 
 import static de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController.GameState.INTRO;
 
@@ -22,10 +23,12 @@ public interface ArcadeActions {
         @Override
         public void execute(GameUI ui) {
             final Game game = ui.context().currentGame();
-            if (ui.context().coinMechanism().numCoins() < CoinMechanism.MAX_COINS) {
-                ui.currentConfig().soundManager().setEnabled(true);
-                ui.currentConfig().soundManager().stopVoice();
-                ui.context().coinMechanism().insertCoin();
+            final CoinMechanism coinMechanism = ui.context().coinMechanism();
+            final SoundManager soundManager = ui.currentConfig().soundManager();
+            if (coinMechanism.numCoins() < CoinMechanism.MAX_COINS) {
+                coinMechanism.insertCoin();
+                soundManager.setEnabled(true);
+                soundManager.stopVoice();
                 game.publishGameEvent(GameEvent.Type.CREDIT_ADDED);
             }
             game.control().enterState(GameState.SETTING_OPTIONS_FOR_START);
