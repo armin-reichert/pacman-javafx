@@ -8,6 +8,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
 import de.amr.pacmanfx.arcade.ms_pacman.model.actors.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
+import de.amr.pacmanfx.arcade.pacman.model.Arcade_HUD;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.timer.TickTimer;
@@ -82,7 +83,8 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         final GameUI_Config uiConfig = ui.currentConfig();
         final var spriteSheet = (ArcadeMsPacMan_SpriteSheet) uiConfig.spriteSheet();
 
-        game.hud().score(true).levelCounter(true).livesCounter(false).show();
+        final var hud = (Arcade_HUD) game.hud();
+        hud.credit(false).score(true).levelCounter(true).livesCounter(false).show();
 
         pacMan = ArcadeMsPacMan_ActorFactory.createPacMan();
         pacMan.setAnimationManager(uiConfig.createPacAnimations());
@@ -105,8 +107,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     }
 
     @Override
-    protected void doEnd(Game game) {
-    }
+    protected void doEnd(Game game) {}
 
     @Override
     public void update(Game game) {
