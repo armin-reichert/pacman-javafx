@@ -24,8 +24,16 @@ import static java.util.Objects.requireNonNull;
 
 public abstract class FlyerStartPage extends StackPane implements GameUI_StartPage {
 
+    public static final Font  DEFAULT_START_BUTTON_FONT = Font.font(GameUI.FONT_ARCADE_8.getFamily(), 32);
     public static final Color DEFAULT_START_BUTTON_BGCOLOR = Color.rgb(0, 155, 252, 0.7);
     public static final Color DEFAULT_START_BUTTON_FILLCOLOR = Color.rgb(255, 255, 255);
+
+    public static FancyButton createDefaultStartButton(String text, Runnable action) {
+        var button = new FancyButton(text, DEFAULT_START_BUTTON_FONT, DEFAULT_START_BUTTON_BGCOLOR, DEFAULT_START_BUTTON_FILLCOLOR);
+        button.setAction(action);
+        StackPane.setAlignment(button, Pos.BOTTOM_CENTER);
+        return button;
+    }
 
     protected final String gameVariant;
     protected final Flyer flyer;
@@ -67,16 +75,6 @@ public abstract class FlyerStartPage extends StackPane implements GameUI_StartPa
     }
 
     protected abstract Flyer createFlyer();
-
-    protected Node createDefaultStartButton(String text, Runnable action) {
-        var button = new FancyButton(
-            text,
-            Font.font(GameUI.FONT_ARCADE_8.getFamily(), 30),
-            DEFAULT_START_BUTTON_BGCOLOR, DEFAULT_START_BUTTON_FILLCOLOR);
-        button.setAction(action);
-        StackPane.setAlignment(button, Pos.BOTTOM_CENTER);
-        return button;
-    }
 
     protected Node createStartButton(GameUI ui) {
         Node button = createDefaultStartButton(
