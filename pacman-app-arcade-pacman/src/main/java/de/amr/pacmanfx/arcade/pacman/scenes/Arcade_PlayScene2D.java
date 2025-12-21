@@ -57,8 +57,8 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     protected void doInit(Game game) {
-        Arcade_HUD arcadeHud = (Arcade_HUD) game.hud();
-        arcadeHud.credit(false).score(true).levelCounter(true).livesCounter(true).show();
+        final var hud = (Arcade_HUD) game.hud();
+        hud.credit(false).score(true).levelCounter(true).livesCounter(true).show();
     }
 
     @Override
@@ -117,18 +117,18 @@ public class Arcade_PlayScene2D extends GameScene2D {
     @Override
     public void onBonusActivated(GameEvent e) {
         // This is the sound in Ms. Pac-Man when the bonus wanders the maze. In Pac-Man, this is a no-op.
-        soundManager().loop(SoundID.ACTIVE);
+        soundManager().loop(SoundID.BONUS_ACTIVE);
     }
 
     @Override
     public void onBonusEaten(GameEvent e) {
-        soundManager().stop(SoundID.ACTIVE);
+        soundManager().stop(SoundID.BONUS_ACTIVE);
         soundManager().play(SoundID.BONUS_EATEN);
     }
 
     @Override
     public void onBonusExpires(GameEvent e) {
-        soundManager().stop(SoundID.ACTIVE);
+        soundManager().stop(SoundID.BONUS_ACTIVE);
     }
 
     @Override
@@ -238,18 +238,21 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     /**
      * If the 3D play scene is shown when the game level gets created, the onLevelCreated() method of this
-     *  scene is not called, so we have to accept the game level again when switching from the 3D scene to this one.
+     * scene is not called, so we have to accept the game level again when switching from the 3D scene to this one.
      * @param level game level
      */
     private void acceptGameLevel(GameLevel level) {
         final Game game = level.game();
+        final var hud = (Arcade_HUD) game.hud();
         final boolean demoLevel = level.isDemoLevel();
-        soundManager().setEnabled(!demoLevel);
-        final Arcade_HUD arcadeHud = (Arcade_HUD) game.hud();
-        arcadeHud.credit(false).levelCounter(true).livesCounter(!demoLevel).show();
+        hud.credit(false).levelCounter(true).show();
         if (demoLevel) {
+            hud.livesCounter(false);
+            soundManager().setEnabled(false);
             actionBindings.useAll(ArcadePacMan_UIConfig.DEFAULT_BINDINGS); // insert coin + start game
         } else {
+            hud.livesCounter(true);
+            soundManager().setEnabled(true);
             actionBindings.useAll(GameUI.STEERING_BINDINGS);
             actionBindings.useAll(GameUI.CHEAT_BINDINGS);
         }
@@ -259,12 +262,12 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     private void updateHUD(GameLevel level) {
         final Game game = level.game();
-        final Arcade_HUD hud = (Arcade_HUD) game.hud();
         // While Pac-Man is still invisible on level start, one entry more is shown in the lives counter
         final boolean oneExtra = game.control().state() == GameState.STARTING_GAME_OR_LEVEL && !level.pac().isVisible();
         final int livesDisplayed = oneExtra ? game.lifeCount() : game.lifeCount() - 1;
+        final var hud = (Arcade_HUD) game.hud();
         hud.setVisibleLifeCount(Math.clamp(livesDisplayed, 0, hud.maxLivesDisplayed()));
-        hud.credit(context().coinMechanism().isEmpty());
+        hud.credit(context().coinMechanism().isEmpty()); // show credit only when zero
     }
 
     private void updateHuntingSound(GameLevel level) {

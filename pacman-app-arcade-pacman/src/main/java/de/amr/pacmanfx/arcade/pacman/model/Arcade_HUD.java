@@ -31,7 +31,7 @@ public class Arcade_HUD extends BaseHUD {
 
     public boolean isCreditVisible() { return creditVisible; }
 
-    public HUD credit(boolean visible) {
+    public Arcade_HUD credit(boolean visible) {
         creditVisible = visible;
         return this;
     }

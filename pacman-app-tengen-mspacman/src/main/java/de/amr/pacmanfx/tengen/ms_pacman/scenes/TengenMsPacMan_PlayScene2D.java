@@ -301,18 +301,18 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void onBonusActivated(GameEvent e) {
-        soundManager().loop(SoundID.ACTIVE);
+        soundManager().loop(SoundID.BONUS_ACTIVE);
     }
 
     @Override
     public void onBonusEaten(GameEvent e) {
-        soundManager().stop(SoundID.ACTIVE);
+        soundManager().stop(SoundID.BONUS_ACTIVE);
         soundManager().play(SoundID.BONUS_EATEN);
     }
 
     @Override
     public void onBonusExpires(GameEvent e) {
-        soundManager().stop(SoundID.ACTIVE);
+        soundManager().stop(SoundID.BONUS_ACTIVE);
     }
 
     @Override

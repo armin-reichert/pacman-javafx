@@ -219,7 +219,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
         soundManager.registerMedia(SoundID.VOICE_FLYER_TEXT,        LOCAL_RESOURCES.url("sound/flyer-text.mp3"));
 
-        soundManager.registerMediaPlayer(SoundID.ACTIVE,            LOCAL_RESOURCES.url("sound/fruitbounce.wav"));
+        soundManager.registerMediaPlayer(SoundID.BONUS_ACTIVE,            LOCAL_RESOURCES.url("sound/fruitbounce.wav"));
         soundManager.registerAudioClipURL(SoundID.BONUS_EATEN,      LOCAL_RESOURCES.url("sound/ms-fruit.wav"));
         soundManager.registerAudioClipURL(SoundID.EXTRA_LIFE,       LOCAL_RESOURCES.url("sound/ms-extralife.wav"));
         soundManager.registerAudioClipURL(SoundID.GAME_OVER,        LOCAL_RESOURCES.url("sound/common/game-over.mp3"));
@@ -243,7 +243,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         soundManager.registerMedia(SoundID.SIREN_4,                  LOCAL_RESOURCES.url("sound/ms-siren2.wav"));// TODO
 
         //TODO fix the sound file instead
-        MediaPlayer bounceSound = soundManager.mediaPlayer(SoundID.ACTIVE);
+        MediaPlayer bounceSound = soundManager.mediaPlayer(SoundID.BONUS_ACTIVE);
         if (bounceSound != null) {
             bounceSound.setRate(0.25);
         }
