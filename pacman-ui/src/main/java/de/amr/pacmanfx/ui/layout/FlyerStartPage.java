@@ -11,6 +11,7 @@ import de.amr.pacmanfx.uilib.widgets.FancyButton;
 import de.amr.pacmanfx.uilib.widgets.Flyer;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Region;
@@ -28,23 +29,19 @@ public abstract class FlyerStartPage extends StackPane implements GameUI_StartPa
 
     protected final String gameVariant;
     protected final Flyer flyer;
-    protected final Node startButton;
-
+    protected Node startButton;
     protected String title;
 
-    protected FlyerStartPage(GameUI ui, String gameVariant) {
-        requireNonNull(ui);
+    protected FlyerStartPage(String gameVariant) {
         this.gameVariant = requireNonNull(gameVariant);
 
         flyer = createFlyer();
-        startButton = createStartButton(ui);
-        getChildren().addAll(flyer, startButton);
+        getChildren().add(flyer);
 
         addEventHandler(KeyEvent.KEY_PRESSED, e -> {
             switch (e.getCode()) {
                 case DOWN -> flyer.nextFlyerPage();
                 case UP -> flyer.prevFlyerPage();
-                case ESCAPE -> ui.currentConfig().soundManager().stopVoice();
             }
         });
 
@@ -53,6 +50,18 @@ public abstract class FlyerStartPage extends StackPane implements GameUI_StartPa
                 flyer.nextFlyerPage();
             } else if (e.getDeltaY() > 0) {
                 flyer.prevFlyerPage();
+            }
+        });
+    }
+
+    public void init(GameUI ui) {
+        requireNonNull(ui);
+        startButton = createStartButton(ui);
+        getChildren().add(startButton);
+
+        addEventHandler(KeyEvent.KEY_PRESSED, e -> {
+            if (e.getCode() == KeyCode.ESCAPE) {
+                ui.currentConfig().soundManager().stopVoice();
             }
         });
     }

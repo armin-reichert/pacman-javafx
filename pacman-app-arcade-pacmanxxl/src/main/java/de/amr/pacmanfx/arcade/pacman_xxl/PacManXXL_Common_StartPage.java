@@ -20,6 +20,7 @@ import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.TS;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Displays an option menu where the game variant to be played and other options can be set.
@@ -32,13 +33,22 @@ public class PacManXXL_Common_StartPage implements GameUI_StartPage {
     private static final String BACKGROUND_IMAGE_PATH = "graphics/screenshot.png";
 
     private final StackPane root = new StackPane();
-    private final PacManXXL_Common_StartPageMenu menu;
     private final MediaPlayer voicePlayer = new MediaPlayer(VOICE);
 
-    public PacManXXL_Common_StartPage(GameUI ui) {
+    private PacManXXL_Common_StartPageMenu menu;
+
+    public PacManXXL_Common_StartPage() {
         final var flyer = new Flyer(LOCAL_RESOURCES.loadImage(BACKGROUND_IMAGE_PATH));
         flyer.setPageLayout(0, Flyer.LayoutMode.FILL);
         flyer.selectPage(0);
+
+        root.setBackground(Background.fill(Color.BLACK));
+        root.getChildren().addAll(flyer);
+    }
+
+    @Override
+    public void init(GameUI ui) {
+        requireNonNull(ui);
 
         menu = new PacManXXL_Common_StartPageMenu(ui);
         menu.scalingProperty().bind(ui.stage().heightProperty()
@@ -48,9 +58,8 @@ public class PacManXXL_Common_StartPage implements GameUI_StartPage {
                 h /= TS(menu.numTilesY()); // scale according to menu height
                 return Math.round(h * 100.0) / 100.0; // round to 2 decimal digits
             }));
+        root.getChildren().add(menu.root());
 
-        root.setBackground(Background.fill(Color.BLACK));
-        root.getChildren().addAll(flyer, menu.root());
         root.focusedProperty().addListener((_, _, _) -> {
             if (root.isFocused()) {
                 Logger.info("Focus now on {}, passing to {}", root, menu);

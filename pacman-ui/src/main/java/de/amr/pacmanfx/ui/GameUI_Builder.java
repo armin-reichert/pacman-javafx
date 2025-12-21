@@ -143,24 +143,25 @@ public class GameUI_Builder {
         });
 
         for (StartPageConfiguration config : startPageConfigs) {
-            GameUI_StartPage startPage = createStartPage(ui, config.gameVariants.getFirst(), config.startPageClass);
+            GameUI_StartPage startPage = createStartPage(config.gameVariants.getFirst(), config.startPageClass);
             ui.startPagesView().addStartPage(startPage);
+            startPage.init(ui);
         }
 
         ui.playView().dashboard().configure(dashboardIDs);
         return ui;
     }
 
-    private GameUI_StartPage createStartPage(GameUI ui, String gameVariant, Class<?> startPageClass) {
-        // first try constructor(GameUI, String)
+    private GameUI_StartPage createStartPage(String gameVariant, Class<?> startPageClass) {
+        // first try constructor(String gameVariantName)
         try {
-            var constructor = startPageClass.getDeclaredConstructor(GameUI.class, String.class);
-            return (GameUI_StartPage) constructor.newInstance(ui, gameVariant);
+            var constructor = startPageClass.getDeclaredConstructor(String.class);
+            return (GameUI_StartPage) constructor.newInstance(gameVariant);
         } catch (NoSuchMethodException x) {
-            // then try constructor(GameUI)
+            // then try constructor without argument
             try {
-                var constructor = startPageClass.getDeclaredConstructor(GameUI.class);
-                return (GameUI_StartPage) constructor.newInstance(ui);
+                var constructor = startPageClass.getDeclaredConstructor();
+                return (GameUI_StartPage) constructor.newInstance();
             } catch (Exception xx) {
                 error("Could not create start page from class '%s'".formatted(startPageClass.getSimpleName()), xx);
                 throw new IllegalStateException(xx);

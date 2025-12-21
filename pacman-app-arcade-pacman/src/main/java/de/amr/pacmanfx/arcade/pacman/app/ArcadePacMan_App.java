@@ -11,7 +11,6 @@ import de.amr.pacmanfx.model.StandardGameVariant;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
 import de.amr.pacmanfx.ui.api.GameUI;
-import de.amr.pacmanfx.ui.api.GameUI_StartPage;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import javafx.application.Application;
 import javafx.stage.Screen;
@@ -40,10 +39,12 @@ public class ArcadePacMan_App extends Application {
         Map<String, Class<?>> configClassMap = Map.of(
             GAME_VARIANT_NAME, ArcadePacMan_UIConfig.class
         );
-        GameUI ui = new GameUI_Implementation(configClassMap, THE_GAME_BOX, stage, sceneWidth, sceneHeight);
+        final var ui = new GameUI_Implementation(configClassMap, THE_GAME_BOX, stage, sceneWidth, sceneHeight);
 
-        GameUI_StartPage startPage = new ArcadePacMan_StartPage(ui);
+        final var startPage = new ArcadePacMan_StartPage();
         ui.startPagesView().addStartPage(startPage);
+
+        startPage.init(ui);
         ui.startPagesView().setSelectedIndex(0);
 
         ui.dashboard().configure(List.of(

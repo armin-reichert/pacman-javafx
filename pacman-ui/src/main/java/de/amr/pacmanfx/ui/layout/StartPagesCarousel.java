@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_BOOT_SHOW_PLAY_VIEW;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_TOGGLE_PAUSED;
@@ -110,8 +111,8 @@ public class StartPagesCarousel extends Carousel implements GameUI_View {
             default -> throw new IllegalArgumentException("Illegal navigation direction: %s".formatted(dir));
         };
         icon.setOpacity(0.2);
-        icon.setOnMouseEntered(e -> icon.setOpacity(0.8));
-        icon.setOnMouseExited(e -> icon.setOpacity(0.2));
+        icon.setOnMouseEntered(_ -> icon.setOpacity(0.8));
+        icon.setOnMouseExited(_ -> icon.setOpacity(0.2));
 
         final var button = new HBox(icon);
         button.setMaxHeight(iconSize);
@@ -132,6 +133,10 @@ public class StartPagesCarousel extends Carousel implements GameUI_View {
     @Override
     public Optional<Supplier<String>> titleSupplier() {
         return Optional.of(this::composeTitle);
+    }
+
+    public Stream<GameUI_StartPage> startPages() {
+        return pages.stream();
     }
 
     public Optional<GameUI_StartPage> currentStartPage() {

@@ -11,6 +11,8 @@ public interface GameUI_StartPage {
 
     Region layoutRoot();
 
+    void init(GameUI ui);
+
     default void onEnter(GameUI ui) {
         Logger.info("Enter start page {}", this);
     }

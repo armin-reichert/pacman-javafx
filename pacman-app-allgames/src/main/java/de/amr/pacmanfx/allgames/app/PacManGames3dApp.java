@@ -23,6 +23,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
 import de.amr.pacmanfx.ui.api.GameUI;
+import de.amr.pacmanfx.ui.api.GameUI_StartPage;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -95,11 +96,12 @@ public class PacManGames3dApp extends Application {
         );
         GameUI ui = new GameUI_Implementation(configClassMap, THE_GAME_BOX, stage, sceneWidth, sceneHeight);
 
-        ui.startPagesView().addStartPage(new ArcadePacMan_StartPage(ui));
-        ui.startPagesView().addStartPage(new ArcadeMsPacMan_StartPage(ui));
-        ui.startPagesView().addStartPage(new TengenMsPacMan_StartPage(ui));
-        ui.startPagesView().addStartPage(new PacManXXL_Common_StartPage(ui));
+        ui.startPagesView().addStartPage(new ArcadePacMan_StartPage());
+        ui.startPagesView().addStartPage(new ArcadeMsPacMan_StartPage());
+        ui.startPagesView().addStartPage(new TengenMsPacMan_StartPage());
+        ui.startPagesView().addStartPage(new PacManXXL_Common_StartPage());
 
+        ui.startPagesView().startPages().forEach(startPage -> startPage.init(ui));
         ui.startPagesView().setSelectedIndex(0);
 
         ui.dashboard().configure(List.of(
