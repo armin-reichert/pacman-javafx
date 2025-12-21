@@ -45,7 +45,7 @@ public abstract class Ghost extends MovingActor {
     protected Ghost(byte personality, String name) {
         super(name);
         this.personality = Validations.requireValidGhostPersonality(personality);
-        corneringSpeedUp = -1.25f;
+        corneringSpeedDelta = -1.0f;
     }
 
     /**
@@ -102,7 +102,7 @@ public abstract class Ghost extends MovingActor {
                 ", newTileEntered=" + newTileEntered +
                 ", turnBackRequested=" + turnBackRequested +
                 ", canTeleport=" + canTeleport +
-                ", corneringSpeedUp" + corneringSpeedUp +
+                ", corneringSpeedUp" + corneringSpeedDelta +
                 '}';
     }
 

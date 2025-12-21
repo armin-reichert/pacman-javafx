@@ -72,7 +72,6 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel implements LevelCou
     protected static final Vector2i DEFAULT_BONUS_TILE = new Vector2i(13, 20);
 
     protected final MapSelector mapSelector;
-    protected final Arcade_HUD hud;
 
     public ArcadePacMan_GameModel(CoinMechanism coinMechanism, File highScoreFile) {
         this(coinMechanism, new ArcadePacMan_MapSelector(), highScoreFile);
@@ -87,7 +86,6 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel implements LevelCou
         super(coinMechanism, highScoreFile);
 
         this.mapSelector = requireNonNull(mapSelector);
-        this.hud = new Arcade_HUD(coinMechanism);
 
         bonus1PelletsEaten = 70;
         bonus2PelletsEaten = 170;

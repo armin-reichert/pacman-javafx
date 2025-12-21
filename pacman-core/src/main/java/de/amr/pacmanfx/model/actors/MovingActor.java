@@ -51,7 +51,7 @@ public abstract class MovingActor extends Actor {
     protected boolean teleporting;
 
     //TODO this is just a primitive way to provide cornering speed differences
-    protected float corneringSpeedUp;
+    protected float corneringSpeedDelta;
 
     protected MovingActor(String name) {
         this.name = requireNonNull(name);
@@ -97,7 +97,7 @@ public abstract class MovingActor extends Actor {
             ", turnBackRequested=" + turnBackRequested +
             ", canTeleport=" + canTeleport +
             ", teleporting=" + teleporting +
-            ", corneringSpeedUp" + corneringSpeedUp +
+            ", corneringSpeedDelta" + corneringSpeedDelta +
             '}';
     }
 
@@ -401,8 +401,8 @@ public abstract class MovingActor extends Actor {
             }
         }
 
-        if (turn && corneringSpeedUp != 0) {
-            Vector2f cornerVelocity = newVelocity.plus(dir.vector().scaled(corneringSpeedUp));
+        if (turn && corneringSpeedDelta != 0) {
+            Vector2f cornerVelocity = newVelocity.plus(dir.vector().scaled(corneringSpeedDelta));
             Logger.trace("{} velocity around corner: {}", name(), cornerVelocity.length());
             setVelocity(cornerVelocity);
             move();

@@ -8,7 +8,6 @@ import de.amr.pacmanfx.arcade.ms_pacman.model.actors.ArcadeMsPacMan_ActorFactory
 import de.amr.pacmanfx.arcade.ms_pacman.model.actors.MsPacMan;
 import de.amr.pacmanfx.arcade.ms_pacman.model.actors.Sue;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameModel;
-import de.amr.pacmanfx.arcade.pacman.model.Arcade_HUD;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
 import de.amr.pacmanfx.arcade.pacman.model.actors.Blinky;
 import de.amr.pacmanfx.arcade.pacman.model.actors.Inky;
@@ -62,7 +61,6 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel implements LevelC
     protected static final int GAME_OVER_STATE_TICKS = 150;
 
     protected final MapSelector mapSelector;
-    protected final Arcade_HUD hud;
 
     /**
      * Called via reflection by builder.
@@ -77,7 +75,6 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel implements LevelC
     public ArcadeMsPacMan_GameModel(CoinMechanism coinMechanism, MapSelector mapSelector, File highScoreFile) {
         super(coinMechanism, highScoreFile);
 
-        this.hud = new Arcade_HUD(coinMechanism);
         this.mapSelector = requireNonNull(mapSelector);
 
         bonus1PelletsEaten = 64;

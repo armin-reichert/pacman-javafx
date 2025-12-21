@@ -165,6 +165,8 @@ public class Arcade_PlayScene2D extends GameScene2D {
         else if (e.newState() == GameState.GAME_OVER) {
             soundManager().stopAll();
             soundManager().play(SoundID.GAME_OVER);
+            final var hud = (Arcade_HUD) game.hud();
+            hud.credit(true);
         }
     }
 
@@ -247,11 +249,11 @@ public class Arcade_PlayScene2D extends GameScene2D {
         final boolean demoLevel = level.isDemoLevel();
         hud.credit(false).levelCounter(true).show();
         if (demoLevel) {
-            hud.livesCounter(false);
+            hud.credit(true).livesCounter(false);
             soundManager().setEnabled(false);
             actionBindings.useAll(ArcadePacMan_UIConfig.DEFAULT_BINDINGS); // insert coin + start game
         } else {
-            hud.livesCounter(true);
+            hud.credit(false).livesCounter(true);
             soundManager().setEnabled(true);
             actionBindings.useAll(GameUI.STEERING_BINDINGS);
             actionBindings.useAll(GameUI.CHEAT_BINDINGS);
@@ -267,7 +269,6 @@ public class Arcade_PlayScene2D extends GameScene2D {
         final int livesDisplayed = oneExtra ? game.lifeCount() : game.lifeCount() - 1;
         final var hud = (Arcade_HUD) game.hud();
         hud.setVisibleLifeCount(Math.clamp(livesDisplayed, 0, hud.maxLivesDisplayed()));
-        hud.credit(context().coinMechanism().isEmpty()); // show credit only when zero
     }
 
     private void updateHuntingSound(GameLevel level) {
