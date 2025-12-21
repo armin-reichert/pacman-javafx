@@ -28,9 +28,9 @@ public class Score {
     private final IntegerProperty levelNumber = new SimpleIntegerProperty();
     private final ObjectProperty<LocalDate> date = new SimpleObjectProperty<>();
 
-    public static Score readScoreFile(File scoreFile) {
+    public static Score fromFile(File file) throws IOException {
         final var score = new Score();
-        score.read(scoreFile);
+        score.read(file);
         return score;
     }
 
@@ -45,7 +45,7 @@ public class Score {
         setDate(LocalDate.now());
     }
 
-    public void read(File file) {
+    public void read(File file) throws IOException {
         requireNonNull(file);
         final var properties = new Properties();
         try (var inputStream = new BufferedInputStream(new FileInputStream(file))) {
@@ -53,9 +53,6 @@ public class Score {
             setPoints(Integer.parseInt(properties.getProperty(ATTR_POINTS)));
             setLevelNumber(Integer.parseInt(properties.getProperty(ATTR_LEVEL)));
             setDate(LocalDate.parse(properties.getProperty(ATTR_DATE), DateTimeFormatter.ISO_LOCAL_DATE));
-        } catch (Exception x) {
-            Logger.error(x);
-            Logger.error("An error occurred reading score from file '{}'", file);
         }
     }
 

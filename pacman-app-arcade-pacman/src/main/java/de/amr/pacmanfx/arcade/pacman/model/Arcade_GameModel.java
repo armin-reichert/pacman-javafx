@@ -16,6 +16,7 @@ import de.amr.pacmanfx.steering.Steering;
 import org.tinylog.Logger;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Optional;
 import java.util.Set;
 
@@ -237,8 +238,13 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         if (!coinMechanism.isEmpty()) {
             coinMechanism.consumeCoin();
         }
-        updateHighScore();
         showLevelMessage(MessageType.GAME_OVER);
+        try {
+            updateHighScore();
+        } catch (IOException x) {
+            Logger.error(x);
+            Logger.error("Error updating highscore file {}", highScoreFile.getAbsolutePath());
+        }
         Logger.info("Game ended with level number {}", level().number());
     }
 
@@ -256,7 +262,12 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     @Override
     public void prepareNewGame() {
         score().reset();
-        loadHighScore();
+        try {
+            loadHighScore();
+        } catch (IOException x) {
+            Logger.error(x);
+            Logger.error("Error updating highscore file {}", highScoreFile.getAbsolutePath());
+        }
         highScore().setEnabled(true);
         gateKeeper.reset();
         levelProperty().set(null);

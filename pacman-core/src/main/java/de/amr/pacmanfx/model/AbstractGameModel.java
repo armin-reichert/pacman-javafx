@@ -561,13 +561,14 @@ public abstract class AbstractGameModel implements Game {
         score.setPoints(newScore);
     }
 
-    protected void loadHighScore() {
+    protected void loadHighScore() throws IOException {
         highScore.read(highScoreFile);
         Logger.info("High Score loaded from file '{}': points={}, level={}", highScoreFile, highScore.points(), highScore.levelNumber());
     }
 
-    protected void updateHighScore() {
-        var savedHighScore = Score.readScoreFile(highScoreFile);
+    protected void updateHighScore() throws IOException {
+        final var savedHighScore = new Score();
+        savedHighScore.read(highScoreFile);
         if (highScore.points() > savedHighScore.points()) {
             saveHighScore();
         }

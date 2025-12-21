@@ -21,6 +21,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import org.tinylog.Logger;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -191,18 +192,28 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
         clearLevelCounter();
         setPlaying(false);
         boosterActive = false;
-        loadHighScore();
-        score().reset();
         highScore().setEnabled(true);
         gateKeeper.reset();
         levelProperty().set(null);
+        score().reset();
+        try {
+            loadHighScore();
+        } catch (IOException x) {
+            Logger.error(x);
+            Logger.error("Error loading highscore file {}", highScoreFile.getAbsolutePath());
+        }
     }
 
     @Override
     public void onGameOver() {
         setPlaying(false);
-        updateHighScore();
         showLevelMessage(MessageType.GAME_OVER);
+        try {
+            updateHighScore();
+        } catch (IOException x) {
+            Logger.error(x);
+            Logger.error("Error updating highscore file {}", highScoreFile.getAbsolutePath());
+        }
     }
 
     @Override
