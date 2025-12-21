@@ -29,7 +29,7 @@ import static de.amr.pacmanfx.model.actors.GhostState.EATEN;
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
 
 /**
- * The ghosts are presented one by one, Pac-Man is chased by the ghosts, turns the cards and hunts the ghosts himself.
+ * The ghosts are presented one by one, then Pac-Man is chased by the ghosts, turns the cards and hunts the ghosts himself.
  */
 public class ArcadePacMan_IntroScene extends GameScene2D {
 
@@ -54,19 +54,19 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         sceneController = new StateMachine<>(this, List.of(SceneState.values()));
     }
 
-    public boolean titleVisible() {
+    public boolean isTitleVisible() {
         return titleVisible;
     }
 
-    public boolean ghostImageVisible(byte personality) {
+    public boolean isGhostImageVisible(byte personality) {
         return ghostImageVisible[personality];
     }
 
-    public boolean ghostCharacterVisible(byte personality) {
+    public boolean isGhostCharacterVisible(byte personality) {
         return ghostCharacterVisible[personality];
     }
 
-    public boolean ghostNicknameVisible(byte personality) {
+    public boolean isGhostNicknameVisible(byte personality) {
         return ghostNicknameVisible[personality];
     }
 
@@ -86,13 +86,13 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     public void doInit(Game game) {
         final GameUI_Config uiConfig = ui.currentConfig();
 
+        final var hud = (Arcade_HUD) game.hud();
+        hud.credit(true).score(true).livesCounter(false).levelCounter(true).show();
+
         soundManager().playVoiceAfterSec(1, SoundID.VOICE_EXPLAIN_GAME_START);
 
-        Arcade_HUD arcadeHud = (Arcade_HUD) game.hud();
-        arcadeHud.credit(true).score(true).livesCounter(false).levelCounter(true).show();
-
-        actionBindings.useAll(ArcadePacMan_UIConfig.DEFAULT_BINDINGS);
-        actionBindings.useAll(GameUI.SCENE_TESTS_BINDINGS);
+        actionBindings.useAll(ArcadePacMan_UIConfig.DEFAULT_BINDINGS); // insert coin + start game actions
+        actionBindings.useAll(GameUI.SCENE_TESTS_BINDINGS); // actions for starting tests
 
         blinking = new Pulse(10, Pulse.State.ON);
 
@@ -186,7 +186,6 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         },
 
         CHASING_PAC {
-
             @Override
             public void onEnter(ArcadePacMan_IntroScene scene) {
                 timer.restartIndefinitely();

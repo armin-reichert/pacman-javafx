@@ -87,20 +87,20 @@ public class ArcadePacMan_IntroScene_Renderer extends GameScene2D_Renderer imple
 
     private void drawGhostGallery(ArcadePacMan_IntroScene introScene) {
         ctx.setFont(arcadeFont8());
-        if (introScene.titleVisible()) {
+        if (introScene.isTitleVisible()) {
             fillText("CHARACTER / NICKNAME", ARCADE_WHITE, TS(LEFT_TILE_X + 3), TS(6));
         }
         final int y = TS * 8;
         for (byte p = RED_GHOST_SHADOW; p <= ORANGE_GHOST_POKEY; ++p) {
             int offsetY = 3 * p * TS;
-            if (introScene.ghostImageVisible(p)) {
+            if (introScene.isGhostImageVisible(p)) {
                 RectShort sprite = spriteSheet.spriteSequence(GALLERY_GHOSTS)[p];
                 drawSpriteCentered(TS * 5, y + offsetY - HTS, sprite);
             }
-            if (introScene.ghostCharacterVisible(p)) {
+            if (introScene.isGhostCharacterVisible(p)) {
                 fillText("-" + GHOST_CHARACTERS[p], GHOST_COLORS[p], TS * 7, y + offsetY);
             }
-            if (introScene.ghostNicknameVisible(p)) {
+            if (introScene.isGhostNicknameVisible(p)) {
                 fillText(GHOST_NICKNAMES[p], GHOST_COLORS[p], TS * 18, y + offsetY);
             }
         }
