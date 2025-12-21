@@ -23,7 +23,6 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
 import de.amr.pacmanfx.ui.api.GameUI;
-import de.amr.pacmanfx.ui.api.GameUI_StartPage;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -41,7 +40,7 @@ import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
  */
 public class PacManGames3dApp extends Application {
 
-    static boolean USE_BUILDER = false;
+    private static final boolean USE_BUILDER = false;
 
     private static final float ASPECT_RATIO = 1.6f; // 16:10 aspect ratio
     private static final float USED_HEIGHT = 0.8f;  // 80% of available height
@@ -57,44 +56,44 @@ public class PacManGames3dApp extends Application {
     }
     private GameUI createUI_WithoutBuilder(Stage stage, double sceneWidth, double sceneHeight) {
         {
-            String variantName = StandardGameVariant.PACMAN.name();
-            Game game = new ArcadePacMan_GameModel(THE_GAME_BOX, THE_GAME_BOX.highScoreFile(variantName));
+            final String variantName = StandardGameVariant.PACMAN.name();
+            final Game game = new ArcadePacMan_GameModel(THE_GAME_BOX, THE_GAME_BOX.highScoreFile(variantName));
             addTestStates(game);
             THE_GAME_BOX.registerGame(variantName, game);
         }
         {
-            String variantName = StandardGameVariant.MS_PACMAN.name();
-            Game game = new ArcadeMsPacMan_GameModel(THE_GAME_BOX, THE_GAME_BOX.highScoreFile(variantName));
+            final String variantName = StandardGameVariant.MS_PACMAN.name();
+            final Game game = new ArcadeMsPacMan_GameModel(THE_GAME_BOX, THE_GAME_BOX.highScoreFile(variantName));
             addTestStates(game);
             THE_GAME_BOX.registerGame(variantName, game);
         }
         {
-            String variantName = StandardGameVariant.MS_PACMAN_TENGEN.name();
-            Game game = new TengenMsPacMan_GameModel(THE_GAME_BOX.highScoreFile(variantName));
+            final String variantName = StandardGameVariant.MS_PACMAN_TENGEN.name();
+            final Game game = new TengenMsPacMan_GameModel(THE_GAME_BOX.highScoreFile(variantName));
             addTestStates(game);
             THE_GAME_BOX.registerGame(variantName, game);
         }
         {
-            String variantName = StandardGameVariant.PACMAN_XXL.name();
-            Game game = new PacManXXL_PacMan_GameModel(THE_GAME_BOX, xxlCommonMapSelector, THE_GAME_BOX.highScoreFile(variantName));
+            final String variantName = StandardGameVariant.PACMAN_XXL.name();
+            final Game game = new PacManXXL_PacMan_GameModel(THE_GAME_BOX, xxlCommonMapSelector, THE_GAME_BOX.highScoreFile(variantName));
             addTestStates(game);
             THE_GAME_BOX.registerGame(variantName, game);
         }
         {
-            String variantName = StandardGameVariant.MS_PACMAN_XXL.name();
-            Game game = new PacManXXL_MsPacMan_GameModel(THE_GAME_BOX, xxlCommonMapSelector, THE_GAME_BOX.highScoreFile(variantName));
+            final String variantName = StandardGameVariant.MS_PACMAN_XXL.name();
+            final Game game = new PacManXXL_MsPacMan_GameModel(THE_GAME_BOX, xxlCommonMapSelector, THE_GAME_BOX.highScoreFile(variantName));
             addTestStates(game);
             THE_GAME_BOX.registerGame(variantName, game);
         }
 
-        final Map<String, Class<?>> configClassMap = Map.of(
+        final Map<String, Class<?>> uiConfigMap = Map.of(
             StandardGameVariant.PACMAN.name(),           ArcadePacMan_UIConfig.class,
             StandardGameVariant.MS_PACMAN.name(),        ArcadeMsPacMan_UIConfig.class,
             StandardGameVariant.MS_PACMAN_TENGEN.name(), TengenMsPacMan_UIConfig.class,
             StandardGameVariant.PACMAN_XXL.name(),       PacManXXL_PacMan_UIConfig.class,
             StandardGameVariant.MS_PACMAN_XXL.name(),    PacManXXL_MsPacMan_UIConfig.class
         );
-        GameUI ui = new GameUI_Implementation(configClassMap, THE_GAME_BOX, stage, sceneWidth, sceneHeight);
+        final var ui = new GameUI_Implementation(uiConfigMap, THE_GAME_BOX, stage, sceneWidth, sceneHeight);
 
         ui.startPagesView().addStartPage(new ArcadePacMan_StartPage());
         ui.startPagesView().addStartPage(new ArcadeMsPacMan_StartPage());
