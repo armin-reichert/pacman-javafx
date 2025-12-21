@@ -49,7 +49,8 @@ This will create
 To be able to create the Windows executables, you need to have the following tools installed:
 
 - [Inno Setup](https://jrsoftware.org/isinfo.php)
-- [WiX toolset 3.14]([https://wixtoolset.org/](https://github.com/wixtoolset/wix3/releases/tag/wix3141rtm))
+- [WiX toolset 3.14]([https://wixtoolset.org/](https://github.com/wixtoolset/wix3/releases/tag/wix3141rtm)) 
+  (JDK 25 with WiX versions 4 or 5 does not work!)
 
 as described in the [JavaPackager guide](https://github.com/fvarrui/JavaPackager/blob/master/docs/windows-tools-guide.md)
 (👏 to [Francisco Vargas Ruiz](https://github.com/fvarrui)).
