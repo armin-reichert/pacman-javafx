@@ -5,8 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.actors.MovingActor;
+import de.amr.pacmanfx.model.world.WorldMap;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.ParallelCamera;

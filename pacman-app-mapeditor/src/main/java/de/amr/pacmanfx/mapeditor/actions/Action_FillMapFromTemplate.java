@@ -5,14 +5,10 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.mapeditor.actions;
 
 import de.amr.pacmanfx.lib.math.Vector2i;
-import de.amr.pacmanfx.lib.worldmap.FoodTile;
-import de.amr.pacmanfx.lib.worldmap.TerrainTile;
-import de.amr.pacmanfx.lib.worldmap.WorldMap;
-import de.amr.pacmanfx.lib.worldmap.WorldMapLayer;
 import de.amr.pacmanfx.mapeditor.MessageType;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import de.amr.pacmanfx.mapeditor.TileMatcher;
-import de.amr.pacmanfx.model.DefaultWorldMapPropertyName;
+import de.amr.pacmanfx.model.world.*;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritablePixelFormat;
 import javafx.scene.paint.Color;

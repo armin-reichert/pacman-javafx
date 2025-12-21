@@ -5,12 +5,12 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.mapeditor;
 
 import de.amr.pacmanfx.lib.math.Vector2i;
-import de.amr.pacmanfx.lib.worldmap.TerrainTile;
-import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.mapeditor.rendering.ActorSpriteRenderer;
 import de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites;
 import de.amr.pacmanfx.mapeditor.rendering.TerrainMapTileRenderer;
-import de.amr.pacmanfx.model.DefaultWorldMapPropertyName;
+import de.amr.pacmanfx.model.world.DefaultWorldMapPropertyName;
+import de.amr.pacmanfx.model.world.TerrainTile;
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.uilib.rendering.ArcadeHouseRenderer;
 import de.amr.pacmanfx.uilib.rendering.FoodMapRenderer;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapColorScheme;

@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.steering;
 
-import de.amr.pacmanfx.lib.Vec2Byte;
+import de.amr.pacmanfx.lib.math.Vector2b;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.MovingActor;
 import org.tinylog.Logger;
@@ -18,11 +18,11 @@ import static java.util.Objects.requireNonNull;
  */
 public class RouteBasedSteering implements Steering {
 
-    private final List<Vec2Byte> route;
+    private final List<Vector2b> route;
     private int targetIndex;
     private boolean complete;
 
-    public RouteBasedSteering(List<Vec2Byte> route) {
+    public RouteBasedSteering(List<Vector2b> route) {
         this.route = requireNonNull(route);
         init();
     }
@@ -60,7 +60,7 @@ public class RouteBasedSteering implements Steering {
         }
     }
 
-    private Vec2Byte currentTarget() {
+    private Vector2b currentTarget() {
         return route.get(targetIndex);
     }
 }

@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.mapeditor.properties;
 
+import de.amr.pacmanfx.lib.ColorRGBA;
 import de.amr.pacmanfx.lib.math.Vector2i;
-import de.amr.pacmanfx.lib.worldmap.ColorRGBA;
 
 import java.util.Locale;
 

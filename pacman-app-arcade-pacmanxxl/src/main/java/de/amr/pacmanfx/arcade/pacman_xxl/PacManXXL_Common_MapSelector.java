@@ -4,9 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
-import de.amr.pacmanfx.lib.worldmap.WorldMap;
-import de.amr.pacmanfx.model.MapSelectionMode;
-import de.amr.pacmanfx.model.MapSelector;
+import de.amr.pacmanfx.model.world.MapSelectionMode;
+import de.amr.pacmanfx.model.world.MapSelector;
+import de.amr.pacmanfx.model.world.WorldMap;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.tinylog.Logger;

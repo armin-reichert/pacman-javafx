@@ -4,10 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.rendering;
 
-import de.amr.pacmanfx.lib.worldmap.Obstacle;
-import de.amr.pacmanfx.lib.worldmap.ObstacleSegment;
-import de.amr.pacmanfx.lib.worldmap.TerrainTile;
-import de.amr.pacmanfx.lib.worldmap.WorldMap;
+import de.amr.pacmanfx.model.world.Obstacle;
+import de.amr.pacmanfx.model.world.ObstacleSegment;
+import de.amr.pacmanfx.model.world.TerrainTile;
+import de.amr.pacmanfx.model.world.WorldMap;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;

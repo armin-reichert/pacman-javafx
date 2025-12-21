@@ -4,11 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.mapeditor.properties;
 
-import de.amr.pacmanfx.lib.worldmap.LayerID;
-import de.amr.pacmanfx.lib.worldmap.WorldMap;
-import de.amr.pacmanfx.lib.worldmap.WorldMapLayer;
 import de.amr.pacmanfx.mapeditor.MessageType;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
+import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.model.world.WorldMapLayer;
+import de.amr.pacmanfx.model.world.WorldMapLayerID;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Insets;
@@ -21,7 +21,7 @@ import org.tinylog.Logger;
 
 import java.util.*;
 
-import static de.amr.pacmanfx.model.DefaultWorldMapPropertyName.*;
+import static de.amr.pacmanfx.model.world.DefaultWorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;
 
 public class MapLayerPropertiesEditor extends BorderPane {
@@ -37,14 +37,14 @@ public class MapLayerPropertiesEditor extends BorderPane {
     public static final String DEFAULT_TILE_VALUE = "(0,0)";
     public static final String DEFAULT_TEXT_VALUE = "";
 
-    public static final Map<LayerID, Set<String>> PREDEFINED_PROPERTY_NAMES = Map.of(
-        LayerID.TERRAIN, Set.of(COLOR_WALL_FILL, COLOR_WALL_STROKE, COLOR_DOOR, POS_HOUSE_MIN_TILE, POS_HOUSE_MAX_TILE),
-        LayerID.FOOD,    Set.of(COLOR_FOOD)
+    public static final Map<WorldMapLayerID, Set<String>> PREDEFINED_PROPERTY_NAMES = Map.of(
+        WorldMapLayerID.TERRAIN, Set.of(COLOR_WALL_FILL, COLOR_WALL_STROKE, COLOR_DOOR, POS_HOUSE_MIN_TILE, POS_HOUSE_MAX_TILE),
+        WorldMapLayerID.FOOD,    Set.of(COLOR_FOOD)
     );
 
-    public static final Map<LayerID, Set<String>> HIDDEN_PROPERTY_NAMES = Map.of(
-        LayerID.TERRAIN, Set.of(POS_HOUSE_MIN_TILE, POS_HOUSE_MAX_TILE),
-        LayerID.FOOD,    Set.of()
+    public static final Map<WorldMapLayerID, Set<String>> HIDDEN_PROPERTY_NAMES = Map.of(
+        WorldMapLayerID.TERRAIN, Set.of(POS_HOUSE_MIN_TILE, POS_HOUSE_MAX_TILE),
+        WorldMapLayerID.FOOD,    Set.of()
     );
 
     public static final Set<String> COLOR_PREFIXES = Set.of("color_");
@@ -67,12 +67,12 @@ public class MapLayerPropertiesEditor extends BorderPane {
     }
 
     private final TileMapEditorUI ui;
-    private final LayerID layerID;
+    private final WorldMapLayerID layerID;
     private final BooleanProperty enabled = new SimpleBooleanProperty(true);
     private final List<AbstractPropertyEditor> propertyEditors = new ArrayList<>();
     private final GridPane grid = new GridPane(2, 2);
 
-    public MapLayerPropertiesEditor(TileMapEditorUI ui, LayerID layerID) {
+    public MapLayerPropertiesEditor(TileMapEditorUI ui, WorldMapLayerID layerID) {
         this.ui = requireNonNull(ui);
         this.layerID = requireNonNull(layerID);
         setTop(createButtonBar());

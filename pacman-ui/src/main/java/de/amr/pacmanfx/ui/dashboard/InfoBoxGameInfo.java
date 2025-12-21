@@ -6,13 +6,13 @@ package de.amr.pacmanfx.ui.dashboard;
 
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.lib.timer.TickTimer;
-import de.amr.pacmanfx.lib.worldmap.FoodLayer;
-import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.AbstractHuntingTimer;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HuntingPhase;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
+import de.amr.pacmanfx.model.world.FoodLayer;
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import javafx.scene.paint.Color;

@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.rendering;
 
-import de.amr.pacmanfx.lib.worldmap.WorldMap;
+import de.amr.pacmanfx.model.world.WorldMap;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.paint.Color;
 

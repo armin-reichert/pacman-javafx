@@ -8,9 +8,10 @@ import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController.GameState;
 import de.amr.pacmanfx.arcade.pacman.model.actors.Blinky;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.math.Vector2i;
-import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.*;
+import de.amr.pacmanfx.model.world.GateKeeper;
+import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.steering.Steering;
 import org.tinylog.Logger;
 

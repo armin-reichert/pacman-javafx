@@ -2,7 +2,7 @@
 Copyright (c) 2021-2026 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.lib.worldmap;
+package de.amr.pacmanfx.model.world;
 
 import de.amr.pacmanfx.lib.math.Vector2i;
 import org.tinylog.Logger;
@@ -12,8 +12,8 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static de.amr.pacmanfx.lib.worldmap.FoodTile.ENERGIZER;
-import static de.amr.pacmanfx.lib.worldmap.FoodTile.PELLET;
+import static de.amr.pacmanfx.model.world.FoodTile.ENERGIZER;
+import static de.amr.pacmanfx.model.world.FoodTile.PELLET;
 import static java.util.function.Predicate.not;
 
 public class FoodLayer extends WorldMapLayer {

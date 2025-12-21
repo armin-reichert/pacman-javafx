@@ -4,14 +4,14 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.mapeditor;
 
-import de.amr.pacmanfx.lib.worldmap.LayerID;
-import de.amr.pacmanfx.lib.worldmap.WorldMap;
-import de.amr.pacmanfx.lib.worldmap.WorldMapLayer;
 import de.amr.pacmanfx.mapeditor.actions.*;
 import de.amr.pacmanfx.mapeditor.palette.Palette;
 import de.amr.pacmanfx.mapeditor.palette.PaletteID;
 import de.amr.pacmanfx.mapeditor.properties.MapLayerPropertiesEditor;
-import de.amr.pacmanfx.model.DefaultWorldMapPropertyName;
+import de.amr.pacmanfx.model.world.DefaultWorldMapPropertyName;
+import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.model.world.WorldMapLayer;
+import de.amr.pacmanfx.model.world.WorldMapLayerID;
 import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapColorScheme;
 import javafx.application.Platform;
@@ -662,11 +662,11 @@ public class TileMapEditorUI {
     }
 
     private void createPropertyEditors() {
-        terrainPropertiesEditor = new MapLayerPropertiesEditor(this, LayerID.TERRAIN);
+        terrainPropertiesEditor = new MapLayerPropertiesEditor(this, WorldMapLayerID.TERRAIN);
         terrainPropertiesEditor.enabledProperty().bind(editModeProperty().map(mode -> mode != EditMode.INSPECT));
         terrainPropertiesEditor.setPadding(new Insets(10,0,0,0));
 
-        foodPropertiesEditor = new MapLayerPropertiesEditor(this, LayerID.FOOD);
+        foodPropertiesEditor = new MapLayerPropertiesEditor(this, WorldMapLayerID.FOOD);
         foodPropertiesEditor.enabledProperty().bind(editModeProperty().map(mode -> mode != EditMode.INSPECT));
         foodPropertiesEditor.setPadding(new Insets(10,0,0,0));
 

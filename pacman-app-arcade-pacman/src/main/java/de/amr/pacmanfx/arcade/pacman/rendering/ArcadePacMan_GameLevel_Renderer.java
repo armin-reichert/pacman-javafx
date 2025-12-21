@@ -4,12 +4,12 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
-import de.amr.pacmanfx.lib.worldmap.FoodLayer;
-import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelMessage;
-import de.amr.pacmanfx.model.House;
 import de.amr.pacmanfx.model.MessageType;
+import de.amr.pacmanfx.model.world.FoodLayer;
+import de.amr.pacmanfx.model.world.House;
+import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;

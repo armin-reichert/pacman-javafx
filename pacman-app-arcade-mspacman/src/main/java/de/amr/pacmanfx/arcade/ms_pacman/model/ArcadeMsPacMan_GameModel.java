@@ -13,15 +13,14 @@ import de.amr.pacmanfx.arcade.pacman.model.actors.Blinky;
 import de.amr.pacmanfx.arcade.pacman.model.actors.Inky;
 import de.amr.pacmanfx.arcade.pacman.model.actors.Pinky;
 import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.lib.Vec2Byte;
+import de.amr.pacmanfx.lib.math.Vector2b;
 import de.amr.pacmanfx.lib.math.Vector2i;
-import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
-import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.BonusState;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
+import de.amr.pacmanfx.model.world.*;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -37,7 +36,7 @@ import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
 import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
 import static de.amr.pacmanfx.lib.math.RandomNumberSupport.*;
-import static de.amr.pacmanfx.model.DefaultWorldMapPropertyName.*;
+import static de.amr.pacmanfx.model.world.DefaultWorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -343,7 +342,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel implements LevelC
 
         final Vector2i houseEntry = tileAt(house.entryPosition());
         final Vector2i backyard = houseEntry.plus(0, house.sizeInTiles().y() + 1);
-        final List<Vec2Byte> route = Stream.of(entryTile, houseEntry, backyard, houseEntry, exitTile).map(Vec2Byte::new).toList();
+        final List<Vector2b> route = Stream.of(entryTile, houseEntry, backyard, houseEntry, exitTile).map(Vector2b::new).toList();
 
         bonus.initRoute(route, leftToRight);
         Logger.info("Moving bonus route: {} (crossing {})", route, leftToRight ? "left to right" : "right to left");

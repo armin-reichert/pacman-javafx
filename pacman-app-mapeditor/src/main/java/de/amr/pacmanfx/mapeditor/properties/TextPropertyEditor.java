@@ -4,9 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.mapeditor.properties;
 
-import de.amr.pacmanfx.lib.worldmap.LayerID;
-import de.amr.pacmanfx.lib.worldmap.WorldMapLayer;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
+import de.amr.pacmanfx.model.world.WorldMapLayer;
+import de.amr.pacmanfx.model.world.WorldMapLayerID;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
 
@@ -14,7 +14,7 @@ class TextPropertyEditor extends AbstractPropertyEditor {
 
     private final TextField textEditor;
 
-    public TextPropertyEditor(TileMapEditorUI ui, LayerID layerID, WorldMapLayer layer, MapEditorProperty property) {
+    public TextPropertyEditor(TileMapEditorUI ui, WorldMapLayerID layerID, WorldMapLayer layer, MapEditorProperty property) {
         super(ui, layerID, layer, property);
         textEditor = new TextField();
         textEditor.setPrefWidth(MapLayerPropertiesEditor.NAME_EDITOR_WIDTH);

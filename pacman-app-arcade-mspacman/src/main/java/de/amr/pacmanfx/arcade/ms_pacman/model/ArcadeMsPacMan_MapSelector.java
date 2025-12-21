@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman.model;
 
-import de.amr.pacmanfx.lib.worldmap.WorldMap;
-import de.amr.pacmanfx.model.MapSelector;
+import de.amr.pacmanfx.model.world.MapSelector;
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 
 import java.util.List;

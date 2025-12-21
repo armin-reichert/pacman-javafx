@@ -1,4 +1,4 @@
-package de.amr.pacmanfx.lib.worldmap;
+package de.amr.pacmanfx.model.world;
 
 import de.amr.pacmanfx.lib.StopWatch;
 import de.amr.pacmanfx.lib.math.Vector2i;

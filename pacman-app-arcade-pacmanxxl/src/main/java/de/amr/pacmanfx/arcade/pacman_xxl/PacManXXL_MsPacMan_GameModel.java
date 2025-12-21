@@ -8,8 +8,8 @@ import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.MapSelectionMode;
-import de.amr.pacmanfx.model.MapSelector;
+import de.amr.pacmanfx.model.world.MapSelectionMode;
+import de.amr.pacmanfx.model.world.MapSelector;
 
 import java.io.File;
 import java.util.Random;

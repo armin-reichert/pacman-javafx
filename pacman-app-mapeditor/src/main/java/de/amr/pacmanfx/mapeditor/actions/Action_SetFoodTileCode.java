@@ -5,8 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.mapeditor.actions;
 
 import de.amr.pacmanfx.lib.math.Vector2i;
-import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
+import de.amr.pacmanfx.model.world.WorldMap;
 
 import static de.amr.pacmanfx.mapeditor.EditorUtil.canPlaceFoodAtTile;
 import static java.util.Objects.requireNonNull;

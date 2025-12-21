@@ -6,15 +6,13 @@ package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.pacmanfx.arcade.pacman.model.actors.*;
 import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.lib.Vec2Byte;
+import de.amr.pacmanfx.lib.math.Vector2b;
 import de.amr.pacmanfx.lib.math.Vector2i;
-import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
-import de.amr.pacmanfx.lib.worldmap.TerrainTile;
-import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
+import de.amr.pacmanfx.model.world.*;
 import de.amr.pacmanfx.steering.RouteBasedSteering;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import javafx.beans.property.BooleanProperty;
@@ -29,9 +27,9 @@ import java.util.List;
 import static de.amr.pacmanfx.Globals.ORANGE_GHOST_POKEY;
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
 import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
-import static de.amr.pacmanfx.lib.Vec2Byte.vec2Byte;
 import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomFloat;
-import static de.amr.pacmanfx.model.DefaultWorldMapPropertyName.*;
+import static de.amr.pacmanfx.lib.math.Vector2b.vec2Byte;
+import static de.amr.pacmanfx.model.world.DefaultWorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -52,7 +50,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel implements LevelCou
 
     public static final int MAX_LEVEL_COUNTER_SYMBOLS = 7;
 
-    private static final List<Vec2Byte> PAC_MAN_DEMO_LEVEL_ROUTE = List.of(
+    private static final List<Vector2b> PAC_MAN_DEMO_LEVEL_ROUTE = List.of(
         vec2Byte(9, 26), vec2Byte(9, 29), vec2Byte(12,29), vec2Byte(12, 32), vec2Byte(26,32),
         vec2Byte(26,29), vec2Byte(24,29), vec2Byte(24,26), vec2Byte(26,26),  vec2Byte(26,23),
         vec2Byte(21,23), vec2Byte(18,23), vec2Byte(18,14), vec2Byte(9,14),   vec2Byte(9,17),

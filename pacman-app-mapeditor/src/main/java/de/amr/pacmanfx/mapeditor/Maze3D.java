@@ -6,10 +6,10 @@ package de.amr.pacmanfx.mapeditor;
 
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
-import de.amr.pacmanfx.lib.worldmap.FoodTile;
-import de.amr.pacmanfx.lib.worldmap.Obstacle;
-import de.amr.pacmanfx.lib.worldmap.WorldMap;
-import de.amr.pacmanfx.model.DefaultWorldMapPropertyName;
+import de.amr.pacmanfx.model.world.DefaultWorldMapPropertyName;
+import de.amr.pacmanfx.model.world.FoodTile;
+import de.amr.pacmanfx.model.world.Obstacle;
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.model3D.GhostBody;
 import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;

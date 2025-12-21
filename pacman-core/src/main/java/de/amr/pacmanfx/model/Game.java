@@ -9,6 +9,7 @@ import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.model.world.MapSelector;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 

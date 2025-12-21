@@ -2,19 +2,17 @@
 Copyright (c) 2021-2026 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.lib;
+package de.amr.pacmanfx.lib.math;
 
-import de.amr.pacmanfx.lib.math.Vector2i;
+public record Vector2b(byte x, byte y) {
 
-public record Vec2Byte(byte x, byte y) {
+    public static Vector2b vec2Byte(int x, int y) { return new Vector2b(x, y); }
 
-    public static Vec2Byte vec2Byte(int x, int y) { return new Vec2Byte(x, y); }
-
-    public Vec2Byte(int x, int y) {
+    public Vector2b(int x, int y) {
         this((byte) x, (byte) y);
     }
 
-    public Vec2Byte(Vector2i tile) {
+    public Vector2b(Vector2i tile) {
         this((short) tile.x(), (short) tile.y());
     }
 

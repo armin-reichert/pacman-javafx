@@ -7,9 +7,9 @@ package de.amr.pacmanfx.steering;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.math.Vector2i;
-import de.amr.pacmanfx.lib.worldmap.FoodLayer;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.*;
+import de.amr.pacmanfx.model.world.FoodLayer;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;

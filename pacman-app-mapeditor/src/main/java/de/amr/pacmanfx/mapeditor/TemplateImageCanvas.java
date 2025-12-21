@@ -4,11 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.mapeditor;
 
-import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.mapeditor.actions.Action_FillMapFromTemplate;
 import de.amr.pacmanfx.mapeditor.actions.Action_SetFoodProperty;
 import de.amr.pacmanfx.mapeditor.actions.Action_SetTerrainProperty;
-import de.amr.pacmanfx.model.DefaultWorldMapPropertyName;
+import de.amr.pacmanfx.model.world.DefaultWorldMapPropertyName;
+import de.amr.pacmanfx.model.world.WorldMap;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.geometry.Insets;

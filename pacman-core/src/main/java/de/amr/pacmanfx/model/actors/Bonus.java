@@ -6,13 +6,13 @@ package de.amr.pacmanfx.model.actors;
 
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.lib.Vec2Byte;
+import de.amr.pacmanfx.lib.math.Vector2b;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
-import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.steering.RouteBasedSteering;
 import org.tinylog.Logger;
 
@@ -132,14 +132,14 @@ public class Bonus extends MovingActor {
         return reachedExit;
     }
 
-    public void initRoute(List<Vec2Byte> waypoints, boolean leftToRight) {
+    public void initRoute(List<Vector2b> waypoints, boolean leftToRight) {
         requireNonNull(waypoints);
         if (waypoints.isEmpty()) {
             Logger.error("Bonus route must not be empty");
             return;
         }
         var route = new ArrayList<>(waypoints);
-        Vec2Byte first = route.removeFirst();
+        Vector2b first = route.removeFirst();
         placeAtTile(first.toVector2i());
         setMoveDir(leftToRight ? Direction.RIGHT : Direction.LEFT);
         setWishDir(leftToRight ? Direction.RIGHT : Direction.LEFT);

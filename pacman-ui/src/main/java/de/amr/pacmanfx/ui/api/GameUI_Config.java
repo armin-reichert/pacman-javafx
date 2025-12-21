@@ -5,10 +5,10 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.api;
 
 import de.amr.pacmanfx.lib.Disposable;
-import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.actors.AnimationManager;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui._2d.HUD_Renderer;

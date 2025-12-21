@@ -5,18 +5,18 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.mapeditor.actions;
 
 import de.amr.pacmanfx.lib.math.Vector2i;
-import de.amr.pacmanfx.lib.worldmap.FoodTile;
-import de.amr.pacmanfx.lib.worldmap.Obstacle;
-import de.amr.pacmanfx.lib.worldmap.TerrainTile;
-import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.mapeditor.MessageType;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
+import de.amr.pacmanfx.model.world.FoodTile;
+import de.amr.pacmanfx.model.world.Obstacle;
+import de.amr.pacmanfx.model.world.TerrainTile;
+import de.amr.pacmanfx.model.world.WorldMap;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
-import static de.amr.pacmanfx.model.DefaultWorldMapPropertyName.*;
+import static de.amr.pacmanfx.model.world.DefaultWorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;
 
 public class Action_IdentifyTileAndObstacle extends EditorUIAction<String> {

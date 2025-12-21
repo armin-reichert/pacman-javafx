@@ -5,13 +5,12 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman.model;
 
 import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.lib.Vec2Byte;
+import de.amr.pacmanfx.lib.math.Vector2b;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
-import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
-import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.*;
+import de.amr.pacmanfx.model.world.*;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import de.amr.pacmanfx.steering.Steering;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
@@ -30,7 +29,7 @@ import static de.amr.pacmanfx.Validations.inClosedRange;
 import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
 import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomByte;
-import static de.amr.pacmanfx.model.DefaultWorldMapPropertyName.*;
+import static de.amr.pacmanfx.model.world.DefaultWorldMapPropertyName.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameController.GameState.HUNTING;
 import static java.util.Objects.requireNonNull;
 
@@ -568,13 +567,13 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
         Vector2i houseEntryOpposite = houseEntry.plus(0, house.sizeInTiles().y() + 1);
         HPortal entryPortal = portals.get(new Random().nextInt(portals.size()));
         HPortal exitPortal  = portals.get(new Random().nextInt(portals.size()));
-        List<Vec2Byte> route = Stream.of(
+        List<Vector2b> route = Stream.of(
             leftToRight ? entryPortal.leftBorderEntryTile() : entryPortal.rightBorderEntryTile(),
             houseEntry,
             houseEntryOpposite,
             houseEntry,
             leftToRight ? exitPortal.rightBorderEntryTile().plus(1, 0) : exitPortal.leftBorderEntryTile().minus(1, 0)
-        ).map(Vec2Byte::new).toList();
+        ).map(Vector2b::new).toList();
 
         level.selectNextBonus();
         byte symbol = level.bonusSymbol(level.currentBonusIndex());

@@ -6,8 +6,8 @@ package de.amr.pacmanfx.model;
 
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.timer.Pulse;
-import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.model.actors.*;
+import de.amr.pacmanfx.model.world.WorldMap;
 
 import java.util.ArrayList;
 import java.util.List;

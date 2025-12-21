@@ -6,14 +6,14 @@ package de.amr.pacmanfx.mapeditor;
 
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.math.Vector2i;
-import de.amr.pacmanfx.lib.worldmap.FoodLayer;
-import de.amr.pacmanfx.lib.worldmap.TerrainLayer;
-import de.amr.pacmanfx.lib.worldmap.WorldMap;
 import de.amr.pacmanfx.mapeditor.actions.*;
 import de.amr.pacmanfx.mapeditor.palette.PaletteID;
 import de.amr.pacmanfx.mapeditor.rendering.ActorSpriteRenderer;
 import de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites;
 import de.amr.pacmanfx.mapeditor.rendering.TerrainMapTileRenderer;
+import de.amr.pacmanfx.model.world.FoodLayer;
+import de.amr.pacmanfx.model.world.TerrainLayer;
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.rendering.FoodMapRenderer;
@@ -41,7 +41,7 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.mapeditor.EditorGlobals.ACTOR_SPRITES;
 import static de.amr.pacmanfx.mapeditor.EditorGlobals.translated;
 import static de.amr.pacmanfx.mapeditor.EditorUtil.getColorFromMapLayer;
-import static de.amr.pacmanfx.model.DefaultWorldMapPropertyName.COLOR_FOOD;
+import static de.amr.pacmanfx.model.world.DefaultWorldMapPropertyName.COLOR_FOOD;
 import static java.util.Objects.requireNonNull;
 
 public class EditCanvas extends Canvas {

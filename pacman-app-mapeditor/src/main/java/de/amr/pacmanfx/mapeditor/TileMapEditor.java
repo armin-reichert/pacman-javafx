@@ -4,9 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.mapeditor;
 
-import de.amr.pacmanfx.lib.worldmap.WorldMap;
-import de.amr.pacmanfx.lib.worldmap.WorldMapChecker;
 import de.amr.pacmanfx.mapeditor.actions.Action_CreateEmptyMap;
+import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.model.world.WorldMapChecker;
 import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;

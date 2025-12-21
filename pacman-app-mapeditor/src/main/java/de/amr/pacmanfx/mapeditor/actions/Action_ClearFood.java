@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.mapeditor.actions;
 
-import de.amr.pacmanfx.lib.worldmap.FoodTile;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
+import de.amr.pacmanfx.model.world.FoodTile;
 
 public class Action_ClearFood extends EditorAction<Void> {
 

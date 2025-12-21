@@ -1,4 +1,4 @@
-package de.amr.pacmanfx.lib.worldmap;
+package de.amr.pacmanfx.lib;
 
 public record ColorRGBA(byte red, byte green, byte blue, double alpha) {
 

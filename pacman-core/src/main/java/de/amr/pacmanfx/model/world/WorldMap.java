@@ -2,7 +2,7 @@
 Copyright (c) 2021-2026 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.lib.worldmap;
+package de.amr.pacmanfx.model.world;
 
 import org.tinylog.Logger;
 
@@ -151,7 +151,7 @@ public class WorldMap {
         return foodLayer;
     }
 
-    public WorldMapLayer layer(LayerID id) {
+    public WorldMapLayer layer(WorldMapLayerID id) {
         return switch (id) {
             case TERRAIN -> terrainLayer;
             case FOOD -> foodLayer;

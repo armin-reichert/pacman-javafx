@@ -4,12 +4,12 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.mapeditor.properties;
 
-import de.amr.pacmanfx.lib.worldmap.LayerID;
-import de.amr.pacmanfx.lib.worldmap.WorldMap;
-import de.amr.pacmanfx.lib.worldmap.WorldMapLayer;
 import de.amr.pacmanfx.mapeditor.EditorGlobals;
 import de.amr.pacmanfx.mapeditor.MessageType;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
+import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.model.world.WorldMapLayer;
+import de.amr.pacmanfx.model.world.WorldMapLayerID;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -31,13 +31,13 @@ abstract class AbstractPropertyEditor {
     protected final ObjectProperty<WorldMap> worldMap = new SimpleObjectProperty<>();
 
     protected final TileMapEditorUI ui;
-    protected final LayerID layerID;
+    protected final WorldMapLayerID layerID;
     protected final WorldMapLayer layer;
     protected final TextField nameEditor;
 
     private MapEditorProperty property;
 
-    protected AbstractPropertyEditor(TileMapEditorUI ui, LayerID layerID, WorldMapLayer layer, MapEditorProperty property) {
+    protected AbstractPropertyEditor(TileMapEditorUI ui, WorldMapLayerID layerID, WorldMapLayer layer, MapEditorProperty property) {
         this.ui = requireNonNull(ui);
         this.layerID = requireNonNull(layerID);
         this.layer = requireNonNull(layer);

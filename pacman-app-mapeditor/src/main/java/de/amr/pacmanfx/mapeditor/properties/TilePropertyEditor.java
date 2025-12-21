@@ -5,10 +5,10 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.mapeditor.properties;
 
 import de.amr.pacmanfx.lib.math.Vector2i;
-import de.amr.pacmanfx.lib.worldmap.LayerID;
-import de.amr.pacmanfx.lib.worldmap.WorldMapLayer;
-import de.amr.pacmanfx.lib.worldmap.WorldMapParser;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
+import de.amr.pacmanfx.model.world.WorldMapLayer;
+import de.amr.pacmanfx.model.world.WorldMapLayerID;
+import de.amr.pacmanfx.model.world.WorldMapParser;
 import javafx.scene.Node;
 import javafx.scene.control.Spinner;
 import javafx.scene.layout.HBox;
@@ -19,7 +19,7 @@ class TilePropertyEditor extends AbstractPropertyEditor {
     private final Spinner<Integer> spinnerY;
     private final HBox valueEditorPane;
 
-    public TilePropertyEditor(TileMapEditorUI ui, LayerID layerID, WorldMapLayer layer, MapEditorProperty property) {
+    public TilePropertyEditor(TileMapEditorUI ui, WorldMapLayerID layerID, WorldMapLayer layer, MapEditorProperty property) {
         super(ui, layerID, layer, property);
 
         spinnerX = new Spinner<>(0, layer.numCols() - 1, 0);

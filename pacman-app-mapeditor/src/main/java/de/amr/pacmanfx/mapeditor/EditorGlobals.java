@@ -18,7 +18,7 @@ import java.text.MessageFormat;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-import static de.amr.pacmanfx.model.DefaultWorldMapPropertyName.*;
+import static de.amr.pacmanfx.model.world.DefaultWorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;
 
 public interface EditorGlobals {

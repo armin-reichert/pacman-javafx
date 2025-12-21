@@ -5,10 +5,10 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.mapeditor.palette;
 
 import de.amr.pacmanfx.lib.math.Vector2i;
-import de.amr.pacmanfx.lib.worldmap.LayerID;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.mapeditor.actions.Action_SetFoodTileCode;
 import de.amr.pacmanfx.mapeditor.actions.Action_SetTerrainTileCode;
+import de.amr.pacmanfx.model.world.WorldMapLayerID;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import de.amr.pacmanfx.uilib.rendering.TileRenderer;
 
@@ -21,7 +21,7 @@ public class TileCodeEditorTool implements PaletteTool {
 
     private final Consumer<Vector2i> tileEditor;
 
-    public TileCodeEditorTool(TileMapEditor editor, LayerID layerID, byte code, String description) {
+    public TileCodeEditorTool(TileMapEditor editor, WorldMapLayerID layerID, byte code, String description) {
         this.code = code;
         this.description = description;
         tileEditor = switch (layerID) {
