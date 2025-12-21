@@ -5,8 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.action;
 
 import de.amr.pacmanfx.Globals;
-import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
+import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameControl.StateName;
 import de.amr.pacmanfx.model.StandardGameVariant;

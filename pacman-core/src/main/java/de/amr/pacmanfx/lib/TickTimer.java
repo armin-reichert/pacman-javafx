@@ -2,17 +2,17 @@
 Copyright (c) 2021-2026 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.lib.timer;
+package de.amr.pacmanfx.lib;
 
 import de.amr.pacmanfx.Globals;
-import de.amr.pacmanfx.lib.timer.TickTimerEvent.Type;
+import de.amr.pacmanfx.lib.TickTimerEvent.Type;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static de.amr.pacmanfx.lib.timer.TickTimer.State.*;
+import static de.amr.pacmanfx.lib.TickTimer.State.*;
 import static java.util.Objects.requireNonNull;
 
 /**

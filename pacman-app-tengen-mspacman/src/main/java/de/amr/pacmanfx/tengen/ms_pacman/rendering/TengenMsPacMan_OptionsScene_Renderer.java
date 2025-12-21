@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman.rendering;
 
-import de.amr.pacmanfx.lib.RectShort;
+import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.TengenMsPacMan_OptionsScene;
 import de.amr.pacmanfx.ui._2d.GameScene2D;

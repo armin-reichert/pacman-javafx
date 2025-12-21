@@ -14,7 +14,7 @@ import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_PlayScene2D_Renderer;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_BootScene2D;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene3D;
-import de.amr.pacmanfx.lib.RectShort;
+import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;

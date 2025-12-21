@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.model3D;
 
-import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Disposable;
+import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;

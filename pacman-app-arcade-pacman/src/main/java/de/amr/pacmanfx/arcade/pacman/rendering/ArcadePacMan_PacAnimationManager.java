@@ -5,8 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
-import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.lib.RectShort;
+import de.amr.pacmanfx.lib.math.Direction;
+import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Pac;

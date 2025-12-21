@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model;
 
-import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.lib.timer.Pulse;
+import de.amr.pacmanfx.lib.Pulse;
+import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.world.WorldMap;
 

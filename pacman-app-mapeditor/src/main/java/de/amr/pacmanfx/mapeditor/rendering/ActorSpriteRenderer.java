@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.mapeditor.rendering;
 
-import de.amr.pacmanfx.lib.RectShort;
+import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 

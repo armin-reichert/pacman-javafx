@@ -4,9 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model.actors;
 
+import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
-import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.world.TerrainLayer;
@@ -14,7 +14,7 @@ import de.amr.pacmanfx.steering.Steering;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
-import static de.amr.pacmanfx.lib.timer.TickTimer.secToTicks;
+import static de.amr.pacmanfx.lib.TickTimer.secToTicks;
 import static java.util.Objects.requireNonNull;
 
 /**

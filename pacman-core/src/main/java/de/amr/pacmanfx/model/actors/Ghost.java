@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.model.actors;
 
 import de.amr.pacmanfx.Validations;
-import de.amr.pacmanfx.lib.Direction;
+import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.lib.math.RandomNumberSupport;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
@@ -25,8 +25,8 @@ import java.util.List;
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.Validations.*;
-import static de.amr.pacmanfx.lib.Direction.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
+import static de.amr.pacmanfx.lib.math.Direction.*;
 import static java.util.Objects.requireNonNull;
 
 /**

@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.layout;
 
+import de.amr.pacmanfx.lib.Pulse;
 import de.amr.pacmanfx.lib.math.Vector2i;
-import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.api.GameUI;

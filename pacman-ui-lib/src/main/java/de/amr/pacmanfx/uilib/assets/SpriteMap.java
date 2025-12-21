@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.assets;
 
-import de.amr.pacmanfx.lib.RectShort;
+import de.amr.pacmanfx.lib.math.RectShort;
 import org.tinylog.Logger;
 
 import java.util.EnumMap;

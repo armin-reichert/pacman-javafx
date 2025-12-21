@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.mapeditor;
 
-import de.amr.pacmanfx.lib.Direction;
+import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.mapeditor.actions.*;
 import de.amr.pacmanfx.mapeditor.palette.PaletteID;

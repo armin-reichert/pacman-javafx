@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman.rendering;
 
-import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.lib.RectShort;
+import de.amr.pacmanfx.lib.math.Direction;
+import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.Clapperboard;

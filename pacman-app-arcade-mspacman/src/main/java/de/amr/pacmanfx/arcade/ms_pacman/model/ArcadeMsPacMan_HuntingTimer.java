@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman.model;
 
-import de.amr.pacmanfx.lib.timer.TickTimer;
+import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.model.AbstractHuntingTimer;
 
 /**

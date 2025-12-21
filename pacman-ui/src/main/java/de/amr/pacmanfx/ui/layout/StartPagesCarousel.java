@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.layout;
 
-import de.amr.pacmanfx.lib.Direction;
+import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.api.ActionBindingsManager;

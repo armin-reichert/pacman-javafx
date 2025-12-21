@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.pacmanfx.arcade.pacman.model.actors.ArcadePacMan_ActorFactory;
-import de.amr.pacmanfx.lib.Direction;
+import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.StandardGameVariant;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;

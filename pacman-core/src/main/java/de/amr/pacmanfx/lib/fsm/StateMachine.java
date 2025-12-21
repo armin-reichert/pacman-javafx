@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.lib.fsm;
 
-import de.amr.pacmanfx.lib.timer.TickTimer;
+import de.amr.pacmanfx.lib.TickTimer;
 import org.tinylog.Logger;
 
 import java.util.*;

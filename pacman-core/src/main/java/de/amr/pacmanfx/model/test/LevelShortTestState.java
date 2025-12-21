@@ -6,8 +6,8 @@ package de.amr.pacmanfx.model.test;
 
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.event.GameEvent;
+import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
-import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.*;
 
 public class LevelShortTestState implements StateMachine.State<Game>, TestState {

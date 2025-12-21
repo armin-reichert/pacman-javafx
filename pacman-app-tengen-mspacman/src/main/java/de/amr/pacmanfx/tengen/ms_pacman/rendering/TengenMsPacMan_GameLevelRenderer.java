@@ -4,10 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman.rendering;
 
-import de.amr.pacmanfx.lib.RectShort;
+import de.amr.pacmanfx.lib.Pulse;
+import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
-import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelMessage;
 import de.amr.pacmanfx.model.world.FoodLayer;

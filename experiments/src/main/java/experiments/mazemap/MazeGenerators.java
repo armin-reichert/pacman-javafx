@@ -4,9 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package experiments.mazemap;
 
-import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.graph.DirMap;
 import de.amr.pacmanfx.lib.graph.GridGraph;
+import de.amr.pacmanfx.lib.math.Direction;
 
 import java.util.*;
 import java.util.stream.IntStream;

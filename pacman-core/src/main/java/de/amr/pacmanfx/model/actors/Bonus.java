@@ -5,11 +5,11 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.model.actors;
 
 import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.lib.Direction;
+import de.amr.pacmanfx.lib.Pulse;
+import de.amr.pacmanfx.lib.TickTimer;
+import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.lib.math.Vector2b;
 import de.amr.pacmanfx.lib.math.Vector2i;
-import de.amr.pacmanfx.lib.timer.Pulse;
-import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.world.TerrainLayer;

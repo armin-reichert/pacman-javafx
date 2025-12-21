@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
-import de.amr.pacmanfx.lib.RectShort;
+import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.uilib.assets.SpriteMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.image.Image;
@@ -12,7 +12,7 @@ import javafx.scene.image.Image;
 import java.util.stream.IntStream;
 
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.*;
-import static de.amr.pacmanfx.lib.RectShort.rect;
+import static de.amr.pacmanfx.lib.math.RectShort.rect;
 import static java.util.Objects.requireNonNull;
 
 public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements SpriteSheet<SpriteID> {

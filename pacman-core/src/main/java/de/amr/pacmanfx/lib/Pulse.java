@@ -2,7 +2,7 @@
 Copyright (c) 2021-2026 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.lib.timer;
+package de.amr.pacmanfx.lib;
 
 /**
  * A pulse switches between states ON and OFF and keeps each state for <code>halfPeriod</code> ticks.

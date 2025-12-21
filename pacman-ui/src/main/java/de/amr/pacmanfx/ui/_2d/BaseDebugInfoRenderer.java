@@ -4,9 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._2d;
 
+import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
-import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.GameControl;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.MovingActor;

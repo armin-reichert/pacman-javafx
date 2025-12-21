@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model.world;
 
-import de.amr.pacmanfx.lib.Direction;
+import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
@@ -17,7 +17,7 @@ import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.lib.Direction.LEFT;
+import static de.amr.pacmanfx.lib.math.Direction.LEFT;
 import static java.util.Objects.requireNonNull;
 
 /**

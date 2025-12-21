@@ -4,9 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.dashboard;
 
+import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
-import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.MovingActor;
@@ -18,7 +18,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.lib.timer.TickTimer.ticksToString;
+import static de.amr.pacmanfx.lib.TickTimer.ticksToString;
 
 public class InfoBoxActorInfo extends InfoBox {
 

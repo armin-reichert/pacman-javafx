@@ -9,9 +9,9 @@ import de.amr.pacmanfx.arcade.ms_pacman.model.actors.ArcadeMsPacMan_ActorFactory
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_HUD;
-import de.amr.pacmanfx.lib.Direction;
+import de.amr.pacmanfx.lib.TickTimer;
+import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.lib.math.Vector2f;
-import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;

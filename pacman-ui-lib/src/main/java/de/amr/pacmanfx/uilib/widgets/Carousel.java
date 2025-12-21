@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.widgets;
 
-import de.amr.pacmanfx.lib.Direction;
+import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;

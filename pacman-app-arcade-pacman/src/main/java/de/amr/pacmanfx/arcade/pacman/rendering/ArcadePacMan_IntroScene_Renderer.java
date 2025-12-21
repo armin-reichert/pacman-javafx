@@ -5,8 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_IntroScene;
-import de.amr.pacmanfx.lib.RectShort;
-import de.amr.pacmanfx.lib.timer.Pulse;
+import de.amr.pacmanfx.lib.Pulse;
+import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.ui._2d.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;

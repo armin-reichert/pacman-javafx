@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman.rendering;
 
 import de.amr.pacmanfx.lib.Disposable;
-import de.amr.pacmanfx.lib.RectShort;
+import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.uilib.Ufx;

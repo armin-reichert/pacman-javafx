@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.mapeditor.palette;
 
-import de.amr.pacmanfx.lib.RectShort;
+import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import de.amr.pacmanfx.mapeditor.actions.Action_SetTerrainProperty;

@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.model.world;
 
 import de.amr.pacmanfx.lib.PolygonToRectangleConverter;
-import de.amr.pacmanfx.lib.RectShort;
+import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import org.tinylog.Logger;

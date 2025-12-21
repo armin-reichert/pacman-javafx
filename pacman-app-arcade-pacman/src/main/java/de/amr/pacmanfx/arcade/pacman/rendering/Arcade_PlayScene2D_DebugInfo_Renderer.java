@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
-import de.amr.pacmanfx.lib.Direction;
+import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.model.AbstractHuntingTimer;
 import de.amr.pacmanfx.model.GameControl;
 import de.amr.pacmanfx.model.GameLevel;

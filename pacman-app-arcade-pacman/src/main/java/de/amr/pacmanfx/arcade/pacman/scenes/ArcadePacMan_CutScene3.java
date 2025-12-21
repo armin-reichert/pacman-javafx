@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_HUD;
 import de.amr.pacmanfx.arcade.pacman.model.actors.ArcadePacMan_ActorFactory;
-import de.amr.pacmanfx.lib.Direction;
+import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;

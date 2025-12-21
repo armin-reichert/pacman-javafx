@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.dashboard;
 
+import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
-import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.AbstractHuntingTimer;
 import de.amr.pacmanfx.model.GameLevel;
@@ -21,7 +21,7 @@ import java.util.Map;
 
 import static de.amr.pacmanfx.Globals.CYAN_GHOST_BASHFUL;
 import static de.amr.pacmanfx.Globals.NUM_TICKS_PER_SEC;
-import static de.amr.pacmanfx.lib.timer.TickTimer.secToTicks;
+import static de.amr.pacmanfx.lib.TickTimer.secToTicks;
 import static de.amr.pacmanfx.ui.api.GameUI_Config.CONFIG_KEY_COLOR_MAP;
 import static de.amr.pacmanfx.ui.api.GameUI_Config.CONFIG_KEY_COLOR_MAP_INDEX;
 import static de.amr.pacmanfx.uilib.Ufx.formatColorHex;

@@ -2,9 +2,7 @@
 Copyright (c) 2021-2026 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.lib;
-
-import de.amr.pacmanfx.lib.math.Vector2f;
+package de.amr.pacmanfx.lib.math;
 
 /**
  * A rectangular area with short integer precision.
