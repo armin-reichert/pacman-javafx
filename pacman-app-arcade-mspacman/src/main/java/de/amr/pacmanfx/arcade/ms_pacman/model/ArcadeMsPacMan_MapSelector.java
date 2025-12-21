@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman.model;
 
-import de.amr.pacmanfx.model.world.MapSelector;
 import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.model.world.WorldMapSelector;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 
 import java.util.List;
@@ -15,7 +15,7 @@ import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig.CONFIG_KE
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig.CONFIG_KEY_COLOR_MAP_INDEX;
 import static de.amr.pacmanfx.ui.api.GameUI_Config.CONFIG_KEY_MAP_NUMBER;
 
-public class ArcadeMsPacMan_MapSelector implements MapSelector {
+public class ArcadeMsPacMan_MapSelector implements WorldMapSelector {
 
     public static final List<WorldMapColorScheme> WORLD_MAP_COLOR_SCHEMES = List.of(
         new WorldMapColorScheme("FFB7AE", "FF0000", "FCB5FF", "DEDEFF"),
@@ -44,7 +44,7 @@ public class ArcadeMsPacMan_MapSelector implements MapSelector {
     @Override
     public void loadAllMapPrototypes() {
         if (mapPrototypes.isEmpty()) {
-            mapPrototypes = MapSelector.loadMapsFromModule(getClass(), "/de/amr/pacmanfx/arcade/ms_pacman/maps/mspacman_%d.world", 4);
+            mapPrototypes = WorldMapSelector.loadMapsFromModule(getClass(), "/de/amr/pacmanfx/arcade/ms_pacman/maps/mspacman_%d.world", 4);
         }
     }
 

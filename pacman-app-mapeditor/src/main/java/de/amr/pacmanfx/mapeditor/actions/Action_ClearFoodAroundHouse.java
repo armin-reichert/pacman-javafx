@@ -9,9 +9,9 @@ import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.model.world.TerrainTile;
 import de.amr.pacmanfx.model.world.WorldMap;
 
-import static de.amr.pacmanfx.model.world.DefaultWorldMapPropertyName.POS_HOUSE_MAX_TILE;
-import static de.amr.pacmanfx.model.world.DefaultWorldMapPropertyName.POS_HOUSE_MIN_TILE;
 import static de.amr.pacmanfx.model.world.WorldMapParser.parseTile;
+import static de.amr.pacmanfx.model.world.WorldMapPropertyName.POS_HOUSE_MAX_TILE;
+import static de.amr.pacmanfx.model.world.WorldMapPropertyName.POS_HOUSE_MIN_TILE;
 import static java.util.Objects.requireNonNull;
 
 public class Action_ClearFoodAroundHouse extends EditorAction<Void> {

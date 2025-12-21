@@ -41,7 +41,7 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.mapeditor.EditorGlobals.ACTOR_SPRITES;
 import static de.amr.pacmanfx.mapeditor.EditorGlobals.translated;
 import static de.amr.pacmanfx.mapeditor.EditorUtil.getColorFromMapLayer;
-import static de.amr.pacmanfx.model.world.DefaultWorldMapPropertyName.COLOR_FOOD;
+import static de.amr.pacmanfx.model.world.WorldMapPropertyName.COLOR_FOOD;
 import static java.util.Objects.requireNonNull;
 
 public class EditCanvas extends Canvas {

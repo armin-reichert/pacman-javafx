@@ -8,9 +8,9 @@ import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.mapeditor.rendering.ActorSpriteRenderer;
 import de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites;
 import de.amr.pacmanfx.mapeditor.rendering.TerrainMapTileRenderer;
-import de.amr.pacmanfx.model.world.DefaultWorldMapPropertyName;
 import de.amr.pacmanfx.model.world.TerrainTile;
 import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.model.world.WorldMapPropertyName;
 import de.amr.pacmanfx.uilib.rendering.ArcadeHouseRenderer;
 import de.amr.pacmanfx.uilib.rendering.FoodMapRenderer;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapColorScheme;
@@ -90,8 +90,8 @@ public class Preview2D extends Canvas {
     }
 
     private void drawHouse(WorldMap worldMap) {
-        Vector2i minTile = worldMap.terrainLayer().getTileProperty(DefaultWorldMapPropertyName.POS_HOUSE_MIN_TILE);
-        Vector2i maxTile = worldMap.terrainLayer().getTileProperty(DefaultWorldMapPropertyName.POS_HOUSE_MAX_TILE);
+        Vector2i minTile = worldMap.terrainLayer().getTileProperty(WorldMapPropertyName.POS_HOUSE_MIN_TILE);
+        Vector2i maxTile = worldMap.terrainLayer().getTileProperty(WorldMapPropertyName.POS_HOUSE_MAX_TILE);
         if (minTile != null && maxTile != null) {
             double outerWidth = terrainRenderer.borderWallFullWidth();
             double innerWidth = terrainRenderer.borderWallInnerWidth();
@@ -113,7 +113,7 @@ public class Preview2D extends Canvas {
         }
         if (foodVisible.get()) {
             Color foodColor = getColorFromMapLayer(worldMap.foodLayer(),
-                DefaultWorldMapPropertyName.COLOR_FOOD, ArcadeSprites.MS_PACMAN_COLOR_FOOD);
+                WorldMapPropertyName.COLOR_FOOD, ArcadeSprites.MS_PACMAN_COLOR_FOOD);
             foodRenderer.setEnergizerColor(foodColor);
             foodRenderer.setPelletColor(foodColor);
             worldMap.terrainLayer().tiles().forEach(tile -> foodRenderer.drawTile(tile, worldMap.foodLayer().content(tile)));

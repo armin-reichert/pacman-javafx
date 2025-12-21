@@ -5,10 +5,10 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.mapeditor;
 
 import de.amr.pacmanfx.lib.math.Vector2i;
-import de.amr.pacmanfx.model.world.DefaultWorldMapPropertyName;
 import de.amr.pacmanfx.model.world.TerrainTile;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapLayer;
+import de.amr.pacmanfx.model.world.WorldMapPropertyName;
 import javafx.scene.Node;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -95,8 +95,8 @@ public interface EditorUtil {
     }
 
     static boolean isPartOfHouse(WorldMap worldMap, Vector2i tile) {
-        Vector2i minTile = worldMap.terrainLayer().getTileProperty(DefaultWorldMapPropertyName.POS_HOUSE_MIN_TILE);
-        Vector2i maxTile = worldMap.terrainLayer().getTileProperty(DefaultWorldMapPropertyName.POS_HOUSE_MAX_TILE);
+        Vector2i minTile = worldMap.terrainLayer().getTileProperty(WorldMapPropertyName.POS_HOUSE_MIN_TILE);
+        Vector2i maxTile = worldMap.terrainLayer().getTileProperty(WorldMapPropertyName.POS_HOUSE_MAX_TILE);
         if (minTile != null && maxTile != null) {
             return minTile.x() <= tile.x() && tile.x() <= maxTile.x()
                     && minTile.y() <= tile.y() && tile.y() <= maxTile.y();

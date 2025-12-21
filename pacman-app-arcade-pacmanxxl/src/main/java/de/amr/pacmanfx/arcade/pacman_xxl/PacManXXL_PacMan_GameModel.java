@@ -8,8 +8,8 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.world.MapSelectionMode;
-import de.amr.pacmanfx.model.world.MapSelector;
+import de.amr.pacmanfx.model.world.WorldMapSelectionMode;
+import de.amr.pacmanfx.model.world.WorldMapSelector;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 
 import java.io.File;
@@ -26,7 +26,7 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
     private static final int[] DEMO_LEVEL_NUMBERS = { 1, 3, 6, 10, 14, 18 };
 
     // Warning: Constructor signature is used via reflection by GameUI_Builder, do not change!
-    public PacManXXL_PacMan_GameModel(CoinMechanism coinMechanism, MapSelector mapSelector, File highScoreFile) {
+    public PacManXXL_PacMan_GameModel(CoinMechanism coinMechanism, WorldMapSelector mapSelector, File highScoreFile) {
         super(coinMechanism, mapSelector, highScoreFile);
         // Demo level map could be a custom map, so use generic auto-steering that also can cope with dead-ends:
         demoLevelSteering = new RuleBasedPacSteering();
@@ -41,7 +41,7 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
         int randomIndex = randomInt(0, DEMO_LEVEL_NUMBERS.length);
         int levelNumber = DEMO_LEVEL_NUMBERS[randomIndex];
         score().setLevelNumber(levelNumber);
-        mapSelector().setSelectionMode(MapSelectionMode.NO_CUSTOM_MAPS);
+        mapSelector().setSelectionMode(WorldMapSelectionMode.NO_CUSTOM_MAPS);
 
         final GameLevel level = createLevel(levelNumber, true);
         level.pac().setImmune(false);

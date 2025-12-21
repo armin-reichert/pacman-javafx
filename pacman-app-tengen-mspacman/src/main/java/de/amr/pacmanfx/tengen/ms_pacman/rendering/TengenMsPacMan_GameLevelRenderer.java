@@ -10,10 +10,10 @@ import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelMessage;
-import de.amr.pacmanfx.model.world.DefaultWorldMapPropertyName;
 import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.model.world.House;
 import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.model.world.WorldMapPropertyName;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.uilib.rendering.*;
@@ -185,11 +185,11 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
 
         // Now the actor sprites outside the house. Be careful not to over-paint nearby obstacle edges!
         final Vector2i pacTile = gameLevel.worldMap().terrainLayer()
-            .getTilePropertyOrDefault(DefaultWorldMapPropertyName.POS_PAC, Vector2i.of(14, 26));
+            .getTilePropertyOrDefault(WorldMapPropertyName.POS_PAC, Vector2i.of(14, 26));
         overPaintActorSprite(pacTile, margin);
 
         final Vector2i redGhostTile = gameLevel.worldMap().terrainLayer()
-            .getTilePropertyOrDefault(DefaultWorldMapPropertyName.POS_GHOST_1_RED, Vector2i.of(13, 14));
+            .getTilePropertyOrDefault(WorldMapPropertyName.POS_GHOST_1_RED, Vector2i.of(13, 14));
         overPaintActorSprite(redGhostTile, margin);
     }
 

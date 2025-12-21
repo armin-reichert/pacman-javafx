@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model.world;
 
-public enum MapSelectionMode {
+public enum WorldMapSelectionMode {
     /**
      * Standard maps only, after all standard maps have been used, in random order.
      */

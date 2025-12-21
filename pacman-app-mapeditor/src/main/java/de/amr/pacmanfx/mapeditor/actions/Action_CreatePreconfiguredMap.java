@@ -6,8 +6,8 @@ package de.amr.pacmanfx.mapeditor.actions;
 
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
-import de.amr.pacmanfx.model.world.DefaultWorldMapPropertyName;
 import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.model.world.WorldMapPropertyName;
 
 public class Action_CreatePreconfiguredMap extends EditorAction<WorldMap> {
 
@@ -29,8 +29,8 @@ public class Action_CreatePreconfiguredMap extends EditorAction<WorldMap> {
         if (newMap.numRows() >= 20) {
             Vector2i houseMinTile = Vector2i.of(numCols / 2 - 4, numRows / 2 - 3);
             new Action_PlaceArcadeHouse(editor, newMap, houseMinTile).execute();
-            newMap.terrainLayer().propertyMap().put(DefaultWorldMapPropertyName.POS_PAC,   String.valueOf(houseMinTile.plus(3, 11)));
-            newMap.terrainLayer().propertyMap().put(DefaultWorldMapPropertyName.POS_BONUS, String.valueOf(houseMinTile.plus(3, 5)));
+            newMap.terrainLayer().propertyMap().put(WorldMapPropertyName.POS_PAC,   String.valueOf(houseMinTile.plus(3, 11)));
+            newMap.terrainLayer().propertyMap().put(WorldMapPropertyName.POS_BONUS, String.valueOf(houseMinTile.plus(3, 5)));
         }
         newMap.terrainLayer().buildObstacleList();
         return newMap;

@@ -11,7 +11,7 @@ import de.amr.pacmanfx.model.StandardGameVariant;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.model.world.MapSelectionMode;
+import de.amr.pacmanfx.model.world.WorldMapSelectionMode;
 import de.amr.pacmanfx.ui.api.ArcadePalette;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
@@ -43,7 +43,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         String gameVariant;
         boolean play3D;
         boolean cutScenesEnabled;
-        MapSelectionMode mapOrder;
+        WorldMapSelectionMode mapOrder;
     }
 
     private class ChaseAnimation {
@@ -214,8 +214,8 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         }
     };
 
-    private final OptionMenuEntry<MapSelectionMode> entryMapOrder = new OptionMenuEntry<>("MAP ORDER",
-        MapSelectionMode.CUSTOM_MAPS_FIRST, MapSelectionMode.ALL_RANDOM, MapSelectionMode.NO_CUSTOM_MAPS)
+    private final OptionMenuEntry<WorldMapSelectionMode> entryMapOrder = new OptionMenuEntry<>("MAP ORDER",
+        WorldMapSelectionMode.CUSTOM_MAPS_FIRST, WorldMapSelectionMode.ALL_RANDOM, WorldMapSelectionMode.NO_CUSTOM_MAPS)
     {
         @Override
         protected void onValueChanged(int index) {
@@ -251,7 +251,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         state.gameVariant = StandardGameVariant.PACMAN_XXL.name();
         state.play3D = false;
         state.cutScenesEnabled = true;
-        state.mapOrder = MapSelectionMode.CUSTOM_MAPS_FIRST;
+        state.mapOrder = WorldMapSelectionMode.CUSTOM_MAPS_FIRST;
 
         var style = new OptionMenuStyle(
             Font.font(GameUI.FONT_PAC_FONT_GOOD.getFamily(), 32),

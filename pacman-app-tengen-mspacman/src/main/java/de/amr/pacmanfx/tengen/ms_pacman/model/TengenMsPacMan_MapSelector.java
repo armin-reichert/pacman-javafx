@@ -5,8 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman.model;
 
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
-import de.amr.pacmanfx.model.world.MapSelector;
 import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.model.world.WorldMapSelector;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.NonArcadeMapsSpriteSheet;
 
 import java.util.EnumMap;
@@ -19,7 +19,7 @@ import static de.amr.pacmanfx.lib.nes.NES_ColorScheme.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory.*;
 
-public class TengenMsPacMan_MapSelector implements MapSelector {
+public class TengenMsPacMan_MapSelector implements WorldMapSelector {
 
     private final Map<MapCategory, List<WorldMap>> mapRepository = new EnumMap<>(MapCategory.class);
 
@@ -36,10 +36,10 @@ public class TengenMsPacMan_MapSelector implements MapSelector {
     @Override
     public void loadAllMapPrototypes() {
         if (mapRepository.isEmpty()) {
-            mapRepository.put(MapCategory.ARCADE,  MapSelector.loadMapsFromModule(getClass(), MAPS_PATH + "arcade%d.world",     4));
-            mapRepository.put(MapCategory.MINI,    MapSelector.loadMapsFromModule(getClass(), MAPS_PATH + "mini%d.world",       6));
-            mapRepository.put(MapCategory.BIG,     MapSelector.loadMapsFromModule(getClass(), MAPS_PATH + "big%02d.world",     11));
-            mapRepository.put(MapCategory.STRANGE, MapSelector.loadMapsFromModule(getClass(), MAPS_PATH + "strange%02d.world", 15));
+            mapRepository.put(MapCategory.ARCADE,  WorldMapSelector.loadMapsFromModule(getClass(), MAPS_PATH + "arcade%d.world",     4));
+            mapRepository.put(MapCategory.MINI,    WorldMapSelector.loadMapsFromModule(getClass(), MAPS_PATH + "mini%d.world",       6));
+            mapRepository.put(MapCategory.BIG,     WorldMapSelector.loadMapsFromModule(getClass(), MAPS_PATH + "big%02d.world",     11));
+            mapRepository.put(MapCategory.STRANGE, WorldMapSelector.loadMapsFromModule(getClass(), MAPS_PATH + "strange%02d.world", 15));
         }
     }
 

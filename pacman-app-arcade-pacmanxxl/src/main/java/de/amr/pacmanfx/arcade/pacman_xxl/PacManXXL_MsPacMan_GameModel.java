@@ -8,8 +8,8 @@ import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.world.MapSelectionMode;
-import de.amr.pacmanfx.model.world.MapSelector;
+import de.amr.pacmanfx.model.world.WorldMapSelectionMode;
+import de.amr.pacmanfx.model.world.WorldMapSelector;
 
 import java.io.File;
 import java.util.Random;
@@ -17,7 +17,7 @@ import java.util.Random;
 public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
 
     // Warning: Constructor signature is used via reflection by GameUI_Builder, do not change!
-    public PacManXXL_MsPacMan_GameModel(CoinMechanism coinMechanism, MapSelector mapSelector, File highScoreFile) {
+    public PacManXXL_MsPacMan_GameModel(CoinMechanism coinMechanism, WorldMapSelector mapSelector, File highScoreFile) {
         super(coinMechanism, mapSelector, highScoreFile);
     }
 
@@ -29,7 +29,7 @@ public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
         // Select random (standard) level with different map and map color scheme for each choice
         int[] levelNumbers = { 1, 3, 6, 10, 14, 18 };
         int levelNumber = levelNumbers[new Random().nextInt(levelNumbers.length)];
-        mapSelector().setSelectionMode(MapSelectionMode.NO_CUSTOM_MAPS);
+        mapSelector().setSelectionMode(WorldMapSelectionMode.NO_CUSTOM_MAPS);
         final GameLevel level = createLevel(levelNumber, true);
         level.pac().setImmune(false);
         level.pac().setUsingAutopilot(true);

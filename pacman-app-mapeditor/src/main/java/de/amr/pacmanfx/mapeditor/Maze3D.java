@@ -6,10 +6,10 @@ package de.amr.pacmanfx.mapeditor;
 
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
-import de.amr.pacmanfx.model.world.DefaultWorldMapPropertyName;
 import de.amr.pacmanfx.model.world.FoodTile;
 import de.amr.pacmanfx.model.world.Obstacle;
 import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.model.world.WorldMapPropertyName;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.model3D.GhostBody;
 import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
@@ -159,9 +159,9 @@ public class Maze3D extends Group {
         mazeGroup.getChildren().add(floor);
 
         Color wallBaseColor = EditorUtil.getColorFromMapLayer(worldMap().terrainLayer(),
-            DefaultWorldMapPropertyName.COLOR_WALL_STROKE, MS_PACMAN_COLOR_WALL_STROKE);
+            WorldMapPropertyName.COLOR_WALL_STROKE, MS_PACMAN_COLOR_WALL_STROKE);
         Color wallTopColor = EditorUtil.getColorFromMapLayer(worldMap().terrainLayer(),
-            DefaultWorldMapPropertyName.COLOR_WALL_FILL, MS_PACMAN_COLOR_WALL_FILL);
+            WorldMapPropertyName.COLOR_WALL_FILL, MS_PACMAN_COLOR_WALL_FILL);
 
         PhongMaterial wallBaseMaterial = coloredMaterial(wallBaseColor);
         PhongMaterial wallTopMaterial = coloredMaterial(wallTopColor);
@@ -190,16 +190,16 @@ public class Maze3D extends Group {
                 .forEach(shape3D -> shape3D.drawModeProperty()
                         .bind(wireframe.map(wireframe -> wireframe ? DrawMode.LINE : DrawMode.FILL)));
 
-        addActorShape(pacmanShape3D,  DefaultWorldMapPropertyName.POS_PAC);
-        addActorShape(ghostShapes[0], DefaultWorldMapPropertyName.POS_GHOST_1_RED);
-        addActorShape(ghostShapes[1], DefaultWorldMapPropertyName.POS_GHOST_2_PINK);
-        addActorShape(ghostShapes[2], DefaultWorldMapPropertyName.POS_GHOST_3_CYAN);
-        addActorShape(ghostShapes[3], DefaultWorldMapPropertyName.POS_GHOST_4_ORANGE);
+        addActorShape(pacmanShape3D,  WorldMapPropertyName.POS_PAC);
+        addActorShape(ghostShapes[0], WorldMapPropertyName.POS_GHOST_1_RED);
+        addActorShape(ghostShapes[1], WorldMapPropertyName.POS_GHOST_2_PINK);
+        addActorShape(ghostShapes[2], WorldMapPropertyName.POS_GHOST_3_CYAN);
+        addActorShape(ghostShapes[3], WorldMapPropertyName.POS_GHOST_4_ORANGE);
     }
 
     private void addHouse(Color wallBaseColor, Color wallTopColor) {
-        Vector2i houseMinTile = worldMap().terrainLayer().getTileProperty(DefaultWorldMapPropertyName.POS_HOUSE_MIN_TILE);
-        Vector2i houseMaxTile = worldMap().terrainLayer().getTileProperty(DefaultWorldMapPropertyName.POS_HOUSE_MAX_TILE);
+        Vector2i houseMinTile = worldMap().terrainLayer().getTileProperty(WorldMapPropertyName.POS_HOUSE_MIN_TILE);
+        Vector2i houseMaxTile = worldMap().terrainLayer().getTileProperty(WorldMapPropertyName.POS_HOUSE_MAX_TILE);
         if (houseMinTile == null || houseMaxTile == null) {
             return;
         }
@@ -225,7 +225,7 @@ public class Maze3D extends Group {
         r3D.createWallBetweenTileCoordinates(houseMaxTile, houseRightUpper, Wall3D.DEFAULT_WALL_THICKNESS);
 
         Color doorColor = EditorUtil.getColorFromMapLayer(worldMap().terrainLayer(),
-            DefaultWorldMapPropertyName.COLOR_DOOR, MS_PACMAN_COLOR_DOOR);
+            WorldMapPropertyName.COLOR_DOOR, MS_PACMAN_COLOR_DOOR);
         var doorMaterial = coloredMaterial(doorColor);
         Stream.of(houseMinTile.plus(3, 0), houseMinTile.plus(4, 0)).forEach(doorTile -> {
             Box door = new Box(TS + HTS, 2, HOUSE_DOOR_HEIGHT);
@@ -255,7 +255,7 @@ public class Maze3D extends Group {
             return;
         }
         Color foodColor = EditorUtil.getColorFromMapLayer(worldMap().foodLayer(),
-            DefaultWorldMapPropertyName.COLOR_FOOD, MS_PACMAN_COLOR_FOOD);
+            WorldMapPropertyName.COLOR_FOOD, MS_PACMAN_COLOR_FOOD);
         var foodMaterial = coloredMaterial(foodColor);
         foodGroup.getChildren().clear();
         worldMap().terrainLayer().tiles().filter(this::hasFoodAt).forEach(tile -> {

@@ -29,7 +29,7 @@ import static de.amr.pacmanfx.Validations.inClosedRange;
 import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
 import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomByte;
-import static de.amr.pacmanfx.model.world.DefaultWorldMapPropertyName.*;
+import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameController.GameState.HUNTING;
 import static java.util.Objects.requireNonNull;
 
@@ -206,7 +206,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
     }
 
     @Override
-    public MapSelector mapSelector() { return mapSelector; }
+    public WorldMapSelector mapSelector() { return mapSelector; }
 
     public void setPacBooster(PacBooster mode) {
         pacBooster = mode;

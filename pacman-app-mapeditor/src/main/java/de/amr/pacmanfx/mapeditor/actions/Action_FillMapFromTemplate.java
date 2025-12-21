@@ -35,22 +35,22 @@ public class Action_FillMapFromTemplate extends EditorUIAction<Void> {
         final WorldMap worldMap = editor.currentWorldMap();
         final WorldMapLayer terrain = worldMap.terrainLayer();
 
-        Color fillColor = getColorFromMapLayer(terrain, DefaultWorldMapPropertyName.COLOR_WALL_FILL, null);
+        Color fillColor = getColorFromMapLayer(terrain, WorldMapPropertyName.COLOR_WALL_FILL, null);
         if (fillColor == null) {
             ui.messageDisplay().showMessage("No fill color defined", 3, MessageType.ERROR);
             return null;
         }
-        Color strokeColor = getColorFromMapLayer(terrain, DefaultWorldMapPropertyName.COLOR_WALL_STROKE, null);
+        Color strokeColor = getColorFromMapLayer(terrain, WorldMapPropertyName.COLOR_WALL_STROKE, null);
         if (strokeColor == null) {
             ui.messageDisplay().showMessage("No stroke color defined", 3, MessageType.ERROR);
             return null;
         }
-        Color doorColor = getColorFromMapLayer(terrain, DefaultWorldMapPropertyName.COLOR_DOOR, Color.PINK);
+        Color doorColor = getColorFromMapLayer(terrain, WorldMapPropertyName.COLOR_DOOR, Color.PINK);
         if (doorColor == null) {
             ui.messageDisplay().showMessage("No door color defined", 3, MessageType.ERROR);
             return null;
         }
-        Color foodColor = getColorFromMapLayer(worldMap.foodLayer(), DefaultWorldMapPropertyName.COLOR_FOOD, null);
+        Color foodColor = getColorFromMapLayer(worldMap.foodLayer(), WorldMapPropertyName.COLOR_FOOD, null);
         if (foodColor == null) {
             ui.messageDisplay().showMessage("No food color defined", 3, MessageType.ERROR);
             return null;

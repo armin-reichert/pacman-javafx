@@ -29,7 +29,7 @@ import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
 import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
 import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomFloat;
 import static de.amr.pacmanfx.lib.math.Vector2b.vec2Byte;
-import static de.amr.pacmanfx.model.world.DefaultWorldMapPropertyName.*;
+import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -69,7 +69,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel implements LevelCou
     protected static final int GAME_OVER_STATE_TICKS = 90;
     protected static final Vector2i DEFAULT_BONUS_TILE = new Vector2i(13, 20);
 
-    protected final MapSelector mapSelector;
+    protected final WorldMapSelector mapSelector;
 
     public ArcadePacMan_GameModel(CoinMechanism coinMechanism, File highScoreFile) {
         this(coinMechanism, new ArcadePacMan_MapSelector(), highScoreFile);
@@ -80,7 +80,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel implements LevelCou
      * @param mapSelector e.g. selector that selects custom maps before standard maps
      * @param highScoreFile file where high score is stored
      */
-    public ArcadePacMan_GameModel(CoinMechanism coinMechanism, MapSelector mapSelector, File highScoreFile) {
+    public ArcadePacMan_GameModel(CoinMechanism coinMechanism, WorldMapSelector mapSelector, File highScoreFile) {
         super(coinMechanism, highScoreFile);
 
         this.mapSelector = requireNonNull(mapSelector);
@@ -111,7 +111,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel implements LevelCou
     }
 
     @Override
-    public MapSelector mapSelector() {
+    public WorldMapSelector mapSelector() {
         return mapSelector;
     }
 
@@ -213,7 +213,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel implements LevelCou
         final byte symbol = level.bonusSymbol(level.currentBonusIndex());
         final var bonus = new Bonus(symbol, bonusValue(symbol));
         final Vector2i bonusTile = level.worldMap().terrainLayer()
-            .getTilePropertyOrDefault(DefaultWorldMapPropertyName.POS_BONUS, DEFAULT_BONUS_TILE);
+            .getTilePropertyOrDefault(WorldMapPropertyName.POS_BONUS, DEFAULT_BONUS_TILE);
         bonus.setPosition(halfTileRightOf(bonusTile));
         bonus.setEdibleSeconds(randomFloat(9, 10));
         level.setBonus(bonus);

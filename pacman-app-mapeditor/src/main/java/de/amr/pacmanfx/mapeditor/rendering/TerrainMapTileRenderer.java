@@ -132,10 +132,10 @@ public class TerrainMapTileRenderer extends BaseRenderer implements TerrainMapRe
             drawTileUnscaled(tile, code);
         });
         if (specialTilesDisplayed) {
-            specialTile(worldMap, DefaultWorldMapPropertyName.POS_SCATTER_RED_GHOST).ifPresent(tile -> drawScatterTarget(tile, Color.RED));
-            specialTile(worldMap, DefaultWorldMapPropertyName.POS_SCATTER_PINK_GHOST).ifPresent(tile -> drawScatterTarget(tile, Color.PINK));
-            specialTile(worldMap, DefaultWorldMapPropertyName.POS_SCATTER_CYAN_GHOST).ifPresent(tile -> drawScatterTarget(tile, Color.CYAN));
-            specialTile(worldMap, DefaultWorldMapPropertyName.POS_SCATTER_ORANGE_GHOST).ifPresent(tile -> drawScatterTarget(tile, Color.ORANGE));
+            specialTile(worldMap, WorldMapPropertyName.POS_SCATTER_RED_GHOST).ifPresent(tile -> drawScatterTarget(tile, Color.RED));
+            specialTile(worldMap, WorldMapPropertyName.POS_SCATTER_PINK_GHOST).ifPresent(tile -> drawScatterTarget(tile, Color.PINK));
+            specialTile(worldMap, WorldMapPropertyName.POS_SCATTER_CYAN_GHOST).ifPresent(tile -> drawScatterTarget(tile, Color.CYAN));
+            specialTile(worldMap, WorldMapPropertyName.POS_SCATTER_ORANGE_GHOST).ifPresent(tile -> drawScatterTarget(tile, Color.ORANGE));
         }
         if (segmentNumbersDisplayed) {
             drawObstacleSegmentNumbers(worldMap.terrainLayer().obstacles());

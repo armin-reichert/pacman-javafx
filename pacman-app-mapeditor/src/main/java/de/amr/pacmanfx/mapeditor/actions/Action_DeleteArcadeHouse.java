@@ -10,7 +10,7 @@ import de.amr.pacmanfx.model.world.TerrainTile;
 import de.amr.pacmanfx.model.world.WorldMap;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.model.world.DefaultWorldMapPropertyName.*;
+import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
 
 public class Action_DeleteArcadeHouse extends EditorAction<Void> {
 

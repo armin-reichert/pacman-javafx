@@ -81,12 +81,12 @@ public class Action_FloodWithPellets extends EditorAction<Void> {
 
     private Set<Vector2i> actorTiles(WorldMap worldMap) {
         var actorTiles = new HashSet<Vector2i>();
-        actorTile(worldMap, DefaultWorldMapPropertyName.POS_PAC).ifPresent(actorTiles::add);
-        actorTile(worldMap, DefaultWorldMapPropertyName.POS_GHOST_1_RED).ifPresent(actorTiles::add);
-        actorTile(worldMap, DefaultWorldMapPropertyName.POS_GHOST_2_PINK).ifPresent(actorTiles::add);
-        actorTile(worldMap, DefaultWorldMapPropertyName.POS_GHOST_3_CYAN).ifPresent(actorTiles::add);
-        actorTile(worldMap, DefaultWorldMapPropertyName.POS_GHOST_4_ORANGE).ifPresent(actorTiles::add);
-        actorTile(worldMap, DefaultWorldMapPropertyName.POS_BONUS).ifPresent(actorTiles::add);
+        actorTile(worldMap, WorldMapPropertyName.POS_PAC).ifPresent(actorTiles::add);
+        actorTile(worldMap, WorldMapPropertyName.POS_GHOST_1_RED).ifPresent(actorTiles::add);
+        actorTile(worldMap, WorldMapPropertyName.POS_GHOST_2_PINK).ifPresent(actorTiles::add);
+        actorTile(worldMap, WorldMapPropertyName.POS_GHOST_3_CYAN).ifPresent(actorTiles::add);
+        actorTile(worldMap, WorldMapPropertyName.POS_GHOST_4_ORANGE).ifPresent(actorTiles::add);
+        actorTile(worldMap, WorldMapPropertyName.POS_BONUS).ifPresent(actorTiles::add);
         return actorTiles;
     }
 

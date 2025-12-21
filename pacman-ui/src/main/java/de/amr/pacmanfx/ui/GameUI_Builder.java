@@ -11,7 +11,7 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.model.test.LevelMediumTestState;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
-import de.amr.pacmanfx.model.world.MapSelector;
+import de.amr.pacmanfx.model.world.WorldMapSelector;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.api.GameUI_StartPage;
@@ -30,7 +30,7 @@ public class GameUI_Builder {
     private static class GameConfiguration {
         Class<?> gameModelClass;
         Class<?> uiConfigClass;
-        MapSelector mapSelector;
+        WorldMapSelector mapSelector;
     }
 
     private static class StartPageConfiguration {
@@ -83,7 +83,7 @@ public class GameUI_Builder {
     public GameUI_Builder game(
         String variant,
         Class<? extends Game> gameModelClass,
-        MapSelector mapSelector,
+        WorldMapSelector mapSelector,
         Class<? extends GameUI_Config> uiConfigClass)
     {
         validateGameVariantKey(variant);
@@ -172,12 +172,12 @@ public class GameUI_Builder {
         }
     }
 
-    private AbstractGameModel createGame(Class<?> modelClass, MapSelector mapSelector, File highScoreFile) {
+    private AbstractGameModel createGame(Class<?> modelClass, WorldMapSelector mapSelector, File highScoreFile) {
         AbstractGameModel game = null;
         try {
             if (mapSelector != null) {
                 game = (AbstractGameModel) modelClass
-                    .getDeclaredConstructor(CoinMechanism.class, MapSelector.class, File.class)
+                    .getDeclaredConstructor(CoinMechanism.class, WorldMapSelector.class, File.class)
                     .newInstance(THE_GAME_BOX, mapSelector, highScoreFile);
             }
             else {

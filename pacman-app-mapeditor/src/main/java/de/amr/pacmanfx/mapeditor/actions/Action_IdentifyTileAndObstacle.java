@@ -16,7 +16,7 @@ import javafx.scene.input.ClipboardContent;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
-import static de.amr.pacmanfx.model.world.DefaultWorldMapPropertyName.*;
+import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;
 
 public class Action_IdentifyTileAndObstacle extends EditorUIAction<String> {

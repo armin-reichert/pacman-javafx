@@ -14,9 +14,9 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
-import static de.amr.pacmanfx.model.world.DefaultWorldMapPropertyName.*;
 import static de.amr.pacmanfx.model.world.TerrainTile.TUNNEL;
 import static de.amr.pacmanfx.model.world.TerrainTile.isBlocked;
+import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
@@ -105,7 +105,7 @@ public class TerrainLayer extends WorldMapLayer {
         List<Vector2i> tilesWithErrors = new ArrayList<>();
         obstacles = ObstacleBuilder.buildObstacles(this, tilesWithErrors);
 
-        Vector2i houseMinTile = getTileProperty(DefaultWorldMapPropertyName.POS_HOUSE_MIN_TILE);
+        Vector2i houseMinTile = getTileProperty(WorldMapPropertyName.POS_HOUSE_MIN_TILE);
         if (houseMinTile == null) {
             Logger.info("Could not remove house placeholder from obstacle list, house min tile not set");
         } else {

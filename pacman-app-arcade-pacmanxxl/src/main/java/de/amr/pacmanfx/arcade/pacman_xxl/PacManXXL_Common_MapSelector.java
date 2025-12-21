@@ -4,9 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
-import de.amr.pacmanfx.model.world.MapSelectionMode;
-import de.amr.pacmanfx.model.world.MapSelector;
 import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.model.world.WorldMapSelectionMode;
+import de.amr.pacmanfx.model.world.WorldMapSelector;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.tinylog.Logger;
@@ -22,7 +22,7 @@ import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.CONFIG_KEY_COL
 import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomInt;
 import static java.util.Objects.requireNonNull;
 
-public class PacManXXL_Common_MapSelector implements MapSelector {
+public class PacManXXL_Common_MapSelector implements WorldMapSelector {
 
     public static final List<Map<String, String>> MAP_COLOR_SCHEMES = List.of(
             Map.of("fill", "#359c9c", "stroke", "#85e2ff", "door", "#fcb5ff", "pellet", "#feb8ae"),
@@ -63,19 +63,19 @@ public class PacManXXL_Common_MapSelector implements MapSelector {
     private final File customMapDir;
     private final ObservableList<WorldMap> customMapPrototypes = FXCollections.observableArrayList();
     private final List<WorldMap> builtinMapPrototypes = new ArrayList<>();
-    private MapSelectionMode selectionMode;
+    private WorldMapSelectionMode selectionMode;
 
     public PacManXXL_Common_MapSelector(File dir) {
         customMapDir = requireNonNull(dir);
-        selectionMode = MapSelectionMode.CUSTOM_MAPS_FIRST;
+        selectionMode = WorldMapSelectionMode.CUSTOM_MAPS_FIRST;
         addSampleCustomMapPrototypes(dir);
     }
 
-    public MapSelectionMode selectionMode() {
+    public WorldMapSelectionMode selectionMode() {
         return selectionMode;
     }
 
-    public void setSelectionMode(MapSelectionMode mode) {
+    public void setSelectionMode(WorldMapSelectionMode mode) {
         selectionMode = requireNonNull(mode);
     }
 
@@ -120,7 +120,7 @@ public class PacManXXL_Common_MapSelector implements MapSelector {
     @Override
     public void loadAllMapPrototypes() {
         if (builtinMapPrototypes.isEmpty()) {
-            List<WorldMap> maps = MapSelector.loadMapsFromModule(getClass(), "maps/masonic_%d.world", 8);
+            List<WorldMap> maps = WorldMapSelector.loadMapsFromModule(getClass(), "maps/masonic_%d.world", 8);
             builtinMapPrototypes.addAll(maps);
         }
         loadCustomMapPrototypes();
@@ -154,7 +154,7 @@ public class PacManXXL_Common_MapSelector implements MapSelector {
         // if selected map is a built-in map, use a random color scheme to make it not so boring
         Map<String, String> colorScheme = builtinMapPrototypes.contains(prototype)
             ? MAP_COLOR_SCHEMES.get(randomInt(0, MAP_COLOR_SCHEMES.size()))
-            : MapSelector.extractColorMap(prototype);
+            : WorldMapSelector.extractColorMap(prototype);
         worldMap.setConfigValue(CONFIG_KEY_COLOR_MAP, colorScheme);
         Logger.info("Map selected (Mode {}): {}", selectionMode, worldMap.url());
 

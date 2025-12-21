@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.model;
 
-import de.amr.pacmanfx.model.world.MapSelector;
 import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.model.world.WorldMapSelector;
 import org.tinylog.Logger;
 
 import java.io.IOException;
@@ -14,7 +14,7 @@ import java.util.List;
 
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.*;
 
-public class ArcadePacMan_MapSelector implements MapSelector {
+public class ArcadePacMan_MapSelector implements WorldMapSelector {
 
     private static final String MAP_PROTOTYPE_PATH = "/de/amr/pacmanfx/arcade/pacman/maps/pacman.world";
 
@@ -43,7 +43,7 @@ public class ArcadePacMan_MapSelector implements MapSelector {
                 worldMapPrototype = WorldMap.loadFromURL(url);
                 worldMapPrototype.setConfigValue(CONFIG_KEY_MAP_NUMBER, 1);
                 worldMapPrototype.setConfigValue(CONFIG_KEY_COLOR_MAP_INDEX, 0);
-                worldMapPrototype.setConfigValue(CONFIG_KEY_COLOR_MAP, MapSelector.extractColorMap(worldMapPrototype));
+                worldMapPrototype.setConfigValue(CONFIG_KEY_COLOR_MAP, WorldMapSelector.extractColorMap(worldMapPrototype));
                 Logger.info("Pac-Man Arcade map loaded, URL='{}'", worldMapPrototype.url());
             } catch (IOException x) {
                 Logger.error("Could not load Pac-Man Arcade map, URL={}", url);

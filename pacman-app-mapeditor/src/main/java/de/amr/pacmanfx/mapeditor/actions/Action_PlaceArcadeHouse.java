@@ -11,7 +11,7 @@ import org.tinylog.Logger;
 
 import java.util.Map;
 
-import static de.amr.pacmanfx.model.world.DefaultWorldMapPropertyName.*;
+import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;
 
 public class Action_PlaceArcadeHouse extends EditorAction<Void> {

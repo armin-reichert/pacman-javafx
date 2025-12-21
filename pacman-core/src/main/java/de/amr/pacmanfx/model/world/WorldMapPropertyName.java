@@ -7,7 +7,7 @@ package de.amr.pacmanfx.model.world;
 /**
  * Property names as stored in <code>*.world</code> files.
  */
-public interface DefaultWorldMapPropertyName {
+public interface WorldMapPropertyName {
     String POS_BONUS                = "pos_bonus";
     String POS_PAC                  = "pos_pac";
 

@@ -36,7 +36,7 @@ import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
 import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
 import static de.amr.pacmanfx.lib.math.RandomNumberSupport.*;
-import static de.amr.pacmanfx.model.world.DefaultWorldMapPropertyName.*;
+import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -59,7 +59,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel implements LevelC
 
     protected static final int GAME_OVER_STATE_TICKS = 150;
 
-    protected final MapSelector mapSelector;
+    protected final WorldMapSelector mapSelector;
 
     /**
      * Called via reflection by builder.
@@ -71,7 +71,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel implements LevelC
         this(coinMechanism, new ArcadeMsPacMan_MapSelector(), highScoreFile);
     }
 
-    public ArcadeMsPacMan_GameModel(CoinMechanism coinMechanism, MapSelector mapSelector, File highScoreFile) {
+    public ArcadeMsPacMan_GameModel(CoinMechanism coinMechanism, WorldMapSelector mapSelector, File highScoreFile) {
         super(coinMechanism, highScoreFile);
 
         this.mapSelector = requireNonNull(mapSelector);
@@ -102,7 +102,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel implements LevelC
     }
 
     @Override
-    public MapSelector mapSelector() {
+    public WorldMapSelector mapSelector() {
         return mapSelector;
     }
 
@@ -281,7 +281,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel implements LevelC
         final byte symbol = level.bonusSymbol(level.currentBonusIndex());
         final var bonus = new Bonus(symbol, bonusValue(symbol));
         if (terrain.horizontalPortals().isEmpty()) {
-            final Vector2i bonusTile = terrain.getTilePropertyOrDefault(DefaultWorldMapPropertyName.POS_BONUS, new Vector2i(13, 20));
+            final Vector2i bonusTile = terrain.getTilePropertyOrDefault(WorldMapPropertyName.POS_BONUS, new Vector2i(13, 20));
             bonus.setPosition(halfTileRightOf(bonusTile));
             bonus.setEdibleSeconds(randomFloat(9, 10));
         } else {
@@ -313,7 +313,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel implements LevelC
             return;
         }
 
-        Vector2i entryTile = terrain.getTileProperty(DefaultWorldMapPropertyName.POS_BONUS);
+        Vector2i entryTile = terrain.getTileProperty(WorldMapPropertyName.POS_BONUS);
         Vector2i exitTile;
         boolean leftToRight;
         if (entryTile != null) { // Map defines bonus entry tile

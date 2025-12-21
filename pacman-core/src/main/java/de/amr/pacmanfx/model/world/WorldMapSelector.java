@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public interface MapSelector {
+public interface WorldMapSelector {
 
     /**
      * @param levelNumber level number (1..)
@@ -63,10 +63,10 @@ public interface MapSelector {
 
     static Map<String, String> extractColorMap(WorldMap worldMap) {
         return Map.of(
-            "fill",   worldMap.terrainLayer().propertyMap().getOrDefault(DefaultWorldMapPropertyName.COLOR_WALL_FILL,   "000000"),
-            "stroke", worldMap.terrainLayer().propertyMap().getOrDefault(DefaultWorldMapPropertyName.COLOR_WALL_STROKE, "0000ff"),
-            "door",   worldMap.terrainLayer().propertyMap().getOrDefault(DefaultWorldMapPropertyName.COLOR_DOOR,        "00ffff"),
-            "pellet", worldMap.foodLayer()   .propertyMap().getOrDefault(DefaultWorldMapPropertyName.COLOR_FOOD,        "ffffff")
+            "fill",   worldMap.terrainLayer().propertyMap().getOrDefault(WorldMapPropertyName.COLOR_WALL_FILL,   "000000"),
+            "stroke", worldMap.terrainLayer().propertyMap().getOrDefault(WorldMapPropertyName.COLOR_WALL_STROKE, "0000ff"),
+            "door",   worldMap.terrainLayer().propertyMap().getOrDefault(WorldMapPropertyName.COLOR_DOOR,        "00ffff"),
+            "pellet", worldMap.foodLayer()   .propertyMap().getOrDefault(WorldMapPropertyName.COLOR_FOOD,        "ffffff")
         );
     }
 }
