@@ -26,10 +26,10 @@ import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
  */
 public class ArcadePacMan_CutScene3 extends GameScene2D {
 
-    public static final short ANIMATION_START = 120;
+    public static final short ANIMATION_START_TICK = 120;
 
-    private int frame;
-    private Pac pac;
+    private int tick;
+    private Pac pacMan;
     private Ghost blinky;
 
     public ArcadePacMan_CutScene3(GameUI ui) {
@@ -37,47 +37,48 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
     }
 
     public Pac pac() {
-        return pac;
+        return pacMan;
     }
 
     public Ghost blinky() {
         return blinky;
     }
 
-    public int frame() {
-        return frame;
+    public int tick() {
+        return tick;
     }
 
     @Override
     public void doInit(Game game) {
-        final Arcade_HUD arcadeHud = (Arcade_HUD) game.hud();
-        arcadeHud.credit(false).score(true).levelCounter(true).livesCounter(false).show();
         final GameUI_Config uiConfig = ui.currentConfig();
-        pac = ArcadePacMan_ActorFactory.createPacMan();
-        pac.setAnimationManager(uiConfig.createPacAnimations());
+
+        final var hud = (Arcade_HUD) game.hud();
+        hud.credit(false).score(true).levelCounter(true).livesCounter(false).show();
+
+        pacMan = ArcadePacMan_ActorFactory.createPacMan();
+        pacMan.setAnimationManager(uiConfig.createPacAnimations());
         blinky = uiConfig.createGhostWithAnimations(RED_GHOST_SHADOW);
-        frame = -1;
+
+        tick = -1;
     }
 
     @Override
-    protected void doEnd(Game game) {
-    }
+    protected void doEnd(Game game) {}
 
     @Override
     public void update(Game game) {
-        ++frame;
-        if (frame >= ANIMATION_START) {
-            pac.move();
-            blinky.move();
+        ++tick;
+        if (tick < ANIMATION_START_TICK) {
+            return;
         }
-        switch (frame) {
-            case ANIMATION_START -> {
+        switch (tick) {
+            case ANIMATION_START_TICK -> {
                 soundManager().play(SoundID.INTERMISSION_3, 2);
-                pac.placeAtTile(29, 20);
-                pac.setMoveDir(Direction.LEFT);
-                pac.setSpeed(1.25f);
-                pac.show();
-                pac.playAnimation(CommonAnimationID.ANIM_PAC_MUNCHING);
+                pacMan.placeAtTile(29, 20);
+                pacMan.setMoveDir(Direction.LEFT);
+                pacMan.setSpeed(1.25f);
+                pacMan.show();
+                pacMan.playAnimation(CommonAnimationID.ANIM_PAC_MUNCHING);
                 blinky.placeAtTile(35, 20);
                 blinky.setMoveDir(Direction.LEFT);
                 blinky.setWishDir(Direction.LEFT);
@@ -85,14 +86,16 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
                 blinky.show();
                 blinky.playAnimation(ArcadePacMan_UIConfig.AnimationID.ANIM_BLINKY_PATCHED);
             }
-            case ANIMATION_START + 400 -> {
+            case ANIMATION_START_TICK + 400 -> {
                 blinky.placeAtTile(-1, 20);
                 blinky.setMoveDir(Direction.RIGHT);
                 blinky.setWishDir(Direction.RIGHT);
                 blinky.playAnimation(ArcadePacMan_UIConfig.AnimationID.ANIM_BLINKY_NAKED);
             }
-            case ANIMATION_START + 700 -> game.control().terminateCurrentGameState();
+            case ANIMATION_START_TICK + 700 -> game.control().terminateCurrentGameState();
             default -> {}
         }
+        pacMan.move();
+        blinky.move();
     }
 }

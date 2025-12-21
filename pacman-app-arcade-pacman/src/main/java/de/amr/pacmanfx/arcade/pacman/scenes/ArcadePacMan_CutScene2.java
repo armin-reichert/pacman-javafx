@@ -27,12 +27,12 @@ import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
  */
 public class ArcadePacMan_CutScene2 extends GameScene2D {
 
-    public static final short ANIMATION_START = 120;
+    public static final short ANIMATION_START_TICK = 120;
 
     private static final byte NAIL = 0, STRETCHED_S = 1, STRETCHED_M = 2, STRETCHED_L = 3, RAPTURED = 4;
 
-    private int frame;
-    private Pac pac;
+    private int tick;
+    private Pac pacMan;
     private Ghost blinky;
 
     private SpriteAnimation blinkyNormal;
@@ -48,38 +48,38 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     }
 
     public Pac pac() {
-        return pac;
+        return pacMan;
     }
 
     public Ghost blinky() {
         return blinky;
     }
 
-    public int frame() {
-        return frame;
+    public int tick() {
+        return tick;
     }
 
     @Override
     public void doInit(Game game) {
-        final Arcade_HUD arcadeHud = (Arcade_HUD) game.hud();
-        arcadeHud.credit(false).score(true).levelCounter(true).livesCounter(false).show();
+        final GameUI_Config uiConfig = ui.currentConfig();
 
-        GameUI_Config uiConfig = ui.currentConfig();
+        final var hud = (Arcade_HUD) game.hud();
+        hud.credit(false).score(true).levelCounter(true).livesCounter(false).show();
 
-        pac = ArcadePacMan_ActorFactory.createPacMan();
-        pac.setAnimationManager(uiConfig.createPacAnimations());
+        pacMan = ArcadePacMan_ActorFactory.createPacMan();
+        pacMan.setAnimationManager(uiConfig.createPacAnimations());
 
         blinky = uiConfig.createGhostWithAnimations(RED_GHOST_SHADOW);
         blinky.setSpeed(0);
         blinky.hide();
 
-        blinky.optAnimationManager().ifPresent(animationManager -> {
-            blinkyNormal = (SpriteAnimation) animationManager.animation(CommonAnimationID.ANIM_GHOST_NORMAL);
-            nailDressRaptureAnimation = (SpriteAnimation) animationManager.animation(ArcadePacMan_UIConfig.AnimationID.ANIM_BLINKY_NAIL_DRESS_RAPTURE);
-            blinkyDamaged = (SpriteAnimation) animationManager.animation(ArcadePacMan_UIConfig.AnimationID.ANIM_BLINKY_DAMAGED);
+        blinky.optAnimationManager().ifPresent(am -> {
+            blinkyNormal = (SpriteAnimation) am.animation(CommonAnimationID.ANIM_GHOST_NORMAL);
+            nailDressRaptureAnimation = (SpriteAnimation) am.animation(ArcadePacMan_UIConfig.AnimationID.ANIM_BLINKY_NAIL_DRESS_RAPTURE);
+            blinkyDamaged = (SpriteAnimation) am.animation(ArcadePacMan_UIConfig.AnimationID.ANIM_BLINKY_DAMAGED);
         });
 
-        frame = -1;
+        tick = -1;
     }
 
     @Override
@@ -87,21 +87,21 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
     @Override
     public void update(Game game) {
-        ++frame;
-        if (frame < ANIMATION_START) {
+        ++tick;
+        if (tick < ANIMATION_START_TICK) {
             return;
         }
-        switch (frame) {
-            case ANIMATION_START -> soundManager().play(SoundID.INTERMISSION_2);
-            case ANIMATION_START + 1 -> nailDressRaptureAnimation.setFrameIndex(NAIL);
-            case ANIMATION_START + 25 -> {
-                pac.placeAtTile(28, 20);
-                pac.setMoveDir(Direction.LEFT);
-                pac.setSpeed(1.15f);
-                pac.playAnimation(CommonAnimationID.ANIM_PAC_MUNCHING);
-                pac.show();
+        switch (tick) {
+            case ANIMATION_START_TICK -> soundManager().play(SoundID.INTERMISSION_2);
+            case ANIMATION_START_TICK + 1 -> nailDressRaptureAnimation.setFrameIndex(NAIL);
+            case ANIMATION_START_TICK + 25 -> {
+                pacMan.placeAtTile(28, 20);
+                pacMan.setMoveDir(Direction.LEFT);
+                pacMan.setSpeed(1.15f);
+                pacMan.playAnimation(CommonAnimationID.ANIM_PAC_MUNCHING);
+                pacMan.show();
             }
-            case ANIMATION_START + 111 -> {
+            case ANIMATION_START_TICK + 111 -> {
                 blinky.placeAtTile(28, 20, -3, 0);
                 blinky.setMoveDir(Direction.LEFT);
                 blinky.setWishDir(Direction.LEFT);
@@ -109,30 +109,30 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
                 blinky.playAnimation(CommonAnimationID.ANIM_GHOST_NORMAL);
                 blinky.show();
             }
-            case ANIMATION_START + 194 -> {
+            case ANIMATION_START_TICK + 194 -> {
                 blinky.setSpeed(0.09f);
                 blinkyNormal.setFrameTicks(32);
             }
-            case ANIMATION_START + 198 -> nailDressRaptureAnimation.setFrameIndex(STRETCHED_S);
-            case ANIMATION_START + 230 -> nailDressRaptureAnimation.setFrameIndex(STRETCHED_M);
-            case ANIMATION_START + 262 -> nailDressRaptureAnimation.setFrameIndex(STRETCHED_L);
-            case ANIMATION_START + 296 -> {
+            case ANIMATION_START_TICK + 198 -> nailDressRaptureAnimation.setFrameIndex(STRETCHED_S);
+            case ANIMATION_START_TICK + 230 -> nailDressRaptureAnimation.setFrameIndex(STRETCHED_M);
+            case ANIMATION_START_TICK + 262 -> nailDressRaptureAnimation.setFrameIndex(STRETCHED_L);
+            case ANIMATION_START_TICK + 296 -> {
                 blinky.setSpeed(0);
                 blinky.stopAnimation();
             }
-            case ANIMATION_START + 360 -> {
+            case ANIMATION_START_TICK + 360 -> {
                 nailDressRaptureAnimation.setFrameIndex(RAPTURED);
                 blinky.setX(blinky.x() - 4);
                 blinky.selectAnimation(ArcadePacMan_UIConfig.AnimationID.ANIM_BLINKY_DAMAGED);
             }
-            case ANIMATION_START + 420 -> blinkyDamaged.nextFrame(); // Eyes right-down
-            case ANIMATION_START + 508 -> {
+            case ANIMATION_START_TICK + 420 -> blinkyDamaged.nextFrame(); // Eyes right-down
+            case ANIMATION_START_TICK + 508 -> {
                 blinky.setVisible(false);
                 game.control().terminateCurrentGameState();
             }
             default -> {}
         }
-        pac.move();
+        pacMan.move();
         blinky.move();
     }
 }
