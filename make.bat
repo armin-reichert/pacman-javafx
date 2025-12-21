@@ -1,2 +1,2 @@
 REM --warning-mode=(all,none,summary)
-.\gradlew --info --warning-mode summary clean jpackage
+.\gradlew --stacktrace --info --warning-mode summary clean jpackage
