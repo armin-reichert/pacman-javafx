@@ -13,7 +13,8 @@ jobs:
     
     strategy:
       matrix:
-        os: [ windows-latest, ubuntu-latest, macos-14 ]
+        os: [ windows-latest, ubuntu-latest ]
+        #os: [ windows-latest, ubuntu-latest, macos-14 ]
         java: [ '25' ]
       fail-fast: false
 
