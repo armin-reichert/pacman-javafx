@@ -28,9 +28,11 @@ jlink {
     }
     jpackage {
         installerType = installerPkg
-        installerOptions += [
-            // Underscore not allowed!
-            "--mac-package-identifier", "de.amr.pacmanfx.tengen.mspacman.app.Main"
-        ]
+        if (osdetector.os == "osx") {
+            installerOptions += [
+                // Underscore not allowed!
+                "--mac-package-identifier", "de.amr.pacmanfx.tengen.ms-pacman.app.Main"
+            ]
+        }
     }
 }
