@@ -13,7 +13,7 @@ import static java.util.Objects.requireNonNull;
 public interface SpriteRenderer extends Renderer {
 
     // This is an attempt to avoid artifacts caused by unwanted grabbing of neighbor pixels around a sprite
-    double SPRITE_MARGIN = 0.25, DOUBLE_SPRITE_MARGIN = 0.5;
+    double SPRITE_MARGIN = 0.3, DOUBLE_SPRITE_MARGIN = 0.6;
 
     SpriteSheet<?> spriteSheet();
 
