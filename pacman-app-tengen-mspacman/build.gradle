@@ -28,5 +28,10 @@ jlink {
     }
     jpackage {
         installerType = installerPkg
+        if (org.gradle.internal.os.OperatingSystem.current().isMacOsX()) {
+            installerOptions += [
+                "--mac-package-identifier", "de.amr.pacmanfx.tengen.ms-pacman.app.Main"
+            ]
+        }
     }
 }
