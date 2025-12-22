@@ -14,7 +14,7 @@ import static de.amr.pacmanfx.lib.math.RectShort.rect;
 import static de.amr.pacmanfx.tengen.ms_pacman.rendering.SpriteID.*;
 import static java.util.Objects.requireNonNull;
 
-public record TengenMsPacMan_SpriteSheet(Image sourceImage) implements SpriteSheet<SpriteID> {
+public class TengenMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
 
     // Bonus symbols/values: x-position, width, y-delta
     private static final int[] BONUS_X  = {8, 24, 40, 56, 76, 96, 118, 140, 162, 182, 204, 230, 250, 272};
@@ -218,9 +218,21 @@ public record TengenMsPacMan_SpriteSheet(Image sourceImage) implements SpriteShe
         });
     }
 
+    private Image sourceImage;
 
-    public TengenMsPacMan_SpriteSheet {
-        requireNonNull(sourceImage);
+    public TengenMsPacMan_SpriteSheet(Image sourceImage) {
+        this.sourceImage = requireNonNull(sourceImage);
+    }
+
+    @Override
+    public void dispose() {
+        sourceImage.cancel();
+        sourceImage = null;
+    }
+
+    @Override
+    public Image sourceImage() {
+        return sourceImage;
     }
 
     @Override

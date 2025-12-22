@@ -27,16 +27,20 @@ public class SpriteMap<SID extends Enum<SID>> {
     record SpriteSequence(RectShort[] sequence) implements SpriteData {}
 
     private final Class<SID> idEnumClass;
-    private final EnumMap<SID, SpriteData> data;
+    private final EnumMap<SID, SpriteData> spriteDataByID;
 
     public SpriteMap(Class<SID> idEnumClass) {
         this.idEnumClass = requireNonNull(idEnumClass);
-        data = new EnumMap<>(idEnumClass);
+        spriteDataByID = new EnumMap<>(idEnumClass);
+    }
+
+    public boolean isEmpty() {
+        return spriteDataByID.isEmpty();
     }
 
     private SpriteData get(SID id) {
         requireNonNull(id);
-        SpriteData value = data.get(id);
+        SpriteData value = spriteDataByID.get(id);
         if (value == null) {
             throw new IllegalArgumentException("Sprite value is null for id '%s'".formatted(id));
         }
@@ -62,15 +66,15 @@ public class SpriteMap<SID extends Enum<SID>> {
     public final void add(SID id, RectShort... sprites) {
         requireNonNull(sprites, "Sprite list is null! WTF?");
         if (sprites.length == 1) {
-            data.put(id, new SingleSprite(sprites[0]));
+            spriteDataByID.put(id, new SingleSprite(sprites[0]));
         } else {
-            data.put(id, new SpriteSequence(sprites));
+            spriteDataByID.put(id, new SpriteSequence(sprites));
         }
     }
 
     public final void checkCompleteness() {
         for (SID id : idEnumClass.getEnumConstants()) {
-            if (!data.containsKey(id)) {
+            if (!spriteDataByID.containsKey(id)) {
                 Logger.warn("Found sprite ID without value: {}", id);
             }
         }

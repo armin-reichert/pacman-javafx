@@ -12,7 +12,7 @@ import javafx.scene.image.Image;
 import static de.amr.pacmanfx.Globals.TS;
 import static java.util.Objects.requireNonNull;
 
-public record ArcadeMapsSpriteSheet(Image sourceImage) implements SpriteSheet<ArcadeMapsSpriteSheet.MazeID> {
+public class ArcadeMapsSpriteSheet implements SpriteSheet<ArcadeMapsSpriteSheet.MazeID> {
 
     // Size of Arcade maze (without the 3 empty rows above and the 2 below the maze!)
     private static final int MAZE_SPRITE_WIDTH  = 28 * TS;
@@ -42,8 +42,21 @@ public record ArcadeMapsSpriteSheet(Image sourceImage) implements SpriteSheet<Ar
         SPRITE_MAP.checkCompleteness();
     }
 
-    public ArcadeMapsSpriteSheet {
-        requireNonNull(sourceImage, "Sprite sheet source image must not be null");
+    private Image sourceImage;
+
+    public ArcadeMapsSpriteSheet(Image sourceImage) {
+        this.sourceImage = requireNonNull(sourceImage);
+    }
+
+    @Override
+    public void dispose() {
+        sourceImage.cancel();
+        sourceImage = null;
+    }
+
+    @Override
+    public Image sourceImage() {
+        return sourceImage;
     }
 
     @Override

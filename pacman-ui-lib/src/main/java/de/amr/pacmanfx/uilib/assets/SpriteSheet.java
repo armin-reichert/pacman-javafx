@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.assets;
 
+import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.math.RectShort;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
@@ -13,7 +14,7 @@ import javafx.scene.image.WritableImage;
  *
  * @param <SID> sprite ID enum type
  */
-public interface SpriteSheet<SID extends Enum<SID>> {
+public interface SpriteSheet<SID extends Enum<SID>> extends Disposable {
 
     /**
      * @return the sprite sheet image

@@ -166,6 +166,8 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     public void dispose() {
         assets.removeAll();
         soundManager.dispose();
+        scenesByID.clear();
+        spriteSheet.dispose();
     }
 
     @Override

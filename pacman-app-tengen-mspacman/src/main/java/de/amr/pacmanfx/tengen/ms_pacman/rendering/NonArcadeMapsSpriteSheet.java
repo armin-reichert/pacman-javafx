@@ -19,7 +19,7 @@ import static java.util.Objects.requireNonNull;
  * <p>Each MazeID corresponds to a sub‐image region laid out row by row
  * in the source image. Some mazes (32, 33, 34–37) are handled specially.
  */
-public record NonArcadeMapsSpriteSheet(Image sourceImage) implements SpriteSheet<NonArcadeMapsSpriteSheet.MazeID> {
+public class NonArcadeMapsSpriteSheet implements SpriteSheet<NonArcadeMapsSpriteSheet.MazeID> {
 
     // MazeIDs as they appear in the sprite sheet (row by row)
     public enum MazeID {
@@ -79,8 +79,21 @@ public record NonArcadeMapsSpriteSheet(Image sourceImage) implements SpriteSheet
         SPRITE_MAP.checkCompleteness();
     }
 
-    public NonArcadeMapsSpriteSheet {
-        requireNonNull(sourceImage, "Sprite sheet source image must not be null");
+    private Image sourceImage;
+
+    public NonArcadeMapsSpriteSheet(Image sourceImage) {
+        this.sourceImage = requireNonNull(sourceImage);
+    }
+
+    @Override
+    public void dispose() {
+        sourceImage.cancel();
+        sourceImage = null;
+    }
+
+    @Override
+    public Image sourceImage() {
+        return sourceImage;
     }
 
     @Override

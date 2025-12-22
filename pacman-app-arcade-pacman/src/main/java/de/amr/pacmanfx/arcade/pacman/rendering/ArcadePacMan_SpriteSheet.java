@@ -14,7 +14,7 @@ import java.util.stream.IntStream;
 import static de.amr.pacmanfx.lib.math.RectShort.rect;
 import static java.util.Objects.requireNonNull;
 
-public record ArcadePacMan_SpriteSheet(Image sourceImage) implements SpriteSheet<SpriteID> {
+public class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
 
     /** Sprite sheet has a 16x16 raster. */
     public static final int SQUARE_SIZE = 16;
@@ -36,11 +36,33 @@ public record ArcadePacMan_SpriteSheet(Image sourceImage) implements SpriteSheet
             .toArray(RectShort[]::new);
     }
 
+    private static RectShort pacFullSprite() {
+        int margin = 1;
+        int size = 14; // SQUARE_SIZE - 2 * margin
+        return clipSpriteRect(2 * SQUARE_SIZE + margin, margin, size, size);
+    }
+
+    private static RectShort[] makePacManMunchingSpriteSeq(int dir) {
+        int margin = 1;
+        int size = 14; // SQUARE_SIZE - 2 * margin
+        // Note: the close mouth sprite is only available at row 0
+        RectShort closed = clipSpriteRect(2 * SQUARE_SIZE + margin, margin, size, size);
+        RectShort wide   = clipSpriteRect(margin, dir * SQUARE_SIZE + margin, size, size);
+        RectShort middle = clipSpriteRect(SQUARE_SIZE + margin, dir * SQUARE_SIZE + margin, size, size);
+        return new RectShort[] {closed, closed, middle, middle, wide, wide, middle, middle};
+    }
+
+    private static RectShort[] makePacManDyingSpriteSeq() {
+        return IntStream.range(0, 11)
+                .mapToObj(i -> rect(504 + i * 16, 0, 16, i <= 9 ? 15 : 16))
+                .toArray(RectShort[]::new);
+    }
+
     private static final SpriteMap<SpriteID> SPRITE_MAP = new SpriteMap<>(SpriteID.class);
 
     static {
         // -- Map images
-        SPRITE_MAP.add(SpriteID.MAP_FULL,  rect(0,   0, 224, 248));
+        SPRITE_MAP.add(SpriteID.MAP_FULL, rect(0, 0, 224, 248));
         SPRITE_MAP.add(SpriteID.MAP_EMPTY, rect(228, 0, 224, 248));
 
         // -- Eaten ghost values
@@ -76,13 +98,13 @@ public record ArcadePacMan_SpriteSheet(Image sourceImage) implements SpriteSheet
 
         // -- Pac-Man sprites
 
-        SPRITE_MAP.add(SpriteID.PACMAN_FULL,           pacFullSprite());
+        SPRITE_MAP.add(SpriteID.PACMAN_FULL, pacFullSprite());
         SPRITE_MAP.add(SpriteID.PACMAN_MUNCHING_RIGHT, makePacManMunchingSpriteSeq(0));
-        SPRITE_MAP.add(SpriteID.PACMAN_MUNCHING_LEFT,  makePacManMunchingSpriteSeq(1));
-        SPRITE_MAP.add(SpriteID.PACMAN_MUNCHING_UP,    makePacManMunchingSpriteSeq(2));
-        SPRITE_MAP.add(SpriteID.PACMAN_MUNCHING_DOWN,  makePacManMunchingSpriteSeq(3));
+        SPRITE_MAP.add(SpriteID.PACMAN_MUNCHING_LEFT, makePacManMunchingSpriteSeq(1));
+        SPRITE_MAP.add(SpriteID.PACMAN_MUNCHING_UP, makePacManMunchingSpriteSeq(2));
+        SPRITE_MAP.add(SpriteID.PACMAN_MUNCHING_DOWN, makePacManMunchingSpriteSeq(3));
 
-        SPRITE_MAP.add(SpriteID.PACMAN_DYING,          makePacManDyingSpriteSeq());
+        SPRITE_MAP.add(SpriteID.PACMAN_DYING, makePacManDyingSpriteSeq());
 
         SPRITE_MAP.add(SpriteID.PACMAN_BIG,
             clipSpriteRect(32, 16, 32, 32),
@@ -92,76 +114,66 @@ public record ArcadePacMan_SpriteSheet(Image sourceImage) implements SpriteSheet
 
         // -- Ghost sprites
 
-        SPRITE_MAP.add(SpriteID.RED_GHOST_RIGHT,       clipSpriteTiles(0, 4, 2));
-        SPRITE_MAP.add(SpriteID.RED_GHOST_LEFT,        clipSpriteTiles(2, 4, 2));
-        SPRITE_MAP.add(SpriteID.RED_GHOST_UP,          clipSpriteTiles(4, 4, 2));
-        SPRITE_MAP.add(SpriteID.RED_GHOST_DOWN,        clipSpriteTiles(6, 4, 2));
+        SPRITE_MAP.add(SpriteID.RED_GHOST_RIGHT, clipSpriteTiles(0, 4, 2));
+        SPRITE_MAP.add(SpriteID.RED_GHOST_LEFT, clipSpriteTiles(2, 4, 2));
+        SPRITE_MAP.add(SpriteID.RED_GHOST_UP, clipSpriteTiles(4, 4, 2));
+        SPRITE_MAP.add(SpriteID.RED_GHOST_DOWN, clipSpriteTiles(6, 4, 2));
 
-        SPRITE_MAP.add(SpriteID.PINK_GHOST_RIGHT,      clipSpriteTiles(0, 5, 2));
-        SPRITE_MAP.add(SpriteID.PINK_GHOST_LEFT,       clipSpriteTiles(2, 5, 2));
-        SPRITE_MAP.add(SpriteID.PINK_GHOST_UP,         clipSpriteTiles(4, 5, 2));
-        SPRITE_MAP.add(SpriteID.PINK_GHOST_DOWN,       clipSpriteTiles(6, 5, 2));
+        SPRITE_MAP.add(SpriteID.PINK_GHOST_RIGHT, clipSpriteTiles(0, 5, 2));
+        SPRITE_MAP.add(SpriteID.PINK_GHOST_LEFT, clipSpriteTiles(2, 5, 2));
+        SPRITE_MAP.add(SpriteID.PINK_GHOST_UP, clipSpriteTiles(4, 5, 2));
+        SPRITE_MAP.add(SpriteID.PINK_GHOST_DOWN, clipSpriteTiles(6, 5, 2));
 
-        SPRITE_MAP.add(SpriteID.CYAN_GHOST_RIGHT,      clipSpriteTiles(0, 6, 2));
-        SPRITE_MAP.add(SpriteID.CYAN_GHOST_LEFT,       clipSpriteTiles(2, 6, 2));
-        SPRITE_MAP.add(SpriteID.CYAN_GHOST_UP,         clipSpriteTiles(4, 6, 2));
-        SPRITE_MAP.add(SpriteID.CYAN_GHOST_DOWN,       clipSpriteTiles(6, 6, 2));
+        SPRITE_MAP.add(SpriteID.CYAN_GHOST_RIGHT, clipSpriteTiles(0, 6, 2));
+        SPRITE_MAP.add(SpriteID.CYAN_GHOST_LEFT, clipSpriteTiles(2, 6, 2));
+        SPRITE_MAP.add(SpriteID.CYAN_GHOST_UP, clipSpriteTiles(4, 6, 2));
+        SPRITE_MAP.add(SpriteID.CYAN_GHOST_DOWN, clipSpriteTiles(6, 6, 2));
 
-        SPRITE_MAP.add(SpriteID.ORANGE_GHOST_RIGHT,    clipSpriteTiles(0, 7, 2));
-        SPRITE_MAP.add(SpriteID.ORANGE_GHOST_LEFT,     clipSpriteTiles(2, 7, 2));
-        SPRITE_MAP.add(SpriteID.ORANGE_GHOST_UP,       clipSpriteTiles(4, 7, 2));
-        SPRITE_MAP.add(SpriteID.ORANGE_GHOST_DOWN,     clipSpriteTiles(6, 7, 2));
+        SPRITE_MAP.add(SpriteID.ORANGE_GHOST_RIGHT, clipSpriteTiles(0, 7, 2));
+        SPRITE_MAP.add(SpriteID.ORANGE_GHOST_LEFT, clipSpriteTiles(2, 7, 2));
+        SPRITE_MAP.add(SpriteID.ORANGE_GHOST_UP, clipSpriteTiles(4, 7, 2));
+        SPRITE_MAP.add(SpriteID.ORANGE_GHOST_DOWN, clipSpriteTiles(6, 7, 2));
 
-        SPRITE_MAP.add(SpriteID.GHOST_FRIGHTENED,      clipSpriteTiles(8, 4, 2));
-        SPRITE_MAP.add(SpriteID.GHOST_FLASHING,        clipSpriteTiles(8, 4, 4));
+        SPRITE_MAP.add(SpriteID.GHOST_FRIGHTENED, clipSpriteTiles(8, 4, 2));
+        SPRITE_MAP.add(SpriteID.GHOST_FLASHING, clipSpriteTiles(8, 4, 4));
 
-        SPRITE_MAP.add(SpriteID.GHOST_EYES_RIGHT,      clipSpriteTiles( 8, 5, 1));
-        SPRITE_MAP.add(SpriteID.GHOST_EYES_LEFT,       clipSpriteTiles( 9, 5, 1));
-        SPRITE_MAP.add(SpriteID.GHOST_EYES_UP,         clipSpriteTiles(10, 5, 1));
-        SPRITE_MAP.add(SpriteID.GHOST_EYES_DOWN,       clipSpriteTiles(11, 5, 1));
+        SPRITE_MAP.add(SpriteID.GHOST_EYES_RIGHT, clipSpriteTiles(8, 5, 1));
+        SPRITE_MAP.add(SpriteID.GHOST_EYES_LEFT, clipSpriteTiles(9, 5, 1));
+        SPRITE_MAP.add(SpriteID.GHOST_EYES_UP, clipSpriteTiles(10, 5, 1));
+        SPRITE_MAP.add(SpriteID.GHOST_EYES_DOWN, clipSpriteTiles(11, 5, 1));
 
         // -- Intro scene ghost sprites
-        SPRITE_MAP.add(SpriteID.GALLERY_GHOSTS,        clipSpriteTile(0, 4), clipSpriteTile(0, 5), clipSpriteTile(0, 6), clipSpriteTile(0, 7));
+        SPRITE_MAP.add(SpriteID.GALLERY_GHOSTS, clipSpriteTile(0, 4), clipSpriteTile(0, 5), clipSpriteTile(0, 6), clipSpriteTile(0, 7));
 
         // -- Cut scenes sprites
-        SPRITE_MAP.add(SpriteID.RED_GHOST_STRETCHED,   clipSpriteTiles(8, 6, 5));
+        SPRITE_MAP.add(SpriteID.RED_GHOST_STRETCHED, clipSpriteTiles(8, 6, 5));
         SPRITE_MAP.add(SpriteID.RED_GHOST_DAMAGED,
-                clipSpriteRect(SQUARE_SIZE * 8 + 1, SQUARE_SIZE * 7 + 1, 14, 14),
-                clipSpriteRect(SQUARE_SIZE * 9 + 1, SQUARE_SIZE * 7 + 1, 14, 14)
+            clipSpriteRect(SQUARE_SIZE * 8 + 1, SQUARE_SIZE * 7 + 1, 14, 14),
+            clipSpriteRect(SQUARE_SIZE * 9 + 1, SQUARE_SIZE * 7 + 1, 14, 14)
         );
         SPRITE_MAP.add(SpriteID.RED_GHOST_PATCHED, clipSpriteTiles(10, 7, 2));
         SPRITE_MAP.add(SpriteID.RED_GHOST_NAKED,
-                clipSpriteRect(SQUARE_SIZE *  8, SQUARE_SIZE * 8, SQUARE_SIZE * 2, SQUARE_SIZE),
-                clipSpriteRect(SQUARE_SIZE * 10, SQUARE_SIZE * 8, SQUARE_SIZE * 2, SQUARE_SIZE)
+            clipSpriteRect(SQUARE_SIZE * 8, SQUARE_SIZE * 8, SQUARE_SIZE * 2, SQUARE_SIZE),
+            clipSpriteRect(SQUARE_SIZE * 10, SQUARE_SIZE * 8, SQUARE_SIZE * 2, SQUARE_SIZE)
         );
 
         SPRITE_MAP.checkCompleteness();
     }
 
-    private static RectShort pacFullSprite() {
-        int margin = 1;
-        int size = 14; // SQUARE_SIZE - 2 * margin
-        return clipSpriteRect(2 * SQUARE_SIZE + margin, margin, size, size);
+    private Image sourceImage;
+
+    public ArcadePacMan_SpriteSheet(Image sourceImage) {
+        this.sourceImage = requireNonNull(sourceImage);
     }
 
-    private static RectShort[] makePacManMunchingSpriteSeq(int dir) {
-        int margin = 1;
-        int size = 14; // SQUARE_SIZE - 2 * margin
-        // Note: the close mouth sprite is only available at row 0
-        RectShort closed = clipSpriteRect(2 * SQUARE_SIZE + margin, margin, size, size);
-        RectShort wide   = clipSpriteRect(margin, dir * SQUARE_SIZE + margin, size, size);
-        RectShort middle = clipSpriteRect(SQUARE_SIZE + margin, dir * SQUARE_SIZE + margin, size, size);
-        return new RectShort[] {closed, closed, middle, middle, wide, wide, middle, middle};
+    @Override
+    public Image sourceImage() {
+        return sourceImage;
     }
 
-    private static RectShort[] makePacManDyingSpriteSeq() {
-        return IntStream.range(0, 11)
-                .mapToObj(i -> rect(504 + i * 16, 0, 16, i <= 9 ? 15 : 16))
-                .toArray(RectShort[]::new);
-    }
-
-    public ArcadePacMan_SpriteSheet {
-        requireNonNull(sourceImage);
+    @Override
+    public void dispose() {
+        sourceImage = null;
     }
 
     @Override

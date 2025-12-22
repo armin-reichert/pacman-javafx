@@ -50,8 +50,9 @@ public class SoundManager implements Disposable {
         mutedProperty.unbind();
         map.clear();
         voicePlayer = null;
+        sirenPlayer = null;
         currentSirenID = null;
-        Logger.info("Disposed default sound manager {}", this);
+        Logger.info("Disposed sound manager {}", this);
     }
 
     public MediaPlayer mediaPlayer(Object key) {
