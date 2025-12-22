@@ -4,7 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
+import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.lib.math.RectShort;
+import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.SpriteMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.image.Image;
@@ -12,7 +14,6 @@ import javafx.scene.image.Image;
 import java.util.stream.IntStream;
 
 import static de.amr.pacmanfx.lib.math.RectShort.rect;
-import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
 
@@ -160,10 +161,12 @@ public class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
         SPRITE_MAP.checkCompleteness();
     }
 
+    private static final ResourceManager LOCAL_RESOURCES = () -> ArcadePacMan_UIConfig.class;
+
     private Image sourceImage;
 
-    public ArcadePacMan_SpriteSheet(Image sourceImage) {
-        this.sourceImage = requireNonNull(sourceImage);
+    public ArcadePacMan_SpriteSheet() {
+        this.sourceImage = LOCAL_RESOURCES.loadImage("graphics/pacman_spritesheet.png");
     }
 
     @Override

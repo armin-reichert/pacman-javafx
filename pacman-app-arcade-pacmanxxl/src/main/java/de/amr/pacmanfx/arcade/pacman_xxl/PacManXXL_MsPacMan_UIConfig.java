@@ -65,12 +65,11 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config, GameScene_Con
     private final AssetMap assets = new AssetMap();
     private final Map<String, GameScene> scenesByID = new HashMap<>();
     private final SoundManager soundManager = new SoundManager();
-    private final ArcadeMsPacMan_SpriteSheet spriteSheet;
+    private final ArcadeMsPacMan_SpriteSheet spriteSheet = new ArcadeMsPacMan_SpriteSheet();
     private final GameUI ui;
 
     public PacManXXL_MsPacMan_UIConfig(GameUI ui) {
         this.ui = requireNonNull(ui);
-        spriteSheet = new ArcadeMsPacMan_SpriteSheet(ARCADE_MS_PACMAN_RESOURCES.loadImage("graphics/mspacman_spritesheet.png"));
         assets.setLocalizedTexts(ResourceBundle.getBundle("de.amr.pacmanfx.arcade.pacman_xxl.localized_texts_ms_pacman"));
     }
 

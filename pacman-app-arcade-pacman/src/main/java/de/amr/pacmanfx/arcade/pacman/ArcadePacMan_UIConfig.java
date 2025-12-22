@@ -85,7 +85,7 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
     public ArcadePacMan_UIConfig(GameUI ui) {
         this.ui = requireNonNull(ui);
         assets.setLocalizedTexts(ResourceBundle.getBundle("de.amr.pacmanfx.arcade.pacman.localized_texts"));
-        spriteSheet = new ArcadePacMan_SpriteSheet(LOCAL_RESOURCES.loadImage("graphics/pacman_spritesheet.png"));
+        spriteSheet = new ArcadePacMan_SpriteSheet();
     }
 
     @Override
