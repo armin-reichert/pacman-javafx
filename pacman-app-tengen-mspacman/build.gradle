@@ -30,7 +30,7 @@ jlink {
         installerType = installerPkg
         if (osdetector.os == "osx") {
             installerOptions += [
-                // Underscore not allowed!
+                // Underscore not allowed, use hyphen instead!
                 "--mac-package-identifier", "de.amr.pacmanfx.tengen.ms-pacman.app.Main"
             ]
         }
