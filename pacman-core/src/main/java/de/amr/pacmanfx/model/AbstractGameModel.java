@@ -567,8 +567,7 @@ public abstract class AbstractGameModel implements Game {
     }
 
     protected void updateHighScore() throws IOException {
-        final var savedHighScore = new Score();
-        savedHighScore.read(highScoreFile);
+        final Score savedHighScore = Score.fromFile(highScoreFile);
         if (highScore.points() > savedHighScore.points()) {
             saveHighScore();
         }
