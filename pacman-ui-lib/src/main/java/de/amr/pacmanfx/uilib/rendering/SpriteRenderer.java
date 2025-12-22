@@ -12,9 +12,6 @@ import static java.util.Objects.requireNonNull;
 
 public interface SpriteRenderer extends Renderer {
 
-    // This is an attempt to avoid artifacts caused by unwanted grabbing of neighbor pixels around a sprite
-    double SPRITE_MARGIN = 0.3, DOUBLE_SPRITE_MARGIN = 0.6;
-
     SpriteSheet<?> spriteSheet();
 
     /**
@@ -30,8 +27,8 @@ public interface SpriteRenderer extends Renderer {
         final double scalingValue = scaled ? scaling() : 1;
         ctx().setImageSmoothing(imageSmoothing());
         ctx().drawImage(spriteSheet().sourceImage(),
-            sprite.x() + SPRITE_MARGIN, sprite.y() + SPRITE_MARGIN,
-            sprite.width() - DOUBLE_SPRITE_MARGIN, sprite.height() - DOUBLE_SPRITE_MARGIN,
+            sprite.x(), sprite.y(),
+            sprite.width(), sprite.height(),
             scalingValue * x, scalingValue * y,
             scalingValue * sprite.width(), scalingValue * sprite.height());
     }
