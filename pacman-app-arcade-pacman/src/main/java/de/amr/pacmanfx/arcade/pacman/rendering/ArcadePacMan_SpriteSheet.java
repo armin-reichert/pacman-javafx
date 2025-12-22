@@ -174,6 +174,7 @@ public class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
 
     @Override
     public void dispose() {
+        sourceImage.cancel();
         sourceImage = null;
     }
 
