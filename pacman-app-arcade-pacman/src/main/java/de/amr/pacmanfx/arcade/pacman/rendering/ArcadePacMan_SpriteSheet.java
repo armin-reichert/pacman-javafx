@@ -54,9 +54,7 @@ public class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
     }
 
     private static RectShort[] makePacManDyingSpriteSeq() {
-        return IntStream.range(0, 11)
-                .mapToObj(i -> rect(504 + i * 16, 0, 16, i <= 9 ? 15 : 16))
-                .toArray(RectShort[]::new);
+        return IntStream.range(0, 11).mapToObj(i -> rect(504 + i * 16, 0, 16, 16)).toArray(RectShort[]::new);
     }
 
     private static final SpriteMap<SpriteID> SPRITE_MAP = new SpriteMap<>(SpriteID.class);
