@@ -12,7 +12,7 @@ module pacmanfx.all {
     requires de.amr.pacmanfx.arcade.ms_pacman;
     requires de.amr.pacmanfx.arcade.pacman;
     requires de.amr.pacmanfx.arcade.pacman_xxl;
-    requires de.amr.pacmanfx.tengen.ms_pacman;
+    requires de.amr.pacmanfx.tengenmspacman;
     requires org.tinylog.api;
 
     exports de.amr.pacmanfx.allgames.app;

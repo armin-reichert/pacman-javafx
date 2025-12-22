@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 
 // module is open to allow access to non-class resources
-open module de.amr.pacmanfx.tengen.ms_pacman {
+open module de.amr.pacmanfx.tengenmspacman {
     requires javafx.base;
     requires javafx.controls;
     requires javafx.graphics;
@@ -15,9 +15,9 @@ open module de.amr.pacmanfx.tengen.ms_pacman {
     requires de.amr.pacmanfx.ui;
     requires java.desktop;
 
-    exports de.amr.pacmanfx.tengen.ms_pacman;
-    exports de.amr.pacmanfx.tengen.ms_pacman.app;
-    exports de.amr.pacmanfx.tengen.ms_pacman.model;
-    exports de.amr.pacmanfx.tengen.ms_pacman.rendering;
-    exports de.amr.pacmanfx.tengen.ms_pacman.scenes;
+    exports de.amr.pacmanfx.tengenmspacman;
+    exports de.amr.pacmanfx.tengenmspacman.app;
+    exports de.amr.pacmanfx.tengenmspacman.model;
+    exports de.amr.pacmanfx.tengenmspacman.rendering;
+    exports de.amr.pacmanfx.tengenmspacman.scenes;
 }

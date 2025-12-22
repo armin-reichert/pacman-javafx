@@ -18,8 +18,8 @@ javafx {
 }
 
 application {
-    mainModule = "de.amr.pacmanfx.tengen.ms_pacman"
-    mainClass = "de.amr.pacmanfx.tengen.ms_pacman.app.Main"
+    mainModule = "de.amr.pacmanfx.tengenmspacman"
+    mainClass = "de.amr.pacmanfx.tengenmspacman.app.Main"
 }
 
 jlink {
