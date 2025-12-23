@@ -14,12 +14,15 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Path;
+import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.CONFIG_KEY_COLOR_MAP;
 import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomInt;
@@ -84,11 +87,45 @@ public class PacManXXL_MapSelector implements WorldMapSelector, DirectoryWatchdo
             Logger.info("Detected custom map directory changes:");
             for (WatchEvent<Path> event : events) {
                 final Path path = event.context();
-                Logger.info("\tEvent: kind={}, path='{}'", event.kind(), path.toAbsolutePath());
+                final File worldMapFile = new File(customMapDir, path.toFile().getPath());
+                Logger.info("\t{}, path='{}'", event.kind(), worldMapFile);
+                if (event.kind() == StandardWatchEventKinds.ENTRY_CREATE) {
+                    try {
+                        final WorldMap worldMap = WorldMap.loadFromFile(worldMapFile);
+                        customMapPrototypes.add(worldMap);
+                        Logger.info("Added custom map {}", worldMapFile);
+                    } catch (IOException x) {
+                        Logger.error(x);
+                    }
+                }
+                else if (event.kind() == StandardWatchEventKinds.ENTRY_DELETE) {
+                    try {
+                        final URL url = worldMapFile.toURI().toURL();
+                        findCustomMapPrototype(url).ifPresent(worldMap -> {
+                            customMapPrototypes.remove(worldMap);
+                            Logger.info("Removed custom map {}", worldMapFile);
+                        });
+                    } catch (MalformedURLException x) {
+                        Logger.error(x);
+                    }
+                }
+                else if (event.kind() == StandardWatchEventKinds.ENTRY_MODIFY) {
+                    try {
+                        final URL url = worldMapFile.toURI().toURL();
+                        findCustomMapPrototype(url).ifPresent(customMapPrototypes::remove);
+                        final WorldMap worldMap = WorldMap.loadFromFile(worldMapFile);
+                        customMapPrototypes.add(worldMap);
+                        Logger.info("Updated custom map {}", worldMapFile);
+                    } catch (IOException x) {
+                        Logger.error(x);
+                    }
+                }
             }
-            customMapPrototypes().clear();
-            loadCustomMapPrototypes();
         }
+    }
+
+    private Optional<WorldMap> findCustomMapPrototype(URL url) {
+        return customMapPrototypes.stream().filter(worldMap -> url.toString().equals(worldMap.url())).findFirst();
     }
 
     public void setSelectionMode(WorldMapSelectionMode mode) {
@@ -107,7 +144,7 @@ public class PacManXXL_MapSelector implements WorldMapSelector, DirectoryWatchdo
 
     @Override
     public void loadCustomMapPrototypes() {
-        File[] mapFiles = customMapDir.listFiles((dir, name) -> name.endsWith(".world"));
+        File[] mapFiles = customMapDir.listFiles((_, name) -> name.endsWith(".world"));
         if (mapFiles == null) {
             Logger.error("An error occurred accessing custom map directory {}", customMapDir);
             return;
