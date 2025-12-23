@@ -28,12 +28,5 @@ jlink {
     }
     jpackage {
         installerType = installerPkg
-        // Underscore in macPackageIdentifier not allowed!
-        if (osdetector.os == "osx") {
-            // This seems not work: why?
-           args += [
-                "--mac-package-identifier", "de.amr.pacmanfx.tengen.mspacman"
-            ]
-        }
     }
 }
