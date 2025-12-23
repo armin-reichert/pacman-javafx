@@ -17,6 +17,8 @@ import static de.amr.pacmanfx.tengenmspacman.rendering.SpriteID.*;
 
 public final class TengenMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
 
+    public static final TengenMsPacMan_SpriteSheet INSTANCE = new TengenMsPacMan_SpriteSheet();
+
     // Bonus symbols/values: x-position, width, y-delta
     private static final int[] BONUS_X  = {8, 24, 40, 56, 76, 96, 118, 140, 162, 182, 204, 230, 250, 272};
     private static final int[] BONUS_W  = {16, 15, 16, 18, 18, 20, 18, 18, 18, 18, 18, 18, 18, 18};
@@ -223,7 +225,7 @@ public final class TengenMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
 
     private static final Image IMAGE = LOCAL_RESOURCES.loadImage(TengenMsPacMan_UIConfig.SPRITE_SHEET_PATH);
 
-    public TengenMsPacMan_SpriteSheet() {}
+    private TengenMsPacMan_SpriteSheet() {}
 
     @Override
     public Image sourceImage() {

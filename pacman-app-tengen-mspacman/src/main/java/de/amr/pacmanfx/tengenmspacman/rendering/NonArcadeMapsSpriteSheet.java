@@ -22,6 +22,8 @@ import static de.amr.pacmanfx.lib.math.RectShort.rect;
  */
 public final class NonArcadeMapsSpriteSheet implements SpriteSheet<NonArcadeMapsSpriteSheet.MazeID> {
 
+    public static final NonArcadeMapsSpriteSheet INSTANCE = new NonArcadeMapsSpriteSheet();
+
     // MazeIDs as they appear in the sprite sheet (row by row)
     public enum MazeID {
         MAZE1, MAZE2, MAZE3, MAZE4, MAZE5, MAZE6, MAZE7, MAZE8,
@@ -84,7 +86,7 @@ public final class NonArcadeMapsSpriteSheet implements SpriteSheet<NonArcadeMaps
 
     private static final Image IMAGE = LOCAL_RESOURCES.loadImage(TengenMsPacMan_UIConfig.NON_ARCADE_MAZES_IMAGE_PATH);
 
-    public NonArcadeMapsSpriteSheet() {}
+    private NonArcadeMapsSpriteSheet() {}
 
     @Override
     public Image sourceImage() {

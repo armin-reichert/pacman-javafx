@@ -59,7 +59,6 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config, GameScene_Confi
     private final AssetMap assets = new AssetMap();
     private final Map<String, GameScene> scenesByID = new HashMap<>();
     private final SoundManager soundManager = new SoundManager();
-    private final ArcadePacMan_SpriteSheet spriteSheet = new ArcadePacMan_SpriteSheet();
     private final GameUI ui;
 
     public PacManXXL_PacMan_UIConfig(GameUI ui) {
@@ -148,19 +147,19 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config, GameScene_Confi
 
     @Override
     public PacManXXL_PacMan_GameLevelRenderer createGameLevelRenderer(Canvas canvas) {
-        return new PacManXXL_PacMan_GameLevelRenderer(canvas, spriteSheet);
+        return new PacManXXL_PacMan_GameLevelRenderer(canvas, ArcadePacMan_SpriteSheet.INSTANCE);
     }
 
     @Override
     public GameScene2D_Renderer createGameSceneRenderer(Canvas canvas, GameScene2D gameScene2D) {
         GameScene2D_Renderer renderer = switch (gameScene2D) {
-            case Arcade_BootScene2D ignored -> new Arcade_BootScene2D_Renderer(gameScene2D, canvas, spriteSheet);
-            case ArcadePacMan_IntroScene ignored -> new ArcadePacMan_IntroScene_Renderer(gameScene2D, canvas, spriteSheet);
+            case Arcade_BootScene2D ignored -> new Arcade_BootScene2D_Renderer(gameScene2D, canvas, ArcadePacMan_SpriteSheet.INSTANCE);
+            case ArcadePacMan_IntroScene ignored -> new ArcadePacMan_IntroScene_Renderer(gameScene2D, canvas, ArcadePacMan_SpriteSheet.INSTANCE);
             case ArcadePacMan_StartScene ignored -> new ArcadePacMan_StartScene_Renderer(gameScene2D, canvas);
-            case Arcade_PlayScene2D ignored -> new Arcade_PlayScene2D_Renderer(gameScene2D, canvas, spriteSheet);
-            case ArcadePacMan_CutScene1 ignored -> new ArcadePacMan_CutScene1_Renderer(gameScene2D, canvas, spriteSheet);
-            case ArcadePacMan_CutScene2 ignored -> new ArcadePacMan_CutScene2_Renderer(gameScene2D, canvas, spriteSheet);
-            case ArcadePacMan_CutScene3 ignored -> new ArcadePacMan_CutScene3_Renderer(gameScene2D, canvas, spriteSheet);
+            case Arcade_PlayScene2D ignored -> new Arcade_PlayScene2D_Renderer(gameScene2D, canvas, ArcadePacMan_SpriteSheet.INSTANCE);
+            case ArcadePacMan_CutScene1 ignored -> new ArcadePacMan_CutScene1_Renderer(gameScene2D, canvas, ArcadePacMan_SpriteSheet.INSTANCE);
+            case ArcadePacMan_CutScene2 ignored -> new ArcadePacMan_CutScene2_Renderer(gameScene2D, canvas, ArcadePacMan_SpriteSheet.INSTANCE);
+            case ArcadePacMan_CutScene3 ignored -> new ArcadePacMan_CutScene3_Renderer(gameScene2D, canvas, ArcadePacMan_SpriteSheet.INSTANCE);
             default -> throw new IllegalStateException("Unexpected value: " + gameScene2D);
         };
         return gameScene2D.adaptRenderer(renderer);
@@ -168,7 +167,7 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config, GameScene_Confi
 
     @Override
     public HUD_Renderer createHUDRenderer(Canvas canvas, GameScene2D gameScene2D) {
-        var hudRenderer = new ArcadePacMan_HUD_Renderer(canvas, spriteSheet);
+        var hudRenderer = new ArcadePacMan_HUD_Renderer(canvas, ArcadePacMan_SpriteSheet.INSTANCE);
         hudRenderer.setImageSmoothing(true);
         gameScene2D.adaptRenderer(hudRenderer);
         return hudRenderer;
@@ -176,27 +175,27 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config, GameScene_Confi
 
     @Override
     public ActorRenderer createActorRenderer(Canvas canvas) {
-        var actorRenderer = new ArcadePacMan_Actor_Renderer(canvas, spriteSheet);
+        var actorRenderer = new ArcadePacMan_Actor_Renderer(canvas, ArcadePacMan_SpriteSheet.INSTANCE);
         actorRenderer.setImageSmoothing(true);
         return actorRenderer;
     }
 
     @Override
     public Image killedGhostPointsImage(int killedIndex) {
-        RectShort[] numberSprites = spriteSheet.spriteSequence(SpriteID.GHOST_NUMBERS);
-        return spriteSheet.image(numberSprites[killedIndex]);
+        RectShort[] numberSprites = ArcadePacMan_SpriteSheet.INSTANCE.spriteSequence(SpriteID.GHOST_NUMBERS);
+        return ArcadePacMan_SpriteSheet.INSTANCE.image(numberSprites[killedIndex]);
     }
 
     @Override
     public Image bonusSymbolImage(byte symbol) {
-        RectShort[] sprites = spriteSheet.spriteSequence(SpriteID.BONUS_SYMBOLS);
-        return spriteSheet.image(sprites[symbol]);
+        RectShort[] sprites = ArcadePacMan_SpriteSheet.INSTANCE.spriteSequence(SpriteID.BONUS_SYMBOLS);
+        return ArcadePacMan_SpriteSheet.INSTANCE.image(sprites[symbol]);
     }
 
     @Override
     public Image bonusValueImage(byte symbol) {
-        RectShort[] sprites = spriteSheet.spriteSequence(SpriteID.BONUS_VALUES);
-        return spriteSheet.image(sprites[symbol]);
+        RectShort[] sprites = ArcadePacMan_SpriteSheet.INSTANCE.spriteSequence(SpriteID.BONUS_VALUES);
+        return ArcadePacMan_SpriteSheet.INSTANCE.image(sprites[symbol]);
     }
 
     @Override
@@ -206,7 +205,7 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config, GameScene_Confi
 
     @Override
     public ArcadePacMan_SpriteSheet spriteSheet() {
-        return spriteSheet;
+        return ArcadePacMan_SpriteSheet.INSTANCE;
     }
 
     @Override
@@ -225,12 +224,12 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config, GameScene_Confi
 
     @Override
     public ArcadePacMan_GhostAnimationManager createGhostAnimations(byte personality) {
-        return new ArcadePacMan_GhostAnimationManager(spriteSheet, personality);
+        return new ArcadePacMan_GhostAnimationManager(ArcadePacMan_SpriteSheet.INSTANCE, personality);
     }
 
     @Override
     public ArcadePacMan_PacAnimationManager createPacAnimations() {
-        return new ArcadePacMan_PacAnimationManager(spriteSheet);
+        return new ArcadePacMan_PacAnimationManager(ArcadePacMan_SpriteSheet.INSTANCE);
     }
 
     @Override

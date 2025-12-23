@@ -15,6 +15,8 @@ import static de.amr.pacmanfx.Globals.TS;
 
 public final class ArcadeMapsSpriteSheet implements SpriteSheet<ArcadeMapsSpriteSheet.MazeID> {
 
+    public static final ArcadeMapsSpriteSheet INSTANCE = new ArcadeMapsSpriteSheet();
+
     // Size of Arcade maze (without the 3 empty rows above and the 2 below the maze!)
     private static final int MAZE_SPRITE_WIDTH  = 28 * TS;
     private static final int MAZE_SPRITE_HEIGHT = 31 * TS;
@@ -47,7 +49,7 @@ public final class ArcadeMapsSpriteSheet implements SpriteSheet<ArcadeMapsSprite
 
     private static final Image IMAGE = LOCAL_RESOURCES.loadImage(TengenMsPacMan_UIConfig.ARCADE_MAZES_IMAGE_PATH);
 
-    public ArcadeMapsSpriteSheet() {}
+    private ArcadeMapsSpriteSheet() {}
 
     @Override
     public Image sourceImage() {

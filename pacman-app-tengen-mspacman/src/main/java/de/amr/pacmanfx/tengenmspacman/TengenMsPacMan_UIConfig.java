@@ -145,21 +145,13 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     private final AssetMap assets = new AssetMap();
     private final Map<String, GameScene> scenesByID = new HashMap<>();
     private final SoundManager soundManager = new SoundManager();
-    private final TengenMsPacMan_SpriteSheet spriteSheet;
     private final GameUI ui;
 
-    private final ArcadeMapsSpriteSheet arcadeMapsSpriteSheet;
-    private final NonArcadeMapsSpriteSheet nonArcadeMapsSpriteSheet;
     private final MapColoringService coloringService = new MapColoringService();
 
     public TengenMsPacMan_UIConfig(GameUI ui) {
         this.ui = requireNonNull(ui);
-
         assets.setLocalizedTexts(TEXT_BUNDLE);
-
-        spriteSheet              = new TengenMsPacMan_SpriteSheet();
-        arcadeMapsSpriteSheet    = new ArcadeMapsSpriteSheet();
-        nonArcadeMapsSpriteSheet = new NonArcadeMapsSpriteSheet();
     }
 
     @Override
@@ -264,20 +256,16 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     @Override
     public TengenMsPacMan_SpriteSheet spriteSheet() {
-        return spriteSheet;
-    }
-
-    public NonArcadeMapsSpriteSheet nonArcadeMapsSpriteSheet() {
-        return nonArcadeMapsSpriteSheet;
+        return TengenMsPacMan_SpriteSheet.INSTANCE;
     }
 
     @Override
     public GameScene2D_Renderer createGameSceneRenderer(Canvas canvas, GameScene2D gameScene2D) {
         GameScene2D_Renderer renderer = switch (gameScene2D) {
             case TengenMsPacMan_BootScene ignored -> new TengenMsPacMan_BootScene_Renderer(gameScene2D, canvas);
-            case TengenMsPacMan_IntroScene ignored -> new TengenMsPacMan_IntroScene_Renderer(gameScene2D, canvas, spriteSheet);
-            case TengenMsPacMan_OptionsScene ignored -> new TengenMsPacMan_OptionsScene_Renderer(gameScene2D, canvas, spriteSheet);
-            case TengenMsPacMan_PlayScene2D ignored -> new TengenMsPacMan_PlayScene2D_Renderer(gameScene2D, canvas, spriteSheet);
+            case TengenMsPacMan_IntroScene ignored -> new TengenMsPacMan_IntroScene_Renderer(gameScene2D, canvas, TengenMsPacMan_SpriteSheet.INSTANCE);
+            case TengenMsPacMan_OptionsScene ignored -> new TengenMsPacMan_OptionsScene_Renderer(gameScene2D, canvas, TengenMsPacMan_SpriteSheet.INSTANCE);
+            case TengenMsPacMan_PlayScene2D ignored -> new TengenMsPacMan_PlayScene2D_Renderer(gameScene2D, canvas, TengenMsPacMan_SpriteSheet.INSTANCE);
             case TengenMsPacMan_CreditsScene ignored -> new TengenMsPacMan_CreditsScene_Renderer(gameScene2D, canvas);
             case TengenMsPacMan_CutScene1 ignored -> new TengenMsPacMan_CutScene1_Renderer(gameScene2D, canvas);
             case TengenMsPacMan_CutScene2 ignored -> new TengenMsPacMan_CutScene2_Renderer(gameScene2D, canvas);
@@ -301,31 +289,31 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
             || ui.isCurrentGameSceneID(sceneID_CutScene(3))
             || ui.isCurrentGameSceneID(sceneID_CutScene(4)) )
         {
-            final var hudRenderer = new TengenMsPacMan_HUD_Renderer(canvas, spriteSheet, ui.clock());
+            final var hudRenderer = new TengenMsPacMan_HUD_Renderer(canvas, TengenMsPacMan_SpriteSheet.INSTANCE, ui.clock());
             hudRenderer.setOffsetY(-2*TS); //TODO this is ugly
             return gameScene2D.adaptRenderer(hudRenderer);
         }
         if (ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_2D)) {
-            return gameScene2D.adaptRenderer(new TengenMsPacMan_HUD_Renderer(canvas, spriteSheet, ui.clock()));
+            return gameScene2D.adaptRenderer(new TengenMsPacMan_HUD_Renderer(canvas, TengenMsPacMan_SpriteSheet.INSTANCE, ui.clock()));
         }
         return null;
     }
 
     @Override
     public TengenMsPacMan_ActorRenderer createActorRenderer(Canvas canvas) {
-        return new TengenMsPacMan_ActorRenderer(canvas, spriteSheet);
+        return new TengenMsPacMan_ActorRenderer(canvas, TengenMsPacMan_SpriteSheet.INSTANCE);
     }
 
     @Override
     public Image killedGhostPointsImage(int killedIndex) {
-        RectShort[] numberSprites = spriteSheet.spriteSequence(SpriteID.GHOST_NUMBERS);
-        return spriteSheet.image(numberSprites[killedIndex]);
+        RectShort[] numberSprites = TengenMsPacMan_SpriteSheet.INSTANCE.spriteSequence(SpriteID.GHOST_NUMBERS);
+        return TengenMsPacMan_SpriteSheet.INSTANCE.image(numberSprites[killedIndex]);
     }
 
     @Override
     public Image bonusSymbolImage(byte symbol) {
-        RectShort[] symbolSprites = spriteSheet.spriteSequence(SpriteID.BONUS_SYMBOLS);
-        return spriteSheet.image(symbolSprites[symbol]);
+        RectShort[] symbolSprites = TengenMsPacMan_SpriteSheet.INSTANCE.spriteSequence(SpriteID.BONUS_SYMBOLS);
+        return TengenMsPacMan_SpriteSheet.INSTANCE.image(symbolSprites[symbol]);
     }
 
     @Override
@@ -338,8 +326,8 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
             case TengenMsPacMan_GameModel.BONUS_ICE_CREAM -> 7; // 4000!
             default -> symbol;
         };
-        RectShort[] sprites = spriteSheet.spriteSequence(SpriteID.BONUS_VALUES);
-        return spriteSheet.image(sprites[usedSymbol]);
+        RectShort[] sprites = TengenMsPacMan_SpriteSheet.INSTANCE.spriteSequence(SpriteID.BONUS_VALUES);
+        return TengenMsPacMan_SpriteSheet.INSTANCE.image(sprites[usedSymbol]);
     }
 
     @Override
@@ -365,12 +353,12 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     @Override
     public TengenMsPacMan_GhostAnimationManager createGhostAnimations(byte personality) {
-        return new TengenMsPacMan_GhostAnimationManager(spriteSheet(), personality);
+        return new TengenMsPacMan_GhostAnimationManager(TengenMsPacMan_SpriteSheet.INSTANCE, personality);
     }
 
     @Override
     public TengenMsPacMan_PacAnimationManager createPacAnimations() {
-        return new TengenMsPacMan_PacAnimationManager(spriteSheet());
+        return new TengenMsPacMan_PacAnimationManager(TengenMsPacMan_SpriteSheet.INSTANCE);
     }
 
     @Override
@@ -520,7 +508,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         info.put(CommonRenderInfoKey.MAZE_IMAGE, mazeSpriteSet.mazeImage().spriteSheetImage());
         if (mapCategory == MapCategory.STRANGE && mapNumber == 15) {
             int spriteIndex = mazeAnimationSpriteIndex(tick);
-            info.put(CommonRenderInfoKey.MAZE_SPRITE, nonArcadeMapsSpriteSheet().spriteSequence(MAZE32_ANIMATED)[spriteIndex]);
+            info.put(CommonRenderInfoKey.MAZE_SPRITE, NonArcadeMapsSpriteSheet.INSTANCE.spriteSequence(MAZE32_ANIMATED)[spriteIndex]);
         } else {
             info.put(CommonRenderInfoKey.MAZE_SPRITE, mazeSpriteSet.mazeImage().sprite());
         }
@@ -589,13 +577,13 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
             default -> throw new IllegalArgumentException("Illegal Arcade map number: " + mapNumber);
         };
 
-        RectShort mazeSprite = arcadeMapsSpriteSheet.sprite(mazeID);
-        var coloredMaze = new ColoredSpriteImage(arcadeMapsSpriteSheet.sourceImage(), mazeSprite, colorScheme);
+        RectShort mazeSprite = ArcadeMapsSpriteSheet.INSTANCE.sprite(mazeID);
+        var coloredMaze = new ColoredSpriteImage(ArcadeMapsSpriteSheet.INSTANCE.sourceImage(), mazeSprite, colorScheme);
 
         //TODO: Handle case when color scheme is already black & white
         List<ColoredSpriteImage> flashingMazes = coloringService.createFlashingMazeList(
             MapCategory.ARCADE, mazeID,
-            arcadeMapsSpriteSheet, mazeSprite,
+                ArcadeMapsSpriteSheet.INSTANCE, mazeSprite,
             colorScheme, NES_ColorScheme._0F_20_0F_BLACK_WHITE_BLACK,
             false, flashCount);
 
@@ -627,7 +615,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
         return coloringService.createMazeSet(
             MapCategory.MINI, mazeID,
-            nonArcadeMapsSpriteSheet, nonArcadeMapsSpriteSheet.sprite(mazeID),
+                NonArcadeMapsSpriteSheet.INSTANCE, NonArcadeMapsSpriteSheet.INSTANCE.sprite(mazeID),
             originalColorScheme, requestedColorScheme,
             randomFlashColors, flashCount
         );
@@ -668,7 +656,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
         return coloringService.createMazeSet(
             MapCategory.BIG, mazeID,
-            nonArcadeMapsSpriteSheet, nonArcadeMapsSpriteSheet.sprite(mazeID),
+            NonArcadeMapsSpriteSheet.INSTANCE, NonArcadeMapsSpriteSheet.INSTANCE.sprite(mazeID),
             originalColorScheme, requestedColorScheme,
             randomFlashColors, flashCount
         );
@@ -681,8 +669,8 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         boolean randomFlashColors) {
 
         final RectShort mazeSprite = mazeID == NonArcadeMapsSpriteSheet.MazeID.MAZE32_ANIMATED
-            ? nonArcadeMapsSpriteSheet.spriteSequence(mazeID)[0]
-            : nonArcadeMapsSpriteSheet.sprite(mazeID);
+            ? NonArcadeMapsSpriteSheet.INSTANCE.spriteSequence(mazeID)[0]
+            : NonArcadeMapsSpriteSheet.INSTANCE.sprite(mazeID);
 
         final NES_ColorScheme originalColorScheme = colorSchemeOfNonArcadeMap(mazeID);
         final NES_ColorScheme requestedColorScheme = optionalRandomColorScheme == null
@@ -690,7 +678,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
         return coloringService.createMazeSet(
             MapCategory.STRANGE, mazeID,
-            nonArcadeMapsSpriteSheet, mazeSprite,
+            NonArcadeMapsSpriteSheet.INSTANCE, mazeSprite,
             originalColorScheme, requestedColorScheme,
             randomFlashColors, flashCount
         );

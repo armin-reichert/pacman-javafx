@@ -17,6 +17,8 @@ import static de.amr.pacmanfx.lib.math.RectShort.rect;
 
 public final class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
 
+    public static final ArcadePacMan_SpriteSheet INSTANCE = new ArcadePacMan_SpriteSheet();
+
     /** Sprite sheet has a 16x16 raster. */
     public static final int SQUARE_SIZE = 16;
 
@@ -163,7 +165,7 @@ public final class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
 
     private static final Image IMAGE = LOCAL_RESOURCES.loadImage("graphics/pacman_spritesheet.png");
 
-    public ArcadePacMan_SpriteSheet() {}
+    private ArcadePacMan_SpriteSheet() {}
 
     @Override
     public Image sourceImage() {

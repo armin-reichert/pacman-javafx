@@ -18,6 +18,8 @@ import static de.amr.pacmanfx.lib.math.RectShort.rect;
 
 public final class ArcadeMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
 
+    public static final ArcadeMsPacMan_SpriteSheet INSTANCE = new ArcadeMsPacMan_SpriteSheet();
+
     // left from this x position, the maps are located
     private static final int BEGIN_SPRITES_X = 456;
 
@@ -121,7 +123,7 @@ public final class ArcadeMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
 
     private static final Image IMAGE = LOCAL_RESOURCES.loadImage("graphics/mspacman_spritesheet.png");
 
-    public ArcadeMsPacMan_SpriteSheet() {}
+    private ArcadeMsPacMan_SpriteSheet() {}
 
     @Override
     public Image sourceImage() {
