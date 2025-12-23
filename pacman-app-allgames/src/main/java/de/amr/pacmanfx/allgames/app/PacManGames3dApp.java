@@ -195,7 +195,7 @@ public class PacManGames3dApp extends Application {
             ui = USE_BUILDER
                 ? createUI_WithBuilder(primaryStage, width, height, xxlMapSelector)
                 : createUI_WithoutBuilder(primaryStage, width, height, xxlMapSelector);
-            ui.directoryWatchdog().addEventListener(xxlMapSelector);
+            ui.customDirWatchdog().addEventListener(xxlMapSelector);
             ui.show();
         }
         catch (RuntimeException x) {

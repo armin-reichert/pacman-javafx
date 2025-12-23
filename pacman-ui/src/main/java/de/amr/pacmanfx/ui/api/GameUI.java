@@ -135,7 +135,7 @@ public interface GameUI extends LocalizedTextAccessor {
     /**
      * @return watchdog process observing the directory where user-defined maps are stored
      */
-    DirectoryWatchdog directoryWatchdog();
+    DirectoryWatchdog customDirWatchdog();
 
     /**
      * @return the clock driving the game

@@ -311,7 +311,7 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     @Override
-    public DirectoryWatchdog directoryWatchdog() {
+    public DirectoryWatchdog customDirWatchdog() {
         return customDirWatchdog;
     }
 
