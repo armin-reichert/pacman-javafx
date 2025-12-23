@@ -29,7 +29,7 @@ public class GameUI_Builder {
 
     private static class GameConfiguration {
         Class<?> gameModelClass;
-        Class<?> uiConfigClass;
+        Class<? extends GameUI_Config> uiConfigClass;
         WorldMapSelector mapSelector;
     }
 
@@ -128,7 +128,7 @@ public class GameUI_Builder {
         validateConfiguration();
 
         //TODO this is crap
-        Map<String, Class<?>> uiConfigMap = new HashMap<>();
+        Map<String, Class<? extends GameUI_Config>> uiConfigMap = new HashMap<>();
         configByGameVariant.forEach((gameVariant, config) -> uiConfigMap.put(gameVariant, config.uiConfigClass));
         var ui = new GameUI_Implementation(uiConfigMap, THE_GAME_BOX, stage, mainSceneWidth, mainSceneHeight);
 

@@ -11,6 +11,7 @@ import de.amr.pacmanfx.model.StandardGameVariant;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
 import de.amr.pacmanfx.ui.api.GameUI;
+import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import javafx.application.Application;
 import javafx.stage.Screen;
@@ -36,7 +37,7 @@ public class ArcadePacMan_App extends Application {
         var game = new ArcadePacMan_GameModel(THE_GAME_BOX, THE_GAME_BOX.highScoreFile(GAME_VARIANT_NAME));
         THE_GAME_BOX.registerGame(GAME_VARIANT_NAME, game);
 
-        Map<String, Class<?>> configClassMap = Map.of(
+        Map<String, Class<? extends GameUI_Config>> configClassMap = Map.of(
             GAME_VARIANT_NAME, ArcadePacMan_UIConfig.class
         );
         final var ui = new GameUI_Implementation(configClassMap, THE_GAME_BOX, stage, sceneWidth, sceneHeight);

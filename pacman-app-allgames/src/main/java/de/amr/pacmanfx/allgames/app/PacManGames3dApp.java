@@ -23,6 +23,7 @@ import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
 import de.amr.pacmanfx.ui.api.GameUI;
+import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -86,7 +87,7 @@ public class PacManGames3dApp extends Application {
             THE_GAME_BOX.registerGame(variantName, game);
         }
 
-        final Map<String, Class<?>> uiConfigMap = Map.of(
+        final Map<String, Class<? extends GameUI_Config>> uiConfigMap = Map.of(
             StandardGameVariant.PACMAN.name(),           ArcadePacMan_UIConfig.class,
             StandardGameVariant.MS_PACMAN.name(),        ArcadeMsPacMan_UIConfig.class,
             StandardGameVariant.MS_PACMAN_TENGEN.name(), TengenMsPacMan_UIConfig.class,

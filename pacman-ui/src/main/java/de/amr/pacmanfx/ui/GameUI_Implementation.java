@@ -69,7 +69,7 @@ public final class GameUI_Implementation implements GameUI {
     private final DirectoryWatchdog customDirWatchdog;
 
     private final ActionBindingsManager actionBindings = new DefaultActionBindingsManager();
-    private final Map<String, Class<?>> configClassesByGameVariant;
+    private final Map<String, Class<? extends GameUI_Config>> configClassesByGameVariant;
     private final Map<String, GameUI_Config> configByGameVariant = new HashMap<>();
 
     private final ObjectProperty<GameUI_View> currentView = new SimpleObjectProperty<>();
@@ -88,7 +88,7 @@ public final class GameUI_Implementation implements GameUI {
     private final StringBinding titleBinding;
 
     public GameUI_Implementation(
-        Map<String, Class<?>> configClassesByVariantName,
+        Map<String, Class<? extends GameUI_Config>> configClassesByVariantName,
         GameContext gameContext,
         Stage stage,
         double sceneWidth,
