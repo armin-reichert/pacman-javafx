@@ -69,7 +69,7 @@ public final class GameUI_Implementation implements GameUI {
     private final DirectoryWatchdog customDirWatchdog;
 
     private final ActionBindingsManager actionBindings = new DefaultActionBindingsManager();
-    private final Map<String, Class<? extends GameUI_Config>> configClassesByGameVariant;
+    private final Map<String, Class<? extends GameUI_Config>> uiConfigMap;
     private final Map<String, GameUI_Config> configByGameVariant = new HashMap<>();
 
     private final ObjectProperty<GameUI_View> currentView = new SimpleObjectProperty<>();
@@ -88,13 +88,13 @@ public final class GameUI_Implementation implements GameUI {
     private final StringBinding titleBinding;
 
     public GameUI_Implementation(
-        Map<String, Class<? extends GameUI_Config>> configClassesByVariantName,
+        Map<String, Class<? extends GameUI_Config>> uiConfigMap,
         GameContext gameContext,
         Stage stage,
         double sceneWidth,
         double sceneHeight)
     {
-        this.configClassesByGameVariant = requireNonNull(configClassesByVariantName, "UI configuration map is null");
+        this.uiConfigMap = requireNonNull(uiConfigMap, "UI configuration map is null");
         this.gameContext = requireNonNull(gameContext, "Game context is null");
         this.stage = requireNonNull(stage, "Stage is null");
         requireNonNegative(sceneWidth, "Main scene width must be a positive number");
@@ -522,7 +522,7 @@ public final class GameUI_Implementation implements GameUI {
     public GameUI_Config config(String gameVariantName) {
         GameUI_Config config = configByGameVariant.get(gameVariantName);
         if (config == null) {
-            Class<?> configClass = configClassesByGameVariant.get(gameVariantName);
+            Class<?> configClass = uiConfigMap.get(gameVariantName);
             try {
                 config = (GameUI_Config) configClass.getDeclaredConstructor(GameUI.class).newInstance(this);
                 config.sceneConfig().createGameScenes(this);

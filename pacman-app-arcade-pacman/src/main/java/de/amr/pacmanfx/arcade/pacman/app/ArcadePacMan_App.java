@@ -37,10 +37,10 @@ public class ArcadePacMan_App extends Application {
         var game = new ArcadePacMan_GameModel(THE_GAME_BOX, THE_GAME_BOX.highScoreFile(GAME_VARIANT_NAME));
         THE_GAME_BOX.registerGame(GAME_VARIANT_NAME, game);
 
-        Map<String, Class<? extends GameUI_Config>> configClassMap = Map.of(
+        Map<String, Class<? extends GameUI_Config>> uiConfigMap = Map.of(
             GAME_VARIANT_NAME, ArcadePacMan_UIConfig.class
         );
-        final var ui = new GameUI_Implementation(configClassMap, THE_GAME_BOX, stage, sceneWidth, sceneHeight);
+        final var ui = new GameUI_Implementation(uiConfigMap, THE_GAME_BOX, stage, sceneWidth, sceneHeight);
 
         final var startPage = new ArcadePacMan_StartPage();
         ui.startPagesView().addStartPage(startPage);
