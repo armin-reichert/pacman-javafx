@@ -15,7 +15,7 @@ import java.util.stream.IntStream;
 
 import static de.amr.pacmanfx.lib.math.RectShort.rect;
 
-public class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
+public final class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
 
     /** Sprite sheet has a 16x16 raster. */
     public static final int SQUARE_SIZE = 16;
@@ -169,9 +169,6 @@ public class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
     public Image sourceImage() {
         return IMAGE;
     }
-
-    @Override
-    public void dispose() {}
 
     @Override
     public RectShort sprite(SpriteID id) {

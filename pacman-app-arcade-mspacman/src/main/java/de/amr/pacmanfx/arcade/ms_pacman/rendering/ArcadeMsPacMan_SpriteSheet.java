@@ -16,7 +16,7 @@ import java.util.stream.IntStream;
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.*;
 import static de.amr.pacmanfx.lib.math.RectShort.rect;
 
-public class ArcadeMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
+public final class ArcadeMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
 
     // left from this x position, the maps are located
     private static final int BEGIN_SPRITES_X = 456;
@@ -127,9 +127,6 @@ public class ArcadeMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
     public Image sourceImage() {
         return IMAGE;
     }
-
-    @Override
-    public void dispose() {}
 
     @Override
     public RectShort sprite(SpriteID id) {

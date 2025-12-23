@@ -20,7 +20,7 @@ import static de.amr.pacmanfx.lib.math.RectShort.rect;
  * <p>Each MazeID corresponds to a sub‐image region laid out row by row
  * in the source image. Some mazes (32, 33, 34–37) are handled specially.
  */
-public class NonArcadeMapsSpriteSheet implements SpriteSheet<NonArcadeMapsSpriteSheet.MazeID> {
+public final class NonArcadeMapsSpriteSheet implements SpriteSheet<NonArcadeMapsSpriteSheet.MazeID> {
 
     // MazeIDs as they appear in the sprite sheet (row by row)
     public enum MazeID {
@@ -85,9 +85,6 @@ public class NonArcadeMapsSpriteSheet implements SpriteSheet<NonArcadeMapsSprite
     private static final Image IMAGE = LOCAL_RESOURCES.loadImage(TengenMsPacMan_UIConfig.NON_ARCADE_MAZES_IMAGE_PATH);
 
     public NonArcadeMapsSpriteSheet() {}
-
-    @Override
-    public void dispose() {}
 
     @Override
     public Image sourceImage() {
