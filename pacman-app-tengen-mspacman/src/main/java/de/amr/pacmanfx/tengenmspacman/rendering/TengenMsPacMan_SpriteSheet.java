@@ -4,6 +4,8 @@
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.pacmanfx.lib.math.RectShort;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
+import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.SpriteMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.image.Image;
@@ -12,7 +14,6 @@ import java.util.stream.IntStream;
 
 import static de.amr.pacmanfx.lib.math.RectShort.rect;
 import static de.amr.pacmanfx.tengenmspacman.rendering.SpriteID.*;
-import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
 
@@ -218,21 +219,18 @@ public class TengenMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
         });
     }
 
-    private Image sourceImage;
+    private static final ResourceManager LOCAL_RESOURCES = () -> TengenMsPacMan_UIConfig.class;
 
-    public TengenMsPacMan_SpriteSheet(Image sourceImage) {
-        this.sourceImage = requireNonNull(sourceImage);
-    }
+    private static final Image IMAGE = LOCAL_RESOURCES.loadImage(TengenMsPacMan_UIConfig.SPRITE_SHEET_PATH);
+
+    public TengenMsPacMan_SpriteSheet() {}
 
     @Override
-    public void dispose() {
-        sourceImage.cancel();
-        sourceImage = null;
-    }
+    public void dispose() {}
 
     @Override
     public Image sourceImage() {
-        return sourceImage;
+        return IMAGE;
     }
 
     @Override

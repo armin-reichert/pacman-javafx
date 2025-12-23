@@ -161,22 +161,17 @@ public class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
 
     private static final ResourceManager LOCAL_RESOURCES = () -> ArcadePacMan_UIConfig.class;
 
-    private Image sourceImage;
+    private static final Image IMAGE = LOCAL_RESOURCES.loadImage("graphics/pacman_spritesheet.png");
 
-    public ArcadePacMan_SpriteSheet() {
-        this.sourceImage = LOCAL_RESOURCES.loadImage("graphics/pacman_spritesheet.png");
-    }
+    public ArcadePacMan_SpriteSheet() {}
 
     @Override
     public Image sourceImage() {
-        return sourceImage;
+        return IMAGE;
     }
 
     @Override
-    public void dispose() {
-        sourceImage.cancel();
-        sourceImage = null;
-    }
+    public void dispose() {}
 
     @Override
     public RectShort sprite(SpriteID id) {

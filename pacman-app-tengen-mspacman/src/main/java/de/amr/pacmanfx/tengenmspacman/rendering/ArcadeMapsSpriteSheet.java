@@ -5,12 +5,13 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.pacmanfx.lib.math.RectShort;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
+import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.SpriteMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.image.Image;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static java.util.Objects.requireNonNull;
 
 public class ArcadeMapsSpriteSheet implements SpriteSheet<ArcadeMapsSpriteSheet.MazeID> {
 
@@ -42,21 +43,18 @@ public class ArcadeMapsSpriteSheet implements SpriteSheet<ArcadeMapsSpriteSheet.
         SPRITE_MAP.checkCompleteness();
     }
 
-    private Image sourceImage;
+    private static final ResourceManager LOCAL_RESOURCES = () -> TengenMsPacMan_UIConfig.class;
 
-    public ArcadeMapsSpriteSheet(Image sourceImage) {
-        this.sourceImage = requireNonNull(sourceImage);
-    }
+    private static final Image IMAGE = LOCAL_RESOURCES.loadImage(TengenMsPacMan_UIConfig.ARCADE_MAZES_IMAGE_PATH);
+
+    public ArcadeMapsSpriteSheet() {}
 
     @Override
-    public void dispose() {
-        sourceImage.cancel();
-        sourceImage = null;
-    }
+    public void dispose() {}
 
     @Override
     public Image sourceImage() {
-        return sourceImage;
+        return IMAGE;
     }
 
     @Override

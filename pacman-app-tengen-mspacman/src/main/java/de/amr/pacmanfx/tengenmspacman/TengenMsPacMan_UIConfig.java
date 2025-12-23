@@ -16,6 +16,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.actors.Blinky;
@@ -36,7 +37,6 @@ import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
-import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.MsPacMan3D;
 import de.amr.pacmanfx.uilib.model3D.MsPacManBody;
 import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
@@ -157,9 +157,9 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
         assets.setLocalizedTexts(TEXT_BUNDLE);
 
-        spriteSheet              = new TengenMsPacMan_SpriteSheet(LOCAL_RESOURCES.loadImage(SPRITE_SHEET_PATH));
-        arcadeMapsSpriteSheet    = new ArcadeMapsSpriteSheet(LOCAL_RESOURCES.loadImage(ARCADE_MAZES_IMAGE_PATH));
-        nonArcadeMapsSpriteSheet = new NonArcadeMapsSpriteSheet(LOCAL_RESOURCES.loadImage(NON_ARCADE_MAZES_IMAGE_PATH));
+        spriteSheet              = new TengenMsPacMan_SpriteSheet();
+        arcadeMapsSpriteSheet    = new ArcadeMapsSpriteSheet();
+        nonArcadeMapsSpriteSheet = new NonArcadeMapsSpriteSheet();
     }
 
     @Override
