@@ -76,6 +76,8 @@ public abstract class PlayScene3D extends Group implements GameScene {
 
     private static final float DISPLAY_SECONDS_READY_MESSAGE = 2.5f;
 
+    private static final float SIREN_VOLUME = 0.33f;
+
     private final Map<PerspectiveID, Perspective> perspectivesByID = new EnumMap<>(PerspectiveID.class);
 
     private final ObjectProperty<PerspectiveID> perspectiveID = new SimpleObjectProperty<>(PerspectiveID.NEAR_PLAYER);
@@ -175,7 +177,7 @@ public abstract class PlayScene3D extends Group implements GameScene {
         return Optional.of(menu);
     }
 
-    private final ChangeListener<PerspectiveID> perspectiveIDChangeListener = (py, ov, newID) -> {
+    private final ChangeListener<PerspectiveID> perspectiveIDChangeListener = (_, _, newID) -> {
         for (Toggle toggle : perspectivesGroup.getToggles()) {
             if (Objects.equals(toggle.getUserData(), newID)) {
                 perspectivesGroup.selectToggle(toggle);
@@ -192,7 +194,7 @@ public abstract class PlayScene3D extends Group implements GameScene {
             if (id == GameUI.PROPERTY_3D_PERSPECTIVE_ID.get())  {
                 item.setSelected(true);
             }
-            item.setOnAction(e -> GameUI.PROPERTY_3D_PERSPECTIVE_ID.set(id));
+            item.setOnAction(_ -> GameUI.PROPERTY_3D_PERSPECTIVE_ID.set(id));
         }
     }
 
@@ -301,7 +303,7 @@ public abstract class PlayScene3D extends Group implements GameScene {
 
     @Override
     public void onBonusEaten(GameEvent event) {
-        context().currentGame().level().optBonus().ifPresent(bonus -> {
+        context().currentGame().level().optBonus().ifPresent(_ -> {
             gameLevel3D.bonus3D().ifPresent(Bonus3D::showEaten);
             soundManager().stop(SoundID.BONUS_ACTIVE);
             soundManager().play(SoundID.BONUS_EATEN);
@@ -310,7 +312,7 @@ public abstract class PlayScene3D extends Group implements GameScene {
 
     @Override
     public void onBonusExpires(GameEvent event) {
-        context().currentGame().level().optBonus().ifPresent(bonus -> {
+        context().currentGame().level().optBonus().ifPresent(_ -> {
             gameLevel3D.bonus3D().ifPresent(Bonus3D::expire);
             soundManager().stop(SoundID.BONUS_ACTIVE);
         });
@@ -475,7 +477,7 @@ public abstract class PlayScene3D extends Group implements GameScene {
         perspectivesByID.put(PerspectiveID.TRACK_PLAYER, new TrackingPlayerPerspective());
         perspectivesByID.put(PerspectiveID.NEAR_PLAYER, new StalkingPlayerPerspective());
 
-        perspectiveID.addListener((py, oldID, newID) -> {
+        perspectiveID.addListener((_, oldID, newID) -> {
             if (oldID != null) {
                 Perspective oldPerspective = perspectivesByID.get(oldID);
                 oldPerspective.detach(camera);
@@ -566,14 +568,7 @@ public abstract class PlayScene3D extends Group implements GameScene {
             // siren numbers are 1..4, hunting phase index = 0..7
             int huntingPhase = game.level().huntingTimer().phaseIndex();
             int sirenNumber = 1 + huntingPhase / 2;
-            float volume = 0.33f;
-            switch (sirenNumber) {
-                case 1 -> soundManager().playSiren(SoundID.SIREN_1, volume);
-                case 2 -> soundManager().playSiren(SoundID.SIREN_2, volume);
-                case 3 -> soundManager().playSiren(SoundID.SIREN_3, volume);
-                case 4 -> soundManager().playSiren(SoundID.SIREN_4, volume);
-                default -> throw new IllegalArgumentException("Illegal siren number " + sirenNumber);
-            }
+            soundManager().playSiren(sirenNumber, SIREN_VOLUME); // TODO change sound file volume?
         }
     }
 

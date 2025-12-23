@@ -251,21 +251,24 @@ public class SoundManager implements Disposable {
         }
     }
 
-    public void playSiren(SoundID soundID, double volume) {
-        requireNonNull(soundID);
-        if (!soundID.isSirenID()) {
-            throw new IllegalArgumentException("Illegal siren ID '%s'".formatted(soundID));
-        }
-        if (soundID != currentSirenID) {
+    public void playSiren(int number, double volume) {
+        final SoundID sirenID = switch (number) {
+            case 1 -> SoundID.SIREN_1;
+            case 2 -> SoundID.SIREN_2;
+            case 3 -> SoundID.SIREN_3;
+            case 4 -> SoundID.SIREN_4;
+            default -> throw new IllegalArgumentException("Invalid siren number: " + number);
+        };
+        if (sirenID != currentSirenID) {
             if (currentSirenID != null) {
                 stopSiren();
             }
-            createSirenPlayer(soundID);
-            currentSirenID = soundID;
+            createSirenPlayer(sirenID);
+            currentSirenID = sirenID;
         }
         sirenPlayer.setVolume(volume);
         sirenPlayer.play();
-        Logger.trace("Playing siren '{}' at volume {}", soundID, sirenPlayer.getVolume());
+        Logger.trace("Playing siren '{}' at volume {}", sirenID, sirenPlayer.getVolume());
     }
 
     public void pauseSiren() {

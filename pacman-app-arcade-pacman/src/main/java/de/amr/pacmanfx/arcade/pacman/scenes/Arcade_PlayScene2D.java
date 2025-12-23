@@ -301,14 +301,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     private void selectAndPlaySiren(GameLevel level) {
         final int sirenNumber = selectSirenNumber(level.huntingTimer().phaseIndex());
-        final SoundID sirenID = switch (sirenNumber) {
-            case 1 -> SoundID.SIREN_1;
-            case 2 -> SoundID.SIREN_2;
-            case 3 -> SoundID.SIREN_3;
-            case 4 -> SoundID.SIREN_4;
-            default -> throw new IllegalArgumentException("Illegal siren number " + sirenNumber);
-        };
-        soundManager().playSiren(sirenID, SIREN_VOLUME);
+        soundManager().playSiren(sirenNumber, SIREN_VOLUME);
     }
 
     private void playLevelCompletedAnimation(Game game, GameLevel level) {

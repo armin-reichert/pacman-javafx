@@ -385,14 +385,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     private void selectAndPlaySiren() {
         final float volume = 0.33f;
         final int sirenNumber = selectSirenNumber(context().currentGame().level().huntingTimer().phaseIndex());
-        final SoundID sirenID = switch (sirenNumber) {
-            case 1 -> SoundID.SIREN_1;
-            case 2 -> SoundID.SIREN_2;
-            case 3 -> SoundID.SIREN_3;
-            case 4 -> SoundID.SIREN_4;
-            default -> throw new IllegalArgumentException("Illegal siren number " + sirenNumber);
-        };
-        soundManager().playSiren(sirenID, volume);
+        soundManager().playSiren(sirenNumber, volume);
     }
 
     private void updateHUD(GameLevel level) {
