@@ -7,15 +7,13 @@ package de.amr.pacmanfx.arcade.pacman_xxl;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_GameLevel_Renderer;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui._2d.GenericMapRenderer;
+import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapColorScheme;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
-
-import java.util.Map;
-
-import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.CONFIG_KEY_COLOR_MAP;
 
 /**
  * Renderer for "Pac-Man XXL" game variant. Uses the vector graphics map renderer that can render any custom map.
@@ -33,12 +31,12 @@ public class PacManXXL_PacMan_GameLevelRenderer extends ArcadePacMan_GameLevel_R
 
     @Override
     public void applyLevelSettings(GameLevel gameLevel, RenderInfo info) {
-        Map<String, String> colorMap = gameLevel.worldMap().getConfigValue(CONFIG_KEY_COLOR_MAP);
+        final WorldMapColorScheme worldMapColorScheme = gameLevel.worldMap().getConfigValue(GameUI_Config.CONFIG_KEY_COLOR_SCHEME);
         var terrainMapColorScheme = new TerrainMapColorScheme(
             (Color) background(),
-            Color.web(colorMap.get("fill")),
-            Color.web(colorMap.get("stroke")),
-            Color.web(colorMap.get("door"))
+            Color.web(worldMapColorScheme.fill()),
+            Color.web(worldMapColorScheme.stroke()),
+            Color.web(worldMapColorScheme.door())
         );
         info.put("terrainMapColorScheme", terrainMapColorScheme);
     }

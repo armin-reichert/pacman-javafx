@@ -15,14 +15,12 @@ import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.api.GameUI;
+import de.amr.pacmanfx.ui.api.GameUI_Config;
 import javafx.scene.paint.Color;
-
-import java.util.Map;
 
 import static de.amr.pacmanfx.Globals.CYAN_GHOST_BASHFUL;
 import static de.amr.pacmanfx.Globals.NUM_TICKS_PER_SEC;
 import static de.amr.pacmanfx.lib.TickTimer.secToTicks;
-import static de.amr.pacmanfx.ui.api.GameUI_Config.CONFIG_KEY_COLOR_MAP;
 import static de.amr.pacmanfx.ui.api.GameUI_Config.CONFIG_KEY_COLOR_MAP_INDEX;
 import static de.amr.pacmanfx.uilib.Ufx.formatColorHex;
 
@@ -54,12 +52,12 @@ public class InfoBoxGameInfo extends InfoBox {
                 Color strokeColor = Color.web(nesColors.strokeColorRGB());
                 Color pelletColor = Color.web(nesColors.pelletColorRGB());
                 return "%s / %s / %s".formatted(formatColorHex(fillColor), formatColorHex(strokeColor), formatColorHex(pelletColor));
-            } else if (worldMap.hasConfigValue(CONFIG_KEY_COLOR_MAP)) {
+            } else if (worldMap.hasConfigValue(GameUI_Config.CONFIG_KEY_COLOR_SCHEME)) {
                 // Pac-Man XXL game
-                Map<String, String> colorMap = worldMap.getConfigValue(CONFIG_KEY_COLOR_MAP);
-                Color fillColor = Color.web(colorMap.get("fill"));
-                Color strokeColor = Color.web(colorMap.get("stroke"));
-                Color pelletColor = Color.web(colorMap.get("pellet"));
+                WorldMapColorScheme colorScheme = worldMap.getConfigValue(GameUI_Config.CONFIG_KEY_COLOR_SCHEME);
+                Color fillColor = Color.web(colorScheme.fill());
+                Color strokeColor = Color.web(colorScheme.stroke());
+                Color pelletColor = Color.web(colorScheme.pellet());
                 return "%s / %s / %s".formatted(formatColorHex(fillColor), formatColorHex(strokeColor), formatColorHex(pelletColor));
             } else if (worldMap.hasConfigValue(CONFIG_KEY_COLOR_MAP_INDEX)) {
                 // Arcade games

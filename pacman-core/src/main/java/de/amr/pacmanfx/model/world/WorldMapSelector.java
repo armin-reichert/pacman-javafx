@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public interface WorldMapSelector {
 
@@ -61,12 +60,12 @@ public interface WorldMapSelector {
         return maps;
     }
 
-    static Map<String, String> extractColorMap(WorldMap worldMap) {
-        return Map.of(
-            "fill",   worldMap.terrainLayer().propertyMap().getOrDefault(WorldMapPropertyName.COLOR_WALL_FILL,   "000000"),
-            "stroke", worldMap.terrainLayer().propertyMap().getOrDefault(WorldMapPropertyName.COLOR_WALL_STROKE, "0000ff"),
-            "door",   worldMap.terrainLayer().propertyMap().getOrDefault(WorldMapPropertyName.COLOR_DOOR,        "00ffff"),
-            "pellet", worldMap.foodLayer()   .propertyMap().getOrDefault(WorldMapPropertyName.COLOR_FOOD,        "ffffff")
+    static WorldMapColorScheme extractColorScheme(WorldMap worldMap) {
+        return new WorldMapColorScheme(
+            worldMap.terrainLayer().propertyMap().getOrDefault(WorldMapPropertyName.COLOR_WALL_FILL,   "000000"),
+            worldMap.terrainLayer().propertyMap().getOrDefault(WorldMapPropertyName.COLOR_WALL_STROKE, "0000ff"),
+            worldMap.terrainLayer().propertyMap().getOrDefault(WorldMapPropertyName.COLOR_DOOR,        "00ffff"),
+            worldMap.foodLayer()   .propertyMap().getOrDefault(WorldMapPropertyName.COLOR_FOOD,        "ffffff")
         );
     }
 }

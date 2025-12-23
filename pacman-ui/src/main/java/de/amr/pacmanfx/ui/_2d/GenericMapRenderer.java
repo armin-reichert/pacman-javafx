@@ -7,14 +7,13 @@ package de.amr.pacmanfx.ui._2d;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.model.world.WorldMapColorScheme;
+import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
-import java.util.Map;
-
-import static de.amr.pacmanfx.ui.api.GameUI_Config.CONFIG_KEY_COLOR_MAP;
 import static java.util.function.Predicate.not;
 
 /**
@@ -43,7 +42,7 @@ public class GenericMapRenderer extends BaseRenderer {
         houseRenderer = new ArcadeHouseRenderer(canvas);
         houseRenderer.scalingProperty().bind(scalingProperty());
 
-        backgroundProperty().addListener((py, ov, newColor) -> updateColors(newColor));
+        backgroundProperty().addListener((_, _, newColor) -> updateColors(newColor));
         updateColors(background());
     }
 
@@ -66,20 +65,20 @@ public class GenericMapRenderer extends BaseRenderer {
             terrainRenderer.draw(worldMap);
         }
         else {
-            TerrainMapColorScheme colorScheme = info.get("terrainMapColorScheme", TerrainMapColorScheme.class);
-            terrainRenderer.setColorScheme(colorScheme);
+            TerrainMapColorScheme terrainColorScheme = info.get("terrainMapColorScheme", TerrainMapColorScheme.class);
+            terrainRenderer.setColorScheme(terrainColorScheme);
             terrainRenderer.draw(worldMap);
 
             gameLevel.worldMap().terrainLayer().optHouse().ifPresent(house -> {
-                houseRenderer.setColorScheme(colorScheme);
+                houseRenderer.setColorScheme(terrainColorScheme);
                 houseRenderer.drawHouse(house.minTile(), house.sizeInTiles(),
                     terrainRenderer.borderWallFullWidth(),terrainRenderer.borderWallInnerWidth());
             });
 
             // this is set by the map selector
-            Map<String, String> colorMap = gameLevel.worldMap().getConfigValue(CONFIG_KEY_COLOR_MAP);
-
-            foodRenderer.setPelletColor(Color.web(colorMap.get("pellet")));
+            WorldMapColorScheme foodColorScheme = gameLevel.worldMap().getConfigValue(GameUI_Config.CONFIG_KEY_COLOR_SCHEME);
+            final Color pelletColor = Color.web(foodColorScheme.pellet());
+            foodRenderer.setPelletColor(pelletColor);
             FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
             foodLayer.tiles()
                 .filter(foodLayer::hasFoodAtTile)
@@ -87,7 +86,7 @@ public class GenericMapRenderer extends BaseRenderer {
                 .forEach(foodRenderer::drawPellet);
 
             if (info.getBoolean(CommonRenderInfoKey.ENERGIZER_BLINKING)) {
-                foodRenderer.setEnergizerColor(Color.web(colorMap.get("pellet")));
+                foodRenderer.setEnergizerColor(pelletColor);
                 foodLayer.energizerTiles().stream()
                     .filter(foodLayer::hasFoodAtTile)
                     .forEach(foodRenderer::drawEnergizer);

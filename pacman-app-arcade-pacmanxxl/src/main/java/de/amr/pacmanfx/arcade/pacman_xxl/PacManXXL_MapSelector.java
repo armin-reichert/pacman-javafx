@@ -9,6 +9,7 @@ import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.model.world.WorldMapSelectionMode;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
+import de.amr.pacmanfx.ui.api.GameUI_Config;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.tinylog.Logger;
@@ -22,16 +23,14 @@ import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
-import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.CONFIG_KEY_COLOR_MAP;
 import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomInt;
 import static java.util.Objects.requireNonNull;
 
 public class PacManXXL_MapSelector implements WorldMapSelector, DirectoryWatchdog.WatchEventListener {
 
-    public static final List<WorldMapColorScheme> MAP_COLOR_SCHEMES = List.of(
+    public static final List<WorldMapColorScheme> WORLD_MAP_COLOR_SCHEMES = List.of(
         new WorldMapColorScheme("#359c9c", "#85e2ff", "#fcb5ff", "#feb8ae"),
         new WorldMapColorScheme("#c2b853", "#ffeace", "#fcb5ff", "#feb8ae"),
         new WorldMapColorScheme("#86669c", "#f6c4e0", "#fcb5ff", "#feb8ae"),
@@ -206,10 +205,10 @@ public class PacManXXL_MapSelector implements WorldMapSelector, DirectoryWatchdo
 
         WorldMap worldMap = new WorldMap(prototype);
         // if selected map is a built-in map, use a random color scheme to make it not so boring
-        Map<String, String> colorScheme = builtinMapPrototypes.contains(prototype)
-            ? MAP_COLOR_SCHEMES.get(randomInt(0, MAP_COLOR_SCHEMES.size()))
-            : WorldMapSelector.extractColorMap(prototype);
-        worldMap.setConfigValue(CONFIG_KEY_COLOR_MAP, colorScheme);
+        WorldMapColorScheme colorScheme = builtinMapPrototypes.contains(prototype)
+            ? WORLD_MAP_COLOR_SCHEMES.get(randomInt(0, WORLD_MAP_COLOR_SCHEMES.size()))
+            : WorldMapSelector.extractColorScheme(prototype);
+        worldMap.setConfigValue(GameUI_Config.CONFIG_KEY_COLOR_SCHEME, colorScheme);
         Logger.info("Map selected (Mode {}): {}", selectionMode, worldMap.url());
 
         return worldMap;
