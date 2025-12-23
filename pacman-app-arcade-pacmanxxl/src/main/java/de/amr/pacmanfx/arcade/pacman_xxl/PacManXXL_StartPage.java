@@ -25,9 +25,9 @@ import static java.util.Objects.requireNonNull;
 /**
  * Displays an option menu where the game variant to be played and other options can be set.
  */
-public class PacManXXL_Common_StartPage implements GameUI_StartPage {
+public class PacManXXL_StartPage implements GameUI_StartPage {
 
-    private static final ResourceManager LOCAL_RESOURCES = () -> PacManXXL_Common_StartPage.class;
+    private static final ResourceManager LOCAL_RESOURCES = () -> PacManXXL_StartPage.class;
     private static final Media VOICE = LOCAL_RESOURCES.loadMedia("sound/game-description.mp3");
 
     private static final String BACKGROUND_IMAGE_PATH = "graphics/screenshot.png";
@@ -35,9 +35,9 @@ public class PacManXXL_Common_StartPage implements GameUI_StartPage {
     private final StackPane root = new StackPane();
     private final MediaPlayer voicePlayer = new MediaPlayer(VOICE);
 
-    private PacManXXL_Common_StartPageMenu menu;
+    private PacManXXL_StartPageMenu menu;
 
-    public PacManXXL_Common_StartPage() {
+    public PacManXXL_StartPage() {
         final var flyer = new Flyer(LOCAL_RESOURCES.loadImage(BACKGROUND_IMAGE_PATH));
         flyer.setPageLayout(0, Flyer.LayoutMode.FILL);
         flyer.selectPage(0);
@@ -50,7 +50,7 @@ public class PacManXXL_Common_StartPage implements GameUI_StartPage {
     public void init(GameUI ui) {
         requireNonNull(ui);
 
-        menu = new PacManXXL_Common_StartPageMenu(ui);
+        menu = new PacManXXL_StartPageMenu(ui);
         menu.scalingProperty().bind(ui.stage().heightProperty()
             .map(height -> {
                 double h = height.doubleValue();

@@ -33,7 +33,7 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
     }
 
     @Override
-    public PacManXXL_Common_MapSelector mapSelector() { return (PacManXXL_Common_MapSelector) mapSelector; }
+    public PacManXXL_MapSelector mapSelector() { return (PacManXXL_MapSelector) mapSelector; }
 
     @Override
     public void buildDemoLevel() {

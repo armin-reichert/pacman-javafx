@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.pacmanfx.GameBox;
+import de.amr.pacmanfx.model.StandardGameVariant;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
@@ -15,7 +16,7 @@ import javafx.stage.Stage;
 import static de.amr.pacmanfx.model.StandardGameVariant.MS_PACMAN_XXL;
 import static de.amr.pacmanfx.model.StandardGameVariant.PACMAN_XXL;
 
-public class PacManXXL_Common_App extends Application {
+public class PacManXXL_App extends Application {
 
     private GameUI ui;
 
@@ -24,7 +25,7 @@ public class PacManXXL_Common_App extends Application {
         // UI size: 80% of available screen height, aspect 16:10
         final double height = 0.8 * Screen.getPrimary().getBounds().getHeight();
         final double width  = 1.6 * height;
-        var xxlMapSelector = new PacManXXL_Common_MapSelector(GameBox.CUSTOM_MAP_DIR);
+        var xxlMapSelector = new PacManXXL_MapSelector(GameBox.CUSTOM_MAP_DIR);
         ui = GameUI_Builder.create(primaryStage, width, height)
                 .game(
                     PACMAN_XXL.name(),
@@ -44,10 +45,11 @@ public class PacManXXL_Common_App extends Application {
                     DashboardID.GAME_INFO, DashboardID.ACTOR_INFO, DashboardID.CUSTOM_MAPS,
                     DashboardID.KEYS_GLOBAL, DashboardID.KEYS_LOCAL,
                     DashboardID.ABOUT)
-            .startPage(PacManXXL_Common_StartPage.class, PACMAN_XXL.name())
+            .startPage(PacManXXL_StartPage.class, PACMAN_XXL.name())
             .build();
 
         ui.customDirWatchdog().addEventListener(xxlMapSelector);
+        ui.selectGameVariant(PACMAN_XXL.name());
         ui.show();
     }
 

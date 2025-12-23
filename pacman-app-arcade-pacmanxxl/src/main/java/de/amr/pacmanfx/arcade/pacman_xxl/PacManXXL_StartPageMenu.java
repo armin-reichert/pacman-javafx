@@ -37,7 +37,7 @@ import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_3D_ENABLED;
 import static de.amr.pacmanfx.uilib.widgets.OptionMenuStyle.DEFAULT_OPTION_MENU_STYLE;
 import static java.util.Objects.requireNonNull;
 
-public class PacManXXL_Common_StartPageMenu extends OptionMenu {
+public class PacManXXL_StartPageMenu extends OptionMenu {
 
     public static class MenuState {
         String gameVariant;
@@ -243,7 +243,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
     private final ChaseAnimation chaseAnimation = new ChaseAnimation();
     private final Timeline animationTimer;
 
-    public PacManXXL_Common_StartPageMenu(GameUI ui) {
+    public PacManXXL_StartPageMenu(GameUI ui) {
         super(42, 36, 6, 20);
 
         this.ui = requireNonNull(ui);
@@ -335,7 +335,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
 
     public void syncMenuState() {
         final Game game = selectedGame();
-        final var mapSelector = (PacManXXL_Common_MapSelector) game.mapSelector();
+        final var mapSelector = (PacManXXL_MapSelector) game.mapSelector();
         mapSelector.loadAllMapPrototypes();
         final boolean customMapsExist = !mapSelector.customMapPrototypes().isEmpty();
 
@@ -368,7 +368,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
 
     public void startGame() {
         final Game game = selectedGame();
-        final var mapSelector = (PacManXXL_Common_MapSelector) game.mapSelector();
+        final var mapSelector = (PacManXXL_MapSelector) game.mapSelector();
         mapSelector.setSelectionMode(state.mapOrder);
         mapSelector.loadAllMapPrototypes();
         game.setCutScenesEnabled(state.cutScenesEnabled);

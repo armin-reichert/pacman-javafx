@@ -59,7 +59,7 @@ public class PacManGames3dApp extends Application {
         Stage stage,
         double sceneWidth,
         double sceneHeight,
-        PacManXXL_Common_MapSelector xxlMapSelector)
+        PacManXXL_MapSelector xxlMapSelector)
     {
         {
             final String variantName = StandardGameVariant.PACMAN.name();
@@ -104,7 +104,7 @@ public class PacManGames3dApp extends Application {
         ui.startPagesView().addStartPage(new ArcadePacMan_StartPage());
         ui.startPagesView().addStartPage(new ArcadeMsPacMan_StartPage());
         ui.startPagesView().addStartPage(new TengenMsPacMan_StartPage());
-        ui.startPagesView().addStartPage(new PacManXXL_Common_StartPage());
+        ui.startPagesView().addStartPage(new PacManXXL_StartPage());
 
         ui.startPagesView().startPages().forEach(startPage -> startPage.init(ui));
         ui.startPagesView().setSelectedIndex(0);
@@ -125,7 +125,7 @@ public class PacManGames3dApp extends Application {
         return ui;
     }
 
-    private GameUI createUI_WithBuilder(Stage stage, double sceneWidth, double sceneHeight, PacManXXL_Common_MapSelector xxlMapSelector) {
+    private GameUI createUI_WithBuilder(Stage stage, double sceneWidth, double sceneHeight, PacManXXL_MapSelector xxlMapSelector) {
 
         return GameUI_Builder.create(stage, sceneWidth, sceneHeight)
             .game(
@@ -168,7 +168,7 @@ public class PacManGames3dApp extends Application {
                 StandardGameVariant.MS_PACMAN_TENGEN.name())
 
             .startPage(
-                PacManXXL_Common_StartPage.class,
+                PacManXXL_StartPage.class,
                 StandardGameVariant.PACMAN_XXL.name(), StandardGameVariant.MS_PACMAN_XXL.name())
 
             .dashboard(
@@ -191,7 +191,7 @@ public class PacManGames3dApp extends Application {
         try {
             final int height = (int) Math.round(USED_HEIGHT * Screen.getPrimary().getBounds().getHeight());
             final int width  = Math.round(ASPECT_RATIO * height);
-            final var xxlMapSelector = new PacManXXL_Common_MapSelector(GameBox.CUSTOM_MAP_DIR);
+            final var xxlMapSelector = new PacManXXL_MapSelector(GameBox.CUSTOM_MAP_DIR);
             ui = USE_BUILDER
                 ? createUI_WithBuilder(primaryStage, width, height, xxlMapSelector)
                 : createUI_WithoutBuilder(primaryStage, width, height, xxlMapSelector);

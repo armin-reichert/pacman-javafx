@@ -25,7 +25,7 @@ import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.CONFIG_KEY_COL
 import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomInt;
 import static java.util.Objects.requireNonNull;
 
-public class PacManXXL_Common_MapSelector implements WorldMapSelector, DirectoryWatchdog.WatchEventListener {
+public class PacManXXL_MapSelector implements WorldMapSelector, DirectoryWatchdog.WatchEventListener {
 
     public static final List<Map<String, String>> MAP_COLOR_SCHEMES = List.of(
             Map.of("fill", "#359c9c", "stroke", "#85e2ff", "door", "#fcb5ff", "pellet", "#feb8ae"),
@@ -50,7 +50,7 @@ public class PacManXXL_Common_MapSelector implements WorldMapSelector, Directory
             for (int i = 1; i <= 15; ++i) {
                 String mapName = "Jr. Pac-Man %02d.world".formatted(i);
                 String path = "/de/amr/pacmanfx/arcade/pacman_xxl/maps/junior_pacman/" + mapName;
-                URL url = PacManXXL_Common_MapSelector.class.getResource(path);
+                URL url = PacManXXL_MapSelector.class.getResource(path);
                 if (url != null) {
                     try {
                         WorldMap worldMap = WorldMap.loadFromURL(url);
@@ -68,7 +68,7 @@ public class PacManXXL_Common_MapSelector implements WorldMapSelector, Directory
     private final List<WorldMap> builtinMapPrototypes = new ArrayList<>();
     private WorldMapSelectionMode selectionMode;
 
-    public PacManXXL_Common_MapSelector(File dir) {
+    public PacManXXL_MapSelector(File dir) {
         customMapDir = requireNonNull(dir);
         selectionMode = WorldMapSelectionMode.CUSTOM_MAPS_FIRST;
         addSampleCustomMapPrototypes(dir);
