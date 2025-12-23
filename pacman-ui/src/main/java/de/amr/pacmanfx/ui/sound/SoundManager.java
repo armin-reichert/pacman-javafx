@@ -100,12 +100,6 @@ public class SoundManager implements Disposable {
         register(key, media);
     }
 
-    public void registerVoice(SoundID id, URL url) {
-        registerMediaPlayer(id, url);
-        // voice is also played when sound manager is disabled!
-        mediaPlayer(id).muteProperty().bind(mutedProperty);
-    }
-
     public BooleanProperty enabledProperty() {
         return enabledProperty;
     }
@@ -206,6 +200,8 @@ public class SoundManager implements Disposable {
         Logger.debug("All sounds (media players, siren, voice) stopped");
     }
 
+    // Voices
+
     public void playVoiceAfterSec(float delaySeconds, SoundID soundID) {
         requireNonNull(soundID);
         if (!soundID.isVoiceID()) {
@@ -251,6 +247,8 @@ public class SoundManager implements Disposable {
         }
     }
 
+    // Sirens
+
     public void playSiren(int number, double volume) {
         final SoundID sirenID = switch (number) {
             case 1 -> SoundID.SIREN_1;
@@ -285,7 +283,18 @@ public class SoundManager implements Disposable {
         else Logger.info("Cannot stop siren: player not yet created");
     }
 
-    // private stuff
+    private void createSirenPlayer(SoundID sirenID) {
+        sirenPlayer = new MediaPlayer(valueOfType(sirenID, Media.class));
+        sirenPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        sirenPlayer.setVolume(1);
+        sirenPlayer.muteProperty().bind(Bindings.createBooleanBinding(
+            () -> mutedProperty().get() || !enabledProperty().get(),
+            mutedProperty(), enabledProperty()
+        ));
+        Logger.info("Siren player created, siren ID='{}'", sirenID);
+    }
+
+    // General
 
     private <C> Stream<C> allOfType(Class<C> type) {
         return map.values().stream().filter(type::isInstance).map(type::cast);
@@ -302,16 +311,5 @@ public class SoundManager implements Disposable {
             return (C) value;
         }
         throw new IllegalArgumentException("Sound entry with key '%s' is not a media object".formatted(key));
-    }
-
-    private void createSirenPlayer(SoundID sirenID) {
-        sirenPlayer = new MediaPlayer(valueOfType(sirenID, Media.class));
-        sirenPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-        sirenPlayer.setVolume(1);
-        sirenPlayer.muteProperty().bind(Bindings.createBooleanBinding(
-            () -> mutedProperty().get() || !enabledProperty().get(),
-            mutedProperty(), enabledProperty()
-        ));
-        Logger.info("Siren player created, siren ID='{}'", sirenID);
     }
 }
