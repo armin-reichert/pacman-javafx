@@ -46,7 +46,6 @@ public class PacManGames3dApp extends Application {
     private static final float ASPECT_RATIO = 1.6f; // 16:10 aspect ratio
     private static final float USED_HEIGHT = 0.8f;  // 80% of available height
 
-    private PacManXXL_Common_MapSelector xxlCommonMapSelector;
     private GameUI ui;
 
     private void addTestStates(Game game) {
@@ -55,7 +54,13 @@ public class PacManGames3dApp extends Application {
         game.control().stateMachine().addState(new CutScenesTestState());
 
     }
-    private GameUI createUI_WithoutBuilder(Stage stage, double sceneWidth, double sceneHeight) {
+
+    private GameUI createUI_WithoutBuilder(
+        Stage stage,
+        double sceneWidth,
+        double sceneHeight,
+        PacManXXL_Common_MapSelector xxlMapSelector)
+    {
         {
             final String variantName = StandardGameVariant.PACMAN.name();
             final Game game = new ArcadePacMan_GameModel(THE_GAME_BOX, THE_GAME_BOX.highScoreFile(variantName));
@@ -76,13 +81,13 @@ public class PacManGames3dApp extends Application {
         }
         {
             final String variantName = StandardGameVariant.PACMAN_XXL.name();
-            final Game game = new PacManXXL_PacMan_GameModel(THE_GAME_BOX, xxlCommonMapSelector, THE_GAME_BOX.highScoreFile(variantName));
+            final Game game = new PacManXXL_PacMan_GameModel(THE_GAME_BOX, xxlMapSelector, THE_GAME_BOX.highScoreFile(variantName));
             addTestStates(game);
             THE_GAME_BOX.registerGame(variantName, game);
         }
         {
             final String variantName = StandardGameVariant.MS_PACMAN_XXL.name();
-            final Game game = new PacManXXL_MsPacMan_GameModel(THE_GAME_BOX, xxlCommonMapSelector, THE_GAME_BOX.highScoreFile(variantName));
+            final Game game = new PacManXXL_MsPacMan_GameModel(THE_GAME_BOX, xxlMapSelector, THE_GAME_BOX.highScoreFile(variantName));
             addTestStates(game);
             THE_GAME_BOX.registerGame(variantName, game);
         }
@@ -120,7 +125,8 @@ public class PacManGames3dApp extends Application {
         return ui;
     }
 
-    private GameUI createUI_WithBuilder(Stage stage, double sceneWidth, double sceneHeight) {
+    private GameUI createUI_WithBuilder(Stage stage, double sceneWidth, double sceneHeight, PacManXXL_Common_MapSelector xxlMapSelector) {
+
         return GameUI_Builder.create(stage, sceneWidth, sceneHeight)
             .game(
                 StandardGameVariant.PACMAN.name(),
@@ -140,13 +146,13 @@ public class PacManGames3dApp extends Application {
             .game(
                 StandardGameVariant.PACMAN_XXL.name(),
                 PacManXXL_PacMan_GameModel.class,
-                xxlCommonMapSelector,
+                xxlMapSelector,
                 PacManXXL_PacMan_UIConfig.class)
 
             .game(
                 StandardGameVariant.MS_PACMAN_XXL.name(),
                 PacManXXL_MsPacMan_GameModel.class,
-                xxlCommonMapSelector,
+                xxlMapSelector,
                 PacManXXL_MsPacMan_UIConfig.class)
 
             .startPage(
@@ -185,19 +191,11 @@ public class PacManGames3dApp extends Application {
         try {
             final int height = (int) Math.round(USED_HEIGHT * Screen.getPrimary().getBounds().getHeight());
             final int width  = Math.round(ASPECT_RATIO * height);
-
-            xxlCommonMapSelector = new PacManXXL_Common_MapSelector(GameBox.CUSTOM_MAP_DIR);
-
+            final var xxlMapSelector = new PacManXXL_Common_MapSelector(GameBox.CUSTOM_MAP_DIR);
             ui = USE_BUILDER
-                ? createUI_WithBuilder(primaryStage, width, height)
-                : createUI_WithoutBuilder(primaryStage, width, height);
-
-            ui.directoryWatchdog().addEventListener(watchEvents -> {
-                if (!watchEvents.isEmpty()) {
-                    xxlCommonMapSelector.customMapPrototypes().clear();
-                    xxlCommonMapSelector.loadCustomMapPrototypes();
-                }
-            });
+                ? createUI_WithBuilder(primaryStage, width, height, xxlMapSelector)
+                : createUI_WithoutBuilder(primaryStage, width, height, xxlMapSelector);
+            ui.directoryWatchdog().addEventListener(xxlMapSelector);
             ui.show();
         }
         catch (RuntimeException x) {

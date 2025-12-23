@@ -8,10 +8,7 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.WatchEvent;
-import java.nio.file.WatchKey;
-import java.nio.file.WatchService;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +17,7 @@ import static java.nio.file.StandardWatchEventKinds.*;
 public class DirectoryWatchdog {
 
     public interface WatchEventListener {
-        void handle(List<WatchEvent<?>> events);
+        void handleWatchEvents(List<WatchEvent<Path>> events);
     }
 
     private final Thread pollingThread = new Thread(this::pollEvents);
@@ -81,11 +78,13 @@ public class DirectoryWatchdog {
 
     public boolean isWatching() { return polling && pollingThread.isAlive(); }
 
+    @SuppressWarnings("unchecked")
     private void pollEvents() {
         while (polling) {
-            List<WatchEvent<?>> watchEvents = watchKey.pollEvents();
+            final List<WatchEvent<?>> watchEvents = watchKey.pollEvents();
             if (!watchEvents.isEmpty()) {
-                eventListeners.forEach(eventListener -> eventListener.handle(watchEvents));
+                final List<WatchEvent<Path>> pathEvents = watchEvents.stream().map(e -> (WatchEvent<Path>) e).toList();
+                eventListeners.forEach(listener -> listener.handleWatchEvents(pathEvents));
             }
             try {
                 Thread.sleep(10);

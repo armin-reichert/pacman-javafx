@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
+import de.amr.pacmanfx.lib.DirectoryWatchdog;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapSelectionMode;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
@@ -14,6 +15,8 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.WatchEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +25,7 @@ import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.CONFIG_KEY_COL
 import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomInt;
 import static java.util.Objects.requireNonNull;
 
-public class PacManXXL_Common_MapSelector implements WorldMapSelector {
+public class PacManXXL_Common_MapSelector implements WorldMapSelector, DirectoryWatchdog.WatchEventListener {
 
     public static final List<Map<String, String>> MAP_COLOR_SCHEMES = List.of(
             Map.of("fill", "#359c9c", "stroke", "#85e2ff", "door", "#fcb5ff", "pellet", "#feb8ae"),
@@ -73,6 +76,19 @@ public class PacManXXL_Common_MapSelector implements WorldMapSelector {
 
     public WorldMapSelectionMode selectionMode() {
         return selectionMode;
+    }
+
+    @Override
+    public void handleWatchEvents(List<WatchEvent<Path>> events) {
+        if (!events.isEmpty()) {
+            Logger.info("Detected custom map directory changes:");
+            for (WatchEvent<Path> event : events) {
+                final Path path = event.context();
+                Logger.info("\tEvent: kind={}, path='{}'", event.kind(), path.toAbsolutePath());
+            }
+            customMapPrototypes().clear();
+            loadCustomMapPrototypes();
+        }
     }
 
     public void setSelectionMode(WorldMapSelectionMode mode) {

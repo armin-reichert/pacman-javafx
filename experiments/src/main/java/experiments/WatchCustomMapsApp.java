@@ -23,6 +23,10 @@ import static java.nio.file.StandardWatchEventKinds.*;
 
 public class WatchCustomMapsApp extends Application {
 
+    public static void main() {
+        launch(WatchCustomMapsApp.class);
+    }
+
     private final ObservableList<String> eventsDescriptions = FXCollections.observableList(new ArrayList<>());
     private File watchedDirectory;
 
@@ -48,11 +52,10 @@ public class WatchCustomMapsApp extends Application {
         dog.startWatching();
     }
 
-    private void showEventsInList(List<WatchEvent<?>> polledEvents) {
+    private void showEventsInList(List<WatchEvent<Path>> polledEvents) {
         Platform.runLater(() -> {
             var now = LocalTime.now().format(DateTimeFormatter.ISO_LOCAL_TIME);
-            for (WatchEvent<?> we : polledEvents) {
-                @SuppressWarnings("unchecked") WatchEvent<Path> event = (WatchEvent<Path>) we;
+            for (WatchEvent<Path> event : polledEvents) {
                 Path relativePath = event.context();
                 File file = new File(watchedDirectory, relativePath.toString());
                 String fileType = file.isDirectory() ? "Directory" : "File";
