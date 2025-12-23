@@ -294,13 +294,9 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     // Siren numbers are 1, 2, 3, 4, hunting phase index = 0..7
-    //TODO move this logic into game model as it depends on the played game variant
-    private int selectSirenNumber(int huntingPhase) {
-        return 1 + huntingPhase / 2;
-    }
-
+    // TODO: move this logic into game model as it depends on the played game variant
     private void selectAndPlaySiren(GameLevel level) {
-        final int sirenNumber = selectSirenNumber(level.huntingTimer().phaseIndex());
+        final int sirenNumber = 1 + level.huntingTimer().phaseIndex() / 2;
         soundManager().playSiren(sirenNumber, SIREN_VOLUME);
     }
 
