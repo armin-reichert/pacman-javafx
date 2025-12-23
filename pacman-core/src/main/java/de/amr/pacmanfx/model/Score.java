@@ -47,6 +47,9 @@ public class Score {
 
     public void read(File file) throws IOException {
         requireNonNull(file);
+        if (!file.exists()) {
+            save(file, "High score");
+        }
         final var properties = new Properties();
         try (var inputStream = new BufferedInputStream(new FileInputStream(file))) {
             properties.loadFromXML(inputStream);
