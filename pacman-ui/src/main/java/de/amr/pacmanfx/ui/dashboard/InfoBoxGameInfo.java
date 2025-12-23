@@ -13,8 +13,8 @@ import de.amr.pacmanfx.model.HuntingPhase;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.api.GameUI;
-import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import javafx.scene.paint.Color;
 
 import java.util.Map;
@@ -64,13 +64,13 @@ public class InfoBoxGameInfo extends InfoBox {
             } else if (worldMap.hasConfigValue(CONFIG_KEY_COLOR_MAP_INDEX)) {
                 // Arcade games
                 WorldMapColorScheme coloring = ui.currentConfig().colorScheme(worldMap);
-                return "%s / %s / %s".formatted(formatColorHex(coloring.fill()), formatColorHex(coloring.stroke()), formatColorHex(coloring.pellet()));
+                return "%s / %s / %s".formatted(coloring.fill(), coloring.stroke(), coloring.pellet());
             } else {
                 return NO_INFO;
             }
         }));
 
-        addDynamicLabeledValue("Hunting Phase",   ifGameLevel(level -> fmtHuntingPhase(level)));
+        addDynamicLabeledValue("Hunting Phase",   ifGameLevel(this::fmtHuntingPhase));
         addDynamicLabeledValue("-Running",        ifGameLevel(level -> fmtHuntingTicksRunning(level.huntingTimer())));
         addDynamicLabeledValue("-Remaining",      ifGameLevel(level -> fmtHuntingTicksRemaining(level.huntingTimer())));
 

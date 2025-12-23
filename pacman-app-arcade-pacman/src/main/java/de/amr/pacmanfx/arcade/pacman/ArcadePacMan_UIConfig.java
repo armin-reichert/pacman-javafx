@@ -14,6 +14,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui._2d.HUD_Renderer;
@@ -28,7 +29,6 @@ import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
-import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.PacBody;
 import de.amr.pacmanfx.uilib.model3D.PacMan3D;
 import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
@@ -72,8 +72,8 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
     );
 
     private static final Map<Color, Color> BRIGHT_MAZE_COLOR_CHANGES = Map.of(
-        MAP_COLOR_SCHEME.stroke(), ARCADE_WHITE,   // wall color change
-        MAP_COLOR_SCHEME.door(), Color.TRANSPARENT // door color change
+        Color.web(MAP_COLOR_SCHEME.stroke()), ARCADE_WHITE,   // wall color change
+        Color.web(MAP_COLOR_SCHEME.door()), Color.TRANSPARENT // door color change
     );
 
     private final GameUI ui;

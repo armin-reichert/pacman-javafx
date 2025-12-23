@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
 import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.model.world.WorldMapSelectionMode;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
 import javafx.collections.FXCollections;
@@ -30,15 +31,15 @@ import static java.util.Objects.requireNonNull;
 
 public class PacManXXL_MapSelector implements WorldMapSelector, DirectoryWatchdog.WatchEventListener {
 
-    public static final List<Map<String, String>> MAP_COLOR_SCHEMES = List.of(
-            Map.of("fill", "#359c9c", "stroke", "#85e2ff", "door", "#fcb5ff", "pellet", "#feb8ae"),
-            Map.of("fill", "#c2b853", "stroke", "#ffeace", "door", "#fcb5ff", "pellet", "#feb8ae"),
-            Map.of("fill", "#86669c", "stroke", "#f6c4e0", "door", "#fcb5ff", "pellet", "#feb8ae"),
-            Map.of("fill", "#ed0a04", "stroke", "#f0b4cd", "door", "#fcb5ff", "pellet", "#feb8ae"),
-            Map.of("fill", "#2067c1", "stroke", "#65e5bb", "door", "#fcb5ff", "pellet", "#feb8ae"),
-            Map.of("fill", "#c55994", "stroke", "#f760c0", "door", "#fcb5ff", "pellet", "#feb8ae"),
-            Map.of("fill", "#12bc76", "stroke", "#ade672", "door", "#fcb5ff", "pellet", "#feb8ae"),
-            Map.of("fill", "#5036d9", "stroke", "#5f8bcf", "door", "#fcb5ff", "pellet", "#feb8ae")
+    public static final List<WorldMapColorScheme> MAP_COLOR_SCHEMES = List.of(
+        new WorldMapColorScheme("#359c9c", "#85e2ff", "#fcb5ff", "#feb8ae"),
+        new WorldMapColorScheme("#c2b853", "#ffeace", "#fcb5ff", "#feb8ae"),
+        new WorldMapColorScheme("#86669c", "#f6c4e0", "#fcb5ff", "#feb8ae"),
+        new WorldMapColorScheme("#ed0a04", "#f0b4cd", "#fcb5ff", "#feb8ae"),
+        new WorldMapColorScheme("#2067c1", "#65e5bb", "#fcb5ff", "#feb8ae"),
+        new WorldMapColorScheme("#c55994", "#f760c0", "#fcb5ff", "#feb8ae"),
+        new WorldMapColorScheme("#12bc76", "#ade672", "#fcb5ff", "#feb8ae"),
+        new WorldMapColorScheme("#5036d9", "#5f8bcf", "#fcb5ff", "#feb8ae")
     );
 
     private static void addSampleCustomMapPrototypes(File dir) {

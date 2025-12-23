@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.model;
 
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
-import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
+import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 
 import java.util.List;
 

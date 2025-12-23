@@ -33,7 +33,7 @@ import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
-import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
+import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.MsPacMan3D;
 import de.amr.pacmanfx.uilib.model3D.MsPacManBody;
 import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
@@ -79,8 +79,8 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         Image mazeImage = spriteSheet.image(mazeSprite);
         WorldMapColorScheme colorScheme = ArcadeMsPacMan_MapSelector.WORLD_MAP_COLOR_SCHEMES.get(index);
         Map<Color, Color> changes = Map.of(
-            colorScheme.stroke(), ARCADE_WHITE,
-            colorScheme.door(), Color.TRANSPARENT
+            Color.web(colorScheme.stroke()), ARCADE_WHITE,
+            Color.web(colorScheme.door()), Color.TRANSPARENT
         );
         return Ufx.recolorImage(mazeImage, changes);
     }
@@ -91,9 +91,9 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     }
 
     public void loadAssets() {
-        assets.set("app_icon",                LOCAL_RESOURCES.loadImage("graphics/icons/mspacman.png"));
+        assets.set("app_icon", LOCAL_RESOURCES.loadImage("graphics/icons/mspacman.png"));
 
-        assets.set("logo.midway",             LOCAL_RESOURCES.loadImage("graphics/midway_logo.png"));
+        assets.set("logo.midway", LOCAL_RESOURCES.loadImage("graphics/midway_logo.png"));
 
         for (int i = 0; i < ArcadeMsPacMan_MapSelector.WORLD_MAP_COLOR_SCHEMES.size(); ++i) {
             assets.set("maze.bright.%d".formatted(i), createBrightMazeImage(i));
