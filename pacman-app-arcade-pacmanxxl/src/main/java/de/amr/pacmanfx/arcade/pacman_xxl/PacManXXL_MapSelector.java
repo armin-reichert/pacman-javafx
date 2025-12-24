@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
-import de.amr.pacmanfx.lib.DirectoryWatchdog;
+import de.amr.pacmanfx.lib.PathWatchEventListener;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.model.world.WorldMapSelectionMode;
@@ -28,7 +28,7 @@ import java.util.Optional;
 import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomInt;
 import static java.util.Objects.requireNonNull;
 
-public class PacManXXL_MapSelector implements WorldMapSelector, DirectoryWatchdog.WatchEventListener {
+public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventListener {
 
     public static final List<WorldMapColorScheme> WORLD_MAP_COLOR_SCHEMES = List.of(
         new WorldMapColorScheme("#359c9c", "#85e2ff", "#fcb5ff", "#feb8ae"),

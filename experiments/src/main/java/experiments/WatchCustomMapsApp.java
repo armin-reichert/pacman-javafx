@@ -23,11 +23,11 @@ import static java.nio.file.StandardWatchEventKinds.*;
 
 public class WatchCustomMapsApp extends Application {
 
-    public static void main() {
+    static void main() {
         launch(WatchCustomMapsApp.class);
     }
 
-    private final ObservableList<String> eventsDescriptions = FXCollections.observableList(new ArrayList<>());
+    private final ObservableList<String> eventDescriptionList = FXCollections.observableList(new ArrayList<>());
     private File watchedDirectory;
 
     @Override
@@ -37,34 +37,35 @@ public class WatchCustomMapsApp extends Application {
 
     @Override
     public void start(Stage stage) {
-        BorderPane root = new BorderPane();
-        var eventListView = new ListView<String>();
-        eventListView.setItems(eventsDescriptions);
-        root.setCenter(eventListView);
+        final var root = new BorderPane();
 
-        Scene scene = new Scene(root, 600, 400);
+        final var listView = new ListView<String>();
+        listView.setItems(eventDescriptionList);
+        root.setCenter(listView);
+
+        final var scene = new Scene(root, 600, 400);
         stage.setScene(scene);
         stage.setTitle("Watch " + watchedDirectory);
         stage.show();
 
-        DirectoryWatchdog dog = new DirectoryWatchdog(GameBox.CUSTOM_MAP_DIR);
+        final var dog = new DirectoryWatchdog(GameBox.CUSTOM_MAP_DIR);
         dog.addEventListener(this::showEventsInList);
         dog.startWatching();
     }
 
-    private void showEventsInList(List<WatchEvent<Path>> polledEvents) {
+    private void showEventsInList(List<WatchEvent<Path>> pathEvents) {
         Platform.runLater(() -> {
-            var now = LocalTime.now().format(DateTimeFormatter.ISO_LOCAL_TIME);
-            for (WatchEvent<Path> event : polledEvents) {
-                Path relativePath = event.context();
-                File file = new File(watchedDirectory, relativePath.toString());
-                String fileType = file.isDirectory() ? "Directory" : "File";
-                if (event.kind().equals(ENTRY_CREATE)) {
-                    eventsDescriptions.add("%s: %s %s created".formatted(now, fileType, file));
-                } else if (event.kind().equals(ENTRY_MODIFY)) {
-                    eventsDescriptions.add("%s: %s %s modified".formatted(now, fileType, file));
-                } else if (event.kind().equals(ENTRY_DELETE)) {
-                    eventsDescriptions.add("%s: %s %s deleted".formatted(now, fileType, file));
+            final var now = LocalTime.now().format(DateTimeFormatter.ISO_LOCAL_TIME);
+            for (WatchEvent<Path> pathEvent : pathEvents) {
+                final Path relativePath = pathEvent.context();
+                final File file = new File(watchedDirectory, relativePath.toString());
+                final String fileType = file.isDirectory() ? "Directory" : "File";
+                if (pathEvent.kind().equals(ENTRY_CREATE)) {
+                    eventDescriptionList.add("%s: %s %s created".formatted(now, fileType, file));
+                } else if (pathEvent.kind().equals(ENTRY_MODIFY)) {
+                    eventDescriptionList.add("%s: %s %s modified".formatted(now, fileType, file));
+                } else if (pathEvent.kind().equals(ENTRY_DELETE)) {
+                    eventDescriptionList.add("%s: %s %s deleted".formatted(now, fileType, file));
                 }
             }
         });

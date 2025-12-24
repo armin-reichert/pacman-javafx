@@ -16,15 +16,11 @@ import static java.nio.file.StandardWatchEventKinds.*;
 
 public class DirectoryWatchdog {
 
-    public interface WatchEventListener {
-        void handleWatchEvents(List<WatchEvent<Path>> events);
-    }
-
     private final Thread pollingThread = new Thread(this::pollEvents);
     private final File watchedDir;
     private final WatchService watchService;
     private final WatchKey watchKey;
-    private final List<WatchEventListener> eventListeners = new ArrayList<>();
+    private final List<PathWatchEventListener> eventListeners = new ArrayList<>();
     private boolean polling;
 
     public DirectoryWatchdog(File path) {
@@ -46,11 +42,11 @@ public class DirectoryWatchdog {
         }
     }
 
-    public void addEventListener(WatchEventListener eventListener) {
+    public void addEventListener(PathWatchEventListener eventListener) {
         eventListeners.add(eventListener);
     }
 
-    public void removeEventListener(WatchEventListener eventListener) {
+    public void removeEventListener(PathWatchEventListener eventListener) {
         eventListeners.remove(eventListener);
     }
 
