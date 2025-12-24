@@ -45,7 +45,7 @@ public class AssetMap implements LocalizedTextAccessor, Disposable {
         assetsByID.put(key, value);
     }
 
-    public void removeAll() {
+    public void clear() {
         assetsByID.clear();
     }
 

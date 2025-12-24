@@ -83,7 +83,6 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
 
     public ArcadePacMan_UIConfig(GameUI ui) {
         this.ui = requireNonNull(ui);
-        this.assets.setLocalizedTexts(ResourceBundle.getBundle("de.amr.pacmanfx.arcade.pacman.localized_texts"));
     }
 
     @Override
@@ -96,8 +95,9 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
         return ArcadePacMan_SpriteSheet.INSTANCE;
     }
 
-    @Override
-    public void loadAssets() {
+    private void loadAssets() {
+        assets.clear();
+
         assets.set("app_icon", LOCAL_RESOURCES.loadImage("graphics/icons/pacman.png"));
 
         assets.set("color.game_over_message", ARCADE_RED);
@@ -131,6 +131,10 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
         assets.set("ghost.color.flashing.eyeballs",   ARCADE_ROSE);
         assets.set("ghost.color.flashing.pupils",     ARCADE_RED);
 
+        assets.setLocalizedTexts(ResourceBundle.getBundle("de.amr.pacmanfx.arcade.pacman.localized_texts"));
+    }
+
+    private void registerSounds() {
         soundManager.register(SoundID.VOICE_AUTOPILOT_OFF,          GameUI.VOICE_AUTOPILOT_OFF);
         soundManager.register(SoundID.VOICE_AUTOPILOT_ON,           GameUI.VOICE_AUTOPILOT_ON);
         soundManager.register(SoundID.VOICE_EXPLAIN_GAME_START,     GameUI.VOICE_EXPLAIN);
@@ -158,6 +162,12 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
         soundManager.registerMedia(SoundID.SIREN_2,                 LOCAL_RESOURCES.url("sound/siren_2.mp3"));
         soundManager.registerMedia(SoundID.SIREN_3,                 LOCAL_RESOURCES.url("sound/siren_3.mp3"));
         soundManager.registerMedia(SoundID.SIREN_4,                 LOCAL_RESOURCES.url("sound/siren_4.mp3"));
+    }
+
+    @Override
+    public void init() {
+        loadAssets();
+        registerSounds();
     }
 
     @Override

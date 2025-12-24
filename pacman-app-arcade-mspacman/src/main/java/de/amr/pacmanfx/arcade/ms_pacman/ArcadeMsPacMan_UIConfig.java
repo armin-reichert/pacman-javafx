@@ -73,16 +73,17 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         assets.setLocalizedTexts(ResourceBundle.getBundle("de.amr.pacmanfx.arcade.ms_pacman.localized_texts"));
     }
 
-    // Creates the maze image used in the flash animation at the end of each level
-    private Image createBrightMazeImage(int index) {
-        RectShort mazeSprite = spriteSheet().spriteSequence(SpriteID.FULL_MAZES)[index];
-        Image mazeImage = ArcadeMsPacMan_SpriteSheet.INSTANCE.image(mazeSprite);
-        WorldMapColorScheme colorScheme = ArcadeMsPacMan_MapSelector.WORLD_MAP_COLOR_SCHEMES.get(index);
-        Map<Color, Color> changes = Map.of(
-            Color.web(colorScheme.wallStroke()), ARCADE_WHITE,
-            Color.web(colorScheme.door()), Color.TRANSPARENT
-        );
-        return Ufx.recolorImage(mazeImage, changes);
+    @Override
+    public void init() {
+        loadAssets();
+        registerSounds();
+    }
+
+    @Override
+    public void dispose() {
+        Logger.info("Disposing UI configuration {}", getClass().getSimpleName());
+        assets.dispose();
+        soundManager.dispose();
     }
 
     @Override
@@ -90,7 +91,9 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         return assets;
     }
 
-    public void loadAssets() {
+    private void loadAssets() {
+        assets.clear();
+
         assets.set("app_icon", LOCAL_RESOURCES.loadImage("graphics/icons/mspacman.png"));
 
         assets.set("logo.midway", LOCAL_RESOURCES.loadImage("graphics/midway_logo.png"));
@@ -130,7 +133,9 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         assets.set("ghost.color.flashing.dress",      ARCADE_WHITE);
         assets.set("ghost.color.flashing.eyeballs",   ARCADE_ROSE);
         assets.set("ghost.color.flashing.pupils",     ARCADE_RED);
+    }
 
+    private void registerSounds() {
         soundManager.register(SoundID.VOICE_AUTOPILOT_OFF,          GameUI.VOICE_AUTOPILOT_OFF);
         soundManager.register(SoundID.VOICE_AUTOPILOT_ON,           GameUI.VOICE_AUTOPILOT_ON);
         soundManager.register(SoundID.VOICE_EXPLAIN_GAME_START,     GameUI.VOICE_EXPLAIN);
@@ -161,11 +166,16 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         soundManager.registerMedia(SoundID.SIREN_4,                 LOCAL_RESOURCES.url("sound/GhostNoise4.wav"));
     }
 
-    @Override
-    public void dispose() {
-        Logger.info("Disposing UI configuration {}", getClass().getSimpleName());
-        assets.dispose();
-        soundManager.dispose();
+    // Creates the maze image used in the flash animation at the end of each level
+    private Image createBrightMazeImage(int index) {
+        RectShort mazeSprite = spriteSheet().spriteSequence(SpriteID.FULL_MAZES)[index];
+        Image mazeImage = ArcadeMsPacMan_SpriteSheet.INSTANCE.image(mazeSprite);
+        WorldMapColorScheme colorScheme = ArcadeMsPacMan_MapSelector.WORLD_MAP_COLOR_SCHEMES.get(index);
+        Map<Color, Color> changes = Map.of(
+            Color.web(colorScheme.wallStroke()), ARCADE_WHITE,
+            Color.web(colorScheme.door()), Color.TRANSPARENT
+        );
+        return Ufx.recolorImage(mazeImage, changes);
     }
 
     @Override

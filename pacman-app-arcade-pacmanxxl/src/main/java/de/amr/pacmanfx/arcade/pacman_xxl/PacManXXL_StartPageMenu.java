@@ -159,14 +159,22 @@ public class PacManXXL_StartPageMenu extends OptionMenu {
 
         @Override
         protected void onValueChanged(int index) {
-            String gameVariant = selectedValue();
+            final String gameVariant = selectedValue();
             if (StandardGameVariant.PACMAN_XXL.name().equals(gameVariant)) {
-                Logger.info("Loading assets for game variant {}", gameVariant);
-                ui.config(gameVariant).loadAssets();
+                //TODO add previous value into event parameter
+                final String prevGameVariantName = StandardGameVariant.MS_PACMAN_XXL.name();
+                Logger.info("Dispose game variant {}", prevGameVariantName);
+                ui.config(prevGameVariantName).dispose();
+                Logger.info("Init game variant {}", gameVariant);
+                ui.config(gameVariant).init();
             }
             else if (StandardGameVariant.MS_PACMAN_XXL.name().equals(gameVariant)) {
-                Logger.info("Loading assets for game variant {}", gameVariant);
-                ui.config(gameVariant).loadAssets();
+                //TODO add previous value into event parameter
+                final String prevGameVariantName = StandardGameVariant.PACMAN_XXL.name();
+                Logger.info("Dispose game variant {}", prevGameVariantName);
+                ui.config(prevGameVariantName).dispose();
+                Logger.info("Init game variant {}", gameVariant);
+                ui.config(gameVariant).init();
             }
             chaseAnimation.init(ui.config(gameVariant));
             state.gameVariant = gameVariant;

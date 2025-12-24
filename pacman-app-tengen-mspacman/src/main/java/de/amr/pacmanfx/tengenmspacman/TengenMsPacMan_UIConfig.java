@@ -151,7 +151,20 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     public TengenMsPacMan_UIConfig(GameUI ui) {
         this.ui = requireNonNull(ui);
-        assets.setLocalizedTexts(TEXT_BUNDLE);
+    }
+
+    @Override
+    public void init() {
+        loadAssets();
+        registerSounds();
+    }
+
+    @Override
+    public void dispose() {
+        Logger.info("Disposing UI configuration {}", getClass().getSimpleName());
+        coloringService.dispose();
+        assets.dispose();
+        soundManager.dispose();
     }
 
     @Override
@@ -159,8 +172,9 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         return assets;
     }
 
-    @Override
-    public void loadAssets() {
+    private void loadAssets() {
+        assets.clear();
+
         assets.set("app_icon",                         LOCAL_RESOURCES.loadImage("graphics/icons/mspacman.png"));
         assets.set("startpage.image1",                 LOCAL_RESOURCES.loadImage("graphics/flyer-page-1.png"));
         assets.set("startpage.image2",                 LOCAL_RESOURCES.loadImage("graphics/flyer-page-2.png"));
@@ -200,6 +214,10 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         assets.set("ghost.color.flashing.eyeballs",    nesColor(0x20));
         assets.set("ghost.color.flashing.pupils",      nesColor(0x20));
 
+        assets.setLocalizedTexts(TEXT_BUNDLE);
+    }
+
+    private void registerSounds() {
         soundManager.registerAudioClipURL("audio.option.selection_changed",    LOCAL_RESOURCES.url("sound/ms-select1.wav"));
         soundManager.registerAudioClipURL("audio.option.value_changed",        LOCAL_RESOURCES.url("sound/ms-select2.wav"));
 
@@ -239,14 +257,6 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         if (bounceSound != null) {
             bounceSound.setRate(0.25);
         }
-    }
-
-    @Override
-    public void dispose() {
-        Logger.info("Disposing UI configuration {}", getClass().getSimpleName());
-        coloringService.dispose();
-        assets.dispose();
-        soundManager.dispose();
     }
 
     @Override

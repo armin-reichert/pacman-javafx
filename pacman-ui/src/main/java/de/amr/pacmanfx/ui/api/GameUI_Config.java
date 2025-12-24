@@ -36,15 +36,12 @@ public interface GameUI_Config extends Disposable {
 
     String CONFIG_KEY_MAP_NUMBER = "mapNumber";
 
+    void init();
+
     /**
      * @return the game variant specific asset map
      */
     AssetMap assets();
-
-    /**
-     * Loads the game variant specific asset map
-     */
-    void loadAssets();
 
     /**
      * @return the spritesheet for this game variant

@@ -69,7 +69,19 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config, GameScene_Con
 
     public PacManXXL_MsPacMan_UIConfig(GameUI ui) {
         this.ui = requireNonNull(ui);
-        assets.setLocalizedTexts(ResourceBundle.getBundle("de.amr.pacmanfx.arcade.pacman_xxl.localized_texts_ms_pacman"));
+    }
+
+    @Override
+    public void init() {
+        loadAssets();
+        registerSounds();
+    }
+
+    @Override
+    public void dispose() {
+        Logger.info("Disposing UI configuration {}", getClass().getSimpleName());
+        assets.dispose();
+        soundManager.dispose();
     }
 
     @Override
@@ -77,7 +89,9 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config, GameScene_Con
         return assets;
     }
 
-    public void loadAssets() {
+    private void loadAssets() {
+        assets.clear();
+
         assets.set("app_icon", ARCADE_MS_PACMAN_RESOURCES.loadImage("graphics/icons/mspacman.png"));
         assets.set("logo.midway", ARCADE_MS_PACMAN_RESOURCES.loadImage("graphics/midway_logo.png"));
         assets.set("color.game_over_message", ARCADE_RED);
@@ -115,6 +129,10 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config, GameScene_Con
         assets.set("audio.option.selection_changed", LOCAL_RESOURCES.loadAudioClip("sound/ms-select1.wav"));
         assets.set("audio.option.value_changed",     LOCAL_RESOURCES.loadAudioClip("sound/ms-select2.wav"));
 
+        assets.setLocalizedTexts(ResourceBundle.getBundle("de.amr.pacmanfx.arcade.pacman_xxl.localized_texts_ms_pacman"));
+    }
+
+    private void registerSounds() {
         soundManager.register(SoundID.VOICE_AUTOPILOT_OFF,          GameUI.VOICE_AUTOPILOT_OFF);
         soundManager.register(SoundID.VOICE_AUTOPILOT_ON,           GameUI.VOICE_AUTOPILOT_ON);
         soundManager.register(SoundID.VOICE_EXPLAIN_GAME_START,     GameUI.VOICE_EXPLAIN);
@@ -141,13 +159,6 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config, GameScene_Con
         soundManager.registerMedia(SoundID.SIREN_2,                 ARCADE_MS_PACMAN_RESOURCES.url("sound/GhostNoise2.wav"));
         soundManager.registerMedia(SoundID.SIREN_3,                 ARCADE_MS_PACMAN_RESOURCES.url("sound/GhostNoise3.wav"));
         soundManager.registerMedia(SoundID.SIREN_4,                 ARCADE_MS_PACMAN_RESOURCES.url("sound/GhostNoise4.wav"));
-    }
-
-    @Override
-    public void dispose() {
-        Logger.info("Disposing UI configuration {}", getClass().getSimpleName());
-        assets.dispose();
-        soundManager.dispose();
     }
 
     @Override
