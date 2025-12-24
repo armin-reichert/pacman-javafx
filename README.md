@@ -36,9 +36,13 @@ Prerequisites: You need to have [Git](https://github.com/git-guides/install-git)
 
 - `git clone https://github.com/armin-reichert/pacman-javafx.git`
 - `cd pacman-javafx`
-- `./gradlew jpackage` or just `make` (Windows) or `./make.sh` (Unix)
+- `./gradlew jpackage` or `./gradlew clean jpackage` (clean build)
+- On Windows, you can also call
+  - `make` or `make clean`
+- and on Linux
+  - `./make.sh` or `./make.sh clean`
 
-On Ubuntu, I first had to install also
+On Linux (Ubuntu 24), I first had to install also
 - binutils: `sudo apt-get install binutils`
 - fakeroot: `sudo apt-get install fakeroot`
   
