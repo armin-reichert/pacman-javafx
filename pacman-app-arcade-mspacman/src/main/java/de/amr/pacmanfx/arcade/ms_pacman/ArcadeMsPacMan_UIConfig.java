@@ -77,6 +77,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     public void init() {
         loadAssets();
         registerSounds();
+        createGameScenes(ui);
     }
 
     @Override
@@ -84,6 +85,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         Logger.info("Disposing UI configuration {}", getClass().getSimpleName());
         assets.dispose();
         soundManager.dispose();
+        scenesByID.clear();
     }
 
     @Override
@@ -304,13 +306,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     // Game scenes
 
-    @Override
-    public GameScene_Config sceneConfig() {
-        return this;
-    }
-
-    @Override
-    public void createGameScenes(GameUI ui) {
+    private void createGameScenes(GameUI ui) {
         scenesByID.put(SCENE_ID_BOOT_SCENE,     new Arcade_BootScene2D(ui));
         scenesByID.put(SCENE_ID_INTRO_SCENE,    new ArcadeMsPacMan_IntroScene(ui));
         scenesByID.put(SCENE_ID_START_SCENE,    new ArcadeMsPacMan_StartScene(ui));
@@ -319,6 +315,11 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         scenesByID.put(sceneID_CutScene(1),     new ArcadeMsPacMan_CutScene1(ui));
         scenesByID.put(sceneID_CutScene(2),     new ArcadeMsPacMan_CutScene2(ui));
         scenesByID.put(sceneID_CutScene(3),     new ArcadeMsPacMan_CutScene3(ui));
+    }
+
+    @Override
+    public GameScene_Config sceneConfig() {
+        return this;
     }
 
     @Override

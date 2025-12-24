@@ -86,6 +86,21 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
     }
 
     @Override
+    public void init() {
+        loadAssets();
+        registerSounds();
+        createGameScenes(ui);
+    }
+
+    @Override
+    public void dispose() {
+        Logger.info("Disposing UI configuration {}", getClass().getSimpleName());
+        assets.dispose();
+        soundManager.dispose();
+        scenesByID.clear();
+    }
+
+    @Override
     public AssetMap assets() {
         return assets;
     }
@@ -162,19 +177,6 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
         soundManager.registerMedia(SoundID.SIREN_2,                 LOCAL_RESOURCES.url("sound/siren_2.mp3"));
         soundManager.registerMedia(SoundID.SIREN_3,                 LOCAL_RESOURCES.url("sound/siren_3.mp3"));
         soundManager.registerMedia(SoundID.SIREN_4,                 LOCAL_RESOURCES.url("sound/siren_4.mp3"));
-    }
-
-    @Override
-    public void init() {
-        loadAssets();
-        registerSounds();
-    }
-
-    @Override
-    public void dispose() {
-        Logger.info("Disposing UI configuration {}", getClass().getSimpleName());
-        assets.dispose();
-        soundManager.dispose();
     }
 
     @Override
@@ -294,18 +296,7 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
 
     // Game scene config
 
-    @Override
-    public GameScene_Config sceneConfig() {
-        return this;
-    }
-
-    @Override
-    public Stream<GameScene> gameScenes() {
-        return scenesByID.values().stream();
-    }
-
-    @Override
-    public void createGameScenes(GameUI ui) {
+    private void createGameScenes(GameUI ui) {
         scenesByID.put(SCENE_ID_BOOT_SCENE,     new Arcade_BootScene2D(ui));
         scenesByID.put(SCENE_ID_INTRO_SCENE,    new ArcadePacMan_IntroScene(ui));
         scenesByID.put(SCENE_ID_START_SCENE,    new ArcadePacMan_StartScene(ui));
@@ -314,6 +305,16 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
         scenesByID.put(sceneID_CutScene(1),     new ArcadePacMan_CutScene1(ui));
         scenesByID.put(sceneID_CutScene(2),     new ArcadePacMan_CutScene2(ui));
         scenesByID.put(sceneID_CutScene(3),     new ArcadePacMan_CutScene3(ui));
+    }
+
+    @Override
+    public GameScene_Config sceneConfig() {
+        return this;
+    }
+
+    @Override
+    public Stream<GameScene> gameScenes() {
+        return scenesByID.values().stream();
     }
 
     @Override

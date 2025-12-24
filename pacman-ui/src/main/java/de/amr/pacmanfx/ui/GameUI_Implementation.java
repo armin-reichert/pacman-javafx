@@ -525,7 +525,6 @@ public final class GameUI_Implementation implements GameUI {
             Class<?> configClass = uiConfigMap.get(gameVariantName);
             try {
                 config = (GameUI_Config) configClass.getDeclaredConstructor(GameUI.class).newInstance(this);
-                config.sceneConfig().createGameScenes(this);
                 config.sceneConfig().gameScenes().forEach(scene -> {
                     if (scene instanceof GameScene2D gameScene2D) {
                         gameScene2D.debugInfoVisibleProperty().bind(PROPERTY_DEBUG_INFO_VISIBLE);

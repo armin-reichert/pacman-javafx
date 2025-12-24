@@ -157,6 +157,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     public void init() {
         loadAssets();
         registerSounds();
+        createGameScenes(ui);
     }
 
     @Override
@@ -165,6 +166,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         coloringService.dispose();
         assets.dispose();
         soundManager.dispose();
+        scenesByID.clear();
     }
 
     @Override
@@ -404,13 +406,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     // Game scenes
 
-    @Override
-    public GameScene_Config sceneConfig() {
-        return this;
-    }
-
-    @Override
-    public void createGameScenes(GameUI ui) {
+    private void createGameScenes(GameUI ui) {
         scenesByID.put(SCENE_ID_BOOT_SCENE,    new TengenMsPacMan_BootScene(ui));
         scenesByID.put(SCENE_ID_INTRO_SCENE,   new TengenMsPacMan_IntroScene(ui));
         scenesByID.put(SCENE_ID_START_SCENE,   new TengenMsPacMan_OptionsScene(ui));
@@ -421,6 +417,11 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         scenesByID.put(sceneID_CutScene(2),    new TengenMsPacMan_CutScene2(ui));
         scenesByID.put(sceneID_CutScene(3),    new TengenMsPacMan_CutScene3(ui));
         scenesByID.put(sceneID_CutScene(4),    new TengenMsPacMan_CutScene4(ui));
+    }
+
+    @Override
+    public GameScene_Config sceneConfig() {
+        return this;
     }
 
     @Override

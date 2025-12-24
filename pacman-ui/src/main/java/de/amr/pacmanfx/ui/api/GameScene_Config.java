@@ -41,9 +41,6 @@ public interface GameScene_Config {
         };
     }
 
-
-    void createGameScenes(GameUI ui);
-
     Stream<GameScene> gameScenes();
 
     boolean gameSceneHasID(GameScene gameScene, String sceneID);
