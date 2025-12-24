@@ -44,7 +44,7 @@ public class TengenMsPacMan_MapSelector implements WorldMapSelector {
     }
 
     @Override
-    public void loadCustomMapPrototypes() {}
+    public void loadCustomMaps() {}
 
     @Override
     public WorldMap selectWorldMap(int levelNumber, Object... args) {

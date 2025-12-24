@@ -29,7 +29,7 @@ public class ArcadePacMan_MapSelector implements WorldMapSelector {
     }
 
     @Override
-    public void loadCustomMapPrototypes() {}
+    public void loadCustomMaps() {}
 
     @Override
     public void loadAllMapPrototypes() {

@@ -30,7 +30,7 @@ public interface WorldMapSelector {
      */
     List<WorldMap> customMapPrototypes();
 
-    void loadCustomMapPrototypes();
+    void loadCustomMaps();
 
     void loadAllMapPrototypes();
 

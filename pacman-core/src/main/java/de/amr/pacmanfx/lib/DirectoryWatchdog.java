@@ -80,7 +80,7 @@ public class DirectoryWatchdog {
             final List<WatchEvent<?>> watchEvents = watchKey.pollEvents();
             if (!watchEvents.isEmpty()) {
                 final List<WatchEvent<Path>> pathEvents = watchEvents.stream().map(e -> (WatchEvent<Path>) e).toList();
-                eventListeners.forEach(listener -> listener.handleWatchEvents(pathEvents));
+                eventListeners.forEach(listener -> listener.handlePathEvents(pathEvents));
             }
             try {
                 Thread.sleep(10);
