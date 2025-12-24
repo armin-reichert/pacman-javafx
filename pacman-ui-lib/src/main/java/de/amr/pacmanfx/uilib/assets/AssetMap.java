@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.assets;
 
+import de.amr.pacmanfx.lib.Disposable;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
@@ -19,7 +20,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Data structure and API for game assets.
  */
-public class AssetMap implements LocalizedTextAccessor {
+public class AssetMap implements LocalizedTextAccessor, Disposable {
 
     private final Map<String, Object> assetsByID = new HashMap<>();
     private ResourceBundle localizedTexts;
@@ -27,6 +28,11 @@ public class AssetMap implements LocalizedTextAccessor {
     @Override
     public ResourceBundle localizedTexts() {
         return localizedTexts;
+    }
+
+    @Override
+    public void dispose() {
+        assetsByID.clear();
     }
 
     public void setLocalizedTexts(ResourceBundle bundle) {

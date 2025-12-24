@@ -83,7 +83,7 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
 
     public ArcadePacMan_UIConfig(GameUI ui) {
         this.ui = requireNonNull(ui);
-        assets.setLocalizedTexts(ResourceBundle.getBundle("de.amr.pacmanfx.arcade.pacman.localized_texts"));
+        this.assets.setLocalizedTexts(ResourceBundle.getBundle("de.amr.pacmanfx.arcade.pacman.localized_texts"));
     }
 
     @Override
@@ -162,8 +162,8 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
 
     @Override
     public void dispose() {
-        Logger.info("Disposing {}", getClass().getSimpleName());
-        assets.removeAll();
+        Logger.info("Disposing UI configuration {}", getClass().getSimpleName());
+        assets.dispose();
         soundManager.dispose();
     }
 
@@ -180,14 +180,14 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
     @Override
     public GameScene2D_Renderer createGameSceneRenderer(Canvas canvas, GameScene2D gameScene2D) {
         GameScene2D_Renderer renderer = switch (gameScene2D) {
-            case Arcade_BootScene2D ignored -> new Arcade_BootScene2D_Renderer(gameScene2D, canvas, ArcadePacMan_SpriteSheet.INSTANCE);
+            case Arcade_BootScene2D ignored      -> new Arcade_BootScene2D_Renderer(gameScene2D, canvas, ArcadePacMan_SpriteSheet.INSTANCE);
             case ArcadePacMan_IntroScene ignored -> new ArcadePacMan_IntroScene_Renderer(gameScene2D, canvas, ArcadePacMan_SpriteSheet.INSTANCE);
             case ArcadePacMan_StartScene ignored -> new ArcadePacMan_StartScene_Renderer(gameScene2D, canvas);
-            case Arcade_PlayScene2D ignored -> new Arcade_PlayScene2D_Renderer(gameScene2D, canvas, ArcadePacMan_SpriteSheet.INSTANCE);
-            case ArcadePacMan_CutScene1 ignored -> new ArcadePacMan_CutScene1_Renderer(gameScene2D, canvas, ArcadePacMan_SpriteSheet.INSTANCE);
-            case ArcadePacMan_CutScene2 ignored -> new ArcadePacMan_CutScene2_Renderer(gameScene2D, canvas, ArcadePacMan_SpriteSheet.INSTANCE);
-            case ArcadePacMan_CutScene3 ignored -> new ArcadePacMan_CutScene3_Renderer(gameScene2D, canvas, ArcadePacMan_SpriteSheet.INSTANCE);
-            default -> throw new IllegalStateException("Unexpected value: " + gameScene2D);
+            case Arcade_PlayScene2D ignored      -> new Arcade_PlayScene2D_Renderer(gameScene2D, canvas, ArcadePacMan_SpriteSheet.INSTANCE);
+            case ArcadePacMan_CutScene1 ignored  -> new ArcadePacMan_CutScene1_Renderer(gameScene2D, canvas, ArcadePacMan_SpriteSheet.INSTANCE);
+            case ArcadePacMan_CutScene2 ignored  -> new ArcadePacMan_CutScene2_Renderer(gameScene2D, canvas, ArcadePacMan_SpriteSheet.INSTANCE);
+            case ArcadePacMan_CutScene3 ignored  -> new ArcadePacMan_CutScene3_Renderer(gameScene2D, canvas, ArcadePacMan_SpriteSheet.INSTANCE);
+            default -> throw new IllegalStateException("Illegal game scene: " + gameScene2D);
         };
         return gameScene2D.adaptRenderer(renderer);
     }

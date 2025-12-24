@@ -145,8 +145,8 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config, GameScene_Con
 
     @Override
     public void dispose() {
-        Logger.info("Disposing {}", getClass().getSimpleName());
-        assets.removeAll();
+        Logger.info("Disposing UI configuration {}", getClass().getSimpleName());
+        assets.dispose();
         soundManager.dispose();
     }
 
