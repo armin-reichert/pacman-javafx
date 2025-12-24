@@ -1,6 +1,7 @@
 plugins {
+    id "application"
     alias(libs.plugins.javafx)
-    alias(libs.plugins.jlink)
+    //alias(libs.plugins.jlink)
     alias(libs.plugins.osdetector)
 }
 
@@ -23,6 +24,7 @@ javafx {
     modules = ["javafx.base", "javafx.graphics", "javafx.controls", "javafx.media"]
 }
 
+/*
 application {
     mainModule = "de.amr.pacmanfx.arcade.pacman"
     mainClass = "de.amr.pacmanfx.arcade.pacman.app.Main"
@@ -36,3 +38,4 @@ jlink {
         installerType = installerPkg
     }
 }
+*/

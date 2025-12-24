@@ -1,7 +1,8 @@
 plugins {
+    id "application"
     alias(libs.plugins.javafx)
     //alias(libs.plugins.jlink)
-    //alias(libs.plugins.osdetector)
+    alias(libs.plugins.osdetector)
 }
 
 dependencies {

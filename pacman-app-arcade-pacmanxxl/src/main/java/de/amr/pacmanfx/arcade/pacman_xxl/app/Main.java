@@ -1,4 +1,4 @@
-package de.amr.pacmanfx.arcade.pacman_xxl;
+package de.amr.pacmanfx.arcade.pacman_xxl.app;
 
 import javafx.application.Application;
 

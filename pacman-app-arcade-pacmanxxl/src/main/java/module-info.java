@@ -19,4 +19,5 @@ open module de.amr.pacmanfx.arcade.pacman_xxl {
     requires de.amr.pacmanfx.arcade.pacman;
 
     exports de.amr.pacmanfx.arcade.pacman_xxl;
+    exports de.amr.pacmanfx.arcade.pacman_xxl.app;
 }
