@@ -382,7 +382,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     @Override
     public void startLevel() {
         final GameLevel level = level();
-        level.setStartTimeMillis(System.currentTimeMillis());
+        level.recordStartTime(System.currentTimeMillis());
         level.getReadyToPlay();
         if (level.isDemoLevel()) {
             showLevelMessage(MessageType.GAME_OVER);
