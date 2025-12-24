@@ -163,17 +163,13 @@ public class PacManXXL_StartPageMenu extends OptionMenu {
             if (StandardGameVariant.PACMAN_XXL.name().equals(gameVariant)) {
                 //TODO add previous value into event parameter
                 final String prevGameVariantName = StandardGameVariant.MS_PACMAN_XXL.name();
-                Logger.info("Dispose game variant {}", prevGameVariantName);
                 ui.config(prevGameVariantName).dispose();
-                Logger.info("Init game variant {}", gameVariant);
                 ui.config(gameVariant).init();
             }
             else if (StandardGameVariant.MS_PACMAN_XXL.name().equals(gameVariant)) {
                 //TODO add previous value into event parameter
                 final String prevGameVariantName = StandardGameVariant.PACMAN_XXL.name();
-                Logger.info("Dispose game variant {}", prevGameVariantName);
                 ui.config(prevGameVariantName).dispose();
-                Logger.info("Init game variant {}", gameVariant);
                 ui.config(gameVariant).init();
             }
             chaseAnimation.init(ui.config(gameVariant));

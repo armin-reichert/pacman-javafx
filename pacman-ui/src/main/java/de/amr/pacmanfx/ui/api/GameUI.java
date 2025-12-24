@@ -115,7 +115,7 @@ public interface GameUI extends LocalizedTextAccessor {
 
     Media VOICE_IMMUNITY_ON   = new Media(GLOBAL_RESOURCES.url("sound/voice/immunity-on.mp3").toExternalForm());
     Media VOICE_IMMUNITY_OFF  = new Media(GLOBAL_RESOURCES.url("sound/voice/immunity-off.mp3").toExternalForm());
-    Media VOICE_EXPLAIN       = new Media(GLOBAL_RESOURCES.url("sound/voice/press-key.mp3").toExternalForm());
+    Media VOICE_EXPLAIN_GAME_START = new Media(GLOBAL_RESOURCES.url("sound/voice/press-key.mp3").toExternalForm());
     Media VOICE_AUTOPILOT_ON  = new Media(GLOBAL_RESOURCES.url("sound/voice/autopilot-on.mp3").toExternalForm());
     Media VOICE_AUTOPILOT_OFF = new Media(GLOBAL_RESOURCES.url("sound/voice/autopilot-off.mp3").toExternalForm());
 

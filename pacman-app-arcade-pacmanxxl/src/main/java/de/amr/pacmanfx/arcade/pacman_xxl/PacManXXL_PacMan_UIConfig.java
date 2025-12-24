@@ -67,6 +67,7 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config, GameScene_Confi
 
     @Override
     public void init() {
+        Logger.info("Init UI configuration {}", getClass().getSimpleName());
         loadAssets();
         registerSounds();
         createGameScenes(ui);
@@ -74,7 +75,7 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config, GameScene_Confi
 
     @Override
     public void dispose() {
-        Logger.info("Disposing UI configuration {}", getClass().getSimpleName());
+        Logger.info("Dispose UI configuration {}", getClass().getSimpleName());
         assets.dispose();
         soundManager.dispose();
         scenesByID.clear();
@@ -128,7 +129,7 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config, GameScene_Confi
     private void registerSounds() {
         soundManager.register(SoundID.VOICE_AUTOPILOT_OFF,          GameUI.VOICE_AUTOPILOT_OFF);
         soundManager.register(SoundID.VOICE_AUTOPILOT_ON,           GameUI.VOICE_AUTOPILOT_ON);
-        soundManager.register(SoundID.VOICE_EXPLAIN_GAME_START,     GameUI.VOICE_EXPLAIN);
+        soundManager.register(SoundID.VOICE_EXPLAIN_GAME_START,     GameUI.VOICE_EXPLAIN_GAME_START);
         soundManager.register(SoundID.VOICE_IMMUNITY_OFF,           GameUI.VOICE_IMMUNITY_OFF);
         soundManager.register(SoundID.VOICE_IMMUNITY_ON,            GameUI.VOICE_IMMUNITY_ON);
 
@@ -165,7 +166,7 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config, GameScene_Confi
 
     @Override
     public GameScene2D_Renderer createGameSceneRenderer(Canvas canvas, GameScene2D gameScene2D) {
-        GameScene2D_Renderer renderer = switch (gameScene2D) {
+        final GameScene2D_Renderer renderer = switch (gameScene2D) {
             case Arcade_BootScene2D ignored -> new Arcade_BootScene2D_Renderer(gameScene2D, canvas, ArcadePacMan_SpriteSheet.INSTANCE);
             case ArcadePacMan_IntroScene ignored -> new ArcadePacMan_IntroScene_Renderer(gameScene2D, canvas, ArcadePacMan_SpriteSheet.INSTANCE);
             case ArcadePacMan_StartScene ignored -> new ArcadePacMan_StartScene_Renderer(gameScene2D, canvas);
@@ -180,7 +181,7 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config, GameScene_Confi
 
     @Override
     public HUD_Renderer createHUDRenderer(Canvas canvas, GameScene2D gameScene2D) {
-        var hudRenderer = new ArcadePacMan_HUD_Renderer(canvas, ArcadePacMan_SpriteSheet.INSTANCE);
+        final var hudRenderer = new ArcadePacMan_HUD_Renderer(canvas, ArcadePacMan_SpriteSheet.INSTANCE);
         hudRenderer.setImageSmoothing(true);
         gameScene2D.adaptRenderer(hudRenderer);
         return hudRenderer;
@@ -188,26 +189,26 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config, GameScene_Confi
 
     @Override
     public ActorRenderer createActorRenderer(Canvas canvas) {
-        var actorRenderer = new ArcadePacMan_Actor_Renderer(canvas, ArcadePacMan_SpriteSheet.INSTANCE);
+        final var actorRenderer = new ArcadePacMan_Actor_Renderer(canvas, ArcadePacMan_SpriteSheet.INSTANCE);
         actorRenderer.setImageSmoothing(true);
         return actorRenderer;
     }
 
     @Override
     public Image killedGhostPointsImage(int killedIndex) {
-        RectShort[] numberSprites = ArcadePacMan_SpriteSheet.INSTANCE.spriteSequence(SpriteID.GHOST_NUMBERS);
+        final RectShort[] numberSprites = ArcadePacMan_SpriteSheet.INSTANCE.spriteSequence(SpriteID.GHOST_NUMBERS);
         return ArcadePacMan_SpriteSheet.INSTANCE.image(numberSprites[killedIndex]);
     }
 
     @Override
     public Image bonusSymbolImage(byte symbol) {
-        RectShort[] sprites = ArcadePacMan_SpriteSheet.INSTANCE.spriteSequence(SpriteID.BONUS_SYMBOLS);
+        final RectShort[] sprites = ArcadePacMan_SpriteSheet.INSTANCE.spriteSequence(SpriteID.BONUS_SYMBOLS);
         return ArcadePacMan_SpriteSheet.INSTANCE.image(sprites[symbol]);
     }
 
     @Override
     public Image bonusValueImage(byte symbol) {
-        RectShort[] sprites = ArcadePacMan_SpriteSheet.INSTANCE.spriteSequence(SpriteID.BONUS_VALUES);
+        final RectShort[] sprites = ArcadePacMan_SpriteSheet.INSTANCE.spriteSequence(SpriteID.BONUS_VALUES);
         return ArcadePacMan_SpriteSheet.INSTANCE.image(sprites[symbol]);
     }
 
@@ -223,7 +224,7 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config, GameScene_Confi
 
     @Override
     public Ghost createGhostWithAnimations(byte personality) {
-        Ghost ghost = switch (personality) {
+        final Ghost ghost = switch (personality) {
             case RED_GHOST_SHADOW   -> ArcadePacMan_ActorFactory.createBlinky();
             case PINK_GHOST_SPEEDY  -> ArcadePacMan_ActorFactory.createPinky();
             case CYAN_GHOST_BASHFUL -> ArcadePacMan_ActorFactory.createInky();
@@ -257,7 +258,7 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config, GameScene_Confi
 
     @Override
     public PacBase3D createPac3D(AnimationRegistry animationRegistry, Pac pac, double size) {
-        var pac3D = new PacMan3D(
+        var pacMan3D = new PacMan3D(
             PacManModel3DRepository.theRepository(),
             animationRegistry,
             pac,
@@ -266,8 +267,8 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config, GameScene_Confi
             assets.color("pac.color.eyes"),
             assets.color("pac.color.palate")
         );
-        pac3D.light().setColor(assets.color("pac.color.head").desaturate());
-        return pac3D;
+        pacMan3D.light().setColor(assets.color("pac.color.head").desaturate());
+        return pacMan3D;
     }
 
     @Override
@@ -300,7 +301,7 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config, GameScene_Confi
 
     @Override
     public Optional<GameScene> selectGameScene(Game game) {
-        String sceneID = switch (game.control().state()) {
+        final String sceneID = switch (game.control().state()) {
             case GameState.BOOT -> SCENE_ID_BOOT_SCENE;
             case GameState.SETTING_OPTIONS_FOR_START -> SCENE_ID_START_SCENE;
             case GameState.INTRO -> SCENE_ID_INTRO_SCENE;
@@ -308,7 +309,7 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config, GameScene_Confi
                 if (game.optGameLevel().isEmpty()) {
                     throw new IllegalStateException("Cannot determine cut scene, no game level available");
                 }
-                int cutSceneNumber = game.level().cutSceneNumber();
+                final int cutSceneNumber = game.level().cutSceneNumber();
                 if (cutSceneNumber == 0) {
                     throw new IllegalStateException("Cannot determine cut scene after level %d".formatted(game.level().number()));
                 }

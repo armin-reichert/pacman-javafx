@@ -63,6 +63,18 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     private static final ResourceManager LOCAL_RESOURCES = () -> ArcadeMsPacMan_UIConfig.class;
 
+    // Creates the maze image used in the flash animation at the end of each level
+    private static Image createBrightMazeImage(int index) {
+        final RectShort mazeSprite = ArcadeMsPacMan_SpriteSheet.INSTANCE.spriteSequence(SpriteID.FULL_MAZES)[index];
+        final Image mazeImage = ArcadeMsPacMan_SpriteSheet.INSTANCE.image(mazeSprite);
+        final WorldMapColorScheme colorScheme = ArcadeMsPacMan_MapSelector.WORLD_MAP_COLOR_SCHEMES.get(index);
+        final Map<Color, Color> colorChanges = Map.of(
+            Color.web(colorScheme.wallStroke()), ARCADE_WHITE,
+            Color.web(colorScheme.door()), Color.TRANSPARENT
+        );
+        return Ufx.recolorImage(mazeImage, colorChanges);
+    }
+
     private final GameUI ui;
     private final AssetMap assets = new AssetMap();
     private final SoundManager soundManager = new SoundManager();
@@ -70,19 +82,19 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     public ArcadeMsPacMan_UIConfig(GameUI ui) {
         this.ui = requireNonNull(ui);
-        assets.setLocalizedTexts(ResourceBundle.getBundle("de.amr.pacmanfx.arcade.ms_pacman.localized_texts"));
     }
 
     @Override
     public void init() {
+        Logger.info("Init UI configuration {}", getClass().getSimpleName());
         loadAssets();
         registerSounds();
-        createGameScenes(ui);
+        createGameScenes();
     }
 
     @Override
     public void dispose() {
-        Logger.info("Disposing UI configuration {}", getClass().getSimpleName());
+        Logger.info("Dispose UI configuration {}", getClass().getSimpleName());
         assets.dispose();
         soundManager.dispose();
         scenesByID.clear();
@@ -135,18 +147,20 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         assets.set("ghost.color.flashing.dress",      ARCADE_WHITE);
         assets.set("ghost.color.flashing.eyeballs",   ARCADE_ROSE);
         assets.set("ghost.color.flashing.pupils",     ARCADE_RED);
+
+        assets.setLocalizedTexts(ResourceBundle.getBundle("de.amr.pacmanfx.arcade.ms_pacman.localized_texts"));
     }
 
     private void registerSounds() {
         soundManager.register(SoundID.VOICE_AUTOPILOT_OFF,          GameUI.VOICE_AUTOPILOT_OFF);
         soundManager.register(SoundID.VOICE_AUTOPILOT_ON,           GameUI.VOICE_AUTOPILOT_ON);
-        soundManager.register(SoundID.VOICE_EXPLAIN_GAME_START,     GameUI.VOICE_EXPLAIN);
+        soundManager.register(SoundID.VOICE_EXPLAIN_GAME_START,     GameUI.VOICE_EXPLAIN_GAME_START);
         soundManager.register(SoundID.VOICE_IMMUNITY_OFF,           GameUI.VOICE_IMMUNITY_OFF);
         soundManager.register(SoundID.VOICE_IMMUNITY_ON,            GameUI.VOICE_IMMUNITY_ON);
 
         soundManager.registerMedia(SoundID.VOICE_FLYER_TEXT,        LOCAL_RESOURCES.url("sound/flyer-text.mp3"));
 
-        soundManager.registerMediaPlayer(SoundID.BONUS_ACTIVE,            LOCAL_RESOURCES.url("sound/Fruit_Bounce.mp3"));
+        soundManager.registerMediaPlayer(SoundID.BONUS_ACTIVE,      LOCAL_RESOURCES.url("sound/Fruit_Bounce.mp3"));
         soundManager.registerAudioClipURL(SoundID.BONUS_EATEN,      LOCAL_RESOURCES.url("sound/Fruit.mp3"));
         soundManager.registerAudioClipURL(SoundID.COIN_INSERTED,    LOCAL_RESOURCES.url("sound/credit.wav"));
         soundManager.registerAudioClipURL(SoundID.EXTRA_LIFE,       LOCAL_RESOURCES.url("sound/ExtraLife.mp3"));
@@ -168,18 +182,6 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         soundManager.registerMedia(SoundID.SIREN_4,                 LOCAL_RESOURCES.url("sound/GhostNoise4.wav"));
     }
 
-    // Creates the maze image used in the flash animation at the end of each level
-    private Image createBrightMazeImage(int index) {
-        RectShort mazeSprite = spriteSheet().spriteSequence(SpriteID.FULL_MAZES)[index];
-        Image mazeImage = ArcadeMsPacMan_SpriteSheet.INSTANCE.image(mazeSprite);
-        WorldMapColorScheme colorScheme = ArcadeMsPacMan_MapSelector.WORLD_MAP_COLOR_SCHEMES.get(index);
-        Map<Color, Color> changes = Map.of(
-            Color.web(colorScheme.wallStroke()), ARCADE_WHITE,
-            Color.web(colorScheme.door()), Color.TRANSPARENT
-        );
-        return Ufx.recolorImage(mazeImage, changes);
-    }
-
     @Override
     public SoundManager soundManager() {
         return soundManager;
@@ -192,7 +194,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     @Override
     public WorldMapColorScheme colorScheme(WorldMap worldMap) {
-        int index = worldMap.getConfigValue("colorMapIndex");
+        final int index = worldMap.getConfigValue("colorMapIndex");
         return ArcadeMsPacMan_MapSelector.WORLD_MAP_COLOR_SCHEMES.get(index);
     }
 
@@ -219,7 +221,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     @Override
     public HUD_Renderer createHUDRenderer(Canvas canvas, GameScene2D gameScene2D) {
-        var hudRenderer = new ArcadeMsPacMan_HUDRenderer(canvas, ArcadeMsPacMan_SpriteSheet.INSTANCE);
+        final var hudRenderer = new ArcadeMsPacMan_HUDRenderer(canvas, ArcadeMsPacMan_SpriteSheet.INSTANCE);
         hudRenderer.setImageSmoothing(true);
         gameScene2D.adaptRenderer(hudRenderer);
         return hudRenderer;
@@ -227,14 +229,14 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     @Override
     public ActorRenderer createActorRenderer(Canvas canvas) {
-        var actorRenderer = new ArcadeMsPacMan_ActorRenderer(canvas, ArcadeMsPacMan_SpriteSheet.INSTANCE);
+        final var actorRenderer = new ArcadeMsPacMan_ActorRenderer(canvas, ArcadeMsPacMan_SpriteSheet.INSTANCE);
         actorRenderer.setImageSmoothing(true);
         return actorRenderer;
     }
 
     public Ghost createGhostWithAnimations(byte personality) {
         requireValidGhostPersonality(personality);
-        Ghost ghost = switch (personality) {
+        final Ghost ghost = switch (personality) {
             case RED_GHOST_SHADOW   -> ArcadeMsPacMan_ActorFactory.createBlinky();
             case PINK_GHOST_SPEEDY  -> ArcadeMsPacMan_ActorFactory.createPinky();
             case CYAN_GHOST_BASHFUL -> ArcadeMsPacMan_ActorFactory.createInky();
@@ -258,19 +260,19 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     @Override
     public Image killedGhostPointsImage(int killedIndex) {
-        RectShort[] numberSprites = ArcadeMsPacMan_SpriteSheet.INSTANCE.spriteSequence(SpriteID.GHOST_NUMBERS);
+        final RectShort[] numberSprites = ArcadeMsPacMan_SpriteSheet.INSTANCE.spriteSequence(SpriteID.GHOST_NUMBERS);
         return ArcadeMsPacMan_SpriteSheet.INSTANCE.image(numberSprites[killedIndex]);
     }
 
     @Override
     public Image bonusSymbolImage(byte symbol) {
-        RectShort[] sprites = ArcadeMsPacMan_SpriteSheet.INSTANCE.spriteSequence(SpriteID.BONUS_SYMBOLS);
+        final RectShort[] sprites = ArcadeMsPacMan_SpriteSheet.INSTANCE.spriteSequence(SpriteID.BONUS_SYMBOLS);
         return ArcadeMsPacMan_SpriteSheet.INSTANCE.image(sprites[symbol]);
     }
 
     @Override
     public Image bonusValueImage(byte symbol) {
-        RectShort[] sprites = ArcadeMsPacMan_SpriteSheet.INSTANCE.spriteSequence(SpriteID.BONUS_VALUES);
+        final RectShort[] sprites = ArcadeMsPacMan_SpriteSheet.INSTANCE.spriteSequence(SpriteID.BONUS_VALUES);
         return ArcadeMsPacMan_SpriteSheet.INSTANCE.image(sprites[symbol]);
     }
 
@@ -289,7 +291,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     @Override
     public MsPacMan3D createPac3D(AnimationRegistry animationRegistry, Pac pac, double size) {
-        var pac3D = new MsPacMan3D(
+        final var msPacMan3D = new MsPacMan3D(
             PacManModel3DRepository.theRepository(),
             animationRegistry,
             pac,
@@ -300,13 +302,13 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
             assets.color("pac.color.hairbow"),
             assets.color("pac.color.hairbow.pearls"),
             assets.color("pac.color.boobs"));
-        pac3D.light().setColor(assets.color("pac.color.head").desaturate());
-        return pac3D;
+        msPacMan3D.light().setColor(assets.color("pac.color.head").desaturate());
+        return msPacMan3D;
     }
 
     // Game scenes
 
-    private void createGameScenes(GameUI ui) {
+    private void createGameScenes() {
         scenesByID.put(SCENE_ID_BOOT_SCENE,     new Arcade_BootScene2D(ui));
         scenesByID.put(SCENE_ID_INTRO_SCENE,    new ArcadeMsPacMan_IntroScene(ui));
         scenesByID.put(SCENE_ID_START_SCENE,    new ArcadeMsPacMan_StartScene(ui));

@@ -155,6 +155,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     @Override
     public void init() {
+        Logger.info("Init UI configuration {}", getClass().getSimpleName());
         loadAssets();
         registerSounds();
         createGameScenes(ui);
@@ -162,7 +163,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     @Override
     public void dispose() {
-        Logger.info("Disposing UI configuration {}", getClass().getSimpleName());
+        Logger.info("Dispose UI configuration {}", getClass().getSimpleName());
         coloringService.dispose();
         assets.dispose();
         soundManager.dispose();
@@ -225,7 +226,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
         soundManager.register(SoundID.VOICE_AUTOPILOT_OFF,          GameUI.VOICE_AUTOPILOT_OFF);
         soundManager.register(SoundID.VOICE_AUTOPILOT_ON,           GameUI.VOICE_AUTOPILOT_ON);
-        soundManager.register(SoundID.VOICE_EXPLAIN_GAME_START,     GameUI.VOICE_EXPLAIN);
+        soundManager.register(SoundID.VOICE_EXPLAIN_GAME_START,     GameUI.VOICE_EXPLAIN_GAME_START);
         soundManager.register(SoundID.VOICE_IMMUNITY_OFF,           GameUI.VOICE_IMMUNITY_OFF);
         soundManager.register(SoundID.VOICE_IMMUNITY_ON,            GameUI.VOICE_IMMUNITY_ON);
 
@@ -255,7 +256,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         soundManager.registerMedia(SoundID.SIREN_4,                  LOCAL_RESOURCES.url("sound/ms-siren2.wav"));// TODO
 
         //TODO fix the sound file instead
-        MediaPlayer bounceSound = soundManager.mediaPlayer(SoundID.BONUS_ACTIVE);
+        final MediaPlayer bounceSound = soundManager.mediaPlayer(SoundID.BONUS_ACTIVE);
         if (bounceSound != null) {
             bounceSound.setRate(0.25);
         }
@@ -273,7 +274,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     @Override
     public GameScene2D_Renderer createGameSceneRenderer(Canvas canvas, GameScene2D gameScene2D) {
-        GameScene2D_Renderer renderer = switch (gameScene2D) {
+        final GameScene2D_Renderer renderer = switch (gameScene2D) {
             case TengenMsPacMan_BootScene ignored -> new TengenMsPacMan_BootScene_Renderer(gameScene2D, canvas);
             case TengenMsPacMan_IntroScene ignored -> new TengenMsPacMan_IntroScene_Renderer(gameScene2D, canvas, TengenMsPacMan_SpriteSheet.INSTANCE);
             case TengenMsPacMan_OptionsScene ignored -> new TengenMsPacMan_OptionsScene_Renderer(gameScene2D, canvas, TengenMsPacMan_SpriteSheet.INSTANCE);
@@ -289,7 +290,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     @Override
     public TengenMsPacMan_GameLevelRenderer createGameLevelRenderer(Canvas canvas) {
-        var renderer = new TengenMsPacMan_GameLevelRenderer(canvas, this);
+        final var renderer = new TengenMsPacMan_GameLevelRenderer(canvas, this);
         renderer.backgroundProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
         return renderer;
     }
@@ -318,13 +319,13 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     @Override
     public Image killedGhostPointsImage(int killedIndex) {
-        RectShort[] numberSprites = TengenMsPacMan_SpriteSheet.INSTANCE.spriteSequence(SpriteID.GHOST_NUMBERS);
+        final RectShort[] numberSprites = TengenMsPacMan_SpriteSheet.INSTANCE.spriteSequence(SpriteID.GHOST_NUMBERS);
         return TengenMsPacMan_SpriteSheet.INSTANCE.image(numberSprites[killedIndex]);
     }
 
     @Override
     public Image bonusSymbolImage(byte symbol) {
-        RectShort[] symbolSprites = TengenMsPacMan_SpriteSheet.INSTANCE.spriteSequence(SpriteID.BONUS_SYMBOLS);
+        final RectShort[] symbolSprites = TengenMsPacMan_SpriteSheet.INSTANCE.spriteSequence(SpriteID.BONUS_SYMBOLS);
         return TengenMsPacMan_SpriteSheet.INSTANCE.image(symbolSprites[symbol]);
     }
 
@@ -332,26 +333,26 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     public Image bonusValueImage(byte symbol) {
         //TODO: should this logic be implemented here?
         // 0=100,1=200,2=500,3=700,4=1000,5=2000,6=3000,7=4000,8=5000,9=6000,10=7000,11=8000,12=9000, 13=10_000
-        byte usedSymbol = switch (symbol) {
+        final byte usedSymbol = switch (symbol) {
             case TengenMsPacMan_GameModel.BONUS_BANANA    -> 8; // 5000!
             case TengenMsPacMan_GameModel.BONUS_MILK      -> 6; // 3000!
             case TengenMsPacMan_GameModel.BONUS_ICE_CREAM -> 7; // 4000!
             default -> symbol;
         };
-        RectShort[] sprites = TengenMsPacMan_SpriteSheet.INSTANCE.spriteSequence(SpriteID.BONUS_VALUES);
+        final RectShort[] sprites = TengenMsPacMan_SpriteSheet.INSTANCE.spriteSequence(SpriteID.BONUS_VALUES);
         return TengenMsPacMan_SpriteSheet.INSTANCE.image(sprites[usedSymbol]);
     }
 
     @Override
     public WorldMapColorScheme colorScheme(WorldMap worldMap) {
-        NES_ColorScheme scheme = worldMap.getConfigValue(CONFIG_KEY_NES_COLOR_SCHEME);
+        final NES_ColorScheme scheme = worldMap.getConfigValue(CONFIG_KEY_NES_COLOR_SCHEME);
         return new WorldMapColorScheme(scheme.fillColorRGB(), scheme.strokeColorRGB(), scheme.strokeColorRGB(), scheme.pelletColorRGB());
     }
 
     @Override
     public Ghost createGhostWithAnimations(byte personality) {
         requireValidGhostPersonality(personality);
-        Ghost ghost = switch (personality) {
+        final Ghost ghost = switch (personality) {
             case RED_GHOST_SHADOW   -> new Blinky();
             case PINK_GHOST_SPEEDY  -> new Pinky();
             case CYAN_GHOST_BASHFUL -> new Inky();
@@ -431,7 +432,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     @Override
     public Optional<GameScene> selectGameScene(Game game) {
-        String sceneID = switch (game.control().state()) {
+        final String sceneID = switch (game.control().state()) {
             case BOOT -> SCENE_ID_BOOT_SCENE;
             case SETTING_OPTIONS_FOR_START -> SCENE_ID_START_SCENE;
             case SHOWING_HALL_OF_FAME -> SCENE_ID_HALL_OF_FAME;
@@ -440,7 +441,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
                 if (game.optGameLevel().isEmpty()) {
                     throw new IllegalStateException("Cannot determine cut scene, no game level available");
                 }
-                int cutSceneNumber = game.level().cutSceneNumber();
+                final int cutSceneNumber = game.level().cutSceneNumber();
                 if (cutSceneNumber == 0) {
                     throw new IllegalStateException("Cannot determine cut scene after level %d".formatted(game.level().number()));
                 }
@@ -506,19 +507,19 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     }
 
     public void configureHighlightedMazeRenderInfo(RenderInfo info, GameLevel gameLevel, int frame) {
-        WorldMap worldMap = gameLevel.worldMap();
-        MazeSpriteSet mazeSpriteSet = worldMap.getConfigValue(CONFIG_KEY_MAZE_SPRITE_SET);
-        ColoredSpriteImage flashingMazeSprite = mazeSpriteSet.flashingMazeImages().get(frame);
+        final WorldMap worldMap = gameLevel.worldMap();
+        final MazeSpriteSet mazeSpriteSet = worldMap.getConfigValue(CONFIG_KEY_MAZE_SPRITE_SET);
+        final ColoredSpriteImage flashingMazeSprite = mazeSpriteSet.flashingMazeImages().get(frame);
         info.put(CommonRenderInfoKey.MAZE_IMAGE, flashingMazeSprite.spriteSheetImage());
         info.put(CommonRenderInfoKey.MAZE_SPRITE, flashingMazeSprite.sprite());
     }
 
     public void configureNormalMazeRenderInfo(RenderInfo info, MapCategory mapCategory, WorldMap worldMap, long tick) {
-        int mapNumber = worldMap.getConfigValue(CONFIG_KEY_MAP_NUMBER);
-        MazeSpriteSet mazeSpriteSet = worldMap.getConfigValue(CONFIG_KEY_MAZE_SPRITE_SET);
+        final int mapNumber = worldMap.getConfigValue(CONFIG_KEY_MAP_NUMBER);
+        final MazeSpriteSet mazeSpriteSet = worldMap.getConfigValue(CONFIG_KEY_MAZE_SPRITE_SET);
         info.put(CommonRenderInfoKey.MAZE_IMAGE, mazeSpriteSet.mazeImage().spriteSheetImage());
         if (mapCategory == MapCategory.STRANGE && mapNumber == 15) {
-            int spriteIndex = mazeAnimationSpriteIndex(tick);
+            final int spriteIndex = mazeAnimationSpriteIndex(tick);
             info.put(CommonRenderInfoKey.MAZE_SPRITE, NonArcadeMapsSpriteSheet.INSTANCE.spriteSequence(MAZE32_ANIMATED)[spriteIndex]);
         } else {
             info.put(CommonRenderInfoKey.MAZE_SPRITE, mazeSpriteSet.mazeImage().sprite());
@@ -530,7 +531,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
      * Frame pattern: (00000000 11111111 22222222 11111111)+, numFrames = 4, frameDuration = 8
      */
     private int mazeAnimationSpriteIndex(long tick) {
-        long block = (tick % 32) / 8;
+        final long block = (tick % 32) / 8;
         return (int) (block < 3 ? block : 1);
     }
 
@@ -555,7 +556,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
             case MINI    -> miniMazeSpriteSet(mapNumber, requestedColorScheme, flashCount, randomFlashColors);
             case BIG     -> bigMazeSpriteSet(mapNumber, requestedColorScheme, flashCount, randomFlashColors);
             case STRANGE -> {
-                NonArcadeMapsSpriteSheet.MazeID mazeID = worldMap.getConfigValue(CONFIG_KEY_MAZE_ID); // set by map selector!
+                final NonArcadeMapsSpriteSheet.MazeID mazeID = worldMap.getConfigValue(CONFIG_KEY_MAZE_ID); // set by map selector!
                 yield strangeMazeSpriteSet(
                     mazeID,
                     randomFlashColors ? requestedColorScheme : null,
@@ -569,7 +570,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         // All requested maze color schemes exist in the sprite sheet, we only have to select the right sprite for the
         // requested (map number, color scheme) combination:
 
-        ArcadeMapsSpriteSheet.MazeID mazeID = switch (mapNumber) {
+        final ArcadeMapsSpriteSheet.MazeID mazeID = switch (mapNumber) {
             case 1 -> ArcadeMapsSpriteSheet.MazeID.MAZE1;
             case 2 -> ArcadeMapsSpriteSheet.MazeID.MAZE2;
             case 3 -> switch (colorScheme) {
@@ -588,13 +589,13 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
             default -> throw new IllegalArgumentException("Illegal Arcade map number: " + mapNumber);
         };
 
-        RectShort mazeSprite = ArcadeMapsSpriteSheet.INSTANCE.sprite(mazeID);
-        var coloredMaze = new ColoredSpriteImage(ArcadeMapsSpriteSheet.INSTANCE.sourceImage(), mazeSprite, colorScheme);
+        final RectShort mazeSprite = ArcadeMapsSpriteSheet.INSTANCE.sprite(mazeID);
+        final var coloredMaze = new ColoredSpriteImage(ArcadeMapsSpriteSheet.INSTANCE.sourceImage(), mazeSprite, colorScheme);
 
         //TODO: Handle case when color scheme is already black & white
-        List<ColoredSpriteImage> flashingMazes = coloringService.createFlashingMazeList(
+        final List<ColoredSpriteImage> flashingMazes = coloringService.createFlashingMazeList(
             MapCategory.ARCADE, mazeID,
-                ArcadeMapsSpriteSheet.INSTANCE, mazeSprite,
+            ArcadeMapsSpriteSheet.INSTANCE, mazeSprite,
             colorScheme, NES_ColorScheme._0F_20_0F_BLACK_WHITE_BLACK,
             false, flashCount);
 
@@ -604,7 +605,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     private MazeSpriteSet miniMazeSpriteSet(
         int mapNumber, NES_ColorScheme requestedColorScheme, int flashCount, boolean randomFlashColors) {
 
-        NonArcadeMapsSpriteSheet.MazeID mazeID = switch (mapNumber) {
+        final NonArcadeMapsSpriteSheet.MazeID mazeID = switch (mapNumber) {
             case 1 -> NonArcadeMapsSpriteSheet.MazeID.MAZE34_MINI;
             case 2 -> NonArcadeMapsSpriteSheet.MazeID.MAZE35_MINI;
             case 3 -> NonArcadeMapsSpriteSheet.MazeID.MAZE36_MINI;
@@ -614,7 +615,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
             default -> throw new IllegalArgumentException("Illegal MINI map number: " + mapNumber);
         };
 
-        NES_ColorScheme originalColorScheme = switch (mapNumber) {
+        final NES_ColorScheme originalColorScheme = switch (mapNumber) {
             case 1 -> NES_ColorScheme._36_15_20_PINK_RED_WHITE;
             case 2 -> NES_ColorScheme._21_20_28_BLUE_WHITE_YELLOW;
             case 3 -> NES_ColorScheme._35_28_20_PINK_YELLOW_WHITE;
@@ -626,7 +627,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
         return coloringService.createMazeSet(
             MapCategory.MINI, mazeID,
-                NonArcadeMapsSpriteSheet.INSTANCE, NonArcadeMapsSpriteSheet.INSTANCE.sprite(mazeID),
+            NonArcadeMapsSpriteSheet.INSTANCE, NonArcadeMapsSpriteSheet.INSTANCE.sprite(mazeID),
             originalColorScheme, requestedColorScheme,
             randomFlashColors, flashCount
         );
@@ -635,7 +636,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     private MazeSpriteSet bigMazeSpriteSet(
         int mapNumber, NES_ColorScheme requestedColorScheme, int flashCount, boolean randomFlashColors) {
 
-        NonArcadeMapsSpriteSheet.MazeID mazeID = switch (mapNumber) {
+        final NonArcadeMapsSpriteSheet.MazeID mazeID = switch (mapNumber) {
             case  1 -> NonArcadeMapsSpriteSheet.MazeID.MAZE19_BIG;
             case  2 -> NonArcadeMapsSpriteSheet.MazeID.MAZE20_BIG;
             case  3 -> NonArcadeMapsSpriteSheet.MazeID.MAZE21_BIG;
@@ -650,7 +651,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
             default -> throw new IllegalArgumentException("Illegal BIG map number: " + mapNumber);
         };
 
-        NES_ColorScheme originalColorScheme = switch (mapNumber) {
+        final NES_ColorScheme originalColorScheme = switch (mapNumber) {
             case  1 -> NES_ColorScheme._07_20_20_BROWN_WHITE_WHITE;
             case  2 -> NES_ColorScheme._15_25_20_RED_ROSE_WHITE;
             case  3 -> NES_ColorScheme._0F_20_1C_BLACK_WHITE_GREEN;
@@ -683,14 +684,13 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
             ? NonArcadeMapsSpriteSheet.INSTANCE.spriteSequence(mazeID)[0]
             : NonArcadeMapsSpriteSheet.INSTANCE.sprite(mazeID);
 
-        final NES_ColorScheme originalColorScheme = colorSchemeOfNonArcadeMap(mazeID);
-        final NES_ColorScheme requestedColorScheme = optionalRandomColorScheme == null
-            ? originalColorScheme : optionalRandomColorScheme;
+        final NES_ColorScheme original = colorSchemeOfNonArcadeMap(mazeID);
+        final NES_ColorScheme requested = optionalRandomColorScheme == null ? original : optionalRandomColorScheme;
 
         return coloringService.createMazeSet(
             MapCategory.STRANGE, mazeID,
             NonArcadeMapsSpriteSheet.INSTANCE, mazeSprite,
-            originalColorScheme, requestedColorScheme,
+            original, requested,
             randomFlashColors, flashCount
         );
     }
