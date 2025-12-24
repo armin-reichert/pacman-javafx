@@ -250,7 +250,6 @@ public final class GameUI_Implementation implements GameUI {
         view.actionBindingsManager().attach(KEYBOARD);
         gameContext.currentGame().addGameEventListener(view);
         currentViewProperty().set(view);
-        view.onEnter();
     }
 
     /**
