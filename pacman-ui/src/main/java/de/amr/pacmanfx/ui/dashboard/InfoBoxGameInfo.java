@@ -55,14 +55,14 @@ public class InfoBoxGameInfo extends InfoBox {
             } else if (worldMap.hasConfigValue(GameUI_Config.CONFIG_KEY_COLOR_SCHEME)) {
                 // Pac-Man XXL game
                 WorldMapColorScheme colorScheme = worldMap.getConfigValue(GameUI_Config.CONFIG_KEY_COLOR_SCHEME);
-                Color fillColor = Color.web(colorScheme.fill());
-                Color strokeColor = Color.web(colorScheme.stroke());
+                Color fillColor = Color.web(colorScheme.walFill());
+                Color strokeColor = Color.web(colorScheme.wallStroke());
                 Color pelletColor = Color.web(colorScheme.pellet());
                 return "%s / %s / %s".formatted(formatColorHex(fillColor), formatColorHex(strokeColor), formatColorHex(pelletColor));
             } else if (worldMap.hasConfigValue(CONFIG_KEY_COLOR_MAP_INDEX)) {
                 // Arcade games
                 WorldMapColorScheme coloring = ui.currentConfig().colorScheme(worldMap);
-                return "%s / %s / %s".formatted(coloring.fill(), coloring.stroke(), coloring.pellet());
+                return "%s / %s / %s".formatted(coloring.walFill(), coloring.wallStroke(), coloring.pellet());
             } else {
                 return NO_INFO;
             }

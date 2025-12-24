@@ -78,7 +78,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         Image mazeImage = ArcadeMsPacMan_SpriteSheet.INSTANCE.image(mazeSprite);
         WorldMapColorScheme colorScheme = ArcadeMsPacMan_MapSelector.WORLD_MAP_COLOR_SCHEMES.get(index);
         Map<Color, Color> changes = Map.of(
-            Color.web(colorScheme.stroke()), ARCADE_WHITE,
+            Color.web(colorScheme.wallStroke()), ARCADE_WHITE,
             Color.web(colorScheme.door()), Color.TRANSPARENT
         );
         return Ufx.recolorImage(mazeImage, changes);

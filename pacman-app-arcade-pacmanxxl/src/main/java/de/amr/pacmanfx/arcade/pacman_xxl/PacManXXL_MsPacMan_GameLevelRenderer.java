@@ -31,8 +31,8 @@ public class PacManXXL_MsPacMan_GameLevelRenderer extends ArcadeMsPacMan_GameLev
         WorldMapColorScheme worldMapColorScheme = gameLevel.worldMap().getConfigValue(GameUI_Config.CONFIG_KEY_COLOR_SCHEME);
         var terrainColorScheme = new TerrainMapColorScheme(
             (Color) background(),
-            Color.web(worldMapColorScheme.fill()),
-            Color.web(worldMapColorScheme.stroke()),
+            Color.web(worldMapColorScheme.walFill()),
+            Color.web(worldMapColorScheme.wallStroke()),
             Color.web(worldMapColorScheme.door())
         );
         info.put("terrainMapColorScheme", terrainColorScheme);
