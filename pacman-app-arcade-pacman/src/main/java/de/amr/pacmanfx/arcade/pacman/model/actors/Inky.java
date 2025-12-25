@@ -13,7 +13,7 @@ import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
 
 public class Inky extends Ghost {
 
-    protected Inky() {
+    public Inky() {
         super(CYAN_GHOST_BASHFUL, "Inky");
         reset();
     }

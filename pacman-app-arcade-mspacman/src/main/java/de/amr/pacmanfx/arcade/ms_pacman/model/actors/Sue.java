@@ -8,7 +8,7 @@ import de.amr.pacmanfx.arcade.pacman.model.actors.Clyde;
 
 public class Sue extends Clyde {
 
-    Sue() {
+    public Sue() {
         super("Sue");
     }
 }

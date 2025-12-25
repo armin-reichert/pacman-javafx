@@ -48,6 +48,26 @@ import static java.util.Objects.requireNonNull;
  */
 public class ArcadePacMan_GameModel extends Arcade_GameModel implements LevelCounter {
 
+    public static Blinky createBlinky() {
+        return new Blinky();
+    }
+
+    public static Clyde createClyde() {
+        return new Clyde();
+    }
+
+    public static Inky createInky() {
+        return new Inky();
+    }
+
+    public static Pinky createPinky() {
+        return new Pinky();
+    }
+
+    public static PacMan createPacMan() {
+        return new PacMan();
+    }
+
     protected static final int MAX_LEVEL_COUNTER_SYMBOLS = 7;
 
     protected static final List<Vector2b> DEMO_LEVEL_ROUTE = List.of(
@@ -141,23 +161,23 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel implements LevelCou
         level.setPacPowerSeconds(levelData.secPacPower());
         level.setPacPowerFadingSeconds(0.5f * numFlashes); //TODO correct?
 
-        final PacMan pacMan = ArcadePacMan_ActorFactory.createPacMan();
+        final PacMan pacMan = createPacMan();
         pacMan.setAutomaticSteering(automaticSteering);
         level.setPac(pacMan);
 
-        final Blinky blinky = ArcadePacMan_ActorFactory.createBlinky();
+        final Blinky blinky = createBlinky();
         blinky.setHome(house);
         setGhostStartPosition(blinky, terrain.getTileProperty(POS_GHOST_1_RED));
 
-        final Pinky pinky = ArcadePacMan_ActorFactory.createPinky();
+        final Pinky pinky = createPinky();
         pinky.setHome(house);
         setGhostStartPosition(pinky, terrain.getTileProperty(POS_GHOST_2_PINK));
 
-        final Inky inky = ArcadePacMan_ActorFactory.createInky();
+        final Inky inky = createInky();
         inky.setHome(house);
         setGhostStartPosition(inky, terrain.getTileProperty(POS_GHOST_3_CYAN));
 
-        final Clyde clyde = ArcadePacMan_ActorFactory.createClyde();
+        final Clyde clyde = createClyde();
         clyde.setHome(house);
         setGhostStartPosition(clyde, terrain.getTileProperty(POS_GHOST_4_ORANGE));
 

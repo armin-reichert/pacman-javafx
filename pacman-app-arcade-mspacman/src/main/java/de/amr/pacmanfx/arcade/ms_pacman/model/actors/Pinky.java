@@ -17,7 +17,7 @@ import de.amr.pacmanfx.model.HuntingPhase;
  */
 public class Pinky extends de.amr.pacmanfx.arcade.pacman.model.actors.Pinky {
 
-    Pinky() {}
+    public Pinky() {}
 
     @Override
     public void hunt(GameLevel gameLevel, float speed) {

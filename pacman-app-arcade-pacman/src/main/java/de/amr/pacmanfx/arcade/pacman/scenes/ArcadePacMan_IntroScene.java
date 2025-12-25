@@ -5,9 +5,9 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
+import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController.GameState;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_HUD;
-import de.amr.pacmanfx.arcade.pacman.model.actors.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Pulse;
 import de.amr.pacmanfx.lib.TickTimer;
@@ -96,7 +96,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
         blinking = new Pulse(10, Pulse.State.ON);
 
-        pacMan = ArcadePacMan_ActorFactory.createPacMan();
+        pacMan = ArcadePacMan_GameModel.createPacMan();
         pacMan.setAnimationManager(uiConfig.createPacAnimations());
         pacMan.selectAnimation(CommonAnimationID.ANIM_PAC_MUNCHING);
 

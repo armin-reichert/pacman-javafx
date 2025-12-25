@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman;
 
-import de.amr.pacmanfx.arcade.pacman.model.actors.ArcadePacMan_ActorFactory;
+import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.rendering.*;
 import de.amr.pacmanfx.arcade.pacman.scenes.*;
 import de.amr.pacmanfx.lib.math.RectShort;
@@ -228,10 +228,10 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
     @Override
     public Ghost createGhostWithAnimations(byte personality) {
         final Ghost ghost = switch (personality) {
-            case RED_GHOST_SHADOW   -> ArcadePacMan_ActorFactory.createBlinky();
-            case PINK_GHOST_SPEEDY  -> ArcadePacMan_ActorFactory.createPinky();
-            case CYAN_GHOST_BASHFUL -> ArcadePacMan_ActorFactory.createInky();
-            case ORANGE_GHOST_POKEY -> ArcadePacMan_ActorFactory.createClyde();
+            case RED_GHOST_SHADOW   -> ArcadePacMan_GameModel.createBlinky();
+            case PINK_GHOST_SPEEDY  -> ArcadePacMan_GameModel.createPinky();
+            case CYAN_GHOST_BASHFUL -> ArcadePacMan_GameModel.createInky();
+            case ORANGE_GHOST_POKEY -> ArcadePacMan_GameModel.createClyde();
             default -> throw new IllegalArgumentException("Illegal ghost personality: " + personality);
         };
         ghost.setAnimationManager(createGhostAnimations(personality));

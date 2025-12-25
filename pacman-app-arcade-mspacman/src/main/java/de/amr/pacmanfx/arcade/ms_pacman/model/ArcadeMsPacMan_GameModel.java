@@ -48,6 +48,26 @@ import static java.util.Objects.requireNonNull;
  */
 public class ArcadeMsPacMan_GameModel extends Arcade_GameModel implements LevelCounter {
 
+    public static Blinky createBlinky() {
+        return new Blinky();
+    }
+
+    public static Sue createSue() {
+        return new Sue();
+    }
+
+    public static Inky createInky() {
+        return new Inky();
+    }
+
+    public static Pinky createPinky() {
+        return new Pinky();
+    }
+
+    public static MsPacMan createMsPacMan() {
+        return new MsPacMan();
+    }
+
     public static final int MAX_LEVEL_COUNTER_SYMBOLS = 7;
 
     private static final int DEMO_LEVEL_MIN_DURATION_MILLIS = 20_000;
@@ -126,23 +146,23 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel implements LevelC
         level.setPacPowerSeconds(levelData.secPacPower());
         level.setPacPowerFadingSeconds(0.5f * numFlashes); //TODO correct?
 
-        final MsPacMan msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
+        final MsPacMan msPacMan = createMsPacMan();
         msPacMan.setAutomaticSteering(automaticSteering);
         level.setPac(msPacMan);
 
-        final Blinky blinky = ArcadeMsPacMan_ActorFactory.createBlinky();
+        final Blinky blinky = createBlinky();
         blinky.setHome(house);
         setGhostStartPosition(blinky, terrain.getTileProperty(POS_GHOST_1_RED));
 
-        final Pinky pinky = ArcadeMsPacMan_ActorFactory.createPinky();
+        final Pinky pinky = createPinky();
         pinky.setHome(house);
         setGhostStartPosition(pinky, terrain.getTileProperty(POS_GHOST_2_PINK));
 
-        final Inky inky = ArcadeMsPacMan_ActorFactory.createInky();
+        final Inky inky = createInky();
         inky.setHome(house);
         setGhostStartPosition(inky, terrain.getTileProperty(POS_GHOST_3_CYAN));
 
-        final Sue sue = ArcadeMsPacMan_ActorFactory.createSue();
+        final Sue sue = createSue();
         sue.setHome(house);
         setGhostStartPosition(sue, terrain.getTileProperty(POS_GHOST_4_ORANGE));
 

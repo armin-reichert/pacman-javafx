@@ -20,7 +20,7 @@ public class Blinky extends Ghost {
     private boolean cruiseElroyEnabled;
     private ElroyMode elroyMode;
 
-    protected Blinky() {
+    public Blinky() {
         super(RED_GHOST_SHADOW, "Blinky");
         reset();
         cruiseElroyEnabled = false;

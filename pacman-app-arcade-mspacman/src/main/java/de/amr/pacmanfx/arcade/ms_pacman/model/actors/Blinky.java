@@ -10,7 +10,7 @@ import de.amr.pacmanfx.model.HuntingPhase;
 
 public class Blinky extends de.amr.pacmanfx.arcade.pacman.model.actors.Blinky {
 
-    Blinky() {}
+    public Blinky() {}
 
     /**
      * In Ms. Pac-Man, Blinky and Pinky move randomly during the *first* scatter phase. Some say,

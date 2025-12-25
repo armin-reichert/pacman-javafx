@@ -5,7 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
-import de.amr.pacmanfx.arcade.ms_pacman.model.actors.ArcadeMsPacMan_ActorFactory;
+import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
+import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_HUD;
 import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.lib.math.Direction;
@@ -59,10 +60,10 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
         final var hud = (Arcade_HUD) game.hud();
         hud.credit(false).score(true).levelCounter(true).livesCounter(false).show();
 
-        pacMan = ArcadeMsPacMan_ActorFactory.createPacMan();
+        pacMan = ArcadePacMan_GameModel.createPacMan();
         pacMan.setAnimationManager(uiConfig.createPacAnimations());
 
-        msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
+        msPacMan = ArcadeMsPacMan_GameModel.createMsPacMan();
         msPacMan.setAnimationManager(uiConfig.createPacAnimations());
 
         clapperboard = new Clapperboard("2", "THE CHASE");

@@ -12,7 +12,7 @@ import static de.amr.pacmanfx.Globals.ORANGE_GHOST_POKEY;
 
 public class Clyde extends Ghost {
 
-    protected Clyde() {
+    public Clyde() {
         super(ORANGE_GHOST_POKEY, "Clyde");
         reset();
     }

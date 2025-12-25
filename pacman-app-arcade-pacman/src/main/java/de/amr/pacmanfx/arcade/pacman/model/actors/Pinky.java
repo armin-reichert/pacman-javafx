@@ -12,7 +12,7 @@ import static de.amr.pacmanfx.Globals.PINK_GHOST_SPEEDY;
 
 public class Pinky extends Ghost {
 
-    protected Pinky() {
+    public Pinky() {
         super(PINK_GHOST_SPEEDY, "Pinky");
         reset();
     }

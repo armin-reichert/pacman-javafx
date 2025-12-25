@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman;
 
+import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_MapSelector;
-import de.amr.pacmanfx.arcade.ms_pacman.model.actors.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.*;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.*;
 import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_BootScene2D_Renderer;
@@ -237,10 +237,10 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     public Ghost createGhostWithAnimations(byte personality) {
         requireValidGhostPersonality(personality);
         final Ghost ghost = switch (personality) {
-            case RED_GHOST_SHADOW   -> ArcadeMsPacMan_ActorFactory.createBlinky();
-            case PINK_GHOST_SPEEDY  -> ArcadeMsPacMan_ActorFactory.createPinky();
-            case CYAN_GHOST_BASHFUL -> ArcadeMsPacMan_ActorFactory.createInky();
-            case ORANGE_GHOST_POKEY -> ArcadeMsPacMan_ActorFactory.createSue();
+            case RED_GHOST_SHADOW   -> ArcadeMsPacMan_GameModel.createBlinky();
+            case PINK_GHOST_SPEEDY  -> ArcadeMsPacMan_GameModel.createPinky();
+            case CYAN_GHOST_BASHFUL -> ArcadeMsPacMan_GameModel.createInky();
+            case ORANGE_GHOST_POKEY -> ArcadeMsPacMan_GameModel.createSue();
             default -> throw new IllegalArgumentException("Illegal ghost personality " + personality);
         };
         ghost.setAnimationManager(createGhostAnimations(personality));
