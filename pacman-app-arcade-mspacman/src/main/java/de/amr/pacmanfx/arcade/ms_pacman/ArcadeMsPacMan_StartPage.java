@@ -5,23 +5,17 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.pacmanfx.model.StandardGameVariant;
-import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.layout.FlyerStartPage;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
-import de.amr.pacmanfx.uilib.widgets.Flyer;
 
 public class ArcadeMsPacMan_StartPage extends FlyerStartPage {
 
     private static final ResourceManager LOCAL_RESOURCES = () -> ArcadeMsPacMan_StartPage.class;
 
     public ArcadeMsPacMan_StartPage() {
-        super(StandardGameVariant.MS_PACMAN.name());
-        title = "Ms. Pac-Man (Arcade)";
-    }
-
-    @Override
-    protected Flyer createFlyer() {
-        return new Flyer(
+        super(
+            StandardGameVariant.MS_PACMAN.name(),
+            "Ms. Pac-Man (Arcade)",
             LOCAL_RESOURCES.loadImage("graphics/flyer-page-1.jpg"),
             LOCAL_RESOURCES.loadImage("graphics/flyer-page-2.jpg")
         );
