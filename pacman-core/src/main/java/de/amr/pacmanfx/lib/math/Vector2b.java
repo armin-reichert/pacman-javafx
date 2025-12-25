@@ -6,7 +6,7 @@ package de.amr.pacmanfx.lib.math;
 
 public record Vector2b(byte x, byte y) {
 
-    public static Vector2b vec2Byte(int x, int y) { return new Vector2b(x, y); }
+    public static Vector2b vector2b(int x, int y) { return new Vector2b(x, y); }
 
     public Vector2b(int x, int y) {
         this((byte) x, (byte) y);

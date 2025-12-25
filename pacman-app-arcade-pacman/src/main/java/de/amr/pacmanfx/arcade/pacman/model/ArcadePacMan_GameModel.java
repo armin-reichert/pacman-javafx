@@ -28,7 +28,7 @@ import static de.amr.pacmanfx.Globals.ORANGE_GHOST_POKEY;
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
 import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
 import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomFloat;
-import static de.amr.pacmanfx.lib.math.Vector2b.vec2Byte;
+import static de.amr.pacmanfx.lib.math.Vector2b.vector2b;
 import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;
 
@@ -48,25 +48,26 @@ import static java.util.Objects.requireNonNull;
  */
 public class ArcadePacMan_GameModel extends Arcade_GameModel implements LevelCounter {
 
-    public static final int MAX_LEVEL_COUNTER_SYMBOLS = 7;
+    protected static final int MAX_LEVEL_COUNTER_SYMBOLS = 7;
 
-    private static final List<Vector2b> PAC_MAN_DEMO_LEVEL_ROUTE = List.of(
-        vec2Byte(9, 26), vec2Byte(9, 29), vec2Byte(12,29), vec2Byte(12, 32), vec2Byte(26,32),
-        vec2Byte(26,29), vec2Byte(24,29), vec2Byte(24,26), vec2Byte(26,26),  vec2Byte(26,23),
-        vec2Byte(21,23), vec2Byte(18,23), vec2Byte(18,14), vec2Byte(9,14),   vec2Byte(9,17),
-        vec2Byte(6,17),  vec2Byte(6,4),   vec2Byte(1,4),   vec2Byte(1,8),    vec2Byte(12,8),
-        vec2Byte(12,4),  vec2Byte(6,4),   vec2Byte(6,11),  vec2Byte(1,11),   vec2Byte(1,8),
-        vec2Byte(9,8),   vec2Byte(9,11),  vec2Byte(12,11), vec2Byte(12,14),  vec2Byte(9,14),
-        vec2Byte(9,17),  vec2Byte(0,17), /*warp tunnel*/   vec2Byte(21,17),  vec2Byte(21,29),
-        vec2Byte(26,29), vec2Byte(26,32), vec2Byte(1,32),  vec2Byte(1,29),   vec2Byte(3,29),
-        vec2Byte(3,26),  vec2Byte(1,26),  vec2Byte(1,23),  vec2Byte(12,23),  vec2Byte(12,26),
-        vec2Byte(15,26), vec2Byte(15,23), vec2Byte(26,23), vec2Byte(26,26),  vec2Byte(24,26),
-        vec2Byte(24,29), vec2Byte(26,29), vec2Byte(26,32), vec2Byte(1,32),
-        vec2Byte(1,29),  vec2Byte(3,29),  vec2Byte(3,26),  vec2Byte(1,26),   vec2Byte(1,23),
-        vec2Byte(6,23) /* eaten at 3,23 in original game */
+    protected static final List<Vector2b> DEMO_LEVEL_ROUTE = List.of(
+        vector2b(9, 26), vector2b(9, 29), vector2b(12,29), vector2b(12, 32), vector2b(26,32),
+        vector2b(26,29), vector2b(24,29), vector2b(24,26), vector2b(26,26),  vector2b(26,23),
+        vector2b(21,23), vector2b(18,23), vector2b(18,14), vector2b(9,14),   vector2b(9,17),
+        vector2b(6,17),  vector2b(6,4),   vector2b(1,4),   vector2b(1,8),    vector2b(12,8),
+        vector2b(12,4),  vector2b(6,4),   vector2b(6,11),  vector2b(1,11),   vector2b(1,8),
+        vector2b(9,8),   vector2b(9,11),  vector2b(12,11), vector2b(12,14),  vector2b(9,14),
+        vector2b(9,17),  vector2b(0,17), /*warp tunnel*/   vector2b(21,17),  vector2b(21,29),
+        vector2b(26,29), vector2b(26,32), vector2b(1,32),  vector2b(1,29),   vector2b(3,29),
+        vector2b(3,26),  vector2b(1,26),  vector2b(1,23),  vector2b(12,23),  vector2b(12,26),
+        vector2b(15,26), vector2b(15,23), vector2b(26,23), vector2b(26,26),  vector2b(24,26),
+        vector2b(24,29), vector2b(26,29), vector2b(26,32), vector2b(1,32),
+        vector2b(1,29),  vector2b(3,29),  vector2b(3,26),  vector2b(1,26),   vector2b(1,23),
+        vector2b(6,23)   /* Pac-Man gets eaten at tile (3,23) in Arcade game demo level */
     );
 
     protected static final int GAME_OVER_STATE_TICKS = 90;
+
     protected static final Vector2i DEFAULT_BONUS_TILE = new Vector2i(13, 20);
 
     protected final WorldMapSelector mapSelector;
@@ -86,19 +87,19 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel implements LevelCou
         this.mapSelector = requireNonNull(mapSelector);
 
         this.gateKeeper = new GateKeeper();
-        this.gateKeeper.setOnGhostReleased((gameLevel, prisoner) -> {
-            final var blinky = (Blinky) gameLevel.ghost(RED_GHOST_SHADOW);
-            if (prisoner.personality() == ORANGE_GHOST_POKEY
-                && blinky.elroyMode() != Blinky.ElroyMode.NONE && !blinky.isCruiseElroyEnabled()) {
-                Logger.debug("Re-enable Blinky 'Cruise Elroy' mode because {} got released:", prisoner.name());
-                blinky.setCruiseElroyEnabled(true);
+        this.gateKeeper.setOnGhostReleased((level, prisoner) -> {
+            if (prisoner.personality() == ORANGE_GHOST_POKEY && level.ghost(RED_GHOST_SHADOW) instanceof Blinky blinky) {
+                if (blinky.elroyMode() != Blinky.ElroyMode.NONE && !blinky.isCruiseElroyEnabled()) {
+                    Logger.debug("Re-enable Blinky 'Cruise Elroy' mode because {} got released:", prisoner.name());
+                    blinky.setCruiseElroyEnabled(true);
+                }
             }
         });
 
-        this.demoLevelSteering = new RouteBasedSteering(PAC_MAN_DEMO_LEVEL_ROUTE);
+        this.demoLevelSteering = new RouteBasedSteering(DEMO_LEVEL_ROUTE);
         this.automaticSteering = new RuleBasedPacSteering();
 
-        mapSelector.loadAllMapPrototypes();
+        this.mapSelector.loadAllMapPrototypes();
     }
 
     @Override
