@@ -148,11 +148,10 @@ public final class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
 
         // -- Cut scenes sprites
         SPRITE_MAP.add(SpriteID.RED_GHOST_STRETCHED, clipSpriteTiles(8, 6, 5));
-        SPRITE_MAP.add(SpriteID.RED_GHOST_DAMAGED,
-            clipSpriteRect(SQUARE_SIZE * 8 + 1, SQUARE_SIZE * 7 + 1, 14, 14),
-            clipSpriteRect(SQUARE_SIZE * 9 + 1, SQUARE_SIZE * 7 + 1, 14, 14)
-        );
-        SPRITE_MAP.add(SpriteID.RED_GHOST_PATCHED, clipSpriteTiles(10, 7, 2));
+
+        SPRITE_MAP.add(SpriteID.RED_GHOST_DAMAGED, rect(585, 113, 14, 14), rect(601, 113, 14, 14));
+        SPRITE_MAP.add(SpriteID.RED_GHOST_PATCHED, rect(617, 113, 14, 14), rect(633, 113, 14, 14));
+
         SPRITE_MAP.add(SpriteID.RED_GHOST_NAKED,
             clipSpriteRect(SQUARE_SIZE * 8, SQUARE_SIZE * 8, SQUARE_SIZE * 2, SQUARE_SIZE),
             clipSpriteRect(SQUARE_SIZE * 10, SQUARE_SIZE * 8, SQUARE_SIZE * 2, SQUARE_SIZE)
