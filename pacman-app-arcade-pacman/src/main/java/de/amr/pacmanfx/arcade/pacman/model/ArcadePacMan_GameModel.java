@@ -85,9 +85,6 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel implements LevelCou
 
         this.mapSelector = requireNonNull(mapSelector);
 
-        bonus1PelletsEaten = 70;
-        bonus2PelletsEaten = 170;
-
         this.gateKeeper = new GateKeeper();
         this.gateKeeper.setOnGhostReleased((gameLevel, prisoner) -> {
             final var blinky = (Blinky) gameLevel.ghost(RED_GHOST_SHADOW);
@@ -170,6 +167,17 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel implements LevelCou
             .filter(tile -> terrain.content(tile) == TerrainTile.ONE_WAY_DOWN.$)
             .toList();
         level.ghosts().forEach(ghost -> ghost.setSpecialTerrainTiles(oneWayDownTiles));
+
+        final int totalFoodCount = worldMap.foodLayer().totalFoodCount();
+        if (totalFoodCount == 244) {
+            // Original Arcade map
+            bonus1PelletsEaten = 70;
+            bonus2PelletsEaten = 170;
+        } else {
+            // XXL maps may have different food count
+            bonus1PelletsEaten = totalFoodCount / 4;
+            bonus2PelletsEaten = totalFoodCount * 3 / 4;
+        }
 
         // Each level has a single bonus symbol appearing twice during the level. From level 13 on, the same symbol
         // (code=7, "key") appears. Klingt komisch? Is aber so!

@@ -76,9 +76,6 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel implements LevelC
 
         this.mapSelector = requireNonNull(mapSelector);
 
-        bonus1PelletsEaten = 64;
-        bonus2PelletsEaten = 176;
-
         this.gateKeeper = new GateKeeper();
         this.gateKeeper.setOnGhostReleased((level, prisoner) -> {
             final var blinky = (Blinky) level.ghost(RED_GHOST_SHADOW);
@@ -155,6 +152,20 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel implements LevelC
         setGhostStartPosition(sue, terrain.getTileProperty(POS_GHOST_4_ORANGE));
 
         level.setGhosts(blinky, pinky, inky, sue);
+
+        final int totalFoodCount = worldMap.foodLayer().totalFoodCount();
+        switch (totalFoodCount) {
+            case 224, 238, 242, 244 -> {
+                // Original Arcade maps
+                bonus1PelletsEaten = 64;
+                bonus2PelletsEaten = 176;
+            }
+            default -> {
+                // XXL maps might be much larger
+                bonus1PelletsEaten = totalFoodCount / 4;
+                bonus2PelletsEaten = totalFoodCount * 3 / 4;
+            }
+        }
 
         level.setBonusSymbol(0, computeBonusSymbol(levelNumber));
         level.setBonusSymbol(1, computeBonusSymbol(levelNumber));
