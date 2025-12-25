@@ -4,14 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman.model;
 
-import de.amr.pacmanfx.arcade.ms_pacman.model.actors.ArcadeMsPacMan_ActorFactory;
-import de.amr.pacmanfx.arcade.ms_pacman.model.actors.MsPacMan;
-import de.amr.pacmanfx.arcade.ms_pacman.model.actors.Sue;
+import de.amr.pacmanfx.arcade.ms_pacman.model.actors.*;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
-import de.amr.pacmanfx.arcade.pacman.model.actors.Blinky;
-import de.amr.pacmanfx.arcade.pacman.model.actors.Inky;
-import de.amr.pacmanfx.arcade.pacman.model.actors.Pinky;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.math.Vector2b;
 import de.amr.pacmanfx.lib.math.Vector2i;
