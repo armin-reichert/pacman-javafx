@@ -108,9 +108,9 @@ public final class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
         SPRITE_MAP.add(SpriteID.PACMAN_DYING, makePacManDyingSpriteSeq());
 
         SPRITE_MAP.add(SpriteID.PACMAN_BIG,
-            clipSpriteRect(32, 16, 32, 32),
-            clipSpriteRect(64, 16, 32, 32),
-            clipSpriteRect(96, 16, 32, 32)
+            rect(488, 16, 32, 32),
+            rect(520, 16, 32, 32),
+            rect(552, 16, 33, 32)
         );
 
         // -- Ghost sprites
