@@ -88,7 +88,7 @@ public interface Game extends LevelCounter {
     GameLevel createLevel(int levelNumber, boolean demoLevel);
     void startLevel();
     void startDemoLevel(long tick);
-    void showLevelMessage(MessageType type);
+    void showLevelMessage(GameLevelMessageType type);
     void clearLevelMessage();
     boolean isLevelCompleted();
     int lastLevelNumber();

@@ -11,7 +11,7 @@ import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelMessage;
-import de.amr.pacmanfx.model.MessageType;
+import de.amr.pacmanfx.model.GameLevelMessageType;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -245,7 +245,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         TengenMsPacMan_GameModel game = context().currentGame();
         game.optGameLevel().ifPresent(level -> {
             resetAnimations(level);
-            game.showLevelMessage(MessageType.READY);
+            game.showLevelMessage(GameLevelMessageType.READY);
             dynamicCamera.enterIntroMode();
         });
     }

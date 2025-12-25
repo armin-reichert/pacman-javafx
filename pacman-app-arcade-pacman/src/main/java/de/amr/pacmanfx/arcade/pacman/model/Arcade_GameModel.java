@@ -238,7 +238,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         if (!coinMechanism.isEmpty()) {
             coinMechanism.consumeCoin();
         }
-        showLevelMessage(MessageType.GAME_OVER);
+        showLevelMessage(GameLevelMessageType.GAME_OVER);
         try {
             updateHighScore();
         } catch (IOException x) {
@@ -385,12 +385,12 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         level.recordStartTime(System.currentTimeMillis());
         level.getReadyToPlay();
         if (level.isDemoLevel()) {
-            showLevelMessage(MessageType.GAME_OVER);
+            showLevelMessage(GameLevelMessageType.GAME_OVER);
             score().setEnabled(false);
             highScore().setEnabled(false);
             Logger.info("Demo level {} started", level.number());
         } else {
-            showLevelMessage(MessageType.READY);
+            showLevelMessage(GameLevelMessageType.READY);
             updateLevelCounter(level.number(), level.bonusSymbol(0));
             score().setEnabled(true);
             updateCheatingProperties(level);
@@ -407,7 +407,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void showLevelMessage(MessageType type) {
+    public void showLevelMessage(GameLevelMessageType type) {
         requireNonNull(type);
         optGameLevel().ifPresent(level -> {
             final var message = new GameLevelMessage(type);

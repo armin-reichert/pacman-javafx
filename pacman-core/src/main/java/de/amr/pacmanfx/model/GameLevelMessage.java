@@ -11,18 +11,18 @@ import static java.util.Objects.requireNonNull;
 
 public class GameLevelMessage extends Actor {
 
-    private final MessageType type;
+    private final GameLevelMessageType type;
 
-    public GameLevelMessage(MessageType type) {
+    public GameLevelMessage(GameLevelMessageType type) {
         this.type = requireNonNull(type);
     }
 
-    public GameLevelMessage(MessageType type, Vector2f position) {
+    public GameLevelMessage(GameLevelMessageType type, Vector2f position) {
         this.type = requireNonNull(type);
         setPosition(requireNonNull(position));
     }
 
-    public MessageType type() {
+    public GameLevelMessageType type() {
         return type;
     }
 }

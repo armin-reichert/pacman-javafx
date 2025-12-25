@@ -207,7 +207,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
     @Override
     public void onGameOver() {
         setPlaying(false);
-        showLevelMessage(MessageType.GAME_OVER);
+        showLevelMessage(GameLevelMessageType.GAME_OVER);
         try {
             updateHighScore();
         } catch (IOException x) {
@@ -333,12 +333,12 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
             activatePacBooster(level.pac(), true);
         }
         if (level.isDemoLevel()) {
-            showLevelMessage(MessageType.GAME_OVER);
+            showLevelMessage(GameLevelMessageType.GAME_OVER);
             score().setEnabled(true);
             highScore().setEnabled(false);
             Logger.info("Demo level {} started", level.number());
         } else {
-            showLevelMessage(MessageType.READY);
+            showLevelMessage(GameLevelMessageType.READY);
             updateLevelCounter(level.number(), level.bonusSymbol(0));
             score().setEnabled(true);
             updateCheatingProperties(level);
@@ -377,12 +377,12 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
     }
 
     @Override
-    public void showLevelMessage(MessageType type) {
+    public void showLevelMessage(GameLevelMessageType type) {
         optGameLevel().ifPresent(level -> {
             requireNonNull(type);
             final Vector2f center = level.worldMap().terrainLayer().messageCenterPosition();
             // Non-Arcade maps have a moving "Game Over" message
-            final GameLevelMessage message = type == MessageType.GAME_OVER && mapCategory != MapCategory.ARCADE
+            final GameLevelMessage message = type == GameLevelMessageType.GAME_OVER && mapCategory != MapCategory.ARCADE
                     ? new MovingGameLevelMessage(type, center, GAME_OVER_MESSAGE_DELAY_SEC * NUM_TICKS_PER_SEC)
                     : new GameLevelMessage(type, center);
             level.setMessage(message);

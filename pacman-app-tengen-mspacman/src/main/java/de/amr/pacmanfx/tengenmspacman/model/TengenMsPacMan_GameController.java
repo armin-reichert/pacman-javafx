@@ -8,7 +8,7 @@ import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameControl;
-import de.amr.pacmanfx.model.MessageType;
+import de.amr.pacmanfx.model.GameLevelMessageType;
 
 public class TengenMsPacMan_GameController extends StateMachine<Game> implements GameControl {
 
@@ -139,7 +139,7 @@ public class TengenMsPacMan_GameController extends StateMachine<Game> implements
             }
 
             private void clearReadyMessage(Game game) {
-                game.level().optMessage().filter(message -> message.type() == MessageType.READY).ifPresent(message -> {
+                game.level().optMessage().filter(message -> message.type() == GameLevelMessageType.READY).ifPresent(message -> {
                     game.clearLevelMessage(); // leave TEST message alone
                 });
             }

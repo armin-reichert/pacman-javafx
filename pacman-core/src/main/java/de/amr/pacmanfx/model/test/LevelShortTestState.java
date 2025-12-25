@@ -43,7 +43,7 @@ public class LevelShortTestState implements StateMachine.State<Game>, TestState 
         final float START = 1.0f;
         if (timer.atSecond(START)) {
             game.continuePlaying(1);
-            GameLevelMessage message = new GameLevelMessage(MessageType.TEST);
+            GameLevelMessage message = new GameLevelMessage(GameLevelMessageType.TEST);
             message.setPosition(game.level().worldMap().terrainLayer().messageCenterPosition());
             game.level().setMessage(message);
             game.level().blinking().restart();
@@ -78,7 +78,7 @@ public class LevelShortTestState implements StateMachine.State<Game>, TestState 
             } else {
                 timer.restartIndefinitely();
                 game.startNextLevel();
-                GameLevelMessage message = new GameLevelMessage(MessageType.TEST);
+                GameLevelMessage message = new GameLevelMessage(GameLevelMessageType.TEST);
                 message.setPosition(game.level().worldMap().terrainLayer().messageCenterPosition());
                 game.level().setMessage(message);
             }

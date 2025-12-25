@@ -33,7 +33,7 @@ public class LevelMediumTestState implements StateMachine.State<Game>, TestState
         gameLevel.pac().optAnimationManager().ifPresent(AnimationManager::play);
         gameLevel.ghosts().forEach(ghost -> ghost.optAnimationManager().ifPresent(AnimationManager::play));
         gameLevel.showPacAndGhosts();
-        GameLevelMessage message = new GameLevelMessage(MessageType.TEST);
+        GameLevelMessage message = new GameLevelMessage(GameLevelMessageType.TEST);
         message.setPosition(gameLevel.worldMap().terrainLayer().messageCenterPosition());
         gameLevel.setMessage(message);
         game.hud().show();

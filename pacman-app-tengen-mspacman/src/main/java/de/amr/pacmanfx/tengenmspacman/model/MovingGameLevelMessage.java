@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.model;
 
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.model.GameLevelMessage;
-import de.amr.pacmanfx.model.MessageType;
+import de.amr.pacmanfx.model.GameLevelMessageType;
 
 import static java.util.Objects.requireNonNull;
 
@@ -23,7 +23,7 @@ public class MovingGameLevelMessage extends GameLevelMessage {
     private long delayTicks;
     private boolean playing;
 
-    public MovingGameLevelMessage(MessageType messageType, Vector2f startPosition, int delayTicks) {
+    public MovingGameLevelMessage(GameLevelMessageType messageType, Vector2f startPosition, int delayTicks) {
         super(messageType);
         this.startPosition = requireNonNull(startPosition);
         this.delayTicks = delayTicks;

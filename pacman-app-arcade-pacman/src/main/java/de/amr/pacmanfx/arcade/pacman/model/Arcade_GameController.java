@@ -8,7 +8,7 @@ import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameControl;
-import de.amr.pacmanfx.model.MessageType;
+import de.amr.pacmanfx.model.GameLevelMessageType;
 
 public class Arcade_GameController extends StateMachine<Game> implements GameControl {
 
@@ -101,7 +101,7 @@ public class Arcade_GameController extends StateMachine<Game> implements GameCon
             public void onEnter(Game game) {
                 // "GAME_OVER" (demo level) and  "TEST LEVEL XX" messages are not cleared
                 game.level().optMessage()
-                    .filter(message -> message.type() == MessageType.READY)
+                    .filter(message -> message.type() == GameLevelMessageType.READY)
                     .ifPresent(_ -> game.clearLevelMessage());
                 game.startHunting(game.level());
             }

@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelMessage;
-import de.amr.pacmanfx.model.MessageType;
+import de.amr.pacmanfx.model.GameLevelMessageType;
 import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
@@ -76,11 +76,11 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
 
     protected void drawGameLevelMessage(GameLevel gameLevel, GameLevelMessage message) {
         switch (message.type()) {
-            case MessageType.GAME_OVER -> fillTextCentered("GAME  OVER",
+            case GameLevelMessageType.GAME_OVER -> fillTextCentered("GAME  OVER",
                 ARCADE_RED, arcadeFont8(), message.x(), message.y());
-            case MessageType.READY -> fillTextCentered("READY!",
+            case GameLevelMessageType.READY -> fillTextCentered("READY!",
                 ARCADE_YELLOW, arcadeFont8(), message.x(), message.y());
-            case MessageType.TEST -> fillTextCentered("TEST    L%02d".formatted(gameLevel.number()),
+            case GameLevelMessageType.TEST -> fillTextCentered("TEST    L%02d".formatted(gameLevel.number()),
                 ARCADE_WHITE, arcadeFont8(), message.x(), message.y());
         }
     }
