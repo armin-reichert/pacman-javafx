@@ -78,11 +78,11 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel implements LevelC
 
         this.gateKeeper = new GateKeeper();
         this.gateKeeper.setOnGhostReleased((level, prisoner) -> {
-            final var blinky = (Blinky) level.ghost(RED_GHOST_SHADOW);
-            if (prisoner.personality() == ORANGE_GHOST_POKEY
-                && blinky.elroyMode() != Blinky.ElroyMode.NONE && !blinky.isCruiseElroyEnabled()) {
-                blinky.setCruiseElroyEnabled(true);
-                Logger.trace("'Cruise Elroy' mode enabled because {} exits house:", prisoner.name());
+            if (prisoner.personality() == ORANGE_GHOST_POKEY && level.ghost(RED_GHOST_SHADOW) instanceof Blinky blinky) {
+                if (blinky.elroyMode() != Blinky.ElroyMode.NONE && !blinky.isCruiseElroyEnabled()) {
+                    Logger.debug("Re-enable Blinky 'Cruise Elroy' mode because {} got released:", prisoner.name());
+                    blinky.setCruiseElroyEnabled(true);
+                }
             }
         });
 
