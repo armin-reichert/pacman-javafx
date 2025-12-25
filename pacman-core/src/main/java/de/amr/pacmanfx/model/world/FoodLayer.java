@@ -19,24 +19,25 @@ import static java.util.function.Predicate.not;
 public class FoodLayer extends WorldMapLayer {
 
     // instead of Set<Vector2i> we use a bit-set indexed by top-down-left-to-right tile index
-    private BitSet eatenFoodBits;
+    private final BitSet eatenFoodBits;
     private int totalFoodCount;
     private int uneatenFoodCount;
     private Set<Vector2i> energizerTiles;
 
     public FoodLayer(int numRows, int numCols) {
         super(numRows, numCols);
-        initFood();
+        eatenFoodBits = new BitSet(numCols() * numRows());
+        updateFoodCount();
     }
 
     public FoodLayer(WorldMapLayer layer) {
         super(layer);
-        initFood();
+        eatenFoodBits = new BitSet(numCols() * numRows());
+        updateFoodCount();
     }
 
-    public void initFood() {
+    public void updateFoodCount() {
         energizerTiles = tilesContaining(ENERGIZER.$).collect(Collectors.toSet());
-        eatenFoodBits = new BitSet(numCols() * numRows());
         totalFoodCount = (int) tilesContaining(PELLET.$).count() + energizerTiles.size();
         uneatenFoodCount = totalFoodCount;
     }

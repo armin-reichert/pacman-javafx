@@ -139,7 +139,8 @@ public interface WorldMapParser {
         var properties = new HashMap<String, String>();
         String[] lines = text.split("\n");
         for (String line : lines) {
-            if (line.startsWith("#")) continue;
+            if (line.startsWith(WorldMap.COMMENT_PREFIX))
+                continue;
             String[] sides = line.split("=");
             if (sides.length != 2) {
                 Logger.error("Invalid line inside property section: {}", line);

@@ -18,6 +18,8 @@ import static java.util.Objects.requireNonNull;
 
 public class WorldMap {
 
+    public static final String COMMENT_PREFIX = "#";
+
     public static final String MARKER_BEGIN_TERRAIN_LAYER = "!terrain";
     public static final String MARKER_BEGIN_FOOD_LAYER = "!food";
     public static final String MARKER_BEGIN_DATA_SECTION = "!data";
@@ -196,11 +198,7 @@ public class WorldMap {
         return configMap;
     }
 
-    private void printLayer(PrintWriter pw, WorldMapLayer layer, String layerMarker) {
-        pw.println(layerMarker);
-        layer.propertiesSortedByName()
-            .map(entry -> "%s=%s".formatted(entry.getKey(), entry.getValue()))
-            .forEach(pw::println);
+    private void printDataSection(PrintWriter pw, WorldMapLayer layer) {
         pw.println(MARKER_BEGIN_DATA_SECTION);
         for (int row = 0; row < layer.numRows(); ++row) {
             for (int col = 0; col < layer.numCols(); ++col) {
@@ -213,20 +211,40 @@ public class WorldMap {
         }
     }
 
+    private void printCommentLine(PrintWriter pw, String comment) {
+        pw.println(COMMENT_PREFIX + comment);
+    }
+
+    private void printLayerProperties(PrintWriter pw, WorldMapLayer layer) {
+        layer.propertiesSortedByName()
+            .map(entry -> "%s=%s".formatted(entry.getKey(), entry.getValue()))
+            .forEach(pw::println);
+    }
+
     public String sourceCode(boolean lineNumbers) {
-        var sw = new StringWriter();
-        var pw = new PrintWriter(sw);
-        printLayer(pw, terrainLayer, MARKER_BEGIN_TERRAIN_LAYER);
-        printLayer(pw, foodLayer, MARKER_BEGIN_FOOD_LAYER);
-        String source = sw.toString();
+        final var sw = new StringWriter();
+        final var pw = new PrintWriter(sw);
+
+        pw.println(MARKER_BEGIN_TERRAIN_LAYER);
+        printLayerProperties(pw, terrainLayer);
+        printDataSection(pw, terrainLayer);
+
+        pw.println(MARKER_BEGIN_FOOD_LAYER);
+        printCommentLine(pw, " Pellets (total): %d".formatted(foodLayer.totalFoodCount()));
+        printCommentLine(pw, " Energizers: %d".formatted(foodLayer.energizerTiles().size()));
+        printLayerProperties(pw, foodLayer);
+        printDataSection(pw, foodLayer);
+
+        final String source = sw.toString();
         if (lineNumbers) {
-            StringBuilder sb = new StringBuilder();
-            String[] lines = source.split("\\R");
+            final var sb = new StringBuilder();
+            final String[] lines = source.split("\\R");
             for (int lineNum = 1; lineNum <= lines.length; ++lineNum) {
                 sb.append("%5d: %s\n".formatted(lineNum, lines[lineNum-1]));
             }
             return sb.toString();
-        } else {
+        }
+        else {
             return source;
         }
     }

@@ -118,24 +118,31 @@ public class TileMapEditor {
     }
 
     private void processChanges() {
+        boolean sourceNeedsUpdate = false;
         if (terrainMapChanged || foodMapChanged) {
             checkResult = WorldMapChecker.check(currentWorldMap());
-            sourceCode.set(currentWorldMap().sourceCode(sourceCodeLineNumbers.get()));
         }
         if (terrainMapChanged) {
-            //TODO use events?
             ui.onTerrainMapChanged();
+            sourceNeedsUpdate = true;
             terrainMapChanged = false;
         }
         if (terrainMapPropertyChanged) {
+            sourceNeedsUpdate = true;
             terrainMapPropertyChanged = false;
         }
         if (foodMapChanged) {
+            currentWorldMap().foodLayer().updateFoodCount();
             ui.onFoodMapChanged();
+            sourceNeedsUpdate = true;
             foodMapChanged = false;
         }
         if (foodMapPropertyChanged) {
+            sourceNeedsUpdate = true;
             foodMapPropertyChanged = false;
+        }
+        if (sourceNeedsUpdate) {
+            sourceCode.set(currentWorldMap().sourceCode(sourceCodeLineNumbers.get()));
         }
     }
 
