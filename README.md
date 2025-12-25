@@ -32,7 +32,7 @@ In each [release](https://github.com/armin-reichert/pacman-javafx/releases) you 
 
 ## How to build
 
-Prerequisites: You need to have [Git](https://github.com/git-guides/install-git) installed on your computer.
+Prerequisites: You need to have a Java 25 compiler and [Git](https://github.com/git-guides/install-git) installed on your computer.
 
 - `git clone https://github.com/armin-reichert/pacman-javafx.git`
 - `cd pacman-javafx`
