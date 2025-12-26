@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman.model;
 
+import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.model.AbstractHuntingTimer;
 
@@ -15,16 +16,27 @@ import de.amr.pacmanfx.model.AbstractHuntingTimer;
  */
 public class ArcadeMsPacMan_HuntingTimer extends AbstractHuntingTimer {
 
-    private static final int[] HUNTING_TICKS_LEVEL_1_TO_4 = {420, 1200, 1, 62220, 1, 62220, 1, -1};
-    private static final int[] HUNTING_TICKS_LEVEL_5_PLUS = {300, 1200, 1, 62220, 1, 62220, 1, -1};
+    private static final int NUM_PHASES = 8;
+
+    // Ticks of scatter (index 0, 2, 4, 6) and chasing (1, 3, 5, 7) phases, -1 = forever
+    private static final int[] HUNTING_TICKS_LEVEL_1_TO_4 = { 420, 1200, 1, 62220, 1, 62220, 1, -1};
+    private static final int[] HUNTING_TICKS_LEVEL_5_PLUS = { 300, 1200, 1, 62220, 1, 62220, 1, -1};
 
     public ArcadeMsPacMan_HuntingTimer() {
-        super("ArcadeMsPacMan-HuntingTimer", 8);
+        super("ArcadeMsPacMan-HuntingTimer", NUM_PHASES);
     }
 
     @Override
     public long phaseDuration(int levelNumber, int phaseIndex) {
-        long ticks = levelNumber < 5 ? HUNTING_TICKS_LEVEL_1_TO_4[phaseIndex] : HUNTING_TICKS_LEVEL_5_PLUS[phaseIndex];
-        return ticks != -1 ? ticks : TickTimer.INDEFINITE;
+        Validations.requireValidLevelNumber(levelNumber);
+        if (Validations.inClosedRange(phaseIndex, 0, NUM_PHASES - 1)) {
+            long ticks = levelNumber < 5
+                ? HUNTING_TICKS_LEVEL_1_TO_4[phaseIndex]
+                : HUNTING_TICKS_LEVEL_5_PLUS[phaseIndex];
+            return ticks != -1 ? ticks : TickTimer.INDEFINITE;
+        }
+        else {
+            throw new IllegalArgumentException("Phase index " + phaseIndex + " is invalid");
+        }
     }
 }

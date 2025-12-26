@@ -8,6 +8,9 @@ import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.model.AbstractHuntingTimer;
 
+/**
+ * Values are taken from the Pac-Man dossier.
+ */
 public class ArcadePacMan_HuntingTimer extends AbstractHuntingTimer {
 
     private static final int NUM_PHASES = 8;
@@ -33,7 +36,7 @@ public class ArcadePacMan_HuntingTimer extends AbstractHuntingTimer {
             return ticks != -1 ? ticks : TickTimer.INDEFINITE;
         }
         else {
-            throw new IllegalArgumentException("Phase index " + phase() + " is invalid");
+            throw new IllegalArgumentException("Phase index " + phaseIndex + " is invalid");
         }
     }
 }
