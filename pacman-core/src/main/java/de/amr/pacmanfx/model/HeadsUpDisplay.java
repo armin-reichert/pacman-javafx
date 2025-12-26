@@ -12,25 +12,26 @@ public abstract class HeadsUpDisplay {
     private boolean scoreVisible = true;
     private int     visibleLifeCount;
 
-    // Fluent API
-
-    public HeadsUpDisplay all(boolean visible) {
+    public <HUD extends HeadsUpDisplay> HUD all(boolean visible) {
         return score(visible).levelCounter(visible).livesCounter(visible);
     }
 
-    public HeadsUpDisplay levelCounter(boolean visible) {
-        showLevelCounter(visible);
-        return this;
+    public <HUD extends HeadsUpDisplay> HUD levelCounter(boolean visible) {
+        levelCounterVisible = visible;
+        //noinspection unchecked
+        return (HUD) this;
     }
 
-    public HeadsUpDisplay livesCounter(boolean visible) {
-        showLivesCounter(visible);
-        return this;
+    public <HUD extends HeadsUpDisplay> HUD livesCounter(boolean visible) {
+        livesCounterVisible = visible;
+        //noinspection unchecked
+        return (HUD) this;
     }
 
-    public HeadsUpDisplay score(boolean visible) {
-        showScore(visible);
-        return this;
+    public <HUD extends HeadsUpDisplay> HUD score(boolean visible) {
+        scoreVisible = visible;
+        //noinspection unchecked
+        return (HUD) this;
     }
 
     public void show() { visible = true; }
@@ -45,16 +46,8 @@ public abstract class HeadsUpDisplay {
         return levelCounterVisible;
     }
 
-    public void showLevelCounter(boolean b) {
-        levelCounterVisible = b;
-    }
-
     public boolean isLivesCounterVisible() {
         return livesCounterVisible;
-    }
-
-    public void showLivesCounter(boolean b) {
-        livesCounterVisible = b;
     }
 
     public int visibleLifeCount() {
@@ -71,9 +64,5 @@ public abstract class HeadsUpDisplay {
 
     public boolean isScoreVisible() {
         return scoreVisible;
-    }
-
-    public void showScore(boolean b) {
-        scoreVisible = b;
     }
 }
