@@ -12,7 +12,7 @@ import de.amr.pacmanfx.model.GameControl;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
-import de.amr.pacmanfx.ui._2d.HUD_Renderer;
+import de.amr.pacmanfx.ui._2d.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.api.*;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
@@ -64,7 +64,7 @@ public class PlayView extends StackPane implements GameUI_View {
     private final GameUI_ContextMenu contextMenu;
 
     private GameScene2D_Renderer sceneRenderer;
-    private HUD_Renderer hudRenderer;
+    private HeadsUpDisplay_Renderer hudRenderer;
 
     public PlayView(GameUI ui, Scene parentScene) {
         this.ui = requireNonNull(ui);

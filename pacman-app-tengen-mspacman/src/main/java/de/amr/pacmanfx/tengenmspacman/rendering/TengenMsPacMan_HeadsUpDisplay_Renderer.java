@@ -8,11 +8,11 @@ import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.HUD;
+import de.amr.pacmanfx.model.HeadsUpDisplay;
 import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.tengenmspacman.model.*;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._2d.HUD_Renderer;
+import de.amr.pacmanfx.ui._2d.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
@@ -27,7 +27,7 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.nesColor;
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteRenderer, HUD_Renderer {
+public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer implements SpriteRenderer, HeadsUpDisplay_Renderer {
 
     private static final Color SCORE_TEXT_COLOR = nesColor(0x20);
     private static final Color SCORE_TEXT_COLOR_DISABLED = nesColor(0x16);
@@ -42,7 +42,7 @@ public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteR
 
     private float offsetY = 0;
 
-    public TengenMsPacMan_HUD_Renderer(Canvas canvas, TengenMsPacMan_SpriteSheet spriteSheet, GameClock clock) {
+    public TengenMsPacMan_HeadsUpDisplay_Renderer(Canvas canvas, TengenMsPacMan_SpriteSheet spriteSheet, GameClock clock) {
         super(canvas);
         this.clock = requireNonNull(clock);
         this.spriteSheet = requireNonNull(spriteSheet);
@@ -59,13 +59,13 @@ public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteR
     }
 
     @Override
-    public void draw(HUD hud, Game game, GameScene2D scene) {
+    public void draw(HeadsUpDisplay hud, Game game, GameScene2D scene) {
         requireNonNull(game);
         requireNonNull(scene);
 
         final Vector2i sceneSize = scene.unscaledSize();
         final var tengenGame = (TengenMsPacMan_GameModel) game;
-        final TengenMsPacMan_HUD tengenHUD = tengenGame.hud();
+        final TengenMsPacMan_HeadsUpDisplay tengenHUD = tengenGame.hud();
 
         if (!hud.isVisible()) return;
 
@@ -112,7 +112,7 @@ public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteR
         fillText("%6d".formatted(score.points()), color, font, TS(13), TS(2));
     }
 
-    private void drawLivesCounter(Game game, TengenMsPacMan_HUD hud, float y) {
+    private void drawLivesCounter(Game game, TengenMsPacMan_HeadsUpDisplay hud, float y) {
         RectShort sprite = spriteSheet().sprite(SpriteID.LIVES_COUNTER_SYMBOL);
         for (int i = 0; i < hud.visibleLifeCount(); ++i) {
             drawSprite(sprite, TS(4 + i * 2), y, true);
@@ -122,7 +122,7 @@ public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteR
         }
     }
 
-    private void drawLevelCounter(GameLevel level, TengenMsPacMan_HUD hud, float y) {
+    private void drawLevelCounter(GameLevel level, TengenMsPacMan_HeadsUpDisplay hud, float y) {
         final RectShort[] symbolSprites = spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS);
         float x = LEVEL_COUNTER_POS_RIGHT - TS(2);
         // symbols are drawn from right to left!

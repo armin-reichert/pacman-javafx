@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController.GameState;
-import de.amr.pacmanfx.arcade.pacman.model.Arcade_HUD;
+import de.amr.pacmanfx.arcade.pacman.model.Arcade_HeadsUpDisplay;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameStateChangeEvent;
 import de.amr.pacmanfx.lib.fsm.StateMachine.State;
@@ -57,7 +57,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     protected void doInit(Game game) {
-        final var hud = (Arcade_HUD) game.hud();
+        final var hud = (Arcade_HeadsUpDisplay) game.hud();
         hud.credit(false).score(true).levelCounter(true).livesCounter(true).show();
     }
 
@@ -165,7 +165,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
         else if (e.newState() == GameState.GAME_OVER) {
             soundManager().stopAll();
             soundManager().play(SoundID.GAME_OVER);
-            final var hud = (Arcade_HUD) game.hud();
+            final var hud = (Arcade_HeadsUpDisplay) game.hud();
             hud.credit(true);
         }
     }
@@ -245,7 +245,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
      */
     private void acceptGameLevel(GameLevel level) {
         final Game game = level.game();
-        final var hud = (Arcade_HUD) game.hud();
+        final var hud = (Arcade_HeadsUpDisplay) game.hud();
         final boolean demoLevel = level.isDemoLevel();
         hud.credit(false).levelCounter(true).show();
         if (demoLevel) {
@@ -267,7 +267,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
         // While Pac-Man is still invisible on level start, one entry more is shown in the lives counter
         final boolean oneExtra = game.control().state() == GameState.STARTING_GAME_OR_LEVEL && !level.pac().isVisible();
         final int livesDisplayed = oneExtra ? game.lifeCount() : game.lifeCount() - 1;
-        final var hud = (Arcade_HUD) game.hud();
+        final var hud = (Arcade_HeadsUpDisplay) game.hud();
         hud.setVisibleLifeCount(Math.clamp(livesDisplayed, 0, hud.maxLivesDisplayed()));
     }
 

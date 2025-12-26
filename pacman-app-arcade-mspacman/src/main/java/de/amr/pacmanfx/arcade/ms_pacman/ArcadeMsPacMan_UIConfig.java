@@ -23,7 +23,7 @@ import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
-import de.amr.pacmanfx.ui._2d.HUD_Renderer;
+import de.amr.pacmanfx.ui._2d.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameScene_Config;
 import de.amr.pacmanfx.ui.api.GameUI;
@@ -220,8 +220,8 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     }
 
     @Override
-    public HUD_Renderer createHUDRenderer(Canvas canvas, GameScene2D gameScene2D) {
-        final var hudRenderer = new ArcadeMsPacMan_HUDRenderer(canvas, ArcadeMsPacMan_SpriteSheet.INSTANCE);
+    public HeadsUpDisplay_Renderer createHUDRenderer(Canvas canvas, GameScene2D gameScene2D) {
+        final var hudRenderer = new ArcadeMsPacMan_HeadsUpDisplayRenderer(canvas, ArcadeMsPacMan_SpriteSheet.INSTANCE);
         hudRenderer.setImageSmoothing(true);
         gameScene2D.adaptRenderer(hudRenderer);
         return hudRenderer;

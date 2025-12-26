@@ -12,7 +12,7 @@ import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
-import de.amr.pacmanfx.ui._2d.HUD_Renderer;
+import de.amr.pacmanfx.ui._2d.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
@@ -102,7 +102,7 @@ public interface GameUI_Config extends Disposable {
      * @param gameScene2D game scene
      * @return a new renderer for the heads-up display (HUD)
      */
-    HUD_Renderer createHUDRenderer(Canvas canvas, GameScene2D gameScene2D);
+    HeadsUpDisplay_Renderer createHUDRenderer(Canvas canvas, GameScene2D gameScene2D);
 
     /**
      * @param canvas the canvas where the 2D scene gets rendered

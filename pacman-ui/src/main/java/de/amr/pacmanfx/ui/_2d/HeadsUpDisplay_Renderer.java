@@ -5,10 +5,10 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui._2d;
 
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.HUD;
+import de.amr.pacmanfx.model.HeadsUpDisplay;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 
-public interface HUD_Renderer extends Renderer {
+public interface HeadsUpDisplay_Renderer extends Renderer {
 
     /**
      * Draws the Head-Up Display (score, live counter, level counter, coins inserted)
@@ -17,5 +17,5 @@ public interface HUD_Renderer extends Renderer {
      * @param game the game model
      * @param scene 2D scene
      */
-    void draw(HUD hud, Game game, GameScene2D scene);
+    void draw(HeadsUpDisplay hud, Game game, GameScene2D scene);
 }

@@ -134,7 +134,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel implements LevelCou
     }
 
     @Override
-    public HUD hud() {
+    public HeadsUpDisplay hud() {
         return hud;
     }
 

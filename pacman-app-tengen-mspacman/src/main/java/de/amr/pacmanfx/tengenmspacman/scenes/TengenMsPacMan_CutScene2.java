@@ -13,7 +13,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_HUD;
+import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_HeadsUpDisplay;
 import de.amr.pacmanfx.tengenmspacman.model.actors.MsPacMan;
 import de.amr.pacmanfx.tengenmspacman.model.actors.PacMan;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SpriteSheet;
@@ -66,7 +66,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
         final GameUI_Config uiConfig = ui.currentConfig();
         final var spriteSheet = (TengenMsPacMan_SpriteSheet) uiConfig.spriteSheet();
 
-        final var hud = (TengenMsPacMan_HUD) game.hud();
+        final var hud = (TengenMsPacMan_HeadsUpDisplay) game.hud();
         if (tengenGame.mapCategory() == MapCategory.ARCADE) {
             hud.hide();
         } else {

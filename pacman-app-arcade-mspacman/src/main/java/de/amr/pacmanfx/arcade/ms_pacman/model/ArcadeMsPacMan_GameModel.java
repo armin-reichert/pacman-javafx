@@ -119,7 +119,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel implements LevelC
     }
 
     @Override
-    public HUD hud() {
+    public HeadsUpDisplay hud() {
         return hud;
     }
 

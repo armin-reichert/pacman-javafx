@@ -39,7 +39,7 @@ public interface Game extends LevelCounter {
     /**
      * @return data to be displayed in the heads-up display (HUD)
      */
-    HUD hud();
+    HeadsUpDisplay hud();
 
     /**
      * @return the score of the currently played game

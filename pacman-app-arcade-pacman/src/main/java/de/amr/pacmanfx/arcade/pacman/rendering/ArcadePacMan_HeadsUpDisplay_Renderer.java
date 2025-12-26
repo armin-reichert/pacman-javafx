@@ -4,14 +4,14 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
-import de.amr.pacmanfx.arcade.pacman.model.Arcade_HUD;
+import de.amr.pacmanfx.arcade.pacman.model.Arcade_HeadsUpDisplay;
 import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.HUD;
+import de.amr.pacmanfx.model.HeadsUpDisplay;
 import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._2d.HUD_Renderer;
+import de.amr.pacmanfx.ui._2d.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
@@ -24,7 +24,7 @@ import static de.amr.pacmanfx.ui.api.ArcadePalette.ARCADE_WHITE;
 import static de.amr.pacmanfx.ui.api.ArcadePalette.ARCADE_YELLOW;
 import static java.util.Objects.requireNonNull;
 
-public class ArcadePacMan_HUD_Renderer extends BaseRenderer implements SpriteRenderer, HUD_Renderer {
+public class ArcadePacMan_HeadsUpDisplay_Renderer extends BaseRenderer implements SpriteRenderer, HeadsUpDisplay_Renderer {
 
     public static final String SCORE_TEXT = "SCORE";
     public static final String HIGH_SCORE_TEXT = "HIGH SCORE";
@@ -35,7 +35,7 @@ public class ArcadePacMan_HUD_Renderer extends BaseRenderer implements SpriteRen
 
     private final ArcadePacMan_SpriteSheet spriteSheet;
 
-    public ArcadePacMan_HUD_Renderer(Canvas canvas, ArcadePacMan_SpriteSheet spriteSheet) {
+    public ArcadePacMan_HeadsUpDisplay_Renderer(Canvas canvas, ArcadePacMan_SpriteSheet spriteSheet) {
         super(canvas);
         this.spriteSheet = requireNonNull(spriteSheet);
     }
@@ -46,11 +46,11 @@ public class ArcadePacMan_HUD_Renderer extends BaseRenderer implements SpriteRen
     }
 
     @Override
-    public void draw(HUD hud, Game game, GameScene2D scene) {
+    public void draw(HeadsUpDisplay hud, Game game, GameScene2D scene) {
         requireNonNull(game);
         requireNonNull(scene);
 
-        final Arcade_HUD arcadeHud = (Arcade_HUD) hud;
+        final Arcade_HeadsUpDisplay arcadeHud = (Arcade_HeadsUpDisplay) hud;
         final Vector2i sceneSize = scene.unscaledSize();
 
         if (!hud.isVisible()) return;

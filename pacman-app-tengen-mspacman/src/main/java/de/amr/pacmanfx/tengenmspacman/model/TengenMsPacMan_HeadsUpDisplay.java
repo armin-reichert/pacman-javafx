@@ -4,14 +4,14 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengenmspacman.model;
 
-import de.amr.pacmanfx.model.BaseHUD;
+import de.amr.pacmanfx.model.HeadsUpDisplay;
 
-public class TengenMsPacMan_HUD extends BaseHUD {
+public class TengenMsPacMan_HeadsUpDisplay extends HeadsUpDisplay {
 
     private boolean levelNumberVisible;
     private boolean gameOptionsVisible;
 
-    public TengenMsPacMan_HUD gameOptions(boolean visible) {
+    public TengenMsPacMan_HeadsUpDisplay gameOptions(boolean visible) {
         gameOptionsVisible = visible;
         return this;
     }
@@ -20,7 +20,7 @@ public class TengenMsPacMan_HUD extends BaseHUD {
         return gameOptionsVisible;
     }
 
-    public TengenMsPacMan_HUD levelNumber(boolean visible) {
+    public TengenMsPacMan_HeadsUpDisplay levelNumber(boolean visible) {
         levelNumberVisible = visible;
         return this;
     }

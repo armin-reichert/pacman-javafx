@@ -129,7 +129,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
         0x00, 0x18, 0x20                                // levels 17, 18, then 19+
     };
 
-    private final TengenMsPacMan_HUD hud = new TengenMsPacMan_HUD();
+    private final TengenMsPacMan_HeadsUpDisplay hud = new TengenMsPacMan_HeadsUpDisplay();
     private final TengenMsPacMan_MapSelector mapSelector;
     private final GateKeeper gateKeeper;
     private final Steering automaticSteering;
@@ -168,7 +168,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
     }
 
     @Override
-    public TengenMsPacMan_HUD hud() {
+    public TengenMsPacMan_HeadsUpDisplay hud() {
         return hud;
     }
 

@@ -296,18 +296,18 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     }
 
     @Override
-    public TengenMsPacMan_HUD_Renderer createHUDRenderer(Canvas canvas, GameScene2D gameScene2D) {
+    public TengenMsPacMan_HeadsUpDisplay_Renderer createHUDRenderer(Canvas canvas, GameScene2D gameScene2D) {
         if (   ui.isCurrentGameSceneID(sceneID_CutScene(1))
             || ui.isCurrentGameSceneID(sceneID_CutScene(2))
             || ui.isCurrentGameSceneID(sceneID_CutScene(3))
             || ui.isCurrentGameSceneID(sceneID_CutScene(4)) )
         {
-            final var hudRenderer = new TengenMsPacMan_HUD_Renderer(canvas, TengenMsPacMan_SpriteSheet.INSTANCE, ui.clock());
+            final var hudRenderer = new TengenMsPacMan_HeadsUpDisplay_Renderer(canvas, TengenMsPacMan_SpriteSheet.INSTANCE, ui.clock());
             hudRenderer.setOffsetY(-2*TS); //TODO this is ugly
             return gameScene2D.adaptRenderer(hudRenderer);
         }
         if (ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_2D)) {
-            return gameScene2D.adaptRenderer(new TengenMsPacMan_HUD_Renderer(canvas, TengenMsPacMan_SpriteSheet.INSTANCE, ui.clock()));
+            return gameScene2D.adaptRenderer(new TengenMsPacMan_HeadsUpDisplay_Renderer(canvas, TengenMsPacMan_SpriteSheet.INSTANCE, ui.clock()));
         }
         return null;
     }

@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController.GameState;
-import de.amr.pacmanfx.arcade.pacman.model.Arcade_HUD;
+import de.amr.pacmanfx.arcade.pacman.model.Arcade_HeadsUpDisplay;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Pulse;
 import de.amr.pacmanfx.lib.TickTimer;
@@ -86,7 +86,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     public void doInit(Game game) {
         final GameUI_Config uiConfig = ui.currentConfig();
 
-        final var hud = (Arcade_HUD) game.hud();
+        final var hud = (Arcade_HeadsUpDisplay) game.hud();
         hud.credit(true).score(true).livesCounter(false).levelCounter(true).show();
 
         soundManager().playVoiceAfterSec(1, SoundID.VOICE_EXPLAIN_GAME_START);

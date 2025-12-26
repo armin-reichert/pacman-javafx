@@ -23,7 +23,7 @@ import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.model.MovingGameLevelMessage;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameController.GameState;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_HUD;
+import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_HeadsUpDisplay;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.api.GameScene;
@@ -390,7 +390,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     private void updateHUD(GameLevel level) {
         final TengenMsPacMan_GameModel game = context().currentGame();
-        final TengenMsPacMan_HUD hud = game.hud();
+        final TengenMsPacMan_HeadsUpDisplay hud = game.hud();
         // As long as Pac-Man is still invisible on start, he is shown as an additional entry in the lives counter
         final boolean oneExtra = game.control().state() == GameState.STARTING_GAME_OR_LEVEL && !level.pac().isVisible();
         final int displayedLifeCount = oneExtra ? game.lifeCount() : game.lifeCount() - 1;
