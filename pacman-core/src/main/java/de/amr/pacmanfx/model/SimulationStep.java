@@ -10,27 +10,29 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Stores what happened during the current simulation step.
  */
 public class SimulationStep {
-    public long       tick;
-    public Vector2i   foodTile;
-    public boolean    energizerFound;
-    public int        bonusIndex = -1;
-    public Bonus      edibleBonus;
-    public boolean    pacGotPower;
-    public boolean    pacStartsLosingPower;
-    public boolean    pacLostPower;
-    public Ghost      pacKiller;
-    public boolean    extraLifeWon;
-    public int        extraLifeScore;
-    public Ghost ghostReleasedFromJailhouse;
-    public String     ghostReleaseInfo;
-    public final List<Ghost> killedGhosts = new ArrayList<>();
-    public List<Ghost> ghostsCollidingWithPac;
+    public long              tick;
+    public Vector2i          foodTile;
+    public boolean           energizerFound;
+    public int               bonusIndex = -1;
+    public Bonus             edibleBonus;
+    public boolean           pacGotPower;
+    public boolean           pacStartsLosingPower;
+    public boolean           pacLostPower;
+    public Ghost             pacKiller;
+    public boolean           extraLifeWon;
+    public int               extraLifeScore;
+    public Ghost             ghostReleasedFromJailhouse;
+    public String            ghostReleaseInfo;
+    public final List<Ghost> ghostsKilled = new ArrayList<>();
+    public final Set<Ghost>  ghostsCollidingWithPac = new HashSet<>(4);
 
     public void init(long tick) {
         this.tick = tick;
@@ -46,8 +48,8 @@ public class SimulationStep {
         extraLifeScore = 0;
         ghostReleasedFromJailhouse = null;
         ghostReleaseInfo = null;
-        killedGhosts.clear();
-        ghostsCollidingWithPac = List.of();
+        ghostsKilled.clear();
+        ghostsCollidingWithPac.clear();
     }
 
     public List<String> createReport() {
@@ -82,7 +84,7 @@ public class SimulationStep {
         if (ghostReleasedFromJailhouse != null) {
             messages.add("%s unlocked: %s".formatted(ghostReleasedFromJailhouse.name(), ghostReleaseInfo));
         }
-        for (Ghost ghost : killedGhosts) {
+        for (Ghost ghost : ghostsKilled) {
             messages.add("%s killed at %s".formatted(ghost.name(), ghost.tile()));
         }
         return messages;

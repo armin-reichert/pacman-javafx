@@ -10,8 +10,6 @@ import de.amr.pacmanfx.event.GameStateChangeEvent;
 import de.amr.pacmanfx.lib.Pulse;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.actors.*;
-import de.amr.pacmanfx.model.world.FoodLayer;
-import de.amr.pacmanfx.model.world.TerrainLayer;
 import javafx.beans.property.*;
 import org.tinylog.Logger;
 
@@ -254,7 +252,7 @@ public abstract class AbstractGameModel implements Game {
 
     @Override
     public boolean hasGhostBeenKilled() {
-        return !simStep.killedGhosts.isEmpty();
+        return !simStep.ghostsKilled.isEmpty();
     }
 
     @Override
@@ -387,11 +385,14 @@ public abstract class AbstractGameModel implements Game {
         boolean quitHunting = false;
 
         pac.tick(this);
+        detectCollisions(level);
+
         level.ghosts().forEach(ghost -> ghost.tick(this));
+        // call collision detection 2nd time, this should minimize collision missing
+        detectCollisions(level);
+
         level.optBonus().ifPresent(bonus -> bonus.tick(this));
         level.blinking().tick();
-
-        detectCollisions(level);
 
         if (!simStep.ghostsCollidingWithPac.isEmpty()) {
             // Is Pac getting killed after the collision with a ghost?
@@ -404,9 +405,9 @@ public abstract class AbstractGameModel implements Game {
                 // Frightened ghosts get killed when colliding with Pac
                 simStep.ghostsCollidingWithPac.stream()
                     .filter(ghost -> ghost.state() == GhostState.FRIGHTENED)
-                    .forEach(simStep.killedGhosts::add);
+                    .forEach(simStep.ghostsKilled::add);
                 // More than one ghost might have been killed in this step
-                simStep.killedGhosts.forEach(ghost -> onEatGhost(level, ghost));
+                simStep.ghostsKilled.forEach(ghost -> onEatGhost(level, ghost));
                 if (hasGhostBeenKilled()) {
                     quitHunting = true;
                 }
@@ -457,27 +458,23 @@ public abstract class AbstractGameModel implements Game {
     private void detectCollisions(GameLevel level) {
         requireNonNull(level);
 
-        final TerrainLayer terrainLayer = level.worldMap().terrainLayer();
-        final FoodLayer foodLayer = level.worldMap().foodLayer();
-        final Pac pac = level.pac();
-        final Vector2i pacTile = pac.tile();
-
         // Ghosts colliding with Pac? While teleportation takes place, collisions are disabled. (Not sure what the
         // original Arcade game does). Collision behavior is controlled by the current collision strategy. The original
         // Arcade games use tile-based collision which can lead to missed collisions by passing through.
-        simStep.ghostsCollidingWithPac = level.ghosts()
-            .filter(ghost -> !terrainLayer.isTileInPortalSpace(ghost.tile()))
-            .filter(ghost -> collisionStrategy().collide(pac, ghost))
-            .toList();
+        level.ghosts()
+            .filter(ghost -> !level.worldMap().terrainLayer().isTileInPortalSpace(ghost.tile()))
+            .filter(ghost -> collisionStrategy().collide(level.pac(), ghost))
+            .forEach(simStep.ghostsCollidingWithPac::add);
 
         simStep.edibleBonus = level.optBonus()
             .filter(bonus -> bonus.state() == BonusState.EDIBLE)
-            .filter(bonus -> collisionStrategy().collide(pac, bonus))
+            .filter(bonus -> collisionStrategy().collide(level.pac(), bonus))
             .orElse(null);
 
-        if (foodLayer.hasFoodAtTile(pacTile)) {
+        final Vector2i pacTile = level.pac().tile();
+        if (level.worldMap().foodLayer().hasFoodAtTile(pacTile)) {
             simStep.foodTile = pacTile;
-            simStep.energizerFound = foodLayer.isEnergizerTile(pacTile);
+            simStep.energizerFound = level.worldMap().foodLayer().isEnergizerTile(pacTile);
         }
     }
 
