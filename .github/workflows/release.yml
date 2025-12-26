@@ -3,6 +3,9 @@
 
 name: Release
 
+permissions:
+  contents: read
+
 on:
   release:
     types: [ created, edited ] # if this is omitted, the workflow starts 3 times when creating a release!
@@ -65,6 +68,8 @@ jobs:
 
   download-and-release-artifacts:
     needs: build-and-upload-artifacts
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
       - name: Download Windows installer
