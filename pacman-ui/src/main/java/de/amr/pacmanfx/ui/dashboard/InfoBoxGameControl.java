@@ -5,13 +5,14 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.dashboard;
 
 import de.amr.pacmanfx.lib.fsm.StateMachine;
+import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.CoinMechanism;
-import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameControl.StateName;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.ui.action.TestActions;
 import de.amr.pacmanfx.ui.api.GameUI;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Spinner;
 
@@ -34,6 +35,7 @@ public class InfoBoxGameControl extends InfoBox {
     private ChoiceBox<Integer> choiceBoxInitialLives;
     private Button[] buttonGroupLevelActions;
     private Button[] buttonGroupCutScenesTest;
+    private CheckBox cbCollisionCheckedTwice;
 
     public InfoBoxGameControl(GameUI ui) {
         super(ui);
@@ -45,6 +47,7 @@ public class InfoBoxGameControl extends InfoBox {
         choiceBoxInitialLives    = addChoiceBox("Initial Lives", new Integer[] {3, 5});
         buttonGroupLevelActions  = addButtonList("Game Level", List.of("Start", "Quit", "Next"));
         buttonGroupCutScenesTest = addButtonList("Cut Scenes Test", List.of("Start", "Quit"));
+        cbCollisionCheckedTwice  = addCheckBox("Collision Check 2x");
 
         setAction(choiceBoxInitialLives, () -> ui.context().currentGame().setInitialLifeCount(choiceBoxInitialLives.getValue()));
 
@@ -54,13 +57,18 @@ public class InfoBoxGameControl extends InfoBox {
 
         setAction(buttonGroupCutScenesTest[CUT_SCENES_TEST_START], TestActions.ACTION_CUT_SCENES_TEST);
         setAction(buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT], ACTION_RESTART_INTRO);
+
+        cbCollisionCheckedTwice.setOnAction(e -> {
+            final AbstractGameModel game = ui.context().currentGame();
+            game.setCollisionCheckedTwice(cbCollisionCheckedTwice.isSelected());
+        });
     }
 
     @Override
     public void update() {
         super.update();
 
-        final Game game = ui.context().currentGame();
+        final AbstractGameModel game = ui.context().currentGame();
         final StateMachine.State<?> state = game.control().state();
 
         //TODO use binding
@@ -77,6 +85,8 @@ public class InfoBoxGameControl extends InfoBox {
 
         buttonGroupCutScenesTest[CUT_SCENES_TEST_START].setDisable(booting || !state.matches(StateName.INTRO));
         buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT] .setDisable(booting || !(state instanceof CutScenesTestState));
+
+        cbCollisionCheckedTwice.setSelected(game.isCollisionCheckedTwice());
     }
 
     private boolean isBooting(StateMachine.State<?> state) {

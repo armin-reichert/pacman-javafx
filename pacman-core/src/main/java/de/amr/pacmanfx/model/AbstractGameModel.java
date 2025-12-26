@@ -38,6 +38,8 @@ public abstract class AbstractGameModel implements Game {
 
     private final ObjectProperty<CollisionStrategy> collisionStrategy = new SimpleObjectProperty<>(DEFAULT_COLLISION_STRATEGY);
 
+    private final BooleanProperty collisionCheckedTwice = new SimpleBooleanProperty(false);
+
     private final BooleanProperty cutScenesEnabled = new SimpleBooleanProperty(true);
 
     private final BooleanProperty immune = new SimpleBooleanProperty(false);
@@ -105,6 +107,18 @@ public abstract class AbstractGameModel implements Game {
         gameControl.stateMachine().setContext(this);
         gameControl.stateMachine().addStateChangeListener(
             (oldState, newState) -> publishGameEvent(new GameStateChangeEvent(this, oldState, newState)));
+    }
+
+    public BooleanProperty collisionCheckedTwiceProperty() {
+        return collisionCheckedTwice;
+    }
+
+    public Boolean isCollisionCheckedTwice() {
+        return collisionCheckedTwiceProperty().get();
+    }
+
+    public void setCollisionCheckedTwice(boolean twice) {
+        collisionCheckedTwiceProperty().set(twice);
     }
 
     public ObjectProperty<GameLevel> levelProperty() {
@@ -388,8 +402,11 @@ public abstract class AbstractGameModel implements Game {
         detectCollisions(level);
 
         level.ghosts().forEach(ghost -> ghost.tick(this));
-        // call collision detection 2nd time, this should minimize collision missing
-        detectCollisions(level);
+
+        if (isCollisionCheckedTwice()) {
+            // call collision detection 2nd time, this should minimize collision missing
+            detectCollisions(level);
+        }
 
         level.optBonus().ifPresent(bonus -> bonus.tick(this));
         level.blinking().tick();
