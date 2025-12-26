@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade.pacman.model;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController.GameState;
 import de.amr.pacmanfx.arcade.pacman.model.actors.Blinky;
 import de.amr.pacmanfx.event.GameEvent;
+import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.*;
@@ -115,7 +116,19 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         checkCruiseElroyActivation(level);
 
         if (!isLevelCompleted()) {
-            onEnergizerEaten(level);
+            level.ghosts(GhostState.FRIGHTENED, GhostState.HUNTING_PAC).forEach(MovingActor::requestTurnBack);
+            level.energizerVictims().clear();
+            final float powerSeconds = level.pacPowerSeconds();
+            if (powerSeconds > 0) {
+                level.huntingTimer().stop();
+                Logger.debug("Hunting stopped (Pac-Man got power)");
+                long ticks = TickTimer.secToTicks(powerSeconds);
+                level.pac().powerTimer().restartTicks(ticks);
+                Logger.debug("Power timer restarted, {} ticks ({0.00} sec)", ticks, powerSeconds);
+                level.ghosts(GhostState.HUNTING_PAC).forEach(ghost -> ghost.setState(GhostState.FRIGHTENED));
+                simStep.pacGotPower = true;
+                publishGameEvent(GameEvent.Type.PAC_GETS_POWER);
+            }
         }
     }
 

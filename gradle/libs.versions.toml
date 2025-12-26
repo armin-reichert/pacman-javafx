@@ -5,7 +5,7 @@
 iconli  = "12.3.1"
 java    = "25"
 javafx  = "25.0.1"
-junit5  = "5.10.3"
+junit5  = "5.11.0"
 tinylog = "2.7.0"
 
 # Usage: alias(libs.plugins.xyz)

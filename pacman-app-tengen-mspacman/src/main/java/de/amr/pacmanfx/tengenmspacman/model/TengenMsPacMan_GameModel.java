@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengenmspacman.model;
 
 import de.amr.pacmanfx.event.GameEvent;
+import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.lib.math.Vector2b;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
@@ -615,7 +616,19 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
         gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
 
         if (!isLevelCompleted()) {
-            onEnergizerEaten(level);
+            level.ghosts(GhostState.FRIGHTENED, GhostState.HUNTING_PAC).forEach(MovingActor::requestTurnBack);
+            level.energizerVictims().clear();
+            final float powerSeconds = level.pacPowerSeconds();
+            if (powerSeconds > 0) {
+                level.huntingTimer().stop();
+                Logger.debug("Hunting stopped (Pac-Man got power)");
+                long ticks = TickTimer.secToTicks(powerSeconds);
+                level.pac().powerTimer().restartTicks(ticks);
+                Logger.debug("Power timer restarted, {} ticks ({0.00} sec)", ticks, powerSeconds);
+                level.ghosts(GhostState.HUNTING_PAC).forEach(ghost -> ghost.setState(GhostState.FRIGHTENED));
+                simStep.pacGotPower = true;
+                publishGameEvent(GameEvent.Type.PAC_GETS_POWER);
+            }
         }
     }
 

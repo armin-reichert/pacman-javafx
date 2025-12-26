@@ -8,7 +8,6 @@ import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.event.GameStateChangeEvent;
 import de.amr.pacmanfx.lib.Pulse;
-import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.world.FoodLayer;
@@ -26,8 +25,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
-import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
-import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -453,23 +450,6 @@ public abstract class AbstractGameModel implements Game {
     private void checkBonusFound(GameLevel level) {
         if (simStep.edibleBonus != null) {
             eatBonus(level, simStep.edibleBonus);
-        }
-    }
-
-    public void onEnergizerEaten(GameLevel level) {
-        requireNonNull(level);
-        level.ghosts(FRIGHTENED, HUNTING_PAC).forEach(MovingActor::requestTurnBack);
-        level.energizerVictims().clear();
-        final float powerSeconds = level.pacPowerSeconds();
-        if (powerSeconds > 0) {
-            level.huntingTimer().stop();
-            Logger.debug("Hunting stopped (Pac-Man got power)");
-            long ticks = TickTimer.secToTicks(powerSeconds);
-            level.pac().powerTimer().restartTicks(ticks);
-            Logger.debug("Power timer restarted, {} ticks ({0.00} sec)", ticks, powerSeconds);
-            level.ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
-            simStep.pacGotPower = true;
-            publishGameEvent(GameEvent.Type.PAC_GETS_POWER);
         }
     }
 
