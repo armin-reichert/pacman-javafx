@@ -85,7 +85,6 @@ public abstract class GameScene2D implements GameScene {
 
     public void setCanvas(Canvas canvas) {
         this.canvas = requireNonNull(canvas);
-        //createRenderers(canvas);
     }
 
     // other methods
