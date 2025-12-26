@@ -326,7 +326,7 @@ public class GameLevel {
      * Selects the next bonus and increments the bonus index.
      */
     public void selectNextBonus() {
-        currentBonusIndex += 1;
+        ++currentBonusIndex;
     }
 
     /**
