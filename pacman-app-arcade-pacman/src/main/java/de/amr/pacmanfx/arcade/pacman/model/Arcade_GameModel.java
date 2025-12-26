@@ -64,7 +64,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     protected final CoinMechanism coinMechanism;
 
-    protected Arcade_HeadsUpDisplay hud;
+    protected HeadsUpDisplay hud;
     protected GateKeeper gateKeeper;
     protected Steering automaticSteering;
     protected Steering demoLevelSteering;
@@ -79,7 +79,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     protected Arcade_GameModel(CoinMechanism coinMechanism, File highscoreFile) {
         super(highscoreFile);
         this.coinMechanism = requireNonNull(coinMechanism);
-        this.hud = new Arcade_HeadsUpDisplay(coinMechanism);
+        this.hud = new HeadsUpDisplay(coinMechanism);
 
         pelletPoints = 10;
         energizerPoints = 50;

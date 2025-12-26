@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
-import de.amr.pacmanfx.arcade.pacman.model.Arcade_HeadsUpDisplay;
 import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
@@ -50,7 +49,6 @@ public class ArcadePacMan_HeadsUpDisplay_Renderer extends BaseRenderer implement
         requireNonNull(game);
         requireNonNull(scene);
 
-        final Arcade_HeadsUpDisplay arcadeHud = (Arcade_HeadsUpDisplay) hud;
         final Vector2i sceneSize = scene.unscaledSize();
 
         if (!hud.isVisible()) return;
@@ -91,8 +89,8 @@ public class ArcadePacMan_HeadsUpDisplay_Renderer extends BaseRenderer implement
             }
         }
 
-        if (arcadeHud.isCreditVisible()) {
-            fillText(CREDIT_TEXT_PATTERN.formatted(arcadeHud.numCoins()), ARCADE_WHITE, arcadeFont8(), TS(2), sceneSize.y());
+        if (hud.isCreditVisible()) {
+            fillText(CREDIT_TEXT_PATTERN.formatted(hud.numCoins()), ARCADE_WHITE, arcadeFont8(), TS(2), sceneSize.y());
         }
     }
 

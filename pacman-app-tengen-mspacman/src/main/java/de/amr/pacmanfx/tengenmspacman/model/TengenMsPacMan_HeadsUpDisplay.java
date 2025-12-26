@@ -4,12 +4,17 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengenmspacman.model;
 
+import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.HeadsUpDisplay;
 
 public class TengenMsPacMan_HeadsUpDisplay extends HeadsUpDisplay {
 
     private boolean levelNumberVisible;
     private boolean gameOptionsVisible;
+
+    public TengenMsPacMan_HeadsUpDisplay() {
+        super(CoinMechanism.MISSING);
+    }
 
     public TengenMsPacMan_HeadsUpDisplay gameOptions(boolean visible) {
         gameOptionsVisible = visible;

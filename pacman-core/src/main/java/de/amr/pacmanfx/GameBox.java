@@ -113,33 +113,6 @@ public class GameBox implements GameContext, CoinMechanism {
     @Override
     public IntegerProperty numCoinsProperty() { return numCoins; }
 
-    @Override
-    public int numCoins() { return numCoins.get(); }
-
-    @Override
-    public boolean isEmpty() { return numCoins() == 0; }
-
-    @Override
-    public void setNumCoins(int n) {
-        if (n >= 0 && n <= CoinMechanism.MAX_COINS) {
-            numCoins.set(n);
-        } else {
-            Logger.error("Cannot set number of coins to {}", n);
-        }
-    }
-
-    @Override
-    public void insertCoin() {
-        setNumCoins(numCoins() + 1);
-    }
-
-    @Override
-    public void consumeCoin() {
-        if (numCoins() > 0) {
-            setNumCoins(numCoins() - 1);
-        }
-    }
-
     // other stuff
 
     public File highScoreFile(String gameVariant) {

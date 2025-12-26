@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
-import de.amr.pacmanfx.arcade.pacman.model.Arcade_HeadsUpDisplay;
 import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
@@ -89,10 +88,8 @@ public class ArcadeMsPacMan_HeadsUpDisplayRenderer extends BaseRenderer implemen
             }
         }
 
-        if (hud instanceof Arcade_HeadsUpDisplay arcadeHud) {
-            if (arcadeHud.isCreditVisible()) {
-                fillText("CREDIT %2d".formatted(arcadeHud.numCoins()), ARCADE_WHITE, arcadeFont8(), TS(2), sceneSize.y());
-            }
+        if (hud.isCreditVisible()) {
+            fillText("CREDIT %2d".formatted(hud.numCoins()), ARCADE_WHITE, arcadeFont8(), TS(2), sceneSize.y());
         }
     }
 
