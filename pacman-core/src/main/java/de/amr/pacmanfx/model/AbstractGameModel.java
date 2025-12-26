@@ -387,28 +387,51 @@ public abstract class AbstractGameModel implements Game {
      */
     protected void doHuntingStep(GameLevel level) {
         final Pac pac = level.pac();
+        boolean quitHunting = false;
 
-        // Compute and record collisions between actors and Pac-Man/food collisions
+        pac.tick(this);
+        level.ghosts().forEach(ghost -> ghost.tick(this));
+        level.optBonus().ifPresent(bonus -> bonus.tick(this));
+        level.blinking().tick();
+
         detectCollisions(level);
 
         if (!simStep.ghostsCollidingWithPac.isEmpty()) {
-            // Is Pac getting killed after collision with ghost? He might stay alive if immune or in level's safe phase!
+            // Is Pac getting killed after the collision with a ghost?
+            // He might stay alive if immune or in level's safe phase!
             checkPacKilled(level);
             if (hasPacManBeenKilled()) {
-                return; // game state will change, so quit this hunting step now
+                quitHunting = true;
             }
-
-            // Ghost(s) killed?
-            simStep.ghostsCollidingWithPac.stream().filter(ghost -> ghost.state() == GhostState.FRIGHTENED)
-                .forEach(simStep.killedGhosts::add);
-            if (hasGhostBeenKilled()) {
-                // just in case more than one ghost is killed during the same simulation step
+            else {
+                // Frightened ghosts get killed when colliding with Pac
+                simStep.ghostsCollidingWithPac.stream()
+                    .filter(ghost -> ghost.state() == GhostState.FRIGHTENED)
+                    .forEach(simStep.killedGhosts::add);
+                // More than one ghost might have been killed in this step
                 simStep.killedGhosts.forEach(ghost -> onEatGhost(level, ghost));
-                return; // game state will change, so quit this hunting step now
+                if (hasGhostBeenKilled()) {
+                    quitHunting = true;
+                }
             }
         }
 
-        // Did Pac enter a tile containing a pellet or an energizer?
+        if (quitHunting) {
+            Logger.info("Hunting has been stopped");
+            return;
+        }
+
+        checkFoodFound(level, pac);
+        checkBonusFound(level);
+
+        if (!isLevelCompleted()) {
+            updatePacPower(level);
+            level.huntingTimer().update(level.number());
+        }
+    }
+
+    // Did Pac enter a tile containing a pellet or an energizer?
+    private void checkFoodFound(GameLevel level, Pac pac) {
         if (simStep.foodTile == null) {
             pac.continueStarving();
         } else {
@@ -425,19 +448,11 @@ public abstract class AbstractGameModel implements Game {
             }
             publishGameEvent(GameEvent.Type.PAC_FOUND_FOOD, simStep.foodTile);
         }
+    }
 
+    private void checkBonusFound(GameLevel level) {
         if (simStep.edibleBonus != null) {
             eatBonus(level, simStep.edibleBonus);
-        }
-
-        pac.tick(this);
-        level.ghosts().forEach(ghost -> ghost.tick(this));
-        level.optBonus().ifPresent(bonus -> bonus.tick(this));
-        level.blinking().tick();
-
-        if (!isLevelCompleted()) {
-            updatePacPower(level);
-            level.huntingTimer().update(level.number());
         }
     }
 
@@ -458,6 +473,7 @@ public abstract class AbstractGameModel implements Game {
         }
     }
 
+    // Compute and record collisions between actors and Pac-Man/food collisions
     private void detectCollisions(GameLevel level) {
         requireNonNull(level);
 
