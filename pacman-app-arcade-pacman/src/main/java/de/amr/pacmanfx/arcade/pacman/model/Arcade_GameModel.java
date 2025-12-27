@@ -313,6 +313,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         if (tick == 1) {
             final GameLevel level = level();
             level.getReadyToPlay();
+            showLevelMessage(GameLevelMessageType.READY);
             level.showPacAndGhosts();
         }
         else if (tick == 60) {

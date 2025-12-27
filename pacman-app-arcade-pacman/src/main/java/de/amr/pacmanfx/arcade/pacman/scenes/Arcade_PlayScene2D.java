@@ -12,7 +12,6 @@ import de.amr.pacmanfx.lib.fsm.StateMachine.State;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.GameLevelMessageType;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -137,10 +136,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     @Override
     public void onGameContinues(GameEvent e) {
         final Game game = e.game();
-        game.optGameLevel().ifPresent(level -> {
-            resetAnimations(level);
-            game.showLevelMessage(GameLevelMessageType.READY);
-        });
+        game.optGameLevel().ifPresent(this::resetAnimations);
     }
 
     @Override
