@@ -11,6 +11,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
+import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.*;
@@ -18,12 +19,13 @@ import javafx.scene.canvas.Canvas;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static java.util.Objects.requireNonNull;
 
 public class Arcade_PlayScene2D_Renderer extends GameScene2D_Renderer implements SpriteRenderer {
+
+    private static final List<Byte> GHOST_Z_ORDER = List.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW);
 
     private final SpriteSheet<?> spriteSheet;
     private final GameLevelRenderer levelRenderer;
@@ -50,34 +52,36 @@ public class Arcade_PlayScene2D_Renderer extends GameScene2D_Renderer implements
     @Override
     public void draw(GameScene2D scene) {
         clearCanvas();
-
-        final Game game = scene.context().currentGame();
-        if (game.optGameLevel().isEmpty()) {
-            return; // Scene is drawn already 2 ticks before level has been created!
+        if (!(scene instanceof Arcade_PlayScene2D playScene)) {
+            return;
         }
-        final GameLevel level = game.level();
-        final Arcade_PlayScene2D playScene = (Arcade_PlayScene2D) scene;
+        final Game game = scene.context().currentGame();
+        // Level creation happens by handling a game event after the play scene has been activated. Therefore,
+        // the game level is not yet existing for the first two ticks after this scene got active.
+        game.optGameLevel().ifPresent(level -> {
+            final RenderInfo info = buildRenderInfo(level, playScene.levelCompletedAnimation().orElse(null));
 
-        final RenderInfo info = new RenderInfo();
+            levelRenderer.applyLevelSettings(level, info);
+            levelRenderer.drawGameLevel(level, info);
+
+            updateActorDrawingOrder(level);
+            actorsInZOrder.forEach(actorRenderer::drawActor);
+
+            if (scene.debugInfoVisible()) {
+                debugRenderer.draw(scene);
+            }
+        });
+    }
+
+    private RenderInfo buildRenderInfo(GameLevel level, LevelCompletedAnimation levelCompletedAnimation) {
+        final var info = new RenderInfo();
+        final boolean bright = levelCompletedAnimation != null && levelCompletedAnimation.isHighlighted();
+        final boolean flashing = levelCompletedAnimation != null && levelCompletedAnimation.isFlashing();
         info.put(CommonRenderInfoKey.ENERGIZER_BLINKING, level.blinking().state() == Pulse.State.ON);
         info.put(CommonRenderInfoKey.MAZE_EMPTY, level.worldMap().foodLayer().uneatenFoodCount() == 0);
-        playScene.levelCompletedAnimation().ifPresentOrElse(levelCompletedAnimation -> {
-            info.put(CommonRenderInfoKey.MAZE_BRIGHT, levelCompletedAnimation.isHighlighted());
-            info.put(CommonRenderInfoKey.MAZE_FLASHING, levelCompletedAnimation.isFlashing());
-        }, () -> {
-            info.put(CommonRenderInfoKey.MAZE_BRIGHT, false);
-            info.put(CommonRenderInfoKey.MAZE_FLASHING, false);
-        });
-
-        levelRenderer.applyLevelSettings(level, info);
-        levelRenderer.drawGameLevel(level, info);
-
-        updateActorDrawingOrder(level);
-        actorsInZOrder.forEach(actorRenderer::drawActor);
-
-        if (playScene.debugInfoVisible()) {
-            debugRenderer.draw(scene);
-        }
+        info.put(CommonRenderInfoKey.MAZE_BRIGHT, bright);
+        info.put(CommonRenderInfoKey.MAZE_FLASHING, flashing);
+        return info;
     }
 
     private void updateActorDrawingOrder(GameLevel gameLevel) {
@@ -86,8 +90,6 @@ public class Arcade_PlayScene2D_Renderer extends GameScene2D_Renderer implements
         actorsInZOrder.clear();
         gameLevel.optBonus().ifPresent(actorsInZOrder::add);
         actorsInZOrder.add(gameLevel.pac());
-        Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW)
-            .map(gameLevel::ghost)
-            .forEach(actorsInZOrder::add);
+        GHOST_Z_ORDER.stream().map(gameLevel::ghost).forEach(actorsInZOrder::add);
     }
 }
