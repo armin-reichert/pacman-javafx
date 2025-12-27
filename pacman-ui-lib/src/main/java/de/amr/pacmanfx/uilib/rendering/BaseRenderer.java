@@ -23,25 +23,22 @@ import static java.util.Objects.requireNonNull;
 
 public class BaseRenderer implements Renderer {
 
-    public static final Font DEFAULT_ARCADE_FONT;
+    public static final ResourceManager UI_LIB_RESOURCES = () -> BaseRenderer.class;
 
-    static {
-        ResourceManager rm = () -> BaseRenderer.class;
-        DEFAULT_ARCADE_FONT = rm.loadFont("/de/amr/pacmanfx/uilib/fonts/emulogic.ttf", 8);
-    }
+    public static final Font DEFAULT_ARCADE_FONT = UI_LIB_RESOURCES.loadFont("/de/amr/pacmanfx/uilib/fonts/emulogic.ttf", 8);
 
     private final ObjectProperty<Paint> background = new SimpleObjectProperty<>(Color.BLACK);
-    private final DoubleProperty scaling = new SimpleDoubleProperty(1.0);
-    private final ObjectProperty<Font> arcadeFont8 = new SimpleObjectProperty<>();
-    private final ObjectProperty<Font> arcadeFont6 = new SimpleObjectProperty<>();
+    private final DoubleProperty scaling           = new SimpleDoubleProperty(1.0);
+    private final ObjectProperty<Font> arcadeFont8 = new SimpleObjectProperty<>(DEFAULT_ARCADE_FONT);
+    private final ObjectProperty<Font> arcadeFont6 = new SimpleObjectProperty<>(DEFAULT_ARCADE_FONT);
 
     protected final GraphicsContext ctx;
     protected boolean imageSmoothing;
 
     public BaseRenderer(Canvas canvas) {
         ctx = requireNonNull(canvas).getGraphicsContext2D();
-        arcadeFont8.bind(scaling.map(s -> Font.font(DEFAULT_ARCADE_FONT.getFamily(), scaled(8))));
-        arcadeFont6 .bind(scaling.map(s -> Font.font(DEFAULT_ARCADE_FONT.getFamily(), scaled(6))));
+        arcadeFont8.bind(scaling.map(_ -> Font.font(DEFAULT_ARCADE_FONT.getFamily(), scaled(8))));
+        arcadeFont6.bind(scaling.map(_ -> Font.font(DEFAULT_ARCADE_FONT.getFamily(), scaled(6))));
     }
 
     public void clearCanvas() {
