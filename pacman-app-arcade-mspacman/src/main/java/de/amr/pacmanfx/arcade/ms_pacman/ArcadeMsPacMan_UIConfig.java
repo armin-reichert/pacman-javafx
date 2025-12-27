@@ -203,8 +203,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         GameScene2D_Renderer renderer = switch (gameScene2D) {
             case Arcade_BootScene2D ignored -> new Arcade_BootScene2D_Renderer(gameScene2D, canvas, ArcadeMsPacMan_SpriteSheet.INSTANCE);
             case ArcadeMsPacMan_IntroScene ignored -> new ArcadeMsPacMan_IntroScene_Renderer(gameScene2D, canvas);
-            case ArcadeMsPacMan_StartScene ignored ->
-                    new ArcadeMsPacMan_StartScene_Renderer(gameScene2D, canvas, ArcadeMsPacMan_SpriteSheet.INSTANCE);
+            case ArcadeMsPacMan_StartScene ignored -> new ArcadeMsPacMan_StartScene_Renderer(gameScene2D, canvas);
             case Arcade_PlayScene2D ignored -> new Arcade_PlayScene2D_Renderer(gameScene2D, canvas, ArcadeMsPacMan_SpriteSheet.INSTANCE);
             case ArcadeMsPacMan_CutScene1 ignored -> new ArcadeMsPacMan_CutScene1_Renderer(gameScene2D, canvas);
             case ArcadeMsPacMan_CutScene2 ignored -> new ArcadeMsPacMan_CutScene2_Renderer(gameScene2D, canvas);

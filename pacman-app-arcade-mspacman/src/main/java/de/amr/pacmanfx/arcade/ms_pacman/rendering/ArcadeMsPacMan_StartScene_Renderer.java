@@ -10,21 +10,17 @@ import javafx.scene.text.Font;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.api.ArcadePalette.ARCADE_ORANGE;
 import static de.amr.pacmanfx.ui.api.ArcadePalette.ARCADE_RED;
-import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_StartScene_Renderer extends GameScene2D_Renderer implements SpriteRenderer {
 
-    private final ArcadeMsPacMan_SpriteSheet spriteSheet;
-
-    public ArcadeMsPacMan_StartScene_Renderer(GameScene2D scene, Canvas canvas, ArcadeMsPacMan_SpriteSheet spriteSheet) {
+    public ArcadeMsPacMan_StartScene_Renderer(GameScene2D scene, Canvas canvas) {
         super(canvas);
-        this.spriteSheet = requireNonNull(spriteSheet);
         createDefaultDebugInfoRenderer(scene, canvas);
     }
 
     @Override
     public ArcadeMsPacMan_SpriteSheet spriteSheet() {
-        return spriteSheet;
+        return ArcadeMsPacMan_SpriteSheet.INSTANCE;
     }
 
     @Override
@@ -36,7 +32,7 @@ public class ArcadeMsPacMan_StartScene_Renderer extends GameScene2D_Renderer imp
         fillText("PUSH START BUTTON", ARCADE_ORANGE, font8, TS(6), TS(16));
         fillText("1 PLAYER ONLY", ARCADE_ORANGE, font8, TS(8), TS(18));
         fillText("ADDITIONAL    AT 10000", ARCADE_ORANGE, font8,TS(2), TS(25));
-        drawSprite(spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL), TS(13), TS(23) + 1, true);
+        drawSprite(spriteSheet().sprite(SpriteID.LIVES_COUNTER_SYMBOL), TS(13), TS(23) + 1, true);
         fillText("PTS", ARCADE_ORANGE, font6, TS(25), TS(25));
 
         Image logo = scene.ui().currentConfig().assets().image("logo.midway");
