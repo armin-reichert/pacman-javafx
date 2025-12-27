@@ -216,12 +216,12 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     @Override
     public ArcadeMsPacMan_GameLevelRenderer createGameLevelRenderer(Canvas canvas) {
-        return new ArcadeMsPacMan_GameLevelRenderer(canvas, ArcadeMsPacMan_SpriteSheet.INSTANCE, assets);
+        return new ArcadeMsPacMan_GameLevelRenderer(canvas, assets);
     }
 
     @Override
     public HeadsUpDisplay_Renderer createHUDRenderer(Canvas canvas, GameScene2D gameScene2D) {
-        final var hudRenderer = new ArcadeMsPacMan_HeadsUpDisplayRenderer(canvas, ArcadeMsPacMan_SpriteSheet.INSTANCE);
+        final var hudRenderer = new ArcadeMsPacMan_HeadsUpDisplayRenderer(canvas);
         hudRenderer.setImageSmoothing(true);
         gameScene2D.adaptRenderer(hudRenderer);
         return hudRenderer;
@@ -229,7 +229,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     @Override
     public ActorRenderer createActorRenderer(Canvas canvas) {
-        final var actorRenderer = new ArcadeMsPacMan_ActorRenderer(canvas, ArcadeMsPacMan_SpriteSheet.INSTANCE);
+        final var actorRenderer = new ArcadeMsPacMan_ActorRenderer(canvas);
         actorRenderer.setImageSmoothing(true);
         return actorRenderer;
     }

@@ -20,16 +20,13 @@ import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements SpriteRenderer, ActorRenderer {
 
-    private final ArcadeMsPacMan_SpriteSheet spriteSheet;
-
-    public ArcadeMsPacMan_ActorRenderer(Canvas canvas, ArcadeMsPacMan_SpriteSheet spriteSheet) {
+    public ArcadeMsPacMan_ActorRenderer(Canvas canvas) {
         super(canvas);
-        this.spriteSheet = requireNonNull(spriteSheet);
     }
 
     @Override
     public ArcadeMsPacMan_SpriteSheet spriteSheet() {
-        return spriteSheet;
+        return ArcadeMsPacMan_SpriteSheet.INSTANCE;
     }
 
     @Override
@@ -48,7 +45,7 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     }
 
     private void drawClapperBoard(Clapperboard clapperboard) {
-        RectShort[] sprites = spriteSheet.spriteSequence(SpriteID.CLAPPERBOARD);
+        RectShort[] sprites = spriteSheet().spriteSequence(SpriteID.CLAPPERBOARD);
         int index = clapperboard.state();
         if (0 <= index && index < sprites.length) {
             RectShort sprite = sprites[index];
@@ -67,9 +64,9 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     private void drawBonus(Bonus bonus) {
         switch (bonus.state()) {
             case EDIBLE -> drawBonusSprite(bonus.center().plus(0, bonus.verticalElongation()),
-                spriteSheet.spriteSequence(SpriteID.BONUS_SYMBOLS), bonus.symbol());
+                spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS), bonus.symbol());
             case EATEN -> drawBonusSprite(bonus.center(),
-                spriteSheet.spriteSequence(SpriteID.BONUS_VALUES), bonus.symbol());
+                spriteSheet().spriteSequence(SpriteID.BONUS_VALUES), bonus.symbol());
             case INACTIVE -> {}
         }
     }

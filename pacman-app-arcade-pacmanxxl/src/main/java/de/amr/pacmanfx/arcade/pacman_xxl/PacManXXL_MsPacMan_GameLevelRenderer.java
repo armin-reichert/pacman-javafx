@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_GameLevelRenderer;
-import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui._2d.GenericMapRenderer;
@@ -19,8 +18,8 @@ public class PacManXXL_MsPacMan_GameLevelRenderer extends ArcadeMsPacMan_GameLev
 
     private final GenericMapRenderer mazeRenderer;
 
-    public PacManXXL_MsPacMan_GameLevelRenderer(Canvas canvas, ArcadeMsPacMan_SpriteSheet spriteSheet) {
-        super(canvas, spriteSheet, null);
+    public PacManXXL_MsPacMan_GameLevelRenderer(Canvas canvas) {
+        super(canvas, null);
         mazeRenderer = new GenericMapRenderer(canvas);
         mazeRenderer.scalingProperty().bind(scalingProperty());
         mazeRenderer.backgroundProperty().bind(backgroundProperty());

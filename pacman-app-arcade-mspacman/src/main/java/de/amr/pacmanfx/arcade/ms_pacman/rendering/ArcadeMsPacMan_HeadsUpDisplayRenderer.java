@@ -31,16 +31,13 @@ public class ArcadeMsPacMan_HeadsUpDisplayRenderer extends BaseRenderer implemen
     private static final Color SCORE_TEXT_COLOR = ARCADE_WHITE;
     private static final Color SCORE_TEXT_COLOR_DISABLED = Color.RED;
 
-    private final ArcadeMsPacMan_SpriteSheet spriteSheet;
-
-    public ArcadeMsPacMan_HeadsUpDisplayRenderer(Canvas canvas, ArcadeMsPacMan_SpriteSheet spriteSheet) {
+    public ArcadeMsPacMan_HeadsUpDisplayRenderer(Canvas canvas) {
         super(canvas);
-        this.spriteSheet = requireNonNull(spriteSheet);
     }
 
     @Override
     public ArcadeMsPacMan_SpriteSheet spriteSheet() {
-        return spriteSheet;
+        return ArcadeMsPacMan_SpriteSheet.INSTANCE;
     }
 
     @Override
@@ -64,7 +61,7 @@ public class ArcadeMsPacMan_HeadsUpDisplayRenderer extends BaseRenderer implemen
         }
 
         if (hud.isLevelCounterVisible()) {
-            final RectShort[] bonusSymbols = spriteSheet.spriteSequence(SpriteID.BONUS_SYMBOLS);
+            final RectShort[] bonusSymbols = spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS);
             float x = sceneSize.x() - TS(4);
             final float y = sceneSize.y() - TS(2) + 2;
             for (byte symbol : game.levelCounterSymbols()) {
@@ -74,7 +71,7 @@ public class ArcadeMsPacMan_HeadsUpDisplayRenderer extends BaseRenderer implemen
         }
 
         if (hud.isLivesCounterVisible()) {
-            final RectShort sprite = spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
+            final RectShort sprite = spriteSheet().sprite(SpriteID.LIVES_COUNTER_SYMBOL);
             final float x = TS(2);
             final float y = sceneSize.y() - TS(2);
             for (int i = 0; i < hud.visibleLifeCount(); ++i) {
