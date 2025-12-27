@@ -73,10 +73,9 @@ public class PacManGames3dApp extends Application {
         game.control().stateMachine().addState(new LevelShortTestState());
         game.control().stateMachine().addState(new LevelMediumTestState());
         game.control().stateMachine().addState(new CutScenesTestState());
-
     }
 
-    private void registerGame(StandardGameVariant variant, Game game) {
+    private void registerGameWithTests(StandardGameVariant variant, Game game) {
         addTestStates(game);
         THE_GAME_BOX.registerGame(variant.name(), game);
     }
@@ -93,11 +92,11 @@ public class PacManGames3dApp extends Application {
     {
         Logger.info("Creating UI without builder");
 
-        registerGame(PACMAN,           new ArcadePacMan_GameModel(THE_GAME_BOX, highScoreFile(PACMAN)));
-        registerGame(MS_PACMAN,        new ArcadeMsPacMan_GameModel(THE_GAME_BOX, highScoreFile(MS_PACMAN)));
-        registerGame(MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel(highScoreFile(MS_PACMAN_TENGEN)));
-        registerGame(PACMAN_XXL,       new PacManXXL_PacMan_GameModel(THE_GAME_BOX, xxlMapSelector, highScoreFile(PACMAN_XXL)));
-        registerGame(MS_PACMAN_XXL,    new PacManXXL_MsPacMan_GameModel(THE_GAME_BOX, xxlMapSelector, highScoreFile(MS_PACMAN_XXL)));
+        registerGameWithTests(PACMAN,           new ArcadePacMan_GameModel(THE_GAME_BOX, highScoreFile(PACMAN)));
+        registerGameWithTests(MS_PACMAN,        new ArcadeMsPacMan_GameModel(THE_GAME_BOX, highScoreFile(MS_PACMAN)));
+        registerGameWithTests(MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel(highScoreFile(MS_PACMAN_TENGEN)));
+        registerGameWithTests(PACMAN_XXL,       new PacManXXL_PacMan_GameModel(THE_GAME_BOX, xxlMapSelector, highScoreFile(PACMAN_XXL)));
+        registerGameWithTests(MS_PACMAN_XXL,    new PacManXXL_MsPacMan_GameModel(THE_GAME_BOX, xxlMapSelector, highScoreFile(MS_PACMAN_XXL)));
 
         final var ui = new GameUI_Implementation(UI_CONFIG_MAP, THE_GAME_BOX, stage, sceneWidth, sceneHeight);
 
