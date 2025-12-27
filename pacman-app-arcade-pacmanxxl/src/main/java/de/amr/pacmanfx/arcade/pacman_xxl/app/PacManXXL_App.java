@@ -23,7 +23,7 @@ public class PacManXXL_App extends Application {
     @Override
     public void start(Stage primaryStage) {
         // UI size: 80% of available screen height, aspect 16:10
-        final double height = 0.8 * Screen.getPrimary().getBounds().getHeight();
+        final double height = 0.8 * Screen.getPrimary().getVisualBounds().getHeight();
         final double width  = 1.6 * height;
         var xxlMapSelector = new PacManXXL_MapSelector(GameBox.CUSTOM_MAP_DIR);
         ui = GameUI_Builder.create(primaryStage, width, height)

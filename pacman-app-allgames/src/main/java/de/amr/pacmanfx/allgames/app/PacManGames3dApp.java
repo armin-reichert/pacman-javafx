@@ -31,20 +31,41 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
 import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
+import static de.amr.pacmanfx.model.StandardGameVariant.*;
 
 /**
  * Application containing all game variants, the 3D play scenes, the map editor etc. ("all you can f*** ähm play").
  */
 public class PacManGames3dApp extends Application {
 
-    private static final boolean USE_BUILDER = false;
-
     private static final float ASPECT_RATIO = 1.6f; // 16:10 aspect ratio
     private static final float USED_HEIGHT = 0.8f;  // 80% of available height
+
+    private static final Map<String, Class<? extends GameUI_Config>> UI_CONFIG_MAP = Map.of(
+        PACMAN.name(),           ArcadePacMan_UIConfig.class,
+        MS_PACMAN.name(),        ArcadeMsPacMan_UIConfig.class,
+        MS_PACMAN_TENGEN.name(), TengenMsPacMan_UIConfig.class,
+        PACMAN_XXL.name(),       PacManXXL_PacMan_UIConfig.class,
+        MS_PACMAN_XXL.name(),    PacManXXL_MsPacMan_UIConfig.class
+    );
+
+    private static final DashboardID[] DASHBOARD_IDS = {
+        DashboardID.GENERAL,
+        DashboardID.GAME_CONTROL,
+        DashboardID.SETTINGS_3D,
+        DashboardID.ANIMATION_INFO,
+        DashboardID.GAME_INFO,
+        DashboardID.ACTOR_INFO,
+        DashboardID.CUSTOM_MAPS,
+        DashboardID.KEYS_GLOBAL,
+        DashboardID.KEYS_LOCAL,
+        DashboardID.ABOUT
+    };
 
     private GameUI ui;
 
@@ -55,51 +76,30 @@ public class PacManGames3dApp extends Application {
 
     }
 
+    private void registerGame(StandardGameVariant variant, Game game) {
+        addTestStates(game);
+        THE_GAME_BOX.registerGame(variant.name(), game);
+    }
+
+    private File highScoreFile(StandardGameVariant variant) {
+        return THE_GAME_BOX.highScoreFile(variant.name());
+    }
+
     private GameUI createUI_WithoutBuilder(
         Stage stage,
         double sceneWidth,
         double sceneHeight,
         PacManXXL_MapSelector xxlMapSelector)
     {
-        {
-            final String variantName = StandardGameVariant.PACMAN.name();
-            final Game game = new ArcadePacMan_GameModel(THE_GAME_BOX, THE_GAME_BOX.highScoreFile(variantName));
-            addTestStates(game);
-            THE_GAME_BOX.registerGame(variantName, game);
-        }
-        {
-            final String variantName = StandardGameVariant.MS_PACMAN.name();
-            final Game game = new ArcadeMsPacMan_GameModel(THE_GAME_BOX, THE_GAME_BOX.highScoreFile(variantName));
-            addTestStates(game);
-            THE_GAME_BOX.registerGame(variantName, game);
-        }
-        {
-            final String variantName = StandardGameVariant.MS_PACMAN_TENGEN.name();
-            final Game game = new TengenMsPacMan_GameModel(THE_GAME_BOX.highScoreFile(variantName));
-            addTestStates(game);
-            THE_GAME_BOX.registerGame(variantName, game);
-        }
-        {
-            final String variantName = StandardGameVariant.PACMAN_XXL.name();
-            final Game game = new PacManXXL_PacMan_GameModel(THE_GAME_BOX, xxlMapSelector, THE_GAME_BOX.highScoreFile(variantName));
-            addTestStates(game);
-            THE_GAME_BOX.registerGame(variantName, game);
-        }
-        {
-            final String variantName = StandardGameVariant.MS_PACMAN_XXL.name();
-            final Game game = new PacManXXL_MsPacMan_GameModel(THE_GAME_BOX, xxlMapSelector, THE_GAME_BOX.highScoreFile(variantName));
-            addTestStates(game);
-            THE_GAME_BOX.registerGame(variantName, game);
-        }
+        Logger.info("Creating UI without builder");
 
-        final Map<String, Class<? extends GameUI_Config>> uiConfigMap = Map.of(
-            StandardGameVariant.PACMAN.name(),           ArcadePacMan_UIConfig.class,
-            StandardGameVariant.MS_PACMAN.name(),        ArcadeMsPacMan_UIConfig.class,
-            StandardGameVariant.MS_PACMAN_TENGEN.name(), TengenMsPacMan_UIConfig.class,
-            StandardGameVariant.PACMAN_XXL.name(),       PacManXXL_PacMan_UIConfig.class,
-            StandardGameVariant.MS_PACMAN_XXL.name(),    PacManXXL_MsPacMan_UIConfig.class
-        );
-        final var ui = new GameUI_Implementation(uiConfigMap, THE_GAME_BOX, stage, sceneWidth, sceneHeight);
+        registerGame(PACMAN,           new ArcadePacMan_GameModel(THE_GAME_BOX, highScoreFile(PACMAN)));
+        registerGame(MS_PACMAN,        new ArcadeMsPacMan_GameModel(THE_GAME_BOX, highScoreFile(MS_PACMAN)));
+        registerGame(MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel(highScoreFile(MS_PACMAN_TENGEN)));
+        registerGame(PACMAN_XXL,       new PacManXXL_PacMan_GameModel(THE_GAME_BOX, xxlMapSelector, highScoreFile(PACMAN_XXL)));
+        registerGame(MS_PACMAN_XXL,    new PacManXXL_MsPacMan_GameModel(THE_GAME_BOX, xxlMapSelector, highScoreFile(MS_PACMAN_XXL)));
+
+        final var ui = new GameUI_Implementation(UI_CONFIG_MAP, THE_GAME_BOX, stage, sceneWidth, sceneHeight);
 
         ui.startPagesView().addStartPage(new ArcadePacMan_StartPage());
         ui.startPagesView().addStartPage(new ArcadeMsPacMan_StartPage());
@@ -109,90 +109,78 @@ public class PacManGames3dApp extends Application {
         ui.startPagesView().startPages().forEach(startPage -> startPage.init(ui));
         ui.startPagesView().setSelectedIndex(0);
 
-        ui.dashboard().configure(List.of(
-            DashboardID.GENERAL,
-            DashboardID.GAME_CONTROL,
-            DashboardID.ANIMATION_INFO,
-            DashboardID.SETTINGS_3D,
-            DashboardID.GAME_INFO,
-            DashboardID.ACTOR_INFO,
-            DashboardID.CUSTOM_MAPS,
-            DashboardID.KEYS_GLOBAL,
-            DashboardID.KEYS_LOCAL,
-            DashboardID.ABOUT)
-        );
+        ui.dashboard().configure(List.of(DASHBOARD_IDS));
 
         return ui;
     }
 
-    private GameUI createUI_WithBuilder(Stage stage, double sceneWidth, double sceneHeight, PacManXXL_MapSelector xxlMapSelector) {
+    private GameUI createUI_WithBuilder(
+        Stage stage,
+        double sceneWidth,
+        double sceneHeight,
+        PacManXXL_MapSelector xxlMapSelector)
+    {
+        Logger.info("Creating UI with builder");
 
         return GameUI_Builder.create(stage, sceneWidth, sceneHeight)
             .game(
-                StandardGameVariant.PACMAN.name(),
+                PACMAN.name(),
                 ArcadePacMan_GameModel.class,
                 ArcadePacMan_UIConfig.class)
 
             .game(
-                StandardGameVariant.MS_PACMAN.name(),
+                MS_PACMAN.name(),
                 ArcadeMsPacMan_GameModel.class,
                 ArcadeMsPacMan_UIConfig.class)
 
             .game(
-                StandardGameVariant.MS_PACMAN_TENGEN.name(),
+                MS_PACMAN_TENGEN.name(),
                 TengenMsPacMan_GameModel.class,
                 TengenMsPacMan_UIConfig.class)
 
             .game(
-                StandardGameVariant.PACMAN_XXL.name(),
+                PACMAN_XXL.name(),
                 PacManXXL_PacMan_GameModel.class,
                 xxlMapSelector,
                 PacManXXL_PacMan_UIConfig.class)
 
             .game(
-                StandardGameVariant.MS_PACMAN_XXL.name(),
+                MS_PACMAN_XXL.name(),
                 PacManXXL_MsPacMan_GameModel.class,
                 xxlMapSelector,
                 PacManXXL_MsPacMan_UIConfig.class)
 
             .startPage(
                 ArcadePacMan_StartPage.class,
-                StandardGameVariant.PACMAN.name())
+                PACMAN.name())
 
             .startPage(
                 ArcadeMsPacMan_StartPage.class,
-                StandardGameVariant.MS_PACMAN.name())
+                MS_PACMAN.name())
 
             .startPage(
                 TengenMsPacMan_StartPage.class,
-                StandardGameVariant.MS_PACMAN_TENGEN.name())
+                MS_PACMAN_TENGEN.name())
 
             .startPage(
                 PacManXXL_StartPage.class,
-                StandardGameVariant.PACMAN_XXL.name(), StandardGameVariant.MS_PACMAN_XXL.name())
+                PACMAN_XXL.name(), MS_PACMAN_XXL.name())
 
-            .dashboard(
-                DashboardID.GENERAL,
-                DashboardID.GAME_CONTROL,
-                DashboardID.SETTINGS_3D,
-                DashboardID.ANIMATION_INFO,
-                DashboardID.GAME_INFO,
-                DashboardID.ACTOR_INFO,
-                DashboardID.CUSTOM_MAPS,
-                DashboardID.KEYS_GLOBAL,
-                DashboardID.KEYS_LOCAL,
-                DashboardID.ABOUT)
+            .dashboard(DASHBOARD_IDS)
 
             .build();
     }
 
     @Override
     public void start(Stage primaryStage) {
+        final Parameters parameters = getParameters();
+        final int height = (int) Math.round(USED_HEIGHT * Screen.getPrimary().getBounds().getHeight());
+        final int width  = Math.round(ASPECT_RATIO * height);
         try {
-            final int height = (int) Math.round(USED_HEIGHT * Screen.getPrimary().getBounds().getHeight());
-            final int width  = Math.round(ASPECT_RATIO * height);
             final var xxlMapSelector = new PacManXXL_MapSelector(GameBox.CUSTOM_MAP_DIR);
-            ui = USE_BUILDER
+            // Command-line: --use_builder=false or --use_builder=true
+            final boolean useBuilder = Boolean.parseBoolean(parameters.getNamed().getOrDefault("use_builder", "true"));
+            ui = useBuilder
                 ? createUI_WithBuilder(primaryStage, width, height, xxlMapSelector)
                 : createUI_WithoutBuilder(primaryStage, width, height, xxlMapSelector);
             ui.customDirWatchdog().addEventListener(xxlMapSelector);

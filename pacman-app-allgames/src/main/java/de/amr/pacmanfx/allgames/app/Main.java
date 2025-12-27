@@ -7,5 +7,5 @@ package de.amr.pacmanfx.allgames.app;
 import javafx.application.Application;
 
 public class Main {
-    public static void main(String[] args) { Application.launch(PacManGames3dApp.class, args); }
+    static void main(String[] args) { Application.launch(PacManGames3dApp.class, args); }
 }

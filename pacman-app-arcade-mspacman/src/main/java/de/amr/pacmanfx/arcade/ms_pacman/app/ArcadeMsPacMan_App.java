@@ -26,7 +26,7 @@ public class ArcadeMsPacMan_App extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        final int height = (int) Math.round(USED_HEIGHT * Screen.getPrimary().getBounds().getHeight());
+        final int height = (int) Math.round(USED_HEIGHT * Screen.getPrimary().getVisualBounds().getHeight());
         final int width  = Math.round(ASPECT_RATIO * height);
 
         ui = GameUI_Builder.create(primaryStage, width, height)
