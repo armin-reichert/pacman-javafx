@@ -238,9 +238,9 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
             a score normally unachievable without cheat codes, since all maze sets end after 32 stages.
             This was most likely done to simulate the Arcade game only giving one extra life per game.
             */
-            extraLifeScores = Set.of(10_000, 970_000, 980_000, 990_000);
+            setExtraLifeScores(10_000, 970_000, 980_000, 990_000);
         } else {
-            extraLifeScores = Set.of(10_000, 50_000, 100_000, 300_000);
+            setExtraLifeScores(10_000, 50_000, 100_000, 300_000);
         }
     }
 

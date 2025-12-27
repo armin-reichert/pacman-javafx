@@ -86,7 +86,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         allGhostsInLevelKilledPoints = 12_000;
         restingTicksAfterPelletEaten = 1;
         restingTicksAfterEnergizerEaten = 3;
-        extraLifeScores = Set.of(10_000);
+        setExtraLifeScores(10_000);
         setCollisionStrategy(CollisionStrategy.SAME_TILE);
 
         setGameControl(new Arcade_GameController());

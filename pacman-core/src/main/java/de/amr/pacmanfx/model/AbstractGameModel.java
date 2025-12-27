@@ -18,9 +18,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
 import static java.util.Objects.requireNonNull;
@@ -63,7 +61,8 @@ public abstract class AbstractGameModel implements Game {
 
     protected final Score score = new Score();
     protected final Score highScore = new Score();
-    protected Set<Integer> extraLifeScores = Set.of();
+
+    private Set<Integer> extraLifeScores = Set.of();
 
     protected final File highScoreFile;
 
@@ -362,6 +361,11 @@ public abstract class AbstractGameModel implements Game {
         } else {
             Logger.error("{} start tile not specified", ghost.name());
         }
+    }
+
+    protected void setExtraLifeScores(Integer... scores) {
+        extraLifeScores = scores.length <= 1
+            ? Set.of(scores) : Collections.unmodifiableSortedSet(new TreeSet<>(Set.of(scores)));
     }
 
     protected void handleScoreChange(int oldScore, int newScore) {
