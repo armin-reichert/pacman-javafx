@@ -11,9 +11,9 @@ import javafx.scene.image.WritableImage;
 /**
  * Sprite sheet interface.
  *
- * @param <SID> sprite ID enum type
+ * @param <ID> sprite ID type, for example some enumeration type.
  */
-public interface SpriteSheet<SID extends Enum<SID>> {
+public interface SpriteSheet<ID> {
 
     /**
      * @return the sprite sheet image
@@ -24,13 +24,13 @@ public interface SpriteSheet<SID extends Enum<SID>> {
      * @param id a sprite ID
      * @return the rectangular area in the sprite sheet where this sprite is located
      */
-    RectShort sprite(SID id);
+    RectShort sprite(ID id);
 
     /**
      * @param id a sprite sequence ID
      * @return array of rectangular sprite sheet areas where sprites are located
      */
-    RectShort[] spriteSequence(SID id);
+    RectShort[] spriteSequence(ID id);
 
     /**
      * @param x      x-coordinate of rectangular area
@@ -40,7 +40,7 @@ public interface SpriteSheet<SID extends Enum<SID>> {
      * @return image cropped from sprite sheet for given area
      */
     default Image image(int x, int y, int width, int height) {
-        var image = new WritableImage(width, height);
+        final var image = new WritableImage(width, height);
         image.getPixelWriter().setPixels(0, 0, width, height, sourceImage().getPixelReader(), x, y);
         return image;
     }
@@ -53,7 +53,11 @@ public interface SpriteSheet<SID extends Enum<SID>> {
         return image(sprite.x(), sprite.y(), sprite.width(), sprite.height());
     }
 
-    default Image image(SID id) {
+    /**
+     * @param id sprite ID
+     * @return image cropped from sprite sheet for given sprite
+     */
+    default Image image(ID id) {
         return image(sprite(id));
     }
 }
