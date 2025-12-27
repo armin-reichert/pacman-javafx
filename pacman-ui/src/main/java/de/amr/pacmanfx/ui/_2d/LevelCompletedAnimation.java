@@ -37,7 +37,7 @@ public class LevelCompletedAnimation extends RegisteredAnimation {
     private int singleFlashMillis;
     private int flashingIndex;
     private final BooleanProperty highlighted = new SimpleBooleanProperty(false);
-    private Timeline flashing;
+    private Timeline flashingAnimation;
 
     public LevelCompletedAnimation(AnimationRegistry animationRegistry, GameLevel gameLevel) {
         super(animationRegistry, "Level_Completed");
@@ -48,21 +48,21 @@ public class LevelCompletedAnimation extends RegisteredAnimation {
     @Override
     protected Animation createAnimationFX() {
         requireNonNull(gameLevel);
-        int numFlashes = gameLevel.numFlashes();
-        flashing = new Timeline(
+        final int numFlashes = gameLevel.numFlashes();
+        flashingAnimation = new Timeline(
             new KeyFrame(Duration.millis(singleFlashMillis * 0.25), _ -> highlighted.set(true)),
             new KeyFrame(Duration.millis(singleFlashMillis * 0.75), _ -> highlighted.set(false)),
-            new KeyFrame(Duration.millis(singleFlashMillis), _ -> {
-                if (flashingIndex + 1 < numFlashes) flashingIndex++;
-            })
+            new KeyFrame(Duration.millis(singleFlashMillis), _ -> nextFlashingIndex(numFlashes))
         );
-        flashing.setCycleCount(numFlashes);
-        return new SequentialTransition(
-            pauseSec(1.5, () -> gameLevel.ghosts().forEach(Ghost::hide)),
-            pauseSec(0.5),
-            numFlashes > 0 ? flashing : pauseSec(0),
-            pauseSec(1)
-        );
+        flashingAnimation.setCycleCount(numFlashes);
+        final Animation hideGhostsAfterDelay = pauseSec(1.5, () -> gameLevel.ghosts().forEach(Ghost::hide));
+        return numFlashes > 0
+            ? new SequentialTransition(hideGhostsAfterDelay, pauseSec(0.5), flashingAnimation, pauseSec(1))
+            : new SequentialTransition(hideGhostsAfterDelay, pauseSec(1.5));
+    }
+
+    private void nextFlashingIndex(int numFlashes) {
+        if (flashingIndex + 1 < numFlashes) flashingIndex++;
     }
 
     public boolean isHighlighted() {
@@ -70,7 +70,7 @@ public class LevelCompletedAnimation extends RegisteredAnimation {
     }
 
     public boolean isFlashing() {
-        return flashing != null && flashing.getStatus() == Animation.Status.RUNNING;
+        return flashingAnimation != null && flashingAnimation.getStatus() == Animation.Status.RUNNING;
     }
 
     @Override
