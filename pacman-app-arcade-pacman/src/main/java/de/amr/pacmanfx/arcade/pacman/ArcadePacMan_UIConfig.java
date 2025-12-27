@@ -207,7 +207,7 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
 
     @Override
     public ArcadePacMan_GameLevel_Renderer createGameLevelRenderer(Canvas canvas) {
-        return new ArcadePacMan_GameLevel_Renderer(canvas, ArcadePacMan_SpriteSheet.INSTANCE, assets.image("maze.bright"));
+        return new ArcadePacMan_GameLevel_Renderer(canvas, assets.image("maze.bright"));
     }
 
     @Override

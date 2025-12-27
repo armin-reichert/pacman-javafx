@@ -6,7 +6,6 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelMessage;
-import de.amr.pacmanfx.model.GameLevelMessageType;
 import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.uilib.rendering.*;
@@ -15,7 +14,6 @@ import javafx.scene.image.Image;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.api.ArcadePalette.*;
-import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
 /**
@@ -23,18 +21,16 @@ import static java.util.function.Predicate.not;
  */
 public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements SpriteRenderer, GameLevelRenderer {
 
-    protected final ArcadePacMan_SpriteSheet spriteSheet;
     private final Image brightMazeImage;
 
-    public ArcadePacMan_GameLevel_Renderer(Canvas canvas, ArcadePacMan_SpriteSheet spriteSheet, Image brightMazeImage) {
+    public ArcadePacMan_GameLevel_Renderer(Canvas canvas,  Image brightMazeImage) {
         super(canvas);
-        this.spriteSheet = requireNonNull(spriteSheet);
         this.brightMazeImage = brightMazeImage; // may be null e.g. in Pac-Man XXL where mazes are rendered without images
     }
 
     @Override
     public ArcadePacMan_SpriteSheet spriteSheet() {
-        return spriteSheet;
+        return ArcadePacMan_SpriteSheet.INSTANCE;
     }
 
     @Override
@@ -57,7 +53,7 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements Spr
                 // Flashing animation bright phase
                 ctx.drawImage(brightMazeImage, 0, emptySpaceOverMazePixels);
             } else {
-                drawSprite(spriteSheet.sprite(SpriteID.MAP_EMPTY), 0, emptySpaceOverMazePixels, false);
+                drawSprite(spriteSheet().sprite(SpriteID.MAP_EMPTY), 0, emptySpaceOverMazePixels, false);
             }
             if (info.getBoolean(CommonRenderInfoKey.MAZE_FLASHING)) {
                 // Hide ghost house doors while flashing
@@ -73,7 +69,7 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements Spr
             }
         }
         else {
-            drawSprite(spriteSheet.sprite(SpriteID.MAP_FULL), 0, emptySpaceOverMazePixels, false);
+            drawSprite(spriteSheet().sprite(SpriteID.MAP_FULL), 0, emptySpaceOverMazePixels, false);
             // Over-paint eaten food tiles
             FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
             foodLayer.tiles()
@@ -89,14 +85,11 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements Spr
     }
 
     protected void drawGameLevelMessage(GameLevel gameLevel, GameLevelMessage message) {
-        double x = message.x(), y = message.y();
+        final double x = message.x(), y = message.y();
         switch (message.type()) {
-            case GameLevelMessageType.GAME_OVER
-                -> fillTextCentered("GAME  OVER", ARCADE_RED, arcadeFont8(), x, y);
-            case GameLevelMessageType.READY
-                -> fillTextCentered("READY!", ARCADE_YELLOW, arcadeFont8(), x, y);
-            case GameLevelMessageType.TEST
-                -> fillTextCentered("TEST    L%02d".formatted(gameLevel.number()), ARCADE_WHITE, arcadeFont8(), x, y);
+            case GAME_OVER -> fillTextCentered("GAME  OVER", ARCADE_RED, arcadeFont8(), x, y);
+            case READY -> fillTextCentered("READY!", ARCADE_YELLOW, arcadeFont8(), x, y);
+            case TEST -> fillTextCentered("TEST    L%02d".formatted(gameLevel.number()), ARCADE_WHITE, arcadeFont8(), x, y);
         }
     }
 }
