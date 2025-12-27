@@ -11,25 +11,19 @@ import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 
-import static java.util.Objects.requireNonNull;
-
 public abstract class ArcadePacMan_CutScene_Renderer extends GameScene2D_Renderer implements SpriteRenderer {
-    protected final ArcadePacMan_SpriteSheet spriteSheet;
+
     protected final ActorRenderer actorRenderer;
 
-    public ArcadePacMan_CutScene_Renderer(GameScene2D scene, Canvas canvas, ArcadePacMan_SpriteSheet spriteSheet) {
+    public ArcadePacMan_CutScene_Renderer(GameScene2D scene, Canvas canvas) {
         super(canvas);
-        this.spriteSheet = requireNonNull(spriteSheet);
-
         final GameUI_Config uiConfig = scene.ui().currentConfig();
-
-        actorRenderer = adaptRenderer(
-            uiConfig.createActorRenderer(canvas), scene);
+        actorRenderer = adaptRenderer(uiConfig.createActorRenderer(canvas), scene);
     }
 
     @Override
     public ArcadePacMan_SpriteSheet spriteSheet() {
-        return spriteSheet;
+        return ArcadePacMan_SpriteSheet.INSTANCE;
     }
 
     @Override

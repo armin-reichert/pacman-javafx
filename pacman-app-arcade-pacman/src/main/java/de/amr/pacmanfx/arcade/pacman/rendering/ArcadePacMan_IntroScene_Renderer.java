@@ -18,7 +18,6 @@ import javafx.scene.paint.Color;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.pacman.rendering.SpriteID.GALLERY_GHOSTS;
 import static de.amr.pacmanfx.ui.api.ArcadePalette.*;
-import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_IntroScene_Renderer extends GameScene2D_Renderer implements SpriteRenderer {
 
@@ -31,13 +30,11 @@ public class ArcadePacMan_IntroScene_Renderer extends GameScene2D_Renderer imple
     private static final short ENERGIZER_X = TS * LEFT_TILE_X;
     private static final short ENERGIZER_Y = TS * 20;
 
-    private final ArcadePacMan_SpriteSheet spriteSheet;
     private final ArcadePacMan_Actor_Renderer actorRenderer;
     private final RectShort energizerSprite;
 
-    public ArcadePacMan_IntroScene_Renderer(GameScene2D scene, Canvas canvas, ArcadePacMan_SpriteSheet spriteSheet) {
+    public ArcadePacMan_IntroScene_Renderer(GameScene2D scene, Canvas canvas) {
         super(canvas);
-        this.spriteSheet = requireNonNull(spriteSheet);
 
         final GameUI_Config uiConfig = scene.ui().currentConfig();
 
@@ -52,13 +49,13 @@ public class ArcadePacMan_IntroScene_Renderer extends GameScene2D_Renderer imple
             }
         }, scene);
 
-        energizerSprite = spriteSheet.sprite(SpriteID.ENERGIZER);
+        energizerSprite = spriteSheet().sprite(SpriteID.ENERGIZER);
         setImageSmoothing(true);
     }
 
     @Override
     public ArcadePacMan_SpriteSheet spriteSheet() {
-        return spriteSheet;
+        return ArcadePacMan_SpriteSheet.INSTANCE;
     }
 
     @Override
@@ -94,7 +91,7 @@ public class ArcadePacMan_IntroScene_Renderer extends GameScene2D_Renderer imple
         for (byte p = RED_GHOST_SHADOW; p <= ORANGE_GHOST_POKEY; ++p) {
             int offsetY = 3 * p * TS;
             if (introScene.isGhostImageVisible(p)) {
-                RectShort sprite = spriteSheet.spriteSequence(GALLERY_GHOSTS)[p];
+                RectShort sprite = spriteSheet().spriteSequence(GALLERY_GHOSTS)[p];
                 drawSpriteCentered(TS * 5, y + offsetY - HTS, sprite);
             }
             if (introScene.isGhostCharacterVisible(p)) {
