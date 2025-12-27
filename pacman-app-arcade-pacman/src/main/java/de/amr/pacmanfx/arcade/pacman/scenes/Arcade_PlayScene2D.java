@@ -47,10 +47,8 @@ public class Arcade_PlayScene2D extends GameScene2D {
         super(ui);
     }
 
-    public boolean isMazeHighlighted() {
-        return levelCompletedAnimation != null
-            && levelCompletedAnimation.isRunning()
-            && levelCompletedAnimation.highlightedProperty().get();
+    public Optional<LevelCompletedAnimation> levelCompletedAnimation() {
+        return Optional.ofNullable(levelCompletedAnimation);
     }
 
     @Override

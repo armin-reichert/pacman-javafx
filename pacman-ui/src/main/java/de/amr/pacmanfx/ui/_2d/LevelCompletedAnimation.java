@@ -37,6 +37,7 @@ public class LevelCompletedAnimation extends RegisteredAnimation {
     private int singleFlashMillis;
     private int flashingIndex;
     private final BooleanProperty highlighted = new SimpleBooleanProperty(false);
+    private Timeline flashing;
 
     public LevelCompletedAnimation(AnimationRegistry animationRegistry, GameLevel gameLevel) {
         super(animationRegistry, "Level_Completed");
@@ -48,24 +49,28 @@ public class LevelCompletedAnimation extends RegisteredAnimation {
     protected Animation createAnimationFX() {
         requireNonNull(gameLevel);
         int numFlashes = gameLevel.numFlashes();
-        var flashingTimeline = new Timeline(
-            new KeyFrame(Duration.millis(singleFlashMillis * 0.25), e -> highlighted.set(true)),
-            new KeyFrame(Duration.millis(singleFlashMillis * 0.75), e -> highlighted.set(false)),
-            new KeyFrame(Duration.millis(singleFlashMillis), e -> {
+        flashing = new Timeline(
+            new KeyFrame(Duration.millis(singleFlashMillis * 0.25), _ -> highlighted.set(true)),
+            new KeyFrame(Duration.millis(singleFlashMillis * 0.75), _ -> highlighted.set(false)),
+            new KeyFrame(Duration.millis(singleFlashMillis), _ -> {
                 if (flashingIndex + 1 < numFlashes) flashingIndex++;
             })
         );
-        flashingTimeline.setCycleCount(numFlashes);
+        flashing.setCycleCount(numFlashes);
         return new SequentialTransition(
             pauseSec(1.5, () -> gameLevel.ghosts().forEach(Ghost::hide)),
             pauseSec(0.5),
-            numFlashes > 0 ? flashingTimeline : pauseSec(0),
+            numFlashes > 0 ? flashing : pauseSec(0),
             pauseSec(1)
         );
     }
 
-    public BooleanProperty highlightedProperty() {
-        return highlighted;
+    public boolean isHighlighted() {
+        return highlighted.get();
+    }
+
+    public boolean isFlashing() {
+        return flashing != null && flashing.getStatus() == Animation.Status.RUNNING;
     }
 
     @Override

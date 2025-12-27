@@ -59,9 +59,15 @@ public class Arcade_PlayScene2D_Renderer extends GameScene2D_Renderer implements
         final Arcade_PlayScene2D playScene = (Arcade_PlayScene2D) scene;
 
         final RenderInfo info = new RenderInfo();
-        info.put(CommonRenderInfoKey.MAZE_BRIGHT, playScene.isMazeHighlighted());
         info.put(CommonRenderInfoKey.ENERGIZER_BLINKING, level.blinking().state() == Pulse.State.ON);
         info.put(CommonRenderInfoKey.MAZE_EMPTY, level.worldMap().foodLayer().uneatenFoodCount() == 0);
+        playScene.levelCompletedAnimation().ifPresentOrElse(levelCompletedAnimation -> {
+            info.put(CommonRenderInfoKey.MAZE_BRIGHT, levelCompletedAnimation.isHighlighted());
+            info.put(CommonRenderInfoKey.MAZE_FLASHING, levelCompletedAnimation.isFlashing());
+        }, () -> {
+            info.put(CommonRenderInfoKey.MAZE_BRIGHT, false);
+            info.put(CommonRenderInfoKey.MAZE_FLASHING, false);
+        });
 
         levelRenderer.applyLevelSettings(level, info);
         levelRenderer.drawGameLevel(level, info);

@@ -8,7 +8,6 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelMessage;
 import de.amr.pacmanfx.model.GameLevelMessageType;
 import de.amr.pacmanfx.model.world.FoodLayer;
-import de.amr.pacmanfx.model.world.House;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.scene.canvas.Canvas;
@@ -52,14 +51,26 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements Spr
         int emptySpaceOverMazePixels = terrain.emptyRowsOverMaze() * TS;
         ctx.save();
         ctx.scale(scaling(), scaling());
-        if (info.getBoolean(CommonRenderInfoKey.MAZE_BRIGHT)) {
-            ctx.drawImage(brightMazeImage, 0, emptySpaceOverMazePixels);
-        }
-        else if (info.getBoolean(CommonRenderInfoKey.MAZE_EMPTY)) {
-            drawSprite(spriteSheet.sprite(SpriteID.MAP_EMPTY), 0, emptySpaceOverMazePixels, false);
-            // Over-paint door tiles
-            terrain.optHouse().map(House::leftDoorTile) .ifPresent(tile -> fillSquareAtTileCenter(tile, TS + 0.5));
-            terrain.optHouse().map(House::rightDoorTile).ifPresent(tile -> fillSquareAtTileCenter(tile, TS + 0.5));
+        if (info.getBoolean(CommonRenderInfoKey.MAZE_EMPTY)) {
+            // Empty maze is shown when level is complete and when the flashing animation is running
+            if (info.getBoolean(CommonRenderInfoKey.MAZE_BRIGHT)) {
+                // Flashing animation bright phase
+                ctx.drawImage(brightMazeImage, 0, emptySpaceOverMazePixels);
+            } else {
+                drawSprite(spriteSheet.sprite(SpriteID.MAP_EMPTY), 0, emptySpaceOverMazePixels, false);
+            }
+            if (info.getBoolean(CommonRenderInfoKey.MAZE_FLASHING)) {
+                // Hide ghost house doors while flashing
+                terrain.optHouse().ifPresent(house -> {
+                    ctx.setFill(background());
+                    if (house.leftDoorTile() != null) {
+                        fillSquareAtTileCenter(house.leftDoorTile(), TS + 0.5);
+                    }
+                    if (house.rightDoorTile() != null) {
+                        fillSquareAtTileCenter(house.rightDoorTile(), TS + 0.5);
+                    }
+                });
+            }
         }
         else {
             drawSprite(spriteSheet.sprite(SpriteID.MAP_FULL), 0, emptySpaceOverMazePixels, false);
