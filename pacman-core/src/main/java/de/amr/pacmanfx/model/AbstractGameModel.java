@@ -74,7 +74,7 @@ public abstract class AbstractGameModel implements Game {
 
         cheatUsedProperty().addListener((_, _, cheated) -> {
             if (cheated) {
-                highScore.setEnabled(false);
+                handleCheatUsed();
             }
         });
     }
@@ -380,6 +380,10 @@ public abstract class AbstractGameModel implements Game {
             addLives(1);
             publishGameEvent(new GameEvent(this, GameEvent.Type.SPECIAL_SCORE_REACHED));
         }
+    }
+
+    protected void handleCheatUsed() {
+        highScore.setEnabled(false);
     }
 
     /**
