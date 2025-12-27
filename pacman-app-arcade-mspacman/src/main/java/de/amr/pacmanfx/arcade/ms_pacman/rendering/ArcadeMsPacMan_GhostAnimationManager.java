@@ -20,8 +20,8 @@ public class ArcadeMsPacMan_GhostAnimationManager extends SpriteAnimationManager
 
     private final byte personality;
 
-    public ArcadeMsPacMan_GhostAnimationManager(ArcadeMsPacMan_SpriteSheet spriteSheet, byte personality) {
-        super(spriteSheet);
+    public ArcadeMsPacMan_GhostAnimationManager(byte personality) {
+        super(ArcadeMsPacMan_SpriteSheet.INSTANCE);
         this.personality = requireValidGhostPersonality(personality);
     }
 

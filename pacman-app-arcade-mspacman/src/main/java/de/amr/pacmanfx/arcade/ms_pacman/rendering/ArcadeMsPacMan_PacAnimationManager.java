@@ -15,8 +15,8 @@ import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 
 public class ArcadeMsPacMan_PacAnimationManager extends SpriteAnimationManager<SpriteID> {
 
-    public ArcadeMsPacMan_PacAnimationManager(ArcadeMsPacMan_SpriteSheet spriteSheet) {
-        super(spriteSheet);
+    public ArcadeMsPacMan_PacAnimationManager() {
+        super(ArcadeMsPacMan_SpriteSheet.INSTANCE);
     }
 
     @Override

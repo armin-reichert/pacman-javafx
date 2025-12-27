@@ -63,18 +63,6 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     private static final ResourceManager LOCAL_RESOURCES = () -> ArcadeMsPacMan_UIConfig.class;
 
-    // Creates the maze image used in the flash animation at the end of each level
-    private static Image createBrightMazeImage(int index) {
-        final RectShort mazeSprite = ArcadeMsPacMan_SpriteSheet.INSTANCE.spriteSequence(SpriteID.FULL_MAZES)[index];
-        final Image mazeImage = ArcadeMsPacMan_SpriteSheet.INSTANCE.image(mazeSprite);
-        final WorldMapColorScheme colorScheme = ArcadeMsPacMan_MapSelector.WORLD_MAP_COLOR_SCHEMES.get(index);
-        final Map<Color, Color> colorChanges = Map.of(
-            Color.web(colorScheme.wallStroke()), ARCADE_WHITE,
-            Color.web(colorScheme.door()), Color.TRANSPARENT
-        );
-        return Ufx.recolorImage(mazeImage, colorChanges);
-    }
-
     private final GameUI ui;
     private final AssetMap assets = new AssetMap();
     private final SoundManager soundManager = new SoundManager();
@@ -151,6 +139,18 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         assets.setLocalizedTexts(ResourceBundle.getBundle("de.amr.pacmanfx.arcade.ms_pacman.localized_texts"));
     }
 
+    // Creates the maze image used in the flash animation at the end of each level
+    private Image createBrightMazeImage(int index) {
+        final RectShort mazeSprite = spriteSheet().spriteSequence(SpriteID.FULL_MAZES)[index];
+        final Image mazeImage = spriteSheet().image(mazeSprite);
+        final WorldMapColorScheme colorScheme = ArcadeMsPacMan_MapSelector.WORLD_MAP_COLOR_SCHEMES.get(index);
+        final Map<Color, Color> colorChanges = Map.of(
+                Color.web(colorScheme.wallStroke()), ARCADE_WHITE,
+                Color.web(colorScheme.door()), Color.TRANSPARENT
+        );
+        return Ufx.recolorImage(mazeImage, colorChanges);
+    }
+
     private void registerSounds() {
         soundManager.register(SoundID.VOICE_AUTOPILOT_OFF,          GameUI.VOICE_AUTOPILOT_OFF);
         soundManager.register(SoundID.VOICE_AUTOPILOT_ON,           GameUI.VOICE_AUTOPILOT_ON);
@@ -201,10 +201,10 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     @Override
     public GameScene2D_Renderer createGameSceneRenderer(Canvas canvas, GameScene2D gameScene2D) {
         GameScene2D_Renderer renderer = switch (gameScene2D) {
-            case Arcade_BootScene2D ignored -> new Arcade_BootScene2D_Renderer(gameScene2D, canvas, ArcadeMsPacMan_SpriteSheet.INSTANCE);
+            case Arcade_BootScene2D ignored -> new Arcade_BootScene2D_Renderer(gameScene2D, canvas, spriteSheet());
             case ArcadeMsPacMan_IntroScene ignored -> new ArcadeMsPacMan_IntroScene_Renderer(gameScene2D, canvas);
             case ArcadeMsPacMan_StartScene ignored -> new ArcadeMsPacMan_StartScene_Renderer(gameScene2D, canvas);
-            case Arcade_PlayScene2D ignored -> new Arcade_PlayScene2D_Renderer(gameScene2D, canvas, ArcadeMsPacMan_SpriteSheet.INSTANCE);
+            case Arcade_PlayScene2D ignored -> new Arcade_PlayScene2D_Renderer(gameScene2D, canvas, spriteSheet());
             case ArcadeMsPacMan_CutScene1 ignored -> new ArcadeMsPacMan_CutScene1_Renderer(gameScene2D, canvas);
             case ArcadeMsPacMan_CutScene2 ignored -> new ArcadeMsPacMan_CutScene2_Renderer(gameScene2D, canvas);
             case ArcadeMsPacMan_CutScene3 ignored -> new ArcadeMsPacMan_CutScene3_Renderer(gameScene2D, canvas);
@@ -249,30 +249,30 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     @Override
     public ArcadeMsPacMan_GhostAnimationManager createGhostAnimations(byte personality) {
-        return new ArcadeMsPacMan_GhostAnimationManager(ArcadeMsPacMan_SpriteSheet.INSTANCE, personality);
+        return new ArcadeMsPacMan_GhostAnimationManager(personality);
     }
 
     @Override
     public ArcadeMsPacMan_PacAnimationManager createPacAnimations() {
-        return new ArcadeMsPacMan_PacAnimationManager(ArcadeMsPacMan_SpriteSheet.INSTANCE);
+        return new ArcadeMsPacMan_PacAnimationManager();
     }
 
     @Override
     public Image killedGhostPointsImage(int killedIndex) {
-        final RectShort[] numberSprites = ArcadeMsPacMan_SpriteSheet.INSTANCE.spriteSequence(SpriteID.GHOST_NUMBERS);
-        return ArcadeMsPacMan_SpriteSheet.INSTANCE.image(numberSprites[killedIndex]);
+        final RectShort[] numberSprites = spriteSheet().spriteSequence(SpriteID.GHOST_NUMBERS);
+        return spriteSheet().image(numberSprites[killedIndex]);
     }
 
     @Override
     public Image bonusSymbolImage(byte symbol) {
-        final RectShort[] sprites = ArcadeMsPacMan_SpriteSheet.INSTANCE.spriteSequence(SpriteID.BONUS_SYMBOLS);
-        return ArcadeMsPacMan_SpriteSheet.INSTANCE.image(sprites[symbol]);
+        final RectShort[] sprites = spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS);
+        return spriteSheet().image(sprites[symbol]);
     }
 
     @Override
     public Image bonusValueImage(byte symbol) {
-        final RectShort[] sprites = ArcadeMsPacMan_SpriteSheet.INSTANCE.spriteSequence(SpriteID.BONUS_VALUES);
-        return ArcadeMsPacMan_SpriteSheet.INSTANCE.image(sprites[symbol]);
+        final RectShort[] sprites = spriteSheet().spriteSequence(SpriteID.BONUS_VALUES);
+        return spriteSheet().image(sprites[symbol]);
     }
 
     @Override

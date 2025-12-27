@@ -142,7 +142,7 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config, GameScene_Con
         soundManager.register(SoundID.VOICE_IMMUNITY_OFF,           GameUI.VOICE_IMMUNITY_OFF);
         soundManager.register(SoundID.VOICE_IMMUNITY_ON,            GameUI.VOICE_IMMUNITY_ON);
 
-        soundManager.registerMediaPlayer(SoundID.BONUS_ACTIVE,            ARCADE_MS_PACMAN_RESOURCES.url("sound/Fruit_Bounce.mp3"));
+        soundManager.registerMediaPlayer(SoundID.BONUS_ACTIVE,      ARCADE_MS_PACMAN_RESOURCES.url("sound/Fruit_Bounce.mp3"));
         soundManager.registerAudioClipURL(SoundID.BONUS_EATEN,      ARCADE_MS_PACMAN_RESOURCES.url("sound/Fruit.mp3"));
         soundManager.registerAudioClipURL(SoundID.COIN_INSERTED,    ARCADE_MS_PACMAN_RESOURCES.url("sound/credit.wav"));
         soundManager.registerAudioClipURL(SoundID.EXTRA_LIFE,       ARCADE_MS_PACMAN_RESOURCES.url("sound/ExtraLife.mp3"));
@@ -182,10 +182,10 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config, GameScene_Con
     @Override
     public GameScene2D_Renderer createGameSceneRenderer(Canvas canvas, GameScene2D gameScene2D) {
         final GameScene2D_Renderer renderer = switch (gameScene2D) {
-            case Arcade_BootScene2D        ignored -> new Arcade_BootScene2D_Renderer(gameScene2D, canvas, ArcadeMsPacMan_SpriteSheet.INSTANCE);
+            case Arcade_BootScene2D        ignored -> new Arcade_BootScene2D_Renderer(gameScene2D, canvas, spriteSheet());
             case ArcadeMsPacMan_IntroScene ignored -> new ArcadeMsPacMan_IntroScene_Renderer(gameScene2D, canvas);
             case ArcadeMsPacMan_StartScene ignored -> new ArcadeMsPacMan_StartScene_Renderer(gameScene2D, canvas);
-            case Arcade_PlayScene2D        ignored -> new Arcade_PlayScene2D_Renderer(gameScene2D, canvas, ArcadeMsPacMan_SpriteSheet.INSTANCE);
+            case Arcade_PlayScene2D        ignored -> new Arcade_PlayScene2D_Renderer(gameScene2D, canvas, spriteSheet());
             case ArcadeMsPacMan_CutScene1  ignored -> new ArcadeMsPacMan_CutScene1_Renderer(gameScene2D, canvas);
             case ArcadeMsPacMan_CutScene2  ignored -> new ArcadeMsPacMan_CutScene2_Renderer(gameScene2D, canvas);
             case ArcadeMsPacMan_CutScene3  ignored -> new ArcadeMsPacMan_CutScene3_Renderer(gameScene2D, canvas);
@@ -231,30 +231,30 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config, GameScene_Con
 
     @Override
     public SpriteAnimationManager<SpriteID> createGhostAnimations(byte personality) {
-        return new ArcadeMsPacMan_GhostAnimationManager(ArcadeMsPacMan_SpriteSheet.INSTANCE, personality);
+        return new ArcadeMsPacMan_GhostAnimationManager(personality);
     }
 
     @Override
     public SpriteAnimationManager<SpriteID> createPacAnimations() {
-        return new ArcadeMsPacMan_PacAnimationManager(ArcadeMsPacMan_SpriteSheet.INSTANCE);
+        return new ArcadeMsPacMan_PacAnimationManager();
     }
 
     @Override
     public Image killedGhostPointsImage(int killedIndex) {
-        final RectShort[] numberSprites = ArcadeMsPacMan_SpriteSheet.INSTANCE.spriteSequence(SpriteID.GHOST_NUMBERS);
-        return ArcadeMsPacMan_SpriteSheet.INSTANCE.image(numberSprites[killedIndex]);
+        final RectShort[] numberSprites = spriteSheet().spriteSequence(SpriteID.GHOST_NUMBERS);
+        return spriteSheet().image(numberSprites[killedIndex]);
     }
 
     @Override
     public Image bonusSymbolImage(byte symbol) {
-        final RectShort[] sprites = ArcadeMsPacMan_SpriteSheet.INSTANCE.spriteSequence(SpriteID.BONUS_SYMBOLS);
-        return ArcadeMsPacMan_SpriteSheet.INSTANCE.image(sprites[symbol]);
+        final RectShort[] sprites = spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS);
+        return spriteSheet().image(sprites[symbol]);
     }
 
     @Override
     public Image bonusValueImage(byte symbol) {
-        final RectShort[] sprites = ArcadeMsPacMan_SpriteSheet.INSTANCE.spriteSequence(SpriteID.BONUS_VALUES);
-        return ArcadeMsPacMan_SpriteSheet.INSTANCE.image(sprites[symbol]);
+        final RectShort[] sprites = spriteSheet().spriteSequence(SpriteID.BONUS_VALUES);
+        return spriteSheet().image(sprites[symbol]);
     }
 
     @Override
