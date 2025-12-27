@@ -61,43 +61,21 @@ public abstract class AbstractGameModel implements Game {
     protected int pelletPoints;
     protected int energizerPoints;
 
-    protected final Score score;
-    protected final Score highScore;
-    protected Set<Integer> extraLifeScores;
+    protected final Score score = new Score();
+    protected final Score highScore = new Score();
+    protected Set<Integer> extraLifeScores = Set.of();
 
     protected final File highScoreFile;
 
     protected AbstractGameModel(File highScoreFile) {
         this.highScoreFile = requireNonNull(highScoreFile);
 
-        score = new Score();
-        score.pointsProperty().addListener((_, oldScore, newScore) -> {
-            // has extra life score line been crossed?
-            for (int scoreLine : extraLifeScores) {
-                if (oldScore.intValue() < scoreLine && newScore.intValue() >= scoreLine) {
-                    simStep.extraLifeWon = true;
-                    simStep.extraLifeScore = scoreLine;
-                    break;
-                }
-            }
-            if (simStep.extraLifeWon) {
-                addLives(1);
-                publishGameEvent(new GameEvent(this, GameEvent.Type.SPECIAL_SCORE_REACHED));
-            }
-        });
-
-        highScore = new Score();
-        extraLifeScores = Set.of();
+        score.pointsProperty().addListener((_, oldScore, newScore)
+            -> handleScoreChange(oldScore.intValue(), newScore.intValue()));
 
         cheatUsedProperty().addListener((_, _, cheated) -> {
-            if (cheated && highScore.isEnabled()) {
+            if (cheated) {
                 highScore.setEnabled(false);
-            }
-        });
-
-        lifeCountProperty().addListener((_, _, nv) -> {
-            if (nv.intValue() < 0) {
-                throw new IllegalArgumentException("Life count cannot be set to negative value " + nv.intValue());
             }
         });
     }
@@ -360,8 +338,8 @@ public abstract class AbstractGameModel implements Game {
     @Override
     public void publishGameEvent(GameEvent event) {
         requireNonNull(event);
+        Logger.trace("Publish game event: {}", event);
         eventListeners.forEach(subscriber -> subscriber.onGameEvent(event));
-        Logger.trace("Published game event: {}", event);
     }
 
     @Override
@@ -383,6 +361,20 @@ public abstract class AbstractGameModel implements Game {
             ghost.setStartPosition(halfTileRightOf(tile));
         } else {
             Logger.error("{} start tile not specified", ghost.name());
+        }
+    }
+
+    protected void handleScoreChange(int oldScore, int newScore) {
+        for (int extraLifeScore : extraLifeScores) {
+            if (oldScore < extraLifeScore && newScore >= extraLifeScore) {
+                simStep.extraLifeWon = true;
+                simStep.extraLifeScore = extraLifeScore;
+                break;
+            }
+        }
+        if (simStep.extraLifeWon) {
+            addLives(1);
+            publishGameEvent(new GameEvent(this, GameEvent.Type.SPECIAL_SCORE_REACHED));
         }
     }
 
