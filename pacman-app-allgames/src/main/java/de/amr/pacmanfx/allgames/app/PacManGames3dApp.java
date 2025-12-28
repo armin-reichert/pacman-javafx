@@ -172,9 +172,10 @@ public class PacManGames3dApp extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        final Parameters parameters = getParameters();
-        final int height = (int) Math.round(USED_HEIGHT * Screen.getPrimary().getBounds().getHeight());
+        final double screenHeight = Screen.getPrimary().getVisualBounds().getHeight();
+        final int height = (int) Math.round(USED_HEIGHT * screenHeight);
         final int width  = Math.round(ASPECT_RATIO * height);
+        final Parameters parameters = getParameters();
         try {
             final var xxlMapSelector = new PacManXXL_MapSelector(GameBox.CUSTOM_MAP_DIR);
             // Command-line: --use_builder=false or --use_builder=true
