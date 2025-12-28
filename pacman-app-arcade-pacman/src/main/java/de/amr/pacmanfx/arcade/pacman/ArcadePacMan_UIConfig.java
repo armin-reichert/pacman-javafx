@@ -67,13 +67,13 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
         new ActionBinding(ArcadeActions.ACTION_START_GAME,  bare(KeyCode.DIGIT1), bare(KeyCode.NUMPAD1))
     );
 
-    public static final WorldMapColorScheme MAP_COLOR_SCHEME = new WorldMapColorScheme(
+    public static final WorldMapColorScheme WORLD_MAP_COLOR_SCHEME = new WorldMapColorScheme(
         "#000000", "#2121ff", "#ffb7ff", "#febdb4"
     );
 
     private static final Map<Color, Color> BRIGHT_MAZE_COLOR_CHANGES = Map.of(
-        Color.web(MAP_COLOR_SCHEME.wallStroke()), ARCADE_WHITE,   // wall color change
-        Color.web(MAP_COLOR_SCHEME.door()), Color.TRANSPARENT // door color change
+        Color.web(WORLD_MAP_COLOR_SCHEME.wallStroke()), ARCADE_WHITE,   // wall color change
+        Color.web(WORLD_MAP_COLOR_SCHEME.door()), Color.TRANSPARENT // door color change
     );
 
     private final GameUI ui;
@@ -187,7 +187,7 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
 
     @Override
     public WorldMapColorScheme colorScheme(WorldMap worldMap) {
-        return MAP_COLOR_SCHEME;
+        return WORLD_MAP_COLOR_SCHEME;
     }
 
     @Override
