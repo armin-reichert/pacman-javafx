@@ -1,4 +1,5 @@
-// alias(libs.plugins.xyz) gets plugin id and version from version catalog ("gradle/libs.versions.toml")
+// Usage: alias(libs.plugins.<plugin_name>) loads plugin from the "version catalog"
+// at "gradle/libs.versions.toml".
 plugins {
     id("java")
     alias(libs.plugins.javafx)
@@ -8,7 +9,7 @@ plugins {
 subprojects {
     // 1. Apply plugins
     apply(plugin: "java")
-    // For plugins referenced via the version catalog it has to be done like this:
+    // For plugins loaded from the version catalog it has to be done like this:
     pluginManager.apply(libs.plugins.javafx.get().getPluginId())
     pluginManager.apply(libs.plugins.osdetector.get().getPluginId())
 
@@ -36,7 +37,7 @@ subprojects {
     }
 }
 
-// define installer package format by OS
+// Define installer package format depending on operating system
 ext.installerPkg = [linux: "deb", "osx": "dmg", windows: "msi"][osdetector.os]
 
 logger.lifecycle("osdetector.os            = ${osdetector.os}")

@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.javafx)
-    alias(libs.plugins.osdetector)
 }
 
 dependencies {
@@ -10,6 +9,7 @@ dependencies {
         project(":pacman-app-mapeditor"),
         libs.bundles.iconli,
         libs.bundles.tinylog)
+
     testImplementation(libs.junit.jupiter.api)
     testRuntimeOnly(libs.junit.jupiter.engine)
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")

@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.javafx)
-    alias(libs.plugins.osdetector)
 }
 
 dependencies {
