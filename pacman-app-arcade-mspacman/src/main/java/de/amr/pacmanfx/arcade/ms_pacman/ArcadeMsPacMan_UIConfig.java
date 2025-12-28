@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
-import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_MapSelector;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.*;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.*;
 import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_BootScene2D_Renderer;
@@ -43,10 +42,7 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -60,6 +56,15 @@ import static java.util.Objects.requireNonNull;
 public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config {
 
     public enum AnimationID { PAC_MAN_MUNCHING }
+
+    public static final List<WorldMapColorScheme> WORLD_MAP_COLOR_SCHEMES = List.of(
+        new WorldMapColorScheme("FFB7AE", "FF0000", "FCB5FF", "DEDEFF"),
+        new WorldMapColorScheme("47B7FF", "DEDEFF", "FCB5FF", "FFFF00"),
+        new WorldMapColorScheme("DE9751", "DEDEFF", "FCB5FF", "FF0000"),
+        new WorldMapColorScheme("2121FF", "FFB751", "FCB5FF", "DEDEFF"),
+        new WorldMapColorScheme("FFB7FF", "FFFF00", "FCB5FF", "00FFFF"),
+        new WorldMapColorScheme("FFB7AE", "FF0000", "FCB5FF", "DEDEFF")
+    );
 
     private static final ResourceManager LOCAL_RESOURCES = () -> ArcadeMsPacMan_UIConfig.class;
 
@@ -100,9 +105,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
         assets.set("logo.midway", LOCAL_RESOURCES.loadImage("graphics/midway_logo.png"));
 
-        for (int i = 0; i < ArcadeMsPacMan_MapSelector.WORLD_MAP_COLOR_SCHEMES.size(); ++i) {
-            assets.set("maze.bright.%d".formatted(i), createBrightMazeImage(i));
-        }
+        createBrightMazeImages();
 
         assets.set("color.game_over_message", ARCADE_RED);
 
@@ -140,11 +143,17 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         assets.setLocalizedTexts(ResourceBundle.getBundle("de.amr.pacmanfx.arcade.ms_pacman.localized_texts"));
     }
 
+    private void createBrightMazeImages() {
+        for (int i = 0; i < WORLD_MAP_COLOR_SCHEMES.size(); ++i) {
+            assets.set("maze.bright.%d".formatted(i), createBrightMazeImage(i));
+        }
+    }
+
     // Creates the maze image used in the flash animation at the end of each level
     private Image createBrightMazeImage(int index) {
         final RectShort mazeSprite = spriteSheet().spriteSequence(SpriteID.EMPTY_MAZES)[index];
         final Image mazeImage = spriteSheet().image(mazeSprite);
-        final WorldMapColorScheme colorScheme = ArcadeMsPacMan_MapSelector.WORLD_MAP_COLOR_SCHEMES.get(index);
+        final WorldMapColorScheme colorScheme = WORLD_MAP_COLOR_SCHEMES.get(index);
         final Map<Color, Color> colorChanges = Map.of(
                 Color.web(colorScheme.wallStroke()), ARCADE_WHITE,
                 Color.web(colorScheme.door()), Color.TRANSPARENT
@@ -196,7 +205,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     @Override
     public WorldMapColorScheme colorScheme(WorldMap worldMap) {
         final int index = worldMap.getConfigValue("colorMapIndex");
-        return ArcadeMsPacMan_MapSelector.WORLD_MAP_COLOR_SCHEMES.get(index);
+        return WORLD_MAP_COLOR_SCHEMES.get(index);
     }
 
     @Override
