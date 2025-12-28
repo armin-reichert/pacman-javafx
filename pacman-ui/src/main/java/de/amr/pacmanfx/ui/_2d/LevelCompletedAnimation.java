@@ -33,11 +33,13 @@ import static java.util.Objects.requireNonNull;
  */
 public class LevelCompletedAnimation extends RegisteredAnimation {
 
+    public static final double GHOSTS_HIDING_DELAY = 1.5;
+
     private final GameLevel gameLevel;
-    private int singleFlashMillis;
-    private int flashingIndex;
     private final BooleanProperty highlighted = new SimpleBooleanProperty(false);
     private Timeline flashingAnimation;
+    private int singleFlashMillis;
+    private int flashingIndex;
 
     public LevelCompletedAnimation(AnimationRegistry animationRegistry, GameLevel gameLevel) {
         super(animationRegistry, "Level_Completed");
@@ -50,12 +52,13 @@ public class LevelCompletedAnimation extends RegisteredAnimation {
         requireNonNull(gameLevel);
         final int numFlashes = gameLevel.numFlashes();
         flashingAnimation = new Timeline(
+            new KeyFrame(Duration.ZERO, _ -> flashingIndex = 0),
             new KeyFrame(Duration.millis(singleFlashMillis * 0.25), _ -> highlighted.set(true)),
             new KeyFrame(Duration.millis(singleFlashMillis * 0.75), _ -> highlighted.set(false)),
             new KeyFrame(Duration.millis(singleFlashMillis), _ -> nextFlashingIndex(numFlashes))
         );
         flashingAnimation.setCycleCount(numFlashes);
-        final Animation hideGhostsAfterDelay = pauseSec(1.5, () -> gameLevel.ghosts().forEach(Ghost::hide));
+        final Animation hideGhostsAfterDelay = pauseSec(GHOSTS_HIDING_DELAY, () -> gameLevel.ghosts().forEach(Ghost::hide));
         return numFlashes > 0
             ? new SequentialTransition(hideGhostsAfterDelay, pauseSec(0.5), flashingAnimation, pauseSec(1))
             : new SequentialTransition(hideGhostsAfterDelay, pauseSec(1.5));
@@ -71,12 +74,6 @@ public class LevelCompletedAnimation extends RegisteredAnimation {
 
     public boolean isFlashing() {
         return flashingAnimation != null && flashingAnimation.getStatus() == Animation.Status.RUNNING;
-    }
-
-    @Override
-    public void playFromStart() {
-        flashingIndex = 0;
-        super.playFromStart();
     }
 
     public void setSingleFlashMillis(int singleFlashMillis) {
