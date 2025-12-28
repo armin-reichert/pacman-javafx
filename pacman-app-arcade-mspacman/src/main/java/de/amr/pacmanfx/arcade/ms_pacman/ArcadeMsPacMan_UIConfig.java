@@ -132,6 +132,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         assets.set("ghost.color.frightened.dress",    ARCADE_BLUE);
         assets.set("ghost.color.frightened.eyeballs", ARCADE_ROSE);
         assets.set("ghost.color.frightened.pupils",   ARCADE_ROSE);
+
         assets.set("ghost.color.flashing.dress",      ARCADE_WHITE);
         assets.set("ghost.color.flashing.eyeballs",   ARCADE_ROSE);
         assets.set("ghost.color.flashing.pupils",     ARCADE_RED);
@@ -141,7 +142,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     // Creates the maze image used in the flash animation at the end of each level
     private Image createBrightMazeImage(int index) {
-        final RectShort mazeSprite = spriteSheet().spriteSequence(SpriteID.FULL_MAZES)[index];
+        final RectShort mazeSprite = spriteSheet().spriteSequence(SpriteID.EMPTY_MAZES)[index];
         final Image mazeImage = spriteSheet().image(mazeSprite);
         final WorldMapColorScheme colorScheme = ArcadeMsPacMan_MapSelector.WORLD_MAP_COLOR_SCHEMES.get(index);
         final Map<Color, Color> colorChanges = Map.of(

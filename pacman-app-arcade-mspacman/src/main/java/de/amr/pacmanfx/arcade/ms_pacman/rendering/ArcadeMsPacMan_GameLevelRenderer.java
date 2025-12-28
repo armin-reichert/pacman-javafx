@@ -44,29 +44,28 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
 
     protected void drawMaze(GameLevel gameLevel, RenderInfo info) {
         final TerrainLayer terrain = gameLevel.worldMap().terrainLayer();
-        float emptySpaceOverMazePixels = TS(terrain.emptyRowsOverMaze());
-        int colorMapIndex = gameLevel.worldMap().getConfigValue("colorMapIndex");
+        final float emptySpaceOverMazePixels = TS(terrain.emptyRowsOverMaze());
+        final int colorMapIndex = gameLevel.worldMap().getConfigValue("colorMapIndex");
+
         ctx.save();
         ctx.scale(scaling(), scaling());
-        if (info.getBoolean(CommonRenderInfoKey.MAZE_BRIGHT)) {
-            Image mazeImage = assets.image("maze.bright.%d".formatted(colorMapIndex));
-            ctx.drawImage(mazeImage, 0, emptySpaceOverMazePixels);
-        } else if (info.getBoolean(CommonRenderInfoKey.MAZE_EMPTY)) {
-            RectShort mazeSprite = spriteSheet().spriteSequence(SpriteID.EMPTY_MAZES)[colorMapIndex];
-            drawSprite(mazeSprite, 0, emptySpaceOverMazePixels, false);
-            if (info.getBoolean(CommonRenderInfoKey.MAZE_FLASHING)) {
-                // Hide ghost house doors while flashing
-                terrain.optHouse().ifPresent(house -> {
-                    ctx.setFill(background());
-                    if (house.leftDoorTile() != null) {
-                        fillSquareAtTileCenter(house.leftDoorTile(), TS + 0.5);
-                    }
-                    if (house.rightDoorTile() != null) {
-                        fillSquareAtTileCenter(house.rightDoorTile(), TS + 0.5);
-                    }
-                });
+
+        if (info.getBoolean(CommonRenderInfoKey.MAZE_FLASHING)) {
+            if (info.getBoolean(CommonRenderInfoKey.MAZE_BRIGHT)) {
+                final Image brightMazeImage = assets.image("maze.bright.%d".formatted(colorMapIndex));
+                ctx.drawImage(brightMazeImage, 0, emptySpaceOverMazePixels);
+                hideGhostHouseDoors(terrain);
             }
-        } else {
+            else {
+                final RectShort emptyMazeSprite = spriteSheet().spriteSequence(SpriteID.EMPTY_MAZES)[colorMapIndex];
+                drawSprite(emptyMazeSprite, 0, emptySpaceOverMazePixels, false);
+            }
+        }
+        else if (info.getBoolean(CommonRenderInfoKey.MAZE_EMPTY)) {
+            final RectShort emptyMazeSprite = spriteSheet().spriteSequence(SpriteID.EMPTY_MAZES)[colorMapIndex];
+            drawSprite(emptyMazeSprite, 0, emptySpaceOverMazePixels, false);
+        }
+        else {
             RectShort mazeSprite = spriteSheet().spriteSequence(SpriteID.FULL_MAZES)[colorMapIndex];
             drawSprite(mazeSprite, 0, emptySpaceOverMazePixels, false);
             // Over-paint the eaten pellets (pellets are part of the maze image)
@@ -81,6 +80,18 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
                 .forEach(tile -> fillSquareAtTileCenter(tile, 10));
         }
         ctx.restore();
+    }
+
+    private void hideGhostHouseDoors(TerrainLayer terrain) {
+        terrain.optHouse().ifPresent(house -> {
+            ctx.setFill(background());
+            if (house.leftDoorTile() != null) {
+                fillSquareAtTileCenter(house.leftDoorTile(), TS + 0.5);
+            }
+            if (house.rightDoorTile() != null) {
+                fillSquareAtTileCenter(house.rightDoorTile(), TS + 0.5);
+            }
+        });
     }
 
     protected void drawGameLevelMessage(GameLevel gameLevel, GameLevelMessage message) {
