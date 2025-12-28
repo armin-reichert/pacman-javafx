@@ -17,6 +17,8 @@ import static de.amr.pacmanfx.ui.api.GameUI_Config.CONFIG_KEY_MAP_NUMBER;
 
 public class ArcadeMsPacMan_MapSelector implements WorldMapSelector {
 
+    private static final String WORLD_MAP_PATH_PATTERN = "/de/amr/pacmanfx/arcade/ms_pacman/maps/mspacman_%d.world";
+
     private List<WorldMap> mapPrototypes = List.of();
 
     @Override
@@ -35,7 +37,7 @@ public class ArcadeMsPacMan_MapSelector implements WorldMapSelector {
     @Override
     public void loadAllMapPrototypes() {
         if (mapPrototypes.isEmpty()) {
-            mapPrototypes = WorldMapSelector.loadMapsFromModule(getClass(), "/de/amr/pacmanfx/arcade/ms_pacman/maps/mspacman_%d.world", 4);
+            mapPrototypes = WorldMapSelector.loadMapsFromModule(getClass(), WORLD_MAP_PATH_PATTERN, 4);
         }
     }
 
@@ -56,6 +58,7 @@ public class ArcadeMsPacMan_MapSelector implements WorldMapSelector {
      * <p>
      *
      * @param levelNumber level number (starts at 1)
+     * @param args additional arguments
      */
     @Override
     public WorldMap selectWorldMap(int levelNumber, Object... args) {
@@ -71,15 +74,15 @@ public class ArcadeMsPacMan_MapSelector implements WorldMapSelector {
         return configuredWorldMap(prototype, levelNumber, mapNumber);
     }
 
+    // Color scheme index
+    // 1->0, 2->1, 3->2, 4->3   level 1..13;
+    // 3->4; 4->5               level 14+
     private WorldMap configuredWorldMap(WorldMap prototype, int levelNumber, int mapNumber) {
         final WorldMap worldMap = new WorldMap(prototype);
+        final int colorMapIndex = levelNumber <= 13 ? mapNumber - 1 : mapNumber + 1;
         worldMap.setConfigValue(CONFIG_KEY_MAP_NUMBER, mapNumber);
-        // Color scheme index
-        // 1->0, 2->1, 3->2, 4->3   level 1..13;
-        // 3->4; 4->5               level 14+
-        int colorIndex = levelNumber <= 13 ? mapNumber - 1 : mapNumber + 1;
-        worldMap.setConfigValue(CONFIG_KEY_COLOR_MAP_INDEX, colorIndex);
-        worldMap.setConfigValue(CONFIG_KEY_COLOR_SCHEME, ArcadeMsPacMan_UIConfig.WORLD_MAP_COLOR_SCHEMES.get(colorIndex));
+        worldMap.setConfigValue(CONFIG_KEY_COLOR_MAP_INDEX, colorMapIndex);
+        worldMap.setConfigValue(CONFIG_KEY_COLOR_SCHEME, ArcadeMsPacMan_UIConfig.WORLD_MAP_COLOR_SCHEMES.get(colorMapIndex));
         return worldMap;
     }
 }
