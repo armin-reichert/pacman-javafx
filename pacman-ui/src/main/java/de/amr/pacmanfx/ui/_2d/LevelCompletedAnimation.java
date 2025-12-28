@@ -81,6 +81,7 @@ public class LevelCompletedAnimation extends RegisteredAnimation {
 
     public void setSingleFlashMillis(int singleFlashMillis) {
         this.singleFlashMillis = singleFlashMillis;
+        invalidate();
     }
 
     public int flashingIndex() {
