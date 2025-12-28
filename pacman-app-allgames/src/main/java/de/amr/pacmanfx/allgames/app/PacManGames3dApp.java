@@ -39,12 +39,20 @@ import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
 import static de.amr.pacmanfx.model.StandardGameVariant.*;
 
 /**
- * Application containing all game variants, the 3D play scenes, the map editor etc. ("all you can f*** ähm play").
+ * Application containing all game variants, the 3D play scenes, the map editor etc.
+ * ("All you can f** ähm play").
+ * <p>
+ * Command-line arguments:
+ * <ul>
+ *     <li>{@code --use_builder=value}:<br/>
+ *     Any value where "true" != toLower(value) is evaluated to false!</li>
+ * </ul>
+ * </p>
  */
 public class PacManGames3dApp extends Application {
 
     private static final float ASPECT_RATIO = 1.6f; // 16:10 aspect ratio
-    private static final float USED_HEIGHT = 0.8f;  // 80% of available height
+    private static final float USED_HEIGHT_FRACTION = 0.8f;  // 80% of screen height
 
     private static final Map<String, Class<? extends GameUI_Config>> UI_CONFIG_MAP = Map.of(
         PACMAN.name(),           ArcadePacMan_UIConfig.class,
@@ -69,19 +77,32 @@ public class PacManGames3dApp extends Application {
 
     private GameUI ui;
 
-    private void addTestStates(Game game) {
-        game.control().stateMachine().addState(new LevelShortTestState());
-        game.control().stateMachine().addState(new LevelMediumTestState());
-        game.control().stateMachine().addState(new CutScenesTestState());
+    @Override
+    public void start(Stage primaryStage) {
+        final double screenHeight = Screen.getPrimary().getVisualBounds().getHeight();
+        final int height = (int) Math.round(USED_HEIGHT_FRACTION * screenHeight);
+        final int width  = Math.round(ASPECT_RATIO * height);
+        final var xxlMapSelector = new PacManXXL_MapSelector(GameBox.CUSTOM_MAP_DIR);
+        final String useBuilder = getParameters().getNamed().getOrDefault("use_builder", "true");
+        try {
+            ui = Boolean.parseBoolean(useBuilder)
+                ? createUI_WithBuilder(primaryStage, width, height, xxlMapSelector)
+                : createUI_WithoutBuilder(primaryStage, width, height, xxlMapSelector);
+            ui.customDirWatchdog().addEventListener(xxlMapSelector);
+            ui.show();
+        }
+        catch (RuntimeException x) {
+            Logger.error(x);
+            Logger.error("An error occurred starting the game.");
+            Platform.exit();
+        }
     }
 
-    private void registerGameWithTests(StandardGameVariant variant, Game game) {
-        addTestStates(game);
-        THE_GAME_BOX.registerGame(variant.name(), game);
-    }
-
-    private File highScoreFile(StandardGameVariant variant) {
-        return THE_GAME_BOX.highScoreFile(variant.name());
+    @Override
+    public void stop() {
+        if (ui != null) {
+            ui.terminate();
+        }
     }
 
     private GameUI createUI_WithoutBuilder(
@@ -170,33 +191,18 @@ public class PacManGames3dApp extends Application {
             .build();
     }
 
-    @Override
-    public void start(Stage primaryStage) {
-        final double screenHeight = Screen.getPrimary().getVisualBounds().getHeight();
-        final int height = (int) Math.round(USED_HEIGHT * screenHeight);
-        final int width  = Math.round(ASPECT_RATIO * height);
-        final Parameters parameters = getParameters();
-        try {
-            final var xxlMapSelector = new PacManXXL_MapSelector(GameBox.CUSTOM_MAP_DIR);
-            // Command-line: --use_builder=false or --use_builder=true
-            final boolean useBuilder = Boolean.parseBoolean(parameters.getNamed().getOrDefault("use_builder", "true"));
-            ui = useBuilder
-                ? createUI_WithBuilder(primaryStage, width, height, xxlMapSelector)
-                : createUI_WithoutBuilder(primaryStage, width, height, xxlMapSelector);
-            ui.customDirWatchdog().addEventListener(xxlMapSelector);
-            ui.show();
-        }
-        catch (RuntimeException x) {
-            Logger.error(x);
-            Logger.error("An error occurred on starting the game.");
-            Platform.exit();
-        }
+    private void addTestStates(Game game) {
+        game.control().stateMachine().addState(new LevelShortTestState());
+        game.control().stateMachine().addState(new LevelMediumTestState());
+        game.control().stateMachine().addState(new CutScenesTestState());
     }
 
-    @Override
-    public void stop() {
-        if (ui != null) {
-            ui.terminate();
-        }
+    private void registerGameWithTests(StandardGameVariant variant, Game game) {
+        addTestStates(game);
+        THE_GAME_BOX.registerGame(variant.name(), game);
+    }
+
+    private File highScoreFile(StandardGameVariant variant) {
+        return THE_GAME_BOX.highScoreFile(variant.name());
     }
 }

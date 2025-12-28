@@ -153,15 +153,13 @@ public class GameUI_Builder {
     }
 
     private GameUI_StartPage createStartPage(String gameVariant, Class<?> startPageClass) {
-        // first try constructor(String gameVariantName)
+        // first try: XYZ_StartPage(String gameVariantName)
         try {
-            var constructor = startPageClass.getDeclaredConstructor(String.class);
-            return (GameUI_StartPage) constructor.newInstance(gameVariant);
+            return (GameUI_StartPage) startPageClass.getDeclaredConstructor(String.class).newInstance(gameVariant);
         } catch (NoSuchMethodException x) {
-            // then try constructor without argument
+            // 2nd try: default constructor
             try {
-                var constructor = startPageClass.getDeclaredConstructor();
-                return (GameUI_StartPage) constructor.newInstance();
+                return (GameUI_StartPage) startPageClass.getDeclaredConstructor().newInstance();
             } catch (Exception xx) {
                 error("Could not create start page from class '%s'".formatted(startPageClass.getSimpleName()), xx);
                 throw new IllegalStateException(xx);
@@ -186,8 +184,7 @@ public class GameUI_Builder {
                     .newInstance(THE_GAME_BOX, highScoreFile);
             }
         } catch (Exception x) {
-            Logger.info("1st try: Could not create game model, class={}", modelClass.getSimpleName());
-            Logger.info(x);
+            Logger.info("1st try: Could not create game model '{}'", modelClass.getSimpleName());
         }
         if (game == null) {
             try {
@@ -195,15 +192,15 @@ public class GameUI_Builder {
                     .getDeclaredConstructor(File.class)
                     .newInstance(highScoreFile);
             } catch (Exception x) {
-                Logger.info("2nd try: Could not create game model, class{}", modelClass.getSimpleName());
+                Logger.info("2nd try: Could not create game model '{}'", modelClass.getSimpleName());
                 Logger.info(x);
             }
         }
         if (game != null) {
-            Logger.info("Success: Game model created, class={}", modelClass.getSimpleName());
+            Logger.info("Game model '{} created", modelClass.getSimpleName());
             return game;
         }
-        throw new RuntimeException("Giving up: Could not create game model");
+        throw new RuntimeException("Giving up: Could not create game model '%s'".formatted(modelClass.getSimpleName()));
     }
 
     private void validateConfiguration() {
