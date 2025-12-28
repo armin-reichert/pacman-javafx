@@ -12,12 +12,9 @@ import org.tinylog.Logger;
 import java.net.URL;
 import java.util.Map;
 
-/**
- * @author Armin Reichert
- */
 public class ObjModelLoaderTest {
 
-    public static void main(String[] args) {
+    static void main(String[] args) {
         if (args.length > 0) {
             ResourceManager rm = () -> ObjModelLoaderTest.class;
             var url = rm.url(args[0]);

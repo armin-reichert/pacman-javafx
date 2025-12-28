@@ -2,9 +2,9 @@ package experiments;
 
 import javafx.application.Application;
 
-public class LaunchExperimentsApp {
+public class ExperimentsAppLauncher {
 
-    public static void main(String[] args) {
+    static void main() {
         Application.launch(ExperimentsApp.class);
     }
 }

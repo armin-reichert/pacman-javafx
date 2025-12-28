@@ -21,10 +21,10 @@ import java.util.List;
 
 import static java.nio.file.StandardWatchEventKinds.*;
 
-public class WatchCustomMapsApp extends Application {
+public class CustomMapsWatchApp extends Application {
 
     static void main() {
-        launch(WatchCustomMapsApp.class);
+        launch(CustomMapsWatchApp.class);
     }
 
     private final ObservableList<String> eventDescriptionList = FXCollections.observableList(new ArrayList<>());

@@ -2,9 +2,9 @@ package experiments;
 
 import javafx.application.Application;
 
-public class LaunchModelViewer {
+public class ModelViewerLauncher {
 
-    public static void main(String[] args) {
+    static void main() {
         Application.launch(ModelViewer.class);
     }
 }

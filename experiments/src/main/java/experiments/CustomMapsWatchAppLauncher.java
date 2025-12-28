@@ -2,9 +2,9 @@ package experiments;
 
 import javafx.application.Application;
 
-public class LaunchWatchCustomMapsApp {
+public class CustomMapsWatchAppLauncher {
 
     public static void main(String[] args) {
-        Application.launch(WatchCustomMapsApp.class);
+        Application.launch(CustomMapsWatchApp.class);
     }
 }
