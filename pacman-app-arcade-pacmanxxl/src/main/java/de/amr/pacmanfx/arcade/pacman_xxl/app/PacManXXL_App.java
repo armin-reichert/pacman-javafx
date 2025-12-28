@@ -25,18 +25,18 @@ public class PacManXXL_App extends Application {
         // UI size: 80% of available screen height, aspect 16:10
         final double height = 0.8 * Screen.getPrimary().getVisualBounds().getHeight();
         final double width  = 1.6 * height;
-        var xxlMapSelector = new PacManXXL_MapSelector(GameBox.CUSTOM_MAP_DIR);
+        final var mapSelector = new PacManXXL_MapSelector(GameBox.CUSTOM_MAP_DIR);
         ui = GameUI_Builder.create(primaryStage, width, height)
                 .game(
                     PACMAN_XXL.name(),
                     PacManXXL_PacMan_GameModel.class,
-                    xxlMapSelector,
+                    mapSelector,
                     PacManXXL_PacMan_UIConfig.class
                 )
                 .game(
                     MS_PACMAN_XXL.name(),
                     PacManXXL_MsPacMan_GameModel.class,
-                    xxlMapSelector,
+                    mapSelector,
                     PacManXXL_MsPacMan_UIConfig.class
                 )
                 .dashboard(
@@ -48,7 +48,7 @@ public class PacManXXL_App extends Application {
             .startPage(PacManXXL_StartPage.class, PACMAN_XXL.name())
             .build();
 
-        ui.customDirWatchdog().addEventListener(xxlMapSelector);
+        ui.customDirWatchdog().addEventListener(mapSelector);
         ui.selectGameVariant(PACMAN_XXL.name());
         ui.show();
     }
