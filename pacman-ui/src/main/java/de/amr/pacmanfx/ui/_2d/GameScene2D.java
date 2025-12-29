@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._2d;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.math.Vector2i;
@@ -31,16 +32,37 @@ public abstract class GameScene2D implements GameScene {
     private final BooleanProperty debugInfoVisible = new SimpleBooleanProperty(false);
     private final DoubleProperty scaling = new SimpleDoubleProperty(1.0f);
 
-    protected final GameUI ui;
     protected final ActionBindingsManager actionBindings;
     protected final AnimationRegistry animationRegistry;
 
+    protected GameContext context;
+    protected GameUI ui;
     protected Canvas canvas;
 
-    protected GameScene2D(GameUI ui) {
-        this.ui = requireNonNull(ui);
+    protected GameScene2D() {
         actionBindings = new DefaultActionBindingsManager();
         animationRegistry = new AnimationRegistry();
+    }
+
+    @Override
+    public GameContext context() {
+        return context;
+    }
+
+    /**
+     * Associates the global game context with this scene.
+     * @param context the game context
+     */
+    public void setContext(GameContext context) {
+        this.context = requireNonNull(context);
+    }
+
+    /**
+     * Associates this game scene with the UI.
+     * @param ui the UI
+     */
+    public void setUI(GameUI ui) {
+        this.ui = requireNonNull(ui);
     }
 
     /**

@@ -22,9 +22,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
     public float fadeProgress = 0;
 
-    public TengenMsPacMan_CreditsScene(GameUI ui) {
-        super(ui);
-    }
+    public TengenMsPacMan_CreditsScene() {}
 
     @Override
     protected void doInit(Game game) {

@@ -31,9 +31,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     public Ghost ghost;
     public Color shadeOfBlue;
 
-    public TengenMsPacMan_BootScene(GameUI ui) {
-        super(ui);
-    }
+    public TengenMsPacMan_BootScene() {}
 
     @Override
     public void doInit(Game game) {

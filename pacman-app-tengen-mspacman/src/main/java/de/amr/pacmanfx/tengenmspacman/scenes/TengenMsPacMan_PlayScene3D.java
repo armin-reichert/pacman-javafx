@@ -39,9 +39,7 @@ import static de.amr.pacmanfx.ui.input.Keyboard.control;
  */
 public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
-    public TengenMsPacMan_PlayScene3D(GameUI ui) {
-        super(ui);
-    }
+    public TengenMsPacMan_PlayScene3D() {}
 
     @Override
     protected GameLevel3D createGameLevel3D() {

@@ -37,6 +37,7 @@ import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
+import de.amr.pacmanfx.uilib.assets.UIPreferences;
 import de.amr.pacmanfx.uilib.model3D.MsPacMan3D;
 import de.amr.pacmanfx.uilib.model3D.MsPacManBody;
 import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
@@ -274,15 +275,16 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     @Override
     public GameScene2D_Renderer createGameSceneRenderer(Canvas canvas, GameScene2D gameScene2D) {
+        final UIPreferences prefs = ui.preferences();
         final GameScene2D_Renderer renderer = switch (gameScene2D) {
-            case TengenMsPacMan_BootScene ignored -> new TengenMsPacMan_BootScene_Renderer(gameScene2D, canvas);
-            case TengenMsPacMan_IntroScene ignored -> new TengenMsPacMan_IntroScene_Renderer(gameScene2D, canvas, TengenMsPacMan_SpriteSheet.INSTANCE);
-            case TengenMsPacMan_OptionsScene ignored -> new TengenMsPacMan_OptionsScene_Renderer(gameScene2D, canvas, TengenMsPacMan_SpriteSheet.INSTANCE);
-            case TengenMsPacMan_PlayScene2D ignored -> new TengenMsPacMan_PlayScene2D_Renderer(gameScene2D, canvas, TengenMsPacMan_SpriteSheet.INSTANCE);
-            case TengenMsPacMan_CreditsScene ignored -> new TengenMsPacMan_CreditsScene_Renderer(gameScene2D, canvas);
-            case TengenMsPacMan_CutScene1 ignored -> new TengenMsPacMan_CutScene1_Renderer(gameScene2D, canvas);
-            case TengenMsPacMan_CutScene2 ignored -> new TengenMsPacMan_CutScene2_Renderer(gameScene2D, canvas);
-            case TengenMsPacMan_CutScene3 ignored -> new TengenMsPacMan_CutScene3_Renderer(gameScene2D, canvas);
+            case TengenMsPacMan_BootScene ignored -> new TengenMsPacMan_BootScene_Renderer(this, prefs, gameScene2D, canvas);
+            case TengenMsPacMan_IntroScene ignored -> new TengenMsPacMan_IntroScene_Renderer(this, prefs, gameScene2D, canvas, spriteSheet());
+            case TengenMsPacMan_OptionsScene ignored -> new TengenMsPacMan_OptionsScene_Renderer(prefs, gameScene2D, canvas, spriteSheet());
+            case TengenMsPacMan_PlayScene2D ignored -> new TengenMsPacMan_PlayScene2D_Renderer(this, prefs, gameScene2D, canvas, spriteSheet());
+            case TengenMsPacMan_CreditsScene ignored -> new TengenMsPacMan_CreditsScene_Renderer(prefs, gameScene2D, canvas);
+            case TengenMsPacMan_CutScene1 ignored -> new TengenMsPacMan_CutScene1_Renderer(this, prefs, gameScene2D, canvas);
+            case TengenMsPacMan_CutScene2 ignored -> new TengenMsPacMan_CutScene2_Renderer(this, prefs, gameScene2D, canvas);
+            case TengenMsPacMan_CutScene3 ignored -> new TengenMsPacMan_CutScene3_Renderer(this, prefs, gameScene2D, canvas);
             default -> throw new IllegalStateException("Unexpected value: " + gameScene2D);
         };
         return gameScene2D.adaptRenderer(renderer);
@@ -302,31 +304,31 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
             || ui.isCurrentGameSceneID(sceneID_CutScene(3))
             || ui.isCurrentGameSceneID(sceneID_CutScene(4)) )
         {
-            final var hudRenderer = new TengenMsPacMan_HeadsUpDisplay_Renderer(canvas, TengenMsPacMan_SpriteSheet.INSTANCE, ui.clock());
+            final var hudRenderer = new TengenMsPacMan_HeadsUpDisplay_Renderer(canvas, spriteSheet(), ui.clock());
             hudRenderer.setOffsetY(-2*TS); //TODO this is ugly
             return gameScene2D.adaptRenderer(hudRenderer);
         }
         if (ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_2D)) {
-            return gameScene2D.adaptRenderer(new TengenMsPacMan_HeadsUpDisplay_Renderer(canvas, TengenMsPacMan_SpriteSheet.INSTANCE, ui.clock()));
+            return gameScene2D.adaptRenderer(new TengenMsPacMan_HeadsUpDisplay_Renderer(canvas, spriteSheet(), ui.clock()));
         }
         return null;
     }
 
     @Override
     public TengenMsPacMan_ActorRenderer createActorRenderer(Canvas canvas) {
-        return new TengenMsPacMan_ActorRenderer(canvas, TengenMsPacMan_SpriteSheet.INSTANCE);
+        return new TengenMsPacMan_ActorRenderer(canvas, spriteSheet());
     }
 
     @Override
     public Image killedGhostPointsImage(int killedIndex) {
-        final RectShort[] numberSprites = TengenMsPacMan_SpriteSheet.INSTANCE.spriteSequence(SpriteID.GHOST_NUMBERS);
-        return TengenMsPacMan_SpriteSheet.INSTANCE.image(numberSprites[killedIndex]);
+        final RectShort[] numberSprites = spriteSheet().spriteSequence(SpriteID.GHOST_NUMBERS);
+        return spriteSheet().image(numberSprites[killedIndex]);
     }
 
     @Override
     public Image bonusSymbolImage(byte symbol) {
-        final RectShort[] symbolSprites = TengenMsPacMan_SpriteSheet.INSTANCE.spriteSequence(SpriteID.BONUS_SYMBOLS);
-        return TengenMsPacMan_SpriteSheet.INSTANCE.image(symbolSprites[symbol]);
+        final RectShort[] symbolSprites = spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS);
+        return spriteSheet().image(symbolSprites[symbol]);
     }
 
     @Override
@@ -339,8 +341,8 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
             case TengenMsPacMan_GameModel.BONUS_ICE_CREAM -> 7; // 4000!
             default -> symbol;
         };
-        final RectShort[] sprites = TengenMsPacMan_SpriteSheet.INSTANCE.spriteSequence(SpriteID.BONUS_VALUES);
-        return TengenMsPacMan_SpriteSheet.INSTANCE.image(sprites[usedSymbol]);
+        final RectShort[] sprites = spriteSheet().spriteSequence(SpriteID.BONUS_VALUES);
+        return spriteSheet().image(sprites[usedSymbol]);
     }
 
     @Override
@@ -366,12 +368,12 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     @Override
     public TengenMsPacMan_GhostAnimationManager createGhostAnimations(byte personality) {
-        return new TengenMsPacMan_GhostAnimationManager(TengenMsPacMan_SpriteSheet.INSTANCE, personality);
+        return new TengenMsPacMan_GhostAnimationManager(spriteSheet(), personality);
     }
 
     @Override
     public TengenMsPacMan_PacAnimationManager createPacAnimations() {
-        return new TengenMsPacMan_PacAnimationManager(TengenMsPacMan_SpriteSheet.INSTANCE);
+        return new TengenMsPacMan_PacAnimationManager(spriteSheet());
     }
 
     @Override
@@ -408,16 +410,16 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     // Game scenes
 
     private void createGameScenes() {
-        scenesByID.put(SCENE_ID_BOOT_SCENE,    new TengenMsPacMan_BootScene(ui));
-        scenesByID.put(SCENE_ID_INTRO_SCENE,   new TengenMsPacMan_IntroScene(ui));
-        scenesByID.put(SCENE_ID_START_SCENE,   new TengenMsPacMan_OptionsScene(ui));
-        scenesByID.put(SCENE_ID_HALL_OF_FAME,  new TengenMsPacMan_CreditsScene(ui));
-        scenesByID.put(SCENE_ID_PLAY_SCENE_2D, new TengenMsPacMan_PlayScene2D(ui));
-        scenesByID.put(SCENE_ID_PLAY_SCENE_3D, new TengenMsPacMan_PlayScene3D(ui));
-        scenesByID.put(sceneID_CutScene(1),    new TengenMsPacMan_CutScene1(ui));
-        scenesByID.put(sceneID_CutScene(2),    new TengenMsPacMan_CutScene2(ui));
-        scenesByID.put(sceneID_CutScene(3),    new TengenMsPacMan_CutScene3(ui));
-        scenesByID.put(sceneID_CutScene(4),    new TengenMsPacMan_CutScene4(ui));
+        scenesByID.put(SCENE_ID_BOOT_SCENE,    new TengenMsPacMan_BootScene());
+        scenesByID.put(SCENE_ID_INTRO_SCENE,   new TengenMsPacMan_IntroScene());
+        scenesByID.put(SCENE_ID_START_SCENE,   new TengenMsPacMan_OptionsScene());
+        scenesByID.put(SCENE_ID_HALL_OF_FAME,  new TengenMsPacMan_CreditsScene());
+        scenesByID.put(SCENE_ID_PLAY_SCENE_2D, new TengenMsPacMan_PlayScene2D());
+        scenesByID.put(SCENE_ID_PLAY_SCENE_3D, new TengenMsPacMan_PlayScene3D());
+        scenesByID.put(sceneID_CutScene(1),    new TengenMsPacMan_CutScene1());
+        scenesByID.put(sceneID_CutScene(2),    new TengenMsPacMan_CutScene2());
+        scenesByID.put(sceneID_CutScene(3),    new TengenMsPacMan_CutScene3());
+        scenesByID.put(sceneID_CutScene(4),    new TengenMsPacMan_CutScene4());
     }
 
     @Override

@@ -36,9 +36,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
 
     private Clapperboard clapperboard;
 
-    public ArcadeMsPacMan_CutScene2(GameUI ui) {
-        super(ui);
-    }
+    public ArcadeMsPacMan_CutScene2() {}
 
     public Pac pacMan() {
         return pacMan;

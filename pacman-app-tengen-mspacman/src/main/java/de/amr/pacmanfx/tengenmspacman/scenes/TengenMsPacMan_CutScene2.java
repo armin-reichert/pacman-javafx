@@ -44,9 +44,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
     private Pac pacMan;
     private Pac msPacMan;
 
-    public TengenMsPacMan_CutScene2(GameUI ui) {
-        super(ui);
-    }
+    public TengenMsPacMan_CutScene2() {}
 
     public Clapperboard clapperboard() {
         return clapperboard;

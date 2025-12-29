@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._2d;
 
+import de.amr.pacmanfx.uilib.assets.UIPreferences;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.scene.canvas.Canvas;
@@ -24,7 +25,7 @@ public abstract class GameScene2D_Renderer extends BaseRenderer {
 
     public abstract void draw(GameScene2D scene);
 
-    protected void createDefaultDebugInfoRenderer(GameScene2D scene, Canvas canvas) {
-        debugRenderer = adaptRenderer(new BaseDebugInfoRenderer(scene.ui(), canvas), scene);
+    protected void createDefaultDebugInfoRenderer(UIPreferences prefs, GameScene2D scene, Canvas canvas) {
+        debugRenderer = adaptRenderer(new BaseDebugInfoRenderer(prefs, canvas), scene);
     }
 }

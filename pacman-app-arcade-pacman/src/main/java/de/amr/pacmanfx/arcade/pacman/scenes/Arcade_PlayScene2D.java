@@ -43,9 +43,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     private LevelCompletedAnimation levelCompletedAnimation;
     private long lastMunchingSoundPlayedTick;
 
-    public Arcade_PlayScene2D(GameUI ui) {
-        super(ui);
-    }
+    public Arcade_PlayScene2D() {}
 
     public Optional<LevelCompletedAnimation> levelCompletedAnimation() {
         return Optional.ofNullable(levelCompletedAnimation);

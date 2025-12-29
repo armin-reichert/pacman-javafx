@@ -48,8 +48,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     private int ghostIndex;
     private long ghostKilledTime;
 
-    public ArcadePacMan_IntroScene(GameUI ui) {
-        super(ui);
+    public ArcadePacMan_IntroScene() {
         sceneController = new StateMachine<>(this, List.of(SceneState.values()));
     }
 

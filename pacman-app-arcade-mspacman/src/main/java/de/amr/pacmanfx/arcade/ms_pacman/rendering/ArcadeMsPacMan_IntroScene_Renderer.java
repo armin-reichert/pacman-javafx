@@ -5,6 +5,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.scenes.Marquee;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
+import de.amr.pacmanfx.uilib.assets.UIPreferences;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -23,11 +24,10 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends GameScene2D_Renderer {
 
     private final ActorRenderer actorRenderer;
 
-    public ArcadeMsPacMan_IntroScene_Renderer(GameScene2D scene, Canvas canvas) {
+    public ArcadeMsPacMan_IntroScene_Renderer(GameUI_Config uiConfig, UIPreferences prefs, GameScene2D scene, Canvas canvas) {
         super(canvas);
-        final GameUI_Config uiConfig = scene.ui().currentConfig();
         actorRenderer = adaptRenderer(uiConfig.createActorRenderer(canvas), scene);
-        createDefaultDebugInfoRenderer(scene, canvas);
+        createDefaultDebugInfoRenderer(prefs, scene, canvas);
     }
 
     public void draw(GameScene2D scene) {

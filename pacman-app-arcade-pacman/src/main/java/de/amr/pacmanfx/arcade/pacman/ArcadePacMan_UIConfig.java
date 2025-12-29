@@ -29,6 +29,7 @@ import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
+import de.amr.pacmanfx.uilib.assets.UIPreferences;
 import de.amr.pacmanfx.uilib.model3D.PacBody;
 import de.amr.pacmanfx.uilib.model3D.PacMan3D;
 import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
@@ -90,7 +91,7 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
         Logger.info("Init UI configuration {}", getClass().getSimpleName());
         loadAssets();
         registerSounds();
-        createGameScenes(ui);
+        createGameScenes();
     }
 
     @Override
@@ -192,14 +193,15 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
 
     @Override
     public GameScene2D_Renderer createGameSceneRenderer(Canvas canvas, GameScene2D gameScene2D) {
+        final UIPreferences prefs = ui.preferences();
         final GameScene2D_Renderer renderer = switch (gameScene2D) {
-            case Arcade_BootScene2D ignored      -> new Arcade_BootScene2D_Renderer(gameScene2D, canvas, spriteSheet());
-            case ArcadePacMan_IntroScene ignored -> new ArcadePacMan_IntroScene_Renderer(gameScene2D, canvas);
-            case ArcadePacMan_StartScene ignored -> new ArcadePacMan_StartScene_Renderer(gameScene2D, canvas);
-            case Arcade_PlayScene2D ignored      -> new Arcade_PlayScene2D_Renderer(gameScene2D, canvas, spriteSheet());
-            case ArcadePacMan_CutScene1 ignored  -> new ArcadePacMan_CutScene1_Renderer(gameScene2D, canvas);
-            case ArcadePacMan_CutScene2 ignored  -> new ArcadePacMan_CutScene2_Renderer(gameScene2D, canvas);
-            case ArcadePacMan_CutScene3 ignored  -> new ArcadePacMan_CutScene3_Renderer(gameScene2D, canvas);
+            case Arcade_BootScene2D ignored      -> new Arcade_BootScene2D_Renderer(prefs, gameScene2D, canvas, spriteSheet());
+            case ArcadePacMan_IntroScene ignored -> new ArcadePacMan_IntroScene_Renderer(this, prefs, gameScene2D, canvas);
+            case ArcadePacMan_StartScene ignored -> new ArcadePacMan_StartScene_Renderer(prefs, gameScene2D, canvas);
+            case Arcade_PlayScene2D ignored      -> new Arcade_PlayScene2D_Renderer(prefs, gameScene2D, canvas, spriteSheet());
+            case ArcadePacMan_CutScene1 ignored  -> new ArcadePacMan_CutScene1_Renderer(prefs, gameScene2D, canvas);
+            case ArcadePacMan_CutScene2 ignored  -> new ArcadePacMan_CutScene2_Renderer(prefs, gameScene2D, canvas);
+            case ArcadePacMan_CutScene3 ignored  -> new ArcadePacMan_CutScene3_Renderer(prefs, gameScene2D, canvas);
             default -> throw new IllegalStateException("Illegal game scene: " + gameScene2D);
         };
         return gameScene2D.adaptRenderer(renderer);
@@ -297,15 +299,15 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
 
     // Game scene config
 
-    private void createGameScenes(GameUI ui) {
-        scenesByID.put(SCENE_ID_BOOT_SCENE,     new Arcade_BootScene2D(ui));
-        scenesByID.put(SCENE_ID_INTRO_SCENE,    new ArcadePacMan_IntroScene(ui));
-        scenesByID.put(SCENE_ID_START_SCENE,    new ArcadePacMan_StartScene(ui));
-        scenesByID.put(SCENE_ID_PLAY_SCENE_2D,  new Arcade_PlayScene2D(ui));
-        scenesByID.put(SCENE_ID_PLAY_SCENE_3D,  new Arcade_PlayScene3D(ui));
-        scenesByID.put(sceneID_CutScene(1),     new ArcadePacMan_CutScene1(ui));
-        scenesByID.put(sceneID_CutScene(2),     new ArcadePacMan_CutScene2(ui));
-        scenesByID.put(sceneID_CutScene(3),     new ArcadePacMan_CutScene3(ui));
+    private void createGameScenes() {
+        scenesByID.put(SCENE_ID_BOOT_SCENE,     new Arcade_BootScene2D());
+        scenesByID.put(SCENE_ID_INTRO_SCENE,    new ArcadePacMan_IntroScene());
+        scenesByID.put(SCENE_ID_START_SCENE,    new ArcadePacMan_StartScene());
+        scenesByID.put(SCENE_ID_PLAY_SCENE_2D,  new Arcade_PlayScene2D());
+        scenesByID.put(SCENE_ID_PLAY_SCENE_3D,  new Arcade_PlayScene3D());
+        scenesByID.put(sceneID_CutScene(1),     new ArcadePacMan_CutScene1());
+        scenesByID.put(sceneID_CutScene(2),     new ArcadePacMan_CutScene2());
+        scenesByID.put(sceneID_CutScene(3),     new ArcadePacMan_CutScene3());
     }
 
     @Override

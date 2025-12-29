@@ -8,21 +8,17 @@ import de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_CutScene3;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
+import de.amr.pacmanfx.uilib.assets.UIPreferences;
 import javafx.scene.canvas.Canvas;
 
 public class TengenMsPacMan_CutScene3_Renderer extends GameScene2D_Renderer {
 
     private final TengenMsPacMan_ActorRenderer actorRenderer;
 
-    public TengenMsPacMan_CutScene3_Renderer(GameScene2D scene, Canvas canvas) {
+    public TengenMsPacMan_CutScene3_Renderer(GameUI_Config uiConfig, UIPreferences prefs, GameScene2D scene, Canvas canvas) {
         super(canvas);
-
-        final GameUI_Config uiConfig = scene.ui().currentConfig();
-
-        actorRenderer = GameScene2D_Renderer.adaptRenderer(
-            (TengenMsPacMan_ActorRenderer) uiConfig.createActorRenderer(canvas), scene);
-
-        createDefaultDebugInfoRenderer(scene, canvas);
+        actorRenderer = GameScene2D_Renderer.adaptRenderer((TengenMsPacMan_ActorRenderer) uiConfig.createActorRenderer(canvas), scene);
+        createDefaultDebugInfoRenderer(prefs, scene, canvas);
     }
 
     @Override

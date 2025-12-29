@@ -75,9 +75,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     private LevelCompletedAnimation levelCompletedAnimation;
 
-    public TengenMsPacMan_PlayScene2D(GameUI ui) {
-        super(ui);
-
+    public TengenMsPacMan_PlayScene2D() {
         fixedCamera = new PerspectiveCamera(false);
 
         dynamicCamera = new PlayScene2DCamera();

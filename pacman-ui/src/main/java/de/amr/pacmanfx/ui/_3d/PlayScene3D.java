@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._3d;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameStateChangeEvent;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
@@ -110,29 +111,28 @@ public abstract class PlayScene3D extends Group implements GameScene {
         }
     };
 
-    protected final GameUI ui;
     protected final SubScene subScene;
     protected final PerspectiveCamera camera;
     protected final ActionBindingsManager actionBindings;
     protected final Group gameLevel3DParent = new Group();
 
+    protected GameContext context;
+    protected GameUI ui;
     protected GameLevel3D gameLevel3D;
     protected Scores3D scores3D;
 
     // context menu radio button group
     private final ToggleGroup perspectivesGroup = new ToggleGroup();
 
-    public PlayScene3D(GameUI ui) {
-        this.ui = requireNonNull(ui);
+    public PlayScene3D() {
         actionBindings = new DefaultActionBindingsManager();
         camera = new PerspectiveCamera(true);
 
         createPerspectives();
-        createScores3D();
         var coordinateSystem = new CoordinateSystem();
         coordinateSystem.visibleProperty().bind(GameUI.PROPERTY_3D_AXES_VISIBLE);
 
-        getChildren().setAll(gameLevel3DParent, scores3D, coordinateSystem);
+        getChildren().setAll(gameLevel3DParent, coordinateSystem);
 
         // initial size is irrelevant (size gets bound to parent scene size eventually)
         subScene = new SubScene(this, 88, 88, true, SceneAntialiasing.BALANCED);
@@ -141,8 +141,24 @@ public abstract class PlayScene3D extends Group implements GameScene {
     }
 
     @Override
+    public GameContext context() {
+        return context;
+    }
+
+    public void setContext(GameContext context) {
+        this.context = context;
+    }
+
+    @Override
     public GameUI ui() {
         return ui;
+    }
+
+    public void setUI(GameUI ui) {
+        this.ui = requireNonNull(ui);
+        //TODO reconsider this
+        createScores3D(ui);
+        getChildren().add(scores3D);
     }
 
     @Override
@@ -492,7 +508,7 @@ public abstract class PlayScene3D extends Group implements GameScene {
         });
     }
 
-    protected void createScores3D() {
+    protected void createScores3D(GameUI ui) {
         scores3D = new Scores3D(
             ui.translated("score.score"),
             ui.translated("score.high_score"),

@@ -13,6 +13,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui._2d.HeadsUpDisplay_Renderer;
+import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.api.*;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
@@ -216,6 +217,15 @@ public class PlayView extends StackPane implements GameUI_View {
             }
         }
 
+        if (intendedGameScene instanceof GameScene2D gameScene2D) {
+            gameScene2D.setContext(ui.context());
+            gameScene2D.setUI(ui);
+        }
+        else if (intendedGameScene instanceof PlayScene3D playScene3D) {
+            playScene3D.setContext(ui.context());
+            playScene3D.setUI(ui);
+        }
+
         embedGameScene(parentScene, intendedGameScene);
         if (intendedGameScene instanceof GameScene2D gameScene2D) {
             gameScene2D.debugInfoVisibleProperty().bind(GameUI.PROPERTY_DEBUG_INFO_VISIBLE);
@@ -316,7 +326,7 @@ public class PlayView extends StackPane implements GameUI_View {
         contextMenu.show(this, event.getScreenX(), event.getScreenY());
     }
 
-    private void useDecoratedCanvas(GameScene2D gameScene2D) {
+    private void useDecoratedCanvas(GameUI ui, GameScene2D gameScene2D) {
         final Canvas canvas = new Canvas();
 
         canvasDecorator.setCanvas(canvas);
@@ -338,12 +348,12 @@ public class PlayView extends StackPane implements GameUI_View {
             subScene.heightProperty().bind(parentScene.heightProperty());
             // Is it a 2D scene with canvas inside sub-scene with camera?
             if (gameScene instanceof GameScene2D gameScene2D) {
-                useDecoratedCanvas(gameScene2D);
+                useDecoratedCanvas(ui, gameScene2D);
             }
             getChildren().set(0, subScene);
         }
         else if (gameScene instanceof GameScene2D gameScene2D) {
-            useDecoratedCanvas(gameScene2D);
+            useDecoratedCanvas(ui, gameScene2D);
             Vector2i gameSceneSizePx = gameScene2D.unscaledSize();
             double aspect = (double) gameSceneSizePx.x() / gameSceneSizePx.y();
             if (ui.currentConfig().sceneConfig().canvasDecorated(gameScene)) {

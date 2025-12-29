@@ -10,6 +10,7 @@ import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
+import de.amr.pacmanfx.uilib.assets.UIPreferences;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 
@@ -29,11 +30,11 @@ public class Arcade_BootScene2D_Renderer extends GameScene2D_Renderer implements
     private final Vector2f minPoint;
     private final Vector2f maxPoint;
 
-    public Arcade_BootScene2D_Renderer(GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
+    public Arcade_BootScene2D_Renderer(UIPreferences prefs, GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(canvas);
         this.spriteSheet = requireNonNull(spriteSheet);
 
-        createDefaultDebugInfoRenderer(scene, canvas);
+        createDefaultDebugInfoRenderer(prefs, scene, canvas);
 
         final double width = spriteSheet.sourceImage().getWidth();
         final double height = spriteSheet.sourceImage().getHeight();

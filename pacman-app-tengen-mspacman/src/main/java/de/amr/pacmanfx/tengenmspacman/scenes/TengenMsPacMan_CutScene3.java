@@ -48,9 +48,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
 
     private boolean darkness;
 
-    public TengenMsPacMan_CutScene3(GameUI ui) {
-        super(ui);
-    }
+    public TengenMsPacMan_CutScene3() {}
 
     public Clapperboard clapperboard() {
         return clapperboard;

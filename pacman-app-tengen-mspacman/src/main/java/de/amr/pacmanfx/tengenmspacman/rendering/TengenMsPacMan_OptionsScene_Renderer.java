@@ -10,6 +10,7 @@ import de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_OptionsScene;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.api.GameUI;
+import de.amr.pacmanfx.uilib.assets.UIPreferences;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -34,10 +35,10 @@ public class TengenMsPacMan_OptionsScene_Renderer extends GameScene2D_Renderer
 
     private final TengenMsPacMan_SpriteSheet spriteSheet;
 
-    public TengenMsPacMan_OptionsScene_Renderer(GameScene2D scene, Canvas canvas, TengenMsPacMan_SpriteSheet spriteSheet) {
+    public TengenMsPacMan_OptionsScene_Renderer(UIPreferences prefs, GameScene2D scene, Canvas canvas, TengenMsPacMan_SpriteSheet spriteSheet) {
         super(canvas);
         this.spriteSheet = requireNonNull(spriteSheet);
-        createDefaultDebugInfoRenderer(scene, canvas);
+        createDefaultDebugInfoRenderer(prefs, scene, canvas);
     }
 
     @Override

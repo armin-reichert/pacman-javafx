@@ -14,9 +14,7 @@ import de.amr.pacmanfx.ui.api.GameUI;
  */
 public class Arcade_BootScene2D extends GameScene2D {
 
-    public Arcade_BootScene2D(GameUI ui) {
-        super(ui);
-    }
+    public Arcade_BootScene2D() {}
 
     @Override
     public void doInit(Game game) {

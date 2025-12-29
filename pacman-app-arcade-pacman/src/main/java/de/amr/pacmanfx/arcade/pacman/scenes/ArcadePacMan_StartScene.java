@@ -16,9 +16,7 @@ import de.amr.pacmanfx.ui.sound.SoundID;
  */
 public class ArcadePacMan_StartScene extends GameScene2D {
 
-    public ArcadePacMan_StartScene(GameUI ui) {
-        super(ui);
-    }
+    public ArcadePacMan_StartScene() {}
 
     @Override
     public void doInit(Game game) {

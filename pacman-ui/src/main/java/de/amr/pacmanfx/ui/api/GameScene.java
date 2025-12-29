@@ -36,9 +36,7 @@ public interface GameScene extends GameEventListener {
      * @return the global context providing access to some global data as the currently selected game variant or the
      *         coin mechanism used by Arcade games
      */
-    default GameContext context() {
-        return ui().context();
-    }
+    GameContext context();
 
     /**
      * @return the action bindings defined for this game scene

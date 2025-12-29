@@ -38,9 +38,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     private SpriteAnimation blinkyDamaged;
     private SpriteAnimation nailDressRaptureAnimation;
 
-    public ArcadePacMan_CutScene2(GameUI ui) {
-        super(ui);
-    }
+    public ArcadePacMan_CutScene2() {}
 
     public SpriteAnimation nailDressRaptureAnimation() {
         return nailDressRaptureAnimation;

@@ -50,9 +50,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     private Actor heart;
     private Clapperboard clapperboard;
 
-    public ArcadeMsPacMan_CutScene1(GameUI ui) {
-        super(ui);
-    }
+    public ArcadeMsPacMan_CutScene1() {}
 
     public Pac pacMan() {
         return pacMan;

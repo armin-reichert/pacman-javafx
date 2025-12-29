@@ -14,9 +14,7 @@ import static de.amr.pacmanfx.ui.input.Keyboard.control;
 
 public class Arcade_PlayScene3D extends PlayScene3D {
 
-    public Arcade_PlayScene3D(GameUI ui) {
-        super(ui);
-    }
+    public Arcade_PlayScene3D() {}
 
     @Override
     protected void setActionBindings(GameLevel level) {

@@ -2,6 +2,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
+import de.amr.pacmanfx.uilib.assets.UIPreferences;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -13,9 +14,9 @@ import static de.amr.pacmanfx.ui.api.ArcadePalette.ARCADE_RED;
 
 public class ArcadeMsPacMan_StartScene_Renderer extends GameScene2D_Renderer implements SpriteRenderer {
 
-    public ArcadeMsPacMan_StartScene_Renderer(GameScene2D scene, Canvas canvas) {
+    public ArcadeMsPacMan_StartScene_Renderer(UIPreferences prefs, GameScene2D scene, Canvas canvas) {
         super(canvas);
-        createDefaultDebugInfoRenderer(scene, canvas);
+        createDefaultDebugInfoRenderer(prefs, scene, canvas);
     }
 
     @Override

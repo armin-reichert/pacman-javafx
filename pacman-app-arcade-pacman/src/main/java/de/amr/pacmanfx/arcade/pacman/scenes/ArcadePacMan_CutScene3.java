@@ -31,9 +31,7 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
     private Pac pacMan;
     private Ghost blinky;
 
-    public ArcadePacMan_CutScene3(GameUI ui) {
-        super(ui);
-    }
+    public ArcadePacMan_CutScene3() {}
 
     public Pac pac() {
         return pacMan;

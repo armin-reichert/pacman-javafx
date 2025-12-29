@@ -16,6 +16,7 @@ import de.amr.pacmanfx.model.actors.MovingActor;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.ui._2d.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.uilib.assets.UIPreferences;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
@@ -31,8 +32,8 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
 
     private final List<Actor> actorsInZOrder = new ArrayList<>();
 
-    public Arcade_PlayScene2D_DebugInfo_Renderer(Canvas canvas, GameScene2D scene) {
-        super(scene.ui(), canvas);
+    public Arcade_PlayScene2D_DebugInfo_Renderer(UIPreferences prefs, Canvas canvas) {
+        super(prefs, canvas);
     }
 
     @Override
