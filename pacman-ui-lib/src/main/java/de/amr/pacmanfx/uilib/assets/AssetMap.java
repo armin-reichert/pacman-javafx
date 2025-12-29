@@ -32,6 +32,7 @@ public class AssetMap implements LocalizedTextAccessor, Disposable {
 
     @Override
     public void dispose() {
+        Logger.info("Dispose asset map: {} entries", assetsByID.size());
         assetsByID.clear();
     }
 

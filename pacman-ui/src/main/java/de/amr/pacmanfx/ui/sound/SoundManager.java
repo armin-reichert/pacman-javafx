@@ -45,6 +45,7 @@ public class SoundManager implements Disposable {
 
     @Override
     public void dispose() {
+        Logger.info("Dispose sound manager: {} entries", map.size());
         stopAll();
         enabledProperty.unbind();
         mutedProperty.unbind();
@@ -52,7 +53,6 @@ public class SoundManager implements Disposable {
         voicePlayer = null;
         sirenPlayer = null;
         currentSirenID = null;
-        Logger.info("Disposed sound manager {}", this);
     }
 
     public MediaPlayer mediaPlayer(Object key) {
