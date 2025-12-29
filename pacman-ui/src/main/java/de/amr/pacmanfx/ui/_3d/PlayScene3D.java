@@ -28,6 +28,7 @@ import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
 import de.amr.pacmanfx.ui.sound.SoundID;
+import de.amr.pacmanfx.uilib.assets.LocalizedTextAccessor;
 import de.amr.pacmanfx.uilib.model3D.Bonus3D;
 import de.amr.pacmanfx.uilib.model3D.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.Scores3D;
@@ -157,8 +158,7 @@ public abstract class PlayScene3D extends Group implements GameScene {
     public void setUI(GameUI ui) {
         this.ui = requireNonNull(ui);
         //TODO reconsider this
-        createScores3D(ui);
-        getChildren().add(scores3D);
+        replaceScores3D();
     }
 
     @Override
@@ -508,10 +508,18 @@ public abstract class PlayScene3D extends Group implements GameScene {
         });
     }
 
-    protected void createScores3D(GameUI ui) {
+    private void replaceScores3D() {
+        if (scores3D != null) {
+            getChildren().remove(scores3D);
+        }
+        createScores3D(ui);
+        getChildren().add(scores3D);
+    }
+
+    protected void createScores3D(LocalizedTextAccessor localizedTexts) {
         scores3D = new Scores3D(
-            ui.translated("score.score"),
-            ui.translated("score.high_score"),
+            localizedTexts.translated("score.score"),
+            localizedTexts.translated("score.high_score"),
             GameUI.FONT_ARCADE_8
         );
 
