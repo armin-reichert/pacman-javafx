@@ -29,6 +29,7 @@ import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.assets.LocalizedTextAccessor;
+import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.model3D.Bonus3D;
 import de.amr.pacmanfx.uilib.model3D.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.Scores3D;
@@ -58,6 +59,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_QUIT_GAME_SCENE;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_TOGGLE_PLAY_SCENE_2D_3D;
 import static de.amr.pacmanfx.uilib.Ufx.doNow;
@@ -119,6 +121,7 @@ public abstract class PlayScene3D extends Group implements GameScene {
 
     protected GameContext context;
     protected GameUI ui;
+    protected RandomTextPicker<String> pickerGameOverMessages;
     protected GameLevel3D gameLevel3D;
     protected Scores3D scores3D;
 
@@ -157,6 +160,7 @@ public abstract class PlayScene3D extends Group implements GameScene {
 
     public void setUI(GameUI ui) {
         this.ui = requireNonNull(ui);
+        pickerGameOverMessages = RandomTextPicker.fromBundle(ui.localizedTexts(), "game.over");
         //TODO reconsider this
         replaceScores3D();
     }
@@ -360,6 +364,11 @@ public abstract class PlayScene3D extends Group implements GameScene {
             }
             else if (state.matches(StateName.GAME_OVER)) {
                 gameLevel3D.onGameOver(state);
+                boolean inOneOf4Cases = randomInt(0, 1000) < 250;
+                String message = pickerGameOverMessages.nextText();
+                if (!game.level().isDemoLevel() && inOneOf4Cases) {
+                    ui.showFlashMessage(Duration.seconds(2.5), message);
+                }
             }
             else if (state.matches(StateName.STARTING_GAME_OR_LEVEL)) {
                 if (gameLevel3D != null) {
@@ -537,8 +546,8 @@ public abstract class PlayScene3D extends Group implements GameScene {
         return perspectiveID.get() == null ? Optional.empty() : Optional.of(perspectivesByID.get(perspectiveID.get()));
     }
 
-    protected GameLevel3D createGameLevel3D() {
-        return new GameLevel3D(ui);
+    protected GameLevel3D createGameLevel3D(GameLevel level) {
+        return new GameLevel3D(ui.currentConfig(), ui.preferences(), ui, level);
     }
 
     protected void replaceGameLevel3D(GameLevel level) {
@@ -550,7 +559,7 @@ public abstract class PlayScene3D extends Group implements GameScene {
         } else {
             Logger.info("Creating new game level 3D");
         }
-        gameLevel3D = createGameLevel3D();
+        gameLevel3D = createGameLevel3D(level);
         Logger.info("Created new game level 3D");
 
         gameLevel3DParent.getChildren().setAll(gameLevel3D);

@@ -42,18 +42,19 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     public TengenMsPacMan_PlayScene3D() {}
 
     @Override
-    protected GameLevel3D createGameLevel3D() {
+    protected GameLevel3D createGameLevel3D(GameLevel level) {
         // Note: member variable "gameLevel3D" is only set later in replaceGameLevel3D()
-        final GameLevel3D gameLevel3D = super.createGameLevel3D();
-        final TengenMsPacMan_GameModel game = context().currentGame();
+        final GameLevel3D gameLevel3D = super.createGameLevel3D(level);
+
+        final TengenMsPacMan_GameModel game = (TengenMsPacMan_GameModel) level.game();
         if (!game.allOptionsHaveDefaultValue()) {
             final ImageView infoView = new ImageView();
-            final double width = TS(game.level().worldMap().numCols());
+            final double width = TS(level.worldMap().numCols());
             final double height = TS(2);
             infoView.setFitWidth(width);
             infoView.setFitHeight(height);
             infoView.imageProperty().bind(PROPERTY_3D_FLOOR_COLOR.map(floorColor -> createInfoViewImage(
-                game.mapCategory(), game.difficulty(), game.pacBooster(), game.level().number(), width, height, floorColor)));
+                game.mapCategory(), game.difficulty(), game.pacBooster(), level.number(), width, height, floorColor)));
             final Box floor3D = gameLevel3D.floor3D();
             // display at lower end of floor just over floor surface
             infoView.setTranslateY(floor3D.getHeight() - infoView.getFitHeight());
