@@ -4,4 +4,4 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model.world;
 
-public record WorldMapColorScheme(String walFill, String wallStroke, String door, String pellet) {}
+public record WorldMapColorScheme(String wallFill, String wallStroke, String door, String pellet) {}

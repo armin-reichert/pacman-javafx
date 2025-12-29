@@ -210,7 +210,7 @@ public class GameLevel3D extends Group implements Disposable {
 
                 @Override
                 protected void interpolate(double t) {
-                    Color color = Color.web(colorScheme.walFill()).interpolate(Color.web(colorScheme.wallStroke()), t);
+                    Color color = Color.web(colorScheme.wallFill()).interpolate(Color.web(colorScheme.wallStroke()), t);
                     wallTopMaterial.setDiffuseColor(color);
                     wallTopMaterial.setSpecularColor(color.brighter());
                 }
@@ -221,8 +221,8 @@ public class GameLevel3D extends Group implements Disposable {
         public void stop() {
             super.stop();
             // reset wall colors
-            wallTopMaterial.setDiffuseColor(Color.web(colorScheme.walFill()));
-            wallTopMaterial.setSpecularColor(Color.web(colorScheme.walFill()).brighter());
+            wallTopMaterial.setDiffuseColor(Color.web(colorScheme.wallFill()));
+            wallTopMaterial.setSpecularColor(Color.web(colorScheme.wallFill()).brighter());
         }
     }
 
@@ -352,7 +352,7 @@ public class GameLevel3D extends Group implements Disposable {
         wallBaseMaterial = defaultPhongMaterial(diffuseColor);
         wallBaseMaterial.setSpecularPower(64);
 
-        wallTopMaterial = defaultPhongMaterial(Color.web(colorScheme.walFill()));
+        wallTopMaterial = defaultPhongMaterial(Color.web(colorScheme.wallFill()));
     }
 
     private WorldMapColorScheme createWorldMapColorScheme() {
@@ -360,7 +360,7 @@ public class GameLevel3D extends Group implements Disposable {
         WorldMapColorScheme proposedColorScheme = ui.currentConfig().colorScheme(worldMap);
         requireNonNull(proposedColorScheme);
         // Add some contrast with floor if wall fill color is black
-        return Color.web(proposedColorScheme.walFill()).equals(Color.BLACK)
+        return Color.web(proposedColorScheme.wallFill()).equals(Color.BLACK)
             ? new WorldMapColorScheme("0x2a2a2a", proposedColorScheme.wallStroke(), proposedColorScheme.door(), proposedColorScheme.pellet())
             : proposedColorScheme;
     }
@@ -504,7 +504,7 @@ public class GameLevel3D extends Group implements Disposable {
                 ui.preferences().getFloat("3d.house.wall_thickness"),
                 ui.preferences().getFloat("3d.house.opacity")
             );
-            house3D.setWallBaseColor(Color.web(colorScheme.walFill()));
+            house3D.setWallBaseColor(Color.web(colorScheme.wallFill()));
             house3D.setWallTopColor(Color.web(colorScheme.wallStroke()));
             house3D.setDoorColor(Color.web(colorScheme.door()));
             house3D.wallBaseHeightProperty().set(ui.preferences().getFloat("3d.house.base_height"));
