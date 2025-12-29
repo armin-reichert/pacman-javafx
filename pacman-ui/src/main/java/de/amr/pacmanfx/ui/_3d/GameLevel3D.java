@@ -435,7 +435,7 @@ public class GameLevel3D extends Group implements Disposable {
 
     private void createLevelCounter3D() {
         WorldMap worldMap = gameLevel.worldMap();
-        levelCounter3D = new LevelCounter3D(animationRegistry);
+        levelCounter3D = new LevelCounter3D(animationRegistry, ui.currentConfig(), ui.preferences());
         levelCounter3D.setTranslateX(TS * (worldMap.numCols() - 2));
         levelCounter3D.setTranslateY(2 * TS);
         levelCounter3D.setTranslateZ(-ui.preferences().getFloat("3d.level_counter.elevation"));
@@ -702,7 +702,7 @@ public class GameLevel3D extends Group implements Disposable {
     public void onStartingGame() {
         energizers3D().forEach(Energizer3D::stopPumping);
         if (levelCounter3D != null) {
-            levelCounter3D.update(ui, gameLevel.game());
+            levelCounter3D.update(gameLevel.game());
         }
     }
 
@@ -827,7 +827,7 @@ public class GameLevel3D extends Group implements Disposable {
 
     public void updateLevelCounter3D() {
         if (levelCounter3D != null) {
-            levelCounter3D.update(ui, gameLevel.game());
+            levelCounter3D.update(gameLevel.game());
         }
     }
 
