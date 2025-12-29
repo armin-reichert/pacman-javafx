@@ -158,7 +158,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         Logger.info("Init UI configuration {}", getClass().getSimpleName());
         loadAssets();
         registerSounds();
-        createGameScenes(ui);
+        createGameScenes();
     }
 
     @Override
@@ -407,7 +407,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     // Game scenes
 
-    private void createGameScenes(GameUI ui) {
+    private void createGameScenes() {
         scenesByID.put(SCENE_ID_BOOT_SCENE,    new TengenMsPacMan_BootScene(ui));
         scenesByID.put(SCENE_ID_INTRO_SCENE,   new TengenMsPacMan_IntroScene(ui));
         scenesByID.put(SCENE_ID_START_SCENE,   new TengenMsPacMan_OptionsScene(ui));
