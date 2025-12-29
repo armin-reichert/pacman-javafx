@@ -91,7 +91,6 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
         Logger.info("Init UI configuration {}", getClass().getSimpleName());
         loadAssets();
         registerSounds();
-        createGameScenes();
     }
 
     @Override
@@ -299,15 +298,20 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
 
     // Game scene config
 
-    private void createGameScenes() {
-        scenesByID.put(SCENE_ID_BOOT_SCENE,     new Arcade_BootScene2D());
-        scenesByID.put(SCENE_ID_INTRO_SCENE,    new ArcadePacMan_IntroScene());
-        scenesByID.put(SCENE_ID_START_SCENE,    new ArcadePacMan_StartScene());
-        scenesByID.put(SCENE_ID_PLAY_SCENE_2D,  new Arcade_PlayScene2D());
-        scenesByID.put(SCENE_ID_PLAY_SCENE_3D,  new Arcade_PlayScene3D());
-        scenesByID.put(sceneID_CutScene(1),     new ArcadePacMan_CutScene1());
-        scenesByID.put(sceneID_CutScene(2),     new ArcadePacMan_CutScene2());
-        scenesByID.put(sceneID_CutScene(3),     new ArcadePacMan_CutScene3());
+    private GameScene createGameScene(String sceneID) {
+        final GameScene gameScene = switch (sceneID) {
+            case SCENE_ID_BOOT_SCENE -> new Arcade_BootScene2D();
+            case SCENE_ID_INTRO_SCENE -> new ArcadePacMan_IntroScene();
+            case SCENE_ID_START_SCENE -> new ArcadePacMan_StartScene();
+            case SCENE_ID_PLAY_SCENE_2D -> new Arcade_PlayScene2D();
+            case SCENE_ID_PLAY_SCENE_3D -> new Arcade_PlayScene3D();
+            case "CutScene_1_2D" -> new ArcadePacMan_CutScene1();
+            case "CutScene_2_2D" -> new ArcadePacMan_CutScene2();
+            case "CutScene_3_2D" -> new ArcadePacMan_CutScene3();
+            default -> throw new IllegalArgumentException("Illegal scene ID: " + sceneID);
+        };
+        Logger.info("Created new game scene {}", gameScene);
+        return gameScene;
     }
 
     @Override
@@ -344,7 +348,8 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
             case CutScenesTestState testState -> sceneID_CutScene(testState.testedCutSceneNumber);
             default -> PROPERTY_3D_ENABLED.get() ? SCENE_ID_PLAY_SCENE_3D : SCENE_ID_PLAY_SCENE_2D;
         };
-        return Optional.ofNullable(scenesByID.get(sceneID));
+        final GameScene gameScene = scenesByID.computeIfAbsent(sceneID, this::createGameScene);
+        return Optional.of(gameScene);
     }
 
     @Override
