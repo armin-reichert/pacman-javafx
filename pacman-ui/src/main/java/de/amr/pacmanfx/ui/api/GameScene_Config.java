@@ -19,8 +19,12 @@ public interface GameScene_Config {
     String SCENE_ID_HALL_OF_FAME     = "HallOfFame";
     String SCENE_ID_PLAY_SCENE_2D    = "PlayScene2D";
     String SCENE_ID_PLAY_SCENE_3D    = "PlayScene3D";
+    String SCENE_ID_CUTSCENE_1_2D    = "CutScene_1_2D";
+    String SCENE_ID_CUTSCENE_2_2D    = "CutScene_2_2D";
+    String SCENE_ID_CUTSCENE_3_2D    = "CutScene_3_2D";
+    String SCENE_ID_CUTSCENE_4_2D    = "CutScene_4_2D";
 
-    static String sceneID_CutScene(int number) {
+    static String sceneID_CutScene_N(int number) {
         return "CutScene_%d_2D".formatted(number);
     }
 

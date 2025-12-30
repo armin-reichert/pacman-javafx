@@ -48,7 +48,6 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.ui.api.ArcadePalette.*;
-import static de.amr.pacmanfx.ui.api.GameScene_Config.sceneID_CutScene;
 import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_3D_ENABLED;
 import static java.util.Objects.requireNonNull;
 
@@ -287,9 +286,9 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config, GameScene_Confi
             case SCENE_ID_START_SCENE   -> new ArcadePacMan_StartScene();
             case SCENE_ID_PLAY_SCENE_2D -> new Arcade_PlayScene2D();
             case SCENE_ID_PLAY_SCENE_3D -> new Arcade_PlayScene3D();
-            case "CutScene_1_2D"        -> new ArcadePacMan_CutScene1();
-            case "CutScene_2_2D"        -> new ArcadePacMan_CutScene2();
-            case "CutScene_3_2D"        -> new ArcadePacMan_CutScene3();
+            case SCENE_ID_CUTSCENE_1_2D -> new ArcadePacMan_CutScene1();
+            case SCENE_ID_CUTSCENE_2_2D -> new ArcadePacMan_CutScene2();
+            case SCENE_ID_CUTSCENE_3_2D -> new ArcadePacMan_CutScene3();
             default -> throw new IllegalArgumentException("Illegal scene ID: " + sceneID);
         };
         Logger.info("Created new game scene {}", gameScene);
@@ -315,9 +314,9 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config, GameScene_Confi
                 if (cutSceneNumber == 0) {
                     throw new IllegalStateException("Cannot determine cut scene after level %d".formatted(game.level().number()));
                 }
-                yield sceneID_CutScene(cutSceneNumber);
+                yield GameScene_Config.sceneID_CutScene_N(cutSceneNumber);
             }
-            case CutScenesTestState testState -> sceneID_CutScene(testState.testedCutSceneNumber);
+            case CutScenesTestState testState -> GameScene_Config.sceneID_CutScene_N(testState.testedCutSceneNumber);
             default -> PROPERTY_3D_ENABLED.get() ? SCENE_ID_PLAY_SCENE_3D : SCENE_ID_PLAY_SCENE_2D;
         };
         final GameScene gameScene = scenesByID.computeIfAbsent(sceneID, this::createGameScene);
