@@ -8,7 +8,7 @@ import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_PlayScene2D;
 import de.amr.pacmanfx.ui._2d.BaseDebugInfoRenderer;
@@ -25,14 +25,14 @@ import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_PlayScene2D.CANVAS_WIDTH_UNSCALED;
-import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_PlayScene2D_Renderer extends GameScene2D_Renderer
-    implements SpriteRenderer, TengenMsPacMan_CommonSceneRenderingFunctions {
+    implements SpriteRenderer, TengenMsPacMan_SceneRenderingCommons {
+
+    private static final List<Byte> GHOSTS_Z_ORDER = List.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW);
 
     private static final float CONTENT_INDENT = TS(2);
 
@@ -64,18 +64,16 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends GameScene2D_Renderer
         }
     }
 
-    private final TengenMsPacMan_SpriteSheet spriteSheet;
-    private final RenderInfo gameLevelRenderInfo = new RenderInfo();
-    private final TengenMsPacMan_GameLevelRenderer gameLevelRenderer;
+    private final RenderInfo renderInfo = new RenderInfo();
+    private final TengenMsPacMan_GameLevelRenderer levelRenderer;
     private final TengenMsPacMan_ActorRenderer actorRenderer;
     private final List<Actor> actorsInZOrder = new ArrayList<>();
-
     private final Rectangle clipRect;
 
-    public TengenMsPacMan_PlayScene2D_Renderer(GameUI_Config uiConfig, UIPreferences prefs, GameScene2D scene, Canvas canvas, TengenMsPacMan_SpriteSheet spriteSheet) {
+    public TengenMsPacMan_PlayScene2D_Renderer(GameUI_Config uiConfig, UIPreferences prefs, GameScene2D scene, Canvas canvas) {
         super(canvas);
-        this.spriteSheet = requireNonNull(spriteSheet);
-        gameLevelRenderer = (TengenMsPacMan_GameLevelRenderer) adaptRenderer(uiConfig.createGameLevelRenderer(canvas), scene);
+
+        levelRenderer = (TengenMsPacMan_GameLevelRenderer) adaptRenderer(uiConfig.createGameLevelRenderer(canvas), scene);
         actorRenderer = (TengenMsPacMan_ActorRenderer) adaptRenderer(uiConfig.createActorRenderer(canvas), scene);
         debugRenderer = adaptRenderer(new PlaySceneDebugInfoRenderer(prefs, canvas), scene);
 
@@ -90,7 +88,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends GameScene2D_Renderer
 
     @Override
     public TengenMsPacMan_SpriteSheet spriteSheet() {
-        return spriteSheet;
+        return TengenMsPacMan_SpriteSheet.INSTANCE;
     }
 
     @Override
@@ -101,10 +99,16 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends GameScene2D_Renderer
     @Override
     public void draw(GameScene2D scene) {
         clearCanvas();
-
-        scene.context().currentGame().optGameLevel().ifPresent(gameLevel -> {
+        scene.context().currentGame().optGameLevel().ifPresent(level -> {
+            configureRenderInfo(scene, level.worldMap());
+            configureActorZOrder(level);
             ctx.getCanvas().setClip(clipRect);
-            drawGameLevel(scene, gameLevel);
+            ctx.save();
+            ctx.translate(scaled(CONTENT_INDENT), 0);
+            levelRenderer.drawGameLevel(level, renderInfo);
+            levelRenderer.drawDoor(level.worldMap()); // ghosts appear under door, so draw door over again
+            actorsInZOrder.forEach(actorRenderer::drawActor);
+            ctx.restore();
             if (scene.debugInfoVisible()) {
                 ctx.getCanvas().setClip(null); // also show normally clipped region (to see how Pac-Man travels through portals)
                 debugRenderer.draw(scene);
@@ -112,37 +116,26 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends GameScene2D_Renderer
         });
     }
 
-    private void drawGameLevel(GameScene2D scene, GameLevel gameLevel) {
+    private void configureRenderInfo(GameScene2D scene, WorldMap worldMap) {
         final TengenMsPacMan_PlayScene2D playScene = (TengenMsPacMan_PlayScene2D) scene;
         final long tick = playScene.ui().clock().tickCount();
 
-        gameLevelRenderInfo.clear();
+        renderInfo.clear();
         // this is needed for drawing animated maze with different images:
-        gameLevelRenderInfo.put(CommonRenderInfoKey.TICK, tick);
-        gameLevelRenderInfo.put(TengenMsPacMan_UIConfig.ConfigKey.MAP_CATEGORY,
-            gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MAP_CATEGORY));
+        renderInfo.put(CommonRenderInfoKey.TICK, tick);
+        renderInfo.put(TengenMsPacMan_UIConfig.ConfigKey.MAP_CATEGORY, worldMap.getConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MAP_CATEGORY));
         if (playScene.levelCompletedAnimation() != null && playScene.isMazeHighlighted()) {
-            gameLevelRenderInfo.put(CommonRenderInfoKey.MAZE_BRIGHT, true);
-            gameLevelRenderInfo.put(CommonRenderInfoKey.MAZE_FLASHING_INDEX, playScene.levelCompletedAnimation().flashingIndex());
+            renderInfo.put(CommonRenderInfoKey.MAZE_BRIGHT, true);
+            renderInfo.put(CommonRenderInfoKey.MAZE_FLASHING_INDEX, playScene.levelCompletedAnimation().flashingIndex());
         } else {
-            gameLevelRenderInfo.put(CommonRenderInfoKey.MAZE_BRIGHT, false);
+            renderInfo.put(CommonRenderInfoKey.MAZE_BRIGHT, false);
         }
-
-        ctx.save();
-        ctx.translate(scaled(CONTENT_INDENT), 0);
-        gameLevelRenderer.drawGameLevel(gameLevel, gameLevelRenderInfo);
-
-        actorsInZOrder.clear();
-        gameLevel.optBonus().ifPresent(actorsInZOrder::add);
-        actorsInZOrder.add(gameLevel.pac());
-        ghostsInZOrder(gameLevel).forEach(actorsInZOrder::add);
-        actorsInZOrder.forEach(actorRenderer::drawActor);
-
-        gameLevelRenderer.drawDoor(gameLevel.worldMap()); // ghosts appear under door when accessing house!
-        ctx.restore();
     }
 
-    private Stream<Ghost> ghostsInZOrder(GameLevel gameLevel) {
-        return Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW).map(gameLevel::ghost);
+    private void configureActorZOrder(GameLevel level) {
+        actorsInZOrder.clear();
+        level.optBonus().ifPresent(actorsInZOrder::add);
+        actorsInZOrder.add(level.pac());
+        GHOSTS_Z_ORDER.stream().map(level::ghost).forEach(actorsInZOrder::add);
     }
 }

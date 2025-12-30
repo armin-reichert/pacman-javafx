@@ -23,7 +23,7 @@ import static de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_OptionsScene.
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_OptionsScene_Renderer extends GameScene2D_Renderer
-    implements SpriteRenderer, TengenMsPacMan_CommonSceneRenderingFunctions {
+    implements SpriteRenderer, TengenMsPacMan_SceneRenderingCommons {
 
     private static final int COL_ARROW = 2 * TS;
     private static final int COL_LABEL = 4 * TS;

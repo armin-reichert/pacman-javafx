@@ -26,7 +26,7 @@ import static de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_IntroScene.MA
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_IntroScene_Renderer extends GameScene2D_Renderer
-    implements SpriteRenderer, TengenMsPacMan_CommonSceneRenderingFunctions {
+    implements SpriteRenderer, TengenMsPacMan_SceneRenderingCommons {
 
     private final TengenMsPacMan_SpriteSheet spriteSheet;
     private final ActorRenderer actorRenderer;

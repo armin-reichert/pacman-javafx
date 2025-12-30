@@ -14,7 +14,7 @@ import javafx.scene.text.Font;
 import static de.amr.pacmanfx.Globals.TS;
 import static java.util.Objects.requireNonNull;
 
-public interface TengenMsPacMan_CommonSceneRenderingFunctions {
+public interface TengenMsPacMan_SceneRenderingCommons {
 
     GameScene2D_Renderer renderer();
 

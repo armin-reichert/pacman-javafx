@@ -281,7 +281,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
             case TengenMsPacMan_BootScene ignored -> new TengenMsPacMan_BootScene_Renderer(this, prefs, gameScene2D, canvas);
             case TengenMsPacMan_IntroScene ignored -> new TengenMsPacMan_IntroScene_Renderer(this, prefs, gameScene2D, canvas, spriteSheet());
             case TengenMsPacMan_OptionsScene ignored -> new TengenMsPacMan_OptionsScene_Renderer(prefs, gameScene2D, canvas, spriteSheet());
-            case TengenMsPacMan_PlayScene2D ignored -> new TengenMsPacMan_PlayScene2D_Renderer(this, prefs, gameScene2D, canvas, spriteSheet());
+            case TengenMsPacMan_PlayScene2D ignored -> new TengenMsPacMan_PlayScene2D_Renderer(this, prefs, gameScene2D, canvas);
             case TengenMsPacMan_CreditsScene ignored -> new TengenMsPacMan_CreditsScene_Renderer(prefs, gameScene2D, canvas);
             case TengenMsPacMan_CutScene1 ignored -> new TengenMsPacMan_CutScene1_Renderer(this, prefs, gameScene2D, canvas);
             case TengenMsPacMan_CutScene2 ignored -> new TengenMsPacMan_CutScene2_Renderer(this, prefs, gameScene2D, canvas);

@@ -14,7 +14,7 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.nesColor;
 import static de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_CreditsScene.DISPLAY_SECONDS;
 
-public class TengenMsPacMan_CreditsScene_Renderer extends GameScene2D_Renderer implements TengenMsPacMan_CommonSceneRenderingFunctions {
+public class TengenMsPacMan_CreditsScene_Renderer extends GameScene2D_Renderer implements TengenMsPacMan_SceneRenderingCommons {
 
     private int y;
 
