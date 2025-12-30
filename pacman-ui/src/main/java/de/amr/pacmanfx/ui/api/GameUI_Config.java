@@ -30,11 +30,7 @@ import javafx.scene.image.Image;
  */
 public interface GameUI_Config extends Disposable {
 
-    String CONFIG_KEY_COLOR_SCHEME = "colorScheme";
-
-    String CONFIG_KEY_COLOR_MAP_INDEX = "colorMapIndex";
-
-    String CONFIG_KEY_MAP_NUMBER = "mapNumber";
+    enum ConfigKey { COLOR_SCHEME, COLOR_MAP_INDEX, MAP_NUMBER }
 
     void init();
 

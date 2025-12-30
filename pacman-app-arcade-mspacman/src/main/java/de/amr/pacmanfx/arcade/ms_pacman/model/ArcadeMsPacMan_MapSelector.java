@@ -7,13 +7,11 @@ package de.amr.pacmanfx.arcade.ms_pacman.model;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
+import de.amr.pacmanfx.ui.api.GameUI_Config;
 
 import java.util.List;
 
 import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
-import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig.CONFIG_KEY_COLOR_MAP_INDEX;
-import static de.amr.pacmanfx.ui.api.GameUI_Config.CONFIG_KEY_COLOR_SCHEME;
-import static de.amr.pacmanfx.ui.api.GameUI_Config.CONFIG_KEY_MAP_NUMBER;
 
 public class ArcadeMsPacMan_MapSelector implements WorldMapSelector {
 
@@ -80,9 +78,9 @@ public class ArcadeMsPacMan_MapSelector implements WorldMapSelector {
     private WorldMap configuredWorldMap(WorldMap prototype, int levelNumber, int mapNumber) {
         final WorldMap worldMap = new WorldMap(prototype);
         final int colorMapIndex = levelNumber <= 13 ? mapNumber - 1 : mapNumber + 1;
-        worldMap.setConfigValue(CONFIG_KEY_MAP_NUMBER, mapNumber);
-        worldMap.setConfigValue(CONFIG_KEY_COLOR_MAP_INDEX, colorMapIndex);
-        worldMap.setConfigValue(CONFIG_KEY_COLOR_SCHEME, ArcadeMsPacMan_UIConfig.WORLD_MAP_COLOR_SCHEMES.get(colorMapIndex));
+        worldMap.setConfigValue(GameUI_Config.ConfigKey.MAP_NUMBER, mapNumber);
+        worldMap.setConfigValue(GameUI_Config.ConfigKey.COLOR_MAP_INDEX, colorMapIndex);
+        worldMap.setConfigValue(GameUI_Config.ConfigKey.COLOR_SCHEME, ArcadeMsPacMan_UIConfig.WORLD_MAP_COLOR_SCHEMES.get(colorMapIndex));
         return worldMap;
     }
 }

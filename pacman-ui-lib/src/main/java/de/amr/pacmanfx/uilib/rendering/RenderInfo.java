@@ -11,15 +11,15 @@ import static java.util.Objects.requireNonNull;
 
 public class RenderInfo {
 
-    private final Map<String, Object> map = new HashMap<>();
+    private final Map<Object, Object> map = new HashMap<>();
 
     public RenderInfo() {}
 
-    public boolean getBoolean(String key) {
+    public boolean getBoolean(Object key) {
         return get(key, Boolean.class);
     }
 
-    public <T> T get(String key, Class<T> valueClass) {
+    public <T> T get(Object key, Class<T> valueClass) {
         Object value = map.get(key);
         if (value == null) {
             return null;
@@ -35,11 +35,11 @@ public class RenderInfo {
         map.clear();
     }
 
-    public void put(String key, Object value) {
+    public void put(Object key, Object value) {
         map.put(key, value);
     }
 
-    public void putAll(Map<String, Object> otherMap) {
+    public void putAll(Map<Object, Object> otherMap) {
         requireNonNull(otherMap);
         map.putAll(otherMap);
     }

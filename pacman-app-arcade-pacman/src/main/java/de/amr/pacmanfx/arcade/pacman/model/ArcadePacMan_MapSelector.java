@@ -6,13 +6,12 @@ package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
+import de.amr.pacmanfx.ui.api.GameUI_Config;
 import org.tinylog.Logger;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
-
-import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.*;
 
 public class ArcadePacMan_MapSelector implements WorldMapSelector {
 
@@ -41,9 +40,9 @@ public class ArcadePacMan_MapSelector implements WorldMapSelector {
             }
             try {
                 worldMapPrototype = WorldMap.loadFromURL(url);
-                worldMapPrototype.setConfigValue(CONFIG_KEY_MAP_NUMBER, 1);
-                worldMapPrototype.setConfigValue(CONFIG_KEY_COLOR_MAP_INDEX, 0);
-                worldMapPrototype.setConfigValue(CONFIG_KEY_COLOR_SCHEME, WorldMapSelector.extractColorScheme(worldMapPrototype));
+                worldMapPrototype.setConfigValue(GameUI_Config.ConfigKey.MAP_NUMBER, 1);
+                worldMapPrototype.setConfigValue(GameUI_Config.ConfigKey.COLOR_MAP_INDEX, 0);
+                worldMapPrototype.setConfigValue(GameUI_Config.ConfigKey.COLOR_SCHEME, WorldMapSelector.extractColorScheme(worldMapPrototype));
                 Logger.info("Pac-Man Arcade map loaded, URL='{}'", worldMapPrototype.url());
             } catch (IOException x) {
                 Logger.error("Could not load Pac-Man Arcade map, URL={}", url);

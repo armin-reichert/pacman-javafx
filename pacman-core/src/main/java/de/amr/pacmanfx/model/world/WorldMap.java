@@ -61,7 +61,7 @@ public class WorldMap {
     String url;
     TerrainLayer terrainLayer;
     FoodLayer foodLayer;
-    Map<String, Object> configMap = new HashMap<>();
+    Map<Object, Object> configMap = new HashMap<>();
 
     WorldMap() {}
 
@@ -174,24 +174,24 @@ public class WorldMap {
 
     // Configuration map, can store values of any data type. Keys and values must not be null.
 
-    public void setConfigValue(String key, Object value) {
+    public void setConfigValue(Object key, Object value) {
         requireNonNull(key);
         requireNonNull(value);
-        configMapIfNullCreate().put(key, value);
+        configMapCreateIfNull().put(key, value);
     }
 
     @SuppressWarnings("unchecked")
-    public <T> T getConfigValue(String key) {
+    public <T> T getConfigValue(Object key) {
         requireNonNull(key);
-        return (T) configMapIfNullCreate().get(key);
+        return (T) configMapCreateIfNull().get(key);
     }
 
-    public boolean hasConfigValue(String key) {
+    public boolean hasConfigValue(Object key) {
         requireNonNull(key);
         return configMap != null && configMap.containsKey(key);
     }
 
-    private Map<String, Object> configMapIfNullCreate() {
+    private Map<Object, Object> configMapCreateIfNull() {
         if (configMap == null) {
             configMap = new HashMap<>();
         }

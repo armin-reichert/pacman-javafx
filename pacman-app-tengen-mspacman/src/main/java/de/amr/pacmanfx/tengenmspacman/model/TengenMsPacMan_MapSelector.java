@@ -7,7 +7,9 @@ package de.amr.pacmanfx.tengenmspacman.model;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.rendering.NonArcadeMapsSpriteSheet;
+import de.amr.pacmanfx.ui.api.GameUI_Config;
 
 import java.util.EnumMap;
 import java.util.List;
@@ -60,7 +62,7 @@ public class TengenMsPacMan_MapSelector implements WorldMapSelector {
                 case STRANGE -> {
                     WorldMap worldMap = createConfiguredStrangeMap(levelNumber);
                     // Hack: Store mazeID in map properties to make renderer happy
-                    worldMap.setConfigValue(CONFIG_KEY_MAZE_ID, NonArcadeMapsSpriteSheet.MazeID.values()[levelNumber - 1]);
+                    worldMap.setConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MAZE_ID, NonArcadeMapsSpriteSheet.MazeID.values()[levelNumber - 1]);
                     yield worldMap;
                 }
             };
@@ -71,16 +73,16 @@ public class TengenMsPacMan_MapSelector implements WorldMapSelector {
 
     private WorldMap configuration(MapCategory category, int number, NES_ColorScheme colorScheme) {
         WorldMap worldMap = new WorldMap(mapRepository.get(category).get(number - 1));
-        worldMap.setConfigValue(CONFIG_KEY_MAP_CATEGORY, category);
-        worldMap.setConfigValue(CONFIG_KEY_MAP_NUMBER, number);
-        worldMap.setConfigValue(CONFIG_KEY_NES_COLOR_SCHEME, colorScheme);
-        worldMap.setConfigValue(CONFIG_KEY_MULTIPLE_FLASH_COLORS, false);
+        worldMap.setConfigValue(GameUI_Config.ConfigKey.MAP_NUMBER, number);
+        worldMap.setConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MAP_CATEGORY, category);
+        worldMap.setConfigValue(TengenMsPacMan_UIConfig.ConfigKey.NES_COLOR_SCHEME, colorScheme);
+        worldMap.setConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MULTIPLE_FLASH_COLORS, false);
         return worldMap;
     }
 
     private WorldMap randomConfiguration(MapCategory category, int number) {
         WorldMap worldMap = configuration(category, number, NES_ColorScheme.randomScheme());
-        worldMap.setConfigValue(CONFIG_KEY_MULTIPLE_FLASH_COLORS, true);
+        worldMap.setConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MULTIPLE_FLASH_COLORS, true);
         return worldMap;
     }
 

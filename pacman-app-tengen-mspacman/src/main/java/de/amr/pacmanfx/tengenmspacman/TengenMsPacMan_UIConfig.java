@@ -104,12 +104,14 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     public static final ResourceBundle TEXT_BUNDLE = ResourceBundle.getBundle("de.amr.pacmanfx.tengenmspacman.localized_texts");
 
-    public static final String CONFIG_KEY_MAP_CATEGORY = "mapCategory";
-    // Name of configuration property under which the correctly recolored maze sprite set is stored
-    public static final String CONFIG_KEY_MAZE_ID = "mazeID";
-    public static final String CONFIG_KEY_MAZE_SPRITE_SET = "mazeSpriteSet";
-    public static final String CONFIG_KEY_MULTIPLE_FLASH_COLORS = "multipleFlashColors";
-    public static final String CONFIG_KEY_NES_COLOR_SCHEME = "nesColorScheme";
+    public enum ConfigKey {
+        MAP_CATEGORY,
+        /** ID of correctly recolored maze sprite set */
+        MAZE_ID,
+        MAZE_SPRITE_SET,
+        MULTIPLE_FLASH_COLORS,
+        NES_COLOR_SCHEME
+    }
 
     /** 32x30 */
     public static final Vector2i NES_TILES = new Vector2i(32, 30);
@@ -347,7 +349,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     @Override
     public WorldMapColorScheme colorScheme(WorldMap worldMap) {
-        final NES_ColorScheme scheme = worldMap.getConfigValue(CONFIG_KEY_NES_COLOR_SCHEME);
+        final NES_ColorScheme scheme = worldMap.getConfigValue(ConfigKey.NES_COLOR_SCHEME);
         return new WorldMapColorScheme(scheme.fillColorRGB(), scheme.strokeColorRGB(), scheme.strokeColorRGB(), scheme.pelletColorRGB());
     }
 
@@ -511,15 +513,15 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     public void configureHighlightedMazeRenderInfo(RenderInfo info, GameLevel gameLevel, int frame) {
         final WorldMap worldMap = gameLevel.worldMap();
-        final MazeSpriteSet mazeSpriteSet = worldMap.getConfigValue(CONFIG_KEY_MAZE_SPRITE_SET);
+        final MazeSpriteSet mazeSpriteSet = worldMap.getConfigValue(ConfigKey.MAZE_SPRITE_SET);
         final ColoredSpriteImage flashingMazeSprite = mazeSpriteSet.flashingMazeImages().get(frame);
         info.put(CommonRenderInfoKey.MAZE_IMAGE, flashingMazeSprite.spriteSheetImage());
         info.put(CommonRenderInfoKey.MAZE_SPRITE, flashingMazeSprite.sprite());
     }
 
     public void configureNormalMazeRenderInfo(RenderInfo info, MapCategory mapCategory, WorldMap worldMap, long tick) {
-        final int mapNumber = worldMap.getConfigValue(CONFIG_KEY_MAP_NUMBER);
-        final MazeSpriteSet mazeSpriteSet = worldMap.getConfigValue(CONFIG_KEY_MAZE_SPRITE_SET);
+        final int mapNumber = worldMap.getConfigValue(GameUI_Config.ConfigKey.MAP_NUMBER);
+        final MazeSpriteSet mazeSpriteSet = worldMap.getConfigValue(ConfigKey.MAZE_SPRITE_SET);
         info.put(CommonRenderInfoKey.MAZE_IMAGE, mazeSpriteSet.mazeImage().spriteSheetImage());
         if (mapCategory == MapCategory.STRANGE && mapNumber == 15) {
             final int spriteIndex = mazeAnimationSpriteIndex(tick);
@@ -546,20 +548,19 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
      * <p>Because the map images do not cover all required map/color-scheme combinations, an image cache is provided where
      * the recolored maze images are stored.
      */
-
     public MazeSpriteSet createMazeSpriteSet(WorldMap worldMap, int flashCount) {
-        final MapCategory mapCategory = worldMap.getConfigValue(CONFIG_KEY_MAP_CATEGORY);
-        final int mapNumber = worldMap.getConfigValue(CONFIG_KEY_MAP_NUMBER);
-        final NES_ColorScheme requestedColorScheme = worldMap.getConfigValue(CONFIG_KEY_NES_COLOR_SCHEME);
+        final MapCategory mapCategory = worldMap.getConfigValue(ConfigKey.MAP_CATEGORY);
+        final int mapNumber = worldMap.getConfigValue(GameUI_Config.ConfigKey.MAP_NUMBER);
+        final NES_ColorScheme requestedColorScheme = worldMap.getConfigValue(ConfigKey.NES_COLOR_SCHEME);
         // for randomly colored maps (levels 28-31, non-ARCADE maps), multiple random flash colors appear
-        final boolean randomFlashColors = worldMap.getConfigValue(CONFIG_KEY_MULTIPLE_FLASH_COLORS);
+        final boolean randomFlashColors = worldMap.getConfigValue(ConfigKey.MULTIPLE_FLASH_COLORS);
 
         return switch (mapCategory) {
             case ARCADE  -> arcadeMazeSpriteSet(mapNumber, requestedColorScheme, flashCount);
             case MINI    -> miniMazeSpriteSet(mapNumber, requestedColorScheme, flashCount, randomFlashColors);
             case BIG     -> bigMazeSpriteSet(mapNumber, requestedColorScheme, flashCount, randomFlashColors);
             case STRANGE -> {
-                final NonArcadeMapsSpriteSheet.MazeID mazeID = worldMap.getConfigValue(CONFIG_KEY_MAZE_ID); // set by map selector!
+                final NonArcadeMapsSpriteSheet.MazeID mazeID = worldMap.getConfigValue(ConfigKey.MAZE_ID); // set by map selector!
                 yield strangeMazeSpriteSet(
                     mazeID,
                     randomFlashColors ? requestedColorScheme : null,

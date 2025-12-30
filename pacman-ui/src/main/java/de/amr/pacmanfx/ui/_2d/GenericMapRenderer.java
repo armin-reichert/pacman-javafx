@@ -76,7 +76,7 @@ public class GenericMapRenderer extends BaseRenderer {
             });
 
             // this is set by the map selector
-            WorldMapColorScheme foodColorScheme = gameLevel.worldMap().getConfigValue(GameUI_Config.CONFIG_KEY_COLOR_SCHEME);
+            WorldMapColorScheme foodColorScheme = gameLevel.worldMap().getConfigValue(GameUI_Config.ConfigKey.COLOR_SCHEME);
             final Color pelletColor = Color.valueOf(foodColorScheme.pellet());
             foodRenderer.setPelletColor(pelletColor);
             FoodLayer foodLayer = gameLevel.worldMap().foodLayer();

@@ -183,7 +183,7 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
         final WorldMapColorScheme colorScheme = builtinMapPrototypes.contains(prototype)
             ? WORLD_MAP_COLOR_SCHEMES.get(randomInt(0, WORLD_MAP_COLOR_SCHEMES.size()))
             : WorldMapSelector.extractColorScheme(prototype);
-        worldMap.setConfigValue(GameUI_Config.CONFIG_KEY_COLOR_SCHEME, colorScheme);
+        worldMap.setConfigValue(GameUI_Config.ConfigKey.COLOR_SCHEME, colorScheme);
         Logger.info("Map selected (mode {}): {}", selectionMode, worldMap.url());
 
         return worldMap;

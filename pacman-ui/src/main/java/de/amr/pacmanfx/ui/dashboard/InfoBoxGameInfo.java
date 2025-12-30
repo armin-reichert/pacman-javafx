@@ -21,7 +21,6 @@ import javafx.scene.paint.Color;
 import static de.amr.pacmanfx.Globals.CYAN_GHOST_BASHFUL;
 import static de.amr.pacmanfx.Globals.NUM_TICKS_PER_SEC;
 import static de.amr.pacmanfx.lib.TickTimer.secToTicks;
-import static de.amr.pacmanfx.ui.api.GameUI_Config.CONFIG_KEY_COLOR_MAP_INDEX;
 import static de.amr.pacmanfx.uilib.Ufx.formatColorHex;
 
 public class InfoBoxGameInfo extends InfoBox {
@@ -52,14 +51,14 @@ public class InfoBoxGameInfo extends InfoBox {
                 Color strokeColor = Color.valueOf(nesColors.strokeColorRGB());
                 Color pelletColor = Color.valueOf(nesColors.pelletColorRGB());
                 return "%s / %s / %s".formatted(formatColorHex(fillColor), formatColorHex(strokeColor), formatColorHex(pelletColor));
-            } else if (worldMap.hasConfigValue(GameUI_Config.CONFIG_KEY_COLOR_SCHEME)) {
+            } else if (worldMap.hasConfigValue(GameUI_Config.ConfigKey.COLOR_SCHEME)) {
                 // Pac-Man XXL game
-                WorldMapColorScheme colorScheme = worldMap.getConfigValue(GameUI_Config.CONFIG_KEY_COLOR_SCHEME);
+                WorldMapColorScheme colorScheme = worldMap.getConfigValue(GameUI_Config.ConfigKey.COLOR_SCHEME);
                 Color fillColor = Color.valueOf(colorScheme.wallFill());
                 Color strokeColor = Color.valueOf(colorScheme.wallStroke());
                 Color pelletColor = Color.valueOf(colorScheme.pellet());
                 return "%s / %s / %s".formatted(formatColorHex(fillColor), formatColorHex(strokeColor), formatColorHex(pelletColor));
-            } else if (worldMap.hasConfigValue(CONFIG_KEY_COLOR_MAP_INDEX)) {
+            } else if (worldMap.hasConfigValue(GameUI_Config.ConfigKey.COLOR_MAP_INDEX)) {
                 // Arcade games
                 WorldMapColorScheme coloring = ui.currentConfig().colorScheme(worldMap);
                 return "%s / %s / %s".formatted(coloring.wallFill(), coloring.wallStroke(), coloring.pellet());

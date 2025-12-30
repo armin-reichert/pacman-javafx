@@ -119,14 +119,15 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends GameScene2D_Renderer
         gameLevelRenderInfo.clear();
         // this is needed for drawing animated maze with different images:
         gameLevelRenderInfo.put(CommonRenderInfoKey.TICK, tick);
-        gameLevelRenderInfo.put(TengenMsPacMan_UIConfig.CONFIG_KEY_MAP_CATEGORY,
-            gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.CONFIG_KEY_MAP_CATEGORY));
+        gameLevelRenderInfo.put(TengenMsPacMan_UIConfig.ConfigKey.MAP_CATEGORY,
+            gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MAP_CATEGORY));
         if (playScene.levelCompletedAnimation() != null && playScene.isMazeHighlighted()) {
             gameLevelRenderInfo.put(CommonRenderInfoKey.MAZE_BRIGHT, true);
             gameLevelRenderInfo.put(CommonRenderInfoKey.MAZE_FLASHING_INDEX, playScene.levelCompletedAnimation().flashingIndex());
         } else {
             gameLevelRenderInfo.put(CommonRenderInfoKey.MAZE_BRIGHT, false);
         }
+
         ctx.save();
         ctx.translate(scaled(CONTENT_INDENT), 0);
         gameLevelRenderer.drawGameLevel(gameLevel, gameLevelRenderInfo);
