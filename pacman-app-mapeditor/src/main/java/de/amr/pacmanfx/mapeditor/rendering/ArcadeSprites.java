@@ -23,8 +23,8 @@ public class ArcadeSprites {
     public static final RectShort STRAWBERRY   = new RectShort(505,  49, 14, 14);
 
     // These are the colors from the first Ms. Pac-Man level
-    public static final Color MS_PACMAN_COLOR_FOOD        = Color.web("#dedeff");
-    public static final Color MS_PACMAN_COLOR_WALL_STROKE = Color.web("#ff0000");
-    public static final Color MS_PACMAN_COLOR_WALL_FILL   = Color.web("#ffb7ae");
-    public static final Color MS_PACMAN_COLOR_DOOR        = Color.web("#fcb5ff");
+    public static final Color MS_PACMAN_COLOR_FOOD        = Color.valueOf("#dedeff");
+    public static final Color MS_PACMAN_COLOR_WALL_STROKE = Color.valueOf("#ff0000");
+    public static final Color MS_PACMAN_COLOR_WALL_FILL   = Color.valueOf("#ffb7ae");
+    public static final Color MS_PACMAN_COLOR_DOOR        = Color.valueOf("#fcb5ff");
 }

@@ -66,7 +66,7 @@ public interface Gradients {
             0, 0, axis.endX(), axis.endY(),
             true, // proportional coordinates
             CycleMethod.NO_CYCLE,
-            new Stop(0, Color.web(startColorCode)), new Stop(1, Color.web(stopColorCode))
+            new Stop(0, Color.valueOf(startColorCode)), new Stop(1, Color.valueOf(stopColorCode))
         );
     }
 }

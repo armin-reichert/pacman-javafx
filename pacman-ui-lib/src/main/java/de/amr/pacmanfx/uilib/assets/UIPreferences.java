@@ -86,7 +86,7 @@ public class UIPreferences {
 
     public Color getColor(String colorKey) {
         String colorValue = prefs.get(colorKey, getDefaultValue(colorKey, String.class));
-        return Color.web(colorValue);
+        return Color.valueOf(colorValue);
     }
 
     public void storeFont(String key, Font font) {

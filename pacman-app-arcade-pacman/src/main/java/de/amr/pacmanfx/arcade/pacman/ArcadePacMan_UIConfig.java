@@ -73,8 +73,8 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
     );
 
     private static final Map<Color, Color> BRIGHT_MAZE_COLOR_CHANGES = Map.of(
-        Color.web(WORLD_MAP_COLOR_SCHEME.wallStroke()), ARCADE_WHITE,   // wall color change
-        Color.web(WORLD_MAP_COLOR_SCHEME.door()), Color.TRANSPARENT // door color change
+        Color.valueOf(WORLD_MAP_COLOR_SCHEME.wallStroke()), ARCADE_WHITE,   // wall color change
+        Color.valueOf(WORLD_MAP_COLOR_SCHEME.door()), Color.TRANSPARENT // door color change
     );
 
     private final GameUI ui;

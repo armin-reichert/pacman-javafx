@@ -23,8 +23,8 @@ public class MapColoringService implements Disposable {
     private static Image replaceColors(Image image, NES_ColorScheme fromScheme, NES_ColorScheme toScheme) {
         return Ufx.replaceImageColors(
             image,
-            Color.web(fromScheme.fillColorRGB()), Color.web(fromScheme.strokeColorRGB()), Color.web(fromScheme.pelletColorRGB()),
-            Color.web(toScheme.fillColorRGB()),   Color.web(toScheme.strokeColorRGB()),   Color.web(toScheme.pelletColorRGB())
+            Color.valueOf(fromScheme.fillColorRGB()), Color.valueOf(fromScheme.strokeColorRGB()), Color.valueOf(fromScheme.pelletColorRGB()),
+            Color.valueOf(toScheme.fillColorRGB()),   Color.valueOf(toScheme.strokeColorRGB()),   Color.valueOf(toScheme.pelletColorRGB())
         );
     }
 

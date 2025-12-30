@@ -48,16 +48,16 @@ public class InfoBoxGameInfo extends InfoBox {
             if (worldMap.hasConfigValue("nesColorScheme")) {
                 // Tengen Ms. Pac-Man
                 var nesColors = (NES_ColorScheme) worldMap.getConfigValue("nesColorScheme");
-                Color fillColor = Color.web(nesColors.fillColorRGB());
-                Color strokeColor = Color.web(nesColors.strokeColorRGB());
-                Color pelletColor = Color.web(nesColors.pelletColorRGB());
+                Color fillColor = Color.valueOf(nesColors.fillColorRGB());
+                Color strokeColor = Color.valueOf(nesColors.strokeColorRGB());
+                Color pelletColor = Color.valueOf(nesColors.pelletColorRGB());
                 return "%s / %s / %s".formatted(formatColorHex(fillColor), formatColorHex(strokeColor), formatColorHex(pelletColor));
             } else if (worldMap.hasConfigValue(GameUI_Config.CONFIG_KEY_COLOR_SCHEME)) {
                 // Pac-Man XXL game
                 WorldMapColorScheme colorScheme = worldMap.getConfigValue(GameUI_Config.CONFIG_KEY_COLOR_SCHEME);
-                Color fillColor = Color.web(colorScheme.wallFill());
-                Color strokeColor = Color.web(colorScheme.wallStroke());
-                Color pelletColor = Color.web(colorScheme.pellet());
+                Color fillColor = Color.valueOf(colorScheme.wallFill());
+                Color strokeColor = Color.valueOf(colorScheme.wallStroke());
+                Color pelletColor = Color.valueOf(colorScheme.pellet());
                 return "%s / %s / %s".formatted(formatColorHex(fillColor), formatColorHex(strokeColor), formatColorHex(pelletColor));
             } else if (worldMap.hasConfigValue(CONFIG_KEY_COLOR_MAP_INDEX)) {
                 // Arcade games

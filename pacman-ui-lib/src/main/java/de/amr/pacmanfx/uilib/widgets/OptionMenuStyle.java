@@ -29,13 +29,13 @@ public record OptionMenuStyle(
         DEFAULT_OPTION_MENU_STYLE = new OptionMenuStyle(
             Font.font("sans", FontWeight.BLACK, 30),
             Font.font("sans", FontWeight.BOLD, 12),
-            Color.web("0c1568"),
-            Color.web("fffeff"),
-            Color.web("fffeff"),
-            Color.web("bcbe00"),
-            Color.web("fffeff"),
+            Color.valueOf("0c1568"),
+            Color.valueOf("fffeff"),
+            Color.valueOf("fffeff"),
+            Color.valueOf("bcbe00"),
+            Color.valueOf("fffeff"),
             Color.GRAY,
-            Color.web("bcbe00"),
+            Color.valueOf("bcbe00"),
             rm.loadAudioClip("/de/amr/pacmanfx/uilib/sounds/menu-select1.wav"),
             rm.loadAudioClip("/de/amr/pacmanfx/uilib/sounds/menu-select2.wav")
         );

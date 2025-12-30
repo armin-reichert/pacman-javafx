@@ -94,7 +94,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         ctx.save();
         ctx.scale(scaling(), scaling());
         MazeSpriteSet recoloredMaze =  gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.CONFIG_KEY_MAZE_SPRITE_SET);
-        Color pelletColor = Color.web(recoloredMaze.mazeImage().colorScheme().pelletColorRGB());
+        Color pelletColor = Color.valueOf(recoloredMaze.mazeImage().colorScheme().pelletColorRGB());
         drawPellets(gameLevel, pelletColor);
         drawEnergizers(gameLevel, pelletColor);
         ctx.restore();
@@ -136,7 +136,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
     private void drawGameOverMessage(GameLevel gameLevel, GameLevelMessage message) {
         final NES_ColorScheme colorScheme = gameLevel.worldMap().getConfigValue(CONFIG_KEY_NES_COLOR_SCHEME);
         Color color = gameLevel.isDemoLevel()
-            ? Color.web(colorScheme.strokeColorRGB())
+            ? Color.valueOf(colorScheme.strokeColorRGB())
             : uiConfig.assets().color("color.game_over_message");
         fillTextCentered(GAME_OVER_MESSAGE_TEXT, color, arcadeFont8(), message.x(), message.y());
     }
@@ -156,7 +156,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
             return;
         }
         final MazeSpriteSet recoloredMaze = worldMap.getConfigValue(TengenMsPacMan_UIConfig.CONFIG_KEY_MAZE_SPRITE_SET);
-        final Color doorColor = Color.web(recoloredMaze.mazeImage().colorScheme().strokeColorRGB());
+        final Color doorColor = Color.valueOf(recoloredMaze.mazeImage().colorScheme().strokeColorRGB());
         final double scaledTileSize = scaled(TS);
         final double xMin = house.leftDoorTile().x() * scaledTileSize;
         final double yMin = house.leftDoorTile().y() * scaledTileSize + scaled(5); // 5 pixels down
