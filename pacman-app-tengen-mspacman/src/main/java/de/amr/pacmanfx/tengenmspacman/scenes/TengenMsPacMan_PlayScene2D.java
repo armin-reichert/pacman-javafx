@@ -145,7 +145,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
             case SCALED_TO_FIT -> subScene.getHeight() / canvasHeightUnscaled.get();
             case SCROLLING -> subScene.getHeight() / NES_SIZE_PX.y();
         });
-        Logger.info("Tengen 2D play scene sub-scene: w={0.00} h={0.00} scaling={0.00}",
+        Logger.debug("Tengen 2D play scene sub-scene: w={0.00} h={0.00} scaling={0.00}",
             subScene.getWidth(), subScene.getHeight(), scaling());
     }
 

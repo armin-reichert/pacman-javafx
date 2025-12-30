@@ -18,12 +18,13 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.lerp;
 public class PlayScene2DCamera extends ParallelCamera {
 
     public static final float NORMAL_CAMERA_SPEED = 0.014f;
+    public static final float INTRO_CAMERA_SPEED = 0.03f;
 
     private record RangeY(double topPosition, double bottomPosition) {}
 
     private enum State { INTRO, TRACKING, MANUAL }
 
-    //TODO determine exakt values in NES emulator
+    //TODO determine exact values in NES emulator
     private static final int INTRO_TILT_START_TICK = 60;
     private static final int INTRO_TILT_DURATION_TICKS = 120;
 
@@ -81,7 +82,7 @@ public class PlayScene2DCamera extends ParallelCamera {
         setToTopPosition();
         state = State.INTRO;
         introTick = 0;
-        cameraSpeed = 2 * NORMAL_CAMERA_SPEED;
+        cameraSpeed = INTRO_CAMERA_SPEED;
         Logger.info("Camera intro sequence started");
     }
 
