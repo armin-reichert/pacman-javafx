@@ -69,7 +69,7 @@ public class SoundManager implements Disposable {
     public void register(Object key, Object value) {
         Object prevValue = map.put(key, value);
         if (prevValue != null) {
-            Logger.warn("Replaced sound  with key '{}', old value was {}", key, value);
+            Logger.warn("Replaced sound '{}', was {}", key, value);
         }
     }
 
@@ -88,7 +88,7 @@ public class SoundManager implements Disposable {
             () -> mutedProperty().get() || !enabledProperty().get(),
             mutedProperty(), enabledProperty()
         ));
-        Logger.info("Media player registered: key='{}', URL='{}'", key, url);
+        Logger.info("Media player: key='{}', URL='{}'", key, url);
         register(key, mediaPlayer);
     }
 
@@ -96,7 +96,7 @@ public class SoundManager implements Disposable {
         requireNonNull(key);
         requireNonNull(url);
         var media = new Media(url.toExternalForm());
-        Logger.info("Media registered: key='{}', URL='{}'", key, url);
+        Logger.info("Media: key='{}', URL='{}'", key, url);
         register(key, media);
     }
 
@@ -135,30 +135,33 @@ public class SoundManager implements Disposable {
     public void play(Object id, int repetitions) {
         requireNonNull(id);
         if (mutedProperty.get()) {
-            Logger.trace("Sound with ID '{}' not played, sound is muted", id);
+            Logger.trace("Sound '{}' not played (reason: muted)", id);
             return;
         }
         if (!enabledProperty.get()) {
-            Logger.trace("Sound with ID '{}' not played, sound is disabled", id);
+            Logger.trace("Sound '{}' not played (reason: disabled)", id);
             return;
         }
         if (!map.containsKey(id)) {
-            Logger.error("No media player and no clip URL registered with ID '{}'", id);
+            Logger.error("Sound '{}' not played (reason: not registered)", id);
             return;
         }
         Object value = map.get(id);
-        if (value instanceof MediaPlayer mediaPlayer) {
-            Logger.trace("Play media player ({} times) with ID '{}'",
-                repetitions == MediaPlayer.INDEFINITE ? "indefinite" : repetitions, id);
-            mediaPlayer.setCycleCount(repetitions);
-            mediaPlayer.play();
-        }
-        else if (value instanceof URL url) {
-            Logger.trace("Create and play audio clip ({} times) with ID '{}'",
-                repetitions == MediaPlayer.INDEFINITE ? "indefinite" : repetitions, id);
-            AudioClip audioClip = new AudioClip(url.toExternalForm());
-            audioClip.setCycleCount(repetitions);
-            audioClip.play(1.0); //TODO add volume parameter?
+        switch (value) {
+            case MediaPlayer mediaPlayer -> {
+                Logger.trace("Play media player ({} times) with ID '{}'",
+                    repetitions == MediaPlayer.INDEFINITE ? "indefinite" : repetitions, id);
+                mediaPlayer.setCycleCount(repetitions);
+                mediaPlayer.play();
+            }
+            case URL url -> {
+                Logger.trace("Create and play audio clip ({} times) with ID '{}'",
+                    repetitions == MediaPlayer.INDEFINITE ? "indefinite" : repetitions, id);
+                final var audioClip = new AudioClip(url.toExternalForm());
+                audioClip.setCycleCount(repetitions);
+                audioClip.play(1.0); //TODO add volume parameter?
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + value);
         }
     }
 
@@ -305,11 +308,11 @@ public class SoundManager implements Disposable {
         requireNonNull(key);
         Object value = map.get(key);
         if (value == null) {
-            throw new IllegalArgumentException("Unknown media player key '%s'".formatted(key));
+            throw new IllegalArgumentException("Unknown media player '%s'".formatted(key));
         }
         if (type.isInstance(value)) {
             return (C) value;
         }
-        throw new IllegalArgumentException("Sound entry with key '%s' is not a media object".formatted(key));
+        throw new IllegalArgumentException("Sound '%s' is not a media object".formatted(key));
     }
 }
