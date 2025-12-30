@@ -17,7 +17,7 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.lerp;
 
 public class PlayScene2DCamera extends ParallelCamera {
 
-    public static final double SPEED = 0.014;
+    public static final float NORMAL_CAMERA_SPEED = 0.014f;
 
     private record RangeY(double topPosition, double bottomPosition) {}
 
@@ -33,6 +33,7 @@ public class PlayScene2DCamera extends ParallelCamera {
     private State state;
     private int introTick;
     private double targetY;
+    private float cameraSpeed = NORMAL_CAMERA_SPEED;
 
     public PlayScene2DCamera() {
         rangeY = new RangeY(Double.MIN_VALUE, Double.MAX_VALUE);
@@ -80,6 +81,7 @@ public class PlayScene2DCamera extends ParallelCamera {
         setToTopPosition();
         state = State.INTRO;
         introTick = 0;
+        cameraSpeed = 2 * NORMAL_CAMERA_SPEED;
         Logger.info("Camera intro sequence started");
     }
 
@@ -93,6 +95,7 @@ public class PlayScene2DCamera extends ParallelCamera {
         }
         else if (introTick == INTRO_TILT_START_TICK + INTRO_TILT_DURATION_TICKS) {
             Logger.info("Camera intro sequence ended");
+            cameraSpeed = NORMAL_CAMERA_SPEED;
             enterTrackingMode();
             return;
         }
@@ -131,7 +134,7 @@ public class PlayScene2DCamera extends ParallelCamera {
     }
 
     private void move() {
-        double y = lerp(getTranslateY(), targetY, SPEED);
+        double y = lerp(getTranslateY(), targetY, cameraSpeed);
         setTranslateY(y);
     }
 }
