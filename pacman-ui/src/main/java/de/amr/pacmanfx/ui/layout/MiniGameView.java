@@ -10,6 +10,7 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.uilib.rendering.*;
+import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
 import javafx.beans.binding.Bindings;
@@ -53,20 +54,12 @@ public class MiniGameView extends VBox {
 
     private long drawCallCount;
 
-    private final TranslateTransition slideInAnimation;
-    private final TranslateTransition slideOutAnimation;
+    private TranslateTransition slideInAnimation;
+    private TranslateTransition slideOutAnimation;
 
     public MiniGameView() {
         canvas = new Canvas();
-        canvas.heightProperty().bind(PROPERTY_MINI_VIEW_HEIGHT);
-        canvas.widthProperty().bind(Bindings.createDoubleBinding(
-            () -> {
-                Vector2i size = worldSize.get();
-                double aspect = (double) size.x() / size.y();
-                return aspect * canvas.getHeight();
-            },
-            worldSize, canvas.heightProperty()
-        ));
+        bindCanvasSize();
 
         canvasRenderer = new BaseRenderer(canvas);
 
@@ -83,18 +76,23 @@ public class MiniGameView extends VBox {
             () -> canvas.getHeight() / worldSize.get().y(),
             canvas.heightProperty(), worldSize
         ));
+    }
 
-        slideInAnimation = new TranslateTransition(SLIDE_IN_DURATION, this);
-        slideInAnimation.setToY(0);
-        slideInAnimation.setByY(10);
-        slideInAnimation.setDelay(Duration.seconds(1));
-        slideInAnimation.setInterpolator(Interpolator.EASE_OUT);
+    private void bindCanvasSize() {
+        canvas.heightProperty().bind(PROPERTY_MINI_VIEW_HEIGHT);
+        canvas.widthProperty().bind(Bindings.createDoubleBinding(
+            () -> {
+                Vector2i size = worldSize.get();
+                double aspect = (double) size.x() / size.y();
+                return aspect * canvas.getHeight();
+            },
+            worldSize, canvas.heightProperty()
+        ));
+    }
 
-        slideOutAnimation = new TranslateTransition(SLIDE_OUT_DURATION, this);
-        slideOutAnimation.setToY(-layout.getHeight());
-        slideOutAnimation.setByY(10);
-        slideOutAnimation.setDelay(Duration.seconds(2));
-        slideOutAnimation.setInterpolator(Interpolator.EASE_IN);
+    private void unbindCanvasSize() {
+        canvas.heightProperty().unbind();
+        canvas.widthProperty().unbind();
     }
 
     public void setUI(GameUI ui) {
@@ -116,12 +114,36 @@ public class MiniGameView extends VBox {
     }
 
     public void slideIn() {
+        if (slideInAnimation != null) {
+            slideInAnimation.stop();
+        }
+        slideInAnimation = new TranslateTransition(SLIDE_IN_DURATION, this);
+        slideInAnimation.setToY(0);
+        slideInAnimation.setByY(10);
+        slideInAnimation.setDelay(Duration.seconds(1));
+        slideInAnimation.setInterpolator(Interpolator.EASE_OUT);
+        slideInAnimation.setOnFinished(e -> bindCanvasSize());
+        unbindCanvasSize();
         slideInAnimation.play();
     }
 
     public void slideOut() {
+        if (slideOutAnimation != null) {
+            slideOutAnimation.stop();
+        }
+        slideOutAnimation = new TranslateTransition(SLIDE_OUT_DURATION, this);
         slideOutAnimation.setToY(-layout.getHeight());
+        slideOutAnimation.setByY(10);
+        slideOutAnimation.setDelay(Duration.seconds(2));
+        slideOutAnimation.setInterpolator(Interpolator.EASE_IN);
+        slideOutAnimation.setOnFinished(e -> bindCanvasSize());
+        unbindCanvasSize();
         slideOutAnimation.play();
+    }
+
+    public boolean isMoving() {
+        return slideInAnimation != null && slideInAnimation.getStatus() == Animation.Status.RUNNING
+            || slideOutAnimation != null && slideOutAnimation.getStatus() == Animation.Status.RUNNING;
     }
 
     public void draw() {

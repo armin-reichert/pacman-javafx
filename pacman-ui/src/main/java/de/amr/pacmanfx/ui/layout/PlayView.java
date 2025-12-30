@@ -104,6 +104,10 @@ public class PlayView extends StackPane implements GameUI_View {
         return Optional.ofNullable(currentGameScene.get());
     }
 
+    public MiniGameView miniView() {
+        return miniView;
+    }
+
     public Dashboard dashboard() {
         return dashboard;
     }
