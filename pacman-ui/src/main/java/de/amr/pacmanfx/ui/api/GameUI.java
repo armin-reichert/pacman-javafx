@@ -185,6 +185,8 @@ public interface GameUI extends LocalizedTextAccessor {
 
     // Scene access
 
+    GameScene_Config currentGameSceneConfig();
+
     Optional<GameScene> currentGameScene();
 
     boolean isCurrentGameSceneID(String id);

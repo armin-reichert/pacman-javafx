@@ -54,11 +54,6 @@ public interface GameUI_Config extends Disposable {
     SoundManager soundManager();
 
     /**
-     * @return the scene configuration for this game variant
-     */
-    GameScene_Config sceneConfig();
-
-    /**
      * Minimum number of ticks since the last pellet eaten time until the next munching sound is played.
      *
      * @return if the munching sound should be played

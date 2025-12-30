@@ -316,11 +316,6 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
     }
 
     @Override
-    public GameScene_Config sceneConfig() {
-        return this;
-    }
-
-    @Override
     public Stream<GameScene> gameScenes() {
         return scenesByID.values().stream();
     }

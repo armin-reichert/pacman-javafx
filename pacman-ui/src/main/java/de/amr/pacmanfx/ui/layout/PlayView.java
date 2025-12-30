@@ -198,7 +198,7 @@ public class PlayView extends StackPane implements GameUI_View {
      */
     public void updateGameScene(Game game, boolean forcedReload) {
         final GameScene currentGameScene = ui.currentGameScene().orElse(null);
-        final GameScene intendedGameScene = ui.currentConfig().sceneConfig().selectGameScene(game).orElse(null);
+        final GameScene intendedGameScene = ui.currentGameSceneConfig().selectGameScene(game).orElse(null);
 
         if (intendedGameScene == null) {
             ui.showFlashMessage(Duration.seconds(30), "Katastrophe! Could not determine game scene!");
@@ -356,7 +356,7 @@ public class PlayView extends StackPane implements GameUI_View {
             useDecoratedCanvas(ui, gameScene2D);
             Vector2i gameSceneSizePx = gameScene2D.unscaledSize();
             double aspect = (double) gameSceneSizePx.x() / gameSceneSizePx.y();
-            if (ui.currentConfig().sceneConfig().canvasDecorated(gameScene)) {
+            if (ui.currentGameSceneConfig().canvasDecorated(gameScene)) {
                 // Decorated game scene scaled-down to give space for the decoration
                 gameScene2D.scalingProperty().bind(canvasDecorator.scalingProperty().map(
                         scaling -> Math.min(scaling.doubleValue(), ui.preferences().getFloat("scene2d.max_scaling"))));

@@ -339,8 +339,6 @@ public final class GameUI_Implementation implements GameUI {
         flashMessageView.showMessage(String.format(message, args), duration.toSeconds());
     }
 
-    // GameUI_Lifecycle interface
-
     @Override
     public void quitCurrentGameScene() {
         final Game game = gameContext.currentGame();
@@ -435,8 +433,6 @@ public final class GameUI_Implementation implements GameUI {
         titleBinding.invalidate();
     }
 
-    // GameUI_ViewAccess interface
-
     @Override
     public GameUI_View currentView() {
         return currentView.get();
@@ -496,8 +492,6 @@ public final class GameUI_Implementation implements GameUI {
         }));
     }
 
-    // GameUI_SceneAccess interface
-
     @Override
     public Optional<GameScene> currentGameScene() {
         return playView.currentGameScene();
@@ -506,7 +500,7 @@ public final class GameUI_Implementation implements GameUI {
     @Override
     public boolean isCurrentGameSceneID(String id) {
         GameScene currentGameScene = playView.currentGameScene().orElse(null);
-        return currentGameScene != null && currentConfig().sceneConfig().gameSceneHasID(currentGameScene, id);
+        return currentGameScene != null && currentGameSceneConfig().gameSceneHasID(currentGameScene, id);
     }
 
     @Override
@@ -514,16 +508,16 @@ public final class GameUI_Implementation implements GameUI {
         playView.updateGameScene(gameContext.currentGame(), forceReloading);
     }
 
-    // GameUI_ConfigManager interface
-
     @Override
     public GameUI_Config config(String gameVariantName) {
         GameUI_Config config = configByGameVariant.get(gameVariantName);
         if (config == null) {
-            Class<?> configClass = uiConfigMap.get(gameVariantName);
+            final Class<?> configClass = uiConfigMap.get(gameVariantName);
             try {
                 config = (GameUI_Config) configClass.getDeclaredConstructor(GameUI.class).newInstance(this);
-                config.sceneConfig().gameScenes().forEach(scene -> {
+                // UI configuration class implements also this interface:
+                final GameScene_Config sceneConfig = (GameScene_Config) config;
+                sceneConfig.gameScenes().forEach(scene -> {
                     if (scene instanceof GameScene2D gameScene2D) {
                         gameScene2D.debugInfoVisibleProperty().bind(PROPERTY_DEBUG_INFO_VISIBLE);
                     }
@@ -543,5 +537,10 @@ public final class GameUI_Implementation implements GameUI {
     @SuppressWarnings("unchecked")
     public <T extends GameUI_Config> T currentConfig() {
         return (T) config(gameContext.gameVariantName());
+    }
+
+    @Override
+    public GameScene_Config currentGameSceneConfig() {
+        return currentConfig();
     }
 }

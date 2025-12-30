@@ -428,11 +428,6 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     }
 
     @Override
-    public GameScene_Config sceneConfig() {
-        return this;
-    }
-
-    @Override
     public boolean canvasDecorated(GameScene gameScene) {
         return false;
     }
