@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman;
 
+import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.rendering.*;
 import de.amr.pacmanfx.arcade.pacman.scenes.*;
@@ -187,11 +188,14 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
 
     @Override
     public WorldMapColorScheme colorScheme(WorldMap worldMap) {
+        requireNonNull(worldMap);
         return WORLD_MAP_COLOR_SCHEME;
     }
 
     @Override
     public GameScene2D_Renderer createGameSceneRenderer(Canvas canvas, GameScene2D gameScene2D) {
+        requireNonNull(canvas);
+        requireNonNull(gameScene2D);
         final UIPreferences prefs = ui.preferences();
         final GameScene2D_Renderer renderer = switch (gameScene2D) {
             case Arcade_BootScene2D ignored      -> new Arcade_BootScene2D_Renderer(prefs, gameScene2D, canvas, spriteSheet());
@@ -208,11 +212,14 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
 
     @Override
     public ArcadePacMan_GameLevel_Renderer createGameLevelRenderer(Canvas canvas) {
+        requireNonNull(canvas);
         return new ArcadePacMan_GameLevel_Renderer(canvas, assets.image("maze.bright"));
     }
 
     @Override
     public HeadsUpDisplay_Renderer createHUDRenderer(Canvas canvas, GameScene2D gameScene2D) {
+        requireNonNull(canvas);
+        requireNonNull(gameScene2D);
         final var hudRenderer = new ArcadePacMan_HeadsUpDisplay_Renderer(canvas);
         hudRenderer.setImageSmoothing(true);
         gameScene2D.adaptRenderer(hudRenderer);
@@ -221,6 +228,7 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
 
     @Override
     public ActorRenderer createActorRenderer(Canvas canvas) {
+        requireNonNull(canvas);
         final var actorRenderer = new ArcadePacMan_Actor_Renderer(canvas);
         actorRenderer.setImageSmoothing(true);
         return actorRenderer;
@@ -228,6 +236,7 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
 
     @Override
     public Ghost createGhostWithAnimations(byte personality) {
+        Validations.requireValidGhostPersonality(personality);
         final Ghost ghost = switch (personality) {
             case RED_GHOST_SHADOW   -> ArcadePacMan_GameModel.createBlinky();
             case PINK_GHOST_SPEEDY  -> ArcadePacMan_GameModel.createPinky();
@@ -242,6 +251,7 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
 
     @Override
     public ArcadePacMan_GhostAnimationManager createGhostAnimations(byte personality) {
+        Validations.requireValidGhostPersonality(personality);
         return new ArcadePacMan_GhostAnimationManager(spriteSheet(), personality);
     }
 
@@ -285,6 +295,8 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
 
     @Override
     public PacMan3D createPac3D(AnimationRegistry animationRegistry, Pac pac, double size) {
+        requireNonNull(animationRegistry);
+        requireNonNull(pac);
         final var pacMan3D = new PacMan3D(PacManModel3DRepository.theRepository(),
             animationRegistry,
             pac,
@@ -298,11 +310,11 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
 
     // Game scene config
 
-    private GameScene createGameScene(String sceneID) {
+    private static GameScene createGameScene(String sceneID) {
         final GameScene gameScene = switch (sceneID) {
-            case SCENE_ID_BOOT_SCENE -> new Arcade_BootScene2D();
-            case SCENE_ID_INTRO_SCENE -> new ArcadePacMan_IntroScene();
-            case SCENE_ID_START_SCENE -> new ArcadePacMan_StartScene();
+            case SCENE_ID_BOOT_SCENE    -> new Arcade_BootScene2D();
+            case SCENE_ID_INTRO_SCENE   -> new ArcadePacMan_IntroScene();
+            case SCENE_ID_START_SCENE   -> new ArcadePacMan_StartScene();
             case SCENE_ID_PLAY_SCENE_2D -> new Arcade_PlayScene2D();
             case SCENE_ID_PLAY_SCENE_3D -> new Arcade_PlayScene3D();
             case SCENE_ID_CUTSCENE_1_2D -> new ArcadePacMan_CutScene1();
@@ -326,6 +338,7 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
 
     @Override
     public Optional<GameScene> selectGameScene(Game game) {
+        requireNonNull(game);
         final String sceneID = switch (game.control().state()) {
             case BOOT -> SCENE_ID_BOOT_SCENE;
             case SETTING_OPTIONS_FOR_START -> SCENE_ID_START_SCENE;
@@ -343,7 +356,7 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
             case CutScenesTestState testState -> GameScene_Config.sceneID_CutScene_N(testState.testedCutSceneNumber);
             default -> PROPERTY_3D_ENABLED.get() ? SCENE_ID_PLAY_SCENE_3D : SCENE_ID_PLAY_SCENE_2D;
         };
-        final GameScene gameScene = scenesByID.computeIfAbsent(sceneID, this::createGameScene);
+        final GameScene gameScene = scenesByID.computeIfAbsent(sceneID, ArcadePacMan_UIConfig::createGameScene);
         return Optional.of(gameScene);
     }
 
