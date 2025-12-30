@@ -22,6 +22,11 @@ public class DefaultActionBindingsManager implements ActionBindingsManager {
     }
 
     @Override
+    public void dispose() {
+        actionByCombination.clear();
+    }
+
+    @Override
     public Map<KeyCombination, GameAction> actionByKeyCombination() {
         return actionByCombination;
     }

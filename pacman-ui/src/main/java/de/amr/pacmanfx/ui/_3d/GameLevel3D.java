@@ -901,15 +901,7 @@ public class GameLevel3D extends Group implements Disposable {
         }
 
         // Dispose all remaining animations
-        if (!animationRegistry.animations().isEmpty()) {
-            Logger.info("There are {} un-disposed animations left:", animationRegistry.animations().size());
-            // create a copy to avoid CME
-            for (RegisteredAnimation animation : new ArrayList<>(animationRegistry.animations())) {
-                Logger.info("\tDisposing" + animation.label());
-                animation.dispose();
-            }
-        }
-        animationRegistry.clear();
+        animationRegistry.dispose();
 
         PROPERTY_3D_DRAW_MODE.removeListener(this::handleDrawModeChange);
         Logger.info("Removed 'draw mode' listener");

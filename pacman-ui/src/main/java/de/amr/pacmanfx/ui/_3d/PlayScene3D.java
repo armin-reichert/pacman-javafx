@@ -145,6 +145,11 @@ public abstract class PlayScene3D extends Group implements GameScene {
     }
 
     @Override
+    public void dispose() {
+        actionBindings.dispose();
+    }
+
+    @Override
     public GameContext context() {
         return context;
     }

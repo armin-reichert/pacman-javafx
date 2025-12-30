@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.api;
 
+import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.input.Keyboard;
@@ -13,12 +14,15 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-public interface ActionBindingsManager {
+public interface ActionBindingsManager extends Disposable {
 
     /**
      * Null object pattern.
      */
     class EmptyBindingsManager implements ActionBindingsManager {
+
+        @Override
+        public void dispose() {}
 
         @Override
         public Map<KeyCombination, GameAction> actionByKeyCombination() {

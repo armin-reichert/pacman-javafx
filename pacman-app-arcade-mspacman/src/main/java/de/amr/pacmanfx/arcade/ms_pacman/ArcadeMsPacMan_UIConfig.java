@@ -90,6 +90,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         assets.dispose();
         soundManager.dispose();
         Logger.info("Dispose game scenes: {} entries", scenesByID.size());
+        scenesByID.values().forEach(GameScene::dispose);
         scenesByID.clear();
     }
 
@@ -204,12 +205,15 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     @Override
     public WorldMapColorScheme colorScheme(WorldMap worldMap) {
+        requireNonNull(worldMap);
         final int index = worldMap.getConfigValue("colorMapIndex");
         return WORLD_MAP_COLOR_SCHEMES.get(index);
     }
 
     @Override
     public GameScene2D_Renderer createGameSceneRenderer(Canvas canvas, GameScene2D gameScene2D) {
+        requireNonNull(canvas);
+        requireNonNull(gameScene2D);
         final UIPreferences prefs = ui.preferences();
         final GameScene2D_Renderer renderer = switch (gameScene2D) {
             case Arcade_BootScene2D        ignored -> new Arcade_BootScene2D_Renderer(prefs, gameScene2D, canvas, spriteSheet());
@@ -226,11 +230,14 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     @Override
     public ArcadeMsPacMan_GameLevelRenderer createGameLevelRenderer(Canvas canvas) {
+        requireNonNull(canvas);
         return new ArcadeMsPacMan_GameLevelRenderer(canvas, assets);
     }
 
     @Override
     public HeadsUpDisplay_Renderer createHUDRenderer(Canvas canvas, GameScene2D gameScene2D) {
+        requireNonNull(canvas);
+        requireNonNull(gameScene2D);
         final var hudRenderer = new ArcadeMsPacMan_HeadsUpDisplayRenderer(canvas);
         hudRenderer.setImageSmoothing(true);
         gameScene2D.adaptRenderer(hudRenderer);
@@ -239,6 +246,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     @Override
     public ActorRenderer createActorRenderer(Canvas canvas) {
+        requireNonNull(canvas);
         final var actorRenderer = new ArcadeMsPacMan_ActorRenderer(canvas);
         actorRenderer.setImageSmoothing(true);
         return actorRenderer;
@@ -260,6 +268,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     @Override
     public ArcadeMsPacMan_GhostAnimationManager createGhostAnimations(byte personality) {
+        requireValidGhostPersonality(personality);
         return new ArcadeMsPacMan_GhostAnimationManager(personality);
     }
 
@@ -301,6 +310,8 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     @Override
     public MsPacMan3D createPac3D(AnimationRegistry animationRegistry, Pac pac, double size) {
+        requireNonNull(animationRegistry);
+        requireNonNull(pac);
         final var msPacMan3D = new MsPacMan3D(
             PacManModel3DRepository.theRepository(),
             animationRegistry,
@@ -318,7 +329,8 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     // Game scenes
 
-    private GameScene createGameScene(String sceneID) {
+    private static GameScene createGameScene(String sceneID) {
+        requireNonNull(sceneID);
         final GameScene gameScene = switch (sceneID) {
             case SCENE_ID_BOOT_SCENE ->     new Arcade_BootScene2D();
             case SCENE_ID_INTRO_SCENE ->    new ArcadeMsPacMan_IntroScene();
@@ -336,11 +348,13 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     @Override
     public boolean canvasDecorated(GameScene gameScene) {
+        requireNonNull(gameScene);
         return true;
     }
 
     @Override
     public Optional<GameScene> selectGameScene(Game game) {
+        requireNonNull(game);
         final String sceneID = switch (game.control().state()) {
             case BOOT -> SCENE_ID_BOOT_SCENE;
             case SETTING_OPTIONS_FOR_START -> SCENE_ID_START_SCENE;
@@ -358,7 +372,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
             case CutScenesTestState testState -> GameScene_Config.sceneID_CutScene_N(testState.testedCutSceneNumber);
             default -> PROPERTY_3D_ENABLED.get() ? SCENE_ID_PLAY_SCENE_3D : SCENE_ID_PLAY_SCENE_2D;
         };
-        final GameScene gameScene = scenesByID.computeIfAbsent(sceneID, this::createGameScene);
+        final GameScene gameScene = scenesByID.computeIfAbsent(sceneID, ArcadeMsPacMan_UIConfig::createGameScene);
         return Optional.of(gameScene);
     }
 

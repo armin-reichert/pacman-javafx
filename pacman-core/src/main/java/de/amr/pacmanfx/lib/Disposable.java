@@ -7,7 +7,9 @@ package de.amr.pacmanfx.lib;
 import java.util.Collection;
 
 public interface Disposable {
+
     void dispose();
+
     default void disposeAll(Collection<?> collection) {
         for (Object element : collection) {
             if (element instanceof Disposable disposable) {

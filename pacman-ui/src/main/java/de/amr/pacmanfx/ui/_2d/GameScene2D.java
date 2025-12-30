@@ -45,6 +45,12 @@ public abstract class GameScene2D implements GameScene {
     }
 
     @Override
+    public void dispose() {
+        actionBindings.dispose();
+        animationRegistry.dispose();
+    }
+
+    @Override
     public GameContext context() {
         return context;
     }

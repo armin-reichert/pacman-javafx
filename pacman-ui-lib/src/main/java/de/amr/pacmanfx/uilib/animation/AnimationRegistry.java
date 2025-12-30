@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.animation;
 
+import de.amr.pacmanfx.lib.Disposable;
 import org.tinylog.Logger;
 
 import java.util.Collections;
@@ -15,10 +16,10 @@ import static java.util.Objects.requireNonNull;
 /**
  * A registry for managed animations.
  */
-public class AnimationRegistry {
+public class AnimationRegistry implements Disposable {
 
     private final Set<RegisteredAnimation> registeredAnimations = new HashSet<>();
-    private final Set<RegisteredAnimation> disposedAnimations = new HashSet<>();
+    private final Set<RegisteredAnimation> markedForDisposal = new HashSet<>();
 
     void register(RegisteredAnimation registeredAnimation) {
         requireNonNull(registeredAnimation);
@@ -30,22 +31,23 @@ public class AnimationRegistry {
         }
     }
 
-    void markDisposed(RegisteredAnimation registeredAnimation) {
-        if (disposedAnimations.contains(registeredAnimation)) {
-            Logger.warn("Animation '{}' has already been disposed", registeredAnimation.label());
+    void markForDisposal(RegisteredAnimation registeredAnimation) {
+        if (markedForDisposal.contains(registeredAnimation)) {
             return;
         }
         if (!registeredAnimations.contains(registeredAnimation)) {
-            Logger.error("Animation '{}' is not registered, cannot be marked as disposed", registeredAnimation.label());
+            Logger.error("Animation '{}' is not registered, cannot be marked for disposal", registeredAnimation.label());
             return;
         }
         registeredAnimations.remove(registeredAnimation);
-        disposedAnimations.add(registeredAnimation);
+        markedForDisposal.add(registeredAnimation);
     }
 
-    public void clear() {
-        Logger.info("Clearing {} disposed animations", disposedAnimations.size());
-        disposedAnimations.clear();
+    @Override
+    public void dispose() {
+        Logger.info("Dispose {} animations", markedForDisposal.size());
+        markedForDisposal.forEach(RegisteredAnimation::dispose);
+        markedForDisposal.clear();
     }
 
     public void stopAllAnimations() {
@@ -59,7 +61,7 @@ public class AnimationRegistry {
     }
 
     public Set<RegisteredAnimation> disposedAnimations() {
-        return Collections.unmodifiableSet(disposedAnimations);
+        return Collections.unmodifiableSet(markedForDisposal);
     }
 
     public Set<RegisteredAnimation> animations() {

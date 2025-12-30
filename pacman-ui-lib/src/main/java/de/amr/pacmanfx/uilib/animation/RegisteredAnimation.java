@@ -70,7 +70,7 @@ public abstract class RegisteredAnimation implements Disposable {
             animationFX = null;
             freeResources();
         }
-        registry.markDisposed(this);
+        registry.markForDisposal(this);
         Logger.info("Disposed animation '{}'", label);
     }
 

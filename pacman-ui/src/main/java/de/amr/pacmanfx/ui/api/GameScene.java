@@ -7,6 +7,7 @@ package de.amr.pacmanfx.ui.api;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameEventListener;
+import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
 import de.amr.pacmanfx.ui.sound.SoundManager;
@@ -18,7 +19,7 @@ import java.util.Optional;
 /**
  * Common interface of all game scenes (2D and 3D).
  */
-public interface GameScene extends GameEventListener {
+public interface GameScene extends GameEventListener, Disposable {
 
     /**
      * @return the game UI
