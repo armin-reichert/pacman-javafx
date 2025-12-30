@@ -25,7 +25,7 @@ import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.*;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.nesColor;
 import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel.*;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
@@ -33,75 +33,77 @@ import static java.util.function.Predicate.not;
 public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements SpriteRenderer, GameLevelRenderer {
 
     private final TengenMsPacMan_UIConfig uiConfig;
-    private final TengenMsPacMan_SpriteSheet spriteSheet;
 
     public TengenMsPacMan_GameLevelRenderer(Canvas canvas, TengenMsPacMan_UIConfig uiConfig) {
         super(canvas);
         this.uiConfig = requireNonNull(uiConfig);
-        this.spriteSheet = uiConfig.spriteSheet();
-        ctx.setImageSmoothing(false);
     }
 
     @Override
     public TengenMsPacMan_SpriteSheet spriteSheet() {
-        return spriteSheet;
+        return TengenMsPacMan_SpriteSheet.INSTANCE;
     }
 
     @Override
-    public void applyLevelSettings(GameLevel gameLevel, RenderInfo info) {
-        WorldMap worldMap = gameLevel.worldMap();
+    public void applyLevelSettings(GameLevel level, RenderInfo info) {
+        final WorldMap worldMap = level.worldMap();
         // store the maze sprite set with the correct colors for this level in the map configuration:
         if (!worldMap.hasConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MAZE_SPRITE_SET)) {
-            int numFlashes = gameLevel.numFlashes();
-            MazeSpriteSet mazeSpriteSet = uiConfig.createMazeSpriteSet(worldMap, numFlashes);
+            final int numFlashes = level.numFlashes();
+            final MazeSpriteSet mazeSpriteSet = uiConfig.createMazeSpriteSet(worldMap, numFlashes);
             worldMap.setConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MAZE_SPRITE_SET, mazeSpriteSet);
             Logger.debug("Maze sprite set created: {}", mazeSpriteSet);
         }
     }
 
     @Override
-    public void drawGameLevel(GameLevel gameLevel, RenderInfo info) {
-        applyLevelSettings(gameLevel, info);
+    public void drawGameLevel(GameLevel level, RenderInfo info) {
+        final WorldMap worldMap = level.worldMap();
+        applyLevelSettings(level, info);
         if (info.getBoolean(CommonRenderInfoKey.MAZE_BRIGHT)) {
-            int flashingIndex = info.get(CommonRenderInfoKey.MAZE_FLASHING_INDEX, Integer.class);
-            uiConfig.configureHighlightedMazeRenderInfo(info, gameLevel, flashingIndex);
+            final int flashingIndex = info.get(CommonRenderInfoKey.MAZE_FLASHING_INDEX, Integer.class);
+            uiConfig.configureHighlightedMazeRenderInfo(info, level, flashingIndex);
         } else {
-            long tick = info.get(CommonRenderInfoKey.TICK, Long.class);
-            MapCategory mapCategory = info.get(TengenMsPacMan_UIConfig.ConfigKey.MAP_CATEGORY, MapCategory.class);
-            uiConfig.configureNormalMazeRenderInfo(info, mapCategory, gameLevel.worldMap(), tick);
+            final long tick = info.get(CommonRenderInfoKey.TICK, Long.class);
+            final MapCategory mapCategory = info.get(TengenMsPacMan_UIConfig.ConfigKey.MAP_CATEGORY, MapCategory.class);
+            uiConfig.configureNormalMazeRenderInfo(info, mapCategory, worldMap, tick);
         }
-        Image mazeImage = info.get(CommonRenderInfoKey.MAZE_IMAGE, Image.class);
-        RectShort mazeSprite = info.get(CommonRenderInfoKey.MAZE_SPRITE, RectShort.class);
+        final Image mazeImage = info.get(CommonRenderInfoKey.MAZE_IMAGE, Image.class);
+        final RectShort mazeSprite = info.get(CommonRenderInfoKey.MAZE_SPRITE, RectShort.class);
+        final int x = 0, y = worldMap.terrainLayer().emptyRowsOverMaze() * TS;
         ctx.setImageSmoothing(imageSmoothing());
-        int x = 0, y = gameLevel.worldMap().terrainLayer().emptyRowsOverMaze() * TS;
         ctx.drawImage(mazeImage,
             mazeSprite.x(), mazeSprite.y(), mazeSprite.width(), mazeSprite.height(),
             scaled(x), scaled(y), scaled(mazeSprite.width()), scaled(mazeSprite.height())
         );
-        overPaintActorSprites(gameLevel);
-        drawFood(gameLevel);
-        gameLevel.optMessage().ifPresent(message -> {
+        overPaintActorSprites(level);
+        drawFood(level);
+        level.optMessage().ifPresent(message -> {
             switch (message.type()) {
-                case GAME_OVER -> drawGameOverMessage(gameLevel, message);
+                case GAME_OVER -> drawGameOverMessage(level, message);
                 case READY -> drawReadyMessage(message);
-                case TEST -> drawTestMessage(gameLevel, message);
+                case TEST -> drawTestMessage(level, message);
             }
         });
     }
 
-    private void drawFood(GameLevel gameLevel) {
-        requireNonNull(gameLevel);
+    private void drawFood(GameLevel level) {
+        requireNonNull(level);
+        final WorldMap worldMap = level.worldMap();
+        final MazeSpriteSet recoloredMazeSprites = worldMap.getConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MAZE_SPRITE_SET);
+        final NES_ColorScheme colorScheme = recoloredMazeSprites.mazeImage().colorScheme();
+        final Color pelletColor = Color.valueOf(colorScheme.pelletColorRGB());
+        final boolean blinkingOn = level.blinking().state() == Pulse.State.ON;
+
         ctx.save();
         ctx.scale(scaling(), scaling());
-        MazeSpriteSet recoloredMaze =  gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MAZE_SPRITE_SET);
-        Color pelletColor = Color.valueOf(recoloredMaze.mazeImage().colorScheme().pelletColorRGB());
-        drawPellets(gameLevel, pelletColor);
-        drawEnergizers(gameLevel, pelletColor);
+        drawPellets(worldMap, pelletColor);
+        drawEnergizers(worldMap, pelletColor, blinkingOn);
         ctx.restore();
     }
 
-    private void drawPellets(GameLevel gameLevel, Color pelletColor) {
-        FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
+    private void drawPellets(WorldMap worldMap, Color pelletColor) {
+        final FoodLayer foodLayer = worldMap.foodLayer();
         foodLayer.tiles()
             .filter(foodLayer::isFoodTile)
             .filter(not(foodLayer::isEnergizerTile)).forEach(tile -> {
@@ -115,17 +117,17 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         });
     }
 
-    private void drawEnergizers(GameLevel gameLevel, Color pelletColor) {
-        double size = TS;
-        double offset = 0.5 * HTS;
-        FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
+    private void drawEnergizers(WorldMap worldMap, Color pelletColor, boolean blinkingOn) {
+        final FoodLayer foodLayer = worldMap.foodLayer();
+        final double size = TS;
+        final double offset = 0.5 * HTS;
         foodLayer.tiles().filter(foodLayer::isEnergizerTile).forEach(tile -> {
             ctx.setFill(background());
             fillSquareAtTileCenter(tile, TS + 2);
-            if (!foodLayer.hasEatenFoodAtTile(tile) && gameLevel.blinking().state() == Pulse.State.ON) {
+            if (!foodLayer.hasEatenFoodAtTile(tile) && blinkingOn) {
+                final double cx = tile.x() * TS, cy = tile.y() * TS;
+                // draw pixelated "circle". TODO use sprite instead?
                 ctx.setFill(pelletColor);
-                // draw pixelated "circle"
-                double cx = tile.x() * TS, cy = tile.y() * TS;
                 ctx.fillRect(cx + offset, cy, HTS, size);
                 ctx.fillRect(cx, cy + offset, size, HTS);
                 ctx.fillRect(cx + 1, cy + 1, size - 2, size - 2);
@@ -133,9 +135,9 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         });
     }
 
-    private void drawGameOverMessage(GameLevel gameLevel, GameLevelMessage message) {
-        final NES_ColorScheme colorScheme = gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.ConfigKey.NES_COLOR_SCHEME);
-        Color color = gameLevel.isDemoLevel()
+    private void drawGameOverMessage(GameLevel level, GameLevelMessage message) {
+        final NES_ColorScheme colorScheme = level.worldMap().getConfigValue(TengenMsPacMan_UIConfig.ConfigKey.NES_COLOR_SCHEME);
+        final Color color = level.isDemoLevel()
             ? Color.valueOf(colorScheme.strokeColorRGB())
             : uiConfig.assets().color("color.game_over_message");
         fillTextCentered(GAME_OVER_MESSAGE_TEXT, color, arcadeFont8(), message.x(), message.y());
@@ -194,8 +196,8 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
     }
 
     private void overPaintActorSprite(Vector2i tile, double margin) {
-        double halfMargin = 0.5f * margin;
-        double overPaintSize = scaled(2 * TS) - margin;
+        final double halfMargin = 0.5f * margin;
+        final double overPaintSize = scaled(2 * TS) - margin;
         ctx.fillRect(
             halfMargin + scaled(tile.x() * TS),
             halfMargin + scaled(tile.y() * TS - HTS),
