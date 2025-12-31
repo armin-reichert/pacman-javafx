@@ -158,10 +158,13 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config, GameScene_Con
         soundManager.registerMediaPlayer(SoundID.PAC_MAN_DEATH,     ARCADE_MS_PACMAN_RESOURCES.url("sound/Died.mp3"));
         soundManager.registerAudioClipURL(SoundID.PAC_MAN_MUNCHING, ARCADE_MS_PACMAN_RESOURCES.url("sound/munch.wav"));
         soundManager.registerMediaPlayer(SoundID.PAC_MAN_POWER,     ARCADE_MS_PACMAN_RESOURCES.url("sound/ScaredGhost.mp3"));
-        soundManager.registerMedia(SoundID.SIREN_1,                 ARCADE_MS_PACMAN_RESOURCES.url("sound/GhostNoise1.wav"));
-        soundManager.registerMedia(SoundID.SIREN_2,                 ARCADE_MS_PACMAN_RESOURCES.url("sound/GhostNoise2.wav"));
-        soundManager.registerMedia(SoundID.SIREN_3,                 ARCADE_MS_PACMAN_RESOURCES.url("sound/GhostNoise3.wav"));
-        soundManager.registerMedia(SoundID.SIREN_4,                 ARCADE_MS_PACMAN_RESOURCES.url("sound/GhostNoise4.wav"));
+
+        soundManager.registerSirens(
+            ARCADE_MS_PACMAN_RESOURCES.url("sound/GhostNoise1.wav"),
+            ARCADE_MS_PACMAN_RESOURCES.url("sound/GhostNoise2.wav"),
+            ARCADE_MS_PACMAN_RESOURCES.url("sound/GhostNoise3.wav"),
+            ARCADE_MS_PACMAN_RESOURCES.url("sound/GhostNoise4.wav")
+        );
     }
 
     @Override

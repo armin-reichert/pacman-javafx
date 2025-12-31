@@ -241,16 +241,19 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         soundManager.registerMediaPlayer(SoundID.PAC_MAN_DEATH,      LOCAL_RESOURCES.url("sound/ms-death.wav"));
         soundManager.registerAudioClipURL(SoundID.PAC_MAN_MUNCHING,  LOCAL_RESOURCES.url("sound/ms-dot.wav"));
         soundManager.registerMediaPlayer(SoundID.PAC_MAN_POWER,      LOCAL_RESOURCES.url("sound/ms-power.wav"));
-        soundManager.registerMedia(SoundID.SIREN_1,                  LOCAL_RESOURCES.url("sound/ms-siren1.wav"));
-        soundManager.registerMedia(SoundID.SIREN_2,                  LOCAL_RESOURCES.url("sound/ms-siren2.wav"));// TODO
-        soundManager.registerMedia(SoundID.SIREN_3,                  LOCAL_RESOURCES.url("sound/ms-siren2.wav"));// TODO
-        soundManager.registerMedia(SoundID.SIREN_4,                  LOCAL_RESOURCES.url("sound/ms-siren2.wav"));// TODO
 
         //TODO fix the sound file instead
         final MediaPlayer bounceSound = soundManager.mediaPlayer(SoundID.BONUS_ACTIVE);
         if (bounceSound != null) {
             bounceSound.setRate(0.25);
         }
+
+        soundManager.registerSirens(
+            LOCAL_RESOURCES.url("sound/ms-siren1.wav"),
+            LOCAL_RESOURCES.url("sound/ms-siren2.wav"), // TODO
+            LOCAL_RESOURCES.url("sound/ms-siren2.wav"), // TODO
+            LOCAL_RESOURCES.url("sound/ms-siren2.wav")  // TODO
+        );
     }
 
     @Override

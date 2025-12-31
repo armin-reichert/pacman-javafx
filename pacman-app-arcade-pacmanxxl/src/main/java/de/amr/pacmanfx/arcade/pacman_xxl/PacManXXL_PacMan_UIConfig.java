@@ -148,10 +148,13 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config, GameScene_Confi
         soundManager.registerMediaPlayer(SoundID.PAC_MAN_DEATH,     ARCADE_PAC_MAN_RESOURCES.url("sound/pacman_death.wav"));
         soundManager.registerAudioClipURL(SoundID.PAC_MAN_MUNCHING, ARCADE_PAC_MAN_RESOURCES.url("sound/munch.wav"));
         soundManager.registerMediaPlayer(SoundID.PAC_MAN_POWER,     ARCADE_PAC_MAN_RESOURCES.url("sound/ghost-turn-to-blue.mp3"));
-        soundManager.registerMedia(SoundID.SIREN_1,                 ARCADE_PAC_MAN_RESOURCES.url("sound/siren_1.mp3"));
-        soundManager.registerMedia(SoundID.SIREN_2,                 ARCADE_PAC_MAN_RESOURCES.url("sound/siren_2.mp3"));
-        soundManager.registerMedia(SoundID.SIREN_3,                 ARCADE_PAC_MAN_RESOURCES.url("sound/siren_3.mp3"));
-        soundManager.registerMedia(SoundID.SIREN_4,                 ARCADE_PAC_MAN_RESOURCES.url("sound/siren_4.mp3"));
+
+        soundManager.registerSirens(
+            ARCADE_PAC_MAN_RESOURCES.url("sound/siren_1.mp3"),
+            ARCADE_PAC_MAN_RESOURCES.url("sound/siren_2.mp3"),
+            ARCADE_PAC_MAN_RESOURCES.url("sound/siren_3.mp3"),
+            ARCADE_PAC_MAN_RESOURCES.url("sound/siren_4.mp3")
+        );
     }
 
     @Override

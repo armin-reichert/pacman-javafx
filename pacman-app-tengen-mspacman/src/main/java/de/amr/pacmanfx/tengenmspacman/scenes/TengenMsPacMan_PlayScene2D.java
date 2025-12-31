@@ -343,7 +343,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void onPacPowerBegins(GameEvent e) {
-        soundManager().pauseSiren();
+        soundManager().stopSiren();
         soundManager().loop(SoundID.PAC_MAN_POWER);
     }
 
