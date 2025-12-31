@@ -89,10 +89,10 @@ public class ArcadePacMan_GhostAnimationManager extends SpriteAnimationManager<S
     @Override
     protected void updateActorSprites(Actor actor) {
         if (actor instanceof Ghost ghost) {
-            if (isCurrentAnimationID(CommonAnimationID.ANIM_GHOST_NORMAL)) {
+            if (isSelected(CommonAnimationID.ANIM_GHOST_NORMAL)) {
                 currentAnimation().setSprites(ghostNormalSprites(ghost.wishDir()));
             }
-            if (isCurrentAnimationID(CommonAnimationID.ANIM_GHOST_EYES)) {
+            if (isSelected(CommonAnimationID.ANIM_GHOST_EYES)) {
                 currentAnimation().setSprites(ghostEyesSprites(ghost.wishDir()));
             }
         }

@@ -30,11 +30,9 @@ public class SpriteAnimationManager<SID extends Enum<SID>> implements AnimationM
     // TODO: this is somewhat crude but currently the way to keep the sprites up-to-date with actor direction etc.
     protected void updateActorSprites(Actor actor) {}
 
-    public Object selectedAnimationID() { return selectedID; }
-
-    public boolean isCurrentAnimationID(Object animationID) {
-        requireNonNull(animationID);
-        return animationID.equals(selectedID);
+    public boolean isSelected(Object id) {
+        requireNonNull(id);
+        return id.equals(selectedID);
     }
 
     @Override

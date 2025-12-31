@@ -14,7 +14,7 @@ import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.world.*;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import de.amr.pacmanfx.steering.Steering;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
+import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameController.GameState;
 import de.amr.pacmanfx.tengenmspacman.model.actors.*;
 import javafx.beans.property.BooleanProperty;
@@ -398,7 +398,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
 
     public void activatePacBooster(Pac pac, boolean active) {
         boosterActive = active;
-        pac.selectAnimation(boosterActive ? TengenMsPacMan_UIConfig.AnimationID.ANIM_MS_PAC_MAN_BOOSTER : CommonAnimationID.ANIM_PAC_MUNCHING);
+        pac.selectAnimation(boosterActive ? TengenMsPacMan_AnimationID.ANIM_MS_PAC_MAN_BOOSTER : CommonAnimationID.ANIM_PAC_MUNCHING);
     }
 
     private int cutSceneNumberAfterLevel(int levelNumber) {

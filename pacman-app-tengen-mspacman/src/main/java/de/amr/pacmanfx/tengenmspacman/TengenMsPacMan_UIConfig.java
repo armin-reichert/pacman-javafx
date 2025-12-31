@@ -69,17 +69,6 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     private static final ResourceManager LOCAL_RESOURCES = () -> TengenMsPacMan_UIConfig.class;
 
-    public enum AnimationID {
-        ANIM_MS_PAC_MAN_BOOSTER,
-        ANIM_MS_PAC_MAN_WAVING_HAND,
-        ANIM_MS_PAC_MAN_TURNING_AWAY,
-        ANIM_PAC_MAN_MUNCHING,
-        ANIM_PAC_MAN_BOOSTER,
-        ANIM_PAC_MAN_WAVING_HAND,
-        ANIM_PAC_MAN_TURNING_AWAY,
-        ANIM_JUNIOR
-    }
-
     public static final Set<ActionBinding> STEERING_BINDINGS = Set.of(
         new ActionBinding(ACTION_STEER_UP,    GameUI.JOYPAD.key(JoypadButton.UP),    control(KeyCode.UP)),
         new ActionBinding(ACTION_STEER_DOWN,  GameUI.JOYPAD.key(JoypadButton.DOWN),  control(KeyCode.DOWN)),
