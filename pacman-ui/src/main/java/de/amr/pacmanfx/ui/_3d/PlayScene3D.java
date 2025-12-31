@@ -266,7 +266,7 @@ public abstract class PlayScene3D extends Group implements GameScene {
         soundManager().setEnabled(!gameLevel.isDemoLevel());
         gameLevel3D.update();
         updateCamera();
-        updateHUD();
+        updateHUD(game);
         updateSound(gameLevel, game.control().state());
     }
 
@@ -311,7 +311,7 @@ public abstract class PlayScene3D extends Group implements GameScene {
             gameLevel3D.livesCounter3D().startTracking(gameLevel3D.pac3D());
         }
         gameLevel3D.updateLevelCounter3D();
-        updateHUD();
+        updateHUD(game);
         setActionBindings(level);
         playSubSceneFadingInAnimation();
     }
@@ -585,8 +585,7 @@ public abstract class PlayScene3D extends Group implements GameScene {
         }
     }
 
-    protected void updateHUD() {
-        final Game game = context().currentGame();
+    protected void updateHUD(Game game) {
         final Score score = game.score(), highScore = game.highScore();
         if (score.isEnabled()) {
             scores3D.showScore(score.points(), score.levelNumber());
