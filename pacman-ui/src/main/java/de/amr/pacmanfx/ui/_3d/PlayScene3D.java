@@ -68,18 +68,16 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * Common 3D play scene base class for all game variants.
- *
- * <p>Provides different camera perspectives that can be stepped through using key combinations
- * <code>Alt+LEFT</code> and <code>Alt+RIGHT</code>.
  */
-public abstract class PlayScene3D extends Group implements GameScene {
+public abstract class PlayScene3D implements GameScene {
 
-    // Colors for fade-in effect
-    private static final Color SUB_SCENE_FILL_DARK = Color.BLACK;
-    private static final Color SUB_SCENE_FILL_BRIGHT = Color.TRANSPARENT;
+    // Colors for fade effect
+    private static final Color SCENE_FILL_DARK = Color.BLACK;
+    private static final Color SCENE_FILL_BRIGHT = Color.TRANSPARENT;
 
     private static final float DISPLAY_SECONDS_READY_MESSAGE = 2.5f;
 
+    //TODO fix sound files
     private static final float SIREN_VOLUME = 0.33f;
 
     private final Map<PerspectiveID, Perspective> perspectivesByID = new EnumMap<>(PerspectiveID.class);
@@ -114,34 +112,34 @@ public abstract class PlayScene3D extends Group implements GameScene {
         }
     };
 
+    protected final ActionBindingsManager actionBindings = new DefaultActionBindingsManager();
+
     protected final SubScene subScene;
-    protected final PerspectiveCamera camera;
-    protected final ActionBindingsManager actionBindings;
-    protected final Group gameLevel3DParent = new Group();
+    protected final Group subSceneRoot = new Group();
+    protected final Group level3DParent = new Group();
+    protected final PerspectiveCamera camera = new PerspectiveCamera(true);
 
     protected GameContext context;
     protected GameUI ui;
-    protected RandomTextPicker<String> pickerGameOverMessages;
     protected GameLevel3D gameLevel3D;
     protected Scores3D scores3D;
+    protected RandomTextPicker<String> pickerGameOverMessages;
 
     // context menu radio button group
     private final ToggleGroup perspectivesGroup = new ToggleGroup();
 
     public PlayScene3D() {
-        actionBindings = new DefaultActionBindingsManager();
-        camera = new PerspectiveCamera(true);
+        // initial size is irrelevant (size gets bound to parent scene size eventually)
+        subScene = new SubScene(subSceneRoot, 88, 88, true, SceneAntialiasing.BALANCED);
+        subScene.setCamera(camera);
+        subScene.setFill(SCENE_FILL_DARK);
 
-        createPerspectives();
-        var coordinateSystem = new CoordinateSystem();
+        final var coordinateSystem = new CoordinateSystem();
         coordinateSystem.visibleProperty().bind(GameUI.PROPERTY_3D_AXES_VISIBLE);
 
-        getChildren().setAll(gameLevel3DParent, coordinateSystem);
+        subSceneRoot.getChildren().setAll(level3DParent, coordinateSystem);
 
-        // initial size is irrelevant (size gets bound to parent scene size eventually)
-        subScene = new SubScene(this, 88, 88, true, SceneAntialiasing.BALANCED);
-        subScene.setCamera(camera);
-        subScene.setFill(SUB_SCENE_FILL_DARK);
+        createPerspectives();
     }
 
     @Override
@@ -246,7 +244,7 @@ public abstract class PlayScene3D extends Group implements GameScene {
             gameLevel3D.dispose();
             gameLevel3D = null;
         }
-        gameLevel3DParent.getChildren().clear();
+        level3DParent.getChildren().clear();
         GameUI.PROPERTY_3D_PERSPECTIVE_ID.removeListener(perspectiveIDChangeListener);
         perspectiveIDProperty().unbind();
     }
@@ -320,7 +318,7 @@ public abstract class PlayScene3D extends Group implements GameScene {
 
     @Override
     public void onBonusActivated(GameEvent event) {
-        context().currentGame().level().optBonus().ifPresent(bonus -> {
+        event.game().level().optBonus().ifPresent(bonus -> {
             gameLevel3D.updateBonus3D(bonus);
             soundManager().loop(SoundID.BONUS_ACTIVE);
         });
@@ -328,7 +326,7 @@ public abstract class PlayScene3D extends Group implements GameScene {
 
     @Override
     public void onBonusEaten(GameEvent event) {
-        context().currentGame().level().optBonus().ifPresent(_ -> {
+        event.game().level().optBonus().ifPresent(_ -> {
             gameLevel3D.bonus3D().ifPresent(Bonus3D::showEaten);
             soundManager().stop(SoundID.BONUS_ACTIVE);
             soundManager().play(SoundID.BONUS_EATEN);
@@ -337,7 +335,7 @@ public abstract class PlayScene3D extends Group implements GameScene {
 
     @Override
     public void onBonusExpires(GameEvent event) {
-        context().currentGame().level().optBonus().ifPresent(_ -> {
+        event.game().level().optBonus().ifPresent(_ -> {
             gameLevel3D.bonus3D().ifPresent(Bonus3D::expire);
             soundManager().stop(SoundID.BONUS_ACTIVE);
         });
@@ -386,16 +384,16 @@ public abstract class PlayScene3D extends Group implements GameScene {
     }
 
     @Override
-    public void onGameContinues(GameEvent e) {
-        final Game game = context().currentGame();
+    public void onGameContinues(GameEvent event) {
+        final Game game = event.game();
         if (gameLevel3D != null) {
             game.optGameLevel().ifPresent(this::showReadyMessage);
         }
     }
 
     @Override
-    public void onGameStarts(GameEvent e) {
-        final Game game = context().currentGame();
+    public void onGameStarts(GameEvent event) {
+        final Game game = event.game();
         final StateMachine.State<Game> state = game.control().state();
         final boolean silent = game.level().isDemoLevel() || state instanceof TestState;
         if (!silent) {
@@ -404,19 +402,19 @@ public abstract class PlayScene3D extends Group implements GameScene {
     }
 
     @Override
-    public void onGhostEaten(GameEvent e) {
+    public void onGhostEaten(GameEvent event) {
         soundManager().play(SoundID.GHOST_EATEN);
     }
 
 
     @Override
-    public void onLevelCreated(GameEvent e) {
-        e.game().optGameLevel().ifPresent(this::replaceGameLevel3D);
+    public void onLevelCreated(GameEvent event) {
+        event.game().optGameLevel().ifPresent(this::replaceGameLevel3D);
     }
 
     @Override
-    public void onLevelStarts(GameEvent e) {
-        final Game game = e.game();
+    public void onLevelStarts(GameEvent event) {
+        final Game game = event.game();
         if (game.optGameLevel().isEmpty()) {
             Logger.error("No game level exists on level start? WTF!");
             return;
@@ -472,7 +470,7 @@ public abstract class PlayScene3D extends Group implements GameScene {
 
     @Override
     public void onPacPowerBegins(GameEvent event) {
-        final Game game = context().currentGame();
+        final Game game = event.game();
         soundManager().stopSiren();
         if (!game.isLevelCompleted()) {
             gameLevel3D.pac3D().setMovementPowerMode(true);
@@ -489,7 +487,7 @@ public abstract class PlayScene3D extends Group implements GameScene {
     }
 
     @Override
-    public void onSpecialScoreReached(GameEvent e) {
+    public void onSpecialScoreReached(GameEvent event) {
         soundManager().play(SoundID.EXTRA_LIFE);
     }
 
@@ -524,10 +522,10 @@ public abstract class PlayScene3D extends Group implements GameScene {
 
     private void replaceScores3D() {
         if (scores3D != null) {
-            getChildren().remove(scores3D);
+            subSceneRoot.getChildren().remove(scores3D);
         }
         createScores3D(ui);
-        getChildren().add(scores3D);
+        subSceneRoot.getChildren().add(scores3D);
     }
 
     protected void createScores3D(LocalizedTextAccessor localizedTexts) {
@@ -541,9 +539,9 @@ public abstract class PlayScene3D extends Group implements GameScene {
         scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
         scores3D.rotateProperty().bind(camera.rotateProperty());
 
-        scores3D.translateXProperty().bind(gameLevel3DParent.translateXProperty().add(TS));
-        scores3D.translateYProperty().bind(gameLevel3DParent.translateYProperty().subtract(4.5 * TS));
-        scores3D.translateZProperty().bind(gameLevel3DParent.translateZProperty().subtract(4.5 * TS));
+        scores3D.translateXProperty().bind(level3DParent.translateXProperty().add(TS));
+        scores3D.translateYProperty().bind(level3DParent.translateYProperty().subtract(4.5 * TS));
+        scores3D.translateZProperty().bind(level3DParent.translateZProperty().subtract(4.5 * TS));
         scores3D.setVisible(false);
     }
 
@@ -567,7 +565,7 @@ public abstract class PlayScene3D extends Group implements GameScene {
         gameLevel3D = createGameLevel3D(level);
         Logger.info("Created new game level 3D");
 
-        gameLevel3DParent.getChildren().setAll(gameLevel3D);
+        level3DParent.getChildren().setAll(gameLevel3D);
 
         gameLevel3D.pac3D().init(level);
         gameLevel3D.ghosts3D().forEach(ghost3D -> ghost3D.init(level));
@@ -598,13 +596,12 @@ public abstract class PlayScene3D extends Group implements GameScene {
         scores3D.showHighScore(highScore.points(), highScore.levelNumber());
     }
 
-    protected void updateSiren(Pac pac) {
-        final Game game = context().currentGame();
-        boolean pacChased = !pac.powerTimer().isRunning();
+    protected void updateSiren(GameLevel level) {
+        final boolean pacChased = !level.pac().powerTimer().isRunning();
         if (pacChased) {
             // siren numbers are 1..4, hunting phase index = 0..7
-            int huntingPhase = game.level().huntingTimer().phaseIndex();
-            int sirenNumber = 1 + huntingPhase / 2;
+            final int huntingPhase = level.huntingTimer().phaseIndex();
+            final int sirenNumber = 1 + huntingPhase / 2;
             soundManager().playSiren(sirenNumber, SIREN_VOLUME); // TODO change sound file volume?
         }
     }
@@ -624,7 +621,7 @@ public abstract class PlayScene3D extends Group implements GameScene {
     protected void updateSound(GameLevel gameLevel, StateMachine.State<Game> state) {
         if (!soundManager().isEnabled()) return;
         if (state.matches(StateName.HUNTING)) {
-            updateSiren(gameLevel.pac());
+            updateSiren(gameLevel);
             updateGhostSounds(gameLevel.pac(), gameLevel.ghosts());
         }
     }
@@ -637,7 +634,7 @@ public abstract class PlayScene3D extends Group implements GameScene {
     }
 
     protected void playSubSceneFadingInAnimation() {
-        subScene.setFill(SUB_SCENE_FILL_DARK);
+        subScene.setFill(SCENE_FILL_DARK);
         float fadingInSec = 3;
         new SequentialTransition(
             doNow(() -> {
@@ -647,7 +644,7 @@ public abstract class PlayScene3D extends Group implements GameScene {
             }),
             new Timeline(
                 new KeyFrame(Duration.seconds(fadingInSec),
-                    new KeyValue(subScene.fillProperty(), SUB_SCENE_FILL_BRIGHT, Interpolator.LINEAR))
+                    new KeyValue(subScene.fillProperty(), SCENE_FILL_BRIGHT, Interpolator.LINEAR))
             )
         ).play();
     }
