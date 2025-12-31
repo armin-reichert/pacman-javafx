@@ -48,7 +48,6 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         if (!tengenGame.allOptionsDefault()) {
             final double width = TS(level.worldMap().numCols());
             final double height = TS(2);
-
             final ImageView levelInfo = new ImageView();
             levelInfo.setFitWidth(width);
             levelInfo.setFitHeight(height);
@@ -73,7 +72,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         hudRenderer.fillCanvas(backgroundColor);
         hudRenderer.drawLevelNumberBox(levelNumber, 0, 0);
         hudRenderer.drawLevelNumberBox(levelNumber, width - 2 * TS, 0);
-        hudRenderer.drawGameOptions(game.mapCategory(), game.difficulty(), game.pacBooster(), TS(14), TS(1.5f));
+        hudRenderer.drawGameOptions(game.mapCategory(), game.difficulty(), game.pacBooster(), 0.5 * width, TS(1.5f));
 
         return canvas.snapshot(null, null);
     }
