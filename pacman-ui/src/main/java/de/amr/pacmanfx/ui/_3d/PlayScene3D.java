@@ -142,9 +142,21 @@ public abstract class PlayScene3D implements GameScene {
         createPerspectives();
     }
 
+    public void setUI(GameUI ui) {
+        this.ui = requireNonNull(ui);
+        pickerGameOverMessages = RandomTextPicker.fromBundle(ui.localizedTexts(), "game.over");
+        //TODO reconsider this
+        replaceScores3D();
+    }
+
     @Override
     public void dispose() {
         actionBindings.dispose();
+        perspectivesByID.clear();
+        if (gameLevel3D != null) {
+            gameLevel3D.dispose();
+            gameLevel3D = null;
+        }
     }
 
     @Override
@@ -159,13 +171,6 @@ public abstract class PlayScene3D implements GameScene {
     @Override
     public GameUI ui() {
         return ui;
-    }
-
-    public void setUI(GameUI ui) {
-        this.ui = requireNonNull(ui);
-        pickerGameOverMessages = RandomTextPicker.fromBundle(ui.localizedTexts(), "game.over");
-        //TODO reconsider this
-        replaceScores3D();
     }
 
     @Override
