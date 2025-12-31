@@ -21,7 +21,7 @@ public class SoundTest implements ResourceManager {
     }
 
     static void main() {
-        Platform.startup(() -> new SoundTest().runAllTests(1.0));
+        Platform.startup(() -> new SoundTest().runAllTests(1.0, 1.5));
     }
 
     private final Timeline timeline = new Timeline();
@@ -35,19 +35,19 @@ public class SoundTest implements ResourceManager {
         return url(SOUND_PATH + "GhostNoise%d.wav".formatted(number));
     }
 
-    private void runAllTests(double volume) {
+    private void runAllTests(double volume, double rate) {
         timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(SINGLE_TEST_DURATION_SECONDS), _ -> sirenPlayer.playSiren(1, volume)));
         timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(2* SINGLE_TEST_DURATION_SECONDS), _ -> {
             sirenPlayer.stopSiren(1);
-            sirenPlayer.playSiren(2, volume);
+            sirenPlayer.playSiren(2, volume, rate);
         }));
         timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(3* SINGLE_TEST_DURATION_SECONDS), _ -> {
             sirenPlayer.stopSiren(2);
-            sirenPlayer.playSiren(3, volume);
+            sirenPlayer.playSiren(3, volume, rate);
         }));
         timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(4* SINGLE_TEST_DURATION_SECONDS), _ -> {
             sirenPlayer.stopSiren(3);
-            sirenPlayer.playSiren(4, volume);
+            sirenPlayer.playSiren(4, volume, rate);
         }));
         timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(5* SINGLE_TEST_DURATION_SECONDS), _ -> {
             sirenPlayer.stopSiren(4);

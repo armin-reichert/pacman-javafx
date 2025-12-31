@@ -20,16 +20,25 @@ public class SirenPlayer {
         clips = new AudioClip[sirenURLArray.length];
     }
 
-    public void playSiren(int number, double volume) {
+    public void playSiren(int number, double volume, double rate) {
         final int index = number - 1;
         if (Validations.inClosedRange(index, 0, urls.length - 1)) {
             if (clips[index] == null) {
                 final var clip = new AudioClip(urls[index].toExternalForm());
                 clip.setCycleCount(AudioClip.INDEFINITE);
+                clip.setRate(rate);
                 clips[index] = clip;
                 clip.play(volume);
             }
         }
+    }
+
+    public void playSiren(int number, double volume) {
+        playSiren(number, volume, 1.0);
+    }
+
+    public void playSiren(int number) {
+        playSiren(number, 1.0);
     }
 
     public void stopSiren(int number) {
