@@ -28,12 +28,13 @@ import static java.util.Objects.requireNonNull;
 public class TengenMsPacMan_IntroScene_Renderer extends GameScene2D_Renderer
     implements SpriteRenderer, TengenMsPacMan_SceneRenderingCommons {
 
-    private final TengenMsPacMan_SpriteSheet spriteSheet;
     private final ActorRenderer actorRenderer;
 
-    public TengenMsPacMan_IntroScene_Renderer(GameUI_Config uiConfig, UIPreferences prefs, GameScene2D scene, Canvas canvas, TengenMsPacMan_SpriteSheet spriteSheet) {
+    public TengenMsPacMan_IntroScene_Renderer(GameUI_Config uiConfig, UIPreferences prefs, GameScene2D scene, Canvas canvas) {
         super(canvas);
-        this.spriteSheet = requireNonNull(spriteSheet);
+        requireNonNull(uiConfig);
+        requireNonNull(prefs);
+        requireNonNull(scene);
         actorRenderer = GameScene2D_Renderer.adaptRenderer(uiConfig.createActorRenderer(canvas), scene);
         createDefaultDebugInfoRenderer(prefs, scene, canvas);
     }
@@ -45,7 +46,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends GameScene2D_Renderer
 
     @Override
     public TengenMsPacMan_SpriteSheet spriteSheet() {
-        return spriteSheet;
+        return TengenMsPacMan_SpriteSheet.INSTANCE;
     }
 
     @Override
@@ -62,7 +63,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends GameScene2D_Renderer
                 if (!introScene.dark) {
                     boolean showPressStart = tick % 60 < 30;
                     fillText("TENGEN PRESENTS", shadeOfBlue(tick), introScene.presentsText.x(), introScene.presentsText.y());
-                    drawSprite(spriteSheet.sprite(SpriteID.LARGE_MS_PAC_MAN_TEXT), 6 * TS, MARQUEE_Y, true);
+                    drawSprite(spriteSheet().sprite(SpriteID.LARGE_MS_PAC_MAN_TEXT), 6 * TS, MARQUEE_Y, true);
                     if (showPressStart) fillText("PRESS START", nesColor(0x20), 11 * TS, MARQUEE_Y + 9 * TS);
                     fillText("MS PAC-MAN TM NAMCO LTD", nesColor(0x25), 6 * TS, MARQUEE_Y + 15 * TS);
                     fillText("©1990 TENGEN INC",        nesColor(0x25), 8 * TS, MARQUEE_Y + 16 * TS);

@@ -16,8 +16,8 @@ import java.util.Arrays;
 
 public class TengenMsPacMan_PacAnimationManager extends SpriteAnimationManager<SpriteID> {
 
-    public TengenMsPacMan_PacAnimationManager(TengenMsPacMan_SpriteSheet spriteSheet) {
-        super(spriteSheet);
+    public TengenMsPacMan_PacAnimationManager() {
+        super(TengenMsPacMan_SpriteSheet.INSTANCE);
     }
 
     @Override

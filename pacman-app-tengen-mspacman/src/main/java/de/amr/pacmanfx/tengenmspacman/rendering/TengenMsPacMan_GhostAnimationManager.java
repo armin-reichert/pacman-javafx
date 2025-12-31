@@ -23,8 +23,8 @@ public class TengenMsPacMan_GhostAnimationManager extends SpriteAnimationManager
 
     private final byte personality;
 
-    public TengenMsPacMan_GhostAnimationManager(TengenMsPacMan_SpriteSheet spriteSheet, byte personality) {
-        super(spriteSheet);
+    public TengenMsPacMan_GhostAnimationManager(byte personality) {
+        super(TengenMsPacMan_SpriteSheet.INSTANCE);
         this.personality = requireValidGhostPersonality(personality);
     }
 
@@ -38,11 +38,6 @@ public class TengenMsPacMan_GhostAnimationManager extends SpriteAnimationManager
             case CommonAnimationID.ANIM_GHOST_NUMBER      -> SpriteAnimation.builder().fromSprites(spriteSheet().spriteSequence(SpriteID.GHOST_NUMBERS)).once();
             default -> throw new IllegalArgumentException("Illegal animation ID " + animationID);
         };
-    }
-
-    @Override
-    public TengenMsPacMan_SpriteSheet spriteSheet() {
-        return (TengenMsPacMan_SpriteSheet) super.spriteSheet();
     }
 
     @Override

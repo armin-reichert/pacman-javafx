@@ -279,8 +279,8 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         final UIPreferences prefs = ui.preferences();
         final GameScene2D_Renderer renderer = switch (gameScene2D) {
             case TengenMsPacMan_BootScene ignored -> new TengenMsPacMan_BootScene_Renderer(this, prefs, gameScene2D, canvas);
-            case TengenMsPacMan_IntroScene ignored -> new TengenMsPacMan_IntroScene_Renderer(this, prefs, gameScene2D, canvas, spriteSheet());
-            case TengenMsPacMan_OptionsScene ignored -> new TengenMsPacMan_OptionsScene_Renderer(prefs, gameScene2D, canvas, spriteSheet());
+            case TengenMsPacMan_IntroScene ignored -> new TengenMsPacMan_IntroScene_Renderer(this, prefs, gameScene2D, canvas);
+            case TengenMsPacMan_OptionsScene ignored -> new TengenMsPacMan_OptionsScene_Renderer(prefs, gameScene2D, canvas);
             case TengenMsPacMan_PlayScene2D ignored -> new TengenMsPacMan_PlayScene2D_Renderer(this, prefs, gameScene2D, canvas);
             case TengenMsPacMan_CreditsScene ignored -> new TengenMsPacMan_CreditsScene_Renderer(prefs, gameScene2D, canvas);
             case TengenMsPacMan_CutScene1 ignored -> new TengenMsPacMan_CutScene1_Renderer(this, prefs, gameScene2D, canvas);
@@ -306,19 +306,19 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
             || ui.isCurrentGameSceneID(GameScene_Config.SCENE_ID_CUTSCENE_3_2D)
             || ui.isCurrentGameSceneID(GameScene_Config.SCENE_ID_CUTSCENE_4_2D) )
         {
-            final var hudRenderer = new TengenMsPacMan_HeadsUpDisplay_Renderer(canvas, spriteSheet(), ui.clock());
+            final var hudRenderer = new TengenMsPacMan_HeadsUpDisplay_Renderer(canvas, ui.clock());
             hudRenderer.setOffsetY(-2 * TS); //TODO this is ugly
             return gameScene2D.adaptRenderer(hudRenderer);
         }
         if (ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_2D)) {
-            return gameScene2D.adaptRenderer(new TengenMsPacMan_HeadsUpDisplay_Renderer(canvas, spriteSheet(), ui.clock()));
+            return gameScene2D.adaptRenderer(new TengenMsPacMan_HeadsUpDisplay_Renderer(canvas, ui.clock()));
         }
         return null;
     }
 
     @Override
     public TengenMsPacMan_ActorRenderer createActorRenderer(Canvas canvas) {
-        return new TengenMsPacMan_ActorRenderer(canvas, spriteSheet());
+        return new TengenMsPacMan_ActorRenderer(canvas);
     }
 
     @Override
@@ -370,12 +370,12 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     @Override
     public TengenMsPacMan_GhostAnimationManager createGhostAnimations(byte personality) {
-        return new TengenMsPacMan_GhostAnimationManager(spriteSheet(), personality);
+        return new TengenMsPacMan_GhostAnimationManager(personality);
     }
 
     @Override
     public TengenMsPacMan_PacAnimationManager createPacAnimations() {
-        return new TengenMsPacMan_PacAnimationManager(spriteSheet());
+        return new TengenMsPacMan_PacAnimationManager();
     }
 
     @Override

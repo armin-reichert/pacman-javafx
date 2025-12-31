@@ -33,17 +33,16 @@ public class TengenMsPacMan_OptionsScene_Renderer extends GameScene2D_Renderer
     private static final Color NES_YELLOW = nesColor(0x28);
     private static final Color NES_WHITE = nesColor(0x20);
 
-    private final TengenMsPacMan_SpriteSheet spriteSheet;
-
-    public TengenMsPacMan_OptionsScene_Renderer(UIPreferences prefs, GameScene2D scene, Canvas canvas, TengenMsPacMan_SpriteSheet spriteSheet) {
+    public TengenMsPacMan_OptionsScene_Renderer(UIPreferences prefs, GameScene2D scene, Canvas canvas) {
         super(canvas);
-        this.spriteSheet = requireNonNull(spriteSheet);
+        requireNonNull(prefs);
+        requireNonNull(scene);
         createDefaultDebugInfoRenderer(prefs, scene, canvas);
     }
 
     @Override
     public TengenMsPacMan_SpriteSheet spriteSheet() {
-        return spriteSheet;
+        return TengenMsPacMan_SpriteSheet.INSTANCE;
     }
 
     @Override
@@ -74,7 +73,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends GameScene2D_Renderer
         drawMarkerIfSelected(optionsScene, OPTION_PLAYERS, y, arcadeFont8());
         fillText("TYPE", NES_YELLOW, COL_LABEL, y);
         fillText(":", NES_YELLOW, COL_LABEL + 4 * TS + 4, y);
-        // grey out
+        // gray out
         fillText("1 PLAYER", nesColor(0x10), COL_LABEL + 6 * TS, y);
 
         y += TS(3);

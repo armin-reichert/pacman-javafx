@@ -36,16 +36,14 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
     public static final float LEVEL_COUNTER_POS_RIGHT = TS(28);
 
     private final GameClock clock;
-    private final TengenMsPacMan_SpriteSheet spriteSheet;
 
     private final ObjectProperty<Font> totalLivesFont = new SimpleObjectProperty<>(Font.font("Serif", FontWeight.BOLD, 8));
 
     private float offsetY = 0;
 
-    public TengenMsPacMan_HeadsUpDisplay_Renderer(Canvas canvas, TengenMsPacMan_SpriteSheet spriteSheet, GameClock clock) {
+    public TengenMsPacMan_HeadsUpDisplay_Renderer(Canvas canvas, GameClock clock) {
         super(canvas);
         this.clock = requireNonNull(clock);
-        this.spriteSheet = requireNonNull(spriteSheet);
         totalLivesFont.bind(scalingProperty().map(scaling -> Font.font("Serif", FontWeight.BOLD, scaling.doubleValue() * 8)));
     }
 
@@ -55,7 +53,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
 
     @Override
     public TengenMsPacMan_SpriteSheet spriteSheet() {
-        return spriteSheet;
+        return TengenMsPacMan_SpriteSheet.INSTANCE;
     }
 
     @Override
