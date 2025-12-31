@@ -80,6 +80,28 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         new ActionBinding(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, bare(KeyCode.SPACE))
     );
 
+    // Note: Order of bonus symbols ins spritesheet is not 1:1 with order of bonus values!
+    // 0=100,1=200,2=500,3=700,4=1000,5=2000,6=3000,7=4000,8=5000,9=6000,10=7000,11=8000,12=9000, 13=10_000
+    public static byte bonusValueSpriteIndex(byte bonusSymbol) {
+        return switch (bonusSymbol) {
+            case TengenMsPacMan_GameModel.BONUS_CHERRY -> 0;     // 100
+            case TengenMsPacMan_GameModel.BONUS_STRAWBERRY -> 1; // 200
+            case TengenMsPacMan_GameModel.BONUS_ORANGE -> 2;     // 500
+            case TengenMsPacMan_GameModel.BONUS_PRETZEL -> 3;    // 700
+            case TengenMsPacMan_GameModel.BONUS_APPLE -> 4;      // 1000
+            case TengenMsPacMan_GameModel.BONUS_PEAR -> 5;       // 2000
+            case TengenMsPacMan_GameModel.BONUS_BANANA -> 8;     // 6 -> 8 (5000)
+            case TengenMsPacMan_GameModel.BONUS_MILK -> 6;       // 7 -> 6 (3000)
+            case TengenMsPacMan_GameModel.BONUS_ICE_CREAM -> 7;  // 8 -> 7 (4000)
+            case TengenMsPacMan_GameModel.BONUS_HIGH_HEELS -> 9; // 6000
+            case TengenMsPacMan_GameModel.BONUS_STAR -> 10;      // 7000
+            case TengenMsPacMan_GameModel.BONUS_HAND -> 11;      // 8000
+            case TengenMsPacMan_GameModel.BONUS_RING -> 12;      // 9000
+            case TengenMsPacMan_GameModel.BONUS_FLOWER -> 13;    // TEN!000
+            default -> bonusSymbol;
+        };
+    }
+
     public static final String SPRITE_SHEET_PATH           = "graphics/spritesheet.png";
     public static final String ARCADE_MAZES_IMAGE_PATH     = "graphics/arcade_mazes.png";
     public static final String NON_ARCADE_MAZES_IMAGE_PATH = "graphics/non_arcade_mazes.png";
@@ -214,7 +236,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
         soundManager.registerMedia(SoundID.VOICE_FLYER_TEXT,        LOCAL_RESOURCES.url("sound/flyer-text.mp3"));
 
-        soundManager.registerMediaPlayer(SoundID.BONUS_ACTIVE,            LOCAL_RESOURCES.url("sound/fruitbounce.wav"));
+        soundManager.registerMediaPlayer(SoundID.BONUS_ACTIVE,      LOCAL_RESOURCES.url("sound/fruitbounce.wav"));
         soundManager.registerAudioClipURL(SoundID.BONUS_EATEN,      LOCAL_RESOURCES.url("sound/ms-fruit.wav"));
         soundManager.registerAudioClipURL(SoundID.EXTRA_LIFE,       LOCAL_RESOURCES.url("sound/ms-extralife.wav"));
         soundManager.registerAudioClipURL(SoundID.GAME_OVER,        LOCAL_RESOURCES.url("sound/common/game-over.mp3"));
@@ -318,16 +340,9 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     @Override
     public Image bonusValueImage(byte symbol) {
-        //TODO: should this logic be implemented here?
-        // 0=100,1=200,2=500,3=700,4=1000,5=2000,6=3000,7=4000,8=5000,9=6000,10=7000,11=8000,12=9000, 13=10_000
-        final byte usedSymbol = switch (symbol) {
-            case TengenMsPacMan_GameModel.BONUS_BANANA    -> 8; // 5000!
-            case TengenMsPacMan_GameModel.BONUS_MILK      -> 6; // 3000!
-            case TengenMsPacMan_GameModel.BONUS_ICE_CREAM -> 7; // 4000!
-            default -> symbol;
-        };
-        final RectShort[] sprites = spriteSheet().spriteSequence(SpriteID.BONUS_VALUES);
-        return spriteSheet().image(sprites[usedSymbol]);
+        final byte spriteIndex = bonusValueSpriteIndex(symbol);
+        final RectShort sprite = spriteSheet().spriteSequence(SpriteID.BONUS_VALUES)[spriteIndex];
+        return spriteSheet().image(sprite);
     }
 
     @Override

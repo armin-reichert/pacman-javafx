@@ -185,12 +185,15 @@ public final class TengenMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
             rect(259, 183, 16, 10),
             rect(279, 183, 16, 10)
         );
+
         SPRITE_MAP.add(BONUS_SYMBOLS, IntStream.range(0, 14)
             .mapToObj(i -> rect(BONUS_X[i], 66 + BONUS_DY[i], BONUS_W[i], 20 - BONUS_DY[i]))
             .toArray(RectShort[]::new));
+
         SPRITE_MAP.add(BONUS_VALUES, IntStream.range(0, 14)
             .mapToObj(i -> rect(BONUS_X[i], 85, BONUS_W[i], 18))
             .toArray(RectShort[]::new));
+
         SPRITE_MAP.add(CLAPPERBOARD,
             // wide-open, open, closed
             rect(91, 361, 32, 32),

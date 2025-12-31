@@ -8,6 +8,7 @@ import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.model.actors.*;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.scenes.Clapperboard;
 import de.amr.pacmanfx.tengenmspacman.scenes.Stork;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
@@ -73,7 +74,9 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
             case EDIBLE -> drawBonusSprite(bonus.center().plus(0, bonus.verticalElongation()),
                 spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS), bonus.symbol());
             case EATEN  -> drawBonusSprite(bonus.center(),
-                spriteSheet().spriteSequence(SpriteID.BONUS_VALUES), bonus.symbol());
+                spriteSheet().spriteSequence(SpriteID.BONUS_VALUES),
+                // Note: sprite sheet has bonus values in wrong order!
+                TengenMsPacMan_UIConfig.bonusValueSpriteIndex(bonus.symbol()));
         }
     }
 
