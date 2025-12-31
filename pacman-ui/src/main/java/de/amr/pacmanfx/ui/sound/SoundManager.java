@@ -21,7 +21,6 @@ import org.tinylog.Logger;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 
@@ -209,7 +208,7 @@ public class SoundManager implements Disposable {
     public void stopAll() {
         stopSiren();
         stopVoice();
-        allOfType(MediaPlayer.class).forEach(MediaPlayer::stop);
+        map.values().stream().filter(MediaPlayer.class::isInstance).map(MediaPlayer.class::cast).forEach(MediaPlayer::stop);
         Logger.debug("All sounds (media players, siren, voice) stopped");
     }
 
@@ -283,18 +282,13 @@ public class SoundManager implements Disposable {
         else Logger.info("Cannot stop siren: player not yet created");
     }
 
-    // General
-
-    private <C> Stream<C> allOfType(Class<C> type) {
-        return map.values().stream().filter(type::isInstance).map(type::cast);
-    }
-
     @SuppressWarnings("unchecked")
     private <C> C valueOfType(Object key, Class<C> type) {
         requireNonNull(key);
-        Object value = map.get(key);
+        requireNonNull(type);
+        final Object value = map.get(key);
         if (value == null) {
-            throw new IllegalArgumentException("Unknown media player '%s'".formatted(key));
+            throw new IllegalArgumentException("No sound value with key '%s' exists".formatted(key));
         }
         if (type.isInstance(value)) {
             return (C) value;
