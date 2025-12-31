@@ -13,7 +13,6 @@ import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.tengenmspacman.model.*;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.HeadsUpDisplay_Renderer;
-import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.beans.property.ObjectProperty;
@@ -35,15 +34,12 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
     public static final float LEVEL_COUNTER_POS_LEFT = TS(2);
     public static final float LEVEL_COUNTER_POS_RIGHT = TS(28);
 
-    private final GameClock clock;
-
     private final ObjectProperty<Font> totalLivesFont = new SimpleObjectProperty<>(Font.font("Serif", FontWeight.BOLD, 8));
 
     private float offsetY = 0;
 
-    public TengenMsPacMan_HeadsUpDisplay_Renderer(Canvas canvas, GameClock clock) {
+    public TengenMsPacMan_HeadsUpDisplay_Renderer(Canvas canvas) {
         super(canvas);
-        this.clock = requireNonNull(clock);
         totalLivesFont.bind(scalingProperty().map(scaling -> Font.font("Serif", FontWeight.BOLD, scaling.doubleValue() * 8)));
     }
 
@@ -71,7 +67,8 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
         ctx.translate(0, scaled(offsetY));
 
         if (hud.isScoreVisible()) {
-            drawScore(game.score(), clock.tickCount(), arcadeFont8());
+            final long tick = scene.ui().clock().tickCount();
+            drawScore(game.score(), tick, arcadeFont8());
 
             final Score highScore = game.highScore();
             Color color = SCORE_TEXT_COLOR;
