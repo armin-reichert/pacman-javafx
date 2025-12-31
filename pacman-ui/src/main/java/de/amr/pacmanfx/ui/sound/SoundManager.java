@@ -270,7 +270,7 @@ public class SoundManager implements Disposable {
             sirenPlayer.stopSiren(currentSirenNumber);
         }
         currentSirenNumber = number;
-        sirenPlayer.playSiren(currentSirenNumber, volume);
+        sirenPlayer.ensureSirenPlaying(currentSirenNumber, volume);
         Logger.trace("Playing siren '{}' at volume {}", currentSirenNumber, volume);
     }
 

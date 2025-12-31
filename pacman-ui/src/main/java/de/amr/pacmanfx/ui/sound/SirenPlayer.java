@@ -20,7 +20,7 @@ public class SirenPlayer {
         clips = new AudioClip[sirenURLArray.length];
     }
 
-    public void playSiren(int number, double volume, double rate) {
+    public void ensureSirenPlaying(int number, double volume, double rate) {
         final int index = number - 1;
         if (Validations.inClosedRange(index, 0, urls.length - 1)) {
             if (clips[index] == null) {
@@ -33,12 +33,12 @@ public class SirenPlayer {
         }
     }
 
-    public void playSiren(int number, double volume) {
-        playSiren(number, volume, 1.0);
+    public void ensureSirenPlaying(int number, double volume) {
+        ensureSirenPlaying(number, volume, 1.0);
     }
 
-    public void playSiren(int number) {
-        playSiren(number, 1.0);
+    public void ensureSirenPlaying(int number) {
+        ensureSirenPlaying(number, 1.0);
     }
 
     public void stopSiren(int number) {
