@@ -19,7 +19,6 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.model.world.FoodLayer;
-import de.amr.pacmanfx.model.world.House;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.action.GameAction;
@@ -71,11 +70,13 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class PlayScene3D implements GameScene {
 
+    private static final float FADE_IN_SECONDS = 3;
+
     // Colors for fade effect
     private static final Color SCENE_FILL_DARK = Color.BLACK;
     private static final Color SCENE_FILL_BRIGHT = Color.TRANSPARENT;
 
-    private static final float DISPLAY_SECONDS_READY_MESSAGE = 2.5f;
+    private static final float READY_MESSAGE_DISPLAY_SECONDS = 2.5f;
 
     //TODO fix sound files
     private static final float SIREN_VOLUME = 0.33f;
@@ -142,11 +143,25 @@ public abstract class PlayScene3D implements GameScene {
         createPerspectives();
     }
 
+    protected abstract void setActionBindings(GameLevel gameLevel);
+
+    public void setContext(GameContext context) {
+        this.context = requireNonNull(context);
+    }
+
     public void setUI(GameUI ui) {
         this.ui = requireNonNull(ui);
         pickerGameOverMessages = RandomTextPicker.fromBundle(ui.localizedTexts(), "game.over");
         //TODO reconsider this
         replaceScores3D();
+    }
+
+    public Optional<GameLevel3D> level3D() {
+        return Optional.ofNullable(gameLevel3D);
+    }
+
+    public ObjectProperty<PerspectiveID> perspectiveIDProperty() {
+        return perspectiveID;
     }
 
     @Override
@@ -164,10 +179,6 @@ public abstract class PlayScene3D implements GameScene {
         return context;
     }
 
-    public void setContext(GameContext context) {
-        this.context = context;
-    }
-
     @Override
     public GameUI ui() {
         return ui;
@@ -177,16 +188,6 @@ public abstract class PlayScene3D implements GameScene {
     public ActionBindingsManager actionBindings() {
         return actionBindings;
     }
-
-    public Optional<GameLevel3D> level3D() {
-        return Optional.ofNullable(gameLevel3D);
-    }
-
-    public ObjectProperty<PerspectiveID> perspectiveIDProperty() {
-        return perspectiveID;
-    }
-
-    protected abstract void setActionBindings(GameLevel gameLevel);
 
     @Override
     public Optional<GameUI_ContextMenu> supplyContextMenu(Game game) {
@@ -256,21 +257,21 @@ public abstract class PlayScene3D implements GameScene {
 
     @Override
     public void update(Game game) {
-        final GameLevel gameLevel = game.level();
-        if (gameLevel == null) {
-            // Scene is already updated 2 ticks before the game level gets created!
-            Logger.info("Tick #{}: Game level not yet created, update ignored", ui.clock().tickCount());
+        final long tick = ui.clock().tickCount();
+        // Scene is already updated 2 ticks before the game level gets created!
+        if (game.optGameLevel().isEmpty()) {
+            Logger.info("Tick #{}: Game level not yet created, update ignored", tick);
             return;
         }
         if (gameLevel3D == null) {
-            Logger.info("Tick #{}: 3D game level not yet created", ui.clock().tickCount());
+            Logger.info("Tick #{}: 3D game level not yet created", tick);
             return;
         }
-        soundManager().setEnabled(!gameLevel.isDemoLevel());
         gameLevel3D.update();
         updateCamera();
         updateHUD(game);
-        updateSound(gameLevel, game.control().state());
+        soundManager().setEnabled(!game.level().isDemoLevel());
+        updateSound(game.level());
     }
 
     @Override
@@ -300,7 +301,7 @@ public abstract class PlayScene3D implements GameScene {
         gameLevel3D.energizers3D().forEach(energizer3D ->
                 energizer3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(energizer3D.tile())));
 
-        final StateMachine.State<?> state = context().currentGame().control().state();
+        final StateMachine.State<?> state = game.control().state();
         if (state.matches(StateName.HUNTING, StateName.EATING_GHOST)) { //TODO check this
             gameLevel3D.energizers3D().stream()
                 .filter(energizer3D -> energizer3D.shape().isVisible())
@@ -323,7 +324,11 @@ public abstract class PlayScene3D implements GameScene {
 
     @Override
     public void onBonusActivated(GameEvent event) {
-        event.game().level().optBonus().ifPresent(bonus -> {
+        if (gameLevel3D == null) {
+            Logger.error("No game level3D exists!");
+            return;
+        }
+        event.game().optGameLevel().flatMap(GameLevel::optBonus).ifPresent(bonus -> {
             gameLevel3D.updateBonus3D(bonus);
             soundManager().loop(SoundID.BONUS_ACTIVE);
         });
@@ -331,7 +336,11 @@ public abstract class PlayScene3D implements GameScene {
 
     @Override
     public void onBonusEaten(GameEvent event) {
-        event.game().level().optBonus().ifPresent(_ -> {
+        if (gameLevel3D == null) {
+            Logger.error("No game level3D exists!");
+            return;
+        }
+        event.game().optGameLevel().flatMap(GameLevel::optBonus).ifPresent(_ -> {
             gameLevel3D.bonus3D().ifPresent(Bonus3D::showEaten);
             soundManager().stop(SoundID.BONUS_ACTIVE);
             soundManager().play(SoundID.BONUS_EATEN);
@@ -340,17 +349,21 @@ public abstract class PlayScene3D implements GameScene {
 
     @Override
     public void onBonusExpires(GameEvent event) {
-        event.game().level().optBonus().ifPresent(_ -> {
+        if (gameLevel3D == null) {
+            Logger.error("No game level3D exists!");
+            return;
+        }
+        event.game().optGameLevel().flatMap(GameLevel::optBonus).ifPresent(_ -> {
             gameLevel3D.bonus3D().ifPresent(Bonus3D::expire);
             soundManager().stop(SoundID.BONUS_ACTIVE);
         });
     }
 
     @Override
-    public void onGameStateChange(GameStateChangeEvent e) {
-        final Game game = e.game();
-        final StateMachine.State<Game> state = e.newState();
-        if (state instanceof TestState) {
+    public void onGameStateChange(GameStateChangeEvent changeEvent) {
+        final Game game = changeEvent.game();
+        final StateMachine.State<Game> newState = changeEvent.newState();
+        if (newState instanceof TestState) {
             game.optGameLevel().ifPresent(level -> {
                 replaceGameLevel3D(level);
                 showLevelTestMessage(level);
@@ -358,27 +371,27 @@ public abstract class PlayScene3D implements GameScene {
             });
         }
         else {
-            if (state.matches(StateName.HUNTING)) {
+            if (newState.matches(StateName.HUNTING)) {
                 gameLevel3D.onHuntingStart();
             }
-            else if (state.matches(StateName.PACMAN_DYING)) {
-                gameLevel3D.onPacManDying(state);
+            else if (newState.matches(StateName.PACMAN_DYING)) {
+                gameLevel3D.onPacManDying(newState);
             }
-            else if (state.matches(StateName.EATING_GHOST)) {
+            else if (newState.matches(StateName.EATING_GHOST)) {
                 gameLevel3D.onEatingGhost();
             }
-            else if (state.matches(StateName.LEVEL_COMPLETE)) {
-                gameLevel3D.onLevelComplete(state, perspectiveID);
+            else if (newState.matches(StateName.LEVEL_COMPLETE)) {
+                gameLevel3D.onLevelComplete(newState, perspectiveID);
             }
-            else if (state.matches(StateName.GAME_OVER)) {
-                gameLevel3D.onGameOver(state);
-                boolean inOneOf4Cases = randomInt(0, 1000) < 250;
-                String message = pickerGameOverMessages.nextText();
-                if (!game.level().isDemoLevel() && inOneOf4Cases) {
+            else if (newState.matches(StateName.GAME_OVER)) {
+                gameLevel3D.onGameOver(newState);
+                final boolean showMessage = randomInt(0, 1000) < 250;
+                if (!game.level().isDemoLevel() && showMessage) {
+                    final String message = pickerGameOverMessages.nextText();
                     ui.showFlashMessage(Duration.seconds(2.5), message);
                 }
             }
-            else if (state.matches(StateName.STARTING_GAME_OR_LEVEL)) {
+            else if (newState.matches(StateName.STARTING_GAME_OR_LEVEL)) {
                 if (gameLevel3D != null) {
                     gameLevel3D.onStartingGame();
                 } else {
@@ -623,34 +636,36 @@ public abstract class PlayScene3D implements GameScene {
         }
     }
 
-    protected void updateSound(GameLevel gameLevel, StateMachine.State<Game> state) {
-        if (!soundManager().isEnabled()) return;
-        if (state.matches(StateName.HUNTING)) {
-            updateSiren(gameLevel);
-            updateGhostSounds(gameLevel.pac(), gameLevel.ghosts());
+    protected void updateSound(GameLevel level) {
+        if (!soundManager().isEnabled()) {
+            return;
+        }
+        if (level.game().control().state().matches(StateName.HUNTING)) {
+            updateSiren(level);
+            updateGhostSounds(level.pac(), level.ghosts());
         }
     }
 
-    protected void showLevelTestMessage(GameLevel gameLevel) {
-        WorldMap worldMap = gameLevel.worldMap();
-        double x = worldMap.numCols() * HTS;
-        double y = (worldMap.numRows() - 2) * TS;
-        gameLevel3D.showAnimatedMessage("LEVEL %d (TEST)".formatted(gameLevel.number()), 5, x, y);
+    protected void showLevelTestMessage(GameLevel level) {
+        final WorldMap worldMap = level.worldMap();
+        final double x = worldMap.numCols() * HTS;
+        final double y = (worldMap.numRows() - 2) * TS;
+        gameLevel3D.showAnimatedMessage("LEVEL %d (TEST)".formatted(level.number()), 5, x, y);
     }
 
     protected void playSubSceneFadingInAnimation() {
+        final var fadeInEffect = new Timeline(
+            new KeyFrame(Duration.seconds(FADE_IN_SECONDS),
+                new KeyValue(subScene.fillProperty(), SCENE_FILL_BRIGHT, Interpolator.LINEAR))
+        );
         subScene.setFill(SCENE_FILL_DARK);
-        float fadingInSec = 3;
         new SequentialTransition(
             doNow(() -> {
                 currentPerspective().ifPresent(perspective -> perspective.attach(camera));
                 gameLevel3D.setVisible(true);
                 scores3D.setVisible(true);
             }),
-            new Timeline(
-                new KeyFrame(Duration.seconds(fadingInSec),
-                    new KeyValue(subScene.fillProperty(), SCENE_FILL_BRIGHT, Interpolator.LINEAR))
-            )
+            fadeInEffect
         ).play();
     }
 
@@ -662,12 +677,9 @@ public abstract class PlayScene3D implements GameScene {
     }
 
     protected void showReadyMessage(GameLevel level) {
-        final Optional<House> optHouse = level.worldMap().terrainLayer().optHouse();
-        if (optHouse.isPresent()) {
-            final Vector2f messagePosition = optHouse.get().centerPositionUnderHouse();
-            gameLevel3D.showAnimatedMessage("READY!", DISPLAY_SECONDS_READY_MESSAGE, messagePosition.x(), messagePosition.y());
-        } else {
-            Logger.error("Cannot display level READY message: no house found in this game level! WTF?");
-        }
+        level.worldMap().terrainLayer().optHouse().ifPresentOrElse(house -> {
+            final Vector2f center = house.centerPositionUnderHouse();
+            gameLevel3D.showAnimatedMessage("READY!", READY_MESSAGE_DISPLAY_SECONDS, center.x(), center.y());
+        }, () -> Logger.error("Cannot display READY message: no house in this game level! WTF?"));
     }
 }

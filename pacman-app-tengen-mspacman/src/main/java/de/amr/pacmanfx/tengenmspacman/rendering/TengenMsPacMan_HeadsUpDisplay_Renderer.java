@@ -54,21 +54,25 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
 
     @Override
     public void draw(HeadsUpDisplay hud, Game game, GameScene2D scene) {
+        requireNonNull(hud);
         requireNonNull(game);
         requireNonNull(scene);
 
-        final Vector2i sceneSize = scene.unscaledSize();
-        final var tengenGame = (TengenMsPacMan_GameModel) game;
-        final TengenMsPacMan_HeadsUpDisplay tengenHUD = tengenGame.hud();
-
+        if (!(hud instanceof TengenMsPacMan_HeadsUpDisplay tengenHUD)) {
+            return;
+        }
+        if (!(game instanceof TengenMsPacMan_GameModel tengenGame)) {
+            return;
+        }
         if (!hud.isVisible()) return;
 
         ctx.save();
         ctx.translate(0, scaled(offsetY));
 
         if (hud.isScoreVisible()) {
-            final long tick = scene.ui().clock().tickCount();
-            drawScore(game.score(), tick, arcadeFont8());
+            // blink frequency = 1Hz (30 ticks on, 30 ticks off)
+            final boolean on = scene.ui().clock().tickCount() % 60 < 30;
+            drawScore(game.score(), on, arcadeFont8());
 
             final Score highScore = game.highScore();
             Color color = SCORE_TEXT_COLOR;
@@ -78,13 +82,17 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
             drawHighScore(highScore, arcadeFont8(), color);
         }
 
+        final int counterY = scene.unscaledSize().y() - TS;
+
         if (hud.isLivesCounterVisible()) {
-            drawLivesCounter(tengenGame, tengenHUD, sceneSize.y() - TS);
+            drawLivesCounter(tengenGame, tengenHUD, counterY);
         }
 
-        if (hud.isLevelCounterVisible() && game.optGameLevel().isPresent()) {
-            drawLevelCounter(game.level(), tengenHUD, sceneSize.y() - TS);
-        }
+        game.optGameLevel().ifPresent(level -> {
+            if (tengenHUD.isLevelCounterVisible()) {
+                drawLevelCounter(level, tengenHUD, counterY);
+            }
+        });
 
         if (tengenHUD.gameOptionsVisible()) {
             drawGameOptions(tengenGame.mapCategory(), tengenGame.difficulty(), tengenGame.pacBooster(), TS(16), TS(2.5f));
@@ -93,9 +101,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
         ctx.restore();
     }
 
-    private void drawScore(Score score, long tick, Font font) {
-        // blink frequency=1Hz (30 ticks on, 30 ticks off)
-        final boolean on = tick % 60 < 30;
+    private void drawScore(Score score, boolean on, Font font) {
         if (on) {
             fillText("1UP", SCORE_TEXT_COLOR, font, TS(4), TS(1));
         }
@@ -108,9 +114,9 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
     }
 
     private void drawLivesCounter(Game game, TengenMsPacMan_HeadsUpDisplay hud, float y) {
-        RectShort sprite = spriteSheet().sprite(SpriteID.LIVES_COUNTER_SYMBOL);
+        final RectShort symbolSprite = spriteSheet().sprite(SpriteID.LIVES_COUNTER_SYMBOL);
         for (int i = 0; i < hud.visibleLifeCount(); ++i) {
-            drawSprite(sprite, TS(4 + i * 2), y, true);
+            drawSprite(symbolSprite, TS(4 + i * 2), y, true);
         }
         if (game.lifeCount() > game.hud().maxLivesDisplayed()) {
             fillText("(%d)".formatted(game.lifeCount()), nesColor(0x28), totalLivesFont.get(), TS(14), y + TS);
@@ -133,10 +139,11 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
         }
     }
 
-    // this is also used by the 3D scene
+    // These methods are also used by the 3D scene, so make them public:
+
     public void drawLevelNumberBox(int number, double x, double y) {
         drawSprite(spriteSheet().sprite(SpriteID.LEVEL_NUMBER_BOX), x, y, true);
-        int tens = number / 10, ones = number % 10;
+        final int tens = number / 10, ones = number % 10;
         if (tens > 0) {
             drawSprite(spriteSheet().digitSprite(tens), x + 2, y + 2, true);
         }
@@ -144,20 +151,20 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
     }
 
     public void drawGameOptions(MapCategory category, Difficulty difficulty, PacBooster booster, double centerX, double y) {
-        RectShort categorySprite = switch (requireNonNull(category)) {
+        final RectShort categorySprite = switch (category) {
             case BIG     -> spriteSheet().sprite(SpriteID.INFO_CATEGORY_BIG);
             case MINI    -> spriteSheet().sprite(SpriteID.INFO_CATEGORY_MINI);
             case STRANGE -> spriteSheet().sprite(SpriteID.INFO_CATEGORY_STRANGE);
             case ARCADE  -> RectShort.ZERO;
         };
-        RectShort difficultySprite = switch (requireNonNull(difficulty)) {
+        final RectShort difficultySprite = switch (difficulty) {
             case EASY   -> spriteSheet().sprite(SpriteID.INFO_DIFFICULTY_EASY);
             case HARD   -> spriteSheet().sprite(SpriteID.INFO_DIFFICULTY_HARD);
             case CRAZY  -> spriteSheet().sprite(SpriteID.INFO_DIFFICULTY_CRAZY);
             case NORMAL -> RectShort.ZERO;
         };
         drawSpriteCentered(centerX, y, spriteSheet().sprite(SpriteID.INFO_FRAME));
-        if (requireNonNull(booster) != PacBooster.OFF) {
+        if (booster != PacBooster.OFF) {
             drawSpriteCentered(centerX - TS(5.5f), y, spriteSheet().sprite(SpriteID.INFO_BOOSTER));
         }
         drawSpriteCentered(centerX, y, difficultySprite);
