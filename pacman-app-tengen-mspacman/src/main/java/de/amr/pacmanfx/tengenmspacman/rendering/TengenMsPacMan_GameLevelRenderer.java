@@ -14,8 +14,10 @@ import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.model.world.House;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapPropertyName;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_MapRepository;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
+import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
@@ -27,6 +29,7 @@ import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.nesColor;
 import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel.*;
+import static de.amr.pacmanfx.tengenmspacman.rendering.NonArcadeMapsSpriteSheet.MazeID.MAZE32_ANIMATED;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
@@ -50,7 +53,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         // store the maze sprite set with the correct colors for this level in the map configuration:
         if (!worldMap.hasConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MAZE_SPRITE_SET)) {
             final int numFlashes = level.numFlashes();
-            final MazeSpriteSet mazeSpriteSet = uiConfig.createMazeSpriteSet(worldMap, numFlashes);
+            final MazeSpriteSet mazeSpriteSet = TengenMsPacMan_MapRepository.INSTANCE.createMazeSpriteSet(worldMap, numFlashes);
             worldMap.setConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MAZE_SPRITE_SET, mazeSpriteSet);
             Logger.debug("Maze sprite set created: {}", mazeSpriteSet);
         }
@@ -62,11 +65,11 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         applyLevelSettings(level, info);
         if (info.getBoolean(CommonRenderInfoKey.MAZE_BRIGHT)) {
             final int flashingIndex = info.get(CommonRenderInfoKey.MAZE_FLASHING_INDEX, Integer.class);
-            uiConfig.configureHighlightedMazeRenderInfo(info, level, flashingIndex);
+            configureHighlightedMazeRenderInfo(info, level, flashingIndex);
         } else {
             final long tick = info.get(CommonRenderInfoKey.TICK, Long.class);
             final MapCategory mapCategory = info.get(TengenMsPacMan_UIConfig.ConfigKey.MAP_CATEGORY, MapCategory.class);
-            uiConfig.configureNormalMazeRenderInfo(info, mapCategory, worldMap, tick);
+            configureNormalMazeRenderInfo(info, mapCategory, worldMap, tick);
         }
         final Image mazeImage = info.get(CommonRenderInfoKey.MAZE_IMAGE, Image.class);
         final RectShort mazeSprite = info.get(CommonRenderInfoKey.MAZE_SPRITE, RectShort.class);
@@ -202,5 +205,34 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
             halfMargin + scaled(tile.x() * TS),
             halfMargin + scaled(tile.y() * TS - HTS),
             overPaintSize, overPaintSize);
+    }
+
+    private void configureHighlightedMazeRenderInfo(RenderInfo info, GameLevel gameLevel, int frame) {
+        final WorldMap worldMap = gameLevel.worldMap();
+        final MazeSpriteSet mazeSpriteSet = worldMap.getConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MAZE_SPRITE_SET);
+        final ColoredSpriteImage flashingMazeSprite = mazeSpriteSet.flashingMazeImages().get(frame);
+        info.put(CommonRenderInfoKey.MAZE_IMAGE, flashingMazeSprite.spriteSheetImage());
+        info.put(CommonRenderInfoKey.MAZE_SPRITE, flashingMazeSprite.sprite());
+    }
+
+    private void configureNormalMazeRenderInfo(RenderInfo info, MapCategory mapCategory, WorldMap worldMap, long tick) {
+        final int mapNumber = worldMap.getConfigValue(GameUI_Config.ConfigKey.MAP_NUMBER);
+        final MazeSpriteSet mazeSpriteSet = worldMap.getConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MAZE_SPRITE_SET);
+        info.put(CommonRenderInfoKey.MAZE_IMAGE, mazeSpriteSet.mazeImage().spriteSheetImage());
+        if (mapCategory == MapCategory.STRANGE && mapNumber == 15) {
+            final int spriteIndex = strangeMap15AnimationFrame(tick);
+            info.put(CommonRenderInfoKey.MAZE_SPRITE, NonArcadeMapsSpriteSheet.INSTANCE.spriteSequence(MAZE32_ANIMATED)[spriteIndex]);
+        } else {
+            info.put(CommonRenderInfoKey.MAZE_SPRITE, mazeSpriteSet.mazeImage().sprite());
+        }
+    }
+
+    /**
+     * Strange map #15 (maze #32): psychedelic animation:
+     * Frame pattern: (00000000 11111111 22222222 11111111)+, numFrames = 4, frameDuration = 8
+     */
+    private int strangeMap15AnimationFrame(long tick) {
+        final long block = (tick % 32) / 8;
+        return (int) (block < 3 ? block : 1);
     }
 }
