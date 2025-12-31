@@ -37,7 +37,6 @@ public class SoundManager implements Disposable {
     private MediaPlayer voicePlayer;
     private final PauseTransition voiceDelay = new PauseTransition();
 
-    private int currentSirenNumber;
     private SirenPlayer sirenPlayer;
 
     public SoundManager() {
@@ -57,7 +56,6 @@ public class SoundManager implements Disposable {
         map.clear();
         voicePlayer = null;
         sirenPlayer = null;
-        currentSirenNumber = 0;
     }
 
     public MediaPlayer mediaPlayer(Object key) {
