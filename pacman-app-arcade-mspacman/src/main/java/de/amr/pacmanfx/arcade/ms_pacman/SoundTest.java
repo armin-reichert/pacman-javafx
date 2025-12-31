@@ -38,19 +38,19 @@ public class SoundTest implements ResourceManager {
     private void runAllTests(double volume, double rate) {
         timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(SINGLE_TEST_DURATION_SECONDS), _ -> sirenPlayer.ensureSirenPlaying(1, volume)));
         timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(2* SINGLE_TEST_DURATION_SECONDS), _ -> {
-            sirenPlayer.stopSiren(1);
+            sirenPlayer.stopCurrentSiren();
             sirenPlayer.ensureSirenPlaying(2, volume, rate);
         }));
         timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(3* SINGLE_TEST_DURATION_SECONDS), _ -> {
-            sirenPlayer.stopSiren(2);
+            sirenPlayer.stopCurrentSiren();
             sirenPlayer.ensureSirenPlaying(3, volume, rate);
         }));
         timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(4* SINGLE_TEST_DURATION_SECONDS), _ -> {
-            sirenPlayer.stopSiren(3);
+            sirenPlayer.stopCurrentSiren();
             sirenPlayer.ensureSirenPlaying(4, volume, rate);
         }));
         timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(5* SINGLE_TEST_DURATION_SECONDS), _ -> {
-            sirenPlayer.stopSiren(4);
+            sirenPlayer.stopCurrentSiren();
             Platform.exit();
         }));
         timeline.play();

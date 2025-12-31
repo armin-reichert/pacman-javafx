@@ -266,20 +266,15 @@ public class SoundManager implements Disposable {
             Logger.error("No sirens registered");
             return;
         }
-        if (number != currentSirenNumber) {
-            sirenPlayer.stopSiren(currentSirenNumber);
-        }
-        currentSirenNumber = number;
-        sirenPlayer.ensureSirenPlaying(currentSirenNumber, volume);
-        Logger.trace("Playing siren '{}' at volume {}", currentSirenNumber, volume);
+        sirenPlayer.ensureSirenPlaying(number, volume);
     }
 
     public void stopSiren() {
-        if (currentSirenNumber != 0 && sirenPlayer != null) {
-            sirenPlayer.stopSiren(currentSirenNumber);
-            currentSirenNumber = 0;
+        if (sirenPlayer == null) {
+            Logger.error("No sirens registered");
+            return;
         }
-        else Logger.info("Cannot stop siren: player not yet created");
+        sirenPlayer.stopCurrentSiren();
     }
 
     @SuppressWarnings("unchecked")

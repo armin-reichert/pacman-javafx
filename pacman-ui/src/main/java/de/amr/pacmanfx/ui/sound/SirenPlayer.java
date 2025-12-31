@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.sound;
 
 import de.amr.pacmanfx.Validations;
 import javafx.scene.media.AudioClip;
+import org.tinylog.Logger;
 
 import java.net.URL;
 import java.util.Arrays;
@@ -15,35 +16,45 @@ public class SirenPlayer {
     private final URL[] urls;
     private final AudioClip[] clips;
 
+    private int currentSirenNumber;
+
     public SirenPlayer(URL... sirenURLArray) {
         urls = Arrays.copyOf(sirenURLArray, sirenURLArray.length);
         clips = new AudioClip[sirenURLArray.length];
-    }
-
-    public void ensureSirenPlaying(int number, double volume, double rate) {
-        final int index = number - 1;
-        if (Validations.inClosedRange(index, 0, urls.length - 1)) {
-            if (clips[index] == null) {
-                final var clip = new AudioClip(urls[index].toExternalForm());
-                clip.setCycleCount(AudioClip.INDEFINITE);
-                clip.setRate(rate);
-                clips[index] = clip;
-                clip.play(volume);
-            }
-        }
-    }
-
-    public void ensureSirenPlaying(int number, double volume) {
-        ensureSirenPlaying(number, volume, 1.0);
     }
 
     public void ensureSirenPlaying(int number) {
         ensureSirenPlaying(number, 1.0);
     }
 
-    public void stopSiren(int number) {
+    public void ensureSirenPlaying(int number, double volume) {
+        ensureSirenPlaying(number, volume, 1.0);
+    }
+
+    public void ensureSirenPlaying(int number, double volume, double rate) {
+        if (!Validations.inClosedRange(number, 1, urls.length)) {
+            Logger.error("Invalid siren number: {}", number);
+            return;
+        }
+        if (currentSirenNumber != number) {
+            if (currentSirenNumber != 0) {
+                stopCurrentSiren();
+            }
+            currentSirenNumber = number;
+        }
         final int index = number - 1;
-        if (Validations.inClosedRange(index, 0, urls.length - 1)) {
+        if (clips[index] == null) {
+            final var clip = new AudioClip(urls[index].toExternalForm());
+            clip.setCycleCount(AudioClip.INDEFINITE);
+            clip.setRate(rate);
+            clip.play(volume);
+            clips[index] = clip;
+        }
+    }
+
+    public void stopCurrentSiren() {
+        if (currentSirenNumber != 0) {
+            final int index = currentSirenNumber - 1;
             if (clips[index] != null) {
                 clips[index].stop();
                 clips[index] = null;
@@ -52,9 +63,10 @@ public class SirenPlayer {
     }
 
     public void stopSirens() {
-        for (AudioClip clip : clips) {
-            if (clip != null) {
-                clip.stop();
+        for (int i = 0; i< clips.length; i++) {
+            if (clips[i] != null) {
+                clips[i].stop();
+                clips[i] = null;
             }
         }
     }
