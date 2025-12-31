@@ -16,7 +16,6 @@ import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.actors.MsPacMan;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
@@ -229,7 +228,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 if (timer.atSecond(8)) {
                     // start demo level or show options
                     TengenMsPacMan_GameModel game = scene.context().currentGame();
-                    if (game.allOptionsHaveDefaultValue()) {
+                    if (game.allOptionsDefault()) {
                         game.setCanStartNewGame(false); // TODO check this
                         game.control().restart(GameState.STARTING_GAME_OR_LEVEL);
                     } else {

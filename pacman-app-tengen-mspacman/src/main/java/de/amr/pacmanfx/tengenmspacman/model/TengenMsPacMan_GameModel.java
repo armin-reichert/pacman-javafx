@@ -160,7 +160,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
         setGameControl(new TengenMsPacMan_GameController());
     }
 
-    public boolean allOptionsHaveDefaultValue() {
+    public boolean allOptionsDefault() {
         return pacBooster == DEFAULT_PAC_BOOSTER
             && difficulty == DEFAULT_DIFFICULTY
             && mapCategory == DEFAULT_MAP_CATEGORY

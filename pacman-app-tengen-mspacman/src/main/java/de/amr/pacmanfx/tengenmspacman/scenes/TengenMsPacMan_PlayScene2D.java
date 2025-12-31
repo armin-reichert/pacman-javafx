@@ -153,7 +153,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     public void doInit(Game game) {
         TengenMsPacMan_GameModel tengenGame = (TengenMsPacMan_GameModel) game;
         game.hud().score(true).levelCounter(true).livesCounter(true).show();
-        tengenGame.hud().gameOptions(!tengenGame.allOptionsHaveDefaultValue());
+        tengenGame.hud().gameOptions(!tengenGame.allOptionsDefault());
         updateScaling();
         dynamicCamera.enterManualMode();
         dynamicCamera.setToTopPosition();
