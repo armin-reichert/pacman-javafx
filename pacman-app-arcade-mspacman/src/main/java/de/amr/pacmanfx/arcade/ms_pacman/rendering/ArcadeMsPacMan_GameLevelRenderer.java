@@ -10,6 +10,7 @@ import de.amr.pacmanfx.model.GameLevelMessage;
 import de.amr.pacmanfx.model.GameLevelMessageType;
 import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.model.world.TerrainLayer;
+import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.scene.canvas.Canvas;
@@ -45,7 +46,7 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
     protected void drawMaze(GameLevel gameLevel, RenderInfo info) {
         final TerrainLayer terrain = gameLevel.worldMap().terrainLayer();
         final float emptySpaceOverMazePixels = TS(terrain.emptyRowsOverMaze());
-        final int colorMapIndex = gameLevel.worldMap().getConfigValue("colorMapIndex");
+        final int colorMapIndex = gameLevel.worldMap().getConfigValue(GameUI_Config.ConfigKey.COLOR_MAP_INDEX);
 
         ctx.save();
         ctx.scale(scaling(), scaling());
