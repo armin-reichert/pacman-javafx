@@ -62,6 +62,10 @@ import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config {
 
+    public enum TengenSceneID implements SceneID {
+        HALL_OF_FAME
+    }
+
     private static final ResourceManager LOCAL_RESOURCES = () -> TengenMsPacMan_UIConfig.class;
 
     public static final Set<ActionBinding> STEERING_BINDINGS = Set.of(
@@ -409,12 +413,12 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     // Game scenes
 
-    private GameScene createGameScene(Object sceneID) {
-        final GameScene gameScene = switch (sceneID) {
+    private GameScene createGameScene(SceneID sceneID) {
+        return switch (sceneID) {
             case CommonSceneID.BOOT_SCENE    -> new TengenMsPacMan_BootScene();
             case CommonSceneID.INTRO_SCENE   -> new TengenMsPacMan_IntroScene();
             case CommonSceneID.START_SCENE   -> new TengenMsPacMan_OptionsScene();
-            case CommonSceneID.HALL_OF_FAME  -> new TengenMsPacMan_CreditsScene();
+            case TengenSceneID.HALL_OF_FAME  -> new TengenMsPacMan_CreditsScene();
             case CommonSceneID.PLAY_SCENE_2D -> new TengenMsPacMan_PlayScene2D();
             case CommonSceneID.PLAY_SCENE_3D -> new TengenMsPacMan_PlayScene3D();
             case CommonSceneID.CUTSCENE_1    -> new TengenMsPacMan_CutScene1();
@@ -423,8 +427,6 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
             case CommonSceneID.CUTSCENE_4    -> new TengenMsPacMan_CutScene4();
             default -> throw new IllegalArgumentException("Illegal scene ID: " + sceneID);
         };
-        Logger.info("Created new game scene {}", gameScene);
-        return gameScene;
     }
 
     @Override
@@ -437,7 +439,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         final SceneID sceneID = switch (game.control().state()) {
             case BOOT -> CommonSceneID.BOOT_SCENE;
             case SETTING_OPTIONS_FOR_START -> CommonSceneID.START_SCENE;
-            case SHOWING_HALL_OF_FAME -> CommonSceneID.HALL_OF_FAME;
+            case SHOWING_HALL_OF_FAME -> TengenSceneID.HALL_OF_FAME;
             case INTRO -> CommonSceneID.INTRO_SCENE;
             case INTERMISSION -> {
                 if (game.optGameLevel().isEmpty()) {

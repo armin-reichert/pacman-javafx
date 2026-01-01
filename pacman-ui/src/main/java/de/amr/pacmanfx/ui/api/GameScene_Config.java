@@ -19,7 +19,6 @@ public interface GameScene_Config {
         BOOT_SCENE,
         INTRO_SCENE,
         START_SCENE,
-        HALL_OF_FAME,
         PLAY_SCENE_2D,
         PLAY_SCENE_3D,
         CUTSCENE_1,
