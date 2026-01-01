@@ -102,9 +102,9 @@ public class Arcade_BootScene2D_Renderer extends GameScene2D_Renderer implements
 
     private RectShort randomSpriteFragment() {
         double xMin = lerp(spriteRegion.getMinX(), spriteRegion.getMaxX(), randomFloat(0, 1));
-        xMin = clamp(xMin, spriteRegion.getMinX(), spriteRegion.getMaxX());
+        xMin = clamp(xMin, spriteRegion.getMinX(), spriteRegion.getMaxX() - RASTER_SIZE);
         double yMin = lerp(spriteRegion.getMinY(), spriteRegion.getMaxY(), randomFloat(0, 1));
-        yMin = clamp(yMin, spriteRegion.getMinY(), spriteRegion.getMaxY());
+        yMin = clamp(yMin, spriteRegion.getMinY(), spriteRegion.getMaxY() - RASTER_SIZE);
         return new RectShort((short) xMin, (short) yMin, RASTER_SIZE, RASTER_SIZE);
     }
 
