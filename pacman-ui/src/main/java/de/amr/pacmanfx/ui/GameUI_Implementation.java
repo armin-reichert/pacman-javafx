@@ -41,6 +41,7 @@ import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.tinylog.Logger;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -513,22 +514,28 @@ public final class GameUI_Implementation implements GameUI {
         if (config == null) {
             final Class<?> configClass = uiConfigMap.get(gameVariantName);
             try {
-                config = (GameUI_Config) configClass.getDeclaredConstructor(GameUI.class).newInstance(this);
-                // UI configuration class implements also this interface:
-                final GameScene_Config sceneConfig = (GameScene_Config) config;
-                sceneConfig.gameScenes().forEach(scene -> {
-                    if (scene instanceof GameScene2D gameScene2D) {
-                        gameScene2D.debugInfoVisibleProperty().bind(PROPERTY_DEBUG_INFO_VISIBLE);
-                    }
-                });
+                config = createGameUI_Config(configClass, prefs);
                 configByGameVariant.put(gameVariantName, config);
-            }
-            catch (Exception x) {
+            } catch (Exception x) {
                 Logger.error("Could not create UI configuration for game variant {} and configuration class {}",
                     gameVariantName, configClass);
                 throw new IllegalStateException(x);
             }
         }
+        return config;
+    }
+
+    private static GameUI_Config createGameUI_Config(Class<?> configClass, UIPreferences prefs)
+        throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException
+    {
+        var config = (GameUI_Config) configClass.getDeclaredConstructor(UIPreferences.class).newInstance(prefs);
+        // UI configuration class must also implement GameScene_Config interface
+        final GameScene_Config sceneConfig = (GameScene_Config) config;
+        sceneConfig.gameScenes().forEach(scene -> {
+            if (scene instanceof GameScene2D gameScene2D) {
+                gameScene2D.debugInfoVisibleProperty().bind(PROPERTY_DEBUG_INFO_VISIBLE);
+            }
+        });
         return config;
     }
 

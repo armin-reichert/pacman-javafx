@@ -5,12 +5,15 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.pacmanfx.lib.math.RectShort;
-import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HeadsUpDisplay;
 import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.tengenmspacman.model.*;
+import de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_CutScene1;
+import de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_CutScene2;
+import de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_CutScene3;
+import de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_CutScene4;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
@@ -36,15 +39,9 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
 
     private final ObjectProperty<Font> totalLivesFont = new SimpleObjectProperty<>(Font.font("Serif", FontWeight.BOLD, 8));
 
-    private float offsetY = 0;
-
     public TengenMsPacMan_HeadsUpDisplay_Renderer(Canvas canvas) {
         super(canvas);
         totalLivesFont.bind(scalingProperty().map(scaling -> Font.font("Serif", FontWeight.BOLD, scaling.doubleValue() * 8)));
-    }
-
-    public void setOffsetY(float offsetY) {
-        this.offsetY = offsetY;
     }
 
     @Override
@@ -58,16 +55,12 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
         requireNonNull(game);
         requireNonNull(scene);
 
-        if (!(hud instanceof TengenMsPacMan_HeadsUpDisplay tengenHUD)) {
-            return;
-        }
-        if (!(game instanceof TengenMsPacMan_GameModel tengenGame)) {
-            return;
-        }
         if (!hud.isVisible()) return;
+        if (!(hud instanceof TengenMsPacMan_HeadsUpDisplay tengenHUD)) return;
+        if (!(game instanceof TengenMsPacMan_GameModel tengenGame)) return;
 
         ctx.save();
-        ctx.translate(0, scaled(offsetY));
+        ctx.translate(0, scaled(computeOffsetY(scene)));
 
         if (hud.isScoreVisible()) {
             // blink frequency = 1Hz (30 ticks on, 30 ticks off)
@@ -99,6 +92,16 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
         }
 
         ctx.restore();
+    }
+
+    private double computeOffsetY(GameScene2D scene) {
+        return switch (scene) {
+            case TengenMsPacMan_CutScene1 ignored -> -2 * TS;
+            case TengenMsPacMan_CutScene2 ignored -> -2 * TS;
+            case TengenMsPacMan_CutScene3 ignored -> -2 * TS;
+            case TengenMsPacMan_CutScene4 ignored -> -2 * TS;
+            default -> 0;
+        };
     }
 
     private void drawScore(Score score, boolean on, Font font) {

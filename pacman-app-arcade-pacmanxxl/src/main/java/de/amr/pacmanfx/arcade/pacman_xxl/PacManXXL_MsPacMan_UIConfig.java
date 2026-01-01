@@ -62,13 +62,13 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config, GameScene_Con
     private static final ResourceManager ARCADE_MS_PACMAN_RESOURCES = () -> ArcadeMsPacMan_UIConfig.class;
     private static final ResourceManager LOCAL_RESOURCES = () -> PacManXXL_MsPacMan_UIConfig.class;
 
+    private final UIPreferences prefs;
     private final AssetMap assets = new AssetMap();
     private final Map<SceneID, GameScene> scenesByID = new HashMap<>();
     private final SoundManager soundManager = new SoundManager();
-    private final GameUI ui;
 
-    public PacManXXL_MsPacMan_UIConfig(GameUI ui) {
-        this.ui = requireNonNull(ui);
+    public PacManXXL_MsPacMan_UIConfig(UIPreferences prefs) {
+        this.prefs = requireNonNull(prefs);
     }
 
     @Override
@@ -184,7 +184,6 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config, GameScene_Con
 
     @Override
     public GameScene2D_Renderer createGameSceneRenderer(Canvas canvas, GameScene2D gameScene2D) {
-        final UIPreferences prefs = ui.preferences();
         final GameScene2D_Renderer renderer = switch (gameScene2D) {
             case Arcade_BootScene2D        ignored -> new Arcade_BootScene2D_Renderer(prefs, gameScene2D, canvas, spriteSheet());
             case ArcadeMsPacMan_IntroScene ignored -> new ArcadeMsPacMan_IntroScene_Renderer(this, prefs, gameScene2D, canvas);
@@ -264,7 +263,7 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config, GameScene_Con
     @Override
     public MsPacManBody createLivesCounterShape3D() {
         return PacManModel3DRepository.theRepository().createMsPacManBody(
-            ui.preferences().getFloat("3d.lives_counter.shape_size"),
+            prefs.getFloat("3d.lives_counter.shape_size"),
             assets.color("pac.color.head"),
             assets.color("pac.color.eyes"),
             assets.color("pac.color.palate"),

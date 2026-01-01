@@ -154,13 +154,13 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         return BLUE_SHADES[(int) (tick % 64) / 16];
     }
 
+    private final UIPreferences prefs;
     private final AssetMap assets = new AssetMap();
     private final Map<SceneID, GameScene> scenesByID = new HashMap<>();
     private final SoundManager soundManager = new SoundManager();
-    private final GameUI ui;
 
-    public TengenMsPacMan_UIConfig(GameUI ui) {
-        this.ui = requireNonNull(ui);
+    public TengenMsPacMan_UIConfig(UIPreferences prefs) {
+        this.prefs = requireNonNull(prefs);
     }
 
     @Override
@@ -285,7 +285,6 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     @Override
     public GameScene2D_Renderer createGameSceneRenderer(Canvas canvas, GameScene2D gameScene2D) {
-        final UIPreferences prefs = ui.preferences();
         final GameScene2D_Renderer renderer = switch (gameScene2D) {
             case TengenMsPacMan_BootScene ignored -> new TengenMsPacMan_BootScene_Renderer(this, prefs, gameScene2D, canvas);
             case TengenMsPacMan_IntroScene ignored -> new TengenMsPacMan_IntroScene_Renderer(this, prefs, gameScene2D, canvas);
@@ -310,19 +309,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     @Override
     public TengenMsPacMan_HeadsUpDisplay_Renderer createHUDRenderer(Canvas canvas, GameScene2D gameScene2D) {
-        if (   ui.isCurrentGameSceneID(CommonSceneID.CUTSCENE_1)
-            || ui.isCurrentGameSceneID(CommonSceneID.CUTSCENE_2)
-            || ui.isCurrentGameSceneID(CommonSceneID.CUTSCENE_3)
-            || ui.isCurrentGameSceneID(CommonSceneID.CUTSCENE_4) )
-        {
-            final var hudRenderer = new TengenMsPacMan_HeadsUpDisplay_Renderer(canvas);
-            hudRenderer.setOffsetY(-2 * TS); //TODO this is ugly
-            return gameScene2D.adaptRenderer(hudRenderer);
-        }
-        if (ui.isCurrentGameSceneID(CommonSceneID.PLAY_SCENE_2D)) {
-            return gameScene2D.adaptRenderer(new TengenMsPacMan_HeadsUpDisplay_Renderer(canvas));
-        }
-        return null;
+        return gameScene2D.adaptRenderer(new TengenMsPacMan_HeadsUpDisplay_Renderer(canvas));
     }
 
     @Override
@@ -383,7 +370,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     @Override
     public MsPacManBody createLivesCounterShape3D() {
         return PacManModel3DRepository.theRepository().createMsPacManBody(
-            ui.preferences().getFloat("3d.lives_counter.shape_size"),
+            prefs.getFloat("3d.lives_counter.shape_size"),
             assets.color("pac.color.head"),
             assets.color("pac.color.eyes"),
             assets.color("pac.color.palate"),

@@ -57,6 +57,8 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void doInit(Game game) {
+        game.hud().hide();
+
         final GameUI_Config uiConfig = ui.currentConfig();
         spriteSheet = (TengenMsPacMan_SpriteSheet) uiConfig.spriteSheet();
 

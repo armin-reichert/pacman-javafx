@@ -77,13 +77,13 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
         Color.valueOf(WORLD_MAP_COLOR_SCHEME.door()), Color.TRANSPARENT // door color change
     );
 
-    private final GameUI ui;
+    private final UIPreferences prefs;
     private final AssetMap assets = new AssetMap();
     private final SoundManager soundManager = new SoundManager();
     private final Map<SceneID, GameScene> scenesByID = new HashMap<>();
 
-    public ArcadePacMan_UIConfig(GameUI ui) {
-        this.ui = requireNonNull(ui);
+    public ArcadePacMan_UIConfig(UIPreferences prefs) {
+        this.prefs = requireNonNull(prefs);
     }
 
     @Override
@@ -199,7 +199,6 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
     public GameScene2D_Renderer createGameSceneRenderer(Canvas canvas, GameScene2D gameScene2D) {
         requireNonNull(canvas);
         requireNonNull(gameScene2D);
-        final UIPreferences prefs = ui.preferences();
         final GameScene2D_Renderer renderer = switch (gameScene2D) {
             case Arcade_BootScene2D ignored      -> new Arcade_BootScene2D_Renderer(prefs, gameScene2D, canvas, spriteSheet());
             case ArcadePacMan_IntroScene ignored -> new ArcadePacMan_IntroScene_Renderer(this, prefs, gameScene2D, canvas);
@@ -289,7 +288,7 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
     @Override
     public PacBody createLivesCounterShape3D() {
         return PacManModel3DRepository.theRepository().createPacBody(
-            ui.preferences().getFloat("3d.lives_counter.shape_size"),
+            prefs.getFloat("3d.lives_counter.shape_size"),
             assets.color("pac.color.head"),
             assets.color("pac.color.eyes"),
             assets.color("pac.color.palate")
