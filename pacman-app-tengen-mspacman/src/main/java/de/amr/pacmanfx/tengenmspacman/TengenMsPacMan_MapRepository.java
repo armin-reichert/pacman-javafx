@@ -15,50 +15,16 @@ import org.tinylog.Logger;
 
 import java.util.List;
 
+/**
+ * Provides correctly colored and flashing maze sprite sets for the Tengen NES Ms. Pac-Man port.
+ * Handles the four map categories (ARCADE, MINI, BIG, STRANGE) and their unique color schemes,
+ * including random recoloring in levels 28–31 and the animated "psychedelic" maze #32.
+ */
 public class TengenMsPacMan_MapRepository implements Disposable {
 
     public static final TengenMsPacMan_MapRepository INSTANCE = new TengenMsPacMan_MapRepository();
 
     private final MapColoringService coloringService = new MapColoringService();
-
-    private static NES_ColorScheme colorSchemeOfNonArcadeMap(NonArcadeMapsSpriteSheet.MazeID mazeID){
-        return switch (mazeID) {
-            case MAZE1           -> NES_ColorScheme._36_15_20_PINK_RED_WHITE;
-            case MAZE2           -> NES_ColorScheme._21_20_28_BLUE_WHITE_YELLOW;
-            case MAZE3           -> NES_ColorScheme._16_20_15_ORANGE_WHITE_RED;
-            case MAZE4           -> NES_ColorScheme._01_38_20_BLUE_YELLOW_WHITE;
-            case MAZE5           -> NES_ColorScheme._35_28_20_PINK_YELLOW_WHITE;
-            case MAZE6           -> NES_ColorScheme._36_15_20_PINK_RED_WHITE;
-            case MAZE7           -> NES_ColorScheme._17_20_20_BROWN_WHITE_WHITE;
-            case MAZE8           -> NES_ColorScheme._13_20_28_VIOLET_WHITE_YELLOW;
-            case MAZE9           -> NES_ColorScheme._0F_20_28_BLACK_WHITE_YELLOW;
-            case MAZE10_BIG      -> NES_ColorScheme._0F_01_20_BLACK_BLUE_WHITE;
-            case MAZE11          -> NES_ColorScheme._14_25_20_VIOLET_ROSE_WHITE;
-            case MAZE12          -> NES_ColorScheme._15_20_20_RED_WHITE_WHITE;
-            case MAZE13          -> NES_ColorScheme._1B_20_20_GREEN_WHITE_WHITE;
-            case MAZE14_BIG      -> NES_ColorScheme._28_20_2A_YELLOW_WHITE_GREEN;
-            case MAZE15          -> NES_ColorScheme._1A_20_28_GREEN_WHITE_YELLOW;
-            case MAZE16_MINI     -> NES_ColorScheme._18_20_20_KHAKI_WHITE_WHITE;
-            case MAZE17_BIG      -> NES_ColorScheme._25_20_20_ROSE_WHITE_WHITE;
-            case MAZE18          -> NES_ColorScheme._12_20_28_BLUE_WHITE_YELLOW;
-            case MAZE19_BIG      -> NES_ColorScheme._07_20_20_BROWN_WHITE_WHITE;
-            case MAZE20_BIG      -> NES_ColorScheme._15_25_20_RED_ROSE_WHITE;
-            case MAZE21_BIG      -> NES_ColorScheme._0F_20_1C_BLACK_WHITE_GREEN;
-            case MAZE22_BIG      -> NES_ColorScheme._19_20_20_GREEN_WHITE_WHITE;
-            case MAZE23_BIG      -> NES_ColorScheme._0C_20_14_GREEN_WHITE_VIOLET;
-            case MAZE24          -> NES_ColorScheme._23_20_2B_VIOLET_WHITE_GREEN;
-            case MAZE25_BIG      -> NES_ColorScheme._10_20_28_GRAY_WHITE_YELLOW;
-            case MAZE26_BIG      -> NES_ColorScheme._03_20_20_BLUE_WHITE_WHITE;
-            case MAZE27          -> NES_ColorScheme._04_20_20_VIOLET_WHITE_WHITE;
-            case MAZE28_MINI     -> NES_ColorScheme._00_2A_24_GRAY_GREEN_PINK;
-            case MAZE29          -> NES_ColorScheme._21_35_20_BLUE_PINK_WHITE;
-            case MAZE30_MINI     -> NES_ColorScheme._28_16_20_YELLOW_RED_WHITE;
-            case MAZE31          -> NES_ColorScheme._12_16_20_BLUE_RED_WHITE;
-            case MAZE32_ANIMATED -> NES_ColorScheme._15_25_20_RED_ROSE_WHITE;
-
-            default -> throw new IllegalArgumentException("Illegal non-Arcade maze ID: " + mazeID);
-        };
-    }
 
     private TengenMsPacMan_MapRepository() {}
 
@@ -225,5 +191,44 @@ public class TengenMsPacMan_MapRepository implements Disposable {
                 original, requested,
                 randomFlashColors, flashCount
         );
+    }
+
+    private NES_ColorScheme colorSchemeOfNonArcadeMap(NonArcadeMapsSpriteSheet.MazeID mazeID){
+        return switch (mazeID) {
+            case MAZE1           -> NES_ColorScheme._36_15_20_PINK_RED_WHITE;
+            case MAZE2           -> NES_ColorScheme._21_20_28_BLUE_WHITE_YELLOW;
+            case MAZE3           -> NES_ColorScheme._16_20_15_ORANGE_WHITE_RED;
+            case MAZE4           -> NES_ColorScheme._01_38_20_BLUE_YELLOW_WHITE;
+            case MAZE5           -> NES_ColorScheme._35_28_20_PINK_YELLOW_WHITE;
+            case MAZE6           -> NES_ColorScheme._36_15_20_PINK_RED_WHITE;
+            case MAZE7           -> NES_ColorScheme._17_20_20_BROWN_WHITE_WHITE;
+            case MAZE8           -> NES_ColorScheme._13_20_28_VIOLET_WHITE_YELLOW;
+            case MAZE9           -> NES_ColorScheme._0F_20_28_BLACK_WHITE_YELLOW;
+            case MAZE10_BIG      -> NES_ColorScheme._0F_01_20_BLACK_BLUE_WHITE;
+            case MAZE11          -> NES_ColorScheme._14_25_20_VIOLET_ROSE_WHITE;
+            case MAZE12          -> NES_ColorScheme._15_20_20_RED_WHITE_WHITE;
+            case MAZE13          -> NES_ColorScheme._1B_20_20_GREEN_WHITE_WHITE;
+            case MAZE14_BIG      -> NES_ColorScheme._28_20_2A_YELLOW_WHITE_GREEN;
+            case MAZE15          -> NES_ColorScheme._1A_20_28_GREEN_WHITE_YELLOW;
+            case MAZE16_MINI     -> NES_ColorScheme._18_20_20_KHAKI_WHITE_WHITE;
+            case MAZE17_BIG      -> NES_ColorScheme._25_20_20_ROSE_WHITE_WHITE;
+            case MAZE18          -> NES_ColorScheme._12_20_28_BLUE_WHITE_YELLOW;
+            case MAZE19_BIG      -> NES_ColorScheme._07_20_20_BROWN_WHITE_WHITE;
+            case MAZE20_BIG      -> NES_ColorScheme._15_25_20_RED_ROSE_WHITE;
+            case MAZE21_BIG      -> NES_ColorScheme._0F_20_1C_BLACK_WHITE_GREEN;
+            case MAZE22_BIG      -> NES_ColorScheme._19_20_20_GREEN_WHITE_WHITE;
+            case MAZE23_BIG      -> NES_ColorScheme._0C_20_14_GREEN_WHITE_VIOLET;
+            case MAZE24          -> NES_ColorScheme._23_20_2B_VIOLET_WHITE_GREEN;
+            case MAZE25_BIG      -> NES_ColorScheme._10_20_28_GRAY_WHITE_YELLOW;
+            case MAZE26_BIG      -> NES_ColorScheme._03_20_20_BLUE_WHITE_WHITE;
+            case MAZE27          -> NES_ColorScheme._04_20_20_VIOLET_WHITE_WHITE;
+            case MAZE28_MINI     -> NES_ColorScheme._00_2A_24_GRAY_GREEN_PINK;
+            case MAZE29          -> NES_ColorScheme._21_35_20_BLUE_PINK_WHITE;
+            case MAZE30_MINI     -> NES_ColorScheme._28_16_20_YELLOW_RED_WHITE;
+            case MAZE31          -> NES_ColorScheme._12_16_20_BLUE_RED_WHITE;
+            case MAZE32_ANIMATED -> NES_ColorScheme._15_25_20_RED_ROSE_WHITE;
+
+            default -> throw new IllegalArgumentException("Illegal non-Arcade maze ID: " + mazeID);
+        };
     }
 }
