@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
+import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_MapSelector;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.*;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.*;
 import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_BootScene2D_Renderer;
@@ -43,7 +44,10 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.ResourceBundle;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -54,15 +58,6 @@ import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_3D_ENABLED;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config {
-
-    public static final List<WorldMapColorScheme> WORLD_MAP_COLOR_SCHEMES = List.of(
-        new WorldMapColorScheme("ffb7ae", "ff0000", "fcb5ff", "dedeff"),
-        new WorldMapColorScheme("47b7ff", "dedeff", "fcb5ff", "ffff00"),
-        new WorldMapColorScheme("de9751", "dedeff", "fcb5ff", "ff0000"),
-        new WorldMapColorScheme("2121ff", "ffb751", "fcb5ff", "dedeff"),
-        new WorldMapColorScheme("ffb7ff", "ffff00", "fcb5ff", "00ffff"),
-        new WorldMapColorScheme("ffb7ae", "ff0000", "fcb5ff", "dedeff")
-    );
 
     private static final ResourceManager LOCAL_RESOURCES = () -> ArcadeMsPacMan_UIConfig.class;
 
@@ -143,7 +138,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     }
 
     private void createBrightMazeImages() {
-        for (int i = 0; i < WORLD_MAP_COLOR_SCHEMES.size(); ++i) {
+        for (int i = 0; i < ArcadeMsPacMan_MapSelector.WORLD_MAP_COLOR_SCHEMES.length; ++i) {
             assets.set("maze.bright.%d".formatted(i), createBrightMazeImage(i));
         }
     }
@@ -152,7 +147,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     private Image createBrightMazeImage(int index) {
         final RectShort mazeSprite = spriteSheet().spriteSequence(SpriteID.EMPTY_MAZES)[index];
         final Image mazeImage = spriteSheet().image(mazeSprite);
-        final WorldMapColorScheme colorScheme = WORLD_MAP_COLOR_SCHEMES.get(index);
+        final WorldMapColorScheme colorScheme = ArcadeMsPacMan_MapSelector.WORLD_MAP_COLOR_SCHEMES[index];
         final Map<Color, Color> colorChanges = Map.of(
                 Color.valueOf(colorScheme.wallStroke()), ARCADE_WHITE,
                 Color.valueOf(colorScheme.door()), Color.TRANSPARENT
@@ -208,7 +203,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     public WorldMapColorScheme colorScheme(WorldMap worldMap) {
         requireNonNull(worldMap);
         final int index = worldMap.getConfigValue(ConfigKey.COLOR_MAP_INDEX);
-        return WORLD_MAP_COLOR_SCHEMES.get(index);
+        return ArcadeMsPacMan_MapSelector.WORLD_MAP_COLOR_SCHEMES[index];
     }
 
     @Override

@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman.model;
 
-import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
 import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 
@@ -14,6 +14,15 @@ import java.util.List;
 import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
 
 public class ArcadeMsPacMan_MapSelector implements WorldMapSelector {
+
+    public static final WorldMapColorScheme[] WORLD_MAP_COLOR_SCHEMES = {
+        new WorldMapColorScheme("ffb7ae", "ff0000", "fcb5ff", "dedeff"),
+        new WorldMapColorScheme("47b7ff", "dedeff", "fcb5ff", "ffff00"),
+        new WorldMapColorScheme("de9751", "dedeff", "fcb5ff", "ff0000"),
+        new WorldMapColorScheme("2121ff", "ffb751", "fcb5ff", "dedeff"),
+        new WorldMapColorScheme("ffb7ff", "ffff00", "fcb5ff", "00ffff"),
+        new WorldMapColorScheme("ffb7ae", "ff0000", "fcb5ff", "dedeff")
+    };
 
     private static final String WORLD_MAP_PATH_PATTERN = "/de/amr/pacmanfx/arcade/ms_pacman/maps/mspacman_%d.world";
 
@@ -80,7 +89,6 @@ public class ArcadeMsPacMan_MapSelector implements WorldMapSelector {
         final int colorMapIndex = levelNumber <= 13 ? mapNumber - 1 : mapNumber + 1;
         worldMap.setConfigValue(GameUI_Config.ConfigKey.MAP_NUMBER, mapNumber);
         worldMap.setConfigValue(GameUI_Config.ConfigKey.COLOR_MAP_INDEX, colorMapIndex);
-        worldMap.setConfigValue(GameUI_Config.ConfigKey.COLOR_SCHEME, ArcadeMsPacMan_UIConfig.WORLD_MAP_COLOR_SCHEMES.get(colorMapIndex));
         return worldMap;
     }
 }
