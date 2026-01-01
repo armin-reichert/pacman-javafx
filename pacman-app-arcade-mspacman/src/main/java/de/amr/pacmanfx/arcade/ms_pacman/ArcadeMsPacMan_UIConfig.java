@@ -335,14 +335,14 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     private static GameScene createGameScene(SceneID sceneID) {
         requireNonNull(sceneID);
         return switch (sceneID) {
-            case BOOT_SCENE    -> new Arcade_BootScene2D();
-            case INTRO_SCENE   -> new ArcadeMsPacMan_IntroScene();
-            case START_SCENE   -> new ArcadeMsPacMan_StartScene();
-            case PLAY_SCENE_2D -> new Arcade_PlayScene2D();
-            case PLAY_SCENE_3D -> new Arcade_PlayScene3D();
-            case CUTSCENE_1    -> new ArcadeMsPacMan_CutScene1();
-            case CUTSCENE_2    -> new ArcadeMsPacMan_CutScene2();
-            case CUTSCENE_3    -> new ArcadeMsPacMan_CutScene3();
+            case CommonSceneID.BOOT_SCENE    -> new Arcade_BootScene2D();
+            case CommonSceneID.INTRO_SCENE   -> new ArcadeMsPacMan_IntroScene();
+            case CommonSceneID.START_SCENE   -> new ArcadeMsPacMan_StartScene();
+            case CommonSceneID.PLAY_SCENE_2D -> new Arcade_PlayScene2D();
+            case CommonSceneID.PLAY_SCENE_3D -> new Arcade_PlayScene3D();
+            case CommonSceneID.CUTSCENE_1    -> new ArcadeMsPacMan_CutScene1();
+            case CommonSceneID.CUTSCENE_2    -> new ArcadeMsPacMan_CutScene2();
+            case CommonSceneID.CUTSCENE_3    -> new ArcadeMsPacMan_CutScene3();
             default -> throw new IllegalArgumentException("Illegal scene ID: " + sceneID);
         };
     }
@@ -357,9 +357,9 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     public Optional<GameScene> selectGameScene(Game game) {
         requireNonNull(game);
         final SceneID sceneID = switch (game.control().state()) {
-            case BOOT -> SceneID.BOOT_SCENE;
-            case SETTING_OPTIONS_FOR_START -> SceneID.START_SCENE;
-            case INTRO -> SceneID.INTRO_SCENE;
+            case BOOT -> CommonSceneID.BOOT_SCENE;
+            case SETTING_OPTIONS_FOR_START -> CommonSceneID.START_SCENE;
+            case INTRO -> CommonSceneID.INTRO_SCENE;
             case INTERMISSION -> {
                 if (game.optGameLevel().isEmpty()) {
                     throw new IllegalStateException("Cannot determine cut scene, no game level available");
@@ -371,7 +371,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
                 yield GameScene_Config.cutSceneID(cutSceneNumber);
             }
             case CutScenesTestState testState -> GameScene_Config.cutSceneID(testState.testedCutSceneNumber);
-            default -> PROPERTY_3D_ENABLED.get() ? SceneID.PLAY_SCENE_3D : SceneID.PLAY_SCENE_2D;
+            default -> PROPERTY_3D_ENABLED.get() ? CommonSceneID.PLAY_SCENE_3D : CommonSceneID.PLAY_SCENE_2D;
         };
         final GameScene gameScene = scenesByID.computeIfAbsent(sceneID, ArcadeMsPacMan_UIConfig::createGameScene);
         return Optional.of(gameScene);

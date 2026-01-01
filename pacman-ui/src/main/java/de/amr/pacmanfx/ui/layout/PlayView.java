@@ -279,7 +279,7 @@ public class PlayView extends StackPane implements GameUI_View {
         ));
 
         miniView.visibleProperty().bind(Bindings.createObjectBinding(
-            () -> GameUI.PROPERTY_MINI_VIEW_ON.get() && ui.isCurrentGameSceneID(SceneID.PLAY_SCENE_3D),
+            () -> GameUI.PROPERTY_MINI_VIEW_ON.get() && ui.isCurrentGameSceneID(CommonSceneID.PLAY_SCENE_3D),
             GameUI.PROPERTY_MINI_VIEW_ON, currentGameScene
         ));
     }
@@ -320,7 +320,7 @@ public class PlayView extends StackPane implements GameUI_View {
     private void handleContextMenuRequest(ContextMenuEvent event) {
         contextMenu.clear();
         ui.currentGameScene().ifPresent(gameScene -> {
-            if (ui.isCurrentGameSceneID(SceneID.PLAY_SCENE_2D)) {
+            if (ui.isCurrentGameSceneID(CommonSceneID.PLAY_SCENE_2D)) {
                 contextMenu.addLocalizedTitleItem("scene_display");
                 contextMenu.addLocalizedActionItem(ACTION_TOGGLE_PLAY_SCENE_2D_3D, "use_3D_scene");
             }

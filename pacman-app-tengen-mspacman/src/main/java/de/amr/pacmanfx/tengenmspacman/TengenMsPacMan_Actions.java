@@ -10,7 +10,7 @@ import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameController.GameSt
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.scenes.SceneDisplayMode;
 import de.amr.pacmanfx.ui.action.GameAction;
-import de.amr.pacmanfx.ui.api.GameScene_Config.SceneID;
+import de.amr.pacmanfx.ui.api.GameScene_Config;
 import de.amr.pacmanfx.ui.api.GameUI;
 
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Properties.PROPERTY_JOYPAD_BINDINGS_DISPLAYED;
@@ -60,7 +60,7 @@ public interface TengenMsPacMan_Actions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            return ui.isCurrentGameSceneID(SceneID.PLAY_SCENE_2D);
+            return ui.isCurrentGameSceneID(GameScene_Config.CommonSceneID.PLAY_SCENE_2D);
         }
     };
 

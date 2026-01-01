@@ -306,16 +306,16 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     @Override
     public TengenMsPacMan_HeadsUpDisplay_Renderer createHUDRenderer(Canvas canvas, GameScene2D gameScene2D) {
-        if (   ui.isCurrentGameSceneID(SceneID.CUTSCENE_1)
-            || ui.isCurrentGameSceneID(SceneID.CUTSCENE_2)
-            || ui.isCurrentGameSceneID(SceneID.CUTSCENE_3)
-            || ui.isCurrentGameSceneID(SceneID.CUTSCENE_4) )
+        if (   ui.isCurrentGameSceneID(CommonSceneID.CUTSCENE_1)
+            || ui.isCurrentGameSceneID(CommonSceneID.CUTSCENE_2)
+            || ui.isCurrentGameSceneID(CommonSceneID.CUTSCENE_3)
+            || ui.isCurrentGameSceneID(CommonSceneID.CUTSCENE_4) )
         {
             final var hudRenderer = new TengenMsPacMan_HeadsUpDisplay_Renderer(canvas);
             hudRenderer.setOffsetY(-2 * TS); //TODO this is ugly
             return gameScene2D.adaptRenderer(hudRenderer);
         }
-        if (ui.isCurrentGameSceneID(SceneID.PLAY_SCENE_2D)) {
+        if (ui.isCurrentGameSceneID(CommonSceneID.PLAY_SCENE_2D)) {
             return gameScene2D.adaptRenderer(new TengenMsPacMan_HeadsUpDisplay_Renderer(canvas));
         }
         return null;
@@ -411,16 +411,16 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     private GameScene createGameScene(Object sceneID) {
         final GameScene gameScene = switch (sceneID) {
-            case SceneID.BOOT_SCENE    -> new TengenMsPacMan_BootScene();
-            case SceneID.INTRO_SCENE   -> new TengenMsPacMan_IntroScene();
-            case SceneID.START_SCENE   -> new TengenMsPacMan_OptionsScene();
-            case SceneID.HALL_OF_FAME  -> new TengenMsPacMan_CreditsScene();
-            case SceneID.PLAY_SCENE_2D -> new TengenMsPacMan_PlayScene2D();
-            case SceneID.PLAY_SCENE_3D -> new TengenMsPacMan_PlayScene3D();
-            case SceneID.CUTSCENE_1    -> new TengenMsPacMan_CutScene1();
-            case SceneID.CUTSCENE_2    -> new TengenMsPacMan_CutScene2();
-            case SceneID.CUTSCENE_3    -> new TengenMsPacMan_CutScene3();
-            case SceneID.CUTSCENE_4    -> new TengenMsPacMan_CutScene4();
+            case CommonSceneID.BOOT_SCENE    -> new TengenMsPacMan_BootScene();
+            case CommonSceneID.INTRO_SCENE   -> new TengenMsPacMan_IntroScene();
+            case CommonSceneID.START_SCENE   -> new TengenMsPacMan_OptionsScene();
+            case CommonSceneID.HALL_OF_FAME  -> new TengenMsPacMan_CreditsScene();
+            case CommonSceneID.PLAY_SCENE_2D -> new TengenMsPacMan_PlayScene2D();
+            case CommonSceneID.PLAY_SCENE_3D -> new TengenMsPacMan_PlayScene3D();
+            case CommonSceneID.CUTSCENE_1    -> new TengenMsPacMan_CutScene1();
+            case CommonSceneID.CUTSCENE_2    -> new TengenMsPacMan_CutScene2();
+            case CommonSceneID.CUTSCENE_3    -> new TengenMsPacMan_CutScene3();
+            case CommonSceneID.CUTSCENE_4    -> new TengenMsPacMan_CutScene4();
             default -> throw new IllegalArgumentException("Illegal scene ID: " + sceneID);
         };
         Logger.info("Created new game scene {}", gameScene);
@@ -435,10 +435,10 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     @Override
     public Optional<GameScene> selectGameScene(Game game) {
         final SceneID sceneID = switch (game.control().state()) {
-            case BOOT -> SceneID.BOOT_SCENE;
-            case SETTING_OPTIONS_FOR_START -> SceneID.START_SCENE;
-            case SHOWING_HALL_OF_FAME -> SceneID.HALL_OF_FAME;
-            case INTRO -> SceneID.INTRO_SCENE;
+            case BOOT -> CommonSceneID.BOOT_SCENE;
+            case SETTING_OPTIONS_FOR_START -> CommonSceneID.START_SCENE;
+            case SHOWING_HALL_OF_FAME -> CommonSceneID.HALL_OF_FAME;
+            case INTRO -> CommonSceneID.INTRO_SCENE;
             case INTERMISSION -> {
                 if (game.optGameLevel().isEmpty()) {
                     throw new IllegalStateException("Cannot determine cut scene, no game level available");
@@ -450,7 +450,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
                 yield GameScene_Config.cutSceneID(cutSceneNumber);
             }
             case CutScenesTestState testState -> GameScene_Config.cutSceneID(testState.testedCutSceneNumber);
-            default -> PROPERTY_3D_ENABLED.get() ? SceneID.PLAY_SCENE_3D : SceneID.PLAY_SCENE_2D;
+            default -> PROPERTY_3D_ENABLED.get() ? CommonSceneID.PLAY_SCENE_3D : CommonSceneID.PLAY_SCENE_2D;
         };
         final GameScene gameScene = scenesByID.computeIfAbsent(sceneID, this::createGameScene);
         return Optional.of(gameScene);

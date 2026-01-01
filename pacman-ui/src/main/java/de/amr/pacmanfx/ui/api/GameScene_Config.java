@@ -13,7 +13,9 @@ import java.util.stream.Stream;
 
 public interface GameScene_Config {
 
-    enum SceneID {
+    interface SceneID {}
+
+    enum CommonSceneID implements SceneID {
         BOOT_SCENE,
         INTRO_SCENE,
         START_SCENE,
@@ -28,10 +30,10 @@ public interface GameScene_Config {
 
     static SceneID cutSceneID(int n) {
         return switch (n) {
-            case 1 -> SceneID.CUTSCENE_1;
-            case 2 -> SceneID.CUTSCENE_2;
-            case 3 -> SceneID.CUTSCENE_3;
-            case 4 -> SceneID.CUTSCENE_4;
+            case 1 -> CommonSceneID.CUTSCENE_1;
+            case 2 -> CommonSceneID.CUTSCENE_2;
+            case 3 -> CommonSceneID.CUTSCENE_3;
+            case 4 -> CommonSceneID.CUTSCENE_4;
             default -> throw new IllegalArgumentException("Illegal cut scene number" + n);
         };
     }

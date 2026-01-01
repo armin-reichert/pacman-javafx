@@ -139,7 +139,7 @@ public final class GameUI_Implementation implements GameUI {
         );
 
         layoutPane.backgroundProperty().bind(Bindings.createObjectBinding(
-            () -> isCurrentGameSceneID(GameScene_Config.SceneID.PLAY_SCENE_3D)
+            () -> isCurrentGameSceneID(GameScene_Config.CommonSceneID.PLAY_SCENE_3D)
                     ? Background.fill(Gradients.Samples.random())
                     : GameUI.BACKGROUND_PAC_MAN_WALLPAPER,
             // depends on:

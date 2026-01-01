@@ -14,7 +14,7 @@ import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.test.LevelMediumTestState;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
-import de.amr.pacmanfx.ui.api.GameScene_Config.SceneID;
+import de.amr.pacmanfx.ui.api.GameScene_Config;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.layout.PlayView;
 import javafx.scene.shape.DrawMode;
@@ -127,7 +127,7 @@ public final class CommonGameActions {
         @Override
         public boolean isEnabled(GameUI ui) {
             boolean isArcadeGame = StandardGameVariant.isArcadeGameName(ui.context().gameVariantName());
-            boolean isPlayScene2D = ui.isCurrentGameSceneID(SceneID.PLAY_SCENE_2D);
+            boolean isPlayScene2D = ui.isCurrentGameSceneID(GameScene_Config.CommonSceneID.PLAY_SCENE_2D);
             return isArcadeGame && isPlayScene2D;
         }
     };
@@ -266,7 +266,7 @@ public final class CommonGameActions {
         @Override
         public void execute(GameUI ui) {
             toggle(PROPERTY_MINI_VIEW_ON);
-            if (!ui.isCurrentGameSceneID(SceneID.PLAY_SCENE_3D)) {
+            if (!ui.isCurrentGameSceneID(GameScene_Config.CommonSceneID.PLAY_SCENE_3D)) {
                 ui.showFlashMessage(ui.translated(PROPERTY_MINI_VIEW_ON.get() ? "pip_on" : "pip_off"));
             }
         }
@@ -296,7 +296,8 @@ public final class CommonGameActions {
             ui.currentGameScene().ifPresent(_ -> {
                 final Game game = ui.context().currentGame();
                 toggle(PROPERTY_3D_ENABLED);
-                if (ui.isCurrentGameSceneID(SceneID.PLAY_SCENE_2D) || ui.isCurrentGameSceneID(SceneID.PLAY_SCENE_3D)) {
+                if (ui.isCurrentGameSceneID(GameScene_Config.CommonSceneID.PLAY_SCENE_2D)
+                    || ui.isCurrentGameSceneID(GameScene_Config.CommonSceneID.PLAY_SCENE_3D)) {
                     ui.updateGameScene(true);
                     game.control().update(); //TODO needed?
                 }
