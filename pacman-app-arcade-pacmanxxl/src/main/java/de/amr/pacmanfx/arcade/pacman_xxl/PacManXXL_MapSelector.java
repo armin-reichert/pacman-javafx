@@ -30,7 +30,7 @@ import static java.util.Objects.requireNonNull;
 
 public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventListener {
 
-    public static final List<WorldMapColorScheme> WORLD_MAP_COLOR_SCHEMES = List.of(
+    public static final WorldMapColorScheme[] WORLD_MAP_COLOR_SCHEMES = {
         new WorldMapColorScheme("#359c9c", "#85e2ff", "#fcb5ff", "#feb8ae"),
         new WorldMapColorScheme("#c2b853", "#ffeace", "#fcb5ff", "#feb8ae"),
         new WorldMapColorScheme("#86669c", "#f6c4e0", "#fcb5ff", "#feb8ae"),
@@ -39,7 +39,7 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
         new WorldMapColorScheme("#c55994", "#f760c0", "#fcb5ff", "#feb8ae"),
         new WorldMapColorScheme("#12bc76", "#ade672", "#fcb5ff", "#feb8ae"),
         new WorldMapColorScheme("#5036d9", "#5f8bcf", "#fcb5ff", "#feb8ae")
-    );
+    };
 
     private final File customMapDir;
     private final ObservableList<WorldMap> customMapPrototypes = FXCollections.observableArrayList();
@@ -181,7 +181,7 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
 
         // If selected map is a built-in map, use a random color scheme to get variation
         final WorldMapColorScheme colorScheme = builtinMapPrototypes.contains(prototype)
-            ? WORLD_MAP_COLOR_SCHEMES.get(randomInt(0, WORLD_MAP_COLOR_SCHEMES.size()))
+            ? WORLD_MAP_COLOR_SCHEMES[randomInt(0, WORLD_MAP_COLOR_SCHEMES.length)]
             : WorldMapSelector.extractColorScheme(prototype);
         worldMap.setConfigValue(GameUI_Config.ConfigKey.COLOR_SCHEME, colorScheme);
         Logger.info("Map selected (mode {}): {}", selectionMode, worldMap.url());
