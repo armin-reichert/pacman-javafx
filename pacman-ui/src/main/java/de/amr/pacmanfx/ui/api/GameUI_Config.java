@@ -20,6 +20,7 @@ import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.model3D.PacBase3D;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -43,6 +44,13 @@ public interface GameUI_Config extends Disposable {
      * @return the spritesheet for this game variant
      */
     SpriteSheet<?> spriteSheet();
+
+    /**
+     * @return spritesheet region from which the Arcade boot scene takes its random content.
+     */
+    default Rectangle2D spriteRegionForArcadeBootScene() {
+        return new Rectangle2D(0, 0, spriteSheet().sourceImage().getWidth(), spriteSheet().sourceImage().getHeight());
+    }
 
     /**
      * @return the sound manager for this game variant

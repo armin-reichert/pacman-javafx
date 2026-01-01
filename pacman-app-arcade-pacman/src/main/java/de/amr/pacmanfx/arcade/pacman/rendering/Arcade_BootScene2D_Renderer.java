@@ -6,12 +6,12 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.lib.math.RectShort;
-import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.assets.UIPreferences;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_PIXELS;
@@ -20,6 +20,7 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.lerp;
 import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomFloat;
 import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.ui.api.ArcadePalette.ARCADE_WHITE;
+import static java.lang.Math.clamp;
 import static java.util.Objects.requireNonNull;
 
 public class Arcade_BootScene2D_Renderer extends GameScene2D_Renderer implements SpriteRenderer {
@@ -27,20 +28,17 @@ public class Arcade_BootScene2D_Renderer extends GameScene2D_Renderer implements
     public static final int RASTER_SIZE = 16;
 
     private final SpriteSheet<?> spriteSheet;
-    private final Vector2f minPoint;
-    private final Vector2f maxPoint;
+    private final Rectangle2D spriteRegion;
 
-    public Arcade_BootScene2D_Renderer(UIPreferences prefs, GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
+    public Arcade_BootScene2D_Renderer(UIPreferences prefs, GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet, Rectangle2D spriteRegion) {
         super(canvas);
+
+        requireNonNull(prefs);
+        requireNonNull(scene);
         this.spriteSheet = requireNonNull(spriteSheet);
+        this.spriteRegion = requireNonNull(spriteRegion);
 
         createDefaultDebugInfoRenderer(prefs, scene, canvas);
-
-        final double width = spriteSheet.sourceImage().getWidth();
-        final double height = spriteSheet.sourceImage().getHeight();
-        // ignore left half of sprite sheet image containing maze images
-        minPoint = Vector2f.of(width / 2, 0);
-        maxPoint = Vector2f.of(width - RASTER_SIZE, height - RASTER_SIZE);
     }
 
     @Override
@@ -103,10 +101,11 @@ public class Arcade_BootScene2D_Renderer extends GameScene2D_Renderer implements
     }
 
     private RectShort randomSpriteFragment() {
-        return new RectShort(
-            (int) lerp(minPoint.x(), maxPoint.x(), randomFloat(0, 1)),
-            (int) lerp(minPoint.y(), maxPoint.y(), randomFloat(0, 1)),
-            RASTER_SIZE, RASTER_SIZE);
+        double xMin = lerp(spriteRegion.getMinX(), spriteRegion.getMaxX(), randomFloat(0, 1));
+        xMin = clamp(xMin, spriteRegion.getMinX(), spriteRegion.getMaxX());
+        double yMin = lerp(spriteRegion.getMinY(), spriteRegion.getMaxY(), randomFloat(0, 1));
+        yMin = clamp(yMin, spriteRegion.getMinY(), spriteRegion.getMaxY());
+        return new RectShort((short) xMin, (short) yMin, RASTER_SIZE, RASTER_SIZE);
     }
 
     private void draw16by16Grid() {

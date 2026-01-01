@@ -39,6 +39,7 @@ import de.amr.pacmanfx.uilib.model3D.MsPacMan3D;
 import de.amr.pacmanfx.uilib.model3D.MsPacManBody;
 import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -200,6 +201,11 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     }
 
     @Override
+    public Rectangle2D spriteRegionForArcadeBootScene() {
+        return new Rectangle2D(380, 0, 204, 208);
+    }
+
+    @Override
     public WorldMapColorScheme colorScheme(WorldMap worldMap) {
         requireNonNull(worldMap);
         final int index = worldMap.getConfigValue(ConfigKey.COLOR_MAP_INDEX);
@@ -211,7 +217,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         requireNonNull(canvas);
         requireNonNull(gameScene2D);
         final GameScene2D_Renderer renderer = switch (gameScene2D) {
-            case Arcade_BootScene2D        ignored -> new Arcade_BootScene2D_Renderer(prefs, gameScene2D, canvas, spriteSheet());
+            case Arcade_BootScene2D        ignored -> new Arcade_BootScene2D_Renderer(prefs, gameScene2D, canvas, spriteSheet(), spriteRegionForArcadeBootScene());
             case ArcadeMsPacMan_IntroScene ignored -> new ArcadeMsPacMan_IntroScene_Renderer(this, prefs, gameScene2D, canvas);
             case ArcadeMsPacMan_StartScene ignored -> new ArcadeMsPacMan_StartScene_Renderer(prefs, gameScene2D, canvas);
             case Arcade_PlayScene2D        ignored -> new Arcade_PlayScene2D_Renderer(prefs, gameScene2D, canvas, spriteSheet());
