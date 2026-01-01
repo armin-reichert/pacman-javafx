@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
-import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
+import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_PacAnimationManager;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.lib.math.Direction;
@@ -13,7 +13,6 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
 
@@ -105,7 +104,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
 
     private void enterStateChasing() {
         pacMan.setMoveDir(Direction.RIGHT);
-        pacMan.playAnimation(ArcadeMsPacMan_UIConfig.AnimationID.PAC_MAN_MUNCHING);
+        pacMan.playAnimation(ArcadeMsPacMan_PacAnimationManager.AnimationID.PAC_MAN_MUNCHING);
 
         msPacMan.setMoveDir(Direction.RIGHT);
         msPacMan.playAnimation(CommonAnimationID.ANIM_PAC_MUNCHING);

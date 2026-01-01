@@ -55,8 +55,6 @@ import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config {
 
-    public enum AnimationID { PAC_MAN_MUNCHING }
-
     public static final List<WorldMapColorScheme> WORLD_MAP_COLOR_SCHEMES = List.of(
         new WorldMapColorScheme("ffb7ae", "ff0000", "fcb5ff", "dedeff"),
         new WorldMapColorScheme("47b7ff", "dedeff", "fcb5ff", "ffff00"),

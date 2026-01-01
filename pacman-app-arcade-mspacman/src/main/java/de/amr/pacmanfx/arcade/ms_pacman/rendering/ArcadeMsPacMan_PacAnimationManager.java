@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
-import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.model.actors.Actor;
@@ -14,6 +13,8 @@ import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 
 public class ArcadeMsPacMan_PacAnimationManager extends SpriteAnimationManager<SpriteID> {
+
+    public enum AnimationID { PAC_MAN_MUNCHING }
 
     public ArcadeMsPacMan_PacAnimationManager() {
         super(ArcadeMsPacMan_SpriteSheet.INSTANCE);
@@ -35,7 +36,7 @@ public class ArcadeMsPacMan_PacAnimationManager extends SpriteAnimationManager<S
                 .ticksPerFrame(8)
                 .once();
 
-            case ArcadeMsPacMan_UIConfig.AnimationID.PAC_MAN_MUNCHING -> SpriteAnimation.builder()
+            case AnimationID.PAC_MAN_MUNCHING -> SpriteAnimation.builder()
                 .fromSprites(mrPacManMunchingSprites(Direction.LEFT))
                 .ticksPerFrame(2)
                 .endless();
@@ -54,7 +55,7 @@ public class ArcadeMsPacMan_PacAnimationManager extends SpriteAnimationManager<S
         if (actor instanceof Pac pac) {
             switch (selectedID) {
                 case CommonAnimationID.ANIM_PAC_MUNCHING -> currentAnimation().setSprites(msPacManMunchingSprites(pac.moveDir()));
-                case ArcadeMsPacMan_UIConfig.AnimationID.PAC_MAN_MUNCHING -> currentAnimation().setSprites(mrPacManMunchingSprites(pac.moveDir()));
+                case AnimationID.PAC_MAN_MUNCHING -> currentAnimation().setSprites(mrPacManMunchingSprites(pac.moveDir()));
                 default -> {}
             }
         }
