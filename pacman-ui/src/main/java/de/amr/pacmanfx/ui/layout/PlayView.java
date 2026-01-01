@@ -279,7 +279,7 @@ public class PlayView extends StackPane implements GameUI_View {
         ));
 
         miniView.visibleProperty().bind(Bindings.createObjectBinding(
-            () -> GameUI.PROPERTY_MINI_VIEW_ON.get() && ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D),
+            () -> GameUI.PROPERTY_MINI_VIEW_ON.get() && ui.isCurrentGameSceneID(SceneID.PLAY_SCENE_3D),
             GameUI.PROPERTY_MINI_VIEW_ON, currentGameScene
         ));
     }
@@ -320,7 +320,7 @@ public class PlayView extends StackPane implements GameUI_View {
     private void handleContextMenuRequest(ContextMenuEvent event) {
         contextMenu.clear();
         ui.currentGameScene().ifPresent(gameScene -> {
-            if (ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_2D)) {
+            if (ui.isCurrentGameSceneID(SceneID.PLAY_SCENE_2D)) {
                 contextMenu.addLocalizedTitleItem("scene_display");
                 contextMenu.addLocalizedActionItem(ACTION_TOGGLE_PLAY_SCENE_2D_3D, "use_3D_scene");
             }
@@ -360,7 +360,7 @@ public class PlayView extends StackPane implements GameUI_View {
             useDecoratedCanvas(ui, gameScene2D);
             Vector2i gameSceneSizePx = gameScene2D.unscaledSize();
             double aspect = (double) gameSceneSizePx.x() / gameSceneSizePx.y();
-            if (ui.currentGameSceneConfig().canvasDecorated(gameScene)) {
+            if (ui.currentGameSceneConfig().sceneDecorationRequested(gameScene)) {
                 // Decorated game scene scaled-down to give space for the decoration
                 gameScene2D.scalingProperty().bind(canvasDecorator.scalingProperty().map(
                         scaling -> Math.min(scaling.doubleValue(), ui.preferences().getFloat("scene2d.max_scaling"))));

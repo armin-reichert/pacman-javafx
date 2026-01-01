@@ -80,7 +80,7 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
     private final GameUI ui;
     private final AssetMap assets = new AssetMap();
     private final SoundManager soundManager = new SoundManager();
-    private final Map<String, GameScene> scenesByID = new HashMap<>();
+    private final Map<SceneID, GameScene> scenesByID = new HashMap<>();
 
     public ArcadePacMan_UIConfig(GameUI ui) {
         this.ui = requireNonNull(ui);
@@ -313,20 +313,18 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
 
     // Game scene config
 
-    private static GameScene createGameScene(String sceneID) {
-        final GameScene gameScene = switch (sceneID) {
-            case SCENE_ID_BOOT_SCENE    -> new Arcade_BootScene2D();
-            case SCENE_ID_INTRO_SCENE   -> new ArcadePacMan_IntroScene();
-            case SCENE_ID_START_SCENE   -> new ArcadePacMan_StartScene();
-            case SCENE_ID_PLAY_SCENE_2D -> new Arcade_PlayScene2D();
-            case SCENE_ID_PLAY_SCENE_3D -> new Arcade_PlayScene3D();
-            case SCENE_ID_CUTSCENE_1_2D -> new ArcadePacMan_CutScene1();
-            case SCENE_ID_CUTSCENE_2_2D -> new ArcadePacMan_CutScene2();
-            case SCENE_ID_CUTSCENE_3_2D -> new ArcadePacMan_CutScene3();
+    private static GameScene createGameScene(SceneID sceneID) {
+        return switch (sceneID) {
+            case BOOT_SCENE    -> new Arcade_BootScene2D();
+            case INTRO_SCENE   -> new ArcadePacMan_IntroScene();
+            case START_SCENE   -> new ArcadePacMan_StartScene();
+            case PLAY_SCENE_2D -> new Arcade_PlayScene2D();
+            case PLAY_SCENE_3D -> new Arcade_PlayScene3D();
+            case CUTSCENE_1    -> new ArcadePacMan_CutScene1();
+            case CUTSCENE_2    -> new ArcadePacMan_CutScene2();
+            case CUTSCENE_3    -> new ArcadePacMan_CutScene3();
             default -> throw new IllegalArgumentException("Illegal scene ID: " + sceneID);
         };
-        Logger.info("Created new game scene {}", gameScene);
-        return gameScene;
     }
 
     @Override
@@ -335,17 +333,17 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
     }
 
     @Override
-    public boolean canvasDecorated(GameScene gameScene) {
+    public boolean sceneDecorationRequested(GameScene gameScene) {
         return true;
     }
 
     @Override
     public Optional<GameScene> selectGameScene(Game game) {
         requireNonNull(game);
-        final String sceneID = switch (game.control().state()) {
-            case BOOT -> SCENE_ID_BOOT_SCENE;
-            case SETTING_OPTIONS_FOR_START -> SCENE_ID_START_SCENE;
-            case INTRO -> SCENE_ID_INTRO_SCENE;
+        final SceneID sceneID = switch (game.control().state()) {
+            case BOOT -> SceneID.BOOT_SCENE;
+            case SETTING_OPTIONS_FOR_START -> SceneID.START_SCENE;
+            case INTRO -> SceneID.INTRO_SCENE;
             case INTERMISSION -> {
                 if (game.optGameLevel().isEmpty()) {
                     throw new IllegalStateException("Cannot determine cut scene, no game level available");
@@ -354,17 +352,17 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
                 if (cutSceneNumber == 0) {
                     throw new IllegalStateException("Cannot determine cut scene after level %d".formatted(game.level().number()));
                 }
-                yield GameScene_Config.sceneID_CutScene_N(cutSceneNumber);
+                yield GameScene_Config.cutSceneID(cutSceneNumber);
             }
-            case CutScenesTestState testState -> GameScene_Config.sceneID_CutScene_N(testState.testedCutSceneNumber);
-            default -> PROPERTY_3D_ENABLED.get() ? SCENE_ID_PLAY_SCENE_3D : SCENE_ID_PLAY_SCENE_2D;
+            case CutScenesTestState testState -> GameScene_Config.cutSceneID(testState.testedCutSceneNumber);
+            default -> PROPERTY_3D_ENABLED.get() ? SceneID.PLAY_SCENE_3D : SceneID.PLAY_SCENE_2D;
         };
         final GameScene gameScene = scenesByID.computeIfAbsent(sceneID, ArcadePacMan_UIConfig::createGameScene);
         return Optional.of(gameScene);
     }
 
     @Override
-    public boolean gameSceneHasID(GameScene gameScene, String sceneID) {
+    public boolean gameSceneHasID(GameScene gameScene, SceneID sceneID) {
         requireNonNull(gameScene);
         requireNonNull(sceneID);
         return scenesByID.get(sceneID) == gameScene;

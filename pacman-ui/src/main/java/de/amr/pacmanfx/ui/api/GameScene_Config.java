@@ -13,19 +13,27 @@ import java.util.stream.Stream;
 
 public interface GameScene_Config {
 
-    String SCENE_ID_BOOT_SCENE       = "BootScene";
-    String SCENE_ID_INTRO_SCENE      = "IntroScene";
-    String SCENE_ID_START_SCENE      = "StartScene";
-    String SCENE_ID_HALL_OF_FAME     = "HallOfFame";
-    String SCENE_ID_PLAY_SCENE_2D    = "PlayScene2D";
-    String SCENE_ID_PLAY_SCENE_3D    = "PlayScene3D";
-    String SCENE_ID_CUTSCENE_1_2D    = "CutScene_1_2D";
-    String SCENE_ID_CUTSCENE_2_2D    = "CutScene_2_2D";
-    String SCENE_ID_CUTSCENE_3_2D    = "CutScene_3_2D";
-    String SCENE_ID_CUTSCENE_4_2D    = "CutScene_4_2D";
+    enum SceneID {
+        BOOT_SCENE,
+        INTRO_SCENE,
+        START_SCENE,
+        HALL_OF_FAME,
+        PLAY_SCENE_2D,
+        PLAY_SCENE_3D,
+        CUTSCENE_1,
+        CUTSCENE_2,
+        CUTSCENE_3,
+        CUTSCENE_4
+    }
 
-    static String sceneID_CutScene_N(int number) {
-        return "CutScene_%d_2D".formatted(number);
+    static SceneID cutSceneID(int n) {
+        return switch (n) {
+            case 1 -> SceneID.CUTSCENE_1;
+            case 2 -> SceneID.CUTSCENE_2;
+            case 3 -> SceneID.CUTSCENE_3;
+            case 4 -> SceneID.CUTSCENE_4;
+            default -> throw new IllegalArgumentException("Illegal cut scene number" + n);
+        };
     }
 
     /**
@@ -47,9 +55,9 @@ public interface GameScene_Config {
 
     Stream<GameScene> gameScenes();
 
-    boolean gameSceneHasID(GameScene gameScene, String sceneID);
+    boolean gameSceneHasID(GameScene gameScene, SceneID sceneID);
 
     Optional<GameScene> selectGameScene(Game game);
 
-    boolean canvasDecorated(GameScene gameScene);
+    boolean sceneDecorationRequested(GameScene gameScene);
 }

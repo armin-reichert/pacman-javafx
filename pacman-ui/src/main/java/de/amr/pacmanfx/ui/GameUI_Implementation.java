@@ -48,7 +48,6 @@ import java.util.ResourceBundle;
 
 import static de.amr.pacmanfx.Validations.requireNonNegative;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
-import static de.amr.pacmanfx.ui.api.GameScene_Config.SCENE_ID_PLAY_SCENE_3D;
 import static java.util.Objects.requireNonNull;
 import static javafx.beans.binding.Bindings.createStringBinding;
 
@@ -140,7 +139,7 @@ public final class GameUI_Implementation implements GameUI {
         );
 
         layoutPane.backgroundProperty().bind(Bindings.createObjectBinding(
-            () -> isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D)
+            () -> isCurrentGameSceneID(GameScene_Config.SceneID.PLAY_SCENE_3D)
                     ? Background.fill(Gradients.Samples.random())
                     : GameUI.BACKGROUND_PAC_MAN_WALLPAPER,
             // depends on:
@@ -498,9 +497,9 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     @Override
-    public boolean isCurrentGameSceneID(String id) {
-        GameScene currentGameScene = playView.currentGameScene().orElse(null);
-        return currentGameScene != null && currentGameSceneConfig().gameSceneHasID(currentGameScene, id);
+    public boolean isCurrentGameSceneID(GameScene_Config.SceneID sceneID) {
+        final GameScene currentGameScene = playView.currentGameScene().orElse(null);
+        return currentGameScene != null && currentGameSceneConfig().gameSceneHasID(currentGameScene, sceneID);
     }
 
     @Override

@@ -120,9 +120,9 @@ public interface GameUI extends LocalizedTextAccessor {
     Media VOICE_AUTOPILOT_OFF = new Media(GLOBAL_RESOURCES.url("sound/voice/autopilot-off.mp3").toExternalForm());
 
     Font FONT_PAC_FONT_GOOD = GLOBAL_RESOURCES.loadFont("fonts/PacfontGood.ttf", 8);
-    Font FONT_PAC_FONT      = GLOBAL_RESOURCES.loadFont("fonts/Pacfont.ttf", 8);
+    //Font FONT_PAC_FONT      = GLOBAL_RESOURCES.loadFont("fonts/Pacfont.ttf", 8);
     Font FONT_MONOSPACED    = GLOBAL_RESOURCES.loadFont("fonts/Inconsolata_Condensed-Bold.ttf", 12);
-    Font FONT_HANDWRITING   = GLOBAL_RESOURCES.loadFont("fonts/Molle-Italic.ttf", 9);
+    //Font FONT_HANDWRITING   = GLOBAL_RESOURCES.loadFont("fonts/Molle-Italic.ttf", 9);
     Font FONT_ARCADE_8      = GLOBAL_RESOURCES.loadFont("fonts/emulogic.ttf", 8);
     Font FONT_ARCADE_6      = GLOBAL_RESOURCES.loadFont("fonts/emulogic.ttf", 6);
 
@@ -189,7 +189,7 @@ public interface GameUI extends LocalizedTextAccessor {
 
     Optional<GameScene> currentGameScene();
 
-    boolean isCurrentGameSceneID(String id);
+    boolean isCurrentGameSceneID(GameScene_Config.SceneID sceneID);
 
     void updateGameScene(boolean forceReloading);
 

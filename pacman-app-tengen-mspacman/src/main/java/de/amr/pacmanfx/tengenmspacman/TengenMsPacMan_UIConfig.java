@@ -151,7 +151,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     }
 
     private final AssetMap assets = new AssetMap();
-    private final Map<String, GameScene> scenesByID = new HashMap<>();
+    private final Map<SceneID, GameScene> scenesByID = new HashMap<>();
     private final SoundManager soundManager = new SoundManager();
     private final GameUI ui;
 
@@ -306,16 +306,16 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     @Override
     public TengenMsPacMan_HeadsUpDisplay_Renderer createHUDRenderer(Canvas canvas, GameScene2D gameScene2D) {
-        if (   ui.isCurrentGameSceneID(GameScene_Config.SCENE_ID_CUTSCENE_1_2D)
-            || ui.isCurrentGameSceneID(GameScene_Config.SCENE_ID_CUTSCENE_2_2D)
-            || ui.isCurrentGameSceneID(GameScene_Config.SCENE_ID_CUTSCENE_3_2D)
-            || ui.isCurrentGameSceneID(GameScene_Config.SCENE_ID_CUTSCENE_4_2D) )
+        if (   ui.isCurrentGameSceneID(SceneID.CUTSCENE_1)
+            || ui.isCurrentGameSceneID(SceneID.CUTSCENE_2)
+            || ui.isCurrentGameSceneID(SceneID.CUTSCENE_3)
+            || ui.isCurrentGameSceneID(SceneID.CUTSCENE_4) )
         {
             final var hudRenderer = new TengenMsPacMan_HeadsUpDisplay_Renderer(canvas);
             hudRenderer.setOffsetY(-2 * TS); //TODO this is ugly
             return gameScene2D.adaptRenderer(hudRenderer);
         }
-        if (ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_2D)) {
+        if (ui.isCurrentGameSceneID(SceneID.PLAY_SCENE_2D)) {
             return gameScene2D.adaptRenderer(new TengenMsPacMan_HeadsUpDisplay_Renderer(canvas));
         }
         return null;
@@ -409,18 +409,18 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     // Game scenes
 
-    private GameScene createGameScene(String sceneID) {
+    private GameScene createGameScene(Object sceneID) {
         final GameScene gameScene = switch (sceneID) {
-            case SCENE_ID_BOOT_SCENE    -> new TengenMsPacMan_BootScene();
-            case SCENE_ID_INTRO_SCENE   -> new TengenMsPacMan_IntroScene();
-            case SCENE_ID_START_SCENE   -> new TengenMsPacMan_OptionsScene();
-            case SCENE_ID_HALL_OF_FAME  -> new TengenMsPacMan_CreditsScene();
-            case SCENE_ID_PLAY_SCENE_2D -> new TengenMsPacMan_PlayScene2D();
-            case SCENE_ID_PLAY_SCENE_3D -> new TengenMsPacMan_PlayScene3D();
-            case SCENE_ID_CUTSCENE_1_2D -> new TengenMsPacMan_CutScene1();
-            case SCENE_ID_CUTSCENE_2_2D -> new TengenMsPacMan_CutScene2();
-            case SCENE_ID_CUTSCENE_3_2D -> new TengenMsPacMan_CutScene3();
-            case SCENE_ID_CUTSCENE_4_2D -> new TengenMsPacMan_CutScene4();
+            case SceneID.BOOT_SCENE    -> new TengenMsPacMan_BootScene();
+            case SceneID.INTRO_SCENE   -> new TengenMsPacMan_IntroScene();
+            case SceneID.START_SCENE   -> new TengenMsPacMan_OptionsScene();
+            case SceneID.HALL_OF_FAME  -> new TengenMsPacMan_CreditsScene();
+            case SceneID.PLAY_SCENE_2D -> new TengenMsPacMan_PlayScene2D();
+            case SceneID.PLAY_SCENE_3D -> new TengenMsPacMan_PlayScene3D();
+            case SceneID.CUTSCENE_1    -> new TengenMsPacMan_CutScene1();
+            case SceneID.CUTSCENE_2    -> new TengenMsPacMan_CutScene2();
+            case SceneID.CUTSCENE_3    -> new TengenMsPacMan_CutScene3();
+            case SceneID.CUTSCENE_4    -> new TengenMsPacMan_CutScene4();
             default -> throw new IllegalArgumentException("Illegal scene ID: " + sceneID);
         };
         Logger.info("Created new game scene {}", gameScene);
@@ -428,17 +428,17 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     }
 
     @Override
-    public boolean canvasDecorated(GameScene gameScene) {
+    public boolean sceneDecorationRequested(GameScene gameScene) {
         return false;
     }
 
     @Override
     public Optional<GameScene> selectGameScene(Game game) {
-        final String sceneID = switch (game.control().state()) {
-            case BOOT -> SCENE_ID_BOOT_SCENE;
-            case SETTING_OPTIONS_FOR_START -> SCENE_ID_START_SCENE;
-            case SHOWING_HALL_OF_FAME -> SCENE_ID_HALL_OF_FAME;
-            case INTRO -> SCENE_ID_INTRO_SCENE;
+        final SceneID sceneID = switch (game.control().state()) {
+            case BOOT -> SceneID.BOOT_SCENE;
+            case SETTING_OPTIONS_FOR_START -> SceneID.START_SCENE;
+            case SHOWING_HALL_OF_FAME -> SceneID.HALL_OF_FAME;
+            case INTRO -> SceneID.INTRO_SCENE;
             case INTERMISSION -> {
                 if (game.optGameLevel().isEmpty()) {
                     throw new IllegalStateException("Cannot determine cut scene, no game level available");
@@ -447,17 +447,17 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
                 if (cutSceneNumber == 0) {
                     throw new IllegalStateException("Cannot determine cut scene after level %d".formatted(game.level().number()));
                 }
-                yield GameScene_Config.sceneID_CutScene_N(cutSceneNumber);
+                yield GameScene_Config.cutSceneID(cutSceneNumber);
             }
-            case CutScenesTestState testState -> GameScene_Config.sceneID_CutScene_N(testState.testedCutSceneNumber);
-            default -> PROPERTY_3D_ENABLED.get() ? SCENE_ID_PLAY_SCENE_3D : SCENE_ID_PLAY_SCENE_2D;
+            case CutScenesTestState testState -> GameScene_Config.cutSceneID(testState.testedCutSceneNumber);
+            default -> PROPERTY_3D_ENABLED.get() ? SceneID.PLAY_SCENE_3D : SceneID.PLAY_SCENE_2D;
         };
         final GameScene gameScene = scenesByID.computeIfAbsent(sceneID, this::createGameScene);
         return Optional.of(gameScene);
     }
 
     @Override
-    public boolean gameSceneHasID(GameScene gameScene, String sceneID) {
+    public boolean gameSceneHasID(GameScene gameScene, SceneID sceneID) {
         requireNonNull(gameScene);
         requireNonNull(sceneID);
         return scenesByID.get(sceneID) == gameScene;
