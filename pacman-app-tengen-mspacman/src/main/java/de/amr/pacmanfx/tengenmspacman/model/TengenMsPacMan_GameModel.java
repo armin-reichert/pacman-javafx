@@ -149,6 +149,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
     public TengenMsPacMan_GameModel(File highScoreFile) {
         super(highScoreFile);
 
+        this.mapSelector = new TengenMsPacMan_MapSelector();
         this.hud = new TengenMsPacMan_HeadsUpDisplay();
         this.gateKeeper = new GateKeeper(); //TODO implement original logic from Tengen game
         this.automaticSteering = new RuleBasedPacSteering();
@@ -156,10 +157,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
         this.pelletPoints = 10;
         this.energizerPoints = 50;
         setCollisionStrategy(CollisionStrategy.CENTER_DISTANCE);
-
-        this.mapSelector = new TengenMsPacMan_MapSelector();
-        //this.mapSelector.loadAllMapPrototypes();
-
         setGameControl(new TengenMsPacMan_GameController());
     }
 

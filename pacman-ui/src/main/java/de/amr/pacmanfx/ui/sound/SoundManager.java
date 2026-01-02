@@ -30,7 +30,7 @@ public class SoundManager implements Disposable {
 
     private final BooleanProperty enabledProperty = new SimpleBooleanProperty(true);
 
-    private final BooleanProperty mutedProperty = new SimpleBooleanProperty(false);
+    private final BooleanProperty muteProperty = new SimpleBooleanProperty(false);
 
     private final Map<Object, Object> map = new HashMap<>();
 
@@ -40,7 +40,7 @@ public class SoundManager implements Disposable {
     private SirenPlayer sirenPlayer;
 
     public SoundManager() {
-        mutedProperty().addListener((_, _, muted) -> {
+        muteProperty().addListener((_, _, muted) -> {
             if (muted && sirenPlayer != null) {
                 sirenPlayer.stopSirens();
             }
@@ -52,7 +52,7 @@ public class SoundManager implements Disposable {
         Logger.info("Dispose sound manager: {} entries", map.size());
         stopAll();
         enabledProperty.unbind();
-        mutedProperty.unbind();
+        muteProperty.unbind();
         map.clear();
         voicePlayer = null;
         sirenPlayer = null;
@@ -88,8 +88,8 @@ public class SoundManager implements Disposable {
         var mediaPlayer = new MediaPlayer(new Media(url.toExternalForm()));
         mediaPlayer.setVolume(1.0);
         mediaPlayer.muteProperty().bind(Bindings.createBooleanBinding(
-            () -> mutedProperty().get() || !enabledProperty().get(),
-            mutedProperty(), enabledProperty()
+            () -> muteProperty().get() || !enabledProperty().get(),
+            muteProperty(), enabledProperty()
         ));
         Logger.info("Media player: key='{}', URL='{}'", key, url);
         register(key, mediaPlayer);
@@ -119,8 +119,8 @@ public class SoundManager implements Disposable {
         enabledProperty.set(enabled);
     }
 
-    public BooleanProperty mutedProperty() {
-        return mutedProperty;
+    public BooleanProperty muteProperty() {
+        return muteProperty;
     }
 
     public void loop(Object id) {
@@ -141,7 +141,7 @@ public class SoundManager implements Disposable {
 
     public void play(Object id, int repetitions) {
         requireNonNull(id);
-        if (mutedProperty.get()) {
+        if (muteProperty.get()) {
             Logger.trace("Sound '{}' not played (reason: muted)", id);
             return;
         }
@@ -220,6 +220,7 @@ public class SoundManager implements Disposable {
         }
         final Media voice = valueOfType(soundID, Media.class);
         voicePlayer = new MediaPlayer(voice);
+        voicePlayer.muteProperty().bind(muteProperty);
         if (delaySeconds > 0) {
             voicePlayer.setOnReady(() -> {
                 voiceDelay.stop();

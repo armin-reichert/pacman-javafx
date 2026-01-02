@@ -393,7 +393,7 @@ public final class GameUI_Implementation implements GameUI {
 
         GameUI_Config newConfig = config(gameVariantName);
         newConfig.init();
-        newConfig.soundManager().mutedProperty().bind(PROPERTY_MUTED);
+        newConfig.soundManager().muteProperty().bind(PROPERTY_MUTED);
 
         Image appIcon = newConfig.assets().image("app_icon");
         if (appIcon != null) {
