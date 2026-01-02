@@ -16,7 +16,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.util.Duration;
 
-import static de.amr.pacmanfx.uilib.Ufx.pauseSec;
+import static de.amr.pacmanfx.uilib.animation.AnimationSupport.pauseSec;
 import static java.util.Objects.requireNonNull;
 
 /**

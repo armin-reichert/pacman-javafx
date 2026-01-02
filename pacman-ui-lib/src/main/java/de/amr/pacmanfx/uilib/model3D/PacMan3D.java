@@ -12,7 +12,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-import static de.amr.pacmanfx.uilib.Ufx.pauseSec;
+import static de.amr.pacmanfx.uilib.animation.AnimationSupport.pauseSec;
 
 public class PacMan3D extends PacBase3D {
 

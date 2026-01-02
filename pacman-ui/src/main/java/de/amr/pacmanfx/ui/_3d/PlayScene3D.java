@@ -61,8 +61,8 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_QUIT_GAME_SCENE;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_TOGGLE_PLAY_SCENE_2D_3D;
-import static de.amr.pacmanfx.uilib.Ufx.doNow;
-import static de.amr.pacmanfx.uilib.Ufx.pauseSec;
+import static de.amr.pacmanfx.uilib.animation.AnimationSupport.doNow;
+import static de.amr.pacmanfx.uilib.animation.AnimationSupport.pauseSec;
 import static java.util.Objects.requireNonNull;
 
 /**

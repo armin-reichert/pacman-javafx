@@ -7,7 +7,6 @@ package de.amr.pacmanfx.arcade.pacman_xxl;
 import de.amr.pacmanfx.model.StandardGameVariant;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_StartPage;
-import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.widgets.Flyer;
 import javafx.scene.input.KeyEvent;
@@ -20,6 +19,7 @@ import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.uilib.animation.AnimationSupport.pauseSec;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -96,7 +96,7 @@ public class PacManXXL_StartPage implements GameUI_StartPage {
         menu.syncMenuState();
         menu.startAnimation();
 
-        Ufx.pauseSec(1, voicePlayer::play).play();
+        pauseSec(1, voicePlayer::play).play();
     }
 
     @Override

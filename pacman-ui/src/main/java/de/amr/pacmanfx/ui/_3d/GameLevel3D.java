@@ -59,7 +59,10 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
 import static de.amr.pacmanfx.ui.api.GameUI.*;
-import static de.amr.pacmanfx.uilib.Ufx.*;
+import static de.amr.pacmanfx.uilib.Ufx.colorWithOpacity;
+import static de.amr.pacmanfx.uilib.Ufx.defaultPhongMaterial;
+import static de.amr.pacmanfx.uilib.animation.AnimationSupport.doNow;
+import static de.amr.pacmanfx.uilib.animation.AnimationSupport.pauseSec;
 import static java.util.Objects.requireNonNull;
 
 /**
