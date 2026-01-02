@@ -19,6 +19,11 @@ import static de.amr.pacmanfx.model.world.WorldMapSelector.loadMapsFromModule;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.MAPS_PATH;
 import static de.amr.pacmanfx.tengenmspacman.model.MapCategory.*;
 
+/**
+ * Selects and configures the correct maze for each level in the Tengen NES Ms. Pac-Man port.
+ * Handles the complex progression across 32 levels using four map categories (ARCADE, MINI, BIG, STRANGE)
+ * with specific color schemes and random recoloring in levels 28–31.
+ */
 public class TengenMsPacMan_MapSelector implements WorldMapSelector {
 
     private List<WorldMap> arcadeMapPrototypes;
