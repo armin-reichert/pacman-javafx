@@ -14,8 +14,10 @@ import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import org.tinylog.Logger;
 
 import java.util.List;
 import java.util.Map;
@@ -24,28 +26,46 @@ import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
 
 public class ArcadePacMan_App extends Application {
 
-    static boolean USE_BUILDER = false;
-
     private static final String GAME_VARIANT_NAME = StandardGameVariant.PACMAN.name();
 
     private static final float ASPECT_RATIO = 1.2f; // 12:10 aspect ratio
-    private static final float USED_HEIGHT = 0.8f;  // 80% of available height
+    private static final float USED_HEIGHT_FRACTION = 0.8f;  // 80% of available height
 
     private GameUI ui;
 
+    @Override
+    public void start(Stage primaryStage) {
+        final double screenHeight = Screen.getPrimary().getVisualBounds().getHeight();
+        final int height = (int) Math.round(USED_HEIGHT_FRACTION * screenHeight);
+        final int width  = Math.round(ASPECT_RATIO * height);
+        final String useBuilder = getParameters().getNamed().getOrDefault("use_builder", "true");
+        try {
+            ui = Boolean.parseBoolean(useBuilder)
+                ? createUI_WithBuilder(primaryStage, width, height)
+                : createUI_WithoutBuilder(primaryStage, width, height);
+            ui.show();
+        }
+        catch (RuntimeException x) {
+            Logger.error(x);
+            Logger.error("An error occurred starting the game.");
+            Platform.exit();
+        }
+    }
+
+    @Override
+    public void stop() {
+        ui.terminate();
+    }
+
     private GameUI createUI_WithoutBuilder(Stage stage, double sceneWidth, double sceneHeight) {
-        var game = new ArcadePacMan_GameModel(THE_GAME_BOX, THE_GAME_BOX.highScoreFile(GAME_VARIANT_NAME));
+        final var game = new ArcadePacMan_GameModel(THE_GAME_BOX, THE_GAME_BOX.highScoreFile(GAME_VARIANT_NAME));
         THE_GAME_BOX.registerGame(GAME_VARIANT_NAME, game);
 
-        Map<String, Class<? extends GameUI_Config>> uiConfigMap = Map.of(
-            GAME_VARIANT_NAME, ArcadePacMan_UIConfig.class
-        );
+        final Map<String, Class<? extends GameUI_Config>> uiConfigMap = Map.of(GAME_VARIANT_NAME, ArcadePacMan_UIConfig.class);
         final var ui = new GameUI_Implementation(uiConfigMap, THE_GAME_BOX, stage, sceneWidth, sceneHeight);
 
         final var startPage = new ArcadePacMan_StartPage();
         ui.startPagesView().addStartPage(startPage);
-
-        startPage.init(ui);
         ui.startPagesView().setSelectedIndex(0);
 
         ui.dashboard().configure(List.of(
@@ -59,6 +79,7 @@ public class ArcadePacMan_App extends Application {
             DashboardID.ABOUT)
         );
 
+        startPage.init(ui);
         return ui;
     }
 
@@ -80,20 +101,5 @@ public class ArcadePacMan_App extends Application {
                 DashboardID.KEYS_LOCAL,
                 DashboardID.ABOUT)
             .build();
-    }
-
-    @Override
-    public void start(Stage primaryStage) {
-        final int height = (int) Math.round(USED_HEIGHT * Screen.getPrimary().getVisualBounds().getHeight());
-        final int width  = Math.round(ASPECT_RATIO * height);
-        ui = USE_BUILDER
-            ? createUI_WithBuilder(primaryStage, width, height)
-            : createUI_WithoutBuilder(primaryStage, width, height);
-        ui.show();
-    }
-
-    @Override
-    public void stop() {
-        ui.terminate();
     }
 }

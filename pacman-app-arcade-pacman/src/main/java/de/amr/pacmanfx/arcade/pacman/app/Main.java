@@ -1,9 +1,9 @@
 package de.amr.pacmanfx.arcade.pacman.app;
 
-import de.amr.pacmanfx.uilib.Ufx;
+import javafx.application.Application;
 
 public class Main {
-    public static void main(String[] args) {
-        Ufx.startApplication(ArcadePacMan_App.class);
+    static void main(String[] args) {
+        Application.launch(ArcadePacMan_App.class, args);
     }
 }
