@@ -17,14 +17,16 @@ import de.amr.pacmanfx.model.StandardGameVariant;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.model.test.LevelMediumTestState;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
+import de.amr.pacmanfx.tengenmspacman.InfoBoxJoypad;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.TengenMsPacMan_DashboardID;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
-import de.amr.pacmanfx.ui.dashboard.DashboardID;
+import de.amr.pacmanfx.ui.dashboard.CommonDashboardID;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Screen;
@@ -62,17 +64,17 @@ public class PacManGames3dApp extends Application {
         MS_PACMAN_XXL.name(),    PacManXXL_MsPacMan_UIConfig.class
     );
 
-    private static final DashboardID[] DASHBOARD_IDS = {
-        DashboardID.GENERAL,
-        DashboardID.GAME_CONTROL,
-        DashboardID.SETTINGS_3D,
-        DashboardID.ANIMATION_INFO,
-        DashboardID.GAME_INFO,
-        DashboardID.ACTOR_INFO,
-        DashboardID.CUSTOM_MAPS,
-        DashboardID.KEYS_GLOBAL,
-        DashboardID.KEYS_LOCAL,
-        DashboardID.ABOUT
+    private static final CommonDashboardID[] DASHBOARD_IDS = {
+        CommonDashboardID.GENERAL,
+        CommonDashboardID.GAME_CONTROL,
+        CommonDashboardID.SETTINGS_3D,
+        CommonDashboardID.ANIMATION_INFO,
+        CommonDashboardID.GAME_INFO,
+        CommonDashboardID.ACTOR_INFO,
+        CommonDashboardID.CUSTOM_MAPS,
+        CommonDashboardID.KEYS_GLOBAL,
+        CommonDashboardID.KEYS_LOCAL,
+        CommonDashboardID.ABOUT
     };
 
     private GameUI ui;
@@ -130,6 +132,10 @@ public class PacManGames3dApp extends Application {
         ui.startPagesView().setSelectedIndex(0);
 
         ui.dashboard().configure(List.of(DASHBOARD_IDS));
+        ui.dashboard().addInfoBox(
+            TengenMsPacMan_DashboardID.JOYPAD,
+            TengenMsPacMan_UIConfig.TEXT_BUNDLE.getString("infobox.joypad.title"),
+            new InfoBoxJoypad(ui));
 
         return ui;
     }

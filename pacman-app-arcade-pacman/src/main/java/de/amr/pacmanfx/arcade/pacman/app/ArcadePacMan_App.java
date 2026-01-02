@@ -12,7 +12,7 @@ import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
-import de.amr.pacmanfx.ui.dashboard.DashboardID;
+import de.amr.pacmanfx.ui.dashboard.CommonDashboardID;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Screen;
@@ -69,14 +69,14 @@ public class ArcadePacMan_App extends Application {
         ui.startPagesView().setSelectedIndex(0);
 
         ui.dashboard().configure(List.of(
-            DashboardID.GENERAL,
-            DashboardID.GAME_CONTROL,
-            DashboardID.SETTINGS_3D,
-            DashboardID.GAME_INFO,
-            DashboardID.ACTOR_INFO,
-            DashboardID.KEYS_GLOBAL,
-            DashboardID.KEYS_LOCAL,
-            DashboardID.ABOUT)
+            CommonDashboardID.GENERAL,
+            CommonDashboardID.GAME_CONTROL,
+            CommonDashboardID.SETTINGS_3D,
+            CommonDashboardID.GAME_INFO,
+            CommonDashboardID.ACTOR_INFO,
+            CommonDashboardID.KEYS_GLOBAL,
+            CommonDashboardID.KEYS_LOCAL,
+            CommonDashboardID.ABOUT)
         );
 
         startPage.init(ui);
@@ -92,14 +92,14 @@ public class ArcadePacMan_App extends Application {
             )
             .startPage(ArcadePacMan_StartPage.class, GAME_VARIANT_NAME)
             .dashboard(
-                DashboardID.GENERAL,
-                DashboardID.GAME_CONTROL,
-                DashboardID.SETTINGS_3D,
-                DashboardID.GAME_INFO,
-                DashboardID.ACTOR_INFO,
-                DashboardID.KEYS_GLOBAL,
-                DashboardID.KEYS_LOCAL,
-                DashboardID.ABOUT)
+                CommonDashboardID.GENERAL,
+                CommonDashboardID.GAME_CONTROL,
+                CommonDashboardID.SETTINGS_3D,
+                CommonDashboardID.GAME_INFO,
+                CommonDashboardID.ACTOR_INFO,
+                CommonDashboardID.KEYS_GLOBAL,
+                CommonDashboardID.KEYS_LOCAL,
+                CommonDashboardID.ABOUT)
             .build();
     }
 }

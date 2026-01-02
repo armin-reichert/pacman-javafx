@@ -37,7 +37,7 @@ public class InfoBoxReadmeFirst extends InfoBox {
 
         var btnGotIt = new Button(ui.translated("infobox.readme.got_it"));
         buttonPane.getChildren().add(btnGotIt);
-        btnGotIt.setOnAction(e -> dashboard.removeInfoBox(DashboardID.README));
+        btnGotIt.setOnAction(e -> dashboard.removeInfoBox(CommonDashboardID.README));
 
         pane.setCenter(readmeText);
         pane.setBottom(buttonPane);

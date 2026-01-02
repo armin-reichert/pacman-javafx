@@ -4,12 +4,14 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengenmspacman.app;
 
+import de.amr.pacmanfx.tengenmspacman.InfoBoxJoypad;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.TengenMsPacMan_DashboardID;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.api.GameUI;
-import de.amr.pacmanfx.ui.dashboard.DashboardID;
+import de.amr.pacmanfx.ui.dashboard.CommonDashboardID;
 import javafx.application.Application;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -38,12 +40,17 @@ public class TengenMsPacMan_App extends Application {
             )
             .startPage(TengenMsPacMan_StartPage.class, GAME_VARIANT_NAME)
             .dashboard(
-                DashboardID.GENERAL, DashboardID.GAME_CONTROL,
-                DashboardID.SETTINGS_3D,
-                DashboardID.GAME_INFO, DashboardID.ACTOR_INFO,
-                DashboardID.KEYS_GLOBAL, DashboardID.KEYS_LOCAL,
-                DashboardID.ABOUT)
+                CommonDashboardID.GENERAL,
+                CommonDashboardID.GAME_CONTROL,
+                CommonDashboardID.SETTINGS_3D,
+                CommonDashboardID.GAME_INFO,
+                CommonDashboardID.ACTOR_INFO,
+                CommonDashboardID.KEYS_GLOBAL,
+                CommonDashboardID.KEYS_LOCAL,
+                CommonDashboardID.ABOUT)
             .build();
+
+        ui.dashboard().addInfoBox(TengenMsPacMan_DashboardID.JOYPAD, "Joypad", new InfoBoxJoypad(ui));
 
         ui.show();
     }

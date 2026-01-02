@@ -30,6 +30,7 @@ import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameScene_Config;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
+import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
@@ -66,6 +67,8 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     public enum TengenSceneID implements SceneID {
         HALL_OF_FAME
     }
+
+    public enum TengenMsPacMan_DashboardID implements DashboardID { JOYPAD }
 
     public static final Joypad JOYPAD = new Joypad(GameUI.KEYBOARD);
 

@@ -8,7 +8,7 @@ import de.amr.pacmanfx.GameBox;
 import de.amr.pacmanfx.arcade.pacman_xxl.*;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.api.GameUI;
-import de.amr.pacmanfx.ui.dashboard.DashboardID;
+import de.amr.pacmanfx.ui.dashboard.CommonDashboardID;
 import javafx.application.Application;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -40,11 +40,16 @@ public class PacManXXL_App extends Application {
                     PacManXXL_MsPacMan_UIConfig.class
                 )
                 .dashboard(
-                    DashboardID.README, DashboardID.GENERAL,
-                    DashboardID.GAME_CONTROL, DashboardID.SETTINGS_3D,
-                    DashboardID.GAME_INFO, DashboardID.ACTOR_INFO, DashboardID.CUSTOM_MAPS,
-                    DashboardID.KEYS_GLOBAL, DashboardID.KEYS_LOCAL,
-                    DashboardID.ABOUT)
+                    CommonDashboardID.README,
+                    CommonDashboardID.GENERAL,
+                    CommonDashboardID.GAME_CONTROL,
+                    CommonDashboardID.SETTINGS_3D,
+                    CommonDashboardID.GAME_INFO,
+                    CommonDashboardID.ACTOR_INFO,
+                    CommonDashboardID.CUSTOM_MAPS,
+                    CommonDashboardID.KEYS_GLOBAL,
+                    CommonDashboardID.KEYS_LOCAL,
+                    CommonDashboardID.ABOUT)
             .startPage(PacManXXL_StartPage.class, PACMAN_XXL.name())
             .build();
 
