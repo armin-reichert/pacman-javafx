@@ -14,35 +14,35 @@ import javafx.scene.text.Font;
 
 public class InfoBoxJoypad extends InfoBox {
 
+    private static final ResourceManager LOCAL_RESOURCES = () -> GameUI_Implementation.class;
+    private static final Font CONTENT_FONT = Font.font("Monospace", 16);
+
     public InfoBoxJoypad(GameUI ui) {
         super(ui);
     }
 
     public void init(GameUI ui) {
-        ResourceManager rm = () -> GameUI_Implementation.class;
-        var imageNesController = new ImageView(rm.loadImage("graphics/nes-controller.jpg"));
+        final var joypad = TengenMsPacMan_UIConfig.JOYPAD.currentKeyBinding();
+        final var imageNesController = new ImageView(LOCAL_RESOURCES.loadImage("graphics/nes-controller.jpg"));
 
-        setContentTextFont(Font.font("Monospace", 16));
+        setContentTextFont(CONTENT_FONT);
 
-        final var joypadKeyBinding = TengenMsPacMan_UIConfig.JOYPAD.currentKeyBinding();
-        String indent = "  "; // Urgh
-        addDynamicLabeledValue("[SELECT]   [START]", () -> "%s%s  %s".formatted(
-            indent,
-            joypadKeyBinding.key(JoypadButton.SELECT).getDisplayText(),
-            joypadKeyBinding.key(JoypadButton.START).getDisplayText())
-        );
-        addDynamicLabeledValue("[B]  [A]", () -> "%s%s   %s".formatted(
-            indent,
-            joypadKeyBinding.key(JoypadButton.B).getDisplayText(),
-            joypadKeyBinding.key(JoypadButton.A).getDisplayText())
-        );
-        addDynamicLabeledValue("UP/DOWN/LEFT/RIGHT", () -> "%s%s  %s  %s  %s".formatted(
-            indent,
-            joypadKeyBinding.key(JoypadButton.UP).getDisplayText(),
-            joypadKeyBinding.key(JoypadButton.DOWN).getDisplayText(),
-            joypadKeyBinding.key(JoypadButton.LEFT).getDisplayText(),
-            joypadKeyBinding.key(JoypadButton.RIGHT).getDisplayText())
-        );
         addRow(imageNesController);
+        addDynamicLabeledValue("[SELECT]", () -> "%s".formatted(
+            joypad.key(JoypadButton.SELECT).getDisplayText())
+        );
+        addDynamicLabeledValue("[START]", () -> "%s".formatted(
+                joypad.key(JoypadButton.START).getDisplayText())
+        );
+        addDynamicLabeledValue("[B]  [A]", () -> "%s   %s".formatted(
+            joypad.key(JoypadButton.B).getDisplayText(),
+            joypad.key(JoypadButton.A).getDisplayText())
+        );
+        addDynamicLabeledValue("UP/DOWN/LEFT/RIGHT", () -> "%s  %s  %s  %s".formatted(
+            joypad.key(JoypadButton.UP).getDisplayText(),
+            joypad.key(JoypadButton.DOWN).getDisplayText(),
+            joypad.key(JoypadButton.LEFT).getDisplayText(),
+            joypad.key(JoypadButton.RIGHT).getDisplayText())
+        );
     }
 }

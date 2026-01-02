@@ -11,6 +11,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +31,7 @@ public class Dashboard extends VBox {
     private final Map<DashboardID, InfoBox> infoBoxMap = new LinkedHashMap<>();
 
     public Dashboard() {
-        visibleProperty().addListener((py, ov, visible) -> {
+        visibleProperty().addListener((_, _, visible) -> {
             if (visible) {
                 updateLayout();
             }
@@ -99,7 +100,18 @@ public class Dashboard extends VBox {
     }
 
     public void updateLayout() {
-        getChildren().setAll(infoBoxes().toArray(InfoBox[]::new));
+        final List<InfoBox> infoBoxes = new ArrayList<>();
+        infoBoxMap.entrySet().stream()
+            .filter(e -> e.getKey() != CommonDashboardID.README)
+            .filter(e -> e.getKey() != CommonDashboardID.ABOUT)
+            .forEach(e -> infoBoxes.add(e.getValue()));
+        if (infoBoxMap.containsKey(CommonDashboardID.README)) {
+            infoBoxes.addFirst(infoBoxMap.get(CommonDashboardID.README));
+        }
+        if (infoBoxMap.containsKey(CommonDashboardID.ABOUT)) {
+            infoBoxes.addLast(infoBoxMap.get(CommonDashboardID.ABOUT));
+        }
+        getChildren().setAll(infoBoxes.toArray(InfoBox[]::new));
     }
 
     public void showVisibleInfoBoxesOnly(boolean onlyVisible) {
