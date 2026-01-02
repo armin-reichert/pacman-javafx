@@ -6,7 +6,6 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui.api.GameUI;
 
 /**
  * The boot screen is showing some strange screen patterns and eventually  a grid.

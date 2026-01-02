@@ -12,7 +12,6 @@ import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.TestActions;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
-import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.layout.StartPagesCarousel;
 import de.amr.pacmanfx.uilib.GameClock;
@@ -42,7 +41,6 @@ import static de.amr.pacmanfx.uilib.Ufx.createImageBackground;
 public interface GameUI extends LocalizedTextAccessor {
 
     Keyboard KEYBOARD = new Keyboard();
-    Joypad JOYPAD     = new Joypad(KEYBOARD);
 
     Set<ActionBinding> CHEAT_BINDINGS = Set.of(
         new ActionBinding(CheatActions.ACTION_EAT_ALL_PELLETS,  alt(KeyCode.E)),

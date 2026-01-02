@@ -9,7 +9,6 @@ import de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_IntroScene;
 import de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_IntroScene.SceneState;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
-import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.assets.UIPreferences;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
@@ -19,8 +18,7 @@ import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Properties.PROPERTY_JOYPAD_BINDINGS_DISPLAYED;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.nesColor;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.shadeOfBlue;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_IntroScene.MARQUEE_X;
 import static de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_IntroScene.MARQUEE_Y;
 import static java.util.Objects.requireNonNull;
@@ -97,7 +95,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends GameScene2D_Renderer
         }
 
         if (PROPERTY_JOYPAD_BINDINGS_DISPLAYED.get()) {
-            drawJoypadKeyBinding(GameUI.JOYPAD.currentKeyBinding());
+            drawJoypadKeyBinding(JOYPAD.currentKeyBinding());
         }
 
         if (scene.debugInfoVisible()) {

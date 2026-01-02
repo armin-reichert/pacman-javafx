@@ -49,6 +49,7 @@ import java.util.Optional;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.ACTION_QUIT_DEMO_LEVEL;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Properties.PROPERTY_PLAY_SCENE_DISPLAY_MODE;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.JOYPAD;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
 import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel.GAME_OVER_MESSAGE_TEXT;
 import static de.amr.pacmanfx.tengenmspacman.scenes.SceneDisplayMode.SCROLLING;
@@ -135,7 +136,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
             actionBindings.useAnyBinding(TengenMsPacMan_Actions.ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, TengenMsPacMan_UIConfig.ACTION_BINDINGS);
             actionBindings.useAnyBinding(TengenMsPacMan_Actions.ACTION_TOGGLE_PAC_BOOSTER, TengenMsPacMan_UIConfig.ACTION_BINDINGS);
         }
-        GameUI.JOYPAD.setBindings(actionBindings);
+        JOYPAD.setBindings(actionBindings);
         actionBindings.activateBindings(GameUI.KEYBOARD);
     }
 

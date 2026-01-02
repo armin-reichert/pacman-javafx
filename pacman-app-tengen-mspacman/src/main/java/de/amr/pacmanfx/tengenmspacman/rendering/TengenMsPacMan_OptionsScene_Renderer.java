@@ -9,7 +9,6 @@ import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_OptionsScene;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
-import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.uilib.assets.UIPreferences;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
@@ -18,6 +17,7 @@ import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Properties.PROPERTY_JOYPAD_BINDINGS_DISPLAYED;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.JOYPAD;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.nesColor;
 import static de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_OptionsScene.*;
 import static java.util.Objects.requireNonNull;
@@ -60,7 +60,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends GameScene2D_Renderer
 
         ctx.setFont(arcadeFont8());
         if (PROPERTY_JOYPAD_BINDINGS_DISPLAYED.get()) {
-            drawJoypadKeyBinding(GameUI.JOYPAD.currentKeyBinding());
+            drawJoypadKeyBinding(JOYPAD.currentKeyBinding());
         }
 
         drawHorizontalBar(nesColor(0x20), nesColor(0x21), optionsScene.unscaledSize().x(), TS, 20);

@@ -64,7 +64,9 @@ public class Dashboard extends VBox {
             case GENERAL        -> addInfoBox(id, "infobox.general.title", new InfoBoxGeneral(ui));
             case GAME_CONTROL   -> addInfoBox(id, "infobox.game_control.title", new InfoBoxGameControl(ui));
             case GAME_INFO      -> addInfoBox(id, "infobox.game_info.title", new InfoBoxGameInfo(ui), true);
-            case JOYPAD         -> addInfoBox(id, "infobox.joypad.title", new InfoBoxJoypad(ui));
+            case JOYPAD         -> {
+//                addInfoBox(id, "infobox.joypad.title", new InfoBoxJoypad(ui));
+            }
             case KEYS_GLOBAL    -> addInfoBox(id, "infobox.keyboard_shortcuts_global.title", new InfoBoxKeyShortcutsGlobal(ui), true);
             case KEYS_LOCAL     -> addInfoBox(id, "infobox.keyboard_shortcuts_local.title", new InfoBoxKeyShortcutsLocal(ui));
             case README         -> addInfoBox(id, "infobox.readme.title", new InfoBoxReadmeFirst(ui));

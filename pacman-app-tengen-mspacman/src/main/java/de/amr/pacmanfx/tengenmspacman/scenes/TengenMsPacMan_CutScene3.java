@@ -19,11 +19,11 @@ import de.amr.pacmanfx.tengenmspacman.model.actors.PacMan;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
 
 import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.JOYPAD;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_LET_GAME_STATE_EXPIRE;
 
@@ -87,7 +87,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
             hud.gameOptions(false).score(false).levelCounter(true).livesCounter(false).show();
         }
 
-        actionBindings.setKeyCombination(ACTION_LET_GAME_STATE_EXPIRE, GameUI.JOYPAD.key(JoypadButton.START));
+        actionBindings.setKeyCombination(ACTION_LET_GAME_STATE_EXPIRE, JOYPAD.key(JoypadButton.START));
 
         clapperboard = new Clapperboard(spriteSheet, 3, "JUNIOR");
         clapperboard.setPosition(3 * TS, 10 * TS);

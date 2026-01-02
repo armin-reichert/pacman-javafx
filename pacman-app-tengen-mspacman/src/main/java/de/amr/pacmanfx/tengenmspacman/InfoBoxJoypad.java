@@ -2,11 +2,12 @@
 Copyright (c) 2021-2026 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.ui.dashboard;
+package de.amr.pacmanfx.tengenmspacman;
 
 import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
 import de.amr.pacmanfx.ui.api.GameUI;
+import de.amr.pacmanfx.ui.dashboard.InfoBox;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Font;
@@ -23,7 +24,7 @@ public class InfoBoxJoypad extends InfoBox {
 
         setContentTextFont(Font.font("Monospace", 16));
 
-        final var joypadKeyBinding = GameUI.JOYPAD.currentKeyBinding();
+        final var joypadKeyBinding = TengenMsPacMan_UIConfig.JOYPAD.currentKeyBinding();
         String indent = "  "; // Urgh
         addDynamicLabeledValue("[SELECT]   [START]", () -> "%s%s  %s".formatted(
             indent,

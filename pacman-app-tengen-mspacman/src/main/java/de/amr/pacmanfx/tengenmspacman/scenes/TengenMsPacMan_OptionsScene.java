@@ -22,14 +22,17 @@ import javafx.scene.input.KeyCode;
 
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.ACTION_START_PLAYING;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.JOYPAD;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
 import static de.amr.pacmanfx.ui.input.Keyboard.alt;
 
 /**
  * Options scene for Ms. Pac-Man Tengen.
  *
- * <p></p>The highscore is cleared if player type (1 player, 2 players etc.), map category or difficulty are
- * changed, see <a href="https://github.com/RussianManSMWC/Ms.-Pac-Man-NES-Tengen-Disassembly/blob/main/MsPacManTENGENDis.asm:9545">disassembly</a>.
+ * <p></p>The high-score is cleared if player type (1 player, 2 players etc.), map category or difficulty are
+ * changed.
+ *
+ * @see <a href="https://github.com/RussianManSMWC/Ms.-Pac-Man-NES-Tengen-Disassembly/blob/main/MsPacManTENGENDis.asm:9545">Disassembly</a>.
  */
 public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
@@ -58,7 +61,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     private final GameAction actionSelectNextJoypadBinding = new GameAction("SELECT_NEXT_JOYPAD_BINDING") {
         @Override
         public void execute(GameUI ui) {
-            GameUI.JOYPAD.selectNextBinding(actionBindings);
+            JOYPAD.selectNextBinding(actionBindings);
         }
     };
 
@@ -76,7 +79,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         actionBindings.useAnyBinding(ACTION_START_PLAYING,                  TengenMsPacMan_UIConfig.ACTION_BINDINGS);
         actionBindings.useAnyBinding(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, TengenMsPacMan_UIConfig.ACTION_BINDINGS);
 
-        GameUI.JOYPAD.setBindings(actionBindings);
+        JOYPAD.setBindings(actionBindings);
 
         selectedOption.set(OPTION_PAC_BOOSTER);
         tengenGame().setCanStartNewGame(true);
@@ -87,7 +90,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
     @Override
     protected void doEnd(Game game) {
-        GameUI.JOYPAD.removeBindings(actionBindings);
+        JOYPAD.removeBindings(actionBindings);
     }
 
     @Override
@@ -119,14 +122,14 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
     @Override
     public void onKeyboardInput() {
-        if (GameUI.JOYPAD.isButtonPressed(JoypadButton.DOWN)) {
+        if (JOYPAD.isButtonPressed(JoypadButton.DOWN)) {
             selectedOption.set(selectedOption() + 1 < NUM_OPTIONS ? selectedOption() + 1 : 0);
         }
-        else if (GameUI.JOYPAD.isButtonPressed(JoypadButton.UP)) {
+        else if (JOYPAD.isButtonPressed(JoypadButton.UP)) {
             selectedOption.set(selectedOption() == 0 ? NUM_OPTIONS - 1 : selectedOption() - 1);
         }
         // Button "A" on the joypad is located right of "B": select next value
-        else if (GameUI.JOYPAD.isButtonPressed(JoypadButton.A) || GameUI.KEYBOARD.isPressed(KeyCode.RIGHT)) {
+        else if (JOYPAD.isButtonPressed(JoypadButton.A) || GameUI.KEYBOARD.isPressed(KeyCode.RIGHT)) {
             switch (selectedOption()) {
                 case OPTION_PAC_BOOSTER    -> setNextPacBoosterValue();
                 case OPTION_DIFFICULTY     -> setNextDifficultyValue();
@@ -135,7 +138,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
             }
         }
         // Button "B" is left of "A": select previous value
-        else if (GameUI.JOYPAD.isButtonPressed(JoypadButton.B) || GameUI.KEYBOARD.isPressed(KeyCode.LEFT)) {
+        else if (JOYPAD.isButtonPressed(JoypadButton.B) || GameUI.KEYBOARD.isPressed(KeyCode.LEFT)) {
             switch (selectedOption()) {
                 case OPTION_PAC_BOOSTER    -> setPrevPacBoosterValue();
                 case OPTION_DIFFICULTY     -> setPrevDifficultyValue();

@@ -30,6 +30,7 @@ import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameScene_Config;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
+import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -66,20 +67,22 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         HALL_OF_FAME
     }
 
+    public static final Joypad JOYPAD = new Joypad(GameUI.KEYBOARD);
+
     private static final ResourceManager LOCAL_RESOURCES = () -> TengenMsPacMan_UIConfig.class;
 
     public static final Set<ActionBinding> STEERING_BINDINGS = Set.of(
-        new ActionBinding(ACTION_STEER_UP,    GameUI.JOYPAD.key(JoypadButton.UP),    control(KeyCode.UP)),
-        new ActionBinding(ACTION_STEER_DOWN,  GameUI.JOYPAD.key(JoypadButton.DOWN),  control(KeyCode.DOWN)),
-        new ActionBinding(ACTION_STEER_LEFT,  GameUI.JOYPAD.key(JoypadButton.LEFT),  control(KeyCode.LEFT)),
-        new ActionBinding(ACTION_STEER_RIGHT, GameUI.JOYPAD.key(JoypadButton.RIGHT), control(KeyCode.RIGHT))
+        new ActionBinding(ACTION_STEER_UP,    JOYPAD.key(JoypadButton.UP),    control(KeyCode.UP)),
+        new ActionBinding(ACTION_STEER_DOWN,  JOYPAD.key(JoypadButton.DOWN),  control(KeyCode.DOWN)),
+        new ActionBinding(ACTION_STEER_LEFT,  JOYPAD.key(JoypadButton.LEFT),  control(KeyCode.LEFT)),
+        new ActionBinding(ACTION_STEER_RIGHT, JOYPAD.key(JoypadButton.RIGHT), control(KeyCode.RIGHT))
     );
 
     public static final Set<ActionBinding> ACTION_BINDINGS = Set.of(
-        new ActionBinding(ACTION_QUIT_DEMO_LEVEL,     GameUI.JOYPAD.key(JoypadButton.START)),
-        new ActionBinding(ACTION_ENTER_START_SCREEN,  GameUI.JOYPAD.key(JoypadButton.START)),
-        new ActionBinding(ACTION_START_PLAYING,       GameUI.JOYPAD.key(JoypadButton.START)),
-        new ActionBinding(ACTION_TOGGLE_PAC_BOOSTER,  GameUI.JOYPAD.key(JoypadButton.A), GameUI.JOYPAD.key(JoypadButton.B)),
+        new ActionBinding(ACTION_QUIT_DEMO_LEVEL,     JOYPAD.key(JoypadButton.START)),
+        new ActionBinding(ACTION_ENTER_START_SCREEN,  JOYPAD.key(JoypadButton.START)),
+        new ActionBinding(ACTION_START_PLAYING,       JOYPAD.key(JoypadButton.START)),
+        new ActionBinding(ACTION_TOGGLE_PAC_BOOSTER,  JOYPAD.key(JoypadButton.A), JOYPAD.key(JoypadButton.B)),
         new ActionBinding(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, alt(KeyCode.C)),
         new ActionBinding(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, bare(KeyCode.SPACE))
     );

@@ -19,7 +19,6 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
-import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 
