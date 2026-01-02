@@ -158,7 +158,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
         setCollisionStrategy(CollisionStrategy.CENTER_DISTANCE);
 
         this.mapSelector = new TengenMsPacMan_MapSelector();
-        this.mapSelector.loadAllMapPrototypes();
+        //this.mapSelector.loadAllMapPrototypes();
 
         setGameControl(new TengenMsPacMan_GameController());
     }
