@@ -8,7 +8,6 @@ import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui.api.GameUI;
 
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.ACTION_ENTER_START_SCREEN;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
@@ -27,7 +26,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
     @Override
     protected void doInit(Game game) {
         game.hud().hide();
-        actionBindings.useFirst(ACTION_ENTER_START_SCREEN, TengenMsPacMan_UIConfig.ACTION_BINDINGS);
+        actionBindings.useAnyBinding(ACTION_ENTER_START_SCREEN, TengenMsPacMan_UIConfig.ACTION_BINDINGS);
         fadeProgress = 0;
     }
 

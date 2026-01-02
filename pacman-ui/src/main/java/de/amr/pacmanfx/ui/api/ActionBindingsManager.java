@@ -25,27 +25,27 @@ public interface ActionBindingsManager extends Disposable {
         public void dispose() {}
 
         @Override
-        public Map<KeyCombination, GameAction> actionByKeyCombination() {
+        public Map<KeyCombination, GameAction> actionForKeyCombination() {
             return Map.of();
         }
 
         @Override
-        public boolean hasNoEntries() { return true; }
+        public boolean hasNoBindings() { return true; }
 
         @Override
-        public void attach(Keyboard keyboard) {}
+        public void activateBindings(Keyboard keyboard) {}
 
         @Override
-        public void release(Keyboard keyboard) {}
+        public void releaseBindings(Keyboard keyboard) {}
 
         @Override
-        public void useFirst(GameAction action, Set<ActionBinding> actionBindings) {}
+        public void useAnyBinding(GameAction action, Set<ActionBinding> actionBindings) {}
 
         @Override
-        public void useKeyCombination(GameAction action, KeyCombination combination) {}
+        public void setKeyCombination(GameAction action, KeyCombination combination) {}
 
         @Override
-        public void useAll(Set<ActionBinding> actionBindings) {}
+        public void useAllBindings(Set<ActionBinding> actionBindings) {}
 
         @Override
         public Optional<GameAction> matchingAction(Keyboard keyboard) { return Optional.empty(); }
@@ -56,19 +56,19 @@ public interface ActionBindingsManager extends Disposable {
      */
     ActionBindingsManager EMPTY = new EmptyBindingsManager();
 
-    Map<KeyCombination, GameAction> actionByKeyCombination();
+    Map<KeyCombination, GameAction> actionForKeyCombination();
 
     Optional<GameAction> matchingAction(Keyboard keyboard);
 
-    boolean hasNoEntries();
+    boolean hasNoBindings();
 
-    void attach(Keyboard keyboard);
+    void activateBindings(Keyboard keyboard);
 
-    void release(Keyboard keyboard);
+    void releaseBindings(Keyboard keyboard);
 
-    void useKeyCombination(GameAction action, KeyCombination combination);
+    void setKeyCombination(GameAction action, KeyCombination combination);
 
-    void useFirst(GameAction gameAction, Set<ActionBinding> actionBindings);
+    void useAnyBinding(GameAction gameAction, Set<ActionBinding> actionBindings);
 
-    void useAll(Set<ActionBinding> actionBindings);
+    void useAllBindings(Set<ActionBinding> actionBindings);
 }

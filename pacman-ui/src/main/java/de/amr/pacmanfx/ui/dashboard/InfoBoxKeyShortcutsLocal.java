@@ -27,11 +27,11 @@ public class InfoBoxKeyShortcutsLocal extends InfoBox {
     }
 
     private void addEntries(ActionBindingsManager actionBindingsManager) {
-        if (actionBindingsManager.hasNoEntries()) {
+        if (actionBindingsManager.hasNoBindings()) {
             addRow(createLabel(NO_INFO, false));
         }
         else {
-            actionBindingsManager.actionByKeyCombination().entrySet().stream()
+            actionBindingsManager.actionForKeyCombination().entrySet().stream()
                     .sorted(Comparator.comparing(e -> e.getKey().getDisplayText()))
                     .forEach(entry -> {
                 KeyCombination keyCombination = entry.getKey();

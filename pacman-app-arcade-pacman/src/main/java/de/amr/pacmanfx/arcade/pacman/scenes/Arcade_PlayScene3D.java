@@ -18,16 +18,16 @@ public class Arcade_PlayScene3D extends PlayScene3D {
 
     @Override
     protected void setActionBindings(GameLevel level) {
-        actionBindings.release(GameUI.KEYBOARD);
-        actionBindings.useAll(GameUI.PLAY_3D_BINDINGS);
+        actionBindings.releaseBindings(GameUI.KEYBOARD);
+        actionBindings.useAllBindings(GameUI.PLAY_3D_BINDINGS);
         if (level.isDemoLevel()) {
-            actionBindings.useAll(ArcadePacMan_UIConfig.DEFAULT_BINDINGS);
+            actionBindings.useAllBindings(ArcadePacMan_UIConfig.DEFAULT_BINDINGS);
         } else {
-            actionBindings.useAll(GameUI.STEERING_BINDINGS);
-            actionBindings.useAll(GameUI.CHEAT_BINDINGS);
+            actionBindings.useAllBindings(GameUI.STEERING_BINDINGS);
+            actionBindings.useAllBindings(GameUI.CHEAT_BINDINGS);
         }
-        actionBindings.useKeyCombination(actionDroneClimb, control(KeyCode.MINUS));
-        actionBindings.useKeyCombination(actionDroneDescent, control(KeyCode.PLUS));
-        actionBindings.attach(GameUI.KEYBOARD);
+        actionBindings.setKeyCombination(actionDroneClimb, control(KeyCode.MINUS));
+        actionBindings.setKeyCombination(actionDroneDescent, control(KeyCode.PLUS));
+        actionBindings.activateBindings(GameUI.KEYBOARD);
     }
 }

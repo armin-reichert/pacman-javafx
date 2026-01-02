@@ -89,7 +89,7 @@ public abstract class GameScene2D implements GameScene {
     @Override
     public final void init(Game game) {
         doInit(game);
-        actionBindings.attach(GameUI.KEYBOARD);
+        actionBindings.activateBindings(GameUI.KEYBOARD);
         Logger.info("2D scene {} initialized", getClass().getSimpleName());
     }
 
