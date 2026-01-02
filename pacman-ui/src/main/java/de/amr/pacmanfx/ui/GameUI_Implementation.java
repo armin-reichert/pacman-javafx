@@ -21,6 +21,7 @@ import de.amr.pacmanfx.ui.layout.StartPagesCarousel;
 import de.amr.pacmanfx.ui.layout.StatusIconBox;
 import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.assets.UIPreferences;
+import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
 import de.amr.pacmanfx.uilib.rendering.Gradients;
 import de.amr.pacmanfx.uilib.widgets.FlashMessageView;
 import javafx.application.Platform;
@@ -103,6 +104,9 @@ public final class GameUI_Implementation implements GameUI {
         prefs = new GameUI_Preferences();
         PROPERTY_3D_WALL_HEIGHT.set(prefs.getFloat("3d.obstacle.base_height"));
         PROPERTY_3D_WALL_OPACITY.set(prefs.getFloat("3d.obstacle.opacity"));
+
+        // Trigger loading of 3D models used by all game variants
+        PacManModel3DRepository.instance();
 
         customDirWatchdog = new DirectoryWatchdog(GameBox.CUSTOM_MAP_DIR);
 

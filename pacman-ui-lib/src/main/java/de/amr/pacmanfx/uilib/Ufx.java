@@ -26,6 +26,8 @@ import javafx.scene.text.Text;
 import org.tinylog.Logger;
 
 import java.io.PrintWriter;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -68,6 +70,19 @@ public interface Ufx {
             } catch (Exception e) {
                 e.printStackTrace(System.err);
             }
+        }
+    }
+
+    static Duration measureDuration(String description, Runnable code) {
+        final Instant start = Instant.now();
+        try {
+            code.run();
+            Duration duration = Duration.between(start, Instant.now());
+            Logger.info("{} millis: '{}'", duration.toMillis(), description);
+            return duration;
+        } catch (Exception x) {
+            Logger.error("Error running code in measurement");
+            return Duration.ZERO;
         }
     }
 
@@ -139,10 +154,6 @@ public interface Ufx {
     static Border border(Color color, double width) {
         requireNonNull(color);
         return new Border(new BorderStroke(color, BorderStrokeStyle.SOLID, null, new BorderWidths(width)));
-    }
-
-    static Font scaledFont(Font font, double scaling) {
-        return Font.font(font.getFamily(), scaling * font.getSize());
     }
 
     static double textWidth(String s, Font font) {

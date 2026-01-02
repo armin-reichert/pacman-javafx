@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.uilib.model3D;
 
 import de.amr.pacmanfx.lib.Disposable;
+import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.objimport.ObjFileContent;
 import de.amr.pacmanfx.uilib.objimport.ObjFileImporter;
 import javafx.scene.paint.Material;
@@ -13,8 +14,6 @@ import org.tinylog.Logger;
 
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.time.Duration;
-import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +25,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class Model3D implements Disposable {
 
-    private final ObjFileContent objFileContent;
+    private ObjFileContent objFileContent;
 
     /**
      * @param url URL addressing an OBJ file (Wavefront .obj file format)
@@ -34,14 +33,13 @@ public class Model3D implements Disposable {
     public Model3D(URL url) {
         requireNonNull(url);
 
-        Instant start = Instant.now();
-        objFileContent = ObjFileImporter.importObjFile(url, StandardCharsets.UTF_8);
-        Duration duration = Duration.between(start, Instant.now());
+        Ufx.measureDuration("Import OBJ file '%s'".formatted(url), () -> {
+            objFileContent = ObjFileImporter.importObjFile(url, StandardCharsets.UTF_8);
+        });
         if (objFileContent == null) {
-            Logger.error("Importing OBJ file with URL '{}' failed!");
+            Logger.error("Import OBJ file '{}' failed!");
             throw new RuntimeException("OBJ import failed!");
         }
-        Logger.info("OBJ file imported ({} millis). URL: '{}'", duration.toMillis(), url);
 
         for (TriangleMesh mesh : objFileContent.triangleMeshMap.values()) {
             try {

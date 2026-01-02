@@ -24,13 +24,13 @@ public class PacManModel3DRepository implements Disposable {
 
     private static final String MESH_ID_PELLET         = "Pellet";
 
-    private static PacManModel3DRepository it;
+    private static PacManModel3DRepository instance;
 
-    public static PacManModel3DRepository theRepository() {
-        if (it == null) {
-            it = new PacManModel3DRepository();
+    public static PacManModel3DRepository instance() {
+        if (instance == null) {
+            instance = new PacManModel3DRepository();
         }
-        return it;
+        return instance;
     }
 
     private final Model3D model3D_PacMan;
@@ -51,7 +51,7 @@ public class PacManModel3DRepository implements Disposable {
         }
         try {
             Model3D model3D = new Model3D(url);
-            Logger.info("3D model loaded from URL '{}'", url);
+            Logger.debug("3D model loaded from URL '{}'", url);
             return model3D;
         } catch (Exception x) {
             throw new IllegalArgumentException("Could not load 3D model from URL '%s'".formatted(url), x);
@@ -95,6 +95,7 @@ public class PacManModel3DRepository implements Disposable {
 
     @Override
     public void dispose() {
+        Logger.info("Dispose model3D repository");
         model3D_PacMan.dispose();
         model3D_Ghost.dispose();
         model3D_Pellet.dispose();
