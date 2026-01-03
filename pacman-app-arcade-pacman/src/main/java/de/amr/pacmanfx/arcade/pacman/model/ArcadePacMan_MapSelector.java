@@ -15,7 +15,7 @@ import java.util.List;
 
 public class ArcadePacMan_MapSelector implements WorldMapSelector {
 
-    private static final String MAP_PROTOTYPE_PATH = "/de/amr/pacmanfx/arcade/pacman/maps/pacman.world";
+    private static final String PROTOTYPE_PATH = "/de/amr/pacmanfx/arcade/pacman/maps/pacman.world";
 
     private WorldMap prototype;
 
@@ -31,29 +31,26 @@ public class ArcadePacMan_MapSelector implements WorldMapSelector {
     public void loadCustomMaps() {}
 
     @Override
-    public void loadAllMapPrototypes() {
-        final URL url = getClass().getResource(MAP_PROTOTYPE_PATH);
+    public void loadAllMapPrototypes() throws IOException {
+        final URL url = getClass().getResource(PROTOTYPE_PATH);
         if (url == null) {
-            Logger.error("Could not locate Pac-Man Arcade map, path='{}'", MAP_PROTOTYPE_PATH);
-            throw new IllegalStateException();
+            final String errorMsg = "Could not access Arcade Pac-Man map '%s'".formatted(PROTOTYPE_PATH);
+            Logger.error(errorMsg);
+            throw new IllegalStateException(errorMsg);
         }
-        try {
-            prototype = WorldMap.loadFromURL(url);
-            prototype.setConfigValue(GameUI_Config.ConfigKey.MAP_NUMBER, 1);
-            prototype.setConfigValue(GameUI_Config.ConfigKey.COLOR_MAP_INDEX, 0);
-            prototype.setConfigValue(GameUI_Config.ConfigKey.COLOR_SCHEME, WorldMapSelector.extractColorScheme(prototype));
-            Logger.info("Pac-Man Arcade map loaded, URL='{}'", prototype.url());
-        } catch (IOException x) {
-            Logger.error("Could not load Pac-Man Arcade map, URL={}", url);
-            throw new IllegalStateException(x);
-        }
+        prototype = WorldMap.loadFromURL(url);
+        Logger.info("Loaded world map '{}'", url);
     }
 
     @Override
-    public WorldMap supplyWorldMap(int levelNumber, Object... args) {
+    public WorldMap supplyWorldMap(int levelNumber, Object... args) throws IOException {
         if (prototype == null) {
             loadAllMapPrototypes();
         }
-        return new WorldMap(prototype);
+        final WorldMap worldMap = new WorldMap(prototype);
+        worldMap.setConfigValue(GameUI_Config.ConfigKey.MAP_NUMBER, 1);
+        worldMap.setConfigValue(GameUI_Config.ConfigKey.COLOR_MAP_INDEX, 0);
+        worldMap.setConfigValue(GameUI_Config.ConfigKey.COLOR_SCHEME, WorldMapSelector.extractColorScheme(prototype));
+        return worldMap;
     }
 }

@@ -262,6 +262,7 @@ public final class GameUI_Implementation implements GameUI {
      * @see <a href="https://de.wikipedia.org/wiki/Steel_Buddies_%E2%80%93_Stahlharte_Gesch%C3%A4fte">Katastrophe!</a>
      */
     private void ka_tas_tro_phe(Throwable reason) {
+        clock.stop();
         Logger.error(reason);
         Logger.error("SOMETHING VERY BAD HAPPENED!");
         showFlashMessage(Duration.seconds(10), "KA-TA-STROOO-PHE!\nSOMEONE CALL AN AMBULANCE!");
