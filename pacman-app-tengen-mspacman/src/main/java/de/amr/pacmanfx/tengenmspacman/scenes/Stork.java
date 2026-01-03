@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengenmspacman.scenes;
 
 import de.amr.pacmanfx.model.actors.Actor;
+import de.amr.pacmanfx.tengenmspacman.rendering.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
@@ -15,19 +16,25 @@ public class Stork extends Actor {
 
     public enum AnimationID { FLYING }
 
+    private static class StorkAnimations extends SpriteAnimationManager<SpriteID> {
+
+        public StorkAnimations() {
+            super(TengenMsPacMan_SpriteSheet.INSTANCE);
+        }
+
+        @Override
+        protected SpriteAnimation createAnimation(Object animationID) {
+            if (animationID.equals(AnimationID.FLYING)) {
+                return SpriteAnimation.buildAnimation().sprites(spriteSheet.sprites(STORK)).ticksPerFrame(8).repeated();
+            }
+            throw new IllegalArgumentException("Illegal animation ID: " + animationID);
+        }
+    }
+
     private boolean bagReleasedFromBeak;
 
     public Stork() {
-        final var animations = new SpriteAnimationManager<>(TengenMsPacMan_SpriteSheet.INSTANCE) {
-            @Override
-            protected SpriteAnimation createAnimation(Object animationID) {
-                if (animationID.equals(AnimationID.FLYING)) {
-                    return SpriteAnimation.buildAnimation().sprites(spriteSheet.sprites(STORK)).ticksPerFrame(8).repeated();
-                }
-                throw new IllegalArgumentException("Illegal animation ID: " + animationID);
-            }
-        };
-        setAnimationManager(animations);
+        setAnimationManager(new StorkAnimations());
     }
 
     public void setBagReleasedFromBeak(boolean released) {

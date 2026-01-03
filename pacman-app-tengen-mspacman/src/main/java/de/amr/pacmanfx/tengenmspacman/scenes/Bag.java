@@ -16,20 +16,26 @@ public class Bag extends Actor {
 
     public enum AnimationID { BAG, JUNIOR }
 
+    public static class BagAnimations extends SpriteAnimationManager<SpriteID> {
+
+        public BagAnimations() {
+            super(TengenMsPacMan_SpriteSheet.INSTANCE);
+        }
+
+        @Override
+        protected SpriteAnimation createAnimation(Object animationID) {
+            return switch (animationID) {
+                case AnimationID.BAG    -> buildAnimation().singleSprite(spriteSheet.sprite(SpriteID.BLUE_BAG)).once();
+                case AnimationID.JUNIOR -> buildAnimation().singleSprite(spriteSheet.sprite(SpriteID.JUNIOR_PAC)).once();
+                default -> throw new IllegalArgumentException("Illegal animation ID: " + animationID);
+            };
+        }
+    };
+
     private boolean open;
 
     public Bag() {
-        final var animations = new SpriteAnimationManager<>(TengenMsPacMan_SpriteSheet.INSTANCE) {
-            @Override
-            protected SpriteAnimation createAnimation(Object animationID) {
-                return switch (animationID) {
-                    case AnimationID.BAG    -> buildAnimation().singleSprite(spriteSheet.sprite(SpriteID.BLUE_BAG)).once();
-                    case AnimationID.JUNIOR -> buildAnimation().singleSprite(spriteSheet.sprite(SpriteID.JUNIOR_PAC)).once();
-                    default -> throw new IllegalArgumentException("Illegal animation ID: " + animationID);
-                };
-            }
-        };
-        setAnimationManager(animations);
+        setAnimationManager(new BagAnimations());
         setOpen(false);
     }
 

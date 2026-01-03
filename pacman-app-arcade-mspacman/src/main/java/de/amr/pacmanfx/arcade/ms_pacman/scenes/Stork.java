@@ -14,19 +14,25 @@ public class Stork extends Actor {
 
     public enum AnimationID { FLYING }
 
-    public Stork() {
-        final var animations = new SpriteAnimationManager<>(ArcadeMsPacMan_SpriteSheet.INSTANCE) {
-            @Override
-            protected SpriteAnimation createAnimation(Object animationID) {
-                if (animationID.equals(AnimationID.FLYING)) {
-                    return SpriteAnimation.buildAnimation()
-                        .sprites(spriteSheet.sprites(SpriteID.STORK))
-                        .ticksPerFrame(8)
-                        .repeated();
-                }
-                throw new IllegalArgumentException("Illegal animation ID: " + animationID);
+    public static class StorkAnimations extends SpriteAnimationManager<SpriteID> {
+
+        public StorkAnimations() {
+            super(ArcadeMsPacMan_SpriteSheet.INSTANCE);
+        }
+
+        @Override
+        protected SpriteAnimation createAnimation(Object animationID) {
+            if (animationID.equals(AnimationID.FLYING)) {
+                return SpriteAnimation.buildAnimation()
+                    .sprites(spriteSheet.sprites(SpriteID.STORK))
+                    .ticksPerFrame(8)
+                    .repeated();
             }
-        };
-        setAnimationManager(animations);
+            throw new IllegalArgumentException("Illegal animation ID: " + animationID);
+        }
+    }
+
+    public Stork() {
+        setAnimationManager(new StorkAnimations());
     }
 }
