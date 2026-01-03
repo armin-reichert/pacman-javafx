@@ -11,17 +11,19 @@ import de.amr.pacmanfx.uilib.assets.UIPreferences;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.Globals.TS;
+import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_CutScene1_Renderer extends ArcadePacMan_CutScene_Renderer {
 
     public ArcadePacMan_CutScene1_Renderer(UIPreferences prefs, GameScene2D scene, Canvas canvas) {
         super(scene, canvas);
+        requireNonNull(prefs);
         debugRenderer = adaptRenderer(new BaseDebugInfoRenderer(prefs, canvas) {
             @Override
             public void draw(GameScene2D scene) {
                 super.draw(scene);
                 if (scene instanceof ArcadePacMan_CutScene1 cutScene1) {
-                    String text = cutScene1.tick() < ArcadePacMan_CutScene1.ANIMATION_START_TICK
+                    final String text = cutScene1.tick() < ArcadePacMan_CutScene1.ANIMATION_START_TICK
                         ? String.format("Wait %d", ArcadePacMan_CutScene1.ANIMATION_START_TICK - cutScene1.tick())
                         : String.format("Frame %d", cutScene1.tick());
                     fillText(text, debugTextFill, debugTextFont, TS(1), TS(5));
@@ -32,8 +34,9 @@ public class ArcadePacMan_CutScene1_Renderer extends ArcadePacMan_CutScene_Rende
 
     @Override
     protected void drawSceneContent(GameScene2D scene) {
-        final ArcadePacMan_CutScene1 cutScene = (ArcadePacMan_CutScene1) scene;
-        actorRenderer.drawActor(cutScene.blinky());
-        actorRenderer.drawActor(cutScene.pac());
+        if (scene instanceof ArcadePacMan_CutScene1 cutScene) {
+            actorRenderer.drawActor(cutScene.blinky());
+            actorRenderer.drawActor(cutScene.pac());
+        }
     }
 }

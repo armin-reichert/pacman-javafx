@@ -10,24 +10,32 @@ import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 
+import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.buildAnimation;
+
 public class Bag extends Actor {
 
-    private static final String ANIM_ID_BAG = "bag";
-    private static final String ANIM_ID_JUNIOR = "junior";
+    public enum AnimationID { BAG, JUNIOR }
 
     private boolean open;
 
     public Bag(TengenMsPacMan_SpriteSheet spriteSheet) {
-        var spriteAnimationManager = new SpriteAnimationManager<>(spriteSheet);
-        spriteAnimationManager.setAnimation(ANIM_ID_BAG, SpriteAnimation.buildAnimation().singleSprite(spriteSheet.sprite(SpriteID.BLUE_BAG)).once());
-        spriteAnimationManager.setAnimation(ANIM_ID_JUNIOR, SpriteAnimation.buildAnimation().singleSprite(spriteSheet.sprite(SpriteID.JUNIOR_PAC)).once());
-        setAnimationManager(spriteAnimationManager);
+        final var animations = new SpriteAnimationManager<>(spriteSheet) {
+            @Override
+            protected SpriteAnimation createAnimation(Object animationID) {
+                return switch (animationID) {
+                    case AnimationID.BAG    -> buildAnimation().singleSprite(spriteSheet.sprite(SpriteID.BLUE_BAG)).once();
+                    case AnimationID.JUNIOR -> buildAnimation().singleSprite(spriteSheet.sprite(SpriteID.JUNIOR_PAC)).once();
+                    default -> throw new IllegalArgumentException("Illegal animation ID: " + animationID);
+                };
+            }
+        };
+        setAnimationManager(animations);
         setOpen(false);
     }
 
     public void setOpen(boolean open) {
         this.open = open;
-        animationManager.select(open ? ANIM_ID_JUNIOR : ANIM_ID_BAG);
+        animationManager.select(open ? AnimationID.JUNIOR : AnimationID.BAG);
     }
 
     public boolean isOpen() {

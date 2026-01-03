@@ -15,7 +15,7 @@ import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
-public class SpriteAnimationManager<SID extends Enum<SID>> implements AnimationManager {
+public abstract class SpriteAnimationManager<SID extends Enum<SID>> implements AnimationManager {
 
     protected final SpriteSheet<SID> spriteSheet;
     protected final Map<Object, SpriteAnimation> animationsByID = new HashMap<>();
@@ -24,6 +24,8 @@ public class SpriteAnimationManager<SID extends Enum<SID>> implements AnimationM
     public SpriteAnimationManager(SpriteSheet<SID> spriteSheet) {
         this.spriteSheet = requireNonNull(spriteSheet);
     }
+
+    protected abstract SpriteAnimation createAnimation(Object animationID);
 
     public SpriteSheet<SID> spriteSheet() { return spriteSheet; }
 
@@ -52,10 +54,6 @@ public class SpriteAnimationManager<SID extends Enum<SID>> implements AnimationM
             animationsByID.put(animationID, spriteAnimation);
         }
         return animationsByID.get(animationID);
-    }
-
-    protected SpriteAnimation createAnimation(Object animationID) {
-        throw new UnsupportedOperationException("No idea how to create animation with ID " + animationID);
     }
 
     public void setAnimation(Object animationID, SpriteAnimation animation) {

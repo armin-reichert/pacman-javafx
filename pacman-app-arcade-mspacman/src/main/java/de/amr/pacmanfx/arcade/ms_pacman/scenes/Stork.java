@@ -12,12 +12,21 @@ import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 
 public class Stork extends Actor {
 
-    public static final String ANIM_FLYING = "flying";
+    public enum AnimationID { FLYING }
 
     public Stork(ArcadeMsPacMan_SpriteSheet spriteSheet) {
-        var spriteAnimationManager = new SpriteAnimationManager<>(spriteSheet);
-        spriteAnimationManager.setAnimation(ANIM_FLYING,
-            SpriteAnimation.buildAnimation().sprites(spriteSheet.sprites(SpriteID.STORK)).ticksPerFrame(8).repeated());
-        setAnimationManager(spriteAnimationManager);
+        final var animations = new SpriteAnimationManager<>(spriteSheet) {
+            @Override
+            protected SpriteAnimation createAnimation(Object animationID) {
+                if (animationID.equals(AnimationID.FLYING)) {
+                    return SpriteAnimation.buildAnimation()
+                        .sprites(spriteSheet.sprites(SpriteID.STORK))
+                        .ticksPerFrame(8)
+                        .repeated();
+                }
+                throw new IllegalArgumentException("Illegal animation ID: " + animationID);
+            }
+        };
+        setAnimationManager(animations);
     }
 }

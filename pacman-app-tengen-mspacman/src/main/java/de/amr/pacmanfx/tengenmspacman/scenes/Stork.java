@@ -13,15 +13,21 @@ import static de.amr.pacmanfx.tengenmspacman.rendering.SpriteID.STORK;
 
 public class Stork extends Actor {
 
-    public static final String ANIM_ID_FLYING = "flying";
+    public enum AnimationID { FLYING }
 
     private boolean bagReleasedFromBeak;
 
     public Stork(TengenMsPacMan_SpriteSheet spriteSheet) {
-        var spriteAnimationManager = new SpriteAnimationManager<>(spriteSheet);
-        spriteAnimationManager.setAnimation(ANIM_ID_FLYING,
-            SpriteAnimation.buildAnimation().sprites(spriteSheet.sprites(STORK)).ticksPerFrame(8).repeated());
-        setAnimationManager(spriteAnimationManager);
+        final var animations = new SpriteAnimationManager<>(spriteSheet) {
+            @Override
+            protected SpriteAnimation createAnimation(Object animationID) {
+                if (animationID.equals(AnimationID.FLYING)) {
+                    return SpriteAnimation.buildAnimation().sprites(spriteSheet.sprites(STORK)).ticksPerFrame(8).repeated();
+                }
+                throw new IllegalArgumentException("Illegal animation ID: " + animationID);
+            }
+        };
+        setAnimationManager(animations);
     }
 
     public void setBagReleasedFromBeak(boolean released) {

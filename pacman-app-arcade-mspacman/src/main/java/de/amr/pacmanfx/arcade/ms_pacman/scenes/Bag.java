@@ -13,18 +13,33 @@ import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.BLUE_BAG;
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.JUNIOR_PAC;
 
 public class Bag extends Actor {
+
+    public enum AnimationID { BAG, JUNIOR }
+
     private boolean open;
 
     public Bag(ArcadeMsPacMan_SpriteSheet spriteSheet) {
-        var spriteAnimationManager = new SpriteAnimationManager<>(spriteSheet);
-        spriteAnimationManager.setAnimation("junior", SpriteAnimation.buildAnimation().singleSprite(spriteSheet.sprite(JUNIOR_PAC)).once());
-        spriteAnimationManager.setAnimation("bag", SpriteAnimation.buildAnimation().singleSprite(spriteSheet.sprite(BLUE_BAG)).once());
-        setAnimationManager(spriteAnimationManager);
+        final var animations = new SpriteAnimationManager<>(spriteSheet) {
+            @Override
+            protected SpriteAnimation createAnimation(Object animationID) {
+                return switch (animationID) {
+                    case AnimationID.JUNIOR -> SpriteAnimation.buildAnimation()
+                        .singleSprite(spriteSheet.sprite(JUNIOR_PAC))
+                        .once();
+
+                    case AnimationID.BAG -> SpriteAnimation.buildAnimation()
+                        .singleSprite(spriteSheet.sprite(BLUE_BAG))
+                        .once();
+                    default -> throw new IllegalArgumentException("Illegal animation ID: " + animationID);
+                };
+            }
+        };
+        setAnimationManager(animations);
     }
 
     public void setOpen(boolean open) {
         this.open = open;
-        animationManager.select(open ? "junior" : "bag");
+        animationManager.select(open ? AnimationID.JUNIOR : AnimationID.BAG);
     }
 
     public boolean isOpen() {
