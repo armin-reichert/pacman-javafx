@@ -51,35 +51,35 @@ public class GenericMapRenderer extends BaseRenderer {
     private void updateColors(Color backgroundColor) {
         blinkingOnColors = new TerrainMapColorScheme(backgroundColor, backgroundColor, Color.WHITE, backgroundColor);
         blinkingOffColors = new TerrainMapColorScheme(backgroundColor, Color.WHITE, backgroundColor, backgroundColor);
-        TerrainMapColorScheme oldColorScheme = terrainRenderer.colorScheme();
-        TerrainMapColorScheme newColorScheme = new TerrainMapColorScheme(
+        final TerrainMapColorScheme oldColorScheme = terrainRenderer.colorScheme();
+        final TerrainMapColorScheme newColorScheme = new TerrainMapColorScheme(
             backgroundColor, oldColorScheme.wallFillColor(), oldColorScheme.wallStrokeColor(), oldColorScheme.doorColor()
         );
         terrainRenderer.setColorScheme(newColorScheme);
     }
 
     public void drawMaze(GameLevel gameLevel, RenderInfo info) {
-        WorldMap worldMap = gameLevel.worldMap();
+        final WorldMap worldMap = gameLevel.worldMap();
         if (info.getBoolean(CommonRenderInfoKey.MAZE_BRIGHT)) {
             terrainRenderer.setColorScheme(info.getBoolean(CommonRenderInfoKey.ENERGIZER_ON) ? blinkingOnColors : blinkingOffColors);
             terrainRenderer.draw(worldMap);
         }
         else {
-            TerrainMapColorScheme terrainColorScheme = info.get(RenderInfoKey.TERRAIN_MAP_COLOR_SCHEME, TerrainMapColorScheme.class);
+            final TerrainMapColorScheme terrainColorScheme = info.get(RenderInfoKey.TERRAIN_MAP_COLOR_SCHEME, TerrainMapColorScheme.class);
             terrainRenderer.setColorScheme(terrainColorScheme);
             terrainRenderer.draw(worldMap);
 
-            gameLevel.worldMap().terrainLayer().optHouse().ifPresent(house -> {
+            worldMap.terrainLayer().optHouse().ifPresent(house -> {
                 houseRenderer.setColorScheme(terrainColorScheme);
                 houseRenderer.drawHouse(house.minTile(), house.sizeInTiles(),
                     terrainRenderer.borderWallFullWidth(),terrainRenderer.borderWallInnerWidth());
             });
 
-            // this is set by the map selector
-            WorldMapColorScheme foodColorScheme = gameLevel.worldMap().getConfigValue(GameUI_Config.ConfigKey.COLOR_SCHEME);
+            // Color scheme is set by the map selector
+            final FoodLayer foodLayer = worldMap.foodLayer();
+            final WorldMapColorScheme foodColorScheme = worldMap.getConfigValue(GameUI_Config.ConfigKey.COLOR_SCHEME);
             final Color pelletColor = Color.valueOf(foodColorScheme.pellet());
             foodRenderer.setPelletColor(pelletColor);
-            FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
             foodLayer.tiles()
                 .filter(foodLayer::hasFoodAtTile)
                 .filter(not(foodLayer::isEnergizerTile))
