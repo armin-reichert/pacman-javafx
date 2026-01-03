@@ -7,7 +7,7 @@ package de.amr.pacmanfx.uilib.rendering;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Paint;
+import javafx.scene.paint.Color;
 
 public interface Renderer {
 
@@ -21,11 +21,11 @@ public interface Renderer {
 
     default double scaled(double value) { return scaling() * value; }
 
-    ObjectProperty<Paint> backgroundProperty();
+    ObjectProperty<Color> backgroundColorProperty();
 
-    void setBackground(Paint paint);
-
-    Paint background();
+    default Color backgroundColor() {
+        return backgroundColorProperty().get();
+    }
 
     boolean imageSmoothing();
 

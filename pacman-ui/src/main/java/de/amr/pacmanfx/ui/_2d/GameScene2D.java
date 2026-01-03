@@ -18,7 +18,6 @@ import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
@@ -28,7 +27,7 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class GameScene2D implements GameScene {
 
-    private final ObjectProperty<Paint> background = new SimpleObjectProperty<>(Color.BLACK);
+    private final ObjectProperty<Color> backgroundColor = new SimpleObjectProperty<>(Color.BLACK);
     private final BooleanProperty debugInfoVisible = new SimpleBooleanProperty(false);
     private final DoubleProperty scaling = new SimpleDoubleProperty(1.0f);
 
@@ -121,16 +120,16 @@ public abstract class GameScene2D implements GameScene {
         return canvas;
     }
 
-    public ObjectProperty<Paint> backgroundProperty() {
-        return background;
+    public ObjectProperty<Color> backgroundProperty() {
+        return backgroundColor;
     }
 
-    public Paint background() {
-        return background.get();
+    public Color backgroundColor() {
+        return backgroundColor.get();
     }
 
-    public void setBackground(Paint paint) {
-        background.set(paint);
+    public void setBackgroundColor(Color color) {
+        backgroundColor.set(color);
     }
 
     public DoubleProperty scalingProperty() {

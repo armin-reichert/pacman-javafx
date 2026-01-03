@@ -27,7 +27,7 @@ public class BaseRenderer implements Renderer {
 
     public static final Font DEFAULT_ARCADE_FONT = UI_LIB_RESOURCES.loadFont("/de/amr/pacmanfx/uilib/fonts/emulogic.ttf", 8);
 
-    private final ObjectProperty<Paint> background = new SimpleObjectProperty<>(Color.BLACK);
+    private final ObjectProperty<Color> backgroundColor = new SimpleObjectProperty<>(Color.BLACK);
     private final DoubleProperty scaling           = new SimpleDoubleProperty(1.0);
     private final ObjectProperty<Font> arcadeFont8 = new SimpleObjectProperty<>(DEFAULT_ARCADE_FONT);
     private final ObjectProperty<Font> arcadeFont6 = new SimpleObjectProperty<>(DEFAULT_ARCADE_FONT);
@@ -42,7 +42,7 @@ public class BaseRenderer implements Renderer {
     }
 
     public void clearCanvas() {
-        fillCanvas(background());
+        fillCanvas(backgroundColor());
     }
 
     public void fillCanvas(Paint paint) {
@@ -74,19 +74,13 @@ public class BaseRenderer implements Renderer {
     }
 
     @Override
-    public ObjectProperty<Paint> backgroundProperty() {
-        return background;
+    public ObjectProperty<Color> backgroundColorProperty() {
+        return backgroundColor;
     }
 
     @Override
-    public void setBackground(Paint paint) {
-        requireNonNull(paint);
-        backgroundProperty().set(paint);
-    }
-
-    @Override
-    public Paint background() {
-        return backgroundProperty().get();
+    public Color backgroundColor() {
+        return backgroundColorProperty().get();
     }
 
     @Override

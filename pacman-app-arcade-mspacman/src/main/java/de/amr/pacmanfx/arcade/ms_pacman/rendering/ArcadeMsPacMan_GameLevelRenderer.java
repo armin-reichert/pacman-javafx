@@ -85,7 +85,7 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
 
     private void hideGhostHouseDoors(TerrainLayer terrain) {
         terrain.optHouse().ifPresent(house -> {
-            ctx.setFill(background());
+            ctx.setFill(backgroundColor());
             if (house.leftDoorTile() != null) {
                 fillSquareAtTileCenter(house.leftDoorTile(), TS + 0.5);
             }

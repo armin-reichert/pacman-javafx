@@ -80,7 +80,7 @@ public class Arcade_BootScene2D_Renderer extends GameScene2D_Renderer implements
         final Vector2i sceneSize = scene.unscaledSize();
         final int numRows = sceneSize.y() / TS;
         final int numCols = sceneSize.x() / TS;
-        fillCanvas(background());
+        fillCanvas(backgroundColor());
         ctx.setFill(ARCADE_WHITE);
         ctx.setFont(arcadeFont8());
         for (int row = 0; row < numRows; ++row) {
@@ -96,7 +96,7 @@ public class Arcade_BootScene2D_Renderer extends GameScene2D_Renderer implements
         final Vector2i sceneSize = scene.unscaledSize();
         final int numRows = sceneSize.y() / GRID_SIZE;
         final int numCols = sceneSize.x() / GRID_SIZE;
-        fillCanvas(background());
+        fillCanvas(backgroundColor());
         for (int row = 0; row < numRows; ++row) {
             if (randomInt(0, 100) < 20) continue;
             final RectShort fragment1 = randomSpriteFragment();
@@ -123,7 +123,7 @@ public class Arcade_BootScene2D_Renderer extends GameScene2D_Renderer implements
         final int numRows = (int) (gridHeight / GRID_SIZE);
         final int numCols = (int) (gridWidth / GRID_SIZE);
         final double thin = scaled(2), thick = scaled(4);
-        fillCanvas(background());
+        fillCanvas(backgroundColor());
         ctx.setStroke(ARCADE_WHITE);
         for (int row = 0; row <= numRows; ++row) {
             final double y = scaled(row * GRID_SIZE);

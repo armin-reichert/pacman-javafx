@@ -17,7 +17,6 @@ import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.nesColor;
@@ -128,7 +127,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
             // over-paint number from sprite sheet
             ctx.save();
             ctx.scale(scaling(), scaling());
-            ctx.setFill(background());
+            ctx.setFill(backgroundColor());
             ctx.fillRect(numberX - 1, numberY - 8, 12, 8);
             ctx.restore();
 
@@ -146,7 +145,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
         drawCurrentSprite(stork);
         if (stork.isBagReleasedFromBeak()) {
             // Sprite sheet has no stork without bag under its beak so we over-paint the bag
-            ctx.setFill(background());
+            ctx.setFill(backgroundColor());
             ctx.fillRect(scaled(stork.x() - 13), scaled(stork.y() + 3), scaled(8), scaled(10));
         }
     }

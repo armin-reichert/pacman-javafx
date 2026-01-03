@@ -12,7 +12,7 @@ import javafx.scene.canvas.Canvas;
 public abstract class GameScene2D_Renderer extends BaseRenderer {
 
     public static <T extends Renderer> T adaptRenderer(T renderer, GameScene2D scene) {
-        renderer.backgroundProperty().bind(scene.backgroundProperty());
+        renderer.backgroundColorProperty().bind(scene.backgroundProperty());
         renderer.scalingProperty().bind(scene.scalingProperty());
         return renderer;
     }

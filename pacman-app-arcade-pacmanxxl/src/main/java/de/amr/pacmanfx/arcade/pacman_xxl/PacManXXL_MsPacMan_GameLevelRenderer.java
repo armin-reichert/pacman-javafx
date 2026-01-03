@@ -22,14 +22,14 @@ public class PacManXXL_MsPacMan_GameLevelRenderer extends ArcadeMsPacMan_GameLev
         super(canvas, null);
         mazeRenderer = new GenericMapRenderer(canvas);
         mazeRenderer.scalingProperty().bind(scalingProperty());
-        mazeRenderer.backgroundProperty().bind(backgroundProperty());
+        mazeRenderer.backgroundColorProperty().bind(backgroundColorProperty());
     }
 
     @Override
     public void applyLevelSettings(GameLevel gameLevel, RenderInfo info) {
         final WorldMapColorScheme worldMapColorScheme = gameLevel.worldMap().getConfigValue(GameUI_Config.ConfigKey.COLOR_SCHEME);
         final var terrainColorScheme = new TerrainMapColorScheme(
-            (Color) background(),
+            backgroundColor(),
             Color.valueOf(worldMapColorScheme.wallFill()),
             Color.valueOf(worldMapColorScheme.wallStroke()),
             Color.valueOf(worldMapColorScheme.door())

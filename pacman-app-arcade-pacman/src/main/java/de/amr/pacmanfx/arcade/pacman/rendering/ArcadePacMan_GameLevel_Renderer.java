@@ -60,7 +60,7 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements Spr
             if (info.getBoolean(CommonRenderInfoKey.MAZE_FLASHING)) {
                 // Hide ghost house doors while flashing
                 terrain.optHouse().ifPresent(house -> {
-                    ctx.setFill(background());
+                    ctx.setFill(backgroundColor());
                     if (house.leftDoorTile() != null) {
                         fillSquareAtTileCenter(house.leftDoorTile(), TS + 0.5);
                     }

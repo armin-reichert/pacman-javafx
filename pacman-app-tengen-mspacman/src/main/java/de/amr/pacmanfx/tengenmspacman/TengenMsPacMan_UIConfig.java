@@ -309,7 +309,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     @Override
     public TengenMsPacMan_GameLevelRenderer createGameLevelRenderer(Canvas canvas) {
         final var renderer = new TengenMsPacMan_GameLevelRenderer(canvas, this);
-        renderer.backgroundProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
+        renderer.backgroundColorProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
         return renderer;
     }
 
