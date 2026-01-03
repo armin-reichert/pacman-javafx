@@ -11,7 +11,6 @@ import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
-import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
 
