@@ -92,7 +92,6 @@ public class Arcade_PlayScene2D_Renderer extends GameScene2D_Renderer implements
     }
 
     // Actor z-order: Bonus under Pac-Man under ghosts in z-order.
-    // TODO: also take ghost state into account!
     private void updateActorZOrder(GameLevel gameLevel) {
         actorsInZOrder.clear();
         gameLevel.optBonus().ifPresent(actorsInZOrder::add);
