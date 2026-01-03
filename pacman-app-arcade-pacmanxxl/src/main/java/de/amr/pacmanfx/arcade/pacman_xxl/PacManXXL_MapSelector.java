@@ -115,7 +115,7 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
     }
 
     @Override
-    public void loadCustomMaps() {
+    public void loadCustomMaps() throws IOException {
         if (!customMapPrototypes.isEmpty()) {
             Logger.info("Custom maps have already been loaded");
             return;
@@ -131,24 +131,24 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
             Logger.info("Found {} custom map(s)", worldMapFiles.length);
         }
         for (File file : worldMapFiles) {
-            try {
-                final WorldMap worldMap = WorldMap.loadFromFile(file);
-                customMapPrototypes.add(worldMap);
-                Logger.info("Custom map loaded from file '{}'", file);
-            } catch (IOException x) {
-                Logger.error(x);
-                Logger.error("Could not read custom map from file '{}'", file);
-            }
+            final WorldMap worldMap = WorldMap.loadFromFile(file);
+            customMapPrototypes.add(worldMap);
+            Logger.info("Custom map loaded from file '{}'", file);
         }
     }
 
     @Override
     public void loadAllMapPrototypes() {
         if (builtinMapPrototypes.isEmpty()) {
-            final List<WorldMap> predefinedMaps = WorldMapSelector.loadMapsFromModule(getClass(), "maps/masonic_%d.world", 8);
-            builtinMapPrototypes.addAll(predefinedMaps);
+            try {
+                final List<WorldMap> predefinedMaps = WorldMapSelector.loadMaps(getClass(), "maps/masonic_%d.world", 8);
+                builtinMapPrototypes.addAll(predefinedMaps);
+                loadCustomMaps();
+            } catch (IOException x) {
+                Logger.error("Error loading map");
+                throw new RuntimeException(x);
+            }
         }
-        loadCustomMaps();
     }
 
     @Override

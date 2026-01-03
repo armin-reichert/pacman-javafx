@@ -53,6 +53,9 @@ public class ArcadePacMan_MapSelector implements WorldMapSelector {
 
     @Override
     public WorldMap supplyWorldMap(int levelNumber, Object... args) {
+        if (worldMapPrototype == null) {
+            loadAllMapPrototypes();
+        }
         return new WorldMap(worldMapPrototype);
     }
 }

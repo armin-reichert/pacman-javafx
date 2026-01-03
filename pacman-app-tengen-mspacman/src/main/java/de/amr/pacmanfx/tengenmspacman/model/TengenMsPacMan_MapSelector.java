@@ -11,11 +11,12 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.rendering.NonArcadeMapsSpriteSheet;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 
+import java.io.IOException;
 import java.util.List;
 
 import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
 import static de.amr.pacmanfx.lib.nes.NES_ColorScheme.*;
-import static de.amr.pacmanfx.model.world.WorldMapSelector.loadMapsFromModule;
+import static de.amr.pacmanfx.model.world.WorldMapSelector.loadMaps;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.MAPS_PATH;
 import static de.amr.pacmanfx.tengenmspacman.model.MapCategory.*;
 
@@ -31,27 +32,27 @@ public class TengenMsPacMan_MapSelector implements WorldMapSelector {
     private List<WorldMap> bigMapPrototypes;
     private List<WorldMap> strangeMapPrototypes;
 
-    private void ensureArcadeMapPrototypesLoaded() {
+    private void ensureArcadeMapPrototypesLoaded() throws IOException {
         if (arcadeMapPrototypes == null) {
-            arcadeMapPrototypes = loadMapsFromModule(getClass(), MAPS_PATH + "arcade%d.world", 4);
+            arcadeMapPrototypes = loadMaps(getClass(), MAPS_PATH + "arcade%d.world", 4);
         }
     }
 
-    private void ensureMiniMapPrototypesLoaded() {
+    private void ensureMiniMapPrototypesLoaded() throws IOException {
         if (miniMapPrototypes == null) {
-            miniMapPrototypes = loadMapsFromModule(getClass(), MAPS_PATH + "mini%d.world", 6);
+            miniMapPrototypes = loadMaps(getClass(), MAPS_PATH + "mini%d.world", 6);
         }
     }
 
-    private void ensureBigMapPrototypesLoaded() {
+    private void ensureBigMapPrototypesLoaded() throws IOException {
         if (bigMapPrototypes == null) {
-            bigMapPrototypes = loadMapsFromModule(getClass(), MAPS_PATH + "big%02d.world", 11);
+            bigMapPrototypes = loadMaps(getClass(), MAPS_PATH + "big%02d.world", 11);
         }
     }
 
-    private void ensureStrangeMapPrototypesLoaded() {
+    private void ensureStrangeMapPrototypesLoaded() throws IOException {
         if (strangeMapPrototypes == null) {
-            strangeMapPrototypes = loadMapsFromModule(getClass(), MAPS_PATH + "strange%02d.world", 15);
+            strangeMapPrototypes = loadMaps(getClass(), MAPS_PATH + "strange%02d.world", 15);
         }
     }
 
@@ -66,7 +67,7 @@ public class TengenMsPacMan_MapSelector implements WorldMapSelector {
     }
 
     @Override
-    public void loadAllMapPrototypes() {
+    public void loadAllMapPrototypes() throws IOException {
         ensureArcadeMapPrototypesLoaded();
         ensureMiniMapPrototypesLoaded();
         ensureBigMapPrototypesLoaded();
@@ -77,7 +78,7 @@ public class TengenMsPacMan_MapSelector implements WorldMapSelector {
     public void loadCustomMaps() {}
 
     @Override
-    public WorldMap supplyWorldMap(int levelNumber, Object... args) {
+    public WorldMap supplyWorldMap(int levelNumber, Object... args) throws IOException {
         if (args == null || args.length == 0) {
             throw new IllegalArgumentException("Insufficient information for computing map");
         }

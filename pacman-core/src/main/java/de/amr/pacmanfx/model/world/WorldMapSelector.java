@@ -18,7 +18,7 @@ public interface WorldMapSelector {
      * @param args additional arguments
      * @return New copy of the world map prototype for specified level.
      */
-    WorldMap supplyWorldMap(int levelNumber, Object... args);
+    WorldMap supplyWorldMap(int levelNumber, Object... args) throws IOException;
 
     /**
      * @return list of the built-in maps. Users should create a copy because the prototypes are modifiable!
@@ -30,32 +30,28 @@ public interface WorldMapSelector {
      */
     List<WorldMap> customMapPrototypes();
 
-    void loadCustomMaps();
+    void loadCustomMaps() throws IOException;
 
-    void loadAllMapPrototypes();
+    void loadAllMapPrototypes() throws IOException;
 
     /**
      * @param mapPattern path (pattern) to access the map files inside resources folder,
      *                   counting from 1, e.g. <code>"maps/masonic_%d.world"</code>
      * @param mapCount number of maps to be loaded
+     * @throws IllegalArgumentException if a map cannot be accessed via a URL created from the pattern
      */
-    static List<WorldMap> loadMapsFromModule(Class<?> loaderClass, String mapPattern, int mapCount) {
-        var maps = new ArrayList<WorldMap>();
+    static List<WorldMap> loadMaps(Class<?> loaderClass, String mapPattern, int mapCount) throws IOException {
+        final var maps = new ArrayList<WorldMap>();
         for (int n = 1; n <= mapCount; ++n) {
-            String name = mapPattern.formatted(n);
-            URL url = loaderClass.getResource(name);
+            final String name = mapPattern.formatted(n);
+            final URL url = loaderClass.getResource(name);
             if (url == null) {
                 Logger.error("Map not found for resource name='{}'", name);
                 throw new IllegalArgumentException("Illegal map pattern: " + name);
             }
-            try {
-                WorldMap worldMap = WorldMap.loadFromURL(url);
-                maps.add(worldMap);
-                Logger.info("Map loaded, URL='{}'", url);
-            } catch (IOException x) {
-                Logger.error("Could not load map, URL='{}'", url);
-                throw new IllegalArgumentException(x);
-            }
+            final WorldMap worldMap = WorldMap.loadFromURL(url);
+            maps.add(worldMap);
+            Logger.info("Map loaded, URL='{}'", url);
         }
         return maps;
     }

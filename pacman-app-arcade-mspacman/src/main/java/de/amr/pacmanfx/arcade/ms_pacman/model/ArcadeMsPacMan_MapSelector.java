@@ -9,6 +9,7 @@ import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 
+import java.io.IOException;
 import java.util.List;
 
 import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
@@ -42,9 +43,9 @@ public class ArcadeMsPacMan_MapSelector implements WorldMapSelector {
     public void loadCustomMaps() {}
 
     @Override
-    public void loadAllMapPrototypes() {
+    public void loadAllMapPrototypes() throws IOException {
         if (mapPrototypes.isEmpty()) {
-            mapPrototypes = WorldMapSelector.loadMapsFromModule(getClass(), WORLD_MAP_PATH_PATTERN, 4);
+            mapPrototypes = WorldMapSelector.loadMaps(getClass(), WORLD_MAP_PATH_PATTERN, 4);
         }
     }
 
@@ -68,7 +69,10 @@ public class ArcadeMsPacMan_MapSelector implements WorldMapSelector {
      * @param args additional arguments
      */
     @Override
-    public WorldMap supplyWorldMap(int levelNumber, Object... args) {
+    public WorldMap supplyWorldMap(int levelNumber, Object... args) throws IOException {
+        if (mapPrototypes.isEmpty()) {
+            loadAllMapPrototypes();
+        }
         requireValidLevelNumber(levelNumber);
         final int mapNumber = switch (levelNumber) {
             case 1, 2 -> 1;

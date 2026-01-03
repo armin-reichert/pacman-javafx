@@ -279,7 +279,7 @@ public class PacManXXL_StartPageMenu extends OptionMenu {
 
         final int freq = 60;
         animationTimer = new Timeline(freq,
-            new KeyFrame(Duration.seconds(1.0 / freq), e -> {
+            new KeyFrame(Duration.seconds(1.0 / freq), _ -> {
                 draw();
                 chaseAnimation.update();
                 chaseAnimation.draw();

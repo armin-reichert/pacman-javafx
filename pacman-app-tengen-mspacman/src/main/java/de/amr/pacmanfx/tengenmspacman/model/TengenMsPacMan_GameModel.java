@@ -425,7 +425,12 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
 
     @Override
     public GameLevel createLevel(int levelNumber, boolean demoLevel) {
-        final WorldMap worldMap = mapSelector.supplyWorldMap(levelNumber, mapCategory);
+        final WorldMap worldMap;
+        try {
+            worldMap = mapSelector.supplyWorldMap(levelNumber, mapCategory);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         final TerrainLayer terrain = worldMap.terrainLayer();
 
         final ArcadeHouse house = new ArcadeHouse(HOUSE_MIN_TILE);
