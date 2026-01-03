@@ -57,20 +57,12 @@ public class TengenMsPacMan_MapSelector implements WorldMapSelector {
     }
 
     @Override
-    public List<WorldMap> customMapPrototypes() {
-        return List.of();
-    }
-
-    @Override
     public void loadAllMapPrototypes() throws IOException {
         ensureArcadeMapPrototypesLoaded();
         ensureMiniMapPrototypesLoaded();
         ensureBigMapPrototypesLoaded();
         ensureStrangeMapPrototypesLoaded();
     }
-
-    @Override
-    public void loadCustomMaps() {}
 
     @Override
     public WorldMap supplyWorldMap(int levelNumber, Object... args) throws IOException {

@@ -11,21 +11,12 @@ import org.tinylog.Logger;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 
 public class ArcadePacMan_MapSelector implements WorldMapSelector {
 
     private static final String PROTOTYPE_PATH = "/de/amr/pacmanfx/arcade/pacman/maps/pacman.world";
 
     private WorldMap prototype;
-
-    @Override
-    public List<WorldMap> customMapPrototypes() {
-        return List.of();
-    }
-
-    @Override
-    public void loadCustomMaps() {}
 
     @Override
     public void loadAllMapPrototypes() throws IOException {

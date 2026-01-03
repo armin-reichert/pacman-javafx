@@ -30,14 +30,6 @@ public class ArcadeMsPacMan_MapSelector implements WorldMapSelector {
     private List<WorldMap> mapPrototypes = List.of();
 
     @Override
-    public List<WorldMap> customMapPrototypes() {
-        return List.of();
-    }
-
-    @Override
-    public void loadCustomMaps() {}
-
-    @Override
     public void loadAllMapPrototypes() throws IOException {
         if (mapPrototypes.isEmpty()) {
             mapPrototypes = WorldMapSelector.loadMaps(getClass(), WORLD_MAP_PATH_PATTERN, 4);

@@ -23,10 +23,20 @@ public interface WorldMapSelector {
     /**
      * @return list of the built-in maps. Users should create a copy because the prototypes are modifiable!
      */
-    List<WorldMap> customMapPrototypes();
+    default List<WorldMap> customMapPrototypes() {
+        return List.of();
+    }
 
-    void loadCustomMaps() throws IOException;
+    /**
+     * Loads all user-defined maps (XXL games only).
+     * @throws IOException if map loading fails
+     */
+    default void loadCustomMaps() throws IOException {}
 
+    /**
+     * Loads all map prototypes, built-in and user-defined maps.
+     * @throws IOException if map loading fails
+     */
     void loadAllMapPrototypes() throws IOException;
 
     /**
@@ -34,6 +44,7 @@ public interface WorldMapSelector {
      *                   counting from 1, e.g. <code>"maps/masonic_%d.world"</code>
      * @param mapCount number of maps to be loaded
      * @throws IllegalArgumentException if a map cannot be accessed via a URL created from the pattern
+     * @throws IOException if map loading fails
      */
     static List<WorldMap> loadMaps(Class<?> loaderClass, String mapPattern, int mapCount) throws IOException {
         final var maps = new ArrayList<WorldMap>();
