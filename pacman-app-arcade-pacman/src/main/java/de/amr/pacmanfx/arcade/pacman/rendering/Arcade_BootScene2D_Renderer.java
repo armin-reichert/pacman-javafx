@@ -24,7 +24,8 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * Boot scene simulating the boot process of the Arcade machine. Shows random hex codes, sprite fragments
- * and a grid before the intro scene starts.
+ * and a grid before the intro scene starts. This scene is used by the Arcade and the XXL variants so we pass the
+ * corresponding spritesheet as a parameter.
  */
 public class Arcade_BootScene2D_Renderer extends GameScene2D_Renderer implements SpriteRenderer {
 
@@ -62,24 +63,24 @@ public class Arcade_BootScene2D_Renderer extends GameScene2D_Renderer implements
             clearCanvas();
         }
         else if (stateTimer.betweenSeconds(1, 2) && fourthTick) {
-            drawRandomHexDigits(scene);
+            showRandomHexDigits(scene);
         }
         else if (stateTimer.betweenSeconds(2, 3.5) && fourthTick) {
-            drawRandomSpriteFragments(scene);
+            showRandomSpriteFragments(scene);
         }
         else if (stateTimer.atSecond(3.5)) {
-            drawGrid(scene);
+            showGrid(scene);
         }
         if (scene.debugInfoVisible()) {
             debugRenderer.draw(scene);
         }
     }
 
-    private void drawRandomHexDigits(GameScene2D scene) {
+    private void showRandomHexDigits(GameScene2D scene) {
         final Vector2i sceneSize = scene.unscaledSize();
         final int numRows = sceneSize.y() / TS;
         final int numCols = sceneSize.x() / TS;
-        clearCanvas();
+        fillCanvas(background());
         ctx.setFill(ARCADE_WHITE);
         ctx.setFont(arcadeFont8());
         for (int row = 0; row < numRows; ++row) {
@@ -91,11 +92,11 @@ public class Arcade_BootScene2D_Renderer extends GameScene2D_Renderer implements
         }
     }
 
-    private void drawRandomSpriteFragments(GameScene2D scene) {
+    private void showRandomSpriteFragments(GameScene2D scene) {
         final Vector2i sceneSize = scene.unscaledSize();
         final int numRows = sceneSize.y() / GRID_SIZE;
         final int numCols = sceneSize.x() / GRID_SIZE;
-        clearCanvas();
+        fillCanvas(background());
         for (int row = 0; row < numRows; ++row) {
             if (randomInt(0, 100) < 20) continue;
             final RectShort fragment1 = randomSpriteFragment();
@@ -115,14 +116,14 @@ public class Arcade_BootScene2D_Renderer extends GameScene2D_Renderer implements
         return new RectShort((short) xMin, (short) yMin, GRID_SIZE, GRID_SIZE);
     }
 
-    private void drawGrid(GameScene2D scene) {
+    private void showGrid(GameScene2D scene) {
         final Vector2i sceneSize = scene.unscaledSize();
         final double gridWidth = scaled(sceneSize.x());
         final double gridHeight = scaled(sceneSize.y());
         final int numRows = (int) (gridHeight / GRID_SIZE);
         final int numCols = (int) (gridWidth / GRID_SIZE);
         final double thin = scaled(2), thick = scaled(4);
-        clearCanvas();
+        fillCanvas(background());
         ctx.setStroke(ARCADE_WHITE);
         for (int row = 0; row <= numRows; ++row) {
             final double y = scaled(row * GRID_SIZE);
