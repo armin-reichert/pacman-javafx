@@ -44,14 +44,16 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements Spr
 
     protected void drawMaze(GameLevel gameLevel, RenderInfo info) {
         final TerrainLayer terrain = gameLevel.worldMap().terrainLayer();
-        int emptySpaceOverMazePixels = terrain.emptyRowsOverMaze() * TS;
+        final int emptySpaceOverMazePixels = terrain.emptyRowsOverMaze() * TS;
         ctx.save();
         ctx.scale(scaling(), scaling());
         if (info.getBoolean(CommonRenderInfoKey.MAZE_EMPTY)) {
             // Empty maze is shown when level is complete and when the flashing animation is running
             if (info.getBoolean(CommonRenderInfoKey.MAZE_BRIGHT)) {
                 // Flashing animation bright phase
-                ctx.drawImage(brightMazeImage, 0, emptySpaceOverMazePixels);
+                if (brightMazeImage != null) {
+                    ctx.drawImage(brightMazeImage, 0, emptySpaceOverMazePixels);
+                }
             } else {
                 drawSprite(spriteSheet().sprite(SpriteID.MAP_EMPTY), 0, emptySpaceOverMazePixels, false);
             }
@@ -71,7 +73,7 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements Spr
         else {
             drawSprite(spriteSheet().sprite(SpriteID.MAP_FULL), 0, emptySpaceOverMazePixels, false);
             // Over-paint eaten food tiles
-            FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
+            final FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
             foodLayer.tiles()
                 .filter(not(foodLayer::isEnergizerTile))
                 .filter(foodLayer::hasEatenFoodAtTile)
@@ -85,11 +87,15 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements Spr
     }
 
     protected void drawGameLevelMessage(GameLevel gameLevel, GameLevelMessage message) {
-        final double x = message.x(), y = message.y();
         switch (message.type()) {
-            case GAME_OVER -> fillTextCentered("GAME  OVER", ARCADE_RED, arcadeFont8(), x, y);
-            case READY -> fillTextCentered("READY!", ARCADE_YELLOW, arcadeFont8(), x, y);
-            case TEST -> fillTextCentered("TEST    L%02d".formatted(gameLevel.number()), ARCADE_WHITE, arcadeFont8(), x, y);
+            case GAME_OVER -> fillTextCentered("GAME  OVER",
+                    ARCADE_RED, arcadeFont8(), message.x(), message.y());
+
+            case READY -> fillTextCentered("READY!",
+                    ARCADE_YELLOW, arcadeFont8(), message.x(), message.y());
+
+            case TEST -> fillTextCentered("TEST    L%02d".formatted(gameLevel.number()),
+                    ARCADE_WHITE, arcadeFont8(), message.x(), message.y());
         }
     }
 }
