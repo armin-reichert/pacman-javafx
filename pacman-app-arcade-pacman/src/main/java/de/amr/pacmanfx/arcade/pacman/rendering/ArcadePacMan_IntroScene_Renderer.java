@@ -31,13 +31,13 @@ public class ArcadePacMan_IntroScene_Renderer extends GameScene2D_Renderer imple
     private static final short ENERGIZER_X = TS * LEFT_TILE_X;
     private static final short ENERGIZER_Y = TS * 20;
 
-    private final ArcadePacMan_Actor_Renderer actorRenderer;
+    private final ArcadePacMan_ActorRenderer actorRenderer;
     private final RectShort energizerSprite;
 
     public ArcadePacMan_IntroScene_Renderer(GameUI_Config uiConfig, UIPreferences prefs, GameScene2D scene, Canvas canvas) {
         super(canvas);
 
-        actorRenderer = adaptRenderer((ArcadePacMan_Actor_Renderer) uiConfig.createActorRenderer(canvas), scene);
+        actorRenderer = adaptRenderer((ArcadePacMan_ActorRenderer) uiConfig.createActorRenderer(canvas), scene);
 
         debugRenderer = adaptRenderer(new BaseDebugInfoRenderer(prefs, canvas) {
             @Override

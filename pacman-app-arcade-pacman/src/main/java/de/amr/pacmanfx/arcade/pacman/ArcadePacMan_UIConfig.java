@@ -229,7 +229,7 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
     @Override
     public ActorRenderer createActorRenderer(Canvas canvas) {
         requireNonNull(canvas);
-        final var actorRenderer = new ArcadePacMan_Actor_Renderer(canvas);
+        final var actorRenderer = new ArcadePacMan_ActorRenderer(canvas);
         actorRenderer.setImageSmoothing(true);
         return actorRenderer;
     }

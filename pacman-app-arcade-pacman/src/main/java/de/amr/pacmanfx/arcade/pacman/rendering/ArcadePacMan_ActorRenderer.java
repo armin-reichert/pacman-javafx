@@ -15,9 +15,9 @@ import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
 
-public class ArcadePacMan_Actor_Renderer extends BaseRenderer implements SpriteRenderer, ActorRenderer {
+public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRenderer, ActorRenderer {
 
-    public ArcadePacMan_Actor_Renderer(Canvas canvas) {
+    public ArcadePacMan_ActorRenderer(Canvas canvas) {
         super(canvas);
     }
 
@@ -54,8 +54,6 @@ public class ArcadePacMan_Actor_Renderer extends BaseRenderer implements SpriteR
     private void drawBonusSprite(Bonus bonus, RectShort[] sprites, int index) {
         if (0 <= index && index < sprites.length) {
             drawSpriteCentered(bonus.center(), sprites[index]);
-        } else {
-            Logger.error("Cannot render bonus with symbol code {}", index);
         }
     }
 }
