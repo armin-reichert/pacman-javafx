@@ -91,7 +91,7 @@ public class TengenMsPacMan_MapRepository implements Disposable {
         final var coloredMaze = new ColorSchemedImage(ArcadeMapsSpriteSheet.INSTANCE.sourceImage(), mazeSprite, colorScheme);
 
         //TODO: Handle case when color scheme is already black & white
-        final List<ColorSchemedImage> flashingMazes = coloringService.createFlashingMazeList(
+        final List<ColorSchemedImage> flashingMazes = coloringService.createFlashingMapImages(
                 MapCategory.ARCADE, mazeID,
                 ArcadeMapsSpriteSheet.INSTANCE, mazeSprite,
                 colorScheme, NES_ColorScheme._0F_20_0F_BLACK_WHITE_BLACK,
