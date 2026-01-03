@@ -13,7 +13,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 
@@ -28,9 +27,9 @@ public class BaseRenderer implements Renderer {
     public static final Font DEFAULT_ARCADE_FONT = UI_LIB_RESOURCES.loadFont("/de/amr/pacmanfx/uilib/fonts/emulogic.ttf", 8);
 
     private final ObjectProperty<Color> backgroundColor = new SimpleObjectProperty<>(Color.BLACK);
-    private final DoubleProperty scaling           = new SimpleDoubleProperty(1.0);
-    private final ObjectProperty<Font> arcadeFont8 = new SimpleObjectProperty<>(DEFAULT_ARCADE_FONT);
-    private final ObjectProperty<Font> arcadeFont6 = new SimpleObjectProperty<>(DEFAULT_ARCADE_FONT);
+    private final DoubleProperty scaling                = new SimpleDoubleProperty(1.0);
+    private final ObjectProperty<Font> arcadeFont6      = new SimpleObjectProperty<>(DEFAULT_ARCADE_FONT);
+    private final ObjectProperty<Font> arcadeFont8      = new SimpleObjectProperty<>(DEFAULT_ARCADE_FONT);
 
     protected final GraphicsContext ctx;
     protected boolean imageSmoothing;
@@ -45,9 +44,9 @@ public class BaseRenderer implements Renderer {
         fillCanvas(backgroundColor());
     }
 
-    public void fillCanvas(Paint paint) {
-        requireNonNull(paint);
-        ctx.setFill(paint);
+    public void fillCanvas(Color color) {
+        requireNonNull(color);
+        ctx.setFill(color);
         ctx.fillRect(0, 0, ctx.getCanvas().getWidth(), ctx.getCanvas().getHeight());
     }
 
@@ -114,8 +113,8 @@ public class BaseRenderer implements Renderer {
      */
     public void fillSquareAtTileCenter(Vector2i tile, double sideLength) {
         requireNonNull(tile);
-        double centerX = tile.x() * TS + HTS, centerY = tile.y() * TS + HTS;
-        double halfSideLength = 0.5f * sideLength;
+        final double centerX = tile.x() * TS + HTS, centerY = tile.y() * TS + HTS;
+        final double halfSideLength = 0.5f * sideLength;
         ctx.fillRect(centerX - halfSideLength, centerY - halfSideLength, sideLength, sideLength);
     }
 
@@ -165,20 +164,20 @@ public class BaseRenderer implements Renderer {
 
     public void drawTileGrid(double sizeX, double sizeY, Color gridColor) {
         final double scaledTileSize = scaled(TS);
-        double thin = 0.2, medium = 0.4, thick = 0.8;
-        int numCols = (int) (sizeX / TS), numRows = (int) (sizeY / TS);
-        double width = numCols * scaledTileSize, height = numRows * scaledTileSize;
+        final double thin = 0.2, medium = 0.4, thick = 0.8;
+        final int numCols = (int) (sizeX / TS), numRows = (int) (sizeY / TS);
+        final double width = numCols * scaledTileSize, height = numRows * scaledTileSize;
         ctx.save();
         ctx.setStroke(Color.YELLOW);
         ctx.strokeRect(0, 0, ctx.getCanvas().getWidth(), ctx.getCanvas().getHeight());
         ctx.setStroke(gridColor);
         for (int row = 0; row <= numRows; ++row) {
-            double y = row * scaledTileSize;
+            final double y = row * scaledTileSize;
             ctx.setLineWidth(row % 10 == 0 ? thick : row % 5 == 0 ? medium : thin);
             ctx.strokeLine(0, y, width, y);
         }
         for (int col = 0; col <= numCols; ++col) {
-            double x = col * scaledTileSize;
+            final double x = col * scaledTileSize;
             ctx.setLineWidth(col % 10 == 0 ? thick : col % 5 == 0? medium : thin);
             ctx.strokeLine(x, 0, x, height);
         }
