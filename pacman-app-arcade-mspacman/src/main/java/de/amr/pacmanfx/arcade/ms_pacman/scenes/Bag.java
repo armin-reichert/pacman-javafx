@@ -18,8 +18,8 @@ public class Bag extends Actor {
 
     private boolean open;
 
-    public Bag(ArcadeMsPacMan_SpriteSheet spriteSheet) {
-        final var animations = new SpriteAnimationManager<>(spriteSheet) {
+    public Bag() {
+        final var animations = new SpriteAnimationManager<>(ArcadeMsPacMan_SpriteSheet.INSTANCE) {
             @Override
             protected SpriteAnimation createAnimation(Object animationID) {
                 return switch (animationID) {

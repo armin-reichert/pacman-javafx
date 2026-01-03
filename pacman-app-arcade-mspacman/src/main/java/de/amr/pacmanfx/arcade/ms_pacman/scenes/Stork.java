@@ -14,8 +14,8 @@ public class Stork extends Actor {
 
     public enum AnimationID { FLYING }
 
-    public Stork(ArcadeMsPacMan_SpriteSheet spriteSheet) {
-        final var animations = new SpriteAnimationManager<>(spriteSheet) {
+    public Stork() {
+        final var animations = new SpriteAnimationManager<>(ArcadeMsPacMan_SpriteSheet.INSTANCE) {
             @Override
             protected SpriteAnimation createAnimation(Object animationID) {
                 if (animationID.equals(AnimationID.FLYING)) {

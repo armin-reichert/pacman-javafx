@@ -100,8 +100,8 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         pacMan = new PacMan();
         pacMan.setAnimationManager(uiConfig.createPacAnimations());
 
-        stork = new Stork(spriteSheet);
-        flyingBag = new Bag(spriteSheet);
+        stork = new Stork();
+        flyingBag = new Bag();
 
         darkness = false;
 

@@ -17,8 +17,8 @@ public class Stork extends Actor {
 
     private boolean bagReleasedFromBeak;
 
-    public Stork(TengenMsPacMan_SpriteSheet spriteSheet) {
-        final var animations = new SpriteAnimationManager<>(spriteSheet) {
+    public Stork() {
+        final var animations = new SpriteAnimationManager<>(TengenMsPacMan_SpriteSheet.INSTANCE) {
             @Override
             protected SpriteAnimation createAnimation(Object animationID) {
                 if (animationID.equals(AnimationID.FLYING)) {
