@@ -85,7 +85,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
     public void doInit(Game game) {
         final var tengenGame = (TengenMsPacMan_GameModel) game;
         final GameUI_Config uiConfig = ui.currentConfig();
-        final var spriteSheet = (TengenMsPacMan_SpriteSheet) uiConfig.spriteSheet();
+        final var spriteSheet = TengenMsPacMan_SpriteSheet.INSTANCE;
 
         final var hud = (TengenMsPacMan_HeadsUpDisplay) game.hud();
         if (tengenGame.mapCategory() == MapCategory.ARCADE) {
@@ -96,7 +96,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
 
         actionBindings.setKeyCombination(ACTION_LET_GAME_STATE_EXPIRE, JOYPAD.key(JoypadButton.START));
 
-        clapperboard = new Clapperboard(spriteSheet, 1, "THEY MEET");
+        clapperboard = new Clapperboard(1, "THEY MEET");
         clapperboard.setPosition(3 * TS, 10 * TS);
         clapperboard.show();
         clapperboard.startAnimation();

@@ -8,7 +8,6 @@ import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.tengenmspacman.rendering.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SpriteSheet;
-import javafx.scene.text.Font;
 
 import java.util.Optional;
 
@@ -21,22 +20,20 @@ public class Clapperboard extends Actor {
 
     public enum State { HIDDEN, WIDE_OPEN, OPEN, CLOSED }
 
-    private final TengenMsPacMan_SpriteSheet spriteSheet;
-    private int tick;
+    private final int number;
+    private final String text;
+
     private State state;
+    private int tick;
     private boolean textVisible;
     private boolean running;
-    private final byte number;
-    private final String text;
-    private Font font = Font.font(8);
 
-    public Clapperboard(TengenMsPacMan_SpriteSheet spriteSheet, int number, String text) {
-        this.spriteSheet = requireNonNull(spriteSheet);
-        this.number = (byte) number;
+    public Clapperboard(int number, String text) {
+        this.number = number;
         this.text = requireNonNull(text);
     }
 
-    public byte number() {
+    public int number() {
         return number;
     }
 
@@ -44,20 +41,12 @@ public class Clapperboard extends Actor {
         return text;
     }
 
-    public Font font() {
-        return font;
-    }
-
-    public void setFont(Font font) {
-        this.font = font;
-    }
-
     public boolean isTextVisible() {
         return textVisible;
     }
 
     public Optional<RectShort> sprite() {
-        RectShort[] sprites = spriteSheet.sprites(SpriteID.CLAPPERBOARD);
+        RectShort[] sprites = TengenMsPacMan_SpriteSheet.INSTANCE.sprites(SpriteID.CLAPPERBOARD);
         return switch (state) {
             case HIDDEN -> Optional.empty();
             case WIDE_OPEN -> Optional.of(sprites[0]);

@@ -68,7 +68,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         final GameUI_Config uiConfig = ui.currentConfig();
         final var spriteSheet = (TengenMsPacMan_SpriteSheet) uiConfig.spriteSheet();
 
-        clapperboard = new Clapperboard(spriteSheet, 4, "THE END");
+        clapperboard = new Clapperboard(4, "THE END");
         clapperboard.setPosition(TS(3), TS(10));
         clapperboard.setVisible(true);
         clapperboard.startAnimation();

@@ -73,7 +73,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
 
         actionBindings.setKeyCombination(ACTION_LET_GAME_STATE_EXPIRE, JOYPAD.key(JoypadButton.START));
 
-        clapperboard = new Clapperboard(spriteSheet, 2, "THE CHASE");
+        clapperboard = new Clapperboard(2, "THE CHASE");
         clapperboard.setPosition(3 * TS, 10 * TS);
         clapperboard.show();
         clapperboard.startAnimation();

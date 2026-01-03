@@ -17,6 +17,7 @@ import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.nesColor;
@@ -131,7 +132,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
             ctx.fillRect(numberX - 1, numberY - 8, 12, 8);
             ctx.restore();
 
-            ctx.setFont(clapperboard.font());
+            ctx.setFont(arcadeFont8());
             ctx.setFill(nesColor(0x20));
             ctx.fillText(String.valueOf(clapperboard.number()), scaled(numberX), scaled(numberY));
             if (clapperboard.isTextVisible()) {

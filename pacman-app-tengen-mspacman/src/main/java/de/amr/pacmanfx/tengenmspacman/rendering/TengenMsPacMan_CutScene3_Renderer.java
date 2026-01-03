@@ -24,17 +24,15 @@ public class TengenMsPacMan_CutScene3_Renderer extends GameScene2D_Renderer {
     @Override
     public void draw(GameScene2D scene) {
         clearCanvas();
-
-        final TengenMsPacMan_CutScene3 cutScene = (TengenMsPacMan_CutScene3) scene;
-        if (!cutScene.darkness()) {
-            cutScene.clapperboard().setFont(arcadeFont8());
-            actorRenderer.drawActor(cutScene.clapperboard());
-            actorRenderer.drawActor(cutScene.stork());
-            actorRenderer.drawActor(cutScene.flyingBag());
-            actorRenderer.drawActor(cutScene.msPacMan());
-            actorRenderer.drawActor(cutScene.pacMan());
+        if (scene instanceof TengenMsPacMan_CutScene3 cutScene) {
+            if (!cutScene.darkness()) {
+                actorRenderer.drawActor(cutScene.clapperboard());
+                actorRenderer.drawActor(cutScene.stork());
+                actorRenderer.drawActor(cutScene.flyingBag());
+                actorRenderer.drawActor(cutScene.msPacMan());
+                actorRenderer.drawActor(cutScene.pacMan());
+            }
         }
-
         if (scene.debugInfoVisible()) {
             debugRenderer.draw(scene);
         }
