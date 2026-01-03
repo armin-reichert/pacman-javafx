@@ -37,7 +37,7 @@ public interface WorldMapSelector {
      * Loads all map prototypes, built-in and user-defined maps.
      * @throws IOException if map loading fails
      */
-    void loadAllMapPrototypes() throws IOException;
+    void loadMapPrototypes() throws IOException;
 
     /**
      * @param mapPattern path (pattern) to access the map files inside resources folder,

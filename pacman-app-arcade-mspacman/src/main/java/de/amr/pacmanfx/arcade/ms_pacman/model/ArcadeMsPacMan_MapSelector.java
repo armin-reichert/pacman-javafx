@@ -30,7 +30,7 @@ public class ArcadeMsPacMan_MapSelector implements WorldMapSelector {
     private List<WorldMap> mapPrototypes = List.of();
 
     @Override
-    public void loadAllMapPrototypes() throws IOException {
+    public void loadMapPrototypes() throws IOException {
         if (mapPrototypes.isEmpty()) {
             mapPrototypes = WorldMapSelector.loadMaps(getClass(), WORLD_MAP_PATH_PATTERN, 4);
         }
@@ -59,7 +59,7 @@ public class ArcadeMsPacMan_MapSelector implements WorldMapSelector {
     public WorldMap supplyWorldMap(int levelNumber, Object... args) throws IOException {
         requireValidLevelNumber(levelNumber);
         if (mapPrototypes.isEmpty()) {
-            loadAllMapPrototypes();
+            loadMapPrototypes();
         }
         final int mapNumber = switch (levelNumber) {
             case 1, 2 -> 1;

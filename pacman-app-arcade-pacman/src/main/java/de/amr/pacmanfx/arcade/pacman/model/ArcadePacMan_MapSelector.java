@@ -19,7 +19,7 @@ public class ArcadePacMan_MapSelector implements WorldMapSelector {
     private WorldMap prototype;
 
     @Override
-    public void loadAllMapPrototypes() throws IOException {
+    public void loadMapPrototypes() throws IOException {
         final URL url = getClass().getResource(PROTOTYPE_PATH);
         if (url == null) {
             final String errorMsg = "Could not access Arcade Pac-Man map '%s'".formatted(PROTOTYPE_PATH);
@@ -30,10 +30,16 @@ public class ArcadePacMan_MapSelector implements WorldMapSelector {
         Logger.info("Loaded world map '{}'", url);
     }
 
+    /**
+     * @param levelNumber (ignored) level number (starting with 1)
+     * @param args (ignored) additional arguments
+     * @return the single map used in Arcade Pac-Man
+     * @throws IOException if map loading fails
+     */
     @Override
     public WorldMap supplyWorldMap(int levelNumber, Object... args) throws IOException {
         if (prototype == null) {
-            loadAllMapPrototypes();
+            loadMapPrototypes();
         }
         final WorldMap worldMap = new WorldMap(prototype);
         worldMap.setConfigValue(GameUI_Config.ConfigKey.MAP_NUMBER, 1);

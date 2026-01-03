@@ -57,7 +57,7 @@ public class TengenMsPacMan_MapSelector implements WorldMapSelector {
     }
 
     @Override
-    public void loadAllMapPrototypes() throws IOException {
+    public void loadMapPrototypes() throws IOException {
         ensureArcadeMapPrototypesLoaded();
         ensureMiniMapPrototypesLoaded();
         ensureBigMapPrototypesLoaded();

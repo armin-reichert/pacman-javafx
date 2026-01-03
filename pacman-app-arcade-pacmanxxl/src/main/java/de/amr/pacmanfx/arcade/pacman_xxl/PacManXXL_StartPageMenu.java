@@ -340,7 +340,7 @@ public class PacManXXL_StartPageMenu extends OptionMenu {
     public void syncMenuState() {
         final Game game = selectedGame();
         final var mapSelector = (PacManXXL_MapSelector) game.mapSelector();
-        mapSelector.loadAllMapPrototypes();
+        mapSelector.loadMapPrototypes();
         final boolean customMapsExist = !mapSelector.customMapPrototypes().isEmpty();
 
         state.play3D = PROPERTY_3D_ENABLED.get();
@@ -374,7 +374,7 @@ public class PacManXXL_StartPageMenu extends OptionMenu {
         final Game game = selectedGame();
         final var mapSelector = (PacManXXL_MapSelector) game.mapSelector();
         mapSelector.setSelectionMode(state.mapOrder);
-        mapSelector.loadAllMapPrototypes();
+        mapSelector.loadMapPrototypes();
         game.setCutScenesEnabled(state.cutScenesEnabled);
         ui.selectGameVariant(state.gameVariant);
     }

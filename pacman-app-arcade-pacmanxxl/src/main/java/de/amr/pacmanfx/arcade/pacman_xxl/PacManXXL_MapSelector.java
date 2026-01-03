@@ -133,7 +133,7 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
     }
 
     @Override
-    public void loadAllMapPrototypes() {
+    public void loadMapPrototypes() {
         if (builtinMapPrototypes.isEmpty()) {
             try {
                 final List<WorldMap> predefinedMaps = WorldMapSelector.loadMaps(getClass(), "maps/masonic_%d.world", 8);
@@ -148,7 +148,7 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
 
     @Override
     public WorldMap supplyWorldMap(int levelNumber, Object... args) {
-        loadAllMapPrototypes(); // ensure maps loaded
+        loadMapPrototypes(); // ensure maps loaded
         final WorldMap prototype = switch (selectionMode) {
             case NO_CUSTOM_MAPS -> {
                 // first pick built-in maps in order, then randomly
