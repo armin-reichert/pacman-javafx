@@ -2,7 +2,7 @@ package de.amr.pacmanfx.uilib.rendering;
 
 public interface CommonRenderInfoKey {
 
-    String ENERGIZER_BLINKING = "blinking";
+    String ENERGIZER_ON = "blinking";
     String MAZE_BRIGHT = "bright";
     String MAZE_EMPTY = "empty";
     String MAZE_FLASHING = "flashing";

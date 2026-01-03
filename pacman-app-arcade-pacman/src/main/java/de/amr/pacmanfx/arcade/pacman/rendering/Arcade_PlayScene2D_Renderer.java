@@ -24,6 +24,10 @@ import java.util.List;
 import static de.amr.pacmanfx.Globals.*;
 import static java.util.Objects.requireNonNull;
 
+/**
+ * Renders the 2D play scene for the Arcade Pac-Man games. The XXL games use a generic map renderer that does not need
+ * any graphics.
+ */
 public class Arcade_PlayScene2D_Renderer extends GameScene2D_Renderer implements SpriteRenderer {
 
     private static final List<Byte> GHOST_Z_ORDER = List.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW);
@@ -35,7 +39,7 @@ public class Arcade_PlayScene2D_Renderer extends GameScene2D_Renderer implements
 
     public Arcade_PlayScene2D_Renderer(UIPreferences prefs, GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(canvas);
-
+        requireNonNull(prefs);
         requireNonNull(scene);
         this.spriteSheet = requireNonNull(spriteSheet);
 
@@ -65,7 +69,7 @@ public class Arcade_PlayScene2D_Renderer extends GameScene2D_Renderer implements
             levelRenderer.applyLevelSettings(level, info);
             levelRenderer.drawGameLevel(level, info);
 
-            updateActorDrawingOrder(level);
+            updateActorZOrder(level);
             actorsInZOrder.forEach(actorRenderer::drawActor);
 
             if (scene.debugInfoVisible()) {
@@ -75,19 +79,21 @@ public class Arcade_PlayScene2D_Renderer extends GameScene2D_Renderer implements
     }
 
     private RenderInfo buildRenderInfo(GameLevel level, LevelCompletedAnimation levelCompletedAnimation) {
-        final var info = new RenderInfo();
         final boolean bright = levelCompletedAnimation != null && levelCompletedAnimation.isHighlighted();
         final boolean flashing = levelCompletedAnimation != null && levelCompletedAnimation.isFlashing();
-        info.put(CommonRenderInfoKey.ENERGIZER_BLINKING, level.blinking().state() == Pulse.State.ON);
-        info.put(CommonRenderInfoKey.MAZE_EMPTY, level.worldMap().foodLayer().uneatenFoodCount() == 0);
+        final boolean energizerOn = level.blinking().state() == Pulse.State.ON;
+        final boolean allPelletsEaten = level.worldMap().foodLayer().uneatenFoodCount() == 0;
+        final var info = new RenderInfo();
+        info.put(CommonRenderInfoKey.ENERGIZER_ON, energizerOn);
+        info.put(CommonRenderInfoKey.MAZE_EMPTY, allPelletsEaten);
         info.put(CommonRenderInfoKey.MAZE_BRIGHT, bright);
         info.put(CommonRenderInfoKey.MAZE_FLASHING, flashing);
         return info;
     }
 
-    private void updateActorDrawingOrder(GameLevel gameLevel) {
-        // Actor drawing order: (Bonus) < Pac-Man < Ghosts in order.
-        // TODO: also take ghost state into account!
+    // Actor z-order: Bonus under Pac-Man under ghosts in z-order.
+    // TODO: also take ghost state into account!
+    private void updateActorZOrder(GameLevel gameLevel) {
         actorsInZOrder.clear();
         gameLevel.optBonus().ifPresent(actorsInZOrder::add);
         actorsInZOrder.add(gameLevel.pac());
