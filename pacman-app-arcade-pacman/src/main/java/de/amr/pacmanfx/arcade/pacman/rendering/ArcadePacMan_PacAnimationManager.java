@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
-import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.model.actors.Actor;
@@ -14,6 +13,10 @@ import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 
 public class ArcadePacMan_PacAnimationManager extends SpriteAnimationManager<SpriteID> {
+
+    public enum AnimationID {
+        ANIM_BIG_PAC_MAN,
+    }
 
     public ArcadePacMan_PacAnimationManager(ArcadePacMan_SpriteSheet spriteSheet) {
         super(spriteSheet);
@@ -34,7 +37,7 @@ public class ArcadePacMan_PacAnimationManager extends SpriteAnimationManager<Spr
                 .ticksPerFrame(8)
                 .once();
 
-            case ArcadePacMan_UIConfig.AnimationID.ANIM_BIG_PAC_MAN -> SpriteAnimation.builder()
+            case AnimationID.ANIM_BIG_PAC_MAN -> SpriteAnimation.builder()
                 .fromSprites(spriteSheet.spriteSequence(SpriteID.PACMAN_BIG))
                 .ticksPerFrame(3)
                 .endless();

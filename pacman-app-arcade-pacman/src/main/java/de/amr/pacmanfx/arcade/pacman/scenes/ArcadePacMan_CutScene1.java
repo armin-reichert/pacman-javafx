@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
-import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
+import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_PacAnimationManager;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
@@ -86,7 +86,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
         else if (tick == ANIMATION_START_TICK + 400) {
             pacMan.placeAtTile(-3, 18, 0, 6.5f);
             pacMan.setMoveDir(Direction.RIGHT);
-            pacMan.playAnimation(ArcadePacMan_UIConfig.AnimationID.ANIM_BIG_PAC_MAN);
+            pacMan.playAnimation(ArcadePacMan_PacAnimationManager.AnimationID.ANIM_BIG_PAC_MAN);
         }
         else if (tick == ANIMATION_START_TICK + 632) {
             game.control().terminateCurrentGameState();

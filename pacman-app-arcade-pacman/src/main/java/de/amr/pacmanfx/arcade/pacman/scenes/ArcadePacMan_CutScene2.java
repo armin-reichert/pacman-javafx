@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
-import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
+import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_GhostAnimationManager;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
@@ -70,8 +70,8 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
         blinky.optAnimationManager().ifPresent(am -> {
             blinkyNormal = (SpriteAnimation) am.animation(CommonAnimationID.ANIM_GHOST_NORMAL);
-            nailDressRaptureAnimation = (SpriteAnimation) am.animation(ArcadePacMan_UIConfig.AnimationID.ANIM_BLINKY_NAIL_DRESS_RAPTURE);
-            blinkyDamaged = (SpriteAnimation) am.animation(ArcadePacMan_UIConfig.AnimationID.ANIM_BLINKY_DAMAGED);
+            nailDressRaptureAnimation = (SpriteAnimation) am.animation(ArcadePacMan_GhostAnimationManager.AnimationID.ANIM_BLINKY_NAIL_DRESS_RAPTURE);
+            blinkyDamaged = (SpriteAnimation) am.animation(ArcadePacMan_GhostAnimationManager.AnimationID.ANIM_BLINKY_DAMAGED);
         });
 
         tick = -1;
@@ -118,7 +118,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
             case ANIMATION_START_TICK + 360 -> {
                 nailDressRaptureAnimation.setFrameIndex(RAPTURED);
                 blinky.setX(blinky.x() - 4);
-                blinky.selectAnimation(ArcadePacMan_UIConfig.AnimationID.ANIM_BLINKY_DAMAGED);
+                blinky.selectAnimation(ArcadePacMan_GhostAnimationManager.AnimationID.ANIM_BLINKY_DAMAGED);
             }
             case ANIMATION_START_TICK + 420 -> blinkyDamaged.nextFrame(); // Eyes right-down
             case ANIMATION_START_TICK + 508 -> {

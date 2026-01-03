@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
-import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.model.actors.Actor;
@@ -17,6 +16,13 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 
 public class ArcadePacMan_GhostAnimationManager extends SpriteAnimationManager<SpriteID> {
+
+    public enum AnimationID {
+        ANIM_BLINKY_DAMAGED,
+        ANIM_BLINKY_PATCHED,
+        ANIM_BLINKY_NAIL_DRESS_RAPTURE,
+        ANIM_BLINKY_NAKED
+    }
 
     private final byte personality;
 
@@ -51,20 +57,20 @@ public class ArcadePacMan_GhostAnimationManager extends SpriteAnimationManager<S
                 .fromSprites(spriteSheet().spriteSequence(SpriteID.GHOST_NUMBERS))
                 .once();
 
-            case ArcadePacMan_UIConfig.AnimationID.ANIM_BLINKY_DAMAGED -> SpriteAnimation.builder()
+            case AnimationID.ANIM_BLINKY_DAMAGED -> SpriteAnimation.builder()
                 .fromSprites(spriteSheet().spriteSequence(SpriteID.RED_GHOST_DAMAGED))
                 .once();
 
-            case ArcadePacMan_UIConfig.AnimationID.ANIM_BLINKY_NAIL_DRESS_RAPTURE -> SpriteAnimation.builder()
+            case AnimationID.ANIM_BLINKY_NAIL_DRESS_RAPTURE -> SpriteAnimation.builder()
                 .fromSprites(spriteSheet().spriteSequence(SpriteID.RED_GHOST_STRETCHED))
                 .once();
 
-            case ArcadePacMan_UIConfig.AnimationID.ANIM_BLINKY_PATCHED -> SpriteAnimation.builder()
+            case AnimationID.ANIM_BLINKY_PATCHED -> SpriteAnimation.builder()
                 .fromSprites(spriteSheet().spriteSequence(SpriteID.RED_GHOST_PATCHED))
                 .ticksPerFrame(4)
                 .endless();
 
-            case ArcadePacMan_UIConfig.AnimationID.ANIM_BLINKY_NAKED -> SpriteAnimation.builder()
+            case AnimationID.ANIM_BLINKY_NAKED -> SpriteAnimation.builder()
                 .fromSprites(spriteSheet().spriteSequence(SpriteID.RED_GHOST_NAKED))
                 .ticksPerFrame(4)
                 .endless();

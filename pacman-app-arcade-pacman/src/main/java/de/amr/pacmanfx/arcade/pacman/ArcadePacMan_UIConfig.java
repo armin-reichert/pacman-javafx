@@ -54,14 +54,6 @@ import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
 
-    public enum AnimationID {
-        ANIM_BIG_PAC_MAN,
-        ANIM_BLINKY_DAMAGED,
-        ANIM_BLINKY_PATCHED,
-        ANIM_BLINKY_NAIL_DRESS_RAPTURE,
-        ANIM_BLINKY_NAKED
-    }
-
     private static final ResourceManager LOCAL_RESOURCES = () -> ArcadePacMan_UIConfig.class;
 
     public static final Set<ActionBinding> DEFAULT_BINDINGS = Set.of(
