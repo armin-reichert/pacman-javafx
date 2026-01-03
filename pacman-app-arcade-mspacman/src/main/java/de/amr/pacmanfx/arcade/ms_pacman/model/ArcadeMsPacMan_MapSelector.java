@@ -66,14 +66,14 @@ public class ArcadeMsPacMan_MapSelector implements WorldMapSelector {
      * <p>
      *
      * @param levelNumber level number (starts at 1)
-     * @param args additional arguments
+     * @param args (unused)
      */
     @Override
     public WorldMap supplyWorldMap(int levelNumber, Object... args) throws IOException {
+        requireValidLevelNumber(levelNumber);
         if (mapPrototypes.isEmpty()) {
             loadAllMapPrototypes();
         }
-        requireValidLevelNumber(levelNumber);
         final int mapNumber = switch (levelNumber) {
             case 1, 2 -> 1;
             case 3, 4, 5 -> 2;
@@ -81,14 +81,10 @@ public class ArcadeMsPacMan_MapSelector implements WorldMapSelector {
             case 10, 11, 12, 13 -> 4;
             default -> (levelNumber - 14) % 8 < 4 ? 3 : 4;
         };
+        // Color scheme index
+        // 1->0, 2->1, 3->2, 4->3   level 1..13;
+        // 3->4; 4->5               level 14+
         final WorldMap prototype = mapPrototypes.get(mapNumber - 1);
-        return configuredWorldMap(prototype, levelNumber, mapNumber);
-    }
-
-    // Color scheme index
-    // 1->0, 2->1, 3->2, 4->3   level 1..13;
-    // 3->4; 4->5               level 14+
-    private WorldMap configuredWorldMap(WorldMap prototype, int levelNumber, int mapNumber) {
         final WorldMap worldMap = new WorldMap(prototype);
         final int colorMapIndex = levelNumber <= 13 ? mapNumber - 1 : mapNumber + 1;
         worldMap.setConfigValue(GameUI_Config.ConfigKey.MAP_NUMBER, mapNumber);
