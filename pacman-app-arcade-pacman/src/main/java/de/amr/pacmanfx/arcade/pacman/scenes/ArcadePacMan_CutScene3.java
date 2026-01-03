@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
-import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_GhostAnimationManager;
+import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_GhostAnimations;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
@@ -79,13 +79,13 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
                 blinky.setWishDir(Direction.LEFT);
                 blinky.setSpeed(1.25f);
                 blinky.show();
-                blinky.playAnimation(ArcadePacMan_GhostAnimationManager.AnimationID.ANIM_BLINKY_PATCHED);
+                blinky.playAnimation(ArcadePacMan_GhostAnimations.AnimationID.ANIM_BLINKY_PATCHED);
             }
             case ANIMATION_START_TICK + 400 -> {
                 blinky.placeAtTile(-1, 20);
                 blinky.setMoveDir(Direction.RIGHT);
                 blinky.setWishDir(Direction.RIGHT);
-                blinky.playAnimation(ArcadePacMan_GhostAnimationManager.AnimationID.ANIM_BLINKY_NAKED);
+                blinky.playAnimation(ArcadePacMan_GhostAnimations.AnimationID.ANIM_BLINKY_NAKED);
             }
             case ANIMATION_START_TICK + 700 -> game.control().terminateCurrentGameState();
             default -> {}

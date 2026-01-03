@@ -12,11 +12,11 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 
-public class ArcadeMsPacMan_PacAnimationManager extends SpriteAnimationManager<SpriteID> {
+public class ArcadeMsPacMan_PacAnimations extends SpriteAnimationManager<SpriteID> {
 
     public enum AnimationID { PAC_MAN_MUNCHING }
 
-    public ArcadeMsPacMan_PacAnimationManager() {
+    public ArcadeMsPacMan_PacAnimations() {
         super(ArcadeMsPacMan_SpriteSheet.INSTANCE);
     }
 

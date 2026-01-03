@@ -12,13 +12,13 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 
-public class ArcadePacMan_PacAnimationManager extends SpriteAnimationManager<SpriteID> {
+public class ArcadePacMan_PacAnimations extends SpriteAnimationManager<SpriteID> {
 
     public enum AnimationID {
         ANIM_BIG_PAC_MAN,
     }
 
-    public ArcadePacMan_PacAnimationManager(ArcadePacMan_SpriteSheet spriteSheet) {
+    public ArcadePacMan_PacAnimations(ArcadePacMan_SpriteSheet spriteSheet) {
         super(spriteSheet);
     }
 

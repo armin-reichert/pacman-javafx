@@ -250,14 +250,14 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
     }
 
     @Override
-    public ArcadePacMan_GhostAnimationManager createGhostAnimations(byte personality) {
+    public ArcadePacMan_GhostAnimations createGhostAnimations(byte personality) {
         Validations.requireValidGhostPersonality(personality);
-        return new ArcadePacMan_GhostAnimationManager(spriteSheet(), personality);
+        return new ArcadePacMan_GhostAnimations(spriteSheet(), personality);
     }
 
     @Override
-    public ArcadePacMan_PacAnimationManager createPacAnimations() {
-        return new ArcadePacMan_PacAnimationManager(spriteSheet());
+    public ArcadePacMan_PacAnimations createPacAnimations() {
+        return new ArcadePacMan_PacAnimations(spriteSheet());
     }
 
     @Override

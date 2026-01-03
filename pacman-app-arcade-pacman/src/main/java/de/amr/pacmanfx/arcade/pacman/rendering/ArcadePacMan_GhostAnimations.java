@@ -15,7 +15,7 @@ import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 
-public class ArcadePacMan_GhostAnimationManager extends SpriteAnimationManager<SpriteID> {
+public class ArcadePacMan_GhostAnimations extends SpriteAnimationManager<SpriteID> {
 
     public enum AnimationID {
         ANIM_BLINKY_DAMAGED,
@@ -26,7 +26,7 @@ public class ArcadePacMan_GhostAnimationManager extends SpriteAnimationManager<S
 
     private final byte personality;
 
-    public ArcadePacMan_GhostAnimationManager(ArcadePacMan_SpriteSheet spriteSheet, byte personality) {
+    public ArcadePacMan_GhostAnimations(ArcadePacMan_SpriteSheet spriteSheet, byte personality) {
         super(spriteSheet);
         this.personality = requireValidGhostPersonality(personality);
     }

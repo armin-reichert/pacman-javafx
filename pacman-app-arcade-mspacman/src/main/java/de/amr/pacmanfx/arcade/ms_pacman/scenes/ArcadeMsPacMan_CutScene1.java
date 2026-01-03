@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
-import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_PacAnimationManager;
+import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_PacAnimations;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
@@ -143,7 +143,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         pacMan.setMoveDir(Direction.RIGHT);
         pacMan.setPosition(TS * (-2), UPPER_LANE_Y);
         pacMan.setSpeed(SPEED_PAC_CHASING);
-        pacMan.playAnimation(ArcadeMsPacMan_PacAnimationManager.AnimationID.PAC_MAN_MUNCHING);
+        pacMan.playAnimation(ArcadeMsPacMan_PacAnimations.AnimationID.PAC_MAN_MUNCHING);
         pacMan.show();
 
         inky.setMoveDir(Direction.RIGHT);

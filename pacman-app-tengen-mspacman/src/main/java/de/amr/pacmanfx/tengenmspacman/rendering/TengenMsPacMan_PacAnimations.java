@@ -15,9 +15,9 @@ import java.util.Arrays;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID.*;
 
-public class TengenMsPacMan_PacAnimationManager extends SpriteAnimationManager<SpriteID> {
+public class TengenMsPacMan_PacAnimations extends SpriteAnimationManager<SpriteID> {
 
-    public TengenMsPacMan_PacAnimationManager() {
+    public TengenMsPacMan_PacAnimations() {
         super(TengenMsPacMan_SpriteSheet.INSTANCE);
     }
 

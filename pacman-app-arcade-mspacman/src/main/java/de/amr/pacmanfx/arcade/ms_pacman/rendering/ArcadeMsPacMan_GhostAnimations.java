@@ -16,11 +16,11 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.*;
 
-public class ArcadeMsPacMan_GhostAnimationManager extends SpriteAnimationManager<SpriteID> {
+public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationManager<SpriteID> {
 
     private final byte personality;
 
-    public ArcadeMsPacMan_GhostAnimationManager(byte personality) {
+    public ArcadeMsPacMan_GhostAnimations(byte personality) {
         super(ArcadeMsPacMan_SpriteSheet.INSTANCE);
         this.personality = requireValidGhostPersonality(personality);
     }

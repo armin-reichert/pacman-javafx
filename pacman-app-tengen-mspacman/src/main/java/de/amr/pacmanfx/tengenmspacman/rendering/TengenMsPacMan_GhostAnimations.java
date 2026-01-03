@@ -15,7 +15,7 @@ import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 
-public class TengenMsPacMan_GhostAnimationManager extends SpriteAnimationManager<SpriteID> {
+public class TengenMsPacMan_GhostAnimations extends SpriteAnimationManager<SpriteID> {
 
     public static final int NORMAL_TICKS = 8;  // TODO check this in emulator
     public static final int FRIGHTENED_TICKS = 8;  // TODO check this in emulator
@@ -23,7 +23,7 @@ public class TengenMsPacMan_GhostAnimationManager extends SpriteAnimationManager
 
     private final byte personality;
 
-    public TengenMsPacMan_GhostAnimationManager(byte personality) {
+    public TengenMsPacMan_GhostAnimations(byte personality) {
         super(TengenMsPacMan_SpriteSheet.INSTANCE);
         this.personality = requireValidGhostPersonality(personality);
     }

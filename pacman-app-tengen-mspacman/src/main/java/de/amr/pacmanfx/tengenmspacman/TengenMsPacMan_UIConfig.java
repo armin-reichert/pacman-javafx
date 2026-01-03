@@ -364,13 +364,13 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     }
 
     @Override
-    public TengenMsPacMan_GhostAnimationManager createGhostAnimations(byte personality) {
-        return new TengenMsPacMan_GhostAnimationManager(personality);
+    public TengenMsPacMan_GhostAnimations createGhostAnimations(byte personality) {
+        return new TengenMsPacMan_GhostAnimations(personality);
     }
 
     @Override
-    public TengenMsPacMan_PacAnimationManager createPacAnimations() {
-        return new TengenMsPacMan_PacAnimationManager();
+    public TengenMsPacMan_PacAnimations createPacAnimations() {
+        return new TengenMsPacMan_PacAnimations();
     }
 
     @Override
