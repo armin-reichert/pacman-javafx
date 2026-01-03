@@ -28,9 +28,9 @@ public class MapColoringService implements Disposable {
         );
     }
 
-    private final Map<CacheKey, ColoredSpriteImage> cache = new WeakHashMap<>();
+    private final Map<CacheKey, ColorSchemedImage> cache = new WeakHashMap<>();
 
-    private ColoredSpriteImage recoloredMazeImage(
+    private ColorSchemedImage recoloredMazeImage(
         MapCategory mapCategory, Object mazeID,
         SpriteSheet<?> spriteSheet,
         RectShort mazeSprite,
@@ -38,9 +38,9 @@ public class MapColoringService implements Disposable {
         NES_ColorScheme requestedColorScheme) {
 
         var key = new CacheKey(mapCategory, mazeID, requestedColorScheme);
-        ColoredSpriteImage mazeImage = cache.get(key);
+        ColorSchemedImage mazeImage = cache.get(key);
         if (mazeImage == null) {
-            mazeImage = new ColoredSpriteImage(
+            mazeImage = new ColorSchemedImage(
                 replaceColors(spriteSheet.image(mazeSprite), originalColorScheme, requestedColorScheme),
                 new RectShort(0, 0, mazeSprite.width(), mazeSprite.height()),
                 requestedColorScheme);
@@ -50,7 +50,7 @@ public class MapColoringService implements Disposable {
         return mazeImage;
     }
 
-    public ColoredSpriteImage recolor(
+    public ColorSchemedImage recolor(
         MapCategory mapCategory, Object mazeID,
         SpriteSheet<?> spriteSheet,
         RectShort originalMazeSprite,
@@ -58,14 +58,14 @@ public class MapColoringService implements Disposable {
         NES_ColorScheme requestedColorScheme)
     {
         return requestedColorScheme.equals(originalColorScheme)
-            ? new ColoredSpriteImage(spriteSheet.sourceImage(), originalMazeSprite, originalColorScheme)
+            ? new ColorSchemedImage(spriteSheet.sourceImage(), originalMazeSprite, originalColorScheme)
             : recoloredMazeImage(
                 mapCategory, mazeID,
                 spriteSheet, originalMazeSprite,
                 originalColorScheme, requestedColorScheme);
     }
 
-    public List<ColoredSpriteImage> createFlashingMazeList(
+    public List<ColorSchemedImage> createFlashingMazeList(
         MapCategory mapCategory, Object mazeID,
         SpriteSheet<?> spriteSheet,
         RectShort mazeSprite,
@@ -74,11 +74,11 @@ public class MapColoringService implements Disposable {
         boolean multipleFlashColors,
         int flashCount
     ) {
-        var flashingMazes = new ArrayList<ColoredSpriteImage>();
+        var flashingMazes = new ArrayList<ColorSchemedImage>();
         if (multipleFlashColors) {
             List<NES_ColorScheme> randomColorSchemes = randomColorSchemesOtherThan(flashCount, requestedColorScheme);
             for (NES_ColorScheme randomColorScheme : randomColorSchemes) {
-                ColoredSpriteImage maze = recoloredMazeImage(
+                ColorSchemedImage maze = recoloredMazeImage(
                     mapCategory, mazeID,
                     spriteSheet, mazeSprite,
                     originalColorScheme, randomColorScheme
@@ -86,7 +86,7 @@ public class MapColoringService implements Disposable {
                 flashingMazes.add(maze);
             }
         } else {
-            ColoredSpriteImage blackWhiteMaze = recoloredMazeImage(
+            ColorSchemedImage blackWhiteMaze = recoloredMazeImage(
                 mapCategory, mazeID,
                 spriteSheet, mazeSprite,
                 originalColorScheme, NES_ColorScheme._0F_20_0F_BLACK_WHITE_BLACK
@@ -98,7 +98,7 @@ public class MapColoringService implements Disposable {
         return flashingMazes;
     }
 
-    public MazeSpriteSet createMazeSet(
+    public MapImageSet createMazeSet(
         MapCategory mapCategory, Object mazeID,
         SpriteSheet<?> spriteSheet,
         RectShort mazeSprite,
@@ -107,18 +107,18 @@ public class MapColoringService implements Disposable {
         boolean multipleFlashColors,
         int flashCount) {
 
-        final ColoredSpriteImage recoloredMaze = recolor(
+        final ColorSchemedImage recoloredMaze = recolor(
             mapCategory, mazeID,
             spriteSheet, mazeSprite,
             originalColorScheme, requestedColorScheme
         );
-        final List<ColoredSpriteImage> flashingMazes = createFlashingMazeList(
+        final List<ColorSchemedImage> flashingMazes = createFlashingMazeList(
             mapCategory, mazeID,
             spriteSheet, mazeSprite,
             originalColorScheme, requestedColorScheme,
             multipleFlashColors, flashCount
         );
-        return new MazeSpriteSet(recoloredMaze, flashingMazes);
+        return new MapImageSet(recoloredMaze, flashingMazes);
     }
 
     private List<NES_ColorScheme> randomColorSchemesOtherThan(int count, NES_ColorScheme colorScheme) {

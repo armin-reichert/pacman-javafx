@@ -42,7 +42,7 @@ public class TengenMsPacMan_MapRepository implements Disposable {
      * <p>Because the map images do not cover all required map/color-scheme combinations, an image cache is provided where
      * the recolored maze images are stored.
      */
-    public MazeSpriteSet createMazeSpriteSet(WorldMap worldMap, int flashCount) {
+    public MapImageSet createMazeSpriteSet(WorldMap worldMap, int flashCount) {
         final MapCategory mapCategory = worldMap.getConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MAP_CATEGORY);
         final int mapNumber = worldMap.getConfigValue(GameUI_Config.ConfigKey.MAP_NUMBER);
         final NES_ColorScheme requestedColorScheme = worldMap.getConfigValue(TengenMsPacMan_UIConfig.ConfigKey.NES_COLOR_SCHEME);
@@ -64,7 +64,7 @@ public class TengenMsPacMan_MapRepository implements Disposable {
         };
     }
 
-    private MazeSpriteSet arcadeMazeSpriteSet(int mapNumber, NES_ColorScheme colorScheme, int flashCount) {
+    private MapImageSet arcadeMazeSpriteSet(int mapNumber, NES_ColorScheme colorScheme, int flashCount) {
         // All requested maze color schemes exist in the sprite sheet, we only have to select the right sprite for the
         // requested (map number, color scheme) combination:
 
@@ -88,19 +88,19 @@ public class TengenMsPacMan_MapRepository implements Disposable {
         };
 
         final RectShort mazeSprite = ArcadeMapsSpriteSheet.INSTANCE.sprite(mazeID);
-        final var coloredMaze = new ColoredSpriteImage(ArcadeMapsSpriteSheet.INSTANCE.sourceImage(), mazeSprite, colorScheme);
+        final var coloredMaze = new ColorSchemedImage(ArcadeMapsSpriteSheet.INSTANCE.sourceImage(), mazeSprite, colorScheme);
 
         //TODO: Handle case when color scheme is already black & white
-        final List<ColoredSpriteImage> flashingMazes = coloringService.createFlashingMazeList(
+        final List<ColorSchemedImage> flashingMazes = coloringService.createFlashingMazeList(
                 MapCategory.ARCADE, mazeID,
                 ArcadeMapsSpriteSheet.INSTANCE, mazeSprite,
                 colorScheme, NES_ColorScheme._0F_20_0F_BLACK_WHITE_BLACK,
                 false, flashCount);
 
-        return new MazeSpriteSet(coloredMaze, flashingMazes);
+        return new MapImageSet(coloredMaze, flashingMazes);
     }
 
-    private MazeSpriteSet miniMazeSpriteSet(
+    private MapImageSet miniMazeSpriteSet(
             int mapNumber, NES_ColorScheme requestedColorScheme, int flashCount, boolean randomFlashColors) {
 
         final NonArcadeMapsSpriteSheet.MazeID mazeID = switch (mapNumber) {
@@ -131,7 +131,7 @@ public class TengenMsPacMan_MapRepository implements Disposable {
         );
     }
 
-    private MazeSpriteSet bigMazeSpriteSet(
+    private MapImageSet bigMazeSpriteSet(
             int mapNumber, NES_ColorScheme requestedColorScheme, int flashCount, boolean randomFlashColors) {
 
         final NonArcadeMapsSpriteSheet.MazeID mazeID = switch (mapNumber) {
@@ -172,7 +172,7 @@ public class TengenMsPacMan_MapRepository implements Disposable {
         );
     }
 
-    private MazeSpriteSet strangeMazeSpriteSet(
+    private MapImageSet strangeMazeSpriteSet(
             NonArcadeMapsSpriteSheet.MazeID mazeID,
             NES_ColorScheme optionalRandomColorScheme,
             int flashCount,

@@ -53,9 +53,9 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         // store the maze sprite set with the correct colors for this level in the map configuration:
         if (!worldMap.hasConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MAZE_SPRITE_SET)) {
             final int numFlashes = level.numFlashes();
-            final MazeSpriteSet mazeSpriteSet = TengenMsPacMan_MapRepository.INSTANCE.createMazeSpriteSet(worldMap, numFlashes);
-            worldMap.setConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MAZE_SPRITE_SET, mazeSpriteSet);
-            Logger.debug("Maze sprite set created: {}", mazeSpriteSet);
+            final MapImageSet mapImageSet = TengenMsPacMan_MapRepository.INSTANCE.createMazeSpriteSet(worldMap, numFlashes);
+            worldMap.setConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MAZE_SPRITE_SET, mapImageSet);
+            Logger.debug("Maze sprite set created: {}", mapImageSet);
         }
     }
 
@@ -93,8 +93,8 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
     private void drawFood(GameLevel level) {
         requireNonNull(level);
         final WorldMap worldMap = level.worldMap();
-        final MazeSpriteSet recoloredMazeSprites = worldMap.getConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MAZE_SPRITE_SET);
-        final NES_ColorScheme colorScheme = recoloredMazeSprites.mazeImage().colorScheme();
+        final MapImageSet recoloredMazeSprites = worldMap.getConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MAZE_SPRITE_SET);
+        final NES_ColorScheme colorScheme = recoloredMazeSprites.mapImage().colorScheme();
         final Color pelletColor = Color.valueOf(colorScheme.pelletColorRGB());
         final boolean blinkingOn = level.blinking().state() == Pulse.State.ON;
 
@@ -160,8 +160,8 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         if (house == null) {
             return;
         }
-        final MazeSpriteSet recoloredMaze = worldMap.getConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MAZE_SPRITE_SET);
-        final Color doorColor = Color.valueOf(recoloredMaze.mazeImage().colorScheme().strokeColorRGB());
+        final MapImageSet recoloredMaze = worldMap.getConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MAZE_SPRITE_SET);
+        final Color doorColor = Color.valueOf(recoloredMaze.mapImage().colorScheme().strokeColorRGB());
         final double scaledTileSize = scaled(TS);
         final double xMin = house.leftDoorTile().x() * scaledTileSize;
         final double yMin = house.leftDoorTile().y() * scaledTileSize + scaled(5); // 5 pixels down
@@ -209,21 +209,21 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
 
     private void configureHighlightedMazeRenderInfo(RenderInfo info, GameLevel gameLevel, int frame) {
         final WorldMap worldMap = gameLevel.worldMap();
-        final MazeSpriteSet mazeSpriteSet = worldMap.getConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MAZE_SPRITE_SET);
-        final ColoredSpriteImage flashingMazeSprite = mazeSpriteSet.flashingMazeImages().get(frame);
+        final MapImageSet mapImageSet = worldMap.getConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MAZE_SPRITE_SET);
+        final ColorSchemedImage flashingMazeSprite = mapImageSet.flashingMapImages().get(frame);
         info.put(CommonRenderInfoKey.MAZE_IMAGE, flashingMazeSprite.spriteSheetImage());
         info.put(CommonRenderInfoKey.MAZE_SPRITE, flashingMazeSprite.sprite());
     }
 
     private void configureNormalMazeRenderInfo(RenderInfo info, MapCategory mapCategory, WorldMap worldMap, long tick) {
         final int mapNumber = worldMap.getConfigValue(GameUI_Config.ConfigKey.MAP_NUMBER);
-        final MazeSpriteSet mazeSpriteSet = worldMap.getConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MAZE_SPRITE_SET);
-        info.put(CommonRenderInfoKey.MAZE_IMAGE, mazeSpriteSet.mazeImage().spriteSheetImage());
+        final MapImageSet mapImageSet = worldMap.getConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MAZE_SPRITE_SET);
+        info.put(CommonRenderInfoKey.MAZE_IMAGE, mapImageSet.mapImage().spriteSheetImage());
         if (mapCategory == MapCategory.STRANGE && mapNumber == 15) {
             final int spriteIndex = strangeMap15AnimationFrame(tick);
             info.put(CommonRenderInfoKey.MAZE_SPRITE, NonArcadeMapsSpriteSheet.INSTANCE.sprites(MAZE32_ANIMATED)[spriteIndex]);
         } else {
-            info.put(CommonRenderInfoKey.MAZE_SPRITE, mazeSpriteSet.mazeImage().sprite());
+            info.put(CommonRenderInfoKey.MAZE_SPRITE, mapImageSet.mapImage().sprite());
         }
     }
 
