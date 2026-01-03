@@ -250,19 +250,19 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config, GameScene_Con
 
     @Override
     public Image killedGhostPointsImage(int killedIndex) {
-        final RectShort[] numberSprites = spriteSheet().spriteSequence(SpriteID.GHOST_NUMBERS);
+        final RectShort[] numberSprites = spriteSheet().sprites(SpriteID.GHOST_NUMBERS);
         return spriteSheet().image(numberSprites[killedIndex]);
     }
 
     @Override
     public Image bonusSymbolImage(byte symbol) {
-        final RectShort[] sprites = spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS);
+        final RectShort[] sprites = spriteSheet().sprites(SpriteID.BONUS_SYMBOLS);
         return spriteSheet().image(sprites[symbol]);
     }
 
     @Override
     public Image bonusValueImage(byte symbol) {
-        final RectShort[] sprites = spriteSheet().spriteSequence(SpriteID.BONUS_VALUES);
+        final RectShort[] sprites = spriteSheet().sprites(SpriteID.BONUS_VALUES);
         return spriteSheet().image(sprites[symbol]);
     }
 

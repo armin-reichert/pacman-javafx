@@ -58,16 +58,16 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
                 hideGhostHouseDoors(terrain);
             }
             else {
-                final RectShort emptyMazeSprite = spriteSheet().spriteSequence(SpriteID.EMPTY_MAZES)[colorMapIndex];
+                final RectShort emptyMazeSprite = spriteSheet().sprites(SpriteID.EMPTY_MAZES)[colorMapIndex];
                 drawSprite(emptyMazeSprite, 0, emptySpaceOverMazePixels, false);
             }
         }
         else if (info.getBoolean(CommonRenderInfoKey.MAZE_EMPTY)) {
-            final RectShort emptyMazeSprite = spriteSheet().spriteSequence(SpriteID.EMPTY_MAZES)[colorMapIndex];
+            final RectShort emptyMazeSprite = spriteSheet().sprites(SpriteID.EMPTY_MAZES)[colorMapIndex];
             drawSprite(emptyMazeSprite, 0, emptySpaceOverMazePixels, false);
         }
         else {
-            RectShort mazeSprite = spriteSheet().spriteSequence(SpriteID.FULL_MAZES)[colorMapIndex];
+            RectShort mazeSprite = spriteSheet().sprites(SpriteID.FULL_MAZES)[colorMapIndex];
             drawSprite(mazeSprite, 0, emptySpaceOverMazePixels, false);
             // Over-paint the eaten pellets (pellets are part of the maze image)
             FoodLayer foodLayer = gameLevel.worldMap().foodLayer();

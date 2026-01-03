@@ -72,9 +72,9 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
         switch (bonus.state()) {
             case INACTIVE -> {}
             case EDIBLE -> drawBonusSprite(bonus.center().plus(0, bonus.verticalElongation()),
-                spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS), bonus.symbol());
+                spriteSheet().sprites(SpriteID.BONUS_SYMBOLS), bonus.symbol());
             case EATEN  -> drawBonusSprite(bonus.center(),
-                spriteSheet().spriteSequence(SpriteID.BONUS_VALUES),
+                spriteSheet().sprites(SpriteID.BONUS_VALUES),
                 // Note: sprite sheet has bonus values in wrong order!
                 TengenMsPacMan_UIConfig.bonusValueSpriteIndex(bonus.symbol()));
         }

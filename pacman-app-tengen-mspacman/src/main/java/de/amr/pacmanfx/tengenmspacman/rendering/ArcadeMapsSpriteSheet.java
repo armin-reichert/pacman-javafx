@@ -62,7 +62,7 @@ public final class ArcadeMapsSpriteSheet implements SpriteSheet<ArcadeMapsSprite
     }
 
     @Override
-    public RectShort[] spriteSequence(MazeID id) {
+    public RectShort[] sprites(MazeID id) {
         return SPRITE_MAP.spriteSequence(id);
     }
 }

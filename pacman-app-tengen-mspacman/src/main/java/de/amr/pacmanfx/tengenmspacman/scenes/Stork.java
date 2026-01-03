@@ -20,7 +20,7 @@ public class Stork extends Actor {
     public Stork(TengenMsPacMan_SpriteSheet spriteSheet) {
         var spriteAnimationManager = new SpriteAnimationManager<>(spriteSheet);
         spriteAnimationManager.setAnimation(ANIM_ID_FLYING,
-            SpriteAnimation.builder().fromSprites(spriteSheet.spriteSequence(STORK)).ticksPerFrame(8).endless());
+            SpriteAnimation.buildAnimation().sprites(spriteSheet.sprites(STORK)).ticksPerFrame(8).repeated());
         setAnimationManager(spriteAnimationManager);
     }
 

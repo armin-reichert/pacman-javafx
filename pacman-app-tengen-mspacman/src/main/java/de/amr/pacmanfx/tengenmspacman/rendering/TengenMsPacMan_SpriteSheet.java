@@ -241,7 +241,7 @@ public final class TengenMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
     }
 
     @Override
-    public RectShort[] spriteSequence(SpriteID id) {
+    public RectShort[] sprites(SpriteID id) {
         return SPRITE_MAP.spriteSequence(id);
     }
 }

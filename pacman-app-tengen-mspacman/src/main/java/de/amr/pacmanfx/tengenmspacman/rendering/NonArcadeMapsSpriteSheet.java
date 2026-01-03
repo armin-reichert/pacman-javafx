@@ -99,7 +99,7 @@ public final class NonArcadeMapsSpriteSheet implements SpriteSheet<NonArcadeMaps
     }
 
     @Override
-    public RectShort[] spriteSequence(MazeID id) {
+    public RectShort[] sprites(MazeID id) {
         return SPRITE_MAP.spriteSequence(id);
     }
 }

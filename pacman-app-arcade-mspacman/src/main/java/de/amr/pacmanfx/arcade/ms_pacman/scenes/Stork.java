@@ -17,7 +17,7 @@ public class Stork extends Actor {
     public Stork(ArcadeMsPacMan_SpriteSheet spriteSheet) {
         var spriteAnimationManager = new SpriteAnimationManager<>(spriteSheet);
         spriteAnimationManager.setAnimation(ANIM_FLYING,
-            SpriteAnimation.builder().fromSprites(spriteSheet.spriteSequence(SpriteID.STORK)).ticksPerFrame(8).endless());
+            SpriteAnimation.buildAnimation().sprites(spriteSheet.sprites(SpriteID.STORK)).ticksPerFrame(8).repeated());
         setAnimationManager(spriteAnimationManager);
     }
 }

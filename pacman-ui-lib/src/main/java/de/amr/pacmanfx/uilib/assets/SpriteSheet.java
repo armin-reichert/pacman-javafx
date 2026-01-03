@@ -30,7 +30,7 @@ public interface SpriteSheet<ID> {
      * @param id a sprite sequence ID
      * @return array of rectangular sprite sheet areas where sprites are located
      */
-    RectShort[] spriteSequence(ID id);
+    RectShort[] sprites(ID id);
 
     /**
      * @param x      x-coordinate of rectangular area

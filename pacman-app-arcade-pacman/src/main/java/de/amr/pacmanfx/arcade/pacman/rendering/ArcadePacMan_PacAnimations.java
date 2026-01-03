@@ -12,6 +12,8 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 
+import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.buildAnimation;
+
 public class ArcadePacMan_PacAnimations extends SpriteAnimationManager<SpriteID> {
 
     public enum AnimationID {
@@ -25,22 +27,23 @@ public class ArcadePacMan_PacAnimations extends SpriteAnimationManager<SpriteID>
     @Override
     protected SpriteAnimation createAnimation(Object id) {
         return switch (id) {
-            case CommonAnimationID.ANIM_PAC_FULL -> SpriteAnimation.builder()
-                .ofSprite(spriteSheet.sprite(SpriteID.PACMAN_FULL)).once();
+            case CommonAnimationID.ANIM_PAC_FULL -> buildAnimation()
+                .singleSprite(spriteSheet.sprite(SpriteID.PACMAN_FULL))
+                .once();
 
-            case CommonAnimationID.ANIM_PAC_MUNCHING -> SpriteAnimation.builder()
-                .fromSprites(pacMunchingSprites(Direction.LEFT))
-                .endless();
+            case CommonAnimationID.ANIM_PAC_MUNCHING -> buildAnimation()
+                .sprites(pacMunchingSprites(Direction.LEFT))
+                .repeated();
 
-            case CommonAnimationID.ANIM_PAC_DYING -> SpriteAnimation.builder()
-                .fromSprites(spriteSheet.spriteSequence(SpriteID.PACMAN_DYING))
+            case CommonAnimationID.ANIM_PAC_DYING -> buildAnimation()
+                .sprites(spriteSheet.sprites(SpriteID.PACMAN_DYING))
                 .ticksPerFrame(8)
                 .once();
 
-            case AnimationID.ANIM_BIG_PAC_MAN -> SpriteAnimation.builder()
-                .fromSprites(spriteSheet.spriteSequence(SpriteID.PACMAN_BIG))
+            case AnimationID.ANIM_BIG_PAC_MAN -> buildAnimation()
+                .sprites(spriteSheet.sprites(SpriteID.PACMAN_BIG))
                 .ticksPerFrame(3)
-                .endless();
+                .repeated();
 
             default -> throw new IllegalArgumentException("Illegal animation ID: " + id);
         };
@@ -60,10 +63,10 @@ public class ArcadePacMan_PacAnimations extends SpriteAnimationManager<SpriteID>
 
     private RectShort[] pacMunchingSprites(Direction dir) {
         return switch (dir) {
-            case RIGHT -> spriteSheet().spriteSequence(SpriteID.PACMAN_MUNCHING_RIGHT);
-            case LEFT  -> spriteSheet().spriteSequence(SpriteID.PACMAN_MUNCHING_LEFT);
-            case UP    -> spriteSheet().spriteSequence(SpriteID.PACMAN_MUNCHING_UP);
-            case DOWN  -> spriteSheet().spriteSequence(SpriteID.PACMAN_MUNCHING_DOWN);
+            case RIGHT -> spriteSheet().sprites(SpriteID.PACMAN_MUNCHING_RIGHT);
+            case LEFT  -> spriteSheet().sprites(SpriteID.PACMAN_MUNCHING_LEFT);
+            case UP    -> spriteSheet().sprites(SpriteID.PACMAN_MUNCHING_UP);
+            case DOWN  -> spriteSheet().sprites(SpriteID.PACMAN_MUNCHING_DOWN);
         };
     }
 }

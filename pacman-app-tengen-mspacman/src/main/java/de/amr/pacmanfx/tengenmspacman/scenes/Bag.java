@@ -19,8 +19,8 @@ public class Bag extends Actor {
 
     public Bag(TengenMsPacMan_SpriteSheet spriteSheet) {
         var spriteAnimationManager = new SpriteAnimationManager<>(spriteSheet);
-        spriteAnimationManager.setAnimation(ANIM_ID_BAG, SpriteAnimation.builder().ofSprite(spriteSheet.sprite(SpriteID.BLUE_BAG)).once());
-        spriteAnimationManager.setAnimation(ANIM_ID_JUNIOR, SpriteAnimation.builder().ofSprite(spriteSheet.sprite(SpriteID.JUNIOR_PAC)).once());
+        spriteAnimationManager.setAnimation(ANIM_ID_BAG, SpriteAnimation.buildAnimation().singleSprite(spriteSheet.sprite(SpriteID.BLUE_BAG)).once());
+        spriteAnimationManager.setAnimation(ANIM_ID_JUNIOR, SpriteAnimation.buildAnimation().singleSprite(spriteSheet.sprite(SpriteID.JUNIOR_PAC)).once());
         setAnimationManager(spriteAnimationManager);
         setOpen(false);
     }

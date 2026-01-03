@@ -44,9 +44,9 @@ public class ArcadePacMan_Actor_Renderer extends BaseRenderer implements SpriteR
     private void drawBonus(Bonus bonus) {
         switch (bonus.state()) {
             case EDIBLE -> // symbol code is index in sprite array
-                drawBonusSprite(bonus, spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS), bonus.symbol());
+                drawBonusSprite(bonus, spriteSheet().sprites(SpriteID.BONUS_SYMBOLS), bonus.symbol());
             case EATEN -> // symbol code is index in sprite array
-                drawBonusSprite(bonus, spriteSheet().spriteSequence(SpriteID.BONUS_VALUES), bonus.symbol());
+                drawBonusSprite(bonus, spriteSheet().sprites(SpriteID.BONUS_VALUES), bonus.symbol());
             case INACTIVE -> {}
         }
     }

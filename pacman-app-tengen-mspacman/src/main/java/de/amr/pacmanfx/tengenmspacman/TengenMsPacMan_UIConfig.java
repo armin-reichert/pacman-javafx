@@ -325,20 +325,20 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     @Override
     public Image killedGhostPointsImage(int killedIndex) {
-        final RectShort[] numberSprites = spriteSheet().spriteSequence(SpriteID.GHOST_NUMBERS);
+        final RectShort[] numberSprites = spriteSheet().sprites(SpriteID.GHOST_NUMBERS);
         return spriteSheet().image(numberSprites[killedIndex]);
     }
 
     @Override
     public Image bonusSymbolImage(byte symbol) {
-        final RectShort[] symbolSprites = spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS);
+        final RectShort[] symbolSprites = spriteSheet().sprites(SpriteID.BONUS_SYMBOLS);
         return spriteSheet().image(symbolSprites[symbol]);
     }
 
     @Override
     public Image bonusValueImage(byte symbol) {
         final byte spriteIndex = bonusValueSpriteIndex(symbol);
-        final RectShort sprite = spriteSheet().spriteSequence(SpriteID.BONUS_VALUES)[spriteIndex];
+        final RectShort sprite = spriteSheet().sprites(SpriteID.BONUS_VALUES)[spriteIndex];
         return spriteSheet().image(sprite);
     }
 

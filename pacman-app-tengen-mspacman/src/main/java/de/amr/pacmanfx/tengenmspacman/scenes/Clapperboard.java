@@ -57,7 +57,7 @@ public class Clapperboard extends Actor {
     }
 
     public Optional<RectShort> sprite() {
-        RectShort[] sprites = spriteSheet.spriteSequence(SpriteID.CLAPPERBOARD);
+        RectShort[] sprites = spriteSheet.sprites(SpriteID.CLAPPERBOARD);
         return switch (state) {
             case HIDDEN -> Optional.empty();
             case WIDE_OPEN -> Optional.of(sprites[0]);

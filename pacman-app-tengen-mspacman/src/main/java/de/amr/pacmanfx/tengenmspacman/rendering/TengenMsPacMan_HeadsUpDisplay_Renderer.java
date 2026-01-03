@@ -127,7 +127,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
     }
 
     private void drawLevelCounter(GameLevel level, TengenMsPacMan_HeadsUpDisplay hud, float y) {
-        final RectShort[] symbolSprites = spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS);
+        final RectShort[] symbolSprites = spriteSheet().sprites(SpriteID.BONUS_SYMBOLS);
         float x = LEVEL_COUNTER_POS_RIGHT - TS(2);
         // symbols are drawn from right to left!
         for (byte symbol : level.game().levelCounterSymbols()) {

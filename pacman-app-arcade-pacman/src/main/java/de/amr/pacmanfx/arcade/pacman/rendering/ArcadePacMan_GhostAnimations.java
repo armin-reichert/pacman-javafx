@@ -14,6 +14,7 @@ import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
+import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.buildAnimation;
 
 public class ArcadePacMan_GhostAnimations extends SpriteAnimationManager<SpriteID> {
 
@@ -34,46 +35,46 @@ public class ArcadePacMan_GhostAnimations extends SpriteAnimationManager<SpriteI
     @Override
     public SpriteAnimation createAnimation(Object animationID) {
         return switch (animationID) {
-            case CommonAnimationID.ANIM_GHOST_NORMAL -> SpriteAnimation.builder()
-                .fromSprites(ghostNormalSprites(Direction.LEFT))
+            case CommonAnimationID.ANIM_GHOST_NORMAL -> buildAnimation()
+                .sprites(ghostNormalSprites(Direction.LEFT))
                 .ticksPerFrame(8)
-                .endless();
+                .repeated();
 
-            case CommonAnimationID.ANIM_GHOST_FRIGHTENED -> SpriteAnimation.builder()
-                .fromSprites(spriteSheet().spriteSequence(SpriteID.GHOST_FRIGHTENED))
+            case CommonAnimationID.ANIM_GHOST_FRIGHTENED -> buildAnimation()
+                .sprites(spriteSheet().sprites(SpriteID.GHOST_FRIGHTENED))
                 .ticksPerFrame(8)
-                .endless();
+                .repeated();
 
-            case CommonAnimationID.ANIM_GHOST_FLASHING -> SpriteAnimation.builder()
-                .fromSprites(spriteSheet().spriteSequence(SpriteID.GHOST_FLASHING))
+            case CommonAnimationID.ANIM_GHOST_FLASHING -> buildAnimation()
+                .sprites(spriteSheet().sprites(SpriteID.GHOST_FLASHING))
                 .ticksPerFrame(7)
-                .endless();
+                .repeated();
 
-            case CommonAnimationID.ANIM_GHOST_EYES -> SpriteAnimation.builder()
-                .fromSprites(ghostEyesSprites(Direction.LEFT))
+            case CommonAnimationID.ANIM_GHOST_EYES -> buildAnimation()
+                .sprites(ghostEyesSprites(Direction.LEFT))
                 .once();
 
-            case CommonAnimationID.ANIM_GHOST_NUMBER -> SpriteAnimation.builder()
-                .fromSprites(spriteSheet().spriteSequence(SpriteID.GHOST_NUMBERS))
+            case CommonAnimationID.ANIM_GHOST_NUMBER -> buildAnimation()
+                .sprites(spriteSheet().sprites(SpriteID.GHOST_NUMBERS))
                 .once();
 
-            case AnimationID.ANIM_BLINKY_DAMAGED -> SpriteAnimation.builder()
-                .fromSprites(spriteSheet().spriteSequence(SpriteID.RED_GHOST_DAMAGED))
+            case AnimationID.ANIM_BLINKY_DAMAGED -> buildAnimation()
+                .sprites(spriteSheet().sprites(SpriteID.RED_GHOST_DAMAGED))
                 .once();
 
-            case AnimationID.ANIM_BLINKY_NAIL_DRESS_RAPTURE -> SpriteAnimation.builder()
-                .fromSprites(spriteSheet().spriteSequence(SpriteID.RED_GHOST_STRETCHED))
+            case AnimationID.ANIM_BLINKY_NAIL_DRESS_RAPTURE -> buildAnimation()
+                .sprites(spriteSheet().sprites(SpriteID.RED_GHOST_STRETCHED))
                 .once();
 
-            case AnimationID.ANIM_BLINKY_PATCHED -> SpriteAnimation.builder()
-                .fromSprites(spriteSheet().spriteSequence(SpriteID.RED_GHOST_PATCHED))
+            case AnimationID.ANIM_BLINKY_PATCHED -> buildAnimation()
+                .sprites(spriteSheet().sprites(SpriteID.RED_GHOST_PATCHED))
                 .ticksPerFrame(4)
-                .endless();
+                .repeated();
 
-            case AnimationID.ANIM_BLINKY_NAKED -> SpriteAnimation.builder()
-                .fromSprites(spriteSheet().spriteSequence(SpriteID.RED_GHOST_NAKED))
+            case AnimationID.ANIM_BLINKY_NAKED -> buildAnimation()
+                .sprites(spriteSheet().sprites(SpriteID.RED_GHOST_NAKED))
                 .ticksPerFrame(4)
-                .endless();
+                .repeated();
 
             default -> throw new IllegalArgumentException("Illegal animation ID: " + animationID);
         };
@@ -105,7 +106,7 @@ public class ArcadePacMan_GhostAnimations extends SpriteAnimationManager<SpriteI
     }
 
     private RectShort[] ghostNormalSprites(Direction dir) {
-        return spriteSheet().spriteSequence(switch (personality) {
+        return spriteSheet().sprites(switch (personality) {
             case RED_GHOST_SHADOW -> switch (dir) {
                 case RIGHT -> SpriteID.RED_GHOST_RIGHT;
                 case LEFT ->  SpriteID.RED_GHOST_LEFT;

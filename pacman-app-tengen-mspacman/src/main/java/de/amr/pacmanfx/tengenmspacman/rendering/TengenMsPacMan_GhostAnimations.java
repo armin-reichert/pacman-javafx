@@ -14,6 +14,7 @@ import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
+import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.buildAnimation;
 
 public class TengenMsPacMan_GhostAnimations extends SpriteAnimationManager<SpriteID> {
 
@@ -31,11 +32,30 @@ public class TengenMsPacMan_GhostAnimations extends SpriteAnimationManager<Sprit
     @Override
     protected SpriteAnimation createAnimation(Object animationID) {
         return switch (animationID) {
-            case CommonAnimationID.ANIM_GHOST_NORMAL      -> SpriteAnimation.builder().fromSprites(ghostNormalSprites(Direction.LEFT)).ticksPerFrame(NORMAL_TICKS).endless();
-            case CommonAnimationID.ANIM_GHOST_FRIGHTENED  -> SpriteAnimation.builder().fromSprites(spriteSheet().spriteSequence(SpriteID.GHOST_FRIGHTENED)).ticksPerFrame(FRIGHTENED_TICKS).endless();
-            case CommonAnimationID.ANIM_GHOST_FLASHING    -> SpriteAnimation.builder().fromSprites(spriteSheet().spriteSequence(SpriteID.GHOST_FLASHING)).ticksPerFrame(FLASH_TICKS).endless();
-            case CommonAnimationID.ANIM_GHOST_EYES        -> SpriteAnimation.builder().fromSprites(ghostEyesSprites(Direction.LEFT)).once();
-            case CommonAnimationID.ANIM_GHOST_NUMBER      -> SpriteAnimation.builder().fromSprites(spriteSheet().spriteSequence(SpriteID.GHOST_NUMBERS)).once();
+            case CommonAnimationID.ANIM_GHOST_NORMAL -> buildAnimation()
+                .sprites(ghostNormalSprites(Direction.LEFT))
+                .ticksPerFrame(NORMAL_TICKS)
+                .repeated();
+
+            case CommonAnimationID.ANIM_GHOST_FRIGHTENED -> buildAnimation()
+                .sprites(spriteSheet().sprites(SpriteID.GHOST_FRIGHTENED))
+                .ticksPerFrame(FRIGHTENED_TICKS)
+                .repeated();
+
+            case CommonAnimationID.ANIM_GHOST_FLASHING -> buildAnimation()
+                .sprites(spriteSheet().sprites(SpriteID.GHOST_FLASHING))
+                .ticksPerFrame(FLASH_TICKS)
+                .repeated();
+
+            case CommonAnimationID.ANIM_GHOST_EYES -> buildAnimation()
+                .sprites(ghostEyesSprites(Direction.LEFT))
+                .once();
+
+            case CommonAnimationID.ANIM_GHOST_NUMBER -> buildAnimation()
+                .sprites(spriteSheet()
+                .sprites(SpriteID.GHOST_NUMBERS))
+                .once();
+
             default -> throw new IllegalArgumentException("Illegal animation ID " + animationID);
         };
     }
@@ -63,28 +83,28 @@ public class TengenMsPacMan_GhostAnimations extends SpriteAnimationManager<Sprit
     private RectShort[] ghostNormalSprites(Direction dir) {
         return switch (personality) {
             case RED_GHOST_SHADOW -> switch (dir) {
-                case Direction.RIGHT -> spriteSheet.spriteSequence(SpriteID.RED_GHOST_RIGHT);
-                case Direction.LEFT  -> spriteSheet.spriteSequence(SpriteID.RED_GHOST_LEFT);
-                case Direction.UP    -> spriteSheet.spriteSequence(SpriteID.RED_GHOST_UP);
-                case Direction.DOWN  -> spriteSheet.spriteSequence(SpriteID.RED_GHOST_DOWN);
+                case Direction.RIGHT -> spriteSheet.sprites(SpriteID.RED_GHOST_RIGHT);
+                case Direction.LEFT  -> spriteSheet.sprites(SpriteID.RED_GHOST_LEFT);
+                case Direction.UP    -> spriteSheet.sprites(SpriteID.RED_GHOST_UP);
+                case Direction.DOWN  -> spriteSheet.sprites(SpriteID.RED_GHOST_DOWN);
             };
             case PINK_GHOST_SPEEDY   -> switch (dir) {
-                case Direction.RIGHT -> spriteSheet.spriteSequence(SpriteID.PINK_GHOST_RIGHT);
-                case Direction.LEFT  -> spriteSheet.spriteSequence(SpriteID.PINK_GHOST_LEFT);
-                case Direction.UP    -> spriteSheet.spriteSequence(SpriteID.PINK_GHOST_UP);
-                case Direction.DOWN  -> spriteSheet.spriteSequence(SpriteID.PINK_GHOST_DOWN);
+                case Direction.RIGHT -> spriteSheet.sprites(SpriteID.PINK_GHOST_RIGHT);
+                case Direction.LEFT  -> spriteSheet.sprites(SpriteID.PINK_GHOST_LEFT);
+                case Direction.UP    -> spriteSheet.sprites(SpriteID.PINK_GHOST_UP);
+                case Direction.DOWN  -> spriteSheet.sprites(SpriteID.PINK_GHOST_DOWN);
             };
             case CYAN_GHOST_BASHFUL  -> switch (dir) {
-                case Direction.RIGHT -> spriteSheet.spriteSequence(SpriteID.CYAN_GHOST_RIGHT);
-                case Direction.LEFT  -> spriteSheet.spriteSequence(SpriteID.CYAN_GHOST_LEFT);
-                case Direction.UP    -> spriteSheet.spriteSequence(SpriteID.CYAN_GHOST_UP);
-                case Direction.DOWN  -> spriteSheet.spriteSequence(SpriteID.CYAN_GHOST_DOWN);
+                case Direction.RIGHT -> spriteSheet.sprites(SpriteID.CYAN_GHOST_RIGHT);
+                case Direction.LEFT  -> spriteSheet.sprites(SpriteID.CYAN_GHOST_LEFT);
+                case Direction.UP    -> spriteSheet.sprites(SpriteID.CYAN_GHOST_UP);
+                case Direction.DOWN  -> spriteSheet.sprites(SpriteID.CYAN_GHOST_DOWN);
             };
             case ORANGE_GHOST_POKEY  -> switch (dir) {
-                case Direction.RIGHT -> spriteSheet.spriteSequence(SpriteID.ORANGE_GHOST_RIGHT);
-                case Direction.LEFT  -> spriteSheet.spriteSequence(SpriteID.ORANGE_GHOST_LEFT);
-                case Direction.UP    -> spriteSheet.spriteSequence(SpriteID.ORANGE_GHOST_UP);
-                case Direction.DOWN  -> spriteSheet.spriteSequence(SpriteID.ORANGE_GHOST_DOWN);
+                case Direction.RIGHT -> spriteSheet.sprites(SpriteID.ORANGE_GHOST_RIGHT);
+                case Direction.LEFT  -> spriteSheet.sprites(SpriteID.ORANGE_GHOST_LEFT);
+                case Direction.UP    -> spriteSheet.sprites(SpriteID.ORANGE_GHOST_UP);
+                case Direction.DOWN  -> spriteSheet.sprites(SpriteID.ORANGE_GHOST_DOWN);
             };
             default -> throw new IllegalArgumentException();
         };

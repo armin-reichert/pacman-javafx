@@ -146,7 +146,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     // Creates the maze image used in the flash animation at the end of each level
     private Image createBrightMazeImage(int index) {
-        final RectShort mazeSprite = spriteSheet().spriteSequence(SpriteID.EMPTY_MAZES)[index];
+        final RectShort mazeSprite = spriteSheet().sprites(SpriteID.EMPTY_MAZES)[index];
         final Image mazeImage = spriteSheet().image(mazeSprite);
         final WorldMapColorScheme colorScheme = ArcadeMsPacMan_MapSelector.WORLD_MAP_COLOR_SCHEMES[index];
         final Map<Color, Color> colorChanges = Map.of(
@@ -280,19 +280,19 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     @Override
     public Image killedGhostPointsImage(int killedIndex) {
-        final RectShort[] numberSprites = spriteSheet().spriteSequence(SpriteID.GHOST_NUMBERS);
+        final RectShort[] numberSprites = spriteSheet().sprites(SpriteID.GHOST_NUMBERS);
         return spriteSheet().image(numberSprites[killedIndex]);
     }
 
     @Override
     public Image bonusSymbolImage(byte symbol) {
-        final RectShort[] sprites = spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS);
+        final RectShort[] sprites = spriteSheet().sprites(SpriteID.BONUS_SYMBOLS);
         return spriteSheet().image(sprites[symbol]);
     }
 
     @Override
     public Image bonusValueImage(byte symbol) {
-        final RectShort[] sprites = spriteSheet().spriteSequence(SpriteID.BONUS_VALUES);
+        final RectShort[] sprites = spriteSheet().sprites(SpriteID.BONUS_VALUES);
         return spriteSheet().image(sprites[symbol]);
     }
 

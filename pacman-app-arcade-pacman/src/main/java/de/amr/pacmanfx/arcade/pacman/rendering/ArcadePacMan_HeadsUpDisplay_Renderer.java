@@ -62,7 +62,7 @@ public class ArcadePacMan_HeadsUpDisplay_Renderer extends BaseRenderer implement
         }
 
         if (hud.isLevelCounterVisible()) {
-            final RectShort[] bonusSymbolSprites = spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS);
+            final RectShort[] bonusSymbolSprites = spriteSheet().sprites(SpriteID.BONUS_SYMBOLS);
             final float y = sceneSize.y() - TS(2) + 2;
             float x = sceneSize.x() - TS(4);
             for (byte symbol : game.levelCounterSymbols()) {

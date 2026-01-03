@@ -90,7 +90,7 @@ public class ArcadePacMan_IntroScene_Renderer extends GameScene2D_Renderer imple
         for (byte p = RED_GHOST_SHADOW; p <= ORANGE_GHOST_POKEY; ++p) {
             int offsetY = 3 * p * TS;
             if (introScene.isGhostImageVisible(p)) {
-                RectShort sprite = spriteSheet().spriteSequence(GALLERY_GHOSTS)[p];
+                RectShort sprite = spriteSheet().sprites(GALLERY_GHOSTS)[p];
                 drawSpriteCentered(TS * 5, y + offsetY - HTS, sprite);
             }
             if (introScene.isGhostCharacterVisible(p)) {
