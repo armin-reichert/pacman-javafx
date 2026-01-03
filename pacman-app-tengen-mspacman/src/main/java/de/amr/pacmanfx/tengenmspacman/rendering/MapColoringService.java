@@ -37,7 +37,7 @@ public class MapColoringService implements Disposable {
         NES_ColorScheme originalColorScheme,
         NES_ColorScheme requestedColorScheme) {
 
-        var key = new CacheKey(mapCategory, mapID, requestedColorScheme);
+        final var key = new CacheKey(mapCategory, mapID, requestedColorScheme);
         ColorSchemedImage mapImage = cache.get(key);
         if (mapImage == null) {
             mapImage = new ColorSchemedImage(
@@ -72,13 +72,13 @@ public class MapColoringService implements Disposable {
         NES_ColorScheme originalColorScheme,
         NES_ColorScheme requestedColorScheme,
         boolean multipleFlashColors,
-        int flashCount
-    ) {
-        var flashingMapImages = new ArrayList<ColorSchemedImage>();
+        int flashCount)
+    {
+        final var flashingMapImages = new ArrayList<ColorSchemedImage>();
         if (multipleFlashColors) {
-            List<NES_ColorScheme> randomColorSchemes = randomColorSchemesOtherThan(flashCount, requestedColorScheme);
+            final List<NES_ColorScheme> randomColorSchemes = randomColorSchemesOtherThan(flashCount, requestedColorScheme);
             for (NES_ColorScheme randomColorScheme : randomColorSchemes) {
-                ColorSchemedImage maze = recoloredMapImage(
+                final ColorSchemedImage maze = recoloredMapImage(
                     mapCategory, mapID,
                     spriteSheet, mapSprite,
                     originalColorScheme, randomColorScheme
@@ -86,7 +86,7 @@ public class MapColoringService implements Disposable {
                 flashingMapImages.add(maze);
             }
         } else {
-            ColorSchemedImage blackWhiteMapImage = recoloredMapImage(
+            final ColorSchemedImage blackWhiteMapImage = recoloredMapImage(
                 mapCategory, mapID,
                 spriteSheet, mapSprite,
                 originalColorScheme, NES_ColorScheme._0F_20_0F_BLACK_WHITE_BLACK
@@ -105,8 +105,8 @@ public class MapColoringService implements Disposable {
         NES_ColorScheme originalColorScheme,
         NES_ColorScheme requestedColorScheme,
         boolean multipleFlashColors,
-        int flashCount) {
-
+        int flashCount)
+    {
         final ColorSchemedImage recoloredMapImage = recolor(
             mapCategory, mapID,
             spriteSheet, mapSprite,
@@ -122,9 +122,9 @@ public class MapColoringService implements Disposable {
     }
 
     private List<NES_ColorScheme> randomColorSchemesOtherThan(int count, NES_ColorScheme colorScheme) {
-        var randomColorSchemes = new HashSet<NES_ColorScheme>();
+        final var randomColorSchemes = new HashSet<NES_ColorScheme>();
         while (randomColorSchemes.size() < count) {
-            NES_ColorScheme randomColorScheme = NES_ColorScheme.randomScheme();
+            final NES_ColorScheme randomColorScheme = NES_ColorScheme.randomScheme();
             if (!randomColorScheme.equals(colorScheme)) {
                 randomColorSchemes.add(randomColorScheme);
             }
