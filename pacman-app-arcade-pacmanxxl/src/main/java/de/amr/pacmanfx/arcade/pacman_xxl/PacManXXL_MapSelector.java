@@ -152,7 +152,7 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
     }
 
     @Override
-    public WorldMap selectWorldMap(int levelNumber, Object... args) {
+    public WorldMap supplyWorldMap(int levelNumber, Object... args) {
         final WorldMap prototype = switch (selectionMode) {
             case NO_CUSTOM_MAPS -> {
                 // first pick built-in maps in order, then randomly

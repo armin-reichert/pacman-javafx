@@ -68,7 +68,7 @@ public class ArcadeMsPacMan_MapSelector implements WorldMapSelector {
      * @param args additional arguments
      */
     @Override
-    public WorldMap selectWorldMap(int levelNumber, Object... args) {
+    public WorldMap supplyWorldMap(int levelNumber, Object... args) {
         requireValidLevelNumber(levelNumber);
         final int mapNumber = switch (levelNumber) {
             case 1, 2 -> 1;

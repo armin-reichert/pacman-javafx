@@ -14,11 +14,11 @@ import java.util.List;
 public interface WorldMapSelector {
 
     /**
-     * @param levelNumber level number (1..)
+     * @param levelNumber level number (starting with 1)
      * @param args additional arguments
-     * @return Fresh copy of the world map prototype for specified level.
+     * @return New copy of the world map prototype for specified level.
      */
-    WorldMap selectWorldMap(int levelNumber, Object... args);
+    WorldMap supplyWorldMap(int levelNumber, Object... args);
 
     /**
      * @return list of the built-in maps. Users should create a copy because the prototypes are modifiable!

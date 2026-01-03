@@ -142,7 +142,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel implements LevelCou
     public GameLevel createLevel(int levelNumber, boolean demoLevel) {
         final LevelData levelData = levelData(levelNumber);
 
-        final WorldMap worldMap = mapSelector.selectWorldMap(levelNumber);
+        final WorldMap worldMap = mapSelector.supplyWorldMap(levelNumber);
         final TerrainLayer terrain = worldMap.terrainLayer();
 
         final Vector2i houseMinTile = terrain.getTilePropertyOrDefault(POS_HOUSE_MIN_TILE, ARCADE_MAP_HOUSE_MIN_TILE);
