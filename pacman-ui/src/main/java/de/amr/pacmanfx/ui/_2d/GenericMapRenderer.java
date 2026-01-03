@@ -17,9 +17,12 @@ import javafx.scene.paint.Paint;
 import static java.util.function.Predicate.not;
 
 /**
- * Draws wall and obstacle paths generated at runtime from the 2D tile map data.
+ * Vector-based renderer for maze terrain, food, and ghost house.
+ * Used by XXL and other dynamic-map variants via delegation.
  */
 public class GenericMapRenderer extends BaseRenderer {
+
+    public enum RenderInfoKey { TERRAIN_MAP_COLOR_SCHEME }
 
     private final TerrainMapVectorRenderer terrainRenderer;
     private final FoodMapRenderer foodRenderer;
@@ -65,7 +68,7 @@ public class GenericMapRenderer extends BaseRenderer {
             terrainRenderer.draw(worldMap);
         }
         else {
-            TerrainMapColorScheme terrainColorScheme = info.get("terrainMapColorScheme", TerrainMapColorScheme.class);
+            TerrainMapColorScheme terrainColorScheme = info.get(RenderInfoKey.TERRAIN_MAP_COLOR_SCHEME, TerrainMapColorScheme.class);
             terrainRenderer.setColorScheme(terrainColorScheme);
             terrainRenderer.draw(worldMap);
 

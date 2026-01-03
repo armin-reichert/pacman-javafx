@@ -34,7 +34,7 @@ public class PacManXXL_MsPacMan_GameLevelRenderer extends ArcadeMsPacMan_GameLev
             Color.valueOf(worldMapColorScheme.wallStroke()),
             Color.valueOf(worldMapColorScheme.door())
         );
-        info.put("terrainMapColorScheme", terrainColorScheme);
+        info.put(GenericMapRenderer.RenderInfoKey.TERRAIN_MAP_COLOR_SCHEME, terrainColorScheme);
     }
 
     @Override
