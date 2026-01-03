@@ -57,11 +57,6 @@ public class TengenMsPacMan_MapSelector implements WorldMapSelector {
     }
 
     @Override
-    public List<WorldMap> builtinMapPrototypes() {
-        return List.of(); // not used
-    }
-
-    @Override
     public List<WorldMap> customMapPrototypes() {
         return List.of();
     }

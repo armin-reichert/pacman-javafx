@@ -23,11 +23,6 @@ public interface WorldMapSelector {
     /**
      * @return list of the built-in maps. Users should create a copy because the prototypes are modifiable!
      */
-    List<WorldMap> builtinMapPrototypes();
-
-    /**
-     * @return list of the built-in maps. Users should create a copy because the prototypes are modifiable!
-     */
     List<WorldMap> customMapPrototypes();
 
     void loadCustomMaps() throws IOException;

@@ -105,11 +105,6 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
     }
 
     @Override
-    public List<WorldMap> builtinMapPrototypes() {
-        return builtinMapPrototypes;
-    }
-
-    @Override
     public ObservableList<WorldMap> customMapPrototypes() {
         return customMapPrototypes;
     }
@@ -153,6 +148,7 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
 
     @Override
     public WorldMap supplyWorldMap(int levelNumber, Object... args) {
+        loadAllMapPrototypes(); // ensure maps loaded
         final WorldMap prototype = switch (selectionMode) {
             case NO_CUSTOM_MAPS -> {
                 // first pick built-in maps in order, then randomly
@@ -167,11 +163,11 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
                 }
                 else {
                     // pick random built-in map
-                    yield builtinMapPrototypes.get(randomInt(0, builtinMapPrototypes().size()));
+                    yield builtinMapPrototypes.get(randomInt(0, builtinMapPrototypes.size()));
                 }
             }
             case ALL_RANDOM -> {
-                final int index = randomInt(0, customMapPrototypes().size() + builtinMapPrototypes().size());
+                final int index = randomInt(0, customMapPrototypes().size() + builtinMapPrototypes.size());
                 yield index < customMapPrototypes().size() ? customMapPrototypes.get(index) : builtinMapPrototypes.get(index - customMapPrototypes().size());
             }
         };

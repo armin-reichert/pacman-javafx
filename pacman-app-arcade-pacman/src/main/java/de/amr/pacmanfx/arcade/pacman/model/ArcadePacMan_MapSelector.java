@@ -20,9 +20,6 @@ public class ArcadePacMan_MapSelector implements WorldMapSelector {
     private WorldMap prototype;
 
     @Override
-    public List<WorldMap> builtinMapPrototypes() { return List.of(prototype); }
-
-    @Override
     public List<WorldMap> customMapPrototypes() {
         return List.of();
     }
