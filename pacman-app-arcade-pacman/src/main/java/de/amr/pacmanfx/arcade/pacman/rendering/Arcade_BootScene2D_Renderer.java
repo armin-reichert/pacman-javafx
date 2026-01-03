@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.lib.math.RectShort;
+import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
@@ -14,25 +15,32 @@ import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 
-import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.lerp;
-import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomFloat;
-import static de.amr.pacmanfx.lib.math.RandomNumberSupport.randomInt;
+import static de.amr.pacmanfx.lib.math.RandomNumberSupport.*;
 import static de.amr.pacmanfx.ui.api.ArcadePalette.ARCADE_WHITE;
 import static java.lang.Math.clamp;
 import static java.util.Objects.requireNonNull;
 
+/**
+ * Boot scene simulating the boot process of the Arcade machine. Shows random hex codes, sprite fragments
+ * and a grid before the intro scene starts.
+ */
 public class Arcade_BootScene2D_Renderer extends GameScene2D_Renderer implements SpriteRenderer {
 
-    public static final int RASTER_SIZE = 16;
+    public static final int GRID_SIZE = 16;
 
     private final SpriteSheet<?> spriteSheet;
     private final Rectangle2D spriteRegion;
 
-    public Arcade_BootScene2D_Renderer(UIPreferences prefs, GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet, Rectangle2D spriteRegion) {
+    public Arcade_BootScene2D_Renderer(
+        UIPreferences prefs,
+        GameScene2D scene,
+        Canvas canvas,
+        SpriteSheet<?> spriteSheet,
+        Rectangle2D spriteRegion)
+    {
         super(canvas);
-
         requireNonNull(prefs);
         requireNonNull(scene);
         this.spriteSheet = requireNonNull(spriteSheet);
@@ -48,81 +56,82 @@ public class Arcade_BootScene2D_Renderer extends GameScene2D_Renderer implements
 
     @Override
     public void draw(GameScene2D scene) {
-        TickTimer timer = scene.context().currentGame().control().state().timer();
-        if (timer.tickCount() == 1) {
+        final TickTimer stateTimer = scene.context().currentGame().control().state().timer();
+        final boolean fourthTick = stateTimer.tickCount() % 4 == 0;
+        if (stateTimer.tickCount() == 1) {
             clearCanvas();
         }
-        // during first second, nothing happens...
-        else if (timer.betweenSeconds(1, 2) && timer.tickCount() % 4 == 0) {
-            // change pattern every 4th tick
-            clearCanvas();
-            drawRandomHexDigits();
+        else if (stateTimer.betweenSeconds(1, 2) && fourthTick) {
+            drawRandomHexDigits(scene);
         }
-        else if (timer.betweenSeconds(2, 3.5) && timer.tickCount() % 4 == 0) {
-            // change pattern every 4th tick
-            clearCanvas();
-            drawRandomSpriteFragments();
+        else if (stateTimer.betweenSeconds(2, 3.5) && fourthTick) {
+            drawRandomSpriteFragments(scene);
         }
-        else if (timer.atSecond(3.5)) {
-            clearCanvas();
-            draw16by16Grid();
+        else if (stateTimer.atSecond(3.5)) {
+            drawGrid(scene);
         }
-
         if (scene.debugInfoVisible()) {
             debugRenderer.draw(scene);
         }
     }
 
-    private void drawRandomHexDigits() {
-        int numRows = ARCADE_MAP_SIZE_IN_PIXELS.y() / TS;
-        int numCols = ARCADE_MAP_SIZE_IN_PIXELS.x() / TS;
+    private void drawRandomHexDigits(GameScene2D scene) {
+        final Vector2i sceneSize = scene.unscaledSize();
+        final int numRows = sceneSize.y() / TS;
+        final int numCols = sceneSize.x() / TS;
+        clearCanvas();
         ctx.setFill(ARCADE_WHITE);
         ctx.setFont(arcadeFont8());
         for (int row = 0; row < numRows; ++row) {
-            double y = scaled(TS(row + 1));
+            final double y = scaled(TS(row + 1));
             for (int col = 0; col < numCols; ++col) {
-                int hexDigit = randomInt(0, 16);
+                final byte hexDigit = randomByte(0, 16);
                 ctx.fillText(Integer.toHexString(hexDigit), scaled(TS(col)), y);
             }
         }
     }
 
-    private void drawRandomSpriteFragments() {
-        int numRows = ARCADE_MAP_SIZE_IN_PIXELS.y() / RASTER_SIZE;
-        int numCols = ARCADE_MAP_SIZE_IN_PIXELS.x() / RASTER_SIZE;
+    private void drawRandomSpriteFragments(GameScene2D scene) {
+        final Vector2i sceneSize = scene.unscaledSize();
+        final int numRows = sceneSize.y() / GRID_SIZE;
+        final int numCols = sceneSize.x() / GRID_SIZE;
+        clearCanvas();
         for (int row = 0; row < numRows; ++row) {
             if (randomInt(0, 100) < 20) continue;
-            RectShort fragment1 = randomSpriteFragment(), fragment2 = randomSpriteFragment();
-            int split = numCols / 8 + randomInt(0, numCols / 4);
+            final RectShort fragment1 = randomSpriteFragment();
+            final RectShort fragment2 = randomSpriteFragment();
+            final int splitCol = numCols / 8 + randomInt(0, numCols / 4);
             for (int col = 0; col < numCols; ++col) {
-                drawSprite(col < split ? fragment1 : fragment2, RASTER_SIZE * col, RASTER_SIZE * row, true);
+                drawSprite(col < splitCol ? fragment1 : fragment2, GRID_SIZE * col, GRID_SIZE * row, true);
             }
         }
     }
 
     private RectShort randomSpriteFragment() {
         double xMin = lerp(spriteRegion.getMinX(), spriteRegion.getMaxX(), randomFloat(0, 1));
-        xMin = clamp(xMin, spriteRegion.getMinX(), spriteRegion.getMaxX() - RASTER_SIZE);
+        xMin = clamp(xMin, spriteRegion.getMinX(), spriteRegion.getMaxX() - GRID_SIZE);
         double yMin = lerp(spriteRegion.getMinY(), spriteRegion.getMaxY(), randomFloat(0, 1));
-        yMin = clamp(yMin, spriteRegion.getMinY(), spriteRegion.getMaxY() - RASTER_SIZE);
-        return new RectShort((short) xMin, (short) yMin, RASTER_SIZE, RASTER_SIZE);
+        yMin = clamp(yMin, spriteRegion.getMinY(), spriteRegion.getMaxY() - GRID_SIZE);
+        return new RectShort((short) xMin, (short) yMin, GRID_SIZE, GRID_SIZE);
     }
 
-    private void draw16by16Grid() {
-        double gridWidth = scaled(ARCADE_MAP_SIZE_IN_PIXELS.x());
-        double gridHeight = scaled(ARCADE_MAP_SIZE_IN_PIXELS.y());
-        int numRows = ARCADE_MAP_SIZE_IN_PIXELS.y() / RASTER_SIZE;
-        int numCols = ARCADE_MAP_SIZE_IN_PIXELS.x() / RASTER_SIZE;
-        double thin = scaled(2), thick = scaled(4);
+    private void drawGrid(GameScene2D scene) {
+        final Vector2i sceneSize = scene.unscaledSize();
+        final double gridWidth = scaled(sceneSize.x());
+        final double gridHeight = scaled(sceneSize.y());
+        final int numRows = (int) (gridHeight / GRID_SIZE);
+        final int numCols = (int) (gridWidth / GRID_SIZE);
+        final double thin = scaled(2), thick = scaled(4);
+        clearCanvas();
         ctx.setStroke(ARCADE_WHITE);
         for (int row = 0; row <= numRows; ++row) {
+            final double y = scaled(row * GRID_SIZE);
             ctx.setLineWidth(row == 0 || row == numRows ? thick : thin);
-            double y = scaled(row * RASTER_SIZE);
             ctx.strokeLine(0, y, gridWidth, y);
         }
         for (int col = 0; col <= numCols; ++col) {
+            final double x = scaled(col * GRID_SIZE);
             ctx.setLineWidth(col == 0 || col == numCols ? thick : thin);
-            double x = scaled(col * RASTER_SIZE);
             ctx.strokeLine(x, 0, x, gridHeight);
         }
     }
