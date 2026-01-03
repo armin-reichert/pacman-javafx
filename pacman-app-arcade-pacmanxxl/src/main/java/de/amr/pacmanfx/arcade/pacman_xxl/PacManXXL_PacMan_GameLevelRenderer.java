@@ -31,8 +31,8 @@ public class PacManXXL_PacMan_GameLevelRenderer extends ArcadePacMan_GameLevel_R
     @Override
     public void applyLevelSettings(GameLevel gameLevel, RenderInfo info) {
         final WorldMapColorScheme worldMapColorScheme = gameLevel.worldMap().getConfigValue(GameUI_Config.ConfigKey.COLOR_SCHEME);
-        var terrainMapColorScheme = new TerrainMapColorScheme(
-            (Color) backgroundColor(),
+        final var terrainMapColorScheme = new TerrainMapColorScheme(
+            backgroundColor(),
             Color.valueOf(worldMapColorScheme.wallFill()),
             Color.valueOf(worldMapColorScheme.wallStroke()),
             Color.valueOf(worldMapColorScheme.door())
