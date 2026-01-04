@@ -17,6 +17,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+/**
+ * Recolors maze images from source NES color schemes to target schemes.
+ * Generates flashing maze variants (single black/white or multiple random colors)
+ * used during energizer periods in the Tengen NES Ms. Pac-Man port.
+ */
 public class MapColoringService {
 
     public ColorSchemedImage recolorMapImage(
