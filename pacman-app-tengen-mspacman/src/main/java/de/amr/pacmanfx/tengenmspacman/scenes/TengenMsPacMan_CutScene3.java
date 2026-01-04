@@ -17,7 +17,6 @@ import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_HeadsUpDisplay;
 import de.amr.pacmanfx.tengenmspacman.model.actors.MsPacMan;
 import de.amr.pacmanfx.tengenmspacman.model.actors.PacMan;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
-import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
@@ -78,8 +77,6 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
     public void doInit(Game game) {
         final var tengenGame = (TengenMsPacMan_GameModel) game;
         final GameUI_Config uiConfig = ui.currentConfig();
-        final var spriteSheet = (TengenMsPacMan_SpriteSheet) uiConfig.spriteSheet();
-
         final var hud = (TengenMsPacMan_HeadsUpDisplay) game.hud();
         if (tengenGame.mapCategory() == MapCategory.ARCADE) {
             hud.hide();
@@ -129,7 +126,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
                 msPacMan.setMoveDir(Direction.RIGHT);
                 msPacMan.setPosition(TS * 5, GROUND_Y - 4);
                 msPacMan.setSpeed(0);
-                msPacMan.selectAnimation(CommonAnimationID.ANIM_PAC_MUNCHING);
+                msPacMan.selectAnimation(CommonAnimationID.PAC_MUNCHING);
                 msPacMan.show();
 
                 stork.setPosition(RIGHT_BORDER, TS * 7);

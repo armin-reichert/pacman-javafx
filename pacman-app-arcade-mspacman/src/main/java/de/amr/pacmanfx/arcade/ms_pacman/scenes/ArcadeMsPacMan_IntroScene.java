@@ -85,7 +85,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
         msPacMan = ArcadeMsPacMan_GameModel.createMsPacMan();
         msPacMan.setAnimationManager(uiConfig.createPacAnimations());
-        msPacMan.selectAnimation(CommonAnimationID.ANIM_PAC_MUNCHING);
+        msPacMan.selectAnimation(CommonAnimationID.PAC_MUNCHING);
 
         ghosts = List.of(
             uiConfig.createGhostWithAnimations(RED_GHOST_SHADOW),
@@ -126,7 +126,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                 scene.msPacMan.setMoveDir(Direction.LEFT);
                 scene.msPacMan.setSpeed(ACTOR_SPEED);
                 scene.msPacMan.setVisible(true);
-                scene.msPacMan.playAnimation(CommonAnimationID.ANIM_PAC_MUNCHING);
+                scene.msPacMan.playAnimation(CommonAnimationID.PAC_MUNCHING);
                 for (Ghost ghost : scene.ghosts) {
                     ghost.setPosition(TS * 33.5f, TS * 20);
                     ghost.setMoveDir(Direction.LEFT);
@@ -134,7 +134,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                     ghost.setSpeed(ACTOR_SPEED);
                     ghost.setState(GhostState.HUNTING_PAC);
                     ghost.setVisible(true);
-                    ghost.playAnimation(CommonAnimationID.ANIM_GHOST_NORMAL);
+                    ghost.playAnimation(CommonAnimationID.GHOST_NORMAL);
                 }
                 scene.presentedGhostCharacter = RED_GHOST_SHADOW;
             }

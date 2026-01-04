@@ -6,13 +6,13 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.model.actors.Actor;
+import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 
 import java.util.Arrays;
 
-import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID.*;
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.buildAnimation;
 
@@ -25,16 +25,16 @@ public class TengenMsPacMan_PacAnimations extends SpriteAnimationManager<SpriteI
     @Override
     protected SpriteAnimation createAnimation(Object animationID) {
         return switch (animationID) {
-            case ANIM_PAC_FULL -> buildAnimation()
+            case CommonAnimationID.PAC_FULL -> buildAnimation()
                 .singleSprite(spriteSheet.sprite(SpriteID.MS_PAC_FULL))
                 .once();
 
-            case ANIM_PAC_DYING -> buildAnimation()
+            case CommonAnimationID.PAC_DYING -> buildAnimation()
                 .sprites(pacDyingSprites())
                 .ticksPerFrame(8)
                 .once();
 
-            case ANIM_PAC_MUNCHING -> buildAnimation()
+            case CommonAnimationID.PAC_MUNCHING -> buildAnimation()
                 .sprites(spriteSheet.sprites(SpriteID.MS_PAC_MUNCHING))
                 .repeated();
 
@@ -88,7 +88,7 @@ public class TengenMsPacMan_PacAnimations extends SpriteAnimationManager<SpriteI
     @Override
     protected void updateActorSprites(Actor actor) {
         if (actor instanceof Pac) {
-            if (isSelected(ANIM_PAC_MUNCHING)) {
+            if (isSelected(CommonAnimationID.PAC_MUNCHING)) {
                 currentAnimation().setSprites(spriteSheet.sprites(SpriteID.MS_PAC_MUNCHING));
             }
             if (isSelected(ANIM_MS_PAC_MAN_BOOSTER)) {

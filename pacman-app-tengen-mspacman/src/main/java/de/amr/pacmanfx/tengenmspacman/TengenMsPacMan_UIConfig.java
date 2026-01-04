@@ -359,7 +359,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
             default -> throw new IllegalArgumentException("Illegal ghost personality " + personality);
         };
         ghost.setAnimationManager(createGhostAnimations(personality));
-        ghost.selectAnimation(CommonAnimationID.ANIM_GHOST_NORMAL);
+        ghost.selectAnimation(CommonAnimationID.GHOST_NORMAL);
         return ghost;
     }
 

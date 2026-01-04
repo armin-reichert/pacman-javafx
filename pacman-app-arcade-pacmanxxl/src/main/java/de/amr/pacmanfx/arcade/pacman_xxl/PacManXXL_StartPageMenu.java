@@ -73,8 +73,8 @@ public class PacManXXL_StartPageMenu extends OptionMenu {
 
         public void start() {
             running = true;
-            pac.playAnimation(CommonAnimationID.ANIM_PAC_MUNCHING);
-            ghosts.forEach(ghost -> ghost.playAnimation(CommonAnimationID.ANIM_GHOST_NORMAL));
+            pac.playAnimation(CommonAnimationID.PAC_MUNCHING);
+            ghosts.forEach(ghost -> ghost.playAnimation(CommonAnimationID.GHOST_NORMAL));
         }
 
         public void reset() {
@@ -108,7 +108,7 @@ public class PacManXXL_StartPageMenu extends OptionMenu {
                     ghost.setMoveDir(ghost.moveDir().opposite());
                     ghost.setWishDir(ghost.moveDir().opposite());
                     ghost.setSpeed(0.58f);
-                    ghost.playAnimation(CommonAnimationID.ANIM_GHOST_FRIGHTENED);
+                    ghost.playAnimation(CommonAnimationID.GHOST_FRIGHTENED);
                 }
             }
             else if (pac.x() > 56 * TS && ghostsChased) {
@@ -122,13 +122,13 @@ public class PacManXXL_StartPageMenu extends OptionMenu {
                     ghost.setWishDir(Direction.LEFT);
                     ghost.setX(46 * TS + ghost.personality() * 2 * TS);
                     ghost.setSpeed(1.05f);
-                    ghost.playAnimation(CommonAnimationID.ANIM_GHOST_NORMAL);
+                    ghost.playAnimation(CommonAnimationID.GHOST_NORMAL);
                 }
             }
             else if (ghostsChased) {
                 IntStream.range(0, 4).forEach(i -> {
                     if (Math.abs(pac.x() - ghosts.get(i).x()) < 1) {
-                        ghosts.get(i).selectAnimationAt(CommonAnimationID.ANIM_GHOST_NUMBER, i);
+                        ghosts.get(i).selectAnimationAt(CommonAnimationID.GHOST_POINTS, i);
                         if (i > 0) {
                             ghosts.get(i-1).setVisible(false);
                         }

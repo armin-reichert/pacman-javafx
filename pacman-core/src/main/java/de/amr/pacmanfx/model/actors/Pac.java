@@ -90,7 +90,7 @@ public class Pac extends MovingActor {
         restingTicks = 0;
         starvingTicks = 0;
         corneringSpeedDelta = 1.5f; // no real cornering implementation but better than nothing
-        selectAnimation(CommonAnimationID.ANIM_PAC_MUNCHING);
+        selectAnimation(CommonAnimationID.PAC_MUNCHING);
     }
 
     public BooleanProperty deadProperty() {

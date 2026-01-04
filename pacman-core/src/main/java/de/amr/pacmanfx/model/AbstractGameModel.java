@@ -304,7 +304,7 @@ public abstract class AbstractGameModel implements Game {
         pac.setSpeed(0);
         //TODO move animation-related stuff into UI layer?
         pac.stopAnimation();
-        pac.selectAnimation(CommonAnimationID.ANIM_PAC_FULL);
+        pac.selectAnimation(CommonAnimationID.PAC_FULL);
         level.blinking().setStartState(Pulse.State.OFF);
         level.blinking().reset();
         level.ghosts().forEach(Ghost::stopAnimation);

@@ -27,15 +27,15 @@ public class ArcadePacMan_PacAnimations extends SpriteAnimationManager<SpriteID>
     @Override
     protected SpriteAnimation createAnimation(Object id) {
         return switch (id) {
-            case CommonAnimationID.ANIM_PAC_FULL -> buildAnimation()
+            case CommonAnimationID.PAC_FULL -> buildAnimation()
                 .singleSprite(spriteSheet.sprite(SpriteID.PACMAN_FULL))
                 .once();
 
-            case CommonAnimationID.ANIM_PAC_MUNCHING -> buildAnimation()
+            case CommonAnimationID.PAC_MUNCHING -> buildAnimation()
                 .sprites(pacMunchingSprites(Direction.LEFT))
                 .repeated();
 
-            case CommonAnimationID.ANIM_PAC_DYING -> buildAnimation()
+            case CommonAnimationID.PAC_DYING -> buildAnimation()
                 .sprites(spriteSheet.sprites(SpriteID.PACMAN_DYING))
                 .ticksPerFrame(8)
                 .once();
@@ -56,7 +56,7 @@ public class ArcadePacMan_PacAnimations extends SpriteAnimationManager<SpriteID>
 
     @Override
     protected void updateActorSprites(Actor actor) {
-        if (actor instanceof Pac pac && isSelected(CommonAnimationID.ANIM_PAC_MUNCHING)) {
+        if (actor instanceof Pac pac && isSelected(CommonAnimationID.PAC_MUNCHING)) {
             currentAnimation().setSprites(pacMunchingSprites(pac.moveDir()));
         }
     }

@@ -15,7 +15,6 @@ import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameController.GameSt
 import de.amr.pacmanfx.tengenmspacman.model.actors.MsPacMan;
 import de.amr.pacmanfx.tengenmspacman.model.actors.PacMan;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
-import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
@@ -63,10 +62,9 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
     @Override
     protected void doInit(Game game) {
-        game.hud().hide();
-
         final GameUI_Config uiConfig = ui.currentConfig();
-        final var spriteSheet = (TengenMsPacMan_SpriteSheet) uiConfig.spriteSheet();
+
+        game.hud().hide();
 
         clapperboard = new Clapperboard(4, "THE END");
         clapperboard.setPosition(TS(3), TS(10));
@@ -113,7 +111,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
                 msPacMan.setMoveDir(Direction.LEFT);
                 msPacMan.setPosition(RIGHT_BORDER, LOWER_LANE);
                 msPacMan.setSpeed(1f);
-                msPacMan.playAnimation(CommonAnimationID.ANIM_PAC_MUNCHING);
+                msPacMan.playAnimation(CommonAnimationID.PAC_MUNCHING);
                 msPacMan.show();
             } case 230 -> {
                 pacMan.setSpeed(0);
@@ -129,7 +127,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
             }
             case 400 -> {
                 pacMan.playAnimation(TengenMsPacMan_AnimationID.ANIM_PAC_MAN_MUNCHING);
-                msPacMan.playAnimation(CommonAnimationID.ANIM_PAC_MUNCHING);
+                msPacMan.playAnimation(CommonAnimationID.PAC_MUNCHING);
             }
             case 520 -> {
                 pacMan.selectAnimation(TengenMsPacMan_AnimationID.ANIM_PAC_MAN_WAVING_HAND);

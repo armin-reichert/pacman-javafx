@@ -35,26 +35,26 @@ public class ArcadePacMan_GhostAnimations extends SpriteAnimationManager<SpriteI
     @Override
     public SpriteAnimation createAnimation(Object animationID) {
         return switch (animationID) {
-            case CommonAnimationID.ANIM_GHOST_NORMAL -> buildAnimation()
+            case CommonAnimationID.GHOST_NORMAL -> buildAnimation()
                 .sprites(ghostNormalSprites(Direction.LEFT))
                 .ticksPerFrame(8)
                 .repeated();
 
-            case CommonAnimationID.ANIM_GHOST_FRIGHTENED -> buildAnimation()
+            case CommonAnimationID.GHOST_FRIGHTENED -> buildAnimation()
                 .sprites(spriteSheet().sprites(SpriteID.GHOST_FRIGHTENED))
                 .ticksPerFrame(8)
                 .repeated();
 
-            case CommonAnimationID.ANIM_GHOST_FLASHING -> buildAnimation()
+            case CommonAnimationID.GHOST_FLASHING -> buildAnimation()
                 .sprites(spriteSheet().sprites(SpriteID.GHOST_FLASHING))
                 .ticksPerFrame(7)
                 .repeated();
 
-            case CommonAnimationID.ANIM_GHOST_EYES -> buildAnimation()
+            case CommonAnimationID.GHOST_EYES -> buildAnimation()
                 .sprites(ghostEyesSprites(Direction.LEFT))
                 .once();
 
-            case CommonAnimationID.ANIM_GHOST_NUMBER -> buildAnimation()
+            case CommonAnimationID.GHOST_POINTS -> buildAnimation()
                 .sprites(spriteSheet().sprites(SpriteID.GHOST_NUMBERS))
                 .once();
 
@@ -88,18 +88,18 @@ public class ArcadePacMan_GhostAnimations extends SpriteAnimationManager<SpriteI
     @Override
     public void selectFrame(Object animationID, int frameIndex) {
         super.selectFrame(animationID, frameIndex);
-        if (CommonAnimationID.ANIM_GHOST_NUMBER.equals(animationID)) {
-            animation(CommonAnimationID.ANIM_GHOST_NUMBER).setFrameIndex(frameIndex);
+        if (CommonAnimationID.GHOST_POINTS.equals(animationID)) {
+            animation(CommonAnimationID.GHOST_POINTS).setFrameIndex(frameIndex);
         }
     }
 
     @Override
     protected void updateActorSprites(Actor actor) {
         if (actor instanceof Ghost ghost) {
-            if (isSelected(CommonAnimationID.ANIM_GHOST_NORMAL)) {
+            if (isSelected(CommonAnimationID.GHOST_NORMAL)) {
                 currentAnimation().setSprites(ghostNormalSprites(ghost.wishDir()));
             }
-            if (isSelected(CommonAnimationID.ANIM_GHOST_EYES)) {
+            if (isSelected(CommonAnimationID.GHOST_EYES)) {
                 currentAnimation().setSprites(ghostEyesSprites(ghost.wishDir()));
             }
         }

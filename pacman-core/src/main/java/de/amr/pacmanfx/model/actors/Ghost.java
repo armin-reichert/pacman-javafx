@@ -243,9 +243,9 @@ public abstract class Ghost extends MovingActor {
 
         // "onEntry" action:
         switch (newState) {
-            case LOCKED, HUNTING_PAC -> selectAnimation(CommonAnimationID.ANIM_GHOST_NORMAL);
-            case ENTERING_HOUSE, RETURNING_HOME -> selectAnimation(CommonAnimationID.ANIM_GHOST_EYES);
-            case FRIGHTENED -> playAnimation(CommonAnimationID.ANIM_GHOST_FRIGHTENED);
+            case LOCKED, HUNTING_PAC -> selectAnimation(CommonAnimationID.GHOST_NORMAL);
+            case ENTERING_HOUSE, RETURNING_HOME -> selectAnimation(CommonAnimationID.GHOST_EYES);
+            case FRIGHTENED -> playAnimation(CommonAnimationID.GHOST_FRIGHTENED);
             case EATEN -> {}
         }
     }
@@ -295,7 +295,7 @@ public abstract class Ghost extends MovingActor {
         if (isInDanger(level)) {
             playFrightenedAnimation(level, level.pac());
         } else {
-            selectAnimation(CommonAnimationID.ANIM_GHOST_NORMAL);
+            selectAnimation(CommonAnimationID.GHOST_NORMAL);
         }
     }
 
@@ -338,7 +338,7 @@ public abstract class Ghost extends MovingActor {
             if (isInDanger(level)) {
                 playFrightenedAnimation(level, level.pac());
             } else {
-                selectAnimation(CommonAnimationID.ANIM_GHOST_NORMAL);
+                selectAnimation(CommonAnimationID.GHOST_NORMAL);
             }
         }
     }
@@ -385,9 +385,9 @@ public abstract class Ghost extends MovingActor {
 
     private void playFrightenedAnimation(GameLevel level, Pac pac) {
         if (pac.isPowerFadingStarting(level)) {
-            playAnimation(CommonAnimationID.ANIM_GHOST_FLASHING);
+            playAnimation(CommonAnimationID.GHOST_FLASHING);
         } else if (!pac.isPowerFading(level)) {
-            playAnimation(CommonAnimationID.ANIM_GHOST_FRIGHTENED);
+            playAnimation(CommonAnimationID.GHOST_FRIGHTENED);
         }
     }
 
