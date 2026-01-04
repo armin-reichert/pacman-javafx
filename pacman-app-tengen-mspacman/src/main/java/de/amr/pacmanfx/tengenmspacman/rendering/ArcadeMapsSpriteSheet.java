@@ -15,54 +15,51 @@ import static de.amr.pacmanfx.Globals.TS;
 
 public final class ArcadeMapsSpriteSheet implements SpriteSheet<ArcadeMapsSpriteSheet.MapID> {
 
+    public enum MapID {
+        MAP1, MAP2, MAP3, MAP4, MAP5, MAP6, MAP7, MAP8, MAP9
+    }
+
     public static final ArcadeMapsSpriteSheet INSTANCE = new ArcadeMapsSpriteSheet();
 
     // Size of Arcade maze (without the 3 empty rows above and the 2 below the maze!)
     private static final int MAP_SPRITE_WIDTH  = 28 * TS;
     private static final int MAP_SPRITE_HEIGHT = 31 * TS;
 
-    public enum MapID {
-        MAP1, MAP2, MAP3, MAP4, MAP5, MAP6, MAP7, MAP8, MAP9
-    }
-
-    private static final SpriteMap<MapID> SPRITE_MAP = new SpriteMap<>(MapID.class);
-
     private static RectShort spriteAtCell(int row, int col) {
         return new RectShort(col * MAP_SPRITE_WIDTH, row * MAP_SPRITE_HEIGHT, MAP_SPRITE_WIDTH, MAP_SPRITE_HEIGHT);
     }
 
-    static {
-        SPRITE_MAP.add(MapID.MAP1, spriteAtCell(0, 0));
-        SPRITE_MAP.add(MapID.MAP2, spriteAtCell(0, 1));
-        SPRITE_MAP.add(MapID.MAP3, spriteAtCell(0, 2));
-        SPRITE_MAP.add(MapID.MAP4, spriteAtCell(1, 0));
-        SPRITE_MAP.add(MapID.MAP5, spriteAtCell(1, 1));
-        SPRITE_MAP.add(MapID.MAP6, spriteAtCell(1, 2));
-        SPRITE_MAP.add(MapID.MAP7, spriteAtCell(2, 0));
-        SPRITE_MAP.add(MapID.MAP8, spriteAtCell(2, 1));
-        SPRITE_MAP.add(MapID.MAP9, spriteAtCell(2, 2));
-
-        SPRITE_MAP.checkCompleteness();
-    }
-
     private static final ResourceManager LOCAL_RESOURCES = () -> TengenMsPacMan_UIConfig.class;
 
-    private static final Image IMAGE = LOCAL_RESOURCES.loadImage(TengenMsPacMan_UIConfig.ARCADE_MAPS_IMAGE_PATH);
+    private final Image image = LOCAL_RESOURCES.loadImage(TengenMsPacMan_UIConfig.ARCADE_MAPS_IMAGE_PATH);
+    private final SpriteMap<MapID> spriteMap = new SpriteMap<>(MapID.class);
 
-    private ArcadeMapsSpriteSheet() {}
+    private ArcadeMapsSpriteSheet() {
+        spriteMap.add(MapID.MAP1, spriteAtCell(0, 0));
+        spriteMap.add(MapID.MAP2, spriteAtCell(0, 1));
+        spriteMap.add(MapID.MAP3, spriteAtCell(0, 2));
+        spriteMap.add(MapID.MAP4, spriteAtCell(1, 0));
+        spriteMap.add(MapID.MAP5, spriteAtCell(1, 1));
+        spriteMap.add(MapID.MAP6, spriteAtCell(1, 2));
+        spriteMap.add(MapID.MAP7, spriteAtCell(2, 0));
+        spriteMap.add(MapID.MAP8, spriteAtCell(2, 1));
+        spriteMap.add(MapID.MAP9, spriteAtCell(2, 2));
+
+        spriteMap.checkCompleteness();
+    }
 
     @Override
     public Image sourceImage() {
-        return IMAGE;
+        return image;
     }
 
     @Override
     public RectShort sprite(MapID id) {
-        return SPRITE_MAP.sprite(id);
+        return spriteMap.sprite(id);
     }
 
     @Override
     public RectShort[] sprites(MapID id) {
-        return SPRITE_MAP.spriteSequence(id);
+        return spriteMap.spriteSequence(id);
     }
 }
