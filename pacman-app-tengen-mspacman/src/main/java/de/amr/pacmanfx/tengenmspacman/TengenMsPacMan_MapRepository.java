@@ -4,14 +4,12 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengenmspacman;
 
-import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.rendering.*;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
-import org.tinylog.Logger;
 
 import java.util.List;
 
@@ -20,19 +18,13 @@ import java.util.List;
  * Handles the four map categories (ARCADE, MINI, BIG, STRANGE) and their unique color schemes,
  * including random recoloring in levels 28–31 and the animated "psychedelic" maze #32.
  */
-public class TengenMsPacMan_MapRepository implements Disposable {
+public class TengenMsPacMan_MapRepository {
 
     public static final TengenMsPacMan_MapRepository INSTANCE = new TengenMsPacMan_MapRepository();
 
     private final MapColoringService coloringService = new MapColoringService();
 
     private TengenMsPacMan_MapRepository() {}
-
-    @Override
-    public void dispose() {
-        Logger.info("Dispose Tengen map repository {}:", getClass().getSimpleName());
-        coloringService.dispose();
-    }
 
     /*
      * API to access the maze images stored in files {@code non_arcade_mazes.png} and {@code arcade_mazes.png}.
