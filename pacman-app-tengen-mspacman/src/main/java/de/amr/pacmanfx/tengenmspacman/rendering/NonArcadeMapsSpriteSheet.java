@@ -17,12 +17,10 @@ import static de.amr.pacmanfx.lib.math.RectShort.rect;
 /**
  * SpriteSheet for non‐arcade maps in Tengen Ms. Pac-Man.
  *
- * <p>Each MazeID corresponds to a sub‐image region laid out row by row
+ * <p>Each map ID corresponds to a sub‐image region laid out row by row
  * in the source image. Some mazes (32, 33, 34–37) are handled specially.
  */
 public final class NonArcadeMapsSpriteSheet implements SpriteSheet<NonArcadeMapsSpriteSheet.MapID> {
-
-    public static final NonArcadeMapsSpriteSheet INSTANCE = new NonArcadeMapsSpriteSheet();
 
     // Map IDs as they appear in the sprite sheet (row by row)
     public enum MapID {
@@ -33,16 +31,21 @@ public final class NonArcadeMapsSpriteSheet implements SpriteSheet<NonArcadeMaps
         MAP34_MINI, MAP35_MINI, MAP36_MINI, MAP37_MINI
     }
 
-    private static final SpriteMap<MapID> SPRITE_MAP = new SpriteMap<>(MapID.class);
+    public static final NonArcadeMapsSpriteSheet INSTANCE = new NonArcadeMapsSpriteSheet();
 
-    static {
-        // Example: MazeID.MAP10 = MAP_IDS[9]
-        final MapID[] MAP_IDS = MapID.values();
+    private static final ResourceManager LOCAL_RESOURCES = () -> TengenMsPacMan_UIConfig.class;
 
-        final int MAP_WIDTH = 28 * TS;
+    private final Image image = LOCAL_RESOURCES.loadImage(TengenMsPacMan_UIConfig.NON_ARCADE_MAPS_IMAGE_PATH);
+    private final SpriteMap<MapID> spriteMap = new SpriteMap<>(MapID.class);
 
-        // Height of the mazes as they appear in the sprite sheet (row by row)
-        final int[][] MAP_HEIGHTS = {
+    private NonArcadeMapsSpriteSheet() {
+        final MapID[] ids = MapID.values();
+
+        // All maps are 28 tiles wide
+        final int mapWidth = 28 * TS;
+
+        // Map height values as they appear in the sprite sheet (row by row)
+        final int[][] mapHeights = {
             {31 * TS, 31 * TS, 31 * TS, 31 * TS, 31 * TS, 31 * TS, 30 * TS, 31 * TS},
             {31 * TS, 37 * TS, 31 * TS, 31 * TS, 31 * TS, 37 * TS, 31 * TS, 25 * TS},
             {37 * TS, 31 * TS, 37 * TS, 37 * TS, 37 * TS, 37 * TS, 37 * TS, 31 * TS},
@@ -51,55 +54,49 @@ public final class NonArcadeMapsSpriteSheet implements SpriteSheet<NonArcadeMaps
         };
 
         // y position of maze upper edges by row index
-        final int[] Y_POS = {0, 248, 544, 840, 1136};
+        final int[] yPos = {0, 248, 544, 840, 1136};
 
-        int num = 1;
+        int number = 1;
         for (int row = 0; row < 4; ++row) {
             for (int col = 0; col < 8; ++col) {
-                if (num != 32) {
-                    MapID id = MAP_IDS[num - 1];
-                    SPRITE_MAP.add(id, rect(col * MAP_WIDTH, Y_POS[row], MAP_WIDTH, MAP_HEIGHTS[row][col]));
+                if (number != 32) {
+                    final MapID id = ids[number - 1];
+                    spriteMap.add(id, rect(col * mapWidth, yPos[row], mapWidth, mapHeights[row][col]));
                 }
-                ++num;
+                ++number;
             }
         }
 
         // Maze #32 (last in STRANGE level) has 3 animation frames
-        SPRITE_MAP.add(MapID.MAP32_ANIMATED,
-            rect(1568,  840, MAP_WIDTH, 31 * TS),
-            rect(1568, 1088, MAP_WIDTH, 31 * TS),
-            rect(1568, 1336, MAP_WIDTH, 31 * TS));
+        spriteMap.add(MapID.MAP32_ANIMATED,
+            rect(1568,  840, mapWidth, 31 * TS),
+            rect(1568, 1088, mapWidth, 31 * TS),
+            rect(1568, 1336, mapWidth, 31 * TS));
 
         // row=3, col=8:  Maze #33 is BIG
-        SPRITE_MAP.add(MapID.MAP33_BIG, rect(8 * MAP_WIDTH, Y_POS[3], MAP_WIDTH, MAP_HEIGHTS[3][8]));
+        spriteMap.add(MapID.MAP33_BIG, rect(8 * mapWidth, yPos[3], mapWidth, mapHeights[3][8]));
 
         // row=4: 4 MINI mazes
-        SPRITE_MAP.add(MapID.MAP34_MINI, rect(             0, Y_POS[4], MAP_WIDTH, MAP_HEIGHTS[4][0]));
-        SPRITE_MAP.add(MapID.MAP35_MINI, rect(    MAP_WIDTH, Y_POS[4], MAP_WIDTH, MAP_HEIGHTS[4][1]));
-        SPRITE_MAP.add(MapID.MAP36_MINI, rect(2 * MAP_WIDTH, Y_POS[4], MAP_WIDTH, MAP_HEIGHTS[4][2]));
-        SPRITE_MAP.add(MapID.MAP37_MINI, rect(3 * MAP_WIDTH, Y_POS[4], MAP_WIDTH, MAP_HEIGHTS[4][3]));
+        spriteMap.add(MapID.MAP34_MINI, rect(           0, yPos[4], mapWidth, mapHeights[4][0]));
+        spriteMap.add(MapID.MAP35_MINI, rect(    mapWidth, yPos[4], mapWidth, mapHeights[4][1]));
+        spriteMap.add(MapID.MAP36_MINI, rect(2 * mapWidth, yPos[4], mapWidth, mapHeights[4][2]));
+        spriteMap.add(MapID.MAP37_MINI, rect(3 * mapWidth, yPos[4], mapWidth, mapHeights[4][3]));
 
-        SPRITE_MAP.checkCompleteness();
+        spriteMap.checkCompleteness();
     }
-
-    private static final ResourceManager LOCAL_RESOURCES = () -> TengenMsPacMan_UIConfig.class;
-
-    private static final Image IMAGE = LOCAL_RESOURCES.loadImage(TengenMsPacMan_UIConfig.NON_ARCADE_MAPS_IMAGE_PATH);
-
-    private NonArcadeMapsSpriteSheet() {}
 
     @Override
     public Image sourceImage() {
-        return IMAGE;
+        return image;
     }
 
     @Override
     public RectShort sprite(MapID id) {
-        return SPRITE_MAP.sprite(id);
+        return spriteMap.sprite(id);
     }
 
     @Override
     public RectShort[] sprites(MapID id) {
-        return SPRITE_MAP.spriteSequence(id);
+        return spriteMap.spriteSequence(id);
     }
 }
