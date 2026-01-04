@@ -24,6 +24,10 @@ import java.util.List;
  */
 public class MapColoringService {
 
+    public static MapColoringService INSTANCE = new MapColoringService();
+
+    private MapColoringService() {}
+
     public ColorSchemedImage recolorMapImage(
         MapCategory mapCategory,
         Object mapID,

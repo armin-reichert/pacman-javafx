@@ -22,8 +22,6 @@ public class TengenMsPacMan_MapRepository {
 
     public static final TengenMsPacMan_MapRepository INSTANCE = new TengenMsPacMan_MapRepository();
 
-    private final MapColoringService coloringService = new MapColoringService();
-
     private TengenMsPacMan_MapRepository() {}
 
     /*
@@ -83,7 +81,7 @@ public class TengenMsPacMan_MapRepository {
         final var coloredMaze = new ColorSchemedImage(ArcadeMapsSpriteSheet.INSTANCE.sourceImage(), mazeSprite, colorScheme);
 
         //TODO: Handle case when color scheme is already black & white
-        final List<ColorSchemedImage> flashingMazes = coloringService.createFlashingMapImages(
+        final List<ColorSchemedImage> flashingMazes = MapColoringService.INSTANCE.createFlashingMapImages(
                 MapCategory.ARCADE, mazeID,
                 ArcadeMapsSpriteSheet.INSTANCE, mazeSprite,
                 colorScheme, NES_ColorScheme._0F_20_0F_BLACK_WHITE_BLACK,
@@ -115,7 +113,7 @@ public class TengenMsPacMan_MapRepository {
             default -> throw new IllegalArgumentException("Illegal MINI map number: " + mapNumber);
         };
 
-        return coloringService.createMazeSet(
+        return MapColoringService.INSTANCE.createMazeSet(
                 MapCategory.MINI, mazeID,
                 NonArcadeMapsSpriteSheet.INSTANCE, NonArcadeMapsSpriteSheet.INSTANCE.sprite(mazeID),
                 originalColorScheme, requestedColorScheme,
@@ -156,7 +154,7 @@ public class TengenMsPacMan_MapRepository {
             default -> null;
         };
 
-        return coloringService.createMazeSet(
+        return MapColoringService.INSTANCE.createMazeSet(
                 MapCategory.BIG, mazeID,
                 NonArcadeMapsSpriteSheet.INSTANCE, NonArcadeMapsSpriteSheet.INSTANCE.sprite(mazeID),
                 originalColorScheme, requestedColorScheme,
@@ -177,7 +175,7 @@ public class TengenMsPacMan_MapRepository {
         final NES_ColorScheme original = colorSchemeOfNonArcadeMap(mazeID);
         final NES_ColorScheme requested = optionalRandomColorScheme == null ? original : optionalRandomColorScheme;
 
-        return coloringService.createMazeSet(
+        return MapColoringService.INSTANCE.createMazeSet(
                 MapCategory.STRANGE, mazeID,
                 NonArcadeMapsSpriteSheet.INSTANCE, mazeSprite,
                 original, requested,
