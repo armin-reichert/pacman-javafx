@@ -17,10 +17,6 @@ import static de.amr.pacmanfx.lib.math.RectShort.rect;
 
 public final class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
 
-    public static final ArcadePacMan_SpriteSheet INSTANCE = new ArcadePacMan_SpriteSheet();
-
-    private static final ResourceManager LOCAL_RESOURCES = () -> ArcadePacMan_UIConfig.class;
-
     /** Sprite sheet has a 16x16 raster. */
     public static final int SQUARE_SIZE = 16;
 
@@ -61,10 +57,15 @@ public final class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
         return IntStream.range(0, 11).mapToObj(i -> rect(504 + i * 16, 1, 15, i == 10 ? 15 : 14)).toArray(RectShort[]::new);
     }
 
+    public static final ArcadePacMan_SpriteSheet INSTANCE = new ArcadePacMan_SpriteSheet();
+
     private final SpriteMap<SpriteID> spriteMap = new SpriteMap<>(SpriteID.class);
-    private final Image image = LOCAL_RESOURCES.loadImage("graphics/pacman_spritesheet.png");
+    private final Image image;
 
     private ArcadePacMan_SpriteSheet() {
+        final ResourceManager moduleResources = () -> ArcadePacMan_UIConfig.class;
+        image = moduleResources.loadImage("graphics/pacman_spritesheet.png");
+
         // -- Map images
         spriteMap.add(SpriteID.MAP_FULL, rect(0, 0, 224, 248));
         spriteMap.add(SpriteID.MAP_EMPTY, rect(228, 0, 224, 248));

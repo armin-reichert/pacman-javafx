@@ -17,14 +17,12 @@ import static de.amr.pacmanfx.tengenmspacman.rendering.SpriteID.*;
 
 public final class TengenMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
 
-    public static final TengenMsPacMan_SpriteSheet INSTANCE = new TengenMsPacMan_SpriteSheet();
-
-    private static final ResourceManager LOCAL_RESOURCES = () -> TengenMsPacMan_UIConfig.class;
-
     // Bonus symbols/values: x-position, width, y-delta
     private static final int[] BONUS_X  = {8, 24, 40, 56, 76, 96, 118, 140, 162, 182, 204, 230, 250, 272};
     private static final int[] BONUS_W  = {16, 15, 16, 18, 18, 20, 18, 18, 18, 18, 18, 18, 18, 18};
     private static final int[] BONUS_DY = {3, 4, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+    public static final TengenMsPacMan_SpriteSheet INSTANCE = new TengenMsPacMan_SpriteSheet();
 
     public RectShort digitSprite(int digit) {
         return sprite(switch (digit) {
@@ -43,9 +41,12 @@ public final class TengenMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
     }
 
     private final SpriteMap<SpriteID> spriteMap = new SpriteMap<>(SpriteID.class);
-    private final Image image = LOCAL_RESOURCES.loadImage(TengenMsPacMan_UIConfig.SPRITE_SHEET_PATH);
+    private final Image image;
 
     private TengenMsPacMan_SpriteSheet() {
+        final ResourceManager moduleResources = () -> TengenMsPacMan_UIConfig.class;
+        image = moduleResources.loadImage(TengenMsPacMan_UIConfig.SPRITE_SHEET_PATH);
+
         spriteMap.add(LARGE_MS_PAC_MAN_TEXT, rect(15, 191, 152, 40));
         spriteMap.add(INFO_FRAME,            rect(175, 125, 126, 7));
         spriteMap.add(INFO_BOOSTER,          rect(190, 134, 7, 5));

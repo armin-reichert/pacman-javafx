@@ -20,8 +20,6 @@ public final class ArcadeMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
 
     public static final ArcadeMsPacMan_SpriteSheet INSTANCE = new ArcadeMsPacMan_SpriteSheet();
 
-    private static final ResourceManager LOCAL_RESOURCES = () -> ArcadeMsPacMan_UIConfig.class;
-
     // left from this x position, the maps are located
     private static final int BEGIN_SPRITES_X = 456;
 
@@ -53,10 +51,13 @@ public final class ArcadeMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
         return new RectShort[] {down, left, up, right, down, left, up, right, down, left, up};
     }
 
-    private final Image image = LOCAL_RESOURCES.loadImage("graphics/mspacman_spritesheet.png");
     private final SpriteMap<SpriteID> spriteMap = new SpriteMap<>(SpriteID.class);
+    private final Image image;
 
     private ArcadeMsPacMan_SpriteSheet() {
+        final ResourceManager moduleResources = () -> ArcadeMsPacMan_UIConfig.class;
+        image = moduleResources.loadImage("graphics/mspacman_spritesheet.png");
+
         spriteMap.add(FULL_MAZES,
             rect(0, 0, 224, 248),
             rect(0, 248, 224, 248),

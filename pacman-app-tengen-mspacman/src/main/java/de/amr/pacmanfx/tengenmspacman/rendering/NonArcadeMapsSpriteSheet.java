@@ -33,12 +33,13 @@ public final class NonArcadeMapsSpriteSheet implements SpriteSheet<NonArcadeMaps
 
     public static final NonArcadeMapsSpriteSheet INSTANCE = new NonArcadeMapsSpriteSheet();
 
-    private static final ResourceManager LOCAL_RESOURCES = () -> TengenMsPacMan_UIConfig.class;
-
-    private final Image image = LOCAL_RESOURCES.loadImage(TengenMsPacMan_UIConfig.NON_ARCADE_MAPS_IMAGE_PATH);
     private final SpriteMap<MapID> spriteMap = new SpriteMap<>(MapID.class);
+    private final Image image;
 
     private NonArcadeMapsSpriteSheet() {
+        final ResourceManager moduleResources = () -> TengenMsPacMan_UIConfig.class;
+        image = moduleResources.loadImage(TengenMsPacMan_UIConfig.NON_ARCADE_MAPS_IMAGE_PATH);
+
         final MapID[] ids = MapID.values();
 
         // All maps are 28 tiles wide
