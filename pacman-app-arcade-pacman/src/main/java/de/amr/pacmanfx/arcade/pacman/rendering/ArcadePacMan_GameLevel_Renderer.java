@@ -17,15 +17,16 @@ import static de.amr.pacmanfx.ui.api.ArcadePalette.*;
 import static java.util.function.Predicate.not;
 
 /**
- * Renderer for classic Arcade Pac-Man and Pac-Man XXL game variants.
+ * Renderer for classic Arcade Pac-Man. ThePac-Man XXL Pac-Man game subclasses this class to use a generic map
+ * renderer instead of a sprite based one.
  */
 public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements SpriteRenderer, GameLevelRenderer {
 
-    private final Image brightMazeImage;
+    private final Image brightMapImage;
 
-    public ArcadePacMan_GameLevel_Renderer(Canvas canvas,  Image brightMazeImage) {
+    public ArcadePacMan_GameLevel_Renderer(Canvas canvas,  Image brightMapImage) {
         super(canvas);
-        this.brightMazeImage = brightMazeImage; // may be null e.g. in Pac-Man XXL where mazes are rendered without images
+        this.brightMapImage = brightMapImage; // may be null e.g. in Pac-Man XXL where mazes are rendered without images
     }
 
     @Override
@@ -34,30 +35,30 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements Spr
     }
 
     @Override
-    public void applyLevelSettings(GameLevel gameLevel, RenderInfo info) {}
+    public void applyLevelSettings(GameLevel level, RenderInfo info) {}
 
     @Override
-    public void drawGameLevel(GameLevel gameLevel, RenderInfo info) {
-        drawMaze(gameLevel, info);
-        gameLevel.optMessage().ifPresent(message -> drawGameLevelMessage(gameLevel, message));
+    public void drawLevel(GameLevel level, RenderInfo info) {
+        drawMap(level, info);
+        level.optMessage().ifPresent(message -> drawLevelMessage(level, message));
     }
 
-    protected void drawMaze(GameLevel gameLevel, RenderInfo info) {
-        final TerrainLayer terrain = gameLevel.worldMap().terrainLayer();
+    protected void drawMap(GameLevel level, RenderInfo info) {
+        final TerrainLayer terrain = level.worldMap().terrainLayer();
         final int emptySpaceOverMazePixels = terrain.emptyRowsOverMaze() * TS;
         ctx.save();
         ctx.scale(scaling(), scaling());
-        if (info.getBoolean(CommonRenderInfoKey.MAZE_EMPTY)) {
+        if (info.getBoolean(CommonRenderInfoKey.MAP_EMPTY)) {
             // Empty maze is shown when level is complete and when the flashing animation is running
-            if (info.getBoolean(CommonRenderInfoKey.MAZE_BRIGHT)) {
+            if (info.getBoolean(CommonRenderInfoKey.MAP_BRIGHT)) {
                 // Flashing animation bright phase
-                if (brightMazeImage != null) {
-                    ctx.drawImage(brightMazeImage, 0, emptySpaceOverMazePixels);
+                if (brightMapImage != null) {
+                    ctx.drawImage(brightMapImage, 0, emptySpaceOverMazePixels);
                 }
             } else {
                 drawSprite(spriteSheet().sprite(SpriteID.MAP_EMPTY), 0, emptySpaceOverMazePixels, false);
             }
-            if (info.getBoolean(CommonRenderInfoKey.MAZE_FLASHING)) {
+            if (info.getBoolean(CommonRenderInfoKey.MAP_FLASHING)) {
                 // Hide ghost house doors while flashing
                 terrain.optHouse().ifPresent(house -> {
                     ctx.setFill(backgroundColor());
@@ -73,7 +74,7 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements Spr
         else {
             drawSprite(spriteSheet().sprite(SpriteID.MAP_FULL), 0, emptySpaceOverMazePixels, false);
             // Over-paint eaten food tiles
-            final FoodLayer foodLayer = gameLevel.worldMap().foodLayer();
+            final FoodLayer foodLayer = level.worldMap().foodLayer();
             foodLayer.tiles()
                 .filter(not(foodLayer::isEnergizerTile))
                 .filter(foodLayer::hasEatenFoodAtTile)
@@ -86,16 +87,11 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements Spr
         ctx.restore();
     }
 
-    protected void drawGameLevelMessage(GameLevel gameLevel, GameLevelMessage message) {
-        switch (message.type()) {
-            case GAME_OVER -> fillTextCentered("GAME  OVER",
-                    ARCADE_RED, arcadeFont8(), message.x(), message.y());
-
-            case READY -> fillTextCentered("READY!",
-                    ARCADE_YELLOW, arcadeFont8(), message.x(), message.y());
-
-            case TEST -> fillTextCentered("TEST    L%02d".formatted(gameLevel.number()),
-                    ARCADE_WHITE, arcadeFont8(), message.x(), message.y());
+    protected void drawLevelMessage(GameLevel level, GameLevelMessage msg) {
+        switch (msg.type()) {
+            case GAME_OVER -> fillTextCentered("GAME  OVER", ARCADE_RED, arcadeFont8(), msg.x(), msg.y());
+            case READY -> fillTextCentered("READY!", ARCADE_YELLOW, arcadeFont8(), msg.x(), msg.y());
+            case TEST -> fillTextCentered("TEST    L%02d".formatted(level.number()), ARCADE_WHITE, arcadeFont8(), msg.x(), msg.y());
         }
     }
 }

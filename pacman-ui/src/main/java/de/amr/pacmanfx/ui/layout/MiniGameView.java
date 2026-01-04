@@ -159,13 +159,13 @@ public class MiniGameView extends VBox {
             var info = new RenderInfo();
             info.putAll(Map.of(
                 CommonRenderInfoKey.ENERGIZER_ON, game.level().blinking().state() == Pulse.State.ON,
-                CommonRenderInfoKey.MAZE_BRIGHT, false,
-                CommonRenderInfoKey.MAZE_EMPTY, game.level().worldMap().foodLayer().uneatenFoodCount() == 0,
-                CommonRenderInfoKey.MAZE_FLASHING, false,
+                CommonRenderInfoKey.MAP_BRIGHT, false,
+                CommonRenderInfoKey.MAP_EMPTY, game.level().worldMap().foodLayer().uneatenFoodCount() == 0,
+                CommonRenderInfoKey.MAP_FLASHING, false,
                 CommonRenderInfoKey.TICK, ui.clock().tickCount()
             ));
             gameLevelRenderer.applyLevelSettings(game.level(), info);
-            gameLevelRenderer.drawGameLevel(game.level(), info);
+            gameLevelRenderer.drawLevel(game.level(), info);
 
             game.level().optBonus().ifPresent(bonus -> actorRenderer.drawActor(bonus));
             actorRenderer.drawActor(game.level().pac());

@@ -19,18 +19,18 @@ import javafx.scene.paint.Color;
  */
 public class PacManXXL_PacMan_GameLevelRenderer extends ArcadePacMan_GameLevel_Renderer {
 
-    private final GenericMapRenderer mazeRenderer;
+    private final GenericMapRenderer mapRenderer;
 
     public PacManXXL_PacMan_GameLevelRenderer(Canvas canvas) {
         super(canvas, null);
-        mazeRenderer = new GenericMapRenderer(canvas);
-        mazeRenderer.scalingProperty().bind(scalingProperty());
-        mazeRenderer.backgroundColorProperty().bind(backgroundColorProperty());
+        mapRenderer = new GenericMapRenderer(canvas);
+        mapRenderer.scalingProperty().bind(scalingProperty());
+        mapRenderer.backgroundColorProperty().bind(backgroundColorProperty());
     }
 
     @Override
-    public void applyLevelSettings(GameLevel gameLevel, RenderInfo info) {
-        final WorldMapColorScheme worldMapColorScheme = gameLevel.worldMap().getConfigValue(GameUI_Config.ConfigKey.COLOR_SCHEME);
+    public void applyLevelSettings(GameLevel level, RenderInfo info) {
+        final WorldMapColorScheme worldMapColorScheme = level.worldMap().getConfigValue(GameUI_Config.ConfigKey.COLOR_SCHEME);
         final var terrainMapColorScheme = new TerrainMapColorScheme(
             backgroundColor(),
             Color.valueOf(worldMapColorScheme.wallFill()),
@@ -41,7 +41,7 @@ public class PacManXXL_PacMan_GameLevelRenderer extends ArcadePacMan_GameLevel_R
     }
 
     @Override
-    protected void drawMaze(GameLevel gameLevel, RenderInfo info) {
-        mazeRenderer.drawMaze(gameLevel, info);
+    protected void drawMap(GameLevel level, RenderInfo info) {
+        mapRenderer.drawMap(level, info);
     }
 }

@@ -3,9 +3,9 @@ package de.amr.pacmanfx.uilib.rendering;
 public interface CommonRenderInfoKey {
 
     String ENERGIZER_ON = "blinking";
-    String MAZE_BRIGHT = "bright";
-    String MAZE_EMPTY = "empty";
-    String MAZE_FLASHING = "flashing";
+    String MAP_BRIGHT = "bright";
+    String MAP_EMPTY = "empty";
+    String MAP_FLASHING = "flashing";
     String MAZE_FLASHING_INDEX = "flashingIndex";
     String MAZE_IMAGE = "mazeImage";
     String MAZE_SPRITE = "mazeSprite";

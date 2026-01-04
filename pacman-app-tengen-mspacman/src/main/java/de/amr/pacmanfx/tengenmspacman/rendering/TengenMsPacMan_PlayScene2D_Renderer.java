@@ -105,7 +105,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends GameScene2D_Renderer
             ctx.getCanvas().setClip(clipRect);
             ctx.save();
             ctx.translate(scaled(CONTENT_INDENT), 0);
-            levelRenderer.drawGameLevel(level, renderInfo);
+            levelRenderer.drawLevel(level, renderInfo);
             levelRenderer.drawDoor(level.worldMap()); // ghosts appear under door, so draw door over again
             actorsInZOrder.forEach(actorRenderer::drawActor);
             ctx.restore();
@@ -125,10 +125,10 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends GameScene2D_Renderer
         renderInfo.put(CommonRenderInfoKey.TICK, tick);
         renderInfo.put(TengenMsPacMan_UIConfig.ConfigKey.MAP_CATEGORY, worldMap.getConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MAP_CATEGORY));
         if (playScene.levelCompletedAnimation() != null && playScene.isMazeHighlighted()) {
-            renderInfo.put(CommonRenderInfoKey.MAZE_BRIGHT, true);
+            renderInfo.put(CommonRenderInfoKey.MAP_BRIGHT, true);
             renderInfo.put(CommonRenderInfoKey.MAZE_FLASHING_INDEX, playScene.levelCompletedAnimation().flashingIndex());
         } else {
-            renderInfo.put(CommonRenderInfoKey.MAZE_BRIGHT, false);
+            renderInfo.put(CommonRenderInfoKey.MAP_BRIGHT, false);
         }
     }
 

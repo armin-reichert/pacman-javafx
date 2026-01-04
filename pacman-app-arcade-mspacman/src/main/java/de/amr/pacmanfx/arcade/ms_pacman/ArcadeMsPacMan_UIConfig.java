@@ -146,7 +146,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     // Creates the maze image used in the flash animation at the end of each level
     private Image createBrightMazeImage(int index) {
-        final RectShort mazeSprite = spriteSheet().sprites(SpriteID.EMPTY_MAZES)[index];
+        final RectShort mazeSprite = spriteSheet().sprites(SpriteID.EMPTY_MAPS)[index];
         final Image mazeImage = spriteSheet().image(mazeSprite);
         final WorldMapColorScheme colorScheme = ArcadeMsPacMan_MapSelector.MAP_COLOR_SCHEMES[index];
         final Map<Color, Color> colorChanges = Map.of(

@@ -12,14 +12,14 @@ public interface GameLevelRenderer extends Renderer {
      * Applies settings specific to the given game level to this renderer. This can be for example
      * the selection of a different color scheme which is specified in the level map.
      *
-     * @param gameLevel the game level
+     * @param level the game level
      * @param info rendering info
      */
-    void applyLevelSettings(GameLevel gameLevel, RenderInfo info);
+    void applyLevelSettings(GameLevel level, RenderInfo info);
 
     /**
-     * @param gameLevel the game level to draw
+     * @param level the game level to draw
      * @param info additional rendering info
      */
-    void drawGameLevel(GameLevel gameLevel, RenderInfo info);
+    void drawLevel(GameLevel level, RenderInfo info);
 }

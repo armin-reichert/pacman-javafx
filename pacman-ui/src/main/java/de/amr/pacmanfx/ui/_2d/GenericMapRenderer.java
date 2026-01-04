@@ -58,9 +58,9 @@ public class GenericMapRenderer extends BaseRenderer {
         terrainRenderer.setColorScheme(newColorScheme);
     }
 
-    public void drawMaze(GameLevel gameLevel, RenderInfo info) {
+    public void drawMap(GameLevel gameLevel, RenderInfo info) {
         final WorldMap worldMap = gameLevel.worldMap();
-        if (info.getBoolean(CommonRenderInfoKey.MAZE_BRIGHT)) {
+        if (info.getBoolean(CommonRenderInfoKey.MAP_BRIGHT)) {
             terrainRenderer.setColorScheme(info.getBoolean(CommonRenderInfoKey.ENERGIZER_ON) ? blinkingOnColors : blinkingOffColors);
             terrainRenderer.draw(worldMap);
         }

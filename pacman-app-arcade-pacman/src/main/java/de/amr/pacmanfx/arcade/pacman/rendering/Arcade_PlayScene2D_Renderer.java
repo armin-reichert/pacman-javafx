@@ -67,7 +67,7 @@ public class Arcade_PlayScene2D_Renderer extends GameScene2D_Renderer implements
             final RenderInfo info = buildRenderInfo(level, playScene.levelCompletedAnimation().orElse(null));
 
             levelRenderer.applyLevelSettings(level, info);
-            levelRenderer.drawGameLevel(level, info);
+            levelRenderer.drawLevel(level, info);
 
             updateActorZOrder(level);
             actorsInZOrder.forEach(actorRenderer::drawActor);
@@ -85,9 +85,9 @@ public class Arcade_PlayScene2D_Renderer extends GameScene2D_Renderer implements
         final boolean allPelletsEaten = level.worldMap().foodLayer().uneatenFoodCount() == 0;
         final var info = new RenderInfo();
         info.put(CommonRenderInfoKey.ENERGIZER_ON, energizerOn);
-        info.put(CommonRenderInfoKey.MAZE_EMPTY, allPelletsEaten);
-        info.put(CommonRenderInfoKey.MAZE_BRIGHT, bright);
-        info.put(CommonRenderInfoKey.MAZE_FLASHING, flashing);
+        info.put(CommonRenderInfoKey.MAP_EMPTY, allPelletsEaten);
+        info.put(CommonRenderInfoKey.MAP_BRIGHT, bright);
+        info.put(CommonRenderInfoKey.MAP_FLASHING, flashing);
         return info;
     }
 

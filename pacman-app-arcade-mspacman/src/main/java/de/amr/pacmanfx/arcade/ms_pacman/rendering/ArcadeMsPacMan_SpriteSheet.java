@@ -32,7 +32,7 @@ public final class ArcadeMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
         final ResourceManager moduleResources = () -> ArcadeMsPacMan_UIConfig.class;
         image = moduleResources.loadImage(SPRITESHEET_PNG);
 
-        spriteMap.add(FULL_MAZES,
+        spriteMap.add(FULL_MAPS,
             rect(0, 0, 224, 248),
             rect(0, 248, 224, 248),
             rect(0, 2 * 248, 224, 248),
@@ -40,7 +40,7 @@ public final class ArcadeMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
             rect(0, 4 * 248, 224, 248),
             rect(0, 5 * 248, 224, 248)
         );
-        spriteMap.add(EMPTY_MAZES,
+        spriteMap.add(EMPTY_MAPS,
             rect(228, 0, 224, 248),
             rect(228, 248, 224, 248),
             rect(228, 2 * 248, 224, 248),
