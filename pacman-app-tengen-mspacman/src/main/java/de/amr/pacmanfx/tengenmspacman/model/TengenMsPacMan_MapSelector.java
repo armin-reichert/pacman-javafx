@@ -88,8 +88,8 @@ public class TengenMsPacMan_MapSelector implements WorldMapSelector {
                     ensureStrangeMapPrototypesLoaded();
                     final WorldMap strangeMap = configuredStrangeMap(levelNumber);
                     // Hack: Store mazeID in map properties to make renderer happy
-                    final var mazeID = NonArcadeMapsSpriteSheet.MazeID.values()[levelNumber - 1];
-                    strangeMap.setConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MAZE_ID, mazeID);
+                    final var mazeID = NonArcadeMapsSpriteSheet.MapID.values()[levelNumber - 1];
+                    strangeMap.setConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MAP_ID, mazeID);
                     yield strangeMap;
                 }
             };

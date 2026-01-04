@@ -112,9 +112,9 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         };
     }
 
-    public static final String SPRITE_SHEET_PATH           = "graphics/spritesheet.png";
-    public static final String ARCADE_MAZES_IMAGE_PATH     = "graphics/arcade_mazes.png";
-    public static final String NON_ARCADE_MAZES_IMAGE_PATH = "graphics/non_arcade_mazes.png";
+    public static final String SPRITE_SHEET_PATH          = "graphics/spritesheet.png";
+    public static final String ARCADE_MAPS_IMAGE_PATH     = "graphics/arcade_mazes.png";
+    public static final String NON_ARCADE_MAPS_IMAGE_PATH = "graphics/non_arcade_mazes.png";
 
     public static final String MAPS_PATH = "/de/amr/pacmanfx/tengenmspacman/maps/";
 
@@ -123,8 +123,8 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
     public enum ConfigKey {
         MAP_CATEGORY,
         /** ID of correctly recolored maze sprite set */
-        MAZE_ID,
-        MAZE_SPRITE_SET,
+        MAP_ID,
+        MAP_SPRITE_SET,
         MULTIPLE_FLASH_COLORS,
         NES_COLOR_SCHEME
     }
