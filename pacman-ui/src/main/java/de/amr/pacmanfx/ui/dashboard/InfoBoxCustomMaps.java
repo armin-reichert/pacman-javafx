@@ -64,7 +64,12 @@ public class InfoBoxCustomMaps extends InfoBox {
         });
 
         addRow(mapsTableView);
-        updateCustomMapList();
+
+        expandedProperty().addListener((_, _, expanded) -> {
+            if (expanded) {
+                updateCustomMapList();
+            }
+        });
 
         ui.customDirWatchdog().addEventListener(eventList -> {
             Logger.info("Custom map change(s) detected: {}",
