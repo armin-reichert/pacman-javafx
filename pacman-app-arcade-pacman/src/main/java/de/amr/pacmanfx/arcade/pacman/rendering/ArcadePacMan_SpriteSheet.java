@@ -17,45 +17,12 @@ import static de.amr.pacmanfx.lib.math.RectShort.rect;
 
 public final class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
 
-    /** Sprite sheet has a 16x16 raster. */
-    public static final int SQUARE_SIZE = 16;
+    private static final String SPRITESHEET_PNG = "graphics/pacman_spritesheet.png";
 
-    /** Left of this x, there are the maze images, sprites start right from here. */
-    public static final int SPRITES_START_X = 456;
+    private static final int RASTER_SIZE = 16;
 
-    private static RectShort clipSpriteRect(int x, int y, int w, int h) {
-        return rect(SPRITES_START_X + x, y, w, h);
-    }
-
-    private static RectShort clipSpriteTile(int tileX, int tileY) {
-        return clipSpriteRect(SQUARE_SIZE * tileX, SQUARE_SIZE * tileY, SQUARE_SIZE, SQUARE_SIZE);
-    }
-
-    private static RectShort[] clipSpriteTiles(int startTileX, int startTileY, int count) {
-        return IntStream.range(startTileX, startTileX + count)
-            .mapToObj(tileX -> clipSpriteTile(tileX, startTileY))
-            .toArray(RectShort[]::new);
-    }
-
-    private static RectShort pacFullSprite() {
-        int margin = 1;
-        int size = 14; // SQUARE_SIZE - 2 * margin
-        return clipSpriteRect(2 * SQUARE_SIZE + margin, margin, size, size);
-    }
-
-    private static RectShort[] makePacManMunchingSpriteSeq(int dir) {
-        int margin = 1;
-        int size = 14; // SQUARE_SIZE - 2 * margin
-        // Note: the close mouth sprite is only available at row 0
-        RectShort closed = clipSpriteRect(2 * SQUARE_SIZE + margin, margin, size, size);
-        RectShort wide   = clipSpriteRect(margin, dir * SQUARE_SIZE + margin, size, size);
-        RectShort middle = clipSpriteRect(SQUARE_SIZE + margin, dir * SQUARE_SIZE + margin, size, size);
-        return new RectShort[] {closed, closed, middle, middle, wide, wide, middle, middle};
-    }
-
-    private static RectShort[] makePacManDyingSpriteSeq() {
-        return IntStream.range(0, 11).mapToObj(i -> rect(504 + i * 16, 1, 15, i == 10 ? 15 : 14)).toArray(RectShort[]::new);
-    }
+    // Map images are located left and sprites right of this x position
+    private static final int HORIZONTAL_SPLIT_X = 456;
 
     public static final ArcadePacMan_SpriteSheet INSTANCE = new ArcadePacMan_SpriteSheet();
 
@@ -64,7 +31,7 @@ public final class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
 
     private ArcadePacMan_SpriteSheet() {
         final ResourceManager moduleResources = () -> ArcadePacMan_UIConfig.class;
-        image = moduleResources.loadImage("graphics/pacman_spritesheet.png");
+        image = moduleResources.loadImage(SPRITESHEET_PNG);
 
         // -- Map images
         spriteMap.add(SpriteID.MAP_FULL, rect(0, 0, 224, 248));
@@ -84,7 +51,7 @@ public final class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
         // -- 8 bonus symbols ("fruits")
         spriteMap.add(SpriteID.BONUS_SYMBOLS,
             IntStream.range(0, 8)
-                .mapToObj(i -> clipSpriteRect(SQUARE_SIZE * (2 + i), 49, 14, 14))
+                .mapToObj(i -> clipSpriteRect(RASTER_SIZE * (2 + i), 49, 14, 14))
                 .toArray(RectShort[]::new));
 
         // -- Bonus value numbers
@@ -157,8 +124,8 @@ public final class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
         spriteMap.add(SpriteID.RED_GHOST_PATCHED, rect(617, 113, 14, 14), rect(633, 113, 14, 14));
 
         spriteMap.add(SpriteID.RED_GHOST_NAKED,
-            clipSpriteRect(SQUARE_SIZE * 8, SQUARE_SIZE * 8, SQUARE_SIZE * 2, SQUARE_SIZE),
-            clipSpriteRect(SQUARE_SIZE * 10, SQUARE_SIZE * 8, SQUARE_SIZE * 2, SQUARE_SIZE)
+            clipSpriteRect(RASTER_SIZE * 8, RASTER_SIZE * 8, RASTER_SIZE * 2, RASTER_SIZE),
+            clipSpriteRect(RASTER_SIZE * 10, RASTER_SIZE * 8, RASTER_SIZE * 2, RASTER_SIZE)
         );
 
         spriteMap.checkCompleteness();
@@ -177,5 +144,41 @@ public final class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
     @Override
     public RectShort[] sprites(SpriteID id) {
         return spriteMap.spriteSequence(id);
+    }
+
+    // private methods
+
+    private RectShort clipSpriteRect(int x, int y, int w, int h) {
+        return rect(HORIZONTAL_SPLIT_X + x, y, w, h);
+    }
+
+    private RectShort clipSpriteTile(int tileX, int tileY) {
+        return clipSpriteRect(RASTER_SIZE * tileX, RASTER_SIZE * tileY, RASTER_SIZE, RASTER_SIZE);
+    }
+
+    private RectShort[] clipSpriteTiles(int startTileX, int startTileY, int count) {
+        return IntStream.range(startTileX, startTileX + count)
+            .mapToObj(tileX -> clipSpriteTile(tileX, startTileY))
+            .toArray(RectShort[]::new);
+    }
+
+    private RectShort pacFullSprite() {
+        final int margin = 1;
+        final int size = 14; // SQUARE_SIZE - 2 * margin
+        return clipSpriteRect(2 * RASTER_SIZE + margin, margin, size, size);
+    }
+
+    private RectShort[] makePacManMunchingSpriteSeq(int dir) {
+        final int margin = 1;
+        final int size = 14; // SQUARE_SIZE - 2 * margin
+        // Note: the close mouth sprite is only available at row 0
+        final RectShort closed = clipSpriteRect(2 * RASTER_SIZE + margin, margin, size, size);
+        final RectShort wide   = clipSpriteRect(margin, dir * RASTER_SIZE + margin, size, size);
+        final RectShort middle = clipSpriteRect(RASTER_SIZE + margin, dir * RASTER_SIZE + margin, size, size);
+        return new RectShort[] {closed, closed, middle, middle, wide, wide, middle, middle};
+    }
+
+    private RectShort[] makePacManDyingSpriteSeq() {
+        return IntStream.range(0, 11).mapToObj(i -> rect(504 + i * 16, 1, 15, i == 10 ? 15 : 14)).toArray(RectShort[]::new);
     }
 }
