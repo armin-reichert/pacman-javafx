@@ -14,9 +14,17 @@ import java.util.List;
 
 import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
 
+// Though there are 6 maps in Ms. Pac-Man, we only use world maps 1-4 (maps 5 and 6 are the same as 3 and 4 using a
+// different color scheme.) and store the color map index (0-5) in the map configuration instead.
+// The 2D renderer uses that index to extract the corresponding map image from the sprite sheet.
+// The 3D renderer uses that index and the color values in MAP_COLOR_SCHEMES to create the 3D materials.
 public class ArcadeMsPacMan_MapSelector implements WorldMapSelector {
 
-    public static final WorldMapColorScheme[] WORLD_MAP_COLOR_SCHEMES = {
+    private static final int PROTOTYPES_COUNT = 4;
+    private static final String PROTOTYPES_PATH = "/de/amr/pacmanfx/arcade/ms_pacman/maps/mspacman_%d.world";
+
+    /** Colors used by the six Ms. Pac-Man Arcade maps. */
+    public static final WorldMapColorScheme[] MAP_COLOR_SCHEMES = {
         new WorldMapColorScheme("ffb7ae", "ff0000", "fcb5ff", "dedeff"),
         new WorldMapColorScheme("47b7ff", "dedeff", "fcb5ff", "ffff00"),
         new WorldMapColorScheme("de9751", "dedeff", "fcb5ff", "ff0000"),
@@ -25,13 +33,31 @@ public class ArcadeMsPacMan_MapSelector implements WorldMapSelector {
         new WorldMapColorScheme("ffb7ae", "ff0000", "fcb5ff", "dedeff")
     };
 
-    private static final String WORLD_MAP_PATH_PATTERN = "/de/amr/pacmanfx/arcade/ms_pacman/maps/mspacman_%d.world";
+    private static int mapNumber(int levelNumber) {
+        return switch (levelNumber) {
+            case 1, 2 -> 1;
+            case 3, 4, 5 -> 2;
+            case 6, 7, 8, 9 -> 3;
+            case 10, 11, 12, 13 -> 4;
+            default -> (levelNumber - 14) % 8 < 4 ? 3 : 4;
+        };
+    }
+
+    private static int colorMapIndex(int levelNumber) {
+        return switch (levelNumber) {
+            case 1, 2 -> 0;
+            case 3, 4, 5 -> 1;
+            case 6, 7, 8, 9 -> 2;
+            case 10, 11, 12, 13 -> 3;
+            default -> (levelNumber - 14) % 8 < 4 ? 4 : 5;
+        };
+    }
 
     private List<WorldMap> mapPrototypes = List.of();
 
     @Override
     public void loadMapPrototypes() throws IOException {
-        mapPrototypes = WorldMapSelector.loadMaps(getClass(), WORLD_MAP_PATH_PATTERN, 4);
+        mapPrototypes = WorldMapSelector.loadMaps(getClass(), PROTOTYPES_PATH, PROTOTYPES_COUNT);
     }
 
     /**
@@ -59,30 +85,12 @@ public class ArcadeMsPacMan_MapSelector implements WorldMapSelector {
         if (mapPrototypes.isEmpty()) {
             loadMapPrototypes();
         }
-
-        final int mapNumber = switch (levelNumber) {
-            case 1, 2 -> 1;
-            case 3, 4, 5 -> 2;
-            case 6, 7, 8, 9 -> 3;
-            case 10, 11, 12, 13 -> 4;
-            default -> (levelNumber - 14) % 8 < 4 ? 3 : 4;
-        };
-
-        // Color map index:
-        // 1->0, 2->1, 3->2, 4->3   level 1..13;
-        // 3->4; 4->5               level 14+
-        final int colorMapIndex = switch (levelNumber) {
-            case 1, 2 -> 0;
-            case 3, 4, 5 -> 1;
-            case 6, 7, 8, 9 -> 2;
-            case 10, 11, 12, 13 -> 3;
-            default -> ((levelNumber - 14) % 8 < 4) ? 4 : 5;
-        };
-
+        final int mapNumber = mapNumber(levelNumber);
         final WorldMap prototype = mapPrototypes.get(mapNumber - 1);
+
         final WorldMap worldMap = new WorldMap(prototype);
         worldMap.setConfigValue(GameUI_Config.ConfigKey.MAP_NUMBER, mapNumber);
-        worldMap.setConfigValue(GameUI_Config.ConfigKey.COLOR_MAP_INDEX, colorMapIndex);
+        worldMap.setConfigValue(GameUI_Config.ConfigKey.COLOR_MAP_INDEX, colorMapIndex(levelNumber));
         return worldMap;
     }
 }
