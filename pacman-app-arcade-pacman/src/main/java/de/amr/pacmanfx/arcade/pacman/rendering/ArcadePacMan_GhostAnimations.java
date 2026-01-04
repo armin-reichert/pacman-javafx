@@ -19,16 +19,16 @@ import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.buildAnimation;
 public class ArcadePacMan_GhostAnimations extends SpriteAnimationManager<SpriteID> {
 
     public enum AnimationID {
-        ANIM_BLINKY_DAMAGED,
-        ANIM_BLINKY_PATCHED,
-        ANIM_BLINKY_NAIL_DRESS_RAPTURE,
-        ANIM_BLINKY_NAKED
+        BLINKY_DAMAGED,
+        BLINKY_DRESS_PATCHED,
+        BLINKY_NAIL_DRESS_RAPTURE,
+        BLINKY_NAKED
     }
 
     private final byte personality;
 
-    public ArcadePacMan_GhostAnimations(ArcadePacMan_SpriteSheet spriteSheet, byte personality) {
-        super(spriteSheet);
+    public ArcadePacMan_GhostAnimations(byte personality) {
+        super(ArcadePacMan_SpriteSheet.INSTANCE);
         this.personality = requireValidGhostPersonality(personality);
     }
 
@@ -58,20 +58,20 @@ public class ArcadePacMan_GhostAnimations extends SpriteAnimationManager<SpriteI
                 .sprites(spriteSheet().sprites(SpriteID.GHOST_NUMBERS))
                 .once();
 
-            case AnimationID.ANIM_BLINKY_DAMAGED -> buildAnimation()
+            case AnimationID.BLINKY_DAMAGED -> buildAnimation()
                 .sprites(spriteSheet().sprites(SpriteID.RED_GHOST_DAMAGED))
                 .once();
 
-            case AnimationID.ANIM_BLINKY_NAIL_DRESS_RAPTURE -> buildAnimation()
+            case AnimationID.BLINKY_NAIL_DRESS_RAPTURE -> buildAnimation()
                 .sprites(spriteSheet().sprites(SpriteID.RED_GHOST_STRETCHED))
                 .once();
 
-            case AnimationID.ANIM_BLINKY_PATCHED -> buildAnimation()
+            case AnimationID.BLINKY_DRESS_PATCHED -> buildAnimation()
                 .sprites(spriteSheet().sprites(SpriteID.RED_GHOST_PATCHED))
                 .ticksPerFrame(4)
                 .repeated();
 
-            case AnimationID.ANIM_BLINKY_NAKED -> buildAnimation()
+            case AnimationID.BLINKY_NAKED -> buildAnimation()
                 .sprites(spriteSheet().sprites(SpriteID.RED_GHOST_NAKED))
                 .ticksPerFrame(4)
                 .repeated();
@@ -82,12 +82,12 @@ public class ArcadePacMan_GhostAnimations extends SpriteAnimationManager<SpriteI
 
     @Override
     public ArcadePacMan_SpriteSheet spriteSheet() {
-        return (ArcadePacMan_SpriteSheet) super.spriteSheet();
+        return ArcadePacMan_SpriteSheet.INSTANCE;
     }
 
     @Override
-    public void selectFrame(Object animationID, int frameIndex) {
-        super.selectFrame(animationID, frameIndex);
+    public void setAnimationFrame(Object animationID, int frameIndex) {
+        super.setAnimationFrame(animationID, frameIndex);
         if (CommonAnimationID.GHOST_POINTS.equals(animationID)) {
             animation(CommonAnimationID.GHOST_POINTS).setFrameIndex(frameIndex);
         }

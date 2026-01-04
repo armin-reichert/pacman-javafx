@@ -247,7 +247,7 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config, GameScene_Confi
 
     @Override
     public ArcadePacMan_GhostAnimations createGhostAnimations(byte personality) {
-        return new ArcadePacMan_GhostAnimations(spriteSheet(), personality);
+        return new ArcadePacMan_GhostAnimations(personality);
     }
 
     @Override

@@ -20,7 +20,7 @@ public interface AnimationManager {
         }
 
         @Override
-        public void selectFrame(Object id, int frameIndex) {
+        public void setAnimationFrame(Object id, int frameIndex) {
         }
 
         @Override
@@ -48,8 +48,8 @@ public interface AnimationManager {
 
     Object animation(Object id);
     Object selectedID();
-    void selectFrame(Object id, int frameIndex);
-    default void select(Object id) { selectFrame(id, 0); }
+    void setAnimationFrame(Object id, int frameIndex);
+    default void select(Object id) { setAnimationFrame(id, 0); }
     default void play(Object id) { select(id); play(); }
     void play();
     void stop();

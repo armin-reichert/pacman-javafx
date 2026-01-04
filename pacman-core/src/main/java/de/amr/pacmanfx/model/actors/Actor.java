@@ -199,7 +199,7 @@ public class Actor {
 
     public void selectAnimationAt(Object animationID, int frameIndex) {
         requireNonNull(animationID);
-        animationManager.selectFrame(animationID, frameIndex);
+        animationManager.setAnimationFrame(animationID, frameIndex);
     }
 
     public void playAnimation(Object animationID) {

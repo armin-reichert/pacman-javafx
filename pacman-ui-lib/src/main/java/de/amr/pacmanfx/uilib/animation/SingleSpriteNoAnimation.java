@@ -32,7 +32,7 @@ public record SingleSpriteNoAnimation(RectShort sprite) implements AnimationMana
     }
 
     @Override
-    public void selectFrame(Object animationID, int frameIndex) {
+    public void setAnimationFrame(Object animationID, int frameIndex) {
     }
 
     @Override

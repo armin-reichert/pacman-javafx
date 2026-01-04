@@ -61,8 +61,8 @@ public class TengenMsPacMan_GhostAnimations extends SpriteAnimationManager<Sprit
     }
 
     @Override
-    public void selectFrame(Object animationID, int frameIndex) {
-        super.selectFrame(animationID, frameIndex);
+    public void setAnimationFrame(Object animationID, int frameIndex) {
+        super.setAnimationFrame(animationID, frameIndex);
         if (CommonAnimationID.GHOST_POINTS.equals(animationID)) {
             animation(CommonAnimationID.GHOST_POINTS).setFrameIndex(frameIndex);
         }

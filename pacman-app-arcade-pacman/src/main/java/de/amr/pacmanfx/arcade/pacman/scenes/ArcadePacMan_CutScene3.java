@@ -79,13 +79,13 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
                 blinky.setWishDir(Direction.LEFT);
                 blinky.setSpeed(1.25f);
                 blinky.show();
-                blinky.playAnimation(ArcadePacMan_GhostAnimations.AnimationID.ANIM_BLINKY_PATCHED);
+                blinky.playAnimation(ArcadePacMan_GhostAnimations.AnimationID.BLINKY_DRESS_PATCHED);
             }
             case ANIMATION_START_TICK + 400 -> {
                 blinky.placeAtTile(-1, 20);
                 blinky.setMoveDir(Direction.RIGHT);
                 blinky.setWishDir(Direction.RIGHT);
-                blinky.playAnimation(ArcadePacMan_GhostAnimations.AnimationID.ANIM_BLINKY_NAKED);
+                blinky.playAnimation(ArcadePacMan_GhostAnimations.AnimationID.BLINKY_NAKED);
             }
             case ANIMATION_START_TICK + 700 -> game.control().terminateCurrentGameState();
             default -> {}

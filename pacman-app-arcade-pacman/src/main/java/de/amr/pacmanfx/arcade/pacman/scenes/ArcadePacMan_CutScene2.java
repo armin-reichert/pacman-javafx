@@ -70,8 +70,8 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
         blinky.optAnimationManager().ifPresent(am -> {
             blinkyNormal = (SpriteAnimation) am.animation(CommonAnimationID.GHOST_NORMAL);
-            nailDressRaptureAnimation = (SpriteAnimation) am.animation(ArcadePacMan_GhostAnimations.AnimationID.ANIM_BLINKY_NAIL_DRESS_RAPTURE);
-            blinkyDamaged = (SpriteAnimation) am.animation(ArcadePacMan_GhostAnimations.AnimationID.ANIM_BLINKY_DAMAGED);
+            nailDressRaptureAnimation = (SpriteAnimation) am.animation(ArcadePacMan_GhostAnimations.AnimationID.BLINKY_NAIL_DRESS_RAPTURE);
+            blinkyDamaged = (SpriteAnimation) am.animation(ArcadePacMan_GhostAnimations.AnimationID.BLINKY_DAMAGED);
         });
 
         tick = -1;
@@ -118,7 +118,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
             case ANIMATION_START_TICK + 360 -> {
                 nailDressRaptureAnimation.setFrameIndex(RAPTURED);
                 blinky.setX(blinky.x() - 4);
-                blinky.selectAnimation(ArcadePacMan_GhostAnimations.AnimationID.ANIM_BLINKY_DAMAGED);
+                blinky.selectAnimation(ArcadePacMan_GhostAnimations.AnimationID.BLINKY_DAMAGED);
             }
             case ANIMATION_START_TICK + 420 -> blinkyDamaged.nextFrame(); // Eyes right-down
             case ANIMATION_START_TICK + 508 -> {

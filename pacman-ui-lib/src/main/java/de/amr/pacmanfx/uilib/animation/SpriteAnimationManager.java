@@ -72,7 +72,7 @@ public abstract class SpriteAnimationManager<SID extends Enum<SID>> implements A
     }
 
     @Override
-    public void selectFrame(Object animationID, int frameIndex) {
+    public void setAnimationFrame(Object animationID, int frameIndex) {
         if (!animationID.equals(selectedID)) {
             selectedID = animationID;
             if (currentAnimation() != null) {

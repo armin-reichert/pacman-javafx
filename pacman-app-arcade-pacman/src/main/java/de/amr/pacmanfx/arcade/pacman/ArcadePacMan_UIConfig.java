@@ -252,7 +252,7 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
     @Override
     public ArcadePacMan_GhostAnimations createGhostAnimations(byte personality) {
         Validations.requireValidGhostPersonality(personality);
-        return new ArcadePacMan_GhostAnimations(spriteSheet(), personality);
+        return new ArcadePacMan_GhostAnimations(personality);
     }
 
     @Override
