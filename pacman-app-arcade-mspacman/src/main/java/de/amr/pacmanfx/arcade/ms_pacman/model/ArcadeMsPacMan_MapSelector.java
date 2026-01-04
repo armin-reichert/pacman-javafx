@@ -31,9 +31,7 @@ public class ArcadeMsPacMan_MapSelector implements WorldMapSelector {
 
     @Override
     public void loadMapPrototypes() throws IOException {
-        if (mapPrototypes.isEmpty()) {
-            mapPrototypes = WorldMapSelector.loadMaps(getClass(), WORLD_MAP_PATH_PATTERN, 4);
-        }
+        mapPrototypes = WorldMapSelector.loadMaps(getClass(), WORLD_MAP_PATH_PATTERN, 4);
     }
 
     /**
