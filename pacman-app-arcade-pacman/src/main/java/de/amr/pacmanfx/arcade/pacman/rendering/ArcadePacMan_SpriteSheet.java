@@ -19,6 +19,8 @@ public final class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
 
     public static final ArcadePacMan_SpriteSheet INSTANCE = new ArcadePacMan_SpriteSheet();
 
+    private static final ResourceManager LOCAL_RESOURCES = () -> ArcadePacMan_UIConfig.class;
+
     /** Sprite sheet has a 16x16 raster. */
     public static final int SQUARE_SIZE = 16;
 
@@ -59,15 +61,16 @@ public final class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
         return IntStream.range(0, 11).mapToObj(i -> rect(504 + i * 16, 1, 15, i == 10 ? 15 : 14)).toArray(RectShort[]::new);
     }
 
-    private static final SpriteMap<SpriteID> SPRITE_MAP = new SpriteMap<>(SpriteID.class);
+    private final SpriteMap<SpriteID> spriteMap = new SpriteMap<>(SpriteID.class);
+    private final Image image = LOCAL_RESOURCES.loadImage("graphics/pacman_spritesheet.png");
 
-    static {
+    private ArcadePacMan_SpriteSheet() {
         // -- Map images
-        SPRITE_MAP.add(SpriteID.MAP_FULL, rect(0, 0, 224, 248));
-        SPRITE_MAP.add(SpriteID.MAP_EMPTY, rect(228, 0, 224, 248));
+        spriteMap.add(SpriteID.MAP_FULL, rect(0, 0, 224, 248));
+        spriteMap.add(SpriteID.MAP_EMPTY, rect(228, 0, 224, 248));
 
         // -- Eaten ghost values
-        SPRITE_MAP.add(SpriteID.GHOST_NUMBERS,
+        spriteMap.add(SpriteID.GHOST_NUMBERS,
             rect(456, 133, 15, 7),  // 200
             rect(472, 133, 15, 7),  // 400
             rect(488, 133, 15, 7),  // 800
@@ -75,16 +78,16 @@ public final class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
         );
 
         // Energizer
-        SPRITE_MAP.add(SpriteID.ENERGIZER, rect(8, 24, 8, 8));
+        spriteMap.add(SpriteID.ENERGIZER, rect(8, 24, 8, 8));
 
         // -- 8 bonus symbols ("fruits")
-        SPRITE_MAP.add(SpriteID.BONUS_SYMBOLS,
+        spriteMap.add(SpriteID.BONUS_SYMBOLS,
             IntStream.range(0, 8)
                 .mapToObj(i -> clipSpriteRect(SQUARE_SIZE * (2 + i), 49, 14, 14))
                 .toArray(RectShort[]::new));
 
         // -- Bonus value numbers
-        SPRITE_MAP.add(SpriteID.BONUS_VALUES,
+        spriteMap.add(SpriteID.BONUS_VALUES,
             rect(457, 148, 14, 7), //  100
             rect(472, 148, 15, 7), //  300
             rect(488, 148, 15, 7), //  500
@@ -95,19 +98,19 @@ public final class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
             rect(518, 196, 20, 7)  // 5000
         );
 
-        SPRITE_MAP.add(SpriteID.LIVES_COUNTER_SYMBOL, clipSpriteRect(129, 15, 16, 16));
+        spriteMap.add(SpriteID.LIVES_COUNTER_SYMBOL, clipSpriteRect(129, 15, 16, 16));
 
         // -- Pac-Man sprites
 
-        SPRITE_MAP.add(SpriteID.PACMAN_FULL, pacFullSprite());
-        SPRITE_MAP.add(SpriteID.PACMAN_MUNCHING_RIGHT, makePacManMunchingSpriteSeq(0));
-        SPRITE_MAP.add(SpriteID.PACMAN_MUNCHING_LEFT, makePacManMunchingSpriteSeq(1));
-        SPRITE_MAP.add(SpriteID.PACMAN_MUNCHING_UP, makePacManMunchingSpriteSeq(2));
-        SPRITE_MAP.add(SpriteID.PACMAN_MUNCHING_DOWN, makePacManMunchingSpriteSeq(3));
+        spriteMap.add(SpriteID.PACMAN_FULL, pacFullSprite());
+        spriteMap.add(SpriteID.PACMAN_MUNCHING_RIGHT, makePacManMunchingSpriteSeq(0));
+        spriteMap.add(SpriteID.PACMAN_MUNCHING_LEFT, makePacManMunchingSpriteSeq(1));
+        spriteMap.add(SpriteID.PACMAN_MUNCHING_UP, makePacManMunchingSpriteSeq(2));
+        spriteMap.add(SpriteID.PACMAN_MUNCHING_DOWN, makePacManMunchingSpriteSeq(3));
 
-        SPRITE_MAP.add(SpriteID.PACMAN_DYING, makePacManDyingSpriteSeq());
+        spriteMap.add(SpriteID.PACMAN_DYING, makePacManDyingSpriteSeq());
 
-        SPRITE_MAP.add(SpriteID.PACMAN_BIG,
+        spriteMap.add(SpriteID.PACMAN_BIG,
             rect(488, 16, 32, 32),
             rect(520, 16, 32, 32),
             rect(552, 16, 33, 32)
@@ -115,69 +118,63 @@ public final class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
 
         // -- Ghost sprites
 
-        SPRITE_MAP.add(SpriteID.RED_GHOST_RIGHT, clipSpriteTiles(0, 4, 2));
-        SPRITE_MAP.add(SpriteID.RED_GHOST_LEFT, clipSpriteTiles(2, 4, 2));
-        SPRITE_MAP.add(SpriteID.RED_GHOST_UP, clipSpriteTiles(4, 4, 2));
-        SPRITE_MAP.add(SpriteID.RED_GHOST_DOWN, clipSpriteTiles(6, 4, 2));
+        spriteMap.add(SpriteID.RED_GHOST_RIGHT, clipSpriteTiles(0, 4, 2));
+        spriteMap.add(SpriteID.RED_GHOST_LEFT, clipSpriteTiles(2, 4, 2));
+        spriteMap.add(SpriteID.RED_GHOST_UP, clipSpriteTiles(4, 4, 2));
+        spriteMap.add(SpriteID.RED_GHOST_DOWN, clipSpriteTiles(6, 4, 2));
 
-        SPRITE_MAP.add(SpriteID.PINK_GHOST_RIGHT, clipSpriteTiles(0, 5, 2));
-        SPRITE_MAP.add(SpriteID.PINK_GHOST_LEFT, clipSpriteTiles(2, 5, 2));
-        SPRITE_MAP.add(SpriteID.PINK_GHOST_UP, clipSpriteTiles(4, 5, 2));
-        SPRITE_MAP.add(SpriteID.PINK_GHOST_DOWN, clipSpriteTiles(6, 5, 2));
+        spriteMap.add(SpriteID.PINK_GHOST_RIGHT, clipSpriteTiles(0, 5, 2));
+        spriteMap.add(SpriteID.PINK_GHOST_LEFT, clipSpriteTiles(2, 5, 2));
+        spriteMap.add(SpriteID.PINK_GHOST_UP, clipSpriteTiles(4, 5, 2));
+        spriteMap.add(SpriteID.PINK_GHOST_DOWN, clipSpriteTiles(6, 5, 2));
 
-        SPRITE_MAP.add(SpriteID.CYAN_GHOST_RIGHT, clipSpriteTiles(0, 6, 2));
-        SPRITE_MAP.add(SpriteID.CYAN_GHOST_LEFT, clipSpriteTiles(2, 6, 2));
-        SPRITE_MAP.add(SpriteID.CYAN_GHOST_UP, clipSpriteTiles(4, 6, 2));
-        SPRITE_MAP.add(SpriteID.CYAN_GHOST_DOWN, clipSpriteTiles(6, 6, 2));
+        spriteMap.add(SpriteID.CYAN_GHOST_RIGHT, clipSpriteTiles(0, 6, 2));
+        spriteMap.add(SpriteID.CYAN_GHOST_LEFT, clipSpriteTiles(2, 6, 2));
+        spriteMap.add(SpriteID.CYAN_GHOST_UP, clipSpriteTiles(4, 6, 2));
+        spriteMap.add(SpriteID.CYAN_GHOST_DOWN, clipSpriteTiles(6, 6, 2));
 
-        SPRITE_MAP.add(SpriteID.ORANGE_GHOST_RIGHT, clipSpriteTiles(0, 7, 2));
-        SPRITE_MAP.add(SpriteID.ORANGE_GHOST_LEFT, clipSpriteTiles(2, 7, 2));
-        SPRITE_MAP.add(SpriteID.ORANGE_GHOST_UP, clipSpriteTiles(4, 7, 2));
-        SPRITE_MAP.add(SpriteID.ORANGE_GHOST_DOWN, clipSpriteTiles(6, 7, 2));
+        spriteMap.add(SpriteID.ORANGE_GHOST_RIGHT, clipSpriteTiles(0, 7, 2));
+        spriteMap.add(SpriteID.ORANGE_GHOST_LEFT, clipSpriteTiles(2, 7, 2));
+        spriteMap.add(SpriteID.ORANGE_GHOST_UP, clipSpriteTiles(4, 7, 2));
+        spriteMap.add(SpriteID.ORANGE_GHOST_DOWN, clipSpriteTiles(6, 7, 2));
 
-        SPRITE_MAP.add(SpriteID.GHOST_FRIGHTENED, clipSpriteTiles(8, 4, 2));
-        SPRITE_MAP.add(SpriteID.GHOST_FLASHING, clipSpriteTiles(8, 4, 4));
+        spriteMap.add(SpriteID.GHOST_FRIGHTENED, clipSpriteTiles(8, 4, 2));
+        spriteMap.add(SpriteID.GHOST_FLASHING, clipSpriteTiles(8, 4, 4));
 
-        SPRITE_MAP.add(SpriteID.GHOST_EYES_RIGHT, clipSpriteTiles(8, 5, 1));
-        SPRITE_MAP.add(SpriteID.GHOST_EYES_LEFT, clipSpriteTiles(9, 5, 1));
-        SPRITE_MAP.add(SpriteID.GHOST_EYES_UP, clipSpriteTiles(10, 5, 1));
-        SPRITE_MAP.add(SpriteID.GHOST_EYES_DOWN, clipSpriteTiles(11, 5, 1));
+        spriteMap.add(SpriteID.GHOST_EYES_RIGHT, clipSpriteTiles(8, 5, 1));
+        spriteMap.add(SpriteID.GHOST_EYES_LEFT, clipSpriteTiles(9, 5, 1));
+        spriteMap.add(SpriteID.GHOST_EYES_UP, clipSpriteTiles(10, 5, 1));
+        spriteMap.add(SpriteID.GHOST_EYES_DOWN, clipSpriteTiles(11, 5, 1));
 
         // -- Intro scene ghost sprites
-        SPRITE_MAP.add(SpriteID.GALLERY_GHOSTS, clipSpriteTile(0, 4), clipSpriteTile(0, 5), clipSpriteTile(0, 6), clipSpriteTile(0, 7));
+        spriteMap.add(SpriteID.GALLERY_GHOSTS, clipSpriteTile(0, 4), clipSpriteTile(0, 5), clipSpriteTile(0, 6), clipSpriteTile(0, 7));
 
         // -- Cut scenes sprites
-        SPRITE_MAP.add(SpriteID.RED_GHOST_STRETCHED, clipSpriteTiles(8, 6, 5));
+        spriteMap.add(SpriteID.RED_GHOST_STRETCHED, clipSpriteTiles(8, 6, 5));
 
-        SPRITE_MAP.add(SpriteID.RED_GHOST_DAMAGED, rect(585, 113, 14, 14), rect(601, 113, 14, 14));
-        SPRITE_MAP.add(SpriteID.RED_GHOST_PATCHED, rect(617, 113, 14, 14), rect(633, 113, 14, 14));
+        spriteMap.add(SpriteID.RED_GHOST_DAMAGED, rect(585, 113, 14, 14), rect(601, 113, 14, 14));
+        spriteMap.add(SpriteID.RED_GHOST_PATCHED, rect(617, 113, 14, 14), rect(633, 113, 14, 14));
 
-        SPRITE_MAP.add(SpriteID.RED_GHOST_NAKED,
+        spriteMap.add(SpriteID.RED_GHOST_NAKED,
             clipSpriteRect(SQUARE_SIZE * 8, SQUARE_SIZE * 8, SQUARE_SIZE * 2, SQUARE_SIZE),
             clipSpriteRect(SQUARE_SIZE * 10, SQUARE_SIZE * 8, SQUARE_SIZE * 2, SQUARE_SIZE)
         );
 
-        SPRITE_MAP.checkCompleteness();
+        spriteMap.checkCompleteness();
     }
-
-    private static final ResourceManager LOCAL_RESOURCES = () -> ArcadePacMan_UIConfig.class;
-
-    private static final Image IMAGE = LOCAL_RESOURCES.loadImage("graphics/pacman_spritesheet.png");
-
-    private ArcadePacMan_SpriteSheet() {}
 
     @Override
     public Image sourceImage() {
-        return IMAGE;
+        return image;
     }
 
     @Override
     public RectShort sprite(SpriteID id) {
-        return SPRITE_MAP.sprite(id);
+        return spriteMap.sprite(id);
     }
 
     @Override
     public RectShort[] sprites(SpriteID id) {
-        return SPRITE_MAP.spriteSequence(id);
+        return spriteMap.spriteSequence(id);
     }
 }
