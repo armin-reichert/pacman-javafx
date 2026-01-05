@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
-import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
+import de.amr.pacmanfx.arcade.pacman.model.actors.PacMan;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 import de.amr.pacmanfx.lib.math.Direction;
@@ -38,7 +38,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     private Pac pacMan;
     private Ghost blinky;
 
-    private SpriteAnimation nailDressStretchingAnimation;
+    private SpriteAnimation nailDressAnimation;
 
     public ArcadePacMan_CutScene2() {}
 
@@ -51,7 +51,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     }
 
     public RectShort currentNailOrStretchedDressSprite() {
-        return nailDressStretchingAnimation.currentSprite();
+        return nailDressAnimation.currentSprite();
     }
 
     public int tick() {
@@ -64,12 +64,12 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
         game.hud().credit(false).score(true).levelCounter(true).livesCounter(false).show();
 
-        pacMan = ArcadePacMan_GameModel.createPacMan();
+        pacMan = new PacMan();
         pacMan.setAnimationManager(uiConfig.createPacAnimations());
 
         blinky = uiConfig.createGhostWithAnimations(RED_GHOST_SHADOW);
 
-        nailDressStretchingAnimation = SpriteAnimation.buildAnimation()
+        nailDressAnimation = SpriteAnimation.buildAnimation()
             .sprites(ArcadePacMan_SpriteSheet.INSTANCE.sprites(SpriteID.RED_GHOST_STRETCHED))
             .once();
 
@@ -134,11 +134,11 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
     private void setNailDressState(NailDressState state) {
         switch (state) {
-            case NAIL -> nailDressStretchingAnimation.setFrameIndex(0);
-            case STRETCHED_S -> nailDressStretchingAnimation.setFrameIndex(1);
-            case STRETCHED_M -> nailDressStretchingAnimation.setFrameIndex(2);
-            case STRETCHED_L -> nailDressStretchingAnimation.setFrameIndex(3);
-            case RAPTURED -> nailDressStretchingAnimation.setFrameIndex(4);
+            case NAIL -> nailDressAnimation.setFrameIndex(0);
+            case STRETCHED_S -> nailDressAnimation.setFrameIndex(1);
+            case STRETCHED_M -> nailDressAnimation.setFrameIndex(2);
+            case STRETCHED_L -> nailDressAnimation.setFrameIndex(3);
+            case RAPTURED -> nailDressAnimation.setFrameIndex(4);
         }
     }
 
