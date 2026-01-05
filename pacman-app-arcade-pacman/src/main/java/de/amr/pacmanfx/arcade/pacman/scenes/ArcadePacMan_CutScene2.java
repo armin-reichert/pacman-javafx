@@ -27,7 +27,8 @@ import static de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_GhostAnimatio
  */
 public class ArcadePacMan_CutScene2 extends GameScene2D {
 
-    public static final short ANIMATION_START_TICK = 120;
+    /** Tick when animation starts */
+    public static final short ANIMATION_START = 120;
 
     public enum NailDressState {
         NAIL, STRETCHED_S, STRETCHED_M, STRETCHED_L, RAPTURED
@@ -67,8 +68,6 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         pacMan.setAnimationManager(uiConfig.createPacAnimations());
 
         blinky = uiConfig.createGhostWithAnimations(RED_GHOST_SHADOW);
-        blinky.setSpeed(0);
-        blinky.hide();
 
         nailDressStretchingAnimation = SpriteAnimation.buildAnimation()
             .sprites(ArcadePacMan_SpriteSheet.INSTANCE.sprites(SpriteID.RED_GHOST_STRETCHED))
@@ -83,20 +82,22 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     @Override
     public void update(Game game) {
         ++tick;
-        if (tick < ANIMATION_START_TICK) {
+        if (tick < ANIMATION_START) {
             return;
         }
         switch (tick) {
-            case ANIMATION_START_TICK -> soundManager().play(SoundID.INTERMISSION_2);
-            case ANIMATION_START_TICK + 1 -> setNailDressState(NailDressState.NAIL);
-            case ANIMATION_START_TICK + 25 -> {
+            case ANIMATION_START -> {
+                soundManager().play(SoundID.INTERMISSION_2);
+                setNailDressState(NailDressState.NAIL);
+            }
+            case ANIMATION_START + 25 -> {
                 pacMan.placeAtTile(28, 20);
                 pacMan.setMoveDir(Direction.LEFT);
                 pacMan.setSpeed(1.15f);
                 pacMan.playAnimation(Pac.AnimationID.PAC_MUNCHING);
                 pacMan.show();
             }
-            case ANIMATION_START_TICK + 111 -> {
+            case ANIMATION_START + 111 -> {
                 blinky.placeAtTile(28, 20, -3, 0);
                 blinky.setMoveDir(Direction.LEFT);
                 blinky.setWishDir(Direction.LEFT);
@@ -104,24 +105,24 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
                 blinky.playAnimation(Ghost.AnimationID.GHOST_NORMAL);
                 blinky.show();
             }
-            case ANIMATION_START_TICK + 194 -> {
+            case ANIMATION_START + 194 -> {
                 blinky.setSpeed(0.09f);
                 blinkyAnimation(Ghost.AnimationID.GHOST_NORMAL).setFrameTicks(32);
             }
-            case ANIMATION_START_TICK + 198 -> setNailDressState(NailDressState.STRETCHED_S);
-            case ANIMATION_START_TICK + 230 -> setNailDressState(NailDressState.STRETCHED_M);
-            case ANIMATION_START_TICK + 262 -> setNailDressState(NailDressState.STRETCHED_L);
-            case ANIMATION_START_TICK + 296 -> {
+            case ANIMATION_START + 198 -> setNailDressState(NailDressState.STRETCHED_S);
+            case ANIMATION_START + 230 -> setNailDressState(NailDressState.STRETCHED_M);
+            case ANIMATION_START + 262 -> setNailDressState(NailDressState.STRETCHED_L);
+            case ANIMATION_START + 296 -> {
                 blinky.setSpeed(0);
                 blinky.stopAnimation();
             }
-            case ANIMATION_START_TICK + 360 -> {
+            case ANIMATION_START + 360 -> {
                 setNailDressState(NailDressState.RAPTURED);
                 blinky.setX(blinky.x() - 4);
                 blinky.selectAnimation(BLINKY_DAMAGED);
             }
-            case ANIMATION_START_TICK + 420 -> blinkyAnimation(BLINKY_DAMAGED).nextFrame(); // Eyes right-down
-            case ANIMATION_START_TICK + 508 -> {
+            case ANIMATION_START + 420 -> blinkyAnimation(BLINKY_DAMAGED).nextFrame(); // Eyes right-down
+            case ANIMATION_START + 508 -> {
                 blinky.setVisible(false);
                 game.control().terminateCurrentGameState();
             }
