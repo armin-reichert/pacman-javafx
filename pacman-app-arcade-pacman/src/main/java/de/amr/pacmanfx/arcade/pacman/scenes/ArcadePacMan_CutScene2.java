@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
-import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_GhostAnimations;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 import de.amr.pacmanfx.lib.math.Direction;
@@ -30,7 +29,9 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
     public static final short ANIMATION_START_TICK = 120;
 
-    private static final byte NAIL = 0, STRETCHED_S = 1, STRETCHED_M = 2, STRETCHED_L = 3, RAPTURED = 4;
+    public enum DressState {
+        NAIL, STRETCHED_S, STRETCHED_M, STRETCHED_L, RAPTURED;
+    }
 
     private int tick;
     private Pac pacMan;
@@ -69,7 +70,6 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
             .sprites(ArcadePacMan_SpriteSheet.INSTANCE.sprites(SpriteID.RED_GHOST_STRETCHED))
             .once();
 
-
         tick = -1;
     }
 
@@ -84,7 +84,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         }
         switch (tick) {
             case ANIMATION_START_TICK -> soundManager().play(SoundID.INTERMISSION_2);
-            case ANIMATION_START_TICK + 1 -> nailDressStretchingAnimation.setFrameIndex(NAIL);
+            case ANIMATION_START_TICK + 1 -> setDressState(DressState.NAIL);
             case ANIMATION_START_TICK + 25 -> {
                 pacMan.placeAtTile(28, 20);
                 pacMan.setMoveDir(Direction.LEFT);
@@ -104,17 +104,17 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
                 blinky.setSpeed(0.09f);
                 blinkyNormalAnimation().setFrameTicks(32);
             }
-            case ANIMATION_START_TICK + 198 -> nailDressStretchingAnimation.setFrameIndex(STRETCHED_S);
-            case ANIMATION_START_TICK + 230 -> nailDressStretchingAnimation.setFrameIndex(STRETCHED_M);
-            case ANIMATION_START_TICK + 262 -> nailDressStretchingAnimation.setFrameIndex(STRETCHED_L);
+            case ANIMATION_START_TICK + 198 -> setDressState(DressState.STRETCHED_S);
+            case ANIMATION_START_TICK + 230 -> setDressState(DressState.STRETCHED_M);
+            case ANIMATION_START_TICK + 262 -> setDressState(DressState.STRETCHED_L);
             case ANIMATION_START_TICK + 296 -> {
                 blinky.setSpeed(0);
                 blinky.stopAnimation();
             }
             case ANIMATION_START_TICK + 360 -> {
-                nailDressStretchingAnimation.setFrameIndex(RAPTURED);
+                setDressState(DressState.RAPTURED);
                 blinky.setX(blinky.x() - 4);
-                blinky.selectAnimation(ArcadePacMan_GhostAnimations.AnimationID.BLINKY_DAMAGED);
+                blinky.selectAnimation(BLINKY_DAMAGED);
             }
             case ANIMATION_START_TICK + 420 -> blinkyDamagedAnimation().nextFrame(); // Eyes right-down
             case ANIMATION_START_TICK + 508 -> {
@@ -127,7 +127,16 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         blinky.move();
     }
 
-    // Renderer call this to draw current nail or stretched dress sprite
+    private void setDressState(DressState state) {
+        switch (state) {
+            case NAIL -> nailDressStretchingAnimation.setFrameIndex(0);
+            case STRETCHED_S -> nailDressStretchingAnimation.setFrameIndex(1);
+            case STRETCHED_M -> nailDressStretchingAnimation.setFrameIndex(2);
+            case STRETCHED_L -> nailDressStretchingAnimation.setFrameIndex(3);
+            case RAPTURED -> nailDressStretchingAnimation.setFrameIndex(4);
+        }
+    }
+    // Renderer calls this method to draw current nail or stretched dress sprite
     public RectShort currentNailOrStretchedDressSprite() {
         return nailDressStretchingAnimation.currentSprite();
     }
