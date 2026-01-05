@@ -19,7 +19,8 @@ public class ArcadePacMan_GhostAnimations extends SpriteAnimationManager<SpriteI
 
     public enum AnimationID {
         BLINKY_DAMAGED,
-        BLINKY_DRESS_PATCHED
+        BLINKY_DRESS_PATCHED,
+        BLINKY_NAKED
     }
 
     private final byte personality;
@@ -61,6 +62,11 @@ public class ArcadePacMan_GhostAnimations extends SpriteAnimationManager<SpriteI
 
             case AnimationID.BLINKY_DRESS_PATCHED -> buildAnimation()
                 .sprites(spriteSheet().sprites(SpriteID.RED_GHOST_PATCHED))
+                .ticksPerFrame(4)
+                .repeated();
+
+            case AnimationID.BLINKY_NAKED -> buildAnimation()
+                .sprites(spriteSheet().sprites(SpriteID.RED_GHOST_NAKED))
                 .ticksPerFrame(4)
                 .repeated();
 
