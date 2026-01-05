@@ -35,7 +35,8 @@ public class ArcadePacMan_CutScene2_Renderer extends ArcadePacMan_CutScene_Rende
     @Override
     protected void drawSceneContent(GameScene2D scene) {
         if (scene instanceof ArcadePacMan_CutScene2 cutScene) {
-            drawSprite(cutScene.currentNailOrStretchedDressSprite(), TS(14), TS(19) + 3, true);
+            drawSprite(cutScene.currentNailOrStretchedDressSprite(),
+                ArcadePacMan_CutScene2.NAIL_X, ArcadePacMan_CutScene2.NAIL_Y, true);
             actorRenderer.drawActor(cutScene.pac());
             actorRenderer.drawActor(cutScene.blinky());
         }

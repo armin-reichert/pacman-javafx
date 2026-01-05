@@ -18,6 +18,7 @@ import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
+import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_GhostAnimations.AnimationID.BLINKY_DAMAGED;
 
 /**
@@ -27,12 +28,15 @@ import static de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_GhostAnimatio
  */
 public class ArcadePacMan_CutScene2 extends GameScene2D {
 
-    /** Tick when animation starts */
-    public static final short ANIMATION_START = 120;
-
     public enum NailDressState {
         NAIL, STRETCHED_S, STRETCHED_M, STRETCHED_L, RAPTURED
     }
+
+    /** Tick when animation starts */
+    public static final short ANIMATION_START = 120;
+
+    public static final int NAIL_X = TS * 14;
+    public static final int NAIL_Y = TS * 19 + 3;
 
     private int tick;
     private Pac pacMan;
