@@ -6,6 +6,8 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_GhostAnimations;
+import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
+import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.model.Game;
@@ -18,7 +20,6 @@ import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
 import static de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_GhostAnimations.AnimationID.BLINKY_DAMAGED;
-import static de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_GhostAnimations.AnimationID.BLINKY_NAIL_DRESS_RAPTURE;
 
 /**
  * Second cut scene in Arcade Pac-Man game:<br>
@@ -34,6 +35,8 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     private int tick;
     private Pac pacMan;
     private Ghost blinky;
+
+    private SpriteAnimation nailDressStretchingAnimation;
 
     public ArcadePacMan_CutScene2() {}
 
@@ -62,6 +65,11 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         blinky.setSpeed(0);
         blinky.hide();
 
+        nailDressStretchingAnimation = SpriteAnimation.buildAnimation()
+            .sprites(ArcadePacMan_SpriteSheet.INSTANCE.sprites(SpriteID.RED_GHOST_STRETCHED))
+            .once();
+
+
         tick = -1;
     }
 
@@ -76,7 +84,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         }
         switch (tick) {
             case ANIMATION_START_TICK -> soundManager().play(SoundID.INTERMISSION_2);
-            case ANIMATION_START_TICK + 1 -> nailDressRaptureAnimation().setFrameIndex(NAIL);
+            case ANIMATION_START_TICK + 1 -> nailDressStretchingAnimation.setFrameIndex(NAIL);
             case ANIMATION_START_TICK + 25 -> {
                 pacMan.placeAtTile(28, 20);
                 pacMan.setMoveDir(Direction.LEFT);
@@ -96,15 +104,15 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
                 blinky.setSpeed(0.09f);
                 blinkyNormalAnimation().setFrameTicks(32);
             }
-            case ANIMATION_START_TICK + 198 -> nailDressRaptureAnimation().setFrameIndex(STRETCHED_S);
-            case ANIMATION_START_TICK + 230 -> nailDressRaptureAnimation().setFrameIndex(STRETCHED_M);
-            case ANIMATION_START_TICK + 262 -> nailDressRaptureAnimation().setFrameIndex(STRETCHED_L);
+            case ANIMATION_START_TICK + 198 -> nailDressStretchingAnimation.setFrameIndex(STRETCHED_S);
+            case ANIMATION_START_TICK + 230 -> nailDressStretchingAnimation.setFrameIndex(STRETCHED_M);
+            case ANIMATION_START_TICK + 262 -> nailDressStretchingAnimation.setFrameIndex(STRETCHED_L);
             case ANIMATION_START_TICK + 296 -> {
                 blinky.setSpeed(0);
                 blinky.stopAnimation();
             }
             case ANIMATION_START_TICK + 360 -> {
-                nailDressRaptureAnimation().setFrameIndex(RAPTURED);
+                nailDressStretchingAnimation.setFrameIndex(RAPTURED);
                 blinky.setX(blinky.x() - 4);
                 blinky.selectAnimation(ArcadePacMan_GhostAnimations.AnimationID.BLINKY_DAMAGED);
             }
@@ -120,14 +128,8 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     }
 
     // Renderer call this to draw current nail or stretched dress sprite
-    public RectShort currentNailOrDressSprite() {
-        return nailDressRaptureAnimation().currentSprite();
-    }
-
-    private SpriteAnimation nailDressRaptureAnimation() {
-        return (SpriteAnimation) blinky.optAnimationManager()
-            .map(animations -> animations.animation(BLINKY_NAIL_DRESS_RAPTURE))
-            .orElse(null);
+    public RectShort currentNailOrStretchedDressSprite() {
+        return nailDressStretchingAnimation.currentSprite();
     }
 
     private SpriteAnimation blinkyDamagedAnimation() {
