@@ -7,7 +7,6 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
@@ -29,26 +28,26 @@ public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationManager<Sprit
     @Override
     protected SpriteAnimation createAnimation(Object id) {
         return switch (id) {
-            case CommonAnimationID.GHOST_NORMAL -> buildAnimation()
+            case Ghost.AnimationID.GHOST_NORMAL -> buildAnimation()
                 .sprites(ghostNormalSprites(Direction.LEFT))
                 .ticksPerFrame(8)
                 .repeated();
 
-            case CommonAnimationID.GHOST_FRIGHTENED -> buildAnimation()
+            case Ghost.AnimationID.GHOST_FRIGHTENED -> buildAnimation()
                 .sprites(spriteSheet().sprites(GHOST_FRIGHTENED))
                 .ticksPerFrame(8)
                 .repeated();
 
-            case CommonAnimationID.GHOST_FLASHING -> buildAnimation()
+            case Ghost.AnimationID.GHOST_FLASHING -> buildAnimation()
                 .sprites(spriteSheet().sprites(GHOST_FLASHING))
                 .ticksPerFrame(7)
                 .repeated();
 
-            case CommonAnimationID.GHOST_EYES -> buildAnimation()
+            case Ghost.AnimationID.GHOST_EYES -> buildAnimation()
                 .sprites(ghostEyesSprites(Direction.LEFT))
                 .once();
 
-            case CommonAnimationID.GHOST_POINTS -> buildAnimation()
+            case Ghost.AnimationID.GHOST_POINTS -> buildAnimation()
                 .sprites(spriteSheet().sprites(GHOST_NUMBERS))
                 .once();
 
@@ -64,8 +63,8 @@ public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationManager<Sprit
     @Override
     public void setAnimationFrame(Object animationID, int frameIndex) {
         super.setAnimationFrame(animationID, frameIndex);
-        if (CommonAnimationID.GHOST_POINTS.equals(animationID)) {
-            animation(CommonAnimationID.GHOST_POINTS).setFrameIndex(frameIndex);
+        if (Ghost.AnimationID.GHOST_POINTS.equals(animationID)) {
+            animation(Ghost.AnimationID.GHOST_POINTS).setFrameIndex(frameIndex);
         }
     }
 
@@ -73,8 +72,8 @@ public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationManager<Sprit
     protected void updateActorSprites(Actor actor) {
         if (actor instanceof Ghost ghost) {
             switch (selectedID) {
-                case CommonAnimationID.GHOST_NORMAL -> currentAnimation().setSprites(ghostNormalSprites(ghost.wishDir()));
-                case CommonAnimationID.GHOST_EYES -> currentAnimation().setSprites(ghostEyesSprites(ghost.wishDir()));
+                case Ghost.AnimationID.GHOST_NORMAL -> currentAnimation().setSprites(ghostNormalSprites(ghost.wishDir()));
+                case Ghost.AnimationID.GHOST_EYES -> currentAnimation().setSprites(ghostEyesSprites(ghost.wishDir()));
                 default -> {}
             }
         }

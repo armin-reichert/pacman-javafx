@@ -14,7 +14,6 @@ import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
@@ -150,20 +149,20 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         inky.setWishDir(Direction.RIGHT);
         inky.setPosition(pacMan.x() - 6 * TS, pacMan.y());
         inky.setSpeed(SPEED_GHOST_CHASING);
-        inky.playAnimation(CommonAnimationID.GHOST_NORMAL);
+        inky.playAnimation(Ghost.AnimationID.GHOST_NORMAL);
         inky.show();
 
         msPacMan.setMoveDir(Direction.LEFT);
         msPacMan.setPosition(TS * 30, LOWER_LANE_Y);
         msPacMan.setSpeed(SPEED_PAC_CHASING);
-        msPacMan.playAnimation(CommonAnimationID.PAC_MUNCHING);
+        msPacMan.playAnimation(Pac.AnimationID.PAC_MUNCHING);
         msPacMan.show();
 
         pinky.setMoveDir(Direction.LEFT);
         pinky.setWishDir(Direction.LEFT);
         pinky.setPosition(msPacMan.x() + 6 * TS, msPacMan.y());
         pinky.setSpeed(SPEED_GHOST_CHASING);
-        pinky.playAnimation(CommonAnimationID.GHOST_NORMAL);
+        pinky.playAnimation(Ghost.AnimationID.GHOST_NORMAL);
         pinky.show();
 
         setState(SceneState.CHASED_BY_GHOSTS, TickTimer.INDEFINITE);

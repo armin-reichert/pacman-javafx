@@ -10,7 +10,6 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
@@ -107,7 +106,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
         pacMan.playAnimation(ArcadeMsPacMan_PacAnimations.AnimationID.PAC_MAN_MUNCHING);
 
         msPacMan.setMoveDir(Direction.RIGHT);
-        msPacMan.playAnimation(CommonAnimationID.PAC_MUNCHING);
+        msPacMan.playAnimation(Pac.AnimationID.PAC_MUNCHING);
 
         setSceneState(SceneState.CHASING, TickTimer.INDEFINITE);
     }

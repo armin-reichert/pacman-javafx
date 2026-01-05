@@ -8,7 +8,6 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.StandardGameVariant;
-import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.world.WorldMapSelectionMode;
@@ -73,8 +72,8 @@ public class PacManXXL_StartPageMenu extends OptionMenu {
 
         public void start() {
             running = true;
-            pac.playAnimation(CommonAnimationID.PAC_MUNCHING);
-            ghosts.forEach(ghost -> ghost.playAnimation(CommonAnimationID.GHOST_NORMAL));
+            pac.playAnimation(Pac.AnimationID.PAC_MUNCHING);
+            ghosts.forEach(ghost -> ghost.playAnimation(Ghost.AnimationID.GHOST_NORMAL));
         }
 
         public void reset() {
@@ -108,7 +107,7 @@ public class PacManXXL_StartPageMenu extends OptionMenu {
                     ghost.setMoveDir(ghost.moveDir().opposite());
                     ghost.setWishDir(ghost.moveDir().opposite());
                     ghost.setSpeed(0.58f);
-                    ghost.playAnimation(CommonAnimationID.GHOST_FRIGHTENED);
+                    ghost.playAnimation(Ghost.AnimationID.GHOST_FRIGHTENED);
                 }
             }
             else if (pac.x() > 56 * TS && ghostsChased) {
@@ -122,13 +121,13 @@ public class PacManXXL_StartPageMenu extends OptionMenu {
                     ghost.setWishDir(Direction.LEFT);
                     ghost.setX(46 * TS + ghost.personality() * 2 * TS);
                     ghost.setSpeed(1.05f);
-                    ghost.playAnimation(CommonAnimationID.GHOST_NORMAL);
+                    ghost.playAnimation(Ghost.AnimationID.GHOST_NORMAL);
                 }
             }
             else if (ghostsChased) {
                 IntStream.range(0, 4).forEach(i -> {
                     if (Math.abs(pac.x() - ghosts.get(i).x()) < 1) {
-                        ghosts.get(i).selectAnimationAt(CommonAnimationID.GHOST_POINTS, i);
+                        ghosts.get(i).selectAnimationAt(Ghost.AnimationID.GHOST_POINTS, i);
                         if (i > 0) {
                             ghosts.get(i-1).setVisible(false);
                         }

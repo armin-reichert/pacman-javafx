@@ -122,7 +122,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
                 scene.msPacMan = new MsPacMan();
                 scene.msPacMan.setAnimationManager(scene.ui.currentConfig().createPacAnimations());
-                scene.msPacMan.playAnimation(CommonAnimationID.PAC_MUNCHING);
+                scene.msPacMan.playAnimation(Pac.AnimationID.PAC_MUNCHING);
 
                 scene.msPacMan.setPosition(TS * 33, ACTOR_Y);
                 scene.msPacMan.setMoveDir(Direction.LEFT);

@@ -10,7 +10,6 @@ import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.lib.nes.NES_Palette;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
@@ -359,7 +358,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
             default -> throw new IllegalArgumentException("Illegal ghost personality " + personality);
         };
         ghost.setAnimationManager(createGhostAnimations(personality));
-        ghost.selectAnimation(CommonAnimationID.GHOST_NORMAL);
+        ghost.selectAnimation(Ghost.AnimationID.GHOST_NORMAL);
         return ghost;
     }
 

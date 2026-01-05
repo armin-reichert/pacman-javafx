@@ -13,7 +13,6 @@ import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
@@ -132,7 +131,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
 
         msPacMan.setMoveDir(Direction.RIGHT);
         msPacMan.setPosition(TS * 5, LANE_Y - 4);
-        msPacMan.selectAnimation(CommonAnimationID.PAC_MUNCHING);
+        msPacMan.selectAnimation(Pac.AnimationID.PAC_MUNCHING);
         msPacMan.show();
 
         stork.setPosition(TS * 30, TS * 12);

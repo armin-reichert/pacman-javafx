@@ -12,7 +12,7 @@ import de.amr.pacmanfx.lib.fsm.StateMachine.State;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.actors.CommonAnimationID;
+import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.test.TestState;
@@ -295,11 +295,11 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     private void resetAnimations(GameLevel level) {
         level.pac().optAnimationManager().ifPresent(animationManager -> {
-            animationManager.select(CommonAnimationID.PAC_MUNCHING);
+            animationManager.select(Pac.AnimationID.PAC_MUNCHING);
             animationManager.reset();
         });
         level.ghosts().forEach(ghost -> ghost.optAnimationManager().ifPresent(animationManager -> {
-            animationManager.select(CommonAnimationID.GHOST_NORMAL);
+            animationManager.select(Ghost.AnimationID.GHOST_NORMAL);
             animationManager.reset();
         }));
     }

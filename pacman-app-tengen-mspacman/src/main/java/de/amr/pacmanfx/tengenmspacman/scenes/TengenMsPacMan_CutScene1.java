@@ -165,16 +165,16 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
                 pacMan.show();
 
                 msPacMan.setSpeed(SPEED_CHASING);
-                msPacMan.playAnimation(CommonAnimationID.PAC_MUNCHING);
+                msPacMan.playAnimation(Pac.AnimationID.PAC_MUNCHING);
                 msPacMan.show();
             }
             case 160 -> {
                 inky.setSpeed(SPEED_CHASING);
-                inky.playAnimation(CommonAnimationID.GHOST_NORMAL);
+                inky.playAnimation(Ghost.AnimationID.GHOST_NORMAL);
                 inky.show();
 
                 pinky.setSpeed(SPEED_CHASING);
-                pinky.playAnimation(CommonAnimationID.GHOST_NORMAL);
+                pinky.playAnimation(Ghost.AnimationID.GHOST_NORMAL);
                 pinky.show();
             }
             case 400 -> {

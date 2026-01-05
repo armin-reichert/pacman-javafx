@@ -7,7 +7,6 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
@@ -27,15 +26,15 @@ public class ArcadePacMan_PacAnimations extends SpriteAnimationManager<SpriteID>
     @Override
     protected SpriteAnimation createAnimation(Object id) {
         return switch (id) {
-            case CommonAnimationID.PAC_FULL -> buildAnimation()
+            case Pac.AnimationID.PAC_FULL -> buildAnimation()
                 .singleSprite(spriteSheet.sprite(SpriteID.PACMAN_FULL))
                 .once();
 
-            case CommonAnimationID.PAC_MUNCHING -> buildAnimation()
+            case Pac.AnimationID.PAC_MUNCHING -> buildAnimation()
                 .sprites(pacMunchingSprites(Direction.LEFT))
                 .repeated();
 
-            case CommonAnimationID.PAC_DYING -> buildAnimation()
+            case Pac.AnimationID.PAC_DYING -> buildAnimation()
                 .sprites(spriteSheet.sprites(SpriteID.PACMAN_DYING))
                 .ticksPerFrame(8)
                 .once();
@@ -56,7 +55,7 @@ public class ArcadePacMan_PacAnimations extends SpriteAnimationManager<SpriteID>
 
     @Override
     protected void updateActorSprites(Actor actor) {
-        if (actor instanceof Pac pac && isSelected(CommonAnimationID.PAC_MUNCHING)) {
+        if (actor instanceof Pac pac && isSelected(Pac.AnimationID.PAC_MUNCHING)) {
             currentAnimation().setSprites(pacMunchingSprites(pac.moveDir()));
         }
     }

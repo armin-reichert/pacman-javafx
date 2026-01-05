@@ -12,7 +12,7 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelMessage;
 import de.amr.pacmanfx.model.GameLevelMessageType;
-import de.amr.pacmanfx.model.actors.CommonAnimationID;
+import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.test.TestState;
@@ -253,11 +253,11 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         final TengenMsPacMan_GameModel game = context().currentGame();
         level.pac().optAnimationManager().ifPresent(animationManager -> {
             animationManager.select(game.isBoosterActive()
-                ? TengenMsPacMan_AnimationID.ANIM_MS_PAC_MAN_BOOSTER : CommonAnimationID.PAC_MUNCHING);
+                ? TengenMsPacMan_AnimationID.ANIM_MS_PAC_MAN_BOOSTER : Pac.AnimationID.PAC_MUNCHING);
             animationManager.reset();
         });
         level.ghosts().forEach(ghost -> ghost.optAnimationManager().ifPresent(animationManager -> {
-            animationManager.select(CommonAnimationID.GHOST_NORMAL);
+            animationManager.select(Ghost.AnimationID.GHOST_NORMAL);
             animationManager.reset();
         }));
     }
