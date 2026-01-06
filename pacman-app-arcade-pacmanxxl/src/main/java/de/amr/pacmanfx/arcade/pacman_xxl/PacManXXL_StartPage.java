@@ -90,7 +90,7 @@ public class PacManXXL_StartPage implements GameUI_StartPage {
 
     @Override
     public void onEnter(GameUI ui) {
-        ui.selectGameVariant(menu.state().gameVariant);
+        ui.selectGameVariant(menu.state().gameVariant.name());
 
         menu.soundEnabledProperty().bind(ui.currentConfig().soundManager().muteProperty().not());
         menu.syncMenuState();
@@ -112,11 +112,11 @@ public class PacManXXL_StartPage implements GameUI_StartPage {
 
     @Override
     public String title() {
-        String gameVariant = menu.state().gameVariant;
-        if (StandardGameVariant.ARCADE_PACMAN_XXL.name().equals(gameVariant)) {
+        StandardGameVariant gameVariant = menu.state().gameVariant;
+        if (StandardGameVariant.ARCADE_PACMAN_XXL.equals(gameVariant)) {
             return "Pac-Man XXL"; //TODO localize
         }
-        if (StandardGameVariant.ARCADE_MS_PACMAN_XXL.name().equals(gameVariant)) {
+        if (StandardGameVariant.ARCADE_MS_PACMAN_XXL.equals(gameVariant)) {
             return "Ms. Pac-Man XXL"; //TODO localize
         }
         return "Unknown game variant";

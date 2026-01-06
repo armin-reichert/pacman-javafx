@@ -32,6 +32,8 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.model.StandardGameVariant.ARCADE_MS_PACMAN_XXL;
+import static de.amr.pacmanfx.model.StandardGameVariant.ARCADE_PACMAN_XXL;
 import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_3D_ENABLED;
 import static de.amr.pacmanfx.uilib.widgets.OptionMenuStyle.DEFAULT_OPTION_MENU_STYLE;
 import static java.util.Objects.requireNonNull;
@@ -39,7 +41,7 @@ import static java.util.Objects.requireNonNull;
 public class PacManXXL_StartPageMenu extends OptionMenu {
 
     public static class MenuState {
-        String gameVariant;
+        StandardGameVariant gameVariant;
         boolean play3D;
         boolean cutScenesEnabled;
         WorldMapSelectionMode mapOrder;
@@ -153,36 +155,36 @@ public class PacManXXL_StartPageMenu extends OptionMenu {
 
     // Entries
 
-    private final OptionMenuEntry<String> entryGameVariant = new OptionMenuEntry<>("GAME VARIANT",
-        "PACMAN_XXL", "MS_PACMAN_XXL") {
-
+    private final OptionMenuEntry<StandardGameVariant> entryGameVariant = new OptionMenuEntry<>(
+        "GAME VARIANT",
+        ARCADE_PACMAN_XXL,
+        ARCADE_MS_PACMAN_XXL)
+    {
         @Override
         protected void onValueChanged(int index) {
-            final String gameVariant = selectedValue();
-            if (StandardGameVariant.ARCADE_PACMAN_XXL.name().equals(gameVariant)) {
-                //TODO add previous value into event parameter
-                final String prevGameVariantName = StandardGameVariant.ARCADE_MS_PACMAN_XXL.name();
-                ui.config(prevGameVariantName).dispose();
-                ui.config(gameVariant).init();
+            final StandardGameVariant gameVariant = selectedValue();
+            // dispose other game variant
+            if (ARCADE_PACMAN_XXL.equals(gameVariant)) {
+                ui.config(ARCADE_MS_PACMAN_XXL.name()).dispose();
             }
-            else if (StandardGameVariant.ARCADE_MS_PACMAN_XXL.name().equals(gameVariant)) {
-                //TODO add previous value into event parameter
-                final String prevGameVariantName = StandardGameVariant.ARCADE_PACMAN_XXL.name();
-                ui.config(prevGameVariantName).dispose();
-                ui.config(gameVariant).init();
+            else if (ARCADE_MS_PACMAN_XXL.equals(gameVariant)) {
+                ui.config(ARCADE_PACMAN_XXL.name()).dispose();
             }
-            chaseAnimation.init(ui.config(gameVariant));
-            state.gameVariant = gameVariant;
+            final GameUI_Config uiConfig = ui.config(gameVariant.name());
+            uiConfig.init();
             ui.updateTitle();
+            chaseAnimation.init(uiConfig);
+
+            state.gameVariant = gameVariant;
             logState();
         }
 
         @Override
         public String selectedValueText() {
             return switch (state.gameVariant) {
-                case "PACMAN_XXL" -> "PAC-MAN XXL";
-                case "MS_PACMAN_XXL" -> "MS.PAC-MAN XXL";
-                default -> "";
+                case ARCADE_PACMAN_XXL    -> "PAC-MAN XXL";
+                case ARCADE_MS_PACMAN_XXL -> "MS.PAC-MAN XXL";
+                default -> "???";
             };
         }
     };
@@ -251,7 +253,7 @@ public class PacManXXL_StartPageMenu extends OptionMenu {
 
         this.ui = requireNonNull(ui);
 
-        state.gameVariant = StandardGameVariant.ARCADE_PACMAN_XXL.name();
+        state.gameVariant = ARCADE_PACMAN_XXL;
         state.play3D = false;
         state.cutScenesEnabled = true;
         state.mapOrder = WorldMapSelectionMode.CUSTOM_MAPS_FIRST;
@@ -352,7 +354,7 @@ public class PacManXXL_StartPageMenu extends OptionMenu {
         entryMapOrder.selectValue(state.mapOrder);
         entryMapOrder.setEnabled(customMapsExist);
 
-        chaseAnimation.init(ui.config(state.gameVariant));
+        chaseAnimation.init(ui.config(state.gameVariant.name()));
         chaseAnimation.reset();
 
         logState();
@@ -366,7 +368,7 @@ public class PacManXXL_StartPageMenu extends OptionMenu {
     }
 
     private Game selectedGame() {
-        return THE_GAME_BOX.gameByVariantName(state.gameVariant);
+        return THE_GAME_BOX.gameByVariantName(state.gameVariant.name());
     }
 
     public void startGame() {
@@ -375,6 +377,6 @@ public class PacManXXL_StartPageMenu extends OptionMenu {
         mapSelector.setSelectionMode(state.mapOrder);
         mapSelector.loadMapPrototypes();
         game.setCutScenesEnabled(state.cutScenesEnabled);
-        ui.selectGameVariant(state.gameVariant);
+        ui.selectGameVariant(state.gameVariant.name());
     }
 }
