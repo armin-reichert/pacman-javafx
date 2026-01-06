@@ -38,7 +38,6 @@ public class PacManXXL_StartPage implements GameUI_StartPage {
     private final StackPane root = new StackPane();
     private final MediaPlayer voicePlayer = new MediaPlayer(VOICE);
 
-    private GameUI ui;
     private PacManXXL_StartPageMenu menu;
 
     private final StringProperty title = new SimpleStringProperty("TITLE");
@@ -54,29 +53,35 @@ public class PacManXXL_StartPage implements GameUI_StartPage {
 
     @Override
     public void init(GameUI ui) {
-        this.ui = requireNonNull(ui);
+        requireNonNull(ui);
 
         menu = new PacManXXL_StartPageMenu(ui);
 
-        ui.context().gameVariantNameProperty().addListener((_,_,_) -> {
-            menu.init(ui);
-        });
-
-        menu.gameVariantProperty().addListener((_, _, gameVariant) -> {
-            ui.selectGameVariant(gameVariant.name());
+        ui.context().gameVariantNameProperty().addListener((_, _, gameVariantName) -> {
+            if (StandardGameVariant.ARCADE_PACMAN_XXL.name().equals(gameVariantName)) {
+                menu.init(ui);
+            } else if (StandardGameVariant.ARCADE_MS_PACMAN_XXL.name().equals(gameVariantName)) {
+                menu.init(ui);
+            }
         });
 
         menu.cutScenesEnabledProperty().addListener((_,_,enabled) -> {
             ui.context().currentGame().setCutScenesEnabled(enabled);
+            menu.logState();
         });
 
         menu.play3DProperty().addListener((_, _, play3D) -> {
             GameUI.PROPERTY_3D_ENABLED.set(play3D);
+            menu.logState();
         });
 
-        menu.mapOrderProperty().addListener((_, _, mapOrder) -> {
-            //TODO check this
-        });
+        menu.scalingProperty().bind(ui.stage().heightProperty()
+                .map(height -> {
+                    double h = height.doubleValue();
+                    h *= 0.8; // take 80% of stage height
+                    h /= TS(menu.numTilesY()); // scale according to menu height
+                    return Math.round(h * 100.0) / 100.0; // round to 2 decimal digits
+                }));
 
         title.bind(Bindings.createStringBinding(
             () -> {
@@ -89,24 +94,12 @@ public class PacManXXL_StartPage implements GameUI_StartPage {
             menu.gameVariantProperty(), menu.play3DProperty()
         ));
 
-        menu.scalingProperty().bind(ui.stage().heightProperty()
-            .map(height -> {
-                double h = height.doubleValue();
-                h *= 0.8; // take 80% of stage height
-                h /= TS(menu.numTilesY()); // scale according to menu height
-                return Math.round(h * 100.0) / 100.0; // round to 2 decimal digits
-            }));
-
         root.getChildren().add(menu.root());
 
         root.focusedProperty().addListener((_, _, _) -> {
             if (root.isFocused()) {
                 Logger.info("Focus now on {}, passing to {}", root, menu);
-                menu.requestFocus();
-                menu.draw();
                 onEnter(ui);
-            } else {
-                onExit(ui);
             }
         });
 
@@ -129,8 +122,9 @@ public class PacManXXL_StartPage implements GameUI_StartPage {
 
     @Override
     public void onEnter(GameUI ui) {
-        ui.selectGameVariant(StandardGameVariant.ARCADE_PACMAN_XXL.name());
         pauseSec(1, voicePlayer::play).play();
+        menu.requestFocus();
+        ui.selectGameVariant(StandardGameVariant.ARCADE_PACMAN_XXL.name());
     }
 
     @Override

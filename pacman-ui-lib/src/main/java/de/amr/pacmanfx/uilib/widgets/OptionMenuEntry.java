@@ -44,12 +44,12 @@ public abstract class OptionMenuEntry<T> {
         throw new IllegalArgumentException("Cannot select value " + value);
     }
 
-    public T selectedValue() {
+    public T getSelectedValue() {
         return valueList.get(selectedValueIndex);
     }
 
-    public String selectedValueText() {
-        T selectedValue = selectedValue();
+    public String getSelectedValueText() {
+        T selectedValue = getSelectedValue();
         return selectedValue != null ? String.valueOf(selectedValue) : "No value";
     }
 

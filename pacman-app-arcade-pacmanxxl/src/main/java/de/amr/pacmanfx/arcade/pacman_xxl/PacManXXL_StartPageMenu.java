@@ -4,12 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
-import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
-import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.StandardGameVariant;
-import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.world.WorldMapSelectionMode;
 import de.amr.pacmanfx.ui.api.ArcadePalette;
 import de.amr.pacmanfx.ui.api.GameUI;
@@ -32,10 +28,7 @@ import javafx.scene.text.Font;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import java.util.List;
-import java.util.stream.IntStream;
-
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.model.StandardGameVariant.ARCADE_MS_PACMAN_XXL;
 import static de.amr.pacmanfx.model.StandardGameVariant.ARCADE_PACMAN_XXL;
 import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_3D_ENABLED;
@@ -74,11 +67,11 @@ public class PacManXXL_StartPageMenu extends OptionMenu {
     {
         @Override
         protected void onValueChanged(int index) {
-            gameVariantProperty().set(selectedValue());
+            gameVariantProperty().set(getSelectedValue());
         }
 
         @Override
-        public String selectedValueText() {
+        public String getSelectedValueText() {
             final StandardGameVariant gameVariant = gameVariantProperty().get();
             return switch (gameVariant) {
                 case null -> "";
@@ -93,11 +86,11 @@ public class PacManXXL_StartPageMenu extends OptionMenu {
 
         @Override
         protected void onValueChanged(int index) {
-            play3DProperty().set(selectedValue());
+            play3DProperty().set(getSelectedValue());
         }
 
         @Override
-        public String selectedValueText() {
+        public String getSelectedValueText() {
             return play3DProperty().get() ? "3D" : "2D";
         }
     };
@@ -106,11 +99,11 @@ public class PacManXXL_StartPageMenu extends OptionMenu {
 
         @Override
         protected void onValueChanged(int index) {
-            cutScenesEnabledProperty().set(selectedValue());
+            cutScenesEnabledProperty().set(getSelectedValue());
         }
 
         @Override
-        public String selectedValueText() {
+        public String getSelectedValueText() {
             return cutScenesEnabledProperty().get() ? "ON" : "OFF";
         }
     };
@@ -121,12 +114,12 @@ public class PacManXXL_StartPageMenu extends OptionMenu {
         @Override
         protected void onValueChanged(int index) {
             if (enabled) {
-                mapOrderProperty().set(selectedValue());
+                mapOrderProperty().set(getSelectedValue());
             }
         }
 
         @Override
-        public String selectedValueText() {
+        public String getSelectedValueText() {
             if (!enabled) {
                 return "NO CUSTOM MAPS!";
             }
@@ -168,6 +161,8 @@ public class PacManXXL_StartPageMenu extends OptionMenu {
         addEntry(entryCutScenesEnabled);
         addEntry(entryMapOrder);
 
+        chaseAnimation.setOrigin(0, TS(23.5f));
+
         final int freq = 60;
         animationTimer = new Timeline(freq,
             new KeyFrame(Duration.seconds(1.0 / freq), _ -> {
@@ -176,41 +171,41 @@ public class PacManXXL_StartPageMenu extends OptionMenu {
                 chaseAnimation.draw();
             }));
         animationTimer.setCycleCount(Animation.INDEFINITE);
+
+        gameVariantProperty().addListener((_, _, newVariant) -> {
+            final GameUI_Config uiConfig = ui.config(newVariant.name());
+            chaseAnimation.init(uiConfig);
+            final ActorRenderer actorRenderer = uiConfig.createActorRenderer(canvas);
+            actorRenderer.scalingProperty().bind(scalingProperty());
+            chaseAnimation.setActorRenderer(actorRenderer);
+        });
     }
 
     public void init(GameUI ui) {
         final Game game = ui.context().currentGame();
-
-        if (StandardGameVariant.ARCADE_PACMAN_XXL.name().equals(ui.context().gameVariantName())) {
-            gameVariantProperty().set(StandardGameVariant.ARCADE_PACMAN_XXL);
-        } else if (StandardGameVariant.ARCADE_MS_PACMAN_XXL.name().equals(ui.context().gameVariantName())) {
-            gameVariantProperty().set(StandardGameVariant.ARCADE_MS_PACMAN_XXL);
-        } else {
-            Logger.error("Illegal game variant for XXL start page menu");
-        }
-
+        final StandardGameVariant gameVariant = StandardGameVariant.valueOf(ui.context().gameVariantName());
         final var mapSelector = (PacManXXL_MapSelector) game.mapSelector();
+
         mapSelector.loadMapPrototypes();
 
-        final boolean customMapsExist = !mapSelector.customMapPrototypes().isEmpty();
-        entryMapOrder.setEnabled(customMapsExist);
-
+        // init state
+        gameVariantProperty().set(gameVariant);
         play3DProperty().set(PROPERTY_3D_ENABLED.get());
         cutScenesEnabledProperty().set(game.cutScenesEnabled());
-        mapOrder.set(mapSelector.selectionMode());
+        mapOrderProperty().set(mapSelector.selectionMode());
 
         soundEnabledProperty().bind(ui.currentConfig().soundManager().muteProperty().not());
 
-        initAnimation();
-    }
+        // init entries
+        entryCutScenesEnabled.selectValue(cutScenesEnabledProperty().get());
+        entryGameVariant.selectValue(gameVariantProperty().get());
+        entryPlay3D.selectValue(play3DProperty().get());
+        entryMapOrder.selectValue(mapOrderProperty().get());
+        entryMapOrder.setEnabled(!mapSelector.customMapPrototypes().isEmpty());
 
-    public void initAnimation() {
+
         chaseAnimation.init(ui.currentConfig());
-        animationTimer.play();
-    }
-
-    public void startAnimation() {
-        animationTimer.play();
+        animationTimer.playFromStart();
     }
 
     public void stopAnimation() {
@@ -259,124 +254,19 @@ public class PacManXXL_StartPageMenu extends OptionMenu {
         ctx.fillText("TO START", TS(23), y);
     }
 
-    private void logState() {
-        Logger.info("Menu state: gameVariant={} play3D={} cutScenesEnabled={} mapOrder={}",
-            gameVariantProperty().get(), play3DProperty().get(), cutScenesEnabledProperty().get(), mapOrderProperty().get());
+    public void logState() {
+        Logger.info("Menu state: gameVariant={} play3D={} cutScenesEnabled={} mapOrder={} animation running={}",
+            gameVariantProperty().get(),
+            play3DProperty().get(),
+            cutScenesEnabledProperty().get(),
+            mapOrderProperty().get(),
+            animationTimer.getStatus() == Animation.Status.RUNNING);
     }
 
     public void startGame(Game game) {
         final var mapSelector = (PacManXXL_MapSelector) game.mapSelector();
         mapSelector.setSelectionMode(mapOrderProperty().get());
         mapSelector.loadMapPrototypes();
-        game.setCutScenesEnabled(cutScenesEnabledProperty().get());
         ui.selectGameVariant(gameVariantProperty().get().name());
-    }
-
-    private class ChaseAnimation {
-        private Pac pac;
-        private List<Ghost> ghosts;
-        private ActorRenderer actorRenderer;
-        private boolean ghostsChased;
-        private boolean running;
-
-        public void init(GameUI_Config uiConfig) {
-            requireNonNull(uiConfig);
-
-            pac = ArcadePacMan_GameModel.createPacMan();
-            pac.setAnimationManager(uiConfig.createPacAnimations());
-
-            ghosts = List.of(
-                uiConfig.createGhostWithAnimations(RED_GHOST_SHADOW),
-                uiConfig.createGhostWithAnimations(PINK_GHOST_SPEEDY),
-                uiConfig.createGhostWithAnimations(CYAN_GHOST_BASHFUL),
-                uiConfig.createGhostWithAnimations(ORANGE_GHOST_POKEY)
-            );
-
-            actorRenderer = uiConfig.createActorRenderer(renderer.ctx().getCanvas());
-            reset();
-            start();
-        }
-
-        public void start() {
-            running = true;
-            pac.playAnimation(Pac.AnimationID.PAC_MUNCHING);
-            ghosts.forEach(ghost -> ghost.playAnimation(Ghost.AnimationID.GHOST_NORMAL));
-        }
-
-        public void reset() {
-            pac.setX(42 * TS);
-            pac.setMoveDir(Direction.LEFT);
-            pac.setWishDir(Direction.LEFT);
-            pac.setSpeed(1.0f);
-            pac.setVisible(true);
-
-            for (Ghost ghost : ghosts) {
-                ghost.setX(46 * TS + ghost.personality() * 18);
-                ghost.setMoveDir(Direction.LEFT);
-                ghost.setWishDir(Direction.LEFT);
-                ghost.setSpeed(1.05f);
-                ghost.setVisible(true);
-            }
-            ghostsChased = false;
-        }
-
-        public void update() {
-            if (!running) return;
-
-            if (ghosts.getLast().x() < -4 * TS && !ghostsChased) {
-                ghostsChased = true;
-                pac.setMoveDir(pac.moveDir().opposite());
-                pac.setWishDir(pac.moveDir().opposite());
-                pac.setX(-36 * TS);
-                for (Ghost ghost : ghosts) {
-                    ghost.setVisible(true);
-                    ghost.setX(pac.x() + 22 * TS + ghost.personality() * 18);
-                    ghost.setMoveDir(ghost.moveDir().opposite());
-                    ghost.setWishDir(ghost.moveDir().opposite());
-                    ghost.setSpeed(0.58f);
-                    ghost.playAnimation(Ghost.AnimationID.GHOST_FRIGHTENED);
-                }
-            }
-            else if (pac.x() > 56 * TS && ghostsChased) {
-                ghostsChased = false;
-                pac.setMoveDir(Direction.LEFT);
-                pac.setWishDir(Direction.LEFT);
-                pac.setX(42 * TS);
-                for (Ghost ghost : ghosts) {
-                    ghost.setVisible(true);
-                    ghost.setMoveDir(Direction.LEFT);
-                    ghost.setWishDir(Direction.LEFT);
-                    ghost.setX(46 * TS + ghost.personality() * 2 * TS);
-                    ghost.setSpeed(1.05f);
-                    ghost.playAnimation(Ghost.AnimationID.GHOST_NORMAL);
-                }
-            }
-            else if (ghostsChased) {
-                IntStream.range(0, 4).forEach(i -> {
-                    if (Math.abs(pac.x() - ghosts.get(i).x()) < 1) {
-                        ghosts.get(i).selectAnimationAt(Ghost.AnimationID.GHOST_POINTS, i);
-                        if (i > 0) {
-                            ghosts.get(i-1).setVisible(false);
-                        }
-                    }
-                });
-            }
-            pac.move();
-            for (Ghost ghost : ghosts) {
-                ghost.move();
-            }
-        }
-
-        public void draw() {
-            if (actorRenderer != null) {
-                actorRenderer.setScaling(scaling());
-                actorRenderer.setImageSmoothing(true);
-                actorRenderer.ctx().save();
-                actorRenderer.ctx().translate(0, TS(23.5f) * scaling());
-                ghosts.forEach(actorRenderer::drawActor);
-                actorRenderer.drawActor(pac);
-                actorRenderer.ctx().restore();
-            }
-        }
     }
 }

@@ -63,7 +63,7 @@ public final class Globals {
      * @param numTiles number of tiles
      * @return number of pixels corresponding to given number of tiles
      */
-    public static float TS(float numTiles) { return numTiles * TS; }
+    public static float TS(double numTiles) { return (float) numTiles * TS; }
 
     /**
      * Arcade maps have a size of 28 cols and 36 rows (including the empty rows over and under the maze).

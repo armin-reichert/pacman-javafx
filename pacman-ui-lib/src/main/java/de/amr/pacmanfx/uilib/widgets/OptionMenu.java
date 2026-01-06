@@ -42,6 +42,7 @@ public class OptionMenu {
 
     private final BorderPane root = new BorderPane();
     protected final BaseRenderer renderer;
+    protected final Canvas canvas;
 
     protected OptionMenuStyle style = OptionMenuStyle.DEFAULT_OPTION_MENU_STYLE;
 
@@ -53,7 +54,7 @@ public class OptionMenu {
 
         setTitle("OPTIONS");
 
-        var canvas = new Canvas();
+        canvas = new Canvas();
         canvas.widthProperty().bind(scaling.multiply(numTilesX*TS));
         canvas.heightProperty().bind(scaling.multiply(numTilesY*TS));
 
@@ -109,7 +110,7 @@ public class OptionMenu {
             ctx.setFill(style.entryTextFill());
             ctx.fillText(entry.text, textCol * TS, y);
             ctx.setFill(entry.enabled ? style.entryValueFill() : style.entryValueDisabledFill());
-            ctx.fillText(entry.selectedValueText(), valueCol * TS, y);
+            ctx.fillText(entry.getSelectedValueText(), valueCol * TS, y);
         }
 
         drawUsageInfo();
