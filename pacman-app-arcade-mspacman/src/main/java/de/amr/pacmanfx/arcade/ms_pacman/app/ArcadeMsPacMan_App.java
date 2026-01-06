@@ -17,7 +17,7 @@ import javafx.stage.Stage;
 
 public class ArcadeMsPacMan_App extends Application {
 
-    private static final String GAME_VARIANT = StandardGameVariant.MS_PACMAN.name();
+    private static final String GAME_VARIANT = StandardGameVariant.ARCADE_MS_PACMAN.name();
 
     private static final float ASPECT_RATIO = 1.2f; // 12:10 aspect ratio
     private static final float USED_HEIGHT = 0.8f;  // 80% of available height

@@ -113,10 +113,10 @@ public class PacManXXL_StartPage implements GameUI_StartPage {
     @Override
     public String title() {
         String gameVariant = menu.state().gameVariant;
-        if (StandardGameVariant.PACMAN_XXL.name().equals(gameVariant)) {
+        if (StandardGameVariant.ARCADE_PACMAN_XXL.name().equals(gameVariant)) {
             return "Pac-Man XXL"; //TODO localize
         }
-        if (StandardGameVariant.MS_PACMAN_XXL.name().equals(gameVariant)) {
+        if (StandardGameVariant.ARCADE_MS_PACMAN_XXL.name().equals(gameVariant)) {
             return "Ms. Pac-Man XXL"; //TODO localize
         }
         return "Unknown game variant";

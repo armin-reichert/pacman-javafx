@@ -159,15 +159,15 @@ public class PacManXXL_StartPageMenu extends OptionMenu {
         @Override
         protected void onValueChanged(int index) {
             final String gameVariant = selectedValue();
-            if (StandardGameVariant.PACMAN_XXL.name().equals(gameVariant)) {
+            if (StandardGameVariant.ARCADE_PACMAN_XXL.name().equals(gameVariant)) {
                 //TODO add previous value into event parameter
-                final String prevGameVariantName = StandardGameVariant.MS_PACMAN_XXL.name();
+                final String prevGameVariantName = StandardGameVariant.ARCADE_MS_PACMAN_XXL.name();
                 ui.config(prevGameVariantName).dispose();
                 ui.config(gameVariant).init();
             }
-            else if (StandardGameVariant.MS_PACMAN_XXL.name().equals(gameVariant)) {
+            else if (StandardGameVariant.ARCADE_MS_PACMAN_XXL.name().equals(gameVariant)) {
                 //TODO add previous value into event parameter
-                final String prevGameVariantName = StandardGameVariant.PACMAN_XXL.name();
+                final String prevGameVariantName = StandardGameVariant.ARCADE_PACMAN_XXL.name();
                 ui.config(prevGameVariantName).dispose();
                 ui.config(gameVariant).init();
             }
@@ -251,7 +251,7 @@ public class PacManXXL_StartPageMenu extends OptionMenu {
 
         this.ui = requireNonNull(ui);
 
-        state.gameVariant = StandardGameVariant.PACMAN_XXL.name();
+        state.gameVariant = StandardGameVariant.ARCADE_PACMAN_XXL.name();
         state.play3D = false;
         state.cutScenesEnabled = true;
         state.mapOrder = WorldMapSelectionMode.CUSTOM_MAPS_FIRST;

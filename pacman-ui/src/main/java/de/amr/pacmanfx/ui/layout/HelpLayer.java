@@ -34,8 +34,8 @@ public class HelpLayer extends Pane {
     }
 
     public void showHelpPopup(GameUI ui, double scaling, String variantName) {
-        final boolean msPacMan = variantName.equals(StandardGameVariant.MS_PACMAN.name())
-                || variantName.equals(StandardGameVariant.MS_PACMAN_XXL.name());
+        final boolean msPacMan = variantName.equals(StandardGameVariant.ARCADE_MS_PACMAN.name())
+                || variantName.equals(StandardGameVariant.ARCADE_MS_PACMAN_XXL.name());
         final Color bgColor = msPacMan ? ArcadePalette.ARCADE_RED : ArcadePalette.ARCADE_BLUE;
         final var font = Font.font(GameUI.FONT_MONOSPACED.getFamily(), Math.max(6, 14 * scaling));
         final var infoPane = HelpInfo.build(ui).createPane(ui, colorWithOpacity(bgColor, 0.8), font);

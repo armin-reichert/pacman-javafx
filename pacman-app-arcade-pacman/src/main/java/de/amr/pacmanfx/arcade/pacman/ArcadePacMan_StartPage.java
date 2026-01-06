@@ -14,7 +14,7 @@ public class ArcadePacMan_StartPage extends FlyerStartPage {
 
     public ArcadePacMan_StartPage() {
         super(
-            StandardGameVariant.PACMAN.name(),
+            StandardGameVariant.ARCADE_PACMAN.name(),
             "Pac-Man (Arcade)",
             LOCAL_RESOURCES.loadImage("graphics/flyer-page-1.jpg"),
             LOCAL_RESOURCES.loadImage("graphics/flyer-page-2.jpg"),

@@ -13,8 +13,8 @@ import javafx.application.Application;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-import static de.amr.pacmanfx.model.StandardGameVariant.MS_PACMAN_XXL;
-import static de.amr.pacmanfx.model.StandardGameVariant.PACMAN_XXL;
+import static de.amr.pacmanfx.model.StandardGameVariant.ARCADE_MS_PACMAN_XXL;
+import static de.amr.pacmanfx.model.StandardGameVariant.ARCADE_PACMAN_XXL;
 
 public class PacManXXL_App extends Application {
 
@@ -28,13 +28,13 @@ public class PacManXXL_App extends Application {
         final var mapSelector = new PacManXXL_MapSelector(GameBox.CUSTOM_MAP_DIR);
         ui = GameUI_Builder.create(primaryStage, width, height)
                 .game(
-                    PACMAN_XXL.name(),
+                    ARCADE_PACMAN_XXL.name(),
                     PacManXXL_PacMan_GameModel.class,
                     mapSelector,
                     PacManXXL_PacMan_UIConfig.class
                 )
                 .game(
-                    MS_PACMAN_XXL.name(),
+                    ARCADE_MS_PACMAN_XXL.name(),
                     PacManXXL_MsPacMan_GameModel.class,
                     mapSelector,
                     PacManXXL_MsPacMan_UIConfig.class
@@ -50,11 +50,11 @@ public class PacManXXL_App extends Application {
                     CommonDashboardID.KEYS_GLOBAL,
                     CommonDashboardID.KEYS_LOCAL,
                     CommonDashboardID.ABOUT)
-            .startPage(PacManXXL_StartPage.class, PACMAN_XXL.name())
+            .startPage(PacManXXL_StartPage.class, ARCADE_PACMAN_XXL.name())
             .build();
 
         ui.customDirWatchdog().addEventListener(mapSelector);
-        ui.selectGameVariant(PACMAN_XXL.name());
+        ui.selectGameVariant(ARCADE_PACMAN_XXL.name());
         ui.show();
     }
 

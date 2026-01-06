@@ -16,12 +16,12 @@ import javafx.application.Application;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-import static de.amr.pacmanfx.model.StandardGameVariant.MS_PACMAN_TENGEN;
+import static de.amr.pacmanfx.model.StandardGameVariant.TENGEN_MS_PACMAN;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_ASPECT;
 
 public class TengenMsPacMan_App extends Application {
 
-    private static final String GAME_VARIANT_NAME = MS_PACMAN_TENGEN.name();
+    private static final String GAME_VARIANT_NAME = TENGEN_MS_PACMAN.name();
 
     private static final float ASPECT_RATIO = NES_ASPECT; // 32:30 aspect ratio
     private static final float USED_HEIGHT = 0.8f;  // 80% of available height

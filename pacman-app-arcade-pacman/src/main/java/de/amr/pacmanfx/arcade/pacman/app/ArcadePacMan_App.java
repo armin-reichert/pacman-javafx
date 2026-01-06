@@ -19,13 +19,16 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
 import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
-import static de.amr.pacmanfx.model.StandardGameVariant.PACMAN;
+import static de.amr.pacmanfx.model.StandardGameVariant.ARCADE_PACMAN;
 
 public class ArcadePacMan_App extends Application {
+
+    private static final String PACMAN_GAME = ARCADE_PACMAN.name();
 
     private static final float ASPECT_RATIO = 1.2f; // 12:10 aspect ratio
     private static final float USED_HEIGHT_FRACTION = 0.8f;  // 80% of available height
@@ -69,10 +72,9 @@ public class ArcadePacMan_App extends Application {
     }
 
     private GameUI createUI_WithoutBuilder(Stage stage, double sceneWidth, double sceneHeight) {
-        final var game = new ArcadePacMan_GameModel(THE_GAME_BOX, THE_GAME_BOX.highScoreFile(PACMAN.name()));
-        THE_GAME_BOX.registerGame(PACMAN.name(), game);
-
-        final Map<String, Class<? extends GameUI_Config>> uiConfigMap = Map.of(PACMAN.name(), ArcadePacMan_UIConfig.class);
+        final File highScoreFile = THE_GAME_BOX.highScoreFile(PACMAN_GAME);
+        THE_GAME_BOX.registerGame(PACMAN_GAME, new ArcadePacMan_GameModel(THE_GAME_BOX, highScoreFile));
+        final Map<String, Class<? extends GameUI_Config>> uiConfigMap = Map.of(PACMAN_GAME, ArcadePacMan_UIConfig.class);
         final var ui = new GameUI_Implementation(uiConfigMap, THE_GAME_BOX, stage, sceneWidth, sceneHeight);
         ui.startPagesView().addStartPage(new ArcadePacMan_StartPage());
         ui.dashboard().configure(List.of(DASHBOARD_IDS));
@@ -82,11 +84,11 @@ public class ArcadePacMan_App extends Application {
     private GameUI createUI_WithBuilder(Stage stage, double sceneWidth, double sceneHeight) {
         return GameUI_Builder.create(stage, sceneWidth, sceneHeight)
             .game(
-                PACMAN.name(),
+                PACMAN_GAME,
                 ArcadePacMan_GameModel.class,
                 ArcadePacMan_UIConfig.class
             )
-            .startPage(ArcadePacMan_StartPage.class, PACMAN.name())
+            .startPage(ArcadePacMan_StartPage.class, PACMAN_GAME)
             .dashboard(DASHBOARD_IDS)
             .build();
     }

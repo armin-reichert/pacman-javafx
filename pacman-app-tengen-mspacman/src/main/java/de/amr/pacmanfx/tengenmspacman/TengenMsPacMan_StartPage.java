@@ -14,7 +14,7 @@ public class TengenMsPacMan_StartPage extends FlyerStartPage {
 
     public TengenMsPacMan_StartPage() {
         super(
-            StandardGameVariant.MS_PACMAN_TENGEN.name(),
+            StandardGameVariant.TENGEN_MS_PACMAN.name(),
             "Ms. Pac-Man (Tengen)",
             LOCAL_RESOURCES.loadImage("graphics/flyer-page-1.png"),
             LOCAL_RESOURCES.loadImage("graphics/flyer-page-2.png")

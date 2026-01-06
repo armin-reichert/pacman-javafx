@@ -58,11 +58,11 @@ public class PacManGames3dApp extends Application {
     private static final float USED_HEIGHT_FRACTION = 0.8f;  // 80% of screen height
 
     private static final Map<String, Class<? extends GameUI_Config>> UI_CONFIG_MAP = Map.of(
-        PACMAN.name(),           ArcadePacMan_UIConfig.class,
-        MS_PACMAN.name(),        ArcadeMsPacMan_UIConfig.class,
-        MS_PACMAN_TENGEN.name(), TengenMsPacMan_UIConfig.class,
-        PACMAN_XXL.name(),       PacManXXL_PacMan_UIConfig.class,
-        MS_PACMAN_XXL.name(),    PacManXXL_MsPacMan_UIConfig.class
+        ARCADE_PACMAN.name(),           ArcadePacMan_UIConfig.class,
+        ARCADE_MS_PACMAN.name(),        ArcadeMsPacMan_UIConfig.class,
+        TENGEN_MS_PACMAN.name(), TengenMsPacMan_UIConfig.class,
+        ARCADE_PACMAN_XXL.name(),       PacManXXL_PacMan_UIConfig.class,
+        ARCADE_MS_PACMAN_XXL.name(),    PacManXXL_MsPacMan_UIConfig.class
     );
 
     private static final DashboardID[] DASHBOARD_IDS = {
@@ -122,11 +122,11 @@ public class PacManGames3dApp extends Application {
     {
         Logger.info("Creating UI without builder");
 
-        registerGameWithTests(PACMAN,           new ArcadePacMan_GameModel(THE_GAME_BOX, highScoreFile(PACMAN)));
-        registerGameWithTests(MS_PACMAN,        new ArcadeMsPacMan_GameModel(THE_GAME_BOX, highScoreFile(MS_PACMAN)));
-        registerGameWithTests(MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel(highScoreFile(MS_PACMAN_TENGEN)));
-        registerGameWithTests(PACMAN_XXL,       new PacManXXL_PacMan_GameModel(THE_GAME_BOX, xxlMapSelector, highScoreFile(PACMAN_XXL)));
-        registerGameWithTests(MS_PACMAN_XXL,    new PacManXXL_MsPacMan_GameModel(THE_GAME_BOX, xxlMapSelector, highScoreFile(MS_PACMAN_XXL)));
+        registerGameWithTests(ARCADE_PACMAN,           new ArcadePacMan_GameModel(THE_GAME_BOX, highScoreFile(ARCADE_PACMAN)));
+        registerGameWithTests(ARCADE_MS_PACMAN,        new ArcadeMsPacMan_GameModel(THE_GAME_BOX, highScoreFile(ARCADE_MS_PACMAN)));
+        registerGameWithTests(TENGEN_MS_PACMAN, new TengenMsPacMan_GameModel(highScoreFile(TENGEN_MS_PACMAN)));
+        registerGameWithTests(ARCADE_PACMAN_XXL,       new PacManXXL_PacMan_GameModel(THE_GAME_BOX, xxlMapSelector, highScoreFile(ARCADE_PACMAN_XXL)));
+        registerGameWithTests(ARCADE_MS_PACMAN_XXL,    new PacManXXL_MsPacMan_GameModel(THE_GAME_BOX, xxlMapSelector, highScoreFile(ARCADE_MS_PACMAN_XXL)));
 
         final var ui = new GameUI_Implementation(UI_CONFIG_MAP, THE_GAME_BOX, stage, sceneWidth, sceneHeight);
 
@@ -157,47 +157,47 @@ public class PacManGames3dApp extends Application {
 
         return GameUI_Builder.create(stage, sceneWidth, sceneHeight)
             .game(
-                PACMAN.name(),
+                ARCADE_PACMAN.name(),
                 ArcadePacMan_GameModel.class,
                 ArcadePacMan_UIConfig.class)
 
             .game(
-                MS_PACMAN.name(),
+                ARCADE_MS_PACMAN.name(),
                 ArcadeMsPacMan_GameModel.class,
                 ArcadeMsPacMan_UIConfig.class)
 
             .game(
-                MS_PACMAN_TENGEN.name(),
+                TENGEN_MS_PACMAN.name(),
                 TengenMsPacMan_GameModel.class,
                 TengenMsPacMan_UIConfig.class)
 
             .game(
-                PACMAN_XXL.name(),
+                ARCADE_PACMAN_XXL.name(),
                 PacManXXL_PacMan_GameModel.class,
                 xxlMapSelector,
                 PacManXXL_PacMan_UIConfig.class)
 
             .game(
-                MS_PACMAN_XXL.name(),
+                ARCADE_MS_PACMAN_XXL.name(),
                 PacManXXL_MsPacMan_GameModel.class,
                 xxlMapSelector,
                 PacManXXL_MsPacMan_UIConfig.class)
 
             .startPage(
                 ArcadePacMan_StartPage.class,
-                PACMAN.name())
+                ARCADE_PACMAN.name())
 
             .startPage(
                 ArcadeMsPacMan_StartPage.class,
-                MS_PACMAN.name())
+                ARCADE_MS_PACMAN.name())
 
             .startPage(
                 TengenMsPacMan_StartPage.class,
-                MS_PACMAN_TENGEN.name())
+                TENGEN_MS_PACMAN.name())
 
             .startPage(
                 PacManXXL_StartPage.class,
-                PACMAN_XXL.name(), MS_PACMAN_XXL.name())
+                ARCADE_PACMAN_XXL.name(), ARCADE_MS_PACMAN_XXL.name())
 
             .dashboard(DASHBOARD_IDS)
 
