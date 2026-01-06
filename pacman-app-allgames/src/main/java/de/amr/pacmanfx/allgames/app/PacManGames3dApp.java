@@ -27,6 +27,7 @@ import de.amr.pacmanfx.ui.GameUI_Implementation;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.dashboard.CommonDashboardID;
+import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Screen;
@@ -64,7 +65,7 @@ public class PacManGames3dApp extends Application {
         MS_PACMAN_XXL.name(),    PacManXXL_MsPacMan_UIConfig.class
     );
 
-    private static final CommonDashboardID[] DASHBOARD_IDS = {
+    private static final DashboardID[] DASHBOARD_IDS = {
         CommonDashboardID.GENERAL,
         CommonDashboardID.GAME_CONTROL,
         CommonDashboardID.SETTINGS_3D,
@@ -90,6 +91,12 @@ public class PacManGames3dApp extends Application {
             ui = Boolean.parseBoolean(useBuilder)
                 ? createUI_WithBuilder(primaryStage, width, height, xxlMapSelector)
                 : createUI_WithoutBuilder(primaryStage, width, height, xxlMapSelector);
+
+            ui.dashboard().addInfoBox(
+                TengenMsPacMan_DashboardID.JOYPAD,
+                TengenMsPacMan_UIConfig.TEXT_BUNDLE.getString("infobox.joypad.title"),
+                new InfoBoxJoypad(ui));
+
             ui.customDirWatchdog().addEventListener(xxlMapSelector);
             ui.show();
         }

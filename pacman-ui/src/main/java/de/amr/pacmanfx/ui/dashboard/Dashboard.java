@@ -10,6 +10,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -71,7 +72,9 @@ public class Dashboard extends VBox {
             case CommonDashboardID.KEYS_LOCAL     -> addInfoBox(id, ui.translated("infobox.keyboard_shortcuts_local.title"), new InfoBoxKeyShortcutsLocal(ui));
             case CommonDashboardID.README         -> addInfoBox(id, ui.translated("infobox.readme.title"), new InfoBoxReadmeFirst(ui));
             case CommonDashboardID.SETTINGS_3D    -> addInfoBox(id, ui.translated("infobox.3D_settings.title"), new InfoBox3DSettings(ui));
-            default -> {}
+            default -> {
+                Logger.warn("Unknown dashboard ID {}", id);
+            }
         }
         infoBoxMap.get(CommonDashboardID.README).setExpanded(true);
     }
