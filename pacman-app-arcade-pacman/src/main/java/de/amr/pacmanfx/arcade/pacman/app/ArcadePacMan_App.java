@@ -74,14 +74,8 @@ public class ArcadePacMan_App extends Application {
 
         final Map<String, Class<? extends GameUI_Config>> uiConfigMap = Map.of(PACMAN.name(), ArcadePacMan_UIConfig.class);
         final var ui = new GameUI_Implementation(uiConfigMap, THE_GAME_BOX, stage, sceneWidth, sceneHeight);
-
-        final var startPage = new ArcadePacMan_StartPage();
-        ui.startPagesView().addStartPage(startPage);
-        ui.startPagesView().setSelectedIndex(0);
-
+        ui.startPagesView().addStartPage(new ArcadePacMan_StartPage());
         ui.dashboard().configure(List.of(DASHBOARD_IDS));
-
-        startPage.init(ui);
         return ui;
     }
 
@@ -93,15 +87,7 @@ public class ArcadePacMan_App extends Application {
                 ArcadePacMan_UIConfig.class
             )
             .startPage(ArcadePacMan_StartPage.class, PACMAN.name())
-            .dashboard(
-                CommonDashboardID.GENERAL,
-                CommonDashboardID.GAME_CONTROL,
-                CommonDashboardID.SETTINGS_3D,
-                CommonDashboardID.GAME_INFO,
-                CommonDashboardID.ACTOR_INFO,
-                CommonDashboardID.KEYS_GLOBAL,
-                CommonDashboardID.KEYS_LOCAL,
-                CommonDashboardID.ABOUT)
+            .dashboard(DASHBOARD_IDS)
             .build();
     }
 }

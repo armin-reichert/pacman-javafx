@@ -414,16 +414,20 @@ public final class GameUI_Implementation implements GameUI {
     @Override
     public void show() {
         playView.dashboard().init(this);
-        if (startPagesView.numItems() > 0) {
-            startPagesView().setSelectedIndex(0);
-            showStartView();
-        }
-        else {
-            Logger.error("No start page has been set!");
-        }
+        initStartPage();
         stage.centerOnScreen();
         stage.show();
         Platform.runLater(customDirWatchdog::startWatching);
+    }
+
+    private void initStartPage() {
+        if (startPagesView.numItems() > 0) {
+            startPagesView().setSelectedIndex(0);
+            startPagesView().currentStartPage().ifPresent(startPage -> startPage.init(this));
+            showStartView();
+        } else {
+            Logger.error("No start page has been added to this UI!");
+        }
     }
 
     @Override

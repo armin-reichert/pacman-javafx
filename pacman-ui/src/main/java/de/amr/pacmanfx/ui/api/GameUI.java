@@ -243,7 +243,7 @@ public interface GameUI extends LocalizedTextAccessor {
     void selectGameVariant(String gameVariantName);
 
     /**
-     * Shows the UI and displays the start pages view.
+     * Shows the UI centered on the screen and displays the first start page.
      */
     void show();
 
