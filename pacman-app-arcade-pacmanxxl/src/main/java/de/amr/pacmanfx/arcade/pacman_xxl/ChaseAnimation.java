@@ -29,7 +29,6 @@ public class ChaseAnimation {
     private List<Ghost> ghosts;
     private ActorRenderer actorRenderer;
     private boolean ghostsChased;
-    private boolean spriteAnimationRunning;
 
     public ChaseAnimation() {}
 
@@ -47,7 +46,8 @@ public class ChaseAnimation {
         );
 
         reset();
-        startActorSpriteAnimation();
+        pac.playAnimation(Pac.AnimationID.PAC_MUNCHING);
+        ghosts.forEach(ghost -> ghost.playAnimation(Ghost.AnimationID.GHOST_NORMAL));
     }
 
     public void setOrigin(float x, float y) {
@@ -56,12 +56,6 @@ public class ChaseAnimation {
 
     public void setActorRenderer(ActorRenderer actorRenderer) {
         this.actorRenderer = requireNonNull(actorRenderer);
-    }
-
-    public void startActorSpriteAnimation() {
-        spriteAnimationRunning = true;
-        pac.playAnimation(Pac.AnimationID.PAC_MUNCHING);
-        ghosts.forEach(ghost -> ghost.playAnimation(Ghost.AnimationID.GHOST_NORMAL));
     }
 
     public void reset() {
@@ -82,8 +76,6 @@ public class ChaseAnimation {
     }
 
     public void updateAndDraw() {
-        if (!spriteAnimationRunning) return;
-
         if (ghosts.getLast().x() < -4 * TS && !ghostsChased) {
             ghostsChased = true;
             pac.setMoveDir(pac.moveDir().opposite());
