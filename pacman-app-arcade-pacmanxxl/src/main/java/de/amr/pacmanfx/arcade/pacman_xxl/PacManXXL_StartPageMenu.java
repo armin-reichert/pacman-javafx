@@ -38,7 +38,6 @@ import static java.util.Objects.requireNonNull;
 public class PacManXXL_StartPageMenu extends OptionMenu {
 
     // State
-
     private final ObjectProperty<StandardGameVariant> gameVariant = new SimpleObjectProperty<>();
     private final BooleanProperty play3D = new SimpleBooleanProperty();
     private final BooleanProperty cutScenesEnabled = new SimpleBooleanProperty();
@@ -46,6 +45,10 @@ public class PacManXXL_StartPageMenu extends OptionMenu {
 
     public ObjectProperty<StandardGameVariant> gameVariantProperty() {
         return gameVariant;
+    }
+
+    public StandardGameVariant gameVariant() {
+        return gameVariantProperty().get();
     }
 
     public BooleanProperty play3DProperty() {
@@ -72,8 +75,7 @@ public class PacManXXL_StartPageMenu extends OptionMenu {
 
         @Override
         public String getSelectedValueText() {
-            final StandardGameVariant gameVariant = gameVariantProperty().get();
-            return switch (gameVariant) {
+            return switch (gameVariant()) {
                 case null -> "";
                 case ARCADE_PACMAN_XXL    -> "PAC-MAN XXL";
                 case ARCADE_MS_PACMAN_XXL -> "MS.PAC-MAN XXL";
@@ -198,7 +200,7 @@ public class PacManXXL_StartPageMenu extends OptionMenu {
 
         // init entries
         entryCutScenesEnabled.selectValue(cutScenesEnabledProperty().get());
-        entryGameVariant.selectValue(gameVariantProperty().get());
+        entryGameVariant.selectValue(gameVariant());
         entryPlay3D.selectValue(play3DProperty().get());
         entryMapOrder.selectValue(mapOrderProperty().get());
         entryMapOrder.setEnabled(!mapSelector.customMapPrototypes().isEmpty());
@@ -259,7 +261,7 @@ public class PacManXXL_StartPageMenu extends OptionMenu {
 
     public void logState() {
         Logger.info("Menu state: gameVariant={} play3D={} cutScenesEnabled={} mapOrder={}",
-            gameVariantProperty().get(),
+            gameVariant(),
             play3DProperty().get(),
             cutScenesEnabledProperty().get(),
             mapOrderProperty().get());
@@ -269,6 +271,6 @@ public class PacManXXL_StartPageMenu extends OptionMenu {
         final var mapSelector = (PacManXXL_MapSelector) game.mapSelector();
         mapSelector.setSelectionMode(mapOrderProperty().get());
         mapSelector.loadMapPrototypes();
-        ui.selectGameVariant(gameVariantProperty().get().name());
+        ui.selectGameVariant(gameVariant().name());
     }
 }

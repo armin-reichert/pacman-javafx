@@ -79,7 +79,7 @@ public class PacManXXL_StartPage implements GameUI_StartPage {
 
         title.bind(Bindings.createStringBinding(
             () -> {
-                final StandardGameVariant gameVariant = menu.gameVariantProperty().get();
+                final StandardGameVariant gameVariant = menu.gameVariant();
                 final String playSceneMode = menu.play3DProperty().get() ? "3D" : "2D";
                 return gameVariant == null
                     ? ""
@@ -118,7 +118,7 @@ public class PacManXXL_StartPage implements GameUI_StartPage {
     public void onEnter(GameUI ui) {
         pauseSec(1, voicePlayer::play).play();
         menu.requestFocus();
-        final StandardGameVariant gameVariant = menu.gameVariantProperty().get();
+        final StandardGameVariant gameVariant = menu.gameVariant();
         switch (gameVariant) {
             case null -> ui.selectGameVariant(ARCADE_PACMAN_XXL.name());
             case ARCADE_PACMAN_XXL,ARCADE_MS_PACMAN_XXL -> {
