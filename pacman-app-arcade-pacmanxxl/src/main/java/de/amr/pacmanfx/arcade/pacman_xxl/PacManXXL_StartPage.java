@@ -22,6 +22,8 @@ import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.model.StandardGameVariant.ARCADE_MS_PACMAN_XXL;
+import static de.amr.pacmanfx.model.StandardGameVariant.ARCADE_PACMAN_XXL;
 import static de.amr.pacmanfx.uilib.animation.AnimationSupport.pauseSec;
 import static java.util.Objects.requireNonNull;
 
@@ -58,22 +60,14 @@ public class PacManXXL_StartPage implements GameUI_StartPage {
         menu = new PacManXXL_StartPageMenu(ui);
 
         ui.context().gameVariantNameProperty().addListener((_, _, gameVariantName) -> {
-            if (StandardGameVariant.ARCADE_PACMAN_XXL.name().equals(gameVariantName)) {
-                menu.init(ui);
-            } else if (StandardGameVariant.ARCADE_MS_PACMAN_XXL.name().equals(gameVariantName)) {
+            if (ARCADE_PACMAN_XXL.name().equals(gameVariantName) || ARCADE_MS_PACMAN_XXL.name().equals(gameVariantName)) {
                 menu.init(ui);
             }
         });
 
-        menu.cutScenesEnabledProperty().addListener((_,_,enabled) -> {
-            ui.context().currentGame().setCutScenesEnabled(enabled);
-            menu.logState();
-        });
+        menu.cutScenesEnabledProperty().addListener((_,_,enabled) -> ui.context().currentGame().setCutScenesEnabled(enabled));
 
-        menu.play3DProperty().addListener((_, _, play3D) -> {
-            GameUI.PROPERTY_3D_ENABLED.set(play3D);
-            menu.logState();
-        });
+        menu.play3DProperty().addListener((_, _, play3D) -> GameUI.PROPERTY_3D_ENABLED.set(play3D));
 
         menu.scalingProperty().bind(ui.stage().heightProperty()
                 .map(height -> {
@@ -124,7 +118,12 @@ public class PacManXXL_StartPage implements GameUI_StartPage {
     public void onEnter(GameUI ui) {
         pauseSec(1, voicePlayer::play).play();
         menu.requestFocus();
-        ui.selectGameVariant(StandardGameVariant.ARCADE_PACMAN_XXL.name());
+        final StandardGameVariant gameVariant = menu.gameVariantProperty().get();
+        switch (gameVariant) {
+            case null -> ui.selectGameVariant(ARCADE_PACMAN_XXL.name());
+            case ARCADE_PACMAN_XXL,ARCADE_MS_PACMAN_XXL -> ui.selectGameVariant(gameVariant.name());
+            default -> Logger.error("Unexpected game variant in XXL menu: {}", gameVariant);
+        }
     }
 
     @Override

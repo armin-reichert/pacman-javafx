@@ -163,9 +163,9 @@ public class PacManXXL_StartPageMenu extends OptionMenu {
 
         chaseAnimation.setOrigin(0, TS(23.5f));
 
-        final int freq = 60;
-        animationTimer = new Timeline(freq,
-            new KeyFrame(Duration.seconds(1.0 / freq), _ -> {
+        final int fps = 60;
+        animationTimer = new Timeline(fps,
+            new KeyFrame(Duration.millis(1000.0 / fps), _ -> {
                 draw();
                 chaseAnimation.update();
                 chaseAnimation.draw();
@@ -203,7 +203,10 @@ public class PacManXXL_StartPageMenu extends OptionMenu {
         entryMapOrder.selectValue(mapOrderProperty().get());
         entryMapOrder.setEnabled(!mapSelector.customMapPrototypes().isEmpty());
 
+        logState();
 
+        requestFocus();
+        animationTimer.stop();
         chaseAnimation.init(ui.currentConfig());
         animationTimer.playFromStart();
     }
@@ -255,12 +258,11 @@ public class PacManXXL_StartPageMenu extends OptionMenu {
     }
 
     public void logState() {
-        Logger.info("Menu state: gameVariant={} play3D={} cutScenesEnabled={} mapOrder={} animation running={}",
+        Logger.info("Menu state: gameVariant={} play3D={} cutScenesEnabled={} mapOrder={}",
             gameVariantProperty().get(),
             play3DProperty().get(),
             cutScenesEnabledProperty().get(),
-            mapOrderProperty().get(),
-            animationTimer.getStatus() == Animation.Status.RUNNING);
+            mapOrderProperty().get());
     }
 
     public void startGame(Game game) {
