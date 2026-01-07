@@ -15,9 +15,7 @@ import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.widgets.OptionMenu;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuEntry;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuStyle;
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
+import javafx.animation.AnimationTimer;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -25,7 +23,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.TS;
@@ -146,8 +143,8 @@ public class PacManXXL_StartPageMenu extends OptionMenu {
     };
 
     private final GameUI ui;
+    private final AnimationTimer drawLoop;
     private final ChaseAnimation chaseAnimation = new ChaseAnimation();
-    private final Timeline animationTimer;
 
     public PacManXXL_StartPageMenu(GameUI ui) {
         super(42, 36, 6, 20);
@@ -177,15 +174,6 @@ public class PacManXXL_StartPageMenu extends OptionMenu {
 
         chaseAnimation.setOrigin(0, TS(23.5f));
 
-        final int fps = 60;
-        animationTimer = new Timeline(fps,
-            new KeyFrame(Duration.millis(1000.0 / fps), _ -> {
-                draw();
-                chaseAnimation.update();
-                chaseAnimation.draw();
-            }));
-        animationTimer.setCycleCount(Animation.INDEFINITE);
-
         gameVariantProperty().addListener((_, _, newVariant) -> {
             final GameUI_Config uiConfig = ui.config(newVariant.name());
             chaseAnimation.init(uiConfig);
@@ -193,6 +181,14 @@ public class PacManXXL_StartPageMenu extends OptionMenu {
             actorRenderer.scalingProperty().bind(scalingProperty());
             chaseAnimation.setActorRenderer(actorRenderer);
         });
+
+        drawLoop = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                draw();
+                chaseAnimation.updateAndDraw();
+            }
+        };
     }
 
     public void init(GameUI ui) {
@@ -220,13 +216,8 @@ public class PacManXXL_StartPageMenu extends OptionMenu {
         logState();
 
         requestFocus();
-        animationTimer.stop();
-        chaseAnimation.init(ui.currentConfig());
-        animationTimer.playFromStart();
-    }
 
-    public void stopAnimation() {
-        animationTimer.stop();
+        chaseAnimation.init(ui.currentConfig());
     }
 
     @Override
@@ -284,5 +275,17 @@ public class PacManXXL_StartPageMenu extends OptionMenu {
         mapSelector.setSelectionMode(mapOrder());
         mapSelector.loadMapPrototypes();
         ui.selectGameVariant(gameVariant().name());
+    }
+
+    public ChaseAnimation chaseAnimation() {
+        return chaseAnimation;
+    }
+
+    public void startDrawLoop() {
+        drawLoop.start();
+    }
+
+    public void stopDrawLoop() {
+        drawLoop.stop();
     }
 }

@@ -22,7 +22,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Simple chasing animation used in XXL menu.
  */
-class ChaseAnimation {
+public class ChaseAnimation {
 
     private Vector2f origin = Vector2f.ZERO;
     private Pac pac;
@@ -30,6 +30,8 @@ class ChaseAnimation {
     private ActorRenderer actorRenderer;
     private boolean ghostsChased;
     private boolean spriteAnimationRunning;
+
+    public ChaseAnimation() {}
 
     public void init(GameUI_Config uiConfig) {
         requireNonNull(uiConfig);
@@ -79,7 +81,7 @@ class ChaseAnimation {
         ghostsChased = false;
     }
 
-    public void update() {
+    public void updateAndDraw() {
         if (!spriteAnimationRunning) return;
 
         if (ghosts.getLast().x() < -4 * TS && !ghostsChased) {
@@ -122,9 +124,8 @@ class ChaseAnimation {
         for (Ghost ghost : ghosts) {
             ghost.move();
         }
-    }
 
-    public void draw() {
+        // draw
         if (actorRenderer != null) {
             final GraphicsContext ctx = actorRenderer.ctx();
             ctx.save();

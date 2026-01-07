@@ -42,7 +42,7 @@ public class PacManXXL_StartPage implements GameUI_StartPage {
 
     private PacManXXL_StartPageMenu menu;
 
-    private final StringProperty title = new SimpleStringProperty("TITLE");
+    private final StringProperty title = new SimpleStringProperty("Pac-Man XXL games");
 
     public PacManXXL_StartPage() {
         final var flyer = new Flyer(LOCAL_RESOURCES.loadImage(BACKGROUND_IMAGE_PATH));
@@ -77,17 +77,6 @@ public class PacManXXL_StartPage implements GameUI_StartPage {
                     return Math.round(h * 100.0) / 100.0; // round to 2 decimal digits
                 }));
 
-        title.bind(Bindings.createStringBinding(
-            () -> {
-                final StandardGameVariant gameVariant = menu.gameVariant();
-                final String playSceneMode = menu.play3D() ? "3D" : "2D";
-                return gameVariant == null
-                    ? ""
-                    : ui.config(gameVariant.name()).assets().translated("app.title", playSceneMode);
-            },
-            menu.gameVariantProperty(), menu.play3DProperty()
-        ));
-
         root.getChildren().add(menu.root());
 
         root.focusedProperty().addListener((_, _, _) -> {
@@ -118,6 +107,7 @@ public class PacManXXL_StartPage implements GameUI_StartPage {
     public void onEnter(GameUI ui) {
         pauseSec(1, voicePlayer::play).play();
         menu.requestFocus();
+        menu.startDrawLoop();
         final StandardGameVariant gameVariant = menu.gameVariant();
         switch (gameVariant) {
             case null -> ui.selectGameVariant(ARCADE_PACMAN_XXL.name());
@@ -132,7 +122,7 @@ public class PacManXXL_StartPage implements GameUI_StartPage {
     @Override
     public void onExit(GameUI ui) {
         voicePlayer.stop();
-        menu.stopAnimation();
+        menu.stopDrawLoop();
     }
 
     @Override
