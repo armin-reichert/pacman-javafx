@@ -55,12 +55,24 @@ public class PacManXXL_StartPageMenu extends OptionMenu {
         return play3D;
     }
 
+    public boolean play3D() {
+        return play3DProperty().get();
+    }
+
     public BooleanProperty cutScenesEnabledProperty() {
         return cutScenesEnabled;
     }
 
+    public boolean cutScenesEnabled() {
+        return cutScenesEnabledProperty().get();
+    }
+
     public ObjectProperty<WorldMapSelectionMode> mapOrderProperty() {
         return mapOrder;
+    }
+
+    public WorldMapSelectionMode mapOrder() {
+        return mapOrderProperty().get();
     }
 
     // Entries
@@ -93,7 +105,7 @@ public class PacManXXL_StartPageMenu extends OptionMenu {
 
         @Override
         public String getSelectedValueText() {
-            return play3DProperty().get() ? "3D" : "2D";
+            return play3D() ? "3D" : "2D";
         }
     };
 
@@ -106,7 +118,7 @@ public class PacManXXL_StartPageMenu extends OptionMenu {
 
         @Override
         public String getSelectedValueText() {
-            return cutScenesEnabledProperty().get() ? "ON" : "OFF";
+            return cutScenesEnabled() ? "ON" : "OFF";
         }
     };
 
@@ -125,7 +137,7 @@ public class PacManXXL_StartPageMenu extends OptionMenu {
             if (!enabled) {
                 return "NO CUSTOM MAPS!";
             }
-            return switch (mapOrderProperty().get()) {
+            return switch (mapOrder()) {
                 case CUSTOM_MAPS_FIRST -> "CUSTOM MAPS FIRST";
                 case ALL_RANDOM -> "RANDOM ORDER";
                 case NO_CUSTOM_MAPS -> "NO CUSTOM MAPS";
@@ -199,10 +211,10 @@ public class PacManXXL_StartPageMenu extends OptionMenu {
         soundEnabledProperty().bind(ui.currentConfig().soundManager().muteProperty().not());
 
         // init entries
-        entryCutScenesEnabled.selectValue(cutScenesEnabledProperty().get());
+        entryCutScenesEnabled.selectValue(cutScenesEnabled());
         entryGameVariant.selectValue(gameVariant());
-        entryPlay3D.selectValue(play3DProperty().get());
-        entryMapOrder.selectValue(mapOrderProperty().get());
+        entryPlay3D.selectValue(play3D());
+        entryMapOrder.selectValue(mapOrder());
         entryMapOrder.setEnabled(!mapSelector.customMapPrototypes().isEmpty());
 
         logState();
@@ -262,14 +274,14 @@ public class PacManXXL_StartPageMenu extends OptionMenu {
     public void logState() {
         Logger.info("Menu state: gameVariant={} play3D={} cutScenesEnabled={} mapOrder={}",
             gameVariant(),
-            play3DProperty().get(),
-            cutScenesEnabledProperty().get(),
-            mapOrderProperty().get());
+            play3D(),
+            cutScenesEnabled(),
+            mapOrder());
     }
 
     public void startGame(Game game) {
         final var mapSelector = (PacManXXL_MapSelector) game.mapSelector();
-        mapSelector.setSelectionMode(mapOrderProperty().get());
+        mapSelector.setSelectionMode(mapOrder());
         mapSelector.loadMapPrototypes();
         ui.selectGameVariant(gameVariant().name());
     }

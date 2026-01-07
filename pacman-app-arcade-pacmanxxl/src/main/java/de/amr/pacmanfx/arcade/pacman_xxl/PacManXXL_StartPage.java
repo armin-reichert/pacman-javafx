@@ -80,7 +80,7 @@ public class PacManXXL_StartPage implements GameUI_StartPage {
         title.bind(Bindings.createStringBinding(
             () -> {
                 final StandardGameVariant gameVariant = menu.gameVariant();
-                final String playSceneMode = menu.play3DProperty().get() ? "3D" : "2D";
+                final String playSceneMode = menu.play3D() ? "3D" : "2D";
                 return gameVariant == null
                     ? ""
                     : ui.config(gameVariant.name()).assets().translated("app.title", playSceneMode);
