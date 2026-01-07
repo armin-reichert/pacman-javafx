@@ -9,7 +9,6 @@ import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_StartPage;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.widgets.Flyer;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.input.KeyEvent;
@@ -33,16 +32,12 @@ import static java.util.Objects.requireNonNull;
 public class PacManXXL_StartPage implements GameUI_StartPage {
 
     private static final ResourceManager LOCAL_RESOURCES = () -> PacManXXL_StartPage.class;
-    private static final Media VOICE = LOCAL_RESOURCES.loadMedia("sound/game-description.mp3");
-
     private static final String BACKGROUND_IMAGE_PATH = "graphics/screenshot.png";
 
-    private final StackPane root = new StackPane();
-    private final MediaPlayer voicePlayer = new MediaPlayer(VOICE);
-
-    private PacManXXL_StartPageMenu menu;
-
+    private final MediaPlayer voicePlayer = new MediaPlayer(LOCAL_RESOURCES.loadMedia("sound/game-description.mp3"));
     private final StringProperty title = new SimpleStringProperty("Pac-Man XXL games");
+    private final StackPane root = new StackPane();
+    private final PacManXXL_OptionMenu menu;
 
     public PacManXXL_StartPage() {
         final var flyer = new Flyer(LOCAL_RESOURCES.loadImage(BACKGROUND_IMAGE_PATH));
@@ -51,13 +46,13 @@ public class PacManXXL_StartPage implements GameUI_StartPage {
 
         root.setBackground(Background.fill(Color.BLACK));
         root.getChildren().addAll(flyer);
+
+        menu = new PacManXXL_OptionMenu();
     }
 
     @Override
     public void init(GameUI ui) {
         requireNonNull(ui);
-
-        menu = new PacManXXL_StartPageMenu(ui);
 
         ui.context().gameVariantNameProperty().addListener((_, _, gameVariantName) -> {
             if (ARCADE_PACMAN_XXL.name().equals(gameVariantName) || ARCADE_MS_PACMAN_XXL.name().equals(gameVariantName)) {

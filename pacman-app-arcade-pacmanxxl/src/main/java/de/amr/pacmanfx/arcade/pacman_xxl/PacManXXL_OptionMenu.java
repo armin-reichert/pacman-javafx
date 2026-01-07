@@ -32,7 +32,7 @@ import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_3D_ENABLED;
 import static de.amr.pacmanfx.uilib.widgets.OptionMenuStyle.DEFAULT_OPTION_MENU_STYLE;
 import static java.util.Objects.requireNonNull;
 
-public class PacManXXL_StartPageMenu extends OptionMenu {
+public class PacManXXL_OptionMenu extends OptionMenu {
 
     // State
     private final ObjectProperty<StandardGameVariant> gameVariant = new SimpleObjectProperty<>();
@@ -142,14 +142,12 @@ public class PacManXXL_StartPageMenu extends OptionMenu {
         }
     };
 
-    private final GameUI ui;
     private final AnimationTimer drawLoop;
     private final ChaseAnimation chaseAnimation = new ChaseAnimation();
+    private GameUI ui;
 
-    public PacManXXL_StartPageMenu(GameUI ui) {
+    public PacManXXL_OptionMenu() {
         super(42, 36, 6, 20);
-
-        this.ui = requireNonNull(ui);
 
         final var style = new OptionMenuStyle(
             Font.font(GameUI.FONT_PAC_FONT_GOOD.getFamily(), 32),
@@ -172,15 +170,7 @@ public class PacManXXL_StartPageMenu extends OptionMenu {
         addEntry(entryCutScenesEnabled);
         addEntry(entryMapOrder);
 
-        chaseAnimation.setOrigin(0, TS(23.5f));
-
-        gameVariantProperty().addListener((_, _, newVariant) -> {
-            final GameUI_Config uiConfig = ui.config(newVariant.name());
-            chaseAnimation.init(uiConfig);
-            final ActorRenderer actorRenderer = uiConfig.createActorRenderer(canvas);
-            actorRenderer.scalingProperty().bind(scalingProperty());
-            chaseAnimation.setActorRenderer(actorRenderer);
-        });
+        chaseAnimation.setOffsetY(TS(23.5f));
 
         drawLoop = new AnimationTimer() {
             @Override
@@ -189,9 +179,21 @@ public class PacManXXL_StartPageMenu extends OptionMenu {
                 chaseAnimation.updateAndDraw();
             }
         };
+
+        gameVariantProperty().addListener((_, _, newVariant) -> {
+            if (ui != null) {
+                final GameUI_Config uiConfig = ui.config(newVariant.name());
+                chaseAnimation.init(uiConfig);
+                final ActorRenderer actorRenderer = uiConfig.createActorRenderer(canvas);
+                actorRenderer.scalingProperty().bind(scalingProperty());
+                chaseAnimation.setActorRenderer(actorRenderer);
+            }
+        });
     }
 
     public void init(GameUI ui) {
+        this.ui = requireNonNull(ui);
+
         final Game game = ui.context().currentGame();
         final StandardGameVariant gameVariant = StandardGameVariant.valueOf(ui.context().gameVariantName());
         final var mapSelector = (PacManXXL_MapSelector) game.mapSelector();
@@ -275,10 +277,6 @@ public class PacManXXL_StartPageMenu extends OptionMenu {
         mapSelector.setSelectionMode(mapOrder());
         mapSelector.loadMapPrototypes();
         ui.selectGameVariant(gameVariant().name());
-    }
-
-    public ChaseAnimation chaseAnimation() {
-        return chaseAnimation;
     }
 
     public void startDrawLoop() {

@@ -6,7 +6,6 @@ package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.lib.math.Direction;
-import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
@@ -24,13 +23,21 @@ import static java.util.Objects.requireNonNull;
  */
 public class ChaseAnimation {
 
-    private Vector2f origin = Vector2f.ZERO;
+    private float offsetY;
     private Pac pac;
     private List<Ghost> ghosts;
     private ActorRenderer actorRenderer;
     private boolean ghostsChased;
 
     public ChaseAnimation() {}
+
+    public void setOffsetY(float y) {
+        offsetY = y;
+    }
+
+    public void setActorRenderer(ActorRenderer actorRenderer) {
+        this.actorRenderer = requireNonNull(actorRenderer);
+    }
 
     public void init(GameUI_Config uiConfig) {
         requireNonNull(uiConfig);
@@ -39,23 +46,16 @@ public class ChaseAnimation {
         pac.setAnimationManager(uiConfig.createPacAnimations());
 
         ghosts = List.of(
-                uiConfig.createGhostWithAnimations(RED_GHOST_SHADOW),
-                uiConfig.createGhostWithAnimations(PINK_GHOST_SPEEDY),
-                uiConfig.createGhostWithAnimations(CYAN_GHOST_BASHFUL),
-                uiConfig.createGhostWithAnimations(ORANGE_GHOST_POKEY)
+            uiConfig.createGhostWithAnimations(RED_GHOST_SHADOW),
+            uiConfig.createGhostWithAnimations(PINK_GHOST_SPEEDY),
+            uiConfig.createGhostWithAnimations(CYAN_GHOST_BASHFUL),
+            uiConfig.createGhostWithAnimations(ORANGE_GHOST_POKEY)
         );
 
-        reset();
         pac.playAnimation(Pac.AnimationID.PAC_MUNCHING);
         ghosts.forEach(ghost -> ghost.playAnimation(Ghost.AnimationID.GHOST_NORMAL));
-    }
 
-    public void setOrigin(float x, float y) {
-        origin = new Vector2f(x, y);
-    }
-
-    public void setActorRenderer(ActorRenderer actorRenderer) {
-        this.actorRenderer = requireNonNull(actorRenderer);
+        reset();
     }
 
     public void reset() {
@@ -121,7 +121,7 @@ public class ChaseAnimation {
         if (actorRenderer != null) {
             final GraphicsContext ctx = actorRenderer.ctx();
             ctx.save();
-            ctx.translate(actorRenderer.scaled(origin.x()), actorRenderer.scaled(origin.y()));
+            ctx.translate(0, actorRenderer.scaled(offsetY));
             actorRenderer.setImageSmoothing(true);
             ghosts.forEach(actorRenderer::drawActor);
             actorRenderer.drawActor(pac);
