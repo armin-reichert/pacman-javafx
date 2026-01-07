@@ -130,17 +130,17 @@ public class OptionMenu {
 
     protected void handleKeyPress(KeyEvent e) {
         switch (e.getCode()) {
-            case DOWN -> {
-                selectNextEntry();
-                e.consume();
-            }
             case UP -> {
-                selectedPrevEntry();
                 e.consume();
+                selectedPrevEntry();
+            }
+            case DOWN -> {
+                e.consume();
+                selectNextEntry();
             }
             case SPACE -> {
-                selectNextValue();
                 e.consume();
+                selectNextValue();
             }
         }
     }
@@ -158,7 +158,7 @@ public class OptionMenu {
     protected void selectNextValue() {
         playSound(style.valueSelectedSound());
         final OptionMenuEntry<?> entry = entries.get(selectedEntryIndex);
-        entry.selectedValueIndex = entry.selectedValueIndex < entry.valueList.size() - 1 ? entry.selectedValueIndex + 1 : 0;
+        entry.selectedValueIndex = entry.selectedValueIndex < entry.optionValues.size() - 1 ? entry.selectedValueIndex + 1 : 0;
         entry.onValueChanged(entry.selectedValueIndex);
     }
 

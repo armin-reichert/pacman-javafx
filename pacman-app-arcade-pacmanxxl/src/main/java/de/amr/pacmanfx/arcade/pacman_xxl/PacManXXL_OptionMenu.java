@@ -27,7 +27,6 @@ import org.tinylog.Logger;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.model.StandardGameVariant.ARCADE_MS_PACMAN_XXL;
 import static de.amr.pacmanfx.model.StandardGameVariant.ARCADE_PACMAN_XXL;
-import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_3D_ENABLED;
 import static de.amr.pacmanfx.uilib.widgets.OptionMenuStyle.DEFAULT_OPTION_MENU_STYLE;
 import static java.util.Objects.requireNonNull;
 
@@ -199,7 +198,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
 
         // init state
         gameVariantProperty().set(gameVariant);
-        play3DProperty().set(PROPERTY_3D_ENABLED.get());
+        play3DProperty().set(GameUI.PROPERTY_3D_ENABLED.get());
         cutScenesEnabledProperty().set(game.cutScenesEnabled());
         mapOrderProperty().set(mapSelector.selectionMode());
 
@@ -269,10 +268,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
             mapOrder());
     }
 
-    public void startGame(Game game) {
-        final var mapSelector = (PacManXXL_MapSelector) game.mapSelector();
-        mapSelector.setSelectionMode(mapOrder());
-        mapSelector.loadMapPrototypes();
+    public void startSelectedGame() {
         ui.selectGameVariant(gameVariant().name());
     }
 

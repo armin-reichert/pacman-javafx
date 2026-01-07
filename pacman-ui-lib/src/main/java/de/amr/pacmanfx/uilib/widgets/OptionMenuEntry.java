@@ -12,7 +12,7 @@ import static java.util.Objects.requireNonNull;
 
 public abstract class OptionMenuEntry<T> {
     protected final String text;
-    protected final List<T> valueList;
+    protected final List<T> optionValues;
     protected int selectedValueIndex;
     protected boolean enabled;
 
@@ -25,7 +25,7 @@ public abstract class OptionMenuEntry<T> {
         if (Arrays.stream(values).anyMatch(Objects::isNull)) {
             throw new IllegalArgumentException("Menu entry contains NULL value");
         }
-        valueList = List.of(values);
+        optionValues = List.of(values);
         enabled = true;
         selectedValueIndex = 0;
     }
@@ -35,8 +35,8 @@ public abstract class OptionMenuEntry<T> {
     }
 
     public void selectValue(T value) {
-        for (int i = 0; i < valueList.size(); ++i) {
-            if (valueList.get(i).equals(value)) {
+        for (int i = 0; i < optionValues.size(); ++i) {
+            if (optionValues.get(i).equals(value)) {
                 selectedValueIndex = i;
                 return;
             }
@@ -45,7 +45,7 @@ public abstract class OptionMenuEntry<T> {
     }
 
     public T getSelectedValue() {
-        return valueList.get(selectedValueIndex);
+        return optionValues.get(selectedValueIndex);
     }
 
     public String getSelectedValueText() {

@@ -90,7 +90,7 @@ public class PacManXXL_StartPage implements GameUI_StartPage {
                 }
                 case ENTER -> {
                     voicePlayer.stop();
-                    menu.startGame(ui.context().currentGame());
+                    menu.startSelectedGame();
                 }
                 case ESCAPE -> voicePlayer.stop();
             }
