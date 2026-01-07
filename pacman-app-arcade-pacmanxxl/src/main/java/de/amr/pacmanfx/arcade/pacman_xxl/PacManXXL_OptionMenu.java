@@ -11,7 +11,6 @@ import de.amr.pacmanfx.ui.api.ArcadePalette;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.Ufx;
-import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.widgets.OptionMenu;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuEntry;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuStyle;
@@ -171,6 +170,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         addEntry(entryMapOrder);
 
         chaseAnimation.setOffsetY(TS(23.5f));
+        chaseAnimation.scalingProperty().bind(scalingProperty());
 
         drawLoop = new AnimationTimer() {
             @Override
@@ -183,10 +183,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         gameVariantProperty().addListener((_, _, newVariant) -> {
             if (ui != null) {
                 final GameUI_Config uiConfig = ui.config(newVariant.name());
-                chaseAnimation.init(uiConfig);
-                final ActorRenderer actorRenderer = uiConfig.createActorRenderer(canvas);
-                actorRenderer.scalingProperty().bind(scalingProperty());
-                chaseAnimation.setActorRenderer(actorRenderer);
+                chaseAnimation.init(uiConfig, canvas);
             }
         });
     }
@@ -219,7 +216,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
 
         requestFocus();
 
-        chaseAnimation.init(ui.currentConfig());
+        chaseAnimation.init(ui.currentConfig(), canvas);
     }
 
     @Override

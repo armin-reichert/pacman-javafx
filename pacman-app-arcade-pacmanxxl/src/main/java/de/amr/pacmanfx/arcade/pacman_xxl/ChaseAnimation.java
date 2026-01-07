@@ -10,6 +10,9 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
+import javafx.beans.property.FloatProperty;
+import javafx.beans.property.SimpleFloatProperty;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 
 import java.util.List;
@@ -23,6 +26,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class ChaseAnimation {
 
+    private final FloatProperty scaling = new SimpleFloatProperty(1);
     private float offsetY;
     private Pac pac;
     private List<Ghost> ghosts;
@@ -31,15 +35,15 @@ public class ChaseAnimation {
 
     public ChaseAnimation() {}
 
+    public FloatProperty scalingProperty() {
+        return scaling;
+    }
+
     public void setOffsetY(float y) {
         offsetY = y;
     }
 
-    public void setActorRenderer(ActorRenderer actorRenderer) {
-        this.actorRenderer = requireNonNull(actorRenderer);
-    }
-
-    public void init(GameUI_Config uiConfig) {
+    public void init(GameUI_Config uiConfig, Canvas canvas) {
         requireNonNull(uiConfig);
 
         pac = ArcadePacMan_GameModel.createPacMan();
@@ -54,6 +58,9 @@ public class ChaseAnimation {
 
         pac.playAnimation(Pac.AnimationID.PAC_MUNCHING);
         ghosts.forEach(ghost -> ghost.playAnimation(Ghost.AnimationID.GHOST_NORMAL));
+
+        final ActorRenderer actorRenderer = uiConfig.createActorRenderer(canvas);
+        actorRenderer.scalingProperty().bind(scalingProperty());
 
         reset();
     }

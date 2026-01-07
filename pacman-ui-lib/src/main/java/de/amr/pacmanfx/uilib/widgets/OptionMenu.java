@@ -131,26 +131,35 @@ public class OptionMenu {
     protected void handleKeyPress(KeyEvent e) {
         switch (e.getCode()) {
             case DOWN -> {
-                playSound(style.entrySelectedSound());
-                selectedEntryIndex++;
-                if (selectedEntryIndex == entries.size()) selectedEntryIndex = 0;
+                selectNextEntry();
                 e.consume();
             }
             case UP -> {
-                playSound(style.entrySelectedSound());
-                selectedEntryIndex--;
-                if (selectedEntryIndex == -1) selectedEntryIndex = entries.size() - 1;
+                selectedPrevEntry();
                 e.consume();
             }
             case SPACE -> {
-                playSound(style.valueSelectedSound());
-                OptionMenuEntry<?> entry = entries.get(selectedEntryIndex);
-                entry.selectedValueIndex++;
-                if (entry.selectedValueIndex == entry.valueList.size()) entry.selectedValueIndex = 0;
-                entry.onValueChanged(entry.selectedValueIndex);
+                selectNextValue();
                 e.consume();
             }
         }
+    }
+
+    protected void selectedPrevEntry() {
+        playSound(style.entrySelectedSound());
+        selectedEntryIndex = selectedEntryIndex > 0 ? selectedEntryIndex - 1 : entries.size() - 1;
+    }
+
+    protected void selectNextEntry() {
+        playSound(style.entrySelectedSound());
+        selectedEntryIndex = selectedEntryIndex < entries.size() - 1 ? selectedEntryIndex + 1 : 0;
+    }
+
+    protected void selectNextValue() {
+        playSound(style.valueSelectedSound());
+        final OptionMenuEntry<?> entry = entries.get(selectedEntryIndex);
+        entry.selectedValueIndex = entry.selectedValueIndex < entry.valueList.size() - 1 ? entry.selectedValueIndex + 1 : 0;
+        entry.onValueChanged(entry.selectedValueIndex);
     }
 
     public Node root() { return root; }
