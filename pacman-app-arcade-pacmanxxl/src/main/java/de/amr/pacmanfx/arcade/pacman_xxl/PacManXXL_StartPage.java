@@ -121,7 +121,10 @@ public class PacManXXL_StartPage implements GameUI_StartPage {
         final StandardGameVariant gameVariant = menu.gameVariantProperty().get();
         switch (gameVariant) {
             case null -> ui.selectGameVariant(ARCADE_PACMAN_XXL.name());
-            case ARCADE_PACMAN_XXL,ARCADE_MS_PACMAN_XXL -> ui.selectGameVariant(gameVariant.name());
+            case ARCADE_PACMAN_XXL,ARCADE_MS_PACMAN_XXL -> {
+                ui.selectGameVariant(gameVariant.name());
+                menu.init(ui);
+            }
             default -> Logger.error("Unexpected game variant in XXL menu: {}", gameVariant);
         }
     }
