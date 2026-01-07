@@ -59,7 +59,7 @@ public class ChaseAnimation {
         pac.playAnimation(Pac.AnimationID.PAC_MUNCHING);
         ghosts.forEach(ghost -> ghost.playAnimation(Ghost.AnimationID.GHOST_NORMAL));
 
-        final ActorRenderer actorRenderer = uiConfig.createActorRenderer(canvas);
+        actorRenderer = uiConfig.createActorRenderer(canvas);
         actorRenderer.scalingProperty().bind(scalingProperty());
 
         reset();
