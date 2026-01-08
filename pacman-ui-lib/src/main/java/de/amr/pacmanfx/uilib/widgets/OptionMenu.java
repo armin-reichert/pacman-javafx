@@ -79,8 +79,8 @@ public class OptionMenu {
         }
     }
 
-    protected void playSound(AudioClip clip) {
-        if (soundEnabled.get()) {
+    protected void playSoundIfPresent(AudioClip clip) {
+        if (clip != null && soundEnabled.get()) {
             clip.play();
         }
     }
@@ -145,20 +145,27 @@ public class OptionMenu {
         }
     }
 
-    protected void selectedPrevEntry() {
-        playSound(style.entrySelectedSound());
-        selectedEntryIndex = selectedEntryIndex > 0 ? selectedEntryIndex - 1 : entries.size() - 1;
+    private void selectedPrevEntry() {
+        final int prevIndex = selectedEntryIndex > 0 ? selectedEntryIndex - 1 : entries.size() - 1;
+        if (entries.get(prevIndex).enabled) {
+            selectedEntryIndex = prevIndex;
+            playSoundIfPresent(style.entrySelectedSound());
+        }
     }
 
-    protected void selectNextEntry() {
-        playSound(style.entrySelectedSound());
-        selectedEntryIndex = selectedEntryIndex < entries.size() - 1 ? selectedEntryIndex + 1 : 0;
+    private void selectNextEntry() {
+        final int nextIndex = selectedEntryIndex < entries.size() - 1 ? selectedEntryIndex + 1 : 0;
+        if (entries.get(nextIndex).enabled) {
+            selectedEntryIndex = nextIndex;
+            playSoundIfPresent(style.entrySelectedSound());
+        }
     }
 
-    protected void selectNextValue() {
-        playSound(style.valueSelectedSound());
+    private void selectNextValue() {
         final OptionMenuEntry<?> entry = entries.get(selectedEntryIndex);
-        entry.selectedValueIndex = entry.selectedValueIndex < entry.optionValues.size() - 1 ? entry.selectedValueIndex + 1 : 0;
+        entry.selectedValueIndex = entry.selectedValueIndex < entry.optionValues.size() - 1
+            ? entry.selectedValueIndex + 1 : 0;
+        playSoundIfPresent(style.valueSelectedSound());
         entry.onValueSelectionChange();
     }
 

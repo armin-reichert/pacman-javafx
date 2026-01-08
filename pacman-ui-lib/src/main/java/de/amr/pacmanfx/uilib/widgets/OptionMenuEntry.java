@@ -21,17 +21,27 @@ public class OptionMenuEntry<T> {
     protected boolean enabled;
 
     public OptionMenuEntry(String text, List<T> values, T initialValue) {
-        this.value = new SimpleObjectProperty<>(initialValue);
-        this.text = requireNonNull(text);
-        if (requireNonNull(values).isEmpty()) {
-            throw new IllegalArgumentException("Menu entry must provide at least one value");
+        requireNonNull(text);
+        requireNonNull(initialValue);
+        requireNonNull(values);
+        if (values.isEmpty()) {
+            throw new IllegalArgumentException("Menu entry values list is empty");
         }
         if (values.stream().anyMatch(Objects::isNull)) {
-            throw new IllegalArgumentException("Menu entry contains NULL value");
+            throw new IllegalArgumentException("Menu entry values list contains NULL value");
         }
-        optionValues = List.copyOf(values);
-        enabled = true;
-        selectedValueIndex = 0;
+
+        this.value = new SimpleObjectProperty<>(initialValue);
+        this.selectedValueIndex = values.indexOf(initialValue);
+        if (this.selectedValueIndex == -1) {
+            Logger.error("Initial value {} is not contained in values list, using first value instead");
+            this.value.set(values.getFirst());
+            this.selectedValueIndex = 0;
+        }
+
+        this.text = text;
+        this.optionValues = List.copyOf(values);
+        this.enabled = true;
     }
 
     public ObjectProperty<T> valueProperty() {
@@ -43,11 +53,7 @@ public class OptionMenuEntry<T> {
     }
 
     protected void onValueSelectionChange() {
-        if (enabled) {
-            value.set(getSelectedValue());
-        } else {
-            Logger.error("How can value selection change for disabled menu entry?");
-        }
+        value.set(getSelectedValue());
     }
 
     public void setEnabled(boolean enabled) {
