@@ -34,11 +34,6 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         "GAME VARIANT", List.of(ARCADE_PACMAN_XXL, ARCADE_MS_PACMAN_XXL), ARCADE_PACMAN_XXL)
     {
         @Override
-        protected void onValueChanged(int index) {
-            value.set(getSelectedValue());
-        }
-
-        @Override
         public String getSelectedValueText() {
             return switch (value()) {
                 case null -> "";
@@ -52,12 +47,6 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     public final OptionMenuEntry<Boolean> entryPlay3D = new OptionMenuEntry<>(
         "SCENE DISPLAY", List.of(true, false), false)
     {
-
-        @Override
-        protected void onValueChanged(int index) {
-            value.set(getSelectedValue());
-        }
-
         @Override
         public String getSelectedValueText() {
             return value() ? "3D" : "2D";
@@ -67,12 +56,6 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     public final OptionMenuEntry<Boolean> entryCutScenesEnabled = new OptionMenuEntry<>(
         "CUTSCENES", List.of(true, false), true)
     {
-
-        @Override
-        protected void onValueChanged(int index) {
-            valueProperty().set(getSelectedValue());
-        }
-
         @Override
         public String getSelectedValueText() {
             return value() ? "ON" : "OFF";
@@ -87,13 +70,6 @@ public class PacManXXL_OptionMenu extends OptionMenu {
             WorldMapSelectionMode.NO_CUSTOM_MAPS),
         WorldMapSelectionMode.CUSTOM_MAPS_FIRST)
     {
-        @Override
-        protected void onValueChanged(int index) {
-            if (enabled) {
-                value.set(getSelectedValue());
-            }
-        }
-
         @Override
         public String getSelectedValueText() {
             if (!enabled) {

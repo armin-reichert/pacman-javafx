@@ -159,7 +159,7 @@ public class OptionMenu {
         playSound(style.valueSelectedSound());
         final OptionMenuEntry<?> entry = entries.get(selectedEntryIndex);
         entry.selectedValueIndex = entry.selectedValueIndex < entry.optionValues.size() - 1 ? entry.selectedValueIndex + 1 : 0;
-        entry.onValueChanged(entry.selectedValueIndex);
+        entry.onValueSelectionChange();
     }
 
     public Node root() { return root; }

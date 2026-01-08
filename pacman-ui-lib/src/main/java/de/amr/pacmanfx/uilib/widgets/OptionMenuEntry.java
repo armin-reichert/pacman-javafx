@@ -6,13 +6,14 @@ package de.amr.pacmanfx.uilib.widgets;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import org.tinylog.Logger;
 
 import java.util.List;
 import java.util.Objects;
 
 import static java.util.Objects.requireNonNull;
 
-public abstract class OptionMenuEntry<T> {
+public class OptionMenuEntry<T> {
     protected final ObjectProperty<T> value;
     protected final String text;
     protected final List<T> optionValues;
@@ -41,13 +42,20 @@ public abstract class OptionMenuEntry<T> {
         return valueProperty().get();
     }
 
-    protected abstract void onValueChanged(int index);
+    protected void onValueSelectionChange() {
+        if (enabled) {
+            value.set(getSelectedValue());
+        } else {
+            Logger.error("How can value selection change for disabled menu entry?");
+        }
+    }
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 
     public void selectValue(T value) {
+        requireNonNull(value);
         for (int i = 0; i < optionValues.size(); ++i) {
             if (optionValues.get(i).equals(value)) {
                 selectedValueIndex = i;
@@ -62,7 +70,7 @@ public abstract class OptionMenuEntry<T> {
     }
 
     public String getSelectedValueText() {
-        T selectedValue = getSelectedValue();
+        final T selectedValue = getSelectedValue();
         return selectedValue != null ? String.valueOf(selectedValue) : "No value";
     }
 }
