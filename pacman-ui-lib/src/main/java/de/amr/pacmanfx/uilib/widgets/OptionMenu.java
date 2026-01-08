@@ -11,6 +11,8 @@ import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.media.AudioClip;
@@ -27,22 +29,20 @@ public class OptionMenu {
 
     private final int numTilesX;
     private final int numTilesY;
+    private final int textColumn;
+    private final int valueColumn;
 
     private final List<OptionMenuEntry<?>> entries = new ArrayList<>();
     private final BooleanProperty soundEnabled = new SimpleBooleanProperty(true);
     private final FloatProperty scaling = new SimpleFloatProperty(2);
 
     private int selectedEntryIndex = 0;
-    private String title = "";
+    private String title = "OPTIONS";
 
-    private final BorderPane root = new BorderPane();
+    protected final BorderPane root = new BorderPane();
+    protected final Canvas canvas = new Canvas();
     protected OptionMenuRenderer renderer;
-    protected final Canvas canvas;
-
-    protected OptionMenuStyle style = OptionMenuStyle.DEFAULT_OPTION_MENU_STYLE;
-
-    private final int textColumn;
-    private final int valueColumn;
+    protected OptionMenuStyle style;
 
     public OptionMenu(int numTilesX, int numTilesY, int textColumn, int valueColumn) {
         this.numTilesX = numTilesX;
@@ -50,20 +50,18 @@ public class OptionMenu {
         this.textColumn = textColumn;
         this.valueColumn = valueColumn;
 
-        setTitle("OPTIONS");
-
-        canvas = new Canvas();
-        canvas.widthProperty().bind(scaling.multiply(numTilesX*TS));
-        canvas.heightProperty().bind(scaling.multiply(numTilesY*TS));
+        canvas.widthProperty() .bind(scaling.multiply(numTilesX * TS));
+        canvas.heightProperty().bind(scaling.multiply(numTilesY * TS));
 
         renderer = new OptionMenuRenderer(canvas);
         renderer.scalingProperty().bind(scalingProperty());
 
-        root.setCenter(canvas);
-        root.setBorder(Border.stroke(style.borderStroke()));
         root.maxWidthProperty().bind(canvas.widthProperty());
         root.maxHeightProperty().bind(canvas.heightProperty());
         root.addEventHandler(KeyEvent.KEY_PRESSED, this::handleKeyPress);
+        root.setCenter(canvas);
+
+        setStyle(OptionMenuStyle.DEFAULT_OPTION_MENU_STYLE);
     }
 
     public Canvas canvas() {
@@ -162,6 +160,10 @@ public class OptionMenu {
         return selectedEntryIndex;
     }
 
+    public OptionMenuEntry<?> selectedEntry(){
+        return entries.isEmpty() ? null : entries.get(selectedEntryIndex);
+    }
+
     public String title() {
         return title;
     }
@@ -174,6 +176,9 @@ public class OptionMenu {
 
     public void setStyle(OptionMenuStyle style) {
         this.style = requireNonNull(style);
+        root.setBackground(new Background(new BackgroundFill(style.backgroundFill(), null, null)));
+        root.setBorder(Border.stroke(style.borderStroke()));
+        draw();
     }
 
     public int textColumn() {
