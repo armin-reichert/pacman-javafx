@@ -10,7 +10,6 @@ import de.amr.pacmanfx.model.world.WorldMapSelectionMode;
 import de.amr.pacmanfx.ui.api.ArcadePalette;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
-import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.widgets.OptionMenu;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuEntry;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuStyle;
@@ -25,7 +24,6 @@ import java.util.List;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.model.StandardGameVariant.ARCADE_MS_PACMAN_XXL;
 import static de.amr.pacmanfx.model.StandardGameVariant.ARCADE_PACMAN_XXL;
-import static de.amr.pacmanfx.uilib.widgets.OptionMenuStyle.DEFAULT_OPTION_MENU_STYLE;
 import static java.util.Objects.requireNonNull;
 
 public class PacManXXL_OptionMenu extends OptionMenu {
@@ -93,15 +91,10 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         final OptionMenuStyle style = OptionMenuStyle.builder()
             .titleFont(Font.font(GameUI.FONT_PAC_FONT_GOOD.getFamily(), 32))
             .textFont(GameUI.FONT_ARCADE_8)
-            .backgroundFill(Ufx.colorWithOpacity(DEFAULT_OPTION_MENU_STYLE.backgroundFill(), 0.5))
-            .borderStroke(DEFAULT_OPTION_MENU_STYLE.borderStroke())
             .titleTextFill(ArcadePalette.ARCADE_RED)
             .entryTextFill(ArcadePalette.ARCADE_YELLOW)
             .entryValueFill(ArcadePalette.ARCADE_WHITE)
-            .entryValueDisabledFill(DEFAULT_OPTION_MENU_STYLE.entryValueDisabledFill())
             .hintTextFill(ArcadePalette.ARCADE_YELLOW)
-            .entrySelectedSound(DEFAULT_OPTION_MENU_STYLE.entrySelectedSound())
-            .valueSelectedSound(DEFAULT_OPTION_MENU_STYLE.valueSelectedSound())
             .build();
 
         setStyle(style);
