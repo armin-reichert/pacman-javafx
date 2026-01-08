@@ -47,6 +47,7 @@ public class PacManXXL_StartPage implements GameUI_StartPage {
         root.getChildren().addAll(flyer);
 
         menu = new PacManXXL_OptionMenu();
+        menu.setRenderer(new PacManXXL_OptionMenuRenderer(menu.canvas()));
     }
 
     @Override

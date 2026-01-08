@@ -14,8 +14,6 @@ import de.amr.pacmanfx.uilib.widgets.OptionMenu;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuEntry;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuStyle;
 import javafx.animation.AnimationTimer;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
@@ -147,48 +145,6 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         chaseAnimation.init(ui.currentConfig(), canvas);
     }
 
-    @Override
-    protected void drawUsageInfo() {
-        final GraphicsContext ctx = renderer.ctx();
-        final Color normal = style.hintTextFill(), bright = style.entryValueFill();
-
-        ctx.setFont(style.textFont());
-
-        double y = TS(numTilesY() - 8);
-        ctx.setFill(normal);
-        ctx.fillText("SELECT OPTIONS WITH", TS(6), y);
-        ctx.setFill(bright);
-        ctx.fillText("UP", TS(26), y);
-        ctx.setFill(normal);
-        ctx.fillText("AND", TS(29), y);
-        ctx.setFill(bright);
-        ctx.fillText("DOWN", TS(33), y);
-
-        y += TS(2);
-        ctx.setFill(normal);
-        ctx.fillText("PRESS", TS(8), y);
-        ctx.setFill(bright);
-        ctx.fillText("SPACE", TS(14), y);
-        ctx.setFill(normal);
-        ctx.fillText("TO CHANGE VALUE", TS(20), y);
-
-        y += TS(2);
-        ctx.setFill(normal);
-        ctx.fillText("PRESS", TS(10), y);
-        ctx.setFill(bright);
-        ctx.fillText("E", TS(16), y);
-        ctx.setFill(normal);
-        ctx.fillText("TO OPEN EDITOR", TS(18), y);
-
-        y += TS(2);
-        ctx.setFill(normal);
-        ctx.fillText("PRESS", TS(11), y);
-        ctx.setFill(bright);
-        ctx.fillText("ENTER", TS(17), y);
-        ctx.setFill(normal);
-        ctx.fillText("TO START", TS(23), y);
-    }
-
     public void logEntries() {
         Logger.info("Menu state: gameVariant={} play3D={} cutScenesEnabled={} mapOrder={}",
             entryGameVariant.value(),
@@ -208,4 +164,5 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     public void stopDrawLoop() {
         drawLoop.stop();
     }
+
 }
