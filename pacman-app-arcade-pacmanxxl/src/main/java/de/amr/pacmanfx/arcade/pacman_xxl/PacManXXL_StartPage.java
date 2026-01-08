@@ -5,10 +5,12 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.pacmanfx.model.StandardGameVariant;
+import de.amr.pacmanfx.ui.api.ArcadePalette;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_StartPage;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.widgets.Flyer;
+import de.amr.pacmanfx.uilib.widgets.OptionMenuStyle;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.input.KeyEvent;
@@ -17,6 +19,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.TS;
@@ -46,7 +49,17 @@ public class PacManXXL_StartPage implements GameUI_StartPage {
         root.setBackground(Background.fill(Color.BLACK));
         root.getChildren().addAll(flyer);
 
+        final OptionMenuStyle style = OptionMenuStyle.builder()
+            .titleFont(Font.font(GameUI.FONT_PAC_FONT_GOOD.getFamily(), 32))
+            .textFont(GameUI.FONT_ARCADE_8)
+            .titleTextFill(ArcadePalette.ARCADE_RED)
+            .entryTextFill(ArcadePalette.ARCADE_YELLOW)
+            .entryValueFill(ArcadePalette.ARCADE_WHITE)
+            .hintTextFill(ArcadePalette.ARCADE_YELLOW)
+            .build();
+
         menu = new PacManXXL_OptionMenu();
+        menu.setStyle(style);
         menu.setRenderer(new PacManXXL_OptionMenuRenderer(menu.canvas()));
     }
 

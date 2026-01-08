@@ -86,17 +86,6 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     public PacManXXL_OptionMenu() {
         super(42, 36, 6, 20);
 
-        final OptionMenuStyle style = OptionMenuStyle.builder()
-            .titleFont(Font.font(GameUI.FONT_PAC_FONT_GOOD.getFamily(), 32))
-            .textFont(GameUI.FONT_ARCADE_8)
-            .titleTextFill(ArcadePalette.ARCADE_RED)
-            .entryTextFill(ArcadePalette.ARCADE_YELLOW)
-            .entryValueFill(ArcadePalette.ARCADE_WHITE)
-            .hintTextFill(ArcadePalette.ARCADE_YELLOW)
-            .build();
-
-        setStyle(style);
-
         setTitle("Pac-Man XXL");
         addEntry(entryGameVariant);
         addEntry(entryPlay3D);
@@ -164,5 +153,4 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     public void stopDrawLoop() {
         drawLoop.stop();
     }
-
 }

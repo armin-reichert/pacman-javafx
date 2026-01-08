@@ -31,8 +31,8 @@ public record OptionMenuStyle(
     private static final AudioClip DEFAULT_VALUE_SELECTION_SOUND
         = RESOURCE_MANAGER.loadAudioClip("/de/amr/pacmanfx/uilib/sounds/menu-select2.wav");
 
-    public static final Font DEFAULT_TITLE_FONT = Font.font("sans", FontWeight.BLACK, 30);
-    public static final Font DEFAULT_TEXT_FONT = Font.font("sans", FontWeight.BOLD, 12);
+    public static final Font DEFAULT_TITLE_FONT = Font.font("monospace", FontWeight.BLACK, 30);
+    public static final Font DEFAULT_TEXT_FONT = Font.font("monospace", FontWeight.BOLD, 12);
     public static final Color DEFAULT_BACKGROUND_FILL = Color.valueOf("0c1568");
     public static final Color DEFAULT_BORDER_STROKE = Color.valueOf("fffeff");
     public static final Color DEFAULT_TITLE_TEXT_FILL = Color.valueOf("fffeff");
