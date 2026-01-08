@@ -36,7 +36,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         @Override
         public String formatValue(StandardGameVariant variant) {
             return switch (variant) {
-                case null -> "";
+                case null -> ""; //TODO may this happen?
                 case ARCADE_PACMAN_XXL    -> "PAC-MAN XXL";
                 case ARCADE_MS_PACMAN_XXL -> "MS.PAC-MAN XXL";
                 default -> "???";
