@@ -7,14 +7,11 @@ package de.amr.pacmanfx.arcade.pacman_xxl;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.StandardGameVariant;
 import de.amr.pacmanfx.model.world.WorldMapSelectionMode;
-import de.amr.pacmanfx.ui.api.ArcadePalette;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.widgets.OptionMenu;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuEntry;
-import de.amr.pacmanfx.uilib.widgets.OptionMenuStyle;
 import javafx.animation.AnimationTimer;
-import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
 import java.util.List;

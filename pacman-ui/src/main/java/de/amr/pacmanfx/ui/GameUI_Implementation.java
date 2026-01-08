@@ -496,7 +496,7 @@ public final class GameUI_Implementation implements GameUI {
         currentConfig().soundManager().stopAll();
         selectView(startPagesView());
         startPagesView().currentStartPage().ifPresent(startPage -> Platform.runLater(() -> {
-            startPage.onEnter(this); // sets game variant!
+            startPage.onEnterStartPage(this); // sets game variant!
             startPage.layoutRoot().requestFocus();
         }));
     }

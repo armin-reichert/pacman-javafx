@@ -76,7 +76,7 @@ public class PacManXXL_StartPage implements GameUI_StartPage {
         root.focusedProperty().addListener((_, _, _) -> {
             if (root.isFocused()) {
                 Logger.info("Focus now on {}, passing to {}", root, menu);
-                onEnter(ui);
+                onEnterStartPage(ui);
             }
         });
 
@@ -121,7 +121,7 @@ public class PacManXXL_StartPage implements GameUI_StartPage {
     }
 
     @Override
-    public void onEnter(GameUI ui) {
+    public void onEnterStartPage(GameUI ui) {
         pauseSec(1, voicePlayer::play).play();
 
         menu.requestFocus();
@@ -140,7 +140,7 @@ public class PacManXXL_StartPage implements GameUI_StartPage {
     }
 
     @Override
-    public void onExit(GameUI ui) {
+    public void onExitStartPage(GameUI ui) {
         voicePlayer.stop();
         menu.stopDrawLoop();
     }

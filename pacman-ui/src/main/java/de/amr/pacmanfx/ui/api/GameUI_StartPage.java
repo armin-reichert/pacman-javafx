@@ -13,11 +13,11 @@ public interface GameUI_StartPage {
 
     void init(GameUI ui);
 
-    default void onEnter(GameUI ui) {
+    default void onEnterStartPage(GameUI ui) {
         Logger.info("Enter start page {}", this);
     }
 
-    default void onExit(GameUI ui) {
+    default void onExitStartPage(GameUI ui) {
         Logger.info("Exit start page {}", this);
     }
 

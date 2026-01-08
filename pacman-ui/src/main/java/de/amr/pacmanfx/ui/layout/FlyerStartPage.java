@@ -87,14 +87,14 @@ public abstract class FlyerStartPage extends StackPane implements GameUI_StartPa
     }
 
     @Override
-    public void onEnter(GameUI ui) {
+    public void onEnterStartPage(GameUI ui) {
         flyer.selectPage(0);
         ui.selectGameVariant(gameVariant);
         ui.currentConfig().soundManager().playVoiceAfterSec(1, SoundID.VOICE_FLYER_TEXT);
     }
 
     @Override
-    public void onExit(GameUI ui) {
+    public void onExitStartPage(GameUI ui) {
         ui.currentConfig().soundManager().stopVoice();
     }
 

@@ -81,7 +81,7 @@ public class StartPagesCarousel extends Carousel implements GameUI_View {
     public void onExit() {
         pauseTimer();
         actionBindings.releaseBindings(GameUI.KEYBOARD);
-        currentStartPage().ifPresent(startPage -> startPage.onExit(ui));
+        currentStartPage().ifPresent(startPage -> startPage.onExitStartPage(ui));
     }
 
     public void setUI(GameUI ui) {
@@ -90,11 +90,11 @@ public class StartPagesCarousel extends Carousel implements GameUI_View {
             Logger.info("Carousel selection changed from {} to {}", ov, nv);
             int oldIndex = ov.intValue(), newIndex = nv.intValue();
             if (oldIndex != -1) {
-                pages.get(oldIndex).onExit(ui);
+                pages.get(oldIndex).onExitStartPage(ui);
             }
             if (newIndex != -1) {
                 GameUI_StartPage startPage = pages.get(newIndex);
-                startPage.onEnter(ui);
+                startPage.onEnterStartPage(ui);
                 startPage.layoutRoot().requestFocus();
             }
         });
