@@ -8,6 +8,7 @@ import de.amr.pacmanfx.model.StandardGameVariant;
 import de.amr.pacmanfx.ui.api.ArcadePalette;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_StartPage;
+import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.widgets.Flyer;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuStyle;
@@ -19,7 +20,6 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.TS;
@@ -50,8 +50,8 @@ public class PacManXXL_StartPage implements GameUI_StartPage {
         root.getChildren().addAll(flyer);
 
         final OptionMenuStyle style = OptionMenuStyle.builder()
-            .titleFont(Font.font(GameUI.FONT_PAC_FONT_GOOD.getFamily(), 32))
-            .textFont(GameUI.FONT_ARCADE_8)
+            .titleFont(Ufx.deriveFont(GameUI.FONT_PAC_FONT_GOOD, 4*TS))
+            .textFont(Ufx.deriveFont(GameUI.FONT_ARCADE_8, TS))
             .titleTextFill(ArcadePalette.ARCADE_RED)
             .entryTextFill(ArcadePalette.ARCADE_YELLOW)
             .entryValueFill(ArcadePalette.ARCADE_WHITE)

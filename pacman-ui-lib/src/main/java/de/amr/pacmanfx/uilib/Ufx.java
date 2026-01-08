@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib;
 
+import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.lib.math.RectShort;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.lib.nes.NES_Palette;
@@ -154,6 +155,12 @@ public interface Ufx {
     static Border border(Color color, double width) {
         requireNonNull(color);
         return new Border(new BorderStroke(color, BorderStrokeStyle.SOLID, null, new BorderWidths(width)));
+    }
+
+    static Font deriveFont(Font font, double size) {
+        requireNonNull(font);
+        Validations.requireNonNegative(size);
+        return Font.font(font.getFamily(), size);
     }
 
     static double textWidth(String s, Font font) {
