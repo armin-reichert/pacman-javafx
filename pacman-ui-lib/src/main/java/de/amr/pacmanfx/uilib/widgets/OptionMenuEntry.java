@@ -69,8 +69,11 @@ public class OptionMenuEntry<T> {
         return optionValues.get(selectedValueIndex);
     }
 
-    public String getSelectedValueText() {
-        final T selectedValue = getSelectedValue();
-        return selectedValue != null ? String.valueOf(selectedValue) : "No value";
+    public String formatValue(T value) {
+        return value != null ? String.valueOf(value) : "No value";
+    }
+
+    public String formatSelectedValue() {
+        return formatValue(getSelectedValue());
     }
 }

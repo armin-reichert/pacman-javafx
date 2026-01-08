@@ -110,7 +110,7 @@ public class OptionMenu {
             ctx.setFill(style.entryTextFill());
             ctx.fillText(entry.text, textCol * TS, y);
             ctx.setFill(entry.enabled ? style.entryValueFill() : style.entryValueDisabledFill());
-            ctx.fillText(entry.getSelectedValueText(), valueCol * TS, y);
+            ctx.fillText(entry.formatSelectedValue(), valueCol * TS, y);
         }
 
         drawUsageInfo();

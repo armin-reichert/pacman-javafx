@@ -34,8 +34,8 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         "GAME VARIANT", List.of(ARCADE_PACMAN_XXL, ARCADE_MS_PACMAN_XXL), ARCADE_PACMAN_XXL)
     {
         @Override
-        public String getSelectedValueText() {
-            return switch (value()) {
+        public String formatValue(StandardGameVariant variant) {
+            return switch (variant) {
                 case null -> "";
                 case ARCADE_PACMAN_XXL    -> "PAC-MAN XXL";
                 case ARCADE_MS_PACMAN_XXL -> "MS.PAC-MAN XXL";
@@ -48,8 +48,8 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         "SCENE DISPLAY", List.of(true, false), false)
     {
         @Override
-        public String getSelectedValueText() {
-            return value() ? "3D" : "2D";
+        public String formatValue(Boolean play3D) {
+            return play3D ? "3D" : "2D";
         }
     };
 
@@ -57,8 +57,8 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         "CUTSCENES", List.of(true, false), true)
     {
         @Override
-        public String getSelectedValueText() {
-            return value() ? "ON" : "OFF";
+        public String formatValue(Boolean cutScenesEnabled) {
+            return cutScenesEnabled ? "YES" : "NO";
         }
     };
 
@@ -71,11 +71,11 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         WorldMapSelectionMode.CUSTOM_MAPS_FIRST)
     {
         @Override
-        public String getSelectedValueText() {
+        public String formatValue(WorldMapSelectionMode mode) {
             if (!enabled) {
                 return "NO CUSTOM MAPS!";
             }
-            return switch (value()) {
+            return switch (mode) {
                 case CUSTOM_MAPS_FIRST -> "CUSTOM MAPS FIRST";
                 case ALL_RANDOM -> "RANDOM ORDER";
                 case NO_CUSTOM_MAPS -> "NO CUSTOM MAPS";
