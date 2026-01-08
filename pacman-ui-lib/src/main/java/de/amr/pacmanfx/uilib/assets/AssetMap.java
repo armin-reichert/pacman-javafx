@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.uilib.assets;
 
 import de.amr.pacmanfx.lib.Disposable;
+import de.amr.pacmanfx.uilib.Ufx;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
@@ -84,7 +85,7 @@ public class AssetMap implements LocalizedTextAccessor, Disposable {
 
     public Font font(String key) { return asset(key, Font.class); }
 
-    public Font font(String key, double size) { return Font.font(font(key).getFamily(), size); }
+    public Font font(String key, double size) { return Ufx.deriveFont(font(key), size); }
 
     public Image image(String key) { return asset(key, Image.class); }
 }

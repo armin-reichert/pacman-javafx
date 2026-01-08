@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.assets;
 
+import de.amr.pacmanfx.uilib.Ufx;
 import javafx.scene.Cursor;
 import javafx.scene.image.Image;
 import javafx.scene.media.AudioClip;
@@ -87,7 +88,7 @@ public interface ResourceManager {
         var font = Font.loadFont(url.toExternalForm(), size);
         if (font == null) {
             Logger.error("Font could not be loaded from URL '{}' ", url);
-            return Font.font(Font.getDefault().getFamily(), size);
+            return Ufx.deriveFont(Font.getDefault(), size);
         }
         return font;
     }

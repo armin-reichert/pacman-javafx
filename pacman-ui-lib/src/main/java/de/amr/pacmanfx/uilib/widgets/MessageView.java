@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.uilib.widgets;
 
 import de.amr.pacmanfx.lib.Disposable;
+import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
 import javafx.animation.Animation;
@@ -86,7 +87,7 @@ public class MessageView extends ImageView implements Disposable {
         g.setStroke(borderColor);
         g.setLineWidth(5);
         g.strokeRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        g.setFont(Font.font(font.getFamily(), canvasFontSize));
+        g.setFont(Ufx.deriveFont(font, canvasFontSize));
         g.setFill(textColor);
         g.fillText(text, 0.5 * QUALITY * MARGIN, 0.8 * QUALITY * height);
         return canvas.snapshot(null, null);

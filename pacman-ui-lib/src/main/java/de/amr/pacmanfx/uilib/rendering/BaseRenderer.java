@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.uilib.rendering;
 
 import de.amr.pacmanfx.lib.math.Vector2i;
+import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -36,8 +37,8 @@ public class BaseRenderer implements Renderer {
 
     public BaseRenderer(Canvas canvas) {
         ctx = requireNonNull(canvas).getGraphicsContext2D();
-        arcadeFont8.bind(scaling.map(_ -> Font.font(DEFAULT_ARCADE_FONT.getFamily(), scaled(8))));
-        arcadeFont6.bind(scaling.map(_ -> Font.font(DEFAULT_ARCADE_FONT.getFamily(), scaled(6))));
+        arcadeFont8.bind(scaling.map(_ -> Ufx.deriveFont(DEFAULT_ARCADE_FONT, scaled(8))));
+        arcadeFont6.bind(scaling.map(_ -> Ufx.deriveFont(DEFAULT_ARCADE_FONT, scaled(6))));
     }
 
     public void clearCanvas() {
