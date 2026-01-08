@@ -61,32 +61,18 @@ public class PacManXXL_StartPage implements GameUI_StartPage {
         menu = new PacManXXL_OptionMenu();
         menu.setStyle(style);
         menu.setRenderer(new PacManXXL_OptionMenuRenderer(menu.canvas()));
+
+        root.getChildren().add(menu.root());
     }
 
     @Override
     public void init(GameUI ui) {
         requireNonNull(ui);
+        addEventHandlers(ui);
+        bindMenu(ui);
+    }
 
-        ui.context().gameVariantNameProperty().addListener((_, _, gameVariantName) -> {
-            if (ARCADE_PACMAN_XXL.name().equals(gameVariantName) || ARCADE_MS_PACMAN_XXL.name().equals(gameVariantName)) {
-                menu.init(ui);
-            }
-        });
-
-        menu.entryCutScenesEnabled.valueProperty().addListener((_,_,enabled) -> ui.context().currentGame().setCutScenesEnabled(enabled));
-
-        menu.entryPlay3D.valueProperty().addListener((_, _, play3D) -> GameUI.PROPERTY_3D_ENABLED.set(play3D));
-
-        menu.scalingProperty().bind(ui.stage().heightProperty()
-                .map(height -> {
-                    double h = height.doubleValue();
-                    h *= 0.8; // take 80% of stage height
-                    h /= TS(menu.numTilesY()); // scale according to menu height
-                    return Math.round(h * 100.0) / 100.0; // round to 2 decimal digits
-                }));
-
-        root.getChildren().add(menu.root());
-
+    private void addEventHandlers(GameUI ui) {
         root.focusedProperty().addListener((_, _, _) -> {
             if (root.isFocused()) {
                 Logger.info("Focus now on {}, passing to {}", root, menu);
@@ -109,6 +95,29 @@ public class PacManXXL_StartPage implements GameUI_StartPage {
                 case ESCAPE -> voicePlayer.stop();
             }
         });
+    }
+
+    private void bindMenu(GameUI ui) {
+        ui.context().gameVariantNameProperty().addListener(
+            (_, _, gameVariantName) -> {
+                if (ARCADE_PACMAN_XXL.name().equals(gameVariantName) || ARCADE_MS_PACMAN_XXL.name().equals(gameVariantName)) {
+                    menu.init(ui);
+                }
+            });
+
+        menu.entryCutScenesEnabled.valueProperty().addListener(
+            (_,_,enabled) -> ui.context().currentGame().setCutScenesEnabled(enabled));
+
+        menu.entryPlay3D.valueProperty().addListener(
+            (_, _, play3D) -> GameUI.PROPERTY_3D_ENABLED.set(play3D));
+
+        menu.scalingProperty().bind(ui.stage().heightProperty().map(
+            height -> {
+                double h = height.doubleValue();
+                h *= 0.8; // take 80% of stage height
+                h /= TS(menu.numTilesY()); // scale according to menu height
+                return Math.round(h * 100.0) / 100.0; // round to 2 decimal digits
+            }));
     }
 
     @Override
