@@ -59,9 +59,9 @@ public class PacManXXL_StartPage implements GameUI_StartPage {
             }
         });
 
-        menu.cutScenesEnabledProperty().addListener((_,_,enabled) -> ui.context().currentGame().setCutScenesEnabled(enabled));
+        menu.entryCutScenesEnabled.valueProperty().addListener((_,_,enabled) -> ui.context().currentGame().setCutScenesEnabled(enabled));
 
-        menu.play3DProperty().addListener((_, _, play3D) -> GameUI.PROPERTY_3D_ENABLED.set(play3D));
+        menu.entryPlay3D.valueProperty().addListener((_, _, play3D) -> GameUI.PROPERTY_3D_ENABLED.set(play3D));
 
         menu.scalingProperty().bind(ui.stage().heightProperty()
                 .map(height -> {
@@ -100,16 +100,19 @@ public class PacManXXL_StartPage implements GameUI_StartPage {
     @Override
     public void onEnter(GameUI ui) {
         pauseSec(1, voicePlayer::play).play();
+
         menu.requestFocus();
         menu.startDrawLoop();
-        final StandardGameVariant gameVariant = menu.gameVariant();
-        switch (gameVariant) {
+
+        menu.entryPlay3D.valueProperty().set(GameUI.PROPERTY_3D_ENABLED.get());
+        final StandardGameVariant selectedGameVariant = menu.entryGameVariant.value();
+        switch (selectedGameVariant) {
             case null -> ui.selectGameVariant(ARCADE_PACMAN_XXL.name());
             case ARCADE_PACMAN_XXL,ARCADE_MS_PACMAN_XXL -> {
-                ui.selectGameVariant(gameVariant.name());
+                ui.selectGameVariant(selectedGameVariant.name());
                 menu.init(ui);
             }
-            default -> Logger.error("Unexpected game variant in XXL menu: {}", gameVariant);
+            default -> Logger.error("Unexpected game variant in XXL menu: {}", selectedGameVariant);
         }
     }
 

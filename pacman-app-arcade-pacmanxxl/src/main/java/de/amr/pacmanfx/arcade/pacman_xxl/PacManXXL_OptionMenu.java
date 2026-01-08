@@ -15,14 +15,12 @@ import de.amr.pacmanfx.uilib.widgets.OptionMenu;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuEntry;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuStyle;
 import javafx.animation.AnimationTimer;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
+
+import java.util.List;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.model.StandardGameVariant.ARCADE_MS_PACMAN_XXL;
@@ -32,57 +30,17 @@ import static java.util.Objects.requireNonNull;
 
 public class PacManXXL_OptionMenu extends OptionMenu {
 
-    // State
-    private final ObjectProperty<StandardGameVariant> gameVariant = new SimpleObjectProperty<>();
-    private final BooleanProperty play3D = new SimpleBooleanProperty();
-    private final BooleanProperty cutScenesEnabled = new SimpleBooleanProperty();
-    private final ObjectProperty<WorldMapSelectionMode> mapOrder = new SimpleObjectProperty<>();
-
-    public ObjectProperty<StandardGameVariant> gameVariantProperty() {
-        return gameVariant;
-    }
-
-    public StandardGameVariant gameVariant() {
-        return gameVariantProperty().get();
-    }
-
-    public BooleanProperty play3DProperty() {
-        return play3D;
-    }
-
-    public boolean play3D() {
-        return play3DProperty().get();
-    }
-
-    public BooleanProperty cutScenesEnabledProperty() {
-        return cutScenesEnabled;
-    }
-
-    public boolean cutScenesEnabled() {
-        return cutScenesEnabledProperty().get();
-    }
-
-    public ObjectProperty<WorldMapSelectionMode> mapOrderProperty() {
-        return mapOrder;
-    }
-
-    public WorldMapSelectionMode mapOrder() {
-        return mapOrderProperty().get();
-    }
-
-    // Entries
-
-    private final OptionMenuEntry<StandardGameVariant> entryGameVariant = new OptionMenuEntry<>(
-        "GAME VARIANT", ARCADE_PACMAN_XXL, ARCADE_MS_PACMAN_XXL)
+    public final OptionMenuEntry<StandardGameVariant> entryGameVariant = new OptionMenuEntry<>(
+        "GAME VARIANT", List.of(ARCADE_PACMAN_XXL, ARCADE_MS_PACMAN_XXL), ARCADE_PACMAN_XXL)
     {
         @Override
         protected void onValueChanged(int index) {
-            gameVariantProperty().set(getSelectedValue());
+            value.set(getSelectedValue());
         }
 
         @Override
         public String getSelectedValueText() {
-            return switch (gameVariant()) {
+            return switch (value()) {
                 case null -> "";
                 case ARCADE_PACMAN_XXL    -> "PAC-MAN XXL";
                 case ARCADE_MS_PACMAN_XXL -> "MS.PAC-MAN XXL";
@@ -91,39 +49,48 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         }
     };
 
-    private final OptionMenuEntry<Boolean> entryPlay3D = new OptionMenuEntry<>("SCENE DISPLAY", true, false) {
+    public final OptionMenuEntry<Boolean> entryPlay3D = new OptionMenuEntry<>(
+        "SCENE DISPLAY", List.of(true, false), false)
+    {
 
         @Override
         protected void onValueChanged(int index) {
-            play3DProperty().set(getSelectedValue());
+            value.set(getSelectedValue());
         }
 
         @Override
         public String getSelectedValueText() {
-            return play3D() ? "3D" : "2D";
+            return value() ? "3D" : "2D";
         }
     };
 
-    private final OptionMenuEntry<Boolean> entryCutScenesEnabled = new OptionMenuEntry<>("CUTSCENES", true, false) {
+    public final OptionMenuEntry<Boolean> entryCutScenesEnabled = new OptionMenuEntry<>(
+        "CUTSCENES", List.of(true, false), true)
+    {
 
         @Override
         protected void onValueChanged(int index) {
-            cutScenesEnabledProperty().set(getSelectedValue());
+            valueProperty().set(getSelectedValue());
         }
 
         @Override
         public String getSelectedValueText() {
-            return cutScenesEnabled() ? "ON" : "OFF";
+            return value() ? "ON" : "OFF";
         }
     };
 
-    private final OptionMenuEntry<WorldMapSelectionMode> entryMapOrder = new OptionMenuEntry<>("MAP ORDER",
-        WorldMapSelectionMode.CUSTOM_MAPS_FIRST, WorldMapSelectionMode.ALL_RANDOM, WorldMapSelectionMode.NO_CUSTOM_MAPS)
+    public final OptionMenuEntry<WorldMapSelectionMode> entryMapOrder = new OptionMenuEntry<>(
+        "MAP ORDER",
+        List.of(
+            WorldMapSelectionMode.CUSTOM_MAPS_FIRST,
+            WorldMapSelectionMode.ALL_RANDOM,
+            WorldMapSelectionMode.NO_CUSTOM_MAPS),
+        WorldMapSelectionMode.CUSTOM_MAPS_FIRST)
     {
         @Override
         protected void onValueChanged(int index) {
             if (enabled) {
-                mapOrderProperty().set(getSelectedValue());
+                value.set(getSelectedValue());
             }
         }
 
@@ -132,7 +99,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
             if (!enabled) {
                 return "NO CUSTOM MAPS!";
             }
-            return switch (mapOrder()) {
+            return switch (value()) {
                 case CUSTOM_MAPS_FIRST -> "CUSTOM MAPS FIRST";
                 case ALL_RANDOM -> "RANDOM ORDER";
                 case NO_CUSTOM_MAPS -> "NO CUSTOM MAPS";
@@ -179,7 +146,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
             }
         };
 
-        gameVariantProperty().addListener((_, _, newVariant) -> {
+        entryGameVariant.valueProperty().addListener((_, _, newVariant) -> {
             if (ui != null) {
                 final GameUI_Config uiConfig = ui.config(newVariant.name());
                 chaseAnimation.init(uiConfig, canvas);
@@ -192,28 +159,20 @@ public class PacManXXL_OptionMenu extends OptionMenu {
 
         final Game game = ui.context().currentGame();
         final StandardGameVariant gameVariant = StandardGameVariant.valueOf(ui.context().gameVariantName());
-        final var mapSelector = (PacManXXL_MapSelector) game.mapSelector();
 
+        final var mapSelector = (PacManXXL_MapSelector) game.mapSelector();
         mapSelector.loadMapPrototypes();
 
-        // init state
-        gameVariantProperty().set(gameVariant);
-        play3DProperty().set(GameUI.PROPERTY_3D_ENABLED.get());
-        cutScenesEnabledProperty().set(game.cutScenesEnabled());
-        mapOrderProperty().set(mapSelector.selectionMode());
-
-        soundEnabledProperty().bind(ui.currentConfig().soundManager().muteProperty().not());
-
         // init entries
-        entryCutScenesEnabled.selectValue(cutScenesEnabled());
-        entryGameVariant.selectValue(gameVariant());
-        entryPlay3D.selectValue(play3D());
-        entryMapOrder.selectValue(mapOrder());
+        entryGameVariant.selectValue(gameVariant);
+        entryPlay3D.selectValue(GameUI.PROPERTY_3D_ENABLED.get());
+        entryCutScenesEnabled.selectValue(game.cutScenesEnabled());
+        entryMapOrder.selectValue(mapSelector.selectionMode());
         entryMapOrder.setEnabled(!mapSelector.customMapPrototypes().isEmpty());
-
-        logState();
+        logEntries();
 
         requestFocus();
+        soundEnabledProperty().bind(ui.currentConfig().soundManager().muteProperty().not());
 
         chaseAnimation.init(ui.currentConfig(), canvas);
     }
@@ -260,16 +219,16 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         ctx.fillText("TO START", TS(23), y);
     }
 
-    public void logState() {
+    public void logEntries() {
         Logger.info("Menu state: gameVariant={} play3D={} cutScenesEnabled={} mapOrder={}",
-            gameVariant(),
-            play3D(),
-            cutScenesEnabled(),
-            mapOrder());
+            entryGameVariant.value(),
+            entryPlay3D.value(),
+            entryCutScenesEnabled.value(),
+            entryMapOrder.value());
     }
 
     public void startSelectedGame() {
-        ui.selectGameVariant(gameVariant().name());
+        ui.selectGameVariant(entryGameVariant.value().name());
     }
 
     public void startDrawLoop() {
