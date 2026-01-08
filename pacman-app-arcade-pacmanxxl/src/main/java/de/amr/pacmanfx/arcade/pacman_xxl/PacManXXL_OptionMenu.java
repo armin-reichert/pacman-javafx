@@ -90,19 +90,20 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     public PacManXXL_OptionMenu() {
         super(42, 36, 6, 20);
 
-        final var style = new OptionMenuStyle(
-            Font.font(GameUI.FONT_PAC_FONT_GOOD.getFamily(), 32),
-            GameUI.FONT_ARCADE_8,
-            Ufx.colorWithOpacity(DEFAULT_OPTION_MENU_STYLE.backgroundFill(), 0.5),
-            DEFAULT_OPTION_MENU_STYLE.borderStroke(),
-            ArcadePalette.ARCADE_RED,
-            ArcadePalette.ARCADE_YELLOW,
-            ArcadePalette.ARCADE_WHITE,
-            DEFAULT_OPTION_MENU_STYLE.entryValueDisabledFill(),
-            ArcadePalette.ARCADE_YELLOW,
-            DEFAULT_OPTION_MENU_STYLE.entrySelectedSound(),
-            DEFAULT_OPTION_MENU_STYLE.valueSelectedSound()
-        );
+        final OptionMenuStyle style = OptionMenuStyle.builder()
+            .titleFont(Font.font(GameUI.FONT_PAC_FONT_GOOD.getFamily(), 32))
+            .textFont(GameUI.FONT_ARCADE_8)
+            .backgroundFill(Ufx.colorWithOpacity(DEFAULT_OPTION_MENU_STYLE.backgroundFill(), 0.5))
+            .borderStroke(DEFAULT_OPTION_MENU_STYLE.borderStroke())
+            .titleTextFill(ArcadePalette.ARCADE_RED)
+            .entryTextFill(ArcadePalette.ARCADE_YELLOW)
+            .entryValueFill(ArcadePalette.ARCADE_WHITE)
+            .entryValueDisabledFill(DEFAULT_OPTION_MENU_STYLE.entryValueDisabledFill())
+            .hintTextFill(ArcadePalette.ARCADE_YELLOW)
+            .entrySelectedSound(DEFAULT_OPTION_MENU_STYLE.entrySelectedSound())
+            .valueSelectedSound(DEFAULT_OPTION_MENU_STYLE.valueSelectedSound())
+            .build();
+
         setStyle(style);
 
         setTitle("Pac-Man XXL");
