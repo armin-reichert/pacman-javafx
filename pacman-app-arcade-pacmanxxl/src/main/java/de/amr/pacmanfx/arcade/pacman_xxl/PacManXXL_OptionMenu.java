@@ -119,7 +119,10 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         final Game game = ui.context().currentGame();
         final StandardGameVariant gameVariant = StandardGameVariant.valueOf(ui.context().gameVariantName());
 
-        final var mapSelector = (PacManXXL_MapSelector) game.mapSelector();
+        if (!(game.mapSelector() instanceof PacManXXL_MapSelector mapSelector)) {
+            Logger.error("Expected XXL map selector but found {}", game.mapSelector().getClass().getSimpleName());
+            return;
+        }
         mapSelector.loadMapPrototypes();
 
         // init entries
