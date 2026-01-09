@@ -62,23 +62,39 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     }
 
     private void createEntries() {
-        entryGameVariant = new OptionMenuEntry<>("GAME VARIANT", List.of(ARCADE_PACMAN_XXL, ARCADE_MS_PACMAN_XXL), ARCADE_PACMAN_XXL);
+        entryGameVariant = new OptionMenuEntry<>(
+            "GAME VARIANT",
+            List.of(ARCADE_PACMAN_XXL, ARCADE_MS_PACMAN_XXL),
+            ARCADE_PACMAN_XXL
+        );
         entryGameVariant.setValueFormatter(variant -> switch (variant) {
             case ARCADE_PACMAN_XXL    -> "PAC-MAN XXL";
             case ARCADE_MS_PACMAN_XXL -> "MS.PAC-MAN XXL";
             default -> "???";
         });
 
-        entryPlay3D = new OptionMenuEntry<>("SCENE DISPLAY", List.of(true, false), false);
+        entryPlay3D = new OptionMenuEntry<>(
+            "SCENE DISPLAY",
+            List.of(true, false),
+            false
+        );
         entryPlay3D.setValueFormatter(play3D -> play3D ? "3D" : "2D");
 
-        entryCutScenesEnabled = new OptionMenuEntry<>("CUTSCENES", List.of(true, false), true);
+        entryCutScenesEnabled = new OptionMenuEntry<>(
+            "CUTSCENES",
+            List.of(true, false),
+                true
+        );
         entryCutScenesEnabled.setValueFormatter(cutScenesEnabled -> cutScenesEnabled ? "YES" : "NO");
 
-        entryMapOrder = new OptionMenuEntry<>("MAP ORDER", List.of(
-            WorldMapSelectionMode.CUSTOM_MAPS_FIRST,
-            WorldMapSelectionMode.ALL_RANDOM,
-            WorldMapSelectionMode.NO_CUSTOM_MAPS), WorldMapSelectionMode.CUSTOM_MAPS_FIRST);
+        entryMapOrder = new OptionMenuEntry<>(
+            "MAP ORDER",
+            List.of(
+                WorldMapSelectionMode.CUSTOM_MAPS_FIRST,
+                WorldMapSelectionMode.ALL_RANDOM,
+                WorldMapSelectionMode.NO_CUSTOM_MAPS),
+            WorldMapSelectionMode.CUSTOM_MAPS_FIRST
+        );
         entryMapOrder.setValueFormatter(mode -> {
             if (!entryMapOrder.enabled()) {
                 return "NO CUSTOM MAPS!";
