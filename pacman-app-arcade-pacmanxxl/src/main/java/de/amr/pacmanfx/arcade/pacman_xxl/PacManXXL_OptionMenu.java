@@ -30,35 +30,26 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     public static final float Y_OFFSET = 23.5f * TS;
 
     public final OptionMenuEntry<StandardGameVariant> entryGameVariant = new OptionMenuEntry<>(
-        "GAME VARIANT", List.of(ARCADE_PACMAN_XXL, ARCADE_MS_PACMAN_XXL), ARCADE_PACMAN_XXL)
+        "GAME VARIANT", List.of(ARCADE_PACMAN_XXL, ARCADE_MS_PACMAN_XXL), ARCADE_PACMAN_XXL);
     {
-        @Override
-        public String formatValue(StandardGameVariant variant) {
-            return switch (variant) {
-                case ARCADE_PACMAN_XXL    -> "PAC-MAN XXL";
-                case ARCADE_MS_PACMAN_XXL -> "MS.PAC-MAN XXL";
-                default -> "???";
-            };
-        }
-    };
+        entryGameVariant.setValueFormatter(variant -> switch (variant) {
+            case ARCADE_PACMAN_XXL    -> "PAC-MAN XXL";
+            case ARCADE_MS_PACMAN_XXL -> "MS.PAC-MAN XXL";
+            default -> "???";
+        });
+    }
 
     public final OptionMenuEntry<Boolean> entryPlay3D = new OptionMenuEntry<>(
-        "SCENE DISPLAY", List.of(true, false), false)
+        "SCENE DISPLAY", List.of(true, false), false);
     {
-        @Override
-        public String formatValue(Boolean play3D) {
-            return play3D ? "3D" : "2D";
-        }
-    };
+        entryPlay3D.setValueFormatter(play3D -> play3D ? "3D" : "2D");
+    }
 
     public final OptionMenuEntry<Boolean> entryCutScenesEnabled = new OptionMenuEntry<>(
-        "CUTSCENES", List.of(true, false), true)
+        "CUTSCENES", List.of(true, false), true);
     {
-        @Override
-        public String formatValue(Boolean cutScenesEnabled) {
-            return cutScenesEnabled ? "YES" : "NO";
-        }
-    };
+        entryCutScenesEnabled.setValueFormatter(cutScenesEnabled -> cutScenesEnabled ? "YES" : "NO");
+    }
 
     public final OptionMenuEntry<WorldMapSelectionMode> entryMapOrder = new OptionMenuEntry<>(
         "MAP ORDER",
@@ -66,11 +57,10 @@ public class PacManXXL_OptionMenu extends OptionMenu {
             WorldMapSelectionMode.CUSTOM_MAPS_FIRST,
             WorldMapSelectionMode.ALL_RANDOM,
             WorldMapSelectionMode.NO_CUSTOM_MAPS),
-        WorldMapSelectionMode.CUSTOM_MAPS_FIRST)
+        WorldMapSelectionMode.CUSTOM_MAPS_FIRST);
     {
-        @Override
-        public String formatValue(WorldMapSelectionMode mode) {
-            if (!enabled) {
+        entryMapOrder.setValueFormatter(mode -> {
+            if (!entryMapOrder.enabled()) {
                 return "NO CUSTOM MAPS!";
             }
             return switch (mode) {
@@ -78,8 +68,8 @@ public class PacManXXL_OptionMenu extends OptionMenu {
                 case ALL_RANDOM -> "RANDOM ORDER";
                 case NO_CUSTOM_MAPS -> "NO CUSTOM MAPS";
             };
-        }
-    };
+        });
+    }
 
     private final ChaseAnimation chaseAnimation = new ChaseAnimation();
     private GameUI ui;
