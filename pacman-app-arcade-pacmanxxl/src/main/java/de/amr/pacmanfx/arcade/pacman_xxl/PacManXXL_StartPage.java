@@ -10,17 +10,15 @@ import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_StartPage;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
-import de.amr.pacmanfx.uilib.widgets.Flyer;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuStyle;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.MediaPlayer;
-import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.TS;
@@ -35,24 +33,19 @@ import static java.util.Objects.requireNonNull;
 public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
 
     private static final ResourceManager LOCAL_RESOURCES = () -> PacManXXL_StartPage.class;
-    private static final Image BACKGROUND_IMAGE = LOCAL_RESOURCES.loadImage("graphics/screenshot.png");
+    private static final Image WALLPAPER = LOCAL_RESOURCES.loadImage("graphics/screenshot.png");
 
     private final MediaPlayer voicePlayer = new MediaPlayer(LOCAL_RESOURCES.loadMedia("sound/game-description.mp3"));
     private final StringProperty title = new SimpleStringProperty("Pac-Man XXL games");
     private final PacManXXL_OptionMenu menu;
 
+    private GameUI ui;
+
     public PacManXXL_StartPage() {
-        final var flyer = new Flyer(BACKGROUND_IMAGE);
-        flyer.setPageLayout(0, Flyer.LayoutMode.FILL);
-        flyer.selectPage(0);
-
-        setBackground(Background.fill(Color.BLACK));
-        getChildren().addAll(flyer);
-
         final OptionMenuStyle style = OptionMenuStyle.builder()
             .titleFont(Ufx.deriveFont(GameUI.FONT_PAC_FONT_GOOD, 4*TS))
-            .textFont(Ufx.deriveFont(GameUI.FONT_ARCADE_8, TS))
             .titleTextFill(ArcadePalette.ARCADE_RED)
+            .textFont(Ufx.deriveFont(GameUI.FONT_ARCADE_8, TS))
             .entryTextFill(ArcadePalette.ARCADE_YELLOW)
             .entryValueFill(ArcadePalette.ARCADE_WHITE)
             .hintTextFill(ArcadePalette.ARCADE_YELLOW)
@@ -62,62 +55,86 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
         menu.setStyle(style);
         menu.setRenderer(new PacManXXL_OptionMenuRenderer(menu.canvas()));
 
-        getChildren().add(menu.root());
-    }
+        setBackground(Ufx.createWallpaper(WALLPAPER));
+        getChildren().addAll(menu.root());
 
-    @Override
-    public void init(GameUI ui) {
-        requireNonNull(ui);
-        addEventHandlers(ui);
-        bindMenu(ui);
-    }
-
-    private void addEventHandlers(GameUI ui) {
         focusedProperty().addListener((_, _, _) -> {
             if (isFocused()) {
                 Logger.info("Focus now on {}, passing to {}", this, menu);
                 onEnterStartPage(ui);
             }
         });
+    }
 
+    @Override
+    public void init(GameUI ui) {
+        this.ui = requireNonNull(ui);
+        addKeyEventHandler(ui);
+        bindMenu(ui);
+    }
+
+    private void addKeyEventHandler(GameUI ui) {
         addEventHandler(KeyEvent.KEY_PRESSED, e -> {
-            Logger.info("Key '{}' pressed!", e.getCode());
             ui.startPagesView().pauseTimer();
             switch (e.getCode()) {
                 case E -> {
+                    Logger.info("Key '{}': Open editor.", e.getCode());
                     voicePlayer.stop();
                     ui.showEditorView();
                 }
                 case ENTER -> {
+                    Logger.info("Key '{}': Start game.", e.getCode());
                     voicePlayer.stop();
                     menu.startSelectedGame();
                 }
-                case ESCAPE -> voicePlayer.stop();
+                case ESCAPE -> {
+                    Logger.info("Key '{}': Mute voice.", e.getCode());
+                    voicePlayer.stop();
+                }
+                default -> Logger.info("Key '{}': No action assigned.", e.getCode());
             }
         });
     }
 
+    private ChangeListener<String> gameVariantNameListener;
+    private ChangeListener<Boolean> cutScenesEnabledListener;
+    private ChangeListener<Boolean> play3DListener;
+
     private void bindMenu(GameUI ui) {
-        ui.context().gameVariantNameProperty().addListener(
-            (_, _, gameVariantName) -> {
-                if (ARCADE_PACMAN_XXL.name().equals(gameVariantName) || ARCADE_MS_PACMAN_XXL.name().equals(gameVariantName)) {
-                    menu.init(ui);
-                }
-            });
+        unbindMenu();
 
-        menu.entryCutScenesEnabled.valueProperty().addListener(
-            (_,_,enabled) -> ui.context().currentGame().setCutScenesEnabled(enabled));
+        gameVariantNameListener = (_, _, gameVariantName) -> {
+            if (ARCADE_PACMAN_XXL.name().equals(gameVariantName) || ARCADE_MS_PACMAN_XXL.name().equals(gameVariantName)) {
+                menu.init(ui);
+            }
+        };
+        ui.context().gameVariantNameProperty().addListener(gameVariantNameListener);
 
-        menu.entryPlay3D.valueProperty().addListener(
-            (_, _, play3D) -> GameUI.PROPERTY_3D_ENABLED.set(play3D));
+        cutScenesEnabledListener = (_,_,enabled) -> ui.context().currentGame().setCutScenesEnabled(enabled);
+        menu.entryCutScenesEnabled.valueProperty().addListener(cutScenesEnabledListener);
 
-        menu.scalingProperty().bind(ui.stage().heightProperty().map(
-            height -> {
-                double h = height.doubleValue();
-                h *= 0.8; // take 80% of stage height
-                h /= TS(menu.numTilesY()); // scale according to menu height
-                return Math.round(h * 100.0) / 100.0; // round to 2 decimal digits
-            }));
+        play3DListener = (_, _, play3D) -> GameUI.PROPERTY_3D_ENABLED.set(play3D);
+        menu.entryPlay3D.valueProperty().addListener(play3DListener);
+
+        menu.scalingProperty().bind(ui.stage().heightProperty().map(height -> {
+            double h = height.doubleValue();
+            h *= 0.8; // take 80% of stage height
+            h /= TS(menu.numTilesY()); // scale according to menu height
+            return Math.round(h * 100.0) / 100.0; // round to 2 decimal digits
+        }));
+    }
+
+    private void unbindMenu() {
+        if (gameVariantNameListener != null) {
+            ui.context().gameVariantNameProperty().removeListener(gameVariantNameListener);
+        }
+        if (cutScenesEnabledListener != null) {
+            menu.entryCutScenesEnabled.valueProperty().removeListener(cutScenesEnabledListener);
+        }
+        if (play3DListener != null) {
+            menu.entryPlay3D.valueProperty().removeListener(play3DListener);
+        }
+        menu.scalingProperty().unbind();
     }
 
     @Override
@@ -143,6 +160,7 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
     public void onExitStartPage(GameUI ui) {
         voicePlayer.stop();
         menu.stopDrawLoop();
+        unbindMenu();
     }
 
     @Override
