@@ -101,7 +101,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
             @Override
             public void handle(long now) {
                 draw();
-                chaseAnimation.updateAndDraw();
+                chaseAnimation.draw();
             }
         };
 
@@ -153,9 +153,11 @@ public class PacManXXL_OptionMenu extends OptionMenu {
 
     public void startDrawLoop() {
         drawLoop.start();
+        chaseAnimation.start();
     }
 
     public void stopDrawLoop() {
         drawLoop.stop();
+        chaseAnimation.stop();
     }
 }

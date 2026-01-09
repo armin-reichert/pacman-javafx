@@ -10,10 +10,15 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.util.Duration;
+import org.tinylog.Logger;
 
 import java.util.List;
 import java.util.stream.IntStream;
@@ -26,6 +31,10 @@ import static java.util.Objects.requireNonNull;
  */
 public class ChaseAnimation {
 
+    private static final float FPS = 60;
+    private static final Duration FRAME_TIME = Duration.millis(1000.0 / FPS);
+
+    private final Timeline timeline;
     private final FloatProperty scaling = new SimpleFloatProperty(1);
     private float offsetY;
     private Pac pac;
@@ -33,7 +42,11 @@ public class ChaseAnimation {
     private ActorRenderer actorRenderer;
     private boolean ghostsChased;
 
-    public ChaseAnimation() {}
+    public ChaseAnimation() {
+        timeline = new Timeline(new KeyFrame(FRAME_TIME, _ -> update()));
+        timeline.setCycleCount(Animation.INDEFINITE);
+        timeline.statusProperty().addListener((_,_,newStatus) -> Logger.info("Chase animation {}", newStatus));
+    }
 
     public FloatProperty scalingProperty() {
         return scaling;
@@ -41,6 +54,14 @@ public class ChaseAnimation {
 
     public void setOffsetY(float y) {
         offsetY = y;
+    }
+
+    public void start() {
+        timeline.play();
+    }
+
+    public void stop() {
+        timeline.stop();
     }
 
     public void init(GameUI_Config uiConfig, Canvas canvas) {
@@ -82,7 +103,7 @@ public class ChaseAnimation {
         ghostsChased = false;
     }
 
-    public void updateAndDraw() {
+    private void update() {
         if (ghosts.getLast().x() < -4 * TS && !ghostsChased) {
             ghostsChased = true;
             pac.setMoveDir(pac.moveDir().opposite());
@@ -123,8 +144,9 @@ public class ChaseAnimation {
         for (Ghost ghost : ghosts) {
             ghost.move();
         }
+    }
 
-        // draw
+    public void draw() {
         if (actorRenderer != null) {
             final GraphicsContext ctx = actorRenderer.ctx();
             ctx.save();
