@@ -29,47 +29,10 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     public static final int VALUE_COLUMN = 20;
     public static final float Y_OFFSET = 23.5f * TS;
 
-    public final OptionMenuEntry<StandardGameVariant> entryGameVariant = new OptionMenuEntry<>(
-        "GAME VARIANT", List.of(ARCADE_PACMAN_XXL, ARCADE_MS_PACMAN_XXL), ARCADE_PACMAN_XXL);
-    {
-        entryGameVariant.setValueFormatter(variant -> switch (variant) {
-            case ARCADE_PACMAN_XXL    -> "PAC-MAN XXL";
-            case ARCADE_MS_PACMAN_XXL -> "MS.PAC-MAN XXL";
-            default -> "???";
-        });
-    }
-
-    public final OptionMenuEntry<Boolean> entryPlay3D = new OptionMenuEntry<>(
-        "SCENE DISPLAY", List.of(true, false), false);
-    {
-        entryPlay3D.setValueFormatter(play3D -> play3D ? "3D" : "2D");
-    }
-
-    public final OptionMenuEntry<Boolean> entryCutScenesEnabled = new OptionMenuEntry<>(
-        "CUTSCENES", List.of(true, false), true);
-    {
-        entryCutScenesEnabled.setValueFormatter(cutScenesEnabled -> cutScenesEnabled ? "YES" : "NO");
-    }
-
-    public final OptionMenuEntry<WorldMapSelectionMode> entryMapOrder = new OptionMenuEntry<>(
-        "MAP ORDER",
-        List.of(
-            WorldMapSelectionMode.CUSTOM_MAPS_FIRST,
-            WorldMapSelectionMode.ALL_RANDOM,
-            WorldMapSelectionMode.NO_CUSTOM_MAPS),
-        WorldMapSelectionMode.CUSTOM_MAPS_FIRST);
-    {
-        entryMapOrder.setValueFormatter(mode -> {
-            if (!entryMapOrder.enabled()) {
-                return "NO CUSTOM MAPS!";
-            }
-            return switch (mode) {
-                case CUSTOM_MAPS_FIRST -> "CUSTOM MAPS FIRST";
-                case ALL_RANDOM -> "RANDOM ORDER";
-                case NO_CUSTOM_MAPS -> "NO CUSTOM MAPS";
-            };
-        });
-    }
+    private OptionMenuEntry<StandardGameVariant> entryGameVariant;
+    private OptionMenuEntry<Boolean> entryPlay3D;
+    private OptionMenuEntry<Boolean> entryCutScenesEnabled;
+    private OptionMenuEntry<WorldMapSelectionMode> entryMapOrder;
 
     private final ChaseAnimation chaseAnimation = new ChaseAnimation();
     private GameUI ui;
@@ -81,6 +44,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         // Default key code RIGHT is already used to navigate through start pages carousel
         setNextValueKeyCode(KeyCode.SPACE);
 
+        createEntries();
         addEntry(entryGameVariant);
         addEntry(entryPlay3D);
         addEntry(entryCutScenesEnabled);
@@ -94,6 +58,36 @@ public class PacManXXL_OptionMenu extends OptionMenu {
                 final GameUI_Config uiConfig = ui.config(newVariant.name());
                 chaseAnimation.init(uiConfig, canvas);
             }
+        });
+    }
+
+    private void createEntries() {
+        entryGameVariant = new OptionMenuEntry<>("GAME VARIANT", List.of(ARCADE_PACMAN_XXL, ARCADE_MS_PACMAN_XXL), ARCADE_PACMAN_XXL);
+        entryGameVariant.setValueFormatter(variant -> switch (variant) {
+            case ARCADE_PACMAN_XXL    -> "PAC-MAN XXL";
+            case ARCADE_MS_PACMAN_XXL -> "MS.PAC-MAN XXL";
+            default -> "???";
+        });
+
+        entryPlay3D = new OptionMenuEntry<>("SCENE DISPLAY", List.of(true, false), false);
+        entryPlay3D.setValueFormatter(play3D -> play3D ? "3D" : "2D");
+
+        entryCutScenesEnabled = new OptionMenuEntry<>("CUTSCENES", List.of(true, false), true);
+        entryCutScenesEnabled.setValueFormatter(cutScenesEnabled -> cutScenesEnabled ? "YES" : "NO");
+
+        entryMapOrder = new OptionMenuEntry<>("MAP ORDER", List.of(
+            WorldMapSelectionMode.CUSTOM_MAPS_FIRST,
+            WorldMapSelectionMode.ALL_RANDOM,
+            WorldMapSelectionMode.NO_CUSTOM_MAPS), WorldMapSelectionMode.CUSTOM_MAPS_FIRST);
+        entryMapOrder.setValueFormatter(mode -> {
+            if (!entryMapOrder.enabled()) {
+                return "NO CUSTOM MAPS!";
+            }
+            return switch (mode) {
+                case CUSTOM_MAPS_FIRST -> "CUSTOM MAPS FIRST";
+                case ALL_RANDOM -> "RANDOM ORDER";
+                case NO_CUSTOM_MAPS -> "NO CUSTOM MAPS";
+            };
         });
     }
 
@@ -149,5 +143,21 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     public void stopDrawLoop() {
         super.stopDrawLoop();
         chaseAnimation.stop();
+    }
+
+    public OptionMenuEntry<StandardGameVariant> entryGameVariant() {
+        return entryGameVariant;
+    }
+
+    public OptionMenuEntry<Boolean> entryPlay3D() {
+        return entryPlay3D;
+    }
+
+    public OptionMenuEntry<Boolean> entryCutScenesEnabled() {
+        return entryCutScenesEnabled;
+    }
+
+    public OptionMenuEntry<WorldMapSelectionMode> entryMapOrder() {
+        return entryMapOrder;
     }
 }

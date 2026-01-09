@@ -110,10 +110,10 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
         ui.context().gameVariantNameProperty().addListener(gameVariantNameListener);
 
         cutScenesEnabledListener = (_,_,enabled) -> ui.context().currentGame().setCutScenesEnabled(enabled);
-        menu.entryCutScenesEnabled.valueProperty().addListener(cutScenesEnabledListener);
+        menu.entryCutScenesEnabled().valueProperty().addListener(cutScenesEnabledListener);
 
         play3DListener = (_, _, play3D) -> GameUI.PROPERTY_3D_ENABLED.set(play3D);
-        menu.entryPlay3D.valueProperty().addListener(play3DListener);
+        menu.entryPlay3D().valueProperty().addListener(play3DListener);
 
         menu.scalingProperty().bind(ui.stage().heightProperty().map(height -> {
             double h = height.doubleValue();
@@ -128,10 +128,10 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
             ui.context().gameVariantNameProperty().removeListener(gameVariantNameListener);
         }
         if (cutScenesEnabledListener != null) {
-            menu.entryCutScenesEnabled.valueProperty().removeListener(cutScenesEnabledListener);
+            menu.entryCutScenesEnabled().valueProperty().removeListener(cutScenesEnabledListener);
         }
         if (play3DListener != null) {
-            menu.entryPlay3D.valueProperty().removeListener(play3DListener);
+            menu.entryPlay3D().valueProperty().removeListener(play3DListener);
         }
         menu.scalingProperty().unbind();
     }
@@ -143,8 +143,8 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
         menu.requestFocus();
         menu.startDrawLoop();
 
-        menu.entryPlay3D.valueProperty().set(GameUI.PROPERTY_3D_ENABLED.get());
-        final StandardGameVariant selectedGameVariant = menu.entryGameVariant.value();
+        menu.entryPlay3D().valueProperty().set(GameUI.PROPERTY_3D_ENABLED.get());
+        final StandardGameVariant selectedGameVariant = menu.entryGameVariant().value();
         switch (selectedGameVariant) {
             case null -> ui.selectGameVariant(ARCADE_PACMAN_XXL.name());
             case ARCADE_PACMAN_XXL,ARCADE_MS_PACMAN_XXL -> {

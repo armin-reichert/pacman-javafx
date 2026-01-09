@@ -132,7 +132,7 @@ public class ChaseAnimation {
             }
         } else if (ghostsChased) {
             IntStream.range(0, 4).forEach(i -> {
-                if (Math.abs(pac.x() - ghosts.get(i).x()) < 1) {
+                if (Math.abs(pac.x() - ghosts.get(i).x()) < 4) {
                     ghosts.get(i).selectAnimationAt(Ghost.AnimationID.GHOST_POINTS, i);
                     if (i > 0) {
                         ghosts.get(i - 1).setVisible(false);
