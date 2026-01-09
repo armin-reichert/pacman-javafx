@@ -14,6 +14,7 @@ import de.amr.pacmanfx.uilib.widgets.Flyer;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuStyle;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Region;
@@ -31,23 +32,22 @@ import static java.util.Objects.requireNonNull;
 /**
  * Displays an option menu where the game variant to be played and other options can be set.
  */
-public class PacManXXL_StartPage implements GameUI_StartPage {
+public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
 
     private static final ResourceManager LOCAL_RESOURCES = () -> PacManXXL_StartPage.class;
-    private static final String BACKGROUND_IMAGE_PATH = "graphics/screenshot.png";
+    private static final Image BACKGROUND_IMAGE = LOCAL_RESOURCES.loadImage("graphics/screenshot.png");
 
     private final MediaPlayer voicePlayer = new MediaPlayer(LOCAL_RESOURCES.loadMedia("sound/game-description.mp3"));
     private final StringProperty title = new SimpleStringProperty("Pac-Man XXL games");
-    private final StackPane root = new StackPane();
     private final PacManXXL_OptionMenu menu;
 
     public PacManXXL_StartPage() {
-        final var flyer = new Flyer(LOCAL_RESOURCES.loadImage(BACKGROUND_IMAGE_PATH));
+        final var flyer = new Flyer(BACKGROUND_IMAGE);
         flyer.setPageLayout(0, Flyer.LayoutMode.FILL);
         flyer.selectPage(0);
 
-        root.setBackground(Background.fill(Color.BLACK));
-        root.getChildren().addAll(flyer);
+        setBackground(Background.fill(Color.BLACK));
+        getChildren().addAll(flyer);
 
         final OptionMenuStyle style = OptionMenuStyle.builder()
             .titleFont(Ufx.deriveFont(GameUI.FONT_PAC_FONT_GOOD, 4*TS))
@@ -62,7 +62,7 @@ public class PacManXXL_StartPage implements GameUI_StartPage {
         menu.setStyle(style);
         menu.setRenderer(new PacManXXL_OptionMenuRenderer(menu.canvas()));
 
-        root.getChildren().add(menu.root());
+        getChildren().add(menu.root());
     }
 
     @Override
@@ -73,14 +73,14 @@ public class PacManXXL_StartPage implements GameUI_StartPage {
     }
 
     private void addEventHandlers(GameUI ui) {
-        root.focusedProperty().addListener((_, _, _) -> {
-            if (root.isFocused()) {
-                Logger.info("Focus now on {}, passing to {}", root, menu);
+        focusedProperty().addListener((_, _, _) -> {
+            if (isFocused()) {
+                Logger.info("Focus now on {}, passing to {}", this, menu);
                 onEnterStartPage(ui);
             }
         });
 
-        root.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
+        addEventHandler(KeyEvent.KEY_PRESSED, e -> {
             Logger.info("Key '{}' pressed!", e.getCode());
             ui.startPagesView().pauseTimer();
             switch (e.getCode()) {
@@ -147,7 +147,7 @@ public class PacManXXL_StartPage implements GameUI_StartPage {
 
     @Override
     public Region layoutRoot() {
-        return root;
+        return this;
     }
 
     @Override
