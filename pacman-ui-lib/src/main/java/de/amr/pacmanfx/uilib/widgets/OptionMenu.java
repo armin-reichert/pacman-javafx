@@ -10,6 +10,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -35,6 +36,10 @@ public class OptionMenu {
     private final List<OptionMenuEntry<?>> entries = new ArrayList<>();
     private final BooleanProperty soundEnabled = new SimpleBooleanProperty(true);
     private final FloatProperty scaling = new SimpleFloatProperty(2);
+
+    private KeyCode nextEntryKeyCode = KeyCode.DOWN;
+    private KeyCode prevEntryKeyCode = KeyCode.UP;
+    private KeyCode nextValueKeyCode = KeyCode.RIGHT;
 
     private int selectedEntryIndex = 0;
     private String title = "OPTIONS";
@@ -94,19 +99,17 @@ public class OptionMenu {
     }
 
     protected void handleKeyPress(KeyEvent e) {
-        switch (e.getCode()) {
-            case UP -> {
-                e.consume();
-                selectedPrevEntry();
-            }
-            case DOWN -> {
-                e.consume();
-                selectNextEntry();
-            }
-            case SPACE -> {
-                e.consume();
-                selectNextValue();
-            }
+        if (e.getCode() == prevEntryKeyCode) {
+            e.consume();
+            selectedPrevEntry();
+        }
+        else if (e.getCode() == nextEntryKeyCode) {
+            e.consume();
+            selectNextEntry();
+        }
+        else  if (e.getCode() == nextValueKeyCode) {
+            e.consume();
+            selectNextValue();
         }
     }
 
@@ -132,6 +135,18 @@ public class OptionMenu {
             ? entry.selectedValueIndex + 1 : 0;
         playSoundIfPresent(style.valueSelectedSound());
         entry.onValueSelectionChange();
+    }
+
+    public void setNextEntryKeyCode(KeyCode keyCode) {
+        this.nextEntryKeyCode = keyCode;
+    }
+
+    public void setPrevEntryKeyCode(KeyCode keyCode) {
+        this.prevEntryKeyCode = keyCode;
+    }
+
+    public void setNextValueKeyCode(KeyCode keyCode) {
+        this.nextValueKeyCode = keyCode;
     }
 
     public Node root() { return root; }

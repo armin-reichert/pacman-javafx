@@ -12,6 +12,7 @@ import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.widgets.OptionMenu;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuEntry;
 import javafx.animation.AnimationTimer;
+import javafx.scene.input.KeyCode;
 import org.tinylog.Logger;
 
 import java.util.List;
@@ -89,6 +90,9 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         super(NUM_TILES_X, NUM_TILES_Y, TEXT_COLUMN, VALUE_COLUMN);
 
         setTitle("Pac-Man XXL");
+        // Default key code RIGHT is already used to navigate through start pages carousel
+        setNextValueKeyCode(KeyCode.SPACE);
+
         addEntry(entryGameVariant);
         addEntry(entryPlay3D);
         addEntry(entryCutScenesEnabled);
