@@ -23,13 +23,18 @@ import static java.util.Objects.requireNonNull;
 
 public class PacManXXL_OptionMenu extends OptionMenu {
 
+    public static final int NUM_TILES_X = 42;
+    public static final int NUM_TILES_Y = 36;
+    public static final int TEXT_COLUMN = 6;
+    public static final int VALUE_COLUMN = 20;
+    public static final float Y_OFFSET = 23.5f * TS;
+
     public final OptionMenuEntry<StandardGameVariant> entryGameVariant = new OptionMenuEntry<>(
         "GAME VARIANT", List.of(ARCADE_PACMAN_XXL, ARCADE_MS_PACMAN_XXL), ARCADE_PACMAN_XXL)
     {
         @Override
         public String formatValue(StandardGameVariant variant) {
             return switch (variant) {
-                case null -> ""; //TODO may this happen?
                 case ARCADE_PACMAN_XXL    -> "PAC-MAN XXL";
                 case ARCADE_MS_PACMAN_XXL -> "MS.PAC-MAN XXL";
                 default -> "???";
@@ -81,7 +86,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     private GameUI ui;
 
     public PacManXXL_OptionMenu() {
-        super(42, 36, 6, 20);
+        super(NUM_TILES_X, NUM_TILES_Y, TEXT_COLUMN, VALUE_COLUMN);
 
         setTitle("Pac-Man XXL");
         addEntry(entryGameVariant);
@@ -89,7 +94,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         addEntry(entryCutScenesEnabled);
         addEntry(entryMapOrder);
 
-        chaseAnimation.setOffsetY(TS(23.5f));
+        chaseAnimation.setOffsetY(Y_OFFSET);
         chaseAnimation.scalingProperty().bind(scalingProperty());
 
         drawLoop = new AnimationTimer() {

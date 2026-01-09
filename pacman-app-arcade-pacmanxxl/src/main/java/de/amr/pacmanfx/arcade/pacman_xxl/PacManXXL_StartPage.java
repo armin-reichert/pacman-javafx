@@ -40,6 +40,9 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
     private final PacManXXL_OptionMenu menu;
 
     private GameUI ui;
+    private ChangeListener<String> gameVariantNameListener;
+    private ChangeListener<Boolean> cutScenesEnabledListener;
+    private ChangeListener<Boolean> play3DListener;
 
     public PacManXXL_StartPage() {
         final OptionMenuStyle style = OptionMenuStyle.builder()
@@ -95,10 +98,6 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
             }
         });
     }
-
-    private ChangeListener<String> gameVariantNameListener;
-    private ChangeListener<Boolean> cutScenesEnabledListener;
-    private ChangeListener<Boolean> play3DListener;
 
     private void bindMenu(GameUI ui) {
         unbindMenu();
