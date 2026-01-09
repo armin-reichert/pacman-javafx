@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.widgets;
 
+import javafx.animation.AnimationTimer;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -49,6 +50,9 @@ public class OptionMenu {
     protected OptionMenuRenderer renderer;
     protected OptionMenuStyle style;
 
+    private final AnimationTimer drawLoop;
+
+
     public OptionMenu(int numTilesX, int numTilesY, int textColumn, int valueColumn) {
         this.numTilesX = numTilesX;
         this.numTilesY = numTilesY;
@@ -67,6 +71,21 @@ public class OptionMenu {
         root.setCenter(canvas);
 
         setStyle(OptionMenuStyle.DEFAULT_OPTION_MENU_STYLE);
+
+        drawLoop = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                draw();
+            }
+        };
+    }
+
+    public void startDrawLoop() {
+        drawLoop.start();
+    }
+
+    public void stopDrawLoop() {
+        drawLoop.stop();
     }
 
     public Canvas canvas() {
@@ -94,7 +113,7 @@ public class OptionMenu {
 
     public BooleanProperty soundEnabledProperty() { return soundEnabled; }
 
-    public final void draw() {
+    public void draw() {
         renderer.drawOptionMenu(this);
     }
 
@@ -193,7 +212,6 @@ public class OptionMenu {
         this.style = requireNonNull(style);
         root.setBackground(new Background(new BackgroundFill(style.backgroundFill(), null, null)));
         root.setBorder(Border.stroke(style.borderStroke()));
-        draw();
     }
 
     public int textColumn() {

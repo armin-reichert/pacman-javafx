@@ -11,7 +11,6 @@ import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.widgets.OptionMenu;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuEntry;
-import javafx.animation.AnimationTimer;
 import javafx.scene.input.KeyCode;
 import org.tinylog.Logger;
 
@@ -82,7 +81,6 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         }
     };
 
-    private final AnimationTimer drawLoop;
     private final ChaseAnimation chaseAnimation = new ChaseAnimation();
     private GameUI ui;
 
@@ -101,20 +99,18 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         chaseAnimation.setOffsetY(Y_OFFSET);
         chaseAnimation.scalingProperty().bind(scalingProperty());
 
-        drawLoop = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                draw();
-                chaseAnimation.draw();
-            }
-        };
-
         entryGameVariant.valueProperty().addListener((_, _, newVariant) -> {
             if (ui != null) {
                 final GameUI_Config uiConfig = ui.config(newVariant.name());
                 chaseAnimation.init(uiConfig, canvas);
             }
         });
+    }
+
+    @Override
+    public void draw() {
+        super.draw();
+        chaseAnimation.draw();
     }
 
     public void init(GameUI ui) {
@@ -156,12 +152,12 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     }
 
     public void startDrawLoop() {
-        drawLoop.start();
+        super.startDrawLoop();
         chaseAnimation.start();
     }
 
     public void stopDrawLoop() {
-        drawLoop.stop();
+        super.stopDrawLoop();
         chaseAnimation.stop();
     }
 }
