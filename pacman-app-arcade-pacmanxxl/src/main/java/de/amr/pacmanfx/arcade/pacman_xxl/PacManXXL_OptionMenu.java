@@ -173,7 +173,4 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         return entryCutScenesEnabled;
     }
 
-    public OptionMenuEntry<WorldMapSelectionMode> entryMapOrder() {
-        return entryMapOrder;
-    }
 }
