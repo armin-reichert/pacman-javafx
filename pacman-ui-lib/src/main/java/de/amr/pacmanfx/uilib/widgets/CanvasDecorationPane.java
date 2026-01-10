@@ -20,11 +20,17 @@ import org.tinylog.Logger;
 import static java.util.Objects.requireNonNull;
 
 /**
- * TODO: This thing needs to get simplified. Too many magic numbers.
+ * A canvas container that
+ * <ul>
+ *     <li>centers the contained canvas</li>
+ *     <li>adds an oval border decoration </li>
+ * </ul>
+ * <p>
+ * TODO: This urgently needs to be simplified. Too many magic numbers and silly code.
  */
 public class CanvasDecorationPane extends StackPane {
 
-    private static final Vector2f DOWN_SCALING = new Vector2f(0.85f, 0.93f);
+    private static final Vector2f SCALING = new Vector2f(0.85f, 0.93f);
 
     private static Rectangle createRoundedRect(double width, double height, double arcDiameter) {
         var r = new Rectangle(width, height);
@@ -43,21 +49,21 @@ public class CanvasDecorationPane extends StackPane {
     private final DoubleProperty scaling = new SimpleDoubleProperty(1.0) {
         @Override
         protected void invalidated() {
-            doLayout(scaling.get(), true);
+            updateLayout();
         }
     };
 
     private final DoubleProperty unscaledCanvasWidth = new SimpleDoubleProperty(500) {
         @Override
         protected void invalidated() {
-            doLayout(scaling.get(), true);
+            updateLayout();
         }
     };
 
     private final DoubleProperty unscaledCanvasHeight = new SimpleDoubleProperty(400) {
         @Override
         protected void invalidated() {
-            doLayout(scaling.get(), true);
+            updateLayout();
         }
     };
 
@@ -83,6 +89,10 @@ public class CanvasDecorationPane extends StackPane {
         getChildren().setAll(canvas);
         canvas.widthProperty() .bind(scaling.multiply(unscaledCanvasWidth));
         canvas.heightProperty().bind(scaling.multiply(unscaledCanvasHeight));
+    }
+
+    private void updateLayout() {
+        doLayout(scaling(), true);
     }
 
     private void doLayout(double newScaling, boolean forced) {
@@ -112,8 +122,8 @@ public class CanvasDecorationPane extends StackPane {
     }
 
     public void resizeTo(double width, double height) {
-        final double downScaledWidth = DOWN_SCALING.x() * width;
-        final double downScaledHeight = DOWN_SCALING.y() * height;
+        final double downScaledWidth = SCALING.x() * width;
+        final double downScaledHeight = SCALING.y() * height;
         double newScaling = downScaledHeight / unscaledCanvasHeight.get();
         if (newScaling * unscaledCanvasWidth.get() > downScaledWidth) {
             newScaling = downScaledWidth / unscaledCanvasWidth.get();
@@ -127,6 +137,10 @@ public class CanvasDecorationPane extends StackPane {
     }
 
     public DoubleProperty scalingProperty() { return scaling; }
+
+    public double scaling() {
+        return scalingProperty().get();
+    }
 
     public void setMinScaling(double value) {
         minScaling = value;
