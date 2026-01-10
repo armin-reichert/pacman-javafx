@@ -22,6 +22,7 @@ import de.amr.pacmanfx.uilib.widgets.CanvasDecorationPane;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
@@ -85,7 +86,6 @@ public class PlayView extends StackPane implements GameUI_View {
         configureActionBindings();
         configurePropertyBindings();
         configureContextMenu();
-        addListeners();
 
         dashboard.setVisible(false);
     }
@@ -155,10 +155,12 @@ public class PlayView extends StackPane implements GameUI_View {
     @Override
     public void onEnter() {
         requestFocus();
+        addListeners();
     }
 
     @Override
     public void onExit() {
+        removeListeners();
     }
 
     @Override
@@ -252,17 +254,39 @@ public class PlayView extends StackPane implements GameUI_View {
 
     // Others
 
+    private ChangeListener<GameScene> gameSceneChangeListener;
+    private ChangeListener<? super Number> parentSceneWidthListener;
+    private ChangeListener<? super Number> parentSceneHeightListener;
+
     private void addListeners() {
-        currentGameScene.addListener((_, _, gameScene) -> {
+        removeListeners();
+
+        gameSceneChangeListener = (_, _, gameScene) -> {
             contextMenu.hide();
             if (gameScene != null) {
                 embedGameScene(parentScene, gameScene);
             }
-        });
-        parentScene.widthProperty() .addListener((_, _, w) -> canvasDecorator.resizeTo(w.doubleValue(), parentScene.getHeight()));
-        parentScene.heightProperty().addListener((_, _, h) -> canvasDecorator.resizeTo(parentScene.getWidth(), h.doubleValue()));
+        };
+        currentGameSceneProperty().addListener(gameSceneChangeListener);
+
+        parentSceneWidthListener = (_, _, w) -> canvasDecorator.resizeTo(w.doubleValue(), parentScene.getHeight());
+        parentScene.widthProperty() .addListener(parentSceneWidthListener);
+
+        parentSceneHeightListener = (_, _, h) -> canvasDecorator.resizeTo(parentScene.getWidth(), h.doubleValue());
+        parentScene.heightProperty().addListener(parentSceneHeightListener);
     }
 
+    private void removeListeners() {
+        if (gameSceneChangeListener != null) {
+            currentGameSceneProperty().removeListener(gameSceneChangeListener);
+        }
+        if (parentSceneWidthListener != null) {
+            parentScene.widthProperty().removeListener(parentSceneWidthListener);
+        }
+        if (parentSceneHeightListener != null) {
+            parentScene.heightProperty().removeListener(parentSceneHeightListener);
+        }
+    }
 
     private void configurePropertyBindings() {
         GameUI.PROPERTY_CANVAS_FONT_SMOOTHING.addListener((_, _, smooth) ->

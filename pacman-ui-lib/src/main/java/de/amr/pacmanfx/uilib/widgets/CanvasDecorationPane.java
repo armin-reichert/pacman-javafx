@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.widgets;
 
-import de.amr.pacmanfx.lib.math.Vector2f;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -30,7 +29,8 @@ import static java.util.Objects.requireNonNull;
  */
 public class CanvasDecorationPane extends StackPane {
 
-    private static final Vector2f SCALING = new Vector2f(0.85f, 0.93f);
+    private static final float SCALING_X = 0.85f;
+    private static final float SCALING_Y = 0.93f;
 
     private static final int ROUNDED_RECT_ARC_DIAMETER = 26;
     private static final int ROUNDED_RECT_CORNER_RADIUS = 10;
@@ -139,14 +139,14 @@ public class CanvasDecorationPane extends StackPane {
     }
 
     public void resizeTo(double width, double height) {
-        final double downScaledWidth = SCALING.x() * width;
-        final double downScaledHeight = SCALING.y() * height;
-        double newScaling = downScaledHeight / unscaledCanvasHeight.get();
-        if (newScaling * unscaledCanvasWidth.get() > downScaledWidth) {
-            newScaling = downScaledWidth / unscaledCanvasWidth.get();
+        final double realWidth  = SCALING_X * width;
+        final double realHeight = SCALING_Y * height;
+        double newScaling = realHeight / unscaledCanvasHeight();
+        if (newScaling * unscaledCanvasWidth() > realWidth) {
+            newScaling = realWidth / unscaledCanvasWidth();
         }
         doLayout(newScaling, false);
-        Logger.debug("Game canvas container resized to width={} height={}", getWidth(), getHeight());
+        Logger.debug("Canvas container resized to width={} height={}", getWidth(), getHeight());
     }
 
     public Canvas canvas() {
