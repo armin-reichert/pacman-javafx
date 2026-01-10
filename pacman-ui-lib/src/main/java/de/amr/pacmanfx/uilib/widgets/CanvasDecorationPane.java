@@ -32,16 +32,20 @@ public class CanvasDecorationPane extends StackPane {
 
     private static final Vector2f SCALING = new Vector2f(0.85f, 0.93f);
 
-    private static Rectangle createRoundedRect(double width, double height, double arcDiameter) {
-        var r = new Rectangle(width, height);
-        r.setArcHeight(arcDiameter);
-        r.setArcWidth(arcDiameter);
-        return r;
-    }
+    private static final int ROUNDED_RECT_ARC_DIAMETER = 26;
+    private static final int ROUNDED_RECT_CORNER_RADIUS = 10;
+    private static final int ROUNDED_RECT_MIN_BORDER_WIDTH = 5;
+    private static final double BORDER_WIDTH_RATIO = 55.0;
+    private static final int PADDING_X = 25;
+    private static final int PADDING_Y = 15;
 
-    private static Border createRoundedBorder(Paint strokeColor, double width, double cornerRadius) {
-        var stroke = new BorderStroke(strokeColor, BorderStrokeStyle.SOLID, new CornerRadii(cornerRadius), new BorderWidths(width));
-        return new Border(stroke);
+    private static Border createRoundedBorder(Paint strokeColor, double borderWidth, double cornerRadius) {
+        return new Border(
+            new BorderStroke(
+                strokeColor,
+                BorderStrokeStyle.SOLID,
+                new CornerRadii(cornerRadius),
+                new BorderWidths(borderWidth)));
     }
 
     private final ObjectProperty<Color> borderColor = new SimpleObjectProperty<>(Color.LIGHTBLUE);
@@ -71,14 +75,19 @@ public class CanvasDecorationPane extends StackPane {
     private double minScaling = 1.0;
 
     public CanvasDecorationPane() {
-        clipProperty().bind(Bindings.createObjectBinding(() -> createRoundedRect(
-            computeScaledWidth(), computeScaledHeight(), 26 * scaling.get()),
-            scaling, unscaledCanvasWidth, unscaledCanvasHeight)
+        clipProperty().bind(Bindings.createObjectBinding(() -> {
+                final double arcDiameter = ROUNDED_RECT_ARC_DIAMETER * scaling();
+                final var rect = new Rectangle(scaledWidth(), scaledHeight());
+                rect.setArcHeight(arcDiameter);
+                rect.setArcWidth(arcDiameter);
+                return rect;
+            }, scaling, unscaledCanvasWidth, unscaledCanvasHeight)
         );
 
         borderProperty().bind(Bindings.createObjectBinding(() -> {
-                double borderWidth = Math.max(5, Math.ceil(computeScaledHeight() / 55.0));
-                double cornerRadius = Math.ceil(10 * scaling.get());
+                final double proposedBorderWidth = Math.ceil(scaledHeight() / BORDER_WIDTH_RATIO);
+                final double borderWidth = Math.max(ROUNDED_RECT_MIN_BORDER_WIDTH, proposedBorderWidth);
+                final double cornerRadius = Math.ceil(ROUNDED_RECT_CORNER_RADIUS * scaling());
                 return createRoundedBorder(borderColor(), borderWidth, cornerRadius);
             }, borderColor, scaling, unscaledCanvasWidth, unscaledCanvasHeight)
         );
@@ -106,19 +115,27 @@ public class CanvasDecorationPane extends StackPane {
         }
         scaling.set(newScaling);
 
-        final double width = computeScaledWidth();
-        final double height = computeScaledHeight();
+        final double width = scaledWidth();
+        final double height = scaledHeight();
         setMinSize(width, height);
         setMaxSize(width, height);
         setPrefSize(width, height);
     }
 
-    private long computeScaledWidth() {
-        return Math.round((unscaledCanvasWidth.get() + 25) * scaling.get());
+    public int unscaledCanvasWidth() {
+        return (int) unscaledCanvasWidth.get();
     }
 
-    private long computeScaledHeight() {
-        return Math.round((unscaledCanvasHeight.get() + 15) * scaling.get());
+    public int scaledWidth() {
+        return (int) ((unscaledCanvasWidth() + PADDING_X) * scaling());
+    }
+
+    public int unscaledCanvasHeight() {
+        return (int) unscaledCanvasHeight.get();
+    }
+
+    public int scaledHeight() {
+        return (int) ((unscaledCanvasHeight() + PADDING_Y) * scaling());
     }
 
     public void resizeTo(double width, double height) {
