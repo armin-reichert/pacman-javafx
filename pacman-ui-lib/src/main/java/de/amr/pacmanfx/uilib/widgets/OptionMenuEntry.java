@@ -8,6 +8,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.tinylog.Logger;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
@@ -75,14 +76,6 @@ public class OptionMenuEntry<T> {
         value.set(getSelectedValue());
     }
 
-    public boolean enabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
     public void selectValue(T value) {
         requireNonNull(value);
         for (int i = 0; i < optionValues.size(); ++i) {
@@ -96,5 +89,21 @@ public class OptionMenuEntry<T> {
 
     public T getSelectedValue() {
         return optionValues.get(selectedValueIndex);
+    }
+
+    public boolean enabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public String text() {
+        return text;
+    }
+
+    public List<T> optionValues() {
+        return Collections.unmodifiableList(optionValues);
     }
 }

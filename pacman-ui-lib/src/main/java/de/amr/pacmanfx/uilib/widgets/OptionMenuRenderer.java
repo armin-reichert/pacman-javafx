@@ -18,7 +18,7 @@ public class OptionMenuRenderer extends BaseRenderer {
     }
 
     public void drawOptionMenu(OptionMenu menu) {
-        final OptionMenuStyle style = menu.style;
+        final OptionMenuStyle style = menu.style();
 
         fillCanvas(style.backgroundFill());
 
@@ -31,16 +31,17 @@ public class OptionMenuRenderer extends BaseRenderer {
 
         ctx.setFont(style.textFont());
         for (int i = 0; i < menu.entries().size(); ++i) {
-            int y = (12 + 3 * i) * TS;
-            OptionMenuEntry<?> entry = menu.entries().get(i);
+            final int y = (12 + 3 * i) * TS;
+            final OptionMenuEntry<?> entry = menu.entries().get(i);
             if (i == menu.selectedEntryIndex()) {
+                final int col = (menu.textColumn() - 2) * TS;
                 ctx.setFill(style.entryTextFill());
-                ctx.fillText("-", (menu.textColumn() - 2) * TS, y);
-                ctx.fillText(">", (menu.textColumn() - 2) * TS + HTS, y);
+                ctx.fillText("-", col, y);
+                ctx.fillText(">", col + HTS, y);
             }
             ctx.setFill(style.entryTextFill());
-            ctx.fillText(entry.text, menu.textColumn() * TS, y);
-            ctx.setFill(entry.enabled ? style.entryValueFill() : style.entryValueDisabledFill());
+            ctx.fillText(entry.text(), menu.textColumn() * TS, y);
+            ctx.setFill(entry.enabled() ? style.entryValueFill() : style.entryValueDisabledFill());
             ctx.fillText(entry.formatSelectedValue(), menu.valueColumn() * TS, y);
         }
 
