@@ -31,8 +31,14 @@ import static java.util.Objects.requireNonNull;
  */
 public class ChaseAnimation {
 
+    enum ChasingState { PAC_CHASED, GHOSTS_CHASED }
+
     private static final float FPS = 60;
     private static final Duration FRAME_TIME = Duration.millis(1000.0 / FPS);
+
+    private static final int GHOST_DISTANCE = 18;
+    private static final float PAC_FLEEING_SPEED = 1.0f;
+    private static final float GHOST_CHASE_SPEED = 1.05f;
 
     private final int numTilesX;
     private final Timeline timeline;
@@ -41,7 +47,7 @@ public class ChaseAnimation {
     private Pac pac;
     private List<Ghost> ghosts;
     private ActorRenderer actorRenderer;
-    private boolean ghostsChased;
+    private ChasingState state;
 
     public ChaseAnimation(int numTilesX) {
         this.numTilesX = numTilesX;
@@ -69,8 +75,17 @@ public class ChaseAnimation {
     public void init(GameUI_Config uiConfig, Canvas canvas) {
         requireNonNull(uiConfig);
 
+        actorRenderer = uiConfig.createActorRenderer(canvas);
+        actorRenderer.scalingProperty().bind(scalingProperty());
+
         pac = ArcadePacMan_GameModel.createPacMan();
         pac.setAnimationManager(uiConfig.createPacAnimations());
+        pac.playAnimation(Pac.AnimationID.PAC_MUNCHING);
+        pac.setX(numTilesX * TS);
+        pac.setMoveDir(Direction.LEFT);
+        pac.setWishDir(Direction.LEFT);
+        pac.setSpeed(PAC_FLEEING_SPEED);
+        pac.setVisible(true);
 
         ghosts = List.of(
             uiConfig.createGhostWithAnimations(RED_GHOST_SHADOW),
@@ -78,34 +93,34 @@ public class ChaseAnimation {
             uiConfig.createGhostWithAnimations(CYAN_GHOST_BASHFUL),
             uiConfig.createGhostWithAnimations(ORANGE_GHOST_POKEY)
         );
-
-        pac.playAnimation(Pac.AnimationID.PAC_MUNCHING);
-        ghosts.forEach(ghost -> ghost.playAnimation(Ghost.AnimationID.GHOST_NORMAL));
-
-        actorRenderer = uiConfig.createActorRenderer(canvas);
-        actorRenderer.scalingProperty().bind(scalingProperty());
-
-        reset();
-    }
-
-    private void reset() {
-        pac.setX(numTilesX * TS);
-        pac.setMoveDir(Direction.LEFT);
-        pac.setWishDir(Direction.LEFT);
-        pac.setSpeed(1.0f);
-        pac.setVisible(true);
-
         for (Ghost ghost : ghosts) {
-            ghost.setX((numTilesX + 4) * TS + ghost.personality() * 18);
+            ghost.setX((numTilesX + 4) * TS + ghost.personality() * GHOST_DISTANCE);
             ghost.setMoveDir(Direction.LEFT);
             ghost.setWishDir(Direction.LEFT);
-            ghost.setSpeed(1.05f);
+            ghost.setSpeed(GHOST_CHASE_SPEED);
             ghost.setVisible(true);
+            ghost.playAnimation(Ghost.AnimationID.GHOST_NORMAL);
         }
-        ghostsChased = false;
+
+        state = ChasingState.PAC_CHASED;
+    }
+
+    private void update() {
+        switch (state) {
+            case PAC_CHASED -> updatePacChased();
+            case GHOSTS_CHASED -> updateGhostsChased();
+        }
+    }
+
+    private void moveActors() {
+        pac.move();
+        for (Ghost ghost : ghosts) {
+            ghost.move();
+        }
     }
 
     private void updateGhostsChased() {
+        moveActors();
         if (pac.x() > (numTilesX + 14) * TS) { // Pac left screen at right side, let ghosts chase Pac from right to left
             pac.setMoveDir(Direction.LEFT);
             pac.setWishDir(Direction.LEFT);
@@ -118,7 +133,7 @@ public class ChaseAnimation {
                 ghost.setSpeed(1.05f);
                 ghost.playAnimation(Ghost.AnimationID.GHOST_NORMAL);
             }
-            ghostsChased = false;
+            state = ChasingState.PAC_CHASED;
         } else {
             // check if some ghost gets eaten now
             IntStream.range(0, 4).forEach(i -> {
@@ -132,33 +147,22 @@ public class ChaseAnimation {
         }
     }
 
-    private void updatePacManChased() {
+    private void updatePacChased() {
+        moveActors();
         if (ghosts.getLast().x() < -4 * TS) { // ghosts left screen on the left side
             pac.setMoveDir(Direction.RIGHT);
             pac.setWishDir(Direction.RIGHT);
             pac.setX(-(numTilesX - 6) * TS);
             for (Ghost ghost : ghosts) {
                 ghost.setVisible(true);
-                ghost.setX(pac.x() + 22 * TS + ghost.personality() * 18);
+                ghost.setX(pac.x() + 22 * TS + ghost.personality() * GHOST_DISTANCE);
                 ghost.setMoveDir(Direction.RIGHT);
                 ghost.setWishDir(Direction.RIGHT);
                 ghost.setSpeed(0.58f);
                 ghost.playAnimation(Ghost.AnimationID.GHOST_FRIGHTENED);
             }
             // Let Pac-Man chase the ghosts from left to right side of the screen
-            ghostsChased = true;
-        }
-    }
-
-    private void update() {
-        pac.move();
-        for (Ghost ghost : ghosts) {
-            ghost.move();
-        }
-        if (ghostsChased) {
-            updateGhostsChased();
-        } else {
-            updatePacManChased();
+            state = ChasingState.GHOSTS_CHASED;
         }
     }
 
