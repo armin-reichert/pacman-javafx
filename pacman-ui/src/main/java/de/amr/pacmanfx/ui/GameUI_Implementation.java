@@ -130,6 +130,7 @@ public final class GameUI_Implementation implements GameUI {
                 Logger.info("Embedded view: {}", newView);
                 newView.onEnter();
             }
+            flashMessageView.clear();
         });
 
         titleBinding = createStringBinding(this::computeStageTitle,

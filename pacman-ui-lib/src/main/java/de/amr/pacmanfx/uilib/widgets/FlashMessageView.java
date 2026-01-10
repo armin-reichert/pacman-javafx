@@ -59,7 +59,9 @@ public class FlashMessageView extends VBox {
     }
 
     public void clear() {
+        textView.setText(null);
         message = null;
+        setBackground(Background.fill(Color.TRANSPARENT));
     }
 
     public void showMessage(String messageText, double seconds) {
