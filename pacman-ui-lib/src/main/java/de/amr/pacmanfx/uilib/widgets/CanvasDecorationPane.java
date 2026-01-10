@@ -25,7 +25,6 @@ import static java.util.Objects.requireNonNull;
  *     <li>adds an oval border decoration </li>
  * </ul>
  * <p>
- * TODO: This urgently needs to be simplified. Too many magic numbers and silly code.
  */
 public class CanvasDecorationPane extends StackPane {
 
