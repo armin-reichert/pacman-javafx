@@ -21,7 +21,6 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.util.List;
-import java.util.stream.IntStream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static java.util.Objects.requireNonNull;
@@ -136,14 +135,21 @@ public class ChaseAnimation {
             state = ChasingState.PAC_CHASED;
         } else {
             // check if some ghost gets eaten now
-            IntStream.range(0, 4).forEach(i -> {
-                if (Math.abs(pac.x() - ghosts.get(i).x()) < 4) {
-                    ghosts.get(i).selectAnimationAt(Ghost.AnimationID.GHOST_POINTS, i);
-                    if (i > 0) {
-                        ghosts.get(i - 1).setVisible(false);
-                    }
+            int eatenGhostIndex = -1;
+            for (int i = 0; i < 4; ++i) {
+                final Ghost ghost = ghosts.get(i);
+                if (Math.abs(pac.x() - ghost.x()) < 4) {
+                    eatenGhostIndex = i;
+                    break;
                 }
-            });
+            }
+            if (eatenGhostIndex != -1) {
+                ghosts.get(eatenGhostIndex).selectAnimationAt(Ghost.AnimationID.GHOST_POINTS, eatenGhostIndex);
+                if (eatenGhostIndex > 0) {
+                    ghosts.get(eatenGhostIndex - 1).setVisible(false);
+                }
+            }
+
         }
     }
 
