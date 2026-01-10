@@ -34,7 +34,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     private OptionMenuEntry<Boolean> entryCutScenesEnabled;
     private OptionMenuEntry<WorldMapSelectionMode> entryMapOrder;
 
-    private final ChaseAnimation chaseAnimation = new ChaseAnimation();
+    private final ChaseAnimation chaseAnimation = new ChaseAnimation(NUM_TILES_X);
     private GameUI ui;
 
     public PacManXXL_OptionMenu() {

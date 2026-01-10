@@ -34,6 +34,7 @@ public class ChaseAnimation {
     private static final float FPS = 60;
     private static final Duration FRAME_TIME = Duration.millis(1000.0 / FPS);
 
+    private final int numTilesX;
     private final Timeline timeline;
     private final FloatProperty scaling = new SimpleFloatProperty(1);
     private float offsetY;
@@ -42,7 +43,8 @@ public class ChaseAnimation {
     private ActorRenderer actorRenderer;
     private boolean ghostsChased;
 
-    public ChaseAnimation() {
+    public ChaseAnimation(int numTilesX) {
+        this.numTilesX = numTilesX;
         timeline = new Timeline(new KeyFrame(FRAME_TIME, _ -> update()));
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.statusProperty().addListener((_,_,newStatus) -> Logger.info("Chase animation {}", newStatus));
@@ -87,14 +89,14 @@ public class ChaseAnimation {
     }
 
     private void reset() {
-        pac.setX(42 * TS);
+        pac.setX(numTilesX * TS);
         pac.setMoveDir(Direction.LEFT);
         pac.setWishDir(Direction.LEFT);
         pac.setSpeed(1.0f);
         pac.setVisible(true);
 
         for (Ghost ghost : ghosts) {
-            ghost.setX(46 * TS + ghost.personality() * 18);
+            ghost.setX((numTilesX + 4) * TS + ghost.personality() * 18);
             ghost.setMoveDir(Direction.LEFT);
             ghost.setWishDir(Direction.LEFT);
             ghost.setSpeed(1.05f);
@@ -104,15 +106,15 @@ public class ChaseAnimation {
     }
 
     private void updateGhostsChased() {
-        if (pac.x() > 56 * TS) { // Pac left screen at right side, let ghosts chase Pac from right to left
+        if (pac.x() > (numTilesX + 14) * TS) { // Pac left screen at right side, let ghosts chase Pac from right to left
             pac.setMoveDir(Direction.LEFT);
             pac.setWishDir(Direction.LEFT);
-            pac.setX(42 * TS);
+            pac.setX(numTilesX * TS);
             for (Ghost ghost : ghosts) {
                 ghost.setVisible(true);
                 ghost.setMoveDir(Direction.LEFT);
                 ghost.setWishDir(Direction.LEFT);
-                ghost.setX(46 * TS + ghost.personality() * 2 * TS);
+                ghost.setX((numTilesX + 4) * TS + ghost.personality() * 2 * TS);
                 ghost.setSpeed(1.05f);
                 ghost.playAnimation(Ghost.AnimationID.GHOST_NORMAL);
             }
@@ -134,7 +136,7 @@ public class ChaseAnimation {
         if (ghosts.getLast().x() < -4 * TS) { // ghosts left screen on the left side
             pac.setMoveDir(Direction.RIGHT);
             pac.setWishDir(Direction.RIGHT);
-            pac.setX(-36 * TS);
+            pac.setX(-(numTilesX - 6) * TS);
             for (Ghost ghost : ghosts) {
                 ghost.setVisible(true);
                 ghost.setX(pac.x() + 22 * TS + ghost.personality() * 18);
