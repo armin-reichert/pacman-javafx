@@ -54,7 +54,6 @@ import static java.util.Objects.requireNonNull;
 public class PacManXXL_PacMan_UIConfig implements GameUI_Config, GameScene_Config {
 
     private static final ResourceManager ARCADE_PAC_MAN_RESOURCES = () -> ArcadePacMan_UIConfig.class;
-    private static final ResourceManager LOCAL_RESOURCES = () -> PacManXXL_PacMan_UIConfig.class;
 
     private final UIPreferences prefs;
     private final AssetMap assets = new AssetMap();
