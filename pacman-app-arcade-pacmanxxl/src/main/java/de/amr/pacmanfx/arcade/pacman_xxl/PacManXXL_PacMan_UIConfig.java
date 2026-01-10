@@ -120,9 +120,6 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config, GameScene_Confi
         assets.set("ghost.color.flashing.eyeballs",   ARCADE_ROSE);
         assets.set("ghost.color.flashing.pupils",     ARCADE_RED);
 
-        assets.set("audio.option.selection_changed",  LOCAL_RESOURCES.loadAudioClip("sound/ms-select1.wav"));
-        assets.set("audio.option.value_changed",      LOCAL_RESOURCES.loadAudioClip("sound/ms-select2.wav"));
-
         assets.setLocalizedTexts(ResourceBundle.getBundle("de.amr.pacmanfx.arcade.pacman_xxl.localized_texts_pacman"));
     }
 
