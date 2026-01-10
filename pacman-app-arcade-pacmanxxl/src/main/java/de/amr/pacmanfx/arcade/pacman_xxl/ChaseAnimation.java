@@ -86,7 +86,7 @@ public class ChaseAnimation {
         reset();
     }
 
-    public void reset() {
+    private void reset() {
         pac.setX(42 * TS);
         pac.setMoveDir(Direction.LEFT);
         pac.setWishDir(Direction.LEFT);

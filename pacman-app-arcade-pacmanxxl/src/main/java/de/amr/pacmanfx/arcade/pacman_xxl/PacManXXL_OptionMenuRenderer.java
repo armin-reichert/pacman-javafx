@@ -32,24 +32,20 @@ public class PacManXXL_OptionMenuRenderer extends OptionMenuRenderer {
         ctx.setFont(menu.style().textFont());
 
         double y = TS(menu.numTilesY() - 8);
-        drawText("SELECT OPTIONS WITH", textFill, TS(6), y);
+        drawText("SELECT OPTIONS WITH    AND", textFill, TS(6), y);
         drawText("UP", valueFill, TS(26), y);
-        drawText("AND", textFill, TS(29), y);
         drawText("DOWN", valueFill, TS(33), y);
 
         y += LINE_SKIP;
-        drawText("PRESS", textFill, TS(8), y);
+        drawText("PRESS       TO CHANGE VALUE", textFill, TS(8), y);
         drawText("SPACE", valueFill, TS(14), y);
-        drawText("TO CHANGE VALUE", textFill, TS(20), y);
 
         y += LINE_SKIP;
-        drawText("PRESS", textFill, TS(10), y);
+        drawText("PRESS   TO OPEN EDITOR", textFill, TS(10), y);
         drawText("E", valueFill, TS(16), y);
-        drawText("TO OPEN EDITOR", textFill, TS(18), y);
 
         y += LINE_SKIP;
-        drawText("PRESS", textFill, TS(11), y);
+        drawText("PRESS       TO START", textFill, TS(11), y);
         drawText("ENTER", valueFill, TS(17), y);
-        drawText("TO START", textFill, TS(23), y);
     }
 }
