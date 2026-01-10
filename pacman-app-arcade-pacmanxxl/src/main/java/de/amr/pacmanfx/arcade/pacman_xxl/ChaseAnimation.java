@@ -30,7 +30,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class ChaseAnimation {
 
-    enum ChasingState { PAC_CHASED, GHOSTS_CHASED }
+    enum ChasingState {GHOSTS_CHASING_PAC, PAC_CHASING_GHOSTS}
 
     private static final float FPS = 60;
     private static final Duration FRAME_TIME = Duration.millis(1000.0 / FPS);
@@ -101,13 +101,13 @@ public class ChaseAnimation {
             ghost.playAnimation(Ghost.AnimationID.GHOST_NORMAL);
         }
 
-        state = ChasingState.PAC_CHASED;
+        state = ChasingState.GHOSTS_CHASING_PAC;
     }
 
     private void update() {
         switch (state) {
-            case PAC_CHASED -> updatePacChased();
-            case GHOSTS_CHASED -> updateGhostsChased();
+            case GHOSTS_CHASING_PAC -> ghostsChasePacMan();
+            case PAC_CHASING_GHOSTS -> pacManChasesGhosts();
         }
     }
 
@@ -118,9 +118,10 @@ public class ChaseAnimation {
         }
     }
 
-    private void updateGhostsChased() {
+    private void pacManChasesGhosts() {
         moveActors();
-        if (pac.x() > (numTilesX + 14) * TS) { // Pac left screen at right side, let ghosts chase Pac from right to left
+        // If ghosts and Pac leave screen at right border, ghosts start chasing Pac moving left
+        if (pac.x() > (numTilesX + 14) * TS) {
             pac.setMoveDir(Direction.LEFT);
             pac.setWishDir(Direction.LEFT);
             pac.setX(numTilesX * TS);
@@ -132,9 +133,10 @@ public class ChaseAnimation {
                 ghost.setSpeed(1.05f);
                 ghost.playAnimation(Ghost.AnimationID.GHOST_NORMAL);
             }
-            state = ChasingState.PAC_CHASED;
-        } else {
-            // check if some ghost gets eaten now
+            state = ChasingState.GHOSTS_CHASING_PAC;
+        }
+        else { // continue chasing ghosts moving right
+            // ghost eaten?
             int eatenGhostIndex = -1;
             for (int i = 0; i < 4; ++i) {
                 final Ghost ghost = ghosts.get(i);
@@ -153,7 +155,7 @@ public class ChaseAnimation {
         }
     }
 
-    private void updatePacChased() {
+    private void ghostsChasePacMan() {
         moveActors();
         if (ghosts.getLast().x() < -4 * TS) { // ghosts left screen on the left side
             pac.setMoveDir(Direction.RIGHT);
@@ -168,7 +170,7 @@ public class ChaseAnimation {
                 ghost.playAnimation(Ghost.AnimationID.GHOST_FRIGHTENED);
             }
             // Let Pac-Man chase the ghosts from left to right side of the screen
-            state = ChasingState.GHOSTS_CHASED;
+            state = ChasingState.PAC_CHASING_GHOSTS;
         }
     }
 
