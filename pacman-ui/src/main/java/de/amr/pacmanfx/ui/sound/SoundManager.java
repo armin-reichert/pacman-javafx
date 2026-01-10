@@ -47,9 +47,15 @@ public class SoundManager implements Disposable {
         });
     }
 
+    public int numSounds() {
+        int n = map.size();
+        if (voicePlayer != null) ++n;
+        if (sirenPlayer != null) ++n;
+        return n;
+    }
+
     @Override
     public void dispose() {
-        Logger.info("Dispose sound manager: {} entries", map.size());
         stopAll();
         enabledProperty.unbind();
         muteProperty.unbind();

@@ -177,9 +177,9 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     @Override
     public void dispose() {
-        assets.dispose();
-        soundManager.dispose();
-        Logger.info("Dispose game scenes: {} entries", scenesByID.size());
+        GameUI_Config.super.dispose();
+        Logger.info("Dispose {} game scenes", scenesByID.size());
+        scenesByID.values().forEach(GameScene::dispose);
         scenesByID.clear();
     }
 

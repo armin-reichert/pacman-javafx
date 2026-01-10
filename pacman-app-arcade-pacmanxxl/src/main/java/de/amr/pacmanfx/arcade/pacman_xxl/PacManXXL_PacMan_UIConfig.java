@@ -66,17 +66,15 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config, GameScene_Confi
 
     @Override
     public void init() {
-        Logger.info("Init UI configuration {}", getClass().getSimpleName());
+        Logger.info("Load assets of UI configuration {}", getClass().getSimpleName());
         loadAssets();
-        registerSounds();
     }
 
     @Override
     public void dispose() {
-        Logger.info("Dispose UI configuration {}:", getClass().getSimpleName());
-        assets.dispose();
-        soundManager.dispose();
-        Logger.info("Dispose game scenes: {} entries", scenesByID.size());
+        GameUI_Config.super.dispose();
+        Logger.info("Dispose {} game scenes", scenesByID.size());
+        scenesByID.values().forEach(GameScene::dispose);
         scenesByID.clear();
     }
 
@@ -120,9 +118,7 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config, GameScene_Confi
         assets.set("ghost.color.flashing.pupils",     ARCADE_RED);
 
         assets.setLocalizedTexts(ResourceBundle.getBundle("de.amr.pacmanfx.arcade.pacman_xxl.localized_texts_pacman"));
-    }
 
-    private void registerSounds() {
         soundManager.register(SoundID.VOICE_AUTOPILOT_OFF,          GameUI.VOICE_AUTOPILOT_OFF);
         soundManager.register(SoundID.VOICE_AUTOPILOT_ON,           GameUI.VOICE_AUTOPILOT_ON);
         soundManager.register(SoundID.VOICE_EXPLAIN_GAME_START,     GameUI.VOICE_EXPLAIN_GAME_START);

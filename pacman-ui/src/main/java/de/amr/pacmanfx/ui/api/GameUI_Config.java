@@ -24,6 +24,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
+import org.tinylog.Logger;
 
 /**
  * Game-variant specific configuration of the UI. Provides factory methods for renderers and actors and accessors to
@@ -35,10 +36,24 @@ public interface GameUI_Config extends Disposable {
 
     void init();
 
+    @Override
+    default void dispose() {
+        Logger.info("Dispose UI configuration {}:", getClass().getSimpleName());
+        Logger.info("Dispose {} assets", assets().numAssets());
+        assets().dispose();
+        Logger.info("Dispose {} sounds", soundManager().numSounds());
+        soundManager().dispose();
+    }
+
     /**
      * @return the game variant specific asset map
      */
     AssetMap assets();
+
+    /**
+     * @return the sound manager for this game variant
+     */
+    SoundManager soundManager();
 
     /**
      * @return the spritesheet for this game variant
@@ -51,11 +66,6 @@ public interface GameUI_Config extends Disposable {
     default Rectangle2D spriteRegionForArcadeBootScene() {
         return new Rectangle2D(0, 0, spriteSheet().sourceImage().getWidth(), spriteSheet().sourceImage().getHeight());
     }
-
-    /**
-     * @return the sound manager for this game variant
-     */
-    SoundManager soundManager();
 
     /**
      * Minimum number of ticks since the last pellet eaten time until the next munching sound is played.
