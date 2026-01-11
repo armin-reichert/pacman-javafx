@@ -19,7 +19,7 @@ public record OptionMenuStyle(
     Color entryTextFill,
     Color entryValueFill,
     Color entryValueDisabledFill,
-    Color hintTextFill,
+    Color usageTextFill,
     AudioClip entrySelectedSound,
     AudioClip valueSelectedSound) {
 
@@ -39,7 +39,7 @@ public record OptionMenuStyle(
     public static final Color DEFAULT_ENTRY_TEXT_FILL = Color.valueOf("bcbe00");
     public static final Color DEFAULT_ENTRY_VALUE_FILL = Color.valueOf("fffeff");
     public static final Color DEFAULT_ENTRY_VALUE_DISABLED_FILL = Color.GRAY;
-    public static final Color DEFAULT_HINT_TEXT_FILL = Color.valueOf("bcbe00");
+    public static final Color DEFAULT_USAGE_TEXT_FILL = Color.valueOf("bcbe00");
 
     public static final OptionMenuStyle DEFAULT_OPTION_MENU_STYLE = OptionMenuStyle.builder()
         .titleFont(DEFAULT_TITLE_FONT)
@@ -50,7 +50,7 @@ public record OptionMenuStyle(
         .entryTextFill(DEFAULT_ENTRY_TEXT_FILL)
         .entryValueFill(DEFAULT_ENTRY_VALUE_FILL)
         .entryValueDisabledFill(DEFAULT_ENTRY_VALUE_DISABLED_FILL)
-        .hintTextFill(DEFAULT_HINT_TEXT_FILL)
+        .usageTextFill(DEFAULT_USAGE_TEXT_FILL)
         .entrySelectedSound(DEFAULT_ENTRY_SELECTION_SOUND)
         .valueSelectedSound(DEFAULT_VALUE_SELECTION_SOUND)
         .build();
@@ -70,7 +70,7 @@ public record OptionMenuStyle(
         private Color entryTextFill = DEFAULT_ENTRY_TEXT_FILL;
         private Color entryValueFill = DEFAULT_ENTRY_VALUE_FILL;
         private Color entryValueDisabledFill = DEFAULT_ENTRY_VALUE_DISABLED_FILL;
-        private Color hintTextFill = DEFAULT_HINT_TEXT_FILL;
+        private Color usageTextFill = DEFAULT_USAGE_TEXT_FILL;
         private AudioClip entrySelectedSound = DEFAULT_ENTRY_SELECTION_SOUND;
         private AudioClip valueSelectedSound = DEFAULT_VALUE_SELECTION_SOUND;
 
@@ -116,8 +116,8 @@ public record OptionMenuStyle(
             return this;
         }
 
-        public Builder hintTextFill(Color hintTextFill) {
-            this.hintTextFill = hintTextFill;
+        public Builder usageTextFill(Color hintTextFill) {
+            this.usageTextFill = hintTextFill;
             return this;
         }
 
@@ -141,7 +141,7 @@ public record OptionMenuStyle(
                 entryTextFill,
                 entryValueFill,
                 entryValueDisabledFill,
-                hintTextFill,
+                usageTextFill,
                 entrySelectedSound,
                 valueSelectedSound
             );

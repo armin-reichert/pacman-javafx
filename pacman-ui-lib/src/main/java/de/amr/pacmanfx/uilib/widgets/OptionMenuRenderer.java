@@ -50,26 +50,26 @@ public class OptionMenuRenderer extends BaseRenderer {
     }
 
     protected void drawUsageInfo(OptionMenu menu) {
-        final Color txtFill = menu.style().hintTextFill();
-        final Color valFill = menu.style().entryValueFill();
-        final Font font     = Ufx.scaleFontBy(menu.style().textFont(), scaling());
+        final Color normalColor = menu.style().usageTextFill();
+        final Color brightColor = menu.style().entryValueFill();
+        final Font font = Ufx.scaleFontBy(menu.style().textFont(), scaling());
 
         final double centerX = 0.5 * menu.numTilesX() * TS;
         double y = TS(menu.numTilesY() - 8);
 
-        fillTextCentered("SELECT OPTIONS WITH UP AND DOWN", txtFill, font, centerX, y);
-        fillTextCentered("                    UP     DOWN", valFill, font, centerX, y);
+        fillTextCentered("SELECT OPTIONS WITH UP AND DOWN", normalColor, font, centerX, y);
+        fillTextCentered("                    UP     DOWN", brightColor, font, centerX, y);
 
         y += lineSkip;
-        drawActionText(KeyCode.SPACE, "CHANGE VALUE", txtFill, valFill, font, centerX, y);
+        drawActionText(KeyCode.SPACE, "CHANGE VALUE", normalColor, brightColor, font, centerX, y);
 
         if (menu.action1KeyCode() != null && menu.action1Text() != null) {
             y += lineSkip;
-            drawActionText(menu.action1KeyCode(), menu.action1Text(), txtFill, valFill, font, centerX, y);
+            drawActionText(menu.action1KeyCode(), menu.action1Text(), normalColor, brightColor, font, centerX, y);
         }
         if (menu.action2KeyCode() != null && menu.action2Text() != null) {
             y += lineSkip;
-            drawActionText(menu.action2KeyCode(), menu.action2Text(), txtFill, valFill, font, centerX, y);
+            drawActionText(menu.action2KeyCode(), menu.action2Text(), normalColor, brightColor, font, centerX, y);
         }
     }
 

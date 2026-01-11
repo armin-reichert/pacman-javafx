@@ -51,7 +51,7 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
             .textFont(Ufx.deriveFont(GameUI.FONT_ARCADE_8, TS))
             .entryTextFill(ArcadePalette.ARCADE_YELLOW)
             .entryValueFill(ArcadePalette.ARCADE_WHITE)
-            .hintTextFill(ArcadePalette.ARCADE_YELLOW)
+            .usageTextFill(ArcadePalette.ARCADE_YELLOW)
             .build();
 
         menu = new PacManXXL_OptionMenu();
