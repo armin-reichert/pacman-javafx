@@ -27,8 +27,8 @@ public class PacManXXL_OptionMenuRenderer extends OptionMenuRenderer {
         final Color valFill = menu.style().entryValueFill();
         final Font font     = Ufx.deriveFont(menu.style().textFont(), scaling() * menu.style().textFont().getSize());
         final double centerX = 0.5 * menu.numTilesX() * TS;
-        double y = TS(menu.numTilesY() - 8);
 
+        double y = TS(menu.numTilesY() - 8);
         fillTextCentered("SELECT OPTIONS WITH UP AND DOWN", txtFill, font, centerX, y);
         fillTextCentered("                    UP     DOWN", valFill, font, centerX, y);
 
