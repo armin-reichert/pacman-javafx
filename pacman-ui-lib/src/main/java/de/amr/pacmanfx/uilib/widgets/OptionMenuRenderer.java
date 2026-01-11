@@ -31,7 +31,9 @@ public class OptionMenuRenderer extends BaseRenderer {
 
         fillCanvas(style.backgroundFill());
         fillTextCentered(menu.title(), style.titleTextFill(), scaledTitleFont, centerX, 6 * TS);
-        int y = 12 * TS;
+
+        lineSkip = 2.5f * TS;
+        float y = 12 * TS;
         for (int i = 0; i < menu.entries().size(); ++i) {
             final OptionMenuEntry<?> entry = menu.entries().get(i);
             if (i == menu.selectedEntryIndex()) {
@@ -44,8 +46,10 @@ public class OptionMenuRenderer extends BaseRenderer {
                 entry.enabled() ? style.entryValueFill() : style.entryValueDisabledFill(),
                 scaledTextFont,
                 menu.valueColumn() * TS, y);
-            y += 3 * TS;
+            y += lineSkip;
         }
+
+        lineSkip = 2*TS;
         drawUsageInfo(menu);
     }
 
