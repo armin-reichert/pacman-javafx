@@ -4,9 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.widgets;
 
+import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.text.TextAlignment;
+import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
@@ -19,42 +20,29 @@ public class OptionMenuRenderer extends BaseRenderer {
 
     public void drawOptionMenu(OptionMenu menu) {
         final OptionMenuStyle style = menu.style();
+        final Font scaledTitleFont = Ufx.scaleFontBy(style.titleFont(), scaling());
+        final Font scaledTextFont = Ufx.scaleFontBy(style.textFont(), scaling());
+        final double centerX = 0.5 * menu.numTilesX() * TS;
 
         fillCanvas(style.backgroundFill());
-
-        ctx.save();
-        ctx.scale(scaling(), scaling());
-
-        ctx.setFont(style.titleFont());
-        ctx.setFill(style.titleTextFill());
-        drawCentered(menu.title(), 6 * TS);
-
-        ctx.setFont(style.textFont());
+        fillTextCentered(menu.title(), style.titleTextFill(), scaledTitleFont, centerX, 6 * TS);
+        int y = 12 * TS;
         for (int i = 0; i < menu.entries().size(); ++i) {
-            final int y = (12 + 3 * i) * TS;
             final OptionMenuEntry<?> entry = menu.entries().get(i);
             if (i == menu.selectedEntryIndex()) {
                 final int col = (menu.textColumn() - 2) * TS;
-                ctx.setFill(style.entryTextFill());
-                ctx.fillText("-", col, y);
-                ctx.fillText(">", col + HTS, y);
+                fillText("-", style.entryTextFill(), scaledTextFont, col, y);
+                fillText(">", style.entryTextFill(), scaledTextFont, col + HTS, y);
             }
-            ctx.setFill(style.entryTextFill());
-            ctx.fillText(entry.text(), menu.textColumn() * TS, y);
-            ctx.setFill(entry.enabled() ? style.entryValueFill() : style.entryValueDisabledFill());
-            ctx.fillText(entry.formatSelectedValue(), menu.valueColumn() * TS, y);
+            fillText(entry.text(), style.entryTextFill(), scaledTextFont, menu.textColumn() * TS, y);
+            fillText(entry.formatSelectedValue(),
+                entry.enabled() ? style.entryValueFill() : style.entryValueDisabledFill(),
+                scaledTextFont,
+                menu.valueColumn() * TS, y);
+            y += 3 * TS;
         }
-
         drawUsageInfo(menu);
-        ctx.restore();
     }
 
     protected void drawUsageInfo(OptionMenu menu) {}
-
-    protected void drawCentered(String text, double y) {
-        ctx.save();
-        ctx.setTextAlign(TextAlignment.CENTER);
-        ctx.fillText(text, (ctx.getCanvas().getWidth() * 0.5) / scaling(), y);
-        ctx.restore();
-    }
 }

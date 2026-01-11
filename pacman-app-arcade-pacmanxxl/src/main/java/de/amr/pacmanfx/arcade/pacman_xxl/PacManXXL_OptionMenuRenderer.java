@@ -4,10 +4,12 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
+import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.widgets.OptionMenu;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.Globals.TS;
 
@@ -19,32 +21,27 @@ public class PacManXXL_OptionMenuRenderer extends OptionMenuRenderer {
         super(canvas);
     }
 
-    private void drawText(String text, Color fill, double x, double y) {
-        ctx.setFill(fill);
-        ctx.fillText(text, x, y);
-    }
-
     @Override
     protected void drawUsageInfo(OptionMenu menu) {
         final Color txtFill = menu.style().hintTextFill();
         final Color valFill = menu.style().entryValueFill();
-
-        ctx.setFont(menu.style().textFont());
-
+        final Font font     = Ufx.deriveFont(menu.style().textFont(), scaling() * menu.style().textFont().getSize());
+        final double centerX = 0.5 * menu.numTilesX() * TS;
         double y = TS(menu.numTilesY() - 8);
-        drawText("SELECT OPTIONS WITH UP AND DOWN", txtFill, TS(6), y);
-        drawText("                    UP     DOWN", valFill, TS(6), y);
+
+        fillTextCentered("SELECT OPTIONS WITH UP AND DOWN", txtFill, font, centerX, y);
+        fillTextCentered("                    UP     DOWN", valFill, font, centerX, y);
 
         y += LINE_SKIP;
-        drawText("PRESS SPACE TO CHANGE VALUE", txtFill, TS(8), y);
-        drawText("      SPACE                ", valFill, TS(8), y);
+        fillTextCentered("PRESS SPACE TO CHANGE VALUE", txtFill, font, centerX, y);
+        fillTextCentered("      SPACE                ", valFill, font, centerX, y);
 
         y += LINE_SKIP;
-        drawText("PRESS E TO OPEN EDITOR", txtFill, TS(10), y);
-        drawText("      E               ", valFill, TS(10), y);
+        fillTextCentered("PRESS E TO OPEN EDITOR", txtFill, font, centerX, y);
+        fillTextCentered("      E               ", valFill, font, centerX, y);
 
         y += LINE_SKIP;
-        drawText("PRESS ENTER TO START", txtFill, TS(11), y);
-        drawText("      ENTER         ", valFill, TS(11), y);
+        fillTextCentered("PRESS ENTER TO START", txtFill, font, centerX, y);
+        fillTextCentered("      ENTER         ", valFill, font, centerX, y);
     }
 }

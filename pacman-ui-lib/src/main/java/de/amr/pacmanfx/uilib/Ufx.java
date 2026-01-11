@@ -163,6 +163,10 @@ public interface Ufx {
         return Font.font(font.getFamily(), size);
     }
 
+    static Font scaleFontBy(Font font, double factor) {
+        return deriveFont(font, factor * font.getSize());
+    }
+
     static double textWidth(String s, Font font) {
         final Text dummy = new Text(s);
         dummy.setFont(font);

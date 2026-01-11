@@ -153,13 +153,13 @@ public class BaseRenderer implements Renderer {
      * @param text  text
      * @param color text color
      * @param font  text font
-     * @param x     unscaled x-position
+     * @param centerX     unscaled x-position
      * @param y     unscaled y-position (baseline)
      */
-    public void fillTextCentered(String text, Color color, Font font, double x, double y) {
+    public void fillTextCentered(String text, Color color, Font font, double centerX, double y) {
         ctx.save();
         ctx.setTextAlign(TextAlignment.CENTER);
-        fillText(text, color, font, x, y);
+        fillText(text, color, font, centerX, y);
         ctx.restore();
     }
 
