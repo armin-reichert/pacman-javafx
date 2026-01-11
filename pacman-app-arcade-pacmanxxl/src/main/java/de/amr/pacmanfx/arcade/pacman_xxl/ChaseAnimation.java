@@ -42,7 +42,7 @@ public class ChaseAnimation {
     private final int numTilesX;
     private final Timeline timeline;
     private final FloatProperty scaling = new SimpleFloatProperty(1);
-    private float offsetY;
+    private float y;
     private Pac pac;
     private List<Ghost> ghosts;
     private ActorRenderer actorRenderer;
@@ -59,8 +59,8 @@ public class ChaseAnimation {
         return scaling;
     }
 
-    public void setOffsetY(float y) {
-        offsetY = y;
+    public void setY(float y) {
+        this.y = y;
     }
 
     public void start() {
@@ -178,7 +178,7 @@ public class ChaseAnimation {
         if (actorRenderer != null) {
             final GraphicsContext ctx = actorRenderer.ctx();
             ctx.save();
-            ctx.translate(0, actorRenderer.scaled(offsetY));
+            ctx.translate(0, scaling.get() * y);;
             actorRenderer.setImageSmoothing(true);
             ghosts.forEach(actorRenderer::drawActor);
             actorRenderer.drawActor(pac);

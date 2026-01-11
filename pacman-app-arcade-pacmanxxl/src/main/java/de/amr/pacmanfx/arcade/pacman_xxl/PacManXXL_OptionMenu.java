@@ -50,7 +50,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         addEntry(entryCutScenesEnabled);
         addEntry(entryMapOrder);
 
-        chaseAnimation.setOffsetY(Y_OFFSET);
+        chaseAnimation.setY(Y_OFFSET);
         chaseAnimation.scalingProperty().bind(scalingProperty());
 
         entryGameVariant.valueProperty().addListener((_, _, newVariant) -> {
