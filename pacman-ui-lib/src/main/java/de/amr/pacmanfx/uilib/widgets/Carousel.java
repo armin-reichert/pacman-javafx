@@ -75,8 +75,8 @@ public class Carousel extends StackPane {
         final var button = new Button();
         button.setGraphic(icon);
         button.setOpacity(0.1);
-        button.setOnMouseEntered(e -> button.setOpacity(0.4));
-        button.setOnMouseExited(e -> button.setOpacity(0.1));
+        button.setOnMouseEntered(_ -> button.setOpacity(0.4));
+        button.setOnMouseExited(_ -> button.setOpacity(0.1));
         // Without this, button gets input focus after being clicked with the mouse and the navigation keys stop working!
         button.setFocusTraversable(false);
 
@@ -91,31 +91,32 @@ public class Carousel extends StackPane {
         requireNonNull(itemChangeDuration);
 
         btnBack = createNavigationButton(Direction.LEFT);
-        btnBack.setOnMousePressed(e -> showPreviousItem());
+        btnBack.setOnMousePressed(_ -> showPreviousItem());
 
         btnForward = createNavigationButton(Direction.RIGHT);
-        btnForward.setOnMousePressed(e -> showNextItem());
+        btnForward.setOnMousePressed(_ -> showNextItem());
 
         progressBar = new ProgressBar(0);
         progressBar.setPrefHeight(10);
         progressBar.setPrefWidth(400);
 
         timer = new Timeline(
-                new KeyFrame(Duration.ZERO,
-                        new KeyValue(progressBar.progressProperty(), 0)),
-                new KeyFrame(itemChangeDuration,
-                        e -> showNextItem(),
-                        new KeyValue(progressBar.progressProperty(), 1)));
+            new KeyFrame(Duration.ZERO,
+                new KeyValue(progressBar.progressProperty(), 0)),
+            new KeyFrame(itemChangeDuration,
+                _ -> showNextItem(),
+                new KeyValue(progressBar.progressProperty(), 1)));
         timer.setCycleCount(Animation.INDEFINITE);
-        progressBar.visibleProperty().bind(
-                timer.statusProperty().map(status -> status.equals(Animation.Status.RUNNING)));
+
+        // Note: timer must exist at this point
+        progressBar.visibleProperty().bind(timer.statusProperty().map(status -> status.equals(Animation.Status.RUNNING)));
 
         arrangeChildren();
 
         setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.SPACE) {
-                Logger.debug(e);
                 toggleTimer();
+                e.consume();
             }
         });
     }
@@ -141,16 +142,7 @@ public class Carousel extends StackPane {
     }
 
     public void toggleTimer() {
-        if (timer.getStatus() == Animation.Status.RUNNING) {
-            pauseTimer();
-        }
-        else {
-            startTimer();
-        }
-    }
-
-    public boolean isTimerRunning() {
-        return timer.getStatus() == Animation.Status.RUNNING;
+        if (timer.getStatus() == Animation.Status.RUNNING) pauseTimer(); else startTimer();
     }
 
     public IntegerProperty selectedIndexProperty() {
@@ -176,10 +168,6 @@ public class Carousel extends StackPane {
         if (selectedIndex() == -1 && !items.isEmpty()) {
             setSelectedIndex(0);
         }
-    }
-
-    public Node itemAt(int index) {
-        return items.get(index);
     }
 
     public Optional<Node> currentItem() {

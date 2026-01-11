@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.lib.math.Direction;
+import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.api.ActionBindingsManager;
@@ -31,8 +32,6 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_BOOT_SHOW_PLAY_VIEW;
-import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_TOGGLE_PAUSED;
 import static de.amr.pacmanfx.ui.input.Keyboard.bare;
 import static java.util.Objects.requireNonNull;
 
@@ -69,10 +68,10 @@ public class StartPagesCarousel extends Carousel implements GameUI_View {
 
     @Override
     public void onEnter() {
-        actionBindings.setKeyCombination(actionShowPrevPage,         bare(KeyCode.LEFT));
-        actionBindings.setKeyCombination(actionShowNextPage,         bare(KeyCode.RIGHT));
-        actionBindings.setKeyCombination(ACTION_BOOT_SHOW_PLAY_VIEW, bare(KeyCode.ENTER));
-        actionBindings.setKeyCombination(ACTION_TOGGLE_PAUSED,       bare(KeyCode.P));
+        actionBindings.setKeyCombination(actionShowPrevPage, bare(KeyCode.LEFT));
+        actionBindings.setKeyCombination(actionShowNextPage, bare(KeyCode.RIGHT));
+        actionBindings.setKeyCombination(CommonGameActions.ACTION_BOOT_SHOW_PLAY_VIEW, bare(KeyCode.ENTER));
+        actionBindings.setKeyCombination(CommonGameActions.ACTION_TOGGLE_PAUSED, bare(KeyCode.P));
         actionBindings.activateBindings(GameUI.KEYBOARD);
         restartTimer();
     }

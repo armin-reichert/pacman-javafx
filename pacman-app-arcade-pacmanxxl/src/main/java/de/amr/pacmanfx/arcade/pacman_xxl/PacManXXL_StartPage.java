@@ -83,16 +83,12 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
                     Logger.info("Key '{}': Open editor.", e.getCode());
                     voicePlayer.stop();
                     ui.showEditorView();
+                    e.consume();
                 }
                 case ENTER -> {
-                    Logger.info("Key '{}': Start game.", e.getCode());
                     voicePlayer.stop();
                     menu.startSelectedGame();
-                }
-                case ESCAPE -> {
-                    Logger.info("Key '{}': Mute voice.", e.getCode());
                     e.consume();
-                    voicePlayer.stop();
                 }
                 default -> Logger.info("Key '{}': No action assigned.", e.getCode());
             }
