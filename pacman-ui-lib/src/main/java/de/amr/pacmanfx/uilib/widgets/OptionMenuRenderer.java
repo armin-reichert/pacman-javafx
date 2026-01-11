@@ -17,7 +17,7 @@ import static de.amr.pacmanfx.uilib.Ufx.scaleFontBy;
 
 public class OptionMenuRenderer extends BaseRenderer {
 
-    public static final float LINE_SKIP = TS(2);
+    protected float lineSkip = TS(2);
 
     public OptionMenuRenderer(Canvas canvas) {
         super(canvas);
@@ -60,23 +60,23 @@ public class OptionMenuRenderer extends BaseRenderer {
         fillTextCentered("SELECT OPTIONS WITH UP AND DOWN", txtFill, font, centerX, y);
         fillTextCentered("                    UP     DOWN", valFill, font, centerX, y);
 
-        y += LINE_SKIP;
+        y += lineSkip;
         drawActionText(KeyCode.SPACE, "CHANGE VALUE", txtFill, valFill, font, centerX, y);
 
         if (menu.action1KeyCode() != null && menu.action1Text() != null) {
-            y += LINE_SKIP;
+            y += lineSkip;
             drawActionText(menu.action1KeyCode(), menu.action1Text(), txtFill, valFill, font, centerX, y);
         }
         if (menu.action2KeyCode() != null && menu.action2Text() != null) {
-            y += LINE_SKIP;
+            y += lineSkip;
             drawActionText(menu.action2KeyCode(), menu.action2Text(), txtFill, valFill, font, centerX, y);
         }
     }
 
-    private void drawActionText(KeyCode keyCode, String text, Color txtFill, Color valFill, Font font, double centerX, double y) {
-        final String text1 = "PRESS %s TO %s".formatted(keyCode, text);
-        final String text2 = "      %s    %s".formatted(keyCode, " ".repeat(text.length()));
-        fillTextCentered(text1, txtFill, font, centerX, y);
-        fillTextCentered(text2, valFill, font, centerX, y);
+    private void drawActionText(KeyCode keyCode, String actionText, Color normalColor, Color brightColor, Font font, double centerX, double y) {
+        final String normalText = "PRESS %s TO %s".formatted(keyCode, actionText);
+        final String brightText = "      %s    %s".formatted(keyCode, " ".repeat(actionText.length()));
+        fillTextCentered(normalText, normalColor, font, centerX, y);
+        fillTextCentered(brightText, brightColor, font, centerX, y);
     }
 }
