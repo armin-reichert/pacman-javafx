@@ -156,6 +156,7 @@ public class PlayView extends StackPane implements GameUI_View {
     public void onEnter() {
         requestFocus();
         addListeners();
+        canvasDecorator.updateLayout();
     }
 
     @Override

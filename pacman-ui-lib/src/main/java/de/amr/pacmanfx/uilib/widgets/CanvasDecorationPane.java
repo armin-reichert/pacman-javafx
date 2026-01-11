@@ -99,7 +99,7 @@ public class CanvasDecorationPane extends StackPane {
         canvas.heightProperty().bind(scaling.multiply(unscaledCanvasHeight));
     }
 
-    private void updateLayout() {
+    public void updateLayout() {
         doLayout(scaling(), true);
     }
 

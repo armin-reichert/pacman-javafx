@@ -25,9 +25,11 @@ public class PacManXXL_OptionMenu extends OptionMenu {
 
     public static final int NUM_TILES_X = 42;
     public static final int NUM_TILES_Y = 36;
+
     public static final int TEXT_COLUMN = 6;
     public static final int VALUE_COLUMN = 20;
-    public static final float Y_OFFSET = 23.5f * TS;
+
+    public static final float CHASE_ANIMATION_Y = 24f * TS;
 
     private OptionMenuEntry<StandardGameVariant> entryGameVariant;
     private OptionMenuEntry<Boolean> entryPlay3D;
@@ -56,7 +58,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         addEntry(entryCutScenesEnabled);
         addEntry(entryMapOrder);
 
-        chaseAnimation.setY(Y_OFFSET);
+        chaseAnimation.setY(CHASE_ANIMATION_Y);
         chaseAnimation.scalingProperty().bind(scalingProperty());
 
         entryGameVariant.valueProperty().addListener((_, _, newVariant) -> {
