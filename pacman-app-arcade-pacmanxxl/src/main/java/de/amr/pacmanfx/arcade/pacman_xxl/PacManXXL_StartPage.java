@@ -18,13 +18,12 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
-import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.Media;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.model.StandardGameVariant.ARCADE_MS_PACMAN_XXL;
 import static de.amr.pacmanfx.model.StandardGameVariant.ARCADE_PACMAN_XXL;
-import static de.amr.pacmanfx.uilib.animation.AnimationSupport.pauseSec;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -34,10 +33,10 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
 
     private static final ResourceManager LOCAL_RESOURCES = () -> PacManXXL_StartPage.class;
     private static final Image WALLPAPER = LOCAL_RESOURCES.loadImage("graphics/screenshot.png");
+    private static final Media VOICE = LOCAL_RESOURCES.loadMedia("sound/game-description.mp3");
 
     private static final double STAGE_HEIGHT_FRACTION = 0.66;
 
-    private final MediaPlayer voicePlayer = new MediaPlayer(LOCAL_RESOURCES.loadMedia("sound/game-description.mp3"));
     private final StringProperty title = new SimpleStringProperty("Pac-Man XXL games");
     private final PacManXXL_OptionMenu menu;
 
@@ -83,12 +82,12 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
             switch (e.getCode()) {
                 case E -> {
                     Logger.info("Key '{}': Open editor.", e.getCode());
-                    voicePlayer.stop();
+                    ui.stopVoice();
                     ui.showEditorView();
                     e.consume();
                 }
                 case ENTER -> {
-                    voicePlayer.stop();
+                    ui.stopVoice();
                     menu.startSelectedGame();
                     e.consume();
                 }
@@ -136,8 +135,7 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
 
     @Override
     public void onEnterStartPage(GameUI ui) {
-        voicePlayer.stop();
-        pauseSec(1, voicePlayer::play).play();
+        ui.playVoice(VOICE, 1.5f);
 
         menu.requestFocus();
         menu.startDrawLoop();
@@ -156,7 +154,7 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
 
     @Override
     public void onExitStartPage(GameUI ui) {
-        voicePlayer.stop();
+        ui.stopVoice();
         menu.stopDrawLoop();
         unbindMenu();
     }

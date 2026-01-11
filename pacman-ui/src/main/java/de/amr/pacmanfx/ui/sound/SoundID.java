@@ -29,19 +29,13 @@ public enum SoundID {
     VOICE_AUTOPILOT_ON,
     VOICE_AUTOPILOT_OFF,
     VOICE_EXPLAIN_GAME_START,
-    VOICE_FLYER_TEXT,
     VOICE_IMMUNITY_ON,
     VOICE_IMMUNITY_OFF;
-
-    public boolean isSirenID() {
-        return this == SIREN_1 || this == SIREN_2 || this == SIREN_3 || this == SIREN_4;
-    }
 
     public boolean isVoiceID() {
         return this == VOICE_AUTOPILOT_ON
             || this == VOICE_AUTOPILOT_OFF
             || this == VOICE_EXPLAIN_GAME_START
-            || this == VOICE_FLYER_TEXT
             || this == VOICE_IMMUNITY_ON
             || this == VOICE_IMMUNITY_OFF;
     }

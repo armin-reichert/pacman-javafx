@@ -6,7 +6,6 @@ package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_StartPage;
-import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.widgets.FancyButton;
 import de.amr.pacmanfx.uilib.widgets.Flyer;
@@ -90,12 +89,11 @@ public abstract class FlyerStartPage extends StackPane implements GameUI_StartPa
     public void onEnterStartPage(GameUI ui) {
         flyer.selectPage(0);
         ui.selectGameVariant(gameVariant);
-        ui.currentConfig().soundManager().playVoiceAfterSec(1, SoundID.VOICE_FLYER_TEXT);
     }
 
     @Override
     public void onExitStartPage(GameUI ui) {
-        ui.currentConfig().soundManager().stopVoice();
+        ui.stopVoice();
     }
 
     @Override

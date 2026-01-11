@@ -180,6 +180,12 @@ public interface GameUI extends LocalizedTextAccessor {
         showFlashMessage(DEFAULT_FLASH_MESSAGE_DURATION, message, args);
     }
 
+    void playVoice(Media voice);
+
+    void playVoice(Media voice, float delaySeconds);
+
+    void stopVoice();
+
     void updateTitle();
 
     // Scene access

@@ -24,6 +24,7 @@ import de.amr.pacmanfx.uilib.assets.UIPreferences;
 import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
 import de.amr.pacmanfx.uilib.rendering.Gradients;
 import de.amr.pacmanfx.uilib.widgets.FlashMessageView;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
@@ -36,6 +37,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
@@ -50,6 +53,7 @@ import java.util.ResourceBundle;
 
 import static de.amr.pacmanfx.Validations.requireNonNegative;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
+import static de.amr.pacmanfx.uilib.animation.AnimationSupport.pauseSec;
 import static java.util.Objects.requireNonNull;
 import static javafx.beans.binding.Bindings.createStringBinding;
 
@@ -79,6 +83,7 @@ public final class GameUI_Implementation implements GameUI {
     private final StackPane layoutPane = new StackPane();
 
     private final FlashMessageView flashMessageView = new FlashMessageView();
+    private MediaPlayer voicePlayer;
 
     private final StartPagesCarousel startPagesView;
     private final PlayView playView;
@@ -308,6 +313,35 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     // GameUI interface
+
+    private PauseTransition voicePlayerDelay;
+
+    @Override
+    public void playVoice(Media voice) {
+        stopVoice();
+        voicePlayer = new MediaPlayer(requireNonNull(voice));
+        voicePlayer.play();
+    }
+
+    @Override
+    public void playVoice(Media voice, float delaySeconds) {
+        stopVoice();
+        voicePlayer = new MediaPlayer(requireNonNull(voice));
+        voicePlayerDelay = pauseSec(delaySeconds, voicePlayer::play);
+        voicePlayerDelay.play();
+    }
+
+    @Override
+    public void stopVoice() {
+        if (voicePlayerDelay != null) {
+            voicePlayerDelay.stop();
+            voicePlayerDelay = null;
+        }
+        if (voicePlayer != null) {
+            voicePlayer.stop();
+            voicePlayer = null;
+        }
+    }
 
     @Override
     public ResourceBundle localizedTexts() {
