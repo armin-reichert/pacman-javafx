@@ -338,24 +338,23 @@ public final class GameUI_Implementation implements GameUI {
         if (voicePlayerDelay != null) {
             voicePlayerDelay.stop();
         }
-        if (voicePlayer == null) {
-            return;
+        if (voicePlayer != null && voicePlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+            createVoicePlayerFading().play();
         }
-        if (voicePlayer.getStatus() == MediaPlayer.Status.PLAYING) {
-            final var fade = new Timeline(
-                new KeyFrame(Duration.seconds(0), new KeyValue(
-                    voicePlayer.volumeProperty(), voicePlayer.getVolume())),
-                new KeyFrame(Duration.seconds(1.5), new KeyValue(
-                    voicePlayer.volumeProperty(), 0))
-            );
-            fade.setOnFinished(_ -> {
-                if (voicePlayer != null) {
-                    voicePlayer.stop();
-                    voicePlayer.setVolume(1);
-                }
-            });
-            fade.play();
-        }
+    }
+
+    private Timeline createVoicePlayerFading() {
+        final var fading = new Timeline(
+            new KeyFrame(Duration.ZERO,         new KeyValue(voicePlayer.volumeProperty(), 1)),
+            new KeyFrame(Duration.seconds(1.5), new KeyValue(voicePlayer.volumeProperty(), 0))
+        );
+        fading.setOnFinished(_ -> {
+            if (voicePlayer != null) {
+                voicePlayer.stop();
+                voicePlayer.setVolume(1);
+            }
+        });
+        return fading;
     }
 
     @Override
