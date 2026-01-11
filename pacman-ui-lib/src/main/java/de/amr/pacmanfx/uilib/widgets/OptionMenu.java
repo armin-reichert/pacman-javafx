@@ -52,6 +52,11 @@ public class OptionMenu {
 
     private final AnimationTimer drawLoop;
 
+    private KeyCode action1KeyCode;
+    private KeyCode action2KeyCode;
+
+    private String action1Text;
+    private String action2Text;
 
     public OptionMenu(int numTilesX, int numTilesY, int textColumn, int valueColumn) {
         this.numTilesX = numTilesX;
@@ -220,5 +225,37 @@ public class OptionMenu {
 
     public int valueColumn() {
         return valueColumn;
+    }
+
+    public KeyCode action1KeyCode() {
+        return action1KeyCode;
+    }
+
+    public void setAction1KeyCode(KeyCode action1KeyCode) {
+        this.action1KeyCode = action1KeyCode;
+    }
+
+    public KeyCode action2KeyCode() {
+        return action2KeyCode;
+    }
+
+    public void setAction2KeyCode(KeyCode action2KeyCode) {
+        this.action2KeyCode = action2KeyCode;
+    }
+
+    public String action1Text() {
+        return action1Text;
+    }
+
+    public void setAction1Text(String action1Text) {
+        this.action1Text = action1Text;
+    }
+
+    public String action2Text() {
+        return action2Text;
+    }
+
+    public void setAction2Text(String action2Text) {
+        this.action2Text = action2Text;
     }
 }

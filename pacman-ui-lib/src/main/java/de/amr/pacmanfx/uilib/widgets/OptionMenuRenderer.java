@@ -7,6 +7,7 @@ package de.amr.pacmanfx.uilib.widgets;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -55,19 +56,27 @@ public class OptionMenuRenderer extends BaseRenderer {
 
         final double centerX = 0.5 * menu.numTilesX() * TS;
         double y = TS(menu.numTilesY() - 8);
+
         fillTextCentered("SELECT OPTIONS WITH UP AND DOWN", txtFill, font, centerX, y);
         fillTextCentered("                    UP     DOWN", valFill, font, centerX, y);
 
         y += LINE_SKIP;
-        fillTextCentered("PRESS SPACE TO CHANGE VALUE", txtFill, font, centerX, y);
-        fillTextCentered("      SPACE                ", valFill, font, centerX, y);
+        drawActionText(KeyCode.SPACE, "CHANGE VALUE", txtFill, valFill, font, centerX, y);
 
-        y += LINE_SKIP;
-        fillTextCentered("PRESS KEY_1 TO DO ACTION 1", txtFill, font, centerX, y);
-        fillTextCentered("      KEY_1               ", valFill, font, centerX, y);
+        if (menu.action1KeyCode() != null && menu.action1Text() != null) {
+            y += LINE_SKIP;
+            drawActionText(menu.action1KeyCode(), menu.action1Text(), txtFill, valFill, font, centerX, y);
+        }
+        if (menu.action2KeyCode() != null && menu.action2Text() != null) {
+            y += LINE_SKIP;
+            drawActionText(menu.action2KeyCode(), menu.action2Text(), txtFill, valFill, font, centerX, y);
+        }
+    }
 
-        y += LINE_SKIP;
-        fillTextCentered("PRESS KEY_2 TO DO ACTION 2", txtFill, font, centerX, y);
-        fillTextCentered("      KEY_2               ", valFill, font, centerX, y);
+    private void drawActionText(KeyCode keyCode, String text, Color txtFill, Color valFill, Font font, double centerX, double y) {
+        final String text1 = "PRESS %s TO %s".formatted(keyCode, text);
+        final String text2 = "      %s    %s".formatted(keyCode, " ".repeat(text.length()));
+        fillTextCentered(text1, txtFill, font, centerX, y);
+        fillTextCentered(text2, valFill, font, centerX, y);
     }
 }

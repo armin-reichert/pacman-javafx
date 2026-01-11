@@ -56,7 +56,6 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
 
         menu = new PacManXXL_OptionMenu();
         menu.setStyle(style);
-        menu.setRenderer(new PacManXXL_OptionMenuRenderer(menu.canvas()));
 
         setBackground(Ufx.createWallpaper(WALLPAPER));
         getChildren().addAll(menu.root());
