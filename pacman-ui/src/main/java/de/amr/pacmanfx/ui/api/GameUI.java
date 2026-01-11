@@ -111,11 +111,11 @@ public interface GameUI extends LocalizedTextAccessor {
 
     ResourceManager GLOBAL_RESOURCES = () -> GameUI_Implementation.class;
 
-    Media VOICE_IMMUNITY_ON   = new Media(GLOBAL_RESOURCES.url("sound/voice/immunity-on.mp3").toExternalForm());
-    Media VOICE_IMMUNITY_OFF  = new Media(GLOBAL_RESOURCES.url("sound/voice/immunity-off.mp3").toExternalForm());
-    Media VOICE_EXPLAIN_GAME_START = new Media(GLOBAL_RESOURCES.url("sound/voice/press-key.mp3").toExternalForm());
-    Media VOICE_AUTOPILOT_ON  = new Media(GLOBAL_RESOURCES.url("sound/voice/autopilot-on.mp3").toExternalForm());
-    Media VOICE_AUTOPILOT_OFF = new Media(GLOBAL_RESOURCES.url("sound/voice/autopilot-off.mp3").toExternalForm());
+    Media VOICE_IMMUNITY_ON        = GLOBAL_RESOURCES.loadMedia("sound/voice/immunity-on.mp3");
+    Media VOICE_IMMUNITY_OFF       = GLOBAL_RESOURCES.loadMedia("sound/voice/immunity-off.mp3");
+    Media VOICE_EXPLAIN_GAME_START = GLOBAL_RESOURCES.loadMedia("sound/voice/press-key.mp3");
+    Media VOICE_AUTOPILOT_ON       = GLOBAL_RESOURCES.loadMedia("sound/voice/autopilot-on.mp3");
+    Media VOICE_AUTOPILOT_OFF      = GLOBAL_RESOURCES.loadMedia("sound/voice/autopilot-off.mp3");
 
     Font FONT_PAC_FONT_GOOD = GLOBAL_RESOURCES.loadFont("fonts/PacfontGood.ttf", 8);
     Font FONT_PAC_FONT      = GLOBAL_RESOURCES.loadFont("fonts/Pacfont.ttf", 8);
