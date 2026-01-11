@@ -26,26 +26,25 @@ public class PacManXXL_OptionMenuRenderer extends OptionMenuRenderer {
 
     @Override
     protected void drawUsageInfo(OptionMenu menu) {
-        final Color textFill = menu.style().hintTextFill();
-        final Color valueFill = menu.style().entryValueFill();
+        final Color txtFill = menu.style().hintTextFill();
+        final Color valFill = menu.style().entryValueFill();
 
         ctx.setFont(menu.style().textFont());
 
         double y = TS(menu.numTilesY() - 8);
-        drawText("SELECT OPTIONS WITH    AND", textFill, TS(6), y);
-        drawText("UP", valueFill, TS(26), y);
-        drawText("DOWN", valueFill, TS(33), y);
+        drawText("SELECT OPTIONS WITH UP AND DOWN", txtFill, TS(6), y);
+        drawText("                    UP     DOWN", valFill, TS(6), y);
 
         y += LINE_SKIP;
-        drawText("PRESS       TO CHANGE VALUE", textFill, TS(8), y);
-        drawText("SPACE", valueFill, TS(14), y);
+        drawText("PRESS SPACE TO CHANGE VALUE", txtFill, TS(8), y);
+        drawText("      SPACE                ", valFill, TS(8), y);
 
         y += LINE_SKIP;
-        drawText("PRESS   TO OPEN EDITOR", textFill, TS(10), y);
-        drawText("E", valueFill, TS(16), y);
+        drawText("PRESS E TO OPEN EDITOR", txtFill, TS(10), y);
+        drawText("      E               ", valFill, TS(10), y);
 
         y += LINE_SKIP;
-        drawText("PRESS       TO START", textFill, TS(11), y);
-        drawText("ENTER", valueFill, TS(17), y);
+        drawText("PRESS ENTER TO START", txtFill, TS(11), y);
+        drawText("      ENTER         ", valFill, TS(11), y);
     }
 }
