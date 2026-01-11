@@ -122,18 +122,21 @@ public class OptionMenu {
         renderer.drawOptionMenu(this);
     }
 
-    protected void handleKeyPress(KeyEvent e) {
+    public void logEntryState() {
+    }
+
+        protected void handleKeyPress(KeyEvent e) {
         if (e.getCode() == prevEntryKeyCode) {
-            e.consume();
             selectedPrevEntry();
+            e.consume();
         }
         else if (e.getCode() == nextEntryKeyCode) {
-            e.consume();
             selectNextEntry();
+            e.consume();
         }
         else  if (e.getCode() == nextValueKeyCode) {
-            e.consume();
             selectNextValue();
+            e.consume();
         }
     }
 
@@ -143,6 +146,7 @@ public class OptionMenu {
             selectedEntryIndex = prevIndex;
             playSoundIfPresent(style.entrySelectedSound());
         }
+        logEntryState();
     }
 
     private void selectNextEntry() {
@@ -151,6 +155,7 @@ public class OptionMenu {
             selectedEntryIndex = nextIndex;
             playSoundIfPresent(style.entrySelectedSound());
         }
+        logEntryState();
     }
 
     private void selectNextValue() {
@@ -159,6 +164,7 @@ public class OptionMenu {
             ? entry.selectedValueIndex + 1 : 0;
         playSoundIfPresent(style.valueSelectedSound());
         entry.onValueSelectionChange();
+        logEntryState();
     }
 
     public void setNextEntryKeyCode(KeyCode keyCode) {

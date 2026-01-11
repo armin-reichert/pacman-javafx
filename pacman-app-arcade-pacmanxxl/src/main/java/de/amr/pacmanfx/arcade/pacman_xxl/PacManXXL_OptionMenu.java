@@ -24,12 +24,12 @@ import static java.util.Objects.requireNonNull;
 public class PacManXXL_OptionMenu extends OptionMenu {
 
     public static final int NUM_TILES_X = 42;
-    public static final int NUM_TILES_Y = 36;
+    public static final int NUM_TILES_Y = 34;
 
     public static final int TEXT_COLUMN = 6;
     public static final int VALUE_COLUMN = 20;
 
-    public static final float CHASE_ANIMATION_Y = 24f * TS;
+    public static final float CHASE_ANIMATION_Y = (NUM_TILES_Y - 12) * TS;
 
     private OptionMenuEntry<StandardGameVariant> entryGameVariant;
     private OptionMenuEntry<Boolean> entryPlay3D;
@@ -139,7 +139,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         entryCutScenesEnabled.selectValue(game.cutScenesEnabled());
         entryMapOrder.selectValue(mapSelector.selectionMode());
         entryMapOrder.setEnabled(!mapSelector.customMapPrototypes().isEmpty());
-        logEntries();
+        logEntryState();
 
         requestFocus();
         soundEnabledProperty().bind(ui.currentConfig().soundManager().muteProperty().not());
@@ -147,8 +147,8 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         chaseAnimation.init(ui.currentConfig(), canvas);
     }
 
-    public void logEntries() {
-        Logger.info("Menu state: gameVariant={} play3D={} cutScenesEnabled={} mapOrder={}",
+    public void logEntryState() {
+        Logger.info("(Option menu) gameVariant: {} play3D: {} cutScenesEnabled: {} mapOrder: {}",
             entryGameVariant.value(),
             entryPlay3D.value(),
             entryCutScenesEnabled.value(),

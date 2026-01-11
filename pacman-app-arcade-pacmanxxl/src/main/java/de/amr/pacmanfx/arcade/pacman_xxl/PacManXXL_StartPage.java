@@ -35,6 +35,8 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
     private static final ResourceManager LOCAL_RESOURCES = () -> PacManXXL_StartPage.class;
     private static final Image WALLPAPER = LOCAL_RESOURCES.loadImage("graphics/screenshot.png");
 
+    private static final double STAGE_HEIGHT_FRACTION = 0.66;
+
     private final MediaPlayer voicePlayer = new MediaPlayer(LOCAL_RESOURCES.loadMedia("sound/game-description.mp3"));
     private final StringProperty title = new SimpleStringProperty("Pac-Man XXL games");
     private final PacManXXL_OptionMenu menu;
@@ -113,7 +115,7 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
 
         menu.scalingProperty().bind(ui.stage().heightProperty().map(height -> {
             double h = height.doubleValue();
-            h *= 0.8; // take 80% of stage height
+            h *= STAGE_HEIGHT_FRACTION; // take 80% of stage height
             h /= TS(menu.numTilesY()); // scale according to menu height
             return Math.round(h * 100.0) / 100.0; // round to 2 decimal digits
         }));
