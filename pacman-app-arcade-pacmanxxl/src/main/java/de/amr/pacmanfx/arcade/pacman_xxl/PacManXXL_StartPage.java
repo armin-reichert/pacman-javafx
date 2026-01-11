@@ -71,11 +71,11 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
     @Override
     public void init(GameUI ui) {
         this.ui = requireNonNull(ui);
-        addKeyEventHandler(ui);
+        handleKeyEvents(ui);
         bindMenu(ui);
     }
 
-    private void addKeyEventHandler(GameUI ui) {
+    private void handleKeyEvents(GameUI ui) {
         addEventHandler(KeyEvent.KEY_PRESSED, e -> {
             ui.startPagesView().pauseTimer();
             switch (e.getCode()) {
@@ -91,6 +91,7 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
                 }
                 case ESCAPE -> {
                     Logger.info("Key '{}': Mute voice.", e.getCode());
+                    e.consume();
                     voicePlayer.stop();
                 }
                 default -> Logger.info("Key '{}': No action assigned.", e.getCode());
