@@ -12,7 +12,10 @@ import de.amr.pacmanfx.lib.TickTimer;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.model.actors.*;
+import de.amr.pacmanfx.model.actors.AnimationManager;
+import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.model.actors.GhostState;
+import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
@@ -70,7 +73,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void doInit(Game game) {
-        soundManager().playVoiceAfterSec(1, SoundID.VOICE_EXPLAIN_GAME_START);
+        ui.playVoiceAfterSec(GameUI.VOICE_EXPLAIN_GAME_START, 1);
 
         game.hud().credit(true).score(true).levelCounter(true).livesCounter(false).show();
 

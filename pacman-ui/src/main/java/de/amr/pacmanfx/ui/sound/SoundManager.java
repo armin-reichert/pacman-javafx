@@ -5,10 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.sound;
 
 import de.amr.pacmanfx.lib.Disposable;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
 import javafx.animation.PauseTransition;
-import javafx.animation.Timeline;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -25,8 +22,6 @@ import java.util.Map;
 import static java.util.Objects.requireNonNull;
 
 public class SoundManager implements Disposable {
-
-    private static final float VOICE_FADE_OUT_SECONDS = 1.5f;
 
     private final BooleanProperty enabledProperty = new SimpleBooleanProperty(true);
 
@@ -211,57 +206,8 @@ public class SoundManager implements Disposable {
 
     public void stopAll() {
         stopSiren();
-        stopVoice();
         map.values().stream().filter(MediaPlayer.class::isInstance).map(MediaPlayer.class::cast).forEach(MediaPlayer::stop);
         Logger.debug("All sounds (media players, siren, voice) stopped");
-    }
-
-    // Voices
-
-    public void playVoiceAfterSec(float delaySeconds, SoundID soundID) {
-        requireNonNull(soundID);
-        if (!soundID.isVoiceID()) {
-            Logger.error("Sound ID '{}' is no voice ID", soundID);
-            return;
-        }
-        final Media voice = valueOfType(soundID, Media.class);
-        voicePlayer = new MediaPlayer(voice);
-        voicePlayer.muteProperty().bind(muteProperty);
-        if (delaySeconds > 0) {
-            voicePlayer.setOnReady(() -> {
-                voiceDelay.stop();
-                voiceDelay.setDuration(Duration.seconds(delaySeconds));
-                voiceDelay.setOnFinished(_ -> {
-                    if (voicePlayer != null) voicePlayer.play();
-                });
-                voiceDelay.play();
-            });
-        }
-        else {
-            voicePlayer.play();
-        }
-    }
-
-    public void stopVoice() {
-        voiceDelay.stop();
-        if (voicePlayer == null) {
-            return;
-        }
-        if (voicePlayer.getStatus() == MediaPlayer.Status.PLAYING) {
-            final var fade = new Timeline(
-                new KeyFrame(Duration.seconds(0), new KeyValue(
-                    voicePlayer.volumeProperty(), voicePlayer.getVolume())),
-                new KeyFrame(Duration.seconds(VOICE_FADE_OUT_SECONDS), new KeyValue(
-                    voicePlayer.volumeProperty(), 0))
-            );
-            fade.setOnFinished(_ -> {
-                if (voicePlayer != null) {
-                    voicePlayer.stop();
-                    voicePlayer.setVolume(1);
-                }
-            });
-            fade.play();
-        }
     }
 
     // Sirens

@@ -135,7 +135,7 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
 
     @Override
     public void onEnterStartPage(GameUI ui) {
-        ui.playVoice(VOICE, 1.5f);
+        ui.playVoiceAfterSec(VOICE, 1.5f);
 
         menu.requestFocus();
         menu.startDrawLoop();

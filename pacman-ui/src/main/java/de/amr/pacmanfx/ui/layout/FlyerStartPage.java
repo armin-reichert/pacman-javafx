@@ -71,7 +71,7 @@ public abstract class FlyerStartPage extends StackPane implements GameUI_StartPa
 
         addEventHandler(KeyEvent.KEY_PRESSED, e -> {
             if (e.getCode() == KeyCode.ESCAPE) {
-                ui.currentConfig().soundManager().stopVoice();
+                ui.stopVoice();
             }
         });
     }

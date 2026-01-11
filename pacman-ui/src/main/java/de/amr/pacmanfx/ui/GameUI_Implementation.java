@@ -24,7 +24,10 @@ import de.amr.pacmanfx.uilib.assets.UIPreferences;
 import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
 import de.amr.pacmanfx.uilib.rendering.Gradients;
 import de.amr.pacmanfx.uilib.widgets.FlashMessageView;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
 import javafx.animation.PauseTransition;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
@@ -324,22 +327,34 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     @Override
-    public void playVoice(Media voice, float delaySeconds) {
+    public void playVoiceAfterSec(Media voice, float delaySeconds) {
         stopVoice();
         voicePlayer = new MediaPlayer(requireNonNull(voice));
         voicePlayerDelay = pauseSec(delaySeconds, voicePlayer::play);
         voicePlayerDelay.play();
     }
 
-    @Override
     public void stopVoice() {
         if (voicePlayerDelay != null) {
             voicePlayerDelay.stop();
-            voicePlayerDelay = null;
         }
-        if (voicePlayer != null) {
-            voicePlayer.stop();
-            voicePlayer = null;
+        if (voicePlayer == null) {
+            return;
+        }
+        if (voicePlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+            final var fade = new Timeline(
+                new KeyFrame(Duration.seconds(0), new KeyValue(
+                    voicePlayer.volumeProperty(), voicePlayer.getVolume())),
+                new KeyFrame(Duration.seconds(1.5), new KeyValue(
+                    voicePlayer.volumeProperty(), 0))
+            );
+            fade.setOnFinished(_ -> {
+                if (voicePlayer != null) {
+                    voicePlayer.stop();
+                    voicePlayer.setVolume(1);
+                }
+            });
+            fade.play();
         }
     }
 

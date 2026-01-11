@@ -215,7 +215,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
         if (usingAutopilot && game.optGameLevel().isPresent() && !game.level().isDemoLevel()) {
             game.cheatUsedProperty().set(true);
         }
-        soundManager().playVoiceAfterSec(0, usingAutopilot ? SoundID.VOICE_AUTOPILOT_ON : SoundID.VOICE_AUTOPILOT_OFF);
+        ui.playVoice(usingAutopilot ? GameUI.VOICE_AUTOPILOT_ON : GameUI.VOICE_AUTOPILOT_OFF);
         ui.showFlashMessage(ui.translated(usingAutopilot ? "autopilot_on" : "autopilot_off"));
     }
 
@@ -223,7 +223,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
         if (immune && game.optGameLevel().isPresent() && !game.level().isDemoLevel()) {
             game.cheatUsedProperty().set(true);
         }
-        soundManager().playVoiceAfterSec(0, immune ? SoundID.VOICE_IMMUNITY_ON : SoundID.VOICE_IMMUNITY_OFF);
+        ui.playVoice(immune ? GameUI.VOICE_IMMUNITY_ON : GameUI.VOICE_IMMUNITY_OFF);
         ui.showFlashMessage(ui.translated(immune ? "player_immunity_on" : "player_immunity_off"));
     }
 

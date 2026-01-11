@@ -29,7 +29,7 @@ public interface ArcadeActions {
                 final SoundManager soundManager = ui.currentConfig().soundManager();
                 coinMechanism.insertCoin();
                 soundManager.setEnabled(true);
-                soundManager.stopVoice();
+                ui.stopVoice();
                 if (game.control().state() != SETTING_OPTIONS_FOR_START) {
                     game.control().enterState(SETTING_OPTIONS_FOR_START);
                 }
@@ -53,7 +53,7 @@ public interface ArcadeActions {
     GameAction ACTION_START_GAME = new GameAction("START_GAME") {
         @Override
         public void execute(GameUI ui) {
-            ui.currentConfig().soundManager().stopVoice();
+            ui.stopVoice();
             ui.context().currentGame().control().enterState(GameState.STARTING_GAME_OR_LEVEL);
         }
 

@@ -22,7 +22,7 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
 
     @Override
     protected void doEnd(Game game) {
-        soundManager().stopVoice();
+        ui.stopVoice();
     }
 
     @Override
