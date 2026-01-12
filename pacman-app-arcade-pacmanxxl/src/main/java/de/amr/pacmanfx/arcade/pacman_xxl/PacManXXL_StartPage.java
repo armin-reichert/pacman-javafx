@@ -35,7 +35,9 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
     private static final Image WALLPAPER = LOCAL_RESOURCES.loadImage("graphics/screenshot.png");
     private static final Media VOICE = LOCAL_RESOURCES.loadMedia("sound/game-description.mp3");
 
-    private static final double STAGE_HEIGHT_FRACTION = 0.66;
+    private static final int MENU_MIN_HEIGHT = 400;
+    private static final int MENU_MAX_HEIGHT = 800;
+    private static final double RELATIVE_MENU_HEIGHT = 0.66;
 
     private final StringProperty title = new SimpleStringProperty("Pac-Man XXL games");
     private final PacManXXL_OptionMenu menu;
@@ -112,11 +114,11 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
         play3DListener = (_, _, play3D) -> GameUI.PROPERTY_3D_ENABLED.set(play3D);
         menu.entryPlay3D().valueProperty().addListener(play3DListener);
 
-        menu.scalingProperty().bind(ui.stage().heightProperty().map(height -> {
-            double h = height.doubleValue();
-            h *= STAGE_HEIGHT_FRACTION; // take 80% of stage height
-            h /= TS(menu.numTilesY()); // scale according to menu height
-            return Math.round(h * 100.0) / 100.0; // round to 2 decimal digits
+        menu.scalingProperty().bind(ui.stage().heightProperty().map(stageHeight -> {
+            double menuHeight = stageHeight.doubleValue() * RELATIVE_MENU_HEIGHT;
+            menuHeight = Math.clamp(menuHeight, MENU_MIN_HEIGHT, MENU_MAX_HEIGHT);
+            final double scaling = menuHeight / TS(menu.numTilesY());
+            return Math.round(scaling * 100.0) / 100.0; // rounded to 2 decimal digits
         }));
     }
 
