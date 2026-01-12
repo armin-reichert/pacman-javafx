@@ -11,7 +11,6 @@ import de.amr.pacmanfx.lib.DirectoryWatchdog;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameControl;
 import de.amr.pacmanfx.model.SimulationStep;
-import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.api.*;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
@@ -43,8 +42,6 @@ import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.tinylog.Logger;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -71,8 +68,7 @@ public final class GameUI_Implementation implements GameUI {
     private final DirectoryWatchdog customDirWatchdog;
 
     private final ActionBindingsManager actionBindings = new DefaultActionBindingsManager();
-    private final Map<String, Class<? extends GameUI_Config>> uiConfigMap;
-    private final Map<String, GameUI_Config> configByGameVariant = new HashMap<>();
+    private final GameUI_ConfigFactory configFactory;
 
     private final ObjectProperty<GameUI_View> currentView = new SimpleObjectProperty<>();
 
@@ -97,7 +93,7 @@ public final class GameUI_Implementation implements GameUI {
         double sceneWidth,
         double sceneHeight)
     {
-        this.uiConfigMap = requireNonNull(uiConfigMap, "UI configuration map is null");
+        requireNonNull(uiConfigMap, "UI configuration map is null");
         this.gameContext = requireNonNull(gameContext, "Game context is null");
         this.stage = requireNonNull(stage, "Stage is null");
         requireNonNegative(sceneWidth, "Main scene width must be a positive number");
@@ -106,6 +102,8 @@ public final class GameUI_Implementation implements GameUI {
         prefs = new GameUI_Preferences();
         PROPERTY_3D_WALL_HEIGHT.set(prefs.getFloat("3d.obstacle.base_height"));
         PROPERTY_3D_WALL_OPACITY.set(prefs.getFloat("3d.obstacle.opacity"));
+
+        configFactory = new GameUI_ConfigFactory(uiConfigMap, prefs);
 
         // Trigger loading of 3D models used by all game variants
         PacManModel3DRepository.instance();
@@ -395,7 +393,7 @@ public final class GameUI_Implementation implements GameUI {
         }
 
         if (prevVariantName != null) {
-            config(prevVariantName).dispose();
+            configFactory.dispose(prevVariantName);
         }
 
         GameUI_Config newConfig = config(gameVariantName);
@@ -517,33 +515,7 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public GameUI_Config config(String gameVariantName) {
-        GameUI_Config config = configByGameVariant.get(gameVariantName);
-        if (config == null) {
-            final Class<?> configClass = uiConfigMap.get(gameVariantName);
-            try {
-                config = createGameUI_Config(configClass, prefs);
-                configByGameVariant.put(gameVariantName, config);
-            } catch (Exception x) {
-                Logger.error("Could not create UI configuration for game variant {} and configuration class {}",
-                    gameVariantName, configClass);
-                throw new IllegalStateException(x);
-            }
-        }
-        return config;
-    }
-
-    private static GameUI_Config createGameUI_Config(Class<?> configClass, UIPreferences prefs)
-        throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException
-    {
-        var config = (GameUI_Config) configClass.getDeclaredConstructor(UIPreferences.class).newInstance(prefs);
-        // UI configuration class must also implement GameScene_Config interface
-        final GameScene_Config sceneConfig = (GameScene_Config) config;
-        sceneConfig.gameScenes().forEach(scene -> {
-            if (scene instanceof GameScene2D gameScene2D) {
-                gameScene2D.debugInfoVisibleProperty().bind(PROPERTY_DEBUG_INFO_VISIBLE);
-            }
-        });
-        return config;
+        return configFactory.getOrCreate(gameVariantName);
     }
 
     @Override
