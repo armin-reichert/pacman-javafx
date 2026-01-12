@@ -217,27 +217,31 @@ public final class GameUI_Implementation implements GameUI {
         view.root().requestFocus();
     }
 
-    // Asset key: "app.title" or "app.title.paused"
     private String computeStageTitle() {
-        var currentView = currentViewProperty().get();
-        if (currentView == null) {
+        final GameUI_View view = currentViewProperty().get();
+        if (view == null) {
             return "No View?";
         }
-        if (currentView.titleSupplier().isPresent()) {
-            return currentView.titleSupplier().get().get();
-        }
-        boolean mode3D = PROPERTY_3D_ENABLED.get();
-        boolean modeDebug = PROPERTY_DEBUG_INFO_VISIBLE.get();
-        String assetKey       = clock().isPaused() ? "app.title.paused" : "app.title";
-        String translatedMode = translated(mode3D ? "threeD" : "twoD");
-        String shortTitle     = currentConfig().assets().translated(assetKey, translatedMode);
 
-        var currentGameScene = currentGameScene().orElse(null);
-        if (currentGameScene == null || !modeDebug) {
+        // If view explicitly provides a title, use that
+        if (view.titleSupplier().isPresent()) {
+            return view.titleSupplier().get().get();
+        }
+
+        final boolean debug  = PROPERTY_DEBUG_INFO_VISIBLE.get();
+        final boolean is3D   = PROPERTY_3D_ENABLED.get();
+        final boolean paused = clock.isPaused();
+
+        final String appTitle     = paused ? "app.title.paused" : "app.title";
+        final String viewModeText = translated(is3D ? "threeD" : "twoD");
+        final String shortTitle   = currentConfig().assets().translated(appTitle, viewModeText);
+
+        final GameScene gameScene = currentGameScene().orElse(null);
+        if (gameScene == null || !debug) {
             return shortTitle;
         }
-        String sceneClassName = currentGameScene.getClass().getSimpleName();
-        return shortTitle + " [%s]".formatted(sceneClassName);
+        final String sceneClassName = gameScene.getClass().getSimpleName();
+        return "%s [%s]".formatted(shortTitle, sceneClassName);
     }
 
     private void selectView(GameUI_View view) {
