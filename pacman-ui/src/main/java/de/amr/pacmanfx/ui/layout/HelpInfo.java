@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.layout;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameControl.StateName;
-import de.amr.pacmanfx.ui.api.GameUI;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;

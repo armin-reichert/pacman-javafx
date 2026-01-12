@@ -13,16 +13,16 @@ import de.amr.pacmanfx.model.StandardGameVariant;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.test.LevelMediumTestState;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
+import de.amr.pacmanfx.ui.GameScene_Config;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
-import de.amr.pacmanfx.ui.api.GameScene_Config;
-import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.layout.PlayView;
 import javafx.scene.shape.DrawMode;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.NUM_TICKS_PER_SEC;
-import static de.amr.pacmanfx.ui.api.GameUI.*;
+import static de.amr.pacmanfx.ui.GameUI.*;
 import static de.amr.pacmanfx.uilib.Ufx.toggle;
 
 /**

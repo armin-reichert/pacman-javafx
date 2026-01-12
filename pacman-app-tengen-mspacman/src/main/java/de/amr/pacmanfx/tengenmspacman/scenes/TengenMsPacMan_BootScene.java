@@ -10,8 +10,8 @@ import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.ui.GameUI_Config;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui.api.GameUI_Config;
 import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.*;

@@ -20,12 +20,12 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
+import de.amr.pacmanfx.ui.GameScene;
+import de.amr.pacmanfx.ui.GameScene_Config;
+import de.amr.pacmanfx.ui.GameUI_Config;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui._2d.HeadsUpDisplay_Renderer;
-import de.amr.pacmanfx.ui.api.GameScene;
-import de.amr.pacmanfx.ui.api.GameScene_Config;
-import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.Ufx;
@@ -52,8 +52,8 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.arcade.pacman.model.Arcade_GameController.GameState.*;
-import static de.amr.pacmanfx.ui.api.ArcadePalette.*;
-import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_3D_ENABLED;
+import static de.amr.pacmanfx.ui.ArcadePalette.*;
+import static de.amr.pacmanfx.ui.GameUI.PROPERTY_3D_ENABLED;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config {

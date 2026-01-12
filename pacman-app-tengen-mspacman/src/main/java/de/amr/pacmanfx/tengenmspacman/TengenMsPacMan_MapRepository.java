@@ -9,7 +9,7 @@ import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.rendering.*;
-import de.amr.pacmanfx.ui.api.GameUI_Config;
+import de.amr.pacmanfx.ui.GameUI_Config;
 
 import java.util.List;
 

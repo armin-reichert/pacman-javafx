@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.dashboard;
 
-import de.amr.pacmanfx.ui.api.GameUI;
+import de.amr.pacmanfx.ui.GameUI;
 import javafx.scene.Node;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.VBox;

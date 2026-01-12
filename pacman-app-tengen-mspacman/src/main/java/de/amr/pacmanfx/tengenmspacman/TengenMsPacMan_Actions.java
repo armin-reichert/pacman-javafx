@@ -9,9 +9,9 @@ import de.amr.pacmanfx.tengenmspacman.model.PacBooster;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameController.GameState;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.scenes.SceneDisplayMode;
+import de.amr.pacmanfx.ui.GameScene_Config;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.GameAction;
-import de.amr.pacmanfx.ui.api.GameScene_Config;
-import de.amr.pacmanfx.ui.api.GameUI;
 
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Properties.PROPERTY_JOYPAD_BINDINGS_DISPLAYED;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Properties.PROPERTY_PLAY_SCENE_DISPLAY_MODE;

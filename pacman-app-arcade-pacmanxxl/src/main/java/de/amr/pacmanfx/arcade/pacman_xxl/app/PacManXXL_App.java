@@ -6,8 +6,8 @@ package de.amr.pacmanfx.arcade.pacman_xxl.app;
 
 import de.amr.pacmanfx.GameBox;
 import de.amr.pacmanfx.arcade.pacman_xxl.*;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Builder;
-import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.dashboard.CommonDashboardID;
 import javafx.application.Application;
 import javafx.stage.Screen;

@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.pacmanfx.model.StandardGameVariant;
-import de.amr.pacmanfx.ui.api.GameUI;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.layout.FlyerStartPage;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.scene.media.Media;

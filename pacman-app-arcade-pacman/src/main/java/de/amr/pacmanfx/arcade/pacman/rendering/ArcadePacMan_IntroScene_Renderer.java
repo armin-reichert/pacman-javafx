@@ -7,10 +7,10 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_IntroScene;
 import de.amr.pacmanfx.lib.Pulse;
 import de.amr.pacmanfx.lib.math.RectShort;
+import de.amr.pacmanfx.ui.GameUI_Config;
 import de.amr.pacmanfx.ui._2d.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
-import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.assets.UIPreferences;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
@@ -18,7 +18,7 @@ import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.pacman.rendering.SpriteID.GALLERY_GHOSTS;
-import static de.amr.pacmanfx.ui.api.ArcadePalette.*;
+import static de.amr.pacmanfx.ui.ArcadePalette.*;
 
 public class ArcadePacMan_IntroScene_Renderer extends GameScene2D_Renderer implements SpriteRenderer {
 

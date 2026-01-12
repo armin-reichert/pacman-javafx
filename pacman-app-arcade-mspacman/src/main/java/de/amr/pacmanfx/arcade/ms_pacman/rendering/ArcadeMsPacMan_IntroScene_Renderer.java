@@ -2,9 +2,9 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.ArcadeMsPacMan_IntroScene;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.Marquee;
+import de.amr.pacmanfx.ui.GameUI_Config;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
-import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.assets.UIPreferences;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import javafx.scene.canvas.Canvas;
@@ -14,7 +14,7 @@ import javafx.scene.paint.Color;
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.arcade.ms_pacman.scenes.ArcadeMsPacMan_IntroScene.*;
-import static de.amr.pacmanfx.ui.api.ArcadePalette.*;
+import static de.amr.pacmanfx.ui.ArcadePalette.*;
 
 public class ArcadeMsPacMan_IntroScene_Renderer extends GameScene2D_Renderer {
 

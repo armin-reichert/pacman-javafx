@@ -8,7 +8,7 @@ import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameControl;
 import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.ui.api.GameUI;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
 
 import java.util.List;

@@ -16,17 +16,17 @@ import de.amr.pacmanfx.model.actors.AnimationManager;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.GameUI_Config;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui.api.GameUI;
-import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
 
 import java.util.Collections;
 import java.util.List;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.ui.api.ArcadePalette.ARCADE_RED;
-import static de.amr.pacmanfx.ui.api.ArcadePalette.ARCADE_WHITE;
+import static de.amr.pacmanfx.ui.ArcadePalette.ARCADE_RED;
+import static de.amr.pacmanfx.ui.ArcadePalette.ARCADE_WHITE;
 
 /**
  * Intro scene of the Ms. Pac-Man game.

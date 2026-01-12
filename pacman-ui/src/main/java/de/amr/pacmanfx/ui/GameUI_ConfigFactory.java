@@ -5,9 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui.api.GameScene_Config;
-import de.amr.pacmanfx.ui.api.GameUI;
-import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.assets.UIPreferences;
 
 import java.util.HashMap;

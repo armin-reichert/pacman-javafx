@@ -16,7 +16,7 @@ import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.world.*;
-import de.amr.pacmanfx.ui.api.GameUI_Config;
+import de.amr.pacmanfx.ui.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.EnergizerExplosionAndRecycling;
@@ -58,7 +58,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
-import static de.amr.pacmanfx.ui.api.GameUI.*;
+import static de.amr.pacmanfx.ui.GameUI.*;
 import static de.amr.pacmanfx.uilib.Ufx.colorWithOpacity;
 import static de.amr.pacmanfx.uilib.Ufx.defaultPhongMaterial;
 import static de.amr.pacmanfx.uilib.animation.AnimationSupport.doNow;

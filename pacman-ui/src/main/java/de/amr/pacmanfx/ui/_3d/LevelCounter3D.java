@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.ui.api.GameUI_Config;
+import de.amr.pacmanfx.ui.GameUI_Config;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
 import de.amr.pacmanfx.uilib.assets.UIPreferences;

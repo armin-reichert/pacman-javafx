@@ -7,10 +7,10 @@ package de.amr.pacmanfx.ui.dashboard;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.ui.GameScene;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
-import de.amr.pacmanfx.ui.api.GameScene;
-import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.layout.PlayView;
 import javafx.scene.SubScene;
 import javafx.scene.control.CheckBox;
@@ -19,9 +19,9 @@ import javafx.scene.control.Slider;
 import javafx.scene.shape.DrawMode;
 
 import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.ui.GameUI.*;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_TOGGLE_DRAW_MODE;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_TOGGLE_PLAY_SCENE_2D_3D;
-import static de.amr.pacmanfx.ui.api.GameUI.*;
 
 /**
  * Infobox with 3D related settings.

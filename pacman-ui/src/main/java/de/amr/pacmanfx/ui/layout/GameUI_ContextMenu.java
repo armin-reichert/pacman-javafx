@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.layout;
 
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.GameAction;
-import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.uilib.assets.UIPreferences;
 import javafx.beans.property.BooleanProperty;
 import javafx.event.ActionEvent;

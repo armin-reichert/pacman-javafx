@@ -9,8 +9,8 @@ import javafx.scene.image.Image;
 import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.ui.api.ArcadePalette.ARCADE_ORANGE;
-import static de.amr.pacmanfx.ui.api.ArcadePalette.ARCADE_RED;
+import static de.amr.pacmanfx.ui.ArcadePalette.ARCADE_ORANGE;
+import static de.amr.pacmanfx.ui.ArcadePalette.ARCADE_RED;
 
 public class ArcadeMsPacMan_StartScene_Renderer extends GameScene2D_Renderer implements SpriteRenderer {
 

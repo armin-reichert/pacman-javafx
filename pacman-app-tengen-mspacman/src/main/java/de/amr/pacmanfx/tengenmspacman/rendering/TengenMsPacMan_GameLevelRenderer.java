@@ -17,7 +17,7 @@ import de.amr.pacmanfx.model.world.WorldMapPropertyName;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_MapRepository;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
-import de.amr.pacmanfx.ui.api.GameUI_Config;
+import de.amr.pacmanfx.ui.GameUI_Config;
 import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;

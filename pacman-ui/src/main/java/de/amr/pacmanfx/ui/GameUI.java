@@ -2,11 +2,10 @@
 Copyright (c) 2021-2026 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.ui.api;
+package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
-import de.amr.pacmanfx.ui.GameUI_Implementation;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.action.CheatActions;

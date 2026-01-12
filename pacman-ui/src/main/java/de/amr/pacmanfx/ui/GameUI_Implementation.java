@@ -11,8 +11,6 @@ import de.amr.pacmanfx.lib.DirectoryWatchdog;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameControl;
 import de.amr.pacmanfx.model.SimulationStep;
-import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
-import de.amr.pacmanfx.ui.api.*;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.layout.EditorView;
 import de.amr.pacmanfx.ui.layout.PlayView;
@@ -47,7 +45,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 import static de.amr.pacmanfx.Validations.requireNonNegative;
-import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
 import static java.util.Objects.requireNonNull;
 import static javafx.beans.binding.Bindings.createStringBinding;
 
@@ -67,7 +64,7 @@ public final class GameUI_Implementation implements GameUI {
     private final UIPreferences prefs;
     private final DirectoryWatchdog customDirWatchdog;
 
-    private final ActionBindingsManager actionBindings = new DefaultActionBindingsManager();
+    private final ActionBindingsManager globalActionBindings = new GlobalActionBindings();
     private final GameUI_ConfigFactory configFactory;
 
     private final ObjectProperty<GameUI_View> currentView = new SimpleObjectProperty<>();
@@ -157,11 +154,6 @@ public final class GameUI_Implementation implements GameUI {
         stage.setMinWidth(MIN_STAGE_WIDTH);
         stage.setMinHeight(MIN_STAGE_HEIGHT);
         stage.titleProperty().bind(titleBinding);
-
-        actionBindings.useAnyBinding(ACTION_ENTER_FULLSCREEN, GameUI.COMMON_BINDINGS);
-        actionBindings.useAnyBinding(ACTION_OPEN_EDITOR,      GameUI.COMMON_BINDINGS);
-        actionBindings.useAnyBinding(ACTION_TOGGLE_MUTED,     GameUI.COMMON_BINDINGS);
-        actionBindings.activateBindings(KEYBOARD);
     }
 
     private void createScene(double width, double height) {
@@ -172,7 +164,7 @@ public final class GameUI_Implementation implements GameUI {
         scene.addEventFilter(KeyEvent.KEY_RELEASED, KEYBOARD::onKeyReleased);
 
         // If a global action is bound to the key press, execute it; otherwise let the current view handle it.
-        scene.setOnKeyPressed(e -> actionBindings.matchingAction(KEYBOARD).ifPresentOrElse(action ->
+        scene.setOnKeyPressed(e -> globalActionBindings.matchingAction(KEYBOARD).ifPresentOrElse(action ->
             {
                 boolean executed = action.executeIfEnabled(this);
                 if (executed) e.consume();

@@ -10,14 +10,14 @@ import de.amr.pacmanfx.model.GameLevelMessage;
 import de.amr.pacmanfx.model.GameLevelMessageType;
 import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.model.world.TerrainLayer;
-import de.amr.pacmanfx.ui.api.GameUI_Config;
+import de.amr.pacmanfx.ui.GameUI_Config;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.ui.api.ArcadePalette.*;
+import static de.amr.pacmanfx.ui.ArcadePalette.*;
 import static java.util.function.Predicate.not;
 
 public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements SpriteRenderer, GameLevelRenderer {

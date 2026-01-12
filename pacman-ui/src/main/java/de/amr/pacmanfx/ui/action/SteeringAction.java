@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.action;
 
 import de.amr.pacmanfx.lib.math.Direction;
-import de.amr.pacmanfx.ui.api.GameUI;
+import de.amr.pacmanfx.ui.GameUI;
 
 import static java.util.Objects.requireNonNull;
 

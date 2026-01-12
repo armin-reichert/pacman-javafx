@@ -5,13 +5,13 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.lib.math.Direction;
+import de.amr.pacmanfx.ui.ActionBindingsManager;
+import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.GameUI_StartPage;
+import de.amr.pacmanfx.ui.GameUI_View;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.action.GameAction;
-import de.amr.pacmanfx.ui.api.ActionBindingsManager;
-import de.amr.pacmanfx.ui.api.GameUI;
-import de.amr.pacmanfx.ui.api.GameUI_StartPage;
-import de.amr.pacmanfx.ui.api.GameUI_View;
 import de.amr.pacmanfx.uilib.widgets.Carousel;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

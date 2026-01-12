@@ -14,8 +14,8 @@ import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
-import de.amr.pacmanfx.ui.api.GameUI;
-import de.amr.pacmanfx.ui.api.GameUI_Config;
+import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.GameUI_Config;
 import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.CYAN_GHOST_BASHFUL;

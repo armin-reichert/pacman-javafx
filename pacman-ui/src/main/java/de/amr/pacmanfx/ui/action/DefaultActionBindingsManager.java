@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.action;
 
-import de.amr.pacmanfx.ui.api.ActionBindingsManager;
+import de.amr.pacmanfx.ui.ActionBindingsManager;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import javafx.scene.input.KeyCombination;
 import org.tinylog.Logger;

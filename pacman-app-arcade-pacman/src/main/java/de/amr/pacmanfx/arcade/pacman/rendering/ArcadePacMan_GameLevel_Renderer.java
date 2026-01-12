@@ -13,7 +13,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.ui.api.ArcadePalette.*;
+import static de.amr.pacmanfx.ui.ArcadePalette.*;
 import static java.util.function.Predicate.not;
 
 /**

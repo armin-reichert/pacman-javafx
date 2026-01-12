@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.lib.Disposable;
-import de.amr.pacmanfx.ui.api.ArcadePalette;
+import de.amr.pacmanfx.ui.ArcadePalette;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.scene.Node;

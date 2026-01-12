@@ -8,7 +8,7 @@ import de.amr.pacmanfx.lib.Pulse;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.ui.api.GameUI;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -32,7 +32,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.ui.api.GameUI.*;
+import static de.amr.pacmanfx.ui.GameUI.*;
 import static java.util.Objects.requireNonNull;
 
 public class MiniGameView extends VBox {

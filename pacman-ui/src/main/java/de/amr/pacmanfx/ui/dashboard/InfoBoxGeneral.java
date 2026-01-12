@@ -4,9 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.dashboard;
 
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
-import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
@@ -14,7 +14,7 @@ import javafx.scene.image.ImageView;
 
 import java.util.List;
 
-import static de.amr.pacmanfx.ui.api.GameUI.*;
+import static de.amr.pacmanfx.ui.GameUI.*;
 
 /**
  * General settings and simulation control.

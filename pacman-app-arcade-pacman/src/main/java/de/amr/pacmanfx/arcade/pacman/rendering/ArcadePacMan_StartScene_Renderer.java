@@ -10,7 +10,7 @@ import de.amr.pacmanfx.uilib.assets.UIPreferences;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.ui.api.ArcadePalette.*;
+import static de.amr.pacmanfx.ui.ArcadePalette.*;
 
 public class ArcadePacMan_StartScene_Renderer extends GameScene2D_Renderer {
 

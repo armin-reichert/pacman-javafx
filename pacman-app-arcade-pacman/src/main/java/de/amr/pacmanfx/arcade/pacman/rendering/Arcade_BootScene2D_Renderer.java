@@ -18,7 +18,7 @@ import javafx.scene.canvas.Canvas;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.lerp;
 import static de.amr.pacmanfx.lib.math.RandomNumberSupport.*;
-import static de.amr.pacmanfx.ui.api.ArcadePalette.ARCADE_WHITE;
+import static de.amr.pacmanfx.ui.ArcadePalette.ARCADE_WHITE;
 import static java.lang.Math.clamp;
 import static java.util.Objects.requireNonNull;
 

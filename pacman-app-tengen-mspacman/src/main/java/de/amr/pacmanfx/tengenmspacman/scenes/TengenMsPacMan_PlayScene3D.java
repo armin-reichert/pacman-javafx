@@ -11,9 +11,9 @@ import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_HeadsUpDisplay_Renderer;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._3d.GameLevel3D;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
-import de.amr.pacmanfx.ui.api.GameUI;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -23,7 +23,7 @@ import javafx.scene.paint.Color;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.ACTION_QUIT_DEMO_LEVEL;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.ACTION_TOGGLE_PAC_BOOSTER;
-import static de.amr.pacmanfx.ui.api.GameUI.PROPERTY_3D_FLOOR_COLOR;
+import static de.amr.pacmanfx.ui.GameUI.PROPERTY_3D_FLOOR_COLOR;
 import static de.amr.pacmanfx.ui.input.Keyboard.control;
 
 /**

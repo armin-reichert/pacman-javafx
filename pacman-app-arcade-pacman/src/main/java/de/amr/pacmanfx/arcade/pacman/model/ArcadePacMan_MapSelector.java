@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
-import de.amr.pacmanfx.ui.api.GameUI_Config;
+import de.amr.pacmanfx.ui.GameUI_Config;
 import org.tinylog.Logger;
 
 import java.io.IOException;

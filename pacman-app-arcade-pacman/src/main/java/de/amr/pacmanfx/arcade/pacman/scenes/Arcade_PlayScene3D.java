@@ -6,8 +6,8 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
-import de.amr.pacmanfx.ui.api.GameUI;
 import javafx.scene.input.KeyCode;
 
 import static de.amr.pacmanfx.ui.input.Keyboard.control;
