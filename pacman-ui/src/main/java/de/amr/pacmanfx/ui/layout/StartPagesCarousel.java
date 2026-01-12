@@ -74,6 +74,7 @@ public class StartPagesCarousel extends Carousel implements GameUI_View {
         actionBindings.setKeyCombination(CommonGameActions.ACTION_TOGGLE_PAUSED, bare(KeyCode.P));
         actionBindings.activateBindings(GameUI.KEYBOARD);
         restartTimer();
+        currentStartPage().ifPresent(startPage -> startPage.layoutRoot().requestFocus());
     }
 
     @Override
