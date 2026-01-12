@@ -19,15 +19,12 @@ import de.amr.pacmanfx.ui.layout.EditorView;
 import de.amr.pacmanfx.ui.layout.PlayView;
 import de.amr.pacmanfx.ui.layout.StartPagesCarousel;
 import de.amr.pacmanfx.ui.layout.StatusIconBox;
+import de.amr.pacmanfx.ui.sound.VoicePlayer;
 import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.assets.UIPreferences;
 import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
 import de.amr.pacmanfx.uilib.rendering.Gradients;
 import de.amr.pacmanfx.uilib.widgets.FlashMessageView;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.PauseTransition;
-import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
@@ -40,8 +37,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
@@ -56,7 +51,6 @@ import java.util.ResourceBundle;
 
 import static de.amr.pacmanfx.Validations.requireNonNegative;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
-import static de.amr.pacmanfx.uilib.animation.AnimationSupport.pauseSec;
 import static java.util.Objects.requireNonNull;
 import static javafx.beans.binding.Bindings.createStringBinding;
 
@@ -86,7 +80,7 @@ public final class GameUI_Implementation implements GameUI {
     private final StackPane layoutPane = new StackPane();
 
     private final FlashMessageView flashMessageView = new FlashMessageView();
-    private MediaPlayer voicePlayer;
+    private final VoicePlayer voicePlayer = new VoicePlayer();
 
     private final StartPagesCarousel startPagesView;
     private final PlayView playView;
@@ -317,46 +311,6 @@ public final class GameUI_Implementation implements GameUI {
 
     // GameUI interface
 
-    private PauseTransition voicePlayerDelay;
-
-    @Override
-    public void playVoice(Media voice) {
-        stopVoice();
-        voicePlayer = new MediaPlayer(requireNonNull(voice));
-        voicePlayer.play();
-    }
-
-    @Override
-    public void playVoiceAfterSec(Media voice, float delaySeconds) {
-        stopVoice();
-        voicePlayer = new MediaPlayer(requireNonNull(voice));
-        voicePlayerDelay = pauseSec(delaySeconds, voicePlayer::play);
-        voicePlayerDelay.play();
-    }
-
-    public void stopVoice() {
-        if (voicePlayerDelay != null) {
-            voicePlayerDelay.stop();
-        }
-        if (voicePlayer != null && voicePlayer.getStatus() == MediaPlayer.Status.PLAYING) {
-            createVoicePlayerFading().play();
-        }
-    }
-
-    private Timeline createVoicePlayerFading() {
-        final var fading = new Timeline(
-            new KeyFrame(Duration.ZERO,         new KeyValue(voicePlayer.volumeProperty(), 1)),
-            new KeyFrame(Duration.seconds(1.5), new KeyValue(voicePlayer.volumeProperty(), 0))
-        );
-        fading.setOnFinished(_ -> {
-            if (voicePlayer != null) {
-                voicePlayer.stop();
-                voicePlayer.setVolume(1);
-            }
-        });
-        return fading;
-    }
-
     @Override
     public ResourceBundle localizedTexts() {
         return GameUI.LOCALIZED_TEXTS;
@@ -486,8 +440,8 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     @Override
-    public void updateTitle() {
-        titleBinding.invalidate();
+    public VoicePlayer voicePlayer() {
+        return voicePlayer;
     }
 
     @Override
@@ -543,10 +497,6 @@ public final class GameUI_Implementation implements GameUI {
         clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
         currentConfig().soundManager().stopAll();
         selectView(startPagesView());
-        startPagesView().currentStartPage().ifPresent(startPage -> Platform.runLater(() -> {
-            startPage.onEnterStartPage(this); // sets game variant!
-            startPage.layoutRoot().requestFocus();
-        }));
     }
 
     @Override

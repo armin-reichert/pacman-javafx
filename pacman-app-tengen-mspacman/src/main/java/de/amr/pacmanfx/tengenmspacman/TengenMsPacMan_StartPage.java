@@ -27,6 +27,6 @@ public class TengenMsPacMan_StartPage extends FlyerStartPage {
     @Override
     public void onEnterStartPage(GameUI ui) {
         super.onEnterStartPage(ui);
-        ui.playVoiceAfterSec(VOICE, 1.5f);
+        ui.voicePlayer().play(VOICE);
     }
 }

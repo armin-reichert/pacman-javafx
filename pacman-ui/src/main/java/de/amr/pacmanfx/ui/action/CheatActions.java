@@ -108,7 +108,7 @@ public final class CheatActions {
             }
             toggle(game.usingAutopilotProperty());
             boolean usingAutopilot = game.usingAutopilot();
-            ui.playVoice(usingAutopilot ? GameUI.VOICE_AUTOPILOT_ON : GameUI.VOICE_AUTOPILOT_OFF);
+            ui.voicePlayer().play(usingAutopilot ? GameUI.VOICE_AUTOPILOT_ON : GameUI.VOICE_AUTOPILOT_OFF);
             ui.showFlashMessage(ui.translated(usingAutopilot ? "autopilot_on" : "autopilot_off"));
         }
     };
@@ -122,7 +122,7 @@ public final class CheatActions {
             }
             toggle(game.immuneProperty());
             boolean immunityOn = game.immuneProperty().get();
-            ui.playVoice(immunityOn ? GameUI.VOICE_IMMUNITY_ON : GameUI.VOICE_IMMUNITY_OFF);
+            ui.voicePlayer().play(immunityOn ? GameUI.VOICE_IMMUNITY_ON : GameUI.VOICE_IMMUNITY_OFF);
             ui.showFlashMessage(ui.translated(immunityOn ? "player_immunity_on" : "player_immunity_off"));
         }
     };

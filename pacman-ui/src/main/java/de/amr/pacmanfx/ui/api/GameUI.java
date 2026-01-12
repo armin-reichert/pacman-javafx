@@ -14,6 +14,7 @@ import de.amr.pacmanfx.ui.action.TestActions;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.layout.StartPagesCarousel;
+import de.amr.pacmanfx.ui.sound.VoicePlayer;
 import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.assets.LocalizedTextAccessor;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
@@ -156,6 +157,11 @@ public interface GameUI extends LocalizedTextAccessor {
      */
     UIPreferences preferences();
 
+    /**
+     * @return voice player if this UI. Only one voice at a time can be played.
+     */
+    VoicePlayer voicePlayer();
+
     // Messages
 
     /** Default duration a flash message appears on the screen. */
@@ -179,14 +185,6 @@ public interface GameUI extends LocalizedTextAccessor {
     default void showFlashMessage(String message, Object... args) {
         showFlashMessage(DEFAULT_FLASH_MESSAGE_DURATION, message, args);
     }
-
-    void playVoice(Media voice);
-
-    void playVoiceAfterSec(Media voice, float delaySeconds);
-
-    void stopVoice();
-
-    void updateTitle();
 
     // Scene access
 

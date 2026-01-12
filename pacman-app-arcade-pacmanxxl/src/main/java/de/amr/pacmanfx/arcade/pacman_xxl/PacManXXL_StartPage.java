@@ -72,22 +72,22 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
     @Override
     public void init(GameUI ui) {
         this.ui = requireNonNull(ui);
-        handleKeyEvents(ui);
-        bindMenu(ui);
+        addKeyEventHandler();
+        updateMenuBinding();
     }
 
-    private void handleKeyEvents(GameUI ui) {
+    private void addKeyEventHandler() {
         addEventHandler(KeyEvent.KEY_PRESSED, e -> {
             ui.startPagesView().pauseTimer();
             switch (e.getCode()) {
                 case E -> {
                     Logger.info("Key '{}': Open editor.", e.getCode());
-                    ui.stopVoice();
+                    ui.voicePlayer().stop();
                     ui.showEditorView();
                     e.consume();
                 }
                 case ENTER -> {
-                    ui.stopVoice();
+                    ui.voicePlayer().stop();
                     menu.startSelectedGame();
                     e.consume();
                 }
@@ -96,7 +96,7 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
         });
     }
 
-    private void bindMenu(GameUI ui) {
+    private void updateMenuBinding() {
         unbindMenu();
 
         gameVariantNameListener = (_, _, gameVariantName) -> {
@@ -135,7 +135,7 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
 
     @Override
     public void onEnterStartPage(GameUI ui) {
-        ui.playVoiceAfterSec(VOICE, 1.5f);
+        ui.voicePlayer().play(VOICE);
 
         menu.requestFocus();
         menu.startDrawLoop();
@@ -154,7 +154,7 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
 
     @Override
     public void onExitStartPage(GameUI ui) {
-        ui.stopVoice();
+        ui.voicePlayer().stop();
         menu.stopDrawLoop();
         unbindMenu();
     }
