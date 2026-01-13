@@ -173,8 +173,8 @@ public class ObstacleBuilder {
         tilesWithErrors.add(cursor.currentTile);
     }
 
-    private void buildRestOfObstacle(Obstacle obstacle, Vector2i startTile, boolean counterClockwise, List<Vector2i> tilesWithErrors) {
-        boolean ccw = counterClockwise;
+    private void buildRestOfObstacle(Obstacle obstacle, Vector2i startTile, boolean initialOrientation, List<Vector2i> tilesWithErrors) {
+        boolean counterClockwise = initialOrientation;
         int bailout = 0;
         while (bailout < 1000) {
             ++bailout;
@@ -185,10 +185,10 @@ public class ObstacleBuilder {
             byte tileContent = terrainLayer.content(cursor.currentTile);
             if (tileContent == WALL_V.$) {
                 if (cursor.points(Direction.DOWN)) {
-                    obstacle.addSegment(Direction.DOWN.vector().scaled(TS), ccw, tileContent);
+                    obstacle.addSegment(Direction.DOWN.vector().scaled(TS), counterClockwise, tileContent);
                     cursor.move(Direction.DOWN);
                 } else if (cursor.points(Direction.UP)) {
-                    obstacle.addSegment(Direction.UP.vector().scaled(TS), ccw, tileContent);
+                    obstacle.addSegment(Direction.UP.vector().scaled(TS), counterClockwise, tileContent);
                     cursor.move(Direction.UP);
                 } else {
                     errorAtCurrentTile(tilesWithErrors);
@@ -196,10 +196,10 @@ public class ObstacleBuilder {
             }
             else if (tileContent == WALL_H.$ || tileContent == DOOR.$) {
                 if (cursor.points(Direction.RIGHT)) {
-                    obstacle.addSegment(Direction.RIGHT.vector().scaled(TS), ccw, tileContent);
+                    obstacle.addSegment(Direction.RIGHT.vector().scaled(TS), counterClockwise, tileContent);
                     cursor.move(Direction.RIGHT);
                 } else if (cursor.points(Direction.LEFT)) {
-                    obstacle.addSegment(Direction.LEFT.vector().scaled(TS), ccw, tileContent);
+                    obstacle.addSegment(Direction.LEFT.vector().scaled(TS), counterClockwise, tileContent);
                     cursor.move(Direction.LEFT);
                 } else {
                     errorAtCurrentTile(tilesWithErrors);
@@ -207,12 +207,12 @@ public class ObstacleBuilder {
             }
             else if (tileContent == ARC_SW.$ || tileContent == ANG_ARC_SW.$) {
                 if (cursor.points(Direction.DOWN)) {
-                    ccw = true;
-                    obstacle.addSegment(SEG_ARC_SW_DOWN, ccw, tileContent);
+                    counterClockwise = true;
+                    obstacle.addSegment(SEG_ARC_SW_DOWN, true, tileContent);
                     cursor.move(Direction.RIGHT);
                 } else if (cursor.points(Direction.LEFT)) {
-                    ccw = false;
-                    obstacle.addSegment(SEG_ARC_SW_UP, ccw, tileContent);
+                    counterClockwise = false;
+                    obstacle.addSegment(SEG_ARC_SW_UP, false, tileContent);
                     cursor.move(Direction.UP);
                 } else {
                     errorAtCurrentTile(tilesWithErrors);
@@ -220,13 +220,13 @@ public class ObstacleBuilder {
             }
             else if (tileContent == ARC_SE.$ || tileContent == ANG_ARC_SE.$) {
                 if (cursor.points(Direction.DOWN)) {
-                    ccw = false;
-                    obstacle.addSegment(SEG_ARC_SE_DOWN, ccw, tileContent);
+                    counterClockwise = false;
+                    obstacle.addSegment(SEG_ARC_SE_DOWN, false, tileContent);
                     cursor.move(Direction.LEFT);
                 }
                 else if (cursor.points(Direction.RIGHT)) {
-                    ccw = true;
-                    obstacle.addSegment(SEG_ARC_SE_UP, ccw, tileContent);
+                    counterClockwise = true;
+                    obstacle.addSegment(SEG_ARC_SE_UP, true, tileContent);
                     cursor.move(Direction.UP);
                 }
                 else {
@@ -235,13 +235,13 @@ public class ObstacleBuilder {
             }
             else if (tileContent == ARC_NE.$ || tileContent == ANG_ARC_NE.$) {
                 if (cursor.points(Direction.UP)) {
-                    ccw = true;
-                    obstacle.addSegment(SEG_ARC_NE_UP, ccw, tileContent);
+                    counterClockwise = true;
+                    obstacle.addSegment(SEG_ARC_NE_UP, true, tileContent);
                     cursor.move(Direction.LEFT);
                 }
                 else if (cursor.points(Direction.RIGHT)) {
-                    ccw = false;
-                    obstacle.addSegment(SEG_ARC_NE_DOWN, ccw, tileContent);
+                    counterClockwise = false;
+                    obstacle.addSegment(SEG_ARC_NE_DOWN, false, tileContent);
                     cursor.move(Direction.DOWN);
                 }
                 else {
@@ -250,13 +250,13 @@ public class ObstacleBuilder {
             }
             else if (tileContent == ARC_NW.$ || tileContent == ANG_ARC_NW.$) {
                 if (cursor.points(Direction.UP)) {
-                    ccw = false;
-                    obstacle.addSegment(SEG_ARC_NW_UP, ccw, tileContent);
+                    counterClockwise = false;
+                    obstacle.addSegment(SEG_ARC_NW_UP, false, tileContent);
                     cursor.move(Direction.RIGHT);
                 }
                 else if (cursor.points(Direction.LEFT)) {
-                    ccw = true;
-                    obstacle.addSegment(SEG_ARC_NW_DOWN, ccw, tileContent);
+                    counterClockwise = true;
+                    obstacle.addSegment(SEG_ARC_NW_DOWN, true, tileContent);
                     cursor.move(Direction.DOWN);
                 }
                 else {
