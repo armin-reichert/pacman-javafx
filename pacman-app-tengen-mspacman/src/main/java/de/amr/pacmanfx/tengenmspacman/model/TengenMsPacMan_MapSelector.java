@@ -6,10 +6,12 @@ package de.amr.pacmanfx.tengenmspacman.model;
 
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.model.world.WorldMapParseException;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.rendering.NonArcadeMapsSpriteSheet;
 import de.amr.pacmanfx.ui.GameUI_Config;
+import org.tinylog.Logger;
 
 import java.io.IOException;
 import java.util.List;
@@ -32,32 +34,68 @@ public class TengenMsPacMan_MapSelector implements WorldMapSelector {
     private List<WorldMap> bigMapPrototypes;
     private List<WorldMap> strangeMapPrototypes;
 
-    private void ensureArcadeMapPrototypesLoaded() throws IOException {
+    private void ensureArcadeMapPrototypesLoaded() {
         if (arcadeMapPrototypes == null) {
+            try {
             arcadeMapPrototypes = loadMaps(getClass(), MAPS_PATH + "arcade%d.world", 4);
+            } catch (IOException x) {
+                Logger.error("Could not open world map");
+                throw new RuntimeException(x);
+            }
+            catch (WorldMapParseException x) {
+                Logger.error("Could not parse world map");
+                throw new RuntimeException(x);
+            }
         }
     }
 
-    private void ensureMiniMapPrototypesLoaded() throws IOException {
+    private void ensureMiniMapPrototypesLoaded() {
         if (miniMapPrototypes == null) {
+            try {
             miniMapPrototypes = loadMaps(getClass(), MAPS_PATH + "mini%d.world", 6);
+            } catch (IOException x) {
+                Logger.error("Could not open world map");
+                throw new RuntimeException(x);
+            }
+            catch (WorldMapParseException x) {
+                Logger.error("Could not parse world map");
+                throw new RuntimeException(x);
+            }
         }
     }
 
-    private void ensureBigMapPrototypesLoaded() throws IOException {
+    private void ensureBigMapPrototypesLoaded() {
         if (bigMapPrototypes == null) {
-            bigMapPrototypes = loadMaps(getClass(), MAPS_PATH + "big%02d.world", 11);
+            try {
+                bigMapPrototypes = loadMaps(getClass(), MAPS_PATH + "big%02d.world", 11);
+            } catch (IOException x) {
+                Logger.error("Could not open world map");
+                throw new RuntimeException(x);
+            }
+            catch (WorldMapParseException x) {
+                Logger.error("Could not parse world map");
+                throw new RuntimeException(x);
+            }
         }
     }
 
-    private void ensureStrangeMapPrototypesLoaded() throws IOException {
+    private void ensureStrangeMapPrototypesLoaded() {
         if (strangeMapPrototypes == null) {
-            strangeMapPrototypes = loadMaps(getClass(), MAPS_PATH + "strange%02d.world", 15);
+            try {
+                strangeMapPrototypes = loadMaps(getClass(), MAPS_PATH + "strange%02d.world", 15);
+            } catch (IOException x) {
+                Logger.error("Could not open world map");
+                throw new RuntimeException(x);
+            }
+            catch (WorldMapParseException x) {
+                Logger.error("Could not parse world map");
+                throw new RuntimeException(x);
+            }
         }
     }
 
     @Override
-    public void loadMapPrototypes() throws IOException {
+    public void loadMapPrototypes() {
         ensureArcadeMapPrototypesLoaded();
         ensureMiniMapPrototypesLoaded();
         ensureBigMapPrototypesLoaded();
@@ -65,7 +103,7 @@ public class TengenMsPacMan_MapSelector implements WorldMapSelector {
     }
 
     @Override
-    public WorldMap supplyWorldMap(int levelNumber, Object... args) throws IOException {
+    public WorldMap supplyWorldMap(int levelNumber, Object... args) {
         if (args == null || args.length == 0) {
             throw new IllegalArgumentException("Insufficient information for computing map");
         }

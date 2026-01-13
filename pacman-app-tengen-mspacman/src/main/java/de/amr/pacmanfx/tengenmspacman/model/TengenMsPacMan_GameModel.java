@@ -426,12 +426,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
 
     @Override
     public GameLevel createLevel(int levelNumber, boolean demoLevel) {
-        final WorldMap worldMap;
-        try {
-            worldMap = mapSelector.supplyWorldMap(levelNumber, mapCategory);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        final WorldMap worldMap = mapSelector.supplyWorldMap(levelNumber, mapCategory);
         final TerrainLayer terrain = worldMap.terrainLayer();
 
         final ArcadeHouse house = new ArcadeHouse(HOUSE_MIN_TILE);
@@ -767,7 +762,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
      * By the way, there's an additional quirk regarding ghosts' speed.
      * On normal difficulty ONLY and in levels 5 and above, the ghosts become slightly faster if there are few dots remain.
      * if there are 31 or fewer dots, the speed is increased. the base increase value is 2, which is further increased
-     * by 1 for every 8 dots eaten. (I should note it is in subunits. it if was times 2, that would've been crazy)
+     * by 1 for every 8 dots eaten. (I should note it is in subunits. If it was times 2, that would've been crazy).
      * </p>
      */
     public float ghostSpeedIncreaseByFoodRemaining(GameLevel level) {

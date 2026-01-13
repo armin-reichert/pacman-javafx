@@ -24,16 +24,24 @@ public class WorldMap {
     public static final String MARKER_BEGIN_FOOD_LAYER = "!food";
     public static final String MARKER_BEGIN_DATA_SECTION = "!data";
 
-    public static WorldMap loadFromURL(URL url) throws IOException {
+    public static WorldMap loadFromURL(URL url) throws WorldMapParseException, IOException {
         requireNonNull(url);
-        try (var br = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8))) {
-            WorldMap worldMap = WorldMapParser.parse(br.lines(), TerrainTile::isValidCode, FoodTile::isValidCode);
-            worldMap.url = URLDecoder.decode(url.toExternalForm(), StandardCharsets.UTF_8);
-            return worldMap;
+        try {
+            return WorldMapParser.parse(url);
+        }
+        catch (IOException x) {
+            Logger.error("Error loading world map from URL '{}'", url);
+            Logger.error(x);
+            throw new RuntimeException(x);
+        }
+        catch (WorldMapParseException x) {
+            Logger.error("Error parsing world map from URL '{}'", url);
+            Logger.error(x);
+            throw new RuntimeException(x);
         }
     }
 
-    public static WorldMap loadFromFile(File file) throws IOException {
+    public static WorldMap loadFromFile(File file) throws WorldMapParseException, IOException {
         requireNonNull(file);
         return loadFromURL(file.toURI().toURL());
     }

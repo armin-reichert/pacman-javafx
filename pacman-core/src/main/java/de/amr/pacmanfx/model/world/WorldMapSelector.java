@@ -18,7 +18,7 @@ public interface WorldMapSelector {
      * @param args additional arguments
      * @return New copy of the world map prototype for specified level.
      */
-    WorldMap supplyWorldMap(int levelNumber, Object... args) throws IOException;
+    WorldMap supplyWorldMap(int levelNumber, Object... args);
 
     /**
      * @return list of the built-in maps. Users should create a copy because the prototypes are modifiable!
@@ -31,13 +31,13 @@ public interface WorldMapSelector {
      * Loads all user-defined maps (XXL games only).
      * @throws IOException if map loading fails
      */
-    default void loadCustomMaps() throws IOException {}
+    default void loadCustomMaps() throws IOException, WorldMapParseException {}
 
     /**
      * Loads all map prototypes, built-in and user-defined maps.
      * @throws IOException if map loading fails
      */
-    void loadMapPrototypes() throws IOException;
+    void loadMapPrototypes() throws IOException, WorldMapParseException;
 
     /**
      * @param mapPattern path (pattern) to access the map files inside resources folder,
@@ -46,7 +46,7 @@ public interface WorldMapSelector {
      * @throws IllegalArgumentException if a map cannot be accessed via a URL created from the pattern
      * @throws IOException if map loading fails
      */
-    static List<WorldMap> loadMaps(Class<?> loaderClass, String mapPattern, int mapCount) throws IOException {
+    static List<WorldMap> loadMaps(Class<?> loaderClass, String mapPattern, int mapCount) throws IOException, WorldMapParseException {
         final var maps = new ArrayList<WorldMap>();
         for (int n = 1; n <= mapCount; ++n) {
             final String name = mapPattern.formatted(n);

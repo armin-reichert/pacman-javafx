@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.dashboard;
 
 import de.amr.pacmanfx.GameBox;
 import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.model.world.WorldMapParseException;
 import de.amr.pacmanfx.ui.GameUI;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -98,8 +99,12 @@ public class InfoBoxCustomMaps extends InfoBox {
                 customMaps.add(worldMap);
                 Logger.info("Custom map loaded from file {}", file);
             } catch (IOException x) {
-                Logger.error(x);
-                Logger.error("Could not read custom map from file {}", file);
+                Logger.error("Could not open world map");
+                throw new RuntimeException(x);
+            }
+            catch (WorldMapParseException x) {
+                Logger.error("Could not parse world map");
+                throw new RuntimeException(x);
             }
         }
     }

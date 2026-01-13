@@ -30,7 +30,12 @@ javafx {
 }
 
 jlink {
-    options = ["--compress", "zip-9", "--strip-debug", "--no-header-files", "--no-man-pages"]
+    options = [
+        "--compress", "zip-9",
+        "--strip-debug",
+        "--no-header-files",
+        "--no-man-pages"
+    ]
     launcher {
         name = "Pac-Man-FX-3D"
     }

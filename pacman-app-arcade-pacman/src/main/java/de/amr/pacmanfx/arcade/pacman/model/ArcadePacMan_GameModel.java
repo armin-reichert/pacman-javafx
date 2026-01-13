@@ -20,7 +20,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import org.tinylog.Logger;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -142,19 +141,15 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel implements LevelCou
         final LevelData levelData = levelData(levelNumber);
 
         final WorldMap worldMap;
-        try {
-            worldMap = mapSelector.supplyWorldMap(levelNumber);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        worldMap = mapSelector.supplyWorldMap(levelNumber);
         final TerrainLayer terrain = worldMap.terrainLayer();
-
         final Vector2i houseMinTile = terrain.getTilePropertyOrDefault(POS_HOUSE_MIN_TILE, ARCADE_MAP_HOUSE_MIN_TILE);
         // Just in case, property is not set in terrain layer:
         terrain.propertyMap().put(POS_HOUSE_MIN_TILE,  String.valueOf(houseMinTile));
 
         final ArcadeHouse house = new ArcadeHouse(houseMinTile);
         terrain.setHouse(house);
+
 
         final AbstractHuntingTimer huntingTimer = createHuntingTimer();
         final int numFlashes = levelData.numFlashes();

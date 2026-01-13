@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.model.world.WorldMapParseException;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
 import de.amr.pacmanfx.ui.GameUI_Config;
 import org.tinylog.Logger;
@@ -19,25 +20,33 @@ public class ArcadePacMan_MapSelector implements WorldMapSelector {
     private WorldMap prototype;
 
     @Override
-    public void loadMapPrototypes() throws IOException {
+    public void loadMapPrototypes() {
         final URL url = getClass().getResource(PROTOTYPE_PATH);
         if (url == null) {
             final String errorMsg = "Could not access Arcade Pac-Man map '%s'".formatted(PROTOTYPE_PATH);
             Logger.error(errorMsg);
             throw new IllegalStateException(errorMsg);
         }
-        prototype = WorldMap.loadFromURL(url);
-        Logger.info("Loaded world map '{}'", url);
+        try {
+            prototype = WorldMap.loadFromURL(url);
+            Logger.info("Loaded world map '{}'", url);
+        } catch (IOException x) {
+            Logger.error("Could not open world map");
+            throw new RuntimeException(x);
+        }
+        catch (WorldMapParseException x) {
+            Logger.error("Could not parse world map");
+            throw new RuntimeException(x);
+        }
     }
 
     /**
      * @param levelNumber (ignored) level number (starting with 1)
      * @param args (ignored) additional arguments
      * @return the single map used in Arcade Pac-Man
-     * @throws IOException if map loading fails
      */
     @Override
-    public WorldMap supplyWorldMap(int levelNumber, Object... args) throws IOException {
+    public WorldMap supplyWorldMap(int levelNumber, Object... args) {
         if (prototype == null) {
             loadMapPrototypes();
         }

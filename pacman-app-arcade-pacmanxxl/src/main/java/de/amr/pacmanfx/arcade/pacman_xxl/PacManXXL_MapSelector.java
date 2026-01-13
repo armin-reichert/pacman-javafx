@@ -5,10 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.pacmanfx.lib.PathWatchEventListener;
-import de.amr.pacmanfx.model.world.WorldMap;
-import de.amr.pacmanfx.model.world.WorldMapColorScheme;
-import de.amr.pacmanfx.model.world.WorldMapSelectionMode;
-import de.amr.pacmanfx.model.world.WorldMapSelector;
+import de.amr.pacmanfx.model.world.*;
 import de.amr.pacmanfx.ui.GameUI_Config;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -63,24 +60,36 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
         }
         Logger.info("Detected custom map directory changes:");
         for (WatchEvent<Path> event : pathEvents) {
-            final Path path = event.context();
-            final File worldMapFile = new File(customMapDir, path.toFile().getPath());
-            Logger.info("\t{}, path='{}'", event.kind(), worldMapFile);
+            final Path fileName = event.context(); // file or directory name in custom map dir
+            final File file = customMapDir.toPath().resolve(fileName).toFile();
+            Logger.info("WatchEvent kind={}, file name='{}' file='{}'", event.kind(), fileName, file);
+            if (!file.isFile()) {
+                Logger.info("Ignored: this is a directory or something else");
+                continue;
+            }
+            if (!fileName.endsWith(".world")) {
+                Logger.info("Ignored: This is not a world map file or has wrong extension");
+                continue;
+            }
             if (event.kind() == StandardWatchEventKinds.ENTRY_CREATE) {
                 try {
-                    final WorldMap worldMap = WorldMap.loadFromFile(worldMapFile);
+                    final WorldMap worldMap = WorldMap.loadFromFile(file);
                     customMapPrototypes.add(worldMap);
-                    Logger.info("Added custom map {}", worldMapFile);
+                    Logger.info("Added custom map {}", file);
                 } catch (IOException x) {
                     Logger.error(x);
+                }
+                catch (WorldMapParseException x) {
+                    Logger.error("Could not parse world map");
+                    Logger.error(x); //TODO
                 }
             }
             else if (event.kind() == StandardWatchEventKinds.ENTRY_DELETE) {
                 try {
-                    final URL url = worldMapFile.toURI().toURL();
+                    final URL url = file.toURI().toURL();
                     findCustomMapPrototype(url).ifPresent(worldMap -> {
                         customMapPrototypes.remove(worldMap);
-                        Logger.info("Removed custom map {}", worldMapFile);
+                        Logger.info("Removed custom map {}", file);
                     });
                 } catch (MalformedURLException x) {
                     Logger.error(x);
@@ -88,13 +97,17 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
             }
             else if (event.kind() == StandardWatchEventKinds.ENTRY_MODIFY) {
                 try {
-                    final URL url = worldMapFile.toURI().toURL();
+                    final URL url = file.toURI().toURL();
                     findCustomMapPrototype(url).ifPresent(customMapPrototypes::remove);
-                    final WorldMap worldMap = WorldMap.loadFromFile(worldMapFile);
+                    final WorldMap worldMap = WorldMap.loadFromFile(file);
                     customMapPrototypes.add(worldMap);
-                    Logger.info("Updated custom map {}", worldMapFile);
+                    Logger.info("Updated custom map {}", file);
                 } catch (IOException x) {
                     Logger.error(x);
+                }
+                catch (WorldMapParseException x) {
+                    Logger.error("Could not parse world map");
+                    Logger.error(x); //TODO
                 }
             }
         }
@@ -110,7 +123,7 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
     }
 
     @Override
-    public void loadCustomMaps() throws IOException {
+    public void loadCustomMaps() throws IOException, WorldMapParseException {
         if (!customMapPrototypes.isEmpty()) {
             Logger.info("Custom maps have already been loaded");
             return;
@@ -140,7 +153,11 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
                 builtinMapPrototypes.addAll(predefinedMaps);
                 loadCustomMaps();
             } catch (IOException x) {
-                Logger.error("Error loading map");
+                Logger.error("Could not open world map");
+                throw new RuntimeException(x);
+            }
+            catch (WorldMapParseException x) {
+                Logger.error("Could not parse world map");
                 throw new RuntimeException(x);
             }
         }
@@ -201,9 +218,14 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
                 if (url != null) {
                     final File targetFile = new File(customMapDir, mapName);
                     try {
-                        WorldMap.loadFromURL(url).saveToFile(targetFile);
+                        WorldMap map = WorldMap.loadFromURL(url);
+                        map.saveToFile(targetFile);
                     } catch (IOException e) {
                         Logger.error("Could not save map with URL {} to file ''", url, targetFile);
+                    }
+                    catch (WorldMapParseException x) {
+                        Logger.error("Could not parse world map");
+                        Logger.error(x); //TODO
                     }
                 } else {
                     // Not all of these maps exits, just log them

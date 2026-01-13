@@ -6,6 +6,7 @@ package de.amr.pacmanfx.mapeditor.actions;
 
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.model.world.WorldMapParseException;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -36,7 +37,12 @@ public class Action_ReplaceCurrentWorldMapChecked extends EditorUIAction<Boolean
                 });
                 success = true;
             } catch (IOException x) {
-                Logger.error(x);
+                Logger.error("Could not open world map");
+                throw new RuntimeException(x);
+            }
+            catch (WorldMapParseException x) {
+                Logger.error("Could not parse world map");
+                throw new RuntimeException(x);
             }
         }
         return success;

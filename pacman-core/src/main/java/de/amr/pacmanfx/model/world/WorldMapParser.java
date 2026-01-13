@@ -7,6 +7,12 @@ package de.amr.pacmanfx.model.world;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import org.tinylog.Logger;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
@@ -35,11 +41,19 @@ public interface WorldMapParser {
         }
     }
 
+    static WorldMap parse(URL url) throws IOException, WorldMapParseException {
+        requireNonNull(url);
+        try (var br = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8))) {
+            WorldMap worldMap = WorldMapParser.parse(br.lines(), TerrainTile::isValidCode, FoodTile::isValidCode);
+            worldMap.url = URLDecoder.decode(url.toExternalForm(), StandardCharsets.UTF_8);
+            return worldMap;
+        }
+    }
 
-    static WorldMap parse(
+    private static WorldMap parse(
         Stream<String> linesStream,
         Predicate<Byte> validTerrainValueTest,
-        Predicate<Byte> validFoodValueTest)
+        Predicate<Byte> validFoodValueTest) throws WorldMapParseException
     {
         final var lines = new ArrayList<>(linesStream.toList()); // modifiable list!
         final WorldMap worldMap = new WorldMap();
@@ -82,7 +96,7 @@ public interface WorldMapParser {
         return worldMap;
     }
 
-    private static WorldMapLayer parseLayer(List<String> lines, Predicate<Byte> valueAllowed) {
+    private static WorldMapLayer parseLayer(List<String> lines, Predicate<Byte> valueAllowed) throws WorldMapParseException {
         // First pass: read property section and determine data section size
         int numDataRows = 0, numDataCols = -1;
         int dataStartIndex = -1;
@@ -100,13 +114,14 @@ public interface WorldMapParser {
                 if (numDataCols == -1) {
                     numDataCols = columns.length;
                 } else if (columns.length != numDataCols) {
-                    Logger.error("Inconsistent tile map data: found {} column(s) in line {}, expected {}",
-                            columns.length, lineIndex, numDataCols);
+                    final String msg = "Inconsistent tile map data: found %d column(s), expected %d".formatted(columns.length, numDataCols);
+                    throw new WorldMapParseException(msg, null, lineIndex, line);
                 }
             }
         }
         if (numDataRows == 0) {
-            Logger.error("Inconsistent tile map data: No data");
+            final String msg = ("Inconsistent tile map data: No data section found");
+            throw new WorldMapParseException(msg, null, 0, "");
         }
 
         // Second pass: read data and build new tile map

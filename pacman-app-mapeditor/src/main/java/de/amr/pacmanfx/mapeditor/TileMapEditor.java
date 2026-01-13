@@ -7,6 +7,7 @@ package de.amr.pacmanfx.mapeditor;
 import de.amr.pacmanfx.mapeditor.actions.Action_CreateEmptyMap;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapChecker;
+import de.amr.pacmanfx.model.world.WorldMapParseException;
 import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
@@ -282,6 +283,10 @@ public class TileMapEditor {
         } catch (IOException x) {
             Logger.error(x);
             Logger.error("Could not load world map from URL '{}'", url);
+            return Optional.empty();
+        }
+        catch (WorldMapParseException x) {
+            Logger.error("Could not parse world map");
             return Optional.empty();
         }
     }

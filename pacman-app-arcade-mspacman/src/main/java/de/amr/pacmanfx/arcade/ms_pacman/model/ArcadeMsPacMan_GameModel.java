@@ -22,7 +22,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import org.tinylog.Logger;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -126,12 +125,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel implements LevelC
     public GameLevel createLevel(int levelNumber, boolean demoLevel) {
         final LevelData levelData = levelData(levelNumber);
 
-        final WorldMap worldMap;
-        try {
-            worldMap = mapSelector.supplyWorldMap(levelNumber);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        final WorldMap worldMap = mapSelector.supplyWorldMap(levelNumber);
         final TerrainLayer terrain = worldMap.terrainLayer();
 
         final Vector2i houseMinTile = terrain.getTilePropertyOrDefault(POS_HOUSE_MIN_TILE, ARCADE_MAP_HOUSE_MIN_TILE);

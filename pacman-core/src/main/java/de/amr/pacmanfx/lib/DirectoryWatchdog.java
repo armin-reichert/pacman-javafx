@@ -75,7 +75,7 @@ public class DirectoryWatchdog {
     public boolean isWatching() { return polling && pollingThread.isAlive(); }
 
     @SuppressWarnings("unchecked")
-    private void pollEvents() {
+    private void _pollEvents() {
         while (polling) {
             final List<WatchEvent<?>> watchEvents = watchKey.pollEvents();
             if (!watchEvents.isEmpty()) {
@@ -87,6 +87,44 @@ public class DirectoryWatchdog {
             } catch (InterruptedException e) {
                 Logger.debug("Directory polling thread interrupted");
                 Thread.currentThread().interrupt(); // restore flag
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void pollEvents() {
+        while (polling && !Thread.currentThread().isInterrupted()) {
+            try {
+                // Blocks until at least one event is available or watch key is invalid
+                WatchKey key = watchService.take();
+
+                if (!key.isValid()) {
+                    Logger.warn("WatchKey became invalid for {}", watchedDir);
+                    break;
+                }
+
+                List<WatchEvent<?>> watchEvents = key.pollEvents();
+                if (!watchEvents.isEmpty()) {
+                    List<WatchEvent<Path>> pathEvents = watchEvents.stream()
+                        .map(e -> (WatchEvent<Path>) e)
+                        .toList();
+                    eventListeners.forEach(listener -> listener.handlePathEvents(pathEvents));
+                }
+
+                // Very important: reset the key so we receive future events!
+                boolean valid = key.reset();
+                if (!valid) {
+                    Logger.warn("WatchKey reset failed for {}", watchedDir);
+                    break;
+                }
+
+            } catch (InterruptedException e) {
+                Logger.debug("Directory watchdog interrupted");
+                Thread.currentThread().interrupt();
+                break;
+            } catch (ClosedWatchServiceException e) {
+                Logger.debug("WatchService closed");
+                break;
             }
         }
     }

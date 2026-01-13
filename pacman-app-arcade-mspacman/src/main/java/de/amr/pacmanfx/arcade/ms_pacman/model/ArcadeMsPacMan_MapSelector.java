@@ -6,8 +6,10 @@ package de.amr.pacmanfx.arcade.ms_pacman.model;
 
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
+import de.amr.pacmanfx.model.world.WorldMapParseException;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
 import de.amr.pacmanfx.ui.GameUI_Config;
+import org.tinylog.Logger;
 
 import java.io.IOException;
 import java.util.List;
@@ -56,8 +58,16 @@ public class ArcadeMsPacMan_MapSelector implements WorldMapSelector {
     private List<WorldMap> mapPrototypes = List.of();
 
     @Override
-    public void loadMapPrototypes() throws IOException {
-        mapPrototypes = WorldMapSelector.loadMaps(getClass(), PROTOTYPES_PATH, PROTOTYPES_COUNT);
+    public void loadMapPrototypes() {
+        try {
+            mapPrototypes = WorldMapSelector.loadMaps(getClass(), PROTOTYPES_PATH, PROTOTYPES_COUNT);
+        } catch (IOException x) {
+            Logger.error("Could not open world map");
+            throw new RuntimeException(x);
+        } catch (WorldMapParseException x) {
+            Logger.error("Could not parse world map");
+            throw new RuntimeException(x);
+        }
     }
 
     /**
@@ -80,7 +90,7 @@ public class ArcadeMsPacMan_MapSelector implements WorldMapSelector {
      * @param args (unused)
      */
     @Override
-    public WorldMap supplyWorldMap(int levelNumber, Object... args) throws IOException {
+    public WorldMap supplyWorldMap(int levelNumber, Object... args) {
         requireValidLevelNumber(levelNumber);
         if (mapPrototypes.isEmpty()) {
             loadMapPrototypes();
