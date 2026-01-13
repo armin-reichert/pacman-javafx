@@ -54,60 +54,59 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
     }
 
     @Override
-    public void handlePathEvents(List<WatchEvent<Path>> pathEvents) {
-        if (pathEvents.isEmpty()) {
-            return;
-        }
+    public void handleWatchEvents(List<WatchEvent<Path>> watchEvents) {
         Logger.info("Detected custom map directory changes:");
-        for (WatchEvent<Path> event : pathEvents) {
-            final Path fileName = event.context(); // file or directory name in custom map dir
-            final File file = customMapDir.toPath().resolve(fileName).toFile();
-            Logger.info("WatchEvent kind={}, file name='{}' file='{}'", event.kind(), fileName, file);
-            if (!file.isFile()) {
-                Logger.info("Ignored: this is a directory or something else");
-                continue;
-            }
-            if (!fileName.endsWith(".world")) {
-                Logger.info("Ignored: This is not a world map file or has wrong extension");
+        for (WatchEvent<Path> event : watchEvents) {
+            final Path relPath = event.context(); // file or directory name in custom map dir
+            final File file = customMapDir.toPath().resolve(relPath).toFile();
+            Logger.info("WatchEvent kind={}, relative path='{}' file='{}'", event.kind(), relPath, file);
+            if (!file.getAbsolutePath().toLowerCase().endsWith(".world")) {
+                Logger.info("Ignored: File '{}' is no world map file or has wrong extension", file);
                 continue;
             }
             if (event.kind() == StandardWatchEventKinds.ENTRY_CREATE) {
+                // A new map file has appeared
                 try {
                     final WorldMap worldMap = WorldMap.loadFromFile(file);
                     customMapPrototypes.add(worldMap);
-                    Logger.info("Added custom map {}", file);
+                    Logger.info("Added new custom map from file '{}'", file);
                 } catch (IOException x) {
+                    Logger.error("Could not load world map");
                     Logger.error(x);
                 }
                 catch (WorldMapParseException x) {
                     Logger.error("Could not parse world map");
-                    Logger.error(x); //TODO
+                    Logger.error(x);
                 }
             }
             else if (event.kind() == StandardWatchEventKinds.ENTRY_DELETE) {
+                // A map file has been removed
                 try {
                     final URL url = file.toURI().toURL();
                     findCustomMapPrototype(url).ifPresent(worldMap -> {
                         customMapPrototypes.remove(worldMap);
-                        Logger.info("Removed custom map {}", file);
+                        Logger.info("Removed custom map file '{}'", file);
                     });
                 } catch (MalformedURLException x) {
+                    Logger.error("Could not remove custom map for deleted file '{}'", file);
                     Logger.error(x);
                 }
             }
             else if (event.kind() == StandardWatchEventKinds.ENTRY_MODIFY) {
+                // A map file has been changed
                 try {
                     final URL url = file.toURI().toURL();
                     findCustomMapPrototype(url).ifPresent(customMapPrototypes::remove);
                     final WorldMap worldMap = WorldMap.loadFromFile(file);
                     customMapPrototypes.add(worldMap);
-                    Logger.info("Updated custom map {}", file);
+                    Logger.info("Updated custom map from file '{}'", file);
                 } catch (IOException x) {
+                    Logger.error("Could not load world map");
                     Logger.error(x);
                 }
                 catch (WorldMapParseException x) {
                     Logger.error("Could not parse world map");
-                    Logger.error(x); //TODO
+                    Logger.error(x);
                 }
             }
         }

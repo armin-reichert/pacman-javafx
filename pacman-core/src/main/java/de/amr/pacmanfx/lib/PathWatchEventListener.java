@@ -9,5 +9,5 @@ import java.nio.file.WatchEvent;
 import java.util.List;
 
 public interface PathWatchEventListener {
-    void handlePathEvents(List<WatchEvent<Path>> events);
+    void handleWatchEvents(List<WatchEvent<Path>> events);
 }

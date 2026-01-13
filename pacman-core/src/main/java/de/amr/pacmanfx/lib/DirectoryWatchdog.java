@@ -16,24 +16,24 @@ import static java.nio.file.StandardWatchEventKinds.*;
 
 public class DirectoryWatchdog {
 
-    private final Thread pollingThread = new Thread(this::pollEvents);
+    private final Thread watchThread = new Thread(this::watchEvents);
     private final File watchedDir;
     private final WatchService watchService;
     private final WatchKey watchKey;
-    private final List<PathWatchEventListener> eventListeners = new ArrayList<>();
-    private boolean polling;
+    private final List<PathWatchEventListener> listeners = new ArrayList<>();
+    private boolean watching;
 
-    public DirectoryWatchdog(File path) {
-        if (path == null) {
+    public DirectoryWatchdog(File directory) {
+        if (directory == null) {
             throw new IllegalArgumentException("Watched path is NULL");
         }
-        if (!path.isDirectory()) {
-            throw new IllegalArgumentException("Watched path %s is not a directory".formatted(path.getAbsolutePath()));
+        if (!directory.isDirectory()) {
+            throw new IllegalArgumentException("Watched path %s is not a directory".formatted(directory.getAbsolutePath()));
         }
-        if (!path.exists()) {
-            throw new IllegalArgumentException("Watched directory %s does not exist".formatted(path.getAbsolutePath()));
+        if (!directory.exists()) {
+            throw new IllegalArgumentException("Watched directory %s does not exist".formatted(directory.getAbsolutePath()));
         }
-        watchedDir = path;
+        watchedDir = directory;
         try {
             watchService = FileSystems.getDefault().newWatchService();
             watchKey = watchedDir.toPath().register(watchService, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
@@ -42,77 +42,69 @@ public class DirectoryWatchdog {
         }
     }
 
-    public void addEventListener(PathWatchEventListener eventListener) {
-        eventListeners.add(eventListener);
+    public void addEventListener(PathWatchEventListener listener) {
+        listeners.add(listener);
     }
 
-    public void removeEventListener(PathWatchEventListener eventListener) {
-        eventListeners.remove(eventListener);
+    public void removeEventListener(PathWatchEventListener listener) {
+        listeners.remove(listener);
     }
 
     public void startWatching() {
-        if (pollingThread.isAlive()) return;
-        polling = true;
-        pollingThread.setDaemon(true);
-        pollingThread.start();
+        if (watchThread.isAlive()) return;
+        watching = true;
+        watchThread.setDaemon(true);
+        watchThread.start();
         Logger.info("Start watching directory {}", watchedDir);
     }
 
     public void dispose() {
-        polling = false;
+        watching = false;
         watchKey.cancel();
-        pollingThread.interrupt();
+        watchThread.interrupt();
         try {
-            pollingThread.join(100);
+            watchThread.join(50);
             watchService.close();
-            eventListeners.clear();
+            listeners.clear();
             Logger.info("Stopped watching directory {}", watchedDir);
         } catch (Exception x) {
-            Logger.error("Exception occurred when stopping directory watchdog");
-        }
-    }
-
-    public boolean isWatching() { return polling && pollingThread.isAlive(); }
-
-    @SuppressWarnings("unchecked")
-    private void _pollEvents() {
-        while (polling) {
-            final List<WatchEvent<?>> watchEvents = watchKey.pollEvents();
-            if (!watchEvents.isEmpty()) {
-                final List<WatchEvent<Path>> pathEvents = watchEvents.stream().map(e -> (WatchEvent<Path>) e).toList();
-                eventListeners.forEach(listener -> listener.handlePathEvents(pathEvents));
-            }
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                Logger.debug("Directory polling thread interrupted");
-                Thread.currentThread().interrupt(); // restore flag
-            }
+            Logger.warn("Exception occurred when stopping directory watchdog");
         }
     }
 
     @SuppressWarnings("unchecked")
-    private void pollEvents() {
-        while (polling && !Thread.currentThread().isInterrupted()) {
+    private void watchEvents() {
+        while (watching && !Thread.currentThread().isInterrupted()) {
             try {
                 // Blocks until at least one event is available or watch key is invalid
-                WatchKey key = watchService.take();
+                final WatchKey key = watchService.take();
 
                 if (!key.isValid()) {
                     Logger.warn("WatchKey became invalid for {}", watchedDir);
                     break;
                 }
 
-                List<WatchEvent<?>> watchEvents = key.pollEvents();
+                final List<WatchEvent<?>> watchEvents = key.pollEvents();
                 if (!watchEvents.isEmpty()) {
-                    List<WatchEvent<Path>> pathEvents = watchEvents.stream()
+                    final List<WatchEvent<Path>> eventList = watchEvents.stream()
                         .map(e -> (WatchEvent<Path>) e)
+                        .filter(event -> {
+                            final Path relPath = event.context(); // file or directory name in watched directory
+                            return watchedDir.toPath().resolve(relPath).toFile().isFile(); // only real files
+                        })
                         .toList();
-                    eventListeners.forEach(listener -> listener.handlePathEvents(pathEvents));
+                    if (!eventList.isEmpty()) {
+                        try {
+                            listeners.forEach(listener -> listener.handleWatchEvents(eventList));
+                        }
+                        catch (Exception x) {
+                            Logger.error("Exception occurred while handling watch events");
+                        }
+                    }
                 }
 
                 // Very important: reset the key so we receive future events!
-                boolean valid = key.reset();
+                final boolean valid = key.reset();
                 if (!valid) {
                     Logger.warn("WatchKey reset failed for {}", watchedDir);
                     break;
