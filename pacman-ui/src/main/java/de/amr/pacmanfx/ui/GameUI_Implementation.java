@@ -75,7 +75,6 @@ public final class GameUI_Implementation implements GameUI {
     private final VoicePlayer voicePlayer = new VoicePlayer();
 
     private final ViewManager viewManager;
-    private final StartPagesCarousel startPagesView;
     private final PlayView playView;
     private EditorView editorView;
 
@@ -88,8 +87,17 @@ public final class GameUI_Implementation implements GameUI {
         private final GameContext gameContext;
         private final ObjectProperty<GameUI_View> currentView = new SimpleObjectProperty<>();
 
-        public ViewManager(GameContext gameContext, Pane layoutPane, FlashMessageView flashMessageView) {
+        private final StartPagesCarousel startPagesView;
+
+        ViewManager(
+            GameContext gameContext,
+            Pane layoutPane,
+            StartPagesCarousel startPagesView,
+            FlashMessageView flashMessageView
+        ) {
             this.gameContext = gameContext;
+            this.startPagesView = startPagesView;
+
             currentView.addListener((_, oldView, newView) -> {
                 if (oldView != null) {
                     oldView.onExit();
@@ -102,15 +110,7 @@ public final class GameUI_Implementation implements GameUI {
             });
         }
 
-        public ObjectProperty<GameUI_View> currentViewProperty() {
-            return currentView;
-        }
-
-        public GameUI_View currentView() {
-            return currentView.get();
-        }
-
-        public void selectView(GameUI_View view) {
+        void selectView(GameUI_View view) {
             requireNonNull(view);
             final GameUI_View oldView = currentView();
             if (oldView == view) {
@@ -126,6 +126,17 @@ public final class GameUI_Implementation implements GameUI {
             currentView.set(view);
         }
 
+        ObjectProperty<GameUI_View> currentViewProperty() {
+            return currentView;
+        }
+
+        GameUI_View currentView() {
+            return currentView.get();
+        }
+
+        StartPagesCarousel startPagesView() {
+            return startPagesView;
+        }
     }
 
     public GameUI_Implementation(
@@ -137,7 +148,7 @@ public final class GameUI_Implementation implements GameUI {
     {
         requireNonNull(uiConfigMap, "UI configuration map is null");
         this.gameContext = requireNonNull(gameContext, "Game context is null");
-        this.viewManager = new ViewManager(gameContext, layoutPane, flashMessageView);
+        this.viewManager = new ViewManager(gameContext, layoutPane, new StartPagesCarousel(), flashMessageView);
         this.stage = requireNonNull(stage, "Stage is null");
         requireNonNegative(sceneWidth, "Main scene width must be a positive number");
         requireNonNegative(sceneHeight, "Main scene height must be a positive number");
@@ -161,8 +172,7 @@ public final class GameUI_Implementation implements GameUI {
 
         playView = new PlayView(this, scene);
 
-        startPagesView = new StartPagesCarousel();
-        startPagesView.setUI(this);
+        viewManager.startPagesView().setUI(this);
 
         titleBinding = createStringBinding(this::computeStageTitle,
             // depends on:
@@ -427,7 +437,7 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     private void initStartPage() {
-        if (startPagesView.numItems() > 0) {
+        if (viewManager.startPagesView().numItems() > 0) {
             startPagesView().setSelectedIndex(0);
             startPagesView().currentStartPage().ifPresent(startPage -> startPage.init(this));
             showStartView();
@@ -465,7 +475,7 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public StartPagesCarousel startPagesView() {
-        return startPagesView;
+        return viewManager.startPagesView();
     }
 
     @Override
