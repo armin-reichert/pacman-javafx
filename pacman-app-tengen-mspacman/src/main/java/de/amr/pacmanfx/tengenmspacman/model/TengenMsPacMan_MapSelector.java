@@ -104,40 +104,32 @@ public class TengenMsPacMan_MapSelector implements WorldMapSelector {
 
     @Override
     public WorldMap supplyWorldMap(int levelNumber, Object... args) {
+        requireValidLevelNumber(levelNumber);
         if (args == null || args.length == 0) {
-            throw new IllegalArgumentException("Insufficient information for computing map");
+            throw new IllegalArgumentException("Cannot supply map: no map category specified");
         }
-        if (args[0] instanceof MapCategory mapCategory) {
-            requireValidLevelNumber(levelNumber);
-            return switch (mapCategory) {
-                case ARCADE -> {
-                    ensureArcadeMapPrototypesLoaded();
-                    yield configuredArcadeMap(levelNumber);
-                }
-                case MINI -> {
-                    ensureMiniMapPrototypesLoaded();
-                    yield configuredMiniMap(levelNumber);
-                }
-                case BIG -> {
-                    ensureBigMapPrototypesLoaded();
-                    yield configuredBigMap(levelNumber);
-                }
-                case STRANGE -> {
-                    ensureStrangeMapPrototypesLoaded();
-                    final WorldMap strangeMap = configuredStrangeMap(levelNumber);
-                    // Hack: Store mazeID in map properties to make renderer happy
-                    final var mazeID = NonArcadeMapsSpriteSheet.MapID.values()[levelNumber - 1];
-                    strangeMap.setConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MAP_ID, mazeID);
-                    yield strangeMap;
-                }
-            };
-        } else {
+        if (!(args[0] instanceof MapCategory mapCategory)) {
             throw new IllegalArgumentException("Supplied argument '%s' is not a map category".formatted(args[0]));
+
         }
+
+        // Ensure *all* prototypes are loaded! STRANGE maps for example uses BIG maps list etc.
+        loadMapPrototypes();
+        return switch (mapCategory) {
+            case ARCADE -> configuredArcadeMap(levelNumber);
+            case MINI -> configuredMiniMap(levelNumber);
+            case BIG -> configuredBigMap(levelNumber);
+            case STRANGE -> {
+                final WorldMap strangeMap = configuredStrangeMap(levelNumber);
+                // Store maze ID in map properties to make renderer happy
+                final var mapID = NonArcadeMapsSpriteSheet.MapID.values()[levelNumber - 1];
+                strangeMap.setConfigValue(TengenMsPacMan_UIConfig.ConfigKey.MAP_ID, mapID);
+                yield strangeMap;
+            }
+        };
     }
 
     private WorldMap configuredMap(MapCategory category, int number, NES_ColorScheme nesColorScheme) {
-        // It is safe to assume prototypes have been loaded
         final List<WorldMap> prototypes = switch (category) {
             case ARCADE -> arcadeMapPrototypes;
             case MINI -> miniMapPrototypes;

@@ -186,6 +186,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel implements Level
         setMapCategory(DEFAULT_MAP_CATEGORY);
         setStartLevelNumber(DEFAULT_START_LEVEL);
         numContinues = DEFAULT_NUM_CONTINUES;
+        mapSelector.loadMapPrototypes();
     }
 
     @Override
