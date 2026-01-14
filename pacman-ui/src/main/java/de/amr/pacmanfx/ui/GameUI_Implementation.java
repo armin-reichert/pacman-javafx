@@ -75,9 +75,11 @@ public final class GameUI_Implementation implements GameUI {
     private final VoicePlayer voicePlayer = new VoicePlayer();
 
     private final ViewManager viewManager;
-    private final PlayView playView;
+
+    //TODO
     private EditorView editorView;
 
+    private FontIcon pausedIcon;
     private StatusIconBox statusIconBox;
 
     private final StringBinding titleBinding;
@@ -88,15 +90,18 @@ public final class GameUI_Implementation implements GameUI {
         private final ObjectProperty<GameUI_View> currentView = new SimpleObjectProperty<>();
 
         private final StartPagesCarousel startPagesView;
+        private final PlayView playView;
 
         ViewManager(
             GameContext gameContext,
             Pane layoutPane,
             StartPagesCarousel startPagesView,
+            PlayView playView,
             FlashMessageView flashMessageView
         ) {
             this.gameContext = gameContext;
             this.startPagesView = startPagesView;
+            this.playView = playView;
 
             currentView.addListener((_, oldView, newView) -> {
                 if (oldView != null) {
@@ -137,6 +142,10 @@ public final class GameUI_Implementation implements GameUI {
         StartPagesCarousel startPagesView() {
             return startPagesView;
         }
+
+        PlayView playView() {
+            return playView;
+        }
     }
 
     public GameUI_Implementation(
@@ -148,7 +157,6 @@ public final class GameUI_Implementation implements GameUI {
     {
         requireNonNull(uiConfigMap, "UI configuration map is null");
         this.gameContext = requireNonNull(gameContext, "Game context is null");
-        this.viewManager = new ViewManager(gameContext, layoutPane, new StartPagesCarousel(), flashMessageView);
         this.stage = requireNonNull(stage, "Stage is null");
         requireNonNegative(sceneWidth, "Main scene width must be a positive number");
         requireNonNegative(sceneHeight, "Main scene height must be a positive number");
@@ -170,14 +178,29 @@ public final class GameUI_Implementation implements GameUI {
 
         createScene(sceneWidth, sceneHeight);
 
-        playView = new PlayView(this, scene);
-
+        this.viewManager = new ViewManager(
+            gameContext,
+            layoutPane,
+            new StartPagesCarousel(),
+            new PlayView(scene),
+            flashMessageView
+        );
         viewManager.startPagesView().setUI(this);
+        viewManager.playView.setUI(this);
+
+        statusIconBox.visibleProperty().bind(viewManager.currentViewProperty()
+            .map(view -> optEditorView().isEmpty() || view != optEditorView().get()));
+
+        // Show paused icon only in play view
+        pausedIcon.visibleProperty().bind(Bindings.createBooleanBinding(
+                () -> currentView() == viewManager.playView() && clock.isPaused(),
+                viewManager.currentViewProperty(), clock.pausedProperty())
+        );
 
         titleBinding = createStringBinding(this::computeStageTitle,
             // depends on:
             viewManager.currentViewProperty(),
-            playView.currentGameSceneProperty(),
+            viewManager.playView().currentGameSceneProperty(),
             scene.heightProperty(),
             gameContext.gameVariantNameProperty(),
             PROPERTY_DEBUG_INFO_VISIBLE,
@@ -191,7 +214,7 @@ public final class GameUI_Implementation implements GameUI {
                     : GameUI.BACKGROUND_PAC_MAN_WALLPAPER,
             // depends on:
             viewManager.currentViewProperty(),
-            playView.currentGameSceneProperty()
+            viewManager.playView().currentGameSceneProperty()
         ));
 
         stage.setScene(scene);
@@ -220,7 +243,7 @@ public final class GameUI_Implementation implements GameUI {
         createStatusIconBox();
 
         // Large "paused" icon which appears at center of scene
-        FontIcon pausedIcon = createPausedIcon();
+        pausedIcon = createPausedIcon();
         StackPane.setAlignment(pausedIcon, Pos.CENTER);
 
         // First child is placeholder for view (start pages view, play view, ...)
@@ -228,22 +251,13 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     private FontIcon createPausedIcon() {
-        var pausedIcon = FontIcon.of(FontAwesomeSolid.PAUSE, PAUSE_ICON_SIZE, ArcadePalette.ARCADE_WHITE);
-        // Show paused icon only in play view
-        pausedIcon.visibleProperty().bind(Bindings.createBooleanBinding(
-            () -> currentView() == playView && clock.isPaused(),
-            viewManager.currentViewProperty(), clock.pausedProperty())
-        );
-        return pausedIcon;
+        return FontIcon.of(FontAwesomeSolid.PAUSE, PAUSE_ICON_SIZE, ArcadePalette.ARCADE_WHITE);
     }
 
     // Status icon box appears at bottom-left corner of all views except editor view
     private void createStatusIconBox() {
         statusIconBox = new StatusIconBox();
         // hide icon box if editor view is active, avoid creation of editor view in binding expression!
-        statusIconBox.visibleProperty().bind(
-            viewManager.currentViewProperty()
-            .map(view -> optEditorView().isEmpty() || view != optEditorView().get()));
         statusIconBox.iconMuted()    .visibleProperty().bind(PROPERTY_MUTED);
         statusIconBox.icon3D()       .visibleProperty().bind(PROPERTY_3D_ENABLED);
         StackPane.setAlignment(statusIconBox, Pos.BOTTOM_LEFT);
@@ -302,8 +316,8 @@ public final class GameUI_Implementation implements GameUI {
 
     private void drawCurrentView() {
         try {
-            if (currentView() == playView) {
-                playView.draw();
+            if (currentView() == viewManager.playView()) {
+                viewManager.playView().draw();
             }
             flashMessageView.update();
         } catch (Throwable x) {
@@ -429,7 +443,7 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public void show() {
-        playView.dashboard().init(this);
+        viewManager.playView().dashboard().init(this);
         initStartPage();
         stage.centerOnScreen();
         stage.show();
@@ -470,7 +484,7 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public PlayView playView() {
-        return playView;
+        return viewManager.playView();
     }
 
     @Override
@@ -480,7 +494,7 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public Dashboard dashboard() {
-        return playView.dashboard();
+        return viewManager.playView().dashboard();
     }
 
     @Override
@@ -515,18 +529,18 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public Optional<GameScene> currentGameScene() {
-        return playView.currentGameScene();
+        return viewManager.playView().currentGameScene();
     }
 
     @Override
     public boolean isCurrentGameSceneID(GameScene_Config.SceneID sceneID) {
-        final GameScene currentGameScene = playView.currentGameScene().orElse(null);
+        final GameScene currentGameScene = viewManager.playView().currentGameScene().orElse(null);
         return currentGameScene != null && currentGameSceneConfig().gameSceneHasID(currentGameScene, sceneID);
     }
 
     @Override
     public void updateGameScene(boolean forceReloading) {
-        playView.updateGameScene(gameContext.currentGame(), forceReloading);
+        viewManager.playView().updateGameScene(gameContext.currentGame(), forceReloading);
     }
 
     @Override

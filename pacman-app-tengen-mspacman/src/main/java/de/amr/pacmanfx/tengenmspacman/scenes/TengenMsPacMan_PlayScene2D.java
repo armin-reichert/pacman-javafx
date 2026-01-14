@@ -196,7 +196,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     public Optional<GameUI_ContextMenu> supplyContextMenu(Game game) {
         final SceneDisplayMode displayMode = PROPERTY_PLAY_SCENE_DISPLAY_MODE.get();
 
-        final var menu = new GameUI_ContextMenu(ui);
+        final var menu = new GameUI_ContextMenu();
+        menu.setUI(ui);
 
         final RadioMenuItem miScaledToFit = menu.addLocalizedRadioButton("scaled_to_fit");
         miScaledToFit.setSelected(displayMode == SceneDisplayMode.SCALED_TO_FIT);

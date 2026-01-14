@@ -26,9 +26,11 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameUI_ContextMenu extends ContextMenu {
 
-    private final GameUI ui;
+    private GameUI ui;
 
-    public GameUI_ContextMenu(GameUI ui) {
+    public GameUI_ContextMenu() {}
+
+    public void setUI(GameUI ui) {
         this.ui = requireNonNull(ui);
     }
 

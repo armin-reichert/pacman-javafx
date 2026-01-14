@@ -191,7 +191,8 @@ public abstract class PlayScene3D implements GameScene {
 
     @Override
     public Optional<GameUI_ContextMenu> supplyContextMenu(Game game) {
-        final var menu = new GameUI_ContextMenu(ui);
+        final var menu = new GameUI_ContextMenu();
+        menu.setUI(ui);
         menu.addLocalizedTitleItem("scene_display");
         menu.addLocalizedActionItem(ACTION_TOGGLE_PLAY_SCENE_2D_3D, "use_2D_scene");
         menu.addLocalizedCheckBox(GameUI.PROPERTY_MINI_VIEW_ON, "pip");
