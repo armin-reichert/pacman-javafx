@@ -32,6 +32,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -67,14 +68,13 @@ public final class GameUI_Implementation implements GameUI {
     private final ActionBindingsManager globalActionBindings = new GlobalActionBindings();
     private final GameUI_ConfigFactory configFactory;
 
-    private final ObjectProperty<GameUI_View> currentView = new SimpleObjectProperty<>();
-
     private Scene scene;
     private final StackPane layoutPane = new StackPane();
 
     private final FlashMessageView flashMessageView = new FlashMessageView();
     private final VoicePlayer voicePlayer = new VoicePlayer();
 
+    private final ViewManager viewManager;
     private final StartPagesCarousel startPagesView;
     private final PlayView playView;
     private EditorView editorView;
@@ -82,6 +82,46 @@ public final class GameUI_Implementation implements GameUI {
     private StatusIconBox statusIconBox;
 
     private final StringBinding titleBinding;
+
+    private static class ViewManager {
+
+        private final GameContext gameContext;
+        private final ObjectProperty<GameUI_View> currentView = new SimpleObjectProperty<>();
+
+        public ViewManager(GameContext gameContext) {
+            this.gameContext = gameContext;
+        }
+
+        public ObjectProperty<GameUI_View> currentViewProperty() {
+            return currentView;
+        }
+
+        public GameUI_View currentView() {
+            return currentView.get();
+        }
+
+        public void selectView(GameUI_View view) {
+            requireNonNull(view);
+            final GameUI_View oldView = currentView();
+            if (oldView == view) {
+                return;
+            }
+            if (oldView != null) {
+                oldView.onExit();
+                oldView.actionBindingsManager().releaseBindings(KEYBOARD);
+                gameContext.currentGame().removeGameEventListener(oldView);
+            }
+            view.actionBindingsManager().activateBindings(KEYBOARD);
+            gameContext.currentGame().addGameEventListener(view);
+            currentView.set(view);
+        }
+
+        private void embedView(GameUI_View view, Pane layoutPane) {
+            requireNonNull(view);
+            layoutPane.getChildren().set(0, view.root());
+            view.root().requestFocus();
+        }
+    }
 
     public GameUI_Implementation(
         Map<String, Class<? extends GameUI_Config>> uiConfigMap,
@@ -92,6 +132,7 @@ public final class GameUI_Implementation implements GameUI {
     {
         requireNonNull(uiConfigMap, "UI configuration map is null");
         this.gameContext = requireNonNull(gameContext, "Game context is null");
+        this.viewManager = new ViewManager(gameContext);
         this.stage = requireNonNull(stage, "Stage is null");
         requireNonNegative(sceneWidth, "Main scene width must be a positive number");
         requireNonNegative(sceneHeight, "Main scene height must be a positive number");
@@ -118,12 +159,12 @@ public final class GameUI_Implementation implements GameUI {
         startPagesView = new StartPagesCarousel();
         startPagesView.setUI(this);
 
-        currentView.addListener((_, oldView, newView) -> {
+        viewManager.currentViewProperty().addListener((_, oldView, newView) -> {
             if (oldView != null) {
                 oldView.onExit();
             }
             if (newView != null) {
-                embedView(newView);
+                viewManager.embedView(newView, layoutPane);
                 Logger.info("Embedded view: {}", newView);
                 newView.onEnter();
             }
@@ -132,7 +173,7 @@ public final class GameUI_Implementation implements GameUI {
 
         titleBinding = createStringBinding(this::computeStageTitle,
             // depends on:
-            currentViewProperty(),
+            viewManager.currentViewProperty(),
             playView.currentGameSceneProperty(),
             scene.heightProperty(),
             gameContext.gameVariantNameProperty(),
@@ -146,7 +187,7 @@ public final class GameUI_Implementation implements GameUI {
                     ? Background.fill(Gradients.Samples.random())
                     : GameUI.BACKGROUND_PAC_MAN_WALLPAPER,
             // depends on:
-            currentViewProperty(),
+            viewManager.currentViewProperty(),
             playView.currentGameSceneProperty()
         ));
 
@@ -188,7 +229,7 @@ public final class GameUI_Implementation implements GameUI {
         // Show paused icon only in play view
         pausedIcon.visibleProperty().bind(Bindings.createBooleanBinding(
             () -> currentView() == playView && clock.isPaused(),
-            currentViewProperty(), clock.pausedProperty())
+            viewManager.currentViewProperty(), clock.pausedProperty())
         );
         return pausedIcon;
     }
@@ -197,20 +238,16 @@ public final class GameUI_Implementation implements GameUI {
     private void createStatusIconBox() {
         statusIconBox = new StatusIconBox();
         // hide icon box if editor view is active, avoid creation of editor view in binding expression!
-        statusIconBox.visibleProperty().bind(currentViewProperty().map(currentView -> optEditorView().isEmpty() || currentView != optEditorView().get()));
+        statusIconBox.visibleProperty().bind(
+            viewManager.currentViewProperty()
+            .map(view -> optEditorView().isEmpty() || view != optEditorView().get()));
         statusIconBox.iconMuted()    .visibleProperty().bind(PROPERTY_MUTED);
         statusIconBox.icon3D()       .visibleProperty().bind(PROPERTY_3D_ENABLED);
         StackPane.setAlignment(statusIconBox, Pos.BOTTOM_LEFT);
     }
 
-    private void embedView(GameUI_View view) {
-        requireNonNull(view);
-        layoutPane.getChildren().set(0, view.root());
-        view.root().requestFocus();
-    }
-
     private String computeStageTitle() {
-        final GameUI_View view = currentViewProperty().get();
+        final GameUI_View view = currentView();
         if (view == null) {
             return "No View?";
         }
@@ -234,22 +271,6 @@ public final class GameUI_Implementation implements GameUI {
         }
         final String sceneClassName = gameScene.getClass().getSimpleName();
         return "%s [%s]".formatted(shortTitle, sceneClassName);
-    }
-
-    private void selectView(GameUI_View view) {
-        requireNonNull(view);
-        final GameUI_View oldView = currentView();
-        if (oldView == view) {
-            return;
-        }
-        if (oldView != null) {
-            oldView.onExit();
-            oldView.actionBindingsManager().releaseBindings(KEYBOARD);
-            gameContext.currentGame().removeGameEventListener(oldView);
-        }
-        view.actionBindingsManager().activateBindings(KEYBOARD);
-        gameContext.currentGame().addGameEventListener(view);
-        currentViewProperty().set(view);
     }
 
     /**
@@ -297,10 +318,6 @@ public final class GameUI_Implementation implements GameUI {
             editorView.editor().init(GameBox.CUSTOM_MAP_DIR);
         }
         return editorView;
-    }
-
-    public ObjectProperty<GameUI_View> currentViewProperty() {
-        return currentView;
     }
 
     // GameUI interface
@@ -440,7 +457,7 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public GameUI_View currentView() {
-        return currentView.get();
+        return viewManager.currentView();
     }
 
     @Override
@@ -470,7 +487,7 @@ public final class GameUI_Implementation implements GameUI {
             currentConfig().soundManager().stopAll();
             clock.stop();
             getOrCreateEditView().editor().start();
-            selectView(editorView);
+            viewManager.selectView(editorView);
         } else {
             Logger.info("Editor view cannot be opened, game is playing");
         }
@@ -478,7 +495,7 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public void showPlayView() {
-        selectView(playView());
+        viewManager.selectView(playView());
         final Game game = gameContext.currentGame();
         statusIconBox.iconAutopilot().visibleProperty().bind(game.usingAutopilotProperty());
         statusIconBox.iconCheated()  .visibleProperty().bind(game.cheatUsedProperty());
@@ -490,7 +507,7 @@ public final class GameUI_Implementation implements GameUI {
         clock.stop();
         clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
         currentConfig().soundManager().stopAll();
-        selectView(startPagesView());
+        viewManager.selectView(startPagesView());
     }
 
     @Override
