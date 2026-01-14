@@ -70,8 +70,8 @@ public final class GameUI_Implementation implements GameUI {
 
     private Scene scene;
     private final StackPane layoutPane = new StackPane();
-
     private final FlashMessageView flashMessageView = new FlashMessageView();
+
     private final VoicePlayer voicePlayer = new VoicePlayer();
 
     private final ViewManager viewManager;
@@ -88,8 +88,18 @@ public final class GameUI_Implementation implements GameUI {
         private final GameContext gameContext;
         private final ObjectProperty<GameUI_View> currentView = new SimpleObjectProperty<>();
 
-        public ViewManager(GameContext gameContext) {
+        public ViewManager(GameContext gameContext, Pane layoutPane, FlashMessageView flashMessageView) {
             this.gameContext = gameContext;
+            currentView.addListener((_, oldView, newView) -> {
+                if (oldView != null) {
+                    oldView.onExit();
+                }
+                if (newView != null) {
+                    layoutPane.getChildren().set(0, newView.root());
+                    newView.onEnter();
+                }
+                flashMessageView.clear();
+            });
         }
 
         public ObjectProperty<GameUI_View> currentViewProperty() {
@@ -116,11 +126,6 @@ public final class GameUI_Implementation implements GameUI {
             currentView.set(view);
         }
 
-        private void embedView(GameUI_View view, Pane layoutPane) {
-            requireNonNull(view);
-            layoutPane.getChildren().set(0, view.root());
-            view.root().requestFocus();
-        }
     }
 
     public GameUI_Implementation(
@@ -132,7 +137,7 @@ public final class GameUI_Implementation implements GameUI {
     {
         requireNonNull(uiConfigMap, "UI configuration map is null");
         this.gameContext = requireNonNull(gameContext, "Game context is null");
-        this.viewManager = new ViewManager(gameContext);
+        this.viewManager = new ViewManager(gameContext, layoutPane, flashMessageView);
         this.stage = requireNonNull(stage, "Stage is null");
         requireNonNegative(sceneWidth, "Main scene width must be a positive number");
         requireNonNegative(sceneHeight, "Main scene height must be a positive number");
@@ -158,18 +163,6 @@ public final class GameUI_Implementation implements GameUI {
 
         startPagesView = new StartPagesCarousel();
         startPagesView.setUI(this);
-
-        viewManager.currentViewProperty().addListener((_, oldView, newView) -> {
-            if (oldView != null) {
-                oldView.onExit();
-            }
-            if (newView != null) {
-                viewManager.embedView(newView, layoutPane);
-                Logger.info("Embedded view: {}", newView);
-                newView.onEnter();
-            }
-            flashMessageView.clear();
-        });
 
         titleBinding = createStringBinding(this::computeStageTitle,
             // depends on:
