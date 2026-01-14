@@ -40,6 +40,7 @@ import javafx.util.Duration;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.tinylog.Logger;
+import org.tinylog.Supplier;
 
 import java.util.Map;
 import java.util.Optional;
@@ -76,9 +77,6 @@ public final class GameUI_Implementation implements GameUI {
 
     private final ViewManager viewManager;
 
-    //TODO
-    private EditorView editorView;
-
     private FontIcon pausedIcon;
     private StatusIconBox statusIconBox;
 
@@ -91,17 +89,21 @@ public final class GameUI_Implementation implements GameUI {
 
         private final StartPagesCarousel startPagesView;
         private final PlayView playView;
+        private EditorView editorView;
+        private final Supplier<EditorView> editorViewCreator;
 
         ViewManager(
             GameContext gameContext,
             Pane layoutPane,
             StartPagesCarousel startPagesView,
             PlayView playView,
-            FlashMessageView flashMessageView
-        ) {
+            Supplier<EditorView> editorViewCreator,
+            FlashMessageView flashMessageView)
+        {
             this.gameContext = gameContext;
             this.startPagesView = startPagesView;
             this.playView = playView;
+            this.editorViewCreator = editorViewCreator;
 
             currentView.addListener((_, oldView, newView) -> {
                 if (oldView != null) {
@@ -131,6 +133,14 @@ public final class GameUI_Implementation implements GameUI {
             currentView.set(view);
         }
 
+        private EditorView getOrCreateEditView() {
+            if (editorView == null) {
+                editorView = editorViewCreator.get();
+                editorView.editor().init(GameBox.CUSTOM_MAP_DIR);
+            }
+            return editorView;
+        }
+
         ObjectProperty<GameUI_View> currentViewProperty() {
             return currentView;
         }
@@ -145,6 +155,10 @@ public final class GameUI_Implementation implements GameUI {
 
         PlayView playView() {
             return playView;
+        }
+
+        EditorView editorView() {
+            return getOrCreateEditView();
         }
     }
 
@@ -183,8 +197,10 @@ public final class GameUI_Implementation implements GameUI {
             layoutPane,
             new StartPagesCarousel(),
             new PlayView(scene),
+            this::createEditorView,
             flashMessageView
         );
+
         viewManager.startPagesView().setUI(this);
         viewManager.playView.setUI(this);
 
@@ -193,8 +209,8 @@ public final class GameUI_Implementation implements GameUI {
 
         // Show paused icon only in play view
         pausedIcon.visibleProperty().bind(Bindings.createBooleanBinding(
-                () -> currentView() == viewManager.playView() && clock.isPaused(),
-                viewManager.currentViewProperty(), clock.pausedProperty())
+            () -> currentView() == viewManager.playView() && clock.isPaused(),
+            viewManager.currentViewProperty(), clock.pausedProperty())
         );
 
         titleBinding = createStringBinding(this::computeStageTitle,
@@ -221,6 +237,15 @@ public final class GameUI_Implementation implements GameUI {
         stage.setMinWidth(MIN_STAGE_WIDTH);
         stage.setMinHeight(MIN_STAGE_HEIGHT);
         stage.titleProperty().bind(titleBinding);
+    }
+
+    private EditorView createEditorView() {
+        final var editorView = new EditorView(stage, this);
+        editorView.setQuitEditorAction(_ -> {
+            stage.titleProperty().bind(titleBinding);
+            showStartView();
+        });
+        return editorView;
     }
 
     private void createScene(double width, double height) {
@@ -323,18 +348,6 @@ public final class GameUI_Implementation implements GameUI {
         } catch (Throwable x) {
             ka_tas_tro_phe(x);
         }
-    }
-
-    private EditorView getOrCreateEditView() {
-        if (editorView == null) {
-            editorView = new EditorView(stage, this);
-            editorView.setQuitEditorAction(_ -> {
-                stage.titleProperty().bind(titleBinding);
-                showStartView();
-            });
-            editorView.editor().init(GameBox.CUSTOM_MAP_DIR);
-        }
-        return editorView;
     }
 
     // GameUI interface
@@ -479,7 +492,7 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public Optional<GameUI_View> optEditorView() {
-        return Optional.ofNullable(editorView);
+        return Optional.ofNullable(viewManager.editorView());
     }
 
     @Override
@@ -503,8 +516,8 @@ public final class GameUI_Implementation implements GameUI {
             currentGameScene().ifPresent(gameScene -> gameScene.end(gameContext.currentGame()));
             currentConfig().soundManager().stopAll();
             clock.stop();
-            getOrCreateEditView().editor().start();
-            viewManager.selectView(editorView);
+            viewManager.editorView().editor().start();
+            viewManager.selectView(viewManager.editorView());
         } else {
             Logger.info("Editor view cannot be opened, game is playing");
         }
