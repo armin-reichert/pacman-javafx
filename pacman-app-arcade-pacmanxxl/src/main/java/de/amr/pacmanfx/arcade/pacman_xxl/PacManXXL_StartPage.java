@@ -103,7 +103,7 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
 
         gameVariantNameListener = (_, _, gameVariantName) -> {
             if (ARCADE_PACMAN_XXL.name().equals(gameVariantName) || ARCADE_MS_PACMAN_XXL.name().equals(gameVariantName)) {
-                menu.init(ui);
+                ui.context().gameVariantNameProperty().set(gameVariantName);
             }
         };
         ui.context().gameVariantNameProperty().addListener(gameVariantNameListener);
@@ -137,17 +137,18 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
 
     @Override
     public void onEnterStartPage(GameUI ui) {
-        ui.voicePlayer().play(VOICE);
-
+        final StandardGameVariant selectedGameVariant = menu.entryGameVariant().value();
+        switch (selectedGameVariant) {
+            case ARCADE_PACMAN_XXL,ARCADE_MS_PACMAN_XXL -> {
+                ui.context().gameVariantNameProperty().set(selectedGameVariant.name());
+            }
+            default -> throw new IllegalStateException("Unexpected game variant in XXL menu: " + selectedGameVariant);
+        }
+        menu.init(ui);
         menu.requestFocus();
         menu.startDrawLoop();
 
-        menu.entryPlay3D().valueProperty().set(GameUI.PROPERTY_3D_ENABLED.get());
-        final StandardGameVariant selectedGameVariant = menu.entryGameVariant().value();
-        switch (selectedGameVariant) {
-            case ARCADE_PACMAN_XXL,ARCADE_MS_PACMAN_XXL -> menu.init(ui);
-            default -> Logger.error("Unexpected game variant in XXL menu: {}", selectedGameVariant);
-        }
+        ui.voicePlayer().play(VOICE);
     }
 
     @Override

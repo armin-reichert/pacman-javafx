@@ -129,7 +129,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
 
         if (!(game.mapSelector() instanceof PacManXXL_MapSelector mapSelector)) {
             Logger.error("Expected XXL map selector but found {}", game.mapSelector().getClass().getSimpleName());
-            return;
+            throw new IllegalStateException();
         }
         mapSelector.loadMapPrototypes();
 
