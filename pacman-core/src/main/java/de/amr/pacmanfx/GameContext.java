@@ -17,6 +17,8 @@ public interface GameContext {
      */
     default String gameVariantName() { return gameVariantNameProperty().get(); }
 
+    <T extends Game> T gameByVariantName(String variantName);
+
     /**
      * @return the game model of the currently selected game variant
      * @param <T> expected game model type

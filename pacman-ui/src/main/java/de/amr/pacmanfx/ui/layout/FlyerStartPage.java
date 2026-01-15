@@ -36,13 +36,11 @@ public abstract class FlyerStartPage extends StackPane implements GameUI_StartPa
         return button;
     }
 
-    protected final String gameVariant;
     protected final Flyer flyer;
     protected final String title;
     protected Node startButton;
 
-    protected FlyerStartPage(String gameVariant, String title, Image... flyerImages) {
-        this.gameVariant = requireNonNull(gameVariant);
+    protected FlyerStartPage(String title, Image... flyerImages) {
         this.title = requireNonNull(title);
         this.flyer = new Flyer(requireNonNull(flyerImages));
 
@@ -83,12 +81,6 @@ public abstract class FlyerStartPage extends StackPane implements GameUI_StartPa
         );
         button.setTranslateY(-50);
         return button;
-    }
-
-    @Override
-    public void onEnterStartPage(GameUI ui) {
-        flyer.selectPage(0);
-        ui.selectGameVariant(gameVariant);
     }
 
     @Override

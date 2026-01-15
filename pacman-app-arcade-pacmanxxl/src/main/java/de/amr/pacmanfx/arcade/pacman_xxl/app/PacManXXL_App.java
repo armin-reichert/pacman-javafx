@@ -54,7 +54,6 @@ public class PacManXXL_App extends Application {
             .build();
 
         ui.customDirWatchdog().addEventListener(mapSelector);
-        ui.selectGameVariant(ARCADE_PACMAN_XXL.name());
         ui.show();
     }
 

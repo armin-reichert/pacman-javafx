@@ -18,6 +18,7 @@ import de.amr.pacmanfx.ui.layout.StartPagesCarousel;
 import de.amr.pacmanfx.ui.layout.StatusIconBox;
 import de.amr.pacmanfx.ui.sound.VoicePlayer;
 import de.amr.pacmanfx.uilib.GameClock;
+import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.UIPreferences;
 import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
 import de.amr.pacmanfx.uilib.rendering.Gradients;
@@ -126,10 +127,8 @@ public final class GameUI_Implementation implements GameUI {
             if (oldView != null) {
                 oldView.onExit();
                 oldView.actionBindingsManager().releaseBindings(KEYBOARD);
-                gameContext.currentGame().removeGameEventListener(oldView);
             }
             view.actionBindingsManager().activateBindings(KEYBOARD);
-            gameContext.currentGame().addGameEventListener(view);
             currentView.set(view);
         }
 
@@ -192,11 +191,18 @@ public final class GameUI_Implementation implements GameUI {
 
         createScene(sceneWidth, sceneHeight);
 
+        final PlayView playView = new PlayView(scene);
+
+        // Let play view listen to game events of selected game variant
+        context().gameVariantNameProperty().addListener((_, oldVariantName, newVariantName) -> {
+            changeGameVariant(oldVariantName, newVariantName);
+        });
+
         this.viewManager = new ViewManager(
             gameContext,
             layoutPane,
             new StartPagesCarousel(),
-            new PlayView(scene),
+            playView,
             this::createEditorView,
             flashMessageView
         );
@@ -213,7 +219,8 @@ public final class GameUI_Implementation implements GameUI {
             viewManager.currentViewProperty(), clock.pausedProperty())
         );
 
-        titleBinding = createStringBinding(this::computeStageTitle,
+        titleBinding = createStringBinding(
+            () -> context().currentGame() == null ? computeStageTitle(null) : computeStageTitle(currentConfig().assets()),
             // depends on:
             viewManager.currentViewProperty(),
             viewManager.playView().currentGameSceneProperty(),
@@ -288,7 +295,7 @@ public final class GameUI_Implementation implements GameUI {
         StackPane.setAlignment(statusIconBox, Pos.BOTTOM_LEFT);
     }
 
-    private String computeStageTitle() {
+    private String computeStageTitle(AssetMap assets) {
         final GameUI_View view = currentView();
         if (view == null) {
             return "No View?";
@@ -305,7 +312,7 @@ public final class GameUI_Implementation implements GameUI {
 
         final String appTitle     = paused ? "app.title.paused" : "app.title";
         final String viewModeText = translated(is3D ? "threeD" : "twoD");
-        final String shortTitle   = currentConfig().assets().translated(appTitle, viewModeText);
+        final String shortTitle   = assets == null ? "" : assets.translated(appTitle, viewModeText);
 
         final GameScene gameScene = currentGameScene().orElse(null);
         if (gameScene == null || !debug) {
@@ -423,54 +430,43 @@ public final class GameUI_Implementation implements GameUI {
         Platform.runLater(clock::start);
     }
 
+    private void changeGameVariant(String oldVariantName, String newVariantName) {
+        if (oldVariantName != null) {
+            final Game oldGame = context().gameByVariantName(oldVariantName);
+            oldGame.removeGameEventListener(viewManager.playView());
+            configFactory.dispose(oldVariantName);
+        }
+        if (newVariantName != null) {
+            final Game newGame = context().gameByVariantName(newVariantName);
+            newGame.addGameEventListener(viewManager.playView());
+
+            final GameUI_Config newConfig = config(newVariantName);
+            newConfig.init();
+            newConfig.soundManager().muteProperty().bind(PROPERTY_MUTED);
+
+            final Image appIcon = newConfig.assets().image("app_icon");
+            if (appIcon != null) {
+                stage.getIcons().setAll(appIcon);
+            } else {
+                Logger.error("Could not find app icon for current game variant {}", newVariantName);
+            }
+        } else {
+            Logger.error("No game selected");
+        }
+    }
+
     @Override
     public void selectGameVariant(String gameVariantName) {
-        if (gameVariantName == null) {
-            Logger.error("Cannot select game variant (NULL)");
-            return;
-        }
-
-        String prevVariantName = gameContext.gameVariantName();
-        if (gameVariantName.equals(prevVariantName)) {
-            return;
-        }
-
-        if (prevVariantName != null) {
-            configFactory.dispose(prevVariantName);
-        }
-
-        GameUI_Config newConfig = config(gameVariantName);
-        newConfig.init();
-        newConfig.soundManager().muteProperty().bind(PROPERTY_MUTED);
-
-        Image appIcon = newConfig.assets().image("app_icon");
-        if (appIcon != null) {
-            stage.getIcons().setAll(appIcon);
-        } else {
-            Logger.error("Could not find app icon for current game variant {}", gameVariantName);
-        }
-
-        // this triggers a game event and the event handlers:
-        gameContext.gameVariantNameProperty().set(gameVariantName);
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void show() {
         viewManager.playView().dashboard().init(this);
-        initStartPage();
+        viewManager.selectView(viewManager.startPagesView());
         stage.centerOnScreen();
         stage.show();
         Platform.runLater(customDirWatchdog::startWatching);
-    }
-
-    private void initStartPage() {
-        if (viewManager.startPagesView().numItems() > 0) {
-            startPagesView().setSelectedIndex(0);
-            startPagesView().currentStartPage().ifPresent(startPage -> startPage.init(this));
-            showStartView();
-        } else {
-            Logger.error("No start page has been added to this UI!");
-        }
     }
 
     @Override
@@ -564,6 +560,10 @@ public final class GameUI_Implementation implements GameUI {
     @Override
     @SuppressWarnings("unchecked")
     public <T extends GameUI_Config> T currentConfig() {
+        final String gameVariantName = gameContext.gameVariantName();
+        if (gameVariantName == null) {
+            throw new IllegalStateException("Cannot access UI configuration: no game variant is selected");
+        }
         return (T) config(gameContext.gameVariantName());
     }
 

@@ -195,9 +195,11 @@ public class PacManGames3dApp extends Application {
                 TengenMsPacMan_StartPage.class,
                 TENGEN_MS_PACMAN.name())
 
+            /*
             .startPage(
                 PacManXXL_StartPage.class,
                 ARCADE_PACMAN_XXL.name(), ARCADE_MS_PACMAN_XXL.name())
+             */
 
             .dashboard(DASHBOARD_IDS)
 

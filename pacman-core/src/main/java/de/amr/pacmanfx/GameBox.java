@@ -52,7 +52,6 @@ public class GameBox implements GameContext, CoinMechanism {
         if (!DIRECTORY_CHECK_OK) {
             throw new IllegalStateException("User directory check failed");
         }
-        //gameVariantName.addListener((py, ov, newGameVariant) -> gameByVariantName(newGameVariant).init());
     }
 
     /**
@@ -79,6 +78,7 @@ public class GameBox implements GameContext, CoinMechanism {
         return gameVariantName;
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public <T extends Game> T gameByVariantName(String variantName) {
         requireNonNull(variantName);
@@ -94,11 +94,8 @@ public class GameBox implements GameContext, CoinMechanism {
 
     @Override
     public <G extends Game> G currentGame() {
-        G game = gameByVariantName(gameVariantName.get());
-        if (game != null) {
-            return game;
-        }
-        throw new IllegalStateException("No game is currently selected");
+        final String variantName = gameVariantName();
+        return variantName == null ? null : gameByVariantName(variantName);
     }
 
     // CoinMechanism implementation

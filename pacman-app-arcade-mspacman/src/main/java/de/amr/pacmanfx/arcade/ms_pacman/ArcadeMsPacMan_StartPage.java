@@ -17,7 +17,6 @@ public class ArcadeMsPacMan_StartPage extends FlyerStartPage {
 
     public ArcadeMsPacMan_StartPage() {
         super(
-            StandardGameVariant.ARCADE_MS_PACMAN.name(),
             "Ms. Pac-Man (Arcade)",
             LOCAL_RESOURCES.loadImage("graphics/flyer-page-1.jpg"),
             LOCAL_RESOURCES.loadImage("graphics/flyer-page-2.jpg")
@@ -26,8 +25,8 @@ public class ArcadeMsPacMan_StartPage extends FlyerStartPage {
 
     @Override
     public void onEnterStartPage(GameUI ui) {
-        super.onEnterStartPage(ui);
-//        ui.voicePlayer().playAfterSec(VOICE, 1.5f);
+        flyer.selectPage(0);
         ui.voicePlayer().play(VOICE);
+        ui.context().gameVariantNameProperty().set(StandardGameVariant.ARCADE_MS_PACMAN.name());
     }
 }

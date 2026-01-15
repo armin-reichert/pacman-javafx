@@ -13,9 +13,7 @@ public interface GameUI_StartPage {
 
     void init(GameUI ui);
 
-    default void onEnterStartPage(GameUI ui) {
-        Logger.info("Enter start page {}", this);
-    }
+    void onEnterStartPage(GameUI ui);
 
     default void onExitStartPage(GameUI ui) {
         Logger.info("Exit start page {}", this);
