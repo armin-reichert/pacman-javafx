@@ -67,6 +67,10 @@ public class OptionMenu {
         canvas.widthProperty() .bind(scaling.multiply(numTilesX * TS));
         canvas.heightProperty().bind(scaling.multiply(numTilesY * TS));
 
+        canvas.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            Logger.info("Option menu canvas has focus");
+        });
+
         renderer = new OptionMenuRenderer(canvas);
         renderer.scalingProperty().bind(scalingProperty());
 

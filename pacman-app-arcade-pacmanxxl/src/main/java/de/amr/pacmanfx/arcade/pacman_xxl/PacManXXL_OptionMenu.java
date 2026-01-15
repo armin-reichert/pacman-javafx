@@ -67,6 +67,12 @@ public class PacManXXL_OptionMenu extends OptionMenu {
                 chaseAnimation.init(uiConfig, canvas);
             }
         });
+
+        canvas.focusedProperty().addListener((_, _, newFocused) -> {
+            if (newFocused) {
+                startDrawLoop();
+            }
+        });
     }
 
     private void createEntries() {
@@ -141,17 +147,17 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         entryMapOrder.setEnabled(!mapSelector.customMapPrototypes().isEmpty());
         logEntryState();
 
-        requestFocus();
         soundEnabledProperty().bind(ui.currentConfig().soundManager().muteProperty().not());
-
         chaseAnimation.init(ui.currentConfig(), canvas);
+
+        requestFocus();
     }
 
     public void logEntryState() {
-        Logger.info("(Option menu) gameVariant: {} play3D: {} cutScenesEnabled: {} mapOrder: {}",
+        Logger.info("{} {} {} mapOrder: {}",
             entryGameVariant.value(),
-            entryPlay3D.value(),
-            entryCutScenesEnabled.value(),
+            entryPlay3D.value() ? "3D" : "2D",
+            entryCutScenesEnabled.value() ? "cutscenes-on" : "cutscenes-off",
             entryMapOrder.value());
     }
 

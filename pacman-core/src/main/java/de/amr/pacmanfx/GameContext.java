@@ -8,6 +8,8 @@ import de.amr.pacmanfx.model.CoinMechanism;
 import de.amr.pacmanfx.model.Game;
 import javafx.beans.property.StringProperty;
 
+import static java.util.Objects.requireNonNull;
+
 public interface GameContext {
 
     StringProperty gameVariantNameProperty();
@@ -16,6 +18,16 @@ public interface GameContext {
      * @return name (id) of the current game variant
      */
     default String gameVariantName() { return gameVariantNameProperty().get(); }
+
+    default void selectGameByName(String name) {
+        requireNonNull(name);
+        if (hasGameWithName(name)) {
+            gameVariantNameProperty().set(name);
+        }
+        else throw new IllegalArgumentException("Game with name '" + name + "' not found");
+    }
+
+    boolean hasGameWithName(String name);
 
     <T extends Game> T gameByVariantName(String variantName);
 

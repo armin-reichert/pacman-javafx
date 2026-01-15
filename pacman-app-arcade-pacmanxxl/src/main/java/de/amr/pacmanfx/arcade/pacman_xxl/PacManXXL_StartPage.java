@@ -22,8 +22,6 @@ import javafx.scene.media.Media;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.model.StandardGameVariant.ARCADE_MS_PACMAN_XXL;
-import static de.amr.pacmanfx.model.StandardGameVariant.ARCADE_PACMAN_XXL;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -43,7 +41,8 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
     private final PacManXXL_OptionMenu menu;
 
     private GameUI ui;
-    private ChangeListener<String> gameVariantNameListener;
+
+    private ChangeListener<StandardGameVariant> gameVariantNameListener;
     private ChangeListener<Boolean> cutScenesEnabledListener;
     private ChangeListener<Boolean> play3DListener;
 
@@ -63,10 +62,11 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
         setBackground(Ufx.createWallpaper(WALLPAPER));
         getChildren().addAll(menu.root());
 
-        focusedProperty().addListener((_, _, _) -> {
-            if (isFocused()) {
-                Logger.info("Focus now on {}, passing to {}", this, menu);
-                onEnterStartPage(ui);
+        focusedProperty().addListener((_, _, hasFocus) -> {
+            if (hasFocus) {
+                updateMenuEntryValueListeners();
+                Logger.info("Input focus on {}, passing to {}...", this, menu);
+                menu.init(ui);
             }
         });
     }
@@ -75,7 +75,7 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
     public void init(GameUI ui) {
         this.ui = requireNonNull(ui);
         addKeyEventHandler();
-        updateMenuBinding();
+        updateMenuEntryValueListeners();
     }
 
     private void addKeyEventHandler() {
@@ -98,21 +98,22 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
         });
     }
 
-    private void updateMenuBinding() {
-        unbindMenu();
+    private void updateMenuEntryValueListeners() {
+        removeMenuEntryValueListeners();
 
-        gameVariantNameListener = (_, _, gameVariantName) -> {
-            if (ARCADE_PACMAN_XXL.name().equals(gameVariantName) || ARCADE_MS_PACMAN_XXL.name().equals(gameVariantName)) {
-                ui.context().gameVariantNameProperty().set(gameVariantName);
-            }
+        gameVariantNameListener = (_, _, newVariant) -> {
+            ui.context().selectGameByName(newVariant.name());
         };
-        ui.context().gameVariantNameProperty().addListener(gameVariantNameListener);
+        menu.entryGameVariant().valueProperty().addListener(gameVariantNameListener);
+
+        play3DListener = (_, _, play3D) -> {
+            GameUI.PROPERTY_3D_ENABLED.set(play3D);
+            Logger.info("PROPERTY_3D_ENABLED is set to {}.", play3D);
+        };
+        menu.entryPlay3D().valueProperty().addListener(play3DListener);
 
         cutScenesEnabledListener = (_,_,enabled) -> ui.context().currentGame().setCutScenesEnabled(enabled);
         menu.entryCutScenesEnabled().valueProperty().addListener(cutScenesEnabledListener);
-
-        play3DListener = (_, _, play3D) -> GameUI.PROPERTY_3D_ENABLED.set(play3D);
-        menu.entryPlay3D().valueProperty().addListener(play3DListener);
 
         menu.scalingProperty().bind(ui.stage().heightProperty().map(stageHeight -> {
             double menuHeight = stageHeight.doubleValue() * RELATIVE_MENU_HEIGHT;
@@ -122,16 +123,19 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
         }));
     }
 
-    private void unbindMenu() {
+    private void removeMenuEntryValueListeners() {
         if (gameVariantNameListener != null) {
-            ui.context().gameVariantNameProperty().removeListener(gameVariantNameListener);
+            menu.entryGameVariant().valueProperty().removeListener(gameVariantNameListener);
         }
-        if (cutScenesEnabledListener != null) {
-            menu.entryCutScenesEnabled().valueProperty().removeListener(cutScenesEnabledListener);
-        }
+
         if (play3DListener != null) {
             menu.entryPlay3D().valueProperty().removeListener(play3DListener);
         }
+
+        if (cutScenesEnabledListener != null) {
+            menu.entryCutScenesEnabled().valueProperty().removeListener(cutScenesEnabledListener);
+        }
+
         menu.scalingProperty().unbind();
     }
 
@@ -139,15 +143,10 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
     public void onEnterStartPage(GameUI ui) {
         final StandardGameVariant selectedGameVariant = menu.entryGameVariant().value();
         switch (selectedGameVariant) {
-            case ARCADE_PACMAN_XXL,ARCADE_MS_PACMAN_XXL -> {
-                ui.context().gameVariantNameProperty().set(selectedGameVariant.name());
-            }
+            case ARCADE_PACMAN_XXL,ARCADE_MS_PACMAN_XXL -> ui.context().selectGameByName(selectedGameVariant.name());
             default -> throw new IllegalStateException("Unexpected game variant in XXL menu: " + selectedGameVariant);
         }
         menu.init(ui);
-        menu.requestFocus();
-        menu.startDrawLoop();
-
         ui.voicePlayer().play(VOICE);
     }
 
@@ -155,7 +154,7 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
     public void onExitStartPage(GameUI ui) {
         ui.voicePlayer().stop();
         menu.stopDrawLoop();
-        unbindMenu();
+        removeMenuEntryValueListeners();
     }
 
     @Override
