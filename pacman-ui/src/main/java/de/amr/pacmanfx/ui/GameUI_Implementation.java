@@ -26,14 +26,11 @@ import de.amr.pacmanfx.uilib.widgets.FlashMessageView;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -41,7 +38,6 @@ import javafx.util.Duration;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.tinylog.Logger;
-import org.tinylog.Supplier;
 
 import java.util.Map;
 import java.util.Optional;
@@ -76,100 +72,12 @@ public final class GameUI_Implementation implements GameUI {
 
     private final VoicePlayer voicePlayer = new VoicePlayer();
 
-    private final ViewManager viewManager;
+    private final GameUI_ViewManager viewManager;
 
     private FontIcon pausedIcon;
     private StatusIconBox statusIconBox;
 
     private final StringBinding titleBinding;
-
-    private static class ViewManager {
-
-        private final ObjectProperty<GameUI_View> currentView = new SimpleObjectProperty<>();
-
-        private final StartPagesCarousel startPagesView;
-        private final PlayView playView;
-        private EditorView editorView;
-        private final Supplier<EditorView> editorViewCreator;
-
-        ViewManager(
-            Pane layoutPane,
-            StartPagesCarousel startPagesView,
-            PlayView playView,
-            Supplier<EditorView> editorViewCreator,
-            FlashMessageView flashMessageView)
-        {
-            this.startPagesView = startPagesView;
-            this.playView = playView;
-            this.editorViewCreator = editorViewCreator;
-
-            currentView.addListener((_, oldView, newView) -> {
-                if (oldView != null) {
-                    oldView.onExit();
-                }
-                if (newView != null) {
-                    layoutPane.getChildren().set(0, newView.root());
-                    newView.onEnter();
-                }
-                flashMessageView.clear();
-            });
-        }
-
-        void selectStartView() {
-            selectView(startPagesView);
-        }
-
-        void selectPlayView() {
-            selectView(playView);
-        }
-
-        void selectEditorView() {
-            ensureEditorViewCreated();
-            selectView(editorView);
-            editorView.editor().start();
-        }
-
-        void selectView(GameUI_View view) {
-            requireNonNull(view);
-            final GameUI_View oldView = currentView();
-            if (oldView == view) {
-                return;
-            }
-            if (oldView != null) {
-                oldView.onExit();
-                oldView.actionBindingsManager().releaseBindings(KEYBOARD);
-            }
-            view.actionBindingsManager().activateBindings(KEYBOARD);
-            currentView.set(view);
-        }
-
-        void ensureEditorViewCreated() {
-            if (editorView == null) {
-                editorView = editorViewCreator.get();
-                editorView.editor().init(GameBox.CUSTOM_MAP_DIR);
-            }
-        }
-
-        ObjectProperty<GameUI_View> currentViewProperty() {
-            return currentView;
-        }
-
-        GameUI_View currentView() {
-            return currentView.get();
-        }
-
-        StartPagesCarousel startPagesView() {
-            return startPagesView;
-        }
-
-        PlayView playView() {
-            return playView;
-        }
-
-        EditorView editorView() {
-            return editorView;
-        }
-    }
 
     public GameUI_Implementation(
         Map<String, Class<? extends GameUI_Config>> uiConfigMap,
@@ -201,26 +109,15 @@ public final class GameUI_Implementation implements GameUI {
 
         createScene(sceneWidth, sceneHeight);
 
-        final PlayView playView = new PlayView(scene);
-
         // Let play view listen to game events of selected game variant
         context().gameVariantNameProperty().addListener(
             (_, oldVariantName, newVariantName) -> changeGameVariant(oldVariantName, newVariantName));
 
-        this.viewManager = new ViewManager(
-            layoutPane,
-            new StartPagesCarousel(),
-            playView,
-            this::createEditorView,
-            flashMessageView
-        );
-
-        viewManager.startPagesView().setUI(this);
-        viewManager.playView.setUI(this);
+        this.viewManager = new GameUI_ViewManager(this, scene, layoutPane, this::createEditorView, flashMessageView);
 
         statusIconBox.visibleProperty()
             .bind(viewManager.currentViewProperty()
-            .map(view -> view == viewManager.playView || view == viewManager.startPagesView()));
+            .map(view -> view == viewManager.playView() || view == viewManager.startPagesView()));
 
         // Show paused icon only in play view
         pausedIcon.visibleProperty().bind(Bindings.createBooleanBinding(
@@ -496,8 +393,8 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     @Override
-    public GameUI_View editorView() {
-        return viewManager.editorView();
+    public Optional<GameUI_View> optEditorView() {
+        return Optional.ofNullable(viewManager.editorView());
     }
 
     @Override
