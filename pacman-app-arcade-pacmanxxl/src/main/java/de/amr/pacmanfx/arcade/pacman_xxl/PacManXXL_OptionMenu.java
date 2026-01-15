@@ -52,15 +52,8 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         chaseAnimation.setY(CHASE_ANIMATION_Y);
         chaseAnimation.scalingProperty().bind(scalingProperty());
 
-        entryGameVariant.valueProperty().addListener((_, _, newVariant) -> {
-            if (ui != null) {
-                final GameUI_Config uiConfig = ui.config(newVariant.name());
-                chaseAnimation.init(uiConfig, canvas);
-            }
-        });
-
-        canvas.focusedProperty().addListener((_, _, newFocused) -> {
-            if (newFocused) {
+        canvas.focusedProperty().addListener((_, _, focused) -> {
+            if (focused) {
                 startDrawLoop();
             }
         });
@@ -76,6 +69,12 @@ public class PacManXXL_OptionMenu extends OptionMenu {
             case ARCADE_PACMAN_XXL    -> "PAC-MAN XXL";
             case ARCADE_MS_PACMAN_XXL -> "MS.PAC-MAN XXL";
             default -> "???";
+        });
+        entryGameVariant.valueProperty().addListener((_, _, newVariant) -> {
+            if (ui != null) {
+                final GameUI_Config uiConfig = ui.config(newVariant.name());
+                chaseAnimation.init(uiConfig, canvas);
+            }
         });
         addEntry(entryGameVariant);
 
@@ -101,7 +100,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
                 WorldMapSelectionMode.CUSTOM_MAPS_FIRST,
                 WorldMapSelectionMode.ALL_RANDOM,
                 WorldMapSelectionMode.NO_CUSTOM_MAPS),
-            WorldMapSelectionMode.CUSTOM_MAPS_FIRST
+                WorldMapSelectionMode.CUSTOM_MAPS_FIRST
         );
         entryMapOrder.setValueFormatter(mode -> {
             if (!entryMapOrder.enabled()) {
@@ -182,5 +181,4 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     public OptionMenuEntry<Boolean> entryCutScenesEnabled() {
         return entryCutScenesEnabled;
     }
-
 }
