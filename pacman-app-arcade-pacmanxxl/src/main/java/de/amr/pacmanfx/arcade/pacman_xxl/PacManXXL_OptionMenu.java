@@ -53,10 +53,6 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         setAction2Text("START");
 
         createEntries();
-        addEntry(entryGameVariant);
-        addEntry(entryPlay3D);
-        addEntry(entryCutScenesEnabled);
-        addEntry(entryMapOrder);
 
         chaseAnimation.setY(CHASE_ANIMATION_Y);
         chaseAnimation.scalingProperty().bind(scalingProperty());
@@ -86,6 +82,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
             case ARCADE_MS_PACMAN_XXL -> "MS.PAC-MAN XXL";
             default -> "???";
         });
+        addEntry(entryGameVariant);
 
         entryPlay3D = new OptionMenuEntry<>(
             "SCENE DISPLAY",
@@ -93,6 +90,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
             false
         );
         entryPlay3D.setValueFormatter(play3D -> play3D ? "3D" : "2D");
+        addEntry(entryPlay3D);
 
         entryCutScenesEnabled = new OptionMenuEntry<>(
             "CUTSCENES",
@@ -100,6 +98,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
                 true
         );
         entryCutScenesEnabled.setValueFormatter(cutScenesEnabled -> cutScenesEnabled ? "YES" : "NO");
+        addEntry(entryCutScenesEnabled);
 
         entryMapOrder = new OptionMenuEntry<>(
             "MAP ORDER",
@@ -119,6 +118,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
                 case NO_CUSTOM_MAPS -> "NO CUSTOM MAPS";
             };
         });
+        addEntry(entryMapOrder);
     }
 
     @Override
