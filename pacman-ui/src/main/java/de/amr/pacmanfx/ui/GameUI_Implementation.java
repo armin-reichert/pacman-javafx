@@ -85,7 +85,6 @@ public final class GameUI_Implementation implements GameUI {
 
     private static class ViewManager {
 
-        private final GameContext gameContext;
         private final ObjectProperty<GameUI_View> currentView = new SimpleObjectProperty<>();
 
         private final StartPagesCarousel startPagesView;
@@ -94,14 +93,12 @@ public final class GameUI_Implementation implements GameUI {
         private final Supplier<EditorView> editorViewCreator;
 
         ViewManager(
-            GameContext gameContext,
             Pane layoutPane,
             StartPagesCarousel startPagesView,
             PlayView playView,
             Supplier<EditorView> editorViewCreator,
             FlashMessageView flashMessageView)
         {
-            this.gameContext = gameContext;
             this.startPagesView = startPagesView;
             this.playView = playView;
             this.editorViewCreator = editorViewCreator;
@@ -118,6 +115,20 @@ public final class GameUI_Implementation implements GameUI {
             });
         }
 
+        void selectStartView() {
+            selectView(startPagesView);
+        }
+
+        void selectPlayView() {
+            selectView(playView);
+        }
+
+        void selectEditorView() {
+            ensureEditorViewCreated();
+            selectView(editorView);
+            editorView.editor().start();
+        }
+
         void selectView(GameUI_View view) {
             requireNonNull(view);
             final GameUI_View oldView = currentView();
@@ -132,12 +143,11 @@ public final class GameUI_Implementation implements GameUI {
             currentView.set(view);
         }
 
-        private EditorView getOrCreateEditView() {
+        void ensureEditorViewCreated() {
             if (editorView == null) {
                 editorView = editorViewCreator.get();
                 editorView.editor().init(GameBox.CUSTOM_MAP_DIR);
             }
-            return editorView;
         }
 
         ObjectProperty<GameUI_View> currentViewProperty() {
@@ -157,7 +167,7 @@ public final class GameUI_Implementation implements GameUI {
         }
 
         EditorView editorView() {
-            return getOrCreateEditView();
+            return editorView;
         }
     }
 
@@ -194,12 +204,10 @@ public final class GameUI_Implementation implements GameUI {
         final PlayView playView = new PlayView(scene);
 
         // Let play view listen to game events of selected game variant
-        context().gameVariantNameProperty().addListener((_, oldVariantName, newVariantName) -> {
-            changeGameVariant(oldVariantName, newVariantName);
-        });
+        context().gameVariantNameProperty().addListener(
+            (_, oldVariantName, newVariantName) -> changeGameVariant(oldVariantName, newVariantName));
 
         this.viewManager = new ViewManager(
-            gameContext,
             layoutPane,
             new StartPagesCarousel(),
             playView,
@@ -210,8 +218,9 @@ public final class GameUI_Implementation implements GameUI {
         viewManager.startPagesView().setUI(this);
         viewManager.playView.setUI(this);
 
-        statusIconBox.visibleProperty().bind(viewManager.currentViewProperty()
-            .map(view -> optEditorView().isEmpty() || view != optEditorView().get()));
+        statusIconBox.visibleProperty()
+            .bind(viewManager.currentViewProperty()
+            .map(view -> view == viewManager.playView || view == viewManager.startPagesView()));
 
         // Show paused icon only in play view
         pausedIcon.visibleProperty().bind(Bindings.createBooleanBinding(
@@ -463,7 +472,7 @@ public final class GameUI_Implementation implements GameUI {
     @Override
     public void show() {
         viewManager.playView().dashboard().init(this);
-        viewManager.selectView(viewManager.startPagesView());
+        viewManager.selectStartView();
         stage.centerOnScreen();
         stage.show();
         Platform.runLater(customDirWatchdog::startWatching);
@@ -487,8 +496,8 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     @Override
-    public Optional<GameUI_View> optEditorView() {
-        return Optional.ofNullable(viewManager.editorView());
+    public GameUI_View editorView() {
+        return viewManager.editorView();
     }
 
     @Override
@@ -512,8 +521,7 @@ public final class GameUI_Implementation implements GameUI {
             currentGameScene().ifPresent(gameScene -> gameScene.end(gameContext.currentGame()));
             currentConfig().soundManager().stopAll();
             clock.stop();
-            viewManager.editorView().editor().start();
-            viewManager.selectView(viewManager.editorView());
+            viewManager.selectEditorView();
         } else {
             Logger.info("Editor view cannot be opened, game is playing");
         }
@@ -521,7 +529,7 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public void showPlayView() {
-        viewManager.selectView(playView());
+        viewManager.selectPlayView();
         final Game game = gameContext.currentGame();
         statusIconBox.iconAutopilot().visibleProperty().bind(game.usingAutopilotProperty());
         statusIconBox.iconCheated()  .visibleProperty().bind(game.cheatUsedProperty());
@@ -533,7 +541,7 @@ public final class GameUI_Implementation implements GameUI {
         clock.stop();
         clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
         currentConfig().soundManager().stopAll();
-        viewManager.selectView(startPagesView());
+        viewManager.selectStartView();
     }
 
     @Override

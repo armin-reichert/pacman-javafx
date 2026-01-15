@@ -199,7 +199,7 @@ public interface GameUI extends LocalizedTextAccessor {
 
     GameUI_View currentView();
 
-    Optional<GameUI_View> optEditorView();
+    GameUI_View editorView();
 
     GameUI_View playView();
 

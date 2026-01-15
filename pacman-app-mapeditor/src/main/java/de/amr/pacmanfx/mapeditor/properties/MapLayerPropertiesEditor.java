@@ -77,7 +77,7 @@ public class MapLayerPropertiesEditor extends BorderPane {
         this.layerID = requireNonNull(layerID);
         setTop(createButtonBar());
         setCenter(grid);
-        ui.editor().currentWorldMapProperty().addListener((py, ov, nv) -> createPropertyEditors());
+        ui.editor().currentWorldMapProperty().addListener((_, _, _) -> createPropertyEditors());
     }
 
     public BooleanProperty enabledProperty() {
@@ -117,14 +117,14 @@ public class MapLayerPropertiesEditor extends BorderPane {
     private Pane createButtonBar() {
         var btnAddColorEntry = new Button("Color");
         btnAddColorEntry.disableProperty().bind(enabled.not());
-        btnAddColorEntry.setOnAction(e -> addNewColorProperty());
+        btnAddColorEntry.setOnAction(_ -> addNewColorProperty());
 
         var btnAddPosEntry = new Button("Position");
-        btnAddPosEntry.setOnAction(e -> addNewPositionProperty());
+        btnAddPosEntry.setOnAction(_ -> addNewPositionProperty());
         btnAddPosEntry.disableProperty().bind(enabled.not());
 
         var btnAddTextEntry = new Button("Text");
-        btnAddTextEntry.setOnAction(e -> addNewTextProperty());
+        btnAddTextEntry.setOnAction(_ -> addNewTextProperty());
         btnAddTextEntry.disableProperty().bind(enabled.not());
 
         var buttonBar = new HBox(new Label("New"), btnAddColorEntry, btnAddPosEntry, btnAddTextEntry);
@@ -227,7 +227,7 @@ public class MapLayerPropertiesEditor extends BorderPane {
                 grid.add(spacer(), 2, rowIndex);
             } else {
                 Button btnDelete = editor.createDeleteButton();
-                btnDelete.setOnAction(e -> deleteEditorProperty(editor.property()));
+                btnDelete.setOnAction(_ -> deleteEditorProperty(editor.property()));
                 grid.add(btnDelete, 2, rowIndex);
             }
         }
