@@ -67,9 +67,7 @@ public class OptionMenu {
         canvas.widthProperty() .bind(scaling.multiply(numTilesX * TS));
         canvas.heightProperty().bind(scaling.multiply(numTilesY * TS));
 
-        canvas.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            Logger.info("Option menu canvas has focus");
-        });
+        canvas.focusedProperty().addListener((_, _, _) -> Logger.info("Option menu canvas has focus"));
 
         renderer = new OptionMenuRenderer(canvas);
         renderer.scalingProperty().bind(scalingProperty());
@@ -241,31 +239,29 @@ public class OptionMenu {
         return action1KeyCode;
     }
 
-    public void setAction1KeyCode(KeyCode action1KeyCode) {
-        this.action1KeyCode = action1KeyCode;
+    public void defineAction(int i, KeyCode keyCode, String text) {
+        switch (i) {
+            case 1 -> {
+                action1KeyCode = keyCode;
+                action1Text = text;
+            }
+            case 2 -> {
+                action2KeyCode = keyCode;
+                action2Text = text;
+            }
+            default -> throw new IllegalArgumentException("Illegal action number: " + i);
+        }
     }
 
     public KeyCode action2KeyCode() {
         return action2KeyCode;
     }
 
-    public void setAction2KeyCode(KeyCode action2KeyCode) {
-        this.action2KeyCode = action2KeyCode;
-    }
-
     public String action1Text() {
         return action1Text;
     }
 
-    public void setAction1Text(String action1Text) {
-        this.action1Text = action1Text;
-    }
-
     public String action2Text() {
         return action2Text;
-    }
-
-    public void setAction2Text(String action2Text) {
-        this.action2Text = action2Text;
     }
 }

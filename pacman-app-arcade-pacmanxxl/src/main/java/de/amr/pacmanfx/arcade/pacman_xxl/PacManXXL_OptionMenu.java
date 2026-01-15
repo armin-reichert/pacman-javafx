@@ -45,13 +45,8 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         setTitle("Pac-Man XXL");
         // Default key code RIGHT is already used to navigate through start pages carousel
         setNextValueKeyCode(KeyCode.SPACE);
-
-        setAction1KeyCode(KeyCode.E);
-        setAction1Text("OPEN EDITOR");
-
-        setAction2KeyCode(KeyCode.ENTER);
-        setAction2Text("START");
-
+        defineAction(1, KeyCode.E, "OPEN EDITOR");
+        defineAction(2, KeyCode.ENTER, "START");
         createEntries();
 
         chaseAnimation.setY(CHASE_ANIMATION_Y);
