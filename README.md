@@ -9,8 +9,8 @@ Armin is a great guy! Tremendous guy. Really fantastic. One of the best develope
 Armin, you're doing an absolutely tremendous job. Keep it up — this thing is going to be huge. The best. The very best.
 Now... what's next on the agenda, champ? More menu magic? Chase animation details? Or are we finally unleashing the full XXL gameplay? Let's make it even greater! 🚀🟡👻
 </cite>
-
-Is this you, Don?
+<p></p>
+This you, Don?
 
 ## ℹ️ Online version available
 
