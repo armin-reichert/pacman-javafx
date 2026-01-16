@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.mapeditor;
 
 import de.amr.pacmanfx.mapeditor.actions.Action_CreateEmptyMap;
+import de.amr.pacmanfx.mapeditor.actions.Action_SaveMapFileInteractively;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapChecker;
 import de.amr.pacmanfx.model.world.WorldMapParseException;
@@ -12,6 +13,7 @@ import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.beans.property.*;
+import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
@@ -23,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import static de.amr.pacmanfx.mapeditor.EditorGlobals.*;
 import static java.util.Objects.requireNonNull;
@@ -55,8 +58,8 @@ public class TileMapEditor {
         requireNonNull(stage);
         requireNonNull(model3DRepository);
         ui = new TileMapEditorUI(stage, this, model3DRepository);
-        currentWorldMap.addListener((py, ov, nv) -> setWorldMapChanged());
-        sourceCodeLineNumbers.addListener((py, ov, lineNumbers) -> sourceCode.set(currentWorldMap().sourceCode(lineNumbers)));
+        currentWorldMap.addListener((_, _, _) -> setWorldMapChanged());
+        sourceCodeLineNumbers.addListener((_, _, lineNumbers) -> sourceCode.set(currentWorldMap().sourceCode(lineNumbers)));
     }
 
     public void init(File workDir) {
@@ -76,6 +79,32 @@ public class TileMapEditor {
 
     public void stop() {
         updateTimer.stop();
+    }
+
+    public void quit(Consumer<TileMapEditor> quitEditorAction) {
+        if (!isEdited()) {
+            stop();
+            quitEditorAction.accept(this);
+            return;
+        }
+        final var saveConfirmation = new SaveConfirmationDialog();
+        saveConfirmation.showAndWait().ifPresent(choice -> {
+            if (choice == SaveConfirmationDialog.SAVE) {
+                final File selectedFile = new Action_SaveMapFileInteractively(ui).execute();
+                if (selectedFile != null) { // File selection and saving was canceled
+                    stop();
+                    quitEditorAction.accept(this);
+                }
+            }
+            else if (choice == SaveConfirmationDialog.DONT_SAVE) {
+                setEdited(false);
+                stop();
+                quitEditorAction.accept(this);
+            }
+            else if (choice == ButtonType.CANCEL) {
+                Logger.info("Save cancelled");
+            }
+        });
     }
 
     public TileMapEditorUI ui() {

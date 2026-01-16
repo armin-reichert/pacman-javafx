@@ -4,22 +4,17 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.layout;
 
-import de.amr.pacmanfx.mapeditor.SaveConfirmationDialog;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
-import de.amr.pacmanfx.mapeditor.actions.Action_SaveMapFileInteractively;
 import de.amr.pacmanfx.ui.ActionBindingsManager;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_View;
 import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
-import javafx.event.ActionEvent;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import java.io.File;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -42,36 +37,8 @@ public class EditorView implements GameUI_View {
 
     private MenuItem createQuitEditorMenuItem() {
         var miQuitEditor = new MenuItem(ui.translated("back_to_game"));
-        miQuitEditor.setOnAction(this::quitEditor);
+        miQuitEditor.setOnAction(_ -> editor.quit(quitEditorAction));
         return miQuitEditor;
-    }
-
-    private void quitEditor(ActionEvent e) {
-        if (!editor.isEdited()) {
-            editor.stop();
-            quitEditorAction.accept(editor);
-            return;
-        }
-        var saveConfirmation = new SaveConfirmationDialog();
-        saveConfirmation.showAndWait().ifPresent(choice -> {
-            if (choice == SaveConfirmationDialog.SAVE) {
-                final File selectedFile = new Action_SaveMapFileInteractively(editor.ui()).execute();
-                if (selectedFile == null) { // File selection and saving was canceled
-                    e.consume();
-                } else {
-                    editor.stop();
-                    quitEditorAction.accept(editor);
-                }
-            }
-            else if (choice == SaveConfirmationDialog.DONT_SAVE) {
-                editor.setEdited(false);
-                editor.stop();
-                quitEditorAction.accept(editor);
-            }
-            else if (choice == ButtonType.CANCEL) {
-                e.consume();
-            }
-        });
     }
 
     public void setQuitEditorAction(Consumer<TileMapEditor> quitEditorAction) {
