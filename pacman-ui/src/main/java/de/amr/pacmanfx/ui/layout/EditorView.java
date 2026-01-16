@@ -11,6 +11,7 @@ import de.amr.pacmanfx.ui.ActionBindingsManager;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_View;
 import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
+import javafx.event.ActionEvent;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
@@ -29,7 +30,7 @@ public class EditorView implements GameUI_View {
 
     private final GameUI ui;
     private final TileMapEditor editor;
-    private Consumer<TileMapEditor> quitEditorAction = editor -> {};
+    private Consumer<TileMapEditor> quitEditorAction = _ -> {};
 
     public EditorView(Stage stage, GameUI ui) {
         this.ui = ui;
@@ -41,34 +42,36 @@ public class EditorView implements GameUI_View {
 
     private MenuItem createQuitEditorMenuItem() {
         var miQuitEditor = new MenuItem(ui.translated("back_to_game"));
-        miQuitEditor.setOnAction(e -> {
-            if (!editor.isEdited()) {
-                editor.stop();
-                quitEditorAction.accept(editor);
-                return;
-            }
-            var saveDialog = new SaveConfirmationDialog();
-            saveDialog.showAndWait().ifPresent(choice -> {
-                if (choice == SaveConfirmationDialog.SAVE) {
-                    File selectedFile = new Action_SaveMapFileInteractively(editor.ui()).execute();
-                    if (selectedFile == null) { // File selection and saving was canceled
-                        e.consume();
-                    } else {
-                        editor.stop();
-                        quitEditorAction.accept(editor);
-                    }
-                }
-                else if (choice == SaveConfirmationDialog.DONT_SAVE) {
-                    editor.setEdited(false);
+        miQuitEditor.setOnAction(this::quitEditor);
+        return miQuitEditor;
+    }
+
+    private void quitEditor(ActionEvent e) {
+        if (!editor.isEdited()) {
+            editor.stop();
+            quitEditorAction.accept(editor);
+            return;
+        }
+        var saveConfirmation = new SaveConfirmationDialog();
+        saveConfirmation.showAndWait().ifPresent(choice -> {
+            if (choice == SaveConfirmationDialog.SAVE) {
+                final File selectedFile = new Action_SaveMapFileInteractively(editor.ui()).execute();
+                if (selectedFile == null) { // File selection and saving was canceled
+                    e.consume();
+                } else {
                     editor.stop();
                     quitEditorAction.accept(editor);
                 }
-                else if (choice == ButtonType.CANCEL) {
-                    e.consume();
-                }
-            });
+            }
+            else if (choice == SaveConfirmationDialog.DONT_SAVE) {
+                editor.setEdited(false);
+                editor.stop();
+                quitEditorAction.accept(editor);
+            }
+            else if (choice == ButtonType.CANCEL) {
+                e.consume();
+            }
         });
-        return miQuitEditor;
     }
 
     public void setQuitEditorAction(Consumer<TileMapEditor> quitEditorAction) {

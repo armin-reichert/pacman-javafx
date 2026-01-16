@@ -29,7 +29,8 @@ public class TileMapEditorApp extends Application  {
             var editor = new TileMapEditor(stage, PacManModel3DRepository.instance());
 
             var miQuit = new MenuItem(translated("quit"));
-            miQuit.setOnAction(e -> editor.ui().afterCheckForUnsavedChanges(stage::close));
+            miQuit.setOnAction(_ -> editor.ui().afterCheckForUnsavedChanges(stage::close));
+
             editor.ui().menuBar().menuFile().getItems().addAll(new SeparatorMenuItem(), miQuit);
 
             double screenHeight = Screen.getPrimary().getVisualBounds().getHeight();
