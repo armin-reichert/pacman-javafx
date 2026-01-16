@@ -22,9 +22,7 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
 public class InfoBoxCustomMaps extends InfoBox {
@@ -68,14 +66,10 @@ public class InfoBoxCustomMaps extends InfoBox {
                         final String fileProtocol = "file:";
                         final String mapURL = data.worldMap.url();
                         if (mapURL.startsWith(fileProtocol)) {
-                            final String suffix = mapURL.substring(fileProtocol.length());
-                            final String safeURL = fileProtocol + URLEncoder.encode(suffix, StandardCharsets.UTF_8);
-                            final URI uri = new URI(safeURL);
-                            final File file = new File(uri);
+                            final File file = new File(URI.create(mapURL));
                             editWorldMap(file);
                         } else Logger.error("World map does not provide file URL to load it from file system");
-
-                    } catch (URISyntaxException e) {
+                    } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
                 });

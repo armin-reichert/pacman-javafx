@@ -11,7 +11,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.Predicate;
@@ -45,7 +44,7 @@ public interface WorldMapParser {
         requireNonNull(url);
         try (var br = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8))) {
             WorldMap worldMap = WorldMapParser.parse(br.lines(), TerrainTile::isValidCode, FoodTile::isValidCode);
-            worldMap.url = URLDecoder.decode(url.toExternalForm(), StandardCharsets.UTF_8);
+            worldMap.url = url.toExternalForm();
             return worldMap;
         }
     }
