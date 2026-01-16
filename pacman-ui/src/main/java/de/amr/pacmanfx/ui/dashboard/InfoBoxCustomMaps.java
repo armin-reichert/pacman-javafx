@@ -8,6 +8,7 @@ import de.amr.pacmanfx.GameBox;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapParseException;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.layout.EditorView;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -23,6 +24,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
 public class InfoBoxCustomMaps extends InfoBox {
@@ -59,12 +61,20 @@ public class InfoBoxCustomMaps extends InfoBox {
         tcMapURL.setCellFactory(column -> new TableCell<>() {
             private final Button linkButton = new Button();
             {
-                linkButton.getStyleClass().add("link-button");
+                linkButton.getStyleClass().add("link-button"); // see global style.css
                 linkButton.setOnAction(event -> {
                     final MapLinkUserData data = (MapLinkUserData) linkButton.getUserData();
                     try {
-                        final File file =new File(new URI(data.worldMap.url()));
-                        Logger.info("Edit map file {}", file);
+                        final String fileProtocol = "file:";
+                        final String mapURL = data.worldMap.url();
+                        if (mapURL.startsWith(fileProtocol)) {
+                            final String suffix = mapURL.substring(fileProtocol.length());
+                            final String safeURL = fileProtocol + URLEncoder.encode(suffix, StandardCharsets.UTF_8);
+                            final URI uri = new URI(safeURL);
+                            final File file = new File(uri);
+                            editWorldMap(file);
+                        } else Logger.error("World map does not provide file URL to load it from file system");
+
                     } catch (URISyntaxException e) {
                         throw new RuntimeException(e);
                     }
@@ -147,5 +157,21 @@ public class InfoBoxCustomMaps extends InfoBox {
                 throw new RuntimeException(x);
             }
         }
+    }
+
+    private void editWorldMap(File mapFile) {
+        Logger.info("Edit map file {}", mapFile);
+        ui.showEditorView();
+        ui.optEditorView().ifPresent(view -> {
+            if (view instanceof EditorView editorView) {
+                try {
+                    final WorldMap map = WorldMap.loadFromFile(mapFile);
+                    editorView.editor().setCurrentWorldMap(map);
+                    editorView.editor().setCurrentFile(mapFile);
+                } catch (Exception x) {
+                    Logger.error("Could not open map file {}", mapFile);
+                }
+            }
+        });
     }
 }
