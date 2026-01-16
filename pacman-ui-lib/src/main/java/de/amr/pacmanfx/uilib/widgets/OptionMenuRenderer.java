@@ -15,9 +15,22 @@ import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.uilib.Ufx.scaleFontBy;
 
+/**
+ * Base renderer for {@link OptionMenu}.
+ * Draws title, entries with selection indicators, and usage hints using pre-defined string constants.
+ * Subclasses can override {@link #drawUsageInfo(OptionMenu)} for variant-specific layout.
+ */
 public class OptionMenuRenderer extends BaseRenderer {
 
-    protected float lineSkip = TS(2);
+    public static final String SELECT_OPTIONS_WITH_UP_AND_DOWN     = "SELECT OPTIONS WITH UP AND DOWN";
+    public static final String SELECT_OPTIONS_WITH_UP_DOWN_OVERLAY = "                    UP     DOWN";
+
+    public static final String PRESS_KEY         = "PRESS %s TO %s";
+    public static final String PRESS_KEY_OVERLAY = "      %s    %s";
+
+    public static final String CHANGE_VALUE = "CHANGE VALUE";
+
+    protected float lineSkip = TS(2.5);
 
     public OptionMenuRenderer(Canvas canvas) {
         super(canvas);
@@ -32,7 +45,6 @@ public class OptionMenuRenderer extends BaseRenderer {
         fillCanvas(style.backgroundFill());
         fillTextCentered(menu.title(), style.titleTextFill(), scaledTitleFont, centerX, 6 * TS);
 
-        lineSkip = 2.5f * TS;
         float y = 12 * TS;
         for (int i = 0; i < menu.entries().size(); ++i) {
             final OptionMenuEntry<?> entry = menu.entries().get(i);
@@ -49,7 +61,6 @@ public class OptionMenuRenderer extends BaseRenderer {
             y += lineSkip;
         }
 
-        lineSkip = 2*TS;
         drawUsageInfo(menu);
     }
 
@@ -61,11 +72,11 @@ public class OptionMenuRenderer extends BaseRenderer {
         final double centerX = 0.5 * menu.numTilesX() * TS;
         double y = TS(menu.numTilesY() - 8);
 
-        fillTextCentered("SELECT OPTIONS WITH UP AND DOWN", normalColor, font, centerX, y);
-        fillTextCentered("                    UP     DOWN", brightColor, font, centerX, y);
+        fillTextCentered(SELECT_OPTIONS_WITH_UP_AND_DOWN, normalColor, font, centerX, y);
+        fillTextCentered(SELECT_OPTIONS_WITH_UP_DOWN_OVERLAY, brightColor, font, centerX, y);
 
         y += lineSkip;
-        drawActionText(KeyCode.SPACE, "CHANGE VALUE", normalColor, brightColor, font, centerX, y);
+        drawActionText(KeyCode.SPACE, CHANGE_VALUE, normalColor, brightColor, font, centerX, y);
 
         for (int num = 1; num <= OptionMenu.NUM_CLIENT_ACTIONS; ++num) {
             if (menu.actionKeyCode(num) != null && menu.actionText(num) != null) {
@@ -76,8 +87,8 @@ public class OptionMenuRenderer extends BaseRenderer {
     }
 
     private void drawActionText(KeyCode keyCode, String actionText, Color normalColor, Color brightColor, Font font, double centerX, double y) {
-        final String normalText = "PRESS %s TO %s".formatted(keyCode, actionText);
-        final String brightText = "      %s    %s".formatted(keyCode, " ".repeat(actionText.length()));
+        final String normalText = PRESS_KEY.formatted(keyCode, actionText);
+        final String brightText = PRESS_KEY_OVERLAY.formatted(keyCode, " ".repeat(actionText.length()));
         fillTextCentered(normalText, normalColor, font, centerX, y);
         fillTextCentered(brightText, brightColor, font, centerX, y);
     }
