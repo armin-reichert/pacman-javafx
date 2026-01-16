@@ -39,6 +39,15 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
     private static final int MENU_MAX_HEIGHT = 800;
     private static final double RELATIVE_MENU_HEIGHT = 0.66;
 
+    private static final OptionMenuStyle MENU_STYLE = OptionMenuStyle.builder()
+        .titleFont(Ufx.deriveFont(GameUI.FONT_PAC_FONT_GOOD, 4 * TS))
+        .titleTextFill(ArcadePalette.ARCADE_RED)
+        .textFont(Ufx.deriveFont(GameUI.FONT_ARCADE_8, TS))
+        .entryTextFill(ArcadePalette.ARCADE_YELLOW)
+        .entryValueFill(ArcadePalette.ARCADE_WHITE)
+        .usageTextFill(ArcadePalette.ARCADE_YELLOW)
+        .build();
+
     private final StringProperty title = new SimpleStringProperty("Pac-Man XXL games");
 
     private final PacManXXL_OptionMenu menu;
@@ -50,43 +59,39 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
     private ChangeListener<Boolean> play3DListener;
 
     public PacManXXL_StartPage() {
-        final OptionMenuStyle style = OptionMenuStyle.builder()
-            .titleFont(Ufx.deriveFont(GameUI.FONT_PAC_FONT_GOOD, 4*TS))
-            .titleTextFill(ArcadePalette.ARCADE_RED)
-            .textFont(Ufx.deriveFont(GameUI.FONT_ARCADE_8, TS))
-            .entryTextFill(ArcadePalette.ARCADE_YELLOW)
-            .entryValueFill(ArcadePalette.ARCADE_WHITE)
-            .usageTextFill(ArcadePalette.ARCADE_YELLOW)
-            .build();
+        setBackground(Ufx.createWallpaper(WALLPAPER));
 
         menu = new PacManXXL_OptionMenu();
-        menu.setStyle(style);
-
-        setBackground(Ufx.createWallpaper(WALLPAPER));
+        menu.setStyle(MENU_STYLE);
         getChildren().addAll(menu.root());
 
         focusedProperty().addListener((_, _, hasFocus) -> {
             if (hasFocus && ui != null) {
-                updateMenuEntryValueListeners(ui.stage());
+                updateMenuBinding(ui.stage());
                 Logger.info("Input focus on {}, passing to {}...", this, menu);
                 menu.init(ui);
             }
         });
 
         addEventHandler(KeyEvent.KEY_PRESSED, e -> {
-            ui.startPagesView().pauseTimer();
             switch (e.getCode()) {
                 case E -> {
                     e.consume();
-                    ui.voicePlayer().stop();
-                    ui.showEditorView();
+                    if (ui != null) {
+                        ui.voicePlayer().stop();
+                        ui.startPagesView().pauseTimer();
+                        ui.showEditorView();
+                    }
                 }
                 case ENTER -> {
                     e.consume();
-                    ui.voicePlayer().stop();
-                    menu.startSelectedGame();
+                    if (ui != null) {
+                        ui.voicePlayer().stop();
+                        ui.startPagesView().pauseTimer();
+                        menu.startSelectedGame();
+                    }
                 }
-                default -> Logger.info("Key '{}': No action assigned.", e.getCode());
+                default -> Logger.info("Key '{}': No start page action assigned.", e.getCode());
             }
         });
     }
@@ -94,16 +99,7 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
     @Override
     public void init(GameUI ui) {
         this.ui = requireNonNull(ui);
-        updateMenuEntryValueListeners(ui.stage());
-    }
-
-    private ObservableValue<Double> scaling(Stage stage) {
-        return stage.heightProperty().map(stageHeight -> {
-            double menuHeight = stageHeight.doubleValue() * RELATIVE_MENU_HEIGHT;
-            menuHeight = Math.clamp(menuHeight, MENU_MIN_HEIGHT, MENU_MAX_HEIGHT);
-            final double s = menuHeight / TS(menu.numTilesY());
-            return Math.round(s * 100.0) / 100.0; // rounded to 2 decimal digits
-        });
+        updateMenuBinding(ui.stage());
     }
 
     @Override
@@ -121,7 +117,7 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
     public void onExitStartPage(GameUI ui) {
         ui.voicePlayer().stop();
         menu.stopDrawLoop();
-        removeMenuEntryValueListeners();
+        removeMenuBinding();
     }
 
     @Override
@@ -134,25 +130,22 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
         return title.get();
     }
 
-    private void updateMenuEntryValueListeners(Stage stage) {
-        removeMenuEntryValueListeners();
+    private void updateMenuBinding(Stage stage) {
+        removeMenuBinding();
 
         gameVariantNameListener = (_, _, newVariant) -> ui.context().selectGameByName(newVariant.name());
         menu.entryGameVariant().valueProperty().addListener(gameVariantNameListener);
 
-        play3DListener = (_, _, play3D) -> {
-            GameUI.PROPERTY_3D_ENABLED.set(play3D);
-            Logger.info("PROPERTY_3D_ENABLED is set to {}.", play3D);
-        };
+        play3DListener = (_, _, play3D) -> GameUI.PROPERTY_3D_ENABLED.set(play3D);
         menu.entryPlay3D().valueProperty().addListener(play3DListener);
 
         cutScenesEnabledListener = (_,_,enabled) -> ui.context().currentGame().setCutScenesEnabled(enabled);
         menu.entryCutScenesEnabled().valueProperty().addListener(cutScenesEnabledListener);
 
-        menu.scalingProperty().bind(scaling(stage));
+        menu.scalingProperty().bind(menuScaling(stage));
     }
 
-    private void removeMenuEntryValueListeners() {
+    private void removeMenuBinding() {
         if (gameVariantNameListener != null) {
             menu.entryGameVariant().valueProperty().removeListener(gameVariantNameListener);
         }
@@ -166,5 +159,21 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
         }
 
         menu.scalingProperty().unbind();
+    }
+
+    /**
+     * Computes the scaling of the menu depending on the stage height. The option menu should take a relative amount of
+     * the stage height that is clamped to the min/max height interval.
+     *
+     * @param stage the stage of the UI
+     * @return the scaling binding depending on the height of the stage
+     */
+    private ObservableValue<Double> menuScaling(Stage stage) {
+        return stage.heightProperty().map(stageHeight -> {
+            final double menuHeight = Math.clamp(
+                stageHeight.doubleValue() * RELATIVE_MENU_HEIGHT, MENU_MIN_HEIGHT, MENU_MAX_HEIGHT);
+            final double scaling = menuHeight / TS(menu.numTilesY());
+            return Math.round(scaling * 100.0) / 100.0; // rounded to 2 decimal digits to avoid to much resizing
+        });
     }
 }
