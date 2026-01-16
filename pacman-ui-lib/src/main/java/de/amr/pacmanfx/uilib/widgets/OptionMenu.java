@@ -29,6 +29,8 @@ import static java.util.Objects.requireNonNull;
 
 public class OptionMenu {
 
+    public static final int NUM_CLIENT_ACTIONS = 2;
+
     private final int numTilesX;
     private final int numTilesY;
     private final int textColumn;
@@ -52,11 +54,8 @@ public class OptionMenu {
 
     private final AnimationTimer drawLoop;
 
-    private KeyCode action1KeyCode;
-    private KeyCode action2KeyCode;
-
-    private String action1Text;
-    private String action2Text;
+    private final KeyCode[] actionKeyCodes = new KeyCode[NUM_CLIENT_ACTIONS];
+    private final String[]  actionTexts = new String[NUM_CLIENT_ACTIONS];
 
     public OptionMenu(int numTilesX, int numTilesY, int textColumn, int valueColumn) {
         this.numTilesX = numTilesX;
@@ -124,50 +123,7 @@ public class OptionMenu {
         renderer.drawOptionMenu(this);
     }
 
-    public void logEntryState() {
-    }
-
-        protected void handleKeyPress(KeyEvent e) {
-        if (e.getCode() == prevEntryKeyCode) {
-            selectedPrevEntry();
-            e.consume();
-        }
-        else if (e.getCode() == nextEntryKeyCode) {
-            selectNextEntry();
-            e.consume();
-        }
-        else  if (e.getCode() == nextValueKeyCode) {
-            selectNextValue();
-            e.consume();
-        }
-    }
-
-    private void selectedPrevEntry() {
-        final int prevIndex = selectedEntryIndex > 0 ? selectedEntryIndex - 1 : entries.size() - 1;
-        if (entries.get(prevIndex).enabled) {
-            selectedEntryIndex = prevIndex;
-            playSoundIfPresent(style.entrySelectedSound());
-        }
-        logEntryState();
-    }
-
-    private void selectNextEntry() {
-        final int nextIndex = selectedEntryIndex < entries.size() - 1 ? selectedEntryIndex + 1 : 0;
-        if (entries.get(nextIndex).enabled) {
-            selectedEntryIndex = nextIndex;
-            playSoundIfPresent(style.entrySelectedSound());
-        }
-        logEntryState();
-    }
-
-    private void selectNextValue() {
-        final OptionMenuEntry<?> entry = entries.get(selectedEntryIndex);
-        entry.selectedValueIndex = entry.selectedValueIndex < entry.optionValues.size() - 1
-            ? entry.selectedValueIndex + 1 : 0;
-        playSoundIfPresent(style.valueSelectedSound());
-        entry.onValueSelectionChange();
-        logEntryState();
-    }
+    public void logEntryState() {}
 
     public void setNextEntryKeyCode(KeyCode keyCode) {
         this.nextEntryKeyCode = keyCode;
@@ -235,33 +191,67 @@ public class OptionMenu {
         return valueColumn;
     }
 
-    public KeyCode action1KeyCode() {
-        return action1KeyCode;
+    public void defineAction(int num, KeyCode keyCode, String text) {
+        validateActionNumber(num);
+        actionKeyCodes[num-1] = requireNonNull(keyCode);
+        actionTexts[num-1] = requireNonNull(text);
     }
 
-    public void defineAction(int i, KeyCode keyCode, String text) {
-        switch (i) {
-            case 1 -> {
-                action1KeyCode = keyCode;
-                action1Text = text;
-            }
-            case 2 -> {
-                action2KeyCode = keyCode;
-                action2Text = text;
-            }
-            default -> throw new IllegalArgumentException("Illegal action number: " + i);
+    public KeyCode actionKeyCode(int num) {
+        validateActionNumber(num);
+        return actionKeyCodes[num-1];
+    }
+
+    public String actionText(int num) {
+        validateActionNumber(num);
+        return actionTexts[num-1];
+    }
+
+    private void validateActionNumber(int num) {
+        if (num < 1 || num > NUM_CLIENT_ACTIONS) {
+            throw new IllegalArgumentException("Illegal client action number: " + num);
         }
     }
 
-    public KeyCode action2KeyCode() {
-        return action2KeyCode;
+    private void handleKeyPress(KeyEvent e) {
+        if (e.getCode() == prevEntryKeyCode) {
+            selectedPrevEntry();
+            e.consume();
+        }
+        else if (e.getCode() == nextEntryKeyCode) {
+            selectNextEntry();
+            e.consume();
+        }
+        else  if (e.getCode() == nextValueKeyCode) {
+            selectNextValue();
+            e.consume();
+        }
     }
 
-    public String action1Text() {
-        return action1Text;
+    private void selectedPrevEntry() {
+        final int prevIndex = selectedEntryIndex > 0 ? selectedEntryIndex - 1 : entries.size() - 1;
+        if (entries.get(prevIndex).enabled) {
+            selectedEntryIndex = prevIndex;
+            playSoundIfPresent(style.entrySelectedSound());
+        }
+        logEntryState();
     }
 
-    public String action2Text() {
-        return action2Text;
+    private void selectNextEntry() {
+        final int nextIndex = selectedEntryIndex < entries.size() - 1 ? selectedEntryIndex + 1 : 0;
+        if (entries.get(nextIndex).enabled) {
+            selectedEntryIndex = nextIndex;
+            playSoundIfPresent(style.entrySelectedSound());
+        }
+        logEntryState();
+    }
+
+    private void selectNextValue() {
+        final OptionMenuEntry<?> entry = entries.get(selectedEntryIndex);
+        entry.selectedValueIndex = entry.selectedValueIndex < entry.optionValues.size() - 1
+            ? entry.selectedValueIndex + 1 : 0;
+        playSoundIfPresent(style.valueSelectedSound());
+        entry.onValueSelectionChange();
+        logEntryState();
     }
 }

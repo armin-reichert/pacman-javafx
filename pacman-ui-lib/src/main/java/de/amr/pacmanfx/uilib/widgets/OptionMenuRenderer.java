@@ -67,13 +67,11 @@ public class OptionMenuRenderer extends BaseRenderer {
         y += lineSkip;
         drawActionText(KeyCode.SPACE, "CHANGE VALUE", normalColor, brightColor, font, centerX, y);
 
-        if (menu.action1KeyCode() != null && menu.action1Text() != null) {
-            y += lineSkip;
-            drawActionText(menu.action1KeyCode(), menu.action1Text(), normalColor, brightColor, font, centerX, y);
-        }
-        if (menu.action2KeyCode() != null && menu.action2Text() != null) {
-            y += lineSkip;
-            drawActionText(menu.action2KeyCode(), menu.action2Text(), normalColor, brightColor, font, centerX, y);
+        for (int num = 1; num <= OptionMenu.NUM_CLIENT_ACTIONS; ++num) {
+            if (menu.actionKeyCode(num) != null && menu.actionText(num) != null) {
+                y += lineSkip;
+                drawActionText(menu.actionKeyCode(num), menu.actionText(num), normalColor, brightColor, font, centerX, y);
+            }
         }
     }
 
