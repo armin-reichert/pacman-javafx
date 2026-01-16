@@ -21,3 +21,15 @@
     -fx-background-color: rgba(0, 155, 252, 0.7); /* same color as START button */
 }
 
+.link-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #0066cc;
+    -fx-underline: true;
+    -fx-cursor: hand;
+    -fx-padding: 0;
+    -fx-border-width: 0;
+}
+
+.link-button:hover {
+    -fx-text-fill: #003366;
+}

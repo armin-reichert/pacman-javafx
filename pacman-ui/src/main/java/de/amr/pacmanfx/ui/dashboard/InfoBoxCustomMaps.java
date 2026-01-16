@@ -12,16 +12,24 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Button;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import org.tinylog.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 
 public class InfoBoxCustomMaps extends InfoBox {
+
+    static class MapLinkUserData {
+        WorldMap worldMap;
+    }
 
     private static String trimURL(String url) {
         if (url == null) return NO_INFO;
@@ -46,6 +54,38 @@ public class InfoBoxCustomMaps extends InfoBox {
 
         var tcMapURL = new TableColumn<WorldMap, String>("Map");
         tcMapURL.setCellValueFactory(data -> new SimpleStringProperty(trimURL(data.getValue().url())));
+
+        // Show link with map filename that edits the map when clicked
+        tcMapURL.setCellFactory(column -> new TableCell<>() {
+            private final Button linkButton = new Button();
+            {
+                linkButton.getStyleClass().add("link-button");
+                linkButton.setOnAction(event -> {
+                    final MapLinkUserData data = (MapLinkUserData) linkButton.getUserData();
+                    try {
+                        final File file =new File(new URI(data.worldMap.url()));
+                        Logger.info("Edit map file {}", file);
+                    } catch (URISyntaxException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+            }
+
+            @Override
+            protected void updateItem(String url, boolean empty) {
+                super.updateItem(url, empty);
+                if (empty || url == null || url.isBlank()) {
+                    setGraphic(null);
+                } else {
+                    final MapLinkUserData data = new MapLinkUserData();
+                    data.worldMap = getTableRow().getItem();
+                    linkButton.setUserData(data);
+                    linkButton.setText(trimURL(data.worldMap.url()));
+                    setGraphic(linkButton);
+                }
+            }
+        });
+
 
         var tcMapRowCount = new TableColumn<WorldMap, Integer>("Rows");
         tcMapRowCount.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().numRows()).asObject());
