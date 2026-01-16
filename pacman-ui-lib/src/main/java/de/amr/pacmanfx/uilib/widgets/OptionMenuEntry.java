@@ -36,6 +36,8 @@ public class OptionMenuEntry<T> {
         }
 
         this.value = new SimpleObjectProperty<>(initialValue);
+        this.value.addListener((_, oldValue, newValue) -> onValueChanged(oldValue, newValue));
+
         this.selectedValueIndex = values.indexOf(initialValue);
         if (this.selectedValueIndex == -1) {
             Logger.error("Initial value {} is not contained in values list, using first value instead");
@@ -54,6 +56,10 @@ public class OptionMenuEntry<T> {
 
     public T value() {
         return valueProperty().get();
+    }
+
+    public void onValueChanged(T oldValue, T newValue) {
+        Logger.debug("Value changed from {} to {}", oldValue, newValue);
     }
 
     public void setValueFormatter(Function<T, String> valueFormatter) {

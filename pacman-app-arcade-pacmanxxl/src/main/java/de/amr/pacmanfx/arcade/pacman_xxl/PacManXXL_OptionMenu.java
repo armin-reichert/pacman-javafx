@@ -19,6 +19,7 @@ import java.util.List;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.model.StandardGameVariant.ARCADE_MS_PACMAN_XXL;
 import static de.amr.pacmanfx.model.StandardGameVariant.ARCADE_PACMAN_XXL;
+import static de.amr.pacmanfx.model.world.WorldMapSelectionMode.*;
 import static java.util.Objects.requireNonNull;
 
 public class PacManXXL_OptionMenu extends OptionMenu {
@@ -51,50 +52,37 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         entryGameVariant = new OptionMenuEntry<>(
             "GAME VARIANT",
             List.of(ARCADE_PACMAN_XXL, ARCADE_MS_PACMAN_XXL),
-            ARCADE_PACMAN_XXL
-        );
+            ARCADE_PACMAN_XXL)
+        {
+            @Override
+            public void onValueChanged(StandardGameVariant oldVariant, StandardGameVariant newVariant) {
+                if (ui != null) {
+                    final GameUI_Config uiConfig = ui.config(newVariant.name());
+                    chaseAnimation.init(uiConfig, canvas);
+                }
+            }
+        };
         entryGameVariant.setValueFormatter(variant -> switch (variant) {
             case ARCADE_PACMAN_XXL    -> "PAC-MAN XXL";
             case ARCADE_MS_PACMAN_XXL -> "MS.PAC-MAN XXL";
             default -> "???";
         });
-        entryGameVariant.valueProperty().addListener((_, _, newVariant) -> {
-            if (ui != null) {
-                final GameUI_Config uiConfig = ui.config(newVariant.name());
-                chaseAnimation.init(uiConfig, canvas);
-            }
-        });
         addEntry(entryGameVariant);
 
-        entryPlay3D = new OptionMenuEntry<>(
-            "SCENE DISPLAY",
-            List.of(true, false),
-            false
-        );
+        entryPlay3D = new OptionMenuEntry<>("SCENE DISPLAY", List.of(true, false), false);
         entryPlay3D.setValueFormatter(play3D -> play3D ? "3D" : "2D");
         addEntry(entryPlay3D);
 
-        entryCutScenesEnabled = new OptionMenuEntry<>(
-            "CUTSCENES",
-            List.of(true, false),
-            true
-        );
+        entryCutScenesEnabled = new OptionMenuEntry<>("CUTSCENES", List.of(true, false), true);
         entryCutScenesEnabled.setValueFormatter(cutScenesEnabled -> cutScenesEnabled ? "YES" : "NO");
         addEntry(entryCutScenesEnabled);
 
-        entryMapOrder = new OptionMenuEntry<>(
-            "MAP ORDER",
-            List.of(
-                WorldMapSelectionMode.CUSTOM_MAPS_FIRST,
-                WorldMapSelectionMode.ALL_RANDOM,
-                WorldMapSelectionMode.NO_CUSTOM_MAPS),
-            WorldMapSelectionMode.CUSTOM_MAPS_FIRST
-        );
-        entryMapOrder.setValueFormatter(mode -> {
+        entryMapOrder = new OptionMenuEntry<>("MAP ORDER", List.of(CUSTOM_MAPS_FIRST, ALL_RANDOM, NO_CUSTOM_MAPS), CUSTOM_MAPS_FIRST);
+        entryMapOrder.setValueFormatter(order -> {
             if (!entryMapOrder.enabled()) {
                 return "NO CUSTOM MAPS!";
             }
-            return switch (mode) {
+            return switch (order) {
                 case CUSTOM_MAPS_FIRST -> "CUSTOM MAPS FIRST";
                 case ALL_RANDOM -> "RANDOM ORDER";
                 case NO_CUSTOM_MAPS -> "NO CUSTOM MAPS";
