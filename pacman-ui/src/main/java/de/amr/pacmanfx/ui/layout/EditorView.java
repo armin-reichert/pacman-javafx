@@ -16,7 +16,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import static de.amr.pacmanfx.uilib.Ufx.paintBackground;
@@ -25,7 +24,6 @@ public class EditorView implements GameUI_View {
 
     private final GameUI ui;
     private final TileMapEditor editor;
-    private Consumer<TileMapEditor> quitEditorAction = _ -> {};
 
     public EditorView(Stage stage, GameUI ui) {
         this.ui = ui;
@@ -37,12 +35,8 @@ public class EditorView implements GameUI_View {
 
     private MenuItem createQuitEditorMenuItem() {
         var miQuitEditor = new MenuItem(ui.translated("back_to_game"));
-        miQuitEditor.setOnAction(_ -> editor.quit(quitEditorAction));
+        miQuitEditor.setOnAction(_ -> editor.quit());
         return miQuitEditor;
-    }
-
-    public void setQuitEditorAction(Consumer<TileMapEditor> quitEditorAction) {
-        this.quitEditorAction = quitEditorAction;
     }
 
     public TileMapEditor editor() {

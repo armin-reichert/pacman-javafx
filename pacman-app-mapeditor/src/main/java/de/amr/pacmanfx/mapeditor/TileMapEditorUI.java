@@ -36,6 +36,8 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.TS;
@@ -346,6 +348,10 @@ public class TileMapEditorUI {
         });
 
         inputEnabled.bind(editCanvas.draggingProperty().not());
+
+        actionBindings.put("e", new Action_SelectNextEditMode(this));
+        actionBindings.put("p", new Action_TogglePropertyEditor(this));
+        actionBindings.put("q", new Action_QuitEditor(this));
 
         stage.setOnCloseRequest(this::handleCloseEvent);
     }
@@ -820,6 +826,8 @@ public class TileMapEditorUI {
 
     // Event handlers
 
+    private final Map<String, EditorUIAction<?>> actionBindings = new HashMap<>();
+
     private void onKeyPressed(KeyEvent keyEvent) {
         boolean alt = keyEvent.isAltDown();
         switch (keyEvent.getCode()) {
@@ -835,12 +843,10 @@ public class TileMapEditorUI {
     }
 
     private void onKeyTyped(KeyEvent e) {
-        if ("e".equals(e.getCharacter())) {
-            new Action_SelectNextEditMode(this).execute();
-        }
-        else if ("p".equals(e.getCharacter())) {
-            setPropertyEditorsVisible(!propertyEditorsVisible());
-        }
+        actionBindings.entrySet().stream()
+            .filter(entry -> e.getCharacter().equals(entry.getKey()))
+            .findFirst()
+            .ifPresent(entry -> entry.getValue().execute());
     }
 
     // Model change handling

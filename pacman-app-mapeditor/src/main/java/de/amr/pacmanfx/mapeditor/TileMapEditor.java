@@ -34,6 +34,7 @@ public class TileMapEditor {
 
     private SampleMaps sampleMaps;
     private final TileMapEditorUI ui;
+    private Consumer<TileMapEditor> quitEditorAction = _ -> {};
 
     private final AnimationTimer updateTimer = new AnimationTimer() {
         private static final long FRAME_DURATION_NS = 1_000_000_000 / EditorGlobals.UPDATE_FREQ;
@@ -62,6 +63,10 @@ public class TileMapEditor {
         sourceCodeLineNumbers.addListener((_, _, lineNumbers) -> sourceCode.set(currentWorldMap().sourceCode(lineNumbers)));
     }
 
+    public void setQuitEditorAction(Consumer<TileMapEditor> quitEditorAction) {
+        this.quitEditorAction = quitEditorAction;
+    }
+
     public void init(File workDir) {
         setCurrentDirectory(workDir);
         WorldMap worldMap = new Action_CreateEmptyMap(this, 28, 36).execute();
@@ -81,7 +86,7 @@ public class TileMapEditor {
         updateTimer.stop();
     }
 
-    public void quit(Consumer<TileMapEditor> quitEditorAction) {
+    public void quit() {
         if (!isEdited()) {
             stop();
             quitEditorAction.accept(this);
