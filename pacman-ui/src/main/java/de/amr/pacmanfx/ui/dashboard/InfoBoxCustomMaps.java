@@ -17,6 +17,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.layout.Region;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -46,28 +47,34 @@ public class InfoBoxCustomMaps extends InfoBox {
 
     public InfoBoxCustomMaps(GameUI ui) {
         super(ui);
-        
-        TableView<WorldMap> mapsTableView = new TableView<>();
-        mapsTableView.setItems(customMaps);
-        mapsTableView.setPrefWidth(Dashboard.INFOBOX_MIN_WIDTH - 20);
-        mapsTableView.setPrefHeight(400);
 
-        var tcMapURL = new TableColumn<WorldMap, String>("Map");
+        final var tcMapRowCount = new TableColumn<WorldMap, Integer>("Rows");
+        tcMapRowCount.setPrefWidth(40);
+        tcMapRowCount.setResizable(false);
+        tcMapRowCount.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().numRows()).asObject());
+        tcMapRowCount.setStyle("-fx-alignment: CENTER-RIGHT;");
+
+        final var tcMapColCount = new TableColumn<WorldMap, Integer>("Cols");
+        tcMapColCount.setPrefWidth(40);
+        tcMapColCount.setResizable(false);
+        tcMapColCount.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().numCols()).asObject());
+        tcMapColCount.setStyle("-fx-alignment: CENTER-RIGHT;");
+
+        final var tcMapURL = new TableColumn<WorldMap, String>("Map");
+        tcMapURL.setPrefWidth(Region.USE_COMPUTED_SIZE);
         tcMapURL.setCellValueFactory(data -> new SimpleStringProperty(trimURL(data.getValue().url())));
 
         // Show link with map filename that edits the map when clicked
-        tcMapURL.setCellFactory(column -> new TableCell<>() {
+        tcMapURL.setCellFactory(_ -> new TableCell<>() {
             private final Button linkButton = new Button();
             {
                 linkButton.getStyleClass().add("link-button"); // see global style.css
-                linkButton.setOnAction(event -> {
+                linkButton.setOnAction(_ -> {
                     final MapLinkUserData data = (MapLinkUserData) linkButton.getUserData();
                     try {
-                        final String fileProtocol = "file:";
                         final String mapURL = data.worldMap.url();
-                        if (mapURL.startsWith(fileProtocol)) {
-                            final File file = new File(URI.create(mapURL));
-                            editWorldMap(file);
+                        if (mapURL != null && mapURL.startsWith("file:")) {
+                            editWorldMap(new File(URI.create(mapURL)));
                         } else Logger.error("World map does not provide file URL to load it from file system");
                     } catch (Exception e) {
                         throw new RuntimeException(e);
@@ -91,17 +98,16 @@ public class InfoBoxCustomMaps extends InfoBox {
         });
 
 
-        var tcMapRowCount = new TableColumn<WorldMap, Integer>("Rows");
-        tcMapRowCount.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().numRows()).asObject());
-        tcMapRowCount.setStyle("-fx-alignment: CENTER-RIGHT;");
+        final var mapsTableView = new TableView<WorldMap>();
+        mapsTableView.setItems(customMaps);
+        mapsTableView.setPrefWidth(Dashboard.INFOBOX_MIN_WIDTH - 20);
+        mapsTableView.setPrefHeight(400);
+        mapsTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
 
-        var tcMapColCount = new TableColumn<WorldMap, Integer>("Cols");
-        tcMapColCount.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().numCols()).asObject());
-        tcMapColCount.setStyle("-fx-alignment: CENTER-RIGHT;");
-
-        mapsTableView.getColumns().add(tcMapURL);
         mapsTableView.getColumns().add(tcMapRowCount);
         mapsTableView.getColumns().add(tcMapColCount);
+        // add as last column, gets all remaining space
+        mapsTableView.getColumns().add(tcMapURL);
 
         mapsTableView.getColumns().forEach(column -> {
             column.setSortable(false);
@@ -127,7 +133,7 @@ public class InfoBoxCustomMaps extends InfoBox {
 
     private void updateCustomMapList() {
         customMaps.clear();
-        File[] mapFiles = GameBox.CUSTOM_MAP_DIR.listFiles((dir, name) -> name.endsWith(".world"));
+        File[] mapFiles = GameBox.CUSTOM_MAP_DIR.listFiles((_, name) -> name.endsWith(".world"));
         if (mapFiles == null) {
             Logger.error("An error occurred accessing custom map directory {}", GameBox.CUSTOM_MAP_DIR);
             return;
