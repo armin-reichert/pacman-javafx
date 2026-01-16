@@ -28,7 +28,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Simple chasing animation used in XXL menu.
  */
-public class ChaseAnimation {
+class ChaseAnimation {
 
     enum ChasingState {GHOSTS_CHASING_PAC, PAC_CHASING_GHOSTS}
 
@@ -178,7 +178,7 @@ public class ChaseAnimation {
         if (actorRenderer != null) {
             final GraphicsContext ctx = actorRenderer.ctx();
             ctx.save();
-            ctx.translate(0, scaling.get() * y);;
+            ctx.translate(0, scaling.get() * y);
             actorRenderer.setImageSmoothing(true);
             ghosts.forEach(actorRenderer::drawActor);
             actorRenderer.drawActor(pac);
