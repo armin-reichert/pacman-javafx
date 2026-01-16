@@ -26,15 +26,15 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     public static final int NUM_TILES_X = 42;
     public static final int NUM_TILES_Y = 34;
 
-    public static final int TEXT_COLUMN = 6;
+    public static final int TEXT_COLUMN  = 6;
     public static final int VALUE_COLUMN = 20;
 
-    public static final float CHASE_ANIMATION_Y = (NUM_TILES_Y - 12) * TS;
+    public static final int CHASE_ANIMATION_Y = (NUM_TILES_Y - 12) * TS;
 
-    private OptionMenuEntry<StandardGameVariant> entryGameVariant;
-    private OptionMenuEntry<Boolean> entryPlay3D;
-    private OptionMenuEntry<Boolean> entryCutScenesEnabled;
-    private OptionMenuEntry<WorldMapSelectionMode> entryMapOrder;
+    private final OptionMenuEntry<StandardGameVariant>   entryGameVariant;
+    private final OptionMenuEntry<Boolean>               entryPlay3D;
+    private final OptionMenuEntry<Boolean>               entryCutScenesEnabled;
+    private final OptionMenuEntry<WorldMapSelectionMode> entryMapOrder;
 
     private final ChaseAnimation chaseAnimation = new ChaseAnimation(NUM_TILES_X);
     private GameUI ui;
@@ -47,19 +47,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         setNextValueKeyCode(KeyCode.SPACE);
         defineAction(1, KeyCode.E, "OPEN EDITOR");
         defineAction(2, KeyCode.ENTER, "START");
-        createEntries();
 
-        chaseAnimation.setY(CHASE_ANIMATION_Y);
-        chaseAnimation.scalingProperty().bind(scalingProperty());
-
-        canvas.focusedProperty().addListener((_, _, focused) -> {
-            if (focused) {
-                startDrawLoop();
-            }
-        });
-    }
-
-    private void createEntries() {
         entryGameVariant = new OptionMenuEntry<>(
             "GAME VARIANT",
             List.of(ARCADE_PACMAN_XXL, ARCADE_MS_PACMAN_XXL),
@@ -89,7 +77,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         entryCutScenesEnabled = new OptionMenuEntry<>(
             "CUTSCENES",
             List.of(true, false),
-                true
+            true
         );
         entryCutScenesEnabled.setValueFormatter(cutScenesEnabled -> cutScenesEnabled ? "YES" : "NO");
         addEntry(entryCutScenesEnabled);
@@ -100,7 +88,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
                 WorldMapSelectionMode.CUSTOM_MAPS_FIRST,
                 WorldMapSelectionMode.ALL_RANDOM,
                 WorldMapSelectionMode.NO_CUSTOM_MAPS),
-                WorldMapSelectionMode.CUSTOM_MAPS_FIRST
+            WorldMapSelectionMode.CUSTOM_MAPS_FIRST
         );
         entryMapOrder.setValueFormatter(mode -> {
             if (!entryMapOrder.enabled()) {
@@ -113,6 +101,15 @@ public class PacManXXL_OptionMenu extends OptionMenu {
             };
         });
         addEntry(entryMapOrder);
+
+        chaseAnimation.setY(CHASE_ANIMATION_Y);
+        chaseAnimation.scalingProperty().bind(scalingProperty());
+
+        canvas.focusedProperty().addListener((_, _, focused) -> {
+            if (focused) {
+                startDrawLoop();
+            }
+        });
     }
 
     @Override

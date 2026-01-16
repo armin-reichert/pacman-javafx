@@ -69,12 +69,13 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
                 menu.init(ui);
             }
         });
+
+        addKeyEventHandler();
     }
 
     @Override
     public void init(GameUI ui) {
         this.ui = requireNonNull(ui);
-        addKeyEventHandler();
         updateMenuEntryValueListeners();
     }
 
@@ -83,15 +84,14 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
             ui.startPagesView().pauseTimer();
             switch (e.getCode()) {
                 case E -> {
-                    Logger.info("Key '{}': Open editor.", e.getCode());
+                    e.consume();
                     ui.voicePlayer().stop();
                     ui.showEditorView();
-                    e.consume();
                 }
                 case ENTER -> {
+                    e.consume();
                     ui.voicePlayer().stop();
                     menu.startSelectedGame();
-                    e.consume();
                 }
                 default -> Logger.info("Key '{}': No action assigned.", e.getCode());
             }
@@ -101,9 +101,7 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
     private void updateMenuEntryValueListeners() {
         removeMenuEntryValueListeners();
 
-        gameVariantNameListener = (_, _, newVariant) -> {
-            ui.context().selectGameByName(newVariant.name());
-        };
+        gameVariantNameListener = (_, _, newVariant) -> ui.context().selectGameByName(newVariant.name());
         menu.entryGameVariant().valueProperty().addListener(gameVariantNameListener);
 
         play3DListener = (_, _, play3D) -> {
