@@ -149,7 +149,7 @@ public class PlayView extends StackPane implements GameUI_View {
         helpLayer.showHelpPopup(ui, scaling, ui.context().gameVariantName());
     }
 
-    public void draw() {
+    public void render() {
         final Game game = ui.context().currentGame();
         optGameScene().filter(GameScene2D.class::isInstance).map(GameScene2D.class::cast).ifPresent(gameScene2D -> {
             if (sceneRenderer != null) {
