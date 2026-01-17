@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.ui.ArcadePalette;
+import de.amr.pacmanfx.ui.GameUI;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -51,6 +52,10 @@ public class StatusIconBox extends HBox implements Disposable {
 
         setPadding(new Insets(PADDING));
         setSpacing(ICON_SPACING);
+
+        iconMuted.visibleProperty().bind(GameUI.PROPERTY_MUTED);
+        icon3D   .visibleProperty().bind(GameUI.PROPERTY_3D_ENABLED);
+
     }
 
     public FontIcon iconAutopilot() {

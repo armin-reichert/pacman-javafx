@@ -101,7 +101,6 @@ public final class GameUI_Implementation implements GameUI {
 
         composeLayout();
         setupScene();
-        setupStatusIconBox();
         setupBindings();
         setupStage();
 
@@ -119,8 +118,9 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     private void composeLayout() {
+        StackPane.setAlignment(statusIconBox, Pos.BOTTOM_LEFT);
         StackPane.setAlignment(pausedIcon, Pos.CENTER);
-        // First child is placeholder for view (start pages view, play view, ...)
+        // First child is placeholder for current view (start view, play view, ...)
         layoutPane.getChildren().setAll(new Region(), pausedIcon, statusIconBox, flashMessageView);
     }
 
@@ -181,14 +181,6 @@ public final class GameUI_Implementation implements GameUI {
             () -> views().currentView().onKeyboardInput(this)
         ));
         scene.setOnScroll(e -> views().playView().optGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
-    }
-
-    // Status icon box appears at bottom-left corner of all views except editor view
-    private void setupStatusIconBox() {
-        // hide icon box if editor view is active, avoid creation of editor view in binding expression!
-        statusIconBox.iconMuted()    .visibleProperty().bind(PROPERTY_MUTED);
-        statusIconBox.icon3D()       .visibleProperty().bind(PROPERTY_3D_ENABLED);
-        StackPane.setAlignment(statusIconBox, Pos.BOTTOM_LEFT);
     }
 
     private String computeStageTitle(AssetMap assets) {
