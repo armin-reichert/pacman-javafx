@@ -48,24 +48,61 @@ public class InfoBoxCustomMaps extends InfoBox {
     public InfoBoxCustomMaps(GameUI ui) {
         super(ui);
 
-        final var tcMapRowCount = new TableColumn<WorldMap, Integer>("Rows");
-        tcMapRowCount.setPrefWidth(40);
-        tcMapRowCount.setResizable(false);
-        tcMapRowCount.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().numRows()).asObject());
-        tcMapRowCount.setStyle("-fx-alignment: CENTER-RIGHT;");
+        final var tableView = new TableView<WorldMap>();
+        tableView.getColumns().add(createMapRowCountTableColumn());
+        tableView.getColumns().add(createMapColCountTableColumn());
+        tableView.getColumns().add(createMapURLTableColumn());
+        tableView.getColumns().forEach(column -> {
+            column.setSortable(false);
+            column.setReorderable(false);
+        });
+        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
+        tableView.setPrefWidth(Dashboard.INFOBOX_MIN_WIDTH - 20);
+        tableView.setPrefHeight(500);
+        tableView.setItems(customMaps);
 
-        final var tcMapColCount = new TableColumn<WorldMap, Integer>("Cols");
-        tcMapColCount.setPrefWidth(40);
-        tcMapColCount.setResizable(false);
-        tcMapColCount.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().numCols()).asObject());
-        tcMapColCount.setStyle("-fx-alignment: CENTER-RIGHT;");
+        addRow(tableView);
 
-        final var tcMapURL = new TableColumn<WorldMap, String>("Map");
-        tcMapURL.setPrefWidth(Region.USE_COMPUTED_SIZE);
-        tcMapURL.setCellValueFactory(data -> new SimpleStringProperty(trimURL(data.getValue().url())));
+        expandedProperty().addListener((_, _, expanded) -> {
+            if (expanded) {
+                updateCustomMapList();
+            }
+        });
+
+        ui.customDirWatchdog().addEventListener(eventList -> {
+            Logger.info("Custom map change(s) detected: {}",
+                eventList.stream()
+                    .map(watchEvent -> String.format("%s: '%s'", watchEvent.kind(), watchEvent.context()))
+                    .toList());
+            updateCustomMapList();
+        });
+    }
+
+    private TableColumn<WorldMap, Integer> createMapRowCountTableColumn() {
+        final var column = new TableColumn<WorldMap, Integer>("Rows");
+        column.setPrefWidth(40);
+        column.setResizable(false);
+        column.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().numRows()).asObject());
+        column.setStyle("-fx-alignment: CENTER-RIGHT;");
+        return column;
+    }
+
+    private TableColumn<WorldMap, Integer> createMapColCountTableColumn() {
+        final var column = new TableColumn<WorldMap, Integer>("Cols");
+        column.setPrefWidth(40);
+        column.setResizable(false);
+        column.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().numCols()).asObject());
+        column.setStyle("-fx-alignment: CENTER-RIGHT;");
+        return column;
+    }
+
+    private TableColumn<WorldMap, String> createMapURLTableColumn() {
+        final var column = new TableColumn<WorldMap, String>("Map");
+        column.setPrefWidth(Region.USE_COMPUTED_SIZE);
+        column.setCellValueFactory(data -> new SimpleStringProperty(trimURL(data.getValue().url())));
 
         // Show link with map filename that edits the map when clicked
-        tcMapURL.setCellFactory(_ -> new TableCell<>() {
+        column.setCellFactory(_ -> new TableCell<>() {
             private final Button linkButton = new Button();
             {
                 linkButton.getStyleClass().add("link-button"); // see global style.css
@@ -96,39 +133,7 @@ public class InfoBoxCustomMaps extends InfoBox {
                 }
             }
         });
-
-
-        final var mapsTableView = new TableView<WorldMap>();
-        mapsTableView.setItems(customMaps);
-        mapsTableView.setPrefWidth(Dashboard.INFOBOX_MIN_WIDTH - 20);
-        mapsTableView.setPrefHeight(400);
-        mapsTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
-
-        mapsTableView.getColumns().add(tcMapRowCount);
-        mapsTableView.getColumns().add(tcMapColCount);
-        // add as last column, gets all remaining space
-        mapsTableView.getColumns().add(tcMapURL);
-
-        mapsTableView.getColumns().forEach(column -> {
-            column.setSortable(false);
-            column.setReorderable(false);
-        });
-
-        addRow(mapsTableView);
-
-        expandedProperty().addListener((_, _, expanded) -> {
-            if (expanded) {
-                updateCustomMapList();
-            }
-        });
-
-        ui.customDirWatchdog().addEventListener(eventList -> {
-            Logger.info("Custom map change(s) detected: {}",
-                eventList.stream()
-                    .map(watchEvent -> String.format("%s: '%s'", watchEvent.kind(), watchEvent.context()))
-                    .toList());
-            updateCustomMapList();
-        });
+        return column;
     }
 
     private void updateCustomMapList() {
