@@ -153,7 +153,7 @@ public final class GameUI_Implementation implements GameUI {
 
     private EditorView createEditorView() {
         final var editorView = new EditorView(stage, this);
-        editorView.editor().setQuitEditorAction(_ -> {
+        editorView.editor().setOnQuit(_ -> {
             stage.titleProperty().bind(titleBinding);
             showStartView();
         });

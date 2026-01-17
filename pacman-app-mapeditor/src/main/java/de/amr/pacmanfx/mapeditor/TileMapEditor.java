@@ -63,7 +63,7 @@ public class TileMapEditor {
         sourceCodeLineNumbers.addListener((_, _, lineNumbers) -> sourceCode.set(currentWorldMap().sourceCode(lineNumbers)));
     }
 
-    public void setQuitEditorAction(Consumer<TileMapEditor> quitEditorAction) {
+    public void setOnQuit(Consumer<TileMapEditor> quitEditorAction) {
         this.quitEditorAction = quitEditorAction;
     }
 
