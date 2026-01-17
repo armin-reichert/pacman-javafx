@@ -10,17 +10,18 @@ import de.amr.pacmanfx.uilib.assets.UIPreferences;
 import java.util.HashMap;
 import java.util.Map;
 
-class GameUI_ConfigFactory {
+public class GameUI_ConfigFactory {
+
     private final Map<String, Class<? extends GameUI_Config>> configClasses;
     private final Map<String, GameUI_Config> cache = new HashMap<>();
     private final UIPreferences prefs;
 
-    GameUI_ConfigFactory(Map<String, Class<? extends GameUI_Config>> classes, UIPreferences prefs) {
+    public GameUI_ConfigFactory(Map<String, Class<? extends GameUI_Config>> classes, UIPreferences prefs) {
         this.configClasses = classes;
         this.prefs = prefs;
     }
 
-    GameUI_Config getOrCreate(String variantName) {
+    public GameUI_Config getOrCreate(String variantName) {
         return cache.computeIfAbsent(variantName, name -> {
             final Class<?> clazz = configClasses.get(name);
             if (clazz == null) throw new IllegalArgumentException("No config for " + name);
@@ -40,7 +41,7 @@ class GameUI_ConfigFactory {
         });
     }
 
-    void dispose(String variantName) {
+    public void dispose(String variantName) {
         final GameUI_Config config = cache.remove(variantName);
         if (config != null) {
             config.dispose();

@@ -26,6 +26,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.image.Image;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -92,6 +93,33 @@ public class PlayView extends StackPane implements GameUI_View {
         contextMenu.setUI(ui);
         dashboard.setUI(ui);
         miniView.setUI(ui);
+        ui.context().gameVariantNameProperty().addListener(
+            (_, oldVariantName, newVariantName) -> handleGameVariantChange(oldVariantName, newVariantName));
+    }
+
+    private void handleGameVariantChange(String oldVariantName, String newVariantName) {
+        if (oldVariantName != null) {
+            final Game oldGame = ui.context().gameByVariantName(oldVariantName);
+            oldGame.removeGameEventListener(this);
+            ui.configFactory().dispose(oldVariantName);
+        }
+        if (newVariantName != null) {
+            final Game newGame = ui.context().gameByVariantName(newVariantName);
+            newGame.addGameEventListener(this);
+
+            final GameUI_Config newConfig = ui.config(newVariantName);
+            newConfig.init();
+            newConfig.soundManager().muteProperty().bind(GameUI.PROPERTY_MUTED);
+
+            final Image appIcon = newConfig.assets().image("app_icon");
+            if (appIcon != null) {
+                ui.stage().getIcons().setAll(appIcon);
+            } else {
+                Logger.error("Could not find app icon for current game variant {}", newVariantName);
+            }
+        } else {
+            Logger.error("No game selected");
+        }
     }
 
     private void composeLayout() {

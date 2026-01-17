@@ -25,7 +25,6 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Region;
@@ -74,7 +73,7 @@ public final class GameUI_Implementation implements GameUI {
     private FontIcon pausedIcon;
     private StatusIconBox statusIconBox;
 
-    private final StringBinding titleBinding;
+    private StringBinding titleBinding;
 
     public GameUI_Implementation(
         Map<String, Class<? extends GameUI_Config>> uiConfigMap,
@@ -95,9 +94,6 @@ public final class GameUI_Implementation implements GameUI {
 
         configFactory = new GameUI_ConfigFactory(uiConfigMap, prefs);
 
-        // Trigger loading of 3D models used by all game variants
-        PacManModel3DRepository.instance();
-
         customDirWatchdog = new DirectoryWatchdog(GameBox.CUSTOM_MAP_DIR);
 
         clock = new GameClock();
@@ -106,15 +102,22 @@ public final class GameUI_Implementation implements GameUI {
 
         createScene(sceneWidth, sceneHeight);
 
-        // Let play view listen to game events of selected game variant
-        context().gameVariantNameProperty().addListener(
-            (_, oldVariantName, newVariantName) -> changeGameVariant(oldVariantName, newVariantName));
-
         this.viewManager = new GameUI_ViewManager(this, scene, layoutPane, this::createEditorView, flashMessageView);
 
+        setupBindings();
+
+        stage.setScene(scene);
+        stage.setMinWidth(MIN_STAGE_WIDTH);
+        stage.setMinHeight(MIN_STAGE_HEIGHT);
+
+        // Trigger loading of 3D models used by all game variants
+        PacManModel3DRepository.instance();
+    }
+
+    private void setupBindings() {
         statusIconBox.visibleProperty()
             .bind(viewManager.currentViewProperty()
-            .map(view -> view == viewManager.playView() || view == viewManager.startPagesView()));
+                .map(view -> view == viewManager.playView() || view == viewManager.startPagesView()));
 
         // Show paused icon only in play view
         pausedIcon.visibleProperty().bind(Bindings.createBooleanBinding(
@@ -133,20 +136,17 @@ public final class GameUI_Implementation implements GameUI {
             PROPERTY_3D_ENABLED,
             clock().pausedProperty()
         );
+        stage.titleProperty().bind(titleBinding);
 
         layoutPane.backgroundProperty().bind(Bindings.createObjectBinding(
             () -> isCurrentGameSceneID(GameScene_Config.CommonSceneID.PLAY_SCENE_3D)
-                    ? Background.fill(Gradients.Samples.random())
-                    : GameUI.BACKGROUND_PAC_MAN_WALLPAPER,
+                ? Background.fill(Gradients.Samples.random())
+                : GameUI.BACKGROUND_PAC_MAN_WALLPAPER,
             // depends on:
             viewManager.currentViewProperty(),
             viewManager.playView().currentGameSceneProperty()
         ));
 
-        stage.setScene(scene);
-        stage.setMinWidth(MIN_STAGE_WIDTH);
-        stage.setMinHeight(MIN_STAGE_HEIGHT);
-        stage.titleProperty().bind(titleBinding);
     }
 
     private EditorView createEditorView() {
@@ -333,31 +333,6 @@ public final class GameUI_Implementation implements GameUI {
         Platform.runLater(clock::start);
     }
 
-    private void changeGameVariant(String oldVariantName, String newVariantName) {
-        if (oldVariantName != null) {
-            final Game oldGame = context().gameByVariantName(oldVariantName);
-            oldGame.removeGameEventListener(viewManager.playView());
-            configFactory.dispose(oldVariantName);
-        }
-        if (newVariantName != null) {
-            final Game newGame = context().gameByVariantName(newVariantName);
-            newGame.addGameEventListener(viewManager.playView());
-
-            final GameUI_Config newConfig = config(newVariantName);
-            newConfig.init();
-            newConfig.soundManager().muteProperty().bind(PROPERTY_MUTED);
-
-            final Image appIcon = newConfig.assets().image("app_icon");
-            if (appIcon != null) {
-                stage.getIcons().setAll(appIcon);
-            } else {
-                Logger.error("Could not find app icon for current game variant {}", newVariantName);
-            }
-        } else {
-            Logger.error("No game selected");
-        }
-    }
-
     @Override
     public void selectGameVariant(String gameVariantName) {
         throw new UnsupportedOperationException();
@@ -432,6 +407,11 @@ public final class GameUI_Implementation implements GameUI {
     @Override
     public void updateGameScene(boolean forceReloading) {
         viewManager.playView().updateGameScene(gameContext.currentGame(), forceReloading);
+    }
+
+    @Override
+    public GameUI_ConfigFactory configFactory() {
+        return configFactory;
     }
 
     @Override
