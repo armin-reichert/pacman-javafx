@@ -52,28 +52,25 @@ public final class GameUI_Implementation implements GameUI {
 
     private static final int MIN_STAGE_WIDTH  = 280;
     private static final int MIN_STAGE_HEIGHT = 360;
-
     private static final int PAUSE_ICON_SIZE = 80;
 
-    private final GameClock clock;
     private final GameContext gameContext;
-    private final Stage stage;
-    private final UIPreferences prefs;
+    private final GameClock clock = new GameClock();
     private final DirectoryWatchdog customDirWatchdog;
-
     private final ActionBindingsManager globalActionBindings = new GlobalActionBindings();
+
     private final GameUI_ConfigFactory configFactory;
-
-    private Scene scene;
+    private final UIPreferences prefs = new GameUI_Preferences();
+    private final Stage stage;
     private final StackPane layoutPane = new StackPane();
-    private final FlashMessageView flashMessageView = new FlashMessageView();
+    private final GameUI_ViewManager viewManager;
+    private final Scene scene;
 
+    private final FlashMessageView flashMessageView = new FlashMessageView();
     private final VoicePlayer voicePlayer = new VoicePlayer();
 
-    private final GameUI_ViewManager viewManager;
-
-    private FontIcon pausedIcon;
-    private StatusIconBox statusIconBox;
+    private final FontIcon pausedIcon;
+    private final StatusIconBox statusIconBox = new StatusIconBox();
 
     private StringBinding titleBinding;
 
@@ -84,42 +81,52 @@ public final class GameUI_Implementation implements GameUI {
         double sceneWidth,
         double sceneHeight)
     {
-        requireNonNull(uiConfigMap, "UI configuration map is null");
-        this.gameContext = requireNonNull(gameContext, "Game context is null");
-        this.stage = requireNonNull(stage, "Stage is null");
-        requireNonNegative(sceneWidth, "Main scene width must be a positive number");
-        requireNonNegative(sceneHeight, "Main scene height must be a positive number");
+        requireNonNull(uiConfigMap);
+        requireNonNull(gameContext);
+        requireNonNull(stage);
+        requireNonNegative(sceneWidth);
+        requireNonNegative(sceneHeight);
 
-        prefs = new GameUI_Preferences();
-        PROPERTY_3D_WALL_HEIGHT.set(prefs.getFloat("3d.obstacle.base_height"));
-        PROPERTY_3D_WALL_OPACITY.set(prefs.getFloat("3d.obstacle.opacity"));
+        this.gameContext = gameContext;
+        this.stage = stage;
 
-        configFactory = new GameUI_ConfigFactory(uiConfigMap, prefs);
-
-        customDirWatchdog = new DirectoryWatchdog(GameBox.CUSTOM_MAP_DIR);
-
-        clock = new GameClock();
         clock.setPausableAction(this::simulateAndUpdateGameScene);
         clock.setPermanentAction(this::render);
 
-        createScene(sceneWidth, sceneHeight);
+        configFactory = new GameUI_ConfigFactory(uiConfigMap, prefs);
+        customDirWatchdog = new DirectoryWatchdog(GameBox.CUSTOM_MAP_DIR);
+        scene = new Scene(layoutPane, sceneWidth, sceneHeight);
+        pausedIcon = createPausedIcon();
+        viewManager = new GameUI_ViewManager(this, scene, layoutPane, this::createEditorView, flashMessageView);
 
-        this.viewManager = new GameUI_ViewManager(this, scene, layoutPane, this::createEditorView, flashMessageView);
-
+        composeLayout();
+        setupScene();
+        setupStatusIconBox();
         setupBindings();
-
-        stage.setScene(scene);
-        stage.setMinWidth(MIN_STAGE_WIDTH);
-        stage.setMinHeight(MIN_STAGE_HEIGHT);
+        setupStage();
 
         // Trigger loading of 3D models used by all game variants
         PacManModel3DRepository.instance();
+
+        PROPERTY_3D_WALL_HEIGHT.set(prefs.getFloat("3d.obstacle.base_height"));
+        PROPERTY_3D_WALL_OPACITY.set(prefs.getFloat("3d.obstacle.opacity"));
+    }
+
+    private void setupStage() {
+        stage.setScene(scene);
+        stage.setMinWidth(MIN_STAGE_WIDTH);
+        stage.setMinHeight(MIN_STAGE_HEIGHT);
+    }
+
+    private void composeLayout() {
+        StackPane.setAlignment(pausedIcon, Pos.CENTER);
+        // First child is placeholder for view (start pages view, play view, ...)
+        layoutPane.getChildren().setAll(new Region(), pausedIcon, statusIconBox, flashMessageView);
     }
 
     private void setupBindings() {
-        statusIconBox.visibleProperty()
-            .bind(views().currentViewProperty()
-                .map(view -> view == views().playView() || view == views().startPagesView()));
+        statusIconBox.visibleProperty().bind(views().currentViewProperty()
+            .map(view -> view == views().playView() || view == views().startPagesView()));
 
         // Show paused icon only in play view
         pausedIcon.visibleProperty().bind(Bindings.createBooleanBinding(
@@ -159,8 +166,7 @@ public final class GameUI_Implementation implements GameUI {
         return editorView;
     }
 
-    private void createScene(double width, double height) {
-        scene = new Scene(layoutPane, width, height);
+    private void setupScene() {
         scene.getStylesheets().add(GameUI.STYLE_SHEET_PATH);
 
         scene.addEventFilter(KeyEvent.KEY_PRESSED,  KEYBOARD::onKeyPressed);
@@ -175,15 +181,6 @@ public final class GameUI_Implementation implements GameUI {
             () -> views().currentView().onKeyboardInput(this)
         ));
         scene.setOnScroll(e -> views().playView().optGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
-
-        createStatusIconBox();
-
-        // Large "paused" icon which appears at center of scene
-        pausedIcon = createPausedIcon();
-        StackPane.setAlignment(pausedIcon, Pos.CENTER);
-
-        // First child is placeholder for view (start pages view, play view, ...)
-        layoutPane.getChildren().setAll(new Region(), pausedIcon, statusIconBox, flashMessageView);
     }
 
     private FontIcon createPausedIcon() {
@@ -191,8 +188,7 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     // Status icon box appears at bottom-left corner of all views except editor view
-    private void createStatusIconBox() {
-        statusIconBox = new StatusIconBox();
+    private void setupStatusIconBox() {
         // hide icon box if editor view is active, avoid creation of editor view in binding expression!
         statusIconBox.iconMuted()    .visibleProperty().bind(PROPERTY_MUTED);
         statusIconBox.icon3D()       .visibleProperty().bind(PROPERTY_3D_ENABLED);

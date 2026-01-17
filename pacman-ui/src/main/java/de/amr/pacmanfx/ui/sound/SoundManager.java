@@ -34,13 +34,7 @@ public class SoundManager implements Disposable {
 
     private SirenPlayer sirenPlayer;
 
-    public SoundManager() {
-        muteProperty().addListener((_, _, muted) -> {
-            if (muted && sirenPlayer != null) {
-                sirenPlayer.stopSirens();
-            }
-        });
-    }
+    public SoundManager() {}
 
     public int numSounds() {
         int n = map.size();
@@ -106,6 +100,7 @@ public class SoundManager implements Disposable {
 
     public void registerSirens(URL... sirenURLs) {
         sirenPlayer = new SirenPlayer(sirenURLs);
+        sirenPlayer.muteProperty().bind(muteProperty);
     }
 
     public BooleanProperty enabledProperty() {

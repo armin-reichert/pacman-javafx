@@ -5,6 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.sound;
 
 import de.amr.pacmanfx.Validations;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.media.AudioClip;
 import org.tinylog.Logger;
 
@@ -12,6 +14,8 @@ import java.net.URL;
 import java.util.Arrays;
 
 public class SirenPlayer {
+
+    private final BooleanProperty mute = new SimpleBooleanProperty(false);
 
     private final URL[] urls;
     private final AudioClip[] clips;
@@ -21,6 +25,15 @@ public class SirenPlayer {
     public SirenPlayer(URL... sirenURLArray) {
         urls = Arrays.copyOf(sirenURLArray, sirenURLArray.length);
         clips = new AudioClip[sirenURLArray.length];
+        muteProperty().addListener((_, _, muted) -> {
+            if (muted) {
+                stopSirens();
+            }
+        });
+    }
+
+    public BooleanProperty muteProperty() {
+        return mute;
     }
 
     public void ensureSirenPlaying(int number) {
@@ -41,6 +54,9 @@ public class SirenPlayer {
                 stopCurrentSiren();
             }
             currentSirenNumber = number;
+        }
+        if (mute.get()) {
+            return;
         }
         final int index = number - 1;
         if (clips[index] == null) {
