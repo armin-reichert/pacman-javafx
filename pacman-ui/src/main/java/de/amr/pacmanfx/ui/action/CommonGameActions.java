@@ -16,7 +16,6 @@ import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.ui.GameScene_Config;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
-import de.amr.pacmanfx.ui.layout.PlayView;
 import javafx.scene.shape.DrawMode;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -68,7 +67,8 @@ public final class CommonGameActions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            return ui.currentView() == ui.playView() || ui.currentView() == ui.startPagesView();
+            return ui.viewManager().currentView() == ui.viewManager().playView()
+                || ui.viewManager().currentView() == ui.viewManager().startPagesView();
         }
     };
 
@@ -119,9 +119,7 @@ public final class CommonGameActions {
     public static final GameAction ACTION_SHOW_HELP = new GameAction("SHOW_HELP") {
         @Override
         public void execute(GameUI ui) {
-            if (ui.playView() instanceof PlayView playView) {
-                playView.showHelp(ui);
-            }
+            ui.viewManager().playView().showHelp(ui);
         }
 
         @Override
@@ -229,12 +227,12 @@ public final class CommonGameActions {
     public static final GameAction ACTION_TOGGLE_DASHBOARD = new GameAction("TOGGLE_DASHBOARD") {
         @Override
         public void execute(GameUI ui) {
-            ui.dashboard().toggleVisibility();
+            ui.viewManager().playView().dashboard().toggleVisibility();
         }
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            return ui.currentView().equals(ui.playView());
+            return ui.viewManager().currentView() == ui.viewManager().playView();
         }
 
         @Override

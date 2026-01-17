@@ -50,7 +50,7 @@ public class TengenMsPacMan_App extends Application {
                 CommonDashboardID.ABOUT)
             .build();
 
-        ui.dashboard().addInfoBox(
+        ui.viewManager().playView().dashboard().addInfoBox(
             TengenMsPacMan_DashboardID.JOYPAD,
             TengenMsPacMan_UIConfig.TEXT_BUNDLE.getString("infobox.joypad.title"),
             new InfoBoxJoypad(ui));

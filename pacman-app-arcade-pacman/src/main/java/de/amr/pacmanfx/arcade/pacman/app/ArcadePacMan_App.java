@@ -76,8 +76,8 @@ public class ArcadePacMan_App extends Application {
         THE_GAME_BOX.registerGame(PACMAN_GAME, new ArcadePacMan_GameModel(THE_GAME_BOX, highScoreFile));
         final Map<String, Class<? extends GameUI_Config>> uiConfigMap = Map.of(PACMAN_GAME, ArcadePacMan_UIConfig.class);
         final var ui = new GameUI_Implementation(uiConfigMap, THE_GAME_BOX, stage, sceneWidth, sceneHeight);
-        ui.startPagesView().addStartPage(new ArcadePacMan_StartPage());
-        ui.dashboard().configure(List.of(DASHBOARD_IDS));
+        ui.viewManager().startPagesView().addStartPage(new ArcadePacMan_StartPage());
+        ui.viewManager().playView().dashboard().configure(List.of(DASHBOARD_IDS));
         return ui;
     }
 

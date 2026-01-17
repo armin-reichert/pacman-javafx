@@ -27,7 +27,9 @@ import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.GameUI_Config;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
 import de.amr.pacmanfx.ui.dashboard.CommonDashboardID;
+import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
+import de.amr.pacmanfx.ui.layout.StartPagesCarousel;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Screen;
@@ -92,7 +94,7 @@ public class PacManGames3dApp extends Application {
                 ? createUI_WithBuilder(primaryStage, width, height, xxlMapSelector)
                 : createUI_WithoutBuilder(primaryStage, width, height, xxlMapSelector);
 
-            ui.dashboard().addInfoBox(
+            ui.viewManager().playView().dashboard().addInfoBox(
                 TengenMsPacMan_DashboardID.JOYPAD,
                 TengenMsPacMan_UIConfig.TEXT_BUNDLE.getString("infobox.joypad.title"),
                 new InfoBoxJoypad(ui));
@@ -130,16 +132,18 @@ public class PacManGames3dApp extends Application {
 
         final var ui = new GameUI_Implementation(UI_CONFIG_MAP, THE_GAME_BOX, stage, sceneWidth, sceneHeight);
 
-        ui.startPagesView().addStartPage(new ArcadePacMan_StartPage());
-        ui.startPagesView().addStartPage(new ArcadeMsPacMan_StartPage());
-        ui.startPagesView().addStartPage(new TengenMsPacMan_StartPage());
-        ui.startPagesView().addStartPage(new PacManXXL_StartPage());
+        final StartPagesCarousel startPages = ui.viewManager().startPagesView();
+        startPages.addStartPage(new ArcadePacMan_StartPage());
+        startPages.addStartPage(new ArcadeMsPacMan_StartPage());
+        startPages.addStartPage(new TengenMsPacMan_StartPage());
+        startPages.addStartPage(new PacManXXL_StartPage());
 
-        ui.startPagesView().startPages().forEach(startPage -> startPage.init(ui));
-        ui.startPagesView().setSelectedIndex(0);
+        startPages.startPages().forEach(startPage -> startPage.init(ui));
+        startPages.setSelectedIndex(0);
 
-        ui.dashboard().configure(List.of(DASHBOARD_IDS));
-        ui.dashboard().addInfoBox(
+        final Dashboard dashboard = ui.viewManager().playView().dashboard();
+        dashboard.configure(List.of(DASHBOARD_IDS));
+        dashboard.addInfoBox(
             TengenMsPacMan_DashboardID.JOYPAD,
             TengenMsPacMan_UIConfig.TEXT_BUNDLE.getString("infobox.joypad.title"),
             new InfoBoxJoypad(ui));

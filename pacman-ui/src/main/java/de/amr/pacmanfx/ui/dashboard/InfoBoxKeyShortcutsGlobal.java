@@ -20,7 +20,7 @@ public class InfoBoxKeyShortcutsGlobal extends InfoBox {
     @Override
     public void update() {
         clearGrid();
-        addEntries(ui.currentView().actionBindingsManager());
+        addEntries(ui.viewManager().currentView().actionBindingsManager());
     }
 
     private void addEntries(ActionBindingsManager actionBindingsManager) {

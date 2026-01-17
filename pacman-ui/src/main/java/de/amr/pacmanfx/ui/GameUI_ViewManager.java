@@ -11,9 +11,11 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import org.tinylog.Supplier;
 
+import java.util.Optional;
+
 import static java.util.Objects.requireNonNull;
 
-class GameUI_ViewManager {
+public class GameUI_ViewManager {
 
     private final ObjectProperty<GameUI_View> currentView = new SimpleObjectProperty<>();
     private final StartPagesCarousel startPagesView;
@@ -83,16 +85,20 @@ class GameUI_ViewManager {
         return currentView;
     }
 
-    GameUI_View currentView() {
+    public GameUI_View currentView() {
         return currentView.get();
     }
 
-    StartPagesCarousel startPagesView() {
+    public StartPagesCarousel startPagesView() {
         return startPagesView;
     }
 
-    PlayView playView() {
+    public PlayView playView() {
         return playView;
+    }
+
+    public Optional<EditorView> optEditorView() {
+        return Optional.ofNullable(editorView);
     }
 
     EditorView editorView() {

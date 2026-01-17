@@ -12,7 +12,6 @@ import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.TestActions;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.input.Keyboard;
-import de.amr.pacmanfx.ui.layout.StartPagesCarousel;
 import de.amr.pacmanfx.ui.sound.VoicePlayer;
 import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.assets.LocalizedTextAccessor;
@@ -197,21 +196,13 @@ public interface GameUI extends LocalizedTextAccessor {
 
     // View access
 
-    GameUI_View currentView();
-
-    Optional<GameUI_View> optEditorView();
-
-    GameUI_View playView();
-
-    StartPagesCarousel startPagesView();
+    GameUI_ViewManager viewManager();
 
     void showEditorView();
 
     void showPlayView();
 
     void showStartView();
-
-    Dashboard dashboard();
 
     // Config
 

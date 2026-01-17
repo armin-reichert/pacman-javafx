@@ -11,10 +11,7 @@ import de.amr.pacmanfx.lib.DirectoryWatchdog;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameControl;
 import de.amr.pacmanfx.model.SimulationStep;
-import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.layout.EditorView;
-import de.amr.pacmanfx.ui.layout.PlayView;
-import de.amr.pacmanfx.ui.layout.StartPagesCarousel;
 import de.amr.pacmanfx.ui.layout.StatusIconBox;
 import de.amr.pacmanfx.ui.sound.VoicePlayer;
 import de.amr.pacmanfx.uilib.GameClock;
@@ -121,7 +118,7 @@ public final class GameUI_Implementation implements GameUI {
 
         // Show paused icon only in play view
         pausedIcon.visibleProperty().bind(Bindings.createBooleanBinding(
-            () -> currentView() == viewManager.playView() && clock.isPaused(),
+            () -> viewManager.currentView() == viewManager.playView() && clock.isPaused(),
             viewManager.currentViewProperty(), clock.pausedProperty())
         );
 
@@ -174,7 +171,7 @@ public final class GameUI_Implementation implements GameUI {
                 boolean executed = action.executeIfEnabled(this);
                 if (executed) e.consume();
             },
-            () -> currentView().onKeyboardInput(this)
+            () -> viewManager.currentView().onKeyboardInput(this)
         ));
         scene.setOnScroll(e -> currentGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
 
@@ -202,7 +199,7 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     private String computeStageTitle(AssetMap assets) {
-        final GameUI_View view = currentView();
+        final GameUI_View view = viewManager.currentView();
         if (view == null) {
             return "No View?";
         }
@@ -254,7 +251,7 @@ public final class GameUI_Implementation implements GameUI {
 
     private void drawCurrentView() {
         try {
-            if (currentView() == viewManager.playView()) {
+            if (viewManager.currentView() == viewManager.playView()) {
                 viewManager.playView().draw();
             }
             flashMessageView.update();
@@ -388,28 +385,8 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     @Override
-    public GameUI_View currentView() {
-        return viewManager.currentView();
-    }
-
-    @Override
-    public Optional<GameUI_View> optEditorView() {
-        return Optional.ofNullable(viewManager.editorView());
-    }
-
-    @Override
-    public PlayView playView() {
-        return viewManager.playView();
-    }
-
-    @Override
-    public StartPagesCarousel startPagesView() {
-        return viewManager.startPagesView();
-    }
-
-    @Override
-    public Dashboard dashboard() {
-        return viewManager.playView().dashboard();
+    public GameUI_ViewManager viewManager() {
+        return viewManager;
     }
 
     @Override
