@@ -149,24 +149,6 @@ public class PlayView extends StackPane implements GameUI_View {
         helpLayer.showHelpPopup(ui, scaling, ui.context().gameVariantName());
     }
 
-    @Override
-    public void render() {
-        final Game game = ui.context().currentGame();
-        optGameScene().filter(GameScene2D.class::isInstance).map(GameScene2D.class::cast).ifPresent(gameScene2D -> {
-            if (sceneRenderer != null) {
-                sceneRenderer.draw(gameScene2D);
-            }
-            if (hudRenderer != null) {
-                hudRenderer.draw(game.hud(), game, gameScene2D);
-            }
-        });
-        miniView.draw();
-        // Dashboard must also be updated if simulation is stopped
-        if (widgetLayer.isVisible()) {
-            dashboard.updateContent();
-        }
-    }
-
     // -----------------------------------------------------------------------------------------------------------------
     // GameUI_View interface implementation
     // -----------------------------------------------------------------------------------------------------------------
@@ -199,6 +181,24 @@ public class PlayView extends StackPane implements GameUI_View {
     @Override
     public StackPane root() {
         return this;
+    }
+
+    @Override
+    public void render() {
+        final Game game = ui.context().currentGame();
+        optGameScene().filter(GameScene2D.class::isInstance).map(GameScene2D.class::cast).ifPresent(gameScene2D -> {
+            if (sceneRenderer != null) {
+                sceneRenderer.draw(gameScene2D);
+            }
+            if (hudRenderer != null) {
+                hudRenderer.draw(game.hud(), game, gameScene2D);
+            }
+        });
+        miniView.draw();
+        // Dashboard must also be updated if simulation is stopped
+        if (widgetLayer.isVisible()) {
+            dashboard.updateContent();
+        }
     }
 
     // GameEventListener
