@@ -48,6 +48,9 @@ import static javafx.beans.binding.Bindings.createStringBinding;
  */
 public final class GameUI_Implementation implements GameUI {
 
+    // Oh no, my program!
+    private static final String SOMEONE_CALL_AN_AMBULANCE = "KA-TA-STROOO-PHE!\nSOMEONE CALL AN AMBULANCE!";
+
     private static final int MIN_STAGE_WIDTH  = 280;
     private static final int MIN_STAGE_HEIGHT = 360;
 
@@ -225,18 +228,6 @@ public final class GameUI_Implementation implements GameUI {
         return "%s [%s]".formatted(shortTitle, sceneClassName);
     }
 
-    /**
-     * @param reason what caused this catastrophe
-     *
-     * @see <a href="https://de.wikipedia.org/wiki/Steel_Buddies_%E2%80%93_Stahlharte_Gesch%C3%A4fte">Katastrophe!</a>
-     */
-    private void ka_tas_tro_phe(Throwable reason) {
-        clock.stop();
-        Logger.error(reason);
-        Logger.error("SOMETHING VERY BAD HAPPENED!");
-        showFlashMessage(Duration.seconds(10), "KA-TA-STROOO-PHE!\nSOMEONE CALL AN AMBULANCE!");
-    }
-
     private void simulateAndUpdateGameScene(Game game) {
         final SimulationStep step = game.simulationStep();
         step.init(clock.tickCount());
@@ -258,6 +249,25 @@ public final class GameUI_Implementation implements GameUI {
         } catch (Throwable x) {
             ka_tas_tro_phe(x);
         }
+    }
+
+    /**
+     * @param reason what caused this catastrophe
+     *
+     * @see <a href="https://de.wikipedia.org/wiki/Steel_Buddies_%E2%80%93_Stahlharte_Gesch%C3%A4fte">Katastrophe!</a>
+     */
+    private void ka_tas_tro_phe(Throwable reason) {
+        stopGame();
+        Logger.error(reason);
+        Logger.error("SOMETHING VERY BAD HAPPENED!");
+        showFlashMessage(Duration.seconds(10), SOMEONE_CALL_AN_AMBULANCE);
+    }
+
+    private void stopGame() {
+        currentGameScene().ifPresent(gameScene -> gameScene.end(context().currentGame()));
+        currentConfig().soundManager().stopAll();
+        clock.stop();
+        clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
     }
 
     // GameUI interface
@@ -300,15 +310,8 @@ public final class GameUI_Implementation implements GameUI {
     @Override
     public void quitCurrentGameScene() {
         final Game game = gameContext.currentGame();
-
-        clock.stop();
-        clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
-
-        currentConfig().soundManager().stopAll();
-
-        //TODO this is game-specific and should not be handled here
+        //TODO this is game-specific and should not be here
         currentGameScene().ifPresent(gameScene -> {
-            gameScene.end(game);
             boolean shouldConsumeCoin = game.control().state().name().equals("STARTING_GAME_OR_LEVEL")
                 || game.isPlaying();
             if (shouldConsumeCoin && !gameContext.coinMechanism().isEmpty()) {
@@ -317,19 +320,15 @@ public final class GameUI_Implementation implements GameUI {
             Logger.info("Quit game scene ({}), returning to start view", gameScene.getClass().getSimpleName());
         });
 
+        stopGame();
         game.control().restart(GameControl.StateName.BOOT.name());
         showStartView();
     }
 
     @Override
     public void restart() {
-        final Game game = gameContext.currentGame();
-
-        clock.stop();
-        clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
-        currentGameScene().ifPresent(gameScene -> gameScene.end(game));
-
-        game.control().restart(GameControl.StateName.BOOT.name());
+        stopGame();
+        gameContext.currentGame().control().restart(GameControl.StateName.BOOT.name());
         Platform.runLater(clock::start);
     }
 
@@ -350,7 +349,7 @@ public final class GameUI_Implementation implements GameUI {
     @Override
     public void terminate() {
         Logger.info("Application is terminated now. There is no way back!");
-        clock.stop();
+        stopGame();
         customDirWatchdog.dispose();
     }
 
@@ -367,9 +366,7 @@ public final class GameUI_Implementation implements GameUI {
     @Override
     public void showEditorView() {
         if (!gameContext.currentGame().isPlaying() || clock.isPaused()) {
-            currentGameScene().ifPresent(gameScene -> gameScene.end(gameContext.currentGame()));
-            currentConfig().soundManager().stopAll();
-            clock.stop();
+            stopGame();
             viewManager.selectEditorView();
         } else {
             Logger.info("Editor view cannot be opened, game is playing");
@@ -387,9 +384,7 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public void showStartView() {
-        clock.stop();
-        clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
-        currentConfig().soundManager().stopAll();
+        stopGame();
         viewManager.selectStartView();
     }
 

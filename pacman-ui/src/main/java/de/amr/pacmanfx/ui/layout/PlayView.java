@@ -97,25 +97,24 @@ public class PlayView extends StackPane implements GameUI_View {
             (_, oldVariantName, newVariantName) -> handleGameVariantChange(oldVariantName, newVariantName));
     }
 
-    private void handleGameVariantChange(String oldVariantName, String newVariantName) {
-        if (oldVariantName != null) {
-            final Game oldGame = ui.context().gameByVariantName(oldVariantName);
-            oldGame.removeGameEventListener(this);
-            ui.configFactory().dispose(oldVariantName);
+    private void handleGameVariantChange(String oldName, String newName) {
+        if (oldName != null) {
+            ui.context().gameByVariantName(oldName).removeGameEventListener(this);
+            ui.configFactory().dispose(oldName);
         }
-        if (newVariantName != null) {
-            final Game newGame = ui.context().gameByVariantName(newVariantName);
-            newGame.addGameEventListener(this);
+        if (newName != null) {
+            final Game game = ui.context().gameByVariantName(newName);
+            game.addGameEventListener(this);
 
-            final GameUI_Config newConfig = ui.config(newVariantName);
-            newConfig.init();
-            newConfig.soundManager().muteProperty().bind(GameUI.PROPERTY_MUTED);
+            final GameUI_Config uiConfig = ui.config(newName);
+            uiConfig.init();
+            uiConfig.soundManager().muteProperty().bind(GameUI.PROPERTY_MUTED);
 
-            final Image appIcon = newConfig.assets().image("app_icon");
-            if (appIcon != null) {
-                ui.stage().getIcons().setAll(appIcon);
+            final Image icon = uiConfig.assets().image("app_icon");
+            if (icon != null) {
+                ui.stage().getIcons().setAll(icon);
             } else {
-                Logger.error("Could not find app icon for current game variant {}", newVariantName);
+                Logger.error("Could not find application icon for game variant {}", newName);
             }
         } else {
             Logger.error("No game selected");
