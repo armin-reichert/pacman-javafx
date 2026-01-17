@@ -28,7 +28,7 @@ public class ArcadePacMan_MapSelector implements WorldMapSelector {
             throw new IllegalStateException(errorMsg);
         }
         try {
-            prototype = WorldMap.loadFromURL(url);
+            prototype = WorldMap.create(url);
             Logger.info("Loaded world map '{}'", url);
         } catch (IOException x) {
             Logger.error("Could not open world map");

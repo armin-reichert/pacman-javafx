@@ -93,6 +93,6 @@ public class Action_FloodWithPellets extends EditorAction<Void> {
     private Optional<Vector2i> actorTile(WorldMap worldMap, String actorPosProperty) {
         var terrainProperties = worldMap.terrainLayer().propertyMap();
         String posString = terrainProperties.getOrDefault(actorPosProperty, null);
-        return posString != null ? WorldMapParser.parseTile(posString) : Optional.empty();
+        return posString != null ? WorldMap.parseTile(posString) : Optional.empty();
     }
 }

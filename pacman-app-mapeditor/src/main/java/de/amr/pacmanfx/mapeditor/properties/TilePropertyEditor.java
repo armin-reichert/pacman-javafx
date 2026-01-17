@@ -6,9 +6,9 @@ package de.amr.pacmanfx.mapeditor.properties;
 
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapLayer;
 import de.amr.pacmanfx.model.world.WorldMapLayerID;
-import de.amr.pacmanfx.model.world.WorldMapParser;
 import javafx.scene.Node;
 import javafx.scene.control.Spinner;
 import javafx.scene.layout.HBox;
@@ -30,13 +30,13 @@ class TilePropertyEditor extends AbstractPropertyEditor {
         spinnerY.setMaxWidth(60);
         spinnerY.disableProperty().bind(enabled.not());
 
-        WorldMapParser.parseTile(property.value()).ifPresent(tile -> {
+        WorldMap.parseTile(property.value()).ifPresent(tile -> {
             spinnerX.getValueFactory().setValue(tile.x());
             spinnerY.getValueFactory().setValue(tile.y());
         });
 
-        spinnerX.valueProperty().addListener((py, ov, nv) -> storeValueInMapLayer());
-        spinnerY.valueProperty().addListener((py, ov, nv) -> storeValueInMapLayer());
+        spinnerX.valueProperty().addListener((_, _, _) -> storeValueInMapLayer());
+        spinnerY.valueProperty().addListener((_, _, _) -> storeValueInMapLayer());
 
         valueEditorPane = new HBox(spinnerX, spinnerY);
         valueEditorPane.setPrefWidth(MapLayerPropertiesEditor.VALUE_EDITOR_WIDTH);
@@ -45,7 +45,7 @@ class TilePropertyEditor extends AbstractPropertyEditor {
 
     @Override
     public void updateState() {
-        WorldMapParser.parseTile(property().value()).ifPresent(tile -> {
+        WorldMap.parseTile(property().value()).ifPresent(tile -> {
             spinnerX.getValueFactory().setValue(tile.x());
             spinnerY.getValueFactory().setValue(tile.y());
         });

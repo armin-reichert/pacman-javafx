@@ -75,7 +75,7 @@ public class TerrainMapTileRenderer extends BaseRenderer implements TerrainMapRe
     private boolean specialTilesDisplayed = true;
     private boolean tunnelIconsDisplayed = true;
 
-    private BiPredicate<WorldMap, Vector2i> terrainFilter = (worldMap, tile) -> true;
+    private BiPredicate<WorldMap, Vector2i> terrainFilter = (_, _) -> true;
 
     private final double[] xp = new double[3];
     private final double[] yp = new double[3];
@@ -212,7 +212,7 @@ public class TerrainMapTileRenderer extends BaseRenderer implements TerrainMapRe
 
     private Optional<Vector2i> specialTile(WorldMap worldMap, String propertyName) {
         if (worldMap.terrainLayer().propertyMap().containsKey(propertyName)) {
-            return WorldMapParser.parseTile(worldMap.terrainLayer().propertyMap().get(propertyName));
+            return WorldMap.parseTile(worldMap.terrainLayer().propertyMap().get(propertyName));
         }
         return Optional.empty();
     }

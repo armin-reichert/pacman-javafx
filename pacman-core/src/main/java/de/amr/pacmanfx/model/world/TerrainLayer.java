@@ -187,7 +187,7 @@ public class TerrainLayer extends WorldMapLayer {
         requireNonNull(propertyName);
         String value = propertyMap().get(propertyName);
         return value != null
-            ? WorldMapParser.parseTile(value).orElse(defaultTile)
+            ? WorldMap.parseTile(value).orElse(defaultTile)
             : defaultTile;
     }
 
