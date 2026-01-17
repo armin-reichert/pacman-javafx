@@ -242,7 +242,6 @@ public final class GameUI_Implementation implements GameUI {
     private void render() {
         try {
             views().currentView().render();
-            flashMessageView.update();
         } catch (Throwable x) {
             ka_tas_tro_phe(x);
         }
@@ -254,10 +253,10 @@ public final class GameUI_Implementation implements GameUI {
      * @see <a href="https://de.wikipedia.org/wiki/Steel_Buddies_%E2%80%93_Stahlharte_Gesch%C3%A4fte">Katastrophe!</a>
      */
     private void ka_tas_tro_phe(Throwable reason) {
-        stopGame();
         Logger.error(reason);
         Logger.error("SOMETHING VERY BAD HAPPENED!");
-        showFlashMessage(Duration.seconds(10), SOMEONE_CALL_AN_AMBULANCE);
+        showFlashMessage(Duration.seconds(60), "%s\n%s".formatted(SOMEONE_CALL_AN_AMBULANCE, reason.getMessage()));
+        stopGame();
     }
 
     // GameUI interface
@@ -336,6 +335,7 @@ public final class GameUI_Implementation implements GameUI {
         views().selectStartView();
         stage.centerOnScreen();
         stage.show();
+        flashMessageView.start();
         Platform.runLater(customDirWatchdog::startWatching);
     }
 
@@ -343,6 +343,7 @@ public final class GameUI_Implementation implements GameUI {
     public void terminate() {
         Logger.info("Application is terminated now. There is no way back!");
         stopGame();
+        flashMessageView.stop();
         customDirWatchdog.dispose();
     }
 

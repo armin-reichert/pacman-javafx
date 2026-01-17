@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.widgets;
 
+import javafx.animation.AnimationTimer;
 import javafx.geometry.Pos;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.VBox;
@@ -44,6 +45,8 @@ public class FlashMessageView extends VBox {
         }
     }
 
+    private final AnimationTimer drawTimer;
+
     private  static final Font MESSAGE_FONT = Font.font("Sans", FontWeight.BOLD, 30);
 
     private final Text textView = new Text();
@@ -56,6 +59,20 @@ public class FlashMessageView extends VBox {
         setAlignment(Pos.CENTER);
         setMouseTransparent(true);
         getChildren().add(textView);
+        drawTimer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                update();
+            }
+        };
+    }
+
+    public void start() {
+        drawTimer.start();
+    }
+
+    public void stop() {
+        drawTimer.stop();
     }
 
     public void clear() {
@@ -73,7 +90,7 @@ public class FlashMessageView extends VBox {
         setVisible(true);
     }
 
-    public void update() {
+    private void update() {
         if (message == null) {
             setVisible(false);
             return;
