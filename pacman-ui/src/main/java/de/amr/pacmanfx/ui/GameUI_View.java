@@ -40,4 +40,6 @@ public interface GameUI_View extends GameEventListener {
     void onEnter();
 
     void onExit();
+
+    default void render() {}
 }
