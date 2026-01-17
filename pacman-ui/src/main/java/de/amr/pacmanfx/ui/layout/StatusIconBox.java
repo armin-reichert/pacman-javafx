@@ -55,7 +55,6 @@ public class StatusIconBox extends HBox implements Disposable {
 
         iconMuted.visibleProperty().bind(GameUI.PROPERTY_MUTED);
         icon3D   .visibleProperty().bind(GameUI.PROPERTY_3D_ENABLED);
-
     }
 
     public FontIcon iconAutopilot() {

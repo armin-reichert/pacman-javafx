@@ -155,6 +155,13 @@ public final class GameUI_Implementation implements GameUI {
             views().currentViewProperty(),
             views().playView().currentGameSceneProperty()
         ));
+
+        context().gameVariantNameProperty().addListener((_, _, _) -> {
+            final Game game = gameContext.currentGame();
+            statusIconBox.iconAutopilot().visibleProperty().bind(game.usingAutopilotProperty());
+            statusIconBox.iconCheated()  .visibleProperty().bind(game.cheatUsedProperty());
+            statusIconBox.iconImmune()   .visibleProperty().bind(game.immuneProperty());
+        });
     }
 
     private EditorView createEditorView() {
@@ -354,10 +361,6 @@ public final class GameUI_Implementation implements GameUI {
     @Override
     public void showPlayView() {
         views().selectPlayView();
-        final Game game = gameContext.currentGame();
-        statusIconBox.iconAutopilot().visibleProperty().bind(game.usingAutopilotProperty());
-        statusIconBox.iconCheated()  .visibleProperty().bind(game.cheatUsedProperty());
-        statusIconBox.iconImmune()   .visibleProperty().bind(game.immuneProperty());
     }
 
     @Override
