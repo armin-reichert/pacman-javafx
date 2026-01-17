@@ -30,8 +30,6 @@ public class OptionMenuRenderer extends BaseRenderer {
 
     public static final String CHANGE_VALUE = "CHANGE VALUE";
 
-    protected float lineSkip = TS(2.5);
-
     public OptionMenuRenderer(Canvas canvas) {
         super(canvas);
     }
@@ -44,6 +42,8 @@ public class OptionMenuRenderer extends BaseRenderer {
 
         fillCanvas(style.backgroundFill());
         fillTextCentered(menu.title(), style.titleTextFill(), scaledTitleFont, centerX, 6 * TS);
+
+        float lineSkip = 2.5f * TS;
 
         float y = 12 * TS;
         for (int i = 0; i < menu.entries().size(); ++i) {
@@ -68,6 +68,8 @@ public class OptionMenuRenderer extends BaseRenderer {
         final Color normalColor = menu.style().usageTextFill();
         final Color brightColor = menu.style().entryValueFill();
         final Font font = Ufx.scaleFontBy(menu.style().textFont(), scaling());
+
+        float lineSkip = 2f * TS;
 
         final double centerX = 0.5 * menu.numTilesX() * TS;
         double y = TS(menu.numTilesY() - 8);
