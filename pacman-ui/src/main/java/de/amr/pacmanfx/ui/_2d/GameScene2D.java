@@ -102,7 +102,7 @@ public abstract class GameScene2D implements GameScene {
     @Override
     public void onUnspecifiedChange(GameEvent event) {
         // TODO: remove (this is only used by game state GameState.TESTING_CUT_SCENES)
-        ui.updateGameScene(true);
+        ui.views().playView().updateGameScene(event.game(), true);
     }
 
     @Override

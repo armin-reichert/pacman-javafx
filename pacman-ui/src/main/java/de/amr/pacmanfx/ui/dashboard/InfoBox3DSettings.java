@@ -7,6 +7,7 @@ package de.amr.pacmanfx.ui.dashboard;
 import de.amr.pacmanfx.lib.math.Vector2f;
 import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
@@ -89,8 +90,8 @@ public class InfoBox3DSettings extends InfoBox {
         setEditor(sliderWallOpacity, PROPERTY_3D_WALL_OPACITY);
         setEditor(comboPerspectives, PROPERTY_3D_PERSPECTIVE_ID);
 
-        cbUsePlayScene3D.setOnAction(e -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.executeIfEnabled(ui));
-        cbWireframeMode.setOnAction(e -> ACTION_TOGGLE_DRAW_MODE.executeIfEnabled(ui));
+        cbUsePlayScene3D.setOnAction(_ -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.executeIfEnabled(ui));
+        cbWireframeMode.setOnAction(_ -> ACTION_TOGGLE_DRAW_MODE.executeIfEnabled(ui));
     }
 
     @Override
@@ -110,45 +111,38 @@ public class InfoBox3DSettings extends InfoBox {
     }
 
     private String subSceneSizeInfo() {
-        if (ui.currentGameScene().isPresent()) {
-            final GameScene gameScene = ui.currentGameScene().get();
-            if (gameScene.optSubScene().isPresent()) {
-                final SubScene subScene = gameScene.optSubScene().get();
-                return "%.0fx%.0f".formatted(subScene.getWidth(), subScene.getHeight());
-            }
-        }
-        return NO_INFO;
+        return ui.views().playView().optGameScene()
+            .flatMap(GameScene::optSubScene)
+            .map(subScene -> "%.0fx%.0f".formatted(subScene.getWidth(), subScene.getHeight()))
+            .orElse(NO_INFO);
     }
 
     private String subSceneCameraInfo() {
-        if (ui.currentGameScene().isPresent()) {
-            final GameScene gameScene = ui.currentGameScene().get();
-            if (gameScene.optSubScene().isPresent()) {
-                final SubScene subScene = gameScene.optSubScene().get();
-                return "rot=%.0f x=%.0f y=%.0f z=%.0f".formatted(
-                    subScene.getCamera().getRotate(),
-                    subScene.getCamera().getTranslateX(),
-                    subScene.getCamera().getTranslateY(),
-                    subScene.getCamera().getTranslateZ());
-            }
-        }
-        return NO_INFO;
+        return ui.views().playView().optGameScene().flatMap(GameScene::optSubScene).map(SubScene::getCamera)
+            .map(camera -> "rot=%.0f x=%.0f y=%.0f z=%.0f".formatted(
+                camera.getRotate(),
+                camera.getTranslateX(),
+                camera.getTranslateY(),
+                camera.getTranslateZ()))
+            .orElse(NO_INFO);
     }
 
     private String sceneSizeInfo() {
-        if (ui.currentGameScene().isEmpty()) return NO_INFO;
+        final GameScene gameScene = ui.views().playView().optGameScene().orElse(null);
+        if (gameScene == null) return NO_INFO;
 
-        final Game game = ui.context().currentGame();
-        final GameScene gameScene = ui.currentGameScene().get();
         if (gameScene instanceof GameScene2D gameScene2D) {
             final Vector2i size = gameScene2D.unscaledSize();
             final Vector2f scaledSize = size.scaled(gameScene2D.scaling());
             return "%dx%d (scaled: %.0fx%.0f)".formatted(size.x(), size.y(), scaledSize.x(), scaledSize.y());
         }
+
+        final Game game = ui.context().currentGame();
         if (game.optGameLevel().isPresent()) {
-            final var worldMap = game.level().worldMap();
+            final WorldMap worldMap = game.level().worldMap();
             return "%dx%d (map size px)".formatted(worldMap.numCols() * TS, worldMap.numRows() * TS);
         }
+
         return NO_INFO;
     }
 }

@@ -23,7 +23,7 @@ public class InfoBoxKeyShortcutsLocal extends InfoBox {
     @Override
     public void update() {
         clearGrid();
-        ui.currentGameScene().ifPresent(gameScene -> addEntries(gameScene.actionBindings()));
+        ui.views().playView().optGameScene().ifPresent(gameScene -> addEntries(gameScene.actionBindings()));
     }
 
     private void addEntries(ActionBindingsManager actionBindingsManager) {

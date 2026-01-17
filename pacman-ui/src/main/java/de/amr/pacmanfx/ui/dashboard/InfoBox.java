@@ -66,7 +66,7 @@ public abstract class InfoBox extends TitledPane {
         setOpacity(0.9);
         setDisplayedMaximized(false);
 
-        expandedProperty().addListener((py,ov,expanded) -> {
+        expandedProperty().addListener((_, ov, expanded) -> {
             if (displayedMaximized) {
                 if (expanded) {
                     dashboard.infoBoxes().filter(infoBox -> infoBox != this).forEach(otherInfoBox -> otherInfoBox.setVisible(false));
@@ -122,7 +122,7 @@ public abstract class InfoBox extends TitledPane {
     }
 
     protected Supplier<String> ifGameScenePresent(Function<GameScene, String> fnInfo) {
-        return () -> ui.currentGameScene().map(fnInfo).orElse(NO_INFO);
+        return () -> ui.views().playView().optGameScene().map(fnInfo).orElse(NO_INFO);
     }
 
     protected Supplier<String> ifGameLevel(Function<GameLevel, String> fnInfo) {
@@ -223,12 +223,12 @@ public abstract class InfoBox extends TitledPane {
     protected ColorPicker addColorPicker(String labelText, ObjectProperty<Color> colorProperty) {
         var picker = new ColorPicker(colorProperty.get());
         addRow(labelText, picker);
-        picker.setOnAction(e -> colorProperty.set(picker.getValue()));
+        picker.setOnAction(_ -> colorProperty.set(picker.getValue()));
         return picker;
     }
 
     protected <T> void setEditor(ChoiceBox<T> selector, ObjectProperty<T> property) {
-        selector.setOnAction(e -> property.set(selector.getValue()));
+        selector.setOnAction(_ -> property.set(selector.getValue()));
     }
 
     protected void setEditor(Slider slider, Property<Number> property) {
@@ -253,23 +253,23 @@ public abstract class InfoBox extends TitledPane {
         var spinner = new Spinner<Integer>(min, max, valuePy.getValue());
         spinner.setStyle(fontCSS(textFont));
         //TODO bidirectional binding does not work for me. Why? Is it me or is it a bug?
-        spinner.getValueFactory().valueProperty().addListener((py,ov,nv) -> valuePy.set(nv));
-        valuePy.addListener((py,ov,nv) -> spinner.getValueFactory().setValue(nv.intValue()));
+        spinner.getValueFactory().valueProperty().addListener((_, _, nv) -> valuePy.set(nv));
+        valuePy.addListener((_, _, nv) -> spinner.getValueFactory().setValue(nv.intValue()));
         addRow(labelText, spinner);
         return spinner;
     }
 
     protected void setAction(Button button, Runnable action) {
-        button.setOnAction(e -> action.run());
+        button.setOnAction(_ -> action.run());
     }
 
     protected void setAction(Button button, GameAction gameAction) {
-        button.setOnAction(e -> gameAction.executeIfEnabled(ui));
+        button.setOnAction(_ -> gameAction.executeIfEnabled(ui));
         //TODO add boolean property for enabled-state to game action and bind against it
     }
 
     protected void setAction(ChoiceBox<?> selector, Runnable action) {
-        selector.setOnAction(e -> action.run());
+        selector.setOnAction(_ -> action.run());
     }
 
     protected void setTooltip(Control control, ObservableValue<?> property, String pattern) {

@@ -26,7 +26,6 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
 
@@ -187,11 +186,7 @@ public interface GameUI extends LocalizedTextAccessor {
 
     GameScene_Config currentGameSceneConfig();
 
-    Optional<GameScene> currentGameScene();
-
-    boolean isCurrentGameSceneID(GameScene_Config.SceneID sceneID);
-
-    void updateGameScene(boolean forceReloading);
+    boolean currentGameSceneHasID(GameScene_Config.SceneID sceneID);
 
     // View access
 
@@ -221,6 +216,8 @@ public interface GameUI extends LocalizedTextAccessor {
 
     // Lifecycle
 
+    void stopGame();
+
     /**
      * Quits the current game scene (if any) and displays the start page for the current game.
      */
@@ -230,13 +227,6 @@ public interface GameUI extends LocalizedTextAccessor {
      * Resets the game clock to normal speed and shows the boot screen for the selected game.
      */
     void restart();
-
-    /**
-     * Shows the start page for the given game variant, loads its resources and initializes the game model.
-     *
-     * @param gameVariantName game variant name ("PACMAN", "MS_PACMAN" etc.)
-     */
-    void selectGameVariant(String gameVariantName);
 
     /**
      * Shows the UI centered on the screen and displays the first start page.

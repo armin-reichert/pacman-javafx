@@ -4,7 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.dashboard;
 
+import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui._3d.GameLevel3D;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
@@ -44,7 +46,6 @@ public class InfoBoxGameLevelAnimations extends InfoBox {
         public ObjectProperty<Animation> animationProperty() { return animationProperty; }
     }
 
-    private final TableView<TableRow> tableView = new TableView<>();
     private final ObservableList<TableRow> tableRows = FXCollections.observableArrayList();
     private final Timeline refreshTimer;
 
@@ -53,6 +54,7 @@ public class InfoBoxGameLevelAnimations extends InfoBox {
     public InfoBoxGameLevelAnimations(GameUI ui) {
         super(ui);
 
+        final TableView<TableRow> tableView = new TableView<>();
         tableView.setItems(tableRows);
         tableView.setPlaceholder(new Text("No 3D animations"));
         tableView.setFocusTraversable(false);
@@ -75,7 +77,7 @@ public class InfoBoxGameLevelAnimations extends InfoBox {
         addRow(tableView);
 
         refreshTimer = new Timeline(
-            new KeyFrame(Duration.seconds(REFRESH_PERIOD_SECONDS), e -> {
+            new KeyFrame(Duration.seconds(REFRESH_PERIOD_SECONDS), _ -> {
                 if (isVisible()) {
                     updateTableData();
                 }
@@ -97,10 +99,9 @@ public class InfoBoxGameLevelAnimations extends InfoBox {
     }
 
     private AnimationRegistry observedAnimationManager() {
-        if (ui.currentGameScene().isPresent()
-            && ui.currentGameScene().get() instanceof PlayScene3D playScene3D
-            && playScene3D.level3D().isPresent()) {
-            return playScene3D.level3D().get().animationManager();
+        final GameScene gameScene = ui.views().playView().optGameScene().orElse(null);
+        if (gameScene instanceof PlayScene3D playScene3D) {
+            return playScene3D.level3D().map(GameLevel3D::animationManager).orElse(null);
         }
         return null;
     }

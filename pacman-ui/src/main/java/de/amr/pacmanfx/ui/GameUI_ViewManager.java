@@ -100,8 +100,4 @@ public class GameUI_ViewManager {
     public Optional<EditorView> optEditorView() {
         return Optional.ofNullable(editorView);
     }
-
-    EditorView editorView() {
-        return editorView;
-    }
 }

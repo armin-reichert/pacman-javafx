@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.action;
 
-import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.math.Direction;
 import de.amr.pacmanfx.model.Game;
@@ -13,7 +12,7 @@ import de.amr.pacmanfx.model.StandardGameVariant;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.test.LevelMediumTestState;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
-import de.amr.pacmanfx.ui.GameScene_Config;
+import de.amr.pacmanfx.ui.GameScene_Config.CommonSceneID;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import javafx.scene.shape.DrawMode;
@@ -104,15 +103,14 @@ public final class CommonGameActions {
     public static final GameAction ACTION_RESTART_INTRO = new GameAction("RESTART_INTRO") {
         @Override
         public void execute(GameUI ui) {
+            ui.stopGame();
             final Game game = ui.context().currentGame();
-            ui.currentConfig().soundManager().stopAll();
-            ui.currentGameScene().ifPresent(gameScene -> gameScene.end(game));
             boolean isLevelShortTest = game.control().state() instanceof LevelShortTestState;
             if (isLevelShortTest) {
                 game.control().state().onExit(game); //TODO exit other states too?
             }
-            ui.clock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
             game.control().restart(StateName.INTRO.name());
+            ui.clock().start();
         }
     };
 
@@ -125,7 +123,7 @@ public final class CommonGameActions {
         @Override
         public boolean isEnabled(GameUI ui) {
             boolean isArcadeGame = StandardGameVariant.isArcadeGameName(ui.context().gameVariantName());
-            boolean isPlayScene2D = ui.isCurrentGameSceneID(GameScene_Config.CommonSceneID.PLAY_SCENE_2D);
+            boolean isPlayScene2D = ui.currentGameSceneHasID(CommonSceneID.PLAY_SCENE_2D);
             return isArcadeGame && isPlayScene2D;
         }
     };
@@ -264,7 +262,7 @@ public final class CommonGameActions {
         @Override
         public void execute(GameUI ui) {
             toggle(PROPERTY_MINI_VIEW_ON);
-            if (!ui.isCurrentGameSceneID(GameScene_Config.CommonSceneID.PLAY_SCENE_3D)) {
+            if (!ui.currentGameSceneHasID(CommonSceneID.PLAY_SCENE_3D)) {
                 ui.showFlashMessage(ui.translated(PROPERTY_MINI_VIEW_ON.get() ? "pip_on" : "pip_off"));
             }
         }
@@ -291,15 +289,16 @@ public final class CommonGameActions {
     public static final GameAction ACTION_TOGGLE_PLAY_SCENE_2D_3D = new GameAction("TOGGLE_PLAY_SCENE_2D_3D") {
         @Override
         public void execute(GameUI ui) {
-            ui.currentGameScene().ifPresent(_ -> {
-                final Game game = ui.context().currentGame();
+            final Game game = ui.context().currentGame();
+            ui.views().playView().optGameScene().ifPresent(_ -> {
                 toggle(PROPERTY_3D_ENABLED);
-                if (ui.isCurrentGameSceneID(GameScene_Config.CommonSceneID.PLAY_SCENE_2D)
-                    || ui.isCurrentGameSceneID(GameScene_Config.CommonSceneID.PLAY_SCENE_3D)) {
-                    ui.updateGameScene(true);
+                if (ui.currentGameSceneHasID(CommonSceneID.PLAY_SCENE_2D) ||
+                    ui.currentGameSceneHasID(CommonSceneID.PLAY_SCENE_3D))
+                {
+                    ui.views().playView().updateGameScene(game, true);
                     game.control().update(); //TODO needed?
                 }
-                if (!ui.context().currentGame().isPlaying()) {
+                if (!game.isPlaying()) {
                     ui.showFlashMessage(ui.translated(PROPERTY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
                 }
             });

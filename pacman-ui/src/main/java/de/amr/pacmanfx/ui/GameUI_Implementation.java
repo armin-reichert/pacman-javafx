@@ -36,7 +36,6 @@ import org.kordamp.ikonli.javafx.FontIcon;
 import org.tinylog.Logger;
 
 import java.util.Map;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 import static de.amr.pacmanfx.Validations.requireNonNegative;
@@ -119,20 +118,20 @@ public final class GameUI_Implementation implements GameUI {
 
     private void setupBindings() {
         statusIconBox.visibleProperty()
-            .bind(viewManager.currentViewProperty()
-                .map(view -> view == viewManager.playView() || view == viewManager.startPagesView()));
+            .bind(views().currentViewProperty()
+                .map(view -> view == views().playView() || view == views().startPagesView()));
 
         // Show paused icon only in play view
         pausedIcon.visibleProperty().bind(Bindings.createBooleanBinding(
-            () -> viewManager.currentView() == viewManager.playView() && clock.isPaused(),
-            viewManager.currentViewProperty(), clock.pausedProperty())
+            () -> views().currentView() == views().playView() && clock.isPaused(),
+            views().currentViewProperty(), clock.pausedProperty())
         );
 
         titleBinding = createStringBinding(
             () -> context().currentGame() == null ? computeStageTitle(null) : computeStageTitle(currentConfig().assets()),
             // depends on:
-            viewManager.currentViewProperty(),
-            viewManager.playView().currentGameSceneProperty(),
+            views().currentViewProperty(),
+            views().playView().currentGameSceneProperty(),
             scene.heightProperty(),
             gameContext.gameVariantNameProperty(),
             PROPERTY_DEBUG_INFO_VISIBLE,
@@ -142,12 +141,12 @@ public final class GameUI_Implementation implements GameUI {
         stage.titleProperty().bind(titleBinding);
 
         layoutPane.backgroundProperty().bind(Bindings.createObjectBinding(
-            () -> isCurrentGameSceneID(GameScene_Config.CommonSceneID.PLAY_SCENE_3D)
+            () -> currentGameSceneHasID(GameScene_Config.CommonSceneID.PLAY_SCENE_3D)
                 ? Background.fill(Gradients.Samples.random())
                 : GameUI.BACKGROUND_PAC_MAN_WALLPAPER,
             // depends on:
-            viewManager.currentViewProperty(),
-            viewManager.playView().currentGameSceneProperty()
+            views().currentViewProperty(),
+            views().playView().currentGameSceneProperty()
         ));
 
     }
@@ -174,9 +173,9 @@ public final class GameUI_Implementation implements GameUI {
                 boolean executed = action.executeIfEnabled(this);
                 if (executed) e.consume();
             },
-            () -> viewManager.currentView().onKeyboardInput(this)
+            () -> views().currentView().onKeyboardInput(this)
         ));
-        scene.setOnScroll(e -> currentGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
+        scene.setOnScroll(e -> views().playView().optGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
 
         createStatusIconBox();
 
@@ -202,7 +201,7 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     private String computeStageTitle(AssetMap assets) {
-        final GameUI_View view = viewManager.currentView();
+        final GameUI_View view = views().currentView();
         if (view == null) {
             return "No View?";
         }
@@ -220,7 +219,7 @@ public final class GameUI_Implementation implements GameUI {
         final String viewModeText = translated(is3D ? "threeD" : "twoD");
         final String shortTitle   = assets == null ? "" : assets.translated(appTitle, viewModeText);
 
-        final GameScene gameScene = currentGameScene().orElse(null);
+        final GameScene gameScene = views().playView().optGameScene().orElse(null);
         if (gameScene == null || !debug) {
             return shortTitle;
         }
@@ -234,7 +233,7 @@ public final class GameUI_Implementation implements GameUI {
         try {
             game.control().update();
             step.printLog();
-            currentGameScene().ifPresent(gameScene -> gameScene.update(game));
+            views().playView().optGameScene().ifPresent(gameScene -> gameScene.update(game));
         } catch (Throwable x) {
             ka_tas_tro_phe(x);
         }
@@ -242,8 +241,8 @@ public final class GameUI_Implementation implements GameUI {
 
     private void drawCurrentView() {
         try {
-            if (viewManager.currentView() == viewManager.playView()) {
-                viewManager.playView().draw();
+            if (views().currentView() == views().playView()) {
+                views().playView().draw();
             }
             flashMessageView.update();
         } catch (Throwable x) {
@@ -261,13 +260,6 @@ public final class GameUI_Implementation implements GameUI {
         Logger.error(reason);
         Logger.error("SOMETHING VERY BAD HAPPENED!");
         showFlashMessage(Duration.seconds(10), SOMEONE_CALL_AN_AMBULANCE);
-    }
-
-    private void stopGame() {
-        currentGameScene().ifPresent(gameScene -> gameScene.end(context().currentGame()));
-        currentConfig().soundManager().stopAll();
-        clock.stop();
-        clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
     }
 
     // GameUI interface
@@ -308,10 +300,18 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     @Override
+    public void stopGame() {
+        views().playView().optGameScene().ifPresent(gameScene -> gameScene.end(context().currentGame()));
+        currentConfig().soundManager().stopAll();
+        clock.stop();
+        clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
+    }
+
+    @Override
     public void quitCurrentGameScene() {
         final Game game = gameContext.currentGame();
         //TODO this is game-specific and should not be here
-        currentGameScene().ifPresent(gameScene -> {
+        views().playView().optGameScene().ifPresent(gameScene -> {
             boolean shouldConsumeCoin = game.control().state().name().equals("STARTING_GAME_OR_LEVEL")
                 || game.isPlaying();
             if (shouldConsumeCoin && !gameContext.coinMechanism().isEmpty()) {
@@ -333,14 +333,9 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     @Override
-    public void selectGameVariant(String gameVariantName) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public void show() {
-        viewManager.playView().dashboard().init(this);
-        viewManager.selectStartView();
+        views().playView().dashboard().init(this);
+        views().selectStartView();
         stage.centerOnScreen();
         stage.show();
         Platform.runLater(customDirWatchdog::startWatching);
@@ -367,15 +362,15 @@ public final class GameUI_Implementation implements GameUI {
     public void showEditorView() {
         if (!gameContext.currentGame().isPlaying() || clock.isPaused()) {
             stopGame();
-            viewManager.selectEditorView();
-        } else {
-            Logger.info("Editor view cannot be opened, game is playing");
+            views().selectEditorView();
+            return;
         }
+        Logger.info("Editor cannot be opened while game is playing");
     }
 
     @Override
     public void showPlayView() {
-        viewManager.selectPlayView();
+        views().selectPlayView();
         final Game game = gameContext.currentGame();
         statusIconBox.iconAutopilot().visibleProperty().bind(game.usingAutopilotProperty());
         statusIconBox.iconCheated()  .visibleProperty().bind(game.cheatUsedProperty());
@@ -385,23 +380,13 @@ public final class GameUI_Implementation implements GameUI {
     @Override
     public void showStartView() {
         stopGame();
-        viewManager.selectStartView();
+        views().selectStartView();
     }
 
     @Override
-    public Optional<GameScene> currentGameScene() {
-        return viewManager.playView().currentGameScene();
-    }
-
-    @Override
-    public boolean isCurrentGameSceneID(GameScene_Config.SceneID sceneID) {
-        final GameScene currentGameScene = viewManager.playView().currentGameScene().orElse(null);
+    public boolean currentGameSceneHasID(GameScene_Config.SceneID sceneID) {
+        final GameScene currentGameScene = views().playView().optGameScene().orElse(null);
         return currentGameScene != null && currentGameSceneConfig().gameSceneHasID(currentGameScene, sceneID);
-    }
-
-    @Override
-    public void updateGameScene(boolean forceReloading) {
-        viewManager.playView().updateGameScene(gameContext.currentGame(), forceReloading);
     }
 
     @Override

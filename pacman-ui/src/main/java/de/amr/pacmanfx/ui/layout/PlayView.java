@@ -132,7 +132,7 @@ public class PlayView extends StackPane implements GameUI_View {
         return currentGameScene;
     }
 
-    public Optional<GameScene> currentGameScene() {
+    public Optional<GameScene> optGameScene() {
         return Optional.ofNullable(currentGameScene.get());
     }
 
@@ -151,7 +151,7 @@ public class PlayView extends StackPane implements GameUI_View {
 
     public void draw() {
         final Game game = ui.context().currentGame();
-        ui.currentGameScene().filter(GameScene2D.class::isInstance).map(GameScene2D.class::cast).ifPresent(gameScene2D -> {
+        optGameScene().filter(GameScene2D.class::isInstance).map(GameScene2D.class::cast).ifPresent(gameScene2D -> {
             if (sceneRenderer != null) {
                 sceneRenderer.draw(gameScene2D);
             }
@@ -179,7 +179,7 @@ public class PlayView extends StackPane implements GameUI_View {
     public void onKeyboardInput(GameUI ui) {
         actionBindingsManager.matchingAction(GameUI.KEYBOARD).ifPresentOrElse(
             action -> action.execute(ui),
-            () -> ui.currentGameScene().ifPresent(GameScene::onKeyboardInput)
+            () -> optGameScene().ifPresent(GameScene::onKeyboardInput)
         );
     }
 
@@ -218,7 +218,7 @@ public class PlayView extends StackPane implements GameUI_View {
                 miniView.onLevelCreated(level);
                 miniView.slideIn();
                 // size of game scene might have changed, so re-embed
-                ui.currentGameScene().ifPresent(gameScene -> embedGameScene(parentScene, gameScene));
+                optGameScene().ifPresent(gameScene -> embedGameScene(parentScene, gameScene));
             }
             case GAME_STATE_CHANGED -> {
                 if (gameState.matches(GameControl.StateName.LEVEL_COMPLETE)) {
@@ -228,7 +228,7 @@ public class PlayView extends StackPane implements GameUI_View {
         }
         updateGameScene(ui.context().currentGame(), false);
 
-        ui.currentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(gameEvent));
+        optGameScene().ifPresent(gameScene -> gameScene.onGameEvent(gameEvent));
     }
 
     /**
@@ -236,7 +236,7 @@ public class PlayView extends StackPane implements GameUI_View {
      * @param forcedReload if {@code true} the game scene is (re-)embedded even if it doesn't change
      */
     public void updateGameScene(Game game, boolean forcedReload) {
-        final GameScene currentGameScene = ui.currentGameScene().orElse(null);
+        final GameScene currentGameScene = optGameScene().orElse(null);
         final GameScene intendedGameScene = ui.currentGameSceneConfig().selectGameScene(game).orElse(null);
 
         if (intendedGameScene == null) {
@@ -336,7 +336,7 @@ public class PlayView extends StackPane implements GameUI_View {
         ));
 
         miniView.visibleProperty().bind(Bindings.createObjectBinding(
-            () -> GameUI.PROPERTY_MINI_VIEW_ON.get() && ui.isCurrentGameSceneID(CommonSceneID.PLAY_SCENE_3D),
+            () -> GameUI.PROPERTY_MINI_VIEW_ON.get() && ui.currentGameSceneHasID(CommonSceneID.PLAY_SCENE_3D),
             GameUI.PROPERTY_MINI_VIEW_ON, currentGameScene
         ));
     }
@@ -376,8 +376,8 @@ public class PlayView extends StackPane implements GameUI_View {
 
     private void handleContextMenuRequest(ContextMenuEvent event) {
         contextMenu.clear();
-        ui.currentGameScene().ifPresent(gameScene -> {
-            if (ui.isCurrentGameSceneID(CommonSceneID.PLAY_SCENE_2D)) {
+        optGameScene().ifPresent(gameScene -> {
+            if (ui.currentGameSceneHasID(CommonSceneID.PLAY_SCENE_2D)) {
                 contextMenu.addLocalizedTitleItem("scene_display");
                 contextMenu.addLocalizedActionItem(ACTION_TOGGLE_PLAY_SCENE_2D_3D, "use_3D_scene");
             }
