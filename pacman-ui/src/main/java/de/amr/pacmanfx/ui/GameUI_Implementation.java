@@ -99,7 +99,7 @@ public final class GameUI_Implementation implements GameUI {
         customDirWatchdog = new DirectoryWatchdog(GameBox.CUSTOM_MAP_DIR);
 
         clock = new GameClock();
-        clock.setPausableAction(() -> simulateAndUpdateGameScene(gameContext.currentGame()));
+        clock.setPausableAction(this::simulateAndUpdateGameScene);
         clock.setPermanentAction(this::drawCurrentView);
 
         createScene(sceneWidth, sceneHeight);
@@ -148,7 +148,6 @@ public final class GameUI_Implementation implements GameUI {
             views().currentViewProperty(),
             views().playView().currentGameSceneProperty()
         ));
-
     }
 
     private EditorView createEditorView() {
@@ -227,7 +226,8 @@ public final class GameUI_Implementation implements GameUI {
         return "%s [%s]".formatted(shortTitle, sceneClassName);
     }
 
-    private void simulateAndUpdateGameScene(Game game) {
+    private void simulateAndUpdateGameScene() {
+        final Game game = gameContext.currentGame();
         final SimulationStep step = game.simulationStep();
         step.init(clock.tickCount());
         try {
