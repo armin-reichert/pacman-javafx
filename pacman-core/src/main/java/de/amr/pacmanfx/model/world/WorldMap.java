@@ -86,7 +86,15 @@ public class WorldMap {
         worldMap.terrainLayer = new TerrainLayer(parseLayer(terrainLayerRows, validTerrainValueTest));
         worldMap.foodLayer = new FoodLayer(parseLayer(foodLayerRows, validFoodValueTest));
 
-        //TODO
+        if (worldMap.terrainLayer.numRows() != worldMap.foodLayer.numRows()) {
+            throw new WorldMapParseException("Terrain layer has %d rows but food layer has %d rows"
+                .formatted(worldMap.terrainLayer.numRows(), worldMap.foodLayer.numRows()), null);
+        }
+        if (worldMap.terrainLayer.numCols() != worldMap.foodLayer.numCols()) {
+            throw new WorldMapParseException("Terrain layer has %d cols but food layer has %d cols"
+                .formatted(worldMap.terrainLayer.numCols(), worldMap.foodLayer.numCols()), null);
+        }
+
         worldMap.numRows = worldMap.terrainLayer.numRows();
         worldMap.numCols = worldMap.terrainLayer.numCols();
 
@@ -339,13 +347,12 @@ public class WorldMap {
     private void printDataSection(PrintWriter pw, WorldMapLayer layer) {
         pw.println(MARKER_BEGIN_DATA_SECTION);
         for (int row = 0; row < layer.numRows(); ++row) {
+            final StringJoiner joiner = new StringJoiner(",");
             for (int col = 0; col < layer.numCols(); ++col) {
-                pw.printf("#%02X", layer.content(row, col));
-                if (col < layer.numCols() - 1) {
-                    pw.print(",");
-                }
+                final byte content = layer.content(row, col);
+                joiner.add("#%02X".formatted(content));
             }
-            pw.println();
+            pw.println(joiner);
         }
     }
 
