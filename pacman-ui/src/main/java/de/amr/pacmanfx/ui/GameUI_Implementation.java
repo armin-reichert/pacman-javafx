@@ -96,7 +96,7 @@ public final class GameUI_Implementation implements GameUI {
         configFactory = new GameUI_ConfigFactory(uiConfigMap, prefs);
         customDirWatchdog = new DirectoryWatchdog(GameBox.CUSTOM_MAP_DIR);
         scene = new Scene(layoutPane, sceneWidth, sceneHeight);
-        pausedIcon = createPausedIcon();
+        pausedIcon = FontIcon.of(FontAwesomeSolid.PAUSE, PAUSE_ICON_SIZE, ArcadePalette.ARCADE_WHITE);
         viewManager = new GameUI_ViewManager(this, scene, layoutPane, this::createEditorView, flashMessageView);
 
         composeLayout();
@@ -181,10 +181,6 @@ public final class GameUI_Implementation implements GameUI {
             () -> views().currentView().onKeyboardInput(this)
         ));
         scene.setOnScroll(e -> views().playView().optGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
-    }
-
-    private FontIcon createPausedIcon() {
-        return FontIcon.of(FontAwesomeSolid.PAUSE, PAUSE_ICON_SIZE, ArcadePalette.ARCADE_WHITE);
     }
 
     // Status icon box appears at bottom-left corner of all views except editor view
