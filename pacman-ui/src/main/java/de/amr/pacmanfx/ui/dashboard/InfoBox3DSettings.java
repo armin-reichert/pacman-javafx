@@ -98,7 +98,7 @@ public class InfoBox3DSettings extends InfoBox {
         super.update();
         comboPerspectives.setValue(PROPERTY_3D_PERSPECTIVE_ID.get());
         sliderMiniViewSceneHeight.setValue(PROPERTY_MINI_VIEW_HEIGHT.get());
-        sliderMiniViewSceneHeight.setDisable(ui.viewManager().playView().miniView().isMoving());
+        sliderMiniViewSceneHeight.setDisable(ui.views().playView().miniView().isMoving());
         sliderMiniViewOpacity.setValue(PROPERTY_MINI_VIEW_OPACITY_PERCENT.get());
         sliderWallHeight.setValue(PROPERTY_3D_WALL_HEIGHT.get());
         sliderWallOpacity.setValue(PROPERTY_3D_WALL_OPACITY.get());

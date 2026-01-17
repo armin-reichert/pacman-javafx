@@ -167,7 +167,7 @@ public class InfoBoxCustomMaps extends InfoBox {
     private void editWorldMap(File mapFile) {
         Logger.info("Edit map file {}", mapFile);
         ui.showEditorView();
-        ui.viewManager().optEditorView().ifPresent(view -> {
+        ui.views().optEditorView().ifPresent(view -> {
             if (view instanceof EditorView editorView) {
                 try {
                     final WorldMap map = WorldMap.loadFromFile(mapFile);

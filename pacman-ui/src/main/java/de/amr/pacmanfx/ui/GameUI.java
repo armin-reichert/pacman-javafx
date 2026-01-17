@@ -10,7 +10,6 @@ import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.TestActions;
-import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.sound.VoicePlayer;
 import de.amr.pacmanfx.uilib.GameClock;
@@ -196,7 +195,7 @@ public interface GameUI extends LocalizedTextAccessor {
 
     // View access
 
-    GameUI_ViewManager viewManager();
+    GameUI_ViewManager views();
 
     void showEditorView();
 

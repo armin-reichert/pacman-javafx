@@ -385,7 +385,7 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     @Override
-    public GameUI_ViewManager viewManager() {
+    public GameUI_ViewManager views() {
         return viewManager;
     }
 

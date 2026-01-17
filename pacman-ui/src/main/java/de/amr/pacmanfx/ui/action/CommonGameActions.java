@@ -67,8 +67,8 @@ public final class CommonGameActions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            return ui.viewManager().currentView() == ui.viewManager().playView()
-                || ui.viewManager().currentView() == ui.viewManager().startPagesView();
+            return ui.views().currentView() == ui.views().playView()
+                || ui.views().currentView() == ui.views().startPagesView();
         }
     };
 
@@ -119,7 +119,7 @@ public final class CommonGameActions {
     public static final GameAction ACTION_SHOW_HELP = new GameAction("SHOW_HELP") {
         @Override
         public void execute(GameUI ui) {
-            ui.viewManager().playView().showHelp(ui);
+            ui.views().playView().showHelp(ui);
         }
 
         @Override
@@ -227,12 +227,12 @@ public final class CommonGameActions {
     public static final GameAction ACTION_TOGGLE_DASHBOARD = new GameAction("TOGGLE_DASHBOARD") {
         @Override
         public void execute(GameUI ui) {
-            ui.viewManager().playView().dashboard().toggleVisibility();
+            ui.views().playView().dashboard().toggleVisibility();
         }
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            return ui.viewManager().currentView() == ui.viewManager().playView();
+            return ui.views().currentView() == ui.views().playView();
         }
 
         @Override

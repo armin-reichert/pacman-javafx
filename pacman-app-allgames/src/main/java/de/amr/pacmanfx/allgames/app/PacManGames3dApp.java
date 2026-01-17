@@ -94,7 +94,7 @@ public class PacManGames3dApp extends Application {
                 ? createUI_WithBuilder(primaryStage, width, height, xxlMapSelector)
                 : createUI_WithoutBuilder(primaryStage, width, height, xxlMapSelector);
 
-            ui.viewManager().playView().dashboard().addInfoBox(
+            ui.views().playView().dashboard().addInfoBox(
                 TengenMsPacMan_DashboardID.JOYPAD,
                 TengenMsPacMan_UIConfig.TEXT_BUNDLE.getString("infobox.joypad.title"),
                 new InfoBoxJoypad(ui));
@@ -132,7 +132,7 @@ public class PacManGames3dApp extends Application {
 
         final var ui = new GameUI_Implementation(UI_CONFIG_MAP, THE_GAME_BOX, stage, sceneWidth, sceneHeight);
 
-        final StartPagesCarousel startPages = ui.viewManager().startPagesView();
+        final StartPagesCarousel startPages = ui.views().startPagesView();
         startPages.addStartPage(new ArcadePacMan_StartPage());
         startPages.addStartPage(new ArcadeMsPacMan_StartPage());
         startPages.addStartPage(new TengenMsPacMan_StartPage());
@@ -141,7 +141,7 @@ public class PacManGames3dApp extends Application {
         startPages.startPages().forEach(startPage -> startPage.init(ui));
         startPages.setSelectedIndex(0);
 
-        final Dashboard dashboard = ui.viewManager().playView().dashboard();
+        final Dashboard dashboard = ui.views().playView().dashboard();
         dashboard.configure(List.of(DASHBOARD_IDS));
         dashboard.addInfoBox(
             TengenMsPacMan_DashboardID.JOYPAD,

@@ -79,7 +79,7 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
                     e.consume();
                     if (ui != null) {
                         ui.voicePlayer().stop();
-                        ui.viewManager().startPagesView().pauseTimer();
+                        ui.views().startPagesView().pauseTimer();
                         ui.showEditorView();
                     }
                 }
@@ -87,7 +87,7 @@ public class PacManXXL_StartPage extends StackPane implements GameUI_StartPage {
                     e.consume();
                     if (ui != null) {
                         ui.voicePlayer().stop();
-                        ui.viewManager().startPagesView().pauseTimer();
+                        ui.views().startPagesView().pauseTimer();
                         menu.startSelectedGame();
                     }
                 }
