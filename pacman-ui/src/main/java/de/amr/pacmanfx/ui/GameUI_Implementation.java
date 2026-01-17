@@ -100,7 +100,7 @@ public final class GameUI_Implementation implements GameUI {
 
         clock = new GameClock();
         clock.setPausableAction(this::simulateAndUpdateGameScene);
-        clock.setPermanentAction(this::renderCurrentView);
+        clock.setPermanentAction(this::render);
 
         createScene(sceneWidth, sceneHeight);
 
@@ -239,11 +239,9 @@ public final class GameUI_Implementation implements GameUI {
         }
     }
 
-    private void renderCurrentView() {
+    private void render() {
         try {
-            if (views().currentView() == views().playView()) {
-                views().playView().render();
-            }
+            views().currentView().render();
             flashMessageView.update();
         } catch (Throwable x) {
             ka_tas_tro_phe(x);

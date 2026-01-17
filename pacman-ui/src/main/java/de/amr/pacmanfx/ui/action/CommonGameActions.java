@@ -291,6 +291,7 @@ public final class CommonGameActions {
         public void execute(GameUI ui) {
             final Game game = ui.context().currentGame();
             ui.views().playView().optGameScene().ifPresent(_ -> {
+                ui.clock().stop();
                 toggle(PROPERTY_3D_ENABLED);
                 if (ui.currentGameSceneHasID(CommonSceneID.PLAY_SCENE_2D) ||
                     ui.currentGameSceneHasID(CommonSceneID.PLAY_SCENE_3D))
@@ -301,6 +302,7 @@ public final class CommonGameActions {
                 if (!game.isPlaying()) {
                     ui.showFlashMessage(ui.translated(PROPERTY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
                 }
+                ui.clock().start();
             });
         }
 
