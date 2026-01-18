@@ -56,7 +56,7 @@ public final class GameUI_Implementation implements GameUI {
 
     private final GameContext context;
     private final GameClock clock = new GameClock();
-    private final DirectoryWatchdog customDirWatchdog;
+    private final DirectoryWatchdog customDirWatchdog = new DirectoryWatchdog(GameBox.CUSTOM_MAP_DIR);
     private final ActionBindingsManager globalActionBindings = new GlobalActionBindings();
     private final GameUI_PreferencesManager prefs = new GameUI_PreferencesManager();
     private final GameUI_ConfigManager uiConfigManager;
@@ -64,12 +64,11 @@ public final class GameUI_Implementation implements GameUI {
     private final Stage stage;
     private final Scene scene;
     private final StackPane layoutPane = new StackPane();
+    private final FontIcon pausedIcon;
+    private final StatusIconBox statusIconBox = new StatusIconBox();
 
     private final FlashMessageView flashMessageView = new FlashMessageView();
     private final VoicePlayer voicePlayer = new VoicePlayer();
-
-    private final FontIcon pausedIcon;
-    private final StatusIconBox statusIconBox = new StatusIconBox();
 
     private StringBinding titleBinding;
 
@@ -89,14 +88,11 @@ public final class GameUI_Implementation implements GameUI {
         this.context = context;
         this.stage = stage;
 
-        clock.setPausableAction(this::simulateAndUpdateGameScene);
-        clock.setPermanentAction(this::render);
-
         uiConfigManager = new GameUI_ConfigManager(uiConfigMap, prefs);
-        customDirWatchdog = new DirectoryWatchdog(GameBox.CUSTOM_MAP_DIR);
-        scene = new Scene(layoutPane, sceneWidth, sceneHeight);
         pausedIcon = FontIcon.of(FontAwesomeSolid.PAUSE, PAUSE_ICON_SIZE, ArcadePalette.ARCADE_WHITE);
-        viewManager = new GameUI_ViewManager(this, scene, layoutPane, this::createEditorView, flashMessageView);
+        scene = new Scene(layoutPane, sceneWidth, sceneHeight);
+
+        viewManager = new GameUI_ViewManager(layoutPane, this::createEditorView, flashMessageView);
 
         composeLayout();
         setupScene();
@@ -108,6 +104,9 @@ public final class GameUI_Implementation implements GameUI {
 
         PROPERTY_3D_WALL_HEIGHT.set(prefs.getFloat("3d.obstacle.base_height"));
         PROPERTY_3D_WALL_OPACITY.set(prefs.getFloat("3d.obstacle.opacity"));
+
+        clock.setPausableAction(this::simulateAndUpdateGameScene);
+        clock.setPermanentAction(this::render);
     }
 
     private void setupStage() {
@@ -272,26 +271,8 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     @Override
-    public Stage stage() {
-        return stage;
-    }
-
-    @Override
     public PreferencesManager preferences() {
         return prefs;
-    }
-
-    @Override
-    public void showFlashMessage(Duration duration, String message, Object... args) {
-        flashMessageView.showMessage(String.format(message, args), duration.toSeconds());
-    }
-
-    @Override
-    public void stopGame() {
-        views().playView().optGameScene().ifPresent(gameScene -> gameScene.end(context().currentGame()));
-        currentConfig().soundManager().stopAll();
-        clock.stop();
-        clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
     }
 
     @Override
@@ -320,7 +301,13 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     @Override
+    public Scene scene() {
+        return scene;
+    }
+
+    @Override
     public void show() {
+        viewManager.setUI(this);
         views().playView().dashboard().init(this);
         views().selectStartView();
         stage.centerOnScreen();
@@ -330,21 +317,8 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     @Override
-    public void terminate() {
-        Logger.info("Application is terminated now. There is no way back!");
-        stopGame();
-        flashMessageView.stop();
-        customDirWatchdog.dispose();
-    }
-
-    @Override
-    public VoicePlayer voicePlayer() {
-        return voicePlayer;
-    }
-
-    @Override
-    public GameUI_ViewManager views() {
-        return viewManager;
+    public void showFlashMessage(Duration duration, String message, Object... args) {
+        flashMessageView.showMessage(String.format(message, args), duration.toSeconds());
     }
 
     @Override
@@ -366,6 +340,37 @@ public final class GameUI_Implementation implements GameUI {
     public void showStartView() {
         stopGame();
         views().selectStartView();
+    }
+
+    @Override
+    public Stage stage() {
+        return stage;
+    }
+
+    @Override
+    public void stopGame() {
+        views().playView().optGameScene().ifPresent(gameScene -> gameScene.end(context().currentGame()));
+        currentConfig().soundManager().stopAll();
+        clock.stop();
+        clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
+    }
+
+    @Override
+    public void terminate() {
+        Logger.info("Application is terminated now. There is no way back!");
+        stopGame();
+        flashMessageView.stop();
+        customDirWatchdog.dispose();
+    }
+
+    @Override
+    public GameUI_ViewManager views() {
+        return viewManager;
+    }
+
+    @Override
+    public VoicePlayer voicePlayer() {
+        return voicePlayer;
     }
 
     @Override

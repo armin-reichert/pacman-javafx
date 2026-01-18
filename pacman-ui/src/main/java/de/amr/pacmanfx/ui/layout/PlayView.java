@@ -57,7 +57,6 @@ public class PlayView extends StackPane implements GameUI_View {
     private final ObjectProperty<GameScene> currentGameScene = new SimpleObjectProperty<>();
 
     private final ActionBindingsManager actionBindingsManager = new DefaultActionBindingsManager();
-    private final Scene parentScene;
     private final Dashboard dashboard = new Dashboard();
     private final CanvasDecorationPane canvasDecorator = new CanvasDecorationPane();
     private final MiniGameView miniView = new MiniGameView();
@@ -71,8 +70,7 @@ public class PlayView extends StackPane implements GameUI_View {
     private GameScene2D_Renderer sceneRenderer;
     private HeadsUpDisplay_Renderer hudRenderer;
 
-    public PlayView(Scene parentScene) {
-        this.parentScene = requireNonNull(parentScene);
+    public PlayView() {
         this.contextMenu = new GameUI_ContextMenu();
         this.helpLayer = new HelpLayer(canvasDecorator);
 
@@ -83,7 +81,6 @@ public class PlayView extends StackPane implements GameUI_View {
         composeLayout();
         configureActionBindings();
         configurePropertyBindings();
-        configureContextMenu();
 
         dashboard.setVisible(false);
     }
@@ -93,6 +90,7 @@ public class PlayView extends StackPane implements GameUI_View {
         contextMenu.setUI(ui);
         dashboard.setUI(ui);
         miniView.setUI(ui);
+        configureContextMenu(ui.scene());
         ui.context().gameVariantNameProperty().addListener(
             (_, oldVariantName, newVariantName) -> handleGameVariantChange(oldVariantName, newVariantName));
     }
@@ -219,7 +217,7 @@ public class PlayView extends StackPane implements GameUI_View {
                 miniView.onLevelCreated(level);
                 miniView.slideIn();
                 // size of game scene might have changed, so re-embed
-                optGameScene().ifPresent(gameScene -> embedGameScene(parentScene, gameScene));
+                optGameScene().ifPresent(gameScene -> embedGameScene(ui.scene(), gameScene));
             }
             case GAME_STATE_CHANGED -> {
                 if (gameState.matches(GameControl.StateName.LEVEL_COMPLETE)) {
@@ -266,7 +264,7 @@ public class PlayView extends StackPane implements GameUI_View {
             playScene3D.setUI(ui);
         }
 
-        embedGameScene(parentScene, intendedGameScene);
+        embedGameScene(ui.scene(), intendedGameScene);
         if (intendedGameScene instanceof GameScene2D gameScene2D) {
             gameScene2D.debugInfoVisibleProperty().bind(GameUI.PROPERTY_DEBUG_INFO_VISIBLE);
         }
@@ -292,6 +290,8 @@ public class PlayView extends StackPane implements GameUI_View {
     private ChangeListener<? super Number> parentSceneHeightListener;
 
     private void addListeners() {
+        final Scene parentScene = ui.scene();
+
         removeListeners();
 
         gameSceneChangeListener = (_, _, gameScene) -> {
@@ -310,6 +310,8 @@ public class PlayView extends StackPane implements GameUI_View {
     }
 
     private void removeListeners() {
+        final Scene parentScene = ui.scene();
+
         if (gameSceneChangeListener != null) {
             currentGameSceneProperty().removeListener(gameSceneChangeListener);
         }
@@ -342,7 +344,7 @@ public class PlayView extends StackPane implements GameUI_View {
         ));
     }
 
-    private void configureContextMenu() {
+    private void configureContextMenu(Scene parentScene) {
         setOnContextMenuRequested(this::handleContextMenuRequest);
         //TODO is there a better way to hide the context menu?
         parentScene.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
