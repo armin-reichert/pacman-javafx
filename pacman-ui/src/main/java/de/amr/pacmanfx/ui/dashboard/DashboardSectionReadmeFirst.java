@@ -15,27 +15,27 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-public class InfoBoxReadmeFirst extends InfoBox {
+public class DashboardSectionReadmeFirst extends DashboardSection {
 
-    public InfoBoxReadmeFirst(GameUI ui) {
-        super(ui);
+    public DashboardSectionReadmeFirst(Dashboard dashboard) {
+        super(dashboard);
     }
 
     @Override
     public void init(GameUI ui) {
-        var readmeText = new Text();
+        final var readmeText = new Text();
         readmeText.setText(ui.translated("infobox.readme.content"));
         readmeText.setFont(Font.font("Serif", 16));
         readmeText.setFill(Color.WHITE);
 
-        var pane = new BorderPane();
+        final var pane = new BorderPane();
         pane.setBorder(Ufx.border(Color.TRANSPARENT, 5));
 
-        var buttonPane = new HBox();
+        final var buttonPane = new HBox();
         buttonPane.setAlignment(Pos.CENTER);
         buttonPane.setPadding(new Insets(10, 0, 0, 0));
 
-        var btnGotIt = new Button(ui.translated("infobox.readme.got_it"));
+        final var btnGotIt = new Button(ui.translated("infobox.readme.got_it"));
         buttonPane.getChildren().add(btnGotIt);
         btnGotIt.setOnAction(e -> dashboard.removeInfoBox(CommonDashboardID.README));
 

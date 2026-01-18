@@ -5,10 +5,10 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.dashboard;
 
 import de.amr.pacmanfx.GameBox;
+import de.amr.pacmanfx.lib.DirectoryWatchdog;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapParseException;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.layout.EditorView;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -25,10 +25,13 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.function.Consumer;
 
-public class InfoBoxCustomMaps extends InfoBox {
+import static java.util.Objects.requireNonNull;
 
-    static class MapLinkUserData {
+public class DashboardSectionCustomMaps extends DashboardSection {
+
+    private static class MapLinkUserData {
         WorldMap worldMap;
     }
 
@@ -43,10 +46,11 @@ public class InfoBoxCustomMaps extends InfoBox {
         }
     }
 
+    private Consumer<File> mapEditFunction = file -> Logger.info("Open map file {}", file);
     private final ObservableList<WorldMap> customMaps = FXCollections.observableArrayList();
 
-    public InfoBoxCustomMaps(GameUI ui) {
-        super(ui);
+    public DashboardSectionCustomMaps(Dashboard dashboard) {
+        super(dashboard);
 
         final var tableView = new TableView<WorldMap>();
         tableView.getColumns().add(createMapRowCountTableColumn());
@@ -68,13 +72,36 @@ public class InfoBoxCustomMaps extends InfoBox {
                 updateCustomMapList();
             }
         });
+    }
 
-        ui.customDirWatchdog().addEventListener(eventList -> {
+    //TODO Call me!
+    public void setCustomDirWatchDog(DirectoryWatchdog watchdog) {
+        watchdog.addEventListener(eventList -> {
             Logger.info("Custom map change(s) detected: {}",
                 eventList.stream()
                     .map(watchEvent -> String.format("%s: '%s'", watchEvent.kind(), watchEvent.context()))
                     .toList());
             updateCustomMapList();
+        });
+    }
+
+    //TODO Call me!
+    public void setMapEditFunction(Consumer<File> mapEditFunction) {
+        this.mapEditFunction = requireNonNull(mapEditFunction);
+    }
+
+    //TODO set this as map edit function
+    private void editWorldMap(GameUI ui, File mapFile) {
+        Logger.debug("Edit map file {}", mapFile);
+        ui.views().optEditorView().ifPresent(editorView -> {
+            try {
+                final WorldMap map = WorldMap.loadFromFile(mapFile);
+                editorView.editor().setCurrentWorldMap(map);
+                editorView.editor().setCurrentFile(mapFile);
+            } catch (Exception x) {
+                Logger.error("Could not open map file {}", mapFile);
+            }
+            ui.showEditorView();
         });
     }
 
@@ -111,8 +138,11 @@ public class InfoBoxCustomMaps extends InfoBox {
                     try {
                         final String mapURL = data.worldMap.url();
                         if (mapURL != null && mapURL.startsWith("file:")) {
-                            editWorldMap(new File(URI.create(mapURL)));
-                        } else Logger.error("World map does not provide file URL to load it from file system");
+                            final File mapFile = new File(URI.create(mapURL));
+                            mapEditFunction.accept(mapFile);
+                        } else {
+                            Logger.error("World map does not provide file URL to load it from file system");
+                        }
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
@@ -164,19 +194,4 @@ public class InfoBoxCustomMaps extends InfoBox {
         }
     }
 
-    private void editWorldMap(File mapFile) {
-        Logger.info("Edit map file {}", mapFile);
-        ui.showEditorView();
-        ui.views().optEditorView().ifPresent(view -> {
-            if (view instanceof EditorView editorView) {
-                try {
-                    final WorldMap map = WorldMap.loadFromFile(mapFile);
-                    editorView.editor().setCurrentWorldMap(map);
-                    editorView.editor().setCurrentFile(mapFile);
-                } catch (Exception x) {
-                    Logger.error("Could not open map file {}", mapFile);
-                }
-            }
-        });
-    }
 }

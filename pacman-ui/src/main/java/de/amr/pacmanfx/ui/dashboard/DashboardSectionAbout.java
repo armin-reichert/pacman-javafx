@@ -18,10 +18,10 @@ import javafx.scene.text.TextFlow;
 /**
  * @author Armin Reichert
  */
-public class InfoBoxAbout extends InfoBox {
+public class DashboardSectionAbout extends DashboardSection {
 
-    public InfoBoxAbout(GameUI ui) {
-        super(ui);
+    public DashboardSectionAbout(Dashboard dashboard) {
+        super(dashboard);
     }
 
     @Override

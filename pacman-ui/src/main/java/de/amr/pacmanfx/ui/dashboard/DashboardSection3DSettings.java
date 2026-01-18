@@ -26,7 +26,7 @@ import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_TOGGLE_PLAY_SCE
 /**
  * Infobox with 3D related settings.
  */
-public class InfoBox3DSettings extends InfoBox {
+public class DashboardSection3DSettings extends DashboardSection {
 
     private static final int MINI_VIEW_MIN_HEIGHT = 280;
     private static final int MINI_VIEW_MAX_HEIGHT = 600;
@@ -41,8 +41,8 @@ public class InfoBox3DSettings extends InfoBox {
     private CheckBox cbAxesVisible;
     private CheckBox cbWireframeMode;
 
-    public InfoBox3DSettings(GameUI ui) {
-        super(ui);
+    public DashboardSection3DSettings(Dashboard dashboard) {
+        super(dashboard);
     }
 
     @Override
@@ -51,9 +51,9 @@ public class InfoBox3DSettings extends InfoBox {
         comboPerspectives = addChoiceBox("Perspective", PerspectiveID.values());
         addColorPicker("Light Color", PROPERTY_3D_LIGHT_COLOR);
         addColorPicker("Floor Color", PROPERTY_3D_FLOOR_COLOR);
-        addDynamicLabeledValue("Camera",         this::subSceneCameraInfo);
-        addDynamicLabeledValue("Sub-scene Size", this::subSceneSizeInfo);
-        addDynamicLabeledValue("Scene Size",     this::sceneSizeInfo);
+        addDynamicLabeledValue("Camera",         () -> subSceneCameraInfo(ui));
+        addDynamicLabeledValue("Sub-scene Size", () -> subSceneSizeInfo(ui));
+        addDynamicLabeledValue("Scene Size",     () -> sceneSizeInfo(ui));
 
         cbMiniViewVisible = addCheckBox("Mini View", PROPERTY_MINI_VIEW_ON);
         sliderMiniViewSceneHeight = addSlider(
@@ -95,8 +95,9 @@ public class InfoBox3DSettings extends InfoBox {
     }
 
     @Override
-    public void update() {
-        super.update();
+    public void update(GameUI ui) {
+        super.update(ui);
+
         comboPerspectives.setValue(PROPERTY_3D_PERSPECTIVE_ID.get());
         sliderMiniViewSceneHeight.setValue(PROPERTY_MINI_VIEW_HEIGHT.get());
         sliderMiniViewSceneHeight.setDisable(ui.views().playView().miniView().isMoving());
@@ -110,15 +111,17 @@ public class InfoBox3DSettings extends InfoBox {
         cbWireframeMode.setSelected(PROPERTY_3D_DRAW_MODE.get() == DrawMode.LINE);
     }
 
-    private String subSceneSizeInfo() {
+    private String subSceneSizeInfo(GameUI ui) {
         return ui.views().playView().optGameScene()
             .flatMap(GameScene::optSubScene)
             .map(subScene -> "%.0fx%.0f".formatted(subScene.getWidth(), subScene.getHeight()))
             .orElse(NO_INFO);
     }
 
-    private String subSceneCameraInfo() {
-        return ui.views().playView().optGameScene().flatMap(GameScene::optSubScene).map(SubScene::getCamera)
+    private String subSceneCameraInfo(GameUI ui) {
+        final GameScene gameScene = ui.views().playView().optGameScene().orElse(null);
+        if (gameScene == null) return NO_INFO;
+        return gameScene.optSubScene().map(SubScene::getCamera)
             .map(camera -> "rot=%.0f x=%.0f y=%.0f z=%.0f".formatted(
                 camera.getRotate(),
                 camera.getTranslateX(),
@@ -127,7 +130,8 @@ public class InfoBox3DSettings extends InfoBox {
             .orElse(NO_INFO);
     }
 
-    private String sceneSizeInfo() {
+    private String sceneSizeInfo(GameUI ui) {
+        final Game game = ui.context().currentGame();
         final GameScene gameScene = ui.views().playView().optGameScene().orElse(null);
         if (gameScene == null) return NO_INFO;
 
@@ -137,7 +141,6 @@ public class InfoBox3DSettings extends InfoBox {
             return "%dx%d (scaled: %.0fx%.0f)".formatted(size.x(), size.y(), scaledSize.x(), scaledSize.y());
         }
 
-        final Game game = ui.context().currentGame();
         if (game.optGameLevel().isPresent()) {
             final WorldMap worldMap = game.level().worldMap();
             return "%dx%d (map size px)".formatted(worldMap.numCols() * TS, worldMap.numRows() * TS);

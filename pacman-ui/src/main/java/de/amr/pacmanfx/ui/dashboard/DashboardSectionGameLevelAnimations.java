@@ -28,7 +28,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
-public class InfoBoxGameLevelAnimations extends InfoBox {
+public class DashboardSectionGameLevelAnimations extends DashboardSection {
 
     private static final float RELATIVE_TABLE_HEIGHT = 0.80f;
     private static final float REFRESH_PERIOD_SECONDS = 0.5f;
@@ -48,18 +48,17 @@ public class InfoBoxGameLevelAnimations extends InfoBox {
 
     private final ObservableList<TableRow> tableRows = FXCollections.observableArrayList();
     private final Timeline refreshTimer;
+    private final TableView<TableRow> tableView = new TableView<>();
 
     private final ObjectProperty<AnimationRegistry> currentAnimationManager = new SimpleObjectProperty<>();
 
-    public InfoBoxGameLevelAnimations(GameUI ui) {
-        super(ui);
+    public DashboardSectionGameLevelAnimations(Dashboard dashboard) {
+        super(dashboard);
 
-        final TableView<TableRow> tableView = new TableView<>();
         tableView.setItems(tableRows);
         tableView.setPlaceholder(new Text("No 3D animations"));
         tableView.setFocusTraversable(false);
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
-        tableView.prefHeightProperty().bind(ui.stage().heightProperty().map(height -> height.doubleValue() * RELATIVE_TABLE_HEIGHT));
         tableView.setPrefWidth(Dashboard.INFOBOX_MIN_WIDTH - 20);
 
         TableColumn<TableRow, String> labelColumn = new TableColumn<>("Animation Name");
@@ -86,10 +85,17 @@ public class InfoBoxGameLevelAnimations extends InfoBox {
     }
 
     @Override
-    public void update() {
-        super.update();
+    public void init(GameUI ui) {
+        super.init(ui);
+        tableView.prefHeightProperty().bind(ui.stage().heightProperty().map(height -> height.doubleValue() * RELATIVE_TABLE_HEIGHT));
+    }
+
+    @Override
+    public void update(GameUI ui) {
+        super.update(ui);
+
         //TODO use data binding
-        currentAnimationManager.set(observedAnimationManager());
+        ui.views().playView().optGameScene().ifPresent(gameScene -> currentAnimationManager.set(observedAnimationManager(gameScene)));
         if (currentAnimationManager.get() == null) {
             tableRows.clear();
             refreshTimer.pause();
@@ -98,8 +104,7 @@ public class InfoBoxGameLevelAnimations extends InfoBox {
         }
     }
 
-    private AnimationRegistry observedAnimationManager() {
-        final GameScene gameScene = ui.views().playView().optGameScene().orElse(null);
+    private AnimationRegistry observedAnimationManager(GameScene gameScene) {
         if (gameScene instanceof PlayScene3D playScene3D) {
             return playScene3D.level3D().map(GameLevel3D::animationManager).orElse(null);
         }

@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.dashboard;
 
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
@@ -32,10 +33,7 @@ import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
 
-/**
- * Base class for area displaying UI info/editors.
- */
-public abstract class InfoBox extends TitledPane {
+public abstract class DashboardSection extends TitledPane {
 
     public static final String NO_INFO = "n/a";
 
@@ -43,8 +41,7 @@ public abstract class InfoBox extends TitledPane {
         return String.format("-fx-font: %.0fpx \"%s\";", font.getSize(), font.getFamily());
     }
 
-    protected final GameUI ui;
-    protected Dashboard dashboard;
+    protected final Dashboard dashboard;
     protected final List<DynamicInfoText> infoTexts = new ArrayList<>();
     protected final GridPane grid = new GridPane();
     protected int minLabelWidth;
@@ -54,8 +51,8 @@ public abstract class InfoBox extends TitledPane {
     protected int rowIndex;
     protected boolean displayedMaximized;
 
-    public InfoBox(GameUI ui) {
-        this.ui = requireNonNull(ui);
+    public DashboardSection(Dashboard dashboard) {
+        this.dashboard = requireNonNull(dashboard);
 
         grid.setVgap(2);
         grid.setHgap(3);
@@ -66,7 +63,7 @@ public abstract class InfoBox extends TitledPane {
         setOpacity(0.9);
         setDisplayedMaximized(false);
 
-        expandedProperty().addListener((_, ov, expanded) -> {
+        expandedProperty().addListener((_, _, expanded) -> {
             if (displayedMaximized) {
                 if (expanded) {
                     dashboard.infoBoxes().filter(infoBox -> infoBox != this).forEach(otherInfoBox -> otherInfoBox.setVisible(false));
@@ -77,10 +74,6 @@ public abstract class InfoBox extends TitledPane {
                 }
             }
         });
-    }
-
-    public void setDashboard(Dashboard dashboard) {
-        this.dashboard = dashboard;
     }
 
     public Dashboard dashboard() {
@@ -97,7 +90,7 @@ public abstract class InfoBox extends TitledPane {
 
     public void init(GameUI ui) {}
 
-    public void update() {
+    public void update(GameUI ui) {
         infoTexts.forEach(DynamicInfoText::update);
     }
 
@@ -121,12 +114,12 @@ public abstract class InfoBox extends TitledPane {
         this.textFont = textFont;
     }
 
-    protected Supplier<String> ifGameScenePresent(Function<GameScene, String> fnInfo) {
+    protected Supplier<String> ifGameScenePresent(GameUI ui, Function<GameScene, String> fnInfo) {
         return () -> ui.views().playView().optGameScene().map(fnInfo).orElse(NO_INFO);
     }
 
-    protected Supplier<String> ifGameLevel(Function<GameLevel, String> fnInfo) {
-        return () -> ui.context().currentGame().optGameLevel().map(fnInfo).orElse(NO_INFO);
+    protected Supplier<String> ifGameLevel(Supplier<Game> gameSupplier, Function<GameLevel, String> fnInfo) {
+        return () -> gameSupplier.get().optGameLevel().map(fnInfo).orElse(NO_INFO);
     }
 
     protected void clearGrid() {
@@ -263,7 +256,7 @@ public abstract class InfoBox extends TitledPane {
         button.setOnAction(_ -> action.run());
     }
 
-    protected void setAction(Button button, GameAction gameAction) {
+    protected void setAction(GameUI ui, Button button, GameAction gameAction) {
         button.setOnAction(_ -> gameAction.executeIfEnabled(ui));
         //TODO add boolean property for enabled-state to game action and bind against it
     }

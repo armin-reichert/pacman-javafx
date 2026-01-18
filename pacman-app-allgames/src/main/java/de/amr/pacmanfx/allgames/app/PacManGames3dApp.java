@@ -17,7 +17,7 @@ import de.amr.pacmanfx.model.StandardGameVariant;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.model.test.LevelMediumTestState;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
-import de.amr.pacmanfx.tengenmspacman.InfoBoxJoypad;
+import de.amr.pacmanfx.tengenmspacman.DashboardSectionJoypad;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.TengenMsPacMan_DashboardID;
@@ -94,10 +94,11 @@ public class PacManGames3dApp extends Application {
                 ? createUI_WithBuilder(primaryStage, width, height, xxlMapSelector)
                 : createUI_WithoutBuilder(primaryStage, width, height, xxlMapSelector);
 
-            ui.views().playView().dashboard().addInfoBox(
+            final Dashboard dashboard = ui.views().playView().dashboard();
+            dashboard.addInfoBox(
                 TengenMsPacMan_DashboardID.JOYPAD,
                 TengenMsPacMan_UIConfig.TEXT_BUNDLE.getString("infobox.joypad.title"),
-                new InfoBoxJoypad(ui));
+                new DashboardSectionJoypad(dashboard));
 
             ui.customDirWatchdog().addEventListener(xxlMapSelector);
             ui.show();
@@ -146,7 +147,7 @@ public class PacManGames3dApp extends Application {
         dashboard.addInfoBox(
             TengenMsPacMan_DashboardID.JOYPAD,
             TengenMsPacMan_UIConfig.TEXT_BUNDLE.getString("infobox.joypad.title"),
-            new InfoBoxJoypad(ui));
+            new DashboardSectionJoypad(dashboard));
 
         return ui;
     }

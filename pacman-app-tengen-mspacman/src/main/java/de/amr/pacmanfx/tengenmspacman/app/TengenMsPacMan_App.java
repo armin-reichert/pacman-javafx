@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengenmspacman.app;
 
-import de.amr.pacmanfx.tengenmspacman.InfoBoxJoypad;
+import de.amr.pacmanfx.tengenmspacman.DashboardSectionJoypad;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.TengenMsPacMan_DashboardID;
@@ -12,6 +12,7 @@ import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.dashboard.CommonDashboardID;
+import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import javafx.application.Application;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -50,10 +51,11 @@ public class TengenMsPacMan_App extends Application {
                 CommonDashboardID.ABOUT)
             .build();
 
-        ui.views().playView().dashboard().addInfoBox(
+        final Dashboard dashboard = ui.views().playView().dashboard();
+        dashboard.addInfoBox(
             TengenMsPacMan_DashboardID.JOYPAD,
             TengenMsPacMan_UIConfig.TEXT_BUNDLE.getString("infobox.joypad.title"),
-            new InfoBoxJoypad(ui));
+            new DashboardSectionJoypad(dashboard));
 
         ui.show();
     }

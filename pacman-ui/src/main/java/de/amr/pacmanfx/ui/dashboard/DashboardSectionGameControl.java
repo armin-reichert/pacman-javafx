@@ -7,6 +7,7 @@ package de.amr.pacmanfx.ui.dashboard;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.CoinMechanism;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameControl.StateName;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.ui.GameUI;
@@ -22,7 +23,7 @@ import static de.amr.pacmanfx.Globals.THE_GAME_BOX;
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_ENTER_NEXT_LEVEL;
 import static de.amr.pacmanfx.ui.action.CommonGameActions.ACTION_RESTART_INTRO;
 
-public class InfoBoxGameControl extends InfoBox {
+public class DashboardSectionGameControl extends DashboardSection {
 
     private static final int GAME_LEVEL_START = 0;
     private static final int GAME_LEVEL_QUIT = 1;
@@ -37,8 +38,8 @@ public class InfoBoxGameControl extends InfoBox {
     private Button[] buttonGroupCutScenesTest;
     private CheckBox cbCollisionCheckedTwice;
 
-    public InfoBoxGameControl(GameUI ui) {
-        super(ui);
+    public DashboardSectionGameControl(Dashboard dashboard) {
+        super(dashboard);
     }
 
     @Override
@@ -52,11 +53,11 @@ public class InfoBoxGameControl extends InfoBox {
         setAction(choiceBoxInitialLives, () -> ui.context().currentGame().setInitialLifeCount(choiceBoxInitialLives.getValue()));
 
         //setAction(buttonGroupLevelActions[GAME_LEVEL_START], ArcadeActions.ACTION_START_GAME); //TODO FIXME!
-        setAction(buttonGroupLevelActions[GAME_LEVEL_QUIT], ACTION_RESTART_INTRO);
-        setAction(buttonGroupLevelActions[GAME_LEVEL_NEXT], ACTION_ENTER_NEXT_LEVEL);
+        setAction(ui, buttonGroupLevelActions[GAME_LEVEL_QUIT], ACTION_RESTART_INTRO);
+        setAction(ui, buttonGroupLevelActions[GAME_LEVEL_NEXT], ACTION_ENTER_NEXT_LEVEL);
 
-        setAction(buttonGroupCutScenesTest[CUT_SCENES_TEST_START], TestActions.ACTION_CUT_SCENES_TEST);
-        setAction(buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT], ACTION_RESTART_INTRO);
+        setAction(ui, buttonGroupCutScenesTest[CUT_SCENES_TEST_START], TestActions.ACTION_CUT_SCENES_TEST);
+        setAction(ui, buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT], ACTION_RESTART_INTRO);
 
         cbCollisionCheckedTwice.setOnAction(e -> {
             final AbstractGameModel game = ui.context().currentGame();
@@ -65,8 +66,8 @@ public class InfoBoxGameControl extends InfoBox {
     }
 
     @Override
-    public void update() {
-        super.update();
+    public void update(GameUI ui) {
+        super.update(ui);
 
         final AbstractGameModel game = ui.context().currentGame();
         final StateMachine.State<?> state = game.control().state();
@@ -79,9 +80,9 @@ public class InfoBoxGameControl extends InfoBox {
         choiceBoxInitialLives.setDisable(!state.matches(StateName.INTRO));
 
         boolean booting = isBooting(state);
-        buttonGroupLevelActions[GAME_LEVEL_START].setDisable(booting || !canStartLevel(state));
+        buttonGroupLevelActions[GAME_LEVEL_START].setDisable(booting || !canStartLevel(game, state));
         buttonGroupLevelActions[GAME_LEVEL_QUIT] .setDisable(booting || ui.context().currentGame().optGameLevel().isEmpty());
-        buttonGroupLevelActions[GAME_LEVEL_NEXT] .setDisable(booting || !canEnterNextLevel(state));
+        buttonGroupLevelActions[GAME_LEVEL_NEXT] .setDisable(booting || !canEnterNextLevel(game, state));
 
         buttonGroupCutScenesTest[CUT_SCENES_TEST_START].setDisable(booting || !state.matches(StateName.INTRO));
         buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT] .setDisable(booting || !(state instanceof CutScenesTestState));
@@ -93,12 +94,12 @@ public class InfoBoxGameControl extends InfoBox {
         return state.matches(StateName.BOOT);
     }
 
-    private boolean canStartLevel(StateMachine.State<?> state) {
-        return ui.context().currentGame().canStartNewGame()
+    private boolean canStartLevel(Game game, StateMachine.State<?> state) {
+        return game.canStartNewGame()
             && state.matches(StateName.INTRO, StateName.SETTING_OPTIONS_FOR_START);
     }
 
-    private boolean canEnterNextLevel(StateMachine.State<?> state) {
-        return ui.context().currentGame().isPlaying() && state.matches(StateName.HUNTING);
+    private boolean canEnterNextLevel(Game game, StateMachine.State<?> state) {
+        return game.isPlaying() && state.matches(StateName.HUNTING);
     }
 }

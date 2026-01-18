@@ -19,13 +19,13 @@ import static de.amr.pacmanfx.ui.GameUI.*;
 /**
  * General settings and simulation control.
  */
-public class InfoBoxGeneral extends InfoBox {
+public class DashboardSectionGeneral extends DashboardSection {
 
     private static final int MIN_FRAME_RATE = 5;
     private static final int MAX_FRAME_RATE = 120;
 
-    public InfoBoxGeneral(GameUI ui) {
-        super(ui);
+    public DashboardSectionGeneral(Dashboard dashboard) {
+        super(dashboard);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class InfoBoxGeneral extends InfoBox {
         btnPlayPause.setStyle("-fx-background-color: transparent");
         btnPlayPause.graphicProperty().bind(ui.clock().pausedProperty().map(paused -> paused ? iconPlay : iconStop));
         btnPlayPause.tooltipProperty().bind(ui.clock().pausedProperty().map(paused -> paused ? tooltipPlay : tooltipStop));
-        setAction(btnPlayPause, CommonGameActions.ACTION_TOGGLE_PAUSED);
+        setAction(ui, btnPlayPause, CommonGameActions.ACTION_TOGGLE_PAUSED);
 
         Button btnStep = buttonsSimulationControl[1];
         btnStep.setGraphic(iconStep);

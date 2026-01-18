@@ -7,18 +7,19 @@ package de.amr.pacmanfx.tengenmspacman;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
-import de.amr.pacmanfx.ui.dashboard.InfoBox;
+import de.amr.pacmanfx.ui.dashboard.Dashboard;
+import de.amr.pacmanfx.ui.dashboard.DashboardSection;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Font;
 
-public class InfoBoxJoypad extends InfoBox {
+public class DashboardSectionJoypad extends DashboardSection {
 
     private static final ResourceManager LOCAL_RESOURCES = () -> GameUI_Implementation.class;
     private static final Font CONTENT_FONT = Font.font("Monospace", 16);
 
-    public InfoBoxJoypad(GameUI ui) {
-        super(ui);
+    public DashboardSectionJoypad(Dashboard dashboard) {
+        super(dashboard);
     }
 
     public void init(GameUI ui) {
