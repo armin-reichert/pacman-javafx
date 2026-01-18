@@ -10,7 +10,7 @@ import de.amr.pacmanfx.lib.math.Vector2i;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
-import de.amr.pacmanfx.uilib.assets.UIPreferences;
+import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
@@ -35,7 +35,7 @@ public class Arcade_BootScene2D_Renderer extends GameScene2D_Renderer implements
     private final Rectangle2D spriteRegion;
 
     public Arcade_BootScene2D_Renderer(
-        UIPreferences prefs,
+        PreferencesManager prefs,
         GameScene2D scene,
         Canvas canvas,
         SpriteSheet<?> spriteSheet,

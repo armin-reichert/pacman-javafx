@@ -28,7 +28,7 @@ import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
-import de.amr.pacmanfx.uilib.assets.UIPreferences;
+import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.model3D.PacBody;
 import de.amr.pacmanfx.uilib.model3D.PacMan3D;
 import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
@@ -68,12 +68,12 @@ public class ArcadePacMan_UIConfig implements GameUI_Config, GameScene_Config {
         Color.valueOf(WORLD_MAP_COLOR_SCHEME.door()), Color.TRANSPARENT // door color change
     );
 
-    private final UIPreferences prefs;
+    private final PreferencesManager prefs;
     private final AssetMap assets = new AssetMap();
     private final SoundManager soundManager = new SoundManager();
     private final Map<SceneID, GameScene> scenesByID = new HashMap<>();
 
-    public ArcadePacMan_UIConfig(UIPreferences prefs) {
+    public ArcadePacMan_UIConfig(PreferencesManager prefs) {
         this.prefs = requireNonNull(prefs);
     }
 

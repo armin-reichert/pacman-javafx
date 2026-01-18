@@ -36,7 +36,7 @@ import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
-import de.amr.pacmanfx.uilib.assets.UIPreferences;
+import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.model3D.MsPacMan3D;
 import de.amr.pacmanfx.uilib.model3D.MsPacManBody;
 import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
@@ -159,12 +159,12 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
         return BLUE_SHADES[(int) (tick % 64) / 16];
     }
 
-    private final UIPreferences prefs;
+    private final PreferencesManager prefs;
     private final AssetMap assets = new AssetMap();
     private final Map<SceneID, GameScene> scenesByID = new HashMap<>();
     private final SoundManager soundManager = new SoundManager();
 
-    public TengenMsPacMan_UIConfig(UIPreferences prefs) {
+    public TengenMsPacMan_UIConfig(PreferencesManager prefs) {
         this.prefs = requireNonNull(prefs);
     }
 

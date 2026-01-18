@@ -24,7 +24,7 @@ import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.LocalizedTextAccessor;
 import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
-import de.amr.pacmanfx.uilib.assets.UIPreferences;
+import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.model3D.*;
 import de.amr.pacmanfx.uilib.widgets.MessageView;
 import javafx.animation.*;
@@ -74,7 +74,7 @@ public class GameLevel3D extends Group implements Disposable {
     private final DoubleProperty wallOpacityProperty    = new SimpleDoubleProperty(1);
 
     private final GameUI_Config uiConfig;
-    private final UIPreferences prefs;
+    private final PreferencesManager prefs;
     private final LocalizedTextAccessor localizedTextsAccessor;
     private final GameLevel level;
     private final WorldMapColorScheme colorScheme;
@@ -292,7 +292,7 @@ public class GameLevel3D extends Group implements Disposable {
         }
     }
 
-    public GameLevel3D(GameUI_Config uiConfig, UIPreferences prefs, LocalizedTextAccessor localizedTextsAccessor, GameLevel level) {
+    public GameLevel3D(GameUI_Config uiConfig, PreferencesManager prefs, LocalizedTextAccessor localizedTextsAccessor, GameLevel level) {
         this.uiConfig = requireNonNull(uiConfig);
         this.prefs = requireNonNull(prefs);
         this.localizedTextsAccessor =  requireNonNull(localizedTextsAccessor);

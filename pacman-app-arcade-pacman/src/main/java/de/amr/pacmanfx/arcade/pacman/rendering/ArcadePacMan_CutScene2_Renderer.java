@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_CutScene2;
 import de.amr.pacmanfx.ui._2d.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.uilib.assets.UIPreferences;
+import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.Globals.TS;
@@ -15,7 +15,7 @@ import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_CutScene2_Renderer extends ArcadePacMan_CutScene_Renderer {
 
-    public ArcadePacMan_CutScene2_Renderer(UIPreferences prefs, GameScene2D scene, Canvas canvas) {
+    public ArcadePacMan_CutScene2_Renderer(PreferencesManager prefs, GameScene2D scene, Canvas canvas) {
         super(scene, canvas);
         requireNonNull(prefs);
         debugRenderer = adaptRenderer(new BaseDebugInfoRenderer(prefs, canvas) {

@@ -15,7 +15,7 @@ import de.amr.pacmanfx.ui.sound.VoicePlayer;
 import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.assets.LocalizedTextAccessor;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
-import de.amr.pacmanfx.uilib.assets.UIPreferences;
+import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import javafx.beans.property.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
@@ -151,7 +151,7 @@ public interface GameUI extends LocalizedTextAccessor {
     /**
      * @return the UI preferences (stored permanently in platform-specific way)
      */
-    UIPreferences preferences();
+    PreferencesManager preferences();
 
     /**
      * @return voice player if this UI. Only one voice at a time can be played.

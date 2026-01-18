@@ -16,7 +16,7 @@ import de.amr.pacmanfx.ui.layout.StatusIconBox;
 import de.amr.pacmanfx.ui.sound.VoicePlayer;
 import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
-import de.amr.pacmanfx.uilib.assets.UIPreferences;
+import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
 import de.amr.pacmanfx.uilib.rendering.Gradients;
 import de.amr.pacmanfx.uilib.widgets.FlashMessageView;
@@ -48,23 +48,22 @@ import static javafx.beans.binding.Bindings.createStringBinding;
 public final class GameUI_Implementation implements GameUI {
 
     // Oh no, my program!
-    private static final String SOMEONE_CALL_AN_AMBULANCE = "KA-TA-STROOO-PHE!\nSOMEONE CALL AN AMBULANCE!";
+    private static final String SOMEONE_CALL_AN_AMBULANCE = "KA-TA-STRO-PHE!\nSOMEONE CALL AN AMBULANCE!";
 
     private static final int MIN_STAGE_WIDTH  = 280;
     private static final int MIN_STAGE_HEIGHT = 360;
     private static final int PAUSE_ICON_SIZE = 80;
 
-    private final GameContext gameContext;
+    private final GameContext context;
     private final GameClock clock = new GameClock();
     private final DirectoryWatchdog customDirWatchdog;
     private final ActionBindingsManager globalActionBindings = new GlobalActionBindings();
-
-    private final GameUI_ConfigFactory configFactory;
-    private final UIPreferences prefs = new GameUI_Preferences();
-    private final Stage stage;
-    private final StackPane layoutPane = new StackPane();
+    private final GameUI_PreferencesManager prefs = new GameUI_PreferencesManager();
+    private final GameUI_ConfigFactory uiConfigFactory;
     private final GameUI_ViewManager viewManager;
+    private final Stage stage;
     private final Scene scene;
+    private final StackPane layoutPane = new StackPane();
 
     private final FlashMessageView flashMessageView = new FlashMessageView();
     private final VoicePlayer voicePlayer = new VoicePlayer();
@@ -76,24 +75,24 @@ public final class GameUI_Implementation implements GameUI {
 
     public GameUI_Implementation(
         Map<String, Class<? extends GameUI_Config>> uiConfigMap,
-        GameContext gameContext,
+        GameContext context,
         Stage stage,
         double sceneWidth,
         double sceneHeight)
     {
         requireNonNull(uiConfigMap);
-        requireNonNull(gameContext);
+        requireNonNull(context);
         requireNonNull(stage);
         requireNonNegative(sceneWidth);
         requireNonNegative(sceneHeight);
 
-        this.gameContext = gameContext;
+        this.context = context;
         this.stage = stage;
 
         clock.setPausableAction(this::simulateAndUpdateGameScene);
         clock.setPermanentAction(this::render);
 
-        configFactory = new GameUI_ConfigFactory(uiConfigMap, prefs);
+        uiConfigFactory = new GameUI_ConfigFactory(uiConfigMap, prefs);
         customDirWatchdog = new DirectoryWatchdog(GameBox.CUSTOM_MAP_DIR);
         scene = new Scene(layoutPane, sceneWidth, sceneHeight);
         pausedIcon = FontIcon.of(FontAwesomeSolid.PAUSE, PAUSE_ICON_SIZE, ArcadePalette.ARCADE_WHITE);
@@ -140,7 +139,7 @@ public final class GameUI_Implementation implements GameUI {
             views().currentViewProperty(),
             views().playView().currentGameSceneProperty(),
             scene.heightProperty(),
-            gameContext.gameVariantNameProperty(),
+            context.gameVariantNameProperty(),
             PROPERTY_DEBUG_INFO_VISIBLE,
             PROPERTY_3D_ENABLED,
             clock().pausedProperty()
@@ -157,7 +156,7 @@ public final class GameUI_Implementation implements GameUI {
         ));
 
         context().gameVariantNameProperty().addListener((_, _, _) -> {
-            final Game game = gameContext.currentGame();
+            final Game game = context.currentGame();
             statusIconBox.iconAutopilot().visibleProperty().bind(game.usingAutopilotProperty());
             statusIconBox.iconCheated()  .visibleProperty().bind(game.cheatUsedProperty());
             statusIconBox.iconImmune()   .visibleProperty().bind(game.immuneProperty());
@@ -218,7 +217,7 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     private void simulateAndUpdateGameScene() {
-        final Game game = gameContext.currentGame();
+        final Game game = context.currentGame();
         final SimulationStep step = game.simulationStep();
         step.init(clock.tickCount());
         try {
@@ -269,7 +268,7 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public GameContext context() {
-        return gameContext;
+        return context;
     }
 
     @Override
@@ -278,7 +277,7 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     @Override
-    public UIPreferences preferences() {
+    public PreferencesManager preferences() {
         return prefs;
     }
 
@@ -297,13 +296,13 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public void quitCurrentGameScene() {
-        final Game game = gameContext.currentGame();
+        final Game game = context.currentGame();
         //TODO this is game-specific and should not be here
         views().playView().optGameScene().ifPresent(gameScene -> {
             boolean shouldConsumeCoin = game.control().state().name().equals("STARTING_GAME_OR_LEVEL")
                 || game.isPlaying();
-            if (shouldConsumeCoin && !gameContext.coinMechanism().isEmpty()) {
-                gameContext.coinMechanism().consumeCoin();
+            if (shouldConsumeCoin && !context.coinMechanism().isEmpty()) {
+                context.coinMechanism().consumeCoin();
             }
             Logger.info("Quit game scene ({}), returning to start view", gameScene.getClass().getSimpleName());
         });
@@ -316,7 +315,7 @@ public final class GameUI_Implementation implements GameUI {
     @Override
     public void restart() {
         stopGame();
-        gameContext.currentGame().control().restart(GameControl.StateName.BOOT.name());
+        context.currentGame().control().restart(GameControl.StateName.BOOT.name());
         Platform.runLater(clock::start);
     }
 
@@ -350,7 +349,7 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public void showEditorView() {
-        if (!gameContext.currentGame().isPlaying() || clock.isPaused()) {
+        if (!context.currentGame().isPlaying() || clock.isPaused()) {
             stopGame();
             views().selectEditorView();
             return;
@@ -377,22 +376,22 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public GameUI_ConfigFactory configFactory() {
-        return configFactory;
+        return uiConfigFactory;
     }
 
     @Override
     public GameUI_Config config(String gameVariantName) {
-        return configFactory.getOrCreate(gameVariantName);
+        return uiConfigFactory.getOrCreate(gameVariantName);
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public <T extends GameUI_Config> T currentConfig() {
-        final String gameVariantName = gameContext.gameVariantName();
+        final String gameVariantName = context.gameVariantName();
         if (gameVariantName == null) {
             throw new IllegalStateException("Cannot access UI configuration: no game variant is selected");
         }
-        return (T) config(gameContext.gameVariantName());
+        return (T) config(context.gameVariantName());
     }
 
     @Override

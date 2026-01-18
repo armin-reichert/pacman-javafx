@@ -32,7 +32,7 @@ import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
-import de.amr.pacmanfx.uilib.assets.UIPreferences;
+import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.model3D.MsPacMan3D;
 import de.amr.pacmanfx.uilib.model3D.MsPacManBody;
 import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
@@ -60,12 +60,12 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config, GameScene_Config 
 
     private static final ResourceManager LOCAL_RESOURCES = () -> ArcadeMsPacMan_UIConfig.class;
 
-    private final UIPreferences prefs;
+    private final PreferencesManager prefs;
     private final AssetMap assets = new AssetMap();
     private final SoundManager soundManager = new SoundManager();
     private final Map<SceneID, GameScene> scenesByID = new HashMap<>();
 
-    public ArcadeMsPacMan_UIConfig(UIPreferences prefs) {
+    public ArcadeMsPacMan_UIConfig(PreferencesManager prefs) {
         this.prefs = requireNonNull(prefs);
     }
 

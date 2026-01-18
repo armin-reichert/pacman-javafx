@@ -7,7 +7,7 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 import de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_CreditsScene;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
-import de.amr.pacmanfx.uilib.assets.UIPreferences;
+import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.Globals.TS;
@@ -18,7 +18,7 @@ public class TengenMsPacMan_CreditsScene_Renderer extends GameScene2D_Renderer i
 
     private int y;
 
-    public TengenMsPacMan_CreditsScene_Renderer(UIPreferences prefs, GameScene2D scene, Canvas canvas) {
+    public TengenMsPacMan_CreditsScene_Renderer(PreferencesManager prefs, GameScene2D scene, Canvas canvas) {
         super(canvas);
         createDefaultDebugInfoRenderer(prefs, scene, canvas);
     }

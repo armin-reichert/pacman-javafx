@@ -4,17 +4,17 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui;
 
-import de.amr.pacmanfx.uilib.assets.UIPreferences;
+import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 import static de.amr.pacmanfx.Globals.TS;
 
-public class GameUI_Preferences extends UIPreferences {
+public class GameUI_PreferencesManager extends PreferencesManager {
 
-    public GameUI_Preferences() {
-        super(GameUI_Preferences.class);
+    public GameUI_PreferencesManager() {
+        super(GameUI_PreferencesManager.class);
     }
 
     protected void storeDefaultValues() {

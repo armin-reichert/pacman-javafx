@@ -14,7 +14,7 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
-import de.amr.pacmanfx.uilib.assets.UIPreferences;
+import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.scene.canvas.Canvas;
 
@@ -37,7 +37,7 @@ public class Arcade_PlayScene2D_Renderer extends GameScene2D_Renderer implements
     private final ActorRenderer actorRenderer;
     private final List<Actor> actorsInZOrder = new ArrayList<>();
 
-    public Arcade_PlayScene2D_Renderer(UIPreferences prefs, GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
+    public Arcade_PlayScene2D_Renderer(PreferencesManager prefs, GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(canvas);
         requireNonNull(prefs);
         requireNonNull(scene);

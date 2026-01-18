@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.uilib.assets.UIPreferences;
+import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,9 +14,9 @@ public class GameUI_ConfigFactory {
 
     private final Map<String, Class<? extends GameUI_Config>> configClasses;
     private final Map<String, GameUI_Config> cache = new HashMap<>();
-    private final UIPreferences prefs;
+    private final PreferencesManager prefs;
 
-    public GameUI_ConfigFactory(Map<String, Class<? extends GameUI_Config>> classes, UIPreferences prefs) {
+    public GameUI_ConfigFactory(Map<String, Class<? extends GameUI_Config>> classes, PreferencesManager prefs) {
         this.configClasses = classes;
         this.prefs = prefs;
     }
@@ -26,7 +26,7 @@ public class GameUI_ConfigFactory {
             final Class<?> clazz = configClasses.get(name);
             if (clazz == null) throw new IllegalArgumentException("No config for " + name);
             try {
-                final var config = (GameUI_Config) clazz.getConstructor(UIPreferences.class).newInstance(prefs);
+                final var config = (GameUI_Config) clazz.getConstructor(PreferencesManager.class).newInstance(prefs);
                 // UI configuration class must also implement GameScene_Config interface
                 final GameScene_Config sceneConfig = (GameScene_Config) config;
                 sceneConfig.gameScenes().forEach(scene -> {

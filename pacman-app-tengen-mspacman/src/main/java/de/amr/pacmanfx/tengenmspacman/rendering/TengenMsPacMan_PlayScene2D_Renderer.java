@@ -15,7 +15,7 @@ import de.amr.pacmanfx.ui.GameUI_Config;
 import de.amr.pacmanfx.ui._2d.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameScene2D_Renderer;
-import de.amr.pacmanfx.uilib.assets.UIPreferences;
+import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.rendering.CommonRenderInfoKey;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
@@ -38,7 +38,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends GameScene2D_Renderer
 
     private static class PlaySceneDebugInfoRenderer extends BaseDebugInfoRenderer {
 
-        public PlaySceneDebugInfoRenderer(UIPreferences prefs, Canvas canvas) {
+        public PlaySceneDebugInfoRenderer(PreferencesManager prefs, Canvas canvas) {
             super(prefs, canvas);
         }
 
@@ -70,7 +70,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends GameScene2D_Renderer
     private final List<Actor> actorsInZOrder = new ArrayList<>();
     private final Rectangle clipRect;
 
-    public TengenMsPacMan_PlayScene2D_Renderer(GameUI_Config uiConfig, UIPreferences prefs, GameScene2D scene, Canvas canvas) {
+    public TengenMsPacMan_PlayScene2D_Renderer(GameUI_Config uiConfig, PreferencesManager prefs, GameScene2D scene, Canvas canvas) {
         super(canvas);
 
         levelRenderer = (TengenMsPacMan_GameLevelRenderer) adaptRenderer(uiConfig.createGameLevelRenderer(canvas), scene);

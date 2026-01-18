@@ -15,12 +15,12 @@ import java.util.prefs.Preferences;
 
 import static de.amr.pacmanfx.uilib.Ufx.formatColorHex;
 
-public abstract class UIPreferences {
+public abstract class PreferencesManager {
 
     private final Map<String, Object> defaultValueMap = new HashMap<>();
     private final Preferences prefs;
 
-    public UIPreferences(Class<?> packageProvidingClass) {
+    public PreferencesManager(Class<?> packageProvidingClass) {
         prefs = Preferences.userNodeForPackage(packageProvidingClass);
         storeDefaultValues();
         if (!isBackingStoreAccessible()) {
