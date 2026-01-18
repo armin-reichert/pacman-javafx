@@ -145,7 +145,7 @@ public class GameUI_Builder {
             startPage.init(ui);
         }
 
-        ui.views().playView().dashboard().configure(dashboardIDs);
+        ui.views().playView().dashboard().configure(ui, dashboardIDs);
         return ui;
     }
 

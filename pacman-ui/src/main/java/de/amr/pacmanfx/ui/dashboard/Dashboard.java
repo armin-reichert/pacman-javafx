@@ -28,7 +28,6 @@ public class Dashboard extends VBox {
     public static final Color INFO_BOX_TEXT_COLOR = Color.WHITE;
     public static final Font INFO_BOX_FONT = Font.font("Sans", 12);
 
-    private GameUI ui;
     private final Map<DashboardID, InfoBox> infoBoxMap = new LinkedHashMap<>();
 
     public Dashboard() {
@@ -37,10 +36,6 @@ public class Dashboard extends VBox {
                 updateLayout();
             }
         });
-    }
-
-    public void setUI(GameUI ui) {
-        this.ui = requireNonNull(ui);
     }
 
     public void init(GameUI ui) {
@@ -58,7 +53,7 @@ public class Dashboard extends VBox {
         updateLayout();
     }
 
-    public void addCommonInfoBox(DashboardID id) {
+    public void addCommonInfoBox(GameUI ui, DashboardID id) {
         requireNonNull(id);
         switch (id) {
             case CommonDashboardID.ABOUT          -> addInfoBox(id, ui.translated("infobox.about.title"), new InfoBoxAbout(ui));
@@ -72,9 +67,7 @@ public class Dashboard extends VBox {
             case CommonDashboardID.KEYS_LOCAL     -> addInfoBox(id, ui.translated("infobox.keyboard_shortcuts_local.title"), new InfoBoxKeyShortcutsLocal(ui));
             case CommonDashboardID.README         -> addInfoBox(id, ui.translated("infobox.readme.title"), new InfoBoxReadmeFirst(ui));
             case CommonDashboardID.SETTINGS_3D    -> addInfoBox(id, ui.translated("infobox.3D_settings.title"), new InfoBox3DSettings(ui));
-            default -> {
-                Logger.warn("Unknown dashboard ID {}", id);
-            }
+            default -> Logger.warn("Unknown dashboard ID {}", id);
         }
         infoBoxMap.get(CommonDashboardID.README).setExpanded(true);
     }
@@ -90,11 +83,11 @@ public class Dashboard extends VBox {
         addInfoBox(id, title, infoBox, false);
     }
 
-    public void configure(List<DashboardID> dashboardIDS) {
-        addCommonInfoBox(CommonDashboardID.README);
+    public void configure(GameUI ui, List<DashboardID> dashboardIDS) {
+        addCommonInfoBox(ui, CommonDashboardID.README);
         for (DashboardID id : dashboardIDS) {
             if (id == CommonDashboardID.README) continue;
-            addCommonInfoBox(id);
+            addCommonInfoBox(ui, id);
         }
     }
 

@@ -91,7 +91,6 @@ public class PlayView extends StackPane implements GameUI_View {
     public void setUI(GameUI ui) {
         this.ui = requireNonNull(ui);
         contextMenu.setUI(ui);
-        dashboard.setUI(ui);
         miniView.setUI(ui);
         ui.context().gameVariantNameProperty().addListener(
             (_, oldVariantName, newVariantName) -> handleGameVariantChange(oldVariantName, newVariantName));
