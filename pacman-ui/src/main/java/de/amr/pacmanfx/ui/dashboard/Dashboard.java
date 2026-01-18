@@ -12,23 +12,21 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 
 public class Dashboard extends VBox {
 
-    public static final int INFOBOX_MIN_LABEL_WIDTH = 110;
-    public static final int INFOBOX_MIN_WIDTH = 350;
-    public static final Color INFO_BOX_CONTENT_BG_COLOR = Color.rgb(0, 0, 50, 1.0);
-    public static final Color INFO_BOX_TEXT_COLOR = Color.WHITE;
-    public static final Font INFO_BOX_FONT = Font.font("Sans", 12);
+    public static final int SECTION_MIN_LABEL_WIDTH = 110;
+    public static final int SECTION_MIN_WIDTH = 350;
 
-    private final Map<DashboardID, DashboardSection> infoBoxMap = new LinkedHashMap<>();
+    public static final Color SECTION_CONTENT_BG_COLOR = Color.rgb(0, 0, 50, 1.0);
+    public static final Color SECTION_TEXT_COLOR = Color.WHITE;
+    public static final Font  SECTION_FONT = Font.font("Sans", 12);
+
+    private final Map<DashboardID, DashboardSection> sectionsByID = new LinkedHashMap<>();
 
     public Dashboard() {
         visibleProperty().addListener((_, _, visible) -> {
@@ -39,51 +37,57 @@ public class Dashboard extends VBox {
     }
 
     public void init(GameUI ui) {
-        infoBoxes().forEach(infoBox -> infoBox.init(ui));
+        sections().forEach(infoBox -> infoBox.init(ui));
     }
 
     public void update(GameUI ui) {
-        infoBoxes().filter(DashboardSection::isExpanded).forEach(section -> section.update(ui));
+        sections().filter(DashboardSection::isExpanded).forEach(section -> section.update(ui));
     }
 
     public void toggleVisibility() {
         setVisible(!isVisible());
     }
 
-    public Stream<DashboardSection> infoBoxes() { return infoBoxMap.values().stream(); }
+    public Stream<DashboardSection> sections() { return sectionsByID.values().stream(); }
 
-    public void removeInfoBox(DashboardID id) {
-        infoBoxMap.remove(id);
+    public void removeSection(DashboardID id) {
+        sectionsByID.remove(id);
         updateLayout();
     }
 
-    public void addCommonInfoBox(GameUI ui, DashboardID id) {
+    public void addCommonSection(GameUI ui, DashboardID id) {
         requireNonNull(id);
         switch (id) {
-            case CommonDashboardID.ABOUT          -> addInfoBox(id, ui.translated("infobox.about.title"), new DashboardSectionAbout(this));
-            case CommonDashboardID.ACTOR_INFO     -> addInfoBox(id, ui.translated("infobox.actor_info.title"), new InfoBoxActorInfo(this), true);
-            case CommonDashboardID.ANIMATION_INFO -> addInfoBox(id, ui.translated("infobox.animation_info.title"), new DashboardSectionGameLevelAnimations(this), true);
-            case CommonDashboardID.CUSTOM_MAPS    -> addInfoBox(id, ui.translated("infobox.custom_maps.title"), new DashboardSectionCustomMaps(this), true);
-            case CommonDashboardID.GENERAL        -> addInfoBox(id, ui.translated("infobox.general.title"), new DashboardSectionGeneral(this));
-            case CommonDashboardID.GAME_CONTROL   -> addInfoBox(id, ui.translated("infobox.game_control.title"), new DashboardSectionGameControl(this));
-            case CommonDashboardID.GAME_INFO      -> addInfoBox(id, ui.translated("infobox.game_info.title"), new InfoBoxGameInfo(this), true);
-            case CommonDashboardID.KEYS_GLOBAL    -> addInfoBox(id, ui.translated("infobox.keyboard_shortcuts_global.title"), new DashboardSectionKeyShortcutsGlobal(this), true);
-            case CommonDashboardID.KEYS_LOCAL     -> addInfoBox(id, ui.translated("infobox.keyboard_shortcuts_local.title"), new DashboardSectionKeyShortcutsLocal(this));
-            case CommonDashboardID.README         -> addInfoBox(id, ui.translated("infobox.readme.title"), new DashboardSectionReadmeFirst(this));
-            case CommonDashboardID.SETTINGS_3D    -> addInfoBox(id, ui.translated("infobox.3D_settings.title"), new DashboardSection3DSettings(this));
+            case CommonDashboardID.ABOUT          -> addSection(id, ui.translated("infobox.about.title"), new DashboardSectionAbout(this));
+            case CommonDashboardID.ACTOR_INFO     -> addSection(id, ui.translated("infobox.actor_info.title"), new InfoBoxActorInfo(this), true);
+            case CommonDashboardID.ANIMATION_INFO -> addSection(id, ui.translated("infobox.animation_info.title"), new DashboardSectionGameLevelAnimations(this), true);
+            // this dashboard section needs additional configuration to work!
+            case CommonDashboardID.CUSTOM_MAPS    -> addSection(id, ui.translated("infobox.custom_maps.title"), new DashboardSectionCustomMaps(this), true);
+            case CommonDashboardID.GENERAL        -> addSection(id, ui.translated("infobox.general.title"), new DashboardSectionGeneral(this));
+            case CommonDashboardID.GAME_CONTROL   -> addSection(id, ui.translated("infobox.game_control.title"), new DashboardSectionGameControl(this));
+            case CommonDashboardID.GAME_INFO      -> addSection(id, ui.translated("infobox.game_info.title"), new InfoBoxGameInfo(this), true);
+            case CommonDashboardID.KEYS_GLOBAL    -> addSection(id, ui.translated("infobox.keyboard_shortcuts_global.title"), new DashboardSectionKeyShortcutsGlobal(this), true);
+            case CommonDashboardID.KEYS_LOCAL     -> addSection(id, ui.translated("infobox.keyboard_shortcuts_local.title"), new DashboardSectionKeyShortcutsLocal(this));
+            case CommonDashboardID.README         -> addSection(id, ui.translated("infobox.readme.title"), new DashboardSectionReadmeFirst(this));
+            case CommonDashboardID.SETTINGS_3D    -> addSection(id, ui.translated("infobox.3D_settings.title"), new DashboardSection3DSettings(this));
             default -> Logger.warn("Unknown dashboard ID {}", id);
         }
-        infoBoxMap.get(CommonDashboardID.README).setExpanded(true);
+        sectionsByID.get(CommonDashboardID.README).setExpanded(true);
     }
 
-    public void addInfoBox(DashboardID id, String title, DashboardSection dashboardSection, boolean maximized) {
-        infoBoxMap.put(id, preconfiguredInfoBox(title, dashboardSection));
-        dashboardSection.setDisplayedMaximized(maximized);
-        dashboardSection.setMinWidth(INFOBOX_MIN_WIDTH);
+    public Optional<DashboardSection> findSection(DashboardID id) {
+        requireNonNull(id);
+        return Optional.ofNullable(sectionsByID.get(id));
     }
 
-    public void addInfoBox(DashboardID id, String title, DashboardSection dashboardSection) {
-        addInfoBox(id, title, dashboardSection, false);
+    public void addSection(DashboardID id, String title, DashboardSection section, boolean maximized) {
+        sectionsByID.put(id, preconfiguredSection(title, section));
+        section.setDisplayedMaximized(maximized);
+        section.setMinWidth(SECTION_MIN_WIDTH);
+    }
+
+    public void addSection(DashboardID id, String title, DashboardSection section) {
+        addSection(id, title, section, false);
     }
 
     /**
@@ -92,46 +96,46 @@ public class Dashboard extends VBox {
      * @param ui the UI
      * @param ids the dashboard info box IDs
      */
-    public void addInfoBoxes(GameUI ui, List<DashboardID> ids) {
+    public void addSections(GameUI ui, List<DashboardID> ids) {
         requireNonNull(ui);
         requireNonNull(ids);
-        addCommonInfoBox(ui, CommonDashboardID.README);
+        addCommonSection(ui, CommonDashboardID.README);
         for (DashboardID id : ids) {
-            if (id != CommonDashboardID.README) addCommonInfoBox(ui, id);
+            if (id != CommonDashboardID.README) addCommonSection(ui, id);
         }
     }
 
     private void updateLayout() {
-        final List<DashboardSection> dashboardSections = new ArrayList<>();
-        infoBoxMap.entrySet().stream()
+        final List<DashboardSection> sectionList = new ArrayList<>();
+        sectionsByID.entrySet().stream()
             .filter(e -> e.getKey() != CommonDashboardID.README)
             .filter(e -> e.getKey() != CommonDashboardID.ABOUT)
-            .forEach(e -> dashboardSections.add(e.getValue()));
-        if (infoBoxMap.containsKey(CommonDashboardID.README)) {
-            dashboardSections.addFirst(infoBoxMap.get(CommonDashboardID.README));
+            .forEach(e -> sectionList.add(e.getValue()));
+        if (sectionsByID.containsKey(CommonDashboardID.README)) {
+            sectionList.addFirst(sectionsByID.get(CommonDashboardID.README));
         }
-        if (infoBoxMap.containsKey(CommonDashboardID.ABOUT)) {
-            dashboardSections.addLast(infoBoxMap.get(CommonDashboardID.ABOUT));
+        if (sectionsByID.containsKey(CommonDashboardID.ABOUT)) {
+            sectionList.addLast(sectionsByID.get(CommonDashboardID.ABOUT));
         }
-        getChildren().setAll(dashboardSections.toArray(DashboardSection[]::new));
+        getChildren().setAll(sectionList.toArray(DashboardSection[]::new));
     }
 
-    public void showVisibleInfoBoxesOnly(boolean onlyVisible) {
+    public void setIncludeOnlyVisibleSections(boolean onlyVisibleSections) {
         getChildren().clear();
-        if (onlyVisible) {
-            infoBoxes().filter(Node::isVisible).forEach(getChildren()::add);
+        if (onlyVisibleSections) {
+            sections().filter(Node::isVisible).forEach(getChildren()::add);
         } else {
-            infoBoxes().forEach(getChildren()::add);
+            sections().forEach(getChildren()::add);
         }
     }
 
-    private DashboardSection preconfiguredInfoBox(String title, DashboardSection dashboardSection) {
-        dashboardSection.setText(title);
-        dashboardSection.setMinLabelWidth(INFOBOX_MIN_LABEL_WIDTH);
-        dashboardSection.setContentBackground(Background.fill(INFO_BOX_CONTENT_BG_COLOR));
-        dashboardSection.setTextColor(INFO_BOX_TEXT_COLOR);
-        dashboardSection.setContentTextFont(INFO_BOX_FONT);
-        dashboardSection.setLabelFont(INFO_BOX_FONT);
-        return dashboardSection;
+    private DashboardSection preconfiguredSection(String title, DashboardSection section) {
+        section.setText(title);
+        section.setMinLabelWidth(SECTION_MIN_LABEL_WIDTH);
+        section.setContentBackground(Background.fill(SECTION_CONTENT_BG_COLOR));
+        section.setTextColor(SECTION_TEXT_COLOR);
+        section.setContentTextFont(SECTION_FONT);
+        section.setLabelFont(SECTION_FONT);
+        return section;
     }
 }

@@ -9,6 +9,8 @@ import de.amr.pacmanfx.arcade.pacman_xxl.*;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.dashboard.CommonDashboardID;
+import de.amr.pacmanfx.ui.dashboard.Dashboard;
+import de.amr.pacmanfx.ui.dashboard.DashboardSectionCustomMaps;
 import javafx.application.Application;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -53,6 +55,12 @@ public class PacManXXL_App extends Application {
             .startPage(PacManXXL_StartPage.class, ARCADE_PACMAN_XXL.name())
             .build();
 
+        final Dashboard dashboard = ui.views().playView().dashboard();
+        dashboard.findSection(CommonDashboardID.CUSTOM_MAPS).ifPresent(section -> {
+            final var sectionCustomMaps = (DashboardSectionCustomMaps) section;
+            sectionCustomMaps.setCustomDirWatchDog(ui.customDirWatchdog());
+            sectionCustomMaps.setMapEditFunction(mapFile -> ui.editWorldMap(mapFile));
+        });
         ui.customDirWatchdog().addEventListener(mapSelector);
         ui.show();
     }

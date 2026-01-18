@@ -66,11 +66,11 @@ public abstract class DashboardSection extends TitledPane {
         expandedProperty().addListener((_, _, expanded) -> {
             if (displayedMaximized) {
                 if (expanded) {
-                    dashboard.infoBoxes().filter(infoBox -> infoBox != this).forEach(otherInfoBox -> otherInfoBox.setVisible(false));
-                    dashboard.showVisibleInfoBoxesOnly(true);
+                    dashboard.sections().filter(infoBox -> infoBox != this).forEach(otherInfoBox -> otherInfoBox.setVisible(false));
+                    dashboard.setIncludeOnlyVisibleSections(true);
                 } else {
-                    dashboard.infoBoxes().forEach(infoBox -> infoBox.setVisible(true));
-                    dashboard.showVisibleInfoBoxesOnly(false);
+                    dashboard.sections().forEach(infoBox -> infoBox.setVisible(true));
+                    dashboard.setIncludeOnlyVisibleSections(false);
                 }
             }
         });
@@ -232,7 +232,7 @@ public abstract class DashboardSection extends TitledPane {
         var slider = new Slider(min, max, initialValue);
         slider.setShowTickMarks(tickMarks);
         slider.setShowTickLabels(tickLabels);
-        slider.setPrefWidth(0.5 * Dashboard.INFOBOX_MIN_WIDTH);
+        slider.setPrefWidth(0.5 * Dashboard.SECTION_MIN_WIDTH);
         slider.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             if (e.getClickCount() == 2) {
                 slider.setValue(initialValue);

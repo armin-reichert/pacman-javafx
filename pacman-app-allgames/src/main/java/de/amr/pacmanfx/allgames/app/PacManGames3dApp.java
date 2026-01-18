@@ -29,6 +29,7 @@ import de.amr.pacmanfx.ui.GameUI_Implementation;
 import de.amr.pacmanfx.ui.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
+import de.amr.pacmanfx.ui.dashboard.DashboardSectionCustomMaps;
 import de.amr.pacmanfx.ui.layout.StartPagesCarousel;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -95,11 +96,18 @@ public class PacManGames3dApp extends Application {
                 : createUI_WithoutBuilder(primaryStage, width, height, xxlMapSelector);
 
             final Dashboard dashboard = ui.views().playView().dashboard();
-            dashboard.addInfoBox(
+            dashboard.addSection(
                 TengenMsPacMan_DashboardID.JOYPAD,
                 TengenMsPacMan_UIConfig.TEXT_BUNDLE.getString("infobox.joypad.title"),
                 new DashboardSectionJoypad(dashboard));
 
+            dashboard.findSection(CommonDashboardID.CUSTOM_MAPS).ifPresent(section -> {
+                final var sectionCustomMaps = (DashboardSectionCustomMaps) section;
+                sectionCustomMaps.setCustomDirWatchDog(ui.customDirWatchdog());
+                sectionCustomMaps.setMapEditFunction(mapFile -> {
+                    ui.editWorldMap(mapFile);
+                });
+            });
             ui.customDirWatchdog().addEventListener(xxlMapSelector);
             ui.show();
         }
@@ -143,11 +151,7 @@ public class PacManGames3dApp extends Application {
         startPages.setSelectedIndex(0);
 
         final Dashboard dashboard = ui.views().playView().dashboard();
-        dashboard.addInfoBoxes(ui, List.of(DASHBOARD_IDS));
-        dashboard.addInfoBox(
-            TengenMsPacMan_DashboardID.JOYPAD,
-            TengenMsPacMan_UIConfig.TEXT_BUNDLE.getString("infobox.joypad.title"),
-            new DashboardSectionJoypad(dashboard));
+        dashboard.addSections(ui, List.of(DASHBOARD_IDS));
 
         return ui;
     }

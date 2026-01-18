@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.action.CheatActions;
@@ -14,8 +15,8 @@ import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.sound.VoicePlayer;
 import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.assets.LocalizedTextAccessor;
-import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
+import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.beans.property.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
@@ -25,7 +26,9 @@ import javafx.scene.shape.DrawMode;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.tinylog.Logger;
 
+import java.io.File;
 import java.util.ResourceBundle;
 import java.util.Set;
 
@@ -237,4 +240,24 @@ public interface GameUI extends LocalizedTextAccessor {
      * Terminates the game and stops the game clock. Called when the application is terminated by closing the stage.
      */
     void terminate();
+
+    /**
+     * Default implementation of a function to open a map file and show it in the editor view.
+     *
+     * @param mapFile a map file
+     */
+    default void editWorldMap(File mapFile) {
+        Logger.debug("Edit map file {}", mapFile);
+        views().selectEditorView(); // this ensures the editor view is created!
+        views().optEditorView().ifPresent(editorView -> {
+            try {
+                final WorldMap map = WorldMap.loadFromFile(mapFile);
+                editorView.editor().setCurrentWorldMap(map);
+                editorView.editor().setCurrentFile(mapFile);
+            } catch (Exception x) {
+                Logger.error("Could not open map file {}", mapFile);
+            }
+            showEditorView();
+        });
+    }
 }

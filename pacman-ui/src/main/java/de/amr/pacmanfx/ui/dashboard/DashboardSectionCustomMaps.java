@@ -8,7 +8,6 @@ import de.amr.pacmanfx.GameBox;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapParseException;
-import de.amr.pacmanfx.ui.GameUI;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -61,7 +60,7 @@ public class DashboardSectionCustomMaps extends DashboardSection {
             column.setReorderable(false);
         });
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
-        tableView.setPrefWidth(Dashboard.INFOBOX_MIN_WIDTH - 20);
+        tableView.setPrefWidth(Dashboard.SECTION_MIN_WIDTH - 20);
         tableView.setPrefHeight(500);
         tableView.setItems(customMaps);
 
@@ -74,7 +73,6 @@ public class DashboardSectionCustomMaps extends DashboardSection {
         });
     }
 
-    //TODO Call me!
     public void setCustomDirWatchDog(DirectoryWatchdog watchdog) {
         watchdog.addEventListener(eventList -> {
             Logger.info("Custom map change(s) detected: {}",
@@ -85,24 +83,8 @@ public class DashboardSectionCustomMaps extends DashboardSection {
         });
     }
 
-    //TODO Call me!
     public void setMapEditFunction(Consumer<File> mapEditFunction) {
         this.mapEditFunction = requireNonNull(mapEditFunction);
-    }
-
-    //TODO set this as map edit function
-    private void editWorldMap(GameUI ui, File mapFile) {
-        Logger.debug("Edit map file {}", mapFile);
-        ui.views().optEditorView().ifPresent(editorView -> {
-            try {
-                final WorldMap map = WorldMap.loadFromFile(mapFile);
-                editorView.editor().setCurrentWorldMap(map);
-                editorView.editor().setCurrentFile(mapFile);
-            } catch (Exception x) {
-                Logger.error("Could not open map file {}", mapFile);
-            }
-            ui.showEditorView();
-        });
     }
 
     private TableColumn<WorldMap, Integer> createMapRowCountTableColumn() {
@@ -168,7 +150,7 @@ public class DashboardSectionCustomMaps extends DashboardSection {
 
     private void updateCustomMapList() {
         customMaps.clear();
-        File[] mapFiles = GameBox.CUSTOM_MAP_DIR.listFiles((_, name) -> name.endsWith(".world"));
+        final File[] mapFiles = GameBox.CUSTOM_MAP_DIR.listFiles((_, name) -> name.endsWith(".world"));
         if (mapFiles == null) {
             Logger.error("An error occurred accessing custom map directory {}", GameBox.CUSTOM_MAP_DIR);
             return;
@@ -180,18 +162,15 @@ public class DashboardSectionCustomMaps extends DashboardSection {
         }
         for (File file : mapFiles) {
             try {
-                WorldMap worldMap = WorldMap.loadFromFile(file);
+                final WorldMap worldMap = WorldMap.loadFromFile(file);
                 customMaps.add(worldMap);
                 Logger.info("Custom map loaded from file {}", file);
             } catch (IOException x) {
                 Logger.error("Could not open world map");
-                throw new RuntimeException(x);
             }
             catch (WorldMapParseException x) {
                 Logger.error("Could not parse world map");
-                throw new RuntimeException(x);
             }
         }
     }
-
 }
