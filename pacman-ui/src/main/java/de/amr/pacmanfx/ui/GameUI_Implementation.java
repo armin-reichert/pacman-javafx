@@ -143,8 +143,7 @@ public final class GameUI_Implementation implements GameUI {
                 final boolean is3D   = PROPERTY_3D_ENABLED.get();
                 final boolean paused = clock.isPaused();
                 return computeStageTitle(this, view, assets, gameScene, debug, is3D, paused);
-            },
-            // depends on:
+            }, // depends on:
             context.gameVariantNameProperty(),
             views().currentViewProperty(),
             views().playView().currentGameSceneProperty(),
@@ -195,35 +194,6 @@ public final class GameUI_Implementation implements GameUI {
             () -> views().currentView().onKeyboardInput(this)
         ));
         scene.setOnScroll(e -> views().playView().optGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
-    }
-
-    private static String computeStageTitle(
-        Translator translator,
-        GameUI_View view,
-        AssetMap assets,
-        GameScene gameScene,
-        boolean debug,
-        boolean is3D,
-        boolean paused)
-    {
-        if (view == null) {
-            return "No View?";
-        }
-
-        // If view explicitly provides a title, use that
-        if (view.titleSupplier().isPresent()) {
-            return view.titleSupplier().get().get();
-        }
-
-        final String appTitle     = paused ? "app.title.paused" : "app.title";
-        final String viewModeText = translator.translate(is3D ? "threeD" : "twoD");
-        final String shortTitle   = assets == null ? "" : assets.translate(appTitle, viewModeText);
-
-        if (gameScene == null || !debug) {
-            return shortTitle;
-        }
-        final String sceneClassName = gameScene.getClass().getSimpleName();
-        return "%s [%s]".formatted(shortTitle, sceneClassName);
     }
 
     private void simulateAndUpdateGameScene() {
@@ -407,5 +377,24 @@ public final class GameUI_Implementation implements GameUI {
     @Override
     public GameScene_Config currentGameSceneConfig() {
         return currentConfig();
+    }
+
+    // private stuff
+
+    private static String computeStageTitle(Translator translator, GameUI_View view, AssetMap assets, GameScene gameScene,
+        boolean debug, boolean is3D, boolean paused)
+    {
+        if (view == null) {
+            return translator.translate("view.missing"); // Should never happen
+        }
+        if (view.titleSupplier().isPresent()) {
+            return view.titleSupplier().get().get();
+        }
+        final String appTitle = paused ? "app.title.paused" : "app.title";
+        final String viewMode = translator.translate(is3D ? "threeD" : "twoD");
+        final String normalTitle = assets == null ? "" : assets.translate(appTitle, viewMode);
+        return gameScene == null || !debug
+            ? normalTitle
+            : "%s [%s]".formatted(normalTitle, gameScene.getClass().getSimpleName());
     }
 }
