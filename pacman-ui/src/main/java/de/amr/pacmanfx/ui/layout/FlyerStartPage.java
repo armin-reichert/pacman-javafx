@@ -76,7 +76,7 @@ public abstract class FlyerStartPage extends StackPane implements GameUI_StartPa
 
     protected Node createStartButton(GameUI ui) {
         Node button = createDefaultStartButton(
-            ui.translated("play_button"),
+            ui.translate("play_button"),
             () -> ACTION_BOOT_SHOW_PLAY_VIEW.executeIfEnabled(ui)
         );
         button.setTranslateY(-50);

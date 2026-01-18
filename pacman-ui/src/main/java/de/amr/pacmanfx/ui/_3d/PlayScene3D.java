@@ -27,8 +27,8 @@ import de.amr.pacmanfx.ui.action.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.layout.GameUI_ContextMenu;
 import de.amr.pacmanfx.ui.sound.SoundID;
-import de.amr.pacmanfx.uilib.assets.LocalizedTextAccessor;
 import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
+import de.amr.pacmanfx.uilib.assets.Translator;
 import de.amr.pacmanfx.uilib.model3D.Bonus3D;
 import de.amr.pacmanfx.uilib.model3D.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.Scores3D;
@@ -547,10 +547,10 @@ public abstract class PlayScene3D implements GameScene {
         subSceneRoot.getChildren().add(scores3D);
     }
 
-    protected void createScores3D(LocalizedTextAccessor localizedTexts) {
+    protected void createScores3D(Translator localizedTexts) {
         scores3D = new Scores3D(
-            localizedTexts.translated("score.score"),
-            localizedTexts.translated("score.high_score"),
+            localizedTexts.translate("score.score"),
+            localizedTexts.translate("score.high_score"),
             GameUI.FONT_ARCADE_8
         );
 
@@ -609,7 +609,7 @@ public abstract class PlayScene3D implements GameScene {
         }
         else { // disabled, show text "GAME OVER"
             Color color = ui.currentConfig().assets().color("color.game_over_message");
-            scores3D.showTextForScore(ui.translated("score.game_over"), color);
+            scores3D.showTextForScore(ui.translate("score.game_over"), color);
         }
         // Always show high score
         scores3D.showHighScore(highScore.points(), highScore.levelNumber());

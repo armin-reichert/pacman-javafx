@@ -11,11 +11,11 @@ import java.util.ResourceBundle;
 
 import static java.util.Objects.requireNonNull;
 
-public interface LocalizedTextAccessor {
+public interface Translator {
 
     ResourceBundle localizedTexts();
 
-    default String translated(String keyOrPattern, Object... args) {
+    default String translate(String keyOrPattern, Object... args) {
         requireNonNull(keyOrPattern);
         requireNonNull(args);
         if (localizedTexts() == null) {

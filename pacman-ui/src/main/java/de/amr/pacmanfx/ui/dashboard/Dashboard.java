@@ -58,18 +58,18 @@ public class Dashboard extends VBox {
     public void addCommonSection(GameUI ui, DashboardID id) {
         requireNonNull(id);
         switch (id) {
-            case CommonDashboardID.ABOUT          -> addSection(id, ui.translated("infobox.about.title"), new DashboardSectionAbout(this));
-            case CommonDashboardID.ACTOR_INFO     -> addSection(id, ui.translated("infobox.actor_info.title"), new InfoBoxActorInfo(this), true);
-            case CommonDashboardID.ANIMATION_INFO -> addSection(id, ui.translated("infobox.animation_info.title"), new DashboardSectionGameLevelAnimations(this), true);
+            case CommonDashboardID.ABOUT          -> addSection(id, ui.translate("infobox.about.title"), new DashboardSectionAbout(this));
+            case CommonDashboardID.ACTOR_INFO     -> addSection(id, ui.translate("infobox.actor_info.title"), new InfoBoxActorInfo(this), true);
+            case CommonDashboardID.ANIMATION_INFO -> addSection(id, ui.translate("infobox.animation_info.title"), new DashboardSectionGameLevelAnimations(this), true);
             // this dashboard section needs additional configuration to work!
-            case CommonDashboardID.CUSTOM_MAPS    -> addSection(id, ui.translated("infobox.custom_maps.title"), new DashboardSectionCustomMaps(this), true);
-            case CommonDashboardID.GENERAL        -> addSection(id, ui.translated("infobox.general.title"), new DashboardSectionGeneral(this));
-            case CommonDashboardID.GAME_CONTROL   -> addSection(id, ui.translated("infobox.game_control.title"), new DashboardSectionGameControl(this));
-            case CommonDashboardID.GAME_INFO      -> addSection(id, ui.translated("infobox.game_info.title"), new InfoBoxGameInfo(this), true);
-            case CommonDashboardID.KEYS_GLOBAL    -> addSection(id, ui.translated("infobox.keyboard_shortcuts_global.title"), new DashboardSectionKeyShortcutsGlobal(this), true);
-            case CommonDashboardID.KEYS_LOCAL     -> addSection(id, ui.translated("infobox.keyboard_shortcuts_local.title"), new DashboardSectionKeyShortcutsLocal(this));
-            case CommonDashboardID.README         -> addSection(id, ui.translated("infobox.readme.title"), new DashboardSectionReadmeFirst(this));
-            case CommonDashboardID.SETTINGS_3D    -> addSection(id, ui.translated("infobox.3D_settings.title"), new DashboardSection3DSettings(this));
+            case CommonDashboardID.CUSTOM_MAPS    -> addSection(id, ui.translate("infobox.custom_maps.title"), new DashboardSectionCustomMaps(this), true);
+            case CommonDashboardID.GENERAL        -> addSection(id, ui.translate("infobox.general.title"), new DashboardSectionGeneral(this));
+            case CommonDashboardID.GAME_CONTROL   -> addSection(id, ui.translate("infobox.game_control.title"), new DashboardSectionGameControl(this));
+            case CommonDashboardID.GAME_INFO      -> addSection(id, ui.translate("infobox.game_info.title"), new InfoBoxGameInfo(this), true);
+            case CommonDashboardID.KEYS_GLOBAL    -> addSection(id, ui.translate("infobox.keyboard_shortcuts_global.title"), new DashboardSectionKeyShortcutsGlobal(this), true);
+            case CommonDashboardID.KEYS_LOCAL     -> addSection(id, ui.translate("infobox.keyboard_shortcuts_local.title"), new DashboardSectionKeyShortcutsLocal(this));
+            case CommonDashboardID.README         -> addSection(id, ui.translate("infobox.readme.title"), new DashboardSectionReadmeFirst(this));
+            case CommonDashboardID.SETTINGS_3D    -> addSection(id, ui.translate("infobox.3D_settings.title"), new DashboardSection3DSettings(this));
             default -> Logger.warn("Unknown dashboard ID {}", id);
         }
         sectionsByID.get(CommonDashboardID.README).setExpanded(true);

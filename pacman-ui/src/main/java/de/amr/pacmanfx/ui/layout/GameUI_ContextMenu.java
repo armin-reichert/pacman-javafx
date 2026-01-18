@@ -68,29 +68,29 @@ public class GameUI_ContextMenu extends ContextMenu {
     }
 
     public MenuItem addLocalizedActionItem(Runnable action, String globalAssetsKey, Object... args) {
-        var actionItem = new MenuItem(ui.translated(globalAssetsKey, args));
+        var actionItem = new MenuItem(ui.translate(globalAssetsKey, args));
         actionItem.setOnAction(e -> action.run());
         return add(actionItem);
     }
 
     public MenuItem addLocalizedActionItem(GameAction action, String globalAssetsKey, Object... args) {
-        var actionItem = new MenuItem(ui.translated(globalAssetsKey, args));
+        var actionItem = new MenuItem(ui.translate(globalAssetsKey, args));
         actionItem.setOnAction(e -> action.executeIfEnabled(ui));
         return add(actionItem);
     }
 
     public MenuItem addLocalizedTitleItem(String globalAssetsKey, Object... args) {
-        return addTitleItem(ui.translated(globalAssetsKey, args));
+        return addTitleItem(ui.translate(globalAssetsKey, args));
     }
 
     public CheckMenuItem addLocalizedCheckBox(BooleanProperty selectionProperty, String globalAssetsKey, Object... args) {
-        var checkMenuItem = new CheckMenuItem(ui.translated(globalAssetsKey, args));
+        var checkMenuItem = new CheckMenuItem(ui.translate(globalAssetsKey, args));
         checkMenuItem.selectedProperty().bindBidirectional(selectionProperty);
         return add(checkMenuItem);
     }
 
     public RadioMenuItem addLocalizedRadioButton(String globalAssetsKey, Object... args) {
-        return add(new RadioMenuItem(ui.translated(globalAssetsKey, args)));
+        return add(new RadioMenuItem(ui.translate(globalAssetsKey, args)));
     }
 
     public void addSeparator() {

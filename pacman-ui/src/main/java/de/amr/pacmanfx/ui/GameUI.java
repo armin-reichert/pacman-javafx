@@ -14,9 +14,9 @@ import de.amr.pacmanfx.ui.action.TestActions;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.sound.VoicePlayer;
 import de.amr.pacmanfx.uilib.GameClock;
-import de.amr.pacmanfx.uilib.assets.LocalizedTextAccessor;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
+import de.amr.pacmanfx.uilib.assets.Translator;
 import javafx.beans.property.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
@@ -38,7 +38,7 @@ import static de.amr.pacmanfx.ui.action.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.*;
 import static de.amr.pacmanfx.uilib.Ufx.createImageBackground;
 
-public interface GameUI extends LocalizedTextAccessor {
+public interface GameUI extends Translator {
 
     Keyboard KEYBOARD = new Keyboard();
 

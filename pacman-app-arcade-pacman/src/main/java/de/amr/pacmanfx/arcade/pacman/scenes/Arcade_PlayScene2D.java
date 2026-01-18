@@ -217,7 +217,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
             game.cheatUsedProperty().set(true);
         }
         ui.voicePlayer().play(usingAutopilot ? GameUI.VOICE_AUTOPILOT_ON : GameUI.VOICE_AUTOPILOT_OFF);
-        ui.showFlashMessage(ui.translated(usingAutopilot ? "autopilot_on" : "autopilot_off"));
+        ui.showFlashMessage(ui.translate(usingAutopilot ? "autopilot_on" : "autopilot_off"));
     }
 
     private void setImmunity(Game game, boolean immune) {
@@ -225,7 +225,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
             game.cheatUsedProperty().set(true);
         }
         ui.voicePlayer().play(immune ? GameUI.VOICE_IMMUNITY_ON : GameUI.VOICE_IMMUNITY_OFF);
-        ui.showFlashMessage(ui.translated(immune ? "player_immunity_on" : "player_immunity_off"));
+        ui.showFlashMessage(ui.translate(immune ? "player_immunity_on" : "player_immunity_off"));
     }
 
     /**

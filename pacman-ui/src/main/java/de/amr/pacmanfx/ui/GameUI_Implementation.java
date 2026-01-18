@@ -17,6 +17,7 @@ import de.amr.pacmanfx.ui.sound.VoicePlayer;
 import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
+import de.amr.pacmanfx.uilib.assets.Translator;
 import de.amr.pacmanfx.uilib.model3D.PacManModel3DRepository;
 import de.amr.pacmanfx.uilib.rendering.Gradients;
 import de.amr.pacmanfx.uilib.widgets.FlashMessageView;
@@ -134,12 +135,19 @@ public final class GameUI_Implementation implements GameUI {
         );
 
         titleBinding = createStringBinding(
-            () -> context().currentGame() == null ? computeStageTitle(null) : computeStageTitle(currentConfig().assets()),
+            () -> {
+                final GameScene gameScene = viewManager.playView().optGameScene().orElse(null);
+                final AssetMap assets = currentConfig().assets();
+                final GameUI_View view = views().currentView();
+                final boolean debug  = PROPERTY_DEBUG_INFO_VISIBLE.get();
+                final boolean is3D   = PROPERTY_3D_ENABLED.get();
+                final boolean paused = clock.isPaused();
+                return computeStageTitle(this, view, assets, gameScene, debug, is3D, paused);
+            },
             // depends on:
+            context.gameVariantNameProperty(),
             views().currentViewProperty(),
             views().playView().currentGameSceneProperty(),
-            scene.heightProperty(),
-            context.gameVariantNameProperty(),
             PROPERTY_DEBUG_INFO_VISIBLE,
             PROPERTY_3D_ENABLED,
             clock().pausedProperty()
@@ -189,8 +197,15 @@ public final class GameUI_Implementation implements GameUI {
         scene.setOnScroll(e -> views().playView().optGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
     }
 
-    private String computeStageTitle(AssetMap assets) {
-        final GameUI_View view = views().currentView();
+    private static String computeStageTitle(
+        Translator translator,
+        GameUI_View view,
+        AssetMap assets,
+        GameScene gameScene,
+        boolean debug,
+        boolean is3D,
+        boolean paused)
+    {
         if (view == null) {
             return "No View?";
         }
@@ -200,15 +215,10 @@ public final class GameUI_Implementation implements GameUI {
             return view.titleSupplier().get().get();
         }
 
-        final boolean debug  = PROPERTY_DEBUG_INFO_VISIBLE.get();
-        final boolean is3D   = PROPERTY_3D_ENABLED.get();
-        final boolean paused = clock.isPaused();
-
         final String appTitle     = paused ? "app.title.paused" : "app.title";
-        final String viewModeText = translated(is3D ? "threeD" : "twoD");
-        final String shortTitle   = assets == null ? "" : assets.translated(appTitle, viewModeText);
+        final String viewModeText = translator.translate(is3D ? "threeD" : "twoD");
+        final String shortTitle   = assets == null ? "" : assets.translate(appTitle, viewModeText);
 
-        final GameScene gameScene = views().playView().optGameScene().orElse(null);
         if (gameScene == null || !debug) {
             return shortTitle;
         }

@@ -22,9 +22,9 @@ import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.EnergizerExplosionAndRecycling;
 import de.amr.pacmanfx.uilib.animation.RegisteredAnimation;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
-import de.amr.pacmanfx.uilib.assets.LocalizedTextAccessor;
-import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
+import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
+import de.amr.pacmanfx.uilib.assets.Translator;
 import de.amr.pacmanfx.uilib.model3D.*;
 import de.amr.pacmanfx.uilib.widgets.MessageView;
 import javafx.animation.*;
@@ -75,7 +75,7 @@ public class GameLevel3D extends Group implements Disposable {
 
     private final GameUI_Config uiConfig;
     private final PreferencesManager prefs;
-    private final LocalizedTextAccessor localizedTextsAccessor;
+    private final Translator localizedTextsAccessor;
     private final GameLevel level;
     private final WorldMapColorScheme colorScheme;
 
@@ -292,7 +292,7 @@ public class GameLevel3D extends Group implements Disposable {
         }
     }
 
-    public GameLevel3D(GameUI_Config uiConfig, PreferencesManager prefs, LocalizedTextAccessor localizedTextsAccessor, GameLevel level) {
+    public GameLevel3D(GameUI_Config uiConfig, PreferencesManager prefs, Translator localizedTextsAccessor, GameLevel level) {
         this.uiConfig = requireNonNull(uiConfig);
         this.prefs = requireNonNull(prefs);
         this.localizedTextsAccessor =  requireNonNull(localizedTextsAccessor);
@@ -865,9 +865,9 @@ public class GameLevel3D extends Group implements Disposable {
     }
 
 
-    private String translatedLevelCompleteMessage(LocalizedTextAccessor localizedTextAccessor, int levelNumber) {
+    private String translatedLevelCompleteMessage(Translator translator, int levelNumber) {
         return pickerLevelCompleteMessages.hasEntries()
-            ? pickerLevelCompleteMessages.nextText() + "\n\n" + localizedTextAccessor.translated("level_complete", levelNumber)
+            ? pickerLevelCompleteMessages.nextText() + "\n\n" + translator.translate("level_complete", levelNumber)
             : "";
     }
 
