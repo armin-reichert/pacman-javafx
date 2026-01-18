@@ -59,7 +59,7 @@ public final class GameUI_Implementation implements GameUI {
     private final DirectoryWatchdog customDirWatchdog;
     private final ActionBindingsManager globalActionBindings = new GlobalActionBindings();
     private final GameUI_PreferencesManager prefs = new GameUI_PreferencesManager();
-    private final GameUI_ConfigFactory uiConfigFactory;
+    private final GameUI_ConfigManager uiConfigManager;
     private final GameUI_ViewManager viewManager;
     private final Stage stage;
     private final Scene scene;
@@ -92,7 +92,7 @@ public final class GameUI_Implementation implements GameUI {
         clock.setPausableAction(this::simulateAndUpdateGameScene);
         clock.setPermanentAction(this::render);
 
-        uiConfigFactory = new GameUI_ConfigFactory(uiConfigMap, prefs);
+        uiConfigManager = new GameUI_ConfigManager(uiConfigMap, prefs);
         customDirWatchdog = new DirectoryWatchdog(GameBox.CUSTOM_MAP_DIR);
         scene = new Scene(layoutPane, sceneWidth, sceneHeight);
         pausedIcon = FontIcon.of(FontAwesomeSolid.PAUSE, PAUSE_ICON_SIZE, ArcadePalette.ARCADE_WHITE);
@@ -375,13 +375,13 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     @Override
-    public GameUI_ConfigFactory configFactory() {
-        return uiConfigFactory;
+    public GameUI_ConfigManager configFactory() {
+        return uiConfigManager;
     }
 
     @Override
     public GameUI_Config config(String gameVariantName) {
-        return uiConfigFactory.getOrCreate(gameVariantName);
+        return uiConfigManager.getOrCreate(gameVariantName);
     }
 
     @Override

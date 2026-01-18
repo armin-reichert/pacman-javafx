@@ -200,7 +200,7 @@ public interface GameUI extends LocalizedTextAccessor {
 
     // Config
 
-    GameUI_ConfigFactory configFactory();
+    GameUI_ConfigManager configFactory();
 
     /**
      * @param gameVariantName name of game variant

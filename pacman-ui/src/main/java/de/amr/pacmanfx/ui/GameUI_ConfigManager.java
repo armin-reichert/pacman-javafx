@@ -10,13 +10,13 @@ import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GameUI_ConfigFactory {
+public class GameUI_ConfigManager {
 
     private final Map<String, Class<? extends GameUI_Config>> configClasses;
     private final Map<String, GameUI_Config> cache = new HashMap<>();
     private final PreferencesManager prefs;
 
-    public GameUI_ConfigFactory(Map<String, Class<? extends GameUI_Config>> classes, PreferencesManager prefs) {
+    public GameUI_ConfigManager(Map<String, Class<? extends GameUI_Config>> classes, PreferencesManager prefs) {
         this.configClasses = classes;
         this.prefs = prefs;
     }
