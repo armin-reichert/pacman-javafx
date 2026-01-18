@@ -137,7 +137,7 @@ public final class GameUI_Implementation implements GameUI {
         titleBinding = createStringBinding(
             () -> {
                 final GameScene gameScene = viewManager.playView().optGameScene().orElse(null);
-                final AssetMap assets = currentConfig().assets();
+                final AssetMap assets = context.gameVariantName() != null ? currentConfig().assets() : null;
                 final GameUI_View view = views().currentView();
                 final boolean debug  = PROPERTY_DEBUG_INFO_VISIBLE.get();
                 final boolean is3D   = PROPERTY_3D_ENABLED.get();
