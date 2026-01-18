@@ -17,7 +17,6 @@ import de.amr.pacmanfx.uilib.assets.LocalizedTextAccessor;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import javafx.beans.property.*;
-import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
 import javafx.scene.media.Media;
@@ -148,11 +147,6 @@ public interface GameUI extends LocalizedTextAccessor {
      * @return the primary stage provided by the JavaFX application
      */
     Stage stage();
-
-    /**
-     * @return main scene of UI
-     */
-    Scene scene();
 
     /**
      * @return the UI preferences (stored permanently in platform-specific way)

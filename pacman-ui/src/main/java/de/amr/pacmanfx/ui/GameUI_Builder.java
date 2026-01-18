@@ -12,7 +12,6 @@ import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.model.test.LevelMediumTestState;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
-import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
@@ -146,10 +145,7 @@ public class GameUI_Builder {
             startPage.init(ui);
         }
 
-        final Dashboard dashboard = ui.views().playView().dashboard();
-        dashboard.setUI(ui);
-        dashboard.configure(dashboardIDs);
-
+        ui.views().playView().dashboard().configure(dashboardIDs);
         return ui;
     }
 

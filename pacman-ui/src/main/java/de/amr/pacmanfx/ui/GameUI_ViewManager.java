@@ -23,17 +23,22 @@ public class GameUI_ViewManager {
     private final Supplier<EditorView> editorViewCreator;
     private EditorView editorView; // created on-demand
 
-    GameUI_ViewManager(Pane layoutPane, Supplier<EditorView> editorViewCreator, FlashMessageView flashMessageView) {
-        requireNonNull(layoutPane);
-        requireNonNull(editorViewCreator);
-        requireNonNull(flashMessageView);
+    GameUI_ViewManager(
+        GameUI ui,
+        Scene scene,
+        Pane layoutPane,
+        Supplier<EditorView> editorViewCreator,
+        FlashMessageView flashMessageView)
+    {
+        this.startPagesView = new StartPagesCarousel();
+        startPagesView.setUI(ui);
+
+        this.playView = new PlayView(scene);
+        playView.setUI(ui);
 
         this.editorViewCreator = editorViewCreator;
 
-        startPagesView = new StartPagesCarousel();
-        playView = new PlayView();
-
-        currentViewProperty().addListener((_, oldView, newView) -> {
+        currentView.addListener((_, oldView, newView) -> {
             if (oldView != null) {
                 oldView.onExit();
             }
@@ -43,11 +48,6 @@ public class GameUI_ViewManager {
             }
             flashMessageView.clear();
         });
-    }
-
-    void setUI(GameUI ui) {
-        startPagesView.setUI(ui);
-        playView.setUI(ui);
     }
 
     void selectStartView() {
