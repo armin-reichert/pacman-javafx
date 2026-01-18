@@ -142,7 +142,7 @@ public class PacManGames3dApp extends Application {
         startPages.setSelectedIndex(0);
 
         final Dashboard dashboard = ui.views().playView().dashboard();
-        dashboard.configure(ui, List.of(DASHBOARD_IDS));
+        dashboard.addInfoBoxes(ui, List.of(DASHBOARD_IDS));
         dashboard.addInfoBox(
             TengenMsPacMan_DashboardID.JOYPAD,
             TengenMsPacMan_UIConfig.TEXT_BUNDLE.getString("infobox.joypad.title"),

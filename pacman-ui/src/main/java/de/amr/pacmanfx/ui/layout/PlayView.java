@@ -196,7 +196,7 @@ public class PlayView extends StackPane implements GameUI_View {
         miniView.draw();
         // Dashboard must also be updated if simulation is stopped
         if (widgetLayer.isVisible()) {
-            dashboard.updateContent();
+            dashboard.update();
         }
     }
 

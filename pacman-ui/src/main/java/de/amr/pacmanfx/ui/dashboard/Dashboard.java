@@ -42,6 +42,10 @@ public class Dashboard extends VBox {
         infoBoxes().forEach(infoBox -> infoBox.init(ui));
     }
 
+    public void update() {
+        infoBoxes().filter(InfoBox::isExpanded).forEach(InfoBox::update);
+    }
+
     public void toggleVisibility() {
         setVisible(!isVisible());
     }
@@ -83,19 +87,22 @@ public class Dashboard extends VBox {
         addInfoBox(id, title, infoBox, false);
     }
 
-    public void configure(GameUI ui, List<DashboardID> dashboardIDS) {
+    /**
+     * Adds all info boxes defined by the given ID. The README info box is automatically inserted at the first position.
+     *
+     * @param ui the UI
+     * @param ids the dashboard info box IDs
+     */
+    public void addInfoBoxes(GameUI ui, List<DashboardID> ids) {
+        requireNonNull(ui);
+        requireNonNull(ids);
         addCommonInfoBox(ui, CommonDashboardID.README);
-        for (DashboardID id : dashboardIDS) {
-            if (id == CommonDashboardID.README) continue;
-            addCommonInfoBox(ui, id);
+        for (DashboardID id : ids) {
+            if (id != CommonDashboardID.README) addCommonInfoBox(ui, id);
         }
     }
 
-    public void updateContent() {
-        infoBoxes().filter(InfoBox::isExpanded).forEach(InfoBox::update);
-    }
-
-    public void updateLayout() {
+    private void updateLayout() {
         final List<InfoBox> infoBoxes = new ArrayList<>();
         infoBoxMap.entrySet().stream()
             .filter(e -> e.getKey() != CommonDashboardID.README)
