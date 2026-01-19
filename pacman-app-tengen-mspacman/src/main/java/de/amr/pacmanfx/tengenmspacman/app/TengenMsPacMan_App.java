@@ -54,8 +54,8 @@ public class TengenMsPacMan_App extends Application {
         final Dashboard dashboard = ui.views().playView().dashboard();
         dashboard.addSection(
             TengenMsPacMan_DashboardID.JOYPAD,
-            TengenMsPacMan_UIConfig.TEXT_BUNDLE.getString("infobox.joypad.title"),
             new DashboardSectionJoypad(dashboard),
+            TengenMsPacMan_UIConfig.TEXT_BUNDLE.getString("infobox.joypad.title"),
             false);
 
         ui.show();

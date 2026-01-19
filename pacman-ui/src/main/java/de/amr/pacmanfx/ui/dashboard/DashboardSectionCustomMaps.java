@@ -60,7 +60,7 @@ public class DashboardSectionCustomMaps extends DashboardSection {
             column.setReorderable(false);
         });
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
-        tableView.setPrefWidth(Dashboard.SECTION_MIN_WIDTH - 20);
+        tableView.setPrefWidth(dashboard.style().minWidth() - 20);
         tableView.setPrefHeight(500);
         tableView.setItems(customMaps);
 

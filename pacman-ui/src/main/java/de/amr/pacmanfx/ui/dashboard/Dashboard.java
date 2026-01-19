@@ -11,7 +11,6 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import org.tinylog.Logger;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -21,12 +20,22 @@ import static java.util.Objects.requireNonNull;
 
 public class Dashboard extends VBox {
 
-    public static final int SECTION_MIN_LABEL_WIDTH = 110;
-    public static final int SECTION_MIN_WIDTH = 350;
+    public record Style(
+        int minLabelWidth,
+        int minWidth,
+        Color contentBackground,
+        Color textColor,
+        Font labelFont,
+        Font contentFont) {}
 
-    public static final Color SECTION_CONTENT_BG_COLOR = Color.rgb(0, 0, 50, 1.0);
-    public static final Color SECTION_TEXT_COLOR = Color.WHITE;
-    public static final Font  SECTION_FONT = Font.font("Sans", 12);
+    public static final Style DEFAULT_STYLE = new Style(
+        110,
+        350,
+        Color.rgb(0, 0, 50, 1.0),
+        Color.WHITE,
+        Font.font("Sans", 12),
+        Font.font("Sans", 12)
+    );
 
     private static final Map<DashboardID, String> TITLE_KEYS = Map.ofEntries(
         entry(CommonDashboardID.ABOUT         , "infobox.about.title"),
@@ -43,13 +52,23 @@ public class Dashboard extends VBox {
     );
 
     private final Map<DashboardID, DashboardSection> sectionsByID = new LinkedHashMap<>();
+    private final Style style;
 
-    public Dashboard() {
+    public Dashboard(Style style) {
+        this.style = requireNonNull(style);
         visibleProperty().addListener((_, _, visible) -> {
             if (visible) {
                 updateLayout();
             }
         });
+    }
+
+    public Dashboard() {
+        this(DEFAULT_STYLE);
+    }
+
+    public Style style() {
+        return style;
     }
 
     public void init(GameUI ui) {
@@ -71,32 +90,43 @@ public class Dashboard extends VBox {
         updateLayout();
     }
 
+    private DashboardSection createCommonSection(DashboardID id) {
+        requireNonNull(id);
+        return switch (id) {
+            case CommonDashboardID.ABOUT          -> new DashboardSectionAbout(this);
+            case CommonDashboardID.ACTOR_INFO     -> new DashboardSectionActorInfo(this);
+            case CommonDashboardID.ANIMATION_INFO -> new DashboardSectionGameLevelAnimations(this);
+            // this dashboard section needs additional configuration to work!
+            case CommonDashboardID.CUSTOM_MAPS    -> new DashboardSectionCustomMaps(this);
+            case CommonDashboardID.GENERAL        -> new DashboardSectionGeneral(this);
+            case CommonDashboardID.GAME_CONTROL   -> new DashboardSectionGameControl(this);
+            case CommonDashboardID.GAME_INFO      -> new DashboardSectionGameInfo(this);
+            case CommonDashboardID.KEYS_GLOBAL    -> new DashboardSectionKeyShortcutsGlobal(this);
+            case CommonDashboardID.KEYS_LOCAL     -> new DashboardSectionKeyShortcutsLocal(this);
+            case CommonDashboardID.README         -> new DashboardSectionReadmeFirst(this);
+            case CommonDashboardID.SETTINGS_3D    -> new DashboardSection3DSettings(this);
+            default -> throw new IllegalArgumentException("Illegal dashboard ID: " + id);
+        };
+    }
+
+    /**
+     * Adds one of the common dashboard sections defined by the given ID.
+     *
+     * @param translator translator for localized text keys
+     * @param id common dashboard section ID
+     */
     public void addCommonSection(Translator translator, DashboardID id) {
         requireNonNull(translator);
         requireNonNull(id);
-        switch (id) {
-            case CommonDashboardID.ABOUT          -> addCommonSection(translator, id, new DashboardSectionAbout(this), false);
-            case CommonDashboardID.ACTOR_INFO     -> addCommonSection(translator, id, new DashboardSectionActorInfo(this), true);
-            case CommonDashboardID.ANIMATION_INFO -> addCommonSection(translator, id, new DashboardSectionGameLevelAnimations(this), true);
-            // this dashboard section needs additional configuration to work!
-            case CommonDashboardID.CUSTOM_MAPS    -> addCommonSection(translator, id, new DashboardSectionCustomMaps(this), true);
-            case CommonDashboardID.GENERAL        -> addCommonSection(translator, id, new DashboardSectionGeneral(this), false);
-            case CommonDashboardID.GAME_CONTROL   -> addCommonSection(translator, id, new DashboardSectionGameControl(this), false);
-            case CommonDashboardID.GAME_INFO      -> addCommonSection(translator, id, new DashboardSectionGameInfo(this), true);
-            case CommonDashboardID.KEYS_GLOBAL    -> addCommonSection(translator, id, new DashboardSectionKeyShortcutsGlobal(this), true);
-            case CommonDashboardID.KEYS_LOCAL     -> addCommonSection(translator, id, new DashboardSectionKeyShortcutsLocal(this), false);
-            case CommonDashboardID.README         -> addCommonSection(translator, id, new DashboardSectionReadmeFirst(this), false);
-            case CommonDashboardID.SETTINGS_3D    -> addCommonSection(translator, id, new DashboardSection3DSettings(this), false);
-            default -> Logger.warn("Not so common dashboard ID: {}", id);
-        }
-        // Initially expand the README section
-        sectionsByID.get(CommonDashboardID.README).setExpanded(true);
+        final DashboardSection section = createCommonSection(id);
+        sectionsByID.put(id, configure(section, translator.translate(TITLE_KEYS.get(id)), false));
     }
 
-    public void addSection(DashboardID id, String title, DashboardSection section, boolean maximized) {
-        sectionsByID.put(id, configureSection(title, section));
-        section.setDisplayedMaximized(maximized);
-        section.setMinWidth(SECTION_MIN_WIDTH);
+    public void addSection(DashboardID id, DashboardSection section, String title, boolean maximized) {
+        requireNonNull(id);
+        requireNonNull(title);
+        requireNonNull(section);
+        sectionsByID.put(id, configure(section, title, maximized));
     }
 
     /**
@@ -143,20 +173,13 @@ public class Dashboard extends VBox {
         }
     }
 
-    private void addCommonSection(Translator translator, DashboardID id, DashboardSection section, boolean maximized) {
-        section.setDisplayedMaximized(maximized);
-        final String title = translator.translate(TITLE_KEYS.get(id));
-        sectionsByID.put(id, configureSection(title, section));
-    }
-
-    private DashboardSection configureSection(String title, DashboardSection section) {
+    private DashboardSection configure(DashboardSection section, String title, boolean maximized) {
         section.setText(title);
-        section.setMinLabelWidth(SECTION_MIN_LABEL_WIDTH);
-        section.setMinWidth(SECTION_MIN_WIDTH);
-        section.setContentBackground(Background.fill(SECTION_CONTENT_BG_COLOR));
-        section.setTextColor(SECTION_TEXT_COLOR);
-        section.setContentTextFont(SECTION_FONT);
-        section.setLabelFont(SECTION_FONT);
+        section.setDisplayedMaximized(maximized);
+        section.setMinLabelWidth(style.minLabelWidth());
+        section.setMinWidth(style.minWidth());
+        section.setContentBackground(Background.fill(style.contentBackground()));
+        section.setTextColor(style.textColor());
         return section;
     }
 }

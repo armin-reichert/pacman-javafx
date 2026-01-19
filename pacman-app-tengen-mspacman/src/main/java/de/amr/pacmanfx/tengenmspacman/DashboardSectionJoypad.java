@@ -11,12 +11,10 @@ import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.DashboardSection;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.scene.image.ImageView;
-import javafx.scene.text.Font;
 
 public class DashboardSectionJoypad extends DashboardSection {
 
     private static final ResourceManager LOCAL_RESOURCES = () -> GameUI_Implementation.class;
-    private static final Font CONTENT_FONT = Font.font("Monospace", 16);
 
     public DashboardSectionJoypad(Dashboard dashboard) {
         super(dashboard);
@@ -25,8 +23,6 @@ public class DashboardSectionJoypad extends DashboardSection {
     public void init(GameUI ui) {
         final var joypad = TengenMsPacMan_UIConfig.JOYPAD.currentKeyBinding();
         final var imageNesController = new ImageView(LOCAL_RESOURCES.loadImage("graphics/nes-controller.jpg"));
-
-        setContentTextFont(CONTENT_FONT);
 
         addRow(imageNesController);
         addDynamicLabeledValue("[SELECT]", () -> "%s".formatted(

@@ -46,8 +46,6 @@ public abstract class DashboardSection extends TitledPane {
     protected final GridPane grid = new GridPane();
     protected int minLabelWidth;
     protected Color textColor;
-    protected Font textFont;
-    protected Font labelFont;
     protected int rowIndex;
     protected boolean displayedMaximized;
 
@@ -98,20 +96,12 @@ public abstract class DashboardSection extends TitledPane {
         grid.setBackground(background);
     }
 
-    public void setLabelFont(Font labelFont) {
-        this.labelFont = labelFont;
-    }
-
     public void setMinLabelWidth(int minLabelWidth) {
         this.minLabelWidth = minLabelWidth;
     }
 
     public void setTextColor(Color textColor) {
         this.textColor = textColor;
-    }
-
-    public void setContentTextFont(Font textFont) {
-        this.textFont = textFont;
     }
 
     protected Supplier<String> ifGameScenePresent(GameUI ui, Function<GameScene, String> fnInfo) {
@@ -151,7 +141,7 @@ public abstract class DashboardSection extends TitledPane {
     protected void addDynamicLabeledValue(String label, Supplier<?> infoSupplier) {
         var dynamicInfoText = new DynamicInfoText(infoSupplier);
         dynamicInfoText.setFill(textColor);
-        dynamicInfoText.setFont(textFont);
+        dynamicInfoText.setFont(dashboard.style().contentFont());
         infoTexts.add(dynamicInfoText);
         addRow(label, dynamicInfoText);
     }
@@ -159,7 +149,7 @@ public abstract class DashboardSection extends TitledPane {
     protected void addStaticLabeledValue(String label, String value) {
         var staticText = new Text(value);
         staticText.setFill(textColor);
-        staticText.setFont(textFont);
+        staticText.setFont(dashboard.style().contentFont());
         addRow(label, staticText);
     }
 
@@ -167,7 +157,7 @@ public abstract class DashboardSection extends TitledPane {
         Label label = new Label(text);
         label.setMinWidth(minLabelWidth);
         label.setTextFill(enabled ? textColor : Color.DIMGRAY);
-        label.setFont(textFont);
+        label.setFont(dashboard.style().labelFont());
         return label;
     }
 
@@ -180,7 +170,7 @@ public abstract class DashboardSection extends TitledPane {
         var buttons = new Button[buttonTexts.size()];
         for (int i = 0; i < buttonTexts.size(); ++i) {
             buttons[i] = new Button(buttonTexts.get(i));
-            buttons[i].setFont(textFont);
+            buttons[i].setFont(dashboard.style().contentFont());
             hbox.getChildren().add(buttons[i]);
         }
         addRow(labelText, hbox);
@@ -190,7 +180,7 @@ public abstract class DashboardSection extends TitledPane {
     protected CheckBox createCheckBox(String text) {
         var cb = new CheckBox(text);
         cb.setTextFill(textColor);
-        cb.setFont(textFont);
+        cb.setFont(dashboard.style().contentFont());
         return cb;
     }
 
@@ -208,7 +198,7 @@ public abstract class DashboardSection extends TitledPane {
 
     protected <T> ChoiceBox<T> addChoiceBox(String labelText, T[] items) {
         var selector = new ChoiceBox<>(FXCollections.observableArrayList(items));
-        selector.setStyle(fontCSS(textFont));
+        selector.setStyle(fontCSS(dashboard.style().contentFont()));
         addRow(labelText, selector);
         return selector;
     }
@@ -232,7 +222,7 @@ public abstract class DashboardSection extends TitledPane {
         var slider = new Slider(min, max, initialValue);
         slider.setShowTickMarks(tickMarks);
         slider.setShowTickLabels(tickLabels);
-        slider.setPrefWidth(0.5 * Dashboard.SECTION_MIN_WIDTH);
+        slider.setPrefWidth(0.5 * dashboard.style().minWidth());
         slider.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             if (e.getClickCount() == 2) {
                 slider.setValue(initialValue);
@@ -244,7 +234,7 @@ public abstract class DashboardSection extends TitledPane {
 
     protected Spinner<Integer> addIntSpinner(String labelText, int min, int max, IntegerProperty valuePy) {
         var spinner = new Spinner<Integer>(min, max, valuePy.getValue());
-        spinner.setStyle(fontCSS(textFont));
+        spinner.setStyle(fontCSS(dashboard.style().contentFont()));
         //TODO bidirectional binding does not work for me. Why? Is it me or is it a bug?
         spinner.getValueFactory().valueProperty().addListener((_, _, nv) -> valuePy.set(nv));
         valuePy.addListener((_, _, nv) -> spinner.getValueFactory().setValue(nv.intValue()));

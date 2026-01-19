@@ -33,6 +33,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.FontSmoothingType;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -54,11 +55,20 @@ import static java.util.Objects.requireNonNull;
  */
 public class PlayView extends StackPane implements GameUI_View {
 
+    private static final Dashboard.Style DASHBOARD_STYLE = new Dashboard.Style(
+        Dashboard.DEFAULT_STYLE.minLabelWidth(),
+        Dashboard.DEFAULT_STYLE.minWidth(),
+        Dashboard.DEFAULT_STYLE.contentBackground(),
+        Color.WHITE,
+        Font.font(12),
+        Font.font(13)
+    );
+
     private final ObjectProperty<GameScene> currentGameScene = new SimpleObjectProperty<>();
 
     private final ActionBindingsManager actionBindingsManager = new DefaultActionBindingsManager();
     private final Scene parentScene;
-    private final Dashboard dashboard = new Dashboard();
+    private final Dashboard dashboard = new Dashboard(DASHBOARD_STYLE);
     private final CanvasDecorationPane canvasDecorator = new CanvasDecorationPane();
     private final MiniGameView miniView = new MiniGameView();
     private final BorderPane canvasLayer = new BorderPane();

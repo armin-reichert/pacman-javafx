@@ -59,7 +59,7 @@ public class DashboardSectionGameLevelAnimations extends DashboardSection {
         tableView.setPlaceholder(new Text("No 3D animations"));
         tableView.setFocusTraversable(false);
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
-        tableView.setPrefWidth(Dashboard.SECTION_MIN_WIDTH - 20);
+        tableView.setPrefWidth(dashboard.style().minWidth() - 20);
 
         TableColumn<TableRow, String> labelColumn = new TableColumn<>("Animation Name");
         labelColumn.setCellValueFactory(data -> data.getValue().labelProperty());

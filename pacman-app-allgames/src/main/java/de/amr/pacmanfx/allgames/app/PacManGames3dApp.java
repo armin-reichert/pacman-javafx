@@ -98,8 +98,8 @@ public class PacManGames3dApp extends Application {
             final Dashboard dashboard = ui.views().playView().dashboard();
             dashboard.addSection(
                 TengenMsPacMan_DashboardID.JOYPAD,
-                TengenMsPacMan_UIConfig.TEXT_BUNDLE.getString("infobox.joypad.title"),
                 new DashboardSectionJoypad(dashboard),
+                TengenMsPacMan_UIConfig.TEXT_BUNDLE.getString("infobox.joypad.title"),
                 false);
 
             dashboard.findSection(CommonDashboardID.CUSTOM_MAPS).ifPresent(section -> {

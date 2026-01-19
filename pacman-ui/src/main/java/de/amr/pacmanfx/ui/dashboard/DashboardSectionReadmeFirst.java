@@ -25,7 +25,7 @@ public class DashboardSectionReadmeFirst extends DashboardSection {
     public void init(GameUI ui) {
         final var readmeText = new Text();
         readmeText.setText(ui.translate("infobox.readme.content"));
-        readmeText.setFont(Font.font("Serif", 16));
+        readmeText.setFont(Font.font("Sans", 16));
         readmeText.setFill(Color.WHITE);
 
         final var pane = new BorderPane();
