@@ -55,10 +55,11 @@ public abstract class DashboardSection extends TitledPane {
         this.dashboard = requireNonNull(dashboard);
 
         setContent(grid);
+        setContentBackground(Background.fill(dashboard.style().contentBackground()));
         setExpanded(false);
         setFocusTraversable(false);
-        setOpacity(OPACITY);
         setMinWidth(dashboard.style().minWidth());
+        setOpacity(OPACITY);
 
         setDisplayedMaximized(false);
 

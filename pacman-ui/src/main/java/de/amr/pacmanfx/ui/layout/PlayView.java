@@ -58,7 +58,7 @@ public class PlayView extends StackPane implements GameUI_View {
     private static final Dashboard.Style DASHBOARD_STYLE = new Dashboard.Style(
         Dashboard.DEFAULT_STYLE.minLabelWidth(),
         Dashboard.DEFAULT_STYLE.minWidth(),
-        Dashboard.DEFAULT_STYLE.contentBackground(),
+        Color.rgb(0, 0, 0x33),
         ArcadePalette.ARCADE_WHITE,
         Font.font("Sans", 12),
         Font.font("Sans", 12)

@@ -195,7 +195,6 @@ public class Dashboard extends VBox {
     private DashboardSection configure(DashboardSection section, String title, boolean maximized) {
         section.setText(title);
         section.setDisplayedMaximized(maximized);
-        section.setContentBackground(Background.fill(style.contentBackground()));
         return section;
     }
 }
