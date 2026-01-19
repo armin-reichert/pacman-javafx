@@ -109,6 +109,25 @@ public class Dashboard extends VBox {
         };
     }
 
+    private boolean isCommonSectionShownMaximized(DashboardID id) {
+        requireNonNull(id);
+        return switch (id) {
+            case CommonDashboardID.ABOUT          -> true;
+            case CommonDashboardID.ACTOR_INFO     -> true;
+            case CommonDashboardID.ANIMATION_INFO -> true;
+            // this dashboard section needs additional configuration to work!
+            case CommonDashboardID.CUSTOM_MAPS    -> true;
+            case CommonDashboardID.GENERAL        -> false;
+            case CommonDashboardID.GAME_CONTROL   -> false;
+            case CommonDashboardID.GAME_INFO      -> true;
+            case CommonDashboardID.KEYS_GLOBAL    -> true;
+            case CommonDashboardID.KEYS_LOCAL     -> false;
+            case CommonDashboardID.README         -> false;
+            case CommonDashboardID.SETTINGS_3D    -> true;
+            default -> throw new IllegalArgumentException("Illegal dashboard ID: " + id);
+        };
+    }
+
     /**
      * Adds one of the common dashboard sections defined by the given ID.
      *
@@ -119,7 +138,8 @@ public class Dashboard extends VBox {
         requireNonNull(translator);
         requireNonNull(id);
         final DashboardSection section = createCommonSection(id);
-        sectionsByID.put(id, configure(section, translator.translate(TITLE_KEYS.get(id)), false));
+        final boolean showMaximized = isCommonSectionShownMaximized(id);
+        sectionsByID.put(id, configure(section, translator.translate(TITLE_KEYS.get(id)), showMaximized));
     }
 
     public void addSection(DashboardID id, DashboardSection section, String title, boolean maximized) {
