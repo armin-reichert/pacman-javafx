@@ -93,32 +93,24 @@ public class Dashboard extends VBox {
         sectionsByID.get(CommonDashboardID.README).setExpanded(true);
     }
 
-    private void addCommonSection(Translator translator, DashboardID id, DashboardSection section, boolean maximized) {
-        addSection(id, translator.translate(TITLE_KEYS.get(id)), section, maximized);
-    }
-
     public void addSection(DashboardID id, String title, DashboardSection section, boolean maximized) {
-        sectionsByID.put(id, preconfiguredSection(title, section));
+        sectionsByID.put(id, configureSection(title, section));
         section.setDisplayedMaximized(maximized);
         section.setMinWidth(SECTION_MIN_WIDTH);
     }
 
-    public void addSection(DashboardID id, String title, DashboardSection section) {
-        addSection(id, title, section, false);
-    }
-
     /**
-     * Adds all info boxes defined by the given ID. The README info box is automatically inserted at the first position.
+     * Adds all dashboard sections defined by the given ID. The README info box is automatically inserted at the first position.
      *
-     * @param ui the UI
-     * @param ids the dashboard info box IDs
+     * @param translator translator for localized text keys
+     * @param ids list of dashboard section IDs
      */
-    public void addSections(GameUI ui, List<DashboardID> ids) {
-        requireNonNull(ui);
+    public void addSections(Translator translator, List<DashboardID> ids) {
+        requireNonNull(translator);
         requireNonNull(ids);
-        addCommonSection(ui, CommonDashboardID.README);
+        addCommonSection(translator, CommonDashboardID.README);
         for (DashboardID id : ids) {
-            if (id != CommonDashboardID.README) addCommonSection(ui, id);
+            if (id != CommonDashboardID.README) addCommonSection(translator, id);
         }
     }
 
@@ -151,9 +143,16 @@ public class Dashboard extends VBox {
         }
     }
 
-    private DashboardSection preconfiguredSection(String title, DashboardSection section) {
+    private void addCommonSection(Translator translator, DashboardID id, DashboardSection section, boolean maximized) {
+        section.setDisplayedMaximized(maximized);
+        final String title = translator.translate(TITLE_KEYS.get(id));
+        sectionsByID.put(id, configureSection(title, section));
+    }
+
+    private DashboardSection configureSection(String title, DashboardSection section) {
         section.setText(title);
         section.setMinLabelWidth(SECTION_MIN_LABEL_WIDTH);
+        section.setMinWidth(SECTION_MIN_WIDTH);
         section.setContentBackground(Background.fill(SECTION_CONTENT_BG_COLOR));
         section.setTextColor(SECTION_TEXT_COLOR);
         section.setContentTextFont(SECTION_FONT);
