@@ -59,9 +59,9 @@ public class PlayView extends StackPane implements GameUI_View {
         Dashboard.DEFAULT_STYLE.minLabelWidth(),
         Dashboard.DEFAULT_STYLE.minWidth(),
         Dashboard.DEFAULT_STYLE.contentBackground(),
-        Color.WHITE,
-        Font.font(12),
-        Font.font(13)
+        ArcadePalette.ARCADE_WHITE,
+        Font.font("Sans", 12),
+        Font.font("Sans", 12)
     );
 
     private final ObjectProperty<GameScene> currentGameScene = new SimpleObjectProperty<>();

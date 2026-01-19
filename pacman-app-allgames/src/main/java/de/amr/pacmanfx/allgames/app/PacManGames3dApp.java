@@ -150,7 +150,7 @@ public class PacManGames3dApp extends Application {
         startPages.setSelectedIndex(0);
 
         final Dashboard dashboard = ui.views().playView().dashboard();
-        dashboard.addSections(ui, List.of(DASHBOARD_IDS));
+        dashboard.addCommonSections(ui, List.of(DASHBOARD_IDS));
 
         return ui;
     }

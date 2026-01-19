@@ -115,7 +115,6 @@ public class Dashboard extends VBox {
             case CommonDashboardID.ABOUT          -> true;
             case CommonDashboardID.ACTOR_INFO     -> true;
             case CommonDashboardID.ANIMATION_INFO -> true;
-            // this dashboard section needs additional configuration to work!
             case CommonDashboardID.CUSTOM_MAPS    -> true;
             case CommonDashboardID.GENERAL        -> false;
             case CommonDashboardID.GAME_CONTROL   -> false;
@@ -155,7 +154,7 @@ public class Dashboard extends VBox {
      * @param translator translator for localized text keys
      * @param ids list of dashboard section IDs
      */
-    public void addSections(Translator translator, List<DashboardID> ids) {
+    public void addCommonSections(Translator translator, List<DashboardID> ids) {
         requireNonNull(translator);
         requireNonNull(ids);
         addCommonSection(translator, CommonDashboardID.README);
