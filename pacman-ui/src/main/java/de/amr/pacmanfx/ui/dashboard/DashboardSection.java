@@ -44,8 +44,6 @@ public abstract class DashboardSection extends TitledPane {
     protected final Dashboard dashboard;
     protected final List<DynamicInfoText> infoTexts = new ArrayList<>();
     protected final GridPane grid = new GridPane();
-    protected int minLabelWidth;
-    protected Color textColor;
     protected int rowIndex;
     protected boolean displayedMaximized;
 
@@ -60,6 +58,7 @@ public abstract class DashboardSection extends TitledPane {
         setFocusTraversable(false);
         setOpacity(0.9);
         setDisplayedMaximized(false);
+        setMinWidth(dashboard.style().minWidth());
 
         expandedProperty().addListener((_, _, expanded) -> {
             if (displayedMaximized) {
@@ -74,34 +73,18 @@ public abstract class DashboardSection extends TitledPane {
         });
     }
 
-    public Dashboard dashboard() {
-        return dashboard;
-    }
-
-    public void setDisplayedMaximized(boolean displayedMaximized) {
-        this.displayedMaximized = displayedMaximized;
-    }
-
-    public boolean isDisplayedMaximized() {
-        return displayedMaximized;
-    }
-
     public void init(GameUI ui) {}
 
     public void update(GameUI ui) {
         infoTexts.forEach(DynamicInfoText::update);
     }
 
+    public void setDisplayedMaximized(boolean maximized) {
+        displayedMaximized = maximized;
+    }
+
     public void setContentBackground(Background background) {
         grid.setBackground(background);
-    }
-
-    public void setMinLabelWidth(int minLabelWidth) {
-        this.minLabelWidth = minLabelWidth;
-    }
-
-    public void setTextColor(Color textColor) {
-        this.textColor = textColor;
     }
 
     protected Supplier<String> ifGameScenePresent(GameUI ui, Function<GameScene, String> fnInfo) {
@@ -140,7 +123,7 @@ public abstract class DashboardSection extends TitledPane {
 
     protected void addDynamicLabeledValue(String label, Supplier<?> infoSupplier) {
         var dynamicInfoText = new DynamicInfoText(infoSupplier);
-        dynamicInfoText.setFill(textColor);
+        dynamicInfoText.setFill(dashboard.style().textColor());
         dynamicInfoText.setFont(dashboard.style().contentFont());
         infoTexts.add(dynamicInfoText);
         addRow(label, dynamicInfoText);
@@ -148,15 +131,15 @@ public abstract class DashboardSection extends TitledPane {
 
     protected void addStaticLabeledValue(String label, String value) {
         var staticText = new Text(value);
-        staticText.setFill(textColor);
+        staticText.setFill(dashboard.style().textColor());
         staticText.setFont(dashboard.style().contentFont());
         addRow(label, staticText);
     }
 
     protected Label createLabel(String text, boolean enabled) {
         Label label = new Label(text);
-        label.setMinWidth(minLabelWidth);
-        label.setTextFill(enabled ? textColor : Color.DIMGRAY);
+        label.setMinWidth(dashboard.style().minLabelWidth());
+        label.setTextFill(enabled ? dashboard.style().textColor() : Color.DIMGRAY);
         label.setFont(dashboard.style().labelFont());
         return label;
     }
@@ -179,7 +162,7 @@ public abstract class DashboardSection extends TitledPane {
 
     protected CheckBox createCheckBox(String text) {
         var cb = new CheckBox(text);
-        cb.setTextFill(textColor);
+        cb.setTextFill(dashboard.style().textColor());
         cb.setFont(dashboard.style().contentFont());
         return cb;
     }

@@ -195,10 +195,7 @@ public class Dashboard extends VBox {
     private DashboardSection configure(DashboardSection section, String title, boolean maximized) {
         section.setText(title);
         section.setDisplayedMaximized(maximized);
-        section.setMinLabelWidth(style.minLabelWidth());
-        section.setMinWidth(style.minWidth());
         section.setContentBackground(Background.fill(style.contentBackground()));
-        section.setTextColor(style.textColor());
         return section;
     }
 }
