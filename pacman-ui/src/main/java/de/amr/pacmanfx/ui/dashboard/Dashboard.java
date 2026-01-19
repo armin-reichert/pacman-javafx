@@ -7,7 +7,6 @@ package de.amr.pacmanfx.ui.dashboard;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.uilib.assets.Translator;
 import javafx.scene.Node;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -137,8 +136,8 @@ public class Dashboard extends VBox {
         requireNonNull(translator);
         requireNonNull(id);
         final DashboardSection section = createCommonSection(id);
-        final boolean showMaximized = isCommonSectionShownMaximized(id);
-        sectionsByID.put(id, configure(section, translator.translate(TITLE_KEYS.get(id)), showMaximized));
+        final boolean maximized = isCommonSectionShownMaximized(id);
+        sectionsByID.put(id, configure(section, translator.translate(TITLE_KEYS.get(id)), maximized));
     }
 
     public void addSection(DashboardID id, DashboardSection section, String title, boolean maximized) {
