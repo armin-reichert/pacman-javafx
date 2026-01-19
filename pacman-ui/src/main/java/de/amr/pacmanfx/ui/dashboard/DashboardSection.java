@@ -35,6 +35,10 @@ import static java.util.Objects.requireNonNull;
 
 public abstract class DashboardSection extends TitledPane {
 
+    private static final int GRID_HGAP = 3;
+    private static final int GRID_VGAP = 2;
+    private static final double OPACITY = 0.8;
+
     public static final String NO_INFO = "n/a";
 
     protected static String fontCSS(Font font) {
@@ -43,22 +47,20 @@ public abstract class DashboardSection extends TitledPane {
 
     protected final Dashboard dashboard;
     protected final List<DynamicInfoText> infoTexts = new ArrayList<>();
-    protected final GridPane grid = new GridPane();
+    protected final GridPane grid = new GridPane(GRID_HGAP, GRID_VGAP);
     protected int rowIndex;
     protected boolean displayedMaximized;
 
     public DashboardSection(Dashboard dashboard) {
         this.dashboard = requireNonNull(dashboard);
 
-        grid.setVgap(2);
-        grid.setHgap(3);
-
         setContent(grid);
         setExpanded(false);
         setFocusTraversable(false);
-        setOpacity(0.9);
-        setDisplayedMaximized(false);
+        setOpacity(OPACITY);
         setMinWidth(dashboard.style().minWidth());
+
+        setDisplayedMaximized(false);
 
         expandedProperty().addListener((_, _, expanded) -> {
             if (displayedMaximized) {
