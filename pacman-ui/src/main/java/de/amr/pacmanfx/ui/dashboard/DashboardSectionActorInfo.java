@@ -22,9 +22,9 @@ import java.util.function.Supplier;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.TickTimer.ticksToString;
 
-public class InfoBoxActorInfo extends DashboardSection {
+public class DashboardSectionActorInfo extends DashboardSection {
 
-    public InfoBoxActorInfo(Dashboard dashboard) {
+    public DashboardSectionActorInfo(Dashboard dashboard) {
         super(dashboard);
     }
 

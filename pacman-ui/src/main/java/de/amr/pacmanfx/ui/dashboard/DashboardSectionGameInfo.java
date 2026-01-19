@@ -22,9 +22,9 @@ import static de.amr.pacmanfx.Globals.NUM_TICKS_PER_SEC;
 import static de.amr.pacmanfx.lib.TickTimer.secToTicks;
 import static de.amr.pacmanfx.uilib.Ufx.formatColorHex;
 
-public class InfoBoxGameInfo extends DashboardSection {
+public class DashboardSectionGameInfo extends DashboardSection {
 
-    public InfoBoxGameInfo(Dashboard dashboard) {
+    public DashboardSectionGameInfo(Dashboard dashboard) {
         super(dashboard);
     }
 
