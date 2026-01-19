@@ -14,6 +14,7 @@ import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
 import de.amr.pacmanfx.ui.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
+import de.amr.pacmanfx.ui.layout.StartPagesCarousel;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Dimension2D;
@@ -84,8 +85,14 @@ public class ArcadePacMan_App extends Application {
             THE_GAME_BOX,
             stage,
             size.getWidth(), size.getHeight());
-        ui.views().startPagesView().addStartPage(new ArcadePacMan_StartPage());
+
+        final StartPagesCarousel startPagesCarousel = ui.views().startPagesView();
+        startPagesCarousel.addStartPage(new ArcadePacMan_StartPage());
+        startPagesCarousel.startPages().forEach(startPage -> startPage.init(ui));
+        startPagesCarousel.setSelectedIndex(0);
+
         ui.views().playView().dashboard().addSections(ui, DASHBOARD_IDS);
+
         return ui;
     }
 
