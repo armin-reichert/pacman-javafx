@@ -75,7 +75,7 @@ public class GameLevel3D extends Group implements Disposable {
 
     private final GameUI_Config uiConfig;
     private final PreferencesManager prefs;
-    private final Translator localizedTextsAccessor;
+    private final Translator translator;
     private final GameLevel level;
     private final WorldMapColorScheme colorScheme;
 
@@ -292,10 +292,10 @@ public class GameLevel3D extends Group implements Disposable {
         }
     }
 
-    public GameLevel3D(GameUI_Config uiConfig, PreferencesManager prefs, Translator localizedTextsAccessor, GameLevel level) {
+    public GameLevel3D(GameUI_Config uiConfig, PreferencesManager prefs, Translator translator, GameLevel level) {
         this.uiConfig = requireNonNull(uiConfig);
         this.prefs = requireNonNull(prefs);
-        this.localizedTextsAccessor =  requireNonNull(localizedTextsAccessor);
+        this.translator =  requireNonNull(translator);
         this.level = requireNonNull(level);
 
         wallOpacityProperty.bind(PROPERTY_3D_WALL_OPACITY);
@@ -346,7 +346,7 @@ public class GameLevel3D extends Group implements Disposable {
         ghosts3D.forEach(ghost3D -> ghost3D.init(level));
         house3D.startSwirlAnimations();
 
-        pickerLevelCompleteMessages = RandomTextPicker.fromBundle(localizedTextsAccessor.localizedTexts(), "level.complete");
+        pickerLevelCompleteMessages = RandomTextPicker.fromBundle(translator.localizedTexts(), "level.complete");
     }
 
     private void createMaterials() {
