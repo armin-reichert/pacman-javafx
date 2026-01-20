@@ -168,11 +168,11 @@ public class Dashboard extends VBox {
     }
 
     private void updateLayout() {
-        final List<DashboardSection> sectionList = sectionsByID.entrySet().stream()
+        final List<DashboardSection> sectionList = new ArrayList<>(sectionsByID.entrySet().stream()
             .filter(e -> e.getKey() != CommonDashboardID.README)
             .filter(e -> e.getKey() != CommonDashboardID.ABOUT)
             .map(Map.Entry::getValue)
-            .toList();
+            .toList());
         if (sectionsByID.containsKey(CommonDashboardID.README)) {
             sectionList.addFirst(sectionsByID.get(CommonDashboardID.README));
         }
