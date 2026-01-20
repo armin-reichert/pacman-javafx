@@ -42,7 +42,7 @@ public abstract class DashboardSection extends TitledPane {
     public static final String NO_INFO = "n/a";
 
     protected static String fontCSS(Font font) {
-        return String.format("-fx-font: %.0fpx \"%s\";", font.getSize(), font.getFamily());
+        return "-fx-font: %.0fpx \"%s\";".formatted(font.getSize(), font.getFamily());
     }
 
     protected final Dashboard dashboard;
@@ -55,13 +55,14 @@ public abstract class DashboardSection extends TitledPane {
         this.dashboard = requireNonNull(dashboard);
 
         setContent(grid);
-        setContentBackground(Background.fill(dashboard.style().contentBackground()));
         setExpanded(false);
         setFocusTraversable(false);
+        setPrefWidth(dashboard.style().width());
         setMinWidth(dashboard.style().width());
         setMaxWidth(dashboard.style().width());
         setOpacity(OPACITY);
 
+        setContentBackground(Background.fill(dashboard.style().contentBackground()));
         setDisplayedMaximized(false);
 
         expandedProperty().addListener((_, _, expanded) -> {

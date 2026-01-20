@@ -33,6 +33,11 @@ public class DashboardSectionAnimations3D extends DashboardSection {
     private static final float RELATIVE_TABLE_HEIGHT = 0.80f;
     private static final float REFRESH_PERIOD_SECONDS = 0.5f;
 
+    public static final String NO_3_D_ANIMATIONS = "No 3D animations";
+    public static final String ANIMATION_NAME = "Animation Name";
+    public static final String STATUS = "Status";
+    public static final String UNKNOWN = "unknown";
+
     public static class TableRow {
         private final StringProperty labelProperty;
         private final ObjectProperty<Animation> animationProperty;
@@ -56,20 +61,20 @@ public class DashboardSectionAnimations3D extends DashboardSection {
         super(dashboard);
 
         tableView.setItems(tableRows);
-        tableView.setPlaceholder(new Text("No 3D animations"));
+        tableView.setPlaceholder(new Text(NO_3_D_ANIMATIONS));
         tableView.setFocusTraversable(false);
         tableView.setPrefWidth(dashboard.style().width());
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
 
-        final var labelColumn = new TableColumn<TableRow, String>("Animation Name");
+        final var labelColumn = new TableColumn<TableRow, String>(ANIMATION_NAME);
         labelColumn.setCellValueFactory(data -> data.getValue().labelProperty());
         labelColumn.setSortable(false);
         labelColumn.setMinWidth(0.66 * dashboard.style().width());
         tableView.getColumns().add(labelColumn);
 
-        final var statusColumn = new TableColumn<TableRow, String>("Status");
+        final var statusColumn = new TableColumn<TableRow, String>(STATUS);
         statusColumn.setCellValueFactory(data -> data.getValue().animationProperty()
-                .map(animation -> animation == null ? "unknown" : animation.getStatus().name()));
+                .map(animation -> animation == null ? UNKNOWN : animation.getStatus().name()));
         statusColumn.setSortable(false);
         tableView.getColumns().add(statusColumn);
 
