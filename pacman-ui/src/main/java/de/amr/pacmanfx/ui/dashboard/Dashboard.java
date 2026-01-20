@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.dashboard;
 
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.uilib.assets.Translator;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -60,6 +61,7 @@ public class Dashboard extends VBox {
                 updateLayout();
             }
         });
+        setPadding(new Insets(10));
     }
 
     public Dashboard() {

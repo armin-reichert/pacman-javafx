@@ -35,7 +35,7 @@ import static java.util.Objects.requireNonNull;
 
 public abstract class DashboardSection extends TitledPane {
 
-    private static final int GRID_HGAP = 3;
+    private static final int GRID_HGAP = 0;
     private static final int GRID_VGAP = 2;
     private static final double OPACITY = 0.8;
 
