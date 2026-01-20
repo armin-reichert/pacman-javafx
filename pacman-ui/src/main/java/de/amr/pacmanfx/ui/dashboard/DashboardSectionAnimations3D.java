@@ -28,7 +28,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
-public class DashboardSectionGameLevelAnimations extends DashboardSection {
+public class DashboardSectionAnimations3D extends DashboardSection {
 
     private static final float RELATIVE_TABLE_HEIGHT = 0.80f;
     private static final float REFRESH_PERIOD_SECONDS = 0.5f;
@@ -52,22 +52,22 @@ public class DashboardSectionGameLevelAnimations extends DashboardSection {
 
     private final ObjectProperty<AnimationRegistry> currentAnimationManager = new SimpleObjectProperty<>();
 
-    public DashboardSectionGameLevelAnimations(Dashboard dashboard) {
+    public DashboardSectionAnimations3D(Dashboard dashboard) {
         super(dashboard);
 
         tableView.setItems(tableRows);
         tableView.setPlaceholder(new Text("No 3D animations"));
         tableView.setFocusTraversable(false);
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
-        tableView.setPrefWidth(dashboard.style().minWidth() - 20);
+        tableView.setPrefWidth(dashboard.style().width() - 20);
 
-        TableColumn<TableRow, String> labelColumn = new TableColumn<>("Animation Name");
+        final var labelColumn = new TableColumn<TableRow, String>("Animation Name");
         labelColumn.setCellValueFactory(data -> data.getValue().labelProperty());
         labelColumn.setSortable(false);
         labelColumn.setMinWidth(180);
         tableView.getColumns().add(labelColumn);
 
-        TableColumn<TableRow, String> statusColumn = new TableColumn<>("Status");
+        final var statusColumn = new TableColumn<TableRow, String>("Status");
         statusColumn.setCellValueFactory(data -> data.getValue().animationProperty()
                 .map(animation -> animation == null ? "unknown" : animation.getStatus().name()));
         statusColumn.setSortable(false);
@@ -87,7 +87,8 @@ public class DashboardSectionGameLevelAnimations extends DashboardSection {
     @Override
     public void init(GameUI ui) {
         super.init(ui);
-        tableView.prefHeightProperty().bind(ui.stage().heightProperty().map(height -> height.doubleValue() * RELATIVE_TABLE_HEIGHT));
+        tableView.prefHeightProperty()
+            .bind(ui.stage().heightProperty().map(height -> height.doubleValue() * RELATIVE_TABLE_HEIGHT));
     }
 
     @Override
@@ -114,14 +115,14 @@ public class DashboardSectionGameLevelAnimations extends DashboardSection {
     private void updateTableData() {
         tableRows.clear();
         if (currentAnimationManager.get() != null) {
-            Set<RegisteredAnimation> animations = currentAnimationManager.get().animations();
-            tableRows.addAll(tableDataSortedByAnimationLabel(animations, Animation.Status.RUNNING));
-            tableRows.addAll(tableDataSortedByAnimationLabel(animations, Animation.Status.PAUSED));
-            tableRows.addAll(tableDataSortedByAnimationLabel(animations, Animation.Status.STOPPED));
+            final Set<RegisteredAnimation> animations = currentAnimationManager.get().animations();
+            tableRows.addAll(animationDataSortedByLabel(animations, Animation.Status.RUNNING));
+            tableRows.addAll(animationDataSortedByLabel(animations, Animation.Status.PAUSED));
+            tableRows.addAll(animationDataSortedByLabel(animations, Animation.Status.STOPPED));
         }
     }
 
-    private List<TableRow> tableDataSortedByAnimationLabel(Set<RegisteredAnimation> animations, Animation.Status status) {
+    private List<TableRow> animationDataSortedByLabel(Set<RegisteredAnimation> animations, Animation.Status status) {
         return animations.stream()
             .filter(animation -> hasStatus(animation, status))
             .sorted(Comparator.comparing(RegisteredAnimation::label))
@@ -129,7 +130,7 @@ public class DashboardSectionGameLevelAnimations extends DashboardSection {
             .toList();
     }
 
-    private boolean hasStatus(RegisteredAnimation ma, Animation.Status status) {
-        return ma.animationFX().map(animation -> animation.getStatus() == status).orElse(false);
+    private boolean hasStatus(RegisteredAnimation managedAnimation, Animation.Status status) {
+        return managedAnimation.animationFX().map(animation -> animation.getStatus() == status).orElse(false);
     }
 }

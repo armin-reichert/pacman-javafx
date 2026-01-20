@@ -56,8 +56,8 @@ import static java.util.Objects.requireNonNull;
 public class PlayView extends StackPane implements GameUI_View {
 
     private static final Dashboard.Style DASHBOARD_STYLE = new Dashboard.Style(
-        Dashboard.DEFAULT_STYLE.minLabelWidth(),
-        Dashboard.DEFAULT_STYLE.minWidth(),
+        Dashboard.DEFAULT_STYLE.labelWidth(),
+        Dashboard.DEFAULT_STYLE.width(),
         Color.rgb(0, 0, 0x33),
         ArcadePalette.ARCADE_WHITE,
         Font.font("Sans", 12),

@@ -17,6 +17,8 @@ import javafx.scene.text.Text;
 
 public class DashboardSectionReadmeFirst extends DashboardSection {
 
+    private static final Font TEXT_FONT = Font.font("Sans", 14);
+
     public DashboardSectionReadmeFirst(Dashboard dashboard) {
         super(dashboard);
     }
@@ -25,7 +27,7 @@ public class DashboardSectionReadmeFirst extends DashboardSection {
     public void init(GameUI ui) {
         final var readmeText = new Text();
         readmeText.setText(ui.translate("infobox.readme.content"));
-        readmeText.setFont(Font.font("Sans", 16));
+        readmeText.setFont(TEXT_FONT);
         readmeText.setFill(Color.WHITE);
 
         final var pane = new BorderPane();
@@ -37,7 +39,7 @@ public class DashboardSectionReadmeFirst extends DashboardSection {
 
         final var btnGotIt = new Button(ui.translate("infobox.readme.got_it"));
         buttonPane.getChildren().add(btnGotIt);
-        btnGotIt.setOnAction(e -> dashboard.removeSection(CommonDashboardID.README));
+        btnGotIt.setOnAction(_ -> dashboard.removeSection(CommonDashboardID.README));
 
         pane.setCenter(readmeText);
         pane.setBottom(buttonPane);

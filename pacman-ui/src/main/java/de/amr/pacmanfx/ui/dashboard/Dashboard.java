@@ -19,8 +19,8 @@ import static java.util.Objects.requireNonNull;
 public class Dashboard extends VBox {
 
     public record Style(
-        int minLabelWidth,
-        int minWidth,
+        int labelWidth,
+        int width,
         Color contentBackground,
         Color textColor,
         Font labelFont,
@@ -28,7 +28,7 @@ public class Dashboard extends VBox {
 
     public static final Style DEFAULT_STYLE = new Style(
         110,
-        350,
+        320,
         Color.rgb(0, 0, 50, 1.0),
         Color.WHITE,
         Font.font("Sans", 12),
@@ -94,7 +94,7 @@ public class Dashboard extends VBox {
         return switch (id) {
             case CommonDashboardID.ABOUT          -> new DashboardSectionAbout(this);
             case CommonDashboardID.ACTOR_INFO     -> new DashboardSectionActorInfo(this);
-            case CommonDashboardID.ANIMATION_INFO -> new DashboardSectionGameLevelAnimations(this);
+            case CommonDashboardID.ANIMATION_INFO -> new DashboardSectionAnimations3D(this);
             // this dashboard section needs additional configuration to work!
             case CommonDashboardID.CUSTOM_MAPS    -> new DashboardSectionCustomMaps(this);
             case CommonDashboardID.GENERAL        -> new DashboardSectionGeneral(this);

@@ -58,7 +58,8 @@ public abstract class DashboardSection extends TitledPane {
         setContentBackground(Background.fill(dashboard.style().contentBackground()));
         setExpanded(false);
         setFocusTraversable(false);
-        setMinWidth(dashboard.style().minWidth());
+        setMinWidth(dashboard.style().width());
+        setMaxWidth(dashboard.style().width());
         setOpacity(OPACITY);
 
         setDisplayedMaximized(false);
@@ -141,7 +142,7 @@ public abstract class DashboardSection extends TitledPane {
 
     protected Label createLabel(String text, boolean enabled) {
         Label label = new Label(text);
-        label.setMinWidth(dashboard.style().minLabelWidth());
+        label.setMinWidth(dashboard.style().labelWidth());
         label.setTextFill(enabled ? dashboard.style().textColor() : Color.DIMGRAY);
         label.setFont(dashboard.style().labelFont());
         return label;
@@ -208,7 +209,7 @@ public abstract class DashboardSection extends TitledPane {
         var slider = new Slider(min, max, initialValue);
         slider.setShowTickMarks(tickMarks);
         slider.setShowTickLabels(tickLabels);
-        slider.setPrefWidth(0.5 * dashboard.style().minWidth());
+        slider.setPrefWidth(0.5 * dashboard.style().width());
         slider.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             if (e.getClickCount() == 2) {
                 slider.setValue(initialValue);
