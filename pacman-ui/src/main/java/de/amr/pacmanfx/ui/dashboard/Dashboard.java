@@ -14,7 +14,6 @@ import javafx.scene.text.Font;
 import java.util.*;
 import java.util.stream.Stream;
 
-import static java.util.Map.entry;
 import static java.util.Objects.requireNonNull;
 
 public class Dashboard extends VBox {
@@ -36,19 +35,20 @@ public class Dashboard extends VBox {
         Font.font("Sans", 12)
     );
 
-    private static final Map<DashboardID, String> TITLE_KEYS = Map.ofEntries(
-        entry(CommonDashboardID.ABOUT         , "infobox.about.title"),
-        entry(CommonDashboardID.ACTOR_INFO    , "infobox.actor_info.title"),
-        entry(CommonDashboardID.ANIMATION_INFO, "infobox.animation_info.title"),
-        entry(CommonDashboardID.CUSTOM_MAPS   , "infobox.custom_maps.title"),
-        entry(CommonDashboardID.GENERAL       , "infobox.general.title"),
-        entry(CommonDashboardID.GAME_CONTROL  , "infobox.game_control.title"),
-        entry(CommonDashboardID.GAME_INFO     , "infobox.game_info.title"),
-        entry(CommonDashboardID.KEYS_GLOBAL   , "infobox.keyboard_shortcuts_global.title"),
-        entry(CommonDashboardID.KEYS_LOCAL    , "infobox.keyboard_shortcuts_local.title"),
-        entry(CommonDashboardID.README        , "infobox.readme.title"),
-        entry(CommonDashboardID.SETTINGS_3D   , "infobox.3D_settings.title")
-    );
+    private static final Map<CommonDashboardID, String> TITLE_KEYS = new EnumMap<>(CommonDashboardID.class);
+    {
+        TITLE_KEYS.put(CommonDashboardID.ABOUT, "infobox.about.title");
+        TITLE_KEYS.put(CommonDashboardID.ACTOR_INFO, "infobox.actor_info.title");
+        TITLE_KEYS.put(CommonDashboardID.ANIMATION_INFO, "infobox.animation_info.title");
+        TITLE_KEYS.put(CommonDashboardID.CUSTOM_MAPS, "infobox.custom_maps.title");
+        TITLE_KEYS.put(CommonDashboardID.GENERAL, "infobox.general.title");
+        TITLE_KEYS.put(CommonDashboardID.GAME_CONTROL, "infobox.game_control.title");
+        TITLE_KEYS.put(CommonDashboardID.GAME_INFO, "infobox.game_info.title");
+        TITLE_KEYS.put(CommonDashboardID.KEYS_GLOBAL, "infobox.keyboard_shortcuts_global.title");
+        TITLE_KEYS.put(CommonDashboardID.KEYS_LOCAL, "infobox.keyboard_shortcuts_local.title");
+        TITLE_KEYS.put(CommonDashboardID.README, "infobox.readme.title");
+        TITLE_KEYS.put(CommonDashboardID.SETTINGS_3D, "infobox.3D_settings.title");
+    }
 
     private final Map<DashboardID, DashboardSection> sectionsByID = new LinkedHashMap<>();
     private final Style style;
@@ -132,7 +132,7 @@ public class Dashboard extends VBox {
      * @param translator translator for localized text keys
      * @param id common dashboard section ID
      */
-    public void addCommonSection(Translator translator, DashboardID id) {
+    public void addCommonSection(Translator translator, CommonDashboardID id) {
         requireNonNull(translator);
         requireNonNull(id);
         final DashboardSection section = createCommonSection(id);
@@ -153,11 +153,11 @@ public class Dashboard extends VBox {
      * @param translator translator for localized text keys
      * @param ids list of dashboard section IDs
      */
-    public void addCommonSections(Translator translator, List<DashboardID> ids) {
+    public void addCommonSections(Translator translator, List<CommonDashboardID> ids) {
         requireNonNull(translator);
         requireNonNull(ids);
         addCommonSection(translator, CommonDashboardID.README);
-        for (DashboardID id : ids) {
+        for (CommonDashboardID id : ids) {
             if (id != CommonDashboardID.README) addCommonSection(translator, id);
         }
     }

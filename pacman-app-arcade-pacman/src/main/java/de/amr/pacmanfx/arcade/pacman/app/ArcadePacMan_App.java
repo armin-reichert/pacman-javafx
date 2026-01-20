@@ -13,7 +13,6 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
 import de.amr.pacmanfx.ui.dashboard.CommonDashboardID;
-import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.layout.StartPagesCarousel;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -35,7 +34,7 @@ public class ArcadePacMan_App extends Application {
     private static final float ASPECT_RATIO = 1.2f; // 12:10 aspect ratio
     private static final float USED_HEIGHT_FRACTION = 0.8f;  // 80% of available height
 
-    private static final List<DashboardID> DASHBOARD_IDS = List.of(
+    private static final List<CommonDashboardID> DASHBOARD_IDS = List.of(
         CommonDashboardID.GENERAL,
         CommonDashboardID.GAME_CONTROL,
         CommonDashboardID.SETTINGS_3D,
@@ -104,7 +103,7 @@ public class ArcadePacMan_App extends Application {
                 ArcadePacMan_UIConfig.class
             )
             .startPage(ArcadePacMan_StartPage.class, ARCADE_PACMAN_GAME)
-            .dashboard(DASHBOARD_IDS.toArray(DashboardID[]::new))
+            .dashboard(DASHBOARD_IDS.toArray(CommonDashboardID[]::new))
             .build();
     }
 }

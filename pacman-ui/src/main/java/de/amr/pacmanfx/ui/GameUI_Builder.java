@@ -12,7 +12,7 @@ import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.model.test.LevelMediumTestState;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
-import de.amr.pacmanfx.ui.dashboard.DashboardID;
+import de.amr.pacmanfx.ui.dashboard.CommonDashboardID;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
@@ -45,7 +45,7 @@ public class GameUI_Builder {
     private final double mainSceneHeight;
     private final Map<String, GameConfiguration> configByGameVariant = new LinkedHashMap<>();
     private final List<StartPageConfiguration> startPageConfigs = new ArrayList<>();
-    private List<DashboardID> dashboardIDs = List.of();
+    private List<CommonDashboardID> dashboardIDs = List.of();
 
     private GameUI_Builder(Stage stage, double width, double height) {
         this.stage = requireNonNull(stage);
@@ -113,7 +113,7 @@ public class GameUI_Builder {
         return this;
     }
 
-    public GameUI_Builder dashboard(DashboardID... dashboardIDs) {
+    public GameUI_Builder dashboard(CommonDashboardID... dashboardIDs) {
         if (dashboardIDs == null) {
             error("Dashboard entry list must not be null");
         }

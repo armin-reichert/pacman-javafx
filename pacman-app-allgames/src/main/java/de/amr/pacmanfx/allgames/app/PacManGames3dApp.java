@@ -28,7 +28,6 @@ import de.amr.pacmanfx.ui.GameUI_Config;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
 import de.amr.pacmanfx.ui.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
-import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.dashboard.DashboardSectionCustomMaps;
 import de.amr.pacmanfx.ui.layout.StartPagesCarousel;
 import javafx.application.Application;
@@ -68,7 +67,7 @@ public class PacManGames3dApp extends Application {
         ARCADE_MS_PACMAN_XXL.name(), PacManXXL_MsPacMan_UIConfig.class
     );
 
-    private static final DashboardID[] DASHBOARD_IDS = {
+    private static final List<CommonDashboardID> DASHBOARD_IDS = List.of(
         CommonDashboardID.GENERAL,
         CommonDashboardID.GAME_CONTROL,
         CommonDashboardID.SETTINGS_3D,
@@ -79,7 +78,7 @@ public class PacManGames3dApp extends Application {
         CommonDashboardID.KEYS_GLOBAL,
         CommonDashboardID.KEYS_LOCAL,
         CommonDashboardID.ABOUT
-    };
+    );
 
     private GameUI ui;
 
@@ -150,7 +149,7 @@ public class PacManGames3dApp extends Application {
         startPages.setSelectedIndex(0);
 
         final Dashboard dashboard = ui.views().playView().dashboard();
-        dashboard.addCommonSections(ui, List.of(DASHBOARD_IDS));
+        dashboard.addCommonSections(ui, DASHBOARD_IDS);
 
         return ui;
     }
@@ -207,7 +206,7 @@ public class PacManGames3dApp extends Application {
                 PacManXXL_StartPage.class,
                 ARCADE_PACMAN_XXL.name(), ARCADE_MS_PACMAN_XXL.name())
 
-            .dashboard(DASHBOARD_IDS)
+            .dashboard(DASHBOARD_IDS.toArray(CommonDashboardID[]::new))
 
             .build();
     }
