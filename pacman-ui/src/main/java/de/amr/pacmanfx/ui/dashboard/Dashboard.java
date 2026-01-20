@@ -36,7 +36,7 @@ public class Dashboard extends VBox {
     );
 
     private static final Map<CommonDashboardID, String> TITLE_KEYS = new EnumMap<>(CommonDashboardID.class);
-    {
+    static {
         TITLE_KEYS.put(CommonDashboardID.ABOUT, "infobox.about.title");
         TITLE_KEYS.put(CommonDashboardID.ACTOR_INFO, "infobox.actor_info.title");
         TITLE_KEYS.put(CommonDashboardID.ANIMATION_INFO, "infobox.animation_info.title");
@@ -55,7 +55,7 @@ public class Dashboard extends VBox {
 
     public Dashboard(Style style) {
         this.style = requireNonNull(style);
-        visibleProperty().addListener((_, _, visible) -> {
+        visibleProperty().addListener((_, ignored, visible) -> {
             if (visible) {
                 updateLayout();
             }
@@ -168,11 +168,11 @@ public class Dashboard extends VBox {
     }
 
     private void updateLayout() {
-        final List<DashboardSection> sectionList = new ArrayList<>();
-        sectionsByID.entrySet().stream()
+        final List<DashboardSection> sectionList = sectionsByID.entrySet().stream()
             .filter(e -> e.getKey() != CommonDashboardID.README)
             .filter(e -> e.getKey() != CommonDashboardID.ABOUT)
-            .forEach(e -> sectionList.add(e.getValue()));
+            .map(Map.Entry::getValue)
+            .toList();
         if (sectionsByID.containsKey(CommonDashboardID.README)) {
             sectionList.addFirst(sectionsByID.get(CommonDashboardID.README));
         }
@@ -182,9 +182,9 @@ public class Dashboard extends VBox {
         getChildren().setAll(sectionList.toArray(DashboardSection[]::new));
     }
 
-    public void setIncludeOnlyVisibleSections(boolean onlyVisibleSections) {
+    public void setCompactMode(boolean compactMode) {
         getChildren().clear();
-        if (onlyVisibleSections) {
+        if (compactMode) {
             sections().filter(Node::isVisible).forEach(getChildren()::add);
         } else {
             sections().forEach(getChildren()::add);

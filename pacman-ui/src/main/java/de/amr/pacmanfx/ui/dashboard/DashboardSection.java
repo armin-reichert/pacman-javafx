@@ -68,10 +68,10 @@ public abstract class DashboardSection extends TitledPane {
             if (displayedMaximized) {
                 if (expanded) {
                     dashboard.sections().filter(infoBox -> infoBox != this).forEach(otherInfoBox -> otherInfoBox.setVisible(false));
-                    dashboard.setIncludeOnlyVisibleSections(true);
+                    dashboard.setCompactMode(true);
                 } else {
                     dashboard.sections().forEach(infoBox -> infoBox.setVisible(true));
-                    dashboard.setIncludeOnlyVisibleSections(false);
+                    dashboard.setCompactMode(false);
                 }
             }
         });
