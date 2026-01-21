@@ -97,24 +97,7 @@ public class PacManGames3dApp extends Application {
             } else {
                 createUI_WithoutBuilder(primaryStage, width, height, xxlMapSelector);
             }
-            final Dashboard dashboard = ui.views().playView().dashboard();
-
-            // Add Joypad controller section
-            dashboard.addSection(
-                TengenMsPacMan_DashboardID.JOYPAD,
-                new DashboardSectionJoypad(dashboard),
-                TengenMsPacMan_UIConfig.TEXT_BUNDLE.getString("infobox.joypad.title"),
-                false);
-
-            // Configure custom map section table
-            dashboard.findSection(CommonDashboardID.CUSTOM_MAPS)
-                .filter(DashboardSectionCustomMaps.class::isInstance)
-                .map(DashboardSectionCustomMaps.class::cast)
-                .ifPresent(section -> {
-                    section.setCustomDirWatchDog(ui.customDirWatchdog());
-                    section.setMapEditFunction(mapFile -> ui.editWorldMap(mapFile));
-                });
-
+            configureDashboard();
             ui.customDirWatchdog().addEventListener(xxlMapSelector);
             ui.show();
         }
@@ -230,5 +213,25 @@ public class PacManGames3dApp extends Application {
 
     private File highScoreFile(StandardGameVariant variant) {
         return THE_GAME_BOX.highScoreFile(variant.name());
+    }
+
+    private void configureDashboard() {
+        final Dashboard dashboard = ui.views().playView().dashboard();
+
+        // Add Joypad controller section
+        dashboard.addSection(
+            TengenMsPacMan_DashboardID.JOYPAD,
+            new DashboardSectionJoypad(dashboard),
+            TengenMsPacMan_UIConfig.TEXT_BUNDLE.getString("infobox.joypad.title"),
+            false);
+
+        // Configure custom map section table
+        dashboard.findSection(CommonDashboardID.CUSTOM_MAPS)
+            .filter(DashboardSectionCustomMaps.class::isInstance)
+            .map(DashboardSectionCustomMaps.class::cast)
+            .ifPresent(section -> {
+                section.setCustomDirWatchDog(ui.customDirWatchdog());
+                section.setMapEditFunction(mapFile -> ui.editWorldMap(mapFile));
+            });
     }
 }
