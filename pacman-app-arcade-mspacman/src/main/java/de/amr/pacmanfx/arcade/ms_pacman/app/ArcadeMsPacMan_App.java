@@ -17,25 +17,26 @@ import javafx.stage.Stage;
 
 public class ArcadeMsPacMan_App extends Application {
 
-    private static final String GAME_VARIANT = StandardGameVariant.ARCADE_MS_PACMAN.name();
+    private static final String NAME_OF_THE_GAME = StandardGameVariant.ARCADE_MS_PACMAN.name();
 
-    private static final float ASPECT_RATIO = 1.2f; // 12:10 aspect ratio
-    private static final float USED_HEIGHT = 0.8f;  // 80% of available height
+    private static final float ASPECT_RATIO    = 1.2f; // 12:10
+    private static final float HEIGHT_FRACTION = 0.8f; // Use 80% of screen height
 
     private GameUI ui;
 
     @Override
     public void start(Stage primaryStage) {
-        final int height = (int) Math.round(USED_HEIGHT * Screen.getPrimary().getVisualBounds().getHeight());
-        final int width  = Math.round(ASPECT_RATIO * height);
+        final double screenHeight = Screen.getPrimary().getVisualBounds().getHeight();
+        final double height = Math.floor(HEIGHT_FRACTION * screenHeight);
+        final double width  = Math.floor(ASPECT_RATIO * height);
 
         ui = GameUI_Builder.create(primaryStage, width, height)
             .game(
-                GAME_VARIANT,
+                NAME_OF_THE_GAME,
                 ArcadeMsPacMan_GameModel.class,
                 ArcadeMsPacMan_UIConfig.class
             )
-            .startPage(ArcadeMsPacMan_StartPage.class, GAME_VARIANT)
+            .startPage(ArcadeMsPacMan_StartPage.class, NAME_OF_THE_GAME)
             .dashboard(
                 CommonDashboardID.GENERAL,
                 CommonDashboardID.GAME_CONTROL,
