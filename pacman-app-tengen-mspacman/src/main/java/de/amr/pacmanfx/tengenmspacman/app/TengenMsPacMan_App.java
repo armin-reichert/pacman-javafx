@@ -22,24 +22,23 @@ import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_ASPECT;
 
 public class TengenMsPacMan_App extends Application {
 
-    private static final String GAME_VARIANT_NAME = TENGEN_MS_PACMAN.name();
+    private static final String NAME_OF_THE_GAME = TENGEN_MS_PACMAN.name();
 
-    private static final float ASPECT_RATIO = NES_ASPECT; // 32:30 aspect ratio
-    private static final float USED_HEIGHT = 0.8f;  // 80% of available height
+    private static final float ASPECT_RATIO    = NES_ASPECT; // 32:30
+    private static final float HEIGHT_FRACTION = 0.8f; // Use 80% of available height
 
     private GameUI ui;
 
     @Override
     public void start(Stage primaryStage) {
-        final int height = (int) Math.round(USED_HEIGHT * Screen.getPrimary().getVisualBounds().getHeight());
-        final int width  = Math.round(ASPECT_RATIO * height);
-        ui = GameUI_Builder.create(primaryStage, width, height)
-            .game(
-                GAME_VARIANT_NAME,
-                TengenMsPacMan_GameModel.class,
-                TengenMsPacMan_UIConfig.class
-            )
-            .startPage(TengenMsPacMan_StartPage.class, GAME_VARIANT_NAME)
+        final double availableHeight = Screen.getPrimary().getVisualBounds().getHeight();
+        final double height = Math.floor(HEIGHT_FRACTION * availableHeight);
+        final double width  = Math.round(ASPECT_RATIO * height);
+
+        ui = GameUI_Builder
+            .create(primaryStage, width, height)
+            .game(NAME_OF_THE_GAME, TengenMsPacMan_GameModel.class, TengenMsPacMan_UIConfig.class)
+            .startPage(TengenMsPacMan_StartPage.class, NAME_OF_THE_GAME)
             .dashboard(
                 CommonDashboardID.GENERAL,
                 CommonDashboardID.GAME_CONTROL,
